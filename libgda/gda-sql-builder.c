@@ -1108,3 +1108,92 @@ gda_sql_builder_select_order_by (GdaSqlBuilder *builder, guint expr_id,
 		sorder->collation_name = g_strdup (collation_name);
 	sel->order_by = g_slist_append (sel->order_by, sorder);
 }
+
+/**
+ * gda_sql_builder_add_function
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @function_id: the ID of the functions's name
+ * @...: a list, terminated with %0, of each function's argument's ID
+ *
+ * Builds a new expression which reprenents a function applied to some arguments
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_add_function (GdaSqlBuilder *builder, guint id, const gchar *func_name, ...)
+{
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+
+	GdaSqlExpr *expr;
+	GSList *list = NULL;
+	va_list ap;
+	SqlPart *part;
+	guint aid;
+
+	expr = gda_sql_expr_new (NULL);
+	expr->func = gda_sql_function_new (GDA_SQL_ANY_PART (expr));
+	expr->func->function_name = g_strdup (func_name);
+
+	va_start (ap, func_name);
+	for (aid = va_arg (ap, guint); aid; aid = va_arg (ap, guint)) {
+		part = get_part (builder, aid, GDA_SQL_ANY_EXPR);
+		if (!part) {
+			expr->func->args_list = list;
+			gda_sql_expr_free (expr);
+			return 0;
+		}
+		list = g_slist_prepend (list, use_part (part, GDA_SQL_ANY_PART (expr->func)));
+	}
+	va_end (ap);
+	expr->func->args_list = g_slist_reverse (list);
+
+	return add_part (builder, id, (GdaSqlAnyPart *) expr);
+}
+
+/**
+ * gda_sql_builder_add_function_v
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @function_id: the ID of the functions's name
+ * @args: an array of IDs representing the function's arguments
+ * @args_size: @args's size
+ *
+ * Builds a new expression which reprenents a function applied to some arguments
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_add_function_v (GdaSqlBuilder *builder, guint id, const gchar *func_name,
+				const guint *args, gint args_size)
+{
+	gint i;
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	g_return_val_if_fail (func_name && *func_name, 0);
+
+	GdaSqlExpr *expr;
+	GSList *list = NULL;
+	expr = gda_sql_expr_new (NULL);
+	expr->func = gda_sql_function_new (GDA_SQL_ANY_PART (expr));
+	expr->func->function_name = g_strdup (func_name);
+
+	for (i = 0; i < args_size; i++) {
+		SqlPart *part;
+		part = get_part (builder, args[i], GDA_SQL_ANY_EXPR);
+		if (!part) {
+			expr->func->args_list = list;
+			gda_sql_expr_free (expr);
+			return 0;
+		}
+		list = g_slist_prepend (list, use_part (part, GDA_SQL_ANY_PART (expr->func)));
+	}
+	expr->func->args_list = g_slist_reverse (list);
+
+	return add_part (builder, id, (GdaSqlAnyPart *) expr);
+}

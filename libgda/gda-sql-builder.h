@@ -79,6 +79,9 @@ guint              gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSq
 					 guint op1, guint op2, guint op3);
 guint              gda_sql_builder_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
 					   const guint *op_ids, gint op_ids_size);
+guint             gda_sql_builder_add_function (GdaSqlBuilder *builder, guint id, const gchar *func_name, ...);
+guint             gda_sql_builder_add_function_v (GdaSqlBuilder *builder, guint id, const gchar *func_name,
+						  const guint *args, gint args_size);
 
 
 /* SELECT Statement API */
@@ -97,7 +100,6 @@ void              gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar
 void              gda_sql_builder_set_where (GdaSqlBuilder *builder, guint cond_id);
 
 void              gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_id);
-
 
 
 G_END_DECLS

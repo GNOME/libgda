@@ -563,6 +563,8 @@
 	gda_sql_any_part_foreach
 	gda_sql_any_part_type_get_type
 	gda_sql_builder_add_field
+	gda_sql_builder_add_function
+	gda_sql_builder_add_function_v
 	gda_sql_builder_cond
 	gda_sql_builder_cond_v
 	gda_sql_builder_expr

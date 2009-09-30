@@ -91,6 +91,31 @@ main (int argc, char *argv[])
 	render_as_sql (b);
 	g_object_unref (b);
 
+	/* SELECT myfunc (a, 5, 'Joe') FROM mytable */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_ident (b, 0, "mytable"),
+					   NULL);
+	gda_sql_builder_add_function (b, 1, "myfunc",
+				      gda_sql_builder_ident (b, 0, "a"),
+				      gda_sql_builder_expr (b, 0, NULL, G_TYPE_INT, 5),
+				      gda_sql_builder_expr (b, 0, NULL, G_TYPE_STRING, "Joe"),
+				      0);
+	gda_sql_builder_add_field (b, 1, 0);
+	render_as_sql (b);
+
+	/* reuse the same GdaSqlBuilder object to have:
+	 * SELECT myfunc (a, 5, 'Joe'), MAX (myfunc (a, 5, 'Joe'), b, 10) FROM mytable */
+	guint args[] = {1, 3, 4};
+	gda_sql_builder_ident (b, 3, "b");
+	gda_sql_builder_expr (b, 4, NULL, G_TYPE_INT, 10);
+
+	gda_sql_builder_add_function_v (b, 5, "MAX", args, 3);
+	gda_sql_builder_add_field (b, 5, 0);
+
+	render_as_sql (b);
+	g_object_unref (b);	
+
 	return 0;
 }
 

@@ -1662,6 +1662,8 @@ gda_sql_builder_get_sql_statement
 <SUBSECTION>
 gda_sql_builder_set_table
 gda_sql_builder_add_field
+gda_sql_builder_add_function
+gda_sql_builder_add_function_v
 <SUBSECTION>
 gda_sql_builder_ident
 gda_sql_builder_expr

@@ -104,6 +104,31 @@ gda_sql_builder_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expressi
 @value_id: 
 
 
+<!-- ##### FUNCTION gda_sql_builder_add_function ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@func_name: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_add_function_v ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@func_name: 
+@args: 
+@args_size: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_sql_builder_ident ##### -->
 <para>
 
