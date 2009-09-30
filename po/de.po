@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2009-09-24 18:45+0000\n"
-"PO-Revision-Date: 2009-09-29 22:22+0100\n"
+"POT-Creation-Date: 2009-09-30 19:01+0000\n"
+"PO-Revision-Date: 2009-09-30 23:29+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -138,7 +138,7 @@ msgstr "Browserprogramm konnte nicht ausgeführt werden"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:399
 #: ../libgda-ui/data-entries/plugins/common-pict.c:508
 #: ../libgda-ui/demos/main.c:772 ../libgda-ui/gdaui-data-widget-filter.c:160
-#: ../libgda-ui/gdaui-init.c:430 ../libgda-ui/gdaui-login.c:399
+#: ../libgda-ui/gdaui-init.c:434 ../libgda-ui/gdaui-login.c:399
 #: ../providers/jdbc/gda-jdbc-provider.c:379
 #: ../providers/jdbc/gda-jdbc-provider.c:1322
 #: ../providers/jdbc/gda-jdbc-provider.c:1351
@@ -152,9 +152,9 @@ msgstr "Browserprogramm konnte nicht ausgeführt werden"
 #: ../providers/postgres/gda-postgres-util.c:92
 #: ../tools/browser/auth-dialog.c:554 ../tools/browser/auth-dialog.c:557
 #: ../tools/browser/browser-connection.c:365
-#: ../tools/browser/browser-connection.c:473
-#: ../tools/browser/browser-connection.c:490
-#: ../tools/browser/browser-connection.c:615
+#: ../tools/browser/browser-connection.c:474
+#: ../tools/browser/browser-connection.c:491
+#: ../tools/browser/browser-connection.c:616
 #: ../tools/browser/login-dialog.c:232 ../tools/browser/main.c:92
 #: ../tools/browser/main.c:106 ../tools/browser/main.c:132
 #: ../tools/browser/query-exec/query-console.c:750
@@ -1543,7 +1543,7 @@ msgstr "Fehlender Spaltenname für Fremdschlüssel (für Tabelle »%s«)"
 msgid "Column '%s' not found in table '%s'"
 msgstr "Spalte »%s« wurde in Tabelle »%s« nicht gefunden"
 
-#: ../libgda/gda-meta-store.c:1872 ../libgda/gda-meta-struct.c:1023
+#: ../libgda/gda-meta-store.c:1872 ../libgda/gda-meta-struct.c:1024
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Fremdschlüsselspalte »%s« wurde in Tabelle »%s« nicht gefunden"
@@ -1686,13 +1686,13 @@ msgstr "GdaMetaStore-Objekt, aus dem die Information bezogen werden soll"
 msgid "Features to compute"
 msgstr "Zu berechnende Funktionsmerkmale"
 
-#: ../libgda/gda-meta-struct.c:495 ../libgda/gda-meta-struct.c:510
-#: ../libgda/gda-meta-struct.c:527
+#: ../libgda/gda-meta-struct.c:496 ../libgda/gda-meta-struct.c:511
+#: ../libgda/gda-meta-struct.c:528
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Objekt mit dem Namen »%s« konnte nicht gefunden werden"
 
-#: ../libgda/gda-meta-struct.c:576
+#: ../libgda/gda-meta-struct.c:577
 #, c-format
 msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
@@ -1701,22 +1701,22 @@ msgstr ""
 "Objekt %s.%s.%s existiert bereits in GdaMetaStruct und hat einen anderen "
 "Objetktyp"
 
-#: ../libgda/gda-meta-struct.c:602
+#: ../libgda/gda-meta-struct.c:603
 #, c-format
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "Ansicht %s.%s.%s nicht gefunden im Metastore-Objekt"
 
-#: ../libgda/gda-meta-struct.c:684
+#: ../libgda/gda-meta-struct.c:685
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "Tabelle %s.%s.%s nicht gefunden (oder fehlende Spalteninformation)"
 
-#: ../libgda/gda-meta-struct.c:810
+#: ../libgda/gda-meta-struct.c:811
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Interner GdaMetaStore-Fehler: Spalte %s nicht gefunden"
 
-#: ../libgda/gda-meta-struct.c:940
+#: ../libgda/gda-meta-struct.c:941
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1725,11 +1725,11 @@ msgstr ""
 "Zusammenhanglose Metadaten in Fremdschlüssel-Beschränkung für Tabelle %s.%s.%"
 "s in Bezug auf Tabelle %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2254
+#: ../libgda/gda-meta-struct.c:2256
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Fehlender Objektname in GdaMetaDbObject-Struktur"
 
-#: ../libgda/gda-meta-struct.c:2279
+#: ../libgda/gda-meta-struct.c:2281
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "Datenbankobjekt »%s« existiert bereits"
@@ -2179,38 +2179,38 @@ msgstr "GdaHolder muss eine Kennung haben"
 msgid "One or more values are invalid"
 msgstr "Ein oder mehrere Werte sind ungültig"
 
-#: ../libgda/gda-sql-builder.c:271 ../libgda/gda-sql-builder.c:969
-#: ../libgda/gda-sql-builder.c:1041
+#: ../libgda/gda-sql-builder.c:292 ../libgda/gda-sql-builder.c:990
+#: ../libgda/gda-sql-builder.c:1062
 #, c-format
 msgid "Unknown part ID %u"
 msgstr "Unbekannte Kennung %u des Abschnitts"
 
-#: ../libgda/gda-sql-builder.c:275
+#: ../libgda/gda-sql-builder.c:296
 msgid "Unknown part type"
 msgstr "Unbekannter Typ des Abschnitts"
 
-#: ../libgda/gda-sql-builder.c:319
+#: ../libgda/gda-sql-builder.c:340
 #, c-format
 msgid "SqlBuilder is empty"
 msgstr "SqlBuilder ist leer"
 
-#: ../libgda/gda-sql-builder.c:404 ../libgda/gda-sql-builder.c:461
-#: ../libgda/gda-sql-builder.c:509 ../libgda/gda-sql-builder.c:553
-#: ../libgda/gda-sql-builder.c:886 ../libgda/gda-sql-builder.c:948
-#: ../libgda/gda-sql-builder.c:1023 ../libgda/gda-sql-builder.c:1074
+#: ../libgda/gda-sql-builder.c:425 ../libgda/gda-sql-builder.c:482
+#: ../libgda/gda-sql-builder.c:530 ../libgda/gda-sql-builder.c:574
+#: ../libgda/gda-sql-builder.c:907 ../libgda/gda-sql-builder.c:969
+#: ../libgda/gda-sql-builder.c:1044 ../libgda/gda-sql-builder.c:1095
 msgid "Wrong statement type"
 msgstr "Ungültiger Anweisungstyp"
 
-#: ../libgda/gda-sql-builder.c:501
+#: ../libgda/gda-sql-builder.c:522
 msgid "Wrong field format"
 msgstr "Falsches Feldformat"
 
-#: ../libgda/gda-sql-builder.c:588 ../libgda/gda-sql-builder.c:593
+#: ../libgda/gda-sql-builder.c:609 ../libgda/gda-sql-builder.c:614
 #, c-format
 msgid "Unhandled data type '%s'"
 msgstr "Unbehandelter Datentyp »%s«"
 
-#: ../libgda/gda-sql-builder.c:607 ../libgda/gda-sql-builder.c:657
+#: ../libgda/gda-sql-builder.c:628 ../libgda/gda-sql-builder.c:678
 #, c-format
 msgid "Could not convert value to type '%s'"
 msgstr "Wert konnte nicht in »%s« umgewandelt werden"
@@ -3164,7 +3164,7 @@ msgstr "Unbekannt"
 #. FIXME: find a better label
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:158
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:155
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:186
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:167
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:1705 ../libgda-ui/gdaui-basic-form.c:1755
@@ -3175,7 +3175,7 @@ msgstr "Wert"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:159
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:156
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:188
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:184
 msgid "GValue to render"
@@ -3213,12 +3213,12 @@ msgstr "GList zu rendernder GValues, nicht beschränkt auf PK-Felder"
 msgid "The information and status changer can be activated"
 msgstr "Die Änderung von Information und Status kann aktiviert werden"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:407
-#: ../libgda-ui/data-entries/gdaui-entry-string.c:421
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:408
+#: ../libgda-ui/data-entries/gdaui-entry-string.c:385
 msgid "<string cut because too long>"
 msgstr "<Zeichenkette zu lang für Anzeige>"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:431
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:432
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:275
 #, c-format
 msgid ""
@@ -3228,7 +3228,7 @@ msgstr ""
 "Der angegebene Typ (%s) des Elements zur Dateneingabe unterscheidet sich vom "
 "tatsächlichen Typ (%s) zum Anzeigen"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:437
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:438
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:281
 #, c-format
 msgid ""
@@ -3239,14 +3239,20 @@ msgstr ""
 "Datentypen, zumindest %s und %s, was bedeutet, dass das Datenmodell unstimmig "
 "ist"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:484
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:485
 #: ../libgda-ui/data-entries/gdaui-entry-none.c:173
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:300
 msgid "<non-printable>"
 msgstr "<nicht anzeigbar>"
 
+#: ../libgda-ui/data-entries/gdaui-entry.c:201
+#: ../libgda-ui/data-entries/gdaui-entry.c:220
+#: ../libgda-ui/data-entries/gdaui-formatted-entry.c:163
+msgid "Invalid UTF-8 format!"
+msgstr "Ungültiges UTF-8-Format!"
+
 #. format tooltip
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:916
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:1018
 msgid "Format is hh:mm:ss"
 msgstr "Format ist hh:mm:ss"
 
@@ -3272,40 +3278,40 @@ msgstr "Wert wird als Vorgabe festgelegt"
 msgid "Value is invalid"
 msgstr "Wert ist ungültig"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-number.xml.in.h:1
+#: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:1
 msgid "A currency symbol"
 msgstr "Ein Währungssymbol"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-number.xml.in.h:2
+#: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:2
 msgid "Currency symbol"
 msgstr "Währungssymbol"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-number.xml.in.h:3
+#: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:3
 msgid "Decimals"
 msgstr "Dezimalstellen"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-number.xml.in.h:4
+#: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:4
 msgid "Number of decimals"
 msgstr "Anzahl der Dezimalstellen"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-number.xml.in.h:5
+#: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:5
 msgid "Use 1000s separators"
 msgstr "Tausender-Trenner verwenden"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-number.xml.in.h:6
+#: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:6
 msgid "Use thousands separator as specified by current locale"
 msgstr ""
 "Tausender-Trenner verwenden, wie in der aktuellen Spracheinstellung festgelegt"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-string.xml.in.h:1
+#: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:1
 msgid "Display only one line, or a complete text editor"
 msgstr "Nur eine Zeile oder einen vollständigen Texteditor anzeigen"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-string.xml.in.h:2
+#: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:2
 msgid "Hidden"
 msgstr "Verborgen"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-string.xml.in.h:3
+#: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:3
 msgid ""
 "If set to TRUE, characters are all displayed using a single 'invisible' "
 "character, suitable to enter passwords"
@@ -3313,41 +3319,39 @@ msgstr ""
 "Falls »wahr«, werden alle Zeichen als einzelnes »unsichtbares« Zeichen "
 "dargestellt, zur Eingabe von Passwörtern"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-string.xml.in.h:4
+#: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:4
 msgid "Maximum acceptable length of the text"
 msgstr "Maximal akzeptierte Länge des Texts"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-string.xml.in.h:5
+#: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:5
 msgid "Maximum length"
 msgstr "Maximallänge"
 
-#: ../libgda-ui/data-entries/gdaui-entry-string-string.xml.in.h:6
+#: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:6
 msgid "Multiline"
 msgstr "Mehrzeilig"
 
-#: ../libgda-ui/data-entries/gdaui-format-entry.c:385
+#: ../libgda-ui/data-entries/gdaui-formatted-entry.c:274
+#, c-format
+msgid "Unknown format character starting at %s"
+msgstr "Ungültiges Formatierungszeichen beginnend bei %s"
+
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:266
+#, c-format
+#| msgid "Type %s not mapped for value %d"
+msgid "Type %s is not numerical"
+msgstr "Typ %s ist nicht numerisch"
+
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:279
 #, c-format
 msgid "Decimal separator cannot be the '%c' character"
 msgstr "Als Dezimaltrenner kann nicht das Zeichen »%c« verwendet werden"
 
-#: ../libgda-ui/data-entries/gdaui-format-entry.c:395
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:288
 #, c-format
 msgid "Decimal thousands cannot be the '%c' character"
 msgstr ""
 "Als Tausender-Dezimaltrenner kann nicht das Zeichen »%c« verwendet werden"
-
-#: ../libgda-ui/data-entries/gdaui-format-entry.c:537
-msgid "Format and mask strings must have the same length, ignoring mask"
-msgstr ""
-"Formatierungs- und Maskierungszeichenketten müssen die gleiche Länge haben, "
-"Maskierung wird ignoriert"
-
-#: ../libgda-ui/data-entries/gdaui-format-entry.c:556
-msgid ""
-"Format and completion strings must have the same length, ignoring completion"
-msgstr ""
-"Formatierungs- und Vervollständigungszeichenketten müssen die gleiche Länge "
-"haben, Vervollständigung wird ignoriert"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:39
 #: ../libgda-ui/data-entries/plugins/common-pict.c:70
@@ -3499,15 +3503,15 @@ msgstr "Kopfzeilen im Cgrid sind sichtbar"
 msgid "Cgrid headers visible"
 msgstr "Cgrid-Kopfzeilen sichtbar"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:260
+#: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:257
 msgid "Mask settings"
 msgstr "Maskierungseinstellungen"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:266
+#: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:263
 msgid "Set to host mask"
 msgstr "Auf Hostmaske setzen"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:275
+#: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:272
 #, c-format
 msgid "Set to class %c network"
 msgstr "Auf Netzwerk der Klasse %c setzen"
@@ -3776,7 +3780,7 @@ msgstr ""
 "Widget namens »%s« konnte nicht gefunden werden, auf ursprügliches Layout wird "
 "zurückgesetzt"
 
-#: ../libgda-ui/gdaui-basic-form.c:2518
+#: ../libgda-ui/gdaui-basic-form.c:2519
 msgid "Values to be filled"
 msgstr "Werte müssen eingegeben werden"
 
@@ -3830,26 +3834,26 @@ msgstr "Filter setzen"
 msgid "Clear filter"
 msgstr "Filter leeren"
 
-#: ../libgda-ui/gdaui-init.c:61
+#: ../libgda-ui/gdaui-init.c:62
 msgid "Attempt to initialize an already initialized library"
 msgstr "Versuch der Neuinitialisierung einer bereits initialisierten Bibliothek"
 
-#: ../libgda-ui/gdaui-init.c:399
+#: ../libgda-ui/gdaui-init.c:403
 msgid "Could not open plugins directory, no plugin loaded."
 msgstr "Plugin-Ordner konnte nicht geöffnet werden, kein Plugin geladen."
 
-#: ../libgda-ui/gdaui-init.c:419 ../tools/browser/query-exec/query-result.c:245
+#: ../libgda-ui/gdaui-init.c:423 ../tools/browser/query-exec/query-result.c:245
 #: ../tools/web-server.c:2014
 #, c-format
 msgid "Error: %s"
 msgstr "Fehler: %s"
 
-#: ../libgda-ui/gdaui-init.c:426
+#: ../libgda-ui/gdaui-init.c:430
 #, c-format
 msgid "Loading file %s...\n"
 msgstr "Datei »%s« wird geladen …\n"
 
-#: ../libgda-ui/gdaui-init.c:429
+#: ../libgda-ui/gdaui-init.c:433
 #, c-format
 msgid "Plugins load warning: %s"
 msgstr "Warnung des Plugin-Laders: %s"
@@ -4197,7 +4201,7 @@ msgstr "Nicht NULL"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
-#: ../tools/browser/schema-browser/table-columns.c:193
+#: ../tools/browser/schema-browser/table-columns.c:196
 #: ../tools/command-exec.c:809
 msgid "Primary key"
 msgstr "Primärschlüssel"
@@ -5985,20 +5989,20 @@ msgid "c%u"
 msgstr "c%u"
 
 #: ../tools/browser/browser-connection.c:362
-#: ../tools/browser/browser-connection.c:487
+#: ../tools/browser/browser-connection.c:488
 msgid "Analysing database schema"
 msgstr "Datenbankschema wird analysiert"
 
 #: ../tools/browser/browser-connection.c:364
-#: ../tools/browser/browser-connection.c:472
-#: ../tools/browser/browser-connection.c:489
-#: ../tools/browser/browser-connection.c:614
+#: ../tools/browser/browser-connection.c:473
+#: ../tools/browser/browser-connection.c:490
+#: ../tools/browser/browser-connection.c:615
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Fehler beim Holen der Metadaten von der Verbindung: %s"
 
-#: ../tools/browser/browser-connection.c:470
-#: ../tools/browser/browser-connection.c:612
+#: ../tools/browser/browser-connection.c:471
+#: ../tools/browser/browser-connection.c:613
 msgid "Getting database schema information"
 msgstr "Informationen des Datenbankschemas werden ermittelt"
 
@@ -6161,47 +6165,38 @@ msgid "[DSN|connection string]..."
 msgstr "[DSN|Verbindungszeichenkette]..."
 
 #: ../tools/browser/mgr-favorites.c:219
-#| msgid "Empty statement"
 msgid "Multiple statements"
 msgstr "Mehrfache Anweisungen"
 
 #: ../tools/browser/mgr-favorites.c:223
-#| msgid "No SELECT statement specified"
 msgid "SELECT statement"
 msgstr "SELECT-Anweisung"
 
 #: ../tools/browser/mgr-favorites.c:226
-#| msgid "No INSERT statement provided"
 msgid "INSERT statement"
 msgstr "INSERT-Anweisung"
 
 #: ../tools/browser/mgr-favorites.c:229
-#| msgid "No UPDATE statement provided"
 msgid "UPDATE statement"
 msgstr "UPDATE-Anweisung"
 
 #: ../tools/browser/mgr-favorites.c:232
-#| msgid "No DELETE statement provided"
 msgid "DELETE statement"
 msgstr "DELETE-Anweisung"
 
 #: ../tools/browser/mgr-favorites.c:235
-#| msgid "No SELECT statement specified"
 msgid "COMPOUND SELECT statement"
 msgstr "COMPOUND SELECT-Anweisung"
 
 #: ../tools/browser/mgr-favorites.c:238
-#| msgid "Empty statement"
 msgid "BEGIN statement"
 msgstr "BEGIN-Anweisung"
 
 #: ../tools/browser/mgr-favorites.c:241
-#| msgid "Empty statement"
 msgid "ROLLBACK statement"
 msgstr "ROLLBACK-Anweisung"
 
 #: ../tools/browser/mgr-favorites.c:244
-#| msgid "Empty statement"
 msgid "COMMIT statement"
 msgstr "COMMIT-Anweisung"
 
@@ -6218,7 +6213,6 @@ msgid "DELETE SAVEPOINT statement"
 msgstr "DELETE SAVEPOINT-Anweisung"
 
 #: ../tools/browser/mgr-favorites.c:256
-#| msgid "Wrong statement type"
 msgid "Unknown statement"
 msgstr "Unbekannte Anweisung"
 
@@ -6241,7 +6235,6 @@ msgstr ""
 "Festlegen ziehen"
 
 #: ../tools/browser/support.c:203
-#| msgid "None"
 msgid "Note:"
 msgstr "Achtung:"
 
@@ -6258,15 +6251,15 @@ msgstr "Reiter schließen"
 msgid "Type: %s"
 msgstr "Typ: %s"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:328
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:340
 msgid "Remove"
 msgstr "Entfernen"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:332
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:344
 msgid "Add referenced tables"
 msgstr "Referenzierte Tabellen hinzufügen"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:493
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:505
 msgid "Add table"
 msgstr "Tabelle hinzufügen"
 
@@ -6570,7 +6563,6 @@ msgstr ""
 "%s"
 
 #: ../tools/browser/query-exec/query-console.c:986
-#| msgid "Statement:"
 msgid "Statement executed"
 msgstr "Anweisung wurde ausgeführt"
 
@@ -6821,19 +6813,19 @@ msgstr "Fehlendes Tabellenattribut im Inhalt des Favoriten"
 msgid "Could not load diagram"
 msgstr "Diagramm konnte nicht geladen werden"
 
-#: ../tools/browser/schema-browser/table-columns.c:230
+#: ../tools/browser/schema-browser/table-columns.c:234
 msgid "Foreign key on "
 msgstr "Fremdschlüssel auf"
 
-#: ../tools/browser/schema-browser/table-columns.c:302
+#: ../tools/browser/schema-browser/table-columns.c:306
 msgid "Unique constraint"
 msgstr "Eindeutige Beschränkung"
 
-#: ../tools/browser/schema-browser/table-columns.c:392
+#: ../tools/browser/schema-browser/table-columns.c:396
 msgid "Column Name"
 msgstr "Spaltenname"
 
-#: ../tools/browser/schema-browser/table-columns.c:441
+#: ../tools/browser/schema-browser/table-columns.c:445
 msgid "Constraints and integrity rules"
 msgstr "Beschränkungen und Integritätsregeln"
 
@@ -7788,6 +7780,18 @@ msgstr "Objekte"
 #: ../tools/web-server.c:1879
 msgid "Triggers"
 msgstr "Auslöser"
+
+#~ msgid "Format and mask strings must have the same length, ignoring mask"
+#~ msgstr ""
+#~ "Formatierungs- und Maskierungszeichenketten müssen die gleiche Länge "
+#~ "haben, Maskierung wird ignoriert"
+
+#~ msgid ""
+#~ "Format and completion strings must have the same length, ignoring "
+#~ "completion"
+#~ msgstr ""
+#~ "Formatierungs- und Vervollständigungszeichenketten müssen die gleiche "
+#~ "Länge haben, Vervollständigung wird ignoriert"
 
 #~| msgid ""
 #~| "Enter SQL code to execute\n"
