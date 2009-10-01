@@ -1519,7 +1519,6 @@ libgda-report/RML/trml2pdf/Makefile
 libgda-xslt/Makefile
 tools/Makefile
 tools/gda-sql-4.0.1:tools/gda-sql.1.in
-tools/binreloc/Makefile
 testing/Makefile
 tests/Makefile
 tests/parser/Makefile

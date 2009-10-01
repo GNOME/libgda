@@ -1,5 +1,3 @@
-SUBDIRS = binreloc
-
 bin_PROGRAMS = \
 	gda-list-config-4.0 \
 	gda-sql-4.0 \
@@ -38,7 +36,6 @@ gda_sql_4_0_SOURCES = \
 
 gda_sql_4_0_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
-	binreloc/libgdasql_binreloc-4.0.la \
         $(LIBGDA_LIBS) \
 	$(READLINE_LIB) \
         $(HISTORY_LIB)
