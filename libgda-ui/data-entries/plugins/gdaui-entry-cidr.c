@@ -607,10 +607,11 @@ split_values_get (GdauiEntryCidr *mgcidr)
 	gchar **tmp_array;
 	gchar *str;
 
-	values = g_new0 (SplitValues, 1);
 	str = gdaui_entry_get_text (GDAUI_ENTRY (mgcidr->priv->entry));
 	if (!str)
 		return NULL;
+
+	values = g_new0 (SplitValues, 1);
 
 	tmp_array = g_strsplit (str, "/", -1);
 	if (!tmp_array[0] || !tmp_array[1])

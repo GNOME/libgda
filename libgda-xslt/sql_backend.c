@@ -434,6 +434,7 @@ _utility_data_model_to_nodeset (GdaDataModel * model,
 					for (c = 0; c < rnb_cols; c++)
 						g_free (col_ids[c]);
 					g_free (col_ids);
+					g_free (rcols);
 					return -1;
 				}
 				if (gda_value_is_null ((GValue *) value))
@@ -451,8 +452,10 @@ _utility_data_model_to_nodeset (GdaDataModel * model,
 	for (c = 0; c < rnb_cols; c++)
 		g_free (col_ids[c]);
 	g_free (col_ids);
+	g_free (rcols);
 
 	*nodeset = (xmlXPathObjectPtr) xmlXPathNewNodeSet (mainnode);
+
 	return 0;
 }
 

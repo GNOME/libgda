@@ -485,6 +485,8 @@ load_xml_data_layout_button (GdauiBasicForm  *form,
 			// load_data_layout_button_script (table, child);
 		}
 	}
+
+	g_free (script);
 }
 
 static void

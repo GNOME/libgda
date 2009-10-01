@@ -932,6 +932,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 		}
 		else {
 			node = node->next;
+			g_free (path_name);
 			continue;
 		}
 		
