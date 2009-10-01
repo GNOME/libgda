@@ -12,6 +12,7 @@
 <!ENTITY BrowserPage SYSTEM "xml/browser-page.xml">
 <!ENTITY BrowserPerspective SYSTEM "xml/browser-perspective.xml">
 <!ENTITY CCGrayBar SYSTEM "xml/cc-gray-bar.xml">
+<!ENTITY PopupContainer SYSTEM "xml/popup-container.xml">
 ]>
 
 <book id="index">
@@ -138,6 +139,7 @@
 	which can be used in any extension.
       </para>
       &CCGrayBar;
+      &PopupContainer;
     </chapter>
   </part>
 

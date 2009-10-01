@@ -34,6 +34,9 @@
 #endif
 #include "query-editor.h"
 #include <binreloc/gda-binreloc.h>
+#include "../browser-connection.h"
+#include "../browser-window.h"
+#include "../common/popup-container.h"
 
 #define QUERY_EDITOR_LANGUAGE_SQL "gda-sql"
 #define COLOR_ALTER_FACTOR 1.8
@@ -82,6 +85,12 @@ struct _QueryEditorPrivate {
 			   */
 	QueryEditorHistoryBatch *insert_into_batch; /* hold ref here */
 	HistItemData *hist_focus; /* ref held here */
+
+	/* completion popup */
+	GtkWidget *completion_popup;
+	GtkTreeView *completion_treeview;
+	GtkCellRenderer *completion_renderer;
+	GtkWidget *completion_sw;
 };
 
 static void query_editor_class_init (QueryEditorClass *klass);
@@ -216,6 +225,209 @@ text_buffer_changed_cb (GtkTextBuffer *buffer, QueryEditor *editor)
 {
 	if (editor->priv->mode != QUERY_EDITOR_HISTORY)
 		g_signal_emit (editor, query_editor_signals[CHANGED], 0);
+}
+
+static void
+popup_container_position_func (PopupContainer *cont, gint *out_x, gint *out_y)
+{
+	QueryEditor *editor;
+	GdkWindow *wind;
+        gint x, y, ex, ey;
+	GtkTextBuffer *buffer;
+	GtkTextIter iter;
+	GdkRectangle rect;
+	GtkTextView *textview;
+
+        editor = g_object_get_data (G_OBJECT (cont), "editor");
+	textview = GTK_TEXT_VIEW (editor->priv->text);
+	buffer = gtk_text_view_get_buffer (textview);
+	gtk_text_buffer_get_iter_at_mark (buffer, &iter, gtk_text_buffer_get_insert (buffer));
+	gtk_text_view_get_iter_location (textview, &iter, &rect);
+	gtk_text_view_buffer_to_window_coords (textview, GTK_TEXT_WINDOW_WIDGET,
+					       rect.x, rect.y, &ex, &ey);
+
+	wind = gtk_text_view_get_window (textview, GTK_TEXT_WINDOW_WIDGET);
+        gdk_window_get_origin (wind, &x, &y);	
+
+        x += ex + rect.width;
+        y += ey + rect.height;
+
+        if (x < 0)
+                x = 0;
+
+        if (y < 0)
+                y = 0;
+
+        *out_x = x;
+        *out_y = y;
+}
+
+static gchar *
+get_string_to_complete (QueryEditor *editor, gchar **out_start_pos)
+{
+	GtkTextBuffer *buffer;
+	GtkTextIter start, end;
+	GtkTextMark *mark;
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
+	mark = gtk_text_buffer_get_insert (buffer);
+	gtk_text_buffer_get_iter_at_mark (buffer, &end, mark);
+	gtk_text_buffer_get_start_iter (buffer, &start);
+
+	gchar *str, *ptr;
+			
+	str = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+	if (!*str) {
+		g_free (str);
+		*out_start_pos = NULL;
+		return NULL;
+	}
+
+	for (ptr = str + strlen (str) - 1; ptr > str; ptr--) {
+		if (! g_ascii_isalnum (*ptr) &&
+		    (*ptr != '_') && (*ptr != '.')) {
+			ptr++;
+			break;
+		}
+	}
+	if ((ptr == str) &&
+	    ! g_ascii_isalnum (*ptr) &&
+	    (*ptr != '_'))
+		ptr++;
+	/*g_print ("completing [%s]\n", ptr);*/
+
+	*out_start_pos = ptr;
+	return str;
+}
+
+static void
+completion_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
+			     GtkTreeViewColumn *column, QueryEditor *editor)
+{
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+
+	gtk_widget_hide (editor->priv->completion_popup);
+	model = gtk_tree_view_get_model (editor->priv->completion_treeview);
+	if (gtk_tree_model_get_iter (model, &iter, path)) {
+		gchar *compl;
+		gchar *str, *ptr;
+
+		str = get_string_to_complete (editor, &ptr);
+		if (!str)
+			return;
+
+		gtk_tree_model_get (model, &iter, 0, &compl, -1);
+
+		GtkTextBuffer *buffer;
+		GtkTextIter start, end;
+
+		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
+		gtk_text_buffer_get_iter_at_mark (buffer, &end, gtk_text_buffer_get_insert (buffer));
+		start = end;
+		if (gtk_text_iter_backward_chars (&start, strlen (ptr))) {
+			gtk_text_buffer_delete (buffer, &start, &end);
+			gtk_text_buffer_insert (buffer, &end, compl, -1);
+			gtk_text_buffer_insert_at_cursor (buffer, " ", 1);
+		}
+
+		g_free (str);
+		g_free (compl);
+	}
+}
+
+static void
+display_completions (QueryEditor *editor)
+{
+	gchar *str, *ptr;
+
+	str = get_string_to_complete (editor, &ptr);
+	if (!str)
+		return;
+
+	BrowserConnection *bcnc;
+	gchar **compl;
+
+	bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) editor));
+	compl = browser_connection_get_completions (bcnc, str, ptr - str, strlen (str));
+	g_free (str);
+
+	if (compl) {
+		GtkListStore *model;
+		if (! editor->priv->completion_popup) {
+			GtkWidget *treeview;
+			GtkCellRenderer *renderer;
+			GtkTreeViewColumn *column;
+			GtkWidget *popup, *sw;
+			
+			model = gtk_list_store_new (1, G_TYPE_STRING);
+			treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (model));
+			gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
+			gtk_tree_view_set_grid_lines (GTK_TREE_VIEW (treeview), GTK_TREE_VIEW_GRID_LINES_NONE);
+			gtk_tree_selection_set_mode (gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview)),
+						     GTK_SELECTION_BROWSE);
+			g_object_unref (model);
+			
+			renderer = gtk_cell_renderer_text_new ();
+			g_object_set (G_OBJECT (renderer), "scale", 0.8,
+				      "background", "#ffff82", NULL);
+			column = gtk_tree_view_column_new_with_attributes ("", renderer,
+									   "text", 0, NULL);
+			gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+			
+			sw = gtk_scrolled_window_new (NULL, NULL);
+			gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw),
+							     GTK_SHADOW_NONE);
+			gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+							GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+			gtk_container_add (GTK_CONTAINER (sw), treeview);
+			
+			popup = popup_container_new_with_func (popup_container_position_func);
+			g_object_set_data ((GObject*) popup, "editor", editor);
+			gtk_container_set_border_width (GTK_CONTAINER (popup), 0);
+			gtk_container_add (GTK_CONTAINER (popup), sw);
+			editor->priv->completion_popup = popup;
+			editor->priv->completion_treeview = GTK_TREE_VIEW (treeview);
+			editor->priv->completion_renderer = renderer;
+			editor->priv->completion_sw = sw;
+
+			g_signal_connect (treeview, "row-activated",
+					  G_CALLBACK (completion_row_activated_cb), editor);
+
+		}
+		else {
+			model = GTK_LIST_STORE (gtk_tree_view_get_model (editor->priv->completion_treeview));
+			gtk_list_store_clear (model);
+		}
+		
+		/* fill in the model */
+		GtkTreeIter iter;
+		gint w, width = 0, h, height = 0;
+		gint i;
+		
+		for (i = 0; ; i++) {
+			if (! compl[i])
+				break;
+			/*g_print ("==> [%s]\n", compl[i]);*/
+			gtk_list_store_append (model, &iter);
+			gtk_list_store_set (model, &iter, 0, compl[i], -1);
+			if (i == 0)
+				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (editor->priv->completion_treeview),
+								&iter);
+
+			g_object_set ((GObject*) editor->priv->completion_renderer, "text", compl[i], NULL);
+			gtk_cell_renderer_get_size (editor->priv->completion_renderer,
+						    (GtkWidget*) editor->priv->completion_treeview,
+						    NULL, NULL, NULL, &w, &h);
+			width = MAX (width, w);
+			height += h + 2;
+		}
+		g_strfreev (compl);
+		
+		gtk_widget_set_size_request (editor->priv->completion_sw,
+					     MIN (width + 30, 400), MIN (height, 400));
+		gtk_widget_show_all (editor->priv->completion_popup);
+	}
 }
 
 /*
@@ -353,6 +565,12 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 			}
 			return TRUE;
 		}
+		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
+			 (evkey->state & GDK_CONTROL_MASK) &&
+			 (evkey->keyval == GDK_space)) {
+			display_completions (editor);
+			return TRUE;
+		}
 	}
 	else
 		return FALSE;
@@ -449,6 +667,8 @@ query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
 	editor->priv->states = NULL;
 	editor->priv->current_state = G_MAXINT;
 	editor->priv->current_state_text = NULL;
+
+	editor->priv->completion_popup = NULL;
 
 	/* set up widgets */
 	editor->priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -579,6 +799,8 @@ query_editor_finalize (GObject *object)
 		g_array_free (editor->priv->states, TRUE);
 	}
 	g_free (editor->priv->current_state_text);
+	if (editor->priv->completion_popup)
+		gtk_widget_destroy (editor->priv->completion_popup);
 
 	g_free (editor->priv);
 	editor->priv = NULL;

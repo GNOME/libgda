@@ -59,8 +59,6 @@ An opened connection
 
 </para>
 
-@:
-
 @browserconnection: the object which received the signal.
 
 <!-- ##### FUNCTION browser_connection_new ##### -->
@@ -141,6 +139,18 @@ An opened connection
 </para>
 
 @bcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_get_completions ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@sql: 
+@start: 
+@end: 
 @Returns: 
 
 

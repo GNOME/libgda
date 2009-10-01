@@ -736,6 +736,26 @@ browser_connection_get_favorites (BrowserConnection *bcnc)
 }
 
 /**
+ * browser_connection_get_completions
+ * @bcnc: a #BrowserConnection
+ * @sql:
+ * @start:
+ * @end:
+ *
+ * See gda_completion_list_get()
+ *
+ * Returns: a new array of strings, or NULL (use g_strfreev() to free the returned array)
+ */
+gchar **
+browser_connection_get_completions (BrowserConnection *bcnc, const gchar *sql,
+				    gint start, gint end)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	return gda_completion_list_get (bcnc->priv->cnc, sql, start, end);
+}
+
+
+/**
  * browser_connection_create_parser
  * @bcnc: a #BrowserConnection
  *

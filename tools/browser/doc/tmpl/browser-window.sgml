@@ -57,6 +57,7 @@ Top level browser window
 @bwin: 
 @context: 
 @text: 
+@auto_clear: 
 @Returns: 
 
 

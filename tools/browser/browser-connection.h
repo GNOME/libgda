@@ -68,6 +68,9 @@ const gchar        *browser_connection_get_dictionary_file    (BrowserConnection
 
 BrowserFavorites   *browser_connection_get_favorites          (BrowserConnection *bcnc);
 
+gchar             **browser_connection_get_completions        (BrowserConnection *bcnc, const gchar *sql,
+							       gint start, gint end);
+
 /*
  * statements's execution
  */
