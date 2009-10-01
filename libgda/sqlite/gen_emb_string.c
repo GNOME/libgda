@@ -117,6 +117,7 @@ main (int argc,char** argv)
 		for (i = buffer_index; i < buffer_index + n_read + added; i++) {
 			if (buffer_index + n_read + added + 2 >= maxlen) {
 				fprintf (stderr, "Max buffer size reached\nIncrease MAXSIZE constant and re-run\n");
+				fclose (file);
 				return 1;
 			}
 			if (buffer[i] == '"') {

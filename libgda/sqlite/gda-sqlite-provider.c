@@ -549,7 +549,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 				if (g_str_has_suffix (str, FILE_EXTENSION)) {
 					gchar *ptr;
 					
-					dup = strdup (str);
+					dup = g_strdup (str);
 					dup [len-elen] = 0;
 					for (ptr = dup + (len - elen - 1); (ptr >= dup) && (*ptr != G_DIR_SEPARATOR); ptr--);
 					dbname = ptr;

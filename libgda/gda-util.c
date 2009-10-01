@@ -1493,7 +1493,7 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 						
 						g_object_unref (m2);
 					}
-					free (str);
+					g_free (str);
 				}
 			}
 		}
