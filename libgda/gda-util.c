@@ -1310,6 +1310,12 @@ prepare_sql_identifier_for_compare (gchar *str)
 	}
 }
 
+static gint
+cmp_func (gconstpointer a, gconstpointer b)
+{
+	return g_strcmp0 (*((gchar**) a), *((gchar**) b));
+}
+
 /**
  * gda_completion_list_get
  * @cnc: a #GdaConnection object
@@ -1333,6 +1339,8 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 	if (!cnc) 
 		return NULL;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (!sql || !(*sql))
+		return NULL;
 	if (end < start)
 		return NULL;
 
@@ -1519,6 +1527,23 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 	g_free (text);
 	if (compl) {
 		if (compl->len >= 1) {
+			/* sort */
+			gint i;
+			g_array_sort (compl, cmp_func);
+
+			/* remove duplicates if any */
+			for (i = 1; i < compl->len; ) {
+				gchar *current, *before;
+				current = g_array_index (compl, gchar*, i);
+				before = g_array_index (compl, gchar*, i - 1);
+				if (!strcmp (current, before)) {
+					g_free (current);
+					g_array_remove_index (compl, i);
+				}
+				else
+					i++;
+			}
+
 			gchar **ptr;
 			ptr = (gchar**) compl->data;
 			g_array_free (compl, FALSE);
