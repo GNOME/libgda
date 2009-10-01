@@ -70,14 +70,14 @@ GdaStatement     *gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError 
 GdaSqlStatement  *gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder, gboolean copy_it);
 
 /* Expression API */
-guint              gda_sql_builder_ident (GdaSqlBuilder *builder, guint id, const gchar *string);
-guint              gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GType type, ...);
-guint              gda_sql_builder_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GValue* value);
-guint              gda_sql_builder_param (GdaSqlBuilder *builder, guint id, const gchar *param_name, GType type, gboolean nullok);
+guint              gda_sql_builder_add_id (GdaSqlBuilder *builder, guint id, const gchar *string);
+guint              gda_sql_builder_add_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GType type, ...);
+guint              gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GValue* value);
+guint              gda_sql_builder_add_param (GdaSqlBuilder *builder, guint id, const gchar *param_name, GType type, gboolean nullok);
 
-guint              gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
+guint              gda_sql_builder_add_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
 					 guint op1, guint op2, guint op3);
-guint              gda_sql_builder_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
+guint              gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
 					   const guint *op_ids, gint op_ids_size);
 guint             gda_sql_builder_add_function (GdaSqlBuilder *builder, guint id, const gchar *func_name, ...);
 guint             gda_sql_builder_add_function_v (GdaSqlBuilder *builder, guint id, const gchar *func_name,

@@ -577,7 +577,7 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_i
 }
 
 /**
- * gda_sql_builder_expr_value
+ * gda_sql_builder_add_expr_value
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @dh: a #GdaDataHandler to use, or %NULL
@@ -593,7 +593,7 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_i
  * Since: 4.2
  */
 guint
-gda_sql_builder_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GValue *value)
+gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GValue *value)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -631,7 +631,7 @@ gda_sql_builder_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh
 }
 
 /**
- * gda_sql_builder_expr
+ * gda_sql_builder_add_expr
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @dh: a #GdaDataHandler to use, or %NULL
@@ -645,8 +645,8 @@ gda_sql_builder_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh
  *
  * For example:
  * <programlisting>
- * gda_sql_builder_expr (b, 0, G_TYPE_INT, 15);
- * gda_sql_builder_expr (b, 5, G_TYPE_STRING, "joe")
+ * gda_sql_builder_add_expr (b, 0, G_TYPE_INT, 15);
+ * gda_sql_builder_add_expr (b, 5, G_TYPE_STRING, "joe")
  * </programlisting>
  *
  * will be rendered as SQL as:
@@ -660,7 +660,7 @@ gda_sql_builder_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh
  * Since: 4.2
  */
 guint
-gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GType type, ...)
+gda_sql_builder_add_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GType type, ...)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -680,7 +680,7 @@ gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GTyp
 
 	if (!v)
 		return 0;
-	retval = gda_sql_builder_expr_value (builder, id, dh, v);
+	retval = gda_sql_builder_add_expr_value (builder, id, dh, v);
 
 	gda_value_free (v);
 
@@ -688,7 +688,7 @@ gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GTyp
 }
 
 /**
- * gda_sql_builder_ident
+ * gda_sql_builder_add_id
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @string: a string
@@ -698,7 +698,7 @@ gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GTyp
  * The new expression will contain the @string literal.
  * For example:
  * <programlisting>
- * gda_sql_builder_expr_liretal (b, 0, "name")
+ * gda_sql_builder_add_expr_liretal (b, 0, "name")
  * </programlisting>
  *
  * will be rendered as SQL as:
@@ -711,7 +711,7 @@ gda_sql_builder_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GTyp
  * Since: 4.2
  */
 guint
-gda_sql_builder_ident (GdaSqlBuilder *builder, guint id, const gchar *string)
+gda_sql_builder_add_id (GdaSqlBuilder *builder, guint id, const gchar *string)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -728,7 +728,7 @@ gda_sql_builder_ident (GdaSqlBuilder *builder, guint id, const gchar *string)
 }
 
 /**
- * gda_sql_builder_param
+ * gda_sql_builder_add_param
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @param_name: parameter's name
@@ -740,7 +740,7 @@ gda_sql_builder_ident (GdaSqlBuilder *builder, guint id, const gchar *string)
  * The new expression will contain the @string literal.
  * For example:
  * <programlisting>
- * gda_sql_builder_param (b, 0, "age", G_TYPE_INT, FALSE)
+ * gda_sql_builder_add_param (b, 0, "age", G_TYPE_INT, FALSE)
  * </programlisting>
  *
  * will be rendered as SQL as:
@@ -754,7 +754,7 @@ gda_sql_builder_ident (GdaSqlBuilder *builder, guint id, const gchar *string)
  * Since: 4.2
  */
 guint
-gda_sql_builder_param (GdaSqlBuilder *builder, guint id, const gchar *param_name, GType type, gboolean nullok)
+gda_sql_builder_add_param (GdaSqlBuilder *builder, guint id, const gchar *param_name, GType type, gboolean nullok)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -772,7 +772,7 @@ gda_sql_builder_param (GdaSqlBuilder *builder, guint id, const gchar *param_name
 }
 
 /**
- * gda_sql_builder_cond
+ * gda_sql_builder_add_cond
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @op: type of condition
@@ -787,7 +787,7 @@ gda_sql_builder_param (GdaSqlBuilder *builder, guint id, const gchar *param_name
  * Since: 4.2
  */
 guint
-gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, guint op1, guint op2, guint op3)
+gda_sql_builder_add_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, guint op1, guint op2, guint op3)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -817,7 +817,7 @@ gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, g
 }
 
 /**
- * gda_sql_builder_cond_v
+ * gda_sql_builder_add_cond_v
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @op: type of condition
@@ -835,7 +835,7 @@ gda_sql_builder_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op, g
  * Since: 4.2
  */
 guint
-gda_sql_builder_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
+gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
 			const guint *op_ids, gint op_ids_size)
 {
 	gint i;
