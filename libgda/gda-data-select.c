@@ -1690,9 +1690,20 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 					      "%s", _("Unable to retreive data after modifications"));
 				return NULL;
 			}
-			tmpmodel = gda_connection_statement_execute_select (imodel->priv->cnc, 
-									    dstmt->select,
-									    dstmt->params, NULL);
+			GType *types = NULL;
+			if (imodel->prep_stmt && imodel->prep_stmt->types) {
+				types = g_new (GType, imodel->prep_stmt->ncols + 1);
+				memcpy (types, imodel->prep_stmt->types, sizeof (GType) * imodel->prep_stmt->ncols);
+				types [imodel->prep_stmt->ncols] = G_TYPE_NONE;
+			}
+			tmpmodel = gda_connection_statement_execute_select_full (imodel->priv->cnc,
+										 dstmt->select, 
+										 dstmt->params, 
+										 GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+										 types, 
+										 NULL);
+			g_free (types);
+
 			if (!tmpmodel) {
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 					      "%s", _("Unable to retreive data after modifications, no further modification will be allowed"));
@@ -2727,13 +2738,7 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
 		str = g_strdup_printf ("+%d", i);
 		holder = gda_set_get_holder (imodel->priv->modif_internals->modif_set, str);
 		g_free (str);
-		if (! holder) {
-			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-				     _("Column %d can't be modified"), i);
-			bvector_free (bv);
-			return FALSE;
-		}
-		if (! gda_holder_set_value (holder, (GValue *) list->data, error)) {
+		if (holder && ! gda_holder_set_value (holder, (GValue *) list->data, error)) {
 			bvector_free (bv);
 			return FALSE;
 		}
