@@ -1828,6 +1828,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					(ub4) 0,
 					(ub4 *) 0,
 					(ub4) OCI_DEFAULT);
+		_gda_oracle_value_free (ora_value);
 		if ((event = gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
 						      _("Could not bind the Oracle statement parameter"))))
 			break;

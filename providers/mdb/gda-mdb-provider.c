@@ -254,7 +254,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 			if (g_str_has_suffix (str, FILE_EXTENSION)) {
                                 gchar *ptr;
 
-                                dup = strdup (str);
+                                dup = g_strdup (str);
                                 dup [len-elen] = 0;
                                 for (ptr = dup + (len - elen - 1); (ptr >= dup) && (*ptr != G_DIR_SEPARATOR); ptr--);
                                 dbname = ptr;
@@ -512,9 +512,9 @@ table_create_model_func (LocalSpec *spec)
         /* free memory */
         g_free (coltypes);
         for (c = 0; c < mdb_table->num_cols; c++)
-                g_free (bound_values [c]);
-	free (bound_values);
-	free (bound_len);
+                free (bound_values [c]);
+	g_free (bound_values);
+	g_free (bound_len);
 
 	g_object_set (G_OBJECT (model), "read-only", TRUE, NULL);
 	return model;

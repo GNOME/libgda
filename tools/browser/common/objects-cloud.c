@@ -177,6 +177,8 @@ update_display (ObjectsCloud *cloud)
 	mstruct = cloud->priv->mstruct;
 	if (!mstruct) {
 		/* nothing to display */
+		g_object_unref (sd->mark);
+		g_free (sd);
 		return;
 	}
 	dbo_list = g_slist_reverse (gda_meta_struct_get_all_db_objects (mstruct));

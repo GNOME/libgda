@@ -338,7 +338,6 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 			tr = xmlNewChild (node, NULL, "tr", "");
                         for (c = 0 ; c < cols; c++) {
                                 GValue *value;
-                                gchar *str;
 
                                 value = (GValue *) gda_data_model_get_value_at (model, c, r, NULL);
 				if (!value) {
@@ -354,6 +353,7 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 					xmlSetProp(p, "class", (xmlChar*)"null");
 				}
 				else {
+					gchar *str;
 					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
 					else
