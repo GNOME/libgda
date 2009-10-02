@@ -41,7 +41,7 @@ G_BEGIN_DECLS
 			       "   <small><b>CTRL - l</b></small> to clear the editor\n" \
 			       "   <small><b>CTRL - ENTER</b></small> to execute SQL\n" \
 			       "   <small><b>CTRL - Up</b></small> to move to previous executed SQL in history\n" \
-			       "   <small><b>CTRL - Down</b></small> to move to next executed SQL in history" \
+			       "   <small><b>CTRL - Down</b></small> to move to next executed SQL in history\n" \
 			       "   <small><b>CTRL - SPACE</b></small> to obtain a completion list")
 
 typedef struct _QueryEditor        QueryEditor;

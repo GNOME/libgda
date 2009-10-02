@@ -926,6 +926,9 @@ gda_sql_builder_select_add_target (GdaSqlBuilder *builder, guint id, guint table
 	((GdaSqlSelectTarget*) btarget)->expr = (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (btarget));
 	if (alias) 
 		((GdaSqlSelectTarget*) btarget)->as = g_strdup (alias);
+	if (g_value_get_string (((GdaSqlSelectTarget*) btarget)->expr->value))
+		((GdaSqlSelectTarget*) btarget)->table_name = 
+			g_value_dup_string (((GdaSqlSelectTarget*) btarget)->expr->value);
 
 	/* add target to sel->from. NOTE: @btarget is NOT added to the "repository" or GdaSqlAnyPart parts
 	* like others */

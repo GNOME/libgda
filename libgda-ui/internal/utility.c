@@ -387,35 +387,32 @@ static GtkWidget *
 create_data_error_dialog (GdauiDataWidget *form, gboolean with_question, gboolean can_discard, GError *filled_error)
 {
 	GtkWidget *dlg;
-	gchar *msg;
+	const gchar *msg1 = NULL, *msg2 = NULL;
 
 	if (can_discard) {
+		msg1 = _("Current modified data is invalid");
 		if (with_question)
-			msg = g_strdup_printf ("<b>%s:</b>\n\n%s",
-					       _("Current modified data is invalid"),
-					       _("You may now choose to correct it, or to discard\n"
-						 "the modifications.\n\n"
-						 "What do you wan to do?"));
+			msg2 =_("You may now choose to correct it, or to discard\n"
+				"the modifications.\n\n"
+				"What do you wan to do?");
 		else
-			msg = g_strdup_printf ("<b>%s:</b>\n\n%s",
-					       _("Current modified data is invalid"),
-					       _("please correct it and try again, or discard\n"
-						 "the modifications."));
+			msg2 = _("please correct it and try again, or discard\n"
+				 "the modifications.");
 	}
 	else {
 		if (with_question)
 			g_warning ("Incoherence problem...\n");
-		else
-			msg = g_strdup_printf ("<b>%s:</b>\n\n%s",
-					       _("Part of the current modified data was invalid"),
-					       _("As no transaction was used, only a part of the valid data\n"
-						 "has been written, and the remaining modification have been discarded."));
+		else {
+			msg1 = _("Part of the current modified data was invalid");
+			msg2 = _("As no transaction was used, only a part of the valid data\n"
+				 "has been written, and the remaining modification have been discarded.");
+		}
 	}
-	dlg = gtk_message_dialog_new_with_markup ((GtkWindow *) gtk_widget_get_toplevel (GTK_WIDGET (form)), GTK_DIALOG_MODAL,
+	dlg = gtk_message_dialog_new_with_markup ((GtkWindow *) gtk_widget_get_toplevel (GTK_WIDGET (form)),
+						  GTK_DIALOG_MODAL,
 						  GTK_MESSAGE_ERROR, 
 						  with_question ? GTK_BUTTONS_NONE : GTK_BUTTONS_CLOSE,
-						  "%s", msg);
-	g_free (msg);
+						  "<b>%s:</b>\n\n%s", msg1, msg2);
 
 	if (filled_error && filled_error->message) {
 		GtkWidget *exp, *sw, *view;

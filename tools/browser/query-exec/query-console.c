@@ -649,7 +649,8 @@ compute_params (QueryConsole *tconsole)
 				}
 			}
 		}
-
+		if (show_variables && gda_set_is_valid (tconsole->priv->params, NULL))
+			show_variables = FALSE;
 		if (show_variables && !gtk_toggle_button_get_active (tconsole->priv->params_toggle))
 			gtk_toggle_button_set_active (tconsole->priv->params_toggle, TRUE);
 	}
