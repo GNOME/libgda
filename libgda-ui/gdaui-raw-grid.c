@@ -31,18 +31,18 @@
 #include "data-entries/gdaui-data-cell-renderer-combo.h"
 #include "data-entries/gdaui-data-cell-renderer-info.h"
 
-static void gdaui_raw_grid_class_init (GdauiRawGridClass * class);
+static void gdaui_raw_grid_class_init (GdauiRawGridClass *klass);
 static void gdaui_raw_grid_init (GdauiRawGrid *wid);
 static void gdaui_raw_grid_dispose (GObject *object);
 
 static void gdaui_raw_grid_set_property (GObject *object,
-					    guint param_id,
-					    const GValue *value,
-					    GParamSpec *pspec);
+					 guint param_id,
+					 const GValue *value,
+					 GParamSpec *pspec);
 static void gdaui_raw_grid_get_property (GObject *object,
-					    guint param_id,
-					    GValue *value,
-					    GParamSpec *pspec);
+					 guint param_id,
+					 GValue *value,
+					 GParamSpec *pspec);
 
 static void init_tree_view (GdauiRawGrid *grid);
 
@@ -71,7 +71,7 @@ static GdauiDataWidgetWriteMode gdaui_raw_grid_widget_get_write_mode (GdauiDataW
 static void            gdaui_raw_grid_set_data_layout (GdauiDataWidget  *iface, gpointer  data);
 
 typedef struct {
-	GdauiSetGroup *group;
+	GdauiSetGroup   *group;
 	GtkCellRenderer *data_cell;
 	GtkCellRenderer *info_cell;
 	gboolean         info_shown;
@@ -87,8 +87,8 @@ struct _GdauiRawGridPriv
 {
 	GdaDataModel               *data_model;  /* data model provided by set_model() */
 	GdaDataModelIter           *iter;        /* iterator for @store, used for its structure */
-	GdauiSet                 *iter_info;
-	GdauiDataStore           *store;       /* GtkTreeModel interface, using @proxy */
+	GdauiSet                   *iter_info;
+	GdauiDataStore             *store;       /* GtkTreeModel interface, using @proxy */
 	GdaDataProxy               *proxy;       /* proxy data model, proxying @data_model */
 
 	GSList                     *columns_data; /* list of ColumnData */
@@ -101,7 +101,7 @@ struct _GdauiRawGridPriv
 	GtkActionGroup             *actions_group;
 
 	gint                        export_type; /* used by the export dialog */
-	GdauiDataWidgetWriteMode  write_mode;
+	GdauiDataWidgetWriteMode    write_mode;
 
 	GtkWidget                  *filter;
 	GtkWidget                  *filter_window;
@@ -224,10 +224,10 @@ gdaui_raw_grid_widget_init (GdauiDataWidgetIface *iface)
 }
 
 static void
-gdaui_raw_grid_class_init (GdauiRawGridClass *class)
+gdaui_raw_grid_class_init (GdauiRawGridClass *klass)
 {
-	GObjectClass  *object_class = G_OBJECT_CLASS (class);
-	parent_class = g_type_class_peek_parent (class);
+	GObjectClass  *object_class = G_OBJECT_CLASS (klass);
+	parent_class = g_type_class_peek_parent (klass);
 
 	gdaui_raw_grid_signals[SELECTION_CHANGED] = 
 		g_signal_new ("selection_changed",
@@ -336,6 +336,7 @@ gdaui_raw_grid_new (GdaDataModel *model)
 	return grid;
 }
 
+static void gdaui_raw_grid_soft_clean (GdauiRawGrid *grid);
 static void gdaui_raw_grid_clean (GdauiRawGrid *grid);
 static void
 gdaui_raw_grid_dispose (GObject *object)
@@ -702,11 +703,61 @@ gdaui_raw_grid_query_tooltip (GtkWidget   *widget,
 	return TRUE;
 }
 
+static gboolean
+proxy_reset_was_soft (GdauiRawGrid *grid, GdaDataModel *new_model)
+{
+	GdaDataModelIter *iter;
+	GSList *olist, *nlist;
+	gboolean retval = FALSE;
+
+	if (!new_model || (new_model != (GdaDataModel*) grid->priv->proxy))
+		return FALSE;
+
+	iter = gda_data_model_create_iter (new_model);
+	for (olist = GDA_SET (grid->priv->iter)->holders, nlist = GDA_SET (iter)->holders;
+	     olist && nlist;
+	     olist = olist->next, nlist = nlist->next) {
+		GdaHolder *oh, *nh;
+		oh = GDA_HOLDER (olist->data);
+		nh = GDA_HOLDER (nlist->data);
+
+		if (gda_holder_get_not_null (oh) != gda_holder_get_not_null (nh))
+			goto out;
+
+		GType ot, nt;
+		ot = gda_holder_get_g_type (oh);
+		nt = gda_holder_get_g_type (nh);
+		if (ot && (ot != nt))
+			goto out;
+		if (ot != nt)
+			g_object_set (oh, "g-type", nt, NULL);
+
+		const gchar *oid, *nid;
+		oid = gda_holder_get_id (oh);
+		nid = gda_holder_get_id (nh);
+		if ((oid && !nid) || (!oid && nid) ||
+		    (oid && strcmp (oid, nid)))
+			goto out;
+	}
+
+	if (olist || nlist)
+		goto out;
+
+	retval = TRUE;
+
+ out:
+	g_object_unref (iter);
+	return retval;
+}
+
+gboolean *get_hidden_columns (GdauiRawGrid *grid);
+void apply_hidden_columns (GdauiRawGrid *grid, gboolean *hidden_cols);
+
 static void
 gdaui_raw_grid_set_property (GObject *object,
-				guint param_id,
-				const GValue *value,
-				GParamSpec *pspec)
+			     guint param_id,
+			     const GValue *value,
+			     GParamSpec *pspec)
 {
 	GdauiRawGrid *grid;
 
@@ -714,46 +765,69 @@ gdaui_raw_grid_set_property (GObject *object,
         if (grid->priv) {
                 switch (param_id) {
 		case PROP_MODEL: {
+			gboolean reset;
 			GdaDataModel *model = GDA_DATA_MODEL (g_value_get_object (value));
+			gboolean *hidden_cols = NULL;
+
 			if (model)
 				g_return_if_fail (GDA_IS_DATA_MODEL (model));
 			
-			gdaui_raw_grid_clean (grid);
+			reset = !proxy_reset_was_soft (grid, model);
+			
+			if (reset)
+				gdaui_raw_grid_clean (grid);
+			else {
+				hidden_cols = get_hidden_columns (grid);
+				gdaui_raw_grid_soft_clean (grid);
+			}
+
 			if (!model)
 				return;
 			
 			grid->priv->store = GDAUI_DATA_STORE (gdaui_data_store_new (model));
-			grid->priv->proxy = gdaui_data_store_get_proxy (grid->priv->store);
-			grid->priv->data_model = gda_data_proxy_get_proxied_model (grid->priv->proxy);
-			
-			g_object_ref (G_OBJECT (grid->priv->proxy));
-			g_signal_connect (grid->priv->proxy, "sample_changed",
-					  G_CALLBACK (proxy_sample_changed_cb), grid);
-			g_signal_connect (grid->priv->proxy, "row_updated",
-					  G_CALLBACK (proxy_row_updated_cb), grid);
-			g_signal_connect (grid->priv->proxy, "reset",
-					  G_CALLBACK (proxy_reset_cb), grid);
-				
-			grid->priv->iter = gda_data_model_create_iter (GDA_DATA_MODEL (grid->priv->proxy));
-			grid->priv->iter_info = gdaui_set_new (GDA_SET (grid->priv->iter));
-				
-			g_signal_connect (grid->priv->iter_info, "public_data_changed",
-					  G_CALLBACK (paramlist_public_data_changed_cb), grid);
-			g_signal_connect (grid->priv->iter, "holder-attr-changed",
-					  G_CALLBACK (paramlist_param_attr_changed_cb), grid);
 
-			g_signal_connect (grid->priv->iter, "row_changed",
-					  G_CALLBACK (iter_row_changed_cb), grid);
-			g_signal_connect (grid->priv->iter, "validate-set",
-					  G_CALLBACK (iter_validate_set_cb), grid);
+			if (reset) {
+				grid->priv->proxy = gdaui_data_store_get_proxy (grid->priv->store);
+				grid->priv->data_model = gda_data_proxy_get_proxied_model (grid->priv->proxy);
+				
+				g_object_ref (G_OBJECT (grid->priv->proxy));
+				g_signal_connect (grid->priv->proxy, "sample_changed",
+						  G_CALLBACK (proxy_sample_changed_cb), grid);
+				g_signal_connect (grid->priv->proxy, "row_updated",
+						  G_CALLBACK (proxy_row_updated_cb), grid);
+				g_signal_connect (grid->priv->proxy, "reset",
+						  G_CALLBACK (proxy_reset_cb), grid);
+				
+				grid->priv->iter = gda_data_model_create_iter (GDA_DATA_MODEL (grid->priv->proxy));
+				grid->priv->iter_info = gdaui_set_new (GDA_SET (grid->priv->iter));
+				
+				g_signal_connect (grid->priv->iter_info, "public_data_changed",
+						  G_CALLBACK (paramlist_public_data_changed_cb), grid);
+				g_signal_connect (grid->priv->iter, "holder-attr-changed",
+						  G_CALLBACK (paramlist_param_attr_changed_cb), grid);
+				
+				g_signal_connect (grid->priv->iter, "row_changed",
+						  G_CALLBACK (iter_row_changed_cb), grid);
+				g_signal_connect (grid->priv->iter, "validate-set",
+						  G_CALLBACK (iter_validate_set_cb), grid);
+				
+				gda_data_model_iter_invalidate_contents (grid->priv->iter);
+				
+				gtk_tree_view_set_model ((GtkTreeView *) grid, GTK_TREE_MODEL (grid->priv->store));
+				init_tree_view (grid);
+				
+				g_signal_emit_by_name (object, "proxy_changed", grid->priv->proxy);
+				g_signal_emit_by_name (object, "iter_changed", grid->priv->iter);
+			}
+			else {
+				grid->priv->data_model = gda_data_proxy_get_proxied_model (grid->priv->proxy);
 
-			gda_data_model_iter_invalidate_contents (grid->priv->iter);
-							
-			gtk_tree_view_set_model ((GtkTreeView *) grid, GTK_TREE_MODEL (grid->priv->store));
-			init_tree_view (grid);
-	
-			g_signal_emit_by_name (object, "proxy_changed", grid->priv->proxy);
-			g_signal_emit_by_name (object, "iter_changed", grid->priv->iter);
+				gda_data_model_iter_invalidate_contents (grid->priv->iter);
+
+				gtk_tree_view_set_model ((GtkTreeView *) grid, GTK_TREE_MODEL (grid->priv->store));
+				init_tree_view (grid);
+				apply_hidden_columns (grid, hidden_cols);
+			}
 				
 			break;
 		}
@@ -852,9 +926,9 @@ gdaui_raw_grid_set_property (GObject *object,
 
 static void
 gdaui_raw_grid_get_property (GObject *object,
-				 guint param_id,
-				 GValue *value,
-				 GParamSpec *pspec)
+			     guint param_id,
+			     GValue *value,
+			     GParamSpec *pspec)
 {
 	GdauiRawGrid *grid;
 
@@ -2583,6 +2657,43 @@ paramlist_public_data_changed_cb (GdauiSet *info, GdauiRawGrid *grid)
 	init_tree_view (grid);
 }
 
+/*
+ * Returns: a gboolean array with the same number of columns as in @grid
+ */
+gboolean *
+get_hidden_columns (GdauiRawGrid *grid)
+{
+	gint i;
+	gboolean *hidden_cols;
+	GList *cols, *list;
+	cols = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
+	hidden_cols = g_new0 (gboolean, g_list_length (cols));
+	for (list = cols, i = 0; list; list = list->next, i++) {
+		if (!gtk_tree_view_column_get_visible (GTK_TREE_VIEW_COLUMN (list->data)))
+			hidden_cols [i] = TRUE;
+	}
+	g_list_free (cols);
+	return hidden_cols;
+}
+
+/*
+ * consumes @hidden_cols which must have been created with get_hidden_columns()
+ */
+void
+apply_hidden_columns (GdauiRawGrid *grid, gboolean *hidden_cols)
+{
+	gint i;
+	GList *cols, *list;
+
+	cols = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
+	for (list = cols, i = 0; list; list = list->next, i++) {
+		if (hidden_cols [i])
+			gtk_tree_view_column_set_visible (GTK_TREE_VIEW_COLUMN (list->data), FALSE);
+	}
+	g_list_free (cols);
+	g_free (hidden_cols);
+}
+
 static void
 paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param, 
 				 const gchar *att_name, const GValue *att_value, GdauiRawGrid *grid)
@@ -2590,29 +2701,14 @@ paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param,
 	if (!strcmp (att_name, GDAUI_ATTRIBUTE_PLUGIN)) {
 		/* TODO: be more specific and change only the cell renderer corresponding to @param */
 
-		/* keep a list of hidden columns */
-		gint i;
 		gboolean *hidden_cols;
-		GList *cols, *list;
-		cols = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
-		hidden_cols = g_new0 (gboolean, g_list_length (cols));
-		for (list = cols, i = 0; list; list = list->next, i++) {
-			if (!gtk_tree_view_column_get_visible (GTK_TREE_VIEW_COLUMN (list->data)))
-				hidden_cols [i] = TRUE;
-		}
-		g_list_free (cols);
+		hidden_cols = get_hidden_columns (grid);
 
 		/* re-create columns */
 		paramlist_public_data_changed_cb (grid->priv->iter_info, grid);
 
 		/* hide columns which were hidden */
-		cols = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
-		for (list = cols, i = 0; list; list = list->next, i++) {
-			if (hidden_cols [i])
-				gtk_tree_view_column_set_visible (GTK_TREE_VIEW_COLUMN (list->data), FALSE);
-		}
-		g_list_free (cols);
-		g_free (hidden_cols);
+		apply_hidden_columns (grid, hidden_cols);
 	}
 }
 
@@ -2732,7 +2828,7 @@ gdaui_raw_grid_widget_set_gda_model (GdauiDataWidget *iface, GdaDataModel *model
 }
 
 static void
-gdaui_raw_grid_clean (GdauiRawGrid *grid)
+gdaui_raw_grid_soft_clean (GdauiRawGrid *grid)
 {
 	GList *columns, *list;
 
@@ -2757,7 +2853,19 @@ gdaui_raw_grid_clean (GdauiRawGrid *grid)
 		g_slist_free (grid->priv->columns_data);
 		grid->priv->columns_data = NULL;
 	}
-	
+
+	/* store */
+	if (grid->priv->store) {
+		g_object_unref (grid->priv->store);
+		grid->priv->store = NULL;
+	}
+}
+
+static void
+gdaui_raw_grid_clean (GdauiRawGrid *grid)
+{
+	gdaui_raw_grid_soft_clean (grid);
+
 	/* private data set */
 	if (grid->priv->iter) {
 		g_signal_handlers_disconnect_by_func (grid->priv->iter_info,
@@ -2781,12 +2889,6 @@ gdaui_raw_grid_clean (GdauiRawGrid *grid)
 		g_signal_handlers_disconnect_by_func (grid->priv->proxy, G_CALLBACK (proxy_reset_cb), grid);
 		g_object_unref (grid->priv->proxy);
 		grid->priv->proxy = NULL;
-	}
-
-	/* store */
-	if (grid->priv->store) {
-		g_object_unref (grid->priv->store);
-		grid->priv->store = NULL;
 	}
 }
 
