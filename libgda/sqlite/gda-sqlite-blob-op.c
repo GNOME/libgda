@@ -104,7 +104,9 @@ gda_sqlite_blob_op_finalize (GObject * object)
 	/* free specific information */
 	if (bop->priv->sblob) {
 		sqlite3_blob_close (bop->priv->sblob);
-		/* g_print ("CLOSED blob %p\n", bop); */
+#ifdef GDA_DEBUG_NO
+		g_print ("CLOSED blob %p\n", bop);
+#endif
 	}
 	g_free (bop->priv);
 	bop->priv = NULL;
@@ -158,7 +160,9 @@ _gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
 				1, /* Read & Write */
 				&(sblob));
 	if (rc != SQLITE_OK) {
-		/*g_print ("ERROR: %s\n", sqlite3_errmsg (cdata->connection));*/
+#ifdef GDA_DEBUG_NO
+		g_print ("ERROR: %s\n", sqlite3_errmsg (cdata->connection));
+#endif
 		if (transaction_started)
 			gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
 		goto out;
@@ -166,7 +170,9 @@ _gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
 
 	bop = g_object_new (GDA_TYPE_SQLITE_BLOB_OP, NULL);
 	bop->priv->sblob = sblob;
-	/* g_print ("OPENED blob %p\n", bop); */
+#ifdef GDA_DEBUG_NO
+	g_print ("OPENED blob %p\n", bop);
+#endif
 
  out:
 	if (free_strings) {

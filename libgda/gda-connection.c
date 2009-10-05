@@ -2317,8 +2317,14 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * then the resulting data model will re-run itself, see the GdaDataSelect's 
  * <link linkend="GdaDataSelect--auto-reset">auto-reset</link> property for more information.
  *
- * Note4: if @model_usage does not contain the GDA_STATEMENT_MODEL_RANDOM_ACCESS or GDA_STATEMENT_MODEL_CURSOR_FORWARD
- * flags, then the default will be to return a random access data model
+ * Note4: if @model_usage does not contain the GDA_STATEMENT_MODEL_RANDOM_ACCESS or
+ * GDA_STATEMENT_MODEL_CURSOR_FORWARD flags, then the default will be to return a random access data model
+ *
+ * Note5: If @stmt is a SELECT statement which returns blob values (of type %GDA_TYPE_BLOB), then an implicit
+ * transaction will have been started by the database provider, and it's up to the caller to close the transaction
+ * (which will then be locked) once all the blob ressources have been
+ * liberated (when the returned data model is destroyed). See the section about
+ * <link linkend="gen:blobs">Binary large objects (BLOBs)</link> for more information.
  *
  * Also see the <link linkend="limitations">provider's limitations</link>, and the
  * <link linkend="data-select">Advanced GdaDataSelect usage</link> sections.
