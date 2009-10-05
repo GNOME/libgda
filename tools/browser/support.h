@@ -19,8 +19,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __SUPPORT_H_
-#define __SUPPORT_H_
+#ifndef __SUPPORT_H__
+#define __SUPPORT_H__
 
 #include <libgda/libgda.h>
 #include <gtk/gtk.h>

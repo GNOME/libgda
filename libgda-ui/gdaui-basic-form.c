@@ -1878,6 +1878,7 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 	param = g_object_get_data (G_OBJECT (entry), "param");
 	if (param) { /* single parameter */
 		GValue *value;
+		GError *error = NULL;
 		
 		form->priv->forward_param_updates = FALSE;
 
@@ -1886,7 +1887,7 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 		if ((!value || gda_value_is_null (value)) &&
 		    (attr & GDA_VALUE_ATTR_IS_DEFAULT))
 			gda_holder_set_value_to_default (param);
-		else if (gda_holder_set_value (param, value, NULL)) {
+		else if (gda_holder_set_value (param, value, &error)) {
 #ifdef debug_signal
 			g_print (">> 'PARAM_CHANGED' from %s\n", __FUNCTION__);
 #endif
@@ -1895,8 +1896,11 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 			g_print ("<< 'PARAM_CHANGED' from %s\n", __FUNCTION__);
 #endif
 		}
-		else
-			TO_IMPLEMENT;
+		else {
+			g_warning (_("Parameter did not accept form's change: %s"),
+				   error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
 		gda_value_free (value);
 		form->priv->forward_param_updates = TRUE;
 	}
@@ -2508,7 +2512,7 @@ gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *param)
  */
 GtkWidget *
 gdaui_basic_form_new_in_dialog (GdaSet *paramlist, GtkWindow *parent,
-				   const gchar *title, const gchar *header)
+				const gchar *title, const gchar *header)
 {
 	GtkWidget *form;
 	GtkWidget *dlg;
@@ -2529,10 +2533,13 @@ gdaui_basic_form_new_in_dialog (GdaSet *paramlist, GtkWindow *parent,
 					   NULL);
 	if (header && *header) {
 		GtkWidget *label;
+		gchar *str;
 
 		label = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-		gtk_label_set_markup (GTK_LABEL (label), header);
+		str = g_markup_printf_escaped ("<b>%s:</b>", header);
+		gtk_label_set_markup (GTK_LABEL (label), str);
+		g_free (str);
 		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), label, FALSE, FALSE, 5);
 		gtk_widget_show (label);
 	}

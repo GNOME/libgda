@@ -177,7 +177,7 @@ browser_show_notice (GtkWindow *parent, const gchar *context, const gchar *forma
 	if (context) {
 		if (!hidden_contexts)
 			hidden_contexts = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-		hide = g_hash_table_lookup (hidden_contexts, context);
+		hide = GPOINTER_TO_INT (g_hash_table_lookup (hidden_contexts, context));
 	}
 
 	if (hide) {
