@@ -475,6 +475,34 @@
 	  </mediaobject>
 	</para>
       </sect1>
+
+      <sect1 id="gen:blobs">
+	<title>Binary large objects (BLOBs)</title>
+	<para>
+	  Binary large objects (BLOBs) are potentially very big (serevral GigaBytes) pieces of binary
+	  data which databases can store. Because of their potential size, they are not manipulated
+	  like any other data, and are usually not transfered when running a statement: first
+	  a reference to a blob is created for an existing or a new blob using a statement, and then
+	  that reference is used, <emphasis>after the statement has been executed</emphasis>, to
+	  get or set some parts of the blob.
+	</para>
+	<para>
+	  &LIBGDA; makes its best to hide the complexity of this and most of the time blobs can be used
+	  like any other type of values with the following limitations:
+	  <itemizedlist>
+	    <listitem><para>When getting a blob through a SELECT statement, a transaction will automatically
+		be started if it's not already started, and usually the transaction (implicitly or explicitly)
+		will be locked untill all the ressources associated to the fetched blobs are liberated (by
+		calling <link linkend="g-object-unref">g_object_unref()</link> on the model).</para></listitem>
+	    <listitem><para>When fetching a blob value (using
+		<link linkend="gda-data-model-get-value-at()">gda_data_model_get_value_at()</link> for example), the blob
+		itself is not fetched, only a reference to the blob is fetched, and one has to use the
+		<link linkend="GdaBlobOp">GdaBlobOp</link> object embedded in a blob value to get the blob's
+		contents.</para></listitem>
+	  </itemizedlist>
+	</para>
+      </sect1>
+
     </chapter>
 
     &howto;

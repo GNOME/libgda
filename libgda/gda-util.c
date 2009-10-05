@@ -113,7 +113,7 @@ gda_g_type_to_string (GType type)
  *   <listitem><para>"null" for GDA_TYPE_NULL</para></listitem>
  * </itemizedlist>
  *
- * Returns: the #GType represented by the given @str.
+ * Returns: the #GType represented by the given @str, or #G_TYPE_INVALID if not found
  */
 GType
 gda_g_type_from_string (const gchar *str)
