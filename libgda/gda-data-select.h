@@ -114,6 +114,8 @@ gboolean       gda_data_select_compute_modification_statements (GdaDataSelect *m
 gboolean       gda_data_select_compute_columns_attributes      (GdaDataSelect *model, GError **error);
 GdaConnection *gda_data_select_get_connection                  (GdaDataSelect *model);
 
+gboolean       gda_data_select_rerun                           (GdaDataSelect *model, GError **error);
+
 G_END_DECLS
 
 #endif

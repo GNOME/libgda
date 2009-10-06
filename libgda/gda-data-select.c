@@ -352,106 +352,12 @@ static void
 ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect *model)
 {
 	if (model->priv->sh->reset_with_ext_params_change) {
-		GdaDataSelect *new_model;
-		GdaStatement *select;
 		GError *error = NULL;
-
-		select = check_acceptable_statement (model, &error);
-		if (!select) {
+		if (! gda_data_select_rerun (model, &error)) {
 			g_warning (_("Could not re-run SELECT statement: %s"),
 				   error && error->message ? error->message : _("No detail"));
-			if (error)
-				g_error_free (error);
-			return;
+			g_clear_error (&error);
 		}
-		g_assert (model->prep_stmt);
-		GType *types = NULL;
-		if (model->prep_stmt->types) {
-			types = g_new (GType, model->prep_stmt->ncols + 1);
-			memcpy (types, model->prep_stmt->types, sizeof (GType) * model->prep_stmt->ncols);
-			types [model->prep_stmt->ncols] = G_TYPE_NONE;
-		}
-		new_model = (GdaDataSelect*) gda_connection_statement_execute_select_full (model->priv->cnc, select, 
-											   model->priv->sh->ext_params, 
-											   model->priv->sh->usage_flags | GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
-											   types, 
-											   &error);
-		g_free (types);
-		if (!new_model) {
-			g_warning (_("Could not re-run SELECT statement: %s"),
-				   error && error->message ? error->message : _("No detail"));
-			if (error)
-				g_error_free (error);
-			/* FIXME: clear all the rows in @model, and emit the "reset" signal */
-			return;
-		}
-
-		g_assert (G_OBJECT_TYPE (model) == G_OBJECT_TYPE (new_model));
-
-		/* Raw model and new_model contents swap (except for the GObject part) */
-		GTypeQuery tq;
-		gpointer copy;
-		gint offset = sizeof (GObject);
-		gint size;
-		g_type_query (G_OBJECT_TYPE (model), &tq);
-		size = tq.instance_size - offset;
-		copy = g_malloc (size);
-		memcpy (copy, (gint8*) new_model + offset, size);
-		memcpy ((gint8*) new_model + offset, (gint8*) model + offset, size);
-		memcpy ((gint8*) model + offset, copy, size);
-		
-		/* we need to keep some data from the old model */
-		GdaDataSelect *old_model = new_model; /* renamed for code's readability */
-		GdaDataSelectInternals *mi;
-	      
-		model->priv->sh->reset_with_ext_params_change = old_model->priv->sh->reset_with_ext_params_change;
-		mi = old_model->priv->sh->modif_internals;
-		old_model->priv->sh->modif_internals = model->priv->sh->modif_internals;
-		model->priv->sh->modif_internals = mi;
-
-		copy = old_model->priv->sh->sel_stmt;
-		old_model->priv->sh->sel_stmt = model->priv->sh->sel_stmt;
-		model->priv->sh->sel_stmt = (GdaStatement*) copy;
-
-		/* keep the same GdaColumn pointers */
-		GSList *l1, *l2;
-		l1 = old_model->priv->sh->columns;
-		old_model->priv->sh->columns = model->priv->sh->columns;
-		model->priv->sh->columns = l1;
-		for (l1 = model->priv->sh->columns, l2 = old_model->priv->sh->columns;
-		     l1 && l2;
-		     l1 = l1->next, l2 = l2->next) {
-			if ((gda_column_get_g_type ((GdaColumn*) l1->data) == GDA_TYPE_NULL) &&
-			    (gda_column_get_g_type ((GdaColumn*) l2->data) != GDA_TYPE_NULL))
-				gda_column_set_g_type ((GdaColumn*) l1->data, 
-						       gda_column_get_g_type ((GdaColumn*) l2->data));
-		}
-
-		g_object_unref (old_model);
-
-		/* copy all the param's holders' values from model->priv->sh->ext_params to 
-		   to model->priv->sh->modif_internals->exec_set */
-		GSList *list;
-		for (list = model->priv->sh->ext_params->holders; list; list = list->next) {
-			GdaHolder *h;
-			h = gda_set_get_holder (model->priv->sh->modif_internals->exec_set,
-						gda_holder_get_id (list->data));
-			if (h) {
-				if (!gda_holder_is_valid (GDA_HOLDER (list->data))) 
-					gda_holder_set_value (h, gda_holder_get_value (GDA_HOLDER (list->data)), NULL);
-				else if (! gda_holder_set_value (h, gda_holder_get_value (GDA_HOLDER (list->data)),
-								 &error)) {
-					g_warning (_("An error has occurred, the value returned by the \"exec-params\" "
-						     "property will be wrong: %s"),
-						   error && error->message ? error->message : _("No detail"));
-					if (error)
-						g_error_free (error);
-				}
-			}
-		}
-
-		/* signal a reset */
-		gda_data_model_reset ((GdaDataModel*) model);
 	}
 }
 
@@ -3309,6 +3215,119 @@ gda_data_select_compute_columns_attributes (GdaDataSelect *model, GError **error
 	}
 
 	set_column_properties_from_select_stmt (model, model->priv->cnc, sel_stmt);
+
+	return TRUE;
+}
+
+/**
+ * gda_data_select_rerun
+ * @model: a #GdaDataSelect data model
+ * @error: a place to store errors, or %NULL
+ *
+ * Requests that @model be re-run to have an updated result. If an error occurs,
+ * then @model will not be changed.
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 4.2
+ */
+gboolean
+gda_data_select_rerun (GdaDataSelect *model, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
+
+	GdaDataSelect *new_model;
+	GdaStatement *select;
+
+	select = check_acceptable_statement (model, error);
+	if (!select)
+		return FALSE;
+	g_assert (model->prep_stmt);
+	GType *types = NULL;
+	if (model->prep_stmt->types) {
+		types = g_new (GType, model->prep_stmt->ncols + 1);
+		memcpy (types, model->prep_stmt->types, sizeof (GType) * model->prep_stmt->ncols);
+		types [model->prep_stmt->ncols] = G_TYPE_NONE;
+	}
+	new_model = (GdaDataSelect*) gda_connection_statement_execute_select_full (model->priv->cnc, select, 
+										   model->priv->sh->ext_params, 
+										   model->priv->sh->usage_flags | GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+										   types, 
+										   error);
+	g_free (types);
+	if (!new_model) {
+		/* FIXME: clear all the rows in @model, and emit the "reset" signal */
+		return FALSE;
+	}
+
+	g_assert (G_OBJECT_TYPE (model) == G_OBJECT_TYPE (new_model));
+
+	/* Raw model and new_model contents swap (except for the GObject part) */
+	GTypeQuery tq;
+	gpointer copy;
+	gint offset = sizeof (GObject);
+	gint size;
+	g_type_query (G_OBJECT_TYPE (model), &tq);
+	size = tq.instance_size - offset;
+	copy = g_malloc (size);
+	memcpy (copy, (gint8*) new_model + offset, size);
+	memcpy ((gint8*) new_model + offset, (gint8*) model + offset, size);
+	memcpy ((gint8*) model + offset, copy, size);
+		
+	/* we need to keep some data from the old model */
+	GdaDataSelect *old_model = new_model; /* renamed for code's readability */
+	GdaDataSelectInternals *mi;
+	      
+	model->priv->sh->reset_with_ext_params_change = old_model->priv->sh->reset_with_ext_params_change;
+	mi = old_model->priv->sh->modif_internals;
+	old_model->priv->sh->modif_internals = model->priv->sh->modif_internals;
+	model->priv->sh->modif_internals = mi;
+
+	copy = old_model->priv->sh->sel_stmt;
+	old_model->priv->sh->sel_stmt = model->priv->sh->sel_stmt;
+	model->priv->sh->sel_stmt = (GdaStatement*) copy;
+
+	/* keep the same GdaColumn pointers */
+	GSList *l1, *l2;
+	l1 = old_model->priv->sh->columns;
+	old_model->priv->sh->columns = model->priv->sh->columns;
+	model->priv->sh->columns = l1;
+	for (l1 = model->priv->sh->columns, l2 = old_model->priv->sh->columns;
+	     l1 && l2;
+	     l1 = l1->next, l2 = l2->next) {
+		if ((gda_column_get_g_type ((GdaColumn*) l1->data) == GDA_TYPE_NULL) &&
+		    (gda_column_get_g_type ((GdaColumn*) l2->data) != GDA_TYPE_NULL))
+			gda_column_set_g_type ((GdaColumn*) l1->data, 
+					       gda_column_get_g_type ((GdaColumn*) l2->data));
+	}
+
+	g_object_unref (old_model);
+
+	/* copy all the param's holders' values from model->priv->sh->ext_params to 
+	   to model->priv->sh->modif_internals->exec_set */
+	GSList *list;
+	if (model->priv->sh->ext_params) {
+		for (list = model->priv->sh->ext_params->holders; list; list = list->next) {
+			GdaHolder *h;
+			h = gda_set_get_holder (model->priv->sh->modif_internals->exec_set,
+						gda_holder_get_id (list->data));
+			if (h) {
+				GError *lerror = NULL;
+				if (!gda_holder_is_valid (GDA_HOLDER (list->data))) 
+					gda_holder_set_value (h, gda_holder_get_value (GDA_HOLDER (list->data)), NULL);
+				else if (! gda_holder_set_value (h, gda_holder_get_value (GDA_HOLDER (list->data)),
+								 &lerror)) {
+					g_warning (_("An error has occurred, the value returned by the \"exec-params\" "
+						     "property will be wrong: %s"),
+						   lerror && lerror->message ? lerror->message : _("No detail"));
+					g_clear_error (&lerror);
+				}
+			}
+		}
+	}
+
+	/* signal a reset */
+	gda_data_model_reset ((GdaDataModel*) model);
 
 	return TRUE;
 }
