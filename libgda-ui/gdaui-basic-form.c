@@ -75,7 +75,8 @@ enum
 	PROP_PARAMLIST,
 	PROP_HEADERS_SENSITIVE,
 	PROP_SHOW_ACTIONS,
-	PROP_ENTRIES_AUTO_DEFAULT
+	PROP_ENTRIES_AUTO_DEFAULT,
+	PROP_CAN_EXPAND
 };
 
 struct _GdauiBasicFormPriv
@@ -86,8 +87,9 @@ struct _GdauiBasicFormPriv
 
 	GSList                 *entries;/* list of GdauiDataEntry widgets */
 	GSList                 *not_null_labels;/* list of GtkLabel widgets corresponding to NOT NULL entries */
+	gboolean                can_expand; /* ORed among the data entrie's expand requests */
 
-	GdauiFormLayoutSpec  *layout_spec;
+	GdauiFormLayoutSpec    *layout_spec;
 	GtkWidget              *entries_table;
 	GtkWidget              *entries_glade;
 	GSList                 *hidden_entries;
@@ -203,6 +205,12 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 							       _("Entries Auto-default"), 
 							       NULL, FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (object_class, PROP_CAN_EXPAND,
+					 g_param_spec_boolean ("can-expand",
+							       _("TRUE if expanding the form makes sense"), 
+							       NULL, FALSE,
+							       G_PARAM_READABLE));
+
 }
 
 static void
@@ -211,6 +219,7 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
 	wid->priv = g_new0 (GdauiBasicFormPriv, 1);
 	wid->priv->set = NULL;
 	wid->priv->entries = NULL;
+	wid->priv->can_expand = FALSE;
 	wid->priv->not_null_labels = NULL;
 	wid->priv->layout_spec = NULL;
 	wid->priv->entries_glade = NULL;
@@ -1183,9 +1192,9 @@ load_xml_data_layouts (GdauiBasicForm  *form,
 
 static void
 gdaui_basic_form_set_property (GObject *object,
-				  guint param_id,
-				  const GValue *value,
-				  GParamSpec *pspec)
+			       guint param_id,
+			       const GValue *value,
+			       GParamSpec *pspec)
 {
 	GdauiBasicForm *form;
 #ifdef HAVE_LIBGLADE
@@ -1356,10 +1365,13 @@ gdaui_basic_form_get_property (GObject *object,
 			g_value_set_boolean (value, form->priv->headers_sensitive);
 			break;
 		case PROP_SHOW_ACTIONS:
-			g_value_set_boolean(value, form->priv->show_actions);
+			g_value_set_boolean (value, form->priv->show_actions);
 			break;
 		case PROP_ENTRIES_AUTO_DEFAULT:
-			g_value_set_boolean(value, form->priv->entries_auto_default);
+			g_value_set_boolean (value, form->priv->entries_auto_default);
+			break;
+		case PROP_CAN_EXPAND:
+			g_value_set_boolean (value, form->priv->can_expand);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -1654,13 +1666,11 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 			g_print ("Hbox for: %s -- %p\n", id, hbox);
 
 			if (hbox != NULL) {
-				gboolean expand = gdaui_data_entry_expand_in_layout
-					(GDAUI_DATA_ENTRY (entry));
+				gboolean expand = gdaui_data_entry_expand_in_layout (GDAUI_DATA_ENTRY (entry));
 				form_expand = form_expand || expand;
 
-				gtk_box_pack_start (GTK_BOX(hbox), GTK_WIDGET(entry),
-						    expand, TRUE, 0);
-				gtk_widget_show (GTK_WIDGET(entry));
+				gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (entry), expand, TRUE, 0);
+				gtk_widget_show (GTK_WIDGET (entry));
 
 				if (!g_object_get_data (G_OBJECT(hbox), "show_actions"))
 					gdaui_data_entry_set_attributes
@@ -1779,7 +1789,7 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 			form_expand = form_expand || expand;
 			gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (list->data), 1, 2, i, i+1,
 					  GTK_FILL | GTK_EXPAND, 
-					  form_expand ? (GTK_FILL | GTK_EXPAND) : GTK_SHRINK, 0, 0);
+					  expand ? (GTK_FILL | GTK_EXPAND) : GTK_SHRINK, 0, 0);
 			gtk_widget_show (GTK_WIDGET (list->data));
 			g_object_set_data (G_OBJECT (list->data), "entry_label", entry_label);
 			if (entry_label) {
@@ -1796,7 +1806,7 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 		gtk_widget_show (table);
 	}
 
-	g_object_set_data (G_OBJECT (form), "expand", GINT_TO_POINTER (form_expand));
+	form->priv->can_expand = form_expand;
 	
 	/* Set the Show actions in the entries */
 	gdaui_basic_form_show_entry_actions (form, form->priv->show_actions);
@@ -2545,7 +2555,9 @@ gdaui_basic_form_new_in_dialog (GdaSet *paramlist, GtkWindow *parent,
 	}
 
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), 4);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), form, TRUE, TRUE, 10);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), form,
+			    GDAUI_BASIC_FORM (form)->priv->can_expand,
+			    GDAUI_BASIC_FORM (form)->priv->can_expand, 10);
 
 	g_signal_connect (G_OBJECT (form), "param_changed",
 			  G_CALLBACK (form_param_changed), dlg);

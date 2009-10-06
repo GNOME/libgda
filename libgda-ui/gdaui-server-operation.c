@@ -419,8 +419,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 
 		plist = info_node->plist;
 		plwid = gdaui_basic_form_new (plist);
-		gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (plwid),
-							  FALSE);
+		gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (plwid), FALSE);
 	       
 		if (section_str) {
 			const gchar *name;
@@ -438,7 +437,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 				GtkWidget *label_entry;
 
 				label_entry = gdaui_basic_form_get_label_widget (GDAUI_BASIC_FORM (plwid),
-										    GDA_HOLDER (params->data));
+										 GDA_HOLDER (params->data));
 				if (label_entry && !g_slist_find (*label_widgets, label_entry))
 					*label_widgets = g_slist_prepend (*label_widgets, label_entry);
 				params = params->next;
@@ -525,8 +524,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		plist = gda_set_new (list);
 		g_slist_free (list);
 		plwid = gdaui_basic_form_new (plist);
-		gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (plwid),
-							  FALSE);
+		gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (plwid), FALSE);
 		/* we don't need plist anymore */
 		g_object_unref (plist);
 
