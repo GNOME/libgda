@@ -464,7 +464,8 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					else {
 						GdaBlob *blob;
 						blob = g_new0 (GdaBlob, 1);
-						blob->op = bop;
+						gda_blob_set_op (blob, bop);
+						g_object_unref (bop);
 						gda_value_take_blob (value, blob);
 					}
 				}
