@@ -4,7 +4,9 @@ Libgda simple example
 Description:
 ------------
 
-The example in this directory illustrate how to use a GdaSqlBuilder to build statement from their structure
+The example in this directory illustrate how to use a GdaSqlBuilder to build statement from their structure.
+The "example_cnc" program differs from the "example" in that SQL rendering is done for an opened
+connection which has the GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE flag set.
 
 Compiling and running:
 ----------------------
@@ -14,6 +16,8 @@ To compile (make sure Libgda is installed prior to this):
 
 and to run:
 > ./example
+or
+> ./example_cnc
 
 Output:
 -------
@@ -22,3 +26,22 @@ Running should produce the following output:
 SQL: INSERT INTO customers (e, f, g) VALUES (##p1::string, 15, 'joe')
 SQL: UPDATE products SET ref='A0E''FESP' WHERE id = 14
 SQL: UPDATE products SET ref='A0E''FESP' WHERE id = ##theid::int
+SQL: DELETE FROM items WHERE id = ##theid::int
+SQL: SELECT c."date", name AS person FROM "select" AS c INNER JOIN orders 
+SQL: SELECT c."date", name AS person FROM "select" AS c INNER JOIN orders USING (id) 
+SQL: SELECT myfunc (a, 5, 'Joe') FROM mytable
+SQL: SELECT myfunc (a, 5, 'Joe'), MAX (myfunc (a, 5, 'Joe'), b, 10) FROM mytable
+SQL: UPDATE "select" SET "date"='2009-05-27' WHERE id = 14
+SQL: SELECT date (a, 5, 'Joe') FROM "date", MyTable
+
+and for example_cnc:
+SQL: INSERT INTO "customers" ("e", "f", "g") VALUES (##p1::string, 15, 'joe')
+SQL: UPDATE "products" SET "ref"='A0E''FESP' WHERE "id" = 14
+SQL: UPDATE "products" SET "ref"='A0E''FESP' WHERE "id" = ##theid::int
+SQL: DELETE FROM "items" WHERE "id" = ##theid::int
+SQL: SELECT "c"."date", "name" AS person FROM "select" AS c INNER JOIN "orders" 
+SQL: SELECT "c"."date", "name" AS person FROM "select" AS c INNER JOIN "orders" USING ("id") 
+SQL: SELECT myfunc ("a", 5, 'Joe') FROM "mytable"
+SQL: SELECT myfunc ("a", 5, 'Joe'), MAX (myfunc ("a", 5, 'Joe'), "b", 10) FROM "mytable"
+SQL: UPDATE "select" SET "date"='2009-05-27' WHERE "id" = 14
+SQL: SELECT date ("a", 5, 'Joe') FROM "date", "MyTable"

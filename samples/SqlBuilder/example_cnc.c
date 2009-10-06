@@ -8,7 +8,6 @@ main (int argc, char *argv[])
 	gda_init ();
 
 	GdaSqlBuilder *b;
-	
 
 	/* INSERT INTO customers (e, f, g) VALUES (##p1::string, 15, 'joe') */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
@@ -139,6 +138,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target (b, 2,
 					   gda_sql_builder_add_id (b, 0, "MyTable"),
 					   NULL);
+	
 	gda_sql_builder_add_function (b, 1, "date",
 				      gda_sql_builder_add_id (b, 0, "a"),
 				      gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 5),
@@ -155,6 +155,13 @@ render_as_sql (GdaSqlBuilder *b)
 {
 	GdaStatement *stmt;
 	GError *error = NULL;
+	static GdaConnection *cnc = NULL;
+	
+	if (!cnc) {
+		cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=test", NULL,
+						       GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE, NULL);
+		g_assert (cnc);
+	}
 
 	stmt = gda_sql_builder_get_statement (b, &error);
 	if (!stmt) {
@@ -165,7 +172,7 @@ render_as_sql (GdaSqlBuilder *b)
 	}
 	else {
 		gchar *sql;
-		sql = gda_statement_to_sql (stmt, NULL, &error);
+		sql = gda_statement_to_sql_extended (stmt, cnc, NULL, GDA_STATEMENT_SQL_PARAMS_SHORT, NULL, &error);
 		if (!sql) {
 			g_print ("SQL rendering error: %s\n",
 				 error && error->message ? error->message : "No detail");
