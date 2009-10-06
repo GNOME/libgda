@@ -83,6 +83,7 @@ struct _GdaSqlField {
 	/* validity check with a connection */
 	GdaMetaTableColumn *validity_meta_table_column;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -107,6 +108,7 @@ struct _GdaSqlTable
 	/* validity check with a connection */
 	GdaMetaDbObject    *validity_meta_object;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -128,6 +130,7 @@ struct _GdaSqlFunction {
 	gchar              *function_name;
 	GSList             *args_list;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -185,6 +188,7 @@ struct _GdaSqlOperation {
 	GdaSqlOperatorType  operator_type;
 	GSList             *operands;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -208,6 +212,7 @@ struct _GdaSqlCase
 	GSList          *then_expr_list;
 	GdaSqlExpr      *else_expr;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -233,6 +238,7 @@ struct _GdaSqlSelectField
 	GdaMetaDbObject    *validity_meta_object;
 	GdaMetaTableColumn *validity_meta_table_column;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -261,6 +267,7 @@ struct _GdaSqlSelectTarget
 	/* validity check with a connection */
 	GdaMetaDbObject    *validity_meta_object;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -295,6 +302,7 @@ struct _GdaSqlSelectJoin
 	GdaSqlExpr           *expr;
 	GSList               *use;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -317,6 +325,7 @@ struct _GdaSqlSelectFrom
 	GSList          *targets; 
 	GSList          *joins; 
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -340,6 +349,7 @@ struct _GdaSqlSelectOrder
 	gboolean         asc;
 	gchar           *collation_name;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
