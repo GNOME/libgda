@@ -790,8 +790,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: 
 @field_name: 
 @validity_meta_table_column: 
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_sql_field_new ##### -->
 <para>
@@ -845,8 +843,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: 
 @table_name: 
 @validity_meta_object: 
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_sql_table_new ##### -->
 <para>
@@ -900,8 +896,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: inheritance structure
 @function_name: name of the function , in the form [[catalog.]schema.]function_name
 @args_list: list of #GdaSqlExpr expressions, one for each argument
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_sql_function_new ##### -->
 <para>
@@ -964,8 +958,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: inheritance structure
 @operator_type: 
 @operands: list of #GdaSqlExpr operands
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### ENUM GdaSqlOperatorType ##### -->
 <para>
@@ -1066,8 +1058,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @when_expr_list: list of #GdaSqlExpr, one for each WHEN clause
 @then_expr_list: list of #GdaSqlExpr, one for each THEN clause
 @else_expr: default expression for the CASE
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_sql_case_new ##### -->
 <para>
@@ -1119,8 +1109,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @as: alias
 @validity_meta_object: 
 @validity_meta_table_column: 
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_sql_select_field_new ##### -->
 <para>
@@ -1197,8 +1185,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @table_name: table name part of @expr if @expr represents a table
 @as: alias
 @validity_meta_object: 
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_sql_select_target_new ##### -->
 <para>
@@ -1272,8 +1258,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @position: represents a join between a target at (pos &lt; @position) and the one at @position
 @expr: joining expression, or %NULL
 @use: list of #GdaSqlField pointers to use when joining, or %NULL
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### ENUM GdaSqlSelectJoinType ##### -->
 <para>
@@ -1339,8 +1323,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @any: inheritance structure
 @targets: list of #GdaSqlSelectTarget
 @joins: list of #GdaSqlSelectJoin
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_sql_select_from_new ##### -->
 <para>
@@ -1404,8 +1386,6 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @expr: expression to order on
 @asc: TRUE is ordering is ascending
 @collation_name: name of the collation to use for ordering
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_sql_select_order_new ##### -->
 <para>

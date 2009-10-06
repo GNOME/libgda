@@ -39,6 +39,11 @@ Form widget mapping the values contained in a #GdaSet
 @arg1: 
 @arg2: 
 
+<!-- ##### ARG GdauiBasicForm:can-expand ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdauiBasicForm:data-layout ##### -->
 <para>
 
