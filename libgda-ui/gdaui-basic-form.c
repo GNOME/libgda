@@ -333,11 +333,8 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 	}
 
 	/* render all the entries non sensitive */
-	list = form->priv->entries;
-	while (list) {
+	for (list = form->priv->entries; list; list = list->next)
 		gdaui_data_entry_set_editable (GDAUI_DATA_ENTRY (list->data), FALSE);
-		list = g_slist_next (list);
-	}
 }
 
 static void
@@ -1939,18 +1936,15 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 
 			/* parameter's value */
 			param = GDA_SET_NODE (params->data)->holder;
-			if (gda_holder_set_value (param, (GValue *)(list->data), NULL)) {
+			gda_holder_set_value (param, (GValue *)(list->data), NULL);
 #ifdef debug_signal
-				g_print (">> 'PARAM_CHANGED' from %s\n", __FUNCTION__);
+			g_print (">> 'PARAM_CHANGED' from %s\n", __FUNCTION__);
 #endif
-				g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[PARAM_CHANGED], 
-					       0, param, TRUE);
+			g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[PARAM_CHANGED], 
+				       0, param, TRUE);
 #ifdef debug_signal
-				g_print ("<< 'PARAM_CHANGED' from %s\n", __FUNCTION__);
+			g_print ("<< 'PARAM_CHANGED' from %s\n", __FUNCTION__);
 #endif
-			}
-			else
-				TO_IMPLEMENT;
 			form->priv->forward_param_updates = TRUE;
 		}
 		g_slist_free (values);

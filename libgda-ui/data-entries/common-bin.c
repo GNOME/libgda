@@ -350,8 +350,10 @@ common_bin_adjust_menu (BinMenu *binmenu, gboolean editable, const GValue *value
 void
 common_bin_reset (BinMenu *binmenu)
 {
-	if (binmenu->tmpvalue)
+	if (binmenu->tmpvalue) {
 		gda_value_free (binmenu->tmpvalue);
+		binmenu->tmpvalue = NULL;
+	}
 	if (binmenu->popup)
 		gtk_widget_destroy (binmenu->popup);
 	g_free (binmenu->current_folder);
