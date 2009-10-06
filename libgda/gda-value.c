@@ -442,9 +442,11 @@ gda_blob_free (gpointer boxed)
 	GdaBlob *blob = (GdaBlob*) boxed;
 	
 	g_return_if_fail (blob);
-		
-	if (blob->op)
+
+	if (blob->op) {
 		g_object_unref (blob->op);
+		blob->op = NULL;
+	}
 	gda_binary_free ((GdaBinary *) blob);
 }
 
@@ -464,8 +466,7 @@ gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
 	}
 	if (op) {
 		g_return_if_fail (GDA_IS_BLOB_OP (op));
-		blob->op = op;
-		g_object_ref (op);
+		blob->op = g_object_ref (op);
 	}
 }
 
