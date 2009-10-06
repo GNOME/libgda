@@ -844,11 +844,8 @@ gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)
 	g_return_if_fail (iter->priv);
 
 	iter->priv->keep_param_changes = TRUE;
-	list = GDA_SET (iter)->holders;
-	while (list) {
+	for (list = GDA_SET (iter)->holders; list; list = list->next)
 		gda_holder_force_invalid (GDA_HOLDER (list->data));
-		list = g_slist_next (list);
-	}
 	iter->priv->keep_param_changes = FALSE;
 }
 

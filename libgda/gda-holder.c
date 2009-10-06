@@ -1649,17 +1649,17 @@ full_bind_changed_cb (GdaHolder *alias_of, GdaHolder *holder)
 {
 	if (alias_of == holder->priv->simple_bind) {
 		const GValue *cvalue;
-		GError *error = NULL;
+		GError *lerror = NULL;
 		cvalue = gda_holder_get_value (alias_of);
-		if (! gda_holder_set_value (holder, cvalue, &error)) {
-			g_warning (_("Could not change GdaHolder to match value change in bound GdaHolder: %s"),
-				   error && error->message ? error->message : _("No detail"));
-			if (error)
-				g_error_free (error);
+		if (! gda_holder_set_value (holder, cvalue, &lerror)) {
+			if (lerror && ((lerror->domain != GDA_HOLDER_ERROR) || (lerror->code != GDA_HOLDER_VALUE_NULL_ERROR)))
+				g_warning (_("Could not change GdaHolder to match value change in bound GdaHolder: %s"),
+					   lerror && lerror->message ? lerror->message : _("No detail"));
+			g_clear_error (&lerror);
 		}
 	}
 	else
-		g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
+		g_signal_emit (holder, gda_holder_signals [CHANGED], 0);
 }
 
 /**
