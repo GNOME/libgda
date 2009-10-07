@@ -198,7 +198,6 @@ gdaui_entry_shell_dispose (GObject   * object)
 {
 	GdauiEntryShell *shell;
 
-	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (object));
 
 	shell = GDAUI_ENTRY_SHELL (object);
@@ -306,13 +305,10 @@ gdaui_entry_shell_get_property (GObject *object,
 void
 gdaui_entry_shell_pack_entry (GdauiEntryShell *shell, GtkWidget *main_widget)
 {
-	GList *focus_chain;
-	g_return_if_fail (shell && GDAUI_IS_ENTRY_SHELL (shell));
+	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
 	g_return_if_fail (main_widget && GTK_IS_WIDGET (main_widget));
 
 	gtk_box_pack_start (GTK_BOX (shell->priv->top_box), main_widget, TRUE, TRUE, 0);
-	focus_chain = g_list_prepend (NULL, main_widget);
-	gtk_container_set_focus_chain (GTK_CONTAINER (shell->priv->hbox), focus_chain);
 
 	/* signals */
 	g_signal_connect (G_OBJECT (shell), "contents_modified",
@@ -395,7 +391,7 @@ gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell)
 	GdkColor *normal = NULL, *prelight = NULL;
 	GdkColor *orig_normal, *orig_prelight;
 
-	g_return_if_fail (shell && GDAUI_IS_ENTRY_SHELL (shell));
+	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
 
 	orig_normal = & (shell->priv->orig_style->bg[GTK_STATE_NORMAL]);
 	orig_prelight = & (shell->priv->orig_style->bg[GTK_STATE_PRELIGHT]);
@@ -455,7 +451,7 @@ gdaui_entry_shell_refresh_attributes (GdauiEntryShell *shell)
 void
 gdaui_entry_shell_refresh (GdauiEntryShell *shell)
 {
-	g_return_if_fail (shell && GDAUI_IS_ENTRY_SHELL (shell));
+	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
 	gdaui_entry_shell_refresh_attributes (shell);
 	gdaui_entry_shell_refresh_status_display (shell);
 }
