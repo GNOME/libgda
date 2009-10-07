@@ -693,18 +693,23 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, 
  * @id: the requested ID, or 0 if to be determined by @builder
  * @string: a string
  *
- * Defines an expression in @builder which may be reused to build other parts of a statement.
+ * Defines an expression representing an identifier in @builder,
+ * which may be reused to build other parts of a statement.
  *
  * The new expression will contain the @string literal.
  * For example:
  * <programlisting>
- * gda_sql_builder_add_expr_liretal (b, 0, "name")
+ * gda_sql_builder_add_id (b, 0, "name")
+ * gda_sql_builder_add_id (b, 0, "date")
  * </programlisting>
  *
  * will be rendered as SQL as:
  * <programlisting>
  * name
+ * "date"
  * </programlisting>
+ *
+ * because "date" is an SQL reserved keyword.
  *
  * Returns: the ID of the new expression, or 0 if there was an error
  *
@@ -1165,7 +1170,7 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, guint id, const gchar *fun
  * @args: an array of IDs representing the function's arguments
  * @args_size: @args's size
  *
- * Builds a new expression which reprenents a function applied to some arguments
+ * Builds a new expression which represents a function applied to some arguments
  *
  * Returns: the ID of the new expression, or 0 if there was an error
  *
