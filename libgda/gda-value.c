@@ -2490,6 +2490,13 @@ gda_ushort_get_type (void) {
  * where "xyz" is the octal representation of the byte, and the '\' (backslash) character
  * is converted to "\\".
  *
+ * Note that the backslash and newline characters are considered as printable characters and
+ * will not be represented by the "\xyz" representation.
+ *
+ * Use this function to get a representation as much readable by humans as possible of a binary
+ * chunk. Note that this function is internally called when transforming a binary value to
+ * a string for example when using g_value_transform() or gda_value_stringify().
+ *
  * Returns: a new string from @bin
  */
 gchar *
