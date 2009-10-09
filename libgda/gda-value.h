@@ -96,10 +96,18 @@ typedef struct {
 	glong   binary_length;
 } GdaBinary;
 
+/**
+ * GdaBlob
+ * @data: data buffer, as a #GdaBinary
+ * @op: a pointer to a #GdaBlopOp, or %NULL
+ *
+ * Represents some binary data, accessed through a #GdaBlobOp object.
+ * @op is generally set up by database providers when giving access to an existing BLOB in
+ * a database, but can be modified if needed using gda_blob_set_op().
+ */
 typedef struct {
 	GdaBinary  data;
-	GdaBlobOp *op; /* set up by providers if the GdaBlob is linked to something actually existing in the database, 
-			  usable by anyone */
+	GdaBlobOp *op;
 } GdaBlob;
 
 typedef GList GdaValueList;

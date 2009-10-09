@@ -159,7 +159,11 @@ gda_blob_op_read_all (GdaBlobOp *op, GdaBlob *blob)
  * @blob: a #GdaBlob which contains the data to write
  * @offset: offset to write from the start of the blob (starts at 0)
  *
- * Writes a chunk of bytes from a @blob to the BLOB accessible through @op.
+ * Writes a chunk of bytes from a @blob to the BLOB accessible through @op, @blob is unchanged after
+ * this call.
+ *
+ * If @blob has an associated #GdaBlobOp (ie. if @blob->op is not %NULL) then the data to be written
+ * using @op is the data fetched using @blob->op.
  *
  * Returns: the number of bytes written. In case of error, -1 is returned and the
  * provider should have added an error to the connection.
@@ -192,6 +196,9 @@ gda_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
 
 	if (CLASS (op)->write_all != NULL)
 		return CLASS (op)->write_all (op, blob);
-	else
-		return gda_blob_op_write (op, blob, 0);
+	else {
+		glong res;
+		res = gda_blob_op_write (op, blob, 0);
+		return res >= 0 ? TRUE : FALSE;
+	}
 }
