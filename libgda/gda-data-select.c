@@ -1268,27 +1268,26 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **
 					     &(modif_stmts[INS_QUERY]),
 					     &(modif_stmts[UPD_QUERY]),
 					     &(modif_stmts[DEL_QUERY]), error);
-	if (retval) {
-		for (mtype = FIRST_QUERY; mtype < NB_QUERIES; mtype++) {
+	for (mtype = FIRST_QUERY; mtype < NB_QUERIES; mtype++) {
 #ifdef GDA_DEBUG_NO
+		if (modif_stmts[mtype]) {
 			gchar *sql;
 			sql = gda_statement_to_sql (modif_stmts[mtype], NULL, NULL);
 			g_print ("type %d => %s\n", mtype, sql);
 			g_free (sql);
+		}
 #endif
-			if (modif_stmts[mtype] &&
-			    ! gda_data_select_set_modification_statement (model, modif_stmts[mtype], error)) {
-				retval = FALSE;
-				break;
-			}
+		if (modif_stmts[mtype] &&
+		    ! gda_data_select_set_modification_statement (model, modif_stmts[mtype], error)) {
+			retval = FALSE;
 		}
 	}
-	if (!retval) {
-		for (mtype = FIRST_QUERY; mtype < NB_QUERIES; mtype++) {
-			if (modif_stmts[mtype]) 
-				g_object_unref (modif_stmts[mtype]);
-		}
+
+	for (mtype = FIRST_QUERY; mtype < NB_QUERIES; mtype++) {
+		if (modif_stmts[mtype]) 
+			g_object_unref (modif_stmts[mtype]);
 	}
+
 	return retval;
 }
 
@@ -2876,10 +2875,9 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	g_free (sql);
 #endif
 
-	if (! imodel->priv->modif_internals->one_row_select_stmt) {
-		imodel->priv->modif_internals->one_row_select_stmt = compute_single_select_stmt (imodel, error);
-		if (!imodel->priv->modif_internals->one_row_select_stmt)
-			return -1;
+	if (! imodel->priv->sh->modif_internals->one_row_select_stmt) {
+		imodel->priv->sh->modif_internals->one_row_select_stmt =
+			compute_single_select_stmt (imodel, error);
 	}
 
 	GdaSet *last_insert;

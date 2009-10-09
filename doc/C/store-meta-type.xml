@@ -95,7 +95,7 @@
 
   <sect2 id="GdaConnectionMetaTypeGDA_CONNECTION_META_TABLES">
     <title>GDA_CONNECTION_META_TABLES</title>
-    <para>Lists the tables.
+    <para>Lists the tables which are "visible" without having to specify a schema name.
     </para>
     <para>Optional filter:
       <itemizedlist>
@@ -126,7 +126,7 @@
             <row>
               <entry>2</entry> 
               <entry>G_TYPE_STRING</entry>
-              <entry>Table's complete name (if the table is not in the default namespace)</entry>
+              <entry>Table's complete name (ie. schema name + table name)</entry>
             </row>
             <row>
               <entry>3</entry> 

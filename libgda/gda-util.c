@@ -1004,9 +1004,11 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 									     require_pk, error);
 		if (!ust->cond) {
 			retval = FALSE;
-			goto cleanup;
+			*update_stmt = NULL;
+			update_stmt = NULL; /* don't try anymore to build UPDATE statement */
 		}
-		GDA_SQL_ANY_PART (ust->cond)->parent = GDA_SQL_ANY_PART (ust);
+		else
+			GDA_SQL_ANY_PART (ust->cond)->parent = GDA_SQL_ANY_PART (ust);
 	}
         
 	if (delete_stmt) {
@@ -1016,14 +1018,19 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 
 		dst->table = gda_sql_table_new (GDA_SQL_ANY_PART (dst));
 		dst->table->table_name = g_strdup (tmp);
-		dst->cond = gda_compute_unique_table_row_condition_with_cnc (cnc, stsel, 
+		if (update_stmt && ust->cond)
+			dst->cond = gda_sql_expr_copy (ust->cond);
+		else
+			dst->cond = gda_compute_unique_table_row_condition_with_cnc (cnc, stsel, 
 									     GDA_META_TABLE (target->validity_meta_object),
 									     require_pk, error);
 		if (!dst->cond) {
 			retval = FALSE;
-			goto cleanup;
+			*delete_stmt = NULL;
+			delete_stmt = NULL; /* don't try anymore to build DELETE statement */
 		}
-		GDA_SQL_ANY_PART (dst->cond)->parent = GDA_SQL_ANY_PART (dst);
+		else
+			GDA_SQL_ANY_PART (dst->cond)->parent = GDA_SQL_ANY_PART (dst);
 	}
 	g_free (tmp);
 
@@ -1096,10 +1103,11 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 				     "%s", _("Could not compute any field to insert into"));
 			retval = FALSE;
-			goto cleanup;
 		}
-		ist->values_list = g_slist_append (NULL, insert_values_list);
-		ret_insert = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_ist, NULL);
+		else {
+			ist->values_list = g_slist_append (NULL, insert_values_list);
+			ret_insert = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_ist, NULL);
+		}
 	}
 	if (update_stmt)
 		ret_update = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_ust, NULL);
