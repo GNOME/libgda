@@ -22,7 +22,7 @@ main (int argc, char *argv[])
 	provider = gda_vprovider_hub_new ();
         virtual = gda_virtual_connection_open (provider, NULL);
 
-	/* adding connections to the cirtual connection */
+	/* adding connections to the virtual connection */
         if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual), s_cnc, "source", &error)) {
                 g_print ("Could not add connection to virtual connection: %s\n",
                          error && error->message ? error->message : "No detail");
