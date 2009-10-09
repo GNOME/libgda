@@ -79,11 +79,16 @@ enum
 	PROP_CAN_EXPAND
 };
 
+typedef struct {
+	GdaHolder *holder;
+	gulong     signal_id;
+} SignalData;
+
 struct _GdauiBasicFormPriv
 {
 	GdaSet                 *set;
 	GdauiSet               *set_info;
-	gulong                 *signal_ids; /* array of signal ids */
+	GArray                 *signal_data; /* array of SignalData */
 
 	GSList                 *entries;/* list of GdauiDataEntry widgets */
 	GSList                 *not_null_labels;/* list of GtkLabel widgets corresponding to NOT NULL entries */
@@ -225,7 +230,7 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
 	wid->priv->entries_glade = NULL;
 	wid->priv->entries_table = NULL;
 	wid->priv->hidden_entries = NULL;
-	wid->priv->signal_ids = NULL;
+	wid->priv->signal_data = NULL;
 
 	wid->priv->headers_sensitive = FALSE;
 	wid->priv->show_actions = FALSE;
@@ -311,12 +316,13 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 	g_assert (paramlist == form->priv->set);
 
 	/* disconnect from parameters */
-	for (list = form->priv->set->holders, i = 0;
-	     list;
-	     list = list->next, i++)
-		g_signal_handler_disconnect (G_OBJECT (list->data), form->priv->signal_ids[i]);
-	g_free (form->priv->signal_ids);
-	form->priv->signal_ids = NULL;
+	for (i = 0; i < form->priv->signal_data->len; i++) {
+		SignalData *sd = &(g_array_index (form->priv->signal_data, SignalData, i));
+		g_signal_handler_disconnect (sd->holder, sd->signal_id);
+		g_object_unref ((GObject*) sd->holder);
+	}
+	g_array_free (form->priv->signal_data, TRUE);
+	form->priv->signal_data = NULL;
 
 	/* unref the paramlist */
 	g_signal_handlers_disconnect_by_func (form->priv->set_info,
@@ -1380,19 +1386,15 @@ gdaui_basic_form_get_property (GObject *object,
 static void
 gdaui_basic_form_clean (GdauiBasicForm *form)
 {
-	GSList *list;
-	gint i = 0;
-
-	if (form->priv->set) {
-		g_assert (form->priv->signal_ids);
-		for (i = 0, list = form->priv->set->holders; 
-		     list; 
-		     i++, list = list->next) {
-			if (form->priv->signal_ids[i] > 0)
-				g_signal_handler_disconnect (G_OBJECT (list->data), form->priv->signal_ids[i]);
+	if (form->priv->set && form->priv->signal_data) {
+		gint i;
+		for (i = 0; i < form->priv->signal_data->len; i++) {
+			SignalData *sd = &(g_array_index (form->priv->signal_data, SignalData, i));
+			g_signal_handler_disconnect (sd->holder, sd->signal_id);
+			g_object_unref ((GObject*) sd->holder);
 		}
-		g_free (form->priv->signal_ids);
-		form->priv->signal_ids = NULL;
+		g_array_free (form->priv->signal_data, TRUE);
+		form->priv->signal_data = NULL;
 	}
 
 	/* destroy all the widgets */
@@ -1465,7 +1467,6 @@ static void
 gdaui_basic_form_fill (GdauiBasicForm *form)
 {
 	GSList *list;
-	gint i;
 	gboolean form_expand = FALSE;
 	
 	/* parameters list management */
@@ -1474,8 +1475,8 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 		return;
 
 	/* allocating space for the signal ids and connect to the parameter's changes */
-	form->priv->signal_ids = g_new0 (gulong, g_slist_length (form->priv->set->holders));
-	i = 0;
+	form->priv->signal_data = g_array_sized_new (FALSE, TRUE, sizeof (SignalData),
+						     g_slist_length (form->priv->set->holders));
 
 	/* creating all the data entries, and putting them into the form->priv->entries list */
 	for (list = form->priv->set_info->groups_list; list; list = list->next) {
@@ -1543,11 +1544,12 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 			g_signal_connect (entry, "destroy", G_CALLBACK (entry_destroyed_cb), form);
 
 			/* connect to the parameter's changes */
-			i = g_slist_index (form->priv->set->holders, param);
-			g_assert (i >= 0);
-                        form->priv->signal_ids[i] = g_signal_connect (G_OBJECT (param), "changed",
-                                                                      G_CALLBACK (parameter_changed_cb), 
-								      entry);
+			SignalData sd;
+			sd.holder = g_object_ref (param);
+			sd.signal_id = g_signal_connect (G_OBJECT (param), "changed",
+							 G_CALLBACK (parameter_changed_cb), 
+							 entry);
+			g_array_prepend_val (form->priv->signal_data, sd);
 		}
 		else { 
 			/* several parameters depending on the values of a GdaDataModel object */
@@ -1567,11 +1569,13 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 				param = GDA_SET_NODE (plist->data)->holder;
 				if (!gda_holder_get_not_null (param))
 					nnul = FALSE;
-				i = g_slist_index (form->priv->set->holders, param);
-				g_assert (i >= 0);
-				form->priv->signal_ids[i] = g_signal_connect (param, "changed",
-                                                                              G_CALLBACK (parameter_changed_cb), 
-									      entry);
+
+				SignalData sd;
+				sd.holder = g_object_ref (param);
+				sd.signal_id = g_signal_connect (G_OBJECT (param), "changed",
+								 G_CALLBACK (parameter_changed_cb), 
+								 entry);
+				g_array_prepend_val (form->priv->signal_data, sd);
 			}
 			gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
 							    nnul ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL,
@@ -1689,6 +1693,7 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 	 */
 	if (!form->priv->layout_spec && form->priv->scrolled_window == NULL) {
 		GtkWidget *table, *label;
+		gint i;
 
 		/* creating a table for all the entries */
 		table = gtk_table_new (g_slist_length (form->priv->entries), 2, FALSE);
@@ -1696,9 +1701,9 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 		gtk_table_set_col_spacings (GTK_TABLE (table), 5);
 		form->priv->entries_table = table;
 		gtk_box_pack_start (GTK_BOX (form), table, TRUE, TRUE, 0);
-		list = form->priv->entries;
-		i = 0;
-		while (list) {
+		for (list = form->priv->entries, i = 0;
+		     list;
+		     list = list->next, i++) {
 			gboolean expand;
 			GtkWidget *entry_label;
 			GdaHolder *param;
@@ -1795,9 +1800,6 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 				g_object_set (G_OBJECT (entry_label), "can-focus", FALSE, NULL);
 			}
 			g_object_set_data (G_OBJECT (list->data), "row_no", GINT_TO_POINTER (i));
-			
-			list = g_slist_next (list);
-			i++;
 		}
 		mark_not_null_entry_labels (form, TRUE);
 		gtk_widget_show (table);
