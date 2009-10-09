@@ -242,11 +242,10 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 
 	if (blob->op && (blob->op != op)) {
 		/* use data through blob->op */
-		//#define buf_size 262144
-                #define buf_size 16000
+                #define buf_size 16384
 		gint nread = 0;
 		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
-		tmpblob->op = blob->op;
+		gda_blob_set_op (tmpblob, blob->op);
 
 		nbwritten = 0;
 
