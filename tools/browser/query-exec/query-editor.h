@@ -91,6 +91,7 @@ struct _QueryEditorClass {
 	/* signals */
 	void (* changed) (QueryEditor *editor);
 	void (* history_item_removed) (QueryEditor *editor, QueryEditorHistoryItem *item);
+	void (* history_cleared) (QueryEditor *editor);
 	void (* execute_request) (QueryEditor *editor);
 };
 
@@ -132,6 +133,7 @@ void       query_editor_add_history_item (QueryEditor *editor, QueryEditorHistor
 QueryEditorHistoryItem *query_editor_get_current_history_item (QueryEditor *editor);
 QueryEditorHistoryBatch *query_editor_get_current_history_batch (QueryEditor *editor);
 
+void       query_editor_del_all_history_items (QueryEditor *editor);
 void       query_editor_del_current_history_item (QueryEditor *editor);
 void       query_editor_del_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *batch);
 

@@ -116,11 +116,12 @@ enum
 {
         CHANGED,
 	HISTORY_ITEM_REMOVED,
+	HISTORY_CLEARED,
 	EXECUTE_REQUEST,
         LAST_SIGNAL
 };
 
-static gint query_editor_signals[LAST_SIGNAL] = { 0, 0, 0 };
+static gint query_editor_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
 
 
 /*
@@ -214,6 +215,14 @@ query_editor_class_init (QueryEditorClass *klass)
                               G_STRUCT_OFFSET (QueryEditorClass, history_item_removed),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+	query_editor_signals[HISTORY_CLEARED] =
+                g_signal_new ("history-cleared",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (QueryEditorClass, history_cleared),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	object_class->finalize = query_editor_finalize;
 	GTK_WIDGET_CLASS (object_class)->map = query_editor_map;
@@ -1485,6 +1494,34 @@ query_editor_del_current_history_item (QueryEditor *editor)
 		}
 	}
 	hist_item_data_unref (hdata);
+}
+
+/**
+ * query_editor_del_all_history_items
+ * @editor: a #QueryEditor
+ *
+ * Clears all the history
+ */
+void
+query_editor_del_all_history_items (QueryEditor *editor)
+{
+	GtkTextBuffer *buffer;
+	GtkTextIter start, end;
+
+	g_return_if_fail (QUERY_IS_EDITOR (editor));
+	g_return_if_fail (editor->priv->mode == QUERY_EDITOR_HISTORY);
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
+	hist_data_free_all (editor);
+
+	gtk_text_buffer_get_start_iter (buffer, &start);
+	gtk_text_buffer_get_end_iter (buffer, &end);
+	gtk_text_buffer_delete (buffer, &start, &end);
+
+	editor->priv->hash = g_hash_table_new_full (NULL, NULL, NULL,
+						    (GDestroyNotify) hist_item_data_unref);
+	g_signal_emit (editor, query_editor_signals[CHANGED], 0);
+	g_signal_emit (editor, query_editor_signals[HISTORY_CLEARED], 0);
 }
 
 /**

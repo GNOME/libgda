@@ -272,7 +272,7 @@ static void sql_indent_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 static void sql_favorite_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 
 static void history_copy_clicked_cb (GtkButton *button, QueryConsole *tconsole);
-static void history_delete_clicked_cb (GtkButton *button, QueryConsole *tconsole);
+static void history_clear_clicked_cb (GtkButton *button, QueryConsole *tconsole);
 static void history_changed_cb (QueryEditor *history, QueryConsole *tconsole);
 /**
  * query_console_new
@@ -428,10 +428,10 @@ query_console_new (BrowserConnection *bcnc)
 	tconsole->priv->history_copy_button = button;
 	gtk_widget_set_sensitive (button, FALSE);
 
-	button = make_small_button (FALSE, _("Delete"), GTK_STOCK_DELETE, _("Delete history item"));
+	button = make_small_button (FALSE, _("Clear"), GTK_STOCK_CLEAR, _("Clear history"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
-			  G_CALLBACK (history_delete_clicked_cb), tconsole);
+			  G_CALLBACK (history_clear_clicked_cb), tconsole);
 	tconsole->priv->history_del_button = button;
 	gtk_widget_set_sensitive (button, FALSE);
 
@@ -521,21 +521,9 @@ history_changed_cb (QueryEditor *history, QueryConsole *tconsole)
 }
 
 static void
-history_delete_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+history_clear_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 {
-	QueryEditorHistoryItem *qih;
-	QueryEditor *qe;
-	
-	qe = tconsole->priv->history;
-        qih = query_editor_get_current_history_item (qe);
-        if (qih)
-                query_editor_del_current_history_item (qe);
-        else {
-                QueryEditorHistoryBatch *qib;
-                qib = query_editor_get_current_history_batch (qe);
-                if (qib)
-                        query_editor_del_history_batch (qe, qib);
-        }
+	query_editor_del_all_history_items (tconsole->priv->history);
 }
 
 static void

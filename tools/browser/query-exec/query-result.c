@@ -85,6 +85,13 @@ history_item_removed_cb (QueryEditor *history, QueryEditorHistoryItem *item, Que
 }
 
 static void
+history_cleared_cb (QueryEditor *history, QueryResult *result)
+{
+	g_hash_table_remove_all (result->priv->hash);
+	g_print ("Removed all GtkWidget\n");
+}
+
+static void
 query_result_finalize (GObject *object)
 {
 	QueryResult *result = (QueryResult *) object;
@@ -97,6 +104,8 @@ query_result_finalize (GObject *object)
 	if (result->priv->history) {
 		g_signal_handlers_disconnect_by_func (result->priv->history,
 						      G_CALLBACK (history_item_removed_cb), result);
+		g_signal_handlers_disconnect_by_func (result->priv->history,
+						      G_CALLBACK (history_cleared_cb), result);
 		g_object_unref (result->priv->history);
 	}
 	if (result->priv->hbatch)
@@ -149,6 +158,8 @@ query_result_new (QueryEditor *history)
 	result = g_object_new (QUERY_TYPE_RESULT, NULL);
 	g_signal_connect (history, "history-item-removed",
 			  G_CALLBACK (history_item_removed_cb), result);
+	g_signal_connect (history, "history-cleared",
+			  G_CALLBACK (history_cleared_cb), result);
 	result->priv->history = g_object_ref (history);
 
 
