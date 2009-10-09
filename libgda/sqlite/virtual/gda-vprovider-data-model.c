@@ -348,7 +348,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	GdaDataModel *wrapper = NULL;
 	GString *sql;
 	gint i, ncols;
-	gchar *spec_name;
+	gchar *spec_name, *tmp;
 	GdaVConnectionTableData *td;
 
 	TRACE ();
@@ -407,7 +407,9 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 
 	/* create the CREATE TABLE statement */
 	sql = g_string_new ("CREATE TABLE ");
-	g_string_append (sql, argv[2]);
+	tmp = gda_connection_quote_sql_identifier (GDA_CONNECTION (cnc), argv[2]);
+	g_string_append (sql, tmp);
+	g_free (tmp);
 	g_string_append (sql, " (");
 	for (i = 0; i < ncols; i++) {
 		GdaColumn *column;
@@ -764,10 +766,6 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			return SQLITE_READONLY;
 		}
 
-		newrow = gda_data_model_append_row (vtable->wrapper, NULL);
-		if (newrow < 0)
-			return SQLITE_READONLY;
-
 		for (i = 2; i < (nData - 1); i++) {
 			GType type;
 			GValue *value;
@@ -778,11 +776,15 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 				value = gda_value_new_null ();
 			/*g_print ("TXT #%s# => value %p (type=%s) apData[]=%p\n", sqlite3_value_text (apData [i]), value,
 			  g_type_name (type), apData[i]);*/
-			values = g_list_append (values, value);
+			values = g_list_prepend (values, value);
 		}
-		gda_data_model_set_values (vtable->wrapper, newrow, values, NULL);
+		values = g_list_reverse (values);
+
+		newrow = gda_data_model_append_values (vtable->wrapper, values, NULL);
 		g_list_foreach (values, (GFunc) gda_value_free, NULL);
 		g_list_free (values);
+		if (newrow < 0)
+			return SQLITE_READONLY;
 
 		*pRowid = newrow;
 	}
