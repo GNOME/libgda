@@ -2875,8 +2875,8 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	g_free (sql);
 #endif
 
-	if (! imodel->priv->sh->modif_internals->one_row_select_stmt) {
-		imodel->priv->sh->modif_internals->one_row_select_stmt =
+	if (! imodel->priv->modif_internals->one_row_select_stmt) {
+		imodel->priv->modif_internals->one_row_select_stmt =
 			compute_single_select_stmt (imodel, error);
 	}
 
