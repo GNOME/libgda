@@ -798,10 +798,12 @@ fill_tables_views_model (GdaConnection *cnc,
                         if (*(g_value_get_string (tvalue)) == 'v')
                                 is_view = TRUE;
                         g_value_set_boolean ((v1 = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
+
 			str = g_strdup_printf ("%s.%s",
 					       g_value_get_string (ntable_schema),
 					       g_value_get_string (ncvalue));
 			g_value_take_string ((v2 = gda_value_new (G_TYPE_STRING)), str);
+
                         if (is_view && ! append_a_row (to_views_model, error, 6,
                                                        FALSE, catalog_value,
                                                        FALSE, ntable_schema,
@@ -813,11 +815,11 @@ fill_tables_views_model (GdaConnection *cnc,
                         if (! append_a_row (to_tables_model, error, 9,
                                             FALSE, catalog_value, /* table_catalog */
                                             TRUE, ntable_schema, /* table_schema */
-                                            FALSE, ncvalue, /* table_name */
+                                            TRUE, ncvalue, /* table_name */
                                             FALSE, is_view ? view_type_value : table_type_value, /* table_type */
                                             TRUE, v1, /* is_insertable_into */
                                             FALSE, NULL, /* table_comments */
-                                            TRUE, ncvalue, /* table_short_name */
+                                            FALSE, strcmp (schema_name, "main") ? v2 : ncvalue, /* table_short_name */
                                             TRUE, v2, /* table_full_name */
                                             FALSE, NULL)) /* table_owner */
                                 retval = FALSE;
