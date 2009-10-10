@@ -308,6 +308,7 @@
 	gda_data_select_set_modification_statement_sql
 	gda_data_select_set_row_selection_condition
 	gda_data_select_set_row_selection_condition_sql
+	gda_data_select_rerun
 	gda_data_select_take_row
 	gda_default_escape_string
 	gda_default_unescape_string

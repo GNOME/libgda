@@ -172,3 +172,13 @@ Data models returned by the execution of a SELECT statement
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_select_rerun ##### -->
+<para>
+
+</para>
+
+@model: 
+@error: 
+@Returns: 
+
+

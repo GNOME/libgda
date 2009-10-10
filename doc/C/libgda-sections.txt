@@ -1365,6 +1365,7 @@ gda_data_select_set_modification_statement
 gda_data_select_set_modification_statement_sql
 gda_data_select_compute_modification_statements
 gda_data_select_compute_columns_attributes
+gda_data_select_rerun
 <SUBSECTION Standard>
 GDA_IS_DATA_SELECT
 GDA_DATA_SELECT
