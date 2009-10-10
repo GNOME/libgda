@@ -1,3 +1,14 @@
+libgda 4.1.3, 2009-10-10
+
+ - GdaBrowser improvement
+ - UI extension corrections
+ - libgda's core improvements: better BLOB handling, better API for GdaSqlBuilder,
+   GdaDataSelect
+ - misc bug fixes
+ - Translations:
+	- de (Mario Blättermann, Christian Kirbach)
+	- es (Jorge González)
+
 libgda 4.1.2, 2009-09-20
 
  - the GdaBrowser application now supports query execution, and is more
