@@ -563,19 +563,20 @@
 	gda_sql_any_part_check_structure
 	gda_sql_any_part_foreach
 	gda_sql_any_part_type_get_type
+	gda_sql_builder_add_cond
+	gda_sql_builder_add_cond_v
+	gda_sql_builder_add_expr
+	gda_sql_builder_add_expr_value
 	gda_sql_builder_add_field
 	gda_sql_builder_add_function
 	gda_sql_builder_add_function_v
-	gda_sql_builder_cond
-	gda_sql_builder_cond_v
-	gda_sql_builder_expr
+	gda_sql_builder_add_id
+	gda_sql_builder_add_param
 	gda_sql_builder_get_statement
 	gda_sql_builder_get_sql_statement
 	gda_sql_builder_get_type
 	gda_sql_builder_join_add_field
-	gda_sql_builder_ident
 	gda_sql_builder_new
-	gda_sql_builder_param
 	gda_sql_builder_select_add_target
 	gda_sql_builder_select_join_targets
 	gda_sql_builder_select_order_by

@@ -17,7 +17,7 @@
 cross_path=/local/Win32/gtk
 depend_path=/local/Win32
 prefix=/local/Win32/Libgda
-version=4.1.2
+version=4.1.3
 
 
 
@@ -119,7 +119,7 @@ add_all_files_to_zip $archive $prefix share/libgda-4.0/pixmaps
 files=(gda-browser-4.0.png gda-control-center-4.0.png)
 add_files_to_zip $archive $prefix share/pixmaps $files
 
-files=(gdaui-entry-string-number.xml gdaui-entry-string-string.xml)
+files=(gdaui-entry-number.xml gdaui-entry-string.xml)
 add_files_to_zip $archive $prefix share/libgda-4.0/ui $files
 
 files=(cnc.js md5.js jquery.js mouseapp_2.js mouseirb_2.js irb.js gda.css gda-print.css irb.css)
