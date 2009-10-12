@@ -146,7 +146,116 @@ main (int argc, char *argv[])
 				      0);
 	gda_sql_builder_add_field (b, 1, 0);
 	render_as_sql (b);
+	g_object_unref (b);
+
+	/* Subselect: SELECT name FROM master WHERE id IN (SELECT id FROM subdata) */
+	GdaSqlStatement *sub;
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "subdata"),
+					   NULL);
+	sub = gda_sql_builder_get_sql_statement (b, FALSE);
+	g_object_unref (b);
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "master"),
+					   NULL);
+	gda_sql_builder_add_id (b, 1, "id");
+	gda_sql_builder_add_sub_select (b, 2, sub, TRUE);
+	gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_IN, 1, 2, 0);
+	gda_sql_builder_set_where (b, 3);
+	render_as_sql (b);
+	g_object_unref (b);
 	
+	/* Subselect in INSERT: INSERT INTO customers (e, f, g) SELECT id, name, location FROM subdate */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "location"), 0);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "subdate"),
+					   NULL);
+	sub = gda_sql_builder_get_sql_statement (b, FALSE);
+	g_object_unref (b);
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+
+	gda_sql_builder_set_table (b, "customers");
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "e"), 0);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "f"), 0);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "g"), 0);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_sub_select (b, 0, sub, TRUE), 0);
+	
+	render_as_sql (b);
+	g_object_unref (b);
+
+
+	/* compound: SELECT id, name FROM subdata1 UNION SELECT ident, lastname FROM subdata2 */
+	GdaSqlStatement *sub1, *sub2;
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "subdata1"),
+					   NULL);
+	sub1 = gda_sql_builder_get_sql_statement (b, FALSE);
+	g_object_unref (b);
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "ident"), 0);
+	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "lastname"), 0);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "subdata2"),
+					   NULL);
+	sub2 = gda_sql_builder_get_sql_statement (b, FALSE);
+	g_object_unref (b);
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_COMPOUND);
+	gda_sql_builder_compound_add_sub_select (b, sub1, TRUE);
+	gda_sql_builder_compound_add_sub_select (b, sub2, TRUE);
+	render_as_sql (b);
+	g_object_unref (b);
+
+	/* SELECT CASE WHEN price < 1.200000 THEN 2 ELSE 1 END FROM data */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_cond (b, 1, GDA_SQL_OPERATOR_TYPE_LT,
+				  gda_sql_builder_add_id (b, 0, "price"),
+				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_FLOAT, 1.2), 0);
+	
+	gda_sql_builder_add_case (b, 10, 
+				  0,
+				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 1),
+				  1, gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 2),
+				  0);
+	gda_sql_builder_add_field (b, 10, 0);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "data"),
+					   NULL);
+	render_as_sql (b);
+	g_object_unref (b);
+
+	/* SELECT CASE tag WHEN 'Alpha' THEN 1 WHEN 'Bravo' THEN 2 WHEN 'Charlie' THEN 3 ELSE 0 END FROM data */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_case (b, 10, 
+				  gda_sql_builder_add_id (b, 0, "tag"),
+				  0,
+				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Alpha"),
+				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 1),
+				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Bravo"),
+				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 2),
+				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Charlie"),
+				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 3),
+				  0);
+	gda_sql_builder_add_field (b, 10, 0);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "data"),
+					   NULL);
+	render_as_sql (b);
+	g_object_unref (b);
+
 	return 0;
 }
 

@@ -241,11 +241,14 @@ gda_sql_builder_set_property (GObject *object,
 			if ((stmt_type != GDA_SQL_STATEMENT_SELECT) &&
 			    (stmt_type != GDA_SQL_STATEMENT_UPDATE) &&
 			    (stmt_type != GDA_SQL_STATEMENT_INSERT) &&
-			    (stmt_type != GDA_SQL_STATEMENT_DELETE)) {
+			    (stmt_type != GDA_SQL_STATEMENT_DELETE) &&
+			    (stmt_type != GDA_SQL_STATEMENT_COMPOUND)) {
 				g_critical ("Unsupported statement type: %d", stmt_type);
 				return;
 			}
 			builder->priv->main_stmt = gda_sql_statement_new (stmt_type);
+			if (stmt_type == GDA_SQL_STATEMENT_COMPOUND)
+				gda_sql_builder_compound_set_type (builder, GDA_SQL_STATEMENT_COMPOUND_UNION);
 			break;
 		}
 	}
@@ -489,12 +492,17 @@ gda_sql_builder_set_where (GdaSqlBuilder *builder, guint cond_id)
  * gda_sql_builder_add_field
  * @builder: a #GdaSqlBuilder object
  * @field_id: the ID of the field's name or definition
- * @value_id: the ID of the value to set the field to
+ * @value_id: the ID of the value to set the field to, or %0
  *
  * Valid only for: INSERT, UPDATE, SELECT statements
  *
- * For INSERT and UPDATE: specifies that the field named @field_name will be set to the value identified by @value_id.
+ * For UPDATE: specifies that the field represented by @field_id will be set to the value identified by @value_id.
  * For SELECT: add a selected item to the statement, and if @value_id is not %0, then use it as an alias
+ * For INSERT: if @field_id represents an SQL identifier (obtained using gda_sql_builder_add_id()): then if
+ *             @value_id is not %0 then specifies that the field represented by @field_id will be set to the
+ *             value identified by @value_id, otherwise just specifies a named field to be given a value.
+ *             If @field_id represents a sub SELECT (obtained using gda_sql_builder_add_sub_select()), then
+ *             this method call defines the sub SELECT from which values to insert are taken.
  *
  * Since: 4.2
  */
@@ -516,11 +524,11 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_i
 	switch (builder->priv->main_stmt->stmt_type) {
 	case GDA_SQL_STATEMENT_UPDATE:
 	case GDA_SQL_STATEMENT_INSERT:
-		if (!value_part)
-			return;
-		if (!field_expr->value || (G_VALUE_TYPE (field_expr->value) !=  G_TYPE_STRING)) {
-			g_warning (_("Wrong field format"));
-			return;
+		if (!field_expr->select) {
+			if (!field_expr->value || (G_VALUE_TYPE (field_expr->value) !=  G_TYPE_STRING)) {
+				g_warning (_("Wrong field format"));
+				return;
+			}
 		}
 		break;
 	case GDA_SQL_STATEMENT_SELECT:
@@ -543,18 +551,34 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_i
 	}
 	case GDA_SQL_STATEMENT_INSERT:{
 		GdaSqlStatementInsert *ins = (GdaSqlStatementInsert*) builder->priv->main_stmt->contents;
-		GdaSqlField *field = gda_sql_field_new (GDA_SQL_ANY_PART (ins));
-		field->field_name = g_value_dup_string (field_expr->value);
-
-		ins->fields_list = g_slist_append (ins->fields_list, field);
 		
-		if (! ins->values_list)
-			ins->values_list = g_slist_append (NULL,
-							   g_slist_append (NULL,
-							   use_part (value_part, GDA_SQL_ANY_PART (ins))));
-		else
-			ins->values_list->data = g_slist_append ((GSList*) ins->values_list->data, 
-								 use_part (value_part, GDA_SQL_ANY_PART (ins)));
+		if (field_expr->select) {
+			switch (GDA_SQL_ANY_PART (field_expr->select)->type) {
+			case GDA_SQL_STATEMENT_SELECT:
+				ins->select = _gda_sql_statement_select_copy (field_expr->select);
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND:
+				ins->select = _gda_sql_statement_compound_copy (field_expr->select);
+				break;
+			default:
+				g_assert_not_reached ();
+			}
+		}
+		else {
+			GdaSqlField *field = gda_sql_field_new (GDA_SQL_ANY_PART (ins));
+			field->field_name = g_value_dup_string (field_expr->value);
+			
+			ins->fields_list = g_slist_append (ins->fields_list, field);
+			if (value_part) {
+				if (! ins->values_list)
+					ins->values_list = g_slist_append (NULL,
+									   g_slist_append (NULL,
+									   use_part (value_part, GDA_SQL_ANY_PART (ins))));
+				else
+					ins->values_list->data = g_slist_append ((GSList*) ins->values_list->data, 
+										 use_part (value_part, GDA_SQL_ANY_PART (ins)));
+			}
+		}
 		break;
 	}
 	case GDA_SQL_STATEMENT_SELECT: {
@@ -674,6 +698,8 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, 
 		g_value_set_string ((v = gda_value_new (G_TYPE_STRING)), va_arg (ap, gchar*));
 	else if (type == G_TYPE_INT)
 		g_value_set_int ((v = gda_value_new (G_TYPE_INT)), va_arg (ap, gint));
+	else if (type == G_TYPE_FLOAT)
+		g_value_set_float ((v = gda_value_new (G_TYPE_FLOAT)), va_arg (ap, double));
 	else
 		g_warning (_("Could not convert value to type '%s'"), g_type_name (type));
 	va_end (ap);
@@ -921,8 +947,8 @@ gda_sql_builder_select_add_target (GdaSqlBuilder *builder, guint id, guint table
 	BuildTarget *btarget;
 	GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
 	btarget = g_new0 (BuildTarget, 1);
-        GDA_SQL_ANY_PART(btarget)->type = GDA_SQL_ANY_SQL_SELECT_TARGET;
-        GDA_SQL_ANY_PART(btarget)->parent = GDA_SQL_ANY_PART (sel->from);
+        GDA_SQL_ANY_PART (btarget)->type = GDA_SQL_ANY_SQL_SELECT_TARGET;
+        GDA_SQL_ANY_PART (btarget)->parent = GDA_SQL_ANY_PART (sel->from);
 	if (id)
 		btarget->part_id = id;
 	else
@@ -1008,8 +1034,8 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder, guint id,
 	GdaSqlSelectJoin *join;
 
 	bjoin = g_new0 (BuilderJoin, 1);
-	GDA_SQL_ANY_PART(bjoin)->type = GDA_SQL_ANY_SQL_SELECT_JOIN;
-        GDA_SQL_ANY_PART(bjoin)->parent = GDA_SQL_ANY_PART (sel->from);
+	GDA_SQL_ANY_PART (bjoin)->type = GDA_SQL_ANY_SQL_SELECT_JOIN;
+        GDA_SQL_ANY_PART (bjoin)->parent = GDA_SQL_ANY_PART (sel->from);
 	if (id)
 		bjoin->part_id = id;
 	else
@@ -1204,4 +1230,236 @@ gda_sql_builder_add_function_v (GdaSqlBuilder *builder, guint id, const gchar *f
 	expr->func->args_list = g_slist_reverse (list);
 
 	return add_part (builder, id, (GdaSqlAnyPart *) expr);
+}
+
+/**
+ * gda_sql_builder_add_sub_select
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT
+ * @steal: if %TRUE, then @sqlst will be "stolen" by @b and should not be used anymore
+ *
+ * Adds an expression which is a subselect.
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, guint id, GdaSqlStatement *sqlst, gboolean steal)
+{
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	g_return_val_if_fail (sqlst, 0);
+	g_return_val_if_fail ((sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) ||
+			      (sqlst->stmt_type == GDA_SQL_STATEMENT_COMPOUND), 0);
+	
+	GdaSqlExpr *expr;
+	expr = gda_sql_expr_new (NULL);
+	if (steal) {
+		expr->select = sqlst->contents;
+		sqlst->contents = NULL;
+		gda_sql_statement_free (sqlst);
+	}
+	else {
+		switch (sqlst->stmt_type) {
+		case GDA_SQL_STATEMENT_SELECT:
+			expr->select = _gda_sql_statement_select_copy (sqlst->contents);
+			break;
+		case GDA_SQL_STATEMENT_COMPOUND:
+			expr->select = _gda_sql_statement_compound_copy (sqlst->contents);
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
+	GDA_SQL_ANY_PART (expr->select)->parent = GDA_SQL_ANY_PART (expr);
+
+	return add_part (builder, id, (GdaSqlAnyPart *) expr);
+}
+
+/**
+ * gda_sql_builder_compound_set_type
+ * @builder: a #GdaSqlBuilder object
+ * @compound_type: a type of compound
+ *
+ * Changes the type of compound which @builder is making, for a COMPOUND statement
+ *
+ * Since: 4.2
+ */
+void
+gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompoundType compound_type)
+{
+	GdaSqlStatementCompound *cstmt;
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+	g_return_if_fail (builder->priv->main_stmt);
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_COMPOUND) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+
+	cstmt = (GdaSqlStatementCompound*) builder->priv->main_stmt->contents;
+	cstmt->compound_type = compound_type;
+}
+
+/**
+ * gda_sql_builder_compound_add_sub_select
+ * @builder: a #GdaSqlBuilder object
+ * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT
+ * @steal: if %TRUE, then @sqlst will be "stolen" by @b and should not be used anymore
+ *
+ * Add a sub select to a COMPOUND statement
+ * 
+ * Since: 4.2
+ */
+void
+gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst, gboolean steal)
+{
+	GdaSqlStatementCompound *cstmt;
+	GdaSqlStatement *sub;
+
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+	g_return_if_fail (builder->priv->main_stmt);
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_COMPOUND) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+	g_return_if_fail (sqlst);
+	g_return_if_fail ((sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) ||
+			  (sqlst->stmt_type == GDA_SQL_STATEMENT_COMPOUND));
+
+	cstmt = (GdaSqlStatementCompound*) builder->priv->main_stmt->contents;
+	if (steal)
+		sub = sqlst;
+	else
+		sub = gda_sql_statement_copy (sqlst);
+
+	cstmt->stmt_list = g_slist_append (cstmt->stmt_list, sub);
+}
+
+/**
+ * gda_sql_builder_add_case
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @test_expr: the expression ID representing the test of the CASE, or %0
+ * @else_expr: the expression ID representing the ELSE expression, or %0
+ * @...: a list, terminated by a %0, of (WHEN expression ID, THEN expression ID) representing
+ *       all the test cases
+ *
+ * Creates a new CASE ... WHEN ... THEN ... ELSE ... END expression.
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_add_case (GdaSqlBuilder *builder, guint id,
+			  guint test_expr, guint else_expr, ...)
+{
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+
+	SqlPart *ptest, *pelse;
+	ptest = get_part (builder, test_expr, GDA_SQL_ANY_EXPR);
+	pelse = get_part (builder, else_expr, GDA_SQL_ANY_EXPR);
+	
+	GdaSqlExpr *expr;
+	expr = gda_sql_expr_new (NULL);
+
+	expr->case_s = gda_sql_case_new (GDA_SQL_ANY_PART (expr));
+	if (ptest)
+		expr->case_s->base_expr = (GdaSqlExpr*) use_part (ptest, GDA_SQL_ANY_PART (expr->case_s));
+	if (pelse)
+		expr->case_s->else_expr = (GdaSqlExpr*) use_part (pelse, GDA_SQL_ANY_PART (expr->case_s));
+	
+	va_list ap;
+	guint id1;
+	va_start (ap, else_expr);
+	for (id1 = va_arg (ap, guint); id1; id1 = va_arg (ap, guint)) {
+		guint id2;
+		SqlPart *pwhen, *pthen;
+		id2 = va_arg (ap, guint);
+		if (!id2)
+			goto cleanups;
+		pwhen = get_part (builder, id1, GDA_SQL_ANY_EXPR);
+		if (!pwhen)
+			goto cleanups;
+		pthen = get_part (builder, id2, GDA_SQL_ANY_EXPR);
+		if (!pthen)
+			goto cleanups;
+		expr->case_s->when_expr_list = g_slist_prepend (expr->case_s->when_expr_list,
+								use_part (pwhen, GDA_SQL_ANY_PART (expr->case_s)));
+		expr->case_s->then_expr_list = g_slist_prepend (expr->case_s->then_expr_list,
+								use_part (pthen, GDA_SQL_ANY_PART (expr->case_s)));
+	}
+	va_end (ap);
+	expr->case_s->when_expr_list = g_slist_reverse (expr->case_s->when_expr_list);
+	expr->case_s->then_expr_list = g_slist_reverse (expr->case_s->then_expr_list);
+	return add_part (builder, id, (GdaSqlAnyPart *) expr);
+	
+ cleanups:
+	gda_sql_expr_free (expr);
+	return 0;
+}
+
+/**
+ * gda_sql_builder_add_case_v
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @test_expr: the expression ID representing the test of the CASE, or %0
+ * @else_expr: the expression ID representing the ELSE expression, or %0
+ * @when_array: an array containing each WHEN expression ID, having at least @args_size elements
+ * @then_array: an array containing each THEN expression ID, having at least @args_size elements
+ * @args_size: the size of @when_array and @then_array
+ *
+ * Creates a new CASE ... WHEN ... THEN ... ELSE ... END expression. The WHEN expression and the THEN
+ * expression IDs are taken from the @when_array and @then_array at the same index, for each index inferior to
+ * @args_size.
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_add_case_v (GdaSqlBuilder *builder, guint id,
+			    guint test_expr, guint else_expr,
+			    const guint *when_array, const guint *then_array, gint args_size)
+{
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+
+	SqlPart *ptest, *pelse;
+	ptest = get_part (builder, test_expr, GDA_SQL_ANY_EXPR);
+	pelse = get_part (builder, else_expr, GDA_SQL_ANY_EXPR);
+	
+	GdaSqlExpr *expr;
+	expr = gda_sql_expr_new (NULL);
+
+	expr->case_s = gda_sql_case_new (GDA_SQL_ANY_PART (expr));
+	if (ptest)
+		expr->case_s->base_expr = (GdaSqlExpr*) use_part (ptest, GDA_SQL_ANY_PART (expr->case_s));
+	if (pelse)
+		expr->case_s->else_expr = (GdaSqlExpr*) use_part (pelse, GDA_SQL_ANY_PART (expr->case_s));
+	
+	gint i;
+	for (i = 0; i < args_size; i++) {
+		SqlPart *pwhen, *pthen;
+		pwhen = get_part (builder, when_array[i], GDA_SQL_ANY_EXPR);
+		if (!pwhen)
+			goto cleanups;
+		pthen = get_part (builder, then_array[i], GDA_SQL_ANY_EXPR);
+		if (!pthen)
+			goto cleanups;
+		expr->case_s->when_expr_list = g_slist_prepend (expr->case_s->when_expr_list,
+								use_part (pwhen, GDA_SQL_ANY_PART (expr->case_s)));
+		expr->case_s->then_expr_list = g_slist_prepend (expr->case_s->then_expr_list,
+								use_part (pthen, GDA_SQL_ANY_PART (expr->case_s)));
+	}
+	expr->case_s->when_expr_list = g_slist_reverse (expr->case_s->when_expr_list);
+	expr->case_s->then_expr_list = g_slist_reverse (expr->case_s->then_expr_list);
+	return add_part (builder, id, (GdaSqlAnyPart *) expr);
+	
+ cleanups:
+	gda_sql_expr_free (expr);
+	return 0;
 }

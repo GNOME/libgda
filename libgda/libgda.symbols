@@ -563,6 +563,8 @@
 	gda_sql_any_part_check_structure
 	gda_sql_any_part_foreach
 	gda_sql_any_part_type_get_type
+	gda_sql_builder_add_case
+	gda_sql_builder_add_case_v
 	gda_sql_builder_add_cond
 	gda_sql_builder_add_cond_v
 	gda_sql_builder_add_expr
@@ -572,8 +574,11 @@
 	gda_sql_builder_add_function_v
 	gda_sql_builder_add_id
 	gda_sql_builder_add_param
+	gda_sql_builder_compound_add_sub_select
+	gda_sql_builder_compound_set_type
 	gda_sql_builder_get_statement
 	gda_sql_builder_get_sql_statement
+	gda_sql_builder_add_sub_select
 	gda_sql_builder_get_type
 	gda_sql_builder_join_add_field
 	gda_sql_builder_new

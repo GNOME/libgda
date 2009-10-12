@@ -619,6 +619,18 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 @_gda_reserved1: 
 @_gda_reserved2: 
 
+<!-- ##### ENUM GdaSqlStatementCompoundType ##### -->
+<para>
+
+</para>
+
+@GDA_SQL_STATEMENT_COMPOUND_UNION: 
+@GDA_SQL_STATEMENT_COMPOUND_UNION_ALL: 
+@GDA_SQL_STATEMENT_COMPOUND_INTERSECT: 
+@GDA_SQL_STATEMENT_COMPOUND_INTERSECT_ALL: 
+@GDA_SQL_STATEMENT_COMPOUND_EXCEPT: 
+@GDA_SQL_STATEMENT_COMPOUND_EXCEPT_ALL: 
+
 <!-- ##### FUNCTION gda_sql_statement_compound_set_type ##### -->
 <para>
 

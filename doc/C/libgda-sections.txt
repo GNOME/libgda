@@ -1189,6 +1189,7 @@ gda_sql_statement_update_take_condition
 gda_sql_statement_update_take_set_value
 <SUBSECTION>
 GdaSqlStatementCompound
+GdaSqlStatementCompoundType
 gda_sql_statement_compound_set_type
 gda_sql_statement_compound_take_stmt
 <SUBSECTION>
@@ -1670,6 +1671,9 @@ gda_sql_builder_add_id
 gda_sql_builder_add_expr
 gda_sql_builder_add_expr_value
 gda_sql_builder_add_param
+gda_sql_builder_add_case
+gda_sql_builder_add_case_v
+gda_sql_builder_add_sub_select
 <SUBSECTION>
 gda_sql_builder_add_cond
 gda_sql_builder_add_cond_v
@@ -1679,6 +1683,9 @@ gda_sql_builder_select_add_target
 gda_sql_builder_select_join_targets
 gda_sql_builder_join_add_field
 gda_sql_builder_select_order_by
+<SUBSECTION>
+gda_sql_builder_compound_add_sub_select
+gda_sql_builder_compound_set_type
 <SUBSECTION Standard>
 GDA_SQL_BUILDER
 GDA_SQL_BUILDER_GET_CLASS

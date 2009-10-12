@@ -178,6 +178,46 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_sql_builder_add_case ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@test_expr: 
+@else_expr: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_add_case_v ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@test_expr: 
+@else_expr: 
+@when_array: 
+@then_array: 
+@args_size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_add_sub_select ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@sqlst: 
+@steal: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_sql_builder_add_cond ##### -->
 <para>
 
@@ -259,5 +299,24 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 @expr_id: 
 @asc: 
 @collation_name: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_compound_add_sub_select ##### -->
+<para>
+
+</para>
+
+@builder: 
+@sqlst: 
+@steal: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_compound_set_type ##### -->
+<para>
+
+</para>
+
+@builder: 
+@compound_type: 
 
 

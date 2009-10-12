@@ -57,6 +57,7 @@ struct _GdaSqlBuilderClass
 {
 	GObjectClass              parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
@@ -70,30 +71,26 @@ GdaStatement     *gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError 
 GdaSqlStatement  *gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder, gboolean copy_it);
 
 /* Expression API */
-guint              gda_sql_builder_add_id (GdaSqlBuilder *builder, guint id, const gchar *string);
-guint              gda_sql_builder_add_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GType type, ...);
-guint              gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GValue* value);
-guint              gda_sql_builder_add_param (GdaSqlBuilder *builder, guint id, const gchar *param_name, GType type, gboolean nullok);
+guint             gda_sql_builder_add_id (GdaSqlBuilder *builder, guint id, const gchar *string);
+guint             gda_sql_builder_add_expr (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GType type, ...);
+guint             gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler *dh, GValue* value);
+guint             gda_sql_builder_add_param (GdaSqlBuilder *builder, guint id, const gchar *param_name, GType type, gboolean nullok);
 
-guint              gda_sql_builder_add_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
-					 guint op1, guint op2, guint op3);
-guint              gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
-					   const guint *op_ids, gint op_ids_size);
+guint             gda_sql_builder_add_cond (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
+					    guint op1, guint op2, guint op3);
+guint             gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, guint id, GdaSqlOperatorType op,
+					      const guint *op_ids, gint op_ids_size);
 guint             gda_sql_builder_add_function (GdaSqlBuilder *builder, guint id, const gchar *func_name, ...);
 guint             gda_sql_builder_add_function_v (GdaSqlBuilder *builder, guint id, const gchar *func_name,
 						  const guint *args, gint args_size);
-
-
-/* SELECT Statement API */
-guint              gda_sql_builder_select_add_target (GdaSqlBuilder *builder, guint id,
-						      guint table_id, const gchar *alias);
-guint              gda_sql_builder_select_join_targets (GdaSqlBuilder *builder, guint id,
-							guint left_target_id, guint right_target_id,
-							GdaSqlSelectJoinType join_type,
-							guint join_expr);
-void               gda_sql_builder_join_add_field (GdaSqlBuilder *builder, guint join_id, const gchar *field_name);
-void               gda_sql_builder_select_order_by (GdaSqlBuilder *builder, guint expr_id,
-						    gboolean asc, const gchar *collation_name);
+guint             gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, guint id, GdaSqlStatement *sqlst,
+						  gboolean steal);
+guint             gda_sql_builder_add_case (GdaSqlBuilder *builder, guint id,
+					    guint test_expr, guint else_expr, ...);
+guint             gda_sql_builder_add_case_v (GdaSqlBuilder *builder, guint id,
+					      guint test_expr, guint else_expr,
+					      const guint *when_array, const guint *then_array, gint args_size);
+					    
 
 /* General Statement API */
 void              gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar *table_name);
@@ -101,6 +98,20 @@ void              gda_sql_builder_set_where (GdaSqlBuilder *builder, guint cond_
 
 void              gda_sql_builder_add_field (GdaSqlBuilder *builder, guint field_id, guint value_id);
 
+/* SELECT Statement API */
+guint             gda_sql_builder_select_add_target (GdaSqlBuilder *builder, guint id,
+						     guint table_id, const gchar *alias);
+guint             gda_sql_builder_select_join_targets (GdaSqlBuilder *builder, guint id,
+						       guint left_target_id, guint right_target_id,
+						       GdaSqlSelectJoinType join_type,
+						       guint join_expr);
+void              gda_sql_builder_join_add_field (GdaSqlBuilder *builder, guint join_id, const gchar *field_name);
+void              gda_sql_builder_select_order_by (GdaSqlBuilder *builder, guint expr_id,
+						   gboolean asc, const gchar *collation_name);
+
+/* COMPOUND SELECT Statement API */
+void              gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompoundType compound_type);
+void              gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst, gboolean steal);
 
 G_END_DECLS
 
