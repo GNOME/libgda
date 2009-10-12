@@ -25,6 +25,7 @@
 #include "marshal.h"
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-sql-builder.h>
+#include <virtual/libgda-virtual.h>
 
 /* code inclusion */
 #include "../dict-file-name.c"
@@ -495,6 +496,122 @@ browser_connection_new (GdaConnection *cnc)
 	}
 
 	return bcnc;
+}
+
+static GdaThreadWrapper *wrapper = NULL;
+typedef struct {
+        guint cncid;
+        GMainLoop *loop;
+        GError **error;
+
+        /* out */
+        GdaConnection *cnc;
+} MainloopData;
+
+static gboolean
+check_for_cnc (MainloopData *data)
+{
+        GdaConnection *cnc;
+        GError *lerror = NULL;
+        cnc = gda_thread_wrapper_fetch_result (wrapper, FALSE, data->cncid, &lerror);
+        if (cnc || (!cnc && lerror)) {
+                /* waiting is finished! */
+                data->cnc = cnc;
+                if (lerror)
+                        g_propagate_error (data->error, lerror);
+                g_main_loop_quit (data->loop);
+                return FALSE;
+        }
+        return TRUE;
+}
+
+typedef struct {
+	GdaConnection *cnc_to_wrap;
+	const gchar *ns;
+} VirtualConnectionData;
+/*
+ * executed in a sub thread
+ */
+static GdaConnection *
+sub_thread_open_cnc (VirtualConnectionData *vcdata, GError **error)
+{
+#ifndef DUMMY
+	static GdaVirtualProvider *provider = NULL;
+	GdaConnection *virtual, *cnc;
+	if (!provider)
+		provider = gda_vprovider_hub_new ();
+
+	virtual = gda_virtual_connection_open_extended (provider, GDA_CONNECTION_OPTIONS_THREAD_SAFE, NULL);
+	cnc = g_object_get_data (G_OBJECT (virtual), "gda-virtual-connection");
+	if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (cnc), vcdata->cnc_to_wrap,
+				      vcdata->ns, error)) {
+		g_object_unref (virtual);
+		return NULL;
+	}
+	else
+		return virtual;
+#else
+        sleep (5);
+        g_set_error (error, 0, 0, "Oooo");
+        return NULL;
+#endif
+}
+/**
+ * browser_connection_new_virtual
+ * @bcnc: a #BrowserConnection
+ * @ns: the namespace for @bcnc's tables
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates a new virtual connection using #BrowserConnection as a starting point.
+ *
+ * To close the new connection, use browser_core_close_connection().
+ *
+ * Returns: a new object
+ */
+BrowserConnection *
+browser_connection_new_virtual (BrowserConnection *bcnc, const gchar *ns, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+
+	if (!wrapper)
+                wrapper = gda_thread_wrapper_new ();
+
+	guint cncid;
+	VirtualConnectionData vcdata;
+
+	vcdata.cnc_to_wrap = bcnc->priv->cnc;
+	vcdata.ns = ns ? ns : bcnc->priv->name;
+	cncid = gda_thread_wrapper_execute (wrapper,
+                                            (GdaThreadWrapperFunc) sub_thread_open_cnc,
+                                            (gpointer) &vcdata,
+                                            (GDestroyNotify) NULL,
+                                            error);
+        if (cncid == 0)
+                return NULL;
+
+	GMainLoop *loop;
+        guint source_id;
+        MainloopData data;
+	
+        loop = g_main_loop_new (NULL, FALSE);
+	data.cncid = cncid;
+        data.error = error;
+        data.loop = loop;
+        data.cnc = NULL;
+
+        source_id = g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
+        g_main_loop_run (loop);
+        g_main_loop_unref (loop);
+
+        if (data.cnc) {
+		BrowserConnection *nbcnc;
+                g_object_set (data.cnc, "monitor-wrapped-in-mainloop", TRUE, NULL);
+		nbcnc = browser_connection_new (data.cnc);
+		g_object_unref (data.cnc);
+		return nbcnc;
+	}
+	else
+		return NULL;
 }
 
 /**

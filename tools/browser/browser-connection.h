@@ -57,6 +57,7 @@ struct _BrowserConnectionClass
 GType               browser_connection_get_type               (void) G_GNUC_CONST;
 
 BrowserConnection  *browser_connection_new                    (GdaConnection *cnc);
+BrowserConnection  *browser_connection_new_virtual            (BrowserConnection *bcnc, const gchar *ns, GError **error);
 const gchar        *browser_connection_get_name               (BrowserConnection *bcnc);
 const GdaDsnInfo   *browser_connection_get_information        (BrowserConnection *bcnc);
 
