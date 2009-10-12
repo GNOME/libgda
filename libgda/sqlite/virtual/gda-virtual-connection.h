@@ -55,6 +55,8 @@ struct _GdaVirtualConnectionClass {
 
 GType          gda_virtual_connection_get_type                   (void) G_GNUC_CONST;
 GdaConnection *gda_virtual_connection_open                       (GdaVirtualProvider *virtual_provider, GError **error);
+GdaConnection *gda_virtual_connection_open_extended              (GdaVirtualProvider *virtual_provider,
+								  GdaConnectionOptions options, GError **error);
 void           gda_virtual_connection_internal_set_provider_data (GdaVirtualConnection *vcnc, 
 								  gpointer data, GDestroyNotify destroy_func);
 gpointer       gda_virtual_connection_internal_get_provider_data (GdaVirtualConnection *cnc);

@@ -36,6 +36,8 @@
 #include "gda-thread-meta.h"
 #include "gda-thread-wrapper.h"
 #include "gda-thread-recordset.h"
+#include <libgda/sqlite/virtual/gda-virtual-provider.h>
+#include <libgda/sqlite/virtual/gda-virtual-connection.h>
 
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
@@ -434,7 +436,7 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	ThreadConnectionData *cdata;
 	cdata = g_new0 (ThreadConnectionData, 1);
 	cdata->sub_connection = sub_cnc;
-	cdata->cnc_provider = data->out_cnc_provider;
+	cdata->cnc_provider = g_object_ref (data->out_cnc_provider);
 	cdata->wrapper = wr;
 	cdata->handlers_ids = g_array_sized_new (FALSE, FALSE, sizeof (gulong), 2);
 	g_free (data);
@@ -449,6 +451,49 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	}
 
 	return TRUE;
+}
+
+/**
+ * _gda_thread_provider_handle_virtual_connection
+ * @provider: a #GdaThreadProvider provider
+ * @sub_cnc: a #GdaConnection which has already been opened, normally a virtual connection
+ *
+ * Creates a new connection, wrapping @sub_cnc which has to be a virtual connection. @sub_cnc's
+ * reference count is incremented by this call.
+ *
+ * Returns: a new #GdaConnection, or %NULL if an error occurred.
+ */
+GdaConnection *
+_gda_thread_provider_handle_virtual_connection (GdaThreadProvider *provider, GdaConnection *sub_cnc)
+{
+	ThreadConnectionData *cdata;
+	GdaServerProvider *sub_prov;
+	GdaThreadWrapper *wr;
+	gboolean wr_created = FALSE;
+	GdaConnection *cnc;
+
+	g_return_val_if_fail (GDA_IS_THREAD_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_VIRTUAL_CONNECTION (sub_cnc), NULL);
+
+	sub_prov = gda_connection_get_provider (sub_cnc);
+	g_return_val_if_fail (GDA_IS_VIRTUAL_PROVIDER (sub_prov), NULL);
+	wr = gda_thread_wrapper_new ();
+	if (!wr) {
+		g_warning (_("Multi threading is not supported or enabled"));
+		return NULL;
+	}
+
+	cnc = gda_thread_provider_create_connection (GDA_SERVER_PROVIDER (provider));
+
+	cdata = g_new0 (ThreadConnectionData, 1);
+	cdata->sub_connection = g_object_ref (sub_cnc);
+	cdata->cnc_provider = g_object_ref (sub_prov);
+	cdata->wrapper = wr;
+	cdata->handlers_ids = g_array_sized_new (FALSE, FALSE, sizeof (gulong), 2);
+	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_thread_free_cnc_data);
+	setup_signals (cnc, cdata);
+
+	return cnc;
 }
 
 static void
@@ -1975,5 +2020,8 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 		g_slist_foreach (cdata->async_tasks, (GFunc) _ThreadConnectionAsyncTask_free, NULL);
 		g_slist_free (cdata->async_tasks);
 	}
+
+	g_object_unref (cdata->cnc_provider);
+
 	g_free (cdata);
 }

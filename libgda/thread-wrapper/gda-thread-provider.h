@@ -51,6 +51,7 @@ struct _GdaThreadProviderClass {
 G_BEGIN_DECLS
 
 GType              _gda_thread_provider_get_type (void) G_GNUC_CONST;
+GdaConnection     *_gda_thread_provider_handle_virtual_connection (GdaThreadProvider *provider, GdaConnection *sub_cnc);
 
 G_END_DECLS
 

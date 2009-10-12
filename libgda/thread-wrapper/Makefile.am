@@ -2,6 +2,7 @@ noinst_LTLIBRARIES = libgda_threadwrapper-4.0.la
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(srcdir)/.. \
+	-I$(top_srcdir)/libgda/sqlite \
         -I$(top_builddir) \
         $(LIBGDA_CFLAGS) 
 

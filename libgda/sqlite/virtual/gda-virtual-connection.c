@@ -26,6 +26,8 @@
 #include <sqlite3.h>
 #include "gda-virtual-connection.h"
 #include <gda-connection-private.h>
+#include <libgda/gda-connection-internal.h>
+#include <libgda/thread-wrapper/gda-thread-provider.h>
 
 #define PARENT_TYPE GDA_TYPE_CONNECTION
 #define CLASS(obj) (GDA_VIRTUAL_CONNECTION_CLASS (G_OBJECT_GET_CLASS (obj)))
@@ -149,6 +151,52 @@ gda_virtual_connection_open (GdaVirtualProvider *virtual_provider, GError **erro
 	else
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR, "%s", 
 			     _("Internal error: virtual provider does not implement the create_operation() virtual method"));
+	return cnc;
+}
+
+/**
+ * gda_virtual_connection_open_extended
+ * @virtual_provider: a #GdaVirtualProvider object
+ * @options: a set of options to specify the new connection
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates and opens a new virtual connection using the @virtual_provider provider. If @options
+ * contains the %GDA_CONNECTION_OPTIONS_THREAD_SAFE flag, then the returned connection will be
+ * a thread wrapped connection, and the actual (wrapped) virtual connection can be obtained through
+ * the "gda-virtual-connection" user property (use g_object_get_data() to get it).
+ *
+ * Returns: a new #GdaConnection object, or %NULL if an error occurred
+ */
+GdaConnection *
+gda_virtual_connection_open_extended (GdaVirtualProvider *virtual_provider, GdaConnectionOptions options, GError **error)
+{
+	GdaConnection *cnc = NULL;
+	g_return_val_if_fail (GDA_IS_VIRTUAL_PROVIDER (virtual_provider), NULL);
+
+	if (PROV_CLASS (virtual_provider)->create_connection) {
+		cnc = PROV_CLASS (virtual_provider)->create_connection ((GdaServerProvider*) virtual_provider);
+		if (cnc) {
+			g_object_set (G_OBJECT (cnc), "provider", virtual_provider, 
+				      "options", options & (~GDA_CONNECTION_OPTIONS_THREAD_SAFE), NULL);
+			if (!gda_connection_open (cnc, error)) {
+				g_object_unref (cnc);
+				cnc = NULL;
+			}
+		}
+	}
+	else
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR, "%s", 
+			     _("Internal error: virtual provider does not implement the create_operation() virtual method"));
+
+	if (cnc && (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE)) {
+		GdaConnection *wcnc;
+		wcnc = _gda_thread_provider_handle_virtual_connection (GDA_THREAD_PROVIDER (_gda_connection_get_internal_thread_provider ()),
+								       cnc);
+		g_object_set_data (G_OBJECT (wcnc), "gda-virtual-connection", cnc);
+		g_object_unref (cnc);
+		cnc = wcnc;
+	}
+
 	return cnc;
 }
 

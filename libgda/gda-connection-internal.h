@@ -69,7 +69,8 @@ typedef struct {
 	/* current async. tasks */
 	GSList *async_tasks; /* list of ThreadConnectionAsyncTask pointers */
 } ThreadConnectionData; /* Per connection private data for */
-void           _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc);
+void               _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc);
+GdaServerProvider *_gda_connection_get_internal_thread_provider (void);
 
 G_END_DECLS
 

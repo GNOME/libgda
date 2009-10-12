@@ -299,7 +299,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                                                               NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_OPTIONS,
-                                         g_param_spec_flags ("options", NULL, _("Options (connection sharing)"),
+                                         g_param_spec_flags ("options", NULL, _("Options"),
 							    GDA_TYPE_CONNECTION_OPTIONS, GDA_CONNECTION_OPTIONS_NONE,
 							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_META_STORE,
@@ -819,6 +819,18 @@ cnc_task_free (CncTask *task)
 	g_mutex_unlock (task->mutex);
 	g_mutex_free (task->mutex);
 	g_free (task);
+}
+
+/**
+ * _gda_connection_get_internal_thread_provider
+ */ 
+GdaServerProvider *
+_gda_connection_get_internal_thread_provider (void)
+{
+	if (!_gda_thread_wrapper_provider)
+		_gda_thread_wrapper_provider = GDA_SERVER_PROVIDER (g_object_new (GDA_TYPE_THREAD_PROVIDER, NULL));
+
+	return _gda_thread_wrapper_provider;
 }
 
 /**

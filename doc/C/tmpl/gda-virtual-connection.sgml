@@ -33,6 +33,17 @@ This is a base virtual class for all virtual connection implementations
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_virtual_connection_open_extended ##### -->
+<para>
+
+</para>
+
+@virtual_provider: 
+@options: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_virtual_connection_internal_set_provider_data ##### -->
 <para>
 

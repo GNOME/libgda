@@ -882,6 +882,7 @@
 	gda_virtual_connection_internal_get_provider_data
 	gda_virtual_connection_internal_set_provider_data
 	gda_virtual_connection_open
+	gda_virtual_connection_open_extended
 	gda_virtual_provider_get_type
 	gda_vprovider_data_model_get_type
 	gda_vprovider_data_model_new
