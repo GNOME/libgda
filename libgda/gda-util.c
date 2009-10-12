@@ -1819,6 +1819,9 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 			prov = gda_connection_get_provider (cnc);
 	}
 
+	if ((*id == '*') && (! id [1]))
+	    return g_strdup (id);
+
 	if (prov && PROV_CLASS (prov)->identifier_quote)
 		return PROV_CLASS (prov)->identifier_quote (prov, cnc, id,
 							    for_meta_store, force_quotes);
