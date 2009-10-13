@@ -73,6 +73,8 @@ struct _BrowserWindowPrivate {
 
 	GtkWidget         *spinner;
 	GtkUIManager      *ui_manager;
+	GtkActionGroup    *agroup;
+
 	GtkToolbarStyle    toolbar_style;
 	GtkActionGroup    *cnc_agroup; /* one GtkAction for each BrowserConnection */
 	gulong             cnc_added_sigid;
@@ -314,6 +316,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	GtkActionGroup *group;
 
         group = gtk_action_group_new ("Actions");
+	bwin->priv->agroup = group;
         gtk_action_group_add_actions (group, ui_actions, G_N_ELEMENTS (ui_actions), bwin);
 	gtk_action_group_add_toggle_actions (group, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions), bwin);
 
@@ -539,6 +542,21 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Br
 		gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar),
 				   bwin->priv->cnc_statusbar_context);
 	}
+
+	GtkAction *action;
+	action = gtk_action_group_get_action (bwin->priv->agroup, "WindowNew");
+	gtk_action_set_sensitive (action, !is_busy);
+	action = gtk_action_group_get_action (bwin->priv->agroup, "ConnectionMetaSync");
+	gtk_action_set_sensitive (action, !is_busy);
+
+	const gchar *cncname;
+	gchar *path;
+	cncname = browser_connection_get_name (bcnc);
+	path = g_strdup_printf ("/MenuBar/Window/WindowNewOthers/CncList/%s", cncname);
+	action = gtk_ui_manager_get_action (bwin->priv->ui_manager, path);
+	g_free (path);
+	if (action)
+		gtk_action_set_sensitive (action, !is_busy);
 }
 
 /* update @bwin->priv->cnc_agroup and @bwin->priv->ui_manager */
@@ -563,6 +581,7 @@ connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow 
 	g_signal_connect (action, "activate",
 			  G_CALLBACK (window_new_with_cnc_cb), bwin);
 	g_object_set_data (G_OBJECT (action), "bcnc", bcnc);
+	gtk_action_set_sensitive (action, ! browser_connection_is_busy (bcnc, NULL));
 	g_object_unref (action);
 }
 
@@ -576,7 +595,7 @@ connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindo
 	guint *mid;
 
 	cncname = browser_connection_get_name (bcnc);
-	path = g_strdup_printf ("/MenuBar/Window/WindowNewOthers/CncList/%s",cncname);
+	path = g_strdup_printf ("/MenuBar/Window/WindowNewOthers/CncList/%s", cncname);
 	action = gtk_ui_manager_get_action (bwin->priv->ui_manager, path);
 	g_free (path);
 	g_assert (action);

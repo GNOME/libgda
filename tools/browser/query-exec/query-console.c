@@ -109,6 +109,8 @@ struct _QueryConsolePrivate {
 	BrowserConnection *bcnc;
 	GdaSqlParser *parser;
 
+	GtkActionGroup *agroup;
+
 	CcGrayBar *header;
 	GtkWidget *vpaned; /* top=>query editor, bottom=>results */
 
@@ -199,6 +201,7 @@ query_console_init (QueryConsole *tconsole, QueryConsoleClass *klass)
 	tconsole->priv->past_params = NULL;
 	tconsole->priv->params = NULL;
 	tconsole->priv->params_popup = NULL;
+	tconsole->priv->agroup = NULL;
 }
 static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
 				gchar *reason, QueryConsole *tconsole);
@@ -479,6 +482,12 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Qu
 {
 	gtk_widget_set_sensitive (tconsole->priv->exec_button, !is_busy);
 	gtk_widget_set_sensitive (tconsole->priv->indent_button, !is_busy);
+
+	if (tconsole->priv->agroup) {
+		GtkAction *action;
+		action = gtk_action_group_get_action (tconsole->priv->agroup, "ExecuteQuery");
+		gtk_action_set_sensitive (action, !is_busy);
+	}
 }
 
 static GtkWidget *
@@ -921,7 +930,6 @@ sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 	ebatch->batch = batch;
 	g_get_current_time (&(ebatch->start_time));
 	ebatch->hist_batch = query_editor_history_batch_new (ebatch->start_time, tconsole->priv->params);
-	query_editor_start_history_batch (tconsole->priv->history, ebatch->hist_batch);
 
 	stmt_list = gda_batch_get_statements (batch);
 	for (list = stmt_list; list; list = list->next) {
@@ -971,6 +979,10 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 										 estmt->exec_id, NULL,
 										 &(estmt->exec_error));
 			if (estmt->result || estmt->exec_error) {
+				ExecutionBatch *ebatch;
+				ebatch = tconsole->priv->current_exec;
+				query_editor_start_history_batch (tconsole->priv->history, ebatch->hist_batch);
+
 				QueryEditorHistoryItem *history;
 				GdaSqlStatement *sqlst;
 				g_object_get (G_OBJECT (estmt->stmt), "structure", &sqlst, NULL);
@@ -1119,11 +1131,18 @@ static const gchar *ui_actions_console =
 static GtkActionGroup *
 query_console_page_get_actions_group (BrowserPage *page)
 {
-	GtkActionGroup *agroup;
-	agroup = gtk_action_group_new ("QueryExecConsoleActions");
-	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
-	
-	return agroup;
+	QueryConsole *tconsole;
+	tconsole = QUERY_CONSOLE (page);
+	if (! tconsole->priv->agroup) {
+		tconsole->priv->agroup = gtk_action_group_new ("QueryExecConsoleActions");
+		gtk_action_group_add_actions (tconsole->priv->agroup,
+					      ui_actions, G_N_ELEMENTS (ui_actions), page);
+
+		GtkAction *action;
+		action = gtk_action_group_get_action (tconsole->priv->agroup, "ExecuteQuery");
+		gtk_action_set_sensitive (action, !browser_connection_is_busy (tconsole->priv->bcnc, NULL));
+	}
+	return g_object_ref (tconsole->priv->agroup);
 }
 
 static const gchar *

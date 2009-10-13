@@ -725,7 +725,7 @@ browser_connection_get_information (BrowserConnection *bcnc)
  * browser_connection_is_busy
  * @bcnc: a #BrowserConnection
  * @out_reason: a pointer to store a copy of the reason @bcnc is busy (will be set 
- *              to %NULL if @bcnc is not busy)
+ *              to %NULL if @bcnc is not busy), or %NULL
  *
  * Tells if @bcnc is currently busy or not.
  *

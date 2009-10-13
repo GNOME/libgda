@@ -136,6 +136,8 @@ static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 
 static void transaction_status_changed_cb (BrowserConnection *bcnc, QueryExecPerspective *perspective);
 
+static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
+				gchar *reason, QueryExecPerspective *perspective);
 /**
  * query_exec_perspective_new
  *
@@ -199,7 +201,28 @@ query_exec_perspective_new (BrowserWindow *bwin)
 
 	gtk_widget_grab_focus (page);
 
+	/* busy connection handling */
+	connection_busy_cb (perspective->priv->bcnc, browser_connection_is_busy (perspective->priv->bcnc, NULL),
+			    NULL, perspective);
+	g_signal_connect (perspective->priv->bcnc, "busy",
+			  G_CALLBACK (connection_busy_cb), perspective);
+
 	return bpers;
+}
+
+static void
+connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
+		    gchar *reason, QueryExecPerspective *perspective)
+{
+	if (perspective->priv->action_group) {
+		GtkAction *action;
+		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecBegin");
+		gtk_action_set_sensitive (action, !is_busy);
+		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecCommit");
+		gtk_action_set_sensitive (action, !is_busy);
+		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecRollback");
+		gtk_action_set_sensitive (action, !is_busy);
+	}
 }
 
 static void
@@ -271,8 +294,11 @@ query_exec_perspective_dispose (GObject *object)
 	if (perspective->priv) {
 		g_signal_handlers_disconnect_by_func (perspective->priv->bcnc,
 						      G_CALLBACK (transaction_status_changed_cb), perspective);
-		if (perspective->priv->bcnc)
+		if (perspective->priv->bcnc) {
+			g_signal_handlers_disconnect_by_func (perspective->priv->bcnc,
+							      G_CALLBACK (connection_busy_cb), perspective);
 			g_object_unref (perspective->priv->bcnc);
+		}
 
 		if (perspective->priv->action_group)
 			g_object_unref (perspective->priv->action_group);
@@ -444,6 +470,9 @@ query_exec_perspective_get_actions_group (BrowserPerspective *perspective)
 		agroup = gtk_action_group_new ("QueryExecActions");
 		gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
 		bpers->priv->action_group = g_object_ref (agroup);
+
+		connection_busy_cb (bpers->priv->bcnc, browser_connection_is_busy (bpers->priv->bcnc, NULL),
+				    NULL, bpers);
 	}
 	
 	transaction_status_changed_cb (bpers->priv->bcnc, bpers);
