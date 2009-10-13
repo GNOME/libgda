@@ -995,12 +995,8 @@ gda_server_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
-	if (cnc)
-		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->create_parser)
 		parser = (CLASS (provider)->create_parser) (provider, cnc);
-	if (cnc)
-		gda_lockable_unlock ((GdaLockable*) cnc);
 	return parser;
 }
 
