@@ -52,6 +52,7 @@ static void gda_set_finalize (GObject *object);
 static void set_remove_node (GdaSet *set, GdaSetNode *node);
 static void set_remove_source (GdaSet *set, GdaSetSource *source);
 
+
 static void changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static GError *validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *dataset);
 static void source_changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
@@ -95,6 +96,7 @@ struct _GdaSetPrivate
 	gchar           *name;
 	gchar           *descr;
 	GHashTable      *holders_hash; /* key = GdaHoler ID, value = GdaHolder */
+	GArray          *holders_array;
 };
 
 static void 
@@ -345,6 +347,7 @@ gda_set_init (GdaSet *set)
 	set->sources_list = NULL;
 	set->groups_list = NULL;
 	set->priv->holders_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	set->priv->holders_array = NULL;
 }
 
 
@@ -920,6 +923,10 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 
 	set->holders = g_slist_remove (set->holders, holder);
 	g_hash_table_remove (set->priv->holders_hash, gda_holder_get_id (holder));
+	if (set->priv->holders_array) {
+		g_array_free (set->priv->holders_array, TRUE);
+		set->priv->holders_array = NULL;
+	}
 	g_object_unref (G_OBJECT (holder));
 }
 
@@ -1004,6 +1011,10 @@ gda_set_dispose (GObject *object)
 	if (set->priv->holders_hash) {
 		g_hash_table_destroy (set->priv->holders_hash);
 		set->priv->holders_hash = NULL;
+	}
+	if (set->priv->holders_array) {
+		g_array_free (set->priv->holders_array, TRUE);
+		set->priv->holders_array = NULL;
 	}
 
 	/* free the nodes if there are some */
@@ -1181,6 +1192,10 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 		/* really add @holder to the set */
 		set->holders = g_slist_append (set->holders, holder);
 		g_hash_table_insert (set->priv->holders_hash, (gchar*) hid, holder);
+		if (set->priv->holders_array) {
+			g_array_free (set->priv->holders_array, TRUE);
+			set->priv->holders_array = NULL;
+		}
 		g_object_ref (holder);
 		g_signal_connect (G_OBJECT (holder), "changed",
 				  G_CALLBACK (changed_holder_cb), set);
@@ -1309,6 +1324,33 @@ gda_set_get_holder (GdaSet *set, const gchar *holder_id)
 	return (GdaHolder *) g_hash_table_lookup (set->priv->holders_hash, holder_id);
 }
 
+/**
+ * gda_set_get_nth_holder
+ * @set: a #GdaSet object
+ * @pos: the position of the requested #GdaHolder, starting at %0
+ *
+ * Finds a #GdaHolder using its position
+ *
+ * Returns: a #GdaHolder or %NULL
+ *
+ * Since: 4.2
+ */
+GdaHolder *
+gda_set_get_nth_holder (GdaSet *set, gint pos)
+{
+	g_return_val_if_fail (GDA_IS_SET (set), NULL);
+	if (! set->priv->holders_array) {
+		GSList *list;
+		set->priv->holders_array = g_array_sized_new (FALSE, FALSE, sizeof (GdaHolder*),
+							      g_slist_length (set->holders));
+		for (list = set->holders; list; list = list->next)
+			g_array_append_val (set->priv->holders_array, list->data);
+	}
+	if ((pos < 0) || (pos > set->priv->holders_array->len))
+		return NULL;
+	else
+		return g_array_index (set->priv->holders_array, GdaHolder*, pos);
+}
 
 /**
  * gda_set_get_node

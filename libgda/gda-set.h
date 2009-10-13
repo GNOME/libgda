@@ -103,6 +103,7 @@ struct _GdaSetClass
 							const gchar *attr_name, const GValue *attr_value);
 	void                  (*public_data_changed)   (GdaSet *set);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
@@ -121,6 +122,7 @@ GdaSet       *gda_set_new_from_spec_node       (xmlNodePtr xml_spec, GError **er
 gboolean      gda_set_set_holder_value         (GdaSet *set, GError **error, const gchar *holder_id, ...);
 const GValue *gda_set_get_holder_value         (GdaSet *set, const gchar *holder_id);
 GdaHolder    *gda_set_get_holder               (GdaSet *set, const gchar *holder_id);
+GdaHolder    *gda_set_get_nth_holder           (GdaSet *set, gint pos);
 gboolean      gda_set_add_holder               (GdaSet *set, GdaHolder *holder);
 void          gda_set_remove_holder            (GdaSet *set, GdaHolder *holder);
 void          gda_set_merge_with_set           (GdaSet *set, GdaSet *set_to_merge);

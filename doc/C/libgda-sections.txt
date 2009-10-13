@@ -1038,6 +1038,7 @@ gda_set_get_holder_value
 gda_set_set_holder_value
 <SUBSECTION>
 gda_set_get_holder
+gda_set_get_nth_holder
 gda_set_add_holder
 gda_set_remove_holder
 gda_set_merge_with_set

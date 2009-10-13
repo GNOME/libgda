@@ -977,8 +977,13 @@ wrapper_statement_execute (StmtExecData *data, GError **error)
 						data->params, data->model_usage,
 						data->need_last_insert_row ? &last_insert_row : NULL,
 						error);
-	if (obj && last_insert_row)
-		g_object_set_data (obj, "__bcnc_last_inserted_row", last_insert_row);
+	if (obj) {
+		if (GDA_IS_DATA_MODEL (obj))
+			/* force loading of rows if necessary */
+			gda_data_model_get_n_rows ((GdaDataModel*) obj);
+		else if (last_insert_row)
+			g_object_set_data (obj, "__bcnc_last_inserted_row", last_insert_row);
+	}
 	return obj ? obj : (gpointer) 0x01;
 }
 

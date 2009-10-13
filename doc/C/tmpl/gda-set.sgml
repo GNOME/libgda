@@ -187,6 +187,16 @@ Container for several values
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_set_get_nth_holder ##### -->
+<para>
+
+</para>
+
+@set: 
+@pos: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_set_add_holder ##### -->
 <para>
 

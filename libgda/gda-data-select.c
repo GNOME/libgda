@@ -312,7 +312,7 @@ static void
 gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
 {
 	ModType i;
-	g_return_if_fail (GDA_IS_DATA_SELECT (model));
+
 	model->priv = g_new0 (GdaDataSelectPrivate, 1);
 	model->priv->cnc = NULL;
 	model->priv->sh = g_new0 (PrivateShareable, 1);
@@ -425,8 +425,6 @@ gda_data_select_dispose (GObject *object)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 
-	g_return_if_fail (GDA_IS_DATA_SELECT (model));
-
 	/* free memory */
 	if (model->priv) {
 		if (model->priv->cnc) {
@@ -524,8 +522,6 @@ static void
 gda_data_select_finalize (GObject *object)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
-
-	g_return_if_fail (GDA_IS_DATA_SELECT (model));
 
 	/* free memory */
 	if (model->priv) {
@@ -1466,7 +1462,7 @@ gda_data_select_get_n_rows (GdaDataModel *model)
 {
 	GdaDataSelect *imodel;
 	gint retval;
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), 0);
+
 	imodel = GDA_DATA_SELECT (model);
 	g_return_val_if_fail (imodel->priv, 0);
 
@@ -1485,7 +1481,7 @@ static gint
 gda_data_select_get_n_columns (GdaDataModel *model)
 {
 	GdaDataSelect *imodel;
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), 0);
+
 	imodel = GDA_DATA_SELECT (model);
 	g_return_val_if_fail (imodel->priv, 0);
 	
@@ -1499,7 +1495,7 @@ static GdaColumn *
 gda_data_select_describe_column (GdaDataModel *model, gint col)
 {
 	GdaDataSelect *imodel;
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), NULL);
+
 	imodel = GDA_DATA_SELECT (model);
 	g_return_val_if_fail (imodel->priv, NULL);
 
@@ -1512,7 +1508,6 @@ gda_data_select_get_access_flags (GdaDataModel *model)
 	GdaDataSelect *imodel;
 	GdaDataModelAccessFlags flags = 0;
 
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), 0);
 	imodel = GDA_DATA_SELECT (model);
 	g_return_val_if_fail (imodel->priv, 0);
 
@@ -1598,7 +1593,6 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 	gint int_row, irow;
 	GdaDataSelect *imodel;
 
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), NULL);
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, NULL);
 
@@ -1738,7 +1732,6 @@ gda_data_select_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	GdaValueAttribute flags = GDA_VALUE_ATTR_IS_UNCHANGED;
 	GdaDataSelect *imodel;
 
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), 0);
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, 0);
 	
@@ -1759,7 +1752,6 @@ gda_data_select_create_iter (GdaDataModel *model)
 {
 	GdaDataSelect *imodel;
 
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), 0);
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, 0);
 
@@ -1787,7 +1779,6 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	gint target_iter_row;
 	gint irow, int_row;
 
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
 
@@ -1837,7 +1828,6 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	gint target_iter_row;
 	gint irow, int_row;
 
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
 
@@ -1888,7 +1878,6 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 	GdaRow *prow = NULL;
 	gint irow, int_row;
 
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
 

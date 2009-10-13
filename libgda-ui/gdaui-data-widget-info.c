@@ -62,6 +62,8 @@ struct _GdauiDataWidgetInfoPriv
 	GtkWidget         *buttons_bar;
 	GtkWidget         *current_sample;
 	GtkWidget         *row_spin;
+
+	guint              idle_id;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -207,6 +209,8 @@ gdaui_data_widget_info_dispose (GObject *object)
 	info = GDAUI_DATA_WIDGET_INFO (object);
 
 	if (info->priv) {
+		if (info->priv->idle_id)
+			g_source_remove (info->priv->idle_id);
 		if (info->priv->proxy)
 			release_proxy (info);
 		if (info->priv->iter)
@@ -225,9 +229,9 @@ gdaui_data_widget_info_dispose (GObject *object)
 
 static void
 gdaui_data_widget_info_set_property (GObject *object,
-					guint param_id,
-					const GValue *value,
-					GParamSpec *pspec)
+				     guint param_id,
+				     const GValue *value,
+				     GParamSpec *pspec)
 {
 	GdauiDataWidgetInfo *info;
 
@@ -310,9 +314,9 @@ gdaui_data_widget_info_set_property (GObject *object,
 
 static void
 gdaui_data_widget_info_get_property (GObject *object,
-					guint param_id,
-					GValue *value,
-					GParamSpec *pspec)
+				     guint param_id,
+				     GValue *value,
+				     GParamSpec *pspec)
 {
 	GdauiDataWidgetInfo *info;
 
@@ -497,12 +501,23 @@ row_spin_changed_cb (GtkSpinButton *spin, GdauiDataWidgetInfo *info)
 	gda_data_model_iter_move_to_row (gdaui_data_widget_get_current_data (info->priv->data_widget), row);
 }
 
+static gboolean idle_modif_buttons_update (GdauiDataWidgetInfo *info);
+static void
+modif_buttons_update (GdauiDataWidgetInfo *info)
+{
+	if (info->priv->idle_id == 0)
+		info->priv->idle_id = g_idle_add_full (G_PRIORITY_HIGH_IDLE,
+						       (GSourceFunc) idle_modif_buttons_update,
+						       g_object_ref (info), g_object_unref);
+}
+
+
 #define BLOCK_SPIN (g_signal_handlers_block_by_func (G_OBJECT (info->priv->row_spin), \
 						     G_CALLBACK (row_spin_changed_cb), info))
 #define UNBLOCK_SPIN (g_signal_handlers_unblock_by_func (G_OBJECT (info->priv->row_spin), \
 							 G_CALLBACK (row_spin_changed_cb), info))
-static void
-modif_buttons_update (GdauiDataWidgetInfo *info)
+static gboolean
+idle_modif_buttons_update (GdauiDataWidgetInfo *info)
 {
 	GdaDataModelIter *model_iter;
 	gboolean wrows, filtered_proxy = FALSE;
@@ -724,5 +739,9 @@ modif_buttons_update (GdauiDataWidgetInfo *info)
 	}
 	
 	if (info->priv->uimanager)
-		gtk_ui_manager_ensure_update (info->priv->uimanager); 
+		gtk_ui_manager_ensure_update (info->priv->uimanager);
+
+	/* remove IDLE */
+	info->priv->idle_id = 0;
+	return FALSE;
 }

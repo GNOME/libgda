@@ -469,7 +469,6 @@ _gda_thread_provider_handle_virtual_connection (GdaThreadProvider *provider, Gda
 	ThreadConnectionData *cdata;
 	GdaServerProvider *sub_prov;
 	GdaThreadWrapper *wr;
-	gboolean wr_created = FALSE;
 	GdaConnection *cnc;
 
 	g_return_val_if_fail (GDA_IS_THREAD_PROVIDER (provider), NULL);
@@ -1510,6 +1509,13 @@ sub_thread_execute_statement (ExecuteStatementData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	GObject *retval;
+	
+#ifdef GDA_DEBUG_NO
+	g_print ("%p Starting sleep in %s()...\n", g_thread_self (), __FUNCTION__);
+	sleep (10);
+	g_print ("%p finished sleeping in %s().\n", g_thread_self (), __FUNCTION__);
+#endif
+
 	retval = PROV_CLASS (data->prov)->statement_execute (data->prov,
 							     data->cnc,
 							     data->stmt,
