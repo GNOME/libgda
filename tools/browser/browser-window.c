@@ -351,14 +351,6 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), ti, -1);
         gtk_widget_show_all (GTK_WIDGET (ti));
 	bwin->priv->spinner = spinner;
-	gchar *reason;
-	if (browser_connection_is_busy (bwin->priv->bcnc, &reason)) {
-		browser_spinner_start (BROWSER_SPINNER (spinner));
-		gtk_widget_set_tooltip_text (bwin->priv->spinner, reason);
-		g_free (reason);
-	}
-	g_signal_connect (bwin->priv->bcnc, "busy",
-			  G_CALLBACK (connection_busy_cb), bwin);
 
 	guint mid;
 	GSList *connections, *list;
@@ -451,6 +443,13 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
         gtk_widget_show (bwin->priv->statusbar);
 	bwin->priv->cnc_statusbar_context = gtk_statusbar_get_context_id (GTK_STATUSBAR (bwin->priv->statusbar),
 									  "cncbusy");
+	gchar *reason = NULL;
+	if (browser_connection_is_busy (bcnc, &reason)) {
+		connection_busy_cb (bcnc, TRUE, reason, bwin);
+		g_free (reason);
+	}
+	g_signal_connect (bwin->priv->bcnc, "busy",
+			  G_CALLBACK (connection_busy_cb), bwin);
 
         gtk_widget_show (GTK_WIDGET (bwin));
 

@@ -113,6 +113,8 @@ struct _QueryConsolePrivate {
 	GtkWidget *vpaned; /* top=>query editor, bottom=>results */
 
 	QueryEditor *editor;
+	GtkWidget   *exec_button;
+	GtkWidget   *indent_button;
 	guint params_compute_id; /* timout ID to compute params */
 	GdaSet *past_params; /* keeps values given to old params */
 	GdaSet *params; /* execution params */
@@ -198,7 +200,8 @@ query_console_init (QueryConsole *tconsole, QueryConsoleClass *klass)
 	tconsole->priv->params = NULL;
 	tconsole->priv->params_popup = NULL;
 }
-
+static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
+				gchar *reason, QueryConsole *tconsole);
 static void
 query_console_dispose (GObject *object)
 {
@@ -210,8 +213,11 @@ query_console_dispose (GObject *object)
 			g_source_remove (tconsole->priv->current_exec_id);
 		if (tconsole->priv->current_exec)
 			execution_batch_free (tconsole->priv->current_exec);
-		if (tconsole->priv->bcnc)
+		if (tconsole->priv->bcnc) {
+			g_signal_handlers_disconnect_by_func (tconsole->priv->bcnc,
+							      G_CALLBACK (connection_busy_cb), tconsole);
 			g_object_unref (tconsole->priv->bcnc);
+		}
 		if (tconsole->priv->parser)
 			g_object_unref (tconsole->priv->parser);
 		if (tconsole->priv->past_params)
@@ -378,6 +384,7 @@ query_console_new (BrowserConnection *bcnc)
 			  G_CALLBACK (sql_variables_clicked_cb), tconsole);
 
 	button = make_small_button (FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute SQL in editor"));
+	tconsole->priv->exec_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_execute_clicked_cb), tconsole);
@@ -385,6 +392,7 @@ query_console_new (BrowserConnection *bcnc)
 	button = make_small_button (FALSE, _("Indent"), GTK_STOCK_INDENT, _("Indent SQL in editor\n"
 									    "and make the code more readable\n"
 									    "(removes comments)"));
+	tconsole->priv->indent_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_indent_clicked_cb), tconsole);
@@ -454,7 +462,23 @@ query_console_new (BrowserConnection *bcnc)
         gtk_widget_show_all (vpaned);
 	gtk_widget_hide (tconsole->priv->params_top);
 
+	/* busy connection handling */
+	gchar *reason = NULL;
+	if (browser_connection_is_busy (tconsole->priv->bcnc, &reason)) {
+		connection_busy_cb (tconsole->priv->bcnc, TRUE, reason, tconsole);
+		g_free (reason);
+	}
+	g_signal_connect (tconsole->priv->bcnc, "busy",
+			  G_CALLBACK (connection_busy_cb), tconsole);
+
 	return (GtkWidget*) tconsole;
+}
+
+static void
+connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, QueryConsole *tconsole)
+{
+	gtk_widget_set_sensitive (tconsole->priv->exec_button, !is_busy);
+	gtk_widget_set_sensitive (tconsole->priv->indent_button, !is_busy);
 }
 
 static GtkWidget *
@@ -666,7 +690,10 @@ editor_changed_cb (QueryEditor *editor, QueryConsole *tconsole)
 static void
 editor_execute_request_cb (QueryEditor *editor, QueryConsole *tconsole)
 {
-	sql_execute_clicked_cb (NULL, tconsole);
+	gboolean sensitive;
+	g_object_get (tconsole->priv->exec_button, "sensitive", &sensitive, NULL);
+	if (sensitive)
+		sql_execute_clicked_cb (NULL, tconsole);
 }
 	
 static void

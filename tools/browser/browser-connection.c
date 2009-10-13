@@ -30,10 +30,28 @@
 /* code inclusion */
 #include "../dict-file-name.c"
 
+typedef struct {
+	GObject *result;
+	GError  *error;
+	GdaSet  *last_inserted_row;
+} StatementResult;
+
+static void
+statement_result_free (StatementResult *res)
+{
+	if (res->result)
+		g_object_unref (res->result);
+	if (res->last_inserted_row)
+		g_object_unref (res->last_inserted_row);
+	g_clear_error (&(res->error));
+	g_free (res);
+}
+
 struct _BrowserConnectionPrivate {
 	GdaThreadWrapper *wrapper;
 	GSList           *wrapper_jobs;
 	guint             wrapper_results_timer;
+	GHashTable       *executed_statements; /* key = guint exec ID, value = a StatementResult pointer */
 
 	gchar         *name;
 	GdaConnection *cnc;
@@ -49,6 +67,16 @@ struct _BrowserConnectionPrivate {
 	BrowserFavorites *bfav;
 };
 
+/* signals */
+enum {
+	BUSY,
+	META_CHANGED,
+	FAV_CHANGED,
+	TRANSACTION_STATUS_CHANGED,
+	LAST_SIGNAL
+};
+
+gint browser_connection_signals [LAST_SIGNAL] = { 0, 0, 0, 0 };
 
 /* wrapper jobs handling */
 static gboolean check_for_wrapper_result (BrowserConnection *bcnc);
@@ -72,6 +100,9 @@ wrapper_job_free (WrapperJob *wj)
 	g_free (wj);
 }
 
+/*
+ * Pushes a job which has been asked to be exected in a sub thread using gda_thread_wrapper_execute()
+ */
 static void
 push_wrapper_job (BrowserConnection *bcnc, guint job_id, JobType job_type, const gchar *reason)
 {
@@ -89,6 +120,9 @@ push_wrapper_job (BrowserConnection *bcnc, guint job_id, JobType job_type, const
 	if (reason)
 		wj->reason = g_strdup (reason);
 	bcnc->priv->wrapper_jobs = g_slist_append (bcnc->priv->wrapper_jobs, wj);
+
+	if (! bcnc->priv->wrapper_jobs->next)
+		g_signal_emit (bcnc, browser_connection_signals [BUSY], 0, TRUE, wj->reason);
 }
 
 static void
@@ -96,6 +130,7 @@ pop_wrapper_job (BrowserConnection *bcnc, WrapperJob *wj)
 {
 	bcnc->priv->wrapper_jobs = g_slist_remove (bcnc->priv->wrapper_jobs, wj);
 	wrapper_job_free (wj);
+	g_signal_emit (bcnc, browser_connection_signals [BUSY], 0, FALSE, NULL);
 }
 
 
@@ -108,17 +143,6 @@ static void browser_connection_dispose (GObject *object);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
-
-/* signals */
-enum {
-	BUSY,
-	META_CHANGED,
-	FAV_CHANGED,
-	TRANSACTION_STATUS_CHANGED,
-	LAST_SIGNAL
-};
-
-gint browser_connection_signals [LAST_SIGNAL] = { 0, 0, 0, 0 };
 
 GType
 browser_connection_get_type (void)
@@ -203,6 +227,7 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->wrapper = gda_thread_wrapper_new ();
 	bcnc->priv->wrapper_jobs = NULL;
 	bcnc->priv->wrapper_results_timer = 0;
+	bcnc->priv->executed_statements = NULL;
 
 	bcnc->priv->name = g_strdup_printf (_("c%u"), index++);
 	bcnc->priv->cnc = NULL;
@@ -257,6 +282,9 @@ browser_connection_dispose (GObject *object)
 
 	bcnc = BROWSER_CONNECTION (object);
 	if (bcnc->priv) {
+		if (bcnc->priv->executed_statements)
+			g_hash_table_destroy (bcnc->priv->executed_statements);
+
 		clear_dsn_info (bcnc);
 
 		g_free (bcnc->priv->dict_file_name);
@@ -391,9 +419,28 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 			g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
 			break;
 		}
-		case JOB_TYPE_STATEMENT_EXECUTE:
-			TO_IMPLEMENT;
+		case JOB_TYPE_STATEMENT_EXECUTE: {
+			guint *id;
+			StatementResult *res;
+
+			if (! bcnc->priv->executed_statements)
+				bcnc->priv->executed_statements = g_hash_table_new_full (g_int_hash, g_int_equal,
+											 g_free,
+											 (GDestroyNotify) statement_result_free);
+			id = g_new (guint, 1);
+			*id = wj->job_id;
+			res = g_new0 (StatementResult, 1);
+			if (exec_res == (gpointer) 0x01)
+				res->error = lerror;
+			else {
+				res->result = G_OBJECT (exec_res);
+				res->last_inserted_row = g_object_get_data (exec_res, "__bcnc_last_inserted_row");
+				if (res->last_inserted_row)
+					g_object_set_data (exec_res, "__bcnc_last_inserted_row", NULL);
+			}
+			g_hash_table_insert (bcnc->priv->executed_statements, id, res);
 			break;
+		}
 		}
 
 		pop_wrapper_job (bcnc, wj);
@@ -402,7 +449,6 @@ check_for_wrapper_result (BrowserConnection *bcnc)
  out:
 	if (!bcnc->priv->wrapper_jobs) {
 		bcnc->priv->wrapper_results_timer = 0;
-		g_signal_emit (bcnc, browser_connection_signals [BUSY], 0, FALSE, NULL);
 		return FALSE;
 	}
 	else {
@@ -463,7 +509,7 @@ browser_connection_new (GdaConnection *cnc)
 	if (update_store) {
 		GError *lerror = NULL;
 		guint job_id;
-		/*g_print ("UPDATING meta store...\n");*/
+		g_print ("UPDATING meta store...\n");
 		job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
 						     (GdaThreadWrapperFunc) wrapper_meta_store_update,
 						     g_object_ref (bcnc), g_object_unref, &lerror);
@@ -913,6 +959,29 @@ browser_connection_render_pretty_sql (BrowserConnection *bcnc, GdaStatement *stm
 					      NULL, NULL);
 }
 
+typedef struct {
+	GdaConnection *cnc;
+	GdaStatement *stmt;
+	GdaSet *params;
+	GdaStatementModelUsage model_usage;
+	gboolean need_last_insert_row;
+} StmtExecData;
+
+/* executed in sub @bcnc->priv->wrapper's thread */
+static gpointer
+wrapper_statement_execute (StmtExecData *data, GError **error)
+{
+	GObject *obj;
+	GdaSet *last_insert_row = NULL;
+	obj = gda_connection_statement_execute (data->cnc, data->stmt,
+						data->params, data->model_usage,
+						data->need_last_insert_row ? &last_insert_row : NULL,
+						error);
+	if (obj && last_insert_row)
+		g_object_set_data (obj, "__bcnc_last_inserted_row", last_insert_row);
+	return obj ? obj : (gpointer) 0x01;
+}
+
 /**
  * browser_connection_execute_statement
  * @bcnc: a #BrowserConnection
@@ -939,10 +1008,24 @@ browser_connection_execute_statement (BrowserConnection *bcnc,
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), 0);
 	g_return_val_if_fail (!params || GDA_IS_SET (params), 0);
 
-	return gda_connection_async_statement_execute (bcnc->priv->cnc, stmt,
-						       params, model_usage,
-						       NULL, need_last_insert_row,
-						       error);
+	StmtExecData *data;
+	guint job_id;
+
+	data = g_new0 (StmtExecData, 1);
+	data->cnc = bcnc->priv->cnc;
+	data->stmt = stmt;
+	data->params = params;
+	data->model_usage = model_usage;
+	data->need_last_insert_row = need_last_insert_row;
+
+	job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+					     (GdaThreadWrapperFunc) wrapper_statement_execute,
+					     data, (GDestroyNotify) g_free, error);
+	if (job_id > 0)
+		push_wrapper_job (bcnc, job_id, JOB_TYPE_STATEMENT_EXECUTE,
+				  _("Executing a query"));
+
+	return job_id;
 }
 
 /**
@@ -954,16 +1037,40 @@ browser_connection_execute_statement (BrowserConnection *bcnc,
  *
  * Pick up the result of the @exec_id's execution.
  *
- * Retunrs: see gda_connection_async_fetch_result()
+ * Returns: the execution result, or %NULL if either an error occurred or the result is not yet ready
  */
 GObject *
 browser_connection_execution_get_result (BrowserConnection *bcnc, guint exec_id,
 					 GdaSet **last_insert_row, GError **error)
 {
+	StatementResult *res;
+	guint id;
+	GObject *retval;
+
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
 	g_return_val_if_fail (exec_id > 0, NULL);
+
+	if (! bcnc->priv->executed_statements)
+		return NULL;
+
+	id = exec_id;
+	res = g_hash_table_lookup (bcnc->priv->executed_statements, &id);
+	if (!res)
+		return NULL;
+
+	retval = res->result;
+	res->result = NULL;
+
+	if (last_insert_row) {
+		*last_insert_row = res->last_inserted_row;
+		res->last_inserted_row = NULL;
+	}
 	
-	return gda_connection_async_fetch_result (bcnc->priv->cnc, exec_id,
-						  last_insert_row,
-						  error);
+	if (res->error) {
+		g_propagate_error (error, res->error);
+		res->error = NULL;
+	}
+
+	g_hash_table_remove (bcnc->priv->executed_statements, &id);
+	return retval;
 }
