@@ -216,12 +216,19 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
 {
 	if (perspective->priv->action_group) {
 		GtkAction *action;
+		gboolean bsens = FALSE, csens = FALSE;
+		if (!is_busy) {
+			if (browser_connection_get_transaction_status (bcnc))
+				csens = TRUE;
+			else
+				bsens = TRUE;
+		}
 		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecBegin");
-		gtk_action_set_sensitive (action, !is_busy);
+		gtk_action_set_sensitive (action, bsens);
 		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecCommit");
-		gtk_action_set_sensitive (action, !is_busy);
+		gtk_action_set_sensitive (action, csens);
 		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecRollback");
-		gtk_action_set_sensitive (action, !is_busy);
+		gtk_action_set_sensitive (action, csens);
 	}
 }
 

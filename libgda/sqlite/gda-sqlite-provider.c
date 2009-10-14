@@ -260,10 +260,6 @@ static GObject             *gda_sqlite_provider_statement_execute (GdaServerProv
 								   GType *col_types, GdaSet **last_inserted_row, 
 								   guint *task_id, GdaServerProviderExecCallback async_cb, 
 								   gpointer cb_data, GError **error);
-/* Quoting */
-static gchar               *gda_sqlite_identifier_quote    (GdaServerProvider *provider, GdaConnection *cnc,
-							    const gchar *id,
-							    gboolean meta_store_convention, gboolean force_quotes);
 /* 
  * private connection data destroy 
  */
@@ -354,7 +350,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->get_def_dbms_type = gda_sqlite_provider_get_default_dbms_type;
 
 	provider_class->create_connection = NULL;
-	provider_class->identifier_quote = gda_sqlite_identifier_quote;
+	provider_class->identifier_quote = _gda_sqlite_identifier_quote;
 	provider_class->open_connection = gda_sqlite_provider_open_connection;
 	provider_class->close_connection = gda_sqlite_provider_close_connection;
 	provider_class->get_database = gda_sqlite_provider_get_database;
@@ -2582,188 +2578,6 @@ scalar_gda_file_exists_func (sqlite3_context *context, int argc, sqlite3_value *
 		sqlite3_result_int (context, 0);
 }
 
-static gchar *
-identifier_add_quotes (const gchar *str)
-{
-        gchar *retval, *rptr;
-        const gchar *sptr;
-        gint len;
-
-        if (!str)
-                return NULL;
-
-        len = strlen (str);
-        retval = g_new (gchar, 2*len + 3);
-        *retval = '"';
-        for (rptr = retval+1, sptr = str; *sptr; sptr++, rptr++) {
-                if (*sptr == '"') {
-                        *rptr = '\\';
-                        rptr++;
-                        *rptr = *sptr;
-                }
-                else
-                        *rptr = *sptr;
-        }
-        *rptr = '"';
-        rptr++;
-        *rptr = 0;
-        return retval;
-}
-
-static gboolean
-_sql_identifier_needs_quotes (const gchar *str)
-{
-	const gchar *ptr;
-
-	g_return_val_if_fail (str, FALSE);
-	for (ptr = str; *ptr; ptr++) {
-		/* quote if 1st char is a number */
-		if ((*ptr <= '9') && (*ptr >= '0')) {
-			if (ptr == str)
-				return TRUE;
-			continue;
-		}
-		if (((*ptr >= 'A') && (*ptr <= 'Z')) ||
-		    ((*ptr >= 'a') && (*ptr <= 'z')))
-			continue;
-
-		if ((*ptr != '$') && (*ptr != '_') && (*ptr != '#'))
-			return TRUE;
-	}
-	return FALSE;
-}
-
-/* Returns: @str */
-static gchar *
-sqlite_remove_quotes (gchar *str)
-{
-        glong total;
-        gchar *ptr;
-        glong offset = 0;
-	char delim;
-	
-	if (!str)
-		return NULL;
-	delim = *str;
-	if ((delim != '[') && (delim != '"') && (delim != '\'') && (delim != '`'))
-		return str;
-
-        total = strlen (str);
-        if ((str[total-1] == delim) || ((delim == '[') && (str[total-1] == ']'))) {
-		/* string is correctly terminated */
-		g_memmove (str, str+1, total-2);
-		total -=2;
-	}
-	else {
-		/* string is _not_ correctly terminated */
-		g_memmove (str, str+1, total-1);
-		total -=1;
-	}
-        str[total] = 0;
-
-	if ((delim == '"') || (delim == '\'')) {
-		ptr = (gchar *) str;
-		while (offset < total) {
-			/* we accept the "''" as a synonym of "\'" */
-			if (*ptr == delim) {
-				if (*(ptr+1) == delim) {
-					g_memmove (ptr+1, ptr+2, total - offset);
-					offset += 2;
-				}
-				else {
-					*str = 0;
-					return str;
-				}
-			}
-			if (*ptr == '\\') {
-				if (*(ptr+1) == '\\') {
-					g_memmove (ptr+1, ptr+2, total - offset);
-					offset += 2;
-				}
-				else {
-					if (*(ptr+1) == delim) {
-						*ptr = delim;
-						g_memmove (ptr+1, ptr+2, total - offset);
-						offset += 2;
-					}
-					else {
-						*str = 0;
-						return str;
-					}
-				}
-			}
-			else
-				offset ++;
-			
-			ptr++;
-		}
-	}
-
-        return str;
-}
-
-static gchar *
-gda_sqlite_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
-			     const gchar *id,
-			     gboolean for_meta_store, gboolean force_quotes)
-{
-        GdaSqlReservedKeywordsFunc kwfunc;
-        SqliteConnectionData *cdata = NULL;
-
-        if (cnc) {
-                cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
-                if (!cdata)
-                        return NULL;
-        }
-
-        kwfunc = _gda_sqlite_get_reserved_keyword_func ();
-
-	if (for_meta_store) {
-		gchar *tmp, *ptr;
-		tmp = sqlite_remove_quotes (g_strdup (id));
-		if (kwfunc (tmp)) {
-			ptr = gda_sql_identifier_add_quotes (tmp);
-			g_free (tmp);
-			return ptr;
-		}
-		else {
-			/* if only alphanum => don't quote */
-			for (ptr = tmp; *ptr; ptr++) {
-				if ((*ptr >= 'A') && (*ptr <= 'Z'))
-					*ptr += 'a' - 'A';
-				if (((*ptr >= 'a') && (*ptr <= 'z')) ||
-				    ((*ptr >= '0') && (*ptr <= '9') && (ptr != tmp)) ||
-				    (*ptr >= '_'))
-					continue;
-				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
-					g_free (tmp);
-					return ptr;
-				}
-			}
-			return tmp;
-		}
-	}
-	else {
-		if (*id == '"') {
-			/* there are already some quotes */
-			return g_strdup (id);
-		}
-		else if ((*id == '[') || (*id == '`')) {
-			/* there are already some quotes */
-			gchar *tmp, *ptr;
-			tmp = sqlite_remove_quotes (g_strdup (id));
-			ptr = gda_sql_identifier_add_quotes (tmp);
-			g_free (tmp);
-			return ptr;
-		}
-		if (kwfunc (id) || _sql_identifier_needs_quotes (id) || force_quotes)
-			return identifier_add_quotes (id);
-
-		/* nothing to do */
-		return g_strdup (id);
-	}
-}
 
 static void
 scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **argv)

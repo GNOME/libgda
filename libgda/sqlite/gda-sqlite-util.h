@@ -34,6 +34,10 @@ void                _gda_sqlite_test_keywords (void);
 #endif
 GdaSqlReservedKeywordsFunc _gda_sqlite_get_reserved_keyword_func (void);
 
+gchar                     *_gda_sqlite_identifier_quote          (GdaServerProvider *provider, GdaConnection *cnc,
+								  const gchar *id,
+								  gboolean meta_store_convention, gboolean force_quotes);
+
 G_END_DECLS
 
 #endif
