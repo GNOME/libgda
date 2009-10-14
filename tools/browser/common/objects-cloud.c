@@ -34,8 +34,8 @@
 #include "popup-container.h"
 
 struct _ObjectsCloudPrivate {
-	gboolean            show_schemas;
-	ObjectsCloudObjType type;
+	gboolean             show_schemas;
+	ObjectsCloudObjType  type;
 	GdaMetaStruct       *mstruct;
 	GtkTextBuffer       *tbuffer;
 	GtkWidget           *tview;
@@ -137,12 +137,12 @@ objects_cloud_get_type (void)
 typedef struct {
 	gchar *schema;
 	GtkTextMark *mark;
+	gint nb_tables;
 } SchemaData;
 static void add_to_schema_data (ObjectsCloud *cloud, SchemaData *sd, GdaMetaDbObject *dbo);
 static void
 update_display (ObjectsCloud *cloud)
 {
-	gchar *str;
 	GSList *schemas = NULL; /* holds pointers to @SchemaData structures */
 	SchemaData *default_sd = NULL, *sd;
 	
@@ -155,9 +155,11 @@ update_display (ObjectsCloud *cloud)
         gtk_text_buffer_get_end_iter (tbuffer, &end);
         gtk_text_buffer_delete (tbuffer, &start, &end);
 
+	/* default SchemaData */
 	default_sd = g_new0 (SchemaData, 1);
 	default_sd->schema = NULL;
 	default_sd->mark = gtk_text_mark_new (NULL, TRUE);
+	default_sd->nb_tables = 0;
 	gtk_text_buffer_get_end_iter (tbuffer, &end);
 	
 	gtk_text_buffer_get_end_iter (tbuffer, &end);
@@ -165,21 +167,16 @@ update_display (ObjectsCloud *cloud)
 		gtk_text_buffer_insert_pixbuf (tbuffer, &end,
 					       browser_get_pixbuf_icon (BROWSER_ICON_TABLE));
 		gtk_text_buffer_insert (tbuffer, &end, " ", 1);
-		gtk_text_buffer_insert_with_tags_by_name (tbuffer, &end,
-							  _("Tables:"), -1, "section", NULL);
-		gtk_text_buffer_insert (tbuffer, &end, "\n\n", 2);
 	}
 	gtk_text_buffer_add_mark (tbuffer, default_sd->mark, &end);
 
-
+	/* using meta struct */
 	GdaMetaStruct *mstruct;
 	GSList *dbo_list, *list;
 	mstruct = cloud->priv->mstruct;
 	if (!mstruct) {
 		/* nothing to display */
-		g_object_unref (default_sd->mark);
-		g_free (default_sd);
-		return;
+		goto out;
 	}
 	dbo_list = g_slist_reverse (gda_meta_struct_get_all_db_objects (mstruct));
 	for (list = dbo_list; list; list = list->next) {
@@ -193,7 +190,10 @@ update_display (ObjectsCloud *cloud)
 
 		is_default = strcmp (dbo->obj_short_name, dbo->obj_full_name) ? TRUE : FALSE;
 		sd = NULL;
-		if (cloud->priv->show_schemas) {
+		if (is_default) {
+			add_to_schema_data (cloud, default_sd, dbo);
+		}
+		else if (cloud->priv->show_schemas) {
 			for (list = schemas; list; list = list->next) {
 				if (!strcmp (((SchemaData *) list->data)->schema, dbo->obj_schema)) {
 					sd = (SchemaData *) list->data;
@@ -204,18 +204,13 @@ update_display (ObjectsCloud *cloud)
 				sd = g_new0 (SchemaData, 1);
 				sd->schema = g_strdup (dbo->obj_schema);
 				sd->mark = gtk_text_mark_new (NULL, TRUE);
+				sd->nb_tables = 0;
 				
 				gtk_text_buffer_get_end_iter (tbuffer, &end);
 				gtk_text_buffer_insert (tbuffer, &end, "\n\n", 2);
 				gtk_text_buffer_insert_pixbuf (tbuffer, &end,
 							       browser_get_pixbuf_icon (BROWSER_ICON_TABLE));
-				gtk_text_buffer_insert (tbuffer, &end, " ", 1);
-				str = g_strdup_printf (_("Tables in schema '%s':"), sd->schema);
-				gtk_text_buffer_insert_with_tags_by_name (tbuffer, &end,
-									  str, -1, "section", NULL);
-				g_free (str);
-				gtk_text_buffer_insert (tbuffer, &end, "\n\n", 2);
-				
+				gtk_text_buffer_insert (tbuffer, &end, " ", 1);				
 				gtk_text_buffer_add_mark (tbuffer, sd->mark, &end);
 				
 				schemas = g_slist_append (schemas, sd);
@@ -223,17 +218,40 @@ update_display (ObjectsCloud *cloud)
 
 			add_to_schema_data (cloud, sd, dbo);
 		}
-		if (is_default)
-			add_to_schema_data (cloud, default_sd, dbo);
 	}
 	g_slist_free (dbo_list);
 
+ out:
 	if (default_sd)
 		schemas = g_slist_prepend (schemas, default_sd);
 
 	/* get rid of the SchemaData structures */
 	for (list = schemas; list; list = list->next) {
+		GtkTextIter iter;
+		gchar *str;
 		sd = (SchemaData*) list->data;
+
+		gtk_text_buffer_get_iter_at_mark (tbuffer, &iter, sd->mark);
+		if (sd == default_sd) {
+			if (sd->nb_tables > 0)
+				str = g_strdup_printf (ngettext ("%d table in current schema:",
+								 "%d tables in current schema:", sd->nb_tables),
+						       sd->nb_tables);
+			else
+				str = g_strdup (_("Tables in current schema:"));
+		}
+		else
+			str = g_strdup_printf (ngettext ("%d Table in schema '%s':", 
+							 "%d Tables in schema '%s':", sd->nb_tables),
+					       sd->nb_tables, sd->schema);
+
+		gtk_text_buffer_insert_with_tags_by_name (tbuffer, &iter,
+							  str, -1, "section", NULL);
+		g_free (str);
+		gtk_text_buffer_insert (tbuffer, &iter, "\n\n", 2);
+
+		if ((sd == default_sd) && (default_sd->nb_tables == 0))
+			gtk_text_buffer_insert (tbuffer, &iter, _("None"), -1);
 
 		g_free (sd->schema);
 		g_object_unref (sd->mark);
@@ -247,6 +265,8 @@ add_to_schema_data (ObjectsCloud *cloud, SchemaData *sd, GdaMetaDbObject *dbo)
 	GtkTextTag *tag;
 	GtkTextIter iter;
 	gdouble scale = 1.0;
+
+	sd->nb_tables ++;
 
 	if (dbo->obj_type == GDA_META_DB_TABLE)
 		scale = 1.5 + g_slist_length (dbo->depend_list) / 5.;
@@ -263,7 +283,7 @@ add_to_schema_data (ObjectsCloud *cloud, SchemaData *sd, GdaMetaDbObject *dbo)
 
 	gtk_text_buffer_insert_with_tags (cloud->priv->tbuffer, &iter, dbo->obj_name, -1,
 					  tag, NULL);
-	gtk_text_buffer_insert (cloud->priv->tbuffer, &iter, " ", -1);
+	gtk_text_buffer_insert (cloud->priv->tbuffer, &iter, "  ", -1);
 }
 
 static gboolean key_press_event (GtkWidget *text_view, GdkEventKey *event, ObjectsCloud *cloud);

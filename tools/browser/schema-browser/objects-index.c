@@ -178,6 +178,7 @@ objects_index_new (BrowserConnection *bcnc)
 	GtkWidget *cloud;
 	mstruct = browser_connection_get_meta_struct (index->priv->bcnc);
 	cloud = objects_cloud_new (mstruct, OBJECTS_CLOUD_TYPE_TABLE);
+	objects_cloud_show_schemas (OBJECTS_CLOUD (cloud), TRUE);
 	gtk_box_pack_start (GTK_BOX (index), cloud, TRUE, TRUE, 0);
 	index->priv->cloud = cloud;
 	g_signal_connect (cloud, "selected",

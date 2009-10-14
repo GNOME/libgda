@@ -375,48 +375,62 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 	if (exec_res) {
 		switch (wj->job_type) {
 		case JOB_TYPE_META_STORE_UPDATE: {
-			guint job_id;
-
-			g_mutex_lock (bcnc->priv->p_mstruct_mutex);
-			if (bcnc->priv->p_mstruct)
-				g_object_unref (G_OBJECT (bcnc->priv->p_mstruct));
-			bcnc->priv->p_mstruct = gda_meta_struct_new (gda_connection_get_meta_store (bcnc->priv->cnc),
-								   GDA_META_STRUCT_FEATURE_ALL);
-			g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
-			job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
-							     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
-							     g_object_ref (bcnc), g_object_unref, &lerror);
-			if (job_id > 0)
-				push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
-						  _("Analysing database schema"));
-			else if (lerror) {
-				browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
-						    lerror->message ? lerror->message : _("No detail"));
-				g_error_free (lerror);
+			if (GPOINTER_TO_INT (exec_res) == 1) {
+				browser_show_error (NULL, _("Error while analysing database schema: %s"),
+						    lerror && lerror->message ? lerror->message : _("No detail"));
+				g_clear_error (&lerror);
+			}
+			else {
+				guint job_id;
+				
+				g_mutex_lock (bcnc->priv->p_mstruct_mutex);
+				if (bcnc->priv->p_mstruct)
+					g_object_unref (G_OBJECT (bcnc->priv->p_mstruct));
+				bcnc->priv->p_mstruct = gda_meta_struct_new (gda_connection_get_meta_store (bcnc->priv->cnc),
+									     GDA_META_STRUCT_FEATURE_ALL);
+				g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+				job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+								     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
+								     g_object_ref (bcnc), g_object_unref, &lerror);
+				if (job_id > 0)
+					push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
+							  _("Analysing database schema"));
+				else if (lerror) {
+					browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
+							    lerror->message ? lerror->message : _("No detail"));
+					g_error_free (lerror);
+				}
 			}
 			break;
 		}
 		case JOB_TYPE_META_STRUCT_SYNC: {
-			g_mutex_lock (bcnc->priv->p_mstruct_mutex);
-			GdaMetaStruct *old_mstruct;
-			old_mstruct = bcnc->priv->mstruct;
-			bcnc->priv->mstruct = bcnc->priv->p_mstruct;
-			bcnc->priv->p_mstruct = NULL;
-			if (old_mstruct)
-				g_object_unref (old_mstruct);
-#ifdef GDA_DEBUG_NO
-			GSList *all, *list;
-			all = gda_meta_struct_get_all_db_objects (bcnc->priv->mstruct);
-			for (list = all; list; list = list->next) {
-				GdaMetaDbObject *dbo = (GdaMetaDbObject *) list->data;
-				g_print ("DBO, Type %d: %s\n", dbo->obj_type,
-					 dbo->obj_short_name);
+			if (GPOINTER_TO_INT (exec_res) == 1) {
+				browser_show_error (NULL, _("Error while analysing database schema: %s"),
+						    lerror && lerror->message ? lerror->message : _("No detail"));
+				g_clear_error (&lerror);
 			}
-			g_slist_free (all);
+			else {
+				g_mutex_lock (bcnc->priv->p_mstruct_mutex);
+				GdaMetaStruct *old_mstruct;
+				old_mstruct = bcnc->priv->mstruct;
+				bcnc->priv->mstruct = bcnc->priv->p_mstruct;
+				bcnc->priv->p_mstruct = NULL;
+				if (old_mstruct)
+					g_object_unref (old_mstruct);
+#ifdef GDA_DEBUG_NO
+				GSList *all, *list;
+				all = gda_meta_struct_get_all_db_objects (bcnc->priv->mstruct);
+				for (list = all; list; list = list->next) {
+					GdaMetaDbObject *dbo = (GdaMetaDbObject *) list->data;
+					g_print ("DBO, Type %d: short=>[%s] schema=>[%s] full=>[%s]\n", dbo->obj_type,
+						 dbo->obj_short_name, dbo->obj_schema, dbo->obj_full_name);
+				}
+				g_slist_free (all);
 #endif
 
-			g_signal_emit (bcnc, browser_connection_signals [META_CHANGED], 0, bcnc->priv->mstruct);
-			g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+				g_signal_emit (bcnc, browser_connection_signals [META_CHANGED], 0, bcnc->priv->mstruct);
+				g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+			}
 			break;
 		}
 		case JOB_TYPE_STATEMENT_EXECUTE: {
@@ -509,7 +523,6 @@ browser_connection_new (GdaConnection *cnc)
 	if (update_store) {
 		GError *lerror = NULL;
 		guint job_id;
-		g_print ("UPDATING meta store...\n");
 		job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
 						     (GdaThreadWrapperFunc) wrapper_meta_store_update,
 						     g_object_ref (bcnc), g_object_unref, &lerror);
