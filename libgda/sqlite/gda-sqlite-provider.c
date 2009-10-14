@@ -309,7 +309,7 @@ typedef enum {
 	INTERNAL_COMMIT,
 	INTERNAL_COMMIT_NAMED,
 	INTERNAL_ROLLBACK,
-	INTERNAL_ROLLBACK_NAMED,
+	INTERNAL_ROLLBACK_NAMED
 } InternalStatementItem;
 
 static gchar *internal_sql[] = {
@@ -512,7 +512,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
 	const gchar *is_virtual = NULL;
-	const gchar *use_extra_functions = NULL;
+	const gchar *use_extra_functions = NULL, *with_fk = NULL;
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
@@ -533,6 +533,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		dirname="."; /* default to current directory */
 	dbname = gda_quark_list_find (params, "DB_NAME");
 	is_virtual = gda_quark_list_find (params, "_IS_VIRTUAL");
+	with_fk = gda_quark_list_find (params, "FK");
 	use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
 
 	if (! is_virtual) {
@@ -651,7 +652,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		gda_connection_add_event_string (cnc, _("Could not set empty_result_callbacks SQLite option"));
 	g_object_unref (obj);
 
-
 	/* make sure the internals are completely initialized now */
 	{
 		gchar **data = NULL;
@@ -676,6 +676,51 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
 			g_static_rec_mutex_unlock (&cnc_mutex);
 			return FALSE;
+		}
+	}
+
+	/* set connection parameters */
+	gboolean enforce_fk = TRUE;
+	if (with_fk && ((*with_fk == 'f') || (*with_fk == 'F')))
+		enforce_fk = FALSE;
+	int res;
+	sqlite3_stmt *pStmt;
+	if (enforce_fk)
+		res = sqlite3_prepare (cdata->connection,
+				       "PRAGMA foreign_keys = ON", -1,
+				       &pStmt, NULL);
+	else
+		res = sqlite3_prepare (cdata->connection,
+				       "PRAGMA foreign_keys = OFF", -1,
+				       &pStmt, NULL);
+
+	if (res != SQLITE_OK) {
+		if (with_fk) {
+			gda_sqlite_free_cnc_data (cdata);
+			gda_connection_internal_set_provider_data (cnc, NULL,
+							(GDestroyNotify) gda_sqlite_free_cnc_data);
+			g_static_rec_mutex_unlock (&cnc_mutex);
+			return FALSE;
+		}
+	}
+	else {
+		res = sqlite3_step (pStmt);
+		sqlite3_reset (pStmt);
+		sqlite3_finalize (pStmt);
+		if (res != SQLITE_DONE) {
+			if (with_fk) {
+				gda_sqlite_free_cnc_data (cdata);
+				gda_connection_internal_set_provider_data (cnc, NULL,
+							(GDestroyNotify) gda_sqlite_free_cnc_data);
+				g_static_rec_mutex_unlock (&cnc_mutex);
+				return FALSE;
+			}
+		}
+		else {
+			if (enforce_fk)
+				g_print ("SQLite provider enforces foreign keys.\n");
+			else
+				g_print ("SQLite provider does not enforce foreign keys.\n");
 		}
 	}
 
