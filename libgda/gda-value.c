@@ -2027,6 +2027,13 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		 * already have retruned */
 		return 1;
 
+	else if (g_type_is_a (type, G_TYPE_OBJECT)) {
+		if (g_value_get_object (value1) == g_value_get_object (value2))
+			return 0;
+		else
+			return -1;
+	}
+
 	g_warning ("%s() cannot handle values of type %s", __FUNCTION__, g_type_name (G_VALUE_TYPE (value1)));
 
 	return 1;
@@ -2305,6 +2312,13 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		GType t1 = g_value_get_gtype (value1);
 		GType t2 = g_value_get_gtype (value2);
 		return (t1 > t2) ? 1 : ((t1 == t2) ? 0: -1);
+	}
+
+	else if (g_type_is_a (type, G_TYPE_OBJECT)) {
+		if (g_value_get_object (value1) == g_value_get_object (value2))
+			return 0;
+		else
+			return -1;
 	}
 
 	g_warning ("%s() cannot handle values of type %s", __FUNCTION__, g_type_name (G_VALUE_TYPE (value1)));
