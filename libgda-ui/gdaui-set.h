@@ -41,7 +41,7 @@ typedef struct _GdauiSetSource GdauiSetSource;
 
 struct _GdauiSetGroup {
         GdaSetGroup      *group;
-        GdauiSetSource *source; /* if NULL, then @group->nodes contains exactly one entry */
+        GdauiSetSource   *source; /* if NULL, then @group->nodes contains exactly one entry */
 
 	/*< private >*/
         /* Padding for future expansion */
@@ -76,7 +76,7 @@ struct _GdauiSetSource {
 struct _GdauiSet
 {
 	GObject         object;
-	GdauiSetPriv *priv;
+	GdauiSetPriv   *priv;
 
 	/*< public >*/
 	GSList         *sources_list; /* list of GdauiSetSource */

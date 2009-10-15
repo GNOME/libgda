@@ -1887,7 +1887,6 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 	param = g_object_get_data (G_OBJECT (entry), "param");
 	if (param) { /* single parameter */
 		GValue *value;
-		GError *error = NULL;
 		
 		form->priv->forward_param_updates = FALSE;
 
@@ -1896,19 +1895,15 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 		if ((!value || gda_value_is_null (value)) &&
 		    (attr & GDA_VALUE_ATTR_IS_DEFAULT))
 			gda_holder_set_value_to_default (param);
-		else if (gda_holder_set_value (param, value, &error)) {
-#ifdef debug_signal
-			g_print (">> 'PARAM_CHANGED' from %s\n", __FUNCTION__);
-#endif
+		else if (gda_holder_set_value (param, value, NULL))
 			g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[PARAM_CHANGED], 0, param, TRUE);
-#ifdef debug_signal
-			g_print ("<< 'PARAM_CHANGED' from %s\n", __FUNCTION__);
-#endif
-		}
 		else {
-			g_warning (_("Parameter did not accept form's change: %s"),
-				   error && error->message ? error->message : _("No detail"));
-			g_clear_error (&error);
+			/* GdaHolder refused value => reset GdaDataEntry */
+			g_signal_handlers_block_by_func (G_OBJECT (entry),
+							 G_CALLBACK (entry_contents_modified), form);
+			gdaui_data_entry_set_value (entry, gda_holder_get_value (param));
+			g_signal_handlers_unblock_by_func (G_OBJECT (entry),
+							   G_CALLBACK (entry_contents_modified), form);
 		}
 		gda_value_free (value);
 		form->priv->forward_param_updates = TRUE;

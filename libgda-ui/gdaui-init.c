@@ -157,7 +157,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 		else if (type == G_TYPE_DATE)
 			entry = (GdauiDataEntry *) gdaui_entry_date_new (dh);
 		else
-			entry = (GdauiDataEntry *) gdaui_entry_string_new (dh, type, spec_options);
+			entry = (GdauiDataEntry *) gdaui_entry_none_new (type);
 	}
 
 	g_free (spec_options);

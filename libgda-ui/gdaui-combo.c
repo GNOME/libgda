@@ -1,6 +1,6 @@
 /* GNOME DB library
  *
- * Copyright (C) 1999 - 2008 The Free Software Foundation
+ * Copyright (C) 1999 - 2009 The Free Software Foundation
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -31,7 +31,7 @@
 
 struct _GdauiComboPrivate {
 	GdaDataModel     *model; /* proxied model (the one when _set_model() is called) */
-	GdauiDataStore *store; /* model proxy */
+	GdauiDataStore   *store; /* model proxy */
 
 	/* columns of the model to display */
 	gint              n_cols;
@@ -161,24 +161,6 @@ gdaui_combo_get_property (GObject *object,
 }
 
 static void
-model_changed_cb (GdaDataModel *model, GdauiCombo *combo)
-{
-	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), -1);
-}
-
-static void
-get_rid_of_model (GdaDataModel *model, GdauiCombo *combo)
-{
-	g_assert (model == combo->priv->model);
-	g_signal_handlers_disconnect_by_func (model,
-					      G_CALLBACK (get_rid_of_model), combo);
-	g_signal_handlers_disconnect_by_func (model,
-					      G_CALLBACK (model_changed_cb), combo);
-	g_object_unref (model);
-	combo->priv->model = NULL;
-}
-
-static void
 gdaui_combo_dispose (GObject *object)
 {
 	GdauiCombo *combo = (GdauiCombo *) object;
@@ -285,8 +267,10 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 		g_object_unref (G_OBJECT (combo->priv->store));
 		combo->priv->store = NULL;
 	}
-	if (combo->priv->model) 
-		get_rid_of_model (combo->priv->model, combo);
+	if (combo->priv->model) {
+		g_object_unref (combo->priv->model);
+		combo->priv->model = NULL;
+	}
 	if (combo->priv->cols_index) {
 		g_free (combo->priv->cols_index);
 		combo->priv->cols_index = NULL;
@@ -301,8 +285,6 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 		
 		combo->priv->store = GDAUI_DATA_STORE (gdaui_data_store_new (combo->priv->model));
 		gtk_combo_box_set_model (GTK_COMBO_BOX (combo), GTK_TREE_MODEL (combo->priv->store));
-		g_signal_connect (G_OBJECT (model), "changed",
-				  G_CALLBACK (model_changed_cb), combo);
 	} 
 	
 	if (!n_cols && model) {
