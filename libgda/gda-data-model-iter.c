@@ -436,17 +436,9 @@ gda_data_model_iter_set_property (GObject *object,
 					g_free (str);
 				}
 				else {
-					const gchar *cstr;
-					cstr = gda_column_get_description (column);
-					if (!cstr)
-						cstr = gda_column_get_name (column);
-					if (cstr)
-						g_object_set (G_OBJECT (param), "id", cstr, NULL);
-					else {
-						gchar *tmp = g_strdup_printf ("col%d", col);
-						g_object_set (G_OBJECT (param), "id", tmp, NULL);
-						g_free (tmp);
-					}
+					gchar *tmp = g_strdup_printf ("col%d", col);
+					g_object_set (G_OBJECT (param), "id", tmp, NULL);
+					g_free (tmp);
 				}
 				if (gda_column_get_default_value (column))
 					gda_holder_set_default_value (param, gda_column_get_default_value (column));
