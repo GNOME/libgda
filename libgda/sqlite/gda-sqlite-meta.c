@@ -188,20 +188,21 @@ get_statement (InternalStatementItem type, const gchar *schema_name, const gchar
 {
 	GdaStatement *stmt;
 	if (strcmp (schema_name, "main")) {
-		gchar *str;
+		gchar *str, *qschema;
 		
+		qschema = _gda_sqlite_identifier_quote (NULL, NULL, schema_name, FALSE, FALSE);
 		switch (type) {
 		case I_PRAGMA_TABLE_INFO:
-			str = g_strdup_printf ("PRAGMA %s.table_info (%s)", schema_name, obj_name);
+			str = g_strdup_printf ("PRAGMA %s.table_info ('%s')", qschema, obj_name);
 			break;
 		case I_PRAGMA_INDEX_LIST:
-			str = g_strdup_printf ("PRAGMA %s.index_list (%s)", schema_name, obj_name);
+			str = g_strdup_printf ("PRAGMA %s.index_list ('%s')", qschema, obj_name);
 			break;
 		case I_PRAGMA_INDEX_INFO:
-			str = g_strdup_printf ("PRAGMA %s.index_info (%s)", schema_name, obj_name);
+			str = g_strdup_printf ("PRAGMA %s.index_info ('%s')", qschema, obj_name);
 			break;
 		case I_PRAGMA_FK_LIST:
-			str = g_strdup_printf ("PRAGMA %s.foreign_key_list (%s)", schema_name, obj_name);
+			str = g_strdup_printf ("PRAGMA %s.foreign_key_list ('%s')", qschema, obj_name);
 			break;
 		default:
 			g_assert_not_reached ();
@@ -209,6 +210,7 @@ get_statement (InternalStatementItem type, const gchar *schema_name, const gchar
 		
 		stmt = gda_sql_parser_parse_string (internal_parser, str, NULL, NULL);
 		g_free (str);
+		g_free (qschema);
 		g_assert (stmt);
 	}
 	else {
