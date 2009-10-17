@@ -445,7 +445,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		else if ((gtype == GDA_TYPE_BLOB) || (gtype == GDA_TYPE_BINARY))
 			type = "blob";
 		else if (gtype == G_TYPE_STRING)
-			type = "text";
+			type = "string";
 		else if ((gtype == G_TYPE_INT) || (gtype == G_TYPE_UINT) || 
 			 (gtype == G_TYPE_INT64) || (gtype == G_TYPE_UINT64) ||
 			 (gtype == GDA_TYPE_SHORT) || (gtype == GDA_TYPE_USHORT) ||
