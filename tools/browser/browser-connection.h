@@ -52,12 +52,14 @@ struct _BrowserConnectionClass
 	void                    (*meta_changed) (BrowserConnection *bcnc, GdaMetaStruct *mstruct);
 	void                    (*favorites_changed) (BrowserConnection *bcnc);
 	void                    (*transaction_status_changed) (BrowserConnection *bcnc);
+
+	/* virtual methods */
+	gboolean                (*is_busy) (BrowserConnection *bcnc,  gchar **out_reason);
 };
 
 GType               browser_connection_get_type               (void) G_GNUC_CONST;
 
 BrowserConnection  *browser_connection_new                    (GdaConnection *cnc);
-BrowserConnection  *browser_connection_new_virtual            (BrowserConnection *bcnc, const gchar *ns, GError **error);
 const gchar        *browser_connection_get_name               (BrowserConnection *bcnc);
 const GdaDsnInfo   *browser_connection_get_information        (BrowserConnection *bcnc);
 

@@ -25,7 +25,8 @@
 #include "marshal.h"
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-sql-builder.h>
-#include <virtual/libgda-virtual.h>
+
+#include "browser-connection-priv.h"
 
 /* code inclusion */
 #include "../dict-file-name.c"
@@ -46,26 +47,6 @@ statement_result_free (StatementResult *res)
 	g_clear_error (&(res->error));
 	g_free (res);
 }
-
-struct _BrowserConnectionPrivate {
-	GdaThreadWrapper *wrapper;
-	GSList           *wrapper_jobs;
-	guint             wrapper_results_timer;
-	GHashTable       *executed_statements; /* key = guint exec ID, value = a StatementResult pointer */
-
-	gchar         *name;
-	GdaConnection *cnc;
-	gchar         *dict_file_name;
-        GdaSqlParser  *parser;
-        GSList        *variables; /* list of BrowserVariable pointer, owned here */
-
-	GdaDsnInfo     dsn_info;
-	GMutex        *p_mstruct_mutex;
-	GdaMetaStruct *p_mstruct; /* private GdaMetaStruct: while it is being created */
-	GdaMetaStruct *mstruct; /* public GdaMetaStruct: once it has been created and is no more modified */
-
-	BrowserFavorites *bfav;
-};
 
 /* signals */
 enum {
@@ -140,9 +121,22 @@ pop_wrapper_job (BrowserConnection *bcnc, WrapperJob *wj)
 static void browser_connection_class_init (BrowserConnectionClass *klass);
 static void browser_connection_init (BrowserConnection *bcnc);
 static void browser_connection_dispose (GObject *object);
-
+static void browser_connection_set_property (GObject *object,
+					     guint param_id,
+					     const GValue *value,
+					     GParamSpec *pspec);
+static void browser_connection_get_property (GObject *object,
+					     guint param_id,
+					     GValue *value,
+					     GParamSpec *pspec);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+
+/* properties */
+enum {
+        PROP_0,
+        PROP_GDA_CNC
+};
 
 GType
 browser_connection_get_type (void)
@@ -216,6 +210,17 @@ browser_connection_class_init (BrowserConnectionClass *klass)
 	klass->favorites_changed = NULL;
 	klass->transaction_status_changed = NULL;
 
+	klass->is_busy = NULL;
+
+	/* Properties */
+        object_class->set_property = browser_connection_set_property;
+        object_class->get_property = browser_connection_get_property;
+	g_object_class_install_property (object_class, PROP_GDA_CNC,
+                                         g_param_spec_object ("gda-connection", NULL, "Connection to use",
+                                                              GDA_TYPE_CONNECTION,
+                                                              G_PARAM_READABLE | G_PARAM_WRITABLE |
+							      G_PARAM_CONSTRUCT_ONLY));
+
 	object_class->dispose = browser_connection_dispose;
 }
 
@@ -242,6 +247,139 @@ browser_connection_init (BrowserConnection *bcnc)
 }
 
 static void
+transaction_status_changed_cb (GdaConnection *cnc, BrowserConnection *bcnc)
+{
+	g_signal_emit (bcnc, browser_connection_signals [TRANSACTION_STATUS_CHANGED], 0);
+}
+
+/* executed in sub @bcnc->priv->wrapper's thread */
+static gpointer
+wrapper_meta_store_update (BrowserConnection *bcnc, GError **error)
+{
+	gboolean retval;
+	GdaMetaContext context = {"_tables", 0, NULL, NULL};
+	retval = gda_connection_update_meta_store (bcnc->priv->cnc, &context, error);
+
+	return GINT_TO_POINTER (retval ? 2 : 1);
+}
+
+/* executed in sub @bcnc->priv->wrapper's thread */
+static gpointer
+wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
+{
+	gboolean retval;
+
+	g_mutex_lock (bcnc->priv->p_mstruct_mutex);
+	g_assert (bcnc->priv->p_mstruct);
+	g_object_ref (G_OBJECT (bcnc->priv->p_mstruct));
+	retval = gda_meta_struct_complement_all (bcnc->priv->p_mstruct, error);
+	g_object_unref (G_OBJECT (bcnc->priv->p_mstruct));
+	g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+
+	return GINT_TO_POINTER (retval ? 2 : 1);
+}
+
+static void
+browser_connection_set_property (GObject *object,
+				 guint param_id,
+				 const GValue *value,
+				 GParamSpec *pspec)
+{
+        BrowserConnection *bcnc;
+
+        bcnc = BROWSER_CONNECTION (object);
+        if (bcnc->priv) {
+                switch (param_id) {
+                case PROP_GDA_CNC:
+                        bcnc->priv->cnc = (GdaConnection*) g_value_get_object (value);
+                        if (!bcnc->priv->cnc)
+				return;
+
+			g_object_ref (bcnc->priv->cnc);
+			g_signal_connect (bcnc->priv->cnc, "transaction-status-changed",
+					  G_CALLBACK (transaction_status_changed_cb), bcnc);
+
+			/* meta store */
+			gchar *dict_file_name = NULL;
+			gboolean update_store = FALSE;
+			GdaMetaStore *store;
+			gchar *cnc_string, *cnc_info;
+			
+			g_object_get (G_OBJECT (bcnc->priv->cnc),
+				      "dsn", &cnc_info,
+				      "cnc-string", &cnc_string, NULL);
+			dict_file_name = compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
+								 cnc_string);
+			g_free (cnc_string);
+			if (dict_file_name) {
+				if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
+					update_store = TRUE;
+				store = gda_meta_store_new_with_file (dict_file_name);
+			}
+			else {
+				store = gda_meta_store_new (NULL);
+				if (store)
+					update_store = TRUE;
+			}
+			bcnc->priv->dict_file_name = dict_file_name;
+			g_object_set (G_OBJECT (bcnc->priv->cnc), "meta-store", store, NULL);
+			if (update_store) {
+				GError *lerror = NULL;
+				guint job_id;
+				job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+								     (GdaThreadWrapperFunc) wrapper_meta_store_update,
+								     g_object_ref (bcnc), g_object_unref, &lerror);
+				if (job_id > 0)
+					push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STORE_UPDATE,
+							  _("Getting database schema information"));
+				else if (lerror) {
+					browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
+							    lerror->message ? lerror->message : _("No detail"));
+					g_error_free (lerror);
+				}
+			}
+			else {
+				guint job_id;
+				GError *lerror = NULL;
+				
+				bcnc->priv->p_mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
+				job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+								     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
+								     g_object_ref (bcnc), g_object_unref, &lerror);
+				if (job_id > 0)
+					push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
+							  _("Analysing database schema"));
+				else if (lerror) {
+					browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
+							    lerror->message ? lerror->message : _("No detail"));
+					g_error_free (lerror);
+				}
+				g_object_unref (store);
+			}
+                        break;
+                }
+        }
+}
+
+static void
+browser_connection_get_property (GObject *object,
+				 guint param_id,
+				 GValue *value,
+				 GParamSpec *pspec)
+{
+        BrowserConnection *bcnc;
+
+        bcnc = BROWSER_CONNECTION (object);
+        if (bcnc->priv) {
+                switch (param_id) {
+                case PROP_GDA_CNC:
+                        g_value_set_object (value, bcnc->priv->cnc);
+                        break;
+                }
+        }
+}
+
+static void
 clear_dsn_info (BrowserConnection *bcnc)
 {
         g_free (bcnc->priv->dsn_info.name);
@@ -264,12 +402,6 @@ static void
 fav_changed_cb (BrowserFavorites *bfav, BrowserConnection *bcnc)
 {
 	g_signal_emit (bcnc, browser_connection_signals [FAV_CHANGED], 0);
-}
-
-static void
-transaction_status_changed_cb (GdaConnection *cnc, BrowserConnection *bcnc)
-{
-	g_signal_emit (bcnc, browser_connection_signals [TRANSACTION_STATUS_CHANGED], 0);
 }
 
 static void
@@ -329,33 +461,6 @@ browser_connection_dispose (GObject *object)
 
 	/* parent class */
 	parent_class->dispose (object);
-}
-
-/* executed in sub @bcnc->priv->wrapper's thread */
-static gpointer
-wrapper_meta_store_update (BrowserConnection *bcnc, GError **error)
-{
-	gboolean retval;
-	GdaMetaContext context = {"_tables", 0, NULL, NULL};
-	retval = gda_connection_update_meta_store (bcnc->priv->cnc, &context, error);
-
-	return GINT_TO_POINTER (retval ? 2 : 1);
-}
-
-/* executed in sub @bcnc->priv->wrapper's thread */
-static gpointer
-wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
-{
-	gboolean retval;
-
-	g_mutex_lock (bcnc->priv->p_mstruct_mutex);
-	g_assert (bcnc->priv->p_mstruct);
-	g_object_ref (G_OBJECT (bcnc->priv->p_mstruct));
-	retval = gda_meta_struct_complement_all (bcnc->priv->p_mstruct, error);
-	g_object_unref (G_OBJECT (bcnc->priv->p_mstruct));
-	g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
-
-	return GINT_TO_POINTER (retval ? 2 : 1);
 }
 
 static gboolean
@@ -491,186 +596,9 @@ browser_connection_new (GdaConnection *cnc)
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	bcnc = BROWSER_CONNECTION (g_object_new (BROWSER_TYPE_CONNECTION, NULL));
-	bcnc->priv->cnc = g_object_ref (cnc);
-	g_signal_connect (cnc, "transaction-status-changed",
-			  G_CALLBACK (transaction_status_changed_cb), bcnc);
-
-	/* meta store */
-	gchar *dict_file_name = NULL;
-	gboolean update_store = FALSE;
-	GdaMetaStore *store;
-	gchar *cnc_string, *cnc_info;
-	
-	g_object_get (G_OBJECT (cnc),
-		      "dsn", &cnc_info,
-		      "cnc-string", &cnc_string, NULL);
-	dict_file_name = compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
-						 cnc_string);
-	g_free (cnc_string);
-	if (dict_file_name) {
-		if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
-			update_store = TRUE;
-		store = gda_meta_store_new_with_file (dict_file_name);
-	}
-	else {
-		store = gda_meta_store_new (NULL);
-		if (store)
-			update_store = TRUE;
-	}
-	bcnc->priv->dict_file_name = dict_file_name;
-	g_object_set (G_OBJECT (cnc), "meta-store", store, NULL);
-	if (update_store) {
-		GError *lerror = NULL;
-		guint job_id;
-		job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
-						     (GdaThreadWrapperFunc) wrapper_meta_store_update,
-						     g_object_ref (bcnc), g_object_unref, &lerror);
-		if (job_id > 0)
-			push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STORE_UPDATE,
-					  _("Getting database schema information"));
-		else if (lerror) {
-			browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
-					    lerror->message ? lerror->message : _("No detail"));
-			g_error_free (lerror);
-		}
-	}
-	else {
-		guint job_id;
-		GError *lerror = NULL;
-
-		bcnc->priv->p_mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
-		job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
-						     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
-						     g_object_ref (bcnc), g_object_unref, &lerror);
-		if (job_id > 0)
-			push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
-					  _("Analysing database schema"));
-		else if (lerror) {
-			browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
-					    lerror->message ? lerror->message : _("No detail"));
-			g_error_free (lerror);
-		}
-		g_object_unref (store);
-	}
+	bcnc = BROWSER_CONNECTION (g_object_new (BROWSER_TYPE_CONNECTION, "gda-connection", cnc, NULL));
 
 	return bcnc;
-}
-
-static GdaThreadWrapper *wrapper = NULL;
-typedef struct {
-        guint cncid;
-        GMainLoop *loop;
-        GError **error;
-
-        /* out */
-        GdaConnection *cnc;
-} MainloopData;
-
-static gboolean
-check_for_cnc (MainloopData *data)
-{
-        GdaConnection *cnc;
-        GError *lerror = NULL;
-        cnc = gda_thread_wrapper_fetch_result (wrapper, FALSE, data->cncid, &lerror);
-        if (cnc || (!cnc && lerror)) {
-                /* waiting is finished! */
-                data->cnc = cnc;
-                if (lerror)
-                        g_propagate_error (data->error, lerror);
-                g_main_loop_quit (data->loop);
-                return FALSE;
-        }
-        return TRUE;
-}
-
-typedef struct {
-	GdaConnection *cnc_to_wrap;
-	const gchar *ns;
-} VirtualConnectionData;
-/*
- * executed in a sub thread
- */
-static GdaConnection *
-sub_thread_open_cnc (VirtualConnectionData *vcdata, GError **error)
-{
-#ifndef DUMMY
-	static GdaVirtualProvider *provider = NULL;
-	GdaConnection *virtual, *cnc;
-	if (!provider)
-		provider = gda_vprovider_hub_new ();
-
-	virtual = gda_virtual_connection_open_extended (provider, GDA_CONNECTION_OPTIONS_THREAD_SAFE, NULL);
-	cnc = g_object_get_data (G_OBJECT (virtual), "gda-virtual-connection");
-	if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (cnc), vcdata->cnc_to_wrap,
-				      vcdata->ns, error)) {
-		g_object_unref (virtual);
-		return NULL;
-	}
-	else
-		return virtual;
-#else
-        sleep (5);
-        g_set_error (error, 0, 0, "Oooo");
-        return NULL;
-#endif
-}
-/**
- * browser_connection_new_virtual
- * @bcnc: a #BrowserConnection
- * @ns: the namespace for @bcnc's tables
- * @error: a place to store errors, or %NULL
- *
- * Creates a new virtual connection using #BrowserConnection as a starting point.
- *
- * To close the new connection, use browser_core_close_connection().
- *
- * Returns: a new object
- */
-BrowserConnection *
-browser_connection_new_virtual (BrowserConnection *bcnc, const gchar *ns, GError **error)
-{
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
-
-	if (!wrapper)
-                wrapper = gda_thread_wrapper_new ();
-
-	guint cncid;
-	VirtualConnectionData vcdata;
-
-	vcdata.cnc_to_wrap = bcnc->priv->cnc;
-	vcdata.ns = ns ? ns : bcnc->priv->name;
-	cncid = gda_thread_wrapper_execute (wrapper,
-                                            (GdaThreadWrapperFunc) sub_thread_open_cnc,
-                                            (gpointer) &vcdata,
-                                            (GDestroyNotify) NULL,
-                                            error);
-        if (cncid == 0)
-                return NULL;
-
-	GMainLoop *loop;
-        guint source_id;
-        MainloopData data;
-	
-        loop = g_main_loop_new (NULL, FALSE);
-	data.cncid = cncid;
-        data.error = error;
-        data.loop = loop;
-        data.cnc = NULL;
-
-        source_id = g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
-        g_main_loop_run (loop);
-        g_main_loop_unref (loop);
-
-        if (data.cnc) {
-		BrowserConnection *nbcnc;
-                g_object_set (data.cnc, "monitor-wrapped-in-mainloop", TRUE, NULL);
-		nbcnc = browser_connection_new (data.cnc);
-		g_object_unref (data.cnc);
-		return nbcnc;
-	}
-	else
-		return NULL;
 }
 
 /**
@@ -756,6 +684,8 @@ browser_connection_is_busy (BrowserConnection *bcnc, gchar **out_reason)
 			*out_reason = g_strdup (wj->reason);
 		return TRUE;
 	}
+	else if (BROWSER_CONNECTION_CLASS (G_OBJECT_GET_CLASS (bcnc))->is_busy)
+		return BROWSER_CONNECTION_CLASS (G_OBJECT_GET_CLASS (bcnc))->is_busy (bcnc, out_reason);
 	else
 		return FALSE;
 }

@@ -304,37 +304,8 @@ connection_new_cb (GtkButton *button, BrowserConnectionsList *clist)
 	}
 }
 
-static void
-connection_bind_cb (GtkButton *button, BrowserConnectionsList *clist)
-{
-	GtkTreeSelection *select;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	
-	select = gtk_tree_view_get_selection (clist->priv->treeview);
-	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
-		BrowserConnection *bcnc, *nbcnc;
-		GError *error = NULL;
-		gtk_tree_model_get (model, &iter, COLUMN_BCNC, &bcnc, -1);
-		nbcnc = browser_connection_new_virtual (bcnc, NULL, &error);
-		if (nbcnc) {
-			BrowserWindow *nbwin;
-			nbwin = browser_window_new (nbcnc, NULL);
-			
-			browser_core_take_window (nbwin);
-			browser_core_take_connection (nbcnc);
-		}
-		else {
-			browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) clist),
-					    _("Could not open binding connection: %s"),
-					    error && error->message ? error->message : _("No detail"));
-			g_clear_error (&error);
-		}
-	}
-}
-
 /**
- * browser_connections_list_new
+ * browser_connections_list_show
  *
  * Creates a new #BrowserConnectionsList widget and displays it.
  * Only one is created and shown (singleton)
@@ -422,20 +393,11 @@ browser_connections_list_show (void)
 		gtk_widget_set_tooltip_text (button, _("Close selected connection"));
 		_clist->priv->close_cnc_button = button;
 
-		button = gtk_button_new_with_label (_("Open"));
+		button = gtk_button_new_with_label (_("Connect"));
 		gtk_box_pack_start (GTK_BOX (bbox), button, TRUE, TRUE, 0);
 		g_signal_connect (button, "clicked",
 				  G_CALLBACK (connection_new_cb), clist);
 		gtk_widget_set_tooltip_text (button, _("Open a new connection"));
-
-		button = gtk_button_new_with_label (_("Bind"));
-		gtk_box_pack_start (GTK_BOX (bbox), button, TRUE, TRUE, 0);
-		g_signal_connect (button, "clicked",
-				  G_CALLBACK (connection_bind_cb), clist);
-		gtk_widget_set_tooltip_text (button, _("Use selected connection to create\n"
-						       "a new binding connection to access data\n"
-						       "from multiple databases at once"));
-
 
 		/* GtkTreeModel and view */
 		GtkListStore *store;

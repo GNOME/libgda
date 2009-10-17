@@ -66,6 +66,17 @@ typedef enum {
 
 GdkPixbuf         *browser_get_pixbuf_icon (BrowserIconType type);
 
+/*
+ * Connections list
+ */
+enum
+{
+	CNC_LIST_COLUMN_BCNC = 0,
+	CNC_LIST_COLUMN_NAME = 1,
+	CNC_LIST_NUM_COLUMNS
+};
+GdaDataModel *browser_get_connections_list (void);
+
 G_END_DECLS
 
 #endif

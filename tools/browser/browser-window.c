@@ -29,6 +29,7 @@
 #include "browser-connections-list.h"
 #include "browser-spinner.h"
 #include "browser-stock-icons.h"
+#include "connection-binding-properties.h"
 
 /*
  * structure representing a 'tab' in a window
@@ -192,6 +193,7 @@ static void window_new_cb (GtkAction *action, BrowserWindow *bwin);
 static void window_new_with_cnc_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_close_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_open_cb (GtkAction *action, BrowserWindow *bwin);
+static void connection_bind_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_list_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_meta_update_cb (GtkAction *action, BrowserWindow *bwin);
 static void perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserWindow *bwin);
@@ -204,6 +206,9 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
 static const GtkActionEntry ui_actions[] = {
         { "Connection", NULL, "_Connection", NULL, "Connection", NULL },
         { "ConnectionOpen", GTK_STOCK_CONNECT, "_Connect", NULL, "Open a connection", G_CALLBACK (connection_open_cb)},
+        { "ConnectionBind", NULL, N_("_Bind connection"), "<control>B", N_("Use connection to create\n"
+						    "a new binding connection to access data\n"
+						    "from multiple databases at once"), G_CALLBACK (connection_bind_cb)},
         { "ConnectionList", NULL, "_Connections list", NULL, "Connections list", G_CALLBACK (connection_list_cb)},
         { "ConnectionMetaSync", GTK_STOCK_REFRESH, "_Fetch meta data", NULL, "Fetch meta data", G_CALLBACK (connection_meta_update_cb)},
         { "ConnectionClose", GTK_STOCK_CLOSE, "_Close connection", NULL, "Close this connection", G_CALLBACK (connection_close_cb)},
@@ -226,7 +231,9 @@ static const gchar *ui_actions_info =
         "      <menuitem name='ConnectionList' action= 'ConnectionList'/>"
         "      <menuitem name='ConnectionMetaSync' action= 'ConnectionMetaSync'/>"
         "      <separator/>"
+        "      <menuitem name='ConnectionBind' action= 'ConnectionBind'/>"
         "      <menuitem name='ConnectionClose' action= 'ConnectionClose'/>"
+        "      <separator/>"
         "      <menuitem name='Quit' action= 'Quit'/>"
         "      <separator/>"
         "    </menu>"
@@ -768,6 +775,39 @@ static void
 connection_open_cb (GtkAction *action, BrowserWindow *bwin)
 {
 	browser_connection_open (NULL);
+}
+
+static void
+connection_bind_cb (GtkAction *action, BrowserWindow *bwin)
+{
+	GtkWidget *win;
+	gint res;
+
+	win = connection_binding_properties_new_create (bwin->priv->bcnc);
+	gtk_window_set_transient_for (GTK_WINDOW (win), GTK_WINDOW (bwin));
+	gtk_widget_show (win);
+
+	res = gtk_dialog_run (GTK_DIALOG (win));
+	if (res == GTK_RESPONSE_OK) {
+		BrowserConnection *bcnc;
+		GError *error = NULL;
+		bcnc = browser_virtual_connection_new (connection_binding_properties_get_specs
+						       (CONNECTION_BINDING_PROPERTIES (win)), &error);
+		if (bcnc) {
+			BrowserWindow *bwin;
+			bwin = browser_window_new (bcnc, NULL);
+			
+			browser_core_take_window (bwin);
+			browser_core_take_connection (bcnc);
+		}
+		else {
+			browser_show_error ((GtkWindow*) bwin,
+					    _("Could not open binding connection: %s"),
+					    error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+	}
+	gtk_widget_destroy (win);
 }
 
 static void

@@ -54,10 +54,14 @@ libbrowser_la_SOURCES=\
 	browser-favorites.h \
 	browser-variable.c \
 	browser-variable.h \
+	browser-virtual-connection.c \
+	browser-virtual-connection.h \
 	browser-window.c \
 	browser-window.h \
 	browser-connections-list.c \
 	browser-connections-list.h \
+	connection-binding-properties.c \
+	connection-binding-properties.h \
 	mgr-favorites.h \
 	mgr-favorites.c \
 	browser-stock-icons.c \

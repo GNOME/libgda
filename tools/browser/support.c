@@ -355,3 +355,73 @@ browser_find_parent_widget (GtkWidget *current, GType requested_type)
 	}
 	return NULL;
 }
+
+static void connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *model);
+static void connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *model);
+
+/**
+ * browser_get_connections_list
+ *
+ * Creates a unique instance of tree model listing all the connections, and returns
+ * a pointer to it. The object will always exist after it has been created, so no need
+ * to reference it.
+ *
+ * Returns: a pointer to the #GtkTreeModel, the caller must not assume it has a reference to it.
+ */
+GdaDataModel *
+browser_get_connections_list (void)
+{
+	static GdaDataModel *model = NULL;
+	if (!model) {
+		model = gda_data_model_array_new_with_g_types (CNC_LIST_NUM_COLUMNS,
+							       BROWSER_TYPE_CONNECTION,
+							       G_TYPE_STRING);
+		/* initial filling */
+		GSList *connections, *list;
+		connections =  browser_core_get_connections ();
+		for (list = connections; list; list = list->next)
+			connection_added_cb (browser_core_get(), BROWSER_CONNECTION (list->data),
+					     model);
+		g_slist_free (connections);
+
+		g_signal_connect (browser_core_get (), "connection-added",
+				  G_CALLBACK (connection_added_cb), model);
+		g_signal_connect (browser_core_get (), "connection-removed",
+				  G_CALLBACK (connection_removed_cb), model);
+	}
+
+	return model;
+}
+
+static void
+connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *model)
+{
+	GList *values;
+	GValue *value;
+	
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), browser_connection_get_name (bcnc));
+	values = g_list_prepend (NULL, value);
+	g_value_set_object ((value = gda_value_new (BROWSER_TYPE_CONNECTION)), bcnc);
+	values = g_list_prepend (values, value);
+
+	g_assert (gda_data_model_append_values (model, values, NULL) >= 0);
+
+	g_list_foreach (values, (GFunc) gda_value_free, NULL);
+	g_list_free (values);
+}
+
+static void
+connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *model)
+{
+	gint i, nrows;
+	nrows = gda_data_model_get_n_rows (model);
+	for (i = 0; i < nrows; i++) {
+		const GValue *value;
+		value = gda_data_model_get_value_at (model, 0, i, NULL);
+		g_assert (value);
+		if (g_value_get_object (value) == bcnc) {
+			g_assert (gda_data_model_remove_row (model, i, NULL));
+			break;
+		}
+	}
+}
