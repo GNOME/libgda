@@ -31,6 +31,7 @@ static void connection_binding_properties_class_init (ConnectionBindingPropertie
 static void connection_binding_properties_init (ConnectionBindingProperties *stmt);
 static void connection_binding_properties_dispose (GObject *object);
 
+static void update_buttons_sensitiveness (ConnectionBindingProperties *cprop);
 static void create_layout (ConnectionBindingProperties *cprop);
 static void update_display (ConnectionBindingProperties *cprop);
 
@@ -38,6 +39,7 @@ struct _ConnectionBindingPropertiesPrivate
 {
 	BrowserVirtualConnectionSpecs *specs;
 	GtkTable    *layout_table;
+	GtkWidget   *menu;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -98,6 +100,8 @@ connection_binding_properties_dispose (GObject *object)
 	if (cprop->priv) {
 		if (cprop->priv->specs)
 			browser_virtual_connection_specs_free (cprop->priv->specs);
+		if (cprop->priv->menu)
+			gtk_widget_destroy (cprop->priv->menu);
 		g_free (cprop->priv);
 		cprop->priv = NULL;
 	}
@@ -147,7 +151,7 @@ connection_binding_properties_new_create (BrowserConnection *bcnc)
 static void
 create_layout (ConnectionBindingProperties *cprop)
 {
-	GtkWidget *label, *hbox;
+	GtkWidget *sw, *vp, *label, *hbox;
 	gchar *str;
 
 	str = g_strdup_printf ("<b>%s:</b>\n<small>%s</small>",
@@ -158,24 +162,36 @@ create_layout (ConnectionBindingProperties *cprop)
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	g_free (str);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cprop)->vbox), label, FALSE, FALSE, 5);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cprop)->vbox), label, FALSE, FALSE, 10);
 
 	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cprop)->vbox), hbox, TRUE, TRUE, 0);
 	label = gtk_label_new ("      ");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
+	sw = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
+	gtk_box_pack_start (GTK_BOX (hbox), sw, TRUE, TRUE, 0);
+
+	vp = gtk_viewport_new (NULL, NULL);
+	gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
+	gtk_container_add (GTK_CONTAINER (sw), vp);
+
 	cprop->priv->layout_table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
-	gtk_box_pack_start (GTK_BOX (hbox), (GtkWidget*) cprop->priv->layout_table, TRUE, TRUE, 0);
+	gtk_container_add (GTK_CONTAINER (vp), (GtkWidget*) cprop->priv->layout_table);
 
 	gtk_widget_show_all (GTK_DIALOG (cprop)->vbox);
+
+	gtk_window_set_default_size (GTK_WINDOW (cprop), 340, 300);
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (cprop), GTK_RESPONSE_OK, FALSE);
 }
 
 static void add_part_clicked_cb (GtkWidget *button, ConnectionBindingProperties *cprop);
 static void del_part_clicked_cb (GtkWidget *button, BrowserVirtualConnectionPart *part);
 
-static GtkWidget *create_part_for_model (BrowserVirtualConnectionModel *pm);
-static GtkWidget *create_part_for_cnc (BrowserVirtualConnectionCnc *cnc);
+static GtkWidget *create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionModel *pm);
+static GtkWidget *create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectionCnc *cnc);
 
 static void
 update_display (ConnectionBindingProperties *cprop)
@@ -195,52 +211,115 @@ update_display (ConnectionBindingProperties *cprop)
 			part = (BrowserVirtualConnectionPart*) list->data;
 			switch (part->part_type) {
 			case BROWSER_VIRTUAL_CONNECTION_PART_MODEL:
-				display = create_part_for_model (&(part->u.model));
+				display = create_part_for_model (cprop, &(part->u.model));
 				break;
 			case BROWSER_VIRTUAL_CONNECTION_PART_CNC:
-				display = create_part_for_cnc (&(part->u.cnc));
+				display = create_part_for_cnc (cprop, &(part->u.cnc));
 				break;
 			default:
 				g_assert_not_reached ();
 			}
 
-			gtk_table_attach (cprop->priv->layout_table, display, 0, 1, top, top + 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+			gtk_table_attach (cprop->priv->layout_table, display, 0, 1, top, top + 1,
+					  GTK_EXPAND | GTK_FILL, 0, 0, 10);
 
 			button = gtk_button_new ();
 			label = browser_make_tab_label_with_stock (NULL, GTK_STOCK_REMOVE, FALSE, NULL);
 			gtk_container_add (GTK_CONTAINER (button), label);
-			gtk_table_attach (cprop->priv->layout_table, button, 1, 2, top, top + 1, 0, GTK_FILL, 0, 0);
+			gtk_table_attach (cprop->priv->layout_table, button, 1, 2, top, top + 1, 0, GTK_FILL, 0, 10);
 
 			g_signal_connect (button, "clicked",
 					  G_CALLBACK (del_part_clicked_cb), part);
+			g_object_set_data (G_OBJECT (button), "cprop", cprop);
 		}
 	}
 
 	/* bottom button to add a part */
 	button = gtk_button_new ();
-	label = browser_make_tab_label_with_stock (_("Add part"), GTK_STOCK_ADD, FALSE, NULL);
+	label = browser_make_tab_label_with_stock (_("Add binding"), GTK_STOCK_ADD, FALSE, NULL);
 	gtk_container_add (GTK_CONTAINER (button), label);
-	gtk_table_attach (cprop->priv->layout_table, button, 0, 2, top, top + 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	GtkWidget *arrow;
+	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
+	gtk_box_pack_start (GTK_BOX (label), arrow, FALSE, FALSE, 0);
+	g_object_set (G_OBJECT (button), "relief", GTK_RELIEF_NONE, NULL);
+	gtk_table_attach (cprop->priv->layout_table, button, 0, 2, top, top + 1, GTK_EXPAND | GTK_FILL, 0, 0, 10);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (add_part_clicked_cb), cprop);
 	
 	gtk_widget_show_all ((GtkWidget*) cprop->priv->layout_table);
+
+	update_buttons_sensitiveness (cprop);
+}
+
+static void
+add_part_mitem_cb (GtkMenuItem *mitem, ConnectionBindingProperties *cprop)
+{
+	BrowserVirtualConnectionType part_type;
+	BrowserVirtualConnectionPart *part;
+
+	part_type = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (mitem), "part-type"));
+	part = g_new0 (BrowserVirtualConnectionPart, 1);
+	part->part_type = part_type;
+	switch (part_type) {
+	case BROWSER_VIRTUAL_CONNECTION_PART_MODEL: {
+		BrowserVirtualConnectionModel *pm;
+		pm = &(part->u.model);
+		pm->table_name = g_strdup ("tab");
+		break;
+	}
+	case BROWSER_VIRTUAL_CONNECTION_PART_CNC: {
+		BrowserVirtualConnectionCnc *scnc;
+		scnc = &(part->u.cnc);
+		scnc->table_schema = g_strdup ("sub");
+		break;
+	}
+	default:
+		g_assert_not_reached ();
+	}
+
+	cprop->priv->specs->parts = g_slist_append (cprop->priv->specs->parts, part);
+	update_display (cprop);
 }
 
 static void
 add_part_clicked_cb (GtkWidget *button, ConnectionBindingProperties *cprop)
 {
-	TO_IMPLEMENT;
+	if (! cprop->priv->menu) {
+		GtkWidget *menu, *entry;
+		menu = gtk_menu_new ();
+		entry = gtk_menu_item_new_with_label (_("Bind a connection"));
+		g_object_set_data (G_OBJECT (entry), "part-type",
+				   GINT_TO_POINTER (BROWSER_VIRTUAL_CONNECTION_PART_CNC));
+		g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (add_part_mitem_cb), cprop);
+		gtk_widget_show (entry);
+		gtk_menu_append (GTK_MENU (menu), entry);
+		entry = gtk_menu_item_new_with_label (_("Bind a data set"));
+		g_object_set_data (G_OBJECT (entry), "part-type",
+				   GINT_TO_POINTER (BROWSER_VIRTUAL_CONNECTION_PART_MODEL));
+		g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (add_part_mitem_cb), cprop);
+		gtk_menu_append (GTK_MENU (menu), entry);
+		gtk_widget_show (entry);
+
+		cprop->priv->menu = menu;
+	}
+
+	gtk_menu_popup (GTK_MENU (cprop->priv->menu), NULL, NULL, NULL, NULL,
+                        0, gtk_get_current_event_time ());
 }
 
 static void
 del_part_clicked_cb (GtkWidget *button, BrowserVirtualConnectionPart *part)
 {
-	TO_IMPLEMENT;
+	ConnectionBindingProperties *cprop;
+	cprop = g_object_get_data (G_OBJECT (button), "cprop");
+
+	cprop->priv->specs->parts = g_slist_remove (cprop->priv->specs->parts, part);
+	browser_virtual_connection_part_free (part);
+	update_display (cprop);
 }
 
 static GtkWidget *
-create_part_for_model (BrowserVirtualConnectionModel *pm)
+create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionModel *pm)
 {
 	GtkWidget *vbox, *label;
 	gchar *str;
@@ -251,7 +330,7 @@ create_part_for_model (BrowserVirtualConnectionModel *pm)
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	g_free (str);
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 5);
 
 	GdaSet *set;
 	GdaHolder *holder;
@@ -289,8 +368,7 @@ part_for_cnc_validate_holder_change_cb (GdaSet *set, GdaHolder *holder, GValue *
 		str = g_value_get_string (new_value);
 		for (ptr = str; *ptr; ptr++) {
 			if (((ptr == str) && ! g_ascii_isalpha (*ptr)) ||
-			    (*ptr != '_') ||
-			    ! g_ascii_isalnum (*ptr)) {
+			    ((ptr != str) && (*ptr != '_') && !g_ascii_isalnum (*ptr))) {
 				GError *error = NULL;
 				g_set_error (&error, 0, 0,
 					     _("Invalid schema name"));
@@ -326,10 +404,14 @@ part_for_cnc_holder_changed_cb (GdaSet *set, GdaHolder *holder, BrowserVirtualCo
 	}
 	else
 		g_assert_not_reached ();
+
+	ConnectionBindingProperties *cprop;
+	cprop = g_object_get_data (G_OBJECT (set), "cprop");
+	update_buttons_sensitiveness (cprop);
 }
 
 static GtkWidget *
-create_part_for_cnc (BrowserVirtualConnectionCnc *cnc)
+create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectionCnc *cnc)
 {
 	GtkWidget *vbox, *label;
 	gchar *str;
@@ -342,7 +424,7 @@ create_part_for_cnc (BrowserVirtualConnectionCnc *cnc)
 	g_free (str);
 	gtk_widget_set_tooltip_text (label, _("Each table in the selected connection will appear\n"
 					      "as a table in the virtual connection"));
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 5);
 
 	GdaSet *set;
 	GdaHolder *holder;
@@ -370,13 +452,52 @@ create_part_for_cnc (BrowserVirtualConnectionCnc *cnc)
 	form = gdaui_basic_form_new (set);
 	g_signal_connect (set, "validate-holder-change",
 			  G_CALLBACK (part_for_cnc_validate_holder_change_cb), cnc);
+	g_object_set_data (G_OBJECT (set), "cprop", cprop);
 	g_signal_connect (set, "holder-changed",
 			  G_CALLBACK (part_for_cnc_holder_changed_cb), cnc);
-
 	g_object_unref (set);
 	gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
 
 	return vbox;
+}
+
+static void
+update_buttons_sensitiveness (ConnectionBindingProperties *cprop)
+{
+	gboolean allok = FALSE;
+	GSList *list;
+	GHashTable *schemas_hash = g_hash_table_new (g_str_hash, g_str_equal);
+
+	if (! cprop->priv->specs->parts)
+		goto out;
+
+	for (list = cprop->priv->specs->parts; list; list = list->next) {
+		BrowserVirtualConnectionPart *part;
+		part = (BrowserVirtualConnectionPart*) list->data;
+		switch (part->part_type) {
+		case BROWSER_VIRTUAL_CONNECTION_PART_CNC: {
+			BrowserVirtualConnectionCnc *cnc;
+			cnc = &(part->u.cnc);
+			if (! cnc->source_cnc || ! cnc->table_schema || ! *cnc->table_schema)
+				goto out;
+
+			if (g_hash_table_lookup (schemas_hash, cnc->table_schema))
+				goto out;
+			g_hash_table_insert (schemas_hash, cnc->table_schema, 0x01);
+			break;
+		}
+		case BROWSER_VIRTUAL_CONNECTION_PART_MODEL:
+			TO_IMPLEMENT;
+			goto out;
+			break;
+		}
+	}
+
+	allok = TRUE;
+
+ out:
+	g_hash_table_destroy (schemas_hash);
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (cprop), GTK_RESPONSE_OK, allok);
 }
 
 /**

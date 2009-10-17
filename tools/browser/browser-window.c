@@ -788,6 +788,7 @@ connection_bind_cb (GtkAction *action, BrowserWindow *bwin)
 	gtk_widget_show (win);
 
 	res = gtk_dialog_run (GTK_DIALOG (win));
+	gtk_widget_hide (win);
 	if (res == GTK_RESPONSE_OK) {
 		BrowserConnection *bcnc;
 		GError *error = NULL;
