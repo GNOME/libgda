@@ -1,6 +1,6 @@
 /* gdaui-grid.c
  *
- * Copyright (C) 2002 - 2006 Vivien Malerba
+ * Copyright (C) 2002 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -30,13 +30,13 @@ static void gdaui_grid_class_init (GdauiGridClass * class);
 static void gdaui_grid_init (GdauiGrid *wid);
 
 static void gdaui_grid_set_property (GObject *object,
-					guint param_id,
-					const GValue *value,
-					GParamSpec *pspec);
+				     guint param_id,
+				     const GValue *value,
+				     GParamSpec *pspec);
 static void gdaui_grid_get_property (GObject *object,
-					guint param_id,
-					GValue *value,
-					GParamSpec *pspec);
+				     guint param_id,
+				     GValue *value,
+				     GParamSpec *pspec);
 
 struct _GdauiGridPriv
 {
@@ -147,7 +147,7 @@ gdaui_grid_new (GdaDataModel *model)
 	g_return_val_if_fail (!model || GDA_IS_DATA_MODEL (model), NULL);
 
 	grid = (GdauiGrid *) g_object_new (GDAUI_TYPE_GRID,
-	                                     "model", model, NULL);
+					   "model", model, NULL);
 
 	return (GtkWidget *) grid;
 }

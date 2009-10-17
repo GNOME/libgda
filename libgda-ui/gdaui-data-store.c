@@ -681,7 +681,7 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 	GdauiDataStore *store;
 	const GValue *tmp;
 	GType rettype;
-	gint model_nb_cols;
+	gint model_nb_cols = -10;
 
 	g_return_if_fail (GDAUI_IS_DATA_STORE (tree_model));
         store = GDAUI_DATA_STORE (tree_model);
@@ -693,12 +693,12 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 
 	rettype = data_store_get_column_type (tree_model, column);
 	g_value_init (value, rettype);
-	model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
 
 	/* Global attributes */
 	if (column < 0) {
 		switch (column) {
 		case DATA_STORE_COL_MODEL_N_COLUMNS:
+			model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
 			g_value_set_int (value, model_nb_cols);
 			break;
 		case DATA_STORE_COL_MODEL_POINTER:
@@ -720,6 +720,9 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 			g_assert_not_reached ();
 		}
 	}
+
+	if (model_nb_cols == -10)
+		model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
 
 	/* current proxy values or original ones */
 	if (((column >= 0) && (column < model_nb_cols)) ||
