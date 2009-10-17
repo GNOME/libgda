@@ -40,6 +40,11 @@ struct _BrowserConnectionPrivate {
 	GdaMetaStruct *mstruct; /* public GdaMetaStruct: once it has been created and is no more modified */
 
 	BrowserFavorites *bfav;
+
+	gboolean  busy;
+	gchar    *busy_reason;
 };
+
+void browser_connection_set_busy_state (BrowserConnection *bcnc, gboolean busy, const gchar *busy_reason);
 
 #endif

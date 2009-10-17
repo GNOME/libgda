@@ -88,30 +88,6 @@ source_cnc_busy_cb (BrowserConnection *bcnc, gboolean is_busy, const gchar *reas
 			       is_busy ? _("Bound connection is used") : NULL);
 }
 
-static gboolean
-is_busy (BrowserConnection *bcnc, gchar **out_reason)
-{
-	GSList *list;
-	if (out_reason)
-		*out_reason = NULL;
-
-	if (! BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->specs)
-		return FALSE;
-
-	for (list = BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->specs->parts; list; list = list->next) {
-		BrowserVirtualConnectionPart *part;
-		part = (BrowserVirtualConnectionPart*) list->data;
-		if (part->part_type == BROWSER_VIRTUAL_CONNECTION_PART_CNC) {
-			BrowserVirtualConnectionCnc *cnc;
-			cnc = &(part->u.cnc);
-			if (browser_connection_is_busy (cnc->source_cnc, out_reason))
-				return TRUE;
-		}
-	}
-
-	return FALSE;
-}
-
 static void
 m_busy (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason)
 {
@@ -138,6 +114,8 @@ m_busy (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason)
 							   bcnc);			
 		}
 	}
+
+	BROWSER_CONNECTION_CLASS (parent_class)->busy (bcnc, is_busy, reason);
 }
 
 static void
@@ -147,7 +125,6 @@ browser_virtual_connection_class_init (BrowserVirtualConnectionClass * klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	BROWSER_CONNECTION_CLASS (klass)->busy = m_busy;
-	BROWSER_CONNECTION_CLASS (klass)->is_busy = is_busy;
 
 	/* Properties */
         object_class->set_property = browser_virtual_connection_set_property;

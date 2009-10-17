@@ -52,9 +52,6 @@ struct _BrowserConnectionClass
 	void                    (*meta_changed) (BrowserConnection *bcnc, GdaMetaStruct *mstruct);
 	void                    (*favorites_changed) (BrowserConnection *bcnc);
 	void                    (*transaction_status_changed) (BrowserConnection *bcnc);
-
-	/* virtual methods */
-	gboolean                (*is_busy) (BrowserConnection *bcnc,  gchar **out_reason);
 };
 
 GType               browser_connection_get_type               (void) G_GNUC_CONST;

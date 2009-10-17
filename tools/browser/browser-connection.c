@@ -205,12 +205,10 @@ browser_connection_class_init (BrowserConnectionClass *klass)
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
                               0);
 
-	klass->busy = NULL;
+	klass->busy = browser_connection_set_busy_state;
 	klass->meta_changed = NULL;
 	klass->favorites_changed = NULL;
 	klass->transaction_status_changed = NULL;
-
-	klass->is_busy = NULL;
 
 	/* Properties */
         object_class->set_property = browser_connection_set_property;
@@ -454,6 +452,7 @@ browser_connection_dispose (GObject *object)
 							      G_CALLBACK (fav_changed_cb), bcnc);
 			g_object_unref (bcnc->priv->bfav);
 		}
+		browser_connection_set_busy_state (bcnc, FALSE, NULL);
 
 		g_free (bcnc->priv);
 		bcnc->priv = NULL;
@@ -678,16 +677,11 @@ browser_connection_is_busy (BrowserConnection *bcnc, gchar **out_reason)
 	if (out_reason)
 		*out_reason = NULL;
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
-	if (bcnc->priv->wrapper_jobs) {
-		WrapperJob *wj = (WrapperJob*) bcnc->priv->wrapper_jobs->data;
-		if (out_reason && wj->reason)
-			*out_reason = g_strdup (wj->reason);
-		return TRUE;
-	}
-	else if (BROWSER_CONNECTION_CLASS (G_OBJECT_GET_CLASS (bcnc))->is_busy)
-		return BROWSER_CONNECTION_CLASS (G_OBJECT_GET_CLASS (bcnc))->is_busy (bcnc, out_reason);
-	else
-		return FALSE;
+
+	if (out_reason && bcnc->priv->busy_reason)
+		*out_reason = g_strdup (bcnc->priv->busy_reason);
+
+	return bcnc->priv->busy;
 }
 
 /**
@@ -1021,4 +1015,21 @@ browser_connection_execution_get_result (BrowserConnection *bcnc, guint exec_id,
 
 	g_hash_table_remove (bcnc->priv->executed_statements, &id);
 	return retval;
+}
+
+
+/*
+ * DOES NOT emit any signal
+ */
+void
+browser_connection_set_busy_state (BrowserConnection *bcnc, gboolean busy, const gchar *busy_reason)
+{
+	if (bcnc->priv->busy_reason) {
+		g_free (bcnc->priv->busy_reason);
+		bcnc->priv->busy_reason = NULL;
+	}
+
+	bcnc->priv->busy = busy;
+	if (busy_reason)
+		bcnc->priv->busy_reason = g_strdup (busy_reason);
 }
