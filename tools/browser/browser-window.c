@@ -211,7 +211,7 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
 static const GtkActionEntry ui_actions[] = {
         { "Connection", NULL, "_Connection", NULL, "Connection", NULL },
         { "ConnectionOpen", GTK_STOCK_CONNECT, "_Connect", NULL, "Open a connection", G_CALLBACK (connection_open_cb)},
-        { "ConnectionBind", NULL, N_("_Bind connection"), "<control>B", N_("Use connection to create\n"
+        { "ConnectionBind", NULL, N_("_Bind connection"), "<control>V", N_("Use connection to create\n"
 						    "a new binding connection to access data\n"
 						    "from multiple databases at once"), G_CALLBACK (connection_bind_cb)},
         { "ConnectionProps", GTK_STOCK_PROPERTIES, "_Properties", NULL, "Connection properties", G_CALLBACK (connection_properties_cb)},
@@ -438,7 +438,11 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 		    ((factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == factory)) ||
 		     (!factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == browser_core_get_default_factory ()))))
 			active_action = action;
-		gtk_action_group_add_action (agroup, action);
+		if (BROWSER_PERSPECTIVE_FACTORY (plist->data)->menu_shortcut)
+			gtk_action_group_add_action_with_accel (agroup, action,
+								BROWSER_PERSPECTIVE_FACTORY (plist->data)->menu_shortcut);
+		else
+			gtk_action_group_add_action (agroup, action);
 		
 		gtk_radio_action_set_group (GTK_RADIO_ACTION (action), radio_group);
 		radio_group = gtk_radio_action_get_group (GTK_RADIO_ACTION (action));

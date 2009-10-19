@@ -1,5 +1,5 @@
-/* GDA Postgres Provider
- * Copyright (C) 2008 The GNOME Foundation
+/*
+ * Copyright (C) 2009 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -30,6 +30,7 @@ BrowserPerspectiveFactory *
 query_exec_perspective_get_factory (void)
 {
 	bfact.perspective_name = "Query execution";
+	bfact.menu_shortcut = "<control>S";
 	bfact.perspective_create = query_exec_perspective_new;
 
 	return &bfact;

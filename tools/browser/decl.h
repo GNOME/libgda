@@ -40,6 +40,7 @@ typedef struct _BrowserPage        BrowserPage;
 
 typedef struct {
 	const gchar          *perspective_name;
+	const gchar          *menu_shortcut;
 	BrowserPerspective *(*perspective_create) (BrowserWindow *);
 } BrowserPerspectiveFactory;
 #define BROWSER_PERSPECTIVE_FACTORY(x) ((BrowserPerspectiveFactory*)(x))
