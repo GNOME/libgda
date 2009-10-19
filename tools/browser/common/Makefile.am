@@ -19,7 +19,11 @@ libcommon_la_SOURCES = \
 	objects-cloud.c \
 	objects-cloud.h \
 	popup-container.c \
-	popup-container.h
+	popup-container.h \
+	gdaui-data-import.c \
+	gdaui-data-import.h \
+	gdaui-entry-import.c \
+	gdaui-entry-import.h
 
 $(OBJECTS): marshal.c marshal.h
 
@@ -27,6 +31,10 @@ libcommon_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS) \
 	$(GTK_LIBS)
+
+xmldir=$(datadir)/libgda-4.0
+xml_DATA= \
+	import_encodings.xml
 
 EXTRA_DIST = \
 	marshal.list

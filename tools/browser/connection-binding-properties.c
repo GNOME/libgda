@@ -23,6 +23,8 @@
 #include "browser-connection.h"
 #include "support.h"
 #include <libgda-ui/libgda-ui.h>
+#include <libgda-ui/gdaui-plugin.h>
+#include "common/gdaui-entry-import.h"
 
 /* 
  * Main static functions 
@@ -346,11 +348,57 @@ del_part_clicked_cb (GtkWidget *button, BrowserVirtualConnectionPart *part)
 	update_display (cprop);
 }
 
+static void
+part_for_model_holder_changed_cb (GdaSet *set, GdaHolder *holder, BrowserVirtualConnectionModel *pm)
+{
+	const gchar *hid;
+	const GValue *value;
+
+	hid = gda_holder_get_id (holder);
+	g_assert (hid);
+	value = gda_holder_get_value (holder);
+
+	if (!strcmp (hid, "NAME")) {
+		g_free (pm->table_name);
+		pm->table_name = g_value_dup_string (value);
+	}
+	else if (!strcmp (hid, "DATASET")) {
+		if (pm->model)
+			g_object_unref (pm->model);
+		pm->model = (GdaDataModel*) g_value_get_object (value);
+		if (pm->model)
+			g_object_ref (pm->model);
+	}
+	else
+		g_assert_not_reached ();
+
+	ConnectionBindingProperties *cprop;
+	cprop = g_object_get_data (G_OBJECT (set), "cprop");
+	update_buttons_sensitiveness (cprop);
+}
+
+static GdauiDataEntry *
+plugin_entry_import_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return GDAUI_DATA_ENTRY (gdaui_entry_import_new (type));
+}
+
 static GtkWidget *
 create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionModel *pm)
 {
 	GtkWidget *vbox, *label;
 	gchar *str;
+	static gboolean plugin_added = FALSE;
+
+	if (!plugin_added) {
+		GdauiPlugin plugin = {"data-model-import", NULL, NULL, 1, NULL, NULL,
+				      plugin_entry_import_create_func, NULL};
+		plugin.valid_g_types = g_new (GType, 1);
+		plugin.valid_g_types[0] = GDA_TYPE_DATA_MODEL;
+		gdaui_plugin_declare (&plugin);
+		g_free (plugin.valid_g_types);
+		plugin_added = TRUE;
+	}
 
 	vbox = gtk_vbox_new (FALSE, 0);
 	label = gtk_label_new ("");
@@ -363,21 +411,26 @@ create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnect
 	GdaSet *set;
 	GdaHolder *holder;
 	GtkWidget *form;
-	set = gda_set_new_inline (2,
-				  "SCHEMA", G_TYPE_STRING, pm->table_schema,
+	GValue *value;
+	set = gda_set_new_inline (1,
 				  "NAME", G_TYPE_STRING, pm->table_name);
 
-	holder = gda_holder_new (G_TYPE_POINTER);
+	holder = gda_holder_new (GDA_TYPE_DATA_MODEL);
 	g_object_set (holder, "id", "DATASET", "name", "Data set", NULL);
+	value = gda_value_new_from_string ("data-model-import", G_TYPE_STRING);
+	gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+	gda_value_free (value);
 	g_assert (gda_set_add_holder (set, holder));
 	g_object_unref (holder);
 
-	g_object_set (gda_set_get_holder (set, "SCHEMA"), "name", "Table's schema", NULL);
 	g_object_set (gda_set_get_holder (set, "NAME"), "name", "Table's name", NULL);
 							  
 	form = gdaui_basic_form_new (set);
 	g_object_unref (set);
 	gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
+	g_object_set_data (G_OBJECT (set), "cprop", cprop);
+	g_signal_connect (set, "holder-changed",
+			  G_CALLBACK (part_for_model_holder_changed_cb), pm);
 
 	return vbox;
 }
@@ -503,6 +556,16 @@ update_buttons_sensitiveness (ConnectionBindingProperties *cprop)
 		BrowserVirtualConnectionPart *part;
 		part = (BrowserVirtualConnectionPart*) list->data;
 		switch (part->part_type) {
+		case BROWSER_VIRTUAL_CONNECTION_PART_MODEL: {
+			BrowserVirtualConnectionModel *pm;
+			pm = &(part->u.model);
+			if (!pm->table_name || ! *pm->table_name || !pm->model)
+				goto out;
+			if (g_hash_table_lookup (schemas_hash, pm->table_name))
+				goto out;
+			g_hash_table_insert (schemas_hash, pm->table_name, (gpointer) 0x01);
+			break;
+		}
 		case BROWSER_VIRTUAL_CONNECTION_PART_CNC: {
 			BrowserVirtualConnectionCnc *cnc;
 			cnc = &(part->u.cnc);
@@ -514,15 +577,11 @@ update_buttons_sensitiveness (ConnectionBindingProperties *cprop)
 			g_hash_table_insert (schemas_hash, cnc->table_schema, (gpointer) 0x01);
 			break;
 		}
-		case BROWSER_VIRTUAL_CONNECTION_PART_MODEL:
-			TO_IMPLEMENT;
-			goto out;
-			break;
 		}
 	}
-
+	
 	allok = TRUE;
-
+	
  out:
 	g_hash_table_destroy (schemas_hash);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (cprop), GTK_RESPONSE_OK, allok);
@@ -538,6 +597,6 @@ const BrowserVirtualConnectionSpecs *
 connection_binding_properties_get_specs (ConnectionBindingProperties *prop)
 {
 	g_return_val_if_fail (CONNECTION_IS_BINDING_PROPERTIES (prop), NULL);
-
+	
 	return prop->priv->specs;
 }

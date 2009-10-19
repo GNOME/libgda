@@ -56,7 +56,6 @@ typedef enum {
 
 /* part: a table from a GdaDataModel */
 typedef struct {
-	gchar *table_schema;
 	gchar *table_name;
 	GdaDataModel *model;	
 } BrowserVirtualConnectionModel;

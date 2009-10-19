@@ -474,8 +474,6 @@ browser_virtual_connection_part_copy (const BrowserVirtualConnectionPart *part)
 		BrowserVirtualConnectionModel *npm;
 		spm = &(part->u.model);
 		npm = &(npart->u.model);
-		if (spm->table_schema)
-			npm->table_schema = g_strdup (spm->table_schema);
 		if (spm->table_name)
 			npm->table_name = g_strdup (spm->table_name);
 		if (spm->model)
@@ -513,7 +511,6 @@ browser_virtual_connection_part_free (BrowserVirtualConnectionPart *part)
 	case BROWSER_VIRTUAL_CONNECTION_PART_MODEL: {
 		BrowserVirtualConnectionModel *pm;
 		pm = &(part->u.model);
-		g_free (pm->table_schema);
 		g_free (pm->table_name);
 		if (pm->model)
 			g_object_unref (pm->model);
