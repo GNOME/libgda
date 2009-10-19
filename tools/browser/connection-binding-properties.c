@@ -148,6 +148,34 @@ connection_binding_properties_new_create (BrowserConnection *bcnc)
 	return (GtkWidget*) cprop;
 }
 
+/**
+ * connection_binding_properties_new_edit
+ * @specs: a #BrowserVirtualConnectionSpecs pointer
+ *
+ * Creates a new #ConnectionBindingProperties window, starting with a _copy_ of @specs
+ *
+ * Returns: the new object
+ */
+GtkWidget *
+connection_binding_properties_new_edit (const BrowserVirtualConnectionSpecs *specs)
+{
+	ConnectionBindingProperties *cprop;
+
+	g_return_val_if_fail (specs, NULL);
+
+	cprop = CONNECTION_BINDING_PROPERTIES (g_object_new (CONNECTION_TYPE_BINDING_PROPERTIES, NULL));
+	cprop->priv->specs = browser_virtual_connection_specs_copy (specs);
+	gtk_window_set_title (GTK_WINDOW (cprop), _("Virtual connection's properties"));
+
+	create_layout (cprop);
+	update_display (cprop);
+
+	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), GTK_STOCK_APPLY, GTK_RESPONSE_OK));
+	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL));
+
+	return (GtkWidget*) cprop;
+}
+
 static void
 create_layout (ConnectionBindingProperties *cprop)
 {
@@ -483,7 +511,7 @@ update_buttons_sensitiveness (ConnectionBindingProperties *cprop)
 
 			if (g_hash_table_lookup (schemas_hash, cnc->table_schema))
 				goto out;
-			g_hash_table_insert (schemas_hash, cnc->table_schema, 0x01);
+			g_hash_table_insert (schemas_hash, cnc->table_schema, (gpointer) 0x01);
 			break;
 		}
 		case BROWSER_VIRTUAL_CONNECTION_PART_MODEL:

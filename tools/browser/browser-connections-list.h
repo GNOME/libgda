@@ -22,6 +22,7 @@
 #define __BROWSER_CONNECTIONS_LIST_H_
 
 #include <gtk/gtk.h>
+#include "decl.h"
 
 G_BEGIN_DECLS
 
@@ -48,7 +49,7 @@ struct _BrowserConnectionsListClass
 };
 
 GType           browser_connections_list_get_type               (void) G_GNUC_CONST;
-void            browser_connections_list_show                   (void);
+void            browser_connections_list_show                   (BrowserConnection *current);
 
 G_END_DECLS
 

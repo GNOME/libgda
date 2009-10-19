@@ -86,9 +86,11 @@ BrowserVirtualConnectionSpecs *browser_virtual_connection_specs_copy (const Brow
 void                           browser_virtual_connection_specs_free (BrowserVirtualConnectionSpecs *specs);
 
 GType              browser_virtual_connection_get_type               (void) G_GNUC_CONST;
-BrowserConnection *browser_virtual_connection_new                    (BrowserVirtualConnectionSpecs *specs,
+BrowserConnection *browser_virtual_connection_new                    (const BrowserVirtualConnectionSpecs *specs,
 								      GError **error);
-
+gboolean           browser_virtual_connection_modify_specs           (BrowserVirtualConnection *bcnc,
+								      const BrowserVirtualConnectionSpecs *new_specs,
+								      GError **error);
 G_END_DECLS
 
 #endif

@@ -191,6 +191,7 @@ static void window_close_cb (GtkAction *action, BrowserWindow *bwin);
 static void window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin);
 static void window_new_cb (GtkAction *action, BrowserWindow *bwin);
 static void window_new_with_cnc_cb (GtkAction *action, BrowserWindow *bwin);
+static void connection_properties_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_close_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_open_cb (GtkAction *action, BrowserWindow *bwin);
 static void connection_bind_cb (GtkAction *action, BrowserWindow *bwin);
@@ -209,6 +210,7 @@ static const GtkActionEntry ui_actions[] = {
         { "ConnectionBind", NULL, N_("_Bind connection"), "<control>B", N_("Use connection to create\n"
 						    "a new binding connection to access data\n"
 						    "from multiple databases at once"), G_CALLBACK (connection_bind_cb)},
+        { "ConnectionProps", GTK_STOCK_PROPERTIES, "_Properties", NULL, "Connection properties", G_CALLBACK (connection_properties_cb)},
         { "ConnectionList", NULL, "_Connections list", NULL, "Connections list", G_CALLBACK (connection_list_cb)},
         { "ConnectionMetaSync", GTK_STOCK_REFRESH, "_Fetch meta data", NULL, "Fetch meta data", G_CALLBACK (connection_meta_update_cb)},
         { "ConnectionClose", GTK_STOCK_CLOSE, "_Close connection", NULL, "Close this connection", G_CALLBACK (connection_close_cb)},
@@ -231,6 +233,7 @@ static const gchar *ui_actions_info =
         "      <menuitem name='ConnectionList' action= 'ConnectionList'/>"
         "      <menuitem name='ConnectionMetaSync' action= 'ConnectionMetaSync'/>"
         "      <separator/>"
+        "      <menuitem name='ConnectionProps' action= 'ConnectionProps'/>"
         "      <menuitem name='ConnectionBind' action= 'ConnectionBind'/>"
         "      <menuitem name='ConnectionClose' action= 'ConnectionClose'/>"
         "      <separator/>"
@@ -614,7 +617,6 @@ connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindo
 	gtk_action_group_remove_action (bwin->priv->cnc_agroup, action);
 }
 
-
 static void
 connection_close_cb (GtkAction *action, BrowserWindow *bwin)
 {
@@ -778,6 +780,42 @@ connection_open_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
+connection_properties_cb (GtkAction *action, BrowserWindow *bwin)
+{
+	if (BROWSER_IS_VIRTUAL_CONNECTION (bwin->priv->bcnc)) {
+		GtkWidget *win;
+		BrowserVirtualConnectionSpecs *specs;
+		gint res;
+
+		g_object_get (G_OBJECT (bwin->priv->bcnc), "specs", &specs, NULL);
+		win = connection_binding_properties_new_edit (specs); /* @specs is not modified */
+		gtk_window_set_transient_for (GTK_WINDOW (win), GTK_WINDOW (bwin));
+		gtk_widget_show (win);
+		
+		res = gtk_dialog_run (GTK_DIALOG (win));
+		gtk_widget_hide (win);
+		if (res == GTK_RESPONSE_OK) {
+			GError *error = NULL;
+			if (!browser_virtual_connection_modify_specs (BROWSER_VIRTUAL_CONNECTION (bwin->priv->bcnc),
+					connection_binding_properties_get_specs (CONNECTION_BINDING_PROPERTIES (win)),
+								      &error)) {
+				browser_show_error ((GtkWindow*) bwin,
+						    _("Error updating bound connection: %s"),
+						    error && error->message ? error->message : _("No detail"));
+				g_clear_error (&error);
+			}
+
+			/* update meta store */
+			browser_connection_update_meta_data (bwin->priv->bcnc);
+		}
+		gtk_widget_destroy (win);
+	}
+	else {
+		browser_connections_list_show (bwin->priv->bcnc);
+	}
+}
+
+static void
 connection_bind_cb (GtkAction *action, BrowserWindow *bwin)
 {
 	GtkWidget *win;
@@ -814,7 +852,7 @@ connection_bind_cb (GtkAction *action, BrowserWindow *bwin)
 static void
 connection_list_cb (GtkAction *action, BrowserWindow *bwin)
 {
-	browser_connections_list_show ();
+	browser_connections_list_show (bwin->priv->bcnc);
 }
 
 static void

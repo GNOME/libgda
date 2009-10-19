@@ -320,7 +320,7 @@ sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
  * Returns: the new connection
  */
 BrowserConnection *
-browser_virtual_connection_new (BrowserVirtualConnectionSpecs *specs, GError **error)
+browser_virtual_connection_new (const BrowserVirtualConnectionSpecs *specs, GError **error)
 {
 	/* open virtual GdaConnection in sub thread */
 	GdaThreadWrapper *wrapper;
@@ -366,6 +366,91 @@ browser_virtual_connection_new (BrowserVirtualConnectionSpecs *specs, GError **e
 	else
 		return NULL;
 }
+
+/**
+ * browser_virtual_connection_modify_specs
+ * @bcnc: a #BrowserVirtualConnection connection
+ * @new_specs: a pointer to a #BrowserVirtualConnectionSpecs for the new specs
+ * @error: a place to store errors, or %NULL
+ *
+ * Returns: %TRUE if no error occurred
+ */
+gboolean
+browser_virtual_connection_modify_specs (BrowserVirtualConnection *bcnc,
+					 const BrowserVirtualConnectionSpecs *new_specs, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_VIRTUAL_CONNECTION (bcnc), FALSE);
+	g_return_val_if_fail (new_specs, FALSE);
+
+	/* undo the current specs */
+	GSList *list;
+	GdaConnection *cnc;
+	cnc = g_object_get_data (G_OBJECT (BROWSER_CONNECTION (bcnc)->priv->cnc), "gda-virtual-connection");
+	for (list = bcnc->priv->specs->parts; list; list = bcnc->priv->specs->parts) {
+		BrowserVirtualConnectionPart *part;
+		part = (BrowserVirtualConnectionPart*) list->data;
+		switch (part->part_type) {
+		case BROWSER_VIRTUAL_CONNECTION_PART_MODEL: {
+			BrowserVirtualConnectionModel *pm;
+			pm = &(part->u.model);
+			if (! gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (cnc),
+								 pm->table_name, error))
+				return FALSE;
+			break;
+		}
+		case BROWSER_VIRTUAL_CONNECTION_PART_CNC: {
+			BrowserVirtualConnectionCnc *scnc;
+			scnc = &(part->u.cnc);
+			if (!gda_vconnection_hub_remove (GDA_VCONNECTION_HUB (cnc), scnc->source_cnc->priv->cnc,
+							 error))
+				return FALSE;
+			break;
+		}
+		default:
+			g_assert_not_reached ();
+		}
+
+		/* get rid of @part */
+		browser_virtual_connection_part_free (part);
+		bcnc->priv->specs->parts = g_slist_remove (bcnc->priv->specs->parts, part);
+	}
+
+	/* apply the new specs */
+	browser_virtual_connection_specs_free (bcnc->priv->specs);
+	bcnc->priv->specs = g_new0 (BrowserVirtualConnectionSpecs, 1);
+
+	for (list = new_specs->parts; list; list = list->next) {
+		BrowserVirtualConnectionPart *part;
+		part = (BrowserVirtualConnectionPart*) list->data;
+		switch (part->part_type) {
+		case BROWSER_VIRTUAL_CONNECTION_PART_MODEL: {
+			BrowserVirtualConnectionModel *pm;
+			pm = &(part->u.model);
+			if (! gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc),
+								    pm->model, pm->table_name, error))
+				return FALSE;
+			break;
+		}
+		case BROWSER_VIRTUAL_CONNECTION_PART_CNC: {
+			BrowserVirtualConnectionCnc *scnc;
+			scnc = &(part->u.cnc);
+			if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (cnc), scnc->source_cnc->priv->cnc,
+						      scnc->table_schema, error))
+				return FALSE;
+			break;
+		}
+		default:
+			g_assert_not_reached ();
+		}
+
+		/* add @part to bcnc->priv->specs */
+		bcnc->priv->specs->parts = g_slist_append (bcnc->priv->specs->parts,
+							   browser_virtual_connection_part_copy (part));
+	}
+	
+	return TRUE;
+}
+
 
 /*
  * Spec manipulations

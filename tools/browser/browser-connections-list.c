@@ -306,6 +306,7 @@ connection_new_cb (GtkButton *button, BrowserConnectionsList *clist)
 
 /**
  * browser_connections_list_show
+ * @current: a connection to select for displaed properties, or %NULL
  *
  * Creates a new #BrowserConnectionsList widget and displays it.
  * Only one is created and shown (singleton)
@@ -313,7 +314,7 @@ connection_new_cb (GtkButton *button, BrowserConnectionsList *clist)
  * Returns: the new object
  */
 void
-browser_connections_list_show (void)
+browser_connections_list_show (BrowserConnection *current)
 {
 	if (!_clist) {
 		GtkWidget *clist, *sw, *table, *treeview, *label, *wid;
@@ -351,7 +352,7 @@ browser_connections_list_show (void)
 		wid = gtk_label_new ("");
 		str = g_strdup_printf ("<big><b>%s:\n</b></big>%s",
 				       _("List of opened connections"),
-					 "The connection properties are read-only.");
+				       "The connection properties are read-only.");
 		gtk_label_set_markup (GTK_LABEL (wid), str);
 		g_free (str);
 		gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
@@ -437,11 +438,6 @@ browser_connections_list_show (void)
 					     (BrowserConnectionsList*) clist);
 		g_slist_free (connections);
 
-		/* select the 1st available */
-		GtkTreeIter iter;
-		if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (store), &iter))
-			gtk_tree_selection_select_iter (select, &iter);
-
 		_clist->priv->cnc_added_sigid = g_signal_connect (browser_core_get (), "connection-added",
 								  G_CALLBACK (connection_added_cb), _clist);
 		_clist->priv->cnc_removed_sigid = g_signal_connect (browser_core_get (), "connection-removed",
@@ -452,6 +448,33 @@ browser_connections_list_show (void)
 	else {
 		gtk_window_set_screen (GTK_WINDOW (_clist), gdk_screen_get_default ()); /* FIXME: specify GdkScreen */
 		gtk_window_present (GTK_WINDOW (_clist));
+	}
+
+	if (current) {
+		GtkTreeModel *model;
+		GtkTreeIter iter;
+		model = gtk_tree_view_get_model (GTK_TREE_VIEW (_clist->priv->treeview));
+		if (gtk_tree_model_get_iter_first (model, &iter)) {
+			do {
+				BrowserConnection *bcnc;
+				gtk_tree_model_get (model, &iter, COLUMN_BCNC, &bcnc, -1);
+				g_object_unref (bcnc);
+				if (bcnc == current) {
+					GtkTreeSelection *select;
+					select = gtk_tree_view_get_selection (GTK_TREE_VIEW (_clist->priv->treeview));
+					gtk_tree_selection_select_iter (select, &iter);
+					break;
+				}
+			} while (gtk_tree_model_iter_next (model, &iter));
+		}
+	}
+	else {
+		/* select the 1st available */
+		GtkTreeModel *model;
+		GtkTreeIter iter;
+		model = gtk_tree_view_get_model (GTK_TREE_VIEW (_clist->priv->treeview));
+		if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (model), &iter))
+			gtk_tree_selection_select_iter (select, &iter);
 	}
 }
 
