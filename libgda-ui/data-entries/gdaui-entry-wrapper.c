@@ -811,16 +811,14 @@ gdaui_entry_wrapper_get_attributes (GdauiDataEntry *iface)
 static GdaDataHandler *
 gdaui_entry_wrapper_get_handler (GdauiDataEntry *iface)
 {
-	GValue val = { 0, };
 	GdaDataHandler *dh;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface), NULL);
 	g_return_val_if_fail (GDAUI_ENTRY_WRAPPER (iface)->priv, NULL);
 
-	g_value_init (&val, G_TYPE_POINTER);
-	g_object_get_property (G_OBJECT (iface), "handler", &val);
-	dh = g_value_get_pointer (&val);
-	g_value_unset (&val);
+	g_object_get (G_OBJECT (iface), "handler", &dh, NULL);
+	if (dh) /* loose the reference before returning the object */
+		g_object_unref (dh);
 
 	return dh;
 }

@@ -134,6 +134,7 @@
 <!ENTITY libgdaui-GdauiCombo SYSTEM "xml/gdaui-combo.xml">
 <!ENTITY libgdaui-GdauiDataEntry SYSTEM "xml/gdaui-data-entry.xml">
 <!ENTITY libgdaui-gdaui-easy SYSTEM "xml/gdaui-easy.xml">
+<!ENTITY libgdaui-gdaui-plugins SYSTEM "xml/gdaui-plugins.xml">
 <!ENTITY libgdaui-GdauiDataStore SYSTEM "xml/gdaui-data-store.xml">
 <!ENTITY libgdaui-GdauiDataWidgetFilter SYSTEM "xml/gdaui-data-widget-filter.xml">
 <!ENTITY libgdaui-GdauiDataWidget SYSTEM "xml/gdaui-data-widget.xml">
@@ -1248,6 +1249,7 @@ g_object_unref (store);
       &libgdaui-GdauiProviderSelector;
 
       &libgdaui-GdauiBasicForm;
+      &libgdaui-gdaui-plugins;
       &libgdaui-GdauiForm;
       &libgdaui-GdauiGrid;
 

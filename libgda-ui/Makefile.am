@@ -32,7 +32,8 @@ ui_headers = \
 	gdaui-raw-grid.h \
 	gdaui-server-operation.h \
 	gdaui-set.h \
-	gdaui-tree-store.h
+	gdaui-tree-store.h \
+	gdaui-plugin.h
 
 libgda_ui_4_0_la_SOURCES = \
 	$(ui_headers) \
@@ -53,8 +54,7 @@ libgda_ui_4_0_la_SOURCES = \
 	gdaui-server-operation.c \
 	gdaui-set.c \
 	gdaui-tree-store.c \
-	gdaui-init.c \
-	gdaui-plugin.h
+	gdaui-init.c
 
 gdaui-enum-types.h: s-enum-types-h
 	@true

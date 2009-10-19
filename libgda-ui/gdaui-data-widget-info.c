@@ -293,10 +293,8 @@ gdaui_data_widget_info_set_property (GObject *object,
 				gtk_widget_destroy (info->priv->buttons_bar);
 				info->priv->buttons_bar = NULL;
 			}
-			if (info->priv->current_sample) {
-				gtk_widget_destroy (info->priv->current_sample);
+			if (info->priv->current_sample)
 				info->priv->current_sample = NULL;
-			}
 			if (info->priv->row_spin) {
 				gtk_widget_destroy (info->priv->row_spin);
 				info->priv->row_spin = NULL;

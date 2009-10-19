@@ -42,6 +42,7 @@
 
 /* plugins list */
 
+typedef GSList           *(*GdauiPluginInit)     (GError **);
 static GHashTable *init_plugins_hash (void);
 GHashTable *gdaui_plugins_hash = NULL; /* key = plugin name, value = GdauiPlugin structure pointer */
 
@@ -73,7 +74,8 @@ gdaui_init (void)
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
 	gda_init ();
-	gdaui_plugins_hash = init_plugins_hash ();
+	if (! gdaui_plugins_hash)
+		gdaui_plugins_hash = init_plugins_hash ();
 
 	initialized = TRUE;
 }
@@ -221,6 +223,56 @@ _gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
 	}
 
 	return cell;
+}
+
+/**
+ * gdaui_plugin_declare
+ * @plugin: a pointer to a structure filled to describe the new plugin
+ *
+ * Adds a new plugin which will be used by the forms and grids. The new plugin, as
+ * described by @plugin can declare a custom widget to be used for forms, grids, or both.
+ *
+ * If a plugin is already declared with the same name as the requested name, then
+ * a warning is issued and the operation fails.
+ */
+void
+gdaui_plugin_declare (const GdauiPlugin *plugin)
+{
+	GdauiPlugin *np;
+
+	g_return_if_fail (plugin);
+	g_return_if_fail (plugin->plugin_name);
+	if (!gdaui_plugins_hash)
+		gdaui_plugins_hash = init_plugins_hash ();
+	if (g_hash_table_lookup (gdaui_plugins_hash, plugin->plugin_name)) {
+		g_warning ("Plugin '%s' already declared", plugin->plugin_name);
+		return;
+	}
+	if (((plugin->nb_g_types < 1) && plugin->valid_g_types) ||
+	    ((plugin->nb_g_types > 0) && !plugin->valid_g_types)) {
+		g_warning ("Invalid description of plugin accepted types");
+		return;
+	}
+	g_return_if_fail (plugin->entry_create_func || plugin->cell_create_func);
+	
+	np = g_new0 (GdauiPlugin, 1);
+	np->plugin_name = g_strdup (plugin->plugin_name);
+	if (plugin->plugin_descr)
+		np->plugin_descr = g_strdup (plugin->plugin_descr);
+	np->plugin_file = g_strdup (plugin->plugin_file);
+
+	np->nb_g_types = plugin->nb_g_types;
+	if (plugin->valid_g_types) {
+		np->valid_g_types = g_new0 (GType, np->nb_g_types);
+		memcpy (np->valid_g_types, plugin->valid_g_types, np->nb_g_types);
+	}
+
+	if (plugin->options_xml_spec)
+		np->options_xml_spec = g_strdup (plugin->options_xml_spec);
+	np->entry_create_func = plugin->entry_create_func;
+	np->cell_create_func = plugin->cell_create_func;
+
+	g_hash_table_insert (gdaui_plugins_hash, np->plugin_name, np);
 }
 
 static GdauiDataEntry *entry_none_create_func (GdaDataHandler *handler, GType type, const gchar *options);

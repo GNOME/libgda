@@ -142,6 +142,7 @@
 	gdaui_numeric_entry_get_type
 	gdaui_numeric_entry_get_value
 	gdaui_numeric_entry_new
+	gdaui_plugin_declare
 	gdaui_plugins_hash
 	gdaui_provider_selector_get_provider
 	gdaui_provider_selector_get_provider_obj

@@ -118,8 +118,8 @@ gdaui_entry_shell_class_init (GdauiEntryShellClass * class)
 	object_class->set_property = gdaui_entry_shell_set_property;
 	object_class->get_property = gdaui_entry_shell_get_property;
 	g_object_class_install_property (object_class, PROP_HANDLER,
-					 g_param_spec_pointer ("handler", NULL, NULL, 
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+					 g_param_spec_object ("handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_ACTIONS,
 					 g_param_spec_boolean ("actions", NULL, NULL, TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -227,14 +227,13 @@ gdaui_entry_shell_set_property (GObject *object,
 	if (shell->priv) {
 		switch (param_id) {
 		case PROP_HANDLER:
-			ptr = g_value_get_pointer (value);
+			ptr = g_value_get_object (value);
 			if (shell->priv->data_handler) {
 				g_object_unref (shell->priv->data_handler);
 				shell->priv->data_handler = NULL;
 			}
 
 			if (ptr) {
-				g_assert (GDA_IS_DATA_HANDLER (ptr));
 				shell->priv->data_handler = GDA_DATA_HANDLER (ptr);
 				g_object_ref (G_OBJECT (shell->priv->data_handler));
 			}
@@ -275,11 +274,7 @@ gdaui_entry_shell_get_property (GObject *object,
 	if (shell->priv) {
 		switch (param_id) {
 		case PROP_HANDLER:
-			if (!shell->priv->data_handler && !GDAUI_IS_ENTRY_NONE (object))
-				g_message (_("Widget of class '%s' does not have any associated GdaDataHandler, "
-					     "(to be set using the 'handler' property) expect some mis-behaviours"), 
-					   G_OBJECT_TYPE_NAME (object));
-			g_value_set_pointer (value, shell->priv->data_handler);
+			g_value_set_object (value, shell->priv->data_handler);
 			break;
 		case PROP_ACTIONS:
 			g_value_set_boolean (value, shell->priv->show_actions);
