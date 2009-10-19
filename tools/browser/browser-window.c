@@ -61,6 +61,9 @@ static void browser_window_dispose (GObject *object);
 static gboolean window_state_event (GtkWidget *widget, GdkEventWindowState *event);
 static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, BrowserWindow *bwin);
 
+static void connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin);
+static void connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin);
+
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -147,8 +150,12 @@ browser_window_dispose (GObject *object)
 
 	bwin = BROWSER_WINDOW (object);
 	if (bwin->priv) {
-		g_signal_handlers_disconnect_by_func (bwin->priv->bcnc, G_CALLBACK (connection_busy_cb),
-						      bwin);
+		GSList *connections, *list;
+		connections = browser_core_get_connections ();
+		for (list = connections; list; list = list->next)
+			connection_removed_cb (browser_core_get(), BROWSER_CONNECTION (list->data), bwin);
+		g_slist_free (connections);
+
 		if (bwin->priv->cnc_added_sigid > 0)
 			g_signal_handler_disconnect (browser_core_get (), bwin->priv->cnc_added_sigid);
 		if (bwin->priv->cnc_removed_sigid > 0)
@@ -181,9 +188,6 @@ delete_event (GtkWidget *widget, GdkEvent *event, BrowserWindow *bwin)
 	browser_core_close_window (bwin);
         return TRUE;
 }
-
-static void connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin);
-static void connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin);
 
 static void quit_cb (GtkAction *action, BrowserWindow *bwin);
 static void about_cb (GtkAction *action, BrowserWindow *bwin);
@@ -365,10 +369,11 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
         gtk_widget_show_all (GTK_WIDGET (ti));
 	bwin->priv->spinner = spinner;
 
-	guint mid;
-	GSList *connections, *list;
-	mid = gtk_ui_manager_new_merge_id (bwin->priv->ui_manager);
+	/* statusbar */
+	bwin->priv->statusbar = gtk_statusbar_new ();
 
+
+	GSList *connections, *list;
 	bwin->priv->cnc_agroup = gtk_action_group_new ("CncActions");
 	connections = browser_core_get_connections ();
 	for (list = connections; list; list = list->next)
@@ -414,6 +419,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	GtkActionGroup *agroup;
 	const GSList *plist;
 	GSList *radio_group = NULL;
+	guint mid;
 
 	mid = gtk_ui_manager_new_merge_id (bwin->priv->ui_manager);
 	agroup = gtk_action_group_new ("Perspectives");
@@ -450,19 +456,10 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (active_action), TRUE);
 
-	/* statusbar */
-	bwin->priv->statusbar = gtk_statusbar_new ();
 	gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->statusbar, FALSE, FALSE, 0);
         gtk_widget_show (bwin->priv->statusbar);
 	bwin->priv->cnc_statusbar_context = gtk_statusbar_get_context_id (GTK_STATUSBAR (bwin->priv->statusbar),
 									  "cncbusy");
-	gchar *reason = NULL;
-	if (browser_connection_is_busy (bcnc, &reason)) {
-		connection_busy_cb (bcnc, TRUE, reason, bwin);
-		g_free (reason);
-	}
-	g_signal_connect (bwin->priv->bcnc, "busy",
-			  G_CALLBACK (connection_busy_cb), bwin);
 
         gtk_widget_show (GTK_WIDGET (bwin));
 
@@ -560,11 +557,8 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Br
 	gtk_action_set_sensitive (action, !is_busy);
 
 	const gchar *cncname;
-	gchar *path;
 	cncname = browser_connection_get_name (bcnc);
-	path = g_strdup_printf ("/MenuBar/Window/WindowNewOthers/CncList/%s", cncname);
-	action = gtk_ui_manager_get_action (bwin->priv->ui_manager, path);
-	g_free (path);
+	action = gtk_action_group_get_action (bwin->priv->cnc_agroup, cncname);
 	if (action)
 		gtk_action_set_sensitive (action, !is_busy);
 }
@@ -593,6 +587,14 @@ connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow 
 	g_object_set_data (G_OBJECT (action), "bcnc", bcnc);
 	gtk_action_set_sensitive (action, ! browser_connection_is_busy (bcnc, NULL));
 	g_object_unref (action);
+
+	gchar *reason = NULL;
+	if (browser_connection_is_busy (bcnc, &reason)) {
+		connection_busy_cb (bcnc, TRUE, reason, bwin);
+		g_free (reason);
+	}
+	g_signal_connect (bcnc, "busy",
+			  G_CALLBACK (connection_busy_cb), bwin);
 }
 
 /* update @bwin->priv->cnc_agroup and @bwin->priv->ui_manager */
@@ -615,6 +617,9 @@ connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindo
 	
 	gtk_ui_manager_remove_ui (bwin->priv->ui_manager, *mid);
 	gtk_action_group_remove_action (bwin->priv->cnc_agroup, action);
+
+	g_signal_handlers_disconnect_by_func (bcnc,
+					      G_CALLBACK (connection_busy_cb), bwin);
 }
 
 static void
