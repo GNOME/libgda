@@ -50,7 +50,7 @@ ballupname=$(echo $base | tr a-z A-Z)
 for file in *
 do
     mv $file $file.1
-    cat $file.1 | sed -e "s/$base/$provname/g" -e "s/$bupname/$upname/g" -e "s/$ballupname/$allupname/g"> $file
+    cat $file.1 | sed -e "s/$base/$provname/g" -e "s/$bupname/$upname/g" -e "s/$ballupname/$allupname/g" -e "s/skel-implementation\///g" > $file
     rm -f $file.1
 done
 
