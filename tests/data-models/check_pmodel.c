@@ -1293,7 +1293,7 @@ test12 (GdaConnection *cnc)
 	}
 
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "Nick");
-	if (! gda_set_set_holder_value (GDA_SET (iter), &error, "col1", "Nick")) {
+	if (! gda_set_set_holder_value (GDA_SET (iter), &error, "name", "Nick")) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
 		g_print ("GdaDataModelIter value set failed: %s\n",
