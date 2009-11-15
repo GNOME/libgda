@@ -50,6 +50,7 @@ libbrowser_la_SOURCES=\
 	browser-spinner.h \
 	browser-connection.c \
 	browser-connection.h \
+	browser-connection-priv.h \
 	browser-favorites.c \
 	browser-favorites.h \
 	browser-variable.c \

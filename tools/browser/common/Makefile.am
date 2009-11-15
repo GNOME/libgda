@@ -37,7 +37,8 @@ xml_DATA= \
 	import_encodings.xml
 
 EXTRA_DIST = \
-	marshal.list
+	marshal.list \
+	$(xml_DATA)
 
 CLEANFILES = \
 	marshal.h \
