@@ -34,8 +34,6 @@
 #include <locale.h>
 #endif
 
-extern gchar *gda_numeric_locale;
-
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 static void gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass);
@@ -640,14 +638,16 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 	else if (type == GDA_TYPE_SHORT)
 		gda_value_set_short (value, atoi (thevalue));
 	else if (type == G_TYPE_FLOAT) {
-		setlocale (LC_NUMERIC, "C");
+		char *current_locale;
+		current_locale = setlocale (LC_NUMERIC, "C");
 		g_value_set_float (value, atof (thevalue));
-		setlocale (LC_NUMERIC, gda_numeric_locale);
+		setlocale (LC_NUMERIC, current_locale);
 	}
 	else if (type == G_TYPE_DOUBLE) {
-		setlocale (LC_NUMERIC, "C");
+		char *current_locale;
+		current_locale = setlocale (LC_NUMERIC, "C");
 		g_value_set_double (value, atof (thevalue));
-		setlocale (LC_NUMERIC, gda_numeric_locale);
+		setlocale (LC_NUMERIC, current_locale);
 	}
 	else if (type == GDA_TYPE_NUMERIC) {
 		GdaNumeric numeric;

@@ -35,8 +35,6 @@
 #include <locale.h>
 #endif
 
-extern gchar *gda_numeric_locale;
-
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 enum
@@ -736,10 +734,11 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 
 			break;
 		case MYSQL_TYPE_FLOAT:
-		case MYSQL_TYPE_DOUBLE:
+		case MYSQL_TYPE_DOUBLE: {
+			char *current_locale;
 			g_memmove (&doublevalue, mysql_bind_result[i].buffer, sizeof(double));
 			
-			setlocale (LC_NUMERIC, "C");
+			current_locale = setlocale (LC_NUMERIC, "C");
 			if (type == G_TYPE_FLOAT)
 				g_value_set_float (value, (float) doublevalue);
 			else if (type == G_TYPE_DOUBLE)
@@ -751,9 +750,10 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 					     _("Type %s not mapped for value %f"),
 					     g_type_name (type), doublevalue);
 			}
-			setlocale (LC_NUMERIC, gda_numeric_locale);
+			setlocale (LC_NUMERIC, current_locale);
 			
 			break;
+		}
 		case MYSQL_TYPE_STRING:
 		case MYSQL_TYPE_VAR_STRING:
 		case MYSQL_TYPE_BLOB:
@@ -788,9 +788,10 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 			}
 			else if (type == G_TYPE_DOUBLE) {
 				if (length > 0) {
-					setlocale (LC_NUMERIC, "C");
+					char *current_locale;
+					current_locale = setlocale (LC_NUMERIC, "C");
 					g_value_set_double (value, atof (strvalue));
-					setlocale (LC_NUMERIC, gda_numeric_locale);
+					setlocale (LC_NUMERIC, current_locale);
 				}
 				else {
 					/* error: wrong column type */

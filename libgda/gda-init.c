@@ -29,7 +29,21 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-types.h>
 
-/* global variables */
+/*
+ * global variables
+ *
+ * REM: to use them from another Windows DLL, they have to be declared like:
+ *     __declspec(dllimport) extern gchar *gda_numeric_locale;
+ *
+ * Better yet is to define the IMPORT macro as:
+ * 
+ *     #ifdef G_OS_WIN32
+ *       #define IMPORT __declspec(dllimport)
+ *     #else
+ *       #define IMPORT
+ *     #endif
+ *     IMPORT extern gchar *gda_numeric_locale;
+ */
 xmlDtdPtr       gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
 xmlDtdPtr       gda_server_op_dtd = NULL;
