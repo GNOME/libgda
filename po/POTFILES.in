@@ -164,7 +164,6 @@ providers/oracle/oracle_specs_create_table.xml.in
 providers/postgres/gda-postgres-blob-op.c
 providers/postgres/gda-postgres-ddl.c
 providers/postgres/gda-postgres-handler-bin.c
-providers/postgres/gda-postgres-meta.c
 providers/postgres/gda-postgres-provider.c
 providers/postgres/gda-postgres-pstmt.c
 providers/postgres/gda-postgres-recordset.c
@@ -182,6 +181,7 @@ providers/postgres/postgres_specs_drop_table.xml.in
 providers/postgres/postgres_specs_drop_view.xml.in
 providers/postgres/postgres_specs_dsn.xml.in
 providers/postgres/postgres_specs_rename_table.xml.in
+providers/reuseable/postgres/gda-postgres-meta.c
 providers/sqlite/libmain.c
 providers/sqlite/sqlite_specs_add_column.xml.in
 providers/sqlite/sqlite_specs_create_db.xml.in
@@ -194,6 +194,15 @@ providers/sqlite/sqlite_specs_drop_table.xml.in
 providers/sqlite/sqlite_specs_drop_view.xml.in
 providers/sqlite/sqlite_specs_dsn.xml.in
 providers/sqlite/sqlite_specs_rename_table.xml.in
+providers/web/gda-web-ddl.c
+providers/web/gda-web-provider.c
+providers/web/gda-web-recordset.c
+providers/web/gda-web-util.c
+providers/web/libmain.c
+providers/web/gda-web-meta.c
+providers/web/gda-web-provider.c
+providers/web/web_specs_auth.xml.in
+providers/web/web_specs_dsn.xml.in
 testing/gda-test-blob.c
 testing/gda-test-connection.c
 testing/gdaui-test-data-entries.c

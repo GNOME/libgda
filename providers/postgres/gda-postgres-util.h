@@ -1,5 +1,5 @@
 /* GDA postgres provider
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -32,12 +32,6 @@ GdaConnectionEvent *_gda_postgres_make_error               (GdaConnection *cnc, 
 PGresult           *_gda_postgres_PQexec_wrap              (GdaConnection *cnc, PGconn *pconn, const char *query);
 
 int                 _gda_postgres_get_connection_type_list (GdaConnection *cnc, PostgresConnectionData *cdata);
-GType               _gda_postgres_type_oid_to_gda          (PostgresConnectionData *cdata, Oid postgres_type);
-
-#ifdef GDA_DEBUG
-void                _gda_postgres_test_keywords (void);
-#endif
-GdaSqlReservedKeywordsFunc _gda_postgres_get_reserved_keyword_func (PostgresConnectionData *cdata);
 
 G_END_DECLS
 

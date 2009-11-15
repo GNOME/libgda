@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="PASSWORD" _name="Password" _descr="Connection password as defined on the web server" gdatype="gchararray" nullok="FALSE"/>
+  </parameters>
+</data-set-spec>

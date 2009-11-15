@@ -62,6 +62,7 @@ void _ThreadConnectionAsyncTask_free (ThreadConnectionAsyncTask *atd);
  */
 typedef struct {
         GdaConnection *sub_connection;
+	gboolean sub_connection_has_closed;
         GdaServerProvider *cnc_provider;
         GdaThreadWrapper *wrapper;
 	GArray *handlers_ids; /* array of gulong */

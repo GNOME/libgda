@@ -759,16 +759,16 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 			/* run callback now */
 			SignalSpec *spec = job->u.signal.spec;
 
-			signal_spec_lock (spec);
 			if (spec->callback)
 				spec->callback (wrapper, spec->instance, ((GSignalQuery*)spec)->signal_name,
 						job->u.signal.n_param_values, job->u.signal.param_values, NULL,
 						spec->data);
 			else
 				g_print ("Not propagating signal %s\n", ((GSignalQuery*)spec)->signal_name);
-			signal_spec_unref (spec);
 			job->u.signal.spec = NULL;
 			job_free (job);
+			signal_spec_lock (spec);
+			signal_spec_unref (spec);
 			do_again = TRUE;
 		}
 		else
@@ -1119,7 +1119,7 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 	sigspec->instance = NULL;
 	sigspec->signal_id = 0;
 	g_async_queue_unref (sigspec->reply_queue);
-	sigspec->reply_queue = 0;
+	sigspec->reply_queue = NULL;
 	sigspec->callback = NULL;
 	sigspec->data = NULL;
 	signal_spec_unref (sigspec);

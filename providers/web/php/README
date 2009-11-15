@@ -1,0 +1,35 @@
+Installation instructions
+=========================
+
+The PHP scripts in this directory are used by the GDA Web provider and
+have to be installed on a web server. The location of the scripts will have
+to be passed as the PATH argument on the Libgda side when
+opening the connection. For example if the scripts are accessible
+as: http://example.com/path/to/gda-worker.php then the PATH argument
+will have to be "path/to".
+
+These scripts need the PHP engine's SimpleXML extension (which is
+usually included when compiling PHP) and the PEAR's MDB2 module
+(it's the module which actually opens the connection to the database)
+for which the current implementation is provided under the PEAR_MDB2/
+directory.
+
+Once the scripts are installed, some configuration needs to be done
+in the gda-config.php script.
+
+Note that for better security, this script should not be accessible
+from the outside (ie it should be put outside ot the web server's
+root directory, and the gda-front.php and gda-worker.php scripts should be
+modified to point to its real location).
+
+
+Note about gda-tester.php
+-------------------------
+The gda-tester.php script can be executed to diagnose any setup problem,
+it reports errors if the MDB2 PEAR of SimpleXML extensions are missing,
+and, for each configured connection, tests if it can be opened.
+
+Note that by default the gda-tester.php will _not_ display any
+configured connection information, this needs to be enabled in the
+script's source. Better yet is to remove that file once not necessary
+anymore as it could leak usefull information.

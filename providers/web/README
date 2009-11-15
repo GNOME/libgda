@@ -1,0 +1,63 @@
+GDA Web provider
+================
+
+Unlike most other provider, this provider does not link to a database
+specific library but rather acts as a web client for a web server
+running some PHP scripts which acutally make the web server connect
+to a database.
+
+This provider enables a Libgda application to connect to a database
+which is accessible only behind a web server (as many hosting databases
+are) which can execute some PHP scripts and can connect to the
+database. It is necessary to install some specific PHP scripts on the
+web server which handle the connection and implement the protocol
+described hereafter. Also the PHP interpreter need to be compiled with
+the SimpleXML extension.
+
+It is recommended to use an SSL/TLS web server to avoid clear text
+messages being read by third parties, but even with non SSL/TLS
+connections, the protocol features a reasonnable security by:
+* including a message hash in each message to avoid man in the middle
+  message contents tampering
+* making the server generate a challenge which has to be encoded in the
+  next request by the client to authenticate the client
+* avoiding sending any database name, server name, user name or password
+  in any message
+* having to define, on the web server side, connections which can be opened
+  through the provider; each connection is composed of an arbitrary name, 
+  an arbitrary password, and the real connection string the web server
+  will use to actually open the connection to the database. 
+
+The exchanges between the provider (client) and the web server are based
+on XML as each message has the following structure:
+
+"
+[message hash]
+<?xml version="1.0"?>
+...
+"
+
+where the [message hash] is a hash for the remaining part of the
+message which is a valid XML message, compiled using the HMAC MD5
+algorithm (see http://en.wikipedia.org/wiki/HMAC) using (except for
+bootstrapping the authentication) a key which is defined as:
+"
+[connection name]/AND/[password]
+"
+where [connection name] and [password] have to represent a connection
+described on the web server side.
+
+For example opening a connection using the web provider from the gda-sql
+tool can be achieved by the shell command:
+
+[prompt]> gda-sql "web://none:MyPass1@HOST=example.com;PATH=libgda-php;DB_NAME=cnc1;PORT=8081;SECRET=MySecret"
+
+for:
+* the example.com web server
+* on port 8081
+* with a server secret: MySecret
+* the /libgda-php script location
+* the defined connection cnc1
+* the password MyPass1 (note that the gda-sql command requires a username when a password is specified which is
+  the reason for the dummy "none" user name here to avoid any user name prompting, or use the -p command line option
+  otherwise)

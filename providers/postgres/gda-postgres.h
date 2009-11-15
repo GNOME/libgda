@@ -33,6 +33,7 @@
 #include <libgda/libgda.h>
 #include <libpq-fe.h>
 #include <libpq/libpq-fs.h>
+#include <gda-postgres-reuseable.h>
 
 /*
  * Postgres type identification
@@ -49,22 +50,14 @@ typedef struct {
  * Provider's specific connection data
  */
 typedef struct {
-	GdaConnection      *cnc;
-        PGconn             *pconn;
-	gboolean            pconn_is_busy;
-        gint                ntypes;
-        GdaPostgresTypeOid *type_data;
-        GHashTable         *h_table;
+	GdaPostgresReuseable *reuseable;
+	GdaConnection        *cnc;
+        PGconn               *pconn;
+	gboolean              pconn_is_busy;
 
         /* Version of the backend to which we are connected */
-        gchar              *version;
-        gfloat              version_float;
-        gchar              *short_version;
-
-        /* Internal data types not returned */
-        gchar              *avoid_types;
-        gchar              *avoid_types_oids;
-        gchar              *any_type_oid; /* oid for the 'any' data type, used to fetch aggregates and functions */
+        gchar                *version;
+        gchar                *short_version;
 } PostgresConnectionData;
 
 #endif

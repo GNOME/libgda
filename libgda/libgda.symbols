@@ -134,6 +134,7 @@
 	gda_connection_get_type
 	gda_connection_internal_change_transaction_state
 	gda_connection_internal_get_provider_data
+	gda_connection_internal_reset_transaction_status
 	gda_connection_internal_savepoint_added
 	gda_connection_internal_savepoint_removed
 	gda_connection_internal_savepoint_rolledback
@@ -147,6 +148,7 @@
 	gda_connection_open
 	gda_connection_open_from_dsn
 	gda_connection_open_from_string
+	gda_connection_open_sqlite
 	gda_connection_options_get_type
 	gda_connection_perform_operation
 	gda_connection_quote_sql_identifier

@@ -56,6 +56,7 @@ void gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gch
 void gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_name);
 void gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 						       GdaTransactionStatusState newstate);
+void gda_connection_internal_reset_transaction_status (GdaConnection *cnc);
 
 /* 
  * prepared statements support
@@ -63,6 +64,11 @@ void gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 void      gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt, GdaPStmt *prepared_stmt); 
 void      gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt); 
 GdaPStmt *gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt);
+
+/*
+ * Open an SQLite connection even if the SQLite provider is not installed
+ */
+GdaConnection *gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gboolean auto_unlink);
 
 G_END_DECLS
 

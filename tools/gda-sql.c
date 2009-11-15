@@ -38,6 +38,7 @@
 
 #ifndef G_OS_WIN32
 #include <signal.h>
+typedef void (*sighandler_t)(int);
 #include <pwd.h>
 #else
 #include <stdlib.h>
@@ -1243,6 +1244,7 @@ typedef struct {
 static gpointer thread_start_update_meta_store (MetaUpdateData *data);
 static void thread_ok_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data);
 static void thread_cancelled_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data);
+static void conn_closed_cb (GdaConnection *cnc, ConnectionSetting *cs);
 
 /*
  * Open a connection
@@ -1453,6 +1455,11 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		g_free (dict_file_name);
 	}
 
+	if (cs) {
+		g_signal_connect (cs->cnc, "conn-closed",
+				  G_CALLBACK (conn_closed_cb), cs);
+	}
+
 	return cs;
 }
 
@@ -1514,8 +1521,11 @@ static void
 connection_settings_free (ConnectionSetting *cs)
 {
 	g_free (cs->name);
-	if (cs->cnc)
+	if (cs->cnc) {
+		g_signal_handlers_disconnect_by_func (cs->cnc,
+						      G_CALLBACK (conn_closed_cb), cs);
 		g_object_unref (cs->cnc);
+	}
 	if (cs->parser)
 		g_object_unref (cs->parser);
 	if (cs->query_buffer)
@@ -1641,7 +1651,7 @@ output_string (const gchar *str)
 	gboolean append_nl = FALSE;
 	gint length;
 	static gint force_no_pager = -1;
-	
+
 	if (!str)
 		return;
 
@@ -1666,13 +1676,15 @@ output_string (const gchar *str)
 		/* use pager */
 		FILE *pipe;
 		const char *pager;
-		
+#ifndef G_OS_WIN32
+		sighandler_t phandler;
+#endif
 		pager = getenv ("PAGER");
 		if (!pager)
 			pager = "more";
 		pipe = popen (pager, "w");
 #ifndef G_OS_WIN32
-		signal (SIGPIPE, SIG_IGN);
+		phandler = signal (SIGPIPE, SIG_IGN);
 #endif
 		if (append_nl)
 			g_fprintf (pipe, "%s\n", str);
@@ -1680,7 +1692,7 @@ output_string (const gchar *str)
 			g_fprintf (pipe, "%s", str);
 		pclose (pipe);
 #ifndef G_OS_WIN32
-		signal(SIGPIPE, SIG_DFL);
+		signal (SIGPIPE, phandler);
 #endif
 	}
 	else {
@@ -3010,12 +3022,18 @@ extra_command_manage_cnc (SqlConsole *console, GdaConnection *cnc, const gchar *
 	}
 }
 
+static void
+conn_closed_cb (GdaConnection *cnc, ConnectionSetting *cs)
+{
+	extra_command_close_cnc (NULL, cnc, NULL, NULL, NULL);
+}
+
 static 
 GdaInternalCommandResult *
 extra_command_close_cnc (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
 {
 	ConnectionSetting *cs = NULL;
-	if (args[0] && *args[0]) {
+	if (args && args[0] && *args[0]) {
 		cs = find_connection_from_name (args[0]);
 		if (!cs) {
 			g_set_error (error, 0, 0,

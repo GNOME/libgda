@@ -48,6 +48,10 @@
 #include <libgda/thread-wrapper/gda-thread-provider.h>
 #include <libgda/gda-repetitive-statement.h>
 
+#include <glib/gstdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 struct _GdaConnectionPrivate {
@@ -1127,7 +1131,7 @@ _gda_open_internal_sqlite_connection (const gchar *cnc_string)
 	GdaServerProvider *prov = _gda_config_sqlite_provider;
 	gchar *user, *pass, *real_cnc, *real_provider;
 
-	g_print ("%s(%s)\n", __FUNCTION__, cnc_string);
+	/*g_print ("%s(%s)\n", __FUNCTION__, cnc_string);*/
 	gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
         if (!real_cnc) {
                 g_free (user);
@@ -1158,6 +1162,68 @@ _gda_open_internal_sqlite_connection (const gchar *cnc_string)
 	if (!gda_connection_open (cnc, NULL)) {
 		g_object_unref (cnc);
 		cnc = NULL;
+	}
+	return cnc;
+}
+
+static void
+sqlite_connection_closed_cb (GdaConnection *cnc, gpointer data)
+{
+	gchar *filename;
+	filename = g_object_get_data (G_OBJECT (cnc), "__gda_fname");
+	g_assert (filename && *filename);
+	g_unlink (filename);
+}
+
+/**
+ * gda_connection_open_sqlite
+ * @cnc_string: a connection string
+ * @directory: the directory the database file will be in, or %NULL for the default TMP directory
+ * @filename: the database file name
+ * @auto_unlink: if %TRUE, then the database file will be removed afterwards
+ *
+ * Opens an SQLite connection even if the SQLite provider is not installed,
+ * to be used by database providers which need a temporary database to store
+ * some information.
+ *
+ * Returns: a new #GdaConnection, or %NULL if an error occurred
+ */
+GdaConnection *
+gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gboolean auto_unlink)
+{
+	GdaConnection *cnc;
+	gchar *fname;
+	gint fd;
+
+	if (!directory)
+		directory = g_get_tmp_dir();
+	else
+		g_return_val_if_fail (*directory, NULL);
+	g_return_val_if_fail (filename && *filename, NULL);
+
+	fname = g_build_filename (directory, filename, NULL);
+	fd = g_open (fname, O_WRONLY | O_CREAT | O_NOCTTY | O_TRUNC,
+		     S_IRUSR | S_IWUSR);
+	if (fd == -1) {
+		g_free (fname);
+		return NULL;
+	}
+	close (fd);
+
+	gchar *tmp1, *tmp2, *cncstring;
+	tmp1 = gda_rfc1738_encode (directory);
+	tmp2 = gda_rfc1738_encode (filename);
+	cncstring = g_strdup_printf ("SQLite://DB_DIR=%s;DB_NAME=%s", tmp1, tmp2);
+	g_free (tmp1);
+	g_free (tmp2);
+	
+	cnc = _gda_open_internal_sqlite_connection (cncstring);
+	g_free (cncstring);
+
+	if (auto_unlink) {
+		g_object_set_data_full (G_OBJECT (cnc), "__gda_fname", fname, g_free);
+		g_signal_connect (cnc, "conn-closed",
+				  G_CALLBACK (sqlite_connection_closed_cb), NULL);
 	}
 	return cnc;
 }
@@ -1251,12 +1317,15 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	/* try to open the connection */
 	auth = gda_quark_list_new_from_string (real_auth_string);
 
+	cnc->priv->is_open = TRUE; /* consider the connection opened to allow the open_connection()
+				    * virtual method to execute statements of needed */
 	if (PROV_CLASS (cnc->priv->provider_obj)->open_connection (cnc->priv->provider_obj, cnc, params, auth,
 								   NULL, NULL, NULL))
 		cnc->priv->is_open = TRUE;
 	else {
 		const GList *events;
 		
+		cnc->priv->is_open = FALSE;
 		events = gda_connection_get_events (cnc);
 		if (events) {
 			GList *l;
@@ -1341,6 +1410,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
+	g_object_ref (cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
 
 	if (cnc->priv->monitor_id > 0) {
@@ -1349,6 +1419,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	}
 
 	if (! cnc->priv->is_open) {
+		g_object_unref (cnc);
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return;
 	}
@@ -1375,6 +1446,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 		cnc->priv->provider_data = NULL;
 	}
 
+	gda_connection_unlock ((GdaLockable*) cnc);
 #ifdef GDA_DEBUG_signal
         g_print (">> 'CONN_CLOSED' from %s\n", __FUNCTION__);
 #endif
@@ -1382,8 +1454,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 #ifdef GDA_DEBUG_signal
         g_print ("<< 'CONN_CLOSED' from %s\n", __FUNCTION__);
 #endif
-
-	gda_connection_unlock ((GdaLockable*) cnc);
+	g_object_unref (cnc);
 }
 
 
@@ -1913,6 +1984,7 @@ async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_
 	gint i;
 	gboolean is_completed;
 
+	g_object_ref ((GObject*) cnc);
 	gda_connection_lock (GDA_LOCKABLE (cnc));
 
 	i = get_task_index (cnc, task_id, &is_completed, TRUE);
@@ -1982,6 +2054,7 @@ async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_
 			   "ignored.\n", task_id);
 
 	gda_connection_unlock (GDA_LOCKABLE (cnc));
+	g_object_unref ((GObject*) cnc);
 }
 
 /**
@@ -2029,11 +2102,22 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, 0);
 
 
+	g_object_ref ((GObject*) cnc);
 	if (! gda_connection_trylock ((GdaLockable*) cnc)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CANT_LOCK_ERROR,
 			     _("Can't obtain connection lock"));
+		g_object_unref ((GObject*) cnc);
 		return 0;
 	}
+
+	if (!cnc->priv->is_open) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     _("Connection is closed"));
+		gda_connection_unlock (GDA_LOCKABLE (cnc));
+		g_object_unref ((GObject*) cnc);
+		return 0;
+	}
+
 	id = cnc->priv->next_task_id ++;
 	task = cnc_task_new (id, stmt, model_usage, col_types, params, need_last_insert_row);
 	g_array_append_val (cnc->priv->waiting_tasks, task);
@@ -2071,6 +2155,7 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 	}
 
 	gda_connection_unlock ((GdaLockable*) cnc);
+	g_object_unref ((GObject*) cnc);
 
 	return id;
 }
@@ -2231,11 +2316,20 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	types = make_col_types_array (10, ap);
 	va_end (ap);
 
+	g_object_ref ((GObject*) cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
 	if (last_inserted_row) 
 		*last_inserted_row = NULL;
 	if (cnc->priv->auto_clear_events_list)
 		_clear_events_list (cnc);
+
+	if (!cnc->priv->is_open) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     _("Connection is closed"));
+		gda_connection_unlock (GDA_LOCKABLE (cnc));
+		g_object_unref ((GObject*) cnc);
+		return NULL;
+	}
 
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
@@ -2247,6 +2341,8 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 								       NULL, NULL, NULL, error);
 	g_free (types);
 	gda_connection_unlock ((GdaLockable*) cnc);
+	g_object_unref ((GObject*) cnc);
+
 	return obj;
 }
 
@@ -2491,9 +2587,18 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	types = make_col_types_array (10, ap);
 	va_end (ap);
 
+	g_object_ref ((GObject*) cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
 	if (cnc->priv->auto_clear_events_list)
 		_clear_events_list (cnc);
+
+	if (!cnc->priv->is_open) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     _("Connection is closed"));
+		gda_connection_unlock (GDA_LOCKABLE (cnc));
+		g_object_unref ((GObject*) cnc);
+		return NULL;
+	}
 
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
@@ -2505,6 +2610,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 											  types, NULL, NULL, 
 											  NULL, NULL, error);
 	gda_connection_unlock ((GdaLockable*) cnc);
+	g_object_unref ((GObject*) cnc);
 	g_free (types);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
@@ -2552,10 +2658,19 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	g_return_val_if_fail (PROV_CLASS (cnc->priv->provider_obj)->statement_execute, NULL);
 
+	g_object_ref ((GObject*) cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
 	if (cnc->priv->auto_clear_events_list)
 		_clear_events_list (cnc);
 	
+	if (!cnc->priv->is_open) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     _("Connection is closed"));
+		gda_connection_unlock (GDA_LOCKABLE (cnc));
+		g_object_unref ((GObject*) cnc);
+		return NULL;
+	}
+
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
@@ -2566,6 +2681,8 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 											  model_usage, col_types, NULL, 
 											  NULL, NULL, NULL, error);
 	gda_connection_unlock ((GdaLockable*) cnc);
+	g_object_unref ((GObject*) cnc);
+
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
 			      "%s", _("Statement is not a selection statement"));
@@ -2612,7 +2729,16 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 	g_object_get (rstmt, "statement", &stmt, NULL);
 	g_return_val_if_fail (stmt, NULL);
 
+	g_object_ref ((GObject*) cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
+
+	if (!cnc->priv->is_open) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     _("Connection is closed"));
+		gda_connection_unlock (GDA_LOCKABLE (cnc));
+		g_object_unref ((GObject*) cnc);
+		return NULL;
+	}
 
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
@@ -2645,7 +2771,7 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 	g_slist_free (sets_list);
 
 	gda_connection_unlock ((GdaLockable*) cnc);
-
+	g_object_unref ((GObject*) cnc);
 	g_object_unref (stmt);
 
 	return g_slist_reverse (retlist);
@@ -4687,7 +4813,7 @@ gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *st
  * @cnc: a #GdaConnection
  * @newstate: the new state
  *
- * Internal functions to be called by database providers to force a transaction status
+ * Internal function to be called by database providers to force a transaction status
  * change.
  */
 void
@@ -4711,6 +4837,32 @@ gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
+	gda_connection_unlock ((GdaLockable*) cnc);
+}
+
+/**
+ * gda_connection_internal_reset_transaction_status
+ * @cnc: a #GdaConnection
+ *
+ * Internal function to be called by database providers to reset the transaction status.
+ */
+void
+gda_connection_internal_reset_transaction_status (GdaConnection *cnc)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	gda_connection_lock ((GdaLockable*) cnc);
+	if (cnc->priv->trans_status) {
+		g_object_unref (cnc->priv->trans_status);
+		cnc->priv->trans_status = NULL;
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	}
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 

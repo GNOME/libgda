@@ -323,6 +323,25 @@ Methods dedicated to implementing providers
 @newstate: 
 
 
+<!-- ##### FUNCTION gda_connection_internal_reset_transaction_status ##### -->
+<para>
+
+</para>
+
+@cnc: 
+
+
+<!-- ##### FUNCTION gda_connection_open_sqlite ##### -->
+<para>
+
+</para>
+
+@directory: 
+@filename: 
+@auto_unlink: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_meta_store_modify ##### -->
 <para>
 

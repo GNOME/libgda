@@ -63,18 +63,11 @@ set_from_string (GValue *value, const gchar *as_string)
 	/* custom transform function */
 	retval = FALSE;
 	if (type == G_TYPE_BOOLEAN) {
-		if (((as_string[0] == 't') || (as_string[0] == 'T')) &&
-		    ((as_string[1] == 'r') || (as_string[1] == 'R')) &&
-		    ((as_string[2] == 'u') || (as_string[2] == 'U')) &&
-		    ((as_string[3] == 'e') || (as_string[3] == 'E'))) {
+		if ((as_string[0] == 't') || (as_string[0] == 'T')) {
 			g_value_set_boolean (value, TRUE);
 			retval = TRUE;
 		}
-		else if (((as_string[0] == 'f') || (as_string[0] == 'F')) &&
-			 ((as_string[1] == 'a') || (as_string[1] == 'A')) &&
-			 ((as_string[2] == 'l') || (as_string[2] == 'L')) &&
-			 ((as_string[3] == 's') || (as_string[3] == 'S')) &&
-			 ((as_string[4] == 'e') || (as_string[4] == 'E'))) {
+		else if ((as_string[0] == 'f') || (as_string[0] == 'F')) {
 			g_value_set_boolean (value, FALSE);
 			retval = TRUE;
 		}

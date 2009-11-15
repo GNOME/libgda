@@ -54,7 +54,12 @@ if JAVA
 GDA_JAVA_SERVER=jdbc
 endif
 
+if LIBSOUP
+GDA_WEB_SERVER=web
+endif
+
 SUBDIRS = \
+	reuseable \
 	sqlite \
 	skel-implementation \
 	$(GDA_BDB_SERVER) \
@@ -62,7 +67,8 @@ SUBDIRS = \
 	$(GDA_POSTGRES_SERVER) \
 	$(GDA_MYSQL_SERVER) \
 	$(GDA_JAVA_SERVER) \
-	$(GDA_ORACLE_SERVER)
+	$(GDA_ORACLE_SERVER) \
+	$(GDA_WEB_SERVER)
 #	$(GDA_FREETDS_SERVER) \
 #	$(GDA_IBMDB2_SERVER) \
 #	$(GDA_FIREBIRD_SERVER) \

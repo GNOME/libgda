@@ -9,6 +9,8 @@ AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR(libgda/libgda.h.in)
 AM_INIT_AUTOMAKE(1.8 -Wall no-define dist-bzip2)
 
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
 
 AC_SUBST(GDA_VERSION, major.minor.micro)
 
@@ -1708,6 +1710,8 @@ libgda/sqlite/sqlite-src/Makefile
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile
 providers/Makefile
+providers/reuseable/Makefile
+providers/reuseable/postgres/Makefile
 providers/bdb/Makefile
 providers/bdb/libgda-bdb-4.0.pc
 providers/mdb/Makefile
@@ -1722,6 +1726,8 @@ providers/sqlite/Makefile
 providers/sqlite/libgda-sqlite-4.0.pc
 providers/jdbc/Makefile
 providers/jdbc/libgda-jdbc-4.0.pc
+providers/web/Makefile
+providers/web/libgda-web-4.0.pc
 providers/skel-implementation/Makefile
 providers/skel-implementation/capi/Makefile
 providers/skel-implementation/capi/libgda-capi-4.0.pc
@@ -1808,6 +1814,7 @@ dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no;
 dnl echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 dnl echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
 echo "      JDBC = `if test x$have_java = xyes; then echo yes; else echo no; fi`"
+echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
 then
        echo "   Binreloc support is disabled: Libgda will not be relocatable. To enable binreloc support re-run with --enable-binreloc (see http://autopackage.org/docs/binreloc for more information)"

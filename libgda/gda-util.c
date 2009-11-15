@@ -41,12 +41,9 @@
 
 #include <libgda/binreloc/gda-binreloc.h>
 
-/* we don't want to duplicate the symbols in <libgda/sqlite/keywords_hash.h>, so simply
- * declare them as external
- */
-extern const unsigned char UpperToLower[];
 #define charMap(X) UpperToLower[(unsigned char)(X)]
-extern int casecmp(const char *zLeft, const char *zRight, int N);
+#define KEYWORDS_HASH_NO_STATIC
+#include <libgda/sqlite/keywords_hash.h>
 #include "keywords_hash.c" /* this one is dynamically generated */
 
 extern gchar *gda_lang_locale;
@@ -547,6 +544,15 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	str = xmlGetProp (node, BAD_CAST "source");
 	if (str) 
 		g_object_set_data_full (G_OBJECT (holder), "source", str, xmlFree);
+	str = xmlGetProp (node, BAD_CAST "plugin");
+	if (str) {
+		GValue *value;
+#define GDAUI_ATTRIBUTE_PLUGIN "__gdaui_attr_plugin"
+                value = gda_value_new_from_string ((gchar*) str, G_TYPE_STRING);
+		gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+		gda_value_free (value);
+		xmlFree (str);
+	}
 
 	/* set restricting source if specified */
 	if (str && sources) {

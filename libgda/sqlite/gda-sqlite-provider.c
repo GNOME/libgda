@@ -646,11 +646,17 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 	/* set SQLite library options */
 	GObject *obj;
+	GError *lerror = NULL;
 	obj = gda_connection_statement_execute (cnc, internal_stmt[INTERNAL_PRAGMA_EMPTY_RESULT],
-						NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL, NULL);
-	if (!obj)
-		gda_connection_add_event_string (cnc, _("Could not set empty_result_callbacks SQLite option"));
-	g_object_unref (obj);
+						NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL, &lerror);
+	if (!obj) {
+		gda_connection_add_event_string (cnc,
+						 _("Could not set empty_result_callbacks SQLite option: %s"),
+						 lerror && lerror->message ? lerror->message : _("no detail"));
+		g_clear_error (&lerror);
+	}
+	else
+		g_object_unref (obj);
 
 	/* make sure the internals are completely initialized now */
 	{

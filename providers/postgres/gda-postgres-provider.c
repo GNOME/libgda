@@ -392,185 +392,6 @@ pq_notice_processor (PostgresConnectionData *cdata, const char *message)
         gda_connection_add_event (cdata->cnc, error);
 }
 
-static GType
-postgres_name_to_g_type (const gchar *name, const gchar *conv_func_name)
-{
-	/* default built in data types */
-	if (!strcmp (name, "bool"))
-		return G_TYPE_BOOLEAN;
-	else if (!strcmp (name, "int8"))
-		return G_TYPE_INT64;
-	else if (!strcmp (name, "int4") || !strcmp (name, "abstime"))
-		return G_TYPE_INT;
-	else if (!strcmp (name, "int2"))
-		return GDA_TYPE_SHORT;
-	else if (!strcmp (name, "float4"))
-		return G_TYPE_FLOAT;
-	else if (!strcmp (name, "float8"))
-		return G_TYPE_DOUBLE;
-	else if (!strcmp (name, "numeric"))
-		return GDA_TYPE_NUMERIC;
-	else if (!strncmp (name, "timestamp", 9))
-		return GDA_TYPE_TIMESTAMP;
-	else if (!strcmp (name, "date"))
-		return G_TYPE_DATE;
-	else if (!strncmp (name, "time", 4))
-		return GDA_TYPE_TIME;
-	else if (!strcmp (name, "point"))
-		return GDA_TYPE_GEOMETRIC_POINT;
-	else if (!strcmp (name, "oid"))
-		return GDA_TYPE_BLOB;
-	else if (!strcmp (name, "bytea"))
-		return GDA_TYPE_BINARY;
-
-	/* other data types, using the conversion function name as a hint */
-	if (!conv_func_name)
-		return G_TYPE_STRING;
-
-	if (!strncmp (conv_func_name, "int2", 4))
-		return GDA_TYPE_SHORT;
-	if (!strncmp (conv_func_name, "int4", 4))
-		return G_TYPE_INT;
-	if (!strncmp (conv_func_name, "int8", 4))
-		return G_TYPE_INT64;
-	if (!strncmp (conv_func_name, "float4", 6))
-		return G_TYPE_FLOAT;
-	if (!strncmp (conv_func_name, "float8", 6))
-		return G_TYPE_DOUBLE;
-	if (!strncmp (conv_func_name, "timestamp", 9))
-		return GDA_TYPE_TIMESTAMP;
-	if (!strncmp (conv_func_name, "time", 4))
-		return GDA_TYPE_TIME;
-	if (!strncmp (conv_func_name, "date", 4))
-		return G_TYPE_DATE;
-	if (!strncmp (conv_func_name, "bool", 4))
-		return G_TYPE_BOOLEAN;
-	if (!strncmp (conv_func_name, "oid", 3))
-		return GDA_TYPE_BLOB;
-	if (!strncmp (conv_func_name, "bytea", 5))
-		return GDA_TYPE_BINARY;
-	return G_TYPE_STRING;
-}
-
-static int
-get_connection_type_list (PostgresConnectionData *cdata)
-{
-	GHashTable *h_table;
-	GdaPostgresTypeOid *td;
-	PGresult *pg_res, *pg_res_avoid, *pg_res_anyoid = NULL;
-	gint nrows, i;
-	gchar *avoid_types = NULL;
-	GString *string;
-
-	if (cdata->version_float < 7.3) {
-		gchar *query;
-		avoid_types = "'SET', 'cid', 'oid', 'int2vector', 'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid'";
-		/* main query to fetch infos about the data types */
-		query = g_strdup_printf ("SELECT pg_type.oid, typname, usename, obj_description(pg_type.oid) "
-					 "FROM pg_type, pg_user "
-					 "WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_' "
-					 "AND  typname not in (%s) "
-					 "ORDER BY typname", avoid_types);
-		pg_res = _gda_postgres_PQexec_wrap (cdata->cnc, cdata->pconn, query);
-		g_free (query);
-
-		/* query to fetch non returned data types */
-		query = g_strdup_printf ("SELECT pg_type.oid FROM pg_type WHERE typname in (%s)", avoid_types);
-		pg_res_avoid = _gda_postgres_PQexec_wrap (cdata->cnc, cdata->pconn, query);
-		g_free (query);
-	}
-	else {
-		gchar *query;
-		avoid_types = "'any', 'anyarray', 'anyelement', 'cid', 'cstring', 'int2vector', 'internal', 'language_handler', 'oidvector', 'opaque', 'record', 'refcursor', 'regclass', 'regoper', 'regoperator', 'regproc', 'regprocedure', 'regtype', 'SET', 'smgr', 'tid', 'trigger', 'unknown', 'void', 'xid'";
-
-		/* main query to fetch infos about the data types */
-		query = g_strdup_printf (
-                          "SELECT t.oid, t.typname, u.usename, pg_catalog.obj_description(t.oid), t.typinput "
-			  "FROM pg_catalog.pg_type t LEFT JOIN pg_catalog.pg_user u ON (t.typowner=u.usesysid), pg_catalog.pg_namespace n "
-			  "WHERE n.oid = t.typnamespace "
-			  "AND pg_catalog.pg_type_is_visible(t.oid) "
-			  /*--AND (n.nspname = 'public' OR n.nspname = 'pg_catalog')*/
-			  "AND typname !~ '^_' "
-			  "AND (t.typrelid = 0 OR "
-			  "(SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = t.typrelid)) "
-			  "AND t.typname not in (%s) "
-			  "ORDER BY typname", avoid_types);
-		pg_res = _gda_postgres_PQexec_wrap (cdata->cnc, cdata->pconn, query);
-		g_free (query);
-
-		/* query to fetch non returned data types */
-		query = g_strdup_printf ("SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname in (%s)",
-					 avoid_types);
-		pg_res_avoid = _gda_postgres_PQexec_wrap (cdata->cnc, cdata->pconn, query);
-		g_free (query);
-
-		/* query to fetch the oid of the 'any' data type */
-		pg_res_anyoid = _gda_postgres_PQexec_wrap (cdata->cnc, cdata->pconn,
-							   "SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname = 'any'");
-	}
-
-	if (!pg_res || (PQresultStatus (pg_res) != PGRES_TUPLES_OK) ||
-	    !pg_res_avoid || (PQresultStatus (pg_res_avoid) != PGRES_TUPLES_OK) ||
-	    ((cdata->version_float >= 7.3) &&
-	     (!pg_res_anyoid || (PQresultStatus (pg_res_anyoid) != PGRES_TUPLES_OK)))) {
-		if (pg_res)
-			PQclear (pg_res);
-		if (pg_res_avoid)
-			PQclear (pg_res_avoid);
-		if (pg_res_anyoid)
-			PQclear (pg_res_anyoid);
-		return -1;
-	}
-
-	/* Data types returned */
-	nrows = PQntuples (pg_res);
-	td = g_new (GdaPostgresTypeOid, nrows);
-	h_table = g_hash_table_new (g_direct_hash, g_direct_equal);
-	if (nrows == 0)
-		g_warning ("PostgreSQL provider did not find any data type (expect some mis-behaviours) please report the error to bugzilla.gnome.org");
-	for (i = 0; i < nrows; i++) {
-		gchar *conv_func_name = NULL;
-		if (PQnfields (pg_res) >= 5)
-			conv_func_name = PQgetvalue (pg_res, i, 4);
-		td[i].name = g_strdup (PQgetvalue (pg_res, i, 1));
-		td[i].oid = atoi (PQgetvalue (pg_res, i, 0));
-		td[i].type = postgres_name_to_g_type (td[i].name, conv_func_name);
-		td[i].comments = g_strdup (PQgetvalue (pg_res, i, 3));
-		td[i].owner = g_strdup (PQgetvalue (pg_res, i, 2));
-		g_hash_table_insert (h_table, GUINT_TO_POINTER (td[i].oid), &(td[i].type));
-	}
-
-	PQclear (pg_res);
-	cdata->ntypes = nrows;
-	cdata->type_data = td;
-	cdata->h_table = h_table;
-
-	/* Make a string of data types internal to postgres and not returned, for future queries */
-	string = NULL;
-	nrows = PQntuples (pg_res_avoid);
-	for (i = 0; i < nrows; i++) {
-		if (!string)
-			string = g_string_new (PQgetvalue (pg_res_avoid, i, 0));
-		else
-			g_string_append_printf (string, ", %s", PQgetvalue (pg_res_avoid, i, 0));
-	}
-	PQclear (pg_res_avoid);
-	cdata->avoid_types = avoid_types;
-	cdata->avoid_types_oids = string->str;
-	g_string_free (string, FALSE);
-
-	/* make a string of the oid of type 'any' */
-	cdata->any_type_oid = g_strdup("");
-	if (pg_res_anyoid) {
-		if (PQntuples (pg_res_anyoid) == 1) {
-			g_free(cdata->any_type_oid);
-			cdata->any_type_oid = g_strdup (PQgetvalue (pg_res_anyoid, 0, 0));
-		}
-		PQclear (pg_res_anyoid);
-	}
-	return 0;
-}
-
 /*
  * Open connection request
  *
@@ -597,7 +418,6 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	}
 
 	/* Check for connection parameters */
-	/* TO_ADD: your own connection parameters */
 	const gchar *pq_host;
 	const gchar *pq_db;
         const gchar *pg_searchpath;
@@ -707,9 +527,6 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 		return FALSE;
 	}
         cdata->version = g_strdup (PQgetvalue(pg_res, 0, 0));
-        cdata->version_float = get_pg_version_float (cdata->version);
-	cdata->short_version = g_strdup_printf ("%d%d", (int) cdata->version_float,
-						(int) ((cdata->version_float - (int) cdata->version_float) * 10));
         PQclear (pg_res);
 
 	/*
@@ -732,10 +549,22 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	}
         PQclear (pg_res);
 
+	/* attach connection data */
+	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_postgres_free_cnc_data);
+
+	/* handle LibPQ's notices */
+        PQsetNoticeProcessor (pconn, (PQnoticeProcessor) pq_notice_processor, cdata);
+
+	/* handle the reuseable part */
+	GdaProviderReuseableOperations *ops;
+	ops = _gda_postgres_reuseable_get_ops ();
+	cdata->reuseable = (GdaPostgresReuseable*) ops->re_new_data (NULL, NULL);
+	_gda_postgres_compute_types (cnc, cdata->reuseable);
+
 	/*
          * Set the search_path
          */
-        if ((cdata->version_float >= 7.3) && pg_searchpath) {
+        if ((cdata->reuseable->version_float >= 7.3) && pg_searchpath) {
                 const gchar *ptr;
                 gboolean path_valid = TRUE;
 
@@ -755,6 +584,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
                                 gda_connection_add_event_string (cnc, _("Could not set search_path to %s"), pg_searchpath);
                                 PQclear (pg_res);
 				gda_postgres_free_cnc_data (cdata);
+				gda_connection_internal_set_provider_data (cnc, NULL, NULL);
                                 return FALSE;
                         }
                         PQclear (pg_res);
@@ -762,21 +592,9 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
                 else {
 			gda_connection_add_event_string (cnc, _("Search path %s is invalid"), pg_searchpath);
 			gda_postgres_free_cnc_data (cdata);
+			gda_connection_internal_set_provider_data (cnc, NULL, NULL);
                         return FALSE;
                 }
-        }
-
-	/* attach connection data */
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_postgres_free_cnc_data);
-
-
-	/* handle LibPQ's notices */
-        PQsetNoticeProcessor (pconn, (PQnoticeProcessor) pq_notice_processor, cdata);
-
-        if (get_connection_type_list (cdata) != 0) {
-                _gda_postgres_make_error (cnc, pconn, NULL, NULL);
-		gda_postgres_free_cnc_data (cdata);
-                return FALSE;
         }
 
 	return TRUE;
@@ -1150,9 +968,9 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
         gchar *isolation_level = NULL;
 	GdaStatement *stmt = NULL;
 
-	if (cdata->version_float >= 6.5){
+	if (cdata->reuseable->version_float >= 6.5){
                 if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
-                        if (cdata->version_float >= 7.4)
+                        if (cdata->reuseable->version_float >= 7.4)
                                 write_option = "READ ONLY";
                         else {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
@@ -1444,7 +1262,7 @@ gda_postgres_provider_supports_feature (GdaServerProvider *provider, GdaConnecti
 			cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
 			if (!cdata)
 				return FALSE;
-                        if (cdata->version_float >= 7.3)
+                        if (cdata->reuseable->version_float >= 7.3)
                                 return TRUE;
                 }
                 else
@@ -2578,7 +2396,8 @@ gda_postgresql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc
                         return NULL;
         }
 
-        kwfunc = _gda_postgres_get_reserved_keyword_func (cdata);
+        kwfunc = _gda_postgres_reuseable_get_reserved_keywords_func
+		(cdata ? (GdaProviderReuseable*) cdata->reuseable : NULL);
 
 	if (for_meta_store) {
 		gchar *tmp, *ptr;
@@ -2653,23 +2472,13 @@ gda_postgres_free_cnc_data (PostgresConnectionData *cdata)
 	if (cdata->pconn)
                 PQfinish (cdata->pconn);
 
-	if (cdata->type_data) {
-		gint i;
-		for (i = 0; i < cdata->ntypes; i++) {
-			g_free (cdata->type_data[i].name);
-			g_free (cdata->type_data[i].comments);
-			g_free (cdata->type_data[i].owner);
-		}
-		g_free (cdata->type_data);
-	}
-
-	if (cdata->h_table)
-		g_hash_table_destroy (cdata->h_table);
-
 	g_free (cdata->version);
-	g_free (cdata->short_version);
-	g_free (cdata->avoid_types_oids);
-	g_free (cdata->any_type_oid);
+
+	if (cdata->reuseable) {
+		GdaProviderReuseable *rdata = (GdaProviderReuseable*)cdata->reuseable;
+		rdata->operations->re_reset_data (rdata);
+		g_free (cdata->reuseable);
+	}
 
 	g_free (cdata);
 }

@@ -286,6 +286,20 @@ _gda_thread_provider_get_type (void)
 	return type;
 }
 
+/*
+ * Check if the wrapped connection has been closed in the meanwhile
+ *
+ * Returns: %TRUE if @cnc is now also closed (WARNING: @cnc may not exist anymore it %TRUE is returned)
+ */
+static gboolean
+check_cnc_closed (GdaConnection *cnc, ThreadConnectionData *cdata)
+{
+	if (cdata->sub_connection_has_closed) {
+		gda_connection_close_no_warning (cnc);
+		return TRUE;
+	}
+	return FALSE;
+}
 
 /*
  * Get provider name request
@@ -516,13 +530,31 @@ sub_cnc_transaction_status_changed_cb (GdaThreadWrapper *wrapper, GdaConnection 
 }
 
 static void
+sub_cnc_closed_cb (GdaThreadWrapper *wrapper, GdaConnection *sub_cnc, const gchar *signal,
+		   gint n_param_values, const GValue *param_values,
+		   gpointer gda_reserved, GdaConnection *wrapper_cnc)
+{
+	ThreadConnectionData *cdata;
+	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (wrapper_cnc);
+	if (!cdata) 
+		return;
+	cdata->sub_connection_has_closed = TRUE;
+}
+
+static void
 setup_signals (GdaConnection *cnc, ThreadConnectionData *cdata)
 {
 	gulong hid;
 	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
+					      "conn-closed", FALSE,
+					      (GdaThreadWrapperCallback) sub_cnc_closed_cb, cnc);
+	g_array_prepend_val (cdata->handlers_ids, hid);
+
+	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
 					      "error", FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_error_cb, cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
+
 	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
 					      "transaction-status-changed", FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_transaction_status_changed_cb,
@@ -1556,7 +1588,13 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
-		return FALSE;
+		return NULL;
+
+	if (check_cnc_closed (cnc, cdata)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     _("Connection is closed"));
+		return NULL;
+	}
 	
 	if (async_cb) {
 		ExecuteStatementData *wdata;
@@ -1623,6 +1661,9 @@ gda_thread_provider_handle_async (GdaServerProvider *provider, GdaConnection *cn
 	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
+
+	if (check_cnc_closed (cnc, cdata))
+		return TRUE;
 
 	if (!cdata->async_tasks)
 		return TRUE;
