@@ -473,8 +473,11 @@ browser_connections_list_show (BrowserConnection *current)
 		GtkTreeModel *model;
 		GtkTreeIter iter;
 		model = gtk_tree_view_get_model (GTK_TREE_VIEW (_clist->priv->treeview));
-		if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (model), &iter))
+		if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (model), &iter)) {
+			GtkTreeSelection *select;
+                        select = gtk_tree_view_get_selection (GTK_TREE_VIEW (_clist->priv->treeview));	
 			gtk_tree_selection_select_iter (select, &iter);
+		}
 	}
 }
 

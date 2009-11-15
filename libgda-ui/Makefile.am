@@ -11,7 +11,8 @@ AM_CPPFLAGS = \
 	-DPLUGINSDIR=\""$(top_builddir)/libgda-ui/plugins/.libs"\" \
 	-DGDA_ABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(LIBGDA_CFLAGS) \
-	$(GTK_CFLAGS)
+	$(GTK_CFLAGS) \
+	$(GIO_CFLAGS)
 
 ui_headers = \
 	gdaui-basic-form.h \
@@ -102,7 +103,8 @@ libgda_ui_4_0_la_LIBADD = \
 	data-entries/libgda-ui-data-entries.la \
 	../libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS) \
-	$(GTK_LIBS)
+	$(GTK_LIBS) \
+	$(GIO_LIBS)
 
 if PLATFORM_WIN32
 libgda_ui_4_0_la_LDFLAGS += -export-symbols $(srcdir)/libgda-ui.def
