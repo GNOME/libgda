@@ -640,6 +640,8 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 		pq_pwd = gda_quark_list_find (params, "PASSWORD");
 
         pq_requiressl = gda_quark_list_find (params, "USE_SSL");
+	if (pq_requiressl && (*pq_requiressl != 'T') && (*pq_requiressl != 't'))
+		pq_requiressl = NULL;
 
 	/* TODO: Escape single quotes and backslashes in the user name and password: */
         conn_string = g_strconcat ("",
