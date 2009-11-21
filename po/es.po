@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2009-11-14 10:28+0000\n"
-"PO-Revision-Date: 2009-11-15 12:38+0100\n"
+"POT-Creation-Date: 2009-11-15 11:39+0000\n"
+"PO-Revision-Date: 2009-11-21 11:39+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1720,6 +1720,8 @@ msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
 "referencing table %s.%s.%s"
 msgstr ""
+"Incoherencia en los metadatos de restricción de la clave externa para la "
+"tabla %s.%s.%s referenciando la tabla %s.%s.%s"
 
 #: ../libgda/gda-meta-struct.c:2256
 msgid "Missing object name in GdaMetaDbObject structure"
@@ -3106,7 +3108,6 @@ msgid "This report document does not handle %s output"
 msgstr "Este informe del documento no maneja salidas en %s"
 
 #: ../libgda-ui/data-entries/common-bin.c:38
-#| msgid "Select image to load"
 msgid "Select file to load"
 msgstr "Seleccionar archivo para cargar"
 
@@ -3121,15 +3122,11 @@ msgstr ""
 "%s"
 
 #: ../libgda-ui/data-entries/common-bin.c:108
-#| msgid "Select a file to save the image to"
 msgid "Select a file to save data to"
 msgstr "Seleccionar un archivo donde guardar los datos"
 
 #: ../libgda-ui/data-entries/common-bin.c:154
 #, c-format
-#| msgid ""
-#| "Could not save the image to '%s':\n"
-#| " %s"
 msgid ""
 "Could not save data to '%s':\n"
 " %s"
@@ -3138,7 +3135,6 @@ msgstr ""
 "%s"
 
 #: ../libgda-ui/data-entries/common-bin.c:194
-#| msgid "Providers"
 msgid "Properties"
 msgstr "Propiedades"
 
@@ -3151,7 +3147,6 @@ msgstr[1] "%lu bytes"
 
 #: ../libgda-ui/data-entries/common-bin.c:266
 #: ../libgda-ui/data-entries/common-bin.c:316
-#| msgid "No detail"
 msgid "No data"
 msgstr "Sin datos"
 
@@ -3159,7 +3154,6 @@ msgstr "Sin datos"
 #: ../libgda-ui/data-entries/common-bin.c:287
 #: ../libgda-ui/data-entries/common-bin.c:301
 #: ../libgda-ui/data-entries/common-bin.c:305
-#| msgid "Database"
 msgid "Data size"
 msgstr "Tamaño de datos"
 
@@ -3260,7 +3254,6 @@ msgstr "Formato UTF-8 no válido."
 
 #. format tooltip
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:1018
-#| msgid "hh:mm:ss"
 msgid "Format is hh:mm:ss"
 msgstr "El formato es hh:mm:ss"
 
@@ -3274,7 +3267,6 @@ msgstr ""
 "usando la propiedad «manejador») espere algún comportamiento no deseado"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:400
-#| msgid "Values"
 msgid "Value is NULL"
 msgstr "El valor es NULL"
 
@@ -3283,7 +3275,6 @@ msgid "Value will be determined by default"
 msgstr "El valor se determinará de forma predeterminada"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:412
-#| msgid "Parameter '%s' is invalid"
 msgid "Value is invalid"
 msgstr "El valor no es válido"
 
@@ -3343,11 +3334,10 @@ msgstr "Multilínea"
 #: ../libgda-ui/data-entries/gdaui-formatted-entry.c:274
 #, c-format
 msgid "Unknown format character starting at %s"
-msgstr ""
+msgstr "Formato del carácter desconocido comenzando en %s"
 
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:266
 #, c-format
-#| msgid "Type %s not mapped for value %d"
 msgid "Type %s is not numerical"
 msgstr "El tipo %s no es numérico"
 
@@ -4482,12 +4472,10 @@ msgid "Comment"
 msgstr "Comentario"
 
 #: ../providers/mysql/mysql_specs_comment_column.xml.in.h:2
-#| msgid "Field name"
 msgid "Field comment"
 msgstr "Comentario del campo"
 
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
-#| msgid "Table's comment"
 msgid "Table comment"
 msgstr "Comentario de la tabla"
 
@@ -5368,7 +5356,7 @@ msgstr ""
 
 #: ../providers/oracle/gda-oracle-util.c:661
 msgid "Could not copy Lob locator"
-msgstr ""
+msgstr "No se pudo copiar el localizador Lob"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:119
 msgid "Postgresql binary handler"
@@ -5890,10 +5878,9 @@ msgid "The name of a database to use (without the .db)"
 msgstr "El nombre de la base de datos que usar (sin el .db)"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:8
-#, fuzzy
 #| msgid "Foreign keys"
 msgid "With foreign keys"
-msgstr "Claves externas"
+msgstr "Con claves externas"
 
 #: ../testing/gda-test-blob.c:78 ../testing/gda-test-connection.c:67
 #, c-format
@@ -6030,16 +6017,15 @@ msgstr "Analizando el esquema de la base de datos"
 
 #: ../tools/browser/browser-connection.c:483
 #: ../tools/browser/browser-connection.c:512
-#, fuzzy, c-format
+#, c-format
 #| msgid "Analysing database schema"
 msgid "Error while analysing database schema: %s"
-msgstr "Analizando el esquema de la base de datos"
+msgstr "Error al analizar el esquema de la base de datos: %s"
 
 #: ../tools/browser/browser-connection.c:968
-#, fuzzy
 #| msgid "Error creating database: %s"
 msgid "Executing a query"
-msgstr "Error al crear la base de datos: %s"
+msgstr "Ejecutando una consulta"
 
 #: ../tools/browser/browser-connections-list.c:155
 #, c-format
@@ -6092,22 +6078,19 @@ msgid "Close connection"
 msgstr "Cerrar la conexión"
 
 #: ../tools/browser/browser-connections-list.c:394
-#, fuzzy
 #| msgid "Close a connection"
 msgid "Close selected connection"
-msgstr "Cerrar una conexión"
+msgstr "Cerrar la conexión seleccionada"
 
 #: ../tools/browser/browser-connections-list.c:397
-#, fuzzy
 #| msgid "Connections"
 msgid "Connect"
-msgstr "Conexiones"
+msgstr "Conectar"
 
 #: ../tools/browser/browser-connections-list.c:401
-#, fuzzy
 #| msgid "Opened connections"
 msgid "Open a new connection"
-msgstr "Conexiones abiertas"
+msgstr "Abrir una conexión nueva"
 
 #: ../tools/browser/browser-favorites.c:181
 #: ../tools/browser/browser-favorites.c:190
@@ -6127,18 +6110,17 @@ msgid "Can't commit transaction to access favorites"
 msgstr "No se puede efectuar la transacción para acceder a los favoritos"
 
 #: ../tools/browser/browser-stock-icons.c:45
-#, fuzzy
 #| msgid "Directory"
 msgid "History"
-msgstr "Directorio"
+msgstr "Histórico"
 
 #: ../tools/browser/browser-stock-icons.c:46
 msgid "Bookmarks"
-msgstr ""
+msgstr "Marcadores"
 
 #: ../tools/browser/browser-stock-icons.c:47
 msgid "Begin"
-msgstr ""
+msgstr "Inicio"
 
 #: ../tools/browser/browser-stock-icons.c:48
 #, fuzzy
@@ -6148,33 +6130,30 @@ msgstr "Comentario"
 
 #: ../tools/browser/browser-stock-icons.c:49
 msgid "Rollback"
-msgstr ""
+msgstr "Deshacer"
 
 #: ../tools/browser/browser-virtual-connection.c:88
-#, fuzzy
 #| msgid "Bound connections are as:"
 msgid "Bound connection is used"
-msgstr "Los rangos de las conexiones son:"
+msgstr "Se está usando una conexión vinculada"
 
 #: ../tools/browser/browser-virtual-connection.c:111
-#, fuzzy
 #| msgid "Connection string for the internal connection to use"
 msgid "Virtual connection using this connection is busy"
-msgstr "Cadena de conexión que usar para la conexión internar"
+msgstr "La conexión virtual usando esta conexión está ocupada"
 
 #: ../tools/browser/browser-window.c:208
 msgid "_Fullscreen"
-msgstr ""
+msgstr "Pantalla _completa"
 
 #: ../tools/browser/browser-window.c:208
 msgid "Use the whole screen"
-msgstr ""
+msgstr "Usar la pantalla completa"
 
 #: ../tools/browser/browser-window.c:214
-#, fuzzy
 #| msgid "Opened connections"
 msgid "_Bind connection"
-msgstr "Conexiones abiertas"
+msgstr "_Vincular conexión"
 
 #: ../tools/browser/browser-window.c:214
 msgid ""
@@ -6267,7 +6246,7 @@ msgstr "Dato binario"
 
 #: ../tools/browser/connection-binding-properties.c:405
 msgid "Table from a data set:"
-msgstr ""
+msgstr "Tabla desde un conjunto de datos:"
 
 #: ../tools/browser/connection-binding-properties.c:455
 #, fuzzy, c-format
@@ -6424,7 +6403,7 @@ msgstr "Ninguno"
 
 #: ../tools/browser/support.c:206
 msgid "Don't show this message again"
-msgstr ""
+msgstr "No mostrar este mensaje de nuevo"
 
 #: ../tools/browser/support.c:260
 msgid "Close tab"
