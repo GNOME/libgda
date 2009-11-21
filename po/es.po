@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
 "POT-Creation-Date: 2009-11-21 10:39+0000\n"
-"PO-Revision-Date: 2009-11-21 11:42+0100\n"
+"PO-Revision-Date: 2009-11-21 11:49+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1325,7 +1325,7 @@ msgstr "Algunas columnas no se pueden modificar"
 
 #: ../libgda/gda-data-select.c:2192
 msgid "Internal error: can't get the prepared statement's actual statement"
-msgstr "Error interno: no se puede preparar la consulta actual de la consulta"
+msgstr ""
 
 #: ../libgda/gda-data-select.c:2232
 msgid "Unable to identify a way to fetch a single row"
@@ -5377,7 +5377,7 @@ msgstr "Manejador Oracle no válido"
 
 #: ../providers/oracle/gda-oracle-util.c:654
 msgid "Could not allocate Lob locator"
-msgstr ""
+msgstr "No se pudo reservar el localizador Lob"
 
 #: ../providers/oracle/gda-oracle-util.c:661
 msgid "Could not copy Lob locator"
@@ -5822,10 +5822,9 @@ msgstr ""
 #: ../providers/web/gda-web-recordset.c:445
 #: ../providers/web/gda-web-recordset.c:466
 #: ../providers/web/gda-web-meta.c:107
-#, fuzzy
 #| msgid "Can't fetch data from server"
 msgid "Can't import data from web server"
-msgstr "No se pueden obtener los datos del servidor"
+msgstr "No se pueden importar los datos del servidor web"
 
 #: ../providers/sqlite/libmain.c:73
 msgid "Provider for SQLite databases"
@@ -5902,34 +5901,35 @@ msgstr "Con claves externas"
 #: ../providers/web/gda-web-util.c:406 ../providers/web/gda-web-util.c:559
 #, c-format
 msgid "Invalid HOST/SCRIPT '%s'"
-msgstr ""
+msgstr "Equipo y/o script «%s» no válido"
 
 #: ../providers/web/gda-web-provider.c:360
 #: ../providers/web/gda-web-provider.c:366
 #: ../providers/web/gda-web-provider.c:372
 #: ../providers/web/gda-web-provider.c:380
-#, fuzzy, c-format
+#, c-format
 #| msgid "The connection string must contain the URL value"
 msgid "The connection string must contain the %s value"
-msgstr "La cadena de la conexión debe contener un valor URL"
+msgstr "La cadena de la conexión debe contener un valor %s"
 
 #: ../providers/web/gda-web-recordset.c:183
-#, fuzzy, c-format
+#, c-format
 #| msgid "Cannot create temporary file"
 msgid "Can't create temporary file '%s'"
-msgstr "No se pudo crear el archivo temporal"
+msgstr "No se pudo crear el archivo temporal «%s»"
 
 #: ../providers/web/gda-web-recordset.c:363
 #: ../providers/web/gda-web-recordset.c:369
 #: ../providers/web/gda-web-recordset.c:379
 msgid "Can't create temporary table to store data from web server"
 msgstr ""
+"No se puede crear una tabla temporal para almacenar los datos del servidor "
+"web"
 
 #: ../providers/web/gda-web-util.c:151 ../providers/web/gda-web-util.c:165
-#, fuzzy
 #| msgid "Could not set iterator's value: %s"
 msgid "Could not parse server's reponse"
-msgstr "No se puede establecer el valor del iterador: %s"
+msgstr "No se pudo analizar la respuesta del servidor"
 
 #: ../providers/web/gda-web-util.c:159
 #| msgid "Invalid Oracle handle"
@@ -5958,34 +5958,31 @@ msgid "Error cleaning data on the server for session %s"
 msgstr "Error al limpiar los datos en el servidor para la sesión %s"
 
 #: ../providers/web/gda-web-util.c:602
-#, fuzzy
 #| msgid "No detail"
 msgid "Non detailled error"
-msgstr "Sin detalles"
+msgstr "Error no detallado"
 
 #: ../providers/web/libmain.c:71
-#, fuzzy
 #| msgid "Provider for Berkeley databases"
 msgid "Provider for web server proxies"
-msgstr "Proveedor para bases datos Berkeley"
+msgstr "Proveedor para proxies de servidores web"
 
 #: ../providers/web/web_specs_auth.xml.in.h:1
 msgid "Connection password as defined on the web server"
-msgstr ""
+msgstr "Contraseña de conexión como está definida por el servidor web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:2
 msgid "Path to PHP script"
-msgstr ""
+msgstr "Ruta al script PHP"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:5
 msgid "Server secret"
-msgstr ""
+msgstr "Secreto del servidor"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:6
-#, fuzzy
 #| msgid "The name of a database to create"
 msgid "The name of a database to use"
-msgstr "El nombre de la base de datos que crear"
+msgstr "El nombre de la base de datos que usar"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:7
 #, fuzzy
@@ -5999,10 +5996,9 @@ msgid ""
 msgstr ""
 
 #: ../providers/web/web_specs_dsn.xml.in.h:9
-#, fuzzy
 #| msgid "Username"
 msgid "Web server name"
-msgstr "Usuario"
+msgstr "Nombre del servidor web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:10
 msgid "Web server port (leave this field empty for default)"
@@ -6327,17 +6323,15 @@ msgid "Database browser"
 msgstr "Examinador de la base de datos"
 
 #: ../tools/browser/connection-binding-properties.c:142
-#, fuzzy
 #| msgid "Can't open virtual connection"
 msgid "New virtual connection"
-msgstr "No se puede abrir la conexión virtual"
+msgstr "Conexión virtual nueva"
 
 #: ../tools/browser/connection-binding-properties.c:170
 #: ../tools/browser/connection-binding-properties.c:188
-#, fuzzy
 #| msgid "Connection's properties"
 msgid "Virtual connection's properties"
-msgstr "Propiedades de la conexión"
+msgstr "Propiedades de la conexión virtual"
 
 #: ../tools/browser/connection-binding-properties.c:189
 msgid ""
