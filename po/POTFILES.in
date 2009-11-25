@@ -138,7 +138,6 @@ providers/mdb/gda-mdb-provider.c
 providers/mdb/libmain.c
 providers/mdb/mdb_specs_dsn.xml.in
 providers/mysql/gda-mysql-ddl.c
-providers/mysql/gda-mysql-meta.c
 providers/mysql/gda-mysql-provider.c
 providers/mysql/gda-mysql-recordset.c
 providers/mysql/gda-mysql-util.c
@@ -181,7 +180,10 @@ providers/postgres/postgres_specs_drop_table.xml.in
 providers/postgres/postgres_specs_drop_view.xml.in
 providers/postgres/postgres_specs_dsn.xml.in
 providers/postgres/postgres_specs_rename_table.xml.in
+providers/reuseable/mysql/gda-mysql-meta.c
+providers/reuseable/mysql/gda-mysql-reuseable.c
 providers/reuseable/postgres/gda-postgres-meta.c
+providers/reuseable/postgres/gda-postgres-reuseable.c
 providers/sqlite/libmain.c
 providers/sqlite/sqlite_specs_add_column.xml.in
 providers/sqlite/sqlite_specs_create_db.xml.in
