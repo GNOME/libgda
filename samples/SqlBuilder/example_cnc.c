@@ -14,13 +14,13 @@ main (int argc, char *argv[])
 
 	gda_sql_builder_set_table (b, "customers");
 
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "e"),
 				   gda_sql_builder_add_param (b, 0, "p1", G_TYPE_STRING, FALSE));
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "f"),
 				   gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 15));
-	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "g"),
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "g"),
 				   gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "joe"));
 	
 	render_as_sql (b);
@@ -31,7 +31,7 @@ main (int argc, char *argv[])
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_UPDATE);
 
 	gda_sql_builder_set_table (b, "products");
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "ref"),
 				   gda_sql_builder_add_expr (b, 10, NULL, G_TYPE_STRING, "A0E'FESP"));
 	gda_sql_builder_add_id (b, 1, "id");
@@ -76,9 +76,9 @@ main (int argc, char *argv[])
 					   NULL);
 	gda_sql_builder_select_join_targets (b, 5, 1, 2, GDA_SQL_SELECT_JOIN_INNER, 0);
 
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "c.date"), 0); /* DATE is an SQL reserved keyword */
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "name"),
 				   gda_sql_builder_add_id (b, 0, "person"));
 
@@ -100,7 +100,7 @@ main (int argc, char *argv[])
 				      gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 5),
 				      gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Joe"),
 				      0);
-	gda_sql_builder_add_field (b, 1, 0);
+	gda_sql_builder_add_field_id (b, 1, 0);
 	render_as_sql (b);
 
 	/* reuse the same GdaSqlBuilder object to have:
@@ -110,7 +110,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_add_expr (b, 4, NULL, G_TYPE_INT, 10);
 
 	gda_sql_builder_add_function_v (b, 5, "MAX", args, 3);
-	gda_sql_builder_add_field (b, 5, 0);
+	gda_sql_builder_add_field_id (b, 5, 0);
 
 	render_as_sql (b);
 	g_object_unref (b);
@@ -119,7 +119,7 @@ main (int argc, char *argv[])
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_UPDATE);
 
 	gda_sql_builder_set_table (b, "select");
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "date"),
 				   gda_sql_builder_add_expr (b, 10, NULL, G_TYPE_STRING, "2009-05-27"));
 	gda_sql_builder_add_id (b, 1, "id");
@@ -144,8 +144,34 @@ main (int argc, char *argv[])
 				      gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 5),
 				      gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Joe"),
 				      0);
-	gda_sql_builder_add_field (b, 1, 0);
+	gda_sql_builder_add_field_id (b, 1, 0);
 	render_as_sql (b);
+
+	/*
+	 * SELECT people.firstname AS person, people.lastname, "date" AS birthdate, age FROM people
+	 */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	
+	gda_sql_builder_select_add_field (b, "firstname", "people", "person");
+	gda_sql_builder_select_add_field (b, "lastname", "people", NULL);
+	gda_sql_builder_select_add_field (b, "date", NULL, "birthdate");
+	gda_sql_builder_select_add_field (b, "age", NULL, NULL);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "people"),
+					   NULL);
+
+	render_as_sql (b);
+	g_object_unref (b);
+
+	/* INSERT INTO customers (f, g) VALUES (15, 'joe') */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+
+	gda_sql_builder_set_table (b, "customers");
+	gda_sql_builder_add_field (b, "f", G_TYPE_INT, 15);
+	gda_sql_builder_add_field (b, "g", G_TYPE_STRING, "joe");
+	
+	render_as_sql (b);
+	g_object_unref (b);
 	
 	return 0;
 }

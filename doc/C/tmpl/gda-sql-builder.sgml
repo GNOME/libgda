@@ -36,6 +36,9 @@ gda_sql_builder_add_cond2 (b, 4, GDA_SQL_OPERATOR_TYPE_GT, // requested ID=4
 gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expression, requested ID=5
 ]]></programlisting>
 </para>
+<para>
+  For more examples, see the <link linkend="howto-sqlbuilder">Build statements without using a parser</link> section.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
@@ -95,6 +98,27 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 
 
 <!-- ##### FUNCTION gda_sql_builder_add_field ##### -->
+<para>
+
+</para>
+
+@builder: 
+@field_name: 
+@type: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_add_field_value ##### -->
+<para>
+
+</para>
+
+@builder: 
+@field_name: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_add_field_id ##### -->
 <para>
 
 </para>
@@ -264,6 +288,17 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 @table_id: 
 @alias: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_select_add_field ##### -->
+<para>
+
+</para>
+
+@builder: 
+@field_name: 
+@table_name: 
+@alias: 
 
 
 <!-- ##### FUNCTION gda_sql_builder_select_join_targets ##### -->

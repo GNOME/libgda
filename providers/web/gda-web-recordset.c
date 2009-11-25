@@ -343,10 +343,10 @@ create_table (GdaWebRecordset *rs, GError **error)
 		g_string_append_printf (string, "%s %s", colname,
 					gda_g_type_to_string (gda_column_get_g_type (column)));
 
-		gda_sql_builder_add_field (ib, gda_sql_builder_add_id (ib, 0, colname),
+		gda_sql_builder_add_field_id (ib, gda_sql_builder_add_id (ib, 0, colname),
 					   gda_sql_builder_add_param (ib, 0, colname,
 								      gda_column_get_g_type (column), TRUE));
-		gda_sql_builder_add_field (sb, gda_sql_builder_add_id (sb, 0, colname), 0);
+		gda_sql_builder_add_field_id (sb, gda_sql_builder_add_id (sb, 0, colname), 0);
 
 		g_free (colname);
 	}

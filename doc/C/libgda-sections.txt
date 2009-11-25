@@ -1669,6 +1669,8 @@ gda_sql_builder_get_sql_statement
 <SUBSECTION>
 gda_sql_builder_set_table
 gda_sql_builder_add_field
+gda_sql_builder_add_field_value
+gda_sql_builder_add_field_id
 gda_sql_builder_add_function
 gda_sql_builder_add_function_v
 <SUBSECTION>
@@ -1685,6 +1687,7 @@ gda_sql_builder_add_cond_v
 gda_sql_builder_set_where
 <SUBSECTION>
 gda_sql_builder_select_add_target
+gda_sql_builder_select_add_field
 gda_sql_builder_select_join_targets
 gda_sql_builder_join_add_field
 gda_sql_builder_select_order_by

@@ -61,6 +61,249 @@ if (!gda_config_define_dsn (&amp;dsn_info, &amp;error)) {
     </para>
   </sect1>
 
+  <sect1 id="howto-sqlbuilder">
+    <title>Build statements without using a parser</title>
+    <para>
+      Statements can be created using a <link linkend="GdaSqlParser">GdaSqlParser</link> object to parse
+      SQL strings, but an easier way is to use a <link linkend="GdaSqlBuilder">GdaSqlBuilder</link> object
+      and the associated APIs to construct the statement. This section gives examples to create
+      various statements. Please note that only the DML statements (SELECT, INSERT, UPDATE or DELETE statements
+      can be built using a <link linkend="GdaSqlBuilder">GdaSqlBuilder</link> object, other types of
+      statements can only be built using a parser).
+    </para>
+    <para>
+      Each of the examples in this section show the statement construction part, the usage part is not shown for
+      clarity reasons (replaced with <![CDATA[[...]]]>). Typically one would use the
+      <link linkend="gda-sql-builder-get-statement">gda_sql_builder_get_statement()</link> method to
+      actually obtain a <link linkend="GdaStatement">GdaStatement</link> object and execute it.
+    </para>
+    <sect2>
+      <title>INSERT INTO customers (e, f, g) VALUES (##p1::string, 15, 'joe')</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+gda_sql_builder_set_table (b, "customers");
+gda_sql_builder_add_field_id (b,
+                              gda_sql_builder_add_id (b, 0, "e"),
+gda_sql_builder_add_param (b, 0, "p1", G_TYPE_STRING, FALSE));
+gda_sql_builder_add_field (b, "f", G_TYPE_INT, 15);
+gda_sql_builder_add_field (b, "g", G_TYPE_STRING, "joe")
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>SELECT people.firstname AS person, people.lastname, "date" AS birthdate, age FROM people</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+gda_sql_builder_select_add_field (b, "firstname", "people", "person");
+gda_sql_builder_select_add_field (b, "lastname", "people", NULL);
+gda_sql_builder_select_add_field (b, "date", NULL, "birthdate");
+gda_sql_builder_select_add_field (b, "age", NULL, NULL);
+gda_sql_builder_select_add_target (b, 0,
+				   gda_sql_builder_add_id (b, 0, "people"),
+				   NULL);
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>SELECT c."date", name AS person FROM "select" AS c INNER JOIN orders USING (id)</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+gda_sql_builder_add_id (b, 1, "select"); /* SELECT is an SQL reserved keyword */
+gda_sql_builder_select_add_target (b, 1, 1, "c");
+gda_sql_builder_select_add_target (b, 2,
+				   gda_sql_builder_add_id (b, 0, "orders"),
+				   NULL);
+gda_sql_builder_select_join_targets (b, 5, 1, 2, GDA_SQL_SELECT_JOIN_INNER, 0);
+
+gda_sql_builder_add_field_id (b,
+                              gda_sql_builder_add_id (b, 0, "c.date"), 0); /* DATE is an SQL reserved keyword */
+gda_sql_builder_add_field_id (b,
+			      gda_sql_builder_add_id (b, 0, "name"),
+		  	      gda_sql_builder_add_id (b, 0, "person"));
+
+gda_sql_builder_join_add_field (b, 5, "id");
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>UPDATE products set ref='A0E''FESP' WHERE id = 14</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+gda_sql_builder_set_table (b, "products");
+gda_sql_builder_add_field (b, "ref", G_TYPE_STRING, "A0E'FESP");
+gda_sql_builder_add_id (b, 1, "id");
+gda_sql_builder_add_expr (b, 2, NULL, G_TYPE_INT, 14);
+gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2, 0);
+gda_sql_builder_set_where (b, 3);
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>DELETE FROM items WHERE id = ##theid::int</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
+gda_sql_builder_set_table (b, "items");
+gda_sql_builder_add_id (b, 1, "id");
+gda_sql_builder_add_param (b, 2, "theid", G_TYPE_INT, FALSE);
+gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2, 0);
+gda_sql_builder_set_where (b, 3);
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>SELECT myfunc (a, 5, 'Joe') FROM mytable</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+gda_sql_builder_select_add_target (b, 0,
+				   gda_sql_builder_add_id (b, 0, "mytable"),
+				   NULL);
+gda_sql_builder_add_function (b, 1, "myfunc",
+			      gda_sql_builder_add_id (b, 0, "a"),
+			      gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 5),
+			      gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Joe"),
+			      0);
+gda_sql_builder_add_field_id (b, 1, 0);
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>SELECT name FROM master WHERE id IN (SELECT id FROM subdata)</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+GdaSqlStatement *sub;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+gda_sql_builder_select_add_target (b, 0,
+				   gda_sql_builder_add_id (b, 0, "subdata"),
+				   NULL);
+sub = gda_sql_builder_get_sql_statement (b, FALSE);
+g_object_unref (b);
+
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+gda_sql_builder_select_add_target (b, 0,
+				   gda_sql_builder_add_id (b, 0, "master"),
+				   NULL);
+gda_sql_builder_add_id (b, 1, "id");
+gda_sql_builder_add_sub_select (b, 2, sub, TRUE);
+gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_IN, 1, 2, 0);
+gda_sql_builder_set_where (b, 3);
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>INSERT INTO customers (e, f, g) SELECT id, name, location FROM subdate</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+GdaSqlStatement *sub;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "location"), 0);
+gda_sql_builder_select_add_target (b, 0,
+				   gda_sql_builder_add_id (b, 0, "subdate"),
+				   NULL);
+sub = gda_sql_builder_get_sql_statement (b, FALSE);
+g_object_unref (b);
+
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+gda_sql_builder_set_table (b, "customers");
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "e"), 0);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "f"), 0);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "g"), 0);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, 0, sub, TRUE), 0);
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>SELECT id, name FROM subdata1 UNION SELECT ident, lastname FROM subdata2</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+GdaSqlStatement *sub1, *sub2;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+gda_sql_builder_select_add_target (b, 0,
+				   gda_sql_builder_add_id (b, 0, "subdata1"),
+				   NULL);
+sub1 = gda_sql_builder_get_sql_statement (b, FALSE);
+g_object_unref (b);
+
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "ident"), 0);
+gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "lastname"), 0);
+gda_sql_builder_select_add_target (b, 0,
+				   gda_sql_builder_add_id (b, 0, "subdata2"),
+				   NULL);
+sub2 = gda_sql_builder_get_sql_statement (b, FALSE);
+g_object_unref (b);
+
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_COMPOUND);
+gda_sql_builder_compound_add_sub_select (b, sub1, TRUE);
+gda_sql_builder_compound_add_sub_select (b, sub2, TRUE);
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+    <sect2>
+      <title>SELECT CASE tag WHEN 'Alpha' THEN 1 WHEN 'Bravo' THEN 2 WHEN 'Charlie' THEN 3 ELSE 0 END FROM data</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+gda_sql_builder_add_case (b, 10, 
+			  gda_sql_builder_add_id (b, 0, "tag"),
+			  0,
+			  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Alpha"),
+			  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 1),
+			  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Bravo"),
+			  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 2),
+			  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_STRING, "Charlie"),
+			  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 3),
+			  0);
+gda_sql_builder_add_field_id (b, 10, 0);
+gda_sql_builder_select_add_target (b, 0,
+				   gda_sql_builder_add_id (b, 0, "data"),
+				   NULL);
+[...]	
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
+  </sect1>
+
   <sect1 id="howto-exec-select">
     <title>Execute a SELECT command</title>
     <para>

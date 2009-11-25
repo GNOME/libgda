@@ -126,7 +126,7 @@ build0 (void)
 	GdaSqlStatement *stmt;
 
 	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "*"), 0);
 	gda_sql_builder_select_add_target (builder, 0,
 					   gda_sql_builder_add_id (builder, 0, "mytable"), NULL);
@@ -151,13 +151,13 @@ build1 (void)
 	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_select_add_target (builder, 0,
 					   gda_sql_builder_add_id (builder, 0, "mytable"), NULL);
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "contents"), 0);
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "descr"), 0);
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "rank"), 0);
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "name"), 0);
 	gda_sql_builder_add_cond (builder, 1, GDA_SQL_OPERATOR_TYPE_EQ,
 			      gda_sql_builder_add_id (builder, 0, "session"),
@@ -195,19 +195,19 @@ build2 (void)
 	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 	gda_sql_builder_set_table (builder, "mytable");
 
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "session"),
 				   gda_sql_builder_add_param (builder, 0, "session", G_TYPE_INT, FALSE));
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "type"),
 				   gda_sql_builder_add_param (builder, 0, "type", G_TYPE_INT, FALSE));
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "name"),
 				   gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING, TRUE));
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "contents"),
 				   gda_sql_builder_add_param (builder, 0, "contents", G_TYPE_STRING, FALSE));
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "descr"),
 				   gda_sql_builder_add_param (builder, 0, "descr", G_TYPE_STRING, TRUE));
 
@@ -229,13 +229,13 @@ build3 (void)
 	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_UPDATE);
 	gda_sql_builder_set_table (builder, "mytable");
 
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "name"),
 				   gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING, TRUE));
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "contents"),
 				   gda_sql_builder_add_param (builder, 0, "contents", G_TYPE_STRING, FALSE));
-	gda_sql_builder_add_field (builder,
+	gda_sql_builder_add_field_id (builder,
 				   gda_sql_builder_add_id (builder, 0, "descr"),
 				   gda_sql_builder_add_param (builder, 0, "descr", G_TYPE_STRING, TRUE));
 
@@ -263,7 +263,7 @@ build4 (void)
 	guint t1, t2;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "fav.*"), 0);
 	t1 = gda_sql_builder_select_add_target (b, 0,
 						gda_sql_builder_add_id (b, 0, "mytable"),
@@ -304,7 +304,7 @@ build5 (void)
 	GdaSqlStatement *stmt;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "id"), 0);
 	gda_sql_builder_select_add_target (b, 0,
 					   gda_sql_builder_add_id (b, 0, "mytable"),
@@ -335,8 +335,8 @@ build6 (void)
 	GdaSqlStatement *stmt;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "fav_id"), 0);
-	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "rank"), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "fav_id"), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "rank"), 0);
 
 	gda_sql_builder_select_add_target (b, 0,
 					   gda_sql_builder_add_id (b, 0, "mytable"),
@@ -366,7 +366,7 @@ build7 (void)
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_UPDATE);
 	gda_sql_builder_set_table (b, "mytable");
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "rank"),
 				   gda_sql_builder_add_param (b, 0, "newrank", G_TYPE_INT, FALSE));
 	gda_sql_builder_add_cond (b, 1, GDA_SQL_OPERATOR_TYPE_EQ,

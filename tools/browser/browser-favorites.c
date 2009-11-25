@@ -242,7 +242,7 @@ find_favorite_position (BrowserFavorites *bfav, gint fav_id, gint order_key)
 	g_return_val_if_fail (fav_id >= 0, -1);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "rank"), 0);
 	gda_sql_builder_select_add_target (b, 0,
 					   gda_sql_builder_add_id (b, 0, FAVORDER_TABLE_NAME),
@@ -307,15 +307,15 @@ find_favorite (BrowserFavorites *bfav, guint session_id, gint id, const gchar *c
 	g_return_val_if_fail ((id >= 0) || contents, -1);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "id"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "type"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "name"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "descr"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "contents"), 0);
 	gda_sql_builder_select_add_target (b, 0,
 					   gda_sql_builder_add_id (b, 0, FAVORITES_TABLE_NAME),
@@ -397,7 +397,7 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
 	g_assert (order_key >= 0);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (b, gda_sql_builder_add_id (b, 0, "fav_id"), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "fav_id"), 0);
 
 	gda_sql_builder_select_add_target (b, 0,
 					   gda_sql_builder_add_id (b, 0, FAVORDER_TABLE_NAME),
@@ -433,7 +433,7 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_UPDATE);
 	gda_sql_builder_set_table (b, FAVORDER_TABLE_NAME);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "rank"),
 				   gda_sql_builder_add_param (b, 0, "rank", G_TYPE_INT, FALSE));
 	gda_sql_builder_add_cond (b, 1, GDA_SQL_OPERATOR_TYPE_EQ,
@@ -559,19 +559,19 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		builder = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 		gda_sql_builder_set_table (builder, FAVORITES_TABLE_NAME);
 
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "session"),
 					   gda_sql_builder_add_param (builder, 0, "session", G_TYPE_INT, FALSE));
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "type"),
 					   gda_sql_builder_add_param (builder, 0, "type", G_TYPE_INT, FALSE));
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "name"),
 					   gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING, TRUE));
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "contents"),
 					   gda_sql_builder_add_param (builder, 0, "contents", G_TYPE_STRING, FALSE));
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "descr"),
 					   gda_sql_builder_add_param (builder, 0, "descr", G_TYPE_STRING, TRUE));
 		stmt = gda_sql_builder_get_statement (builder, error);
@@ -596,13 +596,13 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		builder = gda_sql_builder_new (GDA_SQL_STATEMENT_UPDATE);
 		gda_sql_builder_set_table (builder, FAVORITES_TABLE_NAME);
 
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "name"),
 					   gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING, TRUE));
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "contents"),
 					   gda_sql_builder_add_param (builder, 0, "contents", G_TYPE_STRING, FALSE));
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "descr"),
 					   gda_sql_builder_add_param (builder, 0, "descr", G_TYPE_STRING, TRUE));
 
@@ -613,11 +613,11 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 								 0));
 		if (fav->id == favid) {
 			/* alter name and description only if fav->id was OK */
-			gda_sql_builder_add_field (builder,
+			gda_sql_builder_add_field_id (builder,
 						   gda_sql_builder_add_id (builder, 0, "name"),
 						   gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING,
 									  TRUE));
-			gda_sql_builder_add_field (builder,
+			gda_sql_builder_add_field_id (builder,
 						   gda_sql_builder_add_id (builder, 0, "descr"),
 						   gda_sql_builder_add_param (builder, 0, "descr", G_TYPE_STRING,
 									  TRUE));
@@ -673,13 +673,13 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 
 		builder = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 		gda_sql_builder_set_table (builder, FAVORDER_TABLE_NAME);
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "fav_id"),
 					   gda_sql_builder_add_param (builder, 0, "id", G_TYPE_INT, FALSE));
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "rank"),
 					   gda_sql_builder_add_param (builder, 0, "rank", G_TYPE_INT, FALSE));
-		gda_sql_builder_add_field (builder,
+		gda_sql_builder_add_field_id (builder,
 					   gda_sql_builder_add_id (builder, 0, "order_key"),
 					   gda_sql_builder_add_param (builder, 0, "orderkey", G_TYPE_STRING, TRUE));
 		stmt = gda_sql_builder_get_statement (builder, error);
@@ -791,15 +791,15 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 		return NULL;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "fav.contents"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "fav.descr"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "fav.name"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "fav.type"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "fav.id"), 0);
 
 	t1 = gda_sql_builder_select_add_target (b, 0,
@@ -1088,15 +1088,15 @@ browser_favorites_get (BrowserFavorites *bfav, gint fav_id,
 	memset (out_fav, 0, sizeof (BrowserFavoritesAttributes));
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "id"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "type"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "name"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "descr"), 0);
-	gda_sql_builder_add_field (b,
+	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "contents"), 0);
 	gda_sql_builder_select_add_target (b, 0,
 					   gda_sql_builder_add_id (b, 0, FAVORITES_TABLE_NAME),
