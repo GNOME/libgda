@@ -14,7 +14,7 @@
  *
  * Table to store (key,value) pairs (keys starting with '_' are reserved)
  */
-GType _col_types_attributes[] = {
+static GType _col_types_attributes[] = {
   G_TYPE_STRING  /* column: att_name */
 , G_TYPE_STRING  /* column: att_value */
 , G_TYPE_NONE /* end of array marker */
@@ -27,7 +27,7 @@ GType _col_types_attributes[] = {
  *
  * Name of the current database (current catalog), has only one row
  */
-GType _col_types_information_schema_catalog_name[] = {
+static GType _col_types_information_schema_catalog_name[] = {
   G_TYPE_STRING  /* column: catalog_name */
 , G_TYPE_NONE /* end of array marker */
 };
@@ -39,7 +39,7 @@ GType _col_types_information_schema_catalog_name[] = {
  *
  * List of schemas
  */
-GType _col_types_schemata[] = {
+static GType _col_types_schemata[] = {
   G_TYPE_STRING  /* column: catalog_name */
 , G_TYPE_STRING  /* column: schema_name */
 , G_TYPE_STRING  /* column: schema_owner */
@@ -54,7 +54,7 @@ GType _col_types_schemata[] = {
  *
  * List of built-in data types such as varchar, int, ...
  */
-GType _col_types_builtin_data_types[] = {
+static GType _col_types_builtin_data_types[] = {
   G_TYPE_STRING  /* column: short_type_name */
 , G_TYPE_STRING  /* column: full_type_name */
 , G_TYPE_STRING  /* column: gtype */
@@ -71,7 +71,7 @@ GType _col_types_builtin_data_types[] = {
  *
  * User defined data types
  */
-GType _col_types_udt[] = {
+static GType _col_types_udt[] = {
   G_TYPE_STRING  /* column: udt_catalog */
 , G_TYPE_STRING  /* column: udt_schema */
 , G_TYPE_STRING  /* column: udt_name */
@@ -91,7 +91,7 @@ GType _col_types_udt[] = {
  *
  * List of components for a user defined data type for composed data types (such as a complex number data type which has real and imaginary parts)
  */
-GType _col_types_udt_columns[] = {
+static GType _col_types_udt_columns[] = {
   G_TYPE_STRING  /* column: udt_catalog */
 , G_TYPE_STRING  /* column: udt_schema */
 , G_TYPE_STRING  /* column: udt_name */
@@ -120,7 +120,7 @@ GType _col_types_udt_columns[] = {
  *
  * List of possible enumeration labels for enumerations
  */
-GType _col_types_enums[] = {
+static GType _col_types_enums[] = {
   G_TYPE_STRING  /* column: udt_catalog */
 , G_TYPE_STRING  /* column: udt_schema */
 , G_TYPE_STRING  /* column: udt_name */
@@ -136,7 +136,7 @@ GType _col_types_enums[] = {
  *
  * Array specific attributes for array data types
  */
-GType _col_types_element_types[] = {
+static GType _col_types_element_types[] = {
   G_TYPE_STRING  /* column: specific_name */
 , G_TYPE_STRING  /* column: object_catalog */
 , G_TYPE_STRING  /* column: object_schema */
@@ -156,7 +156,7 @@ GType _col_types_element_types[] = {
  *
  * List of domains
  */
-GType _col_types_domains[] = {
+static GType _col_types_domains[] = {
   G_TYPE_STRING  /* column: domain_catalog */
 , G_TYPE_STRING  /* column: domain_schema */
 , G_TYPE_STRING  /* column: domain_name */
@@ -189,7 +189,7 @@ GType _col_types_domains[] = {
  *
  * List of tables (tables, views or other objects which can contain data)
  */
-GType _col_types_tables[] = {
+static GType _col_types_tables[] = {
   G_TYPE_STRING  /* column: table_catalog */
 , G_TYPE_STRING  /* column: table_schema */
 , G_TYPE_STRING  /* column: table_name */
@@ -209,7 +209,7 @@ GType _col_types_tables[] = {
  *
  * List of views and their specific information
  */
-GType _col_types_views[] = {
+static GType _col_types_views[] = {
   G_TYPE_STRING  /* column: table_catalog */
 , G_TYPE_STRING  /* column: table_schema */
 , G_TYPE_STRING  /* column: table_name */
@@ -226,7 +226,7 @@ GType _col_types_views[] = {
  *
  * List of collations methods
  */
-GType _col_types_collations[] = {
+static GType _col_types_collations[] = {
   G_TYPE_STRING  /* column: collation_catalog */
 , G_TYPE_STRING  /* column: collation_schema */
 , G_TYPE_STRING  /* column: collation_name */
@@ -243,7 +243,7 @@ GType _col_types_collations[] = {
  *
  * List of character sets
  */
-GType _col_types_character_sets[] = {
+static GType _col_types_character_sets[] = {
   G_TYPE_STRING  /* column: character_set_catalog */
 , G_TYPE_STRING  /* column: character_set_schema */
 , G_TYPE_STRING  /* column: character_set_name */
@@ -263,7 +263,7 @@ GType _col_types_character_sets[] = {
  *
  * List of functions and stored procedures (note: the primary jey for that table is composed of (specific_catalog, specific_schema, specific_name))
  */
-GType _col_types_routines[] = {
+static GType _col_types_routines[] = {
   G_TYPE_STRING  /* column: specific_catalog */
 , G_TYPE_STRING  /* column: specific_schema */
 , G_TYPE_STRING  /* column: specific_name */
@@ -296,7 +296,7 @@ GType _col_types_routines[] = {
  *
  * List of triggers
  */
-GType _col_types_triggers[] = {
+static GType _col_types_triggers[] = {
   G_TYPE_STRING  /* column: trigger_catalog */
 , G_TYPE_STRING  /* column: trigger_schema */
 , G_TYPE_STRING  /* column: trigger_name */
@@ -320,7 +320,7 @@ GType _col_types_triggers[] = {
  *
  * List of columns composing tables
  */
-GType _col_types_columns[] = {
+static GType _col_types_columns[] = {
   G_TYPE_STRING  /* column: table_catalog */
 , G_TYPE_STRING  /* column: table_schema */
 , G_TYPE_STRING  /* column: table_name */
@@ -355,7 +355,7 @@ GType _col_types_columns[] = {
  *
  * List of constraints applied to tables (Check, primary or foreign key, or unique constraints)
  */
-GType _col_types_table_constraints[] = {
+static GType _col_types_table_constraints[] = {
   G_TYPE_STRING  /* column: constraint_catalog */
 , G_TYPE_STRING  /* column: constraint_schema */
 , G_TYPE_STRING  /* column: constraint_name */
@@ -376,7 +376,7 @@ GType _col_types_table_constraints[] = {
  *
  * List of foreign key constraints, along with some specific attributes
  */
-GType _col_types_referential_constraints[] = {
+static GType _col_types_referential_constraints[] = {
   G_TYPE_STRING  /* column: table_catalog */
 , G_TYPE_STRING  /* column: table_schema */
 , G_TYPE_STRING  /* column: table_name */
@@ -398,7 +398,7 @@ GType _col_types_referential_constraints[] = {
  *
  * List of primary key constraints and the name of the tables' columns involved
  */
-GType _col_types_key_column_usage[] = {
+static GType _col_types_key_column_usage[] = {
   G_TYPE_STRING  /* column: table_catalog */
 , G_TYPE_STRING  /* column: table_schema */
 , G_TYPE_STRING  /* column: table_name */
@@ -415,7 +415,7 @@ GType _col_types_key_column_usage[] = {
  *
  * List of check constraints and the name of the tables' columns involved
  */
-GType _col_types_check_column_usage[] = {
+static GType _col_types_check_column_usage[] = {
   G_TYPE_STRING  /* column: table_catalog */
 , G_TYPE_STRING  /* column: table_schema */
 , G_TYPE_STRING  /* column: table_name */
@@ -431,7 +431,7 @@ GType _col_types_check_column_usage[] = {
  *
  * List of the tables' columns involved in a view
  */
-GType _col_types_view_column_usage[] = {
+static GType _col_types_view_column_usage[] = {
   G_TYPE_STRING  /* column: view_catalog */
 , G_TYPE_STRING  /* column: view_schema */
 , G_TYPE_STRING  /* column: view_name */
@@ -449,7 +449,7 @@ GType _col_types_view_column_usage[] = {
  *
  * List of constraints applicable to domains
  */
-GType _col_types_domain_constraints[] = {
+static GType _col_types_domain_constraints[] = {
   G_TYPE_STRING  /* column: constraint_catalog */
 , G_TYPE_STRING  /* column: constraint_schema */
 , G_TYPE_STRING  /* column: constraint_name */
@@ -469,7 +469,7 @@ GType _col_types_domain_constraints[] = {
  *
  * List of routines' (functions and stored procedures) parameters (may not contain data for some routines which accept any type of parameter)
  */
-GType _col_types_parameters[] = {
+static GType _col_types_parameters[] = {
   G_TYPE_STRING  /* column: specific_catalog */
 , G_TYPE_STRING  /* column: specific_schema */
 , G_TYPE_STRING  /* column: specific_name */
@@ -488,7 +488,7 @@ GType _col_types_parameters[] = {
  *
  * List of routines' (functions and stored procedures) returned values' parts (columns) for routines returning composed values
  */
-GType _col_types_routine_columns[] = {
+static GType _col_types_routine_columns[] = {
   G_TYPE_STRING  /* column: specific_catalog */
 , G_TYPE_STRING  /* column: specific_schema */
 , G_TYPE_STRING  /* column: specific_name */

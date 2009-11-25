@@ -174,9 +174,11 @@ gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_param
 				if (col_types [i] > 0) {
 					if (col_types [i] == G_TYPE_NONE)
 						break;
-					if (i >= _GDA_PSTMT (ps)->ncols)
+					if (i >= _GDA_PSTMT (ps)->ncols) {
 						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
 							   _GDA_PSTMT (ps)->ncols - 1);
+						break;
+					}
 					else
 						_GDA_PSTMT (ps)->types [i] = col_types [i];
 				}

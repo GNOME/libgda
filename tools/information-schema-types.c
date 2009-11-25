@@ -23,7 +23,7 @@
 #include <libxml/tree.h>
 #include <glib-object.h>
 #include <libgda/binreloc/gda-binreloc.h>
-#include <libgda/gda-util.h>
+#include <libgda/libgda.h>
 #include <string.h>
 
 #define FILE_NAME "information_schema.xml"
@@ -88,7 +88,7 @@ main (int argc, char** argv)
 					g_string_append_printf (out_str, "/*\n * TABLE: %s\n */\n",
 								(gchar*) prop);
 				g_string_append_printf (out_str,
-							"GType _col_types%s[] = {\n", prop);
+							"static GType _col_types%s[] = {\n", prop);
 				xmlFree (prop);
 			}
 			else {

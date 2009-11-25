@@ -1200,6 +1200,7 @@ gda_web_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *
 	else if (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_UNKNOWN) {
 		if (! g_ascii_strncasecmp (sql, "select", 6) ||
 		    ! g_ascii_strncasecmp (sql, "pragma", 6) ||
+		    ! g_ascii_strncasecmp (sql, "show", 4) ||
 		    ! g_ascii_strncasecmp (sql, "describe", 8))
 			xmlSetProp (node, BAD_CAST "type", BAD_CAST "SELECT");
 	}

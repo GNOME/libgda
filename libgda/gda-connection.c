@@ -1202,8 +1202,13 @@ gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gbool
 	g_return_val_if_fail (filename && *filename, NULL);
 
 	fname = g_build_filename (directory, filename, NULL);
+#ifdef G_OS_WIN32
+	fd = g_open (fname, O_WRONLY | O_CREAT | O_TRUNC,
+		     S_IRUSR | S_IWUSR);
+#else
 	fd = g_open (fname, O_WRONLY | O_CREAT | O_NOCTTY | O_TRUNC,
 		     S_IRUSR | S_IWUSR);
+#endif
 	if (fd == -1) {
 		g_free (fname);
 		return NULL;

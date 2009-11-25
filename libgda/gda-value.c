@@ -71,6 +71,12 @@ set_from_string (GValue *value, const gchar *as_string)
 			g_value_set_boolean (value, FALSE);
 			retval = TRUE;
 		}
+		else {
+			gint i;
+			i = atoi (as_string);
+			g_value_set_boolean (value, i ? TRUE : FALSE);
+			retval = TRUE;
+		}
 	}
 	else if (type == G_TYPE_INT64) {
 		gint64 i64;

@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) $(POSTGRES_CFLAGS) 
+	$(LIBGDA_CFLAGS)
 
 keyword_files=keywords_82.list keywords_83.list keywords_84.list
 pkeyword_files=$(addprefix $(top_srcdir)/providers/reuseable/postgres/,$(keyword_files))
@@ -42,7 +42,7 @@ libgda_postgres_la_SOURCES = \
 
 libgda_postgres_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
-	$(LIBGDA_LIBS) $(POSTGRES_LIBS)
+	$(LIBGDA_LIBS)
 
 EXTRA_DIST = parser.y gen_def.c $(keyword_files)
 CLEANFILES = parser.h parser.c parser.out postgres_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
