@@ -1750,6 +1750,7 @@ libgda-ui/data/Makefile
 libgda-ui/demos/Makefile
 libgda-ui/demos/geninclude.pl
 control-center/Makefile
+control-center/data/Makefile
 tools/Makefile
 tools/gda-sql-4.0.1:tools/gda-sql.1.in
 tools/browser/Makefile

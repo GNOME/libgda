@@ -5,22 +5,15 @@ public_icons_themes = \
 	$(NULL)
 
 public_icons = \
+	hicolor_apps_16x16_gda-control-center.png \
+	hicolor_apps_22x22_gda-control-center.png \
+	hicolor_apps_24x24_gda-control-center.png \
+	hicolor_apps_256x256_gda-control-center.png \
+	hicolor_apps_32x32_gda-control-center.png \
+	hicolor_apps_48x48_gda-control-center.png \
 	$(NULL)
 
 private_icons = \
-	hicolor_actions_16x16_bookmark-view.png \
-	hicolor_actions_16x16_history-view.png \
-	hicolor_actions_22x22_bookmark-view.png \
-	hicolor_actions_22x22_history-view.png \
-	hicolor_actions_24x24_bookmark-view.png \
-	hicolor_actions_24x24_history-view.png \
-	hicolor_actions_24x24_transaction-begin.png \
-	hicolor_actions_24x24_transaction-commit.png \
-	hicolor_actions_24x24_transaction-rollback.png \
-	hicolor_actions_32x32_bookmark-view.png \
-	hicolor_actions_32x32_history-view.png \
-	hicolor_actions_scalable_bookmark-view.svg \
-	hicolor_actions_scalable_history-view.svg \
 	$(NULL)
 
 noinst_DATA = \

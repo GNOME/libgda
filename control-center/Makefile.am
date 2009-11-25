@@ -1,5 +1,7 @@
 bin_PROGRAMS=gda-control-center-4.0
 
+SUBDIRS = data
+
 AM_CPPFLAGS = \
         -I$(top_srcdir) \
         -I$(top_srcdir)/libgda \
@@ -65,12 +67,8 @@ icons_DATA= \
 	gda-control-center.png \
 	gda-control-center-newcnc.png
 
-appiconsdir=$(datadir)/pixmaps
-appicons_DATA= \
-	gda-control-center-4.0.png
-
 EXTRA_DIST = \
 	control-center-res.rc \
 	gda-control-center.ico \
-	$(Desktop_in_files) $(icons_DATA) $(appicons_DATA)
+	$(Desktop_in_files) $(icons_DATA)
 DISTCLEANFILES = $(desktop_DATA)
