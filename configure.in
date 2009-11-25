@@ -1712,6 +1712,7 @@ libgda/thread-wrapper/Makefile
 providers/Makefile
 providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile
+providers/reuseable/mysql/Makefile
 providers/bdb/Makefile
 providers/bdb/libgda-bdb-4.0.pc
 providers/mdb/Makefile

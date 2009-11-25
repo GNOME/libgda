@@ -49,7 +49,7 @@ typedef struct {
 /*
  * Reuseable implementation
  */
-GdaProviderReuseable *_gda_postgres_reuseable_new_data (const gchar *major, const gchar *minor);
+GdaProviderReuseable *_gda_postgres_reuseable_new_data (void);
 void _gda_postgres_reuseable_reset_data (GdaProviderReuseable *rdata);
 GType _gda_postgres_reuseable_get_g_type (GdaConnection *cnc, GdaProviderReuseable *rdata, const gchar *db_type);
 GdaSqlReservedKeywordsFunc _gda_postgres_reuseable_get_reserved_keywords_func (GdaProviderReuseable *rdata);
@@ -63,6 +63,7 @@ GdaProviderReuseableOperations *_gda_postgres_reuseable_get_ops (void);
 /*
  * Specific API
  */
+gboolean            _gda_postgres_compute_version (GdaConnection *cnc, GdaPostgresReuseable *rdata, GError **error);
 void                _gda_postgres_compute_types (GdaConnection *cnc, GdaPostgresReuseable *rdata);
 
 GType               _gda_postgres_type_oid_to_gda (GdaConnection *cnc, GdaPostgresReuseable *rdata,

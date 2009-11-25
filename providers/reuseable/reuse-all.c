@@ -24,6 +24,7 @@
 #include "reuse-all.h"
 
 #include "postgres/gda-postgres-reuseable.h"
+#include "mysql/gda-mysql-reuseable.h"
 
 /**
  * _gda_provider_reuseable_new
@@ -36,18 +37,18 @@
  * Returns: a new GdaProviderReuseable pointer, or %NULL
  */
 GdaProviderReuseable *
-_gda_provider_reuseable_new (const gchar *provider_name,
-			     const gchar *version_major,
-			     const gchar *version_minor)
+_gda_provider_reuseable_new (const gchar *provider_name)
 {
 	GdaProviderReuseable *reuseable = NULL;
 	GdaProviderReuseableOperations *ops = NULL;
 	g_return_val_if_fail (provider_name && *provider_name, NULL);
 	if (!strcmp (provider_name, "PostgreSQL"))
 		ops = _gda_postgres_reuseable_get_ops ();
+	else if (!strcmp (provider_name, "MySQL"))
+		ops = _gda_mysql_reuseable_get_ops ();
 
 	if (ops) {
-		reuseable = ops->re_new_data (version_major, version_minor);
+		reuseable = ops->re_new_data ();
 		g_assert (reuseable->operations == ops);
 	}
 

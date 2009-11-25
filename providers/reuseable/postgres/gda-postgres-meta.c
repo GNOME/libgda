@@ -1,5 +1,5 @@
 /* GDA postgres provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -22,7 +22,9 @@
 
 #include <string.h>
 #include "gda-postgres-meta.h"
-#include <libgda/libgda.h>
+#include <libgda/gda-set.h>
+#include <libgda/gda-holder.h>
+#include <libgda/gda-data-proxy.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider-extra.h>
@@ -256,7 +258,7 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 {
 	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
 	InternalStatementItem i;
-	static GdaSqlParser *parser = NULL;
+	GdaSqlParser *parser;
 
 	g_static_mutex_lock (&init_mutex);
 
@@ -303,7 +305,8 @@ _gda_postgres_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 							      internal_stmt[I_STMT_CATALOG],
 							      NULL, 
 							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-							      _col_types_information_schema_catalog_name, error);
+							      _col_types_information_schema_catalog_name,
+							      error);
 	if (!model)
 		return FALSE;
 
@@ -873,84 +876,6 @@ _gda_postgres_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 	return retval;
 }
 
-/* get the float version of a Postgres version which looks like:
- * PostgreSQL 7.2.2 on i686-pc-linux-gnu, compiled by GCC 2.96 => returns 7.22
- * PostgreSQL 7.3 on i686-pc-linux-gnu, compiled by GCC 2.95.3 => returns 7.3
- * WARNING: no serious test is made on the validity of the string
- */
-static gfloat
-get_pg_version_float (const gchar *str)
-{
-        gfloat retval = 0.;
-        const gchar *ptr;
-        gfloat div = 1;
-
-        if (!str)
-                return retval;
-
-        /* go on  the first digit of version number */
-        ptr = str;
-        while (*ptr != ' ')
-                ptr++;
-        ptr++;
-
-        /* elaborate the real version number */
-        while (*ptr != ' ') {
-                if (*ptr != '.') {
-                        retval += (*ptr - '0')/div;
-                        div *= 10;
-                }
-                ptr++;
-        }
-
-        return retval;
-}
-
-static gboolean
-compute_pg_version (GdaConnection *cnc, GdaPostgresReuseable *rdata, GError **error)
-{
-	GdaSqlBuilder *b;
-	GdaStatement *stmt;
-	GdaDataModel *model;
-
-	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-        gda_sql_builder_add_function (b, 1, "version", 0);
-        gda_sql_builder_add_field (b, 1, 0);
-	stmt = gda_sql_builder_get_statement (b, NULL);
-	g_object_unref (b);
-	g_assert (stmt);
-
-	model = gda_connection_statement_execute_select (cnc, stmt, NULL, error);
-	g_object_unref (stmt);
-	if (!model)
-		return FALSE;
-	
-	const GValue *cvalue;
-	cvalue = gda_data_model_get_value_at (model, 0, 0, NULL);
-	if (!cvalue) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-                             GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
-                             _("Can't import data from web server"));
-		g_object_unref (model);
-		return FALSE;
-	}
-
-	const gchar *str;
-	str = g_value_get_string (cvalue);
-	rdata->version_float = get_pg_version_float (str);
-	((GdaProviderReuseable*)rdata)->version_major =
-		g_strdup_printf ("%d", (int) rdata->version_float);
-	((GdaProviderReuseable*)rdata)->version_minor =
-		g_strdup_printf ("%d", (int) ((rdata->version_float - (int) rdata->version_float) * 10));
-
-	g_object_unref (model);
-
-	/*g_print ("VERSIONS: [%f] [%s] [%s]\n", rdata->version_float,
-		 ((GdaProviderReuseable*)rdata)->version_major,
-		 ((GdaProviderReuseable*)rdata)->version_minor);*/
-	return TRUE;
-}
-
 gboolean
 _gda_postgres_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
@@ -963,7 +888,7 @@ _gda_postgres_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
 	if (!rdata)
 		return FALSE;
-	if ((rdata->version_float == 0) && ! compute_pg_version (cnc, rdata, error))
+	if ((rdata->version_float == 0) && ! _gda_postgres_compute_version (cnc, rdata, error))
 		return FALSE;
 	if (rdata->version_float < 8.2) {
 		/* nothing for this version of PostgreSQL */

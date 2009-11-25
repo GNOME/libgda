@@ -205,8 +205,7 @@ decode_buffer_response (GdaConnection *cnc, WebConnectionData *cdata, SoupBuffer
 				cdata->server_id = g_strdup ((gchar*) contents);
 				xmlFree (contents);
 
-				/* FIXME: get version from server */
-				cdata->reuseable = _gda_provider_reuseable_new (cdata->server_id, NULL, NULL);
+				cdata->reuseable = _gda_provider_reuseable_new (cdata->server_id);
 #ifdef DEBUG_WEB_PROV
 				g_print ("REUSEABLE [%s]: %p\n", cdata->server_id, cdata->reuseable);
 #endif

@@ -23,6 +23,7 @@
  */
 
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-sql-builder.h>
 #include "gda-postgres-reuseable.h"
 #include "gda-postgres-parser.h"
 
@@ -122,7 +123,7 @@ _gda_postgres_test_keywords (void)
 #endif
 
 GdaProviderReuseable *
-_gda_postgres_reuseable_new_data (const gchar *major, const gchar *minor)
+_gda_postgres_reuseable_new_data (void)
 {
 	GdaPostgresReuseable *reuseable;
 	reuseable = g_new0 (GdaPostgresReuseable, 1);
@@ -140,6 +141,7 @@ _gda_postgres_reuseable_reset_data (GdaProviderReuseable *rdata)
 {
 	GdaPostgresReuseable *reuseable;
 	reuseable = (GdaPostgresReuseable*) rdata;
+
 	if (reuseable->types_dbtype_hash)
 		g_hash_table_destroy (reuseable->types_dbtype_hash);
 	if (reuseable->types_oid_hash)
@@ -167,6 +169,75 @@ execute_select (GdaConnection *cnc, GdaPostgresReuseable *rdata, const gchar *sq
 	g_object_unref (stmt);
 
 	return model;
+}
+
+gboolean
+_gda_postgres_compute_version (GdaConnection *cnc, GdaPostgresReuseable *rdata, GError **error)
+{
+	GdaSqlBuilder *b;
+	GdaStatement *stmt;
+	GdaDataModel *model;
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+        gda_sql_builder_add_function (b, 1, "version", 0);
+        gda_sql_builder_add_field (b, 1, 0);
+	stmt = gda_sql_builder_get_statement (b, NULL);
+	g_object_unref (b);
+	g_assert (stmt);
+
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, error);
+	g_object_unref (stmt);
+	if (!model)
+		return FALSE;
+	
+	const GValue *cvalue;
+	cvalue = gda_data_model_get_value_at (model, 0, 0, NULL);
+	if (!cvalue) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+                             GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
+                             _("Can't import data from web server"));
+		g_object_unref (model);
+		return FALSE;
+	}
+
+	const gchar *str;
+	str = g_value_get_string (cvalue);
+
+	/* analyse string */
+	const gchar *ptr;
+	rdata->version_float = 0;
+
+	/* go on  the first digit of version number */
+        ptr = str;
+        while (*ptr && *ptr != ' ')
+                ptr++;
+	if (*ptr) {
+		ptr++;
+		
+		/* scan version parts */
+		GdaProviderReuseable *prdata = (GdaProviderReuseable*) rdata;
+		sscanf (ptr, "%d.%d.%d", &(prdata->major),  &(prdata->minor),  &(prdata->micro));
+
+		/* elaborate the version number as a float */
+		gfloat div = 1;
+		while (*ptr != ' ') {
+			if (*ptr != '.') {
+				rdata->version_float += (*ptr - '0')/div;
+				div *= 10;
+			}
+			ptr++;
+		}
+	}
+
+	g_object_unref (model);
+	
+	/*
+	g_print ("VERSIONS: [%f] [%d.%d.%d]\n", rdata->version_float,
+		 ((GdaProviderReuseable*)rdata)->major,
+		 ((GdaProviderReuseable*)rdata)->minor,
+		 ((GdaProviderReuseable*)rdata)->micro);
+	*/
+	return TRUE;
 }
 
 static GType
@@ -244,6 +315,8 @@ _gda_postgres_compute_types (GdaConnection *cnc, GdaPostgresReuseable *rdata)
 	gchar *avoid_types = NULL;
 	GString *string;
 
+	if (rdata->version_float == 0)
+		_gda_postgres_compute_version (cnc, rdata, NULL);
 	if (rdata->version_float < 7.3) {
 		gchar *query;
 		avoid_types = "'SET', 'cid', 'oid', 'int2vector', 'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid'";
@@ -291,6 +364,8 @@ _gda_postgres_compute_types (GdaConnection *cnc, GdaPostgresReuseable *rdata)
 					       "SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname = 'any'");
 	}
 
+	if (rdata->version_float == 0)
+		_gda_postgres_compute_version (cnc, rdata, NULL);
 	if (!model || !model_avoid ||
 	    ((rdata->version_float >= 7.3) && !model_anyoid)) {
 		if (model)
@@ -407,14 +482,14 @@ _gda_postgres_reuseable_get_g_type (GdaConnection *cnc, GdaProviderReuseable *rd
 GdaSqlReservedKeywordsFunc
 _gda_postgres_reuseable_get_reserved_keywords_func (GdaProviderReuseable *rdata)
 {
-	if (rdata && rdata->version_minor) {
-		switch (*rdata->version_minor) {
-                case '8':
-                        if (rdata->version_minor[1] == '2')
+	if (rdata) {
+		switch (rdata->major) {
+                case 8:
+                        if (rdata->minor == 2)
                                 return V82is_keyword;
-                        if (rdata->version_minor[1] == '3')
+                        if (rdata->minor == 3)
                                 return V83is_keyword;
-                        if (rdata->version_minor[1] == '4')
+			if (rdata->minor == 4)
                                 return V84is_keyword;
                         return V84is_keyword;
                 default:

@@ -1,5 +1,5 @@
 /* GDA Mysql provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
@@ -541,30 +541,6 @@ gda_mysql_real_query_wrap (GdaConnection *cnc, MYSQL *mysql, const char *stmt_st
 	return mysql_real_query (mysql, stmt_str, length);
 }
 
-static gchar *
-get_mysql_version (MYSQL  *mysql)
-{
-	g_return_val_if_fail (mysql != NULL, NULL);
-	unsigned long version_long;
-	version_long = mysql_get_server_version (mysql);
-	return g_strdup_printf ("%lu.%lu.%lu",
-				version_long/10000,
-				(version_long%10000)/100,
-				(version_long%100));
-}
-
-static gchar *
-get_mysql_short_version (MYSQL  *mysql)
-{
-	g_return_val_if_fail (mysql != NULL, NULL);
-	unsigned long version_long;
-	version_long = mysql_get_server_version (mysql);
-	return g_strdup_printf ("%lu%lu",
-				version_long/10000,
-				(version_long%10000)/100);
-}
-
-
 /* 
  * Open connection request
  *
@@ -692,10 +668,12 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	cdata->cnc = cnc;
 	cdata->mysql = mysql;
 
-	cdata->version_long = mysql_get_server_version (mysql);
-	cdata->version = get_mysql_version (mysql);
-	cdata->short_version = get_mysql_short_version (mysql);
-	cdata->identifiers_case_sensitive = case_sensitive;
+	/* handle the reuseable part */
+	GdaProviderReuseableOperations *ops;
+	ops = _gda_mysql_reuseable_get_ops ();
+	cdata->reuseable = (GdaMysqlReuseable*) ops->re_new_data ();
+	_gda_mysql_compute_version (cnc, cdata->reuseable, NULL);
+	cdata->reuseable->identifiers_case_sensitive = case_sensitive;
 
 	return TRUE;
 }
@@ -2264,7 +2242,8 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 	else if (((GdaMysqlProvider*) provider)->test_mode)
 		case_sensitive = ((GdaMysqlProvider*) provider)->test_identifiers_case_sensitive;
 
-	kwfunc = _gda_mysql_get_reserved_keyword_func (cdata);
+	kwfunc = _gda_mysql_reuseable_get_reserved_keywords_func
+		(cdata ? (GdaProviderReuseable*) cdata->reuseable : NULL);
 
 	if (case_sensitive) {
 		/*
@@ -2382,8 +2361,11 @@ gda_mysql_free_cnc_data (MysqlConnectionData  *cdata)
 		cdata->mysql = NULL;
 	}
 
-	g_free (cdata->version);
-	g_free (cdata->short_version);
+	if (cdata->reuseable) {
+		GdaProviderReuseable *rdata = (GdaProviderReuseable*)cdata->reuseable;
+		rdata->operations->re_reset_data (rdata);
+		g_free (cdata->reuseable);
+	}
 	
 	g_free (cdata);
 }

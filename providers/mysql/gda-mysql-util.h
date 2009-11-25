@@ -32,11 +32,6 @@ GdaConnectionEvent          * _gda_mysql_make_error (GdaConnection  *cnc,
 						     MYSQL          *mysql,
 						     MYSQL_STMT     *mysql_stmt,
 						     GError        **error);
-#ifdef GDA_DEBUG
-void                          _gda_mysql_test_keywords (void);
-#endif
-GdaSqlReservedKeywordsFunc    _gda_mysql_get_reserved_keyword_func (MysqlConnectionData *cdata);
-
 
 G_END_DECLS
 

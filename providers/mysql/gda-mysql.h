@@ -33,25 +33,18 @@
 #include <winsock.h>
 #endif
 #include <mysql.h>
+#include <gda-mysql-reuseable.h>
 
 /*
  * Provider's specific connection data
  */
 typedef struct {
-	/* TO_ADD: this structure holds any information necessary to specialize the GdaConnection, usually a connection
-	 * handle from the C or C++ API
-	 */
-	
-	GdaConnection    *cnc;
-	MYSQL            *mysql;
-
-	/* Backend version (to which we're connected). */
-	gchar            *version;
-	unsigned long     version_long;
-	gchar            *short_version;
+	GdaMysqlReuseable *reuseable;
+	GdaConnection     *cnc;
+	MYSQL             *mysql;
 
 	/* specifies how case sensitiveness is */
-	gboolean          identifiers_case_sensitive;
+	gboolean           identifiers_case_sensitive;
 	
 } MysqlConnectionData;
 

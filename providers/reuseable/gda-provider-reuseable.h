@@ -31,7 +31,7 @@ G_BEGIN_DECLS
 
 typedef struct _GdaProviderReuseable GdaProviderReuseable;
 
-typedef GdaProviderReuseable *(*GdaProviderReuseable_NewDataFunc) (const gchar *major, const gchar *minor);
+typedef GdaProviderReuseable *(*GdaProviderReuseable_NewDataFunc) (void);
 typedef void (*GdaProviderReuseable_ResetDataFunc) (GdaProviderReuseable *rdata);
 typedef GType (*GdaProviderReuseable_GetGTypeFunc) (GdaConnection *cnc, GdaProviderReuseable *rdata, const gchar *db_type);
 typedef GdaSqlReservedKeywordsFunc (*GdaProviderReuseable_GetReservedKeywordsFunc) (GdaProviderReuseable *rdata);
@@ -58,8 +58,9 @@ typedef struct {
  */
 struct _GdaProviderReuseable {
 	GdaProviderReuseableOperations *operations;
-	gchar                          *version_major;
-	gchar                          *version_minor;
+	guint                           major; /* major version */
+	guint                           minor; /* minor version */
+	guint                           micro; /* micro version */
 };
 
 

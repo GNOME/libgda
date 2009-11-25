@@ -1,5 +1,5 @@
 /* GDA mysql provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
@@ -22,14 +22,15 @@
  */
 
 #include <string.h>
-#include "gda-mysql.h"
 #include "gda-mysql-meta.h"
-#include "gda-mysql-util.h"
-#include "gda-mysql-provider.h"
+#include "gda-mysql-reuseable.h"
+#include "gda-mysql-parser.h"
 #include <libgda/gda-meta-store.h>
+#include <libgda/gda-data-proxy.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/providers-support/gda-meta-column-types.h>
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
@@ -136,10 +137,10 @@ static gchar *internal_sql[] = {
 	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE IFNULL(constraint_catalog, constraint_schema) = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS */
-	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name WHERE IFNULL(r.constraint_catalog, r.constraint_schema) = BINARY ##cat::string AND r.constraint_schema = BINARY ##schema::string AND r.table_name = BINARY ##name::string AND r.constraint_name = BINARY ##name2::string",
+	"select IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, table_name, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS ref_table_cat, constraint_schema, referenced_table_name, unique_constraint_name, match_option, update_rule, delete_rule from information_schema.referential_constraints WHERE IFNULL(constraint_catalog, constraint_schema) = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS_ALL */
-	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name",
+	"select IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, table_name, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS ref_table_cat, constraint_schema, referenced_table_name, unique_constraint_name, match_option, update_rule, delete_rule from information_schema.referential_constraints",
 
         /* I_STMT_KEY_COLUMN_USAGE */
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM INFORMATION_SCHEMA.key_column_usage WHERE IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
@@ -216,9 +217,6 @@ static gchar *internal_sql[] = {
  */
 static GdaStatement **internal_stmt;
 static GdaSet        *i_set;
-static GdaSqlParser  *internal_parser = NULL;
-/* TO_ADD: other static values */
-
 
 /*
  * Meta initialization
@@ -228,16 +226,23 @@ _gda_mysql_provider_meta_init (GdaServerProvider  *provider)
 {
 	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
 	InternalStatementItem i;
+	GdaSqlParser *parser;
 
 	g_static_mutex_lock (&init_mutex);
 
-        internal_parser = gda_server_provider_internal_get_parser (provider);
+	if (provider)
+                parser = gda_server_provider_internal_get_parser (provider);
+        else
+                parser = GDA_SQL_PARSER (g_object_new (GDA_TYPE_MYSQL_PARSER, NULL));
         internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
         for (i = I_STMT_CATALOG; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-                internal_stmt[i] = gda_sql_parser_parse_string (internal_parser, internal_sql[i], NULL, NULL);
+                internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
                 if (!internal_stmt[i])
                         g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
         }
+
+	if (!provider)
+                g_object_unref (parser);
 
 	/* initialize static values here */
 	i_set = gda_set_new_inline (4, "cat", G_TYPE_STRING, "", 
@@ -252,6 +257,8 @@ _gda_mysql_provider_meta_init (GdaServerProvider  *provider)
 #endif
 }
 
+#define GDA_MYSQL_GET_REUSEABLE_DATA(cdata) (* ((GdaMysqlReuseable**) (cdata)))
+
 gboolean
 _gda_mysql_meta__info (GdaServerProvider  *prov,
 		       GdaConnection      *cnc, 
@@ -261,16 +268,23 @@ _gda_mysql_meta__info (GdaServerProvider  *prov,
 {
 	GdaDataModel *model;
         gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
-        model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_CATALOG], NULL, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_CATALOG],
+							      NULL, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_information_schema_catalog_name,
+							      error);
         if (model == NULL)
                 retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
 		g_object_unref (G_OBJECT (model));
 	}
@@ -327,9 +341,9 @@ _gda_mysql_meta__btypes (GdaServerProvider  *prov,
 	};
         GdaDataModel *model;
         gboolean retval = TRUE;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
 	model = gda_meta_store_create_modify_data_model (store, context->table_name);
@@ -373,7 +387,9 @@ _gda_mysql_meta__btypes (GdaServerProvider  *prov,
 		}
 
 		if (retval) {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
 		}
 		g_object_unref (G_OBJECT(model));
@@ -551,7 +567,7 @@ _gda_mysql_meta_collations (GdaServerProvider  *prov,
 			    const GValue       *collation_schema, 
 			    const GValue       *collation_name_n)
 {
-	TO_IMPLEMENT;
+	/* Feature not supported by MySQL. */
 	return TRUE;
 }
 
@@ -564,16 +580,23 @@ _gda_mysql_meta__character_sets (GdaServerProvider  *prov,
 {
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
-	model = gda_connection_statement_execute_select	(cnc, internal_stmt[I_STMT_CHARACTER_SETS_ALL], NULL, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_CHARACTER_SETS_ALL],
+							      NULL, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_character_sets,
+							      error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 	}
@@ -593,9 +616,9 @@ _gda_mysql_meta_character_sets (GdaServerProvider  *prov,
 {
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), chset_catalog, error))
@@ -604,11 +627,19 @@ _gda_mysql_meta_character_sets (GdaServerProvider  *prov,
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), chset_name_n, error))
 		return FALSE;
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_CHARACTER_SETS], i_set, error);
+
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_CHARACTER_SETS],
+							      i_set,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_character_sets,
+							      error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 
@@ -624,23 +655,24 @@ _gda_mysql_meta__schemata (GdaServerProvider  *prov,
 			   GdaMetaContext     *context,
 			   GError            **error)
 {
-	GType col_types[] = {
-		0, 0, 0,
-		G_TYPE_BOOLEAN, G_TYPE_NONE
-	};
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
-	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMAS_ALL], NULL,
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_SCHEMAS_ALL],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_schemata, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 	}
@@ -657,38 +689,46 @@ _gda_mysql_meta_schemata (GdaServerProvider  *prov,
 			  const GValue       *catalog_name,
 			  const GValue       *schema_name_n)
 {
-	GType col_types[] = {
-		0, 0, 0,
-		G_TYPE_BOOLEAN, G_TYPE_NONE
-	};
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), catalog_name, error))
 		return FALSE;
 	if (!schema_name_n) {
-		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMAS], i_set,
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_SCHEMAS],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_schemata,
+								      error);
 		if (model == NULL)
 			retval = FALSE;
 		else {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify (store, context->table_name, model, NULL, error, NULL);
 			g_object_unref (G_OBJECT(model));
 		}
 	} else {
 		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), schema_name_n, error))
 			return FALSE;
-		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMA_NAMED], i_set,
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_SCHEMA_NAMED],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_schemata,
+								      error);
 		if (model == NULL)
 			retval = FALSE;
 		else {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify (store, context->table_name, model,
 							"schema_name=##name::string",
 							error,
@@ -707,22 +747,16 @@ _gda_mysql_meta__tables_views (GdaServerProvider  *prov,
 			       GdaMetaContext     *context,
 			       GError            **error)
 {	
-	GType col_types_tables[] = {
-		0, 0, 0, 0,
-		G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_NONE
-	};
-	GType col_types_views[] = {
-		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
-		G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE
-	};
 	GdaDataModel *model_tables, *model_views;
 	gboolean retval;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
@@ -731,24 +765,34 @@ _gda_mysql_meta__tables_views (GdaServerProvider  *prov,
 	/* Copy contents, just because we need to modify @context->table_name */
 	GdaMetaContext copy = *context;
 
-	model_tables = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLES_ALL], NULL,
-								     GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_tables, error);
+	model_tables = gda_connection_statement_execute_select_full (cnc,
+								     internal_stmt[I_STMT_TABLES_ALL],
+								     NULL,
+								     GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								     _col_types_tables, error);
 	if (model_tables == NULL)
 		retval = FALSE;
 	else {
 		copy.table_name = "_tables";
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, &copy, model_tables, error);
 		g_object_unref (G_OBJECT(model_tables));
 	}
 
-	model_views = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_VIEWS_ALL], NULL, 
-								    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_views, error);
+	model_views = gda_connection_statement_execute_select_full (cnc,
+								    internal_stmt[I_STMT_VIEWS_ALL],
+								    NULL, 
+								    GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								    _col_types_views, error);
 	if (model_views == NULL)
 		retval = FALSE;
 	else {
 		copy.table_name = "_views";
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, &copy, model_views, error);
 		g_object_unref (G_OBJECT(model_views));
 	}
@@ -766,22 +810,16 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 			      const GValue       *table_schema, 
 			      const GValue       *table_name_n)
 {
-	GType col_types_tables[] = {
-		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
-		G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE
-	};
-	GType col_types_views[] = {
-		G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
-		G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE
-	};
 	GdaDataModel *model_tables, *model_views;
 	gboolean retval;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
@@ -796,14 +834,19 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
 	if (!table_name_n) {
-		model_tables = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLES], i_set, 
-									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_tables,
-									    error);
+		model_tables = gda_connection_statement_execute_select_full (cnc,
+									     internal_stmt[I_STMT_TABLES],
+									     i_set, 
+									     GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									     _col_types_tables,
+									     error);
 		if (model_tables == NULL)
 			retval = FALSE;
 		else {
 			copy.table_name = "_tables";
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify_with_context (store, &copy, model_tables, error);
 			g_object_unref (G_OBJECT (model_tables));
 		}
@@ -811,14 +854,19 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 		if (!retval)
 			return FALSE;
 
-		model_views = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_VIEWS_ALL], i_set, 
-									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_views,
+		model_views = gda_connection_statement_execute_select_full (cnc,
+									    internal_stmt[I_STMT_VIEWS_ALL],
+									    i_set, 
+									    GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									    _col_types_views,
 									    error);
 		if (model_views == NULL)
 			retval = FALSE;
 		else {
 			copy.table_name = "_views";
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify_with_context (store, &copy, model_views, error);
 			g_object_unref (G_OBJECT (model_views));
 		}
@@ -826,28 +874,38 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 	} else {
 		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name_n, error))
 			return FALSE;
-		model_tables = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLE_NAMED], i_set, 
-									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_tables,
-									    error);
+		model_tables = gda_connection_statement_execute_select_full (cnc,
+									     internal_stmt[I_STMT_TABLE_NAMED],
+									     i_set, 
+									     GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									     _col_types_tables,
+									     error);
 		if (model_tables == NULL)
 			retval = FALSE;
 		else {
 			copy.table_name = "_tables";
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify_with_context (store, &copy, model_tables, error);
 			g_object_unref (G_OBJECT(model_tables));
 		}
 
 		if (!retval)
 			return FALSE;
-		model_views = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_VIEW_NAMED], i_set, 
-									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_views,
+		model_views = gda_connection_statement_execute_select_full (cnc,
+									    internal_stmt[I_STMT_VIEW_NAMED],
+									    i_set, 
+									    GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									    _col_types_views,
 									    error);
 		if (model_views == NULL)
 			retval = FALSE;
 		else {
 			copy.table_name = "_views";
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify_with_context (store, &copy, model_views, error);
 			g_object_unref (G_OBJECT(model_views));
 		}
@@ -990,29 +1048,26 @@ _gda_mysql_meta__columns (GdaServerProvider  *prov,
 			  GdaMetaContext     *context,
 			  GError            **error)
 {
-	GType col_types[] = {
-		0, 0, 0, 0, G_TYPE_INT, G_TYPE_STRING,
-		G_TYPE_BOOLEAN,
-		G_TYPE_STRING, 0, 0, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, 0, 0, 0, 0, 0, 0, G_TYPE_STRING, G_TYPE_BOOLEAN,
-		G_TYPE_STRING,
-		G_TYPE_NONE
-	};
 	GdaDataModel *model, *proxy;
 	gboolean retval = TRUE;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
 	/* Use a prepared statement for the "base" model. */
-	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_COLUMNS_ALL], NULL,
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_COLUMNS_ALL], NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_columns, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
@@ -1036,7 +1091,9 @@ _gda_mysql_meta__columns (GdaServerProvider  *prov,
 		}
 
 		if (retval) {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify_with_context (store, context, proxy, error);
 		}
 
@@ -1057,21 +1114,16 @@ _gda_mysql_meta_columns (GdaServerProvider  *prov,
 			 const GValue       *table_schema, 
 			 const GValue       *table_name)
 {
-	GType col_types[] = {
-		0, 0, 0, 0, G_TYPE_INT, G_TYPE_STRING,
-		G_TYPE_BOOLEAN,
-		G_TYPE_STRING, 0, 0, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, 0, 0, 0, 0, 0, 0, G_TYPE_STRING, G_TYPE_BOOLEAN,
-		G_TYPE_STRING,
-		G_TYPE_NONE
-	};
 	GdaDataModel *model, *proxy;
 	gboolean retval;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
@@ -1085,8 +1137,11 @@ _gda_mysql_meta_columns (GdaServerProvider  *prov,
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 		return FALSE;
 
-	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_COLUMNS_OF_TABLE], i_set,
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_COLUMNS_OF_TABLE],
+							      i_set,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_columns, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
@@ -1110,7 +1165,9 @@ _gda_mysql_meta_columns (GdaServerProvider  *prov,
 		}
 
 		if (retval) {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify (store, context->table_name, proxy,
 							"table_schema=##schema::string AND table_name=##name::string",
 							error,
@@ -1133,21 +1190,29 @@ _gda_mysql_meta__view_cols (GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
-	model = gda_connection_statement_execute_select	(cnc, internal_stmt[I_STMT_VIEWS_COLUMNS_ALL], NULL, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_VIEWS_COLUMNS_ALL],
+							      NULL, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_view_column_usage, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 	}
@@ -1167,9 +1232,9 @@ _gda_mysql_meta_view_cols (GdaServerProvider  *prov,
 {
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), view_catalog, error))
@@ -1178,11 +1243,17 @@ _gda_mysql_meta_view_cols (GdaServerProvider  *prov,
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), view_name, error))
 		return FALSE;
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_VIEWS_COLUMNS], i_set, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_VIEWS_COLUMNS],
+							      i_set, 
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_view_column_usage, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 
@@ -1198,23 +1269,24 @@ _gda_mysql_meta__constraints_tab (GdaServerProvider  *prov,
 				  GdaMetaContext     *context,
 				  GError            **error)
 {
-	GType col_types[] = {
-		0, 0, 0, 0, 0, 0, 0, 0,
-		G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_NONE
-	};
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
-	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS_ALL], NULL,
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_TABLES_CONSTRAINTS_ALL],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_table_constraints, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 	}
@@ -1233,15 +1305,11 @@ _gda_mysql_meta_constraints_tab (GdaServerProvider  *prov,
 				 const GValue       *table_name,
 				 const GValue       *constraint_name_n)
 {
-	GType col_types[] = {
-		0, 0, 0, 0, 0, 0, 0, 0,
-		G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_NONE
-	};
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
@@ -1251,11 +1319,17 @@ _gda_mysql_meta_constraints_tab (GdaServerProvider  *prov,
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 		return FALSE;
 	if (!constraint_name_n) {
-		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS], i_set, GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_TABLES_CONSTRAINTS],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_table_constraints, error);
 		if (model == NULL)
 			retval = FALSE;
 		else {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify (store, context->table_name, model,
 							"table_schema = ##schema::string AND table_name = ##name::string",
 							error,
@@ -1265,11 +1339,17 @@ _gda_mysql_meta_constraints_tab (GdaServerProvider  *prov,
 	} else {
 		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name_n, error))
 			return FALSE;
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TABLES_CONSTRAINTS_NAMED], i_set, error);
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_TABLES_CONSTRAINTS_NAMED],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_table_constraints, error);
 		if (model == NULL)
 			retval = FALSE;
 		else {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify (store, context->table_name, model,
 							"table_schema=##schema::string AND table_name=##name::string AND constraint_name=##name2::string",
 							error,
@@ -1288,19 +1368,27 @@ _gda_mysql_meta__constraints_ref (GdaServerProvider  *prov,
 				  GdaMetaContext     *context,
 				  GError            **error)
 {
-	MysqlConnectionData *cdata;
+	GdaMysqlReuseable *rdata;
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	g_return_val_if_fail (cdata, FALSE);
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	g_return_val_if_fail (rdata, FALSE);
 
-	if (cdata->version_long >= 50110) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long >= 50110) {
 		GdaDataModel *model;
 		gboolean retval;
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS_ALL], NULL, error);
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_REF_CONSTRAINTS_ALL],
+								      NULL,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_referential_constraints, error);
 		if (model == NULL)
 			retval = FALSE;
 		else {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify_with_context (store, context, model, error);
 			g_object_unref (G_OBJECT(model));
 		}
@@ -1324,12 +1412,14 @@ _gda_mysql_meta_constraints_ref (GdaServerProvider  *prov,
 				 const GValue       *table_name, 
 				 const GValue       *constraint_name)
 {
-	MysqlConnectionData *cdata;
+	GdaMysqlReuseable *rdata;
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	g_return_val_if_fail (cdata, FALSE);
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	g_return_val_if_fail (rdata, FALSE);
 
-	if (cdata->version_long >= 50110) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long >= 50110) {
 		GdaDataModel *model;
 		gboolean retval;
 		
@@ -1342,11 +1432,17 @@ _gda_mysql_meta_constraints_ref (GdaServerProvider  *prov,
 			return FALSE;
 		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
 			return FALSE;
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_REF_CONSTRAINTS], i_set, error);
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_REF_CONSTRAINTS],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_referential_constraints, error);
 		if (model == NULL)
 			retval = FALSE;
 		else {
-			gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+			gda_meta_store_set_reserved_keywords_func (store,
+								   _gda_mysql_reuseable_get_reserved_keywords_func
+								   ((GdaProviderReuseable*) rdata));
 			retval = gda_meta_store_modify (store, context->table_name, model,
 							"table_schema=##schema::string AND table_name=##name::string AND constraint_name=##name2::string",
 							error,
@@ -1370,23 +1466,24 @@ _gda_mysql_meta__key_columns (GdaServerProvider  *prov,
 			      GdaMetaContext     *context,
 			      GError            **error)
 {
-	GType col_types[] = {
-		0, 0, 0, 0, 0,
-		G_TYPE_INT, G_TYPE_NONE
-	};
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
-	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_KEY_COLUMN_USAGE_ALL], NULL,
-							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_KEY_COLUMN_USAGE_ALL],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_key_column_usage, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 	}
@@ -1405,18 +1502,16 @@ _gda_mysql_meta_key_columns (GdaServerProvider  *prov,
 			     const GValue       *table_name,
 			     const GValue       *constraint_name)
 {
-	GType col_types[] = {
-		0, 0, 0, 0, 0,
-		G_TYPE_INT, G_TYPE_NONE
-	};
 	GdaDataModel *model;
 	gboolean retval;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
@@ -1431,11 +1526,17 @@ _gda_mysql_meta_key_columns (GdaServerProvider  *prov,
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name2"), constraint_name, error))
 		return FALSE;
-	model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_KEY_COLUMN_USAGE], i_set, GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_KEY_COLUMN_USAGE],
+							      i_set, GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_key_column_usage,
+							      error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify (store, context->table_name, model,
 						"table_schema=##schema::string AND table_name=##name::string AND constraint_name=##name2::string",
 						error,
@@ -1483,21 +1584,29 @@ _gda_mysql_meta__triggers (GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
 	}
 
-	model = gda_connection_statement_execute_select	(cnc, internal_stmt[I_STMT_TRIGGERS_ALL], NULL, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_TRIGGERS_ALL],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_triggers, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 	}
@@ -1518,11 +1627,13 @@ _gda_mysql_meta_triggers (GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
@@ -1534,11 +1645,17 @@ _gda_mysql_meta_triggers (GdaServerProvider  *prov,
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
 		return FALSE;
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_TRIGGERS], i_set, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_TRIGGERS],
+							      i_set,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_triggers, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 
@@ -1556,16 +1673,22 @@ _gda_mysql_meta__routines (GdaServerProvider  *prov,
 {
 	GdaDataModel *model;
 	gboolean retval;
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
 
-	model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_ROUTINES_ALL], NULL, error);
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_ROUTINES_ALL],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_routines, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 	}
@@ -1586,11 +1709,13 @@ _gda_mysql_meta_routines (GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	/* Check correct mysql server version. */
-	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData *) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
 		return FALSE;
-	if (cdata->version_long < 50000) {
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
 			     "%s", _("Mysql version 5.0 at least is required"));
 		return FALSE;
@@ -1603,13 +1728,24 @@ _gda_mysql_meta_routines (GdaServerProvider  *prov,
 	if (routine_name_n != NULL) {
 		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), routine_name_n, error))
 			return FALSE;
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_ROUTINES_ONE], i_set, error);
-	} else
-		model = gda_connection_statement_execute_select (cnc, internal_stmt[I_STMT_ROUTINES], i_set, error);
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_ROUTINES_ONE],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_routines, error);
+	}
+	else
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_ROUTINES],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_routines, error);
 	if (model == NULL)
 		retval = FALSE;
 	else {
-		gda_meta_store_set_reserved_keywords_func (store, _gda_mysql_get_reserved_keyword_func (cdata));
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, context, model, error);
 		g_object_unref (G_OBJECT(model));
 

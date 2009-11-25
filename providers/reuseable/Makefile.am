@@ -1,7 +1,8 @@
 noinst_LTLIBRARIES = libreuseable.la
 
 SUBDIRS = \
-	postgres
+	postgres \
+	mysql
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) \
@@ -16,4 +17,5 @@ libreuseable_la_SOURCES = \
 	reuse-all.h
 
 libreuseable_la_LIBADD = \
-	postgres/libgda-postgres.la
+	postgres/libgda-postgres.la \
+	mysql/libgda-mysql.la

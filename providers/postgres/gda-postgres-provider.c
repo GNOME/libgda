@@ -1,5 +1,5 @@
 /* GDA postgres provider
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -558,7 +558,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	/* handle the reuseable part */
 	GdaProviderReuseableOperations *ops;
 	ops = _gda_postgres_reuseable_get_ops ();
-	cdata->reuseable = (GdaPostgresReuseable*) ops->re_new_data (NULL, NULL);
+	cdata->reuseable = (GdaPostgresReuseable*) ops->re_new_data ();
 	_gda_postgres_compute_types (cnc, cdata->reuseable);
 
 	/*

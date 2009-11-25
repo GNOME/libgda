@@ -26,10 +26,7 @@
 
 G_BEGIN_DECLS
 
-GdaProviderReuseable *_gda_provider_reuseable_new (const gchar *provider_name,
-						   const gchar *version_major,
-						   const gchar *version_minor);
-
+GdaProviderReuseable *_gda_provider_reuseable_new (const gchar *provider_name);
 
 G_END_DECLS
 
