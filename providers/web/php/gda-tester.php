@@ -20,7 +20,7 @@ if (! extension_loaded ("SimpleXML")) {
 	exit (1);
 }
 
-function handle_pear_error ($res, $reply)
+function handle_pear_error ($res)
 {
 	if (PEAR::isError($res)) {
 		$cause = "\tStandard Message [".$res->getMessage()."]\n". 
@@ -36,7 +36,7 @@ if ($test_connections) {
 		echo "Connection ".$dbname;
 		try {
 			$mdb2 = MDB2::connect($dsn[$dbname]);
-			handle_pear_error ($mdb2, $reply);
+			handle_pear_error ($mdb2);
 			echo " ==> OK\n";
 		}
 		catch (GdaException $e) {

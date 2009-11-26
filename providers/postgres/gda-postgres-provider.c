@@ -203,7 +203,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
         provider_class->create_operation = gda_postgres_provider_create_operation;
         provider_class->render_operation = gda_postgres_provider_render_operation;
         provider_class->perform_operation = gda_postgres_provider_perform_operation;
-
+	
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
 	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
@@ -518,20 +518,9 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
         cdata->pconn = pconn;
 
 	/*
-         * Get the version as a float
-         */
-	PGresult *pg_res;
-        pg_res = _gda_postgres_PQexec_wrap (cnc, pconn, "SELECT version ()");
-	if (!pg_res) {
-		gda_postgres_free_cnc_data (cdata);
-		return FALSE;
-	}
-        cdata->version = g_strdup (PQgetvalue(pg_res, 0, 0));
-        PQclear (pg_res);
-
-	/*
          * Sets the DATE format for all the current session to YYYY-MM-DD
          */
+	PGresult *pg_res;
         pg_res = _gda_postgres_PQexec_wrap (cnc, pconn, "SET DATESTYLE TO 'ISO'");
 	if (!pg_res) {
 		gda_postgres_free_cnc_data (cdata);
@@ -645,9 +634,11 @@ gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata)
-		return FALSE;
+		return NULL;
 
-	return cdata->version;
+	if (! ((GdaProviderReuseable*)cdata->reuseable)->server_version)
+		_gda_postgres_compute_version (cnc, cdata->reuseable, NULL);
+	return ((GdaProviderReuseable*)cdata->reuseable)->server_version;
 }
 
 /*
@@ -2471,8 +2462,6 @@ gda_postgres_free_cnc_data (PostgresConnectionData *cdata)
 
 	if (cdata->pconn)
                 PQfinish (cdata->pconn);
-
-	g_free (cdata->version);
 
 	if (cdata->reuseable) {
 		GdaProviderReuseable *rdata = (GdaProviderReuseable*)cdata->reuseable;

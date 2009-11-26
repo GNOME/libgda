@@ -320,6 +320,7 @@ function gda_handle_xml ($xml, &$doquit)
 				$dbtype = determine_db_type ($mdb2);
 				if ($dbtype)
 					$reply->addChild ('servertype', $dbtype);
+				$reply->addChild ('serverversion', $mdb2->getServerVersion (true));
 				$status = "OK";
 				break;
 
@@ -418,6 +419,66 @@ function gda_handle_xml ($xml, &$doquit)
 					$mdb2 = real_connect ($_SESSION['dsn'], $reply);
 
 				do_exec ($reply, $mdb2, $pstmt_hash, $sql, $type_is_result, $argsnode);
+				$status = "OK";
+				break;
+			case "BEGIN":
+				if (!isset ($_SESSION['key']))
+					throw new GdaException('Protocol error', true);
+				if ($token == "-")
+					throw new GdaException('Not authenticated', true);
+					
+				/* actually execute SQL in $sql */
+				if (!isset ($mdb2))
+					$mdb2 = real_connect ($_SESSION['dsn'], $reply);
+
+				foreach ($child->attributes() as $a => $b) {
+					if ($a == "svpname") {
+						$svpname = $b;
+						break;
+					}
+				}
+				if (isset ($svpname))
+					$res = $mdb2->beginTransaction ($svpname);
+				else
+					$res = $mdb2->beginTransaction ();
+				handle_pear_error ($res, $reply);
+				$status = "OK";
+				break;
+			case "COMMIT":
+				if (!isset ($_SESSION['key']))
+					throw new GdaException('Protocol error', true);
+				if ($token == "-")
+					throw new GdaException('Not authenticated', true);
+					
+				/* actually execute SQL in $sql */
+				if (!isset ($mdb2))
+					$mdb2 = real_connect ($_SESSION['dsn'], $reply);
+
+				$res = $mdb2->commit ();
+				handle_pear_error ($res, $reply);
+				$status = "OK";
+				break;
+			case "ROLLBACK":
+				if (!isset ($_SESSION['key']))
+					throw new GdaException('Protocol error', true);
+				if ($token == "-")
+					throw new GdaException('Not authenticated', true);
+					
+				/* actually execute SQL in $sql */
+				if (!isset ($mdb2))
+					$mdb2 = real_connect ($_SESSION['dsn'], $reply);
+
+				foreach ($child->attributes() as $a => $b) {
+					if ($a == "svpname") {
+						$svpname = $b;
+						break;
+					}
+				}
+				if (isset ($svpname))
+					$res = $mdb2->rollback ($svpname);
+				else
+					$res = $mdb2->rollback ();
+				handle_pear_error ($res, $reply);
 				$status = "OK";
 				break;
 			case 'META':
@@ -557,7 +618,7 @@ function do_exec ($reply, &$mdb2, $pstmt_hash, $sql, $type_is_result, $argsnode)
 		$ncols = $res->numCols();
 
 		/* compute field type */
-		$tableinfo = $mdb2->tableInfo ($res, NULL);
+		$tableinfo = $mdb2->reverse->tableInfo ($res, NULL);
 		if (! PEAR::isError ($tableinfo)) {
 			//var_dump($tableinfo);
 			$gtypes = array();

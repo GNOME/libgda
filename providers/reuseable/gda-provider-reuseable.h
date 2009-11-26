@@ -58,6 +58,7 @@ typedef struct {
  */
 struct _GdaProviderReuseable {
 	GdaProviderReuseableOperations *operations;
+	gchar                          *server_version;
 	guint                           major; /* major version */
 	guint                           minor; /* minor version */
 	guint                           micro; /* micro version */

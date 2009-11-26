@@ -54,10 +54,6 @@ typedef struct {
 	GdaConnection        *cnc;
         PGconn               *pconn;
 	gboolean              pconn_is_busy;
-
-        /* Version of the backend to which we are connected */
-        gchar                *version;
-        gchar                *short_version;
 } PostgresConnectionData;
 
 #endif

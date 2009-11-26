@@ -41,11 +41,7 @@
 typedef struct {
 	GdaMysqlReuseable *reuseable;
 	GdaConnection     *cnc;
-	MYSQL             *mysql;
-
-	/* specifies how case sensitiveness is */
-	gboolean           identifiers_case_sensitive;
-	
+	MYSQL             *mysql;	
 } MysqlConnectionData;
 
 #endif

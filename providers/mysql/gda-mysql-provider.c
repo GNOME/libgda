@@ -726,8 +726,9 @@ gda_mysql_provider_get_server_version (GdaServerProvider  *provider,
 	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
-	TO_IMPLEMENT;
-	return NULL;
+	if (! ((GdaProviderReuseable*)cdata->reuseable)->server_version)
+		_gda_mysql_compute_version (cnc, cdata->reuseable, NULL);
+	return ((GdaProviderReuseable*)cdata->reuseable)->server_version;
 }
 
 /*
@@ -2237,7 +2238,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 		cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
 		if (!cdata) 
 			return NULL;
-		case_sensitive = cdata->identifiers_case_sensitive;
+		case_sensitive = cdata->reuseable->identifiers_case_sensitive;
 	}
 	else if (((GdaMysqlProvider*) provider)->test_mode)
 		case_sensitive = ((GdaMysqlProvider*) provider)->test_identifiers_case_sensitive;

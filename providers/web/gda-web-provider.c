@@ -62,7 +62,6 @@ static gboolean            gda_web_provider_open_connection (GdaServerProvider *
 							     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
 static gboolean            gda_web_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_web_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
-static const gchar        *gda_web_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 /* DDL operations */
 static gboolean            gda_web_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
@@ -118,22 +117,10 @@ static GObject             *gda_web_provider_statement_execute (GdaServerProvide
 								guint *task_id, GdaServerProviderExecCallback async_cb, 
 								gpointer cb_data, GError **error);
 
-/* distributed transactions */
-static gboolean gda_web_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
-					      const GdaXaTransactionId *xid, GError **error);
-
-static gboolean gda_web_provider_xa_end      (GdaServerProvider *provider, GdaConnection *cnc, 
-					      const GdaXaTransactionId *xid, GError **error);
-static gboolean gda_web_provider_xa_prepare  (GdaServerProvider *provider, GdaConnection *cnc, 
-					      const GdaXaTransactionId *xid, GError **error);
-
-static gboolean gda_web_provider_xa_commit   (GdaServerProvider *provider, GdaConnection *cnc, 
-					      const GdaXaTransactionId *xid, GError **error);
-static gboolean gda_web_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
-					      const GdaXaTransactionId *xid, GError **error);
-
-static GList   *gda_web_provider_xa_recover  (GdaServerProvider *provider, GdaConnection *cnc, 
-					      GError **error);
+/* Quoting */
+static gchar               *gda_web_identifier_quote    (GdaServerProvider *provider, GdaConnection *cnc,
+							 const gchar *id,
+							 gboolean meta_store_convention, gboolean force_quotes);
 
 
 /*
@@ -156,7 +143,7 @@ gda_web_provider_class_init (GdaWebProviderClass *klass)
 
 	provider_class->open_connection = gda_web_provider_open_connection;
 	provider_class->close_connection = gda_web_provider_close_connection;
-	provider_class->get_database = gda_web_provider_get_database;
+	provider_class->get_database = NULL;
 
 	provider_class->supports_operation = gda_web_provider_supports_operation;
         provider_class->create_operation = gda_web_provider_create_operation;
@@ -178,6 +165,8 @@ gda_web_provider_class_init (GdaWebProviderClass *klass)
 	provider_class->is_busy = NULL;
 	provider_class->cancel = NULL;
 	provider_class->create_connection = NULL;
+
+	provider_class->identifier_quote = gda_web_identifier_quote;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	provider_class->meta_funcs._info = _gda_web_meta__info;
@@ -224,13 +213,7 @@ gda_web_provider_class_init (GdaWebProviderClass *klass)
 	provider_class->meta_funcs.routine_par = _gda_web_meta_routine_par;
 
 	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
-	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
-	provider_class->xa_funcs->xa_start = gda_web_provider_xa_start;
-	provider_class->xa_funcs->xa_end = gda_web_provider_xa_end;
-	provider_class->xa_funcs->xa_prepare = gda_web_provider_xa_prepare;
-	provider_class->xa_funcs->xa_commit = gda_web_provider_xa_commit;
-	provider_class->xa_funcs->xa_rollback = gda_web_provider_xa_rollback;
-	provider_class->xa_funcs->xa_recover = gda_web_provider_xa_recover;
+	provider_class->xa_funcs = NULL;
 
 	/* provider is thread safe */
 	provider_class->limiting_thread = NULL;
@@ -571,28 +554,7 @@ gda_web_provider_get_server_version (GdaServerProvider *provider, GdaConnection 
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
-	TO_IMPLEMENT;
-	return NULL;
-}
-
-/*
- * Get database request
- *
- * Returns the database name as a string, which should be stored in @cnc's associated WebConnectionData structure
- */
-static const gchar *
-gda_web_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	WebConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return NULL;
-	TO_IMPLEMENT;
-	return NULL;
+	return cdata->server_version;
 }
 
 /*
@@ -604,7 +566,7 @@ gda_web_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
  *   - make this method return TRUE for the operation type
  *   - implement the gda_web_provider_render_operation() and gda_web_provider_perform_operation() methods
  *
- * In this example, the GDA_SERVER_OPERATION_CREATE_TABLE is implemented
+ * For now no server operation is supported, it can be added if cdata->reuseable is not %NULL
  */
 static gboolean
 gda_web_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
@@ -618,10 +580,7 @@ gda_web_provider_supports_operation (GdaServerProvider *provider, GdaConnection 
         switch (type) {
         case GDA_SERVER_OPERATION_CREATE_DB:
         case GDA_SERVER_OPERATION_DROP_DB:
-		return FALSE;
-
         case GDA_SERVER_OPERATION_CREATE_TABLE:
-		return TRUE;
         case GDA_SERVER_OPERATION_DROP_TABLE:
         case GDA_SERVER_OPERATION_RENAME_TABLE:
 
@@ -633,6 +592,7 @@ gda_web_provider_supports_operation (GdaServerProvider *provider, GdaConnection 
         case GDA_SERVER_OPERATION_CREATE_VIEW:
         case GDA_SERVER_OPERATION_DROP_VIEW:
         default:
+		TO_IMPLEMENT;
                 return FALSE;
         }
 }
@@ -647,35 +607,22 @@ static GdaServerOperation *
 gda_web_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
 				   GdaServerOperationType type, GdaSet *options, GError **error)
 {
-        gchar *file;
-        GdaServerOperation *op;
-        gchar *str;
-	gchar *dir;
+	WebConnectionData *cdata = NULL;
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	}
+	if (!cdata) {
+		g_set_error (error, 0, 0, _("Not supported"));
+		return NULL;
 	}
 
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-        str = g_strdup_printf ("web_specs_%s.xml", file);
-        g_free (file);
-
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, str);
-	g_free (dir);
-
-        if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
-		g_free (str);
-                return NULL;
-        }
-        g_free (str);
-
-        op = gda_server_operation_new (type, file);
-        g_free (file);
-
-        return op;
+	TO_IMPLEMENT;
+	g_set_error (error, 0, 0, _("Server operations not yet implemented"));
+	return NULL;
 }
 
 /*
@@ -685,59 +632,22 @@ static gchar *
 gda_web_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc,
 				   GdaServerOperation *op, GError **error)
 {
-        gchar *sql = NULL;
-        gchar *file;
-        gchar *str;
-	gchar *dir;
+	WebConnectionData *cdata = NULL;
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	}
+	if (!cdata) {
+		g_set_error (error, 0, 0, _("Not supported"));
+		return NULL;
 	}
 
-	/* test @op's validity */
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
-        str = g_strdup_printf ("web_specs_%s.xml", file);
-        g_free (file);
-
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, str);
-	g_free (dir);
-
-        if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
-		g_free (str);
-                return NULL;
-        }
-        g_free (str);
-        if (!gda_server_operation_is_valid (op, file, error)) {
-                g_free (file);
-                return NULL;
-        }
-        g_free (file);
-
-	/* actual rendering */
-        switch (gda_server_operation_get_op_type (op)) {
-        case GDA_SERVER_OPERATION_CREATE_DB:
-        case GDA_SERVER_OPERATION_DROP_DB:
-		sql = NULL;
-                break;
-        case GDA_SERVER_OPERATION_CREATE_TABLE:
-                sql = gda_web_render_CREATE_TABLE (provider, cnc, op, error);
-                break;
-        case GDA_SERVER_OPERATION_DROP_TABLE:
-        case GDA_SERVER_OPERATION_RENAME_TABLE:
-        case GDA_SERVER_OPERATION_ADD_COLUMN:
-        case GDA_SERVER_OPERATION_CREATE_INDEX:
-        case GDA_SERVER_OPERATION_DROP_INDEX:
-        case GDA_SERVER_OPERATION_CREATE_VIEW:
-        case GDA_SERVER_OPERATION_DROP_VIEW:
-                sql = NULL;
-                break;
-        default:
-                g_assert_not_reached ();
-        }
-        return sql;
+	TO_IMPLEMENT;
+	g_set_error (error, 0, 0, _("Server operations not yet implemented"));
+	return NULL;
 }
 
 /*
@@ -784,13 +694,57 @@ gda_web_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
+	if (name && *name) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+			     "%s", _("Named transaction is not supported"));
+		return FALSE;
+	}
+	if (level != GDA_TRANSACTION_ISOLATION_UNKNOWN) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+			     "%s", _("Transaction level is not supported"));
+		return FALSE;
+	}
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
+	/* prepare XML command */
+	xmlDocPtr doc;
+	xmlNodePtr root, cmdnode;
+	gchar *token;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewNode (NULL, BAD_CAST "request");
+	xmlDocSetRootElement (doc, root);
+	token = _gda_web_compute_token (cdata);
+	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
+	g_free (token);
+	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "BEGIN");
 
-	return FALSE;
+	/* send command */
+	xmlChar *cmde;
+	xmlDocPtr replydoc;
+	int size;
+	gchar status;
+	
+	xmlDocDumpMemory (doc, &cmde, &size);
+	xmlFreeDoc (doc);
+	replydoc = _gda_web_send_message_to_frontend (cnc, cdata, MESSAGE_PREPARE, (gchar*) cmde, cdata->key, &status);
+	xmlFree (cmde);
+
+	if (!replydoc) {
+		_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+	if (status != 'O') {
+		_gda_web_set_connection_error_from_xmldoc (cnc, replydoc, error);
+		xmlFreeDoc (replydoc);
+
+		if (status == 'C')
+			_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 /*
@@ -805,13 +759,52 @@ gda_web_provider_commit_transaction (GdaServerProvider *provider, GdaConnection 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
+	if (name && *name) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+			     "%s", _("Named transaction is not supported"));
+		return FALSE;
+	}
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
+	/* prepare XML command */
+	xmlDocPtr doc;
+	xmlNodePtr root, cmdnode;
+	gchar *token;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewNode (NULL, BAD_CAST "request");
+	xmlDocSetRootElement (doc, root);
+	token = _gda_web_compute_token (cdata);
+	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
+	g_free (token);
+	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "COMMIT");
 
-	return FALSE;
+	/* send command */
+	xmlChar *cmde;
+	xmlDocPtr replydoc;
+	int size;
+	gchar status;
+	
+	xmlDocDumpMemory (doc, &cmde, &size);
+	xmlFreeDoc (doc);
+	replydoc = _gda_web_send_message_to_frontend (cnc, cdata, MESSAGE_PREPARE, (gchar*) cmde, cdata->key, &status);
+	xmlFree (cmde);
+
+	if (!replydoc) {
+		_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+	if (status != 'O') {
+		_gda_web_set_connection_error_from_xmldoc (cnc, replydoc, error);
+		xmlFreeDoc (replydoc);
+
+		if (status == 'C')
+			_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 /*
@@ -826,13 +819,52 @@ gda_web_provider_rollback_transaction (GdaServerProvider *provider, GdaConnectio
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
+	if (name && *name) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+			     "%s", _("Named transaction is not supported"));
+		return FALSE;
+	}
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
+	/* prepare XML command */
+	xmlDocPtr doc;
+	xmlNodePtr root, cmdnode;
+	gchar *token;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewNode (NULL, BAD_CAST "request");
+	xmlDocSetRootElement (doc, root);
+	token = _gda_web_compute_token (cdata);
+	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
+	g_free (token);
+	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "ROLLBACK");
 
-	return FALSE;
+	/* send command */
+	xmlChar *cmde;
+	xmlDocPtr replydoc;
+	int size;
+	gchar status;
+	
+	xmlDocDumpMemory (doc, &cmde, &size);
+	xmlFreeDoc (doc);
+	replydoc = _gda_web_send_message_to_frontend (cnc, cdata, MESSAGE_PREPARE, (gchar*) cmde, cdata->key, &status);
+	xmlFree (cmde);
+
+	if (!replydoc) {
+		_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+	if (status != 'O') {
+		_gda_web_set_connection_error_from_xmldoc (cnc, replydoc, error);
+		xmlFreeDoc (replydoc);
+
+		if (status == 'C')
+			_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 /*
@@ -847,13 +879,53 @@ gda_web_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
+	if (!name || !(*name)) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+			     "%s", _("Unnamed savepoint is not supported"));
+		return FALSE;
+	}
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
+	/* prepare XML command */
+	xmlDocPtr doc;
+	xmlNodePtr root, cmdnode;
+	gchar *token;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewNode (NULL, BAD_CAST "request");
+	xmlDocSetRootElement (doc, root);
+	token = _gda_web_compute_token (cdata);
+	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
+	g_free (token);
+	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "BEGIN");
+	xmlSetProp (cmdnode, BAD_CAST "svpname", BAD_CAST name);
 
-	return FALSE;
+	/* send command */
+	xmlChar *cmde;
+	xmlDocPtr replydoc;
+	int size;
+	gchar status;
+	
+	xmlDocDumpMemory (doc, &cmde, &size);
+	xmlFreeDoc (doc);
+	replydoc = _gda_web_send_message_to_frontend (cnc, cdata, MESSAGE_PREPARE, (gchar*) cmde, cdata->key, &status);
+	xmlFree (cmde);
+
+	if (!replydoc) {
+		_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+	if (status != 'O') {
+		_gda_web_set_connection_error_from_xmldoc (cnc, replydoc, error);
+		xmlFreeDoc (replydoc);
+
+		if (status == 'C')
+			_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 /*
@@ -868,13 +940,53 @@ gda_web_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
+	if (!name || !(*name)) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+			     "%s", _("Unnamed savepoint is not supported"));
+		return FALSE;
+	}
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
+	/* prepare XML command */
+	xmlDocPtr doc;
+	xmlNodePtr root, cmdnode;
+	gchar *token;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewNode (NULL, BAD_CAST "request");
+	xmlDocSetRootElement (doc, root);
+	token = _gda_web_compute_token (cdata);
+	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
+	g_free (token);
+	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "ROLLBACK");
+	xmlSetProp (cmdnode, BAD_CAST "svpname", BAD_CAST name);
 
-	return FALSE;
+	/* send command */
+	xmlChar *cmde;
+	xmlDocPtr replydoc;
+	int size;
+	gchar status;
+	
+	xmlDocDumpMemory (doc, &cmde, &size);
+	xmlFreeDoc (doc);
+	replydoc = _gda_web_send_message_to_frontend (cnc, cdata, MESSAGE_PREPARE, (gchar*) cmde, cdata->key, &status);
+	xmlFree (cmde);
+
+	if (!replydoc) {
+		_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+	if (status != 'O') {
+		_gda_web_set_connection_error_from_xmldoc (cnc, replydoc, error);
+		xmlFreeDoc (replydoc);
+
+		if (status == 'C')
+			_gda_web_change_connection_to_closed (cnc, cdata);
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 /*
@@ -936,31 +1048,19 @@ static GdaDataHandler *
 gda_web_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
 				   GType type, const gchar *dbms_type)
 {
-	GdaDataHandler *dh;
+	WebConnectionData *cdata = NULL;
+
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-	}
 
-	if (type == G_TYPE_INVALID) {
-		TO_IMPLEMENT; /* use @dbms_type */
-		dh = NULL;
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	}
-	else if ((type == GDA_TYPE_BINARY) ||
-		 (type == GDA_TYPE_BLOB)) {
-		TO_IMPLEMENT; /* define data handlers for these types */
-		dh = NULL;
-	}
-	else if ((type == GDA_TYPE_TIME) ||
-		 (type == GDA_TYPE_TIMESTAMP) ||
-		 (type == G_TYPE_DATE)) {
-		TO_IMPLEMENT; /* define data handlers for these types */
-		dh = NULL;
-	}
-	else
-		dh = gda_server_provider_get_data_handler_default (provider, cnc, type, dbms_type);
+	if (!cdata)
+		return NULL;
 
-	return dh;
+	TO_IMPLEMENT;
+	return NULL;
 }
 
 /*
@@ -971,55 +1071,19 @@ gda_web_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *c
 static const gchar*
 gda_web_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, GType type)
 {
+	WebConnectionData *cdata = NULL;
+
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	}
+	if (!cdata)
+		return NULL;
 
 	TO_IMPLEMENT;
-
-	if ((type == G_TYPE_INT64) ||
-	    (type == G_TYPE_INT) ||
-	    (type == GDA_TYPE_SHORT) ||
-	    (type == GDA_TYPE_USHORT) ||
-	    (type == G_TYPE_CHAR) ||
-	    (type == G_TYPE_UCHAR) ||
-	    (type == G_TYPE_ULONG) ||
-	    (type == G_TYPE_UINT) ||
-	    (type == G_TYPE_UINT64))
-		return "integer";
-
-	if ((type == GDA_TYPE_BINARY) ||
-	    (type == GDA_TYPE_BLOB))
-		return "blob";
-
-	if (type == G_TYPE_BOOLEAN)
-		return "boolean";
-	
-	if ((type == G_TYPE_DATE) || 
-	    (type == GDA_TYPE_GEOMETRIC_POINT) ||
-	    (type == G_TYPE_OBJECT) ||
-	    (type == GDA_TYPE_LIST) ||
-	    (type == G_TYPE_STRING) ||
-	    (type == GDA_TYPE_TIME) ||
-	    (type == GDA_TYPE_TIMESTAMP) ||
-	    (type == G_TYPE_INVALID) ||
-	    (type == G_TYPE_GTYPE))
-		return "string";
-
-	if ((type == G_TYPE_DOUBLE) ||
-	    (type == GDA_TYPE_NUMERIC) ||
-	    (type == G_TYPE_FLOAT))
-		return "real";
-	
-	if (type == GDA_TYPE_TIME)
-		return "time";
-	if (type == GDA_TYPE_TIMESTAMP)
-		return "timestamp";
-	if (type == G_TYPE_DATE)
-		return "date";
-
-	return "text";
+	return NULL;
 }
 
 /*
@@ -1057,12 +1121,19 @@ gda_web_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *c
 				   GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
 				   GSList **params_used, GError **error)
 {
+	WebConnectionData *cdata = NULL;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-	if (cnc) {
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-	}
 
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	}
+	if (!cdata)
+		return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
+
+	/*TO_IMPLEMENT;*/
 	return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
 }
 
@@ -1364,6 +1435,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	else if (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_UNKNOWN) {
 		if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "select", 6) ||
 		    ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "pragma", 6) ||
+		    ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "show", 4) ||
 		    ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "describe", 8))
 			xmlSetProp (node, BAD_CAST "type", BAD_CAST "SELECT");
 	}
@@ -1557,131 +1629,22 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	return retval;
 }
 
-/*
- * starts a distributed transaction: put the XA transaction in the ACTIVE state
- */
-static gboolean
-gda_web_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc, 
-			   const GdaXaTransactionId *xid, GError **error)
+static gchar *
+gda_web_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+			  const gchar *id,
+			  gboolean for_meta_store, gboolean force_quotes)
 {
-	WebConnectionData *cdata;
+	WebConnectionData *cdata = NULL;
 
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-	g_return_val_if_fail (xid, FALSE);
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return FALSE;
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	}
+	if (!cdata)
+		return gda_sql_identifier_quote (id, NULL, NULL, for_meta_store, force_quotes);
 
-	TO_IMPLEMENT;
-	return FALSE;
-}
-
-/*
- * put the XA transaction in the IDLE state: the connection won't accept any more modifications.
- * This state is required by some database providers before actually going to the PREPARED state
- */
-static gboolean
-gda_web_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc, 
-			 const GdaXaTransactionId *xid, GError **error)
-{
-	WebConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-	g_return_val_if_fail (xid, FALSE);
-
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return FALSE;
-
-	TO_IMPLEMENT;
-	return FALSE;
-}
-
-/*
- * prepares the distributed transaction: put the XA transaction in the PREPARED state
- */
-static gboolean
-gda_web_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc, 
-			     const GdaXaTransactionId *xid, GError **error)
-{
-	WebConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-	g_return_val_if_fail (xid, FALSE);
-
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return FALSE;
-
-	TO_IMPLEMENT;
-	return FALSE;
-}
-
-/*
- * commits the distributed transaction: actually write the prepared data to the database and
- * terminates the XA transaction
- */
-static gboolean
-gda_web_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc, 
-			    const GdaXaTransactionId *xid, GError **error)
-{
-	WebConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-	g_return_val_if_fail (xid, FALSE);
-
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return FALSE;
-
-	TO_IMPLEMENT;
-	return FALSE;
-}
-
-/*
- * Rolls back an XA transaction, possible only if in the ACTIVE, IDLE or PREPARED state
- */
-static gboolean
-gda_web_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
-			      const GdaXaTransactionId *xid, GError **error)
-{
-	WebConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-	g_return_val_if_fail (xid, FALSE);
-
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return FALSE;
-
-	TO_IMPLEMENT;
-	return FALSE;
-}
-
-/*
- * Lists all XA transactions that are in the PREPARED state
- *
- * Returns: a list of GdaXaTransactionId structures, which will be freed by the caller
- */
-static GList *
-gda_web_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
-			     GError **error)
-{
-	WebConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return NULL;
-
-	TO_IMPLEMENT;
-	return NULL;
+	/*TO_IMPLEMENT;*/
+	return gda_sql_identifier_quote (id, NULL, NULL, for_meta_store, force_quotes);
 }

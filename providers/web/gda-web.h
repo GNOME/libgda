@@ -41,6 +41,7 @@ typedef struct {
 	GdaMutex *mutex; /* protected access */
 
 	gchar *server_id; /* PostgreSQL, MySQL, ... */
+	gchar *server_version; /* native representation */
 
 	gboolean forced_closing;
 	gchar *server_base_url;

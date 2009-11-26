@@ -210,6 +210,15 @@ decode_buffer_response (GdaConnection *cnc, WebConnectionData *cdata, SoupBuffer
 				g_print ("REUSEABLE [%s]: %p\n", cdata->server_id, cdata->reuseable);
 #endif
 			}
+			else if (!cdata->server_version && !strcmp ((gchar*) node->name, "serverversion")) {
+				xmlChar *contents;
+				contents = xmlNodeGetContent (node);
+				cdata->server_version = g_strdup ((gchar*) contents);
+				xmlFree (contents);
+#ifdef DEBUG_WEB_PROV
+				g_print ("SERVER version [%s]\n", cdata->server_version);
+#endif
+			}
 		}
 	}
 
@@ -638,6 +647,7 @@ _gda_web_free_cnc_data (WebConnectionData *cdata)
 		g_free (cdata->reuseable);
 	}
 	g_free (cdata->server_id);
+	g_free (cdata->server_version);
 	g_free (cdata->server_base_url);
 	g_free (cdata->front_url);
 	g_free (cdata->worker_url);

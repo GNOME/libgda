@@ -142,6 +142,7 @@ _gda_postgres_reuseable_reset_data (GdaProviderReuseable *rdata)
 	GdaPostgresReuseable *reuseable;
 	reuseable = (GdaPostgresReuseable*) rdata;
 
+	g_free (rdata->server_version);
 	if (reuseable->types_dbtype_hash)
 		g_hash_table_destroy (reuseable->types_dbtype_hash);
 	if (reuseable->types_oid_hash)
@@ -202,6 +203,7 @@ _gda_postgres_compute_version (GdaConnection *cnc, GdaPostgresReuseable *rdata, 
 
 	const gchar *str;
 	str = g_value_get_string (cvalue);
+	((GdaProviderReuseable*)rdata)->server_version = g_strdup (str);
 
 	/* analyse string */
 	const gchar *ptr;

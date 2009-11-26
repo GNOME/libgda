@@ -123,11 +123,13 @@ _gda_mysql_reuseable_reset_data (GdaProviderReuseable *rdata)
 	GdaMysqlReuseable *reuseable;
 	reuseable = (GdaMysqlReuseable*) rdata;
 
+	g_free (rdata->server_version);
+
 	memset (reuseable, 0, sizeof (GdaMysqlReuseable));
 }
 
 static GdaDataModel *
-execute_select (GdaConnection *cnc, GdaMysqlReuseable *rdata, const gchar *sql)
+execute_select (GdaConnection *cnc, GdaMysqlReuseable *rdata, const gchar *sql, GError **error)
 {
 	GdaSqlParser *parser;
 	GdaStatement *stmt;
@@ -138,7 +140,7 @@ execute_select (GdaConnection *cnc, GdaMysqlReuseable *rdata, const gchar *sql)
 	g_object_unref (parser);
 	g_assert (stmt);
 
-	model = gda_connection_statement_execute_select (cnc, stmt, NULL, NULL);
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, error);
 	g_object_unref (stmt);
 
 	return model;
@@ -175,6 +177,7 @@ _gda_mysql_compute_version (GdaConnection *cnc, GdaMysqlReuseable *rdata, GError
 
 	const gchar *str;
 	str = g_value_get_string (cvalue);
+	((GdaProviderReuseable*)rdata)->server_version = g_strdup (str);
 
 	/* analyse string */
 	const gchar *ptr;
@@ -200,6 +203,24 @@ _gda_mysql_compute_version (GdaConnection *cnc, GdaMysqlReuseable *rdata, GError
 		 ((GdaProviderReuseable*)rdata)->minor,
 		 ((GdaProviderReuseable*)rdata)->micro);
 	*/
+
+	model = execute_select (cnc, rdata, "SHOW VARIABLES WHERE Variable_name = 'lower_case_table_names'", error);
+	if (!model)
+		return FALSE;
+	cvalue = gda_data_model_get_value_at (model, 0, 0, NULL);
+	if (!cvalue) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+                             GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
+                             _("Can't import data from web server"));
+		g_object_unref (model);
+		return FALSE;
+	}
+	str = g_value_get_string (cvalue);
+	rdata->identifiers_case_sensitive = FALSE;
+	if (atoi (str) == 0)
+		rdata->identifiers_case_sensitive = TRUE;
+	g_object_unref (model);
+
 	return TRUE;
 }
 
