@@ -316,13 +316,6 @@ gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_p
 				return NULL;
 			}
 
-#ifdef GDA_DEBUG_NO
-			g_print ("--COL type is %d, GType is %s, ORA defined size is %d\n",
-				 ora_value->sql_type,
-				 g_type_name (ora_value->g_type),
-				 ora_value->defined_size - 1);
-#endif
-
 			/* column's name */
 			text *name;
 			ub4 name_len;
@@ -401,6 +394,7 @@ gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_p
 			else
 				ora_value->g_type = _oracle_sqltype_to_g_type (ora_value->sql_type, ora_value->precision, 
 									       ora_value->scale);
+
 			if (ora_value->g_type == GDA_TYPE_BLOB) {
 				/* allocate a Lob locator */
 				OCILobLocator *lob;
@@ -424,6 +418,10 @@ gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_p
 				ora_value->value = g_malloc0 (ora_value->defined_size);
 			
 			ora_value->s_type = gda_g_type_to_static_type (ora_value->g_type);
+			if (_GDA_PSTMT (ps)->types [i] == GDA_TYPE_NULL)
+				_GDA_PSTMT (ps)->types [i] = ora_value->g_type;
+			gda_column_set_g_type (column, ora_value->g_type);
+
 #ifdef GDA_DEBUG_NO
 			g_print ("**COL type is %d, GType is %s, ORA defined size is %d%s\n",
 				 ora_value->sql_type,
