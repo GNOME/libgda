@@ -2001,12 +2001,11 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		GdaColumn *gdacol;
 		GType coltype;
 
-#ifdef GDA_DEBUG_NO
-		{
+		if (dump_attributes) {
 			GdaColumn *col = gda_data_model_describe_column (model, i);
-			g_print ("Model col %d has type %s\n", i, gda_g_type_to_string (gda_column_get_g_type (col)));
+			g_print ("Model col %d has type %s\n", i,
+				 gda_g_type_to_string (gda_column_get_g_type (col)));
 		}
-#endif
 
 		str = (gchar *) gda_data_model_get_column_title (model, i);
 		if (str)
@@ -2017,7 +2016,6 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		if (! dump_attributes) {
 			gdacol = gda_data_model_describe_column (model, i);
 			coltype = gda_column_get_g_type (gdacol);
-			/*g_string_append_printf (string, "COL %d is a %s\n", i+1, gda_g_type_to_string (coltype));*/
 			if ((coltype == G_TYPE_INT64) ||
 			    (coltype == G_TYPE_UINT64) ||
 			    (coltype == G_TYPE_INT) ||
