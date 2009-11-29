@@ -42,6 +42,7 @@
 <!ENTITY data-validation SYSTEM "data_validation.xml">
 <!ENTITY data-select SYSTEM "data_select.xml">
 <!ENTITY limitations SYSTEM "limitations.xml">
+<!ENTITY provnotes SYSTEM "prov-notes.xml">
 <!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
 <!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
 <!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
@@ -452,6 +453,7 @@
     &examples;
     &migration;
     &migration2;
+    &provnotes;
     &limitations;
   </part>  
   <part id="part_libgda_api">

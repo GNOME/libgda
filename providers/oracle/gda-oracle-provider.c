@@ -446,13 +446,31 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 	/* Check for connection parameters */
 	const gchar *tnsname, *username, *password;
+	gchar *easy = NULL;
  	tnsname = gda_quark_list_find (params, "TNSNAME");
 	if (!tnsname) {
-		gda_connection_add_event_string (cnc,
-						 _("The connection string must contain the TNSNAME value"));
-		return FALSE;
+		const gchar *host, *port, *dbname;
+		host = gda_quark_list_find (params, "HOST");
+		dbname = gda_quark_list_find (params, "DB_NAME");
+		port = gda_quark_list_find (params, "PORT");
+		if (host) {
+			GString *string;
+			string = g_string_new (host);
+			if (port)
+				g_string_append_printf (string, ":%s", port);
+			if (dbname)
+				g_string_append_printf (string, "/%s", dbname);
+			easy = g_string_free (string, FALSE);
+		}
+		else {
+			gda_connection_add_event_string (cnc,
+							 _("The connection string must contain the TNSNAME or the HOST values"));
+			return FALSE;
+		}
 	}
 	username = gda_quark_list_find (auth, "USERNAME");
+	if (!username)
+		username = g_get_user_name ();
 	password = gda_quark_list_find (auth, "PASSWORD");
 	
 	/* open the real connection to the database */
@@ -539,9 +557,11 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	/* attach to Oracle server */
         result = OCIServerAttach (cdata->hserver,
                                   cdata->herr,
-                                  (text *) tnsname,
-                                  (ub4) strlen (tnsname),
+                                  (text *) tnsname ? tnsname : easy,
+                                  (ub4) strlen (tnsname ? tnsname : easy),
                                   OCI_DEFAULT);
+	g_free (easy);
+
         if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
                                      _("Could not attach to the Oracle server"))) {
                 OCIHandleFree ((dvoid *) cdata->hsession, OCI_HTYPE_SESSION);
@@ -570,12 +590,12 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
         }
 
 	/* set the username attribute */
-        result = OCIAttrSet ((dvoid *) cdata->hsession,
-                             (ub4) OCI_HTYPE_SESSION,
-                             (dvoid *) username,
-                             (ub4) strlen (username),
-                             (ub4) OCI_ATTR_USERNAME,
-                             cdata->herr);
+	result = OCIAttrSet ((dvoid *) cdata->hsession,
+			     (ub4) OCI_HTYPE_SESSION,
+			     (dvoid *) username,
+			     (ub4) strlen (username),
+			     (ub4) OCI_ATTR_USERNAME,
+			     cdata->herr);
         if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
                                      _("Could not set the Oracle username attribute"))) {
                 OCIHandleFree ((dvoid *) cdata->hsession, OCI_HTYPE_SESSION);
@@ -587,21 +607,23 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
         }
 
         /* set the password attribute */
-        result = OCIAttrSet ((dvoid *) cdata->hsession,
-                             (ub4) OCI_HTYPE_SESSION,
-                             (dvoid *) password,
-                             (ub4) strlen (password),
-                             (ub4) OCI_ATTR_PASSWORD,
-                             cdata->herr);
-        if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
-                                     _("Could not set the Oracle password attribute"))) {
-                OCIHandleFree ((dvoid *) cdata->hsession, OCI_HTYPE_SESSION);
-                OCIHandleFree ((dvoid *) cdata->hserver, OCI_HTYPE_SERVER);
-                OCIHandleFree ((dvoid *) cdata->herr, OCI_HTYPE_ERROR);
-                OCIHandleFree ((dvoid *) cdata->hservice, OCI_HTYPE_SVCCTX);
-		gda_oracle_free_cnc_data (cdata);
-                return FALSE;
-        }
+	if (password) {
+		result = OCIAttrSet ((dvoid *) cdata->hsession,
+				     (ub4) OCI_HTYPE_SESSION,
+				     (dvoid *) password,
+				     (ub4) strlen (password),
+				     (ub4) OCI_ATTR_PASSWORD,
+				     cdata->herr);
+		if (gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+					     _("Could not set the Oracle password attribute"))) {
+			OCIHandleFree ((dvoid *) cdata->hsession, OCI_HTYPE_SESSION);
+			OCIHandleFree ((dvoid *) cdata->hserver, OCI_HTYPE_SERVER);
+			OCIHandleFree ((dvoid *) cdata->herr, OCI_HTYPE_ERROR);
+			OCIHandleFree ((dvoid *) cdata->hservice, OCI_HTYPE_SVCCTX);
+			gda_oracle_free_cnc_data (cdata);
+			return FALSE;
+		}
+	}
 
 	/* begin the session */
         result = OCISessionBegin (cdata->hservice,

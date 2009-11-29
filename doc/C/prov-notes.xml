@@ -1,0 +1,44 @@
+<chapter id="provider-notes">
+  <title>Provider's notes</title>
+
+  <sect1 id="provider_notes_oracle"><title>For Oracle</title>
+    <para>
+      The following arguments are used to connect to an Oracle database:
+      <table frame="all">
+        <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+          <thead>
+	    <row>
+              <entry>Argument name</entry>
+              <entry>Description</entry>
+              <entry>Required</entry>
+	    </row>
+          </thead>
+          <tbody>
+	    <row>
+              <entry>DB_NAME</entry>
+              <entry>Service name: global database name entered during database creation (it combines a database name with a domain name), can be left empty to connect to the default database.</entry>
+              <entry>No</entry>
+	    </row>
+	    <row>
+              <entry>HOST</entry>
+              <entry>Database server: host on which the database server is running</entry>
+              <entry>Yes</entry>
+	    </row>
+	    <row>
+              <entry>PORT</entry>
+              <entry>Port: database server port (leave this field empty for the default 1521 port)</entry>
+              <entry>No</entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+      Note however all the arguments above can be replaced by a single TNSNAME argument (see
+      the "Oracle Database Net Services Administrator's Guide" for more information about defining
+      connection identifiers).
+    </para>
+    <para>
+      Also refer to the <link linkend="limitations_oracle">Oracle's provider's limitations</link>.
+    </para>
+  </sect1>
+  
+</chapter>
