@@ -1,0 +1,874 @@
+/* gdaui-cloud.c
+ *
+ * Copyright (C) 2009 Vivien Malerba
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ */
+
+#include <string.h>
+#include <glib/gi18n-lib.h>
+#include <libgda/libgda.h>
+#include "gdaui-cloud.h"
+#include <gdk/gdkkeysyms.h>
+#include "internal/popup-container.h"
+
+static void gdaui_cloud_class_init (GdauiCloudClass * class);
+static void gdaui_cloud_init (GdauiCloud *wid);
+static void gdaui_cloud_dispose (GObject *object);
+static void gdaui_cloud_set_property (GObject *object,
+				      guint param_id,
+				      const GValue *value,
+				      GParamSpec *pspec);
+static void gdaui_cloud_get_property (GObject *object,
+				      guint param_id,
+				      GValue *value,
+				      GParamSpec *pspec);
+
+struct _GdauiCloudPriv
+{
+	GdaDataModel        *model;
+	gint                 label_column;
+	gint                 weight_column;
+
+	gdouble              min_scale;
+	gdouble              max_scale;
+
+	GtkTextBuffer       *tbuffer;
+        GtkWidget           *tview;
+	GSList              *selected_tags;
+	GtkSelectionMode     selection_mode;
+
+        gboolean             hovering_over_link;
+};
+
+enum {
+        SELECTION_CHANGED,
+	ACTIVATE,
+        LAST_SIGNAL
+};
+
+static guint objects_cloud_signals[LAST_SIGNAL] = { 0, 0 };
+
+/* get a pointer to the parents to be able to call their destructor */
+static GObjectClass *parent_class = NULL;
+
+/* properties */
+enum
+{
+        PROP_0,
+	PROP_MODEL,
+	PROP_LABEL_COLUMN,
+	PROP_WEIGHT_COLUMN,
+	PROP_MIN_SCALE,
+	PROP_MAX_SCALE,
+};
+
+GType
+gdaui_cloud_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static const GTypeInfo info = {
+			sizeof (GdauiCloudClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gdaui_cloud_class_init,
+			NULL,
+			NULL,
+			sizeof (GdauiCloud),
+			0,
+			(GInstanceInitFunc) gdaui_cloud_init
+		};		
+
+		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiCloud", &info, 0);
+	}
+
+	return type;
+}
+
+static void
+gdaui_cloud_class_init (GdauiCloudClass *klass)
+{
+	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
+	
+	parent_class = g_type_class_peek_parent (klass);
+	object_class->dispose = gdaui_cloud_dispose;
+
+	/* signals */
+        objects_cloud_signals [SELECTION_CHANGED] =
+                g_signal_new ("selection-changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdauiCloudClass, selection_changed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+        objects_cloud_signals [ACTIVATE] =
+                g_signal_new ("activate",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdauiCloudClass, activate),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
+        klass->selection_changed = NULL;
+        klass->activate = NULL;
+
+	/* Properties */
+        object_class->set_property = gdaui_cloud_set_property;
+        object_class->get_property = gdaui_cloud_get_property;
+	g_object_class_install_property (object_class, PROP_MODEL,
+	                                 g_param_spec_object ("model", NULL, NULL,
+	                                                      GDA_TYPE_DATA_MODEL, G_PARAM_READWRITE));
+	g_object_class_install_property (object_class, PROP_LABEL_COLUMN,
+	                                 g_param_spec_int ("label-column", NULL,
+							   "Column in the data model which contains the "
+							   "text to display, the column must be a G_TYPE_STRING",
+							   -1, G_MAXINT, -1, G_PARAM_READWRITE));
+ 	g_object_class_install_property (object_class, PROP_WEIGHT_COLUMN,
+	                                 g_param_spec_int ("weight-column", NULL, NULL,
+							   -1, G_MAXINT, -1, G_PARAM_READWRITE));
+	g_object_class_install_property (object_class, PROP_MIN_SCALE,
+	                                 g_param_spec_double ("min-scale", NULL, NULL,
+							      .1, 10., .8, G_PARAM_READWRITE));
+	g_object_class_install_property (object_class, PROP_MAX_SCALE,
+	                                 g_param_spec_double ("max-scale", NULL, NULL,
+							      .1, 10., 3., G_PARAM_READWRITE));
+}
+
+static void
+update_display (GdauiCloud *cloud)
+{
+	GtkTextBuffer *tbuffer;
+        GtkTextIter start, end;
+
+        /* clean all */
+        tbuffer = cloud->priv->tbuffer;
+        gtk_text_buffer_get_start_iter (tbuffer, &start);
+        gtk_text_buffer_get_end_iter (tbuffer, &end);
+        gtk_text_buffer_delete (tbuffer, &start, &end);
+	if (cloud->priv->selected_tags) {
+		g_slist_foreach (cloud->priv->selected_tags, (GFunc) g_object_unref, NULL);
+		g_slist_free (cloud->priv->selected_tags);
+		cloud->priv->selected_tags = NULL;
+	}
+
+	if (!cloud->priv->model)
+		return;
+	if (cloud->priv->label_column < 0)
+		return;
+	/* check for the data model's column type */
+	GdaColumn *column;
+	column = gda_data_model_describe_column (cloud->priv->model, cloud->priv->label_column);
+	if (!column || (gda_column_get_g_type (column) != G_TYPE_STRING)) {
+		g_warning (_("Wrong column type for label: expecting a string and got a %s"),
+			   gda_g_type_to_string (gda_column_get_g_type (column)));
+		return;
+	}
+
+	gint nrows, i;
+	nrows = gda_data_model_get_n_rows (cloud->priv->model);
+
+	/* compute scale range */
+	gdouble min_weight = 1., max_weight = 1., wrange;
+	if (cloud->priv->weight_column >= 0) {
+		for (i = 0; i < nrows; i++) {
+			const GValue *cvalue;
+			gdouble weight = 1.;
+			cvalue = gda_data_model_get_value_at (cloud->priv->model,
+							      cloud->priv->weight_column, i, NULL);
+			if (cvalue) {
+				weight = atof (gda_value_stringify (cvalue));
+				min_weight = MIN (min_weight, weight);
+				max_weight = MAX (max_weight, weight);
+			}
+		}
+	}
+	if (max_weight != min_weight)
+		wrange = (cloud->priv->max_scale - cloud->priv->min_scale) / (max_weight - min_weight);
+	else
+		wrange = 0.;
+	
+	gtk_text_buffer_get_start_iter (tbuffer, &start);
+	for (i = 0; i < nrows; i++) {
+		const GValue *cvalue;
+		gdouble weight = 1.;
+		const gchar *ptr;
+		GString *string;
+		cvalue = gda_data_model_get_value_at (cloud->priv->model, cloud->priv->label_column, i, NULL);
+		if (!cvalue) {
+			TO_IMPLEMENT;
+			continue;
+		}
+		if (!g_value_get_string (cvalue))
+			continue;
+
+		/* convert spaces to non breaking spaces (0xC2 0xA0 as UTF8) */
+		string = g_string_new ("");
+		for (ptr = g_value_get_string (cvalue); *ptr; ptr++) {
+			if (*ptr == ' ') {
+				g_string_append_c (string, 0xC2);
+				g_string_append_c (string, 0xA0);
+			}
+			else
+				g_string_append_c (string, *ptr);
+		}
+
+		if (cloud->priv->weight_column >= 0) {
+			cvalue = gda_data_model_get_value_at (cloud->priv->model,
+							      cloud->priv->weight_column, i, NULL);
+			if (cvalue) {
+				weight = atof (gda_value_stringify (cvalue));
+				weight = cloud->priv->min_scale + wrange * (weight - min_weight);
+			}
+		}
+
+		GtkTextTag *tag;
+		tag = gtk_text_buffer_create_tag (cloud->priv->tbuffer, NULL, 
+					  "foreground", "#6161F2", 
+					  "scale", weight,
+					  NULL);
+		g_object_set_data ((GObject*) tag, "row", GINT_TO_POINTER (i) + 1);
+		gtk_text_buffer_insert_with_tags (cloud->priv->tbuffer, &start, string->str, -1,
+						  tag, NULL);
+		g_string_free (string, TRUE);
+		gtk_text_buffer_insert (cloud->priv->tbuffer, &start, "   ", -1);
+	}
+}
+
+static gboolean key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud);
+static gboolean event_after (GtkWidget *text_view, GdkEvent *ev, GdauiCloud *cloud);
+static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, GdauiCloud *cloud);
+static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, GdauiCloud *cloud);
+
+static void
+gdaui_cloud_init (GdauiCloud *cloud)
+{
+	cloud->priv = g_new0 (GdauiCloudPriv, 1);
+	cloud->priv->min_scale = .8;
+	cloud->priv->max_scale = 2.;
+	cloud->priv->selected_tags = NULL;
+	cloud->priv->selection_mode = GTK_SELECTION_SINGLE;
+
+	/* text buffer */
+        cloud->priv->tbuffer = gtk_text_buffer_new (NULL);
+        gtk_text_buffer_create_tag (cloud->priv->tbuffer, "section",
+                                    "weight", PANGO_WEIGHT_BOLD,
+                                    "foreground", "blue", NULL);
+
+	/* text view */
+	GtkWidget *sw, *vbox;
+        sw = gtk_scrolled_window_new (NULL, NULL);
+        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC,
+                                        GTK_POLICY_AUTOMATIC);
+        gtk_box_pack_start (GTK_BOX (cloud), sw, TRUE, TRUE, 0);
+
+        vbox = gtk_vbox_new (FALSE, 0);
+        gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), vbox);
+
+        cloud->priv->tview = gtk_text_view_new_with_buffer (cloud->priv->tbuffer);
+        gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (cloud->priv->tview), GTK_WRAP_WORD);
+        gtk_text_view_set_editable (GTK_TEXT_VIEW (cloud->priv->tview), FALSE);
+        gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (cloud->priv->tview), FALSE);
+        gtk_box_pack_start (GTK_BOX (vbox), cloud->priv->tview, TRUE, TRUE, 0);
+        gtk_widget_show_all (sw);
+
+        g_signal_connect (cloud->priv->tview, "key-press-event",
+                          G_CALLBACK (key_press_event), cloud);
+        g_signal_connect (cloud->priv->tview, "event-after",
+                          G_CALLBACK (event_after), cloud);
+        g_signal_connect (cloud->priv->tview, "motion-notify-event",
+                          G_CALLBACK (motion_notify_event), cloud);
+        g_signal_connect (cloud->priv->tview, "visibility-notify-event",
+                          G_CALLBACK (visibility_notify_event), cloud);
+}
+
+/**
+ * gdaui_cloud_new
+ * @model: a #GdaDataModel
+ *
+ * Creates a new #GdauiCloud widget suitable to display the data in @model
+ *
+ * Returns: the new widget
+ *
+ * Since: 4.2
+ */
+GtkWidget *
+gdaui_cloud_new (GdaDataModel *model, gint label_column, gint weight_column)
+{
+	GdauiCloud *cloud;
+	
+	g_return_val_if_fail (!model || GDA_IS_DATA_MODEL (model), NULL);
+	if (label_column < -1)
+		label_column = -1;
+	if (weight_column < -1)
+		weight_column = -1;
+
+	cloud = (GdauiCloud *) g_object_new (GDAUI_TYPE_CLOUD,
+					     "label-column", label_column,
+					     "weight-column", weight_column,
+					     "model", model, NULL);
+	return (GtkWidget *) cloud;
+}
+
+static void
+gdaui_cloud_dispose (GObject *object)
+{
+        GdauiCloud *cloud;
+
+        g_return_if_fail (GDAUI_IS_CLOUD (object));
+
+        cloud = GDAUI_CLOUD (object);
+
+        if (cloud->priv) {
+		if (cloud->priv->selected_tags) {
+			g_slist_foreach (cloud->priv->selected_tags, (GFunc) g_object_unref, NULL);
+			g_slist_free (cloud->priv->selected_tags);
+		}
+                if (cloud->priv->model)
+                        g_object_unref (cloud->priv->model);
+		if (cloud->priv->tbuffer)
+			g_object_unref (cloud->priv->tbuffer);
+
+                g_free (cloud->priv);
+                cloud->priv = NULL;
+        }
+
+        /* for the parent class */
+        parent_class->dispose (object);
+}
+
+
+static void
+gdaui_cloud_set_property (GObject *object,
+				 guint param_id,
+				 const GValue *value,
+				 GParamSpec *pspec)
+{
+	GdauiCloud *cloud;
+	GdaDataModel *model;
+	
+	cloud = GDAUI_CLOUD (object);
+	
+	switch (param_id) {
+	case PROP_MODEL:
+		model = (GdaDataModel*) g_value_get_object (value);
+		if (cloud->priv->model != model) {
+			if (cloud->priv->model)
+				g_object_unref (cloud->priv->model);
+			cloud->priv->model = model;
+			if (model)
+				g_object_ref (G_OBJECT (model));
+			update_display (cloud);
+		}
+		break;
+	case PROP_LABEL_COLUMN:
+		if (cloud->priv->label_column !=  g_value_get_int (value)) {
+			cloud->priv->label_column = g_value_get_int (value);
+			update_display (cloud);
+		}
+		break;
+	case PROP_WEIGHT_COLUMN:
+		if (cloud->priv->weight_column !=  g_value_get_int (value)) {
+			cloud->priv->weight_column = g_value_get_int (value);
+			update_display (cloud);
+		}
+		break;
+	case PROP_MIN_SCALE:
+		if (cloud->priv->min_scale !=  g_value_get_double (value)) {
+			cloud->priv->min_scale = g_value_get_double (value);
+			update_display (cloud);
+		}
+		break;
+	case PROP_MAX_SCALE:
+		if (cloud->priv->max_scale !=  g_value_get_double (value)) {
+			cloud->priv->max_scale = g_value_get_double (value);
+			update_display (cloud);
+		}
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+	}
+}
+
+static void
+gdaui_cloud_get_property (GObject *object,
+			  guint param_id,
+			  GValue *value,
+			  GParamSpec *pspec)
+{
+	GdauiCloud *cloud;
+
+	cloud = GDAUI_CLOUD (object);
+	
+	switch (param_id) {
+	case PROP_MODEL:
+		g_value_set_object (value, cloud->priv->model);
+		break;
+	case PROP_LABEL_COLUMN:
+		g_value_set_int (value, cloud->priv->label_column);
+		break;
+	case PROP_WEIGHT_COLUMN:
+		g_value_set_int (value, cloud->priv->weight_column);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+	}	
+}
+
+/**
+ * gdaui_cloud_set_selection_mode
+ * @cloud: a #GdauiCloud widget
+ * @mode: the desired selection mode
+ *
+ * Sets @cloud's selection mode
+ *
+ * Since: 4.2
+ */
+void
+gdaui_cloud_set_selection_mode   (GdauiCloud *cloud, GtkSelectionMode mode)
+{
+	g_return_if_fail (GDAUI_IS_CLOUD (cloud));
+	if (mode == cloud->priv->selection_mode)
+		return;
+	switch (mode) {
+	case GTK_SELECTION_NONE:
+		if (cloud->priv->selected_tags) {
+			/* remove any selection */
+			GSList *list;
+			for (list = cloud->priv->selected_tags; list; list = list->next) {
+				g_object_unref ((GObject*) list->data);
+				g_object_set ((GObject*) list->data,
+					      "background-set", FALSE,
+					      NULL);
+			}
+
+			g_slist_free (cloud->priv->selected_tags);
+			g_signal_emit (cloud, objects_cloud_signals [SELECTION_CHANGED], 0);
+			cloud->priv->selected_tags = NULL;
+		}
+		break;
+	case GTK_SELECTION_SINGLE:
+	case GTK_SELECTION_BROWSE:
+		if (cloud->priv->selected_tags && cloud->priv->selected_tags->next) {
+			/* cut down to 1 selected node */
+			GSList *newsel;
+			newsel = cloud->priv->selected_tags;
+			cloud->priv->selected_tags = g_slist_remove_link (cloud->priv->selected_tags,
+									  cloud->priv->selected_tags);
+			GSList *list;
+			for (list = cloud->priv->selected_tags; list; list = list->next) {
+				g_object_unref ((GObject*) list->data);
+				g_object_set ((GObject*) list->data,
+					      "background-set", FALSE,
+					      NULL);
+			}
+			g_slist_free (cloud->priv->selected_tags);
+			cloud->priv->selected_tags = newsel;
+			g_signal_emit (cloud, objects_cloud_signals [SELECTION_CHANGED], 0);
+		}
+		break;
+	case GTK_SELECTION_MULTIPLE:
+		break;
+	default:
+		g_warning ("Unknown selection mode");
+		return;
+	}
+	cloud->priv->selection_mode = mode;
+}
+
+/**
+ * gdaui_cloud_get_selection
+ * @cloud: a #GdauiCloud widget
+ * 
+ * Returns the list of the currently selected rows in a #GdauiCloud widget. 
+ * The returned value is a list of integers (use GPOINTER_TO_INT()) which represent each of the selected rows.
+ *
+ * Returns: a new list, should be freed (by calling g_list_free) when no longer needed.
+ *
+ * Since: 4.2
+ */
+GList *
+gdaui_cloud_get_selection (GdauiCloud *cloud)
+{
+	GList *retlist = NULL;
+	GSList *list;
+	g_return_val_if_fail (GDAUI_IS_CLOUD (cloud), NULL);
+
+	for (list = cloud->priv->selected_tags; list; list = list->next) {
+		gint row;
+		row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
+		if (row >= 0)
+			retlist = g_list_prepend (retlist, GINT_TO_POINTER (row));
+	}
+	return retlist;
+}
+
+static void
+row_clicked (GdauiCloud *cloud, gint row, GtkTextTag *tag)
+{
+	if (cloud->priv->selection_mode == GTK_SELECTION_NONE) {
+		/* emit "activate" signal */
+		g_signal_emit (cloud, objects_cloud_signals [ACTIVATE], 0, row);
+		return;
+	}
+
+	/* toggle @rows's selection */
+	if (g_slist_find (cloud->priv->selected_tags, tag)) {
+		cloud->priv->selected_tags = g_slist_remove (cloud->priv->selected_tags, tag);
+		g_object_set ((GObject*) tag,
+			      "background-set", FALSE,
+			      NULL);
+		g_object_unref ((GObject*) tag);
+	}
+	else {
+		cloud->priv->selected_tags = g_slist_prepend (cloud->priv->selected_tags, tag);
+		g_object_ref ((GObject*) tag);
+		g_object_set ((GObject*) tag,
+			      "background", "yellow",
+			      "background-set", TRUE,
+			      NULL);
+	}
+
+	if ((cloud->priv->selection_mode == GTK_SELECTION_SINGLE) ||
+	    (cloud->priv->selection_mode == GTK_SELECTION_BROWSE)) {
+		/* no more than 1 element can be selected */
+		if (cloud->priv->selected_tags && cloud->priv->selected_tags->next) {
+			GtkTextTag *tag2;
+			tag2 = GTK_TEXT_TAG (cloud->priv->selected_tags->next->data);
+			cloud->priv->selected_tags = g_slist_remove (cloud->priv->selected_tags, tag2);
+			g_object_set ((GObject*) tag2,
+				      "background-set", FALSE,
+				      NULL);
+			g_object_unref ((GObject*) tag2);
+		}
+	}
+	if (cloud->priv->selection_mode == GTK_SELECTION_BROWSE) {
+		/* one element is always selected */
+		if (! cloud->priv->selected_tags) {
+			cloud->priv->selected_tags = g_slist_prepend (cloud->priv->selected_tags, tag);
+			g_object_ref ((GObject*) tag);
+			g_object_set ((GObject*) tag,
+				      "background", "yellow",
+				      "background-set", TRUE,
+				      NULL);
+		}
+	}
+
+	g_signal_emit (cloud, objects_cloud_signals [SELECTION_CHANGED], 0);
+}
+
+static GdkCursor *hand_cursor = NULL;
+static GdkCursor *regular_cursor = NULL;
+
+/* Looks at all tags covering the position (x, y) in the text view, 
+ * and if one of them is a link, change the cursor to the "hands" cursor
+ * typically used by web browsers.
+ */
+static void
+set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, GdauiCloud *cloud)
+{
+	GSList *tags = NULL, *tagp = NULL;
+	GtkTextIter iter;
+	gboolean hovering = FALSE;
+	
+	gtk_text_view_get_iter_at_location (text_view, &iter, x, y);
+	
+	tags = gtk_text_iter_get_tags (&iter);
+	for (tagp = tags;  tagp != NULL;  tagp = tagp->next) {
+		GtkTextTag *tag = tagp->data;
+		gint row;
+		row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "row")) - 1;
+		if (row >= 0) {
+			hovering = TRUE;
+			break;
+		}
+	}
+	
+	if (hovering != cloud->priv->hovering_over_link) {
+		cloud->priv->hovering_over_link = hovering;
+		
+		if (cloud->priv->hovering_over_link) {
+			if (! hand_cursor)
+				hand_cursor = gdk_cursor_new (GDK_HAND2);
+			gdk_window_set_cursor (gtk_text_view_get_window (text_view,
+									 GTK_TEXT_WINDOW_TEXT),
+					       hand_cursor);
+		}
+		else {
+			if (!regular_cursor)
+				regular_cursor = gdk_cursor_new (GDK_XTERM);
+			gdk_window_set_cursor (gtk_text_view_get_window (text_view,
+									 GTK_TEXT_WINDOW_TEXT),
+					       regular_cursor);
+		}
+	}
+	
+	if (tags) 
+		g_slist_free (tags);
+}
+
+/* 
+ * Also update the cursor image if the window becomes visible
+ * (e.g. when a window covering it got iconified).
+ */
+static gboolean
+visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, GdauiCloud *cloud)
+{
+	gint wx, wy, bx, by;
+	
+	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
+	
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
+					       GTK_TEXT_WINDOW_WIDGET,
+					       wx, wy, &bx, &by);
+	
+	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), bx, by, cloud);
+	
+	return FALSE;
+}
+
+/*
+ * Update the cursor image if the pointer moved. 
+ */
+static gboolean
+motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, GdauiCloud *cloud)
+{
+	gint x, y;
+	
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
+					       GTK_TEXT_WINDOW_WIDGET,
+					       event->x, event->y, &x, &y);
+	
+	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, cloud);
+	
+	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
+	return FALSE;
+}
+
+/* Looks at all tags covering the position of iter in the text view, 
+ * and if one of them is a link, follow it by showing the page identified
+ * by the data attached to it.
+ */
+static void
+follow_if_link (GtkWidget *text_view, GtkTextIter *iter, GdauiCloud *cloud)
+{
+	GSList *tags = NULL, *tagp = NULL;
+	
+	tags = gtk_text_iter_get_tags (iter);
+	for (tagp = tags;  tagp;  tagp = tagp->next) {
+		GtkTextTag *tag = tagp->data;
+		gint row;
+		row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "row")) - 1;
+		if (row >= 0) {
+			row_clicked (cloud, row, tag);
+			break;
+		}
+        }
+
+	if (tags) 
+		g_slist_free (tags);
+}
+
+/*
+ * Links can also be activated by clicking.
+ */
+static gboolean
+event_after (GtkWidget *text_view, GdkEvent *ev, GdauiCloud *cloud)
+{
+	GtkTextIter start, end, iter;
+	GtkTextBuffer *buffer;
+	GdkEventButton *event;
+	gint x, y;
+	
+	if (ev->type != GDK_BUTTON_RELEASE)
+		return FALSE;
+	
+	event = (GdkEventButton *)ev;
+	
+	if (event->button != 1)
+		return FALSE;
+	
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
+	
+	/* we shouldn't follow a link if the user has selected something */
+	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
+	if (gtk_text_iter_get_offset (&start) != gtk_text_iter_get_offset (&end))
+		return FALSE;
+	
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
+					       GTK_TEXT_WINDOW_WIDGET,
+					       event->x, event->y, &x, &y);
+	
+	gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW (text_view), &iter, x, y);
+	
+	follow_if_link (text_view, &iter, cloud);
+	
+	return FALSE;
+}
+
+/* 
+ * Links can be activated by pressing Enter.
+ */
+static gboolean
+key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
+{
+        GtkTextIter iter;
+        GtkTextBuffer *buffer;
+
+        switch (event->keyval) {
+        case GDK_Return:
+        case GDK_KP_Enter:
+                buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
+                gtk_text_buffer_get_iter_at_mark (buffer, &iter,
+                                                  gtk_text_buffer_get_insert (buffer));
+                follow_if_link (text_view, &iter, cloud);
+                break;
+
+        default:
+                break;
+        }
+        return FALSE;
+}
+
+typedef struct {
+	GdauiCloud *cloud;
+	const gchar *find;
+} FilterData;
+
+static void
+text_tag_table_foreach_cb (GtkTextTag *tag, FilterData *fdata)
+{
+	const GValue *cvalue;
+	const gchar *label;
+	gint row;
+
+	if (! fdata->cloud->priv->model)
+		return;
+	if (fdata->cloud->priv->label_column < 0)
+		return;
+
+	/* check for the data model's column type */
+	GdaColumn *column;
+	column = gda_data_model_describe_column (fdata->cloud->priv->model,
+						 fdata->cloud->priv->label_column);
+	if (!column || (gda_column_get_g_type (column) != G_TYPE_STRING)) {
+		g_warning (_("Wrong column type for label: expecting a string and got a %s"),
+			   gda_g_type_to_string (gda_column_get_g_type (column)));
+		return;
+	}
+
+	row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "row")) - 1;
+	if (row < 0)
+		return;
+
+	cvalue = gda_data_model_get_value_at (fdata->cloud->priv->model,
+					      fdata->cloud->priv->label_column, row, NULL);
+	if (!cvalue)
+		return;
+
+	label = g_value_get_string (cvalue);
+
+	if (!(fdata->find) || !*(fdata->find)) {
+		g_object_set (tag, "foreground", "#6161F2", NULL);
+	}
+	else {
+		gchar *ptr;
+		gchar *lcname, *lcfind;
+		lcname = g_utf8_strdown (label, -1);
+		lcfind = g_utf8_strdown (fdata->find, -1);
+
+		ptr = strstr (lcname, lcfind);
+		if (!ptr) {
+			/* string not present in name */
+			g_object_set (tag, "foreground", "#DBDBDB", NULL);
+		}
+		else if ((ptr == lcname) ||
+			 ((*label == '"') && (ptr == lcname+1))) {
+			/* string present as start of name */
+			g_object_set (tag, "foreground", "#6161F2", NULL);
+		}
+		else {
+			/* string present in name but not at the start */
+			g_object_set (tag, "foreground", "#A0A0A0", NULL);
+		}
+
+		g_free (lcname);
+		g_free (lcfind);
+	}
+}
+
+/**
+ * gdaui_cloud_filter
+ * @cloud: a #GdauiCloud widget
+ * @filter: the filter to use, or %NULL to remove any filter
+ *
+ * Filters the elements displayed in @cloud, by altering their color.
+ *
+ * Since: 4.2
+ */
+void
+gdaui_cloud_filter (GdauiCloud *cloud, const gchar *filter)
+{
+	g_return_if_fail (GDAUI_IS_CLOUD (cloud));
+
+	GtkTextTagTable *tags_table = gtk_text_buffer_get_tag_table (cloud->priv->tbuffer);
+
+	FilterData fdata;
+	fdata.cloud = cloud;
+	fdata.find = filter;
+	gtk_text_tag_table_foreach (tags_table, (GtkTextTagTableForeach) text_tag_table_foreach_cb,
+				    (gpointer) &(fdata));
+}
+
+static void
+find_entry_changed_cb (GtkWidget *entry, GdauiCloud *cloud)
+{
+	gchar *find = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+	gdaui_cloud_filter (cloud, find);
+	g_free (find);
+}
+
+/**
+ * gdaui_cloud_create_filter_widget
+ * @cloud: a #GdauiCloud widget
+ *
+ * Creates a search widget linked directly to modify @cloud's appearance.
+ *
+ * Returns: a new widget
+ *
+ * Since: 4.2
+ */
+GtkWidget *
+gdaui_cloud_create_filter_widget (GdauiCloud *cloud)
+{
+	GtkWidget *hbox, *label, *wid;
+	g_return_val_if_fail (GDAUI_IS_CLOUD (cloud), NULL);
+	
+	hbox = gtk_hbox_new (FALSE, 0);
+
+	label = gtk_label_new (_("Find:"));
+	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	wid = gtk_entry_new ();
+	g_signal_connect (wid, "changed",
+			  G_CALLBACK (find_entry_changed_cb), cloud);
+	gtk_box_pack_start (GTK_BOX (hbox), wid, TRUE, TRUE, 0);
+	gtk_widget_show_all (hbox);
+	gtk_widget_hide (hbox);
+
+	return hbox;
+}

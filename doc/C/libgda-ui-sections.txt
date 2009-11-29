@@ -306,3 +306,21 @@ GDAUI_TREE_STORE_CLASS
 GDAUI_TYPE_TREE_STORE
 gdaui_tree_store_get_type
 </SECTION>
+
+<SECTION>
+<FILE>gdaui-cloud</FILE>
+<TITLE>GdauiCloud</TITLE>
+GdauiCloud
+gdaui_cloud_new
+gdaui_cloud_set_selection_mode
+gdaui_cloud_get_selection
+gdaui_cloud_filter
+gdaui_cloud_create_filter_widget
+<SUBSECTION Standard>
+GDAUI_CLOUD
+GDAUI_CLOUD_CLASS
+GDAUI_IS_CLOUD
+GDAUI_IS_CLOUD_CLASS
+GDAUI_TYPE_CLOUD
+gdaui_cloud_get_type
+</SECTION>

@@ -43,6 +43,7 @@
 #include <libgda-ui/gdaui-server-operation.h>
 #include <libgda-ui/gdaui-login.h>
 #include <libgda-ui/gdaui-tree-store.h>
+#include <libgda-ui/gdaui-cloud.h>
 
 G_BEGIN_DECLS
 

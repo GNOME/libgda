@@ -1,0 +1,112 @@
+<!-- ##### SECTION Title ##### -->
+GdauiCloud
+
+<!-- ##### SECTION Short_Description ##### -->
+Cloud widget
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiCloud ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdauiCloud::activate ##### -->
+<para>
+
+</para>
+
+@gdauicloud: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdauiCloud::selection-changed ##### -->
+<para>
+
+</para>
+
+@gdauicloud: the object which received the signal.
+
+<!-- ##### ARG GdauiCloud:label-column ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiCloud:max-scale ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiCloud:min-scale ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiCloud:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiCloud:weight-column ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_cloud_new ##### -->
+<para>
+
+</para>
+
+@model: 
+@label_column: 
+@weight_column: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_cloud_set_selection_mode ##### -->
+<para>
+
+</para>
+
+@cloud: 
+@mode: 
+
+
+<!-- ##### FUNCTION gdaui_cloud_get_selection ##### -->
+<para>
+
+</para>
+
+@cloud: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_cloud_filter ##### -->
+<para>
+
+</para>
+
+@cloud: 
+@filter: 
+
+
+<!-- ##### FUNCTION gdaui_cloud_create_filter_widget ##### -->
+<para>
+
+</para>
+
+@cloud: 
+@Returns: 
+
+

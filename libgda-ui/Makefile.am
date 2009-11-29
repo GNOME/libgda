@@ -27,6 +27,7 @@ ui_headers = \
 	gdaui-enums.h \
 	gdaui-form.h \
 	gdaui-grid.h \
+	gdaui-cloud.h \
 	gdaui-login.h \
 	gdaui-provider-selector.h \
 	gdaui-raw-form.h \
@@ -48,6 +49,7 @@ libgda_ui_4_0_la_SOURCES = \
 	gdaui-data-widget-info.c \
 	gdaui-form.c \
 	gdaui-grid.c \
+	gdaui-cloud.c \
 	gdaui-login.c \
 	gdaui-provider-selector.c \
 	gdaui-raw-form.c \

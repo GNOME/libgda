@@ -18,6 +18,12 @@
 	gdaui_basic_form_set_entries_auto_default
 	gdaui_basic_form_set_entries_default
 	gdaui_basic_form_show_entry_actions
+	gdaui_cloud_create_filter_widget
+	gdaui_cloud_filter
+	gdaui_cloud_get_selection
+	gdaui_cloud_get_type
+	gdaui_cloud_new
+	gdaui_cloud_set_selection_mode
 	gdaui_combo_add_undef_choice
 	gdaui_combo_get_model
 	gdaui_combo_get_type

@@ -15,4 +15,4 @@ gdaui_raw_grid_get_type
 gdaui_server_operation_get_type
 gdaui_set_get_type
 gdaui_tree_store_get_type
-
+gdaui_cloud_get_type

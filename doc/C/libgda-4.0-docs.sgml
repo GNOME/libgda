@@ -148,6 +148,7 @@
 <!ENTITY libgdaui-GdauiServerOperation SYSTEM "xml/gdaui-server-operation.xml">
 <!ENTITY libgdaui-GdauiSet SYSTEM "xml/gdaui-set.xml">
 <!ENTITY libgdaui-GdauiTreeStore SYSTEM "xml/gdaui-tree-store.xml">
+<!ENTITY libgdaui-GdauiCloud SYSTEM "xml/gdaui-cloud.xml">
 ]>
 
 <book id="index">
@@ -1252,6 +1253,7 @@ g_object_unref (store);
       &libgdaui-gdaui-plugins;
       &libgdaui-GdauiForm;
       &libgdaui-GdauiGrid;
+      &libgdaui-GdauiCloud;
 
       &libgdaui-GdauiRawForm;
       &libgdaui-GdauiRawGrid;
