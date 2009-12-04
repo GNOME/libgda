@@ -1043,7 +1043,7 @@ typedef struct {
 } BuildTarget;
 
 /**
- * gda_sql_builder_select_add_target
+ * gda_sql_builder_select_add_target_id
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @table_id: the ID of the expression holding a table reference (not %0)
@@ -1056,7 +1056,7 @@ typedef struct {
  * Since: 4.2
  */
 guint
-gda_sql_builder_select_add_target (GdaSqlBuilder *builder, guint id, guint table_id, const gchar *alias)
+gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint id, guint table_id, const gchar *alias)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -1096,6 +1096,46 @@ gda_sql_builder_select_add_target (GdaSqlBuilder *builder, guint id, guint table
 
 	return btarget->part_id;
 }
+
+
+/**
+ * gda_sql_builder_select_add_target
+ * @builder: a #GdaSqlBuilder object
+ * @table_name: the name of the target table
+ * @alias: the alias to give to the target, or %NULL
+ *
+ * Adds a new target to a SELECT statement
+ *
+ * Returns: the ID of the new target, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_name, const gchar *alias)
+{
+	gchar *tmp;
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+	g_return_if_fail (builder->priv->main_stmt);
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+	g_return_if_fail (table_name && *table_name);
+
+	if (alias && *alias)
+		gda_sql_builder_select_add_target_id (builder,
+					      0, 
+					      gda_sql_builder_add_id (builder, 0, table_name),
+					      gda_sql_builder_add_id (builder, 0, alias));
+	else
+		gda_sql_builder_select_add_target_id (builder,
+					      0, 
+					      gda_sql_builder_add_id (builder, 0, table_name),
+					      0);
+	if (table_name)
+		g_free (tmp);
+}
+
 
 typedef struct {
 	GdaSqlSelectJoin join; /* inheritance! */

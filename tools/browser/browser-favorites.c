@@ -244,9 +244,7 @@ find_favorite_position (BrowserFavorites *bfav, gint fav_id, gint order_key)
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "rank"), 0);
-	gda_sql_builder_select_add_target (b, 0,
-					   gda_sql_builder_add_id (b, 0, FAVORDER_TABLE_NAME),
-					   NULL);
+	gda_sql_builder_select_add_target (b, FAVORDER_TABLE_NAME, NULL);
 	gda_sql_builder_set_where (b,
 				   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_AND,
 				   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,
@@ -317,9 +315,7 @@ find_favorite (BrowserFavorites *bfav, guint session_id, gint id, const gchar *c
 				   gda_sql_builder_add_id (b, 0, "descr"), 0);
 	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "contents"), 0);
-	gda_sql_builder_select_add_target (b, 0,
-					   gda_sql_builder_add_id (b, 0, FAVORITES_TABLE_NAME),
-					   NULL);
+	gda_sql_builder_select_add_target (b, FAVORITES_TABLE_NAME, NULL);
 
 	if (id >= 0) {
 		/* lookup from ID */
@@ -399,9 +395,7 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "fav_id"), 0);
 
-	gda_sql_builder_select_add_target (b, 0,
-					   gda_sql_builder_add_id (b, 0, FAVORDER_TABLE_NAME),
-					   NULL);
+	gda_sql_builder_select_add_target (b, FAVORDER_TABLE_NAME, NULL);
 	
 	gda_sql_builder_set_where (b, gda_sql_builder_add_cond (b, 1, GDA_SQL_OPERATOR_TYPE_EQ,
 				    gda_sql_builder_add_id (b, 0, "order_key"),
@@ -802,13 +796,9 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "fav.id"), 0);
 
-	t1 = gda_sql_builder_select_add_target (b, 0,
-						gda_sql_builder_add_id (b, 0, FAVORITES_TABLE_NAME),
-						"fav");
+	t1 = gda_sql_builder_select_add_target (b, FAVORITES_TABLE_NAME, "fav");
 	if (order_key > 0) {
-		t2 = gda_sql_builder_select_add_target (b, 0,
-							gda_sql_builder_add_id (b, 0, FAVORDER_TABLE_NAME),
-							"o");
+		t2 = gda_sql_builder_select_add_target (b, FAVORDER_TABLE_NAME, "o");
 		gda_sql_builder_select_join_targets (b, 0, t1, t2, GDA_SQL_SELECT_JOIN_LEFT,
 						     gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,
 									   gda_sql_builder_add_id (b, 0, "fav.id"),
@@ -1098,9 +1088,7 @@ browser_favorites_get (BrowserFavorites *bfav, gint fav_id,
 				   gda_sql_builder_add_id (b, 0, "descr"), 0);
 	gda_sql_builder_add_field_id (b,
 				   gda_sql_builder_add_id (b, 0, "contents"), 0);
-	gda_sql_builder_select_add_target (b, 0,
-					   gda_sql_builder_add_id (b, 0, FAVORITES_TABLE_NAME),
-					   NULL);
+	gda_sql_builder_select_add_target (b, FAVORITES_TABLE_NAME, NULL);
 
 	gda_sql_builder_set_where (b,
 				   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,

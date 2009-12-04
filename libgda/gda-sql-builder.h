@@ -105,7 +105,8 @@ void              gda_sql_builder_add_field_id (GdaSqlBuilder *builder, guint fi
 /* SELECT Statement API */
 void              gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_name,
 						    const gchar *table_name, const gchar *alias);
-guint             gda_sql_builder_select_add_target (GdaSqlBuilder *builder, guint id,
+guint             gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_name, const gchar *alias);
+guint             gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint id,
 						     guint table_id, const gchar *alias);
 guint             gda_sql_builder_select_join_targets (GdaSqlBuilder *builder, guint id,
 						       guint left_target_id, guint right_target_id,

@@ -328,7 +328,7 @@ create_table (GdaWebRecordset *rs, GError **error)
 	sb = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 
 	gda_sql_builder_set_table (ib, TABLE_NAME);
-	gda_sql_builder_select_add_target (sb, 0, gda_sql_builder_add_id (sb, 0, TABLE_NAME), NULL);
+	gda_sql_builder_select_add_target (sb, TABLE_NAME, NULL);
 
 	string = g_string_new ("CREATE table " TABLE_NAME " (");
 	ncols = gda_data_model_get_n_columns ((GdaDataModel*) rs);
