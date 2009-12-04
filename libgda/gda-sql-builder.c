@@ -1122,16 +1122,10 @@ gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_na
 	}
 	g_return_if_fail (table_name && *table_name);
 
-	if (alias && *alias)
-		gda_sql_builder_select_add_target_id (builder,
+	gda_sql_builder_select_add_target_id (builder,
 					      0, 
 					      gda_sql_builder_add_id (builder, 0, table_name),
-					      gda_sql_builder_add_id (builder, 0, alias));
-	else
-		gda_sql_builder_select_add_target_id (builder,
-					      0, 
-					      gda_sql_builder_add_id (builder, 0, table_name),
-					      0);
+					      alias);
 	if (table_name)
 		g_free (tmp);
 }
