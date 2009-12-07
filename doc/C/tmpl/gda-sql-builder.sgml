@@ -284,6 +284,17 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
+@table_name: 
+@alias: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_select_add_target_id ##### -->
+<para>
+
+</para>
+
+@builder: 
 @id: 
 @table_id: 
 @alias: 

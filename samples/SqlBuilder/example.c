@@ -69,8 +69,8 @@ main (int argc, char *argv[])
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	
 	gda_sql_builder_add_id (b, 1, "select"); /* SELECT is an SQL reserved keyword */
-	gda_sql_builder_select_add_target (b, 1, 1, "c");
-	gda_sql_builder_select_add_target (b, 2,
+	gda_sql_builder_select_add_target_id (b, 1, 1, "c");
+	gda_sql_builder_select_add_target_id (b, 2,
 					   gda_sql_builder_add_id (b, 0, "orders"),
 					   NULL);
 	gda_sql_builder_select_join_targets (b, 5, 1, 2, GDA_SQL_SELECT_JOIN_INNER, 0);
@@ -91,7 +91,7 @@ main (int argc, char *argv[])
 
 	/* SELECT myfunc (a, 5, 'Joe') FROM mytable */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "mytable"),
 					   NULL);
 	gda_sql_builder_add_function (b, 1, "myfunc",
@@ -131,10 +131,10 @@ main (int argc, char *argv[])
 
 	/* testing identifiers which are SQL reserved keywords */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_select_add_target (b, 1,
+	gda_sql_builder_select_add_target_id (b, 1,
 					   gda_sql_builder_add_id (b, 0, "date"),
 					   NULL);
-	gda_sql_builder_select_add_target (b, 2,
+	gda_sql_builder_select_add_target_id (b, 2,
 					   gda_sql_builder_add_id (b, 0, "MyTable"),
 					   NULL);
 	gda_sql_builder_add_function (b, 1, "date",
@@ -150,7 +150,7 @@ main (int argc, char *argv[])
 	GdaSqlStatement *sub;
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata"),
 					   NULL);
 	sub = gda_sql_builder_get_sql_statement (b, FALSE);
@@ -158,7 +158,7 @@ main (int argc, char *argv[])
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "master"),
 					   NULL);
 	gda_sql_builder_add_id (b, 1, "id");
@@ -170,7 +170,7 @@ main (int argc, char *argv[])
 
 	/* SELECT id, name, (SELECT MAX (ts) FROM documents AS d WHERE t.id = d.topic) FROM topics AS t */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "documents"), "d");
 	gda_sql_builder_add_field_id (b,
 				      gda_sql_builder_add_function (b, 0, "MAX",
@@ -184,7 +184,7 @@ main (int argc, char *argv[])
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "topics"), "t");
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
@@ -198,7 +198,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "location"), 0);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdate"),
 					   NULL);
 	sub = gda_sql_builder_get_sql_statement (b, FALSE);
@@ -221,7 +221,7 @@ main (int argc, char *argv[])
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata1"),
 					   NULL);
 	sub1 = gda_sql_builder_get_sql_statement (b, FALSE);
@@ -230,7 +230,7 @@ main (int argc, char *argv[])
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "ident"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "lastname"), 0);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata2"),
 					   NULL);
 	sub2 = gda_sql_builder_get_sql_statement (b, FALSE);
@@ -254,7 +254,7 @@ main (int argc, char *argv[])
 				  1, gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 2),
 				  0);
 	gda_sql_builder_add_field_id (b, 10, 0);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "data"),
 					   NULL);
 	render_as_sql (b);
@@ -273,7 +273,7 @@ main (int argc, char *argv[])
 				  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 3),
 				  0);
 	gda_sql_builder_add_field_id (b, 10, 0);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "data"),
 					   NULL);
 	render_as_sql (b);
@@ -288,7 +288,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_field (b, "lastname", "people", NULL);
 	gda_sql_builder_select_add_field (b, "date", NULL, "birthdate");
 	gda_sql_builder_select_add_field (b, "age", NULL, NULL);
-	gda_sql_builder_select_add_target (b, 0,
+	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "people"),
 					   NULL);
 
