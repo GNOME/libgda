@@ -167,6 +167,31 @@ main (int argc, char *argv[])
 	gda_sql_builder_set_where (b, 3);
 	render_as_sql (b);
 	g_object_unref (b);
+
+	/* SELECT id, name, (SELECT MAX (ts) FROM documents AS d WHERE t.id = d.topic) FROM topics AS t */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "documents"), "d");
+	gda_sql_builder_add_field_id (b,
+				      gda_sql_builder_add_function (b, 0, "MAX",
+								    gda_sql_builder_add_id (b, 0, "ts"),
+								    0), 0);
+	gda_sql_builder_set_where (b,
+				   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+							     gda_sql_builder_add_id (b, 0, "t.id"),
+							     gda_sql_builder_add_id (b, 0, "d.topic"), 0));
+	sub = gda_sql_builder_get_sql_statement (b, FALSE);
+	g_object_unref (b);
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_select_add_target (b, 0,
+					   gda_sql_builder_add_id (b, 0, "topics"), "t");
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, 0, sub, TRUE), 0);
+
+	render_as_sql (b);
+	g_object_unref (b);
 	
 	/* Subselect in INSERT: INSERT INTO customers (e, f, g) SELECT id, name, location FROM subdate */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
