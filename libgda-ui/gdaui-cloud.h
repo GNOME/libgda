@@ -63,6 +63,8 @@ GList            *gdaui_cloud_get_selection        (GdauiCloud *cloud);
 void              gdaui_cloud_filter               (GdauiCloud *cloud, const gchar *filter);
 GtkWidget        *gdaui_cloud_create_filter_widget (GdauiCloud *cloud);
 
+typedef gdouble (*GdauiCloudWeightFunc)            (GdaDataModel *model, gint row, gpointer data);
+void              gdaui_cloud_set_weight_func      (GdauiCloud *cloud, GdauiCloudWeightFunc func, gpointer data);
 
 G_END_DECLS
 
