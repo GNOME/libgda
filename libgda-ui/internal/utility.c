@@ -439,7 +439,12 @@ create_data_error_dialog (GdauiDataWidget *form, gboolean with_question, gboolea
 		
 		gtk_container_add (GTK_CONTAINER (sw), view);
 		gtk_container_add (GTK_CONTAINER (exp), sw);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
+				    exp, TRUE, TRUE, 0);
+#else
 		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), exp, TRUE, TRUE, 0);
+#endif
 		gtk_widget_show_all (exp);
 
 		gtk_window_set_resizable (GTK_WINDOW (dlg), TRUE);

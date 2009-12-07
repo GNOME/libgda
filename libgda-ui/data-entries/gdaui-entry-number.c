@@ -45,7 +45,7 @@ static void gdaui_entry_number_get_property (GObject *object,
 enum
 {
 	PROP_0,
-	PROP_EDITING_CANCELLED,
+	PROP_EDITING_CANCELED,
 	PROP_OPTIONS
 };
 
@@ -73,6 +73,7 @@ static GObjectClass  *parent_class = NULL;
 struct _GdauiEntryNumberPrivate
 {
 	GtkWidget     *entry;
+	gboolean       editing_canceled;
 
 	guchar         thousand_sep;
 	guint16        nb_decimals;
@@ -139,14 +140,22 @@ gdaui_entry_number_class_init (GdauiEntryNumberClass * klass)
 	object_class->set_property = gdaui_entry_number_set_property;
 	object_class->get_property = gdaui_entry_number_get_property;
 
-	g_object_class_install_property (object_class, PROP_EDITING_CANCELLED,
-					 g_param_spec_boolean ("editing_cancelled", NULL, NULL, FALSE, G_PARAM_READABLE));
+	g_object_class_install_property (object_class, PROP_EDITING_CANCELED,
+					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE, G_PARAM_READABLE));
 	g_object_class_install_property (object_class, PROP_OPTIONS,
 					 g_param_spec_string ("options", NULL, NULL, NULL, G_PARAM_WRITABLE));
 }
 
+static gboolean
+key_press_event_cb (GdauiEntryNumber *mgstr, GdkEventKey *key_event, gpointer data)
+{
+	if (key_event->keyval == GDK_Escape)
+		mgstr->priv->editing_canceled = TRUE;
+	return FALSE;
+}
+
 static void
-gdaui_entry_number_init (GdauiEntryNumber * mgstr)
+gdaui_entry_number_init (GdauiEntryNumber *mgstr)
 {
 	mgstr->priv = g_new0 (GdauiEntryNumberPrivate, 1);
 	mgstr->priv->entry = NULL;
@@ -156,6 +165,9 @@ gdaui_entry_number_init (GdauiEntryNumber * mgstr)
 	mgstr->priv->currency = NULL;
 
 	mgstr->priv->entry_change_sig = 0;
+
+	g_signal_connect (mgstr, "key-press-event",
+			  G_CALLBACK (key_press_event_cb), NULL);
 }
 
 gboolean
@@ -272,8 +284,8 @@ gdaui_entry_number_get_property (GObject *object,
 	mgstr = GDAUI_ENTRY_NUMBER (object);
 	if (mgstr->priv) {
 		switch (param_id) {
-		case PROP_EDITING_CANCELLED:
-			g_value_set_boolean (value, GTK_ENTRY (mgstr->priv->entry)->editing_canceled);
+		case PROP_EDITING_CANCELED:
+			g_value_set_boolean (value, mgstr->priv->editing_canceled);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -419,9 +431,10 @@ gdaui_entry_number_start_editing (GtkCellEditable *iface, GdkEvent *event)
 {
 	GdauiEntryNumber *mgstr;
 
-	g_return_if_fail (iface && GDAUI_IS_ENTRY_NUMBER (iface));
+	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (iface));
 	mgstr = GDAUI_ENTRY_NUMBER (iface);
 
+	mgstr->priv->editing_canceled = FALSE;
 	g_object_set (G_OBJECT (mgstr->priv->entry), "has_frame", FALSE, "xalign", 0., NULL);
 
 	gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgstr->priv->entry), event);

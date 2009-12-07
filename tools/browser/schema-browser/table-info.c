@@ -22,7 +22,6 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include <gtk/gtk.h>
 #include "table-info.h"
 #include "../dnd.h"
 #include "../support.h"
@@ -226,8 +225,14 @@ source_drag_data_get_cb (GtkWidget *widget, GdkDragContext *context,
 	case TARGET_KEY_VALUE: {
 		gchar *str;
 		str = table_info_to_selection (tinfo);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_selection_data_set (selection_data,
+					gtk_selection_data_get_target (selection_data), 8, (guchar*) str,
+					strlen (str));
+#else
 		gtk_selection_data_set (selection_data, selection_data->target, 8, (guchar*) str,
 					strlen (str));
+#endif
 		g_free (str);
 		break;
 	}

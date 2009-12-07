@@ -21,8 +21,6 @@
  */
 
 #include <string.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtktable.h>
 #include <libgda/libgda.h>
 #include "gdaui-provider-spec-editor.h"
 #include <libgda-ui/gdaui-basic-form.h>

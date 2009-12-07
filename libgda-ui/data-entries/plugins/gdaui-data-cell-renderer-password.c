@@ -1,6 +1,6 @@
 /* gdaui-data-cell-renderer-password.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba <malerba@gdaui.org>
+ * Copyright (C) 2003 - 2009 Vivien Malerba <malerba@gdaui.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -137,10 +137,8 @@ gdaui_data_cell_renderer_password_init (GdauiDataCellRendererPassword *datacell)
 	datacell->priv->value = NULL;
 	datacell->priv->options = NULL;
 
-	GTK_CELL_RENDERER (datacell)->xalign = 0.0;
-	GTK_CELL_RENDERER (datacell)->yalign = 0.5;
-	GTK_CELL_RENDERER (datacell)->xpad = 2;
-	GTK_CELL_RENDERER (datacell)->ypad = 2;
+	g_object_set ((GObject*) datacell, "xalign", 0., "yalign", 0.,
+		      "xpad", 2, "ypad", 2, NULL);
 }
 
 static void
@@ -235,8 +233,6 @@ gdaui_data_cell_renderer_password_get_property (GObject *object,
 						   GValue *value,
 						   GParamSpec *pspec)
 {
-	GdauiDataCellRendererPassword *datacell = GDAUI_DATA_CELL_RENDERER_PASSWORD (object);
-
 	switch (param_id) {
 	case PROP_VALUE_ATTRIBUTES:
 		/* nothing to do */
@@ -382,19 +378,27 @@ gdaui_data_cell_renderer_password_render (GtkCellRenderer      *cell,
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 	(text_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
 
-	if (GDAUI_DATA_CELL_RENDERER_PASSWORD (cell)->priv->to_be_deleted)
-		gtk_paint_hline (widget->style,
+	if (GDAUI_DATA_CELL_RENDERER_PASSWORD (cell)->priv->to_be_deleted) {
+		GtkStyle *style;
+		guint xpad;
+
+		g_object_get ((GObject*) widget, "style", &style, NULL);
+		g_object_get ((GObject*) cell, "xpad", &xpad, NULL);
+
+		gtk_paint_hline (style,
 				 window, GTK_STATE_SELECTED,
 				 cell_area, 
 				 widget,
 				 "hline",
-				 cell_area->x + cell->xpad, cell_area->x + cell_area->width - cell->xpad,
+				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
 				 cell_area->y + cell_area->height / 2.);
+		g_object_unref (style);
+	}
 }
 
 static void
 gdaui_data_cell_renderer_password_editing_done (GtkCellEditable *entry,
-						   gpointer         data)
+						gpointer         data)
 {
 	const gchar *path;
 	GdauiDataCellRendererPasswordInfo *info;
@@ -408,11 +412,11 @@ gdaui_data_cell_renderer_password_editing_done (GtkCellEditable *entry,
 		info->focus_out_id = 0;
 	}
 
-	if (g_object_class_find_property (G_OBJECT_GET_CLASS (entry), "editing_cancelled")) {
-		gboolean editing_cancelled;
+	if (g_object_class_find_property (G_OBJECT_GET_CLASS (entry), "editing-canceled")) {
+		gboolean editing_canceled;
 
-		g_object_get (G_OBJECT (entry), "editing_cancelled", &editing_cancelled, NULL);
-		if (editing_cancelled)
+		g_object_get (G_OBJECT (entry), "editing-canceled", &editing_canceled, NULL);
+		if (editing_canceled)
 			return;
 	}
 
@@ -462,7 +466,7 @@ gdaui_data_cell_renderer_password_start_editing (GtkCellRenderer      *cell,
 
 	g_object_set (G_OBJECT (entry), "is_cell_renderer", TRUE, "actions", FALSE, NULL);
 
-	gdaui_data_entry_set_value_orig (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
+	gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
 	
 	info = g_new0 (GdauiDataCellRendererPasswordInfo, 1);
  	g_object_set_data_full (G_OBJECT (entry), GDAUI_DATA_CELL_RENDERER_PASSWORD_PATH, g_strdup (path), g_free); 

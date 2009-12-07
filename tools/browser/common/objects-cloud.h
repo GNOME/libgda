@@ -23,7 +23,7 @@
 #ifndef __OBJECTS_CLOUD_H__
 #define __OBJECTS_CLOUD_H__
 
-#include <gtk/gtkvbox.h>
+#include <gtk/gtk.h>
 #include "../browser-connection.h"
 
 G_BEGIN_DECLS

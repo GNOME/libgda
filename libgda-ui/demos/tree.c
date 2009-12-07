@@ -126,7 +126,12 @@ do_tree (GtkWidget *do_widget)
 				       "feeds it to a GdauiTreeStore (which implements the GtkTreeModel\n"
 				       "interface, and creates a GtkTreeView to display the contents\n"
 				       "of the GdaTree");
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
+				    label, TRUE, TRUE, 0);
+#else
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label, TRUE, TRUE, 0);
+#endif
 
 		/* create GdaTree */
 		tree = gda_tree_new ();
@@ -147,7 +152,12 @@ do_tree (GtkWidget *do_widget)
 					      G_TYPE_BOOLEAN, "scale-set");
 		treeview = gtk_tree_view_new_with_model (model);
 		g_object_unref (model);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
+				    treeview, TRUE, TRUE, 0);
+#else
 		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), treeview, TRUE, TRUE, 0);
+#endif
 
 		/* create GtkTreeView's column */
 		enum {
@@ -161,13 +171,17 @@ do_tree (GtkWidget *do_widget)
 								   "scale-set", COLUMN_SCALE_SET,
 								   "scale", COLUMN_SCALE,
 								   NULL);
-		gtk_tree_view_append_column (treeview, column);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 	}
 
-	if (!GTK_WIDGET_VISIBLE (window))
+	gboolean visible;
+	g_object_get (G_OBJECT (window), "visible", &visible, NULL);
+	if (!visible)
 		gtk_widget_show_all (window);
-	else
+	else {
 		gtk_widget_destroy (window);
+		window = NULL;
+	}
 
 	return window;
 }

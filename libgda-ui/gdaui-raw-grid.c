@@ -385,10 +385,10 @@ load_xml_data_layout_item (GdauiRawGrid  *grid,
 	gboolean sort_ascending = FALSE;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "name");
+	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		name = g_strdup (str);
-		g_print ("name: %s\n", str);
+		name = g_strdup ((gchar*) str);
+		g_print ("name: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -404,24 +404,24 @@ load_xml_data_layout_item (GdauiRawGrid  *grid,
 	/* 	xmlFree (str); */
 	/* } */
 
-	str = xmlGetProp (node, "sequence");
+	str = xmlGetProp (node, BAD_CAST "sequence");
 	if (str) {
-		sequence = atoi (str);
-		g_print ("sequence: %s\n", str);
+		sequence = atoi ((gchar*) str);
+		g_print ("sequence: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "editable");
+	str = xmlGetProp (node, BAD_CAST "editable");
 	if (str) {
 		editable = (*str == 't' || *str == 'T') ? TRUE : FALSE;
-		g_print ("editable: %s\n", str);
+		g_print ("editable: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "sort_ascending");
+	str = xmlGetProp (node, BAD_CAST "sort_ascending");
 	if (str) {
 		sort_ascending = (*str == 't' || *str == 'T') ? TRUE : FALSE;
-		g_print ("sort_ascending: %s\n", str);
+		g_print ("sort_ascending: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -495,31 +495,31 @@ load_xml_data_layout_group (GdauiRawGrid  *grid,
 	gchar *title = NULL;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "name");
+	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		name = g_strdup (str);
-		g_print ("name: %s\n", str);
+		name = g_strdup ((gchar*) str);
+		g_print ("name: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "sequence");
+	str = xmlGetProp (node, BAD_CAST "sequence");
 	if (str) {
-		sequence = atoi (str);
-		g_print ("sequence: %s\n", str);
+		sequence = atoi ((gchar*) str);
+		g_print ("sequence: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "columns_count");
+	str = xmlGetProp (node, BAD_CAST "columns_count");
 	if (str) {
-		columns_count = atoi (str);
-		g_print ("columns_count: %s\n", str);
+		columns_count = atoi ((gchar*) str);
+		g_print ("columns_count: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "title");
+	str = xmlGetProp (node, BAD_CAST "title");
 	if (str) {
-		title = g_strdup (str);
-		g_print ("title: %s\n", str);
+		title = g_strdup ((gchar*) str);
+		g_print ("title: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -527,37 +527,37 @@ load_xml_data_layout_group (GdauiRawGrid  *grid,
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_group")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_group")) {
 			load_xml_data_layout_group (grid, child, data);
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_item")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item")) {
 			load_xml_data_layout_item (grid, child, /* data *//* table */ title);
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_portal")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_portal")) {
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_notebook")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_notebook")) {
 		}
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "trans_set")) {
+		    !xmlStrcmp (child->name, BAD_CAST "trans_set")) {
 			/* load_xml_trans_set (grid, child, data); */
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_button")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_button")) {
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_item_groupby")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item_groupby")) {
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_item_header")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item_header")) {
 		}
 	}
 
@@ -577,7 +577,7 @@ load_xml_data_layout_groups (GdauiRawGrid  *grid,
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_group")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_group")) {
 			load_xml_data_layout_group (grid, child, /* data */ NULL);
 		}
 	}
@@ -596,17 +596,17 @@ load_xml_data_layout (GdauiRawGrid  *grid,
 	gchar *name = NULL;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "parent_table");
+	str = xmlGetProp (node, BAD_CAST "parent_table");
 	if (str) {
-		parent_table = g_strdup (str);
-		g_print ("parent_table: %s\n", str);
+		parent_table = g_strdup ((gchar*) str);
+		g_print ("parent_table: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "name");
+	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		name = g_strdup (str);
-		g_print ("name: %s\n", str);
+		name = g_strdup ((gchar*) str);
+		g_print ("name: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -625,7 +625,7 @@ load_xml_data_layout (GdauiRawGrid  *grid,
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_groups")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_groups")) {
 			load_xml_data_layout_groups (grid, child, data);
 		}
 	}
@@ -644,7 +644,7 @@ load_xml_data_layouts (GdauiRawGrid  *grid,
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout")) {
 			load_xml_data_layout (grid, child, data);
 		}
 
@@ -672,16 +672,16 @@ gdaui_raw_grid_query_tooltip (GtkWidget   *widget,
 	GList *list, *columns = gtk_tree_view_get_columns (tree_view);
 	for (list = columns; list; list = list->next) {
 		GtkTreeViewColumn *column = list->data;
-		if (x >= col_x && x < (col_x + column->width)) {
+		if (x >= col_x && x < (col_x + gtk_tree_view_column_get_width (column))) {
 			break;
 		} else
-			col_x += column->width;
+			col_x += gtk_tree_view_column_get_width (column);
 		++position;
 	}
 	if (list == NULL)
 		return FALSE;
 
-	GdauiRawGrid *grid = GDAUI_RAW_GRID(tree_view);
+	GdauiRawGrid *grid = GDAUI_RAW_GRID (tree_view);
 	ColumnData *column_data = (ColumnData *) (g_slist_nth (grid->priv->columns_data, position)->data);
 	g_return_val_if_fail (column_data, FALSE);
 
@@ -839,7 +839,7 @@ gdaui_raw_grid_set_property (GObject *object,
 			for (child = node->children; child != NULL; child = child->next) {
 
 				if (child->type == XML_ELEMENT_NODE &&
-				    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_groups")) {
+				    !xmlStrcmp (child->name, BAD_CAST "data_layout_groups")) {
 					load_xml_data_layout_groups (grid, child, NULL);
 				}
 			}
@@ -1730,11 +1730,18 @@ filter_position_func (GtkWidget *widget,
 	gint x, y;
 	gint tree_x, tree_y;
 	gint tree_width, tree_height;
-	GdkWindow *window = GTK_WIDGET (widget)->window;
-	GdkScreen *screen = gdk_drawable_get_screen (window);
+	GdkWindow *window;
+	GdkScreen *screen;
 	GtkRequisition requisition;
 	gint monitor_num;
 	GdkRectangle monitor;
+
+#if GTK_CHECK_VERSION(2,18,0)
+	window = gtk_widget_get_window (widget);
+#else
+	window = widget->window;
+#endif
+	screen = gdk_drawable_get_screen (window);
 
 	monitor_num = gdk_screen_get_monitor_at_window (screen, window);
 	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
@@ -1799,9 +1806,15 @@ action_filter_cb (GtkAction *action, GdauiRawGrid *grid)
 		gtk_widget_set_events (grid->priv->filter_window,
 				       gtk_widget_get_events (grid->priv->filter_window) | GDK_KEY_PRESS_MASK);
 
+#if GTK_CHECK_VERSION(2,18,0)
+		if (gtk_widget_is_toplevel (toplevel) && gtk_window_get_group (GTK_WINDOW (toplevel)))
+			gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (toplevel)),
+						     GTK_WINDOW (grid->priv->filter_window));
+#else
 		if (GTK_WIDGET_TOPLEVEL (toplevel) && GTK_WINDOW (toplevel)->group)
 			gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
 						     GTK_WINDOW (grid->priv->filter_window));
+#endif
 		
 		g_signal_connect (grid->priv->filter_window, "delete_event",
 				  G_CALLBACK (filter_event), grid);
@@ -1826,6 +1839,16 @@ action_filter_cb (GtkAction *action, GdauiRawGrid *grid)
 		}
 		gtk_container_add (GTK_CONTAINER (vbox), grid->priv->filter);
 	}
+#if GTK_CHECK_VERSION(2,18,0)
+	else if (gtk_widget_is_toplevel (toplevel)) {
+		if (gtk_window_get_group ((GtkWindow*) toplevel))
+			gtk_window_group_add_window (gtk_window_get_group ((GtkWindow*) toplevel),
+						     GTK_WINDOW (grid->priv->filter_window));
+		else if (gtk_window_get_group (GTK_WINDOW (grid->priv->filter_window)))
+			gtk_window_group_remove_window (gtk_window_get_group (GTK_WINDOW (grid->priv->filter_window)),
+							GTK_WINDOW (grid->priv->filter_window));
+	}
+#else
 	else if (GTK_WIDGET_TOPLEVEL (toplevel)) {
 		if (GTK_WINDOW (toplevel)->group)
 			gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
@@ -1834,13 +1857,18 @@ action_filter_cb (GtkAction *action, GdauiRawGrid *grid)
 			gtk_window_group_remove_window (GTK_WINDOW (grid->priv->filter_window)->group,
 							GTK_WINDOW (grid->priv->filter_window));
 	}
+#endif
 
 	/* move the filter window to a correct location */
 	/* FIXME: let the user specify the position function like GtkTreeView -> search_position_func() */
 	gtk_grab_add (grid->priv->filter_window);
 	filter_position_func (GTK_WIDGET (grid), grid->priv->filter_window, NULL);
 	gtk_widget_show (grid->priv->filter_window);
+#if GTK_CHECK_VERSION(2,18,0)
+	popup_grab_on_window (gtk_widget_get_window (grid->priv->filter_window),
+#else
 	popup_grab_on_window (grid->priv->filter_window->window,
+#endif
 			      gtk_get_current_event_time ());	
 }
 
@@ -1861,7 +1889,7 @@ tree_view_event_cb (GtkWidget *treeview, GdkEvent *event, GdauiRawGrid *grid)
 			GtkTreeViewColumn *column;
 			GtkTreePath *path;
 
-			/* FIXME: if a column is currently edited, then make sure the editing of that cell is not cancelled */
+			/* FIXME: if a column is currently edited, then make sure the editing of that cell is not canceled */
 			gtk_tree_view_get_cursor (GTK_TREE_VIEW (treeview), &path, &column);
 			if (column && path) {
 				GList *columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (treeview));
@@ -2062,7 +2090,7 @@ menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid)
 	GtkWidget *label;
 	GtkWidget *filename;
 	GtkWidget *types;
-	GtkWidget *hbox, *table, *check;
+	GtkWidget *hbox, *table, *check, *dbox;
 	char *str;
 	GtkTreeSelection *sel;
 	gint selrows;
@@ -2084,17 +2112,23 @@ menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid)
         gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
         g_free (str);
-        gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), label, FALSE, TRUE, 2);
+
+#if GTK_CHECK_VERSION(2,18,0)
+	dbox = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+#else
+	dbox = GTK_DIALOG (dialog)->vbox;
+#endif
+        gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
 	str = g_strdup_printf ("<b>%s:</b>", _("File name"));
         label = gtk_label_new ("");
         gtk_label_set_markup (GTK_LABEL (label), str);
         gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
         g_free (str);
-        gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), label, FALSE, TRUE, 2);
+        gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
 	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
-        gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 5);
+        gtk_box_pack_start (GTK_BOX (dbox), hbox, FALSE, FALSE, 5);
         gtk_widget_show (hbox);
         label = gtk_label_new ("    ");
         gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
@@ -2109,10 +2143,10 @@ menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid)
         gtk_label_set_markup (GTK_LABEL (label), str);
         gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
         g_free (str);
-        gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), label, FALSE, TRUE, 2);
+        gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
 	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
-        gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 5);
+        gtk_box_pack_start (GTK_BOX (dbox), hbox, FALSE, FALSE, 5);
         gtk_widget_show (hbox);
         label = gtk_label_new ("    ");
         gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
@@ -2323,9 +2357,13 @@ confirm_file_overwrite (GtkWindow *parent, const gchar *path)
 						     GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION,
 						     GTK_BUTTONS_CLOSE, "%s", str);
 	g_free (str);
-		
+
 	button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+#if GTK_CHECK_VERSION(2,18,0)
+	gtk_widget_set_can_default (button, TRUE);
+#else
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+#endif
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
 				      button,
 				      GTK_RESPONSE_NO);

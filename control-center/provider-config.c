@@ -25,11 +25,7 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-data-model-array.h>
-#include <gtk/gtkimage.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtkvbbox.h>
+#include <gtk/gtk.h>
 #include <libgda-ui/libgda-ui.h>
 #include "provider-config.h"
 #include "cc-gray-bar.h"

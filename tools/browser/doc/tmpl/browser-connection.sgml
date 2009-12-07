@@ -23,6 +23,22 @@ An opened connection
 
 </para>
 
+@wrapper: 
+@wrapper_jobs: 
+@wrapper_results_timer: 
+@executed_statements: 
+@name: 
+@cnc: 
+@dict_file_name: 
+@parser: 
+@variables: 
+@dsn_info: 
+@p_mstruct_mutex: 
+@p_mstruct: 
+@mstruct: 
+@bfav: 
+@busy: 
+@busy_reason: 
 
 <!-- ##### STRUCT BrowserConnection ##### -->
 <para>
@@ -60,6 +76,11 @@ An opened connection
 </para>
 
 @browserconnection: the object which received the signal.
+
+<!-- ##### ARG BrowserConnection:gda-connection ##### -->
+<para>
+
+</para>
 
 <!-- ##### FUNCTION browser_connection_new ##### -->
 <para>

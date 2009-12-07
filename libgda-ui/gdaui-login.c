@@ -30,9 +30,7 @@
 #include <libgda-ui/internal/gdaui-provider-spec-editor.h>
 #include <libgda-ui/internal/gdaui-provider-auth-editor.h>
 #include "gdaui-enum-types.h"
-#include <gtk/gtklabel.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtkstock.h>
+#include <gtk/gtk.h>
 #include <string.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
@@ -390,7 +388,11 @@ run_cc_cb (GtkButton *button, GdauiLogin *login)
 	if (!sresult) {
 		GtkWidget *msgdialog;
 		GtkWidget *toplevel = gtk_widget_get_toplevel (GTK_WIDGET (login));
+#if GTK_CHECK_VERSION(2,18,0)
+		if (!gtk_widget_is_toplevel (toplevel))
+#else
 		if (!GTK_WIDGET_TOPLEVEL (toplevel))
+#endif
 			toplevel = NULL;
 		msgdialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (toplevel), GTK_DIALOG_MODAL,
 								GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,

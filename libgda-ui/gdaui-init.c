@@ -57,7 +57,6 @@ void
 gdaui_init (void)
 {
 	static gboolean initialized = FALSE;
-	gchar *str;
 
 	if (initialized) {
 		gda_log_error (_("Attempt to initialize an already initialized library"));
@@ -65,6 +64,7 @@ gdaui_init (void)
 	}
 
 	/*
+	gchar *str;
 	gdaui_gbr_init ();
 	str = gdaui_gbr_get_locale_dir_path ();
 	bindtextdomain (GETTEXT_PACKAGE, str);
@@ -383,7 +383,7 @@ init_plugins_hash (void)
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-number.xml", NULL);
 	xmlChar *xml_spec = get_spec_with_isocodes (file);
 	if (xml_spec) {
-		plugin->options_xml_spec = g_strdup (xml_spec);
+		plugin->options_xml_spec = g_strdup ((gchar*) xml_spec);
 		xmlFree (xml_spec);
 	}
 	g_free (file);
@@ -590,12 +590,12 @@ find_child_node_from_name (xmlNodePtr parent, const gchar *name, const gchar *at
 		return NULL;
 
 	for (node = parent->children; node; node = node->next) {
-		if (!strcmp (node->name, name)) {
+		if (!strcmp ((gchar*) node->name, name)) {
 			if (attr_name) {
 				xmlChar *prop;
-				prop = xmlGetProp (node, attr_name);
+				prop = xmlGetProp (node, BAD_CAST attr_name);
 				if (prop) {
-					if (attr_value && !strcmp (prop, attr_value)) {
+					if (attr_value && !strcmp ((gchar*) prop, attr_value)) {
 						xmlFree (prop);
 						break;
 					}
@@ -616,7 +616,7 @@ static xmlChar *
 get_spec_with_isocodes (const gchar *file)
 {
 	xmlDocPtr spec, isocodes = NULL;
-	gchar *retval = NULL;
+	xmlChar *retval = NULL;
 	gchar *isofile = NULL;
 	GError *err = NULL;
 	gchar  *buf = NULL;
@@ -657,20 +657,21 @@ get_spec_with_isocodes (const gchar *file)
 		spec_node = find_child_node_from_name (node, "gda_array_data", NULL, NULL);
 		xmlUnlinkNode (spec_node);
 		xmlFreeNode (spec_node);
-		spec_node = xmlNewChild (node, NULL, "gda_array_data", NULL);
+		spec_node = xmlNewChild (node, NULL, BAD_CAST "gda_array_data", NULL);
 		
 		node = xmlDocGetRootElement (isocodes);
 		for (node = node->children; node; node = node->next) {
-			if (!strcmp (node->name, "iso_4217_entry")) {
+			if (!strcmp ((gchar*) node->name, "iso_4217_entry")) {
 				xmlChar *code, *name;
-				code = xmlGetProp (node, "letter_code");
-				name = xmlGetProp (node, "currency_name");
+				code = xmlGetProp (node, BAD_CAST "letter_code");
+				name = xmlGetProp (node, BAD_CAST "currency_name");
 				if (code && name) {
 					xmlNodePtr row;
-					row = xmlNewChild (spec_node, NULL, "gda_array_row", NULL);
-					xmlNewChild (row, NULL, "gda_value", code);
-					xmlNewChild (row, NULL, "gda_value", code);
-					xmlNewChild (row, NULL, "gda_value", dgettext ("iso_4217", name));
+					row = xmlNewChild (spec_node, NULL, BAD_CAST "gda_array_row", NULL);
+					xmlNewChild (row, NULL, BAD_CAST "gda_value", code);
+					xmlNewChild (row, NULL, BAD_CAST "gda_value", code);
+					xmlNewChild (row, NULL, BAD_CAST "gda_value",
+						     BAD_CAST dgettext ("iso_4217", (gchar*) name));
 				}
 				if (code)
 					xmlFree (code);
@@ -691,7 +692,7 @@ get_spec_with_isocodes (const gchar *file)
 
 		node = find_child_node_from_name (xmlDocGetRootElement (spec), "parameters", NULL, NULL);
 		node = find_child_node_from_name (xmlDocGetRootElement (spec), "parameter", "id", "CURRENCY");
-		xmlSetProp (node, "source", NULL);
+		xmlSetProp (node, BAD_CAST "source", NULL);
 	}
 
 	xmlDocDumpMemory (spec, (xmlChar **) &retval, &buf_len);

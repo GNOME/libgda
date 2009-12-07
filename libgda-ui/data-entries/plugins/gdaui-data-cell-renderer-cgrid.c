@@ -1,6 +1,6 @@
 /* gdaui-data-cell-renderer-cgrid.c
  *
- * Copyright (C) 2007 - 2007 Carlos Savoretti
+ * Copyright (C) 2007 - 2009 Carlos Savoretti
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -449,15 +449,23 @@ gdaui_data_cell_renderer_cgrid_render (GtkCellRenderer       *renderer,
 
 	(renderer_class->render) (renderer, window, widget, background_rectangle, cell_rectangle, expose_rectangle, flags);
 
-	if (GDAUI_DATA_CELL_RENDERER_CGRID(renderer)->priv->to_be_deleted)
-		gtk_paint_hline (widget->style,
+	if (GDAUI_DATA_CELL_RENDERER_CGRID(renderer)->priv->to_be_deleted) {
+		GtkStyle *style;
+		guint xpad;
+
+		g_object_get ((GObject*) widget, "style", &style, NULL);
+		g_object_get ((GObject*) renderer, "xpad", &xpad, NULL);
+
+		gtk_paint_hline (style,
                                  window, GTK_STATE_SELECTED,
                                  cell_rectangle,
                                  widget,
                                  "hline",
-                                 cell_rectangle->x + renderer->xpad, 
-				 cell_rectangle->x + cell_rectangle->width - renderer->xpad,
+                                 cell_rectangle->x + xpad, 
+				 cell_rectangle->x + cell_rectangle->width - xpad,
                                  cell_rectangle->y + cell_rectangle->height / 2.);
+		g_object_unref (style);
+	}
 }
 
 static void

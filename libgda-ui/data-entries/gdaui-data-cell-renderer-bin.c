@@ -128,9 +128,8 @@ gdaui_data_cell_renderer_bin_init (GdauiDataCellRendererBin *cell)
 	cell->priv->dh = NULL;
 	cell->priv->type = GDA_TYPE_BLOB;
 	cell->priv->editable = FALSE;
-	GTK_CELL_RENDERER (cell)->mode = GTK_CELL_RENDERER_MODE_ACTIVATABLE;
-	GTK_CELL_RENDERER (cell)->xpad = 2;
-	GTK_CELL_RENDERER (cell)->ypad = 2;
+	g_object_set (G_OBJECT (cell), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE,
+									"xpad", 2, "ypad", 2, NULL);
 }
 
 static void
@@ -361,15 +360,23 @@ gdaui_data_cell_renderer_bin_render (GtkCellRenderer      *cell,
 	GtkCellRendererClass *pixbuf_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_PIXBUF);
 
 	(pixbuf_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
+	
+	if (GDAUI_DATA_CELL_RENDERER_BIN (cell)->priv->to_be_deleted) {
+		GtkStyle *style;
+		guint xpad;
+		
+		g_object_get ((GObject*) widget, "style", &style, NULL);
+		g_object_get ((GObject*) cell, "xpad", &xpad, NULL);
 
-	if (GDAUI_DATA_CELL_RENDERER_BIN (cell)->priv->to_be_deleted)
-		gtk_paint_hline (widget->style,
+		gtk_paint_hline (style,
 				 window, GTK_STATE_SELECTED,
 				 cell_area, 
 				 widget,
 				 "hline",
-				 cell_area->x + cell->xpad, cell_area->x + cell_area->width - cell->xpad,
+				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
 				 cell_area->y + cell_area->height / 2.);
+		g_object_unref (style);
+	}
 
 }
 

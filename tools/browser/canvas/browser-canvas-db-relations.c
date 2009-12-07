@@ -209,10 +209,18 @@ popup_position (PopupContainer *container, gint *out_x, gint *out_y)
 
         gtk_widget_size_request (canvas, &req);
 
+#if GTK_CHECK_VERSION(2,18,0)
+	GtkAllocation alloc;
+	gdk_window_get_origin (gtk_widget_get_window (canvas), &x, &y);
+	gtk_widget_get_allocation (canvas, &alloc);
+        x += alloc.x;
+        y += alloc.y;
+#else
         gdk_window_get_origin (canvas->window, &x, &y);
 
         x += canvas->allocation.x;
         y += canvas->allocation.y;
+#endif
 
         if (x < 0)
                 x = 0;

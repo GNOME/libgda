@@ -134,6 +134,7 @@ auth_dialog_init (AuthDialog *dialog)
 {
 	GtkWidget *label, *hbox, *wid;
 	char *markup, *str;
+	GtkWidget *dcontents;
 
 	dialog->priv = g_new0 (AuthDialogPrivate, 1);
 
@@ -143,7 +144,12 @@ auth_dialog_init (AuthDialog *dialog)
 				GTK_STOCK_CANCEL,
 				GTK_RESPONSE_REJECT, NULL);
 
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 5);
+#if GTK_CHECK_VERSION(2,18,0)
+	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+#else
+	dcontents = GTK_DIALOG (dialog)->vbox;
+#endif
+	gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, TRUE);
 
 	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-auth.png", NULL);
@@ -153,7 +159,7 @@ auth_dialog_init (AuthDialog *dialog)
 	/* label and spinner */
 	hbox = gtk_hbox_new (FALSE, 0); 
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 10);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 0);
 	
 	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-auth-big.png", NULL);
 	wid = gtk_image_new_from_file (str);
@@ -397,6 +403,13 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 		/* add widget */
 		GtkWidget *hbox, *label;
 		gchar *str;
+		GtkWidget *dcontents;
+
+#if GTK_CHECK_VERSION(2,18,0)
+		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+#else
+		dcontents = GTK_DIALOG (dialog)->vbox;
+#endif
 
 		label = gtk_label_new ("");
 		str = g_strdup_printf ("<b>%s: %s</b>\n%s", _("For connection"), ad->ext.cnc_string,
@@ -404,11 +417,11 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 		g_free (str);
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), label, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 		gtk_widget_show (label);
 
 		hbox = gtk_hbox_new (FALSE, 0); /* HIG */
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, TRUE, TRUE, 0);
+		gtk_box_pack_start (GTK_BOX (dcontents), hbox, TRUE, TRUE, 0);
 		label = gtk_label_new ("      ");
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (hbox), ad->auth_widget, TRUE, TRUE, 0);

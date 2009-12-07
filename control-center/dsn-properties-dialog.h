@@ -20,9 +20,9 @@
  */
 
 #ifndef __DSN_PROPERTIES_DIALOG_H__
-#define __dsn_properties_dialog_h__
+#define __DSN_PROPERTIES_DIALOG_H__
 
-#include <gtk/gtkwindow.h>
+#include <gtk/gtk.h>
 
 void dsn_properties_dialog (GtkWindow *parent, const gchar *dsn);
 

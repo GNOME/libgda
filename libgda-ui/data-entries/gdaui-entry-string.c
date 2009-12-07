@@ -36,20 +36,20 @@ static void gdaui_entry_string_dispose (GObject *object);
 static void gdaui_entry_string_finalize (GObject *object);
 
 static void gdaui_entry_string_set_property (GObject *object,
-					  guint param_id,
-					  const GValue *value,
-					  GParamSpec *pspec);
+					     guint param_id,
+					     const GValue *value,
+					     GParamSpec *pspec);
 static void gdaui_entry_string_get_property (GObject *object,
-					  guint param_id,
-					  GValue *value,
-					  GParamSpec *pspec);
+					     guint param_id,
+					     GValue *value,
+					     GParamSpec *pspec);
 
 /* properties */
 enum
 {
 	PROP_0,
 	PROP_MULTILINE,
-	PROP_EDITING_CANCELLED,
+	PROP_EDITING_CANCELED,
 	PROP_OPTIONS
 };
 
@@ -81,6 +81,7 @@ struct _GdauiEntryStringPrivate
 	GtkWidget     *vbox;
 
 	GtkWidget     *entry;
+	gboolean       editing_canceled;
 
 	GtkTextBuffer *buffer;
 	GtkWidget     *sw;
@@ -152,20 +153,29 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 	g_object_class_install_property (object_class, PROP_MULTILINE,
 					 g_param_spec_boolean ("multiline", NULL, NULL, FALSE, 
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
-	g_object_class_install_property (object_class, PROP_EDITING_CANCELLED,
-					 g_param_spec_boolean ("editing_cancelled", NULL, NULL, FALSE, G_PARAM_READABLE));
+	g_object_class_install_property (object_class, PROP_EDITING_CANCELED,
+					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE, G_PARAM_READABLE));
 	g_object_class_install_property (object_class, PROP_OPTIONS,
 					 g_param_spec_string ("options", NULL, NULL, NULL, G_PARAM_WRITABLE));
 }
 
+static gboolean
+key_press_event_cb (GdauiEntryString *mgstr, GdkEventKey *key_event, gpointer data)
+{
+	if (key_event->keyval == GDK_Escape)
+		mgstr->priv->editing_canceled = TRUE;
+	return FALSE;
+}
+
 static void
-gdaui_entry_string_init (GdauiEntryString * mgstr)
+gdaui_entry_string_init (GdauiEntryString *mgstr)
 {
 	mgstr->priv = g_new0 (GdauiEntryStringPrivate, 1);
 	mgstr->priv->multiline = FALSE;
 	mgstr->priv->hidden = FALSE;
 	mgstr->priv->vbox = NULL;
 	mgstr->priv->entry = NULL;
+	mgstr->priv->editing_canceled = FALSE;
 	mgstr->priv->buffer = NULL;
 	mgstr->priv->view = NULL;
 	mgstr->priv->sw = NULL;
@@ -173,6 +183,9 @@ gdaui_entry_string_init (GdauiEntryString * mgstr)
 	mgstr->priv->maxsize = 65535; /* eg. unlimited for GtkEntry */
 
 	mgstr->priv->entry_change_sig = 0;
+
+	g_signal_connect (mgstr, "key-press-event",
+			  G_CALLBACK (key_press_event_cb), NULL);
 }
 
 /**
@@ -252,9 +265,9 @@ gdaui_entry_string_finalize (GObject   * object)
 
 static void
 gdaui_entry_string_set_property (GObject *object,
-				    guint param_id,
-				    const GValue *value,
-				    GParamSpec *pspec)
+				 guint param_id,
+				 const GValue *value,
+				 GParamSpec *pspec)
 {
 	GdauiEntryString *mgstr;
 
@@ -286,9 +299,9 @@ gdaui_entry_string_set_property (GObject *object,
 
 static void
 gdaui_entry_string_get_property (GObject *object,
-			     guint param_id,
-			     GValue *value,
-			     GParamSpec *pspec)
+				 guint param_id,
+				 GValue *value,
+				 GParamSpec *pspec)
 {
 	GdauiEntryString *mgstr;
 
@@ -298,8 +311,8 @@ gdaui_entry_string_get_property (GObject *object,
 		case PROP_MULTILINE:
 			g_value_set_boolean (value, mgstr->priv->multiline);
 			break;
-		case PROP_EDITING_CANCELLED:
-			g_value_set_boolean (value, GTK_ENTRY (mgstr->priv->entry)->editing_canceled);
+		case PROP_EDITING_CANCELED:
+			g_value_set_boolean (value, mgstr->priv->editing_canceled);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -554,10 +567,11 @@ gdaui_entry_string_start_editing (GtkCellEditable *iface, GdkEvent *event)
 {
 	GdauiEntryString *mgstr;
 
-	g_return_if_fail (iface && GDAUI_IS_ENTRY_STRING (iface));
+	g_return_if_fail (GDAUI_IS_ENTRY_STRING (iface));
 	mgstr = GDAUI_ENTRY_STRING (iface);
 	g_return_if_fail (mgstr->priv);
 
+	mgstr->priv->editing_canceled = FALSE;
 	g_object_set (G_OBJECT (mgstr->priv->entry), "has_frame", FALSE, "xalign", 0., NULL);
 	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_LEFT, 0);
 	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_RIGHT, 0);
@@ -567,12 +581,12 @@ gdaui_entry_string_start_editing (GtkCellEditable *iface, GdkEvent *event)
 	gtk_container_set_border_width (GTK_CONTAINER (mgstr->priv->sw), 0);
 
 	gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgstr->priv->entry), event);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "editing_done",
+	g_signal_connect (mgstr->priv->entry, "editing_done",
 			  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgstr);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "remove_widget",
+	g_signal_connect (mgstr->priv->entry, "remove_widget",
 			  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgstr);
 	gdaui_entry_shell_refresh (GDAUI_ENTRY_SHELL (mgstr));
-
+	
 	gtk_widget_grab_focus (mgstr->priv->entry);
 	gtk_widget_queue_draw (GTK_WIDGET (mgstr));
 }

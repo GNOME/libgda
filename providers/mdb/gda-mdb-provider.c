@@ -22,7 +22,7 @@
  */
 
 #include <stdlib.h>
-#include <glib/gbacktrace.h>
+#include <glib.h>
 #include <virtual/gda-vconnection-data-model.h>
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-server-provider-extra.h>

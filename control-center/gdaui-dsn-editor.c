@@ -22,8 +22,6 @@
  */
 
 #include <string.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtktable.h>
 #include <libgda/libgda.h>
 #include "gdaui-dsn-editor.h"
 #include <libgda-ui/gdaui-provider-selector.h>
@@ -193,6 +191,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
 				"editing the data source's attributes is disabled</span>"));
 	gtk_misc_set_alignment (GTK_MISC (config->priv->warning), 0.5, -1);
 	gtk_label_set_justify (GTK_LABEL (config->priv->warning), GTK_JUSTIFY_CENTER);
+	gtk_label_set_line_wrap (GTK_LABEL (config->priv->warning), TRUE);
 	gtk_table_attach (GTK_TABLE (table), config->priv->warning, 0, 2, 8, 9,
 			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
 

@@ -21,7 +21,7 @@
 #ifndef __GDAUI_ENTRY_H__
 #define __GDAUI_ENTRY_H__
 
-#include <gtk/gtkentry.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

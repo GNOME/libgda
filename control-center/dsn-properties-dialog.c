@@ -21,11 +21,7 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include <gtk/gtkdialog.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtknotebook.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtktable.h>
+#include <gtk/gtk.h>
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include "dsn-properties-dialog.h"
@@ -88,6 +84,12 @@ data_source_info_free (GdaDsnInfo *info)
 	g_free (info);
 }
 
+static void
+delete_event_cb (GtkDialog *dlg, gpointer data)
+{
+	gtk_dialog_response (dlg, GTK_RESPONSE_OK);
+}
+
 void
 dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 {
@@ -114,6 +116,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), TEST_BUTTON, pinfo ? TRUE : FALSE);
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), BROWSE_BUTTON, pinfo ? TRUE : FALSE);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), REVERT_BUTTON, FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
@@ -156,11 +159,18 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
         gtk_label_set_markup (GTK_LABEL (label), str);
         gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
         g_free (str);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), label, FALSE, FALSE, 0);
+
+	GtkWidget *dcontents;
+#if GTK_CHECK_VERSION(2,18,0)
+	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+#else
+	dcontents = GTK_DIALOG (dialog)->vbox;
+#endif
+	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
 	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
-        gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 10);
+        gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 10);
         gtk_widget_show (hbox);
         label = gtk_label_new ("    ");
         gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
@@ -173,6 +183,10 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 	g_signal_connect (G_OBJECT (props), "changed", G_CALLBACK (dsn_changed_cb), dialog);	
 	gtk_box_pack_start (GTK_BOX (hbox), props, TRUE, TRUE, 0);
 	gtk_widget_set_size_request (props, 500, -1);
+
+	/* handle "delete-event" */
+	g_signal_connect (dialog, "delete-event",
+			  G_CALLBACK (delete_event_cb), NULL);
 
 	/* run the dialog */
 	do {

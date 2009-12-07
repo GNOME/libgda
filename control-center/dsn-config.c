@@ -25,9 +25,6 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-data-model-array.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtkvbbox.h>
 #include <libgda-ui/libgda-ui.h>
 #include "dsn-config.h"
 #include "dsn-properties-dialog.h"

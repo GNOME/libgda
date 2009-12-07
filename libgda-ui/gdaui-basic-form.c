@@ -452,24 +452,24 @@ load_xml_data_layout_button (GdauiBasicForm  *form,
 	gint sequence = 0;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "title");
+	str = xmlGetProp (node, BAD_CAST "title");
 	if (str) {
-		title = g_strdup (str);
-		g_print ("title: %s\n", str);
+		title = g_strdup ((gchar*) str);
+		g_print ("title: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "script");
+	str = xmlGetProp (node, BAD_CAST "script");
 	if (str) {
-		script = g_strdup (str);
-		g_print ("script: %s\n", str);
+		script = g_strdup ((gchar*) str);
+		g_print ("script: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "sequence");
+	str = xmlGetProp (node, BAD_CAST "sequence");
 	if (str) {
-		sequence = atoi (str);
-		g_print ("sequence: %s\n", str);
+		sequence = atoi ((gchar*) str);
+		g_print ("sequence: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -493,7 +493,7 @@ load_xml_data_layout_button (GdauiBasicForm  *form,
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "script")) {
+		    !xmlStrcmp (child->name, BAD_CAST "script")) {
 			// load_data_layout_button_script (table, child);
 		}
 	}
@@ -516,10 +516,10 @@ load_xml_data_layout_item (GdauiBasicForm  *form,
 	gboolean sort_ascending = FALSE;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "name");
+	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		name = g_strdup (str);
-		g_print ("name: %s\n", str);
+		name = g_strdup ((gchar*) str);
+		g_print ("name: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -535,24 +535,24 @@ load_xml_data_layout_item (GdauiBasicForm  *form,
 	/* 	xmlFree (str); */
 	/* } */
 
-	str = xmlGetProp (node, "sequence");
+	str = xmlGetProp (node, BAD_CAST "sequence");
 	if (str) {
-		sequence = atoi (str);
-		g_print ("sequence: %s\n", str);
+		sequence = atoi ((gchar*) str);
+		g_print ("sequence: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "editable");
+	str = xmlGetProp (node, BAD_CAST "editable");
 	if (str) {
 		editable = (*str == 't' || *str == 'T') ? TRUE : FALSE;
-		g_print ("editable: %s\n", str);
+		g_print ("editable: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "sort_ascending");
+	str = xmlGetProp (node, BAD_CAST "sort_ascending");
 	if (str) {
 		sort_ascending = (*str == 't' || *str == 'T') ? TRUE : FALSE;
-		g_print ("sort_ascending: %s\n", str);
+		g_print ("sort_ascending: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -672,38 +672,38 @@ load_xml_data_layout_portal (GdauiBasicForm  *form,
 	gint columns_count = 1;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "name");
+	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		name = g_strdup (str);
-		g_print ("name: %s\n", str);
+		name = g_strdup ((gchar*) str);
+		g_print ("name: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "relationship");
+	str = xmlGetProp (node, BAD_CAST "relationship");
 	if (str) {
-		relationship = g_strdup (str);
-		g_print ("relationship: %s\n", str);
+		relationship = g_strdup ((gchar*) str);
+		g_print ("relationship: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "sequence");
+	str = xmlGetProp (node, BAD_CAST "sequence");
 	if (str) {
-		sequence = atoi (str);
-		g_print ("sequence: %s\n", str);
+		sequence = atoi ((gchar*) str);
+		g_print ("sequence: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "hidden");
+	str = xmlGetProp (node, BAD_CAST "hidden");
 	if (str) {
 		hidden = *str == 't' || *str == 'T' ? TRUE : FALSE;
-		g_print ("hidden: %s\n", str);
+		g_print ("hidden: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "columns_count");
+	str = xmlGetProp (node, BAD_CAST "columns_count");
 	if (str) {
-		columns_count = atoi (str);
-		g_print ("columns_count: %s\n", str);
+		columns_count = atoi ((gchar*) str);
+		g_print ("columns_count: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -726,7 +726,7 @@ load_xml_data_layout_portal (GdauiBasicForm  *form,
 
 	gtk_widget_set_name (vbox, name);
 
-	if (!xmlStrcmp (node->parent->name, (const xmlChar *) "data_layout_group")) {
+	if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_group")) {
 
 
 		gint n_columns, n_rows;
@@ -742,7 +742,7 @@ load_xml_data_layout_portal (GdauiBasicForm  *form,
 				  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND),
 				  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND), 0, 0);
 	} else
-	if (!xmlStrcmp (node->parent->name, (const xmlChar *) "data_layout_notebook")) {
+	if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_notebook")) {
 
 		GtkLabel *label;
 		gchar *markup = g_strdup_printf ("<b>%s</b>", (name != NULL) ? name : "");
@@ -780,28 +780,28 @@ load_xml_data_layout_notebook (GdauiBasicForm  *form,
 	gchar *title = NULL;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "name");
+	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		g_print ("name: %s\n", str);
+		g_print ("name: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "title");
+	str = xmlGetProp (node, BAD_CAST "title");
 	if (str) {
-		g_print ("title: %s\n", str);
+		g_print ("title: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "sequence");
+	str = xmlGetProp (node, BAD_CAST "sequence");
 	if (str) {
-		sequence = atoi (str);
-		g_print ("sequence: %s\n", str);
+		sequence = atoi ((gchar*) str);
+		g_print ("sequence: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "columns_count");
+	str = xmlGetProp (node, BAD_CAST "columns_count");
 	if (str) {
-		g_print ("columns_count: %s\n", str);
+		g_print ("columns_count: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -862,31 +862,31 @@ load_xml_data_layout_group (GdauiBasicForm  *form,
 	gchar *title = NULL;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "name");
+	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		name = g_strdup (str);
-		g_print ("name: %s\n", str);
+		name = g_strdup ((gchar*) str);
+		g_print ("name: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "sequence");
+	str = xmlGetProp (node, BAD_CAST "sequence");
 	if (str) {
-		sequence = atoi (str);
-		g_print ("sequence: %s\n", str);
+		sequence = atoi ((gchar*) str);
+		g_print ("sequence: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "columns_count");
+	str = xmlGetProp (node, BAD_CAST "columns_count");
 	if (str) {
-		columns_count = atoi (str);
-		g_print ("columns_count: %s\n", str);
+		columns_count = atoi ((gchar*) str);
+		g_print ("columns_count: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "title");
+	str = xmlGetProp (node, BAD_CAST "title");
 	if (str) {
-		title = g_strdup (str);
-		g_print ("title: %s\n", str);
+		title = g_strdup ((gchar*) str);
+		g_print ("title: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -908,7 +908,7 @@ load_xml_data_layout_group (GdauiBasicForm  *form,
 	gtk_table_set_row_spacings (table, 3);
 	gtk_table_set_col_spacings (table, 3);
 
-	if (!xmlStrcmp (node->parent->name, (const xmlChar *) "data_layout_groups")) {
+	if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_groups")) {
 
 		GtkFrame *frame = GTK_FRAME(gtk_frame_new (NULL));
 		gtk_widget_show (GTK_WIDGET(frame));
@@ -931,7 +931,7 @@ load_xml_data_layout_group (GdauiBasicForm  *form,
 
 		gtk_box_pack_start (GTK_BOX(data), GTK_WIDGET(frame), FALSE, TRUE, 0);
 	} else
-	if (!xmlStrcmp (node->parent->name, (const xmlChar *) "data_layout_group")) {
+	if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_group")) {
 
 		GtkFrame *frame = GTK_FRAME(gtk_frame_new (NULL));
 		gtk_widget_show (GTK_WIDGET(frame));
@@ -965,7 +965,7 @@ load_xml_data_layout_group (GdauiBasicForm  *form,
 				  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND),
 				  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND), 0, 0);
 	} else
-	if (!xmlStrcmp (node->parent->name, (const xmlChar *) "data_layout_notebook")) {
+	if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_notebook")) {
 
 		gchar *text = g_strdup ((title != NULL) ? title : "");
 		gtk_label_set_text (label, text);
@@ -978,45 +978,45 @@ load_xml_data_layout_group (GdauiBasicForm  *form,
 					    (GTK_NOTEBOOK(data), sequence - 1),
 					    GTK_WIDGET(label));
 	}
-
+	
 	xmlNodePtr child;
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_group")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_group")) {
 			load_xml_data_layout_group (form, child, /* data */ table);
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_item")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item")) {
 			load_xml_data_layout_item (form, child, /* data */ table);
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_portal")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_portal")) {
 			load_xml_data_layout_portal (form, child, /* data */ table);
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_notebook")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_notebook")) {
 			load_xml_data_layout_notebook (form, child, /* data */ table);
 		}
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "trans_set")) {
+		    !xmlStrcmp (child->name, BAD_CAST "trans_set")) {
 			/* load_data_layout_group_trans_set (form, child, data); */
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_button")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_button")) {
 			load_xml_data_layout_button (form, child, /* data */ table);
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_item_groupby")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item_groupby")) {
 		}
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_item_header")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item_header")) {
 		}
 	}
 
@@ -1052,7 +1052,7 @@ load_xml_data_layout_groups (GdauiBasicForm  *form,
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_group")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_group")) {
 			load_xml_data_layout_group (form, child, /* data */ vbox);
 		}
 	}
@@ -1071,17 +1071,17 @@ load_xml_data_layout (GdauiBasicForm  *form,
 	gchar *name = NULL;
 
 	xmlChar *str;
-	str = xmlGetProp (node, "parent_table");
+	str = xmlGetProp (node, BAD_CAST "parent_table");
 	if (str) {
-		parent_table = g_strdup (str);
-		g_print ("parent_table: %s\n", str);
+		parent_table = g_strdup ((gchar*) str);
+		g_print ("parent_table: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "name");
+	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		name = g_strdup (str);
-		g_print ("name: %s\n", str);
+		name = g_strdup ((gchar*) str);
+		g_print ("name: %s\n", (gchar*) str);
 		xmlFree (str);
 	}
 
@@ -1100,7 +1100,7 @@ load_xml_data_layout (GdauiBasicForm  *form,
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_groups")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout_groups")) {
 			load_xml_data_layout_groups (form, child, data);
 		}
 	}
@@ -1119,7 +1119,7 @@ load_xml_data_layouts (GdauiBasicForm  *form,
 	for (child = node->children; child != NULL; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, (const xmlChar *) "data_layout")) {
+		    !xmlStrcmp (child->name, BAD_CAST "data_layout")) {
 			load_xml_data_layout (form, child, data);
 		}
 	}
@@ -1161,31 +1161,31 @@ load_xml_data_layouts (GdauiBasicForm  *form,
 /* 	for (child = node->children; child != NULL; child = child->next) { */
 
 /* 		/\* if (child->type == XML_ELEMENT_NODE && *\/ */
-/* 		/\*     !xmlStrcmp (child->name, (const xmlChar *) "fields")) { *\/ */
+/* 		/\*     !xmlStrcmp (child->name, BAD_CAST "fields")) { *\/ */
 
 /* 		/\* 	load_xml_fields (table, child, data); *\/ */
 /* 		/\* } *\/ */
 
 /* 		/\* if (child->type == XML_ELEMENT_NODE && *\/ */
-/* 		/\*     !xmlStrcmp (child->name, (const xmlChar *) "relationships")) { *\/ */
+/* 		/\*     !xmlStrcmp (child->name, BAD_CAST "relationships")) { *\/ */
 
 /* 		/\* 	load_xml_relationships (table, child, data); *\/ */
 /* 		/\* } *\/ */
 
 /* 		if (child->type == XML_ELEMENT_NODE && */
-/* 		    !xmlStrcmp (child->name, (const xmlChar *) "data_layouts")) { */
+/* 		    !xmlStrcmp (child->name, BAD_CAST "data_layouts")) { */
 
 /* 			load_xml_data_layouts (form, child, data); */
 /* 		} */
 
 /* 		/\* if (child->type == XML_ELEMENT_NODE && *\/ */
-/* 		/\*     !xmlStrcmp (child->name, (const xmlChar *) "reports")) { *\/ */
+/* 		/\*     !xmlStrcmp (child->name, BAD_CAST "reports")) { *\/ */
 
 /* 		/\* 	load_xml_reports (table, child, data); *\/ */
 /* 		/\* } *\/ */
 
 /* 		/\* if (child->type == XML_ELEMENT_NODE && *\/ */
-/* 		/\*     !xmlStrcmp (child->name, (const xmlChar *) "trans_set")) { *\/ */
+/* 		/\*     !xmlStrcmp (child->name, BAD_CAST "trans_set")) { *\/ */
 
 /* 		/\* 	load_xml_table_trans_set (table, child, data); *\/ */
 /* 		/\* } *\/ */
@@ -1258,7 +1258,7 @@ gdaui_basic_form_set_property (GObject *object,
 				for (child = node->children; child != NULL; child = child->next) {
 
 					if (child->type == XML_ELEMENT_NODE &&
-					    !xmlStrcmp (child->name, (const xmlChar *) "data_layout_groups")) {
+					    !xmlStrcmp (child->name, BAD_CAST "data_layout_groups")) {
 						load_xml_data_layout_groups (form, child, NULL);
 					}
 				}
@@ -2541,12 +2541,23 @@ gdaui_basic_form_new_in_dialog (GdaSet *paramlist, GtkWindow *parent,
 		str = g_markup_printf_escaped ("<b>%s:</b>", header);
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
+				    label, FALSE, FALSE, 5);
+#else
 		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), label, FALSE, FALSE, 5);
+#endif
 		gtk_widget_show (label);
 	}
 
+
+#if GTK_CHECK_VERSION(2,18,0)
+	gtk_container_set_border_width (GTK_CONTAINER (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg)))), 4);
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))), form,
+#else
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), 4);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), form,
+#endif
 			    GDAUI_BASIC_FORM (form)->priv->can_expand,
 			    GDAUI_BASIC_FORM (form)->priv->can_expand, 10);
 

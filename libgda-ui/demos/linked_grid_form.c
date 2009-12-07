@@ -92,7 +92,12 @@ do_linked_grid_form (GtkWidget *do_widget)
 		g_object_set_data_full (G_OBJECT (window), "demodata", data, g_free);
 		
 		vbox = gtk_vbox_new (FALSE, 5);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
+				    vbox, TRUE, TRUE, 0);
+#else
 		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), vbox, TRUE, TRUE, 0);
+#endif
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 		
 		label = gtk_label_new ("The following GdauiForm and GdauiGrid widgets\n"
@@ -168,10 +173,14 @@ do_linked_grid_form (GtkWidget *do_widget)
 				  G_CALLBACK (sync_selections_cb), data);
 	}
 
-	if (!GTK_WIDGET_VISIBLE (window))
+	gboolean visible;
+	g_object_get (G_OBJECT (window), "visible", &visible, NULL);
+	if (!visible)
 		gtk_widget_show_all (window);
-	else
+	else {
 		gtk_widget_destroy (window);
+		window = NULL;
+	}
 
 	return window;
 }

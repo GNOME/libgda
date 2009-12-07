@@ -24,8 +24,7 @@
 #ifndef __CC_GRAY_BAR_H__
 #define __CC_GRAY_BAR_H__
 
-#include <gtk/gtkbin.h>
-#include <gtk/gtkimage.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

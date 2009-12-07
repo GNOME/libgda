@@ -22,7 +22,6 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include <gtk/gtk.h>
 #include <libgda/gda-tree.h>
 #include "favorite-selector.h"
 #include "../mgr-favorites.h"
@@ -344,7 +343,11 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 	fav.type = BROWSER_FAVORITES_TABLES;
 	fav.name = NULL;
 	fav.descr = NULL;
+#if GTK_CHECK_VERSION(2,18,0)
+	fav.contents = (gchar*) gtk_selection_data_get_data (selection_data);
+#else
 	fav.contents = (gchar*) selection_data->data;
+#endif
 
 	pos = atoi (path);
 	g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);
@@ -388,8 +391,14 @@ tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionDa
 		if (cvalue) {
 			const gchar *str;
 			str = g_value_get_string (cvalue);
+#if GTK_CHECK_VERSION(2,18,0)
+			gtk_selection_data_set (selection_data,
+						gtk_selection_data_get_target (selection_data), 8,
+						(guchar*) str, strlen (str));
+#else
 			gtk_selection_data_set (selection_data, selection_data->target, 8,
 						(guchar*) str, strlen (str));
+#endif
 			return TRUE;
 		}
 	}

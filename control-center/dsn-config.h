@@ -23,7 +23,7 @@
 #ifndef __DSN_CONFIG_H__
 #define __DSN_CONFIG_H__
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 GtkWidget *dsn_config_new             (void);
 void       dsn_config_edit_properties (GtkWidget *dsn);

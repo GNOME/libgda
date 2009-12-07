@@ -406,7 +406,7 @@ gdaui_data_widget_set_data_layout_from_file (GdauiDataWidget *iface, const gchar
 
 	gchar *file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "data-layout.dtd", NULL);
         if (g_file_test (file, G_FILE_TEST_EXISTS))
-                dtd = xmlParseDTD (NULL, file);
+                dtd = xmlParseDTD (NULL, BAD_CAST file);
         if (dtd == NULL) {
                 g_warning (_("'%s' DTD not parsed successfully. "
                              "XML data layout validation will not be "
@@ -421,7 +421,7 @@ gdaui_data_widget_set_data_layout_from_file (GdauiDataWidget *iface, const gchar
         /* Must have root element, a name and the name must be "data_layouts" */
         if (!root_node ||
             !root_node->name ||
-            xmlStrcmp (root_node->name, "data_layouts")) {
+            xmlStrcmp (root_node->name, BAD_CAST "data_layouts")) {
                 xmlFreeDoc (doc);
                 return;
         }
@@ -430,23 +430,23 @@ gdaui_data_widget_set_data_layout_from_file (GdauiDataWidget *iface, const gchar
         for (node = root_node->children; node != NULL; node = node->next) {
 
                 if (node->type == XML_ELEMENT_NODE &&
-                    !xmlStrcmp (node->name, (const xmlChar *) "data_layout")) {
+                    !xmlStrcmp (node->name, BAD_CAST "data_layout")) {
                         gboolean retval = FALSE;
                         xmlChar *str;
 
-                        str = xmlGetProp (node, "parent_table");
+                        str = xmlGetProp (node, BAD_CAST "parent_table");
                         if (str) {
-                                if (strcmp (str, parent_table) == 0)
+                                if (strcmp ((gchar*) str, parent_table) == 0)
                                         retval = TRUE;
                                 //g_print ("parent_table: %s\n", str);
                                 xmlFree (str);
                         }
 
-                        str = xmlGetProp (node, "name");
+                        str = xmlGetProp (node, BAD_CAST "name");
                         if (str) {
                                 if (retval == TRUE &&
-                                    ((GDAUI_IS_RAW_GRID (iface) && strcmp (str, "list") == 0) ||
-				     (GDAUI_IS_RAW_FORM (iface) &&strcmp (str, "details") == 0)))  // Now proceed
+                                    ((GDAUI_IS_RAW_GRID (iface) && strcmp ((gchar*) str, "list") == 0) ||
+				     (GDAUI_IS_RAW_FORM (iface) && strcmp ((gchar*) str, "details") == 0)))  // Now proceed
                                         (GDAUI_DATA_WIDGET_GET_IFACE (iface)->set_data_layout) (iface, node);
                                 //g_print ("name: %s\n", str);
                                 xmlFree (str);

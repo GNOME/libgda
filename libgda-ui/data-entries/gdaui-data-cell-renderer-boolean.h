@@ -39,18 +39,18 @@ typedef struct _GdauiDataCellRendererBooleanPrivate GdauiDataCellRendererBoolean
 
 struct _GdauiDataCellRendererBoolean
 {
-	GtkCellRendererToggle             parent;
+	GtkCellRendererToggle                parent;
 	
 	GdauiDataCellRendererBooleanPrivate *priv;
 };
 
 struct _GdauiDataCellRendererBooleanClass
 {
-	GtkCellRendererToggleClass  parent_class;
+	GtkCellRendererToggleClass           parent_class;
 	
-	void (* changed) (GdauiDataCellRendererBoolean *cell_renderer,
-			  const gchar               *path,
-			  const GValue            *new_value);
+	void                               (*changed) (GdauiDataCellRendererBoolean *cell_renderer,
+						       const gchar               *path,
+						       const GValue            *new_value);
 };
 
 GType            gdaui_data_cell_renderer_boolean_get_type  (void) G_GNUC_CONST;

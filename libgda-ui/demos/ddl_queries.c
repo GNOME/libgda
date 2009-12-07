@@ -74,7 +74,12 @@ do_ddl_queries (GtkWidget *do_widget)
 				  G_CALLBACK (gtk_widget_destroyed), &window);
 		
 		table = gtk_table_new (3, 2, FALSE);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
+				    table, TRUE, TRUE, 0);
+#else
 		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), table, TRUE, TRUE, 0);
+#endif
 		gtk_container_set_border_width (GTK_CONTAINER (table), 5);
 		
 		label = gtk_label_new ("<b>Tested provider and operation:</b>");
@@ -142,10 +147,14 @@ do_ddl_queries (GtkWidget *do_widget)
 		gtk_combo_box_set_active (GTK_COMBO_BOX (data->op_combo), 1);
 	}
 
-	if (!GTK_WIDGET_VISIBLE (window))
+	gboolean visible;
+	g_object_get (G_OBJECT (window), "visible", &visible, NULL);
+	if (!visible)
 		gtk_widget_show_all (window);
-	else
+	else {
 		gtk_widget_destroy (window);
+		window = NULL;
+	}
 
 	return window;
 }
@@ -407,7 +416,12 @@ show_named_parameters (GtkButton *button, DemoData *data)
 	label = gtk_label_new ("<b>Named parameters:</b>\n");
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), label, FALSE, FALSE, 5);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
+				    label, TRUE, TRUE, 0);
+#else
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), label, TRUE, TRUE, 0);
+#endif
 	gtk_widget_show (label);
 	
 	/* text area */
@@ -433,7 +447,12 @@ show_named_parameters (GtkButton *button, DemoData *data)
 	gtk_container_add (GTK_CONTAINER (sw), view);
 	gtk_widget_show_all (sw);
 
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), sw, TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(2,18,0)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
+				    sw, TRUE, TRUE, 0);
+#else
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), sw, TRUE, TRUE, 0);
+#endif
 	gtk_widget_set_size_request (dlg, 530, 350);
 
 	gtk_dialog_run (GTK_DIALOG (dlg));

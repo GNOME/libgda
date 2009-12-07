@@ -24,10 +24,9 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include <gtk/gtkcelllayout.h>
+#include <gtk/gtk.h>
 #include "gdaui-combo.h"
 #include "gdaui-data-store.h"
-#include <gtk/gtk.h>
 
 struct _GdauiComboPrivate {
 	GdaDataModel     *model; /* proxied model (the one when _set_model() is called) */
@@ -42,13 +41,13 @@ static void gdaui_combo_class_init   (GdauiComboClass *klass);
 static void gdaui_combo_init         (GdauiCombo *combo,
 					 GdauiComboClass *klass);
 static void gdaui_combo_set_property (GObject *object,
-					 guint paramid,
-					 const GValue *value,
-					 GParamSpec *pspec);
+				      guint paramid,
+				      const GValue *value,
+				      GParamSpec *pspec);
 static void gdaui_combo_get_property (GObject *object,
-					 guint param_id,
-					 GValue *value,
-					 GParamSpec *pspec);
+				      guint param_id,
+				      GValue *value,
+				      GParamSpec *pspec);
 static void gdaui_combo_dispose      (GObject *object);
 static void gdaui_combo_finalize     (GObject *object);
 

@@ -127,9 +127,8 @@ gdaui_data_cell_renderer_info_init (GdauiDataCellRendererInfo *cellinfo)
 {
 	cellinfo->priv = g_new0 (GdauiDataCellRendererInfoPriv, 1);
 
-	GTK_CELL_RENDERER (cellinfo)->mode = GTK_CELL_RENDERER_MODE_ACTIVATABLE;
-	GTK_CELL_RENDERER (cellinfo)->xpad = 1;
-	GTK_CELL_RENDERER (cellinfo)->ypad = 1;
+	g_object_set ((GObject*) cellinfo, "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE,
+		      "xpad", 1, "ypad", 1, NULL);
 }
 
 static void
@@ -336,9 +335,11 @@ gdaui_data_cell_renderer_info_get_size (GtkCellRenderer *cell,
 {
 	gint calc_width;
 	gint calc_height;
+	guint xpad, ypad;
 
-	calc_width = (gint) cell->xpad * 2 + INFO_WIDTH;
-	calc_height = (gint) cell->ypad * 2 + INFO_HEIGHT;
+	g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
+	calc_width = (gint) xpad * 2 + INFO_WIDTH;
+	calc_height = (gint) ypad * 2 + INFO_HEIGHT;
 
 	if (width)
 		*width = calc_width;
@@ -348,11 +349,15 @@ gdaui_data_cell_renderer_info_get_size (GtkCellRenderer *cell,
 
 	if (cell_area) {
 		if (x_offset) {
-			*x_offset = cell->xalign * (cell_area->width - calc_width);
+			gfloat xalign;
+			g_object_get ((GObject*) cell, "xalign", &xalign, NULL);
+			*x_offset = xalign * (cell_area->width - calc_width);
 			*x_offset = MAX (*x_offset, 0);
 		}
 		if (y_offset) {
-			*y_offset = cell->yalign * (cell_area->height - calc_height);
+			gfloat yalign;
+			g_object_get ((GObject*) cell, "yalign", &yalign, NULL);
+			*y_offset = yalign * (cell_area->height - calc_height);
 			*y_offset = MAX (*y_offset, 0);
 		}
 	}
@@ -381,7 +386,11 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 	if (!colors)
 		colors = _gdaui_utility_entry_build_info_colors_array ();
 
-	style = gtk_style_copy (widget->style);
+	GtkStyle *estyle;
+	g_object_get ((GObject*) widget, "style", &estyle, NULL);
+	style = gtk_style_copy (estyle);
+	g_object_unref (estyle);
+
 	orig_normal = & (style->bg[GTK_STATE_NORMAL]);
 	orig_prelight = & (style->bg[GTK_STATE_PRELIGHT]);
 	if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_NULL) {
@@ -409,10 +418,13 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 	style->bg[GTK_STATE_PRELIGHT] = *prelight;
 	style = gtk_style_attach (style, window); /* Note that we must use the return value, because this function is documented as sometimes returning a new object. */
 	gdaui_data_cell_renderer_info_get_size (cell, widget, cell_area,
-						   &x_offset, &y_offset,
-						   &width, &height);
-	width -= cell->xpad*2;
-	height -= cell->ypad*2;
+						&x_offset, &y_offset,
+						&width, &height);
+
+	guint xpad, ypad;
+	g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
+	width -= xpad*2;
+	height -= ypad*2;
 
 	if (width <= 0 || height <= 0)
 		return;
@@ -423,8 +435,8 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 		       window,
 		       state, GTK_SHADOW_NONE,
 		       cell_area, widget, "cellcheck",
-		       cell_area->x + x_offset + cell->xpad,
-		       cell_area->y + y_offset + cell->ypad,
+		       cell_area->x + x_offset + xpad,
+		       cell_area->y + y_offset + ypad,
 		       width - 1, height - 1);
 	gtk_style_detach (style);
 	g_object_unref (G_OBJECT (style));

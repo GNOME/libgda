@@ -104,6 +104,13 @@ login_dialog_init (LoginDialog *dialog)
 {
 	GtkWidget *label, *hbox, *wid;
 	char *markup, *str;
+	GtkWidget *dcontents;
+
+#if GTK_CHECK_VERSION(2,18,0)
+	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+#else
+	dcontents = GTK_DIALOG (dialog)->vbox;
+#endif
 
 	dialog->priv = g_new0 (LoginDialogPrivate, 1);
 
@@ -113,7 +120,7 @@ login_dialog_init (LoginDialog *dialog)
 				GTK_STOCK_CANCEL,
 				GTK_RESPONSE_REJECT, NULL);
 
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 5);
+	gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, FALSE);
 
 	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-non-connected.png", NULL);
@@ -123,7 +130,7 @@ login_dialog_init (LoginDialog *dialog)
 	/* label and spinner */
 	hbox = gtk_hbox_new (FALSE, 0); 
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 10);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 0);
 	
 	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-non-connected-big.png", NULL);
 	wid = gtk_image_new_from_file (str);
@@ -146,7 +153,7 @@ login_dialog_init (LoginDialog *dialog)
 
 	/* login (not shown) */
 	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 10);
 	label = gtk_label_new ("    ");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	

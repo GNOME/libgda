@@ -22,7 +22,6 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include <gtk/gtk.h>
 #include "relations-diagram.h"
 #include "../support.h"
 #include "../cc-gray-bar.h"

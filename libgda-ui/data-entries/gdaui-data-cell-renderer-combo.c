@@ -128,7 +128,7 @@ gdaui_data_cell_renderer_combo_get_type (void)
 static void
 gdaui_data_cell_renderer_combo_init (GdauiDataCellRendererCombo *datacell)
 {
-	GTK_CELL_RENDERER (datacell)->mode = GTK_CELL_RENDERER_MODE_ACTIVATABLE;
+	g_object_set ((GObject*) datacell, "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
 	datacell->priv = g_new0 (GdauiDataCellRendererComboPrivate, 1);
 	datacell->priv->attributes = 0;
 	datacell->priv->set_default_if_invalid = FALSE;
@@ -465,10 +465,12 @@ gdaui_data_cell_renderer_combo_get_size (GtkCellRenderer *cell,
 	
 	/* Add more space for the popdown menu symbol */
 	if (GDAUI_DATA_CELL_RENDERER_COMBO (cell)->priv->show_expander) {
+		guint xpad, ypad;
+		g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
 		gint expander_size;
 		gtk_widget_style_get (widget, "expander_size", &expander_size, NULL);
-		calc_width = (gint) cell->xpad * 2 + expander_size;
-		calc_height = (gint) cell->ypad * 2 + expander_size;
+		calc_width = (gint) xpad * 2 + expander_size;
+		calc_height = (gint) ypad * 2 + expander_size;
 	}
 	
 	if (width)
@@ -497,13 +499,17 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 
 	/* render the popdown menu symbol */
 	if ((flags & GTK_CELL_RENDERER_SELECTED) == GTK_CELL_RENDERER_SELECTED)	{
-		if (GTK_WIDGET_HAS_FOCUS (widget))
+		gboolean hasfocus;
+		g_object_get ((GObject*) widget, "has-focus", &hasfocus, NULL);
+		if (hasfocus)
 			state = GTK_STATE_SELECTED;
 		else
 			state = GTK_STATE_ACTIVE;
 	}
 	else {
-		if (GTK_CELL_RENDERER_TEXT (cell)->editable)
+		gboolean editable;
+		g_object_get ((GObject*) cell, "editable", &editable, NULL);
+		if (editable)
 			state = GTK_STATE_NORMAL;
 		else
 			state = GTK_STATE_INSENSITIVE;
@@ -511,26 +517,40 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 
 	if (combocell->priv->show_expander) {
 		gint expander_size;
+		GtkStyle *style;
+		guint xpad, ypad;
+
 		gtk_widget_style_get (widget, "expander_size", &expander_size, NULL);
+		g_object_get ((GObject*) widget, "style", &style, NULL);
+		g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
 		
-		gtk_paint_expander (widget->style,
+		gtk_paint_expander (style,
 				    window, state,
 				    cell_area, 
 				    widget,
 				    "expander",
-				    cell_area->x + cell_area->width - cell->xpad - expander_size/2.,
-				    cell_area->y + cell_area->height - cell->ypad - expander_size/2. ,
+				    cell_area->x + cell_area->width - xpad - expander_size/2.,
+				    cell_area->y + cell_area->height - ypad - expander_size/2. ,
 				    GTK_EXPANDER_EXPANDED);
+		g_object_unref (style);
 	}
 
-	if (combocell->priv->to_be_deleted)
-		gtk_paint_hline (widget->style,
+	if (combocell->priv->to_be_deleted) {
+		GtkStyle *style;
+		guint xpad;
+
+		g_object_get ((GObject*) widget, "style", &style, NULL);
+		g_object_get ((GObject*) cell, "xpad", &xpad, NULL);
+
+		gtk_paint_hline (style,
 				 window, GTK_STATE_SELECTED,
 				 cell_area, 
 				 widget,
 				 "hline",
-				 cell_area->x + cell->xpad, cell_area->x + cell_area->width - cell->xpad,
+				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
 				 cell_area->y + cell_area->height / 2.);
+		g_object_unref (style);
+	}
 }
 
 static void gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCellRendererCombo *datacell);
@@ -547,15 +567,14 @@ gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
 					      GtkCellRendererState flags)
 {
 	GdauiDataCellRendererCombo *datacell;
-	GtkCellRendererText *cell_text;
 	GtkWidget *combo;
-	
-	datacell = GDAUI_DATA_CELL_RENDERER_COMBO (cell);
-	
-	cell_text = GTK_CELL_RENDERER_TEXT (cell);
-	if (cell_text->editable == FALSE)
+	gboolean editable;
+
+	g_object_get ((GObject*) cell, "editable", &editable, NULL);
+	if (editable == FALSE)
 		return NULL;
 
+	datacell = GDAUI_DATA_CELL_RENDERER_COMBO (cell);
 	combo = gdaui_combo_new_with_model (GDA_DATA_MODEL (datacell->priv->source->source->data_model),
 					    datacell->priv->source->shown_n_cols, 
 					    datacell->priv->source->shown_cols_index);

@@ -207,7 +207,11 @@ browser_show_notice (GtkWindow *parent, const gchar *context, const gchar *forma
 			g_signal_connect_data (cb, "toggled",
 					       G_CALLBACK (hide_notice_toggled_cb), g_strdup (context),
 					       (GClosureNotify) g_free, 0);
+#if GTK_CHECK_VERSION(2,18,0)
+			gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), cb, FALSE, FALSE, 10);
+#else
 			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), cb, FALSE, FALSE, 10);
+#endif
 		}
 		
 		gtk_widget_show_all (dialog);

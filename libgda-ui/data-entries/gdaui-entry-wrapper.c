@@ -865,8 +865,10 @@ gdaui_entry_wrapper_grab_focus (GdauiDataEntry *iface)
 
 	if (mgwrap->priv->real_class->grab_focus)
 		(mgwrap->priv->real_class->grab_focus) (mgwrap);
-	else {
-		if (mgwrap->priv->entry && GTK_WIDGET_CAN_FOCUS (mgwrap->priv->entry))
+	else if (mgwrap->priv->entry) {
+		gboolean canfocus;
+		g_object_get ((GObject*) mgwrap->priv->entry, "can-focus", &canfocus, NULL);
+		if (canfocus)
 			gtk_widget_grab_focus (mgwrap->priv->entry);
 	}
 }

@@ -22,12 +22,9 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include <gtk/gtkdialog.h>
-#include <gtk/gtkstock.h>
+#include <gtk/gtk.h>
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/binreloc/gda-binreloc.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtknotebook.h>
 #include "dsn-config.h"
 #include "provider-config.h"
 #include "gdaui-dsn-assistant.h"

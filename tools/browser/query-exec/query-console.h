@@ -23,7 +23,7 @@
 #ifndef __QUERY_INFO_H__
 #define __QUERY_CONSOLE_H__
 
-#include <gtk/gtkvbox.h>
+#include <gtk/gtk.h>
 #include "../browser-connection.h"
 
 G_BEGIN_DECLS

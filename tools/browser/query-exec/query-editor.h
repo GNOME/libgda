@@ -24,7 +24,7 @@
 #ifndef __QUERY_EDITOR_H__
 #define __QUERY_EDITOR_H__
 
-#include <gtk/gtkvbox.h>
+#include <gtk/gtk.h>
 #include <libgda/libgda.h>
 
 G_BEGIN_DECLS

@@ -183,6 +183,14 @@ create_layout (ConnectionBindingProperties *cprop)
 {
 	GtkWidget *sw, *vp, *label, *hbox;
 	gchar *str;
+	GtkWidget *dcontents;
+
+#if GTK_CHECK_VERSION(2,18,0)
+	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (cprop));
+#else
+	dcontents = GTK_DIALOG (cprop)->vbox;
+#endif
+
 
 	str = g_strdup_printf ("<b>%s:</b>\n<small>%s</small>",
 			       _("Virtual connection's properties"),
@@ -192,10 +200,10 @@ create_layout (ConnectionBindingProperties *cprop)
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	g_free (str);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cprop)->vbox), label, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 10);
 
 	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cprop)->vbox), hbox, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (dcontents), hbox, TRUE, TRUE, 0);
 	label = gtk_label_new ("      ");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
@@ -211,7 +219,7 @@ create_layout (ConnectionBindingProperties *cprop)
 	cprop->priv->layout_table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
 	gtk_container_add (GTK_CONTAINER (vp), (GtkWidget*) cprop->priv->layout_table);
 
-	gtk_widget_show_all (GTK_DIALOG (cprop)->vbox);
+	gtk_widget_show_all (dcontents);
 
 	gtk_window_set_default_size (GTK_WINDOW (cprop), 340, 300);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (cprop), GTK_RESPONSE_OK, FALSE);

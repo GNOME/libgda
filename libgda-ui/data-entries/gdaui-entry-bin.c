@@ -332,11 +332,19 @@ popup_position (PopupContainer *container, gint *out_x, gint *out_y)
 
         gtk_widget_size_request (poswidget, &req);
 
-        gdk_window_get_origin (poswidget->window, &x, &y);
-
-        x += poswidget->allocation.x;
+#if GTK_CHECK_VERSION(2,18,0)
+        gdk_window_get_origin (gtk_widget_get_window (poswidget), &x, &y);
+	GtkAllocation alloc;
+	gtk_widget_get_allocation (poswidget, &alloc);
+        x += alloc.x;
+        y += alloc.y;
+        y += alloc.height;
+#else
+	gdk_window_get_origin (poswidget->window, &x, &y);
+	x += poswidget->allocation.x;
         y += poswidget->allocation.y;
-        y += poswidget->allocation.height;
+	y += poswidget->allocation.height;
+#endif
 
         if (x < 0)
                 x = 0;

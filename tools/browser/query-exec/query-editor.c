@@ -23,9 +23,12 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #ifdef HAVE_GTKSOURCEVIEW
+  #ifdef GTK_DISABLE_SINGLE_INCLUDES
+    #undef GTK_DISABLE_SINGLE_INCLUDES
+  #endif
+
   #include <gtksourceview/gtksourceview.h>
   #include <gtksourceview/gtksourcelanguagemanager.h>
   #include <gtksourceview/gtksourcebuffer.h>
@@ -606,11 +609,13 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	gint win_y;
 	GdkGC *gc;
 	gint margin;
+	GtkTextBuffer *tbuffer;
 	
-	gtk_text_buffer_get_iter_at_mark (tv->buffer, &cur, editor->priv->hist_focus->start_mark);	
+	tbuffer = gtk_text_view_get_buffer (tv);
+	gtk_text_buffer_get_iter_at_mark (tbuffer, &cur, editor->priv->hist_focus->start_mark);	
 	gtk_text_view_get_line_yrange (tv, &cur, &y, &height);
 	
-	gtk_text_buffer_get_iter_at_mark (tv->buffer, &cur, editor->priv->hist_focus->end_mark);	
+	gtk_text_buffer_get_iter_at_mark (tbuffer, &cur, editor->priv->hist_focus->end_mark);	
 	gtk_text_view_get_line_yrange (tv, &cur, &ye, &heighte);
 	height = ye - y;
 
@@ -620,7 +625,7 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 		list = g_slist_last (editor->priv->hist_focus->batch->hist_items);
 		if (list) {
 			hdata = g_hash_table_lookup (editor->priv->hash, list->data);
-			gtk_text_buffer_get_iter_at_mark (tv->buffer, &cur, hdata->end_mark);	
+			gtk_text_buffer_get_iter_at_mark (tbuffer, &cur, hdata->end_mark);	
 			gtk_text_view_get_line_yrange (tv, &cur, &ye, &heighte);
 			height = ye - y;
 		}
@@ -643,7 +648,13 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	redraw_rect.width = visible_rect.width;
 	redraw_rect.height = visible_rect.height;
 	
-	gc = GTK_WIDGET (tv)->style->bg_gc[GTK_WIDGET_STATE (GTK_WIDGET (tv))];
+	GtkStateType state;
+#if GTK_CHECK_VERSION(2,18,0)
+	state = gtk_widget_get_state (GTK_WIDGET (tv));
+#else
+	state = GTK_WIDGET_STATE (GTK_WIDGET (tv));
+#endif
+	gc = gtk_widget_get_style (GTK_WIDGET (tv))->bg_gc[state];
 	margin = gtk_text_view_get_left_margin (tv);
 	
 	gdk_draw_rectangle (event->window,

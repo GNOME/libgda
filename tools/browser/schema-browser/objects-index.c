@@ -180,7 +180,7 @@ objects_index_new (BrowserConnection *bcnc)
 	cloud = objects_cloud_new (mstruct, OBJECTS_CLOUD_TYPE_TABLE);
 	objects_cloud_show_schemas (OBJECTS_CLOUD (cloud), TRUE);
 	gtk_box_pack_start (GTK_BOX (index), cloud, TRUE, TRUE, 0);
-	index->priv->cloud = cloud;
+	index->priv->cloud = OBJECTS_CLOUD (cloud);
 	g_signal_connect (cloud, "selected",
 			  G_CALLBACK (cloud_object_selected_cb), index);
 
@@ -198,7 +198,7 @@ objects_index_new (BrowserConnection *bcnc)
 				  G_CALLBACK (gtk_widget_show), popup);
 	g_object_set_data (G_OBJECT (popup), "button", wid);
 
-	wid = objects_cloud_create_filter (cloud);
+	wid = objects_cloud_create_filter (OBJECTS_CLOUD (cloud));
 	gtk_container_add (GTK_CONTAINER (popup), wid);
 	gtk_widget_show (wid);
 

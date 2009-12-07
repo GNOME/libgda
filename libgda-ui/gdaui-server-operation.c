@@ -900,7 +900,7 @@ static void
 sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item_index, GdauiServerOperation *form)
 {
 	GtkWidget *table;
-	GList *list, *to_move = NULL;
+	GList *children, *list, *to_move = NULL;
 	GtkWidget *wid;
 	gchar *str;
 	WidgetData *wd;
@@ -914,13 +914,13 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 	g_assert (wd);
 	table = wd->widget;
 	g_assert (table);
-	list = GTK_TABLE (table)->children;
 	
 	/* resize table */
 	gtk_table_resize (GTK_TABLE (table), size+1, 2);
 
 	/* move children DOWN if necessary */
-	while (list) {
+	children = gtk_container_get_children (GTK_CONTAINER (table));
+	for (list = children; list; list = list->next) {
 		GtkTableChild *tc = (GtkTableChild *) (list->data);
 
 		if (tc->widget) {
@@ -948,11 +948,11 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 							   GINT_TO_POINTER (index + 1));
 			}
 		}
-		list = list->next;
 	}
+	g_list_free (children);
 
-	list = to_move;
-	while (list) {
+	
+	for (list = to_move; list; list = list->next) {
 		struct MoveChild *mc;
 
 		mc = (struct MoveChild *) (list->data);
@@ -960,7 +960,6 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 					 "top-attach", mc->top_attach,
 					 "bottom-attach", mc->top_attach + 1, NULL);
 		g_free (list->data);
-		list = list->next;
 	}
 	g_list_free (to_move);
 
@@ -978,7 +977,7 @@ static void
 sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint item_index, GdauiServerOperation *form)
 {
 	GtkWidget *table;
-	GList *list, *to_move = NULL;
+	GList *children, *list, *to_move = NULL;
 	gchar *str;
 	WidgetData *wds, *wdi;
 	guint min, size;
@@ -1003,21 +1002,24 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 	widget_data_free (wdi);
 
 	/* remove the widget associated to the sequence item */
-	list = GTK_TABLE (table)->children;
-	while (list) {
+	children = gtk_container_get_children (GTK_CONTAINER (table));
+	for (list = children; list; ) {
 		GtkTableChild *tc = (GtkTableChild *) (list->data);
 
 		if (tc->widget && (tc->top_attach == item_index)) {
 			gtk_widget_destroy (tc->widget);
-			list = GTK_TABLE (table)->children;
+			g_list_free (children);
+			children = gtk_container_get_children (GTK_CONTAINER (table));
+			list = children;
 		}
 		else
 			list = list->next;
 	}
+	g_list_free (children);
 
 	/* move children UP if necessary */
-	list = GTK_TABLE (table)->children;
-	while (list) {
+	children = gtk_container_get_children (GTK_CONTAINER (table));
+	for (list = children; list; list = list->next) {
 		GtkTableChild *tc = (GtkTableChild *) (list->data);
 
 		if (tc->widget) {
@@ -1045,12 +1047,10 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 							   GINT_TO_POINTER (index - 1));
 			}
 		}
-
-		list = list->next;
 	}
+	g_list_free (children);
 
-	list = to_move;
-	while (list) {
+	for (list = to_move; list; list = list->next) {
 		struct MoveChild *mc;
 
 		mc = (struct MoveChild *) (list->data);
@@ -1058,7 +1058,6 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 					 "top-attach", mc->top_attach,
 					 "bottom-attach", mc->top_attach + 1, NULL);
 		g_free (list->data);
-		list = list->next;
 	}
 	g_list_free (to_move);
 
@@ -1089,6 +1088,7 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 {
 	GtkWidget *form;
 	GtkWidget *dlg;
+	GtkWidget *dcontents;
 	const gchar *rtitle;
 
 	form = gdaui_server_operation_new (op);
@@ -1104,18 +1104,24 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 					   GTK_STOCK_CANCEL,
 					   GTK_RESPONSE_REJECT,
 					   NULL);
+#if GTK_CHECK_VERSION(2,18,0)
+	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dlg));
+#else
+	dcontents = GTK_DIALOG (dlg)->vbox;
+#endif
+
 	if (header && *header) {
 		GtkWidget *label;
 
 		label = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
 		gtk_label_set_markup (GTK_LABEL (label), header);
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), label, FALSE, FALSE, 5);
+		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 5);
+
 		gtk_widget_show (label);
 	}
-
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), 4);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), form, TRUE, TRUE, 10);
+	gtk_container_set_border_width (GTK_CONTAINER (dcontents), 4);
+	gtk_box_pack_start (GTK_BOX (dcontents), form, TRUE, TRUE, 10);
 
 	gtk_widget_show_all (form);
 

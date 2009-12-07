@@ -1,6 +1,6 @@
 /* gdaui-data-widget-filter.c
  *
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -118,7 +118,11 @@ set_wait_cursor (GtkWidget *w)
 	if (parent) {
 		GdkCursor* cursor;
 		cursor = gdk_cursor_new (GDK_WATCH);
+#if GTK_CHECK_VERSION(2,18,0)
+		gdk_window_set_cursor (gtk_widget_get_window (parent), cursor);
+#else
 		gdk_window_set_cursor (parent->window, cursor);
+#endif
 		gdk_cursor_destroy (cursor);
 	}
 }
@@ -129,8 +133,12 @@ unset_wait_cursor (GtkWidget *w)
 	GtkWidget *parent;
 
 	parent = gtk_widget_get_toplevel (w);
-	if (parent) 
+	if (parent)
+#if GTK_CHECK_VERSION(2,18,0)
+		gdk_window_set_cursor (gtk_widget_get_window (parent), NULL);
+#else
 		gdk_window_set_cursor (parent->window, NULL);
+#endif
 }
 
 static void

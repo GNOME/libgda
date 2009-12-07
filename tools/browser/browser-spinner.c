@@ -24,10 +24,17 @@
  * $Id$
  */
 
-#include "browser-spinner.h"
-
-#include <gdk-pixbuf/gdk-pixbuf.h>
+#ifdef GSEAL_ENABLE
+  #define KEEP_GSEAL_ENABLE
+  #undef GSEAL_ENABLE
+#endif
 #include <gtk/gtk.h>
+#ifdef KEEP_GSEAL_ENABLE
+  #define GSEAL_ENABLE
+  #undef KEEP_GSEAL_ENABLE
+#endif
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include "browser-spinner.h"
 
 /* Spinner cache implementation */
 
@@ -572,7 +579,11 @@ browser_spinner_init (BrowserSpinner *spinner)
 
 	priv = spinner->priv = BROWSER_SPINNER_GET_PRIVATE (spinner);
 
+#if GTK_CHECK_VERSION(2,18,0)
+	gtk_widget_set_has_window (GTK_WIDGET (spinner), TRUE);
+#else
 	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (spinner), GTK_NO_WINDOW);
+#endif
 
 	priv->cache = browser_spinner_cache_ref ();
 	priv->size = GTK_ICON_SIZE_DIALOG;
@@ -582,8 +593,7 @@ browser_spinner_init (BrowserSpinner *spinner)
 }
 
 static int
-browser_spinner_expose (GtkWidget *widget,
-		     GdkEventExpose *event)
+browser_spinner_expose (GtkWidget *widget, GdkEventExpose *event)
 {
 	BrowserSpinner *spinner = BROWSER_SPINNER (widget);
 	BrowserSpinnerPriv *priv = spinner->priv;
@@ -592,23 +602,22 @@ browser_spinner_expose (GtkWidget *widget,
 	GdkGC *gc;
 	int x_offset, y_offset, width, height;
 	GdkRectangle pix_area, dest;
+	gboolean drawable;
 
-	if (!GTK_WIDGET_DRAWABLE (spinner))
-	{
+#if GTK_CHECK_VERSION(2,18,0)
+	drawable = gtk_widget_is_drawable (widget);
+#else
+	drawable = GTK_WIDGET_DRAWABLE (widget);
+#endif
+	if (!drawable)
 		return FALSE;
-	}
 
-	if (priv->need_load &&
-	    !browser_spinner_load_images (spinner))
-	{
+	if (priv->need_load && !browser_spinner_load_images (spinner))
 		return FALSE;
-	}
 
 	images = priv->images;
-	if (images == NULL)
-	{
+	if (!images)
 		return FALSE;
-	}
 
 	/* Otherwise |images| will be NULL anyway */
 	g_assert (images->n_animation_pixbufs > 0);
@@ -624,23 +633,35 @@ browser_spinner_expose (GtkWidget *widget,
 	height = gdk_pixbuf_get_height (pixbuf);
 
 	/* Compute the offsets for the image centered on our allocation */
+#if GTK_CHECK_VERSION(2,18,0)
+	GtkAllocation alloc;
+	gtk_widget_get_allocation (widget, &alloc);
+	x_offset = (alloc.width - width) / 2;
+	y_offset = (alloc.height - height) / 2;
+	pix_area.x = x_offset + alloc.x;
+	pix_area.y = y_offset + alloc.y;
+#else
 	x_offset = (widget->allocation.width - width) / 2;
 	y_offset = (widget->allocation.height - height) / 2;
-
 	pix_area.x = x_offset + widget->allocation.x;
 	pix_area.y = y_offset + widget->allocation.y;
+#endif
 	pix_area.width = width;
 	pix_area.height = height;
 
 	if (!gdk_rectangle_intersect (&event->area, &pix_area, &dest))
-	{
 		return FALSE;
-	}
 
-	gc = gdk_gc_new (widget->window);
-	gdk_draw_pixbuf (widget->window, gc, pixbuf,
-			 dest.x - x_offset - widget->allocation.x,
-			 dest.y - y_offset - widget->allocation.y,
+	GdkWindow *win;
+#if GTK_CHECK_VERSION(2,18,0)
+	win = gtk_widget_get_window (widget);
+#else
+	win = widget->window;
+#endif
+	gc = gdk_gc_new (win);
+	gdk_draw_pixbuf (win, gc, pixbuf,
+			 dest.x - x_offset - alloc.x,
+			 dest.y - y_offset - alloc.y,
 			 dest.x, dest.y,
 			 dest.width, dest.height,
 			 GDK_RGB_DITHER_MAX, 0, 0);
@@ -686,10 +707,9 @@ browser_spinner_start (BrowserSpinner *spinner)
 
 	priv->spinning = TRUE;
 
-	if (GTK_WIDGET_MAPPED (GTK_WIDGET (spinner)) &&
+	if (GTK_WIDGET_MAPPED (GTK_WIDGET (spinner)) && /* GTK3 FIXME */
 	    priv->timer_task == 0 &&
-	    browser_spinner_load_images (spinner))
-	{
+	    browser_spinner_load_images (spinner)) {
 		/* the 0th frame is the 'rest' icon */
 		priv->current_image = MIN (1, priv->images->n_animation_pixbufs);
 
@@ -707,8 +727,7 @@ browser_spinner_remove_update_callback (BrowserSpinner *spinner)
 {
 	BrowserSpinnerPriv *priv = spinner->priv;
 
-	if (priv->timer_task != 0)
-	{
+	if (priv->timer_task != 0) {
 		g_source_remove (priv->timer_task);
 		priv->timer_task = 0;
 	}
@@ -728,14 +747,11 @@ browser_spinner_stop (BrowserSpinner *spinner)
 	priv->spinning = FALSE;
 	priv->current_image = 0;
 
-	if (priv->timer_task != 0)
-	{
+	if (priv->timer_task != 0) {
 		browser_spinner_remove_update_callback (spinner);
 
-		if (GTK_WIDGET_MAPPED (GTK_WIDGET (spinner)))
-		{
+		if (GTK_WIDGET_MAPPED (GTK_WIDGET (spinner))) /* GTK3 FIXME */
 			gtk_widget_queue_draw (GTK_WIDGET (spinner));
-		}
 	}
 }
 

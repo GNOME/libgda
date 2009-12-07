@@ -126,9 +126,8 @@ gdaui_data_cell_renderer_boolean_init (GdauiDataCellRendererBoolean *cell)
 	cell->priv->dh = NULL;
 	cell->priv->type = G_TYPE_BOOLEAN;
 	cell->priv->editable = FALSE;
-	GTK_CELL_RENDERER (cell)->mode = GTK_CELL_RENDERER_MODE_ACTIVATABLE;
-	GTK_CELL_RENDERER (cell)->xpad = 2;
-	GTK_CELL_RENDERER (cell)->ypad = 2;
+	g_object_set (G_OBJECT (cell), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE,
+		      "xpad", 2, "ypad", 2, NULL);
 }
 
 static void
@@ -367,17 +366,22 @@ gdaui_data_cell_renderer_boolean_render (GtkCellRenderer      *cell,
 
 	(toggle_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
 
-	if (GDAUI_DATA_CELL_RENDERER_BOOLEAN (cell)->priv->to_be_deleted)
-		gtk_paint_hline (widget->style,
+	if (GDAUI_DATA_CELL_RENDERER_BOOLEAN (cell)->priv->to_be_deleted) {
+		GtkStyle *style;
+		guint xpad;
+
+		g_object_get (G_OBJECT(widget), "style", &style, "xpad", &xpad, NULL);
+		gtk_paint_hline (style,
 				 window, GTK_STATE_SELECTED,
 				 cell_area, 
 				 widget,
 				 "hline",
-				 cell_area->x + cell->xpad, cell_area->x + cell_area->width - cell->xpad,
+				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
 				 cell_area->y + cell_area->height / 2.);
 
+	}
 }
-
+	
 static gboolean
 gdaui_data_cell_renderer_boolean_activate  (GtkCellRenderer            *cell,
 					    GdkEvent                   *event,
@@ -387,20 +391,22 @@ gdaui_data_cell_renderer_boolean_activate  (GtkCellRenderer            *cell,
 					    GdkRectangle               *cell_area,
 					    GtkCellRendererState        flags)
 {
-	if (GDAUI_DATA_CELL_RENDERER_BOOLEAN (cell)->priv->editable) {
-		GtkCellRendererClass *toggle_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TOGGLE);
+	gboolean editable;
+	g_object_get (G_OBJECT(cell), "editable", &editable, NULL);
+	if (editable) {
 		gboolean retval, active;
 		GValue *value;
-
-		retval = (toggle_class->activate) (cell, event, widget, path, background_area, cell_area, flags);
+		
+		retval = gtk_cell_renderer_activate (cell, event, widget, path, background_area, cell_area, flags);
 		active = gtk_cell_renderer_toggle_get_active (GTK_CELL_RENDERER_TOGGLE (cell));
-
-		g_value_set_boolean (value = gda_value_new (G_TYPE_BOOLEAN), ! active);
+		
+		value = gda_value_new (G_TYPE_BOOLEAN);
+		g_value_set_boolean (value, ! active);
 		g_signal_emit (G_OBJECT (cell), toggle_cell_signals[CHANGED], 0, path, value);
 		gda_value_free (value);
 		return retval;
 	}
-
+	
 	return FALSE;
 }
 

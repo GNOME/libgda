@@ -517,7 +517,7 @@ void
 gdaui_formatted_entry_set_insert_func (GdauiFormattedEntry *entry, GdauiFormattedEntryInsertFunc insert_func,
 				       gpointer data)
 {
-	g_return_val_if_fail (GDAUI_IS_FORMATTED_ENTRY (entry), NULL);
+	g_return_if_fail (GDAUI_IS_FORMATTED_ENTRY (entry));
 
 	entry->priv->insert_func = insert_func;
 	entry->priv->insert_func_data = data;

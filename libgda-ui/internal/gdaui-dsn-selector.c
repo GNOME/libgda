@@ -25,11 +25,10 @@
 #include <string.h>
 #include <libgda/gda-config.h>
 #include "gdaui-dsn-selector.h"
-#include <gtk/gtkcelllayout.h>
-#include <gtk/gtkcellrenderer.h>
-#include <gtk/gtkcellrenderertext.h>
+#include <gtk/gtk.h>
 
 struct _GdauiDsnSelectorPrivate {
+	gchar dummy;
 };
 
 static void gdaui_dsn_selector_class_init (GdauiDsnSelectorClass *klass);

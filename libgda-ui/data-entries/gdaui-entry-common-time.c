@@ -34,19 +34,19 @@ static void gdaui_entry_common_time_dispose (GObject *object);
 static void gdaui_entry_common_time_finalize (GObject *object);
 
 static void gdaui_entry_common_time_set_property (GObject *object,
-					guint param_id,
-					const GValue *value,
-					GParamSpec *pspec);
+						  guint param_id,
+						  const GValue *value,
+						  GParamSpec *pspec);
 static void gdaui_entry_common_time_get_property (GObject *object,
-					guint param_id,
-					GValue *value,
-					GParamSpec *pspec);
+						  guint param_id,
+						  GValue *value,
+						  GParamSpec *pspec);
 
 /* properties */
 enum
 {
 	PROP_0,
-	PROP_EDITING_CANCELLED,
+	PROP_EDITING_CANCELED,
 	PROP_TYPE
 };
 
@@ -75,6 +75,7 @@ struct _GdauiEntryCommonTimePrivate
 	GtkWidget *date;
         GtkWidget *window;
         GtkWidget *date_button;
+	gboolean   editing_canceled;
 
 	/* for time */
 	GtkWidget *entry_time;
@@ -144,15 +145,23 @@ gdaui_entry_common_time_class_init (GdauiEntryCommonTimeClass * class)
 	object_class->set_property = gdaui_entry_common_time_set_property;
 	object_class->get_property = gdaui_entry_common_time_get_property;
 
-	g_object_class_install_property (object_class, PROP_EDITING_CANCELLED,
-					 g_param_spec_boolean ("editing_cancelled", NULL, NULL, FALSE, G_PARAM_READABLE));
+	g_object_class_install_property (object_class, PROP_EDITING_CANCELED,
+					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE, G_PARAM_READABLE));
 	g_object_class_install_property (object_class, PROP_TYPE,
 					 g_param_spec_uint ("type", NULL, NULL, 0, G_MAXUINT, GDA_TYPE_TIME, 
 							    G_PARAM_WRITABLE | G_PARAM_READABLE));
 }
 
+static gboolean
+key_press_event_cb (GdauiEntryCommonTime *mgtim, GdkEventKey *key_event, gpointer data)
+{
+	if (key_event->keyval == GDK_Escape)
+		mgtim->priv->editing_canceled = TRUE;
+	return FALSE;
+}
+
 static void
-gdaui_entry_common_time_init (GdauiEntryCommonTime * gdaui_entry_common_time)
+gdaui_entry_common_time_init (GdauiEntryCommonTime *gdaui_entry_common_time)
 {
 	gdaui_entry_common_time->priv = g_new0 (GdauiEntryCommonTimePrivate, 1);
 	gdaui_entry_common_time->priv->entry_date = NULL;
@@ -162,6 +171,9 @@ gdaui_entry_common_time_init (GdauiEntryCommonTime * gdaui_entry_common_time)
 	gdaui_entry_common_time->priv->date_button = NULL;
 	gdaui_entry_common_time->priv->hbox = NULL;
 	gdaui_entry_common_time->priv->last_value_set = NULL;
+	gdaui_entry_common_time->priv->editing_canceled = FALSE;
+	g_signal_connect (gdaui_entry_common_time, "key-press-event",
+			  G_CALLBACK (key_press_event_cb), NULL);
 }
 
 /**
@@ -234,9 +246,9 @@ gdaui_entry_common_time_finalize (GObject   * object)
 
 static void
 gdaui_entry_common_time_set_property (GObject *object,
-					 guint param_id,
-					 const GValue *value,
-					 GParamSpec *pspec)
+				      guint param_id,
+				      const GValue *value,
+				      GParamSpec *pspec)
 {
 	GdauiEntryCommonTime *mgtim;
 
@@ -255,24 +267,17 @@ gdaui_entry_common_time_set_property (GObject *object,
 
 static void
 gdaui_entry_common_time_get_property (GObject *object,
-					 guint param_id,
-					 GValue *value,
-					 GParamSpec *pspec)
+				      guint param_id,
+				      GValue *value,
+				      GParamSpec *pspec)
 {
 	GdauiEntryCommonTime *mgtim;
-	gboolean cancelled;
 
 	mgtim = GDAUI_ENTRY_COMMON_TIME (object);
 	if (mgtim->priv) {
 		switch (param_id) {
-		case PROP_EDITING_CANCELLED:
-			cancelled = FALSE;
-			/* FIXME */
-			if (mgtim->priv->entry_date)
-				cancelled = GTK_ENTRY (mgtim->priv->entry_date)->editing_canceled;
-			if (!cancelled && mgtim->priv->entry_time)
-				cancelled = GTK_ENTRY (mgtim->priv->entry_time)->editing_canceled;
-			g_value_set_boolean (value, cancelled);
+		case PROP_EDITING_CANCELED:
+			g_value_set_boolean (value, mgtim->priv->editing_canceled);
 			break;
 		case PROP_TYPE:
 			g_value_set_uint (value, gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (object)));
@@ -782,7 +787,7 @@ date_button_press_popup (GtkWidget *widget, GdkEventButton *event, GdauiEntryCom
                 while (child) {
                         if (child == widget)
                                 return FALSE;
-                        child = child->parent;
+                        child = gtk_widget_get_parent (child);
                 }
         }
 
@@ -887,8 +892,14 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
 
         /* popup window */
         /* Temporarily grab pointer and keyboard, copied from GnomeDateEdit */
-        if (!popup_grab_on_window (button->window, gtk_get_current_event_time ()))
+#if GTK_CHECK_VERSION(2,18,0)
+        if (!popup_grab_on_window (gtk_widget_get_window (button), gtk_get_current_event_time ()))
                 return;
+#else
+	if (!popup_grab_on_window (button->window, gtk_get_current_event_time ()))
+		return;
+#endif
+
         position_popup (mgtim);
         gtk_grab_add (mgtim->priv->window);
         gtk_widget_show (mgtim->priv->window);
@@ -929,8 +940,13 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
 		gtk_window_move (GTK_WINDOW (mgtim->priv->window), root_x, root_y);
 
         gtk_widget_grab_focus (mgtim->priv->date);
-        popup_grab_on_window (mgtim->priv->window->window,
+#if GTK_CHECK_VERSION(2,18,0)
+        popup_grab_on_window (gtk_widget_get_window (mgtim->priv->window),
                               gtk_get_current_event_time ());
+#else
+	popup_grab_on_window (mgtim->priv->window->window,
+			      gtk_get_current_event_time ());
+#endif
 }
 
 static gboolean
@@ -960,12 +976,22 @@ position_popup (GdauiEntryCommonTime *mgtim)
 
         gtk_widget_size_request (mgtim->priv->window, &req);
 
-        gdk_window_get_origin (mgtim->priv->date_button->window, &x, &y);
-
+#if GTK_CHECK_VERSION(2,18,0)
+        gdk_window_get_origin (gtk_widget_get_window (mgtim->priv->date_button), &x, &y);
+	GtkAllocation alloc;
+	gtk_widget_get_allocation (mgtim->priv->date_button, &alloc);
+        x += alloc.x;
+        y += alloc.y;
+        bwidth = alloc.width;
+        bheight = alloc.height;
+#else
+	gdk_window_get_origin (mgtim->priv->date_button->window, &x, &y);
+	
         x += mgtim->priv->date_button->allocation.x;
         y += mgtim->priv->date_button->allocation.y;
         bwidth = mgtim->priv->date_button->allocation.width;
-        bheight = mgtim->priv->date_button->allocation.height;
+	bheight = mgtim->priv->date_button->allocation.height;
+#endif
 
         x += bwidth - req.width;
         y += bheight;
@@ -1103,11 +1129,11 @@ gdaui_entry_common_time_start_editing (GtkCellEditable *iface, GdkEvent *event)
 {
 	GdauiEntryCommonTime *mgtim;
 
-	g_return_if_fail (iface && GDAUI_IS_ENTRY_COMMON_TIME (iface));
+	g_return_if_fail (GDAUI_IS_ENTRY_COMMON_TIME (iface));
 	mgtim = GDAUI_ENTRY_COMMON_TIME (iface);
 	g_return_if_fail (mgtim->priv);
 
-
+	mgtim->priv->editing_canceled = FALSE;
 	if (mgtim->priv->date_button) {
 		gtk_widget_destroy (mgtim->priv->date_button);
 		mgtim->priv->date_button = NULL;

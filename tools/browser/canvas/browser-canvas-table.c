@@ -535,7 +535,11 @@ browser_canvas_table_drag_data_get (BrowserCanvasItem *citem, GdkDragContext *dr
 	g_free (tmp1);
 	g_free (tmp2);
 	g_free (tmp3);
-	gtk_selection_data_set (data, data->target, 8, str, strlen (str));
+#if GTK_CHECK_VERSION(2,18,0)
+	gtk_selection_data_set (data, gtk_selection_data_get_target (data), 8, (guchar*) str, strlen (str));
+#else
+	gtk_selection_data_set (data, data->target, 8, (guchar*) str, strlen (str));
+#endif
 	g_free (str);
 }
 
@@ -561,7 +565,7 @@ browser_canvas_table_serialize (BrowserCanvasItem *citem)
 	gchar *str;
 
 	dbo = GDA_META_DB_OBJECT (ctable->priv->table);
-	node = xmlNewNode (NULL, "table");
+	node = xmlNewNode (NULL, BAD_CAST "table");
 	xmlSetProp (node, BAD_CAST "schema", BAD_CAST (dbo->obj_schema));
 	xmlSetProp (node, BAD_CAST "name", BAD_CAST (dbo->obj_name));
 	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (citem), &bounds);

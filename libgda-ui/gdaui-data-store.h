@@ -21,7 +21,7 @@
 #ifndef __GDAUI_DATA_STORE__
 #define __GDAUI_DATA_STORE__
 
-#include <gtk/gtktreemodel.h>
+#include <gtk/gtk.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-proxy.h>
 

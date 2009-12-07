@@ -22,13 +22,7 @@
 
 #include <gdk/gdkkeysyms.h>
 
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtktogglebutton.h>
-#include <gtk/gtkwindow.h>
-#include <gtk/gtkscrolledwindow.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtktreeselection.h>
+#include <gtk/gtk.h>
 
 #include <libgda/gda-data-model.h>
 #include <libgda-ui/gdaui-raw-grid.h>
@@ -133,7 +127,7 @@ get_row_height (GdauiEntryCGrid  *cgrid)
 		GList *current1 = renderers;
 		while (current1) {
 			GtkCellRenderer *renderer = (GtkCellRenderer *) current1->data;
-			guint height;
+			gint height;
 
 			gtk_cell_renderer_get_size (renderer, cgrid->priv->tree_view,
 						    NULL, NULL, NULL, NULL, &height);
@@ -220,7 +214,7 @@ toggle_button_on_toggled (GtkToggleButton  *toggle_button,
 	if (gtk_toggle_button_get_active (toggle_button) == TRUE) {
 
 		GdauiEntryCGrid  *cgrid = (GdauiEntryCGrid  *) data;
-
+		GdkWindow *gdkwin;
 		GtkWidget *window_popup = GDAUI_ENTRY_CGRID(cgrid)->priv->window_popup;
 		GtkRequisition requisition;
 
@@ -229,14 +223,25 @@ toggle_button_on_toggled (GtkToggleButton  *toggle_button,
 
 		gint x, y, width, height;
 
-		gdk_window_get_origin (GDK_WINDOW
-				       (GTK_WIDGET(cgrid)->window),
-				       &x, &y);
+#if GTK_CHECK_VERSION(2,18,0)
+		gdkwin = gtk_widget_get_window (GTK_WIDGET(cgrid));
+#else
+		gdkwin = GDK_WINDOW (GTK_WIDGET(cgrid)->window);
+#endif
+		gdk_window_get_origin (gdkwin, &x, &y);
 
-		x += GTK_WIDGET(cgrid)->allocation.x;
+#if GTK_CHECK_VERSION(2,18,0)
+		GtkAllocation alloc;
+		gtk_widget_get_allocation (GTK_WIDGET (cgrid), &alloc);
+		x += alloc.x;
+		width = alloc.width;
+		height = alloc.height;
+#else
+		x += GTK_WIDGET (cgrid)->allocation.x;
 /* 		y += cgrid->priv->entry->allocation.y; */
-		width = GTK_WIDGET(cgrid)->allocation.width;
-		height = GTK_WIDGET(cgrid)->allocation.height;
+		width = GTK_WIDGET (cgrid)->allocation.width;
+		height = GTK_WIDGET (cgrid)->allocation.height;
+#endif
 
 /* 		x += width - requisition.width; */
 		y += height;
@@ -246,13 +251,22 @@ toggle_button_on_toggled (GtkToggleButton  *toggle_button,
 		gtk_grab_add (window_popup);
 		gtk_window_move (GTK_WINDOW(window_popup), x, y);
 		gtk_widget_set_size_request (window_popup,
+#if GTK_CHECK_VERSION(2,18,0)
+					     alloc.width,
+#else
 					     GTK_WIDGET(cgrid)->allocation.width,
+#endif
 					     ((y + cgrid->priv->grid_height) > gdk_screen_height ()) ? gdk_screen_height () - y : cgrid->priv->grid_height);
 		gtk_widget_show (window_popup);
 		gtk_widget_grab_focus (cgrid->priv->tree_view);
 
+#if GTK_CHECK_VERSION(2,18,0)
+		popup_grab_on_window (gtk_widget_get_window (window_popup),
+				      gtk_get_current_event_time ());
+#else
 		popup_grab_on_window (window_popup->window,
 				      gtk_get_current_event_time ());
+#endif
 	}
 
 }
@@ -358,7 +372,7 @@ window_popup_on_button_press_event (GtkWidget       *window_popup,
 		while (event_widget) {
 			if (event_widget == window_popup)
 				return FALSE;
-			event_widget = event_widget->parent;
+			event_widget = gtk_widget_get_parent (event_widget);
 		}
 
 	}
@@ -809,7 +823,6 @@ gdaui_entry_cgrid_class_init (GdauiEntryCGridClass  *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
 
-	GdauiEntryShellClass *shell_class = GDAUI_ENTRY_SHELL_CLASS(klass);
 	GdauiEntryWrapperClass *wrapper_class = GDAUI_ENTRY_WRAPPER_CLASS(klass);
 
 	parent_class = g_type_class_peek_parent (klass);

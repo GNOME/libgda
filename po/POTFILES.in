@@ -112,6 +112,7 @@ libgda-ui/internal/gdaui-provider-auth-editor.c
 libgda-ui/internal/gdaui-provider-spec-editor.c
 libgda-ui/internal/utility.c
 libgda-ui/gdaui-basic-form.c
+libgda-ui/gdaui-cloud.c
 libgda-ui/gdaui-combo.c
 libgda-ui/gdaui-data-store.c
 libgda-ui/gdaui-data-widget.c

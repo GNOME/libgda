@@ -513,8 +513,12 @@ static gboolean
 visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, ObjectsCloud *cloud)
 {
 	gint wx, wy, bx, by;
-	
+
+#if GTK_CHECK_VERSION(2,18,0)
+	gdk_window_get_pointer (gtk_widget_get_window (text_view), &wx, &wy, NULL);
+#else
 	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
+#endif
 	
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
 					       GTK_TEXT_WINDOW_WIDGET,
@@ -538,8 +542,11 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ObjectsCloud *
 					       event->x, event->y, &x, &y);
 	
 	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, cloud);
-	
+#if GTK_CHECK_VERSION(2,18,0)
+	gdk_window_get_pointer (gtk_widget_get_window (text_view), NULL, NULL, NULL);
+#else
 	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
+#endif
 	return FALSE;
 }
 

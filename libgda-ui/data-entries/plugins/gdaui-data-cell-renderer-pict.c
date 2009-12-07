@@ -1,6 +1,6 @@
 /* gdaui-data-cell-renderer-pict.c
  *
- * Copyright (C) 2006 - 2007 Vivien Malerba <malerba@gdaui.org>
+ * Copyright (C) 2006 - 2009 Vivien Malerba <malerba@gdaui.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -153,10 +153,8 @@ gdaui_data_cell_renderer_pict_init (GdauiDataCellRendererPict *cell)
 	
 	gtk_icon_size_lookup (GTK_ICON_SIZE_DIALOG, &(cell->priv->size.width), &(cell->priv->size.height));
 
-	GTK_CELL_RENDERER (cell)->mode = GTK_CELL_RENDERER_MODE_ACTIVATABLE;
-	GTK_CELL_RENDERER (cell)->xpad = 2;
-	GTK_CELL_RENDERER (cell)->ypad = 2;
-
+	g_object_set ((GObject*) cell, "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE,
+		      "xpad", 2, "ypad", 2, NULL);
 	g_signal_connect (G_OBJECT (cell), "notify",
 			  G_CALLBACK (notify_property_cb), NULL);
 }
@@ -399,15 +397,22 @@ gdaui_data_cell_renderer_pict_render (GtkCellRenderer      *cell,
 
 	(pixbuf_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
 
-	if (GDAUI_DATA_CELL_RENDERER_PICT (cell)->priv->to_be_deleted)
-		gtk_paint_hline (widget->style,
+	if (GDAUI_DATA_CELL_RENDERER_PICT (cell)->priv->to_be_deleted) {
+		GtkStyle *style;
+		guint xpad;
+
+		g_object_get ((GObject*) widget, "style", &style, NULL);
+		g_object_get ((GObject*) cell, "xpad", &xpad, NULL);
+
+		gtk_paint_hline (style,
 				 window, GTK_STATE_SELECTED,
 				 cell_area, 
 				 widget,
 				 "hline",
-				 cell_area->x + cell->xpad, cell_area->x + cell_area->width - cell->xpad,
+				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
 				 cell_area->y + cell_area->height / 2.);
-
+		g_object_unref (style);
+	}
 }
 
 static void

@@ -23,7 +23,7 @@
 #ifndef __QUERY_RESULT_H__
 #define __QUERY_RESULT_H__
 
-#include <gtk/gtkvbox.h>
+#include <gtk/gtk.h>
 #include <libgda/libgda.h>
 #include "query-editor.h"
 

@@ -23,7 +23,7 @@
 #ifndef __PROVIDER_CONFIG_H__
 #define __PROVIDER_CONFIG_H__
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 GtkWidget *provider_config_new (void);
 

@@ -21,7 +21,7 @@
 #ifndef __GDAUI_PLUGIN__
 #define __GDAUI_PLUGIN__
 
-#include <gtk/gtkcellrenderer.h>
+#include <gtk/gtk.h>
 #include <libgda/gda-value.h>
 #include "gdaui-decl.h"
 

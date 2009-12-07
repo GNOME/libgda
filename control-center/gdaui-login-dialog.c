@@ -21,13 +21,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gtk/gtkimage.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtknotebook.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkwindow.h>
 #include <libgda/gda-config.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda-ui/gdaui-login.h>
@@ -106,8 +99,15 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, GdauiLoginDialogClass *klass)
 	GtkWidget *hbox, *vbox, *image, *label;
 	GtkWidget *nb;
 	GdkPixbuf *icon;
+	GtkWidget *dcontents;
 
 	g_return_if_fail (GDAUI_IS_LOGIN_DIALOG (dialog));
+
+#if GTK_CHECK_VERSION(2,18,0)
+	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+#else
+	dcontents = GTK_DIALOG (dialog)->vbox;
+#endif
 
 	dialog->priv = g_new0 (GdauiLoginDialogPrivate, 1);
         
@@ -116,14 +116,14 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, GdauiLoginDialogClass *klass)
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-        gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 12);
+        gtk_box_set_spacing (GTK_BOX (dcontents), 12);
         gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
         gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 
 	hbox = gtk_hbox_new (FALSE, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_widget_show (hbox);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (dcontents), hbox, TRUE, TRUE, 0);
 
 	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_AUTHENTICATION, GTK_ICON_SIZE_DIALOG);
         gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);

@@ -25,7 +25,7 @@
 #define __GDAUI_DSN_ASSISTANT_H__
 
 #include <libgda/gda-config.h>
-#include <gtk/gtkassistant.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

@@ -1,6 +1,6 @@
 /* gdaui-entry-pict.c
  *
- * Copyright (C) 2006 - 2007 Vivien Malerba
+ * Copyright (C) 2006 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -381,8 +381,15 @@ display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_s
 	PictAllocation alloc;
 	GError *error = NULL;
 
+#if GTK_CHECK_VERSION(2,18,0)
+	GtkAllocation walloc;
+	gtk_widget_get_allocation (mgpict->priv->sw, &walloc);
+	alloc.width = walloc.width;
+	alloc.height = walloc.height;
+#else
 	alloc.width = mgpict->priv->sw->allocation.width;
 	alloc.height = mgpict->priv->sw->allocation.height;
+#endif
 	
 	pixbuf = common_pict_fetch_cached_pixbuf (&(mgpict->priv->options), value);
 	if (pixbuf)
