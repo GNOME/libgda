@@ -472,7 +472,11 @@ get_file (WebServer *server, SoupMessage *msg, const char *path, GError **error)
 	SoupBuffer *buffer;
 	buffer = soup_buffer_new_with_owner (g_mapped_file_get_contents (mfile),
 					     g_mapped_file_get_length (mfile),
+#if GLIB_CHECK_VERSION(2,22,0)
+					     mfile, (GDestroyNotify) g_mapped_file_unref);
+#else
 					     mfile, (GDestroyNotify) g_mapped_file_free);
+#endif
 	soup_message_body_append_buffer (msg->response_body, buffer);
 	soup_buffer_free (buffer);
 	soup_message_set_status (msg, SOUP_STATUS_OK);
