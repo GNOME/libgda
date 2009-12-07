@@ -342,45 +342,46 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 	pinfo = gda_config_get_provider_info (gda_server_provider_get_name (prov));
 	g_assert (pinfo);
 
-	table = xmlNewChild (file->body, NULL, "table", NULL);
-	xmlSetProp (table, "width", (xmlChar*)"100%");
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	td = xmlNewTextChild (tr, NULL, "th", header_str);
-	xmlSetProp (td, "colspan", (xmlChar*)"4");
+	table = xmlNewChild (file->body, NULL, BAD_CAST "table", NULL);
+	xmlSetProp (table, BAD_CAST "width", BAD_CAST "100%");
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	td = xmlNewTextChild (tr, NULL, BAD_CAST "th", BAD_CAST header_str);
+	xmlSetProp (td, BAD_CAST "colspan", BAD_CAST  "4");
 
 	/* line 1 */
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Provider's name:");
-	td = xmlNewTextChild (tr, NULL, "td", gda_server_provider_get_name (prov));
-	xmlSetProp (td, "width", (xmlChar*)"35%");
-	xmlNewChild (tr, NULL, "td", "Provider is virtual:");
-	td = xmlNewChild (tr, NULL, "td", is_virt ? "Yes (uses the SQLite engine)" : "No");
-	xmlSetProp (td, "width", (xmlChar*)"35%");
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Provider's name:");
+	td = xmlNewTextChild (tr, NULL, BAD_CAST "td", BAD_CAST gda_server_provider_get_name (prov));
+	xmlSetProp (td, BAD_CAST "width", (xmlChar*) "35%");
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Provider is virtual:");
+	td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST (is_virt ? "Yes (uses the SQLite engine)" : "No"));
+	xmlSetProp (td, BAD_CAST "width", (xmlChar*) "35%");
 
 	/* line 2 */
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Provider's version:");
-	xmlNewTextChild (tr, NULL, "td", gda_server_provider_get_version (prov));
-	xmlNewChild (tr, NULL, "td", "Provider's server version:");
-	xmlNewTextChild (tr, NULL, "td", cnc ? gda_server_provider_get_server_version (prov, cnc) : "(non connected)");
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Provider's version:");
+	xmlNewTextChild (tr, NULL, BAD_CAST "td", BAD_CAST gda_server_provider_get_version (prov));
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Provider's server version:");
+	xmlNewTextChild (tr, NULL, BAD_CAST "td",
+			 BAD_CAST (cnc ? gda_server_provider_get_server_version (prov, cnc) : "(non connected)"));
 
 	/* line 3 */
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Provider's description:");
-	xmlNewTextChild (tr, NULL, "td", pinfo->description);
-	xmlNewChild (tr, NULL, "td", "Filename:");
-	xmlNewTextChild (tr, NULL, "td", pinfo->location);
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Provider's description:");
+	xmlNewTextChild (tr, NULL, BAD_CAST "td", BAD_CAST pinfo->description);
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Filename:");
+	xmlNewTextChild (tr, NULL, BAD_CAST "td", BAD_CAST pinfo->location);
 
 	/* line 4 */
 	parser = gda_server_provider_create_parser (prov, cnc);
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Creates its own SQL parser:");
-	xmlNewChild (tr, NULL, "td", parser ? "Yes" : "No");
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Creates its own SQL parser:");
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST (parser ? "Yes" : "No"));
 	if (parser)
 		g_object_unref (parser);
-	xmlNewChild (tr, NULL, "td", "Non implemented base methods:");
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Non implemented base methods:");
 	span = NULL;
-	td = xmlNewChild (tr, NULL, "td", NULL);
+	td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
 	for (i = 0; i < sizeof (fa) / sizeof (ProvFunc); i++) {
 		gchar *str;
 		ProvFunc *pf = &(fa[i]);
@@ -392,19 +393,19 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 			str = g_strdup_printf (", %s()", pf->name);
 		else
 			str = g_strdup_printf ("%s()", pf->name);
-		span = xmlNewTextChild (td, NULL, "span", str);
+		span = xmlNewTextChild (td, NULL, BAD_CAST "span", BAD_CAST str);
 		g_free (str);
 		if (pf->should_be)
-			xmlSetProp (span, "class", (xmlChar*)"error");
+			xmlSetProp (span, BAD_CAST "class", BAD_CAST "error");
 	}
 	if (!span)
-		xmlNodeSetContent (td, (xmlChar*) "---");
+		xmlNodeSetContent (td, BAD_CAST "---");
 
 	/* line 5 */
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Non implemented meta data methods:");
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Non implemented meta data methods:");
 	span = NULL;
-	td = xmlNewChild (tr, NULL, "td", NULL);
+	td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
 	for (i = 0; i < sizeof (md) / sizeof (ProvFunc); i++) {
 		gchar *str;
 		ProvFunc *pf = &(md[i]);
@@ -416,22 +417,22 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 			str = g_strdup_printf (", %s()", pf->name);
 		else
 			str = g_strdup_printf ("%s()", pf->name);
-		span = xmlNewTextChild (td, NULL, "span", str);
+		span = xmlNewTextChild (td, NULL, BAD_CAST "span", BAD_CAST str);
 		g_free (str);
 		if (pf->should_be)
-			xmlSetProp (span, "class", (xmlChar*)"error");
+			xmlSetProp (span, BAD_CAST "class", BAD_CAST "error");
 	}
 	if (!span)
-		xmlNodeSetContent (td, (xmlChar*) "---");
+		xmlNodeSetContent (td, BAD_CAST "---");
 
-	xmlNewChild (tr, NULL, "td", "Non implemented XA transactions:");
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Non implemented XA transactions:");
 	if (pclass->xa_funcs) {
 		if (!has_xa) {
-			td = xmlNewChild (tr, NULL, "td", 
-					  "The provider has the 'xa_funcs' part but "
+			td = xmlNewChild (tr, NULL, BAD_CAST "td", 
+					  BAD_CAST "The provider has the 'xa_funcs' part but "
 					  "reports that distributed transactions are "
 					  "not supported.");
-			xmlSetProp (td, "class", (xmlChar*)"warning");
+			xmlSetProp (td, BAD_CAST "class", BAD_CAST "warning");
 		}
 		else {
 			ProvFunc dt[] = {
@@ -443,7 +444,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 				{"xa_recover", TRUE, (AFunc) pclass->xa_funcs->xa_recover},
 			};
 			span = NULL;
-			td = xmlNewChild (tr, NULL, "td", NULL);
+			td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
 			for (i = 0; i < sizeof (dt) / sizeof (ProvFunc); i++) {
 				gchar *str;
 				ProvFunc *pf = &(dt[i]);
@@ -455,33 +456,33 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 					str = g_strdup_printf (", %s()", pf->name);
 				else
 					str = g_strdup_printf ("%s()", pf->name);
-				span = xmlNewTextChild (td, NULL, "span", str);
+				span = xmlNewTextChild (td, NULL, BAD_CAST "span", BAD_CAST str);
 				g_free (str);
 				if (pf->should_be)
-					xmlSetProp (span, "class", (xmlChar*)"error");
+					xmlSetProp (span, BAD_CAST "class", BAD_CAST "error");
 			}
 			if (!span)
-				xmlNodeSetContent (td, (xmlChar*) "---");
+				xmlNodeSetContent (td, BAD_CAST "---");
 		}
 	}
 	else {
 		if (has_xa) {
-			td = xmlNewTextChild (tr, NULL, "td", 
-					  (xmlChar*) "The provider does not have the 'xa_funcs' part but "
+			td = xmlNewTextChild (tr, NULL, BAD_CAST "td",
+					   BAD_CAST "The provider does not have the 'xa_funcs' part but "
 					  "reports that distributed transactions are "
 					  "supported.");
-			xmlSetProp (td, "class", (xmlChar*)"warning");
+			xmlSetProp (td, BAD_CAST "class", BAD_CAST "warning");
 		}
 		else
-			xmlNewChild (tr, NULL, "td", (xmlChar*) "---");
+			xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "---");
 	}	
 
 	/* line 6 */
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Connection's parameters:");
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Connection's parameters:");
 	if (pinfo->dsn_params && pinfo->dsn_params->holders) {
 		GSList *list;
-		td = xmlNewChild (tr, NULL, "td", NULL);
+		td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
 		for (list = pinfo->dsn_params->holders; list; list = list->next) {
 			xmlNodePtr div;
 			gchar *str, *descr;
@@ -492,19 +493,19 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 			else
 				str = g_strdup (gda_holder_get_id (holder));
 			g_free (descr);
-			div = xmlNewTextChild (td, NULL, "div", str);
+			div = xmlNewTextChild (td, NULL, BAD_CAST "div", BAD_CAST str);
 			g_free (str);
 		}
 	}
 	else {
-		td = xmlNewChild (tr, NULL, "td", "None provided");
-		xmlSetProp (td, "class", (xmlChar*)"error");
+		td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "None provided");
+		xmlSetProp (td, BAD_CAST "class", BAD_CAST "error");
 	}
-	xmlNewChild (tr, NULL, "td", "Authentication's parameters:");
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Authentication's parameters:");
 	if (pinfo->auth_params) {
 		GSList *list;
 		if (pinfo->auth_params->holders) {
-			td = xmlNewChild (tr, NULL, "td", NULL);
+			td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
 			for (list = pinfo->auth_params->holders; list; list = list->next) {
 				xmlNodePtr div;
 				gchar *str, *descr;
@@ -515,23 +516,23 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 				else
 					str = g_strdup (gda_holder_get_id (holder));
 				g_free (descr);
-				div = xmlNewTextChild (td, NULL, "div", str);
+				div = xmlNewTextChild (td, NULL, BAD_CAST "div", BAD_CAST str);
 				g_free (str);
 			}
 		}
 		else
-			td = xmlNewChild (tr, NULL, "td", "None required");
+			td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "None required");
 	}
 	else {
-		td = xmlNewChild (tr, NULL, "td", "None provided");
-		xmlSetProp (td, "class", (xmlChar*)"error");
+		td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "None provided");
+		xmlSetProp (td, BAD_CAST "class", BAD_CAST "error");
 	}
 
 	/* line 7 */
 	GdaConnectionFeature f;
 	string = NULL;
-	tr = xmlNewChild (table, NULL, "tr", NULL);
-	xmlNewChild (tr, NULL, "td", "Supported features:");
+	tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Supported features:");
 	for (f = 0; f < GDA_CONNECTION_FEATURE_LAST; f++) {
 		if (gda_server_provider_supports_feature (prov, cnc, f)) {
 			GEnumValue *ev;
@@ -544,14 +545,14 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		}
 	}
 	if (string) {
-		xmlNewTextChild (tr, NULL, "td", string->str);
+		xmlNewTextChild (tr, NULL, BAD_CAST "td", BAD_CAST string->str);
 		g_string_free (string, TRUE);
 	}
 	else
-		xmlNewChild (tr, NULL, "td", "---");
+		xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "---");
 
 	string = NULL;
-	xmlNewChild (tr, NULL, "td", "Unsupported features:");
+	xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "Unsupported features:");
 	for (f = 0; f < GDA_CONNECTION_FEATURE_LAST; f++) {
 		if (!gda_server_provider_supports_feature (prov, cnc, f)) {
 			GEnumValue *ev;
@@ -564,11 +565,11 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		}
 	}
 	if (string) {
-		xmlNewTextChild (tr, NULL, "td", string->str);
+		xmlNewTextChild (tr, NULL, BAD_CAST "td", BAD_CAST string->str);
 		g_string_free (string, TRUE);
 	}
 	else
-		xmlNewChild (tr, NULL, "td", "---");
+		xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST "---");
 		
 	g_free (header_str);
 

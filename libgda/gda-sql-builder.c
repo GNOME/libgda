@@ -1114,20 +1114,23 @@ guint
 gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_name, const gchar *alias)
 {
 	gchar *tmp;
-	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
-	g_return_if_fail (builder->priv->main_stmt);
+	guint id;
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+
 	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
 		g_warning (_("Wrong statement type"));
-		return;
+		return 0;
 	}
-	g_return_if_fail (table_name && *table_name);
+	g_return_val_if_fail (table_name && *table_name, 0);
 
-	gda_sql_builder_select_add_target_id (builder,
-					      0, 
-					      gda_sql_builder_add_id (builder, 0, table_name),
-					      alias);
+	id = gda_sql_builder_select_add_target_id (builder,
+						   0, 
+						   gda_sql_builder_add_id (builder, 0, table_name),
+						   alias);
 	if (table_name)
 		g_free (tmp);
+	return id;
 }
 
 
