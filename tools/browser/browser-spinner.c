@@ -633,19 +633,17 @@ browser_spinner_expose (GtkWidget *widget, GdkEventExpose *event)
 	height = gdk_pixbuf_get_height (pixbuf);
 
 	/* Compute the offsets for the image centered on our allocation */
-#if GTK_CHECK_VERSION(2,18,0)
 	GtkAllocation alloc;
+#if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_get_allocation (widget, &alloc);
+#else
+	alloc = widget->allocation;
+#endif
 	x_offset = (alloc.width - width) / 2;
 	y_offset = (alloc.height - height) / 2;
 	pix_area.x = x_offset + alloc.x;
 	pix_area.y = y_offset + alloc.y;
-#else
-	x_offset = (widget->allocation.width - width) / 2;
-	y_offset = (widget->allocation.height - height) / 2;
-	pix_area.x = x_offset + widget->allocation.x;
-	pix_area.y = y_offset + widget->allocation.y;
-#endif
+
 	pix_area.width = width;
 	pix_area.height = height;
 
