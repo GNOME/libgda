@@ -1113,7 +1113,6 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint id, guint ta
 guint
 gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_name, const gchar *alias)
 {
-	gchar *tmp;
 	guint id;
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -1128,8 +1127,6 @@ gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_na
 						   0, 
 						   gda_sql_builder_add_id (builder, 0, table_name),
 						   alias);
-	if (table_name)
-		g_free (tmp);
 	return id;
 }
 
