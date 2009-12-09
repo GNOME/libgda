@@ -6,3 +6,5 @@ s-enum-types-h
 gda-enum-types.c
 gda-enum-types.h
 libgda.def
+Gda-4.0.gir
+Gda-4.0.typelib

@@ -26,10 +26,12 @@ G_BEGIN_DECLS
 
 /* Boxed type for GError will not be done in GLib see bug #300610 */
 #define GDA_TYPE_ERROR (_gda_error_get_type())
+typedef GError GdaError;
 GType   _gda_error_get_type (void) G_GNUC_CONST;
 
 /* Pointer type for GSList (not a boxed type!) */
 #define GDA_TYPE_SLIST (_gda_slist_get_type())
+typedef GSList GdaSList;
 GType   _gda_slist_get_type (void) G_GNUC_CONST;
 
 /* Pointer type for GdaMetaContext (not a boxed type!) */
