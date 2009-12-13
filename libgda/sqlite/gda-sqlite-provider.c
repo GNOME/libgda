@@ -415,6 +415,10 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->meta_funcs.routine_col = _gda_sqlite_meta_routine_col;
 	provider_class->meta_funcs._routine_par = _gda_sqlite_meta__routine_par;
 	provider_class->meta_funcs.routine_par = _gda_sqlite_meta_routine_par;
+	provider_class->meta_funcs._indexes_tab = _gda_sqlite_meta__indexes_tab;
+        provider_class->meta_funcs.indexes_tab = _gda_sqlite_meta_indexes_tab;
+        provider_class->meta_funcs._index_cols = _gda_sqlite_meta__index_cols;
+        provider_class->meta_funcs.index_cols = _gda_sqlite_meta_index_cols;	
 
 	/* SQLite doe not support distributed transactions */
 	provider_class->xa_funcs = NULL;

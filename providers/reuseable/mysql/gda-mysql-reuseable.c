@@ -82,7 +82,11 @@ _gda_mysql_reuseable = {
 		._routine_col = _gda_mysql_meta__routine_col,
 		.routine_col = _gda_mysql_meta_routine_col,
 		._routine_par = _gda_mysql_meta__routine_par,
-		.routine_par = _gda_mysql_meta_routine_par
+		.routine_par = _gda_mysql_meta_routine_par,
+		._indexes_tab = _gda_mysql_meta__indexes_tab,
+		.indexes_tab = _gda_mysql_meta_indexes_tab,
+		._index_cols = _gda_mysql_meta__index_cols,
+		.index_cols = _gda_mysql_meta_index_cols
 	}
 };
 

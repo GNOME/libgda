@@ -726,14 +726,14 @@ _gda_web_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 		return FALSE;
 
 	if (table_name_n)
-		tables_model = run_meta_command_args (cnc, cdata, "views", error,
-						      "table_catalog", g_value_get_string (table_catalog),
-						      "table_schema", g_value_get_string (table_schema),
-						      "table_name", g_value_get_string (table_name_n), NULL);
+		views_model = run_meta_command_args (cnc, cdata, "views", error,
+						     "table_catalog", g_value_get_string (table_catalog),
+						     "table_schema", g_value_get_string (table_schema),
+						     "table_name", g_value_get_string (table_name_n), NULL);
 	else
-		tables_model = run_meta_command_args (cnc, cdata, "views", error,
-						      "table_catalog", g_value_get_string (table_catalog),
-						      "table_schema", g_value_get_string (table_schema), NULL);
+		views_model = run_meta_command_args (cnc, cdata, "views", error,
+						     "table_catalog", g_value_get_string (table_catalog),
+						     "table_schema", g_value_get_string (table_schema), NULL);
 	if (!views_model) {
 		g_object_unref (tables_model);
 		return FALSE;
@@ -1373,6 +1373,106 @@ _gda_web_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 											context, error,
 											rout_catalog, rout_schema, 
 											rout_name);
+		else
+			return TRUE;
+	}
+
+	/* no default method */
+	return TRUE;
+}
+
+gboolean
+_gda_web_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	WebConnectionData *cdata;
+
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	/* use reuseable methods if available */
+	if (cdata->reuseable) {
+		if (cdata->reuseable->operations->re_meta_funcs._indexes_tab)
+			return cdata->reuseable->operations->re_meta_funcs._indexes_tab (NULL, cnc, store,
+											 context, error);
+		else
+			return TRUE;
+	}
+
+	/* no default method */
+	return TRUE;
+}
+
+gboolean
+_gda_web_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			   const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+			   const GValue *index_name_n)
+{
+	WebConnectionData *cdata;
+
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	/* use reuseable methods if available */
+	if (cdata->reuseable) {
+		if (cdata->reuseable->operations->re_meta_funcs.indexes_tab)
+			return cdata->reuseable->operations->re_meta_funcs.indexes_tab (NULL, cnc, store,
+											context, error,
+											table_catalog, table_schema, 
+											table_name, index_name_n);
+		else
+			return TRUE;
+	}
+
+	/* no default method */
+	return TRUE;
+}
+
+gboolean
+_gda_web_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	WebConnectionData *cdata;
+
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	/* use reuseable methods if available */
+	if (cdata->reuseable) {
+		if (cdata->reuseable->operations->re_meta_funcs._index_cols)
+			return cdata->reuseable->operations->re_meta_funcs._index_cols (NULL, cnc, store,
+											context, error);
+		else
+			return TRUE;
+	}
+
+	/* no default method */
+	return TRUE;
+}
+
+gboolean
+_gda_web_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			  const GValue *table_catalog, const GValue *table_schema,
+			  const GValue *table_name, const GValue *index_name)
+{
+	WebConnectionData *cdata;
+
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	/* use reuseable methods if available */
+	if (cdata->reuseable) {
+		if (cdata->reuseable->operations->re_meta_funcs.index_cols)
+			return cdata->reuseable->operations->re_meta_funcs.index_cols (NULL, cnc, store,
+										       context, error,
+										       table_catalog, table_schema,
+										       table_name, index_name);
 		else
 			return TRUE;
 	}

@@ -1,5 +1,5 @@
 /* GDA oracle provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -190,7 +190,21 @@ gboolean _gda_oracle_meta_routine_par      (GdaServerProvider *prov, GdaConnecti
 					  const GValue *rout_catalog, const GValue *rout_schema, 
 					  const GValue *rout_name);
 
+/* _table_indexes */
+gboolean _gda_oracle_meta__indexes_tab     (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_oracle_meta_indexes_tab      (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					    const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+					    const GValue *index_name_n);
 
+/* _index_column_usage */
+gboolean _gda_oracle_meta__index_cols      (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_oracle_meta_index_cols       (GdaServerProvider *prov, GdaConnection *cnc, 
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					    const GValue *table_catalog, const GValue *table_schema,
+					    const GValue *table_name, const GValue *index_name);
 G_END_DECLS
 
 #endif

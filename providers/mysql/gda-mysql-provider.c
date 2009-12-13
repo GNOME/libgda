@@ -329,7 +329,10 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
         provider_class->meta_funcs.routine_col = _gda_mysql_meta_routine_col;
         provider_class->meta_funcs._routine_par = _gda_mysql_meta__routine_par;
         provider_class->meta_funcs.routine_par = _gda_mysql_meta_routine_par;
-	
+	provider_class->meta_funcs._indexes_tab = _gda_mysql_meta__indexes_tab;
+        provider_class->meta_funcs.indexes_tab = _gda_mysql_meta_indexes_tab;
+        provider_class->meta_funcs._index_cols = _gda_mysql_meta__index_cols;
+        provider_class->meta_funcs.index_cols = _gda_mysql_meta_index_cols;
 
 	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
 	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);

@@ -1118,3 +1118,39 @@ _gda_oracle_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 	TO_IMPLEMENT;
 	return TRUE;
 }
+
+gboolean
+_gda_oracle_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_oracle_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+			      const GValue *index_name_n)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_oracle_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_oracle_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			     const GValue *table_catalog, const GValue *table_schema,
+			     const GValue *table_name, const GValue *index_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
