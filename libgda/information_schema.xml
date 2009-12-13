@@ -4,11 +4,11 @@
     This is the base schema and can be extended by applications by adding new
     DBMS objects, but: the '_' prefix is reserved for Libgda's internals...
 
-    NOTE: when modified, please re-run:
-       tools/information-schema-doc
-       tools/information-schema-types
-
-    and copy the generated files to doc/C and libgda/providers-support
+    NOTE: when modified, please:
+    * run tools/information-schema-doc and move the generated file to doc/C/
+    * run tools/information-schema-types and move the generated file to libgda/providers-support/
+    * increment the CURRENT_SCHEMA_VERSION define in libgda/gda-meta-store.c and implement the corresponding
+      schema migration in that file
 -->
 
 
@@ -542,6 +542,52 @@
     <!--
     <fkey ref_table="_all_types">
       <part column="data_type" ref_column="full_type_name"/>
+    </fkey>
+    -->
+  </table>
+
+  <table name="_table_indexes" descr="List of tables' indexes which do not relate to primary keys">
+    <column name="index_catalog" nullok="TRUE" descr="Name of the catalog that contains the index"/>
+    <column name="index_schema" nullok="TRUE" descr="Name of the schema that contains the index" ident="TRUE"/>
+    <column name="index_name" pkey="TRUE" ident="TRUE"/>
+    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="is_unique" type="boolean" descr="" nullok="TRUE"/>
+    <column name="index_def" descr="Index definition" nullok="TRUE"/>
+    <column name="index_type" nullok="TRUE" descr="Database specific type of index such as BTREE, ..."/>
+    <column name="extra" nullok="TRUE" descr="CSV string with: ASCENDING, ..."/>
+    <column name="index_owner" nullok="TRUE"/>
+    <column name="index_comments" nullok="TRUE"/>
+    <fkey ref_table="_tables">
+      <part column="table_catalog"/>
+      <part column="table_schema"/>
+      <part column="table_name"/>
+    </fkey>
+  </table>
+
+  <table name="_index_column_usage" descr="List of the tables' columns involved in an index listed in the _table_indexes table">
+    <column name="index_catalog" nullok="TRUE"/>
+    <column name="index_schema" nullok="TRUE" ident="TRUE"/>
+    <column name="index_name" pkey="TRUE" ident="TRUE"/>
+    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="column_name" pkey="TRUE" nullok="TRUE" ident="TRUE"/>
+    <column name="column_expr" pkey="TRUE" nullok="TRUE"/>
+    <column name="ordinal_position" type="gint" descr="Column position in the index, starts at 1"/>
+    <fkey ref_table="_table_indexes">
+      <part column="index_name"/>
+      <part column="table_catalog"/>
+      <part column="table_schema"/>
+      <part column="table_name"/>
+    </fkey>
+    <!--
+    <fkey ref_table="_columns">
+      <part column="table_catalog"/>
+      <part column="table_schema"/>
+      <part column="table_name"/>
+      <part column="column_name"/>
     </fkey>
     -->
   </table>

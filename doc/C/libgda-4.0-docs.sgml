@@ -1109,7 +1109,7 @@ g_object_unref (store);
 	  defined by &LIBGDA; for its internal needs:
 	  <mediaobject>
 	    <imageobject role="html">
-	      <imagedata fileref="information_schema.png" format="PNG"/>
+	      <imagedata fileref="information_schema.png" format="PNG" contentwidth="210mm"/>
 	    </imageobject>
 	    <textobject>
 	      <phrase>Dictionary's tables and views initially defined by &LIBGDA;</phrase>

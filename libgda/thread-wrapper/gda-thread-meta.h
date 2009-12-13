@@ -191,6 +191,21 @@ gboolean _gda_thread_meta_routine_par      (GdaServerProvider *prov, GdaConnecti
 					    const GValue *rout_name);
 
 
+/* _table_indexes */
+gboolean _gda_thread_meta__indexes_tab     (GdaServerProvider *prov, GdaConnection *cnc,
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_thread_meta_indexes_tab      (GdaServerProvider *prov, GdaConnection *cnc,
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					    const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+					    const GValue *index_name_n);
+
+/* _index_column_usage */
+gboolean _gda_thread_meta__index_cols      (GdaServerProvider *prov, GdaConnection *cnc,
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error);
+gboolean _gda_thread_meta_index_cols       (GdaServerProvider *prov, GdaConnection *cnc,
+					    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+					    const GValue *table_catalog, const GValue *table_schema,
+					    const GValue *table_name, const GValue *index_name);
 G_END_DECLS
 
 #endif

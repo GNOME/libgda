@@ -82,7 +82,11 @@ _gda_postgres_reuseable = {
 		._routine_col = _gda_postgres_meta__routine_col,
 		.routine_col = _gda_postgres_meta_routine_col,
 		._routine_par = _gda_postgres_meta__routine_par,
-		.routine_par = _gda_postgres_meta_routine_par
+		.routine_par = _gda_postgres_meta_routine_par,
+		._indexes_tab = _gda_postgres_meta__indexes_tab,
+		.indexes_tab = _gda_postgres_meta_indexes_tab,
+		._index_cols = _gda_postgres_meta__index_cols,
+		.index_cols = _gda_postgres_meta_index_cols
 	}
 };
 

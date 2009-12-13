@@ -499,3 +499,46 @@ static GType _col_types_routine_columns[] = {
 , G_TYPE_NONE /* end of array marker */
 };
 
+
+
+/*
+ * TABLE: _table_indexes
+ *
+ * List of tables' indexes which do not relate to primary keys
+ */
+static GType _col_types_table_indexes[] = {
+  G_TYPE_STRING  /* column: index_catalog */
+, G_TYPE_STRING  /* column: index_schema */
+, G_TYPE_STRING  /* column: index_name */
+, G_TYPE_STRING  /* column: table_catalog */
+, G_TYPE_STRING  /* column: table_schema */
+, G_TYPE_STRING  /* column: table_name */
+, G_TYPE_BOOLEAN  /* column: is_unique */
+, G_TYPE_STRING  /* column: index_def */
+, G_TYPE_STRING  /* column: index_type */
+, G_TYPE_STRING  /* column: extra */
+, G_TYPE_STRING  /* column: index_owner */
+, G_TYPE_STRING  /* column: index_comments */
+, G_TYPE_NONE /* end of array marker */
+};
+
+
+
+/*
+ * TABLE: _index_column_usage
+ *
+ * List of the tables' columns involved in an index listed in the _table_indexes table
+ */
+static GType _col_types_index_column_usage[] = {
+  G_TYPE_STRING  /* column: index_catalog */
+, G_TYPE_STRING  /* column: index_schema */
+, G_TYPE_STRING  /* column: index_name */
+, G_TYPE_STRING  /* column: table_catalog */
+, G_TYPE_STRING  /* column: table_schema */
+, G_TYPE_STRING  /* column: table_name */
+, G_TYPE_STRING  /* column: column_name */
+, G_TYPE_STRING  /* column: column_expr */
+, G_TYPE_INT  /* column: ordinal_position */
+, G_TYPE_NONE /* end of array marker */
+};
+

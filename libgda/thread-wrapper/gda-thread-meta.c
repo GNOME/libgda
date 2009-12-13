@@ -574,7 +574,7 @@ _gda_thread_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 				  const GValue *table_name, const GValue *constraint_name_n)
 {
 	main_thread_detailed_core (sub_thread__gda_thread_meta_constraints_tab, prov, cnc, store, context, 
-				    table_catalog, table_schema, table_name, constraint_name_n, error);
+				   table_catalog, table_schema, table_name, constraint_name_n, error);
 }
 
 static gpointer
@@ -791,5 +791,67 @@ _gda_thread_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 			      const GValue *rout_name)
 {
 	main_thread_detailed_core (sub_thread__gda_thread_meta_routine_par, prov, cnc, store, context, 
-				    rout_catalog, rout_schema, rout_name, NULL, error);
+				   rout_catalog, rout_schema, rout_name, NULL, error);
+}
+
+static gpointer
+sub_thread__gda_thread_meta__indexes_tab (DetailedThreadData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	sub_thread_basic_core (PROV_CLASS (data->prov)->meta_funcs._indexes_tab, "_table_indexes");
+}
+
+gboolean
+_gda_thread_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc,
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	main_thread_basic_core (sub_thread__gda_thread_meta__indexes_tab, prov, cnc, store, context, error);
+}
+
+static gpointer
+sub_thread__gda_thread_meta_indexes_tab (DetailedThreadData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	sub_thread_detailed4_core (PROV_CLASS (data->prov)->meta_funcs.indexes_tab, "table_indexes");
+}
+
+gboolean
+_gda_thread_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc,
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+			      const GValue *index_name_n)
+{
+	main_thread_detailed_core (sub_thread__gda_thread_meta_indexes_tab, prov, cnc, store, context, 
+				   table_catalog, table_schema, table_name, index_name_n, error);
+}
+
+static gpointer
+sub_thread__gda_thread_meta__index_cols (DetailedThreadData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	sub_thread_basic_core (PROV_CLASS (data->prov)->meta_funcs._index_cols, "_index_column_usage");
+}
+
+gboolean
+_gda_thread_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc,
+			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	main_thread_basic_core (sub_thread__gda_thread_meta__index_cols, prov, cnc, store, context, error);
+}
+
+static gpointer
+sub_thread__gda_thread_meta_index_cols (DetailedThreadData *data, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	sub_thread_detailed4_core (PROV_CLASS (data->prov)->meta_funcs.index_cols, "index_column_usage");
+}
+
+gboolean
+_gda_thread_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc,
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			     const GValue *table_catalog, const GValue *table_schema,
+			     const GValue *table_name, const GValue *index_name)
+{
+	main_thread_detailed_core (sub_thread__gda_thread_meta_index_cols, prov, cnc, store, context, 
+				   table_catalog, table_schema, table_name, index_name, error);
 }

@@ -609,6 +609,8 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		g_value_set_string (value, thevalue);
 	else if (type == G_TYPE_INT)
 		g_value_set_int (value, atol (thevalue));
+	else if (type == G_TYPE_UINT)
+		g_value_set_uint (value, (guint) g_ascii_strtoull (thevalue, NULL, 10));
 	else if (type == G_TYPE_DATE) {
 		GDate date;
 		if (!gda_parse_iso8601_date (&date, thevalue)) {

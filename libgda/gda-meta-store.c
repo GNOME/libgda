@@ -19,6 +19,18 @@
  */
 
 #undef GDA_DISABLE_DEPRECATED
+
+/*
+ * Note about schema versions:
+ * Each time the schema evolves:
+ *  - the schema is backward compatible so it can be used by older versions of Libgda
+ *  - it does not modify any table or view not starting with a '_'
+ *  - the version number is increased by 1:
+ *      version 1 for libgda between 4.0.0 and 4.1.3
+ *      version 2 for libgda >= 4.1.4: added the "_table_indexes" and "_index_column_usage" tables
+ */
+#define CURRENT_SCHEMA_VERSION "2"
+
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-meta-store.h>
@@ -76,6 +88,7 @@ static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
 enum {
 	STMT_GET_VERSION,
 	STMT_SET_VERSION,
+	STMT_UPD_VERSION,
 	STMT_DEL_ATT_VALUE,
 	STMT_SET_ATT_VALUE,
 	STMT_LAST
@@ -213,6 +226,7 @@ struct _GdaMetaStorePrivate {
 	GdaSqlIdentifierStyle ident_style;
 	GdaSqlReservedKeywordsFunc reserved_keyword_func;
 
+	GError        *init_error;
 	gint           version;
 	gboolean       schema_ok;
 
@@ -437,7 +451,10 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 
 	klass->cpriv->prep_stmts[STMT_SET_VERSION] =
 		compute_prepared_stmt (klass->cpriv->parser, 
-				       "INSERT INTO _attributes (att_name, att_value) VALUES ('_schema_version', '1')");
+				       "INSERT INTO _attributes (att_name, att_value) VALUES ('_schema_version', ##version::string)");
+	klass->cpriv->prep_stmts[STMT_UPD_VERSION] =
+		compute_prepared_stmt (klass->cpriv->parser, 
+				       "UPDATE _attributes SET att_value = ##version::string WHERE att_name = '_schema_version'");
 	klass->cpriv->prep_stmts[STMT_GET_VERSION] =
 		compute_prepared_stmt (klass->cpriv->parser, 
 				       "SELECT att_value FROM _attributes WHERE att_name='_schema_version'");
@@ -448,12 +465,12 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		compute_prepared_stmt (klass->cpriv->parser, 
 				       "INSERT INTO _attributes VALUES (##name::string, ##value::string::null)");
 
-/*#define GDA_DEBUG_GRAPH*/
+#define GDA_DEBUG_GRAPH
 #ifdef GDA_DEBUG_GRAPH
 #define INFORMATION_SCHEMA_GRAPH_FILE "information_schema.dot"
 	GString *string;
 	GSList *list;
-	string = g_string_new ("digraph G {\nrankdir = BT;\nnode [shape = box];\n");
+	string = g_string_new ("digraph G {\nrankdir = RL;\nnode [shape = box];\n");
 	for (list = klass->cpriv->db_objects; list; list = list->next) {
 		DbObject *dbo = (DbObject*) list->data;
 		switch (dbo->obj_type) {
@@ -500,6 +517,8 @@ gda_meta_store_init (GdaMetaStore *store)
 	store->priv->ident_style = GDA_SQL_IDENTIFIERS_LOWER_CASE;
 	store->priv->reserved_keyword_func = NULL;
 	store->priv->schema_ok = FALSE;
+
+	store->priv->init_error = NULL;
 	store->priv->version = 0;
 
 	store->priv->catalog = NULL;
@@ -524,7 +543,6 @@ gda_meta_store_constructor (GType type,
 {
 	GObject *object;
 	gint i;
-	GError *error = NULL;
 	GdaMetaStore *store;
 	gboolean been_specified = FALSE;
 	
@@ -549,19 +567,16 @@ gda_meta_store_constructor (GType type,
 		/* in memory DB */
 		g_object_set (object, "cnc-string", "SQLite://DB_DIR=.;DB_NAME=__gda_tmp", NULL);
 	
-	if (store->priv->cnc) {
-		store->priv->schema_ok = initialize_cnc_struct (store, &error);
-		if (! store->priv->schema_ok) {
-			g_warning ("GdaMetaStore not initialized, reported error is: %s\n",
-				   error && error->message ? error->message : _ ("No detail"));
-			if (error)
-				g_error_free (error);
-		}
-	}
+	if (store->priv->cnc)
+		store->priv->schema_ok = initialize_cnc_struct (store, &(store->priv->init_error));
 
 	/* create a local copy of all the DbObject structures defined in klass->cpriv */
 	if (store->priv->catalog && !store->priv->schema) {
-		g_warning (_("Catalog specified but no schema specified, store will not be usable"));
+		if (! store->priv->init_error)
+			g_set_error (&(store->priv->init_error), GDA_META_STORE_ERROR,
+				     GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
+				     "%s",
+				     _("Catalog specified but no schema specified, store will not be usable"));
 		store->priv->schema_ok = FALSE;
 	}
 	else {
@@ -703,6 +718,9 @@ gda_meta_store_finalize (GObject *object)
 	
 	store = GDA_META_STORE (object);
 	if (store->priv) {
+		if (store->priv->init_error)
+			g_error_free (store->priv->init_error);
+
 		g_free (store->priv);
 		store->priv = NULL;
 	}
@@ -874,15 +892,24 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 	if (!allok)
 		return FALSE;
 
-	/* set version info, version 1 for now */
-	if (gda_connection_statement_execute_non_select (store->priv->cnc,
-							 klass->cpriv->prep_stmts[STMT_SET_VERSION],
-							 NULL, NULL, NULL) == -1) {
+	/* set version info to CURRENT_SCHEMA_VERSION */
+	GdaSet *params;
+	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_SET_VERSION], &params, NULL)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
 			"%s", _ ("Could not set the internal schema's version"));
 		return FALSE;
 	}
-	
+	g_assert (gda_set_set_holder_value (params, NULL, "version", CURRENT_SCHEMA_VERSION));
+	if (gda_connection_statement_execute_non_select (store->priv->cnc,
+							 klass->cpriv->prep_stmts[STMT_SET_VERSION],
+							 params, NULL, NULL) == -1) {
+		g_object_unref (params);
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
+			"%s", _ ("Could not set the internal schema's version"));
+		return FALSE;
+	}
+	g_object_unref (params);
+
 	return handle_schema_version (store, NULL, error);
 }
 
@@ -1983,9 +2010,120 @@ table_fkey_free (TableFKey *tfk)
 	g_free (tfk);
 }
 
+static gboolean
+update_schema_version (GdaMetaStore *store, const gchar *version, GError **error)
+{
+	GdaSet *params;
+	GdaMetaStoreClass *klass;
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+
+	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_UPD_VERSION], &params, NULL)) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
+			"%s", _ ("Could not set the internal schema's version"));
+		return FALSE;
+	}
+	g_assert (gda_set_set_holder_value (params, NULL, "version", CURRENT_SCHEMA_VERSION));
+	if (gda_connection_statement_execute_non_select (store->priv->cnc,
+							 klass->cpriv->prep_stmts[STMT_UPD_VERSION],
+							 params, NULL, NULL) == -1) {
+		g_object_unref (params);
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
+			"%s", _ ("Could not set the internal schema's version"));
+		return FALSE;
+	}
+	g_object_unref (params);
+
+
+	/* update version */
+	store->priv->version = atoi (CURRENT_SCHEMA_VERSION);
+	return TRUE;
+}
+
+/*
+ * If no transaction is started, then start one
+ * @out_started: a place to store if a transaction was actually started in the function
+ *
+ * Returns: TRUE if no error occurred
+ */
+static gboolean
+check_transaction_started (GdaConnection *cnc, gboolean *out_started)
+{
+        GdaTransactionStatus *trans;
+
+        trans = gda_connection_get_transaction_status (cnc);
+        if (!trans) {
+                if (!gda_connection_begin_transaction (cnc, NULL,
+                                                       GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
+                        return FALSE;
+                else
+                        *out_started = TRUE;
+        }
+        return TRUE;
+}
+
+/*
+ * Create a database object from its name,
+ * to be used by functions implementing versions migrations
+ */
+static gboolean
+create_a_dbobj (GdaMetaStore *store, const gchar *obj_name, GError **error)
+{
+	DbObject *dbobj;
+	GdaMetaStoreClass *klass;
+	GdaServerProvider *prov;
+
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	dbobj = g_hash_table_lookup (klass->cpriv->db_objects_hash, obj_name);
+	if (!dbobj) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
+			     _("Schema description does not contain the object '%s', check installation"),
+			     obj_name);
+		return FALSE;
+	}
+	prov = gda_connection_get_provider (store->priv->cnc);
+	if (! prepare_dbo_server_operation (klass, store, prov, dbobj, error))
+		return FALSE;
+	g_assert (dbobj->create_op);
+
+	gboolean retval;
+	retval = gda_server_provider_perform_operation (prov, store->priv->cnc, dbobj->create_op, error);
+	g_object_unref (dbobj->create_op);
+	dbobj->create_op = NULL;
+	return retval;
+}
+
+/* migrate schema from version 1 to 2 */
+static void
+migrate_schema_from_v1_to_v2 (GdaMetaStore *store, GError **error)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (store->priv->cnc));
+	g_return_if_fail (gda_connection_is_opened (store->priv->cnc));
+
+	/* begin a transaction if possible */
+	gboolean transaction_started = FALSE;
+	if (! check_transaction_started (store->priv->cnc, &transaction_started))
+		return;
+
+	/* create tables for this migration */
+	if (! create_a_dbobj (store, "_table_indexes", error))
+		return;
+	if (! create_a_dbobj (store, "_index_column_usage", error))
+		return;
+
+	/* set version info to CURRENT_SCHEMA_VERSION */
+	update_schema_version (store, "2", error);
+	if (transaction_started) {
+		/* handle transaction started if necessary */
+		if (store->priv->version != 2)
+			gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+		else
+			gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+	}
+}
 
 static gboolean
-handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **error) {
+handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **error)
+{
 	GdaDataModel *model;
 	GdaMetaStoreClass *klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	
@@ -2015,14 +2153,25 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 			return FALSE;
 		}
 		store->priv->version = atoi (g_value_get_string (version));
-		
-		if (store->priv->version != 1) {
-			TO_IMPLEMENT; /* migrate to current version */
-			/* As there is now only version 1 => it's an error */
-			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-				_ ("Unknown internal schema's version: %d"), g_value_get_int (version));
-			g_object_unref (model);
-			return FALSE;
+		if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) {
+			switch (store->priv->version) {
+			case 1:
+				migrate_schema_from_v1_to_v2 (store, error);
+			case 2:
+				/* function call for migration from V2 will be here */
+				break;
+			default:
+				g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
+					     _ ("Unknown internal schema's version: '%s'"),
+					     g_value_get_string (version));
+				break;
+			}
+			
+			if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) {
+				/* it's an error */
+				g_object_unref (model);
+				return FALSE;
+			}
 		}
 		g_object_unref (model);
 		return TRUE;
@@ -2040,7 +2189,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
  *
  * Get @store's internal schema's version
  *
- * Returns: the version (1 at the moment)
+ * Returns: the version (incremented each time the schema changes, backward compatible)
  */
 gint
 gda_meta_store_get_version (GdaMetaStore *store) {
@@ -2124,7 +2273,11 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 	GdaSet *params = NULL;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
-	g_return_val_if_fail (store->priv, NULL);
+
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return NULL;
+	}		
 
 	gda_mutex_lock (store->priv->mutex);
 
@@ -2259,6 +2412,11 @@ gda_meta_store_modify (GdaMetaStore *store, const gchar *table_name,
 	g_return_val_if_fail (table_name, FALSE);
 	g_return_val_if_fail (!new_data || GDA_IS_DATA_MODEL (new_data), FALSE);
 
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
+
 	value_names = g_new (const gchar *, size);
 	values = g_new (const GValue *, size);
 
@@ -2313,9 +2471,15 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
 					g_type_name (G_VALUE_TYPE (context->column_values [i])));
 	}
 
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
+
 	retval = gda_meta_store_modify_v (store, context->table_name, new_data, cond ? cond->str : NULL, error,
 					  context->size, 
-					  (const gchar **) context->column_names, (const GValue **)context->column_values);
+					  (const gchar **) context->column_names,
+					  (const GValue **)context->column_values);
 	if (cond)
 		g_string_free (cond, TRUE);
 	return retval;
@@ -2893,6 +3057,11 @@ _gda_meta_store_begin_data_reset (GdaMetaStore *store, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
+
 	if (store->priv->override_mode)
 		return TRUE;
 
@@ -2931,6 +3100,11 @@ _gda_meta_store_cancel_data_reset (GdaMetaStore *store, GError **error)
 	gboolean retval;
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
+
 	gda_mutex_lock (store->priv->mutex);
 	if (!store->priv->override_mode) {
 		gda_mutex_unlock (store->priv->mutex);
@@ -2956,6 +3130,11 @@ gboolean
 _gda_meta_store_finish_data_reset (GdaMetaStore *store, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
 
 	gda_mutex_lock (store->priv->mutex);
 	if (!store->priv->override_mode) {
@@ -3148,6 +3327,10 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 	GdaMetaStore *real_store;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return NULL;
+	}
 
 	gda_mutex_lock (store->priv->mutex);
 
@@ -3266,6 +3449,11 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (att_name && *att_name, FALSE);
 	g_return_val_if_fail (att_value, FALSE);
+
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
 
 	gda_mutex_lock (store->priv->mutex);
 
@@ -3464,6 +3652,11 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (xml_description && *xml_description, FALSE);
 
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
+
 	/* load XML description */
 	doc = xmlParseDoc (BAD_CAST xml_description);
 	if (!doc) {
@@ -3657,6 +3850,11 @@ gda_meta_store_schema_remove_custom_object (GdaMetaStore *store, const gchar *ob
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (obj_name && *obj_name, FALSE);
 	
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
+
 	gda_mutex_lock (store->priv->mutex);
 	TO_IMPLEMENT;
 	gda_mutex_unlock (store->priv->mutex);
@@ -3675,6 +3873,11 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 {
 	GdaMetaStoreClass *klass;
 	gint i;
+
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return FALSE;
+	}
 
 	if (!context->table_name || !(*context->table_name)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
@@ -3805,6 +4008,11 @@ _gda_meta_store_schema_get_upstream_contexts (GdaMetaStore *store, GdaMetaContex
 	GSList *list, *retlist = NULL;
 	TableInfo *tinfo;
 
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return NULL;
+	}
+
 	gda_mutex_lock (store->priv->mutex);
 
 	/* find the associated DbObject */
@@ -3901,6 +4109,11 @@ _gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaCont
 	DbObject *dbo;
 	GSList *list, *retlist = NULL;
 	TableInfo *tinfo;
+
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return NULL;
+	}
 
 	gda_mutex_lock (store->priv->mutex);
 

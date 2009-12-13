@@ -22,6 +22,7 @@
 
 #include <string.h>
 #include "gda-postgres-meta.h"
+#include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-data-proxy.h>
@@ -84,7 +85,13 @@ typedef enum {
 	I_STMT_ROUTINE_PAR_ALL,
 	I_STMT_ROUTINE_PAR,
 	I_STMT_ROUTINE_COL_ALL,
-	I_STMT_ROUTINE_COL
+	I_STMT_ROUTINE_COL,
+	I_STMT_INDEXES,
+	I_STMT_INDEXES_ALL,
+	I_STMT_INDEXES_NAMED,
+	I_STMT_INDEXES_COLUMNS_GET_ALL_INDEXES,
+	I_STMT_INDEXES_COLUMNS_GET_NAMED_INDEXES,
+	I_STMT_INDEXES_COLUMNS_FOR_INDEX
 } InternalStatementItem;
 
 
@@ -239,8 +246,25 @@ static gchar *internal_sql[] = {
 	"SELECT current_database(), ss.n_nspname, ((ss.proname || '_') || ss.p_oid), NULLIF(ss.proargnames[(ss.x).n], ''), (ss.x).n, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'array_spec' ELSE coalesce (nt.nspname || '.', '') || t.typname END, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'ROUC' || current_database() || '.' || ss.n_nspname || '.' || ((ss.proname || '_') || ss.p_oid) || '.' || (ss.x).n ELSE NULL END FROM pg_type t, pg_namespace nt, ( SELECT n.nspname AS n_nspname, p.proname, p.oid AS p_oid, p.proargnames, p.proargmodes, information_schema._pg_expandarray(COALESCE(p.proallargtypes, p.proargtypes::oid[])) AS x FROM pg_namespace n, pg_proc p WHERE n.oid = p.pronamespace AND (pg_has_role(p.proowner, 'USAGE') OR has_function_privilege(p.oid, 'EXECUTE'))) ss WHERE t.oid = (ss.x).x AND t.typnamespace = nt.oid AND (ss.proargmodes[(ss.x).n] = 'o' OR ss.proargmodes[(ss.x).n] = 'b') ORDER BY 1, 2, 3, 4, 5",
 
 	/* I_STMT_ROUTINE_COL */
-	"SELECT current_database(), ss.n_nspname, ((ss.proname || '_') || ss.p_oid), NULLIF(ss.proargnames[(ss.x).n], ''), (ss.x).n, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'array_spec' ELSE coalesce (nt.nspname || '.', '') || t.typname END, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'ROUC' || current_database() || '.' || ss.n_nspname || '.' || ((ss.proname || '_') || ss.p_oid) || '.' || (ss.x).n ELSE NULL END FROM pg_type t, pg_namespace nt, ( SELECT n.nspname AS n_nspname, p.proname, p.oid AS p_oid, p.proargnames, p.proargmodes, information_schema._pg_expandarray(COALESCE(p.proallargtypes, p.proargtypes::oid[])) AS x FROM pg_namespace n, pg_proc p WHERE n.oid = p.pronamespace AND (pg_has_role(p.proowner, 'USAGE') OR has_function_privilege(p.oid, 'EXECUTE'))) ss WHERE t.oid = (ss.x).x AND t.typnamespace = nt.oid AND (ss.proargmodes[(ss.x).n] = 'o' OR ss.proargmodes[(ss.x).n] = 'b') AND current_database() = ##cat::string AND ss.n_nspname = ##schema::string AND ((ss.proname || '_') || ss.p_oid) = ##name::string ORDER BY 1, 2, 3, 4, 5"
+	"SELECT current_database(), ss.n_nspname, ((ss.proname || '_') || ss.p_oid), NULLIF(ss.proargnames[(ss.x).n], ''), (ss.x).n, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'array_spec' ELSE coalesce (nt.nspname || '.', '') || t.typname END, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'ROUC' || current_database() || '.' || ss.n_nspname || '.' || ((ss.proname || '_') || ss.p_oid) || '.' || (ss.x).n ELSE NULL END FROM pg_type t, pg_namespace nt, ( SELECT n.nspname AS n_nspname, p.proname, p.oid AS p_oid, p.proargnames, p.proargmodes, information_schema._pg_expandarray(COALESCE(p.proallargtypes, p.proargtypes::oid[])) AS x FROM pg_namespace n, pg_proc p WHERE n.oid = p.pronamespace AND (pg_has_role(p.proowner, 'USAGE') OR has_function_privilege(p.oid, 'EXECUTE'))) ss WHERE t.oid = (ss.x).x AND t.typnamespace = nt.oid AND (ss.proargmodes[(ss.x).n] = 'o' OR ss.proargmodes[(ss.x).n] = 'b') AND current_database() = ##cat::string AND ss.n_nspname = ##schema::string AND ((ss.proname || '_') || ss.p_oid) = ##name::string ORDER BY 1, 2, 3, 4, 5",
 
+	/* I_STMT_INDEXES */
+	"SELECT current_database() AS index_catalog, nc2.nspname AS index_schema, c2.relname AS index_name, current_database() AS table_catalog, nc.nspname AS table_schema, c.relname AS table_name, i.indisunique, pg_get_indexdef (i.indexrelid, 0, false), NULL, NULL, o.rolname, pg_catalog.obj_description (c2.oid), i.indexrelid FROM pg_catalog.pg_class c INNER JOIN pg_namespace nc ON (c.relnamespace = nc.oid), pg_catalog.pg_class c2 INNER JOIN pg_namespace nc2 ON (c2.relnamespace = nc2.oid) LEFT JOIN pg_roles o ON (o.oid=c2.relowner), pg_catalog.pg_index i WHERE c.oid = i.indrelid AND i.indexrelid = c2.oid AND NOT i.indisprimary AND pg_catalog.pg_table_is_visible(c.oid) AND nc.nspname = ##schema::string AND c.relname = ##name::string ORDER BY c.relname",
+
+	/* I_STMT_INDEXES_ALL */
+	"SELECT current_database() AS index_catalog, nc2.nspname AS index_schema, c2.relname AS index_name, current_database() AS table_catalog, nc.nspname AS table_schema, c.relname AS table_name, i.indisunique, pg_get_indexdef (i.indexrelid, 0, false), NULL, NULL, o.rolname, pg_catalog.obj_description (c2.oid), i.indexrelid FROM pg_catalog.pg_class c INNER JOIN pg_namespace nc ON (c.relnamespace = nc.oid), pg_catalog.pg_class c2 INNER JOIN pg_namespace nc2 ON (c2.relnamespace = nc2.oid) LEFT JOIN pg_roles o ON (o.oid=c2.relowner), pg_catalog.pg_index i WHERE c.oid = i.indrelid AND i.indexrelid = c2.oid AND NOT i.indisprimary AND pg_catalog.pg_table_is_visible(c.oid) ORDER BY c.relname",
+
+	/* I_STMT_INDEXES_NAMED */
+	"SELECT current_database() AS index_catalog, nc2.nspname AS index_schema, c2.relname AS index_name, current_database() AS table_catalog, nc.nspname AS table_schema, c.relname AS table_name, i.indisunique, pg_get_indexdef (i.indexrelid, 0, false), NULL, NULL, o.rolname, pg_catalog.obj_description (c2.oid), i.indexrelid FROM pg_catalog.pg_class c INNER JOIN pg_namespace nc ON (c.relnamespace = nc.oid), pg_catalog.pg_class c2 INNER JOIN pg_namespace nc2 ON (c2.relnamespace = nc2.oid) LEFT JOIN pg_roles o ON (o.oid=c2.relowner), pg_catalog.pg_index i WHERE c.oid = i.indrelid AND i.indexrelid = c2.oid AND NOT i.indisprimary AND pg_catalog.pg_table_is_visible(c.oid) AND nc.nspname = ##schema::string AND c.relname = ##name::string AND c2.relname = ##name2::string ORDER BY c.relname",
+
+	/* I_STMT_INDEXES_COLUMNS_GET_ALL_INDEXES */
+	"SELECT i.indexrelid FROM pg_catalog.pg_class c, pg_catalog.pg_index i WHERE c.oid = i.indrelid AND NOT i.indisprimary AND pg_catalog.pg_table_is_visible(c.oid)",
+
+	/* I_STMT_INDEXES_COLUMNS_GET_NAMED_INDEXES */
+	"SELECT i.indexrelid FROM pg_catalog.pg_class c INNER JOIN pg_namespace nc ON (c.relnamespace = nc.oid), pg_catalog.pg_index i, pg_catalog.pg_class c2 INNER JOIN pg_namespace nc2 ON (c2.relnamespace = nc2.oid) WHERE c.oid = i.indrelid AND NOT i.indisprimary AND pg_catalog.pg_table_is_visible(c.oid) AND i.indexrelid = c2.oid AND c.relname = ##name::string AND nc.nspname = ##schema::string AND c2.relname=##name2::string",
+
+	/* I_STMT_INDEXES_COLUMNS_FOR_INDEX */
+	"SELECT current_database() AS index_catalog, nc2.nspname AS index_schema, c2.relname AS index_name, current_database() AS table_catalog, nc.nspname AS table_schema, c.relname AS table_name, a.attname, NULL, (ss.a).n FROM pg_catalog.pg_index i, (SELECT information_schema._pg_expandarray(indkey) AS a FROM pg_catalog.pg_index WHERE indexrelid = ##oid::guint) ss, pg_catalog.pg_class c INNER JOIN pg_namespace nc ON (c.relnamespace = nc.oid) INNER JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid), pg_catalog.pg_class c2 INNER JOIN pg_namespace nc2 ON (c2.relnamespace = nc2.oid) WHERE i.indexrelid = ##oid::guint AND (ss.a).x != 0 AND a.attnum = (ss.a).x AND c.oid = i.indrelid AND i.indexrelid = c2.oid AND pg_catalog.pg_table_is_visible(c.oid) UNION SELECT current_database() AS index_catalog, nc2.nspname AS index_schema, c2.relname AS index_name, current_database() AS table_catalog, nc.nspname AS table_schema, c.relname AS table_name, NULL, pg_get_indexdef (i.indexrelid, (ss.a).n, false), (ss.a).n FROM pg_catalog.pg_index i, (SELECT information_schema._pg_expandarray(indkey) AS a FROM pg_catalog.pg_index WHERE indexrelid = ##oid::guint) ss, pg_catalog.pg_class c INNER JOIN pg_namespace nc ON (c.relnamespace = nc.oid), pg_catalog.pg_class c2 INNER JOIN pg_namespace nc2 ON (c2.relnamespace = nc2.oid) WHERE i.indexrelid = ##oid::guint AND (ss.a).x = 0 AND c.oid = i.indrelid AND i.indexrelid = c2.oid AND pg_catalog.pg_table_is_visible(c.oid) order by 9"
 };
 
 /*
@@ -275,10 +299,11 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 	if (!provider)
 		g_object_unref (parser);
 
-	i_set = gda_set_new_inline (4, "cat", G_TYPE_STRING, "", 
+	i_set = gda_set_new_inline (5, "cat", G_TYPE_STRING, "", 
 				    "name", G_TYPE_STRING, "",
 				    "schema", G_TYPE_STRING, "",
-				    "name2", G_TYPE_STRING, "");
+				    "name2", G_TYPE_STRING, "",
+				    "oid", G_TYPE_UINT, 0);
 
 	g_static_mutex_unlock (&init_mutex);
 
@@ -1963,5 +1988,278 @@ _gda_postgres_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 	retval = gda_meta_store_modify_with_context (store, context, model, error);
 	g_object_unref (model);
 		
+	return retval;
+}
+
+gboolean
+_gda_postgres_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	GdaDataModel *model;
+	gboolean retval;
+	GType *types;
+
+	/* check correct postgres server version */
+	GdaPostgresReuseable *rdata;
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
+		return FALSE;
+	if (rdata->version_float < 8.2) {
+		/* nothing for this version of PostgreSQL */
+		return TRUE;
+	}
+
+	gint tsize;
+	tsize = sizeof (_col_types_table_indexes) / sizeof (GType);
+	types = g_new (GType, tsize + 1);
+	memcpy (types, _col_types_table_indexes, tsize * sizeof (GType));
+	types [tsize-1] = G_TYPE_UINT;
+	types [tsize] = G_TYPE_NONE;
+
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_INDEXES_ALL],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      types, error);
+	g_free (types);
+	if (!model)
+		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
+						   ((GdaProviderReuseable*) rdata));
+	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	g_object_unref (model);
+
+	return retval;
+}
+
+gboolean
+_gda_postgres_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error,
+				const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+				const GValue *index_name_n)
+{
+	GdaDataModel *model;
+	gboolean retval = TRUE;
+	GType *types;
+
+	/* check correct postgres server version */
+	GdaPostgresReuseable *rdata;
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
+		return FALSE;
+	if (rdata->version_float < 8.2) {
+		/* nothing for this version of PostgreSQL */
+		return TRUE;
+	}
+
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
+
+	gint tsize;
+	tsize = sizeof (_col_types_table_indexes) / sizeof (GType);
+	types = g_new (GType, tsize + 1);
+	memcpy (types, _col_types_table_indexes, tsize * sizeof (GType));
+	types [tsize-1] = G_TYPE_UINT;
+	types [tsize] = G_TYPE_NONE;
+
+	if (index_name_n) {
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), index_name_n, error)) {
+			g_free (types);
+			return FALSE;
+		}
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_INDEXES_NAMED],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      types, error);
+	}
+	else
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_INDEXES],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      types, error);
+	g_free (types);
+	if (!model)
+		return FALSE;
+
+	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
+						   ((GdaProviderReuseable*) rdata));
+	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	g_object_unref (model);
+		
+	return retval;
+}
+
+static GdaDataModel *
+concatenate_index_details (GdaServerProvider *prov, GdaConnection *cnc, GdaMetaStore *store,
+			   GdaDataModel *index_oid_model, GError **error)
+{
+	GdaDataModel *concat = NULL;
+	gint i, nrows;
+	nrows = gda_data_model_get_n_rows (index_oid_model);
+	if (nrows == 0) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     _("could not determine the indexed columns for index"));
+		return NULL;
+	}
+	for (i = 0; i < nrows; i++) {
+		const GValue *value;
+		value = gda_data_model_get_value_at (index_oid_model, 0, i, error);
+		if (!value) {
+			if (concat)
+				g_object_unref (concat);
+			return NULL;
+		}
+
+		if (G_VALUE_TYPE (value) == GDA_TYPE_NULL)
+			continue;
+		
+		/* get index's columns details */
+		GdaDataModel *tmpmodel;
+		if (! gda_holder_set_value (gda_set_get_holder (i_set, "oid"), value, error)) {
+			if (concat)
+				g_object_unref (concat);
+			return NULL;
+		}
+		tmpmodel = gda_connection_statement_execute_select_full (cnc,
+									 internal_stmt[I_STMT_INDEXES_COLUMNS_FOR_INDEX],
+									 i_set,
+									 GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									 _col_types_index_column_usage, error);
+		if (!tmpmodel) {
+			if (concat)
+				g_object_unref (concat);
+			return NULL;
+		}
+
+		/* create a concatenated model of all the @tmpmodel's contents */
+		if (!concat) {
+			concat = (GdaDataModel*) gda_data_model_array_copy_model (tmpmodel, error);
+			if (!concat) {
+				g_object_unref (tmpmodel);
+				return NULL;
+			}
+		}
+		else {
+			gint tnrows, ti, tncols;
+			tnrows = gda_data_model_get_n_rows (tmpmodel);
+			tncols = gda_data_model_get_n_columns (tmpmodel);
+			for (ti = 0; ti < tnrows; ti++) {
+				GList *list = NULL;
+				gint tj;
+				for (tj = tncols - 1; tj >= 0 ; tj--) {
+					value = gda_data_model_get_value_at (tmpmodel, tj, ti, error);
+					if (!value) {
+						g_list_free (list);
+						g_object_unref (tmpmodel);
+						if (concat)
+							g_object_unref (concat);
+						return NULL;
+					}
+					list = g_list_prepend (list, (gpointer) value);
+				}
+				if (gda_data_model_append_values (concat, list, error) == -1) {
+					g_list_free (list);
+					g_object_unref (tmpmodel);
+					if (concat)
+						g_object_unref (concat);
+					return NULL;
+				}
+				g_list_free (list);
+			}
+		}
+	}
+	return concat;
+}
+
+gboolean
+_gda_postgres_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+				GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	GdaDataModel *model, *concat;
+	GType index_oids_types[] = {G_TYPE_UINT, G_TYPE_NONE};
+
+	/* check correct postgres server version */
+	GdaPostgresReuseable *rdata;
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
+		return FALSE;
+	if (rdata->version_float < 8.2) {
+		/* nothing for this version of PostgreSQL */
+		return TRUE;
+	}
+
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_INDEXES_COLUMNS_GET_ALL_INDEXES],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      index_oids_types, error);
+	if (!model)
+		return FALSE;
+
+	concat = concatenate_index_details (prov, cnc, store, model, error);
+	g_object_unref (model);
+	if (!concat)
+		return FALSE;
+
+	gboolean retval;
+	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
+						   ((GdaProviderReuseable*) rdata));
+	retval = gda_meta_store_modify_with_context (store, context, concat, error);
+	g_object_unref (concat);
+
+	return retval;
+}
+
+gboolean
+_gda_postgres_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			       GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			       const GValue *table_catalog, const GValue *table_schema,
+			       const GValue *table_name, const GValue *index_name)
+{
+	GdaDataModel *model, *concat;
+	GType index_oids_types[] = {G_TYPE_UINT, G_TYPE_NONE};
+
+	/* check correct postgres server version */
+	GdaPostgresReuseable *rdata;
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
+		return FALSE;
+	if (rdata->version_float < 8.2) {
+		/* nothing for this version of PostgreSQL */
+		return TRUE;
+	}
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), index_name, error))
+		return FALSE;
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_INDEXES_COLUMNS_GET_NAMED_INDEXES],
+							      i_set,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      index_oids_types, error);
+	if (!model)
+		return FALSE;
+
+	concat = concatenate_index_details (prov, cnc, store, model, error);
+	g_object_unref (model);
+	if (!concat)
+		return FALSE;
+
+	gboolean retval;
+	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
+						   ((GdaProviderReuseable*) rdata));
+	retval = gda_meta_store_modify_with_context (store, context, concat, error);
+	g_object_unref (concat);
 	return retval;
 }
