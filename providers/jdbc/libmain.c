@@ -132,7 +132,16 @@ plugin_get_sub_names (void)
 		return NULL;
 	}
 
-	cls = jni_wrapper_class_get (env, "GdaJProvider", NULL);
+	cls = jni_wrapper_class_get (env, "GdaJProvider", &error);
+	if (!cls) {
+		g_warning (_("Can't get list of installed JDBC drivers: %s"),
+			   error && error->message ? error->message : _("No detail"));
+		if (error)
+			g_error_free (error);
+
+		(*_jdbc_provider_java_vm)->DetachCurrentThread (_jdbc_provider_java_vm);
+		return NULL;		
+	}
 	lvalue = jni_wrapper_method_call (env, GdaJProvider__getDrivers, NULL, NULL, NULL, &error);
 	if (!lvalue) {
 		g_warning (_("Can't get list of installed JDBC drivers: %s"),
@@ -336,13 +345,17 @@ load_jvm ()
 		GError *error = NULL;
 		path = g_build_filename (module_path, "gdaprovider-4.0.jar", NULL);
 		jni_wrapper_create_vm (&_jdbc_provider_java_vm, __CreateJavaVM, module_path, path, &error);
-		if (!_jdbc_provider_java_vm)
-			g_error (_("Can't create JAVA virtual machine: %s"),
-				 error && error->message ? error->message : _("No detail"));	
+		if (!_jdbc_provider_java_vm) {
+			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
+				g_warning (_("Can't create JAVA virtual machine: %s"),
+					   error && error->message ? error->message : _("No detail"));
+			jvm_found = FALSE;
+		}
 	}
 	else {
 		__CreateJavaVM = NULL;
-		g_warning (_("Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."));
+		if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
+			g_warning (_("Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."));
 	}
 
 	g_static_mutex_unlock (&vm_create);

@@ -12,7 +12,6 @@ main (int argc, char **argv)
 	gboolean some_found = FALSE;
 
 	/* set up test environment */
-	g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
 	gda_init ();
 
 	providers = gda_config_list_providers ();

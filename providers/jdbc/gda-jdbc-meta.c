@@ -731,8 +731,8 @@ _gda_jdbc_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_mysql_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
-			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
