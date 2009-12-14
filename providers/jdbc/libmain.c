@@ -30,6 +30,8 @@
 #include "gda-jdbc-provider.h"
 #include "jni-wrapper.h"
 #include "jni-globals.h"
+#include <unistd.h>
+#include <sys/wait.h>
 
 #ifdef G_OS_WIN32
 #include <windows.h>
@@ -80,17 +82,17 @@ static gint    sub_nb; /* size of sub_names */
 EXPORT const gchar *
 g_module_check_init (GModule *module)
 {
-	g_module_make_resident (module);
+	//g_module_make_resident (module);
 	return NULL;
 }
 
 EXPORT void
 g_module_unload (GModule *module)
 {
-	g_assert_not_reached ();
-
-	g_free (module_path);
-	module_path = NULL;
+	if (! __CreateJavaVM) {
+		g_free (module_path);
+		module_path = NULL;
+	}
 
 	/*
 	__CreateJavaVM = NULL;
@@ -111,20 +113,35 @@ plugin_init (const gchar *real_path)
 {
         if (real_path)
                 module_path = g_strdup (real_path);
-	load_jvm ();
 }
+
+static gboolean in_forked = FALSE;
+static gchar **try_getting_drivers_list_forked (gboolean *out_forked_ok);
+static void describe_driver_names (void);
 
 EXPORT const gchar **
 plugin_get_sub_names (void)
 {
+	if (sub_names)
+		return (const gchar**) sub_names;
+	
+	if (! in_forked) {
+		gboolean forked_ok;
+		sub_names = try_getting_drivers_list_forked (&forked_ok);
+		if (forked_ok) {
+			if (sub_names)
+				describe_driver_names ();
+			return (const gchar**) sub_names;
+		}
+	}
+
 	if (! __CreateJavaVM && !load_jvm ())
 		return NULL;
-	
+
 	GError *error = NULL;
 	GValue *lvalue;
 	JNIEnv *env;
 	jclass cls;
-	gint i;
 
 	if ((*_jdbc_provider_java_vm)->AttachCurrentThread (_jdbc_provider_java_vm,
 							    (void**) &env, NULL) < 0) {
@@ -157,20 +174,7 @@ plugin_get_sub_names (void)
 		g_value_unset (lvalue);
 		g_free (lvalue);
 		
-		sub_nb = g_strv_length (sub_names);
-		jdbc_drivers_hash = g_hash_table_new (g_str_hash, g_str_equal);
-		for (i = 0; i < sub_nb; i++) {
-			JdbcDriver *dr = g_new0 (JdbcDriver, 1);
-			dr->name = sub_names [i];
-			dr->native_db = get_database_name_from_driver_name (sub_names [i]);
-			if (dr->native_db)
-				dr->descr = g_strdup_printf ("Provider to access %s databases using JDBC", 
-							     dr->native_db);
-			else
-				dr->descr = g_strdup_printf ("Provider to access databases using JDBC's %s driver",
-							     dr->name);
-			g_hash_table_insert (jdbc_drivers_hash, (gchar*) dr->name, dr);
-		}
+		describe_driver_names ();
 		
 		(*_jdbc_provider_java_vm)->DetachCurrentThread (_jdbc_provider_java_vm);
 		return (const gchar **) sub_names;
@@ -181,6 +185,105 @@ plugin_get_sub_names (void)
 		return NULL;
 	}
 }
+
+/*
+ * fills the jdbc_drivers_hash hash table
+ */
+static void
+describe_driver_names (void)
+{
+	gint i;
+
+	if (jdbc_drivers_hash)
+		g_hash_table_destroy (jdbc_drivers_hash);
+	sub_nb = g_strv_length (sub_names);
+	jdbc_drivers_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	for (i = 0; i < sub_nb; i++) {
+		JdbcDriver *dr = g_new0 (JdbcDriver, 1);
+		dr->name = sub_names [i];
+		dr->native_db = get_database_name_from_driver_name (sub_names [i]);
+		if (dr->native_db)
+			dr->descr = g_strdup_printf ("Provider to access %s databases using JDBC", 
+						     dr->native_db);
+		else
+			dr->descr = g_strdup_printf ("Provider to access databases using JDBC's %s driver",
+						     dr->name);
+		g_hash_table_insert (jdbc_drivers_hash, (gchar*) dr->name, dr);
+	}
+}
+
+/*
+ * Tries to load the JVM in a forked child to avoid
+ * keeping the JVM loaded all the time
+ *
+ * if it succedded running a forked child, then @out_forked_ok is set to %TRUE
+ */
+static gchar **
+try_getting_drivers_list_forked (gboolean *out_forked_ok)
+{
+	g_assert (out_forked_ok);
+	*out_forked_ok = FALSE;
+#ifdef G_OS_UNIX
+	int pipes[2] = { -1, -1 };
+	pid_t pid;
+
+	if (pipe (pipes) < 0)
+		return NULL;
+
+	pid = fork ();
+	if (pid < 0) {
+		close (pipes [0]);
+		close (pipes [1]);
+		return NULL;
+	}
+
+	if (pid == 0) {
+		/* in child */
+		const gchar **retval;
+		const gchar **ptr;
+		GString *string = NULL;
+
+		close (pipes [0]);
+		in_forked = TRUE;
+		retval = plugin_get_sub_names ();
+		for (ptr = retval; ptr && *ptr; ptr++) {
+			if (!string)
+				string = g_string_new ("");
+			else
+				g_string_append_c (string, ':');
+			g_string_append (string, *ptr);
+		}
+		if (string) {
+			write (pipes [1], string->str, strlen (string->str));
+			g_string_free (string, TRUE);
+		}
+		close (pipes [1]);
+		exit (0);
+	}
+	else {
+		/* in parent */
+		gchar **retval;
+		GString *string;
+		char buf;
+		close (pipes [1]);
+		string = g_string_new ("");
+		while (read(pipes[0], &buf, 1) > 0)
+			g_string_append_c (string, buf);
+		close (pipes [0]);
+		wait (NULL);
+		/*g_print ("Read from child [%s]\n", string->str);*/
+		retval = g_strsplit (string->str, ":", -1);
+		g_string_free (string, TRUE);
+		*out_forked_ok = TRUE;
+
+		return retval;
+	}
+#else
+	/* not supported */
+	return NULL;
+#endif
+}
+
 
 EXPORT const gchar *
 plugin_get_sub_description (const gchar *name)
@@ -209,6 +312,30 @@ plugin_create_sub_provider (const gchar *name)
 {
 	/* server creation */
 	GdaServerProvider *prov;
+
+	if (! __CreateJavaVM && !load_jvm ())
+		return NULL;
+	else {
+		JNIEnv *env;
+		jclass cls;
+		
+		if ((*_jdbc_provider_java_vm)->AttachCurrentThread (_jdbc_provider_java_vm,
+								    (void**) &env, NULL) < 0) {
+			(*_jdbc_provider_java_vm)->DetachCurrentThread (_jdbc_provider_java_vm);
+			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
+				g_warning ("Could not attach JAVA virtual machine's current thread");
+			return NULL;
+		}
+		
+		cls = jni_wrapper_class_get (env, "GdaJProvider", NULL);
+		(*_jdbc_provider_java_vm)->DetachCurrentThread (_jdbc_provider_java_vm);
+		if (!cls) {
+			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
+				g_warning ("Could not find the GdaJProvider class");
+			return NULL;
+		}
+	}
+
 	prov = gda_jdbc_provider_new (name, NULL);
 	g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
 	return prov;
