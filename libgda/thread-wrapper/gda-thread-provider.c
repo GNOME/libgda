@@ -1363,8 +1363,9 @@ static GdaSqlParser *
 sub_thread_create_parser (CncProvData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	GdaSqlParser *parser;
-	parser = PROV_CLASS (data->prov)->create_parser (data->prov, data->cnc);
+	GdaSqlParser *parser = NULL;
+	if (PROV_CLASS (data->prov)->create_parser)
+		parser = PROV_CLASS (data->prov)->create_parser (data->prov, data->cnc);
 #ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %p\n", __FUNCTION__, parser);
 #endif
