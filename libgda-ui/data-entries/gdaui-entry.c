@@ -585,6 +585,10 @@ insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint
 	gint clen;
 	GdauiEntry *entry = GDAUI_ENTRY (editable);
 	gint text_clen;
+	gint start;
+
+	if (gtk_editable_get_selection_bounds (editable, &start, NULL))
+		*position = start;
 
 	signal_handlers_block (entry);
 
