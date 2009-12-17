@@ -1990,7 +1990,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 		/* nothing to do */
 		return NULL;
 
-	const gchar *str = NULL;
+	const gchar *cstr = NULL;
 	GdaStatement *stmt;
 	sqlite3_int64 rowid = -1;
 	GdaDataModel *model = NULL;
@@ -2041,11 +2041,11 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 			GdaSqliteBlobOp *bop;
 			bop = (GdaSqliteBlobOp*) _gda_sqlite_blob_op_new (cdata, pb->db, pb->table, pb->column, rowid);
 			if (!bop) {
-				str =  _("Can't create SQLite BLOB handle");
+				cstr =  _("Can't create SQLite BLOB handle");
 				goto blobs_out;
 			}
 			if (gda_blob_op_write (GDA_BLOB_OP (bop), pb->blob, 0) < 0) {
-				str =  _("Can't write to SQLite's BLOB");
+				cstr =  _("Can't write to SQLite's BLOB");
 				g_object_unref (bop);
 				goto blobs_out;
 			}
@@ -2061,16 +2061,29 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 					g_object_unref (model);
 					goto blobs_out;
 				}
-				rowid = g_value_get_int64 (cvalue);
+				if (G_VALUE_TYPE (cvalue) == G_TYPE_INT64)
+					rowid = g_value_get_int64 (cvalue);
+				else if (G_VALUE_TYPE (cvalue) == G_TYPE_INT)
+					rowid = g_value_get_int (cvalue);
+				else {
+					g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+						     _("Can't obtain SQLite BLOB handle (reported type is '%s'), "
+						       "please report this bug to "
+						       "http://bugzilla.gnome.org/ for the \"libgda\" product."),
+						       g_type_name (G_VALUE_TYPE (cvalue)));
+					g_object_unref (model);
+					goto blobs_out;
+				}
 				GdaSqliteBlobOp *bop;
 				bop = (GdaSqliteBlobOp*) _gda_sqlite_blob_op_new (cdata, pb->db, pb->table, pb->column, rowid);
 				if (!bop) {
-					str =  _("Can't create SQLite BLOB handle");
+					cstr =  _("Can't create SQLite BLOB handle");
 					g_object_unref (model);
 					goto blobs_out;
 				}
 				if (gda_blob_op_write (GDA_BLOB_OP (bop), pb->blob, 0) < 0) {
-					str =  _("Can't write to SQLite's BLOB");
+					cstr =  _("Can't write to SQLite's BLOB");
 					g_object_unref (bop);
 					g_object_unref (model);
 					goto blobs_out;
@@ -2080,18 +2093,18 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 			g_object_unref (model);
 		}
 		else
-			str = _("Can't identify the ROWID of the blob to fill");
+			cstr = _("Can't identify the ROWID of the blob to fill");
 	}
 		
  blobs_out:
 	pending_blobs_free_list (blobs_list);
 
-	if (str) {
+	if (cstr) {
 		GdaConnectionEvent *event;
 		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-		gda_connection_event_set_description (event, str);
+		gda_connection_event_set_description (event, cstr);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
+			     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", cstr);
 		return event;
 	}
 	if (lerror) {
