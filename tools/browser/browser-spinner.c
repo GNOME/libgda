@@ -580,7 +580,7 @@ browser_spinner_init (BrowserSpinner *spinner)
 	priv = spinner->priv = BROWSER_SPINNER_GET_PRIVATE (spinner);
 
 #if GTK_CHECK_VERSION(2,18,0)
-	gtk_widget_set_has_window (GTK_WIDGET (spinner), TRUE);
+	gtk_widget_set_has_window (GTK_WIDGET (spinner), FALSE);
 #else
 	GTK_WIDGET_SET_FLAGS (GTK_WIDGET (spinner), GTK_NO_WINDOW);
 #endif
