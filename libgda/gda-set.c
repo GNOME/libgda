@@ -1319,7 +1319,7 @@ GdaHolder *
 gda_set_get_holder (GdaSet *set, const gchar *holder_id)
 {
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
-	g_return_val_if_fail (set->priv, NULL);
+	g_return_val_if_fail (holder_id, NULL);
 
 	return (GdaHolder *) g_hash_table_lookup (set->priv->holders_hash, holder_id);
 }
