@@ -419,7 +419,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 
 		plist = info_node->plist;
 		plwid = gdaui_basic_form_new (plist);
-		gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (plwid), FALSE);
+		g_object_set ((GObject*) plwid, "show-actions", FALSE, NULL);
 	       
 		if (section_str) {
 			const gchar *name;
@@ -524,7 +524,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		plist = gda_set_new (list);
 		g_slist_free (list);
 		plwid = gdaui_basic_form_new (plist);
-		gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (plwid), FALSE);
+		g_object_set ((GObject*) plwid, "show-actions", FALSE, NULL);
 		/* we don't need plist anymore */
 		g_object_unref (plist);
 

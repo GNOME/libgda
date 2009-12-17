@@ -23,9 +23,6 @@
 
 #include <gtk/gtk.h>
 #include <libgda/libgda.h>
-#ifdef HAVE_LIBGLADE
-#include <glade/glade.h>
-#endif
 
 G_BEGIN_DECLS
 
@@ -34,15 +31,6 @@ G_BEGIN_DECLS
 #define GDAUI_BASIC_FORM_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_basic_form_get_type (), GdauiBasicFormClass)
 #define GDAUI_IS_BASIC_FORM(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_basic_form_get_type ())
 
-typedef struct {
-#ifdef HAVE_LIBGLADE
-	GladeXML *xml_object; /* one of xml_object or */
-#endif
-	gchar    *xml_file;   /* xml_file is required */
-
-	gchar    *root_element; /* required */
-	gchar    *form_prefix;  /* required */
-} GdauiFormLayoutSpec;
 
 typedef struct _GdauiBasicForm      GdauiBasicForm;
 typedef struct _GdauiBasicFormClass GdauiBasicFormClass;
@@ -51,7 +39,7 @@ typedef struct _GdauiBasicFormPriv  GdauiBasicFormPriv;
 /* struct for the object's data */
 struct _GdauiBasicForm
 {
-	GtkVBox               object;
+	GtkVBox             object;
 
 	GdauiBasicFormPriv *priv;
 };
@@ -59,11 +47,11 @@ struct _GdauiBasicForm
 /* struct for the object's class */
 struct _GdauiBasicFormClass
 {
-	GtkVBoxClass          parent_class;
+	GtkVBoxClass        parent_class;
 
 	/* signals */
-        void       (*param_changed)         (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif);
-	void       (*activated)             (GdauiBasicForm *form);
+        void       (*holder_changed) (GdauiBasicForm *form, GdaHolder *holder, gboolean is_user_action);
+	void       (*activated)      (GdauiBasicForm *form);
 };
 
 /* 
@@ -71,29 +59,23 @@ struct _GdauiBasicFormClass
 */
 GType             gdaui_basic_form_get_type                 (void) G_GNUC_CONST;
 GtkWidget        *gdaui_basic_form_new                      (GdaSet *data_set);
-GtkWidget        *gdaui_basic_form_new_custom               (GdaSet *data_set, const gchar *glade_file, 
-								const gchar *root_element, const gchar *form_prefix);
 GtkWidget        *gdaui_basic_form_new_in_dialog            (GdaSet *data_set, GtkWindow *parent,
-								const gchar *title, const gchar *header);
+							     const gchar *title, const gchar *header);
 GdaSet           *gdaui_basic_form_get_data_set             (GdauiBasicForm *form);
 gboolean          gdaui_basic_form_is_valid                 (GdauiBasicForm *form);
-gboolean          gdaui_basic_form_has_been_changed         (GdauiBasicForm *form);
+gboolean          gdaui_basic_form_has_changed              (GdauiBasicForm *form);
 void              gdaui_basic_form_reset                    (GdauiBasicForm *form);
-void              gdaui_basic_form_set_current_as_orig      (GdauiBasicForm *form);
+void              gdaui_basic_form_set_as_reference         (GdauiBasicForm *form);
 
-void              gdaui_basic_form_show_entry_actions       (GdauiBasicForm *form, gboolean show_actions);
-void              gdaui_basic_form_entry_show               (GdauiBasicForm *form, 
-								GdaHolder *param, gboolean show);
-void              gdaui_basic_form_entry_grab_focus         (GdauiBasicForm *form, GdaHolder *param);
-void              gdaui_basic_form_entry_set_editable       (GdauiBasicForm *form, GdaHolder *param, 
-								gboolean editable);
-void              gdaui_basic_form_set_entries_auto_default (GdauiBasicForm *form, gboolean auto_default);
-void              gdaui_basic_form_set_entries_default      (GdauiBasicForm *form);
+void              gdaui_basic_form_entry_set_visible        (GdauiBasicForm *form, 
+							     GdaHolder *holder, gboolean show);
+void              gdaui_basic_form_entry_grab_focus         (GdauiBasicForm *form, GdaHolder *holder);
+void              gdaui_basic_form_entry_set_editable       (GdauiBasicForm *form, GdaHolder *holder, 
+							     gboolean editable);
+void              gdaui_basic_form_set_entries_to_default   (GdauiBasicForm *form);
 
-GtkWidget        *gdaui_basic_form_get_entry_widget         (GdauiBasicForm *form, GdaHolder *param);
-GtkWidget        *gdaui_basic_form_get_label_widget         (GdauiBasicForm *form, GdaHolder *param);
-
-
+GtkWidget        *gdaui_basic_form_get_entry_widget         (GdauiBasicForm *form, GdaHolder *holder);
+GtkWidget        *gdaui_basic_form_get_label_widget         (GdauiBasicForm *form, GdaHolder *holder);
 
 G_END_DECLS
 

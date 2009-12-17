@@ -30,7 +30,7 @@ Form widget mapping the values contained in a #GdaSet
 
 @gdauibasicform: the object which received the signal.
 
-<!-- ##### SIGNAL GdauiBasicForm::param-changed ##### -->
+<!-- ##### SIGNAL GdauiBasicForm::holder-changed ##### -->
 <para>
 
 </para>
@@ -59,11 +59,6 @@ Form widget mapping the values contained in a #GdaSet
 
 </para>
 
-<!-- ##### ARG GdauiBasicForm:layout-spec ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdauiBasicForm:paramlist ##### -->
 <para>
 
@@ -74,34 +69,12 @@ Form widget mapping the values contained in a #GdaSet
 
 </para>
 
-<!-- ##### STRUCT GdauiFormLayoutSpec ##### -->
-<para>
-
-</para>
-
-@xml_object: 
-@xml_file: 
-@root_element: 
-@form_prefix: 
-
 <!-- ##### FUNCTION gdaui_basic_form_new ##### -->
 <para>
 
 </para>
 
 @data_set: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gdaui_basic_form_new_custom ##### -->
-<para>
-
-</para>
-
-@data_set: 
-@glade_file: 
-@root_element: 
-@form_prefix: 
 @Returns: 
 
 
@@ -135,7 +108,7 @@ Form widget mapping the values contained in a #GdaSet
 @Returns: 
 
 
-<!-- ##### FUNCTION gdaui_basic_form_has_been_changed ##### -->
+<!-- ##### FUNCTION gdaui_basic_form_has_changed ##### -->
 <para>
 
 </para>
@@ -152,7 +125,7 @@ Form widget mapping the values contained in a #GdaSet
 @form: 
 
 
-<!-- ##### FUNCTION gdaui_basic_form_set_current_as_orig ##### -->
+<!-- ##### FUNCTION gdaui_basic_form_set_as_reference ##### -->
 <para>
 
 </para>
@@ -160,22 +133,13 @@ Form widget mapping the values contained in a #GdaSet
 @form: 
 
 
-<!-- ##### FUNCTION gdaui_basic_form_show_entry_actions ##### -->
+<!-- ##### FUNCTION gdaui_basic_form_entry_set_visible ##### -->
 <para>
 
 </para>
 
 @form: 
-@show_actions: 
-
-
-<!-- ##### FUNCTION gdaui_basic_form_entry_show ##### -->
-<para>
-
-</para>
-
-@form: 
-@param: 
+@holder: 
 @show: 
 
 
@@ -185,7 +149,7 @@ Form widget mapping the values contained in a #GdaSet
 </para>
 
 @form: 
-@param: 
+@holder: 
 
 
 <!-- ##### FUNCTION gdaui_basic_form_entry_set_editable ##### -->
@@ -194,20 +158,11 @@ Form widget mapping the values contained in a #GdaSet
 </para>
 
 @form: 
-@param: 
+@holder: 
 @editable: 
 
 
-<!-- ##### FUNCTION gdaui_basic_form_set_entries_auto_default ##### -->
-<para>
-
-</para>
-
-@form: 
-@auto_default: 
-
-
-<!-- ##### FUNCTION gdaui_basic_form_set_entries_default ##### -->
+<!-- ##### FUNCTION gdaui_basic_form_set_entries_to_default ##### -->
 <para>
 
 </para>
@@ -221,7 +176,7 @@ Form widget mapping the values contained in a #GdaSet
 </para>
 
 @form: 
-@param: 
+@holder: 
 @Returns: 
 
 
@@ -231,7 +186,7 @@ Form widget mapping the values contained in a #GdaSet
 </para>
 
 @form: 
-@param: 
+@holder: 
 @Returns: 
 
 

@@ -396,7 +396,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 
                 set = gda_set_copy (pinfo->auth_params);
                 ad->auth_widget = gdaui_basic_form_new (set);
-                /*g_signal_connect (G_OBJECT (ad->auth_widget), "param-changed",
+                /*g_signal_connect (G_OBJECT (ad->auth_widget), "holder-changed",
 		  G_CALLBACK (auth_form_changed), dialog);*/
                 g_object_unref (set);
 

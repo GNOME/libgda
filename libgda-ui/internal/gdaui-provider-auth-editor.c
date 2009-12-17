@@ -249,7 +249,7 @@ _gdaui_provider_auth_editor_set_provider (GdauiProviderAuthEditor *auth, const g
 		
 		set = gda_set_copy (auth->priv->pinfo->auth_params);
 		auth->priv->auth_widget = gdaui_basic_form_new (set);
-		g_signal_connect (G_OBJECT (auth->priv->auth_widget), "param-changed",
+		g_signal_connect (G_OBJECT (auth->priv->auth_widget), "holder-changed",
 				  G_CALLBACK (auth_form_changed), auth);
 		g_object_unref (set);
 	}

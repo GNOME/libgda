@@ -6,18 +6,15 @@
 	gdaui_basic_form_get_data_set
 	gdaui_basic_form_get_entry_widget
 	gdaui_basic_form_get_label_widget
-	gdaui_basic_form_get_paramlist
+	gdaui_basic_form_get_data_set
 	gdaui_basic_form_get_type
-	gdaui_basic_form_has_been_changed
+	gdaui_basic_form_has_changed
 	gdaui_basic_form_is_valid
 	gdaui_basic_form_new
-	gdaui_basic_form_new_custom
 	gdaui_basic_form_new_in_dialog
 	gdaui_basic_form_reset
-	gdaui_basic_form_set_current_as_orig
-	gdaui_basic_form_set_entries_auto_default
-	gdaui_basic_form_set_entries_default
-	gdaui_basic_form_show_entry_actions
+	gdaui_basic_form_set_as_reference
+	gdaui_basic_form_set_entries_to_default
 	gdaui_cloud_create_filter_widget
 	gdaui_cloud_filter
 	gdaui_cloud_get_selection

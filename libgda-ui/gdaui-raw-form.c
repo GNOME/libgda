@@ -219,7 +219,7 @@ form_activated_cb (GdauiRawForm *form, gpointer data)
 }
 
 static void
-form_param_changed_cb (GdauiRawForm *form, gpointer data)
+form_holder_changed_cb (GdauiRawForm *form, gpointer data)
 {
 	if (form->priv->write_mode == GDAUI_DATA_WIDGET_WRITE_ON_VALUE_CHANGE) {
 		gint row;
@@ -252,8 +252,8 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 
 	g_signal_connect (G_OBJECT (wid), "activated",
 			  G_CALLBACK (form_activated_cb), NULL);
-	g_signal_connect (G_OBJECT (wid), "param_changed",
-			  G_CALLBACK (form_param_changed_cb), NULL);
+	g_signal_connect (G_OBJECT (wid), "holder-changed",
+			  G_CALLBACK (form_holder_changed_cb), NULL);
 
 	/* action group */
         wid->priv->actions_group = gtk_action_group_new ("Actions");
@@ -465,7 +465,7 @@ iter_validate_set_cb (GdaDataModelIter *iter, GdauiRawForm *form)
 static void
 iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiRawForm *form)
 {
-	gdaui_basic_form_set_current_as_orig (GDAUI_BASIC_FORM (form));
+	gdaui_basic_form_set_as_reference (GDAUI_BASIC_FORM (form));
 
 	gtk_widget_set_sensitive (GTK_WIDGET (form), (row == -1) ? FALSE : TRUE);
 	if (row >= 0) {
@@ -544,7 +544,7 @@ gdaui_raw_form_initialize (GdauiRawForm *form, GtkWidget *layout, GHashTable *bo
 	 * the form itself 
 	 */
 	if (!layout && gda_data_proxy_is_read_only (form->priv->proxy))
-		gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (form), FALSE);
+		g_object_set ((GObject*) form, "show-actions", FALSE, NULL);
 
 	/* data display update */
 	proxy_changed_cb (form->priv->proxy, form);
@@ -945,7 +945,7 @@ gdaui_raw_form_col_set_show (GdauiDataWidget *iface, gint column, gboolean shown
 
 	param = gda_data_model_iter_get_holder_for_field (form->priv->iter, column);
 	g_return_if_fail (param);
-	gdaui_basic_form_entry_show (GDAUI_BASIC_FORM (form), param, shown);
+	gdaui_basic_form_entry_set_visible (GDAUI_BASIC_FORM (form), param, shown);
 }
 
 void
@@ -961,7 +961,7 @@ gdaui_raw_form_set_column_editable (GdauiDataWidget *iface, gint column, gboolea
 	/* What needs to be done:
 	 * - create a gdaui_basic_form_set_entry_editable() function for GdauiBasicForm, and call it
 	 * - in the GdauiDataEntry, add a GDA_VALUE_ATTR_EDITABLE property which defaults to TRUE.
-	 * - imtplement the gdaui_basic_form_set_entry_editable() in the same way as gdaui_basic_form_set_entries_default()
+	 * - imtplement the gdaui_basic_form_set_entry_editable() in the same way as gdaui_basic_form_set_entries_to_default()
 	 *   by setting that new property
 	 * - implement the new property in GdauiEntryWrapper and GdauiEntryCombo.
 	 */
@@ -977,7 +977,7 @@ gdaui_raw_form_show_column_actions (GdauiDataWidget *iface, gint column, gboolea
 	g_return_if_fail (form->priv);
 	
 	/* REM: don't take care of the @column argument */
-	gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (form), show_actions);
+	g_object_set ((GObject*) form, "show-actions", show_actions, NULL);
 }
 
 static GtkActionGroup *

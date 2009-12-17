@@ -623,8 +623,8 @@ compute_params (QueryConsole *tconsole)
 			if (tconsole->priv->params) {
 				show_variables = TRUE;
 				tconsole->priv->params_form = gdaui_basic_form_new (tconsole->priv->params);
-				gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (tconsole->priv->params_form),
-								     TRUE);
+				g_object_set ((GObject*) tconsole->priv->params_form,
+					      "show-actions", TRUE, NULL);
 			}
 			else {
 				tconsole->priv->params_form = gtk_label_new ("");
@@ -890,9 +890,9 @@ sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 			}
 
 			cont = g_object_get_data (G_OBJECT (tconsole->priv->params_popup), "cont");
-			form = gdaui_basic_form_new (tconsole->priv->params);			
-			gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (form), TRUE);
-			g_signal_connect (form, "param-changed",
+			form = gdaui_basic_form_new (tconsole->priv->params);
+			g_object_set ((GObject*) form, "show-actions", TRUE, NULL);
+			g_signal_connect (form, "holder-changed",
 					  G_CALLBACK (params_form_changed_cb), tconsole);
 
 			gtk_box_pack_start (GTK_BOX (cont), form, TRUE, TRUE, 0);

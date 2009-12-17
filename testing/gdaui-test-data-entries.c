@@ -374,7 +374,7 @@ plugin_hash_foreach_func (const gchar *plugin_name, GdauiPlugin *plugin, GtkWidg
 
 
 static void create_plugin_nb (GtkWidget *vbox, GdauiPlugin *plugin);
-static void options_form_param_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean user_modif,
+static void options_form_holder_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean user_modif,
 					   GtkWidget *table);
 static GtkWidget *
 build_test_for_plugin_struct (GdauiPlugin *plugin)
@@ -448,8 +448,8 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 			gtk_table_attach (GTK_TABLE (table), form, 1, 2, 2, 3, GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 			gtk_widget_show (form);
 			g_object_set_data (G_OBJECT (table), "options", form);
-			g_signal_connect (G_OBJECT (form), "param_changed",
-					  G_CALLBACK (options_form_param_changed_cb), table);
+			g_signal_connect (G_OBJECT (form), "holder-changed",
+					  G_CALLBACK (options_form_holder_changed_cb), table);
 		}
 	}
 	else {
@@ -625,7 +625,7 @@ build_test_widget (TestWidgetData *tdata)
 }
 
 static void
-options_form_param_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean user_modif, GtkWidget *table)
+options_form_holder_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean user_modif, GtkWidget *table)
 {
 	GtkWidget *nb;
 	GdauiPlugin *plugin;

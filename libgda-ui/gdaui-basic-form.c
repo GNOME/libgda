@@ -36,18 +36,18 @@ static void gdaui_basic_form_init (GdauiBasicForm *wid);
 static void gdaui_basic_form_dispose (GObject *object);
 
 static void gdaui_basic_form_set_property (GObject *object,
-					      guint param_id,
-					      const GValue *value,
-					      GParamSpec *pspec);
+					   guint param_id,
+					   const GValue *value,
+					   GParamSpec *pspec);
 static void gdaui_basic_form_get_property (GObject *object,
-					      guint param_id,
-					      GValue *value,
-					      GParamSpec *pspec);
-
-static void layout_spec_free (GdauiFormLayoutSpec *spec);
+					   guint param_id,
+					   GValue *value,
+					   GParamSpec *pspec);
 
 static void gdaui_basic_form_fill (GdauiBasicForm *form);
 static void gdaui_basic_form_clean (GdauiBasicForm *form);
+static void gdaui_basic_form_show_entry_actions (GdauiBasicForm *form, gboolean show_actions);
+static void gdaui_basic_form_set_entries_auto_default (GdauiBasicForm *form, gboolean auto_default);
 
 static void get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form);
 static void paramlist_public_data_changed_cb (GdauiSet *paramlist, GdauiBasicForm *form);
@@ -59,18 +59,15 @@ static void entry_contents_activated (GdauiDataEntry *entry, GdauiBasicForm *for
 static void parameter_changed_cb (GdaHolder *param, GdauiDataEntry *entry);
 
 static void mark_not_null_entry_labels (GdauiBasicForm *form, gboolean show_mark);
-enum
-{
-	PARAM_CHANGED,
+enum {
+	HOLDER_CHANGED,
 	ACTIVATED,
 	LAST_SIGNAL
 };
 
 /* properties */
-enum
-{
-        PROP_0,
-	PROP_LAYOUT_SPEC,
+enum {
+	PROP_0,
 	PROP_DATA_LAYOUT,
 	PROP_PARAMLIST,
 	PROP_HEADERS_SENSITIVE,
@@ -91,10 +88,9 @@ struct _GdauiBasicFormPriv
 	GArray                 *signal_data; /* array of SignalData */
 
 	GSList                 *entries;/* list of GdauiDataEntry widgets */
-	GSList                 *not_null_labels;/* list of GtkLabel widgets corresponding to NOT NULL entries */
+	GSList                 *not_null_labels; /* list of GtkLabel widgets corresponding to NOT NULL entries */
 	gboolean                can_expand; /* ORed among the data entrie's expand requests */
 
-	GdauiFormLayoutSpec    *layout_spec;
 	GtkWidget              *entries_table;
 	GtkWidget              *entries_glade;
 	GSList                 *hidden_entries;
@@ -145,18 +141,18 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 
 	/* signals */
 	/**
-	 * GdauiBasicForm::param-changed:
+	 * GdauiBasicForm::holder-changed:
 	 * @form: GdauiBasicForm
 	 * @param: that changed
 	 * @is_user_modif: TRUE if the modification has been initiated by a user modification
 	 *
 	 * Emitted when a GdaHolder changes
 	 */
-	gdaui_basic_form_signals[PARAM_CHANGED] =
-		g_signal_new ("param_changed",
+	gdaui_basic_form_signals[HOLDER_CHANGED] =
+		g_signal_new ("holder-changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
-			      G_STRUCT_OFFSET (GdauiBasicFormClass, param_changed),
+			      G_STRUCT_OFFSET (GdauiBasicFormClass, holder_changed),
 			      NULL, NULL,
 			      _gdaui_marshal_VOID__OBJECT_BOOLEAN, G_TYPE_NONE, 2,
 			      GDA_TYPE_HOLDER, G_TYPE_BOOLEAN);
@@ -175,7 +171,7 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 			      NULL, NULL,
 			      _gdaui_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
-	class->param_changed = NULL;
+	class->holder_changed = NULL;
 	class->activated = NULL;
 	object_class->dispose = gdaui_basic_form_dispose;
 
@@ -183,12 +179,8 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
         object_class->set_property = gdaui_basic_form_set_property;
         object_class->get_property = gdaui_basic_form_get_property;
 	
-	g_object_class_install_property (object_class, PROP_LAYOUT_SPEC,
-					 g_param_spec_pointer ("layout_spec", 
-							       _("Pointer to a GdauiFormLayoutSpec structure"), NULL,
-							       G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_DATA_LAYOUT,
-					 g_param_spec_pointer ("data_layout", 
+					 g_param_spec_pointer ("data-layout", 
 							       _("Pointer to an XML data layout specification"), NULL,
 							       G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_PARAMLIST,
@@ -196,17 +188,17 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 							       _("List of parameters to show in the form"), NULL,
                                                                G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_HEADERS_SENSITIVE,
-					 g_param_spec_boolean ("headers_sensitive",
+					 g_param_spec_boolean ("headers-sensitive",
 							       _("Entry headers are sensitive"), 
 							       NULL, FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_SHOW_ACTIONS,
-					 g_param_spec_boolean ("show_actions",
+					 g_param_spec_boolean ("show-actions",
 							       _("Show Entry actions"), 
 							       NULL, FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_ENTRIES_AUTO_DEFAULT,
-					 g_param_spec_boolean ("entries_auto_default",
+					 g_param_spec_boolean ("entries-auto-default",
 							       _("Entries Auto-default"), 
 							       NULL, FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
@@ -226,7 +218,6 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
 	wid->priv->entries = NULL;
 	wid->priv->can_expand = FALSE;
 	wid->priv->not_null_labels = NULL;
-	wid->priv->layout_spec = NULL;
 	wid->priv->entries_glade = NULL;
 	wid->priv->entries_table = NULL;
 	wid->priv->hidden_entries = NULL;
@@ -251,6 +242,8 @@ static void widget_shown_cb (GtkWidget *wid, GdauiBasicForm *form);
  * node of @paramlist.
  *
  * Returns: the new widget
+ *
+ * Since: 4.2
  */
 GtkWidget *
 gdaui_basic_form_new (GdaSet *paramlist)
@@ -261,38 +254,6 @@ gdaui_basic_form_new (GdaSet *paramlist)
 
 	return (GtkWidget *) obj;
 }
-
-/**
- * gdaui_basic_form_new_custom
- * @paramlist: a #GdaSet structure
- * @glade_file: a Glade XML file name
- * @root_element: the name of the top-most widget in @glade_file to use in the new form
- * @form_prefix: the prefix used to look for widgets to add entries in
- *
- * Creates a new #GdauiBasicForm widget using all the parameters provided in @paramlist.
- *
- * The layout is specified in the @glade_file specification, and an entry is created for each
- * node of @paramlist.
- *
- * Returns: the new widget
- */
-GtkWidget *
-gdaui_basic_form_new_custom (GdaSet *paramlist, const gchar *glade_file, 
-				const gchar *root_element, const gchar *form_prefix)
-{
-	GdauiFormLayoutSpec spec;
-	GObject *obj;
-#ifdef HAVE_LIBGLADE
-	spec.xml_object = NULL;
-#endif
-	spec.xml_file = (gchar *) glade_file;
-	spec.root_element = (gchar *) root_element;
-	spec.form_prefix = (gchar *) form_prefix;
-	obj = g_object_new (GDAUI_TYPE_BASIC_FORM, "layout_spec", &spec, "paramlist", paramlist, NULL);
-
-	return (GtkWidget *) obj;
-}
-
 
 static void
 widget_shown_cb (GtkWidget *wid, GdauiBasicForm *form)
@@ -408,7 +369,7 @@ paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param,
 
 		/* hide entries which were hidden */
 		for (list = hidden_params; list; list = list->next) 
-			gdaui_basic_form_entry_show (form, GDA_HOLDER (list->data), FALSE);
+			gdaui_basic_form_entry_set_visible (form, GDA_HOLDER (list->data), FALSE);
 		g_slist_free (hidden_params);
 	}
 }
@@ -742,22 +703,22 @@ load_xml_data_layout_portal (GdauiBasicForm  *form,
 				  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND),
 				  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND), 0, 0);
 	} else
-	if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_notebook")) {
+		if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_notebook")) {
 
-		GtkLabel *label;
-		gchar *markup = g_strdup_printf ("<b>%s</b>", (name != NULL) ? name : "");
-		label = GTK_LABEL(gtk_label_new (markup));
-		g_free (markup);
-		gtk_widget_show (GTK_WIDGET(label));
-		gtk_label_set_use_markup (label, TRUE);
+			GtkLabel *label;
+			gchar *markup = g_strdup_printf ("<b>%s</b>", (name != NULL) ? name : "");
+			label = GTK_LABEL(gtk_label_new (markup));
+			g_free (markup);
+			gtk_widget_show (GTK_WIDGET(label));
+			gtk_label_set_use_markup (label, TRUE);
 
-		gtk_container_add (GTK_CONTAINER(data), GTK_WIDGET(vbox));
+			gtk_container_add (GTK_CONTAINER(data), GTK_WIDGET(vbox));
 
-		gtk_notebook_set_tab_label (GTK_NOTEBOOK(data),
-					    gtk_notebook_get_nth_page
-					    (GTK_NOTEBOOK(data), sequence - 1),
-					    GTK_WIDGET(label));
-	}
+			gtk_notebook_set_tab_label (GTK_NOTEBOOK(data),
+						    gtk_notebook_get_nth_page
+						    (GTK_NOTEBOOK(data), sequence - 1),
+						    GTK_WIDGET(label));
+		}
 
 	g_free (name);
 	g_free (relationship);
@@ -931,53 +892,53 @@ load_xml_data_layout_group (GdauiBasicForm  *form,
 
 		gtk_box_pack_start (GTK_BOX(data), GTK_WIDGET(frame), FALSE, TRUE, 0);
 	} else
-	if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_group")) {
+		if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_group")) {
 
-		GtkFrame *frame = GTK_FRAME(gtk_frame_new (NULL));
-		gtk_widget_show (GTK_WIDGET(frame));
-		gtk_frame_set_shadow_type (frame, GTK_SHADOW_NONE);
+			GtkFrame *frame = GTK_FRAME(gtk_frame_new (NULL));
+			gtk_widget_show (GTK_WIDGET(frame));
+			gtk_frame_set_shadow_type (frame, GTK_SHADOW_NONE);
 
-		GtkAlignment *alignment = GTK_ALIGNMENT(gtk_alignment_new (0.5, 0.5, 1, 1));
-		gtk_widget_show (GTK_WIDGET(alignment));
-		gtk_container_add (GTK_CONTAINER(frame), GTK_WIDGET(alignment));
-		gtk_alignment_set_padding (alignment, 0, 0, 12, 0);
+			GtkAlignment *alignment = GTK_ALIGNMENT(gtk_alignment_new (0.5, 0.5, 1, 1));
+			gtk_widget_show (GTK_WIDGET(alignment));
+			gtk_container_add (GTK_CONTAINER(frame), GTK_WIDGET(alignment));
+			gtk_alignment_set_padding (alignment, 0, 0, 12, 0);
 
-		gtk_container_add (GTK_CONTAINER(alignment), GTK_WIDGET(table));
+			gtk_container_add (GTK_CONTAINER(alignment), GTK_WIDGET(table));
 
-		gchar *markup = g_strdup_printf ("<b>%s</b>", (title != NULL) ? title : "");
-		gtk_label_set_text (label, markup);
-		g_free (markup);
-		gtk_label_set_use_markup (label, TRUE);
+			gchar *markup = g_strdup_printf ("<b>%s</b>", (title != NULL) ? title : "");
+			gtk_label_set_text (label, markup);
+			g_free (markup);
+			gtk_label_set_use_markup (label, TRUE);
 
-		gtk_frame_set_label_widget (frame, GTK_WIDGET(label));
+			gtk_frame_set_label_widget (frame, GTK_WIDGET(label));
 
 
-		gint n_columns, n_rows;
-		g_object_get (G_OBJECT(data), "n-columns", &n_columns, NULL);
-		g_object_get (G_OBJECT(data), "n-rows", &n_rows, NULL);
+			gint n_columns, n_rows;
+			g_object_get (G_OBJECT(data), "n-columns", &n_columns, NULL);
+			g_object_get (G_OBJECT(data), "n-rows", &n_rows, NULL);
 
-		gint col, row;
-		col = 2 * ((sequence - 1) / n_rows);
-		row = (sequence - 1) % n_rows;
+			gint col, row;
+			col = 2 * ((sequence - 1) / n_rows);
+			row = (sequence - 1) % n_rows;
 
-		gtk_table_attach (GTK_TABLE(data), GTK_WIDGET(frame),
-				  col, col + 2, row, row + 1,
-				  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND),
-				  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND), 0, 0);
-	} else
-	if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_notebook")) {
+			gtk_table_attach (GTK_TABLE(data), GTK_WIDGET(frame),
+					  col, col + 2, row, row + 1,
+					  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND),
+					  (GtkAttachOptions) (GTK_FILL|GTK_EXPAND), 0, 0);
+		} else
+			if (!xmlStrcmp (node->parent->name, BAD_CAST "data_layout_notebook")) {
 
-		gchar *text = g_strdup ((title != NULL) ? title : "");
-		gtk_label_set_text (label, text);
-		g_free (text);
+				gchar *text = g_strdup ((title != NULL) ? title : "");
+				gtk_label_set_text (label, text);
+				g_free (text);
 
-		gtk_container_add (GTK_CONTAINER(data), GTK_WIDGET(table));
+				gtk_container_add (GTK_CONTAINER(data), GTK_WIDGET(table));
 
-		gtk_notebook_set_tab_label (GTK_NOTEBOOK(data),
-					    gtk_notebook_get_nth_page
-					    (GTK_NOTEBOOK(data), sequence - 1),
-					    GTK_WIDGET(label));
-	}
+				gtk_notebook_set_tab_label (GTK_NOTEBOOK(data),
+							    gtk_notebook_get_nth_page
+							    (GTK_NOTEBOOK(data), sequence - 1),
+							    GTK_WIDGET(label));
+			}
 	
 	xmlNodePtr child;
 	for (child = node->children; child != NULL; child = child->next) {
@@ -1045,8 +1006,6 @@ load_xml_data_layout_groups (GdauiBasicForm  *form,
 
 	gtk_scrolled_window_add_with_viewport (form->priv->scrolled_window,
 					       (GtkWidget *) vbox);
-	/* gtk_box_pack_start (GTK_BOX(form), (GtkWidget *) form->priv->scrolled_window, */
-	/* 		    TRUE, TRUE, 0); */
 
 	xmlNodePtr child;
 	for (child = node->children; child != NULL; child = child->next) {
@@ -1108,9 +1067,7 @@ load_xml_data_layout (GdauiBasicForm  *form,
 }
 
 static void
-load_xml_data_layouts (GdauiBasicForm  *form,
-		       xmlNodePtr         node,
-		       gpointer           data)
+load_xml_data_layouts (GdauiBasicForm  *form, xmlNodePtr node, gpointer data)
 {
 	g_print ("%s:\n", __func__);
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
@@ -1200,54 +1157,10 @@ gdaui_basic_form_set_property (GObject *object,
 			       GParamSpec *pspec)
 {
 	GdauiBasicForm *form;
-#ifdef HAVE_LIBGLADE
-	GdauiFormLayoutSpec *lspec, *new_spec = NULL;
-#endif
 
         form = GDAUI_BASIC_FORM (object);
         if (form->priv) {
                 switch (param_id) {
-		case PROP_LAYOUT_SPEC:
-#ifdef HAVE_LIBGLADE
-			lspec = g_value_get_pointer (value);
-			if (lspec) {
-				g_return_if_fail (lspec->xml_file || lspec->xml_object);
-				g_return_if_fail (lspec->root_element);
-				
-				/* spec copy */
-				new_spec = g_new0 (GdauiFormLayoutSpec, 1);
-				if (lspec->xml_file)
-					new_spec->xml_file = g_strdup (lspec->xml_file);
-				if (lspec->xml_object) {
-					new_spec->xml_object = lspec->xml_object;
-					g_object_ref (new_spec->xml_object);
-				}
-				if (lspec->root_element)
-					new_spec->root_element = g_strdup (lspec->root_element);
-				if (lspec->form_prefix)
-					new_spec->form_prefix = g_strdup (lspec->form_prefix);
-				
-				/* spec verify */
-				if (!new_spec->xml_object) {
-					new_spec->xml_object = glade_xml_new (new_spec->xml_file, new_spec->root_element, NULL);
-					if (! new_spec->xml_object) {
-						layout_spec_free (new_spec);
-						g_warning (_("Could not load file '%s'"), new_spec->xml_file);
-						return;
-					}
-				}
-			}
-
-			gdaui_basic_form_clean (form);
-			if (new_spec) {
-				form->priv->layout_spec = new_spec;
-				g_print ("Loaded Glade file, reinit interface\n");
-			}
-			gdaui_basic_form_fill (form);
-#else
-			g_warning (_("Libglade support not built."));
-#endif
-			break;
 		case PROP_DATA_LAYOUT:
 			{
 				xmlNodePtr node = g_value_get_pointer (value);
@@ -1272,44 +1185,6 @@ gdaui_basic_form_set_property (GObject *object,
 			break;
 		case PROP_PARAMLIST:
 			if (form->priv->set) {
-#ifdef HAVE_LIBGLADE
-			new_spec = NULL;
-			if (form->priv->layout_spec) {
-				/* old spec */
-				lspec = form->priv->layout_spec;
-				/* spec copy */
-				new_spec = g_new0 (GdauiFormLayoutSpec, 1);
-				if (lspec->xml_file)
-					new_spec->xml_file = g_strdup (lspec->xml_file);
-				if (lspec->xml_object) {
-					new_spec->xml_object = lspec->xml_object;
-					g_object_ref (new_spec->xml_object);
-				}
-				if (lspec->root_element)
-					new_spec->root_element = g_strdup (lspec->root_element);
-				if (lspec->form_prefix)
-					new_spec->form_prefix = g_strdup (lspec->form_prefix);
-			}
-#endif
-#ifdef HAVE_LIBGLADE
-			new_spec = NULL;
-			if (form->priv->layout_spec) {
-				/* old spec */
-				lspec = form->priv->layout_spec;
-				/* spec copy */
-				new_spec = g_new0 (GdauiFormLayoutSpec, 1);
-				if (lspec->xml_file)
-					new_spec->xml_file = g_strdup (lspec->xml_file);
-				if (lspec->xml_object) {
-					new_spec->xml_object = lspec->xml_object;
-					g_object_ref (new_spec->xml_object);
-				}
-				if (lspec->root_element)
-					new_spec->root_element = g_strdup (lspec->root_element);
-				if (lspec->form_prefix)
-					new_spec->form_prefix = g_strdup (lspec->form_prefix);
-			}
-#endif
 				get_rid_of_set (form->priv->set, form);
 				gdaui_basic_form_clean (form);
 			}
@@ -1326,11 +1201,6 @@ gdaui_basic_form_set_property (GObject *object,
 				g_signal_connect (form->priv->set, "holder-attr-changed",
 						  G_CALLBACK (paramlist_param_attr_changed_cb), form);
 
-#ifdef HAVE_LIBGLADE
-				if (new_spec)
-					form->priv->layout_spec = new_spec;
-				new_spec = NULL;
-#endif
 				gdaui_basic_form_fill (form);
 			}
 			break;
@@ -1338,10 +1208,10 @@ gdaui_basic_form_set_property (GObject *object,
 			form->priv->headers_sensitive = g_value_get_boolean (value);
 			break;
 		case PROP_SHOW_ACTIONS:
-			gdaui_basic_form_show_entry_actions(form, g_value_get_boolean(value));
+			gdaui_basic_form_show_entry_actions(form, g_value_get_boolean (value));
 			break;
 		case PROP_ENTRIES_AUTO_DEFAULT:
-			gdaui_basic_form_set_entries_auto_default(form, g_value_get_boolean(value));
+			gdaui_basic_form_set_entries_auto_default(form, g_value_get_boolean (value));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -1352,9 +1222,9 @@ gdaui_basic_form_set_property (GObject *object,
 
 static void
 gdaui_basic_form_get_property (GObject *object,
-				  guint param_id,
-				  GValue *value,
-				  GParamSpec *pspec)
+			       guint param_id,
+			       GValue *value,
+			       GParamSpec *pspec)
 {
 	GdauiBasicForm *form;
 
@@ -1410,10 +1280,6 @@ gdaui_basic_form_clean (GdauiBasicForm *form)
 		gtk_widget_destroy (form->priv->entries_glade);
 		form->priv->entries_glade = NULL;
 	}
-	if (form->priv->layout_spec) {
-		layout_spec_free (form->priv->layout_spec);
-		form->priv->layout_spec = NULL;
-	}
 	
 	g_slist_free (form->priv->not_null_labels);
 	form->priv->not_null_labels = NULL;
@@ -1425,19 +1291,6 @@ gdaui_basic_form_clean (GdauiBasicForm *form)
 		gtk_widget_destroy (GTK_WIDGET(form->priv->scrolled_window));
 		form->priv->scrolled_window = NULL;
 	}
-}
-
-static void
-layout_spec_free (GdauiFormLayoutSpec *spec)
-{
-#ifdef HAVE_LIBGLADE
-	if (spec->xml_object)
-		g_object_unref (spec->xml_object);
-#endif
-	g_free (spec->xml_file);
-	g_free (spec->root_element);
-	g_free (spec->form_prefix);
-	g_free (spec);
 }
 
 static void entry_destroyed_cb (GtkWidget *entry, GdauiBasicForm *form);
@@ -1530,13 +1383,13 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 			if (default_val) {
 				gdaui_data_entry_set_value_default (GDAUI_DATA_ENTRY (entry), default_val);
 				gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
-								    GDA_VALUE_ATTR_CAN_BE_DEFAULT,
-								    GDA_VALUE_ATTR_CAN_BE_DEFAULT);
+								 GDA_VALUE_ATTR_CAN_BE_DEFAULT,
+								 GDA_VALUE_ATTR_CAN_BE_DEFAULT);
 			}
 
 			gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
-							    nnul ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL,
-							    GDA_VALUE_ATTR_CAN_BE_NULL);
+							 nnul ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL,
+							 GDA_VALUE_ATTR_CAN_BE_NULL);
 			    
 			g_object_set_data (G_OBJECT (entry), "param", param);
 			g_object_set_data (G_OBJECT (entry), "form", form);
@@ -1578,8 +1431,8 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 				g_array_prepend_val (form->priv->signal_data, sd);
 			}
 			gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
-							    nnul ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL,
-							    GDA_VALUE_ATTR_CAN_BE_NULL);
+							 nnul ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL,
+							 GDA_VALUE_ATTR_CAN_BE_NULL);
 		}
 
 		/* connect the entry's changes */
@@ -1589,61 +1442,7 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 				  G_CALLBACK (entry_contents_activated), form);
 	}
 
-
-	/*
-	 * If there is a layout spec, then try to use it
-	 */
-#ifdef HAVE_LIBGLADE
-	if (form->priv->layout_spec) {
-		GtkWidget *layout = NULL;
-		
-		layout = glade_xml_get_widget (form->priv->layout_spec->xml_object, form->priv->layout_spec->root_element);
-		if (!layout) {
-			g_warning (_("Can't find widget named '%s', returning to basic layout"), 
-				   form->priv->layout_spec->root_element);
-			layout_spec_free (form->priv->layout_spec);
-			form->priv->layout_spec = NULL;
-		}
-		else {
-			/* really use the provided layout */
-			GtkWidget *box;
-			GSList *groups;
-			
-			gtk_box_pack_start (GTK_BOX (form), layout,  TRUE, TRUE, 0);
-			list = form->priv->entries;
-			groups = form->priv->set->groups_list;
-			while (groups && list) {
-				gint param_no;
-				gchar *box_name;
-
-				param_no = g_slist_index (form->priv->set->holders,
-							  ((GdaSetNode *)(((GdaSetGroup *)groups->data)->nodes->data))->holder);
-				box_name = g_strdup_printf ("%s_%d", form->priv->layout_spec->form_prefix, param_no);
-				box = glade_xml_get_widget (form->priv->layout_spec->xml_object, box_name);
-				g_print ("Box named %s => %p\n", box_name, box);
-				g_free (box_name);
-				if (box) {
-					gboolean expand;
-					expand = gdaui_data_entry_expand_in_layout (GDAUI_DATA_ENTRY (list->data));
-					form_expand = form_expand || expand;
-
-					gtk_box_pack_start (GTK_BOX (box), GTK_WIDGET (list->data), expand, TRUE, 0);
-					gtk_widget_show (GTK_WIDGET (list->data));
-					if (! g_object_get_data (G_OBJECT (box), "show_actions")) 
-						gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (list->data),
-										    0, GDA_VALUE_ATTR_ACTIONS_SHOWN);
-				}
-				list = g_slist_next (list);
-				groups = g_slist_next (groups);
-			}
-			g_assert (!groups && !list);
-			gtk_widget_show (layout);
-		}
-	}
-#endif
-
 	if (form->priv->scrolled_window != NULL) {
-
 		gtk_box_pack_start (GTK_BOX(form),
 				    (GtkWidget *) form->priv->scrolled_window,
 				    TRUE, TRUE, 0);
@@ -1691,7 +1490,7 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 	 * There is no layout spec (or the provided one could not be used),
 	 * so use the default tables arrangment
 	 */
-	if (!form->priv->layout_spec && form->priv->scrolled_window == NULL) {
+	if (form->priv->scrolled_window == NULL) {
 		GtkWidget *table, *label;
 		gint i;
 
@@ -1725,11 +1524,6 @@ gdaui_basic_form_fill (GdauiBasicForm *form)
 					form->priv->not_null_labels = g_slist_prepend (form->priv->not_null_labels,
 										       label);
 
-#ifdef HAVE_LIBGLADE_FIXME
-				if (new_spec)
-					form->priv->layout_spec = new_spec;
-				new_spec = NULL;
-#endif
 				gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 				
 				gtk_table_attach (GTK_TABLE (table), label, 0, 1, i, i+1,
@@ -1896,7 +1690,7 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 		    (attr & GDA_VALUE_ATTR_IS_DEFAULT))
 			gda_holder_set_value_to_default (param);
 		else if (gda_holder_set_value (param, value, NULL))
-			g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[PARAM_CHANGED], 0, param, TRUE);
+			g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[HOLDER_CHANGED], 0, param, TRUE);
 		else {
 			/* GdaHolder refused value => reset GdaDataEntry */
 			g_signal_handlers_block_by_func (G_OBJECT (entry),
@@ -1922,9 +1716,9 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 			/* REM: if there is more than one value in 'params', then a 
 			 * signal is emitted for each param that is changed, 
 			 * and there is no way for the listener of that signal to know if it
-			 * the end of the "param_changed" sequence. What could be done is:
+			 * the end of the "holder-changed" sequence. What could be done is:
 			 * - adding another boolean to tell if that signal is the 
-			 *   last one in the "param_changed" sequence, or
+			 *   last one in the "holder-changed" sequence, or
 			 * - modify the signal to add a list of parameters which are changed 
 			 *   and emit only one signal.
 			 */
@@ -1934,14 +1728,8 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 			/* parameter's value */
 			param = GDA_SET_NODE (params->data)->holder;
 			gda_holder_set_value (param, (GValue *)(list->data), NULL);
-#ifdef debug_signal
-			g_print (">> 'PARAM_CHANGED' from %s\n", __FUNCTION__);
-#endif
-			g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[PARAM_CHANGED], 
+			g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[HOLDER_CHANGED], 
 				       0, param, TRUE);
-#ifdef debug_signal
-			g_print ("<< 'PARAM_CHANGED' from %s\n", __FUNCTION__);
-#endif
 			form->priv->forward_param_updates = TRUE;
 		}
 		g_slist_free (values);
@@ -1980,7 +1768,7 @@ entry_contents_modified (GdauiDataEntry *entry, GdauiBasicForm *form)
 
 /*
  * Called when a parameter changes
- * We emit a "param_changed" signal only if the 'form->priv->forward_param_updates' is TRUE, which means
+ * We emit a "holder-changed" signal only if the 'form->priv->forward_param_updates' is TRUE, which means
  * the param change does not come from a GdauiDataEntry change.
  */ 
 static void
@@ -2041,44 +1829,23 @@ parameter_changed_cb (GdaHolder *param, GdauiDataEntry *entry)
 							   G_CALLBACK (entry_contents_activated), form);
 		}
 
-#ifdef debug_signal
-		g_print (">> 'PARAM_CHANGED' from %s\n", __FUNCTION__);
-#endif
-		g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[PARAM_CHANGED], 0, param, FALSE);
-#ifdef debug_signal
-		g_print ("<< 'PARAM_CHANGED' from %s\n", __FUNCTION__);
-#endif
+		g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[HOLDER_CHANGED], 0, param, FALSE);
 	}
 }
 
 /**
- * gdaui_basic_form_get_paramlist
- * @form: a #GdauiBasicForm widget
- *
- * Get a pointer to the #GdaSet used internally by @form to store
- * values
- *
- * Returns:
- */
-GdaSet *
-gdaui_basic_form_get_paramlist (GdauiBasicForm *form)
-{
-	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), NULL);
-
-	return form->priv->set;
-}
-
-/**
- * gdaui_basic_form_set_current_as_orig
+ * gdaui_basic_form_set_as_reference
  * @form: a #GdauiBasicForm widget
  *
  * Tells @form that the current values in the different entries are
  * to be considered as the original values for all the entries; the immediate
- * consequence is that any sub-sequent call to gdaui_basic_form_has_been_changed()
+ * consequence is that any sub-sequent call to gdaui_basic_form_has_changed()
  * will return FALSE (of course until any entry is changed).
+ *
+ * Since: 4.2
  */
 void
-gdaui_basic_form_set_current_as_orig (GdauiBasicForm *form)
+gdaui_basic_form_set_as_reference (GdauiBasicForm *form)
 {
 	GSList *list;
 	GdaHolder *param;
@@ -2133,6 +1900,8 @@ gdaui_basic_form_set_current_as_orig (GdauiBasicForm *form)
  * Tells if the form can be used as-is (if all the parameters do have some valid values)
  *
  * Returns: TRUE if the form is valid
+ *
+ * Since: 4.2
  */
 gboolean
 gdaui_basic_form_is_valid (GdauiBasicForm *form)
@@ -2149,7 +1918,9 @@ gdaui_basic_form_is_valid (GdauiBasicForm *form)
  * Get a pointer to the #GdaSet object which
  * is modified by @form
  *
- * Returns:
+ * Returns: a pointer to the #GdaSet
+ *
+ * Since: 4.2
  */
 GdaSet *
 gdaui_basic_form_get_data_set (GdauiBasicForm *form)
@@ -2160,32 +1931,31 @@ gdaui_basic_form_get_data_set (GdauiBasicForm *form)
 }
 
 /**
- * gdaui_basic_form_has_been_changed
+ * gdaui_basic_form_has_changed
  * @form: a #GdauiBasicForm widget
  *
- * Tells if the form has had at least on entry changed, or not
+ * Tells if the form has had at least on entry changed since @form was created or
+ * gdaui_basic_form_set_as_reference() has been called.
  *
- * Returns:
+ * Returns: %TRUE if one entry has changed at least
+ *
+ * Since: 4.2
  */
 gboolean
-gdaui_basic_form_has_been_changed (GdauiBasicForm *form)
+gdaui_basic_form_has_changed (GdauiBasicForm *form)
 {
-	gboolean changed = FALSE;
 	GSList *list;
 
 	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), FALSE);
 	
-	list = form->priv->entries;
-	while (list && !changed) {
-		if (! (gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (list->data)) & GDA_VALUE_ATTR_IS_UNCHANGED))
-			changed = TRUE;
-		list = g_slist_next (list);
-	}
-
-	return changed;
+	for (list = form->priv->entries; list; list = list->next)
+		if (! (gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (list->data)) &
+		       GDA_VALUE_ATTR_IS_UNCHANGED))
+			return TRUE;
+	return FALSE;
 }
 
-/**
+/*
  * gdaui_basic_form_show_entry_actions
  * @form: a #GdauiBasicForm widget
  * @show_actions: a boolean
@@ -2193,7 +1963,7 @@ gdaui_basic_form_has_been_changed (GdauiBasicForm *form)
  * Show or hide the actions button available at the end of each data entry
  * in the form
  */
-void
+static void
 gdaui_basic_form_show_entry_actions (GdauiBasicForm *form, gboolean show_actions)
 {
 	GSList *entries;
@@ -2204,13 +1974,9 @@ gdaui_basic_form_show_entry_actions (GdauiBasicForm *form, gboolean show_actions
 	show = show_actions ? GDA_VALUE_ATTR_ACTIONS_SHOWN : 0;
 	form->priv->show_actions = show_actions;
 
-	entries = form->priv->entries;
-	while (entries) {
+	for (entries = form->priv->entries; entries; entries = entries->next) 
 		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entries->data), show, 
-						    GDA_VALUE_ATTR_ACTIONS_SHOWN);
-		entries = g_slist_next (entries);
-	}
-
+						 GDA_VALUE_ATTR_ACTIONS_SHOWN);
 	/* mark_not_null_entry_labels (form, show_actions); */
 }
 
@@ -2220,6 +1986,8 @@ gdaui_basic_form_show_entry_actions (GdauiBasicForm *form, gboolean show_actions
  *
  * Resets all the entries in the form to their
  * original values
+ *
+ * Since: 4.2
  */
 void
 gdaui_basic_form_reset (GdauiBasicForm *form)
@@ -2253,16 +2021,18 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 
 
 /**
- * gdaui_basic_form_entry_show
+ * gdaui_basic_form_entry_set_visible
  * @form: a #GdauiBasicForm widget
  * @param: a #GdaHolder object
  * @show:
  *
  * Shows or hides the #GdauiDataEntry in @form which corresponds to the
  * @param parameter
+ *
+ * Since: 4.2
  */
 void
-gdaui_basic_form_entry_show (GdauiBasicForm *form, GdaHolder *param, gboolean show)
+gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *param, gboolean show)
 {
 	GtkWidget *entry;
 
@@ -2326,6 +2096,8 @@ gdaui_basic_form_entry_show (GdauiBasicForm *form, GdaHolder *param, gboolean sh
  * @param: a #GdaHolder object
  * 
  * Makes the data entry corresponding to @param grab the focus for the window it's in
+ *
+ * Since: 4.2
  */
 void
 gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *param)
@@ -2349,6 +2121,8 @@ gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *param)
  * Sets the #GdauiDataEntry in @form which corresponds to the
  * @param parameter editable or not. If @param is %NULL, then all the parameters
  * are concerned.
+ *
+ * Since: 4.2
  */
 void
 gdaui_basic_form_entry_set_editable (GdauiBasicForm *form, GdaHolder *param, gboolean editable)
@@ -2375,19 +2149,19 @@ gdaui_basic_form_entry_set_editable (GdauiBasicForm *form, GdaHolder *param, gbo
 }
 
 
-/**
+/*
  * gdaui_basic_form_set_entries_auto_default
  * @form: a #GdauiBasicForm widget
  * @auto_default:
  *
- * Sets weather all the #GdauiDataEntry entries in the form must default
+ * Sets wether all the #GdauiDataEntry entries in the form must default
  * to a default value if they are assigned a non valid value.
  * Depending on the real type of entry, it will provide a default value
  * which the user does not need to modify if it is OK.
  *
  * For example a date entry can by default display the current date.
  */
-void
+static void
 gdaui_basic_form_set_entries_auto_default (GdauiBasicForm *form, gboolean auto_default)
 {
 	GSList *entries;
@@ -2395,39 +2169,37 @@ gdaui_basic_form_set_entries_auto_default (GdauiBasicForm *form, gboolean auto_d
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 	
 	form->priv->entries_auto_default = auto_default;
-	entries = form->priv->entries;
-	while (entries) {
+	for (entries = form->priv->entries; entries; entries = entries->next) {
 		if (g_object_class_find_property (G_OBJECT_GET_CLASS (entries->data), "set_default_if_invalid"))
 			g_object_set (G_OBJECT (entries->data), "set_default_if_invalid", auto_default, NULL);
-		entries = g_slist_next (entries);
 	}	
 }
 
 /**
- * gdaui_basic_form_set_entries_default
+ * gdaui_basic_form_set_entries_to_default
  * @form: a #GdauiBasicForm widget
  *
  * For each entry in the form, sets it to a default value if it is possible to do so.
+ *
+ * Since: 4.2
  */
 void
-gdaui_basic_form_set_entries_default (GdauiBasicForm *form)
+gdaui_basic_form_set_entries_to_default (GdauiBasicForm *form)
 {
 	GSList *entries;
 	guint attrs;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 
-	entries = form->priv->entries;
-	while (entries) {
+	for (entries = form->priv->entries; entries; entries = entries->next) {
 		attrs = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (entries->data));
 		if (attrs & GDA_VALUE_ATTR_CAN_BE_DEFAULT)
 			gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entries->data), 
-							    GDA_VALUE_ATTR_IS_DEFAULT, GDA_VALUE_ATTR_IS_DEFAULT);
-		entries = g_slist_next (entries);
+							 GDA_VALUE_ATTR_IS_DEFAULT, GDA_VALUE_ATTR_IS_DEFAULT);
 	}
 }
 
-static void form_param_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif, GtkDialog *dlg);
+static void form_holder_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif, GtkDialog *dlg);
 
 /**
  * gdaui_basic_form_get_entry_widget
@@ -2437,6 +2209,8 @@ static void form_param_changed (GdauiBasicForm *form, GdaHolder *param, gboolean
  * Get the #GdauiDataEntry in @form which corresponds to the param parameter.
  *
  * Returns: the requested widget, or %NULL if not found
+ *
+ * Since: 4.2
  */
 GtkWidget *
 gdaui_basic_form_get_entry_widget (GdauiBasicForm *form, GdaHolder *param)
@@ -2479,6 +2253,8 @@ gdaui_basic_form_get_entry_widget (GdauiBasicForm *form, GdaHolder *param)
  * Get the label in @form which corresponds to the param parameter.
  *
  * Returns: the requested widget, or %NULL if not found
+ *
+ * Since: 4.2
  */
 GtkWidget *
 gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *param)
@@ -2510,6 +2286,8 @@ gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *param)
  * "form".
  *
  * Returns: the new #GtkDialog widget
+ *
+ * Since: 4.2
  */
 GtkWidget *
 gdaui_basic_form_new_in_dialog (GdaSet *paramlist, GtkWindow *parent,
@@ -2549,34 +2327,36 @@ gdaui_basic_form_new_in_dialog (GdaSet *paramlist, GtkWindow *parent,
 #endif
 		gtk_widget_show (label);
 	}
-
-
+	
+	
 #if GTK_CHECK_VERSION(2,18,0)
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg)))), 4);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))), form,
+			    GDAUI_BASIC_FORM (form)->priv->can_expand,
+			    GDAUI_BASIC_FORM (form)->priv->can_expand, 10);
 #else
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), 4);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), form,
-#endif
 			    GDAUI_BASIC_FORM (form)->priv->can_expand,
 			    GDAUI_BASIC_FORM (form)->priv->can_expand, 10);
+#endif
 
-	g_signal_connect (G_OBJECT (form), "param_changed",
-			  G_CALLBACK (form_param_changed), dlg);
+	g_signal_connect (G_OBJECT (form), "holder-changed",
+			  G_CALLBACK (form_holder_changed), dlg);
 	g_object_set_data (G_OBJECT (dlg), "form", form);
-
+	
 	gtk_widget_show_all (form);
-	form_param_changed (GDAUI_BASIC_FORM (form), NULL, FALSE, GTK_DIALOG (dlg));
-
+	form_holder_changed (GDAUI_BASIC_FORM (form), NULL, FALSE, GTK_DIALOG (dlg));
+	
 	return dlg;
 }
 
 static void
-form_param_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif, GtkDialog *dlg)
+form_holder_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif, GtkDialog *dlg)
 {
 	gboolean valid;
-
+	
 	valid = gdaui_basic_form_is_valid (form);
-
+	
 	gtk_dialog_set_response_sensitive (dlg, GTK_RESPONSE_ACCEPT, valid);
 }

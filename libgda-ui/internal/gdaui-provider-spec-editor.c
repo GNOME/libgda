@@ -206,12 +206,12 @@ adapt_form_widget (GdauiProviderSpecEditor *spec)
 		spec->priv->type = PROVIDER_FORM;
 		
 		wid = gdaui_basic_form_new (dset);
-		gdaui_basic_form_show_entry_actions (GDAUI_BASIC_FORM (wid), FALSE);
+		g_object_set ((GObject*) wid, "show-actions", FALSE, NULL);
 		g_object_unref (dset);
 		
 		spec->priv->form = wid;
 		update_form_contents (spec);
-		g_signal_connect (G_OBJECT (wid), "param_changed",
+		g_signal_connect (G_OBJECT (wid), "holder-changed",
 				  G_CALLBACK (dsn_form_changed), spec);
 	}
 	
