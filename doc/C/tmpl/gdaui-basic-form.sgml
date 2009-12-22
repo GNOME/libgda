@@ -6,7 +6,29 @@ Form widget mapping the values contained in a #GdaSet
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+  The #GdauiBasicForm widget is a form containing an entry for each #GdaHolder object
+  contained in a #GdaSet (specified when the form is created). A typical usage is when the
+  user is requested to enter a value which will be used in a statement (without any error checking for clarity):
+  <programlisting>
+GdaStatement *stmt;
+GdaSet *params;
+stmt = gda_sql_parser_parse_string (parser, "SELECT * FROM customers where name LIKE ##name::string", NULL, NULL);
+gda_statement_get_parameters (stmt, &amp;params, NULL);
 
+GtkWidget *form;
+gint result;
+form = gdaui_basic_form_new_in_dialog (params, NULL, "Customer search", "Enter Customer search expression");
+result = gtk_dialog_run (GTK_DIALOG (form));
+gtk_widget_destroy (form);
+if (result == GTK_RESPONSE_ACCEPT) {
+    /* execute statement */
+    GdaDataModel *model;
+    model = gda_connection_statement_execute_select (cnc, stmt, params, NULL);
+    [...]
+}
+g_object_unref (params);
+g_object_unref (stmt);
+  </programlisting>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -38,6 +60,13 @@ Form widget mapping the values contained in a #GdaSet
 @gdauibasicform: the object which received the signal.
 @arg1: 
 @arg2: 
+
+<!-- ##### SIGNAL GdauiBasicForm::layout-changed ##### -->
+<para>
+
+</para>
+
+@gdauibasicform: the object which received the signal.
 
 <!-- ##### ARG GdauiBasicForm:can-expand ##### -->
 <para>
@@ -188,5 +217,15 @@ Form widget mapping the values contained in a #GdaSet
 @form: 
 @holder: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_set_data_layout_from_file ##### -->
+<para>
+
+</para>
+
+@form: 
+@file_name: 
+@parent_table: 
 
 

@@ -22,9 +22,6 @@ do_grid_data_layout (GtkWidget *do_widget)
 		GdaDataModel *model;
 		GtkWidget *grid;
 		GdauiRawGrid *raw_grid;
-		GdaSet *data_set;
-		GdaHolder *param;
-		GValue *value;
 		
 		window = gtk_dialog_new_with_buttons ("Grid with the automatic 'data_layout'",
 						      GTK_WINDOW (do_widget),
@@ -63,7 +60,7 @@ do_grid_data_layout (GtkWidget *do_widget)
 		g_object_unref (model);
 
 		/* specify that we want to use the 'data_layout' plugin */
-		g_object_get (G_OBJECT (grid), "raw_grid", &raw_grid, NULL);
+		g_object_get (G_OBJECT (grid), "raw-grid", &raw_grid, NULL);
 		/* data_set = GDA_SET (gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (raw_grid))); */
 		/* param = gda_set_get_holder (data_set, "pict"); */
 
@@ -79,10 +76,8 @@ do_grid_data_layout (GtkWidget *do_widget)
 		//
 		gchar *filename;
 		filename = demo_find_file ("example_automatic_layout.xml", NULL);
-		gdaui_data_widget_set_data_layout_from_file (GDAUI_DATA_WIDGET (raw_grid),
-							     filename, "products");
+		gdaui_raw_grid_set_data_layout_from_file (GDAUI_RAW_GRID (raw_grid), filename, "products");
 		g_free (filename);
-		//
 
 		gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 

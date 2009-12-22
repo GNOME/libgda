@@ -28,17 +28,16 @@ static void gdaui_data_store_init (GdauiDataStore *store);
 static void gdaui_data_store_dispose (GObject *object);
 
 static void gdaui_data_store_set_property (GObject *object,
-					      guint param_id,
-					      const GValue *value,
-					      GParamSpec *pspec);
+					   guint param_id,
+					   const GValue *value,
+					   GParamSpec *pspec);
 static void gdaui_data_store_get_property (GObject *object,
-					      guint param_id,
-					      GValue *value,
-					      GParamSpec *pspec);
+					   guint param_id,
+					   GValue *value,
+					   GParamSpec *pspec);
 
 /* properties */
-enum
-{
+enum {
 	PROP_0,
 	PROP_MODEL,
 	PROP_PROXY,
@@ -87,7 +86,7 @@ gdaui_data_store_get_type (void)
 			sizeof (GdauiDataStore),
 			0,
 			(GInstanceInitFunc) gdaui_data_store_init
-		};		
+		};
 
 		static const GInterfaceInfo data_model_info = {
 			(GInterfaceInitFunc) data_store_tree_model_init,
@@ -123,7 +122,7 @@ static void
 gdaui_data_store_class_init (GdauiDataStoreClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-	
+
 	parent_class = g_type_class_peek_parent (class);
 
 	object_class->dispose = gdaui_data_store_dispose;
@@ -164,9 +163,12 @@ row_inserted_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 	((GdauiDataStore*) store)->priv->stamp = g_random_int ();
 	path = gtk_tree_path_new ();
         gtk_tree_path_append_index (path, row);
-	g_assert (gtk_tree_model_get_iter (store, &iter, path));
-	gtk_tree_model_row_inserted (store, path, &iter);
-	gtk_tree_path_free (path);
+	if (gtk_tree_model_get_iter (store, &iter, path)) {
+		gtk_tree_model_row_inserted (store, path, &iter);
+		gtk_tree_path_free (path);
+	}
+	else
+		g_warning ("OOh0");
 }
 
 static void
@@ -178,9 +180,12 @@ row_updated_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 	((GdauiDataStore*) store)->priv->stamp = g_random_int ();
 	path = gtk_tree_path_new ();
         gtk_tree_path_append_index (path, row);
-	g_assert (gtk_tree_model_get_iter (store, &iter, path));
-	gtk_tree_model_row_changed (store, path, &iter);
-	gtk_tree_path_free (path);
+	if (gtk_tree_model_get_iter (store, &iter, path)) {
+		gtk_tree_model_row_changed (store, path, &iter);
+		gtk_tree_path_free (path);
+	}
+	else
+		g_warning ("OOh1");
 }
 
 static void
@@ -201,12 +206,12 @@ proxy_reset_cb (GdaDataProxy *proxy, GtkTreeModel *store)
 {
 	gint i, nrows;
 
-	while (((GdauiDataStore*) store)->priv->nrows > 0) 
+	while (((GdauiDataStore*) store)->priv->nrows > 0)
 		row_removed_cb (proxy, ((GdauiDataStore*) store)->priv->nrows - 1, store);
 
 	nrows = gda_data_model_get_n_rows ((GdaDataModel *) proxy);;
 	((GdauiDataStore*) store)->priv->nrows = 0;
-	for (i = 0; i < nrows; i++) 
+	for (i = 0; i < nrows; i++)
 		row_inserted_cb (proxy, i, store);
 }
 
@@ -246,9 +251,9 @@ gdaui_data_store_dispose (GObject *object)
 
 static void
 gdaui_data_store_set_property (GObject *object,
-				  guint param_id,
-				  const GValue *value,
-				  GParamSpec *pspec)
+			       guint param_id,
+			       const GValue *value,
+			       GParamSpec *pspec)
 {
 	GdauiDataStore *store;
 
@@ -273,11 +278,11 @@ gdaui_data_store_set_property (GObject *object,
 			store->priv->nrows = gda_data_model_get_n_rows (GDA_DATA_MODEL (store->priv->proxy));
 
 			/* connect to row changes */
-			g_signal_connect (G_OBJECT (proxy), "row_inserted",
+			g_signal_connect (G_OBJECT (proxy), "row-inserted",
 					  G_CALLBACK (row_inserted_cb), store);
-			g_signal_connect (G_OBJECT (proxy), "row_updated",
+			g_signal_connect (G_OBJECT (proxy), "row-updated",
 					  G_CALLBACK (row_updated_cb), store);
-			g_signal_connect (G_OBJECT (proxy), "row_removed",
+			g_signal_connect (G_OBJECT (proxy), "row-removed",
 					  G_CALLBACK (row_removed_cb), store);
 			g_signal_connect (G_OBJECT (proxy), "reset",
 					  G_CALLBACK (proxy_reset_cb), store);
@@ -296,9 +301,9 @@ gdaui_data_store_set_property (GObject *object,
 
 static void
 gdaui_data_store_get_property (GObject *object,
-				  guint param_id,
-				  GValue *value,
-				  GParamSpec *pspec)
+			       guint param_id,
+			       GValue *value,
+			       GParamSpec *pspec)
 {
 	GdauiDataStore *store;
 
@@ -315,7 +320,7 @@ gdaui_data_store_get_property (GObject *object,
 			break;
 		case PROP_ADD_NULL_ENTRY: {
 			gboolean prop;
-			
+
 			g_object_get (store->priv->proxy, "prepend_null_entry", &prop, NULL);
 			g_value_set_boolean (value, prop);
 			break;
@@ -331,6 +336,8 @@ gdaui_data_store_get_property (GObject *object,
  * Creates a #GtkTreeModel interface with a #GdaDataModel
  *
  * Returns: the new object
+ *
+ * Since: 4.2
  */
 GtkTreeModel *
 gdaui_data_store_new (GdaDataModel *model)
@@ -352,11 +359,13 @@ gdaui_data_store_new (GdaDataModel *model)
  *
  * Stores a value in the @store data model.
  *
- * Returns: TRUE on succes
+ * Returns: TRUE on success
+ *
+ * Since: 4.2
  */
 gboolean
 gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
-			       gint col, const GValue *value)
+			    gint col, const GValue *value)
 {
 	gint row, model_nb_cols;
 
@@ -395,13 +404,13 @@ gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
 		gint proxy_col;
 
 		proxy_col = (col < model_nb_cols) ? col : col - model_nb_cols;
-		return gda_data_model_set_value_at (GDA_DATA_MODEL (store->priv->proxy), 
+		return gda_data_model_set_value_at (GDA_DATA_MODEL (store->priv->proxy),
 						    proxy_col, row, value, NULL);
 	}
 
 	/* value's attributes */
 	if ((col >= model_nb_cols) && (col < 2 * model_nb_cols)) {
-		gda_data_proxy_alter_value_attributes (store->priv->proxy, row, col - model_nb_cols, 
+		gda_data_proxy_alter_value_attributes (store->priv->proxy, row, col - model_nb_cols,
 						       g_value_get_uint (value));
 		return TRUE;
 	}
@@ -414,6 +423,8 @@ gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
  * @iter: the considered row
  *
  * Marks the row pointed by @iter to be deleted
+ *
+ * Since: 4.2
  */
 void
 gdaui_data_store_delete (GdauiDataStore *store, GtkTreeIter *iter)
@@ -437,6 +448,8 @@ gdaui_data_store_delete (GdauiDataStore *store, GtkTreeIter *iter)
  * @iter: the considered row
  *
  * Remove the "to be deleted" mark the row pointed by @iter, if it existed.
+ *
+ * Since: 4.2
  */
 void
 gdaui_data_store_undelete (GdauiDataStore *store, GtkTreeIter *iter)
@@ -462,6 +475,8 @@ gdaui_data_store_undelete (GdauiDataStore *store, GtkTreeIter *iter)
  * Appends a new row.
  *
  * Returns: TRUE if no error occurred
+ *
+ * Since: 4.2
  */
 gboolean
 gdaui_data_store_append (GdauiDataStore *store, GtkTreeIter *iter)
@@ -489,6 +504,8 @@ gdaui_data_store_append (GdauiDataStore *store, GtkTreeIter *iter)
  * @store: a #GdauiDataStore object
  *
  * Returns: the internal #GdaDataProxy being used by @store
+ *
+ * Since: 4.2
  */
 GdaDataProxy *
 gdaui_data_store_get_proxy (GdauiDataStore *store)
@@ -505,7 +522,10 @@ gdaui_data_store_get_proxy (GdauiDataStore *store)
  * @iter: a valid #GtkTreeIter
  *
  * Get the number of the row represented by @iter
+ *
  * Returns: the row number, or -1 if an error occurred
+ *
+ * Since: 4.2
  */
 gint
 gdaui_data_store_get_row_from_iter (GdauiDataStore *store, GtkTreeIter *iter)
@@ -531,10 +551,12 @@ gdaui_data_store_get_row_from_iter (GdauiDataStore *store, GtkTreeIter *iter)
  * NOTE: the @cols_index array MUST contain a column index for each value in @values
  *
  * Returns: TRUE if the row has been identified @iter was set
+ *
+ * Since: 4.2
  */
 gboolean
 gdaui_data_store_get_iter_from_values (GdauiDataStore *store, GtkTreeIter *iter,
-					  GSList *values, gint *cols_index)
+				       GSList *values, gint *cols_index)
 {
 	gint row;
 
@@ -542,7 +564,7 @@ gdaui_data_store_get_iter_from_values (GdauiDataStore *store, GtkTreeIter *iter,
         g_return_val_if_fail (store->priv, FALSE);
         g_return_val_if_fail (store->priv->proxy, FALSE);
 	g_return_val_if_fail (values, FALSE);
-	
+
 	row = gda_data_model_get_row_from_values (GDA_DATA_MODEL (store->priv->proxy), values, cols_index);
 	if (row >= 0) {
 		if (iter) {
@@ -557,7 +579,7 @@ gdaui_data_store_get_iter_from_values (GdauiDataStore *store, GtkTreeIter *iter,
 
 
 
-/* 
+/*
  * GtkTreeModel Interface implementation
  *
  * REM about the GtkTreeIter: only the iter->user_data is used to retrieve a row in the data model:
@@ -582,7 +604,7 @@ data_store_get_n_columns (GtkTreeModel *tree_model)
         store = GDAUI_DATA_STORE (tree_model);
         g_return_val_if_fail (store->priv, 0);
         g_return_val_if_fail (store->priv->proxy, 0);
-	
+
         return gda_data_model_get_n_columns (GDA_DATA_MODEL (store->priv->proxy));
 }
 
@@ -627,7 +649,7 @@ data_store_get_column_type (GtkTreeModel *tree_model, gint index)
 	if (retval == 0)
 		g_warning ("Unknown GdaDataProxy column: %d", index);
 
-	return retval;	
+	return retval;
 }
 
 static gboolean
@@ -705,15 +727,15 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 			g_value_set_pointer (value, gda_data_proxy_get_proxied_model (store->priv->proxy));
 			break;
 		case DATA_STORE_COL_MODEL_ROW:
-			g_value_set_int (value, gda_data_proxy_get_proxied_model_row (store->priv->proxy, 
+			g_value_set_int (value, gda_data_proxy_get_proxied_model_row (store->priv->proxy,
 										      GPOINTER_TO_INT (iter->user_data)));
 			break;
 		case DATA_STORE_COL_MODIFIED:
-			g_value_set_boolean (value, gda_data_proxy_row_has_changed (store->priv->proxy, 
+			g_value_set_boolean (value, gda_data_proxy_row_has_changed (store->priv->proxy,
 										    GPOINTER_TO_INT (iter->user_data)));
 			break;
 		case DATA_STORE_COL_TO_DELETE:
-			g_value_set_boolean (value, gda_data_proxy_row_is_deleted (store->priv->proxy, 
+			g_value_set_boolean (value, gda_data_proxy_row_is_deleted (store->priv->proxy,
 										   GPOINTER_TO_INT (iter->user_data)));
 			break;
 		default:
@@ -730,12 +752,12 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 		gint proxy_col;
 
 		proxy_col = (column < model_nb_cols) ? column : column - model_nb_cols;
-		tmp = gda_data_model_get_value_at ((GdaDataModel*) store->priv->proxy, 
-						   proxy_col, 
+		tmp = gda_data_model_get_value_at ((GdaDataModel*) store->priv->proxy,
+						   proxy_col,
 						   GPOINTER_TO_INT (iter->user_data), NULL);
-		
+
 		rettype = data_store_get_column_type (tree_model, column);
-		
+
 		if (rettype == G_TYPE_POINTER)
 			g_value_set_pointer (value, (gpointer) tmp);
 		else if (tmp)
@@ -751,7 +773,7 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 	if ((column >= model_nb_cols) && (column < 2 * model_nb_cols)) {
 		guint attr;
 
-		attr = gda_data_proxy_get_value_attributes (store->priv->proxy, 
+		attr = gda_data_proxy_get_value_attributes (store->priv->proxy,
 							    GPOINTER_TO_INT (iter->user_data), column - model_nb_cols);
 		g_value_set_uint (value, attr);
 	}

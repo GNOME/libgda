@@ -26,10 +26,10 @@
 
 G_BEGIN_DECLS
 
-#define GDAUI_TYPE_SET          (gdaui_set_get_type())
-#define GDAUI_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_set_get_type(), GdauiSet)
-#define GDAUI_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_set_get_type (), GdauiSetClass)
-#define GDAUI_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_set_get_type ())
+#define GDAUI_TYPE_SET          (_gdaui_set_get_type())
+#define GDAUI_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, _gdaui_set_get_type(), GdauiSet)
+#define GDAUI_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, _gdaui_set_get_type (), GdauiSetClass)
+#define GDAUI_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, _gdaui_set_get_type ())
 
 
 typedef struct _GdauiSet      GdauiSet;
@@ -93,9 +93,9 @@ struct _GdauiSetClass
 /* 
  * Generic widget's methods 
  */
-GType             gdaui_set_get_type            (void) G_GNUC_CONST;
+GType             _gdaui_set_get_type            (void) G_GNUC_CONST;
 
-GdauiSet         *gdaui_set_new                 (GdaSet *set);
+GdauiSet         *_gdaui_set_new                 (GdaSet *set);
 GdauiSetGroup    *_gdaui_set_get_group          (GdauiSet *dbset, GdaHolder *holder);
 
 G_END_DECLS

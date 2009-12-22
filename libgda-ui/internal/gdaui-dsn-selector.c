@@ -119,7 +119,7 @@ gdaui_dsn_selector_set_property (GObject *object,
 	switch (param_id) {
 	case PROP_SOURCE_NAME:
 		list = g_slist_append (NULL, (gpointer) value);
-		gdaui_combo_set_values_ext (GDAUI_COMBO (selector), list, cols_index);
+		_gdaui_combo_set_selected_ext (GDAUI_COMBO (selector), list, cols_index);
 		g_slist_free (list);
 		break;
 	}
@@ -138,7 +138,7 @@ gdaui_dsn_selector_get_property (GObject *object,
 
 	switch (param_id) {
 	case PROP_SOURCE_NAME:
-		list = gdaui_combo_get_values_ext (GDAUI_COMBO (selector), 1, cols_index);
+		list = _gdaui_combo_get_selected_ext (GDAUI_COMBO (selector), 1, cols_index);
 		if (list && list->data) {
 			g_value_set_string (value, g_value_get_string ((GValue*) list->data));
 			g_slist_free (list);

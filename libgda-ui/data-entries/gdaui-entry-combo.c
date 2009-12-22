@@ -294,9 +294,9 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	gtk_widget_show (entry);
 	combo->priv->combo_entry = entry;
 
-	gdaui_combo_set_values_ext (GDAUI_COMBO (entry), values, NULL);
+	_gdaui_combo_set_selected_ext (GDAUI_COMBO (entry), values, NULL);
 	g_slist_free (values);
-	gdaui_combo_add_undef_choice (GDAUI_COMBO (entry), combo->priv->null_possible);
+	gdaui_combo_add_null (GDAUI_COMBO (entry), combo->priv->null_possible);
 }
 
 static void
@@ -392,7 +392,7 @@ gdaui_entry_combo_get_property (GObject *object,
 static void
 combo_contents_changed_cb (GdauiCombo *entry, GdauiEntryCombo *combo)
 {
-	if (gdaui_combo_undef_selected (GDAUI_COMBO (combo->priv->combo_entry))) /* Set to NULL? */ {
+	if (gdaui_combo_is_null_selected (GDAUI_COMBO (combo->priv->combo_entry))) /* Set to NULL? */ {
 		gdaui_entry_combo_set_values (combo, NULL);
 		gdaui_entry_combo_emit_signal (combo);
 	}
@@ -567,7 +567,7 @@ gdaui_entry_combo_get_all_values (GdauiEntryCombo *combo)
 	g_return_val_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo), NULL);
 	g_return_val_if_fail (combo->priv, NULL);
 
-	return gdaui_combo_get_values_ext (GDAUI_COMBO (combo->priv->combo_entry), 0, NULL);
+	return _gdaui_combo_get_selected_ext (GDAUI_COMBO (combo->priv->combo_entry), 0, NULL);
 }
 
 /**
@@ -822,7 +822,7 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 	if (mask & GDA_VALUE_ATTR_CAN_BE_NULL)
 		if (combo->priv->null_possible != (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE) {
 			combo->priv->null_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE;
-			gdaui_combo_add_undef_choice (GDAUI_COMBO (combo->priv->combo_entry),
+			gdaui_combo_add_null (GDAUI_COMBO (combo->priv->combo_entry),
 						      combo->priv->null_possible);		 
 		}
 

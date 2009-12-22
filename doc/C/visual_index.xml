@@ -11,4 +11,22 @@
   <link linkend="GdauiLogin">
     <inlinegraphic fileref="vi-login.png" format="PNG"></inlinegraphic>
   </link>
+  <link linkend="GdauiProviderSelector">
+    <inlinegraphic fileref="vi-provider-selector.png" format="PNG"></inlinegraphic>
+  </link>
+  <link linkend="GdauiCloud">
+    <inlinegraphic fileref="vi-cloud.png" format="PNG"></inlinegraphic>
+  </link>
+  <link linkend="GdauiRawGrid">
+    <inlinegraphic fileref="vi-raw-grid.png" format="PNG"></inlinegraphic>
+  </link>
+  <link linkend="GdauiDataProxyInfo">
+    <inlinegraphic fileref="vi-info.png" format="PNG"></inlinegraphic>
+  </link>
+  <link linkend="GdauiDataFilter">
+    <inlinegraphic fileref="vi-filter.png" format="PNG"></inlinegraphic>
+  </link>
+  <link linkend="GdauiServerOperation">
+    <inlinegraphic fileref="vi-server-op.png" format="PNG"></inlinegraphic>
+  </link>
 </para>

@@ -67,7 +67,7 @@ enum {
 static gint gdaui_set_signals[LAST_SIGNAL] = { 0 };
 
 GType
-gdaui_set_get_type (void)
+_gdaui_set_get_type (void)
 {
 	static GType type = 0;
 
@@ -131,8 +131,8 @@ gdaui_set_init (GdauiSet *set)
 	set->priv->set = NULL;
 }
 
-/**
- * gdaui_set_new
+/*
+ * _gdaui_set_new
  * @set: a #GdaSet
  *
  * Creates a new #GdauiSet which wraps @set's properties
@@ -140,7 +140,7 @@ gdaui_set_init (GdauiSet *set)
  *  Returns: the new widget
  */
 GdauiSet *
-gdaui_set_new (GdaSet *set)
+_gdaui_set_new (GdaSet *set)
 {
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
 
@@ -381,7 +381,7 @@ gdaui_set_get_property (GObject *object,
 	}	
 }
 
-/**
+/*
  * _gdaui_set_get_group
  */
 GdauiSetGroup  *

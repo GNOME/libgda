@@ -434,7 +434,8 @@ gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **err
 
 		column = gda_data_model_describe_column ((GdaDataModel*) rs, i);
 		i++;
-		xmlSetProp (node, BAD_CAST "gdatype", gda_g_type_to_string (gda_column_get_g_type (column)));
+		xmlSetProp (node, BAD_CAST "gdatype",
+			    BAD_CAST gda_g_type_to_string (gda_column_get_g_type (column)));
 	}
 
 	/* for each row in @data_mode, insert the row in @rs->priv->rs_cnc */

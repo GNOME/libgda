@@ -61,7 +61,7 @@ enum {
 	LAST_SIGNAL
 };
 
-static guint gda_data_model_signals[LAST_SIGNAL];
+static guint gda_data_model_signals[LAST_SIGNAL] = {0, 0, 0, 0, 0};
 
 /* module error */
 GQuark gda_data_model_error_quark (void)
@@ -250,7 +250,6 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_INSERTED],
 			       0, row);
-
 		_gda_data_model_signal_emit_changed (model);
 	}
 }

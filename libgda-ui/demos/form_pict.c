@@ -20,7 +20,6 @@ do_form_pict (GtkWidget *do_widget)
 		GtkWidget *label;
 		GdaDataModel *model;
 		GtkWidget *form;
-		GdauiRawForm *raw_form;
 		GdaSet *data_set;
 		GdaHolder *param;
 		GValue *value;
@@ -59,19 +58,19 @@ do_form_pict (GtkWidget *do_widget)
 		gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL);
 		form = gdaui_form_new (model);
 		g_object_unref (model);
+		g_object_set (G_OBJECT (form), "info-flags",
+			      GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
+			      GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS |
+			      GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS, NULL);
 
 		/* specify that we want to use the 'picture' plugin */
-		g_object_get (G_OBJECT (form), "raw_form", &raw_form, NULL);
-		data_set = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (raw_form));
+		data_set = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (form)));
 		param = gda_set_get_holder (data_set, "pict");
-
 		value = gda_value_new_from_string ("picture", G_TYPE_STRING);
 		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);
 		gda_value_free (value);
 
 		gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
-
-		gtk_widget_set_size_request (window, 500, 500);
 	}
 
 	gboolean visible;

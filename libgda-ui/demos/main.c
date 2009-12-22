@@ -795,7 +795,7 @@ main (int argc, char **argv)
 		demo_parser = gda_sql_parser_new ();
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title (GTK_WINDOW (window), _("Gnome-Db Code Demos"));
+	gtk_window_set_title (GTK_WINDOW (window), _("Libgda-ui Code Demos"));
 	g_signal_connect (window, "destroy",
 			  G_CALLBACK (gtk_main_quit), NULL);
 

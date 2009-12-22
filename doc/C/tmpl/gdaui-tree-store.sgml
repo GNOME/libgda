@@ -2,11 +2,12 @@
 GdauiTreeStore
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Bridge between a GdaTree and a GtkTreeModel
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdauiTreeStore implements the #GtkTreeModel interface required
+  to display data from a #GdaTree in a #GtkTreeView widget.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

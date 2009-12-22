@@ -1,0 +1,224 @@
+/* gdaui-data-selector.c
+ *
+ * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ */
+
+#include <string.h>
+#include <libgda/binreloc/gda-binreloc.h>
+#include "gdaui-data-selector.h"
+#include  <glib/gi18n-lib.h>
+#include <libgda-ui/gdaui-raw-form.h>
+#include <libgda-ui/gdaui-raw-grid.h>
+
+/* signals */
+enum
+{
+        SELECTION_CHANGED,
+        LAST_SIGNAL
+};
+
+static gint gdaui_data_selector_signals[LAST_SIGNAL] = { 0 };
+
+static void gdaui_data_selector_iface_init (gpointer g_class);
+
+GType
+gdaui_data_selector_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static const GTypeInfo info = {
+			sizeof (GdauiDataSelectorIface),
+			(GBaseInitFunc) gdaui_data_selector_iface_init,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) NULL,
+			NULL,
+			NULL,
+			0,
+			0,
+			(GInstanceInitFunc) NULL
+		};
+		
+		type = g_type_register_static (G_TYPE_INTERFACE, "GdauiDataSelector", &info, 0);
+		g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
+	}
+	return type;
+}
+
+
+static void
+gdaui_data_selector_iface_init (gpointer g_class)
+{
+	static gboolean initialized = FALSE;
+
+	if (! initialized) {
+		gdaui_data_selector_signals[SELECTION_CHANGED] = 
+			g_signal_new ("selection-changed",
+                                      GDAUI_TYPE_DATA_SELECTOR,
+                                      G_SIGNAL_RUN_FIRST,
+                                      G_STRUCT_OFFSET (GdauiDataSelectorIface, selection_changed),
+                                      NULL, NULL,
+                                      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
+                                      0);
+
+		initialized = TRUE;
+	}
+}
+
+/**
+ * gdaui_data_selector_get_model
+ * @iface: an object which implements the #GdauiDataSelector interface
+ *
+ * Queries the #GdaDataModel from which the data displayed by the widget implementing @iface
+ * are. Beware that the returned data model may be different than the one used when the
+ * widget was created in case it uses a #GdaDataProxy.
+ *
+ * Returns: the #GdaDataModel
+ *
+ * Since: 4.2
+ */
+GdaDataModel *
+gdaui_data_selector_get_model (GdauiDataSelector *iface)
+{
+	g_return_val_if_fail (GDAUI_IS_DATA_SELECTOR (iface), NULL);
+	
+	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_model)
+		return (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_model) (iface);
+	return NULL;
+}
+
+/**
+ * gdaui_data_selector_set_model
+ * @iface: an object which implements the #GdauiDataSelector interface
+ * @model: a #GdaDataModel to use
+ *
+ * Sets the data model from which the data being displayed are. Also see gdaui_data_selector_get_model()
+ *
+ * Since: 4.2
+ */
+void
+gdaui_data_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model)
+{
+	g_return_if_fail (GDAUI_IS_DATA_SELECTOR (iface));
+	g_return_if_fail (!model || GDA_IS_DATA_MODEL (model));
+	
+	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_model)
+		(GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_model) (iface, model);
+}
+
+/**
+ * gdaui_data_selector_get_selected_rows
+ * @iface: an object which implements the #GdauiDataSelector interface
+ *
+ * Gat an array of selected rows. If no row is selected, the the returned value is %NULL.
+ *
+ * Returns: an array of #gint values, one for each selected row. Use g_array_free() when
+ * finished (passing %TRUE as the last argument)
+ *
+ * Since: 4.2
+ */
+GArray *
+gdaui_data_selector_get_selected_rows (GdauiDataSelector *iface)
+{
+	g_return_val_if_fail (GDAUI_IS_DATA_SELECTOR (iface), NULL);
+	
+	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_selected_rows)
+		return (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_selected_rows) (iface);
+	else
+		return NULL;
+}
+
+/**
+ * gdaui_data_selector_select_row
+ * @iface: an object which implements the #GdauiDataSelector interface
+ * @row: the row to select
+ *
+ * Returns: %TRUE if the row has been selected
+ *
+ * Since: 4.2
+ */
+gboolean
+gdaui_data_selector_select_row (GdauiDataSelector *iface, gint row)
+{
+	g_return_val_if_fail (GDAUI_IS_DATA_SELECTOR (iface), FALSE);
+	
+	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->select_row)
+		return (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->select_row) (iface, row);
+	else
+		return FALSE;
+}
+
+/**
+ * gdaui_data_selector_unselect_row
+ * @iface: an object which implements the #GdauiDataSelector interface
+ * @row: the row to unselect
+ *
+ * Since: 4.2
+ */
+void
+gdaui_data_selector_unselect_row (GdauiDataSelector *iface, gint row)
+{
+	g_return_if_fail (GDAUI_IS_DATA_SELECTOR (iface));
+	
+	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->unselect_row)
+		(GDAUI_DATA_SELECTOR_GET_IFACE (iface)->unselect_row) (iface, row);
+}
+
+/**
+ * gdaui_data_selector_set_column_visible
+ * @iface: an object which implements the #GdauiDataSelector interface
+ * @column: a column number, starting at 0
+ * @visible: required visibility of the data in the @column column
+ *
+ * Shows or hides the data at column @column
+ *
+ * Since: 4.2
+ */
+void
+gdaui_data_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible)
+{
+	g_return_if_fail (GDAUI_IS_DATA_SELECTOR (iface));
+	
+	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_column_visible)
+		(GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_column_visible) (iface, column, visible);
+}
+
+/**
+ * gdaui_data_selector_get_data_set
+ * @iface: an object which implements the #GdauiDataSelector interface
+ *
+ * Get the #GdaDataModelIter object represented the current selected row in @iface. This
+ * function may return either %NULL or an invalid iterator (see gda_data_model_iter_is_valid()) if
+ * the selection cannot be represented by a single selected row.
+ *
+ * Note that the returned #GdaDataModelIter is actually an iterator iterating on the #GdaDataModel
+ * returned by the gdaui_data_selector_get_model() method.
+ *
+ * Returns: a pointer to a #GdaDataModelIter object, or %NULL
+ *
+ * Since: 4.2
+ */
+GdaDataModelIter *
+gdaui_data_selector_get_data_set (GdauiDataSelector *iface)
+{
+	g_return_val_if_fail (GDAUI_IS_DATA_SELECTOR (iface), NULL);
+
+	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_current_selection)
+		return (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_current_selection) (iface);
+	return NULL;
+}

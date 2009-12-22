@@ -254,7 +254,7 @@ provider_changed_cb (GtkWidget *combo, GdauiDsnAssistant *assistant)
 	op = get_specs_database_creation (assistant);
 	if (op) {
 		assistant->priv->newdb_params = g_object_new (GDAUI_TYPE_SERVER_OPERATION, 
-							      "opt_header", TRUE, "server_operation", op, NULL);
+							      "hide-single-header", TRUE, "server_operation", op, NULL);
 		gtk_widget_show (assistant->priv->newdb_params);
 		gtk_container_add (GTK_CONTAINER (assistant->priv->newdb_box), 
 				   assistant->priv->newdb_params);

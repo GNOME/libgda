@@ -2,7 +2,7 @@
 GdauiRawForm
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Form widget to manipulate data in a #GdaDataModel
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -11,7 +11,8 @@ GdauiRawForm
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  The #GdauiForm widget which uses the #GdauiRawForm and adds decorations such as
+  information about data model size, and features searching.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->

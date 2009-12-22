@@ -1,6 +1,6 @@
 /* gdaui-server-operation.c
  *
- * Copyright (C) 2006 - 2008 Vivien Malerba
+ * Copyright (C) 2006 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -27,28 +27,28 @@
 #include "gdaui-raw-grid.h"
 #include "gdaui-raw-form.h"
 #include "gdaui-data-store.h"
-#include "gdaui-data-widget.h"
-#include "gdaui-data-widget-info.h"
+#include "gdaui-data-proxy.h"
+#include "gdaui-data-selector.h"
+#include "gdaui-data-proxy-info.h"
 
 static void gdaui_server_operation_class_init (GdauiServerOperationClass *class);
 static void gdaui_server_operation_init (GdauiServerOperation *wid);
 static void gdaui_server_operation_dispose (GObject *object);
 
 static void gdaui_server_operation_set_property (GObject *object,
-					      guint param_id,
-					      const GValue *value,
-					      GParamSpec *pspec);
+						 guint param_id,
+						 const GValue *value,
+						 GParamSpec *pspec);
 static void gdaui_server_operation_get_property (GObject *object,
-					      guint param_id,
-					      GValue *value,
-					      GParamSpec *pspec);
+						 guint param_id,
+						 GValue *value,
+						 GParamSpec *pspec);
 
 static void gdaui_server_operation_fill (GdauiServerOperation *form);
 
 /* properties */
-enum
-{
-        PROP_0,
+enum {
+	PROP_0,
 	PROP_SERVER_OP_OBJ,
 	PROP_OPT_HEADER
 };
@@ -118,7 +118,7 @@ widget_data_find (GdauiServerOperation *form, const gchar *path)
 
 	list = form->priv->widget_data;
 	while (list && !wd) {
-		if (WIDGET_DATA (list->data)->path_name && 
+		if (WIDGET_DATA (list->data)->path_name &&
 		    !strcmp (WIDGET_DATA (list->data)->path_name, array[1]))
 			wd = WIDGET_DATA (list->data);
 		list = list->next;
@@ -133,12 +133,12 @@ widget_data_find (GdauiServerOperation *form, const gchar *path)
 		if (end && *end)
 			index = -1; /* could not convert array[i] to an int */
 
-		if ((index >= 0) && wd->children && !WIDGET_DATA (wd->children->data)->path_name) 
+		if ((index >= 0) && wd->children && !WIDGET_DATA (wd->children->data)->path_name)
 			wd = g_slist_nth_data (wd->children, index);
 		else {
 			wd = NULL;
 			while (list && !wd) {
-				if (WIDGET_DATA (list->data)->path_name && 
+				if (WIDGET_DATA (list->data)->path_name &&
 				    !strcmp (WIDGET_DATA (list->data)->path_name, array[i]))
 					wd = WIDGET_DATA (list->data);
 				list = list->next;
@@ -171,8 +171,8 @@ gdaui_server_operation_get_type (void)
 			sizeof (GdauiServerOperation),
 			0,
 			(GInstanceInitFunc) gdaui_server_operation_init
-		};		
-		
+		};
+
 		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiServerOperation", &info, 0);
 	}
 
@@ -183,7 +183,7 @@ static void
 gdaui_server_operation_class_init (GdauiServerOperationClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
-	
+
 	parent_class = g_type_class_peek_parent (class);
 
 	object_class->dispose = gdaui_server_operation_dispose;
@@ -192,15 +192,15 @@ gdaui_server_operation_class_init (GdauiServerOperationClass *class)
         object_class->set_property = gdaui_server_operation_set_property;
         object_class->get_property = gdaui_server_operation_get_property;
 	g_object_class_install_property (object_class, PROP_SERVER_OP_OBJ,
-					 g_param_spec_object ("server_operation", 
-							       _("The specification of the operation to implement"), 
-							       NULL, GDA_TYPE_SERVER_OPERATION,
-							       G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY |
-							       G_PARAM_READABLE));
+					 g_param_spec_object ("server_operation",
+							      _("The specification of the operation to implement"),
+							      NULL, GDA_TYPE_SERVER_OPERATION,
+							      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY |
+							      G_PARAM_READABLE));
 	g_object_class_install_property (object_class, PROP_OPT_HEADER,
-					 g_param_spec_boolean ("opt_header",
+					 g_param_spec_boolean ("hide-single-header",
 							       _("Request section header to be hidden if there is only one section"),
-							       NULL, FALSE, G_PARAM_CONSTRUCT | G_PARAM_READABLE | 
+							       NULL, FALSE, G_PARAM_CONSTRUCT | G_PARAM_READABLE |
 							       G_PARAM_WRITABLE));
 }
 
@@ -227,6 +227,8 @@ gdaui_server_operation_init (GdauiServerOperation * wid)
  * node of @paramlist.
  *
  * Returns: the new widget
+ *
+ * Since: 4.2
  */
 GtkWidget *
 gdaui_server_operation_new (GdaServerOperation *op)
@@ -265,7 +267,7 @@ gdaui_server_operation_dispose (GObject *object)
 			g_slist_free (form->priv->widget_data);
 			form->priv->widget_data = NULL;
 		}
-		
+
 #ifdef HAVE_LIBGLADE
 		if (form->priv->glade)
 			g_object_unref (form->priv->glade);
@@ -283,9 +285,9 @@ gdaui_server_operation_dispose (GObject *object)
 
 static void
 gdaui_server_operation_set_property (GObject *object,
-					guint param_id,
-					const GValue *value,
-					GParamSpec *pspec)
+				     guint param_id,
+				     const GValue *value,
+				     GParamSpec *pspec)
 {
 	GdauiServerOperation *form;
 
@@ -301,9 +303,9 @@ gdaui_server_operation_set_property (GObject *object,
 			form->priv->op = GDA_SERVER_OPERATION(g_value_get_object (value));
 			if (form->priv->op) {
 				g_return_if_fail (GDA_IS_SERVER_OPERATION (form->priv->op));
-				
+
 				g_object_ref (form->priv->op);
-				
+
 				gdaui_server_operation_fill (form);
 				g_signal_connect (G_OBJECT (form->priv->op), "sequence_item_added",
 						  G_CALLBACK (sequence_item_added_cb), form);
@@ -323,9 +325,9 @@ gdaui_server_operation_set_property (GObject *object,
 
 static void
 gdaui_server_operation_get_property (GObject *object,
-				  guint param_id,
-				  GValue *value,
-				  GParamSpec *pspec)
+				     guint param_id,
+				     GValue *value,
+				     GParamSpec *pspec)
 {
 	GdauiServerOperation *form;
 
@@ -342,20 +344,20 @@ gdaui_server_operation_get_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
-        }	
+        }
 }
 
 /*
  * create the entries in the widget
  */
 
-static GtkWidget *fill_create_widget (GdauiServerOperation *form, const gchar *path, 
+static GtkWidget *fill_create_widget (GdauiServerOperation *form, const gchar *path,
 				      gchar **section_str, GSList **label_widgets);
 static void seq_add_item (GtkButton *button, GdauiServerOperation *form);
 static void seq_del_item (GtkButton *button, GdauiServerOperation *form);
 
 
-/* 
+/*
  * @path is like "/SEQ", DOES NOT contain the index of the item to add, which is also in @index
  */
 static void
@@ -372,10 +374,10 @@ sequence_table_attach_widget (GdauiServerOperation *form, GtkWidget *table, GtkW
 	/* new widget */
 	expand = g_object_get_data (G_OBJECT (wid), "expand") ?  TRUE : FALSE;
 	gtk_table_attach (GTK_TABLE (table), wid, 0, 1, index, index + 1,
-			  GTK_FILL | GTK_EXPAND, 
+			  GTK_FILL | GTK_EXPAND,
 			  expand ? (GTK_FILL | GTK_EXPAND) : GTK_SHRINK, 0, 0);
 	gtk_widget_show (wid);
-	
+
 	/* "-" button */
 	image = gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU);
 	wid = gtk_button_new ();
@@ -387,18 +389,18 @@ sequence_table_attach_widget (GdauiServerOperation *form, GtkWidget *table, GtkW
 	g_object_set_data (G_OBJECT (wid), "_index", GINT_TO_POINTER (index+1));
 	g_signal_connect (G_OBJECT (wid), "clicked",
 			  G_CALLBACK (seq_del_item), form);
-	if (size <= min) 
+	if (size <= min)
 		gtk_widget_set_sensitive (wid, FALSE);
 }
 
-static GtkWidget *create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path, 
+static GtkWidget *create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path,
 							   gchar **section_str, GSList **label_widgets);
 static GtkWidget *
 fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **section_str, GSList **label_widgets)
 {
 	GdaServerOperationNode *info_node;
 	GtkWidget *plwid = NULL;
-		
+
 	info_node = gda_server_operation_get_node_info (form->priv->op, path);
 	g_assert (info_node);
 
@@ -409,7 +411,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 
 	/* very custom widget rendering goes here */
 	if ((gda_server_operation_get_op_type (form->priv->op) == GDA_SERVER_OPERATION_CREATE_TABLE) &&
-	    !strcmp (path, "/FIELDS_A")) 
+	    !strcmp (path, "/FIELDS_A"))
 		return create_table_fields_array_create_widget (form, path, section_str, label_widgets);
 
 	/* generic widget rendering */
@@ -420,7 +422,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		plist = info_node->plist;
 		plwid = gdaui_basic_form_new (plist);
 		g_object_set ((GObject*) plwid, "show-actions", FALSE, NULL);
-	       
+
 		if (section_str) {
 			const gchar *name;
 			name = g_object_get_data (G_OBJECT (plist), "name");
@@ -431,7 +433,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		}
 		if (label_widgets) {
 			GSList *params;
-			
+
 			params = plist->holders;
 			while (params) {
 				GtkWidget *label_entry;
@@ -453,25 +455,25 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		GtkWidget *box, *grid;
 
 		plwid = gtk_scrolled_window_new (NULL, NULL);
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (plwid), 
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (plwid),
 						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (plwid), 
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (plwid),
 						     GTK_SHADOW_NONE);
 
 		model = info_node->model;
 		grid = gdaui_raw_grid_new (model);
 		gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (plwid), grid);
-		gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))), 
+		gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))),
 					      GTK_SHADOW_NONE);
-		gdaui_data_widget_set_write_mode (GDAUI_DATA_WIDGET (grid),
-						     GDAUI_DATA_WIDGET_WRITE_ON_ROW_CHANGE);
+		gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (grid),
+						 GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE);
 		gtk_widget_show (grid);
 
-		proxy = gdaui_data_widget_get_proxy (GDAUI_DATA_WIDGET (grid));
+		proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (grid));
 		g_object_set (G_OBJECT (grid), "info-cell-visible", FALSE, NULL);
 
-		winfo = gdaui_data_widget_info_new (GDAUI_DATA_WIDGET (grid), 
-						       GDAUI_DATA_WIDGET_INFO_ROW_MODIFY_BUTTONS);
+		winfo = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (grid),
+						   GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS);
 
 		box = gtk_vbox_new (FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (box), plwid, TRUE, TRUE, 0);
@@ -481,9 +483,9 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		gtk_widget_show (winfo);
 
 		plwid = box;
-		
+
 		if (section_str)
-			*section_str = g_strdup_printf ("<b>%s:</b>", 
+			*section_str = g_strdup_printf ("<b>%s:</b>",
 							(gchar*) g_object_get_data (G_OBJECT (model), "name"));
 
 		if (label_widgets) {
@@ -491,7 +493,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			gchar *str;
 
 			if (info_node->status == GDA_SERVER_OPERATION_STATUS_REQUIRED) {
-				str = g_strdup_printf ("<b>%s:</b>", 
+				str = g_strdup_printf ("<b>%s:</b>",
 						       (gchar*) g_object_get_data (G_OBJECT (model), "name"));
 				label_entry = gtk_label_new (str);
 				gtk_label_set_use_markup (GTK_LABEL (label_entry), TRUE);
@@ -505,7 +507,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 
 			gtk_widget_show (label_entry);
 			str = (gchar *) g_object_get_data (G_OBJECT (model), "descr");
-			if (str && *str) 
+			if (str && *str)
 				gtk_widget_set_tooltip_text (label_entry, str);
 
 			*label_widgets = g_slist_prepend (*label_widgets, label_entry);
@@ -529,7 +531,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		g_object_unref (plist);
 
 		if (section_str)
-			*section_str = g_strdup_printf ("<b>%s:</b>", 
+			*section_str = g_strdup_printf ("<b>%s:</b>",
 							(gchar*) g_object_get_data (G_OBJECT (param), "name"));
 		if (label_widgets) {
 			GtkWidget *label_entry;
@@ -545,7 +547,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		WidgetData *wdp, *wd;
 		gchar *parent_path = NULL, *path_name = NULL;
 		guint max;
-		
+
 		max = gda_server_operation_get_sequence_max_size (form->priv->op, path);
 		if (section_str) {
 			const gchar *seq_name;
@@ -555,16 +557,16 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 
 		plwid = gtk_scrolled_window_new (NULL, NULL);
 
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (plwid), 
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (plwid),
 						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (plwid), 
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (plwid),
 						     GTK_SHADOW_NONE);
 
 		size = gda_server_operation_get_sequence_size (form->priv->op, path);
 		table = gtk_table_new (size + 1, 2, FALSE);
 		gtk_table_set_row_spacings (GTK_TABLE (table), 10);
 		gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (plwid), table);
-		gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))), 
+		gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))),
 					      GTK_SHADOW_NONE);
 		gtk_widget_show (table);
 
@@ -577,12 +579,12 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			form->priv->widget_data = g_slist_append (form->priv->widget_data, wd);
 		g_free (parent_path);
 		g_free (path_name);
-			
+
 		/* existing entries */
 		for (n = 0; n < size; n++) {
 			GtkWidget *wid;
 			gchar *str;
-			
+
 			str = g_strdup_printf ("%s/%d", path, n);
 			wid = fill_create_widget (form, str, NULL, NULL);
 			sequence_table_attach_widget (form, table, wid, path, n);
@@ -596,7 +598,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			gtk_table_attach (GTK_TABLE (table), wid, 0, 1, size, size + 1,
 					  GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0);
 			gtk_widget_show (wid);
-			
+
 			image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
 			wid = gtk_button_new ();
 			gtk_button_set_image (GTK_BUTTON (wid), image);
@@ -644,8 +646,8 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 							gtk_widget_ref (label_entry);
 							gtk_container_remove (GTK_CONTAINER (parent), label_entry);
 						}
-						gtk_table_attach (GTK_TABLE (table), label_entry, 
-								  0, 1, tab_index, tab_index+1, 
+						gtk_table_attach (GTK_TABLE (table), label_entry,
+								  0, 1, tab_index, tab_index+1,
 								  GTK_FILL | GTK_SHRINK, GTK_SHRINK, 0, 0);
 						if (parent)
 							gtk_widget_unref (label_entry);
@@ -659,9 +661,9 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 				expand = g_object_get_data (G_OBJECT (wid), "expand") ? TRUE : FALSE;
 				seq_expand = seq_expand || expand;
 				if (nb_labels > 0)
-					gtk_table_attach (GTK_TABLE (table), wid, 1, 2, 
+					gtk_table_attach (GTK_TABLE (table), wid, 1, 2,
 							  tab_index - nb_labels, tab_index,
-							  GTK_FILL | GTK_EXPAND, 
+							  GTK_FILL | GTK_EXPAND,
 							  expand ? (GTK_FILL | GTK_EXPAND) : GTK_SHRINK, 0, 0);
 				else {
 					gtk_table_attach (GTK_TABLE (table), wid, 1, 2, tab_index, tab_index +1,
@@ -673,7 +675,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			}
 			plwid = table;
 		}
-		else 
+		else
 			plwid = fill_create_widget (form, node_names[0], NULL, NULL);
 
 		g_object_set_data (G_OBJECT (plwid), "expand", GINT_TO_POINTER (seq_expand));
@@ -689,13 +691,13 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 	}
 	default:
 		g_assert_not_reached ();
-		break;			
+		break;
 	}
-	
+
 	return plwid;
 }
 
-static void 
+static void
 gdaui_server_operation_fill (GdauiServerOperation *form)
 {
 	gint i;
@@ -712,14 +714,14 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 	/* load Glade file for specific GUI if it exists */
 #ifdef HAVE_LIBGLADE
 	glade_file = gdaui_gbr_get_data_dir_path ("server_operation.glade");
-	form->priv->glade = glade_xml_new (glade_file, 
-					   gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (form->priv->op)), 
+	form->priv->glade = glade_xml_new (glade_file,
+					   gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (form->priv->op)),
 					   NULL);
 	g_free (glade_file);
 	if (form->priv->glade) {
 		GtkWidget *mainw;
-		mainw = glade_xml_get_widget (form->priv->glade, 
-					     gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (form->priv->op)));
+		mainw = glade_xml_get_widget (form->priv->glade,
+					      gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (form->priv->op)));
 		if (mainw) {
 			gtk_box_pack_start (GTK_BOX (form), mainw, TRUE, TRUE, 0);
 			gtk_widget_show (mainw);
@@ -753,7 +755,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 
 		plwid = fill_create_widget (form, topnodes[i], &section_str, NULL);
 		if (plwid) {
-			GdaServerOperationNodeStatus status;			
+			GdaServerOperationNodeStatus status;
 			GtkWidget *label = NULL, *hbox = NULL;
 
 			if (! (form->priv->opt_header && (g_strv_length (topnodes) == 1)) && section_str) {
@@ -763,20 +765,20 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 				gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 				gtk_label_set_markup (GTK_LABEL (label), section_str);
 				g_free (section_str);
-			
+
 				hbox = gtk_hbox_new (FALSE, 0); /* HIG */
 				gtk_widget_show (hbox);
 				lab = gtk_label_new ("    ");
 				gtk_box_pack_start (GTK_BOX (hbox), lab, FALSE, FALSE, 0);
 				gtk_widget_show (lab);
-			
+
 				gtk_box_pack_start (GTK_BOX (hbox), plwid, TRUE, TRUE, 0);
 				gtk_widget_show (plwid);
 			}
-			else 
+			else
 				gtk_widget_show (plwid);
-			
-			
+
+
 			gda_server_operation_get_node_type (form->priv->op, topnodes[i], &status);
 			switch (status) {
 			case GDA_SERVER_OPERATION_STATUS_OPTIONAL: {
@@ -817,7 +819,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 				break;
 			}
 		}
-			
+
 		i++;
 	}
 
@@ -843,7 +845,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 				if (GTK_IS_NOTEBOOK (parent)) {
 					gint pageno;
 
-					pageno = gtk_notebook_page_num (GTK_NOTEBOOK (parent), 
+					pageno = gtk_notebook_page_num (GTK_NOTEBOOK (parent),
 									(GtkWidget *) (list->data));
 					gtk_notebook_remove_page (GTK_NOTEBOOK (parent), pageno);
 				}
@@ -856,7 +858,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 #endif
 
 	g_strfreev (topnodes);
-	
+
 }
 
 /*
@@ -874,7 +876,7 @@ seq_add_item (GtkButton *button, GdauiServerOperation *form)
 /*
  * For sequences: removing an item by clicking on the "-" button
  */
-static void 
+static void
 seq_del_item (GtkButton *button, GdauiServerOperation *form)
 {
 	gchar *seq_path, *item_path;
@@ -896,7 +898,7 @@ struct MoveChild {
 	guint16    top_attach;
 };
 
-static void 
+static void
 sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item_index, GdauiServerOperation *form)
 {
 	GtkWidget *table;
@@ -914,49 +916,53 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 	g_assert (wd);
 	table = wd->widget;
 	g_assert (table);
-	
+
 	/* resize table */
 	gtk_table_resize (GTK_TABLE (table), size+1, 2);
 
 	/* move children DOWN if necessary */
 	children = gtk_container_get_children (GTK_CONTAINER (table));
 	for (list = children; list; list = list->next) {
-		GtkTableChild *tc = (GtkTableChild *) (list->data);
+		GtkWidget *child = GTK_WIDGET (list->data);
 
-		if (tc->widget) {
+		if (child) {
+			guint top_attach, left_attach;
+			gtk_container_child_get (GTK_CONTAINER (table), child,
+						 "top-attach", &top_attach,
+						 "left-attach", &left_attach, NULL);
 			/* ADD/REMOVE button sensitivity */
-			if (tc->left_attach == 1) {
-				if (tc->top_attach == size-1)
-					gtk_widget_set_sensitive (tc->widget, (size < max) ? TRUE : FALSE);
+			if (left_attach == 1) {
+				if (top_attach == size-1)
+					gtk_widget_set_sensitive (child, (size < max) ? TRUE : FALSE);
 				else
-					gtk_widget_set_sensitive (tc->widget, (size > min) ? TRUE : FALSE);
+					gtk_widget_set_sensitive (child, (size > min) ? TRUE : FALSE);
 			}
 
 			/* move children DOWN if necessary and change the "_index" property */
-			if (tc->top_attach >= item_index) {
+			if (top_attach >= item_index) {
 				struct MoveChild *mc;
 				gint index;
 
 				mc = g_new (struct MoveChild, 1);
-				mc->widget = tc->widget;
-				mc->top_attach = tc->top_attach + 1;
+				mc->widget = child;
+				mc->top_attach = top_attach + 1;
 				to_move = g_list_append (to_move, mc);
 
-				index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tc->widget), "_index"));
+				index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (child), "_index"));
 				if (index > 0)
-					g_object_set_data (G_OBJECT (tc->widget), "_index", 
+					g_object_set_data (G_OBJECT (child), "_index",
 							   GINT_TO_POINTER (index + 1));
 			}
 		}
 	}
 	g_list_free (children);
 
-	
+
 	for (list = to_move; list; list = list->next) {
 		struct MoveChild *mc;
 
 		mc = (struct MoveChild *) (list->data);
-		gtk_container_child_set (GTK_CONTAINER (table), mc->widget, 
+		gtk_container_child_set (GTK_CONTAINER (table), mc->widget,
 					 "top-attach", mc->top_attach,
 					 "bottom-attach", mc->top_attach + 1, NULL);
 		g_free (list->data);
@@ -1004,46 +1010,53 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 	/* remove the widget associated to the sequence item */
 	children = gtk_container_get_children (GTK_CONTAINER (table));
 	for (list = children; list; ) {
-		GtkTableChild *tc = (GtkTableChild *) (list->data);
-
-		if (tc->widget && (tc->top_attach == item_index)) {
-			gtk_widget_destroy (tc->widget);
-			g_list_free (children);
-			children = gtk_container_get_children (GTK_CONTAINER (table));
-			list = children;
+		GtkWidget *child = GTK_WIDGET (list->data);
+		if (child) {
+			guint top_attach;
+			gtk_container_child_get (GTK_CONTAINER (table), child,
+						 "top-attach", &top_attach, NULL);
+			if (top_attach == item_index) {
+				gtk_widget_destroy (child);
+				g_list_free (children);
+				children = gtk_container_get_children (GTK_CONTAINER (table));
+				list = children;
+				continue;
+			}
 		}
-		else
-			list = list->next;
+		list = list->next;
 	}
 	g_list_free (children);
 
 	/* move children UP if necessary */
 	children = gtk_container_get_children (GTK_CONTAINER (table));
 	for (list = children; list; list = list->next) {
-		GtkTableChild *tc = (GtkTableChild *) (list->data);
-
-		if (tc->widget) {
+		GtkWidget *child = GTK_WIDGET (list->data);
+		if (child) {
+			guint top_attach, left_attach;
+			gtk_container_child_get (GTK_CONTAINER (table), child,
+						 "top-attach", &top_attach,
+						 "left-attach", &left_attach, NULL);
 			/* ADD/REMOVE button sensitivity */
-			if (tc->left_attach == 1) {
-				if (tc->top_attach == size)
-					gtk_widget_set_sensitive (tc->widget, TRUE);
+			if (left_attach == 1) {
+				if (top_attach == size)
+					gtk_widget_set_sensitive (child, TRUE);
 				else
-					gtk_widget_set_sensitive (tc->widget, (size-1 > min) ? TRUE : FALSE);
+					gtk_widget_set_sensitive (child, (size-1 > min) ? TRUE : FALSE);
 			}
 
 			/* move widgets UP if necessary and change the "_index" property */
-			if (tc->top_attach > item_index) {
+			if (top_attach > item_index) {
 				struct MoveChild *mc;
 				gint index;
-				
+
 				mc = g_new (struct MoveChild, 1);
-				mc->widget = tc->widget;
-				mc->top_attach = tc->top_attach - 1;
+				mc->widget = child;
+				mc->top_attach = top_attach - 1;
 				to_move = g_list_append (to_move, mc);
-				
-				index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tc->widget), "_index"));
+
+				index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (child), "_index"));
 				if (index > 0)
-					g_object_set_data (G_OBJECT (tc->widget), "_index", 
+					g_object_set_data (G_OBJECT (child), "_index",
 							   GINT_TO_POINTER (index - 1));
 			}
 		}
@@ -1054,7 +1067,7 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 		struct MoveChild *mc;
 
 		mc = (struct MoveChild *) (list->data);
-		gtk_container_child_set (GTK_CONTAINER (table), mc->widget, 
+		gtk_container_child_set (GTK_CONTAINER (table), mc->widget,
 					 "top-attach", mc->top_attach,
 					 "bottom-attach", mc->top_attach + 1, NULL);
 		g_free (list->data);
@@ -1081,10 +1094,12 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
  * "form".
  *
  * Returns: the new #GtkDialog widget
+ *
+ * Since: 4.2
  */
 GtkWidget *
 gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
-					 const gchar *title, const gchar *header)
+				      const gchar *title, const gchar *header)
 {
 	GtkWidget *form;
 	GtkWidget *dlg;
@@ -1092,11 +1107,11 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 	const gchar *rtitle;
 
 	form = gdaui_server_operation_new (op);
- 
+
 	rtitle = title;
 	if (!rtitle)
 		rtitle = _("Server operation specification");
-		
+
 	dlg = gtk_dialog_new_with_buttons (rtitle, parent,
 					   GTK_DIALOG_MODAL,
 					   GTK_STOCK_OK,
@@ -1132,10 +1147,10 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 /*
  * CREATE_TABLE "/FIELDS_A" Custom widgets rendering
  */
-static void create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *grid_iter, gint row, 
+static void create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *grid_iter, gint row,
 							  GdaDataModelIter *form_iter);
 static GtkWidget *
-create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path, 
+create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path,
 					 gchar **section_str, GSList **label_widgets)
 {
 	GdaServerOperationNode *info_node;
@@ -1144,12 +1159,11 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	GdaDataProxy *proxy;
 	gint name_col, col, nbcols;
 	GdaDataModelIter *grid_iter, *form_iter;
-		
+
 	info_node = gda_server_operation_get_node_info (form->priv->op, path);
 	g_assert (info_node->type == GDA_SERVER_OPERATION_NODE_DATA_MODEL);
 
 	hlayout = gtk_hpaned_new ();
-	gtk_widget_set_usize (hlayout, 800, 600);
 
 	/* form for field properties */
 	box = gtk_vbox_new (FALSE, 0);
@@ -1161,9 +1175,9 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
 
 	form_props = gdaui_raw_form_new (GDA_DATA_MODEL (info_node->model));
-	proxy = gdaui_data_widget_get_proxy (GDAUI_DATA_WIDGET (form_props));
-	gdaui_data_widget_set_write_mode (GDAUI_DATA_WIDGET (form_props),
-					     GDAUI_DATA_WIDGET_WRITE_ON_VALUE_CHANGE);
+	proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (form_props));
+	gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (form_props),
+					 GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE);
 	gtk_box_pack_start (GTK_BOX (box), form_props, TRUE, TRUE, 0);
 
 	gtk_widget_show_all (box);
@@ -1178,40 +1192,37 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
 
 	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), 
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
 
-	grid_fields = gdaui_raw_grid_new (GDA_DATA_MODEL(proxy));
+	grid_fields = gdaui_raw_grid_new (GDA_DATA_MODEL (proxy));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (grid_fields), FALSE);
-	gtk_widget_set_usize (grid_fields, 300, 200);
-	g_object_set (G_OBJECT (grid_fields), "info-cell-visible", FALSE, NULL);	
+	g_object_set (G_OBJECT (grid_fields), "info-cell-visible", FALSE, NULL);
 
-	/*name_col = gda_data_model_get_column_index_by_name (GDA_DATA_MODEL (proxy), "rr");*/
 	name_col = 0;
 	nbcols = gda_data_proxy_get_proxied_model_n_cols (proxy);
 	g_assert (name_col < nbcols);
 	for (col = 0; col < name_col; col++)
-		gdaui_data_widget_column_hide (GDAUI_DATA_WIDGET (grid_fields), col);
+		gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (grid_fields), col, FALSE);
 	for (col = name_col + 1; col < nbcols; col++)
-		gdaui_data_widget_column_hide (GDAUI_DATA_WIDGET (grid_fields), col);
+		gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (grid_fields), col, FALSE);
 
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), grid_fields);
-	gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (sw))), 
+	gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (sw))),
 				      GTK_SHADOW_NONE);
 	gtk_box_pack_start (GTK_BOX (box), sw, TRUE, TRUE, 0);
 
 	/* buttons to add/remove fields */
-	winfo = gdaui_data_widget_info_new (GDAUI_DATA_WIDGET (form_props), 
-					       GDAUI_DATA_WIDGET_INFO_ROW_MODIFY_BUTTONS);
-
+	winfo = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (form_props),
+					   GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS);
 	gtk_box_pack_start (GTK_BOX (box), winfo, FALSE, FALSE, 0);
 
 	gtk_widget_show_all (box);
 
 	/* keep the selections in sync */
-	grid_iter = gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (grid_fields));
-	form_iter = gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (form_props));
+	grid_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid_fields));
+	form_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (form_props));
 	g_signal_connect (grid_iter, "row_changed",
 			  G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), form_iter);
 	g_signal_connect (form_iter, "row_changed",
@@ -1222,7 +1233,7 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	{
 		GtkActionGroup *group;
 		GtkAction *action;
-		group = gdaui_data_widget_get_actions_group (GDAUI_DATA_WIDGET (form_props));
+		group = gdaui_data_proxy_get_actions_group (GDAUI_DATA_PROXY (form_props));
 		action = gtk_action_group_get_action (group, "ActionNew");
 		g_object_set (G_OBJECT (action), "tooltip", _("Add a new field"), NULL);
 		action = gtk_action_group_get_action (group, "ActionDelete");

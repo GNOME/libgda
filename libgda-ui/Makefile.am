@@ -19,9 +19,10 @@ ui_headers = \
 	gdaui-combo.h \
 	gdaui-data-entry.h \
 	gdaui-data-store.h \
-	gdaui-data-widget.h \
-	gdaui-data-widget-filter.h \
-	gdaui-data-widget-info.h \
+	gdaui-data-filter.h \
+	gdaui-data-selector.h \
+	gdaui-data-proxy.h \
+	gdaui-data-proxy-info.h \
 	gdaui-decl.h \
 	gdaui-easy.h \
 	gdaui-enums.h \
@@ -33,7 +34,6 @@ ui_headers = \
 	gdaui-raw-form.h \
 	gdaui-raw-grid.h \
 	gdaui-server-operation.h \
-	gdaui-set.h \
 	gdaui-tree-store.h \
 	gdaui-plugin.h
 
@@ -44,9 +44,10 @@ libgda_ui_4_0_la_SOURCES = \
 	gdaui-combo.c \
 	gdaui-data-entry.c \
 	gdaui-data-store.c \
-	gdaui-data-widget.c \
-	gdaui-data-widget-filter.c \
-	gdaui-data-widget-info.c \
+	gdaui-data-filter.c \
+	gdaui-data-selector.c \
+	gdaui-data-proxy.c \
+	gdaui-data-proxy-info.c \
 	gdaui-form.c \
 	gdaui-grid.c \
 	gdaui-cloud.c \
@@ -55,6 +56,7 @@ libgda_ui_4_0_la_SOURCES = \
 	gdaui-raw-form.c \
 	gdaui-raw-grid.c \
 	gdaui-server-operation.c \
+	gdaui-set.h \
 	gdaui-set.c \
 	gdaui-tree-store.c \
 	gdaui-init.c

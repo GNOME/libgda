@@ -24,6 +24,7 @@
 #include "gdaui-cloud.h"
 #include <gdk/gdkkeysyms.h>
 #include "internal/popup-container.h"
+#include "gdaui-data-selector.h"
 
 static void gdaui_cloud_class_init (GdauiCloudClass * class);
 static void gdaui_cloud_init (GdauiCloud *wid);
@@ -37,9 +38,20 @@ static void gdaui_cloud_get_property (GObject *object,
 				      GValue *value,
 				      GParamSpec *pspec);
 
+/* GdauiDataSelector interface */
+static void              gdaui_cloud_selector_init (GdauiDataSelectorIface *iface);
+static GdaDataModel     *cloud_selector_get_model (GdauiDataSelector *iface);
+static void              cloud_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
+static GArray           *cloud_selector_get_selected_rows (GdauiDataSelector *iface);
+static GdaDataModelIter *cloud_selector_get_current_selection (GdauiDataSelector *iface);
+static gboolean          cloud_selector_select_row (GdauiDataSelector *iface, gint row);
+static void              cloud_selector_unselect_row (GdauiDataSelector *iface, gint row);
+static void              cloud_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible);
+
 struct _GdauiCloudPriv
 {
 	GdaDataModel        *model;
+	GdaDataModelIter    *iter;
 	gint                 label_column;
 	gint                 weight_column;
 	GdauiCloudWeightFunc weight_func;
@@ -57,12 +69,11 @@ struct _GdauiCloudPriv
 };
 
 enum {
-        SELECTION_CHANGED,
 	ACTIVATE,
         LAST_SIGNAL
 };
 
-static guint objects_cloud_signals[LAST_SIGNAL] = { 0, 0 };
+static guint objects_cloud_signals[LAST_SIGNAL] = { 0 };
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
@@ -94,9 +105,16 @@ gdaui_cloud_get_type (void)
 			sizeof (GdauiCloud),
 			0,
 			(GInstanceInitFunc) gdaui_cloud_init
-		};		
+		};
+
+		static const GInterfaceInfo selector_info = {
+                        (GInterfaceInitFunc) gdaui_cloud_selector_init,
+                        NULL,
+                        NULL
+                };
 
 		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiCloud", &info, 0);
+		g_type_add_interface_static (type, GDAUI_TYPE_DATA_SELECTOR, &selector_info);
 	}
 
 	return type;
@@ -123,13 +141,6 @@ gdaui_cloud_class_init (GdauiCloudClass *klass)
 	GTK_WIDGET_CLASS (object_class)->map = cloud_map;
 
 	/* signals */
-        objects_cloud_signals [SELECTION_CHANGED] =
-                g_signal_new ("selection-changed",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdauiCloudClass, selection_changed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
         objects_cloud_signals [ACTIVATE] =
                 g_signal_new ("activate",
                               G_TYPE_FROM_CLASS (object_class),
@@ -137,7 +148,6 @@ gdaui_cloud_class_init (GdauiCloudClass *klass)
                               G_STRUCT_OFFSET (GdauiCloudClass, activate),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
-        klass->selection_changed = NULL;
         klass->activate = NULL;
 
 	/* Properties */
@@ -163,6 +173,48 @@ gdaui_cloud_class_init (GdauiCloudClass *klass)
 }
 
 static void
+gdaui_cloud_selector_init (GdauiDataSelectorIface *iface)
+{
+	iface->get_model = cloud_selector_get_model;
+	iface->set_model = cloud_selector_set_model;
+	iface->get_selected_rows = cloud_selector_get_selected_rows;
+	iface->get_current_selection = cloud_selector_get_current_selection;
+	iface->select_row = cloud_selector_select_row;
+	iface->unselect_row = cloud_selector_unselect_row;
+	iface->set_column_visible = cloud_selector_set_column_visible;
+}
+
+static void
+sync_iter_with_selection (GdauiCloud *cloud)
+{
+	GSList *list;
+	gint selrow = -1;
+
+	if (! cloud->priv->iter)
+		return;
+
+	/* locate selected row */
+	for (list = cloud->priv->selected_tags; list; list = list->next) {
+		gint row;
+		row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
+		if (row >= 0) {
+			if (selrow == -1)
+				selrow = row;
+			else {
+				selrow = -1;
+				break;
+			}
+		}
+	}
+	
+	/* update iter */
+	if ((selrow == -1) || !gda_data_model_iter_move_to_row (cloud->priv->iter, selrow)) {
+		gda_data_model_iter_invalidate_contents (cloud->priv->iter);
+		g_object_set (G_OBJECT (cloud->priv->iter), "current-row", -1, NULL);
+	}
+}
+
+static void
 update_display (GdauiCloud *cloud)
 {
 	GtkTextBuffer *tbuffer;
@@ -177,6 +229,8 @@ update_display (GdauiCloud *cloud)
 		g_slist_foreach (cloud->priv->selected_tags, (GFunc) g_object_unref, NULL);
 		g_slist_free (cloud->priv->selected_tags);
 		cloud->priv->selected_tags = NULL;
+		sync_iter_with_selection (cloud);
+		g_signal_emit_by_name (cloud, "selection-changed");
 	}
 
 	if (!cloud->priv->model)
@@ -371,6 +425,8 @@ gdaui_cloud_dispose (GObject *object)
 			g_slist_foreach (cloud->priv->selected_tags, (GFunc) g_object_unref, NULL);
 			g_slist_free (cloud->priv->selected_tags);
 		}
+                if (cloud->priv->iter)
+                        g_object_unref (cloud->priv->iter);
                 if (cloud->priv->model)
                         g_object_unref (cloud->priv->model);
 		if (cloud->priv->tbuffer)
@@ -405,6 +461,10 @@ gdaui_cloud_set_property (GObject *object,
 	case PROP_MODEL:
 		model = (GdaDataModel*) g_value_get_object (value);
 		if (cloud->priv->model != model) {
+			if (cloud->priv->iter) {
+				g_object_unref (cloud->priv->iter);
+				cloud->priv->iter = NULL;
+			}
 			if (cloud->priv->model) {
 				g_signal_handlers_disconnect_by_func (cloud->priv->model,
 								      G_CALLBACK (model_reset_cb), cloud);
@@ -503,8 +563,9 @@ gdaui_cloud_set_selection_mode   (GdauiCloud *cloud, GtkSelectionMode mode)
 			}
 
 			g_slist_free (cloud->priv->selected_tags);
-			g_signal_emit (cloud, objects_cloud_signals [SELECTION_CHANGED], 0);
 			cloud->priv->selected_tags = NULL;
+			sync_iter_with_selection (cloud);
+			g_signal_emit_by_name (cloud, "selection-changed");
 		}
 		break;
 	case GTK_SELECTION_SINGLE:
@@ -524,7 +585,8 @@ gdaui_cloud_set_selection_mode   (GdauiCloud *cloud, GtkSelectionMode mode)
 			}
 			g_slist_free (cloud->priv->selected_tags);
 			cloud->priv->selected_tags = newsel;
-			g_signal_emit (cloud, objects_cloud_signals [SELECTION_CHANGED], 0);
+			sync_iter_with_selection (cloud);
+			g_signal_emit_by_name (cloud, "selection-changed");
 		}
 		break;
 	case GTK_SELECTION_MULTIPLE:
@@ -534,33 +596,6 @@ gdaui_cloud_set_selection_mode   (GdauiCloud *cloud, GtkSelectionMode mode)
 		return;
 	}
 	cloud->priv->selection_mode = mode;
-}
-
-/**
- * gdaui_cloud_get_selection
- * @cloud: a #GdauiCloud widget
- * 
- * Returns the list of the currently selected rows in a #GdauiCloud widget. 
- * The returned value is a list of integers (use GPOINTER_TO_INT()) which represent each of the selected rows.
- *
- * Returns: a new list, should be freed (by calling g_list_free) when no longer needed.
- *
- * Since: 4.2
- */
-GList *
-gdaui_cloud_get_selection (GdauiCloud *cloud)
-{
-	GList *retlist = NULL;
-	GSList *list;
-	g_return_val_if_fail (GDAUI_IS_CLOUD (cloud), NULL);
-
-	for (list = cloud->priv->selected_tags; list; list = list->next) {
-		gint row;
-		row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
-		if (row >= 0)
-			retlist = g_list_prepend (retlist, GINT_TO_POINTER (row));
-	}
-	return retlist;
 }
 
 static void
@@ -629,7 +664,8 @@ row_clicked (GdauiCloud *cloud, gint row, GtkTextTag *tag)
 		}
 	}
 
-	g_signal_emit (cloud, objects_cloud_signals [SELECTION_CHANGED], 0);
+	sync_iter_with_selection (cloud);
+	g_signal_emit_by_name (cloud, "selection-changed");
 }
 
 static GdkCursor *hand_cursor = NULL;
@@ -1064,4 +1100,144 @@ gdaui_cloud_set_weight_func (GdauiCloud *cloud, GdauiCloudWeightFunc func, gpoin
 		cloud->priv->weight_func_data = data;
 		update_display (cloud);
 	}
+}
+
+/* GdauiDataSelector interface */
+static GdaDataModel *
+cloud_selector_get_model (GdauiDataSelector *iface)
+{
+	GdauiCloud *cloud;
+	cloud = GDAUI_CLOUD (iface);
+	return cloud->priv->model;
+}
+
+static void
+cloud_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model)
+{
+	g_object_set (G_OBJECT (iface), "model", model, NULL);
+}
+
+static GArray *
+cloud_selector_get_selected_rows (GdauiDataSelector *iface)
+{
+	GArray *retval = NULL;
+	GdauiCloud *cloud;
+	GSList *list;
+
+	cloud = GDAUI_CLOUD (iface);
+	for (list = cloud->priv->selected_tags; list; list = list->next) {
+		gint row;
+		row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
+		if (row >= 0) {
+			if (!retval)
+				retval = g_array_new (FALSE, FALSE, sizeof (gint));
+			g_array_append_val (retval, row);
+		}
+	}
+	return retval;
+
+}
+
+static GdaDataModelIter *
+cloud_selector_get_current_selection (GdauiDataSelector *iface)
+{
+	GdauiCloud *cloud;
+
+	cloud = GDAUI_CLOUD (iface);
+	if (! cloud->priv->iter && cloud->priv->model) {
+		cloud->priv->iter = gda_data_model_create_iter (cloud->priv->model);
+		sync_iter_with_selection (cloud);
+	}
+
+	return cloud->priv->iter;
+}
+
+typedef struct {
+	gint row_to_find;
+	GtkTextTag *tag;
+} RowLookup;
+
+static void
+text_tag_table_foreach_cb2 (GtkTextTag *tag, RowLookup *rl)
+{
+	if (rl->tag)
+		return; /* row already found */
+	gint srow;
+	srow = GPOINTER_TO_INT (g_object_get_data ((GObject*) tag, "row")) - 1;
+	if (srow == rl->row_to_find)
+		rl->tag = tag;
+}
+
+static gboolean
+cloud_selector_select_row (GdauiDataSelector *iface, gint row)
+{
+	GdauiCloud *cloud;
+	GSList *list;
+
+	cloud = GDAUI_CLOUD (iface);
+	if (cloud->priv->selection_mode == GTK_SELECTION_NONE)
+		return FALSE;
+
+	/* test if row already selected */
+	for (list = cloud->priv->selected_tags; list; list = list->next) {
+		gint srow;
+		srow = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
+		if (srow == row)
+			return TRUE;
+	}
+
+	/* try to select row */
+	RowLookup rl;
+	rl.row_to_find = row;
+	rl.tag = NULL;
+	gtk_text_tag_table_foreach (gtk_text_buffer_get_tag_table (cloud->priv->tbuffer),
+				    (GtkTextTagTableForeach) text_tag_table_foreach_cb2,
+				    (gpointer) &rl);
+	if (rl.tag) {
+		row_clicked (cloud, row, rl.tag);
+		for (list = cloud->priv->selected_tags; list; list = list->next) {
+			gint srow;
+			srow = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
+			if (srow == row)
+				return TRUE;
+		}
+		return FALSE;
+	}
+	else
+		return FALSE;
+}
+
+static void
+cloud_selector_unselect_row (GdauiDataSelector *iface, gint row)
+{
+	GdauiCloud *cloud;
+	GSList *list;
+
+	cloud = GDAUI_CLOUD (iface);
+	if (cloud->priv->selection_mode == GTK_SELECTION_NONE)
+		return;
+
+	/* test if row already selected */
+	for (list = cloud->priv->selected_tags; list; list = list->next) {
+		gint srow;
+		GtkTextTag *tag = (GtkTextTag*) list->data;
+		srow = GPOINTER_TO_INT (g_object_get_data ((GObject*) tag, "row")) - 1;
+		if (srow == row) {
+			cloud->priv->selected_tags = g_slist_remove (cloud->priv->selected_tags, tag);
+			g_object_set ((GObject*) tag,
+				      "background-set", FALSE,
+				      NULL);
+			g_object_unref ((GObject*) tag);
+
+			sync_iter_with_selection (cloud);
+			g_signal_emit_by_name (cloud, "selection-changed");
+			break;
+		}
+	}
+}
+
+static void
+cloud_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible)
+{
+	/* nothing to do */
 }

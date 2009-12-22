@@ -1,4 +1,4 @@
-/* gdaui-data-widget-info.c
+/* gdaui-data-proxy-info.c
  *
  * Copyright (C) 2006 - 2009 Vivien Malerba <malerba@gnome-db.org>
  *
@@ -21,41 +21,41 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/libgda.h>
-#include "gdaui-data-widget.h"
+#include "gdaui-data-proxy.h"
+#include "gdaui-data-selector.h"
 #include "gdaui-raw-grid.h"
-#include "gdaui-data-widget-info.h"
+#include "gdaui-data-proxy-info.h"
 #include "gdaui-enum-types.h"
 
-static void gdaui_data_widget_info_class_init (GdauiDataWidgetInfoClass * class);
-static void gdaui_data_widget_info_init (GdauiDataWidgetInfo *wid);
-static void gdaui_data_widget_info_dispose (GObject *object);
+static void gdaui_data_proxy_info_class_init (GdauiDataProxyInfoClass * class);
+static void gdaui_data_proxy_info_init (GdauiDataProxyInfo *wid);
+static void gdaui_data_proxy_info_dispose (GObject *object);
 
-static void gdaui_data_widget_info_set_property (GObject *object,
-						    guint param_id,
-						    const GValue *value,
-						    GParamSpec *pspec);
-static void gdaui_data_widget_info_get_property (GObject *object,
-						    guint param_id,
-						    GValue *value,
-						    GParamSpec *pspec);
+static void gdaui_data_proxy_info_set_property (GObject *object,
+						guint param_id,
+						const GValue *value,
+						GParamSpec *pspec);
+static void gdaui_data_proxy_info_get_property (GObject *object,
+						guint param_id,
+						GValue *value,
+						GParamSpec *pspec);
 
-static void modif_buttons_make (GdauiDataWidgetInfo *info);
-static void modif_buttons_update (GdauiDataWidgetInfo *info);
+static void modif_buttons_make (GdauiDataProxyInfo *info);
+static void modif_buttons_update (GdauiDataProxyInfo *info);
 
-static void data_widget_proxy_changed_cb (GdauiDataWidget *data_widget, GdaDataProxy *proxy, GdauiDataWidgetInfo *info);
-static void proxy_changed_cb (GdaDataProxy *proxy, GdauiDataWidgetInfo *info);
-static void proxy_sample_changed_cb (GdaDataProxy *proxy, gint sample_start, gint sample_end, GdauiDataWidgetInfo *info);
-static void proxy_row_changed_cb (GdaDataProxy *proxy, gint row, GdauiDataWidgetInfo *info);
-static void raw_grid_selection_changed_cb (GdauiRawGrid *grid, gboolean row_selected, 
-					   GdauiDataWidgetInfo *info);
+static void data_proxy_proxy_changed_cb (GdauiDataProxy *data_proxy, GdaDataProxy *proxy, GdauiDataProxyInfo *info);
+static void proxy_changed_cb (GdaDataProxy *proxy, GdauiDataProxyInfo *info);
+static void proxy_sample_changed_cb (GdaDataProxy *proxy, gint sample_start, gint sample_end, GdauiDataProxyInfo *info);
+static void proxy_row_changed_cb (GdaDataProxy *proxy, gint row, GdauiDataProxyInfo *info);
+static void raw_grid_selection_changed_cb (GdauiRawGrid *grid, GdauiDataProxyInfo *info);
 
 
-struct _GdauiDataWidgetInfoPriv
+struct _GdauiDataProxyInfoPriv
 {
-	GdauiDataWidget *data_widget;
+	GdauiDataProxy *data_proxy;
 	GdaDataProxy      *proxy;
 	GdaDataModelIter  *iter;
-	GdauiDataWidgetInfoFlag flags; /* ORed values. */
+	GdauiDataProxyInfoFlag flags; /* ORed values. */
 
 	GtkUIManager      *uimanager;
 
@@ -70,108 +70,110 @@ struct _GdauiDataWidgetInfoPriv
 static GObjectClass *parent_class = NULL;
 
 /* properties */
-enum
-{
-        PROP_0,
-        PROP_DATA_WIDGET,
+enum {
+	PROP_0,
+	PROP_DATA_PROXY,
 	PROP_FLAGS
 };
 
 GType
-gdaui_data_widget_info_get_type (void)
+gdaui_data_proxy_info_get_type (void)
 {
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
-			sizeof (GdauiDataWidgetInfoClass),
+			sizeof (GdauiDataProxyInfoClass),
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_data_widget_info_class_init,
+			(GClassInitFunc) gdaui_data_proxy_info_class_init,
 			NULL,
 			NULL,
-			sizeof (GdauiDataWidgetInfo),
+			sizeof (GdauiDataProxyInfo),
 			0,
-			(GInstanceInitFunc) gdaui_data_widget_info_init
-		};		
+			(GInstanceInitFunc) gdaui_data_proxy_info_init
+		};
 
-		type = g_type_register_static (GTK_TYPE_HBOX, "GdauiDataWidgetInfo", &info, 0);
+		type = g_type_register_static (GTK_TYPE_HBOX, "GdauiDataProxyInfo", &info, 0);
 	}
 
 	return type;
 }
 
 static void
-gdaui_data_widget_info_class_init (GdauiDataWidgetInfoClass *klass)
+gdaui_data_proxy_info_class_init (GdauiDataProxyInfoClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	
+
 	parent_class = g_type_class_peek_parent (klass);
 
 
-	object_class->dispose = gdaui_data_widget_info_dispose;
+	object_class->dispose = gdaui_data_proxy_info_dispose;
 
 	/* Properties */
-        object_class->set_property = gdaui_data_widget_info_set_property;
-        object_class->get_property = gdaui_data_widget_info_get_property;
-	g_object_class_install_property (object_class, PROP_DATA_WIDGET,
-                                         g_param_spec_object ("data_widget", NULL, NULL, GDAUI_TYPE_DATA_WIDGET,
-                                                               G_PARAM_READABLE | G_PARAM_WRITABLE));
+        object_class->set_property = gdaui_data_proxy_info_set_property;
+        object_class->get_property = gdaui_data_proxy_info_get_property;
+	g_object_class_install_property (object_class, PROP_DATA_PROXY,
+                                         g_param_spec_object ("data-proxy", NULL, NULL, GDAUI_TYPE_DATA_PROXY,
+							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_FLAGS,
-                                         g_param_spec_flags ("flags", NULL, NULL, GDAUI_TYPE_DATA_WIDGET_INFO_FLAG, 
-							    GDAUI_DATA_WIDGET_INFO_CURRENT_ROW,
-							    G_PARAM_READABLE | G_PARAM_WRITABLE));
+                                         g_param_spec_flags ("flags", NULL, NULL, GDAUI_TYPE_DATA_PROXY_INFO_FLAG,
+							     GDAUI_DATA_PROXY_INFO_CURRENT_ROW,
+							     G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
 static void
-gdaui_data_widget_info_init (GdauiDataWidgetInfo *wid)
+gdaui_data_proxy_info_init (GdauiDataProxyInfo *wid)
 {
-	wid->priv = g_new0 (GdauiDataWidgetInfoPriv, 1);
-	wid->priv->data_widget = NULL;
+	wid->priv = g_new0 (GdauiDataProxyInfoPriv, 1);
+	wid->priv->data_proxy = NULL;
 	wid->priv->proxy = NULL;
+	wid->priv->row_spin = NULL;
 }
 
 /**
- * gdaui_data_widget_info_new
- * @data_widget: a widget implementing the #GdauiDataWidget interface
+ * gdaui_data_proxy_info_new
+ * @data_proxy: a widget implementing the #GdauiDataProxy interface
  * @flags: OR'ed values, specifying what to display in the new widget
  *
- * Creates a new #GdauiDataWidgetInfo widget suitable to display information about @data_widget
+ * Creates a new #GdauiDataProxyInfo widget suitable to display information about @data_proxy
  *
  * Returns: the new widget
+ *
+ * Since: 4.2
  */
 GtkWidget *
-gdaui_data_widget_info_new (GdauiDataWidget *data_widget, GdauiDataWidgetInfoFlag flags)
+gdaui_data_proxy_info_new (GdauiDataProxy *data_proxy, GdauiDataProxyInfoFlag flags)
 {
 	GtkWidget *info;
 
-	g_return_val_if_fail (!data_widget || GDAUI_IS_DATA_WIDGET (data_widget), NULL);
+	g_return_val_if_fail (!data_proxy || GDAUI_IS_DATA_PROXY (data_proxy), NULL);
 
-	info = (GtkWidget *) g_object_new (GDAUI_TYPE_DATA_WIDGET_INFO, 
-					   "data_widget", data_widget, 
+	info = (GtkWidget *) g_object_new (GDAUI_TYPE_DATA_PROXY_INFO,
+					   "data-proxy", data_proxy,
 					   "flags", flags, NULL);
 
 	return info;
 }
 
 static void
-data_widget_destroyed_cb (GdauiDataWidget *wid, GdauiDataWidgetInfo *info)
+data_proxy_destroyed_cb (GdauiDataProxy *wid, GdauiDataProxyInfo *info)
 {
-	g_assert (wid == info->priv->data_widget);
+	g_assert (wid == info->priv->data_proxy);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (wid),
-					      G_CALLBACK (data_widget_destroyed_cb), info);
+					      G_CALLBACK (data_proxy_destroyed_cb), info);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (wid),
-					      G_CALLBACK (data_widget_proxy_changed_cb), info);
-	if (GDAUI_IS_RAW_GRID (info->priv->data_widget))
-		g_signal_handlers_disconnect_by_func (info->priv->data_widget,
+					      G_CALLBACK (data_proxy_proxy_changed_cb), info);
+	if (GDAUI_IS_RAW_GRID (info->priv->data_proxy))
+		g_signal_handlers_disconnect_by_func (info->priv->data_proxy,
 						      G_CALLBACK (raw_grid_selection_changed_cb), info);
 
-	info->priv->data_widget = NULL;
+	info->priv->data_proxy = NULL;
 }
 
 
 static void
-release_proxy (GdauiDataWidgetInfo *info)
+release_proxy (GdauiDataProxyInfo *info)
 {
 	g_signal_handlers_disconnect_by_func (G_OBJECT (info->priv->proxy),
 					      G_CALLBACK (proxy_changed_cb), info);
@@ -183,9 +185,9 @@ release_proxy (GdauiDataWidgetInfo *info)
 	info->priv->proxy = NULL;
 }
 
-static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiDataWidgetInfo *info);
+static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiDataProxyInfo *info);
 static void
-release_iter (GdauiDataWidgetInfo *info)
+release_iter (GdauiDataProxyInfo *info)
 {
 	g_signal_handlers_disconnect_by_func (info->priv->iter,
 					      G_CALLBACK (iter_row_changed_cb), info);
@@ -194,19 +196,19 @@ release_iter (GdauiDataWidgetInfo *info)
 }
 
 static void
-data_widget_proxy_changed_cb (GdauiDataWidget *data_widget, GdaDataProxy *proxy, GdauiDataWidgetInfo *info)
+data_proxy_proxy_changed_cb (GdauiDataProxy *data_proxy, GdaDataProxy *proxy, GdauiDataProxyInfo *info)
 {
-	g_object_set (G_OBJECT (info), "data_widget", data_widget, NULL);
+	g_object_set (G_OBJECT (info), "data-proxy", data_proxy, NULL);
 }
 
 static void
-gdaui_data_widget_info_dispose (GObject *object)
+gdaui_data_proxy_info_dispose (GObject *object)
 {
-	GdauiDataWidgetInfo *info;
+	GdauiDataProxyInfo *info;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_DATA_WIDGET_INFO (object));
-	info = GDAUI_DATA_WIDGET_INFO (object);
+	g_return_if_fail (GDAUI_IS_DATA_PROXY_INFO (object));
+	info = GDAUI_DATA_PROXY_INFO (object);
 
 	if (info->priv) {
 		if (info->priv->idle_id)
@@ -215,8 +217,8 @@ gdaui_data_widget_info_dispose (GObject *object)
 			release_proxy (info);
 		if (info->priv->iter)
 			release_iter (info);
-		if (info->priv->data_widget)
-			data_widget_destroyed_cb (info->priv->data_widget, info);
+		if (info->priv->data_proxy)
+			data_proxy_destroyed_cb (info->priv->data_proxy, info);
 
 		/* the private area itself */
 		g_free (info->priv);
@@ -228,59 +230,59 @@ gdaui_data_widget_info_dispose (GObject *object)
 }
 
 static void
-gdaui_data_widget_info_set_property (GObject *object,
-				     guint param_id,
-				     const GValue *value,
-				     GParamSpec *pspec)
+gdaui_data_proxy_info_set_property (GObject *object,
+				    guint param_id,
+				    const GValue *value,
+				    GParamSpec *pspec)
 {
-	GdauiDataWidgetInfo *info;
+	GdauiDataProxyInfo *info;
 
-        info = GDAUI_DATA_WIDGET_INFO (object);
+        info = GDAUI_DATA_PROXY_INFO (object);
         if (info->priv) {
                 switch (param_id) {
-                case PROP_DATA_WIDGET:
-			if (info->priv->data_widget)
-				data_widget_destroyed_cb (info->priv->data_widget, info);
-			if (info->priv->iter) 
+                case PROP_DATA_PROXY:
+			if (info->priv->data_proxy)
+				data_proxy_destroyed_cb (info->priv->data_proxy, info);
+			if (info->priv->iter)
 				release_iter (info);
 			if (info->priv->proxy)
 				release_proxy (info);
 
-			info->priv->data_widget = GDAUI_DATA_WIDGET (g_value_get_object (value));
-			if (info->priv->data_widget) {
+			info->priv->data_proxy = GDAUI_DATA_PROXY (g_value_get_object (value));
+			if (info->priv->data_proxy) {
 				GdaDataProxy *proxy;
 				GdaDataModelIter *iter;
 
 				/* data widget */
-				g_signal_connect (info->priv->data_widget, "destroy",
-						  G_CALLBACK (data_widget_destroyed_cb), info);
-				g_signal_connect (info->priv->data_widget, "proxy_changed",
-						  G_CALLBACK (data_widget_proxy_changed_cb), info);
-				if (GDAUI_IS_RAW_GRID (info->priv->data_widget))
-					g_signal_connect (info->priv->data_widget, "selection_changed",
+				g_signal_connect (info->priv->data_proxy, "destroy",
+						  G_CALLBACK (data_proxy_destroyed_cb), info);
+				g_signal_connect (info->priv->data_proxy, "proxy-changed",
+						  G_CALLBACK (data_proxy_proxy_changed_cb), info);
+				if (GDAUI_IS_RAW_GRID (info->priv->data_proxy))
+					g_signal_connect (info->priv->data_proxy, "selection-changed",
 							  G_CALLBACK (raw_grid_selection_changed_cb), info);
 
 				/* proxy */
-				proxy = gdaui_data_widget_get_proxy (info->priv->data_widget);
+				proxy = gdaui_data_proxy_get_proxy (info->priv->data_proxy);
 				if (proxy) {
 					info->priv->proxy = proxy;
 					g_object_ref (info->priv->proxy);
 					g_signal_connect (G_OBJECT (proxy), "changed",
 							  G_CALLBACK (proxy_changed_cb), info);
-					g_signal_connect (G_OBJECT (proxy), "sample_changed",
+					g_signal_connect (G_OBJECT (proxy), "sample-changed",
 							  G_CALLBACK (proxy_sample_changed_cb), info);
-					g_signal_connect (G_OBJECT (proxy), "row_inserted",
+					g_signal_connect (G_OBJECT (proxy), "row-inserted",
 							  G_CALLBACK (proxy_row_changed_cb), info);
-					g_signal_connect (G_OBJECT (proxy), "row_removed",
+					g_signal_connect (G_OBJECT (proxy), "row-removed",
 							  G_CALLBACK (proxy_row_changed_cb), info);
-					
+
 					/* iter */
-					iter = gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET 
-										      (info->priv->data_widget));
+					iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR
+											  (info->priv->data_proxy));
 					info->priv->iter = iter;
 					if (iter) {
 						g_object_ref (G_OBJECT (iter));
-						g_signal_connect (iter, "row_changed",
+						g_signal_connect (iter, "row-changed",
 								  G_CALLBACK (iter_row_changed_cb), info);
 					}
 				}
@@ -289,16 +291,16 @@ gdaui_data_widget_info_set_property (GObject *object,
                         break;
                 case PROP_FLAGS:
 			info->priv->flags = g_value_get_flags (value);
+			if (info->priv->row_spin) {
+				gtk_widget_destroy (info->priv->row_spin);
+				info->priv->row_spin = NULL;
+			}
 			if (info->priv->buttons_bar) {
 				gtk_widget_destroy (info->priv->buttons_bar);
 				info->priv->buttons_bar = NULL;
 			}
 			if (info->priv->current_sample)
 				info->priv->current_sample = NULL;
-			if (info->priv->row_spin) {
-				gtk_widget_destroy (info->priv->row_spin);
-				info->priv->row_spin = NULL;
-			}
 
 			modif_buttons_make (info);
 			modif_buttons_update (info);
@@ -311,18 +313,18 @@ gdaui_data_widget_info_set_property (GObject *object,
 }
 
 static void
-gdaui_data_widget_info_get_property (GObject *object,
-				     guint param_id,
-				     GValue *value,
-				     GParamSpec *pspec)
+gdaui_data_proxy_info_get_property (GObject *object,
+				    guint param_id,
+				    GValue *value,
+				    GParamSpec *pspec)
 {
-	GdauiDataWidgetInfo *info;
+	GdauiDataProxyInfo *info;
 
-        info = GDAUI_DATA_WIDGET_INFO (object);
+        info = GDAUI_DATA_PROXY_INFO (object);
         if (info->priv) {
                 switch (param_id) {
-		case PROP_DATA_WIDGET:
-			g_value_set_pointer (value, info->priv->data_widget);
+		case PROP_DATA_PROXY:
+			g_value_set_pointer (value, info->priv->data_proxy);
 			break;
 		case PROP_FLAGS:
 			g_value_set_flags (value, info->priv->flags);
@@ -331,36 +333,36 @@ gdaui_data_widget_info_get_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
-        }	
+        }
 }
 
 
 static void
-proxy_changed_cb (GdaDataProxy *proxy, GdauiDataWidgetInfo *info)
+proxy_changed_cb (GdaDataProxy *proxy, GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
 
 static void
-proxy_sample_changed_cb (GdaDataProxy *proxy, gint sample_start, gint sample_end, GdauiDataWidgetInfo *info)
+proxy_sample_changed_cb (GdaDataProxy *proxy, gint sample_start, gint sample_end, GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
 
 static void
-proxy_row_changed_cb (GdaDataProxy *proxy, gint row, GdauiDataWidgetInfo *info)
+proxy_row_changed_cb (GdaDataProxy *proxy, gint row, GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
 
 static void
-iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiDataWidgetInfo *info)
+iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
 
 static void
-raw_grid_selection_changed_cb (GdauiRawGrid *grid, gboolean row_selected, GdauiDataWidgetInfo *info)
+raw_grid_selection_changed_cb (GdauiRawGrid *grid, GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
@@ -401,48 +403,49 @@ static const gchar *ui_chunck_change =
 	"  </toolbar>"
 	"</ui>";
 
-static void row_spin_changed_cb (GtkSpinButton *spin, GdauiDataWidgetInfo *info);
+static void row_spin_changed_cb (GtkSpinButton *spin, GdauiDataProxyInfo *info);
 static void
-modif_buttons_make (GdauiDataWidgetInfo *info)
+modif_buttons_make (GdauiDataProxyInfo *info)
 {
 	GtkWidget *wid;
-	GdauiDataWidgetInfoFlag flags = info->priv->flags;
+	GdauiDataProxyInfoFlag flags = info->priv->flags;
 	static gboolean rc_done = FALSE;
 
 	if (!rc_done) {
                 rc_done = TRUE;
-                gtk_rc_parse_string ("style \"gdaui-data-widget-info-style\"\n"
+                gtk_rc_parse_string ("style \"gdaui-data-proxy-info-style\"\n"
                                      "{\n"
                                      "GtkToolbar::shadow-type = GTK_SHADOW_NONE\n"
                                      "xthickness = 0\n"
                                      "ythickness = 0\n"
                                      "}\n"
-                                     "widget \"*.gdaui-data-widget-info\" style \"gdaui-data-widget-info-style\"");
+                                     "widget \"*.gdaui-data-proxy-info\" style \"gdaui-data-proxy-info-style\"");
         }
 
-	if (! info->priv->data_widget)
+	if (! info->priv->data_proxy)
 		return;
 
-	if (flags & (GDAUI_DATA_WIDGET_INFO_ROW_MODIFY_BUTTONS |
-		     GDAUI_DATA_WIDGET_INFO_ROW_MOVE_BUTTONS |
-		     GDAUI_DATA_WIDGET_INFO_CHUNCK_CHANGE_BUTTONS)) {
+	if (flags & (GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
+		     GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS |
+		     GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)) {
 		GtkActionGroup *actions;
 		GtkUIManager *ui;
 
-		actions = gdaui_data_widget_get_actions_group (info->priv->data_widget);
+		actions = gdaui_data_proxy_get_actions_group (info->priv->data_proxy);
 		ui = gtk_ui_manager_new ();
 		gtk_ui_manager_insert_action_group (ui, actions, 0);
-		if (flags & GDAUI_DATA_WIDGET_INFO_ROW_MODIFY_BUTTONS)
+		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS)
 			gtk_ui_manager_add_ui_from_string (ui, ui_row_modif, -1, NULL);
-		if (flags & GDAUI_DATA_WIDGET_INFO_ROW_MOVE_BUTTONS)
+		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS)
 			gtk_ui_manager_add_ui_from_string (ui, ui_row_move, -1, NULL);
-		if (flags & GDAUI_DATA_WIDGET_INFO_CHUNCK_CHANGE_BUTTONS)
+		if (flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)
 			gtk_ui_manager_add_ui_from_string (ui, ui_chunck_change, -1, NULL);
 
 		info->priv->uimanager = ui;
 		info->priv->buttons_bar = gtk_ui_manager_get_widget (ui, "/ToolBar");
+		gtk_toolbar_set_icon_size (GTK_TOOLBAR (info->priv->buttons_bar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 		g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
-		gtk_widget_set_name (info->priv->buttons_bar, "gdaui-data-widget-info");
+		gtk_widget_set_name (info->priv->buttons_bar, "gdaui-data-proxy-info");
 		gtk_toolbar_set_tooltips (GTK_TOOLBAR (info->priv->buttons_bar), TRUE);
 		gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
 	}
@@ -451,9 +454,9 @@ modif_buttons_make (GdauiDataWidgetInfo *info)
 	}
 	gtk_widget_show (info->priv->buttons_bar);
 
-	if (flags & GDAUI_DATA_WIDGET_INFO_CURRENT_ROW) {
+	if (flags & GDAUI_DATA_PROXY_INFO_CURRENT_ROW) {
 		GtkWidget *toolwid;
-		if (flags & GDAUI_DATA_WIDGET_INFO_ROW_MOVE_BUTTONS) {
+		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
 			toolwid = gtk_hbox_new (FALSE, 0);
 
 			/* read-write spin counter (mainly for forms) */
@@ -487,7 +490,7 @@ modif_buttons_make (GdauiDataWidgetInfo *info)
 }
 
 static void
-row_spin_changed_cb (GtkSpinButton *spin, GdauiDataWidgetInfo *info)
+row_spin_changed_cb (GtkSpinButton *spin, GdauiDataProxyInfo *info)
 {
 	gint row;
 	gint value = gtk_spin_button_get_value (spin);
@@ -496,12 +499,13 @@ row_spin_changed_cb (GtkSpinButton *spin, GdauiDataWidgetInfo *info)
 	    (value <= gda_data_model_get_n_rows (GDA_DATA_MODEL (info->priv->proxy))))
 		row = value - 1;
 
-	gda_data_model_iter_move_to_row (gdaui_data_widget_get_current_data (info->priv->data_widget), row);
+	gda_data_model_iter_move_to_row (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (info->priv->data_proxy)),
+					 row);
 }
 
-static gboolean idle_modif_buttons_update (GdauiDataWidgetInfo *info);
+static gboolean idle_modif_buttons_update (GdauiDataProxyInfo *info);
 static void
-modif_buttons_update (GdauiDataWidgetInfo *info)
+modif_buttons_update (GdauiDataProxyInfo *info)
 {
 	if (info->priv->idle_id == 0)
 		info->priv->idle_id = g_idle_add_full (G_PRIORITY_HIGH_IDLE,
@@ -515,11 +519,11 @@ modif_buttons_update (GdauiDataWidgetInfo *info)
 #define UNBLOCK_SPIN (g_signal_handlers_unblock_by_func (G_OBJECT (info->priv->row_spin), \
 							 G_CALLBACK (row_spin_changed_cb), info))
 static gboolean
-idle_modif_buttons_update (GdauiDataWidgetInfo *info)
+idle_modif_buttons_update (GdauiDataProxyInfo *info)
 {
 	GdaDataModelIter *model_iter;
 	gboolean wrows, filtered_proxy = FALSE;
-	gint has_selection;	
+	gint has_selection;
 	gint row;
 
 	gint proxy_rows = 0;
@@ -528,9 +532,9 @@ idle_modif_buttons_update (GdauiDataWidgetInfo *info)
 
 	GtkAction *action;
 	gint sample_first_row = 0, sample_last_row = 0, sample_size = 0;
-	GdauiDataWidgetInfoFlag flags = 0;
+	GdauiDataProxyInfoFlag flags = 0;
 
-	model_iter = gdaui_data_widget_get_current_data (info->priv->data_widget);
+	model_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (info->priv->data_proxy));
 	if (info->priv->proxy) {
 		filtered_proxy = gda_data_proxy_get_filter_expr (info->priv->proxy) ? TRUE : FALSE;
 		proxy_rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (info->priv->proxy));
@@ -554,9 +558,9 @@ idle_modif_buttons_update (GdauiDataWidgetInfo *info)
 	/* sensitiveness of the text indications and of the spin button */
 	wrows = (proxy_rows <= 0) ? FALSE : TRUE;
 	row = model_iter ? gda_data_model_iter_get_row (model_iter) : 0;
-	if (info->priv->flags & GDAUI_DATA_WIDGET_INFO_CURRENT_ROW) {
+	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_CURRENT_ROW) {
 		if (proxy_rows < 0) {
-			if (info->priv->flags & GDAUI_DATA_WIDGET_INFO_ROW_MOVE_BUTTONS) {
+			if (info->priv->flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
 				BLOCK_SPIN;
 				gtk_spin_button_set_range (GTK_SPIN_BUTTON (info->priv->row_spin), 0, 1);
 				gtk_spin_button_set_value (GTK_SPIN_BUTTON (info->priv->row_spin), 0);
@@ -569,9 +573,9 @@ idle_modif_buttons_update (GdauiDataWidgetInfo *info)
 		else {
 			gchar *str;
 			gint total;
-			
+
 			total = sample_first_row + proxy_rows;
-			if (info->priv->flags & GDAUI_DATA_WIDGET_INFO_ROW_MOVE_BUTTONS) {
+			if (info->priv->flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
 				if (total <= 0)
 					str = g_strdup (" / 0");
 				else {
@@ -594,11 +598,11 @@ idle_modif_buttons_update (GdauiDataWidgetInfo *info)
 					if (all_rows < 0)
 						str = g_strdup_printf ("%d - %d /?", sample_first_row + 1, total);
 					else {
-						if (filtered_proxy) 
-							str = g_strdup_printf ("%d - %d / (%d)", 
+						if (filtered_proxy)
+							str = g_strdup_printf ("%d - %d / (%d)",
 									       sample_first_row + 1, total, all_rows);
 						else
-							str = g_strdup_printf ("%d - %d / %d", 
+							str = g_strdup_printf ("%d - %d / %d",
 									       sample_first_row + 1, total, all_rows);
 					}
 				}
@@ -623,23 +627,23 @@ idle_modif_buttons_update (GdauiDataWidgetInfo *info)
 
 		if (info->priv->proxy) {
 			changed = gda_data_proxy_has_changed (info->priv->proxy);
-			
+
 			has_selection = (row >= 0) ? TRUE : FALSE;
 			if (has_selection) {
 				to_be_deleted = gda_data_proxy_row_is_deleted (info->priv->proxy, row);
 				is_inserted = gda_data_proxy_row_is_inserted (info->priv->proxy, row);
 			}
-			else 
-				if (GDAUI_IS_RAW_GRID (info->priv->data_widget)) {
+			else
+				if (GDAUI_IS_RAW_GRID (info->priv->data_proxy)) {
 					/* bad for encapsulation, but very useful... */
 					GList *sel, *list;
-					
-					sel = gdaui_raw_grid_get_selection ((GdauiRawGrid*) info->priv->data_widget);
+
+					sel = _gdaui_raw_grid_get_selection ((GdauiRawGrid*) info->priv->data_proxy);
 					if (sel) {
 						list = sel;
 						while (list && (!force_del_btn || !force_undel_btn)) {
-							if ((GPOINTER_TO_INT (list->data) != -1) && 
-							    gda_data_proxy_row_is_deleted (info->priv->proxy, 
+							if ((GPOINTER_TO_INT (list->data) != -1) &&
+							    gda_data_proxy_row_is_deleted (info->priv->proxy,
 											   GPOINTER_TO_INT (list->data)))
 								force_undel_btn = TRUE;
 							else
@@ -659,64 +663,64 @@ idle_modif_buttons_update (GdauiDataWidgetInfo *info)
 				}
 		}
 
-		if (info->priv->flags & GDAUI_DATA_WIDGET_INFO_ROW_MODIFY_BUTTONS) {
-			GdauiDataWidgetWriteMode mode;
-			mode = gdaui_data_widget_get_write_mode (info->priv->data_widget);
+		if (info->priv->flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS) {
+			GdauiDataProxyWriteMode mode;
+			mode = gdaui_data_proxy_get_write_mode (info->priv->data_proxy);
 
 			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionCommit");
 			g_object_set (G_OBJECT (action), "sensitive", changed ? TRUE : FALSE, NULL);
-			if (mode == GDAUI_DATA_WIDGET_WRITE_ON_VALUE_CHANGE)
+			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
 				gtk_action_set_visible (action, FALSE);
 			else
 				gtk_action_set_visible (action, TRUE);
-			
+
 			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionReset");
 			g_object_set (G_OBJECT (action), "sensitive", changed ? TRUE : FALSE, NULL);
-			if (mode == GDAUI_DATA_WIDGET_WRITE_ON_VALUE_CHANGE)
+			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
 				gtk_action_set_visible (action, FALSE);
 			else
 				gtk_action_set_visible (action, TRUE);
-			
+
 			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionNew");
-			g_object_set (G_OBJECT (action), "sensitive", 
+			g_object_set (G_OBJECT (action), "sensitive",
 				      flags & GDA_DATA_MODEL_ACCESS_INSERT ? TRUE : FALSE, NULL);
-			
+
 			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionDelete");
 			wrows = is_inserted ||
-				((flags & GDA_DATA_MODEL_ACCESS_DELETE) && 
+				((flags & GDA_DATA_MODEL_ACCESS_DELETE) &&
 				 (force_del_btn || (! to_be_deleted && has_selection)));
 			g_object_set (G_OBJECT (action), "sensitive", wrows, NULL);
-			
+
 			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionUndelete");
-			wrows = (flags & GDA_DATA_MODEL_ACCESS_DELETE) && 
+			wrows = (flags & GDA_DATA_MODEL_ACCESS_DELETE) &&
 				(force_undel_btn || (to_be_deleted && has_selection));
 			g_object_set (G_OBJECT (action), "sensitive", wrows, NULL);
 
-			if ((mode == GDAUI_DATA_WIDGET_WRITE_ON_ROW_CHANGE) ||
-			    (mode == GDAUI_DATA_WIDGET_WRITE_ON_VALUE_CHANGE) ||
-			    (mode == GDAUI_DATA_WIDGET_WRITE_ON_VALUE_ACTIVATED))
+			if ((mode == GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) ||
+			    (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE) ||
+			    (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_ACTIVATED))
 				gtk_action_set_visible (action, FALSE);
-			else 
+			else
 				gtk_action_set_visible (action, TRUE);
 		}
 	}
 
 	/* current row moving */
-	if (info->priv->flags & GDAUI_DATA_WIDGET_INFO_ROW_MOVE_BUTTONS) {
+	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
 		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionFirstRecord");
 		g_object_set (G_OBJECT (action), "sensitive", (row <= 0) ? FALSE : TRUE, NULL);
 		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionPrevRecord");
 		g_object_set (G_OBJECT (action), "sensitive", (row <= 0) ? FALSE : TRUE, NULL);
 		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionNextRecord");
-		g_object_set (G_OBJECT (action), "sensitive", (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE, 
+		g_object_set (G_OBJECT (action), "sensitive", (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE,
 			      NULL);
 		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionLastRecord");
-		g_object_set (G_OBJECT (action), "sensitive", (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE, 
+		g_object_set (G_OBJECT (action), "sensitive", (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE,
 			      NULL);
 	}
 
 	/* chunck indications */
-	if (info->priv->flags & GDAUI_DATA_WIDGET_INFO_CHUNCK_CHANGE_BUTTONS) {
+	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS) {
 		gboolean abool;
 		wrows = (sample_size > 0) ? TRUE : FALSE;
 		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionFirstChunck");
@@ -731,11 +735,11 @@ idle_modif_buttons_update (GdauiDataWidgetInfo *info)
 	}
 
 	/* filter */
-	if (info->priv->flags & GDAUI_DATA_WIDGET_INFO_NO_FILTER) {
+	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_NO_FILTER) {
 		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionFilter");
 		g_object_set (G_OBJECT (action), "visible", FALSE, NULL);
 	}
-	
+
 	if (info->priv->uimanager)
 		gtk_ui_manager_ensure_update (info->priv->uimanager);
 

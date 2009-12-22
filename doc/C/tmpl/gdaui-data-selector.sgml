@@ -1,0 +1,107 @@
+<!-- ##### SECTION Title ##### -->
+GdauiDataSelector
+
+<!-- ##### SECTION Short_Description ##### -->
+Selecting data in a #GdaDataModel
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdauiDataSelector interface is implemented by widgets which allow the user
+  to select some data from a #GdaDataModel. Depending on the actual widget, the selection
+  can be a single row or more than one row.
+</para>
+<para>
+  This interface allows one to set and get the #GdaDataModel from which data is to be selected
+  and offers a few other common behaviours.
+</para>
+<para>
+  Please note that any row number in this interface is in reference to the #GdaDataModel returned by
+  the gdaui_data_selector_get_model() method.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiDataSelector ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdauiDataSelector::selection-changed ##### -->
+<para>
+
+</para>
+
+@gdauidataselector: the object which received the signal.
+
+<!-- ##### FUNCTION gdaui_data_selector_get_model ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_data_selector_set_model ##### -->
+<para>
+
+</para>
+
+@iface: 
+@model: 
+
+
+<!-- ##### FUNCTION gdaui_data_selector_get_selected_rows ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_data_selector_get_data_set ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_data_selector_select_row ##### -->
+<para>
+
+</para>
+
+@iface: 
+@row: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_data_selector_unselect_row ##### -->
+<para>
+
+</para>
+
+@iface: 
+@row: 
+
+
+<!-- ##### FUNCTION gdaui_data_selector_set_column_visible ##### -->
+<para>
+
+</para>
+
+@iface: 
+@column: 
+@visible: 
+
+

@@ -529,7 +529,10 @@ gdaui_entry_wrapper_set_value_orig (GdauiDataEntry *iface, const GValue *value)
 		changed = ! mgwrap->priv->real_class->value_is_equal_to (mgwrap, value);
 	else {
 		evalue = gdaui_entry_wrapper_get_value (iface);
-		if (! gda_value_differ ((GValue *) value, evalue))
+		if ((!value || (G_VALUE_TYPE (value) == GDA_TYPE_NULL)) &&
+		    (!evalue || (G_VALUE_TYPE (evalue) == GDA_TYPE_NULL)))
+			changed = FALSE;
+		else if (!gda_value_differ ((GValue *) value, evalue))
 			changed = FALSE;
 		if (evalue)
 			gda_value_free (evalue);

@@ -25,8 +25,8 @@
  * Interfaces 
  */
 
-typedef struct _GdauiDataWidget       GdauiDataWidget;
-typedef struct _GdauiDataWidgetIface  GdauiDataWidgetIface;
+typedef struct _GdauiDataProxy       GdauiDataProxy;
+typedef struct _GdauiDataProxyIface  GdauiDataProxyIface;
 
 /* 
  * Colors

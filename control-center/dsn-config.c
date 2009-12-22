@@ -70,7 +70,7 @@ list_popup_cb (GdauiRawGrid *grid, GtkMenu *menu, gpointer user_data)
 {
 	GtkWidget *item_delete, *item_properties;
 	gboolean ok;
-	GList *list;
+	GArray *selection;
 
 	item_delete = cc_new_menu_item (GTK_STOCK_DELETE,
 					      TRUE,
@@ -81,10 +81,10 @@ list_popup_cb (GdauiRawGrid *grid, GtkMenu *menu, gpointer user_data)
 						  G_CALLBACK (list_popup_properties_cb),
 						  user_data);
 
-	list = gdaui_raw_grid_get_selection (grid);
-	ok = list != NULL;
-	if (list)
-		g_list_free (list);
+	selection = gdaui_data_selector_get_selected_rows (GDAUI_DATA_SELECTOR (grid));
+	ok = (selection != NULL);
+	if (selection)
+		g_array_free (selection, TRUE);
 	gtk_widget_set_sensitive (item_delete, ok);
 	gtk_widget_set_sensitive (item_properties, ok);
 
@@ -154,9 +154,9 @@ dsn_config_new (void)
 
 	g_object_unref (model);
 	g_object_set_data (G_OBJECT (dsn), "grid", priv->dsn_list);
- 	gdaui_data_widget_column_set_editable (GDAUI_DATA_WIDGET (priv->dsn_list), 0, FALSE);
- 	gdaui_data_widget_column_hide (GDAUI_DATA_WIDGET (priv->dsn_list), 3);
- 	gdaui_data_widget_column_hide (GDAUI_DATA_WIDGET (priv->dsn_list), 4);
+ 	gdaui_data_proxy_column_set_editable (GDAUI_DATA_PROXY (priv->dsn_list), 0, FALSE);
+ 	gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (priv->dsn_list), 3, FALSE);
+ 	gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (priv->dsn_list), 4, FALSE);
 	g_object_set (priv->dsn_list, "info_cell_visible", FALSE, NULL);
 
 	gtk_container_add (GTK_CONTAINER (sw), priv->dsn_list);
@@ -199,28 +199,30 @@ dsn_config_edit_properties (GtkWidget *dsn)
 {
 	DsnConfigPrivate *priv;
 	GdaDataModel *model;
-	GList *selection;
+	GArray *selection;
 	gchar *str;
 	const GValue *cvalue;
 
 	priv = g_object_get_data (G_OBJECT (dsn), DSN_CONFIG_DATA);
 	
-	selection = gdaui_raw_grid_get_selection (GDAUI_RAW_GRID (priv->dsn_list));
+	selection = gdaui_data_selector_get_selected_rows (GDAUI_DATA_SELECTOR (priv->dsn_list));
 	if (!selection)
 		return;
 
-	model = gdaui_data_widget_get_gda_model (GDAUI_DATA_WIDGET (priv->dsn_list));
-	if (!GDA_IS_DATA_MODEL (model))
+	model = gdaui_data_selector_get_model (GDAUI_DATA_SELECTOR (priv->dsn_list));
+	if (!GDA_IS_DATA_MODEL (model)) {
+		g_array_free (selection, TRUE);
 		return;
+	}
 
-	cvalue = gda_data_model_get_value_at (model, 0, GPOINTER_TO_INT (selection->data), NULL);
+	cvalue = gda_data_model_get_value_at (model, 0, g_array_index (selection, gint, 0), NULL);
+	g_array_free (selection, TRUE);
 	if (!cvalue) 
 		return;
 
 	str = gda_value_stringify ((GValue *) cvalue);
 	dsn_properties_dialog (GTK_WINDOW (gtk_widget_get_toplevel (dsn)), str);
 
-	g_list_free (selection);
 	g_free (str);
 }
 
@@ -237,7 +239,7 @@ dsn_config_delete (GtkWidget *dsn)
 
 	sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->dsn_list));
 	sel_rows = gtk_tree_selection_get_selected_rows (sel, NULL);
-	model = gdaui_data_widget_get_gda_model (GDAUI_DATA_WIDGET (priv->dsn_list));
+	model = gdaui_data_selector_get_model (GDAUI_DATA_SELECTOR (priv->dsn_list));
 	g_assert (GDA_IS_DATA_MODEL (model));
 
 	/* make a list of DSN to remove */

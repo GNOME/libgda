@@ -2,7 +2,7 @@
 GdauiForm
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Form widget to manipulate data in a #GdaDataModel, with decorations
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -11,7 +11,7 @@ GdauiForm
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  The #GdauiRawForm widget which is used by the #GdaForm widget.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->
@@ -23,17 +23,22 @@ GdauiForm
 </para>
 
 
+<!-- ##### ARG GdauiForm:info ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiForm:info-flags ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdauiForm:model ##### -->
 <para>
 
 </para>
 
 <!-- ##### ARG GdauiForm:raw-form ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdauiForm:widget-info ##### -->
 <para>
 
 </para>

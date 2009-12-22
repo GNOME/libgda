@@ -53,6 +53,8 @@ do_grid_rw (GtkWidget *do_widget)
 		gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL);
 		grid = gdaui_grid_new (model);
 		g_object_unref (model);
+		g_object_set (G_OBJECT (grid), "info-flags",
+			      GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS, NULL);
 
 		gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 	}

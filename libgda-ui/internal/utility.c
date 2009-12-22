@@ -384,7 +384,7 @@ _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataSt
  * Errors reporting
  */
 static GtkWidget *
-create_data_error_dialog (GdauiDataWidget *form, gboolean with_question, gboolean can_discard, GError *filled_error)
+create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean can_discard, GError *filled_error)
 {
 	GtkWidget *dlg;
 	const gchar *msg1 = NULL, *msg2 = NULL;
@@ -464,7 +464,7 @@ create_data_error_dialog (GdauiDataWidget *form, gboolean with_question, gboolea
  * Returns: TRUE if current data can be discarded
  */
 gboolean
-_gdaui_utility_display_error_with_keep_or_discard_choice (GdauiDataWidget *form, GError *filled_error)
+_gdaui_utility_display_error_with_keep_or_discard_choice (GdauiDataProxy *form, GError *filled_error)
 {
 	GtkWidget *dlg;
 	gint res;
@@ -491,7 +491,7 @@ _gdaui_utility_display_error_with_keep_or_discard_choice (GdauiDataWidget *form,
  * led to the error.
  */
 void
-_gdaui_utility_display_error (GdauiDataWidget *form, gboolean can_discard, GError *filled_error)
+_gdaui_utility_display_error (GdauiDataProxy *form, gboolean can_discard, GError *filled_error)
 {
 	GtkWidget *dlg;
 	

@@ -3,9 +3,10 @@ gdaui_basic_form_get_type
 gdaui_combo_get_type
 gdaui_data_entry_get_type
 gdaui_data_store_get_type
-gdaui_data_widget_filter_get_type
-gdaui_data_widget_get_type
-gdaui_data_widget_info_get_type
+gdaui_data_filter_get_type
+gdaui_data_proxy_get_type
+gdaui_data_proxy_info_get_type
+gdaui_data_selector_get_type
 gdaui_form_get_type
 gdaui_grid_get_type
 gdaui_login_get_type
@@ -13,6 +14,5 @@ gdaui_provider_selector_get_type
 gdaui_raw_form_get_type
 gdaui_raw_grid_get_type
 gdaui_server_operation_get_type
-gdaui_set_get_type
 gdaui_tree_store_get_type
 gdaui_cloud_get_type

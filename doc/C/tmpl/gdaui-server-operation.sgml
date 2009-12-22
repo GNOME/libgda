@@ -2,16 +2,19 @@
 GdauiServerOperation
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Enter information to perform a DDL query
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdauiServerOperation widget allows the user to enter information to perform
+  Data Definition queries (all queries which are not SELECT, INSERT, UPDATE or DELETE).
+  For example the figure shows a #GdauiServerOperation widget set to create an index in an
+  SQLite database.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  See the #GdaServerOperation which actually holds the information to perform the query.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->
@@ -23,7 +26,7 @@ GdauiServerOperation
 </para>
 
 
-<!-- ##### ARG GdauiServerOperation:opt-header ##### -->
+<!-- ##### ARG GdauiServerOperation:hide-single-header ##### -->
 <para>
 
 </para>

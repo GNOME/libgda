@@ -6,7 +6,13 @@ Cloud widget
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdauiCloud widget displays a string for each row in a #GdaDataModel for which the size
+  is variable (determined either by some data in the data model, or by a function provided by
+  the programmer).
+</para>
+<para>
+  Depending on the selection mode of the widget, each string can be selected by the user and
+  the "selection-changed" signal is emitted.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -30,13 +36,6 @@ Cloud widget
 
 @gdauicloud: the object which received the signal.
 @arg1: 
-
-<!-- ##### SIGNAL GdauiCloud::selection-changed ##### -->
-<para>
-
-</para>
-
-@gdauicloud: the object which received the signal.
 
 <!-- ##### ARG GdauiCloud:label-column ##### -->
 <para>
@@ -83,15 +82,6 @@ Cloud widget
 @mode: 
 
 
-<!-- ##### FUNCTION gdaui_cloud_get_selection ##### -->
-<para>
-
-</para>
-
-@cloud: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gdaui_cloud_filter ##### -->
 <para>
 
@@ -108,5 +98,26 @@ Cloud widget
 
 @cloud: 
 @Returns: 
+
+
+<!-- ##### USER_FUNCTION GdauiCloudWeightFunc ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_cloud_set_weight_func ##### -->
+<para>
+
+</para>
+
+@cloud: 
+@func: 
+@data: 
 
 

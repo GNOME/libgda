@@ -42,7 +42,7 @@ typedef struct _GdauiComboPrivate GdauiComboPrivate;
 
 struct _GdauiCombo {
 	GtkComboBox          object;
-	GdauiComboPrivate *priv;
+	GdauiComboPrivate   *priv;
 };
 
 struct _GdauiComboClass {
@@ -55,15 +55,15 @@ GtkWidget    *gdaui_combo_new              (void);
 GtkWidget    *gdaui_combo_new_with_model   (GdaDataModel *model, gint n_cols, gint *cols_index);
 
 void          gdaui_combo_set_model        (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint *cols_index);
-GdaDataModel *gdaui_combo_get_model        (GdauiCombo *combo);
-void          gdaui_combo_add_undef_choice (GdauiCombo *combo, gboolean add_undef_choice);
+void          gdaui_combo_add_null         (GdauiCombo *combo, gboolean add_null);
+gboolean      gdaui_combo_is_null_selected (GdauiCombo *combo);
 
-gboolean      gdaui_combo_set_values       (GdauiCombo *combo, const GSList *values);
-GSList       *gdaui_combo_get_values       (GdauiCombo *combo);
-gboolean      gdaui_combo_undef_selected   (GdauiCombo *combo);
 
-gboolean      gdaui_combo_set_values_ext   (GdauiCombo *combo, const GSList *values, gint *cols_index);
-GSList       *gdaui_combo_get_values_ext   (GdauiCombo *combo, gint n_cols, gint *cols_index);
+/* private API */
+gboolean      _gdaui_combo_set_selected     (GdauiCombo *combo, const GSList *values);
+GSList       *_gdaui_combo_get_selected     (GdauiCombo *combo);
+gboolean      _gdaui_combo_set_selected_ext (GdauiCombo *combo, const GSList *values, gint *cols_index);
+GSList       *_gdaui_combo_get_selected_ext (GdauiCombo *combo, gint n_cols, gint *cols_index);
 
 
 G_END_DECLS

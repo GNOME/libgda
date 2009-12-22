@@ -1,4 +1,4 @@
-/* Widgets/Login widget
+/* Widgets/Login
  *
  * The GdauiLogin widget displays information required to open a connection
  */

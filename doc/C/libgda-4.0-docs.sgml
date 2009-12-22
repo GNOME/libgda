@@ -137,9 +137,9 @@
 <!ENTITY libgdaui-gdaui-easy SYSTEM "xml/gdaui-easy.xml">
 <!ENTITY libgdaui-gdaui-plugins SYSTEM "xml/gdaui-plugins.xml">
 <!ENTITY libgdaui-GdauiDataStore SYSTEM "xml/gdaui-data-store.xml">
-<!ENTITY libgdaui-GdauiDataWidgetFilter SYSTEM "xml/gdaui-data-widget-filter.xml">
-<!ENTITY libgdaui-GdauiDataWidget SYSTEM "xml/gdaui-data-widget.xml">
-<!ENTITY libgdaui-GdauiDataWidgetInfo SYSTEM "xml/gdaui-data-widget-info.xml">
+<!ENTITY libgdaui-GdauiDataFilter SYSTEM "xml/gdaui-data-filter.xml">
+<!ENTITY libgdaui-GdauiDataProxy SYSTEM "xml/gdaui-data-proxy.xml">
+<!ENTITY libgdaui-GdauiDataProxyInfo SYSTEM "xml/gdaui-data-proxy-info.xml">
 <!ENTITY libgdaui-GdauiForm SYSTEM "xml/gdaui-form.xml">
 <!ENTITY libgdaui-GdauiGrid SYSTEM "xml/gdaui-grid.xml">
 <!ENTITY libgdaui-GdauiLogin SYSTEM "xml/gdaui-login.xml">
@@ -147,9 +147,9 @@
 <!ENTITY libgdaui-GdauiRawForm SYSTEM "xml/gdaui-raw-form.xml">
 <!ENTITY libgdaui-GdauiRawGrid SYSTEM "xml/gdaui-raw-grid.xml">
 <!ENTITY libgdaui-GdauiServerOperation SYSTEM "xml/gdaui-server-operation.xml">
-<!ENTITY libgdaui-GdauiSet SYSTEM "xml/gdaui-set.xml">
 <!ENTITY libgdaui-GdauiTreeStore SYSTEM "xml/gdaui-tree-store.xml">
 <!ENTITY libgdaui-GdauiCloud SYSTEM "xml/gdaui-cloud.xml">
+<!ENTITY libgdaui-GdauiDataSelector SYSTEM "xml/gdaui-data-selector.xml">
 ]>
 
 <book id="index">
@@ -1246,29 +1246,30 @@ g_object_unref (store);
     <chapter>
       <title>User interface API reference</title>
       &visual-index;
-      &libgdaui-gdaui-easy;
 
       &libgdaui-GdauiLogin;
       &libgdaui-GdauiProviderSelector;
 
+      &libgdaui-GdauiDataSelector;
+      &libgdaui-GdauiDataProxy;
       &libgdaui-GdauiBasicForm;
-      &libgdaui-gdaui-plugins;
       &libgdaui-GdauiForm;
+      &libgdaui-GdauiRawForm;
       &libgdaui-GdauiGrid;
+      &libgdaui-GdauiRawGrid;
+      &libgdaui-GdauiCombo;
       &libgdaui-GdauiCloud;
 
-      &libgdaui-GdauiRawForm;
-      &libgdaui-GdauiRawGrid;
+      &libgdaui-gdaui-plugins;
 
-      &libgdaui-GdauiCombo;
       &libgdaui-GdauiDataEntry;
       &libgdaui-GdauiDataStore;
-      &libgdaui-GdauiDataWidgetFilter;
-      &libgdaui-GdauiDataWidget;
-      &libgdaui-GdauiDataWidgetInfo;
+      &libgdaui-GdauiDataFilter;
+      &libgdaui-GdauiDataProxyInfo;
       &libgdaui-GdauiServerOperation;
-      &libgdaui-GdauiSet;
       &libgdaui-GdauiTreeStore;
+
+      &libgdaui-gdaui-easy;
     </chapter>
 
     <chapter id="multi-threading">

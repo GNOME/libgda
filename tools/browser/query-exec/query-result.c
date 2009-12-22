@@ -333,6 +333,9 @@ make_widget_for_data_model (GdaDataModel *model)
 	GtkWidget *grid;
 	grid = gdaui_grid_new (model);
 	gdaui_grid_set_sample_size (GDAUI_GRID (grid), 300);
+	g_object_set (G_OBJECT (grid), "info-flags",
+		      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS | 
+		      GDAUI_DATA_PROXY_INFO_CURRENT_ROW, NULL);
 	return grid;
 }
 

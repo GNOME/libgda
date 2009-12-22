@@ -1,4 +1,4 @@
-/* gdaui-data-widget-filter.c
+/* gdaui-data-filter.c
  *
  * Copyright (C) 2007 - 2009 Vivien Malerba
  *
@@ -21,36 +21,36 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/libgda.h>
-#include "gdaui-data-widget.h"
-#include "gdaui-data-widget-filter.h"
+#include "gdaui-data-proxy.h"
+#include "gdaui-data-filter.h"
 
-static void gdaui_data_widget_filter_class_init (GdauiDataWidgetFilterClass * class);
-static void gdaui_data_widget_filter_init (GdauiDataWidgetFilter *wid);
-static void gdaui_data_widget_filter_dispose (GObject *object);
+static void gdaui_data_filter_class_init (GdauiDataFilterClass * class);
+static void gdaui_data_filter_init (GdauiDataFilter *wid);
+static void gdaui_data_filter_dispose (GObject *object);
 
-static void gdaui_data_widget_filter_set_property (GObject *object,
-						    guint param_id,
-						    const GValue *value,
-						    GParamSpec *pspec);
-static void gdaui_data_widget_filter_get_property (GObject *object,
-						    guint param_id,
-						    GValue *value,
-						    GParamSpec *pspec);
+static void gdaui_data_filter_set_property (GObject *object,
+					    guint param_id,
+					    const GValue *value,
+					    GParamSpec *pspec);
+static void gdaui_data_filter_get_property (GObject *object,
+					    guint param_id,
+					    GValue *value,
+					    GParamSpec *pspec);
 
 
 /* callbacks */
-static void proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiDataWidgetFilter *filter);
-static void release_proxy (GdauiDataWidgetFilter *filter);
-static void data_widget_destroyed_cb (GdauiDataWidget *wid, GdauiDataWidgetFilter *filter);
-static void data_widget_proxy_changed_cb (GdauiDataWidget *data_widget, 
-					  GdaDataProxy *proxy, GdauiDataWidgetFilter *filter);
+static void proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiDataFilter *filter);
+static void release_proxy (GdauiDataFilter *filter);
+static void data_widget_destroyed_cb (GdauiDataProxy *wid, GdauiDataFilter *filter);
+static void data_widget_proxy_changed_cb (GdauiDataProxy *data_widget, 
+					  GdaDataProxy *proxy, GdauiDataFilter *filter);
 
-static void clear_filter_cb (GtkButton *button, GdauiDataWidgetFilter *filter);
-static void apply_filter_cb (GtkButton *button, GdauiDataWidgetFilter *filter);
+static void clear_filter_cb (GtkButton *button, GdauiDataFilter *filter);
+static void apply_filter_cb (GtkButton *button, GdauiDataFilter *filter);
 
-struct _GdauiDataWidgetFilterPriv
+struct _GdauiDataFilterPriv
 {
-	GdauiDataWidget *data_widget;
+	GdauiDataProxy   *data_widget;
 	GdaDataProxy      *proxy;
 
 	GtkWidget         *filter_entry;
@@ -61,52 +61,51 @@ struct _GdauiDataWidgetFilterPriv
 static GObjectClass *parent_class = NULL;
 
 /* properties */
-enum
-{
-        PROP_0,
-        PROP_DATA_WIDGET
+enum {
+	PROP_0,
+	PROP_DATA_WIDGET
 };
 
 GType
-gdaui_data_widget_filter_get_type (void)
+gdaui_data_filter_get_type (void)
 {
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo filter = {
-			sizeof (GdauiDataWidgetFilterClass),
+			sizeof (GdauiDataFilterClass),
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_data_widget_filter_class_init,
+			(GClassInitFunc) gdaui_data_filter_class_init,
 			NULL,
 			NULL,
-			sizeof (GdauiDataWidgetFilter),
+			sizeof (GdauiDataFilter),
 			0,
-			(GInstanceInitFunc) gdaui_data_widget_filter_init
+			(GInstanceInitFunc) gdaui_data_filter_init
 		};		
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiDataWidgetFilter", &filter, 0);
+		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiDataFilter", &filter, 0);
 	}
 
 	return type;
 }
 
 static void
-gdaui_data_widget_filter_class_init (GdauiDataWidgetFilterClass * class)
+gdaui_data_filter_class_init (GdauiDataFilterClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 	
 	parent_class = g_type_class_peek_parent (class);
 
 
-	object_class->dispose = gdaui_data_widget_filter_dispose;
+	object_class->dispose = gdaui_data_filter_dispose;
 
 	/* Properties */
-        object_class->set_property = gdaui_data_widget_filter_set_property;
-        object_class->get_property = gdaui_data_widget_filter_get_property;
+        object_class->set_property = gdaui_data_filter_set_property;
+        object_class->get_property = gdaui_data_filter_get_property;
 	g_object_class_install_property (object_class, PROP_DATA_WIDGET,
-                                         g_param_spec_object ("data_widget", NULL, NULL, GDAUI_TYPE_DATA_WIDGET,
-                                                               G_PARAM_READABLE | G_PARAM_WRITABLE));
+                                         g_param_spec_object ("data-widget", NULL, NULL, GDAUI_TYPE_DATA_PROXY,
+							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
 static void
@@ -137,12 +136,12 @@ unset_wait_cursor (GtkWidget *w)
 #if GTK_CHECK_VERSION(2,18,0)
 		gdk_window_set_cursor (gtk_widget_get_window (parent), NULL);
 #else
-		gdk_window_set_cursor (parent->window, NULL);
+	gdk_window_set_cursor (parent->window, NULL);
 #endif
 }
 
 static void
-apply_filter_cb (GtkButton *button, GdauiDataWidgetFilter *filter)
+apply_filter_cb (GtkButton *button, GdauiDataFilter *filter)
 {
 	const gchar *expr;
 	gchar *err = NULL;
@@ -189,19 +188,19 @@ apply_filter_cb (GtkButton *button, GdauiDataWidgetFilter *filter)
 }
 
 static void
-clear_filter_cb (GtkButton *button, GdauiDataWidgetFilter *filter)
+clear_filter_cb (GtkButton *button, GdauiDataFilter *filter)
 {
 	gtk_entry_set_text (GTK_ENTRY (filter->priv->filter_entry), "");
 	apply_filter_cb (button, filter);
 }
 
 static void
-gdaui_data_widget_filter_init (GdauiDataWidgetFilter * wid)
+gdaui_data_filter_init (GdauiDataFilter * wid)
 {
 	GtkWidget *table, *label, *entry, *button, *bbox;
 	gchar *str;
 
-	wid->priv = g_new0 (GdauiDataWidgetFilterPriv, 1);
+	wid->priv = g_new0 (GdauiDataFilterPriv, 1);
 	wid->priv->data_widget = NULL;
 	wid->priv->proxy = NULL;
 
@@ -244,29 +243,31 @@ gdaui_data_widget_filter_init (GdauiDataWidgetFilter * wid)
 }
 
 /**
- * gdaui_data_widget_filter_new
- * @data_widget: a widget implementing the #GdauiDataWidget interface
+ * gdaui_data_filter_new
+ * @data_widget: a widget implementing the #GdauiDataProxy interface
  *
- * Creates a new #GdauiDataWidgetFilter widget suitable to change the filter expression
+ * Creates a new #GdauiDataFilter widget suitable to change the filter expression
  * for @data_widget's displayed rows
  *
  * Returns: the new widget
+ *
+ * Since: 4.2
  */
 GtkWidget *
-gdaui_data_widget_filter_new (GdauiDataWidget *data_widget)
+gdaui_data_filter_new (GdauiDataProxy *data_widget)
 {
 	GtkWidget *filter;
 
-	g_return_val_if_fail (!data_widget || GDAUI_IS_DATA_WIDGET (data_widget), NULL);
+	g_return_val_if_fail (!data_widget || GDAUI_IS_DATA_PROXY (data_widget), NULL);
 
-	filter = (GtkWidget *) g_object_new (GDAUI_TYPE_DATA_WIDGET_FILTER, 
+	filter = (GtkWidget *) g_object_new (GDAUI_TYPE_DATA_FILTER, 
 					     "data_widget", data_widget, NULL);
 
 	return filter;
 }
 
 static void
-data_widget_destroyed_cb (GdauiDataWidget *wid, GdauiDataWidgetFilter *filter)
+data_widget_destroyed_cb (GdauiDataProxy *wid, GdauiDataFilter *filter)
 {
 	g_assert (wid == filter->priv->data_widget);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (wid),
@@ -278,7 +279,7 @@ data_widget_destroyed_cb (GdauiDataWidget *wid, GdauiDataWidgetFilter *filter)
 }
 
 static void
-proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiDataWidgetFilter *filter)
+proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiDataFilter *filter)
 {
 	const gchar *expr;
 
@@ -288,7 +289,7 @@ proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiDataWidgetFilter *filter)
 }
 
 static void
-release_proxy (GdauiDataWidgetFilter *filter)
+release_proxy (GdauiDataFilter *filter)
 {
 	g_signal_handlers_disconnect_by_func (G_OBJECT (filter->priv->proxy),
 					      G_CALLBACK (proxy_filter_changed_cb), filter);
@@ -297,19 +298,19 @@ release_proxy (GdauiDataWidgetFilter *filter)
 }
 
 static void
-data_widget_proxy_changed_cb (GdauiDataWidget *data_widget, GdaDataProxy *proxy, GdauiDataWidgetFilter *filter)
+data_widget_proxy_changed_cb (GdauiDataProxy *data_widget, GdaDataProxy *proxy, GdauiDataFilter *filter)
 {
 	g_object_set (G_OBJECT (filter), "data_widget", data_widget, NULL);
 }
 
 static void
-gdaui_data_widget_filter_dispose (GObject *object)
+gdaui_data_filter_dispose (GObject *object)
 {
-	GdauiDataWidgetFilter *filter;
+	GdauiDataFilter *filter;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_DATA_WIDGET_FILTER (object));
-	filter = GDAUI_DATA_WIDGET_FILTER (object);
+	g_return_if_fail (GDAUI_IS_DATA_FILTER (object));
+	filter = GDAUI_DATA_FILTER (object);
 
 	if (filter->priv) {
 		if (filter->priv->proxy)
@@ -327,14 +328,14 @@ gdaui_data_widget_filter_dispose (GObject *object)
 }
 
 static void
-gdaui_data_widget_filter_set_property (GObject *object,
-					guint param_id,
-					const GValue *value,
-					GParamSpec *pspec)
+gdaui_data_filter_set_property (GObject *object,
+				guint param_id,
+				const GValue *value,
+				GParamSpec *pspec)
 {
-	GdauiDataWidgetFilter *filter;
+	GdauiDataFilter *filter;
 
-        filter = GDAUI_DATA_WIDGET_FILTER (object);
+        filter = GDAUI_DATA_FILTER (object);
         if (filter->priv) {
                 switch (param_id) {
                 case PROP_DATA_WIDGET:
@@ -343,7 +344,7 @@ gdaui_data_widget_filter_set_property (GObject *object,
 			if (filter->priv->proxy)
 				release_proxy (filter);
 
-			filter->priv->data_widget = GDAUI_DATA_WIDGET(g_value_get_object (value));
+			filter->priv->data_widget = GDAUI_DATA_PROXY (g_value_get_object (value));
 			if (filter->priv->data_widget) {
 				GdaDataProxy *proxy;
 
@@ -354,7 +355,7 @@ gdaui_data_widget_filter_set_property (GObject *object,
 						  G_CALLBACK (data_widget_proxy_changed_cb), filter);
 
 				/* proxy */
-				proxy = gdaui_data_widget_get_proxy (filter->priv->data_widget);
+				proxy = gdaui_data_proxy_get_proxy (filter->priv->data_widget);
 				if (proxy) {
 					filter->priv->proxy = proxy;
 					g_object_ref (filter->priv->proxy);
@@ -372,14 +373,14 @@ gdaui_data_widget_filter_set_property (GObject *object,
 }
 
 static void
-gdaui_data_widget_filter_get_property (GObject *object,
-					guint param_id,
-					GValue *value,
-					GParamSpec *pspec)
+gdaui_data_filter_get_property (GObject *object,
+				guint param_id,
+				GValue *value,
+				GParamSpec *pspec)
 {
-	GdauiDataWidgetFilter *filter;
+	GdauiDataFilter *filter;
 
-        filter = GDAUI_DATA_WIDGET_FILTER (object);
+        filter = GDAUI_DATA_FILTER (object);
         if (filter->priv) {
                 switch (param_id) {
 		case PROP_DATA_WIDGET:

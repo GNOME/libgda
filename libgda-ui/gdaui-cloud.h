@@ -47,7 +47,6 @@ struct _GdauiCloud
 struct _GdauiCloudClass
 {
 	GtkVBoxClass       parent_class;
-	void            (* selection_changed) (GdauiCloud *cloud);
 	void            (* activate) (GdauiCloud *cloud, gint row);
 };
 
@@ -58,7 +57,6 @@ GType             gdaui_cloud_get_type             (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_cloud_new                  (GdaDataModel *model, gint label_column, gint weight_column);
 void              gdaui_cloud_set_selection_mode   (GdauiCloud *cloud, GtkSelectionMode mode);
-GList            *gdaui_cloud_get_selection        (GdauiCloud *cloud);
 
 void              gdaui_cloud_filter               (GdauiCloud *cloud, const gchar *filter);
 GtkWidget        *gdaui_cloud_create_filter_widget (GdauiCloud *cloud);

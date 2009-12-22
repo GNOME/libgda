@@ -18,12 +18,12 @@ typedef struct {
 } DemoData;
 
 static void
-restrict_default_served_by_field (GdauiDataWidget *data_widget, GdaDataModel *restrict_with, gint restrict_col)
+restrict_default_served_by_field (GdauiDataSelector *selector, GdaDataModel *restrict_with, gint restrict_col)
 {
 	GdaDataModelIter *iter;
 	GdaHolder *param;
 
-	iter = gdaui_data_widget_get_current_data (data_widget);
+	iter = gdaui_data_selector_get_data_set (selector);
 	param = GDA_HOLDER (g_slist_nth_data (GDA_SET (iter)->holders, 2));
 
 	g_assert (gda_holder_set_source_model (param, restrict_with, restrict_col, NULL));
@@ -71,8 +71,6 @@ do_linked_grid_form (GtkWidget *do_widget)
 		GtkWidget *cb;		
 		GdaDataModel *cust_model, *sr_model;
 		GtkWidget *form, *grid;
-		GdauiRawGrid *raw_grid;
-		GdauiRawForm *raw_form;
 		GdaDataProxy *proxy;
 		DemoData *data;
 
@@ -130,9 +128,8 @@ do_linked_grid_form (GtkWidget *do_widget)
 		gtk_widget_show (grid);
 
 		/* restrict the c.default_served_by field in the grid to be within the sr_model */
-		g_object_get (G_OBJECT (grid), "raw_grid", &raw_grid, NULL);
-		restrict_default_served_by_field (GDAUI_DATA_WIDGET (raw_grid), sr_model, 0);
-		data->grid_iter = gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (raw_grid));
+		restrict_default_served_by_field (GDAUI_DATA_SELECTOR (grid), sr_model, 0);
+		data->grid_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid));
 		g_signal_connect (data->grid_iter, "row_changed",
 				  G_CALLBACK (iter_row_changed_cb), data);
 
@@ -143,15 +140,14 @@ do_linked_grid_form (GtkWidget *do_widget)
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 0);
 		gtk_widget_show (label);
 
-		proxy = gdaui_data_widget_get_proxy (GDAUI_DATA_WIDGET (raw_grid));
+		proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (grid));
 		form = gdaui_form_new (GDA_DATA_MODEL (proxy));
 		gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
 		gtk_widget_show (form);
 
 		/* restrict the c.default_served_by field in the form to be within the sr_model */
-		g_object_get (G_OBJECT (form), "raw_form", &raw_form, NULL);
-		restrict_default_served_by_field (GDAUI_DATA_WIDGET (raw_form), sr_model, 0);
-		data->form_iter = gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (raw_form));
+		restrict_default_served_by_field (GDAUI_DATA_SELECTOR (form), sr_model, 0);
+		data->form_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (form));
 		g_signal_connect (data->form_iter, "row_changed",
 				  G_CALLBACK (iter_row_changed_cb), data);
 

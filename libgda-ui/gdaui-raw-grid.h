@@ -38,17 +38,16 @@ typedef struct _GdauiRawGridPriv  GdauiRawGridPriv;
 /* struct for the object's data */
 struct _GdauiRawGrid
 {
-	GtkTreeView             object;
+	GtkTreeView         object;
 
-	GdauiRawGridPriv     *priv;
+	GdauiRawGridPriv   *priv;
 };
 
 /* struct for the object's class */
 struct _GdauiRawGridClass
 {
-	GtkTreeViewClass        parent_class;
+	GtkTreeViewClass    parent_class;
 
-	void             (* selection_changed) (GdauiRawGrid *grid, gboolean row_selected);
 	void             (* double_clicked)    (GdauiRawGrid *grid, gint row);
         void             (* populate_popup)    (GdauiRawGrid *grid, GtkMenu *menu);
 };
@@ -63,7 +62,10 @@ GtkWidget        *gdaui_raw_grid_new                       (GdaDataModel *model)
 void              gdaui_raw_grid_set_sample_size           (GdauiRawGrid *grid, gint sample_size);
 void              gdaui_raw_grid_set_sample_start          (GdauiRawGrid *grid, gint sample_start);
 
-GList            *gdaui_raw_grid_get_selection             (GdauiRawGrid *grid);
+void              gdaui_raw_grid_set_data_layout_from_file (GdauiRawGrid *grid, const gchar *file_name,
+							    const gchar *parent_table);
+/* private API */
+GList            *_gdaui_raw_grid_get_selection            (GdauiRawGrid *grid);
 
 G_END_DECLS
 

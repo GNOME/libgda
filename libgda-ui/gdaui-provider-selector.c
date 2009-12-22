@@ -26,14 +26,13 @@
 #include <libgda-ui/gdaui-provider-selector.h>
 #include <libgda-ui/gdaui-combo.h>
 
-#define PARENT_TYPE GDAUI_TYPE_COMBO
-
 struct _GdauiProviderSelectorPrivate {
+	gint dummy;
 };
 
 static void gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klass);
 static void gdaui_provider_selector_init       (GdauiProviderSelector *selector,
-						   GdauiProviderSelectorClass *klass);
+						GdauiProviderSelectorClass *klass);
 static void gdaui_provider_selector_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
@@ -57,7 +56,7 @@ show_providers (GdauiProviderSelector *selector)
 
 	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "SQLite");
 	list = g_slist_append (NULL, tmpval);
-	gdaui_combo_set_values_ext (GDAUI_COMBO (selector), list, cols);
+	_gdaui_combo_set_selected_ext (GDAUI_COMBO (selector), list, cols);
 	gda_value_free ((GValue *)(list->data));
 	g_slist_free (list);
 	g_object_unref (model);
@@ -79,7 +78,7 @@ gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klass)
 
 static void
 gdaui_provider_selector_init (GdauiProviderSelector *selector,
-				 GdauiProviderSelectorClass *klass)
+			      GdauiProviderSelectorClass *klass)
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_SELECTOR (selector));
 
@@ -117,9 +116,7 @@ gdaui_provider_selector_get_type (void)
 			0,
 			(GInstanceInitFunc) gdaui_provider_selector_init
 		};
-		type = g_type_register_static (PARENT_TYPE,
-					       "GdauiProviderSelector",
-					       &info, 0);
+		type = g_type_register_static (GDAUI_TYPE_COMBO, "GdauiProviderSelector", &info, 0);
 	}
 	return type;
 }
@@ -147,6 +144,8 @@ gdaui_provider_selector_new (void)
  * Get the selected provider.
  *
  * Returns: the selected provider, or %NULL if no provider is selected
+ *
+ * Since: 4.2
  */
 const gchar *
 gdaui_provider_selector_get_provider (GdauiProviderSelector *selector)
@@ -155,7 +154,7 @@ gdaui_provider_selector_get_provider (GdauiProviderSelector *selector)
 	const gchar *str;
 
 	g_return_val_if_fail (GDAUI_IS_PROVIDER_SELECTOR (selector), NULL);
-	list = gdaui_combo_get_values (GDAUI_COMBO (selector));
+	list = _gdaui_combo_get_selected (GDAUI_COMBO (selector));
 	if (list && list->data) {
 		str = g_value_get_string ((GValue *)(list->data));
 		g_slist_free (list);
@@ -173,6 +172,8 @@ gdaui_provider_selector_get_provider (GdauiProviderSelector *selector)
  * Forces @selector to be set on @provider
  *
  * Returns: TRUE if @provider has been selected
+ *
+ * Since: 4.2
  */
 gboolean
 gdaui_provider_selector_set_provider (GdauiProviderSelector *selector, const gchar *provider)
@@ -185,11 +186,11 @@ gdaui_provider_selector_set_provider (GdauiProviderSelector *selector, const gch
 
 	if (provider && *provider)
 		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), provider);
-	else 
+	else
 		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "SQLite");
 
 	list = g_slist_append (NULL, tmpval);
-	retval = gdaui_combo_set_values_ext (GDAUI_COMBO (selector), list, cols);
+	retval = _gdaui_combo_set_selected_ext (GDAUI_COMBO (selector), list, cols);
 	gda_value_free ((GValue *)(list->data));
 	g_slist_free (list);
 
@@ -203,12 +204,14 @@ gdaui_provider_selector_set_provider (GdauiProviderSelector *selector, const gch
  * Get the selected provider as a #GdaServerProvider object
  *
  * Returns: a new #GdaServerProvider or %NULL if an error occurred
+ *
+ * Since: 4.2
  */
 GdaServerProvider *
 gdaui_provider_selector_get_provider_obj (GdauiProviderSelector *selector)
 {
 	const gchar *pname;
-	
+
 	g_return_val_if_fail (GDAUI_IS_PROVIDER_SELECTOR (selector), NULL);
 
 	pname = gdaui_provider_selector_get_provider (selector);

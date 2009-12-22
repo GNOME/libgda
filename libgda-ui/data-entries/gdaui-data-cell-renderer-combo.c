@@ -583,7 +583,7 @@ gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
 	g_object_set_data_full (G_OBJECT (combo),
 				GDAUI_DATA_CELL_RENDERER_COMBO_PATH,
 				g_strdup (path), g_free);
-	gdaui_combo_add_undef_choice (GDAUI_COMBO (combo),
+	gdaui_combo_add_null (GDAUI_COMBO (combo),
 				      (datacell->priv->attributes & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE);
 	gtk_widget_show (combo);
 
@@ -615,10 +615,10 @@ gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCe
 	if (canceled)
 		return;
 	
-	list = gdaui_combo_get_values_ext (GDAUI_COMBO (combo), 
-					   datacell->priv->source->ref_n_cols, 
-					   datacell->priv->source->ref_cols_index);
-	list_all = gdaui_combo_get_values_ext (GDAUI_COMBO (combo), 0, NULL);
+	list = _gdaui_combo_get_selected_ext (GDAUI_COMBO (combo), 
+					      datacell->priv->source->ref_n_cols, 
+					      datacell->priv->source->ref_cols_index);
+	list_all = _gdaui_combo_get_selected_ext (GDAUI_COMBO (combo), 0, NULL);
 
 	path = g_object_get_data (G_OBJECT (combo), GDAUI_DATA_CELL_RENDERER_COMBO_PATH);
 	g_signal_emit (datacell, text_cell_renderer_combo_signals [CHANGED], 0, path, list, list_all);

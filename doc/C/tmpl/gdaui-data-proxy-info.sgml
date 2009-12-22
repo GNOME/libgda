@@ -1,0 +1,61 @@
+<!-- ##### SECTION Title ##### -->
+GdauiDataProxyInfo
+
+<!-- ##### SECTION Short_Description ##### -->
+Shows information &amp; actions about a #GdauiDataProxy widget
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdauiDataProxyInfo widget is a container widget which, depending on how it is configured:
+  <itemizedlist>
+    <listitem><para>proposes action buttons to change the currently displayed row, add new row, ...</para></listitem>
+    <listitem><para>displays information about the number of rows in a #GdauiDataProxy</para></listitem>
+  </itemizedlist>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiDataProxyInfo ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdauiDataProxyInfo:data-proxy ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiDataProxyInfo:flags ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GdauiDataProxyInfoFlag ##### -->
+<para>
+
+</para>
+
+@GDAUI_DATA_PROXY_INFO_NONE: 
+@GDAUI_DATA_PROXY_INFO_CURRENT_ROW: 
+@GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS: 
+@GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS: 
+@GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS: 
+@GDAUI_DATA_PROXY_INFO_NO_FILTER: 
+
+<!-- ##### FUNCTION gdaui_data_proxy_info_new ##### -->
+<para>
+
+</para>
+
+@data_proxy: 
+@flags: 
+@Returns: 
+
+

@@ -66,7 +66,8 @@ HTML_IMAGES = DataModels.png \
 	tree-overview.png tree-overview2.png \
 	SqlIdentifiers.png thread-wrapper.png \
 	vi-basic-form.png vi-combo.png vi-data-entry.png \
-	vi-login.png
+	vi-login.png vi-cloud.png vi-provider-selector.png vi-raw-grid.png \
+	vi-info.png vi-filter.png vi-server-op.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=

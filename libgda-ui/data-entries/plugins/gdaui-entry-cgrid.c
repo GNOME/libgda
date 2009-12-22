@@ -26,7 +26,7 @@
 
 #include <libgda/gda-data-model.h>
 #include <libgda-ui/gdaui-raw-grid.h>
-#include <libgda-ui/gdaui-data-widget.h>
+#include <libgda-ui/gdaui-data-proxy.h>
 
 #include "gdaui-entry-cgrid.h"
 
@@ -574,8 +574,8 @@ gdaui_entry_cgrid_set_model (GdauiEntryCGrid   *cgrid,
 
 	guint i;
 	for (i = 0; i < list_length; ++i) 
-		gdaui_data_widget_column_set_editable (GDAUI_DATA_WIDGET (cgrid->priv->tree_view),
-							  i, FALSE);
+		gdaui_data_proxy_column_set_editable (GDAUI_DATA_PROXY (cgrid->priv->tree_view),
+						      i, FALSE);
 
 	gint grid_height = gda_data_model_get_n_rows ((GdaDataModel  *) model) * get_row_height (cgrid)
 		+ get_header_height (cgrid);

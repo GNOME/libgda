@@ -17,21 +17,16 @@
 	gdaui_basic_form_set_entries_to_default
 	gdaui_cloud_create_filter_widget
 	gdaui_cloud_filter
-	gdaui_cloud_get_selection
 	gdaui_cloud_get_type
 	gdaui_cloud_new
 	gdaui_cloud_set_selection_mode
-	gdaui_combo_add_undef_choice
-	gdaui_combo_get_model
+	gdaui_cloud_set_weight_func
+	gdaui_combo_add_null
 	gdaui_combo_get_type
-	gdaui_combo_get_values
-	gdaui_combo_get_values_ext
 	gdaui_combo_new
 	gdaui_combo_new_with_model
 	gdaui_combo_set_model
-	gdaui_combo_set_values
-	gdaui_combo_set_values_ext
-	gdaui_combo_undef_selected
+	gdaui_combo_is_null_selected
 	gdaui_data_cell_renderer_boolean_get_type
 	gdaui_data_cell_renderer_boolean_new
 	gdaui_data_cell_renderer_combo_get_type

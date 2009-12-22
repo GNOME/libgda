@@ -938,19 +938,16 @@ build_form_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_n
 	if (model) {
 		GdaSet *plist;
 		GdaHolder *param;
-		GdauiDataWidget *datawid;
 		GValue *value;
 
 		wid = gdaui_form_new (model);
-		g_object_get (G_OBJECT (wid), "raw-form", &datawid, NULL);
-		g_object_set (G_OBJECT (datawid), "show-actions", TRUE, NULL);
-		plist = GDA_SET (gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (datawid)));
+		plist = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid)));
+		gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (wid), -1, TRUE);
 		param = plist->holders->data;
 
 		value = gda_value_new_from_string (plugin_name, G_TYPE_STRING);
 		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);
 		gda_value_free (value);
-		g_object_unref (datawid);
 	}
 	else {
 		gchar *str;
@@ -974,19 +971,16 @@ build_grid_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_n
 	if (model) {
 		GdaSet *plist;
 		GdaHolder *param;
-		GdauiDataWidget *datawid;
 		GValue *value;
 		
 		wid = gdaui_grid_new (model);
-		g_object_get (G_OBJECT (wid), "raw-grid", &datawid, NULL);
-		g_object_set (G_OBJECT (datawid), "info-cell-visible", TRUE, NULL);
-		plist = GDA_SET (gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (datawid)));
+		plist = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid)));
+		gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (wid), -1, TRUE);
 		param = plist->holders->data;
 
 		value = gda_value_new_from_string (plugin_name, G_TYPE_STRING);
 		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);
 		gda_value_free (value);
-		g_object_unref (datawid);
 	}
 	else {
 		gchar *str;

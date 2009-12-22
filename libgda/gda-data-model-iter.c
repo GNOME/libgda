@@ -589,14 +589,37 @@ gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 		    (gda_data_model_iter_get_row (iter) != row) && 
 		    ! gda_set_is_valid ((GdaSet*) iter, NULL))
 			return FALSE;
-		
+
+		gboolean *null_oks = NULL;
+		if (GDA_SET (iter)->holders) {
+			gint i;
+			GSList *list;
+
+			null_oks = g_new (gboolean, g_slist_length (GDA_SET (iter)->holders));
+			for (i = 0, list = GDA_SET (iter)->holders; list; i++, list = list->next) {
+				null_oks[i] = gda_holder_get_not_null ((GdaHolder*) list->data);
+				gda_holder_set_not_null ((GdaHolder*) list->data, FALSE);
+			}
+		}
+
+		gboolean move_ok;
 		model = iter->priv->data_model;
 		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
-			return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
+			move_ok = (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
 		else {
 			/* default method */
-			return gda_data_model_iter_move_to_row_default (model, iter, row);
+			move_ok = gda_data_model_iter_move_to_row_default (model, iter, row);
 		}
+		
+		if (null_oks) {
+			gint i;
+			GSList *list;
+			for (i = 0, list = GDA_SET (iter)->holders; list; i++, list = list->next)
+				gda_holder_set_not_null ((GdaHolder*) list->data, null_oks[i]);
+			g_free (null_oks);
+		}
+		
+		return move_ok;
 	}
 }
 
@@ -860,7 +883,8 @@ gda_data_model_iter_get_row (GdaDataModelIter *iter)
  *
  * Declare all the parameters in @iter invalid, without modifying the
  * #GdaDataModel @iter is for or changing the row it represents. This method
- * is for internal usage.
+ * is for internal usage. Note that for gda_data_model_iter_is_valid() to return %FALSE,
+ * it is also necessary to set the "current-row" property to -1.
  */
 void
 gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)

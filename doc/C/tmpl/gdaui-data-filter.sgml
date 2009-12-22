@@ -1,0 +1,40 @@
+<!-- ##### SECTION Title ##### -->
+GdauiDataFilter
+
+<!-- ##### SECTION Short_Description ##### -->
+Entrer rules to filter the rows in a #GdauiDataProxy
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  The #GdauiDataFilter widget can be used as a standalone widget, but is also
+  used internally by the #GdauiDataProxyInfo widget for its search option.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdauiDataFilter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdauiDataFilter:data-widget ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gdaui_data_filter_new ##### -->
+<para>
+
+</para>
+
+@data_widget: 
+@Returns: 
+
+

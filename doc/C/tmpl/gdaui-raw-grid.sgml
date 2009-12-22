@@ -2,7 +2,7 @@
 GdauiRawGrid
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Grid widget to manipulate data in a #GdaDataModel
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -11,7 +11,8 @@ GdauiRawGrid
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  The #GdauiGrid widget which uses the #GdauiRawGrid and adds decorations such as
+  information about data model size, and features searching.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->
@@ -32,14 +33,6 @@ GdauiRawGrid
 @arg1: 
 
 <!-- ##### SIGNAL GdauiRawGrid::populate-popup ##### -->
-<para>
-
-</para>
-
-@gdauirawgrid: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdauiRawGrid::selection-changed ##### -->
 <para>
 
 </para>
@@ -94,12 +87,13 @@ GdauiRawGrid
 @sample_start: 
 
 
-<!-- ##### FUNCTION gdaui_raw_grid_get_selection ##### -->
+<!-- ##### FUNCTION gdaui_raw_grid_set_data_layout_from_file ##### -->
 <para>
 
 </para>
 
 @grid: 
-@Returns: 
+@file_name: 
+@parent_table: 
 
 

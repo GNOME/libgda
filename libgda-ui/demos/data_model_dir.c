@@ -43,7 +43,6 @@ do_data_model_dir (GtkWidget *do_widget)
 		GtkWidget *label;
 		GdaDataModel *model;
 		GtkWidget *form, *grid, *nb;
-		GdauiRawForm *raw;
 		GdaSet *data_set;
 		GdaHolder *param;
 		gchar *path;
@@ -93,21 +92,12 @@ do_data_model_dir (GtkWidget *do_widget)
 		g_object_unref (model);
 
 		/* specify that we want to use the 'picture' plugin */
-		g_object_get (G_OBJECT (form), "raw_form", &raw, NULL);
-		data_set = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (raw));
+		data_set = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid)));
 		param = gda_set_get_holder (data_set, "data");
 
 		value = gda_value_new_from_string ("picture", G_TYPE_STRING);
 		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);
-		gdaui_data_widget_column_show_actions (GDAUI_DATA_WIDGET (raw), -1, TRUE);
-
-		g_object_get (G_OBJECT (grid), "raw_grid", &raw, NULL);
-		data_set = GDA_SET (gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (raw)));
-		param = gda_set_get_holder (data_set, "data");
-
-		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);
-		gdaui_data_widget_column_show_actions (GDAUI_DATA_WIDGET (raw), -1, TRUE);
-
+		gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (grid), -1, TRUE);
 		gda_value_free (value);
 	}
 

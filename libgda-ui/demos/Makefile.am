@@ -24,8 +24,10 @@ demos =						\
 	linked_model_param.c \
 	ddl_queries.c \
 	login.c \
+	provider_sel.c \
 	tree.c \
-	cloud.c
+	cloud.c \
+	combo.c
 
 demofiles = demo_db.db example_automatic_layout.xml
 

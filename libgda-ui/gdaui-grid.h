@@ -55,7 +55,6 @@ struct _GdauiGridClass
 GType             gdaui_grid_get_type            (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_grid_new                 (GdaDataModel *model);
-GList            *gdaui_grid_get_selection       (GdauiGrid *grid);
 void              gdaui_grid_set_sample_size     (GdauiGrid *grid, gint sample_size);
 
 G_END_DECLS

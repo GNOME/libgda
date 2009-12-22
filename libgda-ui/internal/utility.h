@@ -23,7 +23,7 @@
 #include <libgda-ui/gdaui-data-entry.h>
 #include <libgda-ui/gdaui-data-store.h>
 #include <libgda-ui/gdaui-set.h>
-#include <libgda-ui/gdaui-data-widget.h>
+#include <libgda-ui/gdaui-data-proxy.h>
 
 /*
  *
@@ -48,9 +48,9 @@ GList           *_gdaui_utility_proxy_compute_values_for_group     (GdauiSetGrou
 								    GtkTreeIter *tree_iter, gboolean model_values);
 
 /*
- * Some dialogs used by GnomeDbDataWidget widgets
+ * Some dialogs used by GnomeDbDataProxy widgets
  */
-gboolean         _gdaui_utility_display_error_with_keep_or_discard_choice (GdauiDataWidget *form, GError *filled_error);
-void             _gdaui_utility_display_error                             (GdauiDataWidget *form, gboolean can_discard, GError *filled_error);
+gboolean         _gdaui_utility_display_error_with_keep_or_discard_choice (GdauiDataProxy *form, GError *filled_error);
+void             _gdaui_utility_display_error                             (GdauiDataProxy *form, gboolean can_discard, GError *filled_error);
 void             _gdaui_utility_show_error (GtkWindow *parent, const gchar *format, ...);
 

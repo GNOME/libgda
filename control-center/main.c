@@ -374,15 +374,16 @@ static void
 dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, gboolean row_selected, gpointer data)
 {
 	GtkAction *action;
-	GList *sel;
+	GArray *selection;
 
 	action = gtk_action_group_get_action (actions, "DatabaseProperties");
 	g_object_set (G_OBJECT (action), "sensitive", row_selected, NULL);
 
-	sel = gdaui_raw_grid_get_selection (dbrawgrid);
+	selection = gdaui_data_selector_get_selected_rows (GDAUI_DATA_SELECTOR (dbrawgrid));
 	action = gtk_action_group_get_action (actions, "DatabaseDelete");
-	g_object_set (G_OBJECT (action), "sensitive", sel ? TRUE : FALSE, NULL);
-	g_list_free (sel);
+	g_object_set (G_OBJECT (action), "sensitive", selection ? TRUE : FALSE, NULL);
+	if (selection)
+		g_array_free (selection, TRUE);
 }
 
 static void

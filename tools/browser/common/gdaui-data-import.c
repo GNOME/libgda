@@ -25,7 +25,9 @@
 #include <libgda-ui/gdaui-combo.h>
 #include <libgda-ui/gdaui-grid.h>
 #include <libgda-ui/gdaui-raw-grid.h>
-#include <libgda-ui/gdaui-data-widget-info.h>
+#include <libgda-ui/gdaui-data-proxy.h>
+#include <libgda-ui/gdaui-data-proxy-info.h>
+#include <libgda-ui/gdaui-data-selector.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
 static void gdaui_data_import_class_init (GdauiDataImportClass *class);
@@ -381,17 +383,16 @@ spec_changed_cb (GtkWidget *wid, GdauiDataImport *import)
 	}
 
 	if (import->priv->encoding_combo) {
-		GSList *values;
-
-		values = gdaui_combo_get_values (GDAUI_COMBO (import->priv->encoding_combo));
-		if (values) {
+		GdaDataModelIter *iter;
+		
+		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (import->priv->encoding_combo));;
+		if (iter) {
 			GdaHolder *h;
 			h = g_object_new (GDA_TYPE_HOLDER, "id", "ENCODING", "g-type", G_TYPE_STRING, NULL);
 			
-			gda_holder_set_value (h, (GValue *) values->data, NULL);
+			gda_holder_set_value (h, (GValue *) gda_data_model_iter_get_value_at (iter, 0), NULL);
 			gda_set_add_holder (options, h);
 			g_object_unref (h);
-			g_slist_free (values);
 		}
 	}
 
@@ -412,21 +413,14 @@ spec_changed_cb (GtkWidget *wid, GdauiDataImport *import)
 		g_object_unref (options);
 
 	if (import->priv->model) {
-		GObject *raw;
-		GObject *info;
-
 		gtk_widget_hide (import->priv->no_data_label);
 		import->priv->preview_grid = gdaui_grid_new (import->priv->model);
 
-		g_object_get (G_OBJECT (import->priv->preview_grid), "raw-grid", &raw, 
-			      "widget-info", &info, NULL);
-		g_object_set (raw, "info-cell-visible", FALSE, NULL);
-		gdaui_raw_grid_set_sample_size (GDAUI_RAW_GRID (raw), 50);
-		g_object_set (info, "flags", 
-			      GDAUI_DATA_WIDGET_INFO_CHUNCK_CHANGE_BUTTONS | 
-			      GDAUI_DATA_WIDGET_INFO_CURRENT_ROW, NULL);
-		g_object_unref (info);
-
+		gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (import->priv->preview_grid), -1, FALSE);
+		gdaui_grid_set_sample_size (GDAUI_GRID (import->priv->preview_grid), 50);
+		g_object_set (G_OBJECT (import->priv->preview_grid), "info-flags",
+			      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS | 
+			      GDAUI_DATA_PROXY_INFO_CURRENT_ROW, NULL);
 		gtk_box_pack_start (GTK_BOX (import->priv->preview_box), import->priv->preview_grid, TRUE, TRUE, 0);
 		gtk_widget_show (import->priv->preview_grid);
 	}

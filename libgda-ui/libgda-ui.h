@@ -29,25 +29,25 @@
 #include <libgda-ui/gdaui-basic-form.h>
 #include <libgda-ui/gdaui-combo.h>
 #include <libgda-ui/gdaui-data-store.h>
-#include <libgda-ui/gdaui-data-widget-filter.h>
-#include <libgda-ui/gdaui-data-widget.h>
+#include <libgda-ui/gdaui-data-filter.h>
+#include <libgda-ui/gdaui-data-proxy.h>
 #include <libgda-ui/gdaui-easy.h>
 #include <libgda-ui/gdaui-enums.h>
 #include <libgda-ui/gdaui-raw-form.h>
 #include <libgda-ui/gdaui-form.h>
-#include <libgda-ui/gdaui-set.h>
 #include <libgda-ui/gdaui-raw-grid.h>
 #include <libgda-ui/gdaui-grid.h>
-#include <libgda-ui/gdaui-data-widget-info.h>
+#include <libgda-ui/gdaui-data-proxy-info.h>
 #include <libgda-ui/gdaui-provider-selector.h>
 #include <libgda-ui/gdaui-server-operation.h>
 #include <libgda-ui/gdaui-login.h>
 #include <libgda-ui/gdaui-tree-store.h>
 #include <libgda-ui/gdaui-cloud.h>
+#include <libgda-ui/gdaui-data-selector.h>
 
 G_BEGIN_DECLS
 
-void             gdaui_init (void);
+void gdaui_init (void);
 
 G_END_DECLS
 

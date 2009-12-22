@@ -2,7 +2,7 @@
 GdauiGrid
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Grid widget to manipulate data in a #GdaDataModel, with decorations
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -11,7 +11,7 @@ GdauiGrid
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  The #GdauiRawGrid widget which is used by the #GdaGrid widget.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->
@@ -23,6 +23,16 @@ GdauiGrid
 </para>
 
 
+<!-- ##### ARG GdauiGrid:info ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiGrid:info-flags ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdauiGrid:model ##### -->
 <para>
 
@@ -33,26 +43,12 @@ GdauiGrid
 
 </para>
 
-<!-- ##### ARG GdauiGrid:widget-info ##### -->
-<para>
-
-</para>
-
 <!-- ##### FUNCTION gdaui_grid_new ##### -->
 <para>
 
 </para>
 
 @model: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gdaui_grid_get_selection ##### -->
-<para>
-
-</para>
-
-@grid: 
 @Returns: 
 
 

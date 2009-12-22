@@ -30,6 +30,7 @@ gdaui_basic_form_entry_set_editable
 gdaui_basic_form_set_entries_to_default
 gdaui_basic_form_get_entry_widget
 gdaui_basic_form_get_label_widget
+gdaui_basic_form_set_data_layout_from_file
 <SUBSECTION Standard>
 GDAUI_BASIC_FORM
 GDAUI_BASIC_FORM_CLASS
@@ -46,13 +47,8 @@ GdauiCombo
 gdaui_combo_new
 gdaui_combo_new_with_model
 gdaui_combo_set_model
-gdaui_combo_get_model
-gdaui_combo_add_undef_choice
-gdaui_combo_set_values
-gdaui_combo_get_values
-gdaui_combo_undef_selected
-gdaui_combo_set_values_ext
-gdaui_combo_get_values_ext
+gdaui_combo_add_null
+gdaui_combo_is_null_selected
 <SUBSECTION Standard>
 GDAUI_COMBO
 GDAUI_COMBO_CLASS
@@ -111,58 +107,53 @@ gdaui_data_store_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gdaui-data-widget-filter</FILE>
-<TITLE>GdauiDataWidgetFilter</TITLE>
-GdauiDataWidgetFilter
-gdaui_data_widget_filter_new
+<FILE>gdaui-data-filter</FILE>
+<TITLE>GdauiDataFilter</TITLE>
+GdauiDataFilter
+gdaui_data_filter_new
 <SUBSECTION Standard>
-GDAUI_DATA_WIDGET_FILTER
-GDAUI_IS_DATA_WIDGET_FILTER
-GDAUI_DATA_WIDGET_FILTER_CLASS
-GDAUI_TYPE_DATA_WIDGET_FILTER
-gdaui_data_widget_filter_get_type
+GDAUI_DATA_FILTER
+GDAUI_IS_DATA_FILTER
+GDAUI_DATA_FILTER_CLASS
+GDAUI_TYPE_DATA_FILTER
+gdaui_data_filter_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gdaui-data-widget</FILE>
-<TITLE>GdauiDataWidget</TITLE>
-GdauiDataWidget
-GdauiDataWidgetIface
-gdaui_data_widget_new
-gdaui_data_widget_get_proxy
-gdaui_data_widget_get_actions_group
-gdaui_data_widget_perform_action
-gdaui_data_widget_column_show
-gdaui_data_widget_column_hide
-gdaui_data_widget_column_set_editable
-gdaui_data_widget_column_show_actions
-gdaui_data_widget_get_gda_model
-gdaui_data_widget_set_gda_model
-gdaui_data_widget_get_current_data
-GdauiDataWidgetWriteMode
-gdaui_data_widget_set_write_mode
-gdaui_data_widget_get_write_mode
-gdaui_data_widget_set_data_layout_from_file
+<FILE>gdaui-data-proxy</FILE>
+<TITLE>GdauiDataProxy</TITLE>
+GdauiDataProxy
+GdauiDataProxyIface
+gdaui_data_proxy_new
+gdaui_data_proxy_get_proxy
+gdaui_data_proxy_get_actions_group
+GdauiAction
+gdaui_data_proxy_perform_action
+gdaui_data_proxy_column_set_editable
+gdaui_data_proxy_column_show_actions
+GdauiDataProxyWriteMode
+gdaui_data_proxy_set_write_mode
+gdaui_data_proxy_get_write_mode
 <SUBSECTION Standard>
-GDAUI_DATA_WIDGET
-GDAUI_IS_DATA_WIDGET
-GDAUI_DATA_WIDGET_CLASS
-GDAUI_TYPE_DATA_WIDGET
-gdaui_data_widget_get_type
+GDAUI_DATA_PROXY
+GDAUI_IS_DATA_PROXY
+GDAUI_DATA_PROXY_CLASS
+GDAUI_TYPE_DATA_PROXY
+gdaui_data_proxy_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gdaui-data-widget-info</FILE>
-<TITLE>GdauiDataWidgetInfo</TITLE>
-GdauiDataWidgetInfo
-GdauiDataWidgetInfoFlag
-gdaui_data_widget_info_new
+<FILE>gdaui-data-proxy-info</FILE>
+<TITLE>GdauiDataProxyInfo</TITLE>
+GdauiDataProxyInfo
+GdauiDataProxyInfoFlag
+gdaui_data_proxy_info_new
 <SUBSECTION Standard>
-GDAUI_DATA_WIDGET_INFO
-GDAUI_IS_DATA_WIDGET_INFO
-GDAUI_DATA_WIDGET_INFO_CLASS
-GDAUI_TYPE_DATA_WIDGET_INFO
-gdaui_data_widget_info_get_type
+GDAUI_DATA_PROXY_INFO
+GDAUI_IS_DATA_PROXY_INFO
+GDAUI_DATA_PROXY_INFO_CLASS
+GDAUI_TYPE_DATA_PROXY_INFO
+gdaui_data_proxy_info_get_type
 </SECTION>
 
 <SECTION>
@@ -184,7 +175,6 @@ gdaui_form_get_type
 <TITLE>GdauiGrid</TITLE>
 GdauiGrid
 gdaui_grid_new
-gdaui_grid_get_selection
 gdaui_grid_set_sample_size
 <SUBSECTION Standard>
 GDAUI_GRID
@@ -250,7 +240,7 @@ GdauiRawGrid
 gdaui_raw_grid_new
 gdaui_raw_grid_set_sample_size
 gdaui_raw_grid_set_sample_start
-gdaui_raw_grid_get_selection
+gdaui_raw_grid_set_data_layout_from_file
 <SUBSECTION Standard>
 GDAUI_RAW_GRID
 GDAUI_IS_RAW_GRID
@@ -271,22 +261,6 @@ GDAUI_IS_SERVER_OPERATION
 GDAUI_SERVER_OPERATION_CLASS
 GDAUI_TYPE_SERVER_OPERATION
 gdaui_server_operation_get_type
-</SECTION>
-
-<SECTION>
-<FILE>gdaui-set</FILE>
-<TITLE>GdauiSet</TITLE>
-GdauiSet
-gdaui_set_new
-GdauiSetGroup
-GdauiSetSource
-<SUBSECTION Standard>
-GDAUI_SET
-GDAUI_SET_CLASS
-GDAUI_IS_SET
-GDAUI_IS_SET_CLASS
-GDAUI_TYPE_SET
-gdaui_set_get_type
 </SECTION>
 
 <SECTION>
@@ -312,6 +286,8 @@ gdaui_cloud_set_selection_mode
 gdaui_cloud_get_selection
 gdaui_cloud_filter
 gdaui_cloud_create_filter_widget
+GdauiCloudWeightFunc
+gdaui_cloud_set_weight_func
 <SUBSECTION Standard>
 GDAUI_CLOUD
 GDAUI_CLOUD_CLASS
@@ -319,4 +295,23 @@ GDAUI_IS_CLOUD
 GDAUI_IS_CLOUD_CLASS
 GDAUI_TYPE_CLOUD
 gdaui_cloud_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gdaui-data-selector</FILE>
+<TITLE>GdauiDataSelector</TITLE>
+GdauiDataSelector
+gdaui_data_selector_get_model
+gdaui_data_selector_set_model
+gdaui_data_selector_get_selected_rows
+gdaui_data_selector_get_data_set
+gdaui_data_selector_select_row
+gdaui_data_selector_unselect_row
+gdaui_data_selector_set_column_visible
+<SUBSECTION Standard>
+GDAUI_DATA_SELECTOR
+GDAUI_DATA_SELECTOR_GET_IFACE
+GDAUI_IS_DATA_SELECTOR
+GDAUI_TYPE_DATA_SELECTOR
+gdaui_data_selector_get_type
 </SECTION>

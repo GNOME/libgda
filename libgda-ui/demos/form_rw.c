@@ -58,6 +58,10 @@ do_form_rw (GtkWidget *do_widget)
 		}
 		form = gdaui_form_new (model);
 		g_object_unref (model);
+		g_object_set (G_OBJECT (form), "info-flags",
+			      GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
+			      GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS |
+			      GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS, NULL);
 
 		gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
 	}

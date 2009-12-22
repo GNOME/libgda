@@ -1,4 +1,4 @@
-/* DDL queries
+/* Widgets/DDL queries
  *
  * A DDL query is a query defining or modifying a database structure and properties.
  * In Libgda, each type of DDL query corresponds to an "operation".
@@ -175,7 +175,7 @@ update_possible_operations (DemoData *data)
 	GdaServerOperationType type;
 	GdaDataModel *model;
 	
-	model = gdaui_combo_get_model (GDAUI_COMBO (data->op_combo));
+	model = gdaui_data_selector_get_model (GDAUI_DATA_SELECTOR (data->op_combo));
 	if (!model) {
 		gint columns[] = {1};
 		model = gda_data_model_array_new_with_g_types (2, G_TYPE_INT, G_TYPE_STRING);
@@ -230,8 +230,8 @@ tested_operation_changed_cb (GdauiCombo *combo, DemoData *data)
 	GdaServerProvider *prov = NULL;
 	GdaServerOperationType type;
 	GError *error = NULL;
-	GSList *combo_values;
-	gint columns[] = {0};
+	GdaDataModelIter *iter;
+	const GValue *cvalue = NULL;
 
 	if (data->op) {
 		g_object_unref (data->op);
@@ -243,8 +243,10 @@ tested_operation_changed_cb (GdauiCombo *combo, DemoData *data)
 	gtk_widget_set_sensitive (data->show_button, FALSE);
 	gtk_widget_set_sensitive (data->sql_button, FALSE);
 
-	combo_values = gdaui_combo_get_values_ext (GDAUI_COMBO (data->op_combo), 1, columns);
-	if (!combo_values || !gda_value_isa ((GValue *) (combo_values->data), G_TYPE_INT)) {
+	iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (data->op_combo));
+	if (iter)
+		cvalue = gda_data_model_iter_get_value_at (iter, 0);
+	if (!cvalue || !gda_value_isa ((GValue *) cvalue, G_TYPE_INT)) {
 		GtkWidget *label;
 
 		label = gtk_label_new ("Select an operation to perform");
@@ -253,8 +255,7 @@ tested_operation_changed_cb (GdauiCombo *combo, DemoData *data)
 		gtk_widget_show (data->op_form);
 		return;
 	}
-	type = g_value_get_int ((GValue *) (combo_values->data));
-	g_slist_free (combo_values);
+	type = g_value_get_int ((GValue *) cvalue);
 	
 	prov = get_provider_obj (data);
 	if (prov)
@@ -418,9 +419,9 @@ show_named_parameters (GtkButton *button, DemoData *data)
 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 #if GTK_CHECK_VERSION(2,18,0)
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
-				    label, TRUE, TRUE, 0);
+				    label, FALSE, FALSE, 0);
 #else
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), label, TRUE, TRUE, 0);
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), label, FALSE, FALSE, 0);
 #endif
 	gtk_widget_show (label);
 	
@@ -488,7 +489,7 @@ show_sql (GtkButton *button, DemoData *data)
 
 		dlg = gtk_message_dialog_new_with_markup (GTK_WINDOW (data->top_window),
 							  GTK_DIALOG_MODAL,
-							  msg_type, GTK_BUTTONS_CLOSE, "%s", msg);
+							  msg_type, GTK_BUTTONS_CLOSE, msg);
 		g_free (sql);
 		g_free (msg);
 

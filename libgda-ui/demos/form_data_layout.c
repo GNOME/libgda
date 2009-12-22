@@ -22,9 +22,6 @@ do_form_data_layout (GtkWidget *do_widget)
 		GdaDataModel *model;
 		GtkWidget *form;
 		GdauiRawForm *raw_form;
-		GdaSet *data_set;
-		GdaHolder *param;
-		GValue *value;
 		
 		window = gtk_dialog_new_with_buttons ("Form with automatic 'data_layout'",
 						      GTK_WINDOW (do_widget),
@@ -66,11 +63,10 @@ do_form_data_layout (GtkWidget *do_widget)
 		form = gdaui_form_new (model);
 		g_object_unref (model);
 
-		g_object_get (G_OBJECT (form), "raw_form", &raw_form, NULL);
+		g_object_get (G_OBJECT (form), "raw-form", &raw_form, NULL);
 		gchar *filename;
 		filename = demo_find_file ("example_automatic_layout.xml", NULL);
-		gdaui_data_widget_set_data_layout_from_file (GDAUI_DATA_WIDGET (raw_form),
-							     filename, "products");
+		gdaui_basic_form_set_data_layout_from_file (GDAUI_BASIC_FORM (raw_form), filename, "products");
 		g_free (filename);
 
 		gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
