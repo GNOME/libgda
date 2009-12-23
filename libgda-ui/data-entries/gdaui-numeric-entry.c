@@ -676,15 +676,16 @@ gdaui_numeric_entry_get_value (GdauiNumericEntry *entry)
 	
 	text = gdaui_entry_get_text ((GdauiEntry*) entry);
 	if (text) {
-		if (entry->priv->thousands_sep) {
-			gchar *ptr;
-			gint len;
-			len = strlen (text);
-			for (ptr = text; *ptr; ) {
-				if (*ptr == entry->priv->thousands_sep)
-					g_memmove (ptr, ptr+1, len - (ptr - text));
-				else
-					ptr++;
+		gchar *ptr;
+		gint len;
+		len = strlen (text);
+		for (ptr = text; *ptr; ) {
+			if (*ptr == entry->priv->thousands_sep)
+				g_memmove (ptr, ptr+1, len - (ptr - text));
+			else {
+				if (*ptr == entry->priv->decimal_sep)
+					*ptr = '.';
+				ptr++;
 			}
 		}
 		value = gda_value_new_from_string (text, entry->priv->type);
