@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 - 2008 The GNOME Foundation.
+ * Copyright (C) 2007 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -590,12 +590,14 @@ gda_config_constructor (GType type,
 		if (mon_conf_user)
 			g_signal_connect (G_OBJECT (mon_conf_user), "changed",
 					  G_CALLBACK (conf_file_changed), NULL);
+		g_object_unref (gf);
 
 		gf = g_file_new_for_path (unique_instance->priv->system_file);
 		mon_conf_global = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
 		if (mon_conf_user)
 			g_signal_connect (G_OBJECT (mon_conf_global), "changed",
 					  G_CALLBACK (conf_file_changed), NULL);
+		g_object_unref (gf);
 		
 #endif
 
