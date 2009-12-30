@@ -423,8 +423,10 @@ gda_blob_copy (gpointer boxed)
 	g_return_val_if_fail (src, NULL);
 
 	copy = g_new0 (GdaBlob, 1);
-	((GdaBinary *)copy)->data = g_memdup (((GdaBinary *)src)->data, ((GdaBinary *)src)->binary_length);
-	((GdaBinary *)copy)->binary_length = ((GdaBinary *)src)->binary_length;
+	if (((GdaBinary *)src)->data) {
+		((GdaBinary *)copy)->data = g_memdup (((GdaBinary *)src)->data, ((GdaBinary *)src)->binary_length);
+		((GdaBinary *)copy)->binary_length = ((GdaBinary *)src)->binary_length;
+	}
 	gda_blob_set_op (copy, src->op);
 	
 	return copy;
