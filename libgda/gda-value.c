@@ -1130,7 +1130,7 @@ gda_value_new_blob (const guchar *val, glong size)
 	GdaBinary *bin;
 
 	blob = g_new0 (GdaBlob, 1);
-	bin = (GdaBinary*)(&blob);
+	bin = (GdaBinary*)(blob);
 	bin->data = g_new (guchar, size);
         memcpy ((gpointer) bin->data, (gpointer) val, size);
         bin->binary_length = size;
@@ -1409,11 +1409,15 @@ void
 gda_value_set_binary (GValue *value, const GdaBinary *binary)
 {
 	g_return_if_fail (value);
-	g_return_if_fail (binary);
 	
 	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_BINARY);
-	g_value_set_boxed (value, binary);
+	if (binary)
+		g_value_set_boxed (value, binary);
+	else {
+		GdaBinary bin = {NULL, 0};
+		g_value_set_boxed (value, &bin);
+	}
 }
 
 /**
