@@ -650,15 +650,17 @@ test_signals (GdaConnection *cnc, GdaConnection *tcnc)
 	/* test the "dsn_changed" signal */
 	called = FALSE;
 	gda_connection_close (tcnc);
-	g_signal_connect (G_OBJECT (tcnc), "dsn-changed",
-			  G_CALLBACK (test_sig_bool_cb), &called);
-	g_object_set (G_OBJECT (tcnc), "dsn", "SalesTest", NULL);
-	if (!called) {
-		g_print ("ERROR: the threaded connection does not emit the \"dsn-changed\" signal\n");
-		return 1;
+	if (gda_config_get_dsn_info ("SalesTest")) {
+		g_signal_connect (G_OBJECT (tcnc), "dsn-changed",
+				  G_CALLBACK (test_sig_bool_cb), &called);
+		g_object_set (G_OBJECT (tcnc), "dsn", "SalesTest", NULL);
+		if (!called) {
+			g_print ("ERROR: the threaded connection does not emit the \"dsn-changed\" signal\n");
+			return 1;
+		}
+		g_signal_handlers_disconnect_by_func (G_OBJECT (tcnc),
+						      G_CALLBACK (test_sig_bool_cb), &called);
 	}
-	g_signal_handlers_disconnect_by_func (G_OBJECT (tcnc),
-					      G_CALLBACK (test_sig_bool_cb), &called);
 
 	return failures;
 }
