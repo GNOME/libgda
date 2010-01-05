@@ -459,7 +459,7 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 			dh = gda_get_default_handler (type);
 			
 			renderer = gtk_cell_renderer_text_new ();
-			g_object_set_data (G_OBJECT (renderer), "data_handler", dh);
+			g_object_set_data (G_OBJECT (renderer), "data-handler", dh);
 			g_object_set_data (G_OBJECT (renderer), "colnum", GINT_TO_POINTER (index));
 			g_object_set ((GObject*) renderer, "width-chars",
 				      combo->priv->cols_width [index], NULL);
@@ -484,7 +484,7 @@ cell_layout_data_func (GtkCellLayout *cell_layout, GtkCellRenderer *cell,
 	const GValue *value;
 	gchar *str;
 	
-	dh = g_object_get_data (G_OBJECT (cell), "data_handler");
+	dh = g_object_get_data (G_OBJECT (cell), "data-handler");
 	colnum = GPOINTER_TO_INT (g_object_get_data  (G_OBJECT (cell), "colnum"));
 
 	gtk_tree_model_get (tree_model, iter, colnum, &value, -1);
@@ -821,7 +821,7 @@ combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboole
 	dh = gda_get_default_handler (type);
 	
 	renderer = gtk_cell_renderer_text_new ();
-	g_object_set_data (G_OBJECT (renderer), "data_handler", dh);
+	g_object_set_data (G_OBJECT (renderer), "data-handler", dh);
 	g_object_set_data (G_OBJECT (renderer), "colnum", GINT_TO_POINTER (column));
 	
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);

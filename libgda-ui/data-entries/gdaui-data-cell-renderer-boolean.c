@@ -158,7 +158,7 @@ gdaui_data_cell_renderer_boolean_class_init (GdauiDataCellRendererBooleanClass *
   
 	g_object_class_install_property (object_class,
 					 PROP_VALUE_ATTRIBUTES,
-					 g_param_spec_flags ("value_attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
+					 g_param_spec_flags ("value-attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
 							     GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,
@@ -172,11 +172,11 @@ gdaui_data_cell_renderer_boolean_class_init (GdauiDataCellRendererBooleanClass *
 
 	g_object_class_install_property (object_class,
 					 PROP_TO_BE_DELETED,
-					 g_param_spec_boolean ("to_be_deleted", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("to-be-deleted", NULL, NULL, FALSE,
                                                                G_PARAM_WRITABLE));
 	g_object_class_install_property(object_class,
 					PROP_DATA_HANDLER,
-					g_param_spec_object("data_handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
+					g_param_spec_object("data-handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
 							    G_PARAM_WRITABLE|G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property(object_class,
 					PROP_TYPE,
@@ -334,7 +334,7 @@ gdaui_data_cell_renderer_boolean_new (GdaDataHandler *dh, GType type)
 
         g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
         obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_BOOLEAN, "type", type, 
-                            "data_handler", dh, NULL);
+                            "data-handler", dh, NULL);
         	
         return GTK_CELL_RENDERER (obj);
 }

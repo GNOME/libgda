@@ -199,6 +199,15 @@ Data entry widget
 @editable: 
 
 
+<!-- ##### FUNCTION gdaui_data_entry_get_editable ##### -->
+<para>
+
+</para>
+
+@de: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gdaui_data_entry_grab_focus ##### -->
 <para>
 

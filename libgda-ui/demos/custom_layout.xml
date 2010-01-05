@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gdaui_layouts>
+  <gdaui_form name="customers" container="hpaned">
+    <gdaui_section title="Summary">
+      <gdaui_column>
+	<gdaui_entry name="id"/>
+	<gdaui_entry name="name" label="Customer name"/>
+	<gdaui_entry name="comments" label="Comments" plugin="text"/>
+	<gdaui_entry name="total_orders" label="Total ordered" plugin="number:NB_DECIMALS=2;CURRENCY=€"/>
+      </gdaui_column>
+    </gdaui_section>
+    <gdaui_section title="Photo">
+      <gdaui_column>
+	<gdaui_entry name="photo" plugin="picture"/>
+      </gdaui_column>
+    </gdaui_section>
+  </gdaui_form>
+
+  <gdaui_form name="products" container="columns">
+    <gdaui_column>
+      <gdaui_entry name="ref"/>
+      <gdaui_entry name="name" editable="true"/>
+    </gdaui_column>
+    <gdaui_column>
+      <gdaui_entry name="country"/>
+      <gdaui_entry name="city"/>
+    </gdaui_column>
+  </gdaui_form>
+
+  <gdaui_form>
+    <gdaui_box title="Orders">
+      <gdaui_notebook>
+	<gdaui_box>
+	  <gdaui_placeholder id="current_orders"/>
+	  <gdaui_placeholder id="past_orders"/>
+	</gdaui_box>
+      </gdaui_notebook>
+    </gdaui_box>
+  </gdaui_form>
+
+  <gdaui_form name="simple">
+      <gdaui_column>
+	<gdaui_entry name="a string" editable="no"/>
+	<gdaui_entry name="an int"/>
+      </gdaui_column>
+      <gdaui_column>
+	<gdaui_entry name="a picture" plugin="picture"/>
+      </gdaui_column>
+  </gdaui_form>
+
+
+  <gdaui_grid name="picture">
+    <gdaui_entry name="pict" plugin="picture"/>
+  </gdaui_grid>
+</gdaui_layouts>

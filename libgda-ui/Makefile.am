@@ -143,7 +143,7 @@ CLEANFILES = $(libgda_ui_built_headers) $(libgda_ui_built_cfiles) \
 	libgda-ui.def \
 	libgda-ui-$(GDA_ABI_VERSION).lib
 
-DTD_FILES = data-layout.dtd
+DTD_FILES = gdaui-layout.dtd
 dtddir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/dtd
 dtd_DATA=$(DTD_FILES)
 

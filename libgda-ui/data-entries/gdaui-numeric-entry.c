@@ -126,7 +126,7 @@ gdaui_numeric_entry_class_init (GdauiNumericEntryClass *klass)
 							    0, 127, '.',
 							    G_PARAM_READABLE | G_PARAM_WRITABLE));
         g_object_class_install_property (object_class, PROP_THOUSANDS_SEP,
-                                         g_param_spec_char ("thousands_sep", NULL, NULL,
+                                         g_param_spec_char ("thousands-sep", NULL, NULL,
 							    0, 127, ',',
 							    G_PARAM_READABLE | G_PARAM_WRITABLE));
 }

@@ -69,7 +69,7 @@ key_press_popup (GtkWidget *widget, GdkEventKey *event, PopupContainer *containe
         if (event->keyval != GDK_Escape)
                 return FALSE;
 
-        g_signal_stop_emission_by_name (widget, "key_press_event");
+        g_signal_stop_emission_by_name (widget, "key-press-event");
         gtk_widget_hide (GTK_WIDGET (container));
         gtk_grab_remove (GTK_WIDGET (container));
         return TRUE;
@@ -111,11 +111,11 @@ popup_container_init (PopupContainer *container, PopupContainerClass *klass)
 			       gtk_widget_get_events (GTK_WIDGET (container)) | GDK_KEY_PRESS_MASK);
 	gtk_window_set_resizable (GTK_WINDOW (container), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (container), 5);
-	g_signal_connect (G_OBJECT (container), "delete_event",
+	g_signal_connect (G_OBJECT (container), "delete-event",
 			  G_CALLBACK (delete_popup), container);
-	g_signal_connect (G_OBJECT (container), "key_press_event",
+	g_signal_connect (G_OBJECT (container), "key-press-event",
 			  G_CALLBACK (key_press_popup), container);
-	g_signal_connect (G_OBJECT (container), "button_press_event",
+	g_signal_connect (G_OBJECT (container), "button-press-event",
 			  G_CALLBACK (button_press_popup), container);
 
 }

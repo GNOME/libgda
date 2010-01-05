@@ -250,7 +250,7 @@ gdaui_raw_grid_class_init (GdauiRawGridClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	gdaui_raw_grid_signals[DOUBLE_CLICKED] =
-		g_signal_new ("double_clicked",
+		g_signal_new ("double-clicked",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdauiRawGridClass, double_clicked),
@@ -258,7 +258,7 @@ gdaui_raw_grid_class_init (GdauiRawGridClass *klass)
                               _gdaui_marshal_VOID__INT, G_TYPE_NONE,
                               1, G_TYPE_INT);
 	gdaui_raw_grid_signals[POPULATE_POPUP] =
-		g_signal_new ("populate_popup",
+		g_signal_new ("populate-popup",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdauiRawGridClass, populate_popup),
@@ -276,15 +276,15 @@ gdaui_raw_grid_class_init (GdauiRawGridClass *klass)
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_DATA_LAYOUT,
-					 g_param_spec_pointer ("data_layout",
+					 g_param_spec_pointer ("data-layout",
 							       _("Pointer to an XML data layout specification"), NULL,
 							       G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_INFO_CELL_VISIBLE,
-                                         g_param_spec_boolean ("info_cell_visible", NULL, _("Info cell visible"), FALSE,
+                                         g_param_spec_boolean ("info-cell-visible", NULL, _("Info cell visible"), FALSE,
                                                                G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_GLOBAL_ACTIONS_VISIBLE,
-                                         g_param_spec_boolean ("global_actions_visible", NULL, _("Global Actions visible"), FALSE,
+                                         g_param_spec_boolean ("global-actions-visible", NULL, _("Global Actions visible"), FALSE,
                                                                G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
@@ -309,7 +309,7 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (tree_view), TRUE);
 	g_signal_connect (G_OBJECT (tree_view), "event",
 			  G_CALLBACK (tree_view_event_cb), grid);
-	g_signal_connect (G_OBJECT (tree_view), "button_press_event",
+	g_signal_connect (G_OBJECT (tree_view), "button-press-event",
                           G_CALLBACK (tree_view_popup_button_pressed_cb), grid);
 	gtk_tree_view_set_enable_search (tree_view, FALSE);
 
@@ -318,7 +318,7 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
 	g_signal_connect (G_OBJECT (selection), "changed",
 			  G_CALLBACK (tree_view_selection_changed_cb), grid);
-	g_signal_connect (G_OBJECT (tree_view), "row_activated",
+	g_signal_connect (G_OBJECT (tree_view), "row-activated",
 			  G_CALLBACK (tree_view_row_activated_cb), grid);
 
 	/* action group */
@@ -358,7 +358,6 @@ gdaui_raw_grid_dispose (GObject *object)
 {
 	GdauiRawGrid *grid;
 
-	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDAUI_IS_RAW_GRID (object));
 	grid = GDAUI_RAW_GRID (object);
 
@@ -439,7 +438,7 @@ load_xml_data_layout_item (GdauiRawGrid  *grid,
 	}
 
 	/* GSList *slist = grid->priv->set->holders; */
-	/* while (slist != NULL) { */
+	/* while (slist) { */
 	/* 	GdaHolder *holder = slist->data; */
 	/* 	g_print ("SET HOLDER=%s\n", gda_holder_get_id (holder)); */
 	/* 	slist = g_slist_next (slist); */
@@ -447,7 +446,7 @@ load_xml_data_layout_item (GdauiRawGrid  *grid,
 
 	//GdaHolder *holder = gda_set_get_holder (grid->priv->set, name);
 	GdaHolder *holder = gda_set_get_holder (GDA_SET (grid->priv->iter), name);
-	g_return_if_fail (holder != NULL);
+	g_return_if_fail (holder);
 
 	gint index = g_slist_index (GDA_SET (grid->priv->iter)->holders, holder);
 
@@ -467,7 +466,7 @@ load_xml_data_layout_item (GdauiRawGrid  *grid,
 
 	gint position = g_slist_index (GDA_SET (grid->priv->iter)->holders, holder);
 	GtkTreeViewColumn *column = gtk_tree_view_get_column (GTK_TREE_VIEW (grid), position);
-	g_return_if_fail (column != NULL);
+	g_return_if_fail (column);
 
 	// ((GdaDataSelect *) model)->prep_stmt
 	GdaDataModel *model = grid->priv->data_model;
@@ -481,7 +480,7 @@ load_xml_data_layout_item (GdauiRawGrid  *grid,
 	gtk_tree_view_column_set_title (column, text);
 
 	xmlNodePtr child;
-	for (child = node->children; child != NULL; child = child->next) {
+	for (child = node->children; child; child = child->next) {
 
 		/* if (child->type == XML_ELEMENT_NODE && */
 		/*     !xmlStrcmp (child->name, (const xmlChar *) "formatting")) { */
@@ -537,7 +536,7 @@ load_xml_data_layout_group (GdauiRawGrid  *grid,
 	}
 
 	xmlNodePtr child;
-	for (child = node->children; child != NULL; child = child->next) {
+	for (child = node->children; child; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
 		    !xmlStrcmp (child->name, BAD_CAST "data_layout_group")) {
@@ -547,30 +546,6 @@ load_xml_data_layout_group (GdauiRawGrid  *grid,
 		if (child->type == XML_ELEMENT_NODE &&
 		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item")) {
 			load_xml_data_layout_item (grid, child, /* data *//* table */ title);
-		}
-
-		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, BAD_CAST "data_layout_portal")) {
-		}
-
-		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, BAD_CAST "data_layout_notebook")) {
-		}
-		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, BAD_CAST "trans_set")) {
-			/* load_xml_trans_set (grid, child, data); */
-		}
-
-		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, BAD_CAST "data_layout_button")) {
-		}
-
-		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item_groupby")) {
-		}
-
-		if (child->type == XML_ELEMENT_NODE &&
-		    !xmlStrcmp (child->name, BAD_CAST "data_layout_item_header")) {
 		}
 	}
 
@@ -587,7 +562,7 @@ load_xml_data_layout_groups (GdauiRawGrid  *grid,
 	g_return_if_fail (grid && GDAUI_IS_RAW_GRID (grid));
 
 	xmlNodePtr child;
-	for (child = node->children; child != NULL; child = child->next) {
+	for (child = node->children; child; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
 		    !xmlStrcmp (child->name, BAD_CAST "data_layout_group")) {
@@ -635,7 +610,7 @@ load_xml_data_layout (GdauiRawGrid  *grid,
 		return;
 
 	xmlNodePtr child;
-	for (child = node->children; child != NULL; child = child->next) {
+	for (child = node->children; child; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
 		    !xmlStrcmp (child->name, BAD_CAST "data_layout_groups")) {
@@ -654,7 +629,7 @@ load_xml_data_layouts (GdauiRawGrid  *grid,
 	g_return_if_fail (grid && GDAUI_IS_RAW_GRID (grid));
 
 	xmlNodePtr child;
-	for (child = node->children; child != NULL; child = child->next) {
+	for (child = node->children; child; child = child->next) {
 
 		if (child->type == XML_ELEMENT_NODE &&
 		    !xmlStrcmp (child->name, BAD_CAST "data_layout")) {
@@ -804,9 +779,9 @@ gdaui_raw_grid_set_property (GObject *object,
 				grid->priv->data_model = gda_data_proxy_get_proxied_model (grid->priv->proxy);
 
 				g_object_ref (G_OBJECT (grid->priv->proxy));
-				g_signal_connect (grid->priv->proxy, "sample_changed",
+				g_signal_connect (grid->priv->proxy, "sample-changed",
 						  G_CALLBACK (proxy_sample_changed_cb), grid);
-				g_signal_connect (grid->priv->proxy, "row_updated",
+				g_signal_connect (grid->priv->proxy, "row-updated",
 						  G_CALLBACK (proxy_row_updated_cb), grid);
 				g_signal_connect (grid->priv->proxy, "reset",
 						  G_CALLBACK (proxy_reset_cb), grid);
@@ -814,12 +789,12 @@ gdaui_raw_grid_set_property (GObject *object,
 				grid->priv->iter = gda_data_model_create_iter (GDA_DATA_MODEL (grid->priv->proxy));
 				grid->priv->iter_info = _gdaui_set_new (GDA_SET (grid->priv->iter));
 
-				g_signal_connect (grid->priv->iter_info, "public_data_changed",
+				g_signal_connect (grid->priv->iter_info, "public-data-changed",
 						  G_CALLBACK (paramlist_public_data_changed_cb), grid);
 				g_signal_connect (grid->priv->iter, "holder-attr-changed",
 						  G_CALLBACK (paramlist_param_attr_changed_cb), grid);
 
-				g_signal_connect (grid->priv->iter, "row_changed",
+				g_signal_connect (grid->priv->iter, "row-changed",
 						  G_CALLBACK (iter_row_changed_cb), grid);
 				g_signal_connect (grid->priv->iter, "validate-set",
 						  G_CALLBACK (iter_validate_set_cb), grid);
@@ -848,15 +823,14 @@ gdaui_raw_grid_set_property (GObject *object,
 			xmlNodePtr node = g_value_get_pointer (value);
 
 			xmlNodePtr child;
-			for (child = node->children; child != NULL; child = child->next) {
-
+			for (child = node->children; child; child = child->next) {
 				if (child->type == XML_ELEMENT_NODE &&
 				    !xmlStrcmp (child->name, BAD_CAST "data_layout_groups")) {
 					load_xml_data_layout_groups (grid, child, NULL);
 				}
 			}
 
-			if (grid->priv->reordered_indexes != NULL) {
+			if (grid->priv->reordered_indexes) {
 				g_print ("Loaded XML file, reinit interface\n");
 
 				GList *columns = gtk_tree_view_get_columns (GTK_TREE_VIEW(grid));
@@ -865,7 +839,7 @@ gdaui_raw_grid_set_property (GObject *object,
 				GSList *columns_data = NULL;
 
 				GSList *reordered_indexes = grid->priv->reordered_indexes;
-				while (reordered_indexes != NULL) {
+				while (reordered_indexes) {
 					gint position = GPOINTER_TO_INT(reordered_indexes->data);
 
 					GtkTreeViewColumn *column = GTK_TREE_VIEW_COLUMN
@@ -1168,8 +1142,8 @@ init_tree_view (GdauiRawGrid *grid)
 
 		/* settings and signals */
 		g_object_set (G_OBJECT (renderer), "editable", !column_data->data_locked, NULL);
-		if (g_object_class_find_property (G_OBJECT_GET_CLASS (renderer), "set_default_if_invalid"))
-			g_object_set (G_OBJECT (renderer), "set_default_if_invalid", TRUE, NULL);
+		if (g_object_class_find_property (G_OBJECT_GET_CLASS (renderer), "set-default-if-invalid"))
+			g_object_set (G_OBJECT (renderer), "set-default-if-invalid", TRUE, NULL);
 		g_object_set_data (G_OBJECT (column), "__gdaui_group", group);
 
 		/* Adding the GValue's information cell as another GtkCellRenderer */
@@ -1180,7 +1154,7 @@ init_tree_view (GdauiRawGrid *grid)
 		gtk_tree_view_column_set_cell_data_func (column, renderer,
 							 (GtkTreeCellDataFunc) cell_renderer_info_set_attributes,
 							 grid, NULL);
-		g_signal_connect (G_OBJECT (renderer), "status_changed",
+		g_signal_connect (G_OBJECT (renderer), "status-changed",
 				  G_CALLBACK (data_cell_status_changed), grid);
 		g_object_set (G_OBJECT (renderer), "visible", column_data->info_shown, NULL);
 
@@ -1240,28 +1214,28 @@ cell_renderer_value_set_attributes (GtkTreeViewColumn *tree_column,
 			values = _gdaui_utility_proxy_compute_values_for_group (group, grid->priv->store,
 										grid->priv->iter, iter, FALSE);
 			g_object_set (G_OBJECT (cell),
-				      "values_display", values,
-				      "value_attributes", attributes,
+				      "values-display", values,
+				      "value-attributes", attributes,
 				      "editable", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-				      "show_expander", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-				      "cell_background", GDAUI_COLOR_NORMAL_MODIF,
+				      "show-expander", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
+				      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
 				      "cell_background-set",
 				      ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
-				      "to_be_deleted", to_be_deleted,
+				      "to-be-deleted", to_be_deleted,
 				      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
 				      NULL);
 			g_list_free (values);
 		}
 		else {
 			g_object_set (G_OBJECT (cell),
-				      "values_display", values,
-				      "value_attributes", attributes,
+				      "values-display", values,
+				      "value-attributes", attributes,
 				      "editable", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-				      "show_expander", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-				      "cell_background", GDAUI_COLOR_NORMAL_MODIF,
+				      "show-expander", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
+				      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
 				      "cell_background-set",
 				      ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
-				      "to_be_deleted", to_be_deleted,
+				      "to-be-deleted", to_be_deleted,
 				      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
 				      NULL);
 			g_list_free (values);
@@ -1286,11 +1260,11 @@ cell_renderer_value_set_attributes (GtkTreeViewColumn *tree_column,
 				    offset + col, &attributes, -1);
 		g_object_set (G_OBJECT (cell),
 			      "value", value,
-			      "value_attributes", attributes,
+			      "value-attributes", attributes,
 			      "editable", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-			      "cell_background", GDAUI_COLOR_NORMAL_MODIF,
+			      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
 			      "cell_background-set", ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
-			      "to_be_deleted", to_be_deleted,
+			      "to-be-deleted", to_be_deleted,
 			      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
 			      NULL);
 	}
@@ -1328,10 +1302,10 @@ cell_renderer_info_set_attributes (GtkTreeViewColumn *tree_column,
 										iter, &to_be_deleted);
 		g_object_set (G_OBJECT (cell),
 			      "editable", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-			      "value_attributes", attributes,
-			      "cell_background", GDAUI_COLOR_NORMAL_MODIF,
+			      "value-attributes", attributes,
+			      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
 			      "cell_background-set", ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
-			      "to_be_deleted", to_be_deleted,
+			      "to-be-deleted", to_be_deleted,
 			      "visible", column_data->info_shown && !(attributes & GDA_VALUE_ATTR_UNUSED),
 			      NULL);
 	}
@@ -1352,10 +1326,10 @@ cell_renderer_info_set_attributes (GtkTreeViewColumn *tree_column,
 				    offset + col, &attributes, -1);
 		g_object_set (G_OBJECT (cell),
 			      "editable", !column_data->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-			      "value_attributes", attributes,
-			      "cell_background", GDAUI_COLOR_NORMAL_MODIF,
+			      "value-attributes", attributes,
+			      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
 			      "cell_background-set", ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
-			      "to_be_deleted", to_be_deleted,
+			      "to-be-deleted", to_be_deleted,
 			      "visible", column_data->info_shown && !(attributes & GDA_VALUE_ATTR_UNUSED),
 			      NULL);
 	}
@@ -1833,11 +1807,11 @@ action_filter_cb (GtkAction *action, GdauiRawGrid *grid)
 						     GTK_WINDOW (grid->priv->filter_window));
 #endif
 
-		g_signal_connect (grid->priv->filter_window, "delete_event",
+		g_signal_connect (grid->priv->filter_window, "delete-event",
 				  G_CALLBACK (filter_event), grid);
-		g_signal_connect (grid->priv->filter_window, "button_press_event",
+		g_signal_connect (grid->priv->filter_window, "button-press-event",
 				  G_CALLBACK (filter_event), grid);
-		g_signal_connect (grid->priv->filter_window, "key_press_event",
+		g_signal_connect (grid->priv->filter_window, "key-press-event",
 				  G_CALLBACK (key_press_filter_event), grid);
 		frame = gtk_frame_new (NULL);
 		gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
@@ -2603,7 +2577,7 @@ gdaui_raw_grid_set_data_layout_from_file (GdauiRawGrid *grid, const gchar *file_
 			if (str) {
 				if (retval && !strcmp ((gchar*) str, "list"))  // Now proceed
 					g_object_set (G_OBJECT (grid), "data-layout", node, NULL);
-				//g_print ("name: %s\n", str);
+				g_print ("name: %s\n", str);
 				xmlFree (str);
 			}
 		}

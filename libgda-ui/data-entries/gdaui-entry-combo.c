@@ -157,7 +157,7 @@ gdaui_entry_combo_class_init (GdauiEntryComboClass *class)
         object_class->set_property = gdaui_entry_combo_set_property;
         object_class->get_property = gdaui_entry_combo_get_property;
         g_object_class_install_property (object_class, PROP_SET_DEFAULT_IF_INVALID,
-					 g_param_spec_boolean ("set_default_if_invalid", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("set-default-if-invalid", NULL, NULL, FALSE,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* RC setting */
@@ -188,7 +188,7 @@ gdaui_entry_combo_emit_signal (GdauiEntryCombo *combo)
 #ifdef debug_signal
 	g_print (">> 'CONTENTS_MODIFIED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (combo), "contents_modified");
+	g_signal_emit_by_name (G_OBJECT (combo), "contents-modified");
 #ifdef debug_signal
 	g_print ("<< 'CONTENTS_MODIFIED' from %s\n", __FUNCTION__);
 #endif
@@ -419,7 +419,7 @@ combo_contents_changed_cb (GdauiCombo *entry, GdauiEntryCombo *combo)
 			list = g_slist_next (list);
 		}
 		
-		g_signal_emit_by_name (G_OBJECT (combo), "status_changed");
+		g_signal_emit_by_name (G_OBJECT (combo), "status-changed");
 		gdaui_entry_combo_emit_signal (combo);
 	}
 }
@@ -513,7 +513,7 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 	}
 
 	combo->priv->data_valid = !err;
-	g_signal_emit_by_name (G_OBJECT (combo), "status_changed");
+	g_signal_emit_by_name (G_OBJECT (combo), "status-changed");
 
 	if (!err) 
 		/* notify the status and contents changed */
@@ -913,7 +913,7 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 	if (mask & GDA_VALUE_ATTR_HAS_VALUE_ORIG)
 		g_warning ("Having an original value is not a write attribute on GdauiDataEntry!");
 
-	g_signal_emit_by_name (G_OBJECT (combo), "status_changed");
+	g_signal_emit_by_name (G_OBJECT (combo), "status-changed");
 }
 
 static GdaValueAttribute

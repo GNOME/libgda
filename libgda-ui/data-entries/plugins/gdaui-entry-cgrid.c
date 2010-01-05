@@ -344,7 +344,7 @@ window_popup_on_key_press_event (GtkToggleButton  *window_popup,
 		return FALSE;
 	}
 
-	g_signal_stop_emission_by_name (G_OBJECT(window_popup), "key_press_event");
+	g_signal_stop_emission_by_name (G_OBJECT(window_popup), "key-press-event");
 
 	hide_window_popup ((GtkWidget *) data);
 	gtk_widget_grab_focus (GDAUI_ENTRY_CGRID(data)->priv->entry);
@@ -786,13 +786,13 @@ connect_signals (GdauiEntryWrapper  *entry_wrapper,
 	g_signal_connect (G_OBJECT(cgrid->priv->toggle_button), "toggled",
 			  G_CALLBACK(toggle_button_on_toggled), (gpointer) cgrid);
 
-	g_signal_connect (G_OBJECT(cgrid->priv->window_popup), "delete_event",
+	g_signal_connect (G_OBJECT(cgrid->priv->window_popup), "delete-event",
 			  G_CALLBACK(window_popup_on_delete_event), (gpointer) cgrid);
 
-	g_signal_connect (G_OBJECT(cgrid->priv->window_popup), "key_press_event",
+	g_signal_connect (G_OBJECT(cgrid->priv->window_popup), "key-press-event",
 			  G_CALLBACK(window_popup_on_key_press_event), (gpointer) cgrid);
 
-	g_signal_connect (G_OBJECT(cgrid->priv->window_popup), "button_press_event",
+	g_signal_connect (G_OBJECT(cgrid->priv->window_popup), "button-press-event",
 			  G_CALLBACK(window_popup_on_button_press_event), (gpointer) cgrid);
 
 

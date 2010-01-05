@@ -130,7 +130,7 @@ do_linked_grid_form (GtkWidget *do_widget)
 		/* restrict the c.default_served_by field in the grid to be within the sr_model */
 		restrict_default_served_by_field (GDAUI_DATA_SELECTOR (grid), sr_model, 0);
 		data->grid_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid));
-		g_signal_connect (data->grid_iter, "row_changed",
+		g_signal_connect (data->grid_iter, "row-changed",
 				  G_CALLBACK (iter_row_changed_cb), data);
 
 		/* create form widget which uses the same data model as the grid */
@@ -148,7 +148,7 @@ do_linked_grid_form (GtkWidget *do_widget)
 		/* restrict the c.default_served_by field in the form to be within the sr_model */
 		restrict_default_served_by_field (GDAUI_DATA_SELECTOR (form), sr_model, 0);
 		data->form_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (form));
-		g_signal_connect (data->form_iter, "row_changed",
+		g_signal_connect (data->form_iter, "row-changed",
 				  G_CALLBACK (iter_row_changed_cb), data);
 
 		g_object_unref (cust_model);

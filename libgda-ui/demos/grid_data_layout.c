@@ -1,6 +1,6 @@
-/* Grids/Automatic data_layout
+/* Grids/Custom layout
  *
- * A GdauiGrid widget where automatic 'data_layout' is used to display
+ * A GdauiGrid widget where the layout is customized
  * 
  */
 
@@ -44,10 +44,7 @@ do_grid_data_layout (GtkWidget *do_widget)
 #endif
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 		
-		label = gtk_label_new ("The following GdauiGrid widget displays data from the 'products' table.\n\n"
-				       "\n"
-				       "\n"
-				       ".");
+		label = gtk_label_new ("The following GdauiGrid widget displays data from the 'products' table.\n.\n");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		
 		/* Create the demo widget */
@@ -64,7 +61,7 @@ do_grid_data_layout (GtkWidget *do_widget)
 		/* data_set = GDA_SET (gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (raw_grid))); */
 		/* param = gda_set_get_holder (data_set, "pict"); */
 
-		/* value = gda_value_new_from_string ("data_layout", G_TYPE_STRING); */
+		/* value = gda_value_new_from_string ("data-layout", G_TYPE_STRING); */
 		/* gda_holder_set_attribute (param, GDAUI_ATTRIBUTE_PLUGIN, value); */
 		/* gda_value_free (value); */
 		//
@@ -72,7 +69,7 @@ do_grid_data_layout (GtkWidget *do_widget)
 		//d[0] = "./example_automatic_layout_full.xml";
 		//d[1] = "products";
 
-		//g_object_set (G_OBJECT (raw_grid), "data_layout", d, NULL);
+		//g_object_set (G_OBJECT (raw_grid), "data-layout", d, NULL);
 		//
 		gchar *filename;
 		filename = demo_find_file ("example_automatic_layout.xml", NULL);

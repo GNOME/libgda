@@ -466,7 +466,7 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 			gtk_box_pack_start (GTK_BOX (toolwid), wid, FALSE, TRUE, 2);
 			gtk_widget_set_sensitive (wid, FALSE);
 			info->priv->row_spin = wid;
-			g_signal_connect (G_OBJECT (wid), "value_changed",
+			g_signal_connect (G_OBJECT (wid), "value-changed",
 					  G_CALLBACK (row_spin_changed_cb), info);
 
 			/* rows counter */

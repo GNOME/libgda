@@ -192,7 +192,7 @@ gdaui_server_operation_class_init (GdauiServerOperationClass *class)
         object_class->set_property = gdaui_server_operation_set_property;
         object_class->get_property = gdaui_server_operation_get_property;
 	g_object_class_install_property (object_class, PROP_SERVER_OP_OBJ,
-					 g_param_spec_object ("server_operation",
+					 g_param_spec_object ("server-operation",
 							      _("The specification of the operation to implement"),
 							      NULL, GDA_TYPE_SERVER_OPERATION,
 							      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY |
@@ -235,7 +235,7 @@ gdaui_server_operation_new (GdaServerOperation *op)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDAUI_TYPE_SERVER_OPERATION, "server_operation", op, NULL);
+	obj = g_object_new (GDAUI_TYPE_SERVER_OPERATION, "server-operation", op, NULL);
 
 	return (GtkWidget *) obj;
 }
@@ -307,9 +307,9 @@ gdaui_server_operation_set_property (GObject *object,
 				g_object_ref (form->priv->op);
 
 				gdaui_server_operation_fill (form);
-				g_signal_connect (G_OBJECT (form->priv->op), "sequence_item_added",
+				g_signal_connect (G_OBJECT (form->priv->op), "sequence-item-added",
 						  G_CALLBACK (sequence_item_added_cb), form);
-				g_signal_connect (G_OBJECT (form->priv->op), "sequence_item_remove",
+				g_signal_connect (G_OBJECT (form->priv->op), "sequence-item-remove",
 						  G_CALLBACK (sequence_item_remove_cb), form);
 			}
 			break;
@@ -891,7 +891,7 @@ seq_del_item (GtkButton *button, GdauiServerOperation *form)
 }
 
 /*
- * For sequences: treating the "sequence_item_added" signal
+ * For sequences: treating the "sequence-item-added" signal
  */
 struct MoveChild {
 	GtkWidget *widget;
@@ -977,7 +977,7 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 }
 
 /*
- * For sequences: treating the "sequence_item_remove" signal
+ * For sequences: treating the "sequence-item-remove" signal
  */
 static void
 sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint item_index, GdauiServerOperation *form)
@@ -1223,9 +1223,9 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	/* keep the selections in sync */
 	grid_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid_fields));
 	form_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (form_props));
-	g_signal_connect (grid_iter, "row_changed",
+	g_signal_connect (grid_iter, "row-changed",
 			  G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), form_iter);
-	g_signal_connect (form_iter, "row_changed",
+	g_signal_connect (form_iter, "row-changed",
 			  G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), grid_iter);
 
 	g_object_set_data (G_OBJECT (hlayout), "expand", GINT_TO_POINTER (TRUE));

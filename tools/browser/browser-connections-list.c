@@ -325,7 +325,7 @@ browser_connections_list_show (BrowserConnection *current)
 		_clist = (BrowserConnectionsList *) clist;
 		gtk_window_set_title (GTK_WINDOW (clist), _("Opened connections"));
 		gtk_container_set_border_width (GTK_CONTAINER (clist), 6);
-		g_signal_connect (G_OBJECT (clist), "delete_event",
+		g_signal_connect (G_OBJECT (clist), "delete-event",
 				  G_CALLBACK (delete_event), NULL);
 
 		str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-connected.png", NULL);

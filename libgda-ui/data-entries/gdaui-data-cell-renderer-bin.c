@@ -161,7 +161,7 @@ gdaui_data_cell_renderer_bin_class_init (GdauiDataCellRendererBinClass *class)
   
 	g_object_class_install_property (object_class,
 					 PROP_VALUE_ATTRIBUTES,
-					 g_param_spec_flags ("value_attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
+					 g_param_spec_flags ("value-attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
 							     GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,
@@ -175,11 +175,11 @@ gdaui_data_cell_renderer_bin_class_init (GdauiDataCellRendererBinClass *class)
 
 	g_object_class_install_property (object_class,
 					 PROP_TO_BE_DELETED,
-					 g_param_spec_boolean ("to_be_deleted", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("to-be-deleted", NULL, NULL, FALSE,
 							   G_PARAM_WRITABLE));
 	g_object_class_install_property(object_class,
 					PROP_DATA_HANDLER,
-					g_param_spec_object("data_handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
+					g_param_spec_object("data-handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
 							    G_PARAM_WRITABLE|G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property(object_class,
 					PROP_TYPE,
@@ -328,7 +328,7 @@ gdaui_data_cell_renderer_bin_new (GdaDataHandler *dh, GType type)
 
         g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
         obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_BIN, "type", type, 
-                            "data_handler", dh, 
+                            "data-handler", dh, 
 			    "editable", FALSE, NULL);
         	
         return GTK_CELL_RENDERER (obj);
@@ -384,7 +384,7 @@ static void
 bin_data_changed_cb (GdauiDataCellRendererBin *bincell, GValue *value)
 {
         g_signal_emit (G_OBJECT (bincell), bin_cell_signals[CHANGED], 0,
-                       g_object_get_data (G_OBJECT (bincell), "last_path"), value);
+                       g_object_get_data (G_OBJECT (bincell), "last-path"), value);
         gda_value_free (value);
 }
 
@@ -439,7 +439,7 @@ gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
 
         bincell = GDAUI_DATA_CELL_RENDERER_BIN (cell);
 	
-	g_object_set_data_full (G_OBJECT (bincell), "last_path", g_strdup (path), g_free);
+	g_object_set_data_full (G_OBJECT (bincell), "last-path", g_strdup (path), g_free);
 	if (!bincell->priv->menu.popup) {
 		common_bin_create_menu (&(bincell->priv->menu), popup_position, bincell->priv->type,
 					(BinCallback) bin_data_changed_cb, bincell);

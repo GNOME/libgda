@@ -61,7 +61,7 @@ main (int argc, char *argv[])
 	GtkWidget *window, *table, *canvas;
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);
-	g_signal_connect (window, "delete_event", G_CALLBACK (on_delete_event),
+	g_signal_connect (window, "delete-event", G_CALLBACK (on_delete_event),
 			  NULL);
 
 	table = gtk_table_new (3, 1, FALSE);

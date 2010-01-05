@@ -600,11 +600,11 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 	window = gtk_window_new (GTK_WINDOW_POPUP);
 	gtk_widget_set_events (window, gtk_widget_get_events (window) | GDK_KEY_PRESS_MASK);
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
-	g_signal_connect (G_OBJECT (window), "delete_event",
+	g_signal_connect (G_OBJECT (window), "delete-event",
 			  G_CALLBACK (date_delete_popup), mgtim);
-	g_signal_connect (G_OBJECT (window), "key_press_event",
+	g_signal_connect (G_OBJECT (window), "key-press-event",
 			  G_CALLBACK (date_key_press_popup), mgtim);
-	g_signal_connect (G_OBJECT (window), "button_press_event",
+	g_signal_connect (G_OBJECT (window), "button-press-event",
 			  G_CALLBACK (date_button_press_popup), mgtim);
 	mgtim->priv->window = window;
 	
@@ -613,9 +613,9 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 	mgtim->priv->date = wid;
 	gtk_container_add (GTK_CONTAINER (window), wid);
 	gtk_widget_show (wid);
-	g_signal_connect (G_OBJECT (wid), "day_selected",
+	g_signal_connect (G_OBJECT (wid), "day-selected",
 			  G_CALLBACK (date_day_selected), mgtim);
-	g_signal_connect (G_OBJECT (wid), "day_selected_double_click",
+	g_signal_connect (G_OBJECT (wid), "day-selected-double-click",
 			  G_CALLBACK (date_day_selected_double_click), mgtim);
 	
 	/* button to pop up the calendar */
@@ -763,7 +763,7 @@ date_key_press_popup (GtkWidget *widget, GdkEventKey *event, GdauiEntryCommonTim
 	if (event->keyval != GDK_Escape)
                 return FALSE;
 
-        g_signal_stop_emission_by_name (widget, "key_press_event");
+        g_signal_stop_emission_by_name (widget, "key-press-event");
         hide_popup (mgtim);
 
         return TRUE;
@@ -1145,20 +1145,20 @@ gdaui_entry_common_time_start_editing (GtkCellEditable *iface, GdkEvent *event)
 	}
 
 	if (mgtim->priv->entry_date) {
-		g_object_set (G_OBJECT (mgtim->priv->entry_date), "has_frame", FALSE, NULL);
+		g_object_set (G_OBJECT (mgtim->priv->entry_date), "has-frame", FALSE, NULL);
 		gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgtim->priv->entry_date), event);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "editing_done",
+		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "editing-done",
 				  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgtim);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "remove_widget",
+		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "remove-widget",
 				  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgtim);
 	}
 
 	if (mgtim->priv->entry_time) {
-		g_object_set (G_OBJECT (mgtim->priv->entry_time), "has_frame", FALSE, NULL);
+		g_object_set (G_OBJECT (mgtim->priv->entry_time), "has-frame", FALSE, NULL);
 		gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgtim->priv->entry_time), event);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "editing_done",
+		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "editing-done",
 				  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgtim);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "remove_widget",
+		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "remove-widget",
 				  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgtim);
 	}
 

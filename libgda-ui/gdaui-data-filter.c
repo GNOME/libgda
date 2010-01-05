@@ -261,7 +261,7 @@ gdaui_data_filter_new (GdauiDataProxy *data_widget)
 	g_return_val_if_fail (!data_widget || GDAUI_IS_DATA_PROXY (data_widget), NULL);
 
 	filter = (GtkWidget *) g_object_new (GDAUI_TYPE_DATA_FILTER, 
-					     "data_widget", data_widget, NULL);
+					     "data-widget", data_widget, NULL);
 
 	return filter;
 }
@@ -300,7 +300,7 @@ release_proxy (GdauiDataFilter *filter)
 static void
 data_widget_proxy_changed_cb (GdauiDataProxy *data_widget, GdaDataProxy *proxy, GdauiDataFilter *filter)
 {
-	g_object_set (G_OBJECT (filter), "data_widget", data_widget, NULL);
+	g_object_set (G_OBJECT (filter), "data-widget", data_widget, NULL);
 }
 
 static void
@@ -351,7 +351,7 @@ gdaui_data_filter_set_property (GObject *object,
 				/* data widget */
 				g_signal_connect (filter->priv->data_widget, "destroy",
 						  G_CALLBACK (data_widget_destroyed_cb), filter);
-				g_signal_connect (filter->priv->data_widget, "proxy_changed",
+				g_signal_connect (filter->priv->data_widget, "proxy-changed",
 						  G_CALLBACK (data_widget_proxy_changed_cb), filter);
 
 				/* proxy */

@@ -96,7 +96,7 @@ provider_config_new (void)
 	g_object_unref (model);
 	gdaui_data_proxy_column_set_editable (GDAUI_DATA_PROXY (priv->provider_list), 0, FALSE);
 	gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (priv->provider_list), 2, FALSE);
-	g_object_set (G_OBJECT (priv->provider_list), "info_cell_visible", FALSE, NULL);
+	g_object_set (G_OBJECT (priv->provider_list), "info-cell-visible", FALSE, NULL);
 	gtk_container_add (GTK_CONTAINER (sw), priv->provider_list);
 	
 	gtk_widget_show_all (sw);

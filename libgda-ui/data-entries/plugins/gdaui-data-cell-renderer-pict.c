@@ -185,7 +185,7 @@ gdaui_data_cell_renderer_pict_class_init (GdauiDataCellRendererPictClass *class)
   
 	g_object_class_install_property (object_class,
 					 PROP_VALUE_ATTRIBUTES,
-					 g_param_spec_flags ("value_attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
+					 g_param_spec_flags ("value-attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
                                                             GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,
@@ -199,7 +199,7 @@ gdaui_data_cell_renderer_pict_class_init (GdauiDataCellRendererPictClass *class)
 
 	g_object_class_install_property (object_class,
 					 PROP_TO_BE_DELETED,
-					 g_param_spec_boolean ("to_be_deleted", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("to-be-deleted", NULL, NULL, FALSE,
                                                                G_PARAM_WRITABLE));
 
 	pixbuf_cell_signals[CHANGED] = g_signal_new ("changed",
@@ -423,7 +423,7 @@ pict_data_changed_cb (GdauiDataCellRendererPict *pictcell)
 	value = common_pict_get_value (&(pictcell->priv->bindata), &(pictcell->priv->options), 
 				       pictcell->priv->type);
 	g_signal_emit (G_OBJECT (pictcell), pixbuf_cell_signals[CHANGED], 0, 
-		       g_object_get_data (G_OBJECT (pictcell), "last_path"), value);
+		       g_object_get_data (G_OBJECT (pictcell), "last-path"), value);
 	gda_value_free (value);
 }
 
@@ -442,7 +442,7 @@ gdaui_data_cell_renderer_pict_activate  (GtkCellRenderer            *cell,
 	if (pictcell->priv->editable) {
 		int event_time;
 
-		g_object_set_data_full (G_OBJECT (pictcell), "last_path", g_strdup (path), g_free);
+		g_object_set_data_full (G_OBJECT (pictcell), "last-path", g_strdup (path), g_free);
 		if (!pictcell->priv->popup_menu.menu) 
 			common_pict_create_menu (&(pictcell->priv->popup_menu), widget, &(pictcell->priv->bindata), 
 						 &(pictcell->priv->options),

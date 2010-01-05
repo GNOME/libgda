@@ -76,7 +76,7 @@ struct _GdauiRawFormPriv
 	GdaDataProxy               *proxy; /* proxy for @model */
 	GdaDataModelIter           *iter;  /* proxy's iter */
 
-	GdauiDataProxyWriteMode  write_mode;
+	GdauiDataProxyWriteMode     write_mode;
 
 	GtkActionGroup             *actions_group;
 
@@ -408,7 +408,7 @@ gdaui_raw_form_set_property (GObject *object,
 
 				g_signal_connect (form->priv->iter, "validate-set",
 						  G_CALLBACK (iter_validate_set_cb), form);
-				g_signal_connect (form->priv->iter, "row_changed",
+				g_signal_connect (form->priv->iter, "row-changed",
 						  G_CALLBACK (iter_row_changed_cb), form);
 
 				g_signal_connect (G_OBJECT (form->priv->proxy), "row_inserted",
@@ -424,6 +424,7 @@ gdaui_raw_form_set_property (GObject *object,
 				g_object_set (object, "paramlist", form->priv->iter, NULL);
 				gda_data_proxy_set_sample_size (form->priv->proxy, 0);
 				gdaui_raw_form_initialize (form, NULL, NULL);
+				iter_row_changed_cb (form->priv->iter, gda_data_model_iter_get_row (form->priv->iter), form);
 			}
 
 			gdaui_raw_form_widget_set_write_mode ((GdauiDataProxy *) form, form->priv->write_mode);
@@ -848,11 +849,11 @@ action_filter_cb (GtkAction *action, GdauiRawForm *form)
 						     GTK_WINDOW (form->priv->filter_window));
 #endif
 
-		g_signal_connect (form->priv->filter_window, "delete_event",
+		g_signal_connect (form->priv->filter_window, "delete-event",
 				  G_CALLBACK (filter_event), form);
-		g_signal_connect (form->priv->filter_window, "button_press_event",
+		g_signal_connect (form->priv->filter_window, "button-press-event",
 				  G_CALLBACK (filter_event), form);
-		g_signal_connect (form->priv->filter_window, "key_press_event",
+		g_signal_connect (form->priv->filter_window, "key-press-event",
 				  G_CALLBACK (key_press_filter_event), form);
 		frame = gtk_frame_new (NULL);
 		gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);

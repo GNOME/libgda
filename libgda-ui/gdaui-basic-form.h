@@ -78,8 +78,9 @@ void              gdaui_basic_form_set_entries_to_default   (GdauiBasicForm *for
 GtkWidget        *gdaui_basic_form_get_entry_widget         (GdauiBasicForm *form, GdaHolder *holder);
 GtkWidget        *gdaui_basic_form_get_label_widget         (GdauiBasicForm *form, GdaHolder *holder);
 
-void              gdaui_basic_form_set_data_layout_from_file(GdauiBasicForm *form, const gchar *file_name,
-							     const gchar *parent_table);
+void              gdaui_basic_form_set_layout_from_file     (GdauiBasicForm *form, const gchar *file_name,
+							     const gchar *form_name);
+GtkWidget        *gdaui_basic_form_get_place_holder         (GdauiBasicForm *form, const gchar *placeholder_id);
 
 G_END_DECLS
 

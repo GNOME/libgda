@@ -92,14 +92,14 @@ typedef struct
 	/* text renderer */
 	gulong focus_out_id;
 } GdauiDataCellRendererPasswordInfo;
-#define GDAUI_DATA_CELL_RENDERER_PASSWORD_INFO_KEY "gdaui_data_cell_renderer_password_info_key"
+#define GDAUI_DATA_CELL_RENDERER_PASSWORD_INFO_KEY "__info_key_P"
 
 
 
 static GObjectClass *parent_class = NULL;
 static guint text_cell_renderer_password_signals [LAST_SIGNAL];
 
-#define GDAUI_DATA_CELL_RENDERER_PASSWORD_PATH "gdaui_data_cell_renderer_password_path"
+#define GDAUI_DATA_CELL_RENDERER_PASSWORD_PATH "__path_P"
 
 GType
 gdaui_data_cell_renderer_password_get_type (void)
@@ -168,16 +168,16 @@ gdaui_data_cell_renderer_password_class_init (GdauiDataCellRendererPasswordClass
   
 	g_object_class_install_property (object_class,
 					 PROP_VALUE_ATTRIBUTES,
-					 g_param_spec_flags ("value_attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
+					 g_param_spec_flags ("value-attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
 							     GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,
 					 PROP_TO_BE_DELETED,
-					 g_param_spec_boolean ("to_be_deleted", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("to-be-deleted", NULL, NULL, FALSE,
                                                                G_PARAM_WRITABLE));
 	g_object_class_install_property(object_class,
 					PROP_DATA_HANDLER,
-					g_param_spec_object("data_handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
+					g_param_spec_object("data-handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
 							    G_PARAM_WRITABLE|G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property(object_class,
 					PROP_TYPE,
@@ -343,7 +343,7 @@ gdaui_data_cell_renderer_password_new (GdaDataHandler *dh, GType type, const gch
 
 	g_return_val_if_fail (!dh || GDA_IS_DATA_HANDLER (dh), NULL);
 	obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_PASSWORD,
-			    "type", type, "data_handler", dh, NULL);
+			    "type", type, "data-handler", dh, NULL);
 
 	if (options)
 		GDAUI_DATA_CELL_RENDERER_PASSWORD (obj)->priv->options = g_strdup (options);
@@ -464,7 +464,7 @@ gdaui_data_cell_renderer_password_start_editing (GtkCellRenderer      *cell,
 
 	entry = gdaui_entry_password_new (datacell->priv->dh, datacell->priv->type, datacell->priv->options);
 
-	g_object_set (G_OBJECT (entry), "is_cell_renderer", TRUE, "actions", FALSE, NULL);
+	g_object_set (G_OBJECT (entry), "is-cell-renderer", TRUE, "actions", FALSE, NULL);
 
 	gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
 	
@@ -472,9 +472,9 @@ gdaui_data_cell_renderer_password_start_editing (GtkCellRenderer      *cell,
  	g_object_set_data_full (G_OBJECT (entry), GDAUI_DATA_CELL_RENDERER_PASSWORD_PATH, g_strdup (path), g_free); 
 	g_object_set_data_full (G_OBJECT (cell), GDAUI_DATA_CELL_RENDERER_PASSWORD_INFO_KEY, info, g_free);
   
-	g_signal_connect (entry, "editing_done",
+	g_signal_connect (entry, "editing-done",
 			  G_CALLBACK (gdaui_data_cell_renderer_password_editing_done), datacell);
-	info->focus_out_id = g_signal_connect (entry, "focus_out_event",
+	info->focus_out_id = g_signal_connect (entry, "focus-out-event",
 					       G_CALLBACK (gdaui_data_cell_renderer_password_focus_out_event),
 					       datacell);
 	gtk_widget_show (entry);

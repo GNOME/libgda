@@ -60,8 +60,10 @@ struct _GdauiDataEntryIface
 	GdaDataHandler *(*get_handler)           (GdauiDataEntry *de);
 	gboolean        (*expand_in_layout)      (GdauiDataEntry *de);
 	void            (*set_editable)          (GdauiDataEntry *de, gboolean editable);
+	gboolean        (*get_editable)          (GdauiDataEntry *de);
 	void            (*grab_focus)            (GdauiDataEntry *de);
 
+	/*< private >*/
 	/* Padding for future expansion */
         void (*_gdaui_reserved1) (void);
         void (*_gdaui_reserved2) (void);
@@ -91,6 +93,7 @@ GdaValueAttribute gdaui_data_entry_get_attributes       (GdauiDataEntry *de);
 GdaDataHandler *gdaui_data_entry_get_handler            (GdauiDataEntry *de);
 gboolean        gdaui_data_entry_expand_in_layout       (GdauiDataEntry *de);
 void            gdaui_data_entry_set_editable           (GdauiDataEntry *de, gboolean editable);
+gboolean        gdaui_data_entry_get_editable           (GdauiDataEntry *de);
 void            gdaui_data_entry_grab_focus             (GdauiDataEntry *de);
 
 /* TO remove and replace with properties:

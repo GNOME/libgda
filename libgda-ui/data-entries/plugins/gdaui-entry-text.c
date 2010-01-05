@@ -35,6 +35,7 @@ static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
 static gboolean   expand_in_layout (GdauiEntryWrapper *mgwrap);
+static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -85,6 +86,7 @@ gdaui_entry_text_class_init (GdauiEntryTextClass * class)
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->expand_in_layout = expand_in_layout;
+	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
 }
 
 static void
@@ -268,4 +270,15 @@ static gboolean
 expand_in_layout (GdauiEntryWrapper *mgwrap)
 {
 	return TRUE;
+}
+
+static void
+set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
+{
+	GdauiEntryText *mgtxt;
+
+	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_TEXT (mgwrap));
+	mgtxt = GDAUI_ENTRY_TEXT (mgwrap);
+
+	gtk_widget_set_sensitive (mgtxt->priv->view, editable);
 }

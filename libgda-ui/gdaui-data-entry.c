@@ -83,7 +83,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 
 	if (! initialized) {
 		gdaui_data_entry_signals[CONTENTS_MODIFIED] =
-			g_signal_new ("contents_modified",
+			g_signal_new ("contents-modified",
 				      GDAUI_TYPE_DATA_ENTRY,
 				      G_SIGNAL_RUN_FIRST,
 				      G_STRUCT_OFFSET (GdauiDataEntryIface, contents_modified),
@@ -91,7 +91,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 		gdaui_data_entry_signals[CONTENTS_ACTIVATED] =
-			g_signal_new ("contents_activated",
+			g_signal_new ("contents-activated",
 				      GDAUI_TYPE_DATA_ENTRY,
 				      G_SIGNAL_RUN_FIRST,
 				      G_STRUCT_OFFSET (GdauiDataEntryIface, contents_activated),
@@ -99,7 +99,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 		gdaui_data_entry_signals[STATUS_CHANGED] =
-			g_signal_new ("status_changed",
+			g_signal_new ("status-changed",
 				      GDAUI_TYPE_DATA_ENTRY,
 				      G_SIGNAL_RUN_FIRST,
 				      G_STRUCT_OFFSET (GdauiDataEntryIface, status_changed),
@@ -107,7 +107,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 		gdaui_data_entry_signals[CONTENTS_VALID] =
-			g_signal_new ("contents_valid",
+			g_signal_new ("contents-valid",
 				      GDAUI_TYPE_DATA_ENTRY,
 				      G_SIGNAL_RUN_LAST,
 				      G_STRUCT_OFFSET (GdauiDataEntryIface, contents_valid),
@@ -214,7 +214,7 @@ gdaui_data_entry_get_value (GdauiDataEntry *de)
  * Tests the validity of @de's contents. The validity is a determined from:
  * <itemizedlist>
  *   <listitem><para>the @de widget itself if it is capable of doing it (depending on the implementation)</para></listitem>
- *   <listitem><para>the results of the "contents_valid" signal which can be connected from </para></listitem>
+ *   <listitem><para>the results of the "contents-valid" signal which can be connected from </para></listitem>
  * </itemizedlist>
  *
  * Returns: TRUE if @de's contents is valid
@@ -421,6 +421,30 @@ gdaui_data_entry_set_editable (GdauiDataEntry *de, gboolean editable)
 		(GDAUI_DATA_ENTRY_GET_IFACE (de)->set_editable) (de, editable);
 	else
 		gtk_widget_set_sensitive (GTK_WIDGET (de), editable);
+}
+
+/**
+ * gdaui_data_entry_get_editable
+ * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
+ *
+ * Tells if @de can be edited by the user
+ *
+ * Returns: %TRUE if @de is editable
+ *
+ * Since: 4.2
+ */
+gboolean
+gdaui_data_entry_get_editable (GdauiDataEntry *de)
+{
+	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), FALSE);
+
+	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->get_editable)
+		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->get_editable) (de);
+	else {
+		gboolean sens;
+		g_object_get ((GObject*) de, "sensitive", &sens, NULL);
+		return sens;
+	}
 }
 
 /**

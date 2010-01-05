@@ -71,7 +71,7 @@ gdaui_data_cell_renderer_cgrid_new (GdaDataHandler  *data_handler,
 				       const gchar     *options)
 {
 	return (GdauiDataCellRendererCGrid *) g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_CGRID,
-							      "data_handler", data_handler,
+							      "data-handler", data_handler,
 							      "gtype", gtype,
 							      "options", g_strdup (options),
 							      NULL);
@@ -500,14 +500,14 @@ gdaui_data_cell_renderer_cgrid_start_editing (GtkCellRenderer       *renderer,
 								   cgrid->priv->options);
 
 	g_object_set (G_OBJECT(entry),
-		      "is_cell_renderer", TRUE,
+		      "is-cell-renderer", TRUE,
 		      "actions", FALSE,
 		      NULL); 
 
 	gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY(entry),
 					     cgrid->priv->value);
 
-	g_signal_connect (G_OBJECT(entry), "editing_done",
+	g_signal_connect (G_OBJECT(entry), "editing-done",
 			  G_CALLBACK(gdaui_data_cell_renderer_cgrid_editing_done),
 			  cgrid);
 

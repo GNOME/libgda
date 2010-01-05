@@ -435,12 +435,12 @@ gdaui_entry_number_start_editing (GtkCellEditable *iface, GdkEvent *event)
 	mgstr = GDAUI_ENTRY_NUMBER (iface);
 
 	mgstr->priv->editing_canceled = FALSE;
-	g_object_set (G_OBJECT (mgstr->priv->entry), "has_frame", FALSE, "xalign", 0., NULL);
+	g_object_set (G_OBJECT (mgstr->priv->entry), "has-frame", FALSE, "xalign", 0., NULL);
 
 	gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgstr->priv->entry), event);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "editing_done",
+	g_signal_connect (G_OBJECT (mgstr->priv->entry), "editing-done",
 			  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgstr);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "remove_widget",
+	g_signal_connect (G_OBJECT (mgstr->priv->entry), "remove-widget",
 			  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgstr);
 	gdaui_entry_shell_refresh (GDAUI_ENTRY_SHELL (mgstr));
 
@@ -508,7 +508,7 @@ sync_entry_options (GdauiEntryNumber *mgstr)
 
 	g_object_set (G_OBJECT (mgstr->priv->entry), 
 		      "type", gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgstr)),
-		      "n_decimals", mgstr->priv->nb_decimals,
+		      "n-decimals", mgstr->priv->nb_decimals,
 		      "thousands-sep", mgstr->priv->thousand_sep,
 		      "prefix", mgstr->priv->currency,
 		      NULL);

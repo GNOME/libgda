@@ -157,14 +157,14 @@ dsn_config_new (void)
  	gdaui_data_proxy_column_set_editable (GDAUI_DATA_PROXY (priv->dsn_list), 0, FALSE);
  	gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (priv->dsn_list), 3, FALSE);
  	gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (priv->dsn_list), 4, FALSE);
-	g_object_set (priv->dsn_list, "info_cell_visible", FALSE, NULL);
+	g_object_set (priv->dsn_list, "info-cell-visible", FALSE, NULL);
 
 	gtk_container_add (GTK_CONTAINER (sw), priv->dsn_list);
 	
 	gtk_widget_show_all (sw);
-	g_signal_connect (priv->dsn_list, "double_clicked",
+	g_signal_connect (priv->dsn_list, "double-clicked",
 			  G_CALLBACK (list_double_clicked_cb), dsn);
-	g_signal_connect (priv->dsn_list, "populate_popup",
+	g_signal_connect (priv->dsn_list, "populate-popup",
 			  G_CALLBACK (list_popup_cb), dsn);
 
 	/* add tip */

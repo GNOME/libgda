@@ -162,36 +162,36 @@ gdaui_data_cell_renderer_combo_class_init (GdauiDataCellRendererComboClass *clas
 	
 	g_object_class_install_property (object_class,
 					 PROP_VALUES_DISPLAY,
-					 g_param_spec_pointer ("values_display",
+					 g_param_spec_pointer ("values-display",
 							       _("Values"),
 							       _("GList of GValue to render, not limited to PK fields "),
 							       G_PARAM_WRITABLE));
   
 	g_object_class_install_property (object_class,
 					 PROP_VALUE_ATTRIBUTES,
-					 g_param_spec_flags ("value_attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
+					 g_param_spec_flags ("value-attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
 							     GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,
 					 PROP_TO_BE_DELETED,
-					 g_param_spec_boolean ("to_be_deleted", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("to-be-deleted", NULL, NULL, FALSE,
                                                                G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class,
 					 PROP_SHOW_EXPANDER,
-					 g_param_spec_boolean ("show_expander", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("show-expander", NULL, NULL, FALSE,
                                                                G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_SET_DEFAULT_IF_INVALID,
-					 g_param_spec_boolean ("set_default_if_invalid", NULL, NULL, FALSE,
+					 g_param_spec_boolean ("set-default-if-invalid", NULL, NULL, FALSE,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
   
 	g_object_class_install_property (object_class, PROP_PARAMLIST,
-					 g_param_spec_object ("param_list", NULL, NULL, GDAUI_TYPE_SET,
+					 g_param_spec_object ("data-set", NULL, NULL, GDAUI_TYPE_SET,
 							      (G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE)));
 
 	/* Ideally, GdaSetSource would be a boxed type, but it is not yet, so we use g_param_spec_pointer(). */
 	g_object_class_install_property (object_class, PROP_PARAMLISTSOURCE,
-					 g_param_spec_pointer ("param_list_source", NULL, NULL,
+					 g_param_spec_pointer ("data-set-source", NULL, NULL,
                                                                (G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE)));
 	  
 	text_cell_renderer_combo_signals [CHANGED] =
@@ -350,7 +350,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 		else
 			g_object_set (G_OBJECT (object), "text", "", NULL);
 		
-		g_object_notify (object, "values_display");
+		g_object_notify (object, "values-display");
 		break;
 	case PROP_VALUE_ATTRIBUTES:
 		datacell->priv->attributes = g_value_get_flags (value);
@@ -441,8 +441,8 @@ gdaui_data_cell_renderer_combo_new (GdauiSet *paramlist, GdauiSetSource *source)
 	g_return_val_if_fail (source, NULL);
 	g_return_val_if_fail (g_slist_find (paramlist->sources_list, source), NULL);
 
-	obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_COMBO, "param_list", paramlist, 
-			    "param_list_source", source, NULL);
+	obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_COMBO, "data-set", paramlist, 
+			    "data-set-source", source, NULL);
 	
 	return GTK_CELL_RENDERER (obj);
 }
@@ -468,7 +468,7 @@ gdaui_data_cell_renderer_combo_get_size (GtkCellRenderer *cell,
 		guint xpad, ypad;
 		g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
 		gint expander_size;
-		gtk_widget_style_get (widget, "expander_size", &expander_size, NULL);
+		gtk_widget_style_get (widget, "expander-size", &expander_size, NULL);
 		calc_width = (gint) xpad * 2 + expander_size;
 		calc_height = (gint) ypad * 2 + expander_size;
 	}
@@ -520,7 +520,7 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 		GtkStyle *style;
 		guint xpad, ypad;
 
-		gtk_widget_style_get (widget, "expander_size", &expander_size, NULL);
+		gtk_widget_style_get (widget, "expander-size", &expander_size, NULL);
 		g_object_get ((GObject*) widget, "style", &style, NULL);
 		g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
 		
@@ -579,7 +579,7 @@ gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
 					    datacell->priv->source->shown_n_cols, 
 					    datacell->priv->source->shown_cols_index);
 	
-	g_object_set (combo, "has_frame", FALSE, NULL);
+	g_object_set (combo, "has-frame", FALSE, NULL);
 	g_object_set_data_full (G_OBJECT (combo),
 				GDAUI_DATA_CELL_RENDERER_COMBO_PATH,
 				g_strdup (path), g_free);
@@ -587,9 +587,9 @@ gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
 				      (datacell->priv->attributes & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE);
 	gtk_widget_show (combo);
 
-	g_signal_connect (GTK_CELL_EDITABLE (combo), "editing_done",
+	g_signal_connect (GTK_CELL_EDITABLE (combo), "editing-done",
 			  G_CALLBACK (gdaui_data_cell_renderer_combo_editing_done), datacell);
-	datacell->priv->focus_out_id = g_signal_connect (combo, "focus_out_event",
+	datacell->priv->focus_out_id = g_signal_connect (combo, "focus-out-event",
 							 G_CALLBACK (gdaui_data_cell_renderer_combo_focus_out_event),
 							 datacell);
 	

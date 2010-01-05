@@ -304,7 +304,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	gtk_window_set_title (GTK_WINDOW (bwin), str);
 	g_free (str);
 	gtk_window_set_default_size ((GtkWindow*) bwin, 700, 600);
-	g_signal_connect (G_OBJECT (bwin), "delete_event",
+	g_signal_connect (G_OBJECT (bwin), "delete-event",
                           G_CALLBACK (delete_event), bwin);
 	/* icon */
 	GdkPixbuf *icon;

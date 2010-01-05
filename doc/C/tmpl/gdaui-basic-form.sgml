@@ -30,6 +30,71 @@ g_object_unref (params);
 g_object_unref (stmt);
   </programlisting>
 </para>
+<para>
+  The default layout within a #GdauiBasicForm is a vertical column: all the data entry widgets are aligned
+  in a single column. This behaviour can be changed using the gdaui_basic_form_set_layout_from_file() method or
+  setting the <link linkend="GdauiBasicForm--xml-layout">xml-layout</link> property.
+</para>
+
+<refsect2 id="GdauiBasicFormXMLLayout"><title>XML Layout Definitions</title>
+<para>
+The #GdauiBasicForm class parses textual descriptions of XML layout which
+which can be described by the following DTD. 
+</para>
+<para>
+<programlisting><![CDATA[
+<!ELEMENT gdaui_layouts (gdaui_form | gdaui_grid)>
+
+<!ELEMENT gdaui_form (gdaui_section | gdaui_column | gdaui_notebook)*>
+<!ATTLIST gdaui_form
+          name CDATA #REQUIRED
+	  container (columns|rows|hpaned|vpaned) #IMPLIED>
+
+<!ELEMENT gdaui_section (gdaui_section | gdaui_column | gdaui_notebook)*>
+<!ATTLIST gdaui_section
+          title CDATA #IMPLIED >
+
+<!ELEMENT gdaui_notebook (gdaui_section | gdaui_column | gdaui_notebook)*>
+
+<!ELEMENT gdaui_column (gdaui_entry | gdaui_placeholder)*>
+
+<!ELEMENT gdaui_entry EMPTY>
+<!ATTLIST gdaui_entry
+          name CDATA #REQUIRED
+	  editable (true|false) #IMPLIED
+	  label CDATA #IMPLIED
+	  plugin CDATA #IMPLIED>
+
+<!ELEMENT gdaui_placeholder EMPTY>
+<!ATTLIST gdaui_placeholder
+	  id CDATA #REQUIRED
+	  label CDATA #IMPLIED>
+]]></programlisting>
+</para>
+<example>
+  <title>A GdauiBasicForm layout example</title>
+  <programlisting><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<gdaui_layouts>
+  <gdaui_form name="customers" container="hpaned">
+    <gdaui_section title="Summary">
+      <gdaui_column>
+	<gdaui_entry name="id" editable="no"/>
+	<gdaui_entry name="name"/>
+	<gdaui_entry name="comments" plugin="text"/>
+	<gdaui_entry name="total_orders" label="Total ordered" plugin="number:NB_DECIMALS=2;CURRENCY=€"/>
+      </gdaui_column>
+    </gdaui_section>
+    <gdaui_section title="Photo">
+      <gdaui_column>
+	<gdaui_entry name="photo" plugin="picture"/>
+      </gdaui_column>
+    </gdaui_section>
+  </gdaui_form>
+</gdaui_layouts>
+]]></programlisting>
+</example>
+</refsect2>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
@@ -73,11 +138,6 @@ g_object_unref (stmt);
 
 </para>
 
-<!-- ##### ARG GdauiBasicForm:data-layout ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdauiBasicForm:entries-auto-default ##### -->
 <para>
 
@@ -94,6 +154,11 @@ g_object_unref (stmt);
 </para>
 
 <!-- ##### ARG GdauiBasicForm:show-actions ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiBasicForm:xml-layout ##### -->
 <para>
 
 </para>
@@ -217,15 +282,5 @@ g_object_unref (stmt);
 @form: 
 @holder: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gdaui_basic_form_set_data_layout_from_file ##### -->
-<para>
-
-</para>
-
-@form: 
-@file_name: 
-@parent_table: 
 
 

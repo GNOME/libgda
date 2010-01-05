@@ -10,7 +10,8 @@ endif
 
 ## These should be in the order you want them to appear in the 
 ## demo app, which means alphabetized by demo title, not filename
-demos =						\
+demos =					\
+	basic_form.c \
 	data_model_dir.c \
 	form.c \
 	form_rw.c \
@@ -29,7 +30,7 @@ demos =						\
 	cloud.c \
 	combo.c
 
-demofiles = demo_db.db example_automatic_layout.xml
+demofiles = demo_db.db custom_layout.xml
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \

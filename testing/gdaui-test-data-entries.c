@@ -148,7 +148,7 @@ main (int argc, char **argv)
 	/* Create the main window */
 	mainwin = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_container_set_border_width (GTK_CONTAINER (mainwin), 0);
-	g_signal_connect (G_OBJECT (mainwin), "delete_event",
+	g_signal_connect (G_OBJECT (mainwin), "delete-event",
 			  G_CALLBACK (delete_event), NULL);
 	g_signal_connect (G_OBJECT (mainwin), "destroy",
 			  G_CALLBACK (destroy), NULL);
@@ -712,7 +712,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 1, 3, 3, 4, 0, 0, 0, 0);
 	g_object_set_data (G_OBJECT (wid), "value", label);
-	g_signal_connect (G_OBJECT (wid), "contents_modified",
+	g_signal_connect (G_OBJECT (wid), "contents-modified",
 			  G_CALLBACK (entry_contents_modified), NULL);
 	gtk_widget_show (label);
 

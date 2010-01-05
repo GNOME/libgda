@@ -139,7 +139,7 @@ gdaui_data_store_class_init (GdauiDataStoreClass * class)
                                          g_param_spec_pointer ("proxy", _("Internal GdaDataProxy data model"), NULL,
                                                                (G_PARAM_READABLE)));
 	g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
-                                         g_param_spec_boolean ("prepend_null_entry", NULL, NULL, FALSE,
+                                         g_param_spec_boolean ("prepend-null-entry", NULL, NULL, FALSE,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
 
@@ -274,7 +274,7 @@ gdaui_data_store_set_property (GObject *object,
 			else
 				proxy = (GdaDataProxy *) gda_data_proxy_new (model);
 			store->priv->proxy = proxy;
-			g_object_set (G_OBJECT (proxy), "defer_sync", FALSE, "sample_size", 0, NULL);
+			g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
 			store->priv->nrows = gda_data_model_get_n_rows (GDA_DATA_MODEL (store->priv->proxy));
 
 			/* connect to row changes */
@@ -291,7 +291,7 @@ gdaui_data_store_set_property (GObject *object,
 			break;
 		case PROP_ADD_NULL_ENTRY:
 			g_return_if_fail (store->priv->proxy);
-			g_object_set (store->priv->proxy, "prepend_null_entry",
+			g_object_set (store->priv->proxy, "prepend-null-entry",
 				      g_value_get_boolean (value), NULL);
 			store->priv->stamp = g_random_int ();
 			break;
@@ -321,7 +321,7 @@ gdaui_data_store_get_property (GObject *object,
 		case PROP_ADD_NULL_ENTRY: {
 			gboolean prop;
 
-			g_object_get (store->priv->proxy, "prepend_null_entry", &prop, NULL);
+			g_object_get (store->priv->proxy, "prepend-null-entry", &prop, NULL);
 			g_value_set_boolean (value, prop);
 			break;
 		}

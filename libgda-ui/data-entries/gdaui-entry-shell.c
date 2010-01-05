@@ -30,13 +30,13 @@ static void gdaui_entry_shell_init (GdauiEntryShell *wid);
 static void gdaui_entry_shell_dispose (GObject *object);
 
 static void gdaui_entry_shell_set_property (GObject *object,
-					       guint param_id,
-					       const GValue *value,
-					       GParamSpec *pspec);
+					    guint param_id,
+					    const GValue *value,
+					    GParamSpec *pspec);
 static void gdaui_entry_shell_get_property (GObject *object,
-					       guint param_id,
-					       GValue *value,
-					       GParamSpec *pspec);
+					    guint param_id,
+					    GValue *value,
+					    GParamSpec *pspec);
 
 
 static gint event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell);
@@ -45,8 +45,7 @@ static void contents_modified_cb (GdauiEntryShell *shell, gpointer unused);
 static void gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell);
 
 /* properties */
-enum
-{
+enum {
 	PROP_0,
 	PROP_HANDLER,
 	PROP_ACTIONS,
@@ -74,9 +73,9 @@ static GObjectClass *parent_class = NULL;
 
 /**
  * gdaui_entry_shell_get_type
- * 
+ *
  * Register the GdauiEntryShell class on the GLib type system.
- * 
+ *
  * Returns: the GType identifying the class.
  */
 GType
@@ -95,7 +94,7 @@ gdaui_entry_shell_get_type (void)
 			sizeof (GdauiEntryShell),
 			0,
 			(GInstanceInitFunc) gdaui_entry_shell_init
-		};		
+		};
 
 		type = g_type_register_static (GTK_TYPE_VIEWPORT, "GdauiEntryShell", &info, 0);
 	}
@@ -108,12 +107,12 @@ gdaui_entry_shell_class_init (GdauiEntryShellClass * class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
-	
+
 	parent_class = g_type_class_peek_parent (class);
 
 	object_class->dispose = gdaui_entry_shell_dispose;
 	widget_class->show_all = show_all;
-	
+
 	/* Properties */
 	object_class->set_property = gdaui_entry_shell_set_property;
 	object_class->get_property = gdaui_entry_shell_get_property;
@@ -125,7 +124,7 @@ gdaui_entry_shell_class_init (GdauiEntryShellClass * class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	g_object_class_install_property (object_class, PROP_IS_CELL_RENDERER,
-					 g_param_spec_boolean ("is_cell_renderer", NULL, NULL, TRUE,
+					 g_param_spec_boolean ("is-cell-renderer", NULL, NULL, TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
 
@@ -168,8 +167,8 @@ gdaui_entry_shell_init (GdauiEntryShell * shell)
 	shell->priv->hbox = hbox;
 
 	/* vbox to insert the real widget to edit data */
-	vbox = gtk_vbox_new (FALSE, 0); 
-	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0); 
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
 	shell->priv->top_box = vbox;
 	gtk_widget_show (vbox);
 
@@ -177,7 +176,7 @@ gdaui_entry_shell_init (GdauiEntryShell * shell)
 	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
 	button = gtk_button_new ();
 	gtk_container_add (GTK_CONTAINER (button), arrow);
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);  
+	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
 	shell->priv->button = button;
 	gtk_widget_show_all (button);
 	gtk_widget_set_size_request (button, 15, 15);
@@ -205,7 +204,7 @@ gdaui_entry_shell_dispose (GObject   * object)
 	if (shell->priv) {
 		if (shell->priv->data_handler)
 			g_object_unref (shell->priv->data_handler);
-		
+
 		g_free (shell->priv);
 		shell->priv = NULL;
 	}
@@ -216,9 +215,9 @@ gdaui_entry_shell_dispose (GObject   * object)
 
 static void
 gdaui_entry_shell_set_property (GObject *object,
-				   guint param_id,
-				   const GValue *value,
-				   GParamSpec *pspec)
+				guint param_id,
+				const GValue *value,
+				GParamSpec *pspec)
 {
 	gpointer ptr;
 	GdauiEntryShell *shell;
@@ -237,14 +236,14 @@ gdaui_entry_shell_set_property (GObject *object,
 				shell->priv->data_handler = GDA_DATA_HANDLER (ptr);
 				g_object_ref (G_OBJECT (shell->priv->data_handler));
 			}
-			else 
+			else
 				g_message (_("Widget of class '%s' does not have any associated GdaDataHandler, "
-					     "(to be set using the 'handler' property) expect some mis-behaviours"), 
+					     "(to be set using the 'handler' property) expect some mis-behaviours"),
 					   G_OBJECT_TYPE_NAME (object));
 			break;
 		case PROP_ACTIONS:
 			shell->priv->show_actions = g_value_get_boolean (value);
-			if (shell->priv->show_actions) 
+			if (shell->priv->show_actions)
 				gtk_widget_show (shell->priv->button);
 			else
 				gtk_widget_hide (shell->priv->button);
@@ -264,9 +263,9 @@ gdaui_entry_shell_set_property (GObject *object,
 
 static void
 gdaui_entry_shell_get_property (GObject *object,
-				   guint param_id,
-				   GValue *value,
-				   GParamSpec *pspec)
+				guint param_id,
+				GValue *value,
+				GParamSpec *pspec)
 {
 	GdauiEntryShell *shell;
 
@@ -306,10 +305,10 @@ gdaui_entry_shell_pack_entry (GdauiEntryShell *shell, GtkWidget *main_widget)
 	gtk_box_pack_start (GTK_BOX (shell->priv->top_box), main_widget, TRUE, TRUE, 0);
 
 	/* signals */
-	g_signal_connect (G_OBJECT (shell), "contents_modified",
+	g_signal_connect (G_OBJECT (shell), "contents-modified",
 			  G_CALLBACK (contents_modified_cb), NULL);
 
-	g_signal_connect (G_OBJECT (shell), "status_changed",
+	g_signal_connect (G_OBJECT (shell), "status-changed",
 			  G_CALLBACK (contents_modified_cb), NULL);
 }
 
@@ -330,11 +329,11 @@ event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 		return done;
 
 	if (event->type == GDK_BUTTON_PRESS) {
-		GdkEventButton *bevent = (GdkEventButton *) event; 
+		GdkEventButton *bevent = (GdkEventButton *) event;
 		if ((bevent->button == 1) || (bevent->button == 3)) {
 			GtkWidget *menu;
 			guint attributes;
-			
+
 			attributes = gdaui_entry_shell_refresh_attributes (shell);
 			menu = _gdaui_utility_entry_build_actions_menu (G_OBJECT (shell), attributes,
 									G_CALLBACK (mitem_activated_cb));
@@ -350,7 +349,7 @@ event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 
 		if (kevent->keyval == GDK_space) {
 			guint attributes;
-			
+
 			attributes = gdaui_entry_shell_refresh_attributes (shell);
 			menu = _gdaui_utility_entry_build_actions_menu (G_OBJECT (shell), attributes,
 									G_CALLBACK (mitem_activated_cb));
@@ -366,7 +365,7 @@ event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 				done = TRUE;
 		}
 	}
-	
+
 	return done;
 }
 
@@ -379,7 +378,7 @@ mitem_activated_cb (GtkWidget *mitem, GdauiEntryShell *shell)
 	gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (shell), action, action);
 }
 
-static void 
+static void
 gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell)
 {
 	static GdkColor **colors = NULL;

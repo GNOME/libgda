@@ -30,7 +30,9 @@ gdaui_basic_form_entry_set_editable
 gdaui_basic_form_set_entries_to_default
 gdaui_basic_form_get_entry_widget
 gdaui_basic_form_get_label_widget
-gdaui_basic_form_set_data_layout_from_file
+<SUBSECTION>
+gdaui_basic_form_set_layout_from_file
+gdaui_basic_form_get_place_holder
 <SUBSECTION Standard>
 GDAUI_BASIC_FORM
 GDAUI_BASIC_FORM_CLASS
@@ -76,6 +78,7 @@ gdaui_data_entry_get_attributes
 gdaui_data_entry_get_handler
 gdaui_data_entry_expand_in_layout
 gdaui_data_entry_set_editable
+gdaui_data_entry_get_editable
 gdaui_data_entry_grab_focus
 <SUBSECTION Standard>
 GDAUI_DATA_ENTRY

@@ -572,7 +572,7 @@ gdaui_entry_string_start_editing (GtkCellEditable *iface, GdkEvent *event)
 	g_return_if_fail (mgstr->priv);
 
 	mgstr->priv->editing_canceled = FALSE;
-	g_object_set (G_OBJECT (mgstr->priv->entry), "has_frame", FALSE, "xalign", 0., NULL);
+	g_object_set (G_OBJECT (mgstr->priv->entry), "has-frame", FALSE, "xalign", 0., NULL);
 	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_LEFT, 0);
 	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_RIGHT, 0);
 	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_TOP, 0);
@@ -581,9 +581,9 @@ gdaui_entry_string_start_editing (GtkCellEditable *iface, GdkEvent *event)
 	gtk_container_set_border_width (GTK_CONTAINER (mgstr->priv->sw), 0);
 
 	gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgstr->priv->entry), event);
-	g_signal_connect (mgstr->priv->entry, "editing_done",
+	g_signal_connect (mgstr->priv->entry, "editing-done",
 			  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgstr);
-	g_signal_connect (mgstr->priv->entry, "remove_widget",
+	g_signal_connect (mgstr->priv->entry, "remove-widget",
 			  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgstr);
 	gdaui_entry_shell_refresh (GDAUI_ENTRY_SHELL (mgstr));
 	

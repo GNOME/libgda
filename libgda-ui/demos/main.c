@@ -706,7 +706,7 @@ create_tree (void)
 	gtk_tree_selection_select_iter (GTK_TREE_SELECTION (selection), &iter);
 
 	g_signal_connect (selection, "changed", G_CALLBACK (selection_cb), model);
-	g_signal_connect (tree_view, "row_activated", G_CALLBACK (row_activated_cb), model);
+	g_signal_connect (tree_view, "row-activated", G_CALLBACK (row_activated_cb), model);
 
 	gtk_tree_view_expand_all (GTK_TREE_VIEW (tree_view));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree_view), FALSE);

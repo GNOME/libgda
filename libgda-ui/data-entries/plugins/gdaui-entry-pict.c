@@ -58,7 +58,6 @@ struct _GdauiEntryPictPrivate
 {
 	GtkWidget     *sw;
 	GtkWidget     *pict;
-	GtkWidget     *notice;
 	gboolean       editable;
 	
 	PictBinData    bindata;
@@ -223,7 +222,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	GtkWidget *vbox, *wid;
 	GdauiEntryPict *mgpict;
 
-	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_PICT (mgwrap), NULL);
+	g_return_val_if_fail (GDAUI_IS_ENTRY_PICT (mgwrap), NULL);
 	mgpict = GDAUI_ENTRY_PICT (mgwrap);
 	g_return_val_if_fail (mgpict->priv, NULL);
 
@@ -250,12 +249,6 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	wid = gtk_bin_get_child (GTK_BIN (mgpict->priv->sw));
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (wid), GTK_SHADOW_NONE);
 
-	/* notice, not shown */
-	wid = gtk_label_new ("");
-	mgpict->priv->notice = wid;
-	gtk_misc_set_alignment (GTK_MISC (wid), 0., .5);
-	gtk_box_pack_start (GTK_BOX (vbox), wid, TRUE, TRUE, 0);
-
 	/* connect signals for popup menu */
 	g_signal_connect (G_OBJECT (mgpict), "popup-menu",
 			  G_CALLBACK (popup_menu_cb), mgpict);
@@ -278,6 +271,7 @@ size_allocate_cb (GtkWidget *wid, GtkAllocation *allocation, GdauiEntryPict *mgp
 		mgpict->priv->size.width = allocation->width;
 		mgpict->priv->size.height = allocation->height;
 		common_pict_clear_pixbuf_cache (&(mgpict->priv->options));
+		display_image (mgpict, NULL, NULL, NULL);
 	}
 }
 
@@ -329,15 +323,18 @@ event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryPict *mgpict)
 		return TRUE;
 	}
 	if ((event->type == GDK_2BUTTON_PRESS) && (((GdkEventButton *) event)->button == 1)) {
-		if (!mgpict->priv->popup_menu.menu) 
-			common_pict_create_menu (&(mgpict->priv->popup_menu), widget, &(mgpict->priv->bindata), 
-						 &(mgpict->priv->options), 
-						 (PictCallback) pict_data_changed_cb, mgpict);
+		if (mgpict->priv->editable) {
+			if (!mgpict->priv->popup_menu.menu) 
+				common_pict_create_menu (&(mgpict->priv->popup_menu), widget, &(mgpict->priv->bindata), 
+							 &(mgpict->priv->options), 
+							 (PictCallback) pict_data_changed_cb, mgpict);
 
-		common_pict_adjust_menu_sensitiveness (&(mgpict->priv->popup_menu), mgpict->priv->editable, 
-						       &(mgpict->priv->bindata));
-
-		gtk_menu_item_activate (GTK_MENU_ITEM (mgpict->priv->popup_menu.load_mitem));
+			common_pict_adjust_menu_sensitiveness (&(mgpict->priv->popup_menu), mgpict->priv->editable, 
+							       &(mgpict->priv->bindata));
+			
+			gtk_menu_item_activate (GTK_MENU_ITEM (mgpict->priv->popup_menu.load_mitem));
+			return TRUE;
+		}
 	}
 	
 	return FALSE;
@@ -351,7 +348,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	gchar *notice_msg = NULL;
 	GError *error = NULL;
 
-	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_PICT (mgwrap));
+	g_return_if_fail (GDAUI_IS_ENTRY_PICT (mgwrap));
 	mgpict = GDAUI_ENTRY_PICT (mgwrap);
 	g_return_if_fail (mgpict->priv);
 
@@ -390,7 +387,10 @@ display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_s
 	alloc.width = mgpict->priv->sw->allocation.width;
 	alloc.height = mgpict->priv->sw->allocation.height;
 #endif
-	
+
+	alloc.width = MAX (alloc.width, 10);
+	alloc.height = MAX (alloc.height, 10);
+
 	pixbuf = common_pict_fetch_cached_pixbuf (&(mgpict->priv->options), value);
 	if (pixbuf)
 		g_object_ref (pixbuf);
@@ -419,13 +419,8 @@ display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_s
 	if (stock)
 		gtk_image_set_from_stock (GTK_IMAGE (mgpict->priv->pict), 
 					  stock, GTK_ICON_SIZE_DIALOG);
-	if (notice || notice_msg) {
-		gtk_label_set_text (GTK_LABEL (mgpict->priv->notice), notice ? notice : notice_msg);
-		gtk_widget_show (mgpict->priv->notice);
-		g_free (notice_msg);
-	}
-	else 
-		gtk_widget_hide (mgpict->priv->notice);
+	gtk_widget_set_tooltip_text (mgpict->priv->pict, notice ? notice : notice_msg);
+	g_free (notice_msg);
 
 	common_pict_adjust_menu_sensitiveness (&(mgpict->priv->popup_menu), mgpict->priv->editable, &(mgpict->priv->bindata));
 	gtk_widget_queue_resize ((GtkWidget *) mgpict);
@@ -436,7 +431,7 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 {
 	GdauiEntryPict *mgpict;
 
-	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_PICT (mgwrap), NULL);
+	g_return_val_if_fail (GDAUI_IS_ENTRY_PICT (mgwrap), NULL);
 	mgpict = GDAUI_ENTRY_PICT (mgwrap);
 	g_return_val_if_fail (mgpict->priv, NULL);
 
@@ -461,12 +456,13 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 {
 	GdauiEntryPict *mgpict;
 
-	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_PICT (mgwrap));
+	g_return_if_fail (GDAUI_IS_ENTRY_PICT (mgwrap));
 	mgpict = GDAUI_ENTRY_PICT (mgwrap);
 	g_return_if_fail (mgpict->priv);
 	
 	mgpict->priv->editable = editable;
-	common_pict_adjust_menu_sensitiveness (&(mgpict->priv->popup_menu), mgpict->priv->editable, &(mgpict->priv->bindata));
+	common_pict_adjust_menu_sensitiveness (&(mgpict->priv->popup_menu),
+					       mgpict->priv->editable, &(mgpict->priv->bindata));
 }
 
 static gboolean
@@ -474,7 +470,7 @@ value_is_equal_to (GdauiEntryWrapper *mgwrap, const GValue *value)
 {
 	GdauiEntryPict *mgpict;
 
-	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_PICT (mgwrap), FALSE);
+	g_return_val_if_fail (GDAUI_IS_ENTRY_PICT (mgwrap), FALSE);
 	mgpict = GDAUI_ENTRY_PICT (mgwrap);
 	g_return_val_if_fail (mgpict->priv, FALSE);
 	
@@ -547,7 +543,7 @@ value_is_null (GdauiEntryWrapper *mgwrap)
 {
 	GdauiEntryPict *mgpict;
 
-	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_PICT (mgwrap), TRUE);
+	g_return_val_if_fail (GDAUI_IS_ENTRY_PICT (mgwrap), TRUE);
 	mgpict = GDAUI_ENTRY_PICT (mgwrap);
 	g_return_val_if_fail (mgpict->priv, TRUE);
 

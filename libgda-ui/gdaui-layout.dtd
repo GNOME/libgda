@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!ELEMENT gdaui_layouts (gdaui_form | gdaui_grid)>
+
+<!ELEMENT gdaui_form (gdaui_section | gdaui_column | gdaui_notebook)*>
+<!ATTLIST gdaui_form
+          name CDATA #REQUIRED
+	  container (columns|rows|hpaned|vpaned) #IMPLIED>
+
+<!ELEMENT gdaui_section (gdaui_section | gdaui_column | gdaui_notebook)*>
+<!ATTLIST gdaui_section
+          title CDATA #IMPLIED >
+
+<!ELEMENT gdaui_notebook (gdaui_section | gdaui_column | gdaui_notebook)*>
+
+<!ELEMENT gdaui_column (gdaui_entry | gdaui_placeholder)*>
+
+<!ELEMENT gdaui_entry EMPTY>
+<!ATTLIST gdaui_entry
+          name CDATA #REQUIRED
+	  editable (true|false) #IMPLIED
+	  label CDATA #IMPLIED
+	  plugin CDATA #IMPLIED>
+
+<!ELEMENT gdaui_placeholder EMPTY>
+<!ATTLIST gdaui_placeholder
+	  id CDATA #REQUIRED
+	  label CDATA #IMPLIED>
