@@ -17,7 +17,7 @@
 cross_path=/local/Win32/gtk
 depend_path=/local/Win32
 prefix=/local/Win32/Libgda
-version=4.1.3
+version=4.1.4
 
 
 
@@ -125,7 +125,7 @@ add_files_to_zip $archive $prefix share/libgda-4.0/ui $files
 files=(cnc.js md5.js jquery.js mouseapp_2.js mouseirb_2.js irb.js gda.css gda-print.css irb.css)
 add_files_to_zip $archive $prefix share/libgda-4.0/web $files
 
-files=(libgda-paramlist.dtd libgda-array.dtd libgda-server-operation.dtd data-layout.dtd)
+files=(libgda-paramlist.dtd libgda-array.dtd libgda-server-operation.dtd gdaui-layout.dtd)
 add_files_to_zip $archive $prefix share/libgda-4.0/dtd $files
 
 files=(config sales_test.db)

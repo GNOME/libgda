@@ -2,11 +2,11 @@
 	gdaui_action_mode_get_type
 	gdaui_basic_form_entry_grab_focus
 	gdaui_basic_form_entry_set_editable
-	gdaui_basic_form_entry_show
+	gdaui_basic_form_entry_set_visible
 	gdaui_basic_form_get_data_set
 	gdaui_basic_form_get_entry_widget
 	gdaui_basic_form_get_label_widget
-	gdaui_basic_form_get_data_set
+	gdaui_basic_form_get_place_holder
 	gdaui_basic_form_get_type
 	gdaui_basic_form_has_changed
 	gdaui_basic_form_is_valid
@@ -15,6 +15,7 @@
 	gdaui_basic_form_reset
 	gdaui_basic_form_set_as_reference
 	gdaui_basic_form_set_entries_to_default
+	gdaui_basic_form_set_layout_from_file
 	gdaui_cloud_create_filter_widget
 	gdaui_cloud_filter
 	gdaui_cloud_get_type
@@ -23,10 +24,12 @@
 	gdaui_cloud_set_weight_func
 	gdaui_combo_add_null
 	gdaui_combo_get_type
+	gdaui_combo_is_null_selected
 	gdaui_combo_new
 	gdaui_combo_new_with_model
 	gdaui_combo_set_model
-	gdaui_combo_is_null_selected
+	gdaui_data_cell_renderer_bin_get_type
+	gdaui_data_cell_renderer_bin_new
 	gdaui_data_cell_renderer_boolean_get_type
 	gdaui_data_cell_renderer_boolean_new
 	gdaui_data_cell_renderer_combo_get_type
@@ -38,6 +41,7 @@
 	gdaui_data_entry_content_is_valid
 	gdaui_data_entry_expand_in_layout
 	gdaui_data_entry_get_attributes
+	gdaui_data_entry_get_editable
 	gdaui_data_entry_get_handler
 	gdaui_data_entry_get_original_value
 	gdaui_data_entry_get_type
@@ -51,6 +55,28 @@
 	gdaui_data_entry_set_value
 	gdaui_data_entry_set_value_default
 	gdaui_data_entry_set_value_type
+	gdaui_data_filter_get_type
+	gdaui_data_filter_new
+	gdaui_data_proxy_column_set_editable
+	gdaui_data_proxy_column_show_actions
+	gdaui_data_proxy_get_actions_group
+	gdaui_data_proxy_get_proxy
+	gdaui_data_proxy_get_type
+	gdaui_data_proxy_get_write_mode
+	gdaui_data_proxy_info_flag_get_type
+	gdaui_data_proxy_info_get_type
+	gdaui_data_proxy_info_new
+	gdaui_data_proxy_perform_action
+	gdaui_data_proxy_set_write_mode
+	gdaui_data_proxy_write_mode_get_type
+	gdaui_data_selector_get_data_set
+	gdaui_data_selector_get_model
+	gdaui_data_selector_get_selected_rows
+	gdaui_data_selector_get_type
+	gdaui_data_selector_select_row
+	gdaui_data_selector_set_column_visible
+	gdaui_data_selector_set_model
+	gdaui_data_selector_unselect_row
 	gdaui_data_store_append
 	gdaui_data_store_delete
 	gdaui_data_store_get_iter_from_values
@@ -60,26 +86,8 @@
 	gdaui_data_store_new
 	gdaui_data_store_set_value
 	gdaui_data_store_undelete
-	gdaui_data_widget_column_hide
-	gdaui_data_widget_column_set_editable
-	gdaui_data_widget_column_show
-	gdaui_data_widget_column_show_actions
-	gdaui_data_widget_filter_get_type
-	gdaui_data_widget_filter_new
-	gdaui_data_widget_get_actions_group
-	gdaui_data_widget_get_current_data
-	gdaui_data_widget_get_gda_model
-	gdaui_data_widget_get_proxy
-	gdaui_data_widget_get_type
-	gdaui_data_widget_get_write_mode
-	gdaui_data_widget_info_flag_get_type
-	gdaui_data_widget_info_get_type
-	gdaui_data_widget_info_new
-	gdaui_data_widget_perform_action
-	gdaui_data_widget_set_data_layout_from_file
-	gdaui_data_widget_set_gda_model
-	gdaui_data_widget_set_write_mode
-	gdaui_data_widget_write_mode_get_type
+	gdaui_entry_bin_get_type
+	gdaui_entry_bin_new
 	gdaui_entry_boolean_get_type
 	gdaui_entry_boolean_new
 	gdaui_entry_combo_get_all_values
@@ -119,12 +127,12 @@
 	gdaui_entry_wrapper_contents_activated
 	gdaui_entry_wrapper_contents_changed
 	gdaui_entry_wrapper_get_type
-	gdaui_form_get_type
-	gdaui_form_new
 	gdaui_formatted_entry_get_text
 	gdaui_formatted_entry_get_type
 	gdaui_formatted_entry_new
-	gdaui_grid_get_selection
+	gdaui_formatted_entry_set_insert_func
+	gdaui_form_get_type
+	gdaui_form_new
 	gdaui_grid_get_type
 	gdaui_grid_new
 	gdaui_grid_set_sample_size
@@ -149,16 +157,14 @@
 	gdaui_provider_selector_set_provider
 	gdaui_raw_form_get_type
 	gdaui_raw_form_new
-	gdaui_raw_grid_get_selection
 	gdaui_raw_grid_get_type
 	gdaui_raw_grid_new
+	gdaui_raw_grid_set_data_layout_from_file
 	gdaui_raw_grid_set_sample_size
 	gdaui_raw_grid_set_sample_start
 	gdaui_server_operation_get_type
 	gdaui_server_operation_new
 	gdaui_server_operation_new_in_dialog
-	gdaui_set_get_type
-	gdaui_set_new
 	gdaui_tree_store_get_type
 	gdaui_tree_store_new
 	gdaui_tree_store_newv
