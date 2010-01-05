@@ -502,7 +502,7 @@ gda_config_constructor (GType type,
 				}
 				else {
 					g_free (old_path);
-					if (g_mkdir (confdir, 0700)) {
+					if (g_mkdir_with_parents (confdir, 0700)) {
 						setup_ok = FALSE;
 						g_warning (_("Error creating user specific "
 							     "configuration directory '%s'"), 
@@ -551,7 +551,7 @@ gda_config_constructor (GType type,
 						g_free (str);
 					}
 				}
-				if (!g_file_test (confdir, G_FILE_TEST_IS_DIR)) {
+				if (setup_ok && !g_file_test (confdir, G_FILE_TEST_IS_DIR)) {
 					setup_ok = FALSE;
 					g_warning (_("User specific "
 						     "configuration directory '%s' exists and is not a directory"), 
@@ -565,13 +565,19 @@ gda_config_constructor (GType type,
 					g_free (conffile);
 			}
 			else {
+				if (!g_file_test (confdir, G_FILE_TEST_IS_DIR)) {
+					g_warning (_("User specific "
+						     "configuration directory '%s' exists and is not a directory"), 
+						   confdir);
+				}
+				else
+					unique_instance->priv->user_file = conffile;
 				g_free (confdir);
-				unique_instance->priv->user_file = conffile;	
 			}
 		}
 		if (!system_file_set) 
 			unique_instance->priv->system_file = gda_gbr_get_file_path (GDA_ETC_DIR, 
-										   LIBGDA_ABI_NAME, "config", NULL);
+										    LIBGDA_ABI_NAME, "config", NULL);
 		unique_instance->priv->system_config_allowed = FALSE;
 		if (unique_instance->priv->system_file) {
 			FILE *file;
@@ -584,21 +590,25 @@ gda_config_constructor (GType type,
 
 		/* Setup file monitoring */
 #ifdef HAVE_GIO
-		GFile *gf;
-		gf = g_file_new_for_path (unique_instance->priv->user_file);
-		mon_conf_user = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
-		if (mon_conf_user)
-			g_signal_connect (G_OBJECT (mon_conf_user), "changed",
-					  G_CALLBACK (conf_file_changed), NULL);
-		g_object_unref (gf);
+		if (unique_instance->priv->user_file) {
+			GFile *gf;
+			gf = g_file_new_for_path (unique_instance->priv->user_file);
+			mon_conf_user = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
+			if (mon_conf_user)
+				g_signal_connect (G_OBJECT (mon_conf_user), "changed",
+						  G_CALLBACK (conf_file_changed), NULL);
+			g_object_unref (gf);
+		}
 
-		gf = g_file_new_for_path (unique_instance->priv->system_file);
-		mon_conf_global = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
-		if (mon_conf_user)
-			g_signal_connect (G_OBJECT (mon_conf_global), "changed",
-					  G_CALLBACK (conf_file_changed), NULL);
-		g_object_unref (gf);
-		
+		if (unique_instance->priv->system_file) {
+			GFile *gf;
+			gf = g_file_new_for_path (unique_instance->priv->system_file);
+			mon_conf_global = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
+			if (mon_conf_user)
+				g_signal_connect (G_OBJECT (mon_conf_global), "changed",
+						  G_CALLBACK (conf_file_changed), NULL);
+			g_object_unref (gf);
+		}
 #endif
 
 #ifdef HAVE_FAM
