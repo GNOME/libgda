@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2009-12-27 20:58+0000\n"
-"PO-Revision-Date: 2009-12-30 10:22+0100\n"
+"POT-Creation-Date: 2010-01-01 09:01+0000\n"
+"PO-Revision-Date: 2010-01-05 14:40+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -27,11 +27,11 @@ msgstr "Podatkovni viri"
 
 #: ../control-center/dsn-config.c:126
 msgid "Configured data sources in the system"
-msgstr ""
+msgstr "Nastavljeni viri podatkov v sistemu"
 
 #: ../control-center/dsn-config.c:184
 msgid "Data sources are the means by which database connections are identified: all the information needed to open a connection to a specific database using a 'provider' is referenced using a unique name."
-msgstr ""
+msgstr "Podatkovne vire povezujejo povezave podatkovnih zbirk: vse podrobnosti za odpiranje povezave do želene podatkovne zbirke z uporabo 'ponudnika', je določeno z enoznačnim imenom."
 
 #: ../control-center/dsn-config.c:267
 #, c-format
@@ -295,7 +295,7 @@ msgstr ""
 
 #: ../control-center/gdaui-dsn-assistant.c:650
 msgid "Ready to add a new data source"
-msgstr ""
+msgstr "Pripravljeno za dodajanje novega podatkovnega vira"
 
 #: ../control-center/gdaui-dsn-editor.c:126
 msgid "Data source _name:"
@@ -303,7 +303,7 @@ msgstr "_Ime podatkovnega vira:"
 
 #: ../control-center/gdaui-dsn-editor.c:147
 msgid "_System wide data source:"
-msgstr ""
+msgstr "_Sistemski podatkovni vir:"
 
 #: ../control-center/gdaui-dsn-editor.c:158
 msgid "_Provider:"
@@ -321,7 +321,7 @@ msgstr ""
 
 #. connection's authentication
 #: ../control-center/gdaui-dsn-editor.c:212
-#: ../libgda/gda-config.c:1265
+#: ../libgda/gda-config.c:1267
 #: ../tools/browser/auth-dialog.c:215
 msgid "Authentication"
 msgstr "Overitev"
@@ -397,45 +397,45 @@ msgstr ""
 msgid "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
 
-#: ../libgda/gda-config.c:820
+#: ../libgda/gda-config.c:822
 #, c-format
 msgid "Malformed data source name '%s'"
 msgstr "Izmaličeno ime podatkovnega vira '%s'"
 
-#: ../libgda/gda-config.c:864
-#: ../libgda/gda-config.c:953
+#: ../libgda/gda-config.c:866
+#: ../libgda/gda-config.c:955
 msgid "Can't manage system-wide configuration"
-msgstr ""
+msgstr "Ni mogoče upravljati s sistemskimi nastavitvami"
 
-#: ../libgda/gda-config.c:947
+#: ../libgda/gda-config.c:949
 #: ../libgda-ui/gdaui-login.c:613
 #, c-format
 msgid "Unknown DSN '%s'"
 msgstr "Neznan DSN '%s'"
 
-#: ../libgda/gda-config.c:997
+#: ../libgda/gda-config.c:999
 #, c-format
 msgid "Provider '%s' not found"
 msgstr "Ponudnika '%s' ni mogoče najti"
 
-#: ../libgda/gda-config.c:1180
+#: ../libgda/gda-config.c:1182
 #: ../libgda/gda-connection.c:935
 #: ../libgda/gda-connection.c:1089
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Ni nameščenega ponudnika '%s'"
 
-#: ../libgda/gda-config.c:1195
+#: ../libgda/gda-config.c:1197
 #, c-format
 msgid "Can't load provider: %s"
 msgstr "Ni mogoče naložiti ponudnika: %s"
 
-#: ../libgda/gda-config.c:1218
+#: ../libgda/gda-config.c:1220
 #, fuzzy, c-format
 msgid "Can't instantiate provider '%s'"
 msgstr "Ni mogoče naložiti ponudnika: %s"
 
-#: ../libgda/gda-config.c:1262
+#: ../libgda/gda-config.c:1264
 #: ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112
 #: ../tools/gda-sql.c:1729
@@ -445,7 +445,7 @@ msgstr "Ni mogoče naložiti ponudnika: %s"
 msgid "Provider"
 msgstr "Ponudnik"
 
-#: ../libgda/gda-config.c:1263
+#: ../libgda/gda-config.c:1265
 #: ../libgda/gda-data-model-dsn-list.c:117
 #: ../libgda/gda-data-model-dsn-list.c:118
 #: ../libgda/gda-server-provider-extra.c:375
@@ -456,19 +456,19 @@ msgstr "Ponudnik"
 msgid "Description"
 msgstr "Opis"
 
-#: ../libgda/gda-config.c:1264
+#: ../libgda/gda-config.c:1266
 msgid "DSN parameters"
 msgstr "Parametri DSN"
 
-#: ../libgda/gda-config.c:1266
+#: ../libgda/gda-config.c:1268
 msgid "File"
 msgstr "Datoteka"
 
-#: ../libgda/gda-config.c:1267
+#: ../libgda/gda-config.c:1269
 msgid "List of installed providers"
 msgstr "Seznam nameščenih ponudnikov"
 
-#: ../libgda/gda-config.c:1431
+#: ../libgda/gda-config.c:1433
 #: ../libgda/gda-data-model-dsn-list.c:131
 #: ../libgda/gda-data-model-dsn-list.c:132
 #: ../tools/gda-sql.c:2966
@@ -476,13 +476,13 @@ msgid "Username"
 msgstr "Uporabniško ime"
 
 #. other table options
-#: ../libgda/gda-config.c:1433
+#: ../libgda/gda-config.c:1435
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 #: ../providers/web/web_specs_auth.xml.in.h:2
 msgid "Password"
 msgstr "Geslo"
 
-#: ../libgda/gda-config.c:1503
+#: ../libgda/gda-config.c:1505
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "Napaka med nalaganjem ponudnika '%s': %s"
@@ -569,7 +569,7 @@ msgstr "Vira podatkov %s ni mogoče najti med nastavitvami"
 
 #: ../libgda/gda-connection.c:963
 msgid "Datasource configuration error: no provider specified"
-msgstr ""
+msgstr "Napaka nastavitve podatkovnega vira: ni navedenega ponudnika"
 
 #: ../libgda/gda-connection.c:1039
 #: ../tools/browser/auth-dialog.c:324
@@ -655,7 +655,7 @@ msgstr "Neveljaven argument"
 #: ../libgda/gda-connection.c:3157
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
-msgstr ""
+msgstr "Manjkajo ali pa so napačno navedeni argumenti preglednice '%s': %s"
 
 #: ../libgda/gda-connection.c:3912
 msgid "Meta update error"
@@ -795,7 +795,7 @@ msgstr ""
 #: ../libgda/gda-data-model-array.c:665
 #: ../libgda/gda-data-model-array.c:704
 msgid "Too many values in list"
-msgstr ""
+msgstr "Preveč je spremenljivk v seznamu"
 
 #: ../libgda/gda-data-model-array.c:758
 msgid "Row not found in data model"
@@ -950,13 +950,13 @@ msgid "Data model does not support backward cursor move, not displaying data"
 msgstr ""
 
 #: ../libgda/gda-data-model.c:2249
-#, fuzzy, c-format
+#, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
-msgstr[0] "Vrstica"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "(%d vrstic)\n"
+msgstr[1] "(%d vrstica)\n"
+msgstr[2] "(%d vrstici)\n"
+msgstr[3] "(%d vrstice)\n"
 
 #: ../libgda/gda-data-model-dir.c:875
 msgid "Row not found"
@@ -1003,7 +1003,7 @@ msgstr "Stolpca ni mogoče določiti"
 #: ../libgda/gda-data-model-dir.c:1287
 #, c-format
 msgid "Cannot set contents of filename '%s'"
-msgstr ""
+msgstr "Ni mogoče določiti vsebine datoteke '%s'"
 
 #: ../libgda/gda-data-model-dir.c:1298
 #, c-format
@@ -1013,7 +1013,7 @@ msgstr "Ni mogoče ustvariti mape '%s'"
 #: ../libgda/gda-data-model-dir.c:1306
 #: ../libgda/gda-data-model-dir.c:1308
 msgid "Cannot add row: filename missing"
-msgstr ""
+msgstr "Ni mogoče dodati vrstice: manjka ime datoteke"
 
 #: ../libgda/gda-data-model-dir.c:1348
 #, c-format
@@ -1040,7 +1040,7 @@ msgstr "Splošno"
 
 #: ../libgda/gda-data-model-dsn-list.c:142
 msgid "List of defined data sources"
-msgstr ""
+msgstr "Seznam določenih podatkovnih virov"
 
 #: ../libgda/gda-data-model-import.c:448
 #, c-format
@@ -1053,8 +1053,9 @@ msgid "The '%s' option must hold a boolean value, ignored."
 msgstr ""
 
 #: ../libgda/gda-data-model-import.c:573
+#, fuzzy
 msgid "\"options\" property is not a GdaSet object"
-msgstr ""
+msgstr "Lastnost \"možnosti\" ni GdaSet predmet"
 
 #: ../libgda/gda-data-model-import.c:836
 #, c-format
@@ -1062,9 +1063,9 @@ msgid "The '%s' option must hold a GType value, ignored."
 msgstr ""
 
 #: ../libgda/gda-data-model-import.c:902
-#, c-format
+#, fuzzy, c-format
 msgid "Character conversion at line %d, error: %s"
-msgstr ""
+msgstr "Znakovna pretvorba v vrstici %s; napaka: %s"
 
 #: ../libgda/gda-data-model-import.c:905
 #: ../libgda/sqlite/gda-sqlite-provider.c:659
@@ -1081,12 +1082,12 @@ msgstr "Ni se mogoče pretvoriti niza '%s' v'%s' vrednost"
 #: ../libgda/gda-data-model-import.c:999
 #, c-format
 msgid "Error while parsing CSV file: %s"
-msgstr ""
+msgstr "Napaka med razčlenjevanjem CSV datoteke: %s"
 
 #. error
 #: ../libgda/gda-data-model-import.c:1102
 msgid "Failed to read node in XML file"
-msgstr ""
+msgstr "Napaka med branjem vozlišča XML datoteke"
 
 #: ../libgda/gda-data-model-import.c:1121
 #, c-format
@@ -1105,11 +1106,11 @@ msgstr ""
 #: ../libgda/gda-data-model-import.c:1246
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
-msgstr ""
+msgstr "Pričakovan <gda_array_data> v <gda_array>, dobljeno <%s>"
 
 #: ../libgda/gda-data-model-import.c:1248
 msgid "Expected <gda_array_data> in <gda_array>"
-msgstr ""
+msgstr "Pričakovan <gda_array_data> v <gda_array>"
 
 #: ../libgda/gda-data-model-import.c:1260
 msgid "Can't read the contents of the <gda_array_data> node"
@@ -1122,7 +1123,7 @@ msgstr ""
 
 #: ../libgda/gda-data-model-import.c:1333
 msgid "Row has too many values (which are ignored)"
-msgstr ""
+msgstr "Vrstica ima preveč vrednosti (vrednosti so prezrte)"
 
 #: ../libgda/gda-data-model-import.c:1380
 #, c-format
@@ -1216,7 +1217,7 @@ msgstr "Ni mogoče razlčleniti datoteke %s"
 
 #: ../libgda/gda-data-select.c:898
 msgid "Incorrect SQL expression"
-msgstr ""
+msgstr "Nepravilen SQL izraz"
 
 #: ../libgda/gda-data-select.c:923
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
@@ -1396,7 +1397,7 @@ msgstr ""
 
 #: ../libgda/gda-easy.c:296
 msgid "Unspecified table name"
-msgstr "Nedoločeno ime razpredelnice"
+msgstr "Nedoločeno ime preglednice"
 
 #: ../libgda/gda-easy.c:327
 msgid "Invalid type"
@@ -1587,9 +1588,9 @@ msgstr ""
 #: ../libgda/gda-meta-store.c:2968
 #: ../libgda/gda-meta-store.c:4022
 #: ../libgda/gda-meta-store.c:4124
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown database object '%s'"
-msgstr "Neznana vrsta predmeta: %d\n"
+msgstr "Neznan predmet podatkovne zbirke '%s'"
 
 #: ../libgda/gda-meta-store.c:2984
 #, fuzzy, c-format
@@ -1597,14 +1598,12 @@ msgid "Could not set value for parameter '%s'"
 msgstr "Ni mogoče inicializirati okolja Oracle"
 
 #: ../libgda/gda-meta-store.c:3013
-#, fuzzy
 msgid "Could not create SELECT statement"
-msgstr "Ni mogoče inicializirati okolja Oracle"
+msgstr "Ni mogoče ustvariti izjave SELECT"
 
 #: ../libgda/gda-meta-store.c:3028
-#, fuzzy
 msgid "Could not create DELETE statement"
-msgstr "j"
+msgstr "Ni mogoče ustvariti izjave DELETE"
 
 #: ../libgda/gda-meta-store.c:3078
 msgid "A transaction has already been started"
@@ -1616,13 +1615,13 @@ msgid "Attribute '%s' not found"
 msgstr "Atributa '%s' ni mogoče najti"
 
 #: ../libgda/gda-meta-store.c:3475
-#, fuzzy, c-format
+#, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
-msgstr[0] "Lastnost '%s' nima vrednosti"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Atribut '%s' ima %d vrednosti"
+msgstr[1] "Atribut '%s' ima %d vrednost"
+msgstr[2] "Atribut '%s' ima %d vrednosti"
+msgstr[3] "Atribut '%s' ima %d vrednosti"
 
 #: ../libgda/gda-meta-store.c:3522
 msgid "Attributes names starting with a '_' are reserved for internal usage"
@@ -1849,8 +1848,9 @@ msgstr ""
 
 #. To translators: "Aggregate": the noun
 #: ../libgda/gda-server-provider-extra.c:310
+#, fuzzy
 msgid "Aggregate"
-msgstr ""
+msgstr "Agregat"
 
 #: ../libgda/gda-server-provider-extra.c:311
 #: ../libgda/gda-server-provider-extra.c:355
@@ -2023,7 +2023,7 @@ msgstr "Imenski prostor"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "Table"
-msgstr "Razpredelnica"
+msgstr "Preglednica"
 
 #: ../libgda/gda-server-provider-extra.c:350
 #: ../libgda/gda-server-provider-extra.c:366
@@ -2033,7 +2033,7 @@ msgstr "Zaporedje"
 #: ../libgda/gda-server-provider-extra.c:354
 #, fuzzy
 msgid "Procedure"
-msgstr "%d procedur"
+msgstr "Postopek"
 
 #: ../libgda/gda-server-provider-extra.c:358
 #, fuzzy
@@ -2253,7 +2253,7 @@ msgstr "Neimenovan parameter"
 
 #: ../libgda/gda-statement.c:1491
 msgid "Malformed table name"
-msgstr "Izmaličeno ime razpredelnice"
+msgstr "Izmaličeno ime preglednice"
 
 #: ../libgda/gda-statement.c:1940
 msgid "Join is not in a FROM statement"
@@ -2284,7 +2284,7 @@ msgstr "Ni določene sheme"
 #: ../libgda/gda-tree-mgr-columns.c:353
 #, c-format
 msgid "No table specified"
-msgstr "Ni določene razpredelnice"
+msgstr "Ni določene preglednice"
 
 #: ../libgda/gda-tree-mgr-columns.c:382
 #, c-format
@@ -2713,7 +2713,7 @@ msgstr "Vrstice %d ni mogoče najti"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:305
 msgid "Table to remove not found"
-msgstr "Razpredelnice za odstranitev ni mogoče najti"
+msgstr "Preglednice za odstranitev ni mogoče najti"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:208
 #, fuzzy
@@ -2800,13 +2800,13 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:785
 #, c-format
 msgid "Table '%s' not found"
-msgstr "Razpredelnice  '%s' ni mogoče najti"
+msgstr "Preglednice '%s' ni mogoče najti"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:712
 #: ../libgda/sql-parser/gda-statement-struct.c:725
 #, c-format
 msgid "Could not identify table for field '%s'"
-msgstr "Ni mogoče določiti razpredelnice za polje '%s'"
+msgstr "Ni mogoče določiti preglednice za polje '%s'"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:915
 msgid "Expression can't have both a type cast and a parameter specification"
@@ -3307,9 +3307,9 @@ msgid "Unknown format character starting at %s"
 msgstr ""
 
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:266
-#, fuzzy, c-format
+#, c-format
 msgid "Type %s is not numerical"
-msgstr "Vrste %s ni uvrščena v razred"
+msgstr "Vrsta %s ni številčna"
 
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:279
 #, c-format
@@ -3636,7 +3636,6 @@ msgstr ""
 
 #. set to NULL item
 #: ../libgda-ui/internal/utility.c:80
-#, fuzzy
 msgid "Unset"
 msgstr "Nedoločeno"
 
@@ -3926,12 +3925,9 @@ msgid "XML"
 msgstr "XML"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2338
-#, fuzzy, c-format
+#, c-format
 msgid "Could not save file %s"
-msgstr ""
-"Ni mogoče shraniti datoteke:\n"
-"%s\n"
-"%s"
+msgstr "Ni mogoče shraniti datoteke %s"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2346
 msgid "You must specify a file name"
@@ -3973,9 +3969,8 @@ msgid "Server operation specification"
 msgstr ""
 
 #: ../libgda-ui/gdaui-server-operation.c:1172
-#, fuzzy
 msgid "<b>Field properties:</b>"
-msgstr "Lastnosti prekinitvene točke"
+msgstr "<b>Lastnosti polja</b>"
 
 #: ../libgda-ui/gdaui-server-operation.c:1189
 msgid "<b>Fields:</b>"
@@ -4185,7 +4180,7 @@ msgstr "Osnovni ključ"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:37
 msgid "Table's columns"
-msgstr "Stolpci razpredelnice"
+msgstr "Stolpci preglednice"
 
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:22
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:3
@@ -4194,7 +4189,7 @@ msgstr "Stolpci razpredelnice"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:38
 msgid "Table's description"
-msgstr "Opis razpredelnice"
+msgstr "Opis preglednice"
 
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:23
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:19
@@ -4209,7 +4204,7 @@ msgstr "Opis razpredelnice"
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:39
 msgid "Table's name"
-msgstr "Ime razpredelnice"
+msgstr "Ime preglednice"
 
 #. list of fields
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:25
@@ -4289,7 +4284,7 @@ msgstr ""
 
 #: ../providers/mysql/gda-mysql-ddl.c:920
 msgid "Incorrect specified column name"
-msgstr ""
+msgstr "Nepravilno določeno ime stolpca"
 
 #: ../providers/mysql/gda-mysql-provider.c:474
 #, fuzzy
@@ -4420,7 +4415,7 @@ msgstr "Opomba polja"
 
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 msgid "Table comment"
-msgstr "Opomba razpredelnice"
+msgstr "Opomba preglednice"
 
 #. To translators: Charset name
 #. other table options
@@ -5127,7 +5122,7 @@ msgstr "Tema določena na: %s"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:172
 #, fuzzy
 msgid "Table's comment"
-msgstr "Ni opomb"
+msgstr "Opomba razpredelnice"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:175
@@ -5144,9 +5139,8 @@ msgstr "Možnosti tabele"
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:9
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
-#, fuzzy
 msgid "Temporary table"
-msgstr "<b>Podrobnosti razpredelnice</b>"
+msgstr "Začasna preglednica"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:187
@@ -5258,7 +5252,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:4
 msgid "Table to delete"
-msgstr "Razpredelnica za brisanje"
+msgstr "Preglednica za brisanje"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
@@ -5302,13 +5296,13 @@ msgstr "Novo ime"
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:2
 msgid "New table name"
-msgstr "Novo ime razpredelnice"
+msgstr "Novo ime preglednice"
 
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:4
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:4
 msgid "Table to rename"
-msgstr "Razpredelnica za preimenovanje"
+msgstr "Preglednica za preimenovanje"
 
 #: ../providers/oracle/gda-oracle-meta.c:570
 msgid "Could not fetch next row"
@@ -5602,7 +5596,7 @@ msgstr "Vijetnamsko (TCVN-5712/Windows CP1258)"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
 #, fuzzy
 msgid "Tablespace"
-msgstr "Razpredelnica"
+msgstr "Preglednica"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:64
@@ -5756,8 +5750,9 @@ msgstr ""
 
 #. DSN parameters
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
+#, fuzzy
 msgid "The name of a database to drop"
-msgstr ""
+msgstr "Ime podatkovne zbirke za povezovanje"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:1
 msgid "Automatically drop objects that depend on the view (CASCADE)"
@@ -6265,7 +6260,7 @@ msgstr "Povrni"
 #: ../tools/browser/browser-virtual-connection.c:88
 #, fuzzy
 msgid "Bound connection is used"
-msgstr "Povezane razpredelnice"
+msgstr "Povezane preglednice"
 
 #: ../tools/browser/browser-virtual-connection.c:111
 msgid "Virtual connection using this connection is busy"
@@ -6283,7 +6278,7 @@ msgstr "Zajami cel zaslon"
 #: ../tools/browser/browser-window.c:214
 #, fuzzy
 msgid "_Bind connection"
-msgstr "Točke povezav:"
+msgstr "Poveži povezavo"
 
 #: ../tools/browser/browser-window.c:214
 msgid ""
@@ -6303,51 +6298,46 @@ msgstr "Povezava: %s"
 
 #: ../tools/browser/browser-window.c:638
 #: ../tools/browser/support.c:70
-#, fuzzy, c-format
+#, c-format
 msgid "Do you want to close the '%s' connection?"
-msgstr "Ni dovolj pomnilnika za tds_Connection"
+msgstr "Ali želite zapreti '%s' povezavo?"
 
 #: ../tools/browser/browser-window.c:680
 #: ../tools/browser/browser-window.c:687
-#, fuzzy
 msgid "Do you want to quit the application?"
-msgstr "Ali zares želite končati?"
+msgstr "Ali želite končati program?"
 
 #: ../tools/browser/browser-window.c:681
 msgid "all the connections will be closed."
 msgstr ""
 
 #: ../tools/browser/browser-window.c:688
-#, fuzzy
 msgid "the connection will be closed."
-msgstr "Gostitelj je prekinil povezavo"
+msgstr "povezava bo zaprta."
 
 #: ../tools/browser/browser-window.c:812
-#, fuzzy, c-format
+#, c-format
 msgid "Error updating bound connection: %s"
-msgstr "\tZačenjam transakcijo..."
+msgstr "Napaka med posodabljanjem povezave: %s"
 
 #: ../tools/browser/browser-window.c:853
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open binding connection: %s"
-msgstr "** NAPAKA: ni mogoče odpreti povezave z %s\n"
+msgstr "Ni mogoče odpreti povezave: %s"
 
 #: ../tools/browser/browser-window.c:893
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
-#, fuzzy
 msgid "Database browser"
-msgstr "API brskalnik"
+msgstr "Brskalnik podatkovne zbirke"
 
 #: ../tools/browser/connection-binding-properties.c:142
-#, fuzzy
 msgid "New virtual connection"
-msgstr "Nova omrežna &povezava ..."
+msgstr "Nova navidezna povezava"
 
 #: ../tools/browser/connection-binding-properties.c:170
 #: ../tools/browser/connection-binding-properties.c:196
-#, fuzzy
 msgid "Virtual connection's properties"
-msgstr "Ni mogoče odpreti navidezne povezave"
+msgstr "Lastnosti navidezne povezave"
 
 #: ../tools/browser/connection-binding-properties.c:197
 msgid ""
@@ -6356,33 +6346,30 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/connection-binding-properties.c:277
-#, fuzzy
 msgid "Add binding"
-msgstr "Odkrij povezave"
+msgstr "Dodaj povezavo"
 
 #: ../tools/browser/connection-binding-properties.c:328
-#, fuzzy
 msgid "Bind a connection"
-msgstr "Točke povezav:"
+msgstr "Poveži povezavo"
 
 #: ../tools/browser/connection-binding-properties.c:334
-#, fuzzy
 msgid "Bind a data set"
-msgstr "Določeni podatki skladišča"
+msgstr "Poveži podatke"
 
 #: ../tools/browser/connection-binding-properties.c:413
+#, fuzzy
 msgid "Table from a data set:"
-msgstr ""
+msgstr "Podatki uvoženi iz datoteke"
 
 #: ../tools/browser/connection-binding-properties.c:463
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid schema name"
-msgstr "Ignoriram ime sheme `%s', neveljavno: %s"
+msgstr "Neveljavno ime sheme"
 
 #: ../tools/browser/connection-binding-properties.c:510
-#, fuzzy
 msgid "All tables of a connection:"
-msgstr "Zapri povezavo"
+msgstr "Vse preglednice povezave:"
 
 #: ../tools/browser/connection-binding-properties.c:514
 msgid ""
@@ -6412,60 +6399,51 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/login-dialog.c:252
-#, fuzzy, c-format
+#, c-format
 msgid "Cancelled by the user"
-msgstr "Lastnik je _uporabnik"
+msgstr "Preklicano s strani uporabnika"
 
 #: ../tools/browser/main.c:71
 #: ../tools/gda-sql.c:166
 #, fuzzy
 msgid "[DSN|connection string]..."
-msgstr "Izmaličen niz povezave '%s'"
+msgstr "DSN ali niz povezave"
 
 #: ../tools/browser/mgr-favorites.c:219
-#, fuzzy
 msgid "Multiple statements"
-msgstr "Zahteve skripta"
+msgstr "Več izjav"
 
 #: ../tools/browser/mgr-favorites.c:223
-#, fuzzy
 msgid "SELECT statement"
-msgstr "Vključi stavek"
+msgstr "Izjava SELECT"
 
 #: ../tools/browser/mgr-favorites.c:226
-#, fuzzy
 msgid "INSERT statement"
-msgstr "Vključi stavek"
+msgstr "Izjava INSERT"
 
 #: ../tools/browser/mgr-favorites.c:229
-#, fuzzy
 msgid "UPDATE statement"
-msgstr "Vključi stavek"
+msgstr "Izjava UPDATE"
 
 #: ../tools/browser/mgr-favorites.c:232
-#, fuzzy
 msgid "DELETE statement"
-msgstr "Vključi stavek"
+msgstr "Izjava DELETE"
 
 #: ../tools/browser/mgr-favorites.c:235
-#, fuzzy
 msgid "COMPOUND SELECT statement"
-msgstr "COMPOUND SELECT statement"
+msgstr "Izjava COMPOUND SELECT"
 
 #: ../tools/browser/mgr-favorites.c:238
-#, fuzzy
 msgid "BEGIN statement"
-msgstr "Vključi stavek"
+msgstr "Izjava BEGIN"
 
 #: ../tools/browser/mgr-favorites.c:241
-#, fuzzy
 msgid "ROLLBACK statement"
-msgstr "Vključi stavek"
+msgstr "Izjava ROLLBACK"
 
 #: ../tools/browser/mgr-favorites.c:244
-#, fuzzy
 msgid "COMMIT statement"
-msgstr "Vključi stavek"
+msgstr "Izjava COMMIT"
 
 #: ../tools/browser/mgr-favorites.c:247
 msgid "ADD SAVEPOINT statement"
@@ -6480,16 +6458,16 @@ msgid "DELETE SAVEPOINT statement"
 msgstr ""
 
 #: ../tools/browser/mgr-favorites.c:256
-#, fuzzy
 msgid "Unknown statement"
-msgstr "Vključi stavek"
+msgstr "Neznana izjava"
 
 #: ../tools/browser/mgr-favorites.c:504
-#, fuzzy
 msgid ""
 "Getting\n"
 "favorites..."
-msgstr "Dobivanje velikosti"
+msgstr ""
+"Dobivanje\n"
+"priljubljenih"
 
 #: ../tools/browser/mgr-favorites.c:516
 msgid ""
@@ -6503,9 +6481,8 @@ msgid "Note:"
 msgstr "Opomba:"
 
 #: ../tools/browser/support.c:206
-#, fuzzy
 msgid "Don't show this message again"
-msgstr "Ne kaži več tega sporočila"
+msgstr "Sporočila ne pokaži več"
 
 #: ../tools/browser/support.c:264
 msgid "Close tab"
@@ -6522,11 +6499,11 @@ msgstr "Odstrani"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:352
 msgid "Add referenced tables"
-msgstr "Dodaj navedno razpredelnico"
+msgstr "Dodaj navedno preglednico"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:513
 msgid "Add table"
-msgstr "Dodaj razpredelnico"
+msgstr "Dodaj preglednico"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:82
 msgid "Page size and zoom"
@@ -6538,18 +6515,16 @@ msgid "Page %d of %d horizontally and %d of %d vertically"
 msgstr "Stran %d od %d vodoravno in %d od %d navpično"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:237
-#, fuzzy
 msgid "Adjust page's size and orientation"
-msgstr "Nastavi velikost strani in usmerjenost"
+msgstr "Nastavitev velikosti strani in usmerjenost"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:243
 msgid "<b>Zoom</b>"
 msgstr "<b>Približaj</b>"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:255
-#, fuzzy
 msgid "Number of pages used:"
-msgstr "Število strani vodoravno"
+msgstr "Število porabljenih strani:"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:266
 msgid "horizontally"
@@ -6568,19 +6543,16 @@ msgid "<b>Page numbers</b>"
 msgstr "<b>Številke strani</b>"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:307
-#, fuzzy
 msgid "Print page numbers"
 msgstr "Natisni številke vrstic"
 
 #: ../tools/browser/canvas/browser-canvas.c:389
-#, fuzzy
 msgid "Linear layout"
-msgstr "_Vodoravni razpored"
+msgstr "_Vrstični razpored"
 
 #: ../tools/browser/canvas/browser-canvas.c:394
-#, fuzzy
 msgid "Radial layout"
-msgstr "_Vodoravni razpored"
+msgstr "_Krožni razpored"
 
 #: ../tools/browser/canvas/browser-canvas.c:508
 msgid "Save diagram as"
@@ -6595,18 +6567,16 @@ msgid "SVG file"
 msgstr "Datoteka SVG"
 
 #: ../tools/browser/canvas/browser-canvas.c:556
-#, fuzzy
 msgid "Failed to create SVG file"
-msgstr "Ni mogoče ustvariti začasne datoteke: %s"
+msgstr "Ni mogoče ustvariti SVG datoteke"
 
 #: ../tools/browser/canvas/browser-canvas.c:564
 msgid "File format to save to is not recognized."
 msgstr "Datotečni zapis za shranjevanje ni prepoznan."
 
 #: ../tools/browser/canvas/browser-canvas.c:584
-#, fuzzy
 msgid "Failed to create PNG file"
-msgstr "Ni mogoče ustvariti začasne datoteke: %s"
+msgstr "Ni mogoče ustvariti PNG datoteke"
 
 #: ../tools/browser/common/gdaui-data-import.c:123
 #, fuzzy
@@ -6615,23 +6585,20 @@ msgstr "Način uvoza: "
 
 #. file to import from
 #: ../tools/browser/common/gdaui-data-import.c:142
-#, fuzzy
 msgid "File to import from:"
-msgstr "Uvozi zaznamke iz datoteke"
+msgstr "Datoteka za uvoz:"
 
 #: ../tools/browser/common/gdaui-data-import.c:146
 msgid "File to import data from"
 msgstr "Datoteka za uvoz podatkov"
 
 #: ../tools/browser/common/gdaui-data-import.c:149
-#, fuzzy
 msgid "Comma separated values"
-msgstr "S presledki ločene vrednosti"
+msgstr "Z vejico ločene vrednosti"
 
 #: ../tools/browser/common/gdaui-data-import.c:154
-#, fuzzy
 msgid "XML exported"
-msgstr "Izvoženo v %s"
+msgstr "XML je izvožen"
 
 #: ../tools/browser/common/gdaui-data-import.c:158
 msgid "All files"
@@ -6686,9 +6653,8 @@ msgid "No data."
 msgstr "Ni podatkov."
 
 #: ../tools/browser/common/gdaui-entry-import.c:172
-#, fuzzy
 msgid "Data set import from file"
-msgstr "_Naloži sliko iz datoteke"
+msgstr "Podatki uvoženi iz datoteke"
 
 #: ../tools/browser/common/gdaui-entry-import.c:202
 #: ../tools/browser/query-exec/query-result.c:217
@@ -6718,32 +6684,30 @@ msgstr "Podatkovni set %s in %s"
 
 #: ../tools/browser/common/gdaui-entry-import.c:211
 #: ../tools/browser/common/gdaui-entry-import.c:234
-#, fuzzy
 msgid "No data set"
-msgstr "Določeni podatki skladišča"
+msgstr "Ni določenih podatkov"
 
 #: ../tools/browser/common/objects-cloud.c:237
-#, fuzzy, c-format
+#, c-format
 msgid "%d table in current schema:"
 msgid_plural "%d tables in current schema:"
-msgstr[0] "Razpredelnica v shemi '%s'"
-msgstr[1] "Razpredelnica v shemi '%s'"
-msgstr[2] "Razpredelnica v shemi '%s'"
-msgstr[3] "Razpredelnica v shemi '%s'"
+msgstr[0] "%d preglednic v trenutni shemi"
+msgstr[1] "%d preglednica v trenutni shemi"
+msgstr[2] "%d preglednici v trenutni shemi"
+msgstr[3] "%d preglednice v trenutni shemi"
 
 #: ../tools/browser/common/objects-cloud.c:241
-#, fuzzy
 msgid "Tables in current schema:"
-msgstr "Razpredelnica v shemi '%s'"
+msgstr "Preglednice v trenutni shemi"
 
 #: ../tools/browser/common/objects-cloud.c:244
-#, fuzzy, c-format
+#, c-format
 msgid "%d Table in schema '%s':"
 msgid_plural "%d Tables in schema '%s':"
-msgstr[0] "Sprožilci v shemi '%s':"
-msgstr[1] "Razpredelnica v shemi '%s'"
-msgstr[2] "Razpredelnica v shemi '%s'"
-msgstr[3] "Razpredelnica v shemi '%s'"
+msgstr[0] "%d preglednic v shemi '%s':"
+msgstr[1] "%d preglednica v shemi '%s':"
+msgstr[2] "%d preglednici v shemi '%s':"
+msgstr[3] "%d preglednice v shemi '%s':"
 
 #. no connection at all or not authenticated
 #: ../tools/browser/common/objects-cloud.c:254
@@ -6776,7 +6740,6 @@ msgid "Keyword"
 msgstr "Ključna beseda"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:8
-#, fuzzy
 msgid "No idea what it is"
 msgstr "Neznan dogodek brez prave osnove"
 
@@ -6811,9 +6774,8 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:304
 #: ../tools/browser/query-exec/query-console.c:1168
-#, fuzzy
 msgid "Query editor"
-msgstr "Zavihki urejevalnika"
+msgstr "Urejevalnik poizvedb"
 
 #: ../tools/browser/query-exec/query-console.c:330
 msgid "SQL code to execute:"
@@ -6938,9 +6900,8 @@ msgstr ""
 "%s"
 
 #: ../tools/browser/query-exec/query-console.c:1022
-#, fuzzy
 msgid "Statement executed"
-msgstr "Vključi stavek"
+msgstr "Izjava je izvadena"
 
 #: ../tools/browser/query-exec/query-console.c:1030
 msgid ""
@@ -6957,9 +6918,8 @@ msgid "_Execute"
 msgstr "_Izvedi"
 
 #: ../tools/browser/query-exec/query-console.c:1118
-#, fuzzy
 msgid "Execute query"
-msgstr "Ni mogoče izvesti poizvedbe:"
+msgstr "Izvedi poizvedbo"
 
 #: ../tools/browser/query-exec/query-console.c:1121
 msgid "_Undo"
@@ -7075,14 +7035,12 @@ msgid "Favorites"
 msgstr "Priljubljeno"
 
 #: ../tools/browser/query-exec/query-result.c:207
-#, fuzzy
 msgid "Statement:"
-msgstr "Izjava"
+msgstr "Izjava:"
 
 #: ../tools/browser/query-exec/query-result.c:241
-#, fuzzy
 msgid "Number of rows impacted"
-msgstr "Število vrstic v slikovnem medpomnilniku (pixbuf)"
+msgstr "Število ciljnih vrstic"
 
 #: ../tools/browser/query-exec/query-result.c:265
 msgid "Execution Parameters"
@@ -7093,23 +7051,22 @@ msgid "No result selected"
 msgstr "Ni izbranih rezultatov"
 
 #: ../tools/browser/query-exec/query-result.c:371
-#, fuzzy
 msgid "Number of rows impacted:"
-msgstr "Število vrstic v slikovnem medpomnilniku (pixbuf)"
+msgstr "Število ciljnih vrstic:"
 
 #: ../tools/browser/query-exec/query-result.c:410
 msgid "Execution error:\n"
 msgstr "Napaka med izvajanjem:\n"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:274
-#, fuzzy, c-format
+#, c-format
 msgid "Not ready"
-msgstr "naprava ni pripravljena"
+msgstr "Ni pripravljeno"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:292
 #, c-format
 msgid "Table not found"
-msgstr "Razpredelnice ni mogoče najti"
+msgstr "Preglednice ni mogoče najti"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:299
 #, c-format
@@ -7118,7 +7075,7 @@ msgstr ""
 
 #: ../tools/browser/schema-browser/objects-index.c:170
 msgid "Tables' index"
-msgstr "Kazalo razpredelnice"
+msgstr "Kazalo preglednice"
 
 #: ../tools/browser/schema-browser/perspective-main.c:32
 msgid "Schema browser"
@@ -7174,12 +7131,10 @@ msgid "Could not load diagram"
 msgstr "Ni mogoče naložiti diagrama"
 
 #: ../tools/browser/schema-browser/table-columns.c:234
-#, fuzzy
 msgid "Foreign key on "
-msgstr "Tuj ključ na '%s'"
+msgstr "Tuje tipke omogočene"
 
 #: ../tools/browser/schema-browser/table-columns.c:306
-#, fuzzy
 msgid "Unique constraint"
 msgstr "Enoznačna omejitev"
 
@@ -7188,9 +7143,8 @@ msgid "Column Name"
 msgstr "Ime stolpca"
 
 #: ../tools/browser/schema-browser/table-columns.c:445
-#, fuzzy
 msgid "Constraints and integrity rules"
-msgstr "<b>Omejitve in celostna pravila:</b>"
+msgstr "Omejitve in celostna pravila"
 
 #: ../tools/browser/schema-browser/table-info.c:339
 msgid ""
@@ -7208,14 +7162,12 @@ msgid "_Favorite"
 msgstr "_Priljubljeno"
 
 #: ../tools/browser/schema-browser/table-info.c:450
-#, fuzzy
 msgid "Add table to favorites"
-msgstr "Dodaj nastavitve med priljubljene"
+msgstr "Dodaj preglednico med priljubljene"
 
 #: ../tools/command-exec.c:329
-#, fuzzy
 msgid "History is not supported"
-msgstr "Vrsta diska ni podprta."
+msgstr "Zgodovina ni podprta"
 
 #: ../tools/command-exec.c:342
 #: ../tools/command-exec.c:378
@@ -7227,30 +7179,25 @@ msgstr "Vrsta diska ni podprta."
 #: ../tools/gda-sql.c:4092
 #: ../tools/gda-sql.c:4317
 #: ../tools/gda-sql.c:4418
-#, fuzzy
 msgid "No current connection"
-msgstr "Zapri trenutno povezavo"
+msgstr "Ni trenutne povezave"
 
 #: ../tools/command-exec.c:405
-#, fuzzy
 msgid "List of tables"
-msgstr "Preglednice / Pogledi:"
+msgstr "Seznam preglednic"
 
 #: ../tools/command-exec.c:447
-#, fuzzy
 msgid "List of views"
-msgstr "Določi poglede ..."
+msgstr "Seznam pogledov"
 
 #: ../tools/command-exec.c:487
-#, fuzzy
 msgid "List of schemas"
-msgstr "Možnosti seznama"
+msgstr "Seznam shem"
 
 #: ../tools/command-exec.c:561
 #: ../tools/command-exec.c:686
-#, fuzzy
 msgid "No object found"
-msgstr "Predmeta ni mogoče najti"
+msgstr "Ni najdenih predmetov"
 
 #: ../tools/command-exec.c:640
 msgid "Schema"
@@ -7263,9 +7210,8 @@ msgstr "Stolpec"
 
 #: ../tools/command-exec.c:717
 #: ../tools/web-server.c:928
-#, fuzzy
 msgid "Nullable"
-msgstr "Razpredelnica"
+msgstr ""
 
 #: ../tools/command-exec.c:719
 #: ../tools/web-server.c:930
@@ -7275,12 +7221,12 @@ msgstr "Dodatno"
 #: ../tools/command-exec.c:722
 #, c-format
 msgid "List of columns for view '%s'"
-msgstr ""
+msgstr "Seznam stolpcev za pogled '%s'"
 
 #: ../tools/command-exec.c:726
 #, c-format
 msgid "List of columns for table '%s'"
-msgstr ""
+msgstr "Seznam stolpcev za preglednico '%s'"
 
 #: ../tools/command-exec.c:738
 #: ../tools/web-server.c:941
@@ -7302,14 +7248,14 @@ msgid "Gda server operations list"
 msgstr ""
 
 #: ../tools/gda-list-server-op.c:39
-#, fuzzy, c-format
+#, c-format
 msgid "Using XML descriptions in %s\n"
-msgstr "\topis = %s\n"
+msgstr "Upraba opisov XML v %s\n"
 
 #: ../tools/gda-list-server-op.c:46
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create provider object: %s\n"
-msgstr "Ni mogoče razlčleniti datoteke %s"
+msgstr "Ni mogoče ustvariti predmeta ponudnika: %s\n"
 
 #: ../tools/gda-list-server-op.c:55
 #, c-format
@@ -7322,14 +7268,14 @@ msgid "Existing operation types:\n"
 msgstr ""
 
 #: ../tools/gda-list-server-op.c:75
-#, fuzzy, c-format
+#, c-format
 msgid "Description for type: %s\n"
-msgstr "%s za neznano vrsto sprožilca"
+msgstr "Opis za vrsto: %s\n"
 
 #: ../tools/gda-list-server-op.c:88
-#, fuzzy, c-format
+#, c-format
 msgid "Operation not supported\n"
-msgstr "Opravilo ni podprto"
+msgstr "Dejanje ni podprto\n"
 
 #: ../tools/gda-list-server-op.c:90
 #, c-format
@@ -7363,9 +7309,9 @@ msgid ""
 msgstr ""
 
 #: ../tools/gda-sql.c:264
-#, fuzzy, c-format
+#, c-format
 msgid "Opening connection '%s' for: %s\n"
-msgstr "Odpri sličico predogleda za '%s' ..."
+msgstr "Odpiranje povezave'%s' za %s\n"
 
 #: ../tools/gda-sql.c:268
 #, c-format
@@ -7388,28 +7334,24 @@ msgid "Can't run HTTP server on port %d\n"
 msgstr "Ni mogoče zagnati strežnika HTTP na vratih %d\n"
 
 #: ../tools/gda-sql.c:767
-#, fuzzy
 msgid "Connection closed"
-msgstr "Povezava zaprta"
+msgstr "Povezava je zaprta"
 
 #: ../tools/gda-sql.c:780
-#, fuzzy
 msgid "Invalid unnamed command"
-msgstr "Neveljaven parameter v ukazu"
+msgstr "Neveljaven neimenovan ukaz"
 
 #: ../tools/gda-sql.c:891
-#, fuzzy
 msgid "Unknown internal command"
-msgstr "Neznan ukaz ali glagol"
+msgstr "Neznan notranji ukaz"
 
 #: ../tools/gda-sql.c:897
 msgid "Internal command not correctly defined"
 msgstr "Notranji ukaz ni pravilno določen"
 
 #: ../tools/gda-sql.c:903
-#, fuzzy
 msgid "Incomplete internal command"
-msgstr "Ukaz ni popoln"
+msgstr "Nepopolen notranji ukaz"
 
 #: ../tools/gda-sql.c:1013
 #, c-format
@@ -7535,7 +7477,7 @@ msgstr ""
 #: ../tools/gda-sql.c:1898
 #, c-format
 msgid "%s [TABLE]"
-msgstr "%s [razpredelnica]"
+msgstr "%s [preglednica]"
 
 #: ../tools/gda-sql.c:1899
 msgid "List all tables (or named table)"
@@ -7571,7 +7513,7 @@ msgstr ""
 #: ../tools/gda-sql.c:1946
 #, c-format
 msgid "%s [TABLE1 [TABLE2...]]"
-msgstr ""
+msgstr "%s [preglednica1 [preglednica2...]]"
 
 #: ../tools/gda-sql.c:1947
 msgid "Create a graph of all or the listed tables"
@@ -7580,7 +7522,7 @@ msgstr ""
 #: ../tools/gda-sql.c:1959
 #, c-format
 msgid "%s [port [authentication token]]"
-msgstr ""
+msgstr "%s [vrata [žeton overitve]]"
 
 #: ../tools/gda-sql.c:1960
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
@@ -7589,7 +7531,7 @@ msgstr ""
 #: ../tools/gda-sql.c:1973
 #, c-format
 msgid "%s [CNC_NAME [DSN [USER [PASSWORD]]]]"
-msgstr ""
+msgstr "%s [CNC_IME [DSN [uporabnik [geslo]]]]"
 
 #: ../tools/gda-sql.c:1974
 msgid "Connect to another defined data source (DSN, see \\l)"
@@ -7800,9 +7742,8 @@ msgid "Formatting"
 msgstr "Formatiranje ..."
 
 #: ../tools/gda-sql.c:2274
-#, fuzzy
 msgid "Set output format"
-msgstr "Neznana vrsta zapisa odvoda `%s'"
+msgstr "Določitev zapisa odvoda"
 
 #: ../tools/gda-sql.c:2298
 #, c-format
@@ -7860,28 +7801,24 @@ msgid "Missing provider name"
 msgstr "Manjka ime ponudnika"
 
 #: ../tools/gda-sql.c:2672
-#, fuzzy
 msgid "Missing DSN name"
-msgstr "Manjkajoče ime orodja"
+msgstr "Manjka ime DSN"
 
 #: ../tools/gda-sql.c:2712
-#, fuzzy, c-format
+#, c-format
 msgid "Provider '%s' description"
-msgstr "<i>(brez opisa)</i>"
+msgstr "Opis ponudnika '%s'"
 
 #: ../tools/gda-sql.c:2740
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find any provider named '%s'"
-msgstr "Ni mogoče najti paketov z imenom '%s'"
+msgstr "Ni mogoče najti ponudnika z imenom '%s'"
 
 #: ../tools/gda-sql.c:2815
 #: ../tools/gda-sql.c:3104
-#, fuzzy, c-format
+#, c-format
 msgid "A connection named '%s' already exists"
-msgstr ""
-"Mapa z imenom \"%s\" že obstaja.\n"
-"\n"
-"%s"
+msgstr "Povezava z imenom '%s' že obstajas"
 
 #: ../tools/gda-sql.c:2919
 #, c-format
@@ -7893,9 +7830,8 @@ msgid "No opened connection"
 msgstr "Ni odprtih omrežnih povezav"
 
 #: ../tools/gda-sql.c:2965
-#, fuzzy
 msgid "DSN or connection string"
-msgstr "Niz povezave"
+msgstr "DSN ali niz povezave"
 
 #: ../tools/gda-sql.c:3056
 msgid "No connection currently opened"
@@ -7907,9 +7843,8 @@ msgstr "Manjka zahtevano ime povezave"
 
 #. add existing connections to virtual connection
 #: ../tools/gda-sql.c:3133
-#, fuzzy
 msgid "Bound connections are as:"
-msgstr "Povezane razpredelnice"
+msgstr "Poveži povezave kot:"
 
 #: ../tools/gda-sql.c:3236
 #, c-format
@@ -7935,9 +7870,8 @@ msgstr "Ni mogoče spremeniti delovne mape v %s: %s"
 #: ../tools/gda-sql.c:3613
 #: ../tools/gda-sql.c:3704
 #: ../tools/gda-sql.c:3776
-#, fuzzy
 msgid "No connection opened"
-msgstr "Ni odprtih omrežnih povezav"
+msgstr "Ni odprtih povezav"
 
 #: ../tools/gda-sql.c:3311
 #, c-format
@@ -7966,9 +7900,8 @@ msgid "Can't initialize dictionary to store query buffers"
 msgstr ""
 
 #: ../tools/gda-sql.c:3588
-#, fuzzy
 msgid "Query buffer name"
-msgstr "Manjka ime predpomnilnika poizvedbe"
+msgstr "Ime medpomnilnika poizvedbe"
 
 #: ../tools/gda-sql.c:3589
 msgid "SQL"
@@ -7978,17 +7911,16 @@ msgstr "SQL"
 #: ../tools/gda-sql.c:3755
 #: ../tools/gda-sql.c:3816
 msgid "Missing query buffer name"
-msgstr "Manjka ime predpomnilnika poizvedbe"
+msgstr "Manjka ime medpomnilnika poizvedbe"
 
 #: ../tools/gda-sql.c:3683
-#, fuzzy
 msgid "Query buffer is empty"
-msgstr "Iskalni medpomnilnik je prazen.\n"
+msgstr "Medpomnilnik poizvedbe je prazen"
 
 #: ../tools/gda-sql.c:3750
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find query buffer named '%s'"
-msgstr "Ni mogoče dobiti datoteke od %s"
+msgstr "Ni mogoče najti medpomnilnika '%s'"
 
 #: ../tools/gda-sql.c:3880
 #: ../tools/gda-sql.c:4130
@@ -7998,9 +7930,8 @@ msgid "No parameter named '%s' defined"
 msgstr "Ni določenega parametra z imenom '%s'"
 
 #: ../tools/gda-sql.c:3891
-#, fuzzy
 msgid "List of defined parameters"
-msgstr "<b>_Uporabniško določen seznam</b>"
+msgstr "Seznam določenih parametrov"
 
 #: ../tools/gda-sql.c:3947
 #: ../tools/gda-sql.c:4469
@@ -8009,7 +7940,7 @@ msgstr "Napačen pogoj vrstice"
 
 #: ../tools/gda-sql.c:3975
 msgid "No unique row identified"
-msgstr ""
+msgstr "Ni določene enoznačne vrstice"
 
 #: ../tools/gda-sql.c:4016
 #: ../tools/gda-sql.c:4108
@@ -8055,9 +7986,8 @@ msgid "HTTPD server started"
 msgstr "Strežnik HTTPD je zagnan"
 
 #: ../tools/gda-sql.c:4389
-#, fuzzy
 msgid "Invalid port specification"
-msgstr "Neveljavna številka vrat: %d."
+msgstr "Neveljavna določilo vrat"
 
 #: ../tools/gda-sql.c:4603
 #, c-format
@@ -8087,9 +8017,8 @@ msgid "Authentication required"
 msgstr "Zahtevana je overitev"
 
 #: ../tools/web-server.c:632
-#, fuzzy
 msgid "Token:"
-msgstr "Posebni žetoni"
+msgstr "Žeton:"
 
 #: ../tools/web-server.c:773
 msgid "SQL console:"
@@ -8098,12 +8027,12 @@ msgstr "Konzola SQL:"
 #: ../tools/web-server.c:853
 #: ../tools/web-server.c:1873
 msgid "Tables"
-msgstr "Razpredelnice"
+msgstr "Preglednice"
 
 #: ../tools/web-server.c:853
-#, fuzzy, c-format
+#, c-format
 msgid "Tables in the '%s' schema"
-msgstr "Sprožilci v shemi '%s':"
+msgstr "Preglednice v shemi '%s'"
 
 #: ../tools/web-server.c:859
 #: ../tools/web-server.c:1878
@@ -8111,14 +8040,14 @@ msgid "Views"
 msgstr "Pogledi"
 
 #: ../tools/web-server.c:859
-#, fuzzy, c-format
+#, c-format
 msgid "Views in the '%s' schema"
-msgstr "Sprožilci v shemi '%s':"
+msgstr "Pogledi v shemi '%s':"
 
 #: ../tools/web-server.c:918
 #, c-format
 msgid "Columns for the '%s' table:"
-msgstr "Stolpci za '%s' razpredelnico:"
+msgstr "Stolpci preglednice '%s':"
 
 #: ../tools/web-server.c:964
 msgid "Primary key:"
@@ -8144,7 +8073,7 @@ msgstr "Pogled določila:"
 #: ../tools/web-server.c:1347
 #, c-format
 msgid "Trigger '%s' for the '%s.%s' table:"
-msgstr "Sprožilnik '%s' za '%s.%s' razpredelnico:"
+msgstr "Sprožilnik '%s' za '%s.%s' preglednico:"
 
 #: ../tools/web-server.c:1367
 #, c-format
@@ -8168,7 +8097,7 @@ msgstr "Sprožilniki:"
 #: ../tools/web-server.c:1731
 #, c-format
 msgid "For the '%s.%s' table:"
-msgstr "Za '%s.%s' razpredelnico:"
+msgstr "Za '%s.%s' preglednico:"
 
 #: ../tools/web-server.c:1703
 #, c-format
