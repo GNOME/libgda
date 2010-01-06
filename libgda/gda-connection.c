@@ -3075,7 +3075,8 @@ meta_context_stringify (GdaMetaContext *context)
 	return str;
 }
 
-#ifdef GDA_DEBUG_NO
+/*#define GDA_DEBUG_META_STORE_UPDATE*/
+#ifdef GDA_DEBUG_META_STORE_UPDATE
 static void
 meta_context_dump (GdaMetaContext *context)
 {
@@ -3175,7 +3176,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 	gint i;
 
 
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG_META_STORE_UPDATE
 	g_print ("%s() => ", __FUNCTION__);
 	meta_context_dump (context);
 #endif
@@ -4016,7 +4017,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			}
 		}
 
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG_META_STORE_UPDATE
 		g_print ("\n*********** TEMPLATES:\n");
 		for (list = up_templates; list; list = list->next) {
 			g_print ("UP: ");
