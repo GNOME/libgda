@@ -54,10 +54,11 @@ enum {
 	META_CHANGED,
 	FAV_CHANGED,
 	TRANSACTION_STATUS_CHANGED,
+	TABLE_COLUMN_PREF_CHANGED,
 	LAST_SIGNAL
 };
 
-gint browser_connection_signals [LAST_SIGNAL] = { 0, 0, 0, 0 };
+gint browser_connection_signals [LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
 
 /* wrapper jobs handling */
 static gboolean check_for_wrapper_result (BrowserConnection *bcnc);
@@ -204,11 +205,20 @@ browser_connection_class_init (BrowserConnectionClass *klass)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
                               0);
+	browser_connection_signals [TABLE_COLUMN_PREF_CHANGED] =
+		g_signal_new ("table-column-pref-changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (BrowserConnectionClass, table_column_pref_changed),
+                              NULL, NULL,
+			      _marshal_VOID__POINTER_POINTER_STRING_STRING, G_TYPE_NONE,
+                              4, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, G_TYPE_STRING);
 
 	klass->busy = browser_connection_set_busy_state;
 	klass->meta_changed = NULL;
 	klass->favorites_changed = NULL;
 	klass->transaction_status_changed = NULL;
+	klass->table_column_pref_changed = NULL;
 
 	/* Properties */
         object_class->set_property = browser_connection_set_property;
@@ -242,6 +252,8 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->mstruct = NULL;
 
 	bcnc->priv->bfav = NULL;
+
+	bcnc->priv->store_cnc = NULL;
 }
 
 static void
@@ -412,6 +424,9 @@ browser_connection_dispose (GObject *object)
 
 	bcnc = BROWSER_CONNECTION (object);
 	if (bcnc->priv) {
+		if (bcnc->priv->store_cnc)
+			g_object_unref (bcnc->priv->store_cnc);
+
 		if (bcnc->priv->executed_statements)
 			g_hash_table_destroy (bcnc->priv->executed_statements);
 
@@ -1017,6 +1032,25 @@ browser_connection_execution_get_result (BrowserConnection *bcnc, guint exec_id,
 	return retval;
 }
 
+/**
+ * browser_connection_normalize_sql_statement
+ * @bcnc: a #BrowserConnection
+ * @sqlst: a #GdaSqlStatement
+ * @error: a place to store errors, or %NULL
+ *
+ * See gda_sql_statement_normalize().
+ *
+ * Returns: %TRUE if no error occurred
+ */
+gboolean
+browser_connection_normalize_sql_statement (BrowserConnection *bcnc,
+					    GdaSqlStatement *sqlst, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	
+	return gda_sql_statement_normalize (sqlst, bcnc->priv->cnc, error);
+}
+
 
 /*
  * DOES NOT emit any signal
@@ -1032,4 +1066,290 @@ browser_connection_set_busy_state (BrowserConnection *bcnc, gboolean busy, const
 	bcnc->priv->busy = busy;
 	if (busy_reason)
 		bcnc->priv->busy_reason = g_strdup (busy_reason);
+}
+
+/*
+ *
+ * Preferences
+ *
+ */
+#define DBTABLE_PREFERENCES_TABLE_NAME "gda_sql_dbtable_preferences"
+#define DBTABLE_PREFERENCES_TABLE_DESC \
+        "<table name=\"" DBTABLE_PREFERENCES_TABLE_NAME "\"> "                            \
+        "   <column name=\"table_schema\" pkey=\"TRUE\"/>"             \
+        "   <column name=\"table_name\" pkey=\"TRUE\"/>"                              \
+        "   <column name=\"table_column\" nullok=\"TRUE\" pkey=\"TRUE\"/>"                              \
+        "   <column name=\"att_name\"/>"                          \
+        "   <column name=\"att_value\"/>"                           \
+        "</table>"
+
+static gboolean
+meta_store_addons_init (BrowserConnection *bcnc, GError **error)
+{
+	GError *lerror = NULL;
+	GdaMetaStore *store;
+
+	if (!bcnc->priv->cnc) {
+		g_set_error (error, 0, 0,
+			     _("Connection not yet opened"));
+		return FALSE;
+	}
+	store = gda_connection_get_meta_store (bcnc->priv->cnc);
+	if (!gda_meta_store_schema_add_custom_object (store, DBTABLE_PREFERENCES_TABLE_DESC, &lerror)) {
+                g_set_error (error, 0, 0, "%s",
+                             _("Can't initialize dictionary to store table preferences"));
+		g_warning ("Can't initialize dictionary to store dbtable_preferences :%s",
+			   lerror && lerror->message ? lerror->message : "No detail");
+		if (lerror)
+			g_error_free (lerror);
+                return FALSE;
+        }
+
+	bcnc->priv->store_cnc = g_object_ref (gda_meta_store_get_internal_connection (store));
+	return TRUE;
+}
+
+
+/**
+ * browser_connection_set_table_column_attribute
+ * @bcnc:
+ * @dbo:
+ * @column:
+ * @attr_name: attribute name, not %NULL
+ * @value: value to set, or %NULL to unset
+ * @error:
+ *
+ *
+ * Returns: %TRUE if no error occurred
+ */
+gboolean
+browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
+					       GdaMetaTable *table,
+					       GdaMetaTableColumn *column,
+					       const gchar *attr_name,
+					       const gchar *value, GError **error)
+{
+	GdaConnection *store_cnc;
+
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	g_return_val_if_fail (table, FALSE);
+	g_return_val_if_fail (column, FALSE);
+	g_return_val_if_fail (attr_name, FALSE);
+
+	if (! bcnc->priv->store_cnc &&
+	    ! meta_store_addons_init (bcnc, error))
+		return FALSE;
+
+	store_cnc = bcnc->priv->store_cnc;
+	if (! gda_lockable_trylock (GDA_LOCKABLE (store_cnc))) {
+		g_set_error (error, 0, 0, "%s",
+                             _("Can't initialize transaction to access favorites"));
+		return FALSE;
+	}
+	/* begin a transaction */
+	if (! gda_connection_begin_transaction (store_cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
+		g_set_error (error, 0, 0, "%s",
+                             _("Can't initialize transaction to access favorites"));
+		gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
+                return FALSE;
+	}
+
+	/* delete existing attribute */
+	GdaStatement *stmt;
+	GdaSqlBuilder *builder;
+	GdaSet *params;
+	guint op_ids[4];
+	GdaMetaDbObject *dbo = (GdaMetaDbObject *) table;
+
+	params = gda_set_new_inline (5, "schema", G_TYPE_STRING, dbo->obj_schema,
+				     "name", G_TYPE_STRING, dbo->obj_name,
+				     "column", G_TYPE_STRING, column->column_name,
+				     "attname", G_TYPE_STRING, attr_name,
+				     "attvalue", G_TYPE_STRING, value);
+
+	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
+	gda_sql_builder_set_table (builder, DBTABLE_PREFERENCES_TABLE_NAME);
+	op_ids[0] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, 0, "table_schema"),
+					      gda_sql_builder_add_param (builder, 0, "schema", G_TYPE_STRING,
+									 FALSE), 0);
+	op_ids[1] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, 0, "table_name"),
+					      gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING,
+									 FALSE), 0);
+	op_ids[2] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, 0, "table_column"),
+					      gda_sql_builder_add_param (builder, 0, "column", G_TYPE_STRING,
+									 FALSE), 0);
+	op_ids[3] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, 0, "att_name"),
+					      gda_sql_builder_add_param (builder, 0, "attname", G_TYPE_STRING,
+									 FALSE), 0);
+	gda_sql_builder_set_where (builder,
+				   gda_sql_builder_add_cond_v (builder, 0, GDA_SQL_OPERATOR_TYPE_AND,
+							       op_ids, 4));
+	stmt = gda_sql_builder_get_statement (builder, error);
+	g_object_unref (G_OBJECT (builder));
+	if (!stmt)
+		goto err;
+	if (gda_connection_statement_execute_non_select (store_cnc, stmt, params, NULL, error) == -1) {
+		g_object_unref (stmt);
+		goto err;
+	}
+	g_object_unref (stmt);		
+
+	/* insert new attribute if necessary */
+	if (value) {
+		builder = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+		gda_sql_builder_set_table (builder, DBTABLE_PREFERENCES_TABLE_NAME);
+		gda_sql_builder_add_field_id (builder,
+					      gda_sql_builder_add_id (builder, 0, "table_schema"),
+					      gda_sql_builder_add_param (builder, 0, "schema", G_TYPE_STRING, FALSE));
+		gda_sql_builder_add_field_id (builder,
+					      gda_sql_builder_add_id (builder, 0, "table_name"),
+					      gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING, FALSE));
+		gda_sql_builder_add_field_id (builder,
+					      gda_sql_builder_add_id (builder, 0, "table_column"),
+					      gda_sql_builder_add_param (builder, 0, "column", G_TYPE_STRING, FALSE));
+		gda_sql_builder_add_field_id (builder,
+					      gda_sql_builder_add_id (builder, 0, "att_name"),
+					      gda_sql_builder_add_param (builder, 0, "attname", G_TYPE_STRING, FALSE));
+		gda_sql_builder_add_field_id (builder,
+					      gda_sql_builder_add_id (builder, 0, "att_value"),
+					      gda_sql_builder_add_param (builder, 0, "attvalue", G_TYPE_STRING, FALSE));
+		stmt = gda_sql_builder_get_statement (builder, error);
+		g_object_unref (G_OBJECT (builder));
+		if (!stmt)
+			goto err;
+		if (gda_connection_statement_execute_non_select (store_cnc, stmt, params, NULL, error) == -1) {
+			g_object_unref (stmt);
+			goto err;
+		}
+		g_object_unref (stmt);
+	}
+
+	if (! gda_connection_commit_transaction (store_cnc, NULL, NULL)) {
+		g_set_error (error, 0, 0, "%s",
+                             _("Can't commit transaction to access favorites"));
+		goto err;
+	}
+
+	g_object_unref (params);
+	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
+	/*
+	g_print ("%s(table=>%s, column=>%s, value=>%s)\n", __FUNCTION__, GDA_META_DB_OBJECT (table)->obj_full_name,
+		 column->column_name, value);
+	*/
+	g_signal_emit (bcnc, browser_connection_signals [TABLE_COLUMN_PREF_CHANGED], 0,
+		       table, column, attr_name, value);
+
+	return TRUE;
+
+ err:
+	g_object_unref (params);
+	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
+	gda_connection_rollback_transaction (store_cnc, NULL, NULL);
+	return FALSE;
+}
+
+/**
+ * browser_connection_get_table_column_attribute
+ * @bcnc:
+ * @dbo:
+ * @column: may be %NULL
+ * @attr_name: attribute name, not %NULL
+ * @error:
+ *
+ *
+ * Returns: the requested attribute, or %NULL if not set or if an error occurred
+ */
+gchar *
+browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,
+						GdaMetaTable *table,
+						GdaMetaTableColumn *column,
+						const gchar *attr_name,
+						GError **error)
+{
+	GdaConnection *store_cnc;
+	gchar *retval = NULL;
+
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	g_return_val_if_fail (table, FALSE);
+	g_return_val_if_fail (column, FALSE);
+	g_return_val_if_fail (attr_name, FALSE);
+
+	if (! bcnc->priv->store_cnc &&
+	    ! meta_store_addons_init (bcnc, error))
+		return FALSE;
+
+	store_cnc = bcnc->priv->store_cnc;
+	if (! gda_lockable_trylock (GDA_LOCKABLE (store_cnc))) {
+		g_set_error (error, 0, 0, "%s",
+                             _("Can't initialize transaction to access favorites"));
+		return FALSE;
+	}
+
+	/* SELECT */
+	GdaStatement *stmt;
+	GdaSqlBuilder *builder;
+	GdaSet *params;
+	guint op_ids[4];
+	GdaDataModel *model;
+	const GValue *cvalue;
+	GdaMetaDbObject *dbo = (GdaMetaDbObject *) table;
+
+	params = gda_set_new_inline (4, "schema", G_TYPE_STRING, dbo->obj_schema,
+				     "name", G_TYPE_STRING, dbo->obj_name,
+				     "column", G_TYPE_STRING, column->column_name,
+				     "attname", G_TYPE_STRING, attr_name);
+
+	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_select_add_target_id (builder, 0,
+					      gda_sql_builder_add_id (builder, 0, DBTABLE_PREFERENCES_TABLE_NAME),
+					      NULL);
+	gda_sql_builder_select_add_field (builder, "att_value", NULL, NULL);
+	op_ids[0] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, 0, "table_schema"),
+					      gda_sql_builder_add_param (builder, 0, "schema", G_TYPE_STRING,
+									 FALSE), 0);
+	op_ids[1] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, 0, "table_name"),
+					      gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING,
+									 FALSE), 0);
+	op_ids[2] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, 0, "table_column"),
+					      gda_sql_builder_add_param (builder, 0, "column", G_TYPE_STRING,
+									 FALSE), 0);
+	op_ids[3] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, 0, "att_name"),
+					      gda_sql_builder_add_param (builder, 0, "attname", G_TYPE_STRING,
+									 FALSE), 0);
+	gda_sql_builder_set_where (builder,
+				   gda_sql_builder_add_cond_v (builder, 0, GDA_SQL_OPERATOR_TYPE_AND,
+							       op_ids, 4));
+	stmt = gda_sql_builder_get_statement (builder, error);
+	g_object_unref (G_OBJECT (builder));
+	if (!stmt)
+		goto out;
+
+	model = gda_connection_statement_execute_select (store_cnc, stmt, params, error);
+	g_object_unref (stmt);
+	if (!model)
+		goto out;
+
+	/*gda_data_model_dump (model, NULL);*/
+	if (gda_data_model_get_n_rows (model) == 0)
+		goto out;
+
+	cvalue = gda_data_model_get_value_at (model, 0, 0, error);
+	if (cvalue)
+		retval = g_value_dup_string (cvalue);
+
+ out:
+	if (model)
+		g_object_unref (model);
+	g_object_unref (params);
+	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
+
+	return retval;
 }

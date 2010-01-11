@@ -23,7 +23,9 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #include "query-result.h"
+#include "../browser-window.h"
 #include <libgda-ui/libgda-ui.h>
+#include <libgda/sql-parser/gda-sql-parser.h>
 
 struct _QueryResultPrivate {
 	QueryEditor *history;
@@ -41,7 +43,7 @@ static void query_result_finalize   (GObject *object);
 static GObjectClass *parent_class = NULL;
 
 static GtkWidget *make_widget_for_notice (void);
-static GtkWidget *make_widget_for_data_model (GdaDataModel *model);
+static GtkWidget *make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar *sql);
 static GtkWidget *make_widget_for_set (GdaSet *set);
 static GtkWidget *make_widget_for_error (GError *error);
 
@@ -161,7 +163,6 @@ query_result_new (QueryEditor *history)
 	g_signal_connect (history, "history-cleared",
 			  G_CALLBACK (history_cleared_cb), result);
 	result->priv->history = g_object_ref (history);
-
 
 	return GTK_WIDGET (result);
 }
@@ -301,7 +302,8 @@ query_result_show_history_item (QueryResult *qres, QueryEditorHistoryItem *hitem
 		if (!child) {
 			if (hitem->result) {
 				if (GDA_IS_DATA_MODEL (hitem->result))
-					child = make_widget_for_data_model (GDA_DATA_MODEL (hitem->result));
+					child = make_widget_for_data_model (GDA_DATA_MODEL (hitem->result),
+									    qres, hitem->sql);
 				else if (GDA_IS_SET (hitem->result))
 					child = make_widget_for_set (GDA_SET (hitem->result));
 				else
@@ -328,7 +330,7 @@ make_widget_for_notice (void)
 }
 
 static GtkWidget *
-make_widget_for_data_model (GdaDataModel *model)
+make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar *sql)
 {
 	GtkWidget *grid;
 	grid = gdaui_grid_new (model);
@@ -336,6 +338,67 @@ make_widget_for_data_model (GdaDataModel *model)
 	g_object_set (G_OBJECT (grid), "info-flags",
 		      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS | 
 		      GDAUI_DATA_PROXY_INFO_CURRENT_ROW, NULL);
+
+	if (sql) {
+		BrowserConnection *bcnc;
+		bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) qres));
+		if (!bcnc)
+			goto out;
+
+		GdaSqlParser *parser;
+		GdaStatement *stmt;
+		parser = browser_connection_create_parser (bcnc);
+		stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+		g_object_unref (parser);
+		if (!stmt)
+			goto out;
+
+		GdaSqlStatement *sqlst;
+		g_object_get ((GObject*) stmt, "structure", &sqlst, NULL);
+		g_object_unref (stmt);
+		
+		if ((sqlst->stmt_type != GDA_SQL_STATEMENT_SELECT) ||
+		    !browser_connection_normalize_sql_statement (bcnc, sqlst, NULL)) {
+			gda_sql_statement_free (sqlst);
+			goto out;
+		}
+
+		GdaSet *set;
+		set = (GdaSet*) gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid));
+
+		GdaSqlStatementSelect *sel;
+		GSList *list;
+		gint pos;
+		sel = (GdaSqlStatementSelect*) sqlst->contents;
+		for (pos = 0, list = sel->expr_list; list; pos ++, list = list->next) {
+			GdaSqlSelectField *field = (GdaSqlSelectField*) list->data;
+			if (! field->validity_meta_object ||
+			    (field->validity_meta_object->obj_type != GDA_META_DB_TABLE) ||
+			    !field->validity_meta_table_column)
+				continue;
+
+			gchar *plugin;
+			plugin = browser_connection_get_table_column_attribute (bcnc,
+										GDA_META_TABLE (field->validity_meta_object),
+										field->validity_meta_table_column,
+										BROWSER_CONNECTION_COLUMN_PLUGIN, NULL);
+			if (!plugin)
+				continue;
+
+			GdaHolder *holder;
+			holder = gda_set_get_nth_holder (set, pos);
+			if (holder) {
+				GValue *value;
+				value = gda_value_new_from_string (plugin, G_TYPE_STRING);
+				gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+				gda_value_free (value);
+			}
+				
+		}
+
+		gda_sql_statement_free (sqlst);
+	}
+ out:
 	return grid;
 }
 

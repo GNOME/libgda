@@ -52,6 +52,9 @@ struct _BrowserConnectionClass
 	void                    (*meta_changed) (BrowserConnection *bcnc, GdaMetaStruct *mstruct);
 	void                    (*favorites_changed) (BrowserConnection *bcnc);
 	void                    (*transaction_status_changed) (BrowserConnection *bcnc);
+	void                    (*table_column_pref_changed) (BrowserConnection *bcnc, GdaMetaTable *table,
+							      GdaMetaTableColumn *column,
+							      const gchar *attr_name, const gchar *value);
 };
 
 GType               browser_connection_get_type               (void) G_GNUC_CONST;
@@ -72,7 +75,7 @@ gchar             **browser_connection_get_completions        (BrowserConnection
 							       gint start, gint end);
 
 /*
- * statements's execution
+ * statements's manipulations
  */
 GdaSqlParser       *browser_connection_create_parser          (BrowserConnection *bcnc);
 gchar              *browser_connection_render_pretty_sql      (BrowserConnection *bcnc,
@@ -86,6 +89,8 @@ guint               browser_connection_execute_statement      (BrowserConnection
 GObject            *browser_connection_execution_get_result   (BrowserConnection *bcnc,
 							       guint exec_id,
 							       GdaSet **last_insert_row, GError **error);
+gboolean            browser_connection_normalize_sql_statement(BrowserConnection *bcnc,
+							       GdaSqlStatement *sqlst, GError **error);
 
 /*
  * transactions
@@ -95,6 +100,20 @@ gboolean              browser_connection_begin (BrowserConnection *bcnc, GError 
 gboolean              browser_connection_commit (BrowserConnection *bcnc, GError **error);
 gboolean              browser_connection_rollback (BrowserConnection *bcnc, GError **error);
 
+/*
+ * preferences
+ */
+#define BROWSER_CONNECTION_COLUMN_PLUGIN "PLUGIN"
+gboolean             browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
+								    GdaMetaTable *table,
+								    GdaMetaTableColumn *column,
+								    const gchar *attr_name,
+								    const gchar *value, GError **error);
+gchar               *browser_connection_get_table_column_attribute (BrowserConnection *bcnc,
+								    GdaMetaTable *table,
+								    GdaMetaTableColumn *column,
+								    const gchar *attr_name,
+								    GError **error);
 
 G_END_DECLS
 

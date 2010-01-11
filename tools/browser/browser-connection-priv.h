@@ -43,6 +43,8 @@ struct _BrowserConnectionPrivate {
 
 	gboolean  busy;
 	gchar    *busy_reason;
+
+	GdaConnection *store_cnc;
 };
 
 void browser_connection_set_busy_state (BrowserConnection *bcnc, gboolean busy, const gchar *busy_reason);

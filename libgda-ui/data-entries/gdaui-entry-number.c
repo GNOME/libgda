@@ -487,10 +487,14 @@ set_entry_options (GdauiEntryNumber *mgstr, const gchar *options)
 				mgstr->priv->thousand_sep = 0;
 		}
 		str = gda_quark_list_find (params, "NB_DECIMALS");
-		if (str) 
-			mgstr->priv->nb_decimals = atoi (str);
-		str = gda_quark_list_find (params, "CURRENCY");
 		if (str) {
+			if (*str)
+				mgstr->priv->nb_decimals = atoi (str);
+			else
+				mgstr->priv->nb_decimals = 0;
+		}
+		str = gda_quark_list_find (params, "CURRENCY");
+		if (str && *str) {
 			g_free (mgstr->priv->currency);
 			mgstr->priv->currency = g_strdup_printf ("%s ", str);
 		}

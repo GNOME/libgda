@@ -28,6 +28,8 @@ libperspective_la_SOURCES = \
 	table-info.h \
 	table-columns.c \
 	table-columns.h \
+	table-preferences.c \
+	table-preferences.h \
 	mgr-columns.c \
 	mgr-columns.h
 

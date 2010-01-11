@@ -541,9 +541,6 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	else
 		gda_holder_set_not_null (holder, FALSE);
 	
-	str = xmlGetProp (node, BAD_CAST "source");
-	if (str) 
-		g_object_set_data_full (G_OBJECT (holder), "source", str, xmlFree);
 	str = xmlGetProp (node, BAD_CAST "plugin");
 	if (str) {
 		GValue *value;
@@ -553,6 +550,10 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 		gda_value_free (value);
 		xmlFree (str);
 	}
+
+	str = xmlGetProp (node, BAD_CAST "source");
+	if (str) 
+		g_object_set_data_full (G_OBJECT (holder), "source", str, xmlFree);
 
 	/* set restricting source if specified */
 	if (str && sources) {

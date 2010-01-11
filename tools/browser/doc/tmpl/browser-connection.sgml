@@ -39,6 +39,7 @@ An opened connection
 @bfav: 
 @busy: 
 @busy_reason: 
+@store_cnc: 
 
 <!-- ##### STRUCT BrowserConnection ##### -->
 <para>
@@ -69,6 +70,17 @@ An opened connection
 
 @browserconnection: the object which received the signal.
 @arg1: 
+
+<!-- ##### SIGNAL BrowserConnection::table-column-pref-changed ##### -->
+<para>
+
+</para>
+
+@browserconnection: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+@arg4: 
 
 <!-- ##### SIGNAL BrowserConnection::transaction-status-changed ##### -->
 <para>
@@ -220,6 +232,17 @@ An opened connection
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_connection_normalize_sql_statement ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@sqlst: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION browser_connection_begin ##### -->
 <para>
 
@@ -256,6 +279,33 @@ An opened connection
 </para>
 
 @bcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_set_table_column_attribute ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@table: 
+@column: 
+@attr_name: 
+@value: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_get_table_column_attribute ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@table: 
+@column: 
+@attr_name: 
+@error: 
 @Returns: 
 
 

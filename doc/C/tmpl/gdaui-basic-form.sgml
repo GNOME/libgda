@@ -284,3 +284,23 @@ which can be described by the following DTD.
 @Returns: 
 
 
+<!-- ##### FUNCTION gdaui_basic_form_set_layout_from_file ##### -->
+<para>
+
+</para>
+
+@form: 
+@file_name: 
+@form_name: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_get_place_holder ##### -->
+<para>
+
+</para>
+
+@form: 
+@placeholder_id: 
+@Returns: 
+
+

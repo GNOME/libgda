@@ -303,7 +303,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	str = g_strdup_printf (_("Connection: %s"), cncname);
 	gtk_window_set_title (GTK_WINDOW (bwin), str);
 	g_free (str);
-	gtk_window_set_default_size ((GtkWindow*) bwin, 700, 600);
+	gtk_window_set_default_size ((GtkWindow*) bwin, 900, 650);
 	g_signal_connect (G_OBJECT (bwin), "delete-event",
                           G_CALLBACK (delete_event), bwin);
 	/* icon */

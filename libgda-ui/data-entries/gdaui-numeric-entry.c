@@ -375,7 +375,7 @@ text_unformat (GdauiNumericEntry *entry, gchar *str, gint *pos)
  * Retunrs: a new string
  */
 static gchar *
-text_reformat (GdauiNumericEntry *entry, gchar *str, gint *pos)
+text_reformat (GdauiNumericEntry *entry, gchar *str, gint *pos, gboolean allow_sep_ending)
 {
 	g_assert (str);
 	GString *string;
@@ -451,8 +451,28 @@ text_reformat (GdauiNumericEntry *entry, gchar *str, gint *pos)
 				for (i = nb_dec; i < entry->priv->nb_decimals; i++)
 					g_string_append_c (string, '0');
 			}
-			else if (nb_dec > entry->priv->nb_decimals)
+			else if (nb_dec > entry->priv->nb_decimals) {
 				g_string_truncate (string, len - (nb_dec - entry->priv->nb_decimals));
+				if (!allow_sep_ending &&
+				    (string->str[string->len - 1] == entry->priv->decimal_sep)) {
+					/* we don't want numbers terminated by entry->priv->decimal_sep */
+					g_string_truncate (string, string->len - 1);
+				}
+			}
+		}
+	}
+	else if ((! entry->priv->num_attr.is_int) &&
+		 dec_pos >= 0) {
+		/* remove all the '0' which are useless */
+		while ((string->str[string->len - 1] == entry->priv->decimal_sep) ||
+		       (string->str[string->len - 1] == '0')) {
+			if (string->str[string->len - 1] == entry->priv->decimal_sep) {
+				if (!allow_sep_ending)
+					g_string_truncate (string, string->len - 1);
+				break;
+			}
+			else
+				g_string_truncate (string, string->len - 1);
 		}
 	}
 
@@ -573,7 +593,7 @@ gdaui_numeric_entry_assume_insert (GdauiEntry *entry, const gchar *text, gint te
 		/*g_print ("ERROR!\n");*/
 		return;
 	}
-	ntext = text_reformat (fentry, string->str, virt_pos);
+	ntext = text_reformat (fentry, string->str, virt_pos, (text[text_length-1] == fentry->priv->decimal_sep));
 	g_string_free (string, TRUE);
 	/*g_print ("NEW: [%s]\n", ntext);*/
 
@@ -629,7 +649,7 @@ gdaui_numeric_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gint 
 		}
 	}
 	else {
-		ntext = text_reformat (fentry, string->str, &cursor_pos);
+		ntext = text_reformat (fentry, string->str, &cursor_pos, FALSE);
 		g_string_free (string, TRUE);
 	}
 	/*g_print ("NEW: [%s]\n", ntext);*/

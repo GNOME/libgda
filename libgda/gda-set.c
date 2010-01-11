@@ -776,9 +776,9 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 				}
 				else  {
 					sources = g_slist_prepend (sources, model);
-					str = (gchar*)xmlGetProp(cur, (xmlChar*)"name");
+					str = (gchar*)xmlGetProp(cur, (xmlChar*) "name");
 					if (str) 
-						g_object_set_data_full (G_OBJECT (model), "name", str, g_free);
+						g_object_set_data_full (G_OBJECT (model), "name", str, xmlFree);
 				}
 			}
 		}

@@ -27,6 +27,7 @@
 #include "../support.h"
 #include "../cc-gray-bar.h"
 #include "table-columns.h"
+#include "table-preferences.h"
 #ifdef HAVE_GOOCANVAS
 #include "table-relations.h"
 #endif
@@ -374,6 +375,15 @@ table_info_new (BrowserConnection *bcnc,
 		gtk_notebook_append_page (GTK_NOTEBOOK (sub_nb), page, label);
 	}
 #endif
+	page = table_preferences_new (tinfo);
+	if (page) {
+		label = gtk_label_new ("");
+		str = g_strdup_printf ("<small>%s</small>", _("Preferences"));
+		gtk_label_set_markup (GTK_LABEL (label), str);
+		g_free (str);
+		gtk_widget_show (page);
+		gtk_notebook_append_page (GTK_NOTEBOOK (sub_nb), page, label);
+	}
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (sub_nb), 0);
 
 	/* show everything */

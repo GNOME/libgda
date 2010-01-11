@@ -23,6 +23,7 @@
 
 #include <gtk/gtk.h>
 #include <libgda/gda-value.h>
+#include <libgda-ui/gdaui-data-entry.h>
 #include "gdaui-decl.h"
 
 typedef GdauiDataEntry   *(*GdauiEntryCreateFunc)(GdaDataHandler *, GType, const gchar *);

@@ -183,19 +183,6 @@ plugin_init (GError **error)
 	}
 	g_free (file);
 
-	/* CGRID */
-	plugin = g_new0 (GdauiPlugin, 1);
-	plugin->plugin_name = "cgrid";
-	plugin->plugin_descr = "ComboGrid entry";
-	plugin->plugin_file = NULL; /* always leave NULL */
-	plugin->nb_g_types = 1;
-	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
-	plugin->valid_g_types [0] = G_TYPE_STRING;;
-	plugin->options_xml_spec = NULL;
-	plugin->entry_create_func = plugin_entry_cgrid_create_func;
-	plugin->cell_create_func = plugin_cell_renderer_cgrid_create_func;
-	retlist = g_slist_append (retlist, plugin);
-
 	return retlist;
 }
 

@@ -80,8 +80,8 @@ struct  _GdauiEntryComboPriv {
         GtkWidget              *combo_entry;
 	GSList                 *combo_nodes; /* list of ComboNode structures */
 
-	GdauiSet             *paramlist; // useless?
-	GdauiSetSource       *source;	
+	GdauiSet               *paramlist;
+	GdauiSetSource         *source;	
 	
 	gboolean                data_valid;
 	gboolean                null_forced;
@@ -287,6 +287,7 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	entry = gdaui_combo_new_with_model (GDA_DATA_MODEL (source->source->data_model), 
 					    combo->priv->source->shown_n_cols, 
 					    combo->priv->source->shown_cols_index);
+	g_object_set (G_OBJECT (entry), "as-list", TRUE, NULL);
 	g_signal_connect (G_OBJECT (entry), "changed",
 			  G_CALLBACK (combo_contents_changed_cb), combo);
 

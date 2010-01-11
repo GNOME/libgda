@@ -214,7 +214,7 @@ gdaui_combo_set_property (GObject *object,
 			gtk_rc_parse_string ("style \"gdaui-combo-as-list-style\"\n"
 					     "{\n"
 					     "GtkComboBox::appears-as-list = 1\n"
-					     "GtkComboBox::arrow-size = 10\n"
+					     "GtkComboBox::arrow-size = 5\n"
 					     "}\n"
 					     "widget \"*.gdaui-combo-as-list-style\" style \"gdaui-combo-as-list-style\"");
 		}
@@ -462,7 +462,7 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 			g_object_set_data (G_OBJECT (renderer), "data-handler", dh);
 			g_object_set_data (G_OBJECT (renderer), "colnum", GINT_TO_POINTER (index));
 			g_object_set ((GObject*) renderer, "width-chars",
-				      combo->priv->cols_width [index], NULL);
+				      combo->priv->cols_width [index] + 1, NULL);
 			
 			gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
 			gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo), renderer,
