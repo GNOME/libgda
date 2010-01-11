@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-01-01 09:01+0000\n"
-"PO-Revision-Date: 2010-01-07 20:24+0100\n"
+"POT-Creation-Date: 2010-01-07 19:25+0000\n"
+"PO-Revision-Date: 2010-01-11 08:46+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -84,7 +84,7 @@ msgstr "Ni mogoče odpreti povezave"
 
 #: ../control-center/dsn-properties-dialog.c:239
 #: ../control-center/gdaui-dsn-assistant.c:141
-#: ../libgda-ui/gdaui-raw-form.c:595
+#: ../libgda-ui/gdaui-raw-form.c:596
 msgid "Unknown error"
 msgstr "Neznana napaka"
 
@@ -323,7 +323,7 @@ msgstr ""
 
 #. connection's authentication
 #: ../control-center/gdaui-dsn-editor.c:212
-#: ../libgda/gda-config.c:1267
+#: ../libgda/gda-config.c:1277
 #: ../tools/browser/auth-dialog.c:215
 msgid "Authentication"
 msgstr "Overitev"
@@ -359,7 +359,7 @@ msgstr "Ni mogoče prijaviti novega podatkovnega vira"
 
 #: ../control-center/main.c:86
 msgid "No valid data source info was created"
-msgstr "Ni ustvarjenih veljavnih podatovk o viru"
+msgstr "Ni ustvarjenih veljavnih podatkov o viru"
 
 #: ../control-center/main.c:184
 #: ../tools/browser/browser-window.c:896
@@ -395,49 +395,50 @@ msgid "Error creating user specific configuration directory '%s'"
 msgstr ""
 
 #: ../libgda/gda-config.c:556
+#: ../libgda/gda-config.c:569
 #, c-format
 msgid "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
 
-#: ../libgda/gda-config.c:822
+#: ../libgda/gda-config.c:832
 #, c-format
 msgid "Malformed data source name '%s'"
 msgstr "Izmaličeno ime podatkovnega vira '%s'"
 
-#: ../libgda/gda-config.c:866
-#: ../libgda/gda-config.c:955
+#: ../libgda/gda-config.c:876
+#: ../libgda/gda-config.c:965
 msgid "Can't manage system-wide configuration"
 msgstr "Ni mogoče upravljati s sistemskimi nastavitvami"
 
-#: ../libgda/gda-config.c:949
+#: ../libgda/gda-config.c:959
 #: ../libgda-ui/gdaui-login.c:613
 #, c-format
 msgid "Unknown DSN '%s'"
 msgstr "Neznan DSN '%s'"
 
-#: ../libgda/gda-config.c:999
+#: ../libgda/gda-config.c:1009
 #, c-format
 msgid "Provider '%s' not found"
 msgstr "Ponudnika '%s' ni mogoče najti"
 
-#: ../libgda/gda-config.c:1182
+#: ../libgda/gda-config.c:1192
 #: ../libgda/gda-connection.c:935
 #: ../libgda/gda-connection.c:1089
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Ni nameščenega ponudnika '%s'"
 
-#: ../libgda/gda-config.c:1197
+#: ../libgda/gda-config.c:1207
 #, c-format
 msgid "Can't load provider: %s"
 msgstr "Ni mogoče naložiti ponudnika: %s"
 
-#: ../libgda/gda-config.c:1220
+#: ../libgda/gda-config.c:1230
 #, fuzzy, c-format
 msgid "Can't instantiate provider '%s'"
 msgstr "Ni mogoče naložiti ponudnika: %s"
 
-#: ../libgda/gda-config.c:1264
+#: ../libgda/gda-config.c:1274
 #: ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112
 #: ../tools/gda-sql.c:1729
@@ -447,7 +448,7 @@ msgstr "Ni mogoče naložiti ponudnika: %s"
 msgid "Provider"
 msgstr "Ponudnik"
 
-#: ../libgda/gda-config.c:1265
+#: ../libgda/gda-config.c:1275
 #: ../libgda/gda-data-model-dsn-list.c:117
 #: ../libgda/gda-data-model-dsn-list.c:118
 #: ../libgda/gda-server-provider-extra.c:375
@@ -458,19 +459,19 @@ msgstr "Ponudnik"
 msgid "Description"
 msgstr "Opis"
 
-#: ../libgda/gda-config.c:1266
+#: ../libgda/gda-config.c:1276
 msgid "DSN parameters"
 msgstr "Parametri DSN"
 
-#: ../libgda/gda-config.c:1268
+#: ../libgda/gda-config.c:1278
 msgid "File"
 msgstr "Datoteka"
 
-#: ../libgda/gda-config.c:1269
+#: ../libgda/gda-config.c:1279
 msgid "List of installed providers"
 msgstr "Seznam nameščenih ponudnikov"
 
-#: ../libgda/gda-config.c:1433
+#: ../libgda/gda-config.c:1443
 #: ../libgda/gda-data-model-dsn-list.c:131
 #: ../libgda/gda-data-model-dsn-list.c:132
 #: ../tools/gda-sql.c:2966
@@ -478,13 +479,13 @@ msgid "Username"
 msgstr "Uporabniško ime"
 
 #. other table options
-#: ../libgda/gda-config.c:1435
+#: ../libgda/gda-config.c:1445
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 #: ../providers/web/web_specs_auth.xml.in.h:2
 msgid "Password"
 msgstr "Geslo"
 
-#: ../libgda/gda-config.c:1505
+#: ../libgda/gda-config.c:1515
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "Napaka med nalaganjem ponudnika '%s': %s"
@@ -785,7 +786,7 @@ msgstr ""
 
 #: ../libgda/gda-data-model-array.c:560
 msgid "Data model has no data"
-msgstr "Podatkovi model je brez podatkov"
+msgstr "Podatkovni model je brez podatkov"
 
 #: ../libgda/gda-data-model-array.c:615
 #: ../libgda/gda-data-model-array.c:659
@@ -2076,7 +2077,7 @@ msgstr "Sopomenke"
 
 #: ../libgda/gda-server-provider-extra.c:392
 msgid "User"
-msgstr "Uporabik"
+msgstr "Uporabnik"
 
 #: ../libgda/gda-server-provider-extra.c:396
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:3
@@ -2653,7 +2654,7 @@ msgstr "Predmet BLOB je prevelik"
 #: ../libgda/sqlite/gda-sqlite-provider.c:2495
 #, c-format
 msgid "Non handled data type '%s'"
-msgstr "Neupravljana vrsta pdoatkov '%s'"
+msgstr "Neupravljana vrsta podatkov '%s'"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2638
 #: ../libgda/sqlite/gda-sqlite-provider.c:2659
@@ -3130,6 +3131,9 @@ msgstr[3] "%lu bajti"
 
 #: ../libgda-ui/data-entries/common-bin.c:266
 #: ../libgda-ui/data-entries/common-bin.c:316
+#: ../libgda-ui/data-entries/plugins/common-pict.c:39
+#: ../libgda-ui/data-entries/plugins/common-pict.c:70
+#, c-format
 msgid "No data"
 msgstr "Ni podatkov"
 
@@ -3151,9 +3155,9 @@ msgstr "Neznano"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:185
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:165
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:181
-#: ../libgda-ui/gdaui-basic-form.c:1537
-#: ../libgda-ui/gdaui-basic-form.c:1582
-#: ../libgda-ui/gdaui-raw-grid.c:1105
+#: ../libgda-ui/gdaui-basic-form.c:742
+#: ../libgda-ui/gdaui-basic-form.c:804
+#: ../libgda-ui/gdaui-raw-grid.c:1079
 #: ../tools/gda-sql.c:2535
 #: ../tools/gda-sql.c:2710
 #: ../tools/gda-sql.c:3890
@@ -3235,20 +3239,20 @@ msgstr "neveljaven zapis UTF-8!"
 msgid "Format is hh:mm:ss"
 msgstr "Zapis je hh:mm:ss"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:241
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:240
 #, c-format
 msgid "Widget of class '%s' does not have any associated GdaDataHandler, (to be set using the 'handler' property) expect some mis-behaviours"
 msgstr ""
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:400
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:399
 msgid "Value is NULL"
 msgstr "Vrednosti je določena kot NULL"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:406
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:405
 msgid "Value will be determined by default"
 msgstr ""
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:412
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:411
 msgid "Value is invalid"
 msgstr "Vrednost je neveljavna"
 
@@ -3320,13 +3324,6 @@ msgstr ""
 #, c-format
 msgid "Decimal thousands cannot be the '%c' character"
 msgstr ""
-
-#: ../libgda-ui/data-entries/plugins/common-pict.c:39
-#: ../libgda-ui/data-entries/plugins/common-pict.c:70
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict.c:265
-#, fuzzy, c-format
-msgid "No data to display"
-msgstr "Ni tipkovnic za prikaz!"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:107
 #: ../libgda-ui/data-entries/plugins/common-pict.c:120
@@ -3562,6 +3559,11 @@ msgstr "Base 64"
 msgid "Encoding used to convert binary data to the string"
 msgstr ""
 
+#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict.c:258
+#, fuzzy
+msgid "No data to display"
+msgstr "Ni tipkovnic za prikaz!"
+
 #: ../libgda-ui/data/server_operation.glade.h:1
 #: ../tools/browser/schema-browser/table-info.c:360
 msgid "Columns"
@@ -3688,58 +3690,60 @@ msgid "Error details"
 msgstr "Podrobnosti napake"
 
 #: ../libgda-ui/internal/utility.c:478
-#, fuzzy
 msgid "Discard modified data"
-msgstr "Podatkov ni mogoče spremeniti"
+msgstr "Zavrzi spremenjene podatke"
 
 #: ../libgda-ui/internal/utility.c:479
 msgid "Correct data first"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:202
+#: ../libgda-ui/gdaui-basic-form.c:242
 #: ../libgda-ui/gdaui-raw-grid.c:280
 msgid "Pointer to an XML data layout specification"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:206
+#: ../libgda-ui/gdaui-basic-form.c:246
 msgid "List of parameters to show in the form"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:210
+#: ../libgda-ui/gdaui-basic-form.c:250
 msgid "Entry headers are sensitive"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:215
+#: ../libgda-ui/gdaui-basic-form.c:255
 #, fuzzy
 msgid "Show Entry actions"
 msgstr "Pokaži skriptno vrstico"
 
-#: ../libgda-ui/gdaui-basic-form.c:220
+#: ../libgda-ui/gdaui-basic-form.c:260
 msgid "Entries Auto-default"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:225
+#: ../libgda-ui/gdaui-basic-form.c:265
 msgid "TRUE if expanding the form makes sense"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:1389
-#: ../libgda-ui/gdaui-raw-grid.c:1147
+#: ../libgda-ui/gdaui-basic-form.c:707
+#: ../libgda-ui/gdaui-raw-grid.c:1121
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:2323
+#: ../libgda-ui/gdaui-basic-form.c:1576
+msgid "Can't find data entry for GdaHolder"
+msgstr ""
+
+#: ../libgda-ui/gdaui-basic-form.c:1848
 msgid "Values to be filled"
 msgstr "Zahtevane vrednosti"
 
-#: ../libgda-ui/gdaui-basic-form.c:2403
-#: ../libgda-ui/gdaui-raw-grid.c:2558
+#: ../libgda-ui/gdaui-basic-form.c:1928
 #, c-format
-msgid "'%s' Document not parsed successfully\n"
-msgstr "'%s' dokument ni uspešno razčlenjen\n"
+msgid "'%s' document not parsed successfully"
+msgstr "'%s' dokument ni uspešno razčlenjen"
 
-#: ../libgda-ui/gdaui-basic-form.c:2413
-#: ../libgda-ui/gdaui-raw-grid.c:2568
+#: ../libgda-ui/gdaui-basic-form.c:1938
+#: ../libgda-ui/gdaui-raw-grid.c:2542
 #, c-format
 msgid "'%s' DTD not parsed successfully. XML data layout validation will not be performed (some errors may occur)"
 msgstr ""
@@ -3816,9 +3820,9 @@ msgid "Loading file %s...\n"
 msgstr "Nalaganje datoteke %s...\n"
 
 #: ../libgda-ui/gdaui-init.c:485
-#, fuzzy, c-format
+#, c-format
 msgid "Plugins load warning: %s"
-msgstr "Ne nalagaj samodejno vstavkov"
+msgstr "Opozorilo nalaganja vstavkov: %s"
 
 #. radio buttons
 #: ../libgda-ui/gdaui-login.c:152
@@ -3844,7 +3848,7 @@ msgstr "Ni mogoče izvesti"
 msgid "Data to display"
 msgstr "Podatki za prikaz"
 
-#: ../libgda-ui/gdaui-raw-form.c:594
+#: ../libgda-ui/gdaui-raw-form.c:595
 #, c-format
 msgid "Can't append row to data model: %s"
 msgstr "Ni mogoče pripeti vrstice podatkovnem modelu: %s"
@@ -3857,91 +3861,90 @@ msgstr "Celica podrobnosti je vidna"
 msgid "Global Actions visible"
 msgstr "Splošna dejanja so vidna"
 
-#: ../libgda-ui/gdaui-raw-grid.c:707
+#: ../libgda-ui/gdaui-raw-grid.c:682
 msgid "Group:"
 msgstr "Skupina:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1140
+#: ../libgda-ui/gdaui-raw-grid.c:1114
 msgid "No title"
 msgstr "Brez naslova"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2004
+#: ../libgda-ui/gdaui-raw-grid.c:1978
 msgid "Select _All"
 msgstr "Izberi _vse"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2009
+#: ../libgda-ui/gdaui-raw-grid.c:1983
 msgid "_Clear Selection"
 msgstr "_Počisti izbrano"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2012
-#, fuzzy
+#: ../libgda-ui/gdaui-raw-grid.c:1986
 msgid "Show Column _Titles"
-msgstr "Pokaži stolpec kategorij"
+msgstr "Pokaži _naslove stolpcev"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2017
+#: ../libgda-ui/gdaui-raw-grid.c:1991
 msgid "_Set filter"
 msgstr "_Nastavi filter"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2020
+#: ../libgda-ui/gdaui-raw-grid.c:1994
 msgid "_Unset filter"
 msgstr "_Počisti filter"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:2118
+#: ../libgda-ui/gdaui-raw-grid.c:2092
 msgid "Saving Data"
 msgstr "Shranjevanje podatkov"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2126
+#: ../libgda-ui/gdaui-raw-grid.c:2100
 msgid "Saving data to a file"
 msgstr "Shranjevanje podatkov v datoteko"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2127
+#: ../libgda-ui/gdaui-raw-grid.c:2101
 msgid "The data will be exported without any of the modifications which may have been made and have not been committed."
 msgstr ""
 
-#: ../libgda-ui/gdaui-raw-grid.c:2142
+#: ../libgda-ui/gdaui-raw-grid.c:2116
 msgid "File name"
 msgstr "Ime datoteke"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2160
+#: ../libgda-ui/gdaui-raw-grid.c:2134
 msgid "Details"
 msgstr "Podrobnosti"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2180
+#: ../libgda-ui/gdaui-raw-grid.c:2154
 msgid "Limit to selection?"
 msgstr "Ali naj se omeji na izbiro?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2199
+#: ../libgda-ui/gdaui-raw-grid.c:2173
 msgid "File type:"
 msgstr "Vrsta datoteke:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2209
+#: ../libgda-ui/gdaui-raw-grid.c:2183
 msgid "Tab-delimited"
 msgstr "Podatki ločeni s tabulatorji"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2210
+#: ../libgda-ui/gdaui-raw-grid.c:2184
 msgid "Comma-delimited"
 msgstr "Podatki ločeni z vejicami"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2211
+#: ../libgda-ui/gdaui-raw-grid.c:2185
 msgid "XML"
 msgstr "XML"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2338
+#: ../libgda-ui/gdaui-raw-grid.c:2312
 #, c-format
 msgid "Could not save file %s"
 msgstr "Ni mogoče shraniti datoteke %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2346
+#: ../libgda-ui/gdaui-raw-grid.c:2320
 msgid "You must specify a file name"
 msgstr "Navesti je treba ime datoteke"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2352
+#: ../libgda-ui/gdaui-raw-grid.c:2326
 #, fuzzy
 msgid "Got empty file while converting the data"
 msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2365
+#: ../libgda-ui/gdaui-raw-grid.c:2339
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -3950,9 +3953,14 @@ msgstr ""
 "Datoteka '%s' že obstaja.\n"
 "Ali jo želite prepisati?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2371
+#: ../libgda-ui/gdaui-raw-grid.c:2345
 msgid "If you choose yes, the contents will be lost."
 msgstr ""
+
+#: ../libgda-ui/gdaui-raw-grid.c:2532
+#, c-format
+msgid "'%s' Document not parsed successfully\n"
+msgstr "'%s' dokument ni uspešno razčlenjen\n"
 
 #: ../libgda-ui/gdaui-server-operation.c:196
 msgid "The specification of the operation to implement"
@@ -4050,9 +4058,8 @@ msgid "The DB_NAME parameter is not defined in the connection string."
 msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 
 #: ../providers/bdb/gda-bdb-provider.c:192
-#, fuzzy
 msgid "An error occurred while accessing the BDB database"
-msgstr "%s: med pobiranjem podatkov se je zgodila napaka"
+msgstr "Prišlo je do napake med dostopom do podatkovne zbirke BDB"
 
 #: ../providers/bdb/gda-bdb-provider.c:200
 #: ../providers/mdb/gda-mdb-provider.c:315
@@ -4060,9 +4067,9 @@ msgid "Can't open virtual connection"
 msgstr "Ni mogoče odpreti navidezne povezave"
 
 #: ../providers/bdb/gda-bdb-provider.c:207
-#, fuzzy, c-format
+#, c-format
 msgid "Could not add BDB data model to connection: %s"
-msgstr "Ni mogoče povezati ct_bind držalca podtakov s stolpcom"
+msgstr "Ni mogoče dodati BDB podatkovnega modela k povezavi: %s"
 
 #: ../providers/bdb/gda-bdb-provider.c:219
 msgid "-"
@@ -4368,9 +4375,8 @@ msgid "Add the column after the specified column"
 msgstr "Dodaj stolpec za določeni stolpec"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:2
-#, fuzzy
 msgid "Add the column as the first column of the table"
-msgstr "Ni mogoče dobiti števila odjemalčevih sporočil"
+msgstr "Dodaj stolpec kot prvi stolpec preglednice"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:3
 msgid "After column"
@@ -4484,9 +4490,8 @@ msgstr ""
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
-#, fuzzy
 msgid "Create database only if it does not yet exist"
-msgstr "Ustvari kazalo le v primeru, da še ne obstaja"
+msgstr "Ustvari podatkovno zbirko le v primeru, da še ne obstaja"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
@@ -4699,9 +4704,8 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:59
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:36
-#, fuzzy
 msgid "Server access parameters"
-msgstr "Dostopni strežnik z glasovno podporo"
+msgstr "Parametri dostopa do strežnika"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
@@ -4721,9 +4725,8 @@ msgstr "Tajski (TIS620)"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:67
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:10
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:10
-#, fuzzy
 msgid "The name of a database to create"
-msgstr "Omrežno ime"
+msgstr "Ime podatkovne zbirke za ustvarjanje"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
@@ -4761,37 +4764,32 @@ msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:96
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:191
-#, fuzzy
 msgid "Windows Arabic"
-msgstr "Arabsko (_Windows-1256)"
+msgstr "Arabsko (Windows)"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:98
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:193
-#, fuzzy
 msgid "Windows Baltic"
-msgstr "Baltsko (_Windows-1257)"
+msgstr "Baltsko (Windows)"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:100
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:195
-#, fuzzy
 msgid "Windows Central European"
-msgstr "Srednjeevropsko (_Windows-1250)"
+msgstr "Srednjeevropsko (Windows)"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:102
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:197
-#, fuzzy
 msgid "Windows Cyrillic"
-msgstr "Cirilsko (_Windows-1251)"
+msgstr "Cirilica (Windows)"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:6
-#, fuzzy
 msgid "Index description"
-msgstr "<i>(brez opisa)</i>"
+msgstr "Opis kazala"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
@@ -4814,9 +4812,8 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
-#, fuzzy
 msgid "Indexed field(s)"
-msgstr "Dodaj polje"
+msgstr "Indeksirana polja"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
@@ -4839,7 +4836,6 @@ msgstr "<b>Podrobnosti razpredelnice</b>"
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:16
-#, fuzzy
 msgid "Sort type"
 msgstr "Vrsta razvrščanja"
 
@@ -4887,9 +4883,8 @@ msgid "Clustered, fault-tolerant, memory-based"
 msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:32
-#, fuzzy
 msgid "Comma Separated Value (CSV)"
-msgstr "Zapis vrednosti, ločenih z vejicami (.csv)"
+msgstr "Vrednosti ločene z vejicami (.csv)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
 msgid "Compact"
@@ -4926,15 +4921,13 @@ msgid "Don't pack keys"
 msgstr "Brez: Ne objavi ključev"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:61
-#, fuzzy
 msgid "Dynamic"
-msgstr "DINAMIČNO"
+msgstr "Dinamično"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:67
-#, fuzzy
 msgid "Engine"
-msgstr "Datotečni pogon"
+msgstr "Pogon"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:68
 msgid "Example"
@@ -4971,24 +4964,21 @@ msgstr "Nespremenljivo"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
 #: ../tools/command-exec.c:852
-#, fuzzy
 msgid "Foreign key"
-msgstr "Tuj ključ na '%s'"
+msgstr "Tuj ključ"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:94
 msgid "ISAM"
 msgstr "ISAM"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
-#, fuzzy
 msgid "In Memory (MEMORY/HEAP)"
-msgstr "samo v spominu"
+msgstr "V pomnilniku (MEMORY/HEAP)"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:109
-#, fuzzy
 msgid "Index directory"
-msgstr "Mapa za izgradnjo:"
+msgstr "Ustvari kazalo mape"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
 msgid "InnoDB"
@@ -4996,33 +4986,28 @@ msgstr "InnoDB"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:112
-#, fuzzy
 msgid "Insert method"
-msgstr "Način razdeljevanja"
+msgstr "Vstavi način"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:121
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
-#, fuzzy
 msgid "Match full"
-msgstr "Polni medpomnilnik"
+msgstr "Uskladi polno"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:122
-#, fuzzy
 msgid "Match partial"
-msgstr "Megla s presledki"
+msgstr "Uskladi delno"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:123
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
-#, fuzzy
 msgid "Match simple"
-msgstr "Enostavno iskanje"
+msgstr "Uskladi enostavno"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:125
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
-#, fuzzy
 msgid "Match type"
-msgstr "Vrsta skripta"
+msgstr "Uskladi vrsto"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:127
@@ -5032,9 +5017,8 @@ msgstr ""
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:129
-#, fuzzy
 msgid "Max rows"
-msgstr "Izbrane vrstice"
+msgstr "Največ vrstic"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:130
 msgid "Merge"
@@ -5042,34 +5026,29 @@ msgstr "Združi"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:132
-#, fuzzy
 msgid "Min rows"
-msgstr "Izbrane vrstice"
+msgstr "Najmanj vrstic"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:133
-#, fuzzy
 msgid "MyISAM (default)"
-msgstr "Privzeto stiskanje"
+msgstr "MyISAM (privzeto)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
-#, fuzzy
 msgid "No action"
 msgstr "Brez dejanj"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
-#, fuzzy
 msgid "On delete action"
-msgstr "Izbriši dejanje GOK"
+msgstr "Ob dejanju izbrisanja"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
-#, fuzzy
 msgid "On update action"
-msgstr "Posodobitev je na voljo (pri uporabi baterije)"
+msgstr "Ob dejanju posodobitve"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
 msgid "Only pack long CHAR/VARCHAR columns"
@@ -5082,23 +5061,20 @@ msgid "Pack keys"
 msgstr "Odskočne tipke"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:150
-#, fuzzy
 msgid "Redundant"
-msgstr "odvečni predmet"
+msgstr "Odvečno"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:152
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
-#, fuzzy
 msgid "Referenced field"
-msgstr "Dodaj polje"
+msgstr "Referenčno polje"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:154
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
-#, fuzzy
 msgid "Referenced table"
-msgstr "<b>Podrobnosti razpredelnice</b>"
+msgstr "Referenčna preglednica"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:155
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
@@ -5107,9 +5083,8 @@ msgstr ""
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
-#, fuzzy
 msgid "Row format"
-msgstr "Izbor oblike zapisa:"
+msgstr "Zapis vrstice"
 
 #. To translators: Action of setting a value to NULL
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:163
@@ -5194,9 +5169,8 @@ msgstr ""
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
-#, fuzzy
 msgid "Only if existing"
-msgstr "Prikaži le obstoječe datoteke"
+msgstr "Le če obstaja"
 
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:3
@@ -5656,9 +5630,8 @@ msgid "Copy default expressions"
 msgstr "Kopiraj privzeti izraz"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
-#, fuzzy
 msgid "Copy defaults"
-msgstr "Vključevanje privzetega"
+msgstr "Kopiraj preivzete"
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
@@ -5689,14 +5662,12 @@ msgid "Not deferrable"
 msgstr "(ni del programa)"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
-#, fuzzy
 msgid "Parent table"
-msgstr "<b>Podrobnosti razpredelnice</b>"
+msgstr "Nadrejena preglednica"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
-#, fuzzy
 msgid "Parent table(s)"
-msgstr "<b>Podrobnosti razpredelnice</b>"
+msgstr "Nadrejene preglednice"
 
 #. To translators: Action of setting a value to its default value
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
@@ -5708,9 +5679,8 @@ msgid "Use INHERIT instead of LIKE"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
-#, fuzzy
 msgid "With OIDs"
-msgstr "Odpri z:"
+msgstr "Z OID"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:5
@@ -5777,9 +5747,9 @@ msgid "Can't import data from web server"
 msgstr "Ni mogoče uvoziti podatkov iz spletnega strežnika"
 
 #: ../providers/reuseable/postgres/gda-postgres-meta.c:2108
-#, fuzzy, c-format
+#, c-format
 msgid "could not determine the indexed columns for index"
-msgstr "Ni mogoče dobiti datoteke od %s"
+msgstr "ni mogoče določiti indeksiranega stolpca kazala"
 
 #: ../providers/sqlite/libmain.c:73
 msgid "Provider for SQLite databases"
@@ -5861,9 +5831,9 @@ msgstr "Neveljaven HOST/SCRIPT '%s'"
 #: ../providers/web/gda-web-provider.c:353
 #: ../providers/web/gda-web-provider.c:359
 #: ../providers/web/gda-web-provider.c:367
-#, fuzzy, c-format
+#, c-format
 msgid "The connection string must contain the %s value"
-msgstr "Niz povezave mora vsebovati URL naslov"
+msgstr "Niz povezave mora vsebovati vrednost %s"
 
 #: ../providers/web/gda-web-provider.c:623
 #: ../providers/web/gda-web-provider.c:648
@@ -5880,20 +5850,17 @@ msgstr ""
 #: ../providers/web/gda-web-provider.c:703
 #: ../providers/web/gda-web-provider.c:768
 #: ../providers/web/gda-web-provider.c:828
-#, fuzzy
 msgid "Named transaction is not supported"
-msgstr "Operacija ni podprta"
+msgstr "Imenovan prenos ni podprt"
 
 #: ../providers/web/gda-web-provider.c:708
-#, fuzzy
 msgid "Transaction level is not supported"
-msgstr "Nepodprto"
+msgstr "Raven prenosa ni podprta"
 
 #: ../providers/web/gda-web-provider.c:888
 #: ../providers/web/gda-web-provider.c:949
-#, fuzzy
 msgid "Unnamed savepoint is not supported"
-msgstr "Nepodprto"
+msgstr "Neimenovane shranitvene točke niso podprte"
 
 #: ../providers/web/gda-web-recordset.c:183
 #, c-format
@@ -6221,9 +6188,8 @@ msgid "Rollback"
 msgstr "Povrni"
 
 #: ../tools/browser/browser-virtual-connection.c:88
-#, fuzzy
 msgid "Bound connection is used"
-msgstr "Povezane preglednice"
+msgstr "Uporabljene so zvezane povezave"
 
 #: ../tools/browser/browser-virtual-connection.c:111
 msgid "Virtual connection using this connection is busy"
@@ -6238,9 +6204,8 @@ msgid "Use the whole screen"
 msgstr "Uporabi celoten zaslon"
 
 #: ../tools/browser/browser-window.c:214
-#, fuzzy
 msgid "_Bind connection"
-msgstr "Poveži povezavo"
+msgstr "_Zveži povezave"
 
 #: ../tools/browser/browser-window.c:214
 msgid ""
@@ -6583,9 +6548,8 @@ msgid "Comma"
 msgstr "Vejica"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
-#, fuzzy
 msgid "Semi column"
-msgstr "glava stolpca"
+msgstr "Poločični stolpec"
 
 #: ../tools/browser/common/gdaui-data-import.c:222
 msgid "Tab"
@@ -7955,7 +7919,7 @@ msgstr "Ukaz ni popoln"
 
 #: ../tools/html-doc.c:69
 msgid "Generated by the GDA SQL console"
-msgstr ""
+msgstr "Ustvarjeno s GDASQL konzolo"
 
 #: ../tools/html-doc.c:91
 msgid "Console"
