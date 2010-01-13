@@ -90,72 +90,73 @@ typedef enum {
 /*
  * predefined statements' SQL
  */
-#define SHORT_NAME(t,s,f) "CASE WHEN " t "= 'information_schema' OR " t "= 'mysql' THEN " f " ELSE " s " END"
+#define SHORT_NAME(t,s,f) "CASE WHEN " t "= DATABASE() THEN " s " ELSE " f " END"
+#define CATALOG_NAME "'mysql'"
 static gchar *internal_sql[] = {
 	/* I_STMT_CATALOG */
-        "SELECT DATABASE()",
+	"SELECT " CATALOG_NAME,
 
         /* I_STMT_BTYPES */
 
         /* I_STMT_SCHEMAS */
-	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##cat::string",
+	"SELECT " CATALOG_NAME " AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata",
 
         /* I_STMT_SCHEMAS_ALL */
-	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata",
+	"SELECT " CATALOG_NAME " AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata",
 
         /* I_STMT_SCHEMA_NAMED */
-	"SELECT IFNULL(catalog_name, schema_name) AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##name::string",
+	"SELECT " CATALOG_NAME " AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##name::string",
 
         /* I_STMT_TABLES */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " AS short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables WHERE IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " AS short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables WHERE table_schema = BINARY ##schema::string",
 
         /* I_STMT_TABLES_ALL */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " AS short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " AS short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables",
 
         /* I_STMT_TABLE_NAMED */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " as short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables WHERE IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " as short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables WHERE table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
 	/* I_STMT_VIEWS */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_schema = BINARY ##schema::string  UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_schema = BINARY ##schema::string  UNION SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND table_schema = BINARY ##schema::string",
 
         /* I_STMT_VIEWS_ALL */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' and table_type LIKE '%VIEW%'",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views UNION SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' and table_type LIKE '%VIEW%'",
 
         /* I_STMT_VIEW_NAMED */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_catalog = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string UNION SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
         /* I_STMT_COLUMNS_OF_TABLE */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, is_nullable, data_type, NULL, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, 1, column_comment FROM INFORMATION_SCHEMA.columns WHERE IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, is_nullable, data_type, NULL, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, 1, column_comment FROM INFORMATION_SCHEMA.columns WHERE table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
         /* I_STMT_COLUMNS_ALL */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, CASE is_nullable WHEN 'YES' THEN TRUE ELSE FALSE END AS is_nullable, data_type, NULL, 'gchararray', character_maximum_length, character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, IF(FIND_IN_SET('insert', privileges) != 0 OR FIND_IN_SET('update', privileges) != 0, TRUE, FALSE) AS is_updatable, column_comment FROM INFORMATION_SCHEMA.columns",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, CASE is_nullable WHEN 'YES' THEN TRUE ELSE FALSE END AS is_nullable, data_type, NULL, 'gchararray', character_maximum_length, character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, IF(FIND_IN_SET('insert', privileges) != 0 OR FIND_IN_SET('update', privileges) != 0, TRUE, FALSE) AS is_updatable, column_comment FROM INFORMATION_SCHEMA.columns",
 
         /* I_STMT_TABLES_CONSTRAINTS */
-	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE IFNULL(constraint_catalog, constraint_schema) = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS constraint_catalog, constraint_schema, constraint_name, " CATALOG_NAME " AS constraint_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
         /* I_STMT_TABLES_CONSTRAINTS_ALL */
-	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints",
+	"SELECT " CATALOG_NAME " AS constraint_catalog, constraint_schema, constraint_name, " CATALOG_NAME " AS constraint_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints",
 
         /* I_STMT_TABLES_CONSTRAINTS_NAMED */
-	"SELECT IFNULL(constraint_catalog, constraint_schema) AS constraint_catalog, constraint_schema, constraint_name, IFNULL(constraint_catalog, constraint_schema) AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE IFNULL(constraint_catalog, constraint_schema) = BINARY ##cat::string AND constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
+	"SELECT " CATALOG_NAME " AS constraint_catalog, constraint_schema, constraint_name, " CATALOG_NAME " AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS */
-	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name WHERE IFNULL(r.constraint_catalog, r.constraint_schema) = BINARY ##cat::string AND r.constraint_schema = BINARY ##schema::string AND r.table_name = BINARY ##name::string AND r.constraint_name = BINARY ##name2::string",
+	"select " CATALOG_NAME " AS constraint_catalog, constraint_schema, table_name, constraint_name, " CATALOG_NAME " AS ref_table_cat, constraint_schema, referenced_table_name, unique_constraint_name, match_option, update_rule, delete_rule from information_schema.referential_constraints WHERE constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS_ALL */
-	"SELECT IFNULL(t.constraint_catalog, t.constraint_schema) AS constraint_catalog, t.constraint_schema, r.constraint_name, IFNULL(r.constraint_catalog, r.constraint_schema) AS constraint_catalog, r.constraint_schema, r.match_option, r.update_rule, delete_rule FROM INFORMATION_SCHEMA.referential_constraints r INNER JOIN INFORMATION_SCHEMA.table_constraints t ON r.constraint_schema=t.constraint_schema AND r.constraint_name=t.constraint_name AND r.table_name=t.table_name",
+	"select " CATALOG_NAME " AS constraint_catalog, constraint_schema, table_name, constraint_name, " CATALOG_NAME " AS ref_table_cat, constraint_schema, referenced_table_name, unique_constraint_name, match_option, update_rule, delete_rule from information_schema.referential_constraints",
 
         /* I_STMT_KEY_COLUMN_USAGE */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM INFORMATION_SCHEMA.key_column_usage WHERE IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM INFORMATION_SCHEMA.key_column_usage WHERE table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
 
         /* I_STMT_KEY_COLUMN_USAGE_ALL */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM INFORMATION_SCHEMA.key_column_usage",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM INFORMATION_SCHEMA.key_column_usage",
 
         /* I_STMT_CHARACTER_SETS */
-	"SELECT DATABASE() AS character_set_catalog, DATABASE() AS character_set_schema, character_set_name, default_collate_name, default_collate_name, default_collate_name, description, character_set_name, character_set_name FROM INFORMATION_SCHEMA.character_sets WHERE IFNULL(character_set_catalog, character_set_schema) = BINARY ##cat::string AND character_set_schema = BINARY ##schema::string AND character_set_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS character_set_catalog, DATABASE() AS character_set_schema, character_set_name, default_collate_name, default_collate_name, default_collate_name, description, character_set_name, character_set_name FROM INFORMATION_SCHEMA.character_sets WHERE character_set_schema = BINARY ##schema::string AND character_set_name = BINARY ##name::string",
 
         /* I_STMT_CHARACTER_SETS_ALL */
-	"SELECT DATABASE() AS character_set_catalog, DATABASE() AS character_set_schema, character_set_name, default_collate_name, default_collate_name, default_collate_name, description, character_set_name, character_set_name FROM INFORMATION_SCHEMA.character_sets",
+	"SELECT " CATALOG_NAME " AS character_set_catalog, DATABASE() AS character_set_schema, character_set_name, default_collate_name, default_collate_name, default_collate_name, description, character_set_name, character_set_name FROM INFORMATION_SCHEMA.character_sets",
 
         /* I_STMT_UDT */
 
@@ -174,16 +175,16 @@ static gchar *internal_sql[] = {
         /* I_STMT_DOMAINS_CONSTRAINTS_ALL */
 
         /* I_STMT_VIEWS_COLUMNS */
-	"SELECT IFNULL(v.table_catalog, v.table_schema) AS table_catalog, v.table_schema, v.table_name, IFNULL(c.table_catalog, c.table_schema) AS table_catalog, c.table_schema, c.table_name, c.column_name FROM INFORMATION_SCHEMA.columns c INNER JOIN INFORMATION_SCHEMA.views v ON c.table_schema=v.table_schema AND c.table_name=v.table_name WHERE IFNULL(v.table_catalog, v.table_schema) = BINARY ##cat::string AND v.table_schema = BINARY ##schema::string AND v.table_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS table_catalog, v.table_schema, v.table_name, " CATALOG_NAME " AS table_catalog, c.table_schema, c.table_name, c.column_name FROM INFORMATION_SCHEMA.columns c INNER JOIN INFORMATION_SCHEMA.views v ON c.table_schema=v.table_schema AND c.table_name=v.table_name WHERE v.table_schema = BINARY ##schema::string AND v.table_name = BINARY ##name::string",
 
         /* I_STMT_VIEWS_COLUMNS_ALL */
-	"SELECT IFNULL(v.table_catalog, v.table_schema) AS table_catalog, v.table_schema, v.table_name, IFNULL(c.table_catalog, c.table_schema) AS table_catalog, c.table_schema, c.table_name, c.column_name FROM INFORMATION_SCHEMA.columns c INNER JOIN INFORMATION_SCHEMA.views v ON c.table_schema=v.table_schema AND c.table_name=v.table_name",
+	"SELECT " CATALOG_NAME " AS table_catalog, v.table_schema, v.table_name, " CATALOG_NAME " AS table_catalog, c.table_schema, c.table_name, c.column_name FROM INFORMATION_SCHEMA.columns c INNER JOIN INFORMATION_SCHEMA.views v ON c.table_schema=v.table_schema AND c.table_name=v.table_name",
 
         /* I_STMT_TRIGGERS */
-	"SELECT IFNULL(trigger_catalog, trigger_schema) AS trigger_catalog, trigger_schema, trigger_name, event_manipulation, IFNULL(event_object_catalog, event_object_schema) AS event_object_catalog, event_object_schema, event_object_table, action_statement, action_orientation, action_timing, NULL, trigger_name, trigger_name FROM INFORMATION_SCHEMA.triggers WHERE IFNULL(trigger_catalog, trigger_schema) = BINARY ##cat::string AND trigger_schema =  BINARY ##schema::string AND trigger_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS trigger_catalog, trigger_schema, trigger_name, event_manipulation, " CATALOG_NAME " AS event_object_catalog, event_object_schema, event_object_table, action_statement, action_orientation, action_timing, NULL, trigger_name, trigger_name FROM INFORMATION_SCHEMA.triggers WHERE trigger_schema =  BINARY ##schema::string AND trigger_name = BINARY ##name::string",
 
         /* I_STMT_TRIGGERS_ALL */
-	"SELECT IFNULL(trigger_catalog, trigger_schema) AS trigger_catalog, trigger_schema, trigger_name, event_manipulation, IFNULL(event_object_catalog, event_object_schema) AS event_object_catalog, event_object_schema, event_object_table, action_statement, action_orientation, action_timing, NULL, trigger_name, trigger_name FROM INFORMATION_SCHEMA.triggers",
+	"SELECT " CATALOG_NAME " AS trigger_catalog, trigger_schema, trigger_name, event_manipulation, " CATALOG_NAME " AS event_object_catalog, event_object_schema, event_object_table, action_statement, action_orientation, action_timing, NULL, trigger_name, trigger_name FROM INFORMATION_SCHEMA.triggers",
 
         /* I_STMT_EL_TYPES_COL */
 
@@ -194,19 +195,19 @@ static gchar *internal_sql[] = {
         /* I_STMT_EL_TYPES_ALL */
 
         /* I_STMT_ROUTINES_ALL */
-	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines",
+	"SELECT " CATALOG_NAME " AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, " CATALOG_NAME " AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines",
 
         /* I_STMT_ROUTINES */
-	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE IFNULL(routine_catalog, routine_schema) = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string",
+	"SELECT " CATALOG_NAME " AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, " CATALOG_NAME " AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE routine_schema =  BINARY ##schema::string",
 
         /* I_STMT_ROUTINES_ONE */
-	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE IFNULL(routine_catalog, routine_schema) = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string AND routine_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, " CATALOG_NAME " AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE routine_schema =  BINARY ##schema::string AND routine_name = BINARY ##name::string",
 
         /* I_STMT_ROUTINES_PAR_ALL */
-	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines",
+	"SELECT " CATALOG_NAME " AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, " CATALOG_NAME " AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines",
 
         /* I_STMT_ROUTINES_PAR */
-	"SELECT IFNULL(routine_catalog, routine_schema) AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, IFNULL(routine_catalog, routine_schema) AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE IFNULL(routine_catalog, routine_schema) = BINARY ##cat::string AND routine_schema =  BINARY ##schema::string AND routine_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS specific_catalog, routine_schema AS specific_schema, routine_name AS specific_name, " CATALOG_NAME " AS routine_catalog, routine_schema, routine_name, routine_type, dtd_identifier AS return_type, FALSE AS returns_set, 0 AS nb_args, routine_body, routine_definition, external_name, external_language, parameter_style, CASE is_deterministic WHEN 'YES' THEN TRUE ELSE FALSE END AS is_deterministic, sql_data_access, FALSE AS is_null_call, routine_comment, routine_name, routine_name, definer FROM INFORMATION_SCHEMA.routines WHERE routine_schema = BINARY ##schema::string AND routine_name = BINARY ##name::string",
 
         /* I_STMT_ROUTINES_COL_ALL */
 
@@ -244,8 +245,7 @@ _gda_mysql_provider_meta_init (GdaServerProvider  *provider)
         }
 
 	/* initialize static values here */
-	i_set = gda_set_new_inline (4, "cat", G_TYPE_STRING, "", 
-				    "name", G_TYPE_STRING, "",
+	i_set = gda_set_new_inline (3, "name", G_TYPE_STRING, "",
 				    "schema", G_TYPE_STRING, "",
                                     "name2", G_TYPE_STRING, "");
 
@@ -602,8 +602,6 @@ _gda_mysql_meta_character_sets (GdaServerProvider  *prov,
 	if (!cdata)
 		return FALSE;
 
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), chset_catalog, error))
-		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), chset_schema, error))
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), chset_name_n, error))
@@ -672,8 +670,6 @@ _gda_mysql_meta_schemata (GdaServerProvider  *prov,
 	if (!cdata)
 		return FALSE;
 
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), catalog_name, error))
-		return FALSE;
 	if (!schema_name_n) {
 		model = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_SCHEMAS], i_set,
 							      GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types, error);
@@ -795,8 +791,6 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 	/* Copy contents, just because we need to modify @context->table_name */
 	GdaMetaContext copy = *context;
 
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
-		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
 	if (!table_name_n) {
@@ -1082,8 +1076,6 @@ _gda_mysql_meta_columns (GdaServerProvider  *prov,
 	}
 
 	/* Use a prepared statement for the "base" model. */
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
-		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
@@ -1176,8 +1168,6 @@ _gda_mysql_meta_view_cols (GdaServerProvider  *prov,
 	if (!cdata)
 		return FALSE;
 
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), view_catalog, error))
-		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), view_schema, error))
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), view_name, error))
@@ -1248,8 +1238,6 @@ _gda_mysql_meta_constraints_tab (GdaServerProvider  *prov,
 	if (!cdata)
 		return FALSE;
 
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
-		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
@@ -1338,8 +1326,6 @@ _gda_mysql_meta_constraints_ref (GdaServerProvider  *prov,
 		gboolean retval;
 		
 		/* Use a prepared statement for the "base" model. */
-		if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
-			return FALSE;
 		if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 			return FALSE;
 		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
@@ -1427,8 +1413,6 @@ _gda_mysql_meta_key_columns (GdaServerProvider  *prov,
 	}
 
 	/* Use a prepared statement for the "base" model. */
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
-		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
@@ -1532,8 +1516,6 @@ _gda_mysql_meta_triggers (GdaServerProvider  *prov,
 		return FALSE;
 	}
 
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), table_catalog, error))
-		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
 		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
@@ -1600,8 +1582,6 @@ _gda_mysql_meta_routines (GdaServerProvider  *prov,
 		return FALSE;
 	}
 
-	if (!gda_holder_set_value (gda_set_get_holder (i_set, "cat"), routine_catalog, error))
-		return FALSE;
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), routine_schema, error))
 		return FALSE;
 	if (routine_name_n != NULL) {
