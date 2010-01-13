@@ -713,12 +713,14 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
  * Renders @stmt as an SQL statement, with some control on how it is rendered.
  *
  * If @cnc is not %NULL, then the rendered SQL will better be suited to be used by @cnc (in particular
- * it may include some SQL tweaks and/or proprietary extensions specific to the database engine used by @cnc).
+ * it may include some SQL tweaks and/or proprietary extensions specific to the database engine used by @cnc):
+ * in this case the result is similar to calling gda_connection_statement_to_sql().
  *
  * Returns: a new string if no error occurred
  */
 gchar *
-gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *params, GdaStatementSqlFlag flags, 
+gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *params,
+			       GdaStatementSqlFlag flags, 
 			       GSList **params_used, GError **error)
 {
 	gchar *str;
@@ -731,6 +733,13 @@ gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *p
 	context.params = params;
 	context.flags = flags;
 	if (cnc) {
+		GdaServerProvider *prov;
+		prov = gda_connection_get_provider (cnc);
+#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
+		if (prov && PROV_CLASS (prov)->statement_to_sql)
+			return (PROV_CLASS (prov)->statement_to_sql) (prov, 
+								      cnc, stmt, params, flags, 
+								      params_used, error);
 		context.cnc = cnc;
 		context.provider = gda_connection_get_provider (cnc);
 	}
