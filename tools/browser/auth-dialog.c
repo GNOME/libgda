@@ -39,6 +39,7 @@ typedef struct {
 	AuthDialogConnection ext;
 	GdaDsnInfo  cncinfo;
 	GtkWidget  *auth_widget;
+	GString    *auth_string;
 
 	GdaThreadWrapper *wrapper;
 	guint jobid;
@@ -53,6 +54,8 @@ auth_data_free (AuthData *ad)
 	g_free (ad->cncinfo.cnc_string);
 	g_free (ad->cncinfo.auth_string);
 	g_free (ad->ext.cnc_string);
+	if (ad->auth_string)
+		g_string_free (ad->auth_string, TRUE);
 
 	g_object_unref (ad->wrapper);
 	if (ad->ext.cnc_open_error)
@@ -229,12 +232,12 @@ sub_thread_open_cnc (AuthData *ad, GError **error)
 	GdaConnection *cnc;
 	GdaDsnInfo *info = &(ad->cncinfo);
 	if (info->name)
-		cnc = gda_connection_open_from_dsn (info->name, info->auth_string,
+		cnc = gda_connection_open_from_dsn (info->name, ad->auth_string ? ad->auth_string->str : NULL,
 						    GDA_CONNECTION_OPTIONS_THREAD_SAFE,
 						    error);
 	else
 		cnc = gda_connection_open_from_string (info->provider, info->cnc_string,
-						       info->auth_string,
+						       ad->auth_string ? ad->auth_string->str : NULL,
 						       GDA_CONNECTION_OPTIONS_THREAD_SAFE,
 						       error);
 	return cnc;
@@ -330,6 +333,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 	ad = g_new0 (AuthData, 1);
 	ad->wrapper = gda_thread_wrapper_new ();
 	ad->ext.cnc_string = g_strdup (cnc_string);
+	ad->auth_string = NULL;
 	info = gda_config_get_dsn_info (real_cnc);
         if (info && !real_provider) {
 		ad->cncinfo.name = g_strdup (info->name);
@@ -402,7 +406,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 
 		/* add widget */
 		GtkWidget *hbox, *label;
-		gchar *str;
+		gchar *str, *tmp, *ptr;
 		GtkWidget *dcontents;
 
 #if GTK_CHECK_VERSION(2,18,0)
@@ -412,8 +416,23 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 #endif
 
 		label = gtk_label_new ("");
-		str = g_strdup_printf ("<b>%s: %s</b>\n%s", _("For connection"), ad->ext.cnc_string,
+		tmp = g_strdup (ad->ext.cnc_string);
+		for (ptr = tmp; *ptr; ptr++) {
+			if (*ptr == ':') {
+				/* remove everything up to the '@' */
+				gchar *ptr2;
+				for (ptr2 = ptr+1; *ptr2; ptr2++) {
+					if (*ptr2 == '@') {
+						memmove (ptr, ptr2, strlen (ptr2) + 1);
+						break;
+					}
+				}
+				break;
+			}
+		}
+		str = g_strdup_printf ("<b>%s: %s</b>\n%s", _("For connection"), tmp,
 				       _("enter authentication information"));
+		g_free (tmp);
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 		g_free (str);
@@ -537,6 +556,39 @@ auth_dialog_run (AuthDialog *dialog)
 				AuthData *ad;
 				ad = (AuthData *) list->data;
 				if (ad->auth_widget && !ad->jobid) {
+					GSList *plist;
+					GdaSet *set;
+					set = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (ad->auth_widget));
+					if (ad->auth_string) {
+						g_string_free (ad->auth_string, TRUE);
+						ad->auth_string = NULL;
+					}
+					for (plist = set ? set->holders : NULL;
+					     plist; plist = plist->next) {
+						GdaHolder *holder = GDA_HOLDER (plist->data);
+						const GValue *cvalue = NULL;
+						if (gda_holder_is_valid (holder))
+							cvalue = gda_holder_get_value (holder);
+						if (cvalue) {
+							gchar *r1, *r2;
+							r1 = gda_value_stringify (cvalue);
+							r2 = gda_rfc1738_encode (r1);
+							g_free (r1);
+							if (r2) {
+								r1 = gda_rfc1738_encode (gda_holder_get_id (holder));
+								if (ad->auth_string)
+									g_string_append_c (ad->auth_string, ';');
+								else
+									ad->auth_string = g_string_new ("");
+								g_string_append (ad->auth_string, r1);
+								g_string_append_c (ad->auth_string, '=');
+								g_string_append (ad->auth_string, r2);
+							
+								g_free (r1);
+								g_free (r2);
+							}
+						}
+					}
 					gtk_widget_set_sensitive (ad->auth_widget, FALSE);
 					ad->jobid = gda_thread_wrapper_execute (ad->wrapper,
 										(GdaThreadWrapperFunc) sub_thread_open_cnc,
