@@ -47,6 +47,7 @@ typedef enum {
         I_STMT_TABLES,
         I_STMT_TABLES_ALL,
         I_STMT_TABLE_NAMED,
+	I_STMT_VIEWS,
         I_STMT_VIEWS_ALL,
         I_STMT_VIEW_NAMED,
         I_STMT_COLUMNS_OF_TABLE,
@@ -114,11 +115,14 @@ static gchar *internal_sql[] = {
         /* I_STMT_TABLE_NAMED */
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, CASE WHEN table_type LIKE '%VIEW%' THEN 'VIEW' ELSE table_type END, CASE table_type WHEN 'BASE TABLE' THEN TRUE ELSE FALSE END AS table_type, table_comment, " SHORT_NAME("table_schema", "table_name", "CONCAT(table_schema, '.', table_name)") " as short_name, CONCAT(table_schema, '.', table_name) AS table_full_name, NULL AS table_owner FROM INFORMATION_SCHEMA.tables WHERE IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
+	/* I_STMT_VIEWS */
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_schema = BINARY ##schema::string  UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string",
+
         /* I_STMT_VIEWS_ALL */
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' and table_type LIKE '%VIEW%'",
 
         /* I_STMT_VIEW_NAMED */
-	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_catalog = BINARY ##cat::string AND table_schema = BINARY ##schema::string  UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string",
+	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_catalog = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string UNION SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
         /* I_STMT_COLUMNS_OF_TABLE */
 	"SELECT IFNULL(table_catalog, table_schema) AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, is_nullable, data_type, NULL, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, 1, column_comment FROM INFORMATION_SCHEMA.columns WHERE IFNULL(table_catalog, table_schema) = BINARY ##cat::string AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
@@ -811,7 +815,7 @@ _gda_mysql_meta_tables_views (GdaServerProvider  *prov,
 		if (!retval)
 			return FALSE;
 
-		model_views = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_VIEWS_ALL], i_set, 
+		model_views = gda_connection_statement_execute_select_full (cnc, internal_stmt[I_STMT_VIEWS], i_set, 
 									    GDA_STATEMENT_MODEL_RANDOM_ACCESS, col_types_views,
 									    error);
 		if (model_views == NULL)

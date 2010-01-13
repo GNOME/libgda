@@ -303,7 +303,9 @@ common_drop_all_tables (GdaMetaStore *store)
 		"_view_column_usage",
 		"_domain_constraints",
 		"_parameters",
-		"_routine_columns"
+		"_routine_columns",
+		"_table_indexes",
+		"_index_column_usage"
 	};
 	gchar *view_names [] = {
 		"_all_types",
