@@ -2585,11 +2585,6 @@ gdaui_raw_grid_set_data_layout_from_file (GdauiRawGrid *grid, const gchar *file_
 
 	/* Free the document */
 	xmlFreeDoc (doc);
-
-	/* Free the global variables that may
-	 * have been allocated by the parser */
-	xmlCleanupParser ();
-
 }
 
 /*

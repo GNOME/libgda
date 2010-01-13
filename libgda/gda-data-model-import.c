@@ -375,7 +375,6 @@ gda_data_model_import_dispose (GObject *object)
 			if (model->priv->extract.xml.reader) {
 				xmlFreeTextReader (model->priv->extract.xml.reader);
 				model->priv->extract.xml.reader = NULL;
-				/* xmlCleanupParser (); to be included? */
 			}
 			break;
 		case FORMAT_CSV:
