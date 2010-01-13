@@ -1979,11 +1979,11 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 		}
 		store->priv->version = atoi (g_value_get_string (version));
 		
-		if (store->priv->version != 1) {
+		if (store->priv->version < 1) {
 			TO_IMPLEMENT; /* migrate to current version */
 			/* As there is now only version 1 => it's an error */
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-				_ ("Unknown internal schema's version: %d"), g_value_get_int (version));
+				_ ("Unknown internal schema's version: %d"), store->priv->version);
 			g_object_unref (model);
 			return FALSE;
 		}
