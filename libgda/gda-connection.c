@@ -1233,6 +1233,18 @@ gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gbool
 	return cnc;
 }
 
+typedef struct {
+	gboolean thread_exists;
+	GThread *looked_up_thread;
+} ThreadLookupData;
+
+static void
+all_threads_func (GThread *thread, ThreadLookupData *data)
+{
+	if (thread == data->looked_up_thread)
+		data->thread_exists = TRUE;
+}
+
 /**
  * gda_connection_open
  * @cnc: a #GdaConnection object
@@ -1293,10 +1305,23 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	if (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread &&
 	    (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread != g_thread_self ())) {
-		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR,
-			      "%s", _("Provider does not allow usage from this thread"));
-		gda_connection_unlock ((GdaLockable*) cnc);
-		return FALSE;
+		ThreadLookupData data;
+		data.thread_exists = FALSE;
+		data.looked_up_thread = PROV_CLASS (cnc->priv->provider_obj)->limiting_thread;
+
+		g_thread_foreach ((GFunc) all_threads_func, &data);
+		if (data.thread_exists) {
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR,
+				     "%s", _("Provider does not allow usage from this thread"));
+			gda_connection_unlock ((GdaLockable*) cnc);
+			return FALSE;
+		}
+		else {
+			/* the thread which initialized cnc->priv->provider_obj does not exist
+			 * anymore, so we steal ownership of the provider from the current
+			 * thread */
+			PROV_CLASS (cnc->priv->provider_obj)->limiting_thread = g_thread_self ();
+		}
 	}
 
 	if (!PROV_CLASS (cnc->priv->provider_obj)->open_connection) {
