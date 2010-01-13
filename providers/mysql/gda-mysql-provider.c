@@ -503,7 +503,7 @@ real_open_connection (const gchar  *host,
 #if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 18
 		g_set_error (error, 0, 0, "%s", mysql_error (mysql));
 #else
-		g_set_error_literal (error, 0, 0, mysql_error (mysql));
+		g_set_error_literal (error, GDA_SERVER_PROVIDER_ERROR, 0, mysql_error (mysql));
 #endif
 		g_free (mysql);
 		mysql = NULL;
@@ -613,7 +613,16 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 					     (compress && ((*compress == 't') || (*compress == 'T'))) ? TRUE : FALSE,
 					     &error);
 	if (!mysql) {
-		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
+		GdaConnectionEvent *event_error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		gda_connection_event_set_sqlstate (event_error, _("Unknown"));
+		gda_connection_event_set_description (event_error,
+						      error && error->message ? error->message :
+						      _("No description"));
+		gda_connection_event_set_code (event_error, GDA_CONNECTION_EVENT_CODE_UNKNOWN);
+		gda_connection_event_set_source (event_error, "gda-mysql");
+		gda_connection_add_event (cnc, event_error);
+		g_clear_error (&error);
+
 		return FALSE;
 	}
 
@@ -1361,6 +1370,7 @@ gda_mysql_provider_create_parser (GdaServerProvider  *provider,
  * 
  * This method renders a #GdaStatement into its SQL representation.
  */
+static gchar *mysql_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GError **error);
 static gchar *
 gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
 				     GdaConnection        *cnc,
@@ -1382,6 +1392,9 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
         memset (&context, 0, sizeof (context));
         context.params = params;
         context.flags = flags;
+	context.render_function = (GdaSqlRenderingFunc) mysql_render_function; /* don't put any space between function name
+										* and the opening parenthesis, see
+										* http://blog.152.org/2009/12/mysql-error-1305-function-xxx-does-not.html */
 	if (cnc) {
 		context.cnc = cnc;
 		context.provider = gda_connection_get_provider (cnc);
@@ -1401,6 +1414,40 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
                 g_slist_free (context.params_used);
         }
         return str;
+}
+
+static gchar *
+mysql_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+
+	g_return_val_if_fail (func, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (func)->type == GDA_SQL_ANY_SQL_FUNCTION, NULL);
+
+	/* can't have: func->function_name == NULL */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (func), error)) return NULL;
+
+	string = g_string_new (func->function_name);
+	g_string_append_c (string, '(');
+	for (list = func->args_list; list; list = list->next) {
+		if (list != func->args_list)
+			g_string_append (string, ", ");
+		str = context->render_expr (list->data, context, NULL, NULL, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+	g_string_append_c (string, ')');
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
 }
 
 static GdaMysqlPStmt *
