@@ -65,7 +65,7 @@ static void              gdaui_raw_form_selector_init (GdauiDataSelectorIface *i
 static GdaDataModel     *gdaui_raw_form_selector_get_model (GdauiDataSelector *iface);
 static void              gdaui_raw_form_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
 static GArray           *gdaui_raw_form_selector_get_selected_rows (GdauiDataSelector *iface);
-static GdaDataModelIter *gdaui_raw_form_selector_get_current_selection (GdauiDataSelector *iface);
+static GdaDataModelIter *gdaui_raw_form_selector_get_data_set (GdauiDataSelector *iface);
 static gboolean          gdaui_raw_form_selector_select_row (GdauiDataSelector *iface, gint row);
 static void              gdaui_raw_form_selector_unselect_row (GdauiDataSelector *iface, gint row);
 static void              gdaui_raw_form_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible);
@@ -151,7 +151,7 @@ gdaui_raw_form_selector_init (GdauiDataSelectorIface *iface)
 	iface->get_model = gdaui_raw_form_selector_get_model;
 	iface->set_model = gdaui_raw_form_selector_set_model;
 	iface->get_selected_rows = gdaui_raw_form_selector_get_selected_rows;
-	iface->get_current_selection = gdaui_raw_form_selector_get_current_selection;
+	iface->get_data_set = gdaui_raw_form_selector_get_data_set;
 	iface->select_row = gdaui_raw_form_selector_select_row;
 	iface->unselect_row = gdaui_raw_form_selector_unselect_row;
 	iface->set_column_visible = gdaui_raw_form_selector_set_column_visible;
@@ -1055,12 +1055,25 @@ gdaui_raw_form_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model
 static GArray *
 gdaui_raw_form_selector_get_selected_rows (GdauiDataSelector *iface)
 {
-	TO_IMPLEMENT;
-	return NULL;
+	GdauiRawForm *form;
+
+	g_return_val_if_fail (GDAUI_IS_RAW_FORM (iface), NULL);
+	form = GDAUI_RAW_FORM (iface);
+
+	if (gda_data_model_iter_is_valid (form->priv->iter)) {
+		GArray *array;
+		gint row;
+		array = g_array_new (FALSE, FALSE, sizeof (gint));
+		row = gda_data_model_iter_get_row (form->priv->iter);
+		g_array_append_val (array, row);
+		return array;
+	}
+	else
+		return NULL;
 }
 
 static GdaDataModelIter *
-gdaui_raw_form_selector_get_current_selection (GdauiDataSelector *iface)
+gdaui_raw_form_selector_get_data_set (GdauiDataSelector *iface)
 {
 	GdauiRawForm *form;
 
@@ -1084,7 +1097,7 @@ gdaui_raw_form_selector_select_row (GdauiDataSelector *iface, gint row)
 static void
 gdaui_raw_form_selector_unselect_row (GdauiDataSelector *iface, gint row)
 {
-	TO_IMPLEMENT;
+	g_warning ("%s() method not supported\n", __FUNCTION__);
 }
 
 static void

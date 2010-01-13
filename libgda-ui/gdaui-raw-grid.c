@@ -71,7 +71,7 @@ static void              gdaui_raw_grid_selector_init (GdauiDataSelectorIface *i
 static GdaDataModel     *gdaui_raw_grid_selector_get_model (GdauiDataSelector *iface);
 static void              gdaui_raw_grid_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
 static GArray           *gdaui_raw_grid_selector_get_selected_rows (GdauiDataSelector *iface);
-static GdaDataModelIter *gdaui_raw_grid_selector_get_current_selection (GdauiDataSelector *iface);
+static GdaDataModelIter *gdaui_raw_grid_selector_get_data_set (GdauiDataSelector *iface);
 static gboolean          gdaui_raw_grid_selector_select_row (GdauiDataSelector *iface, gint row);
 static void              gdaui_raw_grid_selector_unselect_row (GdauiDataSelector *iface, gint row);
 static void              gdaui_raw_grid_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible);
@@ -237,7 +237,7 @@ gdaui_raw_grid_selector_init (GdauiDataSelectorIface *iface)
 	iface->get_model = gdaui_raw_grid_selector_get_model;
 	iface->set_model = gdaui_raw_grid_selector_set_model;
 	iface->get_selected_rows = gdaui_raw_grid_selector_get_selected_rows;
-	iface->get_current_selection = gdaui_raw_grid_selector_get_current_selection;
+	iface->get_data_set = gdaui_raw_grid_selector_get_data_set;
 	iface->select_row = gdaui_raw_grid_selector_select_row;
 	iface->unselect_row = gdaui_raw_grid_selector_unselect_row;
 	iface->set_column_visible = gdaui_raw_grid_selector_set_column_visible;
@@ -3034,7 +3034,7 @@ gdaui_raw_grid_selector_get_selected_rows (GdauiDataSelector *iface)
 }
 
 static GdaDataModelIter *
-gdaui_raw_grid_selector_get_current_selection (GdauiDataSelector *iface)
+gdaui_raw_grid_selector_get_data_set (GdauiDataSelector *iface)
 {
 	GdauiRawGrid *grid;
 
@@ -3048,18 +3048,41 @@ static gboolean
 gdaui_raw_grid_selector_select_row (GdauiDataSelector *iface, gint row)
 {
 	GdauiRawGrid *grid;
+	GtkTreeSelection *selection;
+	GtkTreePath *path;
+	gboolean retval = TRUE;
+	GtkTreeIter iter;
 
 	g_return_val_if_fail (GDAUI_IS_RAW_GRID (iface), FALSE);
-	grid = (GdauiRawGrid*) iface;
+	grid = GDAUI_RAW_GRID (iface);
 
-	TO_IMPLEMENT;
-	return FALSE;
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
+	path = gtk_tree_path_new_from_indices (row, -1);
+	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (grid->priv->store), &iter, path))
+		gtk_tree_selection_select_path (selection, path);
+	else
+		retval = FALSE;
+	gtk_tree_path_free (path);
+
+	return retval;
 }
 
 static void
 gdaui_raw_grid_selector_unselect_row (GdauiDataSelector *iface, gint row)
 {
-	TO_IMPLEMENT;
+	GdauiRawGrid *grid;
+	GtkTreeSelection *selection;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+
+	g_return_if_fail (GDAUI_IS_RAW_GRID (iface));
+	grid = GDAUI_RAW_GRID (iface);
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
+	path = gtk_tree_path_new_from_indices (row, -1);
+	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (grid->priv->store), &iter, path))
+		gtk_tree_selection_unselect_path (selection, path);
+	gtk_tree_path_free (path);
 }
 
 static void

@@ -127,6 +127,11 @@ gdaui_data_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model)
  *
  * Gat an array of selected rows. If no row is selected, the the returned value is %NULL.
  *
+ * Please note that rows refers to the "visible" rows
+ * at the time it's being called, which may change if the widget implementing this interface
+ * uses a #GdaDataProxy (as is the case for example for the #GdauiRawForm, #GdauiForm, #GdauiRawGrid
+ * and #GdauiGrid).
+ *
  * Returns: an array of #gint values, one for each selected row. Use g_array_free() when
  * finished (passing %TRUE as the last argument)
  *
@@ -148,6 +153,13 @@ gdaui_data_selector_get_selected_rows (GdauiDataSelector *iface)
  * @iface: an object which implements the #GdauiDataSelector interface
  * @row: the row to select
  *
+ * Force the selection of a specific row.
+ *
+ * Please note that @row refers to the "visible" row
+ * at the time it's being called, which may change if the widget implementing this interface
+ * uses a #GdaDataProxy (as is the case for example for the #GdauiRawForm, #GdauiForm, #GdauiRawGrid
+ * and #GdauiGrid).
+ *
  * Returns: %TRUE if the row has been selected
  *
  * Since: 4.2
@@ -167,6 +179,11 @@ gdaui_data_selector_select_row (GdauiDataSelector *iface, gint row)
  * gdaui_data_selector_unselect_row
  * @iface: an object which implements the #GdauiDataSelector interface
  * @row: the row to unselect
+ *
+ * Please note that @row refers to the "visible" row
+ * at the time it's being called, which may change if the widget implementing this interface
+ * uses a #GdaDataProxy (as is the case for example for the #GdauiRawForm, #GdauiForm, #GdauiRawGrid
+ * and #GdauiGrid).
  *
  * Since: 4.2
  */
@@ -218,7 +235,7 @@ gdaui_data_selector_get_data_set (GdauiDataSelector *iface)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_SELECTOR (iface), NULL);
 
-	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_current_selection)
-		return (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_current_selection) (iface);
+	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_data_set)
+		return (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->get_data_set) (iface);
 	return NULL;
 }

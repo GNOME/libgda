@@ -54,7 +54,7 @@ static void              gdaui_form_selector_init (GdauiDataSelectorIface *iface
 static GdaDataModel     *gdaui_form_selector_get_model (GdauiDataSelector *iface);
 static void              gdaui_form_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
 static GArray           *gdaui_form_selector_get_selected_rows (GdauiDataSelector *iface);
-static GdaDataModelIter *gdaui_form_selector_get_current_selection (GdauiDataSelector *iface);
+static GdaDataModelIter *gdaui_form_selector_get_data_set (GdauiDataSelector *iface);
 static gboolean          gdaui_form_selector_select_row (GdauiDataSelector *iface, gint row);
 static void              gdaui_form_selector_unselect_row (GdauiDataSelector *iface, gint row);
 static void              gdaui_form_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible);
@@ -132,7 +132,7 @@ gdaui_form_selector_init (GdauiDataSelectorIface *iface)
 	iface->get_model = gdaui_form_selector_get_model;
 	iface->set_model = gdaui_form_selector_set_model;
 	iface->get_selected_rows = gdaui_form_selector_get_selected_rows;
-	iface->get_current_selection = gdaui_form_selector_get_current_selection;
+	iface->get_data_set = gdaui_form_selector_get_data_set;
 	iface->select_row = gdaui_form_selector_select_row;
 	iface->unselect_row = gdaui_form_selector_unselect_row;
 	iface->set_column_visible = gdaui_form_selector_set_column_visible;
@@ -350,7 +350,7 @@ gdaui_form_selector_get_selected_rows (GdauiDataSelector *iface)
 }
 
 static GdaDataModelIter *
-gdaui_form_selector_get_current_selection (GdauiDataSelector *iface)
+gdaui_form_selector_get_data_set (GdauiDataSelector *iface)
 {
 	return gdaui_data_selector_get_data_set ((GdauiDataSelector*) GDAUI_FORM (iface)->priv->raw_form);
 }

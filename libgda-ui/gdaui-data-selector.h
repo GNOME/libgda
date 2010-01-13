@@ -46,7 +46,7 @@ struct _GdauiDataSelectorIface
 	GdaDataModel     *(*get_model)             (GdauiDataSelector *iface);
 	void              (*set_model)             (GdauiDataSelector *iface, GdaDataModel *model);
 	GArray           *(*get_selected_rows)     (GdauiDataSelector *iface);
-	GdaDataModelIter *(*get_current_selection) (GdauiDataSelector *iface);
+	GdaDataModelIter *(*get_data_set)          (GdauiDataSelector *iface);
 	gboolean          (*select_row)            (GdauiDataSelector *iface, gint row);
 	void              (*unselect_row)          (GdauiDataSelector *iface, gint row);
 	void              (*set_column_visible)    (GdauiDataSelector *iface, gint column, gboolean visible);
@@ -60,7 +60,7 @@ GType             gdaui_data_selector_get_type              (void) G_GNUC_CONST;
 GdaDataModel     *gdaui_data_selector_get_model             (GdauiDataSelector *iface);
 void              gdaui_data_selector_set_model             (GdauiDataSelector *iface, GdaDataModel *model);
 GArray           *gdaui_data_selector_get_selected_rows     (GdauiDataSelector *iface);
-GdaDataModelIter *gdaui_data_selector_get_data_set (GdauiDataSelector *iface);
+GdaDataModelIter *gdaui_data_selector_get_data_set          (GdauiDataSelector *iface);
 gboolean          gdaui_data_selector_select_row            (GdauiDataSelector *iface, gint row);
 void              gdaui_data_selector_unselect_row          (GdauiDataSelector *iface, gint row);
 void              gdaui_data_selector_set_column_visible    (GdauiDataSelector *iface, gint column, gboolean visible);

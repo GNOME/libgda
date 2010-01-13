@@ -43,7 +43,7 @@ static void              gdaui_cloud_selector_init (GdauiDataSelectorIface *ifac
 static GdaDataModel     *cloud_selector_get_model (GdauiDataSelector *iface);
 static void              cloud_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
 static GArray           *cloud_selector_get_selected_rows (GdauiDataSelector *iface);
-static GdaDataModelIter *cloud_selector_get_current_selection (GdauiDataSelector *iface);
+static GdaDataModelIter *cloud_selector_get_data_set (GdauiDataSelector *iface);
 static gboolean          cloud_selector_select_row (GdauiDataSelector *iface, gint row);
 static void              cloud_selector_unselect_row (GdauiDataSelector *iface, gint row);
 static void              cloud_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible);
@@ -178,7 +178,7 @@ gdaui_cloud_selector_init (GdauiDataSelectorIface *iface)
 	iface->get_model = cloud_selector_get_model;
 	iface->set_model = cloud_selector_set_model;
 	iface->get_selected_rows = cloud_selector_get_selected_rows;
-	iface->get_current_selection = cloud_selector_get_current_selection;
+	iface->get_data_set = cloud_selector_get_data_set;
 	iface->select_row = cloud_selector_select_row;
 	iface->unselect_row = cloud_selector_unselect_row;
 	iface->set_column_visible = cloud_selector_set_column_visible;
@@ -1139,7 +1139,7 @@ cloud_selector_get_selected_rows (GdauiDataSelector *iface)
 }
 
 static GdaDataModelIter *
-cloud_selector_get_current_selection (GdauiDataSelector *iface)
+cloud_selector_get_data_set (GdauiDataSelector *iface)
 {
 	GdauiCloud *cloud;
 

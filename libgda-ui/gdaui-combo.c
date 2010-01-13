@@ -63,7 +63,7 @@ static void              gdaui_combo_selector_init (GdauiDataSelectorIface *ifac
 static GdaDataModel     *combo_selector_get_model (GdauiDataSelector *iface);
 static void              combo_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
 static GArray           *combo_selector_get_selected_rows (GdauiDataSelector *iface);
-static GdaDataModelIter *combo_selector_get_current_selection (GdauiDataSelector *iface);
+static GdaDataModelIter *combo_selector_get_data_set (GdauiDataSelector *iface);
 static gboolean          combo_selector_select_row (GdauiDataSelector *iface, gint row);
 static void              combo_selector_unselect_row (GdauiDataSelector *iface, gint row);
 static void              combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible);
@@ -140,7 +140,7 @@ gdaui_combo_selector_init (GdauiDataSelectorIface *iface)
 	iface->get_model = combo_selector_get_model;
 	iface->set_model = combo_selector_set_model;
 	iface->get_selected_rows = combo_selector_get_selected_rows;
-	iface->get_current_selection = combo_selector_get_current_selection;
+	iface->get_data_set = combo_selector_get_data_set;
 	iface->select_row = combo_selector_select_row;
 	iface->unselect_row = combo_selector_unselect_row;
 	iface->set_column_visible = combo_selector_set_column_visible;
@@ -710,7 +710,7 @@ combo_selector_get_selected_rows (GdauiDataSelector *iface)
 }
 
 static GdaDataModelIter *
-combo_selector_get_current_selection (GdauiDataSelector *iface)
+combo_selector_get_data_set (GdauiDataSelector *iface)
 {
 	GdauiCombo *combo;
 
