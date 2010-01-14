@@ -243,7 +243,7 @@ GdauiRawGrid
 gdaui_raw_grid_new
 gdaui_raw_grid_set_sample_size
 gdaui_raw_grid_set_sample_start
-gdaui_raw_grid_set_data_layout_from_file
+gdaui_raw_grid_set_layout_from_file
 <SUBSECTION Standard>
 GDAUI_RAW_GRID
 GDAUI_IS_RAW_GRID

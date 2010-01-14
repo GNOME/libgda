@@ -55,17 +55,17 @@ struct _GdauiRawGridClass
 /* 
  * Generic widget's methods 
  */
-GType             gdaui_raw_grid_get_type                  (void) G_GNUC_CONST;
+GType      gdaui_raw_grid_get_type              (void) G_GNUC_CONST;
 
-GtkWidget        *gdaui_raw_grid_new                       (GdaDataModel *model);
+GtkWidget *gdaui_raw_grid_new                   (GdaDataModel *model);
 
-void              gdaui_raw_grid_set_sample_size           (GdauiRawGrid *grid, gint sample_size);
-void              gdaui_raw_grid_set_sample_start          (GdauiRawGrid *grid, gint sample_start);
+void       gdaui_raw_grid_set_sample_size       (GdauiRawGrid *grid, gint sample_size);
+void       gdaui_raw_grid_set_sample_start      (GdauiRawGrid *grid, gint sample_start);
 
-void              gdaui_raw_grid_set_data_layout_from_file (GdauiRawGrid *grid, const gchar *file_name,
-							    const gchar *parent_table);
+void       gdaui_raw_grid_set_layout_from_file  (GdauiRawGrid *grid, const gchar *file_name, const gchar *grid_name);
+
 /* private API */
-GList            *_gdaui_raw_grid_get_selection            (GdauiRawGrid *grid);
+GList     *_gdaui_raw_grid_get_selection        (GdauiRawGrid *grid);
 
 G_END_DECLS
 

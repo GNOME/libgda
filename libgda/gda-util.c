@@ -403,6 +403,18 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 						if (g_value_get_string (value))
 							str = gda_value_stringify (value);	
 					}
+					else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
+						/* force reading the whole blob */
+						GdaBlob *blob;
+						blob = gda_value_get_blob (value);
+						if (blob) {
+							GdaBinary *bin = (GdaBinary*) blob;
+							if (blob->op && 
+							    (bin->binary_length != gda_blob_op_get_length (blob->op)))
+								gda_blob_op_read_all (blob->op, blob);
+						}
+						str = gda_value_stringify (value);
+					}
 					else
 						str = gda_value_stringify (value);
 				}

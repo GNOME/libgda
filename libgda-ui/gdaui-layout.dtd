@@ -26,3 +26,7 @@
 <!ATTLIST gdaui_placeholder
 	  id CDATA #REQUIRED
 	  label CDATA #IMPLIED>
+
+<!ELEMENT gdaui_grid (gdaui_entry)*>
+<!ATTLIST gdaui_grid
+          name CDATA #REQUIRED>

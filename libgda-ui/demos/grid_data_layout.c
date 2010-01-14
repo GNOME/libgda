@@ -23,7 +23,7 @@ do_grid_data_layout (GtkWidget *do_widget)
 		GtkWidget *grid;
 		GdauiRawGrid *raw_grid;
 		
-		window = gtk_dialog_new_with_buttons ("Grid with the automatic 'data_layout'",
+		window = gtk_dialog_new_with_buttons ("Grid with custom data layout",
 						      GTK_WINDOW (do_widget),
 						      0,
 						      GTK_STOCK_CLOSE,
@@ -44,36 +44,32 @@ do_grid_data_layout (GtkWidget *do_widget)
 #endif
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 		
-		label = gtk_label_new ("The following GdauiGrid widget displays data from the 'products' table.\n.\n");
+		label = gtk_label_new ("The following GdauiGrid widget displays information about customers,\n"
+				       "using a picture of the customer.\n");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		
-		/* Create the demo widget */
-		//stmt = gda_sql_parser_parse_string (demo_parser, "SELECT ref, wh_stored, category, name, price FROM products", NULL, NULL);
-		stmt = gda_sql_parser_parse_string (demo_parser, "SELECT p.ref, p.wh_stored, p.category, p.name, p.price, w.name FROM products p LEFT JOIN warehouses w ON (w.id=p.wh_stored)", NULL, NULL);
+		/* Create the demo widget: select all the customers and computes the total
+		 * amount of orders they have spent */
+		stmt = gda_sql_parser_parse_string (demo_parser, 
+						    "select c.id, c.name, c.country, c.city, c.photo, c.comments, sum (od.quantity * (1 - od.discount/100) * p.price) as total_orders from customers c left join orders o on (c.id=o.customer) left join order_contents od on (od.order_id=o.id) left join products p on (p.ref = od.product_ref) group by c.id order by total_orders desc",
+						    NULL, NULL);
+
                 model = gda_connection_statement_execute_select (demo_cnc, stmt, NULL, NULL);
                 g_object_unref (stmt);
-                gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL);
-		grid = gdaui_grid_new (model);
+ 		grid = gdaui_grid_new (model);
 		g_object_unref (model);
 
-		/* specify that we want to use the 'data_layout' plugin */
+		/* request custom layout:
+		   <gdaui_grid name="customers">
+		     <gdaui_entry name="name"/>
+		     <gdaui_entry name="total_orders" label="Total ordered" plugin="number:NB_DECIMALS=2;CURRENCY=€"/>
+		     <gdaui_entry name="photo" plugin="picture"/>
+		   </gdaui_grid>
+		 */
 		g_object_get (G_OBJECT (grid), "raw-grid", &raw_grid, NULL);
-		/* data_set = GDA_SET (gdaui_data_widget_get_current_data (GDAUI_DATA_WIDGET (raw_grid))); */
-		/* param = gda_set_get_holder (data_set, "pict"); */
-
-		/* value = gda_value_new_from_string ("data-layout", G_TYPE_STRING); */
-		/* gda_holder_set_attribute (param, GDAUI_ATTRIBUTE_PLUGIN, value); */
-		/* gda_value_free (value); */
-		//
-		//gpointer d[2];
-		//d[0] = "./example_automatic_layout_full.xml";
-		//d[1] = "products";
-
-		//g_object_set (G_OBJECT (raw_grid), "data-layout", d, NULL);
-		//
 		gchar *filename;
-		filename = demo_find_file ("example_automatic_layout.xml", NULL);
-		gdaui_raw_grid_set_data_layout_from_file (GDAUI_RAW_GRID (raw_grid), filename, "products");
+		filename = demo_find_file ("custom_layout.xml", NULL);
+		gdaui_raw_grid_set_layout_from_file (GDAUI_RAW_GRID (raw_grid), filename, "customers");
 		g_free (filename);
 
 		gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);

@@ -159,7 +159,7 @@
 	gdaui_raw_form_new
 	gdaui_raw_grid_get_type
 	gdaui_raw_grid_new
-	gdaui_raw_grid_set_data_layout_from_file
+	gdaui_raw_grid_set_layout_from_file
 	gdaui_raw_grid_set_sample_size
 	gdaui_raw_grid_set_sample_start
 	gdaui_server_operation_get_type

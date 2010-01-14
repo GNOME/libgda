@@ -239,7 +239,7 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 
 	g_object_class_install_property (object_class, PROP_XML_LAYOUT,
 					 g_param_spec_pointer ("xml-layout",
-							       _("Pointer to an XML data layout specification"), NULL,
+							       _("Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> node)"), NULL,
 							       G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_PARAMLIST,
 					 g_param_spec_pointer ("paramlist",
@@ -1908,10 +1908,11 @@ form_holder_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_mo
 /**
  * gdaui_basic_form_set_layout_from_file
  * @form: a #GdauiBasicForm
- * @file_name:
- * @parent_table:
+ * @file_name: XML file name to use
+ * @form_name: the name of the form to use, in @file_name
  *
- * Sets a data layout according an XML description contained in @file_name
+ * Sets a form layout according an XML description contained in @file_name, for the form identified
+ * by the @form_name name (as an XML layout file can contain the descriptions of several forms and grids).
  *
  * Since: 4.2
  */

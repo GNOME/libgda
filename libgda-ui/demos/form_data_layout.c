@@ -48,7 +48,8 @@ do_form_data_layout (GtkWidget *do_widget)
 				       "a picture of the customer.\n");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		
-		/* Create the demo widget: select all the customers and computes the total amount of orders they have spent */
+		/* Create the demo widget: select all the customers and computes the total
+		 * amount of orders they have spent */
 		stmt = gda_sql_parser_parse_string (demo_parser, 
 						    "select c.id, c.name, c.country, c.city, c.photo, c.comments, sum (od.quantity * (1 - od.discount/100) * p.price) as total_orders from customers c left join orders o on (c.id=o.customer) left join order_contents od on (od.order_id=o.id) left join products p on (p.ref = od.product_ref) group by c.id order by total_orders desc",
 						    NULL, NULL);

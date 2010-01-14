@@ -49,7 +49,9 @@
   </gdaui_form>
 
 
-  <gdaui_grid name="picture">
-    <gdaui_entry name="pict" plugin="picture"/>
+  <gdaui_grid name="customers">
+    <gdaui_entry name="name"/>
+    <gdaui_entry name="total_orders" label="Total ordered" plugin="number:NB_DECIMALS=2;CURRENCY=€"/>
+    <gdaui_entry name="photo" plugin="picture"/>
   </gdaui_grid>
 </gdaui_layouts>
