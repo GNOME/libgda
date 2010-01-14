@@ -40,11 +40,6 @@ Grid widget to manipulate data in a #GdaDataModel
 @gdauirawgrid: the object which received the signal.
 @arg1: 
 
-<!-- ##### ARG GdauiRawGrid:data-layout ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdauiRawGrid:global-actions-visible ##### -->
 <para>
 
@@ -56,6 +51,11 @@ Grid widget to manipulate data in a #GdaDataModel
 </para>
 
 <!-- ##### ARG GdauiRawGrid:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdauiRawGrid:xml-layout ##### -->
 <para>
 
 </para>
@@ -87,13 +87,13 @@ Grid widget to manipulate data in a #GdaDataModel
 @sample_start: 
 
 
-<!-- ##### FUNCTION gdaui_raw_grid_set_data_layout_from_file ##### -->
+<!-- ##### FUNCTION gdaui_raw_grid_set_layout_from_file ##### -->
 <para>
 
 </para>
 
 @grid: 
 @file_name: 
-@parent_table: 
+@grid_name: 
 
 

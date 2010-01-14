@@ -111,7 +111,7 @@ libgda_ui_4_0_la_LIBADD = \
 	$(GIO_LIBS)
 
 if PLATFORM_WIN32
-libgda_ui_4_0_la_LDFLAGS += -export-symbols $(srcdir)/libgda-ui.def
+libgda_ui_4_0_la_LDFLAGS += -export-symbols $(builddir)/libgda-ui.def
 libgda_ui_4_0_la_DEPENDENCIES = libgda-ui.def
 
 libgda-ui.def: libgda-ui.symbols
@@ -124,8 +124,8 @@ install-data-local: install-def-files
 uninstall-local: uninstall-def-files
 
 install-def-files: libgda-ui.def libgda-ui-$(GDA_ABI_VERSION).lib
-	$(INSTALL) $(srcdir)/libgda-ui.def $(DESTDIR)$(libdir)/libgda-ui-$(GDA_ABI_VERSION).def
-	$(INSTALL) $(srcdir)/libgda-ui-$(GDA_ABI_VERSION).lib $(DESTDIR)$(libdir)/
+	$(INSTALL) $(builddir)/libgda-ui.def $(DESTDIR)$(libdir)/libgda-ui-$(GDA_ABI_VERSION).def
+	$(INSTALL) $(builddir)/libgda-ui-$(GDA_ABI_VERSION).lib $(DESTDIR)$(libdir)/
 
 uninstall-def-files:
 	-rm $(DESTDIR)$(libdir)/libgda-ui-$(GDA_ABI_VERSION).def

@@ -169,9 +169,11 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 
 </para>
 
-@gdadataproxy: the object which received the signal.
-@arg1: 
-@arg2: 
+@:
+
+@Param2: 
+@Param3: 
+@Returns: 
 @Returns: 
 
 <!-- ##### ARG GdaDataProxy:defer-sync ##### -->

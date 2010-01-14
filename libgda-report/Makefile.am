@@ -26,7 +26,7 @@ libgda_report_4_0_la_LIBADD = engine/libgda-report-engine-4.0.la \
 	$(LIBGDA_LIBS)
 
 if PLATFORM_WIN32
-libgda_report_4_0_la_LDFLAGS += -export-symbols $(srcdir)/libgda-report.def
+libgda_report_4_0_la_LDFLAGS += -export-symbols $(builddir)/libgda-report.def
 libgda_report_4_0_la_DEPENDENCIES = libgda-report.def
 
 libgda-report.def: libgda-report.symbols
@@ -39,8 +39,8 @@ install-data-local: install-def-files
 uninstall-local: uninstall-def-files
 
 install-def-files: libgda-report.def libgda-report-$(GDA_ABI_VERSION).lib
-	$(INSTALL) $(srcdir)/libgda-report.def $(DESTDIR)$(libdir)/libgda-report-$(GDA_ABI_VERSION).def
-	$(INSTALL) $(srcdir)/libgda-report-$(GDA_ABI_VERSION).lib $(DESTDIR)$(libdir)/
+	$(INSTALL) $(builddir)/libgda-report.def $(DESTDIR)$(libdir)/libgda-report-$(GDA_ABI_VERSION).def
+	$(INSTALL) $(builddir)/libgda-report-$(GDA_ABI_VERSION).lib $(DESTDIR)$(libdir)/
 
 uninstall-def-files:
 	-rm $(DESTDIR)$(libdir)/libgda-report-$(GDA_ABI_VERSION).def

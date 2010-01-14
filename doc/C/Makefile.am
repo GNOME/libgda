@@ -82,7 +82,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
 	version.xml.in \
-	visual_index.xml
+	visual_index.xml prov-notes.xml
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types

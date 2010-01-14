@@ -45,7 +45,7 @@ libgda_mysql_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS)
 
-EXTRA_DIST = $(xml_in_files) libgda-mysql-4.0.pc.in parser.y gen_def.c $(keyword_files)
+EXTRA_DIST = $(xml_in_files) parser.y gen_def.c $(keyword_files)
 
 CLEANFILES = parser.h parser.c parser.out mysql_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
 	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c

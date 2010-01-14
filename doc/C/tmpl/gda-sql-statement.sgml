@@ -36,13 +36,12 @@ which can be manipulated directly. The structure is a tree composed of several k
 
 <!-- ##### STRUCT GdaSqlStatement ##### -->
 <para>
-Container structure for an SQL statement.
+
 </para>
 
-@sql: the actual SQL string which corresponds to the statement, or %NULL
-@stmt_type: the type of statement (SELECT, INSERT, etc) as a #GdaSqlStatementType enum
-@contents: the actual contents of the statement, depends on @stmt_type (can be a pointer to a
-#GdaSqlStatementSelect, #GdaSqlStatementInsert, etc)
+@sql: 
+@stmt_type: 
+@contents: 
 @validity_meta_struct: 
 @_gda_reserved1: 
 @_gda_reserved2: 
@@ -306,32 +305,20 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 <!-- ##### STRUCT GdaSqlStatementSelect ##### -->
 <para>
-  The statement is a SELECT statement, any kind of SELECT statement can be represented using this structure 
-  (if this is not the case
-  then report a bug).
-  <mediaobject>
-    <imageobject role="html">
-      <imagedata fileref="stmt-select.png" format="PNG"/>
-    </imageobject>
-    <caption>
-      <para>
-	Example of a #GdaSqlStatement having a #GdaSqlStatementSelect as its contents.
-      </para>
-    </caption>
-  </mediaobject>
+
 </para>
 
-@any: inheritance structure
-@distinct: TRUE if a DISTINCT clause applies
-@distinct_expr: expression on which the distinct applies, or %NULL
-@expr_list: list of expressions (as #GdaSqlSelectField pointers), one for each column in the data set returned by the execution of the statement
-@from: target(s) of the SELECT statement
-@where_cond: condition expression filtering the resulting data set (WHERE condition)
-@group_by: grouping expressions (as #GdaSqlExpr pointers)
-@having_cond: condition expression filtering the grouped expressions (HAVING condition)
-@order_by: ordering expressions (as #GdaSqlSelectOrder pointers)
-@limit_count: size limiting expression (LIMIT clause)
-@limit_offset: when @limit_count is defined, the start offset for the limit
+@any: 
+@distinct: 
+@distinct_expr: 
+@expr_list: 
+@from: 
+@where_cond: 
+@group_by: 
+@having_cond: 
+@order_by: 
+@limit_count: 
+@limit_offset: 
 @_gda_reserved1: 
 @_gda_reserved2: 
 
@@ -503,14 +490,12 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 <!-- ##### STRUCT GdaSqlStatementDelete ##### -->
 <para>
-  The statement is a DELETE statement, any kind of DELETE statement can be represented using this structure 
-  (if this is not the case
-  then report a bug).
+
 </para>
 
-@any: inheritance structure
-@table: name of the table from which data is deleted
-@cond: WHERE clause for the DELETE
+@any: 
+@table: 
+@cond: 
 @_gda_reserved1: 
 @_gda_reserved2: 
 
@@ -534,27 +519,15 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 <!-- ##### STRUCT GdaSqlStatementUpdate ##### -->
 <para>
-  The statement is an UPDATE statement, any kind of UPDATE statement can be represented using this structure 
-  (if this is not the case
-  then report a bug).
-  <mediaobject>
-    <imageobject role="html">
-      <imagedata fileref="stmt-update.png" format="PNG"/>
-    </imageobject>
-    <caption>
-      <para>
-	Example of a #GdaSqlStatement having a #GdaSqlStatementUpdate as its contents.
-      </para>
-    </caption>
-  </mediaobject>
+
 </para>
 
-@any: inheritance structure
-@on_conflict: conflict resolution clause if there is one (such as "OR REPLACE")
-@table: name of the table to which data is updated
-@fields_list: list of #GdaSqlField fields which are updated
-@expr_list: list of #GdaSqlExpr expressions containing the new values
-@cond: WHERE clause for the UPDATE
+@any: 
+@on_conflict: 
+@table: 
+@fields_list: 
+@expr_list: 
+@cond: 
 @_gda_reserved1: 
 @_gda_reserved2: 
 
@@ -597,25 +570,12 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 <!-- ##### STRUCT GdaSqlStatementCompound ##### -->
 <para>
-  The statement is a compound selection statement: multiple SELECT or compound statements composed together with UNION, EXCEPT or
-  INTERSECT operations. Any kind of compound statement can be represented using this structure 
-  (if this is not the case
-  then report a bug).
-  <mediaobject>
-    <imageobject role="html">
-      <imagedata fileref="stmt-compound.png" format="PNG"/>
-    </imageobject>
-    <caption>
-      <para>
-	Example of a #GdaSqlStatement having a #GdaSqlStatementCompound as its contents.
-      </para>
-    </caption>
-  </mediaobject>
+
 </para>
 
-@any: inheritance structure
-@compound_type: the type of operation to compose the selection or compound statements making this statement
-@stmt_list: a list of #GdaSqlStatement making this statement
+@any: 
+@compound_type: 
+@stmt_list: 
 @_gda_reserved1: 
 @_gda_reserved2: 
 

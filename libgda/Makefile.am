@@ -91,8 +91,7 @@ gda_headers = \
 	gda-tree-mgr-select.h \
 	gda-util.h \
 	gda-value.h \
-	gda-xa-transaction.h \
-	libgda.h 
+	gda-xa-transaction.h
 
 libgda_sources =  \
 	csv.h \
@@ -102,6 +101,7 @@ libgda_sources =  \
 	dir-blob-op.h \
 	dir-blob-op.c \
 	$(gda_headers) \
+	libgda.h \
 	gda-blob-op.c \
 	gda-column.c \
 	gda-config.c \
@@ -176,7 +176,7 @@ s-enum-types-h: @REBUILD@ $(gda_headers) Makefile
 			--fprod "/* enumerations from \"@filename@\" */\n" \
 			--vhead "GType @enum_name@_get_type (void);\n#define GDA_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
 			--ftail "G_END_DECLS\n\n#endif /* __LIBGDA_ENUM_TYPES_H__ */" \
-		$(gda_headers) ) > tmp-gda-enum-types.h \
+		$(gda_headers)) > tmp-gda-enum-types.h \
 	&& (cmp -s tmp-gda-enum-types.h gda-enum-types.h || cp tmp-gda-enum-types.h gda-enum-types.h ) \
 	&& rm -f tmp-gda-enum-types.h	\
 	&& echo timestamp > $(@F)
@@ -192,7 +192,7 @@ s-enum-types-c: @REBUILD@ $(gda_headers) Makefile
 			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" 	\
 			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
 			--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
-		$(gda_headers) ) > tmp-gda-enum-types.c \
+		$(gda_headers)) > tmp-gda-enum-types.c \
 	&& (cmp -s tmp-gda-enum-types.c gda-enum-types.c || cp tmp-gda-enum-types.c gda-enum-types.c ) \
 	&& rm -f tmp-gda-enum-types.c \
 	&& echo timestamp > $(@F)
@@ -225,7 +225,7 @@ libgda_4_0_la_LIBADD = \
 	$(GIO_LIBS) $(GNOMEVFS_LIBS) 
 
 if PLATFORM_WIN32
-libgda_4_0_la_LDFLAGS += -export-symbols $(srcdir)/libgda.def
+libgda_4_0_la_LDFLAGS += -export-symbols $(builddir)/libgda.def
 libgda_4_0_la_DEPENDENCIES = libgda.def
 
 libgda.def: libgda.symbols
@@ -238,8 +238,8 @@ install-data-local: install-def-files
 uninstall-local: uninstall-def-files
 
 install-def-files: libgda.def libgda-$(GDA_ABI_VERSION).lib
-	$(INSTALL) $(srcdir)/libgda.def $(DESTDIR)$(libdir)/libgda-$(GDA_ABI_VERSION).def
-	$(INSTALL) $(srcdir)/libgda-$(GDA_ABI_VERSION).lib $(DESTDIR)$(libdir)/
+	$(INSTALL) $(builddir)/libgda.def $(DESTDIR)$(libdir)/libgda-$(GDA_ABI_VERSION).def
+	$(INSTALL) $(builddir)/libgda-$(GDA_ABI_VERSION).lib $(DESTDIR)$(libdir)/
 
 uninstall-def-files:
 	-rm $(DESTDIR)$(libdir)/libgda-$(GDA_ABI_VERSION).def
@@ -288,7 +288,6 @@ threadwrapper = \
 
 sqlparser = \
 	sql-parser/gda-sql-parser.h \
-	sql-parser/gda-sql-parser-enum-types.c \
 	sql-parser/gda-sql-statement.h \
 	sql-parser/gda-statement-struct-decl.h \
 	sql-parser/gda-statement-struct.h \
@@ -303,7 +302,6 @@ sqlparser = \
 	sql-parser/gda-statement-struct-unknown.h \
 	sql-parser/gda-statement-struct-util.h \
 	sql-parser/gda-sql-parser.c \
-	sql-parser/gda-sql-parser-enum-types.c \
 	sql-parser/gda-statement-struct.c \
 	sql-parser/gda-statement-struct-compound.c \
 	sql-parser/gda-statement-struct-delete.c \
@@ -333,7 +331,7 @@ handlers = \
 Gda-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-@GDA_ABI_VERSION@.la
 	$(INTROSPECTION_SCANNER) -v \
 		--namespace Gda --nsversion=@GDA_ABI_VERSION@ \
-		-I$(top_srcdir) \
+		-I$(top_srcdir) -I$(top_srcdir)/libgda \
 		$(LIBGDA_CFLAGS) \
 		--add-include-path=providers-support \
 		--add-include-path=sql-parser \
@@ -346,12 +344,15 @@ Gda-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-@GDA_ABI_VERSION@.la
 		--library=gda-@GDA_ABI_VERSION@ \
 	    $(INCLUDE_CFLAGS) \
 	    --output $@ \
-		$(gda_headers) gda-types.h \
-		$(gda_sources) \
-		$(psupport) \
-		$(sqlparser) \
-		$(threadwraper) \
-		$(handlers)
+		$(addprefix $(srcdir)/, $(gda_headers)) \
+	        $(srcdir)/gda-types.h \
+		libgda.h \
+		$(addprefix $(srcdir)/, $(gda_sources)) \
+		$(addprefix $(srcdir)/, $(psupport)) \
+		$(addprefix $(srcdir)/, $(sqlparser)) \
+		sql-parser/gda-sql-parser-enum-types.c \
+		$(addprefix $(srcdir)/, $(threadwraper)) \
+		$(addprefix $(srcdir)/, $(handlers))
 
 BUILT_GIRSOURCES += Gda-@GDA_ABI_VERSION@.gir
 

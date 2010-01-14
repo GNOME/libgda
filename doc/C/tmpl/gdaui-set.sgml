@@ -17,33 +17,10 @@ GdauiSet
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### STRUCT GdauiSet ##### -->
+<!-- ##### STRUCT GdauiSetPriv ##### -->
 <para>
 
 </para>
-
-@sources_list: 
-@groups_list: 
-
-<!-- ##### SIGNAL GdauiSet::public-data-changed ##### -->
-<para>
-
-</para>
-
-@gdauiset: the object which received the signal.
-
-<!-- ##### ARG GdauiSet:set ##### -->
-<para>
-
-</para>
-
-<!-- ##### FUNCTION gdaui_set_new ##### -->
-<para>
-
-</para>
-
-@set: 
-@Returns: 
 
 
 <!-- ##### STRUCT GdauiSetGroup ##### -->
@@ -64,4 +41,28 @@ GdauiSet
 @shown_cols_index: 
 @ref_n_cols: 
 @ref_cols_index: 
+
+<!-- ##### MACRO GDAUI_SET_GROUP ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
+<!-- ##### MACRO GDAUI_SET_SOURCE ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
+<!-- ##### STRUCT GdauiSet ##### -->
+<para>
+
+</para>
+
+@sources_list: 
+@groups_list: 
 
