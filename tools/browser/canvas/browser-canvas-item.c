@@ -337,7 +337,11 @@ button_press_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
 				citem->priv->xstart = event->x;
 				citem->priv->ystart = event->y;
 				citem->priv->moving = TRUE;
-				done = FALSE;
+				done = TRUE;
+				goo_canvas_pointer_grab (goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (citem)),
+							 GOO_CANVAS_ITEM (citem),
+							 GDK_POINTER_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
+							 NULL, event->time);
 			}
 		}
 		break;
@@ -354,6 +358,8 @@ button_release_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
 {
 	if (citem->priv->allow_move) {
 		citem->priv->moving = FALSE;
+		goo_canvas_pointer_ungrab (goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (citem)),
+					   GOO_CANVAS_ITEM (citem), event->time);
 #ifdef debug_signal
 		g_print (">> 'MOVED' from %s::item_event()\n", __FILE__);
 #endif

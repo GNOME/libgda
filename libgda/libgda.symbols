@@ -9,6 +9,7 @@
 	fnYM49765777344607__gda_gbr_find_prefix
 	fnYM49765777344607__gda_gbr_find_sbin_dir
 	gda_alphanum_to_text
+	gda_array_dtd
 	gda_attributes_manager_clear
 	gda_attributes_manager_copy
 	gda_attributes_manager_foreach
@@ -41,6 +42,7 @@
 	gda_blob_op_write_all
 	gda_blob_set_op
 	gda_blob_to_string
+	gda_column_attributes_manager
 	gda_column_copy
 	gda_column_get_allow_null
 	gda_column_get_attribute
@@ -87,9 +89,9 @@
 	gda_connection_add_event_string
 	gda_connection_add_prepared_statement
 	gda_connection_add_savepoint
-	gda_connection_async_statement_execute
-	gda_connection_async_fetch_result
 	gda_connection_async_cancel
+	gda_connection_async_fetch_result
+	gda_connection_async_statement_execute
 	gda_connection_batch_execute
 	gda_connection_begin_transaction
 	gda_connection_clear_events_list
@@ -306,11 +308,11 @@
 	gda_data_select_get_connection
 	gda_data_select_get_stored_row
 	gda_data_select_get_type
+	gda_data_select_rerun
 	gda_data_select_set_modification_statement
 	gda_data_select_set_modification_statement_sql
 	gda_data_select_set_row_selection_condition
 	gda_data_select_set_row_selection_condition_sql
-	gda_data_select_rerun
 	gda_data_select_take_row
 	gda_default_escape_string
 	gda_default_unescape_string
@@ -352,6 +354,7 @@
 	gda_handler_time_set_sql_spec
 	gda_handler_type_get_type
 	gda_handler_type_new
+	gda_holder_attributes_manager
 	gda_holder_copy
 	gda_holder_error_get_type
 	gda_holder_error_quark
@@ -418,6 +421,7 @@
 	gda_meta_store_schema_get_structure
 	gda_meta_store_schema_remove_custom_object
 	gda_meta_store_set_attribute_value
+	gda_meta_store_set_identifiers_style
 	gda_meta_store_set_reserved_keywords_func
 	gda_meta_store_sql_identifier_quote
 	gda_meta_struct_add_db_object
@@ -449,6 +453,7 @@
 	gda_numeric_free
 	gda_numeric_get_type
 	gda_numeric_locale
+	gda_paramlist_dtd
 	gda_parse_iso8601_date
 	gda_parse_iso8601_time
 	gda_parse_iso8601_timestamp
@@ -488,6 +493,7 @@
 	gda_row_new
 	gda_row_value_is_valid
 	gda_select_alter_select_for_empty
+	gda_server_op_dtd
 	gda_server_operation_add_item_to_sequence
 	gda_server_operation_del_item_from_sequence
 	gda_server_operation_get_node_info
@@ -501,9 +507,9 @@
 	gda_server_operation_get_sequence_min_size
 	gda_server_operation_get_sequence_name
 	gda_server_operation_get_sequence_size
+	gda_server_operation_get_sql_identifier_at
 	gda_server_operation_get_type
 	gda_server_operation_get_value_at
-	gda_server_operation_get_sql_identifier_at
 	gda_server_operation_is_valid
 	gda_server_operation_load_data_from_xml
 	gda_server_operation_new
@@ -579,16 +585,19 @@
 	gda_sql_builder_add_function_v
 	gda_sql_builder_add_id
 	gda_sql_builder_add_param
+	gda_sql_builder_add_sub_select
 	gda_sql_builder_compound_add_sub_select
 	gda_sql_builder_compound_set_type
-	gda_sql_builder_get_statement
+	gda_sql_builder_error_get_type
+	gda_sql_builder_error_quark
 	gda_sql_builder_get_sql_statement
-	gda_sql_builder_add_sub_select
+	gda_sql_builder_get_statement
 	gda_sql_builder_get_type
 	gda_sql_builder_join_add_field
 	gda_sql_builder_new
 	gda_sql_builder_select_add_field
 	gda_sql_builder_select_add_target
+	gda_sql_builder_select_add_target_id
 	gda_sql_builder_select_join_targets
 	gda_sql_builder_select_order_by
 	gda_sql_builder_set_table
@@ -624,6 +633,7 @@
 	gda_sql_identifier_quote
 	gda_sql_identifier_remove_quotes
 	gda_sql_identifier_split
+	gda_sql_identifier_style_get_type
 	gda_sqlite_provider_get_type
 	gda_sql_operation_copy
 	gda_sql_operation_free
@@ -752,10 +762,11 @@
 	gda_thread_wrapper_cancel
 	gda_thread_wrapper_connect_raw
 	gda_thread_wrapper_disconnect
+	gda_thread_wrapper_error_quark
 	gda_thread_wrapper_execute
 	gda_thread_wrapper_execute_void
-	gda_thread_wrapper_get_type
 	gda_thread_wrapper_fetch_result
+	gda_thread_wrapper_get_type
 	gda_thread_wrapper_get_waiting_size
 	gda_thread_wrapper_iterate
 	gda_thread_wrapper_new
@@ -770,6 +781,7 @@
 	gda_transaction_status_add_event_sql
 	gda_transaction_status_add_event_sub
 	gda_transaction_status_add_event_svp
+	gda_transaction_status_dump
 	gda_transaction_status_event_type_get_type
 	gda_transaction_status_find
 	gda_transaction_status_find_current
@@ -783,13 +795,16 @@
 	gda_tree_error_get_type
 	gda_tree_error_quark
 	gda_tree_get_node
+	gda_tree_get_node_manager
 	gda_tree_get_node_path
 	gda_tree_get_nodes_in_path
 	gda_tree_get_type
 	gda_tree_manager_add_manager
+	gda_tree_manager_add_new_node_attribute
 	gda_tree_manager_create_node
 	gda_tree_manager_error_get_type
 	gda_tree_manager_error_quark
+	gda_tree_manager_get_managers
 	gda_tree_manager_get_node_create_func
 	gda_tree_manager_get_type
 	gda_tree_manager_new_with_func

@@ -73,7 +73,13 @@ enum {
 
 static guint table_preferences_signals[LAST_SIGNAL] = { };
 static GObjectClass *parent_class = NULL;
-extern GHashTable *gdaui_plugins_hash;
+
+#ifdef G_OS_WIN32
+#define IMPORT __declspec(dllimport)
+#else
+#define IMPORT
+#endif
+extern IMPORT GHashTable *gdaui_plugins_hash;
 
 /*
  * TablePreferences class implementation
