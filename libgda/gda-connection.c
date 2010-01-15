@@ -829,9 +829,12 @@ cnc_task_free (CncTask *task)
 GdaServerProvider *
 _gda_connection_get_internal_thread_provider (void)
 {
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+
+	g_static_mutex_lock (&mutex);
 	if (!_gda_thread_wrapper_provider)
 		_gda_thread_wrapper_provider = GDA_SERVER_PROVIDER (g_object_new (GDA_TYPE_THREAD_PROVIDER, NULL));
-
+	g_static_mutex_unlock (&mutex);
 	return _gda_thread_wrapper_provider;
 }
 
@@ -920,13 +923,8 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 
 		pinfo = gda_config_get_provider_info (dsn_info->provider);
 		if (pinfo) {
-			if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) {
-				if (!_gda_thread_wrapper_provider)
-					_gda_thread_wrapper_provider =
-						GDA_SERVER_PROVIDER (g_object_new (GDA_TYPE_THREAD_PROVIDER, 
-										   NULL));
-				prov = _gda_thread_wrapper_provider;
-			}
+			if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE)
+				prov = _gda_connection_get_internal_thread_provider ();
 			else
 				prov = gda_config_get_provider (dsn_info->provider, error);
 		}
@@ -1075,11 +1073,7 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 				tmp = g_strdup_printf ("%s;PROVIDER_NAME=%s", real_cnc, pinfo->id);
 				g_free (real_cnc);
 				real_cnc = tmp;
-				if (!_gda_thread_wrapper_provider)
-					_gda_thread_wrapper_provider =
-						GDA_SERVER_PROVIDER (g_object_new (GDA_TYPE_THREAD_PROVIDER, 
-										   NULL));
-				prov = _gda_thread_wrapper_provider;
+				prov = _gda_connection_get_internal_thread_provider ();
 			}
 			else
 				prov = gda_config_get_provider (provider_name ? provider_name : real_provider, error);

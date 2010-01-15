@@ -389,7 +389,10 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 						 _("Provider does not support asynchronous connection open"));
                 return FALSE;
 	}
-		
+
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	g_static_mutex_lock (&mutex);
+
 	/* test if connection has to be opened using a DSN or a connection string */
 	gchar *dsn, *auth_string, *cnc_string;
 	GdaConnectionOptions options;
@@ -417,6 +420,22 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 					  data->prov_name);
 	}
 	g_assert (data);
+
+	if (!wr) {
+		wr_created = TRUE;
+		wr = gda_thread_wrapper_new ();
+		if (!wr) {
+			gda_connection_add_event_string (cnc, "%s", _("Multi threading is not supported or enabled"));
+			g_free (data);
+			g_static_mutex_unlock (&mutex);
+			return FALSE;
+		}
+	}
+	else {
+		/* here wr_created == FALSE */
+		g_object_ref (wr);
+		g_static_mutex_unlock (&mutex);
+	}
 	
 	/* open sub connection */
 	GdaConnection *sub_cnc;
@@ -426,17 +445,6 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	data->auth_string = auth_string;
 	data->options = options & (~GDA_CONNECTION_OPTIONS_THREAD_SAFE);
 
-	if (!wr) {
-		wr_created = TRUE;
-		wr = gda_thread_wrapper_new ();
-		if (!wr) {
-			gda_connection_add_event_string (cnc, "%s", _("Multi threading is not supported or enabled"));
-			g_free (data);
-			return FALSE;
-		}
-	}
-	else
-		g_object_ref (wr);
 	jid = gda_thread_wrapper_execute (wr, (GdaThreadWrapperFunc) sub_thread_open_connection, data, NULL, NULL);
 	sub_cnc = gda_thread_wrapper_fetch_result (wr, TRUE, jid, &error);
 	g_free (dsn);
@@ -448,6 +456,8 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			g_error_free (error);
 		g_object_unref (wr);
 		g_free (data);
+		if (wr_created)
+			g_static_mutex_unlock (&mutex);
 		return FALSE;
 	}
 	
@@ -461,11 +471,14 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_thread_free_cnc_data);
 	setup_signals (cnc, cdata);
 
-	if (wr_created && PROV_CLASS (cdata->cnc_provider)->limiting_thread) {
-		/* keep GdaThreadWrapper for other uses */
-		g_hash_table_insert (GDA_THREAD_PROVIDER (provider)->priv->prov_wrappers,
-				     g_strdup (gda_server_provider_get_name (cdata->cnc_provider)),
-				     g_object_ref (wr));
+	if (wr_created) {
+		if (PROV_CLASS (cdata->cnc_provider)->limiting_thread) {
+			/* keep GdaThreadWrapper for other uses */
+			g_hash_table_insert (GDA_THREAD_PROVIDER (provider)->priv->prov_wrappers,
+					     g_strdup (gda_server_provider_get_name (cdata->cnc_provider)),
+					     g_object_ref (wr));
+		}
+		g_static_mutex_unlock (&mutex);
 	}
 
 	return TRUE;
