@@ -158,7 +158,8 @@ gda_web_provider_class_init (GdaWebProviderClass *klass)
         provider_class->delete_savepoint = gda_web_provider_delete_savepoint;
 
 	provider_class->create_parser = gda_web_provider_create_parser;
-	provider_class->statement_to_sql = gda_web_provider_statement_to_sql;
+	provider_class->statement_to_sql =  NULL; /* don't use gda_web_provider_statement_to_sql()
+						   * because it only calls gda_statement_to_sql_extended() */
 	provider_class->statement_prepare = gda_web_provider_statement_prepare;
 	provider_class->statement_execute = gda_web_provider_statement_execute;
 
@@ -1119,6 +1120,9 @@ gda_web_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
  * The implementation show here simply calls gda_statement_to_sql_extended() but the rendering
  * can be specialized to the database's SQL dialect, see the implementation of gda_statement_to_sql_extended()
  * and SQLite's specialized rendering for more details
+ *
+ * NOTE: This implementation MUST NOT call gda_statement_to_sql_extended() if it is
+ *       the GdaServerProvider::statement_to_sql() virtual method's implementation
  */
 static gchar *
 gda_web_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
