@@ -548,8 +548,8 @@ history_changed_cb (QueryEditor *history, QueryConsole *tconsole)
 	else
 		query_result_show_history_batch (QUERY_RESULT (tconsole->priv->query_result), NULL);
 
-	gtk_widget_set_sensitive (tconsole->priv->history_del_button, act);
 	gtk_widget_set_sensitive (tconsole->priv->history_copy_button, act);
+	gtk_widget_set_sensitive (tconsole->priv->history_del_button, ! query_editor_history_is_empty (qe));
 }
 
 static void

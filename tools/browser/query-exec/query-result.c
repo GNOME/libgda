@@ -83,14 +83,12 @@ static void
 history_item_removed_cb (QueryEditor *history, QueryEditorHistoryItem *item, QueryResult *result)
 {
 	g_hash_table_remove (result->priv->hash, item);
-	g_print ("Removed GtkWidget for item %p\n", item);
 }
 
 static void
 history_cleared_cb (QueryEditor *history, QueryResult *result)
 {
 	g_hash_table_remove_all (result->priv->hash);
-	g_print ("Removed all GtkWidget\n");
 }
 
 static void
@@ -311,8 +309,8 @@ query_result_show_history_item (QueryResult *qres, QueryEditorHistoryItem *hitem
 			}
 			else 
 				child = make_widget_for_error (hitem->exec_error);
-			g_print ("Inserted GtkWidget %p for item %p\n", child, hitem);
-			g_hash_table_insert (qres->priv->hash, hitem, g_object_ref (G_OBJECT (child)));
+
+			g_hash_table_insert (qres->priv->hash, hitem, g_object_ref_sink (G_OBJECT (child)));
 		}
 	}
 

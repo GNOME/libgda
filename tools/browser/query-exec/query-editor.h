@@ -132,6 +132,7 @@ void       query_editor_start_history_batch (QueryEditor *editor, QueryEditorHis
 void       query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist_item);
 QueryEditorHistoryItem *query_editor_get_current_history_item (QueryEditor *editor);
 QueryEditorHistoryBatch *query_editor_get_current_history_batch (QueryEditor *editor);
+gboolean   query_editor_history_is_empty (QueryEditor *editor);
 
 void       query_editor_del_all_history_items (QueryEditor *editor);
 void       query_editor_del_current_history_item (QueryEditor *editor);

@@ -48,7 +48,7 @@
 
 static void query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib,
 						 QueryEditorHistoryItem *qih);
-static void query_editor_history_batch_del_item (QueryEditorHistoryBatch *qib,
+static void query_editor_history_batch_del_item (QueryEditor *editor, QueryEditorHistoryBatch *qib,
 						 QueryEditorHistoryItem *qih);
 
 typedef void (* CreateTagsFunc) (QueryEditor *editor, const gchar *language);
@@ -779,14 +779,14 @@ query_editor_grab_focus (GtkWidget *widget)
 static void
 hist_data_free_all (QueryEditor *editor)
 {
+	if (editor->priv->hist_focus) {
+		hist_item_data_unref (editor->priv->hist_focus);
+		editor->priv->hist_focus = NULL;
+	}
+
 	if (editor->priv->ts_timeout_id) {
 		g_source_remove (editor->priv->ts_timeout_id);
 		editor->priv->ts_timeout_id = 0;
-	}
-	if (editor->priv->batches_list) {
-		g_slist_foreach (editor->priv->batches_list, (GFunc) query_editor_history_batch_unref, NULL);
-		g_slist_free (editor->priv->batches_list);
-		editor->priv->batches_list = NULL;
 	}
 
 	if (editor->priv->hash) {
@@ -794,10 +794,15 @@ hist_data_free_all (QueryEditor *editor)
 		editor->priv->hash = NULL;
 	}
 
-	if (editor->priv->hist_focus) {
-		hist_item_data_unref (editor->priv->hist_focus);
-		editor->priv->hist_focus = NULL;
-	}	
+	if (editor->priv->insert_into_batch) {
+		query_editor_history_batch_unref (editor->priv->insert_into_batch);
+		editor->priv->insert_into_batch = NULL;
+	}
+	if (editor->priv->batches_list) {
+		g_slist_foreach (editor->priv->batches_list, (GFunc) query_editor_history_batch_unref, NULL);
+		g_slist_free (editor->priv->batches_list);
+		editor->priv->batches_list = NULL;
+	}
 }
 
 static void
@@ -1434,6 +1439,20 @@ query_editor_get_current_history_batch (QueryEditor *editor)
 		return NULL;
 }
 
+/**
+ * query_editor_history_is_empty
+ * @editor: a #QueryEditor widget.
+ *
+ * Returns: %TRUE if @editor doe snot have any history item
+ */
+gboolean
+query_editor_history_is_empty (QueryEditor *editor)
+{
+	g_return_val_if_fail (QUERY_IS_EDITOR (editor), FALSE);
+	g_return_val_if_fail (editor->priv->mode == QUERY_EDITOR_HISTORY, FALSE);
+
+	return editor->priv->batches_list ? FALSE : TRUE;
+}
 
 /**
  * query_editor_del_current_history_item
@@ -1477,10 +1496,7 @@ query_editor_del_current_history_item (QueryEditor *editor)
 	g_hash_table_remove (editor->priv->hash, hdata->tag);
 	
 	g_assert (hdata->batch);
-	query_editor_history_item_ref (hdata->item);
-	query_editor_history_batch_del_item (hdata->batch, hdata->item);
-	g_signal_emit (editor, query_editor_signals[HISTORY_ITEM_REMOVED], 0, hdata->item);
-	query_editor_history_item_unref (hdata->item);
+	query_editor_history_batch_del_item (editor, hdata->batch, hdata->item);
 
 	if (! hdata->batch->hist_items) {
 		/* remove hdata->batch */
@@ -1581,7 +1597,7 @@ query_editor_del_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *ba
 		
 		g_hash_table_remove (editor->priv->hash, hdata->item);
 		g_hash_table_remove (editor->priv->hash, hdata->tag);
-		query_editor_history_batch_del_item (batch, (QueryEditorHistoryItem*) list->data);
+		query_editor_history_batch_del_item (editor, batch, (QueryEditorHistoryItem*) list->data);
 	}
 	
 	/* remove batch */
@@ -1810,6 +1826,9 @@ query_editor_history_batch_new (GTimeVal run_time, GdaSet *params)
 	if (params)
 		qib->params = gda_set_copy (params);
 
+#ifdef QUERY_EDITOR_DEBUG
+	g_print ("\t%s() => %p\n", __FUNCTION__, qib);
+#endif
 	return qib;
 }
 
@@ -1835,7 +1854,14 @@ query_editor_history_batch_unref (QueryEditorHistoryBatch *qib)
 			g_object_unref (qib->params);
 
 		g_free (qib);
+#ifdef QUERY_EDITOR_DEBUG
+		g_print ("\t%s() => %p\n", __FUNCTION__, qib);
+#endif
 	}
+#ifdef QUERY_EDITOR_DEBUG
+	else
+		g_print ("\tFAILED %s() => %p:%d\n", __FUNCTION__, qib, qib->ref_count);
+#endif
 }
 
 static void
@@ -1847,11 +1873,13 @@ query_editor_history_batch_add_item (QueryEditorHistoryBatch *qib, QueryEditorHi
 }
 
 static void
-query_editor_history_batch_del_item (QueryEditorHistoryBatch *qib, QueryEditorHistoryItem *qih)
+query_editor_history_batch_del_item (QueryEditor *editor, QueryEditorHistoryBatch *qib, QueryEditorHistoryItem *qih)
 {
 	g_return_if_fail (qib);
 	g_return_if_fail (qih);
 	qib->hist_items = g_slist_remove (qib->hist_items, qih);
+
+	g_signal_emit (editor, query_editor_signals[HISTORY_ITEM_REMOVED], 0, qih);
 	query_editor_history_item_unref (qih);
 }
 
@@ -1873,6 +1901,9 @@ query_editor_history_item_new (const gchar *sql, GObject *result, GError *error)
 	if (error)
 		qih->exec_error = g_error_copy (error);
 
+#ifdef QUERY_EDITOR_DEBUG
+	g_print ("\t%s() => %p\n", __FUNCTION__, qih);
+#endif
 	return qih;
 }
 
@@ -1896,7 +1927,14 @@ query_editor_history_item_unref (QueryEditorHistoryItem *qih)
 		if (qih->exec_error)
 			g_error_free (qih->exec_error);
 		g_free (qih);
+#ifdef QUERY_EDITOR_DEBUG
+		g_print ("\t%s() => %p\n", __FUNCTION__, qih);
+#endif
 	}
+#ifdef QUERY_EDITOR_DEBUG
+	else
+		g_print ("\tFAILED %s() => %p:%d\n", __FUNCTION__, qih, qih->ref_count);
+#endif
 }
 
 /*
