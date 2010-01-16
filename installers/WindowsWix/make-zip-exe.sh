@@ -114,7 +114,38 @@ add_files_to_zip $archive $prefix share/libgda-4.0 $files
 files=(gdaui-generic.png)
 add_files_to_zip $archive $prefix share/libgda-4.0/pixmaps $files
 
+#copy some Gnome files to be installed on Windows
+
+cp /usr/share/icons/gnome/16x16/actions/bookmark-new.png $prefix/share/libgda-4.0/icons/hicolor/16x16/actions
+cp /usr/share/icons/gnome/22x22/actions/bookmark-new.png $prefix/share/libgda-4.0/icons/hicolor/22x22/actions
+cp /usr/share/icons/gnome/24x24/actions/bookmark-new.png $prefix/share/libgda-4.0/icons/hicolor/24x24/actions
+cp /usr/share/icons/gnome/32x32/actions/bookmark-new.png $prefix/share/libgda-4.0/icons/hicolor/32x32/actions
+cp /usr/share/icons/gnome/16x16/actions/window-new.png $prefix/share/libgda-4.0/icons/hicolor/16x16/actions
+cp /usr/share/icons/gnome/22x22/actions/window-new.png $prefix/share/libgda-4.0/icons/hicolor/22x22/actions
+cp /usr/share/icons/gnome/24x24/actions/window-new.png $prefix/share/libgda-4.0/icons/hicolor/24x24/actions
+cp /usr/share/icons/gnome/32x32/actions/window-new.png $prefix/share/libgda-4.0/icons/hicolor/32x32/actions
+mkdir -p $prefix/share/libgda-4.0/icons/hicolor/16x16/apps
+mkdir -p $prefix/share/libgda-4.0/icons/hicolor/22x22/apps
+mkdir -p $prefix/share/libgda-4.0/icons/hicolor/24x24/apps
+mkdir -p $prefix/share/libgda-4.0/icons/hicolor/32x32/apps
+cp /usr/share/icons/gnome/16x16/apps/accessories-text-editor.png $prefix/share/libgda-4.0/icons/hicolor/16x16/apps
+cp /usr/share/icons/gnome/22x22/apps/accessories-text-editor.png $prefix/share/libgda-4.0/icons/hicolor/22x22/apps
+cp /usr/share/icons/gnome/24x24/apps/accessories-text-editor.png $prefix/share/libgda-4.0/icons/hicolor/24x24/apps
+cp /usr/share/icons/gnome/32x32/apps/accessories-text-editor.png $prefix/share/libgda-4.0/icons/hicolor/32x32/apps
+
 add_all_files_to_zip $archive $prefix share/libgda-4.0/pixmaps
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/16x16/actions
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/22x22/actions
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/24x24/actions
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/32x32/actions
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/scalable/actions
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/16x16/apps
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/22x22/apps
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/24x24/apps
+add_all_files_to_zip $archive $prefix share/libgda-4.0/icons/hicolor/32x32/apps
+files=(index.theme)
+add_files_to_zip $archive . share/libgda-4.0/icons/hicolor $files
+
 
 files=(gda-browser-4.0.png gda-control-center-4.0.png)
 add_files_to_zip $archive $prefix share/pixmaps $files
