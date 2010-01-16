@@ -1,3 +1,23 @@
+libgda 4.1.4, 2010-01-16
+
+ - API improvements: GdaSqlBuilder, UI extension
+ - new Web provider to access databases through a web server
+ - WIN32 related corrections
+ - GNOME 3.0 and GSeal corrections
+ - initial support for GObject Introspection (for libgda only)
+ - meta data now include indexes information
+ - improved icons (thanks to Jakub Steiner)
+ - JDBC provider: don't keep the JVM loaded when not necessary
+ - embedd SQLite 3.6.22
+ - GdaBrowser improvements and corrections: connections bindings, loading CSV
+   files, table's columns' preferences
+ - misc bug fixes and other improvements
+ - Translations:
+	- de (Mario Blättermann)
+	- fr (Nicolas Repentin, Laurent Coudeur and Claude Paroz)
+	- sl (Matej Urbančič)
+	- sp (Jorge González)
+
 libgda 4.1.3, 2009-10-10
 
  - GdaBrowser improvement
