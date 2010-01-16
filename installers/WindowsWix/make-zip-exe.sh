@@ -17,7 +17,7 @@
 cross_path=/local/Win32/gtk
 depend_path=/local/Win32
 prefix=/local/Win32/gtk
-version=4.0.6
+version=4.0.7
 
 
 
