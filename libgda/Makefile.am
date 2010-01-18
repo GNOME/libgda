@@ -358,7 +358,7 @@ BUILT_GIRSOURCES += Gda-@GDA_ABI_VERSION@.gir
 
 endif
 
-girdir = $(datadir)/libgda-4.0/gir-1.0
+girdir = $(datadir)/gir-1.0
 gir_DATA = $(BUILT_GIRSOURCES)
 
 typelibsdir = $(libdir)/girepository-1.0/
