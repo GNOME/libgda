@@ -312,11 +312,12 @@ compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaDbObject *view_dbobj, 
 				tmp_obj = gda_meta_struct_complement (m2,
 								      GDA_META_DB_VIEW, NULL, NULL, vname, NULL);
 			gda_value_free (vname);
-			g_object_unref (m2);
 
-			if (!tmp_obj) 
+			if (!tmp_obj) {
 				/* could not find dependency */
+				g_object_unref (m2);
 				continue;
+			}
 
 			/* the dependency exists, and is identified by tmp_obj->obj_catalog, tmp_obj->obj_schema 
 			 * and tmp_obj->obj_name */
@@ -337,6 +338,7 @@ compute_view_dependencies (GdaMetaStruct *mstruct, GdaMetaDbObject *view_dbobj, 
 						       tmp_obj->obj_schema, tmp_obj->obj_name);
 				g_hash_table_insert (mstruct->priv->index, str, ref_obj);
 			}
+			g_object_unref (m2);
 			g_assert (ref_obj);
 			gda_value_free (catalog);
 			gda_value_free (schema);
