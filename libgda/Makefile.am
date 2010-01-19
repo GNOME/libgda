@@ -247,7 +247,7 @@ uninstall-def-files:
 endif
 
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
-gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)
+gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers) libgda.h
 
 CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 	gda-marshal.c \
