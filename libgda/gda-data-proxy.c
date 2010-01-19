@@ -3620,6 +3620,15 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			gda_mutex_unlock (proxy->priv->mutex);
 			return FALSE;
 		}
+		if ((G_VALUE_TYPE (cmp_value) != GDA_TYPE_NULL) &&
+		    (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
+		    (G_VALUE_TYPE (value) != G_VALUE_TYPE (cmp_value))) {
+			gda_mutex_unlock (proxy->priv->mutex);
+			g_warning (_("Wrong value type: expected '%s' and got '%s'"),
+				   g_type_name (G_VALUE_TYPE (cmp_value)),
+				   g_type_name (G_VALUE_TYPE (value)));
+			return FALSE;
+		}
 		if (! gda_value_compare ((GValue *) value, (GValue *) cmp_value)) {
 			/* nothing to do: values are equal */
 			gda_mutex_unlock (proxy->priv->mutex);
