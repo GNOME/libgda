@@ -31,6 +31,7 @@ main (int argc, char *argv[])
 	display_products_contents (cnc);
 
         gda_connection_close (cnc);
+	g_object_unref (cnc);
 
         return 0;
 }

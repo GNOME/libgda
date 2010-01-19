@@ -88,7 +88,11 @@ example_files = \
 	samples/AsyncExec/example.c \
 	samples/WritableSelect/README \
 	samples/WritableSelect/example.c \
-	samples/WritableSelect/Makefile
+	samples/WritableSelect/Makefile \
+	samples/SimpleUIForm/README \
+	samples/SimpleUIForm/example.c \
+	samples/SimpleUIForm/Makefile \
+	samples/SimpleUIForm/ScreenShot.png
 
 EXTRA_DIST = \
 	COPYING \

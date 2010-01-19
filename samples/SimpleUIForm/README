@@ -1,0 +1,20 @@
+Libgda simple example
+=====================
+
+Description:
+------------
+
+The example in this directory illustrate how to create a simple form using Libgdaui.
+
+It displays a form containing the customers of Libgda's SalesTest database, and for
+each customer, displays its ID, its name and the associated sales representative, using
+the name of the representative in a combo box rather than the representative's own ID.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgdaui is installed prior to this):
+> make
+
+and to run:
+> ./example
