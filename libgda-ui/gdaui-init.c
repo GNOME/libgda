@@ -51,7 +51,15 @@ GHashTable *gdaui_plugins_hash = NULL; /* key = plugin name, value = GdauiPlugin
  * gdaui_init
  *
  * Initialization of the libgda-ui library, must be called before any usage of the library.
- * Note: gtk_init() is not called by this function and should also be called.
+ *
+ * <itemizedlist>
+ * <listitem><para>Note1: gtk_init() is not called by this function and should also
+ *   be called (the calling order has no importance)</para></listitem>
+ * <listitem><para>Note2: this funtion also calls gda_init() so it should not be called
+ *    again</para></listitem>
+ * </itemizedlist>
+ *
+ * Since: 4.2
  */
 void
 gdaui_init (void)

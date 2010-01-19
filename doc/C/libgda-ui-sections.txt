@@ -1,4 +1,11 @@
 <SECTION>
+<FILE>libgdaui</FILE>
+<TITLE>LibgdaUI Initialization</TITLE>
+gdaui_init
+<SUBSECTION Standard>
+</SECTION>
+
+<SECTION>
 <FILE>gdaui-easy</FILE>
 <TITLE>UI Utility functions</TITLE>
 gdaui_new_data_entry

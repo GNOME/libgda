@@ -60,6 +60,7 @@
 <!ENTITY libgda-GdaConnection-event SYSTEM "xml/gda-connection-event.xml">
 <!ENTITY libgda-GdaColumn SYSTEM "xml/gda-column.xml">
 <!ENTITY libgda-init SYSTEM "xml/libgda.xml">
+<!ENTITY libgdaui-init SYSTEM "xml/libgdaui.xml">
 <!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
 <!ENTITY libgda-quark-list SYSTEM "xml/gda-quark-list.xml">
 <!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
@@ -1247,6 +1248,7 @@ g_object_unref (store);
       <title>User interface API reference</title>
       &visual-index;
 
+      &libgdaui-init;
       &libgdaui-GdauiLogin;
       &libgdaui-GdauiProviderSelector;
 
