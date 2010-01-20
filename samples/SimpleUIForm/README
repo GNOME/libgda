@@ -1,5 +1,5 @@
-Libgda simple example
-=====================
+LibgdaUI simple example
+=======================
 
 Description:
 ------------
@@ -10,6 +10,9 @@ It displays a form containing the customers of Libgda's SalesTest database, and 
 each customer, displays its ID, its name and the associated sales representative, using
 the name of the representative in a combo box rather than the representative's own ID.
 
+The same example.c produces two executables, one for a read-only form (example-ro) and
+one for a writeable form (example-rw, depending on the existence of the WRITABLE #define).
+
 Compiling and running:
 ----------------------
 
@@ -17,4 +20,5 @@ To compile (make sure Libgdaui is installed prior to this):
 > make
 
 and to run:
-> ./example
+> ./example-ro
+> ./example-rw

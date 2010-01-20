@@ -24,6 +24,23 @@ main (int argc, char *argv[])
 	GdaDataModel *customers, *salesrep;
 	customers = get_customers (cnc);
 	salesrep = get_salesrep (cnc);
+#ifdef WRITABLE
+	/* make the form writable:
+	 * 1 - fetch meta data
+	 * 2 - compute modification statements
+	 */
+	GError *error = NULL;
+	GdaMetaContext mcontext = {"_tables", 0, NULL, NULL};
+        if (!gda_connection_update_meta_store (cnc, &mcontext, &error)) {
+		g_print ("Can't get meta data: %s\n", error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+	}
+
+	if (! gda_data_select_compute_modification_statements (GDA_DATA_SELECT (customers), &error)) {
+		g_print ("Can't make form writable: %s\n", error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+	}
+#endif
 	
 	/* create UI */
 	GtkWidget *window, *vbox, *button, *form;
@@ -38,8 +55,10 @@ main (int argc, char *argv[])
 
 	/* main form to list customers */
 	form = gdaui_form_new (customers);
+	gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (form), GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE);
 	gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
 
+	/* use a combo box to liste salesrep by their name and not ID */
 	GdaDataModelIter *iter;
 	GdaHolder *holder;
 	iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (form));

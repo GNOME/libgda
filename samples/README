@@ -24,6 +24,6 @@ Currently the contents are:
   the execution of a SELECT statement
 
 And using the UI extension:
-* in SimpleUIForm/: a very simple form
+* in SimpleUIForm/: a very simple form, with read-only and read-write versions
 
 Good luck and happy hacking!
