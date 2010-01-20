@@ -276,6 +276,12 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 	GdaDataModelIter *iter;
 	gint col;
 	GError *error = NULL;
+	GValue *nvalue;
+
+	if (new_value)
+		nvalue = (GValue*) new_value;
+	else
+		nvalue = gda_value_new_null();
 
 	iter = (GdaDataModelIter *) paramlist;
 	if (!iter->priv->keep_param_changes && (iter->priv->row >= 0)) {
@@ -289,14 +295,14 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 				     _("Column %d out of range (0-%d)"), col, g_slist_length (paramlist->holders) - 1);
 		else if (GDA_DATA_MODEL_GET_CLASS ((GdaDataModel *) iter->priv->data_model)->i_iter_set_value) {
 			if (! (GDA_DATA_MODEL_GET_CLASS ((GdaDataModel *) iter->priv->data_model)->i_iter_set_value) 
-			    ((GdaDataModel *) iter->priv->data_model, iter, col, new_value, &error)) {
+			    ((GdaDataModel *) iter->priv->data_model, iter, col, nvalue, &error)) {
 				if (!error)
 					g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 						      "%s", _("GdaDataModel refused value change"));
 			}
 		}
 		else if (! gda_data_model_set_value_at ((GdaDataModel *) iter->priv->data_model, 
-							col, iter->priv->row, new_value, &error)) {
+							col, iter->priv->row, nvalue, &error)) {
 			if (!error)
 				g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 					      "%s", _("GdaDataModel refused value change"));
@@ -305,6 +311,8 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [0]);
 		g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [1]);
 	}
+	if (!new_value)
+		gda_value_free (nvalue);
 
 	if (!error && ((GdaSetClass *) parent_class)->validate_holder_change)
 		/* for the parent class */
