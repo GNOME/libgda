@@ -142,6 +142,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 			 (type == G_TYPE_UINT64) ||
 			 (type == G_TYPE_DOUBLE) ||
 			 (type == G_TYPE_INT) ||
+			 (type == G_TYPE_LONG) ||
 			 (type == GDA_TYPE_NUMERIC) ||
 			 (type == G_TYPE_FLOAT) ||
 			 (type == GDA_TYPE_SHORT) ||
