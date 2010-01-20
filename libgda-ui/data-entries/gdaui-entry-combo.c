@@ -267,8 +267,7 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	 * and use the values provided by the parameters to display the correct row */
 	null_possible = TRUE;
 	values = NULL;
-	list = source->source->nodes;
-	while (list) {
+	for (list = source->source->nodes; list; list = list->next) {
 		ComboNode *cnode = g_new0 (ComboNode, 1);
 		
 		cnode->node = GDA_SET_NODE (list->data);
@@ -278,8 +277,6 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 		values = g_slist_append (values, (GValue *) cnode->value);
 		if (gda_holder_get_not_null (cnode->node->holder))
 			null_possible = FALSE;
-
-		list = g_slist_next (list);
 	}
 	combo->priv->null_possible = null_possible;
 
@@ -325,8 +322,8 @@ gdaui_entry_combo_dispose (GObject *object)
 			g_object_unref (combo->priv->paramlist);
 
 		if (combo->priv->combo_nodes) {
-			GSList *list= combo->priv->combo_nodes;
-			while (list) {
+			GSList *list;
+			for (list = combo->priv->combo_nodes; list; list = list->next) {
 				ComboNode *node = COMBO_NODE (list->data);
 
 				if (node->value)
@@ -336,7 +333,6 @@ gdaui_entry_combo_dispose (GObject *object)
 				if (node->value_default)
 					gda_value_free (node->value_default);
 				g_free (node);
-				list = g_slist_next (list);
 			}
 			g_slist_free (combo->priv->combo_nodes);
 			combo->priv->combo_nodes = NULL;
@@ -410,14 +406,12 @@ combo_contents_changed_cb (GdauiCombo *entry, GdauiEntryCombo *combo)
 		g_assert (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo->priv->combo_entry), &iter));
 		
 		model = gtk_combo_box_get_model (GTK_COMBO_BOX (combo->priv->combo_entry));
-		list = combo->priv->combo_nodes;
-		while (list) {
+		for (list = combo->priv->combo_nodes; list; list = list->next) {
 			ComboNode *node = COMBO_NODE (list->data);
 
 			gtk_tree_model_get (model, &iter, node->node->source_column, &(node->value), -1);
 			/*g_print ("%s(): Set Combo Node value to %s\n", __FUNCTION__,
 			  node->value ? gda_value_stringify (node->value) : "Null");*/
-			list = g_slist_next (list);
 		}
 		
 		g_signal_emit_by_name (G_OBJECT (combo), "status-changed");
@@ -454,11 +448,11 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 	g_return_val_if_fail (combo->priv, FALSE);
 
 	/* try to determine if all the values are NULL or of type GDA_TYPE_NULL */
-	list = values;
-	while (list && allnull) {
-		if (list->data && (G_VALUE_TYPE ((GValue *)list->data) != GDA_TYPE_NULL))
+	for (list = values; list; list = list->next) {
+		if (list->data && (G_VALUE_TYPE ((GValue *)list->data) != GDA_TYPE_NULL)) {
 			allnull = FALSE;
-		list = g_slist_next (list);
+			break;
+		}
 	}
 
 	/* actual values settings */
@@ -479,11 +473,10 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 			real_combo_unblock_signals (combo);
 
 			/* adjusting the values */
-			list = combo->priv->combo_nodes;
-			while (list) {
+			for (list = combo->priv->combo_nodes; list; list = list->next) {
 				node = COMBO_NODE (list->data);
-				gtk_tree_model_get (model, &iter, node->node->source_column, & (node->value), -1);
-				list = g_slist_next (list);
+				gtk_tree_model_get (model, &iter, node->node->source_column,
+						    &(node->value), -1);
 			}
 			
 			combo->priv->null_forced = FALSE;
@@ -495,11 +488,8 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 	}
 	else  { /* set to NULL */
 		GSList *list;
-		list = combo->priv->combo_nodes;
-		while (list) {
+		for (list = combo->priv->combo_nodes; list; list = list->next)
 			COMBO_NODE (list->data)->value = NULL;
-			list = g_slist_next (list);
-		}
 
 		if (combo->priv->null_possible) {
 			real_combo_block_signals (combo);
@@ -541,13 +531,9 @@ gdaui_entry_combo_get_values (GdauiEntryCombo *combo)
 	g_return_val_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo), NULL);
 	g_return_val_if_fail (combo->priv, NULL);
 
-	list = combo->priv->combo_nodes;
-	while (list) {
-		ComboNode *node = COMBO_NODE (list->data);
-		
+	for (list = combo->priv->combo_nodes; list; list = list->next) {
+		ComboNode *node = COMBO_NODE (list->data);		
 		retval = g_slist_append (retval, (GValue *) node->value);
-
-		list = g_slist_next (list);
 	}
 
 	return retval;
@@ -591,15 +577,12 @@ gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
 	gdaui_entry_combo_set_values (combo, values);
 
 	/* clean all the orig values */
-	list = combo->priv->combo_nodes;
-	while (list) {
+	for (list = combo->priv->combo_nodes; list; list = list->next) {
 		ComboNode *node = COMBO_NODE (list->data);
 		if (node->value_orig) {
 			gda_value_free (node->value_orig);
 			node->value_orig = NULL;
 		}
-		
-		list = g_slist_next (list);
 	}
 
 	if (values) {
@@ -613,11 +596,11 @@ gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
 		/* 
 		 * first make sure the value types are the same as for the data model 
 		 */
-		nodes = combo->priv->combo_nodes;
-		argptr = values;
-		while (argptr && nodes && equal) {
+		for (nodes = combo->priv->combo_nodes, argptr = values;
+		     argptr && nodes && equal;
+		     nodes = nodes->next, argptr = argptr->next) {
 			GdaColumn *attrs;
-			GType type=GDA_TYPE_NULL;
+			GType type = GDA_TYPE_NULL;
 			
 			attrs = gda_data_model_describe_column (combo->priv->source->source->data_model, 
 								COMBO_NODE (nodes->data)->node->source_column);
@@ -625,24 +608,19 @@ gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
 			
 			if (arg_value)
 				type = G_VALUE_TYPE ((GValue*) arg_value);
-			equal = (type == gda_column_get_g_type (attrs));
-			
-			nodes = g_slist_next (nodes);
-			argptr = g_slist_next (argptr);
+			equal = (type == gda_column_get_g_type (attrs));			
 		}
 		
 		/* 
 		 * then, actual copy of the values
 		 */
 		if (equal) {
-			nodes = combo->priv->combo_nodes;
-			argptr = values;
-			while (argptr && nodes && equal) {
+			for (nodes = combo->priv->combo_nodes, argptr = values;
+			     argptr && nodes;
+			     nodes = nodes->next, argptr = argptr->next)
 				if (argptr->data)
-					COMBO_NODE (nodes->data)->value_orig = gda_value_copy ((GValue*) (argptr->data));
-				nodes = g_slist_next (nodes);
-				argptr = g_slist_next (argptr);
-			}
+					COMBO_NODE (nodes->data)->value_orig =
+						gda_value_copy ((GValue*) (argptr->data));
 		} 
 	}
 }
@@ -666,8 +644,7 @@ gdaui_entry_combo_get_values_orig (GdauiEntryCombo *combo)
 	g_return_val_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo), NULL);
 	g_return_val_if_fail (combo->priv, NULL);
 
-	list = combo->priv->combo_nodes;
-	while (list) {
+	for (list = combo->priv->combo_nodes; list; list = list->next) {
 		ComboNode *node = COMBO_NODE (list->data);
 
 		if (node->value_orig && 
@@ -675,8 +652,6 @@ gdaui_entry_combo_get_values_orig (GdauiEntryCombo *combo)
 			allnull = FALSE;
 		
 		retval = g_slist_append (retval, node->value_orig);
-		
-		list = g_slist_next (list);
 	}
 
 	if (allnull) {
@@ -797,13 +772,13 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 			if (combo->priv->default_forced) {
 				GSList *list;
 				gboolean allnull = TRUE;
-				list = combo->priv->combo_nodes;
-				while (list && allnull) {
+				for (list = combo->priv->combo_nodes; list; list = list->next) {
 					if (COMBO_NODE (list->data)->value_default && 
 					    (G_VALUE_TYPE (COMBO_NODE (list->data)->value_default) != 
-					     GDA_TYPE_NULL))
+					     GDA_TYPE_NULL)) {
 						allnull = FALSE;
-					list = g_slist_next (list);
+						break;
+					}
 				}
 
 				if (!allnull)
@@ -837,11 +812,9 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 			GSList *tmplist = NULL;
 			GSList *list;
 			
-			list = combo->priv->combo_nodes;
-			while (list) {
+			for (list = combo->priv->combo_nodes; list; list = list->next)
 				tmplist = g_slist_append (tmplist, COMBO_NODE (list->data)->value_default);
-				list = g_slist_next (list);
-			}
+
 			gdaui_entry_combo_set_values (combo, tmplist);
 			g_slist_free (tmplist);
 
@@ -849,13 +822,13 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 			if (combo->priv->null_forced) {
 				GSList *list;
 				gboolean allnull = TRUE;
-				list = combo->priv->combo_nodes;
-				while (list && allnull) {
+				for (list = combo->priv->combo_nodes; list; list = list->next) {
 					if (COMBO_NODE (list->data)->value_default && 
 					    (G_VALUE_TYPE (COMBO_NODE (list->data)->value_default) != 
-					     GDA_TYPE_NULL))
+					     GDA_TYPE_NULL)) {
 						allnull = FALSE;
-					list = g_slist_next (list);
+						break;
+					}
 				}
 				
 				if (!allnull)
@@ -882,11 +855,8 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 			GSList *tmplist = NULL;
 			GSList *list;
 			
-			list = combo->priv->combo_nodes;
-			while (list) {
+			for (list = combo->priv->combo_nodes; list; list = list->next)
 				tmplist = g_slist_append (tmplist, COMBO_NODE (list->data)->value_orig);
-				list = g_slist_next (list);
-			}
 				
 			gdaui_entry_combo_set_values (combo, tmplist);
 			g_slist_free (tmplist);
@@ -932,8 +902,7 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 	combo = GDAUI_ENTRY_COMBO (iface);
 	g_return_val_if_fail (combo->priv, 0);
 
-	list = combo->priv->combo_nodes;
-	while (list) {
+	for (list = combo->priv->combo_nodes; list; list = list->next) {
 		gboolean changed = FALSE;
 
 		/* NULL? */
@@ -964,8 +933,6 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 		if (changed || 
 		    (!orig_value_exists && !isnull))
 			isunchanged = FALSE;
-		
-		list = g_slist_next (list);
 	}
 
 	if (isunchanged)
@@ -998,15 +965,14 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 		GSList *nodes;
 		gboolean allnull = TRUE;
 		
-		nodes = combo->priv->combo_nodes;
- 		while (nodes) {
+		for (nodes = combo->priv->combo_nodes; nodes; nodes = nodes->next) {
 			ComboNode *node = COMBO_NODE (nodes->data);
 
 			/* all the nodes are NULL ? */
-			if (node->value && (G_VALUE_TYPE ((GValue *) node->value) != GDA_TYPE_NULL))
+			if (node->value && (G_VALUE_TYPE ((GValue *) node->value) != GDA_TYPE_NULL)) {
 				allnull = FALSE;
-
-			nodes = g_slist_next (nodes);
+				break;
+			}
 		}
 
 		if ((allnull && !combo->priv->null_possible) ||

@@ -1533,7 +1533,7 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 	for (list = form->priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
 
-		if (sentry->group) {
+		if (!sentry->single_param) {
 			/* Combo entry */
 			GSList *values = NULL;
 
@@ -1732,7 +1732,7 @@ get_single_entry_for_holder (GdauiBasicForm *form, GdaHolder *param)
 		SingleEntry *sentry = (SingleEntry *) list->data;
 		if (sentry->single_param && (sentry->single_param == param))
 			return sentry;
-		else if (sentry->group) {
+		else if (! sentry->single_param) {
 			/* multiple parameters */
 			GSList *params;
 
