@@ -336,8 +336,10 @@ gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
 	model->priv->sh->modif_internals->insert_to_select_mapping = NULL;
 	model->priv->sh->modif_internals->modif_set = NULL;
 	model->priv->sh->modif_internals->exec_set = NULL;
-	for (i = FIRST_QUERY; i < NB_QUERIES; i++)
+	for (i = FIRST_QUERY; i < NB_QUERIES; i++) {
+		model->priv->sh->modif_internals->modif_params[i] = NULL;
 		model->priv->sh->modif_internals->modif_stmts[i] = NULL;
+	}
 	model->priv->sh->modif_internals->upd_stmts = NULL;
 	model->priv->sh->modif_internals->ins_stmts = NULL;
 	model->priv->sh->modif_internals->one_row_select_stmt = NULL;
@@ -489,6 +491,12 @@ _gda_data_select_internals_free (GdaDataSelectInternals *inter)
 		g_object_unref (inter->modif_set);
 		inter->modif_set = NULL;
 	}
+	for (i = 0; i < NB_QUERIES; i++) {
+		if (inter->modif_params [i]) {
+			g_slist_free (inter->modif_params [i]);
+			inter->modif_params [i] = NULL;
+		}
+	}
 	
 	if (inter->exec_set) {
 		g_object_unref (inter->exec_set);
@@ -499,6 +507,10 @@ _gda_data_select_internals_free (GdaDataSelectInternals *inter)
 		if (inter->modif_stmts [i]) {
 			g_object_unref (inter->modif_stmts [i]);
 			inter->modif_stmts [i] = NULL;
+		}
+		if (inter->modif_params [i]) {
+			g_slist_free (inter->modif_params [i]);
+			inter->modif_params [i] = NULL;
 		}
 	}
 	if (inter->upd_stmts) {
@@ -804,6 +816,13 @@ compute_modif_set (GdaDataSelect *model, GError **error)
 		model->priv->sh->modif_internals->modif_set = gda_set_new (NULL);
 
 	for (i = 0; i < NB_QUERIES; i++) {
+		if (model->priv->sh->modif_internals->modif_params [i]) {
+			g_slist_free (model->priv->sh->modif_internals->modif_params [i]);
+			model->priv->sh->modif_internals->modif_params [i] = NULL;
+		}
+	}
+
+	for (i = 0; i < NB_QUERIES; i++) {
 		GdaSet *set;
 		if (! model->priv->sh->modif_internals->modif_stmts [i])
 			continue;
@@ -814,6 +833,16 @@ compute_modif_set (GdaDataSelect *model, GError **error)
 		}
 
 		gda_set_merge_with_set (model->priv->sh->modif_internals->modif_set, set);
+		
+		GSList *list;
+		for (list = set->holders; list; list = list->next) {
+			GdaHolder *holder; 
+			holder = gda_set_get_holder (model->priv->sh->modif_internals->modif_set,
+						     gda_holder_get_id ((GdaHolder*) list->data));
+			model->priv->sh->modif_internals->modif_params [i] =
+				g_slist_prepend (model->priv->sh->modif_internals->modif_params [i], holder);
+		}
+
 		g_object_unref (set);
 	}
 
@@ -1113,7 +1142,8 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 		if (!compute_modif_set (model, error))
 			return FALSE;
 
-		/* check that all the parameters required to execute @mod_stmt are in model->priv->sh->modif_internals->modif_set */
+		/* check that all the parameters required to execute @mod_stmt are in
+		 * model->priv->sh->modif_internals->modif_set */
 		GdaSet *params;
 		GSList *list;
 		if (! gda_statement_get_parameters (mod_stmt, &params, error))
@@ -1121,29 +1151,36 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 		for (list = params->holders; list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			GdaHolder *eholder;
-			eholder = gda_set_get_holder (model->priv->sh->modif_internals->modif_set, gda_holder_get_id (holder));
+			eholder = gda_set_get_holder (model->priv->sh->modif_internals->modif_set,
+						      gda_holder_get_id (holder));
 			if (!eholder) {
 				gint num;
 				gboolean is_old;
 
 				if (!param_name_to_int (gda_holder_get_id (holder), &num, &is_old)) {
-					g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
+					g_set_error (error, GDA_DATA_SELECT_ERROR,
+						     GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 						     _("Modification statement uses an unknown '%s' parameter"),
 						     gda_holder_get_id (holder));
 					g_object_unref (params);
 					return FALSE;
 				}
 				if (num > gda_data_select_get_n_columns ((GdaDataModel*) model)) {
-					g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+					g_set_error (error, GDA_DATA_SELECT_ERROR,
+						     GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
 						     _("Column %d out of range (0-%d)"), num, 
 						     gda_data_select_get_n_columns ((GdaDataModel*) model)-1);
 					g_object_unref (params);
 					return FALSE;
 				}
 				gda_set_add_holder (model->priv->sh->modif_internals->modif_set, holder);
+				model->priv->sh->modif_internals->modif_params[mtype] =
+					g_slist_prepend (model->priv->sh->modif_internals->modif_params[mtype],
+							 holder);
 			}
 			else if (gda_holder_get_g_type (holder) != gda_holder_get_g_type (eholder)) {
-				g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
+				g_set_error (error, GDA_DATA_SELECT_ERROR,
+					     GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 					     _("Modification statement's  '%s' parameter is a %s when it should be a %s"),
 					     gda_holder_get_id (holder),
 					     gda_g_type_to_string (gda_holder_get_g_type (holder)),
@@ -1167,9 +1204,11 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 	GSList *hlist;
 	g_print ("SET MODIF QUERY\n");
 	if (model->priv->sh->modif_internals->modif_set) {
-		for (hlist = model->priv->sh->modif_internals->modif_set->holders; hlist; hlist = hlist->next) {
+		for (hlist = model->priv->sh->modif_internals->modif_set->holders; hlist;
+		     hlist = hlist->next) {
 			GdaHolder *h = GDA_HOLDER (hlist->data);
-			g_print ("  %s type=> %s (%d)\n", gda_holder_get_id (h), g_type_name (gda_holder_get_g_type (h)),
+			g_print ("  %s type=> %s (%d)\n", gda_holder_get_id (h),
+				 g_type_name (gda_holder_get_g_type (h)),
 				 gda_holder_get_g_type (h));
 		}
 	}
@@ -2401,7 +2440,8 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 #endif
 
 	if (gda_connection_statement_execute_non_select (imodel->priv->cnc, stmt,
-							 imodel->priv->sh->modif_internals->modif_set, NULL, error) == -1)
+							 imodel->priv->sh->modif_internals->modif_set,
+							 NULL, error) == -1)
 		return FALSE;
 	
 	/* mark that this row has been modified */
@@ -2417,7 +2457,8 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 			gboolean allok = TRUE;
 
 			/* overwrite old values with new values if some have been provided */
-			for (list = imodel->priv->sh->modif_internals->modif_set->holders; list; list = list->next) {
+			for (list = imodel->priv->sh->modif_internals->modif_set->holders; list;
+			     list = list->next) {
 				GdaHolder *h = (GdaHolder*) list->data;
 				gint res;
 				gboolean old;
@@ -2425,7 +2466,8 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 				    param_name_to_int (gda_holder_get_id (h), &res, &old) && 
 				    !old) {
 					str = g_strdup_printf ("-%d", res);
-					holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
+					holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set,
+								     str);
 					g_free (str);
 					if (holder &&
 					    ! gda_holder_set_value (holder, gda_holder_get_value (h), error)) {
@@ -2519,12 +2561,17 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 	holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
 	g_free (str);
 	if (! holder) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+		g_set_error (error, GDA_DATA_SELECT_ERROR,
+			     GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
 			     _("Column %d can't be modified"), col);
 		return FALSE;
 	}
-	if (! gda_holder_set_value (holder, value, error)) 
-		return FALSE;
+	if (g_slist_find (imodel->priv->sh->modif_internals->modif_params[UPD_QUERY], holder)) {
+		if (! gda_holder_set_value (holder, value, error))
+			return FALSE;
+	}
+	else
+		gda_holder_force_invalid (holder);
 
 	/* BVector */
 	BVector *bv;
@@ -2562,7 +2609,8 @@ gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gi
 	/* arguments check */
 	ncols = gda_data_select_get_n_columns (model);
 	if (col >= ncols) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+		g_set_error (error, GDA_DATA_SELECT_ERROR,
+			     GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
 			     _("Column %d out of range (0-%d)"), col, ncols-1);
 		return FALSE;
 	}
@@ -2580,12 +2628,17 @@ gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gi
 	holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
 	g_free (str);
 	if (! holder) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+		g_set_error (error, GDA_DATA_SELECT_ERROR,
+			     GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
 			     _("Column %d can't be modified"), col);
 		return FALSE;
 	}
-	if (! gda_holder_set_value (holder, value, error)) 
-		return FALSE;
+	if (g_slist_find (imodel->priv->sh->modif_internals->modif_params[UPD_QUERY], holder)) {
+		if (!gda_holder_set_value (holder, value, error))
+			return FALSE;
+	}
+	else
+		gda_holder_force_invalid (holder);
 
 	/* BVector */
 	BVector *bv;
@@ -2682,10 +2735,17 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
 		str = g_strdup_printf ("+%d", i);
 		holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
 		g_free (str);
-		if (holder && ! gda_holder_set_value (holder, (GValue *) list->data, error)) {
-			bvector_free (bv);
-			return FALSE;
+		if (!holder)
+			continue;
+
+		if (g_slist_find (imodel->priv->sh->modif_internals->modif_params[UPD_QUERY], holder)) {
+			if (!gda_holder_set_value (holder, (GValue *) list->data, error)) {
+				bvector_free (bv);
+				return FALSE;
+			}
 		}
+		else
+			gda_holder_force_invalid (holder);
 	}
 
 	return vector_set_value_at (imodel, bv, NULL, row, error);
@@ -2784,12 +2844,18 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 		holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
 		g_free (str);
 		if (! holder) {
-			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+			g_set_error (error, GDA_DATA_SELECT_ERROR,
+				     GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
 				     _("Column %d can't be modified"), i);
 			if (free_bv)
 				bvector_free (bv);
 			return -1;
 		}
+		if (!g_slist_find (imodel->priv->sh->modif_internals->modif_params[INS_QUERY], holder)) {
+			gda_holder_force_invalid (holder);
+			continue;
+		}
+
 		if (! gda_holder_set_value (holder, (GValue *) list->data, error)) {
 			if (free_bv)
 				bvector_free (bv);
@@ -2922,6 +2988,11 @@ gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 		holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
 		g_free (str);
 		if (holder) {
+			if (!g_slist_find (imodel->priv->sh->modif_internals->modif_params[DEL_QUERY],
+					   holder)) {
+				gda_holder_force_invalid (holder);
+				continue;
+			}
 			const GValue *cvalue;
 			cvalue = gda_data_model_get_value_at (model, i, int_row, error);
 			if (!cvalue)

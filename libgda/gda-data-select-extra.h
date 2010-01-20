@@ -47,17 +47,12 @@ typedef struct {
 	
 	GdaSet                 *exec_set; /* owned by this object (copied) */
 	GdaSet                 *modif_set; /* owned by this object */
+	GSList                 *modif_params[NB_QUERIES]; /* the lists point to holders in @modif_set */
 	GdaStatement           *modif_stmts[NB_QUERIES];
 	GHashTable             *upd_stmts; /* key = a gboolean vector with TRUEs when the column is used, value = an UPDATE GdaStatement  */
 	GHashTable             *ins_stmts; /* key = a gboolean vector with TRUEs when the column is used, value = an INSERT GdaStatement  */
 	GdaStatement           *one_row_select_stmt; /* used to retrieve one row after an UPDATE
 						      * or INSERT operation */
-
-	/* Padding for future expansion */
-	gpointer _gda_reserved1;
-	gpointer _gda_reserved2;
-	gpointer _gda_reserved3;
-	gpointer _gda_reserved4;
 } GdaDataSelectInternals;
 
 GdaDataSelectInternals *_gda_data_select_internals_steal (GdaDataSelect *model);
