@@ -158,18 +158,27 @@ gdaui_raw_form_selector_init (GdauiDataSelectorIface *iface)
 }
 
 static void
-gdaui_raw_form_class_init (GdauiRawFormClass * class)
+basic_form_layout_changed (GdauiBasicForm *bform)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GdauiRawForm *form = GDAUI_RAW_FORM (bform);
+	iter_row_changed_cb (form->priv->iter, gda_data_model_iter_get_row (form->priv->iter), form);
+}
+
+static void
+gdaui_raw_form_class_init (GdauiRawFormClass *class)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (class);
 
 	parent_class = g_type_class_peek_parent (class);
 	object_class->dispose = gdaui_raw_form_dispose;
+	GDAUI_BASIC_FORM_CLASS (class)->layout_changed = basic_form_layout_changed;
 
 	/* Properties */
         object_class->set_property = gdaui_raw_form_set_property;
         object_class->get_property = gdaui_raw_form_get_property;
 	g_object_class_install_property (object_class, PROP_MODEL,
-					 g_param_spec_object ("model", _("Data to display"), NULL, GDA_TYPE_DATA_MODEL,
+					 g_param_spec_object ("model", _("Data to display"),
+							      NULL, GDA_TYPE_DATA_MODEL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
