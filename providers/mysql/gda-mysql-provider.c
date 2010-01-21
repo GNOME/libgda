@@ -1854,9 +1854,9 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				MYSQL_TIME *mtime;
 				mtime = g_new0 (MYSQL_TIME, 1);
 				mem_to_free = g_slist_prepend (mem_to_free, mtime);
-				mtime->year = ts->year;
-				mtime->month = ts->month;
-				mtime->day = ts->day;
+				mtime->year = g_date_get_year (ts);
+				mtime->month = g_date_get_month (ts);
+				mtime->day = g_date_get_day (ts);
 
 				mysql_bind_param[i].buffer_type= MYSQL_TYPE_DATE;
 				mysql_bind_param[i].buffer= (char *)mtime;
