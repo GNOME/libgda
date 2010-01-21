@@ -842,7 +842,6 @@ compute_modif_set (GdaDataSelect *model, GError **error)
 			model->priv->sh->modif_internals->modif_params [i] =
 				g_slist_prepend (model->priv->sh->modif_internals->modif_params [i], holder);
 		}
-
 		g_object_unref (set);
 	}
 
@@ -852,6 +851,13 @@ compute_modif_set (GdaDataSelect *model, GError **error)
 	for (list = model->priv->sh->modif_internals->modif_set->holders; list; list = list->next) {
 		GdaHolder *h = GDA_HOLDER (list->data);
 		g_print ("=> holder '%s'\n", gda_holder_get_id (h));
+	}
+	for (i = 0; i < NB_QUERIES; i++) {
+		g_print ("   MOD %d\n", i);
+		for (list = model->priv->sh->modif_internals->modif_params [i]; list; list = list->next) {
+			GdaHolder *h = GDA_HOLDER (list->data);
+			g_print ("\t=> holder '%s'\n", gda_holder_get_id (h));
+		}
 	}
 #endif
 
@@ -1133,21 +1139,19 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 		if (! gda_statement_check_structure (mod_stmt, error))
 			return FALSE;
 
-		if (model->priv->sh->modif_internals->modif_stmts[mtype]) {
-			g_object_unref (model->priv->sh->modif_internals->modif_stmts[mtype]);
-			model->priv->sh->modif_internals->modif_stmts[mtype] = NULL;
-		}
-
-		/* prepare model->priv->sh->modif_internals->modif_set */
-		if (!compute_modif_set (model, error))
-			return FALSE;
-
 		/* check that all the parameters required to execute @mod_stmt are in
 		 * model->priv->sh->modif_internals->modif_set */
 		GdaSet *params;
-		GSList *list;
+		GSList *list, *params_to_add = NULL;
 		if (! gda_statement_get_parameters (mod_stmt, &params, error))
 			return FALSE;
+		if (! model->priv->sh->modif_internals->modif_set) {
+			if (model->priv->sh->modif_internals->exec_set)
+				model->priv->sh->modif_internals->modif_set = gda_set_copy (model->priv->sh->modif_internals->exec_set);
+			else
+				model->priv->sh->modif_internals->modif_set = gda_set_new (NULL);
+		}
+
 		for (list = params->holders; list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			GdaHolder *eholder;
@@ -1163,6 +1167,8 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 						     _("Modification statement uses an unknown '%s' parameter"),
 						     gda_holder_get_id (holder));
 					g_object_unref (params);
+					if (params_to_add)
+						g_slist_free (params_to_add);
 					return FALSE;
 				}
 				if (num > gda_data_select_get_n_columns ((GdaDataModel*) model)) {
@@ -1171,12 +1177,11 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 						     _("Column %d out of range (0-%d)"), num, 
 						     gda_data_select_get_n_columns ((GdaDataModel*) model)-1);
 					g_object_unref (params);
+					if (params_to_add)
+						g_slist_free (params_to_add);
 					return FALSE;
 				}
-				gda_set_add_holder (model->priv->sh->modif_internals->modif_set, holder);
-				model->priv->sh->modif_internals->modif_params[mtype] =
-					g_slist_prepend (model->priv->sh->modif_internals->modif_params[mtype],
-							 holder);
+				params_to_add = g_slist_prepend (params_to_add, holder);
 			}
 			else if (gda_holder_get_g_type (holder) != gda_holder_get_g_type (eholder)) {
 				g_set_error (error, GDA_DATA_SELECT_ERROR,
@@ -1186,13 +1191,35 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 					     gda_g_type_to_string (gda_holder_get_g_type (holder)),
 					     gda_g_type_to_string (gda_holder_get_g_type (eholder)));
 				g_object_unref (params);
+				if (params_to_add)
+					g_slist_free (params_to_add);
 				return FALSE;
 			}
 		}
-		g_object_unref (params);
 
+		/* all ok, accept the modif statement */
+		if (model->priv->sh->modif_internals->modif_stmts[mtype]) {
+			g_object_unref (model->priv->sh->modif_internals->modif_stmts[mtype]);
+			model->priv->sh->modif_internals->modif_stmts[mtype] = NULL;
+		}
 		model->priv->sh->modif_internals->modif_stmts[mtype] = mod_stmt;
 		g_object_ref (mod_stmt);
+
+		if (params_to_add) {
+			for (list = params_to_add; list; list = list->next) {
+				gda_set_add_holder (model->priv->sh->modif_internals->modif_set,
+						    GDA_HOLDER (list->data));
+				model->priv->sh->modif_internals->modif_params[mtype] =
+					g_slist_prepend (model->priv->sh->modif_internals->modif_params[mtype],
+							 list->data);
+			}
+			g_slist_free (params_to_add);
+		}
+		g_object_unref (params);
+
+		/* prepare model->priv->sh->modif_internals->modif_set */
+		if (!compute_modif_set (model, error))
+			return FALSE;
 	}
 	else {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
@@ -2844,12 +2871,8 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 		holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
 		g_free (str);
 		if (! holder) {
-			g_set_error (error, GDA_DATA_SELECT_ERROR,
-				     GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-				     _("Column %d can't be modified"), i);
-			if (free_bv)
-				bvector_free (bv);
-			return -1;
+			/* ignore this value as it won't be used */
+			continue;
 		}
 		if (!g_slist_find (imodel->priv->sh->modif_internals->modif_params[INS_QUERY], holder)) {
 			gda_holder_force_invalid (holder);
