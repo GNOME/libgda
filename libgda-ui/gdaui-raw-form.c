@@ -592,10 +592,12 @@ action_new_cb (GtkAction *action, GdauiRawForm *form)
 	GError *error = NULL;
 	GSList *list;
 
-	if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE)
+	if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
+		/* validate current row (forces calling iter_validate_set_cb()) */
 		if (gda_data_model_iter_is_valid (form->priv->iter) &&
 		    ! gda_set_is_valid (GDA_SET (form->priv->iter), NULL))
 			return;
+	}
 
 	/* append a row in the proxy */
 	g_signal_handlers_block_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
@@ -646,7 +648,7 @@ action_delete_cb (GtkAction *action, GdauiRawForm *form)
 		gint newrow;
 
 		newrow = gda_data_model_iter_get_row (form->priv->iter);
-		if (row == newrow) {/* => row has been marked as delete but nit yet really deleted */
+		if (row == newrow) {/* => row has been marked as delete but not yet really deleted */
 			GError *error = NULL;
 			if (!gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error)) {
 				_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);

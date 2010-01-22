@@ -82,7 +82,7 @@ my_validate_change_cb (GdaHolder *h, const GValue *value, gpointer data)
 	    key event allows one to control each holder's value change as they occur.
 	</para></listitem>
 	<listitem><para>
-	    When the <link linkend="gda-set-is-valid">gda_set_is_valid()</link> method is called, where
+	    When the <link linkend="gda-set-is-valid">gda_set_is_valid()</link> method is called,
 	    the <link linkend="GdaSet-validate-set">"validate-set"</link> signal is
 	    emitted. If any handler for this signal returns a pointer to a filled <link linkend="GError">GError</link>
 	    structure, then the signal's propagation is stopped and the calling method will return the generated
@@ -109,7 +109,7 @@ my_validate_change_cb (GdaHolder *h, const GValue *value, gpointer data)
       The <link linkend="GdaDataProxy">GdaDataProxy</link> data model allows one to store temporary modifications
       to a data model, and then apply (write to the proxied data model) those modifications row by row. Before
       applying any row modification, the <link linkend="GdaDataProxy">GdaDataProxy</link> data model emits
-      the <link linkend="GdaDataProxy::validate-row-changes">"validate-row-changes"</link> signal, and
+      the <link linkend="GdaDataProxy-validate-row-changes">"validate-row-changes"</link> signal, and
       if handler for this signal returns a pointer to a filled <link linkend="GError">GError</link>
       structure, then the signal's propagation is stopped and the row's modifications are not applied.
     </para>
