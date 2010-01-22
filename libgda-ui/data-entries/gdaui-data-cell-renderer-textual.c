@@ -44,35 +44,35 @@ static void gdaui_data_cell_renderer_textual_dispose    (GObject *object);
 static void gdaui_data_cell_renderer_textual_finalize   (GObject *object);
 
 static void gdaui_data_cell_renderer_textual_get_property  (GObject *object,
-							       guint param_id,
-							       GValue *value,
-							       GParamSpec *pspec);
+							    guint param_id,
+							    GValue *value,
+							    GParamSpec *pspec);
 static void gdaui_data_cell_renderer_textual_set_property  (GObject *object,
-							       guint param_id,
-							       const GValue *value,
-							       GParamSpec *pspec);
+							    guint param_id,
+							    const GValue *value,
+							    GParamSpec *pspec);
 static void gdaui_data_cell_renderer_textual_get_size   (GtkCellRenderer          *cell,
-							    GtkWidget                *widget,
-							    GdkRectangle             *cell_area,
-							    gint                     *x_offset,
-							    gint                     *y_offset,
-							    gint                     *width,
-							    gint                     *height);
+							 GtkWidget                *widget,
+							 GdkRectangle             *cell_area,
+							 gint                     *x_offset,
+							 gint                     *y_offset,
+							 gint                     *width,
+							 gint                     *height);
 static void gdaui_data_cell_renderer_textual_render     (GtkCellRenderer          *cell,
-							    GdkWindow                *window,
-							    GtkWidget                *widget,
-							    GdkRectangle             *background_area,
-							    GdkRectangle             *cell_area,
-							    GdkRectangle             *expose_area,
-							    GtkCellRendererState      flags);
+							 GdkWindow                *window,
+							 GtkWidget                *widget,
+							 GdkRectangle             *background_area,
+							 GdkRectangle             *cell_area,
+							 GdkRectangle             *expose_area,
+							 GtkCellRendererState      flags);
 
 static GtkCellEditable *gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
-									   GdkEvent             *event,
-									   GtkWidget            *widget,
-									   const gchar          *path,
-									   GdkRectangle         *background_area,
-									   GdkRectangle         *cell_area,
-									   GtkCellRendererState  flags);
+									GdkEvent             *event,
+									GtkWidget            *widget,
+									const gchar          *path,
+									GdkRectangle         *background_area,
+									GdkRectangle         *cell_area,
+									GtkCellRendererState  flags);
 
 enum {
 	CHANGED,
@@ -102,10 +102,10 @@ struct _GdauiDataCellRendererTextualPrivate
 	gint            max_length;
 	gint            n_decimals;
 	guchar          thousands_sep;
-	
+
 };
 
-typedef struct 
+typedef struct
 {
 	/* text renderer */
 	gulong focus_out_id;
@@ -136,7 +136,7 @@ gdaui_data_cell_renderer_textual_get_type (void)
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_textual_init,
 		};
-		
+
 		cell_text_type =
 			g_type_register_static (GTK_TYPE_CELL_RENDERER_TEXT, "GdauiDataCellRendererTextual",
 						&cell_text_info, 0);
@@ -178,18 +178,18 @@ gdaui_data_cell_renderer_textual_class_init (GdauiDataCellRendererTextualClass *
 	cell_class->get_size = gdaui_data_cell_renderer_textual_get_size;
 	cell_class->render = gdaui_data_cell_renderer_textual_render;
 	cell_class->start_editing = gdaui_data_cell_renderer_textual_start_editing;
-  
+
 	g_object_class_install_property (object_class,
 					 PROP_VALUE,
 					 g_param_spec_pointer ("value",
 							       _("Value"),
 							       _("GValue to render"),
 							       G_PARAM_WRITABLE));
-  
+
 	g_object_class_install_property (object_class,
 					 PROP_VALUE_ATTRIBUTES,
 					 g_param_spec_flags ("value-attributes", NULL, NULL, GDA_TYPE_VALUE_ATTRIBUTE,
-                                                            GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
+							     GDA_VALUE_ATTR_NONE, G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,
 					 PROP_TO_BE_DELETED,
@@ -208,7 +208,7 @@ gdaui_data_cell_renderer_textual_class_init (GdauiDataCellRendererTextualClass *
 	                                PROP_OPTIONS,
 	                                g_param_spec_string("options", NULL, NULL, NULL,
 	                                                    G_PARAM_WRITABLE));
-  
+
 	text_cell_renderer_textual_signals [CHANGED] =
 		g_signal_new ("changed",
 			      G_OBJECT_CLASS_TYPE (object_class),
@@ -254,9 +254,9 @@ gdaui_data_cell_renderer_textual_finalize (GObject *object)
 
 static void
 gdaui_data_cell_renderer_textual_get_property (GObject *object,
-						  guint param_id,
-						  GValue *value,
-						  GParamSpec *pspec)
+					       guint param_id,
+					       GValue *value,
+					       GParamSpec *pspec)
 {
 	switch (param_id) {
 	case PROP_VALUE_ATTRIBUTES:
@@ -311,7 +311,7 @@ adjust_numeric_display (const gchar *number_text, gboolean is_int, gint n_decima
 	number_length = strlen (number_text);
 
 	/* make a copy of current number representation in a tmp buffer */
-	new_text = g_new (gchar, 
+	new_text = g_new (gchar,
 			  number_length * 2 + ((n_decimals >= 0) ? n_decimals : 0) + 1);
 	memcpy (new_text, number_text, number_length + 1);
 
@@ -334,12 +334,12 @@ adjust_numeric_display (const gchar *number_text, gboolean is_int, gint n_decima
 			else {
 				for (ptr++; *ptr && (n < n_decimals); n++, ptr++)
 					g_assert (isdigit (*ptr));
-				
+
 				if (*ptr)
 					*ptr = 0;
 			}
 
-			for (; n < n_decimals; n++, ptr++) 
+			for (; n < n_decimals; n++, ptr++)
 				*ptr = '0';
 			*ptr = 0;
 		}
@@ -357,7 +357,7 @@ adjust_numeric_display (const gchar *number_text, gboolean is_int, gint n_decima
 			}
 		}
 	}
-	
+
 	return new_text;
 }
 
@@ -392,15 +392,15 @@ get_default_thousands_sep ()
 
 static void
 gdaui_data_cell_renderer_textual_set_property (GObject *object,
-						  guint         param_id,
-						  const GValue *value,
-						  GParamSpec *pspec)
+					       guint param_id,
+					       const GValue *value,
+					       GParamSpec *pspec)
 {
 	GdauiDataCellRendererTextual *datacell = GDAUI_DATA_CELL_RENDERER_TEXTUAL (object);
 	gfloat xalign = 0.;
 	const gchar* options;
 	static gchar *too_long_msg = NULL;
-	static gint too_long_msg_len;	
+	static gint too_long_msg_len;
 
 	if (!too_long_msg) {
 		too_long_msg = _("<string cut because too long>");
@@ -427,10 +427,12 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 				if (G_VALUE_TYPE (gval) != datacell->priv->type) {
 					if (!datacell->priv->type_forced) {
 						datacell->priv->type_forced = TRUE;
-						g_warning (_("Data cell renderer's specified type (%s) differs from actual "
-							     "value to display type (%s)"), 
-							   g_type_name (datacell->priv->type),
-							   g_type_name (G_VALUE_TYPE (gval)));
+						if (datacell->priv->type != G_TYPE_INVALID)
+							g_warning (_("Data cell renderer's specified type (%s) "
+								     "differs from actual "
+								     "value to display type (%s)"),
+								   g_type_name (datacell->priv->type),
+								   g_type_name (G_VALUE_TYPE (gval)));
 					}
 					else
 						g_warning (_("Data cell renderer asked to display values of different "
@@ -447,6 +449,9 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 				if (! OPTIMIZE)
 					datacell->priv->value = gda_value_copy (gval);
 
+				if (!datacell->priv->dh && (datacell->priv->type != G_TYPE_INVALID))
+					datacell->priv->dh = g_object_ref (gda_get_default_handler (datacell->priv->type));
+
 				if (datacell->priv->dh) {
 					str = gda_data_handler_get_str_from_value (datacell->priv->dh, gval);
 					if (str && (strlen (str) > MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len)) {
@@ -454,15 +459,15 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 						memcpy (str, too_long_msg, too_long_msg_len);
 						str [MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len + 1] = 0;
 					}
-					
+
 					if (datacell->priv->options) {
 						/* extra specific treatments to handle the options */
 						gchar *tmp_str;
-						
+
 						if (!is_num && (datacell->priv->max_length > 0))
 							str [datacell->priv->max_length] = 0;
 						else if (is_num) {
-							tmp_str = adjust_numeric_display (str, is_int, 
+							tmp_str = adjust_numeric_display (str, is_int,
 											  datacell->priv->n_decimals,
 											  get_default_decimal_sep (),
 											  datacell->priv->thousands_sep);
@@ -480,7 +485,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 					g_free (str);
 				}
 				else
-					g_object_set (G_OBJECT (object), "text", _("<non-printable>"), 
+					g_object_set (G_OBJECT (object), "text", _("<non-printable>"),
 						      "xalign", xalign, NULL);
 			}
 			else
@@ -488,7 +493,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 		}
 		else
 			g_object_set (G_OBJECT (object), "text", "", "xalign", xalign, NULL);
-			      
+
 		g_object_notify (object, "value");
 		break;
 	case PROP_VALUE_ATTRIBUTES:
@@ -501,13 +506,12 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 	case PROP_DATA_HANDLER:
 		if (datacell->priv->dh)
 			g_object_unref (G_OBJECT (datacell->priv->dh));
-
-		datacell->priv->dh = GDA_DATA_HANDLER(g_value_get_object(value));
+		datacell->priv->dh = GDA_DATA_HANDLER (g_value_get_object (value));
 		if (datacell->priv->dh)
 			g_object_ref (G_OBJECT (datacell->priv->dh));
 		break;
 	case PROP_TYPE:
-		datacell->priv->type = g_value_get_gtype(value);
+		datacell->priv->type = g_value_get_gtype (value);
 		break;
 	case PROP_OPTIONS:
 		options = g_value_get_string(value);
@@ -532,7 +536,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 			if (str)
 				datacell->priv->n_decimals = atoi (str);
 			str = gda_quark_list_find (params, "CURRENCY");
-			if (str) 
+			if (str)
 				datacell->priv->currency = g_strdup_printf ("%s ", str);
 			gda_quark_list_free (params);
 		}
@@ -549,7 +553,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
  * @dh: a #GdaDataHandler object, or %NULL
  * @type: the #GType being edited
  * @options: options as a string
- * 
+ *
  * Creates a new #GdauiDataCellRendererTextual. Adjust how text is drawn using
  * object properties. Object properties can be
  * set globally (with g_object_set()). Also, with #GtkTreeViewColumn,
@@ -557,7 +561,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
  * you can bind the "text" property on the cell renderer to a string
  * value in the model, thus rendering a different string in each row
  * of the #GtkTreeView
- * 
+ *
  * Return value: the new cell renderer
  **/
 GtkCellRenderer *
@@ -576,12 +580,12 @@ gdaui_data_cell_renderer_textual_new (GdaDataHandler *dh, GType type, const gcha
 
 static void
 gdaui_data_cell_renderer_textual_get_size (GtkCellRenderer *cell,
-					      GtkWidget       *widget,
-					      GdkRectangle    *cell_area,
-					      gint            *x_offset,
-					      gint            *y_offset,
-					      gint            *width,
-					      gint            *height)
+					   GtkWidget       *widget,
+					   GdkRectangle    *cell_area,
+					   gint            *x_offset,
+					   gint            *y_offset,
+					   gint            *width,
+					   gint            *height)
 {
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 	(text_class->get_size) (cell, widget, cell_area, x_offset, y_offset, width, height);
@@ -589,13 +593,13 @@ gdaui_data_cell_renderer_textual_get_size (GtkCellRenderer *cell,
 
 static void
 gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
-					    GdkWindow            *window,
-					    GtkWidget            *widget,
-					    GdkRectangle         *background_area,
-					    GdkRectangle         *cell_area,
-					    GdkRectangle         *expose_area,
-					    GtkCellRendererState  flags)
-	
+					 GdkWindow            *window,
+					 GtkWidget            *widget,
+					 GdkRectangle         *background_area,
+					 GdkRectangle         *cell_area,
+					 GdkRectangle         *expose_area,
+					 GtkCellRendererState  flags)
+
 {
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 	(text_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
@@ -609,7 +613,7 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 
 		gtk_paint_hline (style,
 				 window, GTK_STATE_SELECTED,
-				 cell_area, 
+				 cell_area,
 				 widget,
 				 "hline",
 				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
@@ -620,7 +624,7 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 
 static void
 gdaui_data_cell_renderer_textual_editing_done (GtkCellEditable *entry,
-						  gpointer         data)
+					       gpointer         data)
 {
 	const gchar *path;
 	GdauiDataCellRendererTextualInfo *info;
@@ -643,7 +647,7 @@ gdaui_data_cell_renderer_textual_editing_done (GtkCellEditable *entry,
 	}
 
 	path = g_object_get_data (G_OBJECT (entry), GDAUI_DATA_CELL_RENDERER_TEXTUAL_PATH);
-	
+
 	value = gdaui_data_entry_get_value (GDAUI_DATA_ENTRY (entry));
 	g_signal_emit (data, text_cell_renderer_textual_signals[CHANGED], 0, path, value);
 	gda_value_free (value);
@@ -651,8 +655,8 @@ gdaui_data_cell_renderer_textual_editing_done (GtkCellEditable *entry,
 
 static gboolean
 gdaui_data_cell_renderer_textual_focus_out_event (GtkWidget *entry,
-						     GdkEvent  *event,
-						     gpointer   data)
+						  GdkEvent  *event,
+						  gpointer   data)
 {
 	gdaui_data_cell_renderer_textual_editing_done (GTK_CELL_EDITABLE (entry), data);
 
@@ -662,24 +666,25 @@ gdaui_data_cell_renderer_textual_focus_out_event (GtkWidget *entry,
 
 static GtkCellEditable *
 gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
-						   GdkEvent             *event,
-						   GtkWidget            *widget,
-						   const gchar          *path,
-						   GdkRectangle         *background_area,
-						   GdkRectangle         *cell_area,
-						   GtkCellRendererState  flags)
+						GdkEvent             *event,
+						GtkWidget            *widget,
+						const gchar          *path,
+						GdkRectangle         *background_area,
+						GdkRectangle         *cell_area,
+						GtkCellRendererState  flags)
 {
 	GdauiDataCellRendererTextual *datacell;
 	GtkWidget *entry;
 	GdauiDataCellRendererTextualInfo *info;
 	gboolean editable;
-	
+
 	datacell = GDAUI_DATA_CELL_RENDERER_TEXTUAL (cell);
 
 	/* If the cell isn't editable we return NULL. */
 	g_object_get (G_OBJECT (cell), "editable", &editable, NULL);
 	if (!editable)
 		return NULL;
+
 	/* If there is no data handler then the cell also is not editable */
 	if (!datacell->priv->dh)
 		return NULL;
@@ -708,11 +713,11 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 	}
 	else
 		gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
-	
+
 	info = g_new0 (GdauiDataCellRendererTextualInfo, 1);
- 	g_object_set_data_full (G_OBJECT (entry), GDAUI_DATA_CELL_RENDERER_TEXTUAL_PATH, g_strdup (path), g_free); 
+ 	g_object_set_data_full (G_OBJECT (entry), GDAUI_DATA_CELL_RENDERER_TEXTUAL_PATH, g_strdup (path), g_free);
 	g_object_set_data_full (G_OBJECT (cell), GDAUI_DATA_CELL_RENDERER_TEXTUAL_INFO_KEY, info, g_free);
-  
+
 	g_signal_connect (entry, "editing-done",
 			  G_CALLBACK (gdaui_data_cell_renderer_textual_editing_done), datacell);
 	info->focus_out_id = g_signal_connect (entry, "focus-out-event",
