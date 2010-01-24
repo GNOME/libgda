@@ -61,7 +61,7 @@ do_basic_form (GtkWidget *do_widget)
 		form = gdaui_basic_form_new (set);
 		gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
 
-                filename = demo_find_file ("example_automatic_layout.xml", NULL);
+                filename = demo_find_file ("custom_layout.xml", NULL);
 		gdaui_basic_form_set_layout_from_file (GDAUI_BASIC_FORM (form), filename, "simple");
 		g_free (filename);
 

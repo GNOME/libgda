@@ -58,6 +58,7 @@ struct _GdauiEntryShellClass
 GType           gdaui_entry_shell_get_type      (void) G_GNUC_CONST;
 void            gdaui_entry_shell_pack_entry    (GdauiEntryShell *shell, GtkWidget *main_widget);
 void            gdaui_entry_shell_refresh       (GdauiEntryShell *shell);
+void            gdaui_entry_shell_set_unknown   (GdauiEntryShell *shell, gboolean unknown);
 
 G_END_DECLS
 

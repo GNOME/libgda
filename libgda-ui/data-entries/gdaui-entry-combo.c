@@ -47,8 +47,8 @@ static void          real_combo_unblock_signals (GdauiEntryCombo *wid);
 static void            gdaui_entry_combo_data_entry_init   (GdauiDataEntryIface *iface);
 static void            gdaui_entry_combo_set_value         (GdauiDataEntry *de, const GValue * value);
 static GValue         *gdaui_entry_combo_get_value         (GdauiDataEntry *de);
-static void            gdaui_entry_combo_set_value_orig    (GdauiDataEntry *de, const GValue * value);
-static const GValue   *gdaui_entry_combo_get_value_orig    (GdauiDataEntry *de);
+static void            gdaui_entry_combo_set_ref_value     (GdauiDataEntry *de, const GValue * value);
+static const GValue   *gdaui_entry_combo_get_ref_value     (GdauiDataEntry *de);
 static void            gdaui_entry_combo_set_value_default (GdauiDataEntry *de, const GValue * value);
 static void            gdaui_entry_combo_set_attributes    (GdauiDataEntry *de, guint attrs, guint mask);
 static GdaValueAttribute gdaui_entry_combo_get_attributes    (GdauiDataEntry *de);
@@ -133,8 +133,8 @@ gdaui_entry_combo_data_entry_init (GdauiDataEntryIface *iface)
         iface->get_value_type = NULL;
         iface->set_value = gdaui_entry_combo_set_value;
         iface->get_value = gdaui_entry_combo_get_value;
-        iface->set_value_orig = gdaui_entry_combo_set_value_orig;
-        iface->get_value_orig = gdaui_entry_combo_get_value_orig;
+        iface->set_ref_value = gdaui_entry_combo_set_ref_value;
+        iface->get_ref_value = gdaui_entry_combo_get_ref_value;
         iface->set_value_default = gdaui_entry_combo_set_value_default;
         iface->set_attributes = gdaui_entry_combo_set_attributes;
         iface->get_attributes = gdaui_entry_combo_get_attributes;
@@ -713,7 +713,7 @@ gdaui_entry_combo_get_value (GdauiDataEntry *iface)
 }
 
 static void
-gdaui_entry_combo_set_value_orig (GdauiDataEntry *iface, const GValue * value)
+gdaui_entry_combo_set_ref_value (GdauiDataEntry *iface, const GValue * value)
 {
         GdauiEntryCombo *combo;
 	
@@ -725,7 +725,7 @@ gdaui_entry_combo_set_value_orig (GdauiDataEntry *iface, const GValue * value)
 }
 
 static const GValue *
-gdaui_entry_combo_get_value_orig (GdauiDataEntry *iface)
+gdaui_entry_combo_get_ref_value (GdauiDataEntry *iface)
 {
         GdauiEntryCombo *combo;
 	

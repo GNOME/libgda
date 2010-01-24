@@ -165,10 +165,12 @@ gdaui_data_entry_get_value_type (GdauiDataEntry *de)
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @value: a #GValue, or %NULL
  *
- * Push a value into the GdauiDataEntry. The value parameter must either be:
+ * Push a value into the #GdauiDataEntry. The value parameter must either be:
  * <itemizedlist>
- *   <listitem><para>NULL or of type GDA_TYPE_NULL, or</para></listitem>
- *   <listitem><para>of type specified using gdaui_data_entry_set_value_type().</para></listitem>
+ *   <listitem><para>of type GDA_TYPE_NULL (may be created using gda_value_new_null()) to 
+ *      represent a NULL value (SQL NULL), or</para></listitem>
+ *   <listitem><para>of type specified using gdaui_data_entry_set_value_type(), or</para></listitem>
+ *   <listitem><para>NULL to represent an undetermined value (usually an error)</para></listitem>
  * </itemizedlist>
  *
  * Since: 4.2
@@ -233,7 +235,7 @@ gdaui_data_entry_content_is_valid (GdauiDataEntry *de, GError **error)
 
 
 /**
- * gdaui_data_entry_set_original_value
+ * gdaui_data_entry_set_reference_value
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @value: a #GValue, or %NULL
  *
@@ -243,12 +245,12 @@ gdaui_data_entry_content_is_valid (GdauiDataEntry *de, GError **error)
  * Since: 4.2
  */
 void
-gdaui_data_entry_set_original_value (GdauiDataEntry *de, const GValue *value)
+gdaui_data_entry_set_reference_value (GdauiDataEntry *de, const GValue *value)
 {
 	g_return_if_fail (GDAUI_IS_DATA_ENTRY (de));
 
-	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->set_value_orig)
-		(GDAUI_DATA_ENTRY_GET_IFACE (de)->set_value_orig) (de, value);
+	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->set_ref_value)
+		(GDAUI_DATA_ENTRY_GET_IFACE (de)->set_ref_value) (de, value);
 }
 
 /**
@@ -266,7 +268,7 @@ gdaui_data_entry_reset (GdauiDataEntry *de)
 	g_return_if_fail (GDAUI_IS_DATA_ENTRY (de));
 
 	value = gdaui_data_entry_get_value (de);
-	gdaui_data_entry_set_original_value (de, value);
+	gdaui_data_entry_set_reference_value (de, value);
 	if (value)
 		gda_value_free (value);
 }
@@ -287,8 +289,8 @@ gdaui_data_entry_get_original_value (GdauiDataEntry *de)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), NULL);
 
-	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->get_value_orig)
-		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->get_value_orig) (de);
+	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->get_ref_value)
+		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->get_ref_value) (de);
 
 	return NULL;
 }

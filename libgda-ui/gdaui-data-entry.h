@@ -52,8 +52,8 @@ struct _GdauiDataEntryIface
 	GType           (*get_value_type)        (GdauiDataEntry *de);
 	void            (*set_value)             (GdauiDataEntry *de, const GValue * value);
 	GValue         *(*get_value)             (GdauiDataEntry *de);
-	void            (*set_value_orig)        (GdauiDataEntry *de, const GValue * value);
-	const GValue   *(*get_value_orig)        (GdauiDataEntry *de);
+	void            (*set_ref_value)         (GdauiDataEntry *de, const GValue * value);
+	const GValue   *(*get_ref_value)         (GdauiDataEntry *de);
 	void            (*set_value_default)     (GdauiDataEntry *de, const GValue * value);
 	void            (*set_attributes)        (GdauiDataEntry *de, GdaValueAttribute attrs, GdaValueAttribute mask);
 	GdaValueAttribute (*get_attributes)      (GdauiDataEntry *de);
@@ -79,15 +79,16 @@ GType           gdaui_data_entry_get_type               (void) G_GNUC_CONST;
 void            gdaui_data_entry_set_value_type         (GdauiDataEntry *de, GType type);
 GType           gdaui_data_entry_get_value_type         (GdauiDataEntry *de);
 
-void            gdaui_data_entry_set_value              (GdauiDataEntry *de, const GValue * value);
+void            gdaui_data_entry_set_value              (GdauiDataEntry *de, const GValue *value);
 GValue         *gdaui_data_entry_get_value              (GdauiDataEntry *de);
-gboolean        gdaui_data_entry_content_is_valid      (GdauiDataEntry *de, GError **error);
-void            gdaui_data_entry_set_original_value         (GdauiDataEntry *de, const GValue * value);
-const GValue   *gdaui_data_entry_get_original_value         (GdauiDataEntry *de);
-void            gdaui_data_entry_reset    (GdauiDataEntry *de);
-void            gdaui_data_entry_set_value_default      (GdauiDataEntry *de, const GValue * value);
+gboolean        gdaui_data_entry_content_is_valid       (GdauiDataEntry *de, GError **error);
+void            gdaui_data_entry_set_reference_value    (GdauiDataEntry *de, const GValue *value);
+const GValue   *gdaui_data_entry_get_original_value     (GdauiDataEntry *de);
+void            gdaui_data_entry_reset                  (GdauiDataEntry *de);
+void            gdaui_data_entry_set_value_default      (GdauiDataEntry *de, const GValue *value);
 
-void            gdaui_data_entry_set_attributes         (GdauiDataEntry *de, GdaValueAttribute attrs, GdaValueAttribute mask);
+void            gdaui_data_entry_set_attributes         (GdauiDataEntry *de, GdaValueAttribute attrs,
+							 GdaValueAttribute mask);
 GdaValueAttribute gdaui_data_entry_get_attributes       (GdauiDataEntry *de);
 
 GdaDataHandler *gdaui_data_entry_get_handler            (GdauiDataEntry *de);

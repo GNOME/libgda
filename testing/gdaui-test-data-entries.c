@@ -911,7 +911,7 @@ orig_clicked_cb (GtkButton *button, GtkWidget *entry)
 		g_free (str);
 	}
 	
-	gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (entry), value);
+	gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), value);
 	gda_value_free (value);
 	entry_contents_modified (entry, NULL);
 }

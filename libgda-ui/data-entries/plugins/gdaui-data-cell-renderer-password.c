@@ -466,7 +466,7 @@ gdaui_data_cell_renderer_password_start_editing (GtkCellRenderer      *cell,
 
 	g_object_set (G_OBJECT (entry), "is-cell-renderer", TRUE, "actions", FALSE, NULL);
 
-	gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
+	gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
 	
 	info = g_new0 (GdauiDataCellRendererPasswordInfo, 1);
  	g_object_set_data_full (G_OBJECT (entry), GDAUI_DATA_CELL_RENDERER_PASSWORD_PATH, g_strdup (path), g_free); 

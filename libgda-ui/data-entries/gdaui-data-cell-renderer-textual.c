@@ -709,10 +709,10 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 		g_object_get (G_OBJECT (cell), "text", &text, NULL);
 		orig = gda_data_handler_get_value_from_str (datacell->priv->dh, text, datacell->priv->type);
 		g_free (text);
-		gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (entry), orig);
+		gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), orig);
 	}
 	else
-		gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
+		gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
 
 	info = g_new0 (GdauiDataCellRendererTextualInfo, 1);
  	g_object_set_data_full (G_OBJECT (entry), GDAUI_DATA_CELL_RENDERER_TEXTUAL_PATH, g_strdup (path), g_free);

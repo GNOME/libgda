@@ -710,12 +710,15 @@ create_entry_widget (SingleEntry *sentry)
 		entry = GTK_WIDGET (gdaui_new_data_entry (type, plugin));
 
 		/* set current value */
-		gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), val);
+		if (gda_holder_is_valid (param))
+			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), val);
+		else
+			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), NULL);
 
 		if (!nnul ||
 		    (nnul && value &&
 		     (G_VALUE_TYPE ((GValue *) value) != GDA_TYPE_NULL)))
-			gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (entry), value);
+			gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), value);
 
 		if (default_val) {
 			gdaui_data_entry_set_value_default (GDAUI_DATA_ENTRY (entry), default_val);
@@ -1226,7 +1229,9 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 			/* GdaHolder refused value => reset GdaDataEntry */
 			g_signal_handler_block (G_OBJECT (entry),
 						sentry->entry_contents_modified_id);
-			gdaui_data_entry_set_value (entry, gda_holder_get_value (param));
+			gdaui_data_entry_set_value (entry,
+						    gda_holder_is_valid (param) ?
+						    gda_holder_get_value (param) : NULL);
 			g_signal_handler_unblock (G_OBJECT (entry),
 						  sentry->entry_contents_modified_id);
 		}
@@ -1331,7 +1336,7 @@ parameter_changed_cb (GdaHolder *param, SingleEntry *sentry)
 		}
 
 		if (sentry->single_param)
-			gdaui_data_entry_set_value (entry, value);
+			gdaui_data_entry_set_value (entry, param_valid ? value : NULL);
 		else {
 			GSList *values = NULL;
 			GSList *list;
@@ -1393,7 +1398,7 @@ gdaui_basic_form_set_as_reference (GdauiBasicForm *form)
 			param = sentry->single_param;
 			g_signal_handler_block (G_OBJECT (sentry->entry),
 						sentry->entry_contents_modified_id);
-			gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY (sentry->entry),
+			gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (sentry->entry),
 							     gda_holder_get_value (param));
 			g_signal_handler_unblock (G_OBJECT (sentry->entry),
 						  sentry->entry_contents_modified_id);

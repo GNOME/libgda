@@ -504,7 +504,7 @@ gdaui_data_cell_renderer_cgrid_start_editing (GtkCellRenderer       *renderer,
 		      "actions", FALSE,
 		      NULL); 
 
-	gdaui_data_entry_set_original_value (GDAUI_DATA_ENTRY(entry),
+	gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY(entry),
 					     cgrid->priv->value);
 
 	g_signal_connect (G_OBJECT(entry), "editing-done",

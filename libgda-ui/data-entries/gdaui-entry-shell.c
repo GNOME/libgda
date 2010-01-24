@@ -449,3 +449,21 @@ gdaui_entry_shell_refresh (GdauiEntryShell *shell)
 	gdaui_entry_shell_refresh_attributes (shell);
 	gdaui_entry_shell_refresh_status_display (shell);
 }
+
+/**
+ * gdaui_entry_shell_set_unknown
+ * @shell: the GdauiEntryShell widget to refresh
+ * @unknown: set to %TRUE if @shell's contents is unavailable and should not be modified
+ *
+ * Defines if @shell's contents is in an undefined state (shows or hides @shell's contents)
+ */
+void
+gdaui_entry_shell_set_unknown (GdauiEntryShell *shell, gboolean unknown)
+{
+	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
+
+	if (unknown)
+		gtk_widget_hide (shell->priv->hbox);
+	else
+		gtk_widget_show (shell->priv->hbox);
+}

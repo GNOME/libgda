@@ -118,7 +118,7 @@ Data entry widget
 @Returns: 
 
 
-<!-- ##### FUNCTION gdaui_data_entry_set_original_value ##### -->
+<!-- ##### FUNCTION gdaui_data_entry_set_reference_value ##### -->
 <para>
 
 </para>
