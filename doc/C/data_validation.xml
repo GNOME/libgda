@@ -75,7 +75,7 @@ my_validate_change_cb (GdaHolder *h, const GValue *value, gpointer data)
       at two key events:
       <itemizedlist>
 	<listitem><para>
-	    When any value of a <link linkend="GdaHolder">GdaHolder</link> changes, where
+	    When any value of a <link linkend="GdaHolder">GdaHolder</link> changes,
 	    the <link linkend="GdaSet-validate-holder-change">"validate-holder-change"</link> signal is
 	    emitted. If any handler for this signal returns a pointer to a filled <link linkend="GError">GError</link>
 	    structure, then the signal's propagation is stopped and the value change will be rejected. This
@@ -109,7 +109,7 @@ my_validate_change_cb (GdaHolder *h, const GValue *value, gpointer data)
       The <link linkend="GdaDataProxy">GdaDataProxy</link> data model allows one to store temporary modifications
       to a data model, and then apply (write to the proxied data model) those modifications row by row. Before
       applying any row modification, the <link linkend="GdaDataProxy">GdaDataProxy</link> data model emits
-      the <link linkend="GdaDataProxy::validate-row-changes">"validate-row-changes"</link> signal, and
+      the <link linkend="GdaDataProxy-validate-row-changes">"validate-row-changes"</link> signal, and
       if handler for this signal returns a pointer to a filled <link linkend="GError">GError</link>
       structure, then the signal's propagation is stopped and the row's modifications are not applied.
     </para>
