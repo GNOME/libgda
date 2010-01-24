@@ -572,7 +572,8 @@ gda_data_model_iter_get_property (GObject *object,
  * property is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE)
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
- * property is set to the @row row.
+ * property is set to the @row row.  In this case
+ * each #GdaHolder composing @iter for which an error occurred will invalid (see gda_holder_is_valid()).
  *
  * Returns: TRUE if no error occurred
  */
@@ -595,9 +596,23 @@ gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 		GdaDataModel *model;
 		if ((gda_data_model_iter_get_row (iter) >= 0) &&
 		    (gda_data_model_iter_get_row (iter) != row) && 
-		    ! gda_set_is_valid ((GdaSet*) iter, NULL))
+		    ! _gda_set_validate ((GdaSet*) iter, NULL)) {
 			return FALSE;
-		
+		}
+
+		gboolean *null_oks = NULL;
+		if (GDA_SET (iter)->holders) {
+			gint i;
+			GSList *list;
+
+			null_oks = g_new (gboolean, g_slist_length (GDA_SET (iter)->holders));
+			for (i = 0, list = GDA_SET (iter)->holders; list; i++, list = list->next) {
+				null_oks[i] = gda_holder_get_not_null ((GdaHolder*) list->data);
+				gda_holder_set_not_null ((GdaHolder*) list->data, FALSE);
+			}
+		}
+
+		gboolean move_ok;
 		model = iter->priv->data_model;
 		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
 			return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
@@ -631,6 +646,7 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 	gint col;
 	GdaDataModel *test;
 	gboolean update_model;
+	gboolean retval = TRUE;
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
@@ -658,16 +674,15 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
 		if (!cvalue || 
 		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL)) {
-			g_object_set (G_OBJECT (iter), "current-row", row, 
-				      "update-model", update_model, NULL);
-			gda_data_model_iter_invalidate_contents (iter);
-			return FALSE;
+			gda_holder_force_invalid ((GdaHolder*) list->data);
+			retval = FALSE;
 		}
-		set_param_attributes ((GdaHolder*) list->data, 
-				      gda_data_model_get_attributes_at (model, col, row));
+		else
+			set_param_attributes ((GdaHolder*) list->data, 
+					      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current-row", row, "update-model", update_model, NULL);
-	return TRUE;
+	return retval;
 }
 
 
@@ -683,7 +698,8 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
  * is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE)
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
- * property is set to the new current row (one row more than it was before the call).
+ * property is set to the new current row (one row more than it was before the call). In this case
+ * each #GdaHolder composing @iter for which an error occurred will invalid (see gda_holder_is_valid()).
  *
  * Returns: TRUE if the iterator is now at the next row
  */
@@ -695,7 +711,7 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
 	g_return_val_if_fail (iter->priv, FALSE);
 
 	if ((gda_data_model_iter_get_row (iter) >= 0) &&
-	    ! gda_set_is_valid ((GdaSet*) iter, NULL))
+	    ! _gda_set_validate ((GdaSet*) iter, NULL))
 		return FALSE;
 
 	model = iter->priv->data_model;
@@ -717,6 +733,7 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
+	gboolean retval = TRUE;
 	
 	/* validity tests */
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
@@ -744,17 +761,16 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
 		if (!cvalue || 
 		    !gda_holder_set_value ((GdaHolder *) list->data, cvalue, NULL)) {
-			g_object_set (G_OBJECT (iter), "current-row", row, 
-				      "update-model", update_model, NULL);
-			gda_data_model_iter_invalidate_contents (iter);
-			return FALSE;
+			gda_holder_force_invalid ((GdaHolder *) list->data);
+			retval = FALSE;
 		}
-		set_param_attributes ((GdaHolder *) list->data, 
-				      gda_data_model_get_attributes_at (model, col, row));
+		else
+			set_param_attributes ((GdaHolder *) list->data, 
+					      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current-row", row, 
 		      "update-model", update_model, NULL);
-	return TRUE;
+	return retval;
 }
 
 /**
@@ -769,7 +785,8 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
  * is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE).
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
- * property is set to the new current row (one row less than it was before the call).
+ * property is set to the new current row (one row less than it was before the call).  In this case
+ * each #GdaHolder composing @iter for which an error occurred will invalid (see gda_holder_is_valid()).
  *
  * Returns: TRUE if the iterator is now at the previous row
  */
@@ -782,7 +799,7 @@ gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 	g_return_val_if_fail (iter->priv, FALSE);
 
 	if ((gda_data_model_iter_get_row (iter) >= 0) &&
-	    ! gda_set_is_valid ((GdaSet*) iter, NULL))
+	    ! _gda_set_validate ((GdaSet*) iter, NULL))
 		return FALSE;
 
 	model = iter->priv->data_model;
@@ -804,6 +821,7 @@ gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
+	gboolean retval = TRUE;
 	
 	/* validity tests */
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
@@ -831,17 +849,16 @@ gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *it
 		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
 		if (!cvalue || 
 		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL)) {
-			g_object_set (G_OBJECT (iter), "current-row", row, 
-				      "update-model", update_model, NULL);
-			gda_data_model_iter_invalidate_contents (iter);
-			return FALSE;
+			gda_holder_force_invalid ((GdaHolder*) list->data);
+			retval = FALSE;
 		}
-		set_param_attributes ((GdaHolder*) list->data,
-				      gda_data_model_get_attributes_at (model, col, row));
+		else
+			set_param_attributes ((GdaHolder*) list->data,
+					      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current-row", row, 
 		      "update-model", update_model, NULL);
-	return TRUE;
+	return retval;
 }
 
 

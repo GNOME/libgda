@@ -7,8 +7,8 @@ AM_CPPFLAGS = \
 	-DTOP_SRC_DIR=\""$(top_srcdir)"\" \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
-check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs
-TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs
+check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors
+TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors
 
 common_sources = 
 
@@ -46,6 +46,14 @@ check_pmodel_LDADD = \
 check_empty_rs_SOURCES = $(common_sources) check_empty_rs.c
 check_empty_rs_LDADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
+	$(LIBGDA_LIBS)
+
+check_model_errors_SOURCES = $(common_sources) check_model_errors.c
+check_model_errors_CFLAGS = \
+	-I$(top_srcdir)/libgda/sqlite
+check_model_errors_LDADD = \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/tests/libgda-test-4.0.la \
 	$(LIBGDA_LIBS)
 
 EXTRA_DIST = \
