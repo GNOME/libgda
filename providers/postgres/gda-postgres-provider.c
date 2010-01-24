@@ -737,7 +737,7 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 	g_free (dir);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR, _("Missing spec. file '%s'"), str);
 		g_free (str);
                 return NULL;
         }
@@ -776,7 +776,7 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 	g_free (dir);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR, _("Missing spec. file '%s'"), str);
 		g_free (str);
                 return NULL;
         }
@@ -913,7 +913,7 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
                 g_string_free (string, TRUE);
 
 		if (PQstatus (pconn) != CONNECTION_OK) {
-                        g_set_error (error, 0, 0, "%s", PQerrorMessage (pconn));
+                        g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR, "%s", PQerrorMessage (pconn));
                         PQfinish(pconn);
 
                         return FALSE;
@@ -927,7 +927,7 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 			pg_res = _gda_postgres_PQexec_wrap (cnc, pconn, sql);
 			g_free (sql);
 			if (!pg_res || PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
-				g_set_error (error, 0, 0, "%s", PQresultErrorMessage (pg_res));
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR, "%s", PQresultErrorMessage (pg_res));
 				PQfinish (pconn);
 				return FALSE;
 			}
