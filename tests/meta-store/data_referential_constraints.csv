@@ -7,7 +7,7 @@
 "meta","pub","_columns","_columns_collation_catalog_fkey","meta","pub","_collations","_collations_pkey","NONE","NO ACTION","NO ACTION"
 "meta","pub","_table_constraints","_table_constraints_table_catalog_fkey","meta","pub","_tables","_tables_pkey","NONE","NO ACTION","NO ACTION"
 "meta","pub","_referential_constraints","_referential_constraints_constraint_catalog_fkey","meta","pub","_table_constraints","_table_constraints_pkey","NONE","NO ACTION","NO ACTION"
-"meta","pub","_referential_constraints,"_referential_constraints_unique_constraint_catalog_fkey","meta","pub","_table_constraints","_table_constraints_pkey","NONE","NO ACTION","NO ACTION"
+"meta","pub","_referential_constraints","_referential_constraints_unique_constraint_catalog_fkey","meta","pub","_table_constraints","_table_constraints_pkey","NONE","NO ACTION","NO ACTION"
 "meta","pub","_key_column_usage","_key_column_usage_constraint_catalog_fkey","meta","pub","_table_constraints","_table_constraints_pkey","NONE","NO ACTION","NO ACTION"
 "meta","pub","_key_column_usage","_key_column_usage_table_catalog_fkey","meta","pub","_columns","_columns_pkey","NONE","NO ACTION","NO ACTION"
 "meta","pub","_check_column_usage","_check_column_usage_constraint_catalog_fkey","meta","pub","_table_constraints","_table_constraints_pkey","NONE","NO ACTION","NO ACTION"
