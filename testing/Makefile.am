@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 
 bin_PROGRAMS = gda-test-connection-4.0
 if HAVE_UI
-UI_PROGS=gdaui-test-data-entries gdaui-test-widget-entry
+UI_PROGS=gdaui-test-data-entries gdaui-test-widget-entry gdaui-test-errors
 endif
 noinst_PROGRAMS = gda-test-blob gda-provider-status $(UI_PROGS)
 
@@ -52,5 +52,16 @@ gdaui_test_widget_entry_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-4.0.la \
         $(LIBGDA_LIBS)
+
+gdaui_test_errors_CFLAGS = $(GTK_CFLAGS)
+gdaui_test_errors_SOURCES = \
+        gdaui-test-errors.c
+
+gdaui_test_errors_LDADD = \
+        $(top_builddir)/libgda/libgda-4.0.la \
+        $(top_builddir)/libgda-ui/libgda-ui-4.0.la \
+	$(top_builddir)/tests/libgda-test-4.0.la \
+        $(LIBGDA_LIBS)
+
 
 EXTRA_DIST = 
