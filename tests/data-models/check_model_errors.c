@@ -79,7 +79,7 @@ check_iter_contents (GdaDataModel *model, GdaDataModelIter *iter)
 		GdaHolder *holder;
 		const GValue *vi, *vm;
 
-		holder = gda_set_get_nth_holder (GDA_SET (iter), i);
+		holder = GDA_HOLDER (g_slist_nth_data (GDA_SET (iter)->holders, i));
 		if (gda_holder_is_valid (holder))
 			vi = gda_holder_get_value (holder);
 		else

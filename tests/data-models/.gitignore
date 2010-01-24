@@ -4,4 +4,5 @@ check_data_proxy
 check_model_copy
 check_pmodel
 check_empty_rs
+check_model_errors
 *.db
