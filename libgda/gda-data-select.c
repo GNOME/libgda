@@ -1870,7 +1870,6 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	else if (!CLASS (model)->fetch_next (imodel, &prow, int_row, NULL)) {
 		/* an error occurred */
 		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
-		gda_data_model_iter_invalidate_contents (iter);
 		return FALSE;
 	}
 	
@@ -1922,7 +1921,6 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	else if (!CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL)) {
 		/* an error occurred */
 		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
-		gda_data_model_iter_invalidate_contents (iter);
 		return FALSE;
 	}
 
@@ -1963,7 +1961,6 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 		if (!CLASS (model)->fetch_at (imodel, &prow, int_row, NULL)) {
 			/* an error occurred */
 			g_object_set (G_OBJECT (iter), "current-row", row, NULL);
-			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
 
@@ -1986,7 +1983,6 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 			/* implementation of fetch_at() is optional */
 			TO_IMPLEMENT; /* iter back or forward the right number of times */
 			g_object_set (G_OBJECT (iter), "current-row", row, NULL);
-			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
 	}

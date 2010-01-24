@@ -1290,6 +1290,12 @@ gda_set_is_valid (GdaSet *set, GError **error)
 		}
 	}
 
+	return _gda_set_validate (set, error);
+}
+
+gboolean
+_gda_set_validate (GdaSet *set, GError **error)
+{
 	/* signal the holder validate-set */
 	GError *lerror = NULL;
 #ifdef GDA_DEBUG_signal
@@ -1305,6 +1311,7 @@ gda_set_is_valid (GdaSet *set, GError **error)
 	}
 	return TRUE;
 }
+
 
 /**
  * gda_set_get_holder

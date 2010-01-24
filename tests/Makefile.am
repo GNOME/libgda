@@ -20,7 +20,9 @@ libgda_test_4_0_la_SOURCES = \
         $(test_headers) \
         gda-ddl-creator.c \
 	test-cnc-utils.h \
-	test-cnc-utils.c
+	test-cnc-utils.c \
+	data-model-errors.h \
+	data-model-errors.c
 
 libgda_test_4_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
 

@@ -134,6 +134,10 @@ GdaSetSource *gda_set_get_source_for_model     (GdaSet *set, GdaDataModel *model
 GdaSetSource *gda_set_get_source               (GdaSet *set, GdaHolder *holder);
 GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *holder);
 
+/* private */
+gboolean      _gda_set_validate                (GdaSet *set, GError **error);
+
+
 G_END_DECLS
 
 #endif
