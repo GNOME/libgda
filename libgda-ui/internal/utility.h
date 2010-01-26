@@ -54,3 +54,7 @@ gboolean         _gdaui_utility_display_error_with_keep_or_discard_choice (Gdaui
 void             _gdaui_utility_display_error                             (GdauiDataProxy *form, gboolean can_discard, GError *filled_error);
 void             _gdaui_utility_show_error (GtkWindow *parent, const gchar *format, ...);
 
+/*
+ * Misc
+ */
+gboolean         _gdaui_utility_iter_differ (GdaDataModelIter *iter1, GdaDataModelIter *iter2);

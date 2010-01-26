@@ -364,6 +364,21 @@ gdaui_raw_form_dispose (GObject *object)
 	parent_class->dispose (object);
 }
 
+static gboolean
+proxy_reset_was_soft (GdauiRawForm *form, GdaDataModel *new_model)
+{
+	GdaDataModelIter *iter;
+	gboolean retval = FALSE;
+
+	if (!new_model || (new_model != (GdaDataModel*) form->priv->proxy))
+		return FALSE;
+
+	iter = gda_data_model_create_iter (new_model);
+	retval = ! _gdaui_utility_iter_differ (form->priv->iter, iter);
+	g_object_unref (iter);
+	return retval;
+}
+
 static void
 gdaui_raw_form_set_property (GObject *object,
 			     guint param_id,
@@ -376,69 +391,80 @@ gdaui_raw_form_set_property (GObject *object,
         form = GDAUI_RAW_FORM (object);
         if (form->priv) {
                 switch (param_id) {
-		case PROP_MODEL:
-			ptr = GDA_DATA_MODEL(g_value_get_object (value));
+		case PROP_MODEL: {
+			gboolean reset;
+
+			ptr = GDA_DATA_MODEL (g_value_get_object (value));
 			if (ptr)
 				g_return_if_fail (GDA_IS_DATA_MODEL (ptr));
-			if (form->priv->proxy) {
-				/* remove old data model settings */
-				g_signal_handlers_disconnect_by_func (form->priv->iter,
-								      G_CALLBACK (iter_row_changed_cb), form);
-				g_signal_handlers_disconnect_by_func (form->priv->iter,
-								      G_CALLBACK (iter_validate_set_cb), form);
+			reset = !proxy_reset_was_soft (form, (GdaDataModel*) ptr);
 
-				g_object_unref (G_OBJECT (form->priv->iter));
-				form->priv->iter = NULL;
+			if (reset) {
+				if (form->priv->proxy) {
+					/* remove old data model settings */
+					g_signal_handlers_disconnect_by_func (form->priv->iter,
+									      G_CALLBACK (iter_row_changed_cb),
+									      form);
+					g_signal_handlers_disconnect_by_func (form->priv->iter,
+									      G_CALLBACK (iter_validate_set_cb),
+									      form);
+					g_object_unref (G_OBJECT (form->priv->iter));
+					form->priv->iter = NULL;
 
-				g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-								      G_CALLBACK (proxy_row_inserted_or_removed_cb),
-								      form);
-				g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-								      G_CALLBACK (proxy_changed_cb), form);
-				g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-								      G_CALLBACK (proxy_reset_cb), form);
-				g_object_unref (G_OBJECT (form->priv->proxy));
-				form->priv->proxy = NULL;
-				form->priv->model = NULL;
-			}
-			if (ptr) {
-				/* handle the data model */
-				if (GDA_IS_DATA_PROXY (ptr)) {
-					form->priv->proxy = (GdaDataProxy *) ptr;
-					g_object_ref (ptr);
+					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+									      G_CALLBACK (proxy_row_inserted_or_removed_cb),
+									      form);
+					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+									      G_CALLBACK (proxy_changed_cb), form);
+					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+									      G_CALLBACK (proxy_reset_cb), form);
+					g_object_unref (G_OBJECT (form->priv->proxy));
+					form->priv->proxy = NULL;
+					form->priv->model = NULL;
 				}
-				else
-					form->priv->proxy = (GdaDataProxy *) gda_data_proxy_new ((GdaDataModel*) ptr);
+				if (ptr) {
+					/* handle the data model */
+					if (GDA_IS_DATA_PROXY (ptr)) {
+						form->priv->proxy = (GdaDataProxy *) ptr;
+						g_object_ref (ptr);
+					}
+					else
+						form->priv->proxy = (GdaDataProxy *) gda_data_proxy_new ((GdaDataModel*) ptr);
 
-				form->priv->model = gda_data_proxy_get_proxied_model (form->priv->proxy);
+					form->priv->model = gda_data_proxy_get_proxied_model (form->priv->proxy);
+					form->priv->iter = gda_data_model_create_iter ((GdaDataModel *) form->priv->proxy);
+					gda_data_model_iter_move_to_row (form->priv->iter, 0);
+					
+					g_signal_connect (form->priv->iter, "validate-set",
+							  G_CALLBACK (iter_validate_set_cb), form);
+					g_signal_connect (form->priv->iter, "row-changed",
+							  G_CALLBACK (iter_row_changed_cb), form);
+					
+					g_signal_connect (G_OBJECT (form->priv->proxy), "row_inserted",
+							  G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
+					g_signal_connect (G_OBJECT (form->priv->proxy), "row_removed",
+							  G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
+					g_signal_connect (G_OBJECT (form->priv->proxy), "changed",
+							  G_CALLBACK (proxy_changed_cb), form);
+					g_signal_connect (G_OBJECT (form->priv->proxy), "reset",
+							  G_CALLBACK (proxy_reset_cb), form);
 
-				form->priv->iter = gda_data_model_create_iter ((GdaDataModel *) form->priv->proxy);
-				gda_data_model_iter_move_to_row (form->priv->iter, 0);
-
-				g_signal_connect (form->priv->iter, "validate-set",
-						  G_CALLBACK (iter_validate_set_cb), form);
-				g_signal_connect (form->priv->iter, "row-changed",
-						  G_CALLBACK (iter_row_changed_cb), form);
-
-				g_signal_connect (G_OBJECT (form->priv->proxy), "row_inserted",
-						  G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
-				g_signal_connect (G_OBJECT (form->priv->proxy), "row_removed",
-						  G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
-				g_signal_connect (G_OBJECT (form->priv->proxy), "changed",
-						  G_CALLBACK (proxy_changed_cb), form);
-				g_signal_connect (G_OBJECT (form->priv->proxy), "reset",
-						  G_CALLBACK (proxy_reset_cb), form);
-
-				/* we don't want chuncking */
-				g_object_set (object, "paramlist", form->priv->iter, NULL);
-				gda_data_proxy_set_sample_size (form->priv->proxy, 0);
-				gdaui_raw_form_initialize (form, NULL, NULL);
-				iter_row_changed_cb (form->priv->iter, gda_data_model_iter_get_row (form->priv->iter), form);
+					/* we don't want chuncking */
+					g_object_set (object, "paramlist", form->priv->iter, NULL);
+					gda_data_proxy_set_sample_size (form->priv->proxy, 0);
+					gdaui_raw_form_initialize (form, NULL, NULL);
+				}
+				if (form->priv->iter)
+					iter_row_changed_cb (form->priv->iter,
+							     gda_data_model_iter_get_row (form->priv->iter), form);
+				gdaui_raw_form_widget_set_write_mode ((GdauiDataProxy *) form,
+								      form->priv->write_mode);
 			}
-
-			gdaui_raw_form_widget_set_write_mode ((GdauiDataProxy *) form, form->priv->write_mode);
+			else
+				gda_data_model_iter_move_to_row (form->priv->iter, 0);
 			g_signal_emit_by_name (object, "proxy-changed", form->priv->proxy);
 			break;
+		}
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;

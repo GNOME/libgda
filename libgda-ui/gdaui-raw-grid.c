@@ -444,45 +444,13 @@ static gboolean
 proxy_reset_was_soft (GdauiRawGrid *grid, GdaDataModel *new_model)
 {
 	GdaDataModelIter *iter;
-	GSList *olist, *nlist;
 	gboolean retval = FALSE;
 
 	if (!new_model || (new_model != (GdaDataModel*) grid->priv->proxy))
 		return FALSE;
 
 	iter = gda_data_model_create_iter (new_model);
-	for (olist = GDA_SET (grid->priv->iter)->holders, nlist = GDA_SET (iter)->holders;
-	     olist && nlist;
-	     olist = olist->next, nlist = nlist->next) {
-		GdaHolder *oh, *nh;
-		oh = GDA_HOLDER (olist->data);
-		nh = GDA_HOLDER (nlist->data);
-
-		if (gda_holder_get_not_null (oh) != gda_holder_get_not_null (nh))
-			goto out;
-
-		GType ot, nt;
-		ot = gda_holder_get_g_type (oh);
-		nt = gda_holder_get_g_type (nh);
-		if (ot && (ot != nt))
-			goto out;
-		if (ot != nt)
-			g_object_set (oh, "g-type", nt, NULL);
-
-		const gchar *oid, *nid;
-		oid = gda_holder_get_id (oh);
-		nid = gda_holder_get_id (nh);
-		if ((oid && !nid) || (!oid && nid) ||
-		    (oid && strcmp (oid, nid)))
-			goto out;
-	}
-
-	if (olist || nlist)
-		goto out;
-
-	retval = TRUE;
-
- out:
+	retval = ! _gdaui_utility_iter_differ (grid->priv->iter, iter);
 	g_object_unref (iter);
 	return retval;
 }

@@ -538,3 +538,48 @@ _gdaui_utility_show_error (GtkWindow *parent, const gchar *format, ...)
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 }
+
+/*
+ * Compares 2 GdaDataModelIter
+ *
+ * Returns: %TRUE if they have at least one difference
+ */
+gboolean
+_gdaui_utility_iter_differ (GdaDataModelIter *iter1, GdaDataModelIter *iter2)
+{
+	GSList *list1, *list2;
+        gboolean retval = TRUE;
+
+	for (list1 = GDA_SET (iter1)->holders, list2 = GDA_SET (iter2)->holders;
+             list1 && list2;
+             list1 = list1->next, list2 = list2->next) {
+                GdaHolder *oh, *nh;
+                oh = GDA_HOLDER (list1->data);
+                nh = GDA_HOLDER (list2->data);
+
+                if (gda_holder_get_not_null (oh) != gda_holder_get_not_null (nh))
+                        goto out;
+
+                GType ot, nt;
+                ot = gda_holder_get_g_type (oh);
+                nt = gda_holder_get_g_type (nh);
+                if (ot && (ot != nt))
+                        goto out;
+                if (ot != nt)
+                        g_object_set (oh, "g-type", nt, NULL);
+
+                const gchar *oid, *nid;
+                oid = gda_holder_get_id (oh);
+                nid = gda_holder_get_id (nh);
+                if ((oid && !nid) || (!oid && nid) ||
+                    (oid && strcmp (oid, nid)))
+                        goto out;
+        }
+
+        if (list1 || list2)
+                goto out;
+        retval = FALSE; /* iters don't differ */
+
+ out:
+        return retval;
+}
