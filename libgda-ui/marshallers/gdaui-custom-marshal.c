@@ -90,8 +90,8 @@ _gdaui_marshal_VOID__STRING_SLIST_SLIST (GClosure     *closure,
 	
 	callback (data1,
 		  (gpointer) g_value_get_string (param_values + 1),
-		  g_value_get_boxed (param_values + 2),
-		  g_value_get_boxed (param_values + 3),
+		  g_value_get_pointer (param_values + 2),
+		  g_value_get_pointer (param_values + 3),
 		  data2);
 }
 
