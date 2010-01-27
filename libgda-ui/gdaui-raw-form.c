@@ -29,6 +29,7 @@
 #include "gdaui-basic-form.h"
 #include "gdaui-data-filter.h"
 #include "internal/utility.h"
+#include "data-entries/gdaui-entry-shell.h"
 
 static void gdaui_raw_form_class_init (GdauiRawFormClass * class);
 static void gdaui_raw_form_init (GdauiRawForm *wid);
@@ -655,7 +656,13 @@ action_new_cb (GtkAction *action, GdauiRawForm *form)
 		}
 		else
 			g_object_unref (param);
+
+		GtkWidget *entry;
+		entry = gdaui_basic_form_get_entry_widget (GDAUI_BASIC_FORM (form), (GdaHolder*) list->data);
+		if (entry)
+			gdaui_entry_shell_set_unknown ((GdauiEntryShell*) entry, FALSE);
 	}
+
 	g_signal_handlers_unblock_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
 	form_holder_changed_cb (form, NULL);
 }
