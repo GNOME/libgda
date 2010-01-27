@@ -240,7 +240,8 @@ gda_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GTy
 	hdl = GDA_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	if (type == GDA_TYPE_BINARY) {
+	if ((type == GDA_TYPE_BINARY) ||
+	    (type == GDA_TYPE_BLOB)) {
 		if (sql && *sql) {
 			gint i = strlen (sql);
 			if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
@@ -277,6 +278,14 @@ gda_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *str, GTy
 		if (bin) {
 			value = gda_value_new (GDA_TYPE_BINARY);
 			gda_value_take_binary (value, bin);
+		}
+	}
+	else if (type == GDA_TYPE_BLOB) {
+		GdaBlob *blob;
+		blob = gda_string_to_blob (str);
+		if (blob) {
+			value = gda_value_new (GDA_TYPE_BLOB);
+			gda_value_take_blob (value, blob);
 		}
 	}
 
