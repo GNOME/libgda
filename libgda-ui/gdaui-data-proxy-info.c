@@ -211,14 +211,14 @@ gdaui_data_proxy_info_dispose (GObject *object)
 	info = GDAUI_DATA_PROXY_INFO (object);
 
 	if (info->priv) {
-		if (info->priv->idle_id)
-			g_source_remove (info->priv->idle_id);
 		if (info->priv->proxy)
 			release_proxy (info);
 		if (info->priv->iter)
 			release_iter (info);
 		if (info->priv->data_proxy)
 			data_proxy_destroyed_cb (info->priv->data_proxy, info);
+		if (info->priv->idle_id)
+			g_source_remove (info->priv->idle_id);
 
 		/* the private area itself */
 		g_free (info->priv);
