@@ -34,6 +34,7 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-statement-extra.h>
 #include <sql-parser/gda-sql-parser.h>
+#include <libgda/gda-blob-op.h>
 #include "gda-mysql.h"
 #include "gda-mysql-provider.h"
 #include "gda-mysql-recordset.h"
@@ -1787,7 +1788,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
 			mysql_bind_param[i].is_null = (my_bool*)1;
 		}
-		else if (G_VALUE_TYPE(value) == GDA_TYPE_TIMESTAMP) {
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
 			const GdaTimestamp *ts;
 
 			ts = gda_value_get_timestamp (value);
@@ -1812,7 +1813,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				mysql_bind_param[i].buffer_length = sizeof (MYSQL_TIME);
 			}
 		}
-		else if (G_VALUE_TYPE(value) == GDA_TYPE_TIME) {
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
 			const GdaTime *ts;
 
 			ts = gda_value_get_time (value);
@@ -1834,7 +1835,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				mysql_bind_param[i].buffer_length = sizeof (MYSQL_TIME);
 			}
 		}
-		else if (G_VALUE_TYPE(value) == G_TYPE_DATE) {
+		else if (G_VALUE_TYPE (value) == G_TYPE_DATE) {
 			const GDate *ts;
 
 			ts = (GDate*) g_value_get_boxed (value);
@@ -1855,7 +1856,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				mysql_bind_param[i].buffer_length = sizeof (MYSQL_TIME);
 			}
 		}
-		else if (G_VALUE_TYPE(value) == G_TYPE_STRING) {
+		else if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
 			const gchar *str;
 			str = g_value_get_string (value);
 			if (!str) {
@@ -1869,15 +1870,75 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				mysql_bind_param[i].length = NULL; /* str is 0 terminated */
 			}
 		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
+			const GdaBinary *bin = NULL;
+			GdaBlob *blob = (GdaBlob*) gda_value_get_blob (value);
+
+			bin = ((GdaBinary*) blob);
+			if (!bin) {
+				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
+				mysql_bind_param[i].is_null = (my_bool*)1;
+			}
+			else {
+				gchar *str = NULL;
+				gulong blob_len;
+				if (blob->op) {
+					blob_len = gda_blob_op_get_length (blob->op);
+					if ((blob_len != bin->binary_length) &&
+					    ! gda_blob_op_read_all (blob->op, blob)) {
+						/* force reading the complete BLOB into memory */
+						str = _("Can't read whole BLOB into memory");
+					}
+				}
+				else
+					blob_len = bin->binary_length;
+				if (blob_len < 0)
+					str = _("Can't get BLOB's length");
+				else if (blob_len >= G_MAXINT)
+					str = _("BLOB is too big");
+				
+				if (str) {
+					event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+					gda_connection_event_set_description (event, str);
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
+					break;
+				}
+				
+				else {
+					mysql_bind_param[i].buffer_type= MYSQL_TYPE_BLOB;
+					mysql_bind_param[i].buffer= (char *) bin->data;
+					mysql_bind_param[i].buffer_length = bin->binary_length;
+					mysql_bind_param[i].length = NULL;
+				}
+			}
+		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
+			const GdaBinary *bin;
+			bin = gda_value_get_binary (value);
+			if (!bin) {
+				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
+				mysql_bind_param[i].is_null = (my_bool*)1;
+			}
+			else {
+				mysql_bind_param[i].buffer_type= MYSQL_TYPE_BLOB;
+				mysql_bind_param[i].buffer= (char *) bin->data;
+				mysql_bind_param[i].buffer_length = bin->binary_length;
+				mysql_bind_param[i].length = NULL;
+			}
+		}
 		else {
 			gchar *str;
 			GdaDataHandler *data_handler =
 				gda_server_provider_get_data_handler_g_type (provider, cnc, 
 									     G_VALUE_TYPE (value));
 			if (data_handler == NULL) {
-				TO_IMPLEMENT;
 				/* there is an error here */
-				str = NULL;
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, str);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
+				break;
 			}
 			else {
 				str = gda_data_handler_get_str_from_value (data_handler, value);
@@ -1890,7 +1951,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		}
 	}
 		
-	if (mysql_bind_param && mysql_stmt_bind_param (ps->mysql_stmt, mysql_bind_param)) {
+	if (!event && mysql_bind_param && mysql_stmt_bind_param (ps->mysql_stmt, mysql_bind_param)) {
 		//g_warning ("mysql_stmt_bind_param failed: %s\n", mysql_stmt_error (ps->mysql_stmt));
 		event = _gda_mysql_make_error (cnc, cdata->mysql, ps->mysql_stmt, error);
 	}

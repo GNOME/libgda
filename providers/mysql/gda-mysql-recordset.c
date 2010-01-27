@@ -566,9 +566,6 @@ gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 	if (model->advertized_nrows >= 0)
 		return model->advertized_nrows;
 
-	/* use C API to determine number of rows,if possible */
-	// TO_IMPLEMENT;
-	
 	model->advertized_nrows = mysql_stmt_affected_rows (imodel->priv->mysql_stmt);
 	
 	return model->advertized_nrows;
@@ -782,11 +779,15 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 				gda_value_set_binary (value, &binary);
 			}
 			else if (type == GDA_TYPE_BLOB) {
-				GdaBinary binary = {
-					.data = (guchar*) strvalue,
-					.binary_length = length
+				/* web don't use GdaMysqlBlobOp because it looks like the MySQL
+				 * API does not support BLOBs accessed in a random way,
+				 * so we return the whole BLOB at once */
+				GdaBlob blob = {
+					.data.data = (guchar*) strvalue,
+					.data.binary_length = length,
+					.op = NULL
 				};
-				gda_value_set_binary (value, &binary);
+				gda_value_set_blob (value, &blob);
 			}
 			else if (type == G_TYPE_DOUBLE) {
 				if (length > 0) {
