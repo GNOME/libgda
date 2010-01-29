@@ -2974,7 +2974,7 @@ gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 		g_free (str);
 		if (holder) {
 			const GValue *cvalue;
-			cvalue = gda_data_model_get_value_at (model, i, int_row, error);
+			cvalue = gda_data_model_get_value_at (model, i, row, error);
 			if (!cvalue)
 				return FALSE;
 			if (! gda_holder_set_value (holder, cvalue, error))
