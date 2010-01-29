@@ -1604,6 +1604,180 @@ prepare_stmt_simple (MysqlConnectionData  *cdata,
 	return ps;
 }
 
+static GdaSet *
+make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, my_ulonglong last_id)
+{
+	GError *lerror = NULL;
+
+	/* analyze @stmt */
+	GdaSqlStatement *sql_insert;
+	GdaSqlStatementInsert *insert;
+	if (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_INSERT)
+		/* unable to compute anything */
+		return NULL;
+
+	g_object_get (G_OBJECT (stmt), "structure", &sql_insert, NULL);
+	g_assert (sql_insert);
+	insert = (GdaSqlStatementInsert *) sql_insert->contents;
+
+	/* find the name of the 1st column which has the AUTO_INCREMENT */
+	gchar *autoinc_colname = NULL;
+	gint rc;
+	gchar *sql;
+	MysqlConnectionData *cdata;
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return NULL;
+	sql = g_strdup_printf ("DESCRIBE %s", insert->table->table_name);
+	rc = gda_mysql_real_query_wrap (cnc, cdata->mysql, sql, strlen (sql));
+	g_free (sql);
+	if (!rc) {
+		MYSQL_RES *result;
+		result = mysql_store_result (cdata->mysql);
+		if (result) {
+			MYSQL_ROW row;
+			unsigned int nfields;
+			nfields = mysql_num_fields (result);
+			while ((row = mysql_fetch_row(result))) {
+				if (row [nfields-1] &&
+				    !g_ascii_strcasecmp (row [nfields-1], "auto_increment")) {
+					autoinc_colname = g_strdup (row [0]);
+					break;
+				}
+			}
+			mysql_free_result (result);
+		}
+	}
+	if (! autoinc_colname) {
+		gda_sql_statement_free (sql_insert);
+		return NULL;
+	}
+
+	/* build corresponding SELECT statement */
+	GdaSqlStatementSelect *select;
+        GdaSqlSelectTarget *target;
+        GdaSqlStatement *sql_statement = gda_sql_statement_new (GDA_SQL_STATEMENT_SELECT);
+
+	select = g_new0 (GdaSqlStatementSelect, 1);
+        GDA_SQL_ANY_PART (select)->type = GDA_SQL_ANY_STMT_SELECT;
+        sql_statement->contents = select;
+
+	/* FROM */
+        select->from = gda_sql_select_from_new (GDA_SQL_ANY_PART (select));
+        target = gda_sql_select_target_new (GDA_SQL_ANY_PART (select->from));
+        gda_sql_select_from_take_new_target (select->from, target);
+
+	/* Filling in the target */
+        GValue *value;
+        g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), insert->table->table_name);
+        gda_sql_select_target_take_table_name (target, value);
+	gda_sql_statement_free (sql_insert);
+
+	/* selected fields */
+        GdaSqlSelectField *field;
+        GSList *fields_list = NULL;
+
+	field = gda_sql_select_field_new (GDA_SQL_ANY_PART (select));
+	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "*");
+	gda_sql_select_field_take_star_value (field, value);
+	fields_list = g_slist_append (fields_list, field);
+
+	gda_sql_statement_select_take_expr_list (sql_statement, fields_list);
+
+	/* WHERE */
+        GdaSqlExpr *where, *expr;
+	GdaSqlOperation *cond;
+	where = gda_sql_expr_new (GDA_SQL_ANY_PART (select));
+	cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
+	where->cond = cond;
+	cond->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
+	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
+	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), autoinc_colname);
+	expr->value = value;
+	cond->operands = g_slist_append (NULL, expr);
+	gchar *str;
+	str = g_strdup_printf ("%llu", last_id);
+	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
+	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);
+	expr->value = value;
+	cond->operands = g_slist_append (cond->operands, expr);
+
+	gda_sql_statement_select_take_where_cond (sql_statement, where);
+
+	if (gda_sql_statement_check_structure (sql_statement, &lerror) == FALSE) {
+                g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
+			     lerror && lerror->message ? lerror->message : _("No detail"));
+		if (lerror)
+			g_error_free (lerror);
+                gda_sql_statement_free (sql_statement);
+                return NULL;
+        }
+
+	/* execute SELECT statement */
+	GdaDataModel *model;
+	GdaStatement *statement = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_statement, NULL);
+        gda_sql_statement_free (sql_statement);
+        model = gda_connection_statement_execute_select (cnc, statement, NULL, &lerror);
+	g_object_unref (statement);
+        if (!model) {
+                g_warning (_("Can't execute SELECT statement to get last inserted row: %s"),
+			   lerror && lerror->message ? lerror->message : _("No detail"));
+		if (lerror)
+			g_error_free (lerror);
+		return NULL;
+        }
+	else {
+		GdaSet *set = NULL;
+		GSList *holders = NULL;
+		gint nrows, ncols, i;
+
+		nrows = gda_data_model_get_n_rows (model);
+		if (nrows <= 0) {
+			g_warning (_("SELECT statement to get last inserted row did not return any row"));
+			return NULL;
+		}
+		else if (nrows > 1) {
+			g_warning (_("SELECT statement to get last inserted row returned too many (%d) rows"),
+				   nrows);
+			return NULL;
+		}
+		ncols = gda_data_model_get_n_columns (model);
+		for (i = 0; i < ncols; i++) {
+			GdaHolder *h;
+			GdaColumn *col;
+			gchar *id;
+			const GValue *cvalue;
+
+			col = gda_data_model_describe_column (model, i);
+			h = gda_holder_new (gda_column_get_g_type (col));
+			id = g_strdup_printf ("+%d", i);
+			g_object_set (G_OBJECT (h), "id", id, "not-null", FALSE,
+				      "name", gda_column_get_name (col), NULL);
+			g_free (id);
+			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);
+			if (!cvalue || !gda_holder_set_value (h, cvalue, NULL)) {
+				if (holders) {
+					g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+					g_slist_free (holders);
+					holders = NULL;
+				}
+				break;
+			}
+			holders = g_slist_prepend (holders, h);
+		}
+		g_object_unref (model);
+
+		if (holders) {
+			holders = g_slist_reverse (holders);
+			set = gda_set_new (holders);
+			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+			g_slist_free (holders);
+		}
+
+		return set;
+	}
+}
+
 static void
 free_bind_param_data (GSList *mem_to_free)
 {
@@ -2071,6 +2245,14 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			else {
 				return_value = (GObject *) gda_data_model_array_new (0);
 			}
+
+			if (last_inserted_row) {
+				my_ulonglong last_row;
+				last_row = mysql_insert_id (cdata->mysql);
+				if (last_row)
+					*last_inserted_row = make_last_inserted_set (cnc, stmt, last_row);
+			}
+
 		}
 	}
 	g_object_unref (ps);
