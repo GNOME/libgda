@@ -514,7 +514,7 @@ _gda_postgres_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), udt_name, error))
 		return FALSE;
 	model = gda_connection_statement_execute_select_full (cnc,
-							      internal_stmt[I_STMT_UDT_COLUMNS_ALL],
+							      internal_stmt[I_STMT_UDT_COLUMNS],
 							      i_set, 
 							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 							      _col_types_udt_columns, error);
