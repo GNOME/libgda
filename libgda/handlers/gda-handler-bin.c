@@ -185,12 +185,15 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		}
 		else {
 			GdaBlob *blob;
+			GdaBinary *bin;
 			blob = (GdaBlob*) gda_value_get_blob ((GValue *) value);
-			if (blob->op)
+			bin = (GdaBinary *) blob;
+			if (blob->op &&
+			    (bin->binary_length != gda_blob_op_get_length (blob->op)))
 				gda_blob_op_read_all (blob->op, blob);
 
 			gchar *str, *str2;
-			str = gda_binary_to_string ((GdaBinary *) blob, 0);
+			str = gda_binary_to_string (bin, 0);
 			str2 = gda_default_escape_string (str);
 			g_free (str);
 			retval = g_strdup_printf ("'%s'", str2);
