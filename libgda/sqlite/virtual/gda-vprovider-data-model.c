@@ -664,8 +664,11 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 			sqlite3_result_double (ctx, g_value_get_double (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 			GdaBlob *blob;
+			GdaBinary *bin;
 			blob = (GdaBlob *) gda_value_get_blob (value);
-			if (blob->op)
+			bin = (GdaBinary *) blob;
+			if (blob->op &&
+			    (bin->binary_length != gda_blob_op_get_length (blob->op)))
 				gda_blob_op_read_all (blob->op, blob);
 			sqlite3_result_blob (ctx, blob->data.data, blob->data.binary_length, SQLITE_TRANSIENT);
 		}
