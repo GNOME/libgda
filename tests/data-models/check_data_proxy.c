@@ -21,6 +21,8 @@ static gboolean do_test_array (void);
 static gboolean do_test_prop_change (void);
 static gboolean do_test_proxied_model_modif (void);
 
+static gboolean do_test_delete_rows (void);
+
 /* 
  * the tests are all run with all the possible combinations of defer_sync (TRUE/FALSE) and 
  * prepend_null_row (TRUE/FALSE), so the ADJUST_ROW() macro allows for row adjustment
@@ -58,59 +60,75 @@ main (int argc, char **argv)
         g_setenv ("GDA_TOP_SRC_DIR", TOP_SRC_DIR, TRUE);
 	gda_init ();
 
+	prepend_null_row = FALSE;
+ 	defer_sync = FALSE;
+	if (!do_test_delete_rows ())
+		number_failed ++;
+	defer_sync = TRUE;
+	if (!do_test_delete_rows ())
+		number_failed ++;
+
+	prepend_null_row = TRUE;
+ 	defer_sync = FALSE;
+	if (!do_test_delete_rows ())
+		number_failed ++;
+	defer_sync = TRUE;
+	if (!do_test_delete_rows ())
+		number_failed ++;
+	
 	if (!do_test_signal ())
 		number_failed ++;
 
 	prepend_null_row = FALSE;
-	defer_sync  = FALSE;
+	defer_sync = FALSE;
 	if (!do_test_read_direct_1 ())
 		number_failed ++;
-	defer_sync  = TRUE;
+	defer_sync = TRUE;
 	if (!do_test_read_direct_1 ())
 		number_failed ++;
 
-	defer_sync  = FALSE;
+	defer_sync = FALSE;
 	if (!do_test_read_direct_2 ())
 		number_failed ++;
-	defer_sync  = TRUE;
+	defer_sync = TRUE;
 	if (!do_test_read_direct_2 ())
 		number_failed ++;
 
-	defer_sync  = FALSE;
+	defer_sync = FALSE;
 	if (!do_test_array ())
 		number_failed ++;
 
-	defer_sync  = TRUE;
+	defer_sync = TRUE;
 	if (!do_test_array ())
 		number_failed ++;
 
 	prepend_null_row = TRUE;
-	defer_sync  = FALSE;
+	defer_sync = FALSE;
 	if (!do_test_read_direct_1 ())
 		number_failed ++;
-	defer_sync  = TRUE;
+	defer_sync = TRUE;
 	if (!do_test_read_direct_1 ())
 		number_failed ++;
 
-	defer_sync  = FALSE;
+	defer_sync = FALSE;
 	if (!do_test_read_direct_2 ())
 		number_failed ++;
-	defer_sync  = TRUE;
+	defer_sync = TRUE;
 	if (!do_test_read_direct_2 ())
 		number_failed ++;
 
-	defer_sync  = FALSE;
+	defer_sync = FALSE;
 	if (!do_test_array ())
 		number_failed ++;
-	defer_sync  = TRUE;
+	defer_sync = TRUE;
 	if (!do_test_array ())
 		number_failed ++;
 
 	prepend_null_row = FALSE;
-	defer_sync  = FALSE;
+	defer_sync = FALSE;
 	if (!do_test_prop_change ())
 		number_failed ++;
-	defer_sync  = TRUE;
+	defer_sync = TRUE;
 	if (!do_test_prop_change ())
 		number_failed ++;
 
@@ -1242,6 +1260,8 @@ gint         expected_signals_index;
  *   - 2U123 means 2 updates, 1 for row 123 and 1 for row 124
  *   - 2I4 means 2 inserts, 1 for row 4 and 1 for row 5
  *   - 2R6 means 2 deletes, all for row 6
+ *
+ * Use lower case to avoid taking into account the prepend_null_row variable
  */
 static void
 declare_expected_signals (const gchar *expected, const gchar *name)
@@ -1277,6 +1297,11 @@ declare_expected_signals (const gchar *expected, const gchar *name)
 			ptr++;
 		for (i = 0; i < nb; i++) {
 			gint sigrow;
+			gboolean use_prepend_null_row = TRUE;
+			if (type >= 'a') {
+				type += 'A' - 'a';
+				use_prepend_null_row = FALSE;
+			}
 			switch (type) {
 			case 'U':
 			case 'I':
@@ -1291,7 +1316,10 @@ declare_expected_signals (const gchar *expected, const gchar *name)
 
 			ASignal sig;
 			sig.sig = type;
-			sig.row = ADJUST_ROW (sigrow);
+			if (use_prepend_null_row)
+				sig.row = ADJUST_ROW (sigrow);
+			else
+				sig.row = sigrow;
 			g_array_append_val (expected_signals, sig);
 		}
 	}
@@ -1614,4 +1642,129 @@ check_data_model_remove_row (GdaDataModel *model, gint row)
 	}
 
 	return TRUE;
+}
+
+/* remove several rows */
+static gboolean do_test_delete_rows (void)
+{
+#define FILE "city.csv"
+	GError *error = NULL;
+	gchar *file;
+	GdaDataModel *import, *model, *proxy;
+	GSList *errors;
+	GdaSet *options;
+
+	file = g_build_filename (CHECK_FILES, "tests", "data-models", FILE, NULL);
+	options = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
+	import = gda_data_model_import_new_file (file, TRUE, options);
+	g_free (file);
+	g_object_unref (options);
+
+	if ((errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import)))) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not load file '%s'\n", FILE);
+#endif
+		g_object_unref (import);
+		return FALSE;
+	}
+
+	model = (GdaDataModel*) gda_data_model_array_copy_model (import, &error);
+	if (!model) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not copy GdaDataModelImport into a GdaDataModelArray: %s\n", 
+			 error && error->message ? error->message : "No detail");
+#endif
+		g_error_free (error);
+		return FALSE;
+	}
+	g_object_unref (import);
+
+	proxy = (GdaDataModel *) gda_data_proxy_new (model);
+	if (!proxy) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not create GdaDataProxy\n");
+#endif
+		return FALSE;
+	}
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
+	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", defer_sync, 
+		      "prepend-null-entry", prepend_null_row, NULL);
+
+	gboolean retval = FALSE;
+
+	g_signal_connect (G_OBJECT (proxy), "reset",
+			  G_CALLBACK (proxy_reset_cb), NULL);
+	g_signal_connect (G_OBJECT (proxy), "row-inserted",
+			  G_CALLBACK (proxy_row_cb), "I");
+	g_signal_connect (G_OBJECT (proxy), "row-updated",
+			  G_CALLBACK (proxy_row_cb), "U");
+	g_signal_connect (G_OBJECT (proxy), "row-removed",
+			  G_CALLBACK (proxy_row_cb), "R");
+
+	
+	/* 
+	 * mark a proxy row to be deleted
+	 */
+	declare_expected_signals ("u3", "Prepare to delete row 3");
+	gda_data_proxy_delete (GDA_DATA_PROXY (proxy), 3);
+	clean_expected_signals (proxy);
+	if (!check_data_model_n_rows (proxy, 158)) goto out;
+
+	/* 
+	 * mark a proxy row to be deleted
+	 */
+	declare_expected_signals ("u5", "Prepare to delete row 5");
+	gda_data_proxy_delete (GDA_DATA_PROXY (proxy), 5);
+	clean_expected_signals (proxy);
+	if (!check_data_model_n_rows (proxy, 158)) goto out;
+
+	/* 
+	 * mark a proxy row to be deleted
+	 */
+	declare_expected_signals ("u1", "Prepare to delete row 1");
+	gda_data_proxy_delete (GDA_DATA_PROXY (proxy), 1);
+	clean_expected_signals (proxy);
+	if (!check_data_model_n_rows (proxy, 158)) goto out;
+
+	if (!check_data_model_value (proxy, 12, 0, G_TYPE_STRING, "Tirana")) goto out;
+	if (!check_data_model_value (proxy, 12, 2, G_TYPE_STRING, "270000")) goto out;
+	if (!check_data_model_value (proxy, 12, 3, G_TYPE_STRING, "Tirana")) goto out;
+	if (!check_data_model_value (proxy, 12, 5, G_TYPE_STRING, "270000")) goto out;
+
+	/* commit changes */
+	declare_expected_signals ("r1r4r2", "Commit row changes");
+
+	if (! gda_data_proxy_apply_all_changes (GDA_DATA_PROXY (proxy), &error)) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not copy GdaDataModelImport into a GdaDataModelArray: %s\n", 
+			 error && error->message ? error->message : "No detail");
+#endif
+		g_error_free (error);
+		return FALSE;
+	}
+
+	clean_expected_signals (proxy);
+	if (!check_data_model_n_rows (proxy, 155)) goto out;
+
+	if (!check_data_model_value (model, 9, 0, G_TYPE_STRING, "Tirana")) goto out;
+	if (!check_data_model_value (model, 9, 2, G_TYPE_STRING, "270000")) goto out;
+	if (prepend_null_row) {
+		if (!check_data_model_value (model, 0, 0, G_TYPE_STRING, "Herat")) goto out;
+		if (!check_data_model_value (model, 1, 0, G_TYPE_STRING, "Mazar-e-Sharif")) goto out;
+		if (!check_data_model_value (model, 2, 0, G_TYPE_STRING, "Benguela")) goto out;
+	}
+	else {
+		if (!check_data_model_value (model, 0, 0, G_TYPE_STRING, "Oranjestad")) goto out;
+		if (!check_data_model_value (model, 1, 0, G_TYPE_STRING, "Kabul")) goto out;
+		if (!check_data_model_value (model, 2, 0, G_TYPE_STRING, "Qandahar")) goto out;
+	}
+	if (!check_data_model_value (model, 3, 0, G_TYPE_STRING, "Huambo")) goto out;
+	if (!check_data_model_value (model, 4, 0, G_TYPE_STRING, "Lobito")) goto out;
+
+	retval = TRUE;
+ out:
+	g_object_unref (model);
+	g_object_unref (proxy);
+	return retval;
 }

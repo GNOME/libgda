@@ -129,7 +129,7 @@ enum
  */
 typedef struct
 {
-	gint           model_row;    /* row index in the GdaDataModel, -1 if new row */
+	gint           model_row;    /* row index in the proxied GdaDataModel, -1 if new row */
 	gboolean       to_be_deleted;/* TRUE if row is to be deleted */
 	GSList        *modify_values; /* list of RowValue structures */
 	GValue       **orig_values;  /* array of the original GValues, indexed on the column numbers */
@@ -1038,6 +1038,22 @@ proxied_model_row_inserted_cb (GdaDataModel *model, gint row, GdaDataProxy *prox
 		}
 	}
 
+	/* update all the RowModif where model_row > row */
+	if (proxy->priv->all_modifs) {
+		GSList *list;
+		for (list = proxy->priv->all_modifs; list; list = list->next) {
+			RowModif *tmprm;
+			tmprm = ROW_MODIF (list->data);
+			if (tmprm->model_row > row) {
+				g_hash_table_remove (proxy->priv->modify_rows,
+						     GINT_TO_POINTER (tmprm->model_row));
+				tmprm->model_row ++;
+				g_hash_table_insert (proxy->priv->modify_rows,
+						     GINT_TO_POINTER (tmprm->model_row), tmprm);
+			}
+		}
+	}
+
 	/* Note: if there is a chunk, then the new row will *not* be part of that chunk and so
 	 * no signal will be emitted for its insertion */
 	proxy->priv->model_nb_rows ++;
@@ -1121,6 +1137,22 @@ proxied_model_row_removed_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy
 		g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (row));
 		proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 		row_modifs_free (rm);
+	}
+
+	/* update all the RowModif where model_row > row */
+	if (proxy->priv->all_modifs) {
+		GSList *list;
+		for (list = proxy->priv->all_modifs; list; list = list->next) {
+			RowModif *tmprm;
+			tmprm = ROW_MODIF (list->data);
+			if (tmprm->model_row > row) {
+				g_hash_table_remove (proxy->priv->modify_rows,
+						     GINT_TO_POINTER (tmprm->model_row));
+				tmprm->model_row --;
+				g_hash_table_insert (proxy->priv->modify_rows,
+						     GINT_TO_POINTER (tmprm->model_row), tmprm);
+			}
+		}
 	}
 
 	/* actual signal emission if row is 'visible' */
@@ -2054,7 +2086,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 		if (rm && g_slist_find (proxy->priv->all_modifs, rm)) {
 			g_warning (_("Proxied data model reports the modifications as accepted, yet did not emit the "
 				     "corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This "
-				     "is a bug of the %s's implementation (please report a bug)."),
+				     "may be a bug of the %s's implementation (please report a bug)."),
 				   G_OBJECT_TYPE_NAME (proxy->priv->model));
 			proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
 			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
