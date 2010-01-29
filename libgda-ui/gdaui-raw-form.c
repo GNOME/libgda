@@ -738,7 +738,8 @@ action_commit_cb (GtkAction *action, GdauiRawForm *form)
 		g_error_free (error);
 	}
 
-	iter_row_changed_cb (form->priv->iter, gda_data_model_iter_get_row (form->priv->iter), form);
+	/* get to a correct selected row */
+	for (; !gda_data_model_iter_move_to_row (form->priv->iter, row) && (row >= 0); row--);
 }
 
 static void
