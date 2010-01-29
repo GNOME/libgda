@@ -47,7 +47,8 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 				blob = (GdaBlob *) gda_value_get_blob ((GValue *) value);
 				g_assert (blob);
 				bin = (GdaBinary *) blob;
-				if (blob->op)
+				if (blob->op &&
+				    (bin->binary_length != gda_blob_op_get_length (blob->op)))
 					gda_blob_op_read_all (blob->op, blob);
 				if (bin->binary_length > 0) {
 					bindata->data = g_new (guchar, bin->binary_length);

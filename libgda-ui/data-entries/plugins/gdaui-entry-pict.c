@@ -484,7 +484,8 @@ value_is_equal_to (GdauiEntryWrapper *mgwrap, const GValue *value)
 			blob = (GdaBlob*) gda_value_get_blob ((GValue *) value);
 			g_assert (blob);
 			bin = (GdaBinary *) blob;
-			if (blob->op) 
+			if (blob->op &&
+			    (bin->binary_length != gda_blob_op_get_length (blob->op)))
 				gda_blob_op_read_all (blob->op, blob);
 			if (mgpict->priv->bindata.data)
 				return !memcmp (bin->data, mgpict->priv->bindata.data, MIN (mgpict->priv->bindata.data_length, bin->binary_length));
