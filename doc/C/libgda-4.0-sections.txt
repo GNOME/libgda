@@ -1102,7 +1102,7 @@ gda_batch_get_type
 <SECTION>
 <FILE>gda-sql-parser</FILE>
 <TITLE>GdaSqlParser</TITLE>
-<INCLUDE>libgda/sql-parser/gda-sql-parser.h</INCLUDE>
+<INCLUDE>sql-parser/gda-sql-parser.h</INCLUDE>
 GdaSqlParser
 GdaSqlParserMode
 gda_sql_parser_new
