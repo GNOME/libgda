@@ -145,10 +145,10 @@ for more information.
 @routine_col: 
 @_routine_par: 
 @routine_par: 
-@_gda_reserved1: 
-@_gda_reserved2: 
-@_gda_reserved3: 
-@_gda_reserved4: 
+@_indexes_tab: 
+@indexes_tab: 
+@_index_cols: 
+@index_cols: 
 @_gda_reserved5: 
 @_gda_reserved6: 
 @_gda_reserved7: 

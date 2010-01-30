@@ -2600,18 +2600,45 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		break;
 
 	case 'i':
-		/* _information_schema_catalog_name, params: 
-		 *  - none
-		 */
-		ASSERT_TABLE_NAME (tname, "information_schema_catalog_name");
-		if (!PROV_CLASS (provider)->meta_funcs._info) {
-			WARN_METHOD_NOT_IMPLEMENTED (provider, "_info");
-			break;
+		if ((tname[1] == 'n') && (tname[2] == 'f')) {
+			/* _information_schema_catalog_name, params: 
+			 *  - none
+			 */
+			ASSERT_TABLE_NAME (tname, "information_schema_catalog_name");
+			if (!PROV_CLASS (provider)->meta_funcs._info) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "_info");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs._info (provider, cnc, store, context, error);
+			WARN_META_UPDATE_FAILURE (retval, "_info");
+			return retval;
 		}
-		retval = PROV_CLASS (provider)->meta_funcs._info (provider, cnc, store, context, error);
-		WARN_META_UPDATE_FAILURE (retval, "_info");
-		return retval;
+		else {
+			/* _index_column_usage, params: 
+			 *  -0- @table_catalog, @table_schema, @table_name, @index_name
+			 */
+			const GValue *iname = NULL;
+			i = check_parameters (context, error, 1,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &name, G_TYPE_STRING,
+					      &iname, G_TYPE_STRING, NULL,
+					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, "index_name", &iname, NULL);
 
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "index_column_usage");
+			if (!PROV_CLASS (provider)->meta_funcs.index_cols) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "index_cols");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.index_cols (provider, cnc, store, context, error,
+									       catalog, schema, name, iname);
+			WARN_META_UPDATE_FAILURE (retval, "index_cols");
+			return retval;
+		}
+		break;
 	case 'k': {
 		/* _key_column_usage, params: 
 		 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
@@ -2828,7 +2855,36 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			WARN_META_UPDATE_FAILURE (retval, "constraints_tab");
 			return retval;
 		}
-		if ((tname[1] == 'r') && (tname[2] == 'i')) {
+		else if ((tname[1] == 'a') && (tname[2] == 'b') && (tname[3] == 'l') && (tname[4] == 'e') && 
+			 (tname[5] == '_') && (tname[6] == 'i')) {
+			/* _table_indexes, params: 
+			 *  -0- @table_catalog, @table_schema, @table_name, @index_name
+			 *  -1- @table_catalog, @table_schema, @table_name
+			 */
+			const GValue *iname = NULL;
+			const GValue *tabname = NULL;
+			i = check_parameters (context, error, 2,
+					      &catalog, G_TYPE_STRING,
+					      &schema, G_TYPE_STRING,
+					      &iname, G_TYPE_STRING,
+					      &tabname, G_TYPE_STRING, NULL,
+					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "index_name", &iname, NULL,
+					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, NULL);
+
+			if (i < 0)
+				return FALSE;
+			
+			ASSERT_TABLE_NAME (tname, "table_indexes");
+			if (!PROV_CLASS (provider)->meta_funcs.indexes_tab) {
+				WARN_METHOD_NOT_IMPLEMENTED (provider, "indexes_tab");
+				break;
+			}
+			retval = PROV_CLASS (provider)->meta_funcs.indexes_tab (provider, cnc, store, context, error,
+										catalog, schema, tabname, iname);
+			WARN_META_UPDATE_FAILURE (retval, "indexes_tab");
+			return retval;
+		}
+		else if ((tname[1] == 'r') && (tname[2] == 'i')) {
 			/* _triggers,  params: 
 			 *  -0- @trigger_catalog, @trigger_schema
 			 *  -1- @event_object_catalog, @event_object_schema, @event_object_table
@@ -3236,7 +3292,9 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			{"_triggers", "_triggers", NULL},
 			{"_routines", "_routines", NULL},
 			{"_routine_columns", "_routine_col", NULL},
-			{"_parameters", "_routine_par", NULL}
+			{"_parameters", "_routine_par", NULL},
+			{"_table_indexes", "_indexes_tab", NULL},
+			{"_index_column_usage", "_index_cols", NULL}
 		};
 		GdaServerProvider *provider = cnc->priv->provider_obj;
 		gboolean retval;
@@ -3262,6 +3320,8 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._routines;
 		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._routine_col;
 		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._routine_par;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._indexes_tab;
+		rmeta [nb++].func = PROV_CLASS (provider)->meta_funcs._index_cols;
 		g_assert (nb == sizeof (rmeta) / sizeof (RMeta));
 
 		if (! _gda_meta_store_begin_data_reset (store, error)) {

@@ -177,12 +177,18 @@ typedef struct {
 	gboolean (*_routine_par)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
 	gboolean (*routine_par)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
 				      const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name);
+	/* _table_indexes */
+	gboolean (*_indexes_tab)     (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*indexes_tab)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, 
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+				      const GValue *index_name_n);
+
+	/* _index_column_usage */
+	gboolean (*_index_cols)      (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
+	gboolean (*index_cols)       (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
+				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, const GValue *index_name);
 	
 	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-	void (*_gda_reserved3) (void);
-	void (*_gda_reserved4) (void);
 	void (*_gda_reserved5) (void);
 	void (*_gda_reserved6) (void);
 	void (*_gda_reserved7) (void);
