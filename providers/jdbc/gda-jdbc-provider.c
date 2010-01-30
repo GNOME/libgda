@@ -1,5 +1,5 @@
 /* GDA Jdbc provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -239,6 +239,10 @@ gda_jdbc_provider_class_init (GdaJdbcProviderClass *klass)
 	provider_class->meta_funcs.routine_col = _gda_jdbc_meta_routine_col;
 	provider_class->meta_funcs._routine_par = _gda_jdbc_meta__routine_par;
 	provider_class->meta_funcs.routine_par = _gda_jdbc_meta_routine_par;
+	provider_class->meta_funcs._indexes_tab = _gda_jdbc_meta__indexes_tab;
+        provider_class->meta_funcs.indexes_tab = _gda_jdbc_meta_indexes_tab;
+        provider_class->meta_funcs._index_cols = _gda_jdbc_meta__index_cols;
+        provider_class->meta_funcs.index_cols = _gda_jdbc_meta_index_cols;
 
 	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
 	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);

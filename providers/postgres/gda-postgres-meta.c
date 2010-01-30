@@ -374,8 +374,8 @@ _gda_postgres_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 			retval = FALSE;
 			break;
 		}
-		
-		type = _gda_postgres_type_oid_to_gda (cdata, g_value_get_int64 (value));
+		guint oid = (guint) g_ascii_strtoull (g_value_get_string (value), NULL, 10);
+		type = _gda_postgres_type_oid_to_gda (cdata, oid);
 		if (type != G_TYPE_STRING) {
 			GValue *v;
 			g_value_set_string (v = gda_value_new (G_TYPE_STRING), g_type_name (type));
@@ -1038,7 +1038,8 @@ gboolean _gda_postgres_meta__columns (GdaServerProvider *prov, GdaConnection *cn
 			break;
 		}
 		
-		type = _gda_postgres_type_oid_to_gda (cdata, g_value_get_int64 (value));
+		guint oid = (guint) g_ascii_strtoull (g_value_get_string (value), NULL, 10);
+		type = _gda_postgres_type_oid_to_gda (cdata, oid);
 		if (type != G_TYPE_STRING) {
 			GValue *v;
 			g_value_set_string (v = gda_value_new (G_TYPE_STRING), g_type_name (type));
@@ -1143,7 +1144,8 @@ _gda_postgres_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 			break;
 		}
 
-		type = _gda_postgres_type_oid_to_gda (cdata, g_value_get_int64 (value));
+		guint oid = (guint) g_ascii_strtoull (g_value_get_string (value), NULL, 10);
+		type = _gda_postgres_type_oid_to_gda (cdata, oid);
 		if (type != G_TYPE_STRING) {
 			GValue *v;
 			g_value_set_string (v = gda_value_new (G_TYPE_STRING), g_type_name (type));

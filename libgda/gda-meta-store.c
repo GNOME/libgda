@@ -460,7 +460,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		compute_prepared_stmt (klass->cpriv->parser, 
 				       "INSERT INTO _attributes VALUES (##name::string, ##value::string::null)");
 
-#define GDA_DEBUG_GRAPH
+/*#define GDA_DEBUG_GRAPH*/
 #ifdef GDA_DEBUG_GRAPH
 #define INFORMATION_SCHEMA_GRAPH_FILE "information_schema.dot"
 	GString *string;

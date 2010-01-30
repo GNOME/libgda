@@ -1,5 +1,5 @@
 /* GDA capi provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2009 The GNOME Foundation.
  *
  * AUTHORS:
  *      TO_ADD: your name and email
@@ -485,6 +485,42 @@ _gda_capi_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			    const GValue *rout_catalog, const GValue *rout_schema, 
 			    const GValue *rout_name)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			    const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
+			    const GValue *index_name_n)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+{
+	TO_IMPLEMENT;
+	return TRUE;
+}
+
+gboolean
+_gda_capi_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+			   const GValue *table_catalog, const GValue *table_schema,
+			   const GValue *table_name, const GValue *index_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
