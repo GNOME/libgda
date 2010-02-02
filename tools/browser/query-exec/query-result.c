@@ -479,6 +479,7 @@ make_widget_for_error (GError *error)
 
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	g_string_free (string, TRUE);
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);	
 
