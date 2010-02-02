@@ -286,23 +286,23 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
 
 /**
  * gdaui_basic_form_new
- * @paramlist: a #GdaSet structure
+ * @data_set: a #GdaSet structure
  *
- * Creates a new #GdauiBasicForm widget using all the parameters provided in @paramlist.
+ * Creates a new #GdauiBasicForm widget using all the #GdaHolder objects provided in @data_set.
  *
  * The global layout is rendered using a table (a #GtkTable), and an entry is created for each
- * node of @paramlist.
+ * node of @data_set.
  *
  * Returns: the new widget
  *
  * Since: 4.2
  */
 GtkWidget *
-gdaui_basic_form_new (GdaSet *paramlist)
+gdaui_basic_form_new (GdaSet *data_set)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDAUI_TYPE_BASIC_FORM, "paramlist", paramlist, NULL);
+	obj = g_object_new (GDAUI_TYPE_BASIC_FORM, "paramlist", data_set, NULL);
 
 	return (GtkWidget *) obj;
 }
@@ -712,8 +712,11 @@ create_entry_widget (SingleEntry *sentry)
 		/* set current value */
 		if (gda_holder_is_valid (param))
 			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), val);
-		else
-			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), NULL);
+		else {
+			GValue value;
+			memset (&value, 0, sizeof (GValue));
+			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), &value);
+		}
 
 		if (!nnul ||
 		    (nnul && value &&
@@ -1822,7 +1825,7 @@ gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *param)
 
 /**
  * gdaui_basic_form_new_in_dialog
- * @paramlist: a #GdaSet structure
+ * @data_set: a #GdaSet object
  * @parent: the parent window for the new dialog, or %NULL
  * @title: the title of the dialog window, or %NULL
  * @header: a helper text displayed at the top of the dialog, or %NULL
@@ -1839,14 +1842,14 @@ gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *param)
  * Since: 4.2
  */
 GtkWidget *
-gdaui_basic_form_new_in_dialog (GdaSet *paramlist, GtkWindow *parent,
+gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 				const gchar *title, const gchar *header)
 {
 	GtkWidget *form;
 	GtkWidget *dlg;
 	const gchar *rtitle;
 
-	form = gdaui_basic_form_new (paramlist);
+	form = gdaui_basic_form_new (data_set);
 
 	rtitle = title;
 	if (!rtitle)

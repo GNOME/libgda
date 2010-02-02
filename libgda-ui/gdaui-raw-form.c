@@ -44,8 +44,6 @@ static void gdaui_raw_form_get_property (GObject *object,
 					 GValue *value,
 					 GParamSpec *pspec);
 
-static void gdaui_raw_form_initialize (GdauiRawForm *form, GtkWidget *layout, GHashTable *box_widgets);
-
 static GError *iter_validate_set_cb (GdaDataModelIter *iter, GdauiRawForm *form);
 static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiRawForm *form);
 static void proxy_changed_cb (GdaDataProxy *proxy, GdauiRawForm *form);
@@ -453,7 +451,24 @@ gdaui_raw_form_set_property (GObject *object,
 					/* we don't want chuncking */
 					g_object_set (object, "paramlist", form->priv->iter, NULL);
 					gda_data_proxy_set_sample_size (form->priv->proxy, 0);
-					gdaui_raw_form_initialize (form, NULL, NULL);
+
+					/* handle invalie iterators' GdaHolder */
+					GSList *list;
+					for (list = GDA_SET (form->priv->iter)->holders; list; list = list->next) {
+						GtkWidget *entry;
+						entry = gdaui_basic_form_get_entry_widget (GDAUI_BASIC_FORM (form),
+											   (GdaHolder*) list->data);
+						if (entry)
+							gdaui_entry_shell_set_unknown ((GdauiEntryShell*) entry,
+										       !gda_holder_is_valid ((GdaHolder*) list->data));
+					}
+
+					/* actions */
+					if (gda_data_proxy_is_read_only (form->priv->proxy))
+						g_object_set ((GObject*) form, "show-actions", FALSE, NULL);
+					
+					/* data display update */
+					proxy_changed_cb (form->priv->proxy, form);					
 				}
 				if (form->priv->iter)
 					iter_row_changed_cb (form->priv->iter,
@@ -562,49 +577,6 @@ proxy_row_inserted_or_removed_cb (GdaDataProxy *proxy, gint row, GdauiRawForm *f
 	if (gda_data_model_get_n_rows (GDA_DATA_MODEL (form->priv->proxy)) != 0)
 		if (gda_data_model_iter_get_row (form->priv->iter) == -1)
 			gda_data_model_iter_move_to_row (form->priv->iter, row > 0 ? row - 1 : 0);
-}
-
-/*
- * Real initialization
- */
-static void
-gdaui_raw_form_initialize (GdauiRawForm *form, GtkWidget *layout, GHashTable *box_widgets)
-{
-	/*
-	 * handling of the layout
-	 */
-	if (layout && box_widgets) {
-		/* REM: the @box_widgets has keys for query fields, and we need to provide
-		   gdaui_basic_form_new_in_layout() with a hash table which has keys for GdaSetNode;
-		   this is why we need to use another hash table: 'fbw' */
-
-		TO_IMPLEMENT;
-		/* GSList *list; */
-		/* 		GdaHolder *param; */
-		/* 		GdaSetNode *node; */
-		/* 		gpointer widget; */
-
-		/* 		fbw = g_hash_table_new (NULL, NULL); */
-		/* 		g_object_get (G_OBJECT (orig_query), "really_all_fields", &list, NULL); */
-		/* 		while (list) { */
-		/* 			widget = g_hash_table_lookup (box_widgets, list->data); */
-		/* 			if (widget) { */
-		/* 				node = gdaui_work_core_find_context_node (form->priv->core, GDA_QUERY_FIELD (list->data)); */
-		/* 				if (node) */
-		/* 					g_hash_table_insert (fbw, node, widget); */
-		/* 			} */
-		/* 			list = g_slist_next (list); */
-		/* 		} */
-	}
-
-	/*
-	 * the form itself
-	 */
-	if (!layout && gda_data_proxy_is_read_only (form->priv->proxy))
-		g_object_set ((GObject*) form, "show-actions", FALSE, NULL);
-
-	/* data display update */
-	proxy_changed_cb (form->priv->proxy, form);
 }
 
 /*
