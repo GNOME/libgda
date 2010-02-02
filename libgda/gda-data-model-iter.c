@@ -573,7 +573,7 @@ gda_data_model_iter_get_property (GObject *object,
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
  * property is set to the @row row.  In this case
- * each #GdaHolder composing @iter for which an error occurred will invalid (see gda_holder_is_valid()).
+ * each #GdaHolder composing @iter for which an error occurred will be invalid (see gda_holder_is_valid()).
  *
  * Returns: TRUE if no error occurred
  */
@@ -699,7 +699,7 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
  * property is set to the new current row (one row more than it was before the call). In this case
- * each #GdaHolder composing @iter for which an error occurred will invalid (see gda_holder_is_valid()).
+ * each #GdaHolder composing @iter for which an error occurred will be invalid (see gda_holder_is_valid()).
  *
  * Returns: TRUE if the iterator is now at the next row
  */
@@ -786,7 +786,7 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
  *
  * If any other error occurred then the returned value is FALSE, but the "current-row"
  * property is set to the new current row (one row less than it was before the call).  In this case
- * each #GdaHolder composing @iter for which an error occurred will invalid (see gda_holder_is_valid()).
+ * each #GdaHolder composing @iter for which an error occurred will be invalid (see gda_holder_is_valid()).
  *
  * Returns: TRUE if the iterator is now at the previous row
  */
