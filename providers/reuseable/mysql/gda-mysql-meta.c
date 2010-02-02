@@ -1,5 +1,5 @@
 /* GDA mysql provider
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
@@ -82,9 +82,15 @@ typedef enum {
         I_STMT_ROUTINES,
         I_STMT_ROUTINES_ONE,
         I_STMT_ROUTINES_PAR_ALL,
-        I_STMT_ROUTINES_PAR/* , */
+        I_STMT_ROUTINES_PAR,
         /* I_STMT_ROUTINES_COL_ALL, */
-        /* I_STMT_ROUTINES_COL */
+        /* I_STMT_ROUTINES_COL, */
+
+	I_STMT_INDEXES_ALL,
+	I_STMT_INDEXES_TABLE,
+	I_STMT_INDEXES_ONE,
+	I_STMT_INDEX_COLUMNS_ALL,
+	I_STMT_INDEX_COLUMNS_NAMED
 } InternalStatementItem;
 
 
@@ -214,6 +220,20 @@ static gchar *internal_sql[] = {
 
         /* I_STMT_ROUTINES_COL */
 
+	/* I_STMT_INDEXES_ALL */
+	"SELECT DISTINCT " CATALOG_NAME ", INDEX_SCHEMA, INDEX_NAME, " CATALOG_NAME ", TABLE_SCHEMA, TABLE_NAME, NOT NON_UNIQUE, NULL, INDEX_TYPE, NULL, NULL, COMMENT FROM INFORMATION_SCHEMA.STATISTICS WHERE INDEX_NAME <> 'PRIMARY'",
+
+	/* I_STMT_INDEXES_TABLE */
+	"SELECT DISTINCT " CATALOG_NAME ", INDEX_SCHEMA, INDEX_NAME, " CATALOG_NAME ", TABLE_SCHEMA, TABLE_NAME, NOT NON_UNIQUE, NULL, INDEX_TYPE, NULL, NULL, COMMENT FROM INFORMATION_SCHEMA.STATISTICS WHERE INDEX_NAME <> 'PRIMARY' AND TABLE_SCHEMA = BINARY ##schema::string AND TABLE_NAME = BINARY ##name::string",
+
+	/* I_STMT_INDEXES_ONE */
+	"SELECT DISTINCT " CATALOG_NAME ", INDEX_SCHEMA, INDEX_NAME, " CATALOG_NAME ", TABLE_SCHEMA, TABLE_NAME, NOT NON_UNIQUE, NULL, INDEX_TYPE, NULL, NULL, COMMENT FROM INFORMATION_SCHEMA.STATISTICS WHERE INDEX_NAME <> 'PRIMARY' AND TABLE_SCHEMA = BINARY ##schema::string AND TABLE_NAME = BINARY ##name::string AND INDEX_NAME = ##name2::string",
+
+	/* I_STMT_INDEX_COLUMNS_ALL */
+	"SELECT DISTINCT " CATALOG_NAME ", INDEX_SCHEMA, INDEX_NAME, " CATALOG_NAME ", TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, COLUMN_NAME, SEQ_IN_INDEX FROM INFORMATION_SCHEMA.STATISTICS WHERE INDEX_NAME <> 'PRIMARY' ORDER BY INDEX_SCHEMA, INDEX_NAME, SEQ_IN_INDEX",
+
+	/* I_STMT_INDEX_COLUMNS_NAMED */
+	"SELECT DISTINCT " CATALOG_NAME ", INDEX_SCHEMA, INDEX_NAME, " CATALOG_NAME ", TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, COLUMN_NAME, SEQ_IN_INDEX FROM INFORMATION_SCHEMA.STATISTICS WHERE INDEX_NAME <> 'PRIMARY' AND TABLE_SCHEMA = BINARY ##schema::string AND TABLE_NAME = BINARY ##name::string AND INDEX_NAME = ##name2::string ORDER BY INDEX_SCHEMA, INDEX_NAME, SEQ_IN_INDEX"
 };
 
 /*
@@ -1710,7 +1730,7 @@ _gda_mysql_meta_routines (GdaServerProvider  *prov,
 	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), routine_schema, error))
 		return FALSE;
 	if (routine_name_n != NULL) {
-		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), routine_name_n, error))
+ 		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), routine_name_n, error))
 			return FALSE;
 		model = gda_connection_statement_execute_select_full (cnc,
 								      internal_stmt[I_STMT_ROUTINES_ONE],
@@ -1792,8 +1812,37 @@ gboolean
 _gda_mysql_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	//TO_IMPLEMENT;
-	return TRUE;
+	GdaDataModel *model;
+	gboolean retval;
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
+		return FALSE;
+	/* Check correct mysql server version. */
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     "%s", _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_INDEXES_ALL],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_table_indexes, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
+		retval = gda_meta_store_modify_with_context (store, context, model, error);
+		g_object_unref (G_OBJECT(model));
+	}
+
+	return retval;
 }
 
 gboolean
@@ -1802,16 +1851,89 @@ _gda_mysql_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc,
 			     const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
 			     const GValue *index_name_n)
 {
-	//TO_IMPLEMENT;
-	return TRUE;
+	GdaDataModel *model;
+	gboolean retval;
+	/* Check correct mysql server version. */
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
+		return FALSE;
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     "%s", _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
+	if (index_name_n) {
+		if (!gda_holder_set_value (gda_set_get_holder (i_set, "name2"), index_name_n, error))
+			return FALSE;
+		model = gda_connection_statement_execute_select_full (cnc,
+								      internal_stmt[I_STMT_INDEXES_ONE],
+								      i_set,
+								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								      _col_types_table_indexes, error);
+	}
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_INDEXES_TABLE],
+							      i_set,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_table_indexes, error);
+
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
+		retval = gda_meta_store_modify_with_context (store, context, model, error);
+		g_object_unref (G_OBJECT(model));
+
+	}
+
+	return retval;
 }
 
 gboolean
 _gda_mysql_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	//TO_IMPLEMENT;
-	return TRUE;
+	GdaDataModel *model;
+	gboolean retval;
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
+		return FALSE;
+	/* Check correct mysql server version. */
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     "%s", _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_INDEX_COLUMNS_ALL],
+							      NULL,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_index_column_usage, error);
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
+		retval = gda_meta_store_modify_with_context (store, context, model, error);
+		g_object_unref (G_OBJECT(model));
+	}
+
+	return retval;
 }
 
 gboolean
@@ -1820,7 +1942,44 @@ _gda_mysql_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc,
 			    const GValue *table_catalog, const GValue *table_schema,
 			    const GValue *table_name, const GValue *index_name)
 {
-	//TO_IMPLEMENT;
-	return TRUE;
+	GdaDataModel *model;
+	gboolean retval;
+	/* Check correct mysql server version. */
+	GdaMysqlReuseable *rdata;
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	if (!rdata)
+		return FALSE;
+	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
+		return FALSE;
+	if (rdata->version_long < 50000) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
+			     "%s", _("Mysql version 5.0 at least is required"));
+		return FALSE;
+	}
+
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "schema"), table_schema, error))
+		return FALSE;
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name"), table_name, error))
+		return FALSE;
+	if (!gda_holder_set_value (gda_set_get_holder (i_set, "name2"), index_name, error))
+		return FALSE;
+	model = gda_connection_statement_execute_select_full (cnc,
+							      internal_stmt[I_STMT_INDEX_COLUMNS_NAMED],
+							      i_set,
+							      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							      _col_types_index_column_usage, error);
+
+	if (model == NULL)
+		retval = FALSE;
+	else {
+		gda_meta_store_set_reserved_keywords_func (store,
+							   _gda_mysql_reuseable_get_reserved_keywords_func
+							   ((GdaProviderReuseable*) rdata));
+		retval = gda_meta_store_modify_with_context (store, context, model, error);
+		g_object_unref (G_OBJECT(model));
+
+	}
+
+	return retval;
 }
 
