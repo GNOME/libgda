@@ -126,9 +126,11 @@ plugin_init (GError **error)
 	plugin->plugin_name = "text";
 	plugin->plugin_descr = "Multiline text entry";
 	plugin->plugin_file = NULL; /* always leave NULL */
-	plugin->nb_g_types = 1;
+	plugin->nb_g_types = 3;
 	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
-	plugin->valid_g_types [0] = G_TYPE_STRING;;
+	plugin->valid_g_types [0] = G_TYPE_STRING;
+	plugin->valid_g_types [1] = GDA_TYPE_BLOB;
+	plugin->valid_g_types [2] = GDA_TYPE_BINARY;
 	plugin->options_xml_spec = NULL;
 	plugin->entry_create_func = plugin_entry_text_create_func;
 	plugin->cell_create_func = NULL;
