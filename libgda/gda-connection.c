@@ -4241,6 +4241,10 @@ prepare_meta_statements_hash (void)
 	name_col_array[0] = "name";
 	name_col_array[1] = "field_name";
 
+	gchar **name_index_array = g_new (gchar *, 2);
+	name_index_array[0] = "name";
+	name_index_array[1] = "index_name";
+
 	h = g_hash_table_new (meta_key_hash, meta_key_equal);
 	
 	/* GDA_CONNECTION_META_NAMESPACES */
@@ -4335,6 +4339,27 @@ prepare_meta_statements_hash (void)
 	key->nb_filters = 2;
 	key->filters = name_col_array;
 	sql = "SELECT c.column_name, c.data_type, c.gtype, c.numeric_precision, c.numeric_scale, c.is_nullable AS 'Nullable', c.column_default, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE t.table_short_name=##name::string AND c.column_name = ##field_name::string";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	/* GDA_CONNECTION_META_INDEXES */
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_INDEXES;
+	key->nb_filters = 1;
+	key->filters = name_array;
+	sql = "SELECT i.table_name, i.table_schema, i.index_name, d.column_name, d.ordinal_position, i.index_type FROM _table_indexes as i INNER JOIN _index_column_usage as d ON (d.table_catalog = i.table_catalog AND d.table_schema = i.table_schema AND d.table_name = i.table_name) INNER JOIN _tables t ON (t.table_catalog = i.table_catalog AND t.table_schema = i.table_schema AND t.table_name = i.table_name) WHERE t.table_short_name=##name::string";
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	if (!stmt)
+		g_error ("Could not parse internal statement: %s\n", sql);
+	g_hash_table_insert (h, key, stmt);
+
+	key = g_new0 (MetaKey, 1);
+	key->meta_type = GDA_CONNECTION_META_INDEXES;
+	key->nb_filters = 2;
+	key->filters = name_index_array;
+	sql = "SELECT i.table_name, i.table_schema, i.index_name, d.column_name, d.ordinal_position, i.index_type FROM _table_indexes as i INNER JOIN _index_column_usage as d ON (d.table_catalog = i.table_catalog AND d.table_schema = i.table_schema AND d.table_name = i.table_name) INNER JOIN _tables t ON (t.table_catalog = i.table_catalog AND t.table_schema = i.table_schema AND t.table_name = i.table_name) WHERE t.table_short_name=##name::string AND i.index_name=##index_name::string";
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	if (!stmt)
 		g_error ("Could not parse internal statement: %s\n", sql);

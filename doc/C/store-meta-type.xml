@@ -99,7 +99,7 @@
     </para>
     <para>Optional filter:
       <itemizedlist>
-	<listitem><para>"name" (G_TYPE_STRING): the full name of the table</para></listitem>
+	<listitem><para>"name" (G_TYPE_STRING): the name of the table</para></listitem>
       </itemizedlist>
     </para>
     <para>Columns of the returned data model:
@@ -150,7 +150,7 @@
     </para>
     <para>Optional filter:
       <itemizedlist>
-	<listitem><para>"name" (G_TYPE_STRING): the full name of the view</para></listitem>
+	<listitem><para>"name" (G_TYPE_STRING): the name of the view</para></listitem>
       </itemizedlist>
     </para>
     <para>Columns of the returned data model:
@@ -201,7 +201,7 @@
     </para>
     <para>Mandatory filter:
       <itemizedlist>
-	<listitem><para>"name" (G_TYPE_STRING): the full name of the table or view</para></listitem>
+	<listitem><para>"name" (G_TYPE_STRING): the name of the table or view</para></listitem>
       </itemizedlist>
     </para>
     <para>Optional filter:
@@ -265,4 +265,66 @@
       </table>
     </para>
   </sect2>
+
+  <sect2 id="GdaConnectionMetaTypeGDA_CONNECTION_META_INDEXES">
+    <title>GDA_CONNECTION_META_INDEXES</title>
+    <para>Lists a table's associated indexes
+    </para>
+    <para>Mandatory filter:
+      <itemizedlist>
+	<listitem><para>"name" (G_TYPE_STRING): the name of the table</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>Optional filter:
+      <itemizedlist>
+	<listitem><para>"index_name" (G_TYPE_STRING): the name of an index</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>Columns of the returned data model:
+      <table frame="all">
+        <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+          <thead>
+            <row>
+              <entry>Column #</entry>
+              <entry>Type</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+	  <tbody>
+            <row>
+              <entry>0</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Table's name</entry>
+            </row>
+            <row>
+              <entry>1</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Namespace in which the table is</entry>
+            </row>
+            <row>
+              <entry>2</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Index's name</entry>
+            </row>
+            <row>
+              <entry>3</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Column's name involved in the index</entry>
+            </row>
+            <row>
+              <entry>4</entry> 
+              <entry>G_TYPE_INT</entry>
+              <entry>Sequence order</entry>
+            </row>
+            <row>
+              <entry>5</entry> 
+              <entry>G_TYPE_STRING</entry>
+              <entry>Index's type</entry>
+            </row>
+	  </tbody>
+	</tgroup>
+      </table>
+    </para>
+  </sect2>
+
 </sect1>
