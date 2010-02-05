@@ -53,6 +53,7 @@ libgda/handlers/gda-handler-type.c
 libgda/providers-support/gda-pstmt.c
 libgda/sqlite/gda-sqlite-ddl.c
 libgda/sqlite/gda-sqlite-handler-bin.c
+libgda/sqlite/gda-sqlite-handler-boolean.c
 libgda/sqlite/gda-sqlite-meta.c
 libgda/sqlite/gda-sqlite-provider.c
 libgda/sqlite/gda-sqlite-pstmt.c
