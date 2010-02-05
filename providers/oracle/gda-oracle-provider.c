@@ -1261,6 +1261,8 @@ gda_oracle_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	}
 
 	memset (&context, 0, sizeof (context));
+	context.provider = provider;
+	context.cnc = cnc;
 	context.params = params;
 	context.flags = flags;
 	context.render_select = (GdaSqlRenderingFunc) oracle_render_select;

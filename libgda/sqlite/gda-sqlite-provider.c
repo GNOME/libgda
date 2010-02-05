@@ -40,6 +40,7 @@
 #include "gda-sqlite-util.h"
 #include "gda-sqlite-meta.h"
 #include "gda-sqlite-handler-bin.h"
+#include "gda-sqlite-handler-boolean.h"
 #include "gda-sqlite-blob-op.h"
 #include <libgda/gda-connection-private.h>
 #include <libgda/binreloc/gda-binreloc.h>
@@ -1229,6 +1230,16 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 			g_object_unref (dh);
 		}
 	}
+	else if (type == G_TYPE_BOOLEAN) {
+		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
+		if (!dh) {
+			dh = _gda_sqlite_handler_boolean_new ();
+			if (dh) {
+				gda_server_provider_handler_declare (provider, dh, cnc, G_TYPE_BOOLEAN, NULL);
+				g_object_unref (dh);
+			}
+		}
+	}
 	else
 		dh = gda_server_provider_get_data_handler_default (provider, cnc, type, dbms_type);
 
@@ -1314,10 +1325,12 @@ gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	}
 
 	memset (&context, 0, sizeof (context));
+	context.provider = provider;
+	context.cnc = cnc;
 	context.params = params;
 	context.flags = flags;
 	context.render_operation = (GdaSqlRenderingFunc) sqlite_render_operation; /* specific REGEXP rendering */
-	context.render_expr = sqlite_render_expr; /* render "FALSE" as 0 and TRUE as !0 */
+	context.render_expr = sqlite_render_expr; /* render "FALSE" as 0 and TRUE as 1 */
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
 

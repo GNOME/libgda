@@ -16,6 +16,8 @@ libgda_mysql_la_SOURCES = \
 	gda-mysql-blob-op.h \
 	gda-mysql-ddl.c \
 	gda-mysql-ddl.h \
+	gda-mysql-handler-boolean.c \
+	gda-mysql-handler-boolean.h \
 	gda-mysql-provider.c \
 	gda-mysql-provider.h \
 	gda-mysql-recordset.c \
