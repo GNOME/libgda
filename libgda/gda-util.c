@@ -589,6 +589,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 				}
 			}
 		}
+		g_free (source);
 	}
 
 	/* specified value */
