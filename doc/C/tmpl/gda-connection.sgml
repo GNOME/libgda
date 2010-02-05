@@ -553,11 +553,12 @@ Management of connections to data sources
 
 </para>
 
-@GDA_CONNECTION_META_NAMESPACES: lists the <link linkend="GdaConnectionMetaTypeGDA_CONNECTION_META_NAMESPACES">namespaces</link> (or schemas for PostgreSQL)
+@GDA_CONNECTION_META_NAMESPACES: 
 @GDA_CONNECTION_META_TYPES: 
-@GDA_CONNECTION_META_TABLES: lists the <link linkend="GdaConnectionMetaTypeGDA_CONNECTION_META_TABLES">tables</link>
+@GDA_CONNECTION_META_TABLES: 
 @GDA_CONNECTION_META_VIEWS: 
 @GDA_CONNECTION_META_FIELDS: 
+@GDA_CONNECTION_META_INDEXES: 
 
 <!-- ##### FUNCTION gda_connection_get_meta_store_data ##### -->
 <para>

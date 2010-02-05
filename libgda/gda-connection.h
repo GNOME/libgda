@@ -152,12 +152,25 @@ typedef enum {
 	GDA_CONNECTION_SCHEMA_TABLE_CONTENTS
 } GdaConnectionSchema;
 
+/**
+ * GdaConnectionMetaType:
+ * @GDA_CONNECTION_META_NAMESPACES: lists the <link linkend="GdaConnectionMetaTypeGDA_CONNECTION_META_NAMESPACES">namespaces</link> (or schemas for PostgreSQL)
+ * @GDA_CONNECTION_META_TYPES: lists the <link linkend="GdaConnectionMetaTypeGDA_CONNECTION_META_TYPES">database types</link>
+ * @GDA_CONNECTION_META_TABLES: lists the <link linkend="GdaConnectionMetaTypeGDA_CONNECTION_META_TABLES">tables</link>
+ * @GDA_CONNECTION_META_VIEWS: lists the <link linkend="GdaConnectionMetaTypeGDA_CONNECTION_META_VIEWS">views</link>
+ * @GDA_CONNECTION_META_FIELDS: lists the <link linkend="GdaConnectionMetaTypeGDA_CONNECTION_META_FIELDS">table's or view's fields</link>
+ * @GDA_CONNECTION_META_INDEXES: lists the <link linkend="GdaConnectionMetaTypeGDA_CONNECTION_META_INDEXES">table's indexes</link>
+ *
+ * Used with gda_connection_get_meta_store_data() to describe what meta data to extract from
+ * a connection's associated #GdaMetaStore.
+ */
 typedef enum {
 	GDA_CONNECTION_META_NAMESPACES,
 	GDA_CONNECTION_META_TYPES,
 	GDA_CONNECTION_META_TABLES,
 	GDA_CONNECTION_META_VIEWS,
-	GDA_CONNECTION_META_FIELDS
+	GDA_CONNECTION_META_FIELDS,
+	GDA_CONNECTION_META_INDEXES
 } GdaConnectionMetaType;
 
 
