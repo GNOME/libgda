@@ -1205,7 +1205,7 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 {
 	DbObject *dbobj;
 	xmlChar *view_name;
-	gchar *complete_obj_name;
+	gchar *complete_obj_name = NULL;
 
 	view_name = xmlGetProp (node, BAD_CAST "name");
 	if (!view_name) {
@@ -1297,9 +1297,11 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 			goto onerror;	
 		}
 	}
+	g_free (complete_obj_name);
 	return dbobj;
 	
 onerror:
+	g_free (complete_obj_name);
 	db_object_free (dbobj);
 	return NULL;	
 }
@@ -4068,6 +4070,7 @@ _gda_meta_store_schema_get_upstream_contexts (GdaMetaStore *store, GdaMetaContex
 						j++;
 					}
 				}
+				g_free (cols_array);
 				break;
 			}
 			else {
