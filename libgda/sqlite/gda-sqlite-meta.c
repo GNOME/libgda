@@ -826,6 +826,8 @@ fill_tables_views_model (GdaConnection *cnc,
                                             FALSE, NULL)) /* table_owner */
                                 retval = FALSE;
                 }
+		else
+			gda_value_free (ncvalue);
         }
         g_object_unref (tmpmodel);
 
