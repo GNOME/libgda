@@ -43,6 +43,7 @@
 
 #include "gda-mysql-util.h"
 #include "gda-mysql-parser.h"
+#include "gda-mysql-handler-boolean.h"
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
@@ -1291,6 +1292,16 @@ gda_mysql_provider_get_data_handler (GdaServerProvider  *provider,
 		TO_IMPLEMENT; /* define data handlers for these types */
 		dh = NULL;
 	}
+	else if (type == G_TYPE_BOOLEAN){
+		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
+                if (!dh) {
+                        dh = gda_mysql_handler_boolean_new ();
+                        if (dh) {
+                                gda_server_provider_handler_declare (provider, dh, cnc, G_TYPE_BOOLEAN, NULL);
+                                g_object_unref (dh);
+                        }
+                }
+	}
 	else
 		dh = gda_server_provider_get_data_handler_default (provider, cnc, type, dbms_type);
 
@@ -1383,6 +1394,9 @@ gda_mysql_provider_create_parser (GdaServerProvider  *provider,
  * This method renders a #GdaStatement into its SQL representation.
  */
 static gchar *mysql_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GError **error);
+static gchar *mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
+				 gboolean *is_default, gboolean *is_null,
+				 GError **error);
 static gchar *
 gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
 				     GdaConnection        *cnc,
@@ -1402,15 +1416,14 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
         }
 
         memset (&context, 0, sizeof (context));
+	context.provider = provider;
+	context.cnc = cnc;
         context.params = params;
         context.flags = flags;
 	context.render_function = (GdaSqlRenderingFunc) mysql_render_function; /* don't put any space between function name
 										* and the opening parenthesis, see
 										* http://blog.152.org/2009/12/mysql-error-1305-function-xxx-does-not.html */
-	if (cnc) {
-		context.cnc = cnc;
-		context.provider = gda_connection_get_provider (cnc);
-	}
+	context.render_expr = mysql_render_expr; /* render "FALSE" as 0 and TRUE as 1 */
 
         str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1461,6 +1474,136 @@ mysql_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GE
 	g_string_free (string, TRUE);
 	return NULL;
 }
+
+static gchar *
+mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
+		   gboolean *is_default, gboolean *is_null,
+		   GError **error)
+{
+	GString *string;
+	gchar *str = NULL;
+
+	g_return_val_if_fail (expr, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, NULL);
+
+	if (is_default)
+		*is_default = FALSE;
+	if (is_null)
+		*is_null = FALSE;
+
+	/* can't have: 
+	 *  - expr->cast_as && expr->param_spec 
+	 */
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (expr), error)) return NULL;
+
+	string = g_string_new ("");
+	if (expr->param_spec) {
+		str = context->render_param_spec (expr->param_spec, expr, context, is_default, is_null, error);
+		if (!str) goto err;
+	}
+	else if (expr->value) {
+		if (expr->value_is_ident && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) &&
+		    g_value_get_string (expr->value)) {
+			gchar **ids_array;
+			gint i;
+			GString *string = NULL;
+			GdaConnectionOptions cncoptions = 0;
+			if (context->cnc)
+				g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+
+			ids_array = gda_sql_identifier_split (g_value_get_string (expr->value));
+			if (!ids_array) 
+				str = g_value_dup_string (expr->value);
+			else if (!(ids_array[0])) goto err;
+			else {
+				for (i = 0; ids_array[i]; i++) {
+					gchar *tmp;
+					if (!string)
+						string = g_string_new ("");
+					else
+						g_string_append_c (string, '.');
+					tmp = gda_sql_identifier_quote (ids_array[i], context->cnc,
+									context->provider, FALSE,
+					   cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+					g_string_append (string, tmp);
+					g_free (tmp);
+				}
+				g_strfreev (ids_array);
+				str = g_string_free (string, FALSE);
+			}
+		}
+		else {
+			str = gda_value_stringify (expr->value);
+			if (!str) goto err;
+			if (is_null && gda_value_is_null (expr->value))
+				*is_null = TRUE;
+			else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
+				 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
+				*is_default = TRUE;
+			else if (!g_ascii_strcasecmp (str, "FALSE")) {
+				g_free (str);
+				str = g_strdup ("0");
+			}
+			else if (!g_ascii_strcasecmp (str, "TRUE")) {
+				g_free (str);
+				str = g_strdup ("1");
+			}
+		}
+	}
+	else if (expr->func) {
+		str = context->render_function (GDA_SQL_ANY_PART (expr->func), context, error);
+		if (!str) goto err;
+	}
+	else if (expr->cond) {
+		str = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
+		if (!str) goto err;
+	}
+	else if (expr->select) {
+		gchar *str1;
+		if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_SELECT)
+			str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
+		else
+			str1 = context->render_compound (GDA_SQL_ANY_PART (expr->select), context, error);
+		if (!str1) goto err;
+
+		if (! GDA_SQL_ANY_PART (expr)->parent ||
+		    (GDA_SQL_ANY_PART (expr)->parent->type != GDA_SQL_ANY_SQL_FUNCTION)) {
+			str = g_strdup_printf ("(%s)", str1);
+			g_free (str1);
+		}
+		else
+			str = str1;
+	}
+	else if (expr->case_s) {
+		str = context->render_case (GDA_SQL_ANY_PART (expr->case_s), context, error);
+		if (!str) goto err;
+	}
+	else {
+		if (is_null)
+			*is_null = TRUE;
+		str = g_strdup ("NULL");
+	}
+
+	if (!str) {
+		/* TO REMOVE */
+		str = g_strdup ("[...]");
+	}
+
+	if (expr->cast_as) 
+		g_string_append_printf (string, "CAST (%s AS %s)", str, expr->cast_as);
+	else
+		g_string_append (string, str);
+	g_free (str);
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
 
 static GdaMysqlPStmt *
 real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stmt, GError **error)

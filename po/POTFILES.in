@@ -38,6 +38,7 @@ libgda/handlers/gda-handler-type.c
 libgda/providers-support/gda-pstmt.c
 libgda/sqlite/gda-sqlite-ddl.c
 libgda/sqlite/gda-sqlite-handler-bin.c
+libgda/sqlite/gda-sqlite-handler-boolean.c
 libgda/sqlite/gda-sqlite-meta.c
 libgda/sqlite/gda-sqlite-provider.c
 libgda/sqlite/gda-sqlite-pstmt.c
@@ -78,6 +79,7 @@ providers/mdb/libmain.c
 providers/mdb/mdb_specs_dsn.xml.in
 providers/mysql/gda-mysql-ddl.c
 providers/mysql/gda-mysql-meta.c
+providers/mysql/gda-mysql-handler-boolean.c
 providers/mysql/gda-mysql-provider.c
 providers/mysql/gda-mysql-recordset.c
 providers/mysql/gda-mysql-util.c

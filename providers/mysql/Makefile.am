@@ -41,6 +41,8 @@ libgda_mysql_la_SOURCES = \
 	gda-mysql-ddl.h \
 	gda-mysql-parser.c \
 	gda-mysql-parser.h \
+	gda-mysql-handler-boolean.c \
+	gda-mysql-handler-boolean.h \
 	gda-mysql-provider.c \
 	gda-mysql-provider.h \
 	gda-mysql-meta.c \
