@@ -1289,8 +1289,16 @@ gda_mysql_provider_get_data_handler (GdaServerProvider  *provider,
 	else if ((type == GDA_TYPE_TIME) ||
 		 (type == GDA_TYPE_TIMESTAMP) ||
 		 (type == G_TYPE_DATE)) {
-		TO_IMPLEMENT; /* define data handlers for these types */
-		dh = NULL;
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+                if (!dh) {
+                        dh = gda_handler_time_new ();
+                        gda_handler_time_set_sql_spec ((GdaHandlerTime *) dh, G_DATE_YEAR,
+                                                       G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
+                        gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
+                        gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
+                        gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
+                        g_object_unref (dh);
+                }
 	}
 	else if (type == G_TYPE_BOOLEAN){
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
