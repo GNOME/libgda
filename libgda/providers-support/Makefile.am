@@ -8,7 +8,8 @@ AM_CPPFLAGS = \
 
 psupport_headers = \
 	gda-data-select-priv.h \
-	gda-pstmt.h
+	gda-pstmt.h \
+	gda-meta-column-types.h
 
 libgda_psupport_la_SOURCES = \
 	$(psupport_headers) \
