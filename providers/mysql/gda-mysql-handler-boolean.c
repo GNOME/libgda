@@ -188,7 +188,7 @@ gda_mysql_handler_boolean_get_str_from_value (GdaDataHandler *iface, const GValu
 	hdl = GDA_MYSQL_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_value_stringify ((GValue *) value);
+	return g_strdup (g_value_get_boolean (value) ? "1" : "0");
 }
 
 static GValue *
