@@ -283,7 +283,7 @@ binary_to_string (const GValue *src, GValue *dest)
 	
 	str = gda_binary_to_string (gda_value_get_binary ((GValue *) src), 0);
 	
-	g_value_set_string (dest, str);
+	g_value_take_string (dest, str);
 }
 
 GType
@@ -380,7 +380,7 @@ blob_to_string (const GValue *src, GValue *dest)
 	
 	str = gda_blob_to_string ((GdaBlob *) gda_value_get_blob ((GValue *) src), 0);
 	
-	g_value_set_string (dest, str);
+	g_value_take_string (dest, str);
 }
 
 GType
@@ -492,7 +492,7 @@ geometric_point_to_string (const GValue *src, GValue *dest)
 				  DBL_DIG,
 				  point->y);
 	
-	g_value_set_string(dest, str);
+	g_value_take_string (dest, str);
 }
 
 /* Transform a String GValue to a GdaGeometricPoint from a string like "(3.2,5.6)" */
