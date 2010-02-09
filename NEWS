@@ -1,3 +1,11 @@
+libgda 4.0.7, 2010-02-09
+
+ - Better GdaDataModelIter behaviour when dealing with model errors
+ - MySQL provider improvements (BLOBs handling, better boolean representation, fetch last
+   inserted row)
+ - Backported information fetching about tables' indexes
+ - Misc corrections: memory leaks, ...
+
 libgda 4.0.6, 2010-01-16
 
  - MySQL meta data corrections
