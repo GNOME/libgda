@@ -2,15 +2,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Voy por la 1000, pero el final también está revisado, como unas 300 o 500
+# CAMBIAR: mantenedor -> manejador
 # Jorge González <jorgegonz@svn.gnome.org>, 200, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-02-05 21:19+0000\n"
-"PO-Revision-Date: 2010-02-16 19:06+0100\n"
+"POT-Creation-Date: 2010-02-16 18:07+0000\n"
+"PO-Revision-Date: 2010-02-18 18:39+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -135,8 +135,8 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../providers/jdbc/gda-jdbc-util.c:46 ../providers/jdbc/libmain.c:155
 #: ../providers/jdbc/libmain.c:165 ../providers/jdbc/libmain.c:478
 #: ../providers/mdb/gda-mdb-provider.c:353
-#: ../providers/mysql/gda-mysql-provider.c:1852
-#: ../providers/mysql/gda-mysql-provider.c:1867
+#: ../providers/mysql/gda-mysql-provider.c:1860
+#: ../providers/mysql/gda-mysql-provider.c:1875
 #: ../providers/mysql/gda-mysql-util.c:73
 #: ../providers/postgres/gda-postgres-provider.c:1652
 #: ../providers/postgres/gda-postgres-provider.c:1667
@@ -1212,11 +1212,10 @@ msgid ""
 msgstr "La primera fila es una fila vacía al comienzo y no se puede alterar"
 
 #: ../libgda/gda-data-proxy.c:3661
-#, fuzzy, c-format
+#, c-format
 #| msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgid "Wrong value type: expected '%s' and got '%s'"
-msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
+msgstr "Tipo de valor erróneo: se esperaba «%s» y se obtuvo «%s»"
 
 #: ../libgda/gda-data-proxy.c:3747
 #, c-format
@@ -1348,6 +1347,8 @@ msgstr "Algunas columnas no se pueden modificar"
 #: ../libgda/gda-data-select.c:2254
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
+"Error interno: no se puede obtener la consulta actual de la consulta "
+"preparada"
 
 #: ../libgda/gda-data-select.c:2294
 msgid "Unable to identify a way to fetch a single row"
@@ -1424,7 +1425,7 @@ msgstr "El servidor de la base de datos no soporta la operación CREATE TABLE"
 #: ../libgda/gda-holder.c:483 ../libgda/gda-set.c:485
 #, c-format
 msgid "Unable to set holder's value: %s"
-msgstr ""
+msgstr "No se pudo establecer el valor del mantenedor: %s"
 
 #: ../libgda/gda-holder.c:575
 msgid "The 'g-type' property cannot be changed"
@@ -1445,7 +1446,7 @@ msgstr ""
 #: ../libgda/gda-holder.c:923 ../libgda/gda-holder.c:1050
 #, c-format
 msgid "(%s): Holder does not allow NULL values"
-msgstr ""
+msgstr "(%s): El mantenedor no permite valores nulos (NULL)"
 
 #: ../libgda/gda-holder.c:930
 #, c-format
@@ -2281,7 +2282,7 @@ msgstr "Falta el parámetro «%s»"
 
 #: ../libgda/gda-statement.c:1236 ../libgda/sqlite/gda-sqlite-provider.c:2366
 #: ../providers/jdbc/gda-jdbc-provider.c:1343
-#: ../providers/mysql/gda-mysql-provider.c:2084
+#: ../providers/mysql/gda-mysql-provider.c:2092
 #: ../providers/postgres/gda-postgres-provider.c:1928
 #: ../providers/web/gda-web-provider.c:1505
 #, c-format
@@ -2509,10 +2510,9 @@ msgid "SQlite binary representation"
 msgstr "Representación binaria SQlite"
 
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:123
-#, fuzzy
 #| msgid "Boolean representation"
 msgid "Sqlite boolean representation"
-msgstr "Representación de booleanos"
+msgstr "Representación de booleanos de SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:109
 #: ../libgda/sqlite/gda-sqlite-provider.c:146
@@ -2568,10 +2568,10 @@ msgstr ""
 "La parte DB_DIR de la cadena de conexión debe apuntar a un directorio válido"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:659
-#, fuzzy, c-format
+#, c-format
 #| msgid "Could not set empty_result_callbacks SQLite option"
 msgid "Could not set empty_result_callbacks SQLite option: %s"
-msgstr "No se pudo establecer la opción de SQLite empty_result_callbacks"
+msgstr "No se pudo establecer la opción de SQLite empty_result_callbacks: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:870
 #: ../libgda/sqlite/gda-sqlite-provider.c:909
@@ -2605,7 +2605,7 @@ msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "No se permite un parámetro si nombre en las declaraciones preparadas"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1983
-#: ../providers/mysql/gda-mysql-provider.c:1851
+#: ../providers/mysql/gda-mysql-provider.c:1859
 #: ../providers/postgres/gda-postgres-provider.c:1651
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s)"
@@ -2614,7 +2614,7 @@ msgstr ""
 "insertada: %s)"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1998
-#: ../providers/mysql/gda-mysql-provider.c:1866
+#: ../providers/mysql/gda-mysql-provider.c:1874
 #: ../providers/postgres/gda-postgres-provider.c:1666
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
@@ -2623,7 +2623,7 @@ msgstr ""
 "insertada: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2011
-#: ../providers/mysql/gda-mysql-provider.c:1879
+#: ../providers/mysql/gda-mysql-provider.c:1887
 #: ../providers/postgres/gda-postgres-provider.c:1679
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
@@ -2631,7 +2631,7 @@ msgstr ""
 "ningún valor"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2015
-#: ../providers/mysql/gda-mysql-provider.c:1883
+#: ../providers/mysql/gda-mysql-provider.c:1891
 #: ../providers/postgres/gda-postgres-provider.c:1683
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
@@ -2654,7 +2654,7 @@ msgid "Can't write to SQLite's BLOB"
 msgstr "No se puede escribir en el BLOB de SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2147
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "Non handled GdaServerOperationType, please report error to http://"
 #| "bugzilla.gnome.org/ for the \"libgda\" product"
@@ -2662,8 +2662,8 @@ msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
 msgstr ""
-"No existe el manejador GdaServerOperationType, por favor informe del error "
-"en http://bugzilla.gnome.org/ para el producto «libgda»"
+"No se puede obtener el manejador de SQLite BLOB (el tipo informado es «%s»), "
+"informe del error en http://bugzilla.gnome.org/ para el producto «libgda»."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2172
 msgid "Can't identify the ROWID of the blob to fill"
@@ -2671,7 +2671,7 @@ msgstr "No se puede identificar el id de fila (ROWID) del BLOB que rellenar"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2220
 #: ../providers/jdbc/gda-jdbc-provider.c:1209
-#: ../providers/mysql/gda-mysql-provider.c:1972
+#: ../providers/mysql/gda-mysql-provider.c:1980
 #: ../providers/postgres/gda-postgres-provider.c:1778
 #: ../providers/web/gda-web-provider.c:1389
 msgid "Provider does not support asynchronous statement execution"
@@ -2686,8 +2686,8 @@ msgstr "Declaración vacía"
 #: ../libgda/sqlite/gda-sqlite-provider.c:2332
 #: ../providers/jdbc/gda-jdbc-provider.c:1296
 #: ../providers/jdbc/gda-jdbc-provider.c:1299
-#: ../providers/mysql/gda-mysql-provider.c:2046
-#: ../providers/mysql/gda-mysql-provider.c:2049
+#: ../providers/mysql/gda-mysql-provider.c:2054
+#: ../providers/mysql/gda-mysql-provider.c:2057
 #: ../providers/postgres/gda-postgres-provider.c:1892
 #: ../providers/postgres/gda-postgres-provider.c:1895
 #: ../providers/web/gda-web-provider.c:1467
@@ -2698,7 +2698,7 @@ msgstr "Falta(n) parámetro(s) para ejecutar la consulta"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2347
 #: ../providers/jdbc/gda-jdbc-provider.c:1314
-#: ../providers/mysql/gda-mysql-provider.c:2064
+#: ../providers/mysql/gda-mysql-provider.c:2072
 #: ../providers/postgres/gda-postgres-provider.c:1910
 #: ../providers/web/gda-web-provider.c:1485
 #, c-format
@@ -2706,12 +2706,12 @@ msgid "Missing parameter '%s' to execute query"
 msgstr "Falta el parámetro «%s» para ejecutar la consulta"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2424
-#: ../providers/mysql/gda-mysql-provider.c:2213
+#: ../providers/mysql/gda-mysql-provider.c:2221
 msgid "Can't get BLOB's length"
 msgstr "No se puede obtener la longitud del BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2426
-#: ../providers/mysql/gda-mysql-provider.c:2215
+#: ../providers/mysql/gda-mysql-provider.c:2223
 msgid "BLOB is too big"
 msgstr "El BLOB es demasiado grande"
 
@@ -3706,10 +3706,9 @@ msgstr ""
 "%s\n"
 
 #: ../libgda-ui/demos/main.c:798
-#, fuzzy
 #| msgid "Gnome-Db Code Demos"
 msgid "Libgda-ui Code Demos"
-msgstr "Demostraciones de código de Gnome-DB"
+msgstr "Demostraciones de código de libgda-ui"
 
 #: ../libgda-ui/demos/main.c:853
 #, c-format
@@ -3812,12 +3811,13 @@ msgid "Correct data first"
 msgstr "Corregir datos primero"
 
 #: ../libgda-ui/gdaui-basic-form.c:242
-#, fuzzy
 #| msgid "Pointer to an XML data layout specification"
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
-msgstr "Puntero a una especificación de distribución de datos XML"
+msgstr ""
+"Puntero a una especificación de distribución de datos XML (como un "
+"xmlNodePtr hacia un nodo <gdaui_form>)"
 
 #: ../libgda-ui/gdaui-basic-form.c:246
 msgid "List of parameters to show in the form"
@@ -3854,10 +3854,10 @@ msgid "Values to be filled"
 msgstr "Valores para rellenar"
 
 #: ../libgda-ui/gdaui-basic-form.c:1937 ../libgda-ui/gdaui-raw-grid.c:2351
-#, fuzzy, c-format
+#, c-format
 #| msgid "'%s' Document not parsed successfully\n"
 msgid "'%s' document not parsed successfully"
-msgstr "El documento «%s» no se analizó correctamente\n"
+msgstr "El documento «%s» no se analizó correctamente"
 
 #: ../libgda-ui/gdaui-basic-form.c:1947 ../libgda-ui/gdaui-raw-grid.c:2361
 #, c-format
@@ -3869,17 +3869,17 @@ msgstr ""
 "distribución de datos XML (podrían ocurrir algunos errores)"
 
 #: ../libgda-ui/gdaui-cloud.c:244 ../libgda-ui/gdaui-cloud.c:979
-#, fuzzy, c-format
+#, c-format
 #| msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
+"Tipo de columna incorrecto para la etiqueta: se esperaba una cadena y se "
+"obtuvo %s"
 
 #: ../libgda-ui/gdaui-cloud.c:1072 ../tools/browser/common/objects-cloud.c:445
-#, fuzzy
 #| msgid "Field"
 msgid "Find:"
-msgstr "Campo"
+msgstr "Buscar:"
 
 #: ../libgda-ui/gdaui-combo.c:128
 msgid "The data model to display"
@@ -3975,12 +3975,13 @@ msgid "Can't append row to data model: %s"
 msgstr "No se pudo añadir la fila al modelo de datos: %s"
 
 #: ../libgda-ui/gdaui-raw-grid.c:290
-#, fuzzy
 #| msgid "Pointer to an XML data layout specification"
 msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
-msgstr "Puntero a una especificación de distribución de datos XML"
+msgstr ""
+"Puntero a una especificación de distribución de datos XML (como un "
+"xmlNodePtr hacia un nodo <gdaui_grid>)"
 
 #: ../libgda-ui/gdaui-raw-grid.c:293
 msgid "Info cell visible"
@@ -3992,10 +3993,9 @@ msgstr "Acciones globales visibles"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
 #: ../libgda-ui/gdaui-raw-grid.c:742 ../libgda-ui/gdaui-raw-grid.c:765
-#, fuzzy
 #| msgid "Can't read BLOB"
 msgid "Can't be NULL"
-msgstr "No se puede leer el BLOB"
+msgstr "No puede ser nulo (NULL)"
 
 #: ../libgda-ui/gdaui-raw-grid.c:773
 msgid "No title"
@@ -4431,10 +4431,9 @@ msgid "Incorrect specified column name"
 msgstr "El nombre de la columna especificado es incorrecto"
 
 #: ../providers/mysql/gda-mysql-handler-boolean.c:123
-#, fuzzy
 #| msgid "Boolean representation"
 msgid "MySQL boolean representation"
-msgstr "Representación de booleanos"
+msgstr "Representación de booleanos de MySQL"
 
 #: ../providers/mysql/gda-mysql-provider.c:476
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
@@ -4460,18 +4459,17 @@ msgstr "La cadena de la conexión debe contener el valor DB_NAME"
 msgid "No description"
 msgstr "Sin descripción"
 
-#: ../providers/mysql/gda-mysql-provider.c:1648
+#: ../providers/mysql/gda-mysql-provider.c:1656
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "No se permite un parámetro si nombre en las declaraciones preparadas."
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2207
-#, fuzzy
+#: ../providers/mysql/gda-mysql-provider.c:2215
 #| msgid "Can't read BLOB"
 msgid "Can't read whole BLOB into memory"
-msgstr "No se puede leer el BLOB"
+msgstr "No se puede leer el BLOB completo en la memoria"
 
-#: ../providers/mysql/gda-mysql-provider.c:2297
+#: ../providers/mysql/gda-mysql-provider.c:2305
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -5004,6 +5002,8 @@ msgstr "Tipo de ordenación"
 msgid ""
 "The number of characters the index is on for columns of type CHAR or VARCHAR"
 msgstr ""
+"El número de caracteres en los que está el índice para columnas de tipo CHAR "
+"o VARCHAR"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:7
@@ -5927,10 +5927,10 @@ msgid "Can't import data from web server"
 msgstr "No se pueden importar los datos del servidor web"
 
 #: ../providers/reuseable/postgres/gda-postgres-meta.c:2108
-#, fuzzy, c-format
+#, c-format
 #| msgid "Could not find target the join is for"
 msgid "could not determine the indexed columns for index"
-msgstr "No se pudo encontrar el destino para la unión («JOIN»)"
+msgstr "no se pudieron determinar las columnas indexadas para el índice"
 
 #: ../providers/sqlite/libmain.c:73
 msgid "Provider for SQLite databases"
@@ -6019,10 +6019,10 @@ msgstr "La cadena de la conexión debe contener un valor %s"
 
 #: ../providers/web/gda-web-provider.c:624
 #: ../providers/web/gda-web-provider.c:649
-#, fuzzy, c-format
+#, c-format
 #| msgid "History is not supported"
 msgid "Not supported"
-msgstr "No se soporta el histórico"
+msgstr "No está soportado"
 
 #: ../providers/web/gda-web-provider.c:629
 #: ../providers/web/gda-web-provider.c:654
@@ -6124,6 +6124,7 @@ msgstr "El nombre de una base de datos a la que conectarse"
 msgid ""
 "The path of the script to use if service is not at the web server's root"
 msgstr ""
+"La ruta al script que usar si el servicio no está en la raíz del servidor web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:9
 msgid "Web server name"
@@ -7276,12 +7277,10 @@ msgid "Could not remove favorite: %s"
 msgstr "No se pudo quitar el favorito: %s"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:272
-#| msgid "Connection's properties"
 msgid "Favorite's properties"
 msgstr "Propiedades de los favoritos"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:294
-#| msgid "SQL console:"
 msgid "SQL Code"
 msgstr "Código SQL"
 
@@ -7291,17 +7290,14 @@ msgid "Favorites"
 msgstr "Favoritos"
 
 #: ../tools/browser/query-exec/query-result.c:206
-#| msgid "Empty statement"
 msgid "Statement:"
 msgstr "Declaración:"
 
 #: ../tools/browser/query-exec/query-result.c:240
-#| msgid "Number of rows fetched at a time"
 msgid "Number of rows impacted"
 msgstr "Número de filas afectadas"
 
 #: ../tools/browser/query-exec/query-result.c:264
-#| msgid "Connection's parameters"
 msgid "Execution Parameters"
 msgstr "Parámetros de ejecución"
 
@@ -7310,7 +7306,6 @@ msgid "No result selected"
 msgstr "No se seleccionó ningún resultado"
 
 #: ../tools/browser/query-exec/query-result.c:432
-#| msgid "Number of rows fetched at a time"
 msgid "Number of rows impacted:"
 msgstr "Número de filas afectadas:"
 
@@ -7347,17 +7342,14 @@ msgid "Diagram"
 msgstr "Diagrama"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:236
-#| msgid "Could not save file %s"
 msgid "Could not save diagram"
 msgstr "No se pudo guardar el diagrama"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:262
-#| msgid "Columns' names"
 msgid "Canvas's name"
 msgstr "Nombre del marco"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:282
-#| msgid "Scale"
 msgid "Save"
 msgstr "Guardar"
 
@@ -7365,13 +7357,11 @@ msgstr "Guardar"
 #: ../tools/browser/schema-browser/relations-diagram.c:380
 #: ../tools/browser/schema-browser/relations-diagram.c:460
 #: ../tools/browser/schema-browser/relations-diagram.c:471
-#| msgid "Relations"
 msgid "Relations diagram"
 msgstr "Diagrama de relaciones"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:323
 #: ../tools/browser/schema-browser/relations-diagram.c:471
-#| msgid "Unnamed parameter"
 msgid "Unsaved diagram"
 msgstr "Diagrama sin guardar"
 
@@ -7388,12 +7378,10 @@ msgstr "diagrama «%s»"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:429
 #, c-format
-#| msgid "Missing table name in statement"
 msgid "Missing table attribute in favorite's contents"
 msgstr "Falta un atributo de la tabla en el contenido de los favoritos"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:383
-#| msgid "Could not load file '%s'"
 msgid "Could not load diagram"
 msgstr "No se pudo cargar el diagrama"
 
@@ -7428,12 +7416,10 @@ msgid "Relations"
 msgstr "Relaciones"
 
 #: ../tools/browser/schema-browser/table-info.c:381
-#| msgid "References"
 msgid "Preferences"
 msgstr "Preferencias"
 
 #: ../tools/browser/schema-browser/table-info.c:460
-#| msgid "Favorites"
 msgid "_Favorite"
 msgstr "_Favoritos"
 
@@ -7442,12 +7428,10 @@ msgid "Add table to favorites"
 msgstr "Añadir tabla a los favoritos"
 
 #: ../tools/browser/schema-browser/table-preferences.c:266
-#| msgid "Default"
 msgid "default"
 msgstr "predeterminado"
 
 #: ../tools/browser/schema-browser/table-preferences.c:343
-#| msgid "Table's name"
 msgid "Table's fields"
 msgstr "Campos de la tabla"
 
@@ -7456,7 +7440,6 @@ msgid "Field's display preferences"
 msgstr "Preferencias de mostrado del campo"
 
 #: ../tools/browser/schema-browser/table-preferences.c:464
-#| msgid "Data type"
 msgid "Data entry type:"
 msgstr "Entrada del tipo de datos:"
 
@@ -7469,17 +7452,14 @@ msgstr ""
 
 #: ../tools/browser/schema-browser/table-preferences.c:474
 #: ../tools/browser/schema-browser/table-preferences.c:485
-#| msgid "None"
 msgid "none"
 msgstr "ninguna"
 
 #: ../tools/browser/schema-browser/table-preferences.c:478
-#| msgid "Options"
 msgid "Options:"
 msgstr "Opciones:"
 
 #: ../tools/browser/schema-browser/table-preferences.c:489
-#| msgid "_Provider:"
 msgid "Preview:"
 msgstr "Vista previa:"
 
