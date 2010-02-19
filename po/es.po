@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
 "POT-Creation-Date: 2010-02-16 18:07+0000\n"
-"PO-Revision-Date: 2010-02-18 18:39+0100\n"
+"PO-Revision-Date: 2010-02-19 15:26+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -7221,10 +7221,10 @@ msgid "Error committing transaction: %s"
 msgstr "Error al crear la base de datos: %s"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:428
-#, fuzzy, c-format
+#, c-format
 #| msgid "Error creating database: %s"
 msgid "Error rolling back transaction: %s"
-msgstr "Error al crear la base de datos: %s"
+msgstr "Error al deshacer la transacción: %s"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:436
 msgid "_Query"
@@ -7232,43 +7232,39 @@ msgstr "_Consultar"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:437
 msgid "_New editor"
-msgstr ""
+msgstr "Editor _nuevo"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:437
 msgid "Open a new query editor"
-msgstr ""
+msgstr "Abrir una consulta de edición nueva"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:439
 msgid "_Begin"
 msgstr "_Iniciar"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:439
-#, fuzzy
 #| msgid "Cannot start transaction"
 msgid "Begin a new transaction"
-msgstr "No se pude iniciar la transacción"
+msgstr "Iniciar una transacción nueva"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:441
-#, fuzzy
 #| msgid "Comment"
 msgid "_Commit"
-msgstr "Comentario"
+msgstr "_Efectuar"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:441
-#, fuzzy
 #| msgid "Cannot start transaction"
 msgid "Commit current transaction"
-msgstr "No se pude iniciar la transacción"
+msgstr "Efectuar la transacción actual"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:443
 msgid "_Rollback"
-msgstr ""
+msgstr "_Deshacer"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:443
-#, fuzzy
 #| msgid "No current connection"
 msgid "Rollback current transaction"
-msgstr "No existe una conexión actualmente"
+msgstr "Deshacer la transacción actual"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:190
 #: ../tools/browser/schema-browser/favorite-selector.c:169
@@ -7449,6 +7445,10 @@ msgid ""
 "will be displayed in forms. Leave 'Default' to have\n"
 "the default display"
 msgstr ""
+"Define cómo se mostrarán en los formularios\n"
+"los datos para la columna seleccionada.\n"
+"Déjelo como «Predeterminado» para tener la\n"
+"pantalla predeterminada"
 
 #: ../tools/browser/schema-browser/table-preferences.c:474
 #: ../tools/browser/schema-browser/table-preferences.c:485
@@ -7468,6 +7468,8 @@ msgid ""
 "Free form to test the configured\n"
 "data entry"
 msgstr ""
+"Formulario libre para probar la\n"
+"entrada de datos configurada"
 
 #: ../tools/command-exec.c:329
 msgid "History is not supported"
