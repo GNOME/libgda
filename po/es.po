@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
 "POT-Creation-Date: 2010-02-16 18:07+0000\n"
-"PO-Revision-Date: 2010-02-20 13:32+0100\n"
+"PO-Revision-Date: 2010-02-20 14:22+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1185,6 +1185,10 @@ msgid ""
 "the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" "
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
+"El modelo de datos representado informa de las modificaciones como aceptadas "
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto es un error de la implementación de %s (informe del "
+"error)."
 
 #: ../libgda/gda-data-proxy.c:2087
 #, c-format
@@ -1193,6 +1197,10 @@ msgid ""
 "the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" "
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
+"El modelo de datos representado informa de las modificaciones como aceptadas "
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto puede ser un error de la implementación de %s "
+"(informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2933 ../tools/gda-sql.c:3128
 msgid "Could not create virtual connection"
@@ -1339,6 +1347,8 @@ msgstr "No se pudo cambiar el valor de iteración para la columna %d: %s"
 #: ../libgda/gda-data-select.c:2027
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
+"Permitir que el valor del GdaHolder sea nulo (NULL) para la actualización "
+"del iterador"
 
 #: ../libgda/gda-data-select.c:2107 ../libgda/gda-data-select.c:2200
 msgid "Some columns can't be modified"
@@ -1903,6 +1913,9 @@ msgid ""
 "implement the %s one, please report this bug to http://bugzilla.gnome.org/ "
 "for the \"libgda\" product."
 msgstr ""
+"El objeto GdaServerProvider implementa el método virtual %s pero no "
+"implementa %s, por favor informe de este error en http://bugzilla.gnome.org/ "
+"para el producto «libgda»."
 
 #. To translators: "Aggregate": the noun
 #: ../libgda/gda-server-provider-extra.c:310
@@ -6035,7 +6048,7 @@ msgstr "Las operaciones en el servidor aún no están implementadas"
 #: ../providers/web/gda-web-provider.c:829
 #| msgid "Operation not supported\n"
 msgid "Named transaction is not supported"
-msgstr ""
+msgstr "No se soporta la transacción con nombre"
 
 #: ../providers/web/gda-web-provider.c:709
 #| msgid "History is not supported"
@@ -6479,6 +6492,8 @@ msgid ""
 "Define the sources of data for which tables will\n"
 "appear in the virtual connection"
 msgstr ""
+"Definir los orígenes de los datos para los que\n"
+"las tablas aparecerán en la conexión virtual"
 
 #: ../tools/browser/connection-binding-properties.c:277
 msgid "Add binding"
@@ -6955,6 +6970,20 @@ msgid ""
 "tt> and\n"
 "<tt>binary</tt></small>"
 msgstr ""
+"<small>Este área le permite dar valores a\n"
+"las variables definidas en el código SQL\n"
+"usando la siguiente sintaxis:\n"
+"<b><tt>##&lt;nombre de la variable&gt;::&lt;type&gt;[::null]</tt></b>\n"
+"Por ejemplo:\n"
+"<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
+"      define <b>id</b> como un entero no nulo\n"
+"<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
+"      define <b>age</b> como una cadena\n"
+"\n"
+"Los tipos válidos son: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
+"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
+"tt> y\n"
+"<tt>binary</tt></small>"
 
 #: ../tools/browser/query-exec/query-console.c:304
 #: ../tools/browser/query-exec/query-console.c:1168
@@ -7119,6 +7148,12 @@ msgid ""
 "accessible, clear the corresponding history item before\n"
 "closing the transaction)."
 msgstr ""
+"Se ha iniciado una transacción automática durante\n"
+"la ejecución de esta declaración, esto generalmente\n"
+"sucede cuando se seleccionan «blobs» (y la transacción\n"
+"tendrá que permanecer abierta mientras los «blobs»\n"
+"estén accesibles, limpie el elemento correspondiente\n"
+"del histórico antes de cerrar la transacción)."
 
 #: ../tools/browser/query-exec/query-console.c:1118
 msgid "_Execute"
