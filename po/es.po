@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
 "POT-Creation-Date: 2010-02-16 18:07+0000\n"
-"PO-Revision-Date: 2010-02-19 15:26+0100\n"
+"PO-Revision-Date: 2010-02-20 10:22+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -6901,26 +6901,25 @@ msgid "No data set"
 msgstr "Sin detalles"
 
 #: ../tools/browser/common/objects-cloud.c:237
-#, fuzzy, c-format
+#, c-format
 #| msgid "Tables in the '%s' schema"
 msgid "%d table in current schema:"
 msgid_plural "%d tables in current schema:"
-msgstr[0] "Tablas en el esquema «%s»"
-msgstr[1] "Tablas en el esquema «%s»"
+msgstr[0] "%d tabla en el esquema actual:"
+msgstr[1] "%d tablas en el esquema actual:"
 
 #: ../tools/browser/common/objects-cloud.c:241
-#, fuzzy
 #| msgid "Tables in schema <b>'%s'</b>"
 msgid "Tables in current schema:"
-msgstr "Tablas en el esquema <b>«%s»</b>"
+msgstr "Tablas en el esquema actual:"
 
 #: ../tools/browser/common/objects-cloud.c:244
-#, fuzzy, c-format
+#, c-format
 #| msgid "Tables in schema <b>'%s'</b>"
 msgid "%d Table in schema '%s':"
 msgid_plural "%d Tables in schema '%s':"
-msgstr[0] "Tablas en el esquema <b>«%s»</b>"
-msgstr[1] "Tablas en el esquema <b>«%s»</b>"
+msgstr[0] "%d tabla en el esquema «%s»:"
+msgstr[1] "%d tablas en el esquema «%s»:"
 
 #. no connection at all or not authenticated
 #: ../tools/browser/common/objects-cloud.c:254 ../tools/web-server.c:713
@@ -6928,60 +6927,52 @@ msgid "None"
 msgstr "Ninguno"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:2
-#, fuzzy
 #| msgid "Data type"
 msgid "Data Type"
 msgstr "Tipo de dato"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:3
-#, fuzzy
 #| msgid "Decimals"
 msgid "Decimal"
-msgstr "Decimales"
+msgstr "Decimal"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:4
 msgid "Floating Point"
-msgstr ""
+msgstr "Coma flotante"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:5
-#, fuzzy
 #| msgid "Action:"
 msgid "Function"
-msgstr "Acción:"
+msgstr "Función"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:6
-#, fuzzy
 #| msgid "SQL"
 msgid "GDA-SQL"
-msgstr "SQL"
+msgstr "GDA-SQL"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:7
 msgid "Keyword"
-msgstr ""
+msgstr "Palabra clave"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:8
-#, fuzzy
 #| msgid "No data to display"
 msgid "No idea what it is"
-msgstr "No hay datos para mostrar"
+msgstr "Ni idea de lo que es"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:9
-#, fuzzy
 #| msgid "Data Sources"
 msgid "Sources"
-msgstr "Fuentes de datos"
+msgstr "Fuentes"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:10
-#, fuzzy
 #| msgid "InternalString"
 msgid "String"
-msgstr "CadenaInterna"
+msgstr "Cadena"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:11
-#, fuzzy
 #| msgid "Editable"
 msgid "Variable"
-msgstr "Editable"
+msgstr "Variable"
 
 #: ../tools/browser/query-exec/query-console.c:39
 msgid ""
@@ -7003,35 +6994,32 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:304
 #: ../tools/browser/query-exec/query-console.c:1168
-#, fuzzy
 #| msgid "Query buffer"
 msgid "Query editor"
-msgstr "Búfer de consulta"
+msgstr "Editor de consultas"
 
 #: ../tools/browser/query-exec/query-console.c:330
 msgid "SQL code to execute:"
-msgstr ""
+msgstr "Código SQL que ejecutar:"
 
 #: ../tools/browser/query-exec/query-console.c:351
 msgid "Variables' values:"
-msgstr ""
+msgstr "Valores de las variables:"
 
 #: ../tools/browser/query-exec/query-console.c:377
 #: ../tools/browser/query-exec/query-console.c:441
 msgid "Clear"
-msgstr ""
+msgstr "Limpiar"
 
 #: ../tools/browser/query-exec/query-console.c:377
-#, fuzzy
 #| msgid "Clear filter"
 msgid "Clear the editor"
-msgstr "Limpiar filtro"
+msgstr "Limpiar el editor"
 
 #: ../tools/browser/query-exec/query-console.c:382
-#, fuzzy
 #| msgid "Values"
 msgid "Variables"
-msgstr "Valores"
+msgstr "Variables"
 
 #: ../tools/browser/query-exec/query-console.c:382
 msgid ""
@@ -7041,17 +7029,16 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:388
 msgid "Execute"
-msgstr ""
+msgstr "Ejecutar"
 
 #: ../tools/browser/query-exec/query-console.c:388
 msgid "Execute SQL in editor"
-msgstr ""
+msgstr "Ejecutar SQL en el editor"
 
 #: ../tools/browser/query-exec/query-console.c:394
-#, fuzzy
 #| msgid "Index"
 msgid "Indent"
-msgstr "Índice"
+msgstr "Sangrar"
 
 #: ../tools/browser/query-exec/query-console.c:394
 msgid ""
@@ -7061,45 +7048,44 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:402
-#, fuzzy
 #| msgid "Favorites"
 msgid "Favorite"
-msgstr "Favoritos"
+msgstr "Favorito"
 
 #: ../tools/browser/query-exec/query-console.c:402
 msgid "Add SQL to favorite"
-msgstr ""
+msgstr "Añadir SQL a los favoritos"
 
 #: ../tools/browser/query-exec/query-console.c:416
 msgid "Execution history:"
-msgstr ""
+msgstr "Histórico de ejecuciones:"
 
 #: ../tools/browser/query-exec/query-console.c:434
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #: ../tools/browser/query-exec/query-console.c:434
 msgid ""
 "Copy selected history\n"
 "to editor"
 msgstr ""
+"Copiar el histórico\n"
+"seleccionado al editor"
 
 #: ../tools/browser/query-exec/query-console.c:441
-#, fuzzy
 #| msgid "Clear filter"
 msgid "Clear history"
-msgstr "Limpiar filtro"
+msgstr "Limpiar histórico"
 
 #: ../tools/browser/query-exec/query-console.c:453
 msgid "Execution Results:"
-msgstr ""
+msgstr "Resultados de la ejecución:"
 
 #: ../tools/browser/query-exec/query-console.c:768
 #: ../tools/browser/query-exec/query-favorite-selector.c:582
-#, fuzzy
 #| msgid "Unnamed"
 msgid "Unnamed query"
-msgstr "Sin nombre"
+msgstr "Consulta sin nombre"
 
 #: ../tools/browser/query-exec/query-console.c:774
 #: ../tools/browser/query-exec/query-favorite-selector.c:242
@@ -7111,20 +7097,19 @@ msgid "Could not add favorite: %s"
 msgstr "No se pudo añadir el favorito: %s"
 
 #: ../tools/browser/query-exec/query-console.c:858
-#, fuzzy
 #| msgid "Invalid Oracle handle"
 msgid "Invalid variable's contents"
-msgstr "Manejador Oracle no válido"
+msgstr "Contenido de la variable no válido"
 
 #: ../tools/browser/query-exec/query-console.c:859
 msgid "assign values to the following variables"
 msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:913
-#, fuzzy, c-format
+#, c-format
 #| msgid "Error while parsing CSV file: %s"
 msgid "Error while parsing code: %s"
-msgstr "Error al analizar el archivo CSV: %s"
+msgstr "Error al analizar el código: %s"
 
 #: ../tools/browser/query-exec/query-console.c:925
 msgid ""
@@ -7133,19 +7118,21 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:958
-#, fuzzy, c-format
+#, c-format
 #| msgid "Error creating database: %s"
 msgid "Error executing query: %s"
-msgstr "Error al crear la base de datos: %s"
+msgstr "Error al ejecutar la consulta: %s"
 
 #: ../tools/browser/query-exec/query-console.c:1011
 #: ../tools/browser/query-exec/query-console.c:1061
-#, fuzzy, c-format
+#, c-format
 #| msgid "Error creating database: %s"
 msgid ""
 "Error executing query:\n"
 "%s"
-msgstr "Error al crear la base de datos: %s"
+msgstr ""
+"Error al ejecutar la consulta:\n"
+"%s"
 
 #: ../tools/browser/query-exec/query-console.c:1022
 msgid "Statement executed"
@@ -7163,62 +7150,61 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:1118
 msgid "_Execute"
-msgstr ""
+msgstr "_Ejecutar"
 
 #: ../tools/browser/query-exec/query-console.c:1118
 msgid "Execute query"
-msgstr ""
+msgstr "Ejecutar consulta"
 
 #: ../tools/browser/query-exec/query-console.c:1121
-#, fuzzy
 #| msgid "Union"
 msgid "_Undo"
-msgstr "Unión"
+msgstr "_Deshacer"
 
 #: ../tools/browser/query-exec/query-console.c:1121
 msgid "Undo last change"
-msgstr ""
+msgstr "Deshacer el último cambio"
 
 #: ../tools/browser/query-exec/query-editor.c:1185
 msgid "In the future:\n"
-msgstr ""
+msgstr "En el futuro:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1189
 msgid "Less than a minute ago:\n"
-msgstr ""
+msgstr "Hace menos de un minuto:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1194
 #, c-format
 msgid "%lu minute ago:\n"
 msgid_plural "%lu minutes ago:\n"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "hace %lu minuto:\n"
+msgstr[1] "hace %lu minutos:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1201
 #, c-format
 msgid "%lu hour ago\n"
 msgid_plural "%lu hours ago\n"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "hace %lu hora\n"
+msgstr[1] "hace %lu horas\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1207
 #, c-format
 msgid "%lu day ago\n"
 msgid_plural "%lu days ago\n"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "hace %lu día\n"
+msgstr[1] "hace %lu días\n"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:390
-#, fuzzy, c-format
+#, c-format
 #| msgid "Cannot start transaction"
 msgid "Error starting transaction: %s"
-msgstr "No se pude iniciar la transacción"
+msgstr "Error al iniciar la transacción: %s"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:409
-#, fuzzy, c-format
+#, c-format
 #| msgid "Error creating database: %s"
 msgid "Error committing transaction: %s"
-msgstr "Error al crear la base de datos: %s"
+msgstr "Error al efectuar la transacción: %s"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:428
 #, c-format
