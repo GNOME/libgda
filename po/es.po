@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
 "POT-Creation-Date: 2010-02-16 18:07+0000\n"
-"PO-Revision-Date: 2010-02-20 10:22+0100\n"
+"PO-Revision-Date: 2010-02-20 13:32+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -5986,10 +5986,9 @@ msgid "Enable usage of some extra functions in SQL"
 msgstr "Activar el uso de algunas funciones adicionales en SQL"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:5
-#, fuzzy
 #| msgid "Foreign keys"
 msgid "Enforce foreign keys"
-msgstr "Claves externas"
+msgstr "Forzar claves externas"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:6
 msgid "Extra functions"
@@ -6026,31 +6025,28 @@ msgstr "No está soportado"
 
 #: ../providers/web/gda-web-provider.c:629
 #: ../providers/web/gda-web-provider.c:654
-#, fuzzy, c-format
+#, c-format
 #| msgid "Server operation specification"
 msgid "Server operations not yet implemented"
-msgstr "Especificación de operaciones del servidor"
+msgstr "Las operaciones en el servidor aún no están implementadas"
 
 #: ../providers/web/gda-web-provider.c:704
 #: ../providers/web/gda-web-provider.c:769
 #: ../providers/web/gda-web-provider.c:829
-#, fuzzy
 #| msgid "Operation not supported\n"
 msgid "Named transaction is not supported"
-msgstr "La operación no está soportada\n"
+msgstr ""
 
 #: ../providers/web/gda-web-provider.c:709
-#, fuzzy
 #| msgid "History is not supported"
 msgid "Transaction level is not supported"
-msgstr "No se soporta el histórico"
+msgstr "No se soporta el nivel de transacción"
 
 #: ../providers/web/gda-web-provider.c:889
 #: ../providers/web/gda-web-provider.c:950
-#, fuzzy
 #| msgid "Key modification is not supported"
 msgid "Unnamed savepoint is not supported"
-msgstr "No se soporta la modificación de claves"
+msgstr "No se soporta el punto de guardado sin nombre"
 
 #: ../providers/web/gda-web-recordset.c:183
 #, c-format
@@ -6115,10 +6111,9 @@ msgid "The name of a database to use"
 msgstr "El nombre de la base de datos que usar"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:7
-#, fuzzy
 #| msgid "The name of a database to connect to"
 msgid "The name of the web server which proxies connections"
-msgstr "El nombre de una base de datos a la que conectarse"
+msgstr "El nombre del servidor web que enruta las conexiones"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:8
 msgid ""
@@ -6132,7 +6127,7 @@ msgstr "Nombre del servidor web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:10
 msgid "Web server port (leave this field empty for default)"
-msgstr ""
+msgstr "Puerto del servidor web (déjelo vacío para el predeterminado)"
 
 #: ../testing/gda-test-blob.c:78 ../testing/gda-test-connection.c:67
 #, c-format
@@ -6278,17 +6273,17 @@ msgid "Executing a query"
 msgstr "Ejecutando una consulta"
 
 #: ../tools/browser/browser-connection.c:1094
-#, fuzzy, c-format
+#, c-format
 #| msgid "No connection currently opened"
 msgid "Connection not yet opened"
-msgstr "No existe ninguna conexión abierta"
+msgstr "La conexión aún no está abierta"
 
 #: ../tools/browser/browser-connection.c:1100
-#, fuzzy
 #| msgid "Can't initialize dictionary to store query buffers"
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
-"No se puede inicializar el diccionario para almacenar los búfers de consulta"
+"No se puede inicializar el diccionario para almacenar las preferencias de la "
+"tabla"
 
 #: ../tools/browser/browser-connection.c:1146
 #: ../tools/browser/browser-connection.c:1152
@@ -6386,10 +6381,9 @@ msgid "Begin"
 msgstr "Inicio"
 
 #: ../tools/browser/browser-stock-icons.c:48
-#, fuzzy
 #| msgid "Comment"
 msgid "Commit"
-msgstr "Comentario"
+msgstr "Efectuar"
 
 #: ../tools/browser/browser-stock-icons.c:49
 msgid "Rollback"
@@ -6421,6 +6415,10 @@ msgid ""
 "a new binding connection to access data\n"
 "from multiple databases at once"
 msgstr ""
+"Usar la conexión para crear una\n"
+"nueva conexión vinculada para\n"
+"acceder a los datos desde varias\n"
+"bases de datos a la vez"
 
 #: ../tools/browser/browser-window.c:302
 msgid "unnamed"
@@ -6449,20 +6447,18 @@ msgid "the connection will be closed."
 msgstr "se cerrará la conexión."
 
 #: ../tools/browser/browser-window.c:812
-#, fuzzy, c-format
+#, c-format
 #| msgid "Cannot start transaction"
 msgid "Error updating bound connection: %s"
-msgstr "No se pude iniciar la transacción"
+msgstr "Error al actualizar la conexión vinculada: %s"
 
 #: ../tools/browser/browser-window.c:853
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "Could not open connection:\n"
 #| "%s"
 msgid "Could not open binding connection: %s"
-msgstr ""
-"No se pudo abrir la conexión:\n"
-"%s"
+msgstr "No se pudo abrir la conexión de vinculación: %s"
 
 #: ../tools/browser/browser-window.c:893
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
@@ -6486,53 +6482,51 @@ msgstr ""
 
 #: ../tools/browser/connection-binding-properties.c:277
 msgid "Add binding"
-msgstr ""
+msgstr "Añadir vinculación"
 
 #: ../tools/browser/connection-binding-properties.c:328
-#, fuzzy
 #| msgid "Opened connections"
 msgid "Bind a connection"
-msgstr "Conexiones abiertas"
+msgstr "Vincular una conexión"
 
 #: ../tools/browser/connection-binding-properties.c:334
-#, fuzzy
 #| msgid "Binary data"
 msgid "Bind a data set"
-msgstr "Dato binario"
+msgstr "Vincular un conjunto de datos"
 
 #: ../tools/browser/connection-binding-properties.c:413
 msgid "Table from a data set:"
 msgstr "Tabla desde un conjunto de datos:"
 
 #: ../tools/browser/connection-binding-properties.c:463
-#, fuzzy, c-format
+#, c-format
 #| msgid "Unable to get schema name"
 msgid "Invalid schema name"
-msgstr "No se pudo obtener el nombre del esquema"
+msgstr "El nombre del esquema no es válido"
 
 #: ../tools/browser/connection-binding-properties.c:510
-#, fuzzy
 #| msgid "Close a connection"
 msgid "All tables of a connection:"
-msgstr "Cerrar una conexión"
+msgstr "Todas las tablas de una conexión:"
 
 #: ../tools/browser/connection-binding-properties.c:514
-#, fuzzy
 #| msgid ""
 #| "Bind several connections together into the CNC_NAME virtual connection"
 msgid ""
 "Each table in the selected connection will appear\n"
 "as a table in the virtual connection"
 msgstr ""
-"Vincular varias conexiones juntas entro de la conexión virtual CNC_NOMBRE"
+"Cada tabla en la conexión seleccionada aparecerá\n"
+"como una tabla en la conexión virtual"
 
 #: ../tools/browser/connection-binding-properties.c:539
-#, fuzzy
 #| msgid "Name of the database in the database file to be used"
 msgid ""
 "Name of the schema the\n"
 "tables will be in"
-msgstr "Nombre de la base de datos en el archivo de base de datos para usar"
+msgstr ""
+"El nombre del esquema en\n"
+"el que estarán las tablas"
 
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:1
 msgid "Browse your database's contents"
@@ -6562,76 +6556,66 @@ msgid "[DSN|connection string]..."
 msgstr "[DSN|cadena de conexión]…"
 
 #: ../tools/browser/mgr-favorites.c:219
-#, fuzzy
 #| msgid "Empty statement"
 msgid "Multiple statements"
-msgstr "Declaración vacía"
+msgstr "Múltiples declaraciones"
 
 #: ../tools/browser/mgr-favorites.c:223
-#, fuzzy
 #| msgid "No SELECT statement specified"
 msgid "SELECT statement"
-msgstr "No se especificó una declaración SELECT"
+msgstr "Declaración SELECT"
 
 #: ../tools/browser/mgr-favorites.c:226
-#, fuzzy
 #| msgid "No INSERT statement provided"
 msgid "INSERT statement"
-msgstr "No se ha proporcionado una declaración INSERT"
+msgstr "Declaración INSERT"
 
 #: ../tools/browser/mgr-favorites.c:229
-#, fuzzy
 #| msgid "No UPDATE statement provided"
 msgid "UPDATE statement"
-msgstr "No se ha proporcionado de una declaración UPDATE"
+msgstr "Declaración UPDATE"
 
 #: ../tools/browser/mgr-favorites.c:232
-#, fuzzy
 #| msgid "No DELETE statement provided"
 msgid "DELETE statement"
-msgstr "No se ha proporcionado una declaración DELETE"
+msgstr "Declaración DELETE"
 
 #: ../tools/browser/mgr-favorites.c:235
-#, fuzzy
 #| msgid "No SELECT statement specified"
 msgid "COMPOUND SELECT statement"
-msgstr "No se especificó una declaración SELECT"
+msgstr "Declaración COMPOUND SELECT"
 
 #: ../tools/browser/mgr-favorites.c:238
-#, fuzzy
 #| msgid "Empty statement"
 msgid "BEGIN statement"
-msgstr "Declaración vacía"
+msgstr "Declaración BEGIN"
 
 #: ../tools/browser/mgr-favorites.c:241
-#, fuzzy
 #| msgid "Empty statement"
 msgid "ROLLBACK statement"
-msgstr "Declaración vacía"
+msgstr "Declaración ROLLBACK"
 
 #: ../tools/browser/mgr-favorites.c:244
-#, fuzzy
 #| msgid "Empty statement"
 msgid "COMMIT statement"
-msgstr "Declaración vacía"
+msgstr "Declaración COMMIT"
 
 #: ../tools/browser/mgr-favorites.c:247
 msgid "ADD SAVEPOINT statement"
-msgstr ""
+msgstr "Declaración ADD SAVEPOINT"
 
 #: ../tools/browser/mgr-favorites.c:250
 msgid "ROLLBACK SAVEPOINT statement"
-msgstr ""
+msgstr "Declaración ROLLBACK SAVEPOINT"
 
 #: ../tools/browser/mgr-favorites.c:253
 msgid "DELETE SAVEPOINT statement"
-msgstr ""
+msgstr "Declaración DELETE SAVEPOINT"
 
 #: ../tools/browser/mgr-favorites.c:256
-#, fuzzy
 #| msgid "Wrong statement type"
 msgid "Unknown statement"
-msgstr "Tipo de declaración erróneo"
+msgstr "Declaración desconocida"
 
 #: ../tools/browser/mgr-favorites.c:504
 msgid ""
@@ -6652,10 +6636,9 @@ msgstr ""
 "para definir uno"
 
 #: ../tools/browser/support.c:203
-#, fuzzy
 #| msgid "None"
 msgid "Note:"
-msgstr "Ninguno"
+msgstr "Nota:"
 
 #: ../tools/browser/support.c:206
 msgid "Don't show this message again"
@@ -6666,239 +6649,220 @@ msgid "Close tab"
 msgstr "Cerrar solapa"
 
 #: ../tools/browser/canvas/browser-canvas-column.c:169
-#, fuzzy, c-format
+#, c-format
 #| msgid "Type"
 msgid "Type: %s"
-msgstr "Tipo"
+msgstr "Tipo: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:348
-#, fuzzy
 #| msgid "Remove a DSN"
 msgid "Remove"
-msgstr "Quitar un DSN"
+msgstr "Quitar"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:352
-#, fuzzy
 #| msgid "Referenced table"
 msgid "Add referenced tables"
-msgstr "Tabla referenciada"
+msgstr "Añadir tablas referenciadas"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:513
-#, fuzzy
 #| msgid "Editable"
 msgid "Add table"
-msgstr "Editable"
+msgstr "Añadir tabla"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:82
 msgid "Page size and zoom"
-msgstr ""
+msgstr "Tamaño de página y ampliación"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:179
 #, c-format
 msgid "Page %d of %d horizontally and %d of %d vertically"
-msgstr ""
+msgstr "Página %d de %d horizontalmente y %d de %d verticalmente"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:237
 msgid "Adjust page's size and orientation"
-msgstr ""
+msgstr "Ajuste del tamaño de página y orientación"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:243
 msgid "<b>Zoom</b>"
-msgstr ""
+msgstr "<b>Ampliación</b>"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:255
-#, fuzzy
 #| msgid "Number of decimals"
 msgid "Number of pages used:"
-msgstr "Número de decimales"
+msgstr "Número de páginas usadas:"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:266
 msgid "horizontally"
-msgstr ""
+msgstr "horizontalmente"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:277
 msgid "vertically"
-msgstr ""
+msgstr "verticalmente"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:281
 msgid "Zoom factor:"
-msgstr ""
+msgstr "Factor de ampliación:"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:294
 msgid "<b>Page numbers</b>"
-msgstr ""
+msgstr "<b>Números de página</b>"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:307
 msgid "Print page numbers"
-msgstr ""
+msgstr "Imprimir números de página"
 
 #: ../tools/browser/canvas/browser-canvas.c:389
 msgid "Linear layout"
-msgstr ""
+msgstr "Distribución lineal"
 
 #: ../tools/browser/canvas/browser-canvas.c:394
 msgid "Radial layout"
-msgstr ""
+msgstr "Distribución radial"
 
 #: ../tools/browser/canvas/browser-canvas.c:508
-#, fuzzy
 #| msgid "_Save image"
 msgid "Save diagram as"
-msgstr "_Guardar imagen"
+msgstr "Guardar diagrama como"
 
 #: ../tools/browser/canvas/browser-canvas.c:514
 msgid "PNG Image"
-msgstr ""
+msgstr "Imagen PNG"
 
 #: ../tools/browser/canvas/browser-canvas.c:519
-#, fuzzy
 #| msgid "Set filter"
 msgid "SVG file"
-msgstr "Activar filtro"
+msgstr "Archivo SVG"
 
 #: ../tools/browser/canvas/browser-canvas.c:556
-#, fuzzy
 #| msgid "Failed to read node in XML file"
 msgid "Failed to create SVG file"
-msgstr "Falló al leer el nodo en el archivo XML"
+msgstr "Falló al crear el archivo SVG"
 
 #: ../tools/browser/canvas/browser-canvas.c:564
 msgid "File format to save to is not recognized."
-msgstr ""
+msgstr "No se reconoce el formato de archivo en el que guardar."
 
 #: ../tools/browser/canvas/browser-canvas.c:584
-#, fuzzy
 #| msgid "Failed to read node in XML file"
 msgid "Failed to create PNG file"
-msgstr "Falló al leer el nodo en el archivo XML"
+msgstr "Falló al crear el archivo PNG"
 
 #: ../tools/browser/common/gdaui-data-import.c:123
-#, fuzzy
 #| msgid "Invalid port specification"
 msgid "Import specifications"
-msgstr "Especificación de puertos no válida"
+msgstr "Importar especificaciones"
 
 #. file to import from
 #: ../tools/browser/common/gdaui-data-import.c:142
 msgid "File to import from:"
-msgstr ""
+msgstr "Archivo del que importar:"
 
 #: ../tools/browser/common/gdaui-data-import.c:146
 msgid "File to import data from"
-msgstr ""
+msgstr "Archivo del que importar los datos"
 
 #: ../tools/browser/common/gdaui-data-import.c:149
-#, fuzzy
 #| msgid "Comma Separated Value (CSV)"
 msgid "Comma separated values"
-msgstr "Valor separado por comas (CSV)"
+msgstr "Valores separados por comas"
 
 #: ../tools/browser/common/gdaui-data-import.c:154
 msgid "XML exported"
-msgstr ""
+msgstr "XML exportado"
 
 #: ../tools/browser/common/gdaui-data-import.c:158
 msgid "All files"
-msgstr ""
+msgstr "Todos los archivos"
 
 #. Encoding
 #: ../tools/browser/common/gdaui-data-import.c:166
-#, fuzzy
 #| msgid "Encoding"
 msgid "Encoding:"
-msgstr "Codificación"
+msgstr "Codificación:"
 
 #. first line as title
 #: ../tools/browser/common/gdaui-data-import.c:192
 msgid "First line as title:"
-msgstr ""
+msgstr "Primera línea como título:"
 
 #. separator
 #: ../tools/browser/common/gdaui-data-import.c:204
 msgid "Separator:"
-msgstr ""
+msgstr "Separador:"
 
 #: ../tools/browser/common/gdaui-data-import.c:208
-#, fuzzy
 #| msgid "Comment"
 msgid "Comma"
-msgstr "Comentario"
+msgstr "Coma"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
-#, fuzzy
 #| msgid "After column"
 msgid "Semi column"
-msgstr "Después de la columna"
+msgstr "Punto y coma"
 
 #: ../tools/browser/common/gdaui-data-import.c:222
-#, fuzzy
 #| msgid "Table"
 msgid "Tab"
-msgstr "Tabla"
+msgstr "Tabulación"
 
 #: ../tools/browser/common/gdaui-data-import.c:229
-#, fuzzy
 #| msgid "Scale"
 msgid "Space"
-msgstr "Escala"
+msgstr "Espacio"
 
 #: ../tools/browser/common/gdaui-data-import.c:236
 msgid "Pipe"
-msgstr ""
+msgstr "Barra vertical"
 
 #: ../tools/browser/common/gdaui-data-import.c:245
 msgid "Other:"
-msgstr ""
+msgstr "Otro:"
 
 #: ../tools/browser/common/gdaui-data-import.c:269
-#, fuzzy
 #| msgid "Temporary view"
 msgid "Import preview"
-msgstr "Vista temporal"
+msgstr "Vista previa de la importación"
 
 #: ../tools/browser/common/gdaui-data-import.c:284
-#, fuzzy
 #| msgid "No detail"
 msgid "No data."
-msgstr "Sin detalles"
+msgstr "Sin datos."
 
 #: ../tools/browser/common/gdaui-entry-import.c:172
-#, fuzzy
 #| msgid "_Load image from file"
 msgid "Data set import from file"
-msgstr "_Cargar imagen del archivo"
+msgstr "Conjunto de datos importados de archivo"
 
 #: ../tools/browser/common/gdaui-entry-import.c:202
 #: ../tools/browser/query-exec/query-result.c:216
-#, fuzzy, c-format
+#, c-format
 #| msgid "(%d row)"
 #| msgid_plural "(%d rows)"
 msgid "%d row"
 msgid_plural "%d rows"
-msgstr[0] "(%d fila)"
-msgstr[1] "(%d filas)"
+msgstr[0] "%d fila"
+msgstr[1] "%d filas"
 
 #: ../tools/browser/common/gdaui-entry-import.c:203
 #: ../tools/browser/query-exec/query-result.c:217
-#, fuzzy, c-format
+#, c-format
 #| msgid "After column"
 msgid "%d column"
 msgid_plural "%d columns"
-msgstr[0] "Después de la columna"
-msgstr[1] "Después de la columna"
+msgstr[0] "%d columna"
+msgstr[1] "%d columnas"
 
 #: ../tools/browser/common/gdaui-entry-import.c:204
 #: ../tools/browser/query-exec/query-result.c:219
 #, c-format
 msgid "Data set with %s and %s"
-msgstr ""
+msgstr "Conjunto de datos con %s y %s"
 
 #: ../tools/browser/common/gdaui-entry-import.c:211
 #: ../tools/browser/common/gdaui-entry-import.c:234
-#, fuzzy
 #| msgid "No detail"
 msgid "No data set"
-msgstr "Sin detalles"
+msgstr "Sin conjunto de datos"
 
 #: ../tools/browser/common/objects-cloud.c:237
 #, c-format
@@ -7026,6 +6990,9 @@ msgid ""
 "Show variables needed\n"
 "to execute SQL"
 msgstr ""
+"Mostrar las variables\n"
+"necesarias para ejecutar\n"
+"el SQL"
 
 #: ../tools/browser/query-exec/query-console.c:388
 msgid "Execute"
@@ -7046,6 +7013,9 @@ msgid ""
 "and make the code more readable\n"
 "(removes comments)"
 msgstr ""
+"Sangrar el SQL en el editor\n"
+"y hacer el código más legible\n"
+"(quita los comentarios)"
 
 #: ../tools/browser/query-exec/query-console.c:402
 #| msgid "Favorites"
@@ -7103,7 +7073,7 @@ msgstr "Contenido de la variable no válido"
 
 #: ../tools/browser/query-exec/query-console.c:859
 msgid "assign values to the following variables"
-msgstr ""
+msgstr "asignar valores a las siguientes variables"
 
 #: ../tools/browser/query-exec/query-console.c:913
 #, c-format
@@ -7116,6 +7086,8 @@ msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
 msgstr ""
+"Ya se está ejecutando una consulta, para ejecutar otra consulta abra una "
+"conexión nueva."
 
 #: ../tools/browser/query-exec/query-console.c:958
 #, c-format
@@ -7136,7 +7108,7 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:1022
 msgid "Statement executed"
-msgstr ""
+msgstr "Declaración ejecutada"
 
 #: ../tools/browser/query-exec/query-console.c:1030
 msgid ""
