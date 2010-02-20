@@ -220,7 +220,7 @@ then
 	fi
 fi
 
-AM_CONDITIONAL(HAVE_GTKSOURCEVIEW, test x"$have_gtksourceview" = "xyes")
+AM_CONDITIONAL(HAVE_GTKSOURCEVIEW, test x"$have_sourceview" = "xyes")
 AC_SUBST(GTKSOURCEVIEW_CFLAGS)
 AC_SUBST(GTKSOURCEVIEW_LIBS)
 
