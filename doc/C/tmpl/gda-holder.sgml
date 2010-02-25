@@ -6,8 +6,12 @@ Container for a single #GValue
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The #GdaHolder is a container for a single #GValue value. It also specifies various attributes
-of the contained value (default value, ...)
+  The #GdaHolder is a container for a single #GValue value. It also specifies various attributes
+  of the contained value (default value, ...)
+</para>
+<para>
+  The type of a #GdaHolder has to be set and cannot be modified, except if it's initialized
+  with a GDA_TYPE_NULL GType (representing NULL values) where it can be changed once to a real GType.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
