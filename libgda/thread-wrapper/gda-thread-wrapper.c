@@ -196,6 +196,7 @@ get_thread_data (GdaThreadWrapper *wrapper, GThread *thread)
 		td = g_new0 (ThreadData, 1);
 		td->owner = thread;
 		td->from_worker_thread = g_async_queue_new_full ((GDestroyNotify) job_free);
+		td->jobs = NULL;
 		td->results = NULL;
 
 		g_hash_table_insert (wrapper->priv->threads_hash, thread, td);
@@ -208,10 +209,12 @@ static void
 thread_data_free (ThreadData *td)
 {
 	g_async_queue_unref (td->from_worker_thread);
+	td->from_worker_thread = NULL;
 	g_assert (!td->jobs);
 	if (td->results) {
 		g_slist_foreach (td->results, (GFunc) job_free, NULL);
 		g_slist_free (td->results);
+		td->results = NULL;
 	}
 	if (td->signals_list) {
 		GSList *list;
@@ -321,7 +324,6 @@ worker_thread_entry_point (GAsyncQueue *to_worker_thread)
 				job->u.exe.result = NULL;
 				job->void_func (job->arg, &(job->u.exe.error));
 			}
-			/*g_print ("... done job %d\n", job->job_id);*/
 			g_async_queue_push (job->reply_queue, job);
 		}
 		else
@@ -568,6 +570,7 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
                         job->u.exe.result = NULL;
                         job->void_func (job->arg, &(job->u.exe.error));
                 }
+		/* g_print ("... IMMEDIATELY done job %d => %p\n", job->job_id, job->u.exe.result); */
                 g_async_queue_push (job->reply_queue, job);
         }
         else
@@ -629,7 +632,7 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 	job->reply_queue = g_async_queue_ref (td->from_worker_thread);
 
 	id = job->job_id;
-	/*g_print ("... submitted VOID job %d\n", id);*/
+	/* g_print ("... submitted VOID job %d\n", id); */
 
 	td->jobs = g_slist_append (td->jobs, job);
 
@@ -641,6 +644,7 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
                         job->u.exe.result = NULL;
                         job->void_func (job->arg, &(job->u.exe.error));
                 }
+		/* g_print ("... IMMEDIATELY done VOID job %d => %p\n", job->job_id, job->u.exe.result); */
                 g_async_queue_push (job->reply_queue, job);
         }
         else
@@ -744,7 +748,6 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 		job = g_async_queue_try_pop (td->from_worker_thread);
 	if (job) {
 		gboolean do_again = FALSE;
-
 		td->jobs = g_slist_remove (td->jobs, job);
 
 		if (job->type == JOB_TYPE_EXECUTE) {

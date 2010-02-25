@@ -464,6 +464,7 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	ThreadConnectionData *cdata;
 	cdata = g_new0 (ThreadConnectionData, 1);
 	cdata->sub_connection = sub_cnc;
+	cdata->sub_connection_has_closed = FALSE;
 	cdata->cnc_provider = g_object_ref (data->out_cnc_provider);
 	cdata->wrapper = wr;
 	cdata->handlers_ids = g_array_sized_new (FALSE, FALSE, sizeof (gulong), 2);
