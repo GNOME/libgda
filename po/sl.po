@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-02-08 17:31+0000\n"
-"PO-Revision-Date: 2010-02-24 14:26+0100\n"
+"PO-Revision-Date: 2010-02-25 10:34+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1395,7 +1395,7 @@ msgstr "Stolpca %d ni mogoče spremeniti"
 #: ../libgda/gda-data-select.c:2722
 #, c-format
 msgid "Too many values (%d as maximum)"
-msgstr ""
+msgstr "Preveč je vrednosti (%d je največje dovoljeno število)"
 
 #: ../libgda/gda-data-select.c:2802
 msgid "No INSERT statement provided"
@@ -1403,7 +1403,7 @@ msgstr ""
 
 #: ../libgda/gda-data-select.c:2807
 msgid "Cannot add a row because the number of rows in unknown"
-msgstr ""
+msgstr "Ni mogoče dodati vrstice, ker število vrstic ni znano"
 
 #: ../libgda/gda-data-select.c:2836
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:385
@@ -1418,7 +1418,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:3397
 #, c-format
 msgid "An error has occurred, the value returned by the \"exec-params\" property will be wrong: %s"
-msgstr ""
+msgstr "Prišlo je do napake; vrnjena je napaka \"exec-params\" napačne lastnosti: %s"
 
 #: ../libgda/gda-easy.c:296
 msgid "Unspecified table name"
@@ -1478,7 +1478,7 @@ msgstr ""
 
 #: ../libgda/gda-init.c:73
 msgid "Ignoring attempt to re-initialize GDA library."
-msgstr ""
+msgstr "Prezrt je poskus ponovnega začenjanja GDA knjižnice."
 
 #: ../libgda/gda-init.c:95
 msgid "libgda needs GModule. Finishing..."
@@ -1505,15 +1505,15 @@ msgstr "Predmet povezave je uporabljen"
 
 #: ../libgda/gda-meta-store.c:433
 msgid "Catalog in which the database objects will be created"
-msgstr ""
+msgstr "Katalog v katerem bodo ustvarjeni predmeti podatkovne zbirke"
 
 #: ../libgda/gda-meta-store.c:436
 msgid "Schema in which the database objects will be created"
-msgstr ""
+msgstr "Shema v kateri bodo ustvarjeni predmeti podatkovne zbirke"
 
 #: ../libgda/gda-meta-store.c:579
 msgid "Catalog specified but no schema specified, store will not be usable"
-msgstr ""
+msgstr "Katalog je določen, shema pa ne; shranjevanje ne bo na voljo"
 
 #: ../libgda/gda-meta-store.c:899
 #: ../libgda/gda-meta-store.c:908
@@ -1629,7 +1629,7 @@ msgstr "Ni mogoče ustvariti izjave DELETE"
 
 #: ../libgda/gda-meta-store.c:3080
 msgid "A transaction has already been started"
-msgstr ""
+msgstr "Prenos je že začet"
 
 #: ../libgda/gda-meta-store.c:3474
 #, c-format
@@ -1659,7 +1659,7 @@ msgstr ""
 
 #: ../libgda/gda-meta-store.c:3680
 msgid "Missing custom database object name"
-msgstr ""
+msgstr "Manjka ime predmeta podatkovne zbirke po meri"
 
 #: ../libgda/gda-meta-store.c:3685
 msgid "Custom database object names starting with a '_' are reserved for internal usage"
@@ -1667,7 +1667,7 @@ msgstr ""
 
 #: ../libgda/gda-meta-store.c:3783
 msgid "Another object with the same name already exists"
-msgstr ""
+msgstr "Drug predmet z istim imenom že obstaja"
 
 #: ../libgda/gda-meta-store.c:3886
 #, c-format
@@ -1845,7 +1845,7 @@ msgstr ""
 
 #: ../libgda/gda-server-operation.c:1510
 msgid "Missing attribute named 'path'"
-msgstr ""
+msgstr "Manjka atribut z imenom 'pot'"
 
 #: ../libgda/gda-server-operation.c:2268
 #, c-format
@@ -2127,47 +2127,47 @@ msgstr "Polja"
 
 #: ../libgda/gda-server-provider-extra.c:523
 msgid "Data model for schema has a wrong number of columns"
-msgstr ""
+msgstr "Podatkovni model sheme ima določeno napačno število stolpcev"
 
 #: ../libgda/gda-server-provider-extra.c:535
 #, c-format
 msgid "Data model for schema has a wrong column title: '%s' instead of '%s'"
-msgstr ""
+msgstr "Podatkovni model sheme ima napačen naslov stolpca: '%s' namesto '%s'"
 
 #: ../libgda/gda-server-provider-extra.c:542
 #, c-format
 msgid "Data model for schema has a wrong column name: '%s' instead of '%s'"
-msgstr ""
+msgstr "Podatkovni model sheme ima napačno ime stolpca: '%s' namesto '%s'"
 
 #: ../libgda/gda-server-provider-extra.c:549
 #, c-format
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
-msgstr ""
+msgstr "Podatkovni model sheme ima določeno napačno vrsto GDA: '%s' namesto '%s'"
 
 #: ../libgda/gda-set.c:477
 #: ../libgda/gda-set.c:578
 #, c-format
 msgid "%s() does not handle values of type '%s'."
-msgstr ""
+msgstr "%s() ne upravlja z vrednostmi vrste '%s'."
 
 #: ../libgda/gda-set.c:532
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
-msgstr ""
+msgstr "Gradnika GdaHolder z ID '%s' ni mogoče najti v naboru"
 
 #: ../libgda/gda-set.c:712
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
-msgstr ""
+msgstr "Spec korensko vozlišče != 'data-set-spec': '%s'"
 
 #: ../libgda/gda-set.c:751
 #, c-format
 msgid "Missing node <parameters>: '%s'"
-msgstr ""
+msgstr "Manjkajo <parametri> vozlišča: '%s'"
 
 #: ../libgda/gda-set.c:1186
 msgid "GdaHolder needs to have an ID"
-msgstr ""
+msgstr "GdaHolder zahteva določitev ID"
 
 #: ../libgda/gda-set.c:1288
 msgid "One or more values are invalid"
@@ -2746,7 +2746,7 @@ msgstr ""
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:384
 msgid "Data model must have at least one column"
-msgstr ""
+msgstr "Podatkovni model mora imeti vsaj en stolpec"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:402
 msgid "Could not compute virtual table's columns"
@@ -2991,13 +2991,13 @@ msgstr "Signal ne obstaja\n"
 
 #: ../libgda/thread-wrapper/gda-thread-wrapper.c:1028
 msgid "Signal to connect to must not have a return value\n"
-msgstr ""
+msgstr "Signal za povezavo mora imeti povratno vrednost.\n"
 
 #: ../libgda/thread-wrapper/gda-thread-wrapper.c:1097
 #: ../libgda/thread-wrapper/gda-thread-wrapper.c:1164
 #, c-format
 msgid "Signal %lu does not exist"
-msgstr ""
+msgstr "Signal %lu ne obstaja"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:284
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:353
@@ -3009,11 +3009,11 @@ msgstr "Ni mogoče najti programa '%s'"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:299
 msgid "Could not find the DocBook XSL stylesheet for HTML"
-msgstr ""
+msgstr "Ni mogoče najti DocBook XSL slogovne predloge za HTML"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:367
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
-msgstr ""
+msgstr "Ni mogoče najti DocBook XSL slogovne predloge za oblikovane predmete"
 
 #: ../libgda-report/engine/gda-report-engine.c:308
 #, c-format
@@ -3077,7 +3077,7 @@ msgstr ""
 #: ../libgda-report/engine/gda-report-engine.c:1138
 #, c-format
 msgid "Expression '%s' should return exactly one value"
-msgstr ""
+msgstr "Izraz '%s' mora vrniti natanko eno vrednost"
 
 #: ../libgda-report/engine/gda-report-engine.c:1175
 msgid "Binary data"
@@ -3491,19 +3491,19 @@ msgstr ""
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:1
 msgid "Let the user name an existing or new folder"
-msgstr ""
+msgstr "Dovoli uporabniku poimenovati obstoječo ali novo mapo"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:2
 msgid "Let the user pick an existing file, or type in a new filename"
-msgstr ""
+msgstr "Dovoli uporabniku izbrati obstoječo datoteko, oziroma vtipkati novo ime datoteke"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:3
 msgid "Let the user pick an existing folder"
-msgstr ""
+msgstr "Dovoli uporabniku izbrati obstoječo mapo"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:4
 msgid "Only let the user pick an existing file"
-msgstr ""
+msgstr "Dovoli uporabniku le izbrati obstoječo datoteko"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:5
 msgid "Selection model"
@@ -5861,7 +5861,7 @@ msgstr "Ni mogoče ustvariti začasne datoteke '%s'"
 #: ../providers/web/gda-web-recordset.c:371
 #: ../providers/web/gda-web-recordset.c:381
 msgid "Can't create temporary table to store data from web server"
-msgstr ""
+msgstr "Ni mogoče ustvariti začasne preglednice za shranjevanje podatkov spletnega strežnika"
 
 #: ../providers/web/gda-web-util.c:151
 #: ../providers/web/gda-web-util.c:165
@@ -5964,27 +5964,27 @@ msgstr "_Preizkušeni gradniki"
 
 #: ../testing/gdaui-test-data-entries.c:261
 msgid "Default individual data entry widgets"
-msgstr ""
+msgstr "Privzeti posamezni gradniki vnosa podatkov"
 
 #: ../testing/gdaui-test-data-entries.c:268
 msgid "Default data entry widgets in a form"
-msgstr ""
+msgstr "Privzeti posamezni gradniki vnosa v obrazcu"
 
 #: ../testing/gdaui-test-data-entries.c:275
 msgid "Default data cell renderers in a grid"
-msgstr ""
+msgstr "Privzeti izrisevalniki podatkov celic v mreži"
 
 #: ../testing/gdaui-test-data-entries.c:285
 msgid "Plugins individual data entry widgets"
-msgstr ""
+msgstr "Gradniki vstavkov posameznih vnosov podatkov"
 
 #: ../testing/gdaui-test-data-entries.c:292
 msgid "Plugins data entry widgets in a form"
-msgstr ""
+msgstr "Gradniki vstavkov posameznih vnosov podatkov v obrazcu"
 
 #: ../testing/gdaui-test-data-entries.c:299
 msgid "Plugins data cell renderers in a grid"
-msgstr ""
+msgstr "Gradniki vstavkov za izrisevanje podatkov celic v mreži"
 
 #: ../testing/gdaui-test-data-entries.c:675
 msgid "No GdaDataHandler available for this type"
@@ -6239,7 +6239,7 @@ msgstr "Ali želite končati program?"
 
 #: ../tools/browser/browser-window.c:681
 msgid "all the connections will be closed."
-msgstr ""
+msgstr "vse povezave bodo zaprte."
 
 #: ../tools/browser/browser-window.c:688
 msgid "the connection will be closed."
@@ -6311,10 +6311,12 @@ msgid ""
 "Name of the schema the\n"
 "tables will be in"
 msgstr ""
+"Ime sheme v kateri\n"
+"bodo preglednice"
 
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:1
 msgid "Browse your database's contents"
-msgstr ""
+msgstr "Brskanje po vsebini podatkovne zbirke"
 
 #: ../tools/browser/login-dialog.c:142
 msgid "Connection opening:"
@@ -6403,6 +6405,9 @@ msgid ""
 "drag item to\n"
 "define one"
 msgstr ""
+"Ni priljubljenih:\n"
+"potegni predmet na\n"
+"določi predmet"
 
 #: ../tools/browser/support.c:203
 msgid "Note:"
@@ -7140,6 +7145,8 @@ msgid ""
 "Free form to test the configured\n"
 "data entry"
 msgstr ""
+"Prosti obrazec za preizkus nastavitev\n"
+"za vnos podatkov"
 
 #: ../tools/command-exec.c:329
 msgid "History is not supported"
@@ -7525,11 +7532,11 @@ msgstr "Zapri povezavo"
 #: ../tools/gda-sql.c:1997
 #, c-format
 msgid "%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"
-msgstr ""
+msgstr "%s CNC_IME CNC_IME1 CNC_IME2 [CNC_IME ...]"
 
 #: ../tools/gda-sql.c:1998
 msgid "Bind several connections together into the CNC_NAME virtual connection"
-msgstr ""
+msgstr "Poveži več povezav skupaj v navidezno CNC_IME povezavo"
 
 #: ../tools/gda-sql.c:2008
 #: ../tools/gda-sql.c:2020
@@ -7550,7 +7557,7 @@ msgstr "izpis vseh DSN (ali imenovanih atributov DSN)"
 #: ../tools/gda-sql.c:2021
 #, c-format
 msgid "%s DSN_NAME DSN_DEFINITION [DESCRIPTION]"
-msgstr ""
+msgstr "%s DSN_IME DSN_DOLOČILO [OPIS]"
 
 #: ../tools/gda-sql.c:2022
 msgid "Create (or modify) a DSN"
@@ -7702,7 +7709,7 @@ msgstr "%s [IME [VREDNOST|_null_]]"
 
 #: ../tools/gda-sql.c:2250
 msgid "Set or show internal parameter, or list all if no parameters"
-msgstr ""
+msgstr "Določi ali prikaži notranje parametre, oziroma seznam vseh, če parameter ni določen"
 
 #: ../tools/gda-sql.c:2261
 #, c-format
@@ -7724,20 +7731,20 @@ msgstr "Določitev zapisa odvoda"
 #: ../tools/gda-sql.c:2298
 #, c-format
 msgid "%s [NAME|TABLE COLUMN ROW_CONDITION] FILE"
-msgstr ""
+msgstr "%s [IME|PREGLEDNICA STOLPEC POGOJI_VRSTICE] DATOTEKA"
 
 #: ../tools/gda-sql.c:2299
 msgid "Export internal parameter or table's value to the FILE file"
-msgstr ""
+msgstr "Izvozi zunanji parameter ali vrednost preglednice v datoteko DATOTEKA"
 
 #: ../tools/gda-sql.c:2310
 #, c-format
 msgid "%s NAME [FILE|TABLE COLUMN ROW_CONDITION]"
-msgstr ""
+msgstr "%s IME [DATOTEKA|PREGLEDNICA STOLPEC POGOJI_VRSTICE]"
 
 #: ../tools/gda-sql.c:2311
 msgid "Set internal parameter as the contents of the FILE file or from an existing table's value"
-msgstr ""
+msgstr "Določitev notranjega parametra kot vsebine datoteke DATOTEKA ali iz obstoječe vrednosti preglednice"
 
 #: ../tools/gda-sql.c:2324
 msgid "List all available commands"
