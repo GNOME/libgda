@@ -33,6 +33,7 @@ static gboolean test9 (GError **error);
 static gboolean test10 (GError **error);
 static gboolean test11 (GError **error);
 static gboolean test12 (GError **error);
+static gboolean test13 (GError **error);
 
 TestFunc tests[] = {
 	test1,
@@ -46,7 +47,8 @@ TestFunc tests[] = {
 	test9,
 	test10,
 	test11,
-	test12
+	test12,
+	test13
 };
 
 int 
@@ -999,6 +1001,101 @@ test12 (GError **error)
 	return TRUE;
 }
 
+
+static gboolean
+test13 (GError **error)
+{
+	GdaHolder *h1, *h2;
+	h1 = gda_holder_new (GDA_TYPE_NULL);
+	h2 = gda_holder_new (GDA_TYPE_NULL);
+	if (! gda_holder_set_bind (h1, h2, error)) {
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	g_object_set (h2, "g-type", G_TYPE_STRING, NULL);
+	if (gda_holder_get_g_type (h1) != G_TYPE_STRING) {
+		g_set_error (error, 0, 0,
+			     "Bind-to holder type set did not propagate to holder's type, case 1");
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	g_object_unref (h1);
+	g_object_unref (h2);
+	
+	/* another test */
+	h1 = gda_holder_new (GDA_TYPE_NULL);
+	h2 = gda_holder_new (G_TYPE_INT);
+	if (! gda_holder_set_bind (h1, h2, error)) {
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	if (gda_holder_get_g_type (h1) != G_TYPE_INT) {
+		g_set_error (error, 0, 0,
+			     "Bind-to holder type set did not propagate to holder's type, case 2");
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	g_object_unref (h1);
+	g_object_unref (h2);
+
+	/* another test */
+	h1 = gda_holder_new (G_TYPE_STRING);
+	h2 = gda_holder_new (GDA_TYPE_NULL);
+	if (! gda_holder_set_bind (h1, h2, error)) {
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	g_object_set (h2, "g-type", G_TYPE_STRING, NULL);
+	if (gda_holder_get_g_type (h1) != G_TYPE_STRING) {
+		g_set_error (error, 0, 0,
+			     "Holder type changed when it should not have, case 1");
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	if (gda_holder_get_bind (h1) != h2) {
+		g_set_error (error, 0, 0,
+			     "Bind broken when it should not have been");
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	g_object_unref (h1);
+	g_object_unref (h2);
+
+	/* another test */
+	h1 = gda_holder_new (G_TYPE_STRING);
+	h2 = gda_holder_new (GDA_TYPE_NULL);
+	if (! gda_holder_set_bind (h1, h2, error)) {
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	g_object_set (h2, "g-type", G_TYPE_INT, NULL);
+	if (gda_holder_get_g_type (h1) != G_TYPE_STRING) {
+		g_set_error (error, 0, 0,
+			     "Holder type changed when it should not have, case 2");
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	if (gda_holder_get_bind (h1) == h2) {
+		g_set_error (error, 0, 0,
+			     "Bind not broken when it should have been");
+		g_object_unref (h1);
+		g_object_unref (h2);
+		return FALSE;
+	}
+	g_object_unref (h1);
+	g_object_unref (h2);
+
+	return TRUE;
+}
 
 /*
  * Signals testing

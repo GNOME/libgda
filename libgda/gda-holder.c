@@ -92,6 +92,7 @@ struct _GdaHolderPrivate
 	GType            g_type;
 	GdaHolder       *full_bind;     /* FULL bind to holder */
 	GdaHolder       *simple_bind;  /* SIMPLE bind to holder */
+	gulong           simple_bind_notify_signal_id;
 	
 	gboolean         invalid_forced;
 	gboolean         valid;
@@ -301,6 +302,7 @@ gda_holder_init (GdaHolder *holder)
 	holder->priv->g_type = G_TYPE_INVALID;
 	holder->priv->full_bind = NULL;
 	holder->priv->simple_bind = NULL;
+	holder->priv->simple_bind_notify_signal_id = 0;
 
 	holder->priv->invalid_forced = FALSE;
 	holder->priv->valid = TRUE;
@@ -569,8 +571,10 @@ gda_holder_set_property (GObject *object,
 			gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_DESCRIPTION, value);
 			break;
 		case PROP_GDA_TYPE:
-			if (holder->priv->g_type == GDA_TYPE_NULL)
+			if (holder->priv->g_type == GDA_TYPE_NULL) {
 				holder->priv->g_type = g_value_get_gtype (value);
+				g_object_notify ((GObject*) holder, "g-type");
+			}
 			else
 				g_warning (_("The 'g-type' property cannot be changed"));
 			break;
@@ -1493,6 +1497,27 @@ gda_holder_get_source_model (GdaHolder *holder, gint *col)
 	return holder->priv->source_model;
 }
 
+/*
+ * This callback is called when @holder->priv->simple_bind's GType was GDA_TYPE_NULL at the time
+ * gda_holder_set_bind() was called, and it makes sure @holder's GType is the same as @holder->priv->simple_bind's
+ */
+static void
+bind_to_notify_cb (GdaHolder *bind_to, GParamSpec *pspec, GdaHolder *holder)
+{
+	g_signal_handler_disconnect (holder->priv->simple_bind,
+				     holder->priv->simple_bind_notify_signal_id);
+	holder->priv->simple_bind_notify_signal_id = 0;
+	if (holder->priv->g_type == GDA_TYPE_NULL)
+		holder->priv->g_type = bind_to->priv->g_type;
+	else if (holder->priv->g_type != bind_to->priv->g_type) {
+		/* break holder's binding because type differ */
+		g_warning (_("Cannot bind holders if their type is not the same, "
+			     "breaking existing bind where '%s' was bound to '%s'"),
+			   gda_holder_get_id (holder), gda_holder_get_id (bind_to));
+		gda_holder_set_bind (holder, NULL, NULL);
+	}
+}
+
 /**
  * gda_holder_set_bind
  * @holder: a #GdaHolder
@@ -1500,6 +1525,9 @@ gda_holder_get_source_model (GdaHolder *holder, gint *col)
  * @error: a place to store errors, or %NULL
  *
  * Sets @holder to change when @bind_to changes (and does not make @bind_to change when @holder changes).
+ * For the operation to succeed, the GType of @holder and @bind_to must be the same, with the exception that
+ * any of them can have a %GDA_TYPE_NULL type (in this situation, the GType of the two #GdaHolder objects
+ * involved is set to match the other when any of them sets its type to something different than GDA_TYPE_NULL).
  *
  * If @bind_to is %NULL, then @holder will not be bound anymore.
  *
@@ -1523,7 +1551,10 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 	if (bind_to) {
 		g_return_val_if_fail (GDA_IS_HOLDER (bind_to), FALSE);
 		g_return_val_if_fail (bind_to->priv, FALSE);
-		if (holder->priv->g_type != bind_to->priv->g_type) {
+		
+		if ((holder->priv->g_type != GDA_TYPE_NULL) &&
+		    (bind_to->priv->g_type != GDA_TYPE_NULL) &&
+		    (holder->priv->g_type != bind_to->priv->g_type)) {
 			g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
 				     "%s", _("Cannot bind holders if their type is not the same"));
 			return FALSE;
@@ -1539,6 +1570,11 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 	if (holder->priv->simple_bind) {
 		g_signal_handlers_disconnect_by_func (G_OBJECT (holder->priv->simple_bind),
 						      G_CALLBACK (full_bind_changed_cb), holder);
+		if (holder->priv->simple_bind_notify_signal_id) {
+			g_signal_handler_disconnect (holder->priv->simple_bind,
+						     holder->priv->simple_bind_notify_signal_id);
+			holder->priv->simple_bind_notify_signal_id = 0;
+		}
 		g_object_unref (holder->priv->simple_bind);
 		holder->priv->simple_bind = NULL;
 	}
@@ -1549,6 +1585,13 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 		g_object_ref (holder->priv->simple_bind);
 		g_signal_connect (G_OBJECT (holder->priv->simple_bind), "changed",
 				  G_CALLBACK (full_bind_changed_cb), holder);
+
+		if (bind_to->priv->g_type == GDA_TYPE_NULL)
+			holder->priv->simple_bind_notify_signal_id = g_signal_connect (bind_to, "notify::g-type",
+										       G_CALLBACK (bind_to_notify_cb),
+										       holder);
+		else if (holder->priv->g_type == GDA_TYPE_NULL)
+			g_object_set ((GObject*) holder, "g-type", bind_to->priv->g_type , NULL);
 
 		/* if bind_to has a different value than holder, then we set holder to the new value */
 		if (value1)
