@@ -313,10 +313,12 @@ gda_data_model_reset (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	g_signal_emit (G_OBJECT (model),
-		       gda_data_model_signals[RESET], 0);
-
-	_gda_data_model_signal_emit_changed (model);
+	if (do_notify_changes (model)) {
+		g_signal_emit (G_OBJECT (model),
+			       gda_data_model_signals[RESET], 0);
+		
+		_gda_data_model_signal_emit_changed (model);
+	}
 }
 
 /**
