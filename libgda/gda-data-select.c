@@ -80,6 +80,7 @@ typedef struct {
 					   * sorted by row number (row numbers are internal row numbers )*/
 	GHashTable             *upd_rows; /* key = internal row number + 1, value = a DelayedSelectStmt pointer */
 
+	gboolean                notify_changes;
 	gboolean                ref_count; /* when drop to 0 => free can be done */
 } PrivateShareable;
 
@@ -168,6 +169,9 @@ static gboolean             gda_data_select_set_values      (GdaDataModel *model
 							     GError **error);
 static gint                 gda_data_select_append_values   (GdaDataModel *model, const GList *values, GError **error);
 static gboolean             gda_data_select_remove_row      (GdaDataModel *model, gint row, GError **error);
+
+static void                 gda_data_select_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
+static gboolean             gda_data_select_get_notify      (GdaDataModel *model);
 
 static GObjectClass *parent_class = NULL;
 
@@ -303,8 +307,8 @@ gda_data_select_data_model_init (GdaDataModelIface *iface)
 	iface->i_remove_row = gda_data_select_remove_row;
 	iface->i_find_row = NULL;
 	
-	iface->i_set_notify = NULL;
-	iface->i_get_notify = NULL;
+	iface->i_set_notify = gda_data_select_set_notify;
+	iface->i_get_notify = gda_data_select_get_notify;
 	iface->i_send_hint = NULL;
 }
 
@@ -316,6 +320,7 @@ gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
 	model->priv = g_new0 (GdaDataSelectPrivate, 1);
 	model->priv->cnc = NULL;
 	model->priv->sh = g_new0 (PrivateShareable, 1);
+	model->priv->sh-> notify_changes = TRUE;
 	model->priv->sh->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
 	model->priv->sh->index = g_hash_table_new (g_direct_hash, g_direct_equal);
 	model->prep_stmt = NULL;
@@ -368,6 +373,7 @@ free_private_shared_data (GdaDataSelect *model)
 {
 	if (!model->priv->sh)
 		return;
+
 	model->priv->sh->ref_count --;
 	if (model->priv->sh->ref_count == 0) {
 		gint i;
@@ -3053,6 +3059,18 @@ gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 	return TRUE;
 }
 
+static void
+gda_data_select_set_notify (GdaDataModel *model, gboolean do_notify_changes)
+{
+	((GdaDataSelect *) model)->priv->sh->notify_changes = do_notify_changes;
+}
+
+static gboolean
+gda_data_select_get_notify (GdaDataModel *model)
+{
+	return ((GdaDataSelect *) model)->priv->sh->notify_changes;
+}
+
 /*
  * The following function creates a correspondance between the parameters required to
  * execute the model->one_row_select_stmt statement (GdaHolders named "-<num>", in ), and the GdaHolder
@@ -3356,6 +3374,7 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	GdaDataSelectInternals *mi;
 	      
 	model->priv->sh->reset_with_ext_params_change = old_model->priv->sh->reset_with_ext_params_change;
+	model->priv->sh->notify_changes = old_model->priv->sh->notify_changes;
 	mi = old_model->priv->sh->modif_internals;
 	old_model->priv->sh->modif_internals = model->priv->sh->modif_internals;
 	model->priv->sh->modif_internals = mi;
