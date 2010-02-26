@@ -85,6 +85,7 @@ struct _GdaDataSelectPrivate {
 	GArray                 *del_rows; /* array[index] = number of the index'th deleted row,
 					   * sorted by row number (row numbers are internal row numbers )*/
 	GHashTable             *upd_rows; /* key = internal row number + 1, value = a DelayedSelectStmt pointer */
+	gboolean                notify_changes;
 };
 
 /* properties */
@@ -162,6 +163,8 @@ static gboolean             gda_data_select_set_values      (GdaDataModel *model
 							     GError **error);
 static gint                 gda_data_select_append_values   (GdaDataModel *model, const GList *values, GError **error);
 static gboolean             gda_data_select_remove_row      (GdaDataModel *model, gint row, GError **error);
+static void                 gda_data_select_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
+static gboolean             gda_data_select_get_notify      (GdaDataModel *model);
 
 static GObjectClass *parent_class = NULL;
 
@@ -297,8 +300,8 @@ gda_data_select_data_model_init (GdaDataModelIface *iface)
 	iface->i_remove_row = gda_data_select_remove_row;
 	iface->i_find_row = NULL;
 	
-	iface->i_set_notify = NULL;
-	iface->i_get_notify = NULL;
+	iface->i_set_notify = gda_data_select_set_notify;
+	iface->i_get_notify = gda_data_select_get_notify;
 	iface->i_send_hint = NULL;
 }
 
@@ -309,6 +312,7 @@ gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
 	g_return_if_fail (GDA_IS_DATA_SELECT (model));
 	model->priv = g_new0 (GdaDataSelectPrivate, 1);
 	model->priv->cnc = NULL;
+	model->priv->notify_changes = TRUE;
 	model->priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
 	model->priv->index = g_hash_table_new (g_direct_hash, g_direct_equal);
 	model->prep_stmt = NULL;
@@ -3012,6 +3016,18 @@ gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 	gda_data_model_row_removed (model, row);
 
 	return TRUE;
+}
+
+static void
+gda_data_select_set_notify (GdaDataModel *model, gboolean do_notify_changes)
+{
+	((GdaDataSelect *) model)->priv->notify_changes = do_notify_changes;
+}
+
+static gboolean
+gda_data_select_get_notify (GdaDataModel *model)
+{
+	return ((GdaDataSelect *) model)->priv->notify_changes;
 }
 
 /*
