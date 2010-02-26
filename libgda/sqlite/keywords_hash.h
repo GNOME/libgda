@@ -30,7 +30,7 @@ const unsigned char UpperToLower[] = {
     234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,
     252,253,254,255
 };
-#define charMap(X) UpperToLower[(unsigned char)X]
+#define charMap(X) UpperToLower[(unsigned char)(X)]
 #ifndef KEYWORDS_HASH_NO_STATIC
 static
 #endif
