@@ -1082,7 +1082,7 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint id, guint ta
 		btarget->part_id = builder->priv->next_assigned_id --;
 	
 	((GdaSqlSelectTarget*) btarget)->expr = (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (btarget));
-	if (alias) 
+	if (alias && *alias) 
 		((GdaSqlSelectTarget*) btarget)->as = g_strdup (alias);
 	if (g_value_get_string (((GdaSqlSelectTarget*) btarget)->expr->value))
 		((GdaSqlSelectTarget*) btarget)->table_name = 
