@@ -92,6 +92,7 @@ struct _GdaDataSelectPrivate {
 	GdaConnection          *cnc;
         GdaDataModelIter       *iter;
 	PrivateShareable       *sh;
+	gulong                  ext_params_changed_sig_id;
 };
 
 /* properties */
@@ -333,6 +334,7 @@ gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
 	model->priv->sh->reset_with_ext_params_change = FALSE;
 
 	model->priv->sh->iter_row = G_MININT;
+	model->priv->ext_params_changed_sig_id = 0;
         model->priv->iter = NULL;
 
 	model->priv->sh->modif_internals = g_new0 (GdaDataSelectInternals, 1);
@@ -384,8 +386,12 @@ free_private_shared_data (GdaDataSelect *model)
 		}
 
 		if (model->priv->sh->ext_params) {
-			g_signal_handlers_disconnect_by_func (model->priv->sh->ext_params,
-							      G_CALLBACK (ext_params_holder_changed_cb), model);
+			if (model->priv->ext_params_changed_sig_id) {
+				g_signal_handler_disconnect (model->priv->sh->ext_params,
+							     model->priv->ext_params_changed_sig_id);
+				model->priv->ext_params_changed_sig_id = 0;
+			}
+
 			g_object_unref (model->priv->sh->ext_params);
 			model->priv->sh->ext_params = NULL;
 		}
@@ -447,6 +453,12 @@ gda_data_select_dispose (GObject *object)
 			g_object_unref (model->prep_stmt);
 			model->prep_stmt = NULL;
 		}
+		if (model->priv->ext_params_changed_sig_id) {
+			g_signal_handler_disconnect (model->priv->sh->ext_params,
+						     model->priv->ext_params_changed_sig_id);
+			model->priv->ext_params_changed_sig_id = 0;
+		}
+
 		free_private_shared_data (model);
 		g_free (model->priv);
 		model->priv = NULL;
@@ -654,8 +666,9 @@ gda_data_select_set_property (GObject *object,
 			set = g_value_get_object (value);
 			if (set) {
 				model->priv->sh->ext_params = g_object_ref (set);
-				g_signal_connect (model->priv->sh->ext_params, "holder-changed",
-						  G_CALLBACK (ext_params_holder_changed_cb), model);
+				model->priv->ext_params_changed_sig_id = 
+					g_signal_connect (model->priv->sh->ext_params, "holder-changed",
+							  G_CALLBACK (ext_params_holder_changed_cb), model);
 				model->priv->sh->modif_internals->exec_set = gda_set_copy (set);
 			}
 			break;
@@ -3358,6 +3371,18 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	g_assert (G_OBJECT_TYPE (model) == G_OBJECT_TYPE (new_model));
 
 	/* Raw model and new_model contents swap (except for the GObject part) */
+	GdaDataSelect *old_model = new_model; /* renamed for code's readability */
+	if (old_model->priv->ext_params_changed_sig_id) {
+		g_signal_handler_disconnect (old_model->priv->sh->ext_params,
+					     old_model->priv->ext_params_changed_sig_id);
+		old_model->priv->ext_params_changed_sig_id = 0;
+	}
+	if (model->priv->ext_params_changed_sig_id) {
+		g_signal_handler_disconnect (model->priv->sh->ext_params,
+					     model->priv->ext_params_changed_sig_id);
+		model->priv->ext_params_changed_sig_id = 0;
+	}
+
 	GTypeQuery tq;
 	gpointer copy;
 	gint offset = sizeof (GObject);
@@ -3370,7 +3395,6 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	memcpy ((gint8*) model + offset, copy, size);
 		
 	/* we need to keep some data from the old model */
-	GdaDataSelect *old_model = new_model; /* renamed for code's readability */
 	GdaDataSelectInternals *mi;
 	      
 	model->priv->sh->reset_with_ext_params_change = old_model->priv->sh->reset_with_ext_params_change;
@@ -3382,6 +3406,11 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	copy = old_model->priv->sh->sel_stmt;
 	old_model->priv->sh->sel_stmt = model->priv->sh->sel_stmt;
 	model->priv->sh->sel_stmt = (GdaStatement*) copy;
+
+	if (model->priv->sh->ext_params)
+		model->priv->ext_params_changed_sig_id =
+			g_signal_connect (model->priv->sh->ext_params, "holder-changed",
+					  G_CALLBACK (ext_params_holder_changed_cb), model);
 
 	/* keep the same GdaColumn pointers */
 	GSList *l1, *l2;
