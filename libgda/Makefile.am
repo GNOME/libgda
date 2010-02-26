@@ -1,3 +1,5 @@
+QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
+
 lib_LTLIBRARIES = libgda-4.0.la
 
 SUBDIRS = sqlite handlers binreloc sql-parser providers-support
@@ -252,3 +254,103 @@ EXTRA_DIST = \
 	keywords.list
 
 DISTCLEANFILES  = .deps/*.P
+
+if HAVE_INTROSPECTION
+BUILT_GIRSOURCES =
+psupport = \
+	providers-support/gda-pstmt.h \
+	providers-support/gda-pstmt.c
+
+threadwrapper = \
+	thread-wrapper/gda-thread-wrapper.h \
+	thread-wrapper/gda-thread-wrapper.c
+
+sqlparser = \
+	sql-parser/gda-sql-parser.h \
+	sql-parser/gda-sql-statement.h \
+	sql-parser/gda-statement-struct-decl.h \
+	sql-parser/gda-statement-struct.h \
+	sql-parser/gda-statement-struct-compound.h \
+	sql-parser/gda-statement-struct-delete.h \
+	sql-parser/gda-statement-struct-update.h \
+	sql-parser/gda-statement-struct-insert.h \
+	sql-parser/gda-statement-struct-parts.h \
+	sql-parser/gda-statement-struct-pspec.h \
+	sql-parser/gda-statement-struct-select.h \
+	sql-parser/gda-statement-struct-trans.h \
+	sql-parser/gda-statement-struct-unknown.h \
+	sql-parser/gda-statement-struct-util.h \
+	sql-parser/gda-sql-parser.c \
+	sql-parser/gda-statement-struct.c \
+	sql-parser/gda-statement-struct-compound.c \
+	sql-parser/gda-statement-struct-delete.c \
+	sql-parser/gda-statement-struct-update.c \
+	sql-parser/gda-statement-struct-insert.c \
+	sql-parser/gda-statement-struct-parts.c \
+	sql-parser/gda-statement-struct-pspec.c \
+	sql-parser/gda-statement-struct-select.c \
+	sql-parser/gda-statement-struct-trans.c \
+	sql-parser/gda-statement-struct-unknown.c \
+	sql-parser/gda-statement-struct-util.c
+
+handlers = \
+	handlers/gda-handler-bin.h \
+	handlers/gda-handler-boolean.h \
+	handlers/gda-handler-numerical.h \
+	handlers/gda-handler-string.h \
+	handlers/gda-handler-time.h \
+	handlers/gda-handler-type.h \
+	handlers/gda-handler-bin.c \
+	handlers/gda-handler-boolean.c \
+	handlers/gda-handler-numerical.c \
+	handlers/gda-handler-string.c \
+	handlers/gda-handler-time.c \
+	handlers/gda-handler-type.c
+
+Gda-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-@GDA_ABI_VERSION@.la
+	$(INTROSPECTION_SCANNER) -v \
+		--namespace Gda --nsversion=@GDA_ABI_VERSION@ \
+		-I$(top_srcdir) -I$(top_srcdir)/libgda \
+		$(LIBGDA_CFLAGS) \
+		--add-include-path=providers-support \
+		--add-include-path=sql-parser \
+		--add-include-path=thread-wrapper \
+		--add-include-path=handlers \
+		--c-include='libgda/libgda.h' \
+		--include=GL-1.0 \
+		--include=GObject-2.0 \
+		--include=libxml2-2.0 \
+		--library=gda-@GDA_ABI_VERSION@ \
+	    $(INCLUDE_CFLAGS) \
+	    --output $@ \
+		$(addprefix $(srcdir)/, $(gda_headers)) \
+	        $(srcdir)/gda-types.h \
+		libgda.h \
+		$(addprefix $(srcdir)/, $(gda_sources)) \
+		$(addprefix $(srcdir)/, $(psupport)) \
+		$(addprefix $(srcdir)/, $(sqlparser)) \
+		sql-parser/gda-sql-parser-enum-types.c \
+		$(addprefix $(srcdir)/, $(threadwraper)) \
+		$(addprefix $(srcdir)/, $(handlers))
+
+BUILT_GIRSOURCES += Gda-@GDA_ABI_VERSION@.gir
+
+endif
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(BUILT_GIRSOURCES)
+
+typelibsdir = $(libdir)/girepository-1.0/
+
+typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
+
+Gda-@GDA_ABI_VERSION@.typelib: Gda-@GDA_ABI_VERSION@.gir $(INTROSPECTION_COMPILER)
+	$(QUIET_GEN)$(DEBUG) $(INTROSPECTION_COMPILER) \
+	--includedir=$(srcdir) --includedir=. \
+	--includedir=$(srcdir)/providers-support \
+	--includedir=$(srcdir)/sql-parser \
+	--includedir=$(srcdir)/thread-wrapper \
+	--includedir=$(srcdir)/handlers \
+	$(INTROSPECTION_COMPILER_OPTS) $< -o $(@F)
+
+CLEANFILES += $(BUILT_GIRSOURCES) $(typelibs_DATA)
