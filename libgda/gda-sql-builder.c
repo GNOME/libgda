@@ -591,7 +591,7 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, const gchar *field_name, GTyp
  * gda_sql_builder_add_field_value
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @value: value to set the field to
+ * @value: value to set the field to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
  *
  * Valid only for: INSERT, UPDATE statements.
  *
@@ -606,7 +606,6 @@ gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name
 	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
 	g_return_if_fail (builder->priv->main_stmt);
 	g_return_if_fail (field_name && *field_name);
-	g_return_if_fail (value);
 
 	if ((builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_UPDATE) &&
 	    (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_INSERT)) {
@@ -739,7 +738,7 @@ gda_sql_builder_add_field_id (GdaSqlBuilder *builder, guint field_id, guint valu
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
  * @dh: a #GdaDataHandler to use, or %NULL
- * @value: value to set the expression to
+ * @value: value to set the expression to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
  *
@@ -755,25 +754,27 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
-	g_return_val_if_fail (value != NULL, 0);
 
-	GType type = G_VALUE_TYPE(value);
 	gchar *str;
 
-	if (!dh)
-		dh = gda_get_default_handler (type);
-	else {
-		if (! gda_data_handler_accepts_g_type (dh, type)) {
+	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+		GType type = G_VALUE_TYPE (value);
+		if (!dh)
+			dh = gda_get_default_handler (type);
+		else {
+			if (! gda_data_handler_accepts_g_type (dh, type)) {
+				g_warning (_("Unhandled data type '%s'"), g_type_name (type));
+				return 0;
+			}
+		}
+		if (!dh) {
 			g_warning (_("Unhandled data type '%s'"), g_type_name (type));
 			return 0;
 		}
+		str = gda_data_handler_get_sql_from_value (dh, value);
 	}
-	if (!dh) {
-		g_warning (_("Unhandled data type '%s'"), g_type_name (type));
-		return 0;
-	}
-
-	str = gda_data_handler_get_sql_from_value (dh, value);
+	else
+		str = g_strdup ("NULL");
 
 	if (str) {
 		GdaSqlExpr *expr;
@@ -783,7 +784,8 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, guint id, GdaDataHandler
 		return add_part (builder, id, (GdaSqlAnyPart *) expr);
 	}
 	else {
-		g_warning (_("Could not convert value to type '%s'"), g_type_name (type));
+		g_warning (_("Could not convert value to type '%s'"),
+			   g_type_name (G_VALUE_TYPE (value)));
 		return 0;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -39,6 +39,7 @@ static GdaSqlStatement *build5 (void);
 static GdaSqlStatement *build6 (void);
 static GdaSqlStatement *build7 (void);
 static GdaSqlStatement *build8 (void);
+static GdaSqlStatement *build9 (void);
 
 ATest tests[] = {
 	{"build0", build0, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"*\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]}}}"},
@@ -49,7 +50,8 @@ ATest tests[] = {
 	{"build5", build5, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"id\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"where\":{\"operation\":{\"operator\":\"AND\",\"operand0\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"sesion\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"session\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}},\"operand1\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"contents\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"contents\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}}}"},
 	{"build6", build6, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"where\":{\"operation\":{\"operator\":\"AND\",\"operand0\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"order_key\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"orderkey\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}},\"operand1\":{\"operation\":{\"operator\":\"!=\",\"operand0\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"id\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}}}"},
 	{"build7", build7, "{\"sql\":null,\"stmt_type\":\"UPDATE\",\"contents\":{\"table\":\"mytable\",\"fields\":[\"rank\"],\"expressions\":[{\"value\":null,\"param_spec\":{\"name\":\"newrank\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}],\"condition\":{\"operation\":{\"operator\":\"AND\",\"operand0\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"id\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}},\"operand1\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"order_key\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"orderkey\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}},\"operand2\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"rank\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}}}"},
-	{"build8", build8, "{\"sql\":null,\"stmt_type\":\"DELETE\",\"contents\":{\"table\":\"mytable\",\"condition\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"id\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"id\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}"}
+	{"build8", build8, "{\"sql\":null,\"stmt_type\":\"DELETE\",\"contents\":{\"table\":\"mytable\",\"condition\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"id\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"id\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}"},
+	{"build8", build9, "{\"sql\":null,\"stmt_type\":\"INSERT\",\"contents\":{\"table\":\"mytable\",\"fields\":[\"session\",\"name\"],\"values\":[[{\"value\":\"NULL\"},{\"value\":\"NULL\"}]]}}"}
 };
 
 int
@@ -409,3 +411,32 @@ build8 (void)
 	return stmt;
 }
 
+/*
+ * INSERT INTO mytable (session, name) VALUES (NULL, NULL);
+ */
+static GdaSqlStatement *
+build9 (void)
+{
+	GdaSqlBuilder *builder;
+	GdaSqlStatement *stmt;
+	GValue *value;
+
+	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+	gda_sql_builder_set_table (builder, "mytable");
+
+	gda_sql_builder_add_field_value (builder, "session", NULL);
+	value = gda_value_new_null ();
+	gda_sql_builder_add_field_value (builder, "name", value);
+	gda_value_free (value);
+
+	{
+		GdaStatement *st;
+		st = gda_sql_builder_get_statement (builder, FALSE);
+		g_print ("[%s]\n", gda_statement_to_sql (st, NULL, NULL));
+		g_object_unref (st);
+	}
+	stmt = gda_sql_builder_get_sql_statement (builder, FALSE);
+	g_object_unref (builder);
+	
+	return stmt;
+}
