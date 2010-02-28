@@ -40,6 +40,8 @@ static GdaSqlStatement *build6 (void);
 static GdaSqlStatement *build7 (void);
 static GdaSqlStatement *build8 (void);
 static GdaSqlStatement *build9 (void);
+static GdaSqlStatement *build10 (void);
+static GdaSqlStatement *build11 (void);
 
 ATest tests[] = {
 	{"build0", build0, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"*\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]}}}"},
@@ -51,7 +53,9 @@ ATest tests[] = {
 	{"build6", build6, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"where\":{\"operation\":{\"operator\":\"AND\",\"operand0\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"order_key\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"orderkey\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}},\"operand1\":{\"operation\":{\"operator\":\"!=\",\"operand0\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"id\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}}}"},
 	{"build7", build7, "{\"sql\":null,\"stmt_type\":\"UPDATE\",\"contents\":{\"table\":\"mytable\",\"fields\":[\"rank\"],\"expressions\":[{\"value\":null,\"param_spec\":{\"name\":\"newrank\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}],\"condition\":{\"operation\":{\"operator\":\"AND\",\"operand0\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"id\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}},\"operand1\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"order_key\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"orderkey\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}},\"operand2\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"rank\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}}}"},
 	{"build8", build8, "{\"sql\":null,\"stmt_type\":\"DELETE\",\"contents\":{\"table\":\"mytable\",\"condition\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"id\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"id\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}"},
-	{"build8", build9, "{\"sql\":null,\"stmt_type\":\"INSERT\",\"contents\":{\"table\":\"mytable\",\"fields\":[\"session\",\"name\"],\"values\":[[{\"value\":\"NULL\"},{\"value\":\"NULL\"}]]}}"}
+	{"build9", build9, "{\"sql\":null,\"stmt_type\":\"INSERT\",\"contents\":{\"table\":\"mytable\",\"fields\":[\"session\",\"name\"],\"values\":[[{\"value\":\"NULL\"},{\"value\":\"NULL\"}]]}}"},
+	{"build10", build10, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"}}}"},
+	{"build11", build11, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"distinct_on\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"},\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"},\"offset\":{\"value\":\"2\"}}}"}
 };
 
 int
@@ -429,14 +433,74 @@ build9 (void)
 	gda_sql_builder_add_field_value (builder, "name", value);
 	gda_value_free (value);
 
-	{
-		GdaStatement *st;
-		st = gda_sql_builder_get_statement (builder, FALSE);
-		g_print ("[%s]\n", gda_statement_to_sql (st, NULL, NULL));
-		g_object_unref (st);
-	}
 	stmt = gda_sql_builder_get_sql_statement (builder, FALSE);
 	g_object_unref (builder);
 	
+	return stmt;
+}
+
+/*
+ * SELECT DISTINCT fav_id, rank FROM mytable LIMIT 5
+ */
+static GdaSqlStatement *
+build10 (void)
+{
+	GdaSqlBuilder *b;
+	GdaSqlStatement *stmt;
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "fav_id"), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "rank"), 0);
+
+	gda_sql_builder_select_add_target_id (b, 0,
+					   gda_sql_builder_add_id (b, 0, "mytable"),
+					   NULL);
+	gda_sql_builder_select_set_distinct (b, TRUE, 0);
+	gda_sql_builder_select_set_limit (b, gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 5), 0);
+
+	{
+		GdaStatement *st;
+		st = gda_sql_builder_get_statement (b, FALSE);
+		g_print ("[%s]\n", gda_statement_to_sql (st, NULL, NULL));
+		g_object_unref (st);
+	}
+
+	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	g_object_unref (b);
+	return stmt;
+}
+
+/*
+ * SELECT DISTINCT ON (rank) fav_id, rank FROM mytable LIMIT 5 OFFSET 2
+ */
+static GdaSqlStatement *
+build11 (void)
+{
+	GdaSqlBuilder *b;
+	GdaSqlStatement *stmt;
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "fav_id"), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "rank"), 0);
+
+	gda_sql_builder_select_add_target_id (b, 0,
+					   gda_sql_builder_add_id (b, 0, "mytable"),
+					   NULL);
+	gda_sql_builder_select_set_distinct (b, TRUE,
+					     gda_sql_builder_add_id (b, 0, "rank"));
+	gda_sql_builder_select_set_limit (b, gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 5),
+					  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 2));
+
+#ifdef DEBUG_NO
+	{
+		GdaStatement *st;
+		st = gda_sql_builder_get_statement (b, FALSE);
+		g_print ("[%s]\n", gda_statement_to_sql (st, NULL, NULL));
+		g_object_unref (st);
+	}
+#endif
+
+	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	g_object_unref (b);
 	return stmt;
 }

@@ -1,6 +1,6 @@
 /* gda-sql-builder.h
  *
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -115,6 +115,10 @@ guint             gda_sql_builder_select_join_targets (GdaSqlBuilder *builder, g
 void              gda_sql_builder_join_add_field (GdaSqlBuilder *builder, guint join_id, const gchar *field_name);
 void              gda_sql_builder_select_order_by (GdaSqlBuilder *builder, guint expr_id,
 						   gboolean asc, const gchar *collation_name);
+void              gda_sql_builder_select_set_distinct (GdaSqlBuilder *builder,
+						       gboolean distinct, guint expr_id);
+void              gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
+						    guint limit_count_expr_id, guint limit_offest_expr_id);
 
 /* COMPOUND SELECT Statement API */
 void              gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompoundType compound_type);

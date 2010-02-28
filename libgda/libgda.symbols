@@ -600,6 +600,8 @@
 	gda_sql_builder_select_add_target_id
 	gda_sql_builder_select_join_targets
 	gda_sql_builder_select_order_by
+	gda_sql_builder_select_set_distinct
+	gda_sql_builder_select_set_limit
 	gda_sql_builder_set_table
 	gda_sql_builder_set_where
 	gda_sql_case_copy

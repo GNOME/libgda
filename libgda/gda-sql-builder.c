@@ -1307,6 +1307,110 @@ gda_sql_builder_select_order_by (GdaSqlBuilder *builder, guint expr_id,
 }
 
 /**
+ * gda_sql_builder_select_set_distinct
+ * @builder: a #GdaSqlBuilder object
+ * @distinct: set to %TRUE to have the DISTINCT requirement
+ * @expr_id: the ID of the DISTINCT ON expression, or %0 if no expression is to be used. It is ignored
+ *           if @distinct is %FALSE.
+ *
+ * Defines (if @distinct is %TRUE) or removes (if @distinct is %FALSE) a DISTINCT clause
+ * for a SELECT statement.
+ *
+ * If @distinct is %TRUE, then the ID of an expression can be specified as the @expr_id argument:
+ * if not %0, this is the expression used to apply the DISTINCT clause on (the resuting SQL
+ * will then usually be "... DISTINCT ON &lt;expression&gt;...").
+ *
+ * Since: 4.2
+ */
+void
+gda_sql_builder_select_set_distinct (GdaSqlBuilder *builder, gboolean distinct, guint expr_id)
+{
+	GdaSqlStatementSelect *sel;
+	SqlPart *part = NULL;
+
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+
+	if (expr_id) {
+		part = get_part (builder, expr_id, GDA_SQL_ANY_EXPR);
+		if (!part)
+			return;
+	}
+
+	sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+	if (sel->distinct_expr) {
+		gda_sql_expr_free (sel->distinct_expr);
+		sel->distinct_expr = NULL;
+	}
+
+	if (distinct && part)
+		sel->distinct_expr = (GdaSqlExpr*) use_part (part, GDA_SQL_ANY_PART (sel));
+	sel->distinct = distinct;
+}
+
+/**
+ * gda_sql_builder_select_set_limit
+ * @builder: a #GdaSqlBuilder object
+ * @limit_count_expr_id: the ID of the LIMIT expression, or %0
+ * @limit_offset_expr_id: the ID of the OFFSET expression, or %0
+ *
+ * If @limit_count_expr_id is not %0, defines the maximum number of rows in the #GdaDataModel
+ * resulting from the execution of the built statement. In this case, the offset from which the
+ * rows must be collected can be defined by the @limit_offset_expr_id expression if not %0 (note that
+ * this feature may not be supported by all the database providers).
+ *
+ * If @limit_count_expr_id is %0, then removes any LIMIT which may have been imposed by a previous
+ * call to this method.
+ *
+ * Since: 4.2
+ */
+void
+gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
+				  guint limit_count_expr_id, guint limit_offset_expr_id)
+{
+	GdaSqlStatementSelect *sel;
+	SqlPart *part1 = NULL, *part2 = NULL;
+
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+
+	if (limit_count_expr_id) {
+		part1 = get_part (builder, limit_count_expr_id, GDA_SQL_ANY_EXPR);
+		if (!part1)
+			return;
+	}
+	if (limit_offset_expr_id) {
+		part2 = get_part (builder, limit_offset_expr_id, GDA_SQL_ANY_EXPR);
+		if (!part2)
+			return;
+	}
+
+	sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+
+	if (sel->limit_count) {
+		gda_sql_expr_free (sel->limit_count);
+		sel->limit_count = NULL;
+	}
+	if (sel->limit_offset) {
+		gda_sql_expr_free (sel->limit_offset);
+		sel->limit_offset = NULL;
+	}
+	if (part1)
+		sel->limit_count = (GdaSqlExpr*) use_part (part1, GDA_SQL_ANY_PART (sel));
+	if (part2)
+		sel->limit_offset = (GdaSqlExpr*) use_part (part2, GDA_SQL_ANY_PART (sel));
+}
+
+
+/**
  * gda_sql_builder_add_function
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
