@@ -23,20 +23,16 @@
  */
 
 #ifdef GSEAL_ENABLE
-  #define KEEP_GSEAL_ENABLE
-  #undef GSEAL_ENABLE
+#define KEEP_GSEAL_ENABLE
+#undef GSEAL_ENABLE
 #endif
 #include <gtk/gtk.h>
 #ifdef KEEP_GSEAL_ENABLE
-  #define GSEAL_ENABLE
-  #undef KEEP_GSEAL_ENABLE
+#define GSEAL_ENABLE
+#undef KEEP_GSEAL_ENABLE
 #endif
 
 #include "cc-gray-bar.h"
-
-#define PARENT_TYPE GTK_TYPE_BIN
-
-
 
 struct _CcGrayBarPrivate {
 	GtkWidget *hbox;
@@ -47,27 +43,28 @@ struct _CcGrayBarPrivate {
 
 static void cc_gray_bar_class_init   (CcGrayBarClass *klass);
 static void cc_gray_bar_init         (CcGrayBar      *bar,
-					    CcGrayBarClass *klass);
+				      CcGrayBarClass *klass);
 static void cc_gray_bar_realize      (GtkWidget           *widget);
 static void cc_gray_bar_size_request (GtkWidget           *widget,
-					    GtkRequisition      *requisition);
+				      GtkRequisition      *requisition);
 static void cc_gray_bar_allocate     (GtkWidget           *widget,
-					    GtkAllocation       *allocation);
+				      GtkAllocation       *allocation);
 static void cc_gray_bar_paint        (GtkWidget           *widget,
-					    GdkRectangle        *area);
+				      GdkRectangle        *area);
 static gint cc_gray_bar_expose       (GtkWidget           *widget,
-					    GdkEventExpose      *event);
+				      GdkEventExpose      *event);
 static void cc_gray_bar_style_set    (GtkWidget           *w,
-					    GtkStyle            *previous_style);
+				      GtkStyle            *previous_style);
 static void cc_gray_bar_set_property (GObject *object,
-					    guint                paramid,
-					    const GValue *value,
-					    GParamSpec *pspec);
+				      guint                paramid,
+				      const GValue *value,
+				      GParamSpec *pspec);
 static void cc_gray_bar_get_property (GObject *object,
-					    guint                param_id,
-					    GValue *value,
-					    GParamSpec *pspec);
+				      guint                param_id,
+				      GValue *value,
+				      GParamSpec *pspec);
 static void cc_gray_bar_finalize     (GObject *object);
+static void cc_gray_bar_show_all     (GtkWidget *widget);
 
 /* Properties */
 enum {
@@ -107,12 +104,12 @@ cc_gray_bar_realize (GtkWidget *widget)
 		| GDK_EXPOSURE_MASK
 		| GDK_ENTER_NOTIFY_MASK
 		| GDK_LEAVE_NOTIFY_MASK;
-	
+
 	attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
-	
+
 	widget->window = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
 	gdk_window_set_user_data (widget->window, widget);
-	
+
 	widget->style = gtk_style_attach (widget->style, widget->window);
 	gtk_style_set_background (widget->style, widget->window, GTK_STATE_NORMAL);
 }
@@ -129,13 +126,13 @@ cc_gray_bar_size_request (GtkWidget *widget, GtkRequisition *requisition)
 	bw = gtk_container_get_border_width (GTK_CONTAINER (widget));
 	requisition->width = bw * 2;
 	requisition->height = requisition->width;
-	
+
 	child = gtk_bin_get_child (bin);
 	if (child)
 		g_object_get ((GObject*) child, "visible", &visible, NULL);
 	if (visible) {
 		gtk_widget_size_request (child, &child_requisition);
-		
+
 		requisition->width += child_requisition.width;
 		requisition->height += child_requisition.height;
 	}
@@ -156,13 +153,13 @@ cc_gray_bar_allocate (GtkWidget *widget, GtkAllocation *allocation)
 #endif
 
 	bin = GTK_BIN (widget);
-	
+
 	child_allocation.x = 0;
 	child_allocation.y = 0;
 	bw = gtk_container_get_border_width (GTK_CONTAINER (widget));
 	child_allocation.width = MAX (allocation->width - bw * 2, 0);
 	child_allocation.height = MAX (allocation->height - bw * 2, 0);
-	
+
 #if GTK_CHECK_VERSION(2,18,0)
 	win = gtk_widget_get_window (widget);
 #else
@@ -175,7 +172,7 @@ cc_gray_bar_allocate (GtkWidget *widget, GtkAllocation *allocation)
 					child_allocation.width,
 					child_allocation.height);
 	}
-	
+
 	GtkWidget *child;
 	child = gtk_bin_get_child (bin);
 	if (child)
@@ -231,19 +228,19 @@ cc_gray_bar_paint (GtkWidget *widget, GdkRectangle *area)
 				    state, GTK_SHADOW_NONE,
 				    area, widget, "gnomedbgraybar",
 				    1, 1,
-				    alloc.width - 2, 
+				    alloc.width - 2,
 				    alloc.height - 2);
 	}
 }
 
 static gboolean
 cc_gray_bar_expose (GtkWidget *widget, GdkEventExpose *event)
-{   
+{
 	gboolean drawable;
 	g_return_val_if_fail (widget != NULL, FALSE);
 	g_return_val_if_fail (CC_IS_GRAY_BAR (widget), FALSE);
 	g_return_val_if_fail (event != NULL, FALSE);
-	
+
 	if (event->count > 0)
 		return FALSE;
 #if GTK_CHECK_VERSION(2,18,0)
@@ -253,11 +250,20 @@ cc_gray_bar_expose (GtkWidget *widget, GdkEventExpose *event)
 #endif
 	if (drawable) {
 		cc_gray_bar_paint (widget, &event->area);
-		
+
 		(* GTK_WIDGET_CLASS (parent_class)->expose_event) (widget, event);
 	}
 
 	return FALSE;
+}
+
+static void
+cc_gray_bar_show_all (GtkWidget *widget)
+{
+	CcGrayBar *bar = (CcGrayBar *) widget;
+	GTK_WIDGET_CLASS (parent_class)->show_all (widget);
+	if (!bar->priv->show_icon)
+		gtk_widget_hide (bar->priv->icon);
 }
 
 static void
@@ -276,17 +282,18 @@ cc_gray_bar_class_init (CcGrayBarClass *klass)
 	widget_class->size_request  = cc_gray_bar_size_request;
 	widget_class->size_allocate = cc_gray_bar_allocate;
 	widget_class->expose_event  = cc_gray_bar_expose;
+	widget_class->show_all      = cc_gray_bar_show_all;
 
 	/* add class properties */
 	g_object_class_install_property (
-		object_class, PROP_TEXT,
-		g_param_spec_string ("text", NULL, "Text showed inside the widget.", NULL,
-				     (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+					 object_class, PROP_TEXT,
+					 g_param_spec_string ("text", NULL, "Text showed inside the widget.", NULL,
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (
-		object_class, PROP_SHOW_ICON,
-		g_param_spec_boolean ("show_icon", NULL, NULL, FALSE,
-				     (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	
+					 object_class, PROP_SHOW_ICON,
+					 g_param_spec_boolean ("show_icon", NULL, NULL, FALSE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+
 }
 
 static void
@@ -297,35 +304,35 @@ cc_gray_bar_init (CcGrayBar *bar, CcGrayBarClass *klass)
 #else
 	GTK_WIDGET_UNSET_FLAGS (bar, GTK_NO_WINDOW);
 #endif
-	
+
 	bar->priv = g_new0 (CcGrayBarPrivate, 1);
-	
+
 	bar->priv->hbox = gtk_hbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (bar->priv->hbox), 6);
-	
+
 	bar->priv->show_icon = FALSE;
 	bar->priv->icon = gtk_image_new ();
 	gtk_misc_set_alignment (GTK_MISC (bar->priv->icon), 0.5, 0.0);
 	gtk_widget_hide (bar->priv->icon);
 	gtk_box_pack_start (GTK_BOX (bar->priv->hbox), bar->priv->icon,
 			    FALSE, TRUE, 0);
-	
+
 	bar->priv->label = gtk_label_new ("");
 	gtk_label_set_selectable (GTK_LABEL (bar->priv->label), FALSE);
 	gtk_misc_set_alignment (GTK_MISC (bar->priv->label), 0.00, 0.0);
 	gtk_box_pack_end (GTK_BOX (bar->priv->hbox), bar->priv->label,
 			  TRUE, TRUE, 0);
 	gtk_widget_show (bar->priv->label);
-	
+
 	gtk_widget_show (bar->priv->hbox);
 	gtk_container_add (GTK_CONTAINER (bar), bar->priv->hbox);
 }
 
 static void
 cc_gray_bar_set_property (GObject *object,
-				guint param_id,
-				const GValue *value,
-				GParamSpec *pspec)
+			  guint param_id,
+			  const GValue *value,
+			  GParamSpec *pspec)
 {
 	CcGrayBar *bar = (CcGrayBar *) object;
 
@@ -346,9 +353,9 @@ cc_gray_bar_set_property (GObject *object,
 
 static void
 cc_gray_bar_get_property (GObject *object,
-				guint param_id,
-				GValue *value,
-				GParamSpec *pspec)
+			  guint param_id,
+			  GValue *value,
+			  GParamSpec *pspec)
 {
 	CcGrayBar *bar = (CcGrayBar *) object;
 
@@ -403,7 +410,7 @@ cc_gray_bar_get_type (void)
 			0,
 			(GInstanceInitFunc) cc_gray_bar_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "CcGrayBar", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BIN, "CcGrayBar", &info, 0);
 	}
 	return type;
 }
@@ -440,7 +447,7 @@ const gchar *
 cc_gray_bar_get_text (CcGrayBar *bar)
 {
 	const gchar *text;
-	
+
 	g_return_val_if_fail (CC_IS_GRAY_BAR (bar), NULL);
 
 	text = gtk_label_get_text (GTK_LABEL (bar->priv->label));
@@ -453,9 +460,9 @@ cc_gray_bar_get_text (CcGrayBar *bar)
  * @bar: a #CcGrayBar widget
  * @text: a string
  *
- * Set the text displayed in the given gray bar widget. This can include 
+ * Set the text displayed in the given gray bar widget. This can include
  * embedded underlines indicating mnemonics or Pango markup.
- * 
+ *
  */
 void
 cc_gray_bar_set_text (CcGrayBar *bar, const gchar *text)
@@ -470,15 +477,15 @@ cc_gray_bar_set_text (CcGrayBar *bar, const gchar *text)
  * @bar: a #CcGrayBar widget.
  * @file: filename.
  *
- * Set the icon displayed in the given gray bar widget. This can include 
+ * Set the icon displayed in the given gray bar widget. This can include
  * embedded underlines indicating mnemonics or Pango markup.
- * 
+ *
  */
 void
 cc_gray_bar_set_icon_from_file (CcGrayBar *bar, const gchar *file)
 {
 	g_return_if_fail (CC_IS_GRAY_BAR (bar));
-	
+
 	gtk_image_set_from_file (GTK_IMAGE (bar->priv->icon), file);
 	cc_gray_bar_set_show_icon (bar, TRUE);
 }
@@ -495,7 +502,7 @@ void
 cc_gray_bar_set_icon_from_stock (CcGrayBar *bar, const gchar *stock_id, GtkIconSize size)
 {
 	g_return_if_fail (CC_IS_GRAY_BAR (bar));
-	
+
 	gtk_image_set_from_stock (GTK_IMAGE (bar->priv->icon), stock_id, size);
 	cc_gray_bar_set_show_icon (bar, TRUE);
 }
@@ -511,7 +518,7 @@ void
 cc_gray_bar_set_icon_from_pixbuf (CcGrayBar *bar, GdkPixbuf *pixbuf)
 {
 	g_return_if_fail (CC_IS_GRAY_BAR (bar));
-	
+
 	gtk_image_set_from_pixbuf (GTK_IMAGE (bar->priv->icon), pixbuf);
 	cc_gray_bar_set_show_icon (bar, TRUE);
 }
@@ -550,6 +557,6 @@ cc_gray_bar_get_show_icon (CcGrayBar *bar)
 {
 	g_return_val_if_fail (CC_IS_GRAY_BAR (bar), FALSE);
 
-	return bar->priv->show_icon;	
+	return bar->priv->show_icon;
 }
 
