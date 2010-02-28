@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-02-16 18:07+0000\n"
-"PO-Revision-Date: 2010-02-20 14:22+0100\n"
+"POT-Creation-Date: 2010-02-26 21:46+0000\n"
+"PO-Revision-Date: 2010-03-01 00:29+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -103,13 +103,13 @@ msgstr "No se pudo ejecutar el programa del examinador"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:283
-#: ../libgda/gda-data-model.c:1889 ../libgda/gda-data-model.c:1897
+#: ../libgda/gda-data-model.c:1891 ../libgda/gda-data-model.c:1899
 #: ../libgda/gda-data-model-dir.c:386 ../libgda/gda-data-model-import.c:1574
 #: ../libgda/gda-data-model-import.c:1857
-#: ../libgda/gda-data-model-import.c:1930 ../libgda/gda-data-select.c:360
-#: ../libgda/gda-data-select.c:2014 ../libgda/gda-data-select.c:2023
-#: ../libgda/gda-data-select.c:2033 ../libgda/gda-data-select.c:3399
-#: ../libgda/gda-holder.c:484 ../libgda/gda-holder.c:1657
+#: ../libgda/gda-data-model-import.c:1930 ../libgda/gda-data-select.c:367
+#: ../libgda/gda-data-select.c:2033 ../libgda/gda-data-select.c:2042
+#: ../libgda/gda-data-select.c:2052 ../libgda/gda-data-select.c:3447
+#: ../libgda/gda-holder.c:486 ../libgda/gda-holder.c:1700
 #: ../libgda/gda-server-operation.c:614 ../libgda/gda-server-operation.c:1005
 #: ../libgda/gda-set.c:486 ../libgda/gda-tree-mgr-select.c:188
 #: ../libgda/gda-tree-mgr-select.c:220
@@ -588,7 +588,7 @@ msgstr ""
 
 #: ../libgda/gda-connection.c:882 ../libgda/gda-connection.c:1027
 #: ../libgda/thread-wrapper/gda-thread-provider.c:428
-#: ../libgda/thread-wrapper/gda-thread-provider.c:512
+#: ../libgda/thread-wrapper/gda-thread-provider.c:513
 msgid "Multi threading is not supported or enabled"
 msgstr "El procesado multihilo no se soporta o no está activado "
 
@@ -647,7 +647,7 @@ msgstr "No se puede abrir la conexión virtual"
 #: ../libgda/gda-connection.c:2621 ../libgda/gda-connection.c:2692
 #: ../libgda/gda-connection.c:2761
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:217
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1613
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1614
 #, c-format
 msgid "Connection is closed"
 msgstr "La conexión está cerrada"
@@ -658,7 +658,7 @@ msgid "Can't find task %u"
 msgstr "No se puede encontrar la tarea %u"
 
 #: ../libgda/gda-connection.c:2309 ../libgda/sqlite/gda-sqlite-provider.c:973
-#: ../libgda/thread-wrapper/gda-thread-provider.c:916
+#: ../libgda/thread-wrapper/gda-thread-provider.c:917
 #: ../providers/jdbc/gda-jdbc-provider.c:571
 #: ../providers/mysql/gda-mysql-provider.c:959
 #: ../providers/postgres/gda-postgres-provider.c:844
@@ -713,8 +713,8 @@ msgstr "Error interno: manejo del proveedor no válido"
 #: ../libgda/gda-data-model-dir.c:891 ../libgda/gda-data-model-dir.c:933
 #: ../libgda/gda-data-model-dsn-list.c:311 ../libgda/gda-data-model-iter.c:295
 #: ../libgda/gda-data-model-iter.c:1018 ../libgda/gda-data-proxy.c:3478
-#: ../libgda/gda-data-select.c:1177 ../libgda/gda-data-select.c:1675
-#: ../libgda/gda-data-select.c:2570 ../libgda/gda-data-select.c:2637
+#: ../libgda/gda-data-select.c:1196 ../libgda/gda-data-select.c:1694
+#: ../libgda/gda-data-select.c:2589 ../libgda/gda-data-select.c:2656
 #: ../libgda-ui/gdaui-combo.c:789
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -770,8 +770,8 @@ msgstr "Indica si el modelo de datos se puede modificar"
 #: ../libgda/gda-data-model-array.c:622 ../libgda/gda-data-model-dir.c:803
 #: ../libgda/gda-data-model-dir.c:975 ../libgda/gda-data-model-dir.c:1329
 #: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3427
-#: ../libgda/gda-data-proxy.c:3465 ../libgda/gda-data-select.c:1631
-#: ../libgda/gda-data-select.c:1685
+#: ../libgda/gda-data-proxy.c:3465 ../libgda/gda-data-select.c:1650
+#: ../libgda/gda-data-select.c:1704
 #, c-format
 msgid "Row %d out of range (0-%d)"
 msgstr "Fila %d fuera de rango (0 - %d)"
@@ -780,8 +780,8 @@ msgstr "Fila %d fuera de rango (0 - %d)"
 #: ../libgda/gda-data-model-array.c:625 ../libgda/gda-data-model-dir.c:806
 #: ../libgda/gda-data-model-dir.c:978 ../libgda/gda-data-model-dir.c:1332
 #: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3430
-#: ../libgda/gda-data-proxy.c:3468 ../libgda/gda-data-select.c:1634
-#: ../libgda/gda-data-select.c:1688
+#: ../libgda/gda-data-proxy.c:3468 ../libgda/gda-data-select.c:1653
+#: ../libgda/gda-data-select.c:1707
 #, c-format
 msgid "Row %d not found (empty data model)"
 msgstr "No se encontró la fila %d (modelo de datos vacío)"
@@ -839,91 +839,91 @@ msgstr "Se esperaba un valor GdaBinary, se obtuvo %s"
 msgid "Key modification is not supported"
 msgstr "No se soporta la modificación de claves"
 
-#: ../libgda/gda-data-model.c:609
+#: ../libgda/gda-data-model.c:611
 msgid "Data model does not support getting individual value"
 msgstr "El modelo de datos no soporta la obtención de un valor individual"
 
-#: ../libgda/gda-data-model.c:646 ../libgda/gda-data-model.c:656
+#: ../libgda/gda-data-model.c:648 ../libgda/gda-data-model.c:658
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr "El modelo de datos devolvió un valor de tipo «%s» no válido"
 
-#: ../libgda/gda-data-model.c:653
+#: ../libgda/gda-data-model.c:655
 msgid "Data model returned invalid NULL value"
 msgstr "El modelo de datos devolvió un valor NULL no válido"
 
-#: ../libgda/gda-data-model.c:710
+#: ../libgda/gda-data-model.c:712
 msgid "Data model does not support setting individual value"
 msgstr "El modelo de datos no soporta establecer un valor individual"
 
-#: ../libgda/gda-data-model.c:740
+#: ../libgda/gda-data-model.c:742
 msgid "Data model does not support setting values"
 msgstr "El modelo de datos no soporta los valores configurados"
 
-#: ../libgda/gda-data-model.c:800 ../libgda/gda-data-model.c:831
+#: ../libgda/gda-data-model.c:802 ../libgda/gda-data-model.c:833
 msgid "Data model does not support row append"
 msgstr "El modelo de datos no soporta agregación de filas"
 
-#: ../libgda/gda-data-model.c:822
+#: ../libgda/gda-data-model.c:824
 msgid "Model does not allow row insertion"
 msgstr "El modelo no permite inserción de filas"
 
-#: ../libgda/gda-data-model.c:854
+#: ../libgda/gda-data-model.c:856
 msgid "Model does not allow row deletion"
 msgstr "El modelo no permite borrado de filas"
 
-#: ../libgda/gda-data-model.c:863
+#: ../libgda/gda-data-model.c:865
 msgid "Data model does not support row removal"
 msgstr "El modelo de datos no soporta la eliminación de filas"
 
-#: ../libgda/gda-data-model.c:1004 ../libgda/gda-data-model.c:1043
-#: ../libgda/gda-data-model.c:1057
+#: ../libgda/gda-data-model.c:1006 ../libgda/gda-data-model.c:1045
+#: ../libgda/gda-data-model.c:1059
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "El parámetro «%s» debe contener un valor de cadena, ignorado."
 
-#: ../libgda/gda-data-model.c:1066 ../libgda/gda-data-model.c:1149
+#: ../libgda/gda-data-model.c:1068 ../libgda/gda-data-model.c:1151
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "El parámetro «%s» debe contener un valor booleano, ignorado."
 
-#: ../libgda/gda-data-model.c:1157
+#: ../libgda/gda-data-model.c:1159
 #, c-format
 msgid "File '%s' already exists"
 msgstr "El archivo «%s» ya existe"
 
-#: ../libgda/gda-data-model.c:1271
+#: ../libgda/gda-data-model.c:1273
 msgid "Exported Data"
 msgstr "Datos exportados"
 
-#: ../libgda/gda-data-model.c:1388
+#: ../libgda/gda-data-model.c:1390
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "Se esperaba la etiqueta <gda_value> o <gda_array_value>, se obtuvo <%s>, "
 "ignorando"
 
-#: ../libgda/gda-data-model.c:1419
+#: ../libgda/gda-data-model.c:1421
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "No puede recuperar el tipo de datos de la columna (el tipo es DESCONOCIDO o "
 "no ha sido especificado)"
 
-#: ../libgda/gda-data-model.c:1502
+#: ../libgda/gda-data-model.c:1504
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Se esperaba la etiqueta <gda_array_data>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model.c:1562
+#: ../libgda/gda-data-model.c:1564
 msgid "Could not get an iterator for source data model"
 msgstr "No se ha pudo obtener un iterador para el modelo de datos de origen"
 
-#: ../libgda/gda-data-model.c:1579
+#: ../libgda/gda-data-model.c:1581
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Columna inexistente en el modelo de datos origen: %d"
 
-#: ../libgda/gda-data-model.c:1593
+#: ../libgda/gda-data-model.c:1595
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
@@ -932,7 +932,7 @@ msgstr ""
 "La columna de destino %d no puede ser NULL pero no tiene ninguna "
 "correspondencia en el modelo de datos origen"
 
-#: ../libgda/gda-data-model.c:1603
+#: ../libgda/gda-data-model.c:1605
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -941,27 +941,27 @@ msgstr ""
 "La columna de destino %d tiene un tipo gda (%s) incompatible con el  de la "
 "columna de origen %d (tipo %s)"
 
-#: ../libgda/gda-data-model.c:1700
+#: ../libgda/gda-data-model.c:1702
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "No se puede transformar «%s» del tipo GDA %s al tipo GDA %s"
 
-#: ../libgda/gda-data-model.c:1888
+#: ../libgda/gda-data-model.c:1890
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "No se pudo añadir el modelo de datos BDB a la conexión: %s"
 
-#: ../libgda/gda-data-model.c:1896
+#: ../libgda/gda-data-model.c:1898
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "No se pudo volcar el contenido del modelo de datos: %s"
 
-#: ../libgda/gda-data-model.c:2130
+#: ../libgda/gda-data-model.c:2132
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr ""
 "El modelo de datos no soporta acceso hacia atrás, no se mostrarán los datos"
 
-#: ../libgda/gda-data-model.c:2249
+#: ../libgda/gda-data-model.c:2251
 #, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
@@ -1210,7 +1210,7 @@ msgstr "No se pudo crear la conexión virtual"
 msgid "Error in filter expression"
 msgstr "Error en la expresión de filtrado"
 
-#: ../libgda/gda-data-proxy.c:3101 ../libgda/gda-data-select.c:1425
+#: ../libgda/gda-data-proxy.c:3101 ../libgda/gda-data-select.c:1444
 msgid "Incorrect filter expression"
 msgstr "Expresión de filtrado incorrecta"
 
@@ -1221,7 +1221,6 @@ msgstr "La primera fila es una fila vacía al comienzo y no se puede alterar"
 
 #: ../libgda/gda-data-proxy.c:3661
 #, c-format
-#| msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Tipo de valor erróneo: se esperaba «%s» y se obtuvo «%s»"
 
@@ -1235,97 +1234,97 @@ msgstr "intentando cambiar una columna de sólo lectura: %d"
 msgid "Value type mismatch %s instead of %s"
 msgstr "El tipo del valor no coincide %s en lugar de %s"
 
-#: ../libgda/gda-data-select.c:359
+#: ../libgda/gda-data-select.c:366
 #, c-format
 msgid "Could not re-run SELECT statement: %s"
 msgstr "No se pudo volver a ejecutar la declaración SELECT: %s"
 
-#: ../libgda/gda-data-select.c:933
+#: ../libgda/gda-data-select.c:952
 msgid "Incorrect SQL expression"
 msgstr "Expresión SQL incorrecta"
 
-#: ../libgda/gda-data-select.c:958
+#: ../libgda/gda-data-select.c:977
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
 msgstr "Error interno: la propiedad «prepared-stmt» no se ha establecido"
 
-#: ../libgda/gda-data-select.c:965
+#: ../libgda/gda-data-select.c:984
 msgid "Can't get the prepared statement's actual statement"
 msgstr "No se puede obtener la declaración preparada de la declaración actual"
 
-#: ../libgda/gda-data-select.c:971
+#: ../libgda/gda-data-select.c:990
 msgid "Unsupported type of SELECT statement"
 msgstr "Tipo de declaración SELECT no soportada"
 
-#: ../libgda/gda-data-select.c:1040
+#: ../libgda/gda-data-select.c:1059
 msgid "INSERT statement must contain values to insert"
 msgstr "La declaración INSERT necesita valores que insertar"
 
-#: ../libgda/gda-data-select.c:1046
+#: ../libgda/gda-data-select.c:1065
 msgid "INSERT statement must insert only one row"
 msgstr "La declaración INSERT debe insertar solo una fila"
 
-#: ../libgda/gda-data-select.c:1073
+#: ../libgda/gda-data-select.c:1092
 msgid "DELETE statement must have a WHERE part"
 msgstr "La declaración DELETE debe contener una condición WHERE"
 
-#: ../libgda/gda-data-select.c:1113
+#: ../libgda/gda-data-select.c:1132
 msgid "UPDATE statement must have a WHERE part"
 msgstr "La declaración UPDATE debe contener una condición WHERE"
 
-#: ../libgda/gda-data-select.c:1167
+#: ../libgda/gda-data-select.c:1186
 #, c-format
 msgid "Modification statement uses an unknown '%s' parameter"
 msgstr "La modificación de la declaración usa un parámetro «%s» desconocido"
 
-#: ../libgda/gda-data-select.c:1189
+#: ../libgda/gda-data-select.c:1208
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
 "La modificación del parámetro «%s» de la declaración es %s cuando debería ser "
 "%s"
 
-#: ../libgda/gda-data-select.c:1226
+#: ../libgda/gda-data-select.c:1245
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
 msgstr ""
 "La declaración de modificación debe ser una declaración INSERT, UPDATE o "
 "DELETE"
 
-#: ../libgda/gda-data-select.c:1274 ../libgda/gda-data-select.c:1480
-#: ../libgda/gda-data-select.c:3290
+#: ../libgda/gda-data-select.c:1293 ../libgda/gda-data-select.c:1499
+#: ../libgda/gda-data-select.c:3321
 msgid "No connection to use"
 msgstr "No hay conexión para usar"
 
-#: ../libgda/gda-data-select.c:1320
+#: ../libgda/gda-data-select.c:1339
 msgid "Invalid unique row condition (ony equal operators are allowed)"
 msgstr ""
 "Condición de fila única no válida (solo se permiten operadores iguales)"
 
-#: ../libgda/gda-data-select.c:1352 ../libgda/gda-data-select.c:1407
+#: ../libgda/gda-data-select.c:1371 ../libgda/gda-data-select.c:1426
 msgid "Unique row condition has already been specified"
 msgstr "La condición de fila única ya ha sido especificada"
 
-#: ../libgda/gda-data-select.c:1489 ../libgda/gda-data-select.c:1500
+#: ../libgda/gda-data-select.c:1508 ../libgda/gda-data-select.c:1519
 msgid "No table to select from in SELECT statement"
 msgstr "No hay tabla para seleccionar en la declaración SELECT"
 
-#: ../libgda/gda-data-select.c:1494
+#: ../libgda/gda-data-select.c:1513
 msgid "SELECT statement uses more than one table to select from"
 msgstr ""
 "La declaración SELECT involucra más de una tabla o expresión de la que "
 "seleccionar"
 
-#: ../libgda/gda-data-select.c:1668 ../libgda/gda-data-select.c:2387
-#: ../libgda/gda-data-select.c:2557 ../libgda/gda-data-select.c:2709
-#: ../libgda/gda-data-select.c:2797 ../libgda/gda-data-select.c:2991
+#: ../libgda/gda-data-select.c:1687 ../libgda/gda-data-select.c:2406
+#: ../libgda/gda-data-select.c:2576 ../libgda/gda-data-select.c:2728
+#: ../libgda/gda-data-select.c:2816 ../libgda/gda-data-select.c:3010
 msgid "Data model does only support random access"
 msgstr "Los modelos de datos soportan acceso aleatorio"
 
-#: ../libgda/gda-data-select.c:1703
+#: ../libgda/gda-data-select.c:1722
 msgid "Unable to retrieve data after modifications"
 msgstr "No se pudieron obtener los datos después de las modificaciones"
 
-#: ../libgda/gda-data-select.c:1722 ../libgda/gda-data-select.c:1730
-#: ../libgda/gda-data-select.c:1752
+#: ../libgda/gda-data-select.c:1741 ../libgda/gda-data-select.c:1749
+#: ../libgda/gda-data-select.c:1771
 msgid ""
 "Unable to retrieve data after modifications, no further modification will be "
 "allowed"
@@ -1333,85 +1332,85 @@ msgstr ""
 "No se pudieron obtener los datos después de las modificaciones, no se "
 "permitirán futuras modificaciones"
 
-#: ../libgda/gda-data-select.c:1787
+#: ../libgda/gda-data-select.c:1806
 #, c-format
 msgid "Unable to get value for row %d and column %d"
 msgstr "No se pudo obtener el valor para la fila %d y columna %d"
 
-#: ../libgda/gda-data-select.c:2013 ../libgda/gda-data-select.c:2022
-#: ../libgda/gda-data-select.c:2032
+#: ../libgda/gda-data-select.c:2032 ../libgda/gda-data-select.c:2041
+#: ../libgda/gda-data-select.c:2051
 #, c-format
 msgid "Could not change iter's value for column %d: %s"
 msgstr "No se pudo cambiar el valor de iteración para la columna %d: %s"
 
-#: ../libgda/gda-data-select.c:2027
+#: ../libgda/gda-data-select.c:2046
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
 "Permitir que el valor del GdaHolder sea nulo (NULL) para la actualización "
 "del iterador"
 
-#: ../libgda/gda-data-select.c:2107 ../libgda/gda-data-select.c:2200
+#: ../libgda/gda-data-select.c:2126 ../libgda/gda-data-select.c:2219
 msgid "Some columns can't be modified"
 msgstr "Algunas columnas no se pueden modificar"
 
-#: ../libgda/gda-data-select.c:2254
+#: ../libgda/gda-data-select.c:2273
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
 "Error interno: no se puede obtener la consulta actual de la consulta "
 "preparada"
 
-#: ../libgda/gda-data-select.c:2294
+#: ../libgda/gda-data-select.c:2313
 msgid "Unable to identify a way to fetch a single row"
 msgstr "No se pudo identificar una manera de conseguir una sola fila"
 
-#: ../libgda/gda-data-select.c:2301
+#: ../libgda/gda-data-select.c:2320
 msgid "Can only operate on non compound SELECT statements"
 msgstr "Sólo se puede operar con declaraciones SELECT no compuestas"
 
-#: ../libgda/gda-data-select.c:2382 ../libgda/gda-data-select.c:2552
-#: ../libgda/gda-data-select.c:2623 ../libgda/gda-data-select.c:2704
-#: ../libgda/gda-data-select.c:2792 ../libgda/gda-data-select.c:2986
+#: ../libgda/gda-data-select.c:2401 ../libgda/gda-data-select.c:2571
+#: ../libgda/gda-data-select.c:2642 ../libgda/gda-data-select.c:2723
+#: ../libgda/gda-data-select.c:2811 ../libgda/gda-data-select.c:3005
 msgid "Modifications are not allowed anymore"
 msgstr "Ya no se soportan modificaciones"
 
-#: ../libgda/gda-data-select.c:2392 ../libgda/gda-data-select.c:2562
-#: ../libgda/gda-data-select.c:2628 ../libgda/gda-data-select.c:2714
+#: ../libgda/gda-data-select.c:2411 ../libgda/gda-data-select.c:2581
+#: ../libgda/gda-data-select.c:2647 ../libgda/gda-data-select.c:2733
 msgid "No UPDATE statement provided"
 msgstr "No se ha proporcionado de una declaración UPDATE"
 
-#: ../libgda/gda-data-select.c:2432
+#: ../libgda/gda-data-select.c:2451
 msgid "Could not get iterator's value"
 msgstr "No se pudo obtener el valor del iterador"
 
-#: ../libgda/gda-data-select.c:2589 ../libgda/gda-data-select.c:2656
+#: ../libgda/gda-data-select.c:2608 ../libgda/gda-data-select.c:2675
 #, c-format
 msgid "Column %d can't be modified"
 msgstr "No se puede modificar la columna %d"
 
-#: ../libgda/gda-data-select.c:2722
+#: ../libgda/gda-data-select.c:2741
 #, c-format
 msgid "Too many values (%d as maximum)"
 msgstr "Demasiados valores (%d es el máximo)"
 
-#: ../libgda/gda-data-select.c:2802
+#: ../libgda/gda-data-select.c:2821
 msgid "No INSERT statement provided"
 msgstr "No se ha proporcionado una declaración INSERT"
 
-#: ../libgda/gda-data-select.c:2807
+#: ../libgda/gda-data-select.c:2826
 msgid "Cannot add a row because the number of rows in unknown"
 msgstr "No se puede insertar una fila porque se desconoce el número de filas"
 
-#: ../libgda/gda-data-select.c:2836
+#: ../libgda/gda-data-select.c:2855
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:385
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:394
 msgid "Missing values to insert in INSERT statement"
 msgstr "Faltan los valores para insertar en la declaración INSERT"
 
-#: ../libgda/gda-data-select.c:2996
+#: ../libgda/gda-data-select.c:3015
 msgid "No DELETE statement provided"
 msgstr "No se ha proporcionado una declaración DELETE"
 
-#: ../libgda/gda-data-select.c:3397
+#: ../libgda/gda-data-select.c:3445
 #, c-format
 msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
@@ -1432,33 +1431,33 @@ msgstr "Tipo no válido"
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "El servidor de la base de datos no soporta la operación CREATE TABLE"
 
-#: ../libgda/gda-holder.c:483 ../libgda/gda-set.c:485
+#: ../libgda/gda-holder.c:485 ../libgda/gda-set.c:485
 #, c-format
 msgid "Unable to set holder's value: %s"
 msgstr "No se pudo establecer el valor del mantenedor: %s"
 
-#: ../libgda/gda-holder.c:575
+#: ../libgda/gda-holder.c:579
 msgid "The 'g-type' property cannot be changed"
 msgstr "No se puede modificar la propiedad «g-type»"
 
-#: ../libgda/gda-holder.c:842
+#: ../libgda/gda-holder.c:846
 #, c-format
 msgid "Unable to convert string to '%s' type"
 msgstr "No se puede convertir la cadena al tipo «%s»"
 
-#: ../libgda/gda-holder.c:904
+#: ../libgda/gda-holder.c:908
 msgid ""
 "Can't use this method to set value because there is already a static value"
 msgstr ""
 "No se puede usar este método para modificar el valor porque ya existe un "
 "valor estático"
 
-#: ../libgda/gda-holder.c:923 ../libgda/gda-holder.c:1050
+#: ../libgda/gda-holder.c:927 ../libgda/gda-holder.c:1054
 #, c-format
 msgid "(%s): Holder does not allow NULL values"
 msgstr "(%s): El mantenedor no permite valores nulos (NULL)"
 
-#: ../libgda/gda-holder.c:930
+#: ../libgda/gda-holder.c:934
 #, c-format
 msgid ""
 "(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"
@@ -1466,17 +1465,28 @@ msgstr ""
 "(%s): Tipo de valor del mantenedor erróneo, se esperaba el tipo «%s» cuando "
 "el tipo de valor es «%s»"
 
-#: ../libgda/gda-holder.c:1057
+#: ../libgda/gda-holder.c:1061
 #, c-format
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr ""
 "(%s): Tipo de parámetro erróneo: se esperaba el tipo «%s» y se obtuvo «%s»"
 
-#: ../libgda/gda-holder.c:1528
+#. break holder's binding because type differ
+#: ../libgda/gda-holder.c:1514
+#, c-format
+#| msgid "Cannot bind holders if their type is not the same"
+msgid ""
+"Cannot bind holders if their type is not the same, breaking existing bind "
+"where '%s' was bound to '%s'"
+msgstr ""
+"No se pueden vincular los mantenedores si su tipo no es el mismo, rompiendo "
+"el vínculo existente donde «%s» estaba vinculado a «%s»"
+
+#: ../libgda/gda-holder.c:1559
 msgid "Cannot bind holders if their type is not the same"
 msgstr "No se pueden vincular los mantenedores si su tipo no es el mismo"
 
-#: ../libgda/gda-holder.c:1656
+#: ../libgda/gda-holder.c:1699
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
@@ -2523,7 +2533,6 @@ msgid "SQlite binary representation"
 msgstr "Representación binaria SQlite"
 
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:123
-#| msgid "Boolean representation"
 msgid "Sqlite boolean representation"
 msgstr "Representación de booleanos de SQLite"
 
@@ -2582,7 +2591,6 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:659
 #, c-format
-#| msgid "Could not set empty_result_callbacks SQLite option"
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "No se pudo establecer la opción de SQLite empty_result_callbacks: %s"
 
@@ -2668,9 +2676,6 @@ msgstr "No se puede escribir en el BLOB de SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2147
 #, c-format
-#| msgid ""
-#| "Non handled GdaServerOperationType, please report error to http://"
-#| "bugzilla.gnome.org/ for the \"libgda\" product"
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
@@ -3060,36 +3065,36 @@ msgid "UPDATE statement does not have any target columns to update"
 msgstr ""
 "La declaración UPDATE no tiene ninguna columna de destino para actualizar"
 
-#: ../libgda/thread-wrapper/gda-thread-provider.c:809
-#: ../libgda/thread-wrapper/gda-thread-provider.c:862
-#: ../libgda/thread-wrapper/gda-thread-provider.c:921
-#: ../libgda/thread-wrapper/gda-thread-provider.c:976
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1031
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1078
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1125
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1172
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1219
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1743
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1792
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1840
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1889
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1937
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1986
+#: ../libgda/thread-wrapper/gda-thread-provider.c:810
+#: ../libgda/thread-wrapper/gda-thread-provider.c:863
+#: ../libgda/thread-wrapper/gda-thread-provider.c:922
+#: ../libgda/thread-wrapper/gda-thread-provider.c:977
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1032
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1079
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1126
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1173
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1220
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1744
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1793
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1841
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1890
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1938
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1987
 #, c-format
 msgid "A connection is required"
 msgstr "Se necesita una conexión"
 
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1019
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1110
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1022
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1113
 msgid "Signal does not exist\n"
 msgstr "La señal no existe\n"
 
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1028
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1031
 msgid "Signal to connect to must not have a return value\n"
 msgstr "La señal para conectar debe no tener un valor de retorno\n"
 
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1097
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1164
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1100
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1167
 #, c-format
 msgid "Signal %lu does not exist"
 msgstr "La señal %lu no existe"
@@ -3719,7 +3724,6 @@ msgstr ""
 "%s\n"
 
 #: ../libgda-ui/demos/main.c:798
-#| msgid "Gnome-Db Code Demos"
 msgid "Libgda-ui Code Demos"
 msgstr "Demostraciones de código de libgda-ui"
 
@@ -3824,7 +3828,6 @@ msgid "Correct data first"
 msgstr "Corregir datos primero"
 
 #: ../libgda-ui/gdaui-basic-form.c:242
-#| msgid "Pointer to an XML data layout specification"
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
@@ -3868,7 +3871,6 @@ msgstr "Valores para rellenar"
 
 #: ../libgda-ui/gdaui-basic-form.c:1937 ../libgda-ui/gdaui-raw-grid.c:2351
 #, c-format
-#| msgid "'%s' Document not parsed successfully\n"
 msgid "'%s' document not parsed successfully"
 msgstr "El documento «%s» no se analizó correctamente"
 
@@ -3883,14 +3885,12 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-cloud.c:244 ../libgda-ui/gdaui-cloud.c:979
 #, c-format
-#| msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr ""
 "Tipo de columna incorrecto para la etiqueta: se esperaba una cadena y se "
 "obtuvo %s"
 
 #: ../libgda-ui/gdaui-cloud.c:1072 ../tools/browser/common/objects-cloud.c:445
-#| msgid "Field"
 msgid "Find:"
 msgstr "Buscar:"
 
@@ -3988,7 +3988,6 @@ msgid "Can't append row to data model: %s"
 msgstr "No se pudo añadir la fila al modelo de datos: %s"
 
 #: ../libgda-ui/gdaui-raw-grid.c:290
-#| msgid "Pointer to an XML data layout specification"
 msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
@@ -4006,7 +4005,6 @@ msgstr "Acciones globales visibles"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
 #: ../libgda-ui/gdaui-raw-grid.c:742 ../libgda-ui/gdaui-raw-grid.c:765
-#| msgid "Can't read BLOB"
 msgid "Can't be NULL"
 msgstr "No puede ser nulo (NULL)"
 
@@ -4444,7 +4442,6 @@ msgid "Incorrect specified column name"
 msgstr "El nombre de la columna especificado es incorrecto"
 
 #: ../providers/mysql/gda-mysql-handler-boolean.c:123
-#| msgid "Boolean representation"
 msgid "MySQL boolean representation"
 msgstr "Representación de booleanos de MySQL"
 
@@ -4478,7 +4475,6 @@ msgstr "No se permite un parámetro si nombre en las declaraciones preparadas."
 
 #. force reading the complete BLOB into memory
 #: ../providers/mysql/gda-mysql-provider.c:2215
-#| msgid "Can't read BLOB"
 msgid "Can't read whole BLOB into memory"
 msgstr "No se puede leer el BLOB completo en la memoria"
 
@@ -5941,7 +5937,6 @@ msgstr "No se pueden importar los datos del servidor web"
 
 #: ../providers/reuseable/postgres/gda-postgres-meta.c:2108
 #, c-format
-#| msgid "Could not find target the join is for"
 msgid "could not determine the indexed columns for index"
 msgstr "no se pudieron determinar las columnas indexadas para el índice"
 
@@ -5999,7 +5994,6 @@ msgid "Enable usage of some extra functions in SQL"
 msgstr "Activar el uso de algunas funciones adicionales en SQL"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:5
-#| msgid "Foreign keys"
 msgid "Enforce foreign keys"
 msgstr "Forzar claves externas"
 
@@ -6032,32 +6026,27 @@ msgstr "La cadena de la conexión debe contener un valor %s"
 #: ../providers/web/gda-web-provider.c:624
 #: ../providers/web/gda-web-provider.c:649
 #, c-format
-#| msgid "History is not supported"
 msgid "Not supported"
 msgstr "No está soportado"
 
 #: ../providers/web/gda-web-provider.c:629
 #: ../providers/web/gda-web-provider.c:654
 #, c-format
-#| msgid "Server operation specification"
 msgid "Server operations not yet implemented"
 msgstr "Las operaciones en el servidor aún no están implementadas"
 
 #: ../providers/web/gda-web-provider.c:704
 #: ../providers/web/gda-web-provider.c:769
 #: ../providers/web/gda-web-provider.c:829
-#| msgid "Operation not supported\n"
 msgid "Named transaction is not supported"
 msgstr "No se soporta la transacción con nombre"
 
 #: ../providers/web/gda-web-provider.c:709
-#| msgid "History is not supported"
 msgid "Transaction level is not supported"
 msgstr "No se soporta el nivel de transacción"
 
 #: ../providers/web/gda-web-provider.c:889
 #: ../providers/web/gda-web-provider.c:950
-#| msgid "Key modification is not supported"
 msgid "Unnamed savepoint is not supported"
 msgstr "No se soporta el punto de guardado sin nombre"
 
@@ -6124,7 +6113,6 @@ msgid "The name of a database to use"
 msgstr "El nombre de la base de datos que usar"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:7
-#| msgid "The name of a database to connect to"
 msgid "The name of the web server which proxies connections"
 msgstr "El nombre del servidor web que enruta las conexiones"
 
@@ -6287,12 +6275,10 @@ msgstr "Ejecutando una consulta"
 
 #: ../tools/browser/browser-connection.c:1094
 #, c-format
-#| msgid "No connection currently opened"
 msgid "Connection not yet opened"
 msgstr "La conexión aún no está abierta"
 
 #: ../tools/browser/browser-connection.c:1100
-#| msgid "Can't initialize dictionary to store query buffers"
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
 "No se puede inicializar el diccionario para almacenar las preferencias de la "
@@ -6394,7 +6380,6 @@ msgid "Begin"
 msgstr "Inicio"
 
 #: ../tools/browser/browser-stock-icons.c:48
-#| msgid "Comment"
 msgid "Commit"
 msgstr "Efectuar"
 
@@ -6461,15 +6446,11 @@ msgstr "se cerrará la conexión."
 
 #: ../tools/browser/browser-window.c:812
 #, c-format
-#| msgid "Cannot start transaction"
 msgid "Error updating bound connection: %s"
 msgstr "Error al actualizar la conexión vinculada: %s"
 
 #: ../tools/browser/browser-window.c:853
 #, c-format
-#| msgid ""
-#| "Could not open connection:\n"
-#| "%s"
 msgid "Could not open binding connection: %s"
 msgstr "No se pudo abrir la conexión de vinculación: %s"
 
@@ -6500,12 +6481,10 @@ msgid "Add binding"
 msgstr "Añadir vinculación"
 
 #: ../tools/browser/connection-binding-properties.c:328
-#| msgid "Opened connections"
 msgid "Bind a connection"
 msgstr "Vincular una conexión"
 
 #: ../tools/browser/connection-binding-properties.c:334
-#| msgid "Binary data"
 msgid "Bind a data set"
 msgstr "Vincular un conjunto de datos"
 
@@ -6515,18 +6494,14 @@ msgstr "Tabla desde un conjunto de datos:"
 
 #: ../tools/browser/connection-binding-properties.c:463
 #, c-format
-#| msgid "Unable to get schema name"
 msgid "Invalid schema name"
 msgstr "El nombre del esquema no es válido"
 
 #: ../tools/browser/connection-binding-properties.c:510
-#| msgid "Close a connection"
 msgid "All tables of a connection:"
 msgstr "Todas las tablas de una conexión:"
 
 #: ../tools/browser/connection-binding-properties.c:514
-#| msgid ""
-#| "Bind several connections together into the CNC_NAME virtual connection"
 msgid ""
 "Each table in the selected connection will appear\n"
 "as a table in the virtual connection"
@@ -6535,7 +6510,6 @@ msgstr ""
 "como una tabla en la conexión virtual"
 
 #: ../tools/browser/connection-binding-properties.c:539
-#| msgid "Name of the database in the database file to be used"
 msgid ""
 "Name of the schema the\n"
 "tables will be in"
@@ -6571,47 +6545,38 @@ msgid "[DSN|connection string]..."
 msgstr "[DSN|cadena de conexión]…"
 
 #: ../tools/browser/mgr-favorites.c:219
-#| msgid "Empty statement"
 msgid "Multiple statements"
 msgstr "Múltiples declaraciones"
 
 #: ../tools/browser/mgr-favorites.c:223
-#| msgid "No SELECT statement specified"
 msgid "SELECT statement"
 msgstr "Declaración SELECT"
 
 #: ../tools/browser/mgr-favorites.c:226
-#| msgid "No INSERT statement provided"
 msgid "INSERT statement"
 msgstr "Declaración INSERT"
 
 #: ../tools/browser/mgr-favorites.c:229
-#| msgid "No UPDATE statement provided"
 msgid "UPDATE statement"
 msgstr "Declaración UPDATE"
 
 #: ../tools/browser/mgr-favorites.c:232
-#| msgid "No DELETE statement provided"
 msgid "DELETE statement"
 msgstr "Declaración DELETE"
 
 #: ../tools/browser/mgr-favorites.c:235
-#| msgid "No SELECT statement specified"
 msgid "COMPOUND SELECT statement"
 msgstr "Declaración COMPOUND SELECT"
 
 #: ../tools/browser/mgr-favorites.c:238
-#| msgid "Empty statement"
 msgid "BEGIN statement"
 msgstr "Declaración BEGIN"
 
 #: ../tools/browser/mgr-favorites.c:241
-#| msgid "Empty statement"
 msgid "ROLLBACK statement"
 msgstr "Declaración ROLLBACK"
 
 #: ../tools/browser/mgr-favorites.c:244
-#| msgid "Empty statement"
 msgid "COMMIT statement"
 msgstr "Declaración COMMIT"
 
@@ -6628,7 +6593,6 @@ msgid "DELETE SAVEPOINT statement"
 msgstr "Declaración DELETE SAVEPOINT"
 
 #: ../tools/browser/mgr-favorites.c:256
-#| msgid "Wrong statement type"
 msgid "Unknown statement"
 msgstr "Declaración desconocida"
 
@@ -6651,7 +6615,6 @@ msgstr ""
 "para definir uno"
 
 #: ../tools/browser/support.c:203
-#| msgid "None"
 msgid "Note:"
 msgstr "Nota:"
 
@@ -6665,22 +6628,18 @@ msgstr "Cerrar solapa"
 
 #: ../tools/browser/canvas/browser-canvas-column.c:169
 #, c-format
-#| msgid "Type"
 msgid "Type: %s"
 msgstr "Tipo: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:348
-#| msgid "Remove a DSN"
 msgid "Remove"
 msgstr "Quitar"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:352
-#| msgid "Referenced table"
 msgid "Add referenced tables"
 msgstr "Añadir tablas referenciadas"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:513
-#| msgid "Editable"
 msgid "Add table"
 msgstr "Añadir tabla"
 
@@ -6702,7 +6661,6 @@ msgid "<b>Zoom</b>"
 msgstr "<b>Ampliación</b>"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:255
-#| msgid "Number of decimals"
 msgid "Number of pages used:"
 msgstr "Número de páginas usadas:"
 
@@ -6735,7 +6693,6 @@ msgid "Radial layout"
 msgstr "Distribución radial"
 
 #: ../tools/browser/canvas/browser-canvas.c:508
-#| msgid "_Save image"
 msgid "Save diagram as"
 msgstr "Guardar diagrama como"
 
@@ -6744,12 +6701,10 @@ msgid "PNG Image"
 msgstr "Imagen PNG"
 
 #: ../tools/browser/canvas/browser-canvas.c:519
-#| msgid "Set filter"
 msgid "SVG file"
 msgstr "Archivo SVG"
 
 #: ../tools/browser/canvas/browser-canvas.c:556
-#| msgid "Failed to read node in XML file"
 msgid "Failed to create SVG file"
 msgstr "Falló al crear el archivo SVG"
 
@@ -6758,12 +6713,10 @@ msgid "File format to save to is not recognized."
 msgstr "No se reconoce el formato de archivo en el que guardar."
 
 #: ../tools/browser/canvas/browser-canvas.c:584
-#| msgid "Failed to read node in XML file"
 msgid "Failed to create PNG file"
 msgstr "Falló al crear el archivo PNG"
 
 #: ../tools/browser/common/gdaui-data-import.c:123
-#| msgid "Invalid port specification"
 msgid "Import specifications"
 msgstr "Importar especificaciones"
 
@@ -6777,7 +6730,6 @@ msgid "File to import data from"
 msgstr "Archivo del que importar los datos"
 
 #: ../tools/browser/common/gdaui-data-import.c:149
-#| msgid "Comma Separated Value (CSV)"
 msgid "Comma separated values"
 msgstr "Valores separados por comas"
 
@@ -6791,7 +6743,6 @@ msgstr "Todos los archivos"
 
 #. Encoding
 #: ../tools/browser/common/gdaui-data-import.c:166
-#| msgid "Encoding"
 msgid "Encoding:"
 msgstr "Codificación:"
 
@@ -6806,22 +6757,18 @@ msgid "Separator:"
 msgstr "Separador:"
 
 #: ../tools/browser/common/gdaui-data-import.c:208
-#| msgid "Comment"
 msgid "Comma"
 msgstr "Coma"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
-#| msgid "After column"
 msgid "Semi column"
 msgstr "Punto y coma"
 
 #: ../tools/browser/common/gdaui-data-import.c:222
-#| msgid "Table"
 msgid "Tab"
 msgstr "Tabulación"
 
 #: ../tools/browser/common/gdaui-data-import.c:229
-#| msgid "Scale"
 msgid "Space"
 msgstr "Espacio"
 
@@ -6834,25 +6781,20 @@ msgid "Other:"
 msgstr "Otro:"
 
 #: ../tools/browser/common/gdaui-data-import.c:269
-#| msgid "Temporary view"
 msgid "Import preview"
 msgstr "Vista previa de la importación"
 
 #: ../tools/browser/common/gdaui-data-import.c:284
-#| msgid "No detail"
 msgid "No data."
 msgstr "Sin datos."
 
 #: ../tools/browser/common/gdaui-entry-import.c:172
-#| msgid "_Load image from file"
 msgid "Data set import from file"
 msgstr "Conjunto de datos importados de archivo"
 
 #: ../tools/browser/common/gdaui-entry-import.c:202
 #: ../tools/browser/query-exec/query-result.c:216
 #, c-format
-#| msgid "(%d row)"
-#| msgid_plural "(%d rows)"
 msgid "%d row"
 msgid_plural "%d rows"
 msgstr[0] "%d fila"
@@ -6861,7 +6803,6 @@ msgstr[1] "%d filas"
 #: ../tools/browser/common/gdaui-entry-import.c:203
 #: ../tools/browser/query-exec/query-result.c:217
 #, c-format
-#| msgid "After column"
 msgid "%d column"
 msgid_plural "%d columns"
 msgstr[0] "%d columna"
@@ -6875,26 +6816,22 @@ msgstr "Conjunto de datos con %s y %s"
 
 #: ../tools/browser/common/gdaui-entry-import.c:211
 #: ../tools/browser/common/gdaui-entry-import.c:234
-#| msgid "No detail"
 msgid "No data set"
 msgstr "Sin conjunto de datos"
 
 #: ../tools/browser/common/objects-cloud.c:237
 #, c-format
-#| msgid "Tables in the '%s' schema"
 msgid "%d table in current schema:"
 msgid_plural "%d tables in current schema:"
 msgstr[0] "%d tabla en el esquema actual:"
 msgstr[1] "%d tablas en el esquema actual:"
 
 #: ../tools/browser/common/objects-cloud.c:241
-#| msgid "Tables in schema <b>'%s'</b>"
 msgid "Tables in current schema:"
 msgstr "Tablas en el esquema actual:"
 
 #: ../tools/browser/common/objects-cloud.c:244
 #, c-format
-#| msgid "Tables in schema <b>'%s'</b>"
 msgid "%d Table in schema '%s':"
 msgid_plural "%d Tables in schema '%s':"
 msgstr[0] "%d tabla en el esquema «%s»:"
@@ -6906,12 +6843,10 @@ msgid "None"
 msgstr "Ninguno"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:2
-#| msgid "Data type"
 msgid "Data Type"
 msgstr "Tipo de dato"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:3
-#| msgid "Decimals"
 msgid "Decimal"
 msgstr "Decimal"
 
@@ -6920,12 +6855,10 @@ msgid "Floating Point"
 msgstr "Coma flotante"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:5
-#| msgid "Action:"
 msgid "Function"
 msgstr "Función"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:6
-#| msgid "SQL"
 msgid "GDA-SQL"
 msgstr "GDA-SQL"
 
@@ -6934,22 +6867,18 @@ msgid "Keyword"
 msgstr "Palabra clave"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:8
-#| msgid "No data to display"
 msgid "No idea what it is"
 msgstr "Ni idea de lo que es"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:9
-#| msgid "Data Sources"
 msgid "Sources"
 msgstr "Fuentes"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:10
-#| msgid "InternalString"
 msgid "String"
 msgstr "Cadena"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:11
-#| msgid "Editable"
 msgid "Variable"
 msgstr "Variable"
 
@@ -6987,7 +6916,6 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:304
 #: ../tools/browser/query-exec/query-console.c:1168
-#| msgid "Query buffer"
 msgid "Query editor"
 msgstr "Editor de consultas"
 
@@ -7005,12 +6933,10 @@ msgid "Clear"
 msgstr "Limpiar"
 
 #: ../tools/browser/query-exec/query-console.c:377
-#| msgid "Clear filter"
 msgid "Clear the editor"
 msgstr "Limpiar el editor"
 
 #: ../tools/browser/query-exec/query-console.c:382
-#| msgid "Values"
 msgid "Variables"
 msgstr "Variables"
 
@@ -7032,7 +6958,6 @@ msgid "Execute SQL in editor"
 msgstr "Ejecutar SQL en el editor"
 
 #: ../tools/browser/query-exec/query-console.c:394
-#| msgid "Index"
 msgid "Indent"
 msgstr "Sangrar"
 
@@ -7047,7 +6972,6 @@ msgstr ""
 "(quita los comentarios)"
 
 #: ../tools/browser/query-exec/query-console.c:402
-#| msgid "Favorites"
 msgid "Favorite"
 msgstr "Favorito"
 
@@ -7072,7 +6996,6 @@ msgstr ""
 "seleccionado al editor"
 
 #: ../tools/browser/query-exec/query-console.c:441
-#| msgid "Clear filter"
 msgid "Clear history"
 msgstr "Limpiar histórico"
 
@@ -7082,7 +7005,6 @@ msgstr "Resultados de la ejecución:"
 
 #: ../tools/browser/query-exec/query-console.c:768
 #: ../tools/browser/query-exec/query-favorite-selector.c:582
-#| msgid "Unnamed"
 msgid "Unnamed query"
 msgstr "Consulta sin nombre"
 
@@ -7096,7 +7018,6 @@ msgid "Could not add favorite: %s"
 msgstr "No se pudo añadir el favorito: %s"
 
 #: ../tools/browser/query-exec/query-console.c:858
-#| msgid "Invalid Oracle handle"
 msgid "Invalid variable's contents"
 msgstr "Contenido de la variable no válido"
 
@@ -7106,7 +7027,6 @@ msgstr "asignar valores a las siguientes variables"
 
 #: ../tools/browser/query-exec/query-console.c:913
 #, c-format
-#| msgid "Error while parsing CSV file: %s"
 msgid "Error while parsing code: %s"
 msgstr "Error al analizar el código: %s"
 
@@ -7120,14 +7040,12 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:958
 #, c-format
-#| msgid "Error creating database: %s"
 msgid "Error executing query: %s"
 msgstr "Error al ejecutar la consulta: %s"
 
 #: ../tools/browser/query-exec/query-console.c:1011
 #: ../tools/browser/query-exec/query-console.c:1061
 #, c-format
-#| msgid "Error creating database: %s"
 msgid ""
 "Error executing query:\n"
 "%s"
@@ -7164,7 +7082,6 @@ msgid "Execute query"
 msgstr "Ejecutar consulta"
 
 #: ../tools/browser/query-exec/query-console.c:1121
-#| msgid "Union"
 msgid "_Undo"
 msgstr "_Deshacer"
 
@@ -7203,19 +7120,16 @@ msgstr[1] "hace %lu días\n"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:390
 #, c-format
-#| msgid "Cannot start transaction"
 msgid "Error starting transaction: %s"
 msgstr "Error al iniciar la transacción: %s"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:409
 #, c-format
-#| msgid "Error creating database: %s"
 msgid "Error committing transaction: %s"
 msgstr "Error al efectuar la transacción: %s"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:428
 #, c-format
-#| msgid "Error creating database: %s"
 msgid "Error rolling back transaction: %s"
 msgstr "Error al deshacer la transacción: %s"
 
@@ -7236,17 +7150,14 @@ msgid "_Begin"
 msgstr "_Iniciar"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:439
-#| msgid "Cannot start transaction"
 msgid "Begin a new transaction"
 msgstr "Iniciar una transacción nueva"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:441
-#| msgid "Comment"
 msgid "_Commit"
 msgstr "_Efectuar"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:441
-#| msgid "Cannot start transaction"
 msgid "Commit current transaction"
 msgstr "Efectuar la transacción actual"
 
@@ -7255,7 +7166,6 @@ msgid "_Rollback"
 msgstr "_Deshacer"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:443
-#| msgid "No current connection"
 msgid "Rollback current transaction"
 msgstr "Deshacer la transacción actual"
 
