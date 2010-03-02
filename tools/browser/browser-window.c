@@ -64,6 +64,8 @@ static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar
 static void connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin);
 static void connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin);
 
+static void transaction_status_changed_cb (BrowserConnection *bcnc, BrowserWindow *bwin);
+
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -78,6 +80,7 @@ struct _BrowserWindowPrivate {
 	GtkWidget         *spinner;
 	GtkUIManager      *ui_manager;
 	GtkActionGroup    *agroup;
+	gboolean           updating_transaction_status;
 
 	GtkToolbarStyle    toolbar_style;
 	GtkActionGroup    *cnc_agroup; /* one GtkAction for each BrowserConnection */
@@ -138,6 +141,7 @@ browser_window_init (BrowserWindow *bwin)
 	bwin->priv->cnc_agroup = NULL;
 	bwin->priv->cnc_added_sigid = 0;
 	bwin->priv->cnc_removed_sigid = 0;
+	bwin->priv->updating_transaction_status = FALSE;
 }
 
 static void
@@ -165,8 +169,12 @@ browser_window_dispose (GObject *object)
 		if (bwin->priv->cnc_agroup)
 			g_object_unref (bwin->priv->cnc_agroup);
 
-		if (bwin->priv->bcnc)
+		if (bwin->priv->bcnc) {
+			g_signal_handlers_disconnect_by_func (bwin->priv->bcnc,
+							      G_CALLBACK (transaction_status_changed_cb),
+							      bwin);
 			g_object_unref (bwin->priv->bcnc);
+		}
 		if (bwin->priv->perspectives) {
 			g_slist_foreach (bwin->priv->perspectives, (GFunc) perspective_data_free, NULL);
 			g_slist_free (bwin->priv->perspectives);
@@ -189,6 +197,9 @@ delete_event (GtkWidget *widget, GdkEvent *event, BrowserWindow *bwin)
         return TRUE;
 }
 
+static void transaction_begin_cb (GtkAction *action, BrowserWindow *bwin);
+static void transaction_commit_cb (GtkAction *action, BrowserWindow *bwin);
+static void transaction_rollback_cb (GtkAction *action, BrowserWindow *bwin);
 static void quit_cb (GtkAction *action, BrowserWindow *bwin);
 static void about_cb (GtkAction *action, BrowserWindow *bwin);
 static void window_close_cb (GtkAction *action, BrowserWindow *bwin);
@@ -211,7 +222,7 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
 static const GtkActionEntry ui_actions[] = {
         { "Connection", NULL, "_Connection", NULL, "Connection", NULL },
         { "ConnectionOpen", GTK_STOCK_CONNECT, "_Connect", NULL, "Open a connection", G_CALLBACK (connection_open_cb)},
-        { "ConnectionBind", NULL, N_("_Bind connection"), "<control>V", N_("Use connection to create\n"
+        { "ConnectionBind", NULL, N_("_Bind connection"), "<control>I", N_("Use connection to create\n"
 						    "a new binding connection to access data\n"
 						    "from multiple databases at once"), G_CALLBACK (connection_bind_cb)},
         { "ConnectionProps", GTK_STOCK_PROPERTIES, "_Properties", NULL, "Connection properties", G_CALLBACK (connection_properties_cb)},
@@ -226,7 +237,13 @@ static const GtkActionEntry ui_actions[] = {
         { "WindowNewOthers", NULL, "New window for _connection", NULL, "Open a new window for a connection", NULL},
         { "WindowClose", GTK_STOCK_CLOSE, "_Close", "", "Close this window", G_CALLBACK (window_close_cb)},
         { "Help", NULL, "_Help", NULL, "Help", NULL },
-        { "HelpAbout", GTK_STOCK_ABOUT, "_About", NULL, "About", G_CALLBACK (about_cb) }
+        { "HelpAbout", GTK_STOCK_ABOUT, "_About", NULL, "About", G_CALLBACK (about_cb) },
+	{ "TransactionBegin", BROWSER_STOCK_BEGIN, N_("Begin"), NULL, N_("Begin a new transaction"),
+          G_CALLBACK (transaction_begin_cb)},
+        { "TransactionCommit", BROWSER_STOCK_COMMIT, N_("Commit"), NULL, N_("Commit current transaction"),
+          G_CALLBACK (transaction_commit_cb)},
+        { "TransactionRollback", BROWSER_STOCK_ROLLBACK, N_("Rollback"), NULL, N_("Rollback current transaction"),
+          G_CALLBACK (transaction_rollback_cb)},
 };
 
 static const gchar *ui_actions_info =
@@ -240,6 +257,10 @@ static const gchar *ui_actions_info =
         "      <menuitem name='ConnectionProps' action= 'ConnectionProps'/>"
         "      <menuitem name='ConnectionBind' action= 'ConnectionBind'/>"
         "      <menuitem name='ConnectionClose' action= 'ConnectionClose'/>"
+        "      <separator/>"
+	"      <menuitem name='TransactionBegin' action= 'TransactionBegin'/>"
+        "      <menuitem name='TransactionCommit' action= 'TransactionCommit'/>"
+        "      <menuitem name='TransactionRollback' action= 'TransactionRollback'/>"
         "      <separator/>"
         "      <menuitem name='Quit' action= 'Quit'/>"
         "      <separator/>"
@@ -267,6 +288,10 @@ static const gchar *ui_actions_info =
         "  <toolbar  name='ToolBar'>"
         "    <toolitem action='WindowClose'/>"
         "    <toolitem action='WindowFullScreen'/>"
+	"    <separator/>"
+        "    <toolitem action='TransactionBegin'/>"
+        "    <toolitem action='TransactionCommit'/>"
+        "    <toolitem action='TransactionRollback'/>"
         "  </toolbar>"
         "</ui>";
 
@@ -297,6 +322,9 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
 	bwin = BROWSER_WINDOW (g_object_new (BROWSER_TYPE_WINDOW, NULL));
 	bwin->priv->bcnc = g_object_ref (bcnc);
+	g_signal_connect (bcnc, "transaction-status-changed",
+			  G_CALLBACK (transaction_status_changed_cb), bwin);
+
 	cncname = browser_connection_get_name (bcnc);
 	if (!cncname)
 		cncname = _("unnamed");
@@ -333,6 +361,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	bwin->priv->agroup = group;
         gtk_action_group_add_actions (group, ui_actions, G_N_ELEMENTS (ui_actions), bwin);
 	gtk_action_group_add_toggle_actions (group, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions), bwin);
+	transaction_status_changed_cb (bwin->priv->bcnc, bwin);
 
         ui = gtk_ui_manager_new ();
         gtk_ui_manager_insert_action_group (ui, group, 0);
@@ -560,6 +589,20 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Br
 	action = gtk_action_group_get_action (bwin->priv->agroup, "ConnectionMetaSync");
 	gtk_action_set_sensitive (action, !is_busy);
 
+	gboolean bsens = FALSE, csens = FALSE;
+	if (!is_busy) {
+		if (browser_connection_get_transaction_status (bcnc))
+			csens = TRUE;
+		else
+			bsens = TRUE;
+	}
+	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionBegin");
+	gtk_action_set_sensitive (action, bsens);
+	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionCommit");
+	gtk_action_set_sensitive (action, csens);
+	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionRollback");
+	gtk_action_set_sensitive (action, csens);	
+
 	const gchar *cncname;
 	cncname = browser_connection_get_name (bcnc);
 	action = gtk_action_group_get_action (bwin->priv->cnc_agroup, cncname);
@@ -704,6 +747,73 @@ quit_cb (GtkAction *action, BrowserWindow *bwin)
 	g_slist_free (connections);
 	gtk_widget_destroy (dialog);	
 }
+
+static void
+transaction_status_changed_cb (BrowserConnection *bcnc, BrowserWindow *bwin)
+{
+	if (!bwin->priv->agroup)
+		return;
+
+	GtkAction *action;
+	gboolean trans_started;
+
+	trans_started = browser_connection_get_transaction_status (bcnc) ? TRUE : FALSE;
+	bwin->priv->updating_transaction_status = TRUE;
+
+	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionBegin");
+	gtk_action_set_sensitive (action, !trans_started);
+
+	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionCommit");
+	gtk_action_set_sensitive (action, trans_started);
+
+	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionRollback");
+	gtk_action_set_sensitive (action, trans_started);
+				      
+	bwin->priv->updating_transaction_status = FALSE;
+}
+
+static void
+transaction_begin_cb (GtkAction *action, BrowserWindow *bwin)
+{
+	if (!bwin->priv->updating_transaction_status) {
+		GError *error = NULL;
+		if (! browser_connection_begin (bwin->priv->bcnc, &error)) {
+			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) bwin)),
+					    _("Error starting transaction: %s"),
+					    error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+	}
+}
+
+static void
+transaction_commit_cb (GtkAction *action, BrowserWindow *bwin)
+{
+	if (!bwin->priv->updating_transaction_status) {
+		GError *error = NULL;
+		if (! browser_connection_commit (bwin->priv->bcnc, &error)) {
+			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) bwin)),
+					    _("Error committing transaction: %s"),
+					    error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+	}
+}
+
+static void
+transaction_rollback_cb (GtkAction *action, BrowserWindow *bwin)
+{
+	if (!bwin->priv->updating_transaction_status) {
+		GError *error = NULL;
+		if (! browser_connection_rollback (bwin->priv->bcnc, &error)) {
+			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) bwin)),
+					    _("Error rolling back transaction: %s"),
+					    error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+	}
+}
+
 
 static void
 window_close_cb (GtkAction *action, BrowserWindow *bwin)

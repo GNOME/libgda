@@ -86,6 +86,9 @@ guint               browser_connection_execute_statement      (BrowserConnection
 							       GdaStatementModelUsage model_usage,
 							       gboolean need_last_insert_row,
 							       GError **error);
+guint               browser_connection_rerun_select           (BrowserConnection *bcnc,
+							       GdaDataModel *model,
+							       GError **error);
 GObject            *browser_connection_execution_get_result   (BrowserConnection *bcnc,
 							       guint exec_id,
 							       GdaSet **last_insert_row, GError **error);

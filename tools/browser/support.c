@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -428,4 +428,43 @@ connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel
 			break;
 		}
 	}
+}
+
+GtkWidget *
+browser_make_small_button (gboolean is_toggle, const gchar *label, const gchar *stock_id, const gchar *tooltip)
+{
+	GtkWidget *button, *hbox = NULL;
+
+	if (is_toggle)
+		button = gtk_toggle_button_new ();
+	else
+		button = gtk_button_new ();
+	if (label && stock_id) {
+		hbox = gtk_hbox_new (FALSE, 0);
+		gtk_container_add (GTK_CONTAINER (button), hbox);
+		gtk_widget_show (hbox);
+	}
+
+	if (stock_id) {
+		GtkWidget *image;
+		image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU);
+		if (hbox)
+			gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+		else
+			gtk_container_add (GTK_CONTAINER (button), image);
+		gtk_widget_show (image);
+	}
+	if (label) {
+		GtkWidget *wid;
+		wid = gtk_label_new (label);
+		if (hbox)
+			gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
+		else
+			gtk_container_add (GTK_CONTAINER (button), wid);
+		gtk_widget_show (wid);
+	}
+
+	if (tooltip)
+		gtk_widget_set_tooltip_text (button, tooltip);
+	return button;
 }

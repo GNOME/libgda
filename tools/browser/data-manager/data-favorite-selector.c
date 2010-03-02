@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <libgda/gda-tree.h>
-#include "query-favorite-selector.h"
+#include "data-favorite-selector.h"
 #include "../mgr-favorites.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../dnd.h"
@@ -34,9 +34,20 @@
 #include "../browser-favorites.h"
 #include <gdk/gdkkeysyms.h>
 #include "../common/popup-container.h"
-#include "query-editor.h"
 
-struct _QueryFavoriteSelectorPrivate {
+#ifdef HAVE_GTKSOURCEVIEW
+  #ifdef GTK_DISABLE_SINGLE_INCLUDES
+    #undef GTK_DISABLE_SINGLE_INCLUDES
+  #endif
+
+  #include <gtksourceview/gtksourceview.h>
+  #include <gtksourceview/gtksourcelanguagemanager.h>
+  #include <gtksourceview/gtksourcebuffer.h>
+  #include <gtksourceview/gtksourcestyleschememanager.h>
+  #include <gtksourceview/gtksourcestylescheme.h>
+#endif
+
+struct _DataFavoriteSelectorPrivate {
 	BrowserConnection *bcnc;
 	GdaTree *tree;
 	GtkWidget *treeview;
@@ -51,19 +62,19 @@ struct _QueryFavoriteSelectorPrivate {
 	guint      prop_save_timeout;
 };
 
-static void query_favorite_selector_class_init (QueryFavoriteSelectorClass *klass);
-static void query_favorite_selector_init       (QueryFavoriteSelector *tsel,
-				       QueryFavoriteSelectorClass *klass);
-static void query_favorite_selector_dispose   (GObject *object);
+static void data_favorite_selector_class_init (DataFavoriteSelectorClass *klass);
+static void data_favorite_selector_init       (DataFavoriteSelector *tsel,
+				       DataFavoriteSelectorClass *klass);
+static void data_favorite_selector_dispose   (GObject *object);
 
-static void favorites_changed_cb (BrowserFavorites *bfav, QueryFavoriteSelector *tsel);
+static void favorites_changed_cb (BrowserFavorites *bfav, DataFavoriteSelector *tsel);
 
 enum {
 	SELECTION_CHANGED,
 	LAST_SIGNAL
 };
 
-static guint query_favorite_selector_signals[LAST_SIGNAL] = { 0 };
+static guint data_favorite_selector_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 /* columns of the resulting GtkTreeModel */
@@ -74,48 +85,47 @@ enum {
 	COLUMN_TYPE = 3,
 	COLUMN_ID = 4,
 	COLUMN_NAME = 5,
-	COLUMN_SUMMARY = 6
 };
 
 
 /*
- * QueryFavoriteSelector class implementation
+ * DataFavoriteSelector class implementation
  */
 
 static void
-query_favorite_selector_class_init (QueryFavoriteSelectorClass *klass)
+data_favorite_selector_class_init (DataFavoriteSelectorClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
 	/* signals */
-	query_favorite_selector_signals [SELECTION_CHANGED] =
+	data_favorite_selector_signals [SELECTION_CHANGED] =
                 g_signal_new ("selection-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (QueryFavoriteSelectorClass, selection_changed),
+                              G_STRUCT_OFFSET (DataFavoriteSelectorClass, selection_changed),
                               NULL, NULL,
-                              _qe_marshal_VOID__INT_ENUM_STRING, G_TYPE_NONE,
+                              _dm_marshal_VOID__INT_ENUM_STRING, G_TYPE_NONE,
                               3, G_TYPE_INT, G_TYPE_UINT, G_TYPE_STRING);
 	klass->selection_changed = NULL;
 
-	object_class->dispose = query_favorite_selector_dispose;
+	object_class->dispose = data_favorite_selector_dispose;
 }
 
 
 static void
-query_favorite_selector_init (QueryFavoriteSelector *tsel,	QueryFavoriteSelectorClass *klass)
+data_favorite_selector_init (DataFavoriteSelector *tsel,	DataFavoriteSelectorClass *klass)
 {
-	tsel->priv = g_new0 (QueryFavoriteSelectorPrivate, 1);
+	tsel->priv = g_new0 (DataFavoriteSelectorPrivate, 1);
 	tsel->priv->idle_update_favorites = 0;
 	tsel->priv->prop_save_timeout = 0;
 }
 
 static void
-query_favorite_selector_dispose (GObject *object)
+data_favorite_selector_dispose (GObject *object)
 {
-	QueryFavoriteSelector *tsel = (QueryFavoriteSelector *) object;
+	DataFavoriteSelector *tsel = (DataFavoriteSelector *) object;
 
 	/* free memory */
 	if (tsel->priv) {
@@ -145,30 +155,30 @@ query_favorite_selector_dispose (GObject *object)
 }
 
 GType
-query_favorite_selector_get_type (void)
+data_favorite_selector_get_type (void)
 {
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
-			sizeof (QueryFavoriteSelectorClass),
+			sizeof (DataFavoriteSelectorClass),
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) query_favorite_selector_class_init,
+			(GClassInitFunc) data_favorite_selector_class_init,
 			NULL,
 			NULL,
-			sizeof (QueryFavoriteSelector),
+			sizeof (DataFavoriteSelector),
 			0,
-			(GInstanceInitFunc) query_favorite_selector_init
+			(GInstanceInitFunc) data_favorite_selector_init
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "QueryFavoriteSelector",
+		type = g_type_register_static (GTK_TYPE_VBOX, "DataFavoriteSelector",
 					       &info, 0);
 	}
 	return type;
 }
 
 static gboolean
-key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, QueryFavoriteSelector *tsel)
+key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, DataFavoriteSelector *tsel)
 {
 	if (event->keyval == GDK_Delete) {
 		GtkTreeModel *model;
@@ -202,7 +212,7 @@ key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, QueryFavoriteSele
 
 static void
 selection_changed_cb (GtkTreeView *treeview, GtkTreePath *path,
-		      GtkTreeViewColumn *column, QueryFavoriteSelector *tsel)
+		      GtkTreeViewColumn *column, DataFavoriteSelector *tsel)
 {
 	GtkTreeModel *model;
 	GtkTreeSelection *select;
@@ -217,13 +227,13 @@ selection_changed_cb (GtkTreeView *treeview, GtkTreePath *path,
 				    COLUMN_ID, &fav_id,
 				    COLUMN_TYPE, &type,
 				    COLUMN_CONTENTS, &str, -1);
-		g_signal_emit (tsel, query_favorite_selector_signals [SELECTION_CHANGED], 0, fav_id, type, str);
+		g_signal_emit (tsel, data_favorite_selector_signals [SELECTION_CHANGED], 0, fav_id, type, str);
 		g_free (str);
 	}
 }
 
 static gboolean
-prop_save_timeout (QueryFavoriteSelector *tsel)
+prop_save_timeout (DataFavoriteSelector *tsel)
 {
 	BrowserFavorites *bfav;
 	BrowserFavoritesAttributes fav;
@@ -231,13 +241,19 @@ prop_save_timeout (QueryFavoriteSelector *tsel)
 
 	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
 	fav.id = tsel->priv->properties_id;
-	fav.type = BROWSER_FAVORITES_QUERIES;
+	fav.type = BROWSER_FAVORITES_DATA_MANAGERS;
 	fav.name = (gchar*) gtk_entry_get_text (GTK_ENTRY (tsel->priv->properties_name));
 	fav.descr = NULL;
-	fav.contents = query_editor_get_all_text (QUERY_EDITOR (tsel->priv->properties_text));
+
+	GtkTextBuffer *buffer;
+	GtkTextIter start, end;
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (tsel->priv->properties_text));
+	gtk_text_buffer_get_start_iter (buffer, &start);
+	gtk_text_buffer_get_end_iter (buffer, &end);
+	fav.contents = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 
 	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, tsel->priv->properties_position, &error)) {
+	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_DATA_MANAGERS, tsel->priv->properties_position, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));
@@ -251,7 +267,7 @@ prop_save_timeout (QueryFavoriteSelector *tsel)
 }
 
 static void
-property_changed_cb (GtkWidget *multiple, QueryFavoriteSelector *tsel)
+property_changed_cb (GtkWidget *multiple, DataFavoriteSelector *tsel)
 {
 	if (tsel->priv->prop_save_timeout)
 		g_source_remove (tsel->priv->prop_save_timeout);
@@ -259,7 +275,7 @@ property_changed_cb (GtkWidget *multiple, QueryFavoriteSelector *tsel)
 }
 
 static void
-properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
+properties_activated_cb (GtkMenuItem *mitem, DataFavoriteSelector *tsel)
 {
 	if (! tsel->priv->popup_properties) {
 		GtkWidget *pcont, *vbox, *hbox, *label, *entry, *text, *table;
@@ -292,7 +308,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 		
 		label = gtk_label_new ("");
-		str = g_strdup_printf ("<b>%s:</b>", _("SQL Code"));
+		str = g_strdup_printf ("<b>%s:</b>", _("Specifications"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
@@ -304,12 +320,26 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		g_signal_connect (entry, "changed",
 				  G_CALLBACK (property_changed_cb), tsel);
 		
-		text = query_editor_new ();
-		query_editor_show_tooltip (QUERY_EDITOR (text), FALSE);
+#ifdef HAVE_GTKSOURCEVIEW
+		text = gtk_source_view_new ();
+		gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text))),
+							TRUE);
+		gtk_source_buffer_set_language (GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text))),
+						gtk_source_language_manager_get_language (gtk_source_language_manager_get_default (),
+											  "xml"));
+#else
+		text = gtk_text_view_new ();
+#endif
+		GtkWidget *sw;
 		gtk_widget_set_size_request (GTK_WIDGET (text), 400, 300);
-		gtk_table_attach_defaults (GTK_TABLE (table), text, 1, 2, 1, 2);
+
+		sw = gtk_scrolled_window_new (NULL, NULL);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+		gtk_table_attach_defaults (GTK_TABLE (table), sw, 1, 2, 1, 2);
+		gtk_container_add (GTK_CONTAINER (sw), text);
 		tsel->priv->properties_text = text;
-		g_signal_connect (text, "changed",
+		g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text)), "changed",
 				  G_CALLBACK (property_changed_cb), tsel);
 
 		tsel->priv->popup_properties = pcont;
@@ -323,6 +353,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tsel->priv->treeview));
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gchar *name, *contents;
+		GtkTextBuffer *buffer;
 		
 		gtk_tree_model_get (model, &iter,
 				    COLUMN_ID, &(tsel->priv->properties_id),
@@ -339,7 +370,11 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 
 		g_signal_handlers_block_by_func (tsel->priv->properties_text,
 						 G_CALLBACK (property_changed_cb), tsel);
-		query_editor_set_text (QUERY_EDITOR (tsel->priv->properties_text), contents);
+		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (tsel->priv->properties_text));
+		if (contents)
+			gtk_text_buffer_set_text (buffer, contents, -1);
+		else
+			gtk_text_buffer_set_text (buffer, "", -1);
 		g_signal_handlers_unblock_by_func (tsel->priv->properties_text,
 						   G_CALLBACK (property_changed_cb), tsel);
 		g_free (contents);
@@ -349,7 +384,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 }
 
 static void
-do_popup_menu (GtkWidget *widget, GdkEventButton *event, QueryFavoriteSelector *tsel)
+do_popup_menu (GtkWidget *widget, GdkEventButton *event, DataFavoriteSelector *tsel)
 {
 	int button, event_time;
 
@@ -384,14 +419,14 @@ do_popup_menu (GtkWidget *widget, GdkEventButton *event, QueryFavoriteSelector *
 
 
 static gboolean
-popup_menu_cb (GtkWidget *widget, QueryFavoriteSelector *tsel)
+popup_menu_cb (GtkWidget *widget, DataFavoriteSelector *tsel)
 {
 	do_popup_menu (widget, NULL, tsel);
 	return TRUE;
 }
 
 static gboolean
-button_press_event_cb (GtkTreeView *treeview, GdkEventButton *event, QueryFavoriteSelector *tsel)
+button_press_event_cb (GtkTreeView *treeview, GdkEventButton *event, DataFavoriteSelector *tsel)
 {
 	if (event->button == 3 && event->type == GDK_BUTTON_PRESS) {
 		do_popup_menu ((GtkWidget*) treeview, event, tsel);
@@ -403,29 +438,29 @@ button_press_event_cb (GtkTreeView *treeview, GdkEventButton *event, QueryFavori
 
 static void cell_data_func (GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
 			    GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data);
-static gboolean idle_update_favorites (QueryFavoriteSelector *tsel);
+static gboolean idle_update_favorites (DataFavoriteSelector *tsel);
 static gboolean tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path,
-					 GtkSelectionData *selection_data, QueryFavoriteSelector *tsel);
+					 GtkSelectionData *selection_data, DataFavoriteSelector *tsel);
 static gboolean tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar *path,
-					     QueryFavoriteSelector *tsel);
+					     DataFavoriteSelector *tsel);
 static gboolean tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path,
-					GtkSelectionData *selection_data, QueryFavoriteSelector *tsel);
+					GtkSelectionData *selection_data, DataFavoriteSelector *tsel);
 static void trash_data_received_cb (GtkWidget *widget, GdkDragContext *context, gint x, gint y,
 				    GtkSelectionData *selection_data, guint target_type, guint time,
-				    QueryFavoriteSelector *tsel);
+				    DataFavoriteSelector *tsel);
 /**
- * query_favorite_selector_new
+ * data_favorite_selector_new
  *
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-query_favorite_selector_new (BrowserConnection *bcnc)
+data_favorite_selector_new (BrowserConnection *bcnc)
 {
-	QueryFavoriteSelector *tsel;
+	DataFavoriteSelector *tsel;
 	GdaTreeManager *manager;
 
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
-	tsel = QUERY_FAVORITE_SELECTOR (g_object_new (QUERY_FAVORITE_SELECTOR_TYPE, NULL));
+	tsel = DATA_FAVORITE_SELECTOR (g_object_new (DATA_FAVORITE_SELECTOR_TYPE, NULL));
 
 	tsel->priv->bcnc = g_object_ref (bcnc);
 	g_signal_connect (browser_connection_get_favorites (tsel->priv->bcnc), "favorites-changed",
@@ -433,7 +468,7 @@ query_favorite_selector_new (BrowserConnection *bcnc)
 	
 	/* create tree managers */
 	tsel->priv->tree = gda_tree_new ();
-	manager = mgr_favorites_new (bcnc, BROWSER_FAVORITES_QUERIES, ORDER_KEY_QUERIES);
+	manager = mgr_favorites_new (bcnc, BROWSER_FAVORITES_DATA_MANAGERS, ORDER_KEY_DATA_MANAGERS);
         gda_tree_add_manager (tsel->priv->tree, manager);
 	g_object_unref (manager);
 
@@ -459,14 +494,13 @@ query_favorite_selector_new (BrowserConnection *bcnc)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 
-	model = gdaui_tree_store_new (tsel->priv->tree, 7,
+	model = gdaui_tree_store_new (tsel->priv->tree, 6,
 				      G_TYPE_INT, MGR_FAVORITES_POSITION_ATT_NAME,
 				      G_TYPE_OBJECT, "icon",
 				      G_TYPE_STRING, MGR_FAVORITES_CONTENTS_ATT_NAME,
 				      G_TYPE_UINT, MGR_FAVORITES_TYPE_ATT_NAME,
 				      G_TYPE_INT, MGR_FAVORITES_ID_ATT_NAME,
-				      G_TYPE_STRING, MGR_FAVORITES_NAME_ATT_NAME,
-				      G_TYPE_STRING, "summary");
+				      G_TYPE_STRING, MGR_FAVORITES_NAME_ATT_NAME);
 	treeview = gtk_tree_view_new_with_model (model);
 	tsel->priv->treeview = treeview;
 	g_object_unref (model);
@@ -529,27 +563,21 @@ static void
 cell_data_func (GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
 		GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data)
 {
-	gchar *name, *summary;
-	gchar *markup, *tmp1, *tmp2;
+	gchar *name;
+	gchar *tmp;
 
 	gtk_tree_model_get (tree_model, iter,
-			    COLUMN_NAME, &name, COLUMN_SUMMARY, &summary, -1);
-	tmp1 = g_markup_printf_escaped ("%s", name);
-	tmp2 = g_markup_printf_escaped ("%s", summary);
+			    COLUMN_NAME, &name, -1);
+	tmp = g_markup_printf_escaped ("%s", name);
 	g_free (name);
-	g_free (summary);
 
-	markup = g_strdup_printf ("%s\n<small>%s</small>", tmp1, tmp2);
-	g_free (tmp1);
-	g_free (tmp2);
-
-	g_object_set ((GObject*) cell, "markup", markup, NULL);
-	g_free (markup);
+	g_object_set ((GObject*) cell, "markup", tmp, NULL);
+	g_free (tmp);
 }
 
 
 static gboolean
-idle_update_favorites (QueryFavoriteSelector *tsel)
+idle_update_favorites (DataFavoriteSelector *tsel)
 {
 	gboolean done;
 	done = gda_tree_update_all (tsel->priv->tree, NULL);
@@ -563,7 +591,7 @@ idle_update_favorites (QueryFavoriteSelector *tsel)
 
 static gboolean
 tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data,
-			 QueryFavoriteSelector *tsel)
+			 DataFavoriteSelector *tsel)
 {
 	BrowserFavorites *bfav;
 	BrowserFavoritesAttributes fav;
@@ -582,8 +610,8 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 	if (id < 0) {
 		memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
 		fav.id = -1;
-		fav.type = BROWSER_FAVORITES_QUERIES;
-		fav.name = _("Unnamed query");
+		fav.type = BROWSER_FAVORITES_DATA_MANAGERS;
+		fav.name = _("Unnamed data manager");
 		fav.descr = NULL;
 #if GTK_CHECK_VERSION(2,18,0)
 		fav.contents = (gchar*) gtk_selection_data_get_data (selection_data);
@@ -595,7 +623,7 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 	pos = atoi (path);
 	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
 	
-	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, pos, &error)) {
+	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_DATA_MANAGERS, pos, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));
@@ -611,7 +639,7 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 }
 
 static gboolean
-tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar *path, QueryFavoriteSelector *tsel)
+tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar *path, DataFavoriteSelector *tsel)
 {
 	GdaTreeNode *node;
 	node = gda_tree_get_node (tsel->priv->tree, path, FALSE);
@@ -626,7 +654,7 @@ tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar *path, QueryFavo
 
 static gboolean
 tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data,
-			QueryFavoriteSelector *tsel)
+			DataFavoriteSelector *tsel)
 {
 	GdaTreeNode *node;
 	node = gda_tree_get_node (tsel->priv->tree, path, FALSE);
@@ -650,7 +678,7 @@ tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionDa
 }
 
 static void
-favorites_changed_cb (BrowserFavorites *bfav, QueryFavoriteSelector *tsel)
+favorites_changed_cb (BrowserFavorites *bfav, DataFavoriteSelector *tsel)
 {
 	if (! gda_tree_update_all (tsel->priv->tree, NULL)) {
 		if (tsel->priv->idle_update_favorites == 0)

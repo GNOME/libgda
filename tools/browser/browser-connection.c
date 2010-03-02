@@ -101,6 +101,7 @@ push_wrapper_job (BrowserConnection *bcnc, guint job_id, JobType job_type, const
 	wj->job_type = job_type;
 	if (reason)
 		wj->reason = g_strdup (reason);
+
 	bcnc->priv->wrapper_jobs = g_slist_append (bcnc->priv->wrapper_jobs, wj);
 
 	if (! bcnc->priv->wrapper_jobs->next)
@@ -713,9 +714,10 @@ browser_connection_update_meta_data (BrowserConnection *bcnc)
 	if (bcnc->priv->wrapper_jobs) {
 		WrapperJob *wj;
 		wj = (WrapperJob*) g_slist_last (bcnc->priv->wrapper_jobs)->data;
-		if (wj->job_type == JOB_TYPE_META_STORE_UPDATE)
+		if (wj->job_type == JOB_TYPE_META_STORE_UPDATE) {
 			/* nothing to do */
 			return;
+		}
 	}
 
 	guint job_id;
@@ -984,6 +986,50 @@ browser_connection_execute_statement (BrowserConnection *bcnc,
 
 	return job_id;
 }
+
+typedef struct {
+	GdaConnection *cnc;
+	GdaDataModel *model;
+} RerunSelectData;
+
+/* executed in @bcnc->priv->wrapper's sub thread */
+static gpointer
+wrapper_rerun_select (RerunSelectData *data, GError **error)
+{
+	gboolean retval;
+
+	retval = gda_data_select_rerun (GDA_DATA_SELECT (data->model), error);
+	return retval ? data->model : (gpointer) 0x01;
+}
+
+/**
+ * browser_connection_rerun_select
+ */
+guint
+browser_connection_rerun_select (BrowserConnection *bcnc,
+				 GdaDataModel *model,
+				 GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), 0);
+	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), 0);
+
+	RerunSelectData *data;
+	guint job_id;
+
+	data = g_new0 (RerunSelectData, 1);
+	data->cnc = bcnc->priv->cnc;
+	data->model = model;
+
+	job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+					     (GdaThreadWrapperFunc) wrapper_rerun_select,
+					     data, (GDestroyNotify) g_free, error);
+	if (job_id > 0)
+		push_wrapper_job (bcnc, job_id, JOB_TYPE_STATEMENT_EXECUTE,
+				  _("Executing a query"));
+
+	return job_id;
+}
+
 
 /**
  * browser_connection_execution_get_result

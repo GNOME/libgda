@@ -45,9 +45,10 @@ typedef struct _BrowserFavoritesPrivate BrowserFavoritesPrivate;
 typedef enum {
         BROWSER_FAVORITES_TABLES   = 1 << 0,
 	BROWSER_FAVORITES_DIAGRAMS = 1 << 1,
-	BROWSER_FAVORITES_QUERIES  = 1 << 2
+	BROWSER_FAVORITES_QUERIES  = 1 << 2,
+	BROWSER_FAVORITES_DATA_MANAGERS  = 1 << 3
 } BrowserFavoritesType;
-#define BROWSER_FAVORITES_NB_TYPES 3
+#define BROWSER_FAVORITES_NB_TYPES 4
 
 /**
  * BrowserFavoritesAttributes:

@@ -52,7 +52,6 @@ struct _QueryExecPerspectivePrivate {
 	BrowserConnection *bcnc;
 	
 	GtkActionGroup *action_group;
-	gboolean updating_transaction_status;
 };
 
 GType
@@ -134,10 +133,6 @@ static void nb_page_removed_cb (GtkNotebook *nb, GtkNotebookPage *page, gint pag
 			       QueryExecPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 
-static void transaction_status_changed_cb (BrowserConnection *bcnc, QueryExecPerspective *perspective);
-
-static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
-				gchar *reason, QueryExecPerspective *perspective);
 /**
  * query_exec_perspective_new
  *
@@ -195,41 +190,9 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
 
-	/* transaction status detection */
-	g_signal_connect (bcnc, "transaction-status-changed",
-			  G_CALLBACK (transaction_status_changed_cb), bpers);
-
 	gtk_widget_grab_focus (page);
 
-	/* busy connection handling */
-	connection_busy_cb (perspective->priv->bcnc, browser_connection_is_busy (perspective->priv->bcnc, NULL),
-			    NULL, perspective);
-	g_signal_connect (perspective->priv->bcnc, "busy",
-			  G_CALLBACK (connection_busy_cb), perspective);
-
 	return bpers;
-}
-
-static void
-connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
-		    gchar *reason, QueryExecPerspective *perspective)
-{
-	if (perspective->priv->action_group) {
-		GtkAction *action;
-		gboolean bsens = FALSE, csens = FALSE;
-		if (!is_busy) {
-			if (browser_connection_get_transaction_status (bcnc))
-				csens = TRUE;
-			else
-				bsens = TRUE;
-		}
-		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecBegin");
-		gtk_action_set_sensitive (action, bsens);
-		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecCommit");
-		gtk_action_set_sensitive (action, csens);
-		action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecRollback");
-		gtk_action_set_sensitive (action, csens);
-	}
 }
 
 static void
@@ -299,13 +262,8 @@ query_exec_perspective_dispose (GObject *object)
 
 	perspective = QUERY_EXEC_PERSPECTIVE (object);
 	if (perspective->priv) {
-		g_signal_handlers_disconnect_by_func (perspective->priv->bcnc,
-						      G_CALLBACK (transaction_status_changed_cb), perspective);
-		if (perspective->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (perspective->priv->bcnc,
-							      G_CALLBACK (connection_busy_cb), perspective);
+		if (perspective->priv->bcnc)
 			g_object_unref (perspective->priv->bcnc);
-		}
 
 		if (perspective->priv->action_group)
 			g_object_unref (perspective->priv->action_group);
@@ -351,98 +309,10 @@ query_exec_add_cb (GtkAction *action, BrowserPerspective *bpers)
 	gtk_widget_grab_focus (page);
 }
 
-static void
-transaction_status_changed_cb (BrowserConnection *bcnc, QueryExecPerspective *perspective)
-{
-	if (!perspective->priv->action_group)
-		return;
-
-	GtkAction *action;
-	gboolean trans_started;
-
-	trans_started = browser_connection_get_transaction_status (bcnc) ? TRUE : FALSE;
-	perspective->priv->updating_transaction_status = TRUE;
-
-	action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecBegin");
-	gtk_action_set_sensitive (action, !trans_started);
-
-	action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecCommit");
-	gtk_action_set_sensitive (action, trans_started);
-
-	action = gtk_action_group_get_action (perspective->priv->action_group, "QueryExecRollback");
-	gtk_action_set_sensitive (action, trans_started);
-				      
-	perspective->priv->updating_transaction_status = FALSE;
-}
-
-static void
-transaction_begin_cb (GtkAction *action, BrowserPerspective *bpers)
-{
-	QueryExecPerspective *perspective;
-	BrowserConnection *bcnc;
-
-	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
-	bcnc = perspective->priv->bcnc;
-	if (!perspective->priv->updating_transaction_status) {
-		GError *error = NULL;
-		if (! browser_connection_begin (bcnc, &error)) {
-			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) bpers)),
-					    _("Error starting transaction: %s"),
-					    error && error->message ? error->message : _("No detail"));
-			g_clear_error (&error);
-		}
-	}
-}
-
-static void
-transaction_commit_cb (GtkAction *action, BrowserPerspective *bpers)
-{
-	QueryExecPerspective *perspective;
-	BrowserConnection *bcnc;
-
-	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
-	bcnc = perspective->priv->bcnc;
-	if (!perspective->priv->updating_transaction_status) {
-		GError *error = NULL;
-		if (! browser_connection_commit (bcnc, &error)) {
-			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) bpers)),
-					    _("Error committing transaction: %s"),
-					    error && error->message ? error->message : _("No detail"));
-			g_clear_error (&error);
-		}
-	}
-}
-
-static void
-transaction_rollback_cb (GtkAction *action, BrowserPerspective *bpers)
-{
-	QueryExecPerspective *perspective;
-	BrowserConnection *bcnc;
-
-	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
-	bcnc = perspective->priv->bcnc;
-	if (!perspective->priv->updating_transaction_status) {
-		GError *error = NULL;
-		if (! browser_connection_rollback (bcnc, &error)) {
-			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) bpers)),
-					    _("Error rolling back transaction: %s"),
-					    error && error->message ? error->message : _("No detail"));
-			g_clear_error (&error);
-		}
-	}
-}
-
 static GtkActionEntry ui_actions[] = {
         { "QueryExecMenu", NULL, N_("_Query"), NULL, "QueryExecMenu", NULL },
         { "QueryExecItem1", STOCK_CONSOLE, N_("_New editor"), "<control>T", N_("Open a new query editor"),
           G_CALLBACK (query_exec_add_cb)},
-        { "QueryExecBegin", BROWSER_STOCK_BEGIN, N_("_Begin"), NULL, N_("Begin a new transaction"),
-          G_CALLBACK (transaction_begin_cb)},
-        { "QueryExecCommit", BROWSER_STOCK_COMMIT, N_("_Commit"), NULL, N_("Commit current transaction"),
-          G_CALLBACK (transaction_commit_cb)},
-        { "QueryExecRollback", BROWSER_STOCK_ROLLBACK, N_("_Rollback"), NULL, N_("Rollback current transaction"),
-          G_CALLBACK (transaction_rollback_cb)},
-
 };
 
 static const gchar *ui_actions_info =
@@ -451,18 +321,12 @@ static const gchar *ui_actions_info =
 	"    <placeholder name='MenuExtension'>"
         "      <menu name='QueryExec' action='QueryExecMenu'>"
         "        <menuitem name='QueryExecItem1' action= 'QueryExecItem1'/>"
-        "        <menuitem name='QueryExecBegin' action= 'QueryExecBegin'/>"
-        "        <menuitem name='QueryExecCommit' action= 'QueryExecCommit'/>"
-        "        <menuitem name='QueryExecRollback' action= 'QueryExecRollback'/>"
         "      </menu>"
 	"    </placeholder>"
         "  </menubar>"
         "  <toolbar name='ToolBar'>"
         "    <separator/>"
         "    <toolitem action='QueryExecItem1'/>"
-        "    <toolitem action='QueryExecBegin'/>"
-        "    <toolitem action='QueryExecCommit'/>"
-        "    <toolitem action='QueryExecRollback'/>"
         "  </toolbar>"
         "</ui>";
 
@@ -477,13 +341,8 @@ query_exec_perspective_get_actions_group (BrowserPerspective *perspective)
 		agroup = gtk_action_group_new ("QueryExecActions");
 		gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
 		bpers->priv->action_group = g_object_ref (agroup);
-
-		connection_busy_cb (bpers->priv->bcnc, browser_connection_is_busy (bpers->priv->bcnc, NULL),
-				    NULL, bpers);
 	}
 	
-	transaction_status_changed_cb (bpers->priv->bcnc, bpers);
-
 	return bpers->priv->action_group;
 }
 

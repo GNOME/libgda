@@ -99,7 +99,7 @@ g_object_unref (b);
       <para>
 	<programlisting>
 GdaSqlBuilder *b;
-b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 gda_sql_builder_select_add_field (b, "firstname", "people", "person");
 gda_sql_builder_select_add_field (b, "lastname", "people", NULL);
 gda_sql_builder_select_add_field (b, "date", NULL, "birthdate");

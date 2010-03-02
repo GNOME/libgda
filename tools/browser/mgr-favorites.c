@@ -484,6 +484,43 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 								  av, NULL);
 				gda_value_free (av);
 			}
+			else if (fav->type == BROWSER_FAVORITES_DATA_MANAGERS) {
+				if (!snode) {
+					snode = gda_tree_manager_create_node (manager, node, NULL);
+					
+					g_value_set_int ((av = gda_value_new (G_TYPE_INT)), fav->id);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_ID_ATT_NAME,
+									  av, NULL);
+					gda_value_free (av);
+
+					g_value_set_int ((av = gda_value_new (G_TYPE_INT)), pos);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_POSITION_ATT_NAME,
+									  av, NULL);
+					gda_value_free (av);
+
+					/* icon */
+					GdkPixbuf *pixbuf;
+					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
+					av = gda_value_new (G_TYPE_OBJECT);
+					g_value_set_object (av, pixbuf);
+					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
+					gda_value_free (av);
+				}
+
+				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
+						    fav->contents);
+				gda_tree_node_set_node_attribute (snode,
+								  MGR_FAVORITES_CONTENTS_ATT_NAME,
+								  av, NULL);
+				gda_value_free (av);
+
+				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)), fav->name);
+				gda_tree_node_set_node_attribute (snode, MGR_FAVORITES_NAME_ATT_NAME,
+								  av, NULL);
+				gda_value_free (av);
+			}
 			else {
 				TO_IMPLEMENT;
 			}

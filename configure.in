@@ -1764,6 +1764,7 @@ tools/browser/data/Makefile
 tools/browser/common/Makefile
 tools/browser/schema-browser/Makefile
 tools/browser/query-exec/Makefile
+tools/browser/data-manager/Makefile
 tools/browser/dummy-perspective/Makefile
 tools/browser/canvas/Makefile
 tools/browser/doc/Makefile

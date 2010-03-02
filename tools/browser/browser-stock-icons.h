@@ -27,6 +27,7 @@ G_BEGIN_DECLS
 #define BROWSER_STOCK_BEGIN           "transaction-begin"
 #define BROWSER_STOCK_COMMIT          "transaction-commit"
 #define BROWSER_STOCK_ROLLBACK        "transaction-rollback"
+#define BROWSER_STOCK_BUILDER         "glade"
 
 /* Named icons defined in fd.o Icon Naming Spec */
 #define STOCK_NEW_WINDOW           "window-new"

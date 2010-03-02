@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __QUERY_INFO_H__
+#ifndef __QUERY_CONSOLE_H__
 #define __QUERY_CONSOLE_H__
 
 #include <gtk/gtk.h>

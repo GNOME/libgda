@@ -36,17 +36,6 @@
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
 
-#define VARIABLES_HELP _("<small>This area allows to give values to\n" \
-			 "variables defined in the SQL code\n"		\
-			 "using the following syntax:\n"		\
-			 "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n" \
-			 "For example:\n"				\
-			 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n      defines <b>id</b> as a non NULL integer\n" \
-			 "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n      defines <b>age</b> as a a string\n\n" \
-			 "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n" \
-			 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</tt> and\n" \
-			 "<tt>binary</tt></small>")
-
 /*
  * Statement execution structures
  */
@@ -230,6 +219,8 @@ query_console_dispose (GObject *object)
 			g_source_remove (tconsole->priv->params_compute_id);
 		if (tconsole->priv->params_popup)
 			gtk_widget_destroy (tconsole->priv->params_popup);
+		if (tconsole->priv->agroup)
+			g_object_unref (tconsole->priv->agroup);
 
 		g_free (tconsole->priv);
 		tconsole->priv = NULL;
@@ -267,9 +258,6 @@ query_console_get_type (void)
 	}
 	return type;
 }
-
-static GtkWidget *make_small_button (gboolean is_toggle,
-				     const gchar *label, const gchar *stock_id, const gchar *tooltip);
 
 static void editor_changed_cb (QueryEditor *editor, QueryConsole *tconsole);
 static void editor_execute_request_cb (QueryEditor *editor, QueryConsole *tconsole);
@@ -367,6 +355,7 @@ query_console_new (BrowserConnection *bcnc)
 
 	wid = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (wid), VARIABLES_HELP);
+	gtk_misc_set_alignment (GTK_MISC (wid), -1, 0.);
 	gtk_container_add (GTK_CONTAINER (tconsole->priv->params_form_box), wid);
 	tconsole->priv->params_form = wid;
 	
@@ -374,24 +363,24 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 
-	button = make_small_button (FALSE, _("Clear"), GTK_STOCK_CLEAR, _("Clear the editor"));
+	button = browser_make_small_button (FALSE, _("Clear"), GTK_STOCK_CLEAR, _("Clear the editor's\ncontents"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_clear_clicked_cb), tconsole);
 
-	button = make_small_button (TRUE, _("Variables"), NULL, _("Show variables needed\nto execute SQL"));
+	button = browser_make_small_button (TRUE, _("Variables"), NULL, _("Show variables needed\nto execute SQL"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	tconsole->priv->params_toggle = GTK_TOGGLE_BUTTON (button);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (sql_variables_clicked_cb), tconsole);
 
-	button = make_small_button (FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute SQL in editor"));
+	button = browser_make_small_button (FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute SQL in editor"));
 	tconsole->priv->exec_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_execute_clicked_cb), tconsole);
 	
-	button = make_small_button (FALSE, _("Indent"), GTK_STOCK_INDENT, _("Indent SQL in editor\n"
+	button = browser_make_small_button (FALSE, _("Indent"), GTK_STOCK_INDENT, _("Indent SQL in editor\n"
 									    "and make the code more readable\n"
 									    "(removes comments)"));
 	tconsole->priv->indent_button = button;
@@ -399,7 +388,7 @@ query_console_new (BrowserConnection *bcnc)
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_indent_clicked_cb), tconsole);
 
-	button = make_small_button (FALSE, _("Favorite"), STOCK_ADD_BOOKMARK, _("Add SQL to favorite"));
+	button = browser_make_small_button (FALSE, _("Favorite"), STOCK_ADD_BOOKMARK, _("Add SQL to favorite"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_favorite_clicked_cb), tconsole);
@@ -431,14 +420,14 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 
-	button = make_small_button (FALSE, _("Copy"), GTK_STOCK_COPY, _("Copy selected history\nto editor"));
+	button = browser_make_small_button (FALSE, _("Copy"), GTK_STOCK_COPY, _("Copy selected history\nto editor"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (history_copy_clicked_cb), tconsole);
 	tconsole->priv->history_copy_button = button;
 	gtk_widget_set_sensitive (button, FALSE);
 
-	button = make_small_button (FALSE, _("Clear"), GTK_STOCK_CLEAR, _("Clear history"));
+	button = browser_make_small_button (FALSE, _("Clear"), GTK_STOCK_CLEAR, _("Clear history"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (history_clear_clicked_cb), tconsole);
@@ -487,45 +476,6 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Qu
 		action = gtk_action_group_get_action (tconsole->priv->agroup, "ExecuteQuery");
 		gtk_action_set_sensitive (action, !is_busy);
 	}
-}
-
-static GtkWidget *
-make_small_button (gboolean is_toggle, const gchar *label, const gchar *stock_id, const gchar *tooltip)
-{
-	GtkWidget *button, *hbox = NULL;
-
-	if (is_toggle)
-		button = gtk_toggle_button_new ();
-	else
-		button = gtk_button_new ();
-	if (label && stock_id) {
-		hbox = gtk_hbox_new (FALSE, 0);
-		gtk_container_add (GTK_CONTAINER (button), hbox);
-		gtk_widget_show (hbox);
-	}
-
-	if (stock_id) {
-		GtkWidget *image;
-		image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU);
-		if (hbox)
-			gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-		else
-			gtk_container_add (GTK_CONTAINER (button), image);
-		gtk_widget_show (image);
-	}
-	if (label) {
-		GtkWidget *wid;
-		wid = gtk_label_new (label);
-		if (hbox)
-			gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
-		else
-			gtk_container_add (GTK_CONTAINER (button), wid);
-		gtk_widget_show (wid);
-	}
-
-	if (tooltip)
-		gtk_widget_set_tooltip_text (button, tooltip);
-	return button;
 }
 
 static void
@@ -717,6 +667,7 @@ static void
 sql_clear_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 {
 	query_editor_set_text (tconsole->priv->editor, NULL);
+	gtk_widget_grab_focus (GTK_WIDGET (tconsole->priv->editor));
 }
 
 static void

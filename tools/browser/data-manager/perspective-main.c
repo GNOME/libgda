@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -22,16 +22,16 @@
 #include <glib/gi18n-lib.h>
 #include <gmodule.h>
 #include "perspective-main.h"
-#include "query-exec-perspective.h"
+#include "data-manager-perspective.h"
 
 static BrowserPerspectiveFactory bfact;
 
 BrowserPerspectiveFactory *
-query_exec_perspective_get_factory (void)
+data_manager_perspective_get_factory (void)
 {
-	bfact.perspective_name = "Query execution (SQL)";
-	bfact.menu_shortcut = "<control>S";
-	bfact.perspective_create = query_exec_perspective_new;
+	bfact.perspective_name = "Data manager";
+	bfact.menu_shortcut ="<control>D";
+	bfact.perspective_create = data_manager_perspective_new;
 
 	return &bfact;
 }

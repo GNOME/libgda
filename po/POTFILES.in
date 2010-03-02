@@ -224,6 +224,7 @@ tools/browser/login-dialog.c
 tools/browser/main.c
 tools/browser/mgr-favorites.c
 tools/browser/support.c
+tools/browser/support.h
 tools/browser/canvas/browser-canvas-column.c
 tools/browser/canvas/browser-canvas-db-relations.c
 tools/browser/canvas/browser-canvas-fkey.c
@@ -233,6 +234,11 @@ tools/browser/canvas/browser-canvas.c
 tools/browser/common/gdaui-data-import.c
 tools/browser/common/gdaui-entry-import.c
 tools/browser/common/objects-cloud.c
+tools/browser/data-manager/data-console.c
+tools/browser/data-manager/data-favorite-selector.c
+tools/browser/data-manager/data-source.c
+tools/browser/data-manager/data-widget.c
+tools/browser/data-manager/spec-editor.c
 tools/browser/query-exec/gda-sql.lang
 tools/browser/query-exec/query-console.c
 tools/browser/query-exec/query-editor.c

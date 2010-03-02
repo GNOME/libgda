@@ -47,6 +47,7 @@ typedef struct {
 
 #define ORDER_KEY_SCHEMA 1
 #define ORDER_KEY_QUERIES 2
+#define ORDER_KEY_DATA_MANAGERS 3
 
 G_END_DECLS
 

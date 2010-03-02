@@ -209,6 +209,8 @@ favorite_type_to_string (BrowserFavoritesType type)
 		return "DIAGRAM";
 	case BROWSER_FAVORITES_QUERIES:
 		return "QUERY";
+	case BROWSER_FAVORITES_DATA_MANAGERS:
+		return "DATAMAN";
 	default:
 		g_warning ("Unknown type of favorite");
 	}
@@ -221,8 +223,12 @@ favorite_string_to_type (const gchar *str)
 {
 	if (*str == 'T')
 		return BROWSER_FAVORITES_TABLES;
-	else if (*str == 'D')
-		return BROWSER_FAVORITES_DIAGRAMS;
+	else if (*str == 'D') {
+		if (str[1] == 'I')
+			return BROWSER_FAVORITES_DIAGRAMS;
+		else
+			return BROWSER_FAVORITES_DATA_MANAGERS;
+	}
 	else if (*str == 'Q')
 		return BROWSER_FAVORITES_QUERIES;
 	else

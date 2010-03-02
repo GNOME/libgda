@@ -1,7 +1,7 @@
 bin_PROGRAMS=gda-browser-4.0
 noinst_LTLIBRARIES = libbrowser.la
 
-SUBDIRS = data common schema-browser query-exec dummy-perspective
+SUBDIRS = data common schema-browser query-exec data-manager dummy-perspective
 if HAVE_GOOCANVAS
 SUBDIRS+=canvas
 noinst_PROGRAMS=canvas-example
@@ -94,7 +94,7 @@ gda_browser_4_0_LDFLAGS = $(EXTRALDFLAGS)
 gda_browser_4_0_LDADD=\
 	schema-browser/libperspective.la \
 	query-exec/libperspective.la \
-	dummy-perspective/libperspective.la \
+	data-manager/libperspective.la \
 	libbrowser.la \
 	$(CANVAS_LDADD) \
 	common/libcommon.la \

@@ -34,7 +34,8 @@
 /* Perspectives' factories */
 #include "schema-browser/perspective-main.h"
 #include "query-exec/perspective-main.h"
-#include "dummy-perspective/perspective-main.h"
+#include "data-manager/perspective-main.h"
+/* #include "dummy-perspective/perspective-main.h" */
 
 
 extern BrowserCoreInitFactories browser_core_init_factories;
@@ -45,7 +46,8 @@ main_browser_core_init_factories (void)
 	GSList *factories = NULL;
 	factories = g_slist_append (factories, schema_browser_perspective_get_factory ());
 	factories = g_slist_append (factories, query_exec_perspective_get_factory ());
-	factories = g_slist_append (factories, dummy_perspective_get_factory ());
+	factories = g_slist_append (factories, data_manager_perspective_get_factory ());
+	/* factories = g_slist_append (factories, dummy_perspective_get_factory ()); */
 	return factories;
 }
 
