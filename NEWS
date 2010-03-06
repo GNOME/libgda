@@ -1,3 +1,10 @@
+libgda 4.0.8, 2010-03-06
+
+ - Added missing support for the freeze/thaw feature in GdaDataSelect
+ - Misc corrections
+ - GObject introspection support
+
+
 libgda 4.0.7, 2010-02-09
 
  - Better GdaDataModelIter behaviour when dealing with model errors
