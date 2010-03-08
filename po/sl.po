@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-03 09:35+0100\n"
+"PO-Revision-Date: 2010-03-08 20:02+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -662,18 +662,18 @@ msgstr "Ni mogoče najti naloge %u"
 #: ../providers/postgres/gda-postgres-provider.c:844
 #: ../providers/web/gda-web-provider.c:671
 msgid "Provider does not support asynchronous server operation"
-msgstr ""
+msgstr "Ponudnik ne podpira neusklajenih opravil strežnika"
 
 #: ../libgda/gda-connection.c:2492
 #: ../libgda/gda-connection.c:2507
 msgid "Statement is a selection statement"
-msgstr ""
+msgstr "Izjava je izjava izbire"
 
 #: ../libgda/gda-connection.c:2565
 #: ../libgda/gda-connection.c:2641
 #: ../libgda/gda-connection.c:2712
 msgid "Statement is not a selection statement"
-msgstr ""
+msgstr "Izjava ni izjava izbire"
 
 #: ../libgda/gda-connection.c:3168
 msgid "Invalid argument"
@@ -699,12 +699,12 @@ msgstr "Neveljavni argumenti filtra"
 #: ../libgda/gda-connection.c:4831
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
-msgstr ""
+msgstr "Sledenje stanja povezave prenosa: ni prenosa za %s"
 
 #: ../libgda/gda-connection.c:5139
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:234
 msgid "Internal error: invalid provider handle"
-msgstr ""
+msgstr "Notranja napaka: neveljaven ročnik ponudnika"
 
 #: ../libgda/gda-data-access-wrapper.c:486
 #: ../libgda/gda-data-meta-wrapper.c:577
@@ -730,7 +730,7 @@ msgstr "Stolpec %d je izven območja (0-%d)"
 
 #: ../libgda/gda-data-access-wrapper.c:519
 msgid "Can't set iterator's position"
-msgstr ""
+msgstr "Ni mogoče določiti položaja ponavljalnika"
 
 #: ../libgda/gda-data-access-wrapper.c:592
 msgid "Can't access data"
@@ -768,7 +768,7 @@ msgstr "Neprimerna vrsta za stolpec %d: '%s' in '%s'"
 #: ../libgda/gda-data-comparator.c:561
 #: ../libgda/gda-data-comparator.c:597
 msgid "Differences computation cancelled on signal handling"
-msgstr ""
+msgstr "Razlike izračunavanja so preklicane ob zaznanem signalu"
 
 #: ../libgda/gda-data-model-array.c:170
 msgid "Whether data model can be modified"
@@ -837,7 +837,7 @@ msgstr "Ni mogoče naložiti knjižnice Berkeley DB: %s"
 #: ../libgda/gda-data-model-bdb.c:271
 #, c-format
 msgid "Could not load the '%s' symbol from the Berkeley DB library"
-msgstr ""
+msgstr "Ni mogoče naložiti simbola '%s' iz knjižnice Berkeley DB"
 
 #: ../libgda/gda-data-model-bdb.c:294
 #: ../libgda/gda-data-model-bdb.c:365
@@ -850,7 +850,7 @@ msgstr "Knjižnica Berkeley DB ni naložena"
 #: ../libgda/gda-data-model-bdb.c:915
 #, c-format
 msgid "Custom BDB model implementation is not complete: the '%s' method is missing"
-msgstr ""
+msgstr "Model BDB po meri ni popoln: manjka metoda '%s'"
 
 #: ../libgda/gda-data-model-bdb.c:854
 #: ../libgda/gda-data-model-bdb.c:940
@@ -860,7 +860,7 @@ msgstr "Pričakovana je vrednost GdaBinary, pridobljena pa %s"
 
 #: ../libgda/gda-data-model-bdb.c:900
 msgid "Key modification is not supported"
-msgstr ""
+msgstr "Spreminjanje ključa ni podprto"
 
 #: ../libgda/gda-data-model.c:611
 msgid "Data model does not support getting individual value"
@@ -930,7 +930,7 @@ msgstr "Pričakovana je oznaka <gda_value> ali <gda_array_value>, pridobljena pa
 
 #: ../libgda/gda-data-model.c:1421
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
-msgstr ""
+msgstr "Ni mogoče pridobiti podatkov vrste stolpca (vrsta ni znana ali pa ni določena)"
 
 #: ../libgda/gda-data-model.c:1504
 #, c-format
@@ -1171,12 +1171,12 @@ msgstr "Podatkovni model ne podpira naključnega dostopa"
 #: ../libgda/gda-data-model-import.c:1764
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
-msgstr ""
+msgstr "Vrsta v vrstici %d nima dovolj vrednosti; zapolnjene so z NULL vrednostmi"
 
 #: ../libgda/gda-data-model-import.c:1784
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
-msgstr ""
+msgstr "Vrsta v vrstici %d nima dovolj vrednosti; in te so prezrte"
 
 #: ../libgda/gda-data-model-import.c:1856
 #: ../libgda/gda-data-model-import.c:1929
@@ -1265,19 +1265,19 @@ msgstr ""
 
 #: ../libgda/gda-data-select.c:1059
 msgid "INSERT statement must contain values to insert"
-msgstr ""
+msgstr "Izjava INSERT mora vsebovati vrednosti za vstavljanje"
 
 #: ../libgda/gda-data-select.c:1065
 msgid "INSERT statement must insert only one row"
-msgstr ""
+msgstr "Izjava INSERT mora vstaviti le eno vrstico"
 
 #: ../libgda/gda-data-select.c:1092
 msgid "DELETE statement must have a WHERE part"
-msgstr ""
+msgstr "Izjava DELETE mora imeti izpolnjen podatek WHERE"
 
 #: ../libgda/gda-data-select.c:1132
 msgid "UPDATE statement must have a WHERE part"
-msgstr ""
+msgstr "Izjava UPDATE mora imeti izpolnjen podatek WHERE"
 
 #: ../libgda/gda-data-select.c:1186
 #, c-format
@@ -1350,7 +1350,7 @@ msgstr "Ni mogoče rezervirati vrednosti ponavljanja za stolpec %d: %s"
 
 #: ../libgda/gda-data-select.c:2046
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
-msgstr ""
+msgstr "Dovoljena vrednost za posodabljanje GdaHolder ponavljalnika mora biti NULL"
 
 #: ../libgda/gda-data-select.c:2126
 #: ../libgda/gda-data-select.c:2219
@@ -1383,7 +1383,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:2647
 #: ../libgda/gda-data-select.c:2733
 msgid "No UPDATE statement provided"
-msgstr ""
+msgstr "Ni podane izjave UPDATE"
 
 #: ../libgda/gda-data-select.c:2451
 msgid "Could not get iterator's value"
@@ -2349,7 +2349,7 @@ msgstr "Ni določene vrednosti za parameter '%s'"
 #: ../libgda/gda-tree-mgr-select.c:358
 #, c-format
 msgid "Unable to get iterator's value"
-msgstr ""
+msgstr "Ni mogoče pridobiti vrednosti ponavljalnika"
 
 #: ../libgda/gda-tree-mgr-tables.c:348
 #, c-format
