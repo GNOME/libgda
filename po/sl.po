@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-08 20:02+0100\n"
+"PO-Revision-Date: 2010-03-09 14:40+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -973,7 +973,7 @@ msgstr "Ni mogoče spustiti vsebine podatkovnega modela: %s"
 
 #: ../libgda/gda-data-model.c:2132
 msgid "Data model does not support backward cursor move, not displaying data"
-msgstr ""
+msgstr "Podatkovni model ne podpira povratnega premika kazalnika, zato podatki ne bodo prikazani."
 
 #: ../libgda/gda-data-model.c:2251
 #, c-format
@@ -1191,12 +1191,12 @@ msgstr "GdaDataModel zavrača spreminjanje vrednosti"
 
 #: ../libgda/gda-data-proxy.c:912
 msgid "GdaDataProxy can't handle non random access data models"
-msgstr ""
+msgstr "Predmet GdaDataProxy ne podpira naključnih modelov dostopa do podatkov"
 
 #: ../libgda/gda-data-proxy.c:1541
 #: ../libgda/gda-data-proxy.c:3884
 msgid "The first row is an empty row artificially prepended and cannot be removed"
-msgstr ""
+msgstr "Prva vrstica, ki je ni mogoče odstraniti, je dodana programsko in je vedno prazna"
 
 #: ../libgda/gda-data-proxy.c:2051
 #, c-format
@@ -1225,7 +1225,7 @@ msgstr "Napaka v izrazu filtra"
 
 #: ../libgda/gda-data-proxy.c:3639
 msgid "The first row is an empty row artificially prepended and cannot be altered"
-msgstr ""
+msgstr "Prva vrstica, ki je ni mogoče spreminjati, je dodana programsko in je vedno prazna"
 
 #: ../libgda/gda-data-proxy.c:3661
 #, c-format
@@ -1261,7 +1261,7 @@ msgstr "Ni mogoče pridobiti dejanske izjave pripravljene izjave"
 
 #: ../libgda/gda-data-select.c:990
 msgid "Unsupported type of SELECT statement"
-msgstr ""
+msgstr "Nepodprta vrsta izjave SELECT"
 
 #: ../libgda/gda-data-select.c:1059
 msgid "INSERT statement must contain values to insert"
@@ -1282,16 +1282,16 @@ msgstr "Izjava UPDATE mora imeti izpolnjen podatek WHERE"
 #: ../libgda/gda-data-select.c:1186
 #, c-format
 msgid "Modification statement uses an unknown '%s' parameter"
-msgstr ""
+msgstr "Izjava spreminjanja uporablja neznan parameter '%s'"
 
 #: ../libgda/gda-data-select.c:1208
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
-msgstr ""
+msgstr "Paramter izjave spreminjanja '%s' je %s, moral pa bi biti %s"
 
 #: ../libgda/gda-data-select.c:1245
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
-msgstr ""
+msgstr "Izjava spreminjanja mora biti izjava INSERT, UPDATE ali DELETE"
 
 #: ../libgda/gda-data-select.c:1293
 #: ../libgda/gda-data-select.c:1499
@@ -1301,12 +1301,12 @@ msgstr "Ni povezave za uporabo"
 
 #: ../libgda/gda-data-select.c:1339
 msgid "Invalid unique row condition (ony equal operators are allowed)"
-msgstr ""
+msgstr "Neveljaven enoznačen pogoj vrstice (dovoljeni so le enačaji)"
 
 #: ../libgda/gda-data-select.c:1371
 #: ../libgda/gda-data-select.c:1426
 msgid "Unique row condition has already been specified"
-msgstr ""
+msgstr "Enoznačni pogoj vrstice je že določen"
 
 #: ../libgda/gda-data-select.c:1508
 #: ../libgda/gda-data-select.c:1519
@@ -1315,7 +1315,7 @@ msgstr "Ni preglednice za izbor iz SELECT izjave"
 
 #: ../libgda/gda-data-select.c:1513
 msgid "SELECT statement uses more than one table to select from"
-msgstr ""
+msgstr "Izjava SELECT uporablja več kot eno preglednico za izbiro"
 
 #: ../libgda/gda-data-select.c:1687
 #: ../libgda/gda-data-select.c:2406
@@ -1334,12 +1334,12 @@ msgstr "Ni mogoče pridobiti podatkov po spremembah"
 #: ../libgda/gda-data-select.c:1749
 #: ../libgda/gda-data-select.c:1771
 msgid "Unable to retrieve data after modifications, no further modification will be allowed"
-msgstr ""
+msgstr "Ni mogoče pridobiti podatkov po spreminjanju; nadaljnjih sprememb ne bo mogoče narediti"
 
 #: ../libgda/gda-data-select.c:1806
 #, c-format
 msgid "Unable to get value for row %d and column %d"
-msgstr ""
+msgstr "Ni mogoče pridobiti vrednosti za vrstico %d in stolpec %d"
 
 #: ../libgda/gda-data-select.c:2032
 #: ../libgda/gda-data-select.c:2041
@@ -1359,7 +1359,7 @@ msgstr "Nekaterih stolpcev ni mogoče spremeniti"
 
 #: ../libgda/gda-data-select.c:2273
 msgid "Internal error: can't get the prepared statement's actual statement"
-msgstr ""
+msgstr "Notranja napaka: ni mogoče pridobiti pripravljene dejanske izjave"
 
 #: ../libgda/gda-data-select.c:2313
 msgid "Unable to identify a way to fetch a single row"
@@ -1376,7 +1376,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:2811
 #: ../libgda/gda-data-select.c:3005
 msgid "Modifications are not allowed anymore"
-msgstr ""
+msgstr "Spreminjanje ni več dovoljeno"
 
 #: ../libgda/gda-data-select.c:2411
 #: ../libgda/gda-data-select.c:2581
@@ -1402,7 +1402,7 @@ msgstr "Preveč je vrednosti (%d je največje dovoljeno število)"
 
 #: ../libgda/gda-data-select.c:2821
 msgid "No INSERT statement provided"
-msgstr ""
+msgstr "Ni podane izjave INSERT"
 
 #: ../libgda/gda-data-select.c:2826
 msgid "Cannot add a row because the number of rows in unknown"
@@ -1412,11 +1412,11 @@ msgstr "Ni mogoče dodati vrstice, ker število vrstic ni znano"
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:385
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:394
 msgid "Missing values to insert in INSERT statement"
-msgstr ""
+msgstr "Manjka vrednost za vstavljanje izjave INSERT"
 
 #: ../libgda/gda-data-select.c:3015
 msgid "No DELETE statement provided"
-msgstr ""
+msgstr "Ni podane izjave DELETE"
 
 #: ../libgda/gda-data-select.c:3445
 #, c-format
@@ -1439,7 +1439,7 @@ msgstr ""
 #: ../libgda/gda-set.c:485
 #, c-format
 msgid "Unable to set holder's value: %s"
-msgstr ""
+msgstr "Ni mogoče določiti vrednosti ročnika: %s"
 
 #: ../libgda/gda-holder.c:579
 msgid "The 'g-type' property cannot be changed"
@@ -1458,7 +1458,7 @@ msgstr ""
 #: ../libgda/gda-holder.c:1054
 #, c-format
 msgid "(%s): Holder does not allow NULL values"
-msgstr ""
+msgstr "(%s): ročnik ne sprejme vrednosti NULL"
 
 #: ../libgda/gda-holder.c:934
 #, c-format
