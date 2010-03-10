@@ -1090,6 +1090,7 @@ gda_statement_get_type
 <FILE>gda-batch</FILE>
 <TITLE>GdaBatch</TITLE>
 GdaBatch
+GdaBatchError
 gda_batch_new
 gda_batch_copy
 gda_batch_add_statement
@@ -1361,6 +1362,7 @@ gda_meta_struct_dump_as_graph
 <FILE>gda-data-select</FILE>
 <TITLE>GdaDataSelect</TITLE>
 GdaDataSelect
+GdaDataSelectError
 gda_data_select_set_row_selection_condition_sql
 gda_data_select_set_row_selection_condition
 gda_data_select_compute_row_selection_condition

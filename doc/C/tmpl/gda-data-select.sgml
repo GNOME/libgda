@@ -98,6 +98,18 @@ Data models returned by the execution of a SELECT statement
 
 </para>
 
+<!-- ##### ENUM GdaDataSelectError ##### -->
+<para>
+
+</para>
+
+@GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR: 
+@GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR: 
+@GDA_DATA_SELECT_CONNECTION_ERROR: 
+@GDA_DATA_SELECT_ACCESS_ERROR: 
+@GDA_DATA_SELECT_SQL_ERROR: 
+@GDA_DATA_SELECT_SAFETY_LOCKED_ERROR: 
+
 <!-- ##### FUNCTION gda_data_select_set_row_selection_condition_sql ##### -->
 <para>
 

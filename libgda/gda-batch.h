@@ -36,6 +36,10 @@ G_BEGIN_DECLS
 extern GQuark gda_batch_error_quark (void);
 #define GDA_BATCH_ERROR gda_batch_error_quark ()
 
+typedef enum {
+	GDA_BATCH_CONFLICTING_PARAMETER_ERROR
+} GdaBatchError;
+
 /* struct for the object's data */
 struct _GdaBatch
 {

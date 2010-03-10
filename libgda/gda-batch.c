@@ -437,7 +437,7 @@ gda_batch_get_parameters (GdaBatch *batch, GdaSet **out_params, GError **error)
 						if (!eholder ||
 						    (gda_holder_get_g_type (eholder) != (gda_holder_get_g_type (holder)))) {
 							/* error */
-							g_set_error (error, GDA_BATCH_ERROR, 0,
+							g_set_error (error, GDA_BATCH_ERROR, GDA_BATCH_CONFLICTING_PARAMETER_ERROR,
 								     _("Conflicting parameter '%s'"), gda_holder_get_id (holder));
 							g_object_unref (tmpset);
 							g_object_unref (set);

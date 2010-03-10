@@ -44,14 +44,14 @@ typedef struct _GdaDataSelectPrivate GdaDataSelectPrivate;
 extern GQuark gda_data_select_error_quark (void);
 #define GDA_DATA_SELECT_ERROR gda_data_select_error_quark ()
 
-enum {
+typedef enum {
 	GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 	GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
 	GDA_DATA_SELECT_CONNECTION_ERROR,
 	GDA_DATA_SELECT_ACCESS_ERROR,
 	GDA_DATA_SELECT_SQL_ERROR,
 	GDA_DATA_SELECT_SAFETY_LOCKED_ERROR
-};
+} GdaDataSelectError;
 
 struct _GdaDataSelect {
 	GObject           object;

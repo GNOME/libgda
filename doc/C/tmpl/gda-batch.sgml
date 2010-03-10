@@ -35,6 +35,13 @@ a #GdaSqlParser object.
 @gdabatch: the object which received the signal.
 @arg1: 
 
+<!-- ##### ENUM GdaBatchError ##### -->
+<para>
+
+</para>
+
+@GDA_BATCH_CONFLICTING_PARAMETER_ERROR: 
+
 <!-- ##### FUNCTION gda_batch_new ##### -->
 <para>
 
