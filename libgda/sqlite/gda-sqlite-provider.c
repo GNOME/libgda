@@ -1842,6 +1842,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	_GDA_PSTMT (ps)->sql = sql;
 	ps->rowid_hash = hash;
 	ps->nb_rowid_columns = nb_rows_added;
+	g_object_unref (real_stmt);
 	return ps;
 
  out_err:
