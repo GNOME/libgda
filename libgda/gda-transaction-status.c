@@ -323,7 +323,7 @@ gda_transaction_status_dump (GdaTransactionStatus *tstatus, guint offset)
 	memset (str, ' ', offset);
 	str [offset] = 0;
 
-	g_print ("%s" D_COL_H1 "GdaTransactionStatus: %s (%s, %p)\n" D_COL_NOR, str, tstatus->name ? tstatus->name : "(NONAME)", 
+	g_print ("%sGdaTransactionStatus: %s (%s, %p)\n", str, tstatus->name ? tstatus->name : "(NONAME)", 
 		 level_str (tstatus->isolation_level), tstatus);
 	for (evlist = tstatus->events; evlist; evlist = evlist->next) {
 		GdaTransactionStatusEvent *ev = (GdaTransactionStatusEvent *) (evlist->data);

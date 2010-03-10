@@ -1,3 +1,5 @@
+QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
+
 lib_LTLIBRARIES = libgda-ui-4.0.la
 
 SUBDIRS = marshallers data-entries internal data . data-entries/plugins demos
@@ -37,9 +39,8 @@ ui_headers = \
 	gdaui-tree-store.h \
 	gdaui-plugin.h
 
-libgda_ui_4_0_la_SOURCES = \
+ui_sources = \
 	$(ui_headers) \
-	$(libgda_ui_built_cfiles) \
 	gdaui-basic-form.c \
 	gdaui-combo.c \
 	gdaui-data-entry.c \
@@ -60,6 +61,10 @@ libgda_ui_4_0_la_SOURCES = \
 	gdaui-set.c \
 	gdaui-tree-store.c \
 	gdaui-init.c
+
+libgda_ui_4_0_la_SOURCES = \
+	$(libgda_ui_built_cfiles) \
+	$(ui_sources)
 
 gdaui-enum-types.h: s-enum-types-h
 	@true
@@ -148,3 +153,118 @@ dtddir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/dtd
 dtd_DATA=$(DTD_FILES)
 
 EXTRA_DIST = $(DTD_FILES) libgda-ui.symbols
+
+if HAVE_INTROSPECTION
+BUILT_GIRSOURCES =
+ui_data_entries_sources = \
+	data-entries/gdaui-data-cell-renderer-bin.h \
+	data-entries/gdaui-data-cell-renderer-boolean.h \
+	data-entries/gdaui-data-cell-renderer-combo.h \
+	data-entries/gdaui-data-cell-renderer-info.h \
+	data-entries/gdaui-data-cell-renderer-textual.h \
+	data-entries/gdaui-entry-bin.h \
+	data-entries/gdaui-entry-boolean.h \
+	data-entries/gdaui-entry-combo.h \
+	data-entries/gdaui-entry-none.h \
+	data-entries/gdaui-entry-shell.h \
+	data-entries/gdaui-entry-string.h \
+	data-entries/gdaui-entry-number.h \
+	data-entries/gdaui-entry-common-time.h \
+	data-entries/gdaui-entry-time.h \
+	data-entries/gdaui-entry-timestamp.h \
+	data-entries/gdaui-entry-date.h \
+	data-entries/gdaui-entry-wrapper.h \
+	data-entries/gdaui-entry.h \
+	data-entries/gdaui-formatted-entry.h \
+	data-entries/gdaui-numeric-entry.h \
+	data-entries/gdaui-data-cell-renderer-bin.c \
+	data-entries/gdaui-data-cell-renderer-boolean.c \
+	data-entries/gdaui-data-cell-renderer-combo.c \
+	data-entries/gdaui-data-cell-renderer-info.c \
+	data-entries/gdaui-data-cell-renderer-textual.c \
+	data-entries/gdaui-entry-bin.c \
+	data-entries/gdaui-entry-boolean.c \
+	data-entries/gdaui-entry-combo.c \
+	data-entries/gdaui-entry-none.c \
+	data-entries/gdaui-entry-shell.c \
+	data-entries/gdaui-entry-string.c \
+	data-entries/gdaui-entry-number.c \
+	data-entries/gdaui-entry-common-time.c \
+	data-entries/gdaui-entry-time.c \
+	data-entries/gdaui-entry-timestamp.c \
+	data-entries/gdaui-entry-date.c \
+	data-entries/gdaui-entry-wrapper.c \
+	data-entries/gdaui-entry.c \
+	data-entries/gdaui-formatted-entry.c \
+	data-entries/gdaui-numeric-entry.c
+
+plugin_sources = \
+        data-entries/plugins/common-pict.c \
+        data-entries/plugins/common-pict.h \
+        data-entries/plugins/custom-marshal.c \
+        data-entries/plugins/custom-marshal.h \
+        data-entries/plugins/gdaui-data-cell-renderer-cgrid.c \
+        data-entries/plugins/gdaui-data-cell-renderer-cgrid.h \
+        data-entries/plugins/gdaui-data-cell-renderer-password.c \
+        data-entries/plugins/gdaui-data-cell-renderer-password.h \
+        data-entries/plugins/gdaui-data-cell-renderer-pict.c \
+        data-entries/plugins/gdaui-data-cell-renderer-pict.h \
+        data-entries/plugins/gdaui-entry-cgrid.c \
+        data-entries/plugins/gdaui-entry-cgrid.h \
+        data-entries/plugins/gdaui-entry-cidr.c \
+        data-entries/plugins/gdaui-entry-cidr.h \
+        data-entries/plugins/gdaui-entry-filesel.c \
+        data-entries/plugins/gdaui-entry-filesel.h \
+        data-entries/plugins/gdaui-entry-password.c \
+        data-entries/plugins/gdaui-entry-password.h \
+        data-entries/plugins/gdaui-entry-pict.c \
+        data-entries/plugins/gdaui-entry-pict.h \
+        data-entries/plugins/gdaui-entry-text.c \
+        data-entries/plugins/gdaui-entry-text.h
+
+gir_sources = \
+	$(ui_headers) \
+	$(ui_sources) \
+	$(plugin_sources) \
+	$(ui_data_entries_sources)
+
+Gdaui-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-ui-4.0.la
+	$(INTROSPECTION_SCANNER) -v \
+		--namespace Gdaui --nsversion=@GDA_ABI_VERSION@ \
+		-I$(top_srcdir) -I$(top_srcdir)/libgda -I$(top_srcdir)/libgda-ui \
+		$(LIBGDA_CFLAGS) \
+		$(GTK_CFLAGS) \
+		$(GIO_CFLAGS) \
+		--add-include-path=data-entries \
+		--add-include-path=$(top_srcdir)/libgda \
+		--include=GL-1.0 \
+		--include=GObject-2.0 \
+		--include=libxml2-2.0 \
+		--include=Gtk-2.0 \
+		--include=Gda-4.0 \
+		--library=gda-ui-@GDA_ABI_VERSION@ \
+	    $(INCLUDE_CFLAGS) \
+	    --output $@ \
+		$(addprefix $(srcdir)/, $(ui_sources)) \
+		$(addprefix $(srcdir)/, $(ui_data_entries_sources)) 
+
+BUILT_GIRSOURCES += Gdaui-@GDA_ABI_VERSION@.gir
+
+endif
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(BUILT_GIRSOURCES)
+
+typelibsdir = $(libdir)/girepository-1.0/
+
+typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
+
+Gdaui-@GDA_ABI_VERSION@.typelib: Gdaui-@GDA_ABI_VERSION@.gir $(INTROSPECTION_COMPILER)
+	$(QUIET_GEN)$(DEBUG) $(INTROSPECTION_COMPILER) \
+	--includedir=$(srcdir) --includedir=. \
+	--includedir=$(top_builddir)/libgda \
+	--includedir=$(srcdir)/data-entries\
+	$(INTROSPECTION_COMPILER_OPTS) $< -o $(@F)
+
+CLEANFILES += $(BUILT_GIRSOURCES) $(typelibs_DATA)
+
