@@ -235,7 +235,6 @@ Gdaui-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-ui-4.0.la
 		$(LIBGDA_CFLAGS) \
 		$(GTK_CFLAGS) \
 		$(GIO_CFLAGS) \
-		--add-include-path=data-entries \
 		--add-include-path=$(top_srcdir)/libgda \
 		--include=GL-1.0 \
 		--include=GObject-2.0 \
@@ -263,7 +262,6 @@ Gdaui-@GDA_ABI_VERSION@.typelib: Gdaui-@GDA_ABI_VERSION@.gir $(INTROSPECTION_COM
 	$(QUIET_GEN)$(DEBUG) $(INTROSPECTION_COMPILER) \
 	--includedir=$(srcdir) --includedir=. \
 	--includedir=$(top_builddir)/libgda \
-	--includedir=$(srcdir)/data-entries\
 	$(INTROSPECTION_COMPILER_OPTS) $< -o $(@F)
 
 CLEANFILES += $(BUILT_GIRSOURCES) $(typelibs_DATA)
