@@ -84,7 +84,11 @@ cc_gray_bar_realize (GtkWidget *widget)
 {
 	gint border_width;
 
-	GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED); /* GTK3 FIXME */
+#if GTK_CHECK_VERSION (2,19,5)
+	gtk_widget_set_realized (widget, TRUE);
+#else
+	GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+#endif
 	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 	GdkWindowAttr attributes;
 	gint attributes_mask;

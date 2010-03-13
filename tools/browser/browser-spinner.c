@@ -705,7 +705,11 @@ browser_spinner_start (BrowserSpinner *spinner)
 
 	priv->spinning = TRUE;
 
-	if (GTK_WIDGET_MAPPED (GTK_WIDGET (spinner)) && /* GTK3 FIXME */
+#if GTK_CHECK_VERSION (2,19,5)
+	if (gtk_widget_get_mapped (GTK_WIDGET (spinner)) &&
+#else
+	if (GTK_WIDGET_MAPPED (GTK_WIDGET (spinner)) &&
+#endif
 	    priv->timer_task == 0 &&
 	    browser_spinner_load_images (spinner)) {
 		/* the 0th frame is the 'rest' icon */
@@ -748,7 +752,11 @@ browser_spinner_stop (BrowserSpinner *spinner)
 	if (priv->timer_task != 0) {
 		browser_spinner_remove_update_callback (spinner);
 
-		if (GTK_WIDGET_MAPPED (GTK_WIDGET (spinner))) /* GTK3 FIXME */
+#if GTK_CHECK_VERSION (2,19,4)
+		if (gtk_widget_get_mapped (GTK_WIDGET (spinner)))
+#else
+		if (GTK_WIDGET_MAPPED (GTK_WIDGET (spinner)))
+#endif
 			gtk_widget_queue_draw (GTK_WIDGET (spinner));
 	}
 }
