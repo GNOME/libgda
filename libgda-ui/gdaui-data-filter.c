@@ -122,7 +122,7 @@ set_wait_cursor (GtkWidget *w)
 #else
 		gdk_window_set_cursor (parent->window, cursor);
 #endif
-		gdk_cursor_destroy (cursor);
+		gdk_cursor_unref (cursor);
 	}
 }
 

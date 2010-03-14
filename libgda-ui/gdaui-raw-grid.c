@@ -1749,30 +1749,31 @@ tree_view_popup_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, Gda
 	/* create the menu */
 	menu = gtk_menu_new ();
 	if (sel_mode == GTK_SELECTION_MULTIPLE)
-		gtk_menu_append (GTK_MENU (menu),
-				 new_menu_item (_("Select _All"), FALSE,
-						G_CALLBACK (menu_select_all_cb), grid));
-
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu),
+				       new_menu_item (_("Select _All"), FALSE,
+						      G_CALLBACK (menu_select_all_cb), grid));
+	
 	if ((sel_mode == GTK_SELECTION_SINGLE) || (sel_mode == GTK_SELECTION_MULTIPLE))
-		gtk_menu_append (GTK_MENU (menu),
-				 new_menu_item (_("_Clear Selection"), FALSE,
-						G_CALLBACK (menu_unselect_all_cb), grid));
-	gtk_menu_append (GTK_MENU (menu),
-			 new_check_menu_item (_("Show Column _Titles"),
-					      gtk_tree_view_get_headers_visible (tree_view),
-					      G_CALLBACK (menu_show_columns_cb), grid));
-
-	gtk_menu_append (GTK_MENU (menu),
-			 new_menu_item (_("_Set filter"), FALSE,
-					G_CALLBACK (menu_set_filter_cb), grid));
-	gtk_menu_append (GTK_MENU (menu),
-			 new_menu_item (_("_Unset filter"), FALSE,
-					G_CALLBACK (menu_unset_filter_cb), grid));
-
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu),
+				       new_menu_item (_("_Clear Selection"), FALSE,
+						      G_CALLBACK (menu_unselect_all_cb), grid));
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
+			       new_check_menu_item (_("Show Column _Titles"),
+						    gtk_tree_view_get_headers_visible (tree_view),
+						    G_CALLBACK (menu_show_columns_cb), grid));
+	
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
+			       new_menu_item (_("_Set filter"), FALSE,
+					      G_CALLBACK (menu_set_filter_cb), grid));
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
+			       new_menu_item (_("_Unset filter"), FALSE,
+					      G_CALLBACK (menu_unset_filter_cb), grid));
+	
 	if (sel_mode != GTK_SELECTION_NONE) {
-		gtk_menu_append (GTK_MENU (menu), gtk_separator_menu_item_new ());
-		gtk_menu_append (GTK_MENU (menu), new_menu_item (GTK_STOCK_SAVE_AS, TRUE,
-								 G_CALLBACK (menu_save_as_cb), grid));
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), new_menu_item (GTK_STOCK_SAVE_AS, TRUE,
+									     G_CALLBACK (menu_save_as_cb),
+									     grid));
 	}
 
 	/* allow listeners to add their custom menu items */

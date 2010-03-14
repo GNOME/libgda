@@ -347,11 +347,11 @@ canvas_entity_popup_func (BrowserCanvasTable *ce)
 	menu = gtk_menu_new ();
 	entry = gtk_menu_item_new_with_label (_("Remove"));
 	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_func_delete_cb), ce);
-	gtk_menu_append (GTK_MENU (menu), entry);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 	gtk_widget_show (entry);
 	entry = gtk_menu_item_new_with_label (_("Add referenced tables"));
 	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_func_add_depend_cb), ce);
-	gtk_menu_append (GTK_MENU (menu), entry);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 	gtk_widget_show (entry);
 
 	return menu;
@@ -512,7 +512,7 @@ build_context_menu (BrowserCanvas *canvas)
 	menu = gtk_menu_new ();
 	submitem = gtk_menu_item_new_with_label (_("Add table"));
 	gtk_widget_show (submitem);
-	gtk_menu_append (menu, submitem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), submitem);
 	g_signal_connect (G_OBJECT (submitem), "activate", G_CALLBACK (popup_add_table_cb), canvas);
 
 	return menu;

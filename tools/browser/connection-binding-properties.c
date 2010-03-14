@@ -330,12 +330,12 @@ add_part_clicked_cb (GtkWidget *button, ConnectionBindingProperties *cprop)
 				   GINT_TO_POINTER (BROWSER_VIRTUAL_CONNECTION_PART_CNC));
 		g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (add_part_mitem_cb), cprop);
 		gtk_widget_show (entry);
-		gtk_menu_append (GTK_MENU (menu), entry);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 		entry = gtk_menu_item_new_with_label (_("Bind a data set"));
 		g_object_set_data (G_OBJECT (entry), "part-type",
 				   GINT_TO_POINTER (BROWSER_VIRTUAL_CONNECTION_PART_MODEL));
 		g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (add_part_mitem_cb), cprop);
-		gtk_menu_append (GTK_MENU (menu), entry);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 		gtk_widget_show (entry);
 
 		cprop->priv->menu = menu;

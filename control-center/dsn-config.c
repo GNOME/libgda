@@ -88,10 +88,10 @@ list_popup_cb (GdauiRawGrid *grid, GtkMenu *menu, gpointer user_data)
 	gtk_widget_set_sensitive (item_delete, ok);
 	gtk_widget_set_sensitive (item_properties, ok);
 
-	gtk_menu_prepend (menu, gtk_separator_menu_item_new ());
-	gtk_menu_prepend (menu, item_delete);
-	gtk_menu_prepend (menu, gtk_separator_menu_item_new ());
-	gtk_menu_prepend (menu, item_properties);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item_delete);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item_properties);
 }
 
 /*

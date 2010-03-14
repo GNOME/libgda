@@ -458,7 +458,7 @@ single_item_button_press_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item
 	entry = gtk_menu_item_new_with_label (_("Remove"));
 	g_object_set_data (G_OBJECT (entry), "fkcons", fkcons);
 	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_delete_cb), cc);
-	gtk_menu_append (GTK_MENU (menu), entry);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 	gtk_widget_show (entry);
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 			NULL, NULL, ((GdkEventButton *)event)->button,

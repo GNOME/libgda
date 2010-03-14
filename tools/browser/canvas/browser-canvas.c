@@ -366,50 +366,50 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 				else {
 					mitem = gtk_separator_menu_item_new ();
 					gtk_widget_show (mitem);
-					gtk_menu_append (menu, mitem);
+					gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				}
 				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_IN, NULL);
 				gtk_widget_show (mitem);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_zoom_in_cb), canvas);
 				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_OUT, NULL);
 				gtk_widget_show (mitem);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_zoom_out_cb), canvas);
 				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_FIT, NULL);
 				gtk_widget_show (mitem);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_zoom_fit_cb), canvas);
 
 				mitem = gtk_separator_menu_item_new ();
 				gtk_widget_show (mitem);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 
 #ifdef HAVE_GRAPHVIZ
 				mitem = gtk_menu_item_new_with_label (_("Linear layout"));
 				gtk_widget_show (mitem);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_layout_default_cb), canvas);
 
 				mitem = gtk_menu_item_new_with_label (_("Radial layout"));
 				gtk_widget_show (mitem);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_layout_radial_cb), canvas);
 
 				mitem = gtk_separator_menu_item_new ();
 				gtk_widget_show (mitem);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 #endif
 				
 				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE_AS, NULL);
 				gtk_widget_show (mitem);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_export_cb), canvas);
 
 				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PRINT, NULL);
 				gtk_widget_show (mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_print_cb), canvas);
-				gtk_menu_append (menu, mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 
 				gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 						NULL, NULL, ((GdkEventButton *)event)->button,
