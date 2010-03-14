@@ -84,22 +84,14 @@ gda_headers = \
 	gda-xa-transaction.h \
 	libgda.h 
 
-libgda_sources =  \
-	csv.h \
-	libcsv.c \
-	gda-attributes-manager.c \
+gda_sources= \
 	gda-batch.c \
-	dir-blob-op.h \
-	dir-blob-op.c \
-	$(gda_headers) \
+	libgda.h \
 	gda-blob-op.c \
 	gda-column.c \
 	gda-config.c \
 	gda-connection.c \
 	gda-connection-event.c \
-	gda-connection-sqlite.h \
-	gda-custom-marshal.c \
-	gda-custom-marshal.h \
 	gda-data-comparator.c \
 	gda-data-handler.c \
 	gda-data-model-array.c \
@@ -115,18 +107,12 @@ libgda_sources =  \
 	gda-data-meta-wrapper.h \
 	gda-data-proxy.c \
 	gda-data-select.c \
-	gda-data-select-extra.h \
 	gda-easy.c \
-	gda-types.c \
-	gda-types.h \
 	gda-holder.c \
 	gda-init.c \
 	gda-lockable.c \
 	gda-log.c \
-	gda-marshal.c \
 	gda-meta-store.c \
-	gda-meta-store-extra.h \
-	gda-meta-struct-private.h \
 	gda-meta-struct.c \
 	gda-meta-struct-io.c \
 	gda-mutex.c \
@@ -141,10 +127,29 @@ libgda_sources =  \
 	gda-transaction-status.c \
 	gda-util.c \
 	gda-value.c \
-	gda-xa-transaction.c \
+	gda-xa-transaction.c 
+
+libgda_sources =  \
+	csv.h \
+	libcsv.c \
+	dir-blob-op.h \
+	dir-blob-op.c \
+	gda-attributes-manager.c \
+	$(gda_headers) \
+	gda-connection-internal.h \
+	gda-connection-sqlite.h \
+	gda-custom-marshal.c \
+	gda-custom-marshal.h \
+	gda-data-select-extra.h \
+	gda-types.c \
+	gda-types.h \
+	gda-marshal.c \
+	gda-meta-store-extra.h \
+	gda-meta-struct-private.h \
 	global.h \
 	md5.h \
-	md5c.c
+	md5c.c \
+	$(gda_sources)
 
 gda-enum-types.h: s-enum-types-h
 	@true
@@ -261,10 +266,6 @@ psupport = \
 	providers-support/gda-pstmt.h \
 	providers-support/gda-pstmt.c
 
-threadwrapper = \
-	thread-wrapper/gda-thread-wrapper.h \
-	thread-wrapper/gda-thread-wrapper.c
-
 sqlparser = \
 	sql-parser/gda-sql-parser.h \
 	sql-parser/gda-sql-statement.h \
@@ -312,16 +313,27 @@ Gda-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-@GDA_ABI_VERSION@.la
 		--namespace Gda --nsversion=@GDA_ABI_VERSION@ \
 		-I$(top_srcdir) -I$(top_srcdir)/libgda \
 		$(LIBGDA_CFLAGS) \
-		--add-include-path=providers-support \
-		--add-include-path=sql-parser \
-		--add-include-path=thread-wrapper \
-		--add-include-path=handlers \
-		--c-include='libgda/libgda.h' \
 		--include=GL-1.0 \
 		--include=GObject-2.0 \
 		--include=libxml2-2.0 \
 		--library=gda-@GDA_ABI_VERSION@ \
 	    $(INCLUDE_CFLAGS) \
+	    --c-include=$(top_srcdir)/libgda/csv.h \
+		--c-include=$(top_srcdir)/libgda/libcsv.c \
+		--c-include=$(srcdir)/gda-attributes-manager.c \
+		--c-include=$(top_srcdir)/libgda/gda-connection-internal.h \
+		--c-include=$(srcdir)/gda-connection-sqlite.h \
+		--c-include=$(top_srcdir)/libgda/gda-custom-marshal.c \
+		--c-include=$(srcdir)/gda-custom-marshal.h \
+		--c-include=$(top_srcdir)/libgda/gda-data-select-extra.h \
+		--c-include=$(srcdir)/gda-types.c \
+		--c-include=$(top_srcdir)/libgda/gda-types.h \
+		--c-include=$(srcdir)/gda-marshal.c \
+		--c-include=$(top_srcdir)/libgda/gda-meta-store-extra.h \
+		--c-include=$(srcdir)/gda-meta-struct-private.h \
+		--c-include=$(top_srcdir)/libgda/global.h \
+		--c-include=$(srcdir)/md5.h \
+		--c-include=$(top_srcdir)/libgda/md5c.c \
 	    --output $@ \
 		$(addprefix $(srcdir)/, $(gda_headers)) \
 	        $(srcdir)/gda-types.h \
@@ -330,7 +342,6 @@ Gda-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-@GDA_ABI_VERSION@.la
 		$(addprefix $(srcdir)/, $(psupport)) \
 		$(addprefix $(srcdir)/, $(sqlparser)) \
 		sql-parser/gda-sql-parser-enum-types.c \
-		$(addprefix $(srcdir)/, $(threadwraper)) \
 		$(addprefix $(srcdir)/, $(handlers))
 
 BUILT_GIRSOURCES += Gda-@GDA_ABI_VERSION@.gir
@@ -346,11 +357,7 @@ typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
 
 Gda-@GDA_ABI_VERSION@.typelib: Gda-@GDA_ABI_VERSION@.gir $(INTROSPECTION_COMPILER)
 	$(QUIET_GEN)$(DEBUG) $(INTROSPECTION_COMPILER) \
-	--includedir=$(srcdir) --includedir=. \
-	--includedir=$(srcdir)/providers-support \
-	--includedir=$(srcdir)/sql-parser \
-	--includedir=$(srcdir)/thread-wrapper \
-	--includedir=$(srcdir)/handlers \
+	--includedir=$(srcdir) \
 	$(INTROSPECTION_COMPILER_OPTS) $< -o $(@F)
 
 CLEANFILES += $(BUILT_GIRSOURCES) $(typelibs_DATA)

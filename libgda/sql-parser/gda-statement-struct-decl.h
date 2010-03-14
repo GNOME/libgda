@@ -37,7 +37,8 @@ typedef enum {
 	GDA_SQL_MALFORMED_IDENTIFIER_ERROR,
 	GDA_SQL_MISSING_IDENTIFIER_ERROR,
 	GDA_SQL_VALIDATION_ERROR
-} GdaSqlErrorType;
+} GdaSqlError;
+typedef GdaSqlError GdaSqlErrorType;
 
 /*
  * Struct declarations
