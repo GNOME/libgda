@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-09 14:40+0100\n"
+"PO-Revision-Date: 2010-03-15 08:39+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1474,11 +1474,11 @@ msgstr ""
 #: ../libgda/gda-holder.c:1514
 #, c-format
 msgid "Cannot bind holders if their type is not the same, breaking existing bind where '%s' was bound to '%s'"
-msgstr ""
+msgstr "Ni mogogoče povezati ročnikov različnih vrst, zato bo prekinjana povezava '%s' z '%s'"
 
 #: ../libgda/gda-holder.c:1559
 msgid "Cannot bind holders if their type is not the same"
-msgstr ""
+msgstr "Ni mogogoče povezati ročnikov različnih vrst"
 
 #: ../libgda/gda-holder.c:1699
 #, c-format
@@ -1542,12 +1542,12 @@ msgstr "Manjka določilo pogleda iz vozlišča <pogled>"
 #: ../libgda/gda-meta-store.c:1267
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
-msgstr ""
+msgstr "Določilo pogleda mora vsebovati več kot eno izjavo (za pogled '%s')"
 
 #: ../libgda/gda-meta-store.c:1294
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
-msgstr ""
+msgstr "Določilo pogleda ni izjava izbire (za pogled '%s')"
 
 #. FIXME
 #: ../libgda/gda-meta-store.c:1321
@@ -1563,12 +1563,12 @@ msgstr "Stolpec '%s' že obstaja in ima drugačne značilnosti"
 #: ../libgda/gda-meta-store.c:1584
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
-msgstr ""
+msgstr "Manjka ime sklicne preglednice tujega ključa (za razpredelnico '%s')"
 
 #: ../libgda/gda-meta-store.c:1637
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
-msgstr ""
+msgstr "Manjka ime stolpca tujega ključa (za razpredelnico '%s')"
 
 #: ../libgda/gda-meta-store.c:1648
 #, c-format
@@ -1584,7 +1584,7 @@ msgstr "Tujega ključa stolpca '%s' v preglednici '%s' ni mogoče najti"
 #: ../libgda/gda-meta-store.c:2081
 #, c-format
 msgid "Schema description does not contain the object '%s', check installation"
-msgstr ""
+msgstr "Opis sheme ne vsebuje predmeta '%s', preverite namestitev"
 
 #: ../libgda/gda-meta-store.c:2142
 #: ../libgda/gda-meta-store.c:2153
@@ -1605,7 +1605,7 @@ msgstr "Več kot ena SQL izjava"
 #: ../libgda/gda-meta-store.c:2335
 #, c-format
 msgid "Parameter '%s' is not present in statement"
-msgstr ""
+msgstr "Parametra '%s' v izjavi ni mogoče najti"
 
 #: ../libgda/gda-meta-store.c:2352
 #, c-format
@@ -1656,11 +1656,11 @@ msgstr[3] "Atribut '%s' ima %d vrednosti"
 
 #: ../libgda/gda-meta-store.c:3524
 msgid "Attributes names starting with a '_' are reserved for internal usage"
-msgstr ""
+msgstr "Imena atributov, ki se začnejo z '_' so izvzeta za notranje ukaze"
 
 #: ../libgda/gda-meta-store.c:3552
 msgid "Could not start a transaction because one already started, this could lead to GdaMetaStore attributes problems"
-msgstr ""
+msgstr "Prenosa ni mogoče začeti, saj je ta že začet, napaka pa bi lahko vodila do težav atributov"
 
 #: ../libgda/gda-meta-store.c:3666
 msgid "Could not parse XML description of custom database object to add"
@@ -1782,7 +1782,7 @@ msgstr "Manjka ime stolpca za preglednico '%s'"
 #: ../libgda/gda-meta-struct-io.c:281
 #, c-format
 msgid "Missing foreign key's referenced table name for table '%s'"
-msgstr ""
+msgstr "Manjka ime sklicne preglednice tujega ključa za razpredelnico '%s'"
 
 #. FIXME
 #: ../libgda/gda-meta-struct-io.c:292
@@ -1796,7 +1796,7 @@ msgstr "Neveljavno ime referenčne zbirke podatkov '%s'"
 #: ../libgda/gda-meta-struct-io.c:343
 #, c-format
 msgid "Missing foreign key's column name for table '%s'"
-msgstr ""
+msgstr "Manjka ime stolpca tujega ključa za razpredelnico '%s'"
 
 #: ../libgda/gda-server-operation.c:587
 #, c-format
@@ -2250,7 +2250,7 @@ msgstr "Manjka SQL koda"
 #: ../libgda/gda-statement.c:695
 #, c-format
 msgid "No data handler for type '%s'"
-msgstr ""
+msgstr "Ni podatkovnega ročnika za  vrsto '%s'"
 
 #: ../libgda/gda-statement.c:1212
 #, c-format
@@ -2334,12 +2334,12 @@ msgstr "Ni mogoče dobiti parametrov izjave SELECT: %s"
 #: ../libgda/gda-tree-mgr-select.c:217
 #, c-format
 msgid "Could not bind SELECT statement's parameter '%s' to provided parameters: %s"
-msgstr ""
+msgstr "Ni mogoče povezati parametra izjave SELECT '%s' ponujenemu parametru: %s"
 
 #: ../libgda/gda-tree-mgr-select.c:302
 #, c-format
 msgid "No SELECT statement specified"
-msgstr ""
+msgstr "Ni določene izjave SELECT"
 
 #: ../libgda/gda-tree-mgr-select.c:324
 #, c-format
@@ -2369,11 +2369,11 @@ msgstr "Napaka oblike poti: %s"
 #: ../libgda/gda-util.c:594
 #, c-format
 msgid "Field number %d not found in source named '%s'"
-msgstr ""
+msgstr "Številke polja %d ni mogoče najti v viru imenovanem '%s'"
 
 #: ../libgda/gda-util.c:781
 msgid "SELECT statement has no FROM part"
-msgstr ""
+msgstr "Izjava SELECT nima zahtevanega FROM dela"
 
 #: ../libgda/gda-util.c:786
 #: ../libgda/gda-util.c:793
@@ -2442,7 +2442,7 @@ msgstr "Dvojiško prikazovanje"
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:117
 #: ../providers/mysql/gda-mysql-handler-boolean.c:117
 msgid "Boolean values handler"
-msgstr ""
+msgstr "Ročnik logičnih vrednosti"
 
 #: ../libgda/handlers/gda-handler-boolean.c:123
 msgid "Boolean representation"
@@ -2470,7 +2470,7 @@ msgstr "Upravljalnik datuma in časa"
 
 #: ../libgda/handlers/gda-handler-time.c:168
 msgid "Time, Date and TimeStamp representation"
-msgstr ""
+msgstr "Predstavitev časa, datuma in časovnega žiga"
 
 #: ../libgda/handlers/gda-handler-type.c:115
 msgid "Gda type handler"
@@ -2487,7 +2487,7 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-ddl.c:364
 #: ../providers/web/gda-web-ddl.c:141
 msgid "Table to create must have at least one row"
-msgstr ""
+msgstr "Preglednica mora imeti vsaj eno vrstico"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:115
 msgid "SQlite binary handler"
@@ -2505,13 +2505,13 @@ msgstr "Sqlite logično prikazovanje"
 #: ../libgda/sqlite/gda-sqlite-provider.c:146
 #, c-format
 msgid "Parameter '%s' not found is statement"
-msgstr ""
+msgstr "Parametra '%s' znotraj izjave ni mogoče najti"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:117
 #: ../libgda/sqlite/gda-sqlite-provider.c:154
 #, c-format
 msgid "Parameter '%s' does not correspond to a table's column"
-msgstr ""
+msgstr "Parameter '%s' ni v skladu s stolpcem preglednice"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:166
 msgid "Binding a BLOB for this type of statement is not supported"
@@ -3707,7 +3707,7 @@ msgstr "Zavrzi spremenjene podatke"
 
 #: ../libgda-ui/internal/utility.c:479
 msgid "Correct data first"
-msgstr ""
+msgstr "Najprej pravilne podatke"
 
 #: ../libgda-ui/gdaui-basic-form.c:242
 msgid "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> node)"
@@ -3971,7 +3971,7 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-raw-grid.c:2126
 msgid "If you choose yes, the contents will be lost."
-msgstr ""
+msgstr "V koliko odgovorite z da, bo vsebina izgubljena."
 
 #: ../libgda-ui/gdaui-server-operation.c:196
 msgid "The specification of the operation to implement"
@@ -3988,7 +3988,7 @@ msgstr "Dodaj"
 
 #: ../libgda-ui/gdaui-server-operation.c:1113
 msgid "Server operation specification"
-msgstr ""
+msgstr "Določilo opravil strežnika"
 
 #: ../libgda-ui/gdaui-server-operation.c:1172
 msgid "<b>Field properties:</b>"
@@ -4022,7 +4022,7 @@ msgstr "Neskladnost vrste: pričakovana je vrednost vrste %s, pridobljeno pa je 
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:1
 msgid "Berkeley DB database filename to be used"
-msgstr ""
+msgstr "Ime podatkovne zbirke Berkeley DB za uporabo"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:2
 msgid "Database file"
@@ -4057,11 +4057,11 @@ msgstr "Mapa"
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:3
 msgid "Directory where the database file is stored"
-msgstr ""
+msgstr "Mapa v kateri je shranjena datoteka podatkovne zbirke"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:6
 msgid "Name of the database in the database file to be used"
-msgstr ""
+msgstr "Ime podatkovne zbirke v datoteki zbirke za uporabo"
 
 #: ../providers/bdb/gda-bdb-provider.c:164
 msgid "The DB_NAME parameter is not defined in the connection string."
@@ -4244,7 +4244,7 @@ msgstr "URL povezave"
 #: ../providers/jdbc/libmain.c:164
 #, c-format
 msgid "Can't get list of installed JDBC drivers: %s"
-msgstr ""
+msgstr "Ni mogoče pridobiti seznama nameščenih gonilnikov JDBC: %s"
 
 #: ../providers/jdbc/libmain.c:477
 #, c-format
@@ -4318,7 +4318,7 @@ msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:584
 msgid "The connection string must contain the DB_NAME values"
-msgstr ""
+msgstr "Niz povezave mora vsebovati vrednosti DB_NAME"
 
 #: ../providers/mysql/gda-mysql-provider.c:622
 #: ../providers/mysql/gda-mysql-util.c:69
@@ -4327,12 +4327,12 @@ msgstr "Brez opisa"
 
 #: ../providers/mysql/gda-mysql-provider.c:1656
 msgid "Unnamed statement parameter is not allowed in prepared statement."
-msgstr ""
+msgstr "Neimenovan parameter izjave ni dovoljen v pripravljeni izjavi."
 
 #. force reading the complete BLOB into memory
 #: ../providers/mysql/gda-mysql-provider.c:2215
 msgid "Can't read whole BLOB into memory"
-msgstr ""
+msgstr "Ni mogoče prebrati celotnega BLOB v pomnilnik"
 
 #: ../providers/mysql/gda-mysql-provider.c:2305
 msgid "Could not use CURSOR. Mysql version 5.0 at least is required. Using random access anyway."
@@ -4358,7 +4358,7 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-recordset.c:849
 #, c-format
 msgid "Invalid column bind data type. %d\n"
-msgstr ""
+msgstr "Neveljavna vrsta povezave podatkov. %d\n"
 
 #: ../providers/mysql/gda-mysql-recordset.c:665
 #, c-format
@@ -5317,7 +5317,7 @@ msgstr "Ni mogoče kopirati iskalnika Lob"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:119
 msgid "Postgresql binary handler"
-msgstr ""
+msgstr "Postgresql dvojiški ročnik"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:125
 msgid "PostgresqlBin"
@@ -6768,6 +6768,8 @@ msgid ""
 "Execute specified\n"
 "data manager"
 msgstr ""
+"Izvedi določen\n"
+"upravljalnik podatkov"
 
 #: ../tools/browser/data-manager/data-console.c:304
 msgid "View XML"
@@ -6778,10 +6780,12 @@ msgid ""
 "View specifications\n"
 "as XML (advanced)"
 msgstr ""
+"Pogled določil\n"
+"kot XML (napredno)"
 
 #: ../tools/browser/data-manager/data-console.c:322
 msgid "BBB:"
-msgstr ""
+msgstr "BBB:"
 
 #: ../tools/browser/data-manager/data-console.c:379
 #, c-format
@@ -6847,12 +6851,12 @@ msgstr "Neimenovan upravljalnik podatkov"
 #: ../tools/browser/data-manager/data-source.c:229
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
-msgstr ""
+msgstr "Vozlišče mora biti \"preglednica\" ali \"poizvedba\", je pa \"%s\""
 
 #: ../tools/browser/data-manager/data-source.c:258
 #, c-format
 msgid "Multiple statements detected, only the first will be used"
-msgstr ""
+msgstr "Zaznanih je več izjav, uporabljena pa bo le prva"
 
 #: ../tools/browser/data-manager/data-source.c:328
 #: ../tools/browser/schema-browser/mgr-columns.c:274
@@ -6893,7 +6897,7 @@ msgstr "Ni mogoče najti tujega ključa za \"'%s\""
 #: ../tools/browser/data-manager/data-source.c:451
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
-msgstr ""
+msgstr "Polja povezana s tujim ključem za \"%s\" niso znana"
 
 #: ../tools/browser/data-manager/data-source.c:538
 #, c-format
@@ -8278,18 +8282,22 @@ msgstr "Sprožilniki"
 
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
+
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
+
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
+
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
+
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokument ni uspešno razčlenjen\n"
+
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
 
 #, fuzzy
 #~ msgid "Tables:"
 #~ msgstr "Razpredelnice"
-
