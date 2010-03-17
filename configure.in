@@ -1411,15 +1411,28 @@ then
 	  AC_MSG_RESULT([yes])
 
 	  AC_MSG_CHECKING([java compiler version])
-	  JVERSION=`$JAVAC -version 2>&1 | sed -e "1s/javac //" -e "1q"`
+	  JTYPE=`$JAVAC -version 2>&1 | grep -o Unrecognized`
+	  if test x$JTYPE = xUnrecognized; then
+	       # eclipse gjc?
+	       JVERSION=ECJ`$JAVAC -v 2>&1 | grep -o '[[0-9]].[[0-9]].[[0-9]] release' | sed -e 's/ release//'`
+	  else
+	       JTYPE=`$JAVAC -version 2>&1 | grep -o Eclipse`
+	       if test x$JTYPE = xEclipse; then
+	       	       JVERSION=ECJ`$JAVAC -v 2>&1 | grep -o '[[0-9]].[[0-9]].[[0-9]] release' | sed -e 's/ release//'`
+	       else
+		       # Sun's java compiler
+	       	       JVERSION=JRE`$JAVAC -version 2>&1 | sed -e "1s/javac //" -e "1q"`
+	       fi
+	  fi
 	  case "$JVERSION" in
-               1.5.*) try_java=true;;
-               1.6.*) try_java=true;;
+               JRE1.5.*) try_java=true;;
+               JRE1.6.*) try_java=true;;
+               ECJ*) try_java=no;;
                *)
 	       ;;
 	  esac
 	  if test $try_java = true; then
-	     AC_MSG_RESULT([version >= 1.5, Ok])
+	     AC_MSG_RESULT([JAVA version Ok])
 
 	     AC_MSG_CHECKING([for Java environment])
 	     ## retrieve JAVA_HOME from Java itself if not set
@@ -1450,7 +1463,7 @@ then
 	       ## was correct. We should also test the functionality for javac.
 	     fi
 	  else
-	     AC_MSG_RESULT([Version < 1.5, please update your JAVAC version])
+	     AC_MSG_RESULT([SUN Java compiler Version >= 1.5 required, JDBC provider not compiled])
 	  fi
 	else
 	  AC_MSG_RESULT([no])
