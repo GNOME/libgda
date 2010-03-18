@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-15 08:39+0100\n"
+"PO-Revision-Date: 2010-03-18 10:08+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -548,15 +548,15 @@ msgstr "Uporabljen GdaMetaStore v povezavi"
 
 #: ../libgda/gda-connection.c:317
 msgid "Unique GThread from which the connection will be available.This should only be modified by the database providers' implementation"
-msgstr ""
+msgstr "Enoznačna vrednost GThread preko katere bo na voljo povezava.Nastavite lahko spreminja le ponudnik podatkovne zbirke"
 
 #: ../libgda/gda-connection.c:328
 msgid "Tells if the connection acts as a thread wrapper around another connection, making it completely thread safe"
-msgstr ""
+msgstr "Pove ali je povezava ovita okoli  druge povezave in je s tem zavarovana"
 
 #: ../libgda/gda-connection.c:343
 msgid "Make the connection set up a monitoring function in the mainloop to monitor the wrapped connection"
-msgstr ""
+msgstr "Ustvari povezavo z nadzorom za pregledovanje ovite povezave"
 
 #: ../libgda/gda-connection.c:578
 #: ../libgda/gda-connection.c:606
@@ -704,7 +704,7 @@ msgstr "Sledenje stanja povezave prenosa: ni prenosa za %s"
 #: ../libgda/gda-connection.c:5139
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:234
 msgid "Internal error: invalid provider handle"
-msgstr "Notranja napaka: neveljaven ročnik ponudnika"
+msgstr "Notranja napaka: neveljaven upravljalnik ponudnika"
 
 #: ../libgda/gda-data-access-wrapper.c:486
 #: ../libgda/gda-data-meta-wrapper.c:577
@@ -949,12 +949,12 @@ msgstr "Neobstoječ stolpec v izvornem podatkovnem modelu: %d"
 #: ../libgda/gda-data-model.c:1595
 #, c-format
 msgid "Destination column %d can't be NULL but has no correspondence in the source data model"
-msgstr ""
+msgstr "Ciljni stolpec %d ne sme imeti določene vrednosti NULL, vendar nima povezave z izvornim podatkovnim modelom"
 
 #: ../libgda/gda-data-model.c:1605
 #, c-format
 msgid "Destination column %d has a gda type (%s) incompatible with source column %d type (%s)"
-msgstr ""
+msgstr "Ciljni stolpec %d je vrste gda (%s) in je neskladen z izvornim stolpcem vrste %d (%s)"
 
 #: ../libgda/gda-data-model.c:1702
 #, c-format
@@ -1367,7 +1367,7 @@ msgstr "Ni mogoče določiti načina pridobivanja ene vrstice"
 
 #: ../libgda/gda-data-select.c:2320
 msgid "Can only operate on non compound SELECT statements"
-msgstr ""
+msgstr "Opravilo je mogoče izvesti le z nezloženo izjavo SELECT"
 
 #: ../libgda/gda-data-select.c:2401
 #: ../libgda/gda-data-select.c:2571
@@ -1433,7 +1433,7 @@ msgstr "Neveljavna vrsta"
 
 #: ../libgda/gda-easy.c:390
 msgid "CREATE TABLE operation is not supported by the database server"
-msgstr ""
+msgstr "Opravilo ustvarjanja preglednice ni podprto preko strežnika podatkovne zbirke"
 
 #: ../libgda/gda-holder.c:485
 #: ../libgda/gda-set.c:485
@@ -1452,7 +1452,7 @@ msgstr "Ni mogoče pretvoriti niti v  vrsto '%s'"
 
 #: ../libgda/gda-holder.c:908
 msgid "Can't use this method to set value because there is already a static value"
-msgstr ""
+msgstr "Ni mogoče uporabiti te metode za določevanje vrednosti, saj že obstaja določena nespremenljiva vrednost"
 
 #: ../libgda/gda-holder.c:927
 #: ../libgda/gda-holder.c:1054
@@ -1463,12 +1463,12 @@ msgstr "(%s): ročnik ne sprejme vrednosti NULL"
 #: ../libgda/gda-holder.c:934
 #, c-format
 msgid "(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"
-msgstr ""
+msgstr "(%s): napačna vrednost vrste držala; pričakovana je vrsta '%s' ob vrsti vrednosti '%s'"
 
 #: ../libgda/gda-holder.c:1061
 #, c-format
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
-msgstr ""
+msgstr "(%s): napačna vrsta vrednosti: pričakovana je '%s', pridobljena pa je vrsta vrednosti '%s'"
 
 #. break holder's binding because type differ
 #: ../libgda/gda-holder.c:1514
@@ -1483,7 +1483,7 @@ msgstr "Ni mogogoče povezati ročnikov različnih vrst"
 #: ../libgda/gda-holder.c:1699
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
-msgstr ""
+msgstr "Ni mogoče spremeniti predmeta GdaHolder v vrednost skladno z vezanim predmetom GdaHolder: %s"
 
 #: ../libgda/gda-init.c:73
 msgid "Ignoring attempt to re-initialize GDA library."
@@ -1717,7 +1717,7 @@ msgstr ""
 #. * computing some features which won't be used
 #: ../libgda/gda-meta-struct.c:136
 msgid "Features to compute"
-msgstr ""
+msgstr "Zmožnosti za izračun"
 
 #: ../libgda/gda-meta-struct.c:498
 #: ../libgda/gda-meta-struct.c:513
@@ -1839,7 +1839,7 @@ msgstr ""
 
 #: ../libgda/gda-server-operation.c:1227
 msgid "Non handled GdaServerOperationType, please report error to http://bugzilla.gnome.org/ for the \"libgda\" product"
-msgstr ""
+msgstr "Neupravljana vrsta GdaServerOperationType; pošljite poročilo o napaki na http://bugzilla.gnome.org/ za knjižnico \"libgda\""
 
 #: ../libgda/gda-server-operation.c:1408
 #: ../libgda/gda-server-operation.c:1422
@@ -1850,7 +1850,7 @@ msgstr "Pričakovana oznaka <%s>; dobljena <%s>"
 #: ../libgda/gda-server-operation.c:1453
 #: ../libgda/gda-server-operation.c:2139
 msgid "Parameterlist values can only be set for individual parameters within it"
-msgstr ""
+msgstr "Vrednosti seznama parametrov so lahko določene le za posamezne parametre znotraj seznama"
 
 #: ../libgda/gda-server-operation.c:1510
 msgid "Missing attribute named 'path'"
@@ -1864,12 +1864,12 @@ msgstr "Manjka zahtevana vrednost za '%s'"
 #: ../libgda/gda-server-provider.c:499
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
-msgstr ""
+msgstr "Ponudnik %s je ustvaril GdaServerOperation brez vozlišča za '%s'"
 
 #: ../libgda/gda-server-provider.c:503
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
-msgstr ""
+msgstr "Ponudnik %s je ustvaril GdaServerOperation z napačno vrsto vozlišča za '%s'"
 
 #: ../libgda/gda-server-provider.c:927
 #: ../libgda/gda-server-provider.c:961
@@ -2250,7 +2250,7 @@ msgstr "Manjka SQL koda"
 #: ../libgda/gda-statement.c:695
 #, c-format
 msgid "No data handler for type '%s'"
-msgstr "Ni podatkovnega ročnika za  vrsto '%s'"
+msgstr "Ni podatkovnega upravljalnika za vrsto '%s'"
 
 #: ../libgda/gda-statement.c:1212
 #, c-format
@@ -2282,7 +2282,7 @@ msgstr "Izmaličeno ime preglednice"
 
 #: ../libgda/gda-statement.c:1949
 msgid "Join is not in a FROM statement"
-msgstr ""
+msgstr "Izjave JOIN ni v izjavi FORM"
 
 #: ../libgda/gda-statement.c:1956
 msgid "Could not find target the join is for"
@@ -2391,7 +2391,7 @@ msgstr "Preglednica nima določenega osnovnega ključa"
 
 #: ../libgda/gda-util.c:871
 msgid "Table's primary key is not selected"
-msgstr ""
+msgstr "Preglednica nima izbranega osnovnega ključa"
 
 #: ../libgda/gda-util.c:1120
 msgid "Could not compute any field to insert into"
@@ -2399,7 +2399,7 @@ msgstr "Ni mogoče izračunati polja za vstavljanje"
 
 #: ../libgda/gda-util.c:1183
 msgid "Missing table name in UPDATE statement"
-msgstr ""
+msgstr "Manjka ime preglednice v izjavi UPDATE"
 
 #: ../libgda/gda-xa-transaction.c:159
 msgid "Global transaction ID can not have more than 64 bytes"
@@ -2411,7 +2411,7 @@ msgstr ""
 
 #: ../libgda/gda-xa-transaction.c:308
 msgid "Connection does not support distributed transaction"
-msgstr ""
+msgstr "Ponudnik ne podpira razširjenega prenosa podatkov"
 
 #: ../libgda/gda-xa-transaction.c:342
 msgid "Cannot unregister connection not registered with GdaXaTransaction object"
@@ -2442,7 +2442,7 @@ msgstr "Dvojiško prikazovanje"
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:117
 #: ../providers/mysql/gda-mysql-handler-boolean.c:117
 msgid "Boolean values handler"
-msgstr "Ročnik logičnih vrednosti"
+msgstr "Upravljalnik logičnih vrednosti"
 
 #: ../libgda/handlers/gda-handler-boolean.c:123
 msgid "Boolean representation"
@@ -2474,11 +2474,11 @@ msgstr "Predstavitev časa, datuma in časovnega žiga"
 
 #: ../libgda/handlers/gda-handler-type.c:115
 msgid "Gda type handler"
-msgstr ""
+msgstr "Upravljalnik vrste Gda"
 
 #: ../libgda/handlers/gda-handler-type.c:121
 msgid "Gda type representation"
-msgstr ""
+msgstr "Predstavitev vrste Gda"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:221
 #: ../providers/jdbc/gda-jdbc-ddl.c:142
@@ -2491,7 +2491,7 @@ msgstr "Preglednica mora imeti vsaj eno vrstico"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:115
 msgid "SQlite binary handler"
-msgstr "SQLite dvojiški ročnik"
+msgstr "SQLite dvojiški upravljalnik"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:121
 msgid "SQlite binary representation"
@@ -2579,7 +2579,7 @@ msgstr "Prenosi niso podprti v načinu le za branje"
 #: ../providers/postgres/gda-postgres-provider.c:1507
 #: ../providers/web/gda-web-provider.c:1256
 msgid "Unnamed parameter is not allowed in prepared statements"
-msgstr ""
+msgstr "Neimenovan parameter izjave ni dovoljen v pripravljeni izjavi."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1983
 #: ../providers/mysql/gda-mysql-provider.c:1859
@@ -2755,7 +2755,7 @@ msgstr ""
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:153
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:189
 msgid "Internal error: virtual provider does not implement the create_operation() virtual method"
-msgstr ""
+msgstr "Notranja napaka: ponudnik ne omogoča navidezne metode create_operation()"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:384
 msgid "Data model must have at least one column"
@@ -2891,7 +2891,7 @@ msgstr "Prazen FROM stavek"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1359
 msgid "Select field is not in a SELECT statement"
-msgstr ""
+msgstr "V izjavi SELECT ni polja izbire"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:220
 msgid "COMPOUND statement contains an undefined COMPOUND statement"
@@ -2925,7 +2925,7 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:160
 msgid "DELETE statement needs a table to delete from"
-msgstr ""
+msgstr "Izjava DELETE zahteva preglednico iz katere bodo podatki izbrisani"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:351
 msgid "INSERT statement needs a table to insert into"
@@ -2946,7 +2946,7 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:400
 msgid "SELECT does not contain any expression"
-msgstr ""
+msgstr "Izjava SELECT ne vsebuje izraza"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:406
 msgid "SELECT can't have a DISTINCT expression if DISTINCT is not set"
@@ -2968,15 +2968,15 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:277
 msgid "UPDATE statement needs a table to update data"
-msgstr ""
+msgstr "Izjava UPDATE zahteva preglednico za posodobitev podatkov"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:283
 msgid "UPDATE statement does not have the same number of target columns and expressions"
-msgstr ""
+msgstr "Izjava UPDATE nima enakega števila ciljnih stolpcev v izrazu"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:289
 msgid "UPDATE statement does not have any target columns to update"
-msgstr ""
+msgstr "Izjava UPDATE nima določenih ciljnih stolpcev za posodabljanje"
 
 #: ../libgda/thread-wrapper/gda-thread-provider.c:810
 #: ../libgda/thread-wrapper/gda-thread-provider.c:863
@@ -3031,7 +3031,7 @@ msgstr "Ni mogoče najti DocBook XSL slogovne predloge za oblikovane predmete"
 #: ../libgda-report/engine/gda-report-engine.c:308
 #, c-format
 msgid "Object type '%s' cannot be declared in this context"
-msgstr ""
+msgstr "Predmeta vrste '%s' ni mogoče deklarirati na ta način"
 
 #: ../libgda-report/engine/gda-report-engine.c:316
 #, c-format
@@ -3041,7 +3041,7 @@ msgstr ""
 #: ../libgda-report/engine/gda-report-engine.c:351
 #, c-format
 msgid "Object type '%s' cannot be requested in this context"
-msgstr ""
+msgstr "Object type '%s' cannot be requested in this context"
 
 #: ../libgda-report/engine/gda-report-engine.c:570
 #, c-format
@@ -3268,7 +3268,7 @@ msgstr "Zapis je hh:mm:ss"
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:240
 #, c-format
 msgid "Widget of class '%s' does not have any associated GdaDataHandler, (to be set using the 'handler' property) expect some mis-behaviours"
-msgstr ""
+msgstr "Gradnik razreda '%s' ni povezan z GdaDataHandler, (z uporabo lastnosti 'upravljalnik') razen nekaterih napačnih povezav"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:399
 msgid "Value is NULL"
@@ -3276,7 +3276,7 @@ msgstr "Vrednosti je določena kot NULL"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:405
 msgid "Value will be determined by default"
-msgstr ""
+msgstr "Vrednost bo določena privzeto"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:411
 msgid "Value is invalid"
@@ -3304,7 +3304,7 @@ msgstr "Uporabi ločilo tisočic"
 
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:6
 msgid "Use thousands separator as specified by current locale"
-msgstr ""
+msgstr "Uporabi ločilnik tisočic, kot to določajo jezikovne nastavitve"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:1
 msgid "Display only one line, or a complete text editor"
@@ -3333,7 +3333,7 @@ msgstr "Več vrstični vnos"
 #: ../libgda-ui/data-entries/gdaui-formatted-entry.c:274
 #, c-format
 msgid "Unknown format character starting at %s"
-msgstr ""
+msgstr "Neznani znak oblikovanja pri %s"
 
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:266
 #, c-format
@@ -3343,12 +3343,12 @@ msgstr "Vrsta %s ni številčna"
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:279
 #, c-format
 msgid "Decimal separator cannot be the '%c' character"
-msgstr ""
+msgstr "Znak '%c' ni ustrezen ločilnik decimalk"
 
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:288
 #, c-format
 msgid "Decimal thousands cannot be the '%c' character"
-msgstr ""
+msgstr "Znak '%c' ni ustrezen ločilnik tisočic"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:108
 #: ../libgda-ui/data-entries/plugins/common-pict.c:121
@@ -3360,7 +3360,7 @@ msgstr "Prazni podatki"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:114
 #, c-format
 msgid "Unhandled type of data"
-msgstr "Neuporavljana vrsta podatkov"
+msgstr "Neupravljana vrsta podatkov"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:211
 #, c-format
@@ -3376,6 +3376,8 @@ msgid ""
 "Error while interpreting data as an image:\n"
 "%s"
 msgstr ""
+"Napaka med tolmačenjem podatkov kot slike:\n"
+"%s"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:315
 msgid "_Load image from file"
@@ -3417,11 +3419,11 @@ msgstr ""
 
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:541
 msgid "Cgrid data handler"
-msgstr ""
+msgstr "Podatkovni upravljalnik Cgrid"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:542
 msgid "The cgrid data handler"
-msgstr ""
+msgstr "Podatkovni upravljalnik Cgrid"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:549
 msgid "Cgrid gtype"
@@ -3449,11 +3451,11 @@ msgstr "Uredljiv Cgrid"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:573
 msgid "Cgrid is to be deleted"
-msgstr ""
+msgstr "Cgrid bo izbrisan"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:574
 msgid "Cgrid to be deleted"
-msgstr ""
+msgstr "Cgrid pripravljen za brisanje"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:581
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:582
@@ -3463,7 +3465,7 @@ msgstr "Vrednost Cgrid"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:588
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:589
 msgid "Cgrid value attributes"
-msgstr ""
+msgstr "Atributi vrednosti Cgrid"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cgrid.c:849
 msgid "Cgrid text column"
@@ -3475,7 +3477,7 @@ msgstr "Stolpec podatkovnega vira, iz katerega naj bodo pridobljeni nizi"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cgrid.c:857
 msgid "Cgrid grid height"
-msgstr ""
+msgstr "Višina Cgrid mreže"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cgrid.c:858
 msgid "Cgrid height's."
@@ -3483,11 +3485,11 @@ msgstr "Cgrid višina"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cgrid.c:865
 msgid "Cgrid has its headers visible"
-msgstr ""
+msgstr "Cgrid ima glave vidne"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cgrid.c:866
 msgid "Cgrid headers visible"
-msgstr ""
+msgstr "Vidne glave Cgrid"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:257
 msgid "Mask settings"
@@ -3500,7 +3502,7 @@ msgstr ""
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:272
 #, c-format
 msgid "Set to class %c network"
-msgstr ""
+msgstr "Določi kot razred %c omrežja"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:1
 msgid "Let the user name an existing or new folder"
@@ -3546,7 +3548,7 @@ msgstr "Nabor znakov"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:2
 msgid "How password should be encoded"
-msgstr ""
+msgstr "Kako naj bo kodirano geslo"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:3
 msgid "MD5 Sum"
@@ -3618,6 +3620,8 @@ msgid ""
 "Error opening the connection for file '%s':\n"
 "%s\n"
 msgstr ""
+"Napaka med odpiranjem povezave za datoteko '%s':\n"
+"%s\n"
 
 #: ../libgda-ui/demos/main.c:798
 msgid "Libgda-ui Code Demos"
@@ -3715,11 +3719,11 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-basic-form.c:246
 msgid "List of parameters to show in the form"
-msgstr ""
+msgstr "Seznam parametrov prikazanih v obrazcu"
 
 #: ../libgda-ui/gdaui-basic-form.c:250
 msgid "Entry headers are sensitive"
-msgstr ""
+msgstr "Glave vnosov so občutljive"
 
 #: ../libgda-ui/gdaui-basic-form.c:255
 msgid "Show Entry actions"
@@ -3785,11 +3789,11 @@ msgstr "Podatkovni model"
 
 #: ../libgda-ui/gdaui-data-store.c:139
 msgid "Internal GdaDataProxy data model"
-msgstr ""
+msgstr "Notranji GdaDataProxy podatkovni model"
 
 #: ../libgda-ui/gdaui-data-store.c:388
 msgid "Trying to modify a read-only row"
-msgstr ""
+msgstr "Poskus spreminjanja stolpca le za branje"
 
 #: ../libgda-ui/gdaui-data-filter.c:182
 msgid "Filter failed:"
@@ -3801,7 +3805,7 @@ msgstr "Filter"
 
 #: ../libgda-ui/gdaui-data-filter.c:213
 msgid "any valid SQL expression"
-msgstr ""
+msgstr "katerakoli veljavni SQL izraz"
 
 #: ../libgda-ui/gdaui-data-filter.c:229
 msgid "Set filter"
@@ -4479,7 +4483,7 @@ msgstr "Tradicionalni kitajski (Big5)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:19
 msgid "Binary pseudo charset"
-msgstr ""
+msgstr "Dvojiški pseudo nabor"
 
 #. DSN parameters
 #. other table options
@@ -4504,7 +4508,7 @@ msgstr "Primerjava"
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
 msgid "Collation method to use in the new database"
-msgstr ""
+msgstr "Način primerjave uporabljen v novih podatkovnih zbirkah"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
@@ -4823,7 +4827,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
 msgid "Indexed field or expression"
-msgstr ""
+msgstr "Ustvarjeno kazalo polja ali niza"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
@@ -4927,7 +4931,7 @@ msgstr "Podatkovna mapa"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:59
 msgid "Delay key write"
-msgstr ""
+msgstr "Časovno zamakni pisanje ključev"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
 msgid "Don't pack keys"
@@ -4953,7 +4957,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
 msgid "Federated"
-msgstr ""
+msgstr "Zvezno"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:73
@@ -5192,16 +5196,16 @@ msgstr "Kazalo za izbris"
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
 msgid "Automatically drop objects that depend on the table (CASCADE)"
-msgstr ""
+msgstr "Samodejno spusti predmet, ki je odvisen od preglednice (CASCADE)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
 msgid "Drop table only if it exists"
-msgstr ""
+msgstr "Spusti preglednico le, če obstaja"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:3
 msgid "Drop table only if it is temporary"
-msgstr ""
+msgstr "Spusti preglednico le, če je začasna"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:2
@@ -5216,7 +5220,7 @@ msgstr "Če obstaja"
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:3
 msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
-msgstr ""
+msgstr "Zavrni spuščanje preglednice, če je katerikoli predmet od nje odvisen (RESTRICT)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
@@ -5234,7 +5238,7 @@ msgstr "Kaj narediti z referencami"
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:1
 msgid "Drop view only if it exists"
-msgstr ""
+msgstr "Spusti pogled le, če obstaja"
 
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:4
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:7
@@ -5337,7 +5341,7 @@ msgstr "Ni dovolj pomnilnika za pretvarjanje niza v dvojiški medpomnilnik"
 
 #: ../providers/postgres/gda-postgres-provider.c:446
 msgid "The connection string must contain a DB_NAME value"
-msgstr ""
+msgstr "Niz povezave mora vsebovati vrednosti DB_NAME"
 
 #: ../providers/postgres/gda-postgres-provider.c:450
 msgid "The connection string format has changed: replace DATABASE with DB_NAME and the same contents"
@@ -5388,7 +5392,7 @@ msgstr "Ni mogoče začeti transakcije"
 #: ../providers/postgres/gda-postgres-provider.c:2184
 #: ../providers/postgres/gda-postgres-provider.c:2219
 msgid "Could not set the XA transaction ID parameter"
-msgstr ""
+msgstr "Ni mogoče določiti parametra ID prenosa XA"
 
 #: ../providers/postgres/gda-postgres-recordset.c:142
 msgid "Number of rows chunks read since the object creation"
@@ -5400,7 +5404,7 @@ msgstr "Ponudnik PostgreSQL podatkovnih zbirk"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
 msgid "Don't add the column to descendants of the table"
-msgstr ""
+msgstr "Ne dodaj stolpca podrejenim preglednicam"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:9
 msgid "Ignore descendants"
@@ -5555,7 +5559,7 @@ msgstr "Vijetnamsko (TCVN-5712/Windows CP1258)"
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
 msgid "Tablespace"
-msgstr ""
+msgstr "Preglednični prostor"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:64
@@ -5573,7 +5577,7 @@ msgstr "Ime uporabnika, ki bo lastnik podatkovne zbirke"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:69
 msgid "The name of the tablespace that will be associated with the new database"
-msgstr ""
+msgstr "Ime pregledničnega prostora, ki bo povezan z novo podatkovno zbirko"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:70
 msgid "The name of the template from which to create the new database"
@@ -5622,7 +5626,7 @@ msgstr "Windows CP874 (Tajsko)"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:1
 msgid "Constraint expression for a partial index"
-msgstr ""
+msgstr "Omeji izraz za delno kazalo"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 msgid "Predicate"
@@ -5639,27 +5643,27 @@ msgstr "Kopiraj preivzete"
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
 msgid "Deferrable"
-msgstr ""
+msgstr "Odložljivo"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:18
 msgid "Deferrable initially deferred"
-msgstr ""
+msgstr "Neodložljivo v začetku odloženo"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
 msgid "Deferrable initially immediate"
-msgstr ""
+msgstr "Neodložljivo v začetku trenutno"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 msgid "Inheritance"
-msgstr ""
+msgstr "Nasledstvo"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
 msgid "Keep coupled"
-msgstr ""
+msgstr "Ohrani v dvojicah"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
 msgid "Not deferrable"
-msgstr ""
+msgstr "Neodložljivo"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
 msgid "Parent table"
@@ -5676,7 +5680,7 @@ msgstr "Povrni na privzeto"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
 msgid "Use INHERIT instead of LIKE"
-msgstr ""
+msgstr "Uporabi izjavo INHERIT namesto LIKE"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
 msgid "With OIDs"
@@ -5689,15 +5693,15 @@ msgstr "Začasni pogled"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:1
 msgid "Automatically drop objects that depend on the column (CASCADE)"
-msgstr ""
+msgstr "Samodejno spusti predmet, ki je odvisen od stolpca (CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:5
 msgid "Refuse to drop the column if any objects depend on it (RESTRICT)"
-msgstr ""
+msgstr "Zavrni spuščanje stolpca, če je katerikoli predmet od njega odvisen (RESTRICT)"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
 msgid "What to do with references on the column to delete"
-msgstr ""
+msgstr "Kaj storiti s sklici, ob izbrisanju stolpca"
 
 #. DSN parameters
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
@@ -5706,15 +5710,15 @@ msgstr "Ime podatkovne zbirke za zavrnitev"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:1
 msgid "Automatically drop objects that depend on the view (CASCADE)"
-msgstr ""
+msgstr "Samodejno spusti predmet, ki je odvisen od pogleda (CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:5
 msgid "Refuse to drop the view if any objects depend on it (RESTRICT)"
-msgstr ""
+msgstr "Zavrni spuščanje pogleda, če je katerikoli predmet od njega odvisen (RESTRICT)"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:8
 msgid "What to do with objects referencing the view"
-msgstr ""
+msgstr "Kaj storiti s predmeti, ki se sklicujejo na pogled"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
 msgid "Search Path"
@@ -5772,7 +5776,7 @@ msgstr "Mapa kjer bo datoteka podatkovne zbirke"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
 msgid "Collation name (BINARY|NOCASE)"
-msgstr ""
+msgstr "Ime primerjave (BINARY|NOCASE)"
 
 #. To translators: "Compare method" refers to the method SQLite has to compare values
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:4
@@ -5792,7 +5796,7 @@ msgstr "Spor"
 #. list of fields
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:14
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
-msgstr ""
+msgstr "Način razreševanja sporov (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
 
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:1
 msgid "Create view only if it does not yet exist"
@@ -5800,7 +5804,7 @@ msgstr "Ustvari pogled le v primeru, da še ne obstaja"
 
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:1
 msgid "Drop index only if it exists"
-msgstr ""
+msgstr "Spusti kazalo le, če obstaja"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
 msgid "Enable usage of some extra functions in SQL"
@@ -6239,6 +6243,9 @@ msgid ""
 "a new binding connection to access data\n"
 "from multiple databases at once"
 msgstr ""
+"Uporabite povezavo za ustvarjanje\n"
+"novo vezno povezavo za dostop do\n"
+"več podatkovnih zbirk hkrati"
 
 #: ../tools/browser/browser-window.c:241
 msgid "Begin a new transaction"
@@ -6494,6 +6501,19 @@ msgid ""
 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</tt> and\n"
 "<tt>binary</tt></small>"
 msgstr ""
+"<small>To območje dovoli podajanje vrednosti k\n"
+"spremenljivkam, ki so določene znotraj kode SQL\n"
+"v skladnji:\n"
+"<b><tt>##&lt;ime spremenljivke&gt;::&lt;vrsta&gt;[::null]</tt></b>\n"
+"Na primer:\n"
+"<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
+"      določa <b>id</b> kot število NULL\n"
+"<span foreground=\"#4e9a06\"><b><tt>##starost::string::null</tt></b></span>\n"
+"      določa <b>starost</b> kot niz string\n"
+"\n"
+"Veljavne vrste so: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
+"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</tt> in\n"
+"<tt>binary</tt></small>"
 
 #: ../tools/browser/canvas/browser-canvas-column.c:169
 #, c-format
@@ -6805,7 +6825,7 @@ msgstr "_Preklopni način"
 
 #: ../tools/browser/data-manager/data-console.c:447
 msgid "Switch between compose and execute modes"
-msgstr ""
+msgstr "Preklop med načinom sestavljanja in izvajanja"
 
 #: ../tools/browser/data-manager/data-console.c:491
 msgid "Data manager"
@@ -8282,22 +8302,18 @@ msgstr "Sprožilniki"
 
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
-
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
-
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
-
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
-
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokument ni uspešno razčlenjen\n"
-
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
 
 #, fuzzy
 #~ msgid "Tables:"
 #~ msgstr "Razpredelnice"
+
