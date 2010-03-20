@@ -188,7 +188,7 @@ class GdaJConnection {
 			throw new Exception ("No transaction started");
 		}
 
-		svp = (Savepoint) svp_map.get (svp_name);
+		svp = svp_map.get (svp_name);
 		if (svp != null) {
 			throw new Exception ("Savepoint '" + svp_name + "' already exists");
 		}
@@ -201,7 +201,7 @@ class GdaJConnection {
 		if (cnc.getAutoCommit() == true) {
 			throw new Exception ("No transaction started");
 		}
-		svp = (Savepoint) svp_map.get (svp_name);
+		svp = svp_map.get (svp_name);
 		if (svp == null) {
 			throw new Exception ("No savepoint '" + svp_name + "' found");
 		}
@@ -214,7 +214,7 @@ class GdaJConnection {
 		if (cnc.getAutoCommit() == true) {
 			throw new Exception ("No transaction started");
 		}
-		svp = (Savepoint) svp_map.get (svp_name);
+		svp = svp_map.get (svp_name);
 		if (svp == null) {
 			throw new Exception ("No savepoint '" + svp_name + "' found");
 		}
@@ -292,7 +292,7 @@ class GdaJPStmt {
 	// sets a parameter's value
 	// if c_value_pointer is 0, then the parameter should be set to NULL
 	public void setParameterValue (int index, long c_value_pointer) throws Exception {
-		GdaJValue cv = (GdaJValue) param_values.elementAt (index);
+		GdaJValue cv = param_values.elementAt (index);
 		cv.getCValue (ps, index, c_value_pointer);
 	}
 
@@ -440,7 +440,7 @@ class GdaJResultSet {
 		if (! rs.next ())
 			return false;
 		for (i = 0; i < ncols; i++) {
-			GdaJValue cv = (GdaJValue) col_values.elementAt (i);
+			GdaJValue cv = col_values.elementAt (i);
 			cv.setCValue (rs, i, c_pointer);
 		}
 		return true;
@@ -890,7 +890,7 @@ class GdaJBlob extends GdaJValue {
 		else {
 			GdaInputStream is;
 			is = getCBlob (c_pointer);
-			ps.setBinaryStream (index + 1, is, is.size);
+			ps.setBinaryStream (index + 1, is, (int) is.size);
 		}
 	}
 }
@@ -1038,12 +1038,10 @@ class GdaInputStream extends InputStream {
 	static int chunk_size = 65536; // 64kb chunks
 
 	private static native void initIDs();
-	private native int[] readData (long gda_blob_pointer, long offset, long size);
 	private native byte[] readByteData (long gda_blob_pointer, long offset, long size);
 	public long size;
 	private long current_pos;
 	private long gda_blob_pointer;
-	private byte[] data;
 
 	private InputStream ist = null; // delegate
 

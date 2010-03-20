@@ -1,6 +1,4 @@
 import java.sql.*;
-import java.util.*;
-import java.io.*;
 
 
 class org_h2_DriverMeta extends GdaJMeta {
@@ -60,25 +58,25 @@ class org_h2_DriverMetaTables extends GdaJMetaTables {
 
 		GdaJValue cv;
 		
-		cv = (GdaJValue) col_values.elementAt (0);
+		cv = col_values.elementAt (0);
 		cv.setCValue (rs, 0, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (1);
+		cv = col_values.elementAt (1);
 		cv.setCValue (rs, 1, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (2);
+		cv = col_values.elementAt (2);
 		cv.setCValue (rs, 2, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (3);
+		cv = col_values.elementAt (3);
 		cv.setCValue (rs, 3, c_pointer);
 		
-		cv = (GdaJValue) col_values.elementAt (5);
+		cv = col_values.elementAt (5);
 		cv.setCValue (rs, 4, c_pointer);
 
-		cv = (GdaJValue) col_values.elementAt (6);
+		cv = col_values.elementAt (6);
 		String ln = GdaJValue.toLower (rs.getString (2) + "." + rs.getString (3));
 		if (jm.schemaIsCurrent (rs.getString (2)))
 			cv.setCString (c_pointer, 6, GdaJValue.toLower (rs.getString (3)));
 		else
 			cv.setCString (c_pointer, 6, ln);
-		cv = (GdaJValue) col_values.elementAt (7);
+		cv = col_values.elementAt (7);
 		cv.setCString (c_pointer, 7, ln);
 
 		return true;
@@ -94,10 +92,10 @@ class org_h2_DriverMetaViews extends GdaJResultSet {
 	}
 
 	protected void columnTypesDeclared () {
-		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		GdaJValue cv = col_values.elementAt (0);
 		cv.no_null = true;
 		cv.convert_lc = true;
-		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
+		(col_values.elementAt (1)).convert_lc = true;
+		(col_values.elementAt (2)).convert_lc = true;
 	}
 }

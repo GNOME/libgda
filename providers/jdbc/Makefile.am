@@ -84,7 +84,7 @@ jdbcprovdir = $(providerdir)
 jdbcprov_DATA = $(jdbcprov_jar)
 
 GdaJConnection.class: $(jdbcprov_sources)
-	$(JAVAC) -cp . -Xlint:unchecked -Xlint:deprecation -d $(top_builddir)/providers/jdbc $^
+	$(JAVAC) -cp . $(JFLAGS) -d $(top_builddir)/providers/jdbc $^
 
 $(jdbcprov_jar): $(jdbcprov_classes)
 	$(JAR) cfm $(jdbcprov_jar) $(top_srcdir)/providers/jdbc/MANIFEST.MF *.class

@@ -1,6 +1,5 @@
 import java.sql.*;
 import java.util.*;
-import java.io.*;
 
 /*
  * This class is the central point for meta data extraction. It is a default implementation for all JDBC providers
@@ -122,10 +121,10 @@ class GdaJMetaSchemas extends GdaJMetaResultSet {
 
 	protected void columnTypesDeclared () {
 		// the catalog part cannot be NULL, but "" instead
-		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		GdaJValue cv = col_values.elementAt (0);
 		cv.no_null = true;
 		cv.convert_lc = true;
-		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
+		(col_values.elementAt (1)).convert_lc = true;
 	}
 
 	public boolean fillNextRow (long c_pointer) throws Exception {
@@ -145,11 +144,11 @@ class GdaJMetaSchemas extends GdaJMetaResultSet {
 				return fillNextRow (c_pointer);
 		}
 
-		cv = (GdaJValue) col_values.elementAt (0);
+		cv = col_values.elementAt (0);
 		cv.setCValue (rs, 1, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (1);
+		cv = col_values.elementAt (1);
 		cv.setCValue (rs, 0, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (3);
+		cv = col_values.elementAt (3);
 		cv.setCBoolean (c_pointer, 3, false);
 
 		return true;
@@ -181,13 +180,13 @@ class GdaJMetaTables extends GdaJMetaResultSet {
 
 	protected void columnTypesDeclared () {
 		// the catalog part cannot be NULL, but "" instead
-		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		GdaJValue cv = col_values.elementAt (0);
 		cv.no_null = true;
 		cv.convert_lc = true;
-		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (6)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (7)).convert_lc = true;
+		(col_values.elementAt (1)).convert_lc = true;
+		(col_values.elementAt (2)).convert_lc = true;
+		(col_values.elementAt (6)).convert_lc = true;
+		(col_values.elementAt (7)).convert_lc = true;
 	}
 
 	public boolean fillNextRow (long c_pointer) throws Exception {
@@ -196,16 +195,16 @@ class GdaJMetaTables extends GdaJMetaResultSet {
 
 		GdaJValue cv;
 		
-		cv = (GdaJValue) col_values.elementAt (0);
+		cv = col_values.elementAt (0);
 		cv.setCValue (rs, 0, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (1);
+		cv = col_values.elementAt (1);
 		cv.setCValue (rs, 1, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (2);
+		cv = col_values.elementAt (2);
 		cv.setCValue (rs, 2, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (3);
+		cv = col_values.elementAt (3);
 		cv.setCValue (rs, 3, c_pointer);
 		
-		cv = (GdaJValue) col_values.elementAt (5);
+		cv = col_values.elementAt (5);
 		cv.setCValue (rs, 4, c_pointer);
 
 		String ln = GdaJValue.toLower (rs.getString (2) + "." + rs.getString (3));
@@ -213,7 +212,7 @@ class GdaJMetaTables extends GdaJMetaResultSet {
 			cv.setCString (c_pointer, 6, GdaJValue.toLower (rs.getString (3)));
 		else
 			cv.setCString (c_pointer, 6, ln);
-		cv = (GdaJValue) col_values.elementAt (7);
+		cv = col_values.elementAt (7);
 		cv.setCString (c_pointer, 7, ln);
 
 		return true;
@@ -242,11 +241,11 @@ class GdaJMetaViews extends GdaJMetaResultSet {
 
 	protected void columnTypesDeclared () {
 		// the catalog part cannot be NULL, but "" instead
-		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		GdaJValue cv = col_values.elementAt (0);
 		cv.no_null = true;
 		cv.convert_lc = true;
-		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
+		(col_values.elementAt (1)).convert_lc = true;
+		(col_values.elementAt (2)).convert_lc = true;
 	}
 
 	public boolean fillNextRow (long c_pointer) throws Exception {
@@ -255,11 +254,11 @@ class GdaJMetaViews extends GdaJMetaResultSet {
 
 		GdaJValue cv;
 		
-		cv = (GdaJValue) col_values.elementAt (0);
+		cv = col_values.elementAt (0);
 		cv.setCValue (rs, 0, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (1);
+		cv = col_values.elementAt (1);
 		cv.setCValue (rs, 1, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (2);
+		cv = col_values.elementAt (2);
 		cv.setCValue (rs, 2, c_pointer);
 
 		return true;
@@ -307,19 +306,19 @@ class GdaJMetaColumns extends GdaJMetaResultSet {
 
 	protected void columnTypesDeclared () {
 		// the catalog part cannot be NULL, but "" instead
-		GdaJValue cv = (GdaJValue) col_values.elementAt (0);
+		GdaJValue cv = col_values.elementAt (0);
 		cv.no_null = true;
 		cv.convert_lc = true;
-		((GdaJValue) col_values.elementAt (1)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (2)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (3)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (7)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (15)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (16)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (17)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (18)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (19)).convert_lc = true;
-		((GdaJValue) col_values.elementAt (20)).convert_lc = true;
+		(col_values.elementAt (1)).convert_lc = true;
+		(col_values.elementAt (2)).convert_lc = true;
+		(col_values.elementAt (3)).convert_lc = true;
+		(col_values.elementAt (7)).convert_lc = true;
+		(col_values.elementAt (15)).convert_lc = true;
+		(col_values.elementAt (16)).convert_lc = true;
+		(col_values.elementAt (17)).convert_lc = true;
+		(col_values.elementAt (18)).convert_lc = true;
+		(col_values.elementAt (19)).convert_lc = true;
+		(col_values.elementAt (20)).convert_lc = true;
 	}
 
 	public boolean fillNextRow (long c_pointer) throws Exception {
@@ -327,29 +326,29 @@ class GdaJMetaColumns extends GdaJMetaResultSet {
 			return false;
 
 		GdaJValue cv;
-		int i, r;
+		int i;
 
-		((GdaJValue) col_values.elementAt (0)).setCValue (rs, 0, c_pointer);
-		((GdaJValue) col_values.elementAt (1)).setCValue (rs, 1, c_pointer);
-		((GdaJValue) col_values.elementAt (2)).setCValue (rs, 2, c_pointer);
-		((GdaJValue) col_values.elementAt (3)).setCValue (rs, 3, c_pointer);
-		((GdaJValue) col_values.elementAt (4)).setCValue (rs, 16, c_pointer);
-		((GdaJValue) col_values.elementAt (5)).setCValue (rs, 12, c_pointer);
-		cv = (GdaJValue) col_values.elementAt (6);
+		(col_values.elementAt (0)).setCValue (rs, 0, c_pointer);
+		(col_values.elementAt (1)).setCValue (rs, 1, c_pointer);
+		(col_values.elementAt (2)).setCValue (rs, 2, c_pointer);
+		(col_values.elementAt (3)).setCValue (rs, 3, c_pointer);
+		(col_values.elementAt (4)).setCValue (rs, 16, c_pointer);
+		(col_values.elementAt (5)).setCValue (rs, 12, c_pointer);
+		cv = col_values.elementAt (6);
 		i = rs.getInt (10);
 		if (i == DatabaseMetaData.columnNoNulls)
 			cv.setCBoolean (c_pointer, 6, false);
 		else
 			cv.setCBoolean (c_pointer, 6, true);
-		((GdaJValue) col_values.elementAt (7)).setCValue (rs, 5, c_pointer);
+		(col_values.elementAt (7)).setCValue (rs, 5, c_pointer);
 
-		((GdaJValue) col_values.elementAt (9)).setCString (c_pointer, 9, 
+		(col_values.elementAt (9)).setCString (c_pointer, 9, 
 								   GdaJValue.jdbc_type_to_g_type (rs.getInt (5))); // gtype
 
-		((GdaJValue) col_values.elementAt (11)).setCValue (rs, 15, c_pointer);
-		((GdaJValue) col_values.elementAt (12)).setCValue (rs, 8, c_pointer); // numeric_precision
+		(col_values.elementAt (11)).setCValue (rs, 15, c_pointer);
+		(col_values.elementAt (12)).setCValue (rs, 8, c_pointer); // numeric_precision
 
-		((GdaJValue) col_values.elementAt (23)).setCValue (rs, 11, c_pointer); // comments
+		(col_values.elementAt (23)).setCValue (rs, 11, c_pointer); // comments
 
 		return true;
 	}

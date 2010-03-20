@@ -1425,14 +1425,27 @@ then
 	       fi
 	  fi
 	  case "$JVERSION" in
-               JRE1.5.*) try_java=true;;
-               JRE1.6.*) try_java=true;;
+               JRE1.5.*)
+		try_java=true
+		JTYPE="Sun JRE 1.5"
+		JFLAGS="-Xlint:unchecked -Xlint:deprecation"
+		;;
+               JRE1.6.*)
+		try_java=true
+		JTYPE="Sun JRE 1.6"
+		JFLAGS="-Xlint:unchecked -Xlint:deprecation"
+		;;
+               JREgcj-4*)
+		try_java=true
+		JTYPE="GCJ"
+		JFLAGS=""
+		;;
                ECJ*) try_java=no;;
                *)
 	       ;;
 	  esac
 	  if test $try_java = true; then
-	     AC_MSG_RESULT([JAVA version Ok])
+	     AC_MSG_RESULT([JAVA version used is $JTYPE ])
 
 	     AC_MSG_CHECKING([for Java environment])
 	     ## retrieve JAVA_HOME from Java itself if not set
@@ -1560,6 +1573,7 @@ then
 	have_java=yes
 	AC_DEFINE(HAVE_JAVA, 1, [Have JAVA])
 	AC_SUBST(JAVA_LD_PATH)
+	AC_SUBST(JFLAGS)
 fi
 AM_CONDITIONAL(JAVA, test x$have_java = xyes)
 CFLAGS="$save_CFLAGS"
@@ -1835,7 +1849,7 @@ echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system 
 dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
 dnl echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 dnl echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
-echo "      JDBC = `if test x$have_java = xyes; then echo yes; else echo no; fi`"
+echo "      JDBC = `if test x$have_java = xyes; then echo "yes (using $JTYPE)"; else echo no; fi`"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
 then
