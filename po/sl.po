@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-18 10:08+0100\n"
+"PO-Revision-Date: 2010-03-22 18:18+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -2816,7 +2816,7 @@ msgstr "Stolpca '%s' ni mogoče najti"
 #: ../libgda/sql-parser/gda-statement-struct.c:582
 #: ../libgda/sql-parser/gda-statement-struct.c:693
 msgid "GdaSqlSelectField is not part of a SELECT statement"
-msgstr ""
+msgstr "Predmet GdaSqlSelectField ni del izjave SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:641
 msgid "Missing table name in statement"
@@ -2929,7 +2929,7 @@ msgstr "Izjava DELETE zahteva preglednico iz katere bodo podatki izbrisani"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:351
 msgid "INSERT statement needs a table to insert into"
-msgstr ""
+msgstr "Izjava INSERT zahteva preglednico za vstavljanje podatkov"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:357
 msgid "Can't specify values to insert and SELECT statement in INSERT statement"
@@ -2938,7 +2938,7 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:376
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:402
 msgid "INSERT statement does not have the same number of target columns and expressions"
-msgstr ""
+msgstr "Izjava INSERT nima enakega števila ciljnih stolpcev v izrazu"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:405
 msgid "VALUES lists must all be the same length in INSERT statement"
@@ -3497,7 +3497,7 @@ msgstr "Nastavitve maske"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:263
 msgid "Set to host mask"
-msgstr ""
+msgstr "Določi za masko gostitelja"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:272
 #, c-format
@@ -3526,7 +3526,7 @@ msgstr "Način izbire"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:6
 msgid "Specifies what the user will be allowed to select"
-msgstr ""
+msgstr "Določa kaj uporabnik lahko izbere"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:193
 msgid "Choose a file"
@@ -3625,7 +3625,7 @@ msgstr ""
 
 #: ../libgda-ui/demos/main.c:798
 msgid "Libgda-ui Code Demos"
-msgstr ""
+msgstr "Demo libgda-UI kode"
 
 #: ../libgda-ui/demos/main.c:853
 #, c-format
@@ -3652,7 +3652,7 @@ msgstr "Neznan ponudnik '%s'"
 #: ../libgda-ui/internal/gdaui-provider-spec-editor.c:197
 #, c-format
 msgid "Provider '%s' does not report the required parameters for DSN"
-msgstr ""
+msgstr "Ponudnik '%s' ne podpira zahtevanih parametrov za DSN"
 
 #. set to NULL item
 #: ../libgda-ui/internal/utility.c:80
@@ -3693,7 +3693,7 @@ msgstr ""
 
 #: ../libgda-ui/internal/utility.c:406
 msgid "Part of the current modified data was invalid"
-msgstr ""
+msgstr "Del trenutnih spremenjenih podatkov je neveljaven"
 
 #: ../libgda-ui/internal/utility.c:407
 msgid ""
@@ -3731,7 +3731,7 @@ msgstr "Pokaži dejanja vnosa"
 
 #: ../libgda-ui/gdaui-basic-form.c:260
 msgid "Entries Auto-default"
-msgstr ""
+msgstr "Samodejno privzeti vnosi"
 
 #: ../libgda-ui/gdaui-basic-form.c:265
 msgid "TRUE if expanding the form makes sense"
@@ -3742,7 +3742,7 @@ msgstr ""
 #: ../libgda-ui/gdaui-raw-grid.c:2524
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
-msgstr ""
+msgstr "Atribut '%s' mora biti vrednost G_TYPE_STRING"
 
 #: ../libgda-ui/gdaui-basic-form.c:1584
 msgid "Can't find data entry for GdaHolder"
@@ -4273,7 +4273,7 @@ msgstr "Ni mogoče odpreti datoteke %s"
 #: ../providers/mdb/gda-mdb-provider.c:351
 #, c-format
 msgid "Could not map table '%s': %s"
-msgstr ""
+msgstr "Ni mogoče preslikati preglednice '%s': %s"
 
 #: ../providers/mdb/libmain.c:73
 msgid "Provider for Microsoft Access files"
@@ -4353,7 +4353,7 @@ msgstr "Število sočasno pridobljenih vrstic"
 
 #: ../providers/mysql/gda-mysql-recordset.c:232
 msgid "Number of row chunks read since the object creation"
-msgstr ""
+msgstr "Število delov vrstice, ki so bili prebrani od ustvarjanja predmeta"
 
 #: ../providers/mysql/gda-mysql-recordset.c:515
 #: ../providers/mysql/gda-mysql-recordset.c:804
@@ -4618,7 +4618,7 @@ msgstr "Zahodnoevropski (HP)"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:14
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:6
 msgid "Host on which the database server is running"
-msgstr ""
+msgstr "Gostitelj na katerem teče strežnik podatkovne zbirke"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
@@ -4820,7 +4820,7 @@ msgstr "Ime kazala"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:3
 msgid "Index type (depending on table storage engine)"
-msgstr ""
+msgstr "Vrsta kazala (odvisno od strojnika shranjevanja preglednice)"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:5
@@ -4867,7 +4867,7 @@ msgstr ""
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:7
 msgid "An approximation of the average row length for your table"
-msgstr ""
+msgstr "Približna povprečna dolžina vrstice preglednice"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:8
 msgid "Archive"
@@ -4953,7 +4953,7 @@ msgstr "Primer"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:70
 msgid "FIRST, LAST or NO: only with MERGE engine"
-msgstr ""
+msgstr "FIRST, LAST ali NO: le s strojnikom MERGE"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
 msgid "Federated"
@@ -5029,7 +5029,7 @@ msgstr "Uskladi vrsto"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:127
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
 msgid "Matching method if more than one field involved"
-msgstr ""
+msgstr "Način skladnje kadar je uporabljeno več kot eno polje"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:129
@@ -5136,7 +5136,7 @@ msgstr "Unija"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:199
 msgid "tbl_name[,tbl_name]...: only with MERGE engine"
-msgstr ""
+msgstr "tbl_name[,tbl_name]...: le s strojnikom MERGE"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:1
@@ -5179,7 +5179,7 @@ msgstr "ime stolpca"
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:11
 msgid "Drop database only if it exists"
-msgstr ""
+msgstr "Spusti podatkovno zbirko le, če obstaja"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
@@ -5396,7 +5396,7 @@ msgstr "Ni mogoče določiti parametra ID prenosa XA"
 
 #: ../providers/postgres/gda-postgres-recordset.c:142
 msgid "Number of rows chunks read since the object creation"
-msgstr ""
+msgstr "Število delov vrstic, ki so bili prebrani od ustvarjanja predmeta"
 
 #: ../providers/postgres/libmain.c:79
 msgid "Provider for PostgreSQL databases"
