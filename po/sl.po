@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-22 18:18+0100\n"
+"PO-Revision-Date: 2010-03-23 12:41+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1710,7 +1710,7 @@ msgstr "Neznana preglednica v vsebini metapodatkov"
 
 #: ../libgda/gda-meta-struct.c:128
 msgid "GdaMetaStore object to fetch information from"
-msgstr ""
+msgstr "Predmet GdaMetaStore za pridobivanje podrobnosti"
 
 #. To translators: The GdaMetaStruct object computes lists of tables, views,
 #. * and some other information, the "Features to compute" allows one to avoid
@@ -1907,11 +1907,11 @@ msgstr "Opombe"
 
 #: ../libgda/gda-server-provider-extra.c:314
 msgid "OutType"
-msgstr ""
+msgstr "IzhodnaVrsta"
 
 #: ../libgda/gda-server-provider-extra.c:315
 msgid "InType"
-msgstr ""
+msgstr "VhodnaVrsta"
 
 #: ../libgda/gda-server-provider-extra.c:316
 #: ../libgda/gda-server-provider-extra.c:362
@@ -2069,7 +2069,7 @@ msgstr "Povratna vrsta"
 #. To translators: "Nb args": the procedure's number of arguments
 #: ../libgda/gda-server-provider-extra.c:360
 msgid "Nb args"
-msgstr ""
+msgstr "Št. arg"
 
 #: ../libgda/gda-server-provider-extra.c:361
 msgid "Args types"
@@ -2358,7 +2358,7 @@ msgstr "Ni mogoče pridobiti imena podatkovne zbirke"
 
 #: ../libgda/gda-tree.c:174
 msgid "Tells if the GdaTree is a list or a tree"
-msgstr ""
+msgstr "Pove ali je predmet GdaTree sezmam ali drevesna postavitev"
 
 #: ../libgda/gda-tree.c:737
 #: ../libgda/gda-tree.c:745
@@ -2378,7 +2378,7 @@ msgstr "Izjava SELECT nima zahtevanega FROM dela"
 #: ../libgda/gda-util.c:786
 #: ../libgda/gda-util.c:793
 msgid "SELECT statement involves more than one table or expression"
-msgstr ""
+msgstr "Izjava SELECT vključuje več kot eno preglednico ali izraz"
 
 #: ../libgda/gda-util.c:803
 msgid "Can only build modification statement for tables"
@@ -2895,17 +2895,17 @@ msgstr "V izjavi SELECT ni polja izbire"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:220
 msgid "COMPOUND statement contains an undefined COMPOUND statement"
-msgstr ""
+msgstr "Izjava COMPOUND vsebuje nedoločeno izjavo COMPOUND"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:229
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:268
 msgid "COMPOUND statement contains an undefined SELECT statement"
-msgstr ""
+msgstr "Izjava COMPOUND vsebuje nedoločeno izjavo SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:238
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:280
 msgid "COMPOUND statement contains a non SELECT statement"
-msgstr ""
+msgstr "Izjava COMPOUND vsebuje izjavo, ki ni izjava SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:252
 msgid "COMPOUND statement does not contain any SELECT statement"
@@ -2913,7 +2913,7 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:258
 msgid "COMPOUND statement only contains one SELECT statement"
-msgstr ""
+msgstr "Izjava COMPOUND vsebuje le eno izjavo SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:288
 msgid "COMPOUND statement contains an empty SELECT statement"
@@ -8302,18 +8302,22 @@ msgstr "Sprožilniki"
 
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
+
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
+
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
+
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
+
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokument ni uspešno razčlenjen\n"
+
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
 
 #, fuzzy
 #~ msgid "Tables:"
 #~ msgstr "Razpredelnice"
-
