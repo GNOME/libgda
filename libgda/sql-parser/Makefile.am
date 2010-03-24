@@ -49,6 +49,7 @@ s-enum-types-h: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 		$(libgda_sql_parser_headers)) > tmp-gda-enum-types.h \
 	&& (cmp -s tmp-gda-enum-types.h gda-sql-parser-enum-types.h || cp tmp-gda-enum-types.h gda-sql-parser-enum-types.h ) \
 	&& rm -f tmp-gda-enum-types.h	\
+	&& cat gda-sql-parser-enum-types.h.KEEPAPI >> gda-sql-parser-enum-types.h \
 	&& echo timestamp > $(@F)
 
 gda-sql-parser-enum-types.c: s-enum-types-c
@@ -66,6 +67,7 @@ s-enum-types-c: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 		$(libgda_sql_parser_headers)) > tmp-gda-enum-types.c \
 	&& (cmp -s tmp-gda-enum-types.c gda-sql-parser-enum-types.c || cp tmp-gda-enum-types.c gda-sql-parser-enum-types.c ) \
 	&& rm -f tmp-gda-enum-types.c \
+	&& cat gda-sql-parser-enum-types.c.KEEPAPI >> gda-sql-parser-enum-types.c \
 	&& echo timestamp > $(@F)
 
 # Generate the enums source code, with glib-mkenums:
@@ -100,7 +102,8 @@ libgda_sql_parser_4_0_la_SOURCES = \
         gda-statement-struct-unknown.c \
         gda-statement-struct-util.c
 
-EXTRA_DIST= parser.y delimiter.y lemon.c lempar.c gen_def.c parser_tokens.h
+EXTRA_DIST= parser.y delimiter.y lemon.c lempar.c gen_def.c parser_tokens.h \
+	gda-sql-parser-enum-types.c.KEEPAPI gda-sql-parser-enum-types.h.KEEPAPI
 
 CLEANFILES = parser.h parser.c parser.out delimiter.h delimiter.c delimiter.out token_types.h \
 	lemon$(EXEEXT_FOR_BUILD) gen_def$(EXEEXT_FOR_BUILD) \
