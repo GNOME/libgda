@@ -137,6 +137,7 @@ data_manager_perspective_new (BrowserWindow *bwin)
 	g_signal_connect (wid, "selection-changed",
 			  G_CALLBACK (fav_selection_changed_cb), bpers);
         gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
+	gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
 
 	nb = gtk_notebook_new ();
         perspective->priv->notebook = nb;
