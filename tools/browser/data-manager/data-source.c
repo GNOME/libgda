@@ -59,9 +59,12 @@ struct _DataSourcePrivate {
 
 	gchar             *select_sql;
 	guint              exec_id;
+	gboolean           executing;
+	gboolean           exec_again;
 
 	GdaStatement      *stmt;
-	GdaSet            *params;
+	GdaSet            *ext_params; /* "free" parameters */
+	GdaSet            *params; /* all the params used when executing @stmt */
 	gboolean           need_rerun; /* set to %TRUE if @params has changed since the last exec */
 
 	GError            *exec_error;
@@ -130,12 +133,22 @@ data_source_init (DataSource *source)
 	source->priv = g_new0 (DataSourcePrivate, 1);
 	source->priv->bcnc = NULL;
 	source->priv->need_rerun = FALSE;
+	source->priv->exec_id = 0;
+	source->priv->executing = FALSE;
+	source->priv->exec_again = FALSE;
 }
 
 static void
 params_changed_cb (GdaSet *params, GdaHolder *holder, DataSource *source)
 {
 	source->priv->need_rerun = TRUE;
+}
+
+static void
+ext_params_changed_cb (GdaSet *params, GdaHolder *holder, DataSource *source)
+{
+	source->priv->need_rerun = TRUE;
+	data_source_execute (source, NULL);
 }
 
 static void
@@ -157,6 +170,12 @@ data_source_dispose (GObject *object)
 			g_signal_handlers_disconnect_by_func (source->priv->params,
 							      G_CALLBACK (params_changed_cb), source);
 			g_object_unref (source->priv->params);
+		}
+		if (source->priv->ext_params) {
+			g_signal_handlers_disconnect_by_func (source->priv->ext_params,
+							      G_CALLBACK (ext_params_changed_cb),
+							      source);
+			g_object_unref (source->priv->ext_params);
 		}
 
 		g_free (source->priv->id);
@@ -401,7 +420,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 		g_array_append_val (source->priv->export_names, tmp);
 		g_hash_table_insert (source->priv->export_columns, tmp,
 				     GINT_TO_POINTER (i + 1));
-		g_print ("EXPORT [%s]\n", tmp);
+		/*g_print ("EXPORT [%s]\n", tmp);*/
 
 		if (source->priv->id)
 			tmp = g_strdup_printf ("%s@%d", source->priv->id, i + 1);
@@ -410,7 +429,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 		g_array_append_val (source->priv->export_names, tmp);
 		g_hash_table_insert (source->priv->export_columns, tmp,
 				     GINT_TO_POINTER (i + 1));
-		g_print ("EXPORT [%s]\n", tmp);
+		/*g_print ("EXPORT [%s]\n", tmp);*/
 	}
 	xmlFree (tname);
 
@@ -515,9 +534,12 @@ exec_end_timeout_cb (DataSource *source)
 {
 	GObject *obj;
 
+	g_return_val_if_fail (source->priv->exec_id > 0, FALSE);
+
 	g_clear_error (&source->priv->exec_error);
 	obj = browser_connection_execution_get_result (source->priv->bcnc,
-						       source->priv->exec_id, NULL,
+						       source->priv->exec_id,
+						       NULL,
 						       &source->priv->exec_error);
 	if (obj) {
 		if (GDA_IS_DATA_MODEL (obj)) {
@@ -531,19 +553,29 @@ exec_end_timeout_cb (DataSource *source)
 				gda_data_model_thaw (source->priv->model);
 				gda_data_model_reset (source->priv->model);
 			}
+			/*gda_data_model_dump (source->priv->model, NULL);*/
 		}
 		else {
 			g_object_unref (obj);
 			g_set_error (&source->priv->exec_error, 0, 0,
 				     _("Statement to execute is not a selection statement"));
 		}
+
 		source->priv->exec_id = 0;
 		g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, source->priv->exec_error);
+		if (source->priv->exec_again) {
+			source->priv->exec_again = FALSE;
+			data_source_execute (source, NULL);
+		}
 		return FALSE;
 	}
 	else if (source->priv->exec_error) {
 		source->priv->exec_id = 0;
 		g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, source->priv->exec_error);
+		if (source->priv->exec_again) {
+			source->priv->exec_again = FALSE;
+			data_source_execute (source, NULL);
+		}
 		return FALSE;
 	}
 	else
@@ -557,7 +589,7 @@ gboolean
 data_source_execution_going_on (DataSource *source)
 {
 	g_return_val_if_fail (IS_DATA_SOURCE (source), FALSE);
-	return source->priv->exec_id == 0 ? FALSE : TRUE;
+	return source->priv->executing || (source->priv->exec_id > 0);
 }
 
 /**
@@ -570,6 +602,42 @@ data_source_get_import (DataSource *source)
 {
 	g_return_val_if_fail (IS_DATA_SOURCE (source), NULL);
 	return source->priv->params;
+}
+
+/**
+ * data_source_set_external_import
+ */
+void
+data_source_set_params (DataSource *source, GdaSet *params)
+{
+	gboolean bound = FALSE;
+	g_return_if_fail (IS_DATA_SOURCE (source));
+	g_return_if_fail (!params || GDA_IS_SET (params));
+
+	if (source->priv->ext_params) {
+		g_signal_handlers_disconnect_by_func (source->priv->ext_params,
+						      G_CALLBACK (ext_params_changed_cb), source);
+		g_object_unref (source->priv->ext_params);
+		source->priv->ext_params = NULL;
+	}
+
+	if (source->priv->params) {
+		GSList *list;
+		for (list = source->priv->params->holders; list; list = list->next) {
+			GdaHolder *holder = GDA_HOLDER (list->data);
+			GdaHolder *bind = NULL;
+			if (params)
+				bind = gda_set_get_holder (params, gda_holder_get_id (holder));
+			if (gda_holder_set_bind (holder, bind, NULL))
+				bound = TRUE;
+		}
+	}
+
+	if (params && bound) {
+		source->priv->ext_params = g_object_ref (params);
+		g_signal_connect (params, "holder-changed",
+				  G_CALLBACK (ext_params_changed_cb), source);
+	}
 }
 
 /**
@@ -597,15 +665,24 @@ data_source_get_export_columns (DataSource *source)
 }
 
 /**
- * data_source_start_execution
+ * data_source_execute
  */
 void
 data_source_execute (DataSource *source, GError **error)
 {
 	GError *lerror = NULL;
 	gboolean has_exec = TRUE;
+	guint exec_id = 0;
 	g_return_if_fail (IS_DATA_SOURCE (source));
-	
+
+	if (source->priv->exec_again)
+		return;
+	if (source->priv->executing || (source->priv->exec_id > 0)) {
+		source->priv->exec_again = TRUE;
+		return;
+	}
+
+	source->priv->executing = TRUE;
 	if (! source->priv->stmt) {
 		if (source->priv->init_error)
 			g_propagate_error (error, source->priv->init_error);
@@ -620,29 +697,35 @@ data_source_execute (DataSource *source, GError **error)
 			 * wrong thread */
 			source->priv->need_rerun = FALSE;
 			gda_data_model_freeze (source->priv->model);
-			source->priv->exec_id = browser_connection_rerun_select (source->priv->bcnc,
-										 source->priv->model, &lerror);
+			exec_id = browser_connection_rerun_select (source->priv->bcnc,
+								   source->priv->model, &lerror);
 		}
 		else
 			has_exec = FALSE;
 	}
 	else
-		source->priv->exec_id = browser_connection_execute_statement (source->priv->bcnc,
-									      source->priv->stmt,
-									      source->priv->params,
-									      GDA_STATEMENT_MODEL_RANDOM_ACCESS | GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
-									      FALSE, &lerror);
+		exec_id = browser_connection_execute_statement (source->priv->bcnc,
+								source->priv->stmt,
+								source->priv->params,
+								GDA_STATEMENT_MODEL_RANDOM_ACCESS |
+								GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+								FALSE, &lerror);
+
 	if (has_exec) {
 		g_signal_emit (source, data_source_signals [EXEC_STARTED], 0);
-		if (! source->priv->exec_id) {
+		if (! exec_id) {
+			gda_data_model_thaw (source->priv->model);
+			gda_data_model_reset (source->priv->model);
 			g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, lerror);
 			g_propagate_error (error, lerror);
 		}
 		else {
 			/* monitor the end of execution */
+			source->priv->exec_id = exec_id;
 			g_timeout_add (50, (GSourceFunc) exec_end_timeout_cb, source);
 		}
 	}
+	source->priv->executing = FALSE;
 }
 
 /*

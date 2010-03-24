@@ -31,7 +31,6 @@ An opened connection
 @cnc: 
 @dict_file_name: 
 @parser: 
-@variables: 
 @dsn_info: 
 @p_mstruct_mutex: 
 @p_mstruct: 
@@ -40,6 +39,7 @@ An opened connection
 @busy: 
 @busy_reason: 
 @store_cnc: 
+@variables: 
 
 <!-- ##### STRUCT BrowserConnection ##### -->
 <para>
@@ -307,5 +307,23 @@ An opened connection
 @attr_name: 
 @error: 
 @Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_keep_variables ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@set: 
+
+
+<!-- ##### FUNCTION browser_connection_load_variables ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@set: 
 
 

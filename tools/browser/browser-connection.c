@@ -255,6 +255,8 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->bfav = NULL;
 
 	bcnc->priv->store_cnc = NULL;
+
+	bcnc->priv->variables = NULL;
 }
 
 static void
@@ -425,6 +427,9 @@ browser_connection_dispose (GObject *object)
 
 	bcnc = BROWSER_CONNECTION (object);
 	if (bcnc->priv) {
+		if (bcnc->priv->variables)
+			g_object_unref (bcnc->priv->variables);
+
 		if (bcnc->priv->store_cnc)
 			g_object_unref (bcnc->priv->store_cnc);
 
@@ -459,10 +464,6 @@ browser_connection_dispose (GObject *object)
 		}
 		if (bcnc->priv->parser)
 			g_object_unref (bcnc->priv->parser);
-		if (bcnc->priv->variables) {
-			g_slist_foreach (bcnc->priv->variables, (GFunc) g_object_unref, NULL);
-			g_slist_free (bcnc->priv->variables);
-		}
 		if (bcnc->priv->bfav) {
 			g_signal_handlers_disconnect_by_func (bcnc->priv->bfav,
 							      G_CALLBACK (fav_changed_cb), bcnc);
@@ -1398,4 +1399,95 @@ browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,
 	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
 
 	return retval;
+}
+
+/**
+ * browser_connection_keep_variables
+ * @bcnc: a #BrowserConnection object
+ * @set: a #GdaSet containing variables for which a copy has to be done
+ *
+ * Makes a copy of the variables in @set and keep them in @bcnc. Retreive them
+ * using browser_connection_load_variables()
+ */
+void
+browser_connection_keep_variables (BrowserConnection *bcnc, GdaSet *set)
+{
+	g_return_if_fail (BROWSER_IS_CONNECTION (bcnc));
+	if (!set)
+		return;
+	g_return_if_fail (GDA_IS_SET (set));
+
+	if (! bcnc->priv->variables) {
+		bcnc->priv->variables = gda_set_copy (set);
+		return;
+	}
+
+	GSList *list;
+	for (list = set->holders; list; list = list->next) {
+		GdaHolder *nh, *eh;
+		nh = GDA_HOLDER (list->data);
+		eh = gda_set_get_holder (bcnc->priv->variables, gda_holder_get_id (nh));
+		if (eh) {
+			if (gda_holder_get_g_type (nh) == gda_holder_get_g_type (eh)) {
+				const GValue *cvalue;
+				cvalue = gda_holder_get_value (nh);
+				gda_holder_set_value (eh, cvalue, NULL);
+			}
+			else {
+				gda_set_remove_holder (bcnc->priv->variables, eh);
+				eh = gda_holder_copy (nh);
+				gda_set_add_holder (bcnc->priv->variables, eh);
+				g_object_unref (eh);
+			}
+		}
+		else {
+			eh = gda_holder_copy (nh);
+			gda_set_add_holder (bcnc->priv->variables, eh);
+			g_object_unref (eh);
+		}
+	}
+}
+
+/**
+ * browser_connection_load_variables
+ * @bcnc: a #BrowserConnection object
+ * @set: a #GdaSet which will in the end contain (if any) variables stored in @bcnc
+ *
+ * For each #GdaHolder in @set, set the value if one is available in @bcnc.
+ */
+void
+browser_connection_load_variables (BrowserConnection *bcnc, GdaSet *set)
+{
+	g_return_if_fail (BROWSER_IS_CONNECTION (bcnc));
+	if (!set)
+		return;
+	g_return_if_fail (GDA_IS_SET (set));
+
+	if (! bcnc->priv->variables)
+		return;
+
+	GSList *list;
+	for (list = set->holders; list; list = list->next) {
+		GdaHolder *nh, *eh;
+		nh = GDA_HOLDER (list->data);
+		eh = gda_set_get_holder (bcnc->priv->variables, gda_holder_get_id (nh));
+		if (eh) {
+			if (gda_holder_get_g_type (nh) == gda_holder_get_g_type (eh)) {
+				const GValue *cvalue;
+				cvalue = gda_holder_get_value (eh);
+				gda_holder_set_value (nh, cvalue, NULL);
+			}
+			else if (g_value_type_transformable (gda_holder_get_g_type (eh),
+							     gda_holder_get_g_type (nh))) {
+				const GValue *evalue;
+				GValue *nvalue;
+				evalue = gda_holder_get_value (eh);
+				nvalue = gda_value_new (gda_holder_get_g_type (nh));
+				if (g_value_transform (evalue, nvalue))
+					gda_holder_take_value (nh, nvalue, NULL);
+				else
+					gda_value_free (nvalue);
+			}
+		}
+	}	
 }

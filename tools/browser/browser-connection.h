@@ -118,6 +118,13 @@ gchar               *browser_connection_get_table_column_attribute (BrowserConne
 								    const gchar *attr_name,
 								    GError **error);
 
+/*
+ * Variables used at various places and for which a copy of the last recent value
+ * is stored in the BrowserConnection object
+ */
+void                 browser_connection_keep_variables (BrowserConnection *bcnc, GdaSet *set);
+void                 browser_connection_load_variables (BrowserConnection *bcnc, GdaSet *set);
+
 G_END_DECLS
 
 #endif

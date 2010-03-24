@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -106,7 +106,6 @@ struct _QueryConsolePrivate {
 	GtkWidget   *exec_button;
 	GtkWidget   *indent_button;
 	guint params_compute_id; /* timout ID to compute params */
-	GdaSet *past_params; /* keeps values given to old params */
 	GdaSet *params; /* execution params */
 	GtkWidget *params_popup; /* popup shown when invalid params are required */
 
@@ -186,7 +185,6 @@ query_console_init (QueryConsole *tconsole, QueryConsoleClass *klass)
 	tconsole->priv = g_new0 (QueryConsolePrivate, 1);
 	tconsole->priv->parser = NULL;
 	tconsole->priv->params_compute_id = 0;
-	tconsole->priv->past_params = NULL;
 	tconsole->priv->params = NULL;
 	tconsole->priv->params_popup = NULL;
 	tconsole->priv->agroup = NULL;
@@ -211,8 +209,6 @@ query_console_dispose (GObject *object)
 		}
 		if (tconsole->priv->parser)
 			g_object_unref (tconsole->priv->parser);
-		if (tconsole->priv->past_params)
-			g_object_unref (tconsole->priv->past_params);
 		if (tconsole->priv->params)
 			g_object_unref (tconsole->priv->params);
 		if (tconsole->priv->params_compute_id)
@@ -544,16 +540,11 @@ compute_params (QueryConsole *tconsole)
 	GdaBatch *batch;
 
 	if (tconsole->priv->params) {
-		if (tconsole->priv->past_params) {
-			gda_set_merge_with_set (tconsole->priv->params, tconsole->priv->past_params);
-			g_object_unref (tconsole->priv->past_params);
-			tconsole->priv->past_params = tconsole->priv->params;
-		}
-		else
-			tconsole->priv->past_params = tconsole->priv->params;
+		browser_connection_keep_variables (tconsole->priv->bcnc, tconsole->priv->params);
+		g_object_unref (tconsole->priv->params);
 	}
-
 	tconsole->priv->params = NULL;
+
 	if (tconsole->priv->params_form) {
 		gtk_widget_destroy (tconsole->priv->params_form);
 		tconsole->priv->params_form = NULL;		
@@ -590,35 +581,7 @@ compute_params (QueryConsole *tconsole)
 		gtk_widget_show (tconsole->priv->params_form);
 		g_object_unref (batch);
 
-		if (tconsole->priv->past_params && tconsole->priv->params) {
-			/* copy the values from tconsole->priv->past_params to tconsole->priv->params */
-			GSList *list;
-			for (list = tconsole->priv->params->holders; list; list = list->next) {
-				GdaHolder *oldh, *newh;
-				newh = GDA_HOLDER (list->data);
-				oldh = gda_set_get_holder (tconsole->priv->past_params, gda_holder_get_id  (newh));
-				if (oldh) {
-					GType otype, ntype;
-					otype = gda_holder_get_g_type (oldh);
-					ntype = gda_holder_get_g_type (newh);
-					if (otype == ntype) {
-						const GValue *ovalue;
-						ovalue = gda_holder_get_value (oldh);
-						gda_holder_set_value (newh, ovalue, NULL);
-					}
-					else if (g_value_type_transformable (otype, ntype)) {
-						const GValue *ovalue;
-						GValue *nvalue;
-						ovalue = gda_holder_get_value (oldh);
-						nvalue = gda_value_new (ntype);
-						if (g_value_transform (ovalue, nvalue))
-							gda_holder_take_value (newh, nvalue, NULL);
-						else
-							gda_value_free  (nvalue);
-					}
-				}
-			}
-		}
+		browser_connection_load_variables (tconsole->priv->bcnc, tconsole->priv->params);
 		if (tconsole->priv->params && show_variables &&
 		    gda_set_is_valid (tconsole->priv->params, NULL))
 			show_variables = FALSE;

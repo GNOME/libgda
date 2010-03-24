@@ -92,6 +92,9 @@ browser_connection_get_transaction_status
 <SUBSECTION>
 browser_connection_set_table_column_attribute
 browser_connection_get_table_column_attribute
+<SUBSECTION>
+browser_connection_keep_variables
+browser_connection_load_variables
 <SUBSECTION Standard>
 BROWSER_CONNECTION
 BROWSER_IS_CONNECTION

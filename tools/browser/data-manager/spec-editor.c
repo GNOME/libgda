@@ -26,6 +26,7 @@
 #include "data-source.h"
 #include <libgda/libgda.h>
 #include "../support.h"
+#include "marshal.h"
 
 #ifdef HAVE_GTKSOURCEVIEW
   #ifdef GTK_DISABLE_SINGLE_INCLUDES
@@ -45,13 +46,14 @@ struct _SpecEditorPrivate {
 	SpecEditorMode mode;
 	GtkNotebook *notebook;
 
-	guint params_compute_id; /* timout ID to compute params */
+        GdaSet *params; /* execution params */
 
 	/* reference for all views */
 	xmlDocPtr doc;
 
 	/* XML view */
 	gboolean xml_view_up_to_date;
+	guint signal_editor_changed_id; /* timout ID to signal editor changed */
 	GtkWidget *text;
 	GtkTextBuffer *buffer;
 
@@ -63,6 +65,12 @@ static void spec_editor_class_init (SpecEditorClass *klass);
 static void spec_editor_init       (SpecEditor *sped, SpecEditorClass *klass);
 static void spec_editor_dispose    (GObject *object);
 
+enum {
+	CHANGED,
+        LAST_SIGNAL
+};
+
+static guint spec_editor_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -75,6 +83,15 @@ spec_editor_class_init (SpecEditorClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	/* signals */
+        spec_editor_signals [CHANGED] =
+                g_signal_new ("changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (SpecEditorClass, changed),
+                              NULL, NULL,
+                              _dm_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
 	object_class->dispose = spec_editor_dispose;
 }
 
@@ -86,7 +103,7 @@ spec_editor_init (SpecEditor *sped, SpecEditorClass *klass)
 
 	/* allocate private structure */
 	sped->priv = g_new0 (SpecEditorPrivate, 1);
-	sped->priv->params_compute_id = 0;
+	sped->priv->signal_editor_changed_id = 0;
 	sped->priv->mode = SPEC_EDITOR_XML;
 }
 
@@ -117,9 +134,10 @@ spec_editor_dispose (GObject *object)
 {
 	SpecEditor *sped = (SpecEditor*) object;
 	if (sped->priv) {
-		if (sped->priv->params_compute_id)
-			g_source_remove (sped->priv->params_compute_id);
-
+		if (sped->priv->signal_editor_changed_id)
+			g_source_remove (sped->priv->signal_editor_changed_id);
+		if (sped->priv->params)
+			g_object_unref (sped->priv->params);
 		if (sped->priv->bcnc)
 			g_object_unref (sped->priv->bcnc);
 
@@ -132,12 +150,13 @@ spec_editor_dispose (GObject *object)
 }
 
 static gboolean
-compute_params (SpecEditor *sped)
+signal_editor_changed (SpecEditor *sped)
 {
-	TO_IMPLEMENT;
-	
+	/* send signal */
+	g_signal_emit (sped, spec_editor_signals[CHANGED], 0);
+
 	/* remove timeout */
-	sped->priv->params_compute_id = 0;
+	sped->priv->signal_editor_changed_id = 0;
 	return FALSE;
 }
 
@@ -145,9 +164,9 @@ compute_params (SpecEditor *sped)
 static void
 editor_changed_cb (GtkTextBuffer *buffer, SpecEditor *sped)
 {
-	if (sped->priv->params_compute_id)
-		g_source_remove (sped->priv->params_compute_id);
-	sped->priv->params_compute_id = g_timeout_add_seconds (1, (GSourceFunc) compute_params, sped);
+	if (sped->priv->signal_editor_changed_id)
+		g_source_remove (sped->priv->signal_editor_changed_id);
+	sped->priv->signal_editor_changed_id = g_timeout_add_seconds (1, (GSourceFunc) signal_editor_changed, sped);
 }
 
 /**
@@ -216,8 +235,12 @@ spec_editor_set_xml_text (SpecEditor *sped, const gchar *xml)
 	g_return_if_fail (IS_SPEC_EDITOR (sped));
 
 	gtk_text_buffer_set_text (sped->priv->buffer, xml, -1);
+	signal_editor_changed (sped);
 }
 
+/**
+ * spec_editor_get_xml_text
+ */
 gchar *
 spec_editor_get_xml_text (SpecEditor *sped)
 {
@@ -260,7 +283,78 @@ spec_editor_get_mode (SpecEditor *sped)
 }
 
 static GArray *compute_sources (SpecEditor *sped, GError **error);
+static GSList *compute_sources_list (SpecEditor *sped, GError **error);
 
+static void
+compute_params (SpecEditor *sped)
+{
+	/* cleanning process */
+	if (sped->priv->params) {
+		browser_connection_keep_variables (sped->priv->bcnc, sped->priv->params);
+		g_object_unref (sped->priv->params);
+        }
+        sped->priv->params = NULL;
+	
+	/* compute new params */
+	GSList *sources_list;
+	sources_list = compute_sources_list (sped, NULL);
+	if (sources_list) {
+		GSList *list;
+		for (list = sources_list; list; list = list->next) {
+			DataSource *source;
+			GdaSet *set;
+			
+			source = DATA_SOURCE (list->data);
+			set = data_source_get_import (source);
+			if (!set)
+				continue;
+
+			GSList *holders;
+			gboolean found;
+			for (found = FALSE, holders = set->holders; holders; holders = holders->next) {
+				GSList *list2;
+				for (list2 = sources_list; list2; list2 = list2->next) {
+					if (list2 == list)
+						continue;
+					GHashTable *export_h;
+					export_h = data_source_get_export_columns (DATA_SOURCE (list2->data));
+					if (g_hash_table_lookup (export_h, 
+					      gda_holder_get_id (GDA_HOLDER (holders->data)))) {
+						found = TRUE;
+						break;
+					}
+				}
+			}
+			if (! found) {
+				if (! sped->priv->params)
+					sped->priv->params = gda_set_copy (set);
+				else
+					gda_set_merge_with_set (sped->priv->params, set);
+			}
+		}
+
+		/* cleanups */
+		g_slist_foreach (sources_list, (GFunc) g_object_unref, NULL);
+		g_slist_free (sources_list);
+		sources_list = NULL;
+	}
+
+	browser_connection_load_variables (sped->priv->bcnc, sped->priv->params);
+}
+
+/**
+ * spec_editor_get_params
+ *
+ * Returns: a pointer to an internal #GdaSet, must not be modified
+ */
+GdaSet *
+spec_editor_get_params (SpecEditor *sped)
+{
+	g_return_val_if_fail (IS_SPEC_EDITOR (sped), NULL);
+
+	compute_params (sped);
+	return sped->priv->params;
+}
 
 /**
  * spec_editor_get_sources_array
@@ -269,10 +363,10 @@ GArray *
 spec_editor_get_sources_array (SpecEditor *sped, GError **error)
 {
 	g_return_val_if_fail (IS_SPEC_EDITOR (sped), NULL);
-	if (sped->priv->params_compute_id > 0) {
-		g_source_remove (sped->priv->params_compute_id);
-		sped->priv->params_compute_id = 0;
-		//compute_params (tconsole);
+	if (sped->priv->signal_editor_changed_id > 0) {
+		g_source_remove (sped->priv->signal_editor_changed_id);
+		sped->priv->signal_editor_changed_id = 0;
+		compute_params (sped);
 	}
 	return compute_sources (sped, error);
 }
@@ -408,12 +502,11 @@ create_sources_array (GSList *sources_list, GError **error)
 	return array;
 }
 
-static GArray *
-compute_sources (SpecEditor *sped, GError **error)
+static GSList *
+compute_sources_list (SpecEditor *sped, GError **error)
 {
 	gchar *xml;
 	xmlDocPtr doc = NULL;
-	GError *lerror = NULL;
 	GSList *sources_list = NULL;
 
 	/* create sources_list from XML */
@@ -427,7 +520,7 @@ compute_sources (SpecEditor *sped, GError **error)
 	}
 
 	if (!doc) {
-		g_set_error (&lerror, 0, 0,
+		g_set_error (error, 0, 0,
 			     _("Error parsing XML specifications"));
 		goto onerror;
 	}
@@ -444,29 +537,17 @@ compute_sources (SpecEditor *sped, GError **error)
 		if (!strcmp ((gchar*) node->name, "table") ||
 		    !strcmp ((gchar*) node->name, "query")) {
 			DataSource *source;
-			source = data_source_new_from_xml_node (sped->priv->bcnc, node, &lerror);
+			source = data_source_new_from_xml_node (sped->priv->bcnc, node, error);
 			if (!source)
 				goto onerror;
-			else
-				sources_list = g_slist_prepend (sources_list, source);
+			
+			sources_list = g_slist_prepend (sources_list, source);
+			data_source_set_params (source, sped->priv->params);
 		}
 	}
 	xmlFreeDoc (doc);
 	doc = NULL;
-	sources_list = g_slist_reverse (sources_list);
-
-	/* reorder sources_list */
-	GArray *sources_array;
-	sources_array = create_sources_array (sources_list, &lerror);
-	if (sources_list) {
-		g_slist_foreach (sources_list, (GFunc) g_object_unref, NULL);
-		g_slist_free (sources_list);
-		sources_list = NULL;
-	}
-	if (! sources_array)
-		goto onerror;
-
-	return sources_array;
+	return g_slist_reverse (sources_list);
 
  onerror:
 	if (doc)
@@ -475,11 +556,32 @@ compute_sources (SpecEditor *sped, GError **error)
 		g_slist_foreach (sources_list, (GFunc) g_object_unref, NULL);
 		g_slist_free (sources_list);
 	}
+	
+	return NULL;
+}
+
+static GArray *
+compute_sources (SpecEditor *sped, GError **error)
+{
+	GArray *sources_array = NULL;
+	GSList *sources_list;
+	GError *lerror = NULL;
+
+	sources_list = compute_sources_list (sped, &lerror);
+	if (!lerror)
+		sources_array = create_sources_array (sources_list, &lerror);
+
+	if (sources_list) {
+		g_slist_foreach (sources_list, (GFunc) g_object_unref, NULL);
+		g_slist_free (sources_list);
+		sources_list = NULL;
+	}
+
 	if (lerror) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) sped),
 				    lerror && lerror->message ? lerror->message :_("Error parsing XML specifications"));
 		g_clear_error (&lerror);
 	}
-	
-	return NULL;
+
+	return sources_array;
 }

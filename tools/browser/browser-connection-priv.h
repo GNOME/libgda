@@ -32,7 +32,6 @@ struct _BrowserConnectionPrivate {
 	GdaConnection *cnc;
 	gchar         *dict_file_name;
         GdaSqlParser  *parser;
-        GSList        *variables; /* list of BrowserVariable pointer, owned here */
 
 	GdaDsnInfo     dsn_info;
 	GMutex        *p_mstruct_mutex;
@@ -45,6 +44,8 @@ struct _BrowserConnectionPrivate {
 	gchar    *busy_reason;
 
 	GdaConnection *store_cnc;
+
+	GdaSet        *variables;
 };
 
 void browser_connection_set_busy_state (BrowserConnection *bcnc, gboolean busy, const gchar *busy_reason);

@@ -52,6 +52,7 @@ struct _DataConsolePrivate {
 	GtkWidget *data;
 	GtkActionGroup *agroup;
 
+	gboolean toggling;
 	GtkToggleButton *params_toggle;
 	GtkWidget *params_top;
 	GtkWidget *params_form_box;
@@ -168,6 +169,7 @@ static void editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole);
 static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole);
+static void spec_editor_changed_cb (SpecEditor *sped, DataConsole *dconsole);
 
 /**
  * data_console_new
@@ -250,6 +252,8 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
 	dconsole->priv->sped = spec_editor_new (dconsole->priv->bcnc);
+	g_signal_connect (dconsole->priv->sped, "changed",
+			  G_CALLBACK (spec_editor_changed_cb), dconsole);
 	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (dconsole->priv->sped), TRUE, TRUE, 0);
 
 #define DEFAULT_XML \
@@ -276,7 +280,7 @@ data_console_new (BrowserConnection *bcnc)
 "    </query>\n" \
 "</data>"
 
-	spec_editor_set_xml_text (dconsole->priv->sped, DEFAULT_XML);
+	//spec_editor_set_xml_text (dconsole->priv->sped, DEFAULT_XML);
 
 	/* buttons */
 	GtkWidget *bbox, *button;
@@ -363,6 +367,35 @@ spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole)
 }
 
 static void
+spec_editor_changed_cb (SpecEditor *sped, DataConsole *dconsole)
+{
+	if (dconsole->priv->params_form) {
+		gtk_widget_destroy (dconsole->priv->params_form);
+		dconsole->priv->params_form = NULL;
+	}
+
+	GdaSet *params;
+	gboolean show_variables = FALSE;
+	params = spec_editor_get_params (sped);
+	if (params) {
+		dconsole->priv->params_form = gdaui_basic_form_new (params);
+		g_object_set ((GObject*) dconsole->priv->params_form,
+			      "show-actions", TRUE, NULL);
+		show_variables = TRUE;
+	}
+	else {
+		dconsole->priv->params_form = gtk_label_new ("");
+                gtk_label_set_markup (GTK_LABEL (dconsole->priv->params_form), VARIABLES_HELP);
+	}
+	gtk_container_add (GTK_CONTAINER (dconsole->priv->params_form_box),
+			   dconsole->priv->params_form);
+	gtk_widget_show (dconsole->priv->params_form);
+
+	/* force showing variables */
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dconsole->priv->params_toggle), show_variables);
+}
+
+static void
 editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole)
 {
 	spec_editor_set_xml_text (dconsole->priv->sped, "");
@@ -405,9 +438,14 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 {
 	gint pagenb;
 
+	if (dconsole->priv->toggling) {
+		dconsole->priv->toggling = FALSE;
+		return;
+	}
+
 	pagenb = gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->notebook));
 	if (pagenb == PAGE_XML) {
-		/* parse XML and create the data */
+		/* Get Data sources */
 		GArray *sources_array;
 		GError *lerror = NULL;
 		sources_array = spec_editor_get_sources_array (dconsole->priv->sped, &lerror);
@@ -433,6 +471,10 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 					    lerror && lerror->message ? lerror->message :
 					    _("Error parsing XML specifications"));
 			g_clear_error (&lerror);
+		}
+		if (pagenb == PAGE_XML) {
+			dconsole->priv->toggling = TRUE;
+			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
 		}
 	}
 	else {
