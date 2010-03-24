@@ -913,7 +913,7 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 
 #ifndef HAVE_GRAPHVIZ
 	g_message ("GraphViz library support not compiled, cannot do graph layout...\n");
-	return FALSE;
+	return;
 #else
 	BrowserCanvasClass *class = BROWSER_CANVAS_CLASS (G_OBJECT_GET_CLASS (canvas));
 	GSList *list, *layout_items;
