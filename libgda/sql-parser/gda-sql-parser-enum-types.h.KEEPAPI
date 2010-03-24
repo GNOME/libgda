@@ -1,0 +1,9 @@
+/* Content designed to maitain API/ABI */
+
+#ifndef __LIBGDA_SQL_PARSER_ENUM_TYPES_KEEPAPI_H__
+#define __LIBGDA_SQL_PARSER_ENUM_TYPES_KEEPAPI_H__
+
+GType gda_sql_error_type_get_type (void);
+#define GDA_SQL_PARSER_TYPE_SQL_ERROR_TYPE (gda_sql_error_type_get_type())
+
+#endif

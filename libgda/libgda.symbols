@@ -612,6 +612,7 @@
 	gda_sql_delimiterAlloc
 	gda_sql_delimiterFree
 	gda_sql_delimiterTrace
+	gda_sql_error_get_type
 	gda_sql_error_quark
 	gda_sql_error_type_get_type
 	gda_sql_expr_copy
