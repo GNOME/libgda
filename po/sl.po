@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-23 12:41+0100\n"
+"PO-Revision-Date: 2010-03-25 13:57+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -2629,7 +2629,7 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2172
 msgid "Can't identify the ROWID of the blob to fill"
-msgstr ""
+msgstr "Ni mogoče določiti vrednosti ROWID zbirke dvojiških podatkov za izpolnjevanje"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2220
 #: ../providers/jdbc/gda-jdbc-provider.c:1209
@@ -2701,7 +2701,7 @@ msgstr "Funkcija zahteva dva argumenta"
 #: ../providers/web/gda-web-recordset.c:217
 #, c-format
 msgid "Column %d out of range (0-%d), ignoring its specified type"
-msgstr ""
+msgstr "Stolpec %d je izven območja (0-%d), zato bo določena vrsta prazrta"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:384
 #: ../libgda/sqlite/gda-sqlite-recordset.c:396
@@ -2773,7 +2773,7 @@ msgstr "Ni mogoče dobiti opisa podatkovnega modela za stolpec %d"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:441
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
-msgstr ""
+msgstr "Ni mogoče pridobiti vrste stolpca podatkovnega modela ali pa vrste stolpca %d"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:489
 #, c-format
@@ -2787,7 +2787,7 @@ msgstr "Stolpca ni mogoče najti"
 #: ../libgda/sql-parser/gda-sql-parser.c:635
 #: ../libgda/sql-parser/gda-sql-parser.c:726
 msgid "SQL code does not contain any statement"
-msgstr ""
+msgstr "Ukaz SQL ne vsebuje nobene izjave"
 
 #: ../libgda/sql-parser/gda-sql-parser.c:809
 #, c-format
@@ -2917,7 +2917,7 @@ msgstr "Izjava COMPOUND vsebuje le eno izjavo SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:288
 msgid "COMPOUND statement contains an empty SELECT statement"
-msgstr ""
+msgstr "Izjava COMPOUND vsebuje prazno izjavo SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:294
 msgid "All statements in a COMPOUND must have the same number of columns"
@@ -3229,7 +3229,7 @@ msgstr ""
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:161
 msgid "The information and status changer can be activated"
-msgstr ""
+msgstr "Omogočiti je mogoče spremenilnik podrobnosti in stanja"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:406
 #: ../libgda-ui/data-entries/gdaui-entry-string.c:398
@@ -3308,7 +3308,7 @@ msgstr "Uporabi ločilnik tisočic, kot to določajo jezikovne nastavitve"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:1
 msgid "Display only one line, or a complete text editor"
-msgstr ""
+msgstr "Prikaži le eno vrstico ali pa celotno urejeno besedilo"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:2
 msgid "Hidden"
@@ -3368,6 +3368,8 @@ msgid ""
 "Error while deserializing data:\n"
 "%s"
 msgstr ""
+"Napaka med ločevanjem podatkov iz zaporedja:\n"
+"%s"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:221
 #: ../libgda-ui/data-entries/plugins/common-pict.c:264
@@ -3561,7 +3563,7 @@ msgstr "Brez kodiranja"
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in.h:1
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:4
 msgid "Serialized picture"
-msgstr ""
+msgstr "Zaporedna slika"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in.h:2
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:5
@@ -3574,7 +3576,7 @@ msgstr "Base 64"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:3
 msgid "Encoding used to convert binary data to the string"
-msgstr ""
+msgstr "Kodiranje uporabljeno za pretvarjanje dvojiških podatkov v nize"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict.c:258
 msgid "No data to display"
@@ -3642,7 +3644,7 @@ msgstr ""
 
 #: ../libgda-ui/internal/gdaui-provider-auth-editor.c:386
 msgid "Can't set authentification string: no authentication is needed"
-msgstr ""
+msgstr "Ni mogoče določiti niza overitve: overitev ni zahtevana"
 
 #: ../libgda-ui/internal/gdaui-provider-spec-editor.c:193
 #, c-format
@@ -3690,6 +3692,8 @@ msgid ""
 "please correct it and try again, or discard\n"
 "the modifications."
 msgstr ""
+"popravite vnos in poskusite znova ali pa\n"
+"zavrnite spremembe"
 
 #: ../libgda-ui/internal/utility.c:406
 msgid "Part of the current modified data was invalid"
@@ -3735,7 +3739,7 @@ msgstr "Samodejno privzeti vnosi"
 
 #: ../libgda-ui/gdaui-basic-form.c:265
 msgid "TRUE if expanding the form makes sense"
-msgstr ""
+msgstr "Izbrana možnost je namenjena vrednostim, kadar ima razširjanje obrazca smisel."
 
 #: ../libgda-ui/gdaui-basic-form.c:707
 #: ../libgda-ui/gdaui-raw-grid.c:780
@@ -3746,7 +3750,7 @@ msgstr "Atribut '%s' mora biti vrednost G_TYPE_STRING"
 
 #: ../libgda-ui/gdaui-basic-form.c:1584
 msgid "Can't find data entry for GdaHolder"
-msgstr ""
+msgstr "Ni mogoče najti podatkovnega vnosa za GdaHolder"
 
 #: ../libgda-ui/gdaui-basic-form.c:1856
 msgid "Values to be filled"
@@ -3821,7 +3825,7 @@ msgstr "Poskus začenjanja že začete knjižnice"
 
 #: ../libgda-ui/gdaui-init.c:464
 msgid "Could not open plugins directory, no plugin loaded."
-msgstr ""
+msgstr "Ni mogoče odpreti mape vstavkov, zato vstavki ne bodo naloženi."
 
 #: ../libgda-ui/gdaui-init.c:484
 #: ../tools/browser/query-exec/query-result.c:255
@@ -3921,7 +3925,7 @@ msgstr "Shranjevanje podatkov v datoteko"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1876
 msgid "The data will be exported without any of the modifications which may have been made and have not been committed."
-msgstr ""
+msgstr "Podatki bodo izvoženi brez sprememb, ki so bile narejene, vendar niso bile objavljene."
 
 #: ../libgda-ui/gdaui-raw-grid.c:1891
 msgid "File name"
@@ -3979,7 +3983,7 @@ msgstr "V koliko odgovorite z da, bo vsebina izgubljena."
 
 #: ../libgda-ui/gdaui-server-operation.c:196
 msgid "The specification of the operation to implement"
-msgstr ""
+msgstr "Določila opravila za vstavitev"
 
 #: ../libgda-ui/gdaui-server-operation.c:202
 msgid "Request section header to be hidden if there is only one section"
@@ -4253,7 +4257,7 @@ msgstr "Ni mogoče pridobiti seznama nameščenih gonilnikov JDBC: %s"
 #: ../providers/jdbc/libmain.c:477
 #, c-format
 msgid "Can't create JAVA virtual machine: %s"
-msgstr ""
+msgstr "Ni mogoče ustvariti navideznega programnika JAVA: %s"
 
 #: ../providers/jdbc/libmain.c:485
 msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
@@ -4277,31 +4281,31 @@ msgstr "Ni mogoče preslikati preglednice '%s': %s"
 
 #: ../providers/mdb/libmain.c:73
 msgid "Provider for Microsoft Access files"
-msgstr ""
+msgstr "Ponudnik Microsoft Access datotek"
 
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:4
 msgid "The name of a database to use (filename without the .mdb)"
-msgstr ""
+msgstr "Ime podatkovne zbirke za uporabo (ime datoteke brez pripone .mdb)"
 
 #: ../providers/mysql/gda-mysql-ddl.c:263
 #: ../providers/postgres/gda-postgres-ddl.c:273
 msgid "No field specified in foreign key constraint"
-msgstr ""
+msgstr "Ni določenega polja omejitev tujega ključa"
 
 #: ../providers/mysql/gda-mysql-ddl.c:278
 #: ../providers/postgres/gda-postgres-ddl.c:288
 msgid "Empty field specified in foreign key constraint"
-msgstr ""
+msgstr "Določeno je prazno polje omejitve tujega ključa"
 
 #: ../providers/mysql/gda-mysql-ddl.c:291
 #: ../providers/postgres/gda-postgres-ddl.c:302
 msgid "No referenced table specified in foreign key constraint"
-msgstr ""
+msgstr "Ni določene sklicne preglednice omejitve tujega ključa"
 
 #: ../providers/mysql/gda-mysql-ddl.c:307
 #: ../providers/postgres/gda-postgres-ddl.c:318
 msgid "Empty referenced field specified in foreign key constraint"
-msgstr ""
+msgstr "Določeno je prazno sklicno polje omejitve tujega ključa"
 
 #: ../providers/mysql/gda-mysql-ddl.c:920
 msgid "Incorrect specified column name"
@@ -4318,7 +4322,7 @@ msgstr "Ni mogoče navesti možnosti UNIX_SOCKET, v kolikor sta navedena tudi go
 #: ../providers/mysql/gda-mysql-provider.c:528
 #, c-format
 msgid "Could not set client charset to UTF8. Using %s. It'll be problems with non UTF-8 characters"
-msgstr ""
+msgstr "Ni mogoče spremeniti znakovnega nabora v UTF8. Uporabljen bo %s. Najverjetneje bodo težave pri prikazovanju znakov ki niso del nabora UTF-8."
 
 #: ../providers/mysql/gda-mysql-provider.c:584
 msgid "The connection string must contain the DB_NAME values"
@@ -4340,11 +4344,11 @@ msgstr "Ni mogoče prebrati celotnega BLOB v pomnilnik"
 
 #: ../providers/mysql/gda-mysql-provider.c:2305
 msgid "Could not use CURSOR. Mysql version 5.0 at least is required. Using random access anyway."
-msgstr ""
+msgstr "Ni mogoče uporabiti izjave CURSOR. Zahtevan je vsaj MySQL različice 5.0. Vseeno bo uporabljen naključni dostop."
 
 #: ../providers/mysql/gda-mysql-recordset.c:135
 msgid "Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size ignored."
-msgstr ""
+msgstr "Ni mogoče uporabiti izjave CURSOR. Zahtevan je vsaj MySQL različice 5.0. Velikost delov bo prezrta."
 
 #: ../providers/mysql/gda-mysql-recordset.c:224
 #: ../providers/postgres/gda-postgres-recordset.c:137
@@ -4587,7 +4591,7 @@ msgstr "Korejski (EUC-KR))"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
 msgid "Full path of the UNIX socket to use when connecting locally"
-msgstr ""
+msgstr "Polna pot unix vtiča za uporabo pri krajevnih povezavah"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
@@ -4673,7 +4677,7 @@ msgstr "Ukrainski (KOI8-U)"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:54
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:32
 msgid "Login name (which has the rights to create databases)"
-msgstr ""
+msgstr "Prijavno ime (z dovoljenji za ustvarjanje podatkovnih zbirk)"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:71
@@ -4820,7 +4824,7 @@ msgstr "Ime kazala"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:3
 msgid "Index type (depending on table storage engine)"
-msgstr "Vrsta kazala (odvisno od strojnika shranjevanja preglednice)"
+msgstr "Vrsta kazala (odvisno od programnika shranjevanja preglednice)"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:5
@@ -4862,7 +4866,7 @@ msgstr "Vrsta razvrščanja"
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:16
 msgid "The number of characters the index is on for columns of type CHAR or VARCHAR"
-msgstr ""
+msgstr "Število znakov v kazalu je omogočeno za stolpce vrste CHAR ali VARCHAR"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:7
@@ -4916,7 +4920,7 @@ msgstr "Stisnjeno"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:38
 msgid "Counter for auto incremented fields is incremented by this value + 1 (DEFAULT: 0)"
-msgstr ""
+msgstr "Števec samodejno štetih polj se povečuje za vrednost + 1 (privzeto: 0)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:15
@@ -4935,7 +4939,7 @@ msgstr "Časovno zamakni pisanje ključev"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
 msgid "Don't pack keys"
-msgstr ""
+msgstr "Ne skrči ključev"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:61
 msgid "Dynamic"
@@ -4944,7 +4948,7 @@ msgstr "Dinamično"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:67
 msgid "Engine"
-msgstr "Pogon"
+msgstr "Programnik"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:68
 msgid "Example"
@@ -4953,7 +4957,7 @@ msgstr "Primer"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:70
 msgid "FIRST, LAST or NO: only with MERGE engine"
-msgstr "FIRST, LAST ali NO: le s strojnikom MERGE"
+msgstr "FIRST, LAST ali NO: le s programnikom MERGE"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
 msgid "Federated"
@@ -5068,12 +5072,12 @@ msgstr "Ob dejanju posodobitve"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
 msgid "Only pack long CHAR/VARCHAR columns"
-msgstr ""
+msgstr "Skrči le dolge stolpce CHAR/VARCHAR"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
 msgid "Pack keys"
-msgstr ""
+msgstr "Skrčni ključe"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:150
 msgid "Redundant"
@@ -5114,7 +5118,7 @@ msgstr "Opomba preglednice"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:175
 msgid "Table's engine (or type)"
-msgstr "Motor preglednice (ali vrsta)"
+msgstr "Programnik preglednice (ali vrsta)"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:178
@@ -5136,7 +5140,7 @@ msgstr "Unija"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:199
 msgid "tbl_name[,tbl_name]...: only with MERGE engine"
-msgstr "tbl_name[,tbl_name]...: le s strojnikom MERGE"
+msgstr "tbl_name[,tbl_name]...: le s programnikom MERGE"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:1
@@ -5345,7 +5349,7 @@ msgstr "Niz povezave mora vsebovati vrednosti DB_NAME"
 
 #: ../providers/postgres/gda-postgres-provider.c:450
 msgid "The connection string format has changed: replace DATABASE with DB_NAME and the same contents"
-msgstr ""
+msgstr "Zapis niza povezave je spremenjen: zamenjati je treba DATABASE s podatki DB_NAME in enako vsebino"
 
 #: ../providers/postgres/gda-postgres-provider.c:578
 #, c-format
@@ -5360,12 +5364,12 @@ msgstr "Pot iskanja %s ni veljavna"
 #: ../providers/postgres/gda-postgres-provider.c:984
 #: ../providers/postgres/gda-postgres-provider.c:986
 msgid "Transactions are not supported in read uncommitted isolation level"
-msgstr ""
+msgstr "Prenosi niso podprti na neobjaljeni ločeni ravni"
 
 #: ../providers/postgres/gda-postgres-provider.c:990
 #: ../providers/postgres/gda-postgres-provider.c:992
 msgid "Transactions are not supported in repeatable read isolation level"
-msgstr ""
+msgstr "Prenosi niso podprti na ponavljajoči se ločeni ravni"
 
 #: ../providers/postgres/gda-postgres-provider.c:1009
 #: ../providers/postgres/gda-postgres-provider.c:1107
@@ -5426,7 +5430,7 @@ msgstr "Kitajsko (EUC)"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:9
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:3
 msgid "Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty)"
-msgstr ""
+msgstr "Vrata strežnika podatkovne zbirke (za strežnike ki so zagnani na unix domeni vtiča, je treba vnesti pripono datoteke vtiča (običajno 5432), ali pa je treba polje pustiti prazno)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:11
@@ -5439,7 +5443,7 @@ msgstr "Dodatne možnosti povezave"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:13
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:5
 msgid "Host on which the database server is running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this field empty)"
-msgstr ""
+msgstr "Gostitelj na katerem teče podatkovni strežnik (za strežnike ki so zagnani na unix domeni vtiča, je treba vnesti pot vtiča (običajno /tmp), ali pa je treba polje pustiti prazno)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
@@ -7086,6 +7090,11 @@ msgid ""
 "accessible, clear the corresponding history item before\n"
 "closing the transaction)."
 msgstr ""
+"Prenos je bil samodejno začet med izvajanjem\n"
+"izjave, kar se običajno zgodi kadar so izbrane zbirke\n"
+"dvojiških podatkov (blobi) in mora biti prenos odprt dokler\n"
+"so blobi dostopni. Počistiti je treba zgodovino pred\n"
+"končanjem prenosa."
 
 #: ../tools/browser/query-exec/query-console.c:1069
 msgid "_Execute"
