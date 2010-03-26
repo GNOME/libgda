@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-26 14:18+0100\n"
+"PO-Revision-Date: 2010-03-26 15:51+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -2538,17 +2538,17 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-provider.c:586
 #, c-format
 msgid "The connection string format has changed: replace URI with DB_DIR (the path to the database file) and DB_NAME (the database file without the '%s' at the end)."
-msgstr ""
+msgstr "Zapis niza povezave je spremenjen: zamenjati je treba naslov URI s podatki DB_DIR (pot do datoteke podatkovne zbirke) in DB_NAME (datoteka podatkovne zbirke brez '%s' na koncu imena)."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:601
 #: ../providers/mdb/gda-mdb-provider.c:288
 msgid "The DB_DIR part of the connection string must point to a valid directory"
-msgstr ""
+msgstr "Del povezave DB_DIR mora kazati na veljavno mapo"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:659
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
-msgstr ""
+msgstr "Ni mogoče določiti praznega rezultata SQLite možnosti: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:870
 #: ../libgda/sqlite/gda-sqlite-provider.c:909
@@ -2933,7 +2933,7 @@ msgstr "Izjava INSERT zahteva preglednico za vstavljanje podatkov"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:357
 msgid "Can't specify values to insert and SELECT statement in INSERT statement"
-msgstr ""
+msgstr "Ni mogoče določiti vrednosti za vstavitev izjave SELECT v izjavo INSERT"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:376
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:402
@@ -2964,7 +2964,7 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct-select.c:452
 #, c-format
 msgid "Multiple targets named or aliased '%s'"
-msgstr ""
+msgstr "Poimenovanih ali povezanih je več ciljev '%s'"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:277
 msgid "UPDATE statement needs a table to update data"
@@ -3036,7 +3036,7 @@ msgstr "Predmeta vrste '%s' ni mogoče deklarirati na ta način"
 #: ../libgda-report/engine/gda-report-engine.c:316
 #, c-format
 msgid "An object with the '%s' name has already been declared"
-msgstr ""
+msgstr "Predmet z imenom '%s' je že deklariran"
 
 #: ../libgda-report/engine/gda-report-engine.c:351
 #, c-format
@@ -3080,12 +3080,12 @@ msgstr "Ni določenega izraza"
 #: ../libgda-report/engine/gda-report-engine.c:907
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr ""
+msgstr "Ni mogoče prenesti vrednosti iz vrste '%s' na vrsto '%s'"
 
 #: ../libgda-report/engine/gda-report-engine.c:1045
 #, c-format
 msgid "Cannot cast parameter from type '%s' to type '%s'"
-msgstr ""
+msgstr "Ni mogoče prenesti parametra iz vrste '%s' na vrsto '%s'"
 
 #: ../libgda-report/engine/gda-report-engine.c:1138
 #, c-format
@@ -3113,7 +3113,7 @@ msgstr "Izvajanje programa %s ni uspelo: %s"
 #: ../libgda-report/gda-report-document.c:371
 #, c-format
 msgid "This report document does not handle %s output"
-msgstr ""
+msgstr "Dokument poročila ne uravlja z odvodom %s"
 
 #: ../libgda-ui/data-entries/common-bin.c:38
 msgid "Select file to load"
@@ -8319,22 +8319,18 @@ msgstr "Sprožilniki"
 
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
-
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
-
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
-
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
-
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokument ni uspešno razčlenjen\n"
-
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
 
 #, fuzzy
 #~ msgid "Tables:"
 #~ msgstr "Razpredelnice"
+
