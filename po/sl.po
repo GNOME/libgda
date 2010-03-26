@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-25 13:57+0100\n"
+"PO-Revision-Date: 2010-03-26 14:18+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1287,7 +1287,7 @@ msgstr "Izjava spreminjanja uporablja neznan parameter '%s'"
 #: ../libgda/gda-data-select.c:1208
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
-msgstr "Paramter izjave spreminjanja '%s' je %s, moral pa bi biti %s"
+msgstr "Parameter izjave spreminjanja '%s' je %s, moral pa bi biti %s"
 
 #: ../libgda/gda-data-select.c:1245
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1474,11 +1474,11 @@ msgstr "(%s): napačna vrsta vrednosti: pričakovana je '%s', pridobljena pa je 
 #: ../libgda/gda-holder.c:1514
 #, c-format
 msgid "Cannot bind holders if their type is not the same, breaking existing bind where '%s' was bound to '%s'"
-msgstr "Ni mogogoče povezati ročnikov različnih vrst, zato bo prekinjana povezava '%s' z '%s'"
+msgstr "Ni mogoče povezati ročnikov različnih vrst, zato bo prekinjana povezava '%s' z '%s'"
 
 #: ../libgda/gda-holder.c:1559
 msgid "Cannot bind holders if their type is not the same"
-msgstr "Ni mogogoče povezati ročnikov različnih vrst"
+msgstr "Ni mogoče povezati ročnikov različnih vrst"
 
 #: ../libgda/gda-holder.c:1699
 #, c-format
@@ -1729,7 +1729,7 @@ msgstr "Ni mogoče najti predmeta z imenom '%s'"
 #: ../libgda/gda-meta-struct.c:579
 #, c-format
 msgid "Object %s.%s.%s already exists in GdaMetaStruct and has a different object type"
-msgstr "Predmet %s.%s.%s aže obstaja v GdaMetaStruct in je drugačne predmetne vrste"
+msgstr "Predmet %s.%s.%s že obstaja v GdaMetaStruct in je drugačne predmetne vrste"
 
 #: ../libgda/gda-meta-struct.c:605
 #, c-format
@@ -2495,7 +2495,7 @@ msgstr "SQLite dvojiški upravljalnik"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:121
 msgid "SQlite binary representation"
-msgstr "Sqlite dvojiško prikazovanje"
+msgstr "SQLite dvojiško prikazovanje"
 
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:123
 msgid "Sqlite boolean representation"
@@ -2909,7 +2909,7 @@ msgstr "Izjava COMPOUND vsebuje izjavo, ki ni izjava SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:252
 msgid "COMPOUND statement does not contain any SELECT statement"
-msgstr ""
+msgstr "Izjava COMPOUND ne vsebuje nobene SELECT izjave"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:258
 msgid "COMPOUND statement only contains one SELECT statement"
@@ -3041,7 +3041,7 @@ msgstr ""
 #: ../libgda-report/engine/gda-report-engine.c:351
 #, c-format
 msgid "Object type '%s' cannot be requested in this context"
-msgstr "Object type '%s' cannot be requested in this context"
+msgstr "Predmeta vrste '%s' ni mogoče zahtevati na ta način"
 
 #: ../libgda-report/engine/gda-report-engine.c:570
 #, c-format
@@ -3213,11 +3213,11 @@ msgstr "Preklopni gumb je lahko dejaven"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:159
 msgid "Values limited to PK fields"
-msgstr ""
+msgstr "Vrednosti omejene za polja osnovnega ključa"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:160
 msgid "GList of GValue to render, limited to PK fields"
-msgstr ""
+msgstr "GList predmeta GValue za izris, omejeno na polja osnovnega ključa"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:166
 msgid "Values"
@@ -3225,7 +3225,7 @@ msgstr "Vrednosti"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:167
 msgid "GList of GValue to render, not limited to PK fields "
-msgstr ""
+msgstr "GList predmeta GValue za izris, brez omejeno na polja osnovnega ključa"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:161
 msgid "The information and status changer can be activated"
@@ -3240,13 +3240,13 @@ msgstr "<niz je zaradi dolžine izrezan>"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:271
 #, c-format
 msgid "Data cell renderer's specified type (%s) differs from actual value to display type (%s)"
-msgstr ""
+msgstr "Izrisovalnik celic podatkov določenih za vrsto (%s) se ločijo od dejanske vrednosti, ki jo kaže vrsta (%s)"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:438
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:277
 #, c-format
 msgid "Data cell renderer asked to display values of different data types, at least %s and %s, which means the data model has some incoherencies"
-msgstr ""
+msgstr "Izrisovalnik celic podatkov izrisuje vrednosti različnih vrst podatkov, vsaj %s in %s, kar pomeni, da podatkovni model ni skladno postavljen"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:488
 #: ../libgda-ui/data-entries/gdaui-entry-none.c:173
@@ -3568,7 +3568,7 @@ msgstr "Zaporedna slika"
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in.h:2
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:5
 msgid "Set to TRUE if data comes from a serialized GdkPixbuf (F-Spot for example)"
-msgstr ""
+msgstr "Izbrana možnost določa, da so podatki vstavljeni zaporedno preko GdkPixbuf (F-Spot)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:1
 msgid "Base 64"
@@ -3609,7 +3609,7 @@ msgstr "Splošno"
 
 #: ../libgda-ui/data/server_operation.glade.h:6
 msgid "hello"
-msgstr "hello"
+msgstr "halo"
 
 #: ../libgda-ui/demos/main.c:760
 #, c-format
@@ -3641,6 +3641,14 @@ msgid ""
 "<i>demo_parser</i> objects are created by the framework and\n"
 "made available to all the demonstrated items."
 msgstr ""
+"<b><big>Opomba:\n"
+"</big></b>Predmeti lahko uporabljajo\n"
+"odprto povezavo s SQLite preko\n"
+"'%s' file.\n"
+"\n"
+"V prikazani predstavitvi <i>demo_cnc</i> in\n"
+"<i>demo_parser</i> predmetov so na voljo\n"
+"povezave pri vseh teh predmetih."
 
 #: ../libgda-ui/internal/gdaui-provider-auth-editor.c:386
 msgid "Can't set authentification string: no authentication is needed"
@@ -3703,7 +3711,7 @@ msgstr "Del trenutnih spremenjenih podatkov je neveljaven"
 msgid ""
 "As no transaction was used, only a part of the valid data\n"
 "has been written, and the remaining modification have been discarded."
-msgstr ""
+msgstr "Ker ni uporabljenega prenosa, je bil zapisan le del podatkov, preostanek pa je trajno izgubljen."
 
 #: ../libgda-ui/internal/utility.c:423
 msgid "Error details"
@@ -3766,7 +3774,7 @@ msgstr "'%s' dokument ni uspešno razčlenjen"
 #: ../libgda-ui/gdaui-raw-grid.c:2361
 #, c-format
 msgid "'%s' DTD not parsed successfully. XML data layout validation will not be performed (some errors may occur)"
-msgstr ""
+msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda podatkov XML ne bo izvedeno (lahko se pojavijo napake)"
 
 #: ../libgda-ui/gdaui-cloud.c:244
 #: ../libgda-ui/gdaui-cloud.c:979
@@ -3987,7 +3995,7 @@ msgstr "Določila opravila za vstavitev"
 
 #: ../libgda-ui/gdaui-server-operation.c:202
 msgid "Request section header to be hidden if there is only one section"
-msgstr ""
+msgstr "Zahtevaj skrivanje glave odseka, kadar je na voljo le ena glava."
 
 #. last row is for new entries
 #: ../libgda-ui/gdaui-server-operation.c:596
@@ -4487,7 +4495,7 @@ msgstr "Tradicionalni kitajski (Big5)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:19
 msgid "Binary pseudo charset"
-msgstr "Dvojiški pseudo nabor"
+msgstr "Dvojiški psevdo-nabor"
 
 #. DSN parameters
 #. other table options
@@ -4670,7 +4678,7 @@ msgstr "Ruski (KOI8-R Relcom)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:68
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:116
 msgid "KOI8-U Ukrainian"
-msgstr "Ukrainski (KOI8-U)"
+msgstr "Ukrajinski (KOI8-U)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:69
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
@@ -4880,7 +4888,7 @@ msgstr "Arhiv"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:12
 msgid "Auto increment value"
-msgstr "Vrednost samodejne povečeve"
+msgstr "Vrednost samodejne povečave"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:14
@@ -5062,7 +5070,7 @@ msgstr "Brez dejanj"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 msgid "On delete action"
-msgstr "Ob dejanju izbrisanja"
+msgstr "Ob dejanju izbrisa"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
@@ -5077,7 +5085,7 @@ msgstr "Skrči le dolge stolpce CHAR/VARCHAR"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
 msgid "Pack keys"
-msgstr "Skrčni ključe"
+msgstr "Skrči ključe"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:150
 msgid "Redundant"
@@ -5283,7 +5291,7 @@ msgstr "Preglednica za preimenovanje"
 
 #: ../providers/oracle/gda-oracle-meta.c:570
 msgid "Could not fetch next row"
-msgstr "Ni mogoče prodobiti naslednje vrstice"
+msgstr "Ni mogoče pridobiti naslednje vrstice"
 
 #: ../providers/oracle/gda-oracle-meta.c:598
 msgid "Could not get a description handle"
@@ -5364,7 +5372,7 @@ msgstr "Pot iskanja %s ni veljavna"
 #: ../providers/postgres/gda-postgres-provider.c:984
 #: ../providers/postgres/gda-postgres-provider.c:986
 msgid "Transactions are not supported in read uncommitted isolation level"
-msgstr "Prenosi niso podprti na neobjaljeni ločeni ravni"
+msgstr "Prenosi niso podprti na neobjavljeni ločeni ravni"
 
 #: ../providers/postgres/gda-postgres-provider.c:990
 #: ../providers/postgres/gda-postgres-provider.c:992
@@ -5557,7 +5565,7 @@ msgstr "Korejsko (EUC s Hangle osnovo)"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:61
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:37
 msgid "TCVN-5712/Windows CP1258 (Vietnamese)"
-msgstr "Vijetnamsko (TCVN-5712/Windows CP1258)"
+msgstr "Vietnamsko (TCVN-5712/Windows CP1258)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:62
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
@@ -5634,7 +5642,7 @@ msgstr "Omeji izraz za delno kazalo"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 msgid "Predicate"
-msgstr "PredikatPovedno"
+msgstr "Povedno"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
 msgid "Copy default expressions"
@@ -5642,7 +5650,7 @@ msgstr "Kopiraj privzeti izraz"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
 msgid "Copy defaults"
-msgstr "Kopiraj preivzete"
+msgstr "Kopiraj privzeto"
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
@@ -5705,7 +5713,7 @@ msgstr "Zavrni spuščanje stolpca, če je katerikoli predmet od njega odvisen (
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
 msgid "What to do with references on the column to delete"
-msgstr "Kaj storiti s sklici, ob izbrisanju stolpca"
+msgstr "Kaj storiti s sklici, ob izbrisu stolpca"
 
 #. DSN parameters
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
@@ -5746,7 +5754,7 @@ msgstr "Iskalna pot med shemami podatkovne zbirke (spremenljivka 'iskalna_pot')"
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:1917
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:1956
 msgid "Mysql version 5.0 at least is required"
-msgstr "Zahtevaja je vsaj različica Mysql 5.0"
+msgstr "Zahtevana je vsaj različica Mysql 5.0"
 
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:177
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:218
@@ -5871,7 +5879,7 @@ msgstr "Raven prenosa ni podprta"
 #: ../providers/web/gda-web-provider.c:889
 #: ../providers/web/gda-web-provider.c:950
 msgid "Unnamed savepoint is not supported"
-msgstr "Neimenovane shranitvene točke niso podprte"
+msgstr "Neimenovane točke shranjevanja niso podprte"
 
 #: ../providers/web/gda-web-recordset.c:183
 #, c-format
@@ -6530,7 +6538,7 @@ msgstr "Odstrani"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:352
 msgid "Add referenced tables"
-msgstr "Dodaj navedno preglednico"
+msgstr "Dodaj sklicno preglednico"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:513
 msgid "Add table"
@@ -6655,7 +6663,7 @@ msgstr "Vejica"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
 msgid "Semi column"
-msgstr "Poločični stolpec"
+msgstr "Polovični stolpec"
 
 #: ../tools/browser/common/gdaui-data-import.c:222
 msgid "Tab"
@@ -7079,7 +7087,7 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console.c:973
 msgid "Statement executed"
-msgstr "Izjava je izvadena"
+msgstr "Izjava je izvedena"
 
 #: ../tools/browser/query-exec/query-console.c:981
 msgid ""
@@ -7428,7 +7436,7 @@ msgstr "Seznam opravil GDA strežnika"
 #: ../tools/gda-list-server-op.c:39
 #, c-format
 msgid "Using XML descriptions in %s\n"
-msgstr "Upraba opisov XML v %s\n"
+msgstr "Uporaba opisov XML v %s\n"
 
 #: ../tools/gda-list-server-op.c:46
 #, c-format
@@ -7485,8 +7493,8 @@ msgid ""
 "      or any query terminated by a semicolon\n"
 "\n"
 msgstr ""
-"Vrsta: .copyright za prikaz pogojev uporabe in razširjanja\n"
-"      .? za pomoč z ukazi\n"
+"Ukaz: .copyright pokaže pogoje uporabe in razširjanja\n"
+"      .? pokaže pomoč z ukazi\n"
 "      .q (ali CTRL-D) za končanje\n"
 "      (znak '.' je mogoče zamenjati z '\\')\n"
 "      ali katerokoli poizvedbo zaustaviti s podpičjem\n"
@@ -7535,7 +7543,7 @@ msgstr "Notranji ukaz ni pravilno določen"
 
 #: ../tools/gda-sql.c:903
 msgid "Incomplete internal command"
-msgstr "Nepopolen notranji ukaz"
+msgstr "Nepopoln notranji ukaz"
 
 #: ../tools/gda-sql.c:1013
 #, c-format
@@ -7744,7 +7752,7 @@ msgstr "Poveži več povezav skupaj v navidezno CNC_IME povezavo"
 #: ../tools/gda-sql.c:2032
 #: ../tools/gda-sql.c:2044
 msgid "DSN (data sources) management"
-msgstr "DSN (podatkovni viri) uporavljanje"
+msgstr "DSN (podatkovni viri) upravljanje"
 
 #: ../tools/gda-sql.c:2009
 #, c-format
@@ -7797,7 +7805,7 @@ msgstr "%s datoteka"
 
 #: ../tools/gda-sql.c:2058
 msgid "Execute commands from file"
-msgstr "Izved ukaz iz datoteke"
+msgstr "Izvedba ukazov iz datoteke"
 
 #: ../tools/gda-sql.c:2070
 msgid "Send output to a file or |pipe"
@@ -8002,7 +8010,7 @@ msgstr "Ni mogoče najti ponudnika z imenom '%s'"
 #: ../tools/gda-sql.c:3104
 #, c-format
 msgid "A connection named '%s' already exists"
-msgstr "Povezava z imenom '%s' že obstajas"
+msgstr "Povezava z imenom '%s' že obstaja"
 
 #: ../tools/gda-sql.c:2919
 #, c-format
