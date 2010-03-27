@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-27 09:39+0100\n"
+"PO-Revision-Date: 2010-03-27 19:26+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1201,12 +1201,12 @@ msgstr "Prva vrstica, ki je ni mogoče odstraniti, je dodana programsko in je ve
 #: ../libgda/gda-data-proxy.c:2051
 #, c-format
 msgid "Proxied data model reports the modifications as accepted, yet did not emit the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This is a bug of the %s's implementation (please report a bug)."
-msgstr ""
+msgstr "Posredniški podatkovni model potrjuje sprejemanje sprememb, vendar pa ni objavljenih ustreznih objav \"row-inserted\", \"row-updated\" ali \"row-removed\". To je najverjetneje hrošč %s (pošljite poročilo o napaki)."
 
 #: ../libgda/gda-data-proxy.c:2087
 #, c-format
 msgid "Proxied data model reports the modifications as accepted, yet did not emit the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This may be a bug of the %s's implementation (please report a bug)."
-msgstr ""
+msgstr "Posredniški podatkovni model potrjuje sprejemanje sprememb, vendar pa ni objavljenih ustreznih objav \"row-inserted\", \"row-updated\" ali \"row-removed\". To je najverjetneje lahko hrošč %s (pošljite poročilo o napaki)."
 
 #: ../libgda/gda-data-proxy.c:2933
 #: ../tools/gda-sql.c:3128
@@ -1502,7 +1502,7 @@ msgstr "Ni mogoče razčleniti '%s': Preverjanje veljavnosti podatkov XML ne bo 
 #: ../libgda/gda-init.c:197
 #, c-format
 msgid "Could not parse '%s': Validation for XML files for server operations will not be performed (some weird errors may occur)"
-msgstr ""
+msgstr "Ni mogoče razčleniti '%s': preverjanje veljavnosti za datoteke XML za strežniška opravila ne bo izvedeno (lahko se pojavijo nenavadne napake)"
 
 #: ../libgda/gda-meta-store.c:427
 msgid "Connection string for the internal connection to use"
@@ -1749,7 +1749,7 @@ msgstr "Notranja GdaMetaStore napaka: stolpca %s ni mogoče najti"
 #: ../libgda/gda-meta-struct.c:943
 #, c-format
 msgid "Meta data incoherence in foreign key constraint for table %s.%s.%s referencing table %s.%s.%s"
-msgstr ""
+msgstr "Neskladnost metapodatkov tujega ključa za omejitev preglednice %s.%s.%s s sklicem na preglednico %s.%s.%s"
 
 #: ../libgda/gda-meta-struct.c:2258
 msgid "Missing object name in GdaMetaDbObject structure"
@@ -1879,7 +1879,7 @@ msgstr "Ponudnik %s je ustvaril GdaServerOperation z napačno vrsto vozlišča z
 #: ../libgda/gda-server-provider.c:961
 #, c-format
 msgid "GdaServerProvider object implements the %s virtual method but does not implement the %s one, please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
-msgstr ""
+msgstr "Predmet GdaServerProvider vključuje navidezno metodo %s, vendar pa ne vljučuje %s. O napaki pošljite poročilo na http://bugzilla.gnome.org/ za paket \"libgda\"."
 
 #. To translators: "Aggregate": the noun
 #: ../libgda/gda-server-provider-extra.c:310
@@ -2754,7 +2754,7 @@ msgstr "Imenski prostor mora biti določen"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:258
 msgid "Connection was not represented in hub"
-msgstr ""
+msgstr "Povezava ni objavljena v vozlišču"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:153
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:189
@@ -2841,7 +2841,7 @@ msgstr "Ni mogoče določiti preglednice za polje '%s'"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:915
 msgid "Expression can't have both a type cast and a parameter specification"
-msgstr ""
+msgstr "Izraz ne more imeti obeh določil; vrste in določila parametra"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:925
 #: ../libgda/sql-parser/gda-statement-struct.c:938
@@ -2883,11 +2883,11 @@ msgstr "Manjka izraz v polju cilja"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1070
 msgid "Join can't at the same time specify a join condition and a list of fields to join on"
-msgstr ""
+msgstr "S predmetom JOIN ni mogoče sočasno določiti pogoj združevanja in seznam polj za združevanje"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1075
 msgid "Cross join can't have a join condition or a list of fields to join on"
-msgstr ""
+msgstr "S predmetom križnega JOIN ni mogoče sočasno določiti pogoj združevanja in seznam polj za združevanje"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1084
 msgid "Empty FROM clause"
@@ -2925,7 +2925,7 @@ msgstr "Izjava COMPOUND vsebuje prazno izjavo SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:294
 msgid "All statements in a COMPOUND must have the same number of columns"
-msgstr ""
+msgstr "Vse izjave COMPOUND morajo ometi enako število stolpcev"
 
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:160
 msgid "DELETE statement needs a table to delete from"
