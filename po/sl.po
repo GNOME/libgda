@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-26 15:51+0100\n"
+"PO-Revision-Date: 2010-03-27 09:39+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1497,7 +1497,7 @@ msgstr "libgda zahteva GModule. Zaustavljanje ..."
 #: ../libgda/gda-init.c:176
 #, c-format
 msgid "Could not parse '%s': XML data import validation will not be performed (some weird errors may occur)"
-msgstr ""
+msgstr "Ni mogoče razčleniti '%s': Preverjanje veljavnosti podatkov XML ne bo izvedena (pojavi jo se lahko nenavadne napake)"
 
 #: ../libgda/gda-init.c:197
 #, c-format
@@ -1664,7 +1664,7 @@ msgstr "Prenosa ni mogoče začeti, saj je ta že začet, napaka pa bi lahko vod
 
 #: ../libgda/gda-meta-store.c:3666
 msgid "Could not parse XML description of custom database object to add"
-msgstr ""
+msgstr "Ni mogoče razčleniti opisa XML podatkovne zbirke po meri za dodajanje"
 
 #: ../libgda/gda-meta-store.c:3680
 msgid "Missing custom database object name"
@@ -1672,7 +1672,7 @@ msgstr "Manjka ime predmeta podatkovne zbirke po meri"
 
 #: ../libgda/gda-meta-store.c:3685
 msgid "Custom database object names starting with a '_' are reserved for internal usage"
-msgstr ""
+msgstr "Imena predmetov podatkovnih zbirk po meri, ki se začnejo s podčrtajem '_' so zadržana za notranjo uporabo"
 
 #: ../libgda/gda-meta-store.c:3783
 msgid "Another object with the same name already exists"
@@ -1820,6 +1820,8 @@ msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
 "%s"
 msgstr ""
+"GdaServerOperation: datoteka '%s' ni v skladu z DTD:\n"
+"%s"
 
 #: ../libgda/gda-server-operation.c:683
 #, c-format
@@ -1827,15 +1829,17 @@ msgid ""
 "GdaServerOperation specification does not conform to DTD:\n"
 "%s"
 msgstr ""
+"Določilo GdaServerOperation ni v skladu z DTD:\n"
+"%s"
 
 #: ../libgda/gda-server-operation.c:690
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
-msgstr ""
+msgstr "GdaServerOperation: datoteka '%s' ni v skladu z DTD"
 
 #: ../libgda/gda-server-operation.c:693
 msgid "GdaServerOperation specification does not conform to DTD\n"
-msgstr ""
+msgstr "Določilo GdaServerOperation ni v skladu z DTD\n"
 
 #: ../libgda/gda-server-operation.c:1227
 msgid "Non handled GdaServerOperationType, please report error to http://bugzilla.gnome.org/ for the \"libgda\" product"
@@ -2382,7 +2386,7 @@ msgstr "Izjava SELECT vključuje več kot eno preglednico ali izraz"
 
 #: ../libgda/gda-util.c:803
 msgid "Can only build modification statement for tables"
-msgstr ""
+msgstr "Izgraditi je mogoče le izjave spreminjanja za preglednice"
 
 #: ../libgda/gda-util.c:837
 #: ../libgda/gda-util.c:845
@@ -2403,11 +2407,11 @@ msgstr "Manjka ime preglednice v izjavi UPDATE"
 
 #: ../libgda/gda-xa-transaction.c:159
 msgid "Global transaction ID can not have more than 64 bytes"
-msgstr ""
+msgstr "Splošnemu ID prenosa ni mogoče pripisati več kot 64 bajtov"
 
 #: ../libgda/gda-xa-transaction.c:295
 msgid "Connection already registered with another GdaXaTransaction object"
-msgstr ""
+msgstr "Povezava je že vpisana z drugim predmetom GdaXaTransaction"
 
 #: ../libgda/gda-xa-transaction.c:308
 msgid "Connection does not support distributed transaction"
@@ -2415,7 +2419,7 @@ msgstr "Ponudnik ne podpira razširjenega prenosa podatkov"
 
 #: ../libgda/gda-xa-transaction.c:342
 msgid "Cannot unregister connection not registered with GdaXaTransaction object"
-msgstr ""
+msgstr "Ni mogoče odstraniti vpisa povezave, ki ni vpisana s predmetom GdaXaTransaction"
 
 #: ../libgda/gda-xa-transaction.c:378
 #: ../libgda/gda-xa-transaction.c:409
@@ -2532,7 +2536,7 @@ msgstr "Ponudnik ne podpira asinhronega odpiranja povezave"
 #: ../libgda/sqlite/gda-sqlite-provider.c:551
 #: ../providers/mdb/gda-mdb-provider.c:246
 msgid "The connection string must contain DB_DIR and DB_NAME values"
-msgstr ""
+msgstr "Niz povezave mora vsebovati vrednosti predmetov DB_DIR in DB_NAME values"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:578
 #: ../libgda/sqlite/gda-sqlite-provider.c:586
@@ -2586,31 +2590,31 @@ msgstr "Neimenovan parameter izjave ni dovoljen v pripravljeni izjavi."
 #: ../providers/postgres/gda-postgres-provider.c:1651
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s)"
-msgstr ""
+msgstr "Ni mogoče izgraditi izjave SELECT za pridobitev zadnje vstavljene vrstice: %s)"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1998
 #: ../providers/mysql/gda-mysql-provider.c:1874
 #: ../providers/postgres/gda-postgres-provider.c:1666
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
-msgstr ""
+msgstr "Ni mogoče izvesti izjave SELECT za pridobitev zadnje vstavljene vrstice: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2011
 #: ../providers/mysql/gda-mysql-provider.c:1887
 #: ../providers/postgres/gda-postgres-provider.c:1679
 msgid "SELECT statement to get last inserted row did not return any row"
-msgstr ""
+msgstr "Z izjavo SELECT za izbiro zadnje vstavljene vrstice, ni bilo mogoče pridobiti nobene vrstice."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2015
 #: ../providers/mysql/gda-mysql-provider.c:1891
 #: ../providers/postgres/gda-postgres-provider.c:1683
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
-msgstr ""
+msgstr "Z izjavo SELECT za izbiro zadnje vstavljene vrstice, je bilo pridobljeno preveč (%d) vrstic."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2080
 msgid "Prepared statement has no associated GdaStatement"
-msgstr ""
+msgstr "Pripravljena izjava ni povezana s predmetom GdaStatement"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2120
 #: ../libgda/sqlite/gda-sqlite-provider.c:2157
@@ -2625,7 +2629,7 @@ msgstr "Ni mogoče pisati v SQLite's predmet BLOB"
 #: ../libgda/sqlite/gda-sqlite-provider.c:2147
 #, c-format
 msgid "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
-msgstr ""
+msgstr "Ni mogoče pridobiti ročnika SQLite BLOB (poročana napaka je '%s'). O napaki pošljite poročilo na http://bugzilla.gnome.org/ za paket \"libgda\"."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2172
 msgid "Can't identify the ROWID of the blob to fill"
@@ -2801,7 +2805,7 @@ msgstr "Napaka prekoračitve v vrstici %d in stolpcu %d"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:514
 msgid "GdaSqlField is not part of an INSERT or UPDATE statement"
-msgstr ""
+msgstr "PRedmet GdaSqlField ni del izjave INSERT ali UPDATE"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:527
 msgid "Missing table in statement"
@@ -2942,7 +2946,7 @@ msgstr "Izjava INSERT nima enakega števila ciljnih stolpcev v izrazu"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:405
 msgid "VALUES lists must all be the same length in INSERT statement"
-msgstr ""
+msgstr "Seznam VALUES mora imeti enake dolžine v izjavi INSERT"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:400
 msgid "SELECT does not contain any expression"
@@ -2950,15 +2954,15 @@ msgstr "Izjava SELECT ne vsebuje izraza"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:406
 msgid "SELECT can't have a DISTINCT expression if DISTINCT is not set"
-msgstr ""
+msgstr "Izjavi SELECT ni mogoče določiti izraza DISTINCT, če izraz DISTINCTni določen"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:412
 msgid "SELECT can't have a HAVING without GROUP BY"
-msgstr ""
+msgstr "Izjavi SELECT ni mogoče določiti določila HAVING brez predmeta GROUP BY"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:418
 msgid "SELECT can't have a limit offset without a limit"
-msgstr ""
+msgstr "Izjave SELECT ni mogoče omejiti z odmikom brez vrednosti omejitve"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:443
 #: ../libgda/sql-parser/gda-statement-struct-select.c:452
@@ -3316,7 +3320,7 @@ msgstr "Skrito"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:3
 msgid "If set to TRUE, characters are all displayed using a single 'invisible' character, suitable to enter passwords"
-msgstr ""
+msgstr "Izbrana možnost omogoča prikaz znakov z enoznačnim 'nevidnim' znakom za uporabo pri vnosu gesel"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:4
 msgid "Maximum acceptable length of the text"
@@ -3727,7 +3731,7 @@ msgstr "Najprej pravilne podatke"
 
 #: ../libgda-ui/gdaui-basic-form.c:242
 msgid "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> node)"
-msgstr ""
+msgstr "Kazalnik do določil razporeditve XML (kot xmlNodePtr za <gdaui_form> vozlišče)"
 
 #: ../libgda-ui/gdaui-basic-form.c:246
 msgid "List of parameters to show in the form"
@@ -3780,7 +3784,7 @@ msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda poda
 #: ../libgda-ui/gdaui-cloud.c:979
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
-msgstr ""
+msgstr "Napačna vrsta za oznako stolpca: pričakovan je niz, dobljen pa %s"
 
 #: ../libgda-ui/gdaui-cloud.c:1072
 #: ../tools/browser/common/objects-cloud.c:445
@@ -3882,7 +3886,7 @@ msgstr "Ni mogoče pripeti vrstice podatkovnem modelu: %s"
 
 #: ../libgda-ui/gdaui-raw-grid.c:290
 msgid "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> node)"
-msgstr ""
+msgstr "Kazalnik do določil razporeditve XML (kot xmlNodePtr za <gdaui_grid> vozlišče)"
 
 #: ../libgda-ui/gdaui-raw-grid.c:293
 msgid "Info cell visible"
@@ -4269,13 +4273,13 @@ msgstr "Ni mogoče ustvariti navideznega programnika JAVA: %s"
 
 #: ../providers/jdbc/libmain.c:485
 msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
-msgstr ""
+msgstr "Ni mogoče uporabiti JVM (libjvm.so), Ponudnik JDBC ni na voljo."
 
 #: ../providers/mdb/gda-mdb-provider.c:273
 #: ../providers/mdb/gda-mdb-provider.c:280
 #, c-format
 msgid "The connection string format has changed: replace FILENAME with DB_DIR (the path to the database file) and DB_NAME (the database file without the '%s' at the end)."
-msgstr ""
+msgstr "Zapis niza povezave je spremenjen: zamenjati je treba naslov vnos FILENAME s podatki DB_DIR (pot do datoteke podatkovne zbirke) in DB_NAME (datoteka podatkovne zbirke brez '%s' na koncu imena)."
 
 #: ../providers/mdb/gda-mdb-provider.c:307
 #, c-format
@@ -4911,7 +4915,7 @@ msgstr "Nadzorna vsota"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
 msgid "Clustered, fault-tolerant, memory-based"
-msgstr ""
+msgstr "Skupnjeno, ponmilniško, varno pred napakami"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:32
 msgid "Comma Separated Value (CSV)"
