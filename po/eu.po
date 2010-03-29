@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-15 16:36+0100\n"
-"PO-Revision-Date: 2010-03-15 18:51+0100\n"
+"PO-Revision-Date: 2010-03-29 12:19+0200\n"
 "Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: Basque <itzulpena@euskalgnu.org>\n"
 "MIME-Version: 1.0\n"
@@ -344,7 +344,7 @@ msgid ""
 msgstr ""
 "<span foreground='red'>Datu-iturburu honek darabilen datu-basearen \n"
 "hornitzailea ez dago eskuragarri,\n"
-"datu-iturburuaren atribututak editatzea desgaituta dago.</span>"
+"datu-iturburuaren atributuak editatzea desgaituta dago.</span>"
 
 #. connection's authentication
 #: ../control-center/gdaui-dsn-editor.c:212 ../libgda/gda-config.c:1277
@@ -406,7 +406,7 @@ msgid ""
 "using the means provided by each database vendor."
 msgstr ""
 "Hornitzaileak gehigarriak dira datu-base bakoitzerako sarbidea "
-"inplementatzen dutenak datu-base bakoitzeko saltzaileak eskainitzako "
+"inplementatzen dutenak datu-base bakoitzeko saltzaileak eskainitako "
 "adierazpenak erabiliz."
 
 #: ../libgda/gda-batch.c:316
@@ -559,8 +559,8 @@ msgid ""
 "Make the connection set up a monitoring function in the mainloop to monitor "
 "the wrapped connection"
 msgstr ""
-"Konexioak monitorizazteko funtzioa konfiguratzea eragiten du begizta "
-"nagusiandoitutako konexioa monitorizatzeko."
+"Konexioak monitorizatzeko funtzioa konfiguratzea eragiten du begizta "
+"nagusian doitutako konexioa monitorizatzeko."
 
 #: ../libgda/gda-connection.c:578 ../libgda/gda-connection.c:606
 #: ../libgda/gda-connection.c:620 ../libgda/gda-connection.c:635
@@ -1207,7 +1207,7 @@ msgstr ""
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr ""
-"Okerrreko balio mota: '%s' mota espero zen, baina '%s' "
+"Okerreko balio mota: '%s' mota espero zen, baina '%s' "
 "eskuratu da"
 
 #: ../libgda/gda-data-proxy.c:3747
@@ -1437,13 +1437,13 @@ msgstr "(%s): edukitzaileak ez ditu NULL balioak onartzen"
 #, c-format
 msgid "(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"
 msgstr ""
-"(%s): okerrreko edukitzailearen balio mota, '%s' mota espero zen, baina '%s' "
+"(%s): okerreko edukitzailearen balio mota, '%s' mota espero zen, baina '%s' "
 "eskuratu da"
 
 #: ../libgda/gda-holder.c:1061
 #, c-format
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
-msgstr "(%s): okerrreko balio mota, '%s' mota espero zen, baina '%s' eskuratu da"
+msgstr "(%s): okerreko balio mota, '%s' mota espero zen, baina '%s' eskuratu da"
 
 #. break holder's binding because type differ
 #: ../libgda/gda-holder.c:1514
@@ -2223,7 +2223,7 @@ msgstr "Ezin izan da balioa %s motara bihurtu"
 
 #: ../libgda/gda-sql-builder.c:662
 msgid "Wrong field format"
-msgstr "Eramuaren formatu okerra"
+msgstr "Eremuaren formatu okerra"
 
 #: ../libgda/gda-sql-builder.c:766 ../libgda/gda-sql-builder.c:771
 #, c-format
@@ -2252,7 +2252,7 @@ msgstr "Ez dago datu-kudeatzailerik '%s' motarentzako"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"'%s'(r)en okerrreko parametro mota: '%s' mota espero zen, baina '%s' "
+"'%s'(r)en okerreko parametro mota: '%s' mota espero zen, baina '%s' "
 "eskuratu da"
 
 #: ../libgda/gda-statement.c:1224
@@ -3265,7 +3265,7 @@ msgid ""
 "Data cell renderer's specified type (%s) differs from actual value to "
 "display type (%s)"
 msgstr ""
-"Datuen gelaxkaren errendatzaileren mota zehatza (%s) uneko balioaren "
+"Datuen gelaxkaren errendatzailearen mota zehatza (%s) uneko balioaren "
 "desberdina da (%s) mota erakusteko."
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:438
@@ -3875,7 +3875,7 @@ msgstr "Dagoeneko hasieratutako bezero bat hasieratzen saiatu zara."
 
 #: ../libgda-ui/gdaui-init.c:464
 msgid "Could not open plugins directory, no plugin loaded."
-msgstr "Ezin izan da plugin-en direktorioa ireki, ez da plugin-ik kargatu."
+msgstr "Ezin izan da pluginen direktorioa ireki, ez da pluginik kargatu."
 
 #: ../libgda-ui/gdaui-init.c:484
 #: ../tools/browser/query-exec/query-result.c:255 ../tools/web-server.c:2018
@@ -3891,7 +3891,7 @@ msgstr "'%s' fitxategia kargatzen...\n"
 #: ../libgda-ui/gdaui-init.c:494
 #, c-format
 msgid "Plugins load warning: %s"
-msgstr "Plugin-ak kargatzearen abisua: %s"
+msgstr "Pluginak kargatzearen abisua: %s"
 
 #. radio buttons
 #: ../libgda-ui/gdaui-login.c:152
@@ -5127,7 +5127,7 @@ msgstr "Gutx. errenkadak"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:133
 msgid "MyISAM (default)"
-msgstr "MyISAM (lehentsia)"
+msgstr "MyISAM (lehenetsia)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
@@ -5959,7 +5959,7 @@ msgstr "Zerbitzariko eragiketak ez daude oraindik inplementatuta"
 #: ../providers/web/gda-web-provider.c:769
 #: ../providers/web/gda-web-provider.c:829
 msgid "Named transaction is not supported"
-msgstr "Izendatutako transkakzioak ez daude onartuta"
+msgstr "Izendatutako transakzioak ez daude onartuta"
 
 #: ../providers/web/gda-web-provider.c:709
 msgid "Transaction level is not supported"
@@ -6197,7 +6197,7 @@ msgstr "Konexioa ez dago irekita"
 
 #: ../tools/browser/browser-connection.c:1146
 msgid "Can't initialize dictionary to store table preferences"
-msgstr "Ezin da hiztegia hasieratu tablen hobespenak gordetzeko"
+msgstr "Ezin da hiztegia hasieratu taulen hobespenak gordetzeko"
 
 #: ../tools/browser/browser-connection.c:1192
 #: ../tools/browser/browser-connection.c:1198
@@ -6354,7 +6354,7 @@ msgstr "Atzera itzuli uneko transakzioa"
 
 #: ../tools/browser/browser-window.c:330
 msgid "unnamed"
-msgstr "izenbagea"
+msgstr "izengabea"
 
 #: ../tools/browser/browser-window.c:331
 #, c-format
@@ -6749,7 +6749,7 @@ msgstr "Puntu ta koma"
 
 #: ../tools/browser/common/gdaui-data-import.c:222
 msgid "Tab"
-msgstr "Tabulazioa"
+msgstr "Tabuladorea"
 
 #: ../tools/browser/common/gdaui-data-import.c:229
 msgid "Space"
@@ -6757,7 +6757,7 @@ msgstr "Zuriunea"
 
 #: ../tools/browser/common/gdaui-data-import.c:236
 msgid "Pipe"
-msgstr "Pipe"
+msgstr "Marra horizontala"
 
 #: ../tools/browser/common/gdaui-data-import.c:245
 msgid "Other:"
@@ -7144,7 +7144,7 @@ msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
 msgstr ""
-"Kontsulta jadanik exekutatzen ari da, beste konstulta bat exekutatzeko, "
+"Kontsulta jadanik exekutatzen ari da, beste kontsulta bat exekutatzeko, "
 "ireki konexio berri bat."
 
 #: ../tools/browser/query-exec/query-console.c:909
@@ -7386,7 +7386,7 @@ msgstr "Taularen eremuak"
 
 #: ../tools/browser/schema-browser/table-preferences.c:387
 msgid "Field's display preferences"
-msgstr "Eremuuak bistaratzearen hobespenak"
+msgstr "Eremuak bistaratzearen hobespenak"
 
 #: ../tools/browser/schema-browser/table-preferences.c:464
 msgid "Data entry type:"
@@ -8297,7 +8297,7 @@ msgstr "Ikuspegiaren definizioa:"
 #: ../tools/web-server.c:1347
 #, c-format
 msgid "Trigger '%s' for the '%s.%s' table:"
-msgstr "'%s' abiarazlea '%s.%s' taularetzat:"
+msgstr "'%s' abiarazlea '%s.%s' taularentzat:"
 
 #: ../tools/web-server.c:1367
 #, c-format
