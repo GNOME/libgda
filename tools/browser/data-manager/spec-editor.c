@@ -56,6 +56,7 @@ struct _SpecEditorPrivate {
 	guint signal_editor_changed_id; /* timout ID to signal editor changed */
 	GtkWidget *text;
 	GtkTextBuffer *buffer;
+	GtkWidget *help;
 
 	/* UI view */
 	gboolean ui_view_up_to_date;
@@ -160,13 +161,34 @@ signal_editor_changed (SpecEditor *sped)
 	return FALSE;
 }
 
-
 static void
 editor_changed_cb (GtkTextBuffer *buffer, SpecEditor *sped)
 {
 	if (sped->priv->signal_editor_changed_id)
 		g_source_remove (sped->priv->signal_editor_changed_id);
 	sped->priv->signal_editor_changed_id = g_timeout_add_seconds (1, (GSourceFunc) signal_editor_changed, sped);
+}
+
+static void help_expand_cb (GtkWidget *exp, SpecEditor *sped)
+{
+#define XML_SYNTAX_HELP _("<small>The XML tree's root node must be a <span foreground=\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which " \
+			  "is allowed to contain one or more data source definitions.\n" \
+			  "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> nodes, both accepting the following optional attributes:\n" \
+			  " - <span foreground=\"#4e9a06\">\"id\"</span> to specify a data source string ID, used when linking data sources one to another;\n" \
+			  " - <span foreground=\"#4e9a06\">\"title\"</span> to specify a title.\n\n" \
+			  "Use the <span foreground=\"#4e9a06\"><tt>&lt;query&gt;</tt></span> tag to specify an SQL SELECT statement, as the contents of the tag. Linkage to other\n" \
+			  "data sources can be achieved using variables in the SELECT's SQL.\n\n" \
+			  "Use the <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> tag to define a data source which will display the contents of a table. This tag:\n" \
+			  " - requires the <span foreground=\"#4e9a06\">\"name\"</span> attribute which represents the table name.\n" \
+			  "</small>")
+	if (! sped->priv->help) {
+		sped->priv->help = gtk_label_new ("");
+		gtk_label_set_markup (GTK_LABEL (sped->priv->help), XML_SYNTAX_HELP);
+		gtk_label_set_ellipsize (GTK_LABEL (sped->priv->help), PANGO_ELLIPSIZE_END);
+		gtk_misc_set_alignment (GTK_MISC (sped->priv->help), 0., 0.);
+		gtk_container_add (GTK_CONTAINER (exp), sped->priv->help);
+		gtk_widget_show (sped->priv->help);
+	}
 }
 
 /**
@@ -178,7 +200,7 @@ SpecEditor *
 spec_editor_new (BrowserConnection *bcnc)
 {
 	SpecEditor *sped;
-	GtkWidget *sw, *nb;
+	GtkWidget *sw, *nb, *exp, *vbox;
 
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
 
@@ -192,12 +214,20 @@ spec_editor_new (BrowserConnection *bcnc)
 	sped->priv->notebook = (GtkNotebook*) nb;
 
 	/* XML editor page */
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_notebook_append_page (GTK_NOTEBOOK (nb), vbox, NULL);
+
 	sw = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_ETCHED_OUT);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
                                         GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), sw, NULL);
+	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
+
+	exp = gtk_expander_new (_("XML syntax help"));
+	gtk_box_pack_start (GTK_BOX (vbox), exp, FALSE, FALSE, 0);
+	g_signal_connect (exp, "activate",
+			  G_CALLBACK (help_expand_cb), sped);
 
 #ifdef HAVE_GTKSOURCEVIEW
         sped->priv->text = gtk_source_view_new ();
