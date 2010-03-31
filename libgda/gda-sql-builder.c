@@ -1409,6 +1409,82 @@ gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
 		sel->limit_offset = (GdaSqlExpr*) use_part (part2, GDA_SQL_ANY_PART (sel));
 }
 
+/**
+ * gda_sql_builder_select_set_having
+ * @builder: a #GdaSqlBuilder object
+ * @cond_id: the ID of the expression to set as HAVING condition, or 0 to unset any previous HAVING condition
+ *
+ * Valid only for: SELECT statements
+ *
+ * Sets the HAVING condition of the statement
+ *
+ * Since: 4.2
+ */
+void
+gda_sql_builder_select_set_having (GdaSqlBuilder *builder, guint cond_id)
+{
+	GdaSqlStatementSelect *sel;
+
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+
+	SqlPart *p = NULL;
+	if (cond_id > 0) {
+		p = get_part (builder, cond_id, GDA_SQL_ANY_EXPR);
+		if (!p)
+			return;
+	}
+
+	sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+	if (sel->having_cond)
+		gda_sql_expr_free (sel->having_cond);
+	sel->having_cond = (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (sel));
+}
+
+/**
+ * gda_sql_builder_select_group_by
+ * @builder: a #GdaSqlBuilder object
+ * @expr_id: the ID of the expression to set use in the GROUP BY clause, or 0 to unset any previous GROUP BY clause
+ *
+ * Valid only for: SELECT statements
+ *
+ * Adds the @expr_id expression to the GROUP BY clause's expressions list
+ *
+ * Since: 4.2
+ */
+void
+gda_sql_builder_select_group_by (GdaSqlBuilder *builder, guint expr_id)
+{
+	GdaSqlStatementSelect *sel;
+
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+
+	SqlPart *p = NULL;
+	if (expr_id > 0) {
+		p = get_part (builder, expr_id, GDA_SQL_ANY_EXPR);
+		if (!p)
+			return;
+	}
+
+	sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+	if (p)
+		sel->group_by = g_slist_append (sel->group_by,
+						(GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (sel)));
+	else if (sel->group_by) {
+		g_slist_foreach (sel->group_by, (GFunc)	gda_sql_expr_free, NULL);
+		g_slist_free (sel->group_by);
+		sel->group_by = NULL;
+	}
+}
 
 /**
  * gda_sql_builder_add_function

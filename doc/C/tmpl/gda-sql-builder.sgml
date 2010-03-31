@@ -367,6 +367,24 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 @limit_offest_expr_id: 
 
 
+<!-- ##### FUNCTION gda_sql_builder_select_set_having ##### -->
+<para>
+
+</para>
+
+@builder: 
+@cond_id: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_select_group_by ##### -->
+<para>
+
+</para>
+
+@builder: 
+@expr_id: 
+
+
 <!-- ##### FUNCTION gda_sql_builder_compound_add_sub_select ##### -->
 <para>
 

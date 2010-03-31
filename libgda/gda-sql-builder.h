@@ -120,6 +120,9 @@ void              gda_sql_builder_select_set_distinct (GdaSqlBuilder *builder,
 void              gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
 						    guint limit_count_expr_id, guint limit_offest_expr_id);
 
+void              gda_sql_builder_select_set_having (GdaSqlBuilder *builder, guint cond_id);
+void              gda_sql_builder_select_group_by (GdaSqlBuilder *builder, guint expr_id);
+
 /* COMPOUND SELECT Statement API */
 void              gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompoundType compound_type);
 void              gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst, gboolean steal);

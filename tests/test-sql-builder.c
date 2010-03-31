@@ -42,6 +42,7 @@ static GdaSqlStatement *build8 (void);
 static GdaSqlStatement *build9 (void);
 static GdaSqlStatement *build10 (void);
 static GdaSqlStatement *build11 (void);
+static GdaSqlStatement *build12 (void);
 
 ATest tests[] = {
 	{"build0", build0, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"*\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]}}}"},
@@ -55,7 +56,8 @@ ATest tests[] = {
 	{"build8", build8, "{\"sql\":null,\"stmt_type\":\"DELETE\",\"contents\":{\"table\":\"mytable\",\"condition\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"id\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"id\",\"descr\":null,\"type\":\"int\",\"is_param\":true,\"nullok\":false}}}}}}"},
 	{"build9", build9, "{\"sql\":null,\"stmt_type\":\"INSERT\",\"contents\":{\"table\":\"mytable\",\"fields\":[\"session\",\"name\"],\"values\":[[{\"value\":\"NULL\"},{\"value\":\"NULL\"}]]}}"},
 	{"build10", build10, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"}}}"},
-	{"build11", build11, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"distinct_on\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"},\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"},\"offset\":{\"value\":\"2\"}}}"}
+	{"build11", build11, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"distinct_on\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"},\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"},\"offset\":{\"value\":\"2\"}}}"},
+	{"build12", build12, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"store_name\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"func\":{\"function_name\":\"sum\",\"function_args\":[{\"value\":\"sales\",\"sqlident\":\"TRUE\"}]}}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"stores\",\"sqlident\":\"TRUE\"},\"table_name\":\"stores\"}]},\"group_by\":[{\"value\":\"store_name\",\"sqlident\":\"TRUE\"}],\"having\":{\"operation\":{\"operator\":\">\",\"operand0\":{\"func\":{\"function_name\":\"sum\",\"function_args\":[{\"value\":\"sales\",\"sqlident\":\"TRUE\"}]}},\"operand1\":{\"value\":\"10\"}}}}}"}
 };
 
 int
@@ -492,6 +494,46 @@ build11 (void)
 					  gda_sql_builder_add_expr (b, 0, NULL, G_TYPE_INT, 2));
 
 #ifdef DEBUG_NO
+	{
+		GdaStatement *st;
+		st = gda_sql_builder_get_statement (b, FALSE);
+		g_print ("[%s]\n", gda_statement_to_sql (st, NULL, NULL));
+		g_object_unref (st);
+	}
+#endif
+
+	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	g_object_unref (b);
+	return stmt;
+}
+
+/*
+ * SELECT store_name, sum (sales) FROM stores GROUP BY store_name HAVING sum (sales) > 10
+ */
+static GdaSqlStatement *
+build12 (void)
+{
+	GdaSqlBuilder *b;
+	GdaSqlStatement *stmt;
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "store_name"), 0);
+	gda_sql_builder_add_function (b, 1, "sum",
+				      gda_sql_builder_add_id (b, 0, "sales"), 0);
+	gda_sql_builder_add_field_id (b, 1, 0);
+
+	gda_sql_builder_select_add_target_id (b, 0,
+					   gda_sql_builder_add_id (b, 0, "stores"),
+					   NULL);
+	gda_sql_builder_select_group_by (b, gda_sql_builder_add_id (b, 0, "store_name"));
+	gda_sql_builder_select_set_having (b,
+					   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_GT,
+								     1,
+								     gda_sql_builder_add_expr (b, 0, NULL,
+											       G_TYPE_INT, 10),
+								     0));
+
+#ifdef DEBUG
 	{
 		GdaStatement *st;
 		st = gda_sql_builder_get_statement (b, FALSE);
