@@ -341,11 +341,7 @@ data_console_new (BrowserConnection *bcnc)
 static void
 execute_clicked_cb (GtkButton *button, DataConsole *dconsole)
 {
-	if (dconsole->priv->agroup) {
-		GtkAction *action;
-		action = gtk_action_group_get_action (dconsole->priv->agroup, "ComposeMode");
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), FALSE);
-	}
+	data_console_execute (dconsole);
 }
 
 static void
@@ -428,7 +424,6 @@ create_widget (DataConsole *dconsole, GArray *sources_array, GError **error)
 	gtk_widget_show_all (vp);
 	return sw;
 }
-
 
 /*
  * UI actions
@@ -557,4 +552,21 @@ data_console_get_text (DataConsole *console)
 	g_return_val_if_fail (IS_DATA_CONSOLE (console), NULL);
 	
 	return spec_editor_get_xml_text (console->priv->sped);
+}
+
+/**
+ * data_console_execute
+ * @console: a #DataConsole widget
+ *
+ * Execute's @console's specs, if possible
+ */
+void
+data_console_execute (DataConsole *console)
+{
+	g_return_if_fail (IS_DATA_CONSOLE (console));
+	if (console->priv->agroup) {
+		GtkAction *action;
+		action = gtk_action_group_get_action (console->priv->agroup, "ComposeMode");
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), FALSE);
+	}
 }

@@ -48,8 +48,9 @@ struct _DataManagerPerspectiveClass
 	GtkVBoxClass                parent_class;
 };
 
-GType                data_manager_perspective_get_type               (void) G_GNUC_CONST;
-BrowserPerspective  *data_manager_perspective_new                    (BrowserWindow *bwin);
+GType                data_manager_perspective_get_type (void) G_GNUC_CONST;
+BrowserPerspective  *data_manager_perspective_new      (BrowserWindow *bwin);
+void                 data_manager_perspective_new_tab  (DataManagerPerspective *dmp, const gchar *xml_spec);
 
 G_END_DECLS
 

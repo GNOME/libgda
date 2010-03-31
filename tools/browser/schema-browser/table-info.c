@@ -34,6 +34,8 @@
 #include "schema-browser-perspective.h"
 #include "../browser-page.h"
 #include "../browser-stock-icons.h"
+#include "../browser-window.h"
+#include "../data-manager/data-manager-perspective.h"
 
 struct _TableInfoPrivate {
 	BrowserConnection *bcnc;
@@ -456,9 +458,39 @@ action_add_to_fav_cb (GtkAction *action, TableInfo *tinfo)
 	g_free (fav.contents);
 }
 
+static void
+action_view_contents_cb  (GtkAction *action, TableInfo *tinfo)
+{
+	if (! tinfo->priv->table_short_name)
+		return;
+
+	BrowserWindow *bwin;
+	BrowserPerspective *pers;
+	bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
+	pers = browser_window_change_perspective (bwin, "Data manager");
+	TO_IMPLEMENT;
+
+	xmlDocPtr doc;
+	xmlNodePtr node, topnode;
+	xmlChar *contents;
+	int size;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	topnode = xmlNewDocNode (doc, NULL, BAD_CAST "data", NULL);
+	xmlDocSetRootElement (doc, topnode);
+	node = xmlNewChild (topnode, NULL, BAD_CAST "table", NULL);
+	xmlSetProp (node, BAD_CAST "name", BAD_CAST tinfo->priv->table_short_name);
+	xmlDocDumpFormatMemory (doc, &contents, &size, 1);
+	xmlFreeDoc (doc);
+
+	data_manager_perspective_new_tab (DATA_MANAGER_PERSPECTIVE (pers), (gchar*) contents);
+	xmlFree (contents);
+}
+
 static GtkActionEntry ui_actions[] = {
 	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("_Favorite"), NULL, N_("Add table to favorites"),
 	  G_CALLBACK (action_add_to_fav_cb)},
+	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View contents"),
+	  G_CALLBACK (action_view_contents_cb)},
 };
 static const gchar *ui_actions_info =
 	"<ui>"
@@ -467,6 +499,7 @@ static const gchar *ui_actions_info =
 	"  <toolbar name='ToolBar'>"
 	"    <separator/>"
 	"    <toolitem action='AddToFav'/>"
+	"    <toolitem action='ViewContents'/>"
 	"  </toolbar>"
 	"</ui>";
 

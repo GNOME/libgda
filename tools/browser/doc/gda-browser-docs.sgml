@@ -11,6 +11,7 @@
 <!ENTITY BrowserFavorites SYSTEM "xml/browser-favorites.xml">
 <!ENTITY BrowserPage SYSTEM "xml/browser-page.xml">
 <!ENTITY BrowserPerspective SYSTEM "xml/browser-perspective.xml">
+<!ENTITY DataManagerPerspective SYSTEM "xml/data-manager-perspective.xml">
 <!ENTITY CCGrayBar SYSTEM "xml/cc-gray-bar.xml">
 <!ENTITY PopupContainer SYSTEM "xml/popup-container.xml">
 ]>
@@ -140,6 +141,15 @@
       </para>
       &CCGrayBar;
       &PopupContainer;
+    </chapter>
+
+    <chapter id="perspectives">
+      <title>Perspectives' objects</title>
+      <para>
+	This section is a reference to some of the existing perspectives and the associated
+	widgets.
+      </para>
+      &DataManagerPerspective;
     </chapter>
   </part>
 

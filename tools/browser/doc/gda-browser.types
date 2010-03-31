@@ -6,3 +6,4 @@ browser_perspective_get_type
 browser_page_get_type
 cc_gray_bar_get_type
 popup_container_get_type
+data_manager_perspective_get_type

@@ -326,3 +326,42 @@ data_manager_perspective_get_actions_ui (BrowserPerspective *bpers)
 {
 	return ui_actions_info;
 }
+
+/**
+ * data_manager_perspective_new_tab
+ * @dmp: a #DataManagerPerspective perspective
+ * @xml_spec: the XML specifications to use
+ *
+ * Make @dmp create a new page (unless the current one is empty)
+ */
+void
+data_manager_perspective_new_tab (DataManagerPerspective *dmp, const gchar *xml_spec)
+{
+	gint current;
+	GtkWidget *page = NULL;
+
+	g_return_if_fail (IS_DATA_MANAGER_PERSPECTIVE (dmp));
+	current = gtk_notebook_get_current_page (GTK_NOTEBOOK (dmp->priv->notebook));
+	if (current >= 0) {
+		page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (dmp->priv->notebook), current);
+		if (! IS_DATA_CONSOLE (page))
+			page = NULL;
+		else {
+			gchar *text;
+			text = data_console_get_text (DATA_CONSOLE (page));
+			if (text && *text)
+				page = NULL;
+			g_free (text);
+		}
+	}
+
+	if (!page) {
+		add_new_data_console (BROWSER_PERSPECTIVE (dmp));
+		current = gtk_notebook_get_current_page (GTK_NOTEBOOK (dmp->priv->notebook));
+		page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (dmp->priv->notebook), current);
+		g_assert (IS_DATA_CONSOLE (page));
+	}
+
+	data_console_set_text (DATA_CONSOLE (page), xml_spec); 
+	data_console_execute (DATA_CONSOLE (page));
+}

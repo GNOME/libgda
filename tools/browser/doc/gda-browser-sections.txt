@@ -8,6 +8,7 @@ browser_window_get_connection
 browser_window_push_status
 browser_window_pop_status
 browser_window_customize_perspective_ui
+browser_window_change_perspective
 <SUBSECTION Standard>
 BROWSER_WINDOW
 BROWSER_IS_WINDOW
@@ -31,9 +32,11 @@ browser_core_take_connection
 browser_core_get_connections
 browser_core_close_connection
 browser_core_quit
+BrowserPerspectiveFactory
 browser_core_get_default_factory
 browser_core_set_default_factory
 browser_core_get_factories
+browser_core_get_factory
 <SUBSECTION Standard>
 BROWSER_CORE
 BROWSER_IS_CORE
@@ -133,7 +136,7 @@ BROWSER_PERSPECTIVE_TYPE
 BROWSER_PERSPECTIVE
 IS_BROWSER_PERSPECTIVE
 BROWSER_PERSPECTIVE_GET_CLASS
-BrowserPerspectiveIface
+BrowserPerspective
 browser_perspective_get_type
 browser_perspective_get_actions_group
 browser_perspective_get_actions_ui
@@ -171,3 +174,13 @@ IS_POPUP_CONTAINER
 IS_POPUP_CONTAINER_CLASS
 </SECTION>
 
+<SECTION>
+<FILE>data-manager-perspective</FILE>
+DATA_MANAGER_PERSPECTIVE_TYPE
+DATA_MANAGER_PERSPECTIVE
+IS_DATA_MANAGER_PERSPECTIVE
+DATA_MANAGER_PERSPECTIVE_GET_CLASS
+DataManagerPerspective
+data_manager_perspective_get_type
+data_manager_perspective_new_tab
+</SECTION>

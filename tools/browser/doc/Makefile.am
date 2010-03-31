@@ -35,14 +35,17 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 	-I$(top_srcdir)/tools/browser \
         $(LIBGDA_CFLAGS) \
         $(GTK_CFLAGS) \
+	$(GTKSOURCEVIEW_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
 
-GTKDOC_LIBS =  $(top_builddir)/tools/browser/libbrowser.la \
+GTKDOC_LIBS = $(top_builddir)/tools/browser/data-manager/libperspective.la \
+	$(top_builddir)/tools/browser/libbrowser.la \
 	$(top_builddir)/tools/browser/common/libcommon.la \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
 	$(LIBGDA_LIBS) \
-	$(GTK_LIBS)
+	$(GTK_LIBS) \
+	$(GTKSOURCEVIEW_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb
 MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="binreloc"

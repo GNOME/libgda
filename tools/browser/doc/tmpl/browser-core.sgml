@@ -125,6 +125,15 @@ Singleton holding the global browser information
 
 
 
+<!-- ##### STRUCT BrowserPerspectiveFactory ##### -->
+<para>
+
+</para>
+
+@perspective_name: 
+@menu_shortcut: 
+@perspective_create: 
+
 <!-- ##### FUNCTION browser_core_get_default_factory ##### -->
 <para>
 
@@ -146,6 +155,15 @@ Singleton holding the global browser information
 
 </para>
 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_core_get_factory ##### -->
+<para>
+
+</para>
+
+@factory: 
 @Returns: 
 
 

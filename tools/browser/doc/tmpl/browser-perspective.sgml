@@ -49,15 +49,11 @@ A "perspective" in a #BrowserWindow window
 @obj: 
 
 
-<!-- ##### STRUCT BrowserPerspectiveIface ##### -->
+<!-- ##### STRUCT BrowserPerspective ##### -->
 <para>
 
 </para>
 
-@g_iface: 
-@i_get_actions_group: 
-@i_get_actions_ui: 
-@i_page_tab_label_change: 
 
 <!-- ##### FUNCTION browser_perspective_get_type ##### -->
 <para>

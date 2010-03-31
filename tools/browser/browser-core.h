@@ -67,8 +67,9 @@ void            browser_core_close_connection       (BrowserConnection *bcnc);
 void            browser_core_quit                   (void);
 
 BrowserPerspectiveFactory *browser_core_get_default_factory    (void);
+BrowserPerspectiveFactory *browser_core_get_factory (const gchar *factory);
 void           browser_core_set_default_factory (const gchar *factory);
-const GSList       *browser_core_get_factories          (void);
+const GSList  *browser_core_get_factories          (void);
 
 G_END_DECLS
 

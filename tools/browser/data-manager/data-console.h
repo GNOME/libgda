@@ -52,6 +52,7 @@ GType                    data_console_get_type (void) G_GNUC_CONST;
 GtkWidget               *data_console_new      (BrowserConnection *bcnc);
 void                     data_console_set_text (DataConsole *console, const gchar *text);
 gchar                   *data_console_get_text (DataConsole *console);
+void                     data_console_execute  (DataConsole *console);
 
 G_END_DECLS
 

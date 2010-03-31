@@ -81,3 +81,13 @@ Top level browser window
 @ui_info: 
 
 
+<!-- ##### FUNCTION browser_window_change_perspective ##### -->
+<para>
+
+</para>
+
+@bwin: 
+@perspective: 
+@Returns: 
+
+

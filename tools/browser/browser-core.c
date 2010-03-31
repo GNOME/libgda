@@ -295,6 +295,28 @@ browser_core_get_connections (void)
 }
 
 /**
+ * browser_core_get_factory
+ * @factory: the name of the requested factory
+ *
+ * Get a pointer to a #BrowserPerspectiveFactory, from its name
+ *
+ * Returns: a pointer to the #BrowserPerspectiveFactory, or %NULL if not found
+ */
+BrowserPerspectiveFactory *
+browser_core_get_factory (const gchar *factory)
+{
+	GSList *list;
+	g_return_val_if_fail (factory, NULL);
+	_bcore = browser_core_get ();
+	for (list = _bcore->priv->factories; list; list = list->next) {
+		BrowserPerspectiveFactory *bpf = BROWSER_PERSPECTIVE_FACTORY (list->data);
+		if (!g_ascii_strcasecmp (bpf->perspective_name, factory))
+			return bpf;
+	}
+	return NULL;
+}
+
+/**
  * browser_core_get_default_factory
  *
  * Get the default #BrowserPerspectiveFactory used when making new #BrowserWindow if none

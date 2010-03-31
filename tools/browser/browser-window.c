@@ -80,6 +80,7 @@ struct _BrowserWindowPrivate {
 	GtkWidget         *spinner;
 	GtkUIManager      *ui_manager;
 	GtkActionGroup    *agroup;
+	GtkActionGroup    *perspectives_actions;
 	gboolean           updating_transaction_status;
 
 	GtkToolbarStyle    toolbar_style;
@@ -453,6 +454,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	mid = gtk_ui_manager_new_merge_id (bwin->priv->ui_manager);
 	agroup = gtk_action_group_new ("Perspectives");
 	gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, agroup, 0);
+	bwin->priv->perspectives_actions = agroup;
 	g_object_unref (agroup);
 
 	GtkAction *active_action = NULL;
@@ -1000,7 +1002,7 @@ about_cb (GtkAction *action, BrowserWindow *bwin)
         g_free (path);
 
         dialog = gtk_about_dialog_new ();
-        gtk_about_dialog_set_name (GTK_ABOUT_DIALOG (dialog), _("Database browser"));
+	gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database browser"));
         gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), PACKAGE_VERSION);
         gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 2009 GNOME Foundation");
 	gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (dialog), _("Database access services for the GNOME Desktop"));
@@ -1202,4 +1204,55 @@ browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective
 										pdata->customized_ui,
 										-1, NULL);
 	}
+}
+
+/**
+ * browser_window_change_perspective
+ * @bwin: a #BrowserWindow
+ * @perspective: the name of the perspective to change to
+ *
+ * Make @bwin switch to the perspective named @perspective
+ *
+ * Returns: a pointer to the #BrowserPerspective, or %NULL if not found
+ */
+BrowserPerspective *
+browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective)
+{
+	BrowserPerspectiveFactory *bpf;
+	BrowserPerspective *bpers = NULL;
+	PerspectiveData *current_pdata;
+
+	g_return_val_if_fail (BROWSER_IS_WINDOW (bwin), NULL);
+	g_return_val_if_fail (perspective, NULL);
+
+	current_pdata = bwin->priv->current_perspective;
+
+	bpf = browser_core_get_factory (perspective);
+	if (!bpf)
+		return NULL;
+	GList *actions, *list;
+	actions = gtk_action_group_list_actions (bwin->priv->perspectives_actions);
+	for (list = actions; list; list = list->next) {
+		GtkAction *action = (GtkAction *) list->data;
+		BrowserPerspectiveFactory *pf;
+		pf = BROWSER_PERSPECTIVE_FACTORY (g_object_get_data (G_OBJECT (action), "pers"));
+		if (pf == bpf) {
+			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
+			PerspectiveData *pdata = bwin->priv->current_perspective;
+			if (pdata && ! g_ascii_strcasecmp (pdata->factory->perspective_name, perspective))
+				bpers = pdata->perspective_widget;
+			break;
+		}
+	}
+	g_list_free (actions);
+
+	browser_show_notice (GTK_WINDOW (bwin), "Perspective change",
+			     _("The current perspective has changed to the '%s' perspective, you "
+			       "can switch back to previous perspective through the "
+			       "'Perspective/%s' menu, or using the '%s' shortcut"),
+			     bwin->priv->current_perspective->factory->perspective_name,
+			     current_pdata->factory->perspective_name,
+			     current_pdata->factory->menu_shortcut);
+
+	return bpers;
 }

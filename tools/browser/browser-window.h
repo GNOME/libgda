@@ -60,6 +60,8 @@ void                browser_window_customize_perspective_ui (BrowserWindow *bwin
 							     GtkActionGroup *actions_group,
 							     const gchar *ui_info);
 
+BrowserPerspective *browser_window_change_perspective     (BrowserWindow *bwin, const gchar *perspective);
+
 G_END_DECLS
 
 #endif
