@@ -532,6 +532,17 @@ create_sources_array (GSList *sources_list, GError **error)
 	return array;
 }
 
+static gint
+data_source_compare_func (DataSource *s1, DataSource *s2)
+{
+	if (source_depends_on (s1, s2))
+		return 1;
+	else if (source_depends_on (s2, s1))
+		return -1;
+	else
+		return 0;
+}
+
 static GSList *
 compute_sources_list (SpecEditor *sped, GError **error)
 {
@@ -577,7 +588,7 @@ compute_sources_list (SpecEditor *sped, GError **error)
 	}
 	xmlFreeDoc (doc);
 	doc = NULL;
-	return g_slist_reverse (sources_list);
+	return g_slist_sort (sources_list, (GCompareFunc) data_source_compare_func);
 
  onerror:
 	if (doc)
