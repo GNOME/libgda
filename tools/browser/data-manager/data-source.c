@@ -398,11 +398,23 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 		xmlFree (tname);
 		return FALSE;
 	}
+	gda_sql_builder_select_set_limit (b,
+					  gda_sql_builder_add_expr (b, 0, NULL,
+								    G_TYPE_INT, DEFAULT_DATA_SELECT_LIMIT),
+					  0);
 
 	for (i = 0, list = mtable->columns; list; i++, list = list->next) {
 		GdaMetaTableColumn *mcol;
 		mcol = GDA_META_TABLE_COLUMN (list->data);
 		gda_sql_builder_select_add_field (b, mcol->column_name, NULL, NULL);
+
+		if (mcol->pkey) {
+			/* ORDER BY */
+			gda_sql_builder_select_order_by (b,
+							 gda_sql_builder_add_id (b, 0,
+										 mcol->column_name),
+							 FALSE, NULL);
+		}
 
 		/* export value */
 		gchar *tmp;
@@ -512,7 +524,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 				  G_CALLBACK (params_changed_cb), source);
 	}
 
-	/* g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL)); */
+	/*g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL));*/
 	g_object_unref (b);
 
 	return source->priv->stmt ? TRUE : FALSE;

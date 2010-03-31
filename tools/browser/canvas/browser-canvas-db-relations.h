@@ -51,17 +51,19 @@ struct _BrowserCanvasDbRelationsClass
 };
 
 /* generic widget's functions */
-GType            browser_canvas_db_relations_get_type        (void) G_GNUC_CONST;
+GType               browser_canvas_db_relations_get_type              (void) G_GNUC_CONST;
 
-GtkWidget       *browser_canvas_db_relations_new             (GdaMetaStruct *mstruct);
+GtkWidget          *browser_canvas_db_relations_new                   (GdaMetaStruct *mstruct);
 
-BrowserCanvasTable *browser_canvas_db_relations_get_table_item  (BrowserCanvasDbRelations *canvas, GdaMetaTable *table);
-BrowserCanvasTable *browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas, 
-							    const GValue *table_catalog,
-							    const GValue *table_schema,
-							    const GValue *table_name);
-void                browser_canvas_db_relations_select_table (BrowserCanvasDbRelations *canvas,
-							      BrowserCanvasTable *table);
+BrowserCanvasTable *browser_canvas_db_relations_get_table_item        (BrowserCanvasDbRelations *canvas,
+								       GdaMetaTable *table);
+BrowserCanvasTable *browser_canvas_db_relations_add_table             (BrowserCanvasDbRelations *canvas, 
+								       const GValue *table_catalog,
+								       const GValue *table_schema,
+								       const GValue *table_name);
+void                browser_canvas_db_relations_select_table          (BrowserCanvasDbRelations *canvas,
+								       BrowserCanvasTable *table);
+gchar              *browser_canvas_db_relations_items_to_data_manager (BrowserCanvasDbRelations *canvas);
 
 G_END_DECLS
 

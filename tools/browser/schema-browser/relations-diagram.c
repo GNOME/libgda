@@ -30,6 +30,8 @@
 #include "../common/popup-container.h"
 #include "../browser-page.h"
 #include "../browser-perspective.h"
+#include "../browser-window.h"
+#include "../data-manager/data-manager-perspective.h"
 
 struct _RelationsDiagramPrivate {
 	BrowserConnection *bcnc;
@@ -58,6 +60,8 @@ static void relations_diagram_get_property (GObject *object,
 
 /* BrowserPage interface */
 static void                 relations_diagram_page_init (BrowserPageIface *iface);
+static GtkActionGroup      *relations_diagram_page_get_actions_group (BrowserPage *page);
+static const gchar         *relations_diagram_page_get_actions_ui (BrowserPage *page);
 static GtkWidget           *relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram);
@@ -99,8 +103,8 @@ relations_diagram_class_init (RelationsDiagramClass *klass)
 static void
 relations_diagram_page_init (BrowserPageIface *iface)
 {
-	iface->i_get_actions_group = NULL;
-	iface->i_get_actions_ui = NULL;
+	iface->i_get_actions_group = relations_diagram_page_get_actions_group;
+	iface->i_get_actions_ui = relations_diagram_page_get_actions_ui;
 	iface->i_get_tab_label = relations_diagram_page_get_tab_label;
 }
 
@@ -491,6 +495,56 @@ relations_diagram_get_fav_id (RelationsDiagram *diagram)
 	g_return_val_if_fail (IS_RELATIONS_DIAGRAM (diagram), -1);
 	return diagram->priv->fav_id;
 }
+
+static void
+action_view_contents_cb  (GtkAction *action, RelationsDiagram *diagram)
+{
+	gchar *str;
+	str = browser_canvas_db_relations_items_to_data_manager (BROWSER_CANVAS_DB_RELATIONS (diagram->priv->canvas));
+	g_print ("%s\n", str);
+
+	if (str) {
+		BrowserWindow *bwin;
+		BrowserPerspective *pers;
+		bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) diagram);
+		pers = browser_window_change_perspective (bwin, "Data manager");
+
+		data_manager_perspective_new_tab (DATA_MANAGER_PERSPECTIVE (pers), str);
+		g_free (str);
+	}
+}
+
+
+static GtkActionEntry ui_actions[] = {
+	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View contents"),
+	  G_CALLBACK (action_view_contents_cb)},
+};
+static const gchar *ui_actions_info =
+	"<ui>"
+	"  <menubar name='MenuBar'>"
+	"  </menubar>"
+	"  <toolbar name='ToolBar'>"
+	"    <separator/>"
+	"    <toolitem action='ViewContents'/>"
+	"  </toolbar>"
+	"</ui>";
+
+static GtkActionGroup *
+relations_diagram_page_get_actions_group (BrowserPage *page)
+{
+	GtkActionGroup *agroup;
+	agroup = gtk_action_group_new ("SchemaBrowserRelationsDiagramActions");
+	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
+	
+	return agroup;
+}
+
+static const gchar *
+relations_diagram_page_get_actions_ui (BrowserPage *page)
+{
+	return ui_actions_info;
+}
+
 
 static GtkWidget *
 relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)

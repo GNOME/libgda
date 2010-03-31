@@ -647,3 +647,58 @@ browser_canvas_db_relations_select_table (BrowserCanvasDbRelations *canvas,
 	browser_canvas_item_toggle_select (BROWSER_CANVAS (canvas), (BrowserCanvasItem*) table);
 }
 
+/**
+ * browser_canvas_db_relations_items_to_data_manager
+ */
+gchar *
+browser_canvas_db_relations_items_to_data_manager (BrowserCanvasDbRelations *canvas)
+{
+	gchar *retval = NULL;
+	GSList *list;
+	xmlDocPtr doc;
+	xmlNodePtr topnode;
+
+	g_return_val_if_fail (IS_BROWSER_CANVAS (canvas), NULL);
+	
+	/* create XML doc and root node */
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	topnode = xmlNewDocNode (doc, NULL, BAD_CAST "data", NULL);
+        xmlDocSetRootElement (doc, topnode);
+	
+	/* actually serialize all the items which can be serialized */
+	for (list = BROWSER_CANVAS (canvas)->priv->items; list; list = list->next) {
+                BrowserCanvasItem *item = BROWSER_CANVAS_ITEM (list->data);
+		GdaMetaTable *mtable;
+
+		mtable = g_hash_table_lookup (canvas->priv->hash_tables, item);
+		if (mtable) {
+			xmlNodePtr node;
+			node = xmlNewChild (topnode, NULL, BAD_CAST "table", NULL);
+			xmlSetProp (node, BAD_CAST "name",
+				    BAD_CAST GDA_META_DB_OBJECT (mtable)->obj_short_name);
+
+			GSList *fklist;
+			for (fklist = mtable->fk_list; fklist; fklist = fklist->next) {
+				GdaMetaTableForeignKey *fk = (GdaMetaTableForeignKey*) fklist->data;
+				GooCanvasItem *fk_item;
+				
+				fk_item = g_hash_table_lookup (canvas->priv->hash_fkeys, fk);
+				if (fk_item)
+					xmlNewChild (node, NULL, BAD_CAST "link_with",
+						     BAD_CAST fk->depend_on->obj_short_name);
+			}
+
+		}
+	}
+
+	/* create buffer from XML tree */
+	xmlChar *xstr = NULL;
+	xmlDocDumpFormatMemory (doc, &xstr, NULL, 1);
+	if (xstr) {
+		retval = g_strdup ((gchar *) xstr);
+		xmlFree (xstr);
+	}
+	xmlFreeDoc (doc);
+	
+	return retval;	
+}

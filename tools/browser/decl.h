@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Vivien Malerba <malerba@gnome-db.org>
@@ -50,6 +50,8 @@ typedef struct {
 #define ORDER_KEY_DATA_MANAGERS 3
 
 #define DEFAULT_FAVORITES_SIZE 150
+
+#define DEFAULT_DATA_SELECT_LIMIT 500
 
 G_END_DECLS
 

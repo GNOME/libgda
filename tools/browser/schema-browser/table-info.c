@@ -468,7 +468,6 @@ action_view_contents_cb  (GtkAction *action, TableInfo *tinfo)
 	BrowserPerspective *pers;
 	bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
 	pers = browser_window_change_perspective (bwin, "Data manager");
-	TO_IMPLEMENT;
 
 	xmlDocPtr doc;
 	xmlNodePtr node, topnode;
@@ -507,7 +506,7 @@ static GtkActionGroup *
 table_info_page_get_actions_group (BrowserPage *page)
 {
 	GtkActionGroup *agroup;
-	agroup = gtk_action_group_new ("SchemaBrowserRelationsDiagramActions");
+	agroup = gtk_action_group_new ("SchemaBrowserTableInfoActions");
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
 	
 	return agroup;
