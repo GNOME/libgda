@@ -178,8 +178,12 @@ static void help_expand_cb (GtkWidget *exp, SpecEditor *sped)
 			  " - <span foreground=\"#4e9a06\">\"title\"</span> to specify a title.\n\n" \
 			  "Use the <span foreground=\"#4e9a06\"><tt>&lt;query&gt;</tt></span> tag to specify an SQL SELECT statement, as the contents of the tag. Linkage to other\n" \
 			  "data sources can be achieved using variables in the SELECT's SQL.\n\n" \
-			  "Use the <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> tag to define a data source which will display the contents of a table. This tag:\n" \
+			  "Use the <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> node to define a data source which will display the contents of a table. This tag:\n" \
 			  " - requires the <span foreground=\"#4e9a06\">\"name\"</span> attribute which represents the table name.\n" \
+			  " - can contain a <span foreground=\"#4e9a06\"><tt>&lt;depend&gt;</tt></span> node which defines a dependency on another data source with the \n" \
+			  "   <span foreground=\"#4e9a06\">\"foreign_key_table\"</span> attribute defining the name of the table to which there are foreign keys\n" \
+			  "   used to determine the dependency, and the <span foreground=\"#4e9a06\">\"id\"</span> attribute can specify a data source ID if different than\n" \
+			  "   the aforementioned table.\n"			\
 			  "</small>")
 	if (! sped->priv->help) {
 		sped->priv->help = gtk_label_new ("");

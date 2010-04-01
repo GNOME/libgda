@@ -448,14 +448,14 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 	/* linking */
 	xmlNodePtr subnode;
 	for (subnode = node->children; subnode; subnode = subnode->next) {
-		if (!strcmp ((gchar*)subnode->name, "link_with")) {
-			xmlChar *contents, *id;
+		if (!strcmp ((gchar*)subnode->name, "depend")) {
+			xmlChar *fk_table, *id;
 			GdaMetaTable *mlinked;
 			
-			contents = xmlNodeGetContent (subnode);
-			mlinked = get_meta_table (source, (gchar*) contents, error);
+			fk_table = xmlGetProp (subnode, BAD_CAST "foreign_key_table");
+			mlinked = get_meta_table (source, (gchar*) fk_table, error);
 			if (!mlinked) {
-				xmlFree (contents);
+				xmlFree (fk_table);
 				g_object_unref (b);	
 				return FALSE;
 			}
@@ -471,8 +471,8 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 			}
 			if (!fk) {
 				g_set_error (error, 0, 0,
-					     _("Could not find any foreign key to \"%s\""), (gchar*) contents);
-				xmlFree (contents);
+					     _("Could not find any foreign key to \"%s\""), (gchar*) fk_table);
+				xmlFree (fk_table);
 				if (id) xmlFree (id);
 				g_object_unref (b);	
 				return FALSE;
@@ -480,8 +480,8 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 			else if (fk->cols_nb <= 0) {
 				g_set_error (error, 0, 0,
 					     _("The fields involved in the foreign key to \"%s\" are not known"),
-					     (gchar*) contents);
-				xmlFree (contents);
+					     (gchar*) fk_table);
+				xmlFree (fk_table);
 				if (id) xmlFree (id);
 				g_object_unref (b);	
 				return FALSE;
@@ -492,7 +492,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 				col = GDA_META_TABLE_COLUMN (g_slist_nth_data (mlinked->columns, fk->fk_cols_array [0]));
 				g_assert (col);
 				gda_sql_builder_add_id (b, 1, fk->fk_names_array [0]);
-				tmp = g_strdup_printf ("%s@%s", id ? (gchar*) id : (gchar*) contents,
+				tmp = g_strdup_printf ("%s@%s", id ? (gchar*) id : (gchar*) fk_table,
 						       fk->ref_pk_names_array [0]);
 				gda_sql_builder_add_param (b, 2, tmp, col->gtype, FALSE);
 				g_free (tmp);
@@ -503,7 +503,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 				TO_IMPLEMENT;
 			}
 
-			xmlFree (contents);
+			xmlFree (fk_table);
 			if (id)
 				xmlFree (id);
 			break;

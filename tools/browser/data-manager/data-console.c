@@ -266,7 +266,7 @@ data_console_new (BrowserConnection *bcnc)
 "\n    <!-- specifies that we want the contents of the 'orders' table, where the order ID \n" \
 "         depends on the selected customer's ID -->\n"						\
 "    <table name=\"orders\">\n" \
-"        <link_with>customers</link_with>\n" \
+"        <depend foreign_key_table=\"customers\"/>\n" \
 "    </table>\n" \
 "\n    <!-- specifies that we want the result of the execution of a SELECT query, notice the WHERE clause\n" \
 "          which enables to filter on the previously selected order ID-->\n" \

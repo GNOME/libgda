@@ -683,9 +683,11 @@ browser_canvas_db_relations_items_to_data_manager (BrowserCanvasDbRelations *can
 				GooCanvasItem *fk_item;
 				
 				fk_item = g_hash_table_lookup (canvas->priv->hash_fkeys, fk);
-				if (fk_item)
-					xmlNewChild (node, NULL, BAD_CAST "link_with",
-						     BAD_CAST fk->depend_on->obj_short_name);
+				if (fk_item) {
+					node = xmlNewChild (node, NULL, BAD_CAST "depend", NULL);
+					xmlSetProp (node, BAD_CAST "foreign_key_table",
+						    BAD_CAST fk->depend_on->obj_short_name);
+				}
 			}
 
 		}
