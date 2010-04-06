@@ -68,6 +68,7 @@ static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, Ta
 static void plugins_combo_changed_cb (GtkComboBox *combo, TablePreferences *tpref);
 
 enum {
+	DUMMY,
 	LAST_SIGNAL
 };
 

@@ -137,6 +137,7 @@ static const gchar         *query_console_page_get_actions_ui (BrowserPage *page
 static GtkWidget           *query_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 enum {
+	DUMMY,
 	LAST_SIGNAL
 };
 
