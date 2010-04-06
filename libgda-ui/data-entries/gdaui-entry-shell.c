@@ -319,7 +319,7 @@ contents_modified_cb (GdauiEntryShell *shell, gpointer unused)
 }
 
 static void mitem_activated_cb (GtkWidget *mitem, GdauiEntryShell *shell);
-static guint gdaui_entry_shell_refresh_attributes (GdauiEntryShell *shell);
+static GdaValueAttribute gdaui_entry_shell_refresh_attributes (GdauiEntryShell *shell);
 static gint
 event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 {
