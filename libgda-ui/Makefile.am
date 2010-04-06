@@ -235,7 +235,7 @@ Gdaui-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-ui-4.0.la
 		$(LIBGDA_CFLAGS) \
 		$(GTK_CFLAGS) \
 		$(GIO_CFLAGS) \
-		--add-include-path=$(top_srcdir)/libgda \
+		--add-include-path=$(top_builddir)/libgda \
 		--include=GL-1.0 \
 		--include=GObject-2.0 \
 		--include=libxml2-2.0 \
