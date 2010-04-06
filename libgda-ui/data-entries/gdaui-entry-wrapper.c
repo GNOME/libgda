@@ -603,7 +603,7 @@ gdaui_entry_wrapper_set_value_default (GdauiDataEntry *iface, const GValue *valu
 }
 
 static void
-gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask)
+gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute attrs, guint mask)
 {
 	GdauiEntryWrapper *mgwrap;
 
