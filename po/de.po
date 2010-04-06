@@ -23,8 +23,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-03-31 15:43+0000\n"
-"PO-Revision-Date: 2010-03-31 21:21+0100\n"
+"POT-Creation-Date: 2010-04-06 17:06+0000\n"
+"PO-Revision-Date: 2010-04-06 22:40+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -171,11 +171,11 @@ msgstr "Browser-Programm konnte nicht ausgeführt werden"
 #: ../tools/browser/data-manager/data-favorite-selector.c:201
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:629
-#: ../tools/browser/query-exec/query-console.c:689
-#: ../tools/browser/query-exec/query-console.c:828
-#: ../tools/browser/query-exec/query-console.c:873
-#: ../tools/browser/query-exec/query-console.c:927
-#: ../tools/browser/query-exec/query-console.c:977
+#: ../tools/browser/query-exec/query-console.c:690
+#: ../tools/browser/query-exec/query-console.c:829
+#: ../tools/browser/query-exec/query-console.c:874
+#: ../tools/browser/query-exec/query-console.c:928
+#: ../tools/browser/query-exec/query-console.c:978
 #: ../tools/browser/query-exec/query-favorite-selector.c:191
 #: ../tools/browser/query-exec/query-favorite-selector.c:243
 #: ../tools/browser/query-exec/query-favorite-selector.c:601
@@ -183,10 +183,10 @@ msgstr "Browser-Programm konnte nicht ausgeführt werden"
 #: ../tools/browser/query-exec/query-result.c:478
 #: ../tools/browser/schema-browser/favorite-selector.c:170
 #: ../tools/browser/schema-browser/favorite-selector.c:359
-#: ../tools/browser/schema-browser/relations-diagram.c:237
+#: ../tools/browser/schema-browser/relations-diagram.c:241
 #: ../tools/browser/schema-browser/table-info.c:454
-#: ../tools/browser/schema-browser/table-preferences.c:704
-#: ../tools/browser/schema-browser/table-preferences.c:777
+#: ../tools/browser/schema-browser/table-preferences.c:705
+#: ../tools/browser/schema-browser/table-preferences.c:778
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
 #: ../tools/gda-sql.c:269 ../tools/gda-sql.c:286 ../tools/gda-sql.c:425
 #: ../tools/gda-sql.c:1429 ../tools/gda-sql.c:1444 ../tools/gda-sql.c:1496
@@ -2359,7 +2359,7 @@ msgstr "Spaltenname konnte nicht erhalten werden werden"
 
 #: ../libgda/gda-tree-mgr-label.c:207
 #: ../tools/browser/canvas/browser-canvas-table.c:309
-#: ../tools/browser/data-manager/data-source.c:815
+#: ../tools/browser/data-manager/data-source.c:827
 msgid "No name"
 msgstr "Kein Name"
 
@@ -6924,28 +6924,28 @@ msgstr[1] "%d Tabellen im Schema »%s«:"
 msgid "None"
 msgstr "Kein"
 
-#: ../tools/browser/data-manager/data-console.c:193
+#: ../tools/browser/data-manager/data-console.c:194
 msgid "Data Manager"
 msgstr "Datenverwaltung"
 
-#: ../tools/browser/data-manager/data-console.c:211
-#: ../tools/browser/query-exec/query-console.c:335
+#: ../tools/browser/data-manager/data-console.c:212
+#: ../tools/browser/query-exec/query-console.c:336
 msgid "Variables' values:"
 msgstr "Werte der Variablen:"
 
-#: ../tools/browser/data-manager/data-console.c:245
-#: ../tools/browser/query-exec/query-console.c:314
+#: ../tools/browser/data-manager/data-console.c:246
+#: ../tools/browser/query-exec/query-console.c:315
 msgid "SQL code to execute:"
 msgstr "Auszuführender SQL-Code:"
 
-#: ../tools/browser/data-manager/data-console.c:291
-#: ../tools/browser/query-exec/query-console.c:362
-#: ../tools/browser/query-exec/query-console.c:426
+#: ../tools/browser/data-manager/data-console.c:292
+#: ../tools/browser/query-exec/query-console.c:363
+#: ../tools/browser/query-exec/query-console.c:427
 msgid "Clear"
 msgstr "Leeren"
 
-#: ../tools/browser/data-manager/data-console.c:291
-#: ../tools/browser/query-exec/query-console.c:362
+#: ../tools/browser/data-manager/data-console.c:292
+#: ../tools/browser/query-exec/query-console.c:363
 msgid ""
 "Clear the editor's\n"
 "contents"
@@ -6953,21 +6953,21 @@ msgstr ""
 "Inhalt des\n"
 "Editors leeren"
 
-#: ../tools/browser/data-manager/data-console.c:296
-#: ../tools/browser/query-exec/query-console.c:367
+#: ../tools/browser/data-manager/data-console.c:297
+#: ../tools/browser/query-exec/query-console.c:368
 msgid "Variables"
 msgstr "Variablen"
 
-#: ../tools/browser/data-manager/data-console.c:296
+#: ../tools/browser/data-manager/data-console.c:297
 msgid "Show variables needed"
 msgstr "Benötigte Variablen anzeigen"
 
-#: ../tools/browser/data-manager/data-console.c:302
-#: ../tools/browser/query-exec/query-console.c:373
+#: ../tools/browser/data-manager/data-console.c:303
+#: ../tools/browser/query-exec/query-console.c:374
 msgid "Execute"
 msgstr "Ausführen"
 
-#: ../tools/browser/data-manager/data-console.c:302
+#: ../tools/browser/data-manager/data-console.c:303
 msgid ""
 "Execute specified\n"
 "data manager"
@@ -6975,11 +6975,11 @@ msgstr ""
 "Angegebene Daten-\n"
 "verwaltung ausführen"
 
-#: ../tools/browser/data-manager/data-console.c:308
+#: ../tools/browser/data-manager/data-console.c:309
 msgid "View XML"
 msgstr "XML-Ansicht"
 
-#: ../tools/browser/data-manager/data-console.c:308
+#: ../tools/browser/data-manager/data-console.c:309
 msgid ""
 "View specifications\n"
 "as XML (advanced)"
@@ -6987,31 +6987,31 @@ msgstr ""
 "Spezifikationen als\n"
 "XML zeigen (fortgeschritten)"
 
-#: ../tools/browser/data-manager/data-console.c:326
+#: ../tools/browser/data-manager/data-console.c:327
 msgid "BBB:"
 msgstr "BBB:"
 
-#: ../tools/browser/data-manager/data-console.c:408
+#: ../tools/browser/data-manager/data-console.c:409
 #, c-format
 msgid "No data source defined"
 msgstr "Keine Datenquelle definiert"
 
-#: ../tools/browser/data-manager/data-console.c:467
-#: ../tools/browser/data-manager/spec-editor.c:554
-#: ../tools/browser/data-manager/spec-editor.c:612
+#: ../tools/browser/data-manager/data-console.c:468
+#: ../tools/browser/data-manager/spec-editor.c:569
+#: ../tools/browser/data-manager/spec-editor.c:627
 #, c-format
 msgid "Error parsing XML specifications"
 msgstr "Fehler beim Verarbeiten der XML-Spezifikation"
 
-#: ../tools/browser/data-manager/data-console.c:484
+#: ../tools/browser/data-manager/data-console.c:485
 msgid "_Toggle mode"
 msgstr "Modus umschal_ten"
 
-#: ../tools/browser/data-manager/data-console.c:484
+#: ../tools/browser/data-manager/data-console.c:485
 msgid "Switch between compose and execute modes"
 msgstr "Zwischen Erstellungs- und Ausführungsmodus umschalten"
 
-#: ../tools/browser/data-manager/data-console.c:528
+#: ../tools/browser/data-manager/data-console.c:529
 msgid "Data manager"
 msgstr "Datenverwaltung"
 
@@ -7024,7 +7024,7 @@ msgstr "Favorit konnte nicht entfernt werden: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:258
 #: ../tools/browser/data-manager/data-favorite-selector.c:628
-#: ../tools/browser/query-exec/query-console.c:688
+#: ../tools/browser/query-exec/query-console.c:689
 #: ../tools/browser/query-exec/query-favorite-selector.c:242
 #: ../tools/browser/query-exec/query-favorite-selector.c:600
 #: ../tools/browser/schema-browser/favorite-selector.c:358
@@ -7093,22 +7093,22 @@ msgstr "Inhalt von »%s«"
 msgid "Could not build SELECT statement"
 msgstr "SELECT-Anweisung konnte nicht erzeugt werden"
 
-#: ../tools/browser/data-manager/data-source.c:462
+#: ../tools/browser/data-manager/data-source.c:474
 #, c-format
 msgid "Could not find any foreign key to \"%s\""
 msgstr "Fremdschlüssel für »%s« konnte nicht gefunden werden"
 
-#: ../tools/browser/data-manager/data-source.c:470
+#: ../tools/browser/data-manager/data-source.c:482
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr "Die betroffenen Felder im Fremdschlüssel für »%s« sind unbekannt"
 
-#: ../tools/browser/data-manager/data-source.c:561
+#: ../tools/browser/data-manager/data-source.c:573
 #, c-format
 msgid "Statement to execute is not a selection statement"
 msgstr "Auszuführende Anweisung ist keine Auswahl-Anweisung"
 
-#: ../tools/browser/data-manager/data-source.c:691
+#: ../tools/browser/data-manager/data-source.c:703
 #, c-format
 msgid "No SELECT statement to execute"
 msgstr "Keine auszuführende SELECT-Anweisung"
@@ -7134,19 +7134,26 @@ msgid ""
 "other\n"
 "data sources can be achieved using variables in the SELECT's SQL.\n"
 "\n"
-"Use the <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> tag to "
+"Use the <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> node to "
 "define a data source which will display the contents of a table. This tag:\n"
 " - requires the <span foreground=\"#4e9a06\">\"name\"</span> attribute which "
 "represents the table name.\n"
+" - can contain a <span foreground=\"#4e9a06\"><tt>&lt;depend&gt;</tt></span> "
+"node which defines a dependency on another data source with the \n"
+"   <span foreground=\"#4e9a06\">\"foreign_key_table\"</span> attribute "
+"defining the name of the table to which there are foreign keys\n"
+"   used to determine the dependency, and the <span foreground=\"#4e9a06\">\"id"
+"\"</span> attribute can specify a data source ID if different than\n"
+"   the aforementioned table.\n"
 "</small>"
 msgstr ""
 "<small>Die Wurzel des XML müssen <span foreground=\"#4e9a06\"><tt>&lt;"
 "Daten&gt;</tt></span> sein, die eine oder mehrere Datenquellendefinitionen "
 "enthalten dürfen.\n"
-"Jede Datenquelle wird durch eine <span foreground=\"#4e9a06\"><tt>&lt;"
+"Jede Datenquelle wird durch einen <span foreground=\"#4e9a06\"><tt>&lt;"
 "query&gt;</tt></span>- oder <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
-"tt></span>-Knoten definiert, die die folgenden optionalen Attribute "
-"akzeptieren:\n"
+"tt></span>-Knoten definiert, der die folgenden optionalen Attribute "
+"akzeptiert:\n"
 " - <span foreground=\"#4e9a06\">»id«</span> zum Festlegen einer spezifischen "
 "Kennung der Datenquelle. Diese wird verwendet, wenn Datenquellen miteinander "
 "verknüpft werden;\n"
@@ -7163,9 +7170,16 @@ msgstr ""
 "anzeigt. Diese Markierung:\n"
 " - benötigt das <span foreground=\"#4e9a06\">»name«</span>-Attribute, welches "
 "den Tabellennamen repräsentiert.\n"
+" - kann einen <span foreground=\"#4e9a06\"><tt>&lt;depend&gt;</tt></span>-"
+"Knoten enthalten, der eine Abhängigkeit zu einer anderen Datenquelle \n"
+"   mit dem <span foreground=\"#4e9a06\">»foreign_key_table«</span>-Attribut "
+"definiert, welche den Namen der Tabelle angibt, für die abhängige\n"
+"   Fremdschlüssel definiert werden. Das <span foreground=\"#4e9a06\">»id«</"
+"span>-Attribute kann hierbei eine Datenquellenkennung angeben,\n"
+"   falls sich diese von der zuerst angegebenen Tabelle unterscheidet.\n"
 "</small>"
 
-#: ../tools/browser/data-manager/spec-editor.c:227
+#: ../tools/browser/data-manager/spec-editor.c:231
 msgid "XML syntax help"
 msgstr "Hilfe zur XML-Syntax"
 
@@ -7209,12 +7223,12 @@ msgstr "Zeichenkette"
 msgid "Variable"
 msgstr "Bearbeitbar"
 
-#: ../tools/browser/query-exec/query-console.c:288
-#: ../tools/browser/query-exec/query-console.c:1082
+#: ../tools/browser/query-exec/query-console.c:289
+#: ../tools/browser/query-exec/query-console.c:1083
 msgid "Query editor"
 msgstr "Abfrageeditor"
 
-#: ../tools/browser/query-exec/query-console.c:367
+#: ../tools/browser/query-exec/query-console.c:368
 msgid ""
 "Show variables needed\n"
 "to execute SQL"
@@ -7222,15 +7236,15 @@ msgstr ""
 "Zur Ausführung von SQL\n"
 "nötige Variablen anzeigen"
 
-#: ../tools/browser/query-exec/query-console.c:373
+#: ../tools/browser/query-exec/query-console.c:374
 msgid "Execute SQL in editor"
 msgstr "SQL im Editor ausführen"
 
-#: ../tools/browser/query-exec/query-console.c:379
+#: ../tools/browser/query-exec/query-console.c:380
 msgid "Indent"
 msgstr "Einzug"
 
-#: ../tools/browser/query-exec/query-console.c:379
+#: ../tools/browser/query-exec/query-console.c:380
 msgid ""
 "Indent SQL in editor\n"
 "and make the code more readable\n"
@@ -7240,23 +7254,23 @@ msgstr ""
 "Lesbarkeit einziehen\n"
 "(entfernt Kommentare)"
 
-#: ../tools/browser/query-exec/query-console.c:387
+#: ../tools/browser/query-exec/query-console.c:388
 msgid "Favorite"
 msgstr "Favoriten"
 
-#: ../tools/browser/query-exec/query-console.c:387
+#: ../tools/browser/query-exec/query-console.c:388
 msgid "Add SQL to favorite"
 msgstr "SQL zu Favoriten hinzufügen"
 
-#: ../tools/browser/query-exec/query-console.c:401
+#: ../tools/browser/query-exec/query-console.c:402
 msgid "Execution history:"
 msgstr "Ausführungschronik:"
 
-#: ../tools/browser/query-exec/query-console.c:419
+#: ../tools/browser/query-exec/query-console.c:420
 msgid "Copy"
 msgstr "Kopieren"
 
-#: ../tools/browser/query-exec/query-console.c:419
+#: ../tools/browser/query-exec/query-console.c:420
 msgid ""
 "Copy selected history\n"
 "to editor"
@@ -7264,33 +7278,33 @@ msgstr ""
 "Ausgewählten Chronikeintrag\n"
 "in Editor kopieren"
 
-#: ../tools/browser/query-exec/query-console.c:426
+#: ../tools/browser/query-exec/query-console.c:427
 msgid "Clear history"
 msgstr "Chronik leeren"
 
-#: ../tools/browser/query-exec/query-console.c:438
+#: ../tools/browser/query-exec/query-console.c:439
 msgid "Execution Results:"
 msgstr "Ergebnisse der Ausführung:"
 
-#: ../tools/browser/query-exec/query-console.c:682
+#: ../tools/browser/query-exec/query-console.c:683
 #: ../tools/browser/query-exec/query-favorite-selector.c:586
 msgid "Unnamed query"
 msgstr "Unbenannte Anfrage"
 
-#: ../tools/browser/query-exec/query-console.c:772
+#: ../tools/browser/query-exec/query-console.c:773
 msgid "Invalid variable's contents"
 msgstr "Ungültiger Inhalt der Variablen"
 
-#: ../tools/browser/query-exec/query-console.c:773
+#: ../tools/browser/query-exec/query-console.c:774
 msgid "assign values to the following variables"
 msgstr "Werte folgenden Variablen zuordnen"
 
-#: ../tools/browser/query-exec/query-console.c:827
+#: ../tools/browser/query-exec/query-console.c:828
 #, c-format
 msgid "Error while parsing code: %s"
 msgstr "Fehler beim Verarbeiten des Codes: %s"
 
-#: ../tools/browser/query-exec/query-console.c:839
+#: ../tools/browser/query-exec/query-console.c:840
 msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
@@ -7298,13 +7312,13 @@ msgstr ""
 "Es wird bereits eine Abfrage ausgeführt. Bitte öffnen Sie für eine weitere "
 "Abfrage eine neue Verbindung."
 
-#: ../tools/browser/query-exec/query-console.c:872
+#: ../tools/browser/query-exec/query-console.c:873
 #, c-format
 msgid "Error executing query: %s"
 msgstr "Fehler beim Ausführen der Abfrage: %s"
 
-#: ../tools/browser/query-exec/query-console.c:925
-#: ../tools/browser/query-exec/query-console.c:975
+#: ../tools/browser/query-exec/query-console.c:926
+#: ../tools/browser/query-exec/query-console.c:976
 #, c-format
 msgid ""
 "Error executing query:\n"
@@ -7313,11 +7327,11 @@ msgstr ""
 "Fehler beim Ausführen der Abfrage:\n"
 "%s"
 
-#: ../tools/browser/query-exec/query-console.c:936
+#: ../tools/browser/query-exec/query-console.c:937
 msgid "Statement executed"
 msgstr "Anweisung wurde ausgeführt"
 
-#: ../tools/browser/query-exec/query-console.c:944
+#: ../tools/browser/query-exec/query-console.c:945
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -7334,19 +7348,19 @@ msgstr ""
 "entsprechenden Chronikeintrag, bevor Sie\n"
 "die Transaktion schließen."
 
-#: ../tools/browser/query-exec/query-console.c:1032
+#: ../tools/browser/query-exec/query-console.c:1033
 msgid "_Execute"
 msgstr "_Ausführen"
 
-#: ../tools/browser/query-exec/query-console.c:1032
+#: ../tools/browser/query-exec/query-console.c:1033
 msgid "Execute query"
 msgstr "Abfrage ausführen"
 
-#: ../tools/browser/query-exec/query-console.c:1035
+#: ../tools/browser/query-exec/query-console.c:1036
 msgid "_Undo"
 msgstr "_Rückgängig"
 
-#: ../tools/browser/query-exec/query-console.c:1035
+#: ../tools/browser/query-exec/query-console.c:1036
 msgid "Undo last change"
 msgstr "Letzte Änderung zurücknehmen"
 
@@ -7437,50 +7451,60 @@ msgstr "Tabellenindex"
 msgid "Schema browser"
 msgstr "Schema-Browser"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:226
-#: ../tools/browser/schema-browser/relations-diagram.c:513
+#: ../tools/browser/schema-browser/relations-diagram.c:230
+#: ../tools/browser/schema-browser/relations-diagram.c:567
 msgid "Diagram"
 msgstr "Diagramm"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:236
+#: ../tools/browser/schema-browser/relations-diagram.c:240
 msgid "Could not save diagram"
 msgstr "Diagramm konnte nicht gespeichert werden"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:262
+#: ../tools/browser/schema-browser/relations-diagram.c:266
 msgid "Canvas's name"
 msgstr "Name des Arbeitsbereichs"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:282
+#: ../tools/browser/schema-browser/relations-diagram.c:286
 msgid "Save"
 msgstr "Speichern"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:323
-#: ../tools/browser/schema-browser/relations-diagram.c:380
-#: ../tools/browser/schema-browser/relations-diagram.c:460
-#: ../tools/browser/schema-browser/relations-diagram.c:471
+#: ../tools/browser/schema-browser/relations-diagram.c:327
+#: ../tools/browser/schema-browser/relations-diagram.c:384
+#: ../tools/browser/schema-browser/relations-diagram.c:464
+#: ../tools/browser/schema-browser/relations-diagram.c:475
 msgid "Relations diagram"
 msgstr "Beziehungsdiagramm"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:323
-#: ../tools/browser/schema-browser/relations-diagram.c:471
+#: ../tools/browser/schema-browser/relations-diagram.c:327
+#: ../tools/browser/schema-browser/relations-diagram.c:475
 msgid "Unsaved diagram"
 msgstr "Ungespeichertes Diagramm"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:370
+#: ../tools/browser/schema-browser/relations-diagram.c:374
 #, c-format
 msgid "Error parsing favorite's contents"
 msgstr "Fehler beim Verarbeiten der bevorzugten Inhalte"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:379
-#: ../tools/browser/schema-browser/relations-diagram.c:459
+#: ../tools/browser/schema-browser/relations-diagram.c:383
+#: ../tools/browser/schema-browser/relations-diagram.c:463
 #, c-format
 msgid "'%s' diagram"
 msgstr "»%s«-Diagramm"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:429
+#: ../tools/browser/schema-browser/relations-diagram.c:433
 #, c-format
 msgid "Missing table attribute in favorite's contents"
 msgstr "Fehlendes Tabellenattribut im Inhalt des Favoriten"
+
+#: ../tools/browser/schema-browser/relations-diagram.c:519
+#: ../tools/browser/schema-browser/table-info.c:491
+msgid "_Contents"
+msgstr "_Inhalt"
+
+#: ../tools/browser/schema-browser/relations-diagram.c:519
+#: ../tools/browser/schema-browser/table-info.c:491
+msgid "View contents"
+msgstr "Inhalt anzeigen"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:384
 msgid "Could not load diagram"
@@ -7521,41 +7545,31 @@ msgstr "Beziehungen"
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: ../tools/browser/schema-browser/table-info.c:490
+#: ../tools/browser/schema-browser/table-info.c:489
 msgid "_Favorite"
 msgstr "_Favorit"
 
-#: ../tools/browser/schema-browser/table-info.c:490
+#: ../tools/browser/schema-browser/table-info.c:489
 msgid "Add table to favorites"
 msgstr "Tabelle zu Favoriten hinzufügen"
 
-#: ../tools/browser/schema-browser/table-info.c:492
-#| msgid "Comments"
-msgid "_Contents"
-msgstr "_Inhalt"
-
-#: ../tools/browser/schema-browser/table-info.c:492
-#| msgid "Field comment"
-msgid "View contents"
-msgstr "Inhalt anzeigen"
-
-#: ../tools/browser/schema-browser/table-preferences.c:266
+#: ../tools/browser/schema-browser/table-preferences.c:267
 msgid "default"
 msgstr "Vorgabe"
 
-#: ../tools/browser/schema-browser/table-preferences.c:343
+#: ../tools/browser/schema-browser/table-preferences.c:344
 msgid "Table's fields"
 msgstr "Tabellenfelder"
 
-#: ../tools/browser/schema-browser/table-preferences.c:387
+#: ../tools/browser/schema-browser/table-preferences.c:388
 msgid "Field's display preferences"
 msgstr "Einstellungen zur Feldanzeige"
 
-#: ../tools/browser/schema-browser/table-preferences.c:464
+#: ../tools/browser/schema-browser/table-preferences.c:465
 msgid "Data entry type:"
 msgstr "Dateneintragstyp:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:465
+#: ../tools/browser/schema-browser/table-preferences.c:466
 msgid ""
 "Defines how data for the selected column\n"
 "will be displayed in forms. Leave 'Default' to have\n"
@@ -7565,20 +7579,20 @@ msgstr ""
 "in Formularen angezeigt werden. Als »Vorgabe«\n"
 "belassen, um die Vorgabeanzeige zu erhalten"
 
-#: ../tools/browser/schema-browser/table-preferences.c:474
-#: ../tools/browser/schema-browser/table-preferences.c:485
+#: ../tools/browser/schema-browser/table-preferences.c:475
+#: ../tools/browser/schema-browser/table-preferences.c:486
 msgid "none"
 msgstr "Kein"
 
-#: ../tools/browser/schema-browser/table-preferences.c:478
+#: ../tools/browser/schema-browser/table-preferences.c:479
 msgid "Options:"
 msgstr "Optionen:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:489
+#: ../tools/browser/schema-browser/table-preferences.c:490
 msgid "Preview:"
 msgstr "Vorschau:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:490
+#: ../tools/browser/schema-browser/table-preferences.c:491
 msgid ""
 "Free form to test the configured\n"
 "data entry"
