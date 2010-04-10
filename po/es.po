@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-03-02 20:38+0000\n"
-"PO-Revision-Date: 2010-03-07 14:40+0100\n"
+"POT-Creation-Date: 2010-04-06 17:06+0000\n"
+"PO-Revision-Date: 2010-04-10 19:32+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -113,11 +113,11 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../libgda/gda-server-operation.c:614 ../libgda/gda-server-operation.c:1005
 #: ../libgda/gda-set.c:486 ../libgda/gda-tree-mgr-select.c:188
 #: ../libgda/gda-tree-mgr-select.c:220
-#: ../libgda/sqlite/gda-sqlite-provider.c:1984
-#: ../libgda/sqlite/gda-sqlite-provider.c:1999
-#: ../libgda/sqlite/gda-sqlite-provider.c:2189
-#: ../libgda/sqlite/gda-sqlite-provider.c:2442
-#: ../libgda/sqlite/gda-sqlite-provider.c:2454
+#: ../libgda/sqlite/gda-sqlite-provider.c:1985
+#: ../libgda/sqlite/gda-sqlite-provider.c:2000
+#: ../libgda/sqlite/gda-sqlite-provider.c:2190
+#: ../libgda/sqlite/gda-sqlite-provider.c:2443
+#: ../libgda/sqlite/gda-sqlite-provider.c:2455
 #: ../libgda/thread-wrapper/gda-thread-provider.c:454
 #: ../libgda-ui/data-entries/common-bin.c:79
 #: ../libgda-ui/data-entries/common-bin.c:156
@@ -143,25 +143,25 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../providers/postgres/gda-postgres-util.c:87
 #: ../providers/postgres/gda-postgres-util.c:90
 #: ../tools/browser/auth-dialog.c:619 ../tools/browser/auth-dialog.c:622
-#: ../tools/browser/browser-connection.c:348
-#: ../tools/browser/browser-connection.c:365
-#: ../tools/browser/browser-connection.c:500
-#: ../tools/browser/browser-connection.c:520
-#: ../tools/browser/browser-connection.c:529
-#: ../tools/browser/browser-connection.c:733
-#: ../tools/browser/browser-window.c:783 ../tools/browser/browser-window.c:797
-#: ../tools/browser/browser-window.c:811 ../tools/browser/browser-window.c:923
-#: ../tools/browser/browser-window.c:964 ../tools/browser/login-dialog.c:239
+#: ../tools/browser/browser-connection.c:350
+#: ../tools/browser/browser-connection.c:367
+#: ../tools/browser/browser-connection.c:501
+#: ../tools/browser/browser-connection.c:521
+#: ../tools/browser/browser-connection.c:530
+#: ../tools/browser/browser-connection.c:734
+#: ../tools/browser/browser-window.c:785 ../tools/browser/browser-window.c:799
+#: ../tools/browser/browser-window.c:813 ../tools/browser/browser-window.c:925
+#: ../tools/browser/browser-window.c:966 ../tools/browser/login-dialog.c:239
 #: ../tools/browser/main.c:94 ../tools/browser/main.c:108
 #: ../tools/browser/main.c:134
 #: ../tools/browser/data-manager/data-favorite-selector.c:201
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:629
-#: ../tools/browser/query-exec/query-console.c:726
-#: ../tools/browser/query-exec/query-console.c:865
-#: ../tools/browser/query-exec/query-console.c:910
-#: ../tools/browser/query-exec/query-console.c:964
-#: ../tools/browser/query-exec/query-console.c:1014
+#: ../tools/browser/query-exec/query-console.c:690
+#: ../tools/browser/query-exec/query-console.c:829
+#: ../tools/browser/query-exec/query-console.c:874
+#: ../tools/browser/query-exec/query-console.c:928
+#: ../tools/browser/query-exec/query-console.c:978
 #: ../tools/browser/query-exec/query-favorite-selector.c:191
 #: ../tools/browser/query-exec/query-favorite-selector.c:243
 #: ../tools/browser/query-exec/query-favorite-selector.c:601
@@ -169,10 +169,10 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../tools/browser/query-exec/query-result.c:478
 #: ../tools/browser/schema-browser/favorite-selector.c:170
 #: ../tools/browser/schema-browser/favorite-selector.c:359
-#: ../tools/browser/schema-browser/relations-diagram.c:237
-#: ../tools/browser/schema-browser/table-info.c:452
-#: ../tools/browser/schema-browser/table-preferences.c:704
-#: ../tools/browser/schema-browser/table-preferences.c:777
+#: ../tools/browser/schema-browser/relations-diagram.c:241
+#: ../tools/browser/schema-browser/table-info.c:454
+#: ../tools/browser/schema-browser/table-preferences.c:705
+#: ../tools/browser/schema-browser/table-preferences.c:778
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
 #: ../tools/gda-sql.c:269 ../tools/gda-sql.c:286 ../tools/gda-sql.c:425
 #: ../tools/gda-sql.c:1429 ../tools/gda-sql.c:1444 ../tools/gda-sql.c:1496
@@ -394,7 +394,7 @@ msgstr "No se pudo declarar el nuevo origen de datos"
 msgid "No valid data source info was created"
 msgstr "No se creó una información válida para la fuente de datos"
 
-#: ../control-center/main.c:184 ../tools/browser/browser-window.c:1006
+#: ../control-center/main.c:184 ../tools/browser/browser-window.c:1008
 msgid "Database access services for the GNOME Desktop"
 msgstr "Servicios de acceso a bases de datos para el Escritorio GNOME"
 
@@ -2073,8 +2073,8 @@ msgstr "Atributos adicionales"
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:157
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:163
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:158
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:164
 msgid "Index"
 msgstr "Índice"
 
@@ -2259,7 +2259,8 @@ msgstr "El constructor SQL (SqlBuilder) está vacío"
 #: ../libgda/gda-sql-builder.c:1123 ../libgda/gda-sql-builder.c:1166
 #: ../libgda/gda-sql-builder.c:1241 ../libgda/gda-sql-builder.c:1292
 #: ../libgda/gda-sql-builder.c:1334 ../libgda/gda-sql-builder.c:1381
-#: ../libgda/gda-sql-builder.c:1564 ../libgda/gda-sql-builder.c:1591
+#: ../libgda/gda-sql-builder.c:1431 ../libgda/gda-sql-builder.c:1467
+#: ../libgda/gda-sql-builder.c:1640 ../libgda/gda-sql-builder.c:1667
 msgid "Wrong statement type"
 msgstr "Tipo de declaración erróneo"
 
@@ -2306,7 +2307,7 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr "Falta el parámetro «%s»"
 
-#: ../libgda/gda-statement.c:1236 ../libgda/sqlite/gda-sqlite-provider.c:2366
+#: ../libgda/gda-statement.c:1236 ../libgda/sqlite/gda-sqlite-provider.c:2367
 #: ../providers/jdbc/gda-jdbc-provider.c:1343
 #: ../providers/mysql/gda-mysql-provider.c:2092
 #: ../providers/postgres/gda-postgres-provider.c:1928
@@ -2357,7 +2358,7 @@ msgstr "No se pudo obtener el nombre de la columna"
 
 #: ../libgda/gda-tree-mgr-label.c:207
 #: ../tools/browser/canvas/browser-canvas-table.c:309
-#: ../tools/browser/data-manager/data-source.c:732
+#: ../tools/browser/data-manager/data-source.c:827
 msgid "No name"
 msgstr "Sin nombre"
 
@@ -2629,7 +2630,7 @@ msgstr "Las transacciones no están soportadas en el modo de sólo lectura"
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "No se permite un parámetro si nombre en las declaraciones preparadas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1983
+#: ../libgda/sqlite/gda-sqlite-provider.c:1984
 #: ../providers/mysql/gda-mysql-provider.c:1859
 #: ../providers/postgres/gda-postgres-provider.c:1651
 #, c-format
@@ -2638,7 +2639,7 @@ msgstr ""
 "No se puede construir una declaración SELECT para obtener la última fila "
 "insertada: %s)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1998
+#: ../libgda/sqlite/gda-sqlite-provider.c:1999
 #: ../providers/mysql/gda-mysql-provider.c:1874
 #: ../providers/postgres/gda-postgres-provider.c:1666
 #, c-format
@@ -2647,7 +2648,7 @@ msgstr ""
 "No se puede ejecutar la declaración SELECT para obtener la última fila "
 "insertada: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2011
+#: ../libgda/sqlite/gda-sqlite-provider.c:2012
 #: ../providers/mysql/gda-mysql-provider.c:1887
 #: ../providers/postgres/gda-postgres-provider.c:1679
 msgid "SELECT statement to get last inserted row did not return any row"
@@ -2655,7 +2656,7 @@ msgstr ""
 "La declaración SELECT para obtener la última fila insertada no devolvió "
 "ningún valor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2015
+#: ../libgda/sqlite/gda-sqlite-provider.c:2016
 #: ../providers/mysql/gda-mysql-provider.c:1891
 #: ../providers/postgres/gda-postgres-provider.c:1683
 #, c-format
@@ -2664,21 +2665,21 @@ msgstr ""
 "La declaración SELECT para obtener la última fila insertada devolvió "
 "demasiadas (%d) filas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2080
+#: ../libgda/sqlite/gda-sqlite-provider.c:2081
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "La declaración preparada no tiene una GdaStatement asociada"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2120
-#: ../libgda/sqlite/gda-sqlite-provider.c:2157
+#: ../libgda/sqlite/gda-sqlite-provider.c:2121
+#: ../libgda/sqlite/gda-sqlite-provider.c:2158
 msgid "Can't create SQLite BLOB handle"
 msgstr "No se puede crear el manejador BLOB de SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2124
-#: ../libgda/sqlite/gda-sqlite-provider.c:2162
+#: ../libgda/sqlite/gda-sqlite-provider.c:2125
+#: ../libgda/sqlite/gda-sqlite-provider.c:2163
 msgid "Can't write to SQLite's BLOB"
 msgstr "No se puede escribir en el BLOB de SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2147
+#: ../libgda/sqlite/gda-sqlite-provider.c:2148
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2687,11 +2688,11 @@ msgstr ""
 "No se puede obtener el manejador de SQLite BLOB (el tipo informado es «%s»), "
 "informe del error en http://bugzilla.gnome.org/ para el producto «libgda»."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2172
+#: ../libgda/sqlite/gda-sqlite-provider.c:2173
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "No se puede identificar el id de fila (ROWID) del BLOB que rellenar"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2220
+#: ../libgda/sqlite/gda-sqlite-provider.c:2221
 #: ../providers/jdbc/gda-jdbc-provider.c:1209
 #: ../providers/mysql/gda-mysql-provider.c:1980
 #: ../providers/postgres/gda-postgres-provider.c:1778
@@ -2699,13 +2700,13 @@ msgstr "No se puede identificar el id de fila (ROWID) del BLOB que rellenar"
 msgid "Provider does not support asynchronous statement execution"
 msgstr "El proveedor no soporta la ejecución de conexiones asíncronas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2287
+#: ../libgda/sqlite/gda-sqlite-provider.c:2288
 #: ../tools/browser/mgr-favorites.c:217 ../tools/browser/mgr-favorites.c:259
 msgid "Empty statement"
 msgstr "Declaración vacía"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2329
-#: ../libgda/sqlite/gda-sqlite-provider.c:2332
+#: ../libgda/sqlite/gda-sqlite-provider.c:2330
+#: ../libgda/sqlite/gda-sqlite-provider.c:2333
 #: ../providers/jdbc/gda-jdbc-provider.c:1296
 #: ../providers/jdbc/gda-jdbc-provider.c:1299
 #: ../providers/mysql/gda-mysql-provider.c:2054
@@ -2718,7 +2719,7 @@ msgstr "Declaración vacía"
 msgid "Missing parameter(s) to execute query"
 msgstr "Falta(n) parámetro(s) para ejecutar la consulta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2347
+#: ../libgda/sqlite/gda-sqlite-provider.c:2348
 #: ../providers/jdbc/gda-jdbc-provider.c:1314
 #: ../providers/mysql/gda-mysql-provider.c:2072
 #: ../providers/postgres/gda-postgres-provider.c:1910
@@ -2727,29 +2728,29 @@ msgstr "Falta(n) parámetro(s) para ejecutar la consulta"
 msgid "Missing parameter '%s' to execute query"
 msgstr "Falta el parámetro «%s» para ejecutar la consulta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2424
+#: ../libgda/sqlite/gda-sqlite-provider.c:2425
 #: ../providers/mysql/gda-mysql-provider.c:2221
 msgid "Can't get BLOB's length"
 msgstr "No se puede obtener la longitud del BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2426
+#: ../libgda/sqlite/gda-sqlite-provider.c:2427
 #: ../providers/mysql/gda-mysql-provider.c:2223
 msgid "BLOB is too big"
 msgstr "El BLOB es demasiado grande"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2508
+#: ../libgda/sqlite/gda-sqlite-provider.c:2509
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "No existe un manejador del tipo de datos «%s»"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2651
-#: ../libgda/sqlite/gda-sqlite-provider.c:2672
-#: ../libgda/sqlite/gda-sqlite-provider.c:2738
+#: ../libgda/sqlite/gda-sqlite-provider.c:2652
+#: ../libgda/sqlite/gda-sqlite-provider.c:2673
+#: ../libgda/sqlite/gda-sqlite-provider.c:2739
 msgid "Function requires one argument"
 msgstr "La función requiere un argumento"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2704
-#: ../libgda/sqlite/gda-sqlite-provider.c:2770
+#: ../libgda/sqlite/gda-sqlite-provider.c:2705
+#: ../libgda/sqlite/gda-sqlite-provider.c:2771
 msgid "Function requires two arguments"
 msgstr "La función requiere dos argumento"
 
@@ -3689,7 +3690,7 @@ msgid "No data to display"
 msgstr "No hay datos para mostrar"
 
 #: ../libgda-ui/data/server_operation.glade.h:1
-#: ../tools/browser/schema-browser/table-info.c:361
+#: ../tools/browser/schema-browser/table-info.c:363
 msgid "Columns"
 msgstr "Columnas"
 
@@ -3860,7 +3861,7 @@ msgid "TRUE if expanding the form makes sense"
 msgstr "Cierto si tiene sentido expandir el formulario"
 
 #: ../libgda-ui/gdaui-basic-form.c:707 ../libgda-ui/gdaui-raw-grid.c:780
-#: ../libgda-ui/gdaui-raw-grid.c:2524
+#: ../libgda-ui/gdaui-raw-grid.c:2525
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "El atributo «%s» debería ser un valor G_TYPE_STRING"
@@ -3873,12 +3874,12 @@ msgstr "No se puede encontrar la entrada para el GdaHolder"
 msgid "Values to be filled"
 msgstr "Valores para rellenar"
 
-#: ../libgda-ui/gdaui-basic-form.c:1937 ../libgda-ui/gdaui-raw-grid.c:2351
+#: ../libgda-ui/gdaui-basic-form.c:1937 ../libgda-ui/gdaui-raw-grid.c:2352
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "El documento «%s» no se analizó correctamente"
 
-#: ../libgda-ui/gdaui-basic-form.c:1947 ../libgda-ui/gdaui-raw-grid.c:2361
+#: ../libgda-ui/gdaui-basic-form.c:1947 ../libgda-ui/gdaui-raw-grid.c:2362
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -4037,15 +4038,15 @@ msgid "_Unset filter"
 msgstr "_Desactivar filtro"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:1867
+#: ../libgda-ui/gdaui-raw-grid.c:1868
 msgid "Saving Data"
 msgstr "Guardando datos"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1875
+#: ../libgda-ui/gdaui-raw-grid.c:1876
 msgid "Saving data to a file"
 msgstr "Guardando datos a un archivo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1876
+#: ../libgda-ui/gdaui-raw-grid.c:1877
 msgid ""
 "The data will be exported without any of the modifications which may have "
 "been made and have not been committed."
@@ -4053,48 +4054,48 @@ msgstr ""
 "Los datos se exportarán sin ninguna de las modificaciones que se hayan "
 "podido hacer y no se hayan efectuado."
 
-#: ../libgda-ui/gdaui-raw-grid.c:1891
+#: ../libgda-ui/gdaui-raw-grid.c:1892
 msgid "File name"
 msgstr "Nombre del archivo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1909
+#: ../libgda-ui/gdaui-raw-grid.c:1910
 msgid "Details"
 msgstr "Detalles"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1929
+#: ../libgda-ui/gdaui-raw-grid.c:1930
 msgid "Limit to selection?"
 msgstr "¿Limitar a la selección?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1948
+#: ../libgda-ui/gdaui-raw-grid.c:1949
 msgid "File type:"
 msgstr "Tipo del archivo:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1958
+#: ../libgda-ui/gdaui-raw-grid.c:1959
 msgid "Tab-delimited"
 msgstr "Delimitado por tabuladores"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1959
+#: ../libgda-ui/gdaui-raw-grid.c:1960
 msgid "Comma-delimited"
 msgstr "Delimitado por comas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1960
+#: ../libgda-ui/gdaui-raw-grid.c:1961
 msgid "XML"
 msgstr "XML"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2089
+#: ../libgda-ui/gdaui-raw-grid.c:2090
 #, c-format
 msgid "Could not save file %s"
 msgstr "No se pudo guardar el archivo %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2097
+#: ../libgda-ui/gdaui-raw-grid.c:2098
 msgid "You must specify a file name"
 msgstr "Debe especificar el nombre del archivo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2103
+#: ../libgda-ui/gdaui-raw-grid.c:2104
 msgid "Got empty file while converting the data"
 msgstr "Se obtuvo un archivo vacío mientras se convertían los datos"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2116
+#: ../libgda-ui/gdaui-raw-grid.c:2117
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4103,7 +4104,7 @@ msgstr ""
 "El archivo %s ya existe\n"
 "¿Quiere sobreescribirlo?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2126
+#: ../libgda-ui/gdaui-raw-grid.c:2127
 msgid "If you choose yes, the contents will be lost."
 msgstr "Si elige sí, se perderá todo el contenido."
 
@@ -6249,49 +6250,49 @@ msgstr ""
 msgid "c%u"
 msgstr "c%u"
 
-#: ../tools/browser/browser-connection.c:345
-#: ../tools/browser/browser-connection.c:730
+#: ../tools/browser/browser-connection.c:347
+#: ../tools/browser/browser-connection.c:731
 msgid "Getting database schema information"
 msgstr "Obteniendo la información de esquema de la base de datos"
 
-#: ../tools/browser/browser-connection.c:347
-#: ../tools/browser/browser-connection.c:364
-#: ../tools/browser/browser-connection.c:519
-#: ../tools/browser/browser-connection.c:732
+#: ../tools/browser/browser-connection.c:349
+#: ../tools/browser/browser-connection.c:366
+#: ../tools/browser/browser-connection.c:520
+#: ../tools/browser/browser-connection.c:733
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Error al obtener los metadatos de la conexión: %s"
 
-#: ../tools/browser/browser-connection.c:362
-#: ../tools/browser/browser-connection.c:517
+#: ../tools/browser/browser-connection.c:364
+#: ../tools/browser/browser-connection.c:518
 msgid "Analysing database schema"
 msgstr "Analizando el esquema de la base de datos"
 
-#: ../tools/browser/browser-connection.c:499
-#: ../tools/browser/browser-connection.c:528
+#: ../tools/browser/browser-connection.c:500
+#: ../tools/browser/browser-connection.c:529
 #, c-format
 msgid "Error while analysing database schema: %s"
 msgstr "Error al analizar el esquema de la base de datos: %s"
 
-#: ../tools/browser/browser-connection.c:985
-#: ../tools/browser/browser-connection.c:1028
+#: ../tools/browser/browser-connection.c:986
+#: ../tools/browser/browser-connection.c:1029
 msgid "Executing a query"
 msgstr "Ejecutando una consulta"
 
-#: ../tools/browser/browser-connection.c:1140
+#: ../tools/browser/browser-connection.c:1141
 #, c-format
 msgid "Connection not yet opened"
 msgstr "La conexión aún no está abierta"
 
-#: ../tools/browser/browser-connection.c:1146
+#: ../tools/browser/browser-connection.c:1147
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
 "No se puede inicializar el diccionario para almacenar las preferencias de la "
 "tabla"
 
-#: ../tools/browser/browser-connection.c:1192
-#: ../tools/browser/browser-connection.c:1198
-#: ../tools/browser/browser-connection.c:1334
+#: ../tools/browser/browser-connection.c:1193
+#: ../tools/browser/browser-connection.c:1199
+#: ../tools/browser/browser-connection.c:1335
 #: ../tools/browser/browser-favorites.c:523
 #: ../tools/browser/browser-favorites.c:529
 #: ../tools/browser/browser-favorites.c:957
@@ -6299,7 +6300,7 @@ msgstr ""
 msgid "Can't initialize transaction to access favorites"
 msgstr "No se puede inicializar la transacción para acceder a los favoritos"
 
-#: ../tools/browser/browser-connection.c:1279
+#: ../tools/browser/browser-connection.c:1280
 #: ../tools/browser/browser-favorites.c:702
 #: ../tools/browser/browser-favorites.c:1015
 msgid "Can't commit transaction to access favorites"
@@ -6381,22 +6382,21 @@ msgid "Bookmarks"
 msgstr "Marcadores"
 
 #: ../tools/browser/browser-stock-icons.c:47
-#: ../tools/browser/browser-window.c:241
+#: ../tools/browser/browser-window.c:242
 msgid "Begin"
 msgstr "Inicio"
 
 #: ../tools/browser/browser-stock-icons.c:48
-#: ../tools/browser/browser-window.c:243
+#: ../tools/browser/browser-window.c:244
 msgid "Commit"
 msgstr "Efectuar"
 
 #: ../tools/browser/browser-stock-icons.c:49
-#: ../tools/browser/browser-window.c:245
+#: ../tools/browser/browser-window.c:246
 msgid "Rollback"
 msgstr "Deshacer"
 
 #: ../tools/browser/browser-stock-icons.c:50
-#| msgid "Filter"
 msgid "Builder"
 msgstr "Constructor"
 
@@ -6408,19 +6408,19 @@ msgstr "Se está usando una conexión vinculada"
 msgid "Virtual connection using this connection is busy"
 msgstr "La conexión virtual usando esta conexión está ocupada"
 
-#: ../tools/browser/browser-window.c:219
+#: ../tools/browser/browser-window.c:220
 msgid "_Fullscreen"
 msgstr "Pantalla _completa"
 
-#: ../tools/browser/browser-window.c:219
+#: ../tools/browser/browser-window.c:220
 msgid "Use the whole screen"
 msgstr "Usar la pantalla completa"
 
-#: ../tools/browser/browser-window.c:225
+#: ../tools/browser/browser-window.c:226
 msgid "_Bind connection"
 msgstr "_Vincular conexión"
 
-#: ../tools/browser/browser-window.c:225
+#: ../tools/browser/browser-window.c:226
 msgid ""
 "Use connection to create\n"
 "a new binding connection to access data\n"
@@ -6431,73 +6431,83 @@ msgstr ""
 "acceder a los datos desde varias\n"
 "bases de datos a la vez"
 
-#: ../tools/browser/browser-window.c:241
+#: ../tools/browser/browser-window.c:242
 msgid "Begin a new transaction"
 msgstr "Iniciar una transacción nueva"
 
-#: ../tools/browser/browser-window.c:243
+#: ../tools/browser/browser-window.c:244
 msgid "Commit current transaction"
 msgstr "Efectuar la transacción actual"
 
-#: ../tools/browser/browser-window.c:245
+#: ../tools/browser/browser-window.c:246
 msgid "Rollback current transaction"
 msgstr "Deshacer la transacción actual"
 
-#: ../tools/browser/browser-window.c:330
+#: ../tools/browser/browser-window.c:331
 msgid "unnamed"
 msgstr "sin nombre"
 
-#: ../tools/browser/browser-window.c:331
+#: ../tools/browser/browser-window.c:332
 #, c-format
 msgid "Connection: %s"
 msgstr "Conexión: %s"
 
-#: ../tools/browser/browser-window.c:681 ../tools/browser/support.c:70
+#: ../tools/browser/browser-window.c:683 ../tools/browser/support.c:70
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "¿Quiere cerrar la conexión «%s»?"
 
-#: ../tools/browser/browser-window.c:723 ../tools/browser/browser-window.c:730
+#: ../tools/browser/browser-window.c:725 ../tools/browser/browser-window.c:732
 msgid "Do you want to quit the application?"
 msgstr "¿Quiere salir de la aplicación?"
 
-#: ../tools/browser/browser-window.c:724
+#: ../tools/browser/browser-window.c:726
 msgid "all the connections will be closed."
 msgstr "se cerrarán todas las conexiones."
 
-#: ../tools/browser/browser-window.c:731
+#: ../tools/browser/browser-window.c:733
 msgid "the connection will be closed."
 msgstr "se cerrará la conexión."
 
-#: ../tools/browser/browser-window.c:782
+#: ../tools/browser/browser-window.c:784
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Error al iniciar la transacción: %s"
 
-#: ../tools/browser/browser-window.c:796
+#: ../tools/browser/browser-window.c:798
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Error al efectuar la transacción: %s"
 
-#: ../tools/browser/browser-window.c:810
+#: ../tools/browser/browser-window.c:812
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Error al deshacer la transacción: %s"
 
-#: ../tools/browser/browser-window.c:922
+#: ../tools/browser/browser-window.c:924
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Error al actualizar la conexión vinculada: %s"
 
-#: ../tools/browser/browser-window.c:963
+#: ../tools/browser/browser-window.c:965
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "No se pudo abrir la conexión de vinculación: %s"
 
-#: ../tools/browser/browser-window.c:1003
+#: ../tools/browser/browser-window.c:1005
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
 msgid "Database browser"
 msgstr "Examinador de la base de datos"
+
+#: ../tools/browser/browser-window.c:1250
+#, c-format
+msgid ""
+"The current perspective has changed to the '%s' perspective, you can switch "
+"back to previous perspective through the 'Perspective/%s' menu, or using the "
+"'%s' shortcut"
+msgstr ""
+"La perspectiva actual ha cambiado a la perspectiva «%s», puede volver a la "
+"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo «%s»"
 
 #: ../tools/browser/connection-binding-properties.c:142
 msgid "New virtual connection"
@@ -6914,30 +6924,28 @@ msgstr[1] "%d tablas en el esquema «%s»:"
 msgid "None"
 msgstr "Ninguno"
 
-#: ../tools/browser/data-manager/data-console.c:191
-#| msgid "Database name"
+#: ../tools/browser/data-manager/data-console.c:194
 msgid "Data Manager"
 msgstr "Gestor de datos"
 
-#: ../tools/browser/data-manager/data-console.c:209
-#: ../tools/browser/query-exec/query-console.c:339
+#: ../tools/browser/data-manager/data-console.c:212
+#: ../tools/browser/query-exec/query-console.c:336
 msgid "Variables' values:"
 msgstr "Valores de las variables:"
 
-#: ../tools/browser/data-manager/data-console.c:243
-#: ../tools/browser/query-exec/query-console.c:318
+#: ../tools/browser/data-manager/data-console.c:246
+#: ../tools/browser/query-exec/query-console.c:315
 msgid "SQL code to execute:"
 msgstr "Código SQL que ejecutar:"
 
-#: ../tools/browser/data-manager/data-console.c:287
-#: ../tools/browser/query-exec/query-console.c:366
-#: ../tools/browser/query-exec/query-console.c:430
+#: ../tools/browser/data-manager/data-console.c:292
+#: ../tools/browser/query-exec/query-console.c:363
+#: ../tools/browser/query-exec/query-console.c:427
 msgid "Clear"
 msgstr "Limpiar"
 
-#: ../tools/browser/data-manager/data-console.c:287
-#: ../tools/browser/query-exec/query-console.c:366
-#| msgid "Clear the editor"
+#: ../tools/browser/data-manager/data-console.c:292
+#: ../tools/browser/query-exec/query-console.c:363
 msgid ""
 "Clear the editor's\n"
 "contents"
@@ -6945,24 +6953,21 @@ msgstr ""
 "Limpiar el contenido\n"
 "del editor"
 
-#: ../tools/browser/data-manager/data-console.c:292
-#: ../tools/browser/query-exec/query-console.c:371
+#: ../tools/browser/data-manager/data-console.c:297
+#: ../tools/browser/query-exec/query-console.c:368
 msgid "Variables"
 msgstr "Variables"
 
-#: ../tools/browser/data-manager/data-console.c:292
-#| msgid ""
-#| "Show variables needed\n"
-#| "to execute SQL"
+#: ../tools/browser/data-manager/data-console.c:297
 msgid "Show variables needed"
 msgstr "Mostrar las variables necesarias"
 
-#: ../tools/browser/data-manager/data-console.c:298
-#: ../tools/browser/query-exec/query-console.c:377
+#: ../tools/browser/data-manager/data-console.c:303
+#: ../tools/browser/query-exec/query-console.c:374
 msgid "Execute"
 msgstr "Ejecutar"
 
-#: ../tools/browser/data-manager/data-console.c:298
+#: ../tools/browser/data-manager/data-console.c:303
 msgid ""
 "Execute specified\n"
 "data manager"
@@ -6970,12 +6975,11 @@ msgstr ""
 "Ejecutar el gestor\n"
 "de datos especificado"
 
-#: ../tools/browser/data-manager/data-console.c:304
-#| msgid "View"
+#: ../tools/browser/data-manager/data-console.c:309
 msgid "View XML"
 msgstr "Ver XML"
 
-#: ../tools/browser/data-manager/data-console.c:304
+#: ../tools/browser/data-manager/data-console.c:309
 msgid ""
 "View specifications\n"
 "as XML (advanced)"
@@ -6983,34 +6987,31 @@ msgstr ""
 "Ver las especificaciones\n"
 "como XML (avanzado)"
 
-#: ../tools/browser/data-manager/data-console.c:322
+#: ../tools/browser/data-manager/data-console.c:327
 msgid "BBB:"
 msgstr "BBB:"
 
-#: ../tools/browser/data-manager/data-console.c:379
+#: ../tools/browser/data-manager/data-console.c:409
 #, c-format
-#| msgid "New data source definition"
 msgid "No data source defined"
 msgstr "No se definió un origen de datos"
 
-#: ../tools/browser/data-manager/data-console.c:434
-#: ../tools/browser/data-manager/spec-editor.c:431
-#: ../tools/browser/data-manager/spec-editor.c:480
+#: ../tools/browser/data-manager/data-console.c:468
+#: ../tools/browser/data-manager/spec-editor.c:569
+#: ../tools/browser/data-manager/spec-editor.c:627
 #, c-format
-#| msgid "Server operation specification"
 msgid "Error parsing XML specifications"
 msgstr "Error al analizar las especificaciones XML"
 
-#: ../tools/browser/data-manager/data-console.c:447
+#: ../tools/browser/data-manager/data-console.c:485
 msgid "_Toggle mode"
 msgstr "C_onmutar modo"
 
-#: ../tools/browser/data-manager/data-console.c:447
+#: ../tools/browser/data-manager/data-console.c:485
 msgid "Switch between compose and execute modes"
 msgstr "Cambiar entre los modos de composición y ejecución"
 
-#: ../tools/browser/data-manager/data-console.c:491
-#| msgid "Database name"
+#: ../tools/browser/data-manager/data-console.c:529
 msgid "Data manager"
 msgstr "Gestor de datos"
 
@@ -7023,11 +7024,11 @@ msgstr "No se pudo quitar el favorito: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:258
 #: ../tools/browser/data-manager/data-favorite-selector.c:628
-#: ../tools/browser/query-exec/query-console.c:725
+#: ../tools/browser/query-exec/query-console.c:689
 #: ../tools/browser/query-exec/query-favorite-selector.c:242
 #: ../tools/browser/query-exec/query-favorite-selector.c:600
 #: ../tools/browser/schema-browser/favorite-selector.c:358
-#: ../tools/browser/schema-browser/table-info.c:451
+#: ../tools/browser/schema-browser/table-info.c:453
 #, c-format
 msgid "Could not add favorite: %s"
 msgstr "No se pudo añadir el favorito: %s"
@@ -7038,7 +7039,6 @@ msgid "Favorite's properties"
 msgstr "Propiedades de los favoritos"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:311
-#| msgid "Import specifications"
 msgid "Specifications"
 msgstr "Especificaciones"
 
@@ -7049,83 +7049,138 @@ msgid "Favorites"
 msgstr "Favoritos"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:614
-#| msgid "Unnamed parameter"
 msgid "Unnamed data manager"
 msgstr "Gestor de datos sin nombre"
 
-#: ../tools/browser/data-manager/data-source.c:229
+#: ../tools/browser/data-manager/data-source.c:248
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
 msgstr "El nodo debe ser «table» (tabla) o «query» (consulta) y es «%s»"
 
-#: ../tools/browser/data-manager/data-source.c:258
+#: ../tools/browser/data-manager/data-source.c:277
 #, c-format
 msgid "Multiple statements detected, only the first will be used"
 msgstr "Se detectaron múltiples declaraciones, sólo se usará la primera"
 
-#: ../tools/browser/data-manager/data-source.c:328
+#: ../tools/browser/data-manager/data-source.c:347
 #: ../tools/browser/schema-browser/mgr-columns.c:274
 #, c-format
 msgid "Not ready"
 msgstr "No está preparado"
 
-#: ../tools/browser/data-manager/data-source.c:337
+#: ../tools/browser/data-manager/data-source.c:356
 #, c-format
-#| msgid "Could not find the '%s' program"
 msgid "Could not find the \"%s\" table"
 msgstr "No se pudo encontrar la tabla «%s»"
 
-#: ../tools/browser/data-manager/data-source.c:342
+#: ../tools/browser/data-manager/data-source.c:361
 #, c-format
-#| msgid "Requested object is not a table or view"
 msgid "The \"%s\" object is not a table"
 msgstr "El objeto «%s» no es una tabla"
 
-#: ../tools/browser/data-manager/data-source.c:355
+#: ../tools/browser/data-manager/data-source.c:374
 #, c-format
-#| msgid "Missing attribute named 'path'"
 msgid "Missing attribute \"name\" for table"
 msgstr "Falta el atributo «nombre» para la tabla"
 
-#: ../tools/browser/data-manager/data-source.c:360
+#: ../tools/browser/data-manager/data-source.c:379
 #, c-format
-#| msgid "Cannot set contents of filename '%s'"
 msgid "Contents of '%s'"
 msgstr "Contenido de «%s»"
 
-#: ../tools/browser/data-manager/data-source.c:378
+#: ../tools/browser/data-manager/data-source.c:397
 #, c-format
-#| msgid "Could not create SELECT statement"
 msgid "Could not build SELECT statement"
 msgstr "No se pudo construir la declaración SELECT"
 
-#: ../tools/browser/data-manager/data-source.c:443
+#: ../tools/browser/data-manager/data-source.c:474
 #, c-format
-#| msgid "Could not find any provider named '%s'"
 msgid "Could not find any foreign key to \"%s\""
 msgstr "No se pudo encontrar ninguna clave externa hacia «%s»"
 
-#: ../tools/browser/data-manager/data-source.c:451
+#: ../tools/browser/data-manager/data-source.c:482
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr "Se desconocen los campos involucrados en la clave externa hacia «%s»"
 
-#: ../tools/browser/data-manager/data-source.c:538
+#: ../tools/browser/data-manager/data-source.c:573
 #, c-format
-#| msgid "Statement is not a selection statement"
 msgid "Statement to execute is not a selection statement"
 msgstr "La declaración que ejecutar no es una declaración de selección"
 
-#: ../tools/browser/data-manager/data-source.c:614
+#: ../tools/browser/data-manager/data-source.c:703
 #, c-format
-#| msgid "No SELECT statement specified"
 msgid "No SELECT statement to execute"
 msgstr "Sin declaración SELECT para ejecutar"
 
 #: ../tools/browser/data-manager/data-widget.c:340
-#| msgid "Error details"
 msgid "Error: no detail"
 msgstr "Error: sin detalles"
+
+#: ../tools/browser/data-manager/spec-editor.c:174
+msgid ""
+"<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
+"\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
+"data source definitions.\n"
+"Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;query&gt;"
+"</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> "
+"nodes, both accepting the following optional attributes:\n"
+" - <span foreground=\"#4e9a06\">\"id\"</span> to specify a data source "
+"string ID, used when linking data sources one to another;\n"
+" - <span foreground=\"#4e9a06\">\"title\"</span> to specify a title.\n"
+"\n"
+"Use the <span foreground=\"#4e9a06\"><tt>&lt;query&gt;</tt></span> tag to "
+"specify an SQL SELECT statement, as the contents of the tag. Linkage to "
+"other\n"
+"data sources can be achieved using variables in the SELECT's SQL.\n"
+"\n"
+"Use the <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> node to "
+"define a data source which will display the contents of a table. This tag:\n"
+" - requires the <span foreground=\"#4e9a06\">\"name\"</span> attribute which "
+"represents the table name.\n"
+" - can contain a <span foreground=\"#4e9a06\"><tt>&lt;depend&gt;</tt></span> "
+"node which defines a dependency on another data source with the \n"
+"   <span foreground=\"#4e9a06\">\"foreign_key_table\"</span> attribute "
+"defining the name of the table to which there are foreign keys\n"
+"   used to determine the dependency, and the <span foreground=\"#4e9a06\">"
+"\"id\"</span> attribute can specify a data source ID if different than\n"
+"   the aforementioned table.\n"
+"</small>"
+msgstr ""
+"<small>Los nodos raíces del árbol XML deben ser <span foreground=\"#4e9a06"
+"\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más definiciones "
+"de fuentes de datos.\n"
+"Cada fuente de datos está definida por nodos <span foreground=\"#4e9a06"
+"\"><tt>&lt;query&gt;</tt></span> o <span foreground=\"#4e9a06\"><tt>&lt;"
+"table&gt;</tt></span>, ambos aceptan los siguientes atributos opcionales:\n"
+" - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena de ID "
+"de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
+" - <span foreground=\"#4e9a06\">«title»</span> para especificar un título.\n"
+"\n"
+"Use la etiqueta <span foreground=\"#4e9a06\"><tt>&lt;query&gt;</tt></span> "
+"para especificar una declaración SQL SELECT, como contenido de la etiqueta. "
+"Se pueden enlazar\n"
+"otras fuentes de datos usando variables en el los SELECT SQL.\n"
+"\n"
+"Use el nodo <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> para "
+"definir una fuente de datos que mostrará el contenido de una tabla. Esta "
+"etiqueta:\n"
+" - requiere el atributo <span foreground=\"#4e9a06\">«name»</span> que "
+"representa el nombre de la tabla.\n"
+" - puede contener un nodo <span foreground=\"#4e9a06\"><tt>&lt;depend&gt;</"
+"tt></span> que define una dependencia de otra fuente de datos con el "
+"atributo\n"
+"   <span foreground=\"#4e9a06\">«foreign_key_table»</span> que define el "
+"nombre de la tabla en la que hay claves externas\n"
+"   usada para determinar la dependencia, y el atributo <span foreground="
+"\"#4e9a06\">«id»</span> puede especificar un ID de fuente de datos si es "
+"diferente de la\n"
+"   tabla mencionada.\n"
+"</small>"
+
+#: ../tools/browser/data-manager/spec-editor.c:231
+msgid "XML syntax help"
+msgstr "Ayuda de sintaxis XML"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:2
 msgid "Data Type"
@@ -7167,12 +7222,12 @@ msgstr "Cadena"
 msgid "Variable"
 msgstr "Variable"
 
-#: ../tools/browser/query-exec/query-console.c:292
-#: ../tools/browser/query-exec/query-console.c:1119
+#: ../tools/browser/query-exec/query-console.c:289
+#: ../tools/browser/query-exec/query-console.c:1083
 msgid "Query editor"
 msgstr "Editor de consultas"
 
-#: ../tools/browser/query-exec/query-console.c:371
+#: ../tools/browser/query-exec/query-console.c:368
 msgid ""
 "Show variables needed\n"
 "to execute SQL"
@@ -7181,15 +7236,15 @@ msgstr ""
 "necesarias para ejecutar\n"
 "el SQL"
 
-#: ../tools/browser/query-exec/query-console.c:377
+#: ../tools/browser/query-exec/query-console.c:374
 msgid "Execute SQL in editor"
 msgstr "Ejecutar SQL en el editor"
 
-#: ../tools/browser/query-exec/query-console.c:383
+#: ../tools/browser/query-exec/query-console.c:380
 msgid "Indent"
 msgstr "Sangrar"
 
-#: ../tools/browser/query-exec/query-console.c:383
+#: ../tools/browser/query-exec/query-console.c:380
 msgid ""
 "Indent SQL in editor\n"
 "and make the code more readable\n"
@@ -7199,23 +7254,23 @@ msgstr ""
 "y hacer el código más legible\n"
 "(quita los comentarios)"
 
-#: ../tools/browser/query-exec/query-console.c:391
+#: ../tools/browser/query-exec/query-console.c:388
 msgid "Favorite"
 msgstr "Favorito"
 
-#: ../tools/browser/query-exec/query-console.c:391
+#: ../tools/browser/query-exec/query-console.c:388
 msgid "Add SQL to favorite"
 msgstr "Añadir SQL a los favoritos"
 
-#: ../tools/browser/query-exec/query-console.c:405
+#: ../tools/browser/query-exec/query-console.c:402
 msgid "Execution history:"
 msgstr "Histórico de ejecuciones:"
 
-#: ../tools/browser/query-exec/query-console.c:423
+#: ../tools/browser/query-exec/query-console.c:420
 msgid "Copy"
 msgstr "Copiar"
 
-#: ../tools/browser/query-exec/query-console.c:423
+#: ../tools/browser/query-exec/query-console.c:420
 msgid ""
 "Copy selected history\n"
 "to editor"
@@ -7223,33 +7278,33 @@ msgstr ""
 "Copiar el histórico\n"
 "seleccionado al editor"
 
-#: ../tools/browser/query-exec/query-console.c:430
+#: ../tools/browser/query-exec/query-console.c:427
 msgid "Clear history"
 msgstr "Limpiar histórico"
 
-#: ../tools/browser/query-exec/query-console.c:442
+#: ../tools/browser/query-exec/query-console.c:439
 msgid "Execution Results:"
 msgstr "Resultados de la ejecución:"
 
-#: ../tools/browser/query-exec/query-console.c:719
+#: ../tools/browser/query-exec/query-console.c:683
 #: ../tools/browser/query-exec/query-favorite-selector.c:586
 msgid "Unnamed query"
 msgstr "Consulta sin nombre"
 
-#: ../tools/browser/query-exec/query-console.c:809
+#: ../tools/browser/query-exec/query-console.c:773
 msgid "Invalid variable's contents"
 msgstr "Contenido de la variable no válido"
 
-#: ../tools/browser/query-exec/query-console.c:810
+#: ../tools/browser/query-exec/query-console.c:774
 msgid "assign values to the following variables"
 msgstr "asignar valores a las siguientes variables"
 
-#: ../tools/browser/query-exec/query-console.c:864
+#: ../tools/browser/query-exec/query-console.c:828
 #, c-format
 msgid "Error while parsing code: %s"
 msgstr "Error al analizar el código: %s"
 
-#: ../tools/browser/query-exec/query-console.c:876
+#: ../tools/browser/query-exec/query-console.c:840
 msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
@@ -7257,13 +7312,13 @@ msgstr ""
 "Ya se está ejecutando una consulta, para ejecutar otra consulta abra una "
 "conexión nueva."
 
-#: ../tools/browser/query-exec/query-console.c:909
+#: ../tools/browser/query-exec/query-console.c:873
 #, c-format
 msgid "Error executing query: %s"
 msgstr "Error al ejecutar la consulta: %s"
 
-#: ../tools/browser/query-exec/query-console.c:962
-#: ../tools/browser/query-exec/query-console.c:1012
+#: ../tools/browser/query-exec/query-console.c:926
+#: ../tools/browser/query-exec/query-console.c:976
 #, c-format
 msgid ""
 "Error executing query:\n"
@@ -7272,11 +7327,11 @@ msgstr ""
 "Error al ejecutar la consulta:\n"
 "%s"
 
-#: ../tools/browser/query-exec/query-console.c:973
+#: ../tools/browser/query-exec/query-console.c:937
 msgid "Statement executed"
 msgstr "Declaración ejecutada"
 
-#: ../tools/browser/query-exec/query-console.c:981
+#: ../tools/browser/query-exec/query-console.c:945
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -7292,19 +7347,19 @@ msgstr ""
 "estén accesibles, limpie el elemento correspondiente\n"
 "del histórico antes de cerrar la transacción)."
 
-#: ../tools/browser/query-exec/query-console.c:1069
+#: ../tools/browser/query-exec/query-console.c:1033
 msgid "_Execute"
 msgstr "_Ejecutar"
 
-#: ../tools/browser/query-exec/query-console.c:1069
+#: ../tools/browser/query-exec/query-console.c:1033
 msgid "Execute query"
 msgstr "Ejecutar consulta"
 
-#: ../tools/browser/query-exec/query-console.c:1072
+#: ../tools/browser/query-exec/query-console.c:1036
 msgid "_Undo"
 msgstr "_Deshacer"
 
-#: ../tools/browser/query-exec/query-console.c:1072
+#: ../tools/browser/query-exec/query-console.c:1036
 msgid "Undo last change"
 msgstr "Deshacer el último cambio"
 
@@ -7337,15 +7392,15 @@ msgid_plural "%lu days ago\n"
 msgstr[0] "hace %lu día\n"
 msgstr[1] "hace %lu días\n"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:313
+#: ../tools/browser/query-exec/query-exec-perspective.c:314
 msgid "_Query"
 msgstr "_Consultar"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:314
+#: ../tools/browser/query-exec/query-exec-perspective.c:315
 msgid "_New editor"
 msgstr "Editor _nuevo"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:314
+#: ../tools/browser/query-exec/query-exec-perspective.c:315
 msgid "Open a new query editor"
 msgstr "Abrir una consulta de edición nueva"
 
@@ -7395,52 +7450,64 @@ msgstr "Índice de la tabla"
 msgid "Schema browser"
 msgstr "Examinador de esquemas"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:226
-#: ../tools/browser/schema-browser/relations-diagram.c:513
+#: ../tools/browser/schema-browser/relations-diagram.c:230
+#: ../tools/browser/schema-browser/relations-diagram.c:567
 msgid "Diagram"
 msgstr "Diagrama"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:236
+#: ../tools/browser/schema-browser/relations-diagram.c:240
 msgid "Could not save diagram"
 msgstr "No se pudo guardar el diagrama"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:262
+#: ../tools/browser/schema-browser/relations-diagram.c:266
 msgid "Canvas's name"
 msgstr "Nombre del marco"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:282
+#: ../tools/browser/schema-browser/relations-diagram.c:286
 msgid "Save"
 msgstr "Guardar"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:323
-#: ../tools/browser/schema-browser/relations-diagram.c:380
-#: ../tools/browser/schema-browser/relations-diagram.c:460
-#: ../tools/browser/schema-browser/relations-diagram.c:471
+#: ../tools/browser/schema-browser/relations-diagram.c:327
+#: ../tools/browser/schema-browser/relations-diagram.c:384
+#: ../tools/browser/schema-browser/relations-diagram.c:464
+#: ../tools/browser/schema-browser/relations-diagram.c:475
 msgid "Relations diagram"
 msgstr "Diagrama de relaciones"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:323
-#: ../tools/browser/schema-browser/relations-diagram.c:471
+#: ../tools/browser/schema-browser/relations-diagram.c:327
+#: ../tools/browser/schema-browser/relations-diagram.c:475
 msgid "Unsaved diagram"
 msgstr "Diagrama sin guardar"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:370
+#: ../tools/browser/schema-browser/relations-diagram.c:374
 #, c-format
 msgid "Error parsing favorite's contents"
 msgstr "Error al analizar el contenido de los favoritos"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:379
-#: ../tools/browser/schema-browser/relations-diagram.c:459
+#: ../tools/browser/schema-browser/relations-diagram.c:383
+#: ../tools/browser/schema-browser/relations-diagram.c:463
 #, c-format
 msgid "'%s' diagram"
 msgstr "diagrama «%s»"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:429
+#: ../tools/browser/schema-browser/relations-diagram.c:433
 #, c-format
 msgid "Missing table attribute in favorite's contents"
 msgstr "Falta un atributo de la tabla en el contenido de los favoritos"
 
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:383
+#: ../tools/browser/schema-browser/relations-diagram.c:519
+#: ../tools/browser/schema-browser/table-info.c:491
+#| msgid "Comments"
+msgid "_Contents"
+msgstr "Índ_ice"
+
+#: ../tools/browser/schema-browser/relations-diagram.c:519
+#: ../tools/browser/schema-browser/table-info.c:491
+#| msgid "Field comment"
+msgid "View contents"
+msgstr "Ver contenido"
+
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:384
 msgid "Could not load diagram"
 msgstr "No se pudo cargar el diagrama"
 
@@ -7460,7 +7527,7 @@ msgstr "Nombre de columna"
 msgid "Constraints and integrity rules"
 msgstr "Reglas de restricciones e integridad"
 
-#: ../tools/browser/schema-browser/table-info.c:340
+#: ../tools/browser/schema-browser/table-info.c:342
 msgid ""
 "Table not found. If you think this is an error,\n"
 "please refresh the meta data from the database\n"
@@ -7470,39 +7537,39 @@ msgstr ""
 "actualice los metadatos de la base de datos\n"
 "(menú Conexión/Obtener metadatos)."
 
-#: ../tools/browser/schema-browser/table-info.c:371
+#: ../tools/browser/schema-browser/table-info.c:373
 msgid "Relations"
 msgstr "Relaciones"
 
-#: ../tools/browser/schema-browser/table-info.c:381
+#: ../tools/browser/schema-browser/table-info.c:383
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: ../tools/browser/schema-browser/table-info.c:460
+#: ../tools/browser/schema-browser/table-info.c:489
 msgid "_Favorite"
 msgstr "_Favoritos"
 
-#: ../tools/browser/schema-browser/table-info.c:460
+#: ../tools/browser/schema-browser/table-info.c:489
 msgid "Add table to favorites"
 msgstr "Añadir tabla a los favoritos"
 
-#: ../tools/browser/schema-browser/table-preferences.c:266
+#: ../tools/browser/schema-browser/table-preferences.c:267
 msgid "default"
 msgstr "predeterminado"
 
-#: ../tools/browser/schema-browser/table-preferences.c:343
+#: ../tools/browser/schema-browser/table-preferences.c:344
 msgid "Table's fields"
 msgstr "Campos de la tabla"
 
-#: ../tools/browser/schema-browser/table-preferences.c:387
+#: ../tools/browser/schema-browser/table-preferences.c:388
 msgid "Field's display preferences"
 msgstr "Preferencias de mostrado del campo"
 
-#: ../tools/browser/schema-browser/table-preferences.c:464
+#: ../tools/browser/schema-browser/table-preferences.c:465
 msgid "Data entry type:"
 msgstr "Entrada del tipo de datos:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:465
+#: ../tools/browser/schema-browser/table-preferences.c:466
 msgid ""
 "Defines how data for the selected column\n"
 "will be displayed in forms. Leave 'Default' to have\n"
@@ -7513,20 +7580,20 @@ msgstr ""
 "Déjelo como «Predeterminado» para tener la\n"
 "pantalla predeterminada"
 
-#: ../tools/browser/schema-browser/table-preferences.c:474
-#: ../tools/browser/schema-browser/table-preferences.c:485
+#: ../tools/browser/schema-browser/table-preferences.c:475
+#: ../tools/browser/schema-browser/table-preferences.c:486
 msgid "none"
 msgstr "ninguna"
 
-#: ../tools/browser/schema-browser/table-preferences.c:478
+#: ../tools/browser/schema-browser/table-preferences.c:479
 msgid "Options:"
 msgstr "Opciones:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:489
+#: ../tools/browser/schema-browser/table-preferences.c:490
 msgid "Preview:"
 msgstr "Vista previa:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:490
+#: ../tools/browser/schema-browser/table-preferences.c:491
 msgid ""
 "Free form to test the configured\n"
 "data entry"
