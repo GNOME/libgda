@@ -299,7 +299,7 @@ init_from_query (DataSource *source, xmlNodePtr node)
 							g_hash_table_new_full (g_str_hash, g_str_equal,
 									       g_free, NULL);
 
-					tmp = g_strdup_printf ("%s@%d", source->priv->id, i);
+					tmp = g_strdup_printf ("%s@%d", source->priv->id, i+1);
 					g_array_append_val (source->priv->export_names, tmp);
 					g_hash_table_insert (source->priv->export_columns, tmp,
 							     GINT_TO_POINTER (i + 1));

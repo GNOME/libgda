@@ -1,0 +1,20 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="features">
+  <info>
+    <title type="sort">1</title>
+    <link type="guide" xref="index#presentation"/>	
+  </info>
+  <title>Features</title>
+  <p>
+    <app>gda-browser</app>'s current features are:
+  </p>
+  <list>
+    <item><p>multiple simultaneous connections can be opened at once</p></item>
+    <item><p>multi threaded: each connection is handled in it own thread, meaning that no single
+	connection can lock the application</p></item>
+    <item><p>several windows can be opened for a single connection</p></item>
+    <item><p>full screen mode accessible to maximize the screen space usage</p></item>
+    <item><p>extensibility: the general framework is opened enough to add new integrated features</p></item>
+  </list>
+</page>

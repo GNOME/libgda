@@ -51,3 +51,6 @@ stamp-it
 keywords_hash.c
 mkkeywordhash
 gtk-doc.make
+gnome-doc-utils.make
+xmldocs.make
+omf.make

@@ -1,0 +1,41 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="variables-syntax">
+  <info>
+    <title type="sort">1</title>
+    <link type="topic" xref="query-execution-perspective"/>
+    <link type="topic" xref="data-manager-perspective"/>
+  </info>
+  <title>Variables in SQL code</title>
+  <p>
+    Variables (sometimes refered to as <em>placeholders</em>) are places in SQL code
+    which are replaced by actual values when the SQL code is executed. The benefits are
+    faster execution times (as the SQL code is parsed only once) and a protection against
+    SQL injection vulnerabilities.
+  </p>
+  <p>
+    Variables can be used in any SQL code, and are defined using the following syntax:
+  </p>
+  <code>
+<![CDATA[##<variable name>[::<variable type>[::NULL]]]]></code>
+  <p>
+    Notes:
+  </p>
+  <list>
+    <item><p>the <em>variable name</em> can contain any SQL identifier character or among the
+	<code>+-.|@?</code>characters (no space allowed)</p></item>
+    <item><p>the <em>variable type</em> can be among: <code>string</code>, <code>boolean</code>, 
+	<code>int</code>, <code>date</code>, <code>time</code>, <code>timestamp</code>, 
+	<code>guint</code>, <code>blob</code> and <code>binary</code></p></item>
+    <item><p>the <code>::NULL</code> can be appended to specify that the variable may take the
+	special <code>NULL</code> value.</p></item>
+  </list>
+  <p>
+    Examples:
+  </p>
+  <code>
+##name::string
+##id::int::NULL
+##sales@3::date::NULL
+##customers@id::int</code>
+</page>

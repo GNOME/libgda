@@ -108,6 +108,10 @@ AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
 AC_PROG_MAKE_SET
 
+dnl -- Initialize docs
+GNOME_DOC_INIT([0.9.0],,
+  [AC_MSG_WARN([[gnome-doc-utils not found: documentation will not be built.]])])
+
 dnl ******************************
 dnl glib-genmarshal
 dnl ******************************
@@ -1795,6 +1799,8 @@ tools/browser/data-manager/Makefile
 tools/browser/dummy-perspective/Makefile
 tools/browser/canvas/Makefile
 tools/browser/doc/Makefile
+tools/browser/help/Makefile
+tools/browser/help/gda-browser.omf
 testing/Makefile
 tests/Makefile
 tests/parser/Makefile

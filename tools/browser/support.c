@@ -220,6 +220,81 @@ browser_show_notice (GtkWindow *parent, const gchar *context, const gchar *forma
 	}
 }
 
+/**
+ * browser_show_help
+ * @topic: the help topic, or %NULL for the global index
+ */
+void
+browser_show_help (GtkWindow *parent, const gchar *topic)
+{
+	GdkScreen *screen;
+	GError *error = NULL;
+
+	const gchar *const *langs;
+	gchar *uri = NULL;
+	gint i;
+	
+	langs = g_get_language_names ();
+	for (i = 0; langs[i]; i++) {
+		const gchar *lang;
+		lang = langs[i];
+		if (strchr (lang, '.'))
+			continue;
+
+		uri = gda_gbr_get_file_path (GDA_DATA_DIR, "gnome", "help", "gda-browser", lang, NULL);
+
+		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
+			if (topic) {
+				gchar *tmp;
+				tmp = g_strdup_printf ("%s?%s", uri, topic);
+				g_free (uri);
+				uri = tmp;
+			}
+			break;
+		}
+		g_free (uri);
+		uri = NULL;
+	}
+	/*g_print ("URI [%s]\n", uri);*/
+	if (uri == NULL) {
+		browser_show_error (NULL,  _("Unable to display help. Please make sure the  "
+					     "documentation package is installed."));
+		return;
+	}
+
+#if GTK_CHECK_VERSION(2,14,0)
+	gchar *ruri;
+
+	screen = gtk_widget_get_screen ((GtkWidget*) parent);
+	ruri = g_strdup_printf ("ghelp:%s", uri);
+	gtk_show_uri (screen, ruri,  gtk_get_current_event_time (), &error);
+	g_free (ruri);
+
+#else
+	gchar *command;
+	
+	command = g_strconcat ("gnome-help ghelp://", uri,  NULL);
+	screen = gtk_widget_get_screen (GTK_WIDGET (parent));
+	gdk_spawn_command_line_on_screen (screen, command, &error);
+	g_free (command);
+#endif
+	if (error) {
+		GtkWidget *d;
+		d = gtk_message_dialog_new (parent, 
+					    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+					    GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, 
+					    "%s", _("Unable to open help file"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (d),
+							  "%s", error->message);
+		g_signal_connect (d, "response", G_CALLBACK (gtk_widget_destroy), NULL);
+		gtk_window_present (GTK_WINDOW (d));
+		
+		g_error_free (error);
+	}
+
+	g_free (uri);
+}
+
 static GtkWidget *
 _browser_make_tab_label (const gchar *label,
 			 GtkWidget *img, gboolean with_close,

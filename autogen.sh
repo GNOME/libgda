@@ -21,5 +21,5 @@ REQUIRED_AUTOMAKE_VERSION=1.9
 gnome_autogen=`which gnome-autogen.sh`
 test -z "$gnome_autogen"
 
-USE_GNOME2_MACROS=1 . $gnome_autogen
+USE_GNOME2_MACROS=1 USE_COMMON_DOC_BUILD=yes . $gnome_autogen
 

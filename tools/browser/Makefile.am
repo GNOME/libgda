@@ -1,7 +1,7 @@
 bin_PROGRAMS=gda-browser-4.0
 noinst_LTLIBRARIES = libbrowser.la
 
-SUBDIRS = data common schema-browser query-exec data-manager dummy-perspective
+SUBDIRS = data common schema-browser query-exec data-manager dummy-perspective help
 if HAVE_GOOCANVAS
 SUBDIRS+=canvas
 noinst_PROGRAMS=canvas-example
