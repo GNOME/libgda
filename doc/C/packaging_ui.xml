@@ -126,22 +126,20 @@
 `-- share
     |-- applications
     |   `-- gda-browser-4.0.desktop
+    |-- gnome
+    |   `-- help
+    |       `-- gda-browser
+    |           `-- C
+    |               |-- data-manager-perspective.page
+    |               [···]
+    |               |-- figures
+    |               |   |-- cnc_open.png
+    |               |   [···]
+    |               |   `-- trans-rollback.png
+    |               `-- variables.page
     `-- pixmaps
         |-- gda-browser-auth-big.png
-        |-- gda-browser-auth.png
-        |-- gda-browser-bookmark.png
-        |-- gda-browser-column-fk.png
-        |-- gda-browser-column-fknn.png
-        |-- gda-browser-column-nn.png
-        |-- gda-browser-column-pk.png
-        |-- gda-browser-column.png
-        |-- gda-browser-connected-big.png
-        |-- gda-browser-connected.png
-        |-- gda-browser-non-connected-big.png
-        |-- gda-browser-non-connected.png
-        |-- gda-browser-reference.png
-        |-- gda-browser-schema.png
-        |-- gda-browser-table.png
+        [···]
         `-- gda-browser.png
 	</programlisting>
       </para>
