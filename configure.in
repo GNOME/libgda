@@ -1823,7 +1823,8 @@ stamp.h
 
 dnl Dirty work to be able to build documentation
 chmod -R u+w ${srcdir}/doc/C
-cp doc/C/version.xml ${srcdir}/doc/C
+cp doc/C/version.xml ${srcdir}/doc/C/version.xml.tmp
+mv ${srcdir}/doc/C/version.xml.tmp ${srcdir}/doc/C/version.xml
 
 cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-4.0-sections.txt
 echo "" >> doc/C/libgda-4.0-sections.txt
