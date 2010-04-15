@@ -220,6 +220,7 @@ browser_show_notice (GtkWindow *parent, const gchar *context, const gchar *forma
 	}
 }
 
+#ifdef HAVE_GDU
 /**
  * browser_show_help
  * @topic: the help topic, or %NULL for the global index
@@ -294,6 +295,7 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 
 	g_free (uri);
 }
+#endif
 
 static GtkWidget *
 _browser_make_tab_label (const gchar *label,

@@ -169,7 +169,9 @@ data_console_get_type (void)
 static void editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole);
 static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
+#ifdef HAVE_GDU
 static void help_clicked_cb (GtkButton *button, DataConsole *dconsole);
+#endif
 static void spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole);
 static void spec_editor_changed_cb (SpecEditor *sped, DataConsole *dconsole);
 
@@ -316,11 +318,12 @@ data_console_new (BrowserConnection *bcnc)
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (spec_editor_toggled_cb), dconsole);
 
+#ifdef HAVE_GDU
 	button = browser_make_small_button (FALSE, _("Help"), GTK_STOCK_HELP, _("Help"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (help_clicked_cb), dconsole);
-
+#endif
 
 
 	/* data contents page */
@@ -352,11 +355,13 @@ execute_clicked_cb (GtkButton *button, DataConsole *dconsole)
 	data_console_execute (dconsole);
 }
 
+#ifdef HAVE_GDU
 static void
 help_clicked_cb (GtkButton *button, DataConsole *dconsole)
 {
 	browser_show_help ((GtkWindow*) gtk_widget_get_toplevel (dconsole), "data-manager-perspective");
 }
+#endif
 
 static void
 variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole)

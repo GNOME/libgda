@@ -109,8 +109,11 @@ AM_PROG_LIBTOOL
 AC_PROG_MAKE_SET
 
 dnl -- Initialize docs
-GNOME_DOC_INIT([0.9.0],,
-  [AC_MSG_WARN([[gnome-doc-utils not found: documentation will not be built.]])])
+GNOME_DOC_INIT([0.9.0],[have_gdu=yes],[have_gdu=no])
+if test x$have_gdu != xno; then
+   AC_DEFINE(HAVE_GDU, [1], [GdaBrowser documentation is built])
+fi
+AM_CONDITIONAL(HAVE_GDU, test x$have_gdu != xno)
 
 dnl ******************************
 dnl glib-genmarshal

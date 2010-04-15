@@ -203,7 +203,9 @@ static void transaction_commit_cb (GtkAction *action, BrowserWindow *bwin);
 static void transaction_rollback_cb (GtkAction *action, BrowserWindow *bwin);
 static void quit_cb (GtkAction *action, BrowserWindow *bwin);
 static void about_cb (GtkAction *action, BrowserWindow *bwin);
+#ifdef HAVE_GDU
 static void manual_cb (GtkAction *action, BrowserWindow *bwin);
+#endif
 static void window_close_cb (GtkAction *action, BrowserWindow *bwin);
 static void window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin);
 static void window_new_cb (GtkAction *action, BrowserWindow *bwin);
@@ -240,7 +242,9 @@ static const GtkActionEntry ui_actions[] = {
         { "WindowClose", GTK_STOCK_CLOSE, "_Close", "", "Close this window", G_CALLBACK (window_close_cb)},
         { "Help", NULL, "_Help", NULL, "Help", NULL },
         { "HelpAbout", GTK_STOCK_ABOUT, "_About", NULL, "About", G_CALLBACK (about_cb) },
+#ifdef HAVE_GDU
         { "HelpManual", GTK_STOCK_HELP, "_Manual", "F1", "Manual", G_CALLBACK (manual_cb) },
+#endif
 	{ "TransactionBegin", BROWSER_STOCK_BEGIN, N_("Begin"), NULL, N_("Begin a new transaction"),
           G_CALLBACK (transaction_begin_cb)},
         { "TransactionCommit", BROWSER_STOCK_COMMIT, N_("Commit"), NULL, N_("Commit current transaction"),
@@ -1022,11 +1026,13 @@ about_cb (GtkAction *action, BrowserWindow *bwin)
         gtk_widget_show (dialog);
 }
 
+#ifdef HAVE_GDU
 void
 manual_cb (GtkAction *action, BrowserWindow *bwin)
 {
 	browser_show_help (GTK_WINDOW (bwin), NULL);
 }
+#endif
 
 
 /**
