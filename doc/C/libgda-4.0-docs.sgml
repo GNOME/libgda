@@ -231,9 +231,9 @@
         </contrib>
       </author>
     </authorgroup>
-    <date>January 2009</date>
+    <date>April 2010</date>
     <copyright>
-      <year>1999 - 2009</year>
+      <year>1999 - 2010</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
@@ -631,6 +631,19 @@
 	       API will be added in the future.
 	   </para></listitem>
 	</itemizedlist>
+
+      <para>
+	The following schema illustrates how a statement is created and executed:
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="GdaStatement.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Statement execution illustrated</phrase>
+	  </textobject>
+	</mediaobject>
+      </para>
+
       </para>
       <para>
 	As each database implements its own SQL variant (all variants more or less close to the SQL92 or SQL99 standards), the
@@ -1543,6 +1556,21 @@ Description for type: DROP_COLUMN
 	</programlisting>
       </para>
     </chapter>
+
+    <chapter id="libgda-tools-controlcenter">
+      <title>Control center</title>
+      <para>
+	This tool is a graphical utility which allows the user to configure and test data sources (define DSN).
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-gdabrowser">
+      <title>GdaBrowser</title>
+      <para>
+	This tool is a graphical utility which helps database administrators in their tasks.
+      </para>
+    </chapter>
+
   </part>
 
   <part id="part_libgda-reports">

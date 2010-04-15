@@ -15,6 +15,10 @@
 	  </para>
 	</listitem>
 	<listitem>
+	  <para>the GObject introspection files (to be used by the GObject introspection framework)
+	  </para>
+	</listitem>
+	<listitem>
 	  <para>the tools, which require the runtime component
 	  </para>
 	</listitem>
@@ -73,21 +77,55 @@
   </sect1>
 
   <sect1>
-    <title>Tools</title>
+    <title>GObject introspection</title>
     <para>
-      This component has the following files:
+      If GObject introspection has been compiled, &LIBGDA;'s UI extension's introspection files are:
       <programlisting>
+|-- share
+|   `-- gir-1.0
+|       `-- Gdaui-4.0.gir
+`-- lib
+    `-- girepository-1.0
+        `-- Gdaui-4.0.typelib
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Tools</title>
+    <sect2>
+      <title>Control center</title>
+      <para>
+	The control center's files are:
+	<programlisting>
 .
 |-- bin
-|   |-- gda-browser-4.0
 |   `-- gda-control-center-4.0
 `-- share
     |-- applications
-    |   |-- gda-browser-4.0.desktop
     |   `-- gda-control-center-4.0.desktop
     |-- libgda-4.0
     |   `-- pixmaps
     |       `-- gdaui-generic.png
+    `-- pixmaps
+        |-- gda-control-center-newcnc.png
+        `-- gda-control-center.png
+	</programlisting>
+      </para>
+    </sect2>
+
+<sect2>
+      <title>Gda browser</title>
+      <para>
+	The <link linkend="libgda-tools-gdabrowser">GdaBrowser</link> can be packaged separately, but it depends on
+	the runtime component and the UI extension runtime component.
+	<programlisting>
+.
+|-- bin
+|   `-- gda-browser-4.0
+`-- share
+    |-- applications
+    |   `-- gda-browser-4.0.desktop
     `-- pixmaps
         |-- gda-browser-auth-big.png
         |-- gda-browser-auth.png
@@ -104,14 +142,10 @@
         |-- gda-browser-reference.png
         |-- gda-browser-schema.png
         |-- gda-browser-table.png
-        |-- gda-browser.png
-        |-- gda-control-center-newcnc.png
-        `-- gda-control-center.png
-      </programlisting>
-    </para>
-    <para>
-      This component should be made dependent on the runtime component above.
-    </para>
+        `-- gda-browser.png
+	</programlisting>
+      </para>
+    </sect2>
   </sect1>
 
   <sect1>
