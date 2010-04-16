@@ -245,6 +245,7 @@ data_source_new_from_xml_node (BrowserConnection *bcnc, xmlNodePtr node, GError 
 	}
 	else {
 		g_set_error (error, 0, 0,
+			     /* Translators: Do not translate "table" nor "query" */
 			     _("Node must be \"table\" or \"query\", and is \"%s\""), (gchar*)node->name);
 		g_object_unref (source);
 		source = NULL;
@@ -371,6 +372,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 	tname = xmlGetProp (node, BAD_CAST "name");
 	if (!tname) {
 		g_set_error (error, 0, 0,
+			     /* Translators: Do not translate "name" */
 			     _("Missing attribute \"name\" for table"));
 		return FALSE;
 	}
