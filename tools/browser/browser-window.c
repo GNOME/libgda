@@ -289,7 +289,9 @@ static const gchar *ui_actions_info =
         "    </menu>"
 	"    <placeholder name='MenuExtension'/>"
         "    <menu name='Help' action='Help'>"
+#ifdef HAVE_GDU
         "      <menuitem name='HelpManual' action= 'HelpManual'/>"
+#endif
         "      <menuitem name='HelpAbout' action= 'HelpAbout'/>"
         "    </menu>"
         "  </menubar>"

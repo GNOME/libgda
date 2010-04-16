@@ -244,13 +244,19 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 
 		uri = gda_gbr_get_file_path (GDA_DATA_DIR, "gnome", "help", "gda-browser", lang, NULL);
 
+		/*g_print ("TST URI [%s]\n", uri);*/
 		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
-			if (topic) {
-				gchar *tmp;
-				tmp = g_strdup_printf ("%s?%s", uri, topic);
-				g_free (uri);
-				uri = tmp;
-			}
+			/* terminate URI with a '/' for images to load properly,
+			 * see http://mail.gnome.org/archives/gnome-doc-list/2009-August/msg00058.html
+			 */
+			gchar *tmp;
+			if (topic)
+				tmp = g_strdup_printf ("%s/?%s", uri, topic);
+			else
+				tmp = g_strdup_printf ("%s/", uri);
+			g_free (uri);
+			uri = tmp;
+
 			break;
 		}
 		g_free (uri);
@@ -258,7 +264,7 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 	}
 	/*g_print ("URI [%s]\n", uri);*/
 	if (uri == NULL) {
-		browser_show_error (NULL,  _("Unable to display help. Please make sure the  "
+		browser_show_error (NULL,  _("Unable to display help. Please make sure the "
 					     "documentation package is installed."));
 		return;
 	}
