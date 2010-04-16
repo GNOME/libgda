@@ -849,81 +849,83 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 	case GDK_Right:
 		if ((cloud->priv->selection_mode == GTK_SELECTION_SINGLE) ||
 		    (cloud->priv->selection_mode == GTK_SELECTION_BROWSE)) {
-			    GtkTextIter iter;
-			    if (cloud->priv->selected_tags) {
-				    GtkTextMark *mark;
-				    mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
-				    gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter, mark);
-			    }
-			    else if ((event->keyval == GDK_Right) || (event->keyval == GDK_Down))
-				    gtk_text_buffer_get_start_iter (cloud->priv->tbuffer, &iter);
-			    else
-				    gtk_text_buffer_get_end_iter (cloud->priv->tbuffer, &iter);
-			    
-			    while (1) {
-				    gboolean done = FALSE;
-				    GtkMovementStep mvt_type;
-				    gint mvt_amount;
-				    switch (event->keyval) {
-				    case GDK_Up:
-					    done = ! gtk_text_view_backward_display_line ((GtkTextView*)cloud->priv->tview, &iter);
-					    mvt_type = GTK_MOVEMENT_DISPLAY_LINES;
-					    mvt_amount = -1;
-					    break;
-				    case GDK_Down:
-					    done = ! gtk_text_view_forward_display_line ((GtkTextView*)cloud->priv->tview, &iter);
-					    mvt_type = GTK_MOVEMENT_DISPLAY_LINES;
-					    mvt_amount = 1;
-					    break;
-				    case GDK_Left:
-					    done = ! gtk_text_iter_backward_char (&iter);
-					    mvt_type = GTK_MOVEMENT_VISUAL_POSITIONS;
-					    mvt_amount = -1;
-					    break;
-				    case GDK_Right:
-					    done = ! gtk_text_iter_forward_char (&iter);
-					    mvt_type = GTK_MOVEMENT_VISUAL_POSITIONS;
-					    mvt_amount = 1;
-					    break;
-				    }
-				    if (done)
-					    break;
-				    g_signal_emit_by_name (cloud->priv->tview, "move-cursor",
-							   mvt_type, mvt_amount, FALSE);
+			GtkTextIter iter;
+			if (cloud->priv->selected_tags) {
+				GtkTextMark *mark;
+				mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
+				gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter, mark);
+			}
+			else if ((event->keyval == GDK_Right) || (event->keyval == GDK_Down))
+				gtk_text_buffer_get_start_iter (cloud->priv->tbuffer, &iter);
+			else
+				gtk_text_buffer_get_end_iter (cloud->priv->tbuffer, &iter);
+			
+			gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (cloud->priv->tview), TRUE);
+			while (1) { /* loop to move the cursor enough positions to change the selected item */
+				gboolean done = FALSE;
+				GtkMovementStep mvt_type;
+				gint mvt_amount;
+				switch (event->keyval) {
+				case GDK_Up:
+					done = ! gtk_text_view_backward_display_line ((GtkTextView*)cloud->priv->tview, &iter);
+					mvt_type = GTK_MOVEMENT_DISPLAY_LINES;
+					mvt_amount = -1;
+					break;
+				case GDK_Down:
+					done = ! gtk_text_view_forward_display_line ((GtkTextView*)cloud->priv->tview, &iter);
+					mvt_type = GTK_MOVEMENT_DISPLAY_LINES;
+					mvt_amount = 1;
+					break;
+				case GDK_Left:
+					done = ! gtk_text_iter_backward_char (&iter);
+					mvt_type = GTK_MOVEMENT_VISUAL_POSITIONS;
+					mvt_amount = -1;
+					break;
+				case GDK_Right:
+					done = ! gtk_text_iter_forward_char (&iter);
+					mvt_type = GTK_MOVEMENT_VISUAL_POSITIONS;
+					mvt_amount = 1;
+					break;
+				}
+				if (done)
+					break; /* end of treatment as no movement possible */
+				g_signal_emit_by_name (cloud->priv->tview, "move-cursor",
+						       mvt_type, mvt_amount, FALSE);
 
-				    GtkTextMark *mark;
-				    mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
-				    gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter, mark);
+				GtkTextMark *mark;
+				mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
+				gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter, mark);
 
-				    GSList *tags, *tagp;
-				    done = FALSE;
-				    tags = gtk_text_iter_get_tags (&iter);
-				    for (tagp = tags;  tagp;  tagp = tagp->next) {
-					    GtkTextTag *tag = (GtkTextTag*) tagp->data;
-					    gint row;
-					    row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "row")) - 1;
-					    if (row >= 0) {
-						    if ((cloud->priv->selected_tags &&
-							 (tag != cloud->priv->selected_tags->data)) ||
-							!cloud->priv->selected_tags) {
-							    row_clicked (cloud, row, tag);
-							    done = TRUE;
-							    break;
-						    }
-					    }
-				    }
-				    if (tags) 
-					    g_slist_free (tags);
-				    if (done) {
-					    GtkTextMark *mark;
+				GSList *tags, *tagp;
+				done = FALSE;
+				tags = gtk_text_iter_get_tags (&iter);
+				for (tagp = tags;  tagp;  tagp = tagp->next) {
+					GtkTextTag *tag = (GtkTextTag*) tagp->data;
+					gint row;
+					row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "row")) - 1;
+					if (row >= 0) {
+						if ((cloud->priv->selected_tags &&
+						     (tag != cloud->priv->selected_tags->data)) ||
+						    !cloud->priv->selected_tags) {
+							row_clicked (cloud, row, tag);
+							done = TRUE;
+							break;
+						}
+					}
+				}
+				if (tags) 
+					g_slist_free (tags);
+				if (done) {
+					GtkTextMark *mark;
 					    
-					    mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
-					    gtk_text_view_scroll_mark_onscreen ((GtkTextView*)cloud->priv->tview, mark);
-					    break;
-				    }
-			    }
-			    return TRUE;
-		    }
+					mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
+					gtk_text_view_scroll_mark_onscreen ((GtkTextView*)cloud->priv->tview, mark);
+					break;
+				}
+			}
+			gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (cloud->priv->tview), FALSE);
+			return TRUE;
+		}
         default:
                 break;
         }
