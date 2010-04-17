@@ -17,14 +17,15 @@
 # Wolfgang Stöggl <c72578@yahoo.de>, 2010.
 # Mario Blättermann <mariobl@gnome.org>, 2009, 2010.
 # Christian Kirbach  <Christian.Kirbach@googlemail.com>, 2009, 2010.
+# Christian Kirbach <Christian.Kirbach@googlemail.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-16 14:59+0200\n"
-"PO-Revision-Date: 2010-04-16 15:02+0200\n"
-"Last-Translator: Christian Kirbach  <Christian.Kirbach@googlemail.com>\n"
-"Language-Team: Deutsch <gnome-de@gnome.org>\n"
+"POT-Creation-Date: 2010-04-17 10:37+0200\n"
+"PO-Revision-Date: 2010-04-17 10:38+0200\n"
+"Last-Translator: Christian Kirbach <Christian.Kirbach@googlemail.com>\n"
+"Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -161,9 +162,9 @@ msgstr "Browser-Programm konnte nicht ausgeführt werden"
 #: ../tools/browser/browser-connection.c:521
 #: ../tools/browser/browser-connection.c:530
 #: ../tools/browser/browser-connection.c:734
-#: ../tools/browser/browser-window.c:792 ../tools/browser/browser-window.c:806
-#: ../tools/browser/browser-window.c:820 ../tools/browser/browser-window.c:932
-#: ../tools/browser/browser-window.c:973 ../tools/browser/login-dialog.c:239
+#: ../tools/browser/browser-window.c:794 ../tools/browser/browser-window.c:808
+#: ../tools/browser/browser-window.c:822 ../tools/browser/browser-window.c:934
+#: ../tools/browser/browser-window.c:975 ../tools/browser/login-dialog.c:239
 #: ../tools/browser/main.c:94 ../tools/browser/main.c:108
 #: ../tools/browser/main.c:134
 #: ../tools/browser/data-manager/data-favorite-selector.c:201
@@ -406,7 +407,7 @@ msgstr "Neue Datenquelle konnte nicht deklariert werden"
 msgid "No valid data source info was created"
 msgstr "Information zur Datenquelle wurde nicht erzeugt"
 
-#: ../control-center/main.c:184 ../tools/browser/browser-window.c:1015
+#: ../control-center/main.c:184 ../tools/browser/browser-window.c:1017
 msgid "Database access services for the GNOME Desktop"
 msgstr "Dienste zum Datenbankzugriff für die GNOME-Arbeitsumgebung"
 
@@ -3902,14 +3903,14 @@ msgstr ""
 "DTD »%s« konnte nicht erfolgreich eingelesen werden: Überprüfung des XML-"
 "Datenimports wird nicht ausgeführt (einige Fehler könnten auftreten)"
 
-#: ../libgda-ui/gdaui-cloud.c:244 ../libgda-ui/gdaui-cloud.c:979
+#: ../libgda-ui/gdaui-cloud.c:244 ../libgda-ui/gdaui-cloud.c:981
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr ""
 "Falscher Spaltentyp für Bezeichnung: Zeichenkette wurde erwartet, erhalten "
 "wurde »%s«"
 
-#: ../libgda-ui/gdaui-cloud.c:1072 ../tools/browser/common/objects-cloud.c:445
+#: ../libgda-ui/gdaui-cloud.c:1074 ../tools/browser/common/objects-cloud.c:445
 msgid "Find:"
 msgstr "Suchen:"
 
@@ -6463,63 +6464,63 @@ msgstr "Aktuelle Transaktion einspielen"
 msgid "Rollback current transaction"
 msgstr "Aktuelle Transaktion zurücknehmen"
 
-#: ../tools/browser/browser-window.c:338
+#: ../tools/browser/browser-window.c:340
 msgid "unnamed"
 msgstr "Unbenannt"
 
-#: ../tools/browser/browser-window.c:339
+#: ../tools/browser/browser-window.c:341
 #, c-format
 msgid "Connection: %s"
 msgstr "Verbindung: %s"
 
-#: ../tools/browser/browser-window.c:690 ../tools/browser/support.c:70
+#: ../tools/browser/browser-window.c:692 ../tools/browser/support.c:70
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Wollen Sie die Verbindung »%s« schließen?"
 
-#: ../tools/browser/browser-window.c:732 ../tools/browser/browser-window.c:739
+#: ../tools/browser/browser-window.c:734 ../tools/browser/browser-window.c:741
 msgid "Do you want to quit the application?"
 msgstr "Wollen Sie diese Anwendung beenden?"
 
-#: ../tools/browser/browser-window.c:733
+#: ../tools/browser/browser-window.c:735
 msgid "all the connections will be closed."
 msgstr "Alle Verbindungen werden geschlossen."
 
-#: ../tools/browser/browser-window.c:740
+#: ../tools/browser/browser-window.c:742
 msgid "the connection will be closed."
 msgstr "Verbindung wird geschlossen."
 
-#: ../tools/browser/browser-window.c:791
+#: ../tools/browser/browser-window.c:793
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Fehler beim Starten der Transaktion: %s"
 
-#: ../tools/browser/browser-window.c:805
+#: ../tools/browser/browser-window.c:807
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Fehler beim Einspielen der Transaktion: %s"
 
-#: ../tools/browser/browser-window.c:819
+#: ../tools/browser/browser-window.c:821
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Fehler beim Zurücknehmen der Transaktion: %s"
 
-#: ../tools/browser/browser-window.c:931
+#: ../tools/browser/browser-window.c:933
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Fehler beim Aktualisieren der gekoppelten Verbindung: %s"
 
-#: ../tools/browser/browser-window.c:972
+#: ../tools/browser/browser-window.c:974
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "Gekoppelte Verbindung konnte nicht geöffnet werden: %s"
 
-#: ../tools/browser/browser-window.c:1012
+#: ../tools/browser/browser-window.c:1014
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
 msgid "Database browser"
 msgstr "Datenbankbrowser"
 
-#: ../tools/browser/browser-window.c:1266
+#: ../tools/browser/browser-window.c:1268
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -6694,19 +6695,19 @@ msgstr "Achtung:"
 msgid "Don't show this message again"
 msgstr "Diese Meldung nicht wieder anzeigen"
 
-#: ../tools/browser/support.c:261
+#: ../tools/browser/support.c:267
 msgid ""
-"Unable to display help. Please make sure the  documentation package is "
+"Unable to display help. Please make sure the documentation package is "
 "installed."
 msgstr ""
 "Die Hilfe kann nicht angezeigt werden. Bitte stellen Sie sicher, dass das "
 "Dokumentationspaket installiert ist."
 
-#: ../tools/browser/support.c:287
+#: ../tools/browser/support.c:293
 msgid "Unable to open help file"
 msgstr "Die Hilfedatei kann nicht geöffnet werden"
 
-#: ../tools/browser/support.c:341
+#: ../tools/browser/support.c:347
 msgid "Close tab"
 msgstr "Reiter schließen"
 
