@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-04-06 18:48+0000\n"
-"PO-Revision-Date: 2010-04-07 10:47+0100\n"
+"POT-Creation-Date: 2010-04-17 08:38+0000\n"
+"PO-Revision-Date: 2010-04-19 08:49+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr "Podatkovni viri"
 
 #: ../control-center/dsn-config.c:126
 msgid "Configured data sources in the system"
-msgstr "Nastavljeni viri podatkov v sistemu"
+msgstr "Nastavljeni podatkovni viri v sistemu"
 
 #: ../control-center/dsn-config.c:184
 msgid "Data sources are the means by which database connections are identified: all the information needed to open a connection to a specific database using a 'provider' is referenced using a unique name."
@@ -155,11 +155,11 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/browser-connection.c:521
 #: ../tools/browser/browser-connection.c:530
 #: ../tools/browser/browser-connection.c:734
-#: ../tools/browser/browser-window.c:785
-#: ../tools/browser/browser-window.c:799
-#: ../tools/browser/browser-window.c:813
-#: ../tools/browser/browser-window.c:925
-#: ../tools/browser/browser-window.c:966
+#: ../tools/browser/browser-window.c:794
+#: ../tools/browser/browser-window.c:808
+#: ../tools/browser/browser-window.c:822
+#: ../tools/browser/browser-window.c:934
+#: ../tools/browser/browser-window.c:975
 #: ../tools/browser/login-dialog.c:239
 #: ../tools/browser/main.c:94
 #: ../tools/browser/main.c:108
@@ -387,7 +387,7 @@ msgid "No valid data source info was created"
 msgstr "Ni ustvarjenih veljavnih podatkov o viru"
 
 #: ../control-center/main.c:184
-#: ../tools/browser/browser-window.c:1008
+#: ../tools/browser/browser-window.c:1017
 msgid "Database access services for the GNOME Desktop"
 msgstr "Storitev dostopa do podatkovnih zbirk za GNOME namizje."
 
@@ -552,7 +552,7 @@ msgstr "Enoznačna vrednost GThread preko katere bo na voljo povezava.Nastavite 
 
 #: ../libgda/gda-connection.c:328
 msgid "Tells if the connection acts as a thread wrapper around another connection, making it completely thread safe"
-msgstr "Pove ali je povezava ovita okoli  druge povezave in je s tem zavarovana"
+msgstr "Pove ali je povezava ovita okoli druge povezave in je s tem zavarovana"
 
 #: ../libgda/gda-connection.c:343
 msgid "Make the connection set up a monitoring function in the mainloop to monitor the wrapped connection"
@@ -1448,7 +1448,7 @@ msgstr "Lastnosti 'g-type' ni mogoče spremeniti"
 #: ../libgda/gda-holder.c:846
 #, c-format
 msgid "Unable to convert string to '%s' type"
-msgstr "Ni mogoče pretvoriti niti v  vrsto '%s'"
+msgstr "Ni mogoče pretvoriti niti v vrsto '%s'"
 
 #: ../libgda/gda-holder.c:908
 msgid "Can't use this method to set value because there is already a static value"
@@ -2323,7 +2323,7 @@ msgstr "Ni mogoče pridobiti imena stolpce"
 
 #: ../libgda/gda-tree-mgr-label.c:207
 #: ../tools/browser/canvas/browser-canvas-table.c:309
-#: ../tools/browser/data-manager/data-source.c:827
+#: ../tools/browser/data-manager/data-source.c:829
 msgid "No name"
 msgstr "Brez imena"
 
@@ -3783,12 +3783,12 @@ msgid "'%s' DTD not parsed successfully. XML data layout validation will not be 
 msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda podatkov XML ne bo izvedeno (lahko se pojavijo napake)"
 
 #: ../libgda-ui/gdaui-cloud.c:244
-#: ../libgda-ui/gdaui-cloud.c:979
+#: ../libgda-ui/gdaui-cloud.c:981
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr "Napačna vrsta za oznako stolpca: pričakovan je niz, dobljen pa %s"
 
-#: ../libgda-ui/gdaui-cloud.c:1072
+#: ../libgda-ui/gdaui-cloud.c:1074
 #: ../tools/browser/common/objects-cloud.c:445
 msgid "Find:"
 msgstr "Poišči:"
@@ -6217,17 +6217,17 @@ msgid "Bookmarks"
 msgstr "Zaznamki"
 
 #: ../tools/browser/browser-stock-icons.c:47
-#: ../tools/browser/browser-window.c:242
+#: ../tools/browser/browser-window.c:248
 msgid "Begin"
 msgstr "Začetek"
 
 #: ../tools/browser/browser-stock-icons.c:48
-#: ../tools/browser/browser-window.c:244
+#: ../tools/browser/browser-window.c:250
 msgid "Commit"
 msgstr "Uveljavi"
 
 #: ../tools/browser/browser-stock-icons.c:49
-#: ../tools/browser/browser-window.c:246
+#: ../tools/browser/browser-window.c:252
 msgid "Rollback"
 msgstr "Povrni"
 
@@ -6243,19 +6243,19 @@ msgstr "Uporabljene so zvezane povezave"
 msgid "Virtual connection using this connection is busy"
 msgstr "Navidezna povezava, ki uporablja to povezavo je zasedena"
 
-#: ../tools/browser/browser-window.c:220
+#: ../tools/browser/browser-window.c:223
 msgid "_Fullscreen"
 msgstr "_Celozaslonski način"
 
-#: ../tools/browser/browser-window.c:220
+#: ../tools/browser/browser-window.c:223
 msgid "Use the whole screen"
 msgstr "Uporabi celoten zaslon"
 
-#: ../tools/browser/browser-window.c:226
+#: ../tools/browser/browser-window.c:229
 msgid "_Bind connection"
 msgstr "_Zveži povezave"
 
-#: ../tools/browser/browser-window.c:226
+#: ../tools/browser/browser-window.c:229
 msgid ""
 "Use connection to create\n"
 "a new binding connection to access data\n"
@@ -6265,77 +6265,77 @@ msgstr ""
 "novo vezno povezavo za dostop do\n"
 "več podatkovnih zbirk hkrati"
 
-#: ../tools/browser/browser-window.c:242
+#: ../tools/browser/browser-window.c:248
 msgid "Begin a new transaction"
 msgstr "Začni z novo transakcijo"
 
-#: ../tools/browser/browser-window.c:244
+#: ../tools/browser/browser-window.c:250
 msgid "Commit current transaction"
 msgstr "Uveljavi trenutno transakcijo"
 
-#: ../tools/browser/browser-window.c:246
+#: ../tools/browser/browser-window.c:252
 msgid "Rollback current transaction"
 msgstr "Povrni trenutno transakcijo"
 
-#: ../tools/browser/browser-window.c:331
+#: ../tools/browser/browser-window.c:340
 msgid "unnamed"
 msgstr "neimenovano"
 
-#: ../tools/browser/browser-window.c:332
+#: ../tools/browser/browser-window.c:341
 #, c-format
 msgid "Connection: %s"
 msgstr "Povezava: %s"
 
-#: ../tools/browser/browser-window.c:683
+#: ../tools/browser/browser-window.c:692
 #: ../tools/browser/support.c:70
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Ali želite zapreti '%s' povezavo?"
 
-#: ../tools/browser/browser-window.c:725
-#: ../tools/browser/browser-window.c:732
+#: ../tools/browser/browser-window.c:734
+#: ../tools/browser/browser-window.c:741
 msgid "Do you want to quit the application?"
 msgstr "Ali želite končati program?"
 
-#: ../tools/browser/browser-window.c:726
+#: ../tools/browser/browser-window.c:735
 msgid "all the connections will be closed."
 msgstr "vse povezave bodo zaprte."
 
-#: ../tools/browser/browser-window.c:733
+#: ../tools/browser/browser-window.c:742
 msgid "the connection will be closed."
 msgstr "povezava bo zaprta."
 
-#: ../tools/browser/browser-window.c:784
+#: ../tools/browser/browser-window.c:793
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Napaka med začenjanjem transakcije: %s"
 
-#: ../tools/browser/browser-window.c:798
+#: ../tools/browser/browser-window.c:807
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Napaka med uveljavljanjem transakcije: %s"
 
-#: ../tools/browser/browser-window.c:812
+#: ../tools/browser/browser-window.c:821
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Napaka med povrnitvijo transakcije: %s"
 
-#: ../tools/browser/browser-window.c:924
+#: ../tools/browser/browser-window.c:933
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Napaka med posodabljanjem povezave: %s"
 
-#: ../tools/browser/browser-window.c:965
+#: ../tools/browser/browser-window.c:974
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "Ni mogoče odpreti povezave: %s"
 
-#: ../tools/browser/browser-window.c:1005
+#: ../tools/browser/browser-window.c:1014
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
 msgid "Database browser"
 msgstr "Brskalnik podatkovne zbirke"
 
-#: ../tools/browser/browser-window.c:1250
+#: ../tools/browser/browser-window.c:1268
 #, c-format
 msgid "The current perspective has changed to the '%s' perspective, you can switch back to previous perspective through the 'Perspective/%s' menu, or using the '%s' shortcut"
 msgstr "Trenutna perspektiva je spremenjena v '%s' perspektivo, nazaj pa jo je mogoče preklopiti preko vnosa menija 'Perspektiva/%s' ali pa s tipkovno bližnjico '%s'."
@@ -6504,11 +6504,19 @@ msgstr "Opomba:"
 msgid "Don't show this message again"
 msgstr "Sporočila ne pokaži več"
 
-#: ../tools/browser/support.c:264
+#: ../tools/browser/support.c:267
+msgid "Unable to display help. Please make sure the documentation package is installed."
+msgstr "Ni mogoče pokazati pomoči. Prepričajte se, da je paket dokumentacije nameščen."
+
+#: ../tools/browser/support.c:293
+msgid "Unable to open help file"
+msgstr "Ni mogoče odpreti datoteke pomoči"
+
+#: ../tools/browser/support.c:347
 msgid "Close tab"
 msgstr "Zapri zavihek"
 
-#: ../tools/browser/support.h:83
+#: ../tools/browser/support.h:86
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -6763,27 +6771,27 @@ msgstr[3] "%d preglednice v shemi '%s':"
 msgid "None"
 msgstr "Brez"
 
-#: ../tools/browser/data-manager/data-console.c:194
+#: ../tools/browser/data-manager/data-console.c:197
 msgid "Data Manager"
 msgstr "Upravljalnik podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:212
+#: ../tools/browser/data-manager/data-console.c:215
 #: ../tools/browser/query-exec/query-console.c:336
 msgid "Variables' values:"
 msgstr "Vrednosti spremenljivke:"
 
-#: ../tools/browser/data-manager/data-console.c:246
+#: ../tools/browser/data-manager/data-console.c:249
 #: ../tools/browser/query-exec/query-console.c:315
 msgid "SQL code to execute:"
 msgstr "Koda SQL ia izvedbo:"
 
-#: ../tools/browser/data-manager/data-console.c:292
+#: ../tools/browser/data-manager/data-console.c:295
 #: ../tools/browser/query-exec/query-console.c:363
 #: ../tools/browser/query-exec/query-console.c:427
 msgid "Clear"
 msgstr "Počisti"
 
-#: ../tools/browser/data-manager/data-console.c:292
+#: ../tools/browser/data-manager/data-console.c:295
 #: ../tools/browser/query-exec/query-console.c:363
 msgid ""
 "Clear the editor's\n"
@@ -6792,21 +6800,21 @@ msgstr ""
 "Počisti vsebino\n"
 "urejevalnika"
 
-#: ../tools/browser/data-manager/data-console.c:297
+#: ../tools/browser/data-manager/data-console.c:300
 #: ../tools/browser/query-exec/query-console.c:368
 msgid "Variables"
 msgstr "Spremenljivke"
 
-#: ../tools/browser/data-manager/data-console.c:297
+#: ../tools/browser/data-manager/data-console.c:300
 msgid "Show variables needed"
 msgstr "Pokaži zahtevane spremenljivke"
 
-#: ../tools/browser/data-manager/data-console.c:303
+#: ../tools/browser/data-manager/data-console.c:306
 #: ../tools/browser/query-exec/query-console.c:374
 msgid "Execute"
 msgstr "Izvedi"
 
-#: ../tools/browser/data-manager/data-console.c:303
+#: ../tools/browser/data-manager/data-console.c:306
 msgid ""
 "Execute specified\n"
 "data manager"
@@ -6814,11 +6822,11 @@ msgstr ""
 "Izvedi določen\n"
 "upravljalnik podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:309
+#: ../tools/browser/data-manager/data-console.c:312
 msgid "View XML"
 msgstr "Pogled XML"
 
-#: ../tools/browser/data-manager/data-console.c:309
+#: ../tools/browser/data-manager/data-console.c:312
 msgid ""
 "View specifications\n"
 "as XML (advanced)"
@@ -6826,31 +6834,36 @@ msgstr ""
 "Pogled določil\n"
 "kot XML (napredno)"
 
-#: ../tools/browser/data-manager/data-console.c:327
+#: ../tools/browser/data-manager/data-console.c:322
+#: ../tools/html-doc.c:95
+msgid "Help"
+msgstr "Pomoč"
+
+#: ../tools/browser/data-manager/data-console.c:337
 msgid "BBB:"
 msgstr "BBB:"
 
-#: ../tools/browser/data-manager/data-console.c:409
+#: ../tools/browser/data-manager/data-console.c:427
 #, c-format
 msgid "No data source defined"
 msgstr "Ni določenega podatkovnega vira"
 
-#: ../tools/browser/data-manager/data-console.c:468
-#: ../tools/browser/data-manager/spec-editor.c:569
-#: ../tools/browser/data-manager/spec-editor.c:627
+#: ../tools/browser/data-manager/data-console.c:486
+#: ../tools/browser/data-manager/spec-editor.c:538
+#: ../tools/browser/data-manager/spec-editor.c:596
 #, c-format
 msgid "Error parsing XML specifications"
 msgstr "Napaka med razčlenjevanjem XML določil"
 
-#: ../tools/browser/data-manager/data-console.c:485
+#: ../tools/browser/data-manager/data-console.c:503
 msgid "_Toggle mode"
 msgstr "_Preklopni način"
 
-#: ../tools/browser/data-manager/data-console.c:485
+#: ../tools/browser/data-manager/data-console.c:503
 msgid "Switch between compose and execute modes"
 msgstr "Preklop med načinom sestavljanja in izvajanja"
 
-#: ../tools/browser/data-manager/data-console.c:529
+#: ../tools/browser/data-manager/data-console.c:547
 msgid "Data manager"
 msgstr "Upravljalnik podatkov"
 
@@ -6891,63 +6904,65 @@ msgstr "Priljubljeno"
 msgid "Unnamed data manager"
 msgstr "Neimenovan upravljalnik podatkov"
 
-#: ../tools/browser/data-manager/data-source.c:248
+#. Translators: Do not translate "table" nor "query"
+#: ../tools/browser/data-manager/data-source.c:249
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
 msgstr "Vozlišče mora biti \"preglednica\" ali \"poizvedba\", je pa \"%s\""
 
-#: ../tools/browser/data-manager/data-source.c:277
+#: ../tools/browser/data-manager/data-source.c:278
 #, c-format
 msgid "Multiple statements detected, only the first will be used"
 msgstr "Zaznanih je več izjav, uporabljena pa bo le prva"
 
-#: ../tools/browser/data-manager/data-source.c:347
+#: ../tools/browser/data-manager/data-source.c:348
 #: ../tools/browser/schema-browser/mgr-columns.c:274
 #, c-format
 msgid "Not ready"
 msgstr "Ni pripravljeno"
 
-#: ../tools/browser/data-manager/data-source.c:356
+#: ../tools/browser/data-manager/data-source.c:357
 #, c-format
 msgid "Could not find the \"%s\" table"
 msgstr "Ni mogoče najti preglednice \"%s\""
 
-#: ../tools/browser/data-manager/data-source.c:361
+#: ../tools/browser/data-manager/data-source.c:362
 #, c-format
 msgid "The \"%s\" object is not a table"
 msgstr "Predmet \"%s\" ni preglednica"
 
-#: ../tools/browser/data-manager/data-source.c:374
+#. Translators: Do not translate "name"
+#: ../tools/browser/data-manager/data-source.c:376
 #, c-format
 msgid "Missing attribute \"name\" for table"
 msgstr "Manjka atribut \"ime\" preglednice"
 
-#: ../tools/browser/data-manager/data-source.c:379
+#: ../tools/browser/data-manager/data-source.c:381
 #, c-format
 msgid "Contents of '%s'"
 msgstr "Vsebina '%s'"
 
-#: ../tools/browser/data-manager/data-source.c:397
+#: ../tools/browser/data-manager/data-source.c:399
 #, c-format
 msgid "Could not build SELECT statement"
 msgstr "Ni mogoče izgraditi izjave SELECT"
 
-#: ../tools/browser/data-manager/data-source.c:474
+#: ../tools/browser/data-manager/data-source.c:476
 #, c-format
 msgid "Could not find any foreign key to \"%s\""
 msgstr "Ni mogoče najti tujega ključa za \"'%s\""
 
-#: ../tools/browser/data-manager/data-source.c:482
+#: ../tools/browser/data-manager/data-source.c:484
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr "Polja povezana s tujim ključem za \"%s\" niso znana"
 
-#: ../tools/browser/data-manager/data-source.c:573
+#: ../tools/browser/data-manager/data-source.c:575
 #, c-format
 msgid "Statement to execute is not a selection statement"
 msgstr "Izjave za izvedbo ni izjava izbire"
 
-#: ../tools/browser/data-manager/data-source.c:703
+#: ../tools/browser/data-manager/data-source.c:705
 #, c-format
 msgid "No SELECT statement to execute"
 msgstr "Ni določene izjave SELECT za izvedbo"
@@ -6955,44 +6970,6 @@ msgstr "Ni določene izjave SELECT za izvedbo"
 #: ../tools/browser/data-manager/data-widget.c:340
 msgid "Error: no detail"
 msgstr "Napaka: ni podrobnosti"
-
-#: ../tools/browser/data-manager/spec-editor.c:174
-msgid ""
-"<small>The XML tree's root node must be a <span foreground=\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more data source definitions.\n"
-"Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> nodes, both accepting the following optional attributes:\n"
-" - <span foreground=\"#4e9a06\">\"id\"</span> to specify a data source string ID, used when linking data sources one to another;\n"
-" - <span foreground=\"#4e9a06\">\"title\"</span> to specify a title.\n"
-"\n"
-"Use the <span foreground=\"#4e9a06\"><tt>&lt;query&gt;</tt></span> tag to specify an SQL SELECT statement, as the contents of the tag. Linkage to other\n"
-"data sources can be achieved using variables in the SELECT's SQL.\n"
-"\n"
-"Use the <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> node to define a data source which will display the contents of a table. This tag:\n"
-" - requires the <span foreground=\"#4e9a06\">\"name\"</span> attribute which represents the table name.\n"
-" - can contain a <span foreground=\"#4e9a06\"><tt>&lt;depend&gt;</tt></span> node which defines a dependency on another data source with the \n"
-"   <span foreground=\"#4e9a06\">\"foreign_key_table\"</span> attribute defining the name of the table to which there are foreign keys\n"
-"   used to determine the dependency, and the <span foreground=\"#4e9a06\">\"id\"</span> attribute can specify a data source ID if different than\n"
-"   the aforementioned table.\n"
-"</small>"
-msgstr ""
-"<small>Vozlišče korena zgradbe XML mora biti<span foreground=\"#4e9a06\"><tt>&lt;podatek&gt;</tt></span>, ki lahko vsebuje enega ali več določil podatkovnega vira.\n"
-"Vsak podatkovni vir je določen z vozliščem <span foreground=\"#4e9a06\"><tt>&lt;poizvedbe&gt;</tt></span> ali pa <span foreground=\"#4e9a06\"><tt>&lt;preglednice&gt;</tt></span>, ki imajo možnost sprejemanja atributov:\n"
-" - <span foreground=\"#4e9a06\">\"id\"</span> za določilo ID podatkovnega vira, ki je uporabljen za povezovanje virov podatkov med seboj;\n"
-" - <span foreground=\"#4e9a06\">\"naziv\"</span> za določilo naziva.\n"
-"\n"
-"Uporabiti je treba <span foreground=\"#4e9a06\"><tt>&lt;poizvedbo&gt;</tt></span> za določitev izjave SQL SELECT kot vsebina oznake. Povezovanje podatkovnih virov med seboj\n"
-"je mogoče doseči z uporabo spremenljivke SELECT SQL.\n"
-"\n"
-"Uporabiti je mogoče tudi oznako <span foreground=\"#4e9a06\"><tt>&lt;preglednica&gt;</tt></span> za določitev podatkovnega vira, ki prikazuje vsebino preglednice. Ta oznaka:\n"
-" - zahteva atribut <span foreground=\"#4e9a06\">\"ime\"</span>, ki zahteva ime preglednice.\n"
-" - lahko vsebuje vozlišče <span foreground=\"#4e9a06\"><tt>&lt;odvisnosti&gt;</tt></span>, ki določa odvisnost od drugega podatkovnega vira z določilom atributa \n"
-"   <span foreground=\"#4e9a06\">\"preglednica_tujih_ključev\"</span>, ki določa ime preglednice s tujimi ključi,\n"
-"    ki  določa odvisnost in atribut <span foreground=\"#4e9a06\">\"id\"</span>, ki določa podatkovni vir z drugo podatkovno zbirko\n"
-"\n"
-"</small>"
-
-#: ../tools/browser/data-manager/spec-editor.c:231
-msgid "XML syntax help"
-msgstr "Pomoč za XML skladnjo"
 
 #: ../tools/browser/query-exec/gda-sql.lang.h:2
 msgid "Data Type"
@@ -8257,10 +8234,6 @@ msgstr "Ustvarjeno s GDASQL konzolo"
 msgid "Console"
 msgstr "Konzola"
 
-#: ../tools/html-doc.c:95
-msgid "Help"
-msgstr "Pomoč"
-
 #: ../tools/tools-input.c:322
 #, c-format
 msgid "Could not save history file to '%s': %s"
@@ -8375,6 +8348,70 @@ msgstr "Predmeti"
 #: ../tools/web-server.c:1883
 msgid "Triggers"
 msgstr "Sprožilniki"
+
+#~ msgid ""
+#~ "<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
+#~ "data source definitions.\n"
+#~ "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;"
+#~ "query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
+#~ "tt></span> nodes, both accepting the following optional attributes:\n"
+#~ " - <span foreground=\"#4e9a06\">\"id\"</span> to specify a data source "
+#~ "string ID, used when linking data sources one to another;\n"
+#~ " - <span foreground=\"#4e9a06\">\"title\"</span> to specify a title.\n"
+#~ "\n"
+#~ "Use the <span foreground=\"#4e9a06\"><tt>&lt;query&gt;</tt></span> tag to "
+#~ "specify an SQL SELECT statement, as the contents of the tag. Linkage to "
+#~ "other\n"
+#~ "data sources can be achieved using variables in the SELECT's SQL.\n"
+#~ "\n"
+#~ "Use the <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> node "
+#~ "to define a data source which will display the contents of a table. This "
+#~ "tag:\n"
+#~ " - requires the <span foreground=\"#4e9a06\">\"name\"</span> attribute "
+#~ "which represents the table name.\n"
+#~ " - can contain a <span foreground=\"#4e9a06\"><tt>&lt;depend&gt;</tt></"
+#~ "span> node which defines a dependency on another data source with the \n"
+#~ "   <span foreground=\"#4e9a06\">\"foreign_key_table\"</span> attribute "
+#~ "defining the name of the table to which there are foreign keys\n"
+#~ "   used to determine the dependency, and the <span foreground=\"#4e9a06\">"
+#~ "\"id\"</span> attribute can specify a data source ID if different than\n"
+#~ "   the aforementioned table.\n"
+#~ "</small>"
+#~ msgstr ""
+#~ "<small>Vozlišče korena zgradbe XML mora biti<span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;podatek&gt;</tt></span>, ki lahko vsebuje enega ali več "
+#~ "določil podatkovnega vira.\n"
+#~ "Vsak podatkovni vir je določen z vozliščem <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;poizvedbe&gt;</tt></span> ali pa <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;preglednice&gt;</tt></span>, ki imajo možnost sprejemanja "
+#~ "atributov:\n"
+#~ " - <span foreground=\"#4e9a06\">\"id\"</span> za določilo ID podatkovnega "
+#~ "vira, ki je uporabljen za povezovanje virov podatkov med seboj;\n"
+#~ " - <span foreground=\"#4e9a06\">\"naziv\"</span> za določilo naziva.\n"
+#~ "\n"
+#~ "Uporabiti je treba <span foreground=\"#4e9a06\"><tt>&lt;poizvedbo&gt;</"
+#~ "tt></span> za določitev izjave SQL SELECT kot vsebina oznake. Povezovanje "
+#~ "podatkovnih virov med seboj\n"
+#~ "je mogoče doseči z uporabo spremenljivke SELECT SQL.\n"
+#~ "\n"
+#~ "Uporabiti je mogoče tudi oznako <span foreground=\"#4e9a06\"><tt>&lt;"
+#~ "preglednica&gt;</tt></span> za določitev podatkovnega vira, ki prikazuje "
+#~ "vsebino preglednice. Ta oznaka:\n"
+#~ " - zahteva atribut <span foreground=\"#4e9a06\">\"ime\"</span>, ki "
+#~ "zahteva ime preglednice.\n"
+#~ " - lahko vsebuje vozlišče <span foreground=\"#4e9a06\"><tt>&lt;"
+#~ "odvisnosti&gt;</tt></span>, ki določa odvisnost od drugega podatkovnega "
+#~ "vira z določilom atributa \n"
+#~ "   <span foreground=\"#4e9a06\">\"preglednica_tujih_ključev\"</span>, ki "
+#~ "določa ime preglednice s tujimi ključi,\n"
+#~ "    ki  določa odvisnost in atribut <span foreground=\"#4e9a06\">\"id\"</"
+#~ "span>, ki določa podatkovni vir z drugo podatkovno zbirko\n"
+#~ "\n"
+#~ "</small>"
+
+#~ msgid "XML syntax help"
+#~ msgstr "Pomoč za XML skladnjo"
 
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
