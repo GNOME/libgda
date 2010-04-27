@@ -12,12 +12,12 @@
   the <keyseq><key>Ctrl</key><key>B</key></keyseq> shortcut.
 </p>
 <p>
-  The perspective is devided in two horizontal panes: the left pane for the user defined favorites, and
+  The perspective is divided in two horizontal panes: the left pane for the user defined favorites, and
   the right pane being the action area.
 </p>
 <figure>
   <title>Schema browser perspective's default view</title>
-  <desc>The default Schema browser prespective</desc>
+  <desc>The default Schema browser perspective</desc>
   <media type="image" mime="image/png" src="figures/mainwin.png"/>
 </figure>
 

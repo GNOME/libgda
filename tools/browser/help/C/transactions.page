@@ -20,7 +20,7 @@
   </list>
   <note>
     <p>
-      A transaction may be started automatically when executin a SELECT statement which involves
+      A transaction may be started automatically when executing a SELECT statement which involves
       binary objects (BLOBs), and the transaction may be locked while the resulting data set is
       kept in memory (to get rid of a data set in a
       <link xref="query-execution-perspective">query execution perspective</link>, clear the

@@ -14,7 +14,7 @@
   </p>
   <figure>
     <title>A connection window</title>
-    <desc>Window opened for the 'c1' connection (and the Schema browser prespective)</desc>
+    <desc>Window opened for the 'c1' connection (and the Schema browser perspective)</desc>
     <media type="image" mime="image/png" src="figures/mainwin.png"/>
   </figure>
 
@@ -30,7 +30,7 @@
   <p>
     The currently displayed perspective can be changed individually for each window, and, as all perspectives 
     have an action area composed of tabs, tabs can be moved from one window to the other if the source
-    and distination window are for the same connection, and display the same perspective (simply drag
+    and destination window are for the same connection, and display the same perspective (simply drag
     and drop a tab from one window to the other using the tab's label as a handle).
   </p>
 </page>

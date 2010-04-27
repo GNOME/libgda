@@ -12,12 +12,12 @@
   menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> shortcut.
 </p>
 <p>
-  The perspective is devided in two horizontal panes: the left pane for the user defined favorite statements,
+  The perspective is divided in two horizontal panes: the left pane for the user defined favorite statements,
   and the right pane being the action area.
 </p>
 <figure>
   <title>Query exec perspective</title>
-  <desc>The query exec prespective with one SELECT statement executed</desc>
+  <desc>The query exec perspective with one SELECT statement executed</desc>
   <media type="image" mime="image/png" src="figures/query-exec-persp.png"/>
 </figure>
 
@@ -76,7 +76,7 @@
 <section>
   <title>Execution history</title>
   <p>
-    The execution history part contains a list of the past executed statements, ordered by executaion date
+    The execution history part contains a list of the past executed statements, ordered by execution date
     along with an indication when the statement was executed (11 minutes in the figure above). Selecting
     an history item displays the corresponding result in the execution results part.
   </p>

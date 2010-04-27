@@ -14,10 +14,10 @@
 <p>
   The workflow in this perspective is organized around the definition of one or more <em>data sources</em>
   (which selects data in the database) which, when executed, result in a data set displayed in
-  a tabular view. The perspective's work area
+  a tabular view.
 </p>
 <p>
-  The perspective is devided in two horizontal panes: the left pane to keep favorite data sources set's
+  The perspective is divided in two horizontal panes: the left pane to keep favorite data sources set's
   definitions, and the right pane being the action area, where each data source is executed and the
   results presented in a tabular view.
 </p>
@@ -56,7 +56,7 @@
   </p>
   <figure>
     <title>Data sources edition</title>
-    <desc>Editing data sources in the data manager perspetive</desc>
+    <desc>Editing data sources in the data manager perspective</desc>
     <media type="image" mime="image/png" src="figures/data-man-xmlcompose.png"/>
   </figure>
 
@@ -67,7 +67,7 @@
     <item><p><gui>Clear</gui>: clears the XML editor</p></item>
     <item><p><gui>Variables</gui>: shows/hide the <link xref="variables-syntax">variables</link> panel where you can give values to the variables
 	present in the SQL code of any data source's definition. The panel is automatically shown when a variable is detected in 
-	the SQL code</p></item>
+	the SQL code.</p></item>
     <item><p><gui>Execute</gui>: executes the defined data sources</p></item>
     <item><p><gui>View XML</gui>: toggles between the XML editor and the UI editor</p></item>
     <item><p><gui>Help</gui>: shows some help</p></item>
@@ -86,7 +86,7 @@
     the right of the one for A.
   </p>
   <p>
-    Also if you change the selected row of tabular view of a data source A , then the tabular views of
+    Also if you change the selected row of tabular view of a data source A, then the tabular views of
     all the data sources depending on A will also have their tabular view refreshed.
   </p>
 </section>

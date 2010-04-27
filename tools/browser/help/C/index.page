@@ -10,7 +10,7 @@
 
   <title>Gda Browser Help</title>
   <p><app>gda-browser</app> is a tool for database administrators: they can analyse database's schemas
-    to understand how data is organized, run SQL commands interractively, and in a broader way manage
+    to understand how data is organized, run SQL commands interactively, and in a broader way manage
     the data contained in the databases.</p>
 
   <p>Several connections to databases can be opened at once, allowing the user to work on multiple
