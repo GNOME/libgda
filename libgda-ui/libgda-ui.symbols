@@ -1,5 +1,6 @@
 	gdaui_action_get_type
 	gdaui_action_mode_get_type
+	gdaui_basic_form_add_to_size_group
 	gdaui_basic_form_entry_grab_focus
 	gdaui_basic_form_entry_set_editable
 	gdaui_basic_form_entry_set_visible
@@ -12,6 +13,7 @@
 	gdaui_basic_form_is_valid
 	gdaui_basic_form_new
 	gdaui_basic_form_new_in_dialog
+	gdaui_basic_form_remove_from_size_group
 	gdaui_basic_form_reset
 	gdaui_basic_form_set_as_reference
 	gdaui_basic_form_set_entries_to_default

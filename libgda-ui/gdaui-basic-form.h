@@ -82,6 +82,15 @@ void              gdaui_basic_form_set_layout_from_file     (GdauiBasicForm *for
 							     const gchar *form_name);
 GtkWidget        *gdaui_basic_form_get_place_holder         (GdauiBasicForm *form, const gchar *placeholder_id);
 
+typedef enum {
+	GDAUI_BASIC_FORM_LABELS,
+	GDAUI_BASIC_FORM_ENTRIES
+} GdauiBasicFormPart;
+void              gdaui_basic_form_add_to_size_group        (GdauiBasicForm *form, GtkSizeGroup *size_group,
+							     GdauiBasicFormPart part);
+void              gdaui_basic_form_remove_from_size_group   (GdauiBasicForm *form, GtkSizeGroup *size_group,
+							     GdauiBasicFormPart part);
+
 G_END_DECLS
 
 #endif

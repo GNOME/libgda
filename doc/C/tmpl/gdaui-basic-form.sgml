@@ -304,3 +304,31 @@ which can be described by the following DTD.
 @Returns: 
 
 
+<!-- ##### ENUM GdauiBasicFormPart ##### -->
+<para>
+
+</para>
+
+@GDAUI_BASIC_FORM_LABELS: 
+@GDAUI_BASIC_FORM_ENTRIES: 
+
+<!-- ##### FUNCTION gdaui_basic_form_add_to_size_group ##### -->
+<para>
+
+</para>
+
+@form: 
+@size_group: 
+@part: 
+
+
+<!-- ##### FUNCTION gdaui_basic_form_remove_from_size_group ##### -->
+<para>
+
+</para>
+
+@form: 
+@size_group: 
+@part: 
+
+

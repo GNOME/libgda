@@ -130,6 +130,17 @@ enum {
 	PROP_CAN_EXPAND
 };
 
+typedef struct {
+	GtkSizeGroup *size_group; /* ref held here */
+	GdauiBasicFormPart part;
+} SizeGroup;
+static void
+size_group_free (SizeGroup *sg)
+{
+	g_object_unref (sg->size_group);
+	g_free (sg);
+}
+
 struct _GdauiBasicFormPriv
 {
 	GdaSet                 *set;
@@ -143,6 +154,8 @@ struct _GdauiBasicFormPriv
 	gboolean                forward_param_updates; /* forward them to the GdauiDataEntry widgets ? */
 	gboolean                show_actions;
 	gboolean                entries_auto_default;
+
+	GSList                 *size_groups; /* list of SizeGroup pointers */
 };
 
 
@@ -429,6 +442,11 @@ gdaui_basic_form_dispose (GObject *object)
 			get_rid_of_set (form->priv->set, form);
 
 		destroy_entries (form);
+
+		if (form->priv->size_groups) {
+			g_slist_foreach (form->priv->size_groups, (GFunc) size_group_free, NULL);
+			g_slist_free (form->priv->size_groups);
+		}
 
 		/* the private area itself */
 		g_free (form->priv);
@@ -825,6 +843,23 @@ create_entry_widget (SingleEntry *sentry)
 	sentry->entry = GDAUI_DATA_ENTRY (entry);
 	g_object_ref_sink (sentry->entry);
 	gdaui_data_entry_set_editable (sentry->entry, editable);
+
+	GSList *list;
+	for (list = sentry->form->priv->size_groups; list; list = list->next) {
+		SizeGroup *sg = (SizeGroup*) list->data;
+		switch (sg->part) {
+		case GDAUI_BASIC_FORM_LABELS:
+			if (sentry->label)
+				gtk_size_group_add_widget (sg->size_group, sentry->label);
+			break;
+		case GDAUI_BASIC_FORM_ENTRIES:
+			if (sentry->entry)
+				gtk_size_group_add_widget (sg->size_group, sentry->entry);
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
 
 	/* connect the entry's changes */
 	sentry->entry_contents_modified_id = g_signal_connect (G_OBJECT (entry), "contents-modified",
@@ -2002,4 +2037,92 @@ gdaui_basic_form_get_place_holder (GdauiBasicForm *form, const gchar *placeholde
 	if (! form->priv->place_holders)
 		return NULL;
 	return g_hash_table_lookup (form->priv->place_holders, placeholder_id);
+}
+
+/**
+ * gdaui_basic_form_add_to_size_group
+ * @form: a #GdauiBasicForm
+ * @size_group: a #GtkSizeGroup object
+ * @part: specifies which widgets in @form are concerned
+ *
+ * Add @form's widgets specified by @part to @size_group
+ * (the widgets can then be removed using gdaui_basic_form_remove_from_size_group()).
+ */
+void
+gdaui_basic_form_add_to_size_group (GdauiBasicForm *form, GtkSizeGroup *size_group, GdauiBasicFormPart part)
+{
+	GSList *list;
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	g_return_if_fail (GTK_IS_SIZE_GROUP (size_group));
+
+	SizeGroup *sg;
+	sg = g_new (SizeGroup, 1);
+	sg->size_group = g_object_ref (size_group);
+	sg->part = part;
+	form->priv->size_groups = g_slist_append (form->priv->size_groups, sg);
+
+	for (list = form->priv->s_entries; list; list = list->next) {
+		SingleEntry *se = (SingleEntry*) list->data;
+		switch (part) {
+		case GDAUI_BASIC_FORM_LABELS:
+			if (se->label)
+				gtk_size_group_add_widget (size_group, se->label);
+			break;
+		case GDAUI_BASIC_FORM_ENTRIES:
+			if (se->entry)
+				gtk_size_group_add_widget (size_group, GTK_WIDGET (se->entry));
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
+}
+
+/**
+ * gdaui_basic_form_remove_from_size_group
+ * @form: a #GdauiBasicForm
+ * @size_group: a #GtkSizeGroup object
+ * @part: specifies which widgets in @form are concerned
+ *
+ * Removes @form's widgets specified by @part from @size_group
+ * (the widgets must have been added using gdaui_basic_form_add_to_size_group()).
+ */
+void
+gdaui_basic_form_remove_from_size_group (GdauiBasicForm *form, GtkSizeGroup *size_group, GdauiBasicFormPart part)
+{
+	GSList *list;
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	g_return_if_fail (GTK_IS_SIZE_GROUP (size_group));
+	
+	SizeGroup *sg;
+	for (list = form->priv->size_groups; list; list = list->next) {
+		sg = (SizeGroup*) list->data;
+		if (sg->size_group == size_group) {
+			form->priv->size_groups = g_slist_remove (form->priv->size_groups, sg);
+			size_group_free (sg);
+			break;
+		}
+		sg = NULL;
+	}
+
+	if (!sg) {
+		g_warning (_("size group was not taken into account using gdaui_basic_form_add_to_size_group()"));
+		return;
+	}
+
+	for (list = form->priv->s_entries; list; list = list->next) {
+		SingleEntry *se = (SingleEntry*) list->data;
+		switch (part) {
+		case GDAUI_BASIC_FORM_LABELS:
+			if (se->label)
+				gtk_size_group_remove_widget (size_group, se->label);
+			break;
+		case GDAUI_BASIC_FORM_ENTRIES:
+			if (se->entry)
+				gtk_size_group_remove_widget (size_group, GTK_WIDGET (se->entry));
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
 }

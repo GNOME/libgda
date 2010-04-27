@@ -40,6 +40,10 @@ gdaui_basic_form_get_label_widget
 <SUBSECTION>
 gdaui_basic_form_set_layout_from_file
 gdaui_basic_form_get_place_holder
+<SUBSECTION>
+GdauiBasicFormPart
+gdaui_basic_form_add_to_size_group
+gdaui_basic_form_remove_from_size_group
 <SUBSECTION Standard>
 GDAUI_BASIC_FORM
 GDAUI_BASIC_FORM_CLASS
