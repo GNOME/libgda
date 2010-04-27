@@ -1,6 +1,6 @@
 /* gdaui-basic-form.c
  *
- * Copyright (C) 2002 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -2047,6 +2047,8 @@ gdaui_basic_form_get_place_holder (GdauiBasicForm *form, const gchar *placeholde
  *
  * Add @form's widgets specified by @part to @size_group
  * (the widgets can then be removed using gdaui_basic_form_remove_from_size_group()).
+ *
+ * Since: 4.2
  */
 void
 gdaui_basic_form_add_to_size_group (GdauiBasicForm *form, GtkSizeGroup *size_group, GdauiBasicFormPart part)
@@ -2086,6 +2088,8 @@ gdaui_basic_form_add_to_size_group (GdauiBasicForm *form, GtkSizeGroup *size_gro
  *
  * Removes @form's widgets specified by @part from @size_group
  * (the widgets must have been added using gdaui_basic_form_add_to_size_group()).
+ *
+ * Since: 4.2
  */
 void
 gdaui_basic_form_remove_from_size_group (GdauiBasicForm *form, GtkSizeGroup *size_group, GdauiBasicFormPart part)
