@@ -42,7 +42,8 @@ gdaui_test_data_entries_SOURCES = \
 gdaui_test_data_entries_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-4.0.la \
-        $(LIBGDA_LIBS)
+        $(LIBGDA_LIBS) \
+	$(GTK_LIBS)
 
 gdaui_test_widget_entry_CFLAGS = $(GTK_CFLAGS)
 gdaui_test_widget_entry_SOURCES = \
@@ -51,7 +52,8 @@ gdaui_test_widget_entry_SOURCES = \
 gdaui_test_widget_entry_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-4.0.la \
-        $(LIBGDA_LIBS)
+        $(LIBGDA_LIBS) \
+	$(GTK_LIBS)
 
 gdaui_test_errors_CFLAGS = $(GTK_CFLAGS)
 gdaui_test_errors_SOURCES = \
@@ -61,7 +63,8 @@ gdaui_test_errors_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-4.0.la \
 	$(top_builddir)/tests/libgda-test-4.0.la \
-        $(LIBGDA_LIBS)
+        $(LIBGDA_LIBS) \
+	$(GTK_LIBS)
 
 
 EXTRA_DIST = 
