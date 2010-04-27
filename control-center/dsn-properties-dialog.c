@@ -166,6 +166,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 #else
 	dcontents = GTK_DIALOG (dialog)->vbox;
 #endif
+	gtk_container_set_border_width (GTK_CONTAINER (dcontents), 5);
 	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
@@ -182,7 +183,6 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 	gtk_widget_show (props);
 	g_signal_connect (G_OBJECT (props), "changed", G_CALLBACK (dsn_changed_cb), dialog);	
 	gtk_box_pack_start (GTK_BOX (hbox), props, TRUE, TRUE, 0);
-	gtk_widget_set_size_request (props, 500, -1);
 
 	/* handle "delete-event" */
 	g_signal_connect (dialog, "delete-event",

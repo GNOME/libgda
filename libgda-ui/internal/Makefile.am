@@ -1,8 +1,6 @@
 noinst_LTLIBRARIES = libgda-ui-internal.la
 
 AM_CPPFLAGS = \
-	-I$(top_builddir)/ui \
-	-I$(top_srcdir)/ui \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \

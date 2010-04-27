@@ -37,6 +37,9 @@ struct _GdauiProviderSpecEditorPrivate {
 	WidgetType   type;
 	GtkWidget   *form; /* what it really is is determined by @type */
 	gchar       *cnc_string; /* as it was last updated */
+
+	GtkSizeGroup *labels_size_group;
+	GtkSizeGroup *entries_size_group;
 };
 
 static void gdaui_provider_spec_editor_class_init (GdauiProviderSpecEditorClass *klass);
@@ -210,6 +213,12 @@ adapt_form_widget (GdauiProviderSpecEditor *spec)
 		g_object_unref (dset);
 		
 		spec->priv->form = wid;
+		if (spec->priv->labels_size_group)
+			gdaui_basic_form_add_to_size_group (GDAUI_BASIC_FORM (spec->priv->form), spec->priv->labels_size_group,
+							    GDAUI_BASIC_FORM_LABELS);
+		if (spec->priv->entries_size_group)
+			gdaui_basic_form_add_to_size_group (GDAUI_BASIC_FORM (spec->priv->form), spec->priv->entries_size_group,
+							    GDAUI_BASIC_FORM_ENTRIES);
 		update_form_contents (spec);
 		g_signal_connect (G_OBJECT (wid), "holder-changed",
 				  G_CALLBACK (dsn_form_changed), spec);
@@ -237,6 +246,14 @@ gdaui_provider_spec_editor_dispose (GObject *object)
 	g_return_if_fail (GDAUI_IS_PROVIDER_SPEC_EDITOR (spec));
 
 	/* free memory */
+	if (spec->priv->labels_size_group) {
+		g_object_unref (spec->priv->labels_size_group);
+		spec->priv->labels_size_group = NULL;
+	}
+	if (spec->priv->entries_size_group) {
+		g_object_unref (spec->priv->entries_size_group);
+		spec->priv->entries_size_group = NULL;
+	}
 
 	/* chain to parent class */
 	parent_class->dispose (object);
@@ -484,4 +501,25 @@ _gdaui_provider_spec_editor_set_specs (GdauiProviderSpecEditor *spec, const gcha
 		spec->priv->cnc_string = g_strdup (specs_string);
 
 	update_form_contents (spec);
+}
+
+/**
+ * _gdaui_provider_spec_editor_add_to_size_group
+ * @spec: a #GdauiProviderSpecEditor widget
+ */
+void
+_gdaui_provider_spec_editor_add_to_size_group (GdauiProviderSpecEditor *spec, GtkSizeGroup *size_group,
+					       GdauiBasicFormPart part)
+{
+	g_return_if_fail (GDAUI_IS_PROVIDER_SPEC_EDITOR (spec));
+	g_return_if_fail (GTK_IS_SIZE_GROUP (size_group));
+
+	g_return_if_fail (! ((spec->priv->labels_size_group && (part == GDAUI_BASIC_FORM_LABELS)) ||
+			     (spec->priv->entries_size_group && (part == GDAUI_BASIC_FORM_ENTRIES))));
+	if (part == GDAUI_BASIC_FORM_LABELS)
+		spec->priv->labels_size_group = g_object_ref (size_group);
+	else
+		spec->priv->entries_size_group = g_object_ref (size_group);
+
+	gdaui_basic_form_add_to_size_group (GDAUI_BASIC_FORM (spec->priv->form), size_group, part);
 }

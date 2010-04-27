@@ -109,12 +109,16 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
 	GtkWidget *label;
 	GtkWidget *exp;
 	gchar *str;
+	GtkSizeGroup *labels_size_group;
 
 	g_return_if_fail (GDAUI_IS_DSN_EDITOR (config));
 
 	/* allocate private structure */
 	config->priv = g_new0 (GdauiDsnEditorPrivate, 1);
 	config->priv->dsn_info = g_new0 (GdaDsnInfo, 1);
+
+	/* size group */
+	labels_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 
 	/* set up widgets */
 	table = gtk_table_new (8, 2, FALSE);
@@ -129,7 +133,9 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
 	g_free (str);
         gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
+
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 	config->priv->wname = gtk_entry_new ();
         gtk_editable_set_editable (GTK_EDITABLE (config->priv->wname), FALSE);
@@ -146,6 +152,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
 
 	label = gtk_label_new_with_mnemonic (_("_System wide data source:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
+	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
 	config->priv->is_system = gtk_check_button_new ();
@@ -161,6 +168,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
 	gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), str);
 	g_free (str);
         gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
 	config->priv->wprovider = gdaui_provider_selector_new ();
@@ -173,6 +181,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
 
 	label = gtk_label_new_with_mnemonic (_("_Description:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
+	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
 	config->priv->wdesc = gtk_entry_new ();
@@ -206,6 +215,8 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
 	g_signal_connect (G_OBJECT (config->priv->dsn_spec), "changed",
 			  G_CALLBACK (field_changed_cb), config);
 	gtk_container_add (GTK_CONTAINER (config->priv->dsn_spec_expander), config->priv->dsn_spec);
+	_gdaui_provider_spec_editor_add_to_size_group (GDAUI_PROVIDER_SPEC_EDITOR (config->priv->dsn_spec), labels_size_group,
+						       GDAUI_BASIC_FORM_LABELS);
 	gtk_widget_show (config->priv->dsn_spec);
 
 	/* connection's authentication */
@@ -219,7 +230,11 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
 	g_signal_connect (G_OBJECT (config->priv->dsn_auth), "changed",
 			  G_CALLBACK (field_changed_cb), config);
 	gtk_container_add (GTK_CONTAINER (config->priv->dsn_auth_expander), config->priv->dsn_auth);
+	_gdaui_provider_auth_editor_add_to_size_group (GDAUI_PROVIDER_AUTH_EDITOR (config->priv->dsn_auth), labels_size_group,
+						       GDAUI_BASIC_FORM_LABELS);
 	gtk_widget_show (config->priv->dsn_auth);
+
+	g_object_unref (labels_size_group);
 }
 
 static void

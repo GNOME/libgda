@@ -23,7 +23,7 @@
 #ifndef __GDAUI_PROVIDER_AUTH_EDITOR_H__
 #define __GDAUI_PROVIDER_AUTH_EDITOR_H__
 
-#include <gtk/gtk.h>
+#include <libgda-ui/gdaui-basic-form.h>
 
 G_BEGIN_DECLS
 
@@ -58,6 +58,8 @@ gboolean    _gdaui_provider_auth_editor_is_valid     (GdauiProviderAuthEditor *a
 gchar      *_gdaui_provider_auth_editor_get_auth     (GdauiProviderAuthEditor *auth);
 void        _gdaui_provider_auth_editor_set_auth     (GdauiProviderAuthEditor *auth, const gchar *auth_string);
 
+void        _gdaui_provider_auth_editor_add_to_size_group (GdauiProviderAuthEditor *auth, GtkSizeGroup *size_group,
+							   GdauiBasicFormPart part);
 G_END_DECLS
 
 #endif

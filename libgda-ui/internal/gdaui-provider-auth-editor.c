@@ -32,6 +32,9 @@ struct _GdauiProviderAuthEditorPrivate {
 
 	GtkWidget       *auth_widget;
 	gboolean         auth_needed;
+
+	GtkSizeGroup    *labels_size_group;
+	GtkSizeGroup    *entries_size_group;
 };
 
 static void gdaui_provider_auth_editor_class_init (GdauiProviderAuthEditorClass *klass);
@@ -121,6 +124,14 @@ gdaui_provider_auth_editor_finalize (GObject *object)
 	g_return_if_fail (GDAUI_IS_PROVIDER_AUTH_EDITOR (auth));
 
 	/* free memory */
+	if (auth->priv->labels_size_group) {
+		g_object_unref (auth->priv->labels_size_group);
+		auth->priv->labels_size_group = NULL;
+	}
+	if (auth->priv->entries_size_group) {
+		g_object_unref (auth->priv->entries_size_group);
+		auth->priv->entries_size_group = NULL;
+	}
 	if (auth->priv->provider)
 		g_free (auth->priv->provider);
 
@@ -257,6 +268,15 @@ _gdaui_provider_auth_editor_set_provider (GdauiProviderAuthEditor *auth, const g
 	if (auth->priv->auth_widget) {
 		gtk_container_add (GTK_CONTAINER (auth), auth->priv->auth_widget);
 		gtk_widget_show (auth->priv->auth_widget);
+
+		if (auth->priv->labels_size_group)
+			gdaui_basic_form_add_to_size_group (GDAUI_BASIC_FORM (auth->priv->auth_widget),
+							    auth->priv->labels_size_group,
+							    GDAUI_BASIC_FORM_LABELS);
+		if (auth->priv->entries_size_group)
+			gdaui_basic_form_add_to_size_group (GDAUI_BASIC_FORM (auth->priv->auth_widget),
+							    auth->priv->entries_size_group,
+							    GDAUI_BASIC_FORM_ENTRIES);
 	}
 
 	g_signal_emit_by_name (auth, "changed");
@@ -427,4 +447,26 @@ _gdaui_provider_auth_editor_set_auth (GdauiProviderAuthEditor *auth, const gchar
 	}
 
 	g_signal_emit_by_name (auth, "changed");
+}
+
+/**
+ * _gdaui_provider_auth_editor_add_to_size_group
+ * @auth: a #GdauiProviderAuthEditor widget
+ */
+void
+_gdaui_provider_auth_editor_add_to_size_group (GdauiProviderAuthEditor *auth, GtkSizeGroup *size_group,
+					       GdauiBasicFormPart part)
+{
+	g_return_if_fail (GDAUI_IS_PROVIDER_AUTH_EDITOR (auth));
+	g_return_if_fail (GTK_IS_SIZE_GROUP (size_group));
+
+	g_return_if_fail (! ((auth->priv->labels_size_group && (part == GDAUI_BASIC_FORM_LABELS)) ||
+			     (auth->priv->entries_size_group && (part == GDAUI_BASIC_FORM_ENTRIES))));
+	if (part == GDAUI_BASIC_FORM_LABELS)
+		auth->priv->labels_size_group = g_object_ref (size_group);
+	else
+		auth->priv->entries_size_group = g_object_ref (size_group);
+
+	if (auth->priv->auth_widget)
+		gdaui_basic_form_add_to_size_group (GDAUI_BASIC_FORM (auth->priv->auth_widget), size_group, part);
 }

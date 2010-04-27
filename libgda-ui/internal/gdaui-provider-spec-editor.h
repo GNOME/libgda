@@ -23,7 +23,7 @@
 #ifndef __GDAUI_PROVIDER_SPEC_EDITOR_H__
 #define __GDAUI_PROVIDER_SPEC_EDITOR_H__
 
-#include <gtk/gtk.h>
+#include <libgda-ui/gdaui-basic-form.h>
 
 G_BEGIN_DECLS
 
@@ -56,6 +56,9 @@ void        _gdaui_provider_spec_editor_set_provider (GdauiProviderSpecEditor *s
 gboolean    _gdaui_provider_spec_editor_is_valid     (GdauiProviderSpecEditor *spec);
 gchar      *_gdaui_provider_spec_editor_get_specs    (GdauiProviderSpecEditor *spec);
 void        _gdaui_provider_spec_editor_set_specs    (GdauiProviderSpecEditor *spec, const gchar *specs_string);
+
+void        _gdaui_provider_spec_editor_add_to_size_group (GdauiProviderSpecEditor *spec, GtkSizeGroup *size_group,
+							   GdauiBasicFormPart part);
 
 G_END_DECLS
 
