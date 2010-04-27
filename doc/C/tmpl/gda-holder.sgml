@@ -232,6 +232,18 @@ Container for a single #GValue
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_holder_take_static_value ##### -->
+<para>
+
+</para>
+
+@holder: 
+@value: 
+@value_changed: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_holder_get_default_value ##### -->
 <para>
 
