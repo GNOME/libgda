@@ -336,7 +336,7 @@ gda_holder_new (GType type)
  *
  * Copy constructor.
  * 
- * Note1: if @orig is set with a static value (see #gda_holder_take_static_value ()) 
+ * Note1: if @orig is set with a static value (see gda_holder_take_static_value()) 
  * its copy will have a fresh new allocated GValue, so that user should free it when done.
  *
  * Returns: a new #GdaHolder object
