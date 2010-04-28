@@ -7,6 +7,7 @@ AM_CPPFLAGS = \
         $(LIBGDA_CFLAGS) \
         $(GTK_CFLAGS) \
 	$(LIBGCRYPT_CFLAGS) \
+	$(GTKSOURCEVIEW_CFLAGS) \
         -DPREFIX=\""$(prefix)"\" \
         -DSYSCONFDIR=\""$(sysconfdir)"\" \
         -DDATADIR=\""$(datadir)"\" \
@@ -54,14 +55,16 @@ libgda_ui_plugins_la_LIBADD = \
         $(top_builddir)/libgda-ui/libgda-ui-4.0.la \
 	$(LIBGCRYPT_LIBS) \
 	$(LIBGDA_LIBS) \
-        $(GTK_LIBS)
+        $(GTK_LIBS) \
+	$(GTKSOURCEVIEW_LIBS)
 
 xmldir   = $(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/plugins
 xml_in_files = \
 	gdaui-entry-pict-spec.xml.in \
 	gdaui-entry-pict-spec_string.xml.in \
 	gdaui-entry-filesel-spec.xml.in \
-	gdaui-entry-password.xml.in
+	gdaui-entry-password.xml.in \
+	gdaui-entry-text-spec.xml.in
 
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 

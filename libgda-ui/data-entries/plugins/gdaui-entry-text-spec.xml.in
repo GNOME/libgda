@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="PROG_LANG" _name="Programming language" _descr="Define to enable syntactical colourisation" gdatype="string" source="langs:0"/>
+  </parameters>
+  <sources>
+    <gda_array name="langs">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="name" gdatype="gchararray"/>
+      <gda_array_data/>
+    </gda_array>
+  </sources>
+</data-set-spec>

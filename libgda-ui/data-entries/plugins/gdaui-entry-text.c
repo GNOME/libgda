@@ -1,6 +1,6 @@
 /* gdaui-entry-text.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -18,8 +18,24 @@
  * USA
  */
 
+#include <string.h>
+#include <binreloc/gda-binreloc.h>
 #include "gdaui-entry-text.h"
 #include <libgda/gda-data-handler.h>
+#include <libgda/gda-blob-op.h>
+
+#ifdef HAVE_GTKSOURCEVIEW
+  #ifdef GTK_DISABLE_SINGLE_INCLUDES
+    #undef GTK_DISABLE_SINGLE_INCLUDES
+  #endif
+
+  #include <gtksourceview/gtksourceview.h>
+  #include <gtksourceview/gtksourcelanguagemanager.h>
+  #include <gtksourceview/gtksourcebuffer.h>
+  #include <gtksourceview/gtksourcestyleschememanager.h>
+  #include <gtksourceview/gtksourcestylescheme.h>
+#endif
+#define LANGUAGE_SQL "gda-sql"
 
 /* 
  * Main static functions 
@@ -45,6 +61,7 @@ struct _GdauiEntryTextPrivate
 {
 	GtkTextBuffer *buffer;
 	GtkWidget     *view;
+	gchar         *lang; /* for code colourisation */
 };
 
 
@@ -101,13 +118,14 @@ gdaui_entry_text_init (GdauiEntryText * gdaui_entry_text)
  * gdaui_entry_text_new
  * @dh: the data handler to be used by the new widget
  * @type: the requested data type (compatible with @dh)
+ * @options: the options
  *
  * Creates a new widget which is mainly a GtkEntry
  *
  * Returns: the new widget
  */
 GtkWidget *
-gdaui_entry_text_new (GdaDataHandler *dh, GType type)
+gdaui_entry_text_new (GdaDataHandler *dh, GType type, const gchar *options)
 {
 	GObject *obj;
 	GdauiEntryText *mgtxt;
@@ -118,6 +136,19 @@ gdaui_entry_text_new (GdaDataHandler *dh, GType type)
 
 	obj = g_object_new (GDAUI_TYPE_ENTRY_TEXT, "handler", dh, NULL);
 	mgtxt = GDAUI_ENTRY_TEXT (obj);
+#ifdef HAVE_GTKSOURCEVIEW
+	if (options && *options) {
+                GdaQuarkList *params;
+                const gchar *str;
+
+                params = gda_quark_list_new_from_string (options);
+                str = gda_quark_list_find (params, "PROG_LANG");
+                if (str)
+			mgtxt->priv->lang = g_strdup (str);
+                gda_quark_list_free (params);
+        }
+#endif
+
 	gdaui_data_entry_set_value_type (GDAUI_DATA_ENTRY (mgtxt), type);
 
 	return GTK_WIDGET (obj);
@@ -134,7 +165,6 @@ gdaui_entry_text_dispose (GObject   * object)
 
 	gdaui_entry_text = GDAUI_ENTRY_TEXT (object);
 	if (gdaui_entry_text->priv) {
-
 	}
 
 	/* parent class */
@@ -151,6 +181,7 @@ gdaui_entry_text_finalize (GObject   * object)
 
 	gdaui_entry_text = GDAUI_ENTRY_TEXT (object);
 	if (gdaui_entry_text->priv) {
+		g_free (gdaui_entry_text->priv->lang);
 
 		g_free (gdaui_entry_text->priv);
 		gdaui_entry_text->priv = NULL;
@@ -159,6 +190,57 @@ gdaui_entry_text_finalize (GObject   * object)
 	/* parent class */
 	parent_class->finalize (object);
 }
+
+#ifdef HAVE_GTKSOURCEVIEW
+static void
+create_tags_for_sql (GtkTextBuffer *buffer, const gchar *language)
+{
+	GtkSourceLanguageManager *mgr;
+	GtkSourceLanguage *lang;
+	gchar ** current_search_path;
+	gint len;
+	gchar ** search_path;
+
+	GtkSourceStyleSchemeManager* sch_mgr;
+	GtkSourceStyleScheme *sch;
+
+	g_return_if_fail (language != NULL);
+	g_return_if_fail (!strcmp (language, LANGUAGE_SQL));
+	mgr = gtk_source_language_manager_new ();
+
+	/* alter search path */
+	current_search_path = (gchar **) gtk_source_language_manager_get_search_path (mgr);
+	len = g_strv_length (current_search_path);
+	search_path = g_new0 (gchar*, len + 2);
+	memcpy (search_path, current_search_path, sizeof (gchar*) * len);
+	search_path [len] = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "language-specs", NULL);
+	gtk_source_language_manager_set_search_path (mgr, search_path);
+	g_free (search_path [len]);
+	g_free (search_path);
+
+	lang = gtk_source_language_manager_get_language (mgr, "gda-sql");
+
+	if (!lang) {
+		gchar *tmp;
+		tmp = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "language-spec", NULL);
+		g_print ("Could not find the gda-sql.lang file in %s,\nusing the default SQL highlighting rules.\n",
+			 tmp);
+		g_free (tmp);
+		lang = gtk_source_language_manager_get_language (mgr, "sql");
+	}
+	if (lang)
+		gtk_source_buffer_set_language (GTK_SOURCE_BUFFER (buffer), lang);
+
+	g_object_unref (mgr);
+
+	sch_mgr = gtk_source_style_scheme_manager_get_default ();
+	sch = gtk_source_style_scheme_manager_get_scheme (sch_mgr, "tango");
+	if (sch) 
+		gtk_source_buffer_set_style_scheme (GTK_SOURCE_BUFFER (buffer), sch);
+}	
+#endif
+
+
 
 static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
@@ -170,7 +252,27 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgtxt = GDAUI_ENTRY_TEXT (mgwrap);
 	g_return_val_if_fail (mgtxt->priv, NULL);
 
+#ifdef HAVE_GTKSOURCEVIEW
+	if (mgtxt->priv->lang) {
+		GtkSourceBuffer *sbuf;
+		mgtxt->priv->view = gtk_source_view_new ();
+		sbuf = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (mgtxt->priv->view)));
+
+		GtkSourceLanguageManager *lm;
+		GtkSourceLanguage *sl;
+		lm = gtk_source_language_manager_get_default ();
+		sl = gtk_source_language_manager_get_language (lm, mgtxt->priv->lang);
+		
+		gtk_source_buffer_set_language (sbuf, sl);
+		gtk_source_buffer_set_highlight_syntax (sbuf, TRUE);
+		if (! strcmp (mgtxt->priv->lang, LANGUAGE_SQL))
+			create_tags_for_sql (GTK_TEXT_BUFFER (sbuf), LANGUAGE_SQL);
+	}
+	else
+		mgtxt->priv->view = gtk_text_view_new ();
+#else
 	mgtxt->priv->view = gtk_text_view_new ();
+#endif
 	mgtxt->priv->buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (mgtxt->priv->view));
 	sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_IN);

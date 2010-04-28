@@ -39,6 +39,18 @@
 #include "gdaui-data-cell-renderer-password.h"
 #endif
 
+#ifdef HAVE_GTKSOURCEVIEW
+  #ifdef GTK_DISABLE_SINGLE_INCLUDES
+    #undef GTK_DISABLE_SINGLE_INCLUDES
+  #endif
+
+  #include <gtksourceview/gtksourceview.h>
+  #include <gtksourceview/gtksourcelanguagemanager.h>
+  #include <gtksourceview/gtksourcebuffer.h>
+  #include <gtksourceview/gtksourcestyleschememanager.h>
+  #include <gtksourceview/gtksourcestylescheme.h>
+#endif
+
 static GdauiDataEntry *plugin_entry_filesel_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_cidr_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_text_create_func (GdaDataHandler *handler, GType type, const gchar *options);
@@ -136,6 +148,75 @@ plugin_init (GError **error)
 	plugin->cell_create_func = NULL;
 	retlist = g_slist_append (retlist, plugin);
 
+#ifdef HAVE_GTKSOURCEVIEW
+	file = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "plugins", "gdaui-entry-text-spec.xml", NULL);
+	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+		if (error && !*error)
+			g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+        }
+	else {
+		xmlDocPtr doc;
+		doc = xmlParseFile (file);
+		if (!doc) {
+			if (error && !*error)
+				g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+		}
+		else {
+			xmlNodePtr node;
+			node = xmlDocGetRootElement (doc);
+			for (node = node->children; node; node = node->next) {
+				if (!strcmp ((gchar*) node->name, "sources")) {
+					for (node = node->children; node; node = node->next) {
+						if (!strcmp ((gchar*) node->name, "gda_array")) {
+							for (node = node->children; node; node = node->next) {
+								if (!strcmp ((gchar*) node->name,
+									     "gda_array_data")) {
+									break;
+								}
+							}
+
+							break;
+						}
+					}
+					break;
+				}
+			}
+			GtkSourceLanguageManager *lm;
+			const gchar * const * langs;
+			gint i;
+			lm = gtk_source_language_manager_get_default ();
+			langs = gtk_source_language_manager_get_language_ids (lm);
+			for (i = 0; ; i++) {
+				const gchar *tmp;
+				tmp = langs [i];
+				if (!tmp)
+					break;
+				if (node) {
+					xmlNodePtr row;
+					row = xmlNewChild (node, NULL, BAD_CAST "gda_array_row", NULL);
+					xmlNewChild (row, NULL, BAD_CAST "gda_value", BAD_CAST tmp);
+
+					GtkSourceLanguage *sl;
+					sl = gtk_source_language_manager_get_language (lm, tmp);
+					if (sl)
+						xmlNewChild (row, NULL, BAD_CAST "gda_value",
+							     BAD_CAST gtk_source_language_get_name (sl));
+					else
+						xmlNewChild (row, NULL, BAD_CAST "gda_value", BAD_CAST tmp);
+				}
+			}
+
+			xmlChar *out;
+			int size;
+			xmlDocDumpFormatMemory (doc, &out, &size, 0);
+			xmlFreeDoc (doc);
+			plugin->options_xml_spec = g_strdup ((gchar*) out);
+			xmlFree (out);
+		}
+	}
+	g_free (file);
+#endif
+
 	/* Picture - binary */
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "picture";
@@ -203,7 +284,7 @@ plugin_entry_cidr_create_func (GdaDataHandler *handler, GType type, const gchar 
 static GdauiDataEntry *
 plugin_entry_text_create_func (GdaDataHandler *handler, GType type, const gchar *options)
 {
-	return (GdauiDataEntry *) gdaui_entry_text_new (handler, type);
+	return (GdauiDataEntry *) gdaui_entry_text_new (handler, type, options);
 }
 
 static GdauiDataEntry *

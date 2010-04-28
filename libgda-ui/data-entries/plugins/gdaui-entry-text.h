@@ -1,6 +1,6 @@
 /* gdaui-entry-text.h
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -51,7 +51,7 @@ struct _GdauiEntryTextClass
 };
 
 GType        gdaui_entry_text_get_type        (void) G_GNUC_CONST;
-GtkWidget   *gdaui_entry_text_new             (GdaDataHandler *dh, GType type);
+GtkWidget   *gdaui_entry_text_new             (GdaDataHandler *dh, GType type, const gchar *options);
 
 
 G_END_DECLS

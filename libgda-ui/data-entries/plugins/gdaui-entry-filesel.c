@@ -103,6 +103,7 @@ gdaui_entry_filesel_init (GdauiEntryFilesel * gdaui_entry_filesel)
  * gdaui_entry_filesel_new
  * @dh: the data handler to be used by the new widget
  * @type: the requested data type (compatible with @dh)
+ * @options: the options
  *
  * Creates a new widget which is mainly a GtkEntry
  *
