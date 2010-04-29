@@ -17,15 +17,14 @@
 # Wolfgang Stöggl <c72578@yahoo.de>, 2010.
 # Mario Blättermann <mariobl@gnome.org>, 2009, 2010.
 # Christian Kirbach  <Christian.Kirbach@googlemail.com>, 2009, 2010.
-# Christian Kirbach <Christian.Kirbach@googlemail.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-17 10:37+0200\n"
-"PO-Revision-Date: 2010-04-17 10:38+0200\n"
-"Last-Translator: Christian Kirbach <Christian.Kirbach@googlemail.com>\n"
-"Language-Team: German <gnome-de@gnome.org>\n"
+"POT-Creation-Date: 2010-04-29 14:53+0200\n"
+"PO-Revision-Date: 2010-04-29 14:54+0200\n"
+"Last-Translator: Christian Kirbach  <Christian.Kirbach@googlemail.com>\n"
+"Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -310,7 +309,7 @@ msgstr ""
 
 #. connection's spec
 #: ../control-center/gdaui-dsn-assistant.c:604
-#: ../control-center/gdaui-dsn-editor.c:199
+#: ../control-center/gdaui-dsn-editor.c:208
 msgid "Connection's parameters"
 msgstr "Verbindungsparameter"
 
@@ -340,23 +339,23 @@ msgstr ""
 msgid "Ready to add a new data source"
 msgstr "Bereit zum Hinzufügen einer neuen Datenquelle"
 
-#: ../control-center/gdaui-dsn-editor.c:126
+#: ../control-center/gdaui-dsn-editor.c:130
 msgid "Data source _name:"
 msgstr "_Name der Datenquelle:"
 
-#: ../control-center/gdaui-dsn-editor.c:147
+#: ../control-center/gdaui-dsn-editor.c:153
 msgid "_System wide data source:"
 msgstr "_Systemweite Datenquelle:"
 
-#: ../control-center/gdaui-dsn-editor.c:158
+#: ../control-center/gdaui-dsn-editor.c:165
 msgid "_Provider:"
 msgstr "_Treiber:"
 
-#: ../control-center/gdaui-dsn-editor.c:174
+#: ../control-center/gdaui-dsn-editor.c:182
 msgid "_Description:"
 msgstr "_Beschreibung:"
 
-#: ../control-center/gdaui-dsn-editor.c:190
+#: ../control-center/gdaui-dsn-editor.c:199
 msgid ""
 "<span foreground='red'>The database provider used by this data source is not "
 "available,\n"
@@ -367,7 +366,7 @@ msgstr ""
 "das Bearbeiten der Attribute der Datenquelle wird deaktiviert.</span>"
 
 #. connection's authentication
-#: ../control-center/gdaui-dsn-editor.c:212 ../libgda/gda-config.c:1277
+#: ../control-center/gdaui-dsn-editor.c:223 ../libgda/gda-config.c:1277
 #: ../tools/browser/auth-dialog.c:218
 msgid "Authentication"
 msgstr "Legitimierung"
@@ -3278,7 +3277,7 @@ msgstr "Unbekannt"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:185
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:165
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:181
-#: ../libgda-ui/gdaui-basic-form.c:748 ../libgda-ui/gdaui-basic-form.c:810
+#: ../libgda-ui/gdaui-basic-form.c:766 ../libgda-ui/gdaui-basic-form.c:828
 #: ../libgda-ui/gdaui-raw-grid.c:739 ../tools/gda-sql.c:2535
 #: ../tools/gda-sql.c:2710 ../tools/gda-sql.c:3890
 msgid "Value"
@@ -3765,18 +3764,18 @@ msgstr ""
 "Framework erzeugt und können für alle der\n"
 "demonstrierten Objekte verfügbar gemacht werden."
 
-#: ../libgda-ui/internal/gdaui-provider-auth-editor.c:386
+#: ../libgda-ui/internal/gdaui-provider-auth-editor.c:406
 msgid "Can't set authentification string: no authentication is needed"
 msgstr ""
 "Legitimierungszeichenkette kann nicht gesetzt werden: keine Legitimierung "
 "erforderlich"
 
-#: ../libgda-ui/internal/gdaui-provider-spec-editor.c:193
+#: ../libgda-ui/internal/gdaui-provider-spec-editor.c:196
 #, c-format
 msgid "Unknown provider '%s'"
 msgstr "Unbekannter Treiber »%s«"
 
-#: ../libgda-ui/internal/gdaui-provider-spec-editor.c:197
+#: ../libgda-ui/internal/gdaui-provider-spec-editor.c:200
 #, c-format
 msgid "Provider '%s' does not report the required parameters for DSN"
 msgstr ""
@@ -3847,7 +3846,7 @@ msgstr "Geänderte Daten verwerfen"
 msgid "Correct data first"
 msgstr "Daten zuerst korrigieren"
 
-#: ../libgda-ui/gdaui-basic-form.c:242
+#: ../libgda-ui/gdaui-basic-form.c:255
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
@@ -3855,46 +3854,46 @@ msgstr ""
 "Zeiger auf eine XML-Datenlayout-Spezifikationen (als ein xmlNodePtr zu einem "
 "<gdaui_form>-Knoten)"
 
-#: ../libgda-ui/gdaui-basic-form.c:246
+#: ../libgda-ui/gdaui-basic-form.c:259
 msgid "List of parameters to show in the form"
 msgstr "Liste der im Formular anzuzeigenden Parameter"
 
-#: ../libgda-ui/gdaui-basic-form.c:250
+#: ../libgda-ui/gdaui-basic-form.c:263
 msgid "Entry headers are sensitive"
 msgstr "Eingabekopf berücksichtigt Groß-/Kleinschreibung"
 
-#: ../libgda-ui/gdaui-basic-form.c:255
+#: ../libgda-ui/gdaui-basic-form.c:268
 msgid "Show Entry actions"
 msgstr "Eintragsaktionen anzeigen"
 
-#: ../libgda-ui/gdaui-basic-form.c:260
+#: ../libgda-ui/gdaui-basic-form.c:273
 msgid "Entries Auto-default"
 msgstr "Einträge automatisch auf Voreinstellung"
 
-#: ../libgda-ui/gdaui-basic-form.c:265
+#: ../libgda-ui/gdaui-basic-form.c:278
 msgid "TRUE if expanding the form makes sense"
 msgstr "WAHR, falls das Ausklappen des Formulars sinnvoll ist"
 
-#: ../libgda-ui/gdaui-basic-form.c:707 ../libgda-ui/gdaui-raw-grid.c:780
+#: ../libgda-ui/gdaui-basic-form.c:725 ../libgda-ui/gdaui-raw-grid.c:780
 #: ../libgda-ui/gdaui-raw-grid.c:2525
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Das Attribut »%s« sollte einen G_TYPE_STRING-Wert haben"
 
-#: ../libgda-ui/gdaui-basic-form.c:1584
+#: ../libgda-ui/gdaui-basic-form.c:1619
 msgid "Can't find data entry for GdaHolder"
 msgstr "Dateneintrag für GdaHolder konnte nicht gefunden werden"
 
-#: ../libgda-ui/gdaui-basic-form.c:1856
+#: ../libgda-ui/gdaui-basic-form.c:1891
 msgid "Values to be filled"
 msgstr "Werte müssen eingegeben werden"
 
-#: ../libgda-ui/gdaui-basic-form.c:1937 ../libgda-ui/gdaui-raw-grid.c:2352
+#: ../libgda-ui/gdaui-basic-form.c:1972 ../libgda-ui/gdaui-raw-grid.c:2352
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "Dokument »%s« konnte nicht erfolgreich eingelesen werden"
 
-#: ../libgda-ui/gdaui-basic-form.c:1947 ../libgda-ui/gdaui-raw-grid.c:2362
+#: ../libgda-ui/gdaui-basic-form.c:1982 ../libgda-ui/gdaui-raw-grid.c:2362
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -3902,6 +3901,14 @@ msgid ""
 msgstr ""
 "DTD »%s« konnte nicht erfolgreich eingelesen werden: Überprüfung des XML-"
 "Datenimports wird nicht ausgeführt (einige Fehler könnten auftreten)"
+
+#: ../libgda-ui/gdaui-basic-form.c:2113
+msgid ""
+"size group was not taken into account using "
+"gdaui_basic_form_add_to_size_group()"
+msgstr ""
+"Die Gruppengröße wurde bei Verwendung von gdaui_basic_form_add_to_size_group"
+"() nicht beachtet"
 
 #: ../libgda-ui/gdaui-cloud.c:244 ../libgda-ui/gdaui-cloud.c:981
 #, c-format
