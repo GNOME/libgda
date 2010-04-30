@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-04-16 19:47+0000\n"
-"PO-Revision-Date: 2010-04-21 18:23+0200\n"
+"POT-Creation-Date: 2010-04-27 19:45+0000\n"
+"PO-Revision-Date: 2010-04-30 07:59+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -299,7 +299,7 @@ msgstr ""
 
 #. connection's spec
 #: ../control-center/gdaui-dsn-assistant.c:604
-#: ../control-center/gdaui-dsn-editor.c:199
+#: ../control-center/gdaui-dsn-editor.c:208
 msgid "Connection's parameters"
 msgstr "Parámetros de la conexión"
 
@@ -329,23 +329,23 @@ msgstr ""
 msgid "Ready to add a new data source"
 msgstr "Preparado para añadir una nueva fuente de datos"
 
-#: ../control-center/gdaui-dsn-editor.c:126
+#: ../control-center/gdaui-dsn-editor.c:130
 msgid "Data source _name:"
 msgstr "_Nombre de la fuente de datos:"
 
-#: ../control-center/gdaui-dsn-editor.c:147
+#: ../control-center/gdaui-dsn-editor.c:153
 msgid "_System wide data source:"
 msgstr "Fuente de datos del _sistema:"
 
-#: ../control-center/gdaui-dsn-editor.c:158
+#: ../control-center/gdaui-dsn-editor.c:165
 msgid "_Provider:"
 msgstr "_Proveedor:"
 
-#: ../control-center/gdaui-dsn-editor.c:174
+#: ../control-center/gdaui-dsn-editor.c:182
 msgid "_Description:"
 msgstr "_Descripción:"
 
-#: ../control-center/gdaui-dsn-editor.c:190
+#: ../control-center/gdaui-dsn-editor.c:199
 msgid ""
 "<span foreground='red'>The database provider used by this data source is not "
 "available,\n"
@@ -356,7 +356,7 @@ msgstr ""
 "la edición de los atributos de la fuente de datos está desactivada</span>"
 
 #. connection's authentication
-#: ../control-center/gdaui-dsn-editor.c:212 ../libgda/gda-config.c:1277
+#: ../control-center/gdaui-dsn-editor.c:223 ../libgda/gda-config.c:1277
 #: ../tools/browser/auth-dialog.c:218
 msgid "Authentication"
 msgstr "Autenticación"
@@ -3272,7 +3272,7 @@ msgstr "Desconocido"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:185
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:165
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:181
-#: ../libgda-ui/gdaui-basic-form.c:748 ../libgda-ui/gdaui-basic-form.c:810
+#: ../libgda-ui/gdaui-basic-form.c:766 ../libgda-ui/gdaui-basic-form.c:828
 #: ../libgda-ui/gdaui-raw-grid.c:739 ../tools/gda-sql.c:2535
 #: ../tools/gda-sql.c:2710 ../tools/gda-sql.c:3890
 msgid "Value"
@@ -3754,18 +3754,18 @@ msgstr ""
 "<i>demo_dict</i> los crea el «framework» y están disponibles\n"
 "para todos los elementos demostrados."
 
-#: ../libgda-ui/internal/gdaui-provider-auth-editor.c:386
+#: ../libgda-ui/internal/gdaui-provider-auth-editor.c:406
 msgid "Can't set authentification string: no authentication is needed"
 msgstr ""
 "No se puede establecer la cadena de autenticación: no se necesita "
 "autenticación"
 
-#: ../libgda-ui/internal/gdaui-provider-spec-editor.c:193
+#: ../libgda-ui/internal/gdaui-provider-spec-editor.c:196
 #, c-format
 msgid "Unknown provider '%s'"
 msgstr "Proveedor «%s» desconocido"
 
-#: ../libgda-ui/internal/gdaui-provider-spec-editor.c:197
+#: ../libgda-ui/internal/gdaui-provider-spec-editor.c:200
 #, c-format
 msgid "Provider '%s' does not report the required parameters for DSN"
 msgstr "El proveedor «%s» no informó de los parámetros necesarios para DSN"
@@ -3833,7 +3833,7 @@ msgstr "Descartar datos modificados"
 msgid "Correct data first"
 msgstr "Corregir datos primero"
 
-#: ../libgda-ui/gdaui-basic-form.c:242
+#: ../libgda-ui/gdaui-basic-form.c:255
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
@@ -3841,46 +3841,46 @@ msgstr ""
 "Puntero a una especificación de distribución de datos XML (como un "
 "xmlNodePtr hacia un nodo <gdaui_form>)"
 
-#: ../libgda-ui/gdaui-basic-form.c:246
+#: ../libgda-ui/gdaui-basic-form.c:259
 msgid "List of parameters to show in the form"
 msgstr "Lista de parámetros para mostrar en el formulario"
 
-#: ../libgda-ui/gdaui-basic-form.c:250
+#: ../libgda-ui/gdaui-basic-form.c:263
 msgid "Entry headers are sensitive"
 msgstr "Las cabeceras de entrada son sensibles"
 
-#: ../libgda-ui/gdaui-basic-form.c:255
+#: ../libgda-ui/gdaui-basic-form.c:268
 msgid "Show Entry actions"
 msgstr "Mostrar acciones de las entradas"
 
-#: ../libgda-ui/gdaui-basic-form.c:260
+#: ../libgda-ui/gdaui-basic-form.c:273
 msgid "Entries Auto-default"
 msgstr "Entradas autopredeterminadas"
 
-#: ../libgda-ui/gdaui-basic-form.c:265
+#: ../libgda-ui/gdaui-basic-form.c:278
 msgid "TRUE if expanding the form makes sense"
 msgstr "Cierto si tiene sentido expandir el formulario"
 
-#: ../libgda-ui/gdaui-basic-form.c:707 ../libgda-ui/gdaui-raw-grid.c:780
+#: ../libgda-ui/gdaui-basic-form.c:725 ../libgda-ui/gdaui-raw-grid.c:780
 #: ../libgda-ui/gdaui-raw-grid.c:2525
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "El atributo «%s» debería ser un valor G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1584
+#: ../libgda-ui/gdaui-basic-form.c:1619
 msgid "Can't find data entry for GdaHolder"
 msgstr "No se puede encontrar la entrada para el GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:1856
+#: ../libgda-ui/gdaui-basic-form.c:1891
 msgid "Values to be filled"
 msgstr "Valores para rellenar"
 
-#: ../libgda-ui/gdaui-basic-form.c:1937 ../libgda-ui/gdaui-raw-grid.c:2352
+#: ../libgda-ui/gdaui-basic-form.c:1972 ../libgda-ui/gdaui-raw-grid.c:2352
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "El documento «%s» no se analizó correctamente"
 
-#: ../libgda-ui/gdaui-basic-form.c:1947 ../libgda-ui/gdaui-raw-grid.c:2362
+#: ../libgda-ui/gdaui-basic-form.c:1982 ../libgda-ui/gdaui-raw-grid.c:2362
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -3888,6 +3888,14 @@ msgid ""
 msgstr ""
 "El DTD «%s» no se analizó correctamente. No se realizará la validación de la "
 "distribución de datos XML (podrían ocurrir algunos errores)"
+
+#: ../libgda-ui/gdaui-basic-form.c:2113
+msgid ""
+"size group was not taken into account using "
+"gdaui_basic_form_add_to_size_group()"
+msgstr ""
+"el tamaño del grupo no se tuvo en cuenta, usando "
+"gdaui_basic_form_add_to_size_group()"
 
 #: ../libgda-ui/gdaui-cloud.c:244 ../libgda-ui/gdaui-cloud.c:981
 #, c-format
@@ -6682,7 +6690,6 @@ msgstr ""
 "está instalado."
 
 #: ../tools/browser/support.c:293
-#| msgid "Unable to open BLOB"
 msgid "Unable to open help file"
 msgstr "No se puede abrir el archivo de ayuda"
 
