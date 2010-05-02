@@ -54,11 +54,14 @@
 .
 |-- lib
 |   |-- libgda-4.0
+|   |   |-- language-specs
+|   |   |   `-- gda-sql.lang
 |   |   |-- plugins
 |   |   |   |-- gdaui-entry-filesel-spec.xml
 |   |   |   |-- gdaui-entry-password.xml
 |   |   |   |-- gdaui-entry-pict-spec.xml
 |   |   |   |-- gdaui-entry-pict-spec_string.xml
+|   |   |   |-- gdaui-entry-text-spec.xml
 |   |   |   `-- libgdaui-plugins.so
 |   |-- libgdaui-4.0.so -> libgdaui-4.0.so.4.1.0
 |   |-- libgdaui-4.0.so.4 -> libgdaui-4.0.so.4.1.0

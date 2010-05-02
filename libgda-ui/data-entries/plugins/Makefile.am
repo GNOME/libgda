@@ -70,5 +70,9 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 @INTLTOOL_XML_RULE@
 
+langspecdir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/language-specs
+langspec_DATA= \
+	gda-sql.lang
+
 EXTRA_DIST = $(xml_in_files)
 DISTCLEANFILES = $(xml_DATA)
