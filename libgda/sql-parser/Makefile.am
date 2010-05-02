@@ -44,7 +44,7 @@ s-enum-types-h: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 	( cd $(srcdir) && glib-mkenums \
 	                --fhead "#ifndef __LIBGDA_SQL_PARSER_ENUM_TYPES_H__\n#define __LIBGDA_SQL_PARSER_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
 			--fprod "/* enumerations from \"@filename@\" */\n" \
-			--vhead "GType @enum_name@_get_type (void);\n#define GDA_SQL_PARSER_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
+			--vhead "GType @enum_name@_get_type (void);\n#define GDA_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
 			--ftail "G_END_DECLS\n\n#endif /* __LIBGDA_ENUM_TYPES_H__ */" \
 		$(libgda_sql_parser_headers)) > tmp-gda-enum-types.h \
 	&& (cmp -s tmp-gda-enum-types.h gda-sql-parser-enum-types.h || cp tmp-gda-enum-types.h gda-sql-parser-enum-types.h ) \
