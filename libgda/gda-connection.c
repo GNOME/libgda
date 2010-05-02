@@ -1699,16 +1699,17 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	return error;
 }
 
+/*
+ * Must be called while @cnc is locked.
+ */
 static void
 _clear_events_list (GdaConnection *cnc)
 {
-	gda_connection_lock ((GdaLockable*) cnc);
-	if (cnc->priv->events_list != NULL) {
-		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
-		g_list_free (cnc->priv->events_list);
-		cnc->priv->events_list =  NULL;
+	for (; cnc->priv->events_list; ) {
+		g_object_unref ((GObject*) cnc->priv->events_list->data);
+		cnc->priv->events_list = g_list_delete_link (cnc->priv->events_list,
+							     cnc->priv->events_list);
 	}
-	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
 /**
@@ -1722,7 +1723,9 @@ void
 gda_connection_clear_events_list (GdaConnection *cnc)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	gda_connection_lock ((GdaLockable*) cnc);
 	_clear_events_list (cnc);
+	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
 /**
