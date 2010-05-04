@@ -95,6 +95,7 @@ libgda-ui/data-entries/gdaui-entry-string.c
 libgda-ui/data-entries/gdaui-formatted-entry.c
 libgda-ui/data-entries/gdaui-numeric-entry.c
 libgda-ui/data-entries/plugins/common-pict.c
+libgda-ui/data-entries/plugins/gda-sql.lang
 libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c
 libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c
 libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c
@@ -106,6 +107,7 @@ libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-pict.c
+libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in
 libgda-ui/data-entries/plugins/libmain.c
 libgda-ui/data/server_operation.glade
 libgda-ui/demos/main.c
@@ -239,7 +241,6 @@ tools/browser/data-manager/data-favorite-selector.c
 tools/browser/data-manager/data-source.c
 tools/browser/data-manager/data-widget.c
 tools/browser/data-manager/spec-editor.c
-tools/browser/query-exec/gda-sql.lang
 tools/browser/query-exec/query-console.c
 tools/browser/query-exec/query-editor.c
 tools/browser/query-exec/query-exec-perspective.c
