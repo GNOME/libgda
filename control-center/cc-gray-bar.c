@@ -22,16 +22,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifdef GSEAL_ENABLE
-#define KEEP_GSEAL_ENABLE
-#undef GSEAL_ENABLE
-#endif
 #include <gtk/gtk.h>
-#ifdef KEEP_GSEAL_ENABLE
-#define GSEAL_ENABLE
-#undef KEEP_GSEAL_ENABLE
-#endif
-
 #include "cc-gray-bar.h"
 
 struct _CcGrayBarPrivate {
@@ -92,11 +83,19 @@ cc_gray_bar_realize (GtkWidget *widget)
 	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 	GdkWindowAttr attributes;
 	gint attributes_mask;
-
+#if GTK_CHECK_VERSION(2,18,0)
+	GtkAllocation alloc;
+        gtk_widget_get_allocation (widget, &alloc);
+	attributes.x = alloc.x + border_width;
+	attributes.y = alloc.y + border_width;
+	attributes.width = alloc.width - 2*border_width;
+	attributes.height = alloc.height - 2*border_width;
+#else
 	attributes.x = widget->allocation.x + border_width;
 	attributes.y = widget->allocation.y + border_width;
 	attributes.width = widget->allocation.width - 2*border_width;
 	attributes.height = widget->allocation.height - 2*border_width;
+#endif
 	attributes.window_type = GDK_WINDOW_CHILD;
 	attributes.wclass = GDK_INPUT_OUTPUT;
 	attributes.visual = gtk_widget_get_visual (widget);
@@ -111,11 +110,20 @@ cc_gray_bar_realize (GtkWidget *widget)
 
 	attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
 
-	widget->window = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
-	gdk_window_set_user_data (widget->window, widget);
+	GdkWindow *win;
+	win = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
+#if GTK_CHECK_VERSION(2,18,0)
+	gtk_widget_set_window (widget, win);
+#else
+	widget->window = win;
+#endif
+	gdk_window_set_user_data (win, widget);
 
-	widget->style = gtk_style_attach (widget->style, widget->window);
-	gtk_style_set_background (widget->style, widget->window, GTK_STATE_NORMAL);
+	GtkStyle *style;
+	style = gtk_widget_get_style (widget);
+	style = gtk_style_attach (style, win);
+	gtk_widget_set_style (widget, style);
+	gtk_style_set_background (style, win, GTK_STATE_NORMAL);
 }
 
 static void
