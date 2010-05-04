@@ -90,7 +90,7 @@ guint             gda_sql_builder_add_case (GdaSqlBuilder *builder, guint id,
 guint             gda_sql_builder_add_case_v (GdaSqlBuilder *builder, guint id,
 					      guint test_expr, guint else_expr,
 					      const guint *when_array, const guint *then_array, gint args_size);
-					    
+
 
 /* General Statement API */
 void              gda_sql_builder_add_field (GdaSqlBuilder *builder, const gchar *field_name, GType type, ...);
@@ -103,7 +103,7 @@ void              gda_sql_builder_set_where (GdaSqlBuilder *builder, guint cond_
 void              gda_sql_builder_add_field_id (GdaSqlBuilder *builder, guint field_id, guint value_id);
 
 /* SELECT Statement API */
-void              gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_name,
+guint             gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_name,
 						    const gchar *table_name, const gchar *alias);
 guint             gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_name, const gchar *alias);
 guint             gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint id,
