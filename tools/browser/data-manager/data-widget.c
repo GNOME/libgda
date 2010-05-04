@@ -157,14 +157,21 @@ create_part (DataWidget *dwid, DataSource *source)
 	gtk_label_set_ellipsize (GTK_LABEL (header), PANGO_ELLIPSIZE_END);
 	gtk_box_pack_start (GTK_BOX (vbox), header, FALSE, FALSE, 0);
 
-	GtkWidget *nb;
+	GtkWidget *nb, *page;
 	nb = gtk_notebook_new ();
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (nb), FALSE);
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), FALSE);
 	part->nb = GTK_NOTEBOOK (nb);
 
 	part->spinner = BROWSER_SPINNER (browser_spinner_new ());
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), GTK_WIDGET (part->spinner), NULL);
+	browser_spinner_set_size ((BrowserSpinner*) part->spinner, GTK_ICON_SIZE_LARGE_TOOLBAR);
+#if GTK_CHECK_VERSION(2,20,0)
+	page = gtk_alignment_new (0.5, 0.5, 0., 0.);
+	gtk_container_add (GTK_CONTAINER (page), (GtkWidget*) part->spinner);
+#else
+	page = GTK_WIDGET (part->spinner);
+#endif
+	gtk_notebook_append_page (GTK_NOTEBOOK (nb), page, NULL);
 	part->data_widget = NULL;
 
 	gtk_box_pack_start (GTK_BOX (vbox), nb, TRUE, TRUE, 0);

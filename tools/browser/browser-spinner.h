@@ -25,6 +25,14 @@
 #ifndef BROWSER_SPINNER_H
 #define BROWSER_SPINNER_H
 
+#if GTK_CHECK_VERSION(2,20,0)
+#define BROWSER_SPINNER(x) GTK_SPINNER(x)
+#define BrowserSpinner GtkSpinner
+#define browser_spinner_new() gtk_spinner_new()
+void		browser_spinner_start	 (BrowserSpinner *throbber);
+void		browser_spinner_stop	 (BrowserSpinner *throbber);
+void            browser_spinner_set_size (BrowserSpinner *spinner, GtkIconSize size);
+#else
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -61,5 +69,6 @@ void		browser_spinner_set_size (BrowserSpinner *spinner,
 					  GtkIconSize size);
 
 G_END_DECLS
+#endif /* GTK_CHECK_VERSION */
 
 #endif /* BROWSER_SPINNER_H */

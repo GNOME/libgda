@@ -393,7 +393,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	bwin->priv->toolbar_style = gtk_toolbar_get_style (GTK_TOOLBAR (toolbar));
 
 	GtkToolItem *ti;
-	GtkWidget *spinner;
+	GtkWidget *spinner, *svbox, *align;
 
 	ti = gtk_separator_tool_item_new ();
 	gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM (ti), FALSE);
@@ -402,8 +402,15 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
         gtk_widget_show (GTK_WIDGET (ti));
 
 	spinner = browser_spinner_new ();
+	browser_spinner_set_size ((BrowserSpinner*) spinner, GTK_ICON_SIZE_SMALL_TOOLBAR);
+
+	svbox = gtk_vbox_new (FALSE, 0);
+	align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+	gtk_container_add (GTK_CONTAINER (align), spinner);
+	gtk_box_pack_start (GTK_BOX (svbox), align, TRUE, TRUE, 0);
+
 	ti = gtk_tool_item_new  ();
-	gtk_container_add (GTK_CONTAINER (ti), spinner);
+	gtk_container_add (GTK_CONTAINER (ti), svbox);
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), ti, -1);
         gtk_widget_show_all (GTK_WIDGET (ti));
 	bwin->priv->spinner = spinner;
