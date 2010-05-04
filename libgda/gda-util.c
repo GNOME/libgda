@@ -207,8 +207,8 @@ gda_default_escape_string (const gchar *string)
  * gda_default_unescape_string
  * @string: string to unescape
  *
- * Do the reverse of gda_default_escape_string(): transforms any "\'" into "'" and any
- * "\\" into "\". 
+ * Do the reverse of gda_default_escape_string(): transforms any "''" into "'", any
+ * "\\" into "\" and any "\'" into "'". 
  *
  * Returns: a new unescaped string, or %NULL in an error was found in @string
  */
