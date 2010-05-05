@@ -19,6 +19,9 @@ Default handler for GType values
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaHandlerType ##### -->
 <para>
 
@@ -45,6 +48,7 @@ Default handler for GType values
 
 </para>
 
+@void: 
 @Returns: 
 
 

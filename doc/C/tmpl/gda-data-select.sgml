@@ -42,6 +42,9 @@ Data models returned by the execution of a SELECT statement
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaDataSelect ##### -->
 <para>
 

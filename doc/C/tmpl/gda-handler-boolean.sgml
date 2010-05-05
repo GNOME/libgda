@@ -17,6 +17,9 @@ Default handler for booleans
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaHandlerBoolean ##### -->
 <para>
 
@@ -43,6 +46,7 @@ Default handler for booleans
 
 </para>
 
+@void: 
 @Returns: 
 
 

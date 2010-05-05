@@ -19,6 +19,9 @@ The #GdaVproviderDataModel provider to use to create such connection objects.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaVconnectionDataModel ##### -->
 <para>
 

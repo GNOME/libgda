@@ -39,6 +39,9 @@ Handles any DDL query in an abstract way
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaServerOperation ##### -->
 <para>
 

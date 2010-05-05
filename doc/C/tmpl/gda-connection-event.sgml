@@ -23,6 +23,9 @@ Any event which has occurred on a #GdaConnection
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaConnectionEvent ##### -->
 <para>
 

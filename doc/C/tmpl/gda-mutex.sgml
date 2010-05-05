@@ -24,6 +24,9 @@ Recursive mutex implementation
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaMutex ##### -->
 <para>
 
@@ -35,6 +38,7 @@ Recursive mutex implementation
 
 </para>
 
+@void: 
 @Returns: 
 
 

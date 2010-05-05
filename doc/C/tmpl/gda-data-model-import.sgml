@@ -40,6 +40,9 @@ depend on the format of the imported data listed here:
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaDataModelImport ##### -->
 <para>
 

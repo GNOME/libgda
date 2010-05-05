@@ -36,6 +36,9 @@ Manager for lists of attributes
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### MACRO GDA_ATTRIBUTE_NAME ##### -->
 <para>
   The corresponding attribute is the name of the object it refers to (value has a G_TYPE_STRING type).

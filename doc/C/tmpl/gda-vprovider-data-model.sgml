@@ -19,6 +19,9 @@ added as tables in the connection. Using gda_server_provider_create_connection()
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaVproviderDataModel ##### -->
 <para>
 
@@ -30,6 +33,7 @@ added as tables in the connection. Using gda_server_provider_create_connection()
 
 </para>
 
+@void: 
 @Returns: 
 
 

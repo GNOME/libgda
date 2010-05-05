@@ -21,6 +21,9 @@ a #GdaSqlParser object.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaBatch ##### -->
 <para>
 
@@ -47,6 +50,7 @@ a #GdaSqlParser object.
 
 </para>
 
+@void: 
 @Returns: 
 
 

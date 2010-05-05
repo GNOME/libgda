@@ -17,6 +17,9 @@ Interface for locking objects in a multi threaded environment
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaLockable ##### -->
 <para>
 

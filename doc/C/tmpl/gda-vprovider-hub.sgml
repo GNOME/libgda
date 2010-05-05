@@ -22,6 +22,9 @@ Using gda_server_provider_create_connection() will generate a #GdaVconnectionHub
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaVproviderHub ##### -->
 <para>
 
@@ -33,6 +36,7 @@ Using gda_server_provider_create_connection() will generate a #GdaVconnectionHub
 
 </para>
 
+@void: 
 @Returns: 
 
 

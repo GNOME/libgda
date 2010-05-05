@@ -32,6 +32,9 @@ Single SQL statement
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaStatement ##### -->
 <para>
 
@@ -102,6 +105,7 @@ These flags specify how the #GdaDataModel returned when executing a #GdaStatemen
 
 </para>
 
+@void: 
 @Returns: 
 
 

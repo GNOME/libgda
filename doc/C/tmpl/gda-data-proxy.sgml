@@ -116,6 +116,9 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaDataProxy ##### -->
 <para>
 

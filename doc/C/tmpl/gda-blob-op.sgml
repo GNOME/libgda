@@ -85,6 +85,9 @@ gda_value_free (tmp_value);
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaBlobOp ##### -->
 <para>
 

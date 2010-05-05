@@ -17,6 +17,9 @@ Combo box to choose from the contents of a #GdaDataModel
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdauiCombo ##### -->
 <para>
 
@@ -38,6 +41,7 @@ Combo box to choose from the contents of a #GdaDataModel
 
 </para>
 
+@void: 
 @Returns: 
 
 

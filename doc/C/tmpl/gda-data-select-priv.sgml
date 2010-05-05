@@ -31,6 +31,9 @@ Base class for all the data models returned by DBMS providers when a SELECT stat
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaDataSelectClass ##### -->
 <para>
 

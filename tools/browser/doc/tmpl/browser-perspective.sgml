@@ -18,6 +18,9 @@ A "perspective" in a #BrowserWindow window
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### MACRO BROWSER_PERSPECTIVE_TYPE ##### -->
 <para>
 
@@ -60,6 +63,7 @@ A "perspective" in a #BrowserWindow window
 
 </para>
 
+@void: 
 @Returns: 
 
 

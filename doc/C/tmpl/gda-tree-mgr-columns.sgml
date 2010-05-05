@@ -29,6 +29,9 @@ a tree manager which creates a node for each column of a table
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaTreeMgrColumns ##### -->
 <para>
 

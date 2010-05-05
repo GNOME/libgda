@@ -18,6 +18,9 @@ Manages lists of KEY=VALUE pairs
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaQuarkList ##### -->
 <para>
 
@@ -29,6 +32,7 @@ Manages lists of KEY=VALUE pairs
 
 </para>
 
+@void: 
 @Returns: 
 
 

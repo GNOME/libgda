@@ -24,6 +24,9 @@ Adapting the SQL to the database's own SQL dialect
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaSqlRenderingContext ##### -->
 <para>
   Structure to wrap all the individual part's SQL rendering functions

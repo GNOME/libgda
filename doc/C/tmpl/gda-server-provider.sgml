@@ -22,6 +22,9 @@ Base class for all the DBMS providers
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaServerProvider ##### -->
 <para>
 

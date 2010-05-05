@@ -19,6 +19,9 @@ Bridge between a #GdaDataModel and a #GtkTreeModel
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdauiDataStore ##### -->
 <para>
 

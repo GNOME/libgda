@@ -96,6 +96,9 @@ ALTER GROUP mygroup ADD USER ##name::gchararray;
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaSqlParser ##### -->
 <para>
 
@@ -140,6 +143,7 @@ Modifies the behaviour of the tokenizer, reserved for #GdaServerProvider impleme
 
 </para>
 
+@void: 
 @Returns: 
 
 

@@ -34,6 +34,9 @@ which can be manipulated directly. The structure is a tree composed of several k
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaSqlStatement ##### -->
 <para>
 

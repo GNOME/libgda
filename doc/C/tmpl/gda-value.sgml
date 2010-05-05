@@ -44,6 +44,9 @@ Assorted functions for dealing with #GValue values.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### FUNCTION gda_value_new ##### -->
 <para>
 

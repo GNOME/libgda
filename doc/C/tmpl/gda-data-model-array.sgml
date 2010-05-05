@@ -23,6 +23,9 @@ An implementation of #GdaDataModel based on a #GArray.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaDataModelArray ##### -->
 <para>
 

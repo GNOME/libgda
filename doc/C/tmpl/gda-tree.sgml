@@ -23,6 +23,9 @@ A tree-structure
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaTree ##### -->
 <para>
 
@@ -71,6 +74,7 @@ A tree-structure
 
 </para>
 
+@void: 
 @Returns: 
 
 

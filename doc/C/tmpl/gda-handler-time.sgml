@@ -17,6 +17,9 @@ Default handler for time, date and timestamp
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaHandlerTime ##### -->
 <para>
 
@@ -43,6 +46,7 @@ Default handler for time, date and timestamp
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -51,6 +55,7 @@ Default handler for time, date and timestamp
 
 </para>
 
+@void: 
 @Returns: 
 
 

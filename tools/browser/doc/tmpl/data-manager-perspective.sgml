@@ -17,6 +17,9 @@ data-manager-perspective
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### MACRO DATA_MANAGER_PERSPECTIVE ##### -->
 <para>
 
@@ -44,6 +47,7 @@ data-manager-perspective
 
 </para>
 
+@void: 
 @Returns: 
 
 

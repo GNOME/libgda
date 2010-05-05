@@ -17,6 +17,9 @@ Select a database provider from a combo box
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdauiProviderSelector ##### -->
 <para>
 
@@ -28,6 +31,7 @@ Select a database provider from a combo box
 
 </para>
 
+@void: 
 @Returns: 
 
 

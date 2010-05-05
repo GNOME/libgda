@@ -17,11 +17,15 @@ Log functions
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### FUNCTION gda_log_enable ##### -->
 <para>
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION gda_log_disable ##### -->
@@ -29,6 +33,7 @@ Log functions
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION gda_log_is_enabled ##### -->
@@ -36,6 +41,7 @@ Log functions
 
 </para>
 
+@void: 
 @Returns: 
 
 

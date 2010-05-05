@@ -30,6 +30,9 @@ Keeps track of the transaction status of a connection
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaTransactionStatus ##### -->
 <para>
 

@@ -17,6 +17,9 @@ Default handler for binary values
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaHandlerBin ##### -->
 <para>
 
@@ -43,6 +46,7 @@ Default handler for binary values
 
 </para>
 
+@void: 
 @Returns: 
 
 

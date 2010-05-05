@@ -18,6 +18,9 @@ Singleton holding the global browser information
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT BrowserCorePrivate ##### -->
 <para>
 
@@ -29,6 +32,7 @@ Singleton holding the global browser information
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -59,6 +63,7 @@ Singleton holding the global browser information
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -67,6 +72,7 @@ Singleton holding the global browser information
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -83,6 +89,7 @@ Singleton holding the global browser information
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -107,6 +114,7 @@ Singleton holding the global browser information
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -123,6 +131,7 @@ Singleton holding the global browser information
 
 </para>
 
+@void: 
 
 
 <!-- ##### STRUCT BrowserPerspectiveFactory ##### -->
@@ -139,6 +148,7 @@ Singleton holding the global browser information
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -155,6 +165,7 @@ Singleton holding the global browser information
 
 </para>
 
+@void: 
 @Returns: 
 
 

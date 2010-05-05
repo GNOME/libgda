@@ -147,6 +147,9 @@ Low level report generator based on XML
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaReportEngine ##### -->
 <para>
 

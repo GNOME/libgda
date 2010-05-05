@@ -18,6 +18,9 @@ Management of #GdaDataModel column attributes
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaColumn ##### -->
 <para>
 
@@ -51,6 +54,7 @@ Management of #GdaDataModel column attributes
 
 </para>
 
+@void: 
 @Returns: 
 
 

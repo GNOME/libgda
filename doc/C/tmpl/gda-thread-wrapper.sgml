@@ -60,6 +60,9 @@ Execute functions in a sub thread
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaThreadWrapper ##### -->
 <para>
 
@@ -71,6 +74,7 @@ Execute functions in a sub thread
 
 </para>
 
+@void: 
 @Returns: 
 
 

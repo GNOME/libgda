@@ -29,6 +29,9 @@ a tree manager which creates a node for each table in a schema
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaTreeMgrTables ##### -->
 <para>
 

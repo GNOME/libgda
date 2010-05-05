@@ -89,6 +89,9 @@ gda_meta_struct_free (mstruct);
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaMetaStruct ##### -->
 <para>
 
