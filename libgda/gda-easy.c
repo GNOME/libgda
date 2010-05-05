@@ -250,8 +250,7 @@ gda_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **e
 /**
  * gda_prepare_create_table
  * @cnc: an opened connection
- * @table_name:
- * @num_columns
+ * @table_name: name of the table to create
  * @error: a place to store errors, or %NULL
  * @...: group of three arguments for column's name, column's #GType 
  * and a #GdaEasyCreateTableFlag flag, finished with NULL
