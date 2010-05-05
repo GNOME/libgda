@@ -261,6 +261,13 @@ static GObject             *gda_sqlite_provider_statement_execute (GdaServerProv
 								   GType *col_types, GdaSet **last_inserted_row, 
 								   guint *task_id, GdaServerProviderExecCallback async_cb, 
 								   gpointer cb_data, GError **error);
+
+/* string escaping */
+static gchar               *gda_sqlite_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc,
+							       const gchar *string);
+static gchar               *gda_sqlite_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc,
+								 const gchar *string);
+
 /* 
  * private connection data destroy 
  */
@@ -372,6 +379,9 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->statement_to_sql = gda_sqlite_provider_statement_to_sql;
 	provider_class->statement_prepare = gda_sqlite_provider_statement_prepare;
 	provider_class->statement_execute = gda_sqlite_provider_statement_execute;
+
+	provider_class->escape_string = gda_sqlite_provider_escape_string;
+	provider_class->unescape_string = gda_sqlite_provider_unescape_string;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	provider_class->meta_funcs._info = _gda_sqlite_meta__info;
@@ -1204,6 +1214,16 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 	if (type == G_TYPE_INVALID) {
 		TO_IMPLEMENT; /* use @dbms_type */
 		dh = NULL;
+	}
+	else if (type == G_TYPE_STRING) {
+		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
+		if (!dh) {
+			dh = gda_handler_string_new_with_provider (provider, cnc);
+			if (dh) {
+				gda_server_provider_handler_declare (provider, dh, cnc, G_TYPE_STRING, NULL);
+				g_object_unref (dh);
+			}
+		}
 	}
 	else if (type == GDA_TYPE_BINARY) {
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
@@ -2819,4 +2839,78 @@ gda_sqlite_free_cnc_data (SqliteConnectionData *cdata)
 	if (cdata->types)
 		g_hash_table_destroy (cdata->types);
 	g_free (cdata);
+}
+
+static gchar *
+gda_sqlite_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *string)
+{
+	gchar *ptr, *ret, *retptr;
+	gint size;
+
+	if (!string)
+		return NULL;
+	
+	/* determination of the new string size */
+	ptr = (gchar *) string;
+	size = 1;
+	while (*ptr) {
+		if (*ptr == '\'')
+			size += 2;
+		else
+			size += 1;
+		ptr++;
+	}
+
+	ptr = (gchar *) string;
+	ret = g_new0 (gchar, size);
+	retptr = ret;
+	while (*ptr) {
+		if (*ptr == '\'') {
+			*retptr = '\'';
+			*(retptr+1) = *ptr;
+			retptr += 2;
+		}
+		else {
+			*retptr = *ptr;
+			retptr ++;
+		}
+		ptr++;
+	}
+	*retptr = '\0';
+
+	return ret;
+}
+
+gchar *
+gda_sqlite_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *string)
+{
+	glong total;
+	gchar *ptr;
+	gchar *retval;
+	glong offset = 0;
+	
+	if (!string) 
+		return NULL;
+	
+	total = strlen (string);
+	retval = g_memdup (string, total+1);
+	ptr = (gchar *) retval;
+	while (offset < total) {
+		if (*ptr == '\'') {
+			if (*(ptr+1) == '\'') {
+				g_memmove (ptr+1, ptr+2, total - offset);
+				offset += 2;
+			}
+			else {
+				g_free (retval);
+				return NULL;
+			}
+		}
+		else
+			offset ++;
+
+		ptr++;
+	}
+
+	return retval;
 }
