@@ -1811,3 +1811,53 @@ gda_sql_builder_add_case_v (GdaSqlBuilder *builder, guint id,
 	gda_sql_expr_free (expr);
 	return 0;
 }
+
+/**
+ * gda_sql_builder_export_expression
+ * @builder: a #GdaSqlBuilder object
+ * @id: the ID of the expression to be exported, (must be a valid ID in @builder, not %0)
+ *
+ * Exports a part managed by @builder as a new #GdaSqlExpr, which can represent any expression
+ * in a statement.
+ *
+ * Returns: a pointer to a new #GdaSqlExpr structure, free using gda_sql_expr_free() when not
+ * needed anymore. If the part with @id as ID cannot be found, the returned value is %NULL.
+ *
+ * Since: 4.2
+ */
+GdaSqlExpr *
+gda_sql_builder_export_expression (GdaSqlBuilder *builder, guint id)
+{
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), NULL);
+	g_return_val_if_fail (builder->priv->main_stmt, NULL);
+
+	SqlPart *part;
+	part = get_part (builder, id, GDA_SQL_ANY_EXPR);
+	if (! part)
+		return NULL;
+	g_return_val_if_fail (part->part->type == GDA_SQL_ANY_EXPR, NULL);
+	return gda_sql_expr_copy ((GdaSqlExpr*) part->part);
+}
+
+/**
+ * gda_sql_builder_import_expression
+ * @builder: a #GdaSqlBuilder object
+ * @id: the requested ID, or 0 if to be determined by @builder
+ * @expr: a #GdaSqlExpr obtained using gda_sql_builder_export_expression()
+ *
+ * Imports the @expr into @builder.
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+guint
+gda_sql_builder_import_expression (GdaSqlBuilder *builder, guint id, GdaSqlExpr *expr)
+{
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	g_return_val_if_fail (expr, 0);
+
+	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, 0);
+	return add_part (builder, id, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));	
+}

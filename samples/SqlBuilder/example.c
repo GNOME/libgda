@@ -305,6 +305,42 @@ main (int argc, char *argv[])
 	render_as_sql (b);
 	g_object_unref (b);
 
+	/* Create a WHERE clause in a statement and reuse it in another one:
+	 *
+	 * - the first SQL built is DELETE FROM items WHERE id = ##theid::int
+	 * - the "id = ##theid::int" is exported from the first build and imported into the final build
+	 * - the final SQL is: SELECT id FROM mytable WHERE (name = ##thename::string) AND (id = ##theid::int)
+	 */
+	GdaSqlExpr *expr;
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
+
+	gda_sql_builder_set_table (b, "items");
+	gda_sql_builder_add_id (b, 1, "id");
+	gda_sql_builder_add_param (b, 2, "theid", G_TYPE_INT, FALSE);
+	gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2, 0);
+	gda_sql_builder_set_where (b, 3);
+
+	render_as_sql (b);
+	expr = gda_sql_builder_export_expression (b, 3);
+	g_object_unref (b);
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+	gda_sql_builder_select_add_target_id (b, 0,
+					      gda_sql_builder_add_id (b, 0, "mytable"),
+					      NULL);
+	gda_sql_builder_add_id (b, 1, "name");
+	gda_sql_builder_add_param (b, 2, "thename", G_TYPE_STRING, FALSE);
+	gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2, 0);
+
+	gda_sql_builder_set_where (b,
+				   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_AND, 3,
+							     gda_sql_builder_import_expression (b, 0, expr),
+							     0));
+	gda_sql_expr_free (expr);
+	render_as_sql (b);
+	g_object_unref (b);
+
 	return 0;
 }
 

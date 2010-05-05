@@ -1702,6 +1702,9 @@ gda_sql_builder_select_group_by
 <SUBSECTION>
 gda_sql_builder_compound_add_sub_select
 gda_sql_builder_compound_set_type
+<SUBSECTION>
+gda_sql_builder_export_expression
+gda_sql_builder_import_expression
 <SUBSECTION Standard>
 GDA_SQL_BUILDER
 GDA_SQL_BUILDER_GET_CLASS

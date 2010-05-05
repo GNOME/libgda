@@ -590,9 +590,11 @@
 	gda_sql_builder_compound_set_type
 	gda_sql_builder_error_get_type
 	gda_sql_builder_error_quark
+	gda_sql_builder_export_expression
 	gda_sql_builder_get_sql_statement
 	gda_sql_builder_get_statement
 	gda_sql_builder_get_type
+	gda_sql_builder_import_expression
 	gda_sql_builder_join_add_field
 	gda_sql_builder_new
 	gda_sql_builder_select_add_field

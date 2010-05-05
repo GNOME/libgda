@@ -127,6 +127,10 @@ void              gda_sql_builder_select_group_by (GdaSqlBuilder *builder, guint
 void              gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompoundType compound_type);
 void              gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst, gboolean steal);
 
+/* import/Export API */
+GdaSqlExpr       *gda_sql_builder_export_expression (GdaSqlBuilder *builder, guint id);
+guint             gda_sql_builder_import_expression (GdaSqlBuilder *builder, guint id, GdaSqlExpr *expr);
+
 G_END_DECLS
 
 #endif

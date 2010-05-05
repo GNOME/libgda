@@ -48,6 +48,9 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GdaSqlBuilder ##### -->
 <para>
 
@@ -310,6 +313,7 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 @field_name: 
 @table_name: 
 @alias: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_sql_builder_select_join_targets ##### -->
@@ -402,5 +406,26 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 
 @builder: 
 @compound_type: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_export_expression ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_import_expression ##### -->
+<para>
+
+</para>
+
+@builder: 
+@id: 
+@expr: 
+@Returns: 
 
 

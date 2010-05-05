@@ -34,10 +34,15 @@ SQL: SELECT myfunc (a, 5, 'Joe'), MAX (myfunc (a, 5, 'Joe'), b, 10) FROM mytable
 SQL: UPDATE "select" SET "date"='2009-05-27' WHERE id = 14
 SQL: SELECT date (a, 5, 'Joe') FROM "date", MyTable
 SQL: SELECT name FROM master WHERE id IN (SELECT id FROM subdata)
+SQL: SELECT id, name, (SELECT MAX (ts) FROM documents AS d WHERE t.id = d.topic) FROM topics AS t
 SQL: INSERT INTO customers (e, f, g) SELECT id, name, location FROM subdate
 SQL: SELECT id, name FROM subdata1 UNION SELECT ident, lastname FROM subdata2
 SQL: SELECT CASE WHEN price < 1.200000 THEN 2 ELSE 1 END FROM data
 SQL: SELECT CASE tag WHEN 'Alpha' THEN 1 WHEN 'Bravo' THEN 2 WHEN 'Charlie' THEN 3 END FROM data
+SQL: SELECT people.firstname AS person, people.lastname, "date" AS birthdate, age FROM people
+SQL: INSERT INTO customers (f, g) VALUES (15, 'joe')
+SQL: DELETE FROM items WHERE id = ##theid::int
+SQL: SELECT id FROM mytable WHERE (name = ##thename::string) AND (id = ##theid::int)
 
 and for example_cnc:
 SQL: INSERT INTO "customers" ("e", "f", "g") VALUES (##p1::string, 15, 'joe')
@@ -50,3 +55,7 @@ SQL: SELECT myfunc ("a", 5, 'Joe') FROM "mytable"
 SQL: SELECT myfunc ("a", 5, 'Joe'), MAX (myfunc ("a", 5, 'Joe'), "b", 10) FROM "mytable"
 SQL: UPDATE "select" SET "date"='2009-05-27' WHERE "id" = 14
 SQL: SELECT date ("a", 5, 'Joe') FROM "date", "MyTable"
+SQL: SELECT "people"."firstname" AS person, "people"."lastname", "date" AS birthdate, "age" FROM "people"
+SQL: INSERT INTO "customers" ("f", "g") VALUES (15, 'joe')
+SQL: DELETE FROM "items" WHERE "id" = ##theid::int
+SQL: SELECT "id" FROM "mytable" WHERE ("name" = ##thename::string) AND ("id" = ##theid::int)
