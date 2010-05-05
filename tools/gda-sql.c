@@ -1400,6 +1400,9 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 			if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
 				update_store = TRUE;
 			store = gda_meta_store_new_with_file (dict_file_name);
+			g_print (_("All the meta data associated to the '%s' connection will be stored "
+				   "in the '%s' file\n"),
+				 cs->name, dict_file_name);
 		}
 		else {
 			store = gda_meta_store_new (NULL);
