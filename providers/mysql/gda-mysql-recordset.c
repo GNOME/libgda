@@ -630,6 +630,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 		int intvalue = 0;
 		long long longlongvalue = 0;
 		double doublevalue = 0.0;
+		float floatvalue = 0.;
 		MYSQL_TIME timevalue = { 0 };
 		my_bool is_null = FALSE;
 		unsigned long length;
@@ -730,15 +731,24 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 			}
 
 			break;
-		case MYSQL_TYPE_FLOAT:
+		case MYSQL_TYPE_FLOAT: {
+			g_memmove (&floatvalue, mysql_bind_result[i].buffer, sizeof(float));
+			
+			if (type == G_TYPE_FLOAT)
+				g_value_set_float (value, (float) floatvalue);
+			else {
+				gda_row_invalidate_value (row, value);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     _("Type %s not mapped for value %f"),
+					     g_type_name (type), doublevalue);
+			}			
+			break;
+		}
 		case MYSQL_TYPE_DOUBLE: {
-			char *current_locale;
 			g_memmove (&doublevalue, mysql_bind_result[i].buffer, sizeof(double));
 			
-			current_locale = setlocale (LC_NUMERIC, "C");
-			if (type == G_TYPE_FLOAT)
-				g_value_set_float (value, (float) doublevalue);
-			else if (type == G_TYPE_DOUBLE)
+			if (type == G_TYPE_DOUBLE)
 				g_value_set_double (value, doublevalue);
 			else {
 				gda_row_invalidate_value (row, value);
@@ -747,8 +757,6 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 					     _("Type %s not mapped for value %f"),
 					     g_type_name (type), doublevalue);
 			}
-			setlocale (LC_NUMERIC, current_locale);
-			
 			break;
 		}
 		case MYSQL_TYPE_STRING:
