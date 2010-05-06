@@ -138,7 +138,6 @@ gdaui_data_filter_get_type
 <TITLE>GdauiDataProxy</TITLE>
 GdauiDataProxy
 GdauiDataProxyIface
-gdaui_data_proxy_new
 gdaui_data_proxy_get_proxy
 gdaui_data_proxy_get_actions_group
 GdauiAction
@@ -151,7 +150,6 @@ gdaui_data_proxy_get_write_mode
 <SUBSECTION Standard>
 GDAUI_DATA_PROXY
 GDAUI_IS_DATA_PROXY
-GDAUI_DATA_PROXY_CLASS
 GDAUI_TYPE_DATA_PROXY
 gdaui_data_proxy_get_type
 </SECTION>
@@ -297,7 +295,6 @@ gdaui_tree_store_get_type
 GdauiCloud
 gdaui_cloud_new
 gdaui_cloud_set_selection_mode
-gdaui_cloud_get_selection
 gdaui_cloud_filter
 gdaui_cloud_create_filter_widget
 GdauiCloudWeightFunc

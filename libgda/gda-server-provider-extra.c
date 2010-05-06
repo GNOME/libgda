@@ -467,8 +467,8 @@ schema_get_spec (GdaConnectionSchema schema)
 
 /**
  * gda_server_provider_init_schema_model
- * @model:
- * @schema:
+ * @model: a #GdaDataModel
+ * @schema: a #GdaConnectionSchema
  *
  * Sets the column attributes of @model for the requested schema
  *

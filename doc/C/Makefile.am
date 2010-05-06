@@ -48,7 +48,7 @@ GTKDOC_LIBS += $(GTK_LIBS) \
 endif
 
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--sgml-mode --output-format=xml --name-space=gda --ignore-files="parser.c binreloc.c libcsv.c md5c.c"
+MKDB_OPTIONS=--sgml-mode --output-format=xml --name-space=gda --ignore-files="parser.c delimiter.c binreloc.c libcsv.c md5c.c providers tools control-center tests samples plugins"
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files = fdl-appendix.sgml version.xml
@@ -82,7 +82,8 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
 	version.xml.in \
-	visual_index.xml prov-notes.xml
+	visual_index.xml prov-notes.xml \
+	libgda-sections.txt libgda-ui-sections.txt libgda.types libgda.types.in libgda-ui.types
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types

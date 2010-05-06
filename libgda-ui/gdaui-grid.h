@@ -29,7 +29,7 @@ G_BEGIN_DECLS
 #define GDAUI_GRID(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_grid_get_type(), GdauiGrid)
 #define GDAUI_GRID_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_grid_get_type (), GdauiGridClass)
 #define GDAUI_IS_GRID(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_grid_get_type ())
-
+#define GDAUI_IS_GRID_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDAUI_TYPE_GRID))
 
 typedef struct _GdauiGrid      GdauiGrid;
 typedef struct _GdauiGridClass GdauiGridClass;

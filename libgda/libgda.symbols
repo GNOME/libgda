@@ -621,6 +621,7 @@
 	gda_sql_error_type_get_type
 	gda_sql_expr_copy
 	gda_sql_expr_free
+	gda_sql_expr_get_type
 	gda_sql_expr_new
 	gda_sql_expr_serialize
 	gda_sql_expr_take_select

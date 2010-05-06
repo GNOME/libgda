@@ -72,6 +72,11 @@ gchar       *gda_alphanum_to_text (gchar *text);
  */
 GdaSqlExpr      *gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, 
 							 gboolean require_pk, GError **error);
+GdaSqlExpr       *gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc,
+								   GdaSqlStatementSelect *stsel,
+								   GdaMetaTable *mtable, gboolean require_pk,
+								   GError **error);
+
 gboolean         gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
 					     GdaStatement **insert_stmt, GdaStatement **update_stmt, GdaStatement **delete_stmt, 
 					     GError **error);

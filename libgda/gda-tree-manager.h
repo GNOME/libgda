@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 #define GDA_TREE_MANAGER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_MANAGER, GdaTreeManagerClass))
 #define GDA_IS_TREE_MANAGER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MANAGER))
 #define GDA_IS_TREE_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MANAGER))
+#define GDA_TREE_MANAGER_GET_CLASS(o)	 (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_MANAGER, GdaTreeManagerClass))
 
 typedef GSList *(*GdaTreeManagerNodesFunc) (GdaTreeManager *manager, GdaTreeNode *node,
 					    const GSList *children_nodes,
@@ -63,6 +64,8 @@ struct _GdaTreeManagerClass {
 	 */
 	GdaTreeManagerNodesFunc update_children;
 
+
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);

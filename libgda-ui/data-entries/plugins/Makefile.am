@@ -74,5 +74,6 @@ langspecdir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/
 langspec_DATA= \
 	gda-sql.lang
 
-EXTRA_DIST = $(xml_in_files)
+EXTRA_DIST = $(xml_in_files) \
+	$(langspec_DATA)
 DISTCLEANFILES = $(xml_DATA)

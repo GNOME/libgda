@@ -443,6 +443,19 @@ Methods dedicated to implementing providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_compute_unique_table_row_condition_with_cnc ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@stsel: 
+@mtable: 
+@require_pk: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_sql_any_part_check_structure ##### -->
 <para>
 

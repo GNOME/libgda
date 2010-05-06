@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 #define GDA_TREE_MGR_COLUMNS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_MGR_COLUMNS, GdaTreeMgrColumnsClass))
 #define GDA_IS_TREE_MGR_COLUMNS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MGR_COLUMNS))
 #define GDA_IS_TREE_MGR_COLUMNS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MGR_COLUMNS))
+#define GDA_TREE_MGR_COLUMNS_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_MGR_COLUMNS, GdaTreeMgrColumnsClass))
 
 typedef struct _GdaTreeMgrColumns GdaTreeMgrColumns;
 typedef struct _GdaTreeMgrColumnsPriv GdaTreeMgrColumnsPriv;

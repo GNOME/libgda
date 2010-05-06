@@ -30,6 +30,7 @@ G_BEGIN_DECLS
 #define GDA_SQL_BUILDER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_sql_builder_get_type(), GdaSqlBuilder)
 #define GDA_SQL_BUILDER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_sql_builder_get_type (), GdaSqlBuilderClass)
 #define GDA_IS_SQL_BUILDER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_sql_builder_get_type ())
+#define GDA_SQL_BUILDER_GET_CLASS(o)  (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_SQL_BUILDER, GdaSqlBuilderClass))
 
 typedef struct _GdaSqlBuilder        GdaSqlBuilder;
 typedef struct _GdaSqlBuilderClass   GdaSqlBuilderClass;

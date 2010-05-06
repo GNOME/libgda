@@ -743,7 +743,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR,
 					     _("Type %s not mapped for value %f"),
-					     g_type_name (type), doublevalue);
+					     g_type_name (type), floatvalue);
 			}			
 			break;
 		}

@@ -380,7 +380,7 @@ gdaui_tree_store_get_property (GObject *object,
 
 /**
  * gdaui_tree_store_new
- * @model: a #GdaTree object
+ * @tree: a #GdaTree object
  * @n_columns: number of columns in the tree store
  * @Varargs: couples of (GType, attribute name) for each column, from first to last 
  *
@@ -432,7 +432,7 @@ gdaui_tree_store_new (GdaTree *tree, guint n_columns, ...)
 
 /**
  * gdaui_tree_store_newv
- * @model: a #GdaTree object
+ * @tree: a #GdaTree object
  * @n_columns: number of columns in the tree store
  * @types: an array of @n_columns GType to specify the type of each column
  * @attribute_names: an array of @n_columns strings to specify the attribute name

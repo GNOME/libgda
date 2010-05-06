@@ -34,6 +34,7 @@ G_BEGIN_DECLS
 #define GDA_TREE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE, GdaTreeClass))
 #define GDA_IS_TREE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE))
 #define GDA_IS_TREE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE))
+#define GDA_TREE_GET_CLASS(o)	 (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE, GdaTreeClass))
 
 /* error reporting */
 extern GQuark gda_tree_error_quark (void);
@@ -57,6 +58,7 @@ struct _GdaTreeClass {
 	void         (* node_has_child_toggled) (GdaTree *tree, GdaTreeNode *node);
 	void         (* node_deleted)           (GdaTree *tree, const gchar *node_path);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);

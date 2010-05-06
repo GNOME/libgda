@@ -67,12 +67,16 @@ A connection to a database
 
 </para>
 
+@:
+
 @gdaconnection: the object which received the signal.
 
 <!-- ##### SIGNAL GdaConnection::conn-opened ##### -->
 <para>
 
 </para>
+
+@:
 
 @gdaconnection: the object which received the signal.
 
@@ -81,12 +85,16 @@ A connection to a database
 
 </para>
 
+@:
+
 @gdaconnection: the object which received the signal.
 
 <!-- ##### SIGNAL GdaConnection::dsn-changed ##### -->
 <para>
 
 </para>
+
+@:
 
 @gdaconnection: the object which received the signal.
 
@@ -95,6 +103,9 @@ A connection to a database
 
 </para>
 
+@: 
+@:
+
 @gdaconnection: the object which received the signal.
 @arg1: 
 
@@ -102,6 +113,8 @@ A connection to a database
 <para>
 
 </para>
+
+@:
 
 @gdaconnection: the object which received the signal.
 

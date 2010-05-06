@@ -1157,7 +1157,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
  * however that this GdaSqlStatement does not select anything (ie it would be rendered as "SELECT FROM ... WHERE ...")
  * and before being usable, one needs to add some fields to actually select.
  *
- * Returns; a new #GdaStatement if no error occurred, or %NULL otherwise
+ * Returns: a new #GdaStatement if no error occurred, or %NULL otherwise
  */
 GdaSqlStatement *
 gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **error)

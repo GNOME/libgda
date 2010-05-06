@@ -85,6 +85,7 @@ gda_tree_mgr_columns_class_init (GdaTreeMgrColumnsClass *klass)
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	/**
 	 * GdaTreeMgrColumns:schema:
+	 *
 	 * If no set, then the table name will be fetched from the parent node using the "schema" attribute
 	 */
         g_object_class_install_property (object_class, PROP_SCHEMA,
@@ -94,6 +95,7 @@ gda_tree_mgr_columns_class_init (GdaTreeMgrColumnsClass *klass)
 
 	/**
 	 * GdaTreeMgrColumns:table-name:
+	 *
 	 * If no set, then the table name will be fetched from the parent node using the "table_name" attribute
 	 */
         g_object_class_install_property (object_class, PROP_TABLE,

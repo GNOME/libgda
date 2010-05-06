@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 #define GDA_TREE_MGR_TABLES_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_MGR_TABLES, GdaTreeMgrTablesClass))
 #define GDA_IS_TREE_MGR_TABLES(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MGR_TABLES))
 #define GDA_IS_TREE_MGR_TABLES_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MGR_TABLES))
+#define GDA_TREE_MGR_TABLES_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_MGR_TABLES, GdaTreeMgrTablesClass))
 
 typedef struct _GdaTreeMgrTables GdaTreeMgrTables;
 typedef struct _GdaTreeMgrTablesPriv GdaTreeMgrTablesPriv;

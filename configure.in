@@ -104,7 +104,6 @@ AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_CC_C_O
 AC_STDC_HEADERS
-AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
 AC_PROG_MAKE_SET
 
@@ -1829,6 +1828,8 @@ mv ${srcdir}/doc/C/version.xml.tmp ${srcdir}/doc/C/version.xml
 cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-4.0-sections.txt
 echo "" >> doc/C/libgda-4.0-sections.txt
 cat ${srcdir}/doc/C/libgda-ui-sections.txt >> doc/C/libgda-4.0-sections.txt
+cp doc/C/libgda-4.0-sections.txt ${srcdir}/doc/C/libgda-4.0-sections.txt.tmp
+mv ${srcdir}/doc/C/libgda-4.0-sections.txt.tmp ${srcdir}/doc/C/libgda-4.0-sections.txt
 
 cp doc/C/libgda.types doc/C/libgda-4.0.types
 if test x$have_ui != xno

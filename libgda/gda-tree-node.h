@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 #define GDA_TREE_NODE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_NODE, GdaTreeNodeClass))
 #define GDA_IS_TREE_NODE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_NODE))
 #define GDA_IS_TREE_NODE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_NODE))
+#define GDA_TREE_NODE_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_NODE, GdaTreeNodeClass))
 
 /* error reporting */
 extern GQuark gda_tree_node_error_quark (void);
@@ -60,6 +61,7 @@ struct _GdaTreeNodeClass {
 	gchar              *(*dump_header) (GdaTreeNode *node);
 	void                (*dump_children) (GdaTreeNode *node, const gchar *prefix, GString *in_string);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);

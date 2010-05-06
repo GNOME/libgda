@@ -232,26 +232,11 @@ Specifies the type of functions passed to gda_sql_any_part_foreach().
 
 <!-- ##### STRUCT GdaSqlStatementUnknown ##### -->
 <para>
-  The SQL statement is of an unknown type (not any of the other parsed types). Such structure is created by the #GdaSqlParser object
-  when it cannot parse the SQL string, or when operating in delimiter mode (it only tries to delimit statements if there are several
-  ones in the same SQL string).
-<mediaobject>
-  <imageobject role="html">
-    <imagedata fileref="stmt-unknown.png" format="PNG"/>
-  </imageobject>
-  <caption>
-    <para>
-      Example of a #GdaSqlStatement having a #GdaSqlStatementUnknown as its contents (the parsed string is "a string;" which
-      is not a valid SQL statement). The arrows are named after the attribute they represent (here the "expressions" attribute).
-      Lists are represented by the GSList nodes and a "data" pointer which points to the data, and a "next" pointer which
-      points to the next node in the list, all of the graphical items are in gray.
-    </para>
-  </caption>
-</mediaobject>
+
 </para>
 
-@any: inheritance structure
-@expressions: a #GSList of #GdaSqlExpr expressions
+@any: 
+@expressions: 
 @_gda_reserved1: 
 @_gda_reserved2: 
 

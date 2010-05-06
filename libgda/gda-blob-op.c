@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/**
+/*
  * BLOB (Binary Large OBject) handling functions specific to each provider.
  */
 

@@ -255,7 +255,8 @@ _gdaui_utility_proxy_compute_attributes_for_group (GdauiSetGroup *group, GdauiDa
 }
 
 /**
- * _gdaui_utility_proxy_compute_values_for_group
+ * _gdaui_utility_proxy_compute_values_for_group:
+ *
  * Computes a list of values containing the individual values stored in @store and
  * corresponding to the columns for the parameters if @group, at row pointed by @tree_iter.
  * 
@@ -270,8 +271,8 @@ _gdaui_utility_proxy_compute_attributes_for_group (GdauiSetGroup *group, GdauiDa
  */
 GList *
 _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataStore *store, 
-						 GdaDataModelIter *model_iter, 
-						 GtkTreeIter *tree_iter, gboolean model_values)
+					       GdaDataModelIter *model_iter, 
+					       GtkTreeIter *tree_iter, gboolean model_values)
 {
 	gint offset;
 	GList *retval = NULL;

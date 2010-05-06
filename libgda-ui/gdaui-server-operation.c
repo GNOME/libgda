@@ -219,7 +219,7 @@ gdaui_server_operation_init (GdauiServerOperation * wid)
 
 /**
  * gdaui_server_operation_new
- * @paramlist: a #GdaSet structure
+ * @op: a #GdaServerOperation structure
  *
  * Creates a new #GdauiServerOperation widget using all the parameters provided in @paramlist.
  *

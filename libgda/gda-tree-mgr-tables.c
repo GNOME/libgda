@@ -84,6 +84,7 @@ gda_tree_mgr_tables_class_init (GdaTreeMgrTablesClass *klass)
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	/**
 	 * GdaTreeMgrTables:schema:
+	 *
 	 * If no set, then the table name will be fetched from the parent node using the "schema" attribute. If not
 	 * found that way, then the list of visible tables (tables which can be identified without having to specify
 	 * a schema) will be used

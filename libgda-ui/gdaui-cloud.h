@@ -29,7 +29,7 @@ G_BEGIN_DECLS
 #define GDAUI_CLOUD(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_cloud_get_type(), GdauiCloud)
 #define GDAUI_CLOUD_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_cloud_get_type (), GdauiCloudClass)
 #define GDAUI_IS_CLOUD(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_cloud_get_type ())
-
+#define GDAUI_IS_CLOUD_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDAUI_TYPE_CLOUD))
 
 typedef struct _GdauiCloud      GdauiCloud;
 typedef struct _GdauiCloudClass GdauiCloudClass;

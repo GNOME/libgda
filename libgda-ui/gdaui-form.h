@@ -30,7 +30,7 @@ G_BEGIN_DECLS
 #define GDAUI_FORM(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_form_get_type(), GdauiForm)
 #define GDAUI_FORM_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_form_get_type (), GdauiFormClass)
 #define GDAUI_IS_FORM(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_form_get_type ())
-
+#define GDAUI_IS_FORM_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDAUI_TYPE_FORM))
 
 typedef struct _GdauiForm      GdauiForm;
 typedef struct _GdauiFormClass GdauiFormClass;

@@ -32,6 +32,7 @@ G_BEGIN_DECLS
 #define GDA_THREAD_WRAPPER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_THREAD_WRAPPER, GdaThreadWrapperClass))
 #define GDA_IS_THREAD_WRAPPER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_THREAD_WRAPPER))
 #define GDA_IS_THREAD_WRAPPER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_THREAD_WRAPPER))
+#define GDA_THREAD_WRAPPER_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_THREAD_WRAPPER, GdaThreadWrapperClass))
 
 typedef struct _GdaThreadWrapper GdaThreadWrapper;
 typedef struct _GdaThreadWrapperClass GdaThreadWrapperClass;

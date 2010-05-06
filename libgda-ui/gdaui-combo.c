@@ -648,7 +648,7 @@ gdaui_combo_add_null (GdauiCombo *combo, gboolean add_null)
  *
  * Tell if the currently selected entry represents the "undefined choice" entry.
  *
- * Returns:
+ * Returns: %TRUE if the %NULL value is selected
  *
  * Since: 4.2
  */
