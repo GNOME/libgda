@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
@@ -33,10 +33,23 @@
  *
  */
 
+GType
+gda_sql_expr_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaSqlExpr",
+			(GBoxedCopyFunc) gda_sql_expr_copy,
+			(GBoxedFreeFunc) gda_sql_expr_free);
+	return our_type;
+}
+
+
 /**
  * gda_sql_expr_new
  * @parent: a #GdaSqlStatementInsert, #GdaSqlStatementUpdate, #GdaSqlSelectField, #GdaSqlSelectTarget, #GdaSqlOperation
- * 
+ *
  * Creates a new #GdaSqlField structure, using @parent as its parent part.
  *
  * Returns: a new #GdaSqlField structure.
@@ -54,7 +67,7 @@ gda_sql_expr_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_expr_free
  * @expr: a #GdaSqlExpr to be freed.
- * 
+ *
  * Frees a #GdaSqlExpr structure and its members.
  *
  */
@@ -88,7 +101,7 @@ gda_sql_expr_free (GdaSqlExpr *expr)
 /**
  * gda_sql_expr_copy
  * @expr: a #GdaSqlExpr
- * 
+ *
  * Creates a new #GdaSqlExpr structure initiated with the values stored in @expr.
  *
  * Returns: a new #GdaSqlExpr structure.
@@ -139,7 +152,7 @@ gda_sql_expr_copy (GdaSqlExpr *expr)
 /**
  * gda_sql_expr_serialize
  * @expr: a #GdaSqlExpr structure
- * 
+ *
  * Creates a new string representing a field. You need to free the returned string
  * using g_free();
  *
@@ -188,7 +201,7 @@ gda_sql_expr_serialize (GdaSqlExpr *expr)
 			g_string_append_printf (string, "\"value\":%s", str);
 			g_free (str);
 		}
-		else 
+		else
 			g_string_append_printf (string, "\"value\":null");
 		if (expr->param_spec) {
 			str = gda_sql_param_spec_serialize (expr->param_spec);
@@ -219,7 +232,7 @@ gda_sql_expr_serialize (GdaSqlExpr *expr)
  * gda_sql_expr_take_select
  * @expr: a #GdaSqlExpr structure
  * @stmt: a #GdaSqlStatement holding the #GdaSqlStatementSelect to take from
- * 
+ *
  * Sets the expression's parent to the #GdaSqlStatementSelect held by @stmt. After
  * calling this function @stmt is freed.
  *
@@ -240,7 +253,7 @@ gda_sql_expr_take_select (GdaSqlExpr *expr, GdaSqlStatement *stmt)
 /**
  * gda_sql_field_new
  * @parent: a #GdaSqlStatementSelect, #GdaSqlStatementInsert, #GdaSqlStatementDelete, #GdaSqlStatementUpdate
- * 
+ *
  * Creates a new #GdaSqlField structure, using @parent as its parent part.
  *
  * Returns: a new #GdaSqlField structure.
@@ -258,7 +271,7 @@ gda_sql_field_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_field_free
  * @field: a #GdaSqlField to be freed.
- * 
+ *
  * Frees a #GdaSqlField structure and its members.
  *
  */
@@ -275,7 +288,7 @@ gda_sql_field_free (GdaSqlField *field)
 /**
  * gda_sql_field_copy
  * @field: a #GdaSqlAnyPart
- * 
+ *
  * Creates a new GdaSqlField structure initiated with the values stored in @field.
  *
  * Returns: a new #GdaSqlField structure.
@@ -297,7 +310,7 @@ gda_sql_field_copy (GdaSqlField *field)
 /**
  * gda_sql_field_serialize
  * @field: a #GdaSqlField structure
- * 
+ *
  * Creates a new string representing a field. You need to free the returned string
  * using g_free();
  *
@@ -306,7 +319,7 @@ gda_sql_field_copy (GdaSqlField *field)
 gchar *
 gda_sql_field_serialize (GdaSqlField *field)
 {
-	if (!field) 
+	if (!field)
 		return g_strdup ("null");
 	else
 		return _json_quote_string (field->field_name);
@@ -316,7 +329,7 @@ gda_sql_field_serialize (GdaSqlField *field)
  * gda_sql_field_take_name
  * @field: a #GdaSqlField structure
  * @value: a #GValue holding a string to take from
- * 
+ *
  * Sets the field's name using the string held by @value. When call, @value is freed using
  * #gda_value_free().
  *
@@ -333,7 +346,7 @@ gda_sql_field_take_name (GdaSqlField *field, GValue *value)
 /**
  * gda_sql_table_new
  * @parent: a #GdaSqlStatementSelect, #GdaSqlStatementInsert, #GdaSqlStatementDelete, #GdaSqlStatementUpdate
- * 
+ *
  * Creates a new #GdaSqlTable structure, using @parent as its parent part.
  *
  * Returns: a new #GdaSqlTable structure.
@@ -351,7 +364,7 @@ gda_sql_table_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_table_free
  * @table: a #GdaSqlTable structure to be freed
- * 
+ *
  * Frees a #GdaSqlTable structure and its members.
  */
 void
@@ -367,7 +380,7 @@ gda_sql_table_free (GdaSqlTable *table)
 /**
  * gda_sql_table_copy
  * @table: a #GdaSqlTable structure to be copied
- * 
+ *
  * Creates a new #GdaSqlTable structure initiated with the values stored in @table.
  *
  * Returns: a new #GdaSqlTable structure.
@@ -389,7 +402,7 @@ gda_sql_table_copy (GdaSqlTable *table)
 /**
  * gda_sql_table_serialize
  * @field: a #GdaSqlTable structure
- * 
+ *
  * Creates a new string representing a table. You need to free the returned string
  * using g_free();
  *
@@ -398,7 +411,7 @@ gda_sql_table_copy (GdaSqlTable *table)
 gchar *
 gda_sql_table_serialize (GdaSqlTable *table)
 {
-	if (!table) 
+	if (!table)
 		return g_strdup ("null");
 	else
 		return _json_quote_string (table->table_name);
@@ -408,7 +421,7 @@ gda_sql_table_serialize (GdaSqlTable *table)
  * gda_sql_table_take_name
  * @field: a #GdaSqlTable structure
  * @value: a #GValue holding a string to take from
- * 
+ *
  * Sets the table's name using the string held by @value. When call, @value is freed using
  * gda_value_free().
  *
@@ -425,7 +438,7 @@ gda_sql_table_take_name (GdaSqlTable *table, GValue *value)
 /**
  * gda_sql_function_new
  * @parent: a #GdaSqlAnyPart structure
- * 
+ *
  * Creates a new #GdaSqlFunction structure initiated.
  *
  * Returns: a new #GdaSqlFunction structure.
@@ -443,7 +456,7 @@ gda_sql_function_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_function_free
  * @function: a #GdaSqlFunction structure to be freed
- * 
+ *
  * Frees a #GdaSqlFunction structure and its members.
  */
 void
@@ -462,7 +475,7 @@ gda_sql_function_free (GdaSqlFunction *function)
 /**
  * gda_sql_function_copy
  * @function: a #GdaSqlFunction structure to be copied
- * 
+ *
  * Creates a new #GdaSqlFunction structure initiated with the values stored in @function.
  *
  * Returns: a new #GdaSqlFunction structure.
@@ -481,7 +494,7 @@ gda_sql_function_copy (GdaSqlFunction *function)
 	if (function->args_list) {
 		GSList *list;
 		for (list = function->args_list; list; list = list->next) {
-			copy->args_list = g_slist_prepend (copy->args_list, 
+			copy->args_list = g_slist_prepend (copy->args_list,
 							   gda_sql_expr_copy ((GdaSqlExpr *) list->data));
 			gda_sql_any_part_set_parent (copy->args_list->data, copy);
 		}
@@ -494,7 +507,7 @@ gda_sql_function_copy (GdaSqlFunction *function)
 /**
  * gda_sql_function_serialize
  * @function: a #GdaSqlFunction structure
- * 
+ *
  * Creates a new string representing a function. You need to free the returned string
  * using g_free();
  *
@@ -502,8 +515,8 @@ gda_sql_function_copy (GdaSqlFunction *function)
  */
 gchar *
 gda_sql_function_serialize (GdaSqlFunction *function)
-{	
-	if (!function) 
+{
+	if (!function)
 		return g_strdup ("null");
 	else {
 		GString *string;
@@ -542,7 +555,7 @@ gda_sql_function_serialize (GdaSqlFunction *function)
  * gda_sql_function_take_name
  * @function: a #GdaSqlFunction structure
  * @value: a #GValue holding a string to take from
- * 
+ *
  * Sets the function's name using the string held by @value. When call, @value is freed using
  * #gda_value_free().
  */
@@ -559,7 +572,7 @@ gda_sql_function_take_name (GdaSqlFunction *function, GValue *value)
  * gda_sql_function_take_args_list
  * @function: a #GdaSqlFunction structure
  * @args: a #GSList to take from
- * 
+ *
  * Sets the function's arguments to point to @args, then sets the
  * list's data elements' parent to @function.
  *
@@ -577,7 +590,7 @@ gda_sql_function_take_args_list (GdaSqlFunction *function, GSList *args)
 /**
  * gda_sql_operation_new
  * @parent: a #GdaSqlAnyPart structure
- * 
+ *
  * Creates a new #GdaSqlOperation structure and sets its parent to @parent.
  *
  * Returns: a new #GdaSqlOperation structure.
@@ -595,7 +608,7 @@ gda_sql_operation_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_operation_free
  * @operation: a #GdaSqlOperation structure to be freed
- * 
+ *
  * Frees a #GdaSqlOperation structure and its members.
  */
 void
@@ -613,7 +626,7 @@ gda_sql_operation_free (GdaSqlOperation *operation)
 /**
  * gda_sql_operation_copy
  * @operation: a #GdaSqlOperation structure to be copied
- * 
+ *
  * Creates a new #GdaSqlOperation structure initiated with the values stored in @operation.
  *
  * Returns: a new #GdaSqlOperation structure.
@@ -628,9 +641,9 @@ gda_sql_operation_copy (GdaSqlOperation *operation)
 
 	copy = gda_sql_operation_new (NULL);
 	copy->operator_type = operation->operator_type;
-	
+
 	for (list = operation->operands; list; list = list->next) {
-		copy->operands = g_slist_prepend (copy->operands, 
+		copy->operands = g_slist_prepend (copy->operands,
 						  gda_sql_expr_copy ((GdaSqlExpr*) list->data));
 		gda_sql_any_part_set_parent (copy->operands->data, copy);
 	}
@@ -642,7 +655,7 @@ gda_sql_operation_copy (GdaSqlOperation *operation)
 /**
  * gda_sql_operation_serialize
  * @operation: a #GdaSqlOperation structure
- * 
+ *
  * Creates a new string representing an operator. You need to free the returned string
  * using g_free();
  *
@@ -650,8 +663,8 @@ gda_sql_operation_copy (GdaSqlOperation *operation)
  */
 gchar *
 gda_sql_operation_serialize (GdaSqlOperation *operation)
-{	
-	if (!operation) 
+{
+	if (!operation)
 		return g_strdup ("null");
 	else {
 		GString *string;
@@ -687,8 +700,8 @@ gda_sql_operation_serialize (GdaSqlOperation *operation)
 /**
  * gda_sql_operation_operator_to_string
  * @op: a #GdaSqlOperation structure
- * 
- * Returns a constant string representing a operator name. You don't need to free 
+ *
+ * Returns a constant string representing a operator name. You don't need to free
  * the returned string.
  *
  * Returns: a string with the operator's name or NULL in case @op is invalid.
@@ -766,12 +779,12 @@ gda_sql_operation_operator_to_string (GdaSqlOperatorType op)
 /**
  * gda_sql_operation_operator_from_string
  * @op: a #GdaSqlOperation structure
- * 
+ *
  * Returns #GdaSqlOperatorType that correspond with the string @op.
  *
  * Returns: #GdaSqlOperatorType
  */
-GdaSqlOperatorType 
+GdaSqlOperatorType
 gda_sql_operation_operator_from_string (const gchar *op)
 {
 	switch (g_ascii_toupper (*op)) {
@@ -808,7 +821,7 @@ gda_sql_operation_operator_from_string (const gchar *op)
 	case '!':
 		if (op[1] == '=')
 			return GDA_SQL_OPERATOR_TYPE_DIFF;
-		else if (op[1] == 'R') 
+		else if (op[1] == 'R')
 			return GDA_SQL_OPERATOR_TYPE_NOT_REGEXP;
 		else
 			return GDA_SQL_OPERATOR_TYPE_NOT_REGEXP_CI;
@@ -843,7 +856,7 @@ gda_sql_operation_operator_from_string (const gchar *op)
 /**
  * gda_sql_case_new
  * @parent: a #GdaSqlAnyPart structure
- * 
+ *
  * Creates a new #GdaSqlCase structure and sets its parent to @parent.
  *
  * Returns: a new #GdaSqlCase structure.
@@ -861,7 +874,7 @@ gda_sql_case_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_case_free
  * @sc: a #GdaSqlCase structure to be freed
- * 
+ *
  * Frees a #GdaSqlCase structure and its members.
  */
 void
@@ -885,7 +898,7 @@ gda_sql_case_free (GdaSqlCase *sc)
 /**
  * gda_sql_case_copy
  * @sc: a #GdaSqlCase structure to be copied
- * 
+ *
  * Creates a new #GdaSqlCase structure initiated with the values stored in @sc.
  *
  * Returns: a new #GdaSqlCase structure.
@@ -903,16 +916,16 @@ gda_sql_case_copy (GdaSqlCase *sc)
 	gda_sql_any_part_set_parent (copy->base_expr, copy);
 	copy->else_expr = gda_sql_expr_copy (sc->else_expr);
 	gda_sql_any_part_set_parent (copy->else_expr, copy);
-	
+
 	for (list = sc->when_expr_list; list; list = list->next) {
-		copy->when_expr_list = g_slist_prepend (copy->when_expr_list, 
+		copy->when_expr_list = g_slist_prepend (copy->when_expr_list,
 							gda_sql_expr_copy ((GdaSqlExpr*) list->data));
 		gda_sql_any_part_set_parent (copy->when_expr_list->data, copy);
 	}
-	
+
 	copy->when_expr_list = g_slist_reverse (copy->when_expr_list);
 	for (list = sc->then_expr_list; list; list = list->next) {
-		copy->then_expr_list = g_slist_prepend (copy->then_expr_list, 
+		copy->then_expr_list = g_slist_prepend (copy->then_expr_list,
 						       gda_sql_expr_copy ((GdaSqlExpr*) list->data));
 		gda_sql_any_part_set_parent (copy->then_expr_list->data, copy);
 	}
@@ -924,7 +937,7 @@ gda_sql_case_copy (GdaSqlCase *sc)
 /**
  * gda_sql_case_serialize
  * @sc: a #GdaSqlCase structure
- * 
+ *
  * Creates a new string representing a CASE clause. You need to free the returned string
  * using g_free();
  *
@@ -932,8 +945,8 @@ gda_sql_case_copy (GdaSqlCase *sc)
  */
 gchar *
 gda_sql_case_serialize (GdaSqlCase *sc)
-{	
-	if (!sc) 
+{
+	if (!sc)
 		return g_strdup ("null");
 	else {
 		GString *string;
@@ -948,7 +961,7 @@ gda_sql_case_serialize (GdaSqlCase *sc)
 		g_free (str);
 
 		g_string_append (string, ",\"body\":[");
-		for (wlist = sc->when_expr_list, tlist = sc->then_expr_list; 
+		for (wlist = sc->when_expr_list, tlist = sc->then_expr_list;
 		     wlist && tlist; wlist = wlist->next, tlist = tlist->next) {
 			if (wlist != sc->when_expr_list)
 				g_string_append_c (string, ',');
@@ -981,7 +994,7 @@ gda_sql_case_serialize (GdaSqlCase *sc)
 /**
  * gda_sql_select_field_new
  * @parent: a #GdaSqlStatementSelect structure
- * 
+ *
  * Creates a new #GdaSqlSelectField structure and sets its parent to @parent. A
  * #GdaSqlSelectField is any expression in SELECT statements before the FROM clause.
  *
@@ -1000,7 +1013,7 @@ gda_sql_select_field_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_select_field_free
  * @field: a #GdaSqlSelectField structure to be freed
- * 
+ *
  * Frees a #GdaSqlSelectField structure and its members.
  */
 void
@@ -1020,7 +1033,7 @@ gda_sql_select_field_free (GdaSqlSelectField *field)
 /**
  * gda_sql_select_field_copy
  * @field: a #GdaSqlSelectField structure to be copied
- * 
+ *
  * Creates a new #GdaSqlSelectField structure initiated with the values stored in @field.
  *
  * Returns: a new #GdaSqlSelectField structure.
@@ -1052,7 +1065,7 @@ gda_sql_select_field_copy (GdaSqlSelectField *field)
 /**
  * gda_sql_select_field_serialize
  * @field: a #GdaSqlSelectField structure
- * 
+ *
  * Creates a new string representing an expression used as field in a SELECT statement
  * before the FROM clause.
  *
@@ -1060,8 +1073,8 @@ gda_sql_select_field_copy (GdaSqlSelectField *field)
  */
 gchar *
 gda_sql_select_field_serialize (GdaSqlSelectField *field)
-{	
-	if (!field) 
+{
+	if (!field)
 		return g_strdup ("null");
 	else {
 		GString *string;
@@ -1104,7 +1117,7 @@ gda_sql_select_field_serialize (GdaSqlSelectField *field)
  * gda_sql_select_field_take_expr
  * @field: a #GdaSqlSelectField structure
  * @expr: a #GdaSqlExpr to take from
- * 
+ *
  * Sets the expression field in the #GdaSqlSelectField structure to point to @expr
  * and modify it to sets its parent to @field.
  */
@@ -1114,7 +1127,7 @@ gda_sql_select_field_take_expr (GdaSqlSelectField *field, GdaSqlExpr *expr)
 	field->expr = expr;
 	gda_sql_any_part_set_parent (field->expr, field);
 
-	if (expr && expr->value) 
+	if (expr && expr->value)
 		_split_identifier_string (g_value_dup_string (expr->value), &(field->table_name), &(field->field_name));
 }
 
@@ -1122,7 +1135,7 @@ gda_sql_select_field_take_expr (GdaSqlSelectField *field, GdaSqlExpr *expr)
  * gda_sql_select_field_take_star_value
  * @field: a #GdaSqlSelectField structure
  * @value: a #GValue to take from
- * 
+ *
  * Sets the expression field's value in the #GdaSqlSelectField structure to point to @value;
  * after this @field is the owner of @value.
  *
@@ -1140,7 +1153,7 @@ gda_sql_select_field_take_star_value (GdaSqlSelectField *field, GValue *value)
  * gda_sql_select_field_take_alias
  * @field: a #GdaSqlSelectField structure
  * @alias: a #GValue to take from
- * 
+ *
  * Sets the 'as' field's string in the #GdaSqlSelectField structure. @alias is freed
  * after call this function.
  *
@@ -1157,7 +1170,7 @@ gda_sql_select_field_take_alias (GdaSqlSelectField *field, GValue *alias)
 /**
  * gda_sql_select_target_new
  * @parent: a #GdaSqlSelectFrom
- * 
+ *
  * Creates a new #GdaSqlSelectTarget structure and sets its parent to @parent. A
  * #GdaSqlSelectTarget is the table in a SELECT statement.
  *
@@ -1176,7 +1189,7 @@ gda_sql_select_target_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_select_target_free
  * @target: a #GdaSqlSelectTarget structure to be freed
- * 
+ *
  * Frees a #GdaSqlSelectTarget structure and its members.
  */
 void
@@ -1195,7 +1208,7 @@ gda_sql_select_target_free (GdaSqlSelectTarget *target)
 /**
  * gda_sql_select_target_copy
  * @target: a #GdaSqlSelectTarget structure to be copied
- * 
+ *
  * Creates a new #GdaSqlSelectTarget structure initiated with the values stored in @target.
  *
  * Returns: a new #GdaSqlSelectTarget structure.
@@ -1224,7 +1237,7 @@ gda_sql_select_target_copy (GdaSqlSelectTarget *target)
 /**
  * gda_sql_select_target_serialize
  * @target: a #GdaSqlSelectTarget structure
- * 
+ *
  * Creates a new string representing a target used in a SELECT statement
  * after the FROM clause.
  *
@@ -1232,8 +1245,8 @@ gda_sql_select_target_copy (GdaSqlSelectTarget *target)
  */
 gchar *
 gda_sql_select_target_serialize (GdaSqlSelectTarget *target)
-{	
-	if (!target) 
+{
+	if (!target)
 		return g_strdup ("null");
 	else {
 		GString *string;
@@ -1270,7 +1283,7 @@ gda_sql_select_target_serialize (GdaSqlSelectTarget *target)
  * gda_sql_select_target_take_table_name
  * @target: a #GdaSqlSelectTarget structure
  * @value: a #GValue to take from
- * 
+ *
  * Sets the target's name using the string stored in @value and the expression
  * to set its value to point to value; after call this function the target owns
  * @value, then you must not free it.
@@ -1289,7 +1302,7 @@ gda_sql_select_target_take_table_name (GdaSqlSelectTarget *target, GValue *value
  * gda_sql_select_target_take_table_name
  * @target: a #GdaSqlSelectTarget structure
  * @stmt: a #GValue to take from
- * 
+ *
  * Sets the target to be a SELECT subquery setting target's expression to use
  * @stmt; after call this function the target owns @stmt, then you must not free it.
  */
@@ -1306,7 +1319,7 @@ gda_sql_select_target_take_select (GdaSqlSelectTarget *target, GdaSqlStatement *
  * gda_sql_select_target_take_table_alias
  * @target: a #GdaSqlSelectTarget structure
  * @alias: a #GValue holding the alias string to take from
- * 
+ *
  * Sets the target alias (AS) to the string held by @alias; after call
  * this function @alias is freed.
  */
@@ -1326,7 +1339,7 @@ gda_sql_select_target_take_alias (GdaSqlSelectTarget *target, GValue *alias)
 /**
  * gda_sql_select_join_new
  * @parent: a #GdaSqlSelectFrom
- * 
+ *
  * Creates a new #GdaSqlSelectJoin structure and sets its parent to @parent.
  *
  * Returns: a new #GdaSqlSelectJoin structure
@@ -1344,7 +1357,7 @@ gda_sql_select_join_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_select_join_free
  * @join: a #GdaSqlSelectJoin structure to be freed
- * 
+ *
  * Frees a #GdaSqlSelectJoin structure and its members.
  */
 void
@@ -1362,7 +1375,7 @@ gda_sql_select_join_free (GdaSqlSelectJoin *join)
 /**
  * gda_sql_select_join_copy
  * @join: a #GdaSqlSelectJoin structure to be copied
- * 
+ *
  * Creates a new #GdaSqlSelectJoin structure initiated with the values stored in @join.
  *
  * Returns: a new #GdaSqlSelectJoin structure.
@@ -1395,7 +1408,7 @@ gda_sql_select_join_copy (GdaSqlSelectJoin *join)
 /**
  * gda_sql_select_join_type_to_string
  * @type: a #GdaSqlSelectJoinType structure to be copied
- * 
+ *
  * Creates a new string representing the join type.
  *
  * Returns: a string representing the Join type.
@@ -1425,15 +1438,15 @@ gda_sql_select_join_type_to_string (GdaSqlSelectJoinType type)
 /**
  * gda_sql_select_join_serialize
  * @join: a #GdaSqlSelectJoin structure
- * 
+ *
  * Creates a new string description of the join used in a SELECT statement.
  *
  * Returns: a new string with the description of the join or "null" in case @join is invalid.
  */
 gchar *
 gda_sql_select_join_serialize (GdaSqlSelectJoin *join)
-{	
-	if (!join) 
+{
+	if (!join)
 		return g_strdup ("null");
 	else {
 		GString *string;
@@ -1486,7 +1499,7 @@ gda_sql_select_join_serialize (GdaSqlSelectJoin *join)
 /**
  * gda_sql_select_from_new
  * @parent: a #GdaSqlStatementSelect
- * 
+ *
  * Creates a new #GdaSqlSelectFrom structure and sets its parent to @parent.
  *
  * Returns: a new #GdaSqlSelectFrom structure
@@ -1504,7 +1517,7 @@ gda_sql_select_from_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_select_from_free
  * @from: a #GdaSqlSelectFrom structure to be freed
- * 
+ *
  * Frees a #GdaSqlSelectFrom structure and its members.
  */
 void
@@ -1527,7 +1540,7 @@ gda_sql_select_from_free (GdaSqlSelectFrom *from)
 /**
  * gda_sql_select_from_copy
  * @from: a #GdaSqlSelectFrom structure to be copied
- * 
+ *
  * Creates a new #GdaSqlSelectFrom structure initiated with the values stored in @from.
  *
  * Returns: a new #GdaSqlSelectFrom structure.
@@ -1561,15 +1574,15 @@ gda_sql_select_from_copy (GdaSqlSelectFrom *from)
 /**
  * gda_sql_select_from_serialize
  * @from: a #GdaSqlSelectFrom structure
- * 
+ *
  * Creates a new string description of the FROM clause used in a SELECT statement.
  *
  * Returns: a new string with the description of the FROM or "null" in case @from is invalid.
  */
 gchar *
 gda_sql_select_from_serialize (GdaSqlSelectFrom *from)
-{	
-	if (!from) 
+{
+	if (!from)
 		return g_strdup ("null");
 	else {
 		GString *string;
@@ -1617,7 +1630,7 @@ gda_sql_select_from_serialize (GdaSqlSelectFrom *from)
  * gda_sql_select_from_take_new_target
  * @from: a #GdaSqlSelectFrom structure
  * @target: a #GdaSqlSelectTarget to take from
- * 
+ *
  * Append @target to the targets in the FROM clause and set @target's parent to
  * @from; after call this function @from owns @target then you must not free it.
  */
@@ -1632,7 +1645,7 @@ gda_sql_select_from_take_new_target (GdaSqlSelectFrom *from, GdaSqlSelectTarget 
  * gda_sql_select_from_take_new_join
  * @from: a #GdaSqlSelectFrom structure
  * @join: a #GdaSqlSelectJoin to take from
- * 
+ *
  * Append @join to the joins in the FROM clause and set @join's parent to
  * @from; after call this function @from owns @join then you must not free it.
  */
@@ -1650,7 +1663,7 @@ gda_sql_select_from_take_new_join  (GdaSqlSelectFrom *from, GdaSqlSelectJoin *jo
 /**
  * gda_sql_select_order_new
  * @parent: a #GdaSqlStatementSelect
- * 
+ *
  * Creates a new #GdaSqlSelectOrder structure and sets its parent to @parent.
  *
  * Returns: a new #GdaSqlSelectOrder structure
@@ -1668,7 +1681,7 @@ gda_sql_select_order_new (GdaSqlAnyPart *parent)
 /**
  * gda_sql_select_order_free
  * @order: a #GdaSqlSelectOrder structure to be freed
- * 
+ *
  * Frees a #GdaSqlSelectOrder structure and its members.
  */
 void
@@ -1685,7 +1698,7 @@ gda_sql_select_order_free (GdaSqlSelectOrder *order)
 /**
  * gda_sql_select_order_copy
  * @order: a #GdaSqlSelectOrder structure to be copied
- * 
+ *
  * Creates a new #GdaSqlSelectOrder structure initiated with the values stored in @order.
  *
  * Returns: a new #GdaSqlSelectOrder structure.
@@ -1711,15 +1724,15 @@ gda_sql_select_order_copy (GdaSqlSelectOrder *order)
 /**
  * gda_sql_select_order_serialize
  * @order: a #GdaSqlSelectOrder structure
- * 
+ *
  * Creates a new string description of the ORDER BY clause used in a SELECT statement.
  *
  * Returns: a new string with the description of the ORDER BY or "null" in case @order is invalid.
  */
 gchar *
 gda_sql_select_order_serialize (GdaSqlSelectOrder *order)
-{	
-	if (!order) 
+{
+	if (!order)
 		return g_strdup ("null");
 	else {
 		GString *string;
@@ -1748,4 +1761,3 @@ gda_sql_select_order_serialize (GdaSqlSelectOrder *order)
 		return str;
 	}
 }
-

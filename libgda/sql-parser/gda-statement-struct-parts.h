@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2007 - 2008 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
@@ -65,6 +65,9 @@ struct _GdaSqlExpr {
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_EXPR (gda_sql_expr_get_type())
+
+GType            gda_sql_expr_get_type       (void) G_GNUC_CONST;
 GdaSqlExpr      *gda_sql_expr_new            (GdaSqlAnyPart *parent);
 void             gda_sql_expr_free           (GdaSqlExpr *expr);
 GdaSqlExpr      *gda_sql_expr_copy           (GdaSqlExpr *expr);
@@ -152,8 +155,8 @@ typedef enum {
 	GDA_SQL_OPERATOR_TYPE_AND,
 	GDA_SQL_OPERATOR_TYPE_OR,
 
-	GDA_SQL_OPERATOR_TYPE_EQ, 
-	GDA_SQL_OPERATOR_TYPE_IS, 
+	GDA_SQL_OPERATOR_TYPE_EQ,
+	GDA_SQL_OPERATOR_TYPE_IS,
 	GDA_SQL_OPERATOR_TYPE_LIKE,
 	GDA_SQL_OPERATOR_TYPE_BETWEEN,
 	GDA_SQL_OPERATOR_TYPE_GT,
@@ -229,10 +232,10 @@ gchar             *gda_sql_case_serialize      (GdaSqlCase *sc);
 struct _GdaSqlSelectField
 {
 	GdaSqlAnyPart       any;
-	GdaSqlExpr         *expr; 
+	GdaSqlExpr         *expr;
 	gchar              *field_name; /* may be NULL if expr does not refer to a table.field, can also be "*" */
 	gchar              *table_name; /* may be NULL if expr does not refer to a table.field */
-	gchar              *as; 
+	gchar              *as;
 
 	/* validity check with a connection */
 	GdaMetaDbObject    *validity_meta_object;
@@ -262,7 +265,7 @@ struct _GdaSqlSelectTarget
 	GdaSqlAnyPart       any;
 	GdaSqlExpr         *expr;
 	gchar              *table_name; /* may be NULL if expr does not refer to a table */
-	gchar              *as; 
+	gchar              *as;
 
 	/* validity check with a connection */
 	GdaMetaDbObject    *validity_meta_object;
@@ -322,8 +325,8 @@ const gchar       *gda_sql_select_join_type_to_string (GdaSqlSelectJoinType type
 struct _GdaSqlSelectFrom
 {
 	GdaSqlAnyPart    any;
-	GSList          *targets; 
-	GSList          *joins; 
+	GSList          *targets;
+	GSList          *joins;
 
 	/*< private >*/
 	/* Padding for future expansion */
@@ -345,7 +348,7 @@ void               gda_sql_select_from_take_new_join  (GdaSqlSelectFrom *from, G
 struct _GdaSqlSelectOrder
 {
 	GdaSqlAnyPart    any;
-	GdaSqlExpr      *expr; 
+	GdaSqlExpr      *expr;
 	gboolean         asc;
 	gchar           *collation_name;
 
