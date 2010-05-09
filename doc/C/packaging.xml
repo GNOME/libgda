@@ -16,6 +16,10 @@
 	  </para>
 	</listitem>
 	<listitem>
+	  <para>the GObject introspection files (to be used by the GObject introspection framework)
+	  </para>
+	</listitem>
+	<listitem>
 	  <para>the tools, which require the runtime component
 	  </para>
 	</listitem>
@@ -92,21 +96,52 @@
   </sect1>
 
   <sect1>
+    <title>GObject introspection</title>
+    <para>
+      If GObject introspection has been compiled, &LIBGDA;'s introspection files are:
+      <programlisting>
+|-- share
+|   `-- gir-1.0
+|       `-- Gda-4.0.gir
+`-- lib
+    `-- girepository-1.0
+        `-- Gda-4.0.typelib
+      </programlisting>
+    </para>
+  </sect1>
+
+  <sect1>
     <title>Tools</title>
     <para>
       &LIBGDA;'s offers several tools, the most usefull being an SQL console which allows one to issue SQL statement
       from the command line. This component has the following files:
-      <programlisting>
+    </para>
+    <sect2>
+      <title>Diagnostic tools</title>
+      <para>
+	The diagnostic tools are usefull to test connections. This component has the following files:
+	<programlisting>
+.
+`-- bin
+    |-- gda-list-config -> gda-list-config-4.0
+    |-- gda-list-config-4.0
+    |-- gda-list-jdbc-providers-4.0
+    |-- gda-list-server-op -> gda-list-server-op-4.0
+    |-- gda-list-server-op-4.0
+    `-- gda-test-connection-4.0
+      </programlisting>
+      </para>
+      <para>
+	This component should be made dependent on the runtime component.
+      </para>
+    </sect2>
+    <sect2>
+      <title>SQL console</title>
+      <para>
+	<programlisting>
 .
 |-- bin
-|   |-- gda-list-config -> gda-list-config-4.0
-|   |-- gda-list-config-4.0
-|   |-- gda-list-jdbc-providers-4.0
-|   |-- gda-list-server-op -> gda-list-server-op-4.0
-|   |-- gda-list-server-op-4.0
-|   |-- gda-sql -> gda-sql-4.0
-|   |-- gda-sql-4.0
-|   `-- gda-test-connection-4.0
+|   `-- gda-sql-4.0
  `-- share
     |   `-- web
     |       |-- cnc.js
@@ -122,11 +157,12 @@
         `-- man1
             |-- gda-sql-4.0.1
             `-- gda-sql.1 -> gda-sql-4.0.1
-      </programlisting>
-    </para>
-    <para>
-      This component should be made dependant on the runtime component.
-    </para>
+	</programlisting>
+      </para>
+      <para>
+	This component should be made dependent on the runtime component.
+      </para>
+    </sect2>
   </sect1>
 
   <sect1>

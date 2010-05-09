@@ -194,9 +194,9 @@
         </contrib>
       </author>
     </authorgroup>
-    <date>January 2009</date>
+    <date>April 2010</date>
     <copyright>
-      <year>1999 - 2009</year>
+      <year>1999 - 2010</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
@@ -588,6 +588,19 @@
 	       API will be added in the future.
 	   </para></listitem>
 	</itemizedlist>
+
+      <para>
+	The following schema illustrates how a statement is created and executed:
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="GdaStatement.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Statement execution illustrated</phrase>
+	  </textobject>
+	</mediaobject>
+      </para>
+
       </para>
       <para>
 	As each database implements its own SQL variant (all variants more or less close to the SQL92 or SQL99 standards), the
@@ -1299,6 +1312,7 @@ Description for type: DROP_COLUMN
 	</programlisting>
       </para>
     </chapter>
+
   </part>
 
   <part id="part_libgda-reports">
