@@ -1,3 +1,33 @@
+libgda 4.1.5, 2010-05-09
+
+ - support BLOBS in MySQL provider
+ - meta data correction for PostgreSQL provider
+ - Do not set GErrors without a domain for the PostgreSQL provider
+ - honor the request for the last inserted row in the MySQL provider
+ - fetch indexes information for MySQL
+ - fixed reading float values in the MySQL provider
+ - corrected the MySQL and SQLite boolean handlers
+ - API improvements to the GdaSqlBuilder object
+ - new Data Manager perspective in the GdaBrowser
+ - added help in GdaBrowser
+ - initial GObject introspection for the UI extension
+ - improved GObject introspection support
+ - removed deprecaded GTK+ symbols usage
+ - use accessor functions instead direct access (enable GSEAL)
+ - new UI extension example
+ - doc. corrections & improvements
+ - better handle GCJ as the java compiler
+ - lots of bug fixes and other improvements
+ - Translations:
+	- fr (Claude Paroz, Laurent Coudeur)
+	- sl (Matej Urbančič)
+	- de (Mario Blättermann, Christian Kirbach)
+	- es (Jorge González)
+	- zh_CN (Aron Xu)
+	- eu (Inaki Larranaga Murgoitio)
+	- pt (Nicolau Gonçalves)
+	- gl (Leandro Regueiro)
+
 libgda 4.1.4, 2010-01-16
 
  - API improvements: GdaSqlBuilder, UI extension
