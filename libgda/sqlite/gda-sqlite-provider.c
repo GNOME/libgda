@@ -2551,7 +2551,18 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			
 			GObject *set;
 			gchar *str = NULL;
-			set = (GObject*) gda_set_new_inline (1, "IMPACTED_ROWS", G_TYPE_INT, changes, NULL);
+			GdaHolder *holder;
+			GValue *value;
+			GSList *list;
+			holder = gda_holder_new (G_TYPE_INT);
+			g_object_set ((GObject*) holder, "id", "IMPACTED_ROWS", NULL);
+			g_value_set_int ((value = gda_value_new (G_TYPE_INT)), changes);
+			gda_holder_take_value (holder, value, NULL);
+			list = g_slist_append (NULL, holder);
+			set = (GObject*) gda_set_new (list);
+			g_slist_free (list);
+			g_object_unref (holder);
+
                         if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DELETE", 6))
                                 str = g_strdup_printf ("DELETE %d (see SQLite documentation for a \"DELETE * FROM table\" query)",
                                                        changes);
