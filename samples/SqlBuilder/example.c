@@ -153,7 +153,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata"),
 					   NULL);
-	sub = gda_sql_builder_get_sql_statement (b, FALSE);
+	sub = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
@@ -180,7 +180,7 @@ main (int argc, char *argv[])
 				   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,
 							     gda_sql_builder_add_id (b, 0, "t.id"),
 							     gda_sql_builder_add_id (b, 0, "d.topic"), 0));
-	sub = gda_sql_builder_get_sql_statement (b, FALSE);
+	sub = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
@@ -201,7 +201,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdate"),
 					   NULL);
-	sub = gda_sql_builder_get_sql_statement (b, FALSE);
+	sub = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
@@ -224,7 +224,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata1"),
 					   NULL);
-	sub1 = gda_sql_builder_get_sql_statement (b, FALSE);
+	sub1 = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
@@ -233,7 +233,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata2"),
 					   NULL);
-	sub2 = gda_sql_builder_get_sql_statement (b, FALSE);
+	sub2 = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_COMPOUND);

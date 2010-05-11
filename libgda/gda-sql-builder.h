@@ -69,7 +69,7 @@ struct _GdaSqlBuilderClass
 GType             gda_sql_builder_get_type       (void) G_GNUC_CONST;
 GdaSqlBuilder    *gda_sql_builder_new            (GdaSqlStatementType stmt_type);
 GdaStatement     *gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error);
-GdaSqlStatement  *gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder, gboolean copy_it);
+GdaSqlStatement  *gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder);
 
 /* Expression API */
 guint             gda_sql_builder_add_id (GdaSqlBuilder *builder, guint id, const gchar *string);

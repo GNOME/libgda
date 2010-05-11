@@ -356,30 +356,23 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
  *
  * Creates a new #GdaSqlStatement structure from @builder's contents.
  *
- * If @copy_it is %FALSE, then the returned pointer is considered to be stolen from @builder's internal
- * representation and will make it unusable anymore (resulting in a %GDA_SQL_BUILDER_MISUSE_ERROR error or
- * some warnings if one tries to reuse it).
- * If, on the other
- * hand it is set to %TRUE, then the returned #GdaSqlStatement is a copy of the on @builder uses
- * internally, making it reusable.
+ * The returned pointer belongs to @builder's internal representation.
+ * Use gda_sql_statement_copy() if you need to keep it.
  *
  * Returns: a #GdaSqlStatement pointer
  *
  * Since: 4.2
  */
 GdaSqlStatement *
-gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder, gboolean copy_it)
+gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), NULL);
 	if (!builder->priv->main_stmt)
 		return NULL;
-	if (copy_it)
-		return gda_sql_statement_copy (builder->priv->main_stmt);
-	else {
-		GdaSqlStatement *stmt = builder->priv->main_stmt;
-		builder->priv->main_stmt = NULL;
-		return stmt;
-	}
+
+	GdaSqlStatement *stmt = builder->priv->main_stmt;
+	builder->priv->main_stmt = NULL;
+	return stmt;
 }
 
 /**
@@ -1859,5 +1852,5 @@ gda_sql_builder_import_expression (GdaSqlBuilder *builder, guint id, GdaSqlExpr 
 	g_return_val_if_fail (expr, 0);
 
 	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, 0);
-	return add_part (builder, id, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));	
+	return add_part (builder, id, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));
 }

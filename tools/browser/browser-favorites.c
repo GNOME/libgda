@@ -850,7 +850,8 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 #ifdef GDA_DEBUG_NO
 	{
 		GdaSqlStatement *sqlst;
-		sqlst = gda_sql_builder_get_sql_statement (b, TRUE);
+		sqlst = gda_sql_builder_get_sql_statement (b);
+                
 		g_print ("=>%s\n", gda_sql_statement_serialize (sqlst));
 	}
 #endif

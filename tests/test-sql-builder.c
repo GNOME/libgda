@@ -138,7 +138,7 @@ build0 (void)
 				   gda_sql_builder_add_id (builder, 0, "*"), 0);
 	gda_sql_builder_select_add_target_id (builder, 0,
 					   gda_sql_builder_add_id (builder, 0, "mytable"), NULL);
-	stmt = gda_sql_builder_get_sql_statement (builder, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (builder);
 	g_object_unref (builder);
 	return stmt;
 }
@@ -185,7 +185,7 @@ build1 (void)
 
 	gda_sql_builder_set_where (builder, gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_AND, 1, 2, 0));
 
-	stmt = gda_sql_builder_get_sql_statement (builder, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (builder);
 	g_object_unref (builder);
 	return stmt;
 }
@@ -219,7 +219,7 @@ build2 (void)
 				   gda_sql_builder_add_id (builder, 0, "descr"),
 				   gda_sql_builder_add_param (builder, 0, "descr", G_TYPE_STRING, TRUE));
 
-	stmt = gda_sql_builder_get_sql_statement (builder, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (builder);
 	g_object_unref (builder);
 	return stmt;
 }
@@ -253,7 +253,7 @@ build3 (void)
 							 gda_sql_builder_add_param (builder, 0, "id", G_TYPE_INT, FALSE),
 							 0));
 
-	stmt = gda_sql_builder_get_sql_statement (builder, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (builder);
 	g_object_unref (builder);
 	return stmt;
 }
@@ -296,7 +296,7 @@ build4 (void)
 
 	gda_sql_builder_select_order_by (b,
 					 gda_sql_builder_add_id (b, 0, "o.rank"), TRUE, NULL);
-	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 	return stmt;
 }
@@ -327,7 +327,7 @@ build5 (void)
 					gda_sql_builder_add_id (b, 0, "contents"),
 					gda_sql_builder_add_param (b, 0, "contents", G_TYPE_INT, FALSE), 0), 0));
 
-	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 	return stmt;
 }
@@ -358,7 +358,7 @@ build6 (void)
 
 	gda_sql_builder_set_where (b, gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_AND, 1, 2, 0));
 
-	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 	return stmt;
 }
@@ -391,7 +391,7 @@ build7 (void)
 			      0);
 	gda_sql_builder_set_where (b, gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_AND, 1, 2, 3));
 
-	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 	return stmt;
 }
@@ -412,7 +412,7 @@ build8 (void)
 							    gda_sql_builder_add_id (b, 0, "id"),
 							    gda_sql_builder_add_param (b, 0, "id", G_TYPE_INT, FALSE),
 							    0));
-	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 	return stmt;
 }
@@ -435,7 +435,7 @@ build9 (void)
 	gda_sql_builder_add_field_value (builder, "name", value);
 	gda_value_free (value);
 
-	stmt = gda_sql_builder_get_sql_statement (builder, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (builder);
 	g_object_unref (builder);
 	
 	return stmt;
@@ -467,7 +467,7 @@ build10 (void)
 		g_object_unref (st);
 	}
 
-	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 	return stmt;
 }
@@ -502,7 +502,7 @@ build11 (void)
 	}
 #endif
 
-	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 	return stmt;
 }
@@ -542,7 +542,7 @@ build12 (void)
 	}
 #endif
 
-	stmt = gda_sql_builder_get_sql_statement (b, FALSE);
+	stmt = gda_sql_builder_get_sql_statement (b);
 	g_object_unref (b);
 	return stmt;
 }
