@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@
 /*
  * Error reporting
  */
-GQuark 
+GQuark
 gda_sql_error_quark (void)
 {
         static GQuark quark;
@@ -45,11 +45,11 @@ gda_sql_error_quark (void)
         return quark;
 }
 
-/* 
+/*
  * statement's infos retrieval
  */
 GdaSqlStatementContentsInfo *
-gda_sql_statement_get_contents_infos  (GdaSqlStatementType type) 
+gda_sql_statement_get_contents_infos  (GdaSqlStatementType type)
 {
 	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 	static GdaSqlStatementContentsInfo **contents = NULL;
@@ -76,6 +76,18 @@ gda_sql_statement_get_contents_infos  (GdaSqlStatementType type)
 	return contents[type];
 }
 
+GType
+gda_sql_statement_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaSqlStatement",
+			(GBoxedCopyFunc) gda_sql_statement_copy,
+			(GBoxedFreeFunc) gda_sql_statement_free);
+	return our_type;
+}
+
 /**
  * gda_sql_statement_new
  * @type: type of statement to create
@@ -89,14 +101,14 @@ gda_sql_statement_new (GdaSqlStatementType type)
 {
 	GdaSqlStatement *stmt;
 	GdaSqlStatementContentsInfo *infos = gda_sql_statement_get_contents_infos (type);
-	
+
 	stmt = g_new0 (GdaSqlStatement, 1);
 	stmt->stmt_type = type;
 	if (infos && infos->construct) {
 		stmt->contents = infos->construct ();
 		GDA_SQL_ANY_PART (stmt->contents)->type = type;
 	}
-	else 
+	else
 		TO_IMPLEMENT;
 
 	return stmt;
@@ -149,18 +161,18 @@ gda_sql_statement_copy (GdaSqlStatement *stmt)
  *
  * Releases any memory associated to @stmt.
  */
-void 
+void
 gda_sql_statement_free (GdaSqlStatement *stmt)
 {
 	GdaSqlStatementContentsInfo *infos;
 
 	infos = gda_sql_statement_get_contents_infos (stmt->stmt_type);
 	g_free (stmt->sql);
-	
+
 	if (stmt->contents) {
 		if (infos && infos->free)
 			infos->free (stmt->contents);
-		else 
+		else
 			TO_IMPLEMENT;
 	}
 	if (stmt->validity_meta_struct)
@@ -202,7 +214,7 @@ GdaSqlStatementType
 gda_sql_statement_string_to_type (const gchar *type)
 {
 	g_return_val_if_fail (type, GDA_SQL_STATEMENT_NONE);
-	
+
 	switch (*type) {
 	case 'B':
 		return GDA_SQL_STATEMENT_BEGIN;
@@ -210,7 +222,7 @@ gda_sql_statement_string_to_type (const gchar *type)
 		if ((type[1] == 'O') && (type[2] == 'M') && (type[2] == 'P'))
 			return GDA_SQL_STATEMENT_COMPOUND;
 		else
-			return GDA_SQL_STATEMENT_COMMIT;	
+			return GDA_SQL_STATEMENT_COMMIT;
 	case 'D':
 		if (!strcmp (type, "DELETE"))
 			return GDA_SQL_STATEMENT_DELETE;
@@ -270,14 +282,14 @@ gda_sql_statement_serialize (GdaSqlStatement *stmt)
 		g_string_append (string, str);
 		g_free (str);
 	}
-	else 
+	else
 		TO_IMPLEMENT;
 
 	g_string_append_c (string, '}');
 	str = string->str;
 	g_string_free (string, FALSE);
 	return str;
-	
+
 }
 
 
@@ -332,10 +344,10 @@ gda_sql_statement_check_validity (GdaSqlStatement *stmt, GdaConnection *cnc, GEr
 		data.cnc = cnc;
 		data.store = gda_connection_get_meta_store (cnc);
 		data.mstruct = gda_meta_struct_new (data.store, GDA_META_STRUCT_FEATURE_NONE);
-		
+
 		/* attach the GdaMetaStruct to @stmt */
 		stmt->validity_meta_struct = data.mstruct;
-		retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
+		retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents),
 						   (GdaSqlForeachFunc) foreach_check_validity, &data, error);
 		return retval;
 	}
@@ -506,20 +518,20 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 
 	if (!data->cnc) return TRUE;
 
-	for (any = GDA_SQL_ANY_PART(field)->parent; 
-	     any && (any->type != GDA_SQL_ANY_STMT_INSERT) && (any->type != GDA_SQL_ANY_STMT_UPDATE); 
+	for (any = GDA_SQL_ANY_PART(field)->parent;
+	     any && (any->type != GDA_SQL_ANY_STMT_INSERT) && (any->type != GDA_SQL_ANY_STMT_UPDATE);
 	     any = any->parent);
 	if (!any) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 			      "%s", _("GdaSqlField is not part of an INSERT or UPDATE statement"));
 		return FALSE;
 	}
-	
-	if (any->type == GDA_SQL_ANY_STMT_INSERT) 
+
+	if (any->type == GDA_SQL_ANY_STMT_INSERT)
 		stable = ((GdaSqlStatementInsert*) any)->table;
-	else if (any->type == GDA_SQL_ANY_STMT_UPDATE) 
+	else if (any->type == GDA_SQL_ANY_STMT_UPDATE)
 		stable = ((GdaSqlStatementUpdate*) any)->table;
-	else 
+	else
 		g_assert_not_reached ();
 
 	if (!stable) {
@@ -537,8 +549,8 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 	GValue value;
 	memset (&value, 0, sizeof (GValue));
 	g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
-	tcol = gda_meta_struct_get_table_column (data->mstruct, 
-						 GDA_META_TABLE (stable->validity_meta_object), 
+	tcol = gda_meta_struct_get_table_column (data->mstruct,
+						 GDA_META_TABLE (stable->validity_meta_object),
 						 &value);
 	g_value_unset (&value);
 	field->validity_meta_table_column = tcol;
@@ -547,11 +559,11 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 			     _("Column '%s' not found"), field->field_name);
 		return FALSE;
 	}
-	
+
         return TRUE;
 }
 
-void 
+void
 _gda_sql_field_check_clean (GdaSqlField *field)
 {
 	if (!field) return;
@@ -577,7 +589,7 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 		GdaSqlAnyPart *any;
 
 		for (any = part->parent; any && any->parent; any = any->parent);
-		if (!any) 
+		if (!any)
 			g_set_error (&lerror, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 				      "%s", _("GdaSqlSelectField is not part of a SELECT statement"));
 		else {
@@ -590,9 +602,9 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 						GdaSqlSelectTarget *target = (GdaSqlSelectTarget*) targets->data;
 						if (!target->as)
 							continue;
-						g_value_set_string (g_value_init (&value, G_TYPE_STRING), 
+						g_value_set_string (g_value_init (&value, G_TYPE_STRING),
 								    target->table_name);
-						dbo = gda_meta_struct_complement (data->mstruct, 
+						dbo = gda_meta_struct_complement (data->mstruct,
 										  GDA_META_DB_UNKNOWN,
 										  NULL, NULL, &value, NULL);
 						g_value_unset (&value);
@@ -654,7 +666,7 @@ gda_sql_table_check_validity (GdaSqlTable *table, GdaSqlStatementCheckValidityDa
 	return table->validity_meta_object ? TRUE : FALSE;
 }
 
-void 
+void
 _gda_sql_table_check_clean (GdaSqlTable *table)
 {
 	if (!table) return;
@@ -671,7 +683,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 	if (!field) return TRUE;
 	_gda_sql_select_field_check_clean (field);
 
-	if (!field->field_name) 
+	if (!field->field_name)
 		/* field is not a table.field */
 		return TRUE;
 
@@ -685,7 +697,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 		GSList *targets;
 		GdaMetaTableColumn *tcol = NULL;
 
-		for (any = GDA_SQL_ANY_PART(field)->parent; 
+		for (any = GDA_SQL_ANY_PART(field)->parent;
 		     any && (any->type != GDA_SQL_ANY_STMT_SELECT);
 		     any = any->parent);
 		if (!any) {
@@ -696,12 +708,12 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 
 		for (targets = ((GdaSqlStatementSelect *)any)->from->targets; targets; targets = targets->next) {
 			GdaSqlSelectTarget *target = (GdaSqlSelectTarget *) targets->data;
-			if (!target->validity_meta_object && 
+			if (!target->validity_meta_object &&
 			    !gda_sql_select_target_check_validity (target, data, error))
 				return FALSE;
 
 			g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
-			tcol = gda_meta_struct_get_table_column (data->mstruct, 
+			tcol = gda_meta_struct_get_table_column (data->mstruct,
 								 GDA_META_TABLE (target->validity_meta_object),
 								 &value);
 			g_value_unset (&value);
@@ -717,7 +729,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 		}
 		if (!dbo) {
 			targets = ((GdaSqlStatementSelect *)any)->from->targets;
-			if (starred_field && targets && !targets->next) 
+			if (starred_field && targets && !targets->next)
 				/* only one target => it's the one */
 				dbo = ((GdaSqlSelectTarget*) targets->data)->validity_meta_object;
 			else {
@@ -741,13 +753,13 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 		field->validity_meta_object = dbo;
 		if (!field->validity_meta_object)
 			return FALSE;
-		
+
 		/* field part */
 		if (!gda_identifier_equal (field->field_name, "*")) {
 			GdaMetaTableColumn *tcol;
 			g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
-			tcol = gda_meta_struct_get_table_column (data->mstruct, 
-								 GDA_META_TABLE (field->validity_meta_object), 
+			tcol = gda_meta_struct_get_table_column (data->mstruct,
+								 GDA_META_TABLE (field->validity_meta_object),
 								 &value);
 			g_value_unset (&value);
 			field->validity_meta_table_column = tcol;
@@ -761,7 +773,7 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 	return TRUE;
 }
 
-void 
+void
 _gda_sql_select_field_check_clean (GdaSqlSelectField *field)
 {
 	if (!field) return;
@@ -789,7 +801,7 @@ gda_sql_select_target_check_validity (GdaSqlSelectTarget *target, GdaSqlStatemen
 	return target->validity_meta_object ? TRUE : FALSE;
 }
 
-void 
+void
 _gda_sql_select_target_check_clean (GdaSqlSelectTarget *target)
 {
 	if (!target) return;
@@ -810,7 +822,7 @@ gda_sql_statement_check_clean (GdaSqlStatement *stmt)
 	g_return_if_fail (stmt);
 
 	if (stmt->validity_meta_struct) {
-		gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
+		gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents),
 					  (GdaSqlForeachFunc) foreach_check_clean, NULL, NULL);
 		g_object_unref (stmt->validity_meta_struct);
 		stmt->validity_meta_struct = NULL;
@@ -863,7 +875,7 @@ gda_sql_statement_check_structure (GdaSqlStatement *stmt, GError **error)
 {
 	g_return_val_if_fail (stmt, FALSE);
 
-	return gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
+	return gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents),
 					 (GdaSqlForeachFunc) foreach_check_struct, NULL, error);
 }
 
@@ -1120,7 +1132,7 @@ gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer 
 {
 	GSList *l;
 	if (!node) return TRUE;
-	
+
 	/* call @func for the node's contents */
 	switch (node->type) {
 	case GDA_SQL_ANY_STMT_BEGIN:
@@ -1201,7 +1213,7 @@ gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer 
 	case GDA_SQL_ANY_STMT_COMPOUND: {
 		GdaSqlStatementCompound *stmt = (GdaSqlStatementCompound*) node;
 		for (l = stmt->stmt_list; l; l = l->next)
-			if (!gda_sql_any_part_foreach (GDA_SQL_ANY_PART (((GdaSqlStatement*) l->data)->contents), 
+			if (!gda_sql_any_part_foreach (GDA_SQL_ANY_PART (((GdaSqlStatement*) l->data)->contents),
 						       func, data, error))
 				return FALSE;
 		break;
@@ -1213,7 +1225,7 @@ gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer 
 				return FALSE;
 		break;
 	}
-	
+
 	/* individual parts */
 	case GDA_SQL_ANY_EXPR: {
 		GdaSqlExpr *expr = (GdaSqlExpr*) node;
@@ -1324,7 +1336,7 @@ gda_sql_statement_normalize (GdaSqlStatement *stmt, GdaConnection *cnc, GError *
 	if (!stmt->validity_meta_struct && !gda_sql_statement_check_validity (stmt, cnc, error))
 		return FALSE;
 
-	retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents), 
+	retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents),
 					   (GdaSqlForeachFunc) foreach_normalize, cnc, error);
 #ifdef GDA_DEBUG
 	GError *lerror = NULL;
@@ -1372,7 +1384,7 @@ foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error)
 				nfield->expr = gda_sql_expr_new ((GdaSqlAnyPart*) nfield);
 				nfield->expr->value = gda_value_new (G_TYPE_STRING);
 				if (field->table_name)
-					g_value_take_string (nfield->expr->value, g_strdup_printf ("%s.%s", 
+					g_value_take_string (nfield->expr->value, g_strdup_printf ("%s.%s",
 												   nfield->table_name,
 												   nfield->field_name));
 				else
@@ -1384,8 +1396,8 @@ foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error)
 					GSList *lnode = g_slist_nth (expr_list, nodepos);
 					lnode->data = nfield;
 				}
-				else 
-					((GdaSqlStatementSelect*) parent_node)->expr_list = 
+				else
+					((GdaSqlStatementSelect*) parent_node)->expr_list =
 						g_slist_insert (expr_list, nfield, ++nodepos);
 			}
 			/* get rid of @field */

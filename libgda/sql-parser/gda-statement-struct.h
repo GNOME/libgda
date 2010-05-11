@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2007 - 2009 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
@@ -36,6 +36,9 @@ struct _GdaSqlStatement {
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_STATEMENT (gda_sql_statement_get_type())
+
+GType                        gda_sql_statement_get_type  (void) G_GNUC_CONST;
 GdaSqlStatement             *gda_sql_statement_new       (GdaSqlStatementType type);
 GdaSqlStatement             *gda_sql_statement_copy      (GdaSqlStatement *stmt);
 void                         gda_sql_statement_free      (GdaSqlStatement *stmt);
