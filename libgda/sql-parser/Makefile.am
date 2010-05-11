@@ -44,12 +44,12 @@ s-enum-types-h: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 	( cd $(srcdir) && glib-mkenums \
 	                --fhead "#ifndef __LIBGDA_SQL_PARSER_ENUM_TYPES_H__\n#define __LIBGDA_SQL_PARSER_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
 			--fprod "/* enumerations from \"@filename@\" */\n" \
-			--vhead "GType @enum_name@_get_type (void);\n#define GDA_SQL_PARSER_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
+			--vhead "GType @enum_name@_get_type (void);\n#define GDA_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
 			--ftail "G_END_DECLS\n\n#endif /* __LIBGDA_ENUM_TYPES_H__ */" \
 		$(libgda_sql_parser_headers)) > tmp-gda-enum-types.h \
 	&& (cmp -s tmp-gda-enum-types.h gda-sql-parser-enum-types.h || cp tmp-gda-enum-types.h gda-sql-parser-enum-types.h ) \
 	&& rm -f tmp-gda-enum-types.h	\
-	&& cat gda-sql-parser-enum-types.h.KEEPAPI >> gda-sql-parser-enum-types.h \
+	&& cat $(srcdir)/gda-sql-parser-enum-types.h.KEEPAPI >> gda-sql-parser-enum-types.h \
 	&& echo timestamp > $(@F)
 
 gda-sql-parser-enum-types.c: s-enum-types-c
@@ -67,7 +67,7 @@ s-enum-types-c: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 		$(libgda_sql_parser_headers)) > tmp-gda-enum-types.c \
 	&& (cmp -s tmp-gda-enum-types.c gda-sql-parser-enum-types.c || cp tmp-gda-enum-types.c gda-sql-parser-enum-types.c ) \
 	&& rm -f tmp-gda-enum-types.c \
-	&& cat gda-sql-parser-enum-types.c.KEEPAPI >> gda-sql-parser-enum-types.c \
+	&& cat $(srcdir)/gda-sql-parser-enum-types.c.KEEPAPI >> gda-sql-parser-enum-types.c \
 	&& echo timestamp > $(@F)
 
 # Generate the enums source code, with glib-mkenums:

@@ -136,7 +136,6 @@ libgda_sources =  \
 	dir-blob-op.c \
 	gda-attributes-manager.c \
 	$(gda_headers) \
-	gda-connection-internal.h \
 	gda-connection-sqlite.h \
 	gda-custom-marshal.c \
 	gda-custom-marshal.h \
@@ -321,7 +320,6 @@ Gda-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-@GDA_ABI_VERSION@.la
 	    --c-include=$(top_srcdir)/libgda/csv.h \
 		--c-include=$(top_srcdir)/libgda/libcsv.c \
 		--c-include=$(srcdir)/gda-attributes-manager.c \
-		--c-include=$(top_srcdir)/libgda/gda-connection-internal.h \
 		--c-include=$(srcdir)/gda-connection-sqlite.h \
 		--c-include=$(top_srcdir)/libgda/gda-custom-marshal.c \
 		--c-include=$(srcdir)/gda-custom-marshal.h \
