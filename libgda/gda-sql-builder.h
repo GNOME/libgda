@@ -84,8 +84,7 @@ guint             gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, guint id, 
 guint             gda_sql_builder_add_function (GdaSqlBuilder *builder, guint id, const gchar *func_name, ...);
 guint             gda_sql_builder_add_function_v (GdaSqlBuilder *builder, guint id, const gchar *func_name,
 						  const guint *args, gint args_size);
-guint             gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, guint id, GdaSqlStatement *sqlst,
-						  gboolean steal);
+guint             gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, guint id, GdaSqlStatement *sqlst);
 guint             gda_sql_builder_add_case (GdaSqlBuilder *builder, guint id,
 					    guint test_expr, guint else_expr, ...);
 guint             gda_sql_builder_add_case_v (GdaSqlBuilder *builder, guint id,
@@ -126,7 +125,7 @@ void              gda_sql_builder_select_group_by (GdaSqlBuilder *builder, guint
 
 /* COMPOUND SELECT Statement API */
 void              gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompoundType compound_type);
-void              gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst, gboolean steal);
+void              gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst);
 
 /* import/Export API */
 GdaSqlExpr       *gda_sql_builder_export_expression (GdaSqlBuilder *builder, guint id);

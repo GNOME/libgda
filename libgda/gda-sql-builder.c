@@ -1577,7 +1577,7 @@ gda_sql_builder_add_function_v (GdaSqlBuilder *builder, guint id, const gchar *f
  * gda_sql_builder_add_sub_select
  * @builder: a #GdaSqlBuilder object
  * @id: the requested ID, or 0 if to be determined by @builder
- * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT
+ * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT. This will be copied.
  * @steal: if %TRUE, then @sqlst will be "stolen" by @b and should not be used anymore
  *
  * Adds an expression which is a subselect.
@@ -1587,7 +1587,7 @@ gda_sql_builder_add_function_v (GdaSqlBuilder *builder, guint id, const gchar *f
  * Since: 4.2
  */
 guint
-gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, guint id, GdaSqlStatement *sqlst, gboolean steal)
+gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, guint id, GdaSqlStatement *sqlst)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -1597,23 +1597,18 @@ gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, guint id, GdaSqlStatemen
 
 	GdaSqlExpr *expr;
 	expr = gda_sql_expr_new (NULL);
-	if (steal) {
-		expr->select = sqlst->contents;
-		sqlst->contents = NULL;
-		gda_sql_statement_free (sqlst);
+
+	switch (sqlst->stmt_type) {
+	case GDA_SQL_STATEMENT_SELECT:
+		expr->select = _gda_sql_statement_select_copy (sqlst->contents);
+		break;
+	case GDA_SQL_STATEMENT_COMPOUND:
+		expr->select = _gda_sql_statement_compound_copy (sqlst->contents);
+		break;
+	default:
+		g_assert_not_reached ();
 	}
-	else {
-		switch (sqlst->stmt_type) {
-		case GDA_SQL_STATEMENT_SELECT:
-			expr->select = _gda_sql_statement_select_copy (sqlst->contents);
-			break;
-		case GDA_SQL_STATEMENT_COMPOUND:
-			expr->select = _gda_sql_statement_compound_copy (sqlst->contents);
-			break;
-		default:
-			g_assert_not_reached ();
-		}
-	}
+
 	GDA_SQL_ANY_PART (expr->select)->parent = GDA_SQL_ANY_PART (expr);
 
 	return add_part (builder, id, (GdaSqlAnyPart *) expr);
@@ -1646,15 +1641,14 @@ gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompou
 /**
  * gda_sql_builder_compound_add_sub_select
  * @builder: a #GdaSqlBuilder object
- * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT
- * @steal: if %TRUE, then @sqlst will be "stolen" by @b and should not be used anymore
+ * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT. This will be copied.
  *
  * Add a sub select to a COMPOUND statement
  *
  * Since: 4.2
  */
 void
-gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst, gboolean steal)
+gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst)
 {
 	GdaSqlStatementCompound *cstmt;
 	GdaSqlStatement *sub;
@@ -1670,10 +1664,7 @@ gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement
 			  (sqlst->stmt_type == GDA_SQL_STATEMENT_COMPOUND));
 
 	cstmt = (GdaSqlStatementCompound*) builder->priv->main_stmt->contents;
-	if (steal)
-		sub = sqlst;
-	else
-		sub = gda_sql_statement_copy (sqlst);
+	sub = gda_sql_statement_copy (sqlst);
 
 	cstmt->stmt_list = g_slist_append (cstmt->stmt_list, sub);
 }

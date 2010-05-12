@@ -162,7 +162,7 @@ main (int argc, char *argv[])
 					   gda_sql_builder_add_id (b, 0, "master"),
 					   NULL);
 	gda_sql_builder_add_id (b, 1, "id");
-	gda_sql_builder_add_sub_select (b, 2, sub, TRUE);
+	gda_sql_builder_add_sub_select (b, 2, sub);
 	gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_IN, 1, 2, 0);
 	gda_sql_builder_set_where (b, 3);
 	render_as_sql (b);
@@ -188,7 +188,7 @@ main (int argc, char *argv[])
 					   gda_sql_builder_add_id (b, 0, "topics"), "t");
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
-	gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, 0, sub, TRUE), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, 0, sub), 0);
 
 	render_as_sql (b);
 	g_object_unref (b);
@@ -210,7 +210,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "e"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "f"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "g"), 0);
-	gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, 0, sub, TRUE), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, 0, sub), 0);
 	
 	render_as_sql (b);
 	g_object_unref (b);
@@ -237,8 +237,8 @@ main (int argc, char *argv[])
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_COMPOUND);
-	gda_sql_builder_compound_add_sub_select (b, sub1, TRUE);
-	gda_sql_builder_compound_add_sub_select (b, sub2, TRUE);
+	gda_sql_builder_compound_add_sub_select (b, sub1);
+	gda_sql_builder_compound_add_sub_select (b, sub2);
 	render_as_sql (b);
 	g_object_unref (b);
 
