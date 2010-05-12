@@ -8,7 +8,6 @@ main (int argc, char *argv[])
 	gda_init ();
 
 	GdaSqlBuilder *b;
-	
 
 	/* INSERT INTO customers (e, f, g) VALUES (##p1::string, 15, 'joe') */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
@@ -153,7 +152,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata"),
 					   NULL);
-	sub = gda_sql_builder_get_sql_statement (b);
+	sub = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (b));
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
@@ -163,6 +162,7 @@ main (int argc, char *argv[])
 					   NULL);
 	gda_sql_builder_add_id (b, 1, "id");
 	gda_sql_builder_add_sub_select (b, 2, sub);
+	gda_sql_statement_free (sub);
 	gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_IN, 1, 2, 0);
 	gda_sql_builder_set_where (b, 3);
 	render_as_sql (b);
@@ -180,7 +180,7 @@ main (int argc, char *argv[])
 				   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_EQ,
 							     gda_sql_builder_add_id (b, 0, "t.id"),
 							     gda_sql_builder_add_id (b, 0, "d.topic"), 0));
-	sub = gda_sql_builder_get_sql_statement (b);
+	sub = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (b));
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
@@ -189,6 +189,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, 0, sub), 0);
+	gda_sql_statement_free (sub);
 
 	render_as_sql (b);
 	g_object_unref (b);
@@ -201,7 +202,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdate"),
 					   NULL);
-	sub = gda_sql_builder_get_sql_statement (b);
+	sub = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (b));
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
@@ -211,6 +212,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "f"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "g"), 0);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, 0, sub), 0);
+	gda_sql_statement_free (sub);
 	
 	render_as_sql (b);
 	g_object_unref (b);
@@ -224,7 +226,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata1"),
 					   NULL);
-	sub1 = gda_sql_builder_get_sql_statement (b);
+	sub1 = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (b));
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
@@ -233,12 +235,14 @@ main (int argc, char *argv[])
 	gda_sql_builder_select_add_target_id (b, 0,
 					   gda_sql_builder_add_id (b, 0, "subdata2"),
 					   NULL);
-	sub2 = gda_sql_builder_get_sql_statement (b);
+	sub2 = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (b));
 	g_object_unref (b);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_COMPOUND);
 	gda_sql_builder_compound_add_sub_select (b, sub1);
 	gda_sql_builder_compound_add_sub_select (b, sub2);
+	gda_sql_statement_free (sub1);
+	gda_sql_statement_free (sub2);
 	render_as_sql (b);
 	g_object_unref (b);
 
@@ -340,6 +344,26 @@ main (int argc, char *argv[])
 	gda_sql_expr_free (expr);
 	render_as_sql (b);
 	g_object_unref (b);
+
+	/* Subselect: SELECT name FROM (SELECT id FROM subdata) as sub */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "id"), 0);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+	gda_sql_builder_select_add_target_id (b, 0,
+					      gda_sql_builder_add_id (b, 0, "subdata"),
+					      NULL);
+	sub = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (b));
+	g_object_unref (b);
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "name"), 0);
+	gda_sql_builder_select_add_target_id (b, 0,
+					      gda_sql_builder_add_sub_select (b, 0, sub), "sub");
+	gda_sql_statement_free (sub);
+	
+	render_as_sql (b);
+	g_object_unref (b);
+
 
 	return 0;
 }

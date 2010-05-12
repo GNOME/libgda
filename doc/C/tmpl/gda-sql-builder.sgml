@@ -87,7 +87,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@copy_it: 
 @Returns: 
 
 
@@ -241,7 +240,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 @builder: 
 @id: 
 @sqlst: 
-@steal: 
 @Returns: 
 
 
@@ -396,7 +394,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 
 @builder: 
 @sqlst: 
-@steal: 
 
 
 <!-- ##### FUNCTION gda_sql_builder_compound_set_type ##### -->

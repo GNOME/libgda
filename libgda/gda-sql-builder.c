@@ -370,9 +370,7 @@ gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder)
 	if (!builder->priv->main_stmt)
 		return NULL;
 
-	GdaSqlStatement *stmt = builder->priv->main_stmt;
-	builder->priv->main_stmt = NULL;
-	return stmt;
+	return builder->priv->main_stmt;
 }
 
 /**
@@ -1072,6 +1070,7 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint id, guint ta
 		return 0;
 
 	BuildTarget *btarget;
+	GdaSqlSelectTarget *target;
 	GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
 	btarget = g_new0 (BuildTarget, 1);
         GDA_SQL_ANY_PART (btarget)->type = GDA_SQL_ANY_SQL_SELECT_TARGET;
@@ -1081,12 +1080,12 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint id, guint ta
 	else
 		btarget->part_id = builder->priv->next_assigned_id --;
 
-	((GdaSqlSelectTarget*) btarget)->expr = (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (btarget));
+	target = (GdaSqlSelectTarget*) btarget;
+	target->expr = (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (btarget));
 	if (alias && *alias)
-		((GdaSqlSelectTarget*) btarget)->as = g_strdup (alias);
-	if (g_value_get_string (((GdaSqlSelectTarget*) btarget)->expr->value))
-		((GdaSqlSelectTarget*) btarget)->table_name =
-			g_value_dup_string (((GdaSqlSelectTarget*) btarget)->expr->value);
+		target->as = g_strdup (alias);
+	if (target->expr->value && g_value_get_string (target->expr->value))
+		target->table_name = g_value_dup_string (target->expr->value);
 
 	/* add target to sel->from. NOTE: @btarget is NOT added to the "repository" or GdaSqlAnyPart parts
 	* like others */

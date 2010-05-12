@@ -43,6 +43,7 @@ SQL: SELECT people.firstname AS person, people.lastname, "date" AS birthdate, ag
 SQL: INSERT INTO customers (f, g) VALUES (15, 'joe')
 SQL: DELETE FROM items WHERE id = ##theid::int
 SQL: SELECT id FROM mytable WHERE (name = ##thename::string) AND (id = ##theid::int)
+SQL: SELECT name FROM (SELECT id, name FROM subdata) AS sub
 
 and for example_cnc:
 SQL: INSERT INTO "customers" ("e", "f", "g") VALUES (##p1::string, 15, 'joe')
