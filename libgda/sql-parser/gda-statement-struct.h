@@ -25,6 +25,8 @@
 #include <sql-parser/gda-statement-struct-decl.h>
 #include <libgda/gda-meta-store.h>
 
+G_BEGIN_DECLS
+
 struct _GdaSqlStatement {
 	gchar               *sql;
 	GdaSqlStatementType  stmt_type;
@@ -53,5 +55,7 @@ void                         gda_sql_statement_check_clean     (GdaSqlStatement 
 gboolean                     gda_sql_statement_normalize       (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error);
 
 GdaSqlStatementContentsInfo *gda_sql_statement_get_contents_infos (GdaSqlStatementType type) ;
+
+G_END_DECLS
 
 #endif
