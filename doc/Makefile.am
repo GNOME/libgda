@@ -1,1 +1,3 @@
 SUBDIRS = C 
+
+DOC_LINGUAS = es
