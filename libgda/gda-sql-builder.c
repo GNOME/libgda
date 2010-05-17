@@ -1298,7 +1298,7 @@ gda_sql_builder_select_order_by (GdaSqlBuilder *builder, guint expr_id,
 	sorder = gda_sql_select_order_new (GDA_SQL_ANY_PART (sel));
 	sorder->expr = (GdaSqlExpr*) use_part (part, GDA_SQL_ANY_PART (sorder));
 	sorder->asc = asc;
-	if (collation_name)
+	if (collation_name && *collation_name)
 		sorder->collation_name = g_strdup (collation_name);
 	sel->order_by = g_slist_append (sel->order_by, sorder);
 }
