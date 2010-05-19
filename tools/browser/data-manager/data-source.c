@@ -401,7 +401,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 		return FALSE;
 	}
 	gda_sql_builder_select_set_limit (b,
-					  gda_sql_builder_add_expr (b, 0, NULL,
+					  gda_sql_builder_add_expr (b, NULL,
 								    G_TYPE_INT, DEFAULT_DATA_SELECT_LIMIT),
 					  0);
 
@@ -413,7 +413,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 		if (mcol->pkey) {
 			/* ORDER BY */
 			gda_sql_builder_select_order_by (b,
-							 gda_sql_builder_add_id (b, 0,
+							 gda_sql_builder_add_id (b,
 										 mcol->column_name),
 							 FALSE, NULL);
 		}
@@ -493,13 +493,13 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 				GdaMetaTableColumn *col;
 				col = GDA_META_TABLE_COLUMN (g_slist_nth_data (mlinked->columns, fk->fk_cols_array [0]));
 				g_assert (col);
-				gda_sql_builder_add_id (b, 1, fk->fk_names_array [0]);
+				const guint id1 = gda_sql_builder_add_id (b, fk->fk_names_array [0]);
 				tmp = g_strdup_printf ("%s@%s", id ? (gchar*) id : (gchar*) fk_table,
 						       fk->ref_pk_names_array [0]);
-				gda_sql_builder_add_param (b, 2, tmp, col->gtype, FALSE);
+				const guint id2 = gda_sql_builder_add_param (b, tmp, col->gtype, FALSE);
 				g_free (tmp);
-				gda_sql_builder_add_cond (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2, 0);
-				gda_sql_builder_set_where (b, 3);
+				const guint id_cond = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id1, id2, 0);
+				gda_sql_builder_set_where (b, id_cond);
 			}
 			else {
 				TO_IMPLEMENT;

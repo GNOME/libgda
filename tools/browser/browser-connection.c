@@ -1216,24 +1216,24 @@ browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
 
 	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
 	gda_sql_builder_set_table (builder, DBTABLE_PREFERENCES_TABLE_NAME);
-	op_ids[0] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-					      gda_sql_builder_add_id (builder, 0, "table_schema"),
-					      gda_sql_builder_add_param (builder, 0, "schema", G_TYPE_STRING,
+	op_ids[0] = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, "table_schema"),
+					      gda_sql_builder_add_param (builder, "schema", G_TYPE_STRING,
 									 FALSE), 0);
-	op_ids[1] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-					      gda_sql_builder_add_id (builder, 0, "table_name"),
-					      gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING,
+	op_ids[1] = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, "table_name"),
+					      gda_sql_builder_add_param (builder, "name", G_TYPE_STRING,
 									 FALSE), 0);
-	op_ids[2] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-					      gda_sql_builder_add_id (builder, 0, "table_column"),
-					      gda_sql_builder_add_param (builder, 0, "column", G_TYPE_STRING,
+	op_ids[2] = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, "table_column"),
+					      gda_sql_builder_add_param (builder, "column", G_TYPE_STRING,
 									 FALSE), 0);
-	op_ids[3] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-					      gda_sql_builder_add_id (builder, 0, "att_name"),
-					      gda_sql_builder_add_param (builder, 0, "attname", G_TYPE_STRING,
+	op_ids[3] = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, "att_name"),
+					      gda_sql_builder_add_param (builder, "attname", G_TYPE_STRING,
 									 FALSE), 0);
 	gda_sql_builder_set_where (builder,
-				   gda_sql_builder_add_cond_v (builder, 0, GDA_SQL_OPERATOR_TYPE_AND,
+				   gda_sql_builder_add_cond_v (builder, GDA_SQL_OPERATOR_TYPE_AND,
 							       op_ids, 4));
 	stmt = gda_sql_builder_get_statement (builder, error);
 	g_object_unref (G_OBJECT (builder));
@@ -1250,20 +1250,20 @@ browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
 		builder = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 		gda_sql_builder_set_table (builder, DBTABLE_PREFERENCES_TABLE_NAME);
 		gda_sql_builder_add_field_id (builder,
-					      gda_sql_builder_add_id (builder, 0, "table_schema"),
-					      gda_sql_builder_add_param (builder, 0, "schema", G_TYPE_STRING, FALSE));
+					      gda_sql_builder_add_id (builder, "table_schema"),
+					      gda_sql_builder_add_param (builder, "schema", G_TYPE_STRING, FALSE));
 		gda_sql_builder_add_field_id (builder,
-					      gda_sql_builder_add_id (builder, 0, "table_name"),
-					      gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING, FALSE));
+					      gda_sql_builder_add_id (builder, "table_name"),
+					      gda_sql_builder_add_param (builder, "name", G_TYPE_STRING, FALSE));
 		gda_sql_builder_add_field_id (builder,
-					      gda_sql_builder_add_id (builder, 0, "table_column"),
-					      gda_sql_builder_add_param (builder, 0, "column", G_TYPE_STRING, FALSE));
+					      gda_sql_builder_add_id (builder, "table_column"),
+					      gda_sql_builder_add_param (builder, "column", G_TYPE_STRING, FALSE));
 		gda_sql_builder_add_field_id (builder,
-					      gda_sql_builder_add_id (builder, 0, "att_name"),
-					      gda_sql_builder_add_param (builder, 0, "attname", G_TYPE_STRING, FALSE));
+					      gda_sql_builder_add_id (builder, "att_name"),
+					      gda_sql_builder_add_param (builder, "attname", G_TYPE_STRING, FALSE));
 		gda_sql_builder_add_field_id (builder,
-					      gda_sql_builder_add_id (builder, 0, "att_value"),
-					      gda_sql_builder_add_param (builder, 0, "attvalue", G_TYPE_STRING, FALSE));
+					      gda_sql_builder_add_id (builder, "att_value"),
+					      gda_sql_builder_add_param (builder, "attvalue", G_TYPE_STRING, FALSE));
 		stmt = gda_sql_builder_get_statement (builder, error);
 		g_object_unref (G_OBJECT (builder));
 		if (!stmt)
@@ -1351,28 +1351,28 @@ browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,
 				     "attname", G_TYPE_STRING, attr_name);
 
 	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_select_add_target_id (builder, 0,
-					      gda_sql_builder_add_id (builder, 0, DBTABLE_PREFERENCES_TABLE_NAME),
+	gda_sql_builder_select_add_target_id (builder,
+					      gda_sql_builder_add_id (builder, DBTABLE_PREFERENCES_TABLE_NAME),
 					      NULL);
 	gda_sql_builder_select_add_field (builder, "att_value", NULL, NULL);
-	op_ids[0] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-					      gda_sql_builder_add_id (builder, 0, "table_schema"),
-					      gda_sql_builder_add_param (builder, 0, "schema", G_TYPE_STRING,
+	op_ids[0] = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, "table_schema"),
+					      gda_sql_builder_add_param (builder, "schema", G_TYPE_STRING,
 									 FALSE), 0);
-	op_ids[1] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-					      gda_sql_builder_add_id (builder, 0, "table_name"),
-					      gda_sql_builder_add_param (builder, 0, "name", G_TYPE_STRING,
+	op_ids[1] = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, "table_name"),
+					      gda_sql_builder_add_param (builder, "name", G_TYPE_STRING,
 									 FALSE), 0);
-	op_ids[2] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-					      gda_sql_builder_add_id (builder, 0, "table_column"),
-					      gda_sql_builder_add_param (builder, 0, "column", G_TYPE_STRING,
+	op_ids[2] = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, "table_column"),
+					      gda_sql_builder_add_param (builder, "column", G_TYPE_STRING,
 									 FALSE), 0);
-	op_ids[3] = gda_sql_builder_add_cond (builder, 0, GDA_SQL_OPERATOR_TYPE_EQ,
-					      gda_sql_builder_add_id (builder, 0, "att_name"),
-					      gda_sql_builder_add_param (builder, 0, "attname", G_TYPE_STRING,
+	op_ids[3] = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+					      gda_sql_builder_add_id (builder, "att_name"),
+					      gda_sql_builder_add_param (builder, "attname", G_TYPE_STRING,
 									 FALSE), 0);
 	gda_sql_builder_set_where (builder,
-				   gda_sql_builder_add_cond_v (builder, 0, GDA_SQL_OPERATOR_TYPE_AND,
+				   gda_sql_builder_add_cond_v (builder, GDA_SQL_OPERATOR_TYPE_AND,
 							       op_ids, 4));
 	stmt = gda_sql_builder_get_statement (builder, error);
 	g_object_unref (G_OBJECT (builder));
