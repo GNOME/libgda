@@ -136,7 +136,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @func_name: 
 @Varargs: 
 @Returns: 
@@ -148,7 +147,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @func_name: 
 @args: 
 @args_size: 
@@ -161,7 +159,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @string: 
 @Returns: 
 
@@ -172,7 +169,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @dh: 
 @type: 
 @Varargs: 
@@ -185,7 +181,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @dh: 
 @value: 
 @Returns: 
@@ -197,7 +192,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @param_name: 
 @type: 
 @nullok: 
@@ -210,7 +204,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @test_expr: 
 @else_expr: 
 @Varargs: 
@@ -223,7 +216,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @test_expr: 
 @else_expr: 
 @when_array: 
@@ -238,7 +230,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @sqlst: 
 @Returns: 
 
@@ -249,7 +240,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @op: 
 @op1: 
 @op2: 
@@ -263,7 +253,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @op: 
 @op_ids: 
 @op_ids_size: 
@@ -296,7 +285,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @table_id: 
 @alias: 
 @Returns: 
@@ -320,7 +308,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @left_target_id: 
 @right_target_id: 
 @join_type: 
@@ -421,7 +408,6 @@ gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expr
 </para>
 
 @builder: 
-@id: 
 @expr: 
 @Returns: 
 
