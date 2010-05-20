@@ -18,22 +18,21 @@ Factory object for statements
 <para>
   During the building process, some pieces of the statement are constructed, and assembled into the
   final statement. Each of these pieces can be reused anytime in the same #GdaBuilder object, and each
-  is identified using a single unsigned integer ID. That ID can either be specified by the user, or
-  be dynamically allocated by the object (pass 0 as the requested ID).
+  is identified using a single unsigned integer ID. That ID is dynamically allocated by the object.
 </para>
 <para>
   The following example builds the equivalent of the <![CDATA["name='joe' AND age >= ##ageparam::int"]]> expression:
   <programlisting><![CDATA[
 GdaSqlBuilder *b=...
-gda_sql_builder_add_id (b, 1, "name"); // build the "name" SQL identifier with requested ID=1
-gda_sql_builder_add_expr (b, 2, NULL, G_TYPE_STRING, "joe"); // 'joe' expression, requested ID=2
-gda_sql_builder_add_cond2 (b, 3, GDA_SQL_OPERATOR_TYPE_EQ, 1, 2); // "name='joe'", requested ID=3
+guint id_field = gda_sql_builder_add_id (b, "name"); // build the "name" SQL identifier
+guint id_value = gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "joe"); // 'joe' expression
+guint id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id_field, id_value, 0); // "name='joe'"
 
-gda_sql_builder_add_cond2 (b, 4, GDA_SQL_OPERATOR_TYPE_GT, // requested ID=4
-       gda_sql_builder_add_id (b, 0, "age"), // build the "age" SQL identifier, no specific ID
-       gda_sql_builder_add_param (b, 0, "ageparam", G_TYPE_INT, FALSE) // parameter, no specific ID
-      );
-gda_sql_builder_add_cond2 (b, 5, GDA_SQL_OPERATOR_TYPE_AND, 3, 4); // whole expression, requested ID=5
+guint id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_GT,
+       gda_sql_builder_add_id (b, "age"), // build the "age" SQL identifier
+       gda_sql_builder_add_param (b, "ageparam", G_TYPE_INT, FALSE), // parameter
+       0);
+guint id_cond_and = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_cond1, id_cond2, 0); // whole expression
 ]]></programlisting>
 </para>
 <para>

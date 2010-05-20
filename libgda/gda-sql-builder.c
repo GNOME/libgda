@@ -798,8 +798,8 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
  *
  * For example:
  * <programlisting>
- * gda_sql_builder_add_expr (b, 0, G_TYPE_INT, 15);
- * gda_sql_builder_add_expr (b, 5, G_TYPE_STRING, "joe")
+ * gda_sql_builder_add_expr (b, G_TYPE_INT, 15);
+ * gda_sql_builder_add_expr (b, G_TYPE_STRING, "joe")
  * </programlisting>
  *
  * will be rendered as SQL as:
@@ -891,7 +891,7 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string)
  * The new expression will contain the @string literal.
  * For example:
  * <programlisting>
- * gda_sql_builder_add_param (b, 0, "age", G_TYPE_INT, FALSE)
+ * gda_sql_builder_add_param (b, "age", G_TYPE_INT, FALSE)
  * </programlisting>
  *
  * will be rendered as SQL as:
