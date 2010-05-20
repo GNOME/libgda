@@ -749,3 +749,112 @@ gda_postgres_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 
 	return sql;
 }
+
+gchar *
+gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc, 
+				 GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+	gchar *tmp;
+	gboolean with = FALSE;
+
+	string = g_string_new ("CREATE USER ");
+
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/USER_DEF_P/USER_NAME");
+	g_string_append (string, tmp);
+	g_free (tmp);
+
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/PASSWORD");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) &&
+	    g_value_get_string (value) && (*g_value_get_string (value))) {
+		GdaDataHandler *dh;
+		const GValue *value2;
+
+		g_string_append (string, " WITH");
+		with = TRUE;
+
+		value2 = gda_server_operation_get_value_at (op, "/USER_DEF_P/PASSWORD_ENCRYPTED");
+		if (value2 && G_VALUE_HOLDS (value2, G_TYPE_BOOLEAN) && g_value_get_boolean (value2))
+			g_string_append (string, " ENCRYPTED");
+
+		g_string_append (string, " PASSWORD ");
+		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
+		if (!dh)
+			dh = gda_get_default_handler (G_TYPE_STRING);
+
+		tmp = gda_data_handler_get_sql_from_value (dh, value);
+		g_string_append (string, tmp);
+		g_free (tmp);
+	}
+
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/UID");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_UINT)) {
+		if (!with) {
+			g_string_append (string, " WITH");
+			with = TRUE;
+		}
+		g_string_append_printf (string, "SYSID %u", g_value_get_uint (value));
+	}
+
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_CREATEDB");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+		if (!with) {
+			g_string_append (string, " WITH");
+			with = TRUE;
+		}
+		g_string_append (string, " CREATEDB");
+	}
+
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_CREATEUSER");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+		if (!with) {
+			g_string_append (string, " WITH");
+			with = TRUE;
+		}
+		g_string_append (string, " CREATEUSER");
+	}
+	
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/GROUPS");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) &&
+	    g_value_get_string (value) && (*g_value_get_string (value))) {
+		GdaDataHandler *dh;		
+
+		g_string_append (string, " IN GROUP ");
+		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
+		if (!dh)
+			dh = gda_get_default_handler (G_TYPE_STRING);
+
+		tmp = gda_data_handler_get_sql_from_value (dh, value);
+		g_string_append (string, tmp);
+		g_free (tmp);
+	}
+	
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/VALIDITY");
+	if (value && G_VALUE_HOLDS (value, GDA_TYPE_TIMESTAMP)) {
+		const GdaTimestamp *ts;
+
+		ts = gda_value_get_timestamp (value);
+		if (value) {
+			GdaDataHandler *dh;
+			if (!with) {
+				g_string_append (string, " WITH");
+				with = TRUE;
+			}
+			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, GDA_TYPE_TIMESTAMP);
+			if (!dh)
+				dh = gda_get_default_handler (GDA_TYPE_TIMESTAMP);
+			
+			g_string_append (string, " VALID UNTIL ");
+			tmp = gda_data_handler_get_sql_from_value (dh, value);
+			g_string_append (string, tmp);
+			g_free (tmp);
+		}
+	}
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}

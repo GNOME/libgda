@@ -429,6 +429,13 @@ static OpReq op_req_DROP_VIEW [] = {
 	{NULL}
 };
 
+static OpReq op_req_CREATE_USER [] = {
+	{"/USER_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
+	{"/USER_DEF_P/USER_NAME",     GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
+
 /**
  * gda_server_provider_create_operation
  * @provider: a #GdaServerProvider object
@@ -477,6 +484,8 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 
 		op_req_table [GDA_SERVER_OPERATION_COMMENT_TABLE] = op_req_COMMENT_TABLE;
 		op_req_table [GDA_SERVER_OPERATION_COMMENT_COLUMN] = op_req_COMMENT_COLUMN;
+
+		op_req_table [GDA_SERVER_OPERATION_CREATE_USER] = op_req_CREATE_USER;
 	}
 	g_static_mutex_unlock (&init_mutex);
 

@@ -702,6 +702,8 @@ gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnec
 
         case GDA_SERVER_OPERATION_CREATE_VIEW:
         case GDA_SERVER_OPERATION_DROP_VIEW:
+
+        case GDA_SERVER_OPERATION_CREATE_USER:
                 return TRUE;
         default:
                 return FALSE;
@@ -821,6 +823,9 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
                 break;
         case GDA_SERVER_OPERATION_DROP_VIEW:
                 sql = gda_postgres_render_DROP_VIEW (provider, cnc, op, error);
+                break;
+        case GDA_SERVER_OPERATION_CREATE_USER:
+                sql = gda_postgres_render_CREATE_USER (provider, cnc, op, error);
                 break;
         default:
                 g_assert_not_reached ();

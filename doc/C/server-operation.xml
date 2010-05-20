@@ -682,6 +682,62 @@
 	  </table>
 	</para>
       </listitem>
+
+      <listitem>
+        <para>Named and required information for GDA_SERVER_OPERATION_CREATE_USER:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/USER_DEF_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>User's description</entry>
+		</row>
+		<row>
+                  <entry>/USER_DEF_P/USER_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>User name (string)</entry>
+		</row>
+                <row>
+                  <entry>/USER_DEF_P/PASSWORD</entry>
+                  <entry>PARAM</entry>
+                  <entry></entry>
+                  <entry>User's password (string)</entry>
+                </row>
+		<row>
+                  <entry>/USER_DEF_P/CAP_CREATEDB</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>Set to TRUE if the user is allowed to create databases (boolean)</entry>
+		</row>
+		<row>
+                  <entry>/USER_DEF_P/CAP_CREATEUSER</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>Set to TRUE if the user is allowed to create users (boolean)</entry>
+		</row>
+		<row>
+                  <entry>/USER_DEF_P/VALIDITY</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>Set the expiration timestamp (timestamp)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+      </listitem>
+
     </itemizedlist>
   </sect3>
   
