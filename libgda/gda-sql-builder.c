@@ -1481,6 +1481,7 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	g_return_val_if_fail (func_name && *func_name, 0);
 
 	GdaSqlExpr *expr;
 	GSList *list = NULL;

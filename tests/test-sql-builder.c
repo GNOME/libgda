@@ -518,17 +518,17 @@ build12 (void)
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, 0, "store_name"), 0);
-	gda_sql_builder_add_function (b, 1, "sum",
+	const guint id_func = gda_sql_builder_add_function (b, "sum",
 				      gda_sql_builder_add_id (b, 0, "sales"), 0);
-	gda_sql_builder_add_field_id (b, 1, 0);
+	gda_sql_builder_add_field_id (b, id_func, 0);
 
 	gda_sql_builder_select_add_target_id (b, 0,
-					   gda_sql_builder_add_id (b, 0, "stores"),
+					   gda_sql_builder_add_id (b, "stores"),
 					   NULL);
-	gda_sql_builder_select_group_by (b, gda_sql_builder_add_id (b, 0, "store_name"));
+	gda_sql_builder_select_group_by (b, gda_sql_builder_add_id (b, "store_name"));
 	gda_sql_builder_select_set_having (b,
-					   gda_sql_builder_add_cond (b, 0, GDA_SQL_OPERATOR_TYPE_GT,
-								     1,
+					   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_GT,
+								     id_func,
 								     gda_sql_builder_add_expr (b, 0, NULL,
 											       G_TYPE_INT, 10),
 								     0));

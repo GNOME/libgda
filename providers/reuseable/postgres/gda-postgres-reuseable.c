@@ -184,8 +184,8 @@ _gda_postgres_compute_version (GdaConnection *cnc, GdaPostgresReuseable *rdata, 
 	GdaDataModel *model;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-        gda_sql_builder_add_function (b, 1, "version", 0);
-        gda_sql_builder_add_field_id (b, 1, 0);
+        const guint id_func = gda_sql_builder_add_function (b, "version", 0);
+        gda_sql_builder_add_field_id (b, id_func, 0);
 	stmt = gda_sql_builder_get_statement (b, NULL);
 	g_object_unref (b);
 	g_assert (stmt);
