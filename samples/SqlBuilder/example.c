@@ -42,9 +42,9 @@ main (int argc, char *argv[])
 	/* reuse the same GdaSqlBuilder object to change the WHERE condition to: WHERE id = ##theid::int */
 	gda_sql_builder_set_where (b,
 				   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-							 1,
-							 gda_sql_builder_add_param (b, "theid", G_TYPE_INT, FALSE),
-							 0));
+							     id_field,
+							     gda_sql_builder_add_param (b, "theid", G_TYPE_INT, FALSE),
+							     0));
 	render_as_sql (b);
 	g_object_unref (b);
 
@@ -248,15 +248,15 @@ main (int argc, char *argv[])
 
 	/* SELECT CASE WHEN price < 1.200000 THEN 2 ELSE 1 END FROM data */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_LT,
-				  gda_sql_builder_add_id (b, "price"),
-				  gda_sql_builder_add_expr (b, NULL, G_TYPE_FLOAT, 1.2), 0);
+	id_cond = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_LT,
+					    gda_sql_builder_add_id (b, "price"),
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_FLOAT, 1.2), 0);
 	
 	guint id_case = gda_sql_builder_add_case (b, 
-				  0,
-				  gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 1),
-				  1, gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 2),
-				  0);
+						  0,
+						  gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 1),
+						  id_cond, gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 2),
+						  0);
 	gda_sql_builder_add_field_id (b, id_case, 0);
 	gda_sql_builder_select_add_target_id (b,
 					   gda_sql_builder_add_id (b, "data"),
@@ -266,17 +266,17 @@ main (int argc, char *argv[])
 
 	/* SELECT CASE tag WHEN 'Alpha' THEN 1 WHEN 'Bravo' THEN 2 WHEN 'Charlie' THEN 3 ELSE 0 END FROM data */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-	gda_sql_builder_add_case (b, 10, 
-				  gda_sql_builder_add_id (b, "tag"),
-				  0,
-				  gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "Alpha"),
-				  gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 1),
-				  gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "Bravo"),
-				  gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 2),
-				  gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "Charlie"),
-				  gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 3),
-				  0);
-	gda_sql_builder_add_field_id (b, 10, 0);
+	id_case = gda_sql_builder_add_case (b,
+					    gda_sql_builder_add_id (b, "tag"),
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 0),
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "Alpha"),
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 1),
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "Bravo"),
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 2),
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "Charlie"),
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 3),
+					    0);
+	gda_sql_builder_add_field_id (b, id_case, 0);
 	gda_sql_builder_select_add_target_id (b,
 					   gda_sql_builder_add_id (b, "data"),
 					   NULL);

@@ -56,7 +56,7 @@ main (int argc, char *argv[])
 	gda_sql_builder_set_table (b, "items");
 	id_field = gda_sql_builder_add_id (b, "id");
 	guint id_param = gda_sql_builder_add_param (b, "theid", G_TYPE_INT, FALSE);
-	id_cond = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id_field, id_value, 0);
+	id_cond = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id_field, id_param, 0);
 	gda_sql_builder_set_where (b, id_cond);
 
 	render_as_sql (b);
