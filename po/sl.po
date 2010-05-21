@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-05-07 12:13+0000\n"
-"PO-Revision-Date: 2010-05-08 09:47+0100\n"
+"POT-Creation-Date: 2010-05-21 14:14+0000\n"
+"PO-Revision-Date: 2010-05-21 20:12+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -2187,58 +2187,67 @@ msgstr "GdaHolder zahteva določitev ID"
 msgid "One or more values are invalid"
 msgstr "Ena ali več vrednosti ni veljavnih"
 
-#: ../libgda/gda-sql-builder.c:295
-#: ../libgda/gda-sql-builder.c:1192
-#: ../libgda/gda-sql-builder.c:1264
+#: ../libgda/gda-sql-builder.c:294
+#: ../libgda/gda-sql-builder.c:1243
 #, c-format
 msgid "Unknown part ID %u"
 msgstr "Neznani ID dela '%u"
 
-#: ../libgda/gda-sql-builder.c:299
+#: ../libgda/gda-sql-builder.c:298
 msgid "Unknown part type"
 msgstr "Neznana vrsta dela"
 
-#: ../libgda/gda-sql-builder.c:343
+#: ../libgda/gda-sql-builder.c:342
 #, c-format
 msgid "SqlBuilder is empty"
 msgstr "SqlBuilder je prazen"
 
-#: ../libgda/gda-sql-builder.c:428
-#: ../libgda/gda-sql-builder.c:485
-#: ../libgda/gda-sql-builder.c:512
-#: ../libgda/gda-sql-builder.c:575
-#: ../libgda/gda-sql-builder.c:617
-#: ../libgda/gda-sql-builder.c:676
-#: ../libgda/gda-sql-builder.c:736
-#: ../libgda/gda-sql-builder.c:1072
-#: ../libgda/gda-sql-builder.c:1128
-#: ../libgda/gda-sql-builder.c:1171
-#: ../libgda/gda-sql-builder.c:1246
-#: ../libgda/gda-sql-builder.c:1297
-#: ../libgda/gda-sql-builder.c:1339
-#: ../libgda/gda-sql-builder.c:1386
-#: ../libgda/gda-sql-builder.c:1436
-#: ../libgda/gda-sql-builder.c:1472
-#: ../libgda/gda-sql-builder.c:1645
-#: ../libgda/gda-sql-builder.c:1672
+#: ../libgda/gda-sql-builder.c:418
+#: ../libgda/gda-sql-builder.c:475
+#: ../libgda/gda-sql-builder.c:502
+#: ../libgda/gda-sql-builder.c:565
+#: ../libgda/gda-sql-builder.c:607
+#: ../libgda/gda-sql-builder.c:666
+#: ../libgda/gda-sql-builder.c:726
+#: ../libgda/gda-sql-builder.c:1052
+#: ../libgda/gda-sql-builder.c:1106
+#: ../libgda/gda-sql-builder.c:1147
+#: ../libgda/gda-sql-builder.c:1225
+#: ../libgda/gda-sql-builder.c:1276
+#: ../libgda/gda-sql-builder.c:1318
+#: ../libgda/gda-sql-builder.c:1365
+#: ../libgda/gda-sql-builder.c:1415
+#: ../libgda/gda-sql-builder.c:1451
+#: ../libgda/gda-sql-builder.c:1617
+#: ../libgda/gda-sql-builder.c:1643
 msgid "Wrong statement type"
 msgstr "Napačna vrsta izjave"
 
-#: ../libgda/gda-sql-builder.c:548
-#: ../libgda/gda-sql-builder.c:792
+#: ../libgda/gda-sql-builder.c:538
+#: ../libgda/gda-sql-builder.c:781
 #, c-format
 msgid "Could not convert value to type '%s'"
 msgstr "Ni mogoče pretvoriti vrednosti v vrsto '%s'"
 
-#: ../libgda/gda-sql-builder.c:667
+#: ../libgda/gda-sql-builder.c:657
 msgid "Wrong field format"
 msgstr "Napačen zapis polja"
 
-#: ../libgda/gda-sql-builder.c:771
-#: ../libgda/gda-sql-builder.c:776
+#: ../libgda/gda-sql-builder.c:760
+#: ../libgda/gda-sql-builder.c:765
 #, c-format
 msgid "Unhandled data type '%s'"
 msgstr "Neupravljana vrsta podatkov '%s'"
+
+#: ../libgda/gda-sql-builder.c:1169
+#, c-format
+msgid "Unknown left part target ID %u"
+msgstr "Neznani levi del cilja ID %u"
+
+#: ../libgda/gda-sql-builder.c:1174
+#, c-format
+msgid "Unknown right part target ID %u"
+msgstr "Neznani desni del cilja ID %u"
 
 #: ../libgda/gda-statement.c:478
 #, c-format
@@ -2807,97 +2816,97 @@ msgstr "Napaka skladnje v vrstici %d in stolpcu %d"
 msgid "Overflow error at line %d, column %d"
 msgstr "Napaka prekoračitve v vrstici %d in stolpcu %d"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:514
+#: ../libgda/sql-parser/gda-statement-struct.c:526
 msgid "GdaSqlField is not part of an INSERT or UPDATE statement"
 msgstr "PRedmet GdaSqlField ni del izjave INSERT ali UPDATE"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:527
+#: ../libgda/sql-parser/gda-statement-struct.c:539
 msgid "Missing table in statement"
 msgstr "Manjka preglednica v izjavi"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:547
-#: ../libgda/sql-parser/gda-statement-struct.c:756
+#: ../libgda/sql-parser/gda-statement-struct.c:559
+#: ../libgda/sql-parser/gda-statement-struct.c:768
 #, c-format
 msgid "Column '%s' not found"
 msgstr "Stolpca '%s' ni mogoče najti"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:582
-#: ../libgda/sql-parser/gda-statement-struct.c:693
+#: ../libgda/sql-parser/gda-statement-struct.c:594
+#: ../libgda/sql-parser/gda-statement-struct.c:705
 msgid "GdaSqlSelectField is not part of a SELECT statement"
 msgstr "Predmet GdaSqlSelectField ni del izjave SELECT"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:641
+#: ../libgda/sql-parser/gda-statement-struct.c:653
 msgid "Missing table name in statement"
 msgstr "Manjka ime preglednice v izjavi"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:649
-#: ../libgda/sql-parser/gda-statement-struct.c:738
-#: ../libgda/sql-parser/gda-statement-struct.c:785
+#: ../libgda/sql-parser/gda-statement-struct.c:661
+#: ../libgda/sql-parser/gda-statement-struct.c:750
+#: ../libgda/sql-parser/gda-statement-struct.c:797
 #, c-format
 msgid "Table '%s' not found"
 msgstr "Preglednice '%s' ni mogoče najti"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:712
-#: ../libgda/sql-parser/gda-statement-struct.c:725
+#: ../libgda/sql-parser/gda-statement-struct.c:724
+#: ../libgda/sql-parser/gda-statement-struct.c:737
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "Ni mogoče določiti preglednice za polje '%s'"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:915
+#: ../libgda/sql-parser/gda-statement-struct.c:927
 msgid "Expression can't have both a type cast and a parameter specification"
 msgstr "Izraz ne more imeti obeh določil; vrste in določila parametra"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:925
-#: ../libgda/sql-parser/gda-statement-struct.c:938
-#: ../libgda/sql-parser/gda-statement-struct.c:951
+#: ../libgda/sql-parser/gda-statement-struct.c:937
+#: ../libgda/sql-parser/gda-statement-struct.c:950
+#: ../libgda/sql-parser/gda-statement-struct.c:963
 #, c-format
 msgid "'%s' is not a valid identifier"
 msgstr "'%s' ni veljavno določilo"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:928
-#: ../libgda/sql-parser/gda-statement-struct.c:941
-#: ../libgda/sql-parser/gda-statement-struct.c:954
+#: ../libgda/sql-parser/gda-statement-struct.c:940
+#: ../libgda/sql-parser/gda-statement-struct.c:953
+#: ../libgda/sql-parser/gda-statement-struct.c:966
 msgid "Empty identifier"
 msgstr "Prazno določilo"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:963
+#: ../libgda/sql-parser/gda-statement-struct.c:975
 msgid "Operation has no operand"
 msgstr "Opravilo nima operanda"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:986
-#: ../libgda/sql-parser/gda-statement-struct.c:993
-#: ../libgda/sql-parser/gda-statement-struct.c:1003
+#: ../libgda/sql-parser/gda-statement-struct.c:998
+#: ../libgda/sql-parser/gda-statement-struct.c:1005
 #: ../libgda/sql-parser/gda-statement-struct.c:1015
-#: ../libgda/sql-parser/gda-statement-struct.c:1023
+#: ../libgda/sql-parser/gda-statement-struct.c:1027
+#: ../libgda/sql-parser/gda-statement-struct.c:1035
 msgid "Wrong number of operands"
 msgstr "Napačno število operandov"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1029
+#: ../libgda/sql-parser/gda-statement-struct.c:1041
 #, c-format
 msgid "Unknown operator %d"
 msgstr "neznan operator %d"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1052
+#: ../libgda/sql-parser/gda-statement-struct.c:1064
 msgid "Missing expression in select field"
 msgstr "Manjka izraz v polju izbire"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1061
+#: ../libgda/sql-parser/gda-statement-struct.c:1073
 msgid "Missing expression in select target"
 msgstr "Manjka izraz v polju cilja"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1070
+#: ../libgda/sql-parser/gda-statement-struct.c:1082
 msgid "Join can't at the same time specify a join condition and a list of fields to join on"
 msgstr "S predmetom JOIN ni mogoče sočasno določiti pogoj združevanja in seznam polj za združevanje"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1075
+#: ../libgda/sql-parser/gda-statement-struct.c:1087
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr "S predmetom križnega JOIN ni mogoče sočasno določiti pogoj združevanja in seznam polj za združevanje"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1084
+#: ../libgda/sql-parser/gda-statement-struct.c:1096
 msgid "Empty FROM clause"
 msgstr "Prazen FROM stavek"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1359
+#: ../libgda/sql-parser/gda-statement-struct.c:1371
 msgid "Select field is not in a SELECT statement"
 msgstr "V izjavi SELECT ni polja izbire"
 
@@ -6183,14 +6192,14 @@ msgstr "Ni mogoče začeti slovarja za shranjevanje možnosti preglednice"
 #: ../tools/browser/browser-connection.c:1335
 #: ../tools/browser/browser-favorites.c:523
 #: ../tools/browser/browser-favorites.c:529
-#: ../tools/browser/browser-favorites.c:957
-#: ../tools/browser/browser-favorites.c:964
+#: ../tools/browser/browser-favorites.c:958
+#: ../tools/browser/browser-favorites.c:965
 msgid "Can't initialize transaction to access favorites"
 msgstr "Ni mogoče začeti prenosa za dostop do priljubljenih"
 
 #: ../tools/browser/browser-connection.c:1280
 #: ../tools/browser/browser-favorites.c:702
-#: ../tools/browser/browser-favorites.c:1015
+#: ../tools/browser/browser-favorites.c:1016
 msgid "Can't commit transaction to access favorites"
 msgstr "Ni mogoče uveljaviti prenosa za dostop do priljubljenih"
 
