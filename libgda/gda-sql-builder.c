@@ -1164,8 +1164,14 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
 		if ((left_pos != -1) && (right_pos != -1))
 			break;
 	}
-	if ((left_pos == -1) || (right_pos == -1)) {
-		g_warning (_("Unknown part ID %u"), (left_pos == -1) ? left_pos : right_pos);
+
+    if (left_pos == -1) {
+		g_warning (_("Unknown left part target ID %u"), left_target_id);
+		return 0;
+	}
+
+    if (right_pos == -1) {
+		g_warning (_("Unknown right part target ID %u"), right_target_id);
 		return 0;
 	}
 
