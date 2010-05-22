@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-05-05 12:55+0000\n"
-"PO-Revision-Date: 2010-05-08 11:33+0100\n"
+"POT-Creation-Date: 2010-05-21 14:14+0000\n"
+"PO-Revision-Date: 2010-05-22 19:15+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -394,7 +394,7 @@ msgstr ""
 "Keine Legitimierung erforderlich,\n"
 "Öffnen der Verbindung bestätigen"
 
-#: ../control-center/main.c:57 ../libgda-ui/internal/utility.c:528
+#: ../control-center/main.c:57 ../libgda-ui/internal/utility.c:529
 #: ../tools/browser/support.c:132
 msgid "Error:"
 msgstr "Fehler:"
@@ -2237,46 +2237,57 @@ msgstr "GdaHolder muss eine Kennung haben"
 msgid "One or more values are invalid"
 msgstr "Ein oder mehrere Werte sind ungültig"
 
-#: ../libgda/gda-sql-builder.c:295 ../libgda/gda-sql-builder.c:1192
-#: ../libgda/gda-sql-builder.c:1264
+#: ../libgda/gda-sql-builder.c:294 ../libgda/gda-sql-builder.c:1243
 #, c-format
 msgid "Unknown part ID %u"
 msgstr "Unbekannte Kennung %u des Abschnitts"
 
-#: ../libgda/gda-sql-builder.c:299
+#: ../libgda/gda-sql-builder.c:298
 msgid "Unknown part type"
 msgstr "Unbekannter Typ des Abschnitts"
 
-#: ../libgda/gda-sql-builder.c:343
+#: ../libgda/gda-sql-builder.c:342
 #, c-format
 msgid "SqlBuilder is empty"
 msgstr "SqlBuilder ist leer"
 
-#: ../libgda/gda-sql-builder.c:428 ../libgda/gda-sql-builder.c:485
-#: ../libgda/gda-sql-builder.c:512 ../libgda/gda-sql-builder.c:575
-#: ../libgda/gda-sql-builder.c:617 ../libgda/gda-sql-builder.c:676
-#: ../libgda/gda-sql-builder.c:736 ../libgda/gda-sql-builder.c:1072
-#: ../libgda/gda-sql-builder.c:1128 ../libgda/gda-sql-builder.c:1171
-#: ../libgda/gda-sql-builder.c:1246 ../libgda/gda-sql-builder.c:1297
-#: ../libgda/gda-sql-builder.c:1339 ../libgda/gda-sql-builder.c:1386
-#: ../libgda/gda-sql-builder.c:1436 ../libgda/gda-sql-builder.c:1472
-#: ../libgda/gda-sql-builder.c:1645 ../libgda/gda-sql-builder.c:1672
+#: ../libgda/gda-sql-builder.c:418 ../libgda/gda-sql-builder.c:475
+#: ../libgda/gda-sql-builder.c:502 ../libgda/gda-sql-builder.c:565
+#: ../libgda/gda-sql-builder.c:607 ../libgda/gda-sql-builder.c:666
+#: ../libgda/gda-sql-builder.c:726 ../libgda/gda-sql-builder.c:1052
+#: ../libgda/gda-sql-builder.c:1106 ../libgda/gda-sql-builder.c:1147
+#: ../libgda/gda-sql-builder.c:1225 ../libgda/gda-sql-builder.c:1276
+#: ../libgda/gda-sql-builder.c:1318 ../libgda/gda-sql-builder.c:1365
+#: ../libgda/gda-sql-builder.c:1415 ../libgda/gda-sql-builder.c:1451
+#: ../libgda/gda-sql-builder.c:1617 ../libgda/gda-sql-builder.c:1643
 msgid "Wrong statement type"
 msgstr "Ungültiger Anweisungstyp"
 
-#: ../libgda/gda-sql-builder.c:548 ../libgda/gda-sql-builder.c:792
+#: ../libgda/gda-sql-builder.c:538 ../libgda/gda-sql-builder.c:781
 #, c-format
 msgid "Could not convert value to type '%s'"
 msgstr "Wert konnte nicht in »%s« umgewandelt werden"
 
-#: ../libgda/gda-sql-builder.c:667
+#: ../libgda/gda-sql-builder.c:657
 msgid "Wrong field format"
 msgstr "Falsches Feldformat"
 
-#: ../libgda/gda-sql-builder.c:771 ../libgda/gda-sql-builder.c:776
+#: ../libgda/gda-sql-builder.c:760 ../libgda/gda-sql-builder.c:765
 #, c-format
 msgid "Unhandled data type '%s'"
 msgstr "Unbehandelter Datentyp »%s«"
+
+#: ../libgda/gda-sql-builder.c:1169
+#, c-format
+#| msgid "Unknown part ID %u"
+msgid "Unknown left part target ID %u"
+msgstr "Unbekannte Zielkennung %u des linken Abschnitts"
+
+#: ../libgda/gda-sql-builder.c:1174
+#, c-format
+#| msgid "Unknown part ID %u"
+msgid "Unknown right part target ID %u"
+msgstr "Unbekannte Zielkennung %u des rechten Abschnitts"
 
 #: ../libgda/gda-statement.c:478
 #, c-format
@@ -2332,8 +2343,8 @@ msgstr "Join ist nicht in einer FROM-Anweisung"
 msgid "Could not find target the join is for"
 msgstr "Ziel der Verbindung konnte nicht gefunden werden"
 
-#: ../libgda/gda-tree-mgr-columns.c:262 ../libgda/gda-tree-mgr-schemas.c:217
-#: ../libgda/gda-tree-mgr-select.c:294 ../libgda/gda-tree-mgr-tables.c:247
+#: ../libgda/gda-tree-mgr-columns.c:264 ../libgda/gda-tree-mgr-schemas.c:217
+#: ../libgda/gda-tree-mgr-select.c:294 ../libgda/gda-tree-mgr-tables.c:248
 #: ../libgda-report/engine/gda-report-engine.c:586
 #: ../libgda-report/engine/gda-report-engine.c:613 ../tools/gda-sql.c:762
 #: ../tools/gda-sql.c:947
@@ -2341,17 +2352,17 @@ msgstr "Ziel der Verbindung konnte nicht gefunden werden"
 msgid "No connection specified"
 msgstr "Keine Verbindung angegeben"
 
-#: ../libgda/gda-tree-mgr-columns.c:345
+#: ../libgda/gda-tree-mgr-columns.c:347
 #, c-format
 msgid "No schema specified"
 msgstr "Kein Schema angegeben"
 
-#: ../libgda/gda-tree-mgr-columns.c:353
+#: ../libgda/gda-tree-mgr-columns.c:355
 #, c-format
 msgid "No table specified"
 msgstr "Keine Tabelle angegeben"
 
-#: ../libgda/gda-tree-mgr-columns.c:382
+#: ../libgda/gda-tree-mgr-columns.c:384
 #, c-format
 msgid "Unable to get column name"
 msgstr "Spaltenname konnte nicht erhalten werden werden"
@@ -2395,7 +2406,7 @@ msgstr "Kein Wert für den Parameter »%s« gesetzt."
 msgid "Unable to get iterator's value"
 msgstr "Der Wert des Iterators konnte nicht gelesen werden"
 
-#: ../libgda/gda-tree-mgr-tables.c:348
+#: ../libgda/gda-tree-mgr-tables.c:349
 #, c-format
 msgid "Unable to get table name"
 msgstr "Tabellenname konnte nicht erhalten werden"
@@ -2868,87 +2879,87 @@ msgstr "Syntaxfehler in Zeile %d, Spalte %d"
 msgid "Overflow error at line %d, column %d"
 msgstr "Überlauf-Fehler in Zeile %d, Spalte %d"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:514
+#: ../libgda/sql-parser/gda-statement-struct.c:526
 msgid "GdaSqlField is not part of an INSERT or UPDATE statement"
 msgstr "GdaSqlField ist nicht Teil einer INSERT- oder UPDATE-Anweisung"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:527
+#: ../libgda/sql-parser/gda-statement-struct.c:539
 msgid "Missing table in statement"
 msgstr "Fehlender Tabellenname in Anweisung"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:547
-#: ../libgda/sql-parser/gda-statement-struct.c:756
+#: ../libgda/sql-parser/gda-statement-struct.c:559
+#: ../libgda/sql-parser/gda-statement-struct.c:768
 #, c-format
 msgid "Column '%s' not found"
 msgstr "Spalte »%s« nicht gefunden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:582
-#: ../libgda/sql-parser/gda-statement-struct.c:693
+#: ../libgda/sql-parser/gda-statement-struct.c:594
+#: ../libgda/sql-parser/gda-statement-struct.c:705
 msgid "GdaSqlSelectField is not part of a SELECT statement"
 msgstr "GdaSqlSelectField ist nicht Teil einer SELECT-Anweisung"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:641
+#: ../libgda/sql-parser/gda-statement-struct.c:653
 msgid "Missing table name in statement"
 msgstr "Fehlender Tabellenname in Anweisung"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:649
-#: ../libgda/sql-parser/gda-statement-struct.c:738
-#: ../libgda/sql-parser/gda-statement-struct.c:785
+#: ../libgda/sql-parser/gda-statement-struct.c:661
+#: ../libgda/sql-parser/gda-statement-struct.c:750
+#: ../libgda/sql-parser/gda-statement-struct.c:797
 #, c-format
 msgid "Table '%s' not found"
 msgstr "Tabelle »%s« nicht gefunden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:712
-#: ../libgda/sql-parser/gda-statement-struct.c:725
+#: ../libgda/sql-parser/gda-statement-struct.c:724
+#: ../libgda/sql-parser/gda-statement-struct.c:737
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "Tabelle oder Feld »%s« konnten nicht identifiziert werden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:915
+#: ../libgda/sql-parser/gda-statement-struct.c:927
 msgid "Expression can't have both a type cast and a parameter specification"
 msgstr ""
 "Der Ausdruck darf nicht zugleich eine Typumwandlung und eine "
 "Parameterspezifikation enthalten"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:925
-#: ../libgda/sql-parser/gda-statement-struct.c:938
-#: ../libgda/sql-parser/gda-statement-struct.c:951
+#: ../libgda/sql-parser/gda-statement-struct.c:937
+#: ../libgda/sql-parser/gda-statement-struct.c:950
+#: ../libgda/sql-parser/gda-statement-struct.c:963
 #, c-format
 msgid "'%s' is not a valid identifier"
 msgstr "»%s« ist kein gültiger Bezeichner"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:928
-#: ../libgda/sql-parser/gda-statement-struct.c:941
-#: ../libgda/sql-parser/gda-statement-struct.c:954
+#: ../libgda/sql-parser/gda-statement-struct.c:940
+#: ../libgda/sql-parser/gda-statement-struct.c:953
+#: ../libgda/sql-parser/gda-statement-struct.c:966
 msgid "Empty identifier"
 msgstr "Leerer Bezeichner"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:963
+#: ../libgda/sql-parser/gda-statement-struct.c:975
 msgid "Operation has no operand"
 msgstr "Operation hat keinen Operanden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:986
-#: ../libgda/sql-parser/gda-statement-struct.c:993
-#: ../libgda/sql-parser/gda-statement-struct.c:1003
+#: ../libgda/sql-parser/gda-statement-struct.c:998
+#: ../libgda/sql-parser/gda-statement-struct.c:1005
 #: ../libgda/sql-parser/gda-statement-struct.c:1015
-#: ../libgda/sql-parser/gda-statement-struct.c:1023
+#: ../libgda/sql-parser/gda-statement-struct.c:1027
+#: ../libgda/sql-parser/gda-statement-struct.c:1035
 msgid "Wrong number of operands"
 msgstr "Falsche Anzahl der Operanden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1029
+#: ../libgda/sql-parser/gda-statement-struct.c:1041
 #, c-format
 msgid "Unknown operator %d"
 msgstr "Unbekannter Operator %d"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1052
+#: ../libgda/sql-parser/gda-statement-struct.c:1064
 msgid "Missing expression in select field"
 msgstr "Fehlender Ausdruck im SELECT-Feld"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1061
+#: ../libgda/sql-parser/gda-statement-struct.c:1073
 msgid "Missing expression in select target"
 msgstr "Fehlender Ausdruck im SELECT-Ziel"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1070
+#: ../libgda/sql-parser/gda-statement-struct.c:1082
 msgid ""
 "Join can't at the same time specify a join condition and a list of fields to "
 "join on"
@@ -2956,17 +2967,17 @@ msgstr ""
 "Verbinden kann nicht gleichzeitig eine Verbindungsbedingung und eine Liste zu "
 "verbindender Felder angeben"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1075
+#: ../libgda/sql-parser/gda-statement-struct.c:1087
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
 "Kreuzverbinden kann nicht gleichzeitig eine Verbindungsbedingung und eine "
 "Liste zu verbindender Felder angeben"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1084
+#: ../libgda/sql-parser/gda-statement-struct.c:1096
 msgid "Empty FROM clause"
 msgstr "Leere FROM-Klausel"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1359
+#: ../libgda/sql-parser/gda-statement-struct.c:1371
 msgid "Select field is not in a SELECT statement"
 msgstr "Select-Feld ist keine SELECT-Anweisung"
 
@@ -3840,11 +3851,11 @@ msgstr "Auf Vorgabewert setzen"
 msgid "Reset to original value"
 msgstr "Auf Originalwert zurücksetzen"
 
-#: ../libgda-ui/internal/utility.c:393
+#: ../libgda-ui/internal/utility.c:394
 msgid "Current modified data is invalid"
 msgstr "Derzeit geänderte Daten sind ungültig"
 
-#: ../libgda-ui/internal/utility.c:395
+#: ../libgda-ui/internal/utility.c:396
 msgid ""
 "You may now choose to correct it, or to discard\n"
 "the modifications.\n"
@@ -3856,7 +3867,7 @@ msgstr ""
 "\n"
 "Was wollen Sie tun?"
 
-#: ../libgda-ui/internal/utility.c:399
+#: ../libgda-ui/internal/utility.c:400
 msgid ""
 "please correct it and try again, or discard\n"
 "the modifications."
@@ -3864,11 +3875,11 @@ msgstr ""
 "Bitte korrigieren und erneut versuchen,\n"
 "oder die Änderungen verwerfen."
 
-#: ../libgda-ui/internal/utility.c:406
+#: ../libgda-ui/internal/utility.c:407
 msgid "Part of the current modified data was invalid"
 msgstr "Teile der gegenwärtig geänderten Daten sind ungültig"
 
-#: ../libgda-ui/internal/utility.c:407
+#: ../libgda-ui/internal/utility.c:408
 msgid ""
 "As no transaction was used, only a part of the valid data\n"
 "has been written, and the remaining modification have been discarded."
@@ -3877,15 +3888,15 @@ msgstr ""
 "gültigen Daten geschrieben und die verbleibenden Änderungen\n"
 "wurden verworfen."
 
-#: ../libgda-ui/internal/utility.c:423
+#: ../libgda-ui/internal/utility.c:424
 msgid "Error details"
 msgstr "Fehlerdetails"
 
-#: ../libgda-ui/internal/utility.c:478
+#: ../libgda-ui/internal/utility.c:479
 msgid "Discard modified data"
 msgstr "Geänderte Daten verwerfen"
 
-#: ../libgda-ui/internal/utility.c:479
+#: ../libgda-ui/internal/utility.c:480
 msgid "Correct data first"
 msgstr "Daten zuerst korrigieren"
 
@@ -4569,35 +4580,36 @@ msgid "Number of row chunks read since the object creation"
 msgstr "Anzahl der gelesenen Zeilenabschnitte seit Erstellung des Objekts"
 
 #: ../providers/mysql/gda-mysql-recordset.c:515
-#: ../providers/mysql/gda-mysql-recordset.c:804
-#: ../providers/mysql/gda-mysql-recordset.c:817
-#: ../providers/mysql/gda-mysql-recordset.c:830
-#: ../providers/mysql/gda-mysql-recordset.c:849
+#: ../providers/mysql/gda-mysql-recordset.c:812
+#: ../providers/mysql/gda-mysql-recordset.c:825
+#: ../providers/mysql/gda-mysql-recordset.c:838
+#: ../providers/mysql/gda-mysql-recordset.c:857
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Ungültiger Datentyp der Spaltenbindung. %d\n"
 
-#: ../providers/mysql/gda-mysql-recordset.c:665
+#: ../providers/mysql/gda-mysql-recordset.c:666
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr "Typ %s ist nicht dem Wert %d zugeordnet"
 
-#: ../providers/mysql/gda-mysql-recordset.c:682
+#: ../providers/mysql/gda-mysql-recordset.c:683
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr "Typ %s ist nicht zugeordnet für Wert %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:728
+#: ../providers/mysql/gda-mysql-recordset.c:729
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Typ %s ist nicht zugeordnet für Wert %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:749
+#: ../providers/mysql/gda-mysql-recordset.c:745
+#: ../providers/mysql/gda-mysql-recordset.c:759
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "Typ %s ist nicht zugeordnet für Wert %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:839
+#: ../providers/mysql/gda-mysql-recordset.c:847
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Typ %s ist nicht zugeordnet für Wert %s"
@@ -6349,14 +6361,14 @@ msgstr ""
 #: ../tools/browser/browser-connection.c:1335
 #: ../tools/browser/browser-favorites.c:523
 #: ../tools/browser/browser-favorites.c:529
-#: ../tools/browser/browser-favorites.c:957
-#: ../tools/browser/browser-favorites.c:964
+#: ../tools/browser/browser-favorites.c:958
+#: ../tools/browser/browser-favorites.c:965
 msgid "Can't initialize transaction to access favorites"
 msgstr "Vorgang zum Zugriff auf Favoriten konnte nicht initialisiert werden"
 
 #: ../tools/browser/browser-connection.c:1280
 #: ../tools/browser/browser-favorites.c:702
-#: ../tools/browser/browser-favorites.c:1015
+#: ../tools/browser/browser-favorites.c:1016
 msgid "Can't commit transaction to access favorites"
 msgstr "Vorgang zum Zugriff auf Favoriten konnte nicht angewendet werden"
 
