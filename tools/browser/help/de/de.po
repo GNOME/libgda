@@ -1,0 +1,1224 @@
+# German translation for the gda-browser manual.
+# Copyright (C) 2010 libgda's COPYRIGHT HOLDER
+# Mario Blättermann <mariobl@gnome.org>, 2010.
+# Christian Kirbach <Christian.Kirbach@googlemail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda master\n"
+"POT-Creation-Date: 2010-05-21 18:13+0000\n"
+"PO-Revision-Date: 2010-05-22 19:09+0100\n"
+"Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
+"Language-Team: Deutsch <gnome-de@gnome.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+
+#: C/legal.xml:3(p)
+msgid ""
+"This work is licensed under a <link href=\"http://creativecommons.org/"
+"licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 Unported "
+"License</link>."
+msgstr ""
+"Diese Arbeit ist lizenziert unter einer <link href=\"http://creativecommons."
+"org/licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 "
+"Unported License</link>."
+
+#: C/legal.xml:6(p)
+msgid ""
+"As a special exception, the copyright holders give you permission to copy, "
+"modify, and distribute the example code contained in this document under the "
+"terms of your choosing, without restriction."
+msgstr ""
+"Als besondere Ausnahme erteilen Ihnen die Urheberrechtsinhaber die "
+"Genehmigung, den in diesem Dokument enthaltenen Beispielcode ohne "
+"Einschränkung unter den Bedingungen Ihrer Wahl zu verbreiten."
+
+#: C/variables.page:5(title) C/transactions.page:5(title)
+#: C/schema-browser-perspective.page:5(title)
+#: C/query-execution-perspective.page:5(title) C/general-ui.page:5(title)
+#: C/features.page:5(title) C/diagram.page:5(title)
+#: C/data-manager-xml-syntax.page:5(title)
+#: C/data-manager-perspective.page:5(title)
+msgid "1"
+msgstr "1"
+
+#: C/variables.page:9(title)
+msgid "Variables in SQL code"
+msgstr "Variablen im SQL-Code"
+
+# CHECK
+#: C/variables.page:10(p)
+msgid ""
+"Variables (sometimes refered to as <em>placeholders</em>) are places in SQL "
+"code which are replaced by actual values when the SQL code is executed. The "
+"benefits are faster execution times (as the SQL code is parsed only once) and "
+"a protection against SQL injection vulnerabilities."
+msgstr ""
+"Variablen (gelegentlich als <em>Platzhalter</em> bezeichnet) sind Stellen im "
+"SQL-Code, welche durch aktuelle Werte ersetzt werden, wenn der SQL-Code "
+"ausgeführt wird. Vorteile sind schnellere Ausführungszeiten, weil der SQL-"
+"Code nur einmal verarbeitet werden muss, und ein Schutz gegen SQL-"
+"Einbruchsverwundbarkeit."
+
+#: C/variables.page:16(p)
+msgid ""
+"Variables can be used in any SQL code, and are defined using the following "
+"syntax:"
+msgstr ""
+"Variablen sind in jeglichem SQL-Code verwendbar und werden durch folgende "
+"Syntax definiert:"
+
+#: C/variables.page:21(p)
+msgid "Notes:"
+msgstr "Hinweise:"
+
+#: C/variables.page:25(p)
+msgid ""
+"the <em>variable name</em> can contain any SQL identifier character or among "
+"the <code>+-.|@?</code>characters (no space allowed)"
+msgstr ""
+"Der <em>Variablenname</em> darf beliebige SQL-Bezeichner und zusätzlich die "
+"Zeichen <code>+-.|@?</code> enthalten, wobei Leerzeichen nicht zulässig sind."
+
+#: C/variables.page:27(p)
+msgid ""
+"the <em>variable type</em> can be among: <code>string</code>, <code>boolean</"
+"code>, <code>int</code>, <code>date</code>, <code>time</code>, "
+"<code>timestamp</code>, <code>guint</code>, <code>blob</code> and "
+"<code>binary</code>"
+msgstr ""
+"Der <em>Variablentyp</em> darf sein: <code>string</code>, <code>boolean</"
+"code>, <code>int</code>, <code>date</code>, <code>time</code>, "
+"<code>timestamp</code>, <code>guint</code>, <code>blob</code> and "
+"<code>binary</code>"
+
+#: C/variables.page:30(p)
+msgid ""
+"the <code>::NULL</code> can be appended to specify that the variable may take "
+"the special <code>NULL</code> value."
+msgstr ""
+"<code>::NULL</code> kann angehängt werden, um festzulegen, dass die Variable "
+"den speziellen Wert <code>NULL</code> annehmen kann."
+
+#: C/variables.page:33(p)
+msgid "Examples:"
+msgstr "Beispiele:"
+
+#: C/variables.page:36(code)
+#, no-wrap
+msgid ""
+"\n"
+"##name::string\n"
+"##id::int::NULL\n"
+"##sales@3::date::NULL\n"
+"##customers@id::int"
+msgstr ""
+"\n"
+"##name::string\n"
+"##id::int::NULL\n"
+"##sales@3::date::NULL\n"
+"##customers@id::int"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/transactions.page:14(None)
+msgid "@@image: 'figures/trans-begin.png'; md5=0382a22aeb54be0d7fe0ffa29dddf423"
+msgstr "translated"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/transactions.page:16(None)
+msgid ""
+"@@image: 'figures/trans-commit.png'; md5=27f45d32501cc05bd6f6b16263283e9a"
+msgstr "translated"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/transactions.page:18(None)
+msgid ""
+"@@image: 'figures/trans-rollback.png'; md5=470522738b1d6bf91b9787baac1c0191"
+msgstr "translated"
+
+#: C/transactions.page:9(title)
+msgid "Transactions"
+msgstr "Transaktionen"
+
+#: C/transactions.page:10(p)
+msgid ""
+"Transactions can be started, committed or rolled back on a per connection "
+"basis:"
+msgstr ""
+"Transaktionen können verbindungsbezogen gestartet, eingespielt oder "
+"zurückgenommen werden:"
+
+#: C/transactions.page:14(p)
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin.png"
+"\"/> toolbar button to start a transaction"
+msgstr ""
+"Verwenden Sie den <media type=\"image\" mime=\"image/png\" src=\"figures/"
+"trans-begin.png\"/>-Werkzeugleistenknopf zum Starten einer Transaktion"
+
+#: C/transactions.page:16(p)
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit."
+"png\"/> toolbar button to commit the current transaction (apply all the "
+"changes)"
+msgstr ""
+"Verwenden Sie den <media type=\"image\" mime=\"image/png\" src=\"figures/"
+"trans-commit.png\"/>-Werkzeugleistenknopf zum Einspielen der aktuellen "
+"Transaktion (Anwenden aller Änderungen)"
+
+#: C/transactions.page:18(p)
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-rollback."
+"png\"/> toolbar button to abort the current transaction (forget all the "
+"changes)"
+msgstr ""
+"Verwenden Sie den <media type=\"image\" mime=\"image/png\" src=\"figures/"
+"trans-rollback.png\"/>-Werkzeugleistenknopf zum Abbrechen der aktuellen "
+"Transaktion (Verwerfen aller Änderungen)"
+
+#: C/transactions.page:22(p)
+msgid ""
+"A transaction may be started automatically when executing a SELECT statement "
+"which involves binary objects (BLOBs), and the transaction may be locked "
+"while the resulting data set is kept in memory (to get rid of a data set in a "
+"<link xref=\"query-execution-perspective\">query execution perspective</"
+"link>, clear the history item relating to the data set)."
+msgstr ""
+"Eine Transaktion kann automatisch durch Ausführen einer SELECT-Anweisung "
+"gestartet werden, wobei binäre Objekte beteiligt sind (BLOBs). Die "
+"Transaktion kann dabei gesperrt werden und der Ergebnisdatensatz wird im "
+"Speicher vorgehalten. Um Daten in einer <link xref=\"query-execution-"
+"perspective\">Abfrageausführungs-Perspektive</link> zu löschen, leeren Sie "
+"den zum Datensatz gehörenden Chronikeintrag."
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/schema-browser-perspective.page:21(None) C/general-ui.page:18(None)
+msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
+msgstr ""
+
+#: C/schema-browser-perspective.page:8(title)
+msgid "The schema browser perspective"
+msgstr "Die Perspektive des Schema-Browsers"
+
+#: C/schema-browser-perspective.page:9(p)
+msgid ""
+"Use the schema browser perspective to understand the database's organisation "
+"(schema). To switch to this perspective, use the <guiseq><gui>Perspective</"
+"gui><gui>Schema browser</gui></guiseq> menu, or the <keyseq><key>Ctrl</"
+"key><key>B</key></keyseq> shortcut."
+msgstr ""
+"Mit Hilfe der Perspektive des Schema-Browsers können Sie die Organisation "
+"(das Schema) der Datenbank besser verstehen. Um in diese Perspektive zu "
+"wechseln, verwenden Sie das Menü <guiseq><gui>Perspektive</gui><gui>Schema-"
+"Browser</gui></guiseq> oder die Tastenkombination <keyseq><key>Strg</"
+"key><key>B</key></keyseq>."
+
+#: C/schema-browser-perspective.page:14(p)
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorites, and the right pane being the action area."
+msgstr ""
+"Die Perspektive ist horizontal in zwei Bereiche unterteilt: der linke Bereich "
+"für die benutzerdefinierten Favoriten und der rechte Bereich als Bedienfläche."
+
+#: C/schema-browser-perspective.page:19(title)
+msgid "Schema browser perspective's default view"
+msgstr "Standardansicht der Schema-Browser-Perspektive"
+
+#: C/schema-browser-perspective.page:20(desc)
+msgid "The default Schema browser perspective"
+msgstr "Die voreingestellte Schema-Browser-Perspektive"
+
+#: C/schema-browser-perspective.page:24(p)
+msgid ""
+"The left part of the perspective lists the favorite database objects or "
+"diagrams. Double clicking on a favorite opens its properties in the right "
+"pane."
+msgstr ""
+"Der linke Bereich der Perspektive listet die bevorzugten Objekte oder "
+"Diagramme der Datenbank auf. Durch Doppelklick auf einen der Favoriten werden "
+"dessen Eigenschaften im rechten Bereich geöffnet."
+
+#: C/schema-browser-perspective.page:29(p)
+msgid "The right pane is composed of several types of tabs:"
+msgstr "Die rechte Leiste besteht aus verschiedenen Reitertypen:"
+
+#: C/schema-browser-perspective.page:33(p)
+msgid ""
+"a tab listing all the database's tables and views, in a <em>cloud</em> view "
+"where the tables with the more relations to other tables being displayed in a "
+"larger font; this tab is always present"
+msgstr ""
+"Einem Reiter, der alle Tabellen und Ansichten der Datenbank in einer "
+"<em>Wolke</em> auflistet, wobei die Tabellen abhängig von der Anzahl der "
+"Bezüge zu anderen Tabellen in entsprechend großer Schrift angezeigt werden. "
+"Dieser Reiter ist immer sichtbar."
+
+#: C/schema-browser-perspective.page:36(p)
+msgid ""
+"zero or more tabs representing a table or views' properties: the list of "
+"columns, the list of constraints (primary or foreign keys, and unique "
+"constraints), a <link xref=\"diagram\">diagram</link> showing the related "
+"tables, and an area to define display preferences for each column's data"
+msgstr ""
+"Null oder mehr Reitern, die die Eigenschaften einer Tabelle oder Ansicht "
+"darstellen: Die Liste der Spalten, die Liste der Beschränkungen (Primär- oder "
+"Fremdschlüssel), ein <link xref=\"diagram\">Diagramm</link>, welches die "
+"Bezugstabellen anzeigt und einen Bereich zum Festlegen von Einstellungen für "
+"die Daten jeder Spalte"
+
+#: C/schema-browser-perspective.page:39(p)
+msgid ""
+"zero or more <link xref=\"diagram\">diagrams</link> in which any number of "
+"tables can be represented, where they are linked using their relations (as "
+"foreign key constraints)"
+msgstr ""
+"Null oder mehr <link xref=\"diagram\">Diagrammen</link>, in welchen eine "
+"beliebige Anzahl von Tabellen dargestellt werden kann, wobei diese anhand "
+"ihrer Beziehungen verknüpft sind (als Fremdschlüsselbeschränkungen)"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/query-execution-perspective.page:21(None)
+msgid ""
+"@@image: 'figures/query-exec-persp.png'; md5=14f701b0619a497da6c7902facad9f42"
+msgstr ""
+
+#: C/query-execution-perspective.page:8(title)
+msgid "The query execution perspective"
+msgstr "Die Abfrageausführungs-Perspektive"
+
+#: C/query-execution-perspective.page:9(p)
+msgid ""
+"Use the query perspective to execute SQL statements. To switch to this "
+"perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)"
+"</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> "
+"shortcut."
+msgstr ""
+"Verwenden Sie die Abfrageperspektive zur Ausführung von SQL-Anweisungen. Um "
+"in diese Perspektive zu wechseln, verwenden Sie das Menü "
+"<guiseq><gui>Perspektive</gui><gui>Abfrageausführung (SQL)</gui></guiseq> "
+"oder die Tastenkombination <keyseq><key>Strg</key><key>S</key></keyseq>."
+
+#: C/query-execution-perspective.page:14(p)
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorite statements, and the right pane being the action area."
+msgstr ""
+"Die Perspektive ist horizontal in zwei Bereiche unterteilt: der linke Bereich "
+"für benutzerdefinierte bevorzugte Anweisungen und der rechte Bereich als "
+"Bedienfläche."
+
+#: C/query-execution-perspective.page:19(title)
+msgid "Query exec perspective"
+msgstr "Abfrageausführungs-Perspektive"
+
+#: C/query-execution-perspective.page:20(desc)
+msgid "The query exec perspective with one SELECT statement executed"
+msgstr ""
+"Die Abfrageausführungs-Perspektive mit einer ausgeführten SELECT-Anweisung"
+
+#: C/query-execution-perspective.page:24(p)
+msgid ""
+"The left part of the perspective lists the favorite statements which have "
+"been user defined. Activating a favorite (double clicking) resets the SQL "
+"text area's contents to the selected statement's SQL."
+msgstr ""
+"Der linke Teil der Perspektive listet die bevorzugten Anweisungen auf, die "
+"durch den Benutzer definiert wurden. Die Aktivierung eines dieser Favoriten "
+"durch Doppelklick setzt den Inhalt des SQL-Textbereichs auf die SQL der "
+"aktuellen Anweisung."
+
+#: C/query-execution-perspective.page:29(p)
+msgid ""
+"The right pane is composed of zero or more tabs where the SQL is entered and "
+"executed. In each tab there is:"
+msgstr ""
+"Die rechte Leiste wird aus null oder mehr Reitern gebildet, in denen der SQL-"
+"Code eingegeben und ausgeführt wird. In jedem der Reiter gibt es:"
+
+#: C/query-execution-perspective.page:34(p)
+msgid "an SQL area in the top left part"
+msgstr "Einen SQL-Bereich links oben"
+
+#: C/query-execution-perspective.page:35(p)
+msgid "command buttons in the top right part"
+msgstr "Befehlsknöpfe im oberen rechten Bereich"
+
+#: C/query-execution-perspective.page:36(p)
+msgid "execution history in the lower left part"
+msgstr "Die Ausführungschronik im linken unteren Bereich"
+
+#: C/query-execution-perspective.page:37(p)
+msgid "execution results in the lower right part"
+msgstr "Die Ausführungsergebnisse im rechten unteren Bereich"
+
+#: C/query-execution-perspective.page:41(title)
+msgid "SQL area"
+msgstr "SQL-Bereich"
+
+#: C/query-execution-perspective.page:42(p)
+msgid ""
+"The SQL area is an SQL editor. The SQL can be any SQL understood by the "
+"database, with the exception of <link xref=\"variables-syntax\">variables</"
+"link> (which must have a specific syntax)."
+msgstr ""
+"Der SQL-Bereich ist ein SQL-Editor. Dabei ist jeder von der Datenbank "
+"akzeptierte SQL-Code möglich, mit Ausnahme von <link xref=\"variables-syntax"
+"\">Variablen</link>, für die eine spezielle Syntax erforderlich ist."
+
+#: C/query-execution-perspective.page:46(p)
+msgid "The keyboard shortcuts in the SQL editor are:"
+msgstr "Folgende Tastenkombinationen stehen im SQL-Editor zur Verfügung:"
+
+#: C/query-execution-perspective.page:50(p)
+msgid ""
+"<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
+msgstr ""
+"<keyseq><key>Strg</key><key>Leertaste</key></keyseq> zum Aufruf einer "
+"Vervollständigungsliste"
+
+#: C/query-execution-perspective.page:51(p)
+msgid "<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code"
+msgstr ""
+"<keyseq><key>Strg</key><key>Eingabetaste</key></keyseq> zum Ausführen des SQL-"
+"Codes"
+
+#: C/query-execution-perspective.page:52(p)
+msgid "<keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor"
+msgstr "<keyseq><key>Strg</key><key>l</key></keyseq> zum Leeren des Editors"
+
+#: C/query-execution-perspective.page:53(p)
+msgid ""
+"<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</"
+"key><key>Down</key></keyseq> to navigate through the editor's history"
+msgstr ""
+"<keyseq><key>Strg</key><key>Pfeiltaste hoch</key></keyseq> und "
+"<keyseq><key>Strg</key><key>Pfeiltaste runter</key></keyseq> zum Navigieren "
+"durch die Chronik des Editors"
+
+#: C/query-execution-perspective.page:59(title)
+msgid "Command buttons"
+msgstr "Befehlsknöpfe"
+
+#: C/query-execution-perspective.page:60(p)
+#: C/data-manager-perspective.page:63(p)
+msgid "The commands available through the command buttons are:"
+msgstr "Folgende Befehle sind über die Befehlsknöpfe erreichbar:"
+
+#: C/query-execution-perspective.page:64(p)
+msgid ""
+"<gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</"
+"key><key>l</key></keyseq> shortcut)"
+msgstr ""
+"<gui>Leeren</gui>: leert den Editor (ähnlich der Tastenkombination "
+"<keyseq><key>Strg</key><key>l</key></keyseq>)"
+
+#: C/query-execution-perspective.page:65(p)
+msgid ""
+"<gui>Variables</gui>: shows or hides the <link xref=\"variables-syntax"
+"\">variables</link> panel where you can give values to the variables present "
+"in the SQL code. The panel is automatically shown when a variable is detected "
+"in the SQL code"
+msgstr ""
+"<gui>Variablen</gui>: zeigt oder verbirgt den <link xref=\"variables-syntax"
+"\">Variablen</link>-Bereich, wo Sie den im SQL-Code enthaltenen Variablen "
+"Werte geben können. Der Bereich wird automatisch angezeigt, wenn die Variable "
+"im SQL-Code erkannt wird."
+
+#: C/query-execution-perspective.page:68(p)
+msgid ""
+"<gui>Execute</gui>: executes the SQL code. If the SQL code contains some "
+"variables which have not been set, then a popup first appears requesting the "
+"variables to be given values. This is similar to the <keyseq><key>Ctrl</"
+"key><key>ENTER</key></keyseq> shortcut"
+msgstr ""
+"<gui>Ausführen</gui>: führt den SQL-Code aus. Falls der SQL-Code einige nicht "
+"gesetzte Variablen enthält, erscheint zuerst ein Dialog, in dem Sie um die "
+"Eingabe der passenden Werte für die Variablen gebeten werden. Dies ist "
+"ähnlich zur Tastenkombination <keyseq><key>Strg</key><key>Eingabetaste</key></"
+"keyseq>."
+
+# CHECK: Soll das wirklich der Texteinzug sein...?
+#: C/query-execution-perspective.page:71(p)
+msgid ""
+"<gui>Indent</gui>: re-indents the SQL code (warning: this removes any "
+"comments)"
+msgstr ""
+"<gui>Einzug</gui>: Zieht den SQL-Code neu ein (Achtung: dadurch werden "
+"jegliche Kommentare entfernt)"
+
+#: C/query-execution-perspective.page:72(p)
+msgid "<gui>Favorites</gui>: adds the current SQL code to the favorites"
+msgstr ""
+"<gui>Favoriten</gui>: fügt den aktuellen SQL-Code zu den Favoriten hinzu"
+
+#: C/query-execution-perspective.page:77(title)
+msgid "Execution history"
+msgstr "Ausführungschronik"
+
+#: C/query-execution-perspective.page:78(p)
+msgid ""
+"The execution history part contains a list of the past executed statements, "
+"ordered by execution date along with an indication when the statement was "
+"executed (11 minutes in the figure above). Selecting an history item displays "
+"the corresponding result in the execution results part."
+msgstr ""
+"Die Ausführungschronik enthält eine Liste der bereits ausgeführten "
+"Anweisungen, geordnet nach Ausführungsdatum, mit einem Hinweis, wann die "
+"Anweisung ausgeführt wurde (11 Minuten im Bild oben). Durch die Auswahl eines "
+"Chronikeintrags wird das zugehörige Ergebnis in den Ausführungsergebnissen "
+"angezeigt."
+
+#: C/query-execution-perspective.page:83(p)
+msgid ""
+"The <gui>Copy</gui> button copies the currently selected history item's SQL "
+"code to the SQL editor, and the <gui>Clear</gui> button removes all the "
+"history items."
+msgstr ""
+"Der Knopf <gui>Kopieren</gui> kopiert den SQL-Code des aktuell ausgewählten "
+"Chronikeintrags in den SQL-Editor. Der Knopf <gui>Leeren</gui> löscht alle "
+"Chronikeinträge."
+
+# CHECK
+#: C/query-execution-perspective.page:87(p)
+msgid ""
+"Note that any given history item can also be removed individually using the "
+"<key>Suppr</key> key."
+msgstr ""
+"Beachten Sie, dass jeder angegebene Chronikeintrag auch einzeln mit Hilfe der "
+"<key>Entf</key>-Taste entfernt werden kann."
+
+#: C/query-execution-perspective.page:93(title)
+msgid "Execution results"
+msgstr "Ergebnisse der Ausführung"
+
+#: C/query-execution-perspective.page:94(p)
+msgid ""
+"The Execution results part displays the execution result of the currently "
+"selected execution history item, as a table for SELECT statement, giving "
+"information for other types of statement, or giving the execution error "
+"notice if the execution failed."
+msgstr ""
+"Der Bildbereich der Ausführungsergebnisse zeigt die Ergebnisse des aktuell "
+"ausgewählten Eintrags der Ausführungschronik als eine Tabelle mit SELECT-"
+"Anweisungen an, mit angegebenen Informationen anderer Anweisungstypen oder "
+"die Fehlermeldung der Ausführung, falls diese fehlgeschlagen ist."
+
+#: C/index.page:6(name)
+msgid "Vivien Malerba"
+msgstr "Vivien Malerba"
+
+#: C/index.page:7(email)
+msgid "malerba@gnome-db.org"
+msgstr "malerba@gnome-db.org"
+
+#: C/index.page:11(title)
+msgid "Gda Browser Help"
+msgstr "Hilfe zum Gda-Browser"
+
+#: C/index.page:12(p)
+msgid ""
+"<app>gda-browser</app> is a tool for database administrators: they can "
+"analyse database's schemas to understand how data is organized, run SQL "
+"commands interactively, and in a broader way manage the data contained in the "
+"databases."
+msgstr ""
+"<app>gda-browser</app> ist ein Werkzeug für Datenbankadministratoren. Sie "
+"können Datenbankschemata analysieren, um zu verstehen, wie Daten organisiert "
+"sind, SQL-Anweisungen interaktiv ausführen und auf vielfältige Weise die in "
+"den Datenbanken enthaltenen Daten verwalten."
+
+#: C/index.page:16(p)
+msgid ""
+"Several connections to databases can be opened at once, allowing the user to "
+"work on multiple databases at once (it is also possible to execute commands "
+"on several connections at the same time)."
+msgstr ""
+"Mehrere Verbindungen zu Datenbanken können auf einmal geöffnet werden, "
+"wodurch dem Benutzer die Arbeit mit mehreren Datenbanken gleichzeitig "
+"ermöglicht wird. Es ist ebenfalls möglich, Befehle auf verschiedenen "
+"Datenbanken gleichzeitig auszuführen."
+
+#: C/index.page:19(p)
+msgid ""
+"As <app>gda-browser</app> uses the <app>libgda</app> library, it can open "
+"connections to databases for which a database driver (provider) exists in "
+"<app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link "
+"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
+"postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
+"\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
+"projects/mdbtools/\">MDBTools</link> library) and <link href=\"http://java."
+"sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at "
+"the moment)."
+msgstr ""
+"Da <app>gda-browser</app> die <app>libgda</app>-Bibliothek verwendet, können "
+"Verbindungen zu Datenbanken, für die in <app>libgda</app> ein Treiber "
+"vorhanden ist, geöffnet werden. Derzeit werden <link href=\"http://www.oracle."
+"com\">Oracle</link>, <link href=\"http://www.mysql.org\">MySQL</link>, <link "
+"href=\"http://www.postgresql.org/\">PostgreSQL</link>, <link href=\"http://"
+"www.sqlite.org\">SQLite</link>, MS Access (über die <link href=\"http://"
+"sourceforge.net/projects/mdbtools/\">MDBTools</link>-Bibliothek) und <link "
+"href=\"http://java.sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> "
+"unterstützt."
+
+#: C/index.page:28(title)
+msgid "Presentation"
+msgstr "Präsentation"
+
+#: C/index.page:31(title)
+msgid "Perspectives"
+msgstr "Perspektiven"
+
+#: C/index.page:35(title)
+msgid "Connections management"
+msgstr "Verbindungsverwaltung"
+
+#: C/general-ui.page:8(title)
+msgid "General interface organization"
+msgstr "Allgemeiner Aufbau der Benutzeroberfläche"
+
+#: C/general-ui.page:9(p)
+msgid ""
+"The <app>gda-browser</app> is composed of one or more top level windows, each "
+"window relating to a single connection (which name is in its title). For any "
+"given connection, several windows can be opened (use the <guiseq><gui>Window</"
+"gui><gui>New window</gui></guiseq> menu or the <keyseq><key>Ctrl</key><key>N</"
+"key></keyseq> shortcut)."
+msgstr ""
+"Der <app>gda-browser</app> wird aus einem oder mehreren Anwendungsfenstern "
+"der obersten Ebene gebildet, wobei jedes Fenster eine einzelne Verbindung "
+"darstellt. Deren Name wird im Fenstertitel angezeigt. Für jede dieser "
+"Verbindungen können verschiedene Fenster geöffnet werden. Verwenden Sie "
+"hierzu das Menü <guiseq><gui>Fenster</gui><gui>Neues Fenster</gui></guiseq> "
+"oder die Tastenkombination <keyseq><key>Strg</key><key>N</key></keyseq>."
+
+#: C/general-ui.page:16(title)
+msgid "A connection window"
+msgstr "Ein Verbindungsfenster"
+
+#: C/general-ui.page:17(desc)
+msgid ""
+"Window opened for the 'c1' connection (and the Schema browser perspective)"
+msgstr ""
+"Für die Verbindung »c1« geöffnetes Fenster (und die Schema-Browser-Perspektive)"
+
+#: C/general-ui.page:21(p)
+msgid ""
+"Within each window, several <em>perspectives</em> are available which are "
+"adapted to different activities:"
+msgstr ""
+"In jedem Fenster sind einige <em>Perspektiven</em> verfügbar, die "
+"unterschiedlichen Aktivitäten zugeordnet sind:"
+
+#: C/general-ui.page:26(p)
+msgid ""
+"the <link xref=\"schema-browser-perspective\">Schema browser perspective</"
+"link> to help understand the database's layout"
+msgstr ""
+"Die <link xref=\"schema-browser-perspective\">Schema-Browser-Perspektive</"
+"link>, welche das Verstehen des Datenbankaufbaus erleichtern soll"
+
+#: C/general-ui.page:27(p)
+msgid ""
+"the <link xref=\"query-execution-perspective\">Query execution perspective</"
+"link> to execute any SQL command"
+msgstr ""
+"Die <link xref=\"query-execution-perspective\">Abfrageausführungs-"
+"Perspektive</link> zum Ausführen eines SQL-Befehls"
+
+#: C/general-ui.page:28(p)
+msgid ""
+"the <link xref=\"data-manager-perspective\">Data manager perspective</link> "
+"to navigate through the database's contents"
+msgstr ""
+"Die <link xref=\"data-manager-perspective\">Datenmanager-Perspektive</link> "
+"zum Navigieren durch den Inhalt der Datenbank"
+
+#: C/general-ui.page:30(p)
+msgid ""
+"The currently displayed perspective can be changed individually for each "
+"window, and, as all perspectives have an action area composed of tabs, tabs "
+"can be moved from one window to the other if the source and destination "
+"window are for the same connection, and display the same perspective (simply "
+"drag and drop a tab from one window to the other using the tab's label as a "
+"handle)."
+msgstr ""
+"Die aktuell angezeigte Perspektive kann individuell für jedes Fenster "
+"angepasst werden. Alle Fenster haben ein aus Reitern gebildeten "
+"Aktionsbereich, dessen Reiter von einem in ein anderes Fenster verschoben "
+"werden können, sofern Ausgangs- und Zielfenster zur gleichen "
+"Datenbankverbindung gehören und auch die gleiche Perspektive anzeigen. Ziehen "
+"Sie dazu einfach mit der Maus einen Reiter in ein anderes Fenster, indem Sie "
+"die Reiterbeschriftung als Anfasser benutzen."
+
+#: C/features.page:8(title)
+msgid "Features"
+msgstr "Funktionsmerkmale"
+
+#: C/features.page:9(p)
+msgid "<app>gda-browser</app>'s current features are:"
+msgstr "Die gegenwärtigen Funktionsmerkmale von <app>gda-browser</app> sind:"
+
+#: C/features.page:13(p)
+msgid "multiple simultaneous connections can be opened at once"
+msgstr "Mehrere Verbindungen können gleichzeitig geöffnet werden."
+
+#: C/features.page:14(p)
+msgid ""
+"multi threaded: each connection is handled in it own thread, meaning that no "
+"single connection can lock the application"
+msgstr ""
+"Unabhängigkeit: Jede Verbindung wird als eigener Thread geführt, was "
+"bedeutet, dass eine bestimmte Verbindung die Anwendung nicht blockieren kann."
+
+#: C/features.page:16(p)
+msgid "several windows can be opened for a single connection"
+msgstr "Mehrere Fenster können für eine einzelne Verbindung geöffnet sein."
+
+#: C/features.page:17(p)
+msgid "full screen mode accessible to maximize the screen space usage"
+msgstr ""
+"Ein Vollbildmodus ist zur vollständigen Nutzung des verfügbaren Platzes auf "
+"dem Bildschirm verfügbar."
+
+#: C/features.page:18(p)
+msgid ""
+"extensibility: the general framework is opened enough to add new integrated "
+"features"
+msgstr ""
+"Erweiterbarkeit: Das allgemeine Grundgerüst ist offen zum Hinzufügen neuer "
+"Funktionsmerkmale"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/diagram.page:15(None)
+msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
+msgstr ""
+
+#: C/diagram.page:7(title)
+msgid "Diagrams"
+msgstr "Diagramme"
+
+# Blödsinnige Beschreibung!
+#: C/diagram.page:8(p)
+msgid ""
+"Diagrams are present throughout the <app>gda-browser</app>, and are made of a "
+"canvas on which graphical items are displayed (like tables for example)."
+msgstr ""
+"Diagramme werden über den <app>gda-browser</app> dargestellt. Sie bestehen "
+"aus einer Darstellungsfläche, auf der grafische Elemente angezeigt werden, "
+"wie beispielsweise Tabellen."
+
+#: C/diagram.page:13(title)
+msgid "Diagram"
+msgstr "Diagramm"
+
+#: C/diagram.page:14(desc)
+msgid "Diagram showing some tables and their relations"
+msgstr "In einem Diagramm angezeigte Tabellen und deren Beziehungen"
+
+#: C/diagram.page:17(p)
+msgid ""
+"The items can be moved around on the canvas (note that as long as the whole "
+"diagram fits in the canvas, it remains centered on it). Other manipulations "
+"are possible:"
+msgstr ""
+"Die Objekte können innerhalb der Darstellungsfläche bewegt werden. Beachten "
+"Sie hierbei, dass das Diagramm auf der Fläche zentriert wird, solange es "
+"vollständig hineinpasst. Weitere Anpassungen sind möglich:"
+
+#: C/diagram.page:22(p)
+msgid ""
+"zooming in and out using the mouse's wheel, or through the contextual menu "
+"(right click on the canvas); a zoom to fit the canvas is also available in "
+"the contextual menu"
+msgstr ""
+"Ändern des Vergrößerungsmaßstabes mit Hilfe des Mausrades oder über das "
+"Kontextmenü, welches Sie mit einem Klick mit der rechten Maustaste auf die "
+"Darstellungsfläche erreichen. Ein vordefinierter Vergrößerungsmaßstab zum "
+"korrekten Einpassen des Diagramms in die Darstellungsfläche ist ebenfalls im "
+"Kontextmenü vorhanden."
+
+#: C/diagram.page:24(p)
+msgid ""
+"bring closer or moving away items from one another using the mouse's wheel "
+"while holding the <key>Shift</key> key"
+msgstr ""
+"Ändern der Abstände der einzelnen Objekte zueinander mit Hilfe des Mausrades, "
+"wobei die <key>Umschalttaste</key> gedrückt gehalten wird"
+
+#: C/diagram.page:26(p)
+msgid "arranging items linearly or radially, through the contextual menu"
+msgstr "Lineare oder radiale Anordnung von Objekten mit Hilfe des Kontextmenüs"
+
+#: C/diagram.page:27(p)
+msgid "printing, through the contextual menu"
+msgstr "Drucken mit Hilfe des Kontextmenüs"
+
+#: C/diagram.page:28(p)
+msgid "exporting as PNG or SVG images, through the contextual menu"
+msgstr "Exportieren als PNG-Bild oder SVG-Grafik mit Hilfe des Kontextmenüs"
+
+#: C/diagram.page:29(p)
+msgid "adding items, through the contextual menu"
+msgstr "Hinzufügen von Objekten mit Hilfe des Kontextmenüs"
+
+#: C/diagram.page:30(p)
+msgid "removing items, through the items's contextual menu"
+msgstr ""
+"Entfernen von Objekten mit Hilfe des Kontextmenüs des jeweiligen Objekts"
+
+#: C/data-manager-xml-syntax.page:7(title)
+msgid "The data manager's XML syntax"
+msgstr "Die XML-Syntax des Datenmanagers"
+
+#: C/data-manager-xml-syntax.page:8(p)
+msgid ""
+"The XML tree's root node must be a <code>&lt;data&gt;</code>, which is "
+"allowed to contain one or more data source definitions. Each data source is "
+"defined by <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> nodes, "
+"both accepting the following optional attributes:"
+msgstr ""
+"Der Wurzelknoten des XML-Baums muss <code>&lt;data&gt;</code>, wobei hier "
+"noch eine oder mehrere Datenquellendefinitionen enthalten sein können. Jede "
+"Datenquelle wird durch <code>&lt;query&gt;</code>- oder <code>&lt;table&gt;</"
+"code>-Knoten angegeben, gefolgt von diesen optionalen Attributen:"
+
+#: C/data-manager-xml-syntax.page:15(p)
+msgid ""
+"\"id\" to specify a data source string ID, used when linking data sources one "
+"to another;"
+msgstr ""
+"»id« zum Angeben einer Kennung in Form einer Datenquellen-Zeichenkette. Dies "
+"wird benutzt, wenn Datenquellen miteinander verknüpft werden sollen."
+
+#: C/data-manager-xml-syntax.page:16(p)
+msgid "\"title\" to specify a title."
+msgstr "»title« zum Angeben eines Titels."
+
+#: C/data-manager-xml-syntax.page:18(p)
+msgid ""
+"It is of course possible to use both the <code>&lt;query&gt;</code> or "
+"<code>&lt;table&gt;</code> tags in the same data sources specifications."
+msgstr ""
+"Es ist natürlich möglich, sowohl die <code>&lt;query&gt;</code>- als auch die "
+"<code>&lt;table&gt;</code> in den gleichen Datenquellenspezifikationen zu "
+"verwenden."
+
+#: C/data-manager-xml-syntax.page:24(title)
+#: C/data-manager-xml-syntax.page:73(title)
+#: C/data-manager-xml-syntax.page:132(title)
+msgid "Exported variables"
+msgstr "Exportierte Variablen"
+
+#: C/data-manager-xml-syntax.page:25(p)
+msgid ""
+"Each data source exports some variables which can be reused by other data "
+"sources to introduce a dependency. When the data sources are executed, the "
+"contents of these exported variables are reset depending on the row actually "
+"selected in the resulting tabular view. If no row is selected then the "
+"variable is unset."
+msgstr ""
+"Jede Datenquelle exportiert einige Variablen, welche von anderen Datenquellen "
+"wiederverwendet werden können, um eine Abhängigkeit zu erzeugen. Wenn die "
+"Datenquellen ausgeführt werden, wird der Inhalt der exportierten Variablen "
+"abhängig von der aktuell ausgewählten Zeile in der sich ergebenden "
+"Tabellenansicht zurückgesetzt. Falls keine Zeile ausgewählt ist, dann wird "
+"die Variable nicht gesetzt."
+
+#: C/data-manager-xml-syntax.page:31(p)
+msgid ""
+"Any data source depending on a variable is executed again when the variable "
+"changes, and in case the variable is unset, the data source's execution "
+"result is an empty data set."
+msgstr ""
+"Jede von einer Variable abhängige Datenquelle wird erneut ausgeführt, wenn "
+"sich die betreffende Variable ändert. Im Falle einer nicht gesetzten Variable "
+"ergibt die Ausführung der Datenquelle einen leeren Datensatz."
+
+#: C/data-manager-xml-syntax.page:37(title)
+msgid "The <code>&lt;query&gt;</code> tag"
+msgstr "Die <code>&lt;query&gt;</code>-Markierung"
+
+#: C/data-manager-xml-syntax.page:38(p)
+msgid ""
+"Use the <code>&lt;query&gt;</code> tag to specify an SQL SELECT statement, as "
+"the contents of the tag. Linkage to other data sources can be achieved using "
+"<link xref=\"variables-syntax\">variables</link> in the SELECT's SQL."
+msgstr ""
+"Verwenden Sie die <code>&lt;query&gt;</code>-Markierung zum Angeben einer SQL "
+"SELECT-Anweisung als Inhalt der Markierung. Verknüpfungen zu anderen "
+"Datenquellen sind über <link xref=\"variables-syntax\">Variablen</link> im "
+"SQL-Code der SELECT-Anweisung möglich."
+
+#: C/data-manager-xml-syntax.page:54(p) C/data-manager-xml-syntax.page:110(p)
+msgid "For example the previous XML specification defines two data sources:"
+msgstr ""
+"Beispielsweise definiert die vorige XML-Spezifikation zwei Datenquellen:"
+
+#: C/data-manager-xml-syntax.page:58(p)
+msgid ""
+"the <code>customers</code> data source which selects some fields from the "
+"<em>customers</em> table, and which depends on a string variable named "
+"<code>name</code>. This variable has to be set when the data sources are "
+"executed because it won't be exported by any data source in this "
+"specification."
+msgstr ""
+"Die Datenquelle <code>customers</code>, welche einige Felder aus der "
+"Datenquelle <em>customers</em> auswählt und von einer Zeichenketten-Variable "
+"namens <code>name</code> abhängt. Diese Variable muss gesetzt werden, wenn "
+"die Datenquellen ausgeführt werden, weil sie in dieser Spezifikation von "
+"keiner Datenquelle exportiert wird."
+
+#: C/data-manager-xml-syntax.page:62(p)
+msgid ""
+"the <code>cust_details</code> data source which selects all the details of a "
+"customer specified using its ID. This second data source depends on the "
+"previous one because the <code>customers@id</code> variable is exported from "
+"the <code>customers</code> data source."
+msgstr ""
+"Die Datenquelle <code>cust_details</code>, die alle verfügbaren Details zu "
+"einem Kunden anhand dessen Kennung auswählt. Diese zweite Datenquelle ist von "
+"der vorigen Datenquelle abhängig, weil die <code>customers@id</code>-Variable "
+"von der <code>customers</code>-Datenquelle exportiert wird."
+
+#: C/data-manager-xml-syntax.page:67(p)
+msgid ""
+"Executing this data sources specification will create two tabular views: one "
+"where you can select a customer, and one which displays all the attributes "
+"for the selected customer."
+msgstr ""
+"Die Ausführung dieser Datenquellenspezifikation erstellt zwei "
+"Tabellenansichten: Eine, in der Sie einen Kunden auswählen können, und eine "
+"weitere, welche alle Attribute des ausgewählten Kunden anzeigt."
+
+#: C/data-manager-xml-syntax.page:74(p)
+msgid ""
+"Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
+"following variable for each column of the resulting data set (the variable's "
+"type is the same as the column's type):"
+msgstr ""
+"Jede durch eine <code>&lt;query&gt;</code>-Markierung definierte Datenquelle "
+"exportiert die folgende Variable für jede Spalte des resultierenden "
+"Datensatzes. Dabei entspricht der Variablentyp dem Spaltentyp:"
+
+#: C/data-manager-xml-syntax.page:79(p) C/data-manager-xml-syntax.page:139(p)
+msgid ""
+"<code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the "
+"column's position starts at 1"
+msgstr ""
+"<code>&lt;data source ID&gt;@&lt;column position&gt;</code>, wobei die "
+"Spaltenposition bei 1 beginnt."
+
+#: C/data-manager-xml-syntax.page:81(code)
+#, no-wrap
+msgid "&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is a table column"
+msgstr "&lt;data source ID&gt;@&lt;column name&gt;, falls die Spalte des Datensatzes eine Tabellenspalte ist."
+
+#: C/data-manager-xml-syntax.page:88(title)
+msgid "The <code>&lt;table&gt;</code> tag"
+msgstr "Die <code>&lt;table&gt;</code>-Markierung"
+
+#: C/data-manager-xml-syntax.page:89(p)
+msgid ""
+"Use the <code>&lt;table&gt;</code> tag to define a data source which will "
+"display the contents of a table. This tag:"
+msgstr ""
+"Verwenden Sie die <code>&lt;table&gt;</code>-Markierung zum Definieren einer "
+"Datenquelle, welche den Inhalt einer Tabelle anzeigt. Diese Markierung:"
+
+#: C/data-manager-xml-syntax.page:94(p)
+msgid "requires the \"name\" attribute which represents the table name."
+msgstr ""
+"benötigt das »name«-Attribut, welches den Namen der Tabelle repräsentiert."
+
+#: C/data-manager-xml-syntax.page:95(p)
+msgid ""
+"can contain a <code>&lt;depend&gt;</code> node which defines a dependency on "
+"another data source with the \"foreign_key_table\" attribute defining the "
+"name of the table to which there are foreign keys used to determine the "
+"dependency, and the \"id\" attribute can specify a data source ID if "
+"different than the aforementioned table"
+msgstr ""
+"kann einen <code>&lt;depend&gt;</code>-Knoten enthalten, welcher eine "
+"Abhängigkeit zu einer anderen Datenquelle mit dem »foreign_key_table«-Attribut "
+"definiert. Dieses Attribut gibt den Namen der Tabelle an, für die "
+"Fremdschlüssel zum Definieren der Abhängigkeit verwendet werden. Weiterhin "
+"kann das »id«-Attribut eine Datenquellenkennung angeben, die sich von der "
+"Kennung der Tabelle unterscheidet."
+
+#: C/data-manager-xml-syntax.page:114(p)
+msgid ""
+"the <code>customers</code> data source which selects all the contents of the "
+"<em>customers</em> table."
+msgstr ""
+"die <code>customers</code>-Datenquelle, welche sämtlichen Inhalt der "
+"<em>customers</em>-Tabelle auswählt."
+
+#: C/data-manager-xml-syntax.page:116(p)
+msgid ""
+"the <code>orders</code> data source which selects among contents of the "
+"<code>orders</code> table, the rows which correspond to a row in the "
+"<code>customers</code> table (assuming here that the <code>orders</code> "
+"references the <code>customers</code> table in some way)."
+msgstr ""
+"die <code>orders</code>-Datenquelle, welche aus dem Inhalt der <code>orders</"
+"code>-Tabelle diejenigen Zeilen auswählt, welche zu einer Zeile in der  "
+"<code>customers</code>-Tabelle korrespondieren, vorausgesetzt, dass "
+"<code>orders</code> in irgendeiner Weise die <code>customers</code>-Tabelle "
+"referenziert."
+
+#: C/data-manager-xml-syntax.page:121(p)
+msgid "Note in this example that:"
+msgstr "In diesem Beispiel ist Folgendes zu beachten:"
+
+#: C/data-manager-xml-syntax.page:125(p)
+msgid ""
+"you don't have to specify the fields involved in the foreign key linking the "
+"<code>orders</code> and <code>customers</code> tables"
+msgstr ""
+"Sie müssen die beteiligten Felder im Fremdschlüssel nicht angeben, der die "
+"Tabellen <code>Bestellungen</code> und <code>Kunden</code> verknüpft"
+
+#: C/data-manager-xml-syntax.page:127(p)
+msgid ""
+"the data sources IDs have been assigned the names of the selected tables as "
+"no \"id\" attribute has been specified for the <code>&lt;table&gt;</code> "
+"tags."
+msgstr ""
+"Den Datenquellenkennungen werden die Namen der ausgewählten Tabellen "
+"zugeordnet, weil kein »id«-Attribut für die <code>&lt;table&gt;</code>-"
+"Markierungen angegeben wurde"
+
+#: C/data-manager-xml-syntax.page:133(p)
+msgid ""
+"Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
+"following variable for each table's column (the variable's type is the same "
+"as the column's type):"
+msgstr ""
+"Jede durch eine <code>&lt;query&gt;</code>-Markierung definierte Datenquelle "
+"exportiert die folgende Variable für jede Tabellenspalte, wobei der "
+"Variablentyp dem Spaltentyp entspricht:"
+
+#: C/data-manager-xml-syntax.page:138(code)
+#, no-wrap
+msgid "&lt;data source ID&gt;@&lt;column name&gt;"
+msgstr "&lt;Datenquellenkennung&gt;@&lt;Spaltenname&gt;"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/data-manager-perspective.page:27(None)
+msgid ""
+"@@image: 'figures/data-man-persp.png'; md5=a0469e170ca29937cd898aae8af6620c"
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/data-manager-perspective.page:53(None)
+#: C/data-manager-perspective.page:80(None)
+msgid ""
+"@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+msgstr "translated"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/data-manager-perspective.page:60(None)
+msgid ""
+"@@image: 'figures/data-man-xmlcompose.png'; "
+"md5=47629c29ef2c7d336e4401e66ba849e0"
+msgstr ""
+
+#: C/data-manager-perspective.page:8(title)
+msgid "The data manager perspective"
+msgstr "Die Datenverwaltungs-Perspektive"
+
+#: C/data-manager-perspective.page:9(p)
+msgid ""
+"Use the data manager perspective to navigate through the database's data. To "
+"switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Data "
+"Manager</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>D</key></"
+"keyseq> shortcut."
+msgstr ""
+"Verwenden Sie die Datenmanager-Perspektive, um durch die Daten in der "
+"Datenbank zu navigieren. Wechseln Sie zu dieser Perspektive mit Hilfe des "
+"Menüs <guiseq><gui>Perspektive</gui><gui>Datenmanager</gui></guiseq> oder der "
+"Tastenkombination <keyseq><key>Strg</key><key>D</key></keyseq>"
+
+#: C/data-manager-perspective.page:14(p)
+msgid ""
+"The workflow in this perspective is organized around the definition of one or "
+"more <em>data sources</em> (which selects data in the database) which, when "
+"executed, result in a data set displayed in a tabular view."
+msgstr ""
+"Der Arbeitsablauf in dieser Perspektive baut auf der Definition einer oder "
+"mehrerer <em>Datenquellen</em> auf, welche Daten in der Datenbank auswählen. "
+"Wenn diese ausgeführt werden, wird als Ergebnis ein Datensatz in einer "
+"tabellarischen Ansicht angezeigt."
+
+#: C/data-manager-perspective.page:19(p)
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane to keep "
+"favorite data sources set's definitions, and the right pane being the action "
+"area, where each data source is executed and the results presented in a "
+"tabular view."
+msgstr ""
+"Die Perspektive besteht aus zwei horizontalen Bereichen: dem linken Bereich, "
+"in dem bevorzugte Datenquellendefinitionen enthalten sind, sowie dem rechten "
+"Bereich, welcher den Aktionsbereich bildet. In diesem Aktionsbereich werden "
+"die Datenquellen ausgeführt und die Ergebnisse in einer tabellarischen "
+"Ansicht angezeigt."
+
+#: C/data-manager-perspective.page:25(title)
+msgid "Data manager perspective"
+msgstr "Datenverwaltungs-Perspektive"
+
+#: C/data-manager-perspective.page:26(desc)
+msgid "The data manager perspective, with two data sources"
+msgstr "Die Datenverwaltungs-Perspektive mit zwei Datenquellen"
+
+#: C/data-manager-perspective.page:29(p)
+msgid ""
+"In the figure above, there are two data sources: one for the 'customers' "
+"table and one for the 'orders' table (which here lists the orders from a "
+"customer), the later data source depending on the former one as there is a "
+"foreign key from the 'orders' table which references the 'customers' table. "
+"The two data sources have been executed and the result is composed of two "
+"tabular views side by side."
+msgstr ""
+"Im Bild oben gibt es zwei Datenquellen: eine für die Tabelle »customers« und "
+"eine für »orders«. Die letztgenannte Quelle listet die Bestellungen für einen "
+"Kunden (customer) auf und hängt somit von der ersten Quelle ab, da es einen "
+"Fremdschlüssel aus »orders« gibt, welcher »customers« referenziert. Die beiden "
+"Datenquellen wurden ausgeführt und das Ergebnis in zwei tabellarischen "
+"Ansichten nebeneinander dargestellt."
+
+#: C/data-manager-perspective.page:36(p)
+msgid ""
+"Because the 'orders' data source depends on the 'customers' data source, its "
+"corresponding view is on the right of the one corresponding to the "
+"'customers' data source. Also when the row selection of the 'customers' view "
+"changes, the whole contents of the 'orders' view is refreshed."
+msgstr ""
+"Da die Datenquelle »orders« von der Datenquelle »customers« abhängt, befindet "
+"sich deren korrespondierende Ansicht rechts von der Datenquelle »customers«. "
+"Wenn sich die Zeilenauswahl in der »customers«-Ansicht ändert, wird der "
+"gesamte Inhalt der »orders«-Ansicht ebenfalls aktualisiert."
+
+#: C/data-manager-perspective.page:44(title)
+msgid "Defining data sources"
+msgstr "Definieren von Datenquellen"
+
+# CHECK
+#: C/data-manager-perspective.page:45(p)
+msgid ""
+"The simplest data source is a data source which represents all the data from "
+"a table, displayed when executed as a single tabular view, as if one executed "
+"the <code>SELECT * FROM mytable</code> statement in the <link xref=\"query-"
+"execution-perspective\"/>."
+msgstr ""
+"Die einfachste Datenquelle ist diejenige, die alle Daten aus einer Tabelle "
+"repräsentiert und bei Ausführung als einzelne tabellarische Ansicht angezeigt "
+"wird. Dies ist identisch mit Ausführung der <code>SELECT * FROM mytable</"
+"code>-Anweisung in <link xref=\"query-execution-perspective\"/>."
+
+#: C/data-manager-perspective.page:51(p)
+msgid ""
+"The following figure shows the data sources editing mode (switch to editing "
+"mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-"
+"man-mode.png\"/> toolbar button) at the moment data sources can only be "
+"defined using an <link xref=\"data-manager-xml-syntax\">XML syntax</link>."
+msgstr ""
+"Die folgende Abbildung zeigt den Bearbeitungsmodus für Datenquellen. Wechseln "
+"sie in den Bearbeitungsmodus mit dem Werkzeugleistenknopf <media type=\"image"
+"\" mime=\"image/png\" src=\"figures/data-man-mode.png\"/>. Derzeit können "
+"Datenquellen nur mit Hilfe einer <link xref=\"data-manager-xml-syntax\">XML-"
+"Syntax</link> definiert werden."
+
+#: C/data-manager-perspective.page:58(title)
+msgid "Data sources edition"
+msgstr "Bearbeiten der Datenquellen"
+
+#: C/data-manager-perspective.page:59(desc)
+msgid "Editing data sources in the data manager perspective"
+msgstr "Bearbeiten von Datenquellen in der Datenmanager-Perspektive"
+
+#: C/data-manager-perspective.page:67(p)
+msgid "<gui>Clear</gui>: clears the XML editor"
+msgstr "<gui>Leeren</gui>: löscht den Inhalt des XML-Editors"
+
+#: C/data-manager-perspective.page:68(p)
+msgid ""
+"<gui>Variables</gui>: shows/hide the <link xref=\"variables-syntax"
+"\">variables</link> panel where you can give values to the variables present "
+"in the SQL code of any data source's definition. The panel is automatically "
+"shown when a variable is detected in the SQL code."
+msgstr ""
+"<gui>Variablen</gui>: Verbirgt das <link xref=\"variables-syntax\">Variablen</"
+"link>-Panel oder zeigt es an, in welchem Sie die Variablen aus dem SQL-Code "
+"jeder Datenquellendefinition mit Werten füllen können. Dieses Panel wird "
+"automatisch angezeigt, sobald im SQL-Code Variablen erkannt werden."
+
+#: C/data-manager-perspective.page:71(p)
+msgid "<gui>Execute</gui>: executes the defined data sources"
+msgstr "<gui>Ausführen</gui>: führt die definierten Datenquellen aus"
+
+#: C/data-manager-perspective.page:72(p)
+msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
+msgstr ""
+"<gui>XML-Ansicht</gui>: Schaltet zwischen dem XML-Editor und dem UI-Editor um"
+
+#: C/data-manager-perspective.page:73(p)
+msgid "<gui>Help</gui>: shows some help"
+msgstr "<gui>Hilfe</gui>: zeigt die Hilfe an"
+
+#: C/data-manager-perspective.page:77(title)
+msgid "Executing defined data sources"
+msgstr "Ausführen definierter Datenquellen"
+
+#: C/data-manager-perspective.page:78(p)
+msgid ""
+"To execute a defined set of data sources, simply switch to execute mode using "
+"the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-mode.png"
+"\"/> toolbar button or the <gui>Execute</gui> button."
+msgstr ""
+"Um eine definierte Reihe von Datenquellen auszuführen, wechseln Sie mit dem "
+"Werkzeugleistenknopf <media type=\"image\" mime=\"image/png\" src=\"figures/"
+"data-man-mode.png\"/> oder dem <gui>Ausführen</gui>-Knopf in den "
+"Ausführungsmodus."
+
+#: C/data-manager-perspective.page:83(p)
+msgid ""
+"The layout of tabular views for each data source is automatically generated "
+"in columns using the following rule: if a data source B depends on a data "
+"source A, then its tabular view is displayed on the right of the one for A."
+msgstr ""
+"Das Layout der tabellarischen Ansicht für jede Datenquelle wird automatisch "
+"nach der folgenden Regel in Spalten erzeugt: Falls eine Datenquelle B von "
+"einer Datenquelle A abhängt, dann wird deren tabellarische Ansicht rechts von "
+"der Ansicht für A angezeigt."
+
+#: C/data-manager-perspective.page:88(p)
+msgid ""
+"Also if you change the selected row of tabular view of a data source A, then "
+"the tabular views of all the data sources depending on A will also have their "
+"tabular view refreshed."
+msgstr ""
+"Wenn Sie die ausgewählte Zeile einer Tabellenansicht der Datenquelle A "
+"ändern, werden die tabellarischen Ansichten aller von der Datenquelle A "
+"abhängenden Datenquellen aktualisiert."
+
+#. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
+#: C/index.page:0(None)
+msgid "translator-credits"
+msgstr ""
+"Mario Blättermann <mariobl@gnome.org>, 2010\n"
+"Christian Kirbach <Christian.Kirbach@googlemail.com>, 2010."
