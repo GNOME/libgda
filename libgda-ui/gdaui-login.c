@@ -1,5 +1,5 @@
 /* GNOME DB library
- * Copyright (C) 1999 - 2008 The GNOME Foundation.
+ * Copyright (C) 1999 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -557,24 +557,23 @@ gdaui_login_get_connection_information (GdauiLogin *login)
 
 	clear_dsn_info (login);
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (login->priv->rb_dsn))) {
-		GdaDsnInfo *info;
+		GdaDsnInfo *info = NULL;
 		gchar *dsn;
 		dsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector));
-		info = gda_config_get_dsn_info (dsn);
 		if (dsn && *dsn)
-			login->priv->dsn_info.name = dsn;
-		else
-			g_free (dsn);
+			info = gda_config_get_dsn_info (dsn);
+		g_free (dsn);
 		if (info) {
+			login->priv->dsn_info.name = g_strdup (info->name);
 			if (info->provider)
 				login->priv->dsn_info.provider = g_strdup (info->provider);
 			if (info->description)
 				login->priv->dsn_info.description = g_strdup (info->description);
 			if (info->cnc_string)
 				login->priv->dsn_info.cnc_string = g_strdup (info->cnc_string);
-			login->priv->dsn_info.auth_string = _gdaui_provider_auth_editor_get_auth (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget));
 			login->priv->dsn_info.is_system = info->is_system;
 		}
+		login->priv->dsn_info.auth_string = _gdaui_provider_auth_editor_get_auth (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget));
 	}
 	else {
 		const gchar *str;
@@ -635,7 +634,15 @@ gdaui_login_set_connection_information (GdauiLogin *login, const GdaDsnInfo *cin
 		_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), NULL);
 	}
 	else {
-		_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), cinfo->name);
+		GdaDsnInfo *info = NULL;
+		if (cinfo->name)
+			info = gda_config_get_dsn_info (cinfo->name);
+		if (info)
+			_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), cinfo->name);
+		else {
+			/* force switch to */
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (login->priv->rb_dsn), FALSE);
+		}
 		_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
 							  cinfo->provider);
 		_gdaui_provider_spec_editor_set_specs (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
