@@ -985,7 +985,7 @@ gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op, guint o
  */
 guint
 gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, GdaSqlOperatorType op,
-			const guint *op_ids, gint op_ids_size)
+			    const guint *op_ids, gint op_ids_size)
 {
 	gint i;
 	SqlPart **parts;
@@ -1005,7 +1005,6 @@ gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, GdaSqlOperatorType op,
 	}
 
 	if (op_ids_size == 1) {
-		SqlPart *part = parts [0];
 		g_free (parts);
 		return op_ids [0];
 	}
@@ -1114,7 +1113,6 @@ gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_na
 	return id;
 }
 
-
 typedef struct {
 	GdaSqlSelectJoin join; /* inheritance! */
 	guint part_id; /* copied from this part ID */
@@ -1128,7 +1126,12 @@ typedef struct {
  * @join_type: the type of join
  * @join_expr: joining expression's ID, or %0
  *
- * Joins two targets in a SELECT statement
+ * Joins two targets in a SELECT statement, using the @join_type type of join.
+ *
+ * Note: if the target represented by @left_target_id is actually situated after (on the right) of
+ * the target represented by @right_target_id, then the actual type of join may be switched from
+ * %GDA_SQL_SELECT_JOIN_LEFT to %GDA_SQL_SELECT_JOIN_RIGHT or from %GDA_SQL_SELECT_JOIN_RIGHT to
+ * %GDA_SQL_SELECT_JOIN_LEFT.
  *
  * Returns: the ID of the new join, or 0 if there was an error
  *
@@ -1165,18 +1168,31 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
 			break;
 	}
 
-    if (left_pos == -1) {
+	if (left_pos == -1) {
 		g_warning (_("Unknown left part target ID %u"), left_target_id);
 		return 0;
 	}
 
-    if (right_pos == -1) {
+	if (right_pos == -1) {
 		g_warning (_("Unknown right part target ID %u"), right_target_id);
 		return 0;
 	}
 
 	if (left_pos > right_pos) {
-		TO_IMPLEMENT;
+		GdaSqlSelectJoinType jt;
+		switch (join_type) {
+		case GDA_SQL_SELECT_JOIN_LEFT:
+			jt = GDA_SQL_SELECT_JOIN_RIGHT;
+			break;
+		case GDA_SQL_SELECT_JOIN_RIGHT:
+			jt = GDA_SQL_SELECT_JOIN_LEFT;
+			break;
+		default:
+			jt = join_type;
+			break;
+		}
+		return gda_sql_builder_select_join_targets (builder, right_target_id,
+							    left_target_id, jt, join_expr);
 	}
 
 	/* create join */
