@@ -44,6 +44,8 @@ static GdaSqlStatement *build10 (void);
 static GdaSqlStatement *build11 (void);
 static GdaSqlStatement *build12 (void);
 
+static gboolean builder_test_target_id (void);
+
 ATest tests[] = {
 	{"build0", build0, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"*\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]}}}"},
 	{"build1", build1, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"contents\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"descr\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"name\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"where\":{\"operation\":{\"operator\":\"AND\",\"operand0\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"session\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":null,\"param_spec\":{\"name\":\"session\",\"descr\":null,\"type\":\"string\",\"is_param\":true,\"nullok\":false}}}},\"operand1\":{\"operation\":{\"operator\":\"AND\",\"operand0\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"type\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":\"'TABLE'\"}}},\"operand1\":{\"operation\":{\"operator\":\"=\",\"operand0\":{\"value\":\"name\",\"sqlident\":\"TRUE\"},\"operand1\":{\"value\":\"'alf'\"}}}}}}}}}"},
@@ -115,6 +117,9 @@ main (int argc, char** argv)
 		if (fail)
 			nfailed++;
 	}
+
+	if (! builder_test_target_id ())
+		nfailed++;
 
 	g_print ("%d tests executed, ", i);
 	if (nfailed > 0)
@@ -545,4 +550,53 @@ build12 (void)
 	stmt = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (b));
 	g_object_unref (b);
 	return stmt;
+}
+
+/*
+ * 
+ */
+static gboolean
+builder_test_target_id (void)
+{
+	GdaSqlBuilder *builder;
+	guint id1, id2;
+	gboolean allok = TRUE;
+
+	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_id (builder,
+				      gda_sql_builder_add_id (builder, "*"), 0);
+	/* same target with aliases */
+	id1 = gda_sql_builder_select_add_target_id (builder,
+						    gda_sql_builder_add_id (builder, "mytable"), "alias");
+	id2 = gda_sql_builder_select_add_target_id (builder,
+						    gda_sql_builder_add_id (builder, "mytable"), "alias");
+	if (id1 != id2) {
+		g_print ("identical targets with an alias not recognized as same target.\n");
+		allok = FALSE;
+	}
+
+	id2 = gda_sql_builder_select_add_target_id (builder,
+						    gda_sql_builder_add_id (builder, "mytable"), "alias2");
+	if (id1 == id2) {
+		g_print ("identical tables with different alias recognized as same target.\n");
+		allok = FALSE;
+	}
+
+	id2 = gda_sql_builder_select_add_target_id (builder,
+						    gda_sql_builder_add_id (builder, "mytable"), NULL);
+	if (id1 == id2) {
+		g_print ("identical tables with no alias recognized as same target.\n");
+		allok = FALSE;
+	}
+
+	id1 = gda_sql_builder_select_add_target_id (builder,
+						    gda_sql_builder_add_id (builder, "mytable"), NULL);
+	if (id1 != id2) {
+		g_print ("identical tables with different alias not recognized as same target.\n");
+		allok = FALSE;
+	}
+
+	g_object_unref (builder);
+	
+	return allok;
 }

@@ -1035,9 +1035,11 @@ typedef struct {
  * @table_id: the ID of the expression holding a table reference (not %0)
  * @alias: the alias to give to the target, or %NULL
  *
- * Adds a new target to a SELECT statement
+ * Adds a new target to a SELECT statement. If there already exists a target representing
+ * the same table and the same alias (or with the same absence of alias) then the same target
+ * ID is returned instead of the ID of a new target.
  *
- * Returns: the ID of the new target, or 0 if there was an error
+ * Returns: the ID of the new (or existing) target, or 0 if there was an error
  *
  * Since: 4.2
  */
@@ -1057,9 +1059,39 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint table_id, co
 	if (!p)
 		return 0;
 
+	/* check for an already existing target with the same characteristics */
+	GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
+	if (sel->from) {
+		gchar *ser;
+		GSList *list;
+
+		g_assert (p->part->type == GDA_SQL_ANY_EXPR);
+		ser = gda_sql_expr_serialize ((GdaSqlExpr*) p->part);
+		for (list = sel->from->targets; list; list = list->next) {
+			BuildTarget *bt = (BuildTarget*) list->data;
+			GdaSqlSelectTarget *t = (GdaSqlSelectTarget*) list->data;
+			gboolean idalias = FALSE;
+			if (alias && t->as && !strcmp (t->as, alias))
+				idalias = TRUE;
+			else if (!alias && ! t->as)
+				idalias = TRUE;
+			
+			gchar *tmp;
+			tmp = gda_sql_expr_serialize (t->expr);
+			if (! strcmp (ser, tmp)) {
+				if (idalias) {
+					g_free (tmp);
+					g_free (ser);
+					return bt->part_id;
+				}
+			}
+			g_free (tmp);
+		}
+		g_free (ser);
+	}
+
 	BuildTarget *btarget;
 	GdaSqlSelectTarget *target;
-	GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) builder->priv->main_stmt->contents;
 	btarget = g_new0 (BuildTarget, 1);
         GDA_SQL_ANY_PART (btarget)->type = GDA_SQL_ANY_SQL_SELECT_TARGET;
         GDA_SQL_ANY_PART (btarget)->parent = GDA_SQL_ANY_PART (sel->from);
