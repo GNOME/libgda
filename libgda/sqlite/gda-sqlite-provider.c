@@ -737,12 +737,14 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 				return FALSE;
 			}
 		}
+#ifdef GDA_DEBUG_NO
 		else {
 			if (enforce_fk)
 				g_print ("SQLite provider enforces foreign keys.\n");
 			else
 				g_print ("SQLite provider does not enforce foreign keys.\n");
 		}
+#endif
 	}
 
 	if (use_extra_functions && ((*use_extra_functions == 't') || (*use_extra_functions == 'T'))) {
