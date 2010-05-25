@@ -854,7 +854,7 @@ create_entry_widget (SingleEntry *sentry)
 			break;
 		case GDAUI_BASIC_FORM_ENTRIES:
 			if (sentry->entry)
-				gtk_size_group_add_widget (sg->size_group, sentry->entry);
+				gtk_size_group_add_widget (sg->size_group, GTK_WIDGET (sentry->entry));
 			break;
 		default:
 			g_assert_not_reached ();
