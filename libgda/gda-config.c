@@ -789,11 +789,11 @@ gda_config_get_property (GObject *object,
 }
 
 /**
- * gda_config_get
+ * gda_config_get:
  * 
  * Get a pointer to the global GdaConfig object
  *
- * Returns: a non %NULL pointer to a #GdaConfig
+ * Returns: (transfer full): a non %NULL pointer to a #GdaConfig
  */
 GdaConfig*
 gda_config_get (void)
@@ -806,7 +806,7 @@ gda_config_get (void)
 }
 
 /**
- * gda_config_get_dsn_info
+ * gda_config_get_dsn_info:
  * @dsn_name: the name of the DSN to look for
  *
  * Get information about the DSN named @dsn_name. 
@@ -815,7 +815,7 @@ gda_config_get (void)
  * and optionally &lt;password&gt; are provided, they are ignored). Also see the gda_dsn_split() utility
  * function.
  *
- * Returns: a a pointer to read-only #GdaDsnInfo structure, or %NULL if not found
+ * Returns: (transfer none): a pointer to read-only #GdaDsnInfo structure, or %NULL if not found
  */
 GdaDsnInfo *
 gda_config_get_dsn_info (const gchar *dsn_name)
@@ -849,7 +849,7 @@ gda_config_get_dsn_info (const gchar *dsn_name)
 }
 
 /**
- * gda_config_define_dsn
+ * gda_config_define_dsn:
  * @info: a pointer to a filled GdaDsnInfo structure
  * @error: a place to store errors, or %NULL
  *
@@ -932,11 +932,11 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 }
 
 /**
- * gda_config_remove_dsn
+ * gda_config_remove_dsn:
  * @dsn_name: the name of the DSN to remove
  * @error: a place to store errors, or %NULL
  *
- * Add or update a DSN from the definition in @info
+ * Remove the DSN named @dsn_name
  *
  * Returns: TRUE if no error occurred
  */
@@ -987,7 +987,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 }
 
 /**
- * gda_config_dsn_needs_authentication
+ * gda_config_dsn_needs_authentication:
  * @dsn_name: the name of a DSN, in the "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" format
  * 
  * Tells if the data source identified as @dsn_name needs any authentication. If a &lt;username&gt;
@@ -1016,7 +1016,7 @@ gda_config_dsn_needs_authentication (const gchar *dsn_name)
 }
 
 /**
- * gda_config_list_dsn
+ * gda_config_list_dsn:
  * 
  * Get a #GdaDataModel representing all the configured DSN, and keeping itself up to date with
  * the changes in the declared DSN.
@@ -1046,7 +1046,7 @@ gda_config_list_dsn (void)
 }
 
 /**
- * gda_config_get_nb_dsn
+ * gda_config_get_nb_dsn:
  *
  * Get the number of defined DSN
  *
@@ -1066,7 +1066,7 @@ gda_config_get_nb_dsn (void)
 }
 
 /**
- * gda_config_get_dsn_info_index
+ * gda_config_get_dsn_info_index:
  * @dsn_name: a DSN
  * 
  * Get the index (starting at 0) of the DSN named @dsn_name
@@ -1093,12 +1093,12 @@ gda_config_get_dsn_info_index (const gchar *dsn_name)
 }
 
 /**
- * gda_config_get_dsn_info_at_index
+ * gda_config_get_dsn_info_at_index:
  * @index: an index
  *
  * Get a pointer to a read-only #GdaDsnInfo at the @index position
  *
- * Returns: the pointer or %NULL if no DSN exists at position @index
+ * Returns: (transfer none):the pointer or %NULL if no DSN exists at position @index
  */
 GdaDsnInfo *
 gda_config_get_dsn_info_at_index (gint index)
@@ -1113,7 +1113,7 @@ gda_config_get_dsn_info_at_index (gint index)
 }
 
 /**
- * gda_config_can_modify_system_config
+ * gda_config_can_modify_system_config:
  *
  * Tells if the global (system) configuration can be modified (considering
  * system permissions and settings)
@@ -1133,12 +1133,12 @@ gda_config_can_modify_system_config (void)
 }
 
 /**
- * gda_config_get_provider_info
+ * gda_config_get_provider_info:
  * @provider_name: a database provider
  *
  * Get some information about the a database provider (adapter) named 
  *
- * Returns: a pointer to read-only #GdaProviderInfo structure, or %NULL if not found
+ * Returns: (transfer none): a pointer to read-only #GdaProviderInfo structure, or %NULL if not found
  */
 GdaProviderInfo *
 gda_config_get_provider_info (const gchar *provider_name)
@@ -1167,7 +1167,7 @@ gda_config_get_provider_info (const gchar *provider_name)
 }
 
 /**
- * gda_config_get_provider
+ * gda_config_get_provider:
  * @provider_name: a database provider
  * @error: a place to store errors, or %NULL
  *
@@ -1175,7 +1175,7 @@ gda_config_get_provider_info (const gchar *provider_name)
  * provider named @provider_name. The caller must not call g_object_unref() on the
  * returned object.
  *
- * Returns: a pointer to the #GdaServerProvider, or %NULL if an error occurred
+ * Returns: (transfer none): a pointer to the #GdaServerProvider, or %NULL if an error occurred
  */
 GdaServerProvider *
 gda_config_get_provider (const gchar *provider_name, GError **error)
@@ -1237,7 +1237,7 @@ gda_config_get_provider (const gchar *provider_name, GError **error)
 }
  
 /**
- * gda_config_list_providers
+ * gda_config_list_providers:
  * 
  * Get a #GdaDataModel representing all the installed database providers.
  *
