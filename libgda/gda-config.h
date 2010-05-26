@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+ * Copyright (C) 2007 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -57,6 +57,7 @@ struct _GdaDsnInfo {
         gchar    *auth_string; /* semi-colon separated <key>=<value> list where <key> and <value> are RFC 1738 encoded */
         gboolean  is_system;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;
@@ -71,6 +72,7 @@ struct _GdaProviderInfo {
         GdaSet            *dsn_params;  /* Specs to create a DSN */
 	GdaSet            *auth_params; /* Specs to authenticate a client */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;
@@ -92,6 +94,7 @@ struct _GdaConfigClass {
 	void   (*dsn_removed)               (GdaConfig *conf, GdaDsnInfo *old_dsn);
 	void   (*dsn_changed)               (GdaConfig *conf, GdaDsnInfo *dsn);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);

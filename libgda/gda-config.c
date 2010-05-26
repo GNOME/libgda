@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+ * Copyright (C) 2007 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
