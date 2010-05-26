@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -503,7 +503,7 @@ GQuark gda_connection_error_quark (void)
 }
 
 /**
- * gda_connection_get_type
+ * gda_connection_get_type:
  * 
  * Registers the #GdaConnection class on the GLib type system.
  * 
@@ -839,7 +839,7 @@ _gda_connection_get_internal_thread_provider (void)
 }
 
 /**
- * gda_connection_open_from_dsn
+ * gda_connection_open_from_dsn:
  * @dsn: data source name.
  * @auth_string: authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
@@ -968,7 +968,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 }
 
 /**
- * gda_connection_open_from_string
+ * gda_connection_open_from_string:
  * @provider_name: provider ID to connect to, or %NULL
  * @cnc_string: connection string.
  * @auth_string: authentication string, or %NULL
@@ -1170,7 +1170,7 @@ sqlite_connection_closed_cb (GdaConnection *cnc, gpointer data)
 }
 
 /**
- * gda_connection_open_sqlite
+ * gda_connection_open_sqlite:
  * @cnc_string: a connection string
  * @directory: the directory the database file will be in, or %NULL for the default TMP directory
  * @filename: the database file name
@@ -1240,7 +1240,7 @@ all_threads_func (GThread *thread, ThreadLookupData *data)
 }
 
 /**
- * gda_connection_open
+ * gda_connection_open:
  * @cnc: a #GdaConnection object
  * @error: a place to store errors, or %NULL
  *
@@ -1396,7 +1396,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 
 /**
- * gda_connection_close
+ * gda_connection_close:
  * @cnc: a #GdaConnection object.
  *
  * Closes the connection to the underlying data source, but first emits the 
@@ -1424,7 +1424,7 @@ gda_connection_close (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_close_no_warning
+ * gda_connection_close_no_warning:
  * @cnc: a #GdaConnection object.
  *
  * Closes the connection to the underlying data source, without emiting any warning signal.
@@ -1483,7 +1483,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 
 
 /**
- * gda_connection_is_opened
+ * gda_connection_is_opened:
  * @cnc: a #GdaConnection object.
  *
  * Checks whether a connection is open or not.
@@ -1500,7 +1500,7 @@ gda_connection_is_opened (GdaConnection *cnc)
 
 
 /**
- * gda_connection_get_options
+ * gda_connection_get_options:
  * @cnc: a #GdaConnection object.
  *
  * Gets the #GdaConnectionOptions used to open this connection.
@@ -1516,12 +1516,12 @@ gda_connection_get_options (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_provider
+ * gda_connection_get_provider:
  * @cnc: a #GdaConnection object
  *
- * Get a pointer to the #GdaServerProvider object used to access the database
+ * Gets a pointer to the #GdaServerProvider object used to access the database
  *
- * Returns: the #GdaServerProvider (NEVER NULL)
+ * Returns: (transfer none): the #GdaServerProvider (NEVER NULL)
  */
 GdaServerProvider *
 gda_connection_get_provider (GdaConnection *cnc)
@@ -1532,10 +1532,10 @@ gda_connection_get_provider (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_provider_name
+ * gda_connection_get_provider_name:
  * @cnc: a #GdaConnection object
  *
- * Get the name (identifier) of the database provider used by @cnc
+ * Gets the name (identifier) of the database provider used by @cnc
  *
  * Returns: a non modifiable string
  */
@@ -1550,7 +1550,7 @@ gda_connection_get_provider_name (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_dsn
+ * gda_connection_get_dsn:
  * @cnc: a #GdaConnection object
  *
  * Returns: the data source name the connection object is connected
@@ -1565,7 +1565,7 @@ gda_connection_get_dsn (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_cnc_string
+ * gda_connection_get_cnc_string:
  * @cnc: a #GdaConnection object.
  *
  * Gets the connection string used to open this connection.
@@ -1585,7 +1585,7 @@ gda_connection_get_cnc_string (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_authentication
+ * gda_connection_get_authentication:
  * @cnc: a #GdaConnection object.
  *
  * Gets the user name used to open this connection.
@@ -1605,9 +1605,9 @@ gda_connection_get_authentication (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_add_event
+ * gda_connection_add_event:
  * @cnc: a #GdaConnection object.
- * @event: is stored internally, so you don't need to unref it.
+ * @event: (transfer full): is stored internally, so you don't need to unref it.
  *
  * Adds an event to the given connection. This function is usually
  * called by providers, to inform clients of events that happened
@@ -1660,7 +1660,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 }
 
 /**
- * gda_connection_add_event_string
+ * gda_connection_add_event_string:
  * @cnc: a #GdaConnection object.
  * @str: a format string (see the printf(3) documentation).
  * @...: the arguments to insert in the error message.
@@ -1669,8 +1669,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
  * function that simply creates a #GdaConnectionEvent and then calls
  * #gda_server_connection_add_error.
  *
- * Returns: a new #GdaConnectionEvent object, however the caller does not hold a reference to the returned
- * object, and if need be the caller must call g_object_ref() on it.
+ * Returns: (transfer none): a new #GdaConnectionEvent object, however the caller does not hold a reference to the returned object, and if need be the caller must call g_object_ref() on it.
  */
 GdaConnectionEvent *
 gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
@@ -1713,7 +1712,7 @@ _clear_events_list (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_clear_events_list
+ * gda_connection_clear_events_list:
  * @cnc: a #GdaConnection object.
  *
  * This function lets you clear the list of #GdaConnectionEvent's of the
@@ -1729,10 +1728,10 @@ gda_connection_clear_events_list (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_create_operation
+ * gda_connection_create_operation:
  * @cnc: a #GdaConnection object
  * @type: the type of operation requested
- * @options: an optional list of parameters
+ * @options: (allow-none): an optional list of parameters
  * @error: a place to store an error, or %NULL
  *
  * Creates a new #GdaServerOperation object which can be modified in order 
@@ -1753,7 +1752,7 @@ gda_connection_create_operation (GdaConnection *cnc, GdaServerOperationType type
 }
 
 /**
- * gda_connection_perform_operation
+ * gda_connection_perform_operation:
  * @cnc: a #GdaConnection object
  * @op: a #GdaServerOperation object
  * @error: a place to store an error, or %NULL
@@ -1780,7 +1779,7 @@ gda_connection_perform_operation (GdaConnection *cnc, GdaServerOperation *op, GE
 }
 
 /**
- * gda_connection_create_parser
+ * gda_connection_create_parser:
  * @cnc: a #GdaConnection object
  *
  * Creates a new parser object able to parse the SQL dialect understood by @cnc. 
@@ -1800,10 +1799,10 @@ gda_connection_create_parser (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_batch_execute
+ * gda_connection_batch_execute:
  * @cnc: a #GdaConnection object
  * @batch: a #GdaBatch object which contains all the statements to execute
- * @params: a #GdaSet object (which can be obtained using gda_batch_get_parameters()), or %NULL
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_batch_get_parameters()), or %NULL
  * @model_usage:  specifies how the returned data model(s) will be used, as a #GdaStatementModelUsage enum
  * @error: a place to store errors, or %NULL
  *
@@ -1815,7 +1814,7 @@ gda_connection_create_parser (GdaConnection *cnc)
  * the list of #GObject created by the correct execution of the previous statements. If a transaction is required,
  * then it should be started before calling this method.
  *
- * Returns: a list of #GObject objects
+ * Returns: (element-type GObject): a new list of #GObject objects
  */
 GSList *
 gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *params,
@@ -1845,7 +1844,7 @@ gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *param
 
 
 /**
- * gda_connection_quote_sql_identifier
+ * gda_connection_quote_sql_identifier:
  * @cnc: a #GdaConnection object
  * @id: an SQL identifier
  *
@@ -1880,12 +1879,12 @@ gda_connection_quote_sql_identifier (GdaConnection *cnc, const gchar *id)
 }
 
 /**
- * gda_connection_statement_to_sql
+ * gda_connection_statement_to_sql:
  * @cnc: a #GdaConnection object
  * @stmt: a #GdaStatement object
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @flags: SQL rendering flags, as #GdaStatementSqlFlag OR'ed values
- * @params_used: a place to store the list of individual #GdaHolder objects within @params which have been used
+ * @params_used: (allow-none) (element-type GdaHolder) (out) (transfer container): a place to store the list of individual #GdaHolder objects within @params which have been used
  * @error: a place to store errors, or %NULL
  *
  * Renders @stmt as an SQL statement, adapted to the SQL dialect used by @cnc
@@ -1909,7 +1908,7 @@ gda_connection_statement_to_sql (GdaConnection *cnc, GdaStatement *stmt, GdaSet 
 }
 
 /**
- * gda_connection_statement_prepare
+ * gda_connection_statement_prepare:
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement object
  * @error: a place to store errors, or %NULL
@@ -2085,12 +2084,12 @@ async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_
 }
 
 /**
- * gda_connection_async_statement_execute
+ * gda_connection_async_statement_execute:
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement object
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @model_usage: in the case where @stmt is a SELECT statement, specifies how the returned data model will be used
- * @col_types: an array of GType to request each returned #GdaDataModel's column's GType, terminated with the G_TYPE_NONE
+ * @col_types: (array) (allow-none): an array of GType to request each returned #GdaDataModel's column's GType, terminated with the G_TYPE_NONE
  * @need_last_insert_row: TRUE if the values of the last interted row must be computed
  * @error: a place to store errors, or %NULL
  *
@@ -2188,10 +2187,10 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 }
 
 /**
- * gda_connection_async_fetch_result
+ * gda_connection_async_fetch_result:
  * @cnc: a #GdaConnection
  * @task_id: a task ID returned by gda_connection_async_statement_execute()
- * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
+ * @last_insert_row: (out) (transfer full) (allow-none): a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Use this method to obtain the result of the execution of a statement which has been executed asynchronously by
@@ -2265,7 +2264,7 @@ gda_connection_async_fetch_result (GdaConnection *cnc, guint task_id, GdaSet **l
 }
 
 /**
- * gda_connection_async_cancel
+ * gda_connection_async_cancel:
  * @cnc: a #GdaConnection
  * @task_id: a task ID returned by gda_connection_async_statement_execute()
  * @error: a place to store errors, or %NULL
@@ -2375,12 +2374,12 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 
 
 /**
- * gda_connection_statement_execute
+ * gda_connection_statement_execute:
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement object
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @model_usage: in the case where @stmt is a SELECT statement, specifies how the returned data model will be used
- * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
+ * @last_insert_row: (out) (transfer full) (allow-none): a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Executes @stmt. 
@@ -2457,11 +2456,11 @@ gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet
 
 
 /**
- * gda_connection_statement_execute_non_select
+ * gda_connection_statement_execute_non_select:
  * @cnc: a #GdaConnection object.
  * @stmt: a #GdaStatement object.
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
- * @last_insert_row: a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @last_insert_row: (out) (transfer full) (allow-none): a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store an error, or %NULL
  *
  * Executes a non-selection statement on the given connection. The gda_execute_non_select_command() method can be easier
@@ -2528,10 +2527,10 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
 }
 
 /**
- * gda_connection_statement_execute_select
+ * gda_connection_statement_execute_select:
  * @cnc: a #GdaConnection object.
  * @stmt: a #GdaStatement object.
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @error: a place to store an error, or %NULL
  *
  * Executes a selection command on the given connection. The gda_execute_select_command() method can be easier
@@ -2573,10 +2572,10 @@ gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
 }
 
 /**
- * gda_connection_statement_execute_select_fullv
+ * gda_connection_statement_execute_select_fullv:
  * @cnc: a #GdaConnection object.
  * @stmt: a #GdaStatement object.
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @model_usage: specifies how the returned data model will be used as a #GdaStatementModelUsage enum
  * @error: a place to store an error, or %NULL
  * @...: a (-1 terminated) list of (column number, GType) specifying for each column mentioned the GType
@@ -2649,12 +2648,12 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 }
 
 /**
- * gda_connection_statement_execute_select_full
+ * gda_connection_statement_execute_select_full:
  * @cnc: a #GdaConnection object.
  * @stmt: a #GdaStatement object.
- * @params: a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @model_usage: specifies how the returned data model will be used as a #GdaStatementModelUsage enum
- * @col_types: an array of GType to request each returned #GdaDataModel's column's GType, terminated with the G_TYPE_NONE
+ * @col_types: (array) (allow-none): an array of GType to request each returned #GdaDataModel's column's GType, terminated with the G_TYPE_NONE
  * value. Any value left to 0 will make the database provider determine the real GType. @col_types can also be %NULL if no
  * column type is specified.
  * @error: a place to store an error, or %NULL
@@ -2720,11 +2719,11 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 }
 
 /**
- * gda_connection_repetitive_statement_execute
+ * gda_connection_repetitive_statement_execute:
  * @cnc: a #GdaConnection
  * @rstmt: a #GdaRepetitiveStatement object
  * @model_usage: specifies how the returned data model will be used as a #GdaStatementModelUsage enum
- * @col_types: an array of GType to request each returned GdaDataModel's column's GType, see gda_connection_statement_execute_select_full() for more information
+ * @col_types: (array) (allow-none): an array of GType to request each returned GdaDataModel's column's GType, see gda_connection_statement_execute_select_full() for more information
  * @stop_on_error: set to TRUE if the method has to stop on the first error.
  * @error: a place to store errors, or %NULL
  *
@@ -2733,7 +2732,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
  *
  * If @error is not %NULL and @stop_on_error is %FALSE, then it may contain the last error which occurred.
  *
- * Returns: a new list of #GObject pointers (see gda_connection_statement_execute() for more information about what they
+ * Returns: (transfer full) (element-type GObject): a new list of #GObject pointers (see gda_connection_statement_execute() for more information about what they
  * represent), one for each actual execution of the statement upon which @rstmt is built. If @stop_on_error is %FALSE, then
  * the list may contain some %NULL pointers which refer to statements which failed to execute.
  *
@@ -2836,9 +2835,9 @@ _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wra
 }
 
 /**
- * gda_connection_begin_transaction
+ * gda_connection_begin_transaction:
  * @cnc: a #GdaConnection object.
- * @name: the name of the transation to start, or %NULL
+ * @name: (allow-none): the name of the transation to start, or %NULL
  * @level: the requested transaction level (%GDA_TRANSACTION_ISOLATION_UNKNOWN if not specified)
  * @error: a place to store errors, or %NULL
  *
@@ -2866,9 +2865,9 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTran
 }
 
 /**
- * gda_connection_commit_transaction
+ * gda_connection_commit_transaction:
  * @cnc: a #GdaConnection object.
- * @name: the name of the transation to commit, or %NULL
+ * @name: (allow-none): the name of the transation to commit, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Commits the given transaction to the backend database. You need to call
@@ -2890,9 +2889,9 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError
 }
 
 /**
- * gda_connection_rollback_transaction
+ * gda_connection_rollback_transaction:
  * @cnc: a #GdaConnection object.
- * @name: the name of the transation to commit, or %NULL
+ * @name: (allow-none): the name of the transation to commit, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Rollbacks the given transaction. This means that all changes
@@ -2915,9 +2914,9 @@ gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *name, GErr
 }
 
 /**
- * gda_connection_add_savepoint
+ * gda_connection_add_savepoint:
  * @cnc: a #GdaConnection object
- * @name: name of the savepoint to add
+ * @name: (allow-none): name of the savepoint to add
  * @error: a place to store errors or %NULL
  *
  * Adds a SAVEPOINT named @name.
@@ -2937,9 +2936,9 @@ gda_connection_add_savepoint (GdaConnection *cnc, const gchar *name, GError **er
 }
 
 /**
- * gda_connection_rollback_savepoint
+ * gda_connection_rollback_savepoint:
  * @cnc: a #GdaConnection object
- * @name: name of the savepoint to rollback to
+ * @name: (allow-none): name of the savepoint to rollback to
  * @error: a place to store errors or %NULL
  *
  * Rollback all the modifications made after the SAVEPOINT named @name.
@@ -2959,9 +2958,9 @@ gda_connection_rollback_savepoint (GdaConnection *cnc, const gchar *name, GError
 }
 
 /**
- * gda_connection_delete_savepoint
+ * gda_connection_delete_savepoint:
  * @cnc: a #GdaConnection object
- * @name: name of the savepoint to delete
+ * @name: (allow-none): name of the savepoint to delete
  * @error: a place to store errors or %NULL
  *
  * Delete the SAVEPOINT named @name when not used anymore.
@@ -2981,7 +2980,7 @@ gda_connection_delete_savepoint (GdaConnection *cnc, const gchar *name, GError *
 }
 
 /**
- * gda_connection_get_transaction_status
+ * gda_connection_get_transaction_status:
  * @cnc: a #GdaConnection object
  *
  * Get the status of @cnc regarding transactions. The returned object should not be modified
@@ -2989,7 +2988,7 @@ gda_connection_delete_savepoint (GdaConnection *cnc, const gchar *name, GError *
  *
  * If %NULL is returned, then no transaction has been associated with @cnc
  *
- * Returns: a #GdaTransactionStatus object, or %NULL
+ * Returns: (transfer none): a #GdaTransactionStatus object, or %NULL
  */
 GdaTransactionStatus *
 gda_connection_get_transaction_status (GdaConnection *cnc)
@@ -3000,7 +2999,7 @@ gda_connection_get_transaction_status (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_supports_feature
+ * gda_connection_supports_feature:
  * @cnc: a #GdaConnection object.
  * @feature: feature to ask for.
  *
@@ -3943,9 +3942,9 @@ suggest_update_cb_downstream (GdaMetaStore *store, GdaMetaContext *suggest, Down
 }
 
 /**
- * gda_connection_update_meta_store
+ * gda_connection_update_meta_store:
  * @cnc: a #GdaConnection object.
- * @context: description of which part of @cnc's associated #GdaMetaStore should be updated, or %NULL
+ * @context: (allow-none): description of which part of @cnc's associated #GdaMetaStore should be updated, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Updates @cnc's associated #GdaMetaStore. If @context is not %NULL, then only the parts described by
@@ -4372,7 +4371,7 @@ prepare_meta_statements_hash (void)
 }
 
 /**
- * gda_connection_get_meta_store_data
+ * gda_connection_get_meta_store_data:
  * @cnc: a #GdaConnection object.
  * @meta_type: describes which data to get.
  * @error: a place to store errors, or %NULL
@@ -4444,11 +4443,11 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 }
 
 /**
- * gda_connection_get_meta_store_data_v
+ * gda_connection_get_meta_store_data_v:
  * @cnc: a #GdaConnection object.
  * @meta_type: describes which data to get.
  * @error: a place to store errors, or %NULL
- * @filters: a GList of GdaHolders
+ * @filters: (element-type GdaHolder): a #GList of #GdaHolder objects
  *
  * see #gda_connection_get_meta_store_data
  * 
@@ -4515,7 +4514,7 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 
 
 /**
- * gda_connection_get_events
+ * gda_connection_get_events:
  * @cnc: a #GdaConnection.
  *
  * Retrieves a list of the last errors occurred during the connection. The returned list is
@@ -4523,7 +4522,7 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
  *
  * Warning: the @cnc object may change the list if connection events occur
  *
- * Returns: a GList of #GdaConnectionEvent objects (the list should not be modified)
+ * Returns: (transfer none): a #GList of #GdaConnectionEvent objects (the list should not be modified)
  */
 const GList *
 gda_connection_get_events (GdaConnection *cnc)
@@ -4554,10 +4553,10 @@ gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
 }
 
 /**
- * gda_connection_internal_transaction_started
+ * gda_connection_internal_transaction_started: (skip)
  * @cnc: a #GdaConnection
- * @parent_trans: name of the parent transaction, or %NULL
- * @trans_name: transaction's name, or %NULL
+ * @parent_trans: (allow-null): name of the parent transaction, or %NULL
+ * @trans_name: (allow-null): transaction's name, or %NULL
  * @isol_level: isolation level.
  *
  * Internal functions to be called by database providers when a transaction has been started
@@ -4604,9 +4603,9 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
 }
 
 /**
- * gda_connection_internal_transaction_rolledback
+ * gda_connection_internal_transaction_rolledback: (skip)
  * @cnc: a #GdaConnection
- * @trans_name: transaction's name, or %NULL
+ * @trans_name: (allow-null): transaction's name, or %NULL
  *
  * Internal functions to be called by database providers when a transaction has been rolled
  * back to keep track of the transaction status of the connection
@@ -4657,9 +4656,9 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
 }
 
 /**
- * gda_connection_internal_transaction_committed
+ * gda_connection_internal_transaction_committed: (skip)
  * @cnc: a #GdaConnection
- * @trans_name: transaction's name, or %NULL
+ * @trans_name: (allow-null): transaction's name, or %NULL
  *
  * Internal functions to be called by database providers when a transaction has been committed
  * to keep track of the transaction status of the connection
@@ -4710,10 +4709,10 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 }
 
 /**
- * gda_connection_internal_savepoint_added
+ * gda_connection_internal_savepoint_added: (skip)
  * @cnc: a #GdaConnection
- * @parent_trans: name of the parent transaction, or %NULL
- * @svp_name: savepoint's name, or %NULL
+ * @parent_trans: (allow-null): name of the parent transaction, or %NULL
+ * @svp_name: (allow-null): savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been added
  * to keep track of the transaction status of the connection
@@ -4754,9 +4753,9 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
 }
 
 /**
- * gda_connection_internal_savepoint_rolledback
+ * gda_connection_internal_savepoint_rolledback: (skip)
  * @cnc: a #GdaConnection
- * @svp_name: savepoint's name, or %NULL
+ * @svp_name: (allow-null): savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been rolled back
  * to keep track of the transaction status of the connection
@@ -4798,9 +4797,9 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
 }
 
 /**
- * gda_connection_internal_savepoint_removed
+ * gda_connection_internal_savepoint_removed: (skip)
  * @cnc: a #GdaConnection
- * @svp_name: savepoint's name, or %NULL
+ * @svp_name: (allow-null): savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been removed
  * to keep track of the transaction status of the connection
@@ -4842,10 +4841,10 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 }
 
 /**
- * gda_connection_internal_statement_executed
+ * gda_connection_internal_statement_executed: (skip)
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement which has been executed
- * @params: execution's parameters
+ * @params: (allow-null): execution's parameters
  * @error: a #GdaConnectionEvent if the execution failed, or %NULL
  *
  * Internal functions to be called by database providers when a statement has been executed
@@ -4922,7 +4921,7 @@ gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *st
 }
 
 /**
- * gda_connection_internal_change_transaction_state
+ * gda_connection_internal_change_transaction_state: (skip)
  * @cnc: a #GdaConnection
  * @newstate: the new state
  *
@@ -4954,7 +4953,7 @@ gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 }
 
 /**
- * gda_connection_internal_reset_transaction_status
+ * gda_connection_internal_reset_transaction_status: (skip)
  * @cnc: a #GdaConnection
  *
  * Internal function to be called by database providers to reset the transaction status.
@@ -5019,7 +5018,7 @@ statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt)
 
 
 /**
- * gda_connection_add_prepared_statement
+ * gda_connection_add_prepared_statement:
  * @cnc: a #GdaConnection object
  * @gda_stmt: a #GdaStatement object
  * @prepared_stmt: a prepared statement object (as a #GdaPStmt object, or more likely a descendant)
@@ -5053,14 +5052,14 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 }
 
 /**
- * gda_connection_get_prepared_statement
+ * gda_connection_get_prepared_statement:
  * @cnc: a #GdaConnection object
  * @gda_stmt: a #GdaStatement object
  *
  * Retrieves a pointer to an object representing a prepared statement for @gda_stmt within @cnc. The
  * association must have been done using gda_connection_add_prepared_statement().
  *
- * Returns: the prepared statement, or %NULL if no association exists
+ * Returns: (transfer none): the prepared statement, or %NULL if no association exists
  */
 GdaPStmt *
 gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt)
@@ -5078,7 +5077,7 @@ gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 }
 
 /**
- * gda_connection_del_prepared_statement
+ * gda_connection_del_prepared_statement:
  * @cnc: a #GdaConnection object
  * @gda_stmt: a #GdaStatement object
  *
@@ -5102,7 +5101,7 @@ gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
  */
 
 /**
- * gda_connection_internal_set_provider_data
+ * gda_connection_internal_set_provider_data: (skip)
  * @cnc: a #GdaConnection object
  * @data: an opaque structure, known only to the provider for which @cnc is opened
  * @destroy_func: function to call when the connection closes and @data needs to be destroyed
@@ -5123,7 +5122,7 @@ gda_connection_internal_set_provider_data (GdaConnection *cnc, gpointer data, GD
 }
 
 /**
- * gda_connection_internal_get_provider_data
+ * gda_connection_internal_get_provider_data: (skip)
  * @cnc: a #GdaConnection object
  *
  * Get the opaque pointer previously set using gda_connection_internal_set_provider_data().
@@ -5145,7 +5144,7 @@ gda_connection_internal_get_provider_data (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_get_meta_store
+ * gda_connection_get_meta_store:
  * @cnc: a #GdaConnection object
  *
  * Get or initializes the #GdaMetaStore associated to @cnc
