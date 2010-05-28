@@ -326,7 +326,11 @@ case "$host" in
     AC_MSG_RESULT([Mac OS X - carbon])
     platform_carbon=yes
     SOPREFIX='lib'
-    AM_BINRELOC
+    if test "$enable_binreloc" != "no"
+    then
+	AC_DEFINE(ENABLE_BINRELOC)
+	br_cv_binreloc=yes
+    fi
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
     LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX

@@ -40,7 +40,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 	return TRUE;
 }
 #elif HAVE_CARBON
-#include <Carbon/Carbon.h>
+  #ifdef ENABLE_BINRELOC
+    #include <Carbon/Carbon.h>
+  #endif
 #endif
 
 
@@ -191,7 +193,8 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 			  g_ascii_strcasecmp (p + 1, "lib") == 0))
 			*p = '\0';
 #elif HAVE_CARBON
-#define MAXLEN 500
+  #ifdef ENABLE_BINRELOC
+    #define MAXLEN 500
 		ProcessSerialNumber myProcess;
 		FSRef bundleLocation;
 		unsigned char bundlePath[MAXLEN];
@@ -206,13 +209,23 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 				if (g_str_has_suffix (prefix, "bin"))
 					prefix [strlen (prefix) - 3] = 0;
 			}
-			/*g_print ("BUNDLE=%s, prefix=%s\n", bundlePath, prefix);*/
+#ifdef GDA_DEBUG_NO
+			g_print ("BUNDLE=%s, prefix=%s\n", bundlePath, prefix);
+#endif
 		}
 		else
 			g_warning ("Could not get PREFIX (using Mac OS X Carbon)");
+  #else
+#ifdef GDA_DEBUG_NO
+		g_print ("Binreloc disabled, using %s\n", LIBGDAPREFIX);
+#endif
+  #endif
+
+		if (!prefix)
+			prefix = g_strdup (LIBGDAPREFIX);
 #else
 		if (!prefix)
-			prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
+		 	prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
 #endif
 	}
 
@@ -246,14 +259,24 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	else
 		tmp = g_build_filename (prefix, file_part, NULL);
 
-	if (!g_file_test (tmp, G_FILE_TEST_EXISTS) &&
-	    g_str_has_suffix (prefix, "libgda")) {
-		/* test if we are in the sources */
-		g_free (tmp);
-		if (prefix_dir_name)
-			tmp = g_build_filename (LIBGDAPREFIX, prefix_dir_name, file_part, NULL);
-		else
-			tmp = g_build_filename (LIBGDAPREFIX, file_part, NULL);
+	if (!g_file_test (tmp, G_FILE_TEST_EXISTS)) {
+		if (g_str_has_suffix (prefix, "libgda")) {
+			/* test if we are in the sources */
+			g_free (tmp);
+			if (prefix_dir_name)
+				tmp = g_build_filename (LIBGDAPREFIX, prefix_dir_name, file_part, NULL);
+			else
+				tmp = g_build_filename (LIBGDAPREFIX, file_part, NULL);
+		}
+		else {
+			g_free (prefix);
+			prefix = g_strdup (LIBGDAPREFIX);
+			g_free (tmp);
+			if (prefix_dir_name)
+				tmp = g_build_filename (prefix, prefix_dir_name, file_part, NULL);
+			else
+				tmp = g_build_filename (prefix, file_part, NULL);
+		}
 	}
 
 	g_free (prefix);
