@@ -6,7 +6,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-DPRIV_OBJ_PREFIX="\"BROWSER\"" \
 	$(LIBGDA_CFLAGS) \
-	$(GTK_CFLAGS)
+	$(GTK_CFLAGS) \
+	$(MAC_INTEGRATION_CFLAGS)
 
 marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_common_marshal > $@

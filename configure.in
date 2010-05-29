@@ -284,7 +284,7 @@ else
 fi
 
 dnl ******************************
-dnl Check for Win32
+dnl Check for Operating System
 dnl ******************************
 dnl linklibext is the shared link library extension, which varies by platform
 
@@ -294,6 +294,7 @@ EXPORT_UI_SYM_REGEX='-export-symbols-regex "^(gdaui_).*"'
 AC_MSG_CHECKING([for platform])
 platform_win32=no
 platform_carbon=no
+have_ige=no
 linklibext=".so"
 case "$host" in
 *-cygwin*)
@@ -331,6 +332,13 @@ case "$host" in
 	AC_DEFINE(ENABLE_BINRELOC)
 	br_cv_binreloc=yes
     fi
+    PKG_CHECK_MODULES(MAC_INTEGRATION, ige-mac-integration, have_ige=yes, have_ige=no)
+    if test x"$have_ige" = "xyes"
+    then
+	AC_DEFINE(HAVE_MAC_INTEGRATION)
+	AC_SUBST(MAC_INTEGRATION_CFLAGS)
+	AC_SUBST(MAC_INTEGRATION_LIBS)
+    fi
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
     LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
@@ -351,6 +359,7 @@ esac
 
 AM_CONDITIONAL(PLATFORM_WIN32, [test $platform_win32 = yes])
 AM_CONDITIONAL(PLATFORM_CARBON, [test $platform_carbon = yes])
+AM_CONDITIONAL(HAVE_IGE, [test $have_ige = yes])
 AC_SUBST(LIBTOOL_EXPORT_OPTIONS)
 AC_SUBST(LIBTOOL_PROV_EXPORT_OPTIONS)
 AC_SUBST(LIBTOOL_UI_EXPORT_OPTIONS)

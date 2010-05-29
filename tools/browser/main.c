@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -36,7 +36,6 @@
 #include "query-exec/perspective-main.h"
 #include "data-manager/perspective-main.h"
 /* #include "dummy-perspective/perspective-main.h" */
-
 
 extern BrowserCoreInitFactories browser_core_init_factories;
 
@@ -81,6 +80,9 @@ main (int argc, char *argv[])
 
 	gdaui_init ();
 	gtk_init (&argc, &argv);
+#ifdef HAVE_MAC_INTEGRATION
+	theApp = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
+#endif
 	browser_stock_icons_init ();
 
 	browser_core_set_default_factory (perspective);

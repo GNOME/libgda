@@ -19,6 +19,7 @@ AM_CPPFLAGS = \
         $(LIBGDA_CFLAGS) \
         $(GTK_CFLAGS) \
         $(GTKSOURCEVIEW_CFLAGS) \
+	$(MAC_INTEGRATION_CFLAGS) \
         -DPREFIX=\""$(prefix)"\" \
         -DSYSCONFDIR=\""$(sysconfdir)"\" \
         -DDATADIR=\""$(datadir)"\" \
@@ -103,7 +104,7 @@ gda_browser_4_0_LDADD=\
 	common/libcommon.la \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
-	$(LIBGDA_LIBS) $(GTK_LIBS) $(GTKSOURCEVIEW_LIBS)
+	$(LIBGDA_LIBS) $(GTK_LIBS) $(GTKSOURCEVIEW_LIBS) $(MAC_INTEGRATION_LIBS)
 
 
 @INTLTOOL_DESKTOP_RULE@

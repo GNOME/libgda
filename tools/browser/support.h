@@ -26,6 +26,11 @@
 #include <gtk/gtk.h>
 #include "browser-connection.h"
 
+#ifdef HAVE_MAC_INTEGRATION
+#include <gtkosxapplication.h>
+extern GtkOSXApplication *theApp;
+#endif
+
 G_BEGIN_DECLS
 
 BrowserConnection *browser_connection_open (GError **error);

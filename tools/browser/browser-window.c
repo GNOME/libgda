@@ -383,8 +383,12 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	gtk_window_add_accel_group (GTK_WINDOW (bwin), accel_group);
 
         menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
+#ifdef HAVE_MAC_INTEGRATION
+	gtk_osxapplication_set_menu_bar (theApp, GTK_MENU_SHELL (menubar));
+#else
         gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
         gtk_widget_show (menubar);
+#endif
 
         toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
         gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, TRUE, 0);

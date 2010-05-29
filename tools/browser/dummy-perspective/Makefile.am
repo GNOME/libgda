@@ -6,7 +6,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	$(LIBGDA_CFLAGS) \
-	$(GTK_CFLAGS)
+	$(GTK_CFLAGS) \
+	$(MAC_INTEGRATION_CFLAGS)
 
 libperspective_la_SOURCES = \
 	perspective-main.c \

@@ -7,7 +7,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	$(LIBGDA_CFLAGS) \
 	$(GTK_CFLAGS) \
-	$(GTKSOURCEVIEW_CFLAGS)
+	$(GTKSOURCEVIEW_CFLAGS) \
+	$(MAC_INTEGRATION_CFLAGS)
 
 marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_dm_marshal > $@

@@ -27,6 +27,11 @@
 #include "browser-window.h"
 #include "login-dialog.h"
 
+#ifdef HAVE_MAC_INTEGRATION
+#include <gtkosxapplication.h>
+GtkOSXApplication *theApp = NULL;
+#endif
+
 /**
  * Display a login dialog and, if validated, create a new #BrowserConnection
  *
