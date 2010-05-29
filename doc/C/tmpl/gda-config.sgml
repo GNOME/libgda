@@ -119,10 +119,6 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @cnc_string: 
 @auth_string: 
 @is_system: 
-@_gda_reserved1: 
-@_gda_reserved2: 
-@_gda_reserved3: 
-@_gda_reserved4: 
 
 <!-- ##### FUNCTION gda_config_get_dsn_info ##### -->
 <para>
@@ -217,10 +213,6 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 @description: 
 @dsn_params: 
 @auth_params: 
-@_gda_reserved1: 
-@_gda_reserved2: 
-@_gda_reserved3: 
-@_gda_reserved4: 
 
 <!-- ##### FUNCTION gda_config_get_provider_info ##### -->
 <para>
