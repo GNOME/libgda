@@ -220,7 +220,7 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
  * Note: if that statement has been modified since the creation of @pstmt, then this method
  * will return %NULL
  *
- * Returns: the #GdaStatement
+ * Returns: (transfer none): the #GdaStatement
  */
 GdaStatement *
 gda_pstmt_get_gda_statement (GdaPStmt *pstmt)

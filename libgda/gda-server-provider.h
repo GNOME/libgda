@@ -308,6 +308,7 @@ struct _GdaServerProviderClass {
 	/* Async. handling@ */
 	gboolean                (*handle_async)          (GdaServerProvider *provider, GdaConnection *cnc, GError **error);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void                    (*_gda_reserved3)        (void);
 	void                    (*_gda_reserved4)        (void);

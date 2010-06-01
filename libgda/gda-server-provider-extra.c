@@ -260,6 +260,8 @@ gda_select_alter_select_for_empty (GdaStatement *stmt, GError **error)
  *
  * Returns: the number of columns the #GdaDataModel for the requested schema
  * must have
+ *
+ * Deprecated: 4.2: This was a leftover from the pre 4.0 area
  */
 gint
 gda_server_provider_get_schema_nb_columns (GdaConnectionSchema schema)
@@ -473,6 +475,8 @@ schema_get_spec (GdaConnectionSchema schema)
  * Sets the column attributes of @model for the requested schema
  *
  * Returns: TRUE if there was no error
+ *
+ * Deprecated: 4.2: This was a leftover from the pre 4.0 area
  */
 gboolean
 gda_server_provider_init_schema_model (GdaDataModel *model, GdaConnectionSchema schema)
@@ -508,6 +512,8 @@ gda_server_provider_init_schema_model (GdaDataModel *model, GdaConnectionSchema 
  * Test that the structure of @model is correct in regard with @schema
  *
  * Returns: TRUE if @model has the correct structure
+ *
+ * Deprecated: 4.2: This was a leftover from the pre 4.0 area
  */
 gboolean
 gda_server_provider_test_schema_model (GdaDataModel *model, GdaConnectionSchema schema, GError **error)
