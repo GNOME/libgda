@@ -63,7 +63,6 @@ static gboolean gda_set_real_add_holder (GdaSet *set, GdaHolder *holder);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
-extern GdaAttributesManager *gda_holder_attributes_manager;
 
 /* properties */
 enum
