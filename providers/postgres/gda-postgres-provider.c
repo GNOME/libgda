@@ -1263,6 +1263,8 @@ gda_postgres_provider_supports_feature (GdaServerProvider *provider, GdaConnecti
                 }
                 else
                         return TRUE;
+	case GDA_CONNECTION_FEATURE_MULTI_THREADING:
+		return PQisthreadsafe () ? TRUE : FALSE;
         default:
                 break;
         }

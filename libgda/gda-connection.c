@@ -877,7 +877,8 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 
 	g_return_val_if_fail (dsn && *dsn, NULL);
 
-	if ((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) && !g_thread_supported ()) {
+	if (((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) || (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE)) &&
+	    !g_thread_supported ()) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR,
 			      "%s", _("Multi threading is not supported or enabled"));
 		return NULL;
@@ -923,10 +924,14 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 
 		pinfo = gda_config_get_provider_info (dsn_info->provider);
 		if (pinfo) {
-			if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE)
+			prov = gda_config_get_provider (dsn_info->provider, error);
+			if (((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) &&
+			     !gda_server_provider_supports_feature (prov, NULL,
+								    GDA_CONNECTION_FEATURE_MULTI_THREADING)) ||
+			    (options & GDA_CONNECTION_OPTIONS_THREAD_ISOLATED)) {
+				options |= GDA_CONNECTION_OPTIONS_THREAD_ISOLATED;
 				prov = _gda_connection_get_internal_thread_provider ();
-			else
-				prov = gda_config_get_provider (dsn_info->provider, error);
+			}
 		}
 		else
 			g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,
@@ -1022,7 +1027,8 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 
 	g_return_val_if_fail (cnc_string && *cnc_string, NULL);
 
-	if ((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) && !g_thread_supported ()) {
+	if (((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) || (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE)) &&
+		!g_thread_supported ()) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR,
 			      "%s", _("Multi threading is not supported or enabled"));
 		return NULL;
@@ -1068,15 +1074,18 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 
 		pinfo = gda_config_get_provider_info (provider_name ? provider_name : real_provider);
 		if (pinfo) {
-			if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) {
+			prov = gda_config_get_provider (provider_name ? provider_name : real_provider, error);
+			if (((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) &&
+			     !gda_server_provider_supports_feature (prov, NULL,
+								    GDA_CONNECTION_FEATURE_MULTI_THREADING)) ||
+			    (options & GDA_CONNECTION_OPTIONS_THREAD_ISOLATED)) {
 				gchar *tmp;
 				tmp = g_strdup_printf ("%s;PROVIDER_NAME=%s", real_cnc, pinfo->id);
 				g_free (real_cnc);
 				real_cnc = tmp;
+				options |= GDA_CONNECTION_OPTIONS_THREAD_ISOLATED;
 				prov = _gda_connection_get_internal_thread_provider ();
 			}
-			else
-				prov = gda_config_get_provider (provider_name ? provider_name : real_provider, error);
 		}
 		else
 			g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,

@@ -764,9 +764,10 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		}
 	}
 	
-	/* Note: we don't need to set the thread owner because as stating with SQLite version 3.6.0
-	 * connections and prepared statement can be shared by threads */
-	g_object_set (G_OBJECT (cnc), "thread-owner", NULL, NULL);
+	if (sqlite3_threadsafe ())
+		g_object_set (G_OBJECT (cnc), "thread-owner", NULL, NULL);
+	else
+		g_object_set (G_OBJECT (cnc), "thread-owner", g_thread_self (), NULL);
 
 	g_static_rec_mutex_unlock (&cnc_mutex);
 	return TRUE;
@@ -844,7 +845,7 @@ gda_sqlite_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 
         case GDA_SERVER_OPERATION_CREATE_VIEW:
         case GDA_SERVER_OPERATION_DROP_VIEW:
-                return TRUE;
+		return TRUE;
         default:
                 return FALSE;
         }
@@ -1194,6 +1195,8 @@ gda_sqlite_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_VIEWS :
 	case GDA_CONNECTION_FEATURE_PROCEDURES :
 		return TRUE;
+	case GDA_CONNECTION_FEATURE_MULTI_THREADING:
+		return sqlite3_threadsafe () ? TRUE : FALSE;
 	default: 
 		return FALSE;
 	}

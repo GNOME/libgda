@@ -443,7 +443,7 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	guint jid;
 	g_assert (data);
 	data->auth_string = auth_string;
-	data->options = options & (~GDA_CONNECTION_OPTIONS_THREAD_SAFE);
+	data->options = options & (~(GDA_CONNECTION_OPTIONS_THREAD_ISOLATED | GDA_CONNECTION_OPTIONS_THREAD_SAFE));
 
 	jid = gda_thread_wrapper_execute (wr, (GdaThreadWrapperFunc) sub_thread_open_connection, data, NULL, NULL);
 	sub_cnc = gda_thread_wrapper_fetch_result (wr, TRUE, jid, &error);
@@ -2059,6 +2059,17 @@ gda_thread_provider_identifier_quote (GdaServerProvider *provider, GdaConnection
 	return res;
 }
 
+static gpointer
+sub_thread_unref_connection (GdaConnection *cnc, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	g_object_unref (cnc);
+#ifdef GDA_DEBUG_NO
+	g_print ("/%s()\n", __FUNCTION__);
+#endif
+	return NULL;
+}
+
 /*
  * Free connection's specific data
  */
@@ -2076,9 +2087,11 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 	}
 
 	/* unref cdata->sub_connection in sub thread */
-	gda_thread_wrapper_execute_void (cdata->wrapper, 
-					 (GdaThreadWrapperVoidFunc) g_object_unref,
-					 cdata->sub_connection, NULL, NULL);
+	guint jid;
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperVoidFunc) sub_thread_unref_connection,
+					  cdata->sub_connection, NULL, NULL);
+	gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	g_object_unref (cdata->wrapper);
 
 	/* free async data */

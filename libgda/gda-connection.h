@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -77,6 +77,7 @@ struct _GdaConnectionClass {
 	void   (*dsn_changed)               (GdaConnection *obj);
 	void   (*transaction_status_changed)(GdaConnection *obj);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
@@ -89,10 +90,13 @@ struct _GdaConnectionClass {
  * @GDA_CONNECTION_OPTIONS_NONE: no specific aspect
  * @GDA_CONNECTION_OPTIONS_READ_ONLY: this flag specifies that the connection to open should be in a read-only mode
  *                                    (this policy is not correctly enforced at the moment)
- * @GDA_CONNECTION_OPTIONS_THREAD_SAFE: this flag specifies that the connection to open will be used 
- *                                     by several threads at once so it has to be thread safe
  * @GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE: this flag specifies that SQL identifiers submitted as input
  *                                    to Libgda have to keep their case sensitivity. 
+ * @GDA_CONNECTION_OPTIONS_THREAD_SAFE: this flag specifies that the connection to open will be used 
+ *                                     by several threads at once so it has to be thread safe
+ * @GDA_CONNECTION_OPTIONS_THREAD_ISOLATED: this flag specifies that the connection to open will be used 
+ *                                     by several threads at once and requests that the real connection be used
+ *                                     only in a sub thread created specifically for it
  *                                    
  *
  * Specifies some aspects of a connection when opening it.
@@ -109,14 +113,55 @@ struct _GdaConnectionClass {
  *   <listitem><para>Libgda will not apply this rule when parsing SQL code, the SQL code being parsed
  *       has to be conform to the database it will be used with</para></listitem>
  * </itemizedlist>
+ *
+ * Additional information about the GDA_CONNECTION_OPTIONS_THREAD_SAFE and GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flags:
+ * The GDA_CONNECTION_OPTIONS_THREAD_SAFE flag specifies that it has to be able to use the returned connection object from
+ * several threads at once (locking is ensured by the #GdaConnection itself). Depending on the database provider's
+ * implementation and on the native libraries it uses, the "normal" connection object might not respect this requirement,
+ * and in this case a specific thread is started and used as the unique thread which will manipulate the actual connection,
+ * while a "wrapper connection" is actually returned and used by the caller (that wrapper connection passes method calls
+ * from the calling thread to the actual connection's specific thread, and gets the results back).
+ *
+ * The GDA_CONNECTION_OPTIONS_THREAD_ISOLATED forces using a specific thread and a "wrapper connection" even if the
+ * "normal" connection would itself be thread safe; this is usefull for example to be sure the asynchronous API can
+ * always be used (see gda_connection_async_statement_execute()).
+ *
+ * Having a specific thread and a "wrapper connection" definitely has an impact on the performances (because it involves
+ * messages passing between threads for every method call), so using the
+ * GDA_CONNECTION_OPTIONS_THREAD_SAFE or GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flags should be carefully considered.
  */
 typedef enum {
-        GDA_CONNECTION_OPTIONS_NONE = 0,
+	GDA_CONNECTION_OPTIONS_NONE = 0,
 	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
 	GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE = 1 << 1,
-	GDA_CONNECTION_OPTIONS_THREAD_SAFE = 1 << 2
+	GDA_CONNECTION_OPTIONS_THREAD_SAFE = 1 << 2,
+	GDA_CONNECTION_OPTIONS_THREAD_ISOLATED = 1 << 3
 } GdaConnectionOptions;
 
+
+/**
+ * GdaConnectionFeature
+ * @GDA_CONNECTION_FEATURE_AGGREGATES: test for aggregates support
+ * @GDA_CONNECTION_FEATURE_BLOBS: test for BLOBS (binary large objects) support
+ * @GDA_CONNECTION_FEATURE_INDEXES: test for indexes support
+ * @GDA_CONNECTION_FEATURE_INHERITANCE: test for tables inheritance support
+ * @GDA_CONNECTION_FEATURE_NAMESPACES: test for namespaces support
+ * @GDA_CONNECTION_FEATURE_PROCEDURES: test for functions support
+ * @GDA_CONNECTION_FEATURE_SEQUENCES: test for sequences support
+ * @GDA_CONNECTION_FEATURE_SQL: test for SQL language (even specific to the database) support
+ * @GDA_CONNECTION_FEATURE_TRANSACTIONS: test for transactions support
+ * @GDA_CONNECTION_FEATURE_SAVEPOINTS: test for savepoints within transactions support
+ * @GDA_CONNECTION_FEATURE_SAVEPOINTS_REMOVE: test if savepoints can be removed
+ * @GDA_CONNECTION_FEATURE_TRIGGERS: test for triggers support
+ * @GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR: test for updatable cursors support
+ * @GDA_CONNECTION_FEATURE_USERS: test for users support
+ * @GDA_CONNECTION_FEATURE_VIEWS: test for views support
+ * @GDA_CONNECTION_FEATURE_XA_TRANSACTIONS: test for distributed transactions support
+ * @GDA_CONNECTION_FEATURE_MULTI_THREADING: test for native multi-threading support
+ *
+ * Used in gda_connection_supports_feature() and gda_server_provider_supports_feature() to test if a connection
+ * or a database provider supports some specific feature.
+ */
 typedef enum {
 	GDA_CONNECTION_FEATURE_AGGREGATES,
 	GDA_CONNECTION_FEATURE_BLOBS,
@@ -134,10 +179,18 @@ typedef enum {
 	GDA_CONNECTION_FEATURE_USERS,
 	GDA_CONNECTION_FEATURE_VIEWS,
 	GDA_CONNECTION_FEATURE_XA_TRANSACTIONS,
+	
+	GDA_CONNECTION_FEATURE_MULTI_THREADING,
 
 	GDA_CONNECTION_FEATURE_LAST
 } GdaConnectionFeature;
 
+
+/**
+ * GdaConnectionSchema
+ *
+ * Deprecated: 4.2: This was a leftover from the pre 4.0 area
+ */
 typedef enum {
 	GDA_CONNECTION_SCHEMA_AGGREGATES,
 	GDA_CONNECTION_SCHEMA_DATABASES,

@@ -161,7 +161,7 @@ gda_virtual_connection_open (GdaVirtualProvider *virtual_provider, GError **erro
  * @error: a place to store errors, or %NULL
  *
  * Creates and opens a new virtual connection using the @virtual_provider provider. If @options
- * contains the %GDA_CONNECTION_OPTIONS_THREAD_SAFE flag, then the returned connection will be
+ * contains the %GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flag, then the returned connection will be
  * a thread wrapped connection, and the actual (wrapped) virtual connection can be obtained through
  * the "gda-virtual-connection" user property (use g_object_get_data() to get it).
  *
@@ -177,7 +177,8 @@ gda_virtual_connection_open_extended (GdaVirtualProvider *virtual_provider, GdaC
 		cnc = PROV_CLASS (virtual_provider)->create_connection ((GdaServerProvider*) virtual_provider);
 		if (cnc) {
 			g_object_set (G_OBJECT (cnc), "provider", virtual_provider, 
-				      "options", options & (~GDA_CONNECTION_OPTIONS_THREAD_SAFE), NULL);
+				      "options",
+				      options & (~ (GDA_CONNECTION_OPTIONS_THREAD_ISOLATED | GDA_CONNECTION_OPTIONS_THREAD_SAFE)), NULL);
 			if (!gda_connection_open (cnc, error)) {
 				g_object_unref (cnc);
 				cnc = NULL;
@@ -188,7 +189,7 @@ gda_virtual_connection_open_extended (GdaVirtualProvider *virtual_provider, GdaC
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR, "%s", 
 			     _("Internal error: virtual provider does not implement the create_operation() virtual method"));
 
-	if (cnc && (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE)) {
+	if (cnc && (options & GDA_CONNECTION_OPTIONS_THREAD_ISOLATED)) {
 		GdaConnection *wcnc;
 		wcnc = _gda_thread_provider_handle_virtual_connection (GDA_THREAD_PROVIDER (_gda_connection_get_internal_thread_provider ()),
 								       cnc);

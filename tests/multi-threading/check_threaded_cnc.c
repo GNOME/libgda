@@ -52,7 +52,7 @@ main (int argc, char** argv)
                 return 1;
         }
         tcnc = gda_connection_open_from_string ("SQlite", "DB_DIR=.;DB_NAME=testdb", NULL,
-					       GDA_CONNECTION_OPTIONS_THREAD_SAFE, &error);
+					       GDA_CONNECTION_OPTIONS_THREAD_ISOLATED, &error);
         if (!tcnc) {
                 g_print ("ERROR opening connection in thread safe mode: %s\n",
                          error && error->message ? error->message : "No detail");
@@ -452,7 +452,7 @@ test_meta_store (GdaConnection *cnc)
 
 	g_print ("=== Starting test where threaded connection is used internally by a meta store\n");
 	tcnc = gda_connection_open_from_string ("SQlite", "DB_DIR=.;DB_NAME=storedb", NULL,
-						GDA_CONNECTION_OPTIONS_THREAD_SAFE, &error);
+						GDA_CONNECTION_OPTIONS_THREAD_ISOLATED, &error);
         if (!tcnc) {
                 g_print ("ERROR opening connection in thread safe mode: %s\n",
                          error && error->message ? error->message : "No detail");

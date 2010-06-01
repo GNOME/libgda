@@ -1234,6 +1234,8 @@ gda_mysql_provider_supports_feature (GdaServerProvider     *provider,
 	switch (feature) {
 	case GDA_CONNECTION_FEATURE_SQL :
 		return TRUE;
+	case GDA_CONNECTION_FEATURE_MULTI_THREADING:
+		return mysql_thread_safe () ? TRUE : FALSE;
 	default: 
 		return FALSE;
 	}
