@@ -1,6 +1,6 @@
 /* gda-batch.c
  *
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -146,7 +146,7 @@ gda_batch_init (GdaBatch * batch)
 }
 
 /**
- * gda_batch_new
+ * gda_batch_new:
  *
  * Creates a new #GdaBatch object
  *
@@ -163,7 +163,7 @@ gda_batch_new (void)
 
 
 /**
- * gda_batch_copy
+ * gda_batch_copy:
  * @orig: a #GdaBatch to make a copy of
  * 
  * Copy constructor
@@ -276,7 +276,7 @@ stmt_reset_cb (GdaStatement *stmt, GdaBatch *batch)
 }
 
 /**
- * gda_batch_add_statement
+ * gda_batch_add_statement:
  * @batch: a #GdaBatch object
  * @stmt: a statement to add to @batch's statements list
  *
@@ -298,7 +298,7 @@ gda_batch_add_statement (GdaBatch *batch, GdaStatement *stmt)
 }
 
 /**
- * gda_batch_remove_statement
+ * gda_batch_remove_statement:
  * @batch: a #GdaBatch object
  * @stmt: a statement to remove from @batch's statements list
  *
@@ -327,7 +327,7 @@ gda_batch_remove_statement (GdaBatch *batch, GdaStatement *stmt)
 
 
 /**
- * gda_batch_serialize
+ * gda_batch_serialize:
  * @batch: a #GdaBatch object
  *
  * Creates a string representing the contents of @batch.
@@ -367,12 +367,12 @@ gda_batch_serialize (GdaBatch *batch)
 }
 
 /**
- * gda_batch_get_statements
+ * gda_batch_get_statements:
  * @batch: a #GdaBatch object
  *
  * Get a list of the #GdaStatement objects contained in @batch
  *
- * Returns: a list of #GdaStatement which should not be modified.
+ * Returns: (element-type GdaStatement) (transfer none): a list of #GdaStatement which should not be modified.
  */
 const GSList *
 gda_batch_get_statements (GdaBatch *batch)
@@ -384,9 +384,9 @@ gda_batch_get_statements (GdaBatch *batch)
 }
 
 /**
- * gda_batch_get_parameters
+ * gda_batch_get_parameters:
  * @batch: a #GdaBatch object
- * @out_params: a place to store a new #GdaSet object, or %NULL
+ * @out_params: (out) (tranfer full) (allow-none): a place to store a new #GdaSet object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get a new #GdaSet object which groups all the execution parameters

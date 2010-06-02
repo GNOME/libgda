@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -247,7 +247,7 @@ gda_column_get_property (GObject *object,
 }
 
 /**
- * gda_column_new
+ * gda_column_new:
  *
  * Returns: a newly allocated #GdaColumn object.
  */
@@ -262,10 +262,11 @@ gda_column_new (void)
 }
 
 /**
- * gda_column_copy 	 
+ * gda_column_copy:
  * @column: column to get a copy from. 	 
  * 	 
- * Creates a new #GdaColumn object from an existing one. 	 
+ * Creates a new #GdaColumn object from an existing one.
+ *
  * Returns: a newly allocated #GdaColumn with a copy of the data 	 
  * in @column. 	 
  */ 	 
@@ -294,7 +295,7 @@ gda_column_copy (GdaColumn *column)
 }
 
 /**
- * gda_column_get_name
+ * gda_column_get_name:
  * @column: a #GdaColumn.
  *
  * Returns: the name of @column.
@@ -312,7 +313,7 @@ gda_column_get_name (GdaColumn *column)
 }
 
 /**
- * gda_column_set_name
+ * gda_column_set_name:
  * @column: a #GdaColumn.
  * @name: the new name of @column.
  *
@@ -344,7 +345,7 @@ gda_column_set_name (GdaColumn *column, const gchar *name)
 }
 
 /**
- * gda_column_get_description
+ * gda_column_get_description:
  * @column: a #GdaColumn.
  *
  * Returns: the column's description, in any
@@ -362,7 +363,7 @@ gda_column_get_description (GdaColumn *column)
 }
 
 /**
- * gda_column_set_description
+ * gda_column_set_description:
  * @column: a #GdaColumn.
  * @title: title name.
  *
@@ -383,7 +384,7 @@ gda_column_set_description (GdaColumn *column, const gchar *descr)
 }
 
 /**
- * gda_column_get_dbms_type
+ * gda_column_get_dbms_type:
  * @column: a #GdaColumn.
  *
  * Returns: the database type of @column.
@@ -396,7 +397,7 @@ gda_column_get_dbms_type (GdaColumn *column)
 }
 
 /**
- * gda_column_set_dbms_type
+ * gda_column_set_dbms_type:
  * @column: a #GdaColumn
  * @dbms_type: a string
  *
@@ -417,7 +418,7 @@ gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type)
 }
 
 /**
- * gda_column_get_g_type
+ * gda_column_get_g_type:
  * @column: a #GdaColumn.
  *
  * Returns: the type of @column.
@@ -430,7 +431,7 @@ gda_column_get_g_type (GdaColumn *column)
 }
 
 /**
- * gda_column_set_g_type
+ * gda_column_set_g_type:
  * @column: a #GdaColumn.
  * @type: the new type of @column.
  *
@@ -452,7 +453,7 @@ gda_column_set_g_type (GdaColumn *column, GType type)
 }
 
 /**
- * gda_column_get_allow_null
+ * gda_column_get_allow_null:
  * @column: a #GdaColumn.
  *
  * Gets the 'allow null' flag of the given column.
@@ -467,7 +468,7 @@ gda_column_get_allow_null (GdaColumn *column)
 }
 
 /**
- * gda_column_set_allow_null
+ * gda_column_set_allow_null:
  * @column: a #GdaColumn.
  * @allow: whether the given column should allows null values or not.
  *
@@ -481,7 +482,7 @@ gda_column_set_allow_null (GdaColumn *column, gboolean allow)
 }
 
 /**
- * gda_column_get_auto_increment
+ * gda_column_get_auto_increment:
  * @column: a #GdaColumn.
  *
  * Returns: whether the given column is an auto incremented one (%TRUE or %FALSE).
@@ -494,7 +495,7 @@ gda_column_get_auto_increment (GdaColumn *column)
 }
 
 /**
- * gda_column_set_auto_increment
+ * gda_column_set_auto_increment:
  * @column: a #GdaColumn.
  * @is_auto: auto increment status.
  *
@@ -509,7 +510,7 @@ gda_column_set_auto_increment (GdaColumn *column,
 }
 
 /**
- * gda_column_get_position
+ * gda_column_get_position:
  * @column: a #GdaColumn.
  *
  * Returns: the position of the column refer to in the
@@ -523,7 +524,7 @@ gda_column_get_position (GdaColumn *column)
 }
 
 /**
- * gda_column_set_position
+ * gda_column_set_position:
  * @column: a #GdaColumn.
  * @position: the wanted position of the column in the containing data model.
  *
@@ -539,7 +540,7 @@ gda_column_set_position (GdaColumn *column, gint position)
 
 
 /**
- * gda_column_get_default_value
+ * gda_column_get_default_value:
  * @column: a #GdaColumn.
  *
  * Returns: @column's default value, as a #GValue object.
@@ -552,7 +553,7 @@ gda_column_get_default_value (GdaColumn *column)
 }
 
 /**
- * gda_column_set_default_value
+ * gda_column_set_default_value:
  * @column: a #GdaColumn.
  * @default_value: default #GValue for the column
  *
@@ -570,7 +571,7 @@ gda_column_set_default_value (GdaColumn *column, const GValue *default_value)
 }
 
 /**
- * gda_column_get_attribute
+ * gda_column_get_attribute:
  * @column: a #GdaColumn
  * @attribute: attribute name as a string
  *
@@ -588,7 +589,7 @@ gda_column_get_attribute (GdaColumn *column, const gchar *attribute)
 }
 
 /**
- * gda_column_set_attribute
+ * gda_column_set_attribute:
  * @column: a #GdaColumn
  * @attribute: attribute name as a static string
  * @value: a #GValue, or %NULL

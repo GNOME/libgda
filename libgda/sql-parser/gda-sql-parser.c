@@ -1,6 +1,6 @@
 /* gda-sql-parser.c
  *
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -261,7 +261,7 @@ gda_sql_parser_init (GdaSqlParser *parser)
 }
 
 /**
- * gda_sql_parser_new
+ * gda_sql_parser_new:
  *
  * Creates a new #GdaSqlParser object
  *
@@ -415,10 +415,10 @@ gda_sql_parser_get_property (GObject *object,
 }
 
 /**
- * gda_sql_parser_parse_string
+ * gda_sql_parser_parse_string:
  * @parser: a #GdaSqlParser object
  * @sql: the SQL string to parse
- * @remain: location to store a pointer to remaining part of @sql in case @sql has multiple statement, or %NULL
+ * @remain: (out) (allow-none): location to store a pointer to remaining part of @sql in case @sql has multiple statement, or %NULL
  * @error: location to store error, or %NULL
  *
  * Parses @sql and creates a #GdaStatement statement from the first SQL statement contained in @sql: if @sql
@@ -647,10 +647,10 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 }
 
 /**
- * gda_sql_parser_parse_string_as_batch
+ * gda_sql_parser_parse_string_as_batch:
  * @parser: a #GdaSqlParser object
  * @sql: the SQL string to parse
- * @remain: location to store a pointer to remaining part of @sql in case an error occurred while parsing @sql, or %NULL
+ * @remain: (out) (allow-none): location to store a pointer to remaining part of @sql in case an error occurred while parsing @sql, or %NULL
  * @error: location to store error, or %NULL
  *
  * Parse @sql and creates a #GdaBatch object which contains all the #GdaStatement objects created while parsing (one object
@@ -738,7 +738,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 }
 
 /**
- * gda_sql_parser_parse_file_as_batch
+ * gda_sql_parser_parse_file_as_batch:
  * @parser: a #GdaSqlParser object
  * @filename: name of the file to parse
  * @error: location to store error, or %NULL

@@ -1,6 +1,6 @@
 /* gda-statement.c
  *
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -177,7 +177,7 @@ gda_statement_init (GdaStatement * stmt)
 }
 
 /**
- * gda_statement_new
+ * gda_statement_new:
  *
  * Creates a new #GdaStatement object
  *
@@ -194,7 +194,7 @@ gda_statement_new (void)
 
 
 /**
- * gda_statement_copy
+ * gda_statement_copy:
  * @orig: a #GdaStatement to make a copy of
  * 
  * Copy constructor
@@ -299,13 +299,13 @@ gda_statement_get_property (GObject *object,
 }
 
 /**
- * gda_statement_get_statement_type
+ * gda_statement_get_statement_type:
  * @stmt: a #GdaStatement object
  *
  * Get the type of statement held by @stmt. It returns GDA_SQL_STATEMENT_NONE if
  * @stmt does not hold any statement
  *
- * Returns: the statement type
+ * Returns: (transfer none): the statement type
  */
 GdaSqlStatementType
 gda_statement_get_statement_type (GdaStatement *stmt)
@@ -320,7 +320,7 @@ gda_statement_get_statement_type (GdaStatement *stmt)
 }
 
 /**
- * gda_statement_is_useless
+ * gda_statement_is_useless:
  * @stmt: a #GdaStatement object
  *
  * Tells if @stmt is composed only of spaces (that is it has no real SQL code), and is completely
@@ -364,7 +364,7 @@ gda_statement_is_useless (GdaStatement *stmt)
 }
 
 /**
- * gda_statement_check_structure
+ * gda_statement_check_structure:
  * @stmt: a #GdaStatement object
  * @error: a place to store errors, or %NULL
  * 
@@ -382,9 +382,9 @@ gda_statement_check_structure (GdaStatement *stmt, GError **error)
 }
 
 /**
- * gda_statement_check_validity
+ * gda_statement_check_validity:
  * @stmt: a #GdaStatement object
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * If @cnc is not %NULL then checks that every object (table, field, function) used in @stmt 
@@ -411,7 +411,7 @@ gda_statement_check_validity (GdaStatement *stmt, GdaConnection *cnc, GError **e
 }
 
 /**
- * gda_statement_normalize
+ * gda_statement_normalize:
  * @stmt: a #GdaStatement object
  * @cnc: a #GdaConnection object
  * @error: a place to store errors, or %NULL
@@ -432,7 +432,7 @@ gda_statement_normalize (GdaStatement *stmt, GdaConnection *cnc, GError **error)
 }
 
 /**
- * gda_statement_serialize
+ * gda_statement_serialize:
  * @stmt: a #GdaStatement object
  *
  * Creates a string representing the contents of @stmt.
@@ -496,9 +496,9 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 }
 
 /**
- * gda_statement_get_parameters
+ * gda_statement_get_parameters:
  * @stmt: a #GdaStatement object
- * @out_params: a place to store a new #GdaSet object, or %NULL
+ * @out_params: (out) (allow-none) (transfer full): a place to store a new #GdaSet object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get a new #GdaSet object which groups all the execution parameters
@@ -562,7 +562,7 @@ static gchar *default_render_select_from (GdaSqlSelectFrom *from, GdaSqlRenderin
 static gchar *default_render_select_order (GdaSqlSelectOrder *order, GdaSqlRenderingContext *context, GError **error);
 
 /**
- * gda_statement_to_sql_real
+ * gda_statement_to_sql_real:
  * @stmt: a #GdaStatement object
  * @context: a #GdaSqlRenderingContext context
  * @error: a place to store errors, or %NULL
@@ -702,12 +702,12 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 }
 
 /**
- * gda_statement_to_sql_extended
+ * gda_statement_to_sql_extended:
  * @stmt: a #GdaStatement object
  * @cnc: a #GdaConnection object, or %NULL
  * @params: parameters contained in a single #GdaSet object
  * @flags: a set of flags to control the rendering
- * @params_used: a place to store the list of actual #GdaHolder objects in @params used to do the rendering, or %NULL
+ * @params_used: (element-type GdaHolder) (out) (transfer container) (allow-none):a place to store the list of actual #GdaHolder objects in @params used to do the rendering, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Renders @stmt as an SQL statement, with some control on how it is rendered.

@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -91,7 +91,7 @@ objattrs_unref (ObjAttrs *attrs)
 }
 
 /**
- * gda_attributes_manager_new
+ * gda_attributes_manager_new:
  * @for_objects: set to TRUE if attributes will be set on objects.
  * @signal_func: a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
  * @signal_data: user data passed as last argument of @signal_func when it is called
@@ -99,6 +99,7 @@ objattrs_unref (ObjAttrs *attrs)
  * Creates a new #GdaAttributesManager, which can store (name, value) attributes for pointers or GObject objects
  * (in the latter case, the attributes are destroyed when objects are also destroyed).
  *
+ * Free-function: gda_attributes_manager_free
  * Returns: the new #GdaAttributesManager
  */
 GdaAttributesManager *
@@ -142,7 +143,7 @@ foreach_destroy_func (gpointer ptr, ObjAttrs *attrs, GdaAttributesManager *mgr)
 }
 
 /**
- * gda_attributes_manager_free
+ * gda_attributes_manager_free:
  * @mgr: a #GdaAttributesManager
  *
  * Frees all the resssources managed by @mgr
@@ -246,7 +247,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
 }
 
 /**
- * gda_attributes_manager_set
+ * gda_attributes_manager_set:
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
@@ -268,7 +269,7 @@ gda_attributes_manager_set (GdaAttributesManager *mgr, gpointer ptr, const gchar
 }
 
 /**
- * gda_attributes_manager_set_full
+ * gda_attributes_manager_set_full:
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
@@ -287,14 +288,14 @@ gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,
 
 
 /**
- * gda_attributes_manager_get
+ * gda_attributes_manager_get:
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name, as a *static* string
  *
  * Retrieves the value of an attribute previously set using gda_attributes_manager_set().
  *
- * Returns: the attribute's value, or %NULL if the attribute is not set.
+ * Returns: (tranfer none): the attribute's value, or %NULL if the attribute is not set.
  */
 const GValue *
 gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar *att_name)
@@ -316,7 +317,7 @@ gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar
 }
 
 /**
- * gda_attributes_manager_copy
+ * gda_attributes_manager_copy:
  * @from_mgr: a #GdaAttributesManager
  * @from: a pointer from which attributes are copied
  * @to_mgr: a #GdaAttributesManager
@@ -375,7 +376,7 @@ foreach_copy_func (AttName *attname, const GValue *value, CopyData *cdata)
 }
 
 /**
- * gda_attributes_manager_clear
+ * gda_attributes_manager_clear:
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources for which all the attributes will be removed
  *
@@ -404,7 +405,7 @@ typedef struct {
 static void foreach_foreach_func (AttName *attname, const GValue *value, FData *fdata);
 
 /**
- * gda_attributes_manager_foreach
+ * gda_attributes_manager_foreach:
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources for which all the attributes used
  * @func: a #GdaAttributesManagerFunc function

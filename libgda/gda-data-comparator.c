@@ -1,6 +1,6 @@
 /* gda-data-comparator.c
  *
- * Copyright (C) 2008 Vivien Malerba
+ * Copyright (C) 2008 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -174,7 +174,7 @@ gda_data_comparator_init (GdaDataComparator *comparator)
 }
 
 /**
- * gda_data_comparator_new
+ * gda_data_comparator_new:
  * @old_model: Data model to which the modifications should be applied
  * @new_model: Target data model.
  *
@@ -182,7 +182,7 @@ gda_data_comparator_init (GdaDataComparator *comparator)
  * all the computed differences (as #GdaDiff structures) to @old_model, the resulting data model
  * should have the same contents as @new_model.
  *
- * Returns: a new #GdaDataComparator object
+ * Returns: (type GdaDataComparator) (transfer full): a new #GdaDataComparator object
  */
 GObject *
 gda_data_comparator_new (GdaDataModel *old_model, GdaDataModel *new_model)
@@ -327,10 +327,10 @@ gda_diff_free (GdaDiff *diff)
 }
 
 /**
- * gda_data_comparator_set_key_columns
+ * gda_data_comparator_set_key_columns:
  * @comp: a #GdaDataComparator object
  * @nb_cols: the size of the @col_numbers array
- * @col_numbers: a array of @nb_cols values
+ * @col_numbers: (array length=nb_cols): an array of @nb_cols values
  *
  * Defines the columns which will be used as a key when searching data. This is not mandatory but
  * will speed things up as less data will be processed.
@@ -411,7 +411,7 @@ find_row_in_model (GdaDataComparator *comp, gint row, gboolean *out_has_changed,
 }
 
 /**
- * gda_data_comparator_compute_diff
+ * gda_data_comparator_compute_diff:
  * @comp: a #GdaDataComparator object
  * @error: a place to store errors, or %NULL
  *
@@ -606,7 +606,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 }
 
 /**
- * gda_data_comparator_get_n_diffs
+ * gda_data_comparator_get_n_diffs:
  * @comp: a #GdaDataComparator object
  *
  * Get the number of differences as computed by the last time gda_data_comparator_compute_diff() was called.
@@ -623,13 +623,13 @@ gda_data_comparator_get_n_diffs  (GdaDataComparator *comp)
 }
 
 /**
- * gda_data_comparator_get_diff
+ * gda_data_comparator_get_diff:
  * @comp: a #GdaDataComparator object
  * @pos: the requested difference number (starting at 0)
  *
  * Get a pointer to the #GdaDiff structure representing the difference which number is @pos
  *
- * Returns: a pointer to a #GdaDiff, or %NULL if @pos is invalid
+ * Returns: (transfer none): a pointer to a #GdaDiff, or %NULL if @pos is invalid
  */
 const GdaDiff *
 gda_data_comparator_get_diff (GdaDataComparator *comp, gint pos)
