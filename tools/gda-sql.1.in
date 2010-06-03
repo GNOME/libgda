@@ -1,4 +1,4 @@
-.TH gda-sql 1 "January 09 2009" "Version @PACKAGE_VERSION@" "LIBGDA Manual Pages"
+.TH gda-sql 1 "June 03 2010" "Version @PACKAGE_VERSION@" "LIBGDA Manual Pages"
 
 .SH NAME
 gda-sql - an SQL console based on Libgda
@@ -6,7 +6,6 @@ gda-sql - an SQL console based on Libgda
 .SH SYNOPSIS
 .B gda-sql
 [\-\-help] [\-v] [\-\-version]
-[\-p] [\-\-no\-password\-ask]
 [\-o] [\-\-output\-file \fI<filename>\fP]
 [\-C] [\-\-command]
 [\-f] [\-\-commands\-file \fI<filename>\fP]
@@ -14,7 +13,8 @@ gda-sql - an SQL console based on Libgda
 [\-l] [\-\-list\-dsn]
 [\-L] [\-\-list\-providers]
 [\-s] [\-\-http\-port \fI<port>\fP]
-[\-t] [\-\-http\-token \fI<token phrase>\fP] ...
+[\-t] [\-\-http\-token \fI<token phrase>\fP]
+[connection's spec] [connection's spec...]
 
 .SH DESCRIPTION
 .PP
@@ -26,7 +26,8 @@ query results.
 Several connections can be opened at the same time, allowing you to switch the active connection to any
 opened connection. When starting, gda-sql opens a connection for each connection specified on the command
 line (plus optionally one corresponding to the \fBGDA_SQL_CNC\fP environment variable). The prompt
-indicates the current connection used when executing commands.
+indicates the current connection used when executing commands. See the \fB.c\fP internal command for
+an explanation about the syntax to specify a connection on the command line.
 
 .PP
 Alternatively, input can be from a file.
@@ -41,9 +42,6 @@ gda-sql accepts the following options:
 .TP 8
 .B  \-\-help
 Show command\-line options.
-.TP 8
-.B \-p, \-\-no\-password\-ask
-Don't ask for a password when it is empty.
 .TP 8
 .B \-o, \-\-output\-file \fI<filename>\fP
 Specifies a file to which outputs are redirected.
@@ -106,11 +104,11 @@ relative to the location of the gda-sql executable file.
 
 .SH FILES
 gda-sql stores data source definitions (DSN) in Libgda defined files 
-(\fB$HOME\fP/.libgda/config and @gdasysconfdir@/libgda-@GDA_ABI_VERSION@/config
+($HOME/.local/share/libgda and @gdasysconfdir@/libgda-@GDA_ABI_VERSION@/config
 where ${prefix} is typically /usr).
 
 For each connection defined by a DSN, the meta data is stored in a
-\fB$HOME\fP/.libgda/gda-sql-<DSN>.db file.
+$HOME/.local/share/libgda/gda-sql-<DSN>.db file.
 
 
 .SH SQL commands
@@ -134,12 +132,14 @@ connections). \fB.bind <CNC_NAME> <CNC_NAME1> <CNC_NAME2> [<CNC_NAME> ...]\fP cr
 \fI<CNC_NAME>\fP which binds the tables of the \fI<CNC_NAME1>\fP, \fI<CNC_NAME2>\fP and any other
 connection specified.
 .IP \fB.c\fP
-Opens a connection or sets the current connection.
+Opens a connection or sets the current connection. Username and password can pe specified using
+the \fB<USERNAME>[:<PASSWORD>]@<DSN_NAME>\fP or \fB<USERNAME>[:<PASSWORD>]@<CNC_DEFINITION>\fP syntax,
+and if a username or a password is required but not specified, it will ba asked interactively.
 
-\fB.c <CNC_NAME> <DSN_NAME> [USER [PASSWORD]]\fP opens a connection internally known as \fI<CNC_NAME>\fP,
+\fB.c <CNC_NAME> <DSN_NAME>\fP opens a connection internally known as \fI<CNC_NAME>\fP,
 using the specified DSN.
 
-\fB.c <CNC_NAME> <CNC_DEFINITION> [USER [PASSWORD]] \fP opens a connection internally known as \fI<CNC_NAME>\fP,
+\fB.c <CNC_NAME> <CNC_DEFINITION>] \fP opens a connection internally known as \fI<CNC_NAME>\fP,
 using a connection specified by \fI<CNC_DEFINITION>\fP which is similar to the \fI<DSN_DEFINITION>\fP parameter
 of the \fB.lc\fP command.
 
