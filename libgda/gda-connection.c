@@ -69,7 +69,7 @@ struct _GdaConnectionPrivate {
 	/* multi threading locking */
 	GThread              *unique_possible_thread; /* non NULL => only that thread can use this connection */
 	GCond                *unique_possible_cond;
-	GMutex               *unique_possible_mutex;
+	GMutex               *object_mutex;
 	GdaMutex             *mutex;
 };
 
@@ -322,7 +322,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv = g_new0 (GdaConnectionPrivate, 1);
 	cnc->priv->unique_possible_thread = NULL;
 	cnc->priv->unique_possible_cond = NULL;
-	cnc->priv->unique_possible_mutex = NULL;
+	cnc->priv->object_mutex = g_mutex_new ();
 	cnc->priv->mutex = gda_mutex_new ();
 	cnc->priv->provider_obj = NULL;
 	cnc->priv->dsn = NULL;
@@ -394,8 +394,8 @@ gda_connection_finalize (GObject *object)
 
 	if (cnc->priv->unique_possible_cond)
 		g_cond_free (cnc->priv->unique_possible_cond);
-	if (cnc->priv->unique_possible_mutex)
-		g_mutex_free (cnc->priv->unique_possible_mutex);
+	if (cnc->priv->object_mutex)
+		g_mutex_free (cnc->priv->object_mutex);
 	gda_mutex_free (cnc->priv->mutex);
 
 	g_free (cnc->priv);
@@ -468,11 +468,20 @@ gda_connection_set_property (GObject *object,
         if (cnc->priv) {
                 switch (param_id) {
 		case PROP_THREAD_OWNER:
+			g_mutex_lock (cnc->priv->object_mutex);
 			gda_mutex_lock (cnc->priv->mutex);
 			cnc->priv->unique_possible_thread = g_value_get_pointer (value);
-			if (cnc->priv->unique_possible_cond) 
-				g_cond_signal (cnc->priv->unique_possible_cond);
+#ifdef GDA_DEBUG_CNC_LOCK
+			g_print ("Unique set to %p\n", cnc->priv->unique_possible_thread);
+#endif
+			if (cnc->priv->unique_possible_cond) {
+#ifdef GDA_DEBUG_CNC_LOCK
+				g_print ("Signalling on %p\n", cnc->priv->unique_possible_cond);
+#endif
+				g_cond_broadcast (cnc->priv->unique_possible_cond);
+			}
 			gda_mutex_unlock (cnc->priv->mutex);
+			g_mutex_unlock (cnc->priv->object_mutex);
 			break;
                 case PROP_DSN: {
 			const gchar *datasource = g_value_get_string (value);
@@ -4351,24 +4360,25 @@ gda_connection_lock (GdaLockable *lockable)
 	gda_mutex_lock (cnc->priv->mutex);
 	if (cnc->priv->unique_possible_thread && 
 	    (cnc->priv->unique_possible_thread != g_thread_self ())) {
-		if (!cnc->priv->unique_possible_mutex)
-			cnc->priv->unique_possible_mutex = g_mutex_new ();
+		gda_mutex_unlock (cnc->priv->mutex);
+		g_mutex_lock (cnc->priv->object_mutex);
+
 		if (!cnc->priv->unique_possible_cond)
 			cnc->priv->unique_possible_cond = g_cond_new ();
 
-		g_mutex_lock (cnc->priv->unique_possible_mutex);
-		gda_mutex_unlock (cnc->priv->mutex);
-
-		g_cond_wait (cnc->priv->unique_possible_cond, cnc->priv->unique_possible_mutex);
 		while (1) {
 			if (cnc->priv->unique_possible_thread &&
 			    (cnc->priv->unique_possible_thread != g_thread_self ())) {
-				g_cond_signal (cnc->priv->unique_possible_cond);
-				g_cond_wait (cnc->priv->unique_possible_cond, cnc->priv->unique_possible_mutex);
+#ifdef GDA_DEBUG_CNC_LOCK
+				g_print ("Wainting th %p, now %p (cond %p, mutex%p)\n", g_thread_self(),
+					 cnc->priv->unique_possible_thread, cnc->priv->unique_possible_cond,
+					 cnc->priv->object_mutex);
+#endif
+				g_cond_wait (cnc->priv->unique_possible_cond,
+					     cnc->priv->object_mutex);
 			}
-			else {
-				g_mutex_unlock (cnc->priv->unique_possible_mutex);
-				gda_mutex_lock (cnc->priv->mutex);
+			else if (gda_mutex_trylock (cnc->priv->mutex)) {
+				g_mutex_unlock (cnc->priv->object_mutex);
 				break;
 			}
 		}
