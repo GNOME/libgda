@@ -280,7 +280,16 @@ EXTRA_DIST = \
 
 DISTCLEANFILES  = .deps/*.P
 if HAVE_INTROSPECTION
-BUILT_GIRSOURCES =
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) \
+			     --add-include-path=providers-support \
+			     --add-include-path=sql-parser \
+			     --add-include-path=thread-wrapper \
+			     --add-include-path=handlers \
+			     --namespace Gda
+INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+
 psupport = \
 	providers-support/gda-pstmt.h \
 	providers-support/gda-pstmt.c
@@ -331,57 +340,27 @@ handlers = \
 	handlers/gda-handler-time.c \
 	handlers/gda-handler-type.c
 
-Gda-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-@GDA_ABI_VERSION@.la
-	$(INTROSPECTION_SCANNER) -v \
-		--namespace Gda --nsversion=@GDA_ABI_VERSION@ \
-		-I$(top_srcdir) -I$(top_srcdir)/libgda \
-		$(LIBGDA_CFLAGS) \
-		--include=GL-1.0 \
-		--include=GObject-2.0 \
-		--include=libxml2-2.0 \
-		--library=gda-@GDA_ABI_VERSION@ \
-	    $(INCLUDE_CFLAGS) \
-	    --c-include=$(top_srcdir)/libgda/csv.h \
-		--c-include=$(top_srcdir)/libgda/libcsv.c \
-		--c-include=$(srcdir)/gda-attributes-manager.c \
-		--c-include=$(top_srcdir)/libgda/gda-connection-internal.h \
-		--c-include=$(srcdir)/gda-connection-sqlite.h \
-		--c-include=$(top_srcdir)/libgda/gda-custom-marshal.c \
-		--c-include=$(srcdir)/gda-custom-marshal.h \
-		--c-include=$(top_srcdir)/libgda/gda-data-select-extra.h \
-		--c-include=$(srcdir)/gda-types.c \
-		--c-include=$(top_srcdir)/libgda/gda-types.h \
-		--c-include=$(srcdir)/gda-marshal.c \
-		--c-include=$(top_srcdir)/libgda/gda-meta-store-extra.h \
-		--c-include=$(srcdir)/gda-meta-struct-private.h \
-		--c-include=$(top_srcdir)/libgda/global.h \
-		--c-include=$(srcdir)/md5.h \
-		--c-include=$(top_srcdir)/libgda/md5c.c \
-	    --output $@ \
-		$(addprefix $(srcdir)/, $(gda_headers)) \
-	        $(srcdir)/gda-types.h \
-		libgda.h \
-		$(addprefix $(srcdir)/, $(gda_sources)) \
-		$(addprefix $(srcdir)/, $(psupport)) \
-		$(addprefix $(srcdir)/, $(sqlparser)) \
-		sql-parser/gda-sql-parser-enum-types.c \
-		$(addprefix $(srcdir)/, $(threadwrapper)) \
-		$(addprefix $(srcdir)/, $(handlers))
-
-BUILT_GIRSOURCES += Gda-@GDA_ABI_VERSION@.gir
-
-endif
+introspection_sources = $(gda_sources) \
+	gda-types.c \
+	gda-types.h \
+	$(gda_headers) \
+	$(psupport) \
+	$(threadwrapper) \
+	$(sqlparser) \
+	$(handlers)
+Gda-4_0.gir: $(lib_LTLIBRARIES)
+Gda_4_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
+Gda_4_0_gir_CFLAGS = $(AM_CPPFLAGS)
+Gda_4_0_gir_LIBS = $(lib_LTLIBRARIES)
+Gda_4_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+Gda_4_0_gir_PACKAGES = gobject-2.0 libxml-2.0
+INTROSPECTION_GIRS += Gda-4.0.gir
+INTROSPECTION_LIBS += -lxml2
 
 girdir = $(datadir)/gir-1.0
-gir_DATA = $(BUILT_GIRSOURCES)
+gir_DATA = $(INTROSPECTION_GIRS)
 
-typelibsdir = $(libdir)/girepository-1.0/
-
-typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
-
-Gda-@GDA_ABI_VERSION@.typelib: Gda-@GDA_ABI_VERSION@.gir $(INTROSPECTION_COMPILER)
-	$(QUIET_GEN)$(DEBUG) $(INTROSPECTION_COMPILER) \
-	--includedir=$(srcdir) \
-	$(INTROSPECTION_COMPILER_OPTS) $< -o $(@F)
-
-CLEANFILES += $(BUILT_GIRSOURCES) $(typelibs_DATA)
+typelibsdir = $(libdir)/girepository-1.0
+typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA)
+endif
