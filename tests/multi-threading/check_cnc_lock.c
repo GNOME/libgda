@@ -122,6 +122,9 @@ test_multiple_threads (GThreadFunc func, GError **error)
 		g_print ("Running thread %d\n", d->th_id);
 #endif
 		d->thread = g_thread_create (func, d, TRUE, NULL);
+#ifdef DEBUG_PRINT
+		g_print ("Running thread %d has pointer %p\n", d->th_id, d->thread);
+#endif
 	}
 
 	/* unlock all the threads */
