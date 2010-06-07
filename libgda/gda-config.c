@@ -709,7 +709,7 @@ GQuark gda_config_error_quark (void)
 }
 
 /**
- * gda_config_get_type
+ * gda_config_get_type:
  * 
  * Registers the #GdaConfig class on the GLib type system.
  * 

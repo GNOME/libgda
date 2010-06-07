@@ -1,5 +1,5 @@
-/* GDA Common Library
- * Copyright (C) 2007 The GNOME Foundation.
+/* Gda blob
+ * Copyright (C) 2007 - 2010 The GNOME Foundation.
  *
  * Authors:
  *       Vivien Malerba <malerba@gnome-db.org>
@@ -90,7 +90,7 @@ gda_blob_op_finalize (GObject *object)
 
 
 /**
- * gda_blob_op_get_length
+ * gda_blob_op_get_length:
  * @op: an existing #GdaBlobOp
  * 
  * Returns: the length of the blob in bytes. In case of error, -1 is returned and the
@@ -108,7 +108,7 @@ gda_blob_op_get_length (GdaBlobOp *op)
 }
 
 /**
- * gda_blob_op_read
+ * gda_blob_op_read:
  * @op: a #GdaBlobOp
  * @blob: a #GdaBlob to read data to
  * @offset: offset to read from the start of the blob (starts at 0)
@@ -131,7 +131,7 @@ gda_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 }
 
 /**
- * gda_blob_op_read_all
+ * gda_blob_op_read_all:
  * @op: a #GdaBlobOp
  * @blob: a #GdaBlob to read data to
  *
@@ -154,7 +154,7 @@ gda_blob_op_read_all (GdaBlobOp *op, GdaBlob *blob)
 }
 
 /**
- * gda_blob_op_write
+ * gda_blob_op_write:
  * @op: a #GdaBlobOp
  * @blob: a #GdaBlob which contains the data to write
  * @offset: offset to write from the start of the blob (starts at 0)
@@ -180,7 +180,7 @@ gda_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 }
 
 /**
- * gda_blob_op_write_all
+ * gda_blob_op_write_all:
  * @op: a #GdaBlobOp
  * @blob: a #GdaBlob which contains the data to write
  *

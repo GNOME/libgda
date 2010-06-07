@@ -1,5 +1,5 @@
 /* GDA server library
- * Copyright (C) 1998 - 2007 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -192,7 +192,7 @@ static void gda_connection_event_get_property (GObject *object, guint prop_id, G
 }
 
 /**
- * gda_connection_event_set_event_type
+ * gda_connection_event_set_event_type:
  * @event: a #GdaConnectionEvent object
  * @type: the severity of the event
  *
@@ -209,7 +209,7 @@ gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEve
 }
 
 /**
- * gda_connection_event_get_event_type
+ * gda_connection_event_get_event_type:
  * @event: a #GdaConnectionEvent object
  *
  * Get @event's severity (from a simple notice to a fatal event)
@@ -226,7 +226,7 @@ gda_connection_event_get_event_type (GdaConnectionEvent *event)
 }
 
 /**
- * gda_connection_event_get_description
+ * gda_connection_event_get_description:
  * @event: a #GdaConnectionEvent.
  *
  * Get the description of the event. Note that is @event's type is GDA_CONNECTION_EVENT_COMMAND,
@@ -242,7 +242,7 @@ gda_connection_event_get_description (GdaConnectionEvent *event)
 }
 
 /**
- * gda_connection_event_set_description
+ * gda_connection_event_set_description:
  * @event: a #GdaConnectionEvent.
  * @description: a description.
  *
@@ -259,7 +259,7 @@ gda_connection_event_set_description (GdaConnectionEvent *event, const gchar *de
 }
 
 /**
- * gda_connection_event_get_code
+ * gda_connection_event_get_code:
  * @event: a #GdaConnectionEvent.
  *
  * Returns: @event's code (the code is specific to the provider being used)
@@ -272,7 +272,7 @@ gda_connection_event_get_code (GdaConnectionEvent * event)
 }
 
 /**
- * gda_connection_event_set_code
+ * gda_connection_event_set_code:
  * @event: a #GdaConnectionEvent.
  * @code: a code.
  *
@@ -290,7 +290,7 @@ gda_connection_event_set_code (GdaConnectionEvent *event, glong code)
 }
 
 /**
- * gda_connection_event_get_gda_code
+ * gda_connection_event_get_gda_code:
  * @event: a #GdaConnectionEvent
  *
  * Retreive the code associated to @event.
@@ -305,7 +305,7 @@ gda_connection_event_get_gda_code (GdaConnectionEvent *event)
 }
 
 /**
- * gda_connection_event_set_gda_code
+ * gda_connection_event_set_gda_code:
  * @event: a #GdaConnectionEvent
  * @code: a code
  *
@@ -324,7 +324,7 @@ gda_connection_event_set_gda_code (GdaConnectionEvent *event, GdaConnectionEvent
 
 
 /**
- * gda_connection_event_get_source
+ * gda_connection_event_get_source:
  * @event: a #GdaConnectionEvent.
  *
  * Returns: @event's source. 
@@ -337,7 +337,7 @@ gda_connection_event_get_source (GdaConnectionEvent *event)
 }
 
 /**
- * gda_connection_event_set_source
+ * gda_connection_event_set_source:
  * @event: a #GdaConnectionEvent.
  * @source: a source.
  *
@@ -354,7 +354,7 @@ gda_connection_event_set_source (GdaConnectionEvent *event, const gchar *source)
 }
 
 /**
- * gda_connection_event_get_sqlstate
+ * gda_connection_event_get_sqlstate:
  * @event: a #GdaConnectionEvent.
  *
  * Get the SQLSTATE value of @event. Even though the SQLSTATE values are specified by ANSI SQL and ODBC,
@@ -372,7 +372,7 @@ gda_connection_event_get_sqlstate (GdaConnectionEvent *event)
 }
 
 /**
- * gda_connection_event_set_sqlstate
+ * gda_connection_event_set_sqlstate:
  * @event: a #GdaConnectionEvent.
  * @sqlstate: SQL state.
  *

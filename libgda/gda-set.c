@@ -1,6 +1,6 @@
 /* gda-set.c
  *
- * Copyright (C) 2003 - 2008 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -349,8 +349,8 @@ gda_set_init (GdaSet *set)
 
 
 /**
- * gda_set_new
- * @holders: a list of #GdaHolder objects
+ * gda_set_new:
+ * @holders: (element-type GdaHolder) (transfer:none): a list of #GdaHolder objects
  *
  * Creates a new #GdaSet object, and populates it with the list given as argument.
  * The list can then be freed as it is copied. All the value holders in @holders are referenced counted
@@ -369,7 +369,7 @@ gda_set_new (GSList *holders)
 }
 
 /**
- * gda_set_copy
+ * gda_set_copy:
  * @set: a #GdaSet object
  *
  * Creates a new #GdaSet object, opy of @set
@@ -395,7 +395,7 @@ gda_set_copy (GdaSet *set)
 }
 
 /**
- * gda_set_new_inline
+ * gda_set_new_inline:
  * @nb: the number of value holders which will be contained in the new #GdaSet
  * @...: a serie of a (const gchar*) id, (GType) type, and value
  *
@@ -502,7 +502,7 @@ gda_set_new_inline (gint nb, ...)
 }
 
 /**
- * gda_set_set_holder_value
+ * gda_set_set_holder_value:
  * @set: a #GdaSet object
  * @error: a place to store errors, or %NULL
  * @holder_id: the ID of the holder to set the value
@@ -583,7 +583,7 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
 }
 
 /**
- * gda_set_get_holder_value
+ * gda_set_get_holder_value:
  * @set: a #GdaSet object
  * @holder_id: the ID of the holder to set the value
  *
@@ -630,7 +630,7 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
 }
 
 /**
- * gda_set_new_from_spec_string
+ * gda_set_new_from_spec_string:
  * @xml_spec: a string
  * @error: a place to store the error, or %NULL
  *
@@ -722,7 +722,7 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 
 
 /**
- * gda_set_new_from_spec_node
+ * gda_set_new_from_spec_node:
  * @xml_spec: a #xmlNodePtr for a &lt;holders&gt; tag
  * @error: a place to store the error, or %NULL
  *
@@ -882,9 +882,11 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 }
 
 /**
- * gda_set_remove_holder
- * @set:
- * @holder:
+ * gda_set_remove_holder:
+ * @set: a #GdaSet object
+ * @holder: the #GdaHolder to remove from @set
+ *
+ * Removes a #GdaHolder from the list of holders managed by @set
  */
 void
 gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
@@ -1131,7 +1133,7 @@ compute_public_data (GdaSet *set)
 }
 
 /**
- * gda_set_add_holder
+ * gda_set_add_holder:
  * @set: a #GdaSet object
  * @holder: a #GdaHolder object
  *
@@ -1202,7 +1204,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 
 
 /**
- * gda_set_merge_with_set
+ * gda_set_merge_with_set:
  * @set: a #GdaSet object
  * @set_to_merge: a #GdaSet object
  *
@@ -1247,7 +1249,7 @@ set_remove_source (GdaSet *set, GdaSetSource *source)
 }
 
 /**
- * gda_set_is_valid
+ * gda_set_is_valid:
  * @set: a #GdaSet object
  * @error: a place to store validation errors, or %NULL
  *
@@ -1299,13 +1301,13 @@ _gda_set_validate (GdaSet *set, GError **error)
 
 
 /**
- * gda_set_get_holder
+ * gda_set_get_holder:
  * @set: a #GdaSet object
  * @holder_id: the ID of the requested value holder
  *
  * Finds a #GdaHolder using its ID
  *
- * Returns: a #GdaHolder or %NULL
+ * Returns: (transfer none): the requested #GdaHolder or %NULL
  */
 GdaHolder *
 gda_set_get_holder (GdaSet *set, const gchar *holder_id)
@@ -1316,15 +1318,14 @@ gda_set_get_holder (GdaSet *set, const gchar *holder_id)
 	return (GdaHolder *) g_hash_table_lookup (set->priv->holders_hash, holder_id);
 }
 
-
 /**
- * gda_set_get_node
+ * gda_set_get_node:
  * @set: a #GdaSet object
  * @holder: a #GdaHolder object
  *
  * Finds a #GdaSetNode holding information for @holder, don't modify the returned structure
  *
- * Returns: a #GdaSetNode or %NULL
+ * Returns: (transfer none): the requested #GdaSetNode or %NULL
  */
 GdaSetNode *
 gda_set_get_node (GdaSet *set, GdaHolder *holder)
@@ -1346,14 +1347,14 @@ gda_set_get_node (GdaSet *set, GdaHolder *holder)
 }
 
 /**
- * gda_set_get_source
+ * gda_set_get_source:
  * @set: a #GdaSet object
  * @holder: a #GdaHolder object
  *
  * Finds a #GdaSetSource which contains the #GdaDataModel restricting the possible values of
  * @holder, don't modify the returned structure.
  *
- * Returns: a #GdaSetSource or %NULL
+ * Returns: (transfer none): the requested #GdaSetSource or %NULL
  */
 GdaSetSource *
 gda_set_get_source (GdaSet *set, GdaHolder *holder)
@@ -1368,14 +1369,14 @@ gda_set_get_source (GdaSet *set, GdaHolder *holder)
 }
 
 /**
- * gda_set_get_group
+ * gda_set_get_group:
  * @set: a #GdaSet object
  * @holder: a #GdaHolder object
  *
  * Finds a #GdaSetGroup which lists a  #GdaSetNode containing @holder,
  * don't modify the returned structure.
  *
- * Returns: a #GdaSetGroup or %NULL
+ * Returns: (transfer none): the requested #GdaSetGroup or %NULL
  */
 GdaSetGroup *
 gda_set_get_group (GdaSet *set, GdaHolder *holder)
@@ -1403,14 +1404,14 @@ gda_set_get_group (GdaSet *set, GdaHolder *holder)
 
 
 /**
- * gda_set_get_source_for_model
+ * gda_set_get_source_for_model:
  * @set: a #GdaSet object
  * @model: a #GdaDataModel object
  *
  * Finds the #GdaSetSource structure used in @set for which @model is a
  * the data model (the returned structure should not be modified).
  *
- * Returns: a #GdaSetSource pointer or %NULL.
+ * Returns: (transfer none): the requested #GdaSetSource pointer or %NULL.
  */
 GdaSetSource *
 gda_set_get_source_for_model (GdaSet *set, GdaDataModel *model)

@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 - 2008 The GNOME Foundation.
+ * Copyright (C) 2006 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -89,7 +89,7 @@ static GdaRow *create_new_row (GdaDataAccessWrapper *model);
 static GObjectClass *parent_class = NULL;
 
 /**
- * gda_data_access_wrapper_get_type
+ * gda_data_access_wrapper_get_type:
  *
  * Returns: the #GType of GdaDataAccessWrapper.
  */
@@ -351,7 +351,7 @@ gda_data_access_wrapper_get_property (GObject *object,
 }
 
 /**
- * gda_data_access_wrapper_new
+ * gda_data_access_wrapper_new:
  * @model: a #GdaDataModel
  *
  * Creates a new #GdaDataModel object which buffers the rows of @model. This object is usefull

@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -216,7 +216,7 @@ _gda_data_model_signal_emit_changed (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_row_inserted
+ * gda_data_model_row_inserted:
  * @model: a #GdaDataModel object.
  * @row: row number.
  *
@@ -256,7 +256,7 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 }
 
 /**
- * gda_data_model_row_updated
+ * gda_data_model_row_updated:
  * @model: a #GdaDataModel object.
  * @row: row number.
  *
@@ -280,7 +280,7 @@ gda_data_model_row_updated (GdaDataModel *model, gint row)
 }
 
 /**
- * gda_data_model_row_removed
+ * gda_data_model_row_removed:
  * @model: a #GdaDataModel object.
  * @row: row number.
  *
@@ -304,7 +304,7 @@ gda_data_model_row_removed (GdaDataModel *model, gint row)
 }
 
 /**
- * gda_data_model_reset
+ * gda_data_model_reset:
  * @model: a #GdaDataModel object.
  *
  * Emits the 'reset' and 'changed' signal on @model.
@@ -323,7 +323,7 @@ gda_data_model_reset (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_freeze
+ * gda_data_model_freeze:
  * @model: a #GdaDataModel object.
  *
  * Disables notifications of changes on the given data model. To
@@ -342,7 +342,7 @@ gda_data_model_freeze (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_thaw
+ * gda_data_model_thaw:
  * @model: a #GdaDataModel object.
  *
  * Re-enables notifications of changes on the given data model.
@@ -359,12 +359,12 @@ gda_data_model_thaw (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_get_access_flags
+ * gda_data_model_get_access_flags:
  * @model: a #GdaDataModel object.
  *
  * Get the attributes of @model such as how to access the data it contains if it's modifiable, etc.
  *
- * Returns: an ORed value of #GdaDataModelAccessFlags flags
+ * Returns: (transfer none): an ORed value of #GdaDataModelAccessFlags flags
  */
 GdaDataModelAccessFlags
 gda_data_model_get_access_flags (GdaDataModel *model)
@@ -381,7 +381,7 @@ gda_data_model_get_access_flags (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_get_n_rows
+ * gda_data_model_get_n_rows:
  * @model: a #GdaDataModel object.
  *
  * Returns: the number of rows in the given data model, or -1 if the number of rows is not known
@@ -398,7 +398,7 @@ gda_data_model_get_n_rows (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_get_n_columns
+ * gda_data_model_get_n_columns:
  * @model: a #GdaDataModel object.
  *
  * Returns: the number of columns in the given data model.
@@ -418,7 +418,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_describe_column
+ * gda_data_model_describe_column:
  * @model: a #GdaDataModel object.
  * @col: column number.
  *
@@ -430,7 +430,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * WARNING: the returned #GdaColumn object belongs to the @model model and
  * and should not be destroyed; any modification will affect the whole data model.
  *
- * Returns: the description of the column.
+ * Returns: (transfer none): the description of the column.
  */
 GdaColumn *
 gda_data_model_describe_column (GdaDataModel *model, gint col)
@@ -447,7 +447,7 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 }
 
 /**
- * gda_data_model_get_column_index
+ * gda_data_model_get_column_index:
  * @model: a #GdaDataModel object.
  * @name: a column name
  *
@@ -477,7 +477,7 @@ gda_data_model_get_column_index (GdaDataModel *model, const gchar *name)
 }
 
 /**
- * gda_data_model_get_column_name
+ * gda_data_model_get_column_name:
  * @model: a #GdaDataModel object.
  * @col: column number.
  *
@@ -501,7 +501,7 @@ gda_data_model_get_column_name (GdaDataModel *model, gint col)
 }
 
 /**
- * gda_data_model_set_column_name
+ * gda_data_model_set_column_name:
  * @model: a #GdaDataModel object.
  * @col: column number
  * @name: name for the given column.
@@ -529,7 +529,7 @@ gda_data_model_set_column_name (GdaDataModel *model, gint col, const gchar *name
 
 
 /**
- * gda_data_model_get_column_title
+ * gda_data_model_get_column_title:
  * @model: a #GdaDataModel object.
  * @col: column number.
  *
@@ -551,7 +551,7 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 }
 
 /**
- * gda_data_model_set_column_title
+ * gda_data_model_set_column_title:
  * @model: a #GdaDataModel object.
  * @col: column number
  * @title: title for the given column.
@@ -572,7 +572,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 }
 
 /**
- * gda_data_model_get_value_at
+ * gda_data_model_get_value_at:
  * @model: a #GdaDataModel object.
  * @col: a valid column number.
  * @row: a valid row number.
@@ -596,7 +596,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * If you want to modify a value stored in a #GdaDataModel, use the gda_data_model_set_value_at() or 
  * gda_data_model_set_values() methods.
  *
- * Returns: a #GValue containing the value stored in the given
+ * Returns: (transfer none): a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
  */
 const GValue *
@@ -615,7 +615,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
 }
 
 /**
- * gda_data_model_get_typed_value_at
+ * gda_data_model_get_typed_value_at:
  * @model: a #GdaDataModel object.
  * @col: a valid column number.
  * @row: a valid row number.
@@ -665,7 +665,7 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
 }
 
 /**
- * gda_data_model_get_attributes_at
+ * gda_data_model_get_attributes_at:
  * @model: a #GdaDataModel object
  * @col: a valid column number
  * @row: a valid row number, or -1
@@ -675,7 +675,7 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
  * @row is -1, then the attributes returned correspond to a "would be" value
  * if a row was added to @model.
  *
- * Returns: the attributes as an ORed value of #GdaValueAttribute
+ * Returns: (transfer none): the attributes as an ORed value of #GdaValueAttribute
  */
 GdaValueAttribute
 gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
@@ -689,7 +689,7 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
 }
 
 /**
- * gda_data_model_set_value_at
+ * gda_data_model_set_value_at:
  * @model: a #GdaDataModel object.
  * @col: column number.
  * @row: row number.
@@ -716,10 +716,10 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
 }
 
 /**
- * gda_data_model_set_values
+ * gda_data_model_set_values:
  * @model: a #GdaDataModel object.
  * @row: row number.
- * @values: a list of #GValue, one for at most the number of columns of @model
+ * @values: (element-type GObject.Value) (transfer none): a list of #GValue, one for at most the number of columns of @model
  * @error: a place to store errors, or %NULL
  *
  * In a similar way to gda_data_model_set_value_at(), this method modifies a data model's contents
@@ -746,7 +746,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 }
 
 /**
- * gda_data_model_create_iter
+ * gda_data_model_create_iter:
  * @model: a #GdaDataModel object.
  *
  * Creates a new iterator object #GdaDataModelIter object which can be used to iterate through
@@ -763,7 +763,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * gda_data_model_iter_move_next() (and gda_data_model_iter_move_prev() if
  * supported).
  *
- * Returns: a #GdaDataModelIter object, or %NULL if an error occurred
+ * Returns: (transfer full): a #GdaDataModelIter object, or %NULL if an error occurred
  */
 GdaDataModelIter *
 gda_data_model_create_iter (GdaDataModel *model)
@@ -778,9 +778,9 @@ gda_data_model_create_iter (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_append_values
+ * gda_data_model_append_values:
  * @model: a #GdaDataModel object.
- * @values: #GList of #GValue* representing the row to add.  The
+ * @values: (element-type GObject.Value): #GList of #GValue* representing the row to add.  The
  *          length must match model's column count.  These #GValue
  *	    are value-copied (the user is still responsible for freeing them).
  * @error: a place to store errors, or %NULL
@@ -806,7 +806,7 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
 }
 
 /**
- * gda_data_model_append_row
+ * gda_data_model_append_row:
  * @model: a #GdaDataModel object.
  * @error: a place to store errors, or %NULL
  * 
@@ -838,7 +838,7 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 
 
 /**
- * gda_data_model_remove_row
+ * gda_data_model_remove_row:
  * @model: a #GdaDataModel object.
  * @row: the row number to be removed.
  * @error: a place to store errors, or %NULL
@@ -869,10 +869,10 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 }
 
 /**
- * gda_data_model_get_row_from_values
+ * gda_data_model_get_row_from_values:
  * @model: a #GdaDataModel object.
- * @values: a list of #GValue values (no %NULL is allowed)
- * @cols_index: an array of #gint containing the column number to match each value of @values
+ * @values: (element-type Gobject.Value): a list of #GValue values (no %NULL is allowed)
+ * @cols_index: (array): an array of #gint containing the column number to match each value of @values
  *
  * Returns the first row where all the values in @values at the columns identified at
  * @cols_index match. If the row can't be identified, then returns -1;
@@ -940,9 +940,9 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
 }
 
 /**
- * gda_data_model_send_hint
+ * gda_data_model_send_hint:
  * @model: a #GdaDataModel
- * @hint: a hint to send to the model
+ * @hint: (transfer none): a hint to send to the model
  * @hint_value: an optional value to specify the hint, or %NULL
  *
  * Sends a hint to the data model. The hint may or may not be handled by the data
@@ -962,12 +962,12 @@ static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, g
 
 
 /**
- * gda_data_model_export_to_string
+ * gda_data_model_export_to_string:
  * @model: a #GdaDataModel
  * @format: the format in which to export data
- * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
+ * @cols: (array length=nb_cols): an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
- * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
+ * @rows: (array length=nb_rows): an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
  * @options: list of options for the export
  *
@@ -1096,13 +1096,13 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 }
 
 /**
- * gda_data_model_export_to_file
+ * gda_data_model_export_to_file:
  * @model: a #GdaDataModel
  * @format: the format in which to export data
  * @file: the filename to export to
- * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
+ * @cols: (array length=nb_cols): an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
- * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
+ * @rows: (array length=nb_rows): an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
@@ -1479,7 +1479,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 }
 
 /**
- * gda_data_model_add_data_from_xml_node
+ * gda_data_model_add_data_from_xml_node:
  * @model: a #GdaDataModel.
  * @node: an XML node representing a &lt;gda_array_data&gt; XML node.
  * @error: a place to store errors, or %NULL
@@ -1517,11 +1517,11 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
 }
 
 /**
- * gda_data_model_import_from_model
+ * gda_data_model_import_from_model:
  * @to: the destination #GdaDataModel
  * @from: the source #GdaDataModel
  * @overwrite: TRUE if @to is completely overwritten by @from's data, and FALSE if @from's data is appended to @to
- * @cols_trans: a #GHashTable for columns translating, or %NULL
+ * @cols_trans: (element-type gint gint): a #GHashTable for columns translating, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Copy the contents of the @from data model to the @to data model. The copy stops as soon as an error
@@ -1772,10 +1772,10 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 }
 
 /**
- * gda_data_model_import_from_string
+ * gda_data_model_import_from_string:
  * @model: a #GdaDataModel
  * @string: the string to import data from
- * @cols_trans: a hash table containing which columns of @model will be imported, or %NULL for all columns
+ * @cols_trans: (element-type gint gint): a hash table containing which columns of @model will be imported, or %NULL for all columns, see gda_data_model_import_from_model()
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
  *
@@ -1804,10 +1804,10 @@ gda_data_model_import_from_string (GdaDataModel *model,
 }
 
 /**
- * gda_data_model_import_from_file
+ * gda_data_model_import_from_file:
  * @model: a #GdaDataModel
  * @file: the filename to import from
- * @cols_trans: a #GHashTable for columns translating, or %NULL
+ * @cols_trans: (element-type gint gint): a #GHashTable for columns translating, or %NULL, see gda_data_model_import_from_model()
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
  *
@@ -1840,7 +1840,7 @@ static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean 
 						  GError **error);
 
 /**
- * gda_data_model_dump
+ * gda_data_model_dump:
  * @model: a #GdaDataModel.
  * @to_stream: where to dump the data model
  *
@@ -1904,7 +1904,7 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 }
 
 /**
- * gda_data_model_dump_as_string
+ * gda_data_model_dump_as_string:
  * @model: a #GdaDataModel.
  *
  * Dumps a textual representation of the @model into a new string

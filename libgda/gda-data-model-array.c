@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -264,7 +264,7 @@ gda_data_model_array_get_property (GObject *object, guint prop_id, GValue *value
 
 
 /**
- * gda_data_model_array_new
+ * gda_data_model_array_new:
  * @cols: number of columns for rows in this data model.
  *
  * Creates a new #GdaDataModel object without initializing the column
@@ -282,7 +282,7 @@ gda_data_model_array_new (gint cols)
 }
 
 /**
- * gda_data_model_array_new_with_g_types
+ * gda_data_model_array_new_with_g_types:
  * @cols: number of columns for rows in this data model.
  * @...: types of the columns of the model to create as #GType, as many as indicated by @cols
  * 
@@ -316,7 +316,7 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
 }
 
 /**
- * gda_data_model_array_copy_model
+ * gda_data_model_array_copy_model:
  * @src: a #GdaDataModel to copy data from
  * @error: a place to store errors, or %NULL
  *
@@ -368,14 +368,14 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 }
 
 /**
- * gda_data_model_array_get_row
+ * gda_data_model_array_get_row:
  * @model: a #GdaDataModelArray object
  * @row: row number (starting from 0)
  * @error: a place to store errors, or %NULL
  *
  * Get a pointer to a row in @model
  *
- * Returns: the #GdaRow, or %NULL if an error occurred
+ * Returns: (transfer none): the #GdaRow, or %NULL if an error occurred
  */
 GdaRow *
 gda_data_model_array_get_row (GdaDataModelArray *model, gint row, GError **error)
@@ -397,7 +397,7 @@ gda_data_model_array_get_row (GdaDataModelArray *model, gint row, GError **error
 }
 
 /**
- * gda_data_model_array_set_n_columns
+ * gda_data_model_array_set_n_columns:
  * @model: the #GdaDataModelArray.
  * @cols: number of columns for rows this data model should use.
  *
@@ -418,7 +418,7 @@ gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols)
 }
 
 /**
- * gda_data_model_array_clear
+ * gda_data_model_array_clear:
  * @model: the model to clear.
  *
  * Frees all the rows in @model.

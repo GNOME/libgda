@@ -1,5 +1,5 @@
 /* GDA Berkeley-DB data model
- * Copyright (C) 1998 - 2008 The GNOME Foundation
+ * Copyright (C) 1998 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Laurent Sansonetti <lrz@gnome.org>
@@ -459,7 +459,7 @@ gda_data_model_bdb_get_property (GObject *object,
 
 
 /**
- * gda_data_model_bdb_new
+ * gda_data_model_bdb_new:
  * @filename: name of the file containing the database
  * @db_name: the name of the database within @filename, or %NULL
  *
@@ -482,12 +482,12 @@ gda_data_model_bdb_new (const gchar *filename, const gchar *db_name)
 }
 
 /**
- * gda_data_model_bdb_get_errors
+ * gda_data_model_bdb_get_errors:
  * @model: a #GdaDataModelBdb object
  *
  * Get the list of errors which have occurred while using @model
  *
- * Returns: a read-only list of #GError pointers, or %NULL if no error has occurred
+ * Returns: (element-type GObject.Error) (transfer none): a read-only list of #GError pointers, or %NULL if no error has occurred
  */
 const GSList *
 gda_data_model_bdb_get_errors (GdaDataModelBdb *model)
@@ -499,7 +499,7 @@ gda_data_model_bdb_get_errors (GdaDataModelBdb *model)
 }
 
 /**
- * gda_data_model_bdb_clean_errors
+ * gda_data_model_bdb_clean_errors:
  * @model: a #GdaDataModelBdb object
  *
  * Reset the list of errors which have occurred while using @model
