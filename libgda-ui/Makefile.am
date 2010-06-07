@@ -155,7 +155,11 @@ dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = $(DTD_FILES) libgda-ui.symbols
 
 if HAVE_INTROSPECTION
-BUILT_GIRSOURCES =
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) \
+                             --add-include-path=$(top_builddir)/libgda \
+                             --namespace Gdaui
 ui_data_entries_sources = \
 	data-entries/gdaui-data-cell-renderer-bin.h \
 	data-entries/gdaui-data-cell-renderer-boolean.h \
@@ -198,71 +202,30 @@ ui_data_entries_sources = \
 	data-entries/gdaui-formatted-entry.c \
 	data-entries/gdaui-numeric-entry.c
 
-plugin_sources = \
-        data-entries/plugins/common-pict.c \
-        data-entries/plugins/common-pict.h \
-        data-entries/plugins/custom-marshal.c \
-        data-entries/plugins/custom-marshal.h \
-        data-entries/plugins/gdaui-data-cell-renderer-cgrid.c \
-        data-entries/plugins/gdaui-data-cell-renderer-cgrid.h \
-        data-entries/plugins/gdaui-data-cell-renderer-password.c \
-        data-entries/plugins/gdaui-data-cell-renderer-password.h \
-        data-entries/plugins/gdaui-data-cell-renderer-pict.c \
-        data-entries/plugins/gdaui-data-cell-renderer-pict.h \
-        data-entries/plugins/gdaui-entry-cgrid.c \
-        data-entries/plugins/gdaui-entry-cgrid.h \
-        data-entries/plugins/gdaui-entry-cidr.c \
-        data-entries/plugins/gdaui-entry-cidr.h \
-        data-entries/plugins/gdaui-entry-filesel.c \
-        data-entries/plugins/gdaui-entry-filesel.h \
-        data-entries/plugins/gdaui-entry-password.c \
-        data-entries/plugins/gdaui-entry-password.h \
-        data-entries/plugins/gdaui-entry-pict.c \
-        data-entries/plugins/gdaui-entry-pict.h \
-        data-entries/plugins/gdaui-entry-text.c \
-        data-entries/plugins/gdaui-entry-text.h
-
-gir_sources = \
+introspection_sources = \
 	$(ui_headers) \
 	$(ui_sources) \
-	$(plugin_sources) \
 	$(ui_data_entries_sources)
 
-Gdaui-@GDA_ABI_VERSION@.gir: $(INTROSPECTION_SCANNER) libgda-ui-4.0.la
-	$(INTROSPECTION_SCANNER) -v \
-		--namespace Gdaui --nsversion=@GDA_ABI_VERSION@ \
-		-I$(top_srcdir) -I$(top_srcdir)/libgda -I$(top_srcdir)/libgda-ui \
-		$(LIBGDA_CFLAGS) \
-		$(GTK_CFLAGS) \
-		$(GIO_CFLAGS) \
-		--add-include-path=$(top_builddir)/libgda \
-		--include=GL-1.0 \
-		--include=GObject-2.0 \
-		--include=libxml2-2.0 \
-		--include=Gtk-2.0 \
-		--include=Gda-4.0 \
-		--library=gda-ui-@GDA_ABI_VERSION@ \
-	    $(INCLUDE_CFLAGS) \
-	    --output $@ \
-		$(addprefix $(srcdir)/, $(ui_sources)) \
-		$(addprefix $(srcdir)/, $(ui_data_entries_sources)) 
+Gdaui-4_0.gir: $(lib_LTLIBRARIES)
+Gdaui_4_0_gir_INCLUDES = Gtk-2.0 Gda-4.0
+Gdaui_4_0_gir_CFLAGS = $(AM_CPPFLAGS)
+Gdaui_4_0_gir_LIBS = $(lib_LTLIBRARIES)
+Gdaui_4_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/libgda
+INTROSPECTION_GIRS += Gdaui-4.0.gir
 
-BUILT_GIRSOURCES += Gdaui-@GDA_ABI_VERSION@.gir
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(INTROSPECTION_GIRS)
+
 
 endif
 
 girdir = $(datadir)/gir-1.0
-gir_DATA = $(BUILT_GIRSOURCES)
+gir_DATA = $(INTROSPECTION_GIRS)
 
 typelibsdir = $(libdir)/girepository-1.0/
+typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
-typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
-
-Gdaui-@GDA_ABI_VERSION@.typelib: Gdaui-@GDA_ABI_VERSION@.gir $(INTROSPECTION_COMPILER)
-	$(QUIET_GEN)$(DEBUG) $(INTROSPECTION_COMPILER) \
-	--includedir=$(srcdir) --includedir=. \
-	--includedir=$(top_builddir)/libgda \
-	$(INTROSPECTION_COMPILER_OPTS) $< -o $(@F)
-
-CLEANFILES += $(BUILT_GIRSOURCES) $(typelibs_DATA)
+CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA)
 
