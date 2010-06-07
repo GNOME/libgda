@@ -54,7 +54,6 @@
 	<arg>-C <replaceable>command</replaceable></arg>
 	<arg>-f <replaceable>commands file</replaceable></arg>
 	<arg>-o <replaceable>output file</replaceable></arg>
-	<arg>-p</arg>
 	<arg>-s<replaceable>port to use to run embedded HTTP server</replaceable></arg>
 	<arg>-t<replaceable>authentication token required to authenticate clients when running the embedded HTTP server</replaceable></arg>
 	<arg rep="repeat"><replaceable>connection specification</replaceable></arg>
@@ -96,9 +95,6 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
 	    before the tool exits</para></listitem>
 	<listitem><para>the <option>-o</option> option allows to specify a file to write the 
 	    output to</para></listitem>
-	<listitem><para>the <option>-p</option> speficies that the tool should not ask for
-	    passwords when a username has been specified for a connection but no password has
-	    been specified.</para></listitem>
 	<listitem><para>the <option>-s</option> requests the embedded HTTP server to be executed, listening on
 	    the port specified.</para></listitem>
 	<listitem><para>the <option>-t</option> specifies a token string which clients will have to
@@ -111,6 +107,8 @@ MSAccess    | Provider for Microsoft Access files | DB_NAME,           |        
 	<listitem><para>defined data sources (the ones listed using the <option>-l</option> option)</para></listitem>
 	<listitem><para>connection strings which have the following format: 
 	    "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;". 
+	    If a username or password is required, and is not specified either by a DSN's definition or in
+	    the connection string, then it will be requested dynamically.
 	    Note that if provided, &lt;username&gt;, &lt;password&gt; and &lt;provider&gt; must be encoded as per RFC 1738</para></listitem>
 	<listitem><para>for SQLite and MS Access files: the file name</para></listitem>
       </itemizedlist>

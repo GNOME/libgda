@@ -31,6 +31,7 @@
 #include "tools-input.h"
 #include "command-exec.h"
 #include <unistd.h>
+#include <termios.h>
 #include <sys/types.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-meta-struct.h>
@@ -54,7 +55,6 @@
 
 /* options */
 gboolean show_version = FALSE;
-gboolean ask_pass = FALSE;
 
 gchar *single_command = NULL;
 gchar *commandsfile = NULL;
@@ -73,8 +73,6 @@ gchar *auth_token = NULL;
 
 static GOptionEntry entries[] = {
 	{ "version", 'v', 0, G_OPTION_ARG_NONE, &show_version, "Show version information and exit", NULL },	
-        { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ask for a password when it is empty", NULL },
-
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
         { "command", 'C', 0, G_OPTION_ARG_STRING, &single_command, "Run only single command (SQL or internal) and exit", "command" },
         { "commands-file", 'f', 0, G_OPTION_ARG_STRING, &commandsfile, "Execute commands from file, then exit (except if -i specified)", "filename" },
@@ -179,7 +177,6 @@ main (int argc, char *argv[])
 	data = g_new0 (MainData, 1);
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	main_data = data;
-	ask_pass = !ask_pass;
 
 	/* output file */
 	if (outfile) {
@@ -1241,6 +1238,10 @@ static gpointer thread_start_update_meta_store (MetaUpdateData *data);
 static void thread_ok_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data);
 static void thread_cancelled_cb_update_meta_store (GdaThreader *threader, guint job, MetaUpdateData *data);
 
+static gchar* read_hidden_passwd ();
+static void user_password_needed (GdaDsnInfo *info, const gchar *real_provider,
+				  gboolean *out_need_username, gboolean *out_need_password);
+
 /*
  * Open a connection
  */
@@ -1259,6 +1260,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	}
 	
 	GdaDsnInfo *info;
+	gboolean need_user, need_pass;
 	gchar *user, *pass, *real_cnc, *real_provider, *real_auth_string = NULL;
 
 	/* if cnc string is a regular file, then use it with SQLite */
@@ -1287,6 +1289,10 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		gda_connection_string_split (cnc_string, &real_cnc, &real_provider, &user, &pass);
 		real_cnc_string = g_strdup (cnc_string);
 	}
+
+	info = gda_config_get_dsn_info (real_cnc);
+	user_password_needed (info, real_provider, &need_user, &need_pass);
+
 	if (!real_cnc) {
 		g_free (user);
 		g_free (pass);
@@ -1297,55 +1303,70 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		return NULL;
 	}
 
-	if (ask_pass) {
-		if (user && !*user) {
-			gchar buf[80];
-			g_print (_("\tUsername for '%s': "), cnc_name);
-			if (scanf ("%80s", buf) == -1) {
-				g_free (real_cnc);
-				g_free (user);
-				g_free (pass);
-				g_free (real_provider);
-				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
-					     _("No username for '%s'"), cnc_string);
-				g_free (real_cnc_string);
-				return NULL;
-			}
+	if (!user && info && info->auth_string) {
+		GdaQuarkList* ql;
+		const gchar *tmp;
+		ql = gda_quark_list_new_from_string (info->auth_string);
+		tmp = gda_quark_list_find (ql, "USERNAME");
+		if (tmp)
+			user = g_strdup (tmp);
+		gda_quark_list_free (ql);
+	}
+	if (need_user && ((user && !*user) || !user)) {
+		gchar buf[80], *ptr;
+		g_print (_("\tUsername for '%s': "), cnc_name);
+		if (! fgets (buf, 80, stdin)) {
+			g_free (real_cnc);
 			g_free (user);
-			user = g_strdup (buf);
-		}
-		if (pass && !*pass) {
-			gchar buf[80];
-			g_print (_("\tPassword for '%s': "), cnc_name);
-			if (scanf ("%80s", buf) == -1) {
-				g_free (real_cnc);
-				g_free (user);
-				g_free (pass);
-				g_free (real_provider);
-				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
-					     _("No password for '%s'"), cnc_string);
-				g_free (real_cnc_string);
-				return NULL;
-			}
 			g_free (pass);
-			pass = g_strdup (buf);
+			g_free (real_provider);
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
+				     _("No username for '%s'"), cnc_string);
+			g_free (real_cnc_string);
+			return NULL;
 		}
-		if (user || pass) {
-			gchar *s1;
-			s1 = gda_rfc1738_encode (user);
-			if (pass) {
-				gchar *s2;
-				s2 = gda_rfc1738_encode (pass);
-				real_auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", s1, s2);
-				g_free (s2);
+		for (ptr = buf; *ptr; ptr++) {
+			if (*ptr == '\n') {
+				*ptr = 0;
+				break;
 			}
-			else
-				real_auth_string = g_strdup_printf ("USERNAME=%s", s1);
-			g_free (s1);
 		}
+		g_free (user);
+		user = g_strdup (buf);
+	}
+	if (need_pass && ((pass && !*pass) || !pass)) {
+		gchar *tmp;
+		g_print (_("\tPassword for '%s': "), cnc_name);
+		tmp = read_hidden_passwd ();
+		g_print ("\n");
+		if (! tmp) {
+			g_free (real_cnc);
+			g_free (user);
+			g_free (pass);
+			g_free (real_provider);
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
+				     _("No password for '%s'"), cnc_string);
+			g_free (real_cnc_string);
+			return NULL;
+		}
+		g_free (pass);
+		pass = tmp;
+	}
+
+	if (user || pass) {
+		gchar *s1;
+		s1 = gda_rfc1738_encode (user);
+		if (pass) {
+			gchar *s2;
+			s2 = gda_rfc1738_encode (pass);
+			real_auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", s1, s2);
+			g_free (s2);
+		}
+		else
+			real_auth_string = g_strdup_printf ("USERNAME=%s", s1);
+		g_free (s1);
 	}
 	
-	info = gda_config_get_dsn_info (real_cnc);
 	if (info && !real_provider)
 		newcnc = gda_connection_open_from_dsn (real_cnc_string, real_auth_string, 0, error);
 	else 
@@ -1454,6 +1475,64 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	}
 
 	return cs;
+}
+
+static void
+user_password_needed (GdaDsnInfo *info, const gchar *real_provider,
+		      gboolean *out_need_username, gboolean *out_need_password)
+{
+	GdaProviderInfo *pinfo = NULL;
+	if (out_need_username)
+		*out_need_username = FALSE;
+	if (out_need_password)
+		*out_need_password = FALSE;
+
+	if (real_provider)
+		pinfo = gda_config_get_provider_info (real_provider);
+	else if (info)
+		pinfo = gda_config_get_provider_info (info->provider);
+
+	if (pinfo && pinfo->auth_params) {
+		if (out_need_password && gda_set_get_holder (pinfo->auth_params, "PASSWORD"))
+			*out_need_password = TRUE;
+		if (out_need_username && gda_set_get_holder (pinfo->auth_params, "USERNAME"))
+			*out_need_username = TRUE;
+	}
+}
+
+static gchar*
+read_hidden_passwd (void)
+{
+	gchar *p, password [100];
+	int fail;
+	struct termios termio;
+	
+	fail = tcgetattr (0, &termio);
+	if (fail)
+		return NULL;
+	
+	termio.c_lflag &= ~ECHO;
+	fail = tcsetattr (0, TCSANOW, &termio);
+	if (fail)
+		return NULL;
+	
+	p = fgets (password, sizeof (password) - 1, stdin);
+	termio.c_lflag |= ECHO;
+	tcsetattr (0, TCSANOW, &termio);
+	
+	if (!p)
+		return NULL;
+
+	for (p = password; *p; p++) {
+		if (*p == '\n') {
+			*p = 0;
+			break;
+		}
+	}
+	p = g_strdup (password);
+	memset (password, 0, sizeof (password));
+
+	return p;
 }
 
 static gpointer
@@ -1958,8 +2037,8 @@ build_internal_commands_list (void)
 	/* specific commands */
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = g_strdup_printf (_("%s [CNC_NAME [DSN [USER [PASSWORD]]]]"), "c");
-	c->description = _("Connect to another defined data source (DSN, see \\l)");
+	c->name = g_strdup_printf (_("%s [CNC_NAME [DSN|CONNECTION STRING]]"), "c");
+	c->description = _("Opens a new connection or lists opened connections");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_manage_cnc;
 	c->user_data = NULL;
