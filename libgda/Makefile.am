@@ -263,10 +263,6 @@ if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) \
-			     --add-include-path=providers-support \
-			     --add-include-path=sql-parser \
-			     --add-include-path=thread-wrapper \
-			     --add-include-path=handlers \
 			     --namespace Gda
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
@@ -329,9 +325,7 @@ Gda_4_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
 Gda_4_0_gir_CFLAGS = $(AM_CPPFLAGS)
 Gda_4_0_gir_LIBS = $(lib_LTLIBRARIES)
 Gda_4_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
-Gda_4_0_gir_PACKAGES = gobject-2.0 libxml-2.0
 INTROSPECTION_GIRS += Gda-4.0.gir
-INTROSPECTION_LIBS += -lxml2
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)
