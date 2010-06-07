@@ -31,7 +31,9 @@
 #include "tools-input.h"
 #include "command-exec.h"
 #include <unistd.h>
+#ifndef G_OS_WIN32
 #include <termios.h>
+#endif
 #include <sys/types.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-meta-struct.h>
@@ -1504,6 +1506,8 @@ static gchar*
 read_hidden_passwd (void)
 {
 	gchar *p, password [100];
+
+#ifndef G_OS_WIN32
 	int fail;
 	struct termios termio;
 	
@@ -1515,10 +1519,14 @@ read_hidden_passwd (void)
 	fail = tcsetattr (0, TCSANOW, &termio);
 	if (fail)
 		return NULL;
+#endif
 	
 	p = fgets (password, sizeof (password) - 1, stdin);
+
+#ifndef G_OS_WIN32
 	termio.c_lflag |= ECHO;
 	tcsetattr (0, TCSANOW, &termio);
+#endif
 	
 	if (!p)
 		return NULL;
