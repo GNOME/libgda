@@ -1,5 +1,5 @@
 /* GDA Library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -40,7 +40,7 @@ GQuark gda_easy_error_quark (void)
 }
 
 /**
- * gda_prepare_create_database
+ * gda_prepare_create_database:
  * @provider: the database provider to use
  * @db_name: the name of the database to create, or %NULL
  * @error: a place to store errors, or %NULL
@@ -79,7 +79,7 @@ gda_prepare_create_database (const gchar *provider, const gchar *db_name, GError
 }
 
 /**
- * gda_perform_create_database
+ * gda_perform_create_database:
  * @provider: the database provider to use, or %NULL if @op has been created using gda_prepare_create_database()
  * @op: a #GdaServerOperation object obtained using gda_prepare_create_database()
  * @error: a place to store en error, or %NULL
@@ -109,7 +109,7 @@ gda_perform_create_database (const gchar *provider, GdaServerOperation *op, GErr
 }
 
 /**
- * gda_prepare_drop_database
+ * gda_prepare_drop_database:
  * @provider: the database provider to use
  * @db_name: the name of the database to drop, or %NULL
  * @error: a place to store errors, or %NULL
@@ -148,7 +148,7 @@ gda_prepare_drop_database (const gchar *provider, const gchar *db_name, GError *
 }
 
 /**
- * gda_perform_drop_database
+ * gda_perform_drop_database:
  * @provider: the database provider to use, or %NULL if @op has been created using gda_prepare_drop_database()
  * @op: a #GdaServerOperation object obtained using gda_prepare_drop_database()
  * @error: a place to store en error, or %NULL
@@ -178,7 +178,7 @@ gda_perform_drop_database (const gchar *provider, GdaServerOperation *op, GError
 }
 
 /**
- * gda_execute_select_command
+ * gda_execute_select_command:
  * @cnc: an opened connection
  * @sql: a query statement must begin with "SELECT"
  * @error: a place to store errors, or %NULL
@@ -214,7 +214,7 @@ gda_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error
 }
 
 /**
- * gda_execute_sql_command
+ * gda_execute_sql_command:
  * @cnc: an opened connection
  * @sql: a query statement must begin with "SELECT"
  * @error: a place to store errors, or %NULL
@@ -248,7 +248,7 @@ gda_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **e
 }
 
 /**
- * gda_prepare_create_table
+ * gda_prepare_create_table:
  * @cnc: an opened connection
  * @table_name: name of the table to create
  * @error: a place to store errors, or %NULL
@@ -392,7 +392,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 }
 
 /**
- * gda_perform_create_table
+ * gda_perform_create_table:
  * @op: a valid #GdaServerOperation
  * @error: a place to store errors, or %NULL
  * 
@@ -421,7 +421,7 @@ gda_perform_create_table (GdaServerOperation *op, GError **error)
 }
 
 /**
- * gda_prepare_drop_table
+ * gda_prepare_drop_table:
  * @cnc: an opened connection
  * @table_name: name of the table to drop
  * @error: a place to store errors, or %NULL
@@ -460,7 +460,7 @@ gda_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **er
 }
 
 /**
- * gda_perform_drop_table
+ * gda_perform_drop_table:
  * @op: a #GdaServerOperation object
  * @error: a place to store errors, or %NULL
  * 
@@ -499,7 +499,7 @@ gtype_equal (gconstpointer a, gconstpointer b)
 }
 
 /**
- * gda_get_default_handler
+ * gda_get_default_handler:
  * @for_type: a #GType type
  * 
  * Obtain a pointer to a #GdaDataHandler which can manage #GValue values of type @for_type. The returned
@@ -508,7 +508,7 @@ gtype_equal (gconstpointer a, gconstpointer b)
  *
  * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
  *
- * Returns: a #GdaDataHandler which must not be modified or destroyed.
+ * Returns: (transfer none): a #GdaDataHandler which must not be modified or destroyed.
  */
 GdaDataHandler *
 gda_get_default_handler (GType for_type)
@@ -551,7 +551,7 @@ gda_get_default_handler (GType for_type)
 }
 
 /**
- * gda_insert_row_into_table
+ * gda_insert_row_into_table:
  * @cnc: an opened connection
  * @table: table's name to insert into
  * @error: a place to store errors, or %NULL
@@ -603,11 +603,11 @@ gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **erro
 }
 
 /**
- * gda_insert_row_into_table_v
+ * gda_insert_row_into_table_v:
  * @cnc: an opened connection
  * @table: table's name to insert into
- * @col_names: a list of column names (as const gchar *)
- * @values: a list of values (as #GValue)
+ * @col_names: (element-type utf8): a list of column names (as const gchar *)
+ * @values: (element-type GValue): a list of values (as #GValue)
  * @error: a place to store errors, or %NULL
  *
  * @col_names and @values must have length (&gt;= 1).
@@ -713,7 +713,7 @@ gda_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
 
 
 /**
- * gda_update_row_in_table
+ * gda_update_row_in_table:
  * @cnc: an opened connection
  * @table: the table's name with the row's values to be updated
  * @condition_column_name: the name of the column to used in the WHERE condition clause
@@ -769,13 +769,13 @@ gda_update_row_in_table (GdaConnection *cnc, const gchar *table,
 }
 
 /**
- * gda_update_row_in_table_v
+ * gda_update_row_in_table_v:
  * @cnc: an opened connection
  * @table: the table's name with the row's values to be updated
  * @condition_column_name: the name of the column to used in the WHERE condition clause
  * @condition_value: the @condition_column_type's GType
- * @col_names: a list of column names (as const gchar *)
- * @values: a list of values (as #GValue)
+ * @col_names: (element-type utf8): a list of column names (as const gchar *)
+ * @values: (element-type GValue): a list of values (as #GValue)
  * @error: a place to store errors, or %NULL
  *
  * @col_names and @values must have length (&gt;= 1).
@@ -917,7 +917,7 @@ gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
 }
 
 /**
- * gda_delete_row_from_table
+ * gda_delete_row_from_table:
  * @cnc: an opened connection
  * @table: the table's name with the row's values to be updated
  * @condition_column_name: the name of the column to used in the WHERE condition clause

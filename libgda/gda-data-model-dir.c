@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 - 2009 The GNOME Foundation
+ * Copyright (C) 2007 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -670,7 +670,7 @@ gda_data_model_dir_get_property (GObject *object,
 }
 
 /**
- * gda_data_model_dir_new
+ * gda_data_model_dir_new:
  * @basedir: a directory
  *
  * Creates a new #GdaDataModel object to list all the files starting from @basedir
@@ -690,12 +690,12 @@ gda_data_model_dir_new (const gchar *basedir)
 }
 
 /**
- * gda_data_model_dir_get_errors
+ * gda_data_model_dir_get_errors:
  * @model: a #GdaDataModelDir object
  *
  * Get the list of errors which have occurred while using @model
  *
- * Returns: a read-only list of #GError pointers, or %NULL if no error has occurred
+ * Returns: (transfer none) (element-type GObject.Error) : a read-only list of #GError pointers, or %NULL if no error has occurred
  */
 const GSList *
 gda_data_model_dir_get_errors (GdaDataModelDir *model)
@@ -707,7 +707,7 @@ gda_data_model_dir_get_errors (GdaDataModelDir *model)
 }
 
 /**
- * gda_data_model_dir_clean_errors
+ * gda_data_model_dir_clean_errors:
  * @model: a #GdaDataModelDir object
  *
  * Reset the list of errors which have occurred while using @model
