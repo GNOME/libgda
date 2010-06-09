@@ -307,7 +307,12 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 
 		op = gda_server_provider_create_operation (server, cnc, 
 							   GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
-		gda_server_operation_set_value_at (op, table_name, error, "/TABLE_DEF_P/TABLE_NAME");
+		if (!GDA_IS_SERVER_OPERATION(op))
+			return NULL;
+		if(!gda_server_operation_set_value_at (op, table_name, error, "/TABLE_DEF_P/TABLE_NAME")) {
+			g_object_unref (op);
+			return NULL;
+		}
 				
 		va_start (args, error);
 		type = 0;
@@ -317,7 +322,10 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 		
 		while ((arg = va_arg (args, gchar*))) {
 			/* First argument for Column's name */			
-			gda_server_operation_set_value_at (op, arg, error, "/FIELDS_A/@COLUMN_NAME/%d", i);
+			if(!gda_server_operation_set_value_at (op, arg, error, "/FIELDS_A/@COLUMN_NAME/%d", i)){
+				g_object_unref (op);
+				return NULL;
+			}
 		
 			/* Second to Define column's type */
 			type = va_arg (args, GType);
@@ -329,16 +337,33 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 			}
 			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server, 
 											 cnc, type);
-			gda_server_operation_set_value_at (op, dbms_type, error, "/FIELDS_A/@COLUMN_TYPE/%d", i);
+			if (!gda_server_operation_set_value_at (op, dbms_type, error, "/FIELDS_A/@COLUMN_TYPE/%d", i)){
+				g_object_unref (op);
+				return NULL;
+			}
 		
 			/* Third for column's flags */
 			flag = va_arg (args, GdaEasyCreateTableFlag);
 			if (flag & GDA_EASY_CREATE_TABLE_PKEY_FLAG)
-				gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_PKEY/%d", i);
+				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_PKEY/%d", i)){
+					g_object_unref (op);
+					return NULL;
+				}
 			if (flag & GDA_EASY_CREATE_TABLE_NOT_NULL_FLAG)
-				gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_NNUL/%d", i);
+				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_NNUL/%d", i)){
+					g_object_unref (op);
+					return NULL;
+				}
 			if (flag & GDA_EASY_CREATE_TABLE_AUTOINC_FLAG)
-				gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i);
+				if (!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i)){
+					g_object_unref (op);
+					return NULL;
+				}
+			if (flag & GDA_EASY_CREATE_TABLE_UNIQUE_FLAG)
+				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_UNIQUE/%d", i)){
+					g_object_unref (op);
+					return NULL;
+				}
 			if (flag & GDA_EASY_CREATE_TABLE_FKEY_FLAG) {
 				gint j;
 				gint fields;
@@ -349,8 +374,11 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 				refs++;
 				
 				fkey_table = va_arg (args, gchar*);				
-				gda_server_operation_set_value_at (op, fkey_table, error, 
-								   "/FKEY_S/%d/FKEY_REF_TABLE", refs);
+				if (!gda_server_operation_set_value_at (op, fkey_table, error, 
+								   "/FKEY_S/%d/FKEY_REF_TABLE", refs)){
+					g_object_unref (op);
+					return NULL;
+				}
 				
 				fields = va_arg (args, gint);
 				
@@ -358,21 +386,33 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 					gchar *field, *rfield;
 					
 					field = va_arg (args, gchar*);				
-					gda_server_operation_set_value_at (op, field, error, 
-									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", refs, j);
+					if(!gda_server_operation_set_value_at (op, field, error, 
+									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", refs, j)){
+						g_object_unref (op);
+						return NULL;
+					}
 					
 					rfield = va_arg (args, gchar*);
-					gda_server_operation_set_value_at (op, rfield, error, 
-									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", refs, j);
+					if(!gda_server_operation_set_value_at (op, rfield, error, 
+									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", refs, j)){
+						g_object_unref (op);
+						return NULL;
+					}
 					
 				}
 				
 				fkey_ondelete = va_arg (args, gchar*);
-				gda_server_operation_set_value_at (op, fkey_ondelete, error, 
-								   "/FKEY_S/%d/FKEY_ONDELETE", refs);
+				if (!gda_server_operation_set_value_at (op, fkey_ondelete, error, 
+								   "/FKEY_S/%d/FKEY_ONDELETE", refs)){
+					g_object_unref (op);
+					return NULL;
+				}
 				fkey_onupdate = va_arg (args, gchar*);
-				gda_server_operation_set_value_at (op, fkey_onupdate, error, 
-								   "/FKEY_S/%d/FKEY_ONUPDATE", refs);
+				if(!gda_server_operation_set_value_at (op, fkey_onupdate, error, 
+								   "/FKEY_S/%d/FKEY_ONUPDATE", refs)){
+					g_object_unref (op);
+					return NULL;
+				}
 			}
 			
 			i++;
