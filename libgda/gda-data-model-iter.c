@@ -1,6 +1,6 @@
 /* gda-data-model-iter.c
  *
- * Copyright (C) 2005 - 2008 Vivien Malerba
+ * Copyright (C) 2005 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -562,7 +562,7 @@ gda_data_model_iter_get_property (GObject *object,
 }
 
 /**
- * gda_data_model_iter_move_to_row
+ * gda_data_model_iter_move_to_row:
  * @iter: a #GdaDataModelIter object
  * @row: the row to set @iter to
  *
@@ -636,7 +636,7 @@ set_param_attributes (GdaHolder *holder, GdaValueAttribute flags)
 }
 
 /**
- * gda_data_model_iter_move_to_row_default
+ * gda_data_model_iter_move_to_row_default: (skip)
  */
 gboolean
 gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row)
@@ -687,7 +687,7 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 
 
 /**
- * gda_data_model_iter_move_next
+ * gda_data_model_iter_move_next:
  * @iter: a #GdaDataModelIter object
  *
  * Moves @iter one row further than where it already is 
@@ -723,7 +723,7 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_move_next_default
+ * gda_data_model_iter_move_next_default: (skip)
  */
 gboolean
 gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *iter)
@@ -774,7 +774,7 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 }
 
 /**
- * gda_data_model_iter_move_prev
+ * gda_data_model_iter_move_prev:
  * @iter: a #GdaDataModelIter object
  *
  * Moves @iter one row before where it already is (synchronizes the values of the parameters in @iter 
@@ -811,7 +811,7 @@ gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_move_prev_default
+ * gda_data_model_iter_move_prev_default: (skip)
  */
 gboolean
 gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *iter)
@@ -863,7 +863,7 @@ gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *it
 
 
 /**
- * gda_data_model_iter_get_row
+ * gda_data_model_iter_get_row:
  * @iter: a #GdaDataModelIter object
  *
  * Get the row which @iter represents in the data model
@@ -880,7 +880,7 @@ gda_data_model_iter_get_row (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_invalidate_contents
+ * gda_data_model_iter_invalidate_contents:
  * @iter: a #GdaDataModelIter object
  *
  * Declare all the parameters in @iter invalid, without modifying the
@@ -901,7 +901,7 @@ gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_is_valid
+ * gda_data_model_iter_is_valid:
  * @iter: a #GdaDataModelIter object
  *
  * Tells if @iter is a valid iterator (if it actually corresponds to a valid row in the model)
@@ -918,7 +918,7 @@ gda_data_model_iter_is_valid (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_get_column_for_param
+ * gda_data_model_iter_get_column_for_param:
  * @iter: a #GdaDataModelIter object
  * @param: a #GdaHolder object, listed in @iter
  *
@@ -939,14 +939,14 @@ gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaHolder *par
 }
 
 /**
- * gda_data_model_iter_get_holder_for_field
+ * gda_data_model_iter_get_holder_for_field:
  * @iter: a #GdaDataModelIter object
  * @col: the requested column
  *
  * Fetch a pointer to the #GdaHolder object which is synchronized with data at 
  * column @col
  *
- * Returns: the #GdaHolder, or %NULL if an error occurred
+ * Returns: (transfer none): the #GdaHolder, or %NULL if an error occurred
  */
 GdaHolder *
 gda_data_model_iter_get_holder_for_field (GdaDataModelIter *iter, gint col)
@@ -958,13 +958,13 @@ gda_data_model_iter_get_holder_for_field (GdaDataModelIter *iter, gint col)
 }
 
 /**
- * gda_data_model_iter_get_value_at
+ * gda_data_model_iter_get_value_at:
  * @iter: a #GdaDataModelIter object
  * @col: the requested column
  *
  * Get the value stored at the column @col in @iter. The returned value must not be modified.
  *
- * Returns: the #GValue, or %NULL if the value could not be fetched
+ * Returns: (transfer none): the #GValue, or %NULL if the value could not be fetched
  */
 const GValue *
 gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
@@ -982,7 +982,7 @@ gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
 }
 
 /**
- * gda_data_model_iter_set_value_at
+ * gda_data_model_iter_set_value_at:
  * @iter: a #GdaDataModelIter object
  * @col: the column number
  * @value: a #GValue (not %NULL)
@@ -1012,13 +1012,13 @@ gda_data_model_iter_set_value_at (GdaDataModelIter *iter, gint col, const GValue
 }
 
 /**
- * gda_data_model_iter_get_value_for_field
+ * gda_data_model_iter_get_value_for_field:
  * @iter: a #GdaDataModelIter object
  * @field_name: the requested column name
  *
  * Get the value stored at the column @field_name in @iter
  *
- * Returns: the #GValue, or %NULL
+ * Returns: (transfer none): the #GValue, or %NULL
  */
 const GValue *
 gda_data_model_iter_get_value_for_field (GdaDataModelIter *iter, const gchar *field_name)

@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -38,7 +38,7 @@ static gboolean log_opened = FALSE;
  */
 
 /**
- * gda_log_enable
+ * gda_log_enable:
  *
  * Enables GDA logs.
  */
@@ -57,7 +57,7 @@ gda_log_enable (void)
 }
 
 /**
- * gda_log_disable
+ * gda_log_disable:
  *
  * Disables GDA logs.
  */
@@ -76,7 +76,7 @@ gda_log_disable (void)
 }
 
 /**
- * gda_log_is_enabled
+ * gda_log_is_enabled:
  *
  * Returns: whether GDA logs are enabled (%TRUE or %FALSE).
  */
@@ -87,7 +87,7 @@ gda_log_is_enabled (void)
 }
 
 /**
- * gda_log_message
+ * gda_log_message:
  * @format: format string (see the printf(3) documentation).
  * @...: arguments to insert in the message.
  *
@@ -122,7 +122,7 @@ gda_log_message (const gchar *format, ...)
 }
 
 /**
- * gda_log_error
+ * gda_log_error:
  * @format: format string (see the printf(3) documentation).
  * @...: arguments to insert in the error.
  *

@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -169,7 +169,7 @@ static gboolean             gda_data_select_get_notify      (GdaDataModel *model
 static GObjectClass *parent_class = NULL;
 
 /**
- * gda_data_select_get_type
+ * gda_data_select_get_type:
  *
  * Returns: the #GType of GdaDataSelect.
  */
@@ -778,9 +778,9 @@ gda_data_select_get_property (GObject *object,
 }
 
 /**
- * gda_data_select_take_row
+ * gda_data_select_take_row:
  * @model: a #GdaDataSelect data model
- * @row: a #GdaRow row
+ * @row: (transfer full): a #GdaRow row
  * @rownum: "external" advertized row number
  *
  * Stores @row into @model, externally advertized at row number @rownum (if no row has been removed). 
@@ -802,13 +802,13 @@ gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
 }
 
 /**
- * gda_data_select_get_stored_row
+ * gda_data_select_get_stored_row:
  * @model: a #GdaDataSelect data model
  * @rownum: "external" advertized row number
  *
  * Get the #GdaRow object stored within @model at row @rownum (without taking care of removed rows)
  *
- * Returns: the requested #GdaRow, or %NULL if not found
+ * Returns: (tranfer none): the requested #GdaRow, or %NULL if not found
  */
 GdaRow *
 gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
@@ -825,13 +825,13 @@ gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
 }
 
 /**
- * gda_data_select_get_connection
+ * gda_data_select_get_connection:
  * @model: a #GdaDataSelect data model
  *
  * Get a pointer to the #GdaConnection object which was used when @model was created
  * (and which may be used internally by @model).
  *
- * Returns: a pointer to the #GdaConnection, or %NULL
+ * Returns: (tranfer none): a pointer to the #GdaConnection, or %NULL
  */
 GdaConnection *
 gda_data_select_get_connection (GdaDataSelect *model)
@@ -914,7 +914,7 @@ param_name_to_int (const gchar *pname, gint *result, gboolean *old_val)
 }
 
 /**
- * gda_data_select_set_modification_statement_sql
+ * gda_data_select_set_modification_statement_sql:
  * @model: a #GdaDataSelect data model
  * @sql: an SQL text
  * @error: a place to store errors, or %NULL
@@ -996,7 +996,7 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
 }
 
 /**
- * gda_data_select_set_modification_statement
+ * gda_data_select_set_modification_statement:
  * @model: a #GdaDataSelect data model
  * @mod_stmt: a #GdaStatement (INSERT, UPDATE or DELETE)
  * @error: a place to store errors, or %NULL
@@ -1233,7 +1233,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 }
 
 /**
- * gda_data_select_compute_modification_statements
+ * gda_data_select_compute_modification_statements:
  * @model: a #GdaDataSelect data model
  * @error: a place to store errors, or %NULL
  *
@@ -1313,9 +1313,9 @@ row_selection_condition_foreach_func (GdaSqlAnyPart *part, gpointer data, GError
 }
 
 /**
- * gda_data_select_set_row_selection_condition
+ * gda_data_select_set_row_selection_condition:
  * @model: a #GdaDataSelect data model
- * @expr: a #GdaSqlExpr expression
+ * @expr: (transfer none): a #GdaSqlExpr expression
  * @error: a place to store errors, or %NULL
  *
  * Offers the same features as gda_data_select_set_row_selection_condition_sql() but using a #GdaSqlExpr
@@ -1352,7 +1352,7 @@ gda_data_select_set_row_selection_condition  (GdaDataSelect *model, GdaSqlExpr *
 }
 
 /**
- * gda_data_select_set_row_selection_condition_sql
+ * gda_data_select_set_row_selection_condition_sql:
  * @model: a #GdaDataSelect data model
  * @sql_where: an SQL condition (withouth the WHERE keyword)
  * @error: a place to store errors, or %NULL
@@ -1428,7 +1428,7 @@ gda_data_select_set_row_selection_condition_sql (GdaDataSelect *model, const gch
 }
 
 /**
- * gda_data_select_compute_row_selection_condition
+ * gda_data_select_compute_row_selection_condition:
  * @model: a #GdaDataSelect object
  * @error: a place to store errors, or %NULL
  *
@@ -3241,7 +3241,7 @@ set_column_properties_from_select_stmt (GdaDataSelect *model, GdaConnection *cnc
 
 
 /**
- * gda_data_select_compute_columns_attributes
+ * gda_data_select_compute_columns_attributes:
  * @model: a #GdaDataSelect data model
  * @error: a place to store errors, or %NULL
  *

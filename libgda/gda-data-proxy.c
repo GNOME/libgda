@@ -1,6 +1,6 @@
 /* gda-data-proxy.c
  *
- * Copyright (C) 2005 - 2009 Vivien Malerba
+ * Copyright (C) 2005 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -752,8 +752,8 @@ static void proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy);
 
 
 /**
- * gda_data_proxy_new
- * @model: Data model to be proxied
+ * gda_data_proxy_new:
+ * @model: (transfer none): Data model to be proxied
  *
  * Creates a new proxy for @model
  *
@@ -1193,12 +1193,12 @@ proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_get_proxied_model
+ * gda_data_proxy_get_proxied_model:
  * @proxy: a #GdaDataProxy object
  *
  * Fetch the #GdaDataModel which @proxy does proxy
  *
- * Returns: the proxied data model
+ * Returns: (transfer none): the proxied data model
  */
 GdaDataModel *
 gda_data_proxy_get_proxied_model (GdaDataProxy *proxy)
@@ -1210,7 +1210,7 @@ gda_data_proxy_get_proxied_model (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_get_proxied_model_n_cols
+ * gda_data_proxy_get_proxied_model_n_cols:
  * @proxy: a #GdaDataProxy object
  * 
  * Get the number of columns in the proxied data model
@@ -1227,7 +1227,7 @@ gda_data_proxy_get_proxied_model_n_cols (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_get_proxied_model_n_rows
+ * gda_data_proxy_get_proxied_model_n_rows:
  * @proxy: a #GdaDataProxy object
  * 
  * Get the number of rows in the proxied data model
@@ -1244,7 +1244,7 @@ gda_data_proxy_get_proxied_model_n_rows (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_is_read_only
+ * gda_data_proxy_is_read_only:
  * @proxy: a #GdaDataProxy object
  *
  * Returns: TRUE if the proxied data model is itself read-only
@@ -1304,17 +1304,17 @@ find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValu
 
 
 /**
- * gda_data_proxy_get_values
+ * gda_data_proxy_get_values:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: a proxy row
- * @cols_index: array containing the columns for which the values are requested
+ * @cols_index: (array) (array length=n_cols): array containing the columns for which the values are requested
  * @n_cols: size of @cols_index
  *
  * Retreive a whole list of values from the @proxy data model. This function 
  * calls gda_data_proxy_get_value()
  * for each column index specified in @cols_index, and generates a #GSList on the way.
  *
- * Returns: a new list of values (the list must be freed, not the values), 
+ * Returns: (element-type GValue) (transfer container): a new list of values (the list must be freed, not the values), 
  * or %NULL if an error occurred
  */
 GSList *
@@ -1345,7 +1345,7 @@ gda_data_proxy_get_values (GdaDataProxy *proxy, gint proxy_row, gint *cols_index
 }
 
 /**
- * gda_data_proxy_get_value_attributes
+ * gda_data_proxy_get_value_attributes:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: a proxy row
  * @col: a valid proxy column
@@ -1353,7 +1353,7 @@ gda_data_proxy_get_values (GdaDataProxy *proxy, gint proxy_row, gint *cols_index
  * Get the attributes of the value stored at (proxy_row, col) in @proxy, which
  * is an ORed value of #GdaValueAttribute flags
  *
- * Returns: the attribute
+ * Returns: (transfer none): the attribute
  */
 GdaValueAttribute
 gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint col)
@@ -1417,11 +1417,11 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 }
 
 /**
- * gda_data_proxy_alter_value_attributes
+ * gda_data_proxy_alter_value_attributes:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: A proxy row number
  * @col: a valid column number
- * @alter_flags: flags to alter the attributes
+ * @alter_flags: (transfer none): flags to alter the attributes
  *
  * Alters the attributes of the value stored at (proxy_row, col) in @proxy. the @alter_flags
  * can only contain the GDA_VALUE_ATTR_IS_NULL, GDA_VALUE_ATTR_IS_DEFAULT and GDA_VALUE_ATTR_IS_UNCHANGED
@@ -1496,7 +1496,7 @@ gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint
 }
 
 /**
- * gda_data_proxy_get_proxied_model_row
+ * gda_data_proxy_get_proxied_model_row:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: A proxy row number
  *
@@ -1515,7 +1515,7 @@ gda_data_proxy_get_proxied_model_row (GdaDataProxy *proxy, gint proxy_row)
 }
 
 /**
- * gda_data_proxy_delete
+ * gda_data_proxy_delete:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: A proxy row number
  *
@@ -1600,7 +1600,7 @@ gda_data_proxy_delete (GdaDataProxy *proxy, gint proxy_row)
 }
 
 /**
- * gda_data_proxy_undelete
+ * gda_data_proxy_undelete:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: A proxy row number
  *
@@ -1649,7 +1649,7 @@ gda_data_proxy_undelete (GdaDataProxy *proxy, gint proxy_row)
 }
 
 /**
- * gda_data_proxy_row_is_deleted
+ * gda_data_proxy_row_is_deleted:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: A proxy row number
  *
@@ -1671,7 +1671,7 @@ gda_data_proxy_row_is_deleted (GdaDataProxy *proxy, gint proxy_row)
 }
 
 /**
- * gda_data_proxy_row_is_inserted
+ * gda_data_proxy_row_is_inserted:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: A proxy row number
  *
@@ -1791,7 +1791,7 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_cancel_row_changes
+ * gda_data_proxy_cancel_row_changes:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: the row to cancel changes
  * @col: the column to cancel changes, or less than 0 to cancel any change on the @row row
@@ -1884,7 +1884,7 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 static gboolean commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GError **error);
 
 /**
- * gda_data_proxy_apply_row_changes
+ * gda_data_proxy_apply_row_changes:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: the row number to commit
  * @error: place to store the error, or %NULL
@@ -2104,7 +2104,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 }
 
 /**
- * gda_data_proxy_has_changed
+ * gda_data_proxy_has_changed:
  * @proxy: a #GdaDataProxy object
  *
  * Tells if @proxy contains any modifications not applied to the proxied data model.
@@ -2121,7 +2121,7 @@ gda_data_proxy_has_changed (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_row_has_changed
+ * gda_data_proxy_row_has_changed:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: A proxy row number
  *
@@ -2143,7 +2143,7 @@ gda_data_proxy_row_has_changed (GdaDataProxy *proxy, gint proxy_row)
 }
 
 /**
- * gda_data_proxy_get_n_new_rows
+ * gda_data_proxy_get_n_new_rows:
  * @proxy: a #GdaDataProxy object
  *
  * Get the number of rows which have been added to @proxy and which are not part of
@@ -2161,7 +2161,7 @@ gda_data_proxy_get_n_new_rows (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_get_n_modified_rows
+ * gda_data_proxy_get_n_modified_rows:
  * @proxy: a #GdaDataProxy object
  *
  * Get the number of rows which have been modified in the proxy (the sum of rows existing in
@@ -2179,7 +2179,7 @@ gda_data_proxy_get_n_modified_rows (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_set_sample_size
+ * gda_data_proxy_set_sample_size:
  * @proxy: a #GdaDataProxy object
  * @sample_size: the requested size of a chunk, or 0
  *
@@ -2219,7 +2219,7 @@ gda_data_proxy_set_sample_size (GdaDataProxy *proxy, gint sample_size)
 }
 
 /**
- * gda_data_proxy_get_sample_size
+ * gda_data_proxy_get_sample_size:
  * @proxy: a #GdaDataProxy object
  *
  * Get the size of each chunk of data displayed at a time.
@@ -2236,7 +2236,7 @@ gda_data_proxy_get_sample_size (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_set_sample_start
+ * gda_data_proxy_set_sample_start:
  * @proxy: a #GdaDataProxy object
  * @sample_start: the number of the first row to be displayed
  *
@@ -2263,7 +2263,7 @@ gda_data_proxy_set_sample_start (GdaDataProxy *proxy, gint sample_start)
 }
 
 /**
- * gda_data_proxy_get_sample_start
+ * gda_data_proxy_get_sample_start:
  * @proxy: a #GdaDataProxy object
  *
  * Get the number of the first row to be available in @proxy (in reference to the proxied data model)
@@ -2280,7 +2280,7 @@ gda_data_proxy_get_sample_start (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_get_sample_end
+ * gda_data_proxy_get_sample_end:
  * @proxy: a #GdaDataProxy object
  *
  * Get the number of the last row to be available in @proxy (in reference to the proxied data model)
@@ -2736,7 +2736,7 @@ adjust_displayed_chunk (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_apply_all_changes
+ * gda_data_proxy_apply_all_changes:
  * @proxy: a #GdaDataProxy object
  * @error: a place to store errors, or %NULL
  *
@@ -2773,7 +2773,7 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 }
 
 /**
- * gda_data_proxy_cancel_all_changes
+ * gda_data_proxy_cancel_all_changes:
  * @proxy: a #GdaDataProxy object
  *
  * Cancel all the changes stored in the proxy (the @proxy will be reset to its state
@@ -3032,7 +3032,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 }
 
 /**
- * gda_data_proxy_set_filter_expr
+ * gda_data_proxy_set_filter_expr:
  * @proxy: a #GdaDataProxy object
  * @filter_expr: an SQL based expression which will filter the contents of @proxy, or %NULL to remove any previous filter
  * @error: a place to store errors, or %NULL
@@ -3117,7 +3117,7 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 }
 
 /**
- * gda_data_proxy_set_ordering_column
+ * gda_data_proxy_set_ordering_column:
  * @proxy: a #GdaDataProxy object
  * @col: the column number to order from
  * @error: a place to store errors, or %NULL
@@ -3208,7 +3208,7 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 }
 
 /**
- * gda_data_proxy_get_filter_expr
+ * gda_data_proxy_get_filter_expr:
  * @proxy: a #GdaDataProxy object
  *
  * Get the current filter expression used by @proxy.
@@ -3225,7 +3225,7 @@ gda_data_proxy_get_filter_expr (GdaDataProxy *proxy)
 }
 
 /**
- * gda_data_proxy_get_filtered_n_rows
+ * gda_data_proxy_get_filtered_n_rows:
  * @proxy: a #GdaDataProxy object
  *
  * Get the total number of filtered rows in @proxy if a filter has been applied. As new rows

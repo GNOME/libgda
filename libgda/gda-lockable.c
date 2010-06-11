@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -67,7 +67,7 @@ gda_lockable_class_init (gpointer g_class)
 }
 
 /**
- * gda_lockable_lock
+ * gda_lockable_lock:
  * @lockable: a #GdaLockable object.
  *
  * Locks @lockable. If it is already locked by another thread, the current thread will block until it is unlocked 
@@ -90,7 +90,7 @@ gda_lockable_lock (GdaLockable *lockable)
 }
 
 /**
- * gda_lockable_trylock
+ * gda_lockable_trylock:
  * @lockable: a #GdaLockable object.
  *
  * Tries to lock @lockable. If it is already locked by another thread, then it immediately returns FALSE, otherwise
@@ -117,7 +117,7 @@ gda_lockable_trylock (GdaLockable *lockable)
 }
 
 /**
- * gda_lockable_unlock
+ * gda_lockable_unlock:
  * @lockable: a #GdaLockable object.
  *
  * Unlocks @lockable. This method should not be called if the current does not already holds a lock on @lockable (having

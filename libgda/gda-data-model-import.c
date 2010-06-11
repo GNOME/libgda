@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 - 2008 The GNOME Foundation.
+ * Copyright (C) 2006 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -174,7 +174,7 @@ static void         add_error (GdaDataModelImport *model, const gchar *err);
 static GObjectClass *parent_class = NULL;
 
 /**
- * gda_data_model_import_get_type
+ * gda_data_model_import_get_type:
  *
  * Returns: the #GType of GdaDataModelImport.
  */
@@ -667,10 +667,10 @@ gda_data_model_import_get_property (GObject *object,
 }
 
 /**
- * gda_data_model_import_new_file
+ * gda_data_model_import_new_file:
  * @filename: the file to import data from
  * @random_access: TRUE if random access will be required
- * @options: list of importing options
+ * @options: (transfer none) (allow-none): importing options
  *
  * Creates a new #GdaDataModel object which contains the data stored within the @filename file.
  *
@@ -706,10 +706,10 @@ gda_data_model_import_new_file   (const gchar *filename, gboolean random_access,
 }
 
 /**
- * gda_data_model_import_new_mem
- * @data: a string containng the data to import
+ * gda_data_model_import_new_mem:
+ * @data: a string containing the data to import
  * @random_access: TRUE if random access will be required
- * @options: list of importing options, see gda_data_model_import_new_file() for more information
+ * @options: (transfer none) (allow-none): importing options, see gda_data_model_import_new_file() for more information
  *
  * Creates a new #GdaDataModel object which contains the data stored in the @data string. 
  *
@@ -732,8 +732,8 @@ gda_data_model_import_new_mem (const gchar *data, gboolean random_access, GdaSet
 }
 
 /**
- * gda_data_model_import_new_xml_node
- * @node: an XML node corresponding to a &lt;data-array&gt; tag
+ * gda_data_model_import_new_xml_node:
+ * @node: (transfer none): an XML node corresponding to a &lt;data-array&gt; tag
  *
  * Creates a new #GdaDataModel and loads the data in @node. The resulting data model
  * can be accessed in a random way.
@@ -1586,13 +1586,13 @@ add_error (GdaDataModelImport *model, const gchar *err)
 }
 
 /**
- * gda_data_model_import_get_errors
+ * gda_data_model_import_get_errors:
  * @model: a #GdaDataModelImport object
  *
  * Get the list of errors which @model has to report. The returned list is a list of
  * #GError structures, and must not be modified
  *
- * Returns: the list of errors (which must not be modified), or %NULL
+ * Returns: (transfer none) (element-type GObject.Error): the list of errors (which must not be modified), or %NULL
  */
 GSList *
 gda_data_model_import_get_errors (GdaDataModelImport *model)
@@ -1604,7 +1604,7 @@ gda_data_model_import_get_errors (GdaDataModelImport *model)
 }
 
 /**
- * gda_data_model_import_clean_errors
+ * gda_data_model_import_clean_errors:
  * @model: a #GdaDataModelImport object
  *
  * Clears the history of errors @model has to report

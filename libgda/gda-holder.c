@@ -1,6 +1,6 @@
 /* gda-holder.c
  *
- * Copyright (C) 2003 - 2008 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -317,8 +317,8 @@ gda_holder_init (GdaHolder *holder)
 }
 
 /**
- * gda_holder_new
- * @type: the #GType requested
+ * gda_holder_new:
+ * @type: (transfer none): the #GType requested
  *
  * Creates a new holder of type @type
  *
@@ -331,7 +331,7 @@ gda_holder_new (GType type)
 }
 
 /**
- * gda_holder_copy
+ * gda_holder_copy:
  * @orig: a #GdaHolder object to copy
  *
  * Copy constructor.
@@ -397,7 +397,7 @@ gda_holder_copy (GdaHolder *orig)
 }
 
 /**
- * gda_holder_new_inline
+ * gda_holder_new_inline:
  * @type: a valid GLib type
  * @id: the id of the holder to create, or %NULL
  * @...: value to set
@@ -668,12 +668,12 @@ gda_holder_get_property (GObject *object,
 }
 
 /**
- * gda_holder_get_g_type
+ * gda_holder_get_g_type:
  * @holder: a #GdaHolder object
  * 
  * Get @holder's type
  *
- * Returns: the data type
+ * Returns: (tranfer none): the data type
  */
 GType
 gda_holder_get_g_type (GdaHolder *holder)
@@ -685,7 +685,7 @@ gda_holder_get_g_type (GdaHolder *holder)
 }
 
 /**
- * gda_holder_get_id
+ * gda_holder_get_id:
  * @holder: a #GdaHolder object
  *
  * Get the ID of @holder. The ID can be set using @holder's "id" property
@@ -703,7 +703,7 @@ gda_holder_get_id (GdaHolder *holder)
 
 
 /**
- * gda_holder_get_value
+ * gda_holder_get_value:
  * @holder: a #GdaHolder object
  *
  * Get the value held into the holder. If @holder is set to use its default value
@@ -738,14 +738,14 @@ gda_holder_get_value (GdaHolder *holder)
 }
 
 /**
- * gda_holder_get_value_str
+ * gda_holder_get_value_str:
  * @holder: a #GdaHolder object
- * @dh: a #GdaDataHandler to use, or %NULL
+ * @dh: (allow-none): a #GdaDataHandler to use, or %NULL
  *
  * Same functionality as gda_holder_get_value() except that it returns the value as a string
  * (the conversion is done using @dh if not %NULL, or the default data handler otherwise).
  *
- * Returns: the value, or %NULL
+ * Returns: (transfer full): the value, or %NULL
  */
 gchar *
 gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
@@ -771,9 +771,9 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
 static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, GError **error);
 
 /**
- * gda_holder_set_value
+ * gda_holder_set_value:
  * @holder: a #GdaHolder object
- * @value: a value to set the holder to, or %NULL
+ * @value: (allow-none): a value to set the holder to, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Sets the value within the holder. If @holder is an alias for another
@@ -806,7 +806,7 @@ gda_holder_set_value (GdaHolder *holder, const GValue *value, GError **error)
 }
 
 /**
- * gda_holder_set_value_str
+ * gda_holder_set_value_str:
  * @holder: a #GdaHolder object
  * @dh: a #GdaDataHandler to use, or %NULL
  * @value: a value to set the holder to, as a string
@@ -851,9 +851,9 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
 }
 
 /**
- * gda_holder_take_value
+ * gda_holder_take_value:
  * @holder: a #GdaHolder object
- * @value: a value to set the holder to
+ * @value: (transfer full): a value to set the holder to
  * @error: a place to store errors, or %NULL
  *
  * Sets the value within the holder. If @holder is an alias for another
@@ -1156,7 +1156,7 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 }
 
 /**
- * gda_holder_take_static_value
+ * gda_holder_take_static_value:
  * @holder: a #GdaHolder object
  * @value: a const value to set the holder to
  * @value_changed: a boolean set with TRUE if the value changes, FALSE elsewhere.
@@ -1178,13 +1178,12 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
  * of which can prevent the change from happening) which can be connected to to have a greater control
  * of which values @holder can have, or implement some business rules.
  *
- * Returns: NULL if an error occurred or if the previous GValue was NULL itself. It returns
+ * Returns: (transfer none): NULL if an error occurred or if the previous GValue was NULL itself. It returns
  * the static GValue user set previously, so that he can free it.
- *
  */
 GValue *
 gda_holder_take_static_value (GdaHolder *holder, const GValue *value, gboolean *value_changed,
-							  GError **error)
+			      GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
@@ -1193,7 +1192,7 @@ gda_holder_take_static_value (GdaHolder *holder, const GValue *value, gboolean *
 }
 
 /**
- * gda_holder_force_invalid
+ * gda_holder_force_invalid:
  * @holder: a #GdaHolder object
  *
  * Forces a holder to be invalid; to set it valid again, a new value must be assigned
@@ -1232,7 +1231,7 @@ gda_holder_force_invalid (GdaHolder *holder)
 
 
 /**
- * gda_holder_is_valid
+ * gda_holder_is_valid:
  * @holder: a #GdaHolder object
  *
  * Get the validity of @holder (that is, of the value held by @holder)
@@ -1259,7 +1258,7 @@ gda_holder_is_valid (GdaHolder *holder)
 }
 
 /**
- * gda_holder_set_value_to_default
+ * gda_holder_set_value_to_default:
  * @holder: a #GdaHolder object
  *
  * Set @holder's value to its default value.
@@ -1297,7 +1296,7 @@ gda_holder_set_value_to_default (GdaHolder *holder)
 }
 
 /**
- * gda_holder_value_is_default
+ * gda_holder_value_is_default:
  * @holder: a #GdaHolder object
  *
  * Tells if @holder's current value is the default one.
@@ -1315,7 +1314,7 @@ gda_holder_value_is_default (GdaHolder *holder)
 
 
 /**
- * gda_holder_get_default_value
+ * gda_holder_get_default_value:
  * @holder: a #GdaHolder object
  *
  * Get the default value held into the holder. WARNING: the default value does not need to be of 
@@ -1334,7 +1333,7 @@ gda_holder_get_default_value (GdaHolder *holder)
 
 
 /**
- * gda_holder_set_default_value
+ * gda_holder_set_default_value:
  * @holder: a #GdaHolder object
  * @value: a value to set the holder's default value, or %NULL
  *
@@ -1386,7 +1385,7 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 }
 
 /**
- * gda_holder_set_not_null
+ * gda_holder_set_not_null:
  * @holder: a #GdaHolder object
  * @not_null: TRUE if @holder should not accept %NULL values
  *
@@ -1402,7 +1401,7 @@ gda_holder_set_not_null (GdaHolder *holder, gboolean not_null)
 }
 
 /**
- * gda_holder_get_not_null
+ * gda_holder_get_not_null:
  * @holder: a #GdaHolder object
  *
  * Get wether the holder can be NULL or not
@@ -1419,7 +1418,7 @@ gda_holder_get_not_null (GdaHolder *holder)
 }
 
 /**
- * gda_holder_set_source_model
+ * gda_holder_set_source_model:
  * @holder: a #GdaHolder object
  * @model: a #GdaDataModel object or NULL
  * @col: the reference column in @model
@@ -1472,7 +1471,7 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
 
 
 /**
- * gda_holder_get_source_model
+ * gda_holder_get_source_model:
  * @holder: a #GdaHolder
  * @col: a place to store the column in the model sourcing the holder, or %NULL
  *
@@ -1483,7 +1482,7 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
  *
  * Otherwise, this method returns %NULL, and if @col is not %NULL, then it is set to 0.
  *
- * Returns: a pointer to a #GdaDataModel, or %NULL
+ * Returns: (transfer none): a pointer to a #GdaDataModel, or %NULL
  */
 GdaDataModel *
 gda_holder_get_source_model (GdaHolder *holder, gint *col)
@@ -1519,7 +1518,7 @@ bind_to_notify_cb (GdaHolder *bind_to, GParamSpec *pspec, GdaHolder *holder)
 }
 
 /**
- * gda_holder_set_bind
+ * gda_holder_set_bind:
  * @holder: a #GdaHolder
  * @bind_to: a #GdaHolder or %NULL
  * @error: a place to store errors, or %NULL
@@ -1706,12 +1705,12 @@ full_bind_changed_cb (GdaHolder *alias_of, GdaHolder *holder)
 }
 
 /**
- * gda_holder_get_bind
+ * gda_holder_get_bind:
  * @holder: a #GdaHolder
  *
  * Get the holder which makes @holder change its value when the holder's value is changed.
  *
- * Returns: the #GdaHolder or %NULL
+ * Returns: (transfer none): the #GdaHolder or %NULL
  */
 GdaHolder *
 gda_holder_get_bind (GdaHolder *holder)
@@ -1723,7 +1722,7 @@ gda_holder_get_bind (GdaHolder *holder)
 }
 
 /**
- * gda_holder_get_alphanum_id
+ * gda_holder_get_alphanum_id:
  * @holder: a #GdaHolder object
  *
  * Get an "encoded" version of @holder's name. The "encoding" consists in replacing non
@@ -1743,7 +1742,7 @@ gda_holder_get_alphanum_id (GdaHolder *holder)
 }
 
 /**
- * gda_holder_get_attribute
+ * gda_holder_get_attribute:
  * @holder: a #GdaHolder
  * @attribute: attribute name as a string
  *
@@ -1763,7 +1762,7 @@ gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
 }
 
 /**
- * gda_holder_set_attribute
+ * gda_holder_set_attribute:
  * @holder: a #GdaHolder
  * @attribute: attribute name
  * @value: a #GValue, or %NULL
