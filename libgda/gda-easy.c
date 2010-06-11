@@ -1050,3 +1050,44 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 	return retval;
 }
 
+/**
+ * gda_parse_string
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @sql: an SQL command to parse, not %NULL
+ * @params: (out) (allow-none) (transfer full): a place to store a new #GdaSet, for parameters used in SQL command, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * This function helps to parse a SQL witch use paramenters and store them at @params.
+ *
+ * Returns: a #GdaStatement representing the SQL command, or %NULL if an error occurred
+ *
+ * Since: 4.2
+ */
+GdaStatement*
+gda_parse_string (GdaConnection *cnc, const gchar *sql, GdaSet **params, GError **error)
+{
+	GdaStatement *stmt;
+	GdaSqlParser *parser = NULL;
+
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (sql, NULL);
+
+	if (params)
+		*params = NULL;
+	if (cnc)
+		parser = gda_connection_create_parser (cnc);
+	if (!parser)
+		parser = gda_sql_parser_new ();
+
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, error);
+	g_object_unref (parser);
+	if (! stmt)
+		return NULL;
+
+	if (params && !gda_statement_get_parameters (stmt, params, error)) {
+		g_object_unref (stmt);
+		return NULL;
+	}
+	
+	return stmt;
+}

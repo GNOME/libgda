@@ -168,6 +168,18 @@ Do quickly some actions
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_parse_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@sql: 
+@params: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_get_default_handler ##### -->
 <para>
 

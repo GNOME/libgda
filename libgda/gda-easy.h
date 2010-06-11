@@ -60,7 +60,8 @@ typedef enum
  * Convenient Functions
  */
 GdaDataHandler     *gda_get_default_handler           (GType for_type);
-
+GdaStatement       *gda_parse_string                  (GdaConnection *cnc, const gchar *sql, GdaSet **params,
+    												   GError **error);
 /*
  * Quick commands execution
  */

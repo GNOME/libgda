@@ -457,6 +457,7 @@
 	gda_parse_iso8601_date
 	gda_parse_iso8601_time
 	gda_parse_iso8601_timestamp
+	gda_parse_string
 	gda_perform_create_database
 	gda_perform_create_table
 	gda_perform_drop_database
