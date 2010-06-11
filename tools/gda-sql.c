@@ -31,7 +31,7 @@
 #include "tools-input.h"
 #include "command-exec.h"
 #include <unistd.h>
-#ifndef G_OS_WIN32
+#ifdef HAVE_TERMIOS_H
 #include <termios.h>
 #endif
 #include <sys/types.h>
@@ -1507,7 +1507,7 @@ read_hidden_passwd (void)
 {
 	gchar *p, password [100];
 
-#ifndef G_OS_WIN32
+#ifdef HAVE_TERMIOS_H
 	int fail;
 	struct termios termio;
 	
@@ -1519,13 +1519,34 @@ read_hidden_passwd (void)
 	fail = tcsetattr (0, TCSANOW, &termio);
 	if (fail)
 		return NULL;
+#else
+  #ifdef G_OS_WIN32
+	HANDLE  t = NULL;
+        LPDWORD t_orig = NULL;
+
+	/* get a new handle to turn echo off */
+	t_orig = (LPDWORD) malloc (sizeof (DWORD));
+	t = GetStdHandle (STD_INPUT_HANDLE);
+	
+	/* save the old configuration first */
+	GetConsoleMode (t, t_orig);
+	
+	/* set to the new mode */
+	SetConsoleMode (t, ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
+  #endif
 #endif
 	
 	p = fgets (password, sizeof (password) - 1, stdin);
 
-#ifndef G_OS_WIN32
+#ifdef HAVE_TERMIOS_H
 	termio.c_lflag |= ECHO;
 	tcsetattr (0, TCSANOW, &termio);
+#else
+  #ifdef G_OS_WIN32
+	SetConsoleMode (t, *t_orig);
+	fflush (stdout);
+	free (t_orig);
+  #endif
 #endif
 	
 	if (!p)

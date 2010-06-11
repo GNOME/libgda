@@ -1402,6 +1402,10 @@ AC_SUBST(LIB_PREFIX)
 AC_SUBST(LIB_SONAME)
 AC_SUBST(LIB_SUFFIX)
 
+dnl
+dnl TERMIOS.H
+dnl
+AC_CHECK_HEADERS([termios.h])
 
 dnl
 dnl where to install DTD files
