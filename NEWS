@@ -1,3 +1,17 @@
+libgda 4.0.9, 2010-06-12
+
+ - Better GObject introspection support through annotations and better build
+ - Corrected memory leak in SQLite provider
+ - String escape and unescape corrections in SQLite provider
+ - Correctly handle floats in MySQL provider
+ - Correctly handle binary relocation on MacOSX
+ - Corrections in the Gda-Sql tool regarding username and password
+ - Misc. corrections: connection locking issues, honor the GDA_EASY_CREATE_TABLE_UNIQUE_FLAG
+   flag, some optimizations
+ - Doc. corrections
+ - Translations:
+	- fi (Timo Jyrinki)
+
 libgda 4.0.8, 2010-03-06
 
  - Added missing support for the freeze/thaw feature in GdaDataSelect
