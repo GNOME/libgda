@@ -2,7 +2,7 @@ m4_define(major, 4)
 m4_define(minor, 1)
 m4_define(micro, 7)
 m4_define([gda_stable],
-	m4_if(m4_eval(minor % 2), [0], [yes], [no])) 
+	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 m4_include(introspection.m4)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
@@ -161,7 +161,7 @@ AC_ARG_WITH(ui,
 
 if test "$with_ui" = "auto" -o "$with_ui" = "yes"
 then
-	GTK_MODULES="gtk+-2.0 >= 2.12.0"
+	GTK_MODULES="gtk+-3.0 >= 2.90.0"
 	PKG_CHECK_MODULES(GTK, $GTK_MODULES, [
 		AC_DEFINE(HAVE_UI, [1], [GTK+ support enabled])
 		have_ui=yes], [
@@ -191,7 +191,7 @@ if test x"$have_ui" = "xyes"
 then
 	if test "$with_sourceview" = "auto" -o "$with_sourceview" = "yes"
 	then
-		PKG_CHECK_MODULES(GTKSOURCEVIEW, "gtksourceview-2.0", [
+		PKG_CHECK_MODULES(GTKSOURCEVIEW, "gtksourceview-3.0", [
 			AC_DEFINE(HAVE_GTKSOURCEVIEW, [1], [GtkSourceView support enabled])
 			have_sourceview=yes], [
 			if test "$with_sourceview" = "yes"
@@ -203,7 +203,7 @@ then
 
 	if test "$with_goo" = "auto" -o "$with_goo" = "yes"
 	then
-		PKG_CHECK_MODULES(GOOCANVAS, "goocanvas", [
+		PKG_CHECK_MODULES(GOOCANVAS, "goocanvas-2.0", [
 			AC_DEFINE(HAVE_GOOCANVAS, [1], [GooCanvas support enabled])
 			have_goocanvas=yes], [
 			if test "$with_goo" = "yes"
@@ -406,7 +406,7 @@ else
 	          AC_MSG_WARN(*** FAM support will not be built (FAM library not found) $FAM_MISSING_WARNING ***))
 	fi
 	AC_SUBST(FAM_LIBS)
-	AC_SUBST(FAM_CFLAGS)	
+	AC_SUBST(FAM_CFLAGS)
 fi
 AC_SUBST(GIO_CFLAGS)
 AC_SUBST(GIO_LIBS)
@@ -651,10 +651,10 @@ else
 	AC_MSG_CHECKING(for MySQL files in $withval)
 	if test $cross_compiling = yes
 	then
-		mysql_req=$withval	
+		mysql_req=$withval
 	else
 		AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5, [], $withval/bin)
-	fi	
+	fi
 fi
 ])
 mysqldir=""
@@ -680,7 +680,7 @@ else
 		if test $platform_win32 = yes -a -f $mysql_req/$lib/opt/libmysql.lib
 		then
 			mysqldir=$mysql_req
-			
+
 			mysqllibdir_suffix=/opt
 			AC_MSG_RESULT(found mysql)
 			AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
@@ -777,10 +777,10 @@ else
 	AC_MSG_CHECKING(for PostgreSQL files in $withval)
 	if test $cross_compiling = yes
 	then
-		postgres_req=$withval	
+		postgres_req=$withval
 	else
 		AC_PATH_PROG(POSTGRES_CONFIG, pg_config, [], $withval/bin)
-	fi	
+	fi
 fi
 ])
 postgresdir=""
@@ -875,7 +875,7 @@ then
 
 			AC_DEFINE_UNQUOTED(FREETDS_VERSION_MAJOR, [$freetds_version_major])
 			AC_DEFINE_UNQUOTED(FREETDS_VERSION_MINOR, [$freetds_version_minor])
-		fi	
+		fi
 	fi
 fi
 
@@ -1327,7 +1327,7 @@ else
 		if test x"$have_sqlite" = "xyes"
 		then
 			AC_CHECK_LIB(sqlite3, sqlite3_table_column_metadata,[sqlite3_api=1], [sqlite3_api=0], $SQLITE_CFLAGS $SQLITE_LIBS)
-	
+
 			if test $sqlite3_api = 0
         		then
 				AC_MSG_RESULT([Installed SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, using embedded SQLite])
@@ -1588,7 +1588,7 @@ then
 		break
 	    fi
 	done
-	
+
 	have_java=yes
 	AC_DEFINE(HAVE_JAVA, 1, [Have JAVA])
 	AC_SUBST(JAVA_LD_PATH)
@@ -1884,4 +1884,3 @@ then
        echo "   Binreloc support is disabled: Libgda will not be relocatable. To enable binreloc support re-run with --enable-binreloc (see http://autopackage.org/docs/binreloc for more information)"
 fi
 echo ""
-
