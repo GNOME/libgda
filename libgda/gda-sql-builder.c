@@ -488,6 +488,8 @@ gda_sql_builder_set_where (GdaSqlBuilder *builder, GdaSqlBuilderId cond_id)
  *
  * Add a selected selected item to the SELECT statement.
  *
+ * For non-SELECT statements, see gda_sql_builder_add_field_id().
+ *
  * Returns: the ID of the added field, or 0 if there was an error
  *
  * Since: 4.2
@@ -846,7 +848,9 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type
  * @string: a string
  *
  * Defines an expression representing an identifier in @builder,
- * which may be reused to build other parts of a statement.
+ * which may be reused to build other parts of a statement,
+ * for instance as a parameter to gda_sql_builder_add_cond() or
+ * gda_sql_builder_add_field_value_id().
  *
  * The new expression will contain the @string literal.
  * For example:
@@ -862,6 +866,8 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type
  * </programlisting>
  *
  * because "date" is an SQL reserved keyword.
+ *
+ * For fields, see gda_sql_builder_add_field_id().
  *
  * Returns: the ID of the new expression, or 0 if there was an error
  *
@@ -882,6 +888,42 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string)
 	}
 
 	return add_part (builder, (GdaSqlAnyPart *) expr);
+}
+
+/**
+ * gda_sql_builder_add_field_id
+ * @builder: a #GdaSqlBuilder object
+ * @field_name: a field name
+ * @table_name: a table name, or %NULL
+ *
+ * Defines an expression representing a field in @builder,
+ * which may be reused to build other parts of a statement,
+ * for instance as a parameter to gda_sql_builder_add_cond() or
+ * gda_sql_builder_add_field_value_id().
+ *
+ * Calling this with a %NULL @table_name is equivalent to calling gda_sql_builder_add_id().
+ *
+ * For SELECT queries, see gda_sql_builder_select_add_field().
+ *
+ * Returns: the ID of the new expression, or 0 if there was an error
+ *
+ * Since: 4.2
+ */
+GdaSqlBuilderId
+gda_sql_builder_add_field_id (GdaSqlBuilder *builder, const gchar *field_name, const gchar *table_name)
+{
+	gchar* tmp = 0;
+	if (table_name && *table_name)
+		tmp = g_strdup_printf ("%s.%s", table_name, field_name);
+	else
+		tmp = (gchar*) field_name;
+
+	guint field_id = gda_sql_builder_add_id (builder, tmp);
+
+	if (table_name)
+		g_free (tmp);
+
+	return field_id;
 }
 
 /**

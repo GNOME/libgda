@@ -1681,6 +1681,7 @@ gda_sql_builder_add_function
 gda_sql_builder_add_function_v
 <SUBSECTION>
 gda_sql_builder_add_id
+gda_sql_builder_add_field_id
 gda_sql_builder_add_expr
 gda_sql_builder_add_expr_value
 gda_sql_builder_add_param

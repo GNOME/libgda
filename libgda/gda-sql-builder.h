@@ -75,6 +75,7 @@ GdaSqlStatement  *gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder);
 
 /* Expression API */
 GdaSqlBuilderId gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string);
+GdaSqlBuilderId gda_sql_builder_add_field_id (GdaSqlBuilder *builder, const gchar *field_name, const gchar *table_name);
 GdaSqlBuilderId gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type, ...);
 GdaSqlBuilderId gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, const GValue *value);
 GdaSqlBuilderId gda_sql_builder_add_param (GdaSqlBuilder *builder, const gchar *param_name, GType type, gboolean nullok);
