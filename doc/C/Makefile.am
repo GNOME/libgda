@@ -3,7 +3,7 @@
 AUTOMAKE_OPTIONS = 1.6
 
 # The name of the module.
-DOC_MODULE=libgda-4.0
+DOC_MODULE=libgda-5.0
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
@@ -37,14 +37,14 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
 
-GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgda-report/libgda-report-4.0.la \
+GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda-report/libgda-report-5.0.la \
 	$(LIBGDA_LIBS)
 
 if HAVE_UI
 GTKDOC_CFLAGS += $(GTK_CFLAGS)
 GTKDOC_LIBS += $(GTK_LIBS) \
-	$(top_builddir)/libgda-ui/libgda-ui-4.0.la
+	$(top_builddir)/libgda-ui/libgda-ui-5.0.la
 endif
 
 # Extra options to supply to gtkdoc-mkdb
@@ -88,7 +88,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
 # for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
-DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-4.0.types libgda-4.0-sections.txt
+DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-5.0.types libgda-5.0-sections.txt
 
 DOC_STAMPS += pdf-build.stamp
 CLEANFILES += $(DOC_STAMPS)

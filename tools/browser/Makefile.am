@@ -1,4 +1,4 @@
-bin_PROGRAMS=gda-browser-4.0
+bin_PROGRAMS=gda-browser-5.0
 noinst_LTLIBRARIES = libbrowser.la
 
 SUBDIRS = data common schema-browser query-exec data-manager dummy-perspective
@@ -72,14 +72,14 @@ libbrowser_la_SOURCES=\
 	browser-stock-icons.c \
 	browser-stock-icons.h
 
-gda_browser_4_0_SOURCES=\
+gda_browser_5_0_SOURCES=\
 	main.c
 
 $(OBJECTS): marshal.c marshal.h
 
 if PLATFORM_WIN32
 EXTRALDFLAGS=-mwindows
-gda_browser_4_0_SOURCES += browser-res.rc
+gda_browser_5_0_SOURCES += browser-res.rc
 else
 EXTRALDFLAGS=
 endif
@@ -94,23 +94,23 @@ endif
 browser-res.o: browser-res.rc
 	$(WINDRES) $^ -o $@
 
-gda_browser_4_0_LDFLAGS = $(EXTRALDFLAGS)
-gda_browser_4_0_LDADD=\
+gda_browser_5_0_LDFLAGS = $(EXTRALDFLAGS)
+gda_browser_5_0_LDADD=\
 	schema-browser/libperspective.la \
 	query-exec/libperspective.la \
 	data-manager/libperspective.la \
 	libbrowser.la \
 	$(CANVAS_LDADD) \
 	common/libcommon.la \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
 	$(LIBGDA_LIBS) $(GTK_LIBS) $(GTKSOURCEVIEW_LIBS) $(MAC_INTEGRATION_LIBS)
 
 
 @INTLTOOL_DESKTOP_RULE@
 
 desktopdir=$(datadir)/applications
-Desktop_in_files = gda-browser-4.0.desktop.in
+Desktop_in_files = gda-browser-5.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 # canvas example
@@ -122,13 +122,13 @@ canvas_example_SOURCES = \
 	dnd.h
 canvas_example_CFLAGS = -DCANVAS_EXAMPLE
 canvas_example_LDFLAGS = \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
 	$(top_builddir)/tools/browser/canvas/libcanvas.la \
 	$(top_builddir)/tools/browser/common/libcommon.la
 
 # icons
-iconsdir=$(datadir)/libgda-4.0/pixmaps
+iconsdir=$(datadir)/libgda-5.0/pixmaps
 icons_DATA= \
 	gda-browser.png \
 	gda-browser-auth.png \
@@ -152,7 +152,7 @@ icons_DATA= \
 # app icon
 appiconsdir=$(datadir)/pixmaps
 appicons_DATA= \
-        gda-browser-4.0.png
+        gda-browser-5.0.png
 
 EXTRA_DIST = \
 	marshal.list \

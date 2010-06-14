@@ -41,8 +41,8 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 GTKDOC_LIBS = $(top_builddir)/tools/browser/data-manager/libperspective.la \
 	$(top_builddir)/tools/browser/libbrowser.la \
 	$(top_builddir)/tools/browser/common/libcommon.la \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
 	$(LIBGDA_LIBS) \
 	$(GTK_LIBS) \
 	$(GTKSOURCEVIEW_LIBS)

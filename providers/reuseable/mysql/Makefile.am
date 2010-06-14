@@ -42,7 +42,7 @@ libgda_mysql_la_SOURCES = \
         mysql_token_types.h
 
 libgda_mysql_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 EXTRA_DIST = $(xml_in_files) parser.y gen_def.c $(keyword_files)

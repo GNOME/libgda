@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libgda_handlers-4.0.la
+noinst_LTLIBRARIES = libgda_handlers-5.0.la
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(srcdir)/.. \
@@ -16,7 +16,7 @@ libgda_handlers_headers = \
 libgda_handlersincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/handlers
 libgda_handlersinclude_HEADERS=$(libgda_handlers_headers)
 
-libgda_handlers_4_0_la_SOURCES = \
+libgda_handlers_5_0_la_SOURCES = \
 	$(libgda_handlers_headers) \
 	gda-handler-bin.c \
 	gda-handler-boolean.c \

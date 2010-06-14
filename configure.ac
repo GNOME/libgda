@@ -1,6 +1,6 @@
 m4_define(major, 4)
-m4_define(minor, 1)
-m4_define(micro, 7)
+m4_define(minor, 99)
+m4_define(micro, 0)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 m4_include(introspection.m4)
@@ -18,7 +18,7 @@ AC_SUBST(GDA_VERSION, major.minor.micro)
 # ABI version:
 # Careful. Changing these will break ABI, because it is used for the library name and header install path:
 # This allows us to do a 3.2 version that is ABI-compatible with 3.0, but with API additions.
-AC_SUBST(GDA_ABI_MAJOR_VERSION, 4)
+AC_SUBST(GDA_ABI_MAJOR_VERSION, 5)
 AC_SUBST(GDA_ABI_MINOR_VERSION, 0)
 #AC_SUBST(GDA_MICRO_VERSION, micro)
 LIBGDA_ABI_VERSION=$GDA_ABI_MAJOR_VERSION.$GDA_ABI_MINOR_VERSION
@@ -1750,10 +1750,10 @@ AC_SUBST(LIBGDA_LIBS)
 AC_OUTPUT([
 Makefile
 libgda.spec
-libgda-4.0.pc
-libgda-ui-4.0.pc
-libgda-report-4.0.pc
-libgda-xslt-4.0.pc
+libgda-5.0.pc
+libgda-ui-5.0.pc
+libgda-report-5.0.pc
+libgda-xslt-5.0.pc
 po/Makefile.in
 libgda/Makefile
 libgda/libgda.h
@@ -1770,26 +1770,26 @@ providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile
 providers/reuseable/mysql/Makefile
 providers/bdb/Makefile
-providers/bdb/libgda-bdb-4.0.pc
+providers/bdb/libgda-bdb-5.0.pc
 providers/mdb/Makefile
-providers/mdb/libgda-mdb-4.0.pc
+providers/mdb/libgda-mdb-5.0.pc
 providers/mysql/Makefile
-providers/mysql/libgda-mysql-4.0.pc
+providers/mysql/libgda-mysql-5.0.pc
 providers/oracle/Makefile
-providers/oracle/libgda-oracle-4.0.pc
+providers/oracle/libgda-oracle-5.0.pc
 providers/postgres/Makefile
-providers/postgres/libgda-postgres-4.0.pc
+providers/postgres/libgda-postgres-5.0.pc
 providers/sqlite/Makefile
-providers/sqlite/libgda-sqlite-4.0.pc
+providers/sqlite/libgda-sqlite-5.0.pc
 providers/jdbc/Makefile
-providers/jdbc/libgda-jdbc-4.0.pc
+providers/jdbc/libgda-jdbc-5.0.pc
 providers/web/Makefile
-providers/web/libgda-web-4.0.pc
+providers/web/libgda-web-5.0.pc
 providers/skel-implementation/Makefile
 providers/skel-implementation/capi/Makefile
-providers/skel-implementation/capi/libgda-capi-4.0.pc
+providers/skel-implementation/capi/libgda-capi-5.0.pc
 providers/skel-implementation/models/Makefile
-providers/skel-implementation/models/libgda-models-4.0.pc
+providers/skel-implementation/models/libgda-models-5.0.pc
 libgda-report/Makefile
 libgda-report/engine/Makefile
 libgda-report/DocBook/Makefile
@@ -1808,7 +1808,7 @@ libgda-ui/demos/geninclude.pl
 control-center/Makefile
 control-center/data/Makefile
 tools/Makefile
-tools/gda-sql-4.0.1:tools/gda-sql.1.in
+tools/gda-sql-5.0.1:tools/gda-sql.1.in
 tools/browser/Makefile
 tools/browser/data/Makefile
 tools/browser/common/Makefile
@@ -1842,17 +1842,17 @@ chmod -R u+w ${srcdir}/doc/C
 cp doc/C/version.xml ${srcdir}/doc/C/version.xml.tmp
 mv ${srcdir}/doc/C/version.xml.tmp ${srcdir}/doc/C/version.xml
 
-cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-4.0-sections.txt
-echo "" >> doc/C/libgda-4.0-sections.txt
-cat ${srcdir}/doc/C/libgda-ui-sections.txt >> doc/C/libgda-4.0-sections.txt
-cp doc/C/libgda-4.0-sections.txt ${srcdir}/doc/C/libgda-4.0-sections.txt.tmp
-mv ${srcdir}/doc/C/libgda-4.0-sections.txt.tmp ${srcdir}/doc/C/libgda-4.0-sections.txt
+cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-5.0-sections.txt
+echo "" >> doc/C/libgda-5.0-sections.txt
+cat ${srcdir}/doc/C/libgda-ui-sections.txt >> doc/C/libgda-5.0-sections.txt
+cp doc/C/libgda-5.0-sections.txt ${srcdir}/doc/C/libgda-5.0-sections.txt.tmp
+mv ${srcdir}/doc/C/libgda-5.0-sections.txt.tmp ${srcdir}/doc/C/libgda-5.0-sections.txt
 
-cp doc/C/libgda.types doc/C/libgda-4.0.types
+cp doc/C/libgda.types doc/C/libgda-5.0.types
 if test x$have_ui != xno
 then
-	echo "" >> doc/C/libgda-4.0.types
-	cat ${srcdir}/doc/C/libgda-ui.types >> doc/C/libgda-4.0.types
+	echo "" >> doc/C/libgda-5.0.types
+	cat ${srcdir}/doc/C/libgda-ui.types >> doc/C/libgda-5.0.types
 fi
 
 

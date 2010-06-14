@@ -35,7 +35,7 @@ main (int argc, char **argv) {
         g_option_context_free (context);
 
 	gda_init ();
-	xml_dir = gda_gbr_get_file_path (GDA_DATA_DIR, "libgda-4.0", NULL);
+	xml_dir = gda_gbr_get_file_path (GDA_DATA_DIR, "libgda-5.0", NULL);
 	g_print (_("Using XML descriptions in %s\n"), xml_dir);
 	if (prov)
 		g_print ("For provider %s\n", prov);

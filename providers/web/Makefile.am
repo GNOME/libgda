@@ -34,10 +34,10 @@ libgda_web_la_SOURCES = \
 libgda_web_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_web_la_LIBADD = \
 	$(top_builddir)/providers/reuseable/libreuseable.la \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) $(LIBSOUP_LIBS)
 
-xmldir   = $(datadir)/libgda-4.0
+xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \
 	web_specs_dsn.xml.in \
 	web_specs_auth.xml.in
@@ -47,9 +47,9 @@ xml_in_files = \
 xml_DATA = $(xml_in_files:.xml.in=.xml) 
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-web-4.0.pc
+pkgconfig_DATA = libgda-web-5.0.pc
 
-phpdir = $(datadir)/libgda-4.0/php
+phpdir = $(datadir)/libgda-5.0/php
 php_DATA = \
 	php/README \
 	php/gda-clean.php \
@@ -63,7 +63,7 @@ php_DATA = \
 	php/gda-worker.php
 
 
-EXTRA_DIST = $(xml_in_files) libgda-web-4.0.pc.in \
+EXTRA_DIST = $(xml_in_files) libgda-web-5.0.pc.in \
 	$(php_DATA)
 
 DISTCLEANFILES = $(xml_DATA)

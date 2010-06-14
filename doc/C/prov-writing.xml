@@ -936,7 +936,7 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
       <listitem><para><filename>libmain.c</filename>: file to make it possible for &LIBGDA; to identify the provider.</para></listitem>
       <listitem><para><filename>capi_specs_dsn.xml.in</filename>: file where the connection parameters are described, 
 	  before being translated</para></listitem>
-      <listitem><para><filename>libgda-capi-4.0.pc.in</filename>: file to be used by <command>pkg-config</command> to identify
+      <listitem><para><filename>libgda-capi-5.0.pc.in</filename>: file to be used by <command>pkg-config</command> to identify
 	  the provider, before being computed by the <command>configure</command> script.</para></listitem>
       <listitem><para>other .xml.in files: DDL queries' parameters, before translation</para></listitem>
     </itemizedlist>

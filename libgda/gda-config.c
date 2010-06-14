@@ -235,7 +235,7 @@ gda_config_class_init (GdaConfigClass *klass)
 							      "File to use for per-user DSN list", 
 							      NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $PREFIX/etc/libgda-4.0/config */
+	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $PREFIX/etc/libgda-5.0/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
                                          g_param_spec_string ("system-filename", NULL,
 							      "File to use for system-wide DSN list", 

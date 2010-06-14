@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libgda_threadwrapper-4.0.la
+noinst_LTLIBRARIES = libgda_threadwrapper-5.0.la
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(srcdir)/.. \
@@ -12,7 +12,7 @@ libgda_threadwrapper_headers = \
 libgda_threadwrapperincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/thread-wrapper
 libgda_threadwrapperinclude_HEADERS=$(libgda_threadwrapper_headers)
 
-libgda_threadwrapper_4_0_la_SOURCES = \
+libgda_threadwrapper_5_0_la_SOURCES = \
 	$(libgda_threadwrapper_headers) \
 	gda-thread-blob-op.h \
 	gda-thread-blob-op.c \

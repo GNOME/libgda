@@ -33,7 +33,7 @@ libcanvas_la_SOURCES = \
 	browser-canvas-utility.h
 
 libcanvas_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) \
 	$(GTK_LIBS) \
 	$(GOOCANVAS_LIBS) \

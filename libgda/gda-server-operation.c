@@ -2008,7 +2008,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
  * if the @path is not defined or @path does not hold any value, or if the value held is not a string
  * (in that last case a warning is shown).
  *
- * Since: 4.0.3
+ * Since: 5.0.3
  */
 gchar *
 gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,

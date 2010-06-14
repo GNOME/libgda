@@ -1,8 +1,8 @@
 [Desktop Entry]
 _Name=Database browser
 _Comment=Browse your database's contents
-Icon=gda-browser-4.0
-Exec=gda-browser-4.0
+Icon=gda-browser-5.0
+Exec=gda-browser-5.0
 Terminal=false
 Type=Application
 Categories=GTK;Development;Database;

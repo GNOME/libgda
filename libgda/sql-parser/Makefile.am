@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libgda_sql_parser-4.0.la
+noinst_LTLIBRARIES = libgda_sql_parser-5.0.la
 noinst_PROGRAMS = 
 
 AM_CPPFLAGS = \
@@ -75,11 +75,11 @@ s-enum-types-c: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 libgda_sql_parser_built_headers = gda-sql-parser-enum-types.h
 libgda_sql_parser_built_cfiles = gda-sql-parser-enum-types.c
 
-$(OBJECTS) $(libgda_sql_parser_4_0_la_OBJECTS): token_types.h
+$(OBJECTS) $(libgda_sql_parser_5_0_la_OBJECTS): token_types.h
 libgda_sql_parserincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/sql-parser
 libgda_sql_parserinclude_HEADERS=$(libgda_sql_parser_headers) $(libgda_sql_parser_built_headers)
 
-libgda_sql_parser_4_0_la_SOURCES = \
+libgda_sql_parser_5_0_la_SOURCES = \
 	$(libgda_sql_parser_headers) \
 	$(libgda_sql_parser_built_headers) \
 	$(libgda_sql_parser_built_cfiles) \

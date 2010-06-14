@@ -30,10 +30,10 @@
 <!ENTITY GDADATAMODEL    "<link linkend='GdaDataModel'>GdaDataModel</link>">
 <!ENTITY GDADATAMODELARRAY "<link linkend='GdaDataModelArray'>GdaDataModelArray</link>">
 <!ENTITY GDADATAMODELHASH "<link linkend='GdaDataModelHash'>GdaDataModelHash</link>">
-<!ENTITY gda-list-server-op "<command>gda-list-server-op-4.0</command>">
-<!ENTITY gda-list-config "<command>gda-list-config-4.0</command>">
+<!ENTITY gda-list-server-op "<command>gda-list-server-op-5.0</command>">
+<!ENTITY gda-list-config "<command>gda-list-config-5.0</command>">
 <!ENTITY gda-sql "<command>gda-sql</command>">
-<!ENTITY gda-test-connection "<command>gda-test-connection-4.0</command>">
+<!ENTITY gda-test-connection "<command>gda-test-connection-5.0</command>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c">
 <!ENTITY install SYSTEM "installation.xml">
 <!ENTITY examples SYSTEM "gettingstarted.xml">
@@ -322,7 +322,7 @@
     <chapter id="features">
       <title>Features</title>
       <para>
-	This section presents the main features of the 4.0 version of Libgda.
+	This section presents the main features of the 5.0 version of Libgda.
       </para>
       <para>
 	Libgda is a low-level database abstraction layer built on top of each database C API. In terms of abstraction, 
@@ -1325,19 +1325,19 @@ g_object_unref (store);
       <para>
 	For example to list the installed providers, do:
 	<programlisting>
-[prompt]> gda-sql-4.0 -L
+[prompt]> gda-sql-5.0 -L
 Provider    | Description                       | DSN parameters     | File                                          
 ------------+-----------------------------------+--------------------+-----------------------------------------------
-SQLite      | Provider for SQLite databases     | DB_NAME,           | /usr/lib/libgda-4.0/providers/libgda-sqlite.so  
+SQLite      | Provider for SQLite databases     | DB_NAME,           | /usr/lib/libgda-5.0/providers/libgda-sqlite.so  
                                                   DB_DIR,                                                            
                                                   LOAD_GDA_FUNCTIONS                                                       
-Berkeley-DB | Provider for Berkeley databases   | FILE,              | /usr/lib/libgda-4.0/providers/libgda-bdb.so 
+Berkeley-DB | Provider for Berkeley databases   | FILE,              | /usr/lib/libgda-5.0/providers/libgda-bdb.so 
                                                   DATABASE                                                                
 [...]
 	</programlisting>
 	To list the configured data sources (DSN):
 	<programlisting>
-[prompt]> gda-sql-4.0 -l
+[prompt]> gda-sql-5.0 -l
 DSN      | Provider   | Description  | Connection string      | Username
 ---------+------------+--------------+------------------------+---------
 Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
@@ -1349,7 +1349,7 @@ Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
 	the GDA_SQL_CNC environment variable to contain that string, and run the command without any argument, 
 	for example:
 	<programlisting>
-[prompt]> gda-sql-4.0 PostgreSQL://DB_NAME=sales
+[prompt]> gda-sql-5.0 PostgreSQL://DB_NAME=sales
 Welcome to the GDA SQL console, version 3.99.3
 
 Type: .copyright to show usage and distribution terms
@@ -1372,7 +1372,7 @@ c0>
 	DSN, and one for the "PostgreSQL://DB_NAME=sales" connection string, and shows the usage of the ".c" command
 	to list the opened connections:
 	<programlisting>
-[prompt]> gda-sql-4.0 pgsales PostgreSQL://DB_NAME=sales
+[prompt]> gda-sql-5.0 pgsales PostgreSQL://DB_NAME=sales
 Welcome to the GDA SQL console, version 3.99.3
 
 Type: .copyright to show usage and distribution terms
@@ -1398,7 +1398,7 @@ c1>
       <para>
 	Here is another sample session showing how to use variables in statements:
 	<programlisting><![CDATA[
-[prompt]> gda-sql-4.0 -p SQLite -c "DB_DIR=.;DB_NAME=sales_test"
+[prompt]> gda-sql-5.0 -p SQLite -c "DB_DIR=.;DB_NAME=sales_test"
 Welcome to the GDA SQL console, version 3.1.2
 
 Type: \copyright to show usage and distribution terms
@@ -1436,11 +1436,11 @@ c0> ]]>
       <para>
 	An example output will be:
 	<programlisting>
-[prompt]> gda-list-config-4.0
+[prompt]> gda-list-config-5.0
 === Installed providers ===
 Provider: SQLite
 Description: Provider for SQLite databases
-Location: /usr/lib/libgda-4.0/providers/libgda-sqlite.so
+Location: /usr/lib/libgda-5.0/providers/libgda-sqlite.so
 Data source's parameters (Name / Type / Description):
   DB_NAME / gchararray / Database name
   DB_DIR / gchararray / Directory
@@ -1448,7 +1448,7 @@ Data source's parameters (Name / Type / Description):
 
 Provider: Berkeley-DB
 Description: Provider for Berkeley databases
-Location: /usr/lib/libgda-4.0/providers/libgda-bdb.so
+Location: /usr/lib/libgda-5.0/providers/libgda-bdb.so
 Data source's parameters (Name / Type / Description):
   FILE / gchararray / Database file
   DATABASE / gchararray / Database name
@@ -1488,8 +1488,8 @@ Data source: Sales
       <para>
 	For example listing all the possible operations (for all the providers) is:
 	<programlisting>
-[prompt]> gda-list-server-op-4.0 -l
-Using XML descriptions in /usr/share/libgda-4.0
+[prompt]> gda-list-server-op-5.0 -l
+Using XML descriptions in /usr/share/libgda-5.0
 Existing operation types:
 CREATE_DB
 DROP_DB
@@ -1504,8 +1504,8 @@ DROP_INDEX
 	Listing all the operations supported by the SQLite provider (notice that the SQLite provider does not support the
 	DROP_COLUMN operation as SQLite does not support it):
 	<programlisting>
-[prompt]> gda-list-server-op-4.0 -l -p SQLite
-Using XML descriptions in /usr/share/libgda-4.0
+[prompt]> gda-list-server-op-5.0 -l -p SQLite
+Using XML descriptions in /usr/share/libgda-5.0
 For provider SQLite
 Existing operation types for provider 'SQLite':
 CREATE_DB
@@ -1519,8 +1519,8 @@ DROP_INDEX
 	</programlisting>
 	Listing all the possible parameters for the MySQL provider and for the DROP_COLUMN operation:
 	<programlisting><![CDATA[
-[prompt]> gda-list-server-op-4.0 -o DROP_COLUMN -p MySQL
-Using XML descriptions in /usr/share/libgda-4.0
+[prompt]> gda-list-server-op-5.0 -o DROP_COLUMN -p MySQL
+Using XML descriptions in /usr/share/libgda-5.0
 For provider MySQL
 Description for type: DROP_COLUMN
 <?xml version="1.0"?>
@@ -1532,8 +1532,8 @@ Description for type: DROP_COLUMN
 	</programlisting>
 	Listing all the possible parameters for the all the installed providers and for the DROP_COLUMN operation:
 	<programlisting><![CDATA[
-[prompt]> gda-list-server-op-4.0 -o DROP_COLUMN 
-Using XML descriptions in /usr/share/libgda-4.0
+[prompt]> gda-list-server-op-5.0 -o DROP_COLUMN 
+Using XML descriptions in /usr/share/libgda-5.0
 Description for type: DROP_COLUMN
 <?xml version="1.0"?>
 <server_op>
