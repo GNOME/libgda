@@ -139,7 +139,7 @@ execute_select (GdaConnection *cnc, GdaMysqlReuseable *rdata, const gchar *sql, 
 	GdaStatement *stmt;
 	GdaDataModel *model;
 	parser = _gda_mysql_reuseable_create_parser ((GdaProviderReuseable*) rdata);
-	
+
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	g_object_unref (parser);
 	g_assert (stmt);
@@ -158,7 +158,7 @@ _gda_mysql_compute_version (GdaConnection *cnc, GdaMysqlReuseable *rdata, GError
 	GdaDataModel *model;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-        const guint id_func = gda_sql_builder_add_function (b, "version", 0);
+        const GdaSqlBuilderId id_func = gda_sql_builder_add_function (b, "version", 0);
         gda_sql_builder_add_field_value_id (b, id_func, 0);
 	stmt = gda_sql_builder_get_statement (b, NULL);
 	g_object_unref (b);
@@ -168,7 +168,7 @@ _gda_mysql_compute_version (GdaConnection *cnc, GdaMysqlReuseable *rdata, GError
 	g_object_unref (stmt);
 	if (!model)
 		return FALSE;
-	
+
 	const GValue *cvalue;
 	cvalue = gda_data_model_get_value_at (model, 0, 0, NULL);
 	if (!cvalue) {

@@ -436,11 +436,11 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
 	gda_sql_builder_add_field_value_id (b,
 				   gda_sql_builder_add_id (b, "rank"),
 				   gda_sql_builder_add_param (b, "rank", G_TYPE_INT, FALSE));
-	const guint id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+	const GdaSqlBuilderId id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 			      gda_sql_builder_add_id (b, "fav_id"),
 			      gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
 			      0);
-	const guint id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+	const GdaSqlBuilderId id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 			      gda_sql_builder_add_id (b, "order_key"),
 			      gda_sql_builder_add_param (b, "orderkey", G_TYPE_INT, FALSE),
 			      0);
@@ -774,7 +774,7 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 	GdaSqlBuilder *b;
 	GdaSet *params = NULL;
 	GdaStatement *stmt;
-	guint t1, t2;
+	GdaSqlBuilderId t1, t2;
 	GdaDataModel *model = NULL;
 	GSList *fav_list = NULL;
 

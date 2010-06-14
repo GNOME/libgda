@@ -1205,7 +1205,7 @@ browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
 	GdaStatement *stmt;
 	GdaSqlBuilder *builder;
 	GdaSet *params;
-	guint op_ids[4];
+	GdaSqlBuilderId op_ids[4];
 	GdaMetaDbObject *dbo = (GdaMetaDbObject *) table;
 
 	params = gda_set_new_inline (5, "schema", G_TYPE_STRING, dbo->obj_schema,
@@ -1340,7 +1340,7 @@ browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,
 	GdaStatement *stmt;
 	GdaSqlBuilder *builder;
 	GdaSet *params;
-	guint op_ids[4];
+	GdaSqlBuilderId op_ids[4];
 	GdaDataModel *model;
 	const GValue *cvalue;
 	GdaMetaDbObject *dbo = (GdaMetaDbObject *) table;

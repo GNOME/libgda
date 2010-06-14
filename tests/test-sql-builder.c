@@ -155,11 +155,11 @@ static GdaSqlStatement *
 build1 (void)
 {
 	GdaSqlBuilder *builder;
-	guint op_ids [3];
+	GdaSqlBuilderId op_ids [3];
 	gint index = 0;
 	GdaSqlStatement *stmt;
 
-	memset (op_ids, 0, sizeof (guint) * 3);
+	memset (op_ids, 0, sizeof (GdaSqlBuilderId) * 3);
 
 	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_select_add_target_id (builder,
@@ -172,7 +172,7 @@ build1 (void)
 				   gda_sql_builder_add_id (builder, "rank"), 0);
 	gda_sql_builder_add_field_value_id (builder,
 				   gda_sql_builder_add_id (builder, "name"), 0);
-	guint id_cond1 = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+	GdaSqlBuilderId id_cond1 = gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
 						   gda_sql_builder_add_id (builder, "session"),
 						   gda_sql_builder_add_param (builder, "session", G_TYPE_STRING, FALSE), 0);
 
@@ -186,7 +186,7 @@ build1 (void)
 						   gda_sql_builder_add_expr (builder, NULL, G_TYPE_STRING, "alf"), 0);
 	index++;
 
-	guint id_cond2 = gda_sql_builder_add_cond_v (builder, GDA_SQL_OPERATOR_TYPE_AND, op_ids, index);
+	GdaSqlBuilderId id_cond2 = gda_sql_builder_add_cond_v (builder, GDA_SQL_OPERATOR_TYPE_AND, op_ids, index);
 
 	gda_sql_builder_set_where (builder, gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_AND, id_cond1, id_cond2, 0));
 
@@ -273,7 +273,7 @@ build4 (void)
 {
 	GdaSqlBuilder *b;
 	GdaSqlStatement *stmt;
-	guint t1, t2;
+	GdaSqlBuilderId t1, t2;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_value_id (b,
@@ -354,10 +354,10 @@ build6 (void)
 	gda_sql_builder_select_add_target_id (b,
 					   gda_sql_builder_add_id (b, "mytable"),
 					   NULL);
-	guint id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+	GdaSqlBuilderId id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 			      gda_sql_builder_add_id (b, "order_key"),
 			      gda_sql_builder_add_param (b, "orderkey", G_TYPE_INT, FALSE), 0);
-	guint id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_DIFF,
+	GdaSqlBuilderId id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_DIFF,
 			      gda_sql_builder_add_id (b, "fav_id"),
 			      gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE), 0);
 
@@ -382,15 +382,15 @@ build7 (void)
 	gda_sql_builder_add_field_value_id (b,
 				   gda_sql_builder_add_id (b, "rank"),
 				   gda_sql_builder_add_param (b, "newrank", G_TYPE_INT, FALSE));
-	guint id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+	GdaSqlBuilderId id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 			      gda_sql_builder_add_id (b, "fav_id"),
 			      gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
 			      0);
-	guint id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+	GdaSqlBuilderId id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 			      gda_sql_builder_add_id (b, "order_key"),
 			      gda_sql_builder_add_param (b, "orderkey", G_TYPE_INT, FALSE),
 			      0);
-	guint id_cond3 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+	GdaSqlBuilderId id_cond3 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 			      gda_sql_builder_add_id (b, "rank"),
 			      gda_sql_builder_add_param (b, "rank", G_TYPE_INT, FALSE),
 			      0);
@@ -412,7 +412,7 @@ build8 (void)
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
 	gda_sql_builder_set_table (b, "mytable");
-	
+
 	gda_sql_builder_set_where (b, gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 							    gda_sql_builder_add_id (b, "id"),
 							    gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
@@ -442,7 +442,7 @@ build9 (void)
 
 	stmt = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (builder));
 	g_object_unref (builder);
-	
+
 	return stmt;
 }
 
@@ -523,7 +523,7 @@ build12 (void)
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "store_name"), 0);
-	const guint id_func = gda_sql_builder_add_function (b, "sum",
+	const GdaSqlBuilderId id_func = gda_sql_builder_add_function (b, "sum",
 				      gda_sql_builder_add_id (b, "sales"), 0);
 	gda_sql_builder_add_field_value_id (b, id_func, 0);
 
@@ -553,13 +553,13 @@ build12 (void)
 }
 
 /*
- * 
+ *
  */
 static gboolean
 builder_test_target_id (void)
 {
 	GdaSqlBuilder *builder;
-	guint id1, id2;
+	GdaSqlBuilderId id1, id2;
 	gboolean allok = TRUE;
 
 	builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
@@ -597,6 +597,6 @@ builder_test_target_id (void)
 	}
 
 	g_object_unref (builder);
-	
+
 	return allok;
 }
