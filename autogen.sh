@@ -10,7 +10,7 @@ REQUIRED_AUTOCONF_VERSION=2.59
 AUTOMAKE=automake
 REQUIRED_AUTOMAKE_VERSION=1.9
 
-(test -f $srcdir/configure.in \
+(test -f $srcdir/configure.ac \
   && test -d $srcdir/libgda \
   && test -f $srcdir/libgda/gda-config.h) || {
     echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
@@ -22,4 +22,3 @@ gnome_autogen=`which gnome-autogen.sh`
 test -z "$gnome_autogen"
 
 USE_GNOME2_MACROS=1 USE_COMMON_DOC_BUILD=yes . $gnome_autogen
-
