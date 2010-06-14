@@ -91,14 +91,13 @@ guint             gda_sql_builder_add_case_v (GdaSqlBuilder *builder, guint test
 
 
 /* General Statement API */
-void              gda_sql_builder_add_field (GdaSqlBuilder *builder, const gchar *field_name, GType type, ...);
-void              gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name,
+void              gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name, GType type, ...);
+void              gda_sql_builder_add_field_value_as_gvalue (GdaSqlBuilder *builder, const gchar *field_name,
 						   const GValue *value);
+void              gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, guint field_id, guint value_id);
 
 void              gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar *table_name);
 void              gda_sql_builder_set_where (GdaSqlBuilder *builder, guint cond_id);
-
-void              gda_sql_builder_add_field_id (GdaSqlBuilder *builder, guint field_id, guint value_id);
 
 /* SELECT Statement API */
 guint             gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_name,

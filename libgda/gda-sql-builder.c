@@ -511,11 +511,11 @@ gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_nam
 
 	const guint field_id = gda_sql_builder_add_id (builder, tmp);
 	if (alias && *alias)
-		gda_sql_builder_add_field_id (builder,
+		gda_sql_builder_add_field_value_id (builder,
 					      field_id,
 					      gda_sql_builder_add_id (builder, alias));
 	else
-		gda_sql_builder_add_field_id (builder,
+		gda_sql_builder_add_field_value_id (builder,
 					      field_id,
 					      0);
 	if (table_name)
@@ -540,7 +540,7 @@ create_typed_value (GType type, va_list *ap)
 }
 
 /**
- * gda_sql_builder_add_field
+ * gda_sql_builder_add_field_value
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
  * @type: the GType of the following argument
@@ -551,10 +551,12 @@ create_typed_value (GType type, va_list *ap)
  * Specifies that the field represented by @field_name will be set to the value identified
  * by @... of type @type.
  *
+ * This is a C convenience function. See also gda_sql_builder_add_field_value_as_gvalue().
+ *
  * Since: 4.2
  */
 void
-gda_sql_builder_add_field (GdaSqlBuilder *builder, const gchar *field_name, GType type, ...)
+gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name, GType type, ...)
 {
 	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
 	g_return_if_fail (builder->priv->main_stmt);
@@ -579,11 +581,11 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, const gchar *field_name, GTyp
 	id1 = gda_sql_builder_add_id (builder, field_name);
 	id2 = gda_sql_builder_add_expr_value (builder, NULL, value);
 	gda_value_free (value);
-	gda_sql_builder_add_field_id (builder, id1, id2);
+	gda_sql_builder_add_field_value_id (builder, id1, id2);
 }
 
 /**
- * gda_sql_builder_add_field_value
+ * gda_sql_builder_add_field_value_as_gvalue
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
  * @value: value to set the field to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
@@ -596,7 +598,7 @@ gda_sql_builder_add_field (GdaSqlBuilder *builder, const gchar *field_name, GTyp
  * Since: 4.2
  */
 void
-gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name, const GValue *value)
+gda_sql_builder_add_field_value_as_gvalue (GdaSqlBuilder *builder, const gchar *field_name, const GValue *value)
 {
 	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
 	g_return_if_fail (builder->priv->main_stmt);
@@ -611,11 +613,11 @@ gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name
 	guint id1, id2;
 	id1 = gda_sql_builder_add_id (builder, field_name);
 	id2 = gda_sql_builder_add_expr_value (builder, NULL, value);
-	gda_sql_builder_add_field_id (builder, id1, id2);
+	gda_sql_builder_add_field_value_id (builder, id1, id2);
 }
 
 /**
- * gda_sql_builder_add_field_id
+ * gda_sql_builder_add_field_value_id
  * @builder: a #GdaSqlBuilder object
  * @field_id: the ID of the field's name or definition
  * @value_id: the ID of the value to set the field to, or %0
@@ -632,10 +634,13 @@ gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name
  *    If @field_id represents a sub SELECT (obtained using gda_sql_builder_add_sub_select()), then
  *    this method call defines the sub SELECT from which values to insert are taken.</para></listitem>
  * </itemizedlist>
+ *
+ * See also gda_sql_builder_add_field_value() and gda_sql_builder_add_field_value_as_gvalue().
+ *
  * Since: 4.2
  */
 void
-gda_sql_builder_add_field_id (GdaSqlBuilder *builder, guint field_id, guint value_id)
+gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, guint field_id, guint value_id)
 {
 	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
 	g_return_if_fail (builder->priv->main_stmt);
@@ -1075,7 +1080,7 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, guint table_id, co
 				idalias = TRUE;
 			else if (!alias && ! t->as)
 				idalias = TRUE;
-			
+
 			gchar *tmp;
 			tmp = gda_sql_expr_serialize (t->expr);
 			if (! strcmp (ser, tmp)) {

@@ -1673,9 +1673,9 @@ gda_sql_builder_get_statement
 gda_sql_builder_get_sql_statement
 <SUBSECTION>
 gda_sql_builder_set_table
-gda_sql_builder_add_field
 gda_sql_builder_add_field_value
-gda_sql_builder_add_field_id
+gda_sql_builder_add_field_value_as_gvalue
+gda_sql_builder_add_field_value_id
 gda_sql_builder_add_function
 gda_sql_builder_add_function_v
 <SUBSECTION>
@@ -1756,4 +1756,3 @@ GDA_IS_REPETITIVE_STATEMENT
 GDA_TYPE_REPETITIVE_STATEMENT
 gda_repetitive_statement_get_type
 </SECTION>
-
