@@ -1906,27 +1906,17 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 		str = g_markup_printf_escaped ("<b>%s:</b>", header);
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-#if GTK_CHECK_VERSION(2,18,0)
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
 				    label, FALSE, FALSE, SPACING);
-#else
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), label, FALSE, FALSE, SPACING);
-#endif
 		gtk_widget_show (label);
 	}
 
 
 	gboolean can_expand;
 	g_object_get ((GObject*) form, "can-expand", &can_expand, NULL);
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg)))), 4);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))), form,
 			    can_expand, can_expand, 10);
-#else
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), 4);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), form,
-			    can_expand, can_expand, 10);
-#endif
 
 	g_signal_connect (G_OBJECT (form), "holder-changed",
 			  G_CALLBACK (form_holder_changed), dlg);

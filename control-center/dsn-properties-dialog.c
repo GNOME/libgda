@@ -1,5 +1,5 @@
 /* GNOME-DB Components
- * Copyright (C) 2000 - 2009 The GNOME Foundation.
+ * Copyright (C) 2000 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -161,11 +161,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
         g_free (str);
 
 	GtkWidget *dcontents;
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-	dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
 	gtk_container_set_border_width (GTK_CONTAINER (dcontents), 5);
 	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);

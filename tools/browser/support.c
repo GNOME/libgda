@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 - 2010The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -212,11 +212,7 @@ browser_show_notice (GtkWindow *parent, const gchar *context, const gchar *forma
 			g_signal_connect_data (cb, "toggled",
 					       G_CALLBACK (hide_notice_toggled_cb), g_strdup (context),
 					       (GClosureNotify) g_free, 0);
-#if GTK_CHECK_VERSION(2,18,0)
 			gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), cb, FALSE, FALSE, 10);
-#else
-			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), cb, FALSE, FALSE, 10);
-#endif
 		}
 		
 		gtk_widget_show_all (dialog);
@@ -274,7 +270,6 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 		return;
 	}
 
-#if GTK_CHECK_VERSION(2,14,0)
 	gchar *ruri;
 
 	screen = gtk_widget_get_screen ((GtkWidget*) parent);
@@ -282,14 +277,6 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 	gtk_show_uri (screen, ruri,  gtk_get_current_event_time (), &error);
 	g_free (ruri);
 
-#else
-	gchar *command;
-	
-	command = g_strconcat ("gnome-help ghelp://", uri,  NULL);
-	screen = gtk_widget_get_screen (GTK_WIDGET (parent));
-	gdk_spawn_command_line_on_screen (screen, command, &error);
-	g_free (command);
-#endif
 	if (error) {
 		GtkWidget *d;
 		d = gtk_message_dialog_new (parent, 

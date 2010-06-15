@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -147,11 +147,7 @@ auth_dialog_init (AuthDialog *dialog)
 				GTK_STOCK_CANCEL,
 				GTK_RESPONSE_REJECT, NULL);
 
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-	dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
 	gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, TRUE);
 
@@ -409,12 +405,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 		gchar *str, *tmp, *ptr;
 		GtkWidget *dcontents;
 
-#if GTK_CHECK_VERSION(2,18,0)
 		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-		dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
-
 		label = gtk_label_new ("");
 		tmp = g_strdup (ad->ext.cnc_string);
 		for (ptr = tmp; *ptr; ptr++) {

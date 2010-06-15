@@ -32,12 +32,7 @@ do_provider_sel (GtkWidget *do_widget)
 		g_signal_connect (window, "destroy",
 				  G_CALLBACK (gtk_widget_destroyed), &window);
 		
-
-#if GTK_CHECK_VERSION(2,18,0)
 		vbox = gtk_dialog_get_content_area (GTK_DIALOG (window));
-#else
-		vbox = GTK_DIALOG (window)->vbox;
-#endif
 
 		/* Create the widget */
 		label = gtk_label_new ("Provider selector:");

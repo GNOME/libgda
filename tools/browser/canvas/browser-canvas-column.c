@@ -1,6 +1,6 @@
 /* browser-canvas-column.c
  *
- * Copyright (C) 2002 - 2008 Vivien Malerba
+ * Copyright (C) 2002 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -320,10 +320,6 @@ browser_canvas_column_drag_data_get (BrowserCanvasItem *citem, GdkDragContext *d
 	g_free (tmp2);
 	g_free (tmp3);
 	g_free (tmp4);
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_selection_data_set (data, gtk_selection_data_get_target (data), 8, (guchar*) str, strlen (str));
-#else
-	gtk_selection_data_set (data, data->target, 8, (guchar*) str, strlen (str));
-#endif
 	g_free (str);
 }

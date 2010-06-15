@@ -1,6 +1,6 @@
 /* gdaui-entry-common-time.c
  *
- * Copyright (C) 2003 - 2007 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -892,13 +892,8 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
 
         /* popup window */
         /* Temporarily grab pointer and keyboard, copied from GnomeDateEdit */
-#if GTK_CHECK_VERSION(2,18,0)
         if (!popup_grab_on_window (gtk_widget_get_window (button), gtk_get_current_event_time ()))
                 return;
-#else
-	if (!popup_grab_on_window (button->window, gtk_get_current_event_time ()))
-		return;
-#endif
 
         position_popup (mgtim);
         gtk_grab_add (mgtim->priv->window);
@@ -940,13 +935,8 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
 		gtk_window_move (GTK_WINDOW (mgtim->priv->window), root_x, root_y);
 
         gtk_widget_grab_focus (mgtim->priv->date);
-#if GTK_CHECK_VERSION(2,18,0)
         popup_grab_on_window (gtk_widget_get_window (mgtim->priv->window),
                               gtk_get_current_event_time ());
-#else
-	popup_grab_on_window (mgtim->priv->window->window,
-			      gtk_get_current_event_time ());
-#endif
 }
 
 static gboolean
@@ -976,7 +966,6 @@ position_popup (GdauiEntryCommonTime *mgtim)
 
         gtk_widget_size_request (mgtim->priv->window, &req);
 
-#if GTK_CHECK_VERSION(2,18,0)
         gdk_window_get_origin (gtk_widget_get_window (mgtim->priv->date_button), &x, &y);
 	GtkAllocation alloc;
 	gtk_widget_get_allocation (mgtim->priv->date_button, &alloc);
@@ -984,14 +973,6 @@ position_popup (GdauiEntryCommonTime *mgtim)
         y += alloc.y;
         bwidth = alloc.width;
         bheight = alloc.height;
-#else
-	gdk_window_get_origin (mgtim->priv->date_button->window, &x, &y);
-	
-        x += mgtim->priv->date_button->allocation.x;
-        y += mgtim->priv->date_button->allocation.y;
-        bwidth = mgtim->priv->date_button->allocation.width;
-	bheight = mgtim->priv->date_button->allocation.height;
-#endif
 
         x += bwidth - req.width;
         y += bheight;

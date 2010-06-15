@@ -1,6 +1,6 @@
 /* GNOME DB library
  *
- * Copyright (C) 1999 - 2009 The GNOME Foundation.
+ * Copyright (C) 1999 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -75,27 +75,16 @@ cc_gray_bar_realize (GtkWidget *widget)
 {
 	gint border_width;
 
-#if GTK_CHECK_VERSION (2,19,5)
 	gtk_widget_set_realized (widget, TRUE);
-#else
-	GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
-#endif
 	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 	GdkWindowAttr attributes;
 	gint attributes_mask;
-#if GTK_CHECK_VERSION(2,18,0)
 	GtkAllocation alloc;
         gtk_widget_get_allocation (widget, &alloc);
 	attributes.x = alloc.x + border_width;
 	attributes.y = alloc.y + border_width;
 	attributes.width = alloc.width - 2*border_width;
 	attributes.height = alloc.height - 2*border_width;
-#else
-	attributes.x = widget->allocation.x + border_width;
-	attributes.y = widget->allocation.y + border_width;
-	attributes.width = widget->allocation.width - 2*border_width;
-	attributes.height = widget->allocation.height - 2*border_width;
-#endif
 	attributes.window_type = GDK_WINDOW_CHILD;
 	attributes.wclass = GDK_INPUT_OUTPUT;
 	attributes.visual = gtk_widget_get_visual (widget);
@@ -112,11 +101,7 @@ cc_gray_bar_realize (GtkWidget *widget)
 
 	GdkWindow *win;
 	win = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_set_window (widget, win);
-#else
-	widget->window = win;
-#endif
 	gdk_window_set_user_data (win, widget);
 
 	GtkStyle *style;
@@ -158,11 +143,7 @@ cc_gray_bar_allocate (GtkWidget *widget, GtkAllocation *allocation)
 	guint bw;
 	GdkWindow *win;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_set_allocation (widget, allocation);
-#else
-	widget->allocation = *allocation;
-#endif
 
 	bin = GTK_BIN (widget);
 
@@ -172,11 +153,7 @@ cc_gray_bar_allocate (GtkWidget *widget, GtkAllocation *allocation)
 	child_allocation.width = MAX (allocation->width - bw * 2, 0);
 	child_allocation.height = MAX (allocation->height - bw * 2, 0);
 
-#if GTK_CHECK_VERSION(2,18,0)
 	win = gtk_widget_get_window (widget);
-#else
-	win = widget->window;
-#endif
 	if (win) {
 		gdk_window_move_resize (win,
 					allocation->x + bw,
@@ -215,11 +192,7 @@ cc_gray_bar_paint (GtkWidget *widget, GdkRectangle *area)
 {
 	gboolean paintable;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	paintable = gtk_widget_get_app_paintable (widget);
-#else
-	paintable = GTK_WIDGET_APP_PAINTABLE (widget);
-#endif
 	if (!paintable) {
 		GtkStyle *style;
 		GdkWindow *win;
@@ -227,15 +200,9 @@ cc_gray_bar_paint (GtkWidget *widget, GdkRectangle *area)
 		GtkStateType state;
 
 		style = gtk_widget_get_style (widget);
-#if GTK_CHECK_VERSION(2,18,0)
 		state = gtk_widget_get_state (widget);
 		win = gtk_widget_get_window (widget);
 		gtk_widget_get_allocation (widget, &alloc);
-#else
-		state = widget->state;
-		win = widget->window;
-		alloc = widget->allocation;
-#endif
 		gtk_paint_flat_box (style, win,
 				    state, GTK_SHADOW_NONE,
 				    area, widget, "gnomedbgraybar",
@@ -255,11 +222,7 @@ cc_gray_bar_expose (GtkWidget *widget, GdkEventExpose *event)
 
 	if (event->count > 0)
 		return FALSE;
-#if GTK_CHECK_VERSION(2,18,0)
 	drawable = gtk_widget_is_drawable (widget);
-#else
-	drawable = GTK_WIDGET_DRAWABLE (widget);
-#endif
 	if (drawable) {
 		cc_gray_bar_paint (widget, &event->area);
 
@@ -311,11 +274,7 @@ cc_gray_bar_class_init (CcGrayBarClass *klass)
 static void
 cc_gray_bar_init (CcGrayBar *bar, CcGrayBarClass *klass)
 {
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_set_has_window (GTK_WIDGET (bar), TRUE);
-#else
-	GTK_WIDGET_UNSET_FLAGS (bar, GTK_NO_WINDOW);
-#endif
 
 	bar->priv = g_new0 (CcGrayBarPrivate, 1);
 

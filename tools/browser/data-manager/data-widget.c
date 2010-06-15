@@ -165,12 +165,8 @@ create_part (DataWidget *dwid, DataSource *source)
 
 	part->spinner = BROWSER_SPINNER (browser_spinner_new ());
 	browser_spinner_set_size ((BrowserSpinner*) part->spinner, GTK_ICON_SIZE_LARGE_TOOLBAR);
-#if GTK_CHECK_VERSION(2,20,0)
 	page = gtk_alignment_new (0.5, 0.5, 0., 0.);
 	gtk_container_add (GTK_CONTAINER (page), (GtkWidget*) part->spinner);
-#else
-	page = GTK_WIDGET (part->spinner);
-#endif
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), page, NULL);
 	part->data_widget = NULL;
 

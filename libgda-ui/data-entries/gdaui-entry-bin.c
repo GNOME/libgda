@@ -1,6 +1,6 @@
 /* gdaui-entry-bin.c
  *
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -332,19 +332,12 @@ popup_position (PopupContainer *container, gint *out_x, gint *out_y)
 
         gtk_widget_size_request (poswidget, &req);
 
-#if GTK_CHECK_VERSION(2,18,0)
         gdk_window_get_origin (gtk_widget_get_window (poswidget), &x, &y);
 	GtkAllocation alloc;
 	gtk_widget_get_allocation (poswidget, &alloc);
         x += alloc.x;
         y += alloc.y;
         y += alloc.height;
-#else
-	gdk_window_get_origin (poswidget->window, &x, &y);
-	x += poswidget->allocation.x;
-        y += poswidget->allocation.y;
-	y += poswidget->allocation.height;
-#endif
 
         if (x < 0)
                 x = 0;

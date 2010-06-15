@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -185,12 +185,7 @@ create_layout (ConnectionBindingProperties *cprop)
 	gchar *str;
 	GtkWidget *dcontents;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (cprop));
-#else
-	dcontents = GTK_DIALOG (cprop)->vbox;
-#endif
-
 
 	str = g_strdup_printf ("<b>%s:</b>\n<small>%s</small>",
 			       _("Virtual connection's properties"),

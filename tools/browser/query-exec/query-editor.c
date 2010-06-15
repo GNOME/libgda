@@ -1,5 +1,5 @@
 /* GNOME DB library
- * Copyright (C) 1999 - 2009 The GNOME Foundation.
+ * Copyright (C) 1999 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -649,11 +649,7 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	redraw_rect.height = visible_rect.height;
 	
 	GtkStateType state;
-#if GTK_CHECK_VERSION(2,18,0)
 	state = gtk_widget_get_state (GTK_WIDGET (tv));
-#else
-	state = GTK_WIDGET_STATE (GTK_WIDGET (tv));
-#endif
 	gc = gtk_widget_get_style (GTK_WIDGET (tv))->bg_gc[state];
 	margin = gtk_text_view_get_left_margin (tv);
 	

@@ -223,25 +223,14 @@ toggle_button_on_toggled (GtkToggleButton  *toggle_button,
 
 		gint x, y, width, height;
 
-#if GTK_CHECK_VERSION(2,18,0)
 		gdkwin = gtk_widget_get_window (GTK_WIDGET(cgrid));
-#else
-		gdkwin = GDK_WINDOW (GTK_WIDGET(cgrid)->window);
-#endif
 		gdk_window_get_origin (gdkwin, &x, &y);
 
-#if GTK_CHECK_VERSION(2,18,0)
 		GtkAllocation alloc;
 		gtk_widget_get_allocation (GTK_WIDGET (cgrid), &alloc);
 		x += alloc.x;
 		width = alloc.width;
 		height = alloc.height;
-#else
-		x += GTK_WIDGET (cgrid)->allocation.x;
-/* 		y += cgrid->priv->entry->allocation.y; */
-		width = GTK_WIDGET (cgrid)->allocation.width;
-		height = GTK_WIDGET (cgrid)->allocation.height;
-#endif
 
 /* 		x += width - requisition.width; */
 		y += height;
@@ -251,22 +240,13 @@ toggle_button_on_toggled (GtkToggleButton  *toggle_button,
 		gtk_grab_add (window_popup);
 		gtk_window_move (GTK_WINDOW(window_popup), x, y);
 		gtk_widget_set_size_request (window_popup,
-#if GTK_CHECK_VERSION(2,18,0)
 					     alloc.width,
-#else
-					     GTK_WIDGET(cgrid)->allocation.width,
-#endif
 					     ((y + cgrid->priv->grid_height) > gdk_screen_height ()) ? gdk_screen_height () - y : cgrid->priv->grid_height);
 		gtk_widget_show (window_popup);
 		gtk_widget_grab_focus (cgrid->priv->tree_view);
 
-#if GTK_CHECK_VERSION(2,18,0)
 		popup_grab_on_window (gtk_widget_get_window (window_popup),
 				      gtk_get_current_event_time ());
-#else
-		popup_grab_on_window (window_popup->window,
-				      gtk_get_current_event_time ());
-#endif
 	}
 
 }

@@ -1,6 +1,6 @@
 /* utility.c
  *
- * Copyright (C) 2003 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2003 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -440,12 +440,8 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 		
 		gtk_container_add (GTK_CONTAINER (sw), view);
 		gtk_container_add (GTK_CONTAINER (exp), sw);
-#if GTK_CHECK_VERSION(2,18,0)
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
 				    exp, TRUE, TRUE, 0);
-#else
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox), exp, TRUE, TRUE, 0);
-#endif
 		gtk_widget_show_all (exp);
 
 		gtk_window_set_resizable (GTK_WINDOW (dlg), TRUE);

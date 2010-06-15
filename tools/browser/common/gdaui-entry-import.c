@@ -1,6 +1,6 @@
 /* gdaui-entry-import.c
  *
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -178,11 +178,7 @@ open_button_clicked_cb (GtkWidget *button, GdauiEntryImport *mgtxt)
 					      GTK_RESPONSE_REJECT,
 					      NULL);
 	wid = gdaui_data_import_new ();
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), wid);
-#else
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), wid);
-#endif
 	gtk_widget_show_all (dialog);
 	
 	res = gtk_dialog_run (GTK_DIALOG (dialog));

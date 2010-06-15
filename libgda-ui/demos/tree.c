@@ -126,12 +126,8 @@ do_tree (GtkWidget *do_widget)
 				       "feeds it to a GdauiTreeStore (which implements the GtkTreeModel\n"
 				       "interface, and creates a GtkTreeView to display the contents\n"
 				       "of the GdaTree");
-#if GTK_CHECK_VERSION(2,18,0)
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
 				    label, TRUE, TRUE, 0);
-#else
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label, TRUE, TRUE, 0);
-#endif
 
 		/* create GdaTree */
 		tree = gda_tree_new ();
@@ -152,12 +148,8 @@ do_tree (GtkWidget *do_widget)
 					      G_TYPE_BOOLEAN, "scale-set");
 		treeview = gtk_tree_view_new_with_model (model);
 		g_object_unref (model);
-#if GTK_CHECK_VERSION(2,18,0)
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
 				    treeview, TRUE, TRUE, 0);
-#else
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), treeview, TRUE, TRUE, 0);
-#endif
 
 		/* create GtkTreeView's column */
 		enum {

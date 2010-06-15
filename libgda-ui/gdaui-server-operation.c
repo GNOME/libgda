@@ -1119,11 +1119,7 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 					   GTK_STOCK_CANCEL,
 					   GTK_RESPONSE_REJECT,
 					   NULL);
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dlg));
-#else
-	dcontents = GTK_DIALOG (dlg)->vbox;
-#endif
 
 	if (header && *header) {
 		GtkWidget *label;
