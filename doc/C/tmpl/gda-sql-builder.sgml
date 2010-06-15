@@ -61,6 +61,12 @@ guint id_cond_and = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_c
 
 </para>
 
+<!-- ##### TYPEDEF GdaSqlBuilderId ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION gda_sql_builder_new ##### -->
 <para>
 
@@ -98,7 +104,7 @@ guint id_cond_and = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_c
 @table_name: 
 
 
-<!-- ##### FUNCTION gda_sql_builder_add_field ##### -->
+<!-- ##### FUNCTION gda_sql_builder_add_field_value ##### -->
 <para>
 
 </para>
@@ -109,7 +115,7 @@ guint id_cond_and = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_c
 @Varargs: 
 
 
-<!-- ##### FUNCTION gda_sql_builder_add_field_value ##### -->
+<!-- ##### FUNCTION gda_sql_builder_add_field_value_as_gvalue ##### -->
 <para>
 
 </para>
@@ -119,7 +125,7 @@ guint id_cond_and = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_c
 @value: 
 
 
-<!-- ##### FUNCTION gda_sql_builder_add_field_id ##### -->
+<!-- ##### FUNCTION gda_sql_builder_add_field_value_id ##### -->
 <para>
 
 </para>
@@ -159,6 +165,17 @@ guint id_cond_and = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_c
 
 @builder: 
 @string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_sql_builder_add_field_id ##### -->
+<para>
+
+</para>
+
+@builder: 
+@field_name: 
+@table_name: 
 @Returns: 
 
 
