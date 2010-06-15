@@ -1,6 +1,6 @@
 /* gdaui-data-proxy-info.c
  *
- * Copyright (C) 2006 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -446,7 +446,7 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		gtk_toolbar_set_icon_size (GTK_TOOLBAR (info->priv->buttons_bar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 		g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
 		gtk_widget_set_name (info->priv->buttons_bar, "gdaui-data-proxy-info");
-		gtk_toolbar_set_tooltips (GTK_TOOLBAR (info->priv->buttons_bar), TRUE);
+		g_object_set (info->priv->buttons_bar, "has-tooltip", TRUE, NULL);
 		gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
 	}
 	else {

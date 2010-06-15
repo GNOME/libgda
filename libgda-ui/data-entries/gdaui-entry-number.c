@@ -397,7 +397,7 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap));
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
 
-	gtk_entry_set_editable (GTK_ENTRY (mgstr->priv->entry), editable);
+	gtk_editable_set_editable (GTK_EDITABLE (mgstr->priv->entry), editable);
 }
 
 static void

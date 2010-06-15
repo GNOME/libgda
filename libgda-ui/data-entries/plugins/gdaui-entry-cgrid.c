@@ -1,6 +1,6 @@
 /* gdaui-entry-cgrid.c
  *
- * Copyright (C) 2007 - 2007 Carlos Savoretti
+ * Copyright (C) 2007 - 2010 Carlos Savoretti
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -815,7 +815,7 @@ set_editable (GdauiEntryWrapper  *entry_wrapper,
 
 	GdauiEntryCGrid *cgrid = GDAUI_ENTRY_CGRID(entry_wrapper);
 
-	gtk_entry_set_editable (GTK_ENTRY(cgrid->priv->entry), editable);
+	gtk_editable_set_editable (GTK_EDITABLE (cgrid->priv->entry), editable);
 }
 
 static void
