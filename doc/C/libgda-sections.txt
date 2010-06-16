@@ -919,7 +919,7 @@ gda_insert_row_into_table
 gda_update_row_in_table
 gda_delete_row_from_table
 <SUBSECTION>
-gda_parse_string
+gda_parse_sql_string
 <SUBSECTION>
 gda_get_default_handler
 </SECTION>

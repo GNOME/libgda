@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -60,7 +60,7 @@ typedef enum
  * Convenient Functions
  */
 GdaDataHandler     *gda_get_default_handler           (GType for_type);
-GdaStatement       *gda_parse_string                  (GdaConnection *cnc, const gchar *sql, GdaSet **params,
+GdaStatement       *gda_parse_sql_string              (GdaConnection *cnc, const gchar *sql, GdaSet **params,
     												   GError **error);
 /*
  * Quick commands execution
