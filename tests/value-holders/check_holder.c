@@ -14,7 +14,7 @@ static void     emitted_signal_add (EmittedSignal *es);
 static void     emitted_signals_reset (void);
 static gboolean emitted_signals_find (gpointer obj, const gchar *signal_name, GError **error);
 static gboolean emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error);
-static gboolean emitted_signals_chech_empty (gpointer obj, const gchar *signal_name, GError **error);
+static gboolean emitted_signals_check_empty (gpointer obj, const gchar *signal_name, GError **error);
 static void     emitted_signals_monitor_holder (GdaHolder *h);
 
 /* 
@@ -104,7 +104,7 @@ test1 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h);
@@ -123,7 +123,7 @@ test1 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h);
@@ -246,7 +246,7 @@ test3 (GError **error)
 
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	g_object_unref (h);
@@ -280,13 +280,13 @@ test4 (GError **error)
 			     "Should not set GdaHolder's value to default");
 		return FALSE;
 	}
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	/** Set a default value to NULL */
 	value = gda_value_new_null ();
 	gda_holder_set_default_value (h, value);
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_default_value (h);
@@ -312,7 +312,7 @@ test4 (GError **error)
 	}
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h);
@@ -329,7 +329,7 @@ test4 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h);
@@ -344,7 +344,7 @@ test4 (GError **error)
 	/** Set a default value to NULL */
 	value = gda_value_new_null ();
 	gda_holder_set_default_value (h, value);
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_default_value (h);
@@ -391,7 +391,7 @@ test5 (GError **error)
 	/** Set a default value to "ABC" */
 	defvalue = gda_value_new_from_string ("ABC", G_TYPE_STRING);
 	gda_holder_set_default_value (h, defvalue);
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_default_value (h);
@@ -416,7 +416,7 @@ test5 (GError **error)
 	}
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h);
@@ -433,7 +433,7 @@ test5 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h);
@@ -458,7 +458,7 @@ test5 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h);
@@ -506,7 +506,7 @@ test6 (GError **error)
 	/** Set a default value to 1234 */
 	defvalue = gda_value_new_from_string ("1234", G_TYPE_INT);
 	gda_holder_set_default_value (h, defvalue);
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_default_value (h);
@@ -531,7 +531,7 @@ test6 (GError **error)
 	}
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h);
@@ -590,7 +590,7 @@ test7 (GError **error)
 		return FALSE;
 	if (!emitted_signals_notfind (h2, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	value = gda_value_new_from_string ("Master string", G_TYPE_STRING);
@@ -611,7 +611,7 @@ test7 (GError **error)
 		return FALSE;
 	if (!emitted_signals_notfind (h2, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h1);
@@ -631,7 +631,7 @@ test7 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h2, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h2);
@@ -650,7 +650,7 @@ test7 (GError **error)
 	/***/
 	if (! gda_holder_set_bind (h1, NULL, error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h1);
@@ -668,7 +668,7 @@ test7 (GError **error)
 		return FALSE;
 	if (!emitted_signals_notfind (h2, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	cvalue = gda_holder_get_value (h1);
@@ -712,7 +712,7 @@ test8 (GError **error)
 	gda_holder_set_default_value (h, value);
 	gda_value_free (value);
 
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	/***/
@@ -747,7 +747,7 @@ test9 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "source-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "source-changed", error))
+	if (!emitted_signals_check_empty (NULL, "source-changed", error))
 		return FALSE;
 
 	if ((gda_holder_get_source_model (h, &col) != model) || (col != 1)) {
@@ -761,7 +761,7 @@ test9 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "source-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "source-changed", error))
+	if (!emitted_signals_check_empty (NULL, "source-changed", error))
 		return FALSE;
 	if ((gda_holder_get_source_model (h, &col) != model) || (col != 0)) {
 		g_set_error (error, 0, 0, "%s", 
@@ -774,7 +774,7 @@ test9 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "source-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "source-changed", error))
+	if (!emitted_signals_check_empty (NULL, "source-changed", error))
 		return FALSE;
 
 	if (gda_holder_get_source_model (h, NULL)) {
@@ -829,7 +829,7 @@ test10 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 	gda_value_free (value);
 	
@@ -845,7 +845,7 @@ test10 (GError **error)
 			     "GdaHolder's change should have failed");
 		return FALSE;
 	}
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 	gda_value_free (value);
 
@@ -867,7 +867,7 @@ test10 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	/***/
@@ -909,7 +909,7 @@ test11 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 	
 	/***/
@@ -920,7 +920,7 @@ test11 (GError **error)
 		return FALSE;
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (NULL, "changed", error))
+	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	/***/
@@ -1150,7 +1150,7 @@ emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error)
 }
 
 static gboolean
-emitted_signals_chech_empty (gpointer obj, const gchar *signal_name, GError **error)
+emitted_signals_check_empty (gpointer obj, const gchar *signal_name, GError **error)
 {
 	GSList *list;
 	for (list = signals_list; list; list = list->next) {
