@@ -1,5 +1,5 @@
 /* GDA Postgres Provider
- * Copyright (C) 2008 The GNOME Foundation
+ * Copyright (C) 2008 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -23,6 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/libgda.h>
 #include "gda-postgres-ddl.h"
+#include "gda-postgres.h"
 
 gchar *
 gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -758,9 +759,22 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 	const GValue *value;
 	gchar *sql = NULL;
 	gchar *tmp;
-	gboolean with = FALSE;
+	gboolean with = FALSE, first, use_role = TRUE;
+	gint nrows, i;
+	PostgresConnectionData *cdata = NULL;
 
-	string = g_string_new ("CREATE USER ");
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	}
+	if (cdata && (cdata->reuseable->version_float < 8.1))
+		use_role = FALSE;
+
+	if (use_role)
+		string = g_string_new ("CREATE ROLE ");
+	else
+		string = g_string_new ("CREATE USER ");
 
 	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/USER_DEF_P/USER_NAME");
 	g_string_append (string, tmp);
@@ -798,6 +812,15 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 		g_string_append_printf (string, "SYSID %u", g_value_get_uint (value));
 	}
 
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_SUPERUSER");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+		if (!with) {
+			g_string_append (string, " WITH");
+			with = TRUE;
+		}
+		g_string_append (string, " SUPERUSER");
+	}
+
 	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_CREATEDB");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
 		if (!with) {
@@ -805,6 +828,15 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 			with = TRUE;
 		}
 		g_string_append (string, " CREATEDB");
+	}
+
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_CREATEROLE");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+		if (!with) {
+			g_string_append (string, " WITH");
+			with = TRUE;
+		}
+		g_string_append (string, " CREATEROLE");
 	}
 
 	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_CREATEUSER");
@@ -815,20 +847,89 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 		}
 		g_string_append (string, " CREATEUSER");
 	}
+
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_INHERIT");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+		if (!with) {
+			g_string_append (string, " WITH");
+			with = TRUE;
+		}
+		g_string_append (string, " INHERIT");
+	}
+	else {
+		if (!with) {
+			g_string_append (string, " WITH");
+			with = TRUE;
+		}
+		g_string_append (string, " NOINHERIT");
+	}
+
+	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_LOGIN");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+		g_string_append (string, " LOGIN");
+		value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CNX_LIMIT");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_INT))
+			g_string_append_printf (string, " CONNECTION LIMIT %d",
+						g_value_get_int (value));
+	}
+
 	
-	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/GROUPS");
-	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) &&
-	    g_value_get_string (value) && (*g_value_get_string (value))) {
-		GdaDataHandler *dh;		
+	nrows = gda_server_operation_get_sequence_size (op, "/GROUPS_S");
+	for (first  = TRUE, i = 0; i < nrows; i++) {
+		gchar *name;
+		if (use_role)
+			name = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/GROUPS_S/%d/ROLE", i);
+		else
+			name = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/GROUPS_S/%d/USER", i);
 
-		g_string_append (string, " IN GROUP ");
-		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
-		if (!dh)
-			dh = gda_get_default_handler (G_TYPE_STRING);
+		if (name && *name) {
+			if (first) {
+				first = FALSE;
+				if (use_role)
+					g_string_append (string, " IN ROLE ");
+				else
+					g_string_append (string, " IN GROUP ");
+			}
+			else
+				g_string_append (string, ", ");
 
-		tmp = gda_data_handler_get_sql_from_value (dh, value);
-		g_string_append (string, tmp);
-		g_free (tmp);
+			g_string_append (string, name);
+		}
+		g_free (name);
+	}
+
+	nrows = gda_server_operation_get_sequence_size (op, "/ROLES_S");
+	for (first  = TRUE, i = 0; i < nrows; i++) {
+		gchar *name;
+		name = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/ROLES_S/%d/ROLE", i);
+		if (name && *name) {
+			if (first) {
+				first = FALSE;
+				g_string_append (string, " ROLE ");
+			}
+			else
+				g_string_append (string, ", ");
+
+			g_string_append (string, name);
+		}
+		g_free (name);
+	}
+
+	nrows = gda_server_operation_get_sequence_size (op, "/ADMINS_S");
+	for (first  = TRUE, i = 0; i < nrows; i++) {
+		gchar *name;
+		name = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/ADMINS_S/%d/ROLE", i);
+		if (name && *name) {
+			if (first) {
+				first = FALSE;
+				g_string_append (string, " ADMIN ");
+			}
+			else
+				g_string_append (string, ", ");
+
+			g_string_append (string, name);
+		}
+		g_free (name);
 	}
 	
 	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/VALIDITY");
@@ -852,6 +953,46 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 			g_free (tmp);
 		}
 	}
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+gchar *
+gda_postgres_render_DROP_USER (GdaServerProvider *provider, GdaConnection *cnc,
+			       GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+	gchar *tmp;
+	gboolean use_role = TRUE;
+	PostgresConnectionData *cdata = NULL;
+
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	}
+	if (cdata && (cdata->reuseable->version_float < 8.1))
+		use_role = FALSE;
+
+	if (use_role)
+		string = g_string_new ("DROP ROLE ");
+	else
+		string = g_string_new ("DROP USER ");
+
+	value = gda_server_operation_get_value_at (op, "/USER_DESC_P/USER_IFEXISTS");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " IF EXISTS");
+
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+							  "/USER_DESC_P/USER_NAME");
+	g_string_append_c (string, ' ');
+	g_string_append (string, tmp);
+	g_free (tmp);
 
 	sql = string->str;
 	g_string_free (string, FALSE);

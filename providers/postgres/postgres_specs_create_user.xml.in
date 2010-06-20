@@ -15,9 +15,12 @@
       <gda_value>FALSE</gda_value>
     </parameter>
 
-    <parameter id="GROUPS" _name="Groups" _descr="Comma separated list of groups the user will belong to" gdatype="gchararray"/>
-
     <parameter id="VALIDITY" _name="Valid until" _descr="Specifies an expiration time for a password only (not for the user account per se: the expiration time is not enforced when logging in using a non-password-based authentication method)" gdatype="timestamp"/>
 
   </parameters>
+
+  <sequence id="GROUPS_S" _name="Member of" _descr="Existing groups to which the new user will be immediately added as a new member" status="OPT">
+    <parameter id="USER" _name="User" _descr="Existing user" gdatype="string"/>
+  </sequence>
+
 </serv_op>

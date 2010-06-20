@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<serv_op>
+<!--
+   This file contains the CREATE ROLE operation's parameters, which is
+   available since PostgreSQL 8.1
+-->
+  <parameters id="USER_DEF_P" _name="Role's definition">
+    <parameter id="USER_NAME" _name="Name" _descr="Role's name" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="PASSWORD" _name="Password" _descr="Role's password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
+    <parameter id="PASSWORD_ENCRYPTED" _name="Encrypt password" _descr="Controls whether the password is stored encrypted in the system catalogs. If the presented password string is already in MD5-encrypted format, then it is stored encrypted as-is." gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+
+    <parameter id="CAP_SUPERUSER" _name="Database superuser" _descr="Set to TRUE if the role is a database superuser" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="CAP_CREATEDB" _name="Can create databases" _descr="Set to TRUE if the role is allowed to create databases" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="CAP_CREATEROLE" _name="Can create roles" _descr="Set to TRUE if the role is allowed to create roles" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="CAP_INHERIT" _name="Inherit" _descr="Set to TRUE if the created role inherits the privileges of roles it is a member of" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="CAP_LOGIN" _name="Can login" _descr="Set to TRUE if the role is allowed to log in" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="CNX_LIMIT" _name="Login limit" _descr="If the role is allowed to log in, defines the number of concurrent connections the role can make (-1 or unset for unlimited)" gdatype="gint">
+      <gda_value>-1</gda_value>
+    </parameter>
+
+    <parameter id="VALIDITY" _name="Valid until" _descr="Specifies an expiration time for a password only (not for the user account per se: the expiration time is not enforced when logging in using a non-password-based authentication method)" gdatype="timestamp"/>
+  </parameters>
+
+  <sequence id="GROUPS_S" _name="Member of" _descr="Existing roles to which the new role will be immediately added as a new member" status="OPT">
+    <parameter id="ROLE" _name="Role" _descr="Existing role" gdatype="string"/>
+  </sequence>
+
+  <sequence id="ROLES_S" _name="Role's members" _descr="Lists one or more existing roles which are automatically added as members of the new role" status="OPT">
+    <parameter id="ROLE" _name="Role" _descr="Existing role" gdatype="string"/>
+  </sequence>
+
+  <sequence id="ADMINS_S" _name="Role's admins" _descr="Lists one or more existing roles which are automatically added as members of the new role, giving them the right to grant membership in this role to others" status="OPT">
+    <parameter id="ROLE" _name="Role" _descr="Existing role" gdatype="string"/>
+  </sequence>
+</serv_op>
