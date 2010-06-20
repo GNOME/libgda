@@ -362,7 +362,7 @@ tests_common_check_holder (GHashTable *data, const gchar *id, GdaHolder *h, GErr
 
 	if (strcmp (got, s)) {
 		g_set_error (error, 0, 0,
-			     "GdaHolder error:\nexp: %s\ngot:%s\n", got, s);
+			     "GdaHolder error:\nexp: %s\ngot: %s\n", got, s);
 		g_free (s);
 		g_object_unref (h);
 		return FALSE;
@@ -412,7 +412,7 @@ tests_common_check_set (GHashTable *data, const gchar *id, GdaSet *set, GError *
 
 	if (strcmp (got, s)) {
 		g_set_error (error, 0, 0,
-			     "GdaSet error:\nexp: %s\ngot:%s\n", got, s);
+			     "GdaSet error:\nexp: %s\ngot: %s\n", got, s);
 		g_free (s);
 		g_object_unref (set);
 		return FALSE;
