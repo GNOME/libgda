@@ -48,6 +48,8 @@ libgda_ui_data_entries_la_SOURCES = \
 	gdaui-entry-boolean.c \
 	gdaui-entry-combo.c \
 	gdaui-entry-none.c \
+	widget-embedder.c \
+	widget-embedder.h \
 	gdaui-entry-shell.c \
 	gdaui-entry-string.c \
 	gdaui-entry-number.c \

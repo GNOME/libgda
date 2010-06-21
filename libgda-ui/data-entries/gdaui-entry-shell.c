@@ -24,7 +24,9 @@
 #include <libgda/gda-data-handler.h>
 #include <libgda-ui/internal/utility.h>
 #include <glib/gi18n-lib.h>
-
+#if GTK_CHECK_VERSION (2,18,0)
+#include "widget-embedder.h"
+#endif
 static void gdaui_entry_shell_class_init (GdauiEntryShellClass *class);
 static void gdaui_entry_shell_init (GdauiEntryShell *wid);
 static void gdaui_entry_shell_dispose (GObject *object);
@@ -53,7 +55,7 @@ enum {
 };
 
 struct  _GdauiEntryShellPriv {
-        GtkWidget           *top_box;
+        GtkWidget           *embedder;
 	GtkWidget           *hbox;
         GtkWidget           *button;
         GtkStyle            *orig_style;
@@ -138,12 +140,12 @@ show_all (GtkWidget *widget)
 static void
 gdaui_entry_shell_init (GdauiEntryShell * shell)
 {
-	GtkWidget *button, *hbox, *vbox, *arrow;
+	GtkWidget *button, *hbox, *arrow;
 	GValue *gval;
 
 	/* Private structure */
 	shell->priv = g_new0 (GdauiEntryShellPriv, 1);
-	shell->priv->top_box = NULL;
+	shell->priv->embedder = NULL;
 	shell->priv->button = NULL;
 	shell->priv->show_actions = TRUE;
 	shell->priv->data_handler = NULL;
@@ -167,10 +169,13 @@ gdaui_entry_shell_init (GdauiEntryShell * shell)
 	shell->priv->hbox = hbox;
 
 	/* vbox to insert the real widget to edit data */
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
-	shell->priv->top_box = vbox;
-	gtk_widget_show (vbox);
+#if GTK_CHECK_VERSION (2,18,0)
+	shell->priv->embedder = widget_embedder_new ();
+#else
+	shell->priv->embedder = gtk_vbox_new (FALSE, 0);
+#endif
+	gtk_box_pack_start (GTK_BOX (hbox), shell->priv->embedder, TRUE, TRUE, 0);
+	gtk_widget_show (shell->priv->embedder);	
 
 	/* button to change the entry's state and to display that state */
 	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
@@ -301,8 +306,11 @@ gdaui_entry_shell_pack_entry (GdauiEntryShell *shell, GtkWidget *main_widget)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
 	g_return_if_fail (main_widget && GTK_IS_WIDGET (main_widget));
-
-	gtk_box_pack_start (GTK_BOX (shell->priv->top_box), main_widget, TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION (2,18,0)
+	gtk_container_add (GTK_CONTAINER (shell->priv->embedder), main_widget);
+#else
+	gtk_box_pack_start (GTK_BOX (shell->priv->embedder), main_widget, TRUE, TRUE, 0);
+#endif
 
 	/* signals */
 	g_signal_connect (G_OBJECT (shell), "contents-modified",
@@ -462,8 +470,12 @@ gdaui_entry_shell_set_unknown (GdauiEntryShell *shell, gboolean unknown)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
 
+#if GTK_CHECK_VERSION (2,18,0)
+	widget_embedder_set_valid ((WidgetEmbedder*) shell->priv->embedder, !unknown);
+#else
 	if (unknown)
-		gtk_widget_hide (shell->priv->hbox);
+		gtk_widget_hide (shell->priv->embedder);
 	else
-		gtk_widget_show (shell->priv->hbox);
+		gtk_widget_show (shell->priv->embedder);
+#endif
 }
