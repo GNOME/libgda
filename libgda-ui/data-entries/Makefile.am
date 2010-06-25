@@ -60,7 +60,9 @@ libgda_ui_data_entries_la_SOURCES = \
 	gdaui-entry-wrapper.c \
 	gdaui-entry.c \
 	gdaui-formatted-entry.c \
-	gdaui-numeric-entry.c
+	gdaui-numeric-entry.c \
+	drawing.h \
+	drawing.c
 
 xmldir   = $(datadir)/libgda-4.0/ui
 xml_in_files = \

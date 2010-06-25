@@ -1,6 +1,6 @@
 /* gdaui-data-cell-renderer-bin.c
  *
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -26,7 +26,7 @@
 #include "gdaui-data-cell-renderer-bin.h"
 #include "marshallers/gdaui-custom-marshal.h"
 #include "common-bin.h"
-
+#include "drawing.h"
 
 static void gdaui_data_cell_renderer_bin_get_property  (GObject *object,
 							guint param_id,
@@ -78,6 +78,7 @@ struct _GdauiDataCellRendererBinPrivate
 	gboolean              editable;
 	gboolean              active;
 	gboolean              null;
+	gboolean              invalid;
 };
 
 enum {
@@ -271,15 +272,22 @@ gdaui_data_cell_renderer_bin_set_property (GObject *object,
 	switch (param_id) {
 	case PROP_VALUE:
 		/* Because we don't have a copy of the value, we MUST NOT free it! */
+		cell->priv->invalid = FALSE;
 		if (value) {	
                         GValue *gval = g_value_get_boxed (value);
 			if (gval && (G_VALUE_TYPE (gval) != GDA_TYPE_NULL))
 				g_object_set (object, "pixbuf", attach_pixbuf, NULL);
-			else
+			else if (gval)
 				g_object_set (object, "pixbuf", NULL, NULL);
+			else {
+				cell->priv->invalid = TRUE;
+				g_object_set (object, "pixbuf", NULL, NULL);
+			}
                 }
-		else
+		else {
+			cell->priv->invalid = TRUE;
 			g_object_set (object, "pixbuf", NULL, NULL);
+		}
 		break;
 	case PROP_VALUE_ATTRIBUTES:
 		break;
@@ -357,11 +365,12 @@ gdaui_data_cell_renderer_bin_render (GtkCellRenderer      *cell,
 				     GdkRectangle         *expose_area,
 				     GtkCellRendererState  flags)
 {
+	GdauiDataCellRendererBin *datacell = (GdauiDataCellRendererBin*) cell;
 	GtkCellRendererClass *pixbuf_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_PIXBUF);
 
 	(pixbuf_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
 	
-	if (GDAUI_DATA_CELL_RENDERER_BIN (cell)->priv->to_be_deleted) {
+	if (datacell->priv->to_be_deleted) {
 		GtkStyle *style;
 		guint xpad;
 		
@@ -377,7 +386,8 @@ gdaui_data_cell_renderer_bin_render (GtkCellRenderer      *cell,
 				 cell_area->y + cell_area->height / 2.);
 		g_object_unref (style);
 	}
-
+	if (datacell->priv->invalid)
+		draw_invalid_area (window, cell_area);
 }
 
 static void
