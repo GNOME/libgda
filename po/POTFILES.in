@@ -176,12 +176,16 @@ providers/postgres/libmain.c
 providers/postgres/postgres_specs_add_column.xml.in
 providers/postgres/postgres_specs_create_db.xml.in
 providers/postgres/postgres_specs_create_index.xml.in
+providers/postgres/postgres_specs_create_role.xml.in
 providers/postgres/postgres_specs_create_table.xml.in
+providers/postgres/postgres_specs_create_user.xml.in
 providers/postgres/postgres_specs_create_view.xml.in
 providers/postgres/postgres_specs_drop_column.xml.in
 providers/postgres/postgres_specs_drop_db.xml.in
 providers/postgres/postgres_specs_drop_index.xml.in
+providers/postgres/postgres_specs_drop_role.xml.in
 providers/postgres/postgres_specs_drop_table.xml.in
+providers/postgres/postgres_specs_drop_user.xml.in
 providers/postgres/postgres_specs_drop_view.xml.in
 providers/postgres/postgres_specs_dsn.xml.in
 providers/postgres/postgres_specs_rename_table.xml.in
