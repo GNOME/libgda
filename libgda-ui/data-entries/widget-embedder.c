@@ -337,7 +337,7 @@ widget_embedder_size_allocate (GtkWidget     *widget,
 		gtk_widget_get_child_requisition (bin->child, &child_requisition);
 		child_allocation.x = 0;
 		child_allocation.y = 0;
-		child_allocation.height = child_requisition.height;
+		child_allocation.height = h;
 		child_allocation.width = w;
 		
 		if (gtk_widget_get_realized (widget))
