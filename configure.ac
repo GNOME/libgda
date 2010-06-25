@@ -568,11 +568,31 @@ then
 	fi
 fi
 
+bdbsqldir=""
 AM_CONDITIONAL(BDB, test x$bdbdir != x)
 if test x$bdbdir != x; then
 	LIBGDA_BDB_INC="#include <libgda/gda-data-model-bdb.h>"
 	LIBGDA_BDB_TYPE="gda_data_model_bdb_get_type"
+
+	if test -f $bdbdir/include/dbsql.h
+	then
+		BDBSQL_CFLAGS="-I${bdbdir}/include"
+		BDBSQL_LIBS="-L${bdbdir}/lib -ldb_sql"
+		BDBSQL_PATH="${bdbdir}/lib"
+		AC_CHECK_LIB(db_sql, sqlite3_table_column_metadata,[bdbsql_api=1], [bdbsql_api=0], $BDBSQL_CFLAGS $BDBSQL_LIBS -pthread -ldl)
+
+		if test $bdbsql_api = 0
+		then
+			BDBSQL_CFLAGS=""
+			BDBSQL_LIBS=""
+			AC_MSG_WARN([Installed BDB Sql was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, BDB Sql provider not compiled])
+		else
+			bdbsqldir="$bdbdir"
+			AC_DEFINE(HAVE_BDBSQL, 1, [Have Berkeley DB SQL])
+		fi
+	fi
 fi
+AM_CONDITIONAL(BDBSQL, test x$bdbsqldir != x)
 AC_SUBST(LIBGDA_BDB_INC)
 AC_SUBST(LIBGDA_BDB_TYPE)
 
@@ -1336,9 +1356,11 @@ else
                 		AC_MSG_RESULT(Note: using system installed version of SQLite, meta data for functions will not be available)
 				have_sqlite=yes
                 		SQLITE_CFLAGS="$SQLITE_CFLAGS -DHAVE_SQLITE"
+				SQLITE_PATH=`pkg-config --variable=libdir sqlite3`
                 		AC_SUBST(SQLITE_CFLAGS)
                 		AC_SUBST(SQLITE_LIBS)
                 		AC_SUBST(SQLITE_VERS)
+                		AC_SUBST(SQLITE_PATH)
         		fi
 		fi
 	fi
@@ -1677,6 +1699,9 @@ dnl ******************************
 AC_SUBST(BDB_LIB)
 AC_SUBST(BDB_LIBS)
 AC_SUBST(BDB_CFLAGS)
+AC_SUBST(BDBSQL_LIBS)
+AC_SUBST(BDBSQL_PATH)
+AC_SUBST(BDBSQL_CFLAGS)
 AC_SUBST(ODBC_LIBS)
 AC_SUBST(ODBC_CFLAGS)
 AC_SUBST(MYSQL_LIBS)
@@ -1771,6 +1796,8 @@ providers/reuseable/postgres/Makefile
 providers/reuseable/mysql/Makefile
 providers/bdb/Makefile
 providers/bdb/libgda-bdb-4.0.pc
+providers/bdbsql/Makefile
+providers/bdbsql/libgda-bdbsql-4.0.pc
 providers/mdb/Makefile
 providers/mdb/libgda-mdb-4.0.pc
 providers/mysql/Makefile
@@ -1864,6 +1891,7 @@ echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; e
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"
+echo "      Berkeley DB SQL = `if test x$bdbsqldir = x; then echo no; else echo yes; fi`"
 dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
 dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"

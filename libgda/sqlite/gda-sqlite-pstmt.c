@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -22,6 +22,7 @@
 
 #include <glib/gi18n-lib.h>
 #include "gda-sqlite-pstmt.h"
+#include "gda-sqlite.h"
 #include <string.h>
 
 static void gda_sqlite_pstmt_class_init (GdaSqlitePStmtClass *klass);
@@ -56,7 +57,11 @@ _gda_sqlite_pstmt_get_type (void)
 
 		g_static_mutex_lock (&registering);
 		if (type == 0)
+#ifdef WITH_BDBSQLITE
+			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaDBDSqlPStmt", &info, 0);
+#else
 			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaSqlitePStmt", &info, 0);
+#endif
 		g_static_mutex_unlock (&registering);
 	}
 	return type;
@@ -91,7 +96,7 @@ gda_sqlite_pstmt_finalize (GObject *object)
 
 	/* free memory */
 	if (pstmt->sqlite_stmt) 
-		sqlite3_finalize (pstmt->sqlite_stmt);
+		SQLITE3_CALL (sqlite3_finalize) (pstmt->sqlite_stmt);
 
 	if (pstmt->rowid_hash)
 		g_hash_table_destroy (pstmt->rowid_hash);

@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -250,11 +250,11 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	/* actually create the virtual table in @cnc */
 	prov = (GdaVirtualProvider *) gda_connection_get_provider (GDA_CONNECTION (cnc));
 	str = g_strdup_printf ("CREATE VIRTUAL TABLE %s USING %s ('%s')", table_name, G_OBJECT_TYPE_NAME (prov), td->unique_name);
-	rc = sqlite3_exec (scnc->connection, str, NULL, 0, &zErrMsg);
+	rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
 	g_free (str);
 	if (rc != SQLITE_OK) {
 		g_set_error (error, 0, 0, "%s", zErrMsg);
-		sqlite3_free (zErrMsg);
+		SQLITE3_CALL (sqlite3_free) (zErrMsg);
 		gda_vconnection_data_model_table_data_free (td);
 		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
 		retval = FALSE;
@@ -308,12 +308,12 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 	
 	prov = (GdaVirtualProvider *) gda_connection_get_provider (GDA_CONNECTION (cnc));
 	str = g_strdup_printf ("DROP TABLE %s", td->table_name);
-	rc = sqlite3_exec (scnc->connection, str, NULL, 0, &zErrMsg);
+	rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
 	g_free (str);
 
 	if (rc != SQLITE_OK) {
 		g_set_error (error, 0, 0, "%s", zErrMsg);
-		sqlite3_free (zErrMsg);
+		SQLITE3_CALL (sqlite3_free) (zErrMsg);
 		return FALSE;
 	}
 	else {
