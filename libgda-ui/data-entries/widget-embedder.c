@@ -18,7 +18,6 @@
  * USA
  */
 #include "widget-embedder.h"
-#if GTK_CHECK_VERSION (2,18,0)
 static void     widget_embedder_realize       (GtkWidget       *widget);
 static void     widget_embedder_unrealize     (GtkWidget       *widget);
 static void     widget_embedder_size_request  (GtkWidget       *widget,
@@ -435,5 +434,3 @@ widget_embedder_set_valid (WidgetEmbedder *bin, gboolean valid)
 	bin->valid = valid;
 	gtk_widget_queue_draw (GTK_WIDGET (bin));
 }
-
-#endif
