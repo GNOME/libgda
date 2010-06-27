@@ -1,3 +1,25 @@
+libgda 4.1.7, 2010-06-27
+
+ - new provider for Oracle Berkeley DB's SQL frontend (which has the same API as sqlite)
+ - added CREATE_USER and DROP_USER server operations (only for PostgreSQL at the moment)
+ - added a new GDA_CONNECTION_OPTIONS_THREAD_ISOLATED connection option
+ - better display invalid values in form and grid widgets
+ - Lots of GObject introspection annotations added
+ - Better MacOSX support: binary relocation corrections, bundle making
+   script for the GdaBrowser
+ - GdaSqlBuilder API improvements
+ - Corrected memory leak in SQLite provider
+ - Renamed configure.in to configure.ac
+ - Corrections in the Gda-Sql tool regarding username and password
+ - Misc. corrections: connection locking issues, honor the 
+   GDA_EASY_CREATE_TABLE_UNIQUE_FLAG flag, some optimizations
+ - Documentation corrections, and code cleanups
+ - Translations:
+	- es (Jorge González)
+	- sl (Matej Urbančič)
+	- fi (I. Jääskeläinen)
+	- de (Mario Blättermann)
+
 libgda 4.1.6, 2010-05-24
 
  - register GdaStatement as a boxed type
