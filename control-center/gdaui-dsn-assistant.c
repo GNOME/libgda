@@ -665,7 +665,7 @@ gdaui_dsn_assistant_finalize (GObject *object)
 
 	/* free memory */
 	if (assistant->priv->logo)
-		gdk_pixbuf_unref (assistant->priv->logo);
+		g_object_unref (assistant->priv->logo);
 	if (assistant->priv->dsn_info)
 		data_source_info_free (assistant->priv->dsn_info);
 
