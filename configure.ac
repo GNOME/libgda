@@ -1,6 +1,6 @@
 m4_define(major, 4)
 m4_define(minor, 1)
-m4_define(micro, 7)
+m4_define(micro, 8)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no])) 
 m4_include(introspection.m4)
