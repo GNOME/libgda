@@ -1205,7 +1205,7 @@ browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
 	GdaStatement *stmt;
 	GdaSqlBuilder *builder;
 	GdaSet *params;
-	guint op_ids[4];
+	GdaSqlBuilderId op_ids[4];
 	GdaMetaDbObject *dbo = (GdaMetaDbObject *) table;
 
 	params = gda_set_new_inline (5, "schema", G_TYPE_STRING, dbo->obj_schema,
@@ -1249,19 +1249,19 @@ browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
 	if (value) {
 		builder = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 		gda_sql_builder_set_table (builder, DBTABLE_PREFERENCES_TABLE_NAME);
-		gda_sql_builder_add_field_id (builder,
+		gda_sql_builder_add_field_value_id (builder,
 					      gda_sql_builder_add_id (builder, "table_schema"),
 					      gda_sql_builder_add_param (builder, "schema", G_TYPE_STRING, FALSE));
-		gda_sql_builder_add_field_id (builder,
+		gda_sql_builder_add_field_value_id (builder,
 					      gda_sql_builder_add_id (builder, "table_name"),
 					      gda_sql_builder_add_param (builder, "name", G_TYPE_STRING, FALSE));
-		gda_sql_builder_add_field_id (builder,
+		gda_sql_builder_add_field_value_id (builder,
 					      gda_sql_builder_add_id (builder, "table_column"),
 					      gda_sql_builder_add_param (builder, "column", G_TYPE_STRING, FALSE));
-		gda_sql_builder_add_field_id (builder,
+		gda_sql_builder_add_field_value_id (builder,
 					      gda_sql_builder_add_id (builder, "att_name"),
 					      gda_sql_builder_add_param (builder, "attname", G_TYPE_STRING, FALSE));
-		gda_sql_builder_add_field_id (builder,
+		gda_sql_builder_add_field_value_id (builder,
 					      gda_sql_builder_add_id (builder, "att_value"),
 					      gda_sql_builder_add_param (builder, "attvalue", G_TYPE_STRING, FALSE));
 		stmt = gda_sql_builder_get_statement (builder, error);
@@ -1340,7 +1340,7 @@ browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,
 	GdaStatement *stmt;
 	GdaSqlBuilder *builder;
 	GdaSet *params;
-	guint op_ids[4];
+	GdaSqlBuilderId op_ids[4];
 	GdaDataModel *model;
 	const GValue *cvalue;
 	GdaMetaDbObject *dbo = (GdaMetaDbObject *) table;

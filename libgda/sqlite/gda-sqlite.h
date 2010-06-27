@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -28,13 +28,22 @@
 #include <glib.h>
 #include <libgda/libgda.h>
 
-#ifdef HAVE_SQLITE
-#include <sqlite3.h>
-  #if (SQLITE_VERSION_NUMBER < 3005000)
-  typedef sqlite_int64 sqlite3_int64;
-  #endif
+#ifdef WITH_BDBSQLITE
+  #include <dbsql.h>
+  #include "gda-symbols-util.h"
+  #define SQLITE3_CALL(x) (s3r->x)
 #else
-#include "sqlite-src/sqlite3.h"
+  #ifdef HAVE_SQLITE
+    #include <sqlite3.h>
+    #include "gda-symbols-util.h"
+    #define SQLITE3_CALL(x) (s3r->x)
+    #if (SQLITE_VERSION_NUMBER < 3005000)
+      typedef sqlite_int64 sqlite3_int64;
+    #endif
+  #else
+    #include "sqlite-src/sqlite3.h"
+    #define SQLITE3_CALL(x) (x)
+  #endif
 #endif
 
 /*

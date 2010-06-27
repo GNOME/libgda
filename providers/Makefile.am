@@ -2,6 +2,10 @@ if BDB
 GDA_BDB_SERVER=bdb
 endif
 
+if BDBSQL
+GDA_BDBSQL_SERVER=bdbsql
+endif
+
 if IBMDB2
 GDA_IBMDB2_SERVER=ibmdb2
 endif
@@ -63,6 +67,7 @@ SUBDIRS = \
 	sqlite \
 	skel-implementation \
 	$(GDA_BDB_SERVER) \
+	$(GDA_BDBSQL_SERVER) \
 	$(GDA_MDB_SERVER) \
 	$(GDA_POSTGRES_SERVER) \
 	$(GDA_MYSQL_SERVER) \

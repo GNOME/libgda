@@ -1,6 +1,7 @@
 /* gdaui-data-cell-renderer-cgrid.c
  *
- * Copyright (C) 2007 - 2009 Carlos Savoretti
+ * Copyright (C) 2007 - 2010 Carlos Savoretti
+ * Copyright (C) 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,6 +25,7 @@
 
 #include "gdaui-entry-cgrid.h"
 #include "gdaui-data-cell-renderer-cgrid.h"
+#include "gdaui-data-cell-renderer-util.h"
 
 struct _GdauiDataCellRendererCGridPrivate {
 	GdaDataHandler        *data_handler;    /* Data handler. */
@@ -34,6 +36,7 @@ struct _GdauiDataCellRendererCGridPrivate {
 
 	GValue                *value;
 	GdaValueAttribute      value_attributes;
+	gboolean               invalid;
 };
 
 enum {
@@ -67,21 +70,21 @@ static GObjectClass *parent_class;
  */
 GdauiDataCellRendererCGrid *
 gdaui_data_cell_renderer_cgrid_new (GdaDataHandler  *data_handler,
-				       GType            gtype,
-				       const gchar     *options)
+				    GType            gtype,
+				    const gchar     *options)
 {
 	return (GdauiDataCellRendererCGrid *) g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_CGRID,
-							      "data-handler", data_handler,
-							      "gtype", gtype,
-							      "options", g_strdup (options),
-							      NULL);
+							    "data-handler", data_handler,
+							    "gtype", gtype,
+							    "options", g_strdup (options),
+							    NULL);
 }
 
 static void
 gdaui_data_cell_renderer_cgrid_init (GdauiDataCellRendererCGrid  *cgrid)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
-	
+
 	cgrid->priv = g_new0 (GdauiDataCellRendererCGridPrivate, 1);
 	cgrid->priv->data_handler = NULL;
 	cgrid->priv->gtype = G_TYPE_INVALID;
@@ -94,10 +97,10 @@ gdaui_data_cell_renderer_cgrid_finalize (GdauiDataCellRendererCGrid  *cgrid)
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
 
 	if (cgrid->priv) {
-		if (cgrid->priv->data_handler) { 
-			g_object_unref (G_OBJECT(cgrid->priv->data_handler)); 
-			cgrid->priv->data_handler = NULL; 
-		} 
+		if (cgrid->priv->data_handler) {
+			g_object_unref (G_OBJECT(cgrid->priv->data_handler));
+			cgrid->priv->data_handler = NULL;
+		}
 		if (cgrid->priv->options) {
 			g_free (G_OBJECT(cgrid->priv->options));
 			cgrid->priv->options = NULL;
@@ -133,7 +136,7 @@ gdaui_data_cell_renderer_cgrid_get_data_handler (GdauiDataCellRendererCGrid  *cg
  */
 void
 gdaui_data_cell_renderer_cgrid_set_data_handler (GdauiDataCellRendererCGrid  *cgrid,
-						    GdaDataHandler          *data_handler)
+						 GdaDataHandler          *data_handler)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
 
@@ -169,7 +172,7 @@ gdaui_data_cell_renderer_cgrid_get_gtype (GdauiDataCellRendererCGrid  *cgrid)
  */
 void
 gdaui_data_cell_renderer_cgrid_set_gtype (GdauiDataCellRendererCGrid  *cgrid,
-					     GType                    gtype)
+					  GType                    gtype)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
 
@@ -201,7 +204,7 @@ gdaui_data_cell_renderer_cgrid_get_options (GdauiDataCellRendererCGrid  *cgrid)
  */
 void
 gdaui_data_cell_renderer_cgrid_set_options (GdauiDataCellRendererCGrid  *cgrid,
-					       const gchar                   *options)
+					    const gchar                   *options)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
 
@@ -235,7 +238,7 @@ gdaui_data_cell_renderer_cgrid_get_editable (GdauiDataCellRendererCGrid  *cgrid)
  */
 void
 gdaui_data_cell_renderer_cgrid_set_editable (GdauiDataCellRendererCGrid  *cgrid,
-						gboolean                 editable)
+					     gboolean                 editable)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
 	cgrid->priv->editable = editable;
@@ -264,7 +267,7 @@ gdaui_data_cell_renderer_cgrid_get_to_be_deleted (GdauiDataCellRendererCGrid  *c
  */
 void
 gdaui_data_cell_renderer_cgrid_set_to_be_deleted (GdauiDataCellRendererCGrid  *cgrid,
-						     gboolean                 to_be_deleted)
+						  gboolean                 to_be_deleted)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
 	cgrid->priv->to_be_deleted = to_be_deleted;
@@ -293,7 +296,7 @@ gdaui_data_cell_renderer_cgrid_get_value (GdauiDataCellRendererCGrid  *cgrid)
  */
 void
 gdaui_data_cell_renderer_cgrid_set_value (GdauiDataCellRendererCGrid  *cgrid,
-					     const GValue                  *value)
+					  const GValue                *value)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
 
@@ -302,8 +305,10 @@ gdaui_data_cell_renderer_cgrid_set_value (GdauiDataCellRendererCGrid  *cgrid,
 		cgrid->priv->value = NULL;
 	}
 
-	if (!value)
+	if (!value) {
+		cgrid->priv->invalid = TRUE;
 		return;
+	}
 
 	cgrid->priv->value = gda_value_copy (value);
 	g_object_notify (G_OBJECT(cgrid), "value");
@@ -331,7 +336,7 @@ gdaui_data_cell_renderer_cgrid_get_value_attributes (GdauiDataCellRendererCGrid 
  */
 void
 gdaui_data_cell_renderer_cgrid_set_value_attributes (GdauiDataCellRendererCGrid  *cgrid,
-							GdaValueAttribute        value_attributes)
+						     GdaValueAttribute        value_attributes)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID (cgrid));
 	cgrid->priv->value_attributes = value_attributes;
@@ -340,9 +345,9 @@ gdaui_data_cell_renderer_cgrid_set_value_attributes (GdauiDataCellRendererCGrid 
 
 static void
 gdaui_data_cell_renderer_cgrid_set_property (GObject       *object,
-						guint          param_id,
-						const GValue  *value,
-						GParamSpec    *pspec)
+					     guint          param_id,
+					     const GValue  *value,
+					     GParamSpec    *pspec)
 {
 	GdauiDataCellRendererCGrid *cgrid;
 
@@ -382,9 +387,9 @@ gdaui_data_cell_renderer_cgrid_set_property (GObject       *object,
 
 static void
 gdaui_data_cell_renderer_cgrid_get_property (GObject     *object,
-						guint        param_id,
-						GValue      *value,
-						GParamSpec  *pspec)
+					     guint        param_id,
+					     GValue      *value,
+					     GParamSpec  *pspec)
 {
 	GdauiDataCellRendererCGrid *cgrid;
 
@@ -424,12 +429,12 @@ gdaui_data_cell_renderer_cgrid_get_property (GObject     *object,
 
 static void
 gdaui_data_cell_renderer_cgrid_get_size (GtkCellRenderer  *renderer,
-					    GtkWidget        *widget,
-					    GdkRectangle     *rectangle,
-					    gint             *x_offset,
-					    gint             *y_offset,
-					    gint             *width,
-					    gint             *height)
+					 GtkWidget        *widget,
+					 GdkRectangle     *rectangle,
+					 gint             *x_offset,
+					 gint             *y_offset,
+					 gint             *width,
+					 gint             *height)
 {
 	GtkCellRendererClass *renderer_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 
@@ -438,18 +443,19 @@ gdaui_data_cell_renderer_cgrid_get_size (GtkCellRenderer  *renderer,
 
 static void
 gdaui_data_cell_renderer_cgrid_render (GtkCellRenderer       *renderer,
-					  GdkWindow             *window,
-					  GtkWidget             *widget,
-					  GdkRectangle          *background_rectangle,
-					  GdkRectangle          *cell_rectangle,
-					  GdkRectangle          *expose_rectangle,
-					  GtkCellRendererState   flags)
+				       GdkWindow             *window,
+				       GtkWidget             *widget,
+				       GdkRectangle          *background_rectangle,
+				       GdkRectangle          *cell_rectangle,
+				       GdkRectangle          *expose_rectangle,
+				       GtkCellRendererState   flags)
 {
+	GdauiDataCellRendererCGrid *datacell = GDAUI_DATA_CELL_RENDERER_CGRID (renderer);
 	GtkCellRendererClass *renderer_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 
 	(renderer_class->render) (renderer, window, widget, background_rectangle, cell_rectangle, expose_rectangle, flags);
 
-	if (GDAUI_DATA_CELL_RENDERER_CGRID(renderer)->priv->to_be_deleted) {
+	if (datacell->priv->to_be_deleted) {
 		GtkStyle *style;
 		guint xpad;
 
@@ -461,16 +467,18 @@ gdaui_data_cell_renderer_cgrid_render (GtkCellRenderer       *renderer,
                                  cell_rectangle,
                                  widget,
                                  "hline",
-                                 cell_rectangle->x + xpad, 
+                                 cell_rectangle->x + xpad,
 				 cell_rectangle->x + cell_rectangle->width - xpad,
                                  cell_rectangle->y + cell_rectangle->height / 2.);
 		g_object_unref (style);
 	}
+	if (datacell->priv->invalid)
+		gdaui_data_cell_renderer_draw_invalid_area (window, cell_rectangle);
 }
 
 static void
 gdaui_data_cell_renderer_cgrid_editing_done (GtkCellEditable  *editable,
-						gpointer          data)
+					     gpointer          data)
 {
 	g_return_if_fail (GDAUI_IS_DATA_CELL_RENDERER_CGRID(data));
 
@@ -483,29 +491,29 @@ gdaui_data_cell_renderer_cgrid_editing_done (GtkCellEditable  *editable,
 
 static GtkCellEditable *
 gdaui_data_cell_renderer_cgrid_start_editing (GtkCellRenderer       *renderer,
-						 GdkEvent              *event,
-						 GtkWidget             *widget,
-						 const gchar           *path,
-						 GdkRectangle          *background_rectangle,
-						 GdkRectangle          *cell_rectangle,
-						 GtkCellRendererState   flags)
+					      GdkEvent              *event,
+					      GtkWidget             *widget,
+					      const gchar           *path,
+					      GdkRectangle          *background_rectangle,
+					      GdkRectangle          *cell_rectangle,
+					      GtkCellRendererState   flags)
 {
 	GdauiDataCellRendererCGrid *cgrid = GDAUI_DATA_CELL_RENDERER_CGRID(renderer);
 
 	gboolean editable;
-	g_object_get (G_OBJECT(renderer), "editable", &editable, NULL); 
+	g_object_get (G_OBJECT(renderer), "editable", &editable, NULL);
 
 	GtkWidget *entry = (GtkWidget *) gdaui_entry_cgrid_new (cgrid->priv->data_handler,
-								   cgrid->priv->gtype,
-								   cgrid->priv->options);
+								cgrid->priv->gtype,
+								cgrid->priv->options);
 
 	g_object_set (G_OBJECT(entry),
 		      "is-cell-renderer", TRUE,
 		      "actions", FALSE,
-		      NULL); 
+		      NULL);
 
 	gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY(entry),
-					     cgrid->priv->value);
+					      cgrid->priv->value);
 
 	g_signal_connect (G_OBJECT(entry), "editing-done",
 			  G_CALLBACK(gdaui_data_cell_renderer_cgrid_editing_done),
@@ -547,9 +555,9 @@ gdaui_data_cell_renderer_cgrid_class_init (GdauiDataCellRendererCGridClass  *kla
 		(gobject_class,
 		 PROP_GTYPE,
 		 g_param_spec_gtype ("gtype", _("Cgrid gtype"),
-				      _("The cgrid gtype"),
-				      G_TYPE_NONE,
-				      (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
+				     _("The cgrid gtype"),
+				     G_TYPE_NONE,
+				     (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 
 	g_object_class_install_property
 		(gobject_class,
@@ -563,24 +571,24 @@ gdaui_data_cell_renderer_cgrid_class_init (GdauiDataCellRendererCGridClass  *kla
 		(gobject_class,
 		 PROP_EDITABLE,
 		 g_param_spec_boolean ("editable", _("Cgrid is editable"),
-				      _("Cgrid editable"),
-				      TRUE,
-				      (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
+				       _("Cgrid editable"),
+				       TRUE,
+				       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 
 	g_object_class_install_property
 		(gobject_class,
 		 PROP_TO_BE_DELETED,
 		 g_param_spec_boolean ("to-be-deleted", _("Cgrid is to be deleted"),
-				      _("Cgrid to be deleted"),
-				      TRUE,
-				      (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
+				       _("Cgrid to be deleted"),
+				       TRUE,
+				       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 
 	g_object_class_install_property
 		(gobject_class,
 		 PROP_VALUE,
 		 g_param_spec_pointer ("value", _("Cgrid value"),
-				      _("Cgrid value"),
-				      (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
+				       _("Cgrid value"),
+				       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 
 	g_object_class_install_property
 		(gobject_class,

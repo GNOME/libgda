@@ -1,5 +1,5 @@
 /* Gda Sqlite provider
- * Copyright (C) 2008 The GNOME Foundation
+ * Copyright (C) 2008 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -366,7 +366,7 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 
 	cstr = g_value_get_string (p_udt_schema);
 	str = g_strdup_printf ("SELECT name FROM %s.sqlite_master WHERE type='table' AND name not like 'sqlite_%%'", cstr);
-	status = sqlite3_prepare_v2 (cdata->connection, str, -1, &tables_stmt, NULL);
+	status = SQLITE3_CALL (sqlite3_prepare_v2) (cdata->connection, str, -1, &tables_stmt, NULL);
 	g_free (str);
 	if ((status != SQLITE_OK) || !tables_stmt)
 		return FALSE;
@@ -374,24 +374,30 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 	if (!cdata->types)
                 _gda_sqlite_compute_types_hash (cdata);
 
-	for (status = sqlite3_step (tables_stmt); status == SQLITE_ROW; status = sqlite3_step (tables_stmt)) {
+	for (status = SQLITE3_CALL (sqlite3_step) (tables_stmt);
+	     status == SQLITE_ROW;
+	     status = SQLITE3_CALL (sqlite3_step) (tables_stmt)) {
 		gchar *sql;
 		sqlite3_stmt *fields_stmt;
 		gint fields_status;
 
 		if (strcmp (cstr, "main")) 
-			sql = g_strdup_printf ("PRAGMA %s.table_info(%s);", cstr, sqlite3_column_text (tables_stmt, 0));
+			sql = g_strdup_printf ("PRAGMA %s.table_info(%s);", cstr,
+					       SQLITE3_CALL (sqlite3_column_text) (tables_stmt, 0));
 		else
-			sql = g_strdup_printf ("PRAGMA table_info('%s');", sqlite3_column_text (tables_stmt, 0));
-		fields_status = sqlite3_prepare_v2 (cdata->connection, sql, -1, &fields_stmt, NULL);
+			sql = g_strdup_printf ("PRAGMA table_info('%s');",
+					       SQLITE3_CALL (sqlite3_column_text) (tables_stmt, 0));
+		fields_status = SQLITE3_CALL (sqlite3_prepare_v2) (cdata->connection, sql,
+								   -1, &fields_stmt, NULL);
 		g_free (sql);
 		if ((fields_status != SQLITE_OK) || !fields_stmt)
 			break;
 		
-		for (fields_status = sqlite3_step (fields_stmt); fields_status == SQLITE_ROW; 
-		     fields_status = sqlite3_step (fields_stmt)) {
+		for (fields_status = SQLITE3_CALL (sqlite3_step) (fields_stmt);
+		     fields_status == SQLITE_ROW; 
+		     fields_status = SQLITE3_CALL (sqlite3_step) (fields_stmt)) {
 			GType gtype;
-			const gchar *typname = (gchar *) sqlite3_column_text (fields_stmt, 2);
+			const gchar *typname = (gchar *) SQLITE3_CALL (sqlite3_column_text) (fields_stmt, 2);
 			if (!typname || !(*typname)) 
 				continue;
 
@@ -420,9 +426,9 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 				g_hash_table_insert (added_hash, g_strdup (typname), GINT_TO_POINTER (1));
 			}
 		}
-		sqlite3_finalize (fields_stmt);
+		SQLITE3_CALL (sqlite3_finalize) (fields_stmt);
 	}
-	sqlite3_finalize (tables_stmt);
+	SQLITE3_CALL (sqlite3_finalize) (tables_stmt);
 
 	return retval;
 }
@@ -975,9 +981,11 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			continue; /* ignore that table */
 		
 		this_col_name = g_value_get_string (nthis_col_pname);
-		if (sqlite3_table_column_metadata (cdata->connection, g_value_get_string (p_table_schema), 
-						   this_table_name, this_col_name,
-						   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
+		if (SQLITE3_CALL (sqlite3_table_column_metadata) (cdata->connection,
+								  g_value_get_string (p_table_schema), 
+								  this_table_name, this_col_name,
+								  &pzDataType, &pzCollSeq,
+								  &pNotNull, &pPrimaryKey, &pAutoinc)
 		    != SQLITE_OK) {
 			/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
 			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
@@ -1253,9 +1261,11 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 			continue; /* ignore that table */
 		
 		this_col_name = g_value_get_string (this_col_pname);
-		if (sqlite3_table_column_metadata (cdata->connection, g_value_get_string (p_table_schema), 
-						   this_table_name, this_col_name,
-						   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
+		if (SQLITE3_CALL (sqlite3_table_column_metadata) (cdata->connection,
+								  g_value_get_string (p_table_schema), 
+								  this_table_name, this_col_name,
+								  &pzDataType, &pzCollSeq,
+								  &pNotNull, &pPrimaryKey, &pAutoinc)
 		    != SQLITE_OK) {
 			/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
 			cvalue = gda_data_model_get_value_at (tmpmodel, 5, i, error);
@@ -1768,9 +1778,10 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 				continue; /* ignore that table */
 			
 			this_col_name = g_value_get_string (this_col_pname);
-			if (sqlite3_table_column_metadata (cdata->connection, g_value_get_string (p_table_schema), 
-							   this_table_name, this_col_name,
-							   &pzDataType, &pzCollSeq, &pNotNull, &pPrimaryKey, &pAutoinc)
+			if (SQLITE3_CALL (sqlite3_table_column_metadata) (cdata->connection, g_value_get_string (p_table_schema), 
+									 this_table_name, this_col_name,
+									 &pzDataType, &pzCollSeq,
+									 &pNotNull, &pPrimaryKey, &pAutoinc)
 			    != SQLITE_OK) {
 				/* may fail because we have a view and not a table => use @tmpmodel to fetch info. */
 				cvalue = gda_data_model_get_value_at (tmpmodel, 5, i, error);

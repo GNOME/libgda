@@ -575,10 +575,13 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * @model: a #GdaDataModel object.
  * @col: a valid column number.
  * @row: a valid row number.
- * @error: a place to store errors, or %NULL
+ * @error: a place to store errors, or %NULL.
  *
  * Retrieves the data stored in the given position (identified by
  * the @col and @row parameters) on a data model.
+ *
+ * Upon errors %NULL will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * This is the main function for accessing data in a model which allows random access to its data.
  * To access data in a data model using a cursor, use a #GdaDataModelIter object, obtained using
@@ -594,6 +597,9 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  *
  * If you want to modify a value stored in a #GdaDataModel, use the gda_data_model_set_value_at() or 
  * gda_data_model_set_values() methods.
+ *
+ * Upon errors %NULL will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: (transfer none): a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
@@ -622,11 +628,17 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
  * @nullok: if TRUE, then NULL values (value of type %GDA_TYPE_NULL) will not generate any error
  * @error: a place to store errors, or %NULL
  *
+ * Upon errors %NULL will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
+ *
  * This method is similar to gda_data_model_get_value_at(), except that it also allows one to specify the expected
  * #GType of the value to get: if the data model returned a #GValue of a type different than the expected one, then
  * this method returns %NULL and an error code.
  *
  * Note: the same limitations and usage instructions apply as for gda_data_model_get_value_at().
+ *
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, wrong data type, etc).
@@ -697,6 +709,9 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
  *
  * Modifies a value in @model, at (@col, @row).
  *
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
+ *
  * Returns: TRUE if the value in the data model has been updated and no error occurred
  */
 gboolean
@@ -726,6 +741,9 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
  *
  * If any value in @values is actually %NULL, then the value in the corresponding column is left
  * unchanged.
+ 
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: TRUE if the value in the data model has been updated and no error occurred
  */
@@ -787,6 +805,9 @@ gda_data_model_create_iter (GdaDataModel *model)
  * Appends a row to the given data model. If any value in @values is actually %NULL, then 
  * it is considered as a default value.
  *
+ * Upon errors -1 will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
+ *
  * Returns: the number of the added row, or -1 if an error occurred
  */
 gint
@@ -811,6 +832,9 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
  * 
  * Appends a row to the data model (the new row will possibly have NULL values for all columns,
  * or some other values depending on the data model implementation)
+ *
+ * Upon errors -1 will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: the number of the added row, or -1 if an error occurred
  */
@@ -843,6 +867,9 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
  * @error: a place to store errors, or %NULL
  *
  * Removes a row from the data model.
+ *
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
@@ -1120,6 +1147,9 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  *   <listitem><para>"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.
  *             </para></listitem>
  * </itemizedlist>
+ *
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: TRUE if no error occurred
  */
@@ -1486,6 +1516,9 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
  * Adds the data from an XML node to the given data model (see the DTD for that node
  * in the $prefix/share/libgda/dtd/libgda-array.dtd file).
  *
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
+ *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
@@ -1529,6 +1562,9 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
  * The @cols_trans is a hash table for which keys are @to columns numbers and the values are
  * the corresponding column numbers in the @from data model. To set the values of a column in @to to NULL,
  * create an entry in the hash table with a negative value.
+ *
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: TRUE if no error occurred.
  */
@@ -1780,6 +1816,9 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
  *
  * Loads the data from @string into @model.
  *
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
+ *
  * Returns: TRUE if no error occurred.
  */
 gboolean
@@ -1811,6 +1850,9 @@ gda_data_model_import_from_string (GdaDataModel *model,
  * @error: a place to store errors, or %NULL
  *
  * Imports data contained in the @file file into @model; the format is detected.
+ *
+ * Upon errors FALSE will be returned and @error will be assigned a
+ * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: TRUE if no error occurred
  */

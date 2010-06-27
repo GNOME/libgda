@@ -1051,7 +1051,7 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 }
 
 /**
- * gda_parse_string
+ * gda_parse_sql_string
  * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @sql: an SQL command to parse, not %NULL
  * @params: (out) (allow-none) (transfer full): a place to store a new #GdaSet, for parameters used in SQL command, or %NULL
@@ -1064,7 +1064,7 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
  * Since: 4.2
  */
 GdaStatement*
-gda_parse_string (GdaConnection *cnc, const gchar *sql, GdaSet **params, GError **error)
+gda_parse_sql_string (GdaConnection *cnc, const gchar *sql, GdaSet **params, GError **error)
 {
 	GdaStatement *stmt;
 	GdaSqlParser *parser = NULL;

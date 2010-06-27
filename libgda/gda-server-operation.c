@@ -1223,6 +1223,12 @@ gda_server_operation_op_type_to_string (GdaServerOperationType type)
 		return "CREATE_VIEW";
 	case GDA_SERVER_OPERATION_DROP_VIEW:
 		return "DROP_VIEW";
+	case GDA_SERVER_OPERATION_CREATE_USER:
+		return "CREATE_USER";
+	case GDA_SERVER_OPERATION_DROP_USER:
+		return "DROP_USER";
+	case GDA_SERVER_OPERATION_ALTER_USER:
+		return "ALTER_USER";
 	default:
 		g_error (_("Non handled GdaServerOperationType, please report error to "
 			   "http://bugzilla.gnome.org/ for the \"libgda\" product"));
@@ -2259,7 +2265,7 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 				if (node->type == GDA_SERVER_OPERATION_NODE_PARAM) {
 					const GValue *value;
 					gchar *path;
-					
+
 					path = node_get_complete_path (op, node);
 					value = gda_server_operation_get_value_at (op, path);
 					if (!value) {

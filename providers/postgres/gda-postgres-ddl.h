@@ -50,6 +50,11 @@ gchar *gda_postgres_render_CREATE_VIEW  (GdaServerProvider *provider, GdaConnect
                                          GdaServerOperation *op, GError **error);
 gchar *gda_postgres_render_DROP_VIEW    (GdaServerProvider *provider, GdaConnection *cnc,
                                          GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_CREATE_USER  (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+gchar *gda_postgres_render_DROP_USER    (GdaServerProvider *provider, GdaConnection *cnc,
+                                         GdaServerOperation *op, GError **error);
+
 G_END_DECLS
 
 #endif

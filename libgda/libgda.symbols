@@ -457,7 +457,7 @@
 	gda_parse_iso8601_date
 	gda_parse_iso8601_time
 	gda_parse_iso8601_timestamp
-	gda_parse_string
+	gda_parse_sql_string
 	gda_perform_create_database
 	gda_perform_create_table
 	gda_perform_drop_database
@@ -579,9 +579,10 @@
 	gda_sql_builder_add_cond_v
 	gda_sql_builder_add_expr
 	gda_sql_builder_add_expr_value
-	gda_sql_builder_add_field
 	gda_sql_builder_add_field_id
 	gda_sql_builder_add_field_value
+	gda_sql_builder_add_field_value_id
+	gda_sql_builder_add_field_value_as_gvalue
 	gda_sql_builder_add_function
 	gda_sql_builder_add_function_v
 	gda_sql_builder_add_id

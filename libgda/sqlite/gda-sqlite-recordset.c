@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	   Rodrigo Moya <rodrigo@gnome-db.org>
@@ -97,7 +97,7 @@ gda_sqlite_recordset_dispose (GObject *object)
 		GdaSqlitePStmt *ps;
 		ps = GDA_SQLITE_PSTMT (GDA_DATA_SELECT (object)->prep_stmt);
 		ps->stmt_used = FALSE;
-		sqlite3_reset (ps->sqlite_stmt);
+		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 
 		if (recset->priv->tmp_row)
 			g_object_unref (recset->priv->tmp_row);
@@ -132,7 +132,11 @@ _gda_sqlite_recordset_get_type (void)
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
+#ifdef WITH_BDBSQLITE
+			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaDBDSqlRecordset", &info, 0);
+#else
 			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaSqliteRecordset", &info, 0);
+#endif
 		g_static_mutex_unlock (&registering);
 	}
 
@@ -209,7 +213,8 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 
         /* make sure @ps reports the correct number of columns */
 	if (_GDA_PSTMT (ps)->ncols < 0)
-		_GDA_PSTMT (ps)->ncols = sqlite3_column_count (ps->sqlite_stmt) - ps->nb_rowid_columns;
+		_GDA_PSTMT (ps)->ncols = SQLITE3_CALL (sqlite3_column_count) (ps->sqlite_stmt) -
+			ps->nb_rowid_columns;
 
         /* completing ps */
 	g_assert (! ps->stmt_used);
@@ -246,9 +251,9 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 			gint real_col = i + ps->nb_rowid_columns;
 			
 			column = GDA_COLUMN (list->data);
-			gda_column_set_description (column, sqlite3_column_name (ps->sqlite_stmt, real_col));
-			gda_column_set_name (column, sqlite3_column_name (ps->sqlite_stmt, real_col));
-			gda_column_set_dbms_type (column, sqlite3_column_decltype (ps->sqlite_stmt, real_col));
+			gda_column_set_description (column, SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col));
+			gda_column_set_name (column, SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col));
+			gda_column_set_dbms_type (column, SQLITE3_CALL (sqlite3_column_decltype) (ps->sqlite_stmt, real_col));
 			if (_GDA_PSTMT (ps)->types [i] != GDA_TYPE_NULL)
 				gda_column_set_g_type (column, _GDA_PSTMT (ps)->types [i]);
 		}
@@ -285,16 +290,16 @@ fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 	if (_GDA_PSTMT (ps)->types [colnum] != GDA_TYPE_NULL)
 		return _GDA_PSTMT (ps)->types [colnum];
 	
-	ctype = sqlite3_column_origin_name (ps->sqlite_stmt, real_col);
+	ctype = SQLITE3_CALL (sqlite3_column_origin_name) (ps->sqlite_stmt, real_col);
 	if (ctype && !strcmp (ctype, "rowid"))
 		gtype = G_TYPE_INT64;
 	else {
-		ctype = sqlite3_column_decltype (ps->sqlite_stmt, real_col);
+		ctype = SQLITE3_CALL (sqlite3_column_decltype) (ps->sqlite_stmt, real_col);
 		
 		if (ctype)
 			gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, ctype));
 		if (gtype == GDA_TYPE_NULL) 
-			gtype = _gda_sqlite_compute_g_type (sqlite3_column_type (ps->sqlite_stmt, real_col));
+			gtype = _gda_sqlite_compute_g_type (SQLITE3_CALL (sqlite3_column_type) (ps->sqlite_stmt, real_col));
 	}
 
 	return gtype;
@@ -317,7 +322,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	if (model->priv->empty_forced)
 		rc = SQLITE_DONE;
 	else
-		rc = sqlite3_step (ps->sqlite_stmt);
+		rc = SQLITE3_CALL (sqlite3_step) (ps->sqlite_stmt);
 	switch (rc) {
 	case  SQLITE_ROW: {
 		gint col, real_col;
@@ -336,12 +341,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					if (ps->rowid_hash) {
 						gint oidcol = 0;
 						const char *ctable;
-						ctable = sqlite3_column_name (ps->sqlite_stmt, real_col);
+						ctable = SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col);
 						if (ctable)
 							oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash,
 												       ctable));
 						if (oidcol == 0) {
-							ctable = sqlite3_column_table_name (ps->sqlite_stmt, real_col);
+							ctable = SQLITE3_CALL (sqlite3_column_table_name) (ps->sqlite_stmt, real_col);
 							if (ctable)
 								oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash, 
 													       ctable));
@@ -365,7 +370,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			
 			/* fill GValue */
 			value = gda_row_get_value (prow, col);
-			if (sqlite3_column_text (ps->sqlite_stmt, real_col) == NULL) {
+			if (SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col) == NULL) {
 				/* we have a NULL value */
 				gda_value_set_null (value);
 			}
@@ -377,7 +382,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					;
 				else if (type == G_TYPE_INT) {
 					gint64 i;
-					i = sqlite3_column_int64 (ps->sqlite_stmt, real_col);
+					i = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
 					if ((i > G_MAXINT) || (i < G_MININT)) {
 						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
@@ -389,7 +394,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				}
 				else if (type == G_TYPE_UINT) {
 					guint64 i;
-					i = (gint64) sqlite3_column_int64 (ps->sqlite_stmt, real_col);
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
 					if (i > G_MAXUINT) {
 						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
@@ -400,24 +405,24 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						g_value_set_uint (value, (gint) i);
 				}
 				else if (type == G_TYPE_INT64)
-					g_value_set_int64 (value, sqlite3_column_int64 (ps->sqlite_stmt, real_col));
+					g_value_set_int64 (value, SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col));
 				else if (type == G_TYPE_UINT64)
-					g_value_set_uint64 (value, (guint64) sqlite3_column_int64 (ps->sqlite_stmt,
+					g_value_set_uint64 (value, (guint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt,
 												   real_col));
 				else if (type == G_TYPE_DOUBLE)
-					g_value_set_double (value, sqlite3_column_double (ps->sqlite_stmt,
+					g_value_set_double (value, SQLITE3_CALL (sqlite3_column_double) (ps->sqlite_stmt,
 											  real_col));
 				else if (type == G_TYPE_STRING)
-					g_value_set_string (value, (gchar *) sqlite3_column_text (ps->sqlite_stmt,
+					g_value_set_string (value, (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
 												  real_col));
 				else if (type == GDA_TYPE_BINARY) {
 					GdaBinary *bin;
 					
 					bin = g_new0 (GdaBinary, 1);
-					bin->binary_length = sqlite3_column_bytes (ps->sqlite_stmt, real_col);
+					bin->binary_length = SQLITE3_CALL (sqlite3_column_bytes) (ps->sqlite_stmt, real_col);
 					if (bin->binary_length > 0) {
 						bin->data = g_new (guchar, bin->binary_length);
-						memcpy (bin->data, sqlite3_column_blob (ps->sqlite_stmt,
+						memcpy (bin->data, SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt,
 											real_col),
 							bin->binary_length);
 					}
@@ -431,12 +436,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 
 					if (ps->rowid_hash) {
 						const char *ctable;
-						ctable = sqlite3_column_name (ps->sqlite_stmt, real_col);
+						ctable = SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col);
 						if (ctable)
 							oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash,
 												       ctable));
 						if (oidcol == 0) {
-							ctable = sqlite3_column_table_name (ps->sqlite_stmt, real_col);
+							ctable = SQLITE3_CALL (sqlite3_column_table_name) (ps->sqlite_stmt, real_col);
 							if (ctable)
 								oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash, 
 													       ctable));
@@ -444,14 +449,14 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 					if (oidcol != 0) {
 						gint64 rowid;
-						rowid = sqlite3_column_int64 (ps->sqlite_stmt, oidcol - 1); /* remove 1
+						rowid = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, oidcol - 1); /* remove 1
 													       because it was added in the first place */
 						bop = _gda_sqlite_blob_op_new (cdata,
-									      sqlite3_column_database_name (ps->sqlite_stmt, 
+									       SQLITE3_CALL (sqlite3_column_database_name) (ps->sqlite_stmt, 
 													    real_col),
-									      sqlite3_column_table_name (ps->sqlite_stmt,
+									       SQLITE3_CALL (sqlite3_column_table_name) (ps->sqlite_stmt,
 													 real_col),
-									      sqlite3_column_origin_name (ps->sqlite_stmt,
+									       SQLITE3_CALL (sqlite3_column_origin_name) (ps->sqlite_stmt,
 													  real_col),
 									      rowid);
 					}
@@ -470,16 +475,16 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 				}
 				else if (type == G_TYPE_BOOLEAN)
-					g_value_set_boolean (value, sqlite3_column_int (ps->sqlite_stmt, real_col) == 0 ? FALSE : TRUE);
+					g_value_set_boolean (value, SQLITE3_CALL (sqlite3_column_int) (ps->sqlite_stmt, real_col) == 0 ? FALSE : TRUE);
 				else if (type == G_TYPE_DATE) {
 					GDate date;
 					if (!gda_parse_iso8601_date (&date, 
-								     (gchar *) sqlite3_column_text (ps->sqlite_stmt, 
+								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, 
 												    real_col))) {
 						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid date '%s' (date format should be YYYY-MM-DD)"), 
-							     (gchar *) sqlite3_column_text (ps->sqlite_stmt, real_col));
+							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
 						gda_row_invalidate_value (prow, value);
 					}
 					else
@@ -488,12 +493,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				else if (type == GDA_TYPE_TIME) {
 					GdaTime timegda;
 					if (!gda_parse_iso8601_time (&timegda, 
-								     (gchar *) sqlite3_column_text (ps->sqlite_stmt, 
+								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, 
 												    real_col))) {
 						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), 
-							     (gchar *) sqlite3_column_text (ps->sqlite_stmt, real_col));
+							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
 						gda_row_invalidate_value (prow, value);
 					}
 					else
@@ -502,12 +507,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				else if (type == GDA_TYPE_TIMESTAMP) {
 					GdaTimestamp timestamp;
 					if (!gda_parse_iso8601_timestamp (&timestamp, 
-									  (gchar *) sqlite3_column_text (ps->sqlite_stmt,
+									  (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
 													 real_col))) {
 						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
-							     (gchar *) sqlite3_column_text (ps->sqlite_stmt, real_col));
+							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
 						gda_row_invalidate_value (prow, value);
 					}
 					else
@@ -531,11 +536,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		break;
 	case SQLITE_ERROR:
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,  "%s", sqlite3_errmsg (cdata->connection));
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,  "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
 		break;
 	case SQLITE_DONE:
 		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
-		sqlite3_reset (ps->sqlite_stmt);
+		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 		break;
 	case SQLITE_MISUSE:
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,

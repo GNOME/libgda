@@ -702,6 +702,9 @@ gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnec
 
         case GDA_SERVER_OPERATION_CREATE_VIEW:
         case GDA_SERVER_OPERATION_DROP_VIEW:
+
+        case GDA_SERVER_OPERATION_CREATE_USER:
+        case GDA_SERVER_OPERATION_DROP_USER:
                 return TRUE;
         default:
                 return FALSE;
@@ -722,15 +725,31 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
         GdaServerOperation *op;
         gchar *str;
 	gchar *dir;
+	PostgresConnectionData *cdata = NULL;
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	}
 
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-        str = g_strdup_printf ("postgres_specs_%s.xml", file);
-        g_free (file);
+	if (type == GDA_SERVER_OPERATION_CREATE_USER) {
+		if (cdata && (cdata->reuseable->version_float < 8.1))
+			str = g_strdup ("postgres_specs_create_user.xml");
+		else
+			str = g_strdup ("postgres_specs_create_role.xml");
+	}
+	else if (type == GDA_SERVER_OPERATION_DROP_USER) {
+		if (cdata && (cdata->reuseable->version_float < 8.1))
+			str = g_strdup ("postgres_specs_drop_user.xml");
+		else
+			str = g_strdup ("postgres_specs_drop_role.xml");
+	}
+	else {
+		file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
+		str = g_strdup_printf ("postgres_specs_%s.xml", file);
+		g_free (file);
+	}
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
         file = gda_server_provider_find_file (provider, dir, str);
@@ -760,17 +779,34 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
         gchar *file;
         gchar *str;
 	gchar *dir;
+	PostgresConnectionData *cdata = NULL;
+	GdaServerOperationType type;
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
-	/* test @op's validity */
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
-        str = g_strdup_printf ("postgres_specs_%s.xml", file);
-        g_free (file);
+	type = gda_server_operation_get_op_type (op);
+	if (type == GDA_SERVER_OPERATION_CREATE_USER) {
+		if (cdata && (cdata->reuseable->version_float < 8.1))
+			str = g_strdup ("postgres_specs_create_user.xml");
+		else
+			str = g_strdup ("postgres_specs_create_role.xml");
+	}
+	else if (type == GDA_SERVER_OPERATION_DROP_USER) {
+		if (cdata && (cdata->reuseable->version_float < 8.1))
+			str = g_strdup ("postgres_specs_drop_user.xml");
+		else
+			str = g_strdup ("postgres_specs_drop_role.xml");
+	}
+	else {
+		file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
+		str = g_strdup_printf ("postgres_specs_%s.xml", file);
+		g_free (file);
+	}
 
+	/* test @op's validity */
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
@@ -821,6 +857,12 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
                 break;
         case GDA_SERVER_OPERATION_DROP_VIEW:
                 sql = gda_postgres_render_DROP_VIEW (provider, cnc, op, error);
+                break;
+        case GDA_SERVER_OPERATION_CREATE_USER:
+                sql = gda_postgres_render_CREATE_USER (provider, cnc, op, error);
+                break;
+        case GDA_SERVER_OPERATION_DROP_USER:
+                sql = gda_postgres_render_DROP_USER (provider, cnc, op, error);
                 break;
         default:
                 g_assert_not_reached ();

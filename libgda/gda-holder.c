@@ -897,9 +897,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 #define DEBUG_HOLDER
 #undef DEBUG_HOLDER
 
-#ifdef DEBUG_HOLDER
 	gboolean was_valid = gda_holder_is_valid (holder);
-#endif
 
 	/* if the value has been set with gda_holder_take_static_value () you'll be able
 	 * to change the value only with another call to real_gda_holder_set_value 
@@ -939,11 +937,14 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 		changed = TRUE;
 	}
 
+	if (was_valid != newvalid)
+		changed = TRUE;
+
 #ifdef DEBUG_HOLDER
-	g_print ("Changed holder %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
+	g_print ("Holder to change %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
 		 holder, holder->priv->id,
-		 current_val ? gda_value_stringify ((GValue *)current_val) : "_NULL_",
-		 value ? gda_value_stringify ((value)) : "_NULL_",
+		 gda_value_stringify ((GValue *)current_val),
+		 gda_value_stringify ((value)),
 		 current_val ? G_VALUE_TYPE ((GValue *)current_val) : 0,
 		 value ? G_VALUE_TYPE (value) : 0, 
 		 was_valid, newvalid, changed);
@@ -963,6 +964,10 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
 	if (lerror) {
 		/* change refused by signal callback */
+#ifdef DEBUG_HOLDER
+		g_print ("Holder change refused %p (ERROR %s)\n", holder,
+			 lerror->message);
+#endif
 		g_propagate_error (error, lerror);
 		if (!do_copy) 
 			gda_value_free (value);

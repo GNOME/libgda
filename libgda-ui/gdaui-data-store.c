@@ -163,12 +163,9 @@ row_inserted_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 	((GdauiDataStore*) store)->priv->stamp = g_random_int ();
 	path = gtk_tree_path_new ();
         gtk_tree_path_append_index (path, row);
-	if (gtk_tree_model_get_iter (store, &iter, path)) {
+	if (gtk_tree_model_get_iter (store, &iter, path))
 		gtk_tree_model_row_inserted (store, path, &iter);
-		gtk_tree_path_free (path);
-	}
-	else
-		g_warning ("OOh0");
+	gtk_tree_path_free (path);
 }
 
 static void
@@ -180,12 +177,9 @@ row_updated_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 	((GdauiDataStore*) store)->priv->stamp = g_random_int ();
 	path = gtk_tree_path_new ();
         gtk_tree_path_append_index (path, row);
-	if (gtk_tree_model_get_iter (store, &iter, path)) {
+	if (gtk_tree_model_get_iter (store, &iter, path))
 		gtk_tree_model_row_changed (store, path, &iter);
-		gtk_tree_path_free (path);
-	}
-	else
-		g_warning ("OOh1");
+	gtk_tree_path_free (path);
 }
 
 static void

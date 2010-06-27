@@ -1,0 +1,119 @@
+/*
+ * Copyright (C) 2010 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *         Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#ifndef __GDA_BDBSQL_UTIL_H__
+#define __GDA_BDBSQL_UTIL_H__
+
+#include <gmodule.h>
+#ifdef WITH_BDBSQLITE
+  #include <dbsql.h>
+#else
+  #include <sqlite3.h>
+#endif
+
+G_BEGIN_DECLS
+
+typedef struct {
+	int  (*sqlite3_bind_blob)(sqlite3_stmt*,int,const void*,int n,void(*)(void*));
+	int  (*sqlite3_bind_double)(sqlite3_stmt*,int,double);
+	int  (*sqlite3_bind_int)(sqlite3_stmt*,int,int);
+	int  (*sqlite3_bind_int64)(sqlite3_stmt*,int,sqlite_int64);
+	int  (*sqlite3_bind_null)(sqlite3_stmt*,int);
+	int  (*sqlite3_bind_text)(sqlite3_stmt*,int,const char*,int n,void(*)(void*));
+	int (*sqlite3_bind_zeroblob)(sqlite3_stmt*,int,int);
+	int (*sqlite3_blob_bytes)(sqlite3_blob*);
+	int (*sqlite3_blob_close)(sqlite3_blob*);
+	int (*sqlite3_blob_open)(sqlite3*,const char*,const char*,const char*,sqlite3_int64,int,sqlite3_blob**);
+	int (*sqlite3_blob_read)(sqlite3_blob*,void*,int,int);
+	int (*sqlite3_blob_write)(sqlite3_blob*,const void*,int,int);
+
+	int  (*sqlite3_busy_timeout)(sqlite3*,int ms);
+	int  (*sqlite3_changes)(sqlite3*);
+	int (*sqlite3_clear_bindings)(sqlite3_stmt*);
+	int  (*sqlite3_close)(sqlite3*);
+
+	const void * (*sqlite3_column_blob)(sqlite3_stmt*,int iCol);
+	int  (*sqlite3_column_bytes)(sqlite3_stmt*,int iCol);
+	int  (*sqlite3_column_count)(sqlite3_stmt*pStmt);
+	const char * (*sqlite3_column_database_name)(sqlite3_stmt*,int);
+	const char * (*sqlite3_column_decltype)(sqlite3_stmt*,int i);
+	double  (*sqlite3_column_double)(sqlite3_stmt*,int iCol);
+	int  (*sqlite3_column_int)(sqlite3_stmt*,int iCol);
+	sqlite_int64  (*sqlite3_column_int64)(sqlite3_stmt*,int iCol);
+	const char * (*sqlite3_column_name)(sqlite3_stmt*,int);
+	const char * (*sqlite3_column_origin_name)(sqlite3_stmt*,int);
+	const char * (*sqlite3_column_table_name)(sqlite3_stmt*,int);
+	const unsigned char * (*sqlite3_column_text)(sqlite3_stmt*,int iCol);
+	int  (*sqlite3_column_type)(sqlite3_stmt*,int iCol);
+
+	int (*sqlite3_config) (int, ...);
+
+	int  (*sqlite3_create_function)(sqlite3*,const char*,int,int,void*,void (*xFunc)(sqlite3_context*,int,sqlite3_value**),void (*xStep)(sqlite3_context*,int,sqlite3_value**),void (*xFinal)(sqlite3_context*));
+	int (*sqlite3_create_module)(sqlite3*,const char*,const sqlite3_module*,void*);
+	sqlite3 * (*sqlite3_db_handle)(sqlite3_stmt*);	
+	int (*sqlite3_declare_vtab)(sqlite3*,const char*);
+
+	int  (*sqlite3_errcode)(sqlite3*db);
+	const char * (*sqlite3_errmsg)(sqlite3*);
+
+	int  (*sqlite3_exec)(sqlite3*,const char*,sqlite3_callback,void*,char**);
+	int (*sqlite3_extended_result_codes)(sqlite3*,int);
+	int  (*sqlite3_finalize)(sqlite3_stmt*pStmt);
+	void  (*sqlite3_free)(void*);
+	void  (*sqlite3_free_table)(char**result);
+	int  (*sqlite3_get_table)(sqlite3*,const char*,char***,int*,int*,char**);
+	sqlite_int64  (*sqlite3_last_insert_rowid)(sqlite3*);
+
+	void *(*sqlite3_malloc)(int);
+	char * (*sqlite3_mprintf)(const char*,...);
+	int  (*sqlite3_open)(const char*,sqlite3**);
+	int  (*sqlite3_prepare)(sqlite3*,const char*,int,sqlite3_stmt**,const char**);
+	int (*sqlite3_prepare_v2)(sqlite3*,const char*,int,sqlite3_stmt**,const char**);
+
+	int  (*sqlite3_reset)(sqlite3_stmt*pStmt);
+	void  (*sqlite3_result_blob)(sqlite3_context*,const void*,int,void(*)(void*));
+	void  (*sqlite3_result_double)(sqlite3_context*,double);
+	void  (*sqlite3_result_error)(sqlite3_context*,const char*,int);
+	void  (*sqlite3_result_int)(sqlite3_context*,int);
+	void  (*sqlite3_result_int64)(sqlite3_context*,sqlite_int64);
+	void  (*sqlite3_result_null)(sqlite3_context*);
+	void  (*sqlite3_result_text)(sqlite3_context*,const char*,int,void(*)(void*));
+
+	int  (*sqlite3_step)(sqlite3_stmt*);
+	int  (*sqlite3_table_column_metadata)(sqlite3*,const char*,const char*,const char*,char const**,char const**,int*,int*,int*);
+	int (*sqlite3_threadsafe)(void);
+
+	const void * (*sqlite3_value_blob)(sqlite3_value*);
+	int  (*sqlite3_value_bytes)(sqlite3_value*);
+	int  (*sqlite3_value_int)(sqlite3_value*);
+	const unsigned char * (*sqlite3_value_text)(sqlite3_value*);
+	int  (*sqlite3_value_type)(sqlite3_value*);
+} Sqlite3ApiRoutines;
+
+extern Sqlite3ApiRoutines *s3r;
+
+GModule *find_sqlite_library (const gchar *name_part);
+void     load_symbols (GModule *module);
+
+G_END_DECLS
+
+#endif
+

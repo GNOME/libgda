@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="USER_DEF_P" _name="User's definition">
+    <parameter id="USER_NAME" _name="Name" _descr="User's name" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="PASSWORD" _name="Password" _descr="User's password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
+    <parameter id="PASSWORD_ENCRYPTED" _name="Encrypt password" _descr="Controls whether the password is stored encrypted in the system catalogs. If the presented password string is already in MD5-encrypted format, then it is stored encrypted as-is." gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+
+    <parameter id="UID" _name="User ID" _descr="Can be used to choose the PostgreSQL user ID of the new user" gdatype="guint"/>
+    <parameter id="CAP_CREATEDB" _name="Can create databases" _descr="Set to TRUE if the user is allowed to create databases" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="CAP_CREATEUSER" _name="Can create users" _descr="Set to TRUE if the user is allowed to create users" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+
+    <parameter id="VALIDITY" _name="Valid until" _descr="Specifies an expiration time for a password only (not for the user account per se: the expiration time is not enforced when logging in using a non-password-based authentication method)" gdatype="timestamp"/>
+
+  </parameters>
+
+  <sequence id="GROUPS_S" _name="Member of" _descr="Existing groups to which the new user will be immediately added as a new member" status="OPT">
+    <parameter id="USER" _name="User" _descr="Existing user" gdatype="string"/>
+  </sequence>
+
+</serv_op>

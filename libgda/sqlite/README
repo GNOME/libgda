@@ -1,3 +1,21 @@
+Accessing SQLite's symbols:
+===========================
+Since the addition of Oracle Berkeley DB 5's SQL provider, all the sqlite3_* symbols
+can be loaded twice during the execution of a program linked with Libgda. Therefore
+how the sqlite3_* functions are called is important, and is the reason of the SQLITE3_CALL()
+macro which _MUST_ be used everytime an sqlite3_* function is called.
+
+The shared libraries layout to avoid symbols resolution clashed is outlined in the following
+diagram (when SQLite is used from a shared library, if not, then there is no symbol clash):
+
+libgda-4.0.so --(dlopen)--> libsqlite3.so (which exports all the sqlite3_* symbols)
+	      --(dlopen)--> providers/libgda-sqlite.so (which does not export any sqlite3_* symbol)
+	      --(dlopen)--> providers/libgda-bdbsql.so
+	                        --(dlopen)--> libdb-5.0.so (which exports all the sqlite3_* symbols)
+As the libsqlite3.so and the libdb-5.0.so shared libraries are loaded using the G_MODULE_BIND_LOCAL
+flag, their exported symbols don't clash.
+
+
 Which version of SQLite is used:
 ================================
 

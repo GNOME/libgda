@@ -45,7 +45,11 @@ xml_in_files = \
         postgres_specs_add_column.xml.in \
         postgres_specs_drop_column.xml.in \
         postgres_specs_create_view.xml.in \
-        postgres_specs_drop_view.xml.in
+        postgres_specs_drop_view.xml.in \
+	postgres_specs_create_user.xml.in \
+	postgres_specs_create_role.xml.in \
+	postgres_specs_drop_user.xml.in \
+	postgres_specs_drop_role.xml.in
 
 @INTLTOOL_XML_RULE@
 

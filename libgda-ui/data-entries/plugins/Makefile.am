@@ -49,7 +49,7 @@ libgda_ui_plugins_la_SOURCES = \
 	gdaui-entry-pict.c \
 	$(gcrypt_sources)
 
-libgda_ui_plugins_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
+libgda_ui_plugins_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_ui_plugins_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-5.0.la \

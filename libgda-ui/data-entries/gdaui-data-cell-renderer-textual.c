@@ -1,7 +1,7 @@
 /* gdaui-data-cell-renderer-textual.c
  *
  * Copyright (C) 2000  Red Hat, Inc.,  Jonathan Blandford <jrb@redhat.com>
- * Copyright (C) 2003 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2003 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -35,6 +35,7 @@
 #include "gdaui-entry-timestamp.h"
 #include <libgda/gda-enum-types.h>
 #include "marshallers/gdaui-custom-marshal.h"
+#include "gdaui-data-cell-renderer-util.h"
 
 #define MAX_ACCEPTED_STRING_LENGTH 500
 
@@ -96,6 +97,7 @@ struct _GdauiDataCellRendererTextualPrivate
 	gboolean        type_forced; /* TRUE if ->type has been forced by a value and changed from what was specified */
 	GValue         *value;
 	gboolean        to_be_deleted;
+	gboolean        invalid;
 
 	gchar          *options;
 	gchar          *currency;
@@ -418,6 +420,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 			}
 		}
 
+		datacell->priv->invalid = FALSE;
 		if (value) {
 			GValue *gval = g_value_get_pointer (value);
 			if (gval && !gda_value_is_null (gval)) {
@@ -488,11 +491,17 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 					g_object_set (G_OBJECT (object), "text", _("<non-printable>"),
 						      "xalign", xalign, NULL);
 			}
-			else
+			else if (gval)
 				g_object_set (G_OBJECT (object), "text", "", "xalign", xalign, NULL);
+			else {
+				datacell->priv->invalid = TRUE;
+				g_object_set (G_OBJECT (object), "text", "", "xalign", xalign, NULL);
+			}
 		}
-		else
+		else {
+			datacell->priv->invalid = TRUE;
 			g_object_set (G_OBJECT (object), "text", "", "xalign", xalign, NULL);
+		}
 
 		g_object_notify (object, "value");
 		break;
@@ -601,10 +610,11 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 					 GtkCellRendererState  flags)
 
 {
+	GdauiDataCellRendererTextual *datacell = (GdauiDataCellRendererTextual*) cell;
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 	(text_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
 
-	if (GDAUI_DATA_CELL_RENDERER_TEXTUAL (cell)->priv->to_be_deleted) {
+	if (datacell->priv->to_be_deleted) {
 		GtkStyle *style;
 		guint xpad;
 
@@ -620,6 +630,8 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 				 cell_area->y + cell_area->height / 2.);
 		g_object_unref (style);
 	}
+	if (datacell->priv->invalid)
+		gdaui_data_cell_renderer_draw_invalid_area (window, cell_area);
 }
 
 static void

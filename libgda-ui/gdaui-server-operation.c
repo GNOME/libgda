@@ -1145,6 +1145,7 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
  */
 static void create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *grid_iter, gint row,
 							  GdaDataModelIter *form_iter);
+static void create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form);
 static GtkWidget *
 create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path,
 					 gchar **section_str, GSList **label_widgets)
@@ -1175,6 +1176,8 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (form_props),
 					 GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE);
 	gtk_box_pack_start (GTK_BOX (box), form_props, TRUE, TRUE, 0);
+	g_signal_connect (proxy, "row-inserted",
+			  G_CALLBACK (create_table_proxy_row_inserted_cb), form);
 
 	gtk_widget_show_all (box);
 
@@ -1251,4 +1254,29 @@ create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *iter1, gint row,
 	gda_data_model_iter_move_to_row (iter2, row);
 	g_signal_handlers_unblock_by_func (G_OBJECT (iter2),
 					   G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), iter1);
+}
+
+static void
+create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form)
+{
+	GdaDataModelIter *iter;
+	GdaHolder *holder;
+	GdaServerProvider *prov;
+	GdaConnection *cnc;
+	gchar *type = NULL;
+
+	iter = gda_data_model_create_iter (GDA_DATA_MODEL (proxy));
+	gda_data_model_iter_move_to_row (iter, row);
+	holder = gda_set_get_nth_holder (GDA_SET (iter), 0);
+	gda_holder_set_value_str (holder, NULL, "fieldname", NULL);
+
+	g_object_get (form->priv->op, "connection", &cnc, "provider", &prov, NULL);
+	if (prov)
+		type = gda_server_provider_get_default_dbms_type (prov, cnc, G_TYPE_STRING);
+	holder = gda_set_get_nth_holder (GDA_SET (iter), 1);
+	gda_holder_set_value_str (holder, NULL, type ? type : "varchar", NULL);
+	if (cnc)
+		g_object_unref (cnc);
+	if (prov)
+		g_object_unref (prov);
 }

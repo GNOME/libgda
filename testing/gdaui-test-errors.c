@@ -18,7 +18,7 @@ main (int argc, char *argv[])
 	gda_data_model_dump (model, NULL);
 	
 	/* create UI */
-	GtkWidget *window, *vbox, *button, *form;
+	GtkWidget *window, *vbox, *button, *form, *grid;
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
         gtk_window_set_default_size (GTK_WINDOW(window), 400, 200);
 	g_signal_connect_swapped (window, "destroy",
@@ -31,13 +31,24 @@ main (int argc, char *argv[])
 
 	/* main form to list customers */
 	form = gdaui_form_new (model);
-	g_object_unref (model);
 	gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
 
         g_object_set (G_OBJECT (form),
 		      "info-flags",
 		      GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 		      GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS |
+		      GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS,
+		      NULL
+		      );
+
+	/* main grid to list customers */
+	grid = gdaui_grid_new (model);
+	g_object_unref (model);
+	gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
+
+        g_object_set (G_OBJECT (grid),
+		      "info-flags",
+		      GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 		      GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS,
 		      NULL
 		      );

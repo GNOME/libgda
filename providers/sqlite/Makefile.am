@@ -14,11 +14,8 @@ AM_CPPFLAGS = \
 libgda_sqlite_la_SOURCES = \
 	libmain.c
 
-libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
-libgda_sqlite_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
-	$(sqlitelibs) \
-	$(LIBGDA_LIBS)
+libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(LIBTOOL_PROV_EXPORT_OPTIONS)
+libgda_sqlite_la_LIBADD = 
 
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \

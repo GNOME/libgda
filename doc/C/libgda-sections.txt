@@ -919,7 +919,7 @@ gda_insert_row_into_table
 gda_update_row_in_table
 gda_delete_row_from_table
 <SUBSECTION>
-gda_parse_string
+gda_parse_sql_string
 <SUBSECTION>
 gda_get_default_handler
 </SECTION>
@@ -1668,18 +1668,20 @@ gda_tree_mgr_select_get_type
 <FILE>gda-sql-builder</FILE>
 <TITLE>GdaSqlBuilder</TITLE>
 GdaSqlBuilder
+GdaSqlBuilderId
 gda_sql_builder_new
 gda_sql_builder_get_statement
 gda_sql_builder_get_sql_statement
 <SUBSECTION>
 gda_sql_builder_set_table
-gda_sql_builder_add_field
 gda_sql_builder_add_field_value
-gda_sql_builder_add_field_id
+gda_sql_builder_add_field_value_as_gvalue
+gda_sql_builder_add_field_value_id
 gda_sql_builder_add_function
 gda_sql_builder_add_function_v
 <SUBSECTION>
 gda_sql_builder_add_id
+gda_sql_builder_add_field_id
 gda_sql_builder_add_expr
 gda_sql_builder_add_expr_value
 gda_sql_builder_add_param
@@ -1756,4 +1758,3 @@ GDA_IS_REPETITIVE_STATEMENT
 GDA_TYPE_REPETITIVE_STATEMENT
 gda_repetitive_statement_get_type
 </SECTION>
-
