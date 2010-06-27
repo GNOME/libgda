@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -17,11 +17,26 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __DRAWING_H__
-#define __DRAWING_H__
+#include "gdaui-data-cell-renderer-util.h"
 
-#include <gtk/gtk.h>
-
-void draw_invalid_area (GdkWindow *window, GdkRectangle *cell_area);
-
-#endif
+void
+gdaui_data_cell_renderer_draw_invalid_area (GdkWindow *window, GdkRectangle *cell_area)
+{
+	cairo_t *cr;
+	cr = gdk_cairo_create (window);
+	cairo_set_source_rgba (cr, .5, .5, .5, .4);
+	cairo_rectangle (cr, cell_area->x, cell_area->y, cell_area->width,  cell_area->height);
+	cairo_clip (cr);
+	
+	gint i;
+	for (i = 0; ; i++) {
+		gint x = 10 * i;
+		if (x > cell_area->width + cell_area->height)
+			break;
+		cairo_move_to (cr, x + cell_area->x, cell_area->y);
+		cairo_line_to (cr, x + cell_area->x - cell_area->height,
+			       cell_area->y + cell_area->height);
+		cairo_stroke (cr);
+	}
+	cairo_destroy (cr);
+}

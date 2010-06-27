@@ -13,6 +13,11 @@ AM_CPPFLAGS = \
         -DDATADIR=\""$(datadir)"\" \
         -DLIBDIR=\""$(libdir)"\"
 
+gdauiincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda-ui
+gdauiinclude_HEADERS= $(extra_headers)
+extra_headers = \
+	gdaui-data-cell-renderer-util.h
+
 libgda_ui_data_entries_headers = \
 	gdaui-data-cell-renderer-bin.h \
 	gdaui-data-cell-renderer-boolean.h \
@@ -39,6 +44,8 @@ libgda_ui_data_entries_la_SOURCES = \
 	$(libgda_ui_data_entries_headers) \
 	common-bin.c \
 	common-bin.h \
+	$(extra_headers) \
+	gdaui-data-cell-renderer-util.c \
 	gdaui-data-cell-renderer-bin.c \
 	gdaui-data-cell-renderer-boolean.c \
 	gdaui-data-cell-renderer-combo.c \
@@ -60,9 +67,7 @@ libgda_ui_data_entries_la_SOURCES = \
 	gdaui-entry-wrapper.c \
 	gdaui-entry.c \
 	gdaui-formatted-entry.c \
-	gdaui-numeric-entry.c \
-	drawing.h \
-	drawing.c
+	gdaui-numeric-entry.c
 
 xmldir   = $(datadir)/libgda-4.0/ui
 xml_in_files = \

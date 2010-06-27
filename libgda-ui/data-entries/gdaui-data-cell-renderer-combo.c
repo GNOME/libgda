@@ -1,7 +1,7 @@
 /* gdaui-data-cell-renderer-combo.c
  *
  * Copyright (C) 2000  Red Hat, Inc.,  Jonathan Blandford <jrb@redhat.com>
- * Copyright (C) 2003 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2003 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -28,6 +28,7 @@
 #include <libgda-ui/gdaui-combo.h>
 #include <libgda-ui/gdaui-data-entry.h>
 #include <libgda/gda-enum-types.h>
+#include "gdaui-data-cell-renderer-util.h"
 
 #define GDAUI_DATA_CELL_RENDERER_COMBO_PATH "gdaui-data-cell-renderer-combo-path"
 
@@ -93,6 +94,7 @@ struct _GdauiDataCellRendererComboPrivate
 	gboolean      to_be_deleted;
 	gboolean      set_default_if_invalid;
 	gboolean      show_expander;
+	gboolean      invalid;
 };
 
 
@@ -270,6 +272,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 
 	switch (param_id) {
 	case PROP_VALUES:
+		datacell->priv->invalid = FALSE;
 		if (value) {	
 			GList *gvalues = g_value_get_pointer (value);
 			if (gvalues) {
@@ -329,11 +332,15 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 
 				g_slist_free (values);
 			}
-			else
+			else {
+				datacell->priv->invalid = TRUE;
 				g_object_set (G_OBJECT (object), "text", "", NULL);
+			}
 		}
-		else
+		else {
+			datacell->priv->invalid = TRUE;
 			g_object_set (G_OBJECT (object), "text", "", NULL);
+		}
 		
 		g_object_notify (object, "values");
 		break;
@@ -551,6 +558,9 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 				 cell_area->y + cell_area->height / 2.);
 		g_object_unref (style);
 	}
+
+	if (combocell->priv->invalid)
+		gdaui_data_cell_renderer_draw_invalid_area (window, cell_area);
 }
 
 static void gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCellRendererCombo *datacell);

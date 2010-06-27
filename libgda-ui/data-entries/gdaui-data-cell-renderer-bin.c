@@ -26,7 +26,7 @@
 #include "gdaui-data-cell-renderer-bin.h"
 #include "marshallers/gdaui-custom-marshal.h"
 #include "common-bin.h"
-#include "drawing.h"
+#include "gdaui-data-cell-renderer-util.h"
 
 static void gdaui_data_cell_renderer_bin_get_property  (GObject *object,
 							guint param_id,
@@ -387,7 +387,7 @@ gdaui_data_cell_renderer_bin_render (GtkCellRenderer      *cell,
 		g_object_unref (style);
 	}
 	if (datacell->priv->invalid)
-		draw_invalid_area (window, cell_area);
+		gdaui_data_cell_renderer_draw_invalid_area (window, cell_area);
 }
 
 static void

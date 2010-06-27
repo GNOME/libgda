@@ -35,7 +35,7 @@
 #include "gdaui-entry-timestamp.h"
 #include <libgda/gda-enum-types.h>
 #include "marshallers/gdaui-custom-marshal.h"
-#include "drawing.h"
+#include "gdaui-data-cell-renderer-util.h"
 
 #define MAX_ACCEPTED_STRING_LENGTH 500
 
@@ -631,7 +631,7 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 		g_object_unref (style);
 	}
 	if (datacell->priv->invalid)
-		draw_invalid_area (window, cell_area);
+		gdaui_data_cell_renderer_draw_invalid_area (window, cell_area);
 }
 
 static void
