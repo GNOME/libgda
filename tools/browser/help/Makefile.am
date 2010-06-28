@@ -28,6 +28,6 @@ DOC_PAGES = \
 	transactions.page \
 	variables.page
 
-DOC_LINGUAS = de
+DOC_LINGUAS = de es
 
 dist-hook: doc-dist-hook
