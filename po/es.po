@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-06-25 19:22+0000\n"
-"PO-Revision-Date: 2010-06-28 21:15+0200\n"
+"POT-Creation-Date: 2010-06-28 19:21+0000\n"
+"PO-Revision-Date: 2010-06-29 05:21+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2603,7 +2603,6 @@ msgstr ""
 "No está soportada la vinculación de un BLOB para este tipo de declaración"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:507
-#| msgid "Can't find task %u"
 msgid "Can't find libsqlite3."
 msgstr "No se puede encontrar libsqlite3."
 
@@ -3318,10 +3317,10 @@ msgstr "Desconocido"
 
 #. FIXME: find a better label
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:158
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:154
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:155
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:165
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:181
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:167
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
 #: ../libgda-ui/gdaui-basic-form.c:766 ../libgda-ui/gdaui-basic-form.c:828
 #: ../libgda-ui/gdaui-raw-grid.c:739 ../tools/gda-sql.c:2646
 #: ../tools/gda-sql.c:2821 ../tools/gda-sql.c:4001
@@ -3329,38 +3328,38 @@ msgid "Value"
 msgstr "Valor"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:159
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:155
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:156
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:188
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:166
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 msgid "GValue to render"
 msgstr "GValue para renderizar"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:171
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:167
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:168
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:160
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:194
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:195
 msgid "Editable"
 msgstr "Editable"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:168
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:195
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:169
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:196
 msgid "The toggle button can be activated"
 msgstr "El botón conmutable puede ser activado"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:159
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:161
 msgid "Values limited to PK fields"
 msgstr "Valores limitados a campos PK"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:160
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:162
 msgid "GList of GValue to render, limited to PK fields"
 msgstr "Glist de GValue para renderizar, limitado a los campos PK"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:166
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:168
 msgid "Values"
 msgstr "Valores"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:167
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:169
 msgid "GList of GValue to render, not limited to PK fields "
 msgstr "Glist del GValue a renderizar, no limitado a los campos PK"
 
@@ -3374,7 +3373,7 @@ msgid "<string cut because too long>"
 msgstr "<cadena cortada porque es demasiado larga>"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:434
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:271
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:274
 #, c-format
 msgid ""
 "Data cell renderer's specified type (%s) differs from actual value to "
@@ -3384,7 +3383,7 @@ msgstr ""
 "valor actual del tipo que mostrar (%s)"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:441
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:277
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:280
 #, c-format
 msgid ""
 "Data cell renderer asked to display values of different data types, at least "
@@ -3396,7 +3395,7 @@ msgstr ""
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:491
 #: ../libgda-ui/data-entries/gdaui-entry-none.c:173
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:296
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
 msgid "<non-printable>"
 msgstr "<no imprimible>"
 
@@ -3619,53 +3618,53 @@ msgstr "Cadena"
 msgid "Variable"
 msgstr "Variable"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:541
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:549
 msgid "Cgrid data handler"
 msgstr "Manejador de datos cgrid"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:542
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:550
 msgid "The cgrid data handler"
 msgstr "El manejador de datos cgrid"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:549
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:557
 msgid "Cgrid gtype"
 msgstr "Cgrid gtype"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:550
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:558
 msgid "The cgrid gtype"
 msgstr "El gtype del cgrid"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:557
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:565
 msgid "Cgrid options"
 msgstr "Opciones de cgrid"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:558
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:566
 msgid "The cgrid options"
 msgstr "Las opciones de cgrid"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:565
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:573
 msgid "Cgrid is editable"
 msgstr "Cgrid es editable"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:566
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:574
 msgid "Cgrid editable"
 msgstr "Cgrid editable"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:573
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:581
 msgid "Cgrid is to be deleted"
 msgstr "El cgrid está para ser borrado"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:574
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:582
 msgid "Cgrid to be deleted"
 msgstr "El cgrid para ser borrado"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:581
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:582
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:589
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:590
 msgid "Cgrid value"
 msgstr "Valor cgrid"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:588
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:589
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:596
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c:597
 msgid "Cgrid value attributes"
 msgstr "Valor de los atributos de cgrid"
 
@@ -4777,7 +4776,6 @@ msgid "Can't find libdb_sql-5."
 msgstr "No se pude encontrar libdb_sql-5."
 
 #: ../providers/bdbsql/libmain.c:88
-#| msgid "Provider for MySQL databases"
 msgid "Provider for BDB SQL databases"
 msgstr "Proveedor para bases de datos SQL BDB"
 
@@ -6082,7 +6080,6 @@ msgstr "Predicado"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:2
-#| msgid "Create a new database:"
 msgid "Can create databases"
 msgstr "Puede crear bases de datos"
 
@@ -6091,7 +6088,6 @@ msgstr "Puede crear bases de datos"
 #. available since PostgreSQL 8.1
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:10
-#| msgid "Cannot create directory '%s'"
 msgid "Can create roles"
 msgstr "Puede crear roles"
 
@@ -6114,13 +6110,15 @@ msgid ""
 "the presented password string is already in MD5-encrypted format, then it is "
 "stored encrypted as-is."
 msgstr ""
+"Controla si la contraseña se almacena cifrada en los catálogos del sistema. "
+"Si la cadena de contraseña presentada ya está en el formato cifrado MD5, "
+"entonces se almacena cifrada como tal."
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:25
-#| msgid "Database server"
 msgid "Database superuser"
 msgstr "Superusuario de la base de datos"
 
@@ -6130,12 +6128,10 @@ msgstr "Superusuario de la base de datos"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:30
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:5
-#| msgid "Administrator password"
 msgid "Encrypt password"
 msgstr "Cifrar contraseña"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:31
-#| msgid "Existing operation types:\n"
 msgid "Existing role"
 msgstr "Rol existente"
 
@@ -6144,6 +6140,8 @@ msgid ""
 "Existing roles to which the new role will be immediately added as a new "
 "member"
 msgstr ""
+"Roles existentes a los que se añadirá inmediatamente el usuario como miembro "
+"nuevo"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6154,13 +6152,15 @@ msgid ""
 "If the role is allowed to log in, defines the number of concurrent "
 "connections the role can make (-1 or unset for unlimited)"
 msgstr ""
+"Si se permite iniciar sesión al rol, define el número de conexiones "
+"concurrentes que el rol puede realizar (-1 o sin establecer para conexiones "
+"ilimitadas)"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:42
-#| msgid "Inheritance"
 msgid "Inherit"
 msgstr "Heredar"
 
@@ -6169,6 +6169,8 @@ msgid ""
 "Lists one or more existing roles which are automatically added as members of "
 "the new role"
 msgstr ""
+"Lista uno o más roles existentes que se añaden automáticamente como miembros "
+"del nuevo rol"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:44
 msgid ""
@@ -6176,6 +6178,9 @@ msgid ""
 "the new role, giving them the right to grant membership in this role to "
 "others"
 msgstr ""
+"Lista uno o más roles existentes que se añaden automáticamente como miembros "
+"del nuevo rol, proporcionándoles el derecho de conceder membresía en este "
+"rol a otros"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6191,7 +6196,6 @@ msgid "Member of"
 msgstr "Miembro de"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:61
-#| msgid "Remove"
 msgid "Role"
 msgstr "Rol"
 
@@ -6205,7 +6209,6 @@ msgstr "Administrador del rol"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:67
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:4
-#| msgid "View's definition"
 msgid "Role's definition"
 msgstr "Definición del rol"
 
@@ -6219,7 +6222,6 @@ msgstr "Miembros del rol"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:73
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:5
-#| msgid "Table's name"
 msgid "Role's name"
 msgstr "Nombre del rol"
 
@@ -6228,7 +6230,6 @@ msgstr "Nombre del rol"
 #. available since PostgreSQL 8.1
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:78
-#| msgid "Password"
 msgid "Role's password"
 msgstr "Contraseña del rol"
 
@@ -6241,6 +6242,8 @@ msgid ""
 "Set to TRUE if the created role inherits the privileges of roles it is a "
 "member of"
 msgstr ""
+"Establecer a cierto si el rol creado hereda los privilegios de los roles de "
+"los que es miembro"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6272,7 +6275,7 @@ msgstr "Establecer a cierto si se permite crear roles al rol"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:103
 msgid "Set to TRUE if the role is allowed to log in"
-msgstr "Etablecer a cierto si se permite iniciar sesión al rol"
+msgstr "Establecer a cierto si se permite iniciar sesión al rol"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6285,6 +6288,9 @@ msgid ""
 "per se: the expiration time is not enforced when logging in using a non-"
 "password-based authentication method)"
 msgstr ""
+"Especifica un tiempo de expiración para una contraseña (no para la cuenta de "
+"usuario en si: el tiempo de expiración no se refuerza al iniciar sesión "
+"usando un método de autenticación no basado en contraseña)"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6355,7 +6361,6 @@ msgstr ""
 "Se puede usar para elegir un ID de usuario PostgreSQL o un nuevo usuario"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:3
-#| msgid "Cancelled by the user"
 msgid "Can create users"
 msgstr "Crear usuarios"
 
@@ -6368,7 +6373,6 @@ msgstr ""
 "miembro nuevo"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:7
-#| msgid "Executing a query"
 msgid "Existing user"
 msgstr "Usuario existente"
 
@@ -6381,24 +6385,20 @@ msgid "Set to TRUE if the user is allowed to create users"
 msgstr "Establecer a cierto si el usuario puede crear usuarios"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:15
-#| msgid "User"
 msgid "User ID"
 msgstr "ID del usuario"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:16
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:4
-#| msgid "View's definition"
 msgid "User's definition"
 msgstr "Definición del usuario"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:17
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:5
-#| msgid "Username"
 msgid "User's name"
 msgstr "Nombre del usuario"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:18
-#| msgid "Password"
 msgid "User's password"
 msgstr "Contraseña del usuario"
 
@@ -6420,12 +6420,10 @@ msgid "The name of a database to drop"
 msgstr "El nombre de la base de datos para borrar"
 
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:1
-#| msgid "Drop table only if it exists"
 msgid "Drop role only if it exists"
 msgstr "Borrar el rol sólo si existe"
 
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:1
-#| msgid "Drop view only if it exists"
 msgid "Drop user only if it exists"
 msgstr "Borrar el usuario sólo si existe"
 
