@@ -2569,32 +2569,26 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				return NULL;
 			}
 			
-			GObject *set;
 			gchar *str = NULL;
-			GdaHolder *holder;
-			GValue *value;
-			GSList *list;
-			holder = gda_holder_new (G_TYPE_INT);
-			g_object_set ((GObject*) holder, "id", "IMPACTED_ROWS", NULL);
-			g_value_set_int ((value = gda_value_new (G_TYPE_INT)), changes);
-			gda_holder_take_value (holder, value, NULL);
-			list = g_slist_append (NULL, holder);
-			set = (GObject*) gda_set_new (list);
-			g_slist_free (list);
-			g_object_unref (holder);
+			gboolean count_changes = FALSE;
 
-                        if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DELETE", 6))
+                        if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DELETE", 6)) {
+				count_changes = TRUE;
                                 str = g_strdup_printf ("DELETE %d (see SQLite documentation for a \"DELETE * FROM table\" query)",
                                                        changes);
+			}
                         else if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "INSERT", 6)) {
 				sqlite3_int64 last_id;
+				count_changes = TRUE;
 				last_id = sqlite3_last_insert_rowid (handle);
 				str = g_strdup_printf ("INSERT %lld %d", last_id, changes);
 				if (last_inserted_row)
 					*last_inserted_row = make_last_inserted_set (cnc, stmt, last_id);
 			}
-			else if (!g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "UPDATE", 6))
+			else if (!g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "UPDATE", 6)) {
+				count_changes = TRUE;
 				str = g_strdup_printf ("UPDATE %d", changes);
+			}
 			else if (*(_GDA_PSTMT (ps)->sql)) {
 				gchar *tmp = g_ascii_strup (_GDA_PSTMT (ps)->sql, -1);
 				for (str = tmp; *str && (*str != ' ') && (*str != '\t') &&
@@ -2608,6 +2602,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				else
 					str = tmp;
 			}
+
 			if (str) {
                                 event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
                                 gda_connection_event_set_description (event, str);
@@ -2618,6 +2613,25 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			sqlite3_reset (ps->sqlite_stmt);
 			if (new_ps)
 				g_object_unref (ps);
+
+			GObject *set;
+			if (count_changes) {
+				GdaHolder *holder;
+				GValue *value;
+				GSList *list;
+
+				holder = gda_holder_new (G_TYPE_INT);
+				g_object_set ((GObject*) holder, "id", "IMPACTED_ROWS", NULL);
+				g_value_set_int ((value = gda_value_new (G_TYPE_INT)), changes);
+				gda_holder_take_value (holder, value, NULL);
+				list = g_slist_append (NULL, holder);
+				set = (GObject*) gda_set_new (list);
+				g_slist_free (list);
+				g_object_unref (holder);
+			}
+			else
+				set = (GObject*) gda_set_new (NULL);
+
 			return set;
 		}
 	}
