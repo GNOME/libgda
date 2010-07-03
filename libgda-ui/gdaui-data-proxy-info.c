@@ -446,11 +446,11 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		gtk_toolbar_set_icon_size (GTK_TOOLBAR (info->priv->buttons_bar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 		g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
 		gtk_widget_set_name (info->priv->buttons_bar, "gdaui-data-proxy-info");
-		gtk_toolbar_set_tooltips (GTK_TOOLBAR (info->priv->buttons_bar), TRUE);
 		gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
 	}
 	else {
 		info->priv->buttons_bar = gtk_toolbar_new ();
+		gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
 	}
 	gtk_widget_show (info->priv->buttons_bar);
 

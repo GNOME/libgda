@@ -31,7 +31,7 @@ main (int argc, char *argv[])
 
 	/* main form to list customers */
 	form = gdaui_form_new (model);
-	gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), form, FALSE, FALSE, 0);
 
         g_object_set (G_OBJECT (form),
 		      "info-flags",

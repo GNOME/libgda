@@ -730,11 +730,8 @@ create_entry_widget (SingleEntry *sentry)
 		/* set current value */
 		if (gda_holder_is_valid (param))
 			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), val);
-		else {
-			GValue value;
-			memset (&value, 0, sizeof (GValue));
-			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), &value);
-		}
+		else
+			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), NULL);
 
 		if (!nnul ||
 		    (nnul && value &&
@@ -1402,11 +1399,17 @@ parameter_changed_cb (GdaHolder *param, SingleEntry *sentry)
 						  sentry->entry_contents_modified_id);
 			g_signal_handler_unblock (G_OBJECT (entry),
 						  sentry->entry_contents_activated_id);
-		}
+		}		
+
+		gdaui_entry_shell_set_unknown (GDAUI_ENTRY_SHELL (entry),
+					       !gda_holder_is_valid (param));
 
 		g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED], 0,
 			       param, FALSE);
 	}
+	else
+		gdaui_entry_shell_set_unknown (GDAUI_ENTRY_SHELL (entry),
+					       !gda_holder_is_valid (param));
 }
 
 /**
