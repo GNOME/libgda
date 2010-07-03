@@ -1372,11 +1372,8 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 	model_column = col % proxy->priv->model_nb_cols;
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
 	flags = gda_data_model_get_attributes_at (proxy->priv->model, model_column, model_row);
-	if (model_row < 0) {
+	if (model_row < 0)
 		flags |= GDA_VALUE_ATTR_IS_NULL;
-		if (flags & GDA_VALUE_ATTR_NO_MODIF) /* A new row with unmodifiable data means unused data */
-			flags |= GDA_VALUE_ATTR_UNUSED;
-	}
 
 	rm = proxy_row_to_row_modif (proxy, proxy_row);
 	if (rm) {
