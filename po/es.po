@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-06-28 19:21+0000\n"
-"PO-Revision-Date: 2010-06-29 05:21+0200\n"
+"POT-Creation-Date: 2010-06-30 18:49+0000\n"
+"PO-Revision-Date: 2010-07-04 23:03+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2272,7 +2272,7 @@ msgstr "GdaGolder necesita tener un ID"
 msgid "One or more values are invalid"
 msgstr "Uno o más valores no son válidos"
 
-#: ../libgda/gda-sql-builder.c:294 ../libgda/gda-sql-builder.c:1338
+#: ../libgda/gda-sql-builder.c:294 ../libgda/gda-sql-builder.c:1399
 #, c-format
 msgid "Unknown part ID %u"
 msgstr "La parte con ID %u es desconocida"
@@ -2287,37 +2287,43 @@ msgid "SqlBuilder is empty"
 msgstr "El constructor SQL (SqlBuilder) está vacío"
 
 #: ../libgda/gda-sql-builder.c:418 ../libgda/gda-sql-builder.c:475
-#: ../libgda/gda-sql-builder.c:504 ../libgda/gda-sql-builder.c:569
-#: ../libgda/gda-sql-builder.c:611 ../libgda/gda-sql-builder.c:673
-#: ../libgda/gda-sql-builder.c:733 ../libgda/gda-sql-builder.c:1100
-#: ../libgda/gda-sql-builder.c:1184 ../libgda/gda-sql-builder.c:1229
-#: ../libgda/gda-sql-builder.c:1320 ../libgda/gda-sql-builder.c:1371
-#: ../libgda/gda-sql-builder.c:1413 ../libgda/gda-sql-builder.c:1460
-#: ../libgda/gda-sql-builder.c:1510 ../libgda/gda-sql-builder.c:1546
-#: ../libgda/gda-sql-builder.c:1712 ../libgda/gda-sql-builder.c:1738
+#: ../libgda/gda-sql-builder.c:504 ../libgda/gda-sql-builder.c:625
+#: ../libgda/gda-sql-builder.c:667 ../libgda/gda-sql-builder.c:729
+#: ../libgda/gda-sql-builder.c:789 ../libgda/gda-sql-builder.c:1161
+#: ../libgda/gda-sql-builder.c:1245 ../libgda/gda-sql-builder.c:1290
+#: ../libgda/gda-sql-builder.c:1381 ../libgda/gda-sql-builder.c:1432
+#: ../libgda/gda-sql-builder.c:1474 ../libgda/gda-sql-builder.c:1521
+#: ../libgda/gda-sql-builder.c:1571 ../libgda/gda-sql-builder.c:1607
+#: ../libgda/gda-sql-builder.c:1773 ../libgda/gda-sql-builder.c:1799
 msgid "Wrong statement type"
 msgstr "Tipo de declaración erróneo"
 
-#: ../libgda/gda-sql-builder.c:540 ../libgda/gda-sql-builder.c:788
+#: ../libgda/gda-sql-builder.c:596
 #, c-format
-msgid "Could not convert value to type '%s'"
-msgstr "No se pudo convertir el valor al tipo «%s»"
+#| msgid "Could not convert value to type '%s'"
+msgid "Could not convert value to type '%s', value not defined"
+msgstr "No se pudo convertir el valor al tipo «%s», el valor no está definido"
 
-#: ../libgda/gda-sql-builder.c:664
+#: ../libgda/gda-sql-builder.c:720
 msgid "Wrong field format"
 msgstr "Formato de campo erróneo"
 
-#: ../libgda/gda-sql-builder.c:767 ../libgda/gda-sql-builder.c:772
+#: ../libgda/gda-sql-builder.c:823 ../libgda/gda-sql-builder.c:828
 #, c-format
 msgid "Unhandled data type '%s'"
 msgstr "Tipo de dato «%s» no manejado"
 
-#: ../libgda/gda-sql-builder.c:1251
+#: ../libgda/gda-sql-builder.c:844
+#, c-format
+msgid "Could not convert value to type '%s'"
+msgstr "No se pudo convertir el valor al tipo «%s»"
+
+#: ../libgda/gda-sql-builder.c:1312
 #, c-format
 msgid "Unknown left part target ID %u"
 msgstr "Se desconoce el ID de destino de la parte izquierda %u"
 
-#: ../libgda/gda-sql-builder.c:1256
+#: ../libgda/gda-sql-builder.c:1317
 #, c-format
 msgid "Unknown right part target ID %u"
 msgstr "Se desconoce el ID de destino de la parte derecha %u"
