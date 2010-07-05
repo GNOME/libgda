@@ -1236,6 +1236,59 @@ gda_server_operation_op_type_to_string (GdaServerOperationType type)
 	}
 }
 
+/**
+ * gda_server_operation_string_to_op_type
+ * @str: a string
+ *
+ * Performs the reverse of gda_server_operation_op_type_to_string()
+ *
+ * Returns: the #GdaServerOperationType represented by @str, or #G_MAXINT if @str is not a valid representation
+ * of a #GdaServerOperationType
+ *
+ * Since: 4.2
+ */
+GdaServerOperationType
+gda_server_operation_string_to_op_type (const gchar *str)
+{
+	GdaServerOperationType operation_type = G_MAXINT;
+	g_return_val_if_fail (str && *str, G_MAXINT);
+
+	if (! g_ascii_strcasecmp (str, "CREATE_DB"))
+		operation_type = GDA_SERVER_OPERATION_CREATE_DB;
+	else if	(! g_ascii_strcasecmp (str, "DROP_DB"))
+		operation_type = GDA_SERVER_OPERATION_DROP_DB;
+	else if (! g_ascii_strcasecmp (str, "CREATE_TABLE"))
+		operation_type = GDA_SERVER_OPERATION_CREATE_TABLE;
+	else if (! g_ascii_strcasecmp (str, "DROP_TABLE"))
+		operation_type = GDA_SERVER_OPERATION_DROP_TABLE;
+	else if (! g_ascii_strcasecmp (str, "CREATE_INDEX"))
+		operation_type = GDA_SERVER_OPERATION_CREATE_INDEX;
+	else if (! g_ascii_strcasecmp (str, "DROP_INDEX"))
+		operation_type = GDA_SERVER_OPERATION_DROP_INDEX;
+	else if (! g_ascii_strcasecmp (str, "RENAME_TABLE"))
+		operation_type = GDA_SERVER_OPERATION_RENAME_TABLE;
+	else if (! g_ascii_strcasecmp (str, "COMMENT_TABLE"))
+		operation_type = GDA_SERVER_OPERATION_COMMENT_TABLE;
+	else if (! g_ascii_strcasecmp (str, "ADD_COLUMN"))
+		operation_type = GDA_SERVER_OPERATION_ADD_COLUMN;
+	else if (! g_ascii_strcasecmp (str, "DROP_COLUMN"))
+		operation_type = GDA_SERVER_OPERATION_DROP_COLUMN;
+	else if (! g_ascii_strcasecmp (str, "COMMENT_COLUMN"))
+		operation_type = GDA_SERVER_OPERATION_COMMENT_COLUMN;
+	else if (! g_ascii_strcasecmp (str, "CREATE_VIEW"))
+		operation_type = GDA_SERVER_OPERATION_CREATE_VIEW;
+	else if (! g_ascii_strcasecmp (str, "DROP_VIEW"))
+		operation_type = GDA_SERVER_OPERATION_DROP_VIEW;
+	else if (! g_ascii_strcasecmp (str, "CREATE_USER"))
+		operation_type = GDA_SERVER_OPERATION_CREATE_USER;
+	else if (! g_ascii_strcasecmp (str, "DROP_USER"))
+		operation_type = GDA_SERVER_OPERATION_DROP_USER;
+	else if (! g_ascii_strcasecmp (str, "ALTER_USER"))
+		operation_type = GDA_SERVER_OPERATION_ALTER_USER;
+
+	return operation_type;
+}
+
 static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent);
 
 /**

@@ -127,6 +127,15 @@ Handles any DDL query in an abstract way
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_operation_string_to_op_type ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_operation_get_value_at ##### -->
 <para>
 

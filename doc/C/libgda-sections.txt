@@ -438,6 +438,7 @@ GdaServerOperation
 GdaServerOperationType
 gda_server_operation_get_op_type
 gda_server_operation_op_type_to_string
+gda_server_operation_string_to_op_type
 <SUBSECTION>
 gda_server_operation_get_value_at
 gda_server_operation_get_sql_identifier_at

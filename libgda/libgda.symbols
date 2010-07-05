@@ -519,6 +519,7 @@
 	gda_server_operation_op_type_to_string
 	gda_server_operation_save_data_to_xml
 	gda_server_operation_set_value_at
+	gda_server_operation_string_to_op_type
 	gda_server_operation_type_get_type
 	gda_server_provider_create_operation
 	gda_server_provider_create_parser

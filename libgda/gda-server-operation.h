@@ -117,6 +117,7 @@ GType                      gda_server_operation_get_type                (void) G
 GdaServerOperation        *gda_server_operation_new                     (GdaServerOperationType op_type, const gchar *xml_file);
 GdaServerOperationType     gda_server_operation_get_op_type             (GdaServerOperation *op);
 const gchar               *gda_server_operation_op_type_to_string       (GdaServerOperationType type);
+GdaServerOperationType     gda_server_operation_string_to_op_type       (const gchar *str);
 GdaServerOperationNode    *gda_server_operation_get_node_info           (GdaServerOperation *op, const gchar *path_format, ...);
 
 const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path_format, ...);
