@@ -185,7 +185,8 @@ Execute functions in a sub thread
 @wrapper: 
 @instance: 
 @sig_name: 
-@private: 
+@private_thread: 
+@private_job: 
 @callback: 
 @data: 
 @Returns: 

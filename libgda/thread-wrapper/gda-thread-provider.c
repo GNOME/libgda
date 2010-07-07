@@ -1,5 +1,5 @@
 /* GDA Thread provider
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -564,17 +564,17 @@ setup_signals (GdaConnection *cnc, ThreadConnectionData *cdata)
 {
 	gulong hid;
 	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
-					      "conn-closed", FALSE,
+					      "conn-closed", TRUE, FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_closed_cb, cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
 
 	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
-					      "error", FALSE,
+					      "error", TRUE, FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_error_cb, cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
 
 	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
-					      "transaction-status-changed", FALSE,
+					      "transaction-status-changed", TRUE, FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_transaction_status_changed_cb,
 					      cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
@@ -2088,9 +2088,9 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 
 	/* unref cdata->sub_connection in sub thread */
 	guint jid;
-	jid = gda_thread_wrapper_execute (cdata->wrapper, 
-					  (GdaThreadWrapperVoidFunc) sub_thread_unref_connection,
-					  cdata->sub_connection, NULL, NULL);
+	jid = gda_thread_wrapper_execute_void (cdata->wrapper, 
+					       (GdaThreadWrapperVoidFunc) sub_thread_unref_connection,
+					       cdata->sub_connection, NULL, NULL);
 	gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	g_object_unref (cdata->wrapper);
 
