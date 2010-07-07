@@ -1376,10 +1376,12 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	
 	if (info && !real_provider)
 		newcnc = gda_connection_open_from_dsn (real_cnc_string, real_auth_string,
-						       GDA_CONNECTION_OPTIONS_THREAD_SAFE, error);
+						       GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA, error);
 	else 
 		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string,
-							  GDA_CONNECTION_OPTIONS_THREAD_SAFE, error);
+							  GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+							  GDA_CONNECTION_OPTIONS_AUTO_META_DATA, error);
 
 	g_free (real_cnc_string);
 	g_free (real_cnc);
@@ -1775,7 +1777,7 @@ output_string (const gchar *str)
 	}
 
 	length = strlen (str);
-	if (str[length - 1] != '\n')
+	if (*str && (str[length - 1] != '\n'))
 		append_nl = TRUE;
 
 	if (main_data->output_stream)

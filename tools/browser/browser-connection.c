@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -30,6 +30,9 @@
 
 /* code inclusion */
 #include "../dict-file-name.c"
+
+#define CHECK_RESULTS_SHORT_TIMER 200
+#define CHECK_RESULTS_LONG_TIMER 2
 
 typedef struct {
 	GObject *result;
@@ -89,10 +92,21 @@ static void
 push_wrapper_job (BrowserConnection *bcnc, guint job_id, JobType job_type, const gchar *reason)
 {
 	/* setup timer */
-	if (bcnc->priv->wrapper_results_timer == 0)
-		bcnc->priv->wrapper_results_timer = g_timeout_add (200,
+	if (bcnc->priv->wrapper_results_timer == 0) {
+		bcnc->priv->long_timer = FALSE;
+		bcnc->priv->wrapper_results_timer = g_timeout_add (CHECK_RESULTS_SHORT_TIMER,
 								   (GSourceFunc) check_for_wrapper_result,
 								   bcnc);
+	}
+	else if (bcnc->priv->long_timer) {
+		/* switch to a short timer to check for results */
+		g_source_remove (bcnc->priv->wrapper_results_timer);
+		bcnc->priv->wrapper_results_timer = g_timeout_add (CHECK_RESULTS_SHORT_TIMER,
+								   (GSourceFunc) check_for_wrapper_result,
+								   bcnc);
+		bcnc->priv->long_timer = FALSE;
+		bcnc->priv->nb_no_job_waits = 0;
+	}
 
 	/* add WrapperJob structure */
 	WrapperJob *wj;
@@ -241,6 +255,8 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->wrapper = gda_thread_wrapper_new ();
 	bcnc->priv->wrapper_jobs = NULL;
 	bcnc->priv->wrapper_results_timer = 0;
+	bcnc->priv->long_timer = FALSE;
+	bcnc->priv->nb_no_job_waits = 0;
 	bcnc->priv->executed_statements = NULL;
 
 	bcnc->priv->name = g_strdup_printf (_("c%u"), index++);
@@ -249,8 +265,11 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->variables = NULL;
 	memset (&(bcnc->priv->dsn_info), 0, sizeof (GdaDsnInfo));
 	bcnc->priv->p_mstruct_mutex = g_mutex_new ();
-	bcnc->priv->p_mstruct = NULL;
+	bcnc->priv->p_mstruct_list = NULL;
+	bcnc->priv->c_mstruct = NULL;
 	bcnc->priv->mstruct = NULL;
+
+	bcnc->priv->meta_store_signal = 0;
 
 	bcnc->priv->bfav = NULL;
 
@@ -280,16 +299,58 @@ wrapper_meta_store_update (BrowserConnection *bcnc, GError **error)
 static gpointer
 wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 {
-	gboolean retval;
+	gboolean retval = TRUE;
+	GdaMetaStruct *mstruct;
 
 	g_mutex_lock (bcnc->priv->p_mstruct_mutex);
-	g_assert (bcnc->priv->p_mstruct);
-	g_object_ref (G_OBJECT (bcnc->priv->p_mstruct));
-	retval = gda_meta_struct_complement_all (bcnc->priv->p_mstruct, error);
-	g_object_unref (G_OBJECT (bcnc->priv->p_mstruct));
+	g_assert (bcnc->priv->p_mstruct_list);
+	mstruct = (GdaMetaStruct *) bcnc->priv->p_mstruct_list->data;
+	bcnc->priv->p_mstruct_list = g_slist_delete_link (bcnc->priv->p_mstruct_list,
+							  bcnc->priv->p_mstruct_list);
+	if (bcnc->priv->p_mstruct_list)
+		/* don't care about this one */
+		g_object_unref (G_OBJECT (mstruct));
+	else {
+		if (bcnc->priv->c_mstruct)
+			g_object_unref (bcnc->priv->c_mstruct);
+		bcnc->priv->c_mstruct = mstruct;
+		/*g_print ("Meta struct sync for %p\n", mstruct);*/
+		retval = gda_meta_struct_complement_all (mstruct, error);
+	}
 	g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
 
 	return GINT_TO_POINTER (retval ? 2 : 1);
+}
+
+static void
+meta_changed_cb (GdaThreadWrapper *wrapper,
+		 GdaMetaStore *store,
+		 const gchar *signame,
+		 gint n_param_values,
+		 const GValue *param_values,
+		 gpointer gda_reserved,
+		 BrowserConnection *bcnc)
+{
+	guint job_id;
+	GError *lerror = NULL;
+	GdaMetaStruct *mstruct;
+	
+	g_mutex_lock (bcnc->priv->p_mstruct_mutex);
+	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (bcnc->priv->cnc),
+				       GDA_META_STRUCT_FEATURE_ALL);
+	bcnc->priv->p_mstruct_list = g_slist_append (bcnc->priv->p_mstruct_list, mstruct);
+	g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+	job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+					     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
+					     g_object_ref (bcnc), g_object_unref, &lerror);
+	if (job_id > 0)
+		push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
+				  _("Analysing database schema"));
+	else if (lerror) {
+		browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
+				    lerror->message ? lerror->message : _("No detail"));
+		g_error_free (lerror);
+	}
 }
 
 static void
@@ -354,8 +415,11 @@ browser_connection_set_property (GObject *object,
 			else {
 				guint job_id;
 				GError *lerror = NULL;
-				
-				bcnc->priv->p_mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
+				GdaMetaStruct *mstruct;
+
+				mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
+				bcnc->priv->p_mstruct_list = g_slist_append (bcnc->priv->p_mstruct_list,
+									     mstruct);
 				job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
 								     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
 								     g_object_ref (bcnc), g_object_unref, &lerror);
@@ -369,10 +433,17 @@ browser_connection_set_property (GObject *object,
 				}
 				g_object_unref (store);
 			}
+			bcnc->priv->meta_store_signal =
+				gda_thread_wrapper_connect_raw (bcnc->priv->wrapper, store, "meta-changed",
+								FALSE, FALSE,
+								(GdaThreadWrapperCallback) meta_changed_cb,
+								bcnc);
                         break;
                 }
         }
 }
+
+
 
 static void
 browser_connection_get_property (GObject *object,
@@ -448,14 +519,22 @@ browser_connection_dispose (GObject *object)
 		if (bcnc->priv->wrapper_results_timer > 0)
 			g_source_remove (bcnc->priv->wrapper_results_timer);
 
+		if (bcnc->priv->meta_store_signal)
+			gda_thread_wrapper_disconnect (bcnc->priv->wrapper,
+						       bcnc->priv->meta_store_signal);
 		g_object_unref (bcnc->priv->wrapper);
 		g_free (bcnc->priv->name);
+		if (bcnc->priv->c_mstruct)
+			g_object_unref (bcnc->priv->c_mstruct);
 		if (bcnc->priv->mstruct)
 			g_object_unref (bcnc->priv->mstruct);
-		if (bcnc->priv->p_mstruct)
-			g_object_unref (bcnc->priv->p_mstruct);
+		if (bcnc->priv->p_mstruct_list) {
+			g_slist_foreach (bcnc->priv->p_mstruct_list, (GFunc) g_object_unref, NULL);
+			g_slist_free (bcnc->priv->p_mstruct_list);
+		}
 		if (bcnc->priv->p_mstruct_mutex)
 			g_mutex_free (bcnc->priv->p_mstruct_mutex);
+
 		if (bcnc->priv->cnc) {
 			g_signal_handlers_disconnect_by_func (bcnc->priv->cnc,
 							      G_CALLBACK (transaction_status_changed_cb),
@@ -485,9 +564,34 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 	GError *lerror = NULL;
 	gpointer exec_res = NULL;
 	WrapperJob *wj;
+	gboolean retval = TRUE; /* return FALSE to interrupt current timer */
 
-	if (!bcnc->priv->wrapper_jobs)
-		goto out;
+	if (!bcnc->priv->wrapper_jobs) {
+		gda_thread_wrapper_iterate (bcnc->priv->wrapper, FALSE);
+		if (! bcnc->priv->long_timer) {
+			if (bcnc->priv->nb_no_job_waits > 100) {
+				/* switch to a long timer to check for results */
+				bcnc->priv->wrapper_results_timer = g_timeout_add_seconds (CHECK_RESULTS_LONG_TIMER,
+											   (GSourceFunc) check_for_wrapper_result,
+											   bcnc);
+				bcnc->priv->nb_no_job_waits = 0;
+				bcnc->priv->long_timer = TRUE;
+				return FALSE;
+			}
+			else
+				bcnc->priv->nb_no_job_waits ++;
+		}
+		return TRUE;
+	}
+	else if (bcnc->priv->long_timer) {
+		/* switch to a short timer to check for results */
+		bcnc->priv->wrapper_results_timer = g_timeout_add (CHECK_RESULTS_SHORT_TIMER,
+								   (GSourceFunc) check_for_wrapper_result,
+								   bcnc);
+		retval = FALSE;
+		bcnc->priv->long_timer = FALSE;
+		bcnc->priv->nb_no_job_waits = 0;
+	}
 
 	wj = (WrapperJob*) bcnc->priv->wrapper_jobs->data;
 	exec_res = gda_thread_wrapper_fetch_result (bcnc->priv->wrapper,
@@ -501,26 +605,17 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 						    lerror && lerror->message ? lerror->message : _("No detail"));
 				g_clear_error (&lerror);
 			}
-			else {
-				guint job_id;
-				
-				g_mutex_lock (bcnc->priv->p_mstruct_mutex);
-				if (bcnc->priv->p_mstruct)
-					g_object_unref (G_OBJECT (bcnc->priv->p_mstruct));
-				bcnc->priv->p_mstruct = gda_meta_struct_new (gda_connection_get_meta_store (bcnc->priv->cnc),
-									     GDA_META_STRUCT_FEATURE_ALL);
-				g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
-				job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
-								     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
-								     g_object_ref (bcnc), g_object_unref, &lerror);
-				if (job_id > 0)
-					push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
-							  _("Analysing database schema"));
-				else if (lerror) {
-					browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
-							    lerror->message ? lerror->message : _("No detail"));
-					g_error_free (lerror);
-				}
+			else if (! bcnc->priv->meta_store_signal) {
+				GdaMetaStore *store;
+				store = gda_connection_get_meta_store (bcnc->priv->cnc);
+				meta_changed_cb (bcnc->priv->wrapper, store,
+						 NULL, 0, NULL, NULL, bcnc);
+				bcnc->priv->meta_store_signal =
+					gda_thread_wrapper_connect_raw (bcnc->priv->wrapper, store, "meta-changed",
+									FALSE, FALSE,
+									(GdaThreadWrapperCallback) meta_changed_cb,
+									bcnc);
+
 			}
 			break;
 		}
@@ -532,24 +627,27 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 			}
 			else {
 				g_mutex_lock (bcnc->priv->p_mstruct_mutex);
-				GdaMetaStruct *old_mstruct;
-				old_mstruct = bcnc->priv->mstruct;
-				bcnc->priv->mstruct = bcnc->priv->p_mstruct;
-				bcnc->priv->p_mstruct = NULL;
-				if (old_mstruct)
-					g_object_unref (old_mstruct);
+				
+				if (bcnc->priv->c_mstruct) {
+					GdaMetaStruct *old_mstruct;
+					old_mstruct = bcnc->priv->mstruct;
+					bcnc->priv->mstruct = bcnc->priv->c_mstruct;
+					bcnc->priv->c_mstruct = NULL;
+					if (old_mstruct)
+						g_object_unref (old_mstruct);
 #ifdef GDA_DEBUG_NO
-				GSList *all, *list;
-				all = gda_meta_struct_get_all_db_objects (bcnc->priv->mstruct);
-				for (list = all; list; list = list->next) {
-					GdaMetaDbObject *dbo = (GdaMetaDbObject *) list->data;
-					g_print ("DBO, Type %d: short=>[%s] schema=>[%s] full=>[%s]\n", dbo->obj_type,
-						 dbo->obj_short_name, dbo->obj_schema, dbo->obj_full_name);
-				}
-				g_slist_free (all);
+					GSList *all, *list;
+					g_print ("For GdaMetaStruct %p:\n", bcnc->priv->mstruct);
+					all = gda_meta_struct_get_all_db_objects (bcnc->priv->mstruct);
+					for (list = all; list; list = list->next) {
+						GdaMetaDbObject *dbo = (GdaMetaDbObject *) list->data;
+						g_print ("DBO, Type %d: short=>[%s] schema=>[%s] full=>[%s]\n", dbo->obj_type,
+							 dbo->obj_short_name, dbo->obj_schema, dbo->obj_full_name);
+					}
+					g_slist_free (all);
 #endif
-
-				g_signal_emit (bcnc, browser_connection_signals [META_CHANGED], 0, bcnc->priv->mstruct);
+					g_signal_emit (bcnc, browser_connection_signals [META_CHANGED], 0, bcnc->priv->mstruct);
+				}
 				g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
 			}
 			break;
@@ -581,17 +679,12 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 		pop_wrapper_job (bcnc, wj);
 	}
 
- out:
-	if (!bcnc->priv->wrapper_jobs) {
-		bcnc->priv->wrapper_results_timer = 0;
-		return FALSE;
-	}
-	else {
+	if (bcnc->priv->wrapper_jobs) {
 		wj = (WrapperJob*) bcnc->priv->wrapper_jobs->data;
 		if (exec_res)
 			g_signal_emit (bcnc, browser_connection_signals [BUSY], 0, TRUE, wj->reason);
-		return TRUE;
 	}
+	return retval;
 }
 
 /**
@@ -719,6 +812,12 @@ browser_connection_update_meta_data (BrowserConnection *bcnc)
 			/* nothing to do */
 			return;
 		}
+	}
+
+	if (bcnc->priv->meta_store_signal) {
+		gda_thread_wrapper_disconnect (bcnc->priv->wrapper,
+					       bcnc->priv->meta_store_signal);
+		bcnc->priv->meta_store_signal = 0;
 	}
 
 	guint job_id;

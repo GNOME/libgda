@@ -97,7 +97,10 @@ struct _GdaConnectionClass {
  * @GDA_CONNECTION_OPTIONS_THREAD_ISOLATED: this flag specifies that the connection to open will be used 
  *                                     by several threads at once and requests that the real connection be used
  *                                     only in a sub thread created specifically for it
- *                                    
+ * @GDA_CONNECTION_OPTIONS_AUTO_META_DATA: this flags specifies that if a #GdaMetaStore has been associated
+ *                                     to the connection, then it is kept up to date with the evolutions in the
+ *                                     database's structure. Be aware however that there are some drawbacks
+ *                                     explained below.
  *
  * Specifies some aspects of a connection when opening it.
  *
@@ -129,13 +132,22 @@ struct _GdaConnectionClass {
  * Having a specific thread and a "wrapper connection" definitely has an impact on the performances (because it involves
  * messages passing between threads for every method call), so using the
  * GDA_CONNECTION_OPTIONS_THREAD_SAFE or GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flags should be carefully considered.
+ *
+ * Note about the @GDA_CONNECTION_OPTIONS_AUTO_META_DATA flag:
+ * <itemizedlist>
+ *  <listitem><para>Every time a DDL statement is successfully executed, the associated mate data, if
+              defined, will be updated, which has a impact on performances</para></listitem>
+ *  <listitem><para>If a transaction is started and some DDL statements are executed and the transaction
+ *            is not rolled back or committed, then the meta data may end up being wrong</para></listitem>
+ * </itemizedlist>
  */
 typedef enum {
 	GDA_CONNECTION_OPTIONS_NONE = 0,
 	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
 	GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE = 1 << 1,
 	GDA_CONNECTION_OPTIONS_THREAD_SAFE = 1 << 2,
-	GDA_CONNECTION_OPTIONS_THREAD_ISOLATED = 1 << 3
+	GDA_CONNECTION_OPTIONS_THREAD_ISOLATED = 1 << 3,
+	GDA_CONNECTION_OPTIONS_AUTO_META_DATA = 1 << 4
 } GdaConnectionOptions;
 
 

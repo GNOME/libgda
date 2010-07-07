@@ -85,6 +85,9 @@ struct _GdaConnectionPrivate {
 	guint                 next_task_id; /* starts at 1 as 0 is an error */
 	GArray               *waiting_tasks; /* array of CncTask pointers to tasks to be executed */
 	GArray               *completed_tasks; /* array of CncTask pointers to tasks already executed */
+
+	/* auto meta data update */
+	GArray               *trans_meta_context; /* Array of GdaMetaContext pointers */
 };
 
 /* represents an asynchronous execution task */
@@ -129,6 +132,7 @@ static void                 gda_connection_lock      (GdaLockable *lockable);
 static gboolean             gda_connection_trylock   (GdaLockable *lockable);
 static void                 gda_connection_unlock    (GdaLockable *lockable);
 
+static void update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params);
 
 enum {
 	ERROR,
@@ -405,8 +409,11 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->next_task_id = 1;
 	cnc->priv->waiting_tasks = g_array_new (FALSE, FALSE, sizeof (gpointer));
 	cnc->priv->completed_tasks = g_array_new (FALSE, FALSE, sizeof (gpointer));
+
+	cnc->priv->trans_meta_context = NULL;
 }
 
+static void auto_update_meta_context_free (GdaMetaContext *context);
 static void prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaPStmt *prepared_stmt, GdaConnection *cnc);
 static void
 gda_connection_dispose (GObject *object)
@@ -462,6 +469,17 @@ gda_connection_dispose (GObject *object)
 			cnc_task_free (CNC_TASK (g_array_index (cnc->priv->completed_tasks, gpointer, i)));
 		g_array_free (cnc->priv->completed_tasks, TRUE);
 		cnc->priv->completed_tasks = NULL;
+	}
+
+	if (cnc->priv->trans_meta_context) {
+		gint i;
+		for (i = 0; i < cnc->priv->trans_meta_context->len; i++) {
+			GdaMetaContext *context;
+			context = g_array_index (cnc->priv->trans_meta_context, GdaMetaContext*, i);
+			auto_update_meta_context_free (context);
+		}
+		g_array_free (cnc->priv->trans_meta_context, TRUE);
+		cnc->priv->trans_meta_context = NULL;
 	}
 
 	/* chain to parent class */
@@ -1441,6 +1459,21 @@ gda_connection_close (GdaConnection *cnc)
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+static void
+add_connection_event_from_error (GdaConnection *cnc, GError **error)
+{
+	GdaConnectionEvent *event;
+	gchar *str;
+	event = gda_connection_event_new (GDA_CONNECTION_EVENT_WARNING);
+	str = g_strdup_printf (_("Error while maintaining the meta data up to date: %s"),
+			       error && *error && (*error)->message ? (*error)->message : _("No detail"));
+	gda_connection_event_set_description (event, str);
+	g_free (str);
+	if (error)
+		g_clear_error (error);
+	gda_connection_add_event (cnc, event);
+}
+
 /**
  * gda_connection_close_no_warning:
  * @cnc: a #GdaConnection object.
@@ -1464,6 +1497,26 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 		g_object_unref (cnc);
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return;
+	}
+
+	if (cnc->priv->meta_store &&
+	    cnc->priv->trans_meta_context &&
+	    gda_connection_get_transaction_status (cnc)) {
+		GdaConnection *mscnc;
+		mscnc = gda_meta_store_get_internal_connection (cnc->priv->meta_store);
+		if (cnc != mscnc) {
+			gint i;
+			for (i = 0; i < cnc->priv->trans_meta_context->len; i++) {
+				GdaMetaContext *context;
+				GError *lerror = NULL;
+				context = g_array_index (cnc->priv->trans_meta_context, GdaMetaContext*, i);
+				if (! gda_connection_update_meta_store (cnc, context, &lerror))
+					add_connection_event_from_error (cnc, &lerror);
+				auto_update_meta_context_free (context);
+			}
+			g_array_free (cnc->priv->trans_meta_context, TRUE);
+			cnc->priv->trans_meta_context = NULL;
+		}
 	}
 
 	/* get rid of prepared statements to avoid problems */
@@ -2090,6 +2143,8 @@ async_stmt_exec_cb (GdaServerProvider *provider, GdaConnection *cnc, guint task_
 				g_array_remove_index (cnc->priv->waiting_tasks, 0);
 				g_array_append_val (cnc->priv->completed_tasks, task);
 			}
+			else
+				update_meta_store_after_statement_exec (cnc, task->stmt, task->params);
 			cnc_task_unlock (task);
 		}
 	}
@@ -2195,6 +2250,8 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 			g_array_remove_index (cnc->priv->waiting_tasks, i);
 			g_array_append_val (cnc->priv->completed_tasks, task);
 		}
+		else
+			update_meta_store_after_statement_exec (cnc, task->stmt, task->params);
 		cnc_task_unlock (task);
 	}
 
@@ -2384,6 +2441,8 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 								       model_usage, types, last_inserted_row, 
 								       NULL, NULL, NULL, error);
 	g_free (types);
+	if (obj)
+		update_meta_store_after_statement_exec (cnc, stmt, params);
 	gda_connection_unlock ((GdaLockable*) cnc);
 	g_object_unref ((GObject*) cnc);
 
@@ -2661,6 +2720,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 			      "%s", _("Statement is not a selection statement"));
 		g_object_unref (model);
 		model = NULL;
+		update_meta_store_after_statement_exec (cnc, stmt, params);
 	}
 	return model;
 }
@@ -2732,6 +2792,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 			      "%s", _("Statement is not a selection statement"));
 		g_object_unref (model);
 		model = NULL;
+		update_meta_store_after_statement_exec (cnc, stmt, params);
 	}
 	return model;
 }
@@ -2809,8 +2870,10 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 				g_propagate_error (error, lerror);
 			}
 		}
-		else
-			retlist = g_slist_prepend (retlist, obj);	
+		else {
+			update_meta_store_after_statement_exec (cnc, stmt, (GdaSet*) list->data);
+			retlist = g_slist_prepend (retlist, obj);
+		}
 	}
 	g_slist_free (sets_list);
 
@@ -5281,4 +5344,200 @@ gda_connection_unlock  (GdaLockable *lockable)
 	GdaConnection *cnc = (GdaConnection *) lockable;
 	
 	gda_mutex_unlock (cnc->priv->mutex);
+}
+
+static gchar *
+get_next_word (gchar *str, gboolean for_ident, gchar **out_next)
+{
+	if (!str) {
+		*out_next = NULL;
+		return NULL;
+	}
+
+	gchar *start;
+	gchar *ptr;
+	gboolean inquotes = FALSE;
+	for (ptr = str; *ptr; ptr++) {
+		if ((*ptr == ' ') || (*ptr == '\n') || (*ptr == '\t') || (*ptr == '\r'))
+			continue;
+		break;
+	}
+	start = ptr;
+	/*g_print ("%s ([%s]) => [%s]", __FUNCTION__, str, start);*/
+	for (; *ptr; ptr++) {
+		if ((*ptr >= 'a') && (*ptr <= 'z')) {
+			if (! for_ident)
+				*ptr += 'A' - 'a';
+			continue;
+		}
+		else if ((*ptr >= 'A') && (*ptr <= 'Z'))
+			continue;
+		else if ((*ptr >= '0') && (*ptr <= '9'))
+			continue;
+		else if (*ptr == '_')
+			continue;
+		else if (for_ident) {
+			if (*ptr == '\'') {
+				if (inquotes) {
+					*ptr = '"';
+					inquotes = FALSE;
+					ptr++;
+					break;
+				}
+				else {
+					*ptr = '"';
+					inquotes = TRUE;
+				}
+				continue;
+			}
+		}
+		break;
+	}
+	if (ptr != start) {
+		if (*ptr) {
+			*ptr = 0;
+			*out_next = ptr + 1;
+		}
+		else
+			*out_next = ptr;
+	}
+	else
+		*out_next = NULL;
+	/*g_print (" -- [%s]\n", *out_next);*/
+	return start;
+}
+
+
+/*
+ * the returned context has:
+ *  - the @table_name attribute as a static string
+ *  - the @column_names[x] as a static string, not the @column_names array itself which has to be freed
+ */
+static GdaMetaContext *
+meta_data_context_from_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params)
+{
+	GdaMetaContext *context = NULL;
+	gchar *sql, *current, *next;
+	sql = gda_statement_to_sql (stmt, params, NULL);
+	if (!sql)
+		return NULL;
+
+	current = get_next_word (sql, FALSE, &next);
+	if (current && (!strcmp (current, "CREATE") || !strcmp (current, "DROP") ||
+			!strcmp (current, "ALTER"))) {
+		current = get_next_word (next, FALSE, &next);
+		if (current && (!strcmp (current, "TABLE") || !strcmp (current, "VIEW"))) {
+			gchar *tmp;
+			current = get_next_word (next, TRUE, &next);
+			/*g_print ("CONTEXT: update for table [%s]\n", current);*/
+			context = g_new0 (GdaMetaContext, 1);
+			context->table_name = "_tables";
+			context->size = 1;
+			context->column_names = g_new0 (gchar *, 1);
+			context->column_names[0] = "table_name";
+			context->column_values = g_new0 (GValue *, 1);
+			tmp = gda_sql_identifier_quote (current, cnc, cnc->priv->provider_obj,
+							TRUE,
+							cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+			g_value_take_string ((context->column_values[0] = gda_value_new (G_TYPE_STRING)),
+					     tmp);
+		}
+	}
+
+	g_free (sql);
+	return context;
+}
+
+/*
+ * update_meta_store_after_statement_exec
+ *
+ * Updates the meta store associated to @cnc if it exists and if @cnc has the
+ * GDA_CONNECTION_OPTIONS_AUTO_META_DATA flag.
+ */
+static void
+update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params)
+{
+	if (! cnc->priv->meta_store ||
+	    ! (cnc->priv->options & GDA_CONNECTION_OPTIONS_AUTO_META_DATA))
+		return;
+
+	GdaSqlStatementType type;
+	type = gda_statement_get_statement_type (stmt);
+	if (type == GDA_SQL_STATEMENT_BEGIN) {
+		/* initialize cnc->priv->trans_meta_context if meta store's connection is not @cnc */
+		GdaConnection *mscnc;
+		mscnc = gda_meta_store_get_internal_connection (cnc->priv->meta_store);
+		if (cnc != mscnc) {
+			g_assert (! cnc->priv->trans_meta_context);
+			cnc->priv->trans_meta_context = g_array_new (FALSE, FALSE, sizeof (GdaMetaContext*));
+		}
+		return;
+	}
+	else if (type == GDA_SQL_STATEMENT_ROLLBACK) {
+		/* re-run all the meta store updates started since the BEGIN */
+		GdaConnection *mscnc;
+		mscnc = gda_meta_store_get_internal_connection (cnc->priv->meta_store);
+		if (cnc != mscnc) {
+			gint i;
+			g_assert (cnc->priv->trans_meta_context);
+			for (i = 0; i < cnc->priv->trans_meta_context->len; i++) {
+				GdaMetaContext *context;
+				GError *lerror = NULL;
+				context = g_array_index (cnc->priv->trans_meta_context, GdaMetaContext*, i);
+				if (! gda_connection_update_meta_store (cnc, context, &lerror))
+					add_connection_event_from_error (cnc, &lerror);
+				auto_update_meta_context_free (context);
+			}
+			g_array_free (cnc->priv->trans_meta_context, TRUE);
+			cnc->priv->trans_meta_context = NULL;
+		}
+		return;
+	}
+	else if (type == GDA_SQL_STATEMENT_COMMIT) {
+		/* get rid of the meta store updates */
+		GdaConnection *mscnc;
+		mscnc = gda_meta_store_get_internal_connection (cnc->priv->meta_store);
+		if (cnc != mscnc) {
+			gint i;
+			g_assert (cnc->priv->trans_meta_context);
+			for (i = 0; i < cnc->priv->trans_meta_context->len; i++) {
+				GdaMetaContext *context;
+				context = g_array_index (cnc->priv->trans_meta_context, GdaMetaContext*, i);
+				auto_update_meta_context_free (context);
+			}
+			g_array_free (cnc->priv->trans_meta_context, TRUE);
+			cnc->priv->trans_meta_context = NULL;
+		}
+		return;
+	}
+	else if (type != GDA_SQL_STATEMENT_UNKNOWN)
+		return;
+
+	GdaMetaContext *context;
+	context = meta_data_context_from_statement (cnc, stmt, params);
+	if (context) {
+		GError *lerror = NULL;
+		if (! gda_connection_update_meta_store (cnc, context, &lerror))
+			add_connection_event_from_error (cnc, &lerror);
+		
+		if (cnc->priv->trans_meta_context)
+			g_array_prepend_val (cnc->priv->trans_meta_context, context);
+		else
+			auto_update_meta_context_free (context);
+	}
+}
+
+/*
+ * Free @context which must have been created by meta_data_context_from_statement()
+ */
+static void
+auto_update_meta_context_free (GdaMetaContext *context)
+{
+	gint i;
+	context->table_name = NULL; /* don't free */
+	g_free (context->column_names); /* don't free the strings in the array */
+	for (i = 0; i < context->size; i++)
+		gda_value_free (context->column_values[i]);
+	g_free (context->column_values);
+	g_free (context);
 }
