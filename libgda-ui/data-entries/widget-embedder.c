@@ -392,20 +392,10 @@ widget_embedder_expose (GtkWidget      *widget,
 				cairo_paint (cr);
 
 				if (! bin->valid) {
-					/* draw */
-					gint i;
-					cairo_set_source_rgba (cr, .5, .5, .5, .4);
-
-					width = child_area.width;
-					height = child_area.height;
-					for (i = 0; ; i++) {
-						gint x = 10 * i;
-						if (x > width + height)
-							break;
-						cairo_move_to (cr, x, 0);
-						cairo_line_to (cr, x - height, height);
-						cairo_stroke (cr);
-					}
+					cairo_set_source_rgba (cr, .8, .1, .1, .2);
+					cairo_rectangle (cr, child_area.x, child_area.y,
+							 child_area.width, child_area.height);
+					cairo_fill (cr);
 				}
 				cairo_destroy (cr);
 			}
