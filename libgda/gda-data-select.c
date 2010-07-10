@@ -1305,7 +1305,7 @@ row_selection_condition_foreach_func (GdaSqlAnyPart *part, gpointer data, GError
 	if ((op->operator_type != GDA_SQL_OPERATOR_TYPE_EQ) &&
 	    (op->operator_type != GDA_SQL_OPERATOR_TYPE_AND)) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-			      "%s", _("Invalid unique row condition (ony equal operators are allowed)"));
+			      "%s", _("Invalid unique row condition (only equal operators are allowed)"));
 		return FALSE;
 	}
 
