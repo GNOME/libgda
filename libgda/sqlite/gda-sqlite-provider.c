@@ -2236,7 +2236,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 
 	if (cstr) {
 		GdaConnectionEvent *event;
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (event, cstr);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", cstr);
@@ -2244,7 +2244,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 	}
 	if (lerror) {
 		GdaConnectionEvent *event;
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (event, lerror->message ? lerror->message : _("No detail"));
 		g_propagate_error (error, lerror);
 		return event;
@@ -2345,7 +2345,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		const char *errmsg;
 
 		errmsg = _("Empty statement");
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (event, errmsg);
 		gda_connection_add_event (cnc, event);
 		gda_connection_del_prepared_statement (cnc, stmt);
@@ -2363,7 +2363,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		const char *errmsg;
 
 		errmsg = SQLITE3_CALL (sqlite3_errmsg) (cdata->connection);
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (event, errmsg);
 		gda_connection_add_event (cnc, event);
 		gda_connection_del_prepared_statement (cnc, stmt);
@@ -2385,7 +2385,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		GdaHolder *h = NULL;		
 
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -2405,7 +2405,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2424,7 +2424,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2486,7 +2486,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				str = _("BLOB is too big");
 
 			if (str) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
@@ -2497,7 +2497,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			GError *lerror = NULL;
 			pb = make_pending_blob (stmt, h, &lerror);
 			if (!pb) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, 
 				   lerror && lerror->message ? lerror->message : _("No detail"));
 								      
@@ -2509,7 +2509,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 			if (SQLITE3_CALL (sqlite3_bind_zeroblob) (ps->sqlite_stmt, i, (int) blob_len) !=
 			    SQLITE_OK) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, 
 				   lerror && lerror->message ? lerror->message : _("No detail"));
 								      
@@ -2567,7 +2567,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			gchar *str;
 			str = g_strdup_printf (_("Non handled data type '%s'"), 
 					       g_type_name (G_VALUE_TYPE (value)));
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, str);
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2585,7 +2585,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	}
 	
 	/* add a connection event */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 	
@@ -2623,7 +2623,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 if (status != SQLITE_DONE) {
                         if (SQLITE3_CALL (sqlite3_errcode) (handle) != SQLITE_OK) {
 				const char *errmsg = SQLITE3_CALL (sqlite3_errmsg) (handle);
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
                                 gda_connection_event_set_description (event, errmsg);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, "%s", errmsg);
@@ -2691,7 +2691,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 
 			if (str) {
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
                                 gda_connection_event_set_description (event, str);
                                 g_free (str);
                                 gda_connection_add_event (cnc, event);
