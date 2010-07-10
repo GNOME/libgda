@@ -2088,9 +2088,9 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 
 	/* unref cdata->sub_connection in sub thread */
 	guint jid;
-	jid = gda_thread_wrapper_execute_void (cdata->wrapper, 
-					       (GdaThreadWrapperVoidFunc) sub_thread_unref_connection,
-					       cdata->sub_connection, NULL, NULL);
+	jid = gda_thread_wrapper_execute (cdata->wrapper, 
+					  (GdaThreadWrapperFunc) sub_thread_unref_connection,
+					  cdata->sub_connection, NULL, NULL);
 	gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	g_object_unref (cdata->wrapper);
 
