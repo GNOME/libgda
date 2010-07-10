@@ -2026,11 +2026,14 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "rowid");
 		expr->value = value;
 		cond->operands = g_slist_append (NULL, expr);
-		gchar *str;
-		str = g_strdup_printf ("%lld", last_id);
+
+		GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
+		pspec->name = g_strdup ("lid");
+		pspec->g_type = G_TYPE_INT64;
+		pspec->nullok = TRUE;
+		pspec->is_param = TRUE;
 		expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
-		g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);
-		expr->value = value;
+		expr->param_spec = pspec;
 		cond->operands = g_slist_append (cond->operands, expr);
 		
 		gda_sql_statement_select_take_where_cond (sql_statement, where);
@@ -2045,14 +2048,30 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 		}
 		statement = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_statement, NULL);
 		gda_sql_statement_free (sql_statement);
+
+		GdaSet *params;
+		if (! gda_statement_get_parameters (statement, &params, &lerror)) {
+			g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
+				   lerror && lerror->message ? lerror->message : _("No detail"));
+			if (lerror)
+				g_error_free (lerror);
+			g_object_unref (statement);
+			return NULL;
+		}
+
 		g_object_set_data_full ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID, statement, g_object_unref);
+		g_object_set_data_full ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID "P", params, g_object_unref);
 		g_signal_connect (stmt, "reset",
 				  G_CALLBACK (lir_stmt_reset_cb), NULL);
 	}
 
 	/* execute SELECT statement */
 	GdaDataModel *model;
-        model = gda_connection_statement_execute_select (cnc, statement, NULL, &lerror);
+	GdaSet *params;
+	params = g_object_get_data ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID "P");
+	g_assert (params);
+	g_assert (gda_set_set_holder_value (params, NULL, "lid", last_id));
+        model = gda_connection_statement_execute_select (cnc, statement, params, &lerror);
         if (!model) {
                 g_warning (_("Can't execute SELECT statement to get last inserted row: %s"),
 			   lerror && lerror->message ? lerror->message : _("No detail"));
