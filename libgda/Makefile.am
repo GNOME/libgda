@@ -165,6 +165,7 @@ libgda_sources =  \
 	gda-marshal.c \
 	gda-meta-store-extra.h \
 	gda-meta-struct-private.h \
+	gda-statement-priv.h \
 	global.h \
 	md5.h \
 	md5c.c \

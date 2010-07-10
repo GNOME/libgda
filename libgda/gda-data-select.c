@@ -37,6 +37,7 @@
 #include <libgda/gda-connection.h>
 #include <libgda/gda-util.h>
 #include <sql-parser/gda-sql-parser.h>
+#include <gda-statement-priv.h>
 
 #define CLASS(x) (GDA_DATA_SELECT_CLASS (G_OBJECT_GET_CLASS (x)))
 
@@ -1480,7 +1481,7 @@ gda_data_select_compute_row_selection_condition (GdaDataSelect *model, GError **
 	GdaSqlExpr *expr;
 	gboolean retval = FALSE;
 	GdaStatement *stmt;
-	GdaSqlStatement *sqlst = NULL;
+	const GdaSqlStatement *sqlst = NULL;
 	GdaSqlStatementSelect *select;
 	GdaSqlSelectTarget *target;
 	GdaMetaStruct *mstruct = NULL;
@@ -1500,7 +1501,7 @@ gda_data_select_compute_row_selection_condition (GdaDataSelect *model, GError **
 		return FALSE;
 	}
 
-	g_object_get (G_OBJECT (stmt), "structure", &sqlst, NULL);
+	sqlst = _gda_statement_get_internal_struct (stmt);
 	g_assert (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT);
 	select = (GdaSqlStatementSelect*) sqlst->contents;
 	if (!select->from || ! select->from->targets || ! select->from->targets->data) {
@@ -1529,8 +1530,6 @@ gda_data_select_compute_row_selection_condition (GdaDataSelect *model, GError **
 	retval = gda_data_select_set_row_selection_condition (model, expr, error);
 
  out:
-	if (sqlst)
-		gda_sql_statement_free (sqlst);
 	if (mstruct)
 		g_object_unref (mstruct);
 	if (nvalue)

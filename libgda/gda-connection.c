@@ -47,6 +47,7 @@
 #include <libgda/gda-lockable.h>
 #include <libgda/thread-wrapper/gda-thread-provider.h>
 #include <libgda/gda-repetitive-statement.h>
+#include <gda-statement-priv.h>
 
 #include <glib/gstdio.h>
 #include <fcntl.h>
@@ -5030,12 +5031,10 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 void 
 gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, GdaConnectionEvent *error)
 {
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-
 	if (!error || (error && (gda_connection_event_get_event_type (error) != GDA_CONNECTION_EVENT_ERROR))) {
-		GdaSqlStatement *sqlst;
+		const GdaSqlStatement *sqlst;
 		GdaSqlStatementTransaction *trans;
-		g_object_get (G_OBJECT (stmt), "structure", &sqlst, NULL);
+		sqlst = _gda_statement_get_internal_struct (stmt);
 		trans = (GdaSqlStatementTransaction*) sqlst->contents; /* warning: this may be inaccurate if stmt_type is not
 									  a transaction type, but the compiler does not care */
 
@@ -5093,7 +5092,6 @@ gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *st
 			break;
 		}
 		}
-		gda_sql_statement_free (sqlst);
 	}
 }
 

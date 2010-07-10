@@ -136,6 +136,7 @@ GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *holder);
 
 /* private */
 gboolean      _gda_set_validate                (GdaSet *set, GError **error);
+GdaSet *      _gda_set_new_read_only           (GSList *holders);
 
 
 G_END_DECLS

@@ -192,6 +192,11 @@ gda_statement_new (void)
 	return GDA_STATEMENT (obj);
 }
 
+const GdaSqlStatement *
+_gda_statement_get_internal_struct (GdaStatement *stmt)
+{
+	return stmt->priv->internal_struct;
+}
 
 /**
  * gda_statement_copy:
