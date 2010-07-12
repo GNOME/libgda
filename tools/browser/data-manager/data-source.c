@@ -340,7 +340,9 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 {
 	GdaMetaStruct *mstruct;
 	GdaMetaDbObject *dbo;
-	GValue *vname;
+	GValue *vname[3] = {NULL, NULL, NULL};
+	gchar **split;
+	gint len;
 
 	mstruct = browser_connection_get_meta_struct (source->priv->bcnc);
 	if (! mstruct) {
@@ -349,9 +351,24 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 		return NULL;
 	}
 
-	g_value_set_string ((vname = gda_value_new (G_TYPE_STRING)), table_name);
-	dbo = gda_meta_struct_get_db_object (mstruct, NULL, NULL, vname);
-	gda_value_free (vname);
+	split = gda_sql_identifier_split (table_name);
+	if (! split) {
+		g_set_error (error, 0, 0,
+			     _("Malformed table name \"%s\""), table_name);
+		return NULL;
+	}
+	len = g_strv_length (split);
+	g_value_set_string ((vname[2] = gda_value_new (G_TYPE_STRING)), split[len - 1]);
+	if (len > 1)
+		g_value_set_string ((vname[1] = gda_value_new (G_TYPE_STRING)), split[len -2]);
+	if (len > 2)
+		g_value_set_string ((vname[0] = gda_value_new (G_TYPE_STRING)), split[len - 3]);
+
+	dbo = gda_meta_struct_get_db_object (mstruct, vname[0], vname[1], vname[2]);
+	if (vname[0]) gda_value_free (vname[0]);
+	if (vname[1]) gda_value_free (vname[1]);
+	if (vname[2]) gda_value_free (vname[2]);
+
 	if (! dbo) {
 		g_set_error (error, 0, 0,
 			     _("Could not find the \"%s\" table"), table_name);
