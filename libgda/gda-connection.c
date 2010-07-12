@@ -5433,7 +5433,7 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	gda_connection_lock ((GdaLockable*) cnc);
+	g_mutex_lock (cnc->priv->object_mutex);
 	if (!cnc->priv->meta_store) {
 		ThreadConnectionData *cdata = NULL;
 		if (cnc->priv->is_thread_wrapper) {
@@ -5453,7 +5453,7 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 		}
 	}
 	store = cnc->priv->meta_store;
-	gda_connection_unlock ((GdaLockable*) cnc);
+	g_mutex_unlock (cnc->priv->object_mutex);
 	
 	return store;
 }
