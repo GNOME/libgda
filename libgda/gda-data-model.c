@@ -1033,8 +1033,6 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 					g_warning (_("The '%s' parameter must hold a string value, ignored."), "NAME");
 			}
 		}
-
-		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 		
 		xml_node = gda_data_model_to_xml_node (model, cols, nb_cols, rows, nb_rows, name);
 		xml_doc = xmlNewDoc ((xmlChar*)"1.0");
@@ -1050,10 +1048,12 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 	}
 
 	case GDA_DATA_MODEL_IO_TEXT_SEPARATED: {
+		GString *retstring;
 		gchar sep = ',';
 		gchar quote = '"';
 		gboolean field_quote = TRUE;
 
+		retstring = g_string_new ("");
 		if (options) {
 			GdaHolder *holder;
 
@@ -1094,25 +1094,68 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 				else 
 					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "FIELD_QUOTE");
 			}
-		}
 
-		if (cols)
-			return export_to_text_separated (model, cols, nb_cols, rows, nb_rows, sep, quote, field_quote);
+			holder = gda_set_get_holder (options, "FIELDS_NAME");
+			if (holder) {
+				const GValue *value;
+				value = gda_holder_get_value (holder);
+				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)) {
+					if (g_value_get_boolean (value)) {
+						gint col;
+						gint *rcols;
+						gint rnb_cols;
+						
+						if (cols) {
+							rcols = (gint *)cols;
+							rnb_cols = nb_cols;
+						}
+						else {
+							gint i;
+							
+							rnb_cols = gda_data_model_get_n_columns (model);
+							rcols = g_new (gint, rnb_cols);
+							for (i = 0; i < rnb_cols; i++)
+								rcols[i] = i;
+						}
+						
+						for (col = 0; col < rnb_cols; col++) {
+							if (col)
+								g_string_append_c (retstring, sep);
+							g_string_append_c (retstring, quote);
+							g_string_append (retstring,
+									 gda_data_model_get_column_name (model, rcols[col]));
+							g_string_append_c (retstring, quote);
+						}
+						g_string_append_c (retstring, '\n');
+					}
+				}
+				else
+					g_warning (_("The '%s' parameter must hold a boolean value, ignored."),
+						   "FIELDS_NAME");
+			}
+		}
+		
+		if (cols) {
+			gchar *tmp;
+			tmp = export_to_text_separated (model, cols, nb_cols, rows,
+							nb_rows, sep, quote, field_quote);
+			g_string_append (retstring, tmp);
+			g_free (tmp);
+		}
 		else {
-			gchar *retval;
 			gint *rcols, rnb_cols, i;
-			
-			g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-			
+			gchar *tmp;
 			rnb_cols = gda_data_model_get_n_columns (model);
 			rcols = g_new (gint, rnb_cols);
 			for (i = 0; i < rnb_cols; i++)
 				rcols[i] = i;
-			retval = export_to_text_separated (model, rcols, rnb_cols, rows, nb_rows, sep, quote, field_quote);
-			g_free (rcols);
-			
-			return retval;
+			tmp = export_to_text_separated (model, rcols, rnb_cols, rows, nb_rows,
+							sep, quote, field_quote);
+			g_string_append (retstring, tmp);
+			g_free (tmp);
+			g_free (rcols);			
 		}
+		return g_string_free (retstring, FALSE);
 	}
 
 	default:
@@ -1144,6 +1187,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  *   <listitem><para>"FIELD_QUOTE": a boolean value which can be set to FALSE if no quote around the individual fields 
  *             is requeted, in case of CSV export</para></listitem>
  *   <listitem><para>"NAME": a string value used to name the exported data if the export format is XML</para></listitem>
+ *   <listitem><para>"FIELDS_NAME": a boolean value which, if set to %TRUE and in case of a CSV export, will add a first line with the name each exported field</para></listitem>
  *   <listitem><para>"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.
  *             </para></listitem>
  * </itemizedlist>
@@ -2021,7 +2065,6 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	gint i, j;
 	const GValue *value;
 
-	gint offset = 0;
 	gint col_offset = dump_rows ? 1 : 0;
 	GdaDataModel *ramodel = NULL;
 
