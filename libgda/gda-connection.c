@@ -1102,8 +1102,8 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 
 	g_return_val_if_fail (cnc_string && *cnc_string, NULL);
 
-	if (((options & GDA_CONNECTION_OPTIONS_THREAD_SAFE) || (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE)) &&
-		!g_thread_supported ()) {
+	if (options & GDA_CONNECTION_OPTIONS_THREAD_SAFE &&
+	    !g_thread_supported ()) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR,
 			      "%s", _("Multi threading is not supported or enabled"));
 		return NULL;
@@ -1380,6 +1380,12 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return FALSE;
 	}
+
+	/* if there is a limiting thread but it's not yet set, then initialize it to the current
+	 * thread */
+	if (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread ==
+	    GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD)
+		PROV_CLASS (cnc->priv->provider_obj)->limiting_thread = g_thread_self ();
 
 	if (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread &&
 	    (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread != g_thread_self ())) {

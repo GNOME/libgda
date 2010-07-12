@@ -222,6 +222,7 @@ typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, Gda
 typedef void (*GdaServerProviderExecCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
 					       GObject *result_obj, const GError *error, gpointer data);
 
+#define GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD ((gpointer)0x1)
 struct _GdaServerProviderClass {
 	GObjectClass parent_class;
 

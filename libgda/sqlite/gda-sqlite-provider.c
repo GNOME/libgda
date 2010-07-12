@@ -439,7 +439,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	if (! SQLITE3_CALL (sqlite3_threadsafe) ()) {
 		gda_log_message ("SQLite was not compiled with the SQLITE_THREADSAFE flag, "
 				 "only one thread can access the provider");
-		provider_class->limiting_thread = g_thread_self ();
+		provider_class->limiting_thread = GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD;
 	}
 	else
 		provider_class->limiting_thread = NULL;
