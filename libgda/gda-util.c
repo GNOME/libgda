@@ -1598,7 +1598,7 @@ concat_ident (const char *prefix, const gchar *ident)
  *
  * For example the <![CDATA["test.\"ATable\""]]> string will result in the array: <![CDATA[{"test", "\"ATable\"", NULL}]]>
  *
- * Returns: a new array of strings, or NULL (use g_strfreev() to free the returned array)
+ * Returns: a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)
  */
 gchar **
 gda_sql_identifier_split (const gchar *id)
