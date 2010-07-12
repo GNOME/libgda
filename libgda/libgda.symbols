@@ -153,6 +153,7 @@
 	gda_connection_open_sqlite
 	gda_connection_options_get_type
 	gda_connection_perform_operation
+	gda_connection_point_available_event
 	gda_connection_quote_sql_identifier
 	gda_connection_repetitive_statement_execute
 	gda_connection_rollback_savepoint

@@ -133,6 +133,11 @@ A connection to a database
 
 </para>
 
+<!-- ##### ARG GdaConnection:events-history-size ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaConnection:is-wrapper ##### -->
 <para>
 

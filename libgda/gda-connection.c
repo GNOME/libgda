@@ -54,6 +54,9 @@
 #include <unistd.h>
 
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
+
+/* number of GdaConnectionEvent kept by each connection. Should be enough to avoid losing any
+ * event, considering that the events are reseted after each statement execution */
 #define EVENTS_ARRAY_SIZE 5
 
 struct _GdaConnectionPrivate {
@@ -68,6 +71,7 @@ struct _GdaConnectionPrivate {
 
 	GdaMetaStore         *meta_store;
 
+	gboolean              auto_clear_events; /* TRUE if events_list is cleared before any statement execution */
 	GdaConnectionEvent  **events_array; /* circular array */
 	gint                  events_array_size;
 	gboolean              events_array_full;
@@ -138,6 +142,7 @@ static gboolean             gda_connection_trylock   (GdaLockable *lockable);
 static void                 gda_connection_unlock    (GdaLockable *lockable);
 
 static void update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params);
+static void change_events_array_max_size (GdaConnection *cnc, gint size);
 
 enum {
 	ERROR,
@@ -163,7 +168,8 @@ enum
 	PROP_META_STORE,
 	PROP_THREAD_OWNER,
 	PROP_IS_THREAD_WRAPPER,
-	PROP_MONITOR_WRAPPED_IN_MAINLOOP
+	PROP_MONITOR_WRAPPED_IN_MAINLOOP,
+	PROP_EVENTS_HISTORY_SIZE
 };
 
 static GObjectClass *parent_class = NULL;
@@ -352,6 +358,20 @@ gda_connection_class_init (GdaConnectionClass *klass)
 							       _("Make the connection set up a monitoring function in the mainloop to monitor the wrapped connection"),
 							       FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+
+	/**
+	 * GdaConnection:events-history-size:
+	 *
+	 * Defines the number of #GdaConnectionEvent objects kept in memory which can
+	 * be fetched using gda_connection_get_events().
+	 *
+	 * Since: 4.2
+	 */
+	g_object_class_install_property (object_class, PROP_EVENTS_HISTORY_SIZE,
+					 g_param_spec_int ("events-history-size", NULL,
+							   _(""), EVENTS_ARRAY_SIZE, G_MAXINT,
+							   EVENTS_ARRAY_SIZE,
+							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
 	object_class->dispose = gda_connection_dispose;
 	object_class->finalize = gda_connection_finalize;
@@ -403,6 +423,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->cnc_string = NULL;
 	cnc->priv->auth_string = NULL;
 	cnc->priv->is_open = FALSE;
+	cnc->priv->auto_clear_events = TRUE;
 	cnc->priv->events_array_size = EVENTS_ARRAY_SIZE;
 	cnc->priv->events_array = g_new0 (GdaConnectionEvent*, EVENTS_ARRAY_SIZE);
 	cnc->priv->events_array_full = FALSE;
@@ -447,6 +468,7 @@ gda_connection_dispose (GObject *object)
 	}
 
 	if (cnc->priv->events_list) {
+		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
 		g_list_free (cnc->priv->events_list);
 		cnc->priv->events_list = NULL;
 	}
@@ -754,6 +776,11 @@ gda_connection_set_property (GObject *object,
 				}
 			}
 			break;
+		case PROP_EVENTS_HISTORY_SIZE:
+			gda_connection_lock ((GdaLockable*) cnc);
+			change_events_array_max_size (cnc, g_value_get_int (value));
+			gda_connection_unlock ((GdaLockable*) cnc);
+			break;
                 }
         }	
 }
@@ -793,6 +820,9 @@ gda_connection_get_property (GObject *object,
 		case PROP_MONITOR_WRAPPED_IN_MAINLOOP:
 			g_value_set_boolean (value, cnc->priv->is_thread_wrapper && (cnc->priv->monitor_id > 0) ?
 					     TRUE : FALSE);
+			break;
+		case PROP_EVENTS_HISTORY_SIZE:
+			g_value_set_int (value, cnc->priv->events_array_size);
 			break;
                 }
         }	
@@ -1699,25 +1729,31 @@ gda_connection_get_authentication (GdaConnection *cnc)
  * @type: a #GdaConnectionEventType
  *
  * Use this method to get a pointer to the next available connection event which can then be customized
- * and taken into account using gda_connection_add_event().
+ * and taken into account using gda_connection_add_event(). This method is a drop-in replacament
+ * for gda_connection_event_new() which improves performances by reusing as much as possible
+ * #GdaConnectionEvent objects. Newly written database providers should use this method.
  *
- * Returns: (transfer none): a pointer to the next available connection event, or %NULL if event should
+ * Returns: (transfer full): a pointer to the next available connection event, or %NULL if event should
  * be ignored
+ *
+ * Since: 4.2
  */
 GdaConnectionEvent *
 gda_connection_point_available_event (GdaConnection *cnc, GdaConnectionEventType type)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
+	/* ownership is transfered to the caller ! */
+
 	GdaConnectionEvent *eev;
 	eev = cnc->priv->events_array [cnc->priv->events_array_next];
-	if (!eev) {
+	if (!eev)
 		eev = gda_connection_event_new (type);
-		cnc->priv->events_array [cnc->priv->events_array_next] = eev;
-	}
-	else
+	else {
 		gda_connection_event_set_event_type (eev, type);
-		
+		cnc->priv->events_array [cnc->priv->events_array_next] = NULL;
+	}
+
 	return eev;
 }
 
@@ -1765,11 +1801,12 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 
 	/* clear external list of events */
 	if (cnc->priv->events_list) {
+		g_list_foreach (cnc->priv->events_list, (GFunc) g_object_unref, NULL);
 		g_list_free (cnc->priv->events_list);
 		cnc->priv->events_list = NULL;
 	}
 
-	/* add event */
+	/* add event, ownership is transfered to @cnc */
 	GdaConnectionEvent *eev;
 	eev = cnc->priv->events_array [cnc->priv->events_array_next];
 	if (eev != event) {
@@ -1857,6 +1894,15 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	return error;
 }
 
+static void
+_clear_connection_events (GdaConnection *locked_cnc)
+{
+	if (locked_cnc->priv->auto_clear_events) {
+		locked_cnc->priv->events_array_full = FALSE;
+		locked_cnc->priv->events_array_next = 0;
+	}
+}
+
 /**
  * gda_connection_clear_events_list:
  * @cnc: a #GdaConnection object.
@@ -1869,8 +1915,7 @@ gda_connection_clear_events_list (GdaConnection *cnc)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	gda_connection_lock ((GdaLockable*) cnc);
-	cnc->priv->events_array_full = FALSE;
-	cnc->priv->events_array_next = 0;
+	_clear_connection_events (cnc);
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
@@ -1918,7 +1963,9 @@ gda_connection_perform_operation (GdaConnection *cnc, GdaServerOperation *op, GE
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 
+	cnc->priv->auto_clear_events = FALSE;
 	retval = gda_server_provider_perform_operation (cnc->priv->provider_obj, cnc, op, error);
+	cnc->priv->auto_clear_events = TRUE;
 	return retval;
 }
 
@@ -1940,6 +1987,37 @@ gda_connection_create_parser (GdaConnection *cnc)
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 
 	return gda_server_provider_create_parser (cnc->priv->provider_obj, cnc);
+}
+
+/*
+ * Also resets the events list (as perceived when calling gda_connection_get_events()
+ */
+static void
+change_events_array_max_size (GdaConnection *cnc, gint size)
+{
+	size ++; /* add 1 to compensate the "lost" slot when rotating the events array */
+	if (size == cnc->priv->events_array_size)
+		return;
+
+	if (size > cnc->priv->events_array_size) {
+		gint i;
+		cnc->priv->events_array = g_renew (GdaConnectionEvent*, cnc->priv->events_array,
+						   size);
+		for (i = cnc->priv->events_array_size; i < size; i++)
+			cnc->priv->events_array [i] = NULL;
+	}
+	else if (size >= EVENTS_ARRAY_SIZE) {
+		gint i;
+		for (i = size; i < cnc->priv->events_array_size; i++) {
+			if (cnc->priv->events_array [i])
+				g_object_unref (cnc->priv->events_array [i]);
+		}
+		cnc->priv->events_array = g_renew (GdaConnectionEvent*, cnc->priv->events_array,
+						   size);
+	}
+	cnc->priv->events_array_size = size;
+	cnc->priv->events_array_full = FALSE;
+	cnc->priv->events_array_next = 0;
 }
 
 /**
@@ -1969,7 +2047,14 @@ gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *param
 	g_return_val_if_fail (GDA_IS_BATCH (batch), NULL);
 
 	gda_connection_lock ((GdaLockable*) cnc);
-	for (stmt_list = (GSList*) gda_batch_get_statements (batch); stmt_list; stmt_list = stmt_list->next) {
+	cnc->priv->auto_clear_events = FALSE;
+
+	/* increase the size of cnc->priv->events_array to be able to store all the
+	 * connection events */
+	stmt_list = (GSList*) gda_batch_get_statements (batch);
+	change_events_array_max_size (cnc, g_slist_length (stmt_list) * 2);
+
+	for (; stmt_list; stmt_list = stmt_list->next) {
 		GObject *obj;
 		obj = gda_connection_statement_execute (cnc, GDA_STATEMENT (stmt_list->data), params,
 							model_usage, NULL, error);
@@ -1977,6 +2062,7 @@ gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *param
 			break;
 		retlist = g_slist_prepend (retlist, obj);
 	}
+	cnc->priv->auto_clear_events = TRUE;
 	gda_connection_unlock ((GdaLockable*) cnc);
 	
 	return g_slist_reverse (retlist);
@@ -2488,6 +2574,9 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 
 	g_object_ref ((GObject*) cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
+
+	_clear_connection_events (cnc);
+
 	if (last_inserted_row) 
 		*last_inserted_row = NULL;
 
@@ -2759,6 +2848,8 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 
 	g_object_ref ((GObject*) cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
+
+	_clear_connection_events (cnc);
 
 	if (!cnc->priv->is_open) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
@@ -4676,6 +4767,9 @@ gda_connection_get_events (GdaConnection *cnc)
 	if (cnc->priv->events_list)
 		return cnc->priv->events_list;
 	
+
+	/* a new list of the GdaConnectionEvent objects is created, the
+	 * ownership of each GdaConnectionEvent object is transfered to the list */
 	GList *list = NULL;
 	if (cnc->priv->events_array_full) {
 		gint i;

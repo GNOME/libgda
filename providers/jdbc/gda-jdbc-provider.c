@@ -1,5 +1,5 @@
 /* GDA Jdbc provider
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -1292,7 +1292,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -1312,7 +1312,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1324,7 +1324,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__setParameterValue,
 								     ps->pstmt_obj, NULL, NULL, &lerror, i, 0);
 				if (!jexec_res) {
-					event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+					event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 					if (lerror)
 						gda_connection_event_set_description (event,
 						lerror->message ? lerror->message : _("No detail"));
@@ -1341,7 +1341,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1353,7 +1353,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__setParameterValue,
 								     ps->pstmt_obj, NULL, NULL, &lerror, i, 0);
 				if (!jexec_res) {
-					event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+					event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 					if (lerror)
 						gda_connection_event_set_description (event,
 						lerror->message ? lerror->message : _("No detail"));
@@ -1372,7 +1372,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 						     ps->pstmt_obj, NULL, NULL, &lerror, i, 
 						     (G_VALUE_TYPE (value) == GDA_TYPE_NULL) ? (glong) 0 : (glong) value);
 		if (!jexec_res) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			if (lerror)
 				gda_connection_event_set_description (event,
 								      lerror->message ? lerror->message : _("No detail"));
@@ -1391,7 +1391,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	}
 	
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 
@@ -1487,7 +1487,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		gchar *str;
 		GdaConnectionEvent *event;
 
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
 		str = g_strdup (PQcmdStatus (pg_res));
 		gda_connection_event_set_description (event, str);
 		g_free (str);

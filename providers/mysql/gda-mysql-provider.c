@@ -1,5 +1,5 @@
 /* GDA Mysql provider
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
@@ -539,7 +539,7 @@ gda_mysql_real_query_wrap (GdaConnection *cnc, MYSQL *mysql, const char *stmt_st
 {
 	GdaConnectionEvent *event;
 	
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
 	gda_connection_event_set_description (event, stmt_str);
 	gda_connection_add_event (cnc, event);
 	
@@ -615,7 +615,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 					     (compress && ((*compress == 't') || (*compress == 'T'))) ? TRUE : FALSE,
 					     &error);
 	if (!mysql) {
-		GdaConnectionEvent *event_error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		GdaConnectionEvent *event_error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_sqlstate (event_error, _("Unknown"));
 		gda_connection_event_set_description (event_error,
 						      error && error->message ? error->message :
@@ -2052,7 +2052,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -2072,7 +2072,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (!allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2092,7 +2092,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (!allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2225,7 +2225,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 					str = _("BLOB is too big");
 				
 				if (str) {
-					event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+					event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 					gda_connection_event_set_description (event, str);
 					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 						     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
@@ -2261,7 +2261,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 									     G_VALUE_TYPE (value));
 			if (data_handler == NULL) {
 				/* there is an error here */
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
@@ -2310,7 +2310,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	}
 
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 
@@ -2385,7 +2385,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (affected_rows >= 0) {
 				GdaConnectionEvent *event;
                                 gchar *str;
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
                                 str = g_strdup_printf ("%llu", affected_rows);
                                 gda_connection_event_set_description (event, str);
                                 g_free (str);

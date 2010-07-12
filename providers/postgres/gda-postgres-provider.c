@@ -1,5 +1,5 @@
 /* GDA postgres provider
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -381,20 +381,24 @@ get_pg_version_float (const gchar *str)
 }
 
 static void
-pq_notice_processor (PostgresConnectionData *cdata, const char *message)
+pq_notice_processor (GdaConnection *cnc, const char *message)
 {
         GdaConnectionEvent *error;
+	PostgresConnectionData *cdata;
 
         if (!message)
                 return;
 
-        error = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return;
+        error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
         gda_connection_event_set_description (error, message);
         gda_connection_event_set_code (error, -1);
-        gda_connection_event_set_source (error, gda_connection_get_provider_name (cdata->cnc));
+        gda_connection_event_set_source (error, gda_connection_get_provider_name (cnc));
         gda_connection_event_set_sqlstate (error, "-1");
 
-        gda_connection_add_event (cdata->cnc, error);
+        gda_connection_add_event (cnc, error);
 }
 
 /*
@@ -547,7 +551,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_postgres_free_cnc_data);
 
 	/* handle LibPQ's notices */
-        PQsetNoticeProcessor (pconn, (PQnoticeProcessor) pq_notice_processor, cdata);
+        PQsetNoticeProcessor (pconn, (PQnoticeProcessor) pq_notice_processor, cnc);
 
 	/* handle the reuseable part */
 	GdaProviderReuseableOperations *ops;
@@ -1866,7 +1870,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		cursor_sql = g_strdup_printf ("DECLARE %s SCROLL CURSOR WITH HOLD FOR %s", cursor_name, sql);
 		g_free (sql);
 		pg_res = _gda_postgres_PQexec_wrap (cnc, cdata->pconn, cursor_sql);
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
 		gda_connection_event_set_description (event, cursor_sql);
 		gda_connection_add_event (cnc, event);
 		g_free (cursor_sql);
@@ -1932,7 +1936,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -1952,7 +1956,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1970,7 +1974,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1996,7 +2000,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 			/* Postgres requires that a transaction be started for LOB operations */
 			if (!check_transaction_started (cnc, &transaction_started)) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, _("Cannot start transaction"));
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
 					     "%s", _("Cannot start transaction"));
@@ -2054,7 +2058,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	}
 
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 
@@ -2102,7 +2106,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
                                 gchar *str;
                                 GdaConnectionEvent *event;
 
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
                                 str = g_strdup (PQcmdStatus (pg_res));
                                 gda_connection_event_set_description (event, str);
                                 g_free (str);

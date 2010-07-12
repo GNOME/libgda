@@ -1,5 +1,5 @@
 /* GDA provider
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -1463,7 +1463,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 		
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -1483,7 +1483,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1503,7 +1503,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1536,7 +1536,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	}
 	
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 
@@ -1593,7 +1593,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	}
 
 	/* required: help @cnc keep some stats */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
 	gda_connection_event_set_description (event, "Command OK");
 	gda_connection_add_event (cnc, event);
 	gda_connection_internal_statement_executed (cnc, stmt, params, event);

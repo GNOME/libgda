@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -740,7 +740,7 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 				     cdata->hsession,
 				     OCI_DEFAULT))) {
                 gda_connection_add_event (cnc,
-                                          _gda_oracle_make_error (cdata->herr, OCI_HTYPE_ERROR, __FILE__, __LINE__));
+                                          _gda_oracle_make_error (cnc, cdata->herr, OCI_HTYPE_ERROR, __FILE__, __LINE__));
                 return FALSE;
         }
 
@@ -1777,7 +1777,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -1800,7 +1800,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1820,7 +1820,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1869,7 +1869,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	}
 	
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 	event = NULL;
@@ -2043,7 +2043,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				break;
 			}
 			if (str) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
 				gda_connection_event_set_description (event, str);
 				g_free (str);
 				gda_connection_add_event (cnc, event);

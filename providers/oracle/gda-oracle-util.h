@@ -92,7 +92,7 @@ typedef struct {
 	GdaStaticType s_type;
 } GdaOracleValue;
 
-GdaConnectionEvent *_gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line);
+GdaConnectionEvent *_gda_oracle_make_error (GdaConnection *cnc, dvoid *hndlp, ub4 type, const gchar *file, gint line);
 GdaConnectionEvent *_gda_oracle_handle_error (gint result, GdaConnection *cnc,
 					      OracleConnectionData *cdata,
 					      ub4 type, const gchar *msg,

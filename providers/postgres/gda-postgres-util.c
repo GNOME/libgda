@@ -1,5 +1,5 @@
 /* GDA postgres provider
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -55,7 +55,7 @@ _gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res, G
         GdaConnectionEventCode gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
         GdaTransactionStatus *trans;
 
-        error_ev = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+        error_ev = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
         if (pconn != NULL) {
                 gchar *message;
 
@@ -116,7 +116,7 @@ _gda_postgres_PQexec_wrap (GdaConnection *cnc, PGconn *pconn, const char *query)
 	GdaConnectionEvent *event;
 
         if (cnc) {
-                event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
                 gda_connection_event_set_description (event, query);
                 gda_connection_add_event (cnc, event);
         }
