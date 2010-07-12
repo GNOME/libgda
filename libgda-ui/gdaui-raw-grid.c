@@ -2030,33 +2030,33 @@ save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid)
 		/* Actual ouput computations */
 		export_type = gtk_combo_box_get_active (GTK_COMBO_BOX (types));
 		grid->priv->export_type = export_type;
+		paramlist = gda_set_new (NULL);
+		/*param = gda_holder_new_boolean ("FIELDS_NAME", TRUE);
+		  gda_set_add_holder (paramlist, param);*/
+		g_object_unref (param);
+
 		switch (export_type) {
 		case 0:
 			param = gda_holder_new_string ("SEPARATOR", "\t");
-			paramlist = gda_set_new (NULL);
 			gda_set_add_holder (paramlist, param);
 			g_object_unref (param);
 			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
 								GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 								cols, nb_cols, rows, nb_rows, paramlist);
-			g_object_unref (paramlist);
 			break;
 		case 1:
 			param = gda_holder_new_string ("SEPARATOR", ",");
-			paramlist = gda_set_new (NULL);
 			gda_set_add_holder (paramlist, param);
 			g_object_unref (param);
 			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
 								GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 								cols, nb_cols, rows, nb_rows, paramlist);
-			g_object_unref (paramlist);
 			break;
 		case 2:
 			param = NULL;
 			body = (gchar *) g_object_get_data (G_OBJECT (grid->priv->data_model), "name");
 			if (body)
 				param = gda_holder_new_string ("NAME", body);
-			paramlist = gda_set_new (NULL);
 			if (param) {
 				gda_set_add_holder (paramlist, param);
 				g_object_unref (param);
@@ -2064,12 +2064,12 @@ save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid)
 			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
 								GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
 								cols, nb_cols, rows, nb_rows, paramlist);
-			g_object_unref (paramlist);
 			break;
 		default:
 			g_assert_not_reached ();
 			break;
 		}
+		g_object_unref (paramlist);
 		g_free (cols);
 		if (rows)
 			g_free (rows);
