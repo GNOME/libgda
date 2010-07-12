@@ -1429,13 +1429,18 @@ typedef struct {
 	GSList **params_used;
 } StmtToSqlData;
 
-static const gchar *
+static gchar *
 sub_thread_statement_to_sql (StmtToSqlData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	const gchar *retval;
-	retval = PROV_CLASS (data->prov)->statement_to_sql (data->prov, data->cnc, data->stmt,
-							    data->params, data->flags, data->params_used, error);
+	gchar *retval;
+	if (PROV_CLASS (data->prov)->statement_to_sql)
+		retval = PROV_CLASS (data->prov)->statement_to_sql (data->prov, data->cnc, data->stmt,
+								    data->params, data->flags, data->params_used, error);
+	else
+		retval = gda_statement_to_sql_extended (data->stmt, data->cnc, data->params, data->flags, data->params_used,
+							error);
+		
 #ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval);
 #endif
@@ -1460,7 +1465,7 @@ gda_thread_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return NULL;
-	
+
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;
 	wdata.stmt = stmt;
