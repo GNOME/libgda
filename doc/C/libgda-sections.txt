@@ -770,12 +770,14 @@ gda_value_set_numeric
 GdaTime
 gda_time_copy
 gda_time_free
+gda_time_valid
 gda_value_get_time
 gda_value_set_time
 <SUBSECTION>
 GdaTimestamp
 gda_timestamp_copy
 gda_timestamp_free
+gda_timestamp_valid
 gda_value_get_timestamp
 gda_value_set_timestamp
 gda_value_new_timestamp_from_timet
