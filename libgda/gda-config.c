@@ -37,18 +37,8 @@
 #include <libgda/sqlite/gda-sqlite-provider.h>
 
 #ifdef HAVE_GIO
-  #ifdef HAVE_FAM
-    #error Impossible to have GIO and FAM at the same time
-  #endif
   #include <gio/gio.h>
 #else
-  #ifdef HAVE_FAM
-    #include <fam.h>
-    #include <glib.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
-    #include <unistd.h>
-  #endif
 #endif
 #ifdef G_OS_WIN32 
 #include <io.h>
@@ -130,24 +120,6 @@ static void conf_file_changed (GFileMonitor *mon, GFile *file, GFile *other_file
 			       GFileMonitorEvent event_type, gpointer data);
 static void lock_notify_changes (void);
 static void unlock_notify_changes (void);
-#endif
-
-#ifdef HAVE_FAM
-/*
- * FAM declarations and static variables
- */
-static FAMConnection *fam_connection = NULL;
-static gint           fam_watch_id = 0;
-static gboolean       lock_fam = FALSE;
-static FAMRequest    *fam_conf_user = NULL;
-static FAMRequest    *fam_conf_global = NULL;
-static time_t         last_mtime = 0;
-static time_t         last_ctime = 0;
-static off_t          last_size = 0;
-
-static gboolean       fam_callback (GIOChannel *source, GIOCondition condition, gpointer data);
-static void           fam_lock_notify ();
-static void           fam_unlock_notify ();
 #endif
 
 static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
@@ -474,9 +446,6 @@ save_config_file (gboolean is_system)
 #ifdef HAVE_GIO
 	lock_notify_changes ();
 #endif
-#ifdef HAVE_FAM
-        fam_lock_notify ();
-#endif
 	if (!is_system && unique_instance->priv->user_file) {
 		if (xmlSaveFormatFile (unique_instance->priv->user_file, doc, TRUE) == -1)
                         g_warning ("Error saving config data to '%s'", unique_instance->priv->user_file);
@@ -488,9 +457,6 @@ save_config_file (gboolean is_system)
 	fflush (NULL);
 #ifdef HAVE_GIO
 	unlock_notify_changes ();
-#endif
-#ifdef HAVE_FAM
-        fam_unlock_notify ();
 #endif
 	xmlFreeDoc (doc);
 }
@@ -649,55 +615,6 @@ gda_config_constructor (GType type,
 				g_signal_connect (G_OBJECT (mon_conf_global), "changed",
 						  G_CALLBACK (conf_file_changed), NULL);
 			g_object_unref (gf);
-		}
-#endif
-
-#ifdef HAVE_FAM
-		if (!fam_connection) {
-			/* FAM init */
-			GIOChannel *ioc;
-			int res;
-			
-#ifdef GDA_DEBUG_NO
-			g_print ("Using FAM to monitor configuration files changes.\n");
-#endif
-			fam_connection = g_malloc0 (sizeof (FAMConnection));
-			if (FAMOpen2 (fam_connection, "libgda user") != 0) {
-				g_print ("FAMOpen failed, FAMErrno=%d\n", FAMErrno);
-				g_free (fam_connection);
-				fam_connection = NULL;
-			}
-			else {
-				ioc = g_io_channel_unix_new (FAMCONNECTION_GETFD(fam_connection));
-				fam_watch_id = g_io_add_watch (ioc,
-							       G_IO_IN | G_IO_HUP | G_IO_ERR,
-							       fam_callback, NULL);
-				
-				if (unique_instance->priv->system_file) {
-					fam_conf_global = g_new0 (FAMRequest, 1);
-					res = FAMMonitorFile (fam_connection, unique_instance->priv->system_file, 
-							      fam_conf_global,
-							      GINT_TO_POINTER (TRUE));
-#ifdef GDA_DEBUG_NO
-					g_print ("Monitoring changes on file %s: %s\n", 
-						 unique_instance->priv->system_file, 
-						 res ? "ERROR" : "Ok");
-#endif
-				}
-				
-				if (unique_instance->priv->user_file) {
-					fam_conf_user = g_new0 (FAMRequest, 1);
-					res = FAMMonitorFile (fam_connection, unique_instance->priv->user_file, 
-							      fam_conf_user,
-							      GINT_TO_POINTER (FALSE));
-#ifdef GDA_DEBUG_NO
-					g_print ("Monitoring changes on file %s: %s\n",
-						 unique_instance->priv->user_file, 
-						 res ? "ERROR" : "Ok");
-#endif
-				}
-			}
-			
 		}
 #endif
 		/* load existing DSN definitions */
@@ -1861,103 +1778,6 @@ unlock_notify_changes (void)
 		g_signal_handler_unblock (mon_conf_user, user_notify_changes);
 	if (global_notify_changes != 0)
 		g_signal_handler_unblock (mon_conf_global, global_notify_changes);
-}
-
-#endif
-
-#ifdef HAVE_FAM
-static gboolean
-fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
-{
-        gboolean res = TRUE;
-
-	if (!unique_instance)
-		return TRUE;
-
-        GDA_CONFIG_LOCK ();
-        while (fam_connection && FAMPending (fam_connection)) {
-                FAMEvent ev;
-                gboolean is_system;
-
-                if (FAMNextEvent (fam_connection, &ev) != 1) {
-                        FAMClose (fam_connection);
-                        g_free (fam_connection);
-                        g_source_remove (fam_watch_id);
-                        fam_watch_id = 0;
-                        fam_connection = NULL;
-                        GDA_CONFIG_UNLOCK ();
-                        return FALSE;
-                }
-
-                if (lock_fam)
-                        continue;
-
-                is_system = GPOINTER_TO_INT (ev.userdata);
-                switch (ev.code) {
-                case FAMChanged: {
-                        struct stat stat;
-                        if (lstat (ev.filename, &stat))
-                                break;
-                        if ((stat.st_mtime != last_mtime) ||
-                            (stat.st_ctime != last_ctime) ||
-                            (stat.st_size != last_size)) {
-                                last_mtime = stat.st_mtime;
-                                last_ctime = stat.st_ctime;
-                                last_size = stat.st_size;
-                        }
-                        else
-                                break;
-                }
-                case FAMDeleted:
-                case FAMCreated:
-#ifdef GDA_DEBUG_NO
-                        g_print ("Reloading config files (%s config has changed)\n", is_system ? "global" : "user");
-			GSList *list;
-			for (list = unique_instance->priv->dsn_list; list; list = list->next) {
-				GdaDsnInfo *info = (GdaDsnInfo *) list->data;
-				g_print ("[info %p]: %s/%s\n", info, info->provider, info->name);
-			}
-#endif
-			while (unique_instance->priv->dsn_list) {
-				GdaDsnInfo *info = (GdaDsnInfo *) unique_instance->priv->dsn_list->data;
-				if (unique_instance->priv->emit_signals)
-					g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
-				unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
-				if (unique_instance->priv->emit_signals)
-					g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
-				data_source_info_free (info);
-			}
-			
-			if (unique_instance->priv->system_file)
-				load_config_file (unique_instance->priv->system_file, TRUE);
-			if (unique_instance->priv->user_file)
-				load_config_file (unique_instance->priv->user_file, FALSE);
-                        break;
-                case FAMAcknowledge:
-                case FAMStartExecuting:
-                case FAMStopExecuting:
-                case FAMExists:
-                case FAMEndExist:
-                case FAMMoved:
-                        /* Not supported */
-                        break;
-                }
-        }
-
-        GDA_CONFIG_UNLOCK ();
-        return res;
-}
-
-static void
-fam_lock_notify ()
-{
-        lock_fam = TRUE;
-}
-
-static void
-fam_unlock_notify ()
-{
-        lock_fam = FALSE;
 }
 
 #endif

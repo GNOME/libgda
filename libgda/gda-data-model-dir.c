@@ -29,10 +29,6 @@
 
 #ifdef HAVE_GIO
 #include <gio/gio.h>
-#else
-  #ifdef HAVE_GNOMEVFS
-  #include <libgnomevfs/gnome-vfs-mime.h>
-  #endif
 #endif
 
 /* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
@@ -597,19 +593,7 @@ update_file_mime (FileRow *row, const gchar *complete_filename)
 		value = gda_value_new_null ();
 	g_object_unref (file);
 #else
-  #ifdef HAVE_GNOMEVFS
-	const gchar *mime;
-	
-	mime = gnome_vfs_get_file_mime_type (complete_filename, NULL, FALSE);
-	if (mime) {
-		value = gda_value_new (G_TYPE_STRING);
-		g_value_set_string (value, mime);
-	}
-	else 
-		value = gda_value_new_null ();
-  #else
 	value = gda_value_new_null ();
-  #endif
 #endif
 
 	if (value) {
