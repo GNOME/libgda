@@ -129,6 +129,19 @@ gdaui_login_class_init (GdauiLoginClass *klass)
 }
 
 static void
+config_dsn_changed_cb (GdaConfig *config, GdaDsnInfo *dsn, GdauiLogin *login)
+{
+	if (!login->priv->prov_selector)
+		return;
+	gchar *sdsn;
+	sdsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector));
+	if (dsn && dsn->name && sdsn && !strcmp (dsn->name, sdsn)) {
+		dsn_entry_changed_cb (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), login);
+		g_print ("Update...\n");
+	}
+}
+
+static void
 gdaui_login_init (GdauiLogin *login, GdauiLoginClass *klass)
 {
 	GtkWidget *table;
@@ -141,6 +154,10 @@ gdaui_login_init (GdauiLogin *login, GdauiLoginClass *klass)
 	login->priv->mode = GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE;
 	memset (&(login->priv->dsn_info), 0, sizeof (GdaDsnInfo));
 	
+	/* catch DSN definition changes */
+	g_signal_connect (gda_config_get (), "dsn-changed",
+			  G_CALLBACK (config_dsn_changed_cb), login);
+
 	/* table layout */
 	table = gtk_table_new (3, 3, FALSE);
 	gtk_widget_show (table);
@@ -280,6 +297,9 @@ gdaui_login_finalize (GObject *object)
 	GdauiLogin *login = (GdauiLogin *) object;
 
 	g_return_if_fail (GDAUI_IS_LOGIN (login));
+
+	g_signal_handlers_disconnect_by_func (gda_config_get (),
+					      G_CALLBACK (config_dsn_changed_cb), login);
 
 	/* free memory */
 	clear_dsn_info (login);
