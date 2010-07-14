@@ -514,6 +514,15 @@ Assorted functions for dealing with #GValue values.
 @boxed: 
 
 
+<!-- ##### FUNCTION gda_time_valid ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_get_time ##### -->
 <para>
 
@@ -561,6 +570,15 @@ Assorted functions for dealing with #GValue values.
 </para>
 
 @boxed: 
+
+
+<!-- ##### FUNCTION gda_timestamp_valid ##### -->
+<para>
+
+</para>
+
+@timestamp: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_get_timestamp ##### -->
