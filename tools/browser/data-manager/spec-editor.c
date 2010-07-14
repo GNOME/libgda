@@ -26,7 +26,6 @@
 #include "data-source.h"
 #include <libgda/libgda.h>
 #include "../support.h"
-#include "marshal.h"
 
 #ifdef HAVE_GTKSOURCEVIEW
   #ifdef GTK_DISABLE_SINGLE_INCLUDES
@@ -41,12 +40,10 @@
 #endif
 
 struct _SpecEditorPrivate {
-	BrowserConnection *bcnc;
+	DataSourceManager *mgr;
 
 	SpecEditorMode mode;
 	GtkNotebook *notebook;
-
-        GdaSet *params; /* execution params */
 
 	/* reference for all views */
 	xmlDocPtr doc;
@@ -66,12 +63,6 @@ static void spec_editor_class_init (SpecEditorClass *klass);
 static void spec_editor_init       (SpecEditor *sped, SpecEditorClass *klass);
 static void spec_editor_dispose    (GObject *object);
 
-enum {
-	CHANGED,
-        LAST_SIGNAL
-};
-
-static guint spec_editor_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -83,15 +74,6 @@ spec_editor_class_init (SpecEditorClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
-
-	/* signals */
-        spec_editor_signals [CHANGED] =
-                g_signal_new ("changed",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (SpecEditorClass, changed),
-                              NULL, NULL,
-                              _dm_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	object_class->dispose = spec_editor_dispose;
 }
@@ -137,10 +119,8 @@ spec_editor_dispose (GObject *object)
 	if (sped->priv) {
 		if (sped->priv->signal_editor_changed_id)
 			g_source_remove (sped->priv->signal_editor_changed_id);
-		if (sped->priv->params)
-			g_object_unref (sped->priv->params);
-		if (sped->priv->bcnc)
-			g_object_unref (sped->priv->bcnc);
+		if (sped->priv->mgr)
+			g_object_unref (sped->priv->mgr);
 
 		if (sped->priv->doc)
 			xmlFreeDoc (sped->priv->doc);
@@ -153,9 +133,65 @@ spec_editor_dispose (GObject *object)
 static gboolean
 signal_editor_changed (SpecEditor *sped)
 {
-	/* send signal */
-	g_signal_emit (sped, spec_editor_signals[CHANGED], 0);
+	/* modify the DataSourceManager */
+	data_source_manager_remove_all (sped->priv->mgr);
 
+	/* create new DataSource objects */
+	GError *lerror = NULL;
+	gchar *xml;
+	xmlDocPtr doc = NULL;
+	GtkTextIter start, end;
+	gtk_text_buffer_get_start_iter (sped->priv->buffer, &start);
+	gtk_text_buffer_get_end_iter (sped->priv->buffer, &end);
+	xml = gtk_text_buffer_get_text (sped->priv->buffer, &start, &end, FALSE);
+	if (xml) {
+		doc = xmlParseDoc (BAD_CAST xml);
+		g_free (xml);
+	}
+
+	if (!doc) {
+		TO_IMPLEMENT;
+		g_set_error (&lerror, 0, 0,
+			     _("Error parsing XML specifications"));
+		goto out;
+	}
+
+	xmlNodePtr node;
+	node = xmlDocGetRootElement (doc);
+	if (!node) {
+		/* nothing to do => finished */
+		xmlFreeDoc (doc);
+		goto out;
+	}
+
+	BrowserConnection *bcnc;
+	GdaSet *params;
+	
+	params = data_source_manager_get_params (sped->priv->mgr);
+	bcnc = data_source_manager_get_browser_cnc (sped->priv->mgr);
+	for (node = node->children; node; node = node->next) {
+		if (!strcmp ((gchar*) node->name, "table") ||
+		    !strcmp ((gchar*) node->name, "query")) {
+			DataSource *source;
+			source = data_source_new_from_xml_node (bcnc, node, &lerror);
+			if (!source) {
+				data_source_manager_remove_all (sped->priv->mgr);
+				TO_IMPLEMENT;
+				goto out;
+			}
+			
+			data_source_set_params (source, params);
+			data_source_manager_add_source (sped->priv->mgr, source);
+			g_object_unref (source);
+		}
+	}
+	xmlFreeDoc (doc);
+
+ out:
+	if (lerror) {
+		TO_IMPLEMENT;
+		g_clear_error (&lerror);
+	}
 	/* remove timeout */
 	sped->priv->signal_editor_changed_id = 0;
 	return FALSE;
@@ -175,15 +211,15 @@ editor_changed_cb (GtkTextBuffer *buffer, SpecEditor *sped)
  * Returns: the newly created editor.
  */
 SpecEditor *
-spec_editor_new (BrowserConnection *bcnc)
+spec_editor_new (DataSourceManager *mgr)
 {
 	SpecEditor *sped;
-	GtkWidget *sw, *nb, *exp, *vbox;
+	GtkWidget *sw, *nb, *vbox;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (IS_DATA_SOURCE_MANAGER (mgr), NULL);
 
 	sped = g_object_new (SPEC_EDITOR_TYPE, NULL);
-	sped->priv->bcnc = g_object_ref (bcnc);
+	sped->priv->mgr = g_object_ref (mgr);
 
 	nb = gtk_notebook_new ();
 	gtk_box_pack_start (GTK_BOX (sped), nb, TRUE, TRUE, 0);
@@ -285,317 +321,3 @@ spec_editor_get_mode (SpecEditor *sped)
 	return sped->priv->mode;
 }
 
-static GArray *compute_sources (SpecEditor *sped, GError **error);
-static GSList *compute_sources_list (SpecEditor *sped, GError **error);
-
-static void
-compute_params (SpecEditor *sped)
-{
-	/* cleanning process */
-	if (sped->priv->params) {
-		browser_connection_keep_variables (sped->priv->bcnc, sped->priv->params);
-		g_object_unref (sped->priv->params);
-        }
-        sped->priv->params = NULL;
-	
-	/* compute new params */
-	GSList *sources_list;
-	sources_list = compute_sources_list (sped, NULL);
-	if (sources_list) {
-		GSList *list;
-		for (list = sources_list; list; list = list->next) {
-			DataSource *source;
-			GdaSet *set;
-			
-			source = DATA_SOURCE (list->data);
-			set = data_source_get_import (source);
-			if (!set)
-				continue;
-
-			GSList *holders;
-			gboolean found;
-			for (found = FALSE, holders = set->holders; holders; holders = holders->next) {
-				GSList *list2;
-				for (list2 = sources_list; list2; list2 = list2->next) {
-					if (list2 == list)
-						continue;
-					GHashTable *export_h;
-					export_h = data_source_get_export_columns (DATA_SOURCE (list2->data));
-					if (g_hash_table_lookup (export_h, 
-					      gda_holder_get_id (GDA_HOLDER (holders->data)))) {
-						found = TRUE;
-						break;
-					}
-				}
-			}
-			if (! found) {
-				if (! sped->priv->params)
-					sped->priv->params = gda_set_copy (set);
-				else
-					gda_set_merge_with_set (sped->priv->params, set);
-			}
-		}
-
-		/* cleanups */
-		g_slist_foreach (sources_list, (GFunc) g_object_unref, NULL);
-		g_slist_free (sources_list);
-		sources_list = NULL;
-	}
-
-	browser_connection_load_variables (sped->priv->bcnc, sped->priv->params);
-}
-
-/**
- * spec_editor_get_params
- *
- * Returns: a pointer to an internal #GdaSet, must not be modified
- */
-GdaSet *
-spec_editor_get_params (SpecEditor *sped)
-{
-	g_return_val_if_fail (IS_SPEC_EDITOR (sped), NULL);
-
-	compute_params (sped);
-	return sped->priv->params;
-}
-
-/**
- * spec_editor_get_sources_array
- */
-GArray *
-spec_editor_get_sources_array (SpecEditor *sped, GError **error)
-{
-	g_return_val_if_fail (IS_SPEC_EDITOR (sped), NULL);
-	if (sped->priv->signal_editor_changed_id > 0) {
-		g_source_remove (sped->priv->signal_editor_changed_id);
-		sped->priv->signal_editor_changed_id = 0;
-		compute_params (sped);
-	}
-	return compute_sources (sped, error);
-}
-
-/**
- * spec_editor_destroy_sources_array
- */
-void
-spec_editor_destroy_sources_array (GArray *array)
-{
-	gint i;
-	for (i = 0; i < array->len; i++) {
-		GArray *subarray;
-		subarray = g_array_index (array, GArray *, i);
-		gint j;
-		for (j = 0; j < subarray->len; j++) {
-			DataSource *source;
-			source = g_array_index (subarray, DataSource *, j);
-			g_object_unref (source);
-		}
-
-		g_array_free (subarray, TRUE);
-	}
-	g_array_free (array, TRUE);
-}
-
-/*
- * Tells if @source1 has an import which can be satisfied by an export in @source2
- * Returns: %TRUE if there is a dependency
- */
-static gboolean
-source_depends_on (DataSource *source1, DataSource *source2)
-{
-	GdaSet *import;
-	import = data_source_get_import (source1);
-	if (!import)
-		return FALSE;
-
-	GSList *holders;
-	GHashTable *export_columns;
-	export_columns = data_source_get_export_columns (source2);
-	for (holders = import->holders; holders; holders = holders->next) {
-		GdaHolder *holder = (GdaHolder*) holders->data;
-		if (GPOINTER_TO_INT (g_hash_table_lookup (export_columns, gda_holder_get_id (holder))) >= 1)
-			return TRUE;
-	}
-	return FALSE;
-}
-
-/*
- * Returns: an array of arrays of pointer to the #DataSource objects
- *
- * No ref is actually held by any of these pointers, all refs to DataSource are held by
- * the @sources_list pointers
- */
-static GArray *
-create_sources_array (GSList *sources_list, GError **error)
-{
-	GSList *list;
-	GArray *array = NULL;
-	g_print ("** Creating DataSource arrays\n");
-	for (list = sources_list; list; list = list->next) {
-		DataSource *source;
-		source = DATA_SOURCE (g_object_ref (G_OBJECT (list->data)));
-		g_print ("Taking into account source [%s]\n",
-			 data_source_get_title (source));
-
-		GdaSet *import;
-		import = data_source_get_import (source);
-		if (!import) {
-			if (! array) {
-				array = g_array_new (FALSE, FALSE, sizeof (GArray*));
-				GArray *subarray = g_array_new (FALSE, FALSE, sizeof (DataSource*));
-				g_array_append_val (array, subarray);
-				g_array_append_val (subarray, source);
-			}
-			else {
-				GArray *subarray = g_array_index (array, GArray*, 0);
-				g_array_append_val (subarray, source);
-			}
-			continue;
-		}
-		
-		if (array) {
-			gint i;
-			gboolean dep_found = FALSE;
-			for (i = array->len - 1; i >= 0 ; i--) {
-				GArray *subarray = g_array_index (array, GArray*, i);
-				gint j;
-				for (j = 0; j < subarray->len; j++) {
-					DataSource *source2 = g_array_index (subarray, DataSource*, j);
-					g_print ("Source [%s] %s on source [%s]\n",
-						 data_source_get_title (source),
-						 source_depends_on (source, source2) ?
-						 "depends" : "does not depend",
-						 data_source_get_title (source2));
-					if (source_depends_on (source, source2)) {
-						dep_found = TRUE;
-						/* add source to column i+1 */
-						if (i == array->len - 1) {
-							GArray *subarray = g_array_new (FALSE, FALSE,
-											sizeof (DataSource*));
-							g_array_append_val (array, subarray);
-							g_array_append_val (subarray, source);
-						}
-						else {
-							GArray *subarray = g_array_index (array, GArray*, i+1);
-							g_array_append_val (subarray, source);
-						}
-						continue;
-					}
-				}
-
-				if (dep_found)
-					break;
-			}
-			if (! dep_found) {
-				/* add source to column 0 */
-				GArray *subarray = g_array_index (array, GArray*, 0);
-				g_array_append_val (subarray, source);
-			}
-		}
-		else {
-			/* add source to column 0 */
-			array = g_array_new (FALSE, FALSE, sizeof (GArray*));
-			GArray *subarray = g_array_new (FALSE, FALSE, sizeof (DataSource*));
-			g_array_append_val (array, subarray);
-			g_array_append_val (subarray, source);
-		}
-	}
-
-	g_print ("** DataSource arrays created\n");
-	return array;
-}
-
-static gint
-data_source_compare_func (DataSource *s1, DataSource *s2)
-{
-	if (source_depends_on (s1, s2))
-		return 1;
-	else if (source_depends_on (s2, s1))
-		return -1;
-	else
-		return 0;
-}
-
-static GSList *
-compute_sources_list (SpecEditor *sped, GError **error)
-{
-	gchar *xml;
-	xmlDocPtr doc = NULL;
-	GSList *sources_list = NULL;
-
-	/* create sources_list from XML */
-	GtkTextIter start, end;
-	gtk_text_buffer_get_start_iter (sped->priv->buffer, &start);
-	gtk_text_buffer_get_end_iter (sped->priv->buffer, &end);
-	xml = gtk_text_buffer_get_text (sped->priv->buffer, &start, &end, FALSE);
-	if (xml) {
-		doc = xmlParseDoc (BAD_CAST xml);
-		g_free (xml);
-	}
-
-	if (!doc) {
-		g_set_error (error, 0, 0,
-			     _("Error parsing XML specifications"));
-		goto onerror;
-	}
-
-	xmlNodePtr node;
-	node = xmlDocGetRootElement (doc);
-	if (!node) {
-		/* nothing to do => finished */
-		xmlFreeDoc (doc);
-		return NULL;
-	}
-
-	for (node = node->children; node; node = node->next) {
-		if (!strcmp ((gchar*) node->name, "table") ||
-		    !strcmp ((gchar*) node->name, "query")) {
-			DataSource *source;
-			source = data_source_new_from_xml_node (sped->priv->bcnc, node, error);
-			if (!source)
-				goto onerror;
-			
-			sources_list = g_slist_prepend (sources_list, source);
-			data_source_set_params (source, sped->priv->params);
-		}
-	}
-	xmlFreeDoc (doc);
-	doc = NULL;
-	return g_slist_sort (sources_list, (GCompareFunc) data_source_compare_func);
-
- onerror:
-	if (doc)
-		xmlFreeDoc (doc);
-	if (sources_list) {
-		g_slist_foreach (sources_list, (GFunc) g_object_unref, NULL);
-		g_slist_free (sources_list);
-	}
-	
-	return NULL;
-}
-
-static GArray *
-compute_sources (SpecEditor *sped, GError **error)
-{
-	GArray *sources_array = NULL;
-	GSList *sources_list;
-	GError *lerror = NULL;
-
-	sources_list = compute_sources_list (sped, &lerror);
-	if (!lerror)
-		sources_array = create_sources_array (sources_list, &lerror);
-
-	if (sources_list) {
-		g_slist_foreach (sources_list, (GFunc) g_object_unref, NULL);
-		g_slist_free (sources_list);
-		sources_list = NULL;
-	}
-
-	if (lerror) {
-		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) sped),
-				    lerror && lerror->message ? lerror->message :_("Error parsing XML specifications"));
-		g_clear_error (&lerror);
-	}
-
-	return sources_array;
-}

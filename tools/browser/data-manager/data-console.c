@@ -34,6 +34,7 @@
 #include "../common/popup-container.h"
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
+#include "data-source-manager.h"
 
 #define PAGE_XML 0
 #define PAGE_DATA 1
@@ -44,6 +45,8 @@ typedef enum {
 } LayoutType;
 
 struct _DataConsolePrivate {
+	DataSourceManager *mgr;
+
 	LayoutType layout_type;
 	BrowserConnection *bcnc;
 	GtkWidget *notebook;
@@ -129,6 +132,8 @@ data_console_dispose (GObject *object)
 			g_object_unref (dconsole->priv->bcnc);
 		if (dconsole->priv->agroup)
 			g_object_unref (dconsole->priv->agroup);
+		if (dconsole->priv->mgr)
+			g_object_unref (dconsole->priv->mgr);
 		g_free (dconsole->priv);
 		dconsole->priv = NULL;
 	}
@@ -173,7 +178,7 @@ static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void help_clicked_cb (GtkButton *button, DataConsole *dconsole);
 #endif
 static void spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole);
-static void spec_editor_changed_cb (SpecEditor *sped, DataConsole *dconsole);
+static void data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole);
 
 /**
  * data_console_new
@@ -190,6 +195,9 @@ data_console_new (BrowserConnection *bcnc)
 	dconsole = DATA_CONSOLE (g_object_new (DATA_CONSOLE_TYPE, NULL));
 
 	dconsole->priv->bcnc = g_object_ref (bcnc);
+	dconsole->priv->mgr = data_source_manager_new (bcnc);
+	g_signal_connect (dconsole->priv->mgr, "changed",
+			  G_CALLBACK (data_source_mgr_changed_cb), dconsole);
 	
 	/* header */
         GtkWidget *label;
@@ -255,9 +263,7 @@ data_console_new (BrowserConnection *bcnc)
 	hbox = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
-	dconsole->priv->sped = spec_editor_new (dconsole->priv->bcnc);
-	g_signal_connect (dconsole->priv->sped, "changed",
-			  G_CALLBACK (spec_editor_changed_cb), dconsole);
+	dconsole->priv->sped = spec_editor_new (dconsole->priv->mgr);
 	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (dconsole->priv->sped), TRUE, TRUE, 0);
 
 #define DEFAULT_XML \
@@ -359,7 +365,8 @@ execute_clicked_cb (GtkButton *button, DataConsole *dconsole)
 static void
 help_clicked_cb (GtkButton *button, DataConsole *dconsole)
 {
-	browser_show_help ((GtkWindow*) gtk_widget_get_toplevel (dconsole), "data-manager-perspective");
+	browser_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dconsole),
+			   "data-manager-perspective");
 }
 #endif
 
@@ -382,7 +389,7 @@ spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole)
 }
 
 static void
-spec_editor_changed_cb (SpecEditor *sped, DataConsole *dconsole)
+data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 {
 	if (dconsole->priv->params_form) {
 		gtk_widget_destroy (dconsole->priv->params_form);
@@ -391,7 +398,7 @@ spec_editor_changed_cb (SpecEditor *sped, DataConsole *dconsole)
 
 	GdaSet *params;
 	gboolean show_variables = FALSE;
-	params = spec_editor_get_params (sped);
+	params = data_source_manager_get_params (mgr);
 	if (params) {
 		dconsole->priv->params_form = gdaui_basic_form_new (params);
 		g_object_set ((GObject*) dconsole->priv->params_form,
@@ -462,7 +469,7 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 		/* Get Data sources */
 		GArray *sources_array;
 		GError *lerror = NULL;
-		sources_array = spec_editor_get_sources_array (dconsole->priv->sped, &lerror);
+		sources_array = data_source_manager_get_sources_array (dconsole->priv->mgr, &lerror);
 		if (sources_array) {
 			if (dconsole->priv->data) {
 				/* destroy existing data widgets */
@@ -472,7 +479,7 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 
 			GtkWidget *wid;
 			wid = create_widget (dconsole, sources_array, &lerror);
-			spec_editor_destroy_sources_array (sources_array);
+			data_source_manager_destroy_sources_array (sources_array);
 			if (wid) {
 				dconsole->priv->data = wid;
 				gtk_box_pack_start (GTK_BOX (dconsole->priv->data_box), wid, TRUE, TRUE, 0);

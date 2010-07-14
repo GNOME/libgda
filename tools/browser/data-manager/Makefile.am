@@ -31,7 +31,9 @@ libperspective_la_SOURCES = \
 	spec-editor.c \
 	spec-editor.h \
 	data-manager-perspective.h \
-	data-manager-perspective.c
+	data-manager-perspective.c \
+	data-source-manager.h \
+	data-source-manager.c
 
 $(OBJECTS): marshal.c marshal.h
 
