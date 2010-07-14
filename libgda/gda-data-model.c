@@ -984,7 +984,8 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
 }
 
 static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, 
-					const gint *rows, gint nb_rows, gchar sep, gchar quote, gboolean field_quotes);
+					const gint *rows, gint nb_rows, gchar sep, gchar quote, gboolean field_quotes,
+					gboolean null_as_empty);
 
 
 /**
@@ -1052,6 +1053,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		gchar sep = ',';
 		gchar quote = '"';
 		gboolean field_quote = TRUE;
+		gboolean null_as_empty = FALSE;
 
 		retstring = g_string_new ("");
 		if (options) {
@@ -1093,6 +1095,16 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 					field_quote = g_value_get_boolean ((GValue *) value);
 				else 
 					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "FIELD_QUOTE");
+			}
+
+			holder = gda_set_get_holder (options, "NULL_AS_EMPTY");
+			if (holder) {
+				const GValue *value;
+				value = gda_holder_get_value (holder);
+				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+					null_as_empty = g_value_get_boolean ((GValue *) value);
+				else 
+					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NULL_AS_EMPTY");
 			}
 
 			holder = gda_set_get_holder (options, "FIELDS_NAME");
@@ -1138,7 +1150,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		if (cols) {
 			gchar *tmp;
 			tmp = export_to_text_separated (model, cols, nb_cols, rows,
-							nb_rows, sep, quote, field_quote);
+							nb_rows, sep, quote, field_quote, null_as_empty);
 			g_string_append (retstring, tmp);
 			g_free (tmp);
 		}
@@ -1150,7 +1162,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 			for (i = 0; i < rnb_cols; i++)
 				rcols[i] = i;
 			tmp = export_to_text_separated (model, rcols, rnb_cols, rows, nb_rows,
-							sep, quote, field_quote);
+							sep, quote, field_quote, null_as_empty);
 			g_string_append (retstring, tmp);
 			g_free (tmp);
 			g_free (rcols);			
@@ -1188,8 +1200,8 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  *             is requeted, in case of CSV export</para></listitem>
  *   <listitem><para>"NAME": a string value used to name the exported data if the export format is XML</para></listitem>
  *   <listitem><para>"FIELDS_NAME": a boolean value which, if set to %TRUE and in case of a CSV export, will add a first line with the name each exported field</para></listitem>
- *   <listitem><para>"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.
- *             </para></listitem>
+ *   <listitem><para>"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.</para></listitem>
+ *   <listitem><para>"NULL_AS_EMPTY": a boolean value which, if set to %TRUE and in case of a CSV export, will render and NULL value as the empty string (instead of the 'NULL' string)</para></listitem>
  * </itemizedlist>
  *
  * Upon errors FALSE will be returned and @error will be assigned a
@@ -1245,7 +1257,7 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 
 static gchar *
 export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, const gint *rows, gint nb_rows, 
-			  gchar sep, gchar quote, gboolean field_quotes)
+			  gchar sep, gchar quote, gboolean field_quotes, gboolean null_as_empty)
 {
 	GString *str;
 	gchar *retval;
@@ -1270,6 +1282,8 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, c
 			value = (GValue *) gda_data_model_get_value_at (model, cols[c], rows ? rows[r] : r, NULL);
 			if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 				txt = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
+			else if (null_as_empty && gda_value_is_null (value))
+				txt = g_strdup ("");
 			else {
 				gchar *tmp;
 				gsize len, size;
