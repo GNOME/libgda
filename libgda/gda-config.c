@@ -54,6 +54,10 @@
 #include <io.h>
 #endif
 
+#ifdef HAVE_GNOME_KEYRING
+#include <gnome-keyring.h>
+#endif
+
 typedef struct {
 	GdaProviderInfo    pinfo;
 	GModule           *handle;
@@ -67,6 +71,8 @@ struct _GdaConfigPrivate {
 	GSList *dsn_list; /* list of GdaDsnInfo structures */
 	GSList *prov_list; /* list of InternalProvider structures */
 	gboolean providers_loaded; /* TRUE if providers list has already been scanned */
+
+	gboolean emit_signals;
 };
 
 static void gda_config_class_init (GdaConfigClass *klass);
@@ -258,7 +264,29 @@ gda_config_init (GdaConfig *conf, GdaConfigClass *klass)
 	conf->priv->prov_list = NULL;
 	conf->priv->dsn_list = NULL;
 	conf->priv->providers_loaded = FALSE;
+	conf->priv->emit_signals = TRUE;
 }
+
+#ifdef HAVE_GNOME_KEYRING
+static void
+password_found (GnomeKeyringResult res, const gchar *password, const gchar *dsnname)
+{
+        if (res == GNOME_KEYRING_RESULT_OK) {
+		GdaDsnInfo *dsn;
+		dsn = gda_config_get_dsn_info (dsnname);
+		if (dsn) {
+			if (dsn->auth_string && password && !strcmp (dsn->auth_string, password))
+				return;
+
+			g_free (dsn->auth_string);
+			dsn->auth_string = g_strdup (password);
+		}
+		/*g_print ("Loaded auth info for '%s'\n", dsnname);*/
+		if (unique_instance->priv->emit_signals)
+			g_signal_emit (unique_instance, gda_config_signals [DSN_CHANGED], 0, dsn);
+	}
+}
+#endif
 
 static void
 load_config_file (const gchar *file, gboolean is_system)
@@ -361,14 +389,23 @@ load_config_file (const gchar *file, gboolean is_system)
 			g_free (username);
 			g_free (password);
 
+#ifdef HAVE_GNOME_KEYRING
+			if (! is_system) {
+				gchar *tmp = g_strdup (info->name);
+				gnome_keyring_find_password (GNOME_KEYRING_NETWORK_PASSWORD,
+							     (GnomeKeyringOperationGetStringCallback) password_found, tmp, g_free,
+							     "server", tmp, NULL);
+			}
+#endif
 
 			/* signals */
 			if (is_new) {
 				unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, info,
 											 (GCompareFunc) data_source_info_compare);
-				g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, info);
+				if (unique_instance->priv->emit_signals)
+					g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, info);
 			}
-			else
+			else if (unique_instance->priv->emit_signals)
 				g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, info);
 		}
 	}
@@ -417,11 +454,15 @@ save_config_file (gboolean is_system)
 		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
 		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->cnc_string));
 
-		/* auth */
-		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
-		xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Auth");
-		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
-		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->auth_string));
+#ifndef HAVE_GNOME_KEYRING
+		if (! is_system) {
+			/* auth */
+			entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
+			xmlSetProp (entry, BAD_CAST "name", BAD_CAST "Auth");
+			xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
+			xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->auth_string));
+		}
+#endif
 
 		/* description */
 		entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
@@ -848,6 +889,17 @@ gda_config_get_dsn_info (const gchar *dsn_name)
 	return NULL;
 }
 
+#ifdef HAVE_GNOME_KEYRING
+static void
+password_stored_cb (GnomeKeyringResult res, const gchar *dsnname)
+{
+        /* user_data will be the same as was passed to gnome_keyring_store_password() */
+        if (res != GNOME_KEYRING_RESULT_OK)
+                g_warning (_("Couldn't save authentification information for DSN '%s': %s"), dsnname,
+			     gnome_keyring_result_to_message (res));
+}
+#endif
+
 /**
  * gda_config_define_dsn:
  * @info: a pointer to a filled GdaDsnInfo structure
@@ -902,7 +954,8 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 			save_user = TRUE;
 			einfo->is_system = info->is_system ? TRUE : FALSE;
 		}
-		g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, einfo);
+		if (unique_instance->priv->emit_signals)
+			g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, einfo);
 	}
 	else {
 		einfo = g_new0 (GdaDsnInfo, 1);
@@ -919,8 +972,24 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 
 		unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, einfo,
 									 (GCompareFunc) data_source_info_compare);
-		g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, einfo);
+		if (unique_instance->priv->emit_signals)
+			g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, einfo);
 	}
+
+#ifdef HAVE_GNOME_KEYRING
+	if (! info->is_system) {
+		/* save to keyring */
+		gchar *tmp, *tmp1;
+		tmp = g_strdup_printf (_("Authentification for the '%s' DSN"), info->name);
+		tmp1 = g_strdup (info->name);
+		gnome_keyring_store_password (GNOME_KEYRING_NETWORK_PASSWORD,
+					      GNOME_KEYRING_DEFAULT,
+					      tmp, info->auth_string,
+					      (GnomeKeyringOperationDoneCallback) password_stored_cb, tmp1, g_free,
+					      "server", info->name, NULL);
+		g_free (tmp);
+	}
+#endif
 	
 	if (save_system)
 		save_config_file (TRUE);
@@ -930,6 +999,16 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 	GDA_CONFIG_UNLOCK ();
 	return TRUE;
 }
+
+#ifdef HAVE_GNOME_KEYRING
+static void
+password_deleted_cb (GnomeKeyringResult res, const gchar *dsnname)
+{
+	if (res != GNOME_KEYRING_RESULT_OK)
+                g_warning (_("Couldn't delete authentication information for DSN '%s': %s"), dsnname,
+			   gnome_keyring_result_to_message (res));
+}
+#endif
 
 /**
  * gda_config_remove_dsn:
@@ -972,11 +1051,24 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	else
 		save_user = TRUE;
 
-	g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
+	if (unique_instance->priv->emit_signals)
+		g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
 	unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
-	g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
+	if (unique_instance->priv->emit_signals)
+		g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
 	data_source_info_free (info);
-	
+
+#ifdef HAVE_GNOME_KEYRING
+	if (! info->is_system) {
+		/* remove from keyring */
+		gchar *tmp;
+		tmp = g_strdup (dsn_name);
+		gnome_keyring_delete_password (GNOME_KEYRING_NETWORK_PASSWORD,
+					       (GnomeKeyringOperationDoneCallback) password_deleted_cb, tmp, g_free,
+					       "server", tmp, NULL);
+	}
+#endif
+
 	if (save_system)
 		save_config_file (TRUE);
 	if (save_user)
@@ -1643,38 +1735,114 @@ internal_provider_free (InternalProvider *ip)
  * File monitoring actions
  */
 #ifdef HAVE_GIO
+
+static gboolean
+str_equal (const gchar *str1, const gchar *str2)
+{
+	if (str1 && str2) {
+		if (!strcmp (str1, str2))
+			return TRUE;
+		else
+			return FALSE;
+	}
+	else if (!str1 && !str2)
+		return TRUE;
+	return FALSE;
+}
+
 static void
 conf_file_changed (GFileMonitor *mon, GFile *file, GFile *other_file,
 		   GFileMonitorEvent event_type, gpointer data)
 {
+	GSList *list, *current_dsn_list, *new_dsn_list;
 	g_assert (unique_instance);
 
 	if (event_type != G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT)
 		return;
 
+        GDA_CONFIG_LOCK ();
 #ifdef GDA_DEBUG_NO
 	gboolean is_system = (mon == mon_conf_global) ? TRUE : FALSE;
 	g_print ("Reloading config files (%s config has changed)\n", is_system ? "global" : "user");
-	GSList *list;
 	for (list = unique_instance->priv->dsn_list; list; list = list->next) {
 		GdaDsnInfo *info = (GdaDsnInfo *) list->data;
 		g_print ("[info %p]: %s/%s\n", info, info->provider, info->name);
 	}
 #endif
-	while (unique_instance->priv->dsn_list) {
-		GdaDsnInfo *info = (GdaDsnInfo *) unique_instance->priv->dsn_list->data;
-		g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
-		unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
-		g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
-		data_source_info_free (info);
-	}
-	
+	current_dsn_list = unique_instance->priv->dsn_list;
+	unique_instance->priv->dsn_list = NULL;
+
+	unique_instance->priv->emit_signals = FALSE;
 	lock_notify_changes ();
 	if (unique_instance->priv->system_file)
 		load_config_file (unique_instance->priv->system_file, TRUE);
 	if (unique_instance->priv->user_file)
 		load_config_file (unique_instance->priv->user_file, FALSE);
 	unlock_notify_changes ();
+	unique_instance->priv->emit_signals = TRUE;
+
+	new_dsn_list = unique_instance->priv->dsn_list;
+	unique_instance->priv->dsn_list = current_dsn_list;
+	current_dsn_list = NULL;
+
+	/* handle new or updated DSN */
+	GHashTable *hash = g_hash_table_new (g_str_hash, g_str_equal);
+	for (list = new_dsn_list; list; list = list->next) {
+		GdaDsnInfo *ninfo, *oinfo;
+		ninfo = (GdaDsnInfo *) list->data;
+		oinfo = gda_config_get_dsn_info (ninfo->name);
+		if (!oinfo) {
+			/* add ninfo */
+			unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, ninfo,
+										 (GCompareFunc) data_source_info_compare);
+			if (unique_instance->priv->emit_signals)
+				g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, ninfo);
+			g_hash_table_insert (hash, ninfo->name, (gpointer) 0x1);
+		}
+		else {
+			/* signal changed if updated */
+			if (str_equal (oinfo->provider, ninfo->provider) && 
+			    str_equal (oinfo->description, ninfo->description) && 
+			    str_equal (oinfo->cnc_string, ninfo->cnc_string) && 
+#ifndef HAVE_GNOME_KEYRING
+			    str_equal (oinfo->auth_string, ninfo->auth_string) && 
+#endif
+			    (oinfo->is_system == ninfo->is_system)) {
+				/* no change for this DSN */
+				data_source_info_free (ninfo);
+			}
+			else {
+				GdaDsnInfo tmp;
+				tmp = *oinfo;
+				*oinfo = *ninfo;
+				*ninfo = tmp;
+				if (unique_instance->priv->emit_signals)
+					g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, oinfo);
+				data_source_info_free (ninfo);
+			}
+			g_hash_table_insert (hash, oinfo->name, (gpointer) 0x1);
+		}
+	}
+	g_slist_free (new_dsn_list);
+
+	/* remove old DSN */
+	for (list = unique_instance->priv->dsn_list; list; ) {
+		GdaDsnInfo *info;
+		info = (GdaDsnInfo *) list->data;
+		list = list->next;
+		if (g_hash_table_lookup (hash, info->name))
+			continue;
+
+		if (unique_instance->priv->emit_signals)
+			g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
+		unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
+		if (unique_instance->priv->emit_signals)
+			g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
+		data_source_info_free (info);
+	}
+	g_hash_table_destroy (hash);
+
+        GDA_CONFIG_UNLOCK ();
 }
 
 static void
@@ -1752,9 +1920,11 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
 #endif
 			while (unique_instance->priv->dsn_list) {
 				GdaDsnInfo *info = (GdaDsnInfo *) unique_instance->priv->dsn_list->data;
-				g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
+				if (unique_instance->priv->emit_signals)
+					g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
 				unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
-				g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
+				if (unique_instance->priv->emit_signals)
+					g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
 				data_source_info_free (info);
 			}
 			

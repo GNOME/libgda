@@ -1632,7 +1632,7 @@ AC_ARG_WITH(libsoup,
 if test "$with_libsoup" = "auto" -o "$with_libsoup" = "yes"
 then
 	PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4, [
-		AC_DEFINE(HAVE_LIBSOUP, [1], [libsoup support enable])
+		AC_DEFINE(HAVE_LIBSOUP, [1], [libsoup support enabled])
 		have_libsoup=yes], [
 		if test "$with_libsoup" = "yes"
 		then
@@ -1643,6 +1643,30 @@ fi
 AM_CONDITIONAL(LIBSOUP, test "$have_libsoup" = "yes")
 AC_SUBST(LIBSOUP_CFLAGS)
 AC_SUBST(LIBSOUP_LIBS)
+
+
+dnl ************************
+dnl Check for gnome-keyring
+dnl ************************
+
+AC_ARG_WITH(gnome-keyring,
+	AS_HELP_STRING([--with-gnome-keyring], [Enable gnome-keyring support]),
+	,with_gnome_keyring=auto)
+
+if test "$with_gnome_keyring" = "auto" -o "$with_gnome_keyring" = "yes"
+then
+	PKG_CHECK_MODULES(GNOME_KEYRING, gnome-keyring-1, [
+		AC_DEFINE(HAVE_GNOME_KEYRING, [1], [gnome-keyring support enabled])
+		have_gnome_keyring=yes], [
+		if test "$with_gnome_keyring" = "yes"
+		then
+			AC_MSG_ERROR([gnome-keyring support requested but not found.])
+		fi
+		have_gnome_keyring=no])
+fi
+AM_CONDITIONAL(GNOME_KEYRING, test "$have_gnome_keyring" = "yes")
+AC_SUBST(GNOME_KEYRING_CFLAGS)
+AC_SUBST(GNOME_KEYRING_LIBS)
 
 
 dnl **************************
