@@ -126,7 +126,6 @@ gda_connection_event_new (GdaConnectionEventType type)
 	GdaConnectionEvent *event;
 
 	event = GDA_CONNECTION_EVENT (g_object_new (GDA_TYPE_CONNECTION_EVENT, "type", (int)type, NULL));
-	g_print ("Createdevent %p\n", event);
 	return event;
 }
 
@@ -150,8 +149,6 @@ gda_connection_event_finalize (GObject *object)
 
 	/* chain to parent class */
 	parent_class->finalize (object);
-
-	g_print ("Finalizedevent %p\n", event);
 }
 
 static void gda_connection_event_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
