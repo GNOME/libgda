@@ -177,6 +177,7 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
+	g_setenv ("GDA_CONFIG_SYNCHRONOUS", "1", TRUE);
         gda_init ();
 
 	has_threads = g_thread_supported ();
@@ -1310,13 +1311,20 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		return NULL;
 	}
 
-	if (!user && info && info->auth_string) {
+	if ((!user || !pass) && info && info->auth_string) {
 		GdaQuarkList* ql;
 		const gchar *tmp;
 		ql = gda_quark_list_new_from_string (info->auth_string);
-		tmp = gda_quark_list_find (ql, "USERNAME");
-		if (tmp)
-			user = g_strdup (tmp);
+		if (!user) {
+			tmp = gda_quark_list_find (ql, "USERNAME");
+			if (tmp)
+				user = g_strdup (tmp);
+		}
+		if (!pass) {
+			tmp = gda_quark_list_find (ql, "PASSWORD");
+			if (tmp)
+				pass = g_strdup (tmp);
+		}
 		gda_quark_list_free (ql);
 	}
 	if (need_user && ((user && !*user) || !user)) {

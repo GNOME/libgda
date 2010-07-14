@@ -80,6 +80,9 @@ static void gda_config_get_property (GObject *object,
 				     GValue *value,
 				     GParamSpec *pspec);
 static GdaConfig *unique_instance = NULL;
+#ifdef HAVE_GNOME_KEYRING
+static gboolean sync_keyring = FALSE;
+#endif
 
 static gint data_source_info_compare (GdaDsnInfo *infoa, GdaDsnInfo *infob);
 static void data_source_info_free (GdaDsnInfo *info);
@@ -241,7 +244,7 @@ gda_config_init (GdaConfig *conf, GdaConfigClass *klass)
 
 #ifdef HAVE_GNOME_KEYRING
 static void
-password_found (GnomeKeyringResult res, const gchar *password, const gchar *dsnname)
+password_found_cb (GnomeKeyringResult res, const gchar *password, const gchar *dsnname)
 {
         if (res == GNOME_KEYRING_RESULT_OK) {
 		GdaDsnInfo *dsn;
@@ -257,6 +260,9 @@ password_found (GnomeKeyringResult res, const gchar *password, const gchar *dsnn
 		if (unique_instance->priv->emit_signals)
 			g_signal_emit (unique_instance, gda_config_signals [DSN_CHANGED], 0, dsn);
 	}
+	else if (res != GNOME_KEYRING_RESULT_NO_MATCH)
+		g_warning (_("Error loading authentification information for '%s' DSN: %s"),
+			     dsnname, gnome_keyring_result_to_message (res));
 }
 #endif
 
@@ -363,13 +369,30 @@ load_config_file (const gchar *file, gboolean is_system)
 
 #ifdef HAVE_GNOME_KEYRING
 			if (! is_system) {
-				gchar *tmp = g_strdup (info->name);
-				gnome_keyring_find_password (GNOME_KEYRING_NETWORK_PASSWORD,
-							     (GnomeKeyringOperationGetStringCallback) password_found, tmp, g_free,
-							     "server", tmp, NULL);
+				if (sync_keyring) {
+					GnomeKeyringResult res;
+					gchar *auth = NULL;
+					res = gnome_keyring_find_password_sync (GNOME_KEYRING_NETWORK_PASSWORD, &auth,
+										"server", info->name, NULL);
+					if (res == GNOME_KEYRING_RESULT_OK) {
+						/*g_print ("Loaded sync. auth info for '%s': %s\n", info->name, auth);*/
+						info->auth_string = g_strdup (auth);
+					}
+					else if (res != GNOME_KEYRING_RESULT_NO_MATCH)
+						g_warning (_("Error loading authentification information for '%s' DSN: %s"),
+							   info->name, gnome_keyring_result_to_message (res));
+					if (auth)
+						gnome_keyring_free_password (auth);
+				}
+				else {
+					gchar *tmp = g_strdup (info->name);
+					gnome_keyring_find_password (GNOME_KEYRING_NETWORK_PASSWORD,
+								     (GnomeKeyringOperationGetStringCallback) password_found_cb,
+								     tmp, g_free,
+								     "server", tmp, NULL);
+				}
 			}
 #endif
-
 			/* signals */
 			if (is_new) {
 				unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, info,
@@ -469,6 +492,11 @@ gda_config_constructor (GType type,
 	GObject *object;
   
 	if (!unique_instance) {
+#ifdef HAVE_GNOME_KEYRING
+		if (g_getenv ("GDA_CONFIG_SYNCHRONOUS"))
+			sync_keyring = TRUE;
+#endif
+
 		gint i;
 		gboolean user_file_set = FALSE, system_file_set = FALSE;
 
@@ -810,7 +838,6 @@ gda_config_get_dsn_info (const gchar *dsn_name)
 static void
 password_stored_cb (GnomeKeyringResult res, const gchar *dsnname)
 {
-        /* user_data will be the same as was passed to gnome_keyring_store_password() */
         if (res != GNOME_KEYRING_RESULT_OK)
                 g_warning (_("Couldn't save authentification information for DSN '%s': %s"), dsnname,
 			     gnome_keyring_result_to_message (res));
@@ -896,14 +923,24 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 #ifdef HAVE_GNOME_KEYRING
 	if (! info->is_system) {
 		/* save to keyring */
-		gchar *tmp, *tmp1;
+		gchar *tmp;
 		tmp = g_strdup_printf (_("Authentification for the '%s' DSN"), info->name);
-		tmp1 = g_strdup (info->name);
-		gnome_keyring_store_password (GNOME_KEYRING_NETWORK_PASSWORD,
-					      GNOME_KEYRING_DEFAULT,
-					      tmp, info->auth_string,
-					      (GnomeKeyringOperationDoneCallback) password_stored_cb, tmp1, g_free,
-					      "server", info->name, NULL);
+		if (sync_keyring) {
+			GnomeKeyringResult res;
+			res = gnome_keyring_store_password_sync (GNOME_KEYRING_NETWORK_PASSWORD, GNOME_KEYRING_DEFAULT,
+								 tmp, info->auth_string,
+								 "server", info->name, NULL);
+			password_stored_cb (res, info->name);
+		}
+		else {
+			gchar *tmp1;
+			tmp1 = g_strdup (info->name);
+			gnome_keyring_store_password (GNOME_KEYRING_NETWORK_PASSWORD,
+						      GNOME_KEYRING_DEFAULT,
+						      tmp, info->auth_string,
+						      (GnomeKeyringOperationDoneCallback) password_stored_cb, tmp1, g_free,
+						      "server", info->name, NULL);
+		}
 		g_free (tmp);
 	}
 #endif
@@ -978,11 +1015,19 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 #ifdef HAVE_GNOME_KEYRING
 	if (! info->is_system) {
 		/* remove from keyring */
-		gchar *tmp;
-		tmp = g_strdup (dsn_name);
-		gnome_keyring_delete_password (GNOME_KEYRING_NETWORK_PASSWORD,
-					       (GnomeKeyringOperationDoneCallback) password_deleted_cb, tmp, g_free,
-					       "server", tmp, NULL);
+		if (sync_keyring) {
+			GnomeKeyringResult res;
+			res = gnome_keyring_delete_password_sync (GNOME_KEYRING_NETWORK_PASSWORD, GNOME_KEYRING_DEFAULT,
+								  "server", info->name, NULL);
+			password_deleted_cb (res, info->name);
+		}
+		else {
+			gchar *tmp;
+			tmp = g_strdup (dsn_name);
+			gnome_keyring_delete_password (GNOME_KEYRING_NETWORK_PASSWORD,
+						       (GnomeKeyringOperationDoneCallback) password_deleted_cb, tmp, g_free,
+						       "server", tmp, NULL);
+		}
 	}
 #endif
 
