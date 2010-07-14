@@ -508,18 +508,41 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 			else if (fk->cols_nb == 1) {
 				gchar *tmp;
 				GdaMetaTableColumn *col;
-				col = GDA_META_TABLE_COLUMN (g_slist_nth_data (mlinked->columns, fk->fk_cols_array [0]));
-				g_assert (col);
 				const GdaSqlBuilderId id1 = gda_sql_builder_add_id (b, fk->fk_names_array [0]);
 				tmp = g_strdup_printf ("%s@%s", id ? (gchar*) id : (gchar*) fk_table,
 						       fk->ref_pk_names_array [0]);
+
+				col = GDA_META_TABLE_COLUMN (g_slist_nth_data (mlinked->columns,
+									       fk->ref_pk_cols_array [0] - 1));
+				g_assert (col);
 				const GdaSqlBuilderId id2 = gda_sql_builder_add_param (b, tmp, col->gtype, FALSE);
 				g_free (tmp);
 				const GdaSqlBuilderId id_cond = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id1, id2, 0);
 				gda_sql_builder_set_where (b, id_cond);
 			}
 			else {
-				TO_IMPLEMENT;
+				gchar *tmp;
+				gint i;
+				GdaMetaTableColumn *col;
+				GdaSqlBuilderId andid;
+				GdaSqlBuilderId *op_ids;
+				op_ids = g_new (GdaSqlBuilderId, fk->cols_nb);
+				
+				for (i = 0; i < fk->cols_nb; i++) {
+					const GdaSqlBuilderId id1 = gda_sql_builder_add_id (b, fk->fk_names_array [i]);
+					tmp = g_strdup_printf ("%s@%s", id ? (gchar*) id : (gchar*) fk_table,
+							       fk->ref_pk_names_array [i]);
+
+					col = GDA_META_TABLE_COLUMN (g_slist_nth_data (mlinked->columns,
+										       fk->ref_pk_cols_array [i] - 1));
+					g_assert (col);
+					const GdaSqlBuilderId id2 = gda_sql_builder_add_param (b, tmp, col->gtype, FALSE);
+					g_free (tmp);
+					op_ids [i] = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id1, id2, 0);
+				}
+				andid = gda_sql_builder_add_cond_v (b, GDA_SQL_OPERATOR_TYPE_AND, op_ids, fk->cols_nb);
+				g_free (op_ids);
+				gda_sql_builder_set_where (b, andid);
 			}
 
 			xmlFree (fk_table);
@@ -543,7 +566,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 				  G_CALLBACK (params_changed_cb), source);
 	}
 
-	/*g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL));*/
+	g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL));
 	g_object_unref (b);
 
 	return source->priv->stmt ? TRUE : FALSE;
@@ -819,7 +842,7 @@ data_source_create_grid (DataSource *source)
 		for (list2 = renderers; list2; list2 = list2->next) {
 			if (GTK_IS_CELL_RENDERER_TEXT (list2->data))
 				g_object_set ((GObject*) list2->data,
-					      "scale", 0.7, NULL);
+					      "scale", 0.8, NULL);
 		}
 		g_list_free (renderers);
 	}
