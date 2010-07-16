@@ -986,7 +986,7 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
 
 static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, 
 					const gint *rows, gint nb_rows, gchar sep, gchar quote, gboolean field_quotes,
-					gboolean null_as_empty);
+					gboolean null_as_empty, gboolean invalid_as_null);
 
 
 /**
@@ -1055,6 +1055,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		gchar quote = '"';
 		gboolean field_quote = TRUE;
 		gboolean null_as_empty = FALSE;
+		gboolean invalid_as_null = FALSE;
 
 		retstring = g_string_new ("");
 		if (options) {
@@ -1108,6 +1109,16 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NULL_AS_EMPTY");
 			}
 
+			holder = gda_set_get_holder (options, "INVALID_AS_NULL");
+			if (holder) {
+				const GValue *value;
+				value = gda_holder_get_value (holder);
+				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+					invalid_as_null = g_value_get_boolean ((GValue *) value);
+				else 
+					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "INVALID_AS_NULL");
+			}
+
 			holder = gda_set_get_holder (options, "FIELDS_NAME");
 			if (holder) {
 				const GValue *value;
@@ -1151,7 +1162,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		if (cols) {
 			gchar *tmp;
 			tmp = export_to_text_separated (model, cols, nb_cols, rows,
-							nb_rows, sep, quote, field_quote, null_as_empty);
+							nb_rows, sep, quote, field_quote, null_as_empty, invalid_as_null);
 			g_string_append (retstring, tmp);
 			g_free (tmp);
 		}
@@ -1163,7 +1174,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 			for (i = 0; i < rnb_cols; i++)
 				rcols[i] = i;
 			tmp = export_to_text_separated (model, rcols, rnb_cols, rows, nb_rows,
-							sep, quote, field_quote, null_as_empty);
+							sep, quote, field_quote, null_as_empty, invalid_as_null);
 			g_string_append (retstring, tmp);
 			g_free (tmp);
 			g_free (rcols);			
@@ -1203,6 +1214,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  *   <listitem><para>"FIELDS_NAME": a boolean value which, if set to %TRUE and in case of a CSV export, will add a first line with the name each exported field</para></listitem>
  *   <listitem><para>"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.</para></listitem>
  *   <listitem><para>"NULL_AS_EMPTY": a boolean value which, if set to %TRUE and in case of a CSV export, will render and NULL value as the empty string (instead of the 'NULL' string)</para></listitem>
+ *   <listitem><para>"INVALID_AS_NULL": a boolean value which, if set to %TRUE, considers any invalid data (for example for the date related values) as NULL</para></listitem>
  * </itemizedlist>
  *
  * Upon errors FALSE will be returned and @error will be assigned a
@@ -1258,7 +1270,7 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 
 static gchar *
 export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, const gint *rows, gint nb_rows, 
-			  gchar sep, gchar quote, gboolean field_quotes, gboolean null_as_empty)
+			  gchar sep, gchar quote, gboolean field_quotes, gboolean null_as_empty, gboolean invalid_as_null)
 {
 	GString *str;
 	gchar *retval;
@@ -1281,7 +1293,31 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, c
 			gchar *txt;
 
 			value = (GValue *) gda_data_model_get_value_at (model, cols[c], rows ? rows[r] : r, NULL);
-			if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
+			if (invalid_as_null) {
+				if ((G_VALUE_TYPE (value) == G_TYPE_DATE)) {
+					GDate *date = (GDate*) g_value_get_boxed (value);
+					if (!g_date_valid (date))
+						value = NULL;
+				}
+				else if ((G_VALUE_TYPE (value) == GDA_TYPE_TIME)) {
+					const GdaTime *tim = gda_value_get_time (value);
+					if (! gda_time_valid (tim))
+						value = NULL;					
+				}
+				else if ((G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP)) {
+					const GdaTimestamp *ts = gda_value_get_timestamp (value);
+					if (! gda_timestamp_valid (ts))
+						value = NULL;
+				}
+			}
+
+			if (!value) {
+				if (null_as_empty)
+					txt = g_strdup ("");
+				else
+					txt = g_strdup ("NULL");
+			}
+			else if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 				txt = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
 			else if (null_as_empty && gda_value_is_null (value))
 				txt = g_strdup ("");
