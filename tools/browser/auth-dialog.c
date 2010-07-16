@@ -345,6 +345,29 @@ check_for_cnc (AuthDialog *dialog)
 	return !finished;
 }
 
+static void
+update_dialog_focus (AuthDialog *dialog)
+{
+	GSList *list;
+	gboolean allvalid = TRUE;
+	for (list = dialog->priv->auth_list; list; list = list->next) {
+		AuthData *ad;
+		ad = (AuthData*) list->data;
+		if (ad->auth_widget && !ad->ext.cnc &&
+		    ! gdaui_basic_form_is_valid (GDAUI_BASIC_FORM (ad->auth_widget))) {
+			allvalid = FALSE;
+			gtk_widget_grab_focus (ad->auth_widget);
+			break;
+		}
+	}
+
+	if (allvalid) {
+		GtkWidget *wid;
+		wid = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+		gtk_widget_grab_focus (wid);
+	}
+}
+
 /**
  * auth_dialog_add_cnc_string
  */
@@ -532,6 +555,8 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
         g_free (pass);
         g_free (real_provider);
         g_free (real_auth_string);
+
+	update_dialog_focus (dialog);
 
 	return TRUE;
 }
