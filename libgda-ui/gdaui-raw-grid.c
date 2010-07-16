@@ -354,7 +354,7 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	grid->priv->default_show_global_actions = TRUE;
 	grid->priv->columns_data = NULL;
 	grid->priv->columns_hash = g_hash_table_new (NULL, NULL);
-	grid->priv->export_type = 2;
+	grid->priv->export_type = 1;
 	grid->priv->write_mode = GDAUI_DATA_PROXY_WRITE_ON_DEMAND;
 
 	tree_view = GTK_TREE_VIEW (grid);
@@ -1907,6 +1907,7 @@ menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid)
 	filename = gtk_file_chooser_widget_new (GTK_FILE_CHOOSER_ACTION_SAVE);
 	g_object_set_data (G_OBJECT (dialog), "filename", filename);
 	gtk_box_pack_start (GTK_BOX (hbox), filename, TRUE, TRUE, 0);
+	gtk_widget_show (filename);
 
 	str = g_strdup_printf ("<b>%s:</b>", _("Details"));
 	label = gtk_label_new ("");
@@ -2102,6 +2103,7 @@ save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid)
 		export_type = gtk_combo_box_get_active (GTK_COMBO_BOX (types));
 		grid->priv->export_type = export_type;
 		paramlist = gda_set_new (NULL);
+
 		if (null_as_empty) {
 			param = gda_holder_new_boolean ("NULL_AS_EMPTY", TRUE);
 			gda_set_add_holder (paramlist, param);
