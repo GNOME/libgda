@@ -129,7 +129,7 @@ enum {
 	PROP_HEADERS_SENSITIVE,
 	PROP_SHOW_ACTIONS,
 	PROP_ENTRIES_AUTO_DEFAULT,
-	PROP_CAN_EXPAND
+	PROP_CAN_VEXPAND
 };
 
 typedef struct {
@@ -275,9 +275,9 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 							       _("Entries Auto-default"),
 							       NULL, FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
-	g_object_class_install_property (object_class, PROP_CAN_EXPAND,
-					 g_param_spec_boolean ("can-expand",
-							       _("TRUE if expanding the form makes sense"),
+	g_object_class_install_property (object_class, PROP_CAN_VEXPAND,
+					 g_param_spec_boolean ("can-expand-v",
+							       _("TRUE if expanding the form vertically makes sense"),
 							       NULL, FALSE,
 							       G_PARAM_READABLE));
 
@@ -548,7 +548,7 @@ gdaui_basic_form_get_property (GObject *object,
 		case PROP_ENTRIES_AUTO_DEFAULT:
 			g_value_set_boolean (value, form->priv->entries_auto_default);
 			break;
-		case PROP_CAN_EXPAND: {
+		case PROP_CAN_VEXPAND: {
 			gboolean can_expand = FALSE;
 			GSList *list;
 			for (list = form->priv->s_entries; list; list = list->next) {
@@ -910,7 +910,7 @@ static void
 pack_entry_widget (SingleEntry *sentry)
 {
 	gboolean expand;
-	expand = gdaui_data_entry_expand_in_layout (GDAUI_DATA_ENTRY (sentry->entry));
+	expand = gdaui_data_entry_can_expand (GDAUI_DATA_ENTRY (sentry->entry), FALSE);
 	sentry->can_expand = expand;
 
 	switch (sentry->packing_type) {
@@ -1934,7 +1934,7 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 
 
 	gboolean can_expand;
-	g_object_get ((GObject*) form, "can-expand", &can_expand, NULL);
+	g_object_get ((GObject*) form, "can-expand-v", &can_expand, NULL);
 #if GTK_CHECK_VERSION(2,18,0)
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg)))), 4);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))), form,

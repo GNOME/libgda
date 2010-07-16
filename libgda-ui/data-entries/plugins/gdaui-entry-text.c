@@ -50,7 +50,7 @@ static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
-static gboolean   expand_in_layout (GdauiEntryWrapper *mgwrap);
+static gboolean   can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -102,7 +102,7 @@ gdaui_entry_text_class_init (GdauiEntryTextClass * class)
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->expand_in_layout = expand_in_layout;
+	GDAUI_ENTRY_WRAPPER_CLASS (class)->can_expand = can_expand;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
 }
 
@@ -396,7 +396,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-expand_in_layout (GdauiEntryWrapper *mgwrap)
+can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
 {
 	return TRUE;
 }

@@ -58,7 +58,7 @@ struct _GdauiDataEntryIface
 	void            (*set_attributes)        (GdauiDataEntry *de, GdaValueAttribute attrs, GdaValueAttribute mask);
 	GdaValueAttribute (*get_attributes)      (GdauiDataEntry *de);
 	GdaDataHandler *(*get_handler)           (GdauiDataEntry *de);
-	gboolean        (*expand_in_layout)      (GdauiDataEntry *de);
+	gboolean        (*can_expand)            (GdauiDataEntry *de, gboolean horiz);
 	void            (*set_editable)          (GdauiDataEntry *de, gboolean editable);
 	gboolean        (*get_editable)          (GdauiDataEntry *de);
 	void            (*grab_focus)            (GdauiDataEntry *de);
@@ -94,21 +94,10 @@ void            gdaui_data_entry_set_attributes         (GdauiDataEntry *de, Gda
 GdaValueAttribute gdaui_data_entry_get_attributes       (GdauiDataEntry *de);
 
 GdaDataHandler *gdaui_data_entry_get_handler            (GdauiDataEntry *de);
-gboolean        gdaui_data_entry_expand_in_layout       (GdauiDataEntry *de);
+gboolean        gdaui_data_entry_can_expand             (GdauiDataEntry *de, gboolean horiz);
 void            gdaui_data_entry_set_editable           (GdauiDataEntry *de, gboolean editable);
 gboolean        gdaui_data_entry_get_editable           (GdauiDataEntry *de);
 void            gdaui_data_entry_grab_focus             (GdauiDataEntry *de);
-
-/* TO remove and replace with properties:
- * gdaui_data_entry_expand_in_layout
- * gdaui_data_entry_get_handler
- * gdaui_data_entry_set_attributes
- * gdaui_data_entry_get_attributes
- * gdaui_data_entry_set_value_default
- *
- * Don't replace at all:
- * gdaui_data_entry_grab_focus
- */
 
 G_END_DECLS
 

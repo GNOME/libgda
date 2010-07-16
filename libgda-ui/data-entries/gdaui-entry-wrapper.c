@@ -53,7 +53,7 @@ static void            gdaui_entry_wrapper_set_value_default (GdauiDataEntry *de
 static void            gdaui_entry_wrapper_set_attributes    (GdauiDataEntry *de, GdaValueAttribute attrs, guint mask);
 static GdaValueAttribute gdaui_entry_wrapper_get_attributes  (GdauiDataEntry *de);
 static GdaDataHandler *gdaui_entry_wrapper_get_handler       (GdauiDataEntry *de);
-static gboolean        gdaui_entry_wrapper_expand_in_layout  (GdauiDataEntry *de);
+static gboolean        gdaui_entry_wrapper_can_expand        (GdauiDataEntry *de, gboolean horiz);
 static void            gdaui_entry_wrapper_set_editable      (GdauiDataEntry *de, gboolean editable);
 static gboolean        gdaui_entry_wrapper_get_editable      (GdauiDataEntry *de);
 static void            gdaui_entry_wrapper_grab_focus        (GdauiDataEntry *de);
@@ -132,7 +132,7 @@ gdaui_entry_wrapper_data_entry_init (GdauiDataEntryIface *iface)
 	iface->set_attributes = gdaui_entry_wrapper_set_attributes;
 	iface->get_attributes = gdaui_entry_wrapper_get_attributes;
 	iface->get_handler = gdaui_entry_wrapper_get_handler;
-	iface->expand_in_layout = gdaui_entry_wrapper_expand_in_layout;
+	iface->can_expand = gdaui_entry_wrapper_can_expand;
 	iface->set_editable = gdaui_entry_wrapper_set_editable;
 	iface->get_editable = gdaui_entry_wrapper_get_editable;
 	iface->grab_focus = gdaui_entry_wrapper_grab_focus;
@@ -190,8 +190,8 @@ check_correct_init (GdauiEntryWrapper *mgwrap)
 				   G_OBJECT_TYPE_NAME (mgwrap));
 			class_impl_error = TRUE;
 		}
-		if (! klass->expand_in_layout) {
-			g_warning ("expand_in_layout () virtual function not implemented for object class %s\n",
+		if (! klass->can_expand) {
+			g_warning ("can_expand () virtual function not implemented for object class %s\n",
 				   G_OBJECT_TYPE_NAME (mgwrap));
 			class_impl_error = TRUE;
 		}
@@ -819,7 +819,7 @@ gdaui_entry_wrapper_get_handler (GdauiDataEntry *iface)
 }
 
 static gboolean
-gdaui_entry_wrapper_expand_in_layout (GdauiDataEntry *iface)
+gdaui_entry_wrapper_can_expand (GdauiDataEntry *iface, gboolean horiz)
 {
 	GdauiEntryWrapper *mgwrap;
 
@@ -827,7 +827,7 @@ gdaui_entry_wrapper_expand_in_layout (GdauiDataEntry *iface)
 	mgwrap = (GdauiEntryWrapper*) iface;
 	check_correct_init (mgwrap);
 
-	return (mgwrap->priv->real_class->expand_in_layout) (mgwrap);
+	return (mgwrap->priv->real_class->can_expand) (mgwrap, horiz);
 }
 
 static void

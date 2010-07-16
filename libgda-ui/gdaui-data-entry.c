@@ -394,22 +394,24 @@ gdaui_data_entry_get_handler (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_expand_in_layout
+ * gdaui_data_entry_can_expand
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
+ * @horiz: %TRUE to query horizontal expansion requirements, or %FALSE for vertical
  *
- * Used for the layout of the widget in containers.
+ * Used for the layout of #GdaDataEntry widgets in containers: queries if @de requires
+ * horizontal or vertical expansion, depending on @horiz
  *
- * Returns: TRUE if the widget should expand
+ * Returns: TRUE if the widget requires expansion
  *
  * Since: 4.2
  */
 gboolean
-gdaui_data_entry_expand_in_layout (GdauiDataEntry *de)
+gdaui_data_entry_can_expand (GdauiDataEntry *de, gboolean horiz)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), FALSE);
 
-	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->expand_in_layout)
-		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->expand_in_layout) (de);
+	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->can_expand)
+		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->can_expand) (de, horiz);
 	else
 		return FALSE;
 }

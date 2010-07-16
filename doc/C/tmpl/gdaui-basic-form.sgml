@@ -136,7 +136,7 @@ which can be described by the following DTD.
 
 @gdauibasicform: the object which received the signal.
 
-<!-- ##### ARG GdauiBasicForm:can-expand ##### -->
+<!-- ##### ARG GdauiBasicForm:can-expand-v ##### -->
 <para>
 
 </para>

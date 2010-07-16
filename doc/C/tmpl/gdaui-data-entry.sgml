@@ -68,6 +68,13 @@ Data entry widget
 @arg1: 
 @Returns: 
 
+<!-- ##### SIGNAL GdauiDataEntry::expand-changed ##### -->
+<para>
+
+</para>
+
+@gdauidataentry: the object which received the signal.
+
 <!-- ##### SIGNAL GdauiDataEntry::status-changed ##### -->
 <para>
 
@@ -184,12 +191,13 @@ Data entry widget
 @Returns: 
 
 
-<!-- ##### FUNCTION gdaui_data_entry_expand_in_layout ##### -->
+<!-- ##### FUNCTION gdaui_data_entry_can_expand ##### -->
 <para>
 
 </para>
 
 @de: 
+@horiz: 
 @Returns: 
 
 
