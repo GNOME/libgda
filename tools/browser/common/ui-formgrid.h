@@ -25,6 +25,7 @@
 #include <libgda/gda-data-model.h>
 #include <libgda-ui/gdaui-data-proxy-info.h>
 #include <libgda-ui/gdaui-raw-grid.h>
+#include "../browser-connection.h"
 
 G_BEGIN_DECLS
 
@@ -58,6 +59,9 @@ struct _UiFormGridClass
 GType             ui_formgrid_get_type            (void);
 
 GtkWidget        *ui_formgrid_new                 (GdaDataModel *model, GdauiDataProxyInfoFlag flags);
+void              ui_formgrid_handle_user_prefs   (UiFormGrid *formgrid, BrowserConnection *bcnc,
+						   GdaStatement *stmt);
+
 GArray           *ui_formgrid_get_selection       (UiFormGrid *formgrid);
 GdaDataModelIter *ui_formgrid_get_form_data_set   (UiFormGrid *formgrid);
 GdaDataModelIter *ui_formgrid_get_grid_data_set   (UiFormGrid *formgrid);

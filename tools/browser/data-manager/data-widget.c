@@ -26,6 +26,7 @@
 #include "../browser-connection.h"
 #include "../browser-spinner.h"
 #include "../common/ui-formgrid.h"
+#include "../browser-window.h"
 
 typedef struct {
 	DataWidget *dwid;
@@ -361,7 +362,12 @@ source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
 	
 	if (! part->data_widget) {
 		GtkWidget *cwid;
+		BrowserConnection *bcnc;
+		bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) part->dwid));
 		cwid = (GtkWidget*) data_source_create_grid (part->source);
+		ui_formgrid_handle_user_prefs (UI_FORMGRID (cwid), bcnc,
+					       data_source_get_statement (part->source));
+
 		wid = (GtkWidget*) ui_formgrid_get_grid_widget (UI_FORMGRID (cwid));
 		part->data_widget = wid;
 		part->data_widget_page = gtk_notebook_append_page (part->nb, cwid, NULL);

@@ -638,6 +638,16 @@ exec_end_timeout_cb (DataSource *source)
 }
 
 /**
+ *data_source_get_statement
+ */
+GdaStatement *
+data_source_get_statement (DataSource *source)
+{
+	g_return_val_if_fail (IS_DATA_SOURCE (source), NULL);
+	return source->priv->stmt;
+}
+
+/**
  * data_source_execution_going_on
  */
 gboolean

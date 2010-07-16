@@ -250,6 +250,73 @@ ui_formgrid_new (GdaDataModel *model, GdauiDataProxyInfoFlag flags)
 	return (GtkWidget *) formgrid;
 }
 
+/**
+ * ui_formgrid_handle_user_prefs
+ * @formgrid: a #UiFormGrid widget
+ * @bcnc: a #BrowserConnection
+ * @stmt: the #GdaStatement which has been executed to produce the #GdaDataModel displayed in @formgrid
+ *
+ * Takes into account the UI preferences of the user
+ */
+void
+ui_formgrid_handle_user_prefs (UiFormGrid *formgrid, BrowserConnection *bcnc, GdaStatement *stmt)
+{
+	g_return_if_fail (UI_IS_FORMGRID (formgrid));
+	if (bcnc)
+		g_return_if_fail (BROWSER_IS_CONNECTION (bcnc));
+	else
+		return;
+	if (stmt)
+		g_return_if_fail (GDA_IS_STATEMENT (stmt));
+	else
+		return;
+
+	GdaSqlStatement *sqlst;
+	g_object_get ((GObject*) stmt, "structure", &sqlst, NULL);
+	if (!sqlst)
+		return;
+	
+	if ((sqlst->stmt_type != GDA_SQL_STATEMENT_SELECT) ||
+	    !browser_connection_normalize_sql_statement (bcnc, sqlst, NULL))
+		goto out;
+	
+	GdaSet *set;
+	set = (GdaSet*) ui_formgrid_get_form_data_set (UI_FORMGRID (formgrid));
+	
+	GdaSqlStatementSelect *sel;
+	GSList *list;
+	gint pos;
+	sel = (GdaSqlStatementSelect*) sqlst->contents;
+	for (pos = 0, list = sel->expr_list; list; pos ++, list = list->next) {
+		GdaSqlSelectField *field = (GdaSqlSelectField*) list->data;
+		if (! field->validity_meta_object ||
+		    (field->validity_meta_object->obj_type != GDA_META_DB_TABLE) ||
+		    !field->validity_meta_table_column)
+			continue;
+		
+		gchar *plugin;
+		plugin = browser_connection_get_table_column_attribute (bcnc,
+									GDA_META_TABLE (field->validity_meta_object),
+									field->validity_meta_table_column,
+									BROWSER_CONNECTION_COLUMN_PLUGIN, NULL);
+		if (!plugin)
+			continue;
+		
+		GdaHolder *holder;
+		holder = gda_set_get_nth_holder (set, pos);
+		if (holder) {
+			GValue *value;
+			value = gda_value_new_from_string (plugin, G_TYPE_STRING);
+			gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+			gda_value_free (value);
+		}
+	}
+	
+ out:
+	gda_sql_statement_free (sqlst);
+}
+
+
 
 static void
 ui_formgrid_set_property (GObject *object,

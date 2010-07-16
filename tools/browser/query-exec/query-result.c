@@ -347,51 +347,8 @@ make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar 
 		g_object_unref (parser);
 		if (!stmt)
 			goto out;
-
-		GdaSqlStatement *sqlst;
-		g_object_get ((GObject*) stmt, "structure", &sqlst, NULL);
+		ui_formgrid_handle_user_prefs (UI_FORMGRID (grid), bcnc, stmt);
 		g_object_unref (stmt);
-		
-		if ((sqlst->stmt_type != GDA_SQL_STATEMENT_SELECT) ||
-		    !browser_connection_normalize_sql_statement (bcnc, sqlst, NULL)) {
-			gda_sql_statement_free (sqlst);
-			goto out;
-		}
-
-		GdaSet *set;
-		set = (GdaSet*) ui_formgrid_get_form_data_set (UI_FORMGRID (grid));
-
-		GdaSqlStatementSelect *sel;
-		GSList *list;
-		gint pos;
-		sel = (GdaSqlStatementSelect*) sqlst->contents;
-		for (pos = 0, list = sel->expr_list; list; pos ++, list = list->next) {
-			GdaSqlSelectField *field = (GdaSqlSelectField*) list->data;
-			if (! field->validity_meta_object ||
-			    (field->validity_meta_object->obj_type != GDA_META_DB_TABLE) ||
-			    !field->validity_meta_table_column)
-				continue;
-
-			gchar *plugin;
-			plugin = browser_connection_get_table_column_attribute (bcnc,
-										GDA_META_TABLE (field->validity_meta_object),
-										field->validity_meta_table_column,
-										BROWSER_CONNECTION_COLUMN_PLUGIN, NULL);
-			if (!plugin)
-				continue;
-
-			GdaHolder *holder;
-			holder = gda_set_get_nth_holder (set, pos);
-			if (holder) {
-				GValue *value;
-				value = gda_value_new_from_string (plugin, G_TYPE_STRING);
-				gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
-				gda_value_free (value);
-			}
-				
-		}
-
-		gda_sql_statement_free (sqlst);
 	}
  out:
 	return grid;
