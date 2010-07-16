@@ -26,6 +26,7 @@
 #include "../browser-window.h"
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
+#include "../common/ui-formgrid.h"
 
 struct _QueryResultPrivate {
 	QueryEditor *history;
@@ -331,12 +332,8 @@ static GtkWidget *
 make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar *sql)
 {
 	GtkWidget *grid;
-	grid = gdaui_grid_new (model);
-	gdaui_grid_set_sample_size (GDAUI_GRID (grid), 300);
-	g_object_set (G_OBJECT (grid), "info-flags",
-		      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS | 
-		      GDAUI_DATA_PROXY_INFO_CURRENT_ROW, NULL);
-
+	grid = ui_formgrid_new (model, 0);
+	ui_formgrid_set_sample_size (UI_FORMGRID (grid), 300);
 	if (sql) {
 		BrowserConnection *bcnc;
 		bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) qres));
@@ -362,7 +359,7 @@ make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar 
 		}
 
 		GdaSet *set;
-		set = (GdaSet*) gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid));
+		set = (GdaSet*) ui_formgrid_get_form_data_set (UI_FORMGRID (grid));
 
 		GdaSqlStatementSelect *sel;
 		GSList *list;

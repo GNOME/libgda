@@ -410,7 +410,9 @@ browser_get_pixbuf_icon (BrowserIconType type)
 		"gda-browser-column-nn.png",
 		"gda-browser-reference.png",
 		"gda-browser-diagram.png",
-		"gda-browser-query.png"
+		"gda-browser-query.png",
+		"gda-browser-grid.png",
+		"gda-browser-form.png",
 	};
 
 	if (!array)

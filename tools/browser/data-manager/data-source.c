@@ -26,6 +26,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-sql-builder.h>
+#include "../common/ui-formgrid.h"
 
 #include "data-source.h"
 
@@ -803,7 +804,7 @@ replace_double_underscores (const gchar *str)
  *
  * Returns: a new #GdauiRawGrid, or %NULL if an error occurred
  */
-GdauiRawGrid *
+GtkWidget *
 data_source_create_grid (DataSource *source)
 {
 	g_return_val_if_fail (IS_DATA_SOURCE (source), NULL);
@@ -811,9 +812,11 @@ data_source_create_grid (DataSource *source)
 	if (! source->priv->model)
 		return NULL;
 
+	GtkWidget *fg;
 	GdauiRawGrid *grid;
-	grid = (GdauiRawGrid*) gdaui_raw_grid_new (source->priv->model);
-	
+	fg = (GdauiRawGrid*) ui_formgrid_new (source->priv->model, 0);
+	grid = ui_formgrid_get_grid_widget (UI_FORMGRID (fg));
+
 	GList *columns, *list;
 	columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
 	for (list = columns; list; list = list->next) {
@@ -850,7 +853,7 @@ data_source_create_grid (DataSource *source)
 	/*if (!columns || !columns->next)*/
 		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (grid), FALSE);
 	g_list_free (columns);
-	return grid;
+	return fg;
 }
 
 /**

@@ -65,7 +65,7 @@ GHashTable         *data_source_get_export_columns  (DataSource *source);
 
 void                data_source_execute             (DataSource *source, GError **error);
 gboolean            data_source_execution_going_on  (DataSource *source);
-GdauiRawGrid       *data_source_create_grid         (DataSource *source);
+GtkWidget          *data_source_create_grid         (DataSource *source);
 const gchar        *data_source_get_title           (DataSource *source);
 
 /*
