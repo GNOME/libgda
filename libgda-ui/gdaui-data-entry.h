@@ -1,6 +1,6 @@
 /* gdaui-data-entry.h
  *
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -63,9 +63,11 @@ struct _GdauiDataEntryIface
 	gboolean        (*get_editable)          (GdauiDataEntry *de);
 	void            (*grab_focus)            (GdauiDataEntry *de);
 
+	/* another signal */
+	void            (* expand_changed)       (GdauiDataEntry *de);
+
 	/*< private >*/
 	/* Padding for future expansion */
-        void (*_gdaui_reserved1) (void);
         void (*_gdaui_reserved2) (void);
         void (*_gdaui_reserved3) (void);
         void (*_gdaui_reserved4) (void);

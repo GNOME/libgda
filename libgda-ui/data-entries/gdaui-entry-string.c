@@ -1,6 +1,6 @@
 /* gdaui-entry-string.c
  *
- * Copyright (C) 2003 - 2008 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -285,6 +285,7 @@ gdaui_entry_string_set_property (GObject *object,
 					gtk_widget_show (mgstr->priv->entry);
 					gtk_widget_hide (mgstr->priv->sw);
 				}
+				g_signal_emit_by_name (object, "expand-changed");
 			}
 			break;
 		case PROP_OPTIONS:

@@ -74,6 +74,7 @@ typedef struct {
 	gulong          label_shown_id; /* signal ID */
 
 	gulong          entry_contents_modified_id; /* signal ID */
+	gulong          entry_expand_changed_id; /* signal ID */
 	gulong          entry_contents_activated_id; /* signal ID */
 
 	GdaHolder      *single_param;
@@ -108,6 +109,7 @@ static void paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param
 					     const gchar *att_name, const GValue *att_value, GdauiBasicForm *form);
 
 static void entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry);
+static void entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry);
 static void entry_contents_activated (GdauiDataEntry *entry, GdauiBasicForm *form);
 static void parameter_changed_cb (GdaHolder *param, SingleEntry *sentry);
 
@@ -568,9 +570,12 @@ gdaui_basic_form_get_property (GObject *object,
 static void
 disconnect_single_entry_signals (SingleEntry *sentry)
 {
-	if (sentry->entry)
+	if (sentry->entry) {
 		g_signal_handler_disconnect (sentry->entry, sentry->entry_contents_modified_id);
+		g_signal_handler_disconnect (sentry->entry, sentry->entry_expand_changed_id);
+	}
 	sentry->entry_contents_modified_id = 0;
+	sentry->entry_expand_changed_id = 0;
 	if (sentry->entry)
 		g_signal_handler_disconnect (sentry->entry, sentry->entry_contents_activated_id);
 	sentry->entry_contents_activated_id = 0;
@@ -862,6 +867,9 @@ create_entry_widget (SingleEntry *sentry)
 	sentry->entry_contents_modified_id = g_signal_connect (G_OBJECT (entry), "contents-modified",
 							       G_CALLBACK (entry_contents_modified),
 							       sentry);
+	sentry->entry_expand_changed_id = g_signal_connect (sentry->entry, "expand-changed",
+							    G_CALLBACK (entry_expand_changed_cb), sentry);
+
 	sentry->entry_contents_activated_id = g_signal_connect (G_OBJECT (entry), "contents-activated",
 								G_CALLBACK (entry_contents_activated),
 								sentry->form);
@@ -1334,6 +1342,12 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 		}
 #endif
 	}
+}
+
+static void
+entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry)
+{
+	pack_entry_widget (sentry);
 }
 
 

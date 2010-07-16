@@ -1,6 +1,6 @@
 /* gdaui-data-entry.c
  *
- * Copyright (C) 2003 - 2009 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -27,10 +27,11 @@ enum {
 	CONTENTS_ACTIVATED,
 	STATUS_CHANGED,
 	CONTENTS_VALID,
+	EXPAND_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gdaui_data_entry_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
+static gint gdaui_data_entry_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
 static void gdaui_data_entry_iface_init (gpointer g_class);
 
 GType
@@ -114,6 +115,14 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      contents_valid_accumulator, NULL,
 				      _gdaui_marshal_BOOLEAN__POINTER,
 				      G_TYPE_BOOLEAN, 1, G_TYPE_POINTER);
+		gdaui_data_entry_signals[EXPAND_CHANGED] =
+			g_signal_new ("expand-changed",
+				      GDAUI_TYPE_DATA_ENTRY,
+				      G_SIGNAL_RUN_FIRST,
+				      G_STRUCT_OFFSET (GdauiDataEntryIface, expand_changed),
+				      NULL, NULL,
+				      _gdaui_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
 
 		((GdauiDataEntryIface*) g_class)->contents_valid = m_class_contents_valid;
 		initialized = TRUE;
