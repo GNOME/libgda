@@ -107,6 +107,8 @@ static void get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form);
 static void paramlist_public_data_changed_cb (GdauiSet *paramlist, GdauiBasicForm *form);
 static void paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param,
 					     const gchar *att_name, const GValue *att_value, GdauiBasicForm *form);
+static void paramlist_holder_type_set_cb (GdaSet *paramlist, GdaHolder *param,
+					  GdauiBasicForm *form);
 
 static void entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry);
 static void entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry);
@@ -352,6 +354,9 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 	g_signal_handlers_disconnect_by_func (paramlist,
 					      G_CALLBACK (paramlist_param_attr_changed_cb), form);
 
+	g_signal_handlers_disconnect_by_func (paramlist,
+					      G_CALLBACK (paramlist_holder_type_set_cb), form);
+
 	g_object_unref (form->priv->set);
 	form->priv->set = NULL;
 
@@ -364,6 +369,24 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 	for (list = form->priv->s_entries; list; list = list->next)
 		gdaui_data_entry_set_editable (GDAUI_DATA_ENTRY (((SingleEntry*)list->data)->entry), FALSE);
 }
+
+static void
+paramlist_holder_type_set_cb (GdaSet *paramlist, GdaHolder *param,
+			      GdauiBasicForm *form)
+{
+	SingleEntry *sentry;
+
+	sentry = get_single_entry_for_holder (form, param);
+	if (sentry) {
+		create_entry_widget (sentry);
+		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (sentry->entry),
+						 form->priv->show_actions ? GDA_VALUE_ATTR_ACTIONS_SHOWN : 0,
+						 GDA_VALUE_ATTR_ACTIONS_SHOWN);
+		pack_entry_widget (sentry);
+		gdaui_basic_form_entry_set_visible (form, param, !sentry->hidden);
+	}
+}
+
 
 static void
 paramlist_public_data_changed_cb (GdauiSet *paramlist, GdauiBasicForm *form)
@@ -503,6 +526,8 @@ gdaui_basic_form_set_property (GObject *object,
 						  G_CALLBACK (paramlist_public_data_changed_cb), form);
 				g_signal_connect (form->priv->set, "holder-attr-changed",
 						  G_CALLBACK (paramlist_param_attr_changed_cb), form);
+				g_signal_connect (form->priv->set, "holder-type-set",
+						  G_CALLBACK (paramlist_holder_type_set_cb), form);
 
 				create_entries (form);
 				pack_entries_in_table (form);

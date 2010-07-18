@@ -112,6 +112,9 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 	if (!gdaui_plugins_hash)
 		gdaui_plugins_hash = init_plugins_hash ();
 
+	if (type == G_TYPE_INVALID)
+		return (GdauiDataEntry *) gdaui_entry_none_new (GDA_TYPE_NULL);
+
 	dh = gda_get_default_handler (type);
 
 	if (plugin_name && *plugin_name) {
@@ -134,9 +137,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 	}
 
 	if (!entry) {
-		if (type == GDA_TYPE_NULL)
-			entry = (GdauiDataEntry *) gdaui_entry_none_new (GDA_TYPE_NULL);
-		else if (type == G_TYPE_STRING)
+		if (type == G_TYPE_STRING)
 			entry = (GdauiDataEntry *) gdaui_entry_string_new (dh, type, spec_options);
 		else if ((type == G_TYPE_INT64) ||
 			 (type == G_TYPE_UINT64) ||

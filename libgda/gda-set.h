@@ -103,10 +103,10 @@ struct _GdaSetClass
 	void                  (*holder_attr_changed)   (GdaSet *set, GdaHolder *holder, 
 							const gchar *attr_name, const GValue *attr_value);
 	void                  (*public_data_changed)   (GdaSet *set);
+	void                  (*holder_type_set)       (GdaSet *set, GdaHolder *holder);
 
 	/*< private >*/
 	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);

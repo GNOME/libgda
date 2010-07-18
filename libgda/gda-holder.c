@@ -1513,8 +1513,10 @@ bind_to_notify_cb (GdaHolder *bind_to, GParamSpec *pspec, GdaHolder *holder)
 	g_signal_handler_disconnect (holder->priv->simple_bind,
 				     holder->priv->simple_bind_notify_signal_id);
 	holder->priv->simple_bind_notify_signal_id = 0;
-	if (holder->priv->g_type == GDA_TYPE_NULL)
+	if (holder->priv->g_type == GDA_TYPE_NULL) {
 		holder->priv->g_type = bind_to->priv->g_type;
+		g_object_notify ((GObject*) holder, "g-type");
+	}
 	else if (holder->priv->g_type != bind_to->priv->g_type) {
 		/* break holder's binding because type differ */
 		g_warning (_("Cannot bind holders if their type is not the same, "

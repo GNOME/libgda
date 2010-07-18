@@ -57,6 +57,8 @@ static void changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static GError *validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *dataset);
 static void source_changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static void att_holder_changed_cb (GdaHolder *holder, const gchar *att_name, const GValue *att_value, GdaSet *dataset);
+static void holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset);
+
 
 static void compute_public_data (GdaSet *set);
 static gboolean gda_set_real_add_holder (GdaSet *set, GdaHolder *holder);
@@ -82,6 +84,7 @@ enum
 	HOLDER_ATTR_CHANGED,
 	VALIDATE_HOLDER_CHANGE,
 	VALIDATE_SET,
+	HOLDER_TYPE_SET,
 	LAST_SIGNAL
 };
 
@@ -311,11 +314,32 @@ gda_set_class_init (GdaSetClass *class)
 			      NULL, NULL,
 			      _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
+	/**
+	 * GdaSet::holder-type-set
+	 * @set: the #GdaSet
+	 * @holder: the #GdaHolder for which the #GType has been set
+	 *
+	 * Gets emitted when @holder in @set has its type finally set, in case
+	 * it was #GDA_TYPE_NULL
+	 *
+	 * Since: 4.2
+	 */
+	gda_set_signals[HOLDER_TYPE_SET] =
+		g_signal_new ("holder-type-set",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GdaSetClass, holder_type_set),
+			      NULL, NULL,
+			      _gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
+			      GDA_TYPE_HOLDER);
+
+
 	class->holder_changed = NULL;
 	class->validate_holder_change = m_validate_holder_change;
 	class->validate_set = m_validate_set;
 	class->holder_attr_changed = NULL;
 	class->public_data_changed = NULL;
+	class->holder_type_set = NULL;
 
 	/* Properties */
 	object_class->set_property = gda_set_set_property;
@@ -933,6 +957,9 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
 						      G_CALLBACK (att_holder_changed_cb), set);
 	}
+	if (gda_holder_get_g_type (holder) == GDA_TYPE_NULL)
+		g_signal_handlers_disconnect_by_func (holder,
+						      G_CALLBACK (holder_notify_cb), set);
 
 	/* now destroy the GdaSetNode and the GdaSetSource if necessary */
 	node = gda_set_get_node (set, holder);
@@ -1203,6 +1230,17 @@ gda_set_add_holder (GdaSet *set, GdaHolder *holder)
 	return added;
 }
 
+static void
+holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
+{
+	GType gtype;
+	gtype = gda_holder_get_g_type (holder);
+	g_assert (gtype != GDA_TYPE_NULL);
+	g_signal_handlers_disconnect_by_func (holder,
+					      G_CALLBACK (holder_notify_cb), dataset);
+	g_signal_emit (dataset, gda_set_signals[HOLDER_TYPE_SET], 0, holder);
+}
+
 static gboolean
 gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 {
@@ -1239,6 +1277,10 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 			g_signal_connect (G_OBJECT (holder), "attribute-changed",
 					  G_CALLBACK (att_holder_changed_cb), set);
 		}
+		if (gda_holder_get_g_type (holder) == GDA_TYPE_NULL)
+			g_signal_connect (G_OBJECT (holder), "notify::g-type",
+					  G_CALLBACK (holder_notify_cb), set);
+
 		return TRUE;
 	}
 	else if (similar == holder)
