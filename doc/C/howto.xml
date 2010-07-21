@@ -84,11 +84,11 @@ if (!gda_config_define_dsn (&amp;dsn_info, &amp;error)) {
 GdaSqlBuilder *b;
 b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 gda_sql_builder_set_table (b, "customers");
-gda_sql_builder_add_field_id (b,
-                              gda_sql_builder_add_id (b, "e"),
-gda_sql_builder_add_param (b, "p1", G_TYPE_STRING, FALSE));
-gda_sql_builder_add_field (b, "f", G_TYPE_INT, 15);
-gda_sql_builder_add_field (b, "g", G_TYPE_STRING, "joe")
+gda_sql_builder_add_field_value_id (b,
+                                    gda_sql_builder_add_id (b, "e"),
+                                    gda_sql_builder_add_param (b, "p1", G_TYPE_STRING, FALSE));
+gda_sql_builder_add_field_value (b, "f", G_TYPE_INT, 15);
+gda_sql_builder_add_field_value (b, "g", G_TYPE_STRING, "joe")
 [...]	
 g_object_unref (b);	  
 	</programlisting>
@@ -125,9 +125,9 @@ guint id_target2 = gda_sql_builder_select_add_target_id (b,
 				   NULL);
 guint id_join = gda_sql_builder_select_join_targets (b, id_target1, id_target2, GDA_SQL_SELECT_JOIN_INNER, 0);
 
-gda_sql_builder_add_field_id (b,
+gda_sql_builder_add_field_value_id (b,
                               gda_sql_builder_add_id (b, "c.date"), 0); /* DATE is an SQL reserved keyword */
-gda_sql_builder_add_field_id (b,
+gda_sql_builder_add_field_value_id (b,
 			      gda_sql_builder_add_id (b, "name"),
 		  	      gda_sql_builder_add_id (b, "person"));
 
@@ -144,7 +144,7 @@ g_object_unref (b);
 GdaSqlBuilder *b;
 b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 gda_sql_builder_set_table (b, "products");
-gda_sql_builder_add_field (b, "ref", G_TYPE_STRING, "A0E'FESP");
+gda_sql_builder_add_field_value (b, "ref", G_TYPE_STRING, "A0E'FESP");
 guint id_field = gda_sql_builder_add_id (b, "id");
 guint id_value = gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 14);
 guint id_cond = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id_field, id_value, 0);
@@ -184,7 +184,7 @@ guint id_function = gda_sql_builder_add_function (b, "myfunc",
 			      gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 5),
 			      gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "Joe"),
 			      0);
-gda_sql_builder_add_field_id (b, id_function, 0);
+gda_sql_builder_add_field_value_id (b, id_function, 0);
 [...]	
 g_object_unref (b);	  
 	</programlisting>
@@ -197,7 +197,7 @@ g_object_unref (b);
 GdaSqlBuilder *b;
 GdaSqlStatement *sub;
 b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "id"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "id"), 0);
 gda_sql_builder_select_add_target_id (b,
 				   gda_sql_builder_add_id (b, "subdata"),
 				   NULL);
@@ -205,7 +205,7 @@ sub = gda_sql_builder_get_sql_statement (b, FALSE);
 g_object_unref (b);
 
 b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "name"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "name"), 0);
 gda_sql_builder_select_add_target_id (b,
 				   gda_sql_builder_add_id (b, "master"),
 				   NULL);
@@ -225,9 +225,9 @@ g_object_unref (b);
 GdaSqlBuilder *b;
 GdaSqlStatement *sub;
 b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "id"), 0);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "name"), 0);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "location"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "id"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "name"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "location"), 0);
 gda_sql_builder_select_add_target_id (b,
 				   gda_sql_builder_add_id (b, "subdate"),
 				   NULL);
@@ -236,10 +236,10 @@ g_object_unref (b);
 
 b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 gda_sql_builder_set_table (b, "customers");
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "e"), 0);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "f"), 0);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "g"), 0);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_sub_select (b, sub, TRUE), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "e"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "f"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "g"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_sub_select (b, sub, TRUE), 0);
 [...]	
 g_object_unref (b);	  
 	</programlisting>
@@ -252,8 +252,8 @@ g_object_unref (b);
 GdaSqlBuilder *b;
 GdaSqlStatement *sub1, *sub2;
 b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "id"), 0);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "name"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "id"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "name"), 0);
 gda_sql_builder_select_add_target_id (b,
 				   gda_sql_builder_add_id (b, "subdata1"),
 				   NULL);
@@ -261,8 +261,8 @@ sub1 = gda_sql_builder_get_sql_statement (b, FALSE);
 g_object_unref (b);
 
 b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "ident"), 0);
-gda_sql_builder_add_field_id (b, gda_sql_builder_add_id (b, "lastname"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "ident"), 0);
+gda_sql_builder_add_field_value_id (b, gda_sql_builder_add_id (b, "lastname"), 0);
 gda_sql_builder_select_add_target_id (b,
 				   gda_sql_builder_add_id (b, "subdata2"),
 				   NULL);
@@ -293,7 +293,7 @@ guint id_case = gda_sql_builder_add_case (b,
 			  gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "Charlie"),
 			  gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 3),
 			  0);
-gda_sql_builder_add_field_id (b, id_case, 0);
+gda_sql_builder_add_field_value_id (b, id_case, 0);
 gda_sql_builder_select_add_target_id (b,
 				   gda_sql_builder_add_id (b, "data"),
 				   NULL);

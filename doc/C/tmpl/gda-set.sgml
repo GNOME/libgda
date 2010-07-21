@@ -55,6 +55,14 @@ Container for several values
 @gdaset: the object which received the signal.
 @arg1: 
 
+<!-- ##### SIGNAL GdaSet::holder-type-set ##### -->
+<para>
+
+</para>
+
+@gdaset: the object which received the signal.
+@arg1: 
+
 <!-- ##### SIGNAL GdaSet::public-data-changed ##### -->
 <para>
 
