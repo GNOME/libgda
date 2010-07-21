@@ -643,9 +643,10 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 		mgwrap->priv->null_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE;
 
 	/* Setting to DEFAULT */
+	guint current = gdaui_data_entry_get_attributes (iface);
 	if (mask & GDA_VALUE_ATTR_IS_DEFAULT) {
-		if (! (mask & GDA_VALUE_ATTR_CAN_BE_DEFAULT))
-			g_return_if_reached ();
+		if (! (current & GDA_VALUE_ATTR_CAN_BE_DEFAULT))
+			g_warning ("Data entry does not have a default value");
 		if (attrs & GDA_VALUE_ATTR_IS_DEFAULT) {
 			block_signals (mgwrap);
 			if (mgwrap->priv->value_default) {
