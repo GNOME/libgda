@@ -72,7 +72,7 @@ struct  _GdauiEntryWrapperPriv {
 
 	GType                     type;
 	GValue                   *value_ref;
-	GValue                   *value_default; /* Can be of any type, not just 'type' */
+	GValue                   *value_default; /* Can be of any type, not just @type */
 
 	gboolean                  null_forced;
 	gboolean                  default_forced;
@@ -81,6 +81,7 @@ struct  _GdauiEntryWrapperPriv {
 	gboolean                  default_possible;
 	gboolean                  show_actions;
 	gboolean                  editable;
+	gboolean                  contents_has_changed; /* since this variable was reset */
 
 	/* property */
 	gboolean                  set_default_if_invalid;
@@ -249,6 +250,7 @@ gdaui_entry_wrapper_init (GdauiEntryWrapper *mgwrap)
 	mgwrap->priv->default_possible = FALSE;
 	mgwrap->priv->show_actions = TRUE;
 	mgwrap->priv->editable = TRUE;
+	mgwrap->priv->contents_has_changed = FALSE;
 
 	mgwrap->priv->set_default_if_invalid = FALSE;
 }
@@ -366,6 +368,7 @@ contents_changed_cb (GtkWidget *entry, GdauiEntryWrapper *mgwrap)
 	if (! mgwrap->priv->signals_blocked) {
 		mgwrap->priv->null_forced = FALSE;
 		mgwrap->priv->default_forced = FALSE;
+		mgwrap->priv->contents_has_changed = TRUE;
 		gdaui_entry_wrapper_emit_signal (mgwrap);
 	}
 }
@@ -374,7 +377,7 @@ static void
 contents_activated_cb (GtkWidget *entry, GdauiEntryWrapper *mgwrap)
 {
 	/* @entry is not used */
-	if (! mgwrap->priv->signals_blocked) {
+	if (! mgwrap->priv->signals_blocked && mgwrap->priv->contents_has_changed) {
 		mgwrap->priv->null_forced = FALSE;
 		mgwrap->priv->default_forced = FALSE;
 #ifdef debug_signal
@@ -475,6 +478,7 @@ gdaui_entry_wrapper_set_value (GdauiDataEntry *iface, const GValue *value)
 	}
 	unblock_signals (mgwrap);
 	mgwrap->priv->default_forced = FALSE;
+	mgwrap->priv->contents_has_changed = FALSE;
 
 	gdaui_entry_wrapper_emit_signal (mgwrap);
 }
@@ -606,6 +610,7 @@ static void
 gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute attrs, guint mask)
 {
 	GdauiEntryWrapper *mgwrap;
+	gboolean signal_contents_changed = FALSE;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface));
 	mgwrap = (GdauiEntryWrapper*) iface;
@@ -625,17 +630,14 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 			/* if default is set, see if we can keep it that way */
 			if (mgwrap->priv->default_forced) {
 				if (G_VALUE_TYPE (mgwrap->priv->value_default) !=
-				    GDA_TYPE_NULL)
+				    GDA_TYPE_NULL) {
 					mgwrap->priv->default_forced = FALSE;
+				}
 			}
-
-			gdaui_entry_wrapper_emit_signal (mgwrap);
-			return;
 		}
-		else {
+		else
 			mgwrap->priv->null_forced = FALSE;
-			gdaui_entry_wrapper_emit_signal (mgwrap);
-		}
+		signal_contents_changed = TRUE;
 	}
 
 	/* Can be NULL ? */
@@ -667,12 +669,11 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 			}
 
 			mgwrap->priv->default_forced = TRUE;
-			gdaui_entry_wrapper_emit_signal (mgwrap);
 		}
-		else {
+		else
 			mgwrap->priv->default_forced = FALSE;
-			gdaui_entry_wrapper_emit_signal (mgwrap);
-		}
+
+		signal_contents_changed = TRUE;
 	}
 
 	/* Can be DEFAULT ? */
@@ -686,7 +687,7 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 			block_signals (mgwrap);
 			gdaui_entry_wrapper_set_value (iface, mgwrap->priv->value_ref);
 			unblock_signals (mgwrap);
-			gdaui_entry_wrapper_emit_signal (mgwrap);
+			signal_contents_changed = TRUE;
 		}
 	}
 
@@ -709,6 +710,14 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 	if (mask & GDA_VALUE_ATTR_HAS_VALUE_ORIG)
 		g_warning ("Having an original value is not a write attribute on GdauiDataEntry!");
 
+	current = gdaui_data_entry_get_attributes (iface);
+	gdaui_entry_shell_set_unknown ((GdauiEntryShell*) iface,
+				       current & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE);
+
+	if (signal_contents_changed) {
+		mgwrap->priv->contents_has_changed = FALSE;
+		gdaui_entry_wrapper_emit_signal (mgwrap);
+	}
 	g_signal_emit_by_name (G_OBJECT (mgwrap), "status-changed");
 }
 
@@ -775,10 +784,8 @@ gdaui_entry_wrapper_get_attributes (GdauiDataEntry *iface)
 			}
 		}
 	}
-	else {
-		if ((mgwrap->priv->real_class->value_is_equal_to) (mgwrap, mgwrap->priv->value_ref))
-			retval = retval | GDA_VALUE_ATTR_IS_UNCHANGED;
-	}
+	else if ((mgwrap->priv->real_class->value_is_equal_to) (mgwrap, mgwrap->priv->value_ref))
+		retval = retval | GDA_VALUE_ATTR_IS_UNCHANGED;
 
 	/* actions shown */
 	if (mgwrap->priv->show_actions)
