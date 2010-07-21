@@ -1396,6 +1396,7 @@ gda_mysql_provider_create_parser (GdaServerProvider  *provider,
  * 
  * This method renders a #GdaStatement into its SQL representation.
  */
+static gchar *mysql_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *context, GError **error);
 static gchar *mysql_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GError **error);
 static gchar *mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
 				 gboolean *is_default, gboolean *is_null,
@@ -1427,6 +1428,7 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
 										* and the opening parenthesis, see
 										* http://blog.152.org/2009/12/mysql-error-1305-function-xxx-does-not.html */
 	context.render_expr = mysql_render_expr; /* render "FALSE" as 0 and TRUE as 1 */
+	context.render_insert = (GdaSqlRenderingFunc) mysql_render_insert;
 
         str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1442,6 +1444,94 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
                 g_slist_free (context.params_used);
         }
         return str;
+}
+
+static gchar *
+mysql_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+	gboolean pretty = context->flags & GDA_STATEMENT_SQL_PRETTY;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_INSERT, NULL);
+
+	string = g_string_new ("INSERT ");
+	
+	/* conflict algo */
+	if (stmt->on_conflict)
+		g_string_append_printf (string, "OR %s ", stmt->on_conflict);
+
+	/* INTO */
+	g_string_append (string, "INTO ");
+	str = context->render_table (GDA_SQL_ANY_PART (stmt->table), context, error);
+	if (!str) goto err;
+	g_string_append (string, str);
+	g_free (str);
+
+	/* fields list */
+	for (list = stmt->fields_list; list; list = list->next) {
+		if (list == stmt->fields_list)
+			g_string_append (string, " (");
+		else
+			g_string_append (string, ", ");
+		str = context->render_field (GDA_SQL_ANY_PART (list->data), context, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+	if (stmt->fields_list)
+		g_string_append_c (string, ')');
+
+	/* values */
+	if (stmt->select) {
+		if (pretty)
+			g_string_append_c (string, '\n');
+		else
+			g_string_append_c (string, ' ');
+		str = context->render_select (GDA_SQL_ANY_PART (stmt->select), context, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+			g_free (str);
+	}
+	else {
+		for (list = stmt->values_list; list; list = list->next) {
+			GSList *rlist;
+			if (list == stmt->values_list) {
+				if (pretty)
+					g_string_append (string, "\nVALUES");
+				else
+					g_string_append (string, " VALUES");
+			}
+			else
+				g_string_append_c (string, ',');
+			for (rlist = (GSList*) list->data; rlist; rlist = rlist->next) {
+				if (rlist == (GSList*) list->data)
+					g_string_append (string, " (");
+				else
+					g_string_append (string, ", ");
+				str = context->render_expr ((GdaSqlExpr*) rlist->data, context, NULL, NULL, error);
+				if (!str) goto err;
+				if (pretty && (rlist != (GSList*) list->data))
+					g_string_append (string, "\n\t");
+				g_string_append (string, str);
+				g_free (str);
+			}
+			g_string_append_c (string, ')');
+		}
+
+		if (!stmt->fields_list && !stmt->values_list)
+			g_string_append (string, " () VALUES ()");
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;	
 }
 
 static gchar *

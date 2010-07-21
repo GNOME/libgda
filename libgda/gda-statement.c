@@ -866,8 +866,10 @@ default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *cont
 			}
 			g_string_append_c (string, ')');
 		}
+
+		if (!stmt->fields_list && !stmt->values_list)
+			g_string_append (string, " DEFAULT VALUES");
 	}
-	
 
 	str = string->str;
 	g_string_free (string, FALSE);

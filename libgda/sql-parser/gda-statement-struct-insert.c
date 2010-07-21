@@ -380,7 +380,7 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 	}
 	else {
 		/* using values list */
-		if (!insert->values_list) {
+		if (!insert->values_list && (nb_values != 0)) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 				      "%s", _("Missing values to insert in INSERT statement"));
 			return FALSE;
