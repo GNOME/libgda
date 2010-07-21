@@ -314,6 +314,7 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *
 						gtk_text_buffer_insert (tbuffer, &current, 
 									g_value_get_string (cvalue), -1);
 					}
+					gtk_text_buffer_insert (tbuffer, &current, "\n\n", -1);
 				}
 				g_object_unref (model);
 			}
