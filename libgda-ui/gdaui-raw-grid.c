@@ -1746,6 +1746,15 @@ tree_view_popup_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, Gda
 	selection = gtk_tree_view_get_selection (tree_view);
 	sel_mode = gtk_tree_selection_get_mode (selection);
 
+	/* force selection of row on which clicked occurred */
+	GtkTreePath *path;
+	if ((event->window == gtk_tree_view_get_bin_window (tree_view)) &&
+	    gtk_tree_view_get_path_at_pos (tree_view, event->x, event->y, &path, NULL, NULL, NULL)) {
+		gtk_tree_selection_unselect_all (selection);
+		gtk_tree_selection_select_path (selection, path);
+		gtk_tree_path_free (path);
+	}
+
 	/* create the menu */
 	menu = gtk_menu_new ();
 	if (sel_mode == GTK_SELECTION_MULTIPLE)

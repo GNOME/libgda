@@ -517,7 +517,10 @@ can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
 	g_return_val_if_fail (mgstr->priv, FALSE);
 
-	return mgstr->priv->multiline;
+	if (horiz)
+		return FALSE;
+	else
+		return mgstr->priv->multiline;
 }
 
 static void
