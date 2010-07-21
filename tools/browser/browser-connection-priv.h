@@ -53,6 +53,9 @@ struct _BrowserConnectionPrivate {
 	GdaConnection *store_cnc;
 
 	GdaSet        *variables;
+
+	GSList        *results_list; /* list of #ExecCallbackData pointers */
+	gulong         results_timer_id;
 };
 
 void browser_connection_set_busy_state (BrowserConnection *bcnc, gboolean busy, const gchar *busy_reason);

@@ -53,8 +53,6 @@ struct _TableInfoPrivate {
 	GtkWidget *pages; /* notebook to store individual pages */
 
 	GtkWidget *insert_popup;
-	guint exec_id;
-	guint timeout_id; /* timout ID to fetch execution results */
 };
 
 static void table_info_class_init (TableInfoClass *klass);
@@ -129,8 +127,6 @@ table_info_dispose (GObject *object)
 
 	/* free memory */
 	if (tinfo->priv) {
-		if (tinfo->priv->timeout_id)
-                        g_source_remove (tinfo->priv->timeout_id);
 		if (tinfo->priv->insert_popup)
 			gtk_widget_destroy (tinfo->priv->insert_popup);
 		g_free (tinfo->priv->schema);
@@ -505,32 +501,21 @@ insert_form_params_changed_cb (GdauiBasicForm *form, GdaHolder *param,
 					   gdaui_basic_form_is_valid (form));
 }
 
-static gboolean
-query_exec_fetch_cb (TableInfo *tinfo)
+static void statement_executed_cb (BrowserConnection *bcnc,
+				   guint exec_id,
+				   GObject *out_result,
+				   GdaSet *out_last_inserted_row, GError *error,
+				   TableInfo *tinfo)
 {
-	GObject *res;
-	GError *lerror = NULL;
-	gboolean alldone = FALSE;
-
-	res = browser_connection_execution_get_result (tinfo->priv->bcnc,
-						       tinfo->priv->exec_id, NULL,
-						       &lerror);
-	if (res) {
-		alldone = TRUE;
-	}
-	else if (lerror) {
+	if (error)
 		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
 				    _("Error executing query:\n%s"),
-				    lerror && lerror->message ?
-				    lerror->message : _("No detail"));
-		g_clear_error (&lerror);
-		alldone = TRUE;
-	}
-
-	if (alldone)
-		tinfo->priv->timeout_id = 0;
-
-	return alldone;
+				    error->message ?
+				    error->message : _("No detail"));
+	else
+		browser_show_notice (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
+				     "DataInsertQuery",
+				     _("Data successfully inserted"));
 }
 
 static void
@@ -539,28 +524,21 @@ insert_response_cb (GtkWidget *dialog, gint response_id, TableInfo *tinfo)
 	if (response_id == GTK_RESPONSE_ACCEPT) {
 		GdaStatement *stmt;
 		GdaSet *params;
-		guint exec_id;
 		GError *lerror = NULL;
 		
 		stmt = g_object_get_data (G_OBJECT (dialog), "stmt");
 		params = g_object_get_data (G_OBJECT (dialog), "params");
 
-		exec_id = browser_connection_execute_statement (tinfo->priv->bcnc, stmt, params,
-								GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-								FALSE, &lerror);
-		if (!exec_id) {
+		if (! browser_connection_execute_statement_cb (tinfo->priv->bcnc,
+							       stmt, params,
+							       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							       FALSE, 
+							       (BrowserConnectionExecuteCallback) statement_executed_cb,
+							       tinfo, &lerror)) {
 			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
 					    _("Error executing query: %s"),
 					    lerror && lerror->message ? lerror->message : _("No detail"));
 			g_clear_error (&lerror);
-		}
-		else {
-			tinfo->priv->exec_id = exec_id;
-			
-			if (! tinfo->priv->timeout_id)
-				tinfo->priv->timeout_id = g_timeout_add (200,
-									 (GSourceFunc) query_exec_fetch_cb,
-									 tinfo);
 		}
 	}
 	gtk_widget_hide (dialog);

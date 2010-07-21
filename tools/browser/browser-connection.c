@@ -498,6 +498,16 @@ browser_connection_dispose (GObject *object)
 
 	bcnc = BROWSER_CONNECTION (object);
 	if (bcnc->priv) {
+		if (bcnc->priv->results_timer_id) {
+			g_source_remove (bcnc->priv->results_timer_id);
+			bcnc->priv->results_timer_id = 0;
+		}
+		if (bcnc->priv->results_list) {
+			g_slist_foreach (bcnc->priv->results_list, (GFunc) g_free, NULL);
+			g_slist_free (bcnc->priv->results_list);
+			bcnc->priv->results_list = NULL;
+		}
+
 		if (bcnc->priv->variables)
 			g_object_unref (bcnc->priv->variables);
 
@@ -1050,7 +1060,8 @@ wrapper_statement_execute (StmtExecData *data, GError **error)
  * @need_last_insert_row: %TRUE if the values of the last interted row must be computed
  * @error: a place to store errors, or %NULL
  *
- * Executes @stmt by @bcnc
+ * Executes @stmt by @bcnc. Unless specific requirements, it's easier to use
+ * browser_connection_execute_statement_cb().
  *
  * Returns: a job ID, to be used with browser_connection_execution_get_result(), or %0 if an
  * error occurred
@@ -1175,10 +1186,114 @@ browser_connection_execution_get_result (BrowserConnection *bcnc, guint exec_id,
 	}
 
 	g_hash_table_remove (bcnc->priv->executed_statements, &id);
-	if (GDA_IS_DATA_MODEL (retval))
-		gda_data_model_dump (GDA_DATA_MODEL (retval), NULL);
+	/*if (GDA_IS_DATA_MODEL (retval))
+	  gda_data_model_dump (GDA_DATA_MODEL (retval), NULL);*/
 	return retval;
 }
+
+static gboolean query_exec_fetch_cb (BrowserConnection *bcnc);
+
+typedef struct {
+	guint exec_id;
+	gboolean need_last_insert_row;
+	BrowserConnectionExecuteCallback callback;
+	gpointer cb_data;
+} ExecCallbackData;
+
+/**
+ * browser_connection_execute_statement_cb
+ * @bcnc: a #BrowserConnection
+ * @stmt: a #GdaStatement
+ * @params: a #GdaSet as parameters, or %NULL
+ * @model_usage: how the returned data model (if any) will be used
+ * @need_last_insert_row: %TRUE if the values of the last interted row must be computed
+ * @callback: the function to call when statement has been executed
+ * @data: data to pass to @callback, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Executes @stmt by @bcnc and calls @callback when done. This occurs in the UI thread and avoids
+ * having to set up a waiting mechanism to call browser_connection_execution_get_result()
+ * repeatedly.
+ *
+ * Returns: a job ID, or %0 if an error occurred
+ */
+guint
+browser_connection_execute_statement_cb (BrowserConnection *bcnc,
+					 GdaStatement *stmt,
+					 GdaSet *params,
+					 GdaStatementModelUsage model_usage,
+					 gboolean need_last_insert_row,
+					 BrowserConnectionExecuteCallback callback,
+					 gpointer data,
+					 GError **error)
+{
+	guint exec_id;
+	g_return_val_if_fail (callback, 0);
+
+	exec_id = browser_connection_execute_statement (bcnc, stmt, params, model_usage,
+							need_last_insert_row, error);
+	if (!exec_id)
+		return 0;
+	ExecCallbackData *cbdata;
+	cbdata = g_new0 (ExecCallbackData, 1);
+	cbdata->exec_id = exec_id;
+	cbdata->need_last_insert_row = need_last_insert_row;
+	cbdata->callback = callback;
+	cbdata->cb_data = data;
+
+	bcnc->priv->results_list = g_slist_append (bcnc->priv->results_list, cbdata);
+	if (! bcnc->priv->results_timer_id)
+		bcnc->priv->results_timer_id = g_timeout_add (200,
+							      (GSourceFunc) query_exec_fetch_cb,
+							      bcnc);
+	return exec_id;
+}
+
+static gboolean
+query_exec_fetch_cb (BrowserConnection *bcnc)
+{
+	GObject *res;
+	GError *lerror = NULL;
+	ExecCallbackData *cbdata;
+	GdaSet *last_inserted_row = NULL;
+
+	g_print (".");
+	if (!bcnc->priv->results_list)
+		goto out;
+
+	cbdata = (ExecCallbackData *) bcnc->priv->results_list->data;
+
+	if (cbdata->need_last_insert_row)
+		res = browser_connection_execution_get_result (bcnc,
+							       cbdata->exec_id,
+							       &last_inserted_row,
+							       &lerror);
+	else
+		res = browser_connection_execution_get_result (bcnc,
+							       cbdata->exec_id, NULL,
+							       &lerror);
+
+	if (res || lerror) {
+		cbdata->callback (bcnc, cbdata->exec_id, res, last_inserted_row, lerror, cbdata->cb_data);
+		if (res)
+			g_object_unref (res);
+		if (last_inserted_row)
+			g_object_unref (last_inserted_row);
+		g_clear_error (&lerror);
+
+		bcnc->priv->results_list = g_slist_remove (bcnc->priv->results_list, cbdata);
+		g_free (cbdata);
+	}
+
+ out:
+	if (! bcnc->priv->results_list) {
+		bcnc->priv->results_timer_id = 0;
+		return FALSE;
+	}
+	else
+		return TRUE; /* keep timer */
+}
+
 
 /**
  * browser_connection_normalize_sql_statement
