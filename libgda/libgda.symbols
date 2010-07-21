@@ -764,6 +764,7 @@
 	gda_statement_model_usage_get_type
 	gda_statement_new
 	gda_statement_normalize
+	gda_statement_rewrite_for_default_values
 	gda_statement_serialize
 	gda_statement_sql_flag_get_type
 	gda_statement_to_sql_extended

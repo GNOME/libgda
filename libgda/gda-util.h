@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -60,6 +60,9 @@ gboolean     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNo
 					      gboolean use_col_ids);
 const gchar *gda_utility_data_model_find_column_description (GdaDataSelect *model, const gchar *field_name);
 gboolean     gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources, GError **error);
+
+GdaSqlStatement *gda_statement_rewrite_for_default_values (GdaStatement *stmt, GdaSet *params,
+							   gboolean remove, GError **error);
 
 /* 
  * translate any text to an alphanumerical text 

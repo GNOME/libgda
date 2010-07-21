@@ -125,6 +125,10 @@ static gchar               *gda_postgresql_identifier_quote    (GdaServerProvide
 								const gchar *id,
 								gboolean meta_store_convention, gboolean force_quotes);
 
+static GdaSqlStatement     *gda_postgresql_statement_rewrite   (GdaServerProvider *provider, GdaConnection *cnc,
+								GdaStatement *stmt, GdaSet *params, GError **error);
+
+
 /* distributed transactions */
 static gboolean gda_postgres_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc,
 						   const GdaXaTransactionId *xid, GError **error);
@@ -216,6 +220,8 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 						  * because it only calls gda_statement_to_sql_extended() */
 	provider_class->statement_prepare = gda_postgres_provider_statement_prepare;
 	provider_class->statement_execute = gda_postgres_provider_statement_execute;
+
+	provider_class->statement_rewrite = gda_postgresql_statement_rewrite;
 
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	provider_class->meta_funcs._info = _gda_postgres_meta__info;
@@ -1988,6 +1994,39 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				continue;
 			}
 		}
+		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
+			/* create a new GdaStatement to handle all default values and execute it instead */
+			GdaSqlStatement *sqlst;
+			GError *lerror = NULL;
+			sqlst = gda_statement_rewrite_for_default_values (stmt, params, FALSE, &lerror);
+			if (!sqlst) {
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, lerror && lerror->message ? 
+								      lerror->message :
+								      _("Can't rewrite statement handle default values"));
+				g_propagate_error (error, lerror);
+				break;
+			}
+
+			GdaStatement *rstmt;
+			GObject *res;
+			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+			gda_sql_statement_free (sqlst);
+			params_freev (param_values, param_mem, nb_params);
+			g_free (param_lengths);
+			g_free (param_formats);
+			if (transaction_started)
+				gda_connection_rollback_transaction (cnc, NULL, NULL);
+			res = gda_postgres_provider_statement_execute (provider, cnc,
+								       rstmt, params,
+								       model_usage,
+								       col_types, last_inserted_row,
+								       task_id,
+								       async_cb, cb_data, error);
+			g_object_unref (rstmt);
+			return res;
+		}
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
@@ -2139,6 +2178,25 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 	return retval;
 }
+
+/*
+ * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
+ *
+ * Usually for INSERTS:
+ *  - it removes any DEFAULT value
+ *  - if there is no default value anymore, it uses the "DEFAULT VALUES" syntax
+ */
+static GdaSqlStatement *
+gda_postgresql_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+				  GdaStatement *stmt, GdaSet *params, GError **error)
+{
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+	}
+	return gda_statement_rewrite_for_default_values (stmt, params, FALSE, error);
+}
+
 
 /*
  * starts a distributed transaction: put the XA transaction in the ACTIVE state

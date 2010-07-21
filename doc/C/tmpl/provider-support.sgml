@@ -466,3 +466,15 @@ Methods dedicated to implementing providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_statement_rewrite_for_default_values ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@params: 
+@remove: 
+@error: 
+@Returns: 
+
+

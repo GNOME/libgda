@@ -113,6 +113,9 @@ static GObject             *gda_jdbc_provider_statement_execute (GdaServerProvid
 								 GType *col_types, GdaSet **last_inserted_row, 
 								 guint *task_id, GdaServerProviderExecCallback async_cb, 
 								 gpointer cb_data, GError **error);
+static GdaSqlStatement     *gda_jdbc_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+								 GdaStatement *stmt, GdaSet *params, GError **error);
+
 
 /* distributed transactions */
 static gboolean gda_jdbc_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -191,6 +194,7 @@ gda_jdbc_provider_class_init (GdaJdbcProviderClass *klass)
 						  * because it only calls gda_statement_to_sql_extended() */
 	provider_class->statement_prepare = gda_jdbc_provider_statement_prepare;
 	provider_class->statement_execute = gda_jdbc_provider_statement_execute;
+	provider_class->statement_rewrite = gda_jdbc_statement_rewrite;
 
 	provider_class->is_busy = NULL;
 	provider_class->cancel = NULL;
@@ -1365,6 +1369,36 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
                                 continue;
                         }
 		}
+		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
+			/* create a new GdaStatement to handle all default values and execute it instead */
+			GdaSqlStatement *sqlst;
+			GError *lerror = NULL;
+			sqlst = gda_statement_rewrite_for_default_values (stmt, params, TRUE, &lerror);
+			if (!sqlst) {
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, lerror && lerror->message ? 
+								      lerror->message :
+								      _("Can't rewrite statement handle default values"));
+				g_propagate_error (error, lerror);
+				break;
+			}
+			
+			GdaStatement *rstmt;
+			GObject *res;
+			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+			gda_sql_statement_free (sqlst);
+			g_object_unref (ps);
+			_gda_jdbc_release_jenv (jni_detach);
+			res = gda_jdbc_provider_statement_execute (provider, cnc,
+								   rstmt, params,
+								   model_usage,
+								   col_types, last_inserted_row,
+								   task_id,
+								   async_cb, cb_data, error);
+			g_object_unref (rstmt);
+			return res;
+		}
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
@@ -1506,6 +1540,22 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		_gda_jdbc_release_jenv (jni_detach);
 		return (GObject*) set;
 	}
+}
+
+/*
+ * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
+ *
+ * Safely removes any default value inserted or updated
+ */
+static GdaSqlStatement *
+gda_jdbc_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+			    GdaStatement *stmt, GdaSet *params, GError **error)
+{
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+	}
+	return gda_statement_rewrite_for_default_values (stmt, params, TRUE, error);
 }
 
 /*

@@ -261,6 +261,8 @@ static GObject             *gda_sqlite_provider_statement_execute (GdaServerProv
 								   GType *col_types, GdaSet **last_inserted_row, 
 								   guint *task_id, GdaServerProviderExecCallback async_cb, 
 								   gpointer cb_data, GError **error);
+static GdaSqlStatement     *gda_sqlite_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+								   GdaStatement *stmt, GdaSet *params, GError **error);
 
 /* string escaping */
 static gchar               *gda_sqlite_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc,
@@ -379,6 +381,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->statement_to_sql = gda_sqlite_provider_statement_to_sql;
 	provider_class->statement_prepare = gda_sqlite_provider_statement_prepare;
 	provider_class->statement_execute = gda_sqlite_provider_statement_execute;
+	provider_class->statement_rewrite = gda_sqlite_statement_rewrite;
 
 	provider_class->escape_string = gda_sqlite_provider_escape_string;
 	provider_class->unescape_string = gda_sqlite_provider_unescape_string;
@@ -2457,6 +2460,37 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				continue;
 			}
 		}
+		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
+			/* create a new GdaStatement to handle all default values and execute it instead */
+			GdaSqlStatement *sqlst;
+			GError *lerror = NULL;
+			sqlst = gda_statement_rewrite_for_default_values (stmt, params, TRUE, &lerror);
+			if (!sqlst) {
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, lerror && lerror->message ? 
+								      lerror->message :
+								      _("Can't rewrite statement handle default values"));
+				g_propagate_error (error, lerror);
+				break;
+			}
+			
+			GdaStatement *rstmt;
+			GObject *res;
+			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+			gda_sql_statement_free (sqlst);
+			if (new_ps)
+				g_object_unref (ps);
+			pending_blobs_free_list (blobs_list);
+			res = gda_sqlite_provider_statement_execute (provider, cnc,
+								     rstmt, params,
+								     model_usage,
+								     col_types, last_inserted_row,
+								     task_id,
+								     async_cb, cb_data, error);
+			g_object_unref (rstmt);
+			return res;
+		}
 		/*g_print ("BINDING param '%s' to %p\n", pname, h);*/
 		
 		const GValue *value = gda_holder_get_value (h);
@@ -2741,6 +2775,22 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			return set;
 		}
 	}
+}
+
+/*
+ * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
+ *
+ * Removes any default value inserted or updated
+ */
+static GdaSqlStatement *
+gda_sqlite_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+			      GdaStatement *stmt, GdaSet *params, GError **error)
+{
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+	}
+	return gda_statement_rewrite_for_default_values (stmt, params, TRUE, error);
 }
 
 /* 
