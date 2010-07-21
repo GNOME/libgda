@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -388,7 +388,7 @@ table_columns_new (TableInfo *tinfo)
 				      G_TYPE_BOOLEAN, MGR_COLUMNS_COL_NOTNULL_ATT_NAME,
 				      G_TYPE_STRING, MGR_COLUMNS_COL_DEFAULT_ATT_NAME,
                                       G_TYPE_OBJECT, "icon");
-        treeview = gtk_tree_view_new_with_model (model);
+        treeview = browser_make_tree_view (model);
         g_object_unref (model);
 
         /* Colum: Name */

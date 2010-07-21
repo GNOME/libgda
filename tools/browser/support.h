@@ -50,6 +50,7 @@ GtkWidget*         browser_make_tab_label_with_pixbuf (const gchar *label,
 
 GtkWidget          *browser_make_small_button (gboolean is_toggle,
 					       const gchar *label, const gchar *stock_id, const gchar *tooltip);
+GtkWidget          *browser_make_tree_view (GtkTreeModel *model);
 
 /*
  * Widgets navigation

@@ -520,6 +520,17 @@ connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel
 	}
 }
 
+/**
+ * browser_make_small_button
+ * @is_toggle:
+ * @label:
+ * @stock_id:
+ * @tooltip:
+ *
+ * Creates a small button
+ *
+ * Returns: a new #GtkWidget
+ */
 GtkWidget *
 browser_make_small_button (gboolean is_toggle, const gchar *label, const gchar *stock_id, const gchar *tooltip)
 {
@@ -557,4 +568,50 @@ browser_make_small_button (gboolean is_toggle, const gchar *label, const gchar *
 	if (tooltip)
 		gtk_widget_set_tooltip_text (button, tooltip);
 	return button;
+}
+
+static gboolean
+tree_view_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+	GtkTreeView *tree_view;
+	GtkTreeSelection *selection;
+
+	if (event->button != 3)
+		return FALSE;
+
+	tree_view = GTK_TREE_VIEW (widget);
+	selection = gtk_tree_view_get_selection (tree_view);
+
+	/* force selection of row on which clicked occurred */
+	GtkTreePath *path;
+	if ((event->window == gtk_tree_view_get_bin_window (tree_view)) &&
+	    gtk_tree_view_get_path_at_pos (tree_view, event->x, event->y, &path, NULL, NULL, NULL)) {
+		gtk_tree_selection_unselect_all (selection);
+		gtk_tree_selection_select_path (selection, path);
+		gtk_tree_path_free (path);
+	}
+
+	return FALSE;
+}
+
+/**
+ * browser_make_tree_view
+ * @model: a #GtkTreeModel
+ *
+ * Creates a #GtkTreeView which, when right clicked, selects the row underneath the mouse
+ * cursor.
+ *
+ * Returns: a new #GtkWidget
+ */
+GtkWidget *
+browser_make_tree_view (GtkTreeModel *model)
+{
+	GtkWidget *tv;
+	g_return_val_if_fail (GTK_IS_TREE_MODEL (model), NULL);
+	tv = gtk_tree_view_new_with_model (model);
+
+	g_signal_connect (G_OBJECT (tv), "button-press-event",
+                          G_CALLBACK (tree_view_button_pressed_cb), NULL);
+
+	return tv;
 }

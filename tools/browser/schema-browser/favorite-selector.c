@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -264,7 +264,7 @@ favorite_selector_new (BrowserConnection *bcnc)
 				      G_TYPE_STRING, MGR_FAVORITES_CONTENTS_ATT_NAME,
 				      G_TYPE_UINT, MGR_FAVORITES_TYPE_ATT_NAME,
 				      G_TYPE_INT, MGR_FAVORITES_ID_ATT_NAME);
-	treeview = gtk_tree_view_new_with_model (model);
+	treeview = browser_make_tree_view (model);
 	tsel->priv->treeview = treeview;
 	g_object_unref (model);
 
