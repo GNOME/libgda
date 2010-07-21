@@ -135,13 +135,13 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	gtk_widget_show (sw);
 
 	formgrid->priv->raw_grid = gdaui_raw_grid_new (NULL);
-	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_grid), -1, TRUE);
+	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_grid), -1, FALSE);
 	gtk_container_add (GTK_CONTAINER (sw), formgrid->priv->raw_grid);
 	gtk_widget_show (formgrid->priv->raw_grid);
 
 	/* form on the 2nd page of the notebook */
 	formgrid->priv->raw_form = gdaui_raw_form_new (NULL);
-	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_form), -1, TRUE);
+	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_form), -1, FALSE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), formgrid->priv->raw_form, NULL);
         gtk_widget_show (formgrid->priv->raw_form);
 
@@ -310,6 +310,7 @@ ui_formgrid_handle_user_prefs (UiFormGrid *formgrid, BrowserConnection *bcnc, Gd
 			gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
 			gda_value_free (value);
 		}
+		g_free (plugin);
 	}
 	
  out:

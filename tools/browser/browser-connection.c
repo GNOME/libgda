@@ -1175,6 +1175,8 @@ browser_connection_execution_get_result (BrowserConnection *bcnc, guint exec_id,
 	}
 
 	g_hash_table_remove (bcnc->priv->executed_statements, &id);
+	if (GDA_IS_DATA_MODEL (retval))
+		gda_data_model_dump (GDA_DATA_MODEL (retval), NULL);
 	return retval;
 }
 
@@ -1407,7 +1409,7 @@ browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
  * @error:
  *
  *
- * Returns: the requested attribute, or %NULL if not set or if an error occurred
+ * Returns: the requested attribute (as a new string), or %NULL if not set or if an error occurred
  */
 gchar *
 browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,

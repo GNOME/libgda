@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -36,6 +36,9 @@
 #include "../browser-stock-icons.h"
 #include "../browser-window.h"
 #include "../data-manager/data-manager-perspective.h"
+#include <libgda-ui/gdaui-enums.h>
+#include <libgda-ui/gdaui-basic-form.h>
+#include "../common/popup-container.h"
 
 struct _TableInfoPrivate {
 	BrowserConnection *bcnc;
@@ -48,6 +51,10 @@ struct _TableInfoPrivate {
 	GtkWidget *contents; /* notebook with pageO <=> @unknown_table_notice, page1 <=> @pages */
 	GtkWidget *unknown_table_notice;
 	GtkWidget *pages; /* notebook to store individual pages */
+
+	GtkWidget *insert_popup;
+	guint exec_id;
+	guint timeout_id; /* timout ID to fetch execution results */
 };
 
 static void table_info_class_init (TableInfoClass *klass);
@@ -122,6 +129,10 @@ table_info_dispose (GObject *object)
 
 	/* free memory */
 	if (tinfo->priv) {
+		if (tinfo->priv->timeout_id)
+                        g_source_remove (tinfo->priv->timeout_id);
+		if (tinfo->priv->insert_popup)
+			gtk_widget_destroy (tinfo->priv->insert_popup);
 		g_free (tinfo->priv->schema);
 		g_free (tinfo->priv->table_name);
 		g_free (tinfo->priv->table_short_name);
@@ -459,7 +470,7 @@ action_add_to_fav_cb (GtkAction *action, TableInfo *tinfo)
 }
 
 static void
-action_view_contents_cb  (GtkAction *action, TableInfo *tinfo)
+action_view_contents_cb (GtkAction *action, TableInfo *tinfo)
 {
 	if (! tinfo->priv->table_short_name)
 		return;
@@ -485,20 +496,253 @@ action_view_contents_cb  (GtkAction *action, TableInfo *tinfo)
 	xmlFree (contents);
 }
 
+static void
+insert_form_params_changed_cb (GdauiBasicForm *form, GdaHolder *param,
+			       gboolean is_user_modif, GtkWidget *popup)
+{
+	/* if all params are valid => authorize the execute button */
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (popup), GTK_RESPONSE_ACCEPT,
+					   gdaui_basic_form_is_valid (form));
+}
+
+static gboolean
+query_exec_fetch_cb (TableInfo *tinfo)
+{
+	GObject *res;
+	GError *lerror = NULL;
+	gboolean alldone = FALSE;
+
+	res = browser_connection_execution_get_result (tinfo->priv->bcnc,
+						       tinfo->priv->exec_id, NULL,
+						       &lerror);
+	if (res) {
+		alldone = TRUE;
+	}
+	else if (lerror) {
+		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
+				    _("Error executing query:\n%s"),
+				    lerror && lerror->message ?
+				    lerror->message : _("No detail"));
+		g_clear_error (&lerror);
+		alldone = TRUE;
+	}
+
+	if (alldone)
+		tinfo->priv->timeout_id = 0;
+
+	return alldone;
+}
+
+static void
+insert_response_cb (GtkWidget *dialog, gint response_id, TableInfo *tinfo)
+{
+	if (response_id == GTK_RESPONSE_ACCEPT) {
+		GdaStatement *stmt;
+		GdaSet *params;
+		guint exec_id;
+		GError *lerror = NULL;
+		
+		stmt = g_object_get_data (G_OBJECT (dialog), "stmt");
+		params = g_object_get_data (G_OBJECT (dialog), "params");
+
+		exec_id = browser_connection_execute_statement (tinfo->priv->bcnc, stmt, params,
+								GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+								FALSE, &lerror);
+		if (!exec_id) {
+			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
+					    _("Error executing query: %s"),
+					    lerror && lerror->message ? lerror->message : _("No detail"));
+			g_clear_error (&lerror);
+		}
+		else {
+			tinfo->priv->exec_id = exec_id;
+			
+			if (! tinfo->priv->timeout_id)
+				tinfo->priv->timeout_id = g_timeout_add (200,
+									 (GSourceFunc) query_exec_fetch_cb,
+									 tinfo);
+		}
+	}
+	gtk_widget_hide (dialog);
+}
+
+static void
+action_insert_cb (GtkAction *action, TableInfo *tinfo)
+{
+	/* init */
+	if (! tinfo->priv->table_short_name)
+		return;
+
+	if (tinfo->priv->insert_popup) {
+		gtk_widget_show (tinfo->priv->insert_popup);
+		return;
+	}
+
+	BrowserWindow *bwin;
+	GdaMetaStruct *mstruct;
+	bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
+	mstruct = browser_connection_get_meta_struct (tinfo->priv->bcnc);
+	if (!mstruct) {
+		browser_show_error (GTK_WINDOW (bwin), _("Meta data not yet available"));
+		return;
+	}
+
+	/* get table's information */
+	GdaMetaDbObject *dbo;
+	GValue *v1, *v2;
+	g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)),
+			    tinfo->priv->schema);
+	g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)),
+			    tinfo->priv->table_name);
+	dbo = gda_meta_struct_complement (mstruct,
+					  GDA_META_DB_TABLE, NULL, v1, v2, NULL);
+	gda_value_free (v1);
+	gda_value_free (v2);
+
+	if (! dbo) {
+		browser_show_error (GTK_WINDOW (bwin), _("Can't find information about table"));
+		return;
+	}
+
+	/* build statement */
+	GdaSqlBuilder *b;
+	GSList *list;
+	GdaMetaTable *mtable;
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
+	gda_sql_builder_set_table (b, tinfo->priv->table_short_name);
+	mtable = GDA_META_TABLE (dbo);
+	for (list = mtable->columns; list; list = list->next) {
+		GdaMetaTableColumn *col = (GdaMetaTableColumn*) list->data;
+		gda_sql_builder_add_field_value_id (b,
+						    gda_sql_builder_add_id (b, col->column_name),
+						    gda_sql_builder_add_param (b, col->column_name,
+									       col->gtype, col->nullok));
+	}
+	GdaStatement *stmt;
+	stmt = gda_sql_builder_get_statement (b, NULL);
+	g_object_unref (b);
+	gchar *sql;
+	sql = gda_statement_to_sql (stmt, NULL, NULL);
+	g_print ("[%s]\n", sql);
+	g_free (sql);
+
+	/* handle user preferences */
+	GdaSet *params;
+	if (! gda_statement_get_parameters (stmt, &params, NULL)) {
+		gchar *sql;
+		sql = gda_statement_to_sql (stmt, NULL, NULL);
+
+		browser_show_error (GTK_WINDOW (bwin),
+				    _("Internal error while building INSERT statement:\n%s"), sql);
+		g_free (sql);
+		g_object_unref (stmt);
+		return;
+	}
+	for (list = mtable->columns; list; list = list->next) {
+		GdaMetaTableColumn *col = (GdaMetaTableColumn*) list->data;
+		gchar *plugin;
+		plugin = browser_connection_get_table_column_attribute (tinfo->priv->bcnc,
+									mtable,	col,
+									BROWSER_CONNECTION_COLUMN_PLUGIN,
+									NULL);
+		if (!plugin && !col->default_value)
+			continue;
+		
+		GdaHolder *holder;
+		holder = gda_set_get_holder (params, col->column_name);
+		if (holder) {
+			if (plugin) {
+				GValue *value;
+				value = gda_value_new_from_string (plugin, G_TYPE_STRING);
+				gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+				gda_value_free (value);
+			}
+
+			if (col->default_value) {
+				GValue *dv;
+				g_value_set_string ((dv = gda_value_new (G_TYPE_STRING)), col->default_value);
+				gda_holder_set_default_value (holder, dv);
+				gda_value_free (dv);
+				gda_holder_set_value_to_default (holder);
+			}
+		}
+
+		g_free (plugin);
+	}
+
+	/* create popup */
+	GtkWidget *popup;
+	popup = gtk_dialog_new_with_buttons (_("Values to insert into table"), GTK_WINDOW (bwin),
+					     0, GTK_STOCK_EXECUTE, GTK_RESPONSE_ACCEPT,
+					     GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+					     NULL);
+	tinfo->priv->insert_popup = popup;
+	g_object_set_data_full (G_OBJECT (popup), "stmt", stmt, g_object_unref);
+	g_object_set_data_full (G_OBJECT (popup), "params", params, g_object_unref);
+
+	g_signal_connect (popup, "close",
+			  G_CALLBACK (gtk_widget_hide), NULL);
+	g_signal_connect (popup, "response",
+			  G_CALLBACK (insert_response_cb), tinfo);
+
+	GtkWidget *label, *form;
+	gchar *str;	
+	label = gtk_label_new ("");
+	str = g_strdup_printf ("<b>%s</b>:\n<small>%s</small>",
+			       _("Values to insert into table"),
+			       _("assign values to the following variables"));
+	gtk_label_set_markup (GTK_LABEL (label), str);
+	g_free (str);
+#if GTK_CHECK_VERSION(2,18,0)
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (popup))),
+			    label, FALSE, FALSE, 0);
+#else
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (popup)->vbox), label, FALSE, FALSE, 0);
+#endif
+	
+	form = gdaui_basic_form_new (params);
+	g_object_set ((GObject*) form, "show-actions", TRUE, NULL);
+	g_signal_connect (form, "holder-changed",
+			  G_CALLBACK (insert_form_params_changed_cb), popup);
+#if GTK_CHECK_VERSION(2,18,0)
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (popup))),
+			    form, TRUE, TRUE, 5);
+#else
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (popup)->vbox), form, TRUE, TRUE, 5);
+#endif
+
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (popup), GTK_RESPONSE_ACCEPT,
+					   gdaui_basic_form_is_valid (GDAUI_BASIC_FORM (form)));
+		
+	gtk_widget_show_all (popup);
+}
+
 static GtkActionEntry ui_actions[] = {
-	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("_Favorite"), NULL, N_("Add table to favorites"),
+	{ "Table", NULL, "_Table", NULL, "Table", NULL },
+	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("Add to _Favorites"), NULL, N_("Add table to favorites"),
 	  G_CALLBACK (action_add_to_fav_cb)},
 	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View contents"),
 	  G_CALLBACK (action_view_contents_cb)},
+	{ "InsertData", GTK_STOCK_ADD, N_("_Insert data"), NULL, N_("Insert data into table"),
+	  G_CALLBACK (action_insert_cb)},
 };
 static const gchar *ui_actions_info =
 	"<ui>"
 	"  <menubar name='MenuBar'>"
+	"    <placeholder name='MenuExtension'>"
+        "      <menu name='Table' action='Table'>"
+        "        <menuitem name='AddToFav' action= 'AddToFav'/>"
+        "        <menuitem name='InsertData' action= 'InsertData'/>"
+        "        <menuitem name='ViewContents' action= 'ViewContents'/>"
+        "      </menu>"
+        "    </placeholder>"
 	"  </menubar>"
 	"  <toolbar name='ToolBar'>"
 	"    <separator/>"
 	"    <toolitem action='AddToFav'/>"
 	"    <toolitem action='ViewContents'/>"
+	"    <toolitem action='InsertData'/>"
 	"  </toolbar>"
 	"</ui>";
 
