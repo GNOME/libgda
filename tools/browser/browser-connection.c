@@ -1257,7 +1257,6 @@ query_exec_fetch_cb (BrowserConnection *bcnc)
 	ExecCallbackData *cbdata;
 	GdaSet *last_inserted_row = NULL;
 
-	g_print (".");
 	if (!bcnc->priv->results_list)
 		goto out;
 

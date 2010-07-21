@@ -369,6 +369,24 @@ mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, const G
 		gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
 		gda_value_free (av);
 
+		/* details */
+		GString *details = NULL;
+		if (col->pkey)
+			details = g_string_new (_("Primary key"));
+		if (is_fk) {
+			if (details)
+				g_string_append (details, ", ");
+			else
+				details = g_string_new ("");
+			g_string_append (details, _("Foreign key"));
+		}
+		if (details) {
+			g_value_set_string ((av = gda_value_new (G_TYPE_STRING)), details->str);
+			gda_tree_node_set_node_attribute (snode, MGR_COLUMNS_COL_DETAILS, av, NULL);
+			gda_value_free (av);
+			g_string_free (details, TRUE);
+		}
+
 		nodes_list = g_slist_prepend (nodes_list, snode);		
 	}
 
