@@ -841,22 +841,30 @@ create_entry_widget (SingleEntry *sentry)
 		gchar *title = NULL;
 		gchar *str;
 		GSList *params;
-			
-		for (params = sentry->group->group->nodes; params; params = params->next) {
-			g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
-				      "name", &title, NULL);
-			if (title)
-				break;
+
+		str = g_object_get_data (G_OBJECT (group->group->nodes_source->data_model), "name");
+		if (str)
+			title = g_strdup (str);
+		else {
+			GString *tstring = NULL;
+			for (params = sentry->group->group->nodes; params; params = params->next) {
+				g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
+					      "name", &title, NULL);
+				if (title) {
+					if (tstring) 
+						g_string_append (tstring, ",\n");
+					else
+						tstring = g_string_new ("");
+					g_string_append (tstring, title);
+				}
+			}
+			if (tstring)
+				title = g_string_free (tstring, FALSE);
 		}
-			
-		if (!title) {
-			str = g_object_get_data (G_OBJECT (group->group->nodes_source->data_model),
-						 "name");
-			if (str)
-				title = g_strdup (str);
-		}
+
 		if (!title)
 			title = g_strdup (_("Value"));
+
 		str = g_strdup_printf ("%s:", title);
 		sentry->label = gtk_label_new (str);
 		g_free (str);
