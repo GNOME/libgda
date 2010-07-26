@@ -1162,11 +1162,11 @@ compute_public_data (GdaSet *set)
 		if (node->source_model) {
 			source = gda_set_get_source_for_model (set, node->source_model);
 			if (source) 
-				source->nodes = g_slist_prepend (source->nodes, node);
+				source->nodes = g_slist_append (source->nodes, node);
 			else {
 				source = g_new0 (GdaSetSource, 1);
 				source->data_model = node->source_model;
-				source->nodes = g_slist_prepend (NULL, node);
+				source->nodes = g_slist_append (NULL, node);
 				set->sources_list = g_slist_prepend (set->sources_list, source);
 			}
 		}

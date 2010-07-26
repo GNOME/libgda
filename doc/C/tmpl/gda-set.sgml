@@ -246,8 +246,6 @@ Container for several values
 @holder: a #GdaHolder in the #GdaSet
 @source_model: if gda_holder_set_source_model() has been used with @holder, the #GdaDataModel used, or %NULL
 @source_column: if gda_holder_set_source_model() has been used with @holder, the column used, or 0
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_set_get_node ##### -->
 <para>
@@ -267,10 +265,6 @@ Container for several values
 
 @data_model: the #GdaDataModel
 @nodes: the list of #GdaSetNode where the @source_model attribute equals @data_model
-@_gda_reserved1: 
-@_gda_reserved2: 
-@_gda_reserved3: 
-@_gda_reserved4: 
 
 <!-- ##### FUNCTION gda_set_get_source_for_model ##### -->
 <para>
@@ -301,8 +295,6 @@ Container for several values
 
 @nodes: a list of #GdaSetNode structures, at least one entry
 @nodes_source: a #GdaSetSource pointer where the @nodes attribute lists the same #GdaHolder objects as @nodes
-@_gda_reserved1: 
-@_gda_reserved2: 
 
 <!-- ##### FUNCTION gda_set_get_group ##### -->
 <para>
