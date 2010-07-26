@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -379,6 +379,15 @@ mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, const G
 			else
 				details = g_string_new ("");
 			g_string_append (details, _("Foreign key"));
+		}
+		const GValue *autoinc;
+		autoinc = gda_meta_table_column_get_attribute (col, GDA_ATTRIBUTE_AUTO_INCREMENT);
+		if (autoinc) {
+			if (details)
+				g_string_append (details, ", ");
+			else
+				details = g_string_new ("");
+			g_string_append (details, _("Auto incremented"));
 		}
 		if (details) {
 			g_value_set_string ((av = gda_value_new (G_TYPE_STRING)), details->str);
