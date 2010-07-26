@@ -232,13 +232,13 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 	/* composed primary key */
 	if (nbpkfields > 1) {
-		GSList *list = pkfields;
+		GSList *list;
 
 		g_string_append (string, ", PRIMARY KEY (");
 		for (list = pkfields; list; list = list->next) {
 			if (list != pkfields)
 				g_string_append (string, ", ");
-			g_string_append (string, (gchar *) tmp);
+			g_string_append (string, (gchar *) list->data);
 		}
 		g_string_append_c (string, ')');
 	}
