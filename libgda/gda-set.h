@@ -49,6 +49,7 @@ struct _GdaSetNode {
 	GdaDataModel *source_model;  /* may be NULL */
 	gint          source_column; /* unused if @source_model is NULL */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer      _gda_reserved1;
 	gpointer      _gda_reserved2;
@@ -58,6 +59,7 @@ struct _GdaSetGroup {
 	GSList       *nodes;       /* list of GdaSetNode, at least one entry */
 	GdaSetSource *nodes_source; /* if NULL, then @nodes contains exactly one entry */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer      _gda_reserved1;
 	gpointer      _gda_reserved2;
@@ -67,6 +69,7 @@ struct _GdaSetSource {
 	GdaDataModel   *data_model;   /* Can't be NULL */
 	GSList         *nodes;        /* list of #GdaSetNode for which source_model == @data_model */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer        _gda_reserved1;
 	gpointer        _gda_reserved2;
