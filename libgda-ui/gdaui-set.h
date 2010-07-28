@@ -88,6 +88,7 @@ struct _GdauiSetClass
 {
 	GObjectClass       parent_class;
 	void             (*public_data_changed)   (GdauiSet *set);
+	void             (*source_model_changed)  (GdauiSet *set, GdauiSetSource *source);
 };
 
 /* 
@@ -96,7 +97,7 @@ struct _GdauiSetClass
 GType             _gdaui_set_get_type            (void) G_GNUC_CONST;
 
 GdauiSet         *_gdaui_set_new                 (GdaSet *set);
-GdauiSetGroup    *_gdaui_set_get_group          (GdauiSet *dbset, GdaHolder *holder);
+GdauiSetGroup    *_gdaui_set_get_group           (GdauiSet *dbset, GdaHolder *holder);
 
 G_END_DECLS
 

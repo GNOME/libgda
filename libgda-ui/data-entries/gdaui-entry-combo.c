@@ -238,6 +238,25 @@ gdaui_entry_combo_new (GdauiSet *paramlist, GdauiSetSource *source)
 	return GTK_WIDGET (obj);
 }
 
+static void
+uiset_source_model_changed_cb (GdauiSet *paramlist, GdauiSetSource *source, GdauiEntryCombo* combo)
+{
+	if (source == combo->priv->source) {
+		GSList *list, *values = NULL;
+		for (list = source->source->nodes; list; list = list->next) {
+			const GValue *cvalue;
+			cvalue = gda_holder_get_value (GDA_SET_NODE (list->data)->holder);
+			values = g_slist_append (values, (GValue *) cvalue);
+		}
+		gdaui_combo_set_model (GDAUI_COMBO (combo->priv->combo_entry),
+				       source->source->data_model,
+				       combo->priv->source->shown_n_cols, 
+				       combo->priv->source->shown_cols_index);
+		_gdaui_combo_set_selected_ext (GDAUI_COMBO (combo->priv->combo_entry), values, NULL);
+		g_slist_free (values);
+	}
+}
+
 /*
  * _gdaui_entry_combo_construct
  * @combo: a #GdauiEntryCombo object to be construced
@@ -262,6 +281,8 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	combo->priv->paramlist = paramlist;
 	combo->priv->source = source;
 	g_object_ref (G_OBJECT (paramlist));
+	g_signal_connect (paramlist, "source-model-changed",
+			  G_CALLBACK (uiset_source_model_changed_cb), combo);
 
 	/* create the ComboNode structures, 
 	 * and use the values provided by the parameters to display the correct row */
@@ -318,8 +339,12 @@ gdaui_entry_combo_dispose (GObject *object)
 	combo = GDAUI_ENTRY_COMBO (object);
 
 	if (combo->priv) {
-		if (combo->priv->paramlist) 
+		if (combo->priv->paramlist) {
+			g_signal_handlers_disconnect_by_func (combo->priv->paramlist,
+							      G_CALLBACK (uiset_source_model_changed_cb),
+							      combo);
 			g_object_unref (combo->priv->paramlist);
+		}
 
 		if (combo->priv->combo_nodes) {
 			GSList *list;
