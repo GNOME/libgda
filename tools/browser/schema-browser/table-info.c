@@ -39,6 +39,7 @@
 #include <libgda-ui/gdaui-enums.h>
 #include <libgda-ui/gdaui-basic-form.h>
 #include "../common/popup-container.h"
+#include <libgda/gda-data-model-extra.h>
 
 struct _TableInfoPrivate {
 	BrowserConnection *bcnc;
@@ -53,6 +54,8 @@ struct _TableInfoPrivate {
 	GtkWidget *pages; /* notebook to store individual pages */
 
 	GtkWidget *insert_popup;
+	GHashTable *insert_columns_hash; /* key = column index as a pointer, value = GdaHolder in the
+					 * params used in the INSERT statement */
 };
 
 static void table_info_class_init (TableInfoClass *klass);
@@ -127,6 +130,8 @@ table_info_dispose (GObject *object)
 
 	/* free memory */
 	if (tinfo->priv) {
+		if (tinfo->priv->insert_columns_hash)
+			g_hash_table_destroy (tinfo->priv->insert_columns_hash);
 		if (tinfo->priv->insert_popup)
 			gtk_widget_destroy (tinfo->priv->insert_popup);
 		g_free (tinfo->priv->schema);
@@ -265,6 +270,15 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableInfo *tin
 {
 	GdaMetaDbObject *dbo;
 	GValue *schema_v = NULL, *name_v;
+
+	if (tinfo->priv->insert_columns_hash) {
+		g_hash_table_destroy (tinfo->priv->insert_columns_hash);
+		tinfo->priv->insert_columns_hash = NULL;
+	}
+	if (tinfo->priv->insert_popup) {
+		gtk_widget_destroy (tinfo->priv->insert_popup);
+		tinfo->priv->insert_popup = NULL;
+	}
 
 	g_value_set_string ((schema_v = gda_value_new (G_TYPE_STRING)), tinfo->priv->schema);
 	g_value_set_string ((name_v = gda_value_new (G_TYPE_STRING)), tinfo->priv->table_name);
@@ -540,8 +554,86 @@ insert_response_cb (GtkWidget *dialog, gint response_id, TableInfo *tinfo)
 					    lerror && lerror->message ? lerror->message : _("No detail"));
 			g_clear_error (&lerror);
 		}
+		gtk_widget_hide (dialog);
 	}
-	gtk_widget_hide (dialog);
+#ifdef HAVE_GDU
+	else if (response_id == GTK_RESPONSE_HELP) {
+		browser_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo),
+				   "table-insert-data");
+	}
+#endif
+	else
+		gtk_widget_hide (dialog);
+}
+
+typedef struct {
+	gint          cols_nb;
+	gint         *fk_cols_array;
+	GdaSet       *insert_params;
+	GHashTable   *chash;
+	GdaStatement *stmt;
+	GdaDataModel *model;
+	gboolean      model_rerunning;
+} FKBindData;
+
+static void
+fk_bind_select_executed_cb (BrowserConnection *bcnc,
+			    guint exec_id,
+			    GObject *out_result,
+			    GdaSet *out_last_inserted_row, GError *error,
+			    FKBindData *fkdata)
+{
+	gint i;
+	GdaDataModel *model;
+	if (! out_result)
+		return;
+
+	if (fkdata->model)
+		g_object_unref (fkdata->model);
+
+	model = GDA_DATA_MODEL (out_result);
+	for (i = 0; i < fkdata->cols_nb; i++) {
+		GdaHolder *h;
+		GdaSetSource *source;
+		h = g_hash_table_lookup (fkdata->chash,
+					 GINT_TO_POINTER (fkdata->fk_cols_array [i] - 1));
+		source = gda_set_get_source (fkdata->insert_params, h);
+		if (source && gda_holder_get_source_model (h, NULL)) {
+			gda_set_replace_source_model (fkdata->insert_params, source,
+						      model);
+			/* break now as gda_set_replace_source_model() does the job of replacing
+			 * the data model for all the holders which share the same data model */
+			break;
+		}
+		else {
+#ifdef GDA_DEBUG_NO
+			if (gda_holder_set_source_model (h, model, i, NULL))
+				g_print ("Bound holder [%s] to column %d for model %p\n", gda_holder_get_id (h), i, model);
+			else
+				g_print ("Could not bind holder [%s] to column %d\n", gda_holder_get_id (h), i);
+#else
+			gda_holder_set_source_model (h, model, i, NULL);
+#endif
+		}
+	}
+	fkdata->model = g_object_ref (out_result);
+	fkdata->model_rerunning = FALSE;
+}
+
+static void
+fkdata_list_free (GSList *fkdata_list)
+{
+	GSList *list;
+	for (list = fkdata_list; list; list = list->next) {
+		FKBindData *fkdata = (FKBindData*) list->data;
+		g_free (fkdata->fk_cols_array);
+		g_object_unref (fkdata->insert_params);
+		g_object_unref (fkdata->stmt);
+		if (fkdata->model)
+			g_object_unref (fkdata->model);
+		g_free (fkdata);
+	}
+	g_slist_free (fkdata_list);
 }
 
 static void
@@ -553,6 +645,21 @@ action_insert_cb (GtkAction *action, TableInfo *tinfo)
 
 	if (tinfo->priv->insert_popup) {
 		gtk_widget_show (tinfo->priv->insert_popup);
+		GSList *fkdata_list;
+		
+		for (fkdata_list = g_object_get_data (G_OBJECT (tinfo->priv->insert_popup), "fkdata_list");
+		     fkdata_list; fkdata_list = fkdata_list->next) {
+			FKBindData *fkdata = (FKBindData *) fkdata_list->data;
+			if (fkdata->model && !fkdata->model_rerunning) {
+				if (browser_connection_execute_statement_cb (tinfo->priv->bcnc,
+									     fkdata->stmt, NULL,
+									     GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									     FALSE,
+									     (BrowserConnectionExecuteCallback) fk_bind_select_executed_cb,
+									     fkdata, NULL) != 0)
+					fkdata->model_rerunning = TRUE;
+			}
+		}
 		return;
 	}
 
@@ -600,10 +707,12 @@ action_insert_cb (GtkAction *action, TableInfo *tinfo)
 	GdaStatement *stmt;
 	stmt = gda_sql_builder_get_statement (b, NULL);
 	g_object_unref (b);
+#ifdef GDA_DEBUG_NO
 	gchar *sql;
 	sql = gda_statement_to_sql (stmt, NULL, NULL);
 	g_print ("[%s]\n", sql);
 	g_free (sql);
+#endif
 
 	/* handle user preferences */
 	GdaSet *params;
@@ -617,47 +726,185 @@ action_insert_cb (GtkAction *action, TableInfo *tinfo)
 		g_object_unref (stmt);
 		return;
 	}
-	for (list = mtable->columns; list; list = list->next) {
+	GSList *fkdata_list = NULL;
+	gint nthcol;
+	if (mtable->fk_list)
+		tinfo->priv->insert_columns_hash = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
+
+	for (nthcol = 0, list = mtable->columns; list; nthcol++, list = list->next) {
 		GdaMetaTableColumn *col = (GdaMetaTableColumn*) list->data;
 		gchar *plugin;
+		const GValue *autoinc;
+		GdaHolder *holder;
+
 		plugin = browser_connection_get_table_column_attribute (tinfo->priv->bcnc,
 									mtable,	col,
 									BROWSER_CONNECTION_COLUMN_PLUGIN,
 									NULL);
-		if (!plugin && !col->default_value)
-			continue;
-		
-		GdaHolder *holder;
 		holder = gda_set_get_holder (params, col->column_name);
-		if (holder) {
-			if (plugin) {
-				GValue *value;
-				value = gda_value_new_from_string (plugin, G_TYPE_STRING);
-				gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
-				gda_value_free (value);
-			}
+		if (!holder)
+			continue;
 
-			if (col->default_value) {
-				GValue *dv;
-				g_value_set_string ((dv = gda_value_new (G_TYPE_STRING)), col->default_value);
-				gda_holder_set_default_value (holder, dv);
-				gda_value_free (dv);
-				gda_holder_set_value_to_default (holder);
-			}
+		autoinc = gda_meta_table_column_get_attribute (col, GDA_ATTRIBUTE_AUTO_INCREMENT);
+		if (tinfo->priv->insert_columns_hash)
+			g_hash_table_insert (tinfo->priv->insert_columns_hash, GINT_TO_POINTER (nthcol), g_object_ref (holder));
+		
+		if (!plugin && !col->default_value && !autoinc)
+			continue;
+		if (plugin) {
+			GValue *value;
+			value = gda_value_new_from_string (plugin, G_TYPE_STRING);
+			gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+			gda_value_free (value);
+		}
+		
+		if (col->default_value) {
+			GValue *dv;
+			//g_value_set_string ((dv = gda_value_new (G_TYPE_STRING)), col->default_value);
+			dv = gda_value_new_null ();
+			gda_holder_set_default_value (holder, dv);
+			gda_value_free (dv);
+			gda_holder_set_value_to_default (holder);
+
+			gchar *tmp;
+			tmp = g_strdup_printf (_("Default value: '%s'"), col->default_value);
+			g_object_set (holder, "description", tmp, NULL);
+			g_free (tmp);
+		}
+		else if (autoinc) {
+			GValue *dv;
+			g_value_set_string ((dv = gda_value_new (G_TYPE_STRING)), "");
+			gda_holder_set_default_value (holder, dv);
+			gda_value_free (dv);
+			gda_holder_set_value_to_default (holder);
+			g_object_set (holder, "description", _("Default value: auto incremented value"), NULL);
 		}
 
 		g_free (plugin);
 	}
 
+	/* analyse FK list to propose values to choose from */
+	for (list = mtable->fk_list; list; list = list->next) {
+		GdaMetaTableForeignKey *fk = (GdaMetaTableForeignKey*) list->data;
+		if (fk->depend_on == dbo) /* don't link to itself */
+			continue;
+		else if (fk->depend_on->obj_type != GDA_META_DB_TABLE)
+			continue;
+		GdaMetaDbObject *rdbo = (GdaMetaDbObject*) fk->depend_on;
+		GdaDataModel *cmodel;
+		GValue *schema_v, *name_v, *catalog_v;
+		GError *lerror = NULL;
+		
+		g_value_set_string ((catalog_v = gda_value_new (G_TYPE_STRING)), rdbo->obj_catalog);
+		g_value_set_string ((schema_v = gda_value_new (G_TYPE_STRING)), rdbo->obj_schema);
+		g_value_set_string ((name_v = gda_value_new (G_TYPE_STRING)), rdbo->obj_name);
+		dbo = gda_meta_struct_get_db_object (mstruct, NULL, schema_v, name_v);
+
+		cmodel = gda_meta_store_extract (browser_connection_get_meta_store (tinfo->priv->bcnc),
+						"SELECT tc.constraint_name, k.column_name FROM _key_column_usage k INNER JOIN _table_constraints tc ON (k.table_catalog=tc.table_catalog AND k.table_schema=tc.table_schema AND k.table_name=tc.table_name AND k.constraint_name=tc.constraint_name) WHERE tc.constraint_type='UNIQUE' AND k.table_catalog = ##catalog::string AND k.table_schema = ##schema::string AND k.table_name = ##tname::string ORDER by k.ordinal_position", &lerror,
+						"catalog", catalog_v,
+						"schema", schema_v,
+						"tname", name_v, NULL);
+
+		gda_value_free (catalog_v);
+		gda_value_free (schema_v);
+		gda_value_free (name_v);
+
+		GdaSqlBuilder *b = NULL;
+		if (cmodel) {
+			gint nrows, i;
+			nrows = gda_data_model_get_n_rows (cmodel);
+			b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+			gda_sql_builder_select_add_target_id (b,
+							      gda_sql_builder_add_id (b, rdbo->obj_short_name),
+							      NULL);
+			/* add REF PK fields */
+			for (i = 0; i < fk->cols_nb; i++) {
+				gda_sql_builder_select_add_field (b, fk->ref_pk_names_array [i], NULL, NULL);
+			}
+
+			/* add UNIQUE fields */
+			for (i = 0; i < nrows; i++) {
+				const GValue *cvalue;
+				cvalue = gda_data_model_get_value_at (cmodel, 1, i, NULL);
+				if (!cvalue || (G_VALUE_TYPE (cvalue) != G_TYPE_STRING))
+					break;
+				gda_sql_builder_select_add_field (b, g_value_get_string (cvalue), NULL, NULL);
+				gda_sql_builder_select_order_by (b,
+								 gda_sql_builder_add_id (b, g_value_get_string (cvalue)),
+								 TRUE, NULL);
+			}
+			if (i < nrows) {
+				/* error  */
+				g_object_unref (b);
+				b = NULL;
+			}
+			/*gda_data_model_dump (cmodel, NULL);*/
+			g_object_unref (cmodel);
+		}
+		else {
+			g_warning ("Can't get list of unique constraints for table '%s': %s",
+				   rdbo->obj_short_name,
+				   lerror && lerror->message ? lerror->message : _("No detail"));
+			g_clear_error (&lerror);
+		}
+
+		if (b) {
+			GdaStatement *stmt;
+			stmt = gda_sql_builder_get_statement (b, NULL);
+			if (stmt) {
+#ifdef GDA_DEBUG_NO
+				gchar *sql;
+				sql = gda_statement_to_sql (stmt, NULL, NULL);
+				g_print ("UNIQUE SELECT [%s]\n", sql);
+				g_free (sql);
+#endif
+
+				FKBindData *fkdata;
+				guint eid;
+				fkdata = g_new0 (FKBindData, 1);
+				fkdata->cols_nb = fk->cols_nb;
+				fkdata->fk_cols_array = g_new (gint, fk->cols_nb);
+				memcpy (fkdata->fk_cols_array, fk->fk_cols_array, sizeof (gint) * fk->cols_nb);
+				fkdata->chash = tinfo->priv->insert_columns_hash;
+				fkdata->stmt = stmt;
+				eid = browser_connection_execute_statement_cb (tinfo->priv->bcnc, stmt, NULL,
+									       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									       FALSE,
+									       (BrowserConnectionExecuteCallback) fk_bind_select_executed_cb,
+									       fkdata, NULL);
+				if (! eid) {
+					g_free (fkdata->fk_cols_array);
+					g_object_unref (fkdata->stmt);
+					g_free (fkdata);
+				}
+				fkdata->insert_params = g_object_ref (params);
+
+				/* attach the kfdata to @popup to be able to re-run the SELECT
+				 * everytime the window is shown */
+				fkdata_list = g_slist_prepend (fkdata_list, fkdata);
+			}
+
+			g_object_unref (b);
+		}
+	}
+
 	/* create popup */
 	GtkWidget *popup;
 	popup = gtk_dialog_new_with_buttons (_("Values to insert into table"), GTK_WINDOW (bwin),
-					     0, GTK_STOCK_EXECUTE, GTK_RESPONSE_ACCEPT,
+					     0,
+#ifdef HAVE_GDU
+					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
+#endif
+					     GTK_STOCK_EXECUTE, GTK_RESPONSE_ACCEPT,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 					     NULL);
 	tinfo->priv->insert_popup = popup;
 	g_object_set_data_full (G_OBJECT (popup), "stmt", stmt, g_object_unref);
 	g_object_set_data_full (G_OBJECT (popup), "params", params, g_object_unref);
+	if (fkdata_list)
+		g_object_set_data_full (G_OBJECT (popup), "fkdata_list",
+					fkdata_list, (GDestroyNotify) fkdata_list_free);
 
 	g_signal_connect (popup, "close",
 			  G_CALLBACK (gtk_widget_hide), NULL);
@@ -696,11 +943,12 @@ action_insert_cb (GtkAction *action, TableInfo *tinfo)
 	gtk_widget_show_all (popup);
 }
 
+
 static GtkActionEntry ui_actions[] = {
 	{ "Table", NULL, "_Table", NULL, "Table", NULL },
 	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("Add to _Favorites"), NULL, N_("Add table to favorites"),
 	  G_CALLBACK (action_add_to_fav_cb)},
-	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View contents"),
+	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View table's contents"),
 	  G_CALLBACK (action_view_contents_cb)},
 	{ "InsertData", GTK_STOCK_ADD, N_("_Insert data"), NULL, N_("Insert data into table"),
 	  G_CALLBACK (action_insert_cb)},

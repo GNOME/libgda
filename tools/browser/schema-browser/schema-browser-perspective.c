@@ -307,10 +307,6 @@ static const gchar *ui_actions_info =
         "      </menu>"
         "    </placeholder>"
         "  </menubar>"
-        "  <toolbar name='ToolBar'>"
-        "    <separator/>"
-        "    <toolitem action='NewDiagram'/>"
-        "  </toolbar>"
         "</ui>";
 
 static GtkActionGroup *
