@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 2002 - 2009 The GNOME Foundation.
+ * Copyright (C) 2002 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
@@ -49,7 +49,7 @@
  * The error number is set to the Oracle error code.
  */
 GdaConnectionEvent *
-_gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
+_gda_oracle_make_error (GdaConnection *cnc, dvoid *hndlp, ub4 type, const gchar *file, gint line)
 {
 	GdaConnectionEvent *error = NULL;
 	gchar errbuf[512];
@@ -66,7 +66,7 @@ _gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 			     (ub4) type);
 	
 		if (errcode != 1405) {
-			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (error, errbuf);
 			/*g_warning ("Oracle error:%s", errbuf);*/
 			if (errcode == 600)
@@ -74,7 +74,7 @@ _gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 		}
 	} 
 	else {
-		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (error, _("NO DESCRIPTION"));
 	}
 	
@@ -119,11 +119,11 @@ _gda_oracle_handle_error (gint result, GdaConnection *cnc,
 	case OCI_ERROR:
 		switch(type) {
 		case OCI_HTYPE_ERROR:
-			error = _gda_oracle_make_error (cdata->herr, type, file, line);
+			error = _gda_oracle_make_error (cnc, cdata->herr, type, file, line);
 			gda_connection_add_event (cnc, error);
 			break;
 		case OCI_HTYPE_ENV:
-			error = _gda_oracle_make_error (cdata->henv, type, file, line);
+			error = _gda_oracle_make_error (cnc, cdata->henv, type, file, line);
 			if (error)
 				gda_connection_add_event (cnc, error);
 			break;

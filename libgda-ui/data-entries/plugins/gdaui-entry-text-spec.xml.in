@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
+    <parameter id="WRAP_MODE" _name="Lines wrapping" _descr="Defines how long lines are wrapped" gdatype="string" source="wrappermodes:0"/>
     <parameter id="PROG_LANG" _name="Programming language" _descr="Define to enable syntactical colourisation" gdatype="string" source="langs:0"/>
   </parameters>
   <sources>
@@ -8,6 +9,29 @@
       <gda_array_field name="id" gdatype="gchararray"/>
       <gda_array_field name="name" gdatype="gchararray"/>
       <gda_array_data/>
+    </gda_array>
+
+    <gda_array name="wrappermodes">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="name" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>NONE</gda_value>
+          <_gda_value>Do not wrap lines</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>CHAR</gda_value>
+          <_gda_value>break lines anywhere the cursor can appear</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>WORD</gda_value>
+          <_gda_value>Break lines in between words</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>D_CHAR</gda_value>
+          <_gda_value>Break lines in between words or graphemes</_gda_value>
+        </gda_array_row>
+      </gda_array_data>
     </gda_array>
   </sources>
 </data-set-spec>

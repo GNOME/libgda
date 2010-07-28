@@ -11,7 +11,7 @@ Grid widget to manipulate data in a #GdaDataModel, with decorations
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-  The #GdauiRawGrid widget which is used by the #GdaGrid widget.
+  The #GdauiRawGrid widget which is used by the #GdauiGrid widget.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->

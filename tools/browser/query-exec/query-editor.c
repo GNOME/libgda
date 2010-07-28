@@ -40,6 +40,7 @@
 #include "../browser-connection.h"
 #include "../browser-window.h"
 #include "../common/popup-container.h"
+#include "../support.h"
 
 #define QUERY_EDITOR_LANGUAGE_SQL "gda-sql"
 #define COLOR_ALTER_FACTOR 1.8
@@ -373,7 +374,7 @@ display_completions (QueryEditor *editor)
 			GtkWidget *popup, *sw;
 			
 			model = gtk_list_store_new (1, G_TYPE_STRING);
-			treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (model));
+			treeview = browser_make_tree_view (GTK_TREE_MODEL (model));
 			gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
 			gtk_tree_view_set_grid_lines (GTK_TREE_VIEW (treeview), GTK_TREE_VIEW_GRID_LINES_NONE);
 			gtk_tree_selection_set_mode (gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview)),

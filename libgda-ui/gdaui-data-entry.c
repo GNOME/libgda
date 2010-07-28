@@ -1,6 +1,6 @@
 /* gdaui-data-entry.c
  *
- * Copyright (C) 2003 - 2009 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -27,10 +27,11 @@ enum {
 	CONTENTS_ACTIVATED,
 	STATUS_CHANGED,
 	CONTENTS_VALID,
+	EXPAND_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gdaui_data_entry_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
+static gint gdaui_data_entry_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
 static void gdaui_data_entry_iface_init (gpointer g_class);
 
 GType
@@ -114,6 +115,14 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      contents_valid_accumulator, NULL,
 				      _gdaui_marshal_BOOLEAN__POINTER,
 				      G_TYPE_BOOLEAN, 1, G_TYPE_POINTER);
+		gdaui_data_entry_signals[EXPAND_CHANGED] =
+			g_signal_new ("expand-changed",
+				      GDAUI_TYPE_DATA_ENTRY,
+				      G_SIGNAL_RUN_FIRST,
+				      G_STRUCT_OFFSET (GdauiDataEntryIface, expand_changed),
+				      NULL, NULL,
+				      _gdaui_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
 
 		((GdauiDataEntryIface*) g_class)->contents_valid = m_class_contents_valid;
 		initialized = TRUE;
@@ -240,7 +249,7 @@ gdaui_data_entry_content_is_valid (GdauiDataEntry *de, GError **error)
  * @value: a #GValue, or %NULL
  *
  * Push a value into the GdauiDataEntry in the same way as gdaui_data_entry_set_value() but
- * also sets this value as the original value.
+ * also sets this value as the reference value.
  *
  * Since: 4.2
  */
@@ -254,15 +263,15 @@ gdaui_data_entry_set_reference_value (GdauiDataEntry *de, const GValue *value)
 }
 
 /**
- * gdaui_data_entry_reset
+ * gdaui_data_entry_set_reference_current
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
- * Tells that the current value in @de is to be considered as the original value
+ * Tells that the current value in @de is to be considered as the reference value
  *
  * Since: 4.2
  */
 void
-gdaui_data_entry_reset (GdauiDataEntry *de)
+gdaui_data_entry_set_reference_current (GdauiDataEntry *de)
 {
 	GValue *value;
 	g_return_if_fail (GDAUI_IS_DATA_ENTRY (de));
@@ -275,17 +284,17 @@ gdaui_data_entry_reset (GdauiDataEntry *de)
 
 
 /**
- * gdaui_data_entry_get_original_value
+ * gdaui_data_entry_get_reference_value
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
- * Fetch the original value held in the GdauiDataEntry widget
+ * Fetch the reference value held in the #GdauiDataEntry widget
  *
  * Returns: the #GValue (not modifiable)
  *
  * Since: 4.2
  */
 const GValue *
-gdaui_data_entry_get_original_value (GdauiDataEntry *de)
+gdaui_data_entry_get_reference_value (GdauiDataEntry *de)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), NULL);
 
@@ -297,7 +306,7 @@ gdaui_data_entry_get_original_value (GdauiDataEntry *de)
 
 
 /**
- * gdaui_data_entry_set_value_default
+ * gdaui_data_entry_set_default_value
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @value: a #GValue, or %NULL
  *
@@ -312,7 +321,7 @@ gdaui_data_entry_get_original_value (GdauiDataEntry *de)
  * Since: 4.2
  */
 void
-gdaui_data_entry_set_value_default (GdauiDataEntry *de, const GValue *value)
+gdaui_data_entry_set_default_value (GdauiDataEntry *de, const GValue *value)
 {
 	g_return_if_fail (GDAUI_IS_DATA_ENTRY (de));
 	g_return_if_fail (value);
@@ -385,22 +394,24 @@ gdaui_data_entry_get_handler (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_expand_in_layout
+ * gdaui_data_entry_can_expand
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
+ * @horiz: %TRUE to query horizontal expansion requirements, or %FALSE for vertical
  *
- * Used for the layout of the widget in containers.
+ * Used for the layout of #GdaDataEntry widgets in containers: queries if @de requires
+ * horizontal or vertical expansion, depending on @horiz
  *
- * Returns: TRUE if the widget should expand
+ * Returns: TRUE if the widget requires expansion
  *
  * Since: 4.2
  */
 gboolean
-gdaui_data_entry_expand_in_layout (GdauiDataEntry *de)
+gdaui_data_entry_can_expand (GdauiDataEntry *de, gboolean horiz)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), FALSE);
 
-	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->expand_in_layout)
-		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->expand_in_layout) (de);
+	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->can_expand)
+		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->can_expand) (de, horiz);
 	else
 		return FALSE;
 }

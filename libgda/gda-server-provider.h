@@ -57,7 +57,8 @@ typedef enum
 	GDA_SERVER_PROVIDER_BUSY_ERROR,
 	GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
 	GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR,
-	GDA_SERVER_PROVIDER_DATA_ERROR
+	GDA_SERVER_PROVIDER_DATA_ERROR,
+	GDA_SERVER_PROVIDER_DEFAULT_VALUE_HANDLING_ERROR
 } GdaServerProviderError;
 
 struct _GdaServerProvider {
@@ -222,6 +223,7 @@ typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, Gda
 typedef void (*GdaServerProviderExecCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
 					       GObject *result_obj, const GError *error, gpointer data);
 
+#define GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD ((gpointer)0x1)
 struct _GdaServerProviderClass {
 	GObjectClass parent_class;
 
@@ -305,12 +307,13 @@ struct _GdaServerProviderClass {
 							 const gchar *id,
 							 gboolean for_meta_store, gboolean force_quotes);
 
-	/* Async. handling@ */
-	gboolean                (*handle_async)          (GdaServerProvider *provider, GdaConnection *cnc, GError **error);
+	/* Async. handling */
+	gboolean                (*handle_async)         (GdaServerProvider *provider, GdaConnection *cnc, GError **error);
 
+	GdaSqlStatement        *(*statement_rewrite)    (GdaServerProvider *provider, GdaConnection *cnc,
+							 GdaStatement *stmt, GdaSet *params, GError **error);
 	/*< private >*/
 	/* Padding for future expansion */
-	void                    (*_gda_reserved3)        (void);
 	void                    (*_gda_reserved4)        (void);
 	void                    (*_gda_reserved5)        (void);
 	void                    (*_gda_reserved6)        (void);

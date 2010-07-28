@@ -1,5 +1,5 @@
 /* GDA postgres provider
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -125,6 +125,10 @@ static gchar               *gda_postgresql_identifier_quote    (GdaServerProvide
 								const gchar *id,
 								gboolean meta_store_convention, gboolean force_quotes);
 
+static GdaSqlStatement     *gda_postgresql_statement_rewrite   (GdaServerProvider *provider, GdaConnection *cnc,
+								GdaStatement *stmt, GdaSet *params, GError **error);
+
+
 /* distributed transactions */
 static gboolean gda_postgres_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc,
 						   const GdaXaTransactionId *xid, GError **error);
@@ -217,6 +221,8 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->statement_prepare = gda_postgres_provider_statement_prepare;
 	provider_class->statement_execute = gda_postgres_provider_statement_execute;
 
+	provider_class->statement_rewrite = gda_postgresql_statement_rewrite;
+
 	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	provider_class->meta_funcs._info = _gda_postgres_meta__info;
 	provider_class->meta_funcs._btypes = _gda_postgres_meta__btypes;
@@ -278,7 +284,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	if (! PQisthreadsafe ()) {
 		gda_log_message ("PostgreSQL was not compiled with the --enable-thread-safety flag, "
 				 "only one thread can access the provider");
-		provider_class->limiting_thread = g_thread_self ();
+		provider_class->limiting_thread = GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD;
 	}
 	else
 		provider_class->limiting_thread = NULL;
@@ -381,20 +387,24 @@ get_pg_version_float (const gchar *str)
 }
 
 static void
-pq_notice_processor (PostgresConnectionData *cdata, const char *message)
+pq_notice_processor (GdaConnection *cnc, const char *message)
 {
         GdaConnectionEvent *error;
+	PostgresConnectionData *cdata;
 
         if (!message)
                 return;
 
-        error = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return;
+        error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
         gda_connection_event_set_description (error, message);
         gda_connection_event_set_code (error, -1);
-        gda_connection_event_set_source (error, gda_connection_get_provider_name (cdata->cnc));
+        gda_connection_event_set_source (error, gda_connection_get_provider_name (cnc));
         gda_connection_event_set_sqlstate (error, "-1");
 
-        gda_connection_add_event (cdata->cnc, error);
+        gda_connection_add_event (cnc, error);
 }
 
 /*
@@ -547,7 +557,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_postgres_free_cnc_data);
 
 	/* handle LibPQ's notices */
-        PQsetNoticeProcessor (pconn, (PQnoticeProcessor) pq_notice_processor, cdata);
+        PQsetNoticeProcessor (pconn, (PQnoticeProcessor) pq_notice_processor, cnc);
 
 	/* handle the reuseable part */
 	GdaProviderReuseableOperations *ops;
@@ -1866,7 +1876,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		cursor_sql = g_strdup_printf ("DECLARE %s SCROLL CURSOR WITH HOLD FOR %s", cursor_name, sql);
 		g_free (sql);
 		pg_res = _gda_postgres_PQexec_wrap (cnc, cdata->pconn, cursor_sql);
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
 		gda_connection_event_set_description (event, cursor_sql);
 		gda_connection_add_event (cnc, event);
 		g_free (cursor_sql);
@@ -1932,7 +1942,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -1952,7 +1962,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1970,7 +1980,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1984,6 +1994,39 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				continue;
 			}
 		}
+		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
+			/* create a new GdaStatement to handle all default values and execute it instead */
+			GdaSqlStatement *sqlst;
+			GError *lerror = NULL;
+			sqlst = gda_statement_rewrite_for_default_values (stmt, params, FALSE, &lerror);
+			if (!sqlst) {
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, lerror && lerror->message ? 
+								      lerror->message :
+								      _("Can't rewrite statement handle default values"));
+				g_propagate_error (error, lerror);
+				break;
+			}
+
+			GdaStatement *rstmt;
+			GObject *res;
+			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+			gda_sql_statement_free (sqlst);
+			params_freev (param_values, param_mem, nb_params);
+			g_free (param_lengths);
+			g_free (param_formats);
+			if (transaction_started)
+				gda_connection_rollback_transaction (cnc, NULL, NULL);
+			res = gda_postgres_provider_statement_execute (provider, cnc,
+								       rstmt, params,
+								       model_usage,
+								       col_types, last_inserted_row,
+								       task_id,
+								       async_cb, cb_data, error);
+			g_object_unref (rstmt);
+			return res;
+		}
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
@@ -1996,7 +2039,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 			/* Postgres requires that a transaction be started for LOB operations */
 			if (!check_transaction_started (cnc, &transaction_started)) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, _("Cannot start transaction"));
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
 					     "%s", _("Cannot start transaction"));
@@ -2054,7 +2097,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	}
 
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 
@@ -2102,7 +2145,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
                                 gchar *str;
                                 GdaConnectionEvent *event;
 
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
                                 str = g_strdup (PQcmdStatus (pg_res));
                                 gda_connection_event_set_description (event, str);
                                 g_free (str);
@@ -2135,6 +2178,25 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 	return retval;
 }
+
+/*
+ * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
+ *
+ * Usually for INSERTS:
+ *  - it removes any DEFAULT value
+ *  - if there is no default value anymore, it uses the "DEFAULT VALUES" syntax
+ */
+static GdaSqlStatement *
+gda_postgresql_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+				  GdaStatement *stmt, GdaSet *params, GError **error)
+{
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+	}
+	return gda_statement_rewrite_for_default_values (stmt, params, FALSE, error);
+}
+
 
 /*
  * starts a distributed transaction: put the XA transaction in the ACTIVE state

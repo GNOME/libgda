@@ -272,7 +272,6 @@ gdaui_data_cell_renderer_pict_set_property (GObject *object,
 		/* Because we don't have a copy of the value, we MUST NOT free it! */
                 cell->priv->value = NULL;
 		g_object_set (G_OBJECT (cell), "pixbuf", NULL, "stock-id", NULL, NULL);
-		cell->priv->invalid = FALSE;
 		if (value) {
                         GValue *gval = g_value_get_boxed (value);
 			GdkPixbuf *pixbuf = NULL;
@@ -325,6 +324,7 @@ gdaui_data_cell_renderer_pict_set_property (GObject *object,
                 g_object_notify (object, "value");
 		break;
 	case PROP_VALUE_ATTRIBUTES:
+		cell->priv->invalid = g_value_get_flags (value) & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE;
 		break;
 	case PROP_EDITABLE:
 		cell->priv->editable = g_value_get_boolean (value);

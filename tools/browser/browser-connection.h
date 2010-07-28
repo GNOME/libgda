@@ -94,6 +94,32 @@ GObject            *browser_connection_execution_get_result   (BrowserConnection
 							       GdaSet **last_insert_row, GError **error);
 gboolean            browser_connection_normalize_sql_statement(BrowserConnection *bcnc,
 							       GdaSqlStatement *sqlst, GError **error);
+/**
+ * BrowserConnectionExecuteCallback
+ *
+ * Callback function called by browser_connection_execute_statement_cb(). If you need to keep
+ * some of the arguments for a later usage, you need to ref/copy them.
+ */
+typedef void (*BrowserConnectionExecuteCallback) (BrowserConnection *bcnc,
+						  guint exec_id,
+						  GObject *out_result,
+						  GdaSet *out_last_inserted_row, GError *error,
+						  gpointer data);
+
+guint               browser_connection_execute_statement_cb   (BrowserConnection *bcnc,
+							       GdaStatement *stmt,
+							       GdaSet *params,
+							       GdaStatementModelUsage model_usage,
+							       gboolean need_last_insert_row,
+							       BrowserConnectionExecuteCallback callback,
+							       gpointer data,
+							       GError **error);
+guint               browser_connection_rerun_select_cb        (BrowserConnection *bcnc,
+							       GdaDataModel *model,
+							       BrowserConnectionExecuteCallback callback,
+							       gpointer data,
+							       GError **error);
+
 
 /*
  * transactions

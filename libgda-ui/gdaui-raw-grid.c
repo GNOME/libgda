@@ -354,7 +354,7 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	grid->priv->default_show_global_actions = TRUE;
 	grid->priv->columns_data = NULL;
 	grid->priv->columns_hash = g_hash_table_new (NULL, NULL);
-	grid->priv->export_type = 2;
+	grid->priv->export_type = 1;
 	grid->priv->write_mode = GDAUI_DATA_PROXY_WRITE_ON_DEMAND;
 
 	tree_view = GTK_TREE_VIEW (grid);
@@ -1030,8 +1030,8 @@ cell_value_set_attributes (GtkTreeViewColumn *tree_column,
 				    col, &value,
 				    offset + col, &attributes, -1);
 		g_object_set (G_OBJECT (cell),
-			      "value", value,
 			      "value-attributes", attributes,
+			      "value", value,
 			      "editable",
 			      !cdata->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
 			      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
@@ -1719,6 +1719,15 @@ tree_view_popup_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, Gda
 	selection = gtk_tree_view_get_selection (tree_view);
 	sel_mode = gtk_tree_selection_get_mode (selection);
 
+	/* force selection of row on which clicked occurred */
+	GtkTreePath *path;
+	if ((event->window == gtk_tree_view_get_bin_window (tree_view)) &&
+	    gtk_tree_view_get_path_at_pos (tree_view, event->x, event->y, &path, NULL, NULL, NULL)) {
+		gtk_tree_selection_unselect_all (selection);
+		gtk_tree_selection_select_path (selection, path);
+		gtk_tree_path_free (path);
+	}
+
 	/* create the menu */
 	menu = gtk_menu_new ();
 	if (sel_mode == GTK_SELECTION_MULTIPLE)
@@ -1823,6 +1832,7 @@ menu_show_columns_cb (GtkWidget *widget, GdauiRawGrid *grid)
 					   gtk_check_menu_item_get_active (item));
 }
 
+static void export_type_changed_cb (GtkComboBox *types, GtkWidget *dialog);
 static void save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid);
 
 static void
@@ -1875,6 +1885,7 @@ menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid)
 	filename = gtk_file_chooser_widget_new (GTK_FILE_CHOOSER_ACTION_SAVE);
 	g_object_set_data (G_OBJECT (dialog), "filename", filename);
 	gtk_box_pack_start (GTK_BOX (hbox), filename, TRUE, TRUE, 0);
+	gtk_widget_show (filename);
 
 	str = g_strdup_printf ("<b>%s:</b>", _("Details"));
 	label = gtk_label_new ("");
@@ -1890,38 +1901,20 @@ menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	table = gtk_table_new (2, 2, FALSE);
+	table = gtk_table_new (3, 2, FALSE);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
 	gtk_table_set_col_spacings (GTK_TABLE (table), 5);
 	gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
 	gtk_widget_show (table);
 
-	label = gtk_label_new (_("Limit to selection?"));
+	/* file type */
+	label = gtk_label_new (_("File type:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (label);
 
-	sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
-	selrows = gtk_tree_selection_count_selected_rows (sel);
-	if (selrows <= 0)
-		gtk_widget_set_sensitive (label, FALSE);
-
-	check = gtk_check_button_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), check, 1, 2, 0, 1);
-	gtk_widget_show (check);
-	if (selrows <= 0)
-		gtk_widget_set_sensitive (check, FALSE);
-	else
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check), TRUE);
-	g_object_set_data (G_OBJECT (dialog), "sel_only", check);
-
-	label = gtk_label_new (_("File type:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
-	gtk_widget_show (label);
-
 	types = gtk_combo_box_new_text ();
-	gtk_table_attach_defaults (GTK_TABLE (table), types, 1, 2, 1, 2);
+	gtk_table_attach_defaults (GTK_TABLE (table), types, 1, 2, 0, 1);
 	gtk_widget_show (label);
 	g_object_set_data (G_OBJECT (dialog), "types", types);
 
@@ -1930,9 +1923,88 @@ menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_combo_box_append_text (GTK_COMBO_BOX (types), _("XML"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (types), grid->priv->export_type);
 
+	g_signal_connect (types, "changed",
+			  G_CALLBACK (export_type_changed_cb), dialog);
+
+	/* limit to selection ? */
+	label = gtk_label_new (_("Limit to selection?"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_widget_show (label);
+
+	sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
+	selrows = gtk_tree_selection_count_selected_rows (sel);
+	if (selrows <= 0)
+		gtk_widget_set_sensitive (label, FALSE);
+
+	check = gtk_check_button_new ();
+	gtk_table_attach_defaults (GTK_TABLE (table), check, 1, 2, 1, 2);
+	gtk_widget_show (check);
+	if (selrows <= 0)
+		gtk_widget_set_sensitive (check, FALSE);
+	else
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check), TRUE);
+	g_object_set_data (G_OBJECT (dialog), "sel_only", check);
+
+	/* other options */
+	GtkWidget *exp;
+	exp = gtk_expander_new (_("Other options"));
+	gtk_table_attach_defaults (GTK_TABLE (table), exp, 0, 2, 2, 3);
+
+	GtkWidget *table2;
+	table2 = gtk_table_new (2, 4, FALSE);
+	gtk_container_add (GTK_CONTAINER (exp), table2);
+	
+	label = gtk_label_new (_("Empty string when NULL?"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_table_attach (GTK_TABLE (table2), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_widget_set_tooltip_text (label, _("Export NULL values as an empty \"\" string"));
+
+	check = gtk_check_button_new ();
+	gtk_table_attach_defaults (GTK_TABLE (table2), check, 1, 2, 0, 1);
+	g_object_set_data (G_OBJECT (dialog), "null_as_empty", check);
+	gtk_widget_set_tooltip_text (check, _("Export NULL values as an empty \"\" string"));
+
+	label = gtk_label_new (_("Invalid data as NULL?"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_table_attach (GTK_TABLE (table2), label, 2, 3, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_widget_set_tooltip_text (label, _("Don't export invalid data,\nbut export a NULL value instead"));
+
+	check = gtk_check_button_new ();
+	gtk_table_attach_defaults (GTK_TABLE (table2), check, 3, 4, 0, 1);
+	g_object_set_data (G_OBJECT (dialog), "invalid_as_null", check);
+	gtk_widget_set_tooltip_text (check, _("Don't export invalid data,\nbut export a NULL value instead"));
+
+	label = gtk_label_new (_("Field names on first row?"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_table_attach (GTK_TABLE (table2), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_widget_set_tooltip_text (label, _("Add a row at beginning with columns names"));
+
+	check = gtk_check_button_new ();
+	gtk_table_attach_defaults (GTK_TABLE (table2), check, 1, 2, 1, 2);
+	g_object_set_data (G_OBJECT (dialog), "first_row", check);
+	gtk_widget_set_tooltip_text (check, _("Add a row at beginning with columns names"));
+
+	export_type_changed_cb (GTK_COMBO_BOX (types), dialog);
+
 	/* run the dialog */
 	g_signal_connect (G_OBJECT (dialog), "response", G_CALLBACK (save_as_response_cb), grid);
 	gtk_widget_show_all (dialog);
+}
+
+static void
+export_type_changed_cb (GtkComboBox *types, GtkWidget *dialog)
+{
+	gboolean is_cvs = TRUE;
+	GtkWidget *wid;
+	if (gtk_combo_box_get_active (types) == 2) /* XML */
+		is_cvs = FALSE;
+	wid = g_object_get_data (G_OBJECT (dialog), "first_row");
+	gtk_widget_set_sensitive (wid, is_cvs);
+	wid = g_object_get_data (G_OBJECT (dialog), "invalid_as_null");
+	gtk_widget_set_sensitive (wid, is_cvs);
+	wid = g_object_get_data (G_OBJECT (dialog), "null_as_empty");
+	gtk_widget_set_sensitive (wid, is_cvs);
 }
 
 static gboolean confirm_file_overwrite (GtkWindow *parent, const gchar *path);
@@ -1944,6 +2016,9 @@ save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid)
 	gint export_type;
 	GtkWidget *filename;
 	gboolean selection_only = FALSE;
+	gboolean null_as_empty = FALSE;
+	gboolean invalid_as_null = FALSE;
+	gboolean first_row = FALSE;
 
 	if (response_id == GTK_RESPONSE_OK) {
 		gchar *body;
@@ -1958,6 +2033,12 @@ save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid)
 		filename = g_object_get_data (G_OBJECT (dialog), "filename");
 		selection_only = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
 							       (g_object_get_data (G_OBJECT (dialog), "sel_only")));
+		null_as_empty = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
+							      (g_object_get_data (G_OBJECT (dialog), "null_as_empty")));
+		invalid_as_null = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
+							      (g_object_get_data (G_OBJECT (dialog), "invalid_as_null")));
+		first_row = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
+							  (g_object_get_data (G_OBJECT (dialog), "first_row")));
 
 		/* output columns computation */
 		columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
@@ -1999,33 +2080,46 @@ save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid)
 		/* Actual ouput computations */
 		export_type = gtk_combo_box_get_active (GTK_COMBO_BOX (types));
 		grid->priv->export_type = export_type;
+		paramlist = gda_set_new (NULL);
+
+		if (null_as_empty) {
+			param = gda_holder_new_boolean ("NULL_AS_EMPTY", TRUE);
+			gda_set_add_holder (paramlist, param);
+			g_object_unref (param);
+		}
+		if (invalid_as_null) {
+			param = gda_holder_new_boolean ("INVALID_AS_NULL", TRUE);
+			gda_set_add_holder (paramlist, param);
+			g_object_unref (param);
+		}
+		if (first_row) {
+			param = gda_holder_new_boolean ("FIELDS_NAME", TRUE);
+			gda_set_add_holder (paramlist, param);
+			g_object_unref (param);
+		}
+
 		switch (export_type) {
 		case 0:
 			param = gda_holder_new_string ("SEPARATOR", "\t");
-			paramlist = gda_set_new (NULL);
 			gda_set_add_holder (paramlist, param);
 			g_object_unref (param);
 			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
 								GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 								cols, nb_cols, rows, nb_rows, paramlist);
-			g_object_unref (paramlist);
 			break;
 		case 1:
 			param = gda_holder_new_string ("SEPARATOR", ",");
-			paramlist = gda_set_new (NULL);
 			gda_set_add_holder (paramlist, param);
 			g_object_unref (param);
 			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
 								GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 								cols, nb_cols, rows, nb_rows, paramlist);
-			g_object_unref (paramlist);
 			break;
 		case 2:
 			param = NULL;
 			body = (gchar *) g_object_get_data (G_OBJECT (grid->priv->data_model), "name");
 			if (body)
 				param = gda_holder_new_string ("NAME", body);
-			paramlist = gda_set_new (NULL);
 			if (param) {
 				gda_set_add_holder (paramlist, param);
 				g_object_unref (param);
@@ -2033,12 +2127,12 @@ save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid)
 			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
 								GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
 								cols, nb_cols, rows, nb_rows, paramlist);
-			g_object_unref (paramlist);
 			break;
 		default:
 			g_assert_not_reached ();
 			break;
 		}
+		g_object_unref (paramlist);
 		g_free (cols);
 		if (rows)
 			g_free (rows);

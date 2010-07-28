@@ -118,7 +118,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	memset (&(klass->meta_funcs), 0, sizeof (GdaServerProviderMeta));
 	klass->xa_funcs = NULL;
 
-	klass->limiting_thread = g_thread_self (); /* default safe behaviour */
+	klass->limiting_thread = GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD;
 
 	 /* Properties */
         object_class->set_property = gda_server_provider_set_property;

@@ -192,6 +192,11 @@ gda_statement_new (void)
 	return GDA_STATEMENT (obj);
 }
 
+const GdaSqlStatement *
+_gda_statement_get_internal_struct (GdaStatement *stmt)
+{
+	return stmt->priv->internal_struct;
+}
 
 /**
  * gda_statement_copy:
@@ -861,8 +866,10 @@ default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *cont
 			}
 			g_string_append_c (string, ')');
 		}
+
+		if (!stmt->fields_list && !stmt->values_list)
+			g_string_append (string, " DEFAULT VALUES");
 	}
-	
 
 	str = string->str;
 	g_string_free (string, FALSE);

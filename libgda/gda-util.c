@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -38,6 +38,8 @@
 #endif
 #include <libgda/sql-parser/gda-sql-statement.h>
 #include <sql-parser/gda-statement-struct-util.h>
+#include <libgda/gda-set.h>
+#include <libgda/gda-blob-op.h>
 
 #include <libgda/binreloc/gda-binreloc.h>
 
@@ -409,7 +411,7 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 							const GdaBinary *bin = &(blob->data);
 							if (blob->op && 
 							    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-								gda_blob_op_read_all (blob->op, blob);
+								gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
 						}
 						str = gda_value_stringify (value);
 					}
@@ -1201,6 +1203,235 @@ gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **er
 	return sel_stmt;
 }
 
+static gboolean stmt_rewrite_insert_remove (GdaSqlStatementInsert *ins, GdaSet *params, GError **error);
+static gboolean stmt_rewrite_insert_default_keyword (GdaSqlStatementInsert *ins, GdaSet *params, GError **error);
+static gboolean stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd, GdaSet *params, GError **error);
+
+
+/**
+ * gda_statement_rewrite_for_default_values
+ * @stmt: a #GdaStatement object
+ * @params: a #GdaSet containing the variable's values to be bound when executing @stmt
+ * @remove: set to %TRUE if DEFAULT fields are removed, of %FALSE if the "DEFAULT" keyword is used
+ * @error: a place to store errors, or %NULL
+ *
+ * Rewrites @stmt and creates a new #GdaSqlStatement where all the variables which are to a DEFAULT value
+ * (as returned by gda_holder_value_is_default()) are either removed from the statement (if @remove
+ * is %TRUE) or replaced by the "DEFAULT" keyword (if @remove is %FALSE).
+ *
+ * This function is only usefull for database providers' implementations which have to deal with default
+ * values when executing statements, and is only relevant in the case of INSERT or UPDATE statements
+ * (in the latter case an error is returned if @remove is %TRUE).
+ *
+ * For example the <programlisting><![CDATA[INSERT INTO mytable (id, name) VALUES (23, ##name::string)]]></programlisting>
+ * is re-written into <programlisting><![CDATA[INSERT INTO mytable (id, name) VALUES (23, DEFAULT)]]></programlisting>
+ * if @remove is %FALSE and into <programlisting><![CDATA[INSERT INTO mytable (id) VALUES (23)]]></programlisting>
+ * if @remove is %TRUE.
+ *
+ * Returns: a new #GdaSqlStatement, or %NULL if an error occurred
+ *
+ * Since: 4.2
+ */
+GdaSqlStatement *
+gda_statement_rewrite_for_default_values (GdaStatement *stmt, GdaSet *params, gboolean remove, GError **error)
+{
+	GdaSqlStatement *sqlst;
+	GdaSqlStatementType type;
+	gboolean ok = FALSE;
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (GDA_IS_SET (params), NULL);
+	type = gda_statement_get_statement_type (stmt);
+
+	g_object_get (stmt, "structure", &sqlst, NULL);
+	if (! gda_sql_statement_check_structure (sqlst, error)) {
+		gda_sql_statement_free (sqlst);
+		return NULL;		
+	}
+
+	switch (type) {
+	case GDA_SQL_STATEMENT_INSERT:
+		if (remove)
+			ok = stmt_rewrite_insert_remove ((GdaSqlStatementInsert*) sqlst->contents,
+							 params, error);
+		else
+			ok = stmt_rewrite_insert_default_keyword ((GdaSqlStatementInsert*) sqlst->contents,
+								  params, error);
+		break;
+	case GDA_SQL_STATEMENT_UPDATE:
+		if (remove)
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_DEFAULT_VALUE_HANDLING_ERROR,
+				     _("Can't rewrite UPDATE statement to handle default values"));
+		else
+			ok = stmt_rewrite_update_default_keyword ((GdaSqlStatementUpdate*) sqlst->contents,
+								  params, error);
+		break;
+	default:
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_DEFAULT_VALUE_HANDLING_ERROR,
+			     "Can't rewrite statement is not INSERT or UPDATE");
+		break;
+	}
+
+	if (ok)
+		return sqlst;
+	else {
+		gda_sql_statement_free (sqlst);
+		return NULL;
+	}
+}
+
+/*
+ * Modifies @ins
+ * Returns: TRUE if rewrite is Ok
+ */
+static gboolean
+stmt_rewrite_insert_remove (GdaSqlStatementInsert *ins, GdaSet *params, GError **error)
+{
+	if (!ins->values_list)
+		/* nothing to do */
+		return TRUE;
+
+	if (ins->values_list->next) {
+		TO_IMPLEMENT;
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_DEFAULT_VALUE_HANDLING_ERROR,
+			     "Not yet implemented");
+		return FALSE;
+	}
+
+	GSList *fields, *values;
+	for (fields = ins->fields_list, values = (GSList*) ins->values_list->data;
+	     fields && values; ){
+		GdaHolder *h;
+		GdaSqlExpr *expr = (GdaSqlExpr*) values->data;
+		if (! expr->param_spec || ! expr->param_spec->is_param) {
+			fields = fields->next;
+			values = values->next;
+			continue;
+		}
+		h = gda_set_get_holder (params, expr->param_spec->name);
+		if (!h) {
+			gchar *str;
+			str = g_strdup_printf (_("Missing parameter '%s' to execute query"),
+					       expr->param_spec->name);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+				     "%s", str);
+			g_free (str);
+			return FALSE;
+		}
+
+		if (gda_holder_value_is_default (h)) {
+			GSList *tmp;
+			
+			gda_sql_field_free ((GdaSqlField*) fields->data);
+			tmp = fields->next;
+			ins->fields_list = g_slist_delete_link (ins->fields_list, fields);
+			fields = tmp;
+			
+			gda_sql_expr_free (expr);
+			tmp = values->next;
+			ins->values_list->data = g_slist_delete_link ((GSList*) ins->values_list->data,
+								      values);
+			values = tmp;
+		}
+		else {
+			fields = fields->next;
+			values = values->next;
+		}
+	}
+
+	if (! ins->values_list->data) {
+		g_slist_free (ins->values_list);
+		ins->values_list = NULL;
+	}
+
+	return TRUE;
+}
+
+/*
+ * Modifies @ins
+ * Returns: TRUE if rewrite is Ok
+ */
+static gboolean
+stmt_rewrite_insert_default_keyword (GdaSqlStatementInsert *ins, GdaSet *params, GError **error)
+{
+	GSList *llist;
+	for (llist = ins->values_list; llist; llist = llist->next) {
+		GSList *values;
+		for (values = (GSList*) llist->data;
+		     values;
+		     values = values->next){
+			GdaHolder *h;
+			GdaSqlExpr *expr = (GdaSqlExpr*) values->data;
+			if (! expr->param_spec || ! expr->param_spec->is_param)
+				continue;
+			h = gda_set_get_holder (params, expr->param_spec->name);
+			if (!h) {
+				gchar *str;
+				str = g_strdup_printf (_("Missing parameter '%s' to execute query"),
+						       expr->param_spec->name);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+					     "%s", str);
+				g_free (str);
+				return FALSE;
+			}
+			
+			if (gda_holder_value_is_default (h)) {
+				GdaSqlExpr *nexpr;
+				nexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (ins));
+				g_value_set_string ((nexpr->value = gda_value_new (G_TYPE_STRING)),
+						    "DEFAULT");
+				gda_sql_expr_free ((GdaSqlExpr*) values->data);
+				values->data = nexpr;
+			}
+		}
+	}
+
+	if (! ins->values_list->data) {
+		g_slist_free (ins->values_list);
+		ins->values_list = NULL;
+	}
+
+	return TRUE;
+}
+
+static gboolean
+stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd, GdaSet *params, GError **error)
+{
+	GSList *values;
+	for (values = upd->expr_list; values; values = values->next) {
+		GdaHolder *h;
+		GdaSqlExpr *expr = (GdaSqlExpr*) values->data;
+		if (! expr->param_spec || ! expr->param_spec->is_param)
+			continue;
+		h = gda_set_get_holder (params, expr->param_spec->name);
+		if (!h) {
+			gchar *str;
+			str = g_strdup_printf (_("Missing parameter '%s' to execute query"),
+					       expr->param_spec->name);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+				     "%s", str);
+			g_free (str);
+			return FALSE;
+		}
+		
+		if (gda_holder_value_is_default (h)) {
+			GdaSqlExpr *nexpr;
+			nexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (upd));
+			g_value_set_string ((nexpr->value = gda_value_new (G_TYPE_STRING)),
+					    "DEFAULT");
+			gda_sql_expr_free ((GdaSqlExpr*) values->data);
+			values->data = nexpr;
+		}
+	}
+
+	return TRUE;
+}
+
 /**
  * gda_identifier_hash
  * @id: an identifier string
@@ -1612,7 +1843,7 @@ concat_ident (const char *prefix, const gchar *ident)
  *
  * For example the <![CDATA["test.\"ATable\""]]> string will result in the array: <![CDATA[{"test", "\"ATable\"", NULL}]]>
  *
- * Returns: a new array of strings, or NULL (use g_strfreev() to free the returned array)
+ * Returns: a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)
  */
 gchar **
 gda_sql_identifier_split (const gchar *id)

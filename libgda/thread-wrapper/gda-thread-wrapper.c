@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -924,10 +924,51 @@ worker_thread_closure_marshal (GClosure *closure,
 	if (g_thread_self () !=  sigspec->worker_thread)
 		return;
 
-	/* check that the worker thread is working on a job for which job->reply_queue == sigspec->reply_queue */
-	if (sigspec->private &&
+	/* check that the worker thread is working on a job for which job->reply_queue == sigspec->reply_queue */	if (sigspec->private &&
 	    g_static_private_get (&worker_thread_current_queue) != sigspec->reply_queue)
 		return;
+
+	gint i;
+	/*
+	  for (i = 1; i < n_param_values; i++) {
+		g_print ("\t%d => %s\n", i, gda_value_stringify (param_values + i));
+	}
+	*/
+	Job *job= g_new0 (Job, 1);
+	job->type = JOB_TYPE_SIGNAL;
+	job->u.signal.spec = signal_spec_ref (sigspec);
+	job->u.signal.n_param_values = n_param_values - 1;
+	job->u.signal.param_values = g_new0 (GValue, job->u.signal.n_param_values);
+	for (i = 1; i < n_param_values; i++) {
+		const GValue *src;
+		GValue *dest;
+
+		src = param_values + i;
+		dest = job->u.signal.param_values + i - 1;
+
+		if (G_VALUE_TYPE (src) != GDA_TYPE_NULL) {
+			g_value_init (dest, G_VALUE_TYPE (src));
+			g_value_copy (src, dest);
+		}
+	}
+
+	g_async_queue_push (sigspec->reply_queue, job);
+	signal_spec_unlock (sigspec);
+}
+
+/* 
+ * Executed in sub thread (or potentially in other threads, in which case will be ignored)
+ * pushes data into the queue 
+ */
+static void
+worker_thread_closure_marshal_anythread (GClosure *closure,
+					 GValue *return_value,
+					 guint n_param_values,
+					 const GValue *param_values,
+					 gpointer invocation_hint,
+					 gpointer marshal_data)
+{
+	SignalSpec *sigspec = (SignalSpec *) closure->data;
 
 	gint i;
 	/*
@@ -962,9 +1003,15 @@ worker_thread_closure_marshal (GClosure *closure,
  * @wrapper: a #GdaThreadWrapper object
  * @instance: the instance to connect to
  * @sig_name: a string of the form "signal-name::detail"
- * @private: set to %TRUE if @callback is to be invoked only if the signal has
+ * @private_thread:  set to %TRUE if @callback is to be invoked only if the signal has
+ *    been emitted while in @wrapper's private sub thread (ie. used when @wrapper is executing some functions
+ *    specified by gda_thread_wrapper_execute() or gda_thread_wrapper_execute_void()), and to %FALSE if the
+ *    callback is to be invoked whenever the signal is emitted, independently of th thread in which the
+ *    signal is emitted.
+ * @private_job: set to %TRUE if @callback is to be invoked only if the signal has
  *    been emitted when a job created for the calling thread is being executed, and to %FALSE
- *    if @callback has to be called whenever the @sig_name signa is emitted by @instance.
+ *    if @callback has to be called whenever the @sig_name signal is emitted by @instance. Note that
+ *    this argument is not taken into account if @private_thread is set to %FALSE.
  * @callback: a #GdaThreadWrapperCallback function
  * @data: data to pass to @callback's calls
  *
@@ -976,10 +1023,6 @@ worker_thread_closure_marshal (GClosure *closure,
  *  <listitem><para>the signal handler must not have to return any value</para></listitem>
  *  <listitem><para>the @callback function will be called asynchronously, the caller may need to use 
  *    gda_thread_wrapper_iterate() to get the notification</para></listitem>
- *  <listitem><para>the @callback function will be called only if the signal has been emitted by @instance 
- *    while being used in @wrapper's private sub thread (ie. used when @wrapper is executing some functions
- *    specified by
- *    gda_thread_wrapper_execute() or gda_thread_wrapper_execute_void())</para></listitem>
  *  <listitem><para>if @private is set to %TRUE, then the @callback function will be called only
  *    if the signal has been emitted by @instance while doing a job on behalf of the current
  *    calling thread. If @private is set to %FALSE, then @callback will be called whenever @instance
@@ -1001,7 +1044,8 @@ worker_thread_closure_marshal (GClosure *closure,
 gulong
 gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 				gpointer instance,
-				const gchar *sig_name, gboolean private,
+				const gchar *sig_name,
+				gboolean private_thread, gboolean private_job,
 				GdaThreadWrapperCallback callback,
 				gpointer data)
 {
@@ -1024,7 +1068,7 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
         }
 
         sigspec = g_new0 (SignalSpec, 1);
-	sigspec->private = private;
+	sigspec->private = private_job;
         g_signal_query (sigid, (GSignalQuery*) sigspec);
 
 	if (((GSignalQuery*) sigspec)->return_type != G_TYPE_NONE) {
@@ -1042,7 +1086,10 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 
 	GClosure *cl;
 	cl = g_closure_new_simple (sizeof (GClosure), sigspec);
-	g_closure_set_marshal (cl, (GClosureMarshal) worker_thread_closure_marshal);
+	if (private_thread)
+		g_closure_set_marshal (cl, (GClosureMarshal) worker_thread_closure_marshal);
+	else
+		g_closure_set_marshal (cl, (GClosureMarshal) worker_thread_closure_marshal_anythread);
 	sigspec->signal_id = g_signal_connect_closure (instance, sig_name, cl, FALSE);
 
 	td->signals_list = g_slist_append (td->signals_list, sigspec);

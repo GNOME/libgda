@@ -41,7 +41,8 @@ typedef enum
 {
 	GDA_SET_XML_SPEC_ERROR,
 	GDA_SET_HOLDER_NOT_FOUND_ERROR,
-	GDA_SET_INVALID_ERROR
+	GDA_SET_INVALID_ERROR,
+	GDA_SET_READ_ONLY_ERROR
 } GdaSetError;
 
 struct _GdaSetNode {
@@ -49,6 +50,7 @@ struct _GdaSetNode {
 	GdaDataModel *source_model;  /* may be NULL */
 	gint          source_column; /* unused if @source_model is NULL */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer      _gda_reserved1;
 	gpointer      _gda_reserved2;
@@ -58,6 +60,7 @@ struct _GdaSetGroup {
 	GSList       *nodes;       /* list of GdaSetNode, at least one entry */
 	GdaSetSource *nodes_source; /* if NULL, then @nodes contains exactly one entry */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer      _gda_reserved1;
 	gpointer      _gda_reserved2;
@@ -67,6 +70,7 @@ struct _GdaSetSource {
 	GdaDataModel   *data_model;   /* Can't be NULL */
 	GSList         *nodes;        /* list of #GdaSetNode for which source_model == @data_model */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer        _gda_reserved1;
 	gpointer        _gda_reserved2;
@@ -102,11 +106,11 @@ struct _GdaSetClass
 	void                  (*holder_attr_changed)   (GdaSet *set, GdaHolder *holder, 
 							const gchar *attr_name, const GValue *attr_value);
 	void                  (*public_data_changed)   (GdaSet *set);
+	void                  (*holder_type_set)       (GdaSet *set, GdaHolder *holder);
+	void                  (*source_model_changed)  (GdaSet *set, GdaSetSource *source);
 
 	/*< private >*/
 	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
@@ -128,6 +132,9 @@ void          gda_set_remove_holder            (GdaSet *set, GdaHolder *holder);
 void          gda_set_merge_with_set           (GdaSet *set, GdaSet *set_to_merge);
 gboolean      gda_set_is_valid                 (GdaSet *set, GError **error);
 
+void          gda_set_replace_source_model     (GdaSet *set, GdaSetSource *source,
+						GdaDataModel *model);
+
 /* public data lookup functions */
 GdaSetNode   *gda_set_get_node                 (GdaSet *set, GdaHolder *holder);
 GdaSetSource *gda_set_get_source_for_model     (GdaSet *set, GdaDataModel *model);
@@ -136,6 +143,7 @@ GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *holder);
 
 /* private */
 gboolean      _gda_set_validate                (GdaSet *set, GError **error);
+GdaSet *      _gda_set_new_read_only           (GSList *holders);
 
 
 G_END_DECLS

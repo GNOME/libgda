@@ -532,12 +532,68 @@ create_typed_value (GType type, va_list *ap)
 	GValue *v = NULL;
 	if (type == G_TYPE_STRING)
 		g_value_set_string ((v = gda_value_new (G_TYPE_STRING)), va_arg (*ap, gchar*));
+	else if (type == G_TYPE_BOOLEAN)
+		g_value_set_boolean ((v = gda_value_new (G_TYPE_BOOLEAN)), va_arg (*ap, gboolean));
+	else if (type == G_TYPE_INT64)
+		g_value_set_int64 ((v = gda_value_new (G_TYPE_INT64)), va_arg (*ap, gint64));
+	else if (type == G_TYPE_UINT64)
+		g_value_set_uint64 ((v = gda_value_new (G_TYPE_UINT64)), va_arg (*ap, guint64));
 	else if (type == G_TYPE_INT)
 		g_value_set_int ((v = gda_value_new (G_TYPE_INT)), va_arg (*ap, gint));
+	else if (type == G_TYPE_UINT)
+		g_value_set_uint ((v = gda_value_new (G_TYPE_UINT)), va_arg (*ap, guint));
+	else if (type == GDA_TYPE_SHORT) 
+		gda_value_set_short ((v = gda_value_new (GDA_TYPE_SHORT)), va_arg (*ap, gint));
+	else if (type == GDA_TYPE_USHORT)
+		gda_value_set_ushort ((v = gda_value_new (GDA_TYPE_USHORT)), va_arg (*ap, guint));
+	else if (type == G_TYPE_CHAR)
+		g_value_set_char ((v = gda_value_new (G_TYPE_CHAR)), va_arg (*ap, gint));
+	else if (type == G_TYPE_UCHAR)
+		g_value_set_uchar ((v = gda_value_new (G_TYPE_UCHAR)), va_arg (*ap, guint));
 	else if (type == G_TYPE_FLOAT)
-		g_value_set_float ((v = gda_value_new (G_TYPE_FLOAT)), va_arg (*ap, double));
+		g_value_set_float ((v = gda_value_new (G_TYPE_FLOAT)), va_arg (*ap, gdouble));
+	else if (type == G_TYPE_DOUBLE)
+		g_value_set_double ((v = gda_value_new (G_TYPE_DOUBLE)), va_arg (*ap, gdouble));
+	else if (type == GDA_TYPE_NUMERIC) {
+		GdaNumeric *numeric;
+		numeric = va_arg (*ap, GdaNumeric *);
+		gda_value_set_numeric ((v = gda_value_new (GDA_TYPE_NUMERIC)), numeric);
+	}
+	else if (type == G_TYPE_DATE) {
+		GDate *gdate;
+		gdate = va_arg (*ap, GDate *);
+		g_value_set_boxed ((v = gda_value_new (G_TYPE_DATE)), gdate);
+	}
+	else if (type == GDA_TYPE_TIME) {
+		GdaTime *timegda;
+		timegda = va_arg (*ap, GdaTime *);
+		gda_value_set_time ((v = gda_value_new (GDA_TYPE_TIME)), timegda);
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		GdaTimestamp *timestamp;
+		timestamp = va_arg (*ap, GdaTimestamp *);
+		gda_value_set_timestamp ((v = gda_value_new (GDA_TYPE_TIMESTAMP)), timestamp);
+	}
+	else if (type == GDA_TYPE_NULL)
+		v = gda_value_new_null ();
+	else if (type == G_TYPE_GTYPE)
+		g_value_set_gtype ((v = gda_value_new (G_TYPE_GTYPE)), va_arg (*ap, GType));
+	else if (type == G_TYPE_ULONG)
+		g_value_set_ulong ((v = gda_value_new (G_TYPE_ULONG)), va_arg (*ap, gulong));
+	else if (type == G_TYPE_LONG)
+		g_value_set_long ((v = gda_value_new (G_TYPE_LONG)), va_arg (*ap, ulong));
+	else if (type == GDA_TYPE_BINARY) {
+		GdaBinary *bin;
+		bin = va_arg (*ap, GdaBinary *);
+		gda_value_set_binary ((v = gda_value_new (GDA_TYPE_BINARY)), bin);
+	}
+	else if (type == GDA_TYPE_BLOB) {
+		GdaBlob *blob;
+		blob = va_arg (*ap, GdaBlob *);
+		gda_value_set_blob ((v = gda_value_new (GDA_TYPE_BLOB)), blob);
+	}
 	else
-		g_warning (_("Could not convert value to type '%s'"), g_type_name (type));
+		g_warning (_("Could not convert value to type '%s', value not defined"), g_type_name (type));
 	return v;
 }
 
@@ -551,7 +607,7 @@ create_typed_value (GType type, va_list *ap)
  * Valid only for: INSERT, UPDATE statements.
  *
  * Specifies that the field represented by @field_name will be set to the value identified
- * by @... of type @type.
+ * by @... of type @type. See gda_sql_builder_add_expr() for more information.
  *
  * This is a C convenience function. See also gda_sql_builder_add_field_value_as_gvalue().
  *
@@ -800,19 +856,24 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
  *
- * The new expression will contain the value passed as the @v argument. It is possible to
+ * The new expression will contain the value passed as the @... argument. It is possible to
  * customize how the value has to be interpreted by passing a specific #GdaDataHandler object as @dh.
  *
- * For example:
- * <programlisting>
- * gda_sql_builder_add_expr (b, G_TYPE_INT, 15);
- * gda_sql_builder_add_expr (b, G_TYPE_STRING, "joe")
- * </programlisting>
+ * Note that for composite types such as #GdaNumeric, #Gdate, #GdaTime, ... pointer to these
+ * structures are expected, they should no be passed by value. For example:
+ * <programlisting><![CDATA[GDate *date = g_date_new_dmy (27, G_DATE_MAY, 1972);
+id = gda_sql_builder_add_expr (b, NULL, G_TYPE_DATE, date);
+g_date_free (date);
+
+id = gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "my string");
+id = gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 25);
+]]></programlisting>
  *
- * will be rendered as SQL as:
+ * will correspond in SQL to:
  * <programlisting>
- * 15
- * 'joe'
+ * '05-27-1972'
+ * 'my string'
+ * 25
  * </programlisting>
  *
  * Returns: the ID of the new expression, or 0 if there was an error

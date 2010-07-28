@@ -74,6 +74,7 @@ typedef struct {
 	gulong          label_shown_id; /* signal ID */
 
 	gulong          entry_contents_modified_id; /* signal ID */
+	gulong          entry_expand_changed_id; /* signal ID */
 	gulong          entry_contents_activated_id; /* signal ID */
 
 	GdaHolder      *single_param;
@@ -106,8 +107,11 @@ static void get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form);
 static void paramlist_public_data_changed_cb (GdauiSet *paramlist, GdauiBasicForm *form);
 static void paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param,
 					     const gchar *att_name, const GValue *att_value, GdauiBasicForm *form);
+static void paramlist_holder_type_set_cb (GdaSet *paramlist, GdaHolder *param,
+					  GdauiBasicForm *form);
 
 static void entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry);
+static void entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry);
 static void entry_contents_activated (GdauiDataEntry *entry, GdauiBasicForm *form);
 static void parameter_changed_cb (GdaHolder *param, SingleEntry *sentry);
 
@@ -127,7 +131,7 @@ enum {
 	PROP_HEADERS_SENSITIVE,
 	PROP_SHOW_ACTIONS,
 	PROP_ENTRIES_AUTO_DEFAULT,
-	PROP_CAN_EXPAND
+	PROP_CAN_VEXPAND
 };
 
 typedef struct {
@@ -273,9 +277,9 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 							       _("Entries Auto-default"),
 							       NULL, FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
-	g_object_class_install_property (object_class, PROP_CAN_EXPAND,
-					 g_param_spec_boolean ("can-expand",
-							       _("TRUE if expanding the form makes sense"),
+	g_object_class_install_property (object_class, PROP_CAN_VEXPAND,
+					 g_param_spec_boolean ("can-expand-v",
+							       _("TRUE if expanding the form vertically makes sense"),
 							       NULL, FALSE,
 							       G_PARAM_READABLE));
 
@@ -347,8 +351,11 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 	/* unref the paramlist */
 	g_signal_handlers_disconnect_by_func (form->priv->set_info,
 					      G_CALLBACK (paramlist_public_data_changed_cb), form);
+
 	g_signal_handlers_disconnect_by_func (paramlist,
 					      G_CALLBACK (paramlist_param_attr_changed_cb), form);
+	g_signal_handlers_disconnect_by_func (paramlist,
+					      G_CALLBACK (paramlist_holder_type_set_cb), form);
 
 	g_object_unref (form->priv->set);
 	form->priv->set = NULL;
@@ -362,6 +369,24 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 	for (list = form->priv->s_entries; list; list = list->next)
 		gdaui_data_entry_set_editable (GDAUI_DATA_ENTRY (((SingleEntry*)list->data)->entry), FALSE);
 }
+
+static void
+paramlist_holder_type_set_cb (GdaSet *paramlist, GdaHolder *param,
+			      GdauiBasicForm *form)
+{
+	SingleEntry *sentry;
+
+	sentry = get_single_entry_for_holder (form, param);
+	if (sentry) {
+		create_entry_widget (sentry);
+		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (sentry->entry),
+						 form->priv->show_actions ? GDA_VALUE_ATTR_ACTIONS_SHOWN : 0,
+						 GDA_VALUE_ATTR_ACTIONS_SHOWN);
+		pack_entry_widget (sentry);
+		gdaui_basic_form_entry_set_visible (form, param, !sentry->hidden);
+	}
+}
+
 
 static void
 paramlist_public_data_changed_cb (GdauiSet *paramlist, GdauiBasicForm *form)
@@ -501,6 +526,8 @@ gdaui_basic_form_set_property (GObject *object,
 						  G_CALLBACK (paramlist_public_data_changed_cb), form);
 				g_signal_connect (form->priv->set, "holder-attr-changed",
 						  G_CALLBACK (paramlist_param_attr_changed_cb), form);
+				g_signal_connect (form->priv->set, "holder-type-set",
+						  G_CALLBACK (paramlist_holder_type_set_cb), form);
 
 				create_entries (form);
 				pack_entries_in_table (form);
@@ -546,7 +573,7 @@ gdaui_basic_form_get_property (GObject *object,
 		case PROP_ENTRIES_AUTO_DEFAULT:
 			g_value_set_boolean (value, form->priv->entries_auto_default);
 			break;
-		case PROP_CAN_EXPAND: {
+		case PROP_CAN_VEXPAND: {
 			gboolean can_expand = FALSE;
 			GSList *list;
 			for (list = form->priv->s_entries; list; list = list->next) {
@@ -568,9 +595,12 @@ gdaui_basic_form_get_property (GObject *object,
 static void
 disconnect_single_entry_signals (SingleEntry *sentry)
 {
-	if (sentry->entry)
+	if (sentry->entry) {
 		g_signal_handler_disconnect (sentry->entry, sentry->entry_contents_modified_id);
+		g_signal_handler_disconnect (sentry->entry, sentry->entry_expand_changed_id);
+	}
 	sentry->entry_contents_modified_id = 0;
+	sentry->entry_expand_changed_id = 0;
 	if (sentry->entry)
 		g_signal_handler_disconnect (sentry->entry, sentry->entry_contents_activated_id);
 	sentry->entry_contents_activated_id = 0;
@@ -657,6 +687,7 @@ create_entry_widget (SingleEntry *sentry)
 	GdauiSetGroup *group;
 	GtkWidget *entry;
 	gboolean editable = TRUE;
+	GValue *ref_value = NULL;
 
 	disconnect_single_entry_signals (sentry);
 	if (sentry->entry) {
@@ -670,10 +701,15 @@ create_entry_widget (SingleEntry *sentry)
 			sentry->entry_shown_id = 0;
 		}
 
+		const GValue *cvalue;
+		cvalue = gdaui_data_entry_get_reference_value (sentry->entry);
+		if (cvalue)
+			ref_value = gda_value_copy (cvalue);
 		editable = gdaui_data_entry_get_editable (sentry->entry);
 		g_object_unref ((GObject *) sentry->entry);
 		sentry->entry = NULL;
 	}
+
 	if (sentry->label) {
 		GtkWidget *parent;
 		parent = gtk_widget_get_parent (sentry->label);
@@ -730,22 +766,27 @@ create_entry_widget (SingleEntry *sentry)
 		/* set current value */
 		if (gda_holder_is_valid (param))
 			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), val);
-		else {
-			GValue value;
-			memset (&value, 0, sizeof (GValue));
-			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), &value);
-		}
+		else
+			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), NULL);
 
-		if (!nnul ||
-		    (nnul && value &&
-		     (G_VALUE_TYPE ((GValue *) value) != GDA_TYPE_NULL)))
+		if (ref_value) {
+			gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), ref_value);
+			gda_value_free (ref_value);
+		}
+		else if (!nnul ||
+			 (nnul && value &&
+			  (G_VALUE_TYPE ((GValue *) value) != GDA_TYPE_NULL)))
 			gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), value);
 
 		if (default_val) {
-			gdaui_data_entry_set_value_default (GDAUI_DATA_ENTRY (entry), default_val);
+			gdaui_data_entry_set_default_value (GDAUI_DATA_ENTRY (entry), default_val);
 			gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
 							 GDA_VALUE_ATTR_CAN_BE_DEFAULT,
 							 GDA_VALUE_ATTR_CAN_BE_DEFAULT);
+			if (gda_holder_value_is_default (param))
+				gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
+							 GDA_VALUE_ATTR_IS_DEFAULT,
+							 GDA_VALUE_ATTR_IS_DEFAULT);
 		}
 
 		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
@@ -780,7 +821,7 @@ create_entry_widget (SingleEntry *sentry)
 	else {
 		/* several parameters depending on the values of a GdaDataModel object */
 		GSList *plist;
-		gboolean nnul = TRUE;
+		gboolean nullok = TRUE;
 			
 		entry = gdaui_entry_combo_new (sentry->form->priv->set_info, group->source);
 
@@ -790,8 +831,8 @@ create_entry_widget (SingleEntry *sentry)
 			GdaHolder *param;
 
 			param = GDA_SET_NODE (plist->data)->holder;
-			if (!gda_holder_get_not_null (param))
-				nnul = FALSE;
+			if (gda_holder_get_not_null (param))
+				nullok = FALSE;
 
 			SignalData sd;
 			sd.holder = g_object_ref (param);
@@ -801,31 +842,38 @@ create_entry_widget (SingleEntry *sentry)
 			g_array_append_val (sentry->group_signals, sd);
 		}
 		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
-						 nnul ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL,
+						 nullok ? GDA_VALUE_ATTR_CAN_BE_NULL : 0,
 						 GDA_VALUE_ATTR_CAN_BE_NULL);
-		sentry->not_null = nnul;
+		sentry->not_null = !nullok;
 
 		/* label */
-		/* FIXME: find a better label and tooltip and improve data entry attributes */
 		gchar *title = NULL;
 		gchar *str;
 		GSList *params;
-			
-		for (params = sentry->group->group->nodes; params; params = params->next) {
-			g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
-				      "name", &title, NULL);
-			if (title)
-				break;
+
+		str = g_object_get_data (G_OBJECT (group->group->nodes_source->data_model), "name");
+		if (str)
+			title = g_strdup (str);
+		else {
+			GString *tstring = NULL;
+			for (params = sentry->group->group->nodes; params; params = params->next) {
+				g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
+					      "name", &title, NULL);
+				if (title) {
+					if (tstring) 
+						g_string_append (tstring, ",\n");
+					else
+						tstring = g_string_new ("");
+					g_string_append (tstring, title);
+				}
+			}
+			if (tstring)
+				title = g_string_free (tstring, FALSE);
 		}
-			
-		if (!title) {
-			str = g_object_get_data (G_OBJECT (group->group->nodes_source->data_model),
-						 "name");
-			if (str)
-				title = g_strdup (str);
-		}
+
 		if (!title)
 			title = g_strdup (_("Value"));
+
 		str = g_strdup_printf ("%s:", title);
 		sentry->label = gtk_label_new (str);
 		g_free (str);
@@ -865,6 +913,9 @@ create_entry_widget (SingleEntry *sentry)
 	sentry->entry_contents_modified_id = g_signal_connect (G_OBJECT (entry), "contents-modified",
 							       G_CALLBACK (entry_contents_modified),
 							       sentry);
+	sentry->entry_expand_changed_id = g_signal_connect (sentry->entry, "expand-changed",
+							    G_CALLBACK (entry_expand_changed_cb), sentry);
+
 	sentry->entry_contents_activated_id = g_signal_connect (G_OBJECT (entry), "contents-activated",
 								G_CALLBACK (entry_contents_activated),
 								sentry->form);
@@ -905,7 +956,7 @@ static void
 pack_entry_widget (SingleEntry *sentry)
 {
 	gboolean expand;
-	expand = gdaui_data_entry_expand_in_layout (GDAUI_DATA_ENTRY (sentry->entry));
+	expand = gdaui_data_entry_can_expand (GDAUI_DATA_ENTRY (sentry->entry), FALSE);
 	sentry->can_expand = expand;
 
 	switch (sentry->packing_type) {
@@ -1257,9 +1308,13 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 
 		/* parameter's value */
 		value = gdaui_data_entry_get_value (entry);
-		if ((!value || gda_value_is_null (value)) &&
-		    (attr & GDA_VALUE_ATTR_IS_DEFAULT))
+		if (attr & GDA_VALUE_ATTR_IS_DEFAULT)
 			gda_holder_set_value_to_default (param);
+		else if (attr & GDA_VALUE_ATTR_DATA_NON_VALID) {
+			gda_holder_force_invalid (param);
+			g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED],
+				       0, param, TRUE);
+		}
 		else if (gda_holder_set_value (param, value, NULL))
 			g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED],
 				       0, param, TRUE);
@@ -1339,6 +1394,12 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 	}
 }
 
+static void
+entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry)
+{
+	pack_entry_widget (sentry);
+}
+
 
 /*
  * Called when a parameter changes
@@ -1402,11 +1463,17 @@ parameter_changed_cb (GdaHolder *param, SingleEntry *sentry)
 						  sentry->entry_contents_modified_id);
 			g_signal_handler_unblock (G_OBJECT (entry),
 						  sentry->entry_contents_activated_id);
-		}
+		}		
+
+		gdaui_entry_shell_set_unknown (GDAUI_ENTRY_SHELL (entry),
+					       !gda_holder_is_valid (param));
 
 		g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED], 0,
 			       param, FALSE);
 	}
+	else
+		gdaui_entry_shell_set_unknown (GDAUI_ENTRY_SHELL (entry),
+					       !gda_holder_is_valid (param));
 }
 
 /**
@@ -1457,9 +1524,9 @@ gdaui_basic_form_set_as_reference (GdauiBasicForm *form)
 			}
 
 			if (!allnull)
-				gdaui_entry_combo_set_values_orig (GDAUI_ENTRY_COMBO (sentry->entry), values);
+				gdaui_entry_combo_set_reference_values (GDAUI_ENTRY_COMBO (sentry->entry), values);
 			else
-				gdaui_entry_combo_set_values_orig (GDAUI_ENTRY_COMBO (sentry->entry), NULL);
+				gdaui_entry_combo_set_reference_values (GDAUI_ENTRY_COMBO (sentry->entry), NULL);
 
 			g_slist_free (values);
 		}
@@ -1580,7 +1647,7 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 			/* Combo entry */
 			GSList *values = NULL;
 
-			values = gdaui_entry_combo_get_values_orig (GDAUI_ENTRY_COMBO (sentry->entry));
+			values = gdaui_entry_combo_get_reference_values (GDAUI_ENTRY_COMBO (sentry->entry));
 			gdaui_entry_combo_set_values (GDAUI_ENTRY_COMBO (sentry->entry), values);
 			g_slist_free (values);
 		}
@@ -1588,7 +1655,7 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 			/* non combo entry */
 			const GValue *value;
 
-			value = gdaui_data_entry_get_original_value (GDAUI_DATA_ENTRY (sentry->entry));
+			value = gdaui_data_entry_get_reference_value (GDAUI_DATA_ENTRY (sentry->entry));
 			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (sentry->entry), value);
 		}
 	}
@@ -1913,7 +1980,7 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 
 
 	gboolean can_expand;
-	g_object_get ((GObject*) form, "can-expand", &can_expand, NULL);
+	g_object_get ((GObject*) form, "can-expand-v", &can_expand, NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg)))), 4);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))), form,
 			    can_expand, can_expand, 10);

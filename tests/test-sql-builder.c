@@ -43,6 +43,7 @@ static GdaSqlStatement *build9 (void);
 static GdaSqlStatement *build10 (void);
 static GdaSqlStatement *build11 (void);
 static GdaSqlStatement *build12 (void);
+static GdaSqlStatement *build13 (void);
 
 static gboolean builder_test_target_id (void);
 
@@ -59,7 +60,8 @@ ATest tests[] = {
 	{"build9", build9, "{\"sql\":null,\"stmt_type\":\"INSERT\",\"contents\":{\"table\":\"mytable\",\"fields\":[\"session\",\"name\"],\"values\":[[{\"value\":\"NULL\"},{\"value\":\"NULL\"}]]}}"},
 	{"build10", build10, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"}}}"},
 	{"build11", build11, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"distinct_on\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"},\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"},\"offset\":{\"value\":\"2\"}}}"},
-	{"build12", build12, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"store_name\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"func\":{\"function_name\":\"sum\",\"function_args\":[{\"value\":\"sales\",\"sqlident\":\"TRUE\"}]}}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"stores\",\"sqlident\":\"TRUE\"},\"table_name\":\"stores\"}]},\"group_by\":[{\"value\":\"store_name\",\"sqlident\":\"TRUE\"}],\"having\":{\"operation\":{\"operator\":\">\",\"operand0\":{\"func\":{\"function_name\":\"sum\",\"function_args\":[{\"value\":\"sales\",\"sqlident\":\"TRUE\"}]}},\"operand1\":{\"value\":\"10\"}}}}}"}
+	{"build12", build12, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"store_name\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"func\":{\"function_name\":\"sum\",\"function_args\":[{\"value\":\"sales\",\"sqlident\":\"TRUE\"}]}}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"stores\",\"sqlident\":\"TRUE\"},\"table_name\":\"stores\"}]},\"group_by\":[{\"value\":\"store_name\",\"sqlident\":\"TRUE\"}],\"having\":{\"operation\":{\"operator\":\">\",\"operand0\":{\"func\":{\"function_name\":\"sum\",\"function_args\":[{\"value\":\"sales\",\"sqlident\":\"TRUE\"}]}},\"operand1\":{\"value\":\"10\"}}}}}"},
+	{"build13", build13, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"'A''string'\"}},{\"expr\":{\"value\":\"234\"}},{\"expr\":{\"value\":\"TRUE\"}},{\"expr\":{\"value\":\"123.4567890\"}},{\"expr\":{\"value\":\"'05-27-1972'\"}},{\"expr\":{\"value\":\"'abc''de\\\\\\\\\\\\\\\\fgh'\"}}]}}"}
 };
 
 int
@@ -599,4 +601,47 @@ builder_test_target_id (void)
 	g_object_unref (builder);
 
 	return allok;
+}
+
+/*
+ * SELECT store_name, sum (sales) FROM stores GROUP BY store_name HAVING sum (sales) > 10
+ */
+static GdaSqlStatement *
+build13 (void)
+{
+	GdaSqlBuilder *b;
+	GdaSqlStatement *stmt;
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "A'string"), 0);
+	gda_sql_builder_add_field_value_id (b, 
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 234), 0);
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_BOOLEAN, TRUE), 0);
+	GdaNumeric numval = {"123.4567890", 0, 0};
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_expr (b, NULL, GDA_TYPE_NUMERIC, &numval), 0);
+	GDate *date = g_date_new_dmy (27, G_DATE_MAY, 1972);
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_expr (b, NULL, G_TYPE_DATE, date), 0);
+	g_date_free (date);
+
+	GdaBinary bin = {"abc'de\\fghijklm", 10};
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_expr (b, NULL, GDA_TYPE_BINARY, &bin), 0);
+
+
+#ifdef DEBUG
+	{
+		GdaStatement *st;
+		st = gda_sql_builder_get_statement (b, FALSE);
+		g_print ("[%s]\n", gda_statement_to_sql (st, NULL, NULL));
+		g_object_unref (st);
+	}
+#endif
+
+	stmt = gda_sql_statement_copy (gda_sql_builder_get_sql_statement (b));
+	g_object_unref (b);
+	return stmt;
 }

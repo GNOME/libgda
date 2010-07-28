@@ -405,7 +405,7 @@ browser_connections_list_show (BrowserConnection *current)
 		store = gtk_list_store_new (NUM_COLUMNS,
 					    BROWSER_TYPE_CONNECTION);
 		
-		treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+		treeview = browser_make_tree_view (GTK_TREE_MODEL (store));
 		_clist->priv->treeview = GTK_TREE_VIEW (treeview);
 		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
 		gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);

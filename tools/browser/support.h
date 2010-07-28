@@ -50,6 +50,7 @@ GtkWidget*         browser_make_tab_label_with_pixbuf (const gchar *label,
 
 GtkWidget          *browser_make_small_button (gboolean is_toggle,
 					       const gchar *label, const gchar *stock_id, const gchar *tooltip);
+GtkWidget          *browser_make_tree_view (GtkTreeModel *model);
 
 /*
  * Widgets navigation
@@ -71,6 +72,9 @@ typedef enum {
 	BROWSER_ICON_REFERENCE,
 	BROWSER_ICON_DIAGRAM,
 	BROWSER_ICON_QUERY,
+	
+	BROWSER_ICON_GRID,
+	BROWSER_ICON_FORM,
 
 	BROWSER_ICON_LAST
 } BrowserIconType;

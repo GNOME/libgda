@@ -1,5 +1,5 @@
 /* GDA Thread provider
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -564,17 +564,17 @@ setup_signals (GdaConnection *cnc, ThreadConnectionData *cdata)
 {
 	gulong hid;
 	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
-					      "conn-closed", FALSE,
+					      "conn-closed", TRUE, FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_closed_cb, cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
 
 	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
-					      "error", FALSE,
+					      "error", TRUE, FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_error_cb, cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
 
 	hid = gda_thread_wrapper_connect_raw (cdata->wrapper, cdata->sub_connection,
-					      "transaction-status-changed", FALSE,
+					      "transaction-status-changed", TRUE, FALSE,
 					      (GdaThreadWrapperCallback) sub_cnc_transaction_status_changed_cb,
 					      cnc);
 	g_array_prepend_val (cdata->handlers_ids, hid);
@@ -1429,13 +1429,18 @@ typedef struct {
 	GSList **params_used;
 } StmtToSqlData;
 
-static const gchar *
+static gchar *
 sub_thread_statement_to_sql (StmtToSqlData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
-	const gchar *retval;
-	retval = PROV_CLASS (data->prov)->statement_to_sql (data->prov, data->cnc, data->stmt,
-							    data->params, data->flags, data->params_used, error);
+	gchar *retval;
+	if (PROV_CLASS (data->prov)->statement_to_sql)
+		retval = PROV_CLASS (data->prov)->statement_to_sql (data->prov, data->cnc, data->stmt,
+								    data->params, data->flags, data->params_used, error);
+	else
+		retval = gda_statement_to_sql_extended (data->stmt, data->cnc, data->params, data->flags, data->params_used,
+							error);
+		
 #ifdef GDA_DEBUG_NO
 	g_print ("/%s() => %s\n", __FUNCTION__, retval);
 #endif
@@ -1460,7 +1465,7 @@ gda_thread_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return NULL;
-	
+
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;
 	wdata.stmt = stmt;
@@ -2089,7 +2094,7 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 	/* unref cdata->sub_connection in sub thread */
 	guint jid;
 	jid = gda_thread_wrapper_execute (cdata->wrapper, 
-					  (GdaThreadWrapperVoidFunc) sub_thread_unref_connection,
+					  (GdaThreadWrapperFunc) sub_thread_unref_connection,
 					  cdata->sub_connection, NULL, NULL);
 	gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	g_object_unref (cdata->wrapper);

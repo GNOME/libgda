@@ -1372,11 +1372,8 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 	model_column = col % proxy->priv->model_nb_cols;
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
 	flags = gda_data_model_get_attributes_at (proxy->priv->model, model_column, model_row);
-	if (model_row < 0) {
+	if (model_row < 0)
 		flags |= GDA_VALUE_ATTR_IS_NULL;
-		if (flags & GDA_VALUE_ATTR_NO_MODIF) /* A new row with unmodifiable data means unused data */
-			flags |= GDA_VALUE_ATTR_UNUSED;
-	}
 
 	rm = proxy_row_to_row_modif (proxy, proxy_row);
 	if (rm) {
@@ -3518,7 +3515,7 @@ gda_data_proxy_find_row_from_values (GdaDataModel *model, GSList *values, gint *
 	/* FIXME: use a virtual connection here with some SQL, it'll be much easier and will avoid
 	 * much code
 	 */
-	TO_IMPLEMENT;
+	/*TO_IMPLEMENT;*/
 
 	/* if there are still some rows waiting to be added in the idle loop, then force them to be added
 	 * first, otherwise we might not find what we are looking for!
@@ -3536,21 +3533,20 @@ gda_data_proxy_find_row_from_values (GdaDataModel *model, GSList *values, gint *
 		gint index;
 		const GValue *value;
 		
-		list = values;
-		index = 0;
-		while (list && allequal) {
+		for (list = values, index = 0;
+		     list;
+		     list = list->next, index++) {
 			if (cols_index)
 				g_return_val_if_fail (cols_index [index] < proxy->priv->model_nb_cols, FALSE);
 			value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, 
 							     cols_index ? cols_index [index] : 
 							     index, proxy_row, NULL);
-			if (!value)
-				return -1;
-			if (gda_value_compare ((GValue *) (list->data), (GValue *) value))
+			if ((!value) || !list->data ||
+			    (G_VALUE_TYPE (value) != G_VALUE_TYPE ((GValue *) list->data)) ||
+			    gda_value_compare ((GValue *) (list->data), (GValue *) value)) {
 				allequal = FALSE;
-
-			list = g_slist_next (list);
-			index++;
+				break;
+			}
 		}
 		if (allequal) {
 			found = TRUE;

@@ -252,6 +252,7 @@ tools/browser/canvas/browser-canvas.c
 tools/browser/common/gdaui-data-import.c
 tools/browser/common/gdaui-entry-import.c
 tools/browser/common/objects-cloud.c
+tools/browser/common/ui-formgrid.c
 tools/browser/data-manager/data-console.c
 tools/browser/data-manager/data-favorite-selector.c
 tools/browser/data-manager/data-source.c

@@ -59,7 +59,7 @@ static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
-static gboolean   expand_in_layout (GdauiEntryWrapper *mgwrap);
+static gboolean   can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 static void       grab_focus (GdauiEntryWrapper *mgwrap);
 
@@ -132,7 +132,7 @@ gdaui_entry_number_class_init (GdauiEntryNumberClass * klass)
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (klass)->expand_in_layout = expand_in_layout;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->can_expand = can_expand;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->set_editable = set_editable;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->grab_focus = grab_focus;
 
@@ -384,7 +384,7 @@ connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activ
 }
 
 static gboolean
-expand_in_layout (GdauiEntryWrapper *mgwrap)
+can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
 {
 	return FALSE;
 }

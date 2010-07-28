@@ -65,6 +65,7 @@ GdaTreeManager* mgr_columns_new                      (BrowserConnection *bcnc, c
 #define MGR_COLUMNS_COL_TYPE_ATT_NAME "type"
 #define MGR_COLUMNS_COL_NOTNULL_ATT_NAME "notnull"
 #define MGR_COLUMNS_COL_DEFAULT_ATT_NAME "default"
+#define MGR_COLUMNS_COL_DETAILS "details"
 
 G_END_DECLS
 

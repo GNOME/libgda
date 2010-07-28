@@ -3,3 +3,4 @@ check_validation
 check_normalization
 check_dml_comp
 check_script
+check_rewrite_for_default

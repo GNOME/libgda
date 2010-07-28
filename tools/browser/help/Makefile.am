@@ -13,7 +13,8 @@ DOC_FIGURES = \
 	figures/query-exec-persp.png \
 	figures/trans-begin.png \
 	figures/trans-commit.png \
-	figures/trans-rollback.png
+	figures/trans-rollback.png \
+	figures/table-insert-data.png
 
 DOC_PAGES = \
 	data-manager-perspective.page \
@@ -26,8 +27,9 @@ DOC_PAGES = \
 	query-execution-perspective.page \
 	schema-browser-perspective.page \
 	transactions.page \
+	table-insert-data.page \
 	variables.page
 
-DOC_LINGUAS = de
+DOC_LINGUAS = de es
 
 dist-hook: doc-dist-hook

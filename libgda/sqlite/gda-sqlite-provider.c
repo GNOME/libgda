@@ -261,6 +261,8 @@ static GObject             *gda_sqlite_provider_statement_execute (GdaServerProv
 								   GType *col_types, GdaSet **last_inserted_row, 
 								   guint *task_id, GdaServerProviderExecCallback async_cb, 
 								   gpointer cb_data, GError **error);
+static GdaSqlStatement     *gda_sqlite_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+								   GdaStatement *stmt, GdaSet *params, GError **error);
 
 /* string escaping */
 static gchar               *gda_sqlite_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc,
@@ -379,6 +381,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->statement_to_sql = gda_sqlite_provider_statement_to_sql;
 	provider_class->statement_prepare = gda_sqlite_provider_statement_prepare;
 	provider_class->statement_execute = gda_sqlite_provider_statement_execute;
+	provider_class->statement_rewrite = gda_sqlite_statement_rewrite;
 
 	provider_class->escape_string = gda_sqlite_provider_escape_string;
 	provider_class->unescape_string = gda_sqlite_provider_unescape_string;
@@ -439,7 +442,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	if (! SQLITE3_CALL (sqlite3_threadsafe) ()) {
 		gda_log_message ("SQLite was not compiled with the SQLITE_THREADSAFE flag, "
 				 "only one thread can access the provider");
-		provider_class->limiting_thread = g_thread_self ();
+		provider_class->limiting_thread = GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD;
 	}
 	else
 		provider_class->limiting_thread = NULL;
@@ -1960,85 +1963,118 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	return NULL;
 }
 
+#define MAKE_LAST_INSERTED_SET_ID "__gda"
+static void
+lir_stmt_reset_cb (GdaStatement *stmt, gpointer data)
+{
+	/* get rid of the SELECT statement used in make_last_inserted_set() */
+	g_object_set_data ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID, NULL);
+}
+
 static GdaSet *
 make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 last_id)
 {
 	GError *lerror = NULL;
 
-	/* analyze @stmt */
-	GdaSqlStatement *sql_insert;
-	GdaSqlStatementInsert *insert;
-	if (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_INSERT)
-		/* unable to compute anything */
-		return NULL;
-	g_object_get (G_OBJECT (stmt), "structure", &sql_insert, NULL);
-	g_assert (sql_insert);
-	insert = (GdaSqlStatementInsert *) sql_insert->contents;
+	GdaStatement *statement;
+	statement = g_object_get_data ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID);
+	if (!statement) {
+		/* analyze @stmt */
+		GdaSqlStatement *sql_insert;
+		GdaSqlStatementInsert *insert;
+		if (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_INSERT)
+			/* unable to compute anything */
+			return NULL;
+		g_object_get (G_OBJECT (stmt), "structure", &sql_insert, NULL);
+		g_assert (sql_insert);
+		insert = (GdaSqlStatementInsert *) sql_insert->contents;
+		
+		/* build corresponding SELECT statement */
+		GdaSqlStatementSelect *select;
+		GdaSqlSelectTarget *target;
+		GdaSqlStatement *sql_statement = gda_sql_statement_new (GDA_SQL_STATEMENT_SELECT);
+		
+		select = (GdaSqlStatementSelect*) sql_statement->contents;
+		
+		/* FROM */
+		select->from = gda_sql_select_from_new (GDA_SQL_ANY_PART (select));
+		target = gda_sql_select_target_new (GDA_SQL_ANY_PART (select->from));
+		gda_sql_select_from_take_new_target (select->from, target);
+		
+		/* Filling in the target */
+		GValue *value;
+		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), insert->table->table_name);
+		gda_sql_select_target_take_table_name (target, value);
+		gda_sql_statement_free (sql_insert);
+		
+		/* selected fields */
+		GdaSqlSelectField *field;
+		GSList *fields_list = NULL;
+		
+		field = gda_sql_select_field_new (GDA_SQL_ANY_PART (select));
+		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "*");
+		gda_sql_select_field_take_star_value (field, value);
+		fields_list = g_slist_append (fields_list, field);
+		
+		gda_sql_statement_select_take_expr_list (sql_statement, fields_list);
+		
+		/* WHERE */
+		GdaSqlExpr *where, *expr;
+		GdaSqlOperation *cond;
+		where = gda_sql_expr_new (GDA_SQL_ANY_PART (select));
+		cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
+		where->cond = cond;
+		cond->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
+		expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
+		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "rowid");
+		expr->value = value;
+		cond->operands = g_slist_append (NULL, expr);
 
-	/* build corresponding SELECT statement */
-	GdaSqlStatementSelect *select;
-        GdaSqlSelectTarget *target;
-        GdaSqlStatement *sql_statement = gda_sql_statement_new (GDA_SQL_STATEMENT_SELECT);
+		GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
+		pspec->name = g_strdup ("lid");
+		pspec->g_type = G_TYPE_INT64;
+		pspec->nullok = TRUE;
+		pspec->is_param = TRUE;
+		expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
+		expr->param_spec = pspec;
+		cond->operands = g_slist_append (cond->operands, expr);
+		
+		gda_sql_statement_select_take_where_cond (sql_statement, where);
+		
+		if (gda_sql_statement_check_structure (sql_statement, &lerror) == FALSE) {
+			g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
+				   lerror && lerror->message ? lerror->message : _("No detail"));
+			if (lerror)
+				g_error_free (lerror);
+			gda_sql_statement_free (sql_statement);
+			return NULL;
+		}
+		statement = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_statement, NULL);
+		gda_sql_statement_free (sql_statement);
 
-	select = (GdaSqlStatementSelect*) sql_statement->contents;
+		GdaSet *params;
+		if (! gda_statement_get_parameters (statement, &params, &lerror)) {
+			g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
+				   lerror && lerror->message ? lerror->message : _("No detail"));
+			if (lerror)
+				g_error_free (lerror);
+			g_object_unref (statement);
+			return NULL;
+		}
 
-	/* FROM */
-        select->from = gda_sql_select_from_new (GDA_SQL_ANY_PART (select));
-        target = gda_sql_select_target_new (GDA_SQL_ANY_PART (select->from));
-        gda_sql_select_from_take_new_target (select->from, target);
-
-	/* Filling in the target */
-        GValue *value;
-        g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), insert->table->table_name);
-        gda_sql_select_target_take_table_name (target, value);
-	gda_sql_statement_free (sql_insert);
-
-	/* selected fields */
-        GdaSqlSelectField *field;
-        GSList *fields_list = NULL;
-
-	field = gda_sql_select_field_new (GDA_SQL_ANY_PART (select));
-	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "*");
-	gda_sql_select_field_take_star_value (field, value);
-	fields_list = g_slist_append (fields_list, field);
-
-	gda_sql_statement_select_take_expr_list (sql_statement, fields_list);
-
-	/* WHERE */
-        GdaSqlExpr *where, *expr;
-	GdaSqlOperation *cond;
-	where = gda_sql_expr_new (GDA_SQL_ANY_PART (select));
-	cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
-	where->cond = cond;
-	cond->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
-	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
-	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "rowid");
-	expr->value = value;
-	cond->operands = g_slist_append (NULL, expr);
-	gchar *str;
-	str = g_strdup_printf ("%lld", last_id);
-	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
-	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);
-	expr->value = value;
-	cond->operands = g_slist_append (cond->operands, expr);
-
-	gda_sql_statement_select_take_where_cond (sql_statement, where);
-
-	if (gda_sql_statement_check_structure (sql_statement, &lerror) == FALSE) {
-                g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
-			     lerror && lerror->message ? lerror->message : _("No detail"));
-		if (lerror)
-			g_error_free (lerror);
-                gda_sql_statement_free (sql_statement);
-                return NULL;
-        }
+		g_object_set_data_full ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID, statement, g_object_unref);
+		g_object_set_data_full ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID "P", params, g_object_unref);
+		g_signal_connect (stmt, "reset",
+				  G_CALLBACK (lir_stmt_reset_cb), NULL);
+	}
 
 	/* execute SELECT statement */
 	GdaDataModel *model;
-	GdaStatement *statement = g_object_new (GDA_TYPE_STATEMENT, "structure", sql_statement, NULL);
-        gda_sql_statement_free (sql_statement);
-        model = gda_connection_statement_execute_select (cnc, statement, NULL, &lerror);
-	g_object_unref (statement);
+	GdaSet *params;
+	params = g_object_get_data ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID "P");
+	g_assert (params);
+	g_assert (gda_set_set_holder_value (params, NULL, "lid", last_id));
+        model = gda_connection_statement_execute_select (cnc, statement, params, &lerror);
         if (!model) {
                 g_warning (_("Can't execute SELECT statement to get last inserted row: %s"),
 			   lerror && lerror->message ? lerror->message : _("No detail"));
@@ -2070,7 +2106,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 			col = gda_data_model_describe_column (model, i);
 			h = gda_holder_new (gda_column_get_g_type (col));
 			id = g_strdup_printf ("+%d", i);
-			g_object_set (G_OBJECT (h), "id", id, "not-null", FALSE, 
+			g_object_set (G_OBJECT (h), "id", id,
 				      "name", gda_column_get_name (col), NULL);
 			g_free (id);
 			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);
@@ -2088,7 +2124,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 
 		if (holders) {
 			holders = g_slist_reverse (holders);
-			set = gda_set_new (holders);
+			set = _gda_set_new_read_only (holders);
 			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
 			g_slist_free (holders);
 		}
@@ -2222,7 +2258,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 
 	if (cstr) {
 		GdaConnectionEvent *event;
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (event, cstr);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", cstr);
@@ -2230,7 +2266,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 	}
 	if (lerror) {
 		GdaConnectionEvent *event;
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (event, lerror->message ? lerror->message : _("No detail"));
 		g_propagate_error (error, lerror);
 		return event;
@@ -2331,7 +2367,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		const char *errmsg;
 
 		errmsg = _("Empty statement");
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (event, errmsg);
 		gda_connection_add_event (cnc, event);
 		gda_connection_del_prepared_statement (cnc, stmt);
@@ -2349,7 +2385,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		const char *errmsg;
 
 		errmsg = SQLITE3_CALL (sqlite3_errmsg) (cdata->connection);
-		event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (event, errmsg);
 		gda_connection_add_event (cnc, event);
 		gda_connection_del_prepared_statement (cnc, stmt);
@@ -2371,7 +2407,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		GdaHolder *h = NULL;		
 
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -2391,7 +2427,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2410,7 +2446,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2423,6 +2459,37 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				empty_rs = TRUE;
 				continue;
 			}
+		}
+		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
+			/* create a new GdaStatement to handle all default values and execute it instead */
+			GdaSqlStatement *sqlst;
+			GError *lerror = NULL;
+			sqlst = gda_statement_rewrite_for_default_values (stmt, params, TRUE, &lerror);
+			if (!sqlst) {
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, lerror && lerror->message ? 
+								      lerror->message :
+								      _("Can't rewrite statement handle default values"));
+				g_propagate_error (error, lerror);
+				break;
+			}
+			
+			GdaStatement *rstmt;
+			GObject *res;
+			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+			gda_sql_statement_free (sqlst);
+			if (new_ps)
+				g_object_unref (ps);
+			pending_blobs_free_list (blobs_list);
+			res = gda_sqlite_provider_statement_execute (provider, cnc,
+								     rstmt, params,
+								     model_usage,
+								     col_types, last_inserted_row,
+								     task_id,
+								     async_cb, cb_data, error);
+			g_object_unref (rstmt);
+			return res;
 		}
 		/*g_print ("BINDING param '%s' to %p\n", pname, h);*/
 		
@@ -2472,7 +2539,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				str = _("BLOB is too big");
 
 			if (str) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
@@ -2483,7 +2550,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			GError *lerror = NULL;
 			pb = make_pending_blob (stmt, h, &lerror);
 			if (!pb) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, 
 				   lerror && lerror->message ? lerror->message : _("No detail"));
 								      
@@ -2495,7 +2562,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 			if (SQLITE3_CALL (sqlite3_bind_zeroblob) (ps->sqlite_stmt, i, (int) blob_len) !=
 			    SQLITE_OK) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, 
 				   lerror && lerror->message ? lerror->message : _("No detail"));
 								      
@@ -2553,7 +2620,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			gchar *str;
 			str = g_strdup_printf (_("Non handled data type '%s'"), 
 					       g_type_name (G_VALUE_TYPE (value)));
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, str);
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2571,7 +2638,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	}
 	
 	/* add a connection event */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 	
@@ -2609,7 +2676,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 if (status != SQLITE_DONE) {
                         if (SQLITE3_CALL (sqlite3_errcode) (handle) != SQLITE_OK) {
 				const char *errmsg = SQLITE3_CALL (sqlite3_errmsg) (handle);
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
                                 gda_connection_event_set_description (event, errmsg);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, "%s", errmsg);
@@ -2642,32 +2709,26 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				return NULL;
 			}
 			
-			GObject *set;
 			gchar *str = NULL;
-			GdaHolder *holder;
-			GValue *value;
-			GSList *list;
-			holder = gda_holder_new (G_TYPE_INT);
-			g_object_set ((GObject*) holder, "id", "IMPACTED_ROWS", NULL);
-			g_value_set_int ((value = gda_value_new (G_TYPE_INT)), changes);
-			gda_holder_take_value (holder, value, NULL);
-			list = g_slist_append (NULL, holder);
-			set = (GObject*) gda_set_new (list);
-			g_slist_free (list);
-			g_object_unref (holder);
+			gboolean count_changes = FALSE;
 
-                        if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DELETE", 6))
+                        if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DELETE", 6)) {
+				count_changes = TRUE;
                                 str = g_strdup_printf ("DELETE %d (see SQLite documentation for a \"DELETE * FROM table\" query)",
                                                        changes);
+			}
                         else if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "INSERT", 6)) {
 				sqlite3_int64 last_id;
+				count_changes = TRUE;
 				last_id = SQLITE3_CALL (sqlite3_last_insert_rowid) (handle);
 				str = g_strdup_printf ("INSERT %lld %d", last_id, changes);
 				if (last_inserted_row)
 					*last_inserted_row = make_last_inserted_set (cnc, stmt, last_id);
 			}
-			else if (!g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "UPDATE", 6))
+			else if (!g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "UPDATE", 6)) {
+				count_changes = TRUE;
 				str = g_strdup_printf ("UPDATE %d", changes);
+			}
 			else if (*(_GDA_PSTMT (ps)->sql)) {
 				gchar *tmp = g_ascii_strup (_GDA_PSTMT (ps)->sql, -1);
 				for (str = tmp; *str && (*str != ' ') && (*str != '\t') &&
@@ -2681,8 +2742,9 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				else
 					str = tmp;
 			}
+
 			if (str) {
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
                                 gda_connection_event_set_description (event, str);
                                 g_free (str);
                                 gda_connection_add_event (cnc, event);
@@ -2691,9 +2753,44 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 			if (new_ps)
 				g_object_unref (ps);
+
+			GObject *set;
+			if (count_changes) {
+				GdaHolder *holder;
+				GValue *value;
+				GSList *list;
+
+				holder = gda_holder_new (G_TYPE_INT);
+				g_object_set ((GObject*) holder, "id", "IMPACTED_ROWS", NULL);
+				g_value_set_int ((value = gda_value_new (G_TYPE_INT)), changes);
+				gda_holder_take_value (holder, value, NULL);
+				list = g_slist_append (NULL, holder);
+				set = (GObject*) _gda_set_new_read_only (list);
+				g_slist_free (list);
+				g_object_unref (holder);
+			}
+			else
+				set = (GObject*) _gda_set_new_read_only (NULL);
+
 			return set;
 		}
 	}
+}
+
+/*
+ * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
+ *
+ * Removes any default value inserted or updated
+ */
+static GdaSqlStatement *
+gda_sqlite_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+			      GdaStatement *stmt, GdaSet *params, GError **error)
+{
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+	}
+	return gda_statement_rewrite_for_default_values (stmt, params, TRUE, error);
 }
 
 /* 

@@ -29,20 +29,26 @@ An opened connection
 @wrapper: 
 @wrapper_jobs: 
 @wrapper_results_timer: 
+@long_timer: 
+@nb_no_job_waits: 
 @executed_statements: 
+@meta_store_signal: 
 @name: 
 @cnc: 
 @dict_file_name: 
 @parser: 
 @dsn_info: 
 @p_mstruct_mutex: 
-@p_mstruct: 
+@p_mstruct_list: 
+@c_mstruct: 
 @mstruct: 
 @bfav: 
 @busy: 
 @busy_reason: 
 @store_cnc: 
 @variables: 
+@results_list: 
+@results_timer_id: 
 
 <!-- ##### STRUCT BrowserConnection ##### -->
 <para>
@@ -235,6 +241,35 @@ An opened connection
 @Returns: 
 
 
+<!-- ##### USER_FUNCTION BrowserConnectionExecuteCallback ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@exec_id: 
+@out_result: 
+@out_last_inserted_row: 
+@error: 
+@data: 
+
+
+<!-- ##### FUNCTION browser_connection_execute_statement_cb ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@stmt: 
+@params: 
+@model_usage: 
+@need_last_insert_row: 
+@callback: 
+@data: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION browser_connection_normalize_sql_statement ##### -->
 <para>
 
@@ -242,6 +277,30 @@ An opened connection
 
 @bcnc: 
 @sqlst: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_rerun_select ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@model: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_rerun_select_cb ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@model: 
+@callback: 
+@data: 
 @error: 
 @Returns: 
 

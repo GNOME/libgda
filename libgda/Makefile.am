@@ -17,10 +17,9 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-DABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(LIBGDA_CFLAGS) \
-	$(FAM_CFLAGS) \
 	$(BDB_CFLAGS) \
 	-DBDB_LIB=\""$(BDB_LIB)"\" \
-	$(GIO_CFLAGS) $(GNOMEVFS_CFLAGS)
+	$(GIO_CFLAGS) $(GNOME_KEYRING_CFLAGS)
 
 _gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -165,6 +164,7 @@ libgda_sources =  \
 	gda-marshal.c \
 	gda-meta-store-extra.h \
 	gda-meta-struct-private.h \
+	gda-statement-priv.h \
 	global.h \
 	md5.h \
 	md5c.c \
@@ -224,8 +224,8 @@ libgda_5_0_la_LIBADD = \
 	binreloc/libgda_binreloc-5.0.la \
 	sqlite/libgda-sqlite.la \
 	thread-wrapper/libgda_threadwrapper-5.0.la \
-	$(LIBGDA_LIBS) $(FAM_LIBS) \
-	$(GIO_LIBS) $(GNOMEVFS_LIBS) 
+	$(LIBGDA_LIBS) \
+	$(GIO_LIBS) $(GNOME_KEYRING_LIBS)
 
 if PLATFORM_WIN32
 libgda_5_0_la_LDFLAGS += -export-symbols $(builddir)/libgda.def

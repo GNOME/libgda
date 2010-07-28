@@ -1,6 +1,6 @@
 /* gdaui-entry-string.c
  *
- * Copyright (C) 2003 - 2008 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -63,7 +63,7 @@ static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
-static gboolean   expand_in_layout (GdauiEntryWrapper *mgwrap);
+static gboolean   can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 static void       grab_focus (GdauiEntryWrapper *mgwrap);
 
@@ -142,7 +142,7 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (klass)->expand_in_layout = expand_in_layout;
+	GDAUI_ENTRY_WRAPPER_CLASS (klass)->can_expand = can_expand;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->set_editable = set_editable;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->grab_focus = grab_focus;
 
@@ -285,6 +285,7 @@ gdaui_entry_string_set_property (GObject *object,
 					gtk_widget_show (mgstr->priv->entry);
 					gtk_widget_hide (mgstr->priv->sw);
 				}
+				g_signal_emit_by_name (object, "expand-changed");
 			}
 			break;
 		case PROP_OPTIONS:
@@ -508,7 +509,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-expand_in_layout (GdauiEntryWrapper *mgwrap)
+can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
 {
 	GdauiEntryString *mgstr;
 
@@ -516,7 +517,10 @@ expand_in_layout (GdauiEntryWrapper *mgwrap)
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
 	g_return_val_if_fail (mgstr->priv, FALSE);
 
-	return mgstr->priv->multiline;
+	if (horiz)
+		return FALSE;
+	else
+		return mgstr->priv->multiline;
 }
 
 static void

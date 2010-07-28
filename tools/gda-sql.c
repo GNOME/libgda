@@ -177,6 +177,7 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
+	g_setenv ("GDA_CONFIG_SYNCHRONOUS", "1", TRUE);
         gda_init ();
 
 	has_threads = g_thread_supported ();
@@ -1310,13 +1311,20 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		return NULL;
 	}
 
-	if (!user && info && info->auth_string) {
+	if ((!user || !pass) && info && info->auth_string) {
 		GdaQuarkList* ql;
 		const gchar *tmp;
 		ql = gda_quark_list_new_from_string (info->auth_string);
-		tmp = gda_quark_list_find (ql, "USERNAME");
-		if (tmp)
-			user = g_strdup (tmp);
+		if (!user) {
+			tmp = gda_quark_list_find (ql, "USERNAME");
+			if (tmp)
+				user = g_strdup (tmp);
+		}
+		if (!pass) {
+			tmp = gda_quark_list_find (ql, "PASSWORD");
+			if (tmp)
+				pass = g_strdup (tmp);
+		}
 		gda_quark_list_free (ql);
 	}
 	if (need_user && ((user && !*user) || !user)) {
@@ -1376,10 +1384,12 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	
 	if (info && !real_provider)
 		newcnc = gda_connection_open_from_dsn (real_cnc_string, real_auth_string,
-						       GDA_CONNECTION_OPTIONS_THREAD_SAFE, error);
+						       GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA, error);
 	else 
 		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string,
-							  GDA_CONNECTION_OPTIONS_THREAD_SAFE, error);
+							  GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+							  GDA_CONNECTION_OPTIONS_AUTO_META_DATA, error);
 
 	g_free (real_cnc_string);
 	g_free (real_cnc);
@@ -1775,7 +1785,7 @@ output_string (const gchar *str)
 	}
 
 	length = strlen (str);
-	if (str[length - 1] != '\n')
+	if (*str && (str[length - 1] != '\n'))
 		append_nl = TRUE;
 
 	if (main_data->output_stream)

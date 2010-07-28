@@ -57,6 +57,8 @@ static void changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static GError *validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *dataset);
 static void source_changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static void att_holder_changed_cb (GdaHolder *holder, const gchar *att_name, const GValue *att_value, GdaSet *dataset);
+static void holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset);
+
 
 static void compute_public_data (GdaSet *set);
 static gboolean gda_set_real_add_holder (GdaSet *set, GdaHolder *holder);
@@ -82,10 +84,12 @@ enum
 	HOLDER_ATTR_CHANGED,
 	VALIDATE_HOLDER_CHANGE,
 	VALIDATE_SET,
+	HOLDER_TYPE_SET,
+	SOURCE_MODEL_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gda_set_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
+static gint gda_set_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0 };
 
 
 /* private structure */
@@ -96,6 +100,7 @@ struct _GdaSetPrivate
 	gchar           *descr;
 	GHashTable      *holders_hash; /* key = GdaHoler ID, value = GdaHolder */
 	GArray          *holders_array;
+	gboolean         read_only;
 };
 
 static void 
@@ -310,11 +315,51 @@ gda_set_class_init (GdaSetClass *class)
 			      NULL, NULL,
 			      _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
+	/**
+	 * GdaSet::holder-type-set
+	 * @set: the #GdaSet
+	 * @holder: the #GdaHolder for which the #GType has been set
+	 *
+	 * Gets emitted when @holder in @set has its type finally set, in case
+	 * it was #GDA_TYPE_NULL
+	 *
+	 * Since: 4.2
+	 */
+	gda_set_signals[HOLDER_TYPE_SET] =
+		g_signal_new ("holder-type-set",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GdaSetClass, holder_type_set),
+			      NULL, NULL,
+			      _gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
+			      GDA_TYPE_HOLDER);
+
+	/**
+	 * GdaSet::source-model-changed
+	 * @set: the #GdaSet
+	 * @source: the #GdaSetSource for which the @data_model attribute has changed
+	 *
+	 * Gets emitted when the data model in @source has changed
+	 *
+	 * Since: 4.2
+	 */
+	gda_set_signals[SOURCE_MODEL_CHANGED] =
+		g_signal_new ("source-model-changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GdaSetClass, source_model_changed),
+			      NULL, NULL,
+			      _gda_marshal_VOID__POINTER, G_TYPE_NONE, 1,
+			      G_TYPE_POINTER);
+
+
 	class->holder_changed = NULL;
 	class->validate_holder_change = m_validate_holder_change;
 	class->validate_set = m_validate_set;
 	class->holder_attr_changed = NULL;
 	class->public_data_changed = NULL;
+	class->holder_type_set = NULL;
+	class->source_model_changed = NULL;
 
 	/* Properties */
 	object_class->set_property = gda_set_set_property;
@@ -347,6 +392,7 @@ gda_set_init (GdaSet *set)
 	set->groups_list = NULL;
 	set->priv->holders_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	set->priv->holders_array = NULL;
+	set->priv->read_only = FALSE;
 }
 
 
@@ -365,10 +411,32 @@ gda_set_new (GSList *holders)
 {
 	GObject *obj;
 
-	obj = g_object_new (GDA_TYPE_SET, "holders", holders, NULL);
-	
-	return GDA_SET (obj);
+	obj = g_object_new (GDA_TYPE_SET, NULL);
+	for (; holders; holders = holders->next) 
+		gda_set_real_add_holder ((GdaSet*) obj, GDA_HOLDER (holders->data));
+	compute_public_data ((GdaSet*) obj);
+
+	return (GdaSet*) obj;
 }
+
+/*
+ * _gda_set_new_read_only
+ */
+GdaSet *
+_gda_set_new_read_only (GSList *holders)
+{
+	GObject *obj;
+
+	obj = g_object_new (GDA_TYPE_SET, NULL);
+	((GdaSet*) obj)->priv->read_only = TRUE;
+	for (; holders; holders = holders->next) 
+		gda_set_real_add_holder ((GdaSet*) obj, GDA_HOLDER (holders->data));
+	compute_public_data ((GdaSet*) obj);
+
+	return (GdaSet*) obj;
+}
+
+
 
 /**
  * gda_set_copy:
@@ -900,13 +968,18 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	g_return_if_fail (g_slist_find (set->holders, holder));
 
 	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
-					      G_CALLBACK (changed_holder_cb), set);
-	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
 					      G_CALLBACK (validate_change_holder_cb), set);
-	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
-					      G_CALLBACK (source_changed_holder_cb), set);
-	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
-					      G_CALLBACK (att_holder_changed_cb), set);
+	if (! set->priv->read_only) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
+						      G_CALLBACK (changed_holder_cb), set);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
+						      G_CALLBACK (source_changed_holder_cb), set);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
+						      G_CALLBACK (att_holder_changed_cb), set);
+	}
+	if (gda_holder_get_g_type (holder) == GDA_TYPE_NULL)
+		g_signal_handlers_disconnect_by_func (holder,
+						      G_CALLBACK (holder_notify_cb), set);
 
 	/* now destroy the GdaSetNode and the GdaSetSource if necessary */
 	node = gda_set_get_node (set, holder);
@@ -954,13 +1027,17 @@ validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *set)
 {
 	/* signal the holder validate-change */
 	GError *error = NULL;
+	if (set->priv->read_only)
+		g_set_error (&error, GDA_SET_ERROR, GDA_SET_READ_ONLY_ERROR, _("Data set does not allow modifications"));
+	else {
 #ifdef GDA_DEBUG_signal
-	g_print (">> 'VALIDATE_HOLDER_CHANGE' from %s\n", __FUNCTION__);
+		g_print (">> 'VALIDATE_HOLDER_CHANGE' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit (G_OBJECT (set), gda_set_signals[VALIDATE_HOLDER_CHANGE], 0, holder, value, &error);
+		g_signal_emit (G_OBJECT (set), gda_set_signals[VALIDATE_HOLDER_CHANGE], 0, holder, value, &error);
 #ifdef GDA_DEBUG_signal
-	g_print ("<< 'VALIDATE_HOLDER_CHANGED' from %s\n", __FUNCTION__);
+		g_print ("<< 'VALIDATE_HOLDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
+	}
 	return error;
 }
 
@@ -998,14 +1075,16 @@ gda_set_dispose (GObject *object)
 	if (set->holders) {
 		for (list = set->holders; list; list = list->next) {
 			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-							      G_CALLBACK (changed_holder_cb), set);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
 							      G_CALLBACK (validate_change_holder_cb), set);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-							      G_CALLBACK (source_changed_holder_cb), set);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-							      G_CALLBACK (att_holder_changed_cb), set);
-			g_object_unref (G_OBJECT (list->data));
+			if (! set->priv->read_only) {
+				g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
+								      G_CALLBACK (changed_holder_cb), set);
+				g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
+								      G_CALLBACK (source_changed_holder_cb), set);
+				g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
+								      G_CALLBACK (att_holder_changed_cb), set);
+			}
+			g_object_unref (list->data);
 		}
 		g_slist_free (set->holders);
 	}
@@ -1063,8 +1142,7 @@ compute_public_data (GdaSet *set)
 	GdaSetNode *node;
 	GdaSetSource *source;
 	GdaSetGroup *group;
-	GHashTable *groups = g_hash_table_new (NULL, NULL); /* key = source model, 
-							       value = GdaSetGroup */
+	GHashTable *groups = NULL;
 
 	/*
 	 * Get rid of all the previous structures
@@ -1089,14 +1167,14 @@ compute_public_data (GdaSet *set)
 		if (node->source_model)
 			g_object_ref (node->source_model);
 		
-		set->nodes_list = g_slist_append (set->nodes_list, node);
+		set->nodes_list = g_slist_prepend (set->nodes_list, node);
 	}
+	set->nodes_list = g_slist_reverse (set->nodes_list);
 
 	/*
 	 * Creation of the GdaSetSource and GdaSetGroup structures 
 	 */
-	list = set->nodes_list;
-	while (list) {
+	for (list = set->nodes_list; list;list = list->next) {
 		node = GDA_SET_NODE (list->data);
 		
 		/* source */
@@ -1104,18 +1182,18 @@ compute_public_data (GdaSet *set)
 		if (node->source_model) {
 			source = gda_set_get_source_for_model (set, node->source_model);
 			if (source) 
-				source->nodes = g_slist_prepend (source->nodes, node);
+				source->nodes = g_slist_append (source->nodes, node);
 			else {
 				source = g_new0 (GdaSetSource, 1);
 				source->data_model = node->source_model;
-				source->nodes = g_slist_prepend (NULL, node);
+				source->nodes = g_slist_append (NULL, node);
 				set->sources_list = g_slist_prepend (set->sources_list, source);
 			}
 		}
 
 		/* group */
 		group = NULL;
-		if (node->source_model)
+		if (node->source_model && groups)
 			group = g_hash_table_lookup (groups, node->source_model);
 		if (group) 
 			group->nodes = g_slist_append (group->nodes, node);
@@ -1123,15 +1201,18 @@ compute_public_data (GdaSet *set)
 			group = g_new0 (GdaSetGroup, 1);
 			group->nodes = g_slist_append (NULL, node);
 			group->nodes_source = source;
-			set->groups_list = g_slist_append (set->groups_list, group);
-			if (node->source_model)
+			set->groups_list = g_slist_prepend (set->groups_list, group);
+			if (node->source_model) {
+				if (!groups)
+					groups = g_hash_table_new (NULL, NULL); /* key = source model, 
+										   value = GdaSetGroup */
 				g_hash_table_insert (groups, node->source_model, group);
+			}
 		}		
-
-		list = g_slist_next (list);
 	}
-	
-	g_hash_table_destroy (groups);
+	set->groups_list = g_slist_reverse (set->groups_list);
+	if (groups)
+		g_hash_table_destroy (groups);
 
 #ifdef GDA_DEBUG_signal
         g_print (">> 'PUBLIC_DATA_CHANGED' from %p\n", set);
@@ -1169,14 +1250,22 @@ gda_set_add_holder (GdaSet *set, GdaHolder *holder)
 	return added;
 }
 
+static void
+holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
+{
+	GType gtype;
+	gtype = gda_holder_get_g_type (holder);
+	g_assert (gtype != GDA_TYPE_NULL);
+	g_signal_handlers_disconnect_by_func (holder,
+					      G_CALLBACK (holder_notify_cb), dataset);
+	g_signal_emit (dataset, gda_set_signals[HOLDER_TYPE_SET], 0, holder);
+}
+
 static gboolean
 gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 {
 	GdaHolder *similar;
 	const gchar *hid;
-
-	if (g_slist_find (set->holders, holder))
-		return FALSE;
 
 	/* 
 	 * try to find a similar holder in the set->holders:
@@ -1187,7 +1276,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 		g_warning (_("GdaHolder needs to have an ID"));
 		return FALSE;
 	}
-	g_return_val_if_fail (hid, FALSE);
+
 	similar = (GdaHolder*) g_hash_table_lookup (set->priv->holders_hash, hid);
 	if (!similar) {
 		/* really add @holder to the set */
@@ -1198,16 +1287,24 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 			set->priv->holders_array = NULL;
 		}
 		g_object_ref (holder);
-		g_signal_connect (G_OBJECT (holder), "changed",
-				  G_CALLBACK (changed_holder_cb), set);
 		g_signal_connect (G_OBJECT (holder), "validate-change",
 				  G_CALLBACK (validate_change_holder_cb), set);
-		g_signal_connect (G_OBJECT (holder), "source-changed",
-				  G_CALLBACK (source_changed_holder_cb), set);
-		g_signal_connect (G_OBJECT (holder), "attribute-changed",
-				  G_CALLBACK (att_holder_changed_cb), set);
+		if (! set->priv->read_only) {
+			g_signal_connect (G_OBJECT (holder), "changed",
+					  G_CALLBACK (changed_holder_cb), set);
+			g_signal_connect (G_OBJECT (holder), "source-changed",
+					  G_CALLBACK (source_changed_holder_cb), set);
+			g_signal_connect (G_OBJECT (holder), "attribute-changed",
+					  G_CALLBACK (att_holder_changed_cb), set);
+		}
+		if (gda_holder_get_g_type (holder) == GDA_TYPE_NULL)
+			g_signal_connect (G_OBJECT (holder), "notify::g-type",
+					  G_CALLBACK (holder_notify_cb), set);
+
 		return TRUE;
 	}
+	else if (similar == holder)
+		return FALSE;
 	else {
 #ifdef GDA_DEBUG_NO
 		g_print ("In Set %p, Holder %p and %p are similar, keeping %p only\n", set, similar, holder, similar);
@@ -1474,4 +1571,74 @@ gda_set_get_source_for_model (GdaSet *set, GdaDataModel *model)
 	}
 
 	return retval;
+}
+
+/**
+ * gda_set_replace_source_model
+ * @set: a #GdaSet object
+ * @source: a pointer to a #GdaSetSource in @set
+ * @model: a #GdaDataModel
+ *
+ * Replaces @source->data_model with @model, which must have the same
+ * characteristics as @source->data_model (same column types)
+ *
+ * Also for each #GdaHolder for which @source->data_model is a source model,
+ * this method calls gda_holder_set_source_model() with @model to replace
+ * the source by the new model
+ *
+ * Since: 4.2
+ */
+void
+gda_set_replace_source_model (GdaSet *set, GdaSetSource *source, GdaDataModel *model)
+{
+	g_return_if_fail (GDA_IS_SET (set));
+	g_return_if_fail (source);
+	g_return_if_fail (g_slist_find (set->sources_list, source));
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	
+	/* compare models */
+	gint ncols, i;
+	ncols = gda_data_model_get_n_columns (source->data_model);
+	if (ncols != gda_data_model_get_n_columns (model)) {
+		g_warning (_("Replacing data model must have the same characteristics as the "
+			     "data model it replaces"));
+		return;
+	}
+	for (i = 0; i < ncols; i++) {
+		GdaColumn *c1, *c2;
+		GType t1, t2;
+		c1 = gda_data_model_describe_column (source->data_model, i);
+		c2 = gda_data_model_describe_column (model, i);
+		t1 = gda_column_get_g_type (c1);
+		t2 = gda_column_get_g_type (c2);
+
+		if ((t1 != GDA_TYPE_NULL) && (t2 != GDA_TYPE_NULL) && (t1 != t2)) {
+			g_warning (_("Replacing data model must have the same characteristics as the "
+				     "data model it replaces"));
+			return;
+		}
+	}
+
+	/* actually swap the models */
+	GSList *list;
+	source->data_model = model;
+	for (list = source->nodes; list; list = list->next) {
+		GdaSetNode *node = (GdaSetNode*) list->data;
+		g_object_unref (node->source_model);
+		node->source_model = g_object_ref (model);
+		g_signal_handlers_block_by_func (G_OBJECT (node->holder),
+						 G_CALLBACK (source_changed_holder_cb), set);
+		gda_holder_set_source_model (GDA_HOLDER (node->holder), model, node->source_column,
+					     NULL);
+		g_signal_handlers_unblock_by_func (G_OBJECT (node->holder),
+						   G_CALLBACK (source_changed_holder_cb), set);
+
+	}
+#ifdef GDA_DEBUG_signal
+	g_print (">> 'SOURCE_MODEL_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	g_signal_emit (G_OBJECT (set), gda_set_signals[SOURCE_MODEL_CHANGED], 0, source);
+#ifdef GDA_DEBUG_signal
+	g_print ("<< 'SOURCE_MODEL_CHANGED' from %s\n", __FUNCTION__);
+#endif
 }

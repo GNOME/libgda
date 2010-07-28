@@ -1,6 +1,7 @@
 /* gdaui-entry-cgrid.c
  *
- * Copyright (C) 2007 - 2010 Carlos Savoretti
+ * Copyright (C) 2007 - 2007 Carlos Savoretti
+ * Copyright (C) 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -117,15 +118,14 @@ get_row_height (GdauiEntryCGrid  *cgrid)
 
 	GList *columns = gtk_tree_view_get_columns (GTK_TREE_VIEW(cgrid->priv->tree_view));
 
-	GList *current = columns;
-	while (current) {
-		GList *renderers = gtk_tree_view_column_get_cell_renderers
-			((GtkTreeViewColumn *) current->data);
+	GList *current;
+	for (current = columns; current; current = current->next) {
+		GList *renderers = gtk_cell_layout_get_cells ((GtkCellLayout *) current->data);
 
 		guint cell_height = 0;
 
-		GList *current1 = renderers;
-		while (current1) {
+		GList *current1;
+		for (current1 = renderers; current1; current1 = current1->next) {
 			GtkCellRenderer *renderer = (GtkCellRenderer *) current1->data;
 			gint height;
 
@@ -134,16 +134,11 @@ get_row_height (GdauiEntryCGrid  *cgrid)
 
 			if (height > cell_height)
 				cell_height = height;
-
-			current1 = g_list_next (current1);
 		}
-
 		g_list_free (renderers);
 
 		if (cell_height > row_height)
 			row_height = cell_height;
-
-		current = g_list_next (current);
 	}
 	g_list_free (columns);
 
@@ -781,19 +776,18 @@ connect_signals (GdauiEntryWrapper  *entry_wrapper,
 }
 
 static gboolean
-expand_in_layout (GdauiEntryWrapper  *entry_wrapper)
+can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
 {
-	g_return_val_if_fail (GDAUI_IS_ENTRY_CGRID(entry_wrapper), FALSE);
+	g_return_val_if_fail (GDAUI_IS_ENTRY_CGRID (mgwrap), FALSE);
 	return FALSE;
 }
 
 static void
-set_editable (GdauiEntryWrapper  *entry_wrapper,
-	      gboolean        editable)
+set_editable (GdauiEntryWrapper *entry_wrapper, gboolean editable)
 {
-	g_return_if_fail (GDAUI_IS_ENTRY_CGRID(entry_wrapper));
+	g_return_if_fail (GDAUI_IS_ENTRY_CGRID (entry_wrapper));
 
-	GdauiEntryCGrid *cgrid = GDAUI_ENTRY_CGRID(entry_wrapper);
+	GdauiEntryCGrid *cgrid = GDAUI_ENTRY_CGRID (entry_wrapper);
 
 	gtk_editable_set_editable (GTK_EDITABLE (cgrid->priv->entry), editable);
 }
@@ -811,7 +805,7 @@ gdaui_entry_cgrid_class_init (GdauiEntryCGridClass  *klass)
 	wrapper_class->real_set_value = real_set_value;
 	wrapper_class->real_get_value = real_get_value;
 	wrapper_class->connect_signals = connect_signals;
-	wrapper_class->expand_in_layout = expand_in_layout;
+	wrapper_class->can_expand = can_expand;
 
 	wrapper_class->set_editable = set_editable;
 

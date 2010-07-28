@@ -133,6 +133,65 @@ auth_contents_changed_cb (GdauiAuth *auth, gboolean is_valid, AuthDialog *dialog
 */
 
 static void
+update_ad_auth (AuthData *ad)
+{
+	if (ad->cncinfo.auth_string) {
+		/* split array in a list of named parameters, and for each parameter value, 
+		 * set the correcponding parameter in @dset */
+		GdaSet *dset;
+		dset = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (ad->auth_widget));
+		gchar **array = NULL;
+		array = g_strsplit (ad->cncinfo.auth_string, ";", 0);
+		if (array) {
+			gint index = 0;
+			gchar *tok;
+			gchar *value;
+			gchar *name;
+			
+			for (index = 0; array[index]; index++) {
+				name = strtok_r (array [index], "=", &tok);
+				if (name)
+					value = strtok_r (NULL, "=", &tok);
+				else
+					value = NULL;
+				if (name && value) {
+					GdaHolder *param;
+					gda_rfc1738_decode (name);
+					gda_rfc1738_decode (value);
+					
+					param = gda_set_get_holder (dset, name);
+					if (param)
+						g_assert (gda_holder_set_value_str (param, NULL, value, NULL));
+				}
+			}
+			
+			g_strfreev (array);
+		}
+	}
+}
+
+ /*
+  * Update the auth part
+  */
+static void
+dsn_changed_cb (GdaConfig *config, GdaDsnInfo *info, AuthDialog *dialog)
+{
+	GSList *list;
+	if (!info || !info->name) /* should not happen */
+		return;
+	for (list = dialog->priv->auth_list; list; list = list->next) {
+		AuthData *ad = (AuthData*) list->data;
+		if (! ad->cncinfo.name || strcmp (info->name, ad->cncinfo.name))
+			continue;
+		g_free (ad->cncinfo.auth_string);
+		ad->cncinfo.auth_string = NULL;
+		if (info->auth_string)
+			ad->cncinfo.auth_string = g_strdup (info->auth_string);
+		update_ad_auth (ad);
+	}
+}
+
+static void
 auth_dialog_init (AuthDialog *dialog)
 {
 	GtkWidget *label, *hbox, *wid;
@@ -177,6 +236,8 @@ auth_dialog_init (AuthDialog *dialog)
 	dialog->priv->spinner = browser_spinner_new ();
 	gtk_container_add (GTK_CONTAINER (hbox), dialog->priv->spinner);
 
+	g_signal_connect (gda_config_get (), "dsn-changed",
+			  G_CALLBACK (dsn_changed_cb), dialog);
 }
 
 static void
@@ -185,6 +246,8 @@ auth_dialog_dispose (GObject *object)
 	AuthDialog *dialog;
 	dialog = AUTH_DIALOG (object);
 	if (dialog->priv) {
+		g_signal_handlers_disconnect_by_func (gda_config_get (),
+						      G_CALLBACK (dsn_changed_cb), dialog);
 		if (dialog->priv->auth_list) {
 			g_slist_foreach (dialog->priv->auth_list, (GFunc) auth_data_free, NULL);
 			g_slist_free (dialog->priv->auth_list);
@@ -229,12 +292,14 @@ sub_thread_open_cnc (AuthData *ad, GError **error)
 	GdaDsnInfo *info = &(ad->cncinfo);
 	if (info->name)
 		cnc = gda_connection_open_from_dsn (info->name, ad->auth_string ? ad->auth_string->str : NULL,
-						    GDA_CONNECTION_OPTIONS_THREAD_SAFE,
+						    GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+						    GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
 						    error);
 	else
 		cnc = gda_connection_open_from_string (info->provider, info->cnc_string,
 						       ad->auth_string ? ad->auth_string->str : NULL,
-						       GDA_CONNECTION_OPTIONS_THREAD_SAFE,
+						       GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
 						       error);
 	return cnc;
 #else
@@ -274,6 +339,29 @@ check_for_cnc (AuthDialog *dialog)
 			g_main_loop_quit (dialog->priv->loop);
 	}
 	return !finished;
+}
+
+static void
+update_dialog_focus (AuthDialog *dialog)
+{
+	GSList *list;
+	gboolean allvalid = TRUE;
+	for (list = dialog->priv->auth_list; list; list = list->next) {
+		AuthData *ad;
+		ad = (AuthData*) list->data;
+		if (ad->auth_widget && !ad->ext.cnc &&
+		    ! gdaui_basic_form_is_valid (GDAUI_BASIC_FORM (ad->auth_widget))) {
+			allvalid = FALSE;
+			gtk_widget_grab_focus (ad->auth_widget);
+			break;
+		}
+	}
+
+	if (allvalid) {
+		GtkWidget *wid;
+		wid = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+		gtk_widget_grab_focus (wid);
+	}
 }
 
 /**
@@ -381,7 +469,6 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 		ad->cncinfo.auth_string = real_auth_string;
 		real_auth_string = NULL;
 	}
-	
 
 	dialog->priv->auth_list = g_slist_append (dialog->priv->auth_list, ad);
 
@@ -438,40 +525,8 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 		gtk_widget_show_all (hbox);
 
 		/* set values */
-		if (ad->cncinfo.auth_string) {
-			/* split array in a list of named parameters, and for each parameter value, 
-			 * set the correcponding parameter in @dset */
-			GdaSet *dset;
-			
-			dset = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (ad->auth_widget));
-			gchar **array = NULL;
-			array = g_strsplit (ad->cncinfo.auth_string, ";", 0);
-			if (array) {
-				gint index = 0;
-				gchar *tok;
-				gchar *value;
-				gchar *name;
-				
-				for (index = 0; array[index]; index++) {
-					name = strtok_r (array [index], "=", &tok);
-					if (name)
-						value = strtok_r (NULL, "=", &tok);
-					else
-						value = NULL;
-					if (name && value) {
-						GdaHolder *param;
-						gda_rfc1738_decode (name);
-						gda_rfc1738_decode (value);
-						
-						param = gda_set_get_holder (dset, name);
-						if (param)
-							g_assert (gda_holder_set_value_str (param, NULL, value, NULL));
-					}
-				}
-				
-				g_strfreev (array);
-			}
-		}
+		if (ad->cncinfo.auth_string)
+			update_ad_auth (ad);
 	}
 	else {
 		/* open connection right away */
@@ -491,6 +546,8 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
         g_free (pass);
         g_free (real_provider);
         g_free (real_auth_string);
+
+	update_dialog_focus (dialog);
 
 	return TRUE;
 }

@@ -272,7 +272,6 @@ gdaui_data_cell_renderer_bin_set_property (GObject *object,
 	switch (param_id) {
 	case PROP_VALUE:
 		/* Because we don't have a copy of the value, we MUST NOT free it! */
-		cell->priv->invalid = FALSE;
 		if (value) {	
                         GValue *gval = g_value_get_boxed (value);
 			if (gval && (G_VALUE_TYPE (gval) != GDA_TYPE_NULL))
@@ -290,6 +289,7 @@ gdaui_data_cell_renderer_bin_set_property (GObject *object,
 		}
 		break;
 	case PROP_VALUE_ATTRIBUTES:
+		cell->priv->invalid = g_value_get_flags (value) & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE;
 		break;
 	case PROP_EDITABLE:
 		cell->priv->editable = g_value_get_boolean (value);

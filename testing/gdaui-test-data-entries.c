@@ -684,7 +684,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	wid = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
 	g_object_set (G_OBJECT (wid), "handler", dh, NULL);
 
-	expand = gdaui_data_entry_expand_in_layout (GDAUI_DATA_ENTRY (wid));
+	expand = gdaui_data_entry_can_expand (GDAUI_DATA_ENTRY (wid), FALSE);
 	if (expand)
 		gtk_table_attach_defaults (GTK_TABLE (table), wid, 0, 3, 1, 2);
 	else
@@ -924,7 +924,7 @@ default_clicked_cb (GtkButton *button, GtkWidget *entry)
 
 	wid = g_object_get_data (G_OBJECT (button), "entry");
 	value = gdaui_data_entry_get_value (GDAUI_DATA_ENTRY (wid));
-	gdaui_data_entry_set_value_default (GDAUI_DATA_ENTRY (entry), value);
+	gdaui_data_entry_set_default_value (GDAUI_DATA_ENTRY (entry), value);
 	gda_value_free (value);
 }
 

@@ -184,10 +184,14 @@ void                              gda_numeric_free (gpointer boxed);
 GType                             gda_time_get_type (void) G_GNUC_CONST;
 gpointer                          gda_time_copy (gpointer boxed);
 void                              gda_time_free (gpointer boxed);
+gboolean                          gda_time_valid (const GdaTime *time);
+
 
 GType                             gda_timestamp_get_type (void) G_GNUC_CONST;
 gpointer                          gda_timestamp_copy (gpointer boxed);
 void                              gda_timestamp_free (gpointer boxed);
+gboolean                          gda_timestamp_valid (const GdaTimestamp *timestamp);
+
 
 GType                             gda_geometricpoint_get_type (void) G_GNUC_CONST;
 gpointer                          gda_geometricpoint_copy (gpointer boxed);

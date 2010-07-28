@@ -32,6 +32,8 @@
 #include <libgda/gda-custom-marshal.h>
 #include <libgda/gda-types.h>
 
+#define __gda_value_is_null(value) (!G_IS_VALUE (value))
+
 /* 
  * Main static functions 
  */
@@ -585,11 +587,11 @@ gda_holder_set_property (GObject *object,
 				
 				/* updating the holder's validity regarding the NULL value */
 				if (!not_null && 
-				    (!holder->priv->value || gda_value_is_null (holder->priv->value)))
+				    (!holder->priv->value || __gda_value_is_null (holder->priv->value)))
 					holder->priv->valid = TRUE;
 				
 				if (not_null && 
-				    (!holder->priv->value || gda_value_is_null (holder->priv->value)))
+				    (!holder->priv->value || __gda_value_is_null (holder->priv->value)))
 					holder->priv->valid = FALSE;
 				
 				g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
@@ -756,7 +758,7 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
 	g_return_val_if_fail (holder->priv, NULL);
 
 	current_val = gda_holder_get_value (holder);
-        if (!current_val || gda_value_is_null (current_val))
+        if (!current_val || __gda_value_is_null (current_val))
                 return NULL;
         else {
                 if (!dh)
@@ -908,11 +910,11 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	}
 		
 	/* holder will be changed? */
-	newnull = !value || gda_value_is_null (value);
+	newnull = !value || __gda_value_is_null (value);
 	current_val = gda_holder_get_value (holder);
 	if (current_val == value)
 		changed = FALSE;
-	else if ((!current_val || gda_value_is_null ((GValue *)current_val)) && newnull)
+	else if ((!current_val || __gda_value_is_null ((GValue *)current_val)) && newnull)
 		changed = FALSE;
 	else if (value && current_val &&
 		 (G_VALUE_TYPE (value) == G_VALUE_TYPE ((GValue *)current_val)))
@@ -1042,11 +1044,11 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 #endif
 
 	/* holder will be changed? */
-	newnull = !value || gda_value_is_null (value);
+	newnull = !value || __gda_value_is_null (value);
 	current_val = gda_holder_get_value (holder);
 	if (current_val == value)
 		changed = FALSE;
-	else if ((!current_val || gda_value_is_null (current_val)) && newnull) 
+	else if ((!current_val || __gda_value_is_null (current_val)) && newnull) 
 		changed = FALSE;
 	else if (value && current_val &&
 		 (G_VALUE_TYPE (value) == G_VALUE_TYPE (current_val))) 
@@ -1371,8 +1373,8 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 		const GValue *current = gda_holder_get_value (holder);
 
 		/* check if default is equal to current value */
-		if (gda_value_is_null (value) &&
-		    (!current || gda_value_is_null (current)))
+		if (__gda_value_is_null (value) &&
+		    (!current || __gda_value_is_null (current)))
 			holder->priv->default_forced = TRUE;
 		else if ((G_VALUE_TYPE (value) == holder->priv->g_type) &&
 			 current && !gda_value_compare (value, current))
@@ -1511,8 +1513,10 @@ bind_to_notify_cb (GdaHolder *bind_to, GParamSpec *pspec, GdaHolder *holder)
 	g_signal_handler_disconnect (holder->priv->simple_bind,
 				     holder->priv->simple_bind_notify_signal_id);
 	holder->priv->simple_bind_notify_signal_id = 0;
-	if (holder->priv->g_type == GDA_TYPE_NULL)
+	if (holder->priv->g_type == GDA_TYPE_NULL) {
 		holder->priv->g_type = bind_to->priv->g_type;
+		g_object_notify ((GObject*) holder, "g-type");
+	}
 	else if (holder->priv->g_type != bind_to->priv->g_type) {
 		/* break holder's binding because type differ */
 		g_warning (_("Cannot bind holders if their type is not the same, "
@@ -1633,12 +1637,12 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 		g_return_if_fail (alias_of->priv);
 		g_return_if_fail (holder->priv->g_type == alias_of->priv->g_type);
 		cvalue = gda_holder_get_value (alias_of);
-		if (cvalue && !gda_value_is_null ((GValue*)cvalue))
+		if (cvalue && !__gda_value_is_null ((GValue*)cvalue))
 			value2 = gda_value_copy ((GValue*)cvalue);
 	}
 
 	cvalue = gda_holder_get_value (holder);
-	if (cvalue && !gda_value_is_null ((GValue*)cvalue))
+	if (cvalue && !__gda_value_is_null ((GValue*)cvalue))
 		value1 = gda_value_copy ((GValue*)cvalue);
 		
 	

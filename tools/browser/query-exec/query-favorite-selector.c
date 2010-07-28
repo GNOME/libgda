@@ -467,7 +467,7 @@ query_favorite_selector_new (BrowserConnection *bcnc)
 				      G_TYPE_INT, MGR_FAVORITES_ID_ATT_NAME,
 				      G_TYPE_STRING, MGR_FAVORITES_NAME_ATT_NAME,
 				      G_TYPE_STRING, "summary");
-	treeview = gtk_tree_view_new_with_model (model);
+	treeview = browser_make_tree_view (model);
 	tsel->priv->treeview = treeview;
 	g_object_unref (model);
 

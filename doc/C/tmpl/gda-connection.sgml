@@ -133,6 +133,11 @@ A connection to a database
 
 </para>
 
+<!-- ##### ARG GdaConnection:events-history-size ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaConnection:is-wrapper ##### -->
 <para>
 
@@ -173,6 +178,7 @@ A connection to a database
 @GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE: 
 @GDA_CONNECTION_OPTIONS_THREAD_SAFE: 
 @GDA_CONNECTION_OPTIONS_THREAD_ISOLATED: 
+@GDA_CONNECTION_OPTIONS_AUTO_META_DATA: 
 
 <!-- ##### ENUM GdaConnectionError ##### -->
 <para>

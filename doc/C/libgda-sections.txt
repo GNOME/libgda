@@ -438,6 +438,7 @@ GdaServerOperation
 GdaServerOperationType
 gda_server_operation_get_op_type
 gda_server_operation_op_type_to_string
+gda_server_operation_string_to_op_type
 <SUBSECTION>
 gda_server_operation_get_value_at
 gda_server_operation_get_sql_identifier_at
@@ -769,12 +770,14 @@ gda_value_set_numeric
 GdaTime
 gda_time_copy
 gda_time_free
+gda_time_valid
 gda_value_get_time
 gda_value_set_time
 <SUBSECTION>
 GdaTimestamp
 gda_timestamp_copy
 gda_timestamp_free
+gda_timestamp_valid
 gda_value_get_timestamp
 gda_value_set_timestamp
 gda_value_new_timestamp_from_timet
@@ -1045,6 +1048,7 @@ gda_set_get_nth_holder
 gda_set_add_holder
 gda_set_remove_holder
 gda_set_merge_with_set
+gda_set_replace_source_model
 <SUBSECTION>
 GdaSetNode
 gda_set_get_node
@@ -1484,6 +1488,8 @@ gda_compute_unique_table_row_condition
 gda_compute_unique_table_row_condition_with_cnc
 <SUBSECTION>
 gda_sql_any_part_check_structure
+<SUBSECTION>
+gda_statement_rewrite_for_default_values
 </SECTION>
 
 <SECTION>

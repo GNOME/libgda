@@ -1,6 +1,6 @@
 /* gdaui-set.c
  *
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -38,6 +38,7 @@ static void gdaui_set_get_property (GObject *object,
 				    GParamSpec *pspec);
 
 static void wrapped_set_public_data_changed_cb (GdaSet *wset, GdauiSet *set);
+static void wrapped_set_source_model_changed_cb (GdaSet *wset, GdaSetSource *source, GdauiSet *set);
 static void clean_public_data (GdauiSet *set);
 static void compute_public_data (GdauiSet *set);
 static void compute_shown_columns_index (GdauiSetSource *dsource);
@@ -61,10 +62,11 @@ enum {
 /* signals */
 enum {
 	PUBLIC_DATA_CHANGED,
+	SOURCE_MODEL_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gdaui_set_signals[LAST_SIGNAL] = { 0 };
+static gint gdaui_set_signals[LAST_SIGNAL] = { 0, 0 };
 
 GType
 _gdaui_set_get_type (void)
@@ -103,6 +105,8 @@ gdaui_set_class_init (GdauiSetClass *class)
          * @set: the #GdauiSet
          * 
          * Gets emitted when @set's public data (#GdauiSetGroup or #GdauiSetSource values) have changed
+	 *
+	 * Since: 4.2
          */
         gdaui_set_signals[PUBLIC_DATA_CHANGED] =
                 g_signal_new ("public-data-changed",
@@ -111,8 +115,24 @@ gdaui_set_class_init (GdauiSetClass *class)
                               G_STRUCT_OFFSET (GdauiSetClass, public_data_changed),
                               NULL, NULL,
                               _gdaui_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	/**
+         * GdauiSet::source-model-changed
+         * @set: the #GdauiSet
+         * 
+         * Gets emitted when the data model used in @set's #GdauiSetSource has changed
+	 *
+	 * Since: 4.2
+         */
+        gdaui_set_signals[SOURCE_MODEL_CHANGED] =
+                g_signal_new ("source-model-changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdauiSetClass, public_data_changed),
+                              NULL, NULL,
+                              _gdaui_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         class->public_data_changed = NULL;
+        class->source_model_changed = NULL;
 
 	/* Properties */
         object_class->set_property = gdaui_set_set_property;
@@ -160,6 +180,9 @@ gdaui_set_dispose (GObject *object)
                 if (set->priv->set) {
                         g_signal_handlers_disconnect_by_func (G_OBJECT (set->priv->set),
                                                               G_CALLBACK (wrapped_set_public_data_changed_cb), set);
+                        g_signal_handlers_disconnect_by_func (G_OBJECT (set->priv->set),
+                                                              G_CALLBACK (wrapped_set_source_model_changed_cb), set);
+
                         g_object_unref (set->priv->set);
                         set->priv->set = NULL;
                 }
@@ -192,6 +215,8 @@ gdaui_set_set_property (GObject *object,
 			compute_public_data (set);
 			g_signal_connect (set->priv->set, "public-data-changed",
 					  G_CALLBACK (wrapped_set_public_data_changed_cb), set);
+			g_signal_connect (set->priv->set, "source-model-changed",
+					  G_CALLBACK (wrapped_set_source_model_changed_cb), set);
 		}
 		break;
 	default:
@@ -206,6 +231,21 @@ wrapped_set_public_data_changed_cb (GdaSet *wset, GdauiSet *set)
 	clean_public_data (set);
 	compute_public_data (set);
 	g_signal_emit (set, gdaui_set_signals[PUBLIC_DATA_CHANGED], 0);
+}
+
+static void
+wrapped_set_source_model_changed_cb (GdaSet *wset, GdaSetSource *source, GdauiSet *set)
+{
+	GdauiSetSource *uisource;
+	GSList *list;
+	for (list = set->sources_list; list; list = list->next) {
+		if (((GdauiSetSource*) list->data)->source == source) {
+			uisource = (GdauiSetSource*) list->data;
+			break;
+		}
+	}
+	if (uisource)
+		g_signal_emit (set, gdaui_set_signals[SOURCE_MODEL_CHANGED], 0, uisource);
 }
 
 static void

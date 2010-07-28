@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -117,6 +117,8 @@ static GObject             *gda_oracle_provider_statement_execute (GdaServerProv
 								 GType *col_types, GdaSet **last_inserted_row, 
 								 guint *task_id, GdaServerProviderExecCallback async_cb, 
 								 gpointer cb_data, GError **error);
+static GdaSqlStatement     *gda_oracle_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+							  GdaStatement *stmt, GdaSet *params, GError **error);
 
 /* Quoting */
 static gchar               *gda_oracle_identifier_quote    (GdaServerProvider *provider, GdaConnection *cnc,
@@ -199,6 +201,7 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	provider_class->statement_to_sql = gda_oracle_provider_statement_to_sql;
 	provider_class->statement_prepare = gda_oracle_provider_statement_prepare;
 	provider_class->statement_execute = gda_oracle_provider_statement_execute;
+	provider_class->statement_rewrite = gda_oracle_statement_rewrite;
 
 	provider_class->is_busy = NULL;
 	provider_class->cancel = NULL;
@@ -740,7 +743,7 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 				     cdata->hsession,
 				     OCI_DEFAULT))) {
                 gda_connection_add_event (cnc,
-                                          _gda_oracle_make_error (cdata->herr, OCI_HTYPE_ERROR, __FILE__, __LINE__));
+                                          _gda_oracle_make_error (cnc, cdata->herr, OCI_HTYPE_ERROR, __FILE__, __LINE__));
                 return FALSE;
         }
 
@@ -1777,7 +1780,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -1800,7 +1803,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1820,7 +1823,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1833,6 +1836,35 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				ora_value->indicator = -1;
                                 empty_rs = TRUE;
                         }
+		}
+		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
+			/* create a new GdaStatement to handle all default values and execute it instead */
+			GdaSqlStatement *sqlst;
+			GError *lerror = NULL;
+			sqlst = gda_statement_rewrite_for_default_values (stmt, params, FALSE, &lerror);
+			if (!sqlst) {
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, lerror && lerror->message ? 
+								      lerror->message :
+								      _("Can't rewrite statement handle default values"));
+				g_propagate_error (error, lerror);
+				break;
+			}
+			
+			GdaStatement *rstmt;
+			GObject *res;
+			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+			gda_sql_statement_free (sqlst);
+			g_object_unref (ps);
+			res = gda_oracle_provider_statement_execute (provider, cnc,
+								     rstmt, params,
+								     model_usage,
+								     col_types, last_inserted_row,
+								     task_id,
+								     async_cb, cb_data, error);
+			g_object_unref (rstmt);
+			return res;
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
@@ -1869,7 +1901,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	}
 	
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 	event = NULL;
@@ -2043,7 +2075,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				break;
 			}
 			if (str) {
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
 				gda_connection_event_set_description (event, str);
 				g_free (str);
 				gda_connection_add_event (cnc, event);
@@ -2054,6 +2086,22 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		g_object_unref (ps);
 		return (GObject*) set;
 	}
+}
+
+/*
+ * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
+ *
+ * Uses the DEFAULT keyword
+ */
+static GdaSqlStatement *
+gda_oracle_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+			      GdaStatement *stmt, GdaSet *params, GError **error)
+{
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+	}
+	return gda_statement_rewrite_for_default_values (stmt, params, FALSE, error);
 }
 
 /*

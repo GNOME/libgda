@@ -58,6 +58,7 @@ GType               data_source_get_type            (void) G_GNUC_CONST;
 DataSource         *data_source_new_from_xml_node   (BrowserConnection *bcnc, xmlNodePtr node, GError **error);
 void                data_source_set_params          (DataSource *source, GdaSet *params);
 xmlNodePtr          data_source_to_xml_node         (DataSource *source);
+GdaStatement       *data_source_get_statement       (DataSource *source);
 
 GdaSet             *data_source_get_import          (DataSource *source);
 GArray             *data_source_get_export_names    (DataSource *source);
@@ -65,7 +66,7 @@ GHashTable         *data_source_get_export_columns  (DataSource *source);
 
 void                data_source_execute             (DataSource *source, GError **error);
 gboolean            data_source_execution_going_on  (DataSource *source);
-GdauiRawGrid       *data_source_create_grid         (DataSource *source);
+GtkWidget          *data_source_create_grid         (DataSource *source);
 const gchar        *data_source_get_title           (DataSource *source);
 
 /*

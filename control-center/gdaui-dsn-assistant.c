@@ -193,7 +193,10 @@ assistant_applied_cb (GtkAssistant *assist, gpointer data)
 				(GDAUI_PROVIDER_SPEC_EDITOR (assistant->priv->provider_detail));
 		assistant->priv->dsn_info->description =
 			g_strdup (gtk_entry_get_text (GTK_ENTRY (assistant->priv->general_description)));
-		assistant->priv->dsn_info->auth_string = NULL; TO_IMPLEMENT;
+		assistant->priv->dsn_info->auth_string = NULL;
+		if (assistant->priv->auth_detail)
+			assistant->priv->dsn_info->auth_string =
+				_gdaui_provider_auth_editor_get_auth (GDAUI_PROVIDER_AUTH_EDITOR (assistant->priv->auth_detail));
 		if (gda_config_can_modify_system_config ())
 			assistant->priv->dsn_info->is_system = gtk_toggle_button_get_active 
 				(GTK_TOGGLE_BUTTON (assistant->priv->general_is_system));

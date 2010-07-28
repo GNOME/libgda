@@ -11,13 +11,13 @@ Factory object for statements
   string.
 </para>
 <para>
-  The #GdaBuilder internally constructs a #GdaSqlStatement and uses it when requested to produce
+  The #GdaSqlBuilder internally constructs a #GdaSqlStatement and uses it when requested to produce
   a #GdaStatement (see gda_sql_builder_get_statement()), or a #GdaSqlStatement (see
   gda_sql_builder_get_sql_statement()).
 </para>
 <para>
   During the building process, some pieces of the statement are constructed, and assembled into the
-  final statement. Each of these pieces can be reused anytime in the same #GdaBuilder object, and each
+  final statement. Each of these pieces can be reused anytime in the same #GdaSqlBuilder object, and each
   is identified using a single unsigned integer ID. That ID is dynamically allocated by the object.
 </para>
 <para>

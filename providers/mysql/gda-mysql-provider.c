@@ -1,5 +1,5 @@
 /* GDA Mysql provider
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
@@ -177,6 +177,9 @@ static GObject             *gda_mysql_provider_statement_execute (GdaServerProvi
 								  GdaServerProviderExecCallback    async_cb, 
 								  gpointer                         cb_data,
 								  GError                         **error);
+static GdaSqlStatement     *gda_mysql_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+								  GdaStatement *stmt, GdaSet *params, GError **error);
+
 
 /* Quoting */
 static gchar               *gda_mysql_identifier_quote    (GdaServerProvider *provider, GdaConnection *cnc,
@@ -282,6 +285,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 	provider_class->statement_to_sql = gda_mysql_provider_statement_to_sql;
 	provider_class->statement_prepare = gda_mysql_provider_statement_prepare;
 	provider_class->statement_execute = gda_mysql_provider_statement_execute;
+	provider_class->statement_rewrite = gda_mysql_statement_rewrite;
 
 	provider_class->is_busy = NULL;
 	provider_class->cancel = NULL;
@@ -348,7 +352,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 	if (!mysql_thread_safe ()) {
 		gda_log_message ("MySQL was not compiled with the --enable-thread-safe-client flag, "
 				 "only one thread can access the provider");
-		provider_class->limiting_thread = g_thread_self ();
+		provider_class->limiting_thread = GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD;
 	}
 	else
 		provider_class->limiting_thread = NULL;
@@ -539,7 +543,7 @@ gda_mysql_real_query_wrap (GdaConnection *cnc, MYSQL *mysql, const char *stmt_st
 {
 	GdaConnectionEvent *event;
 	
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
 	gda_connection_event_set_description (event, stmt_str);
 	gda_connection_add_event (cnc, event);
 	
@@ -615,7 +619,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 					     (compress && ((*compress == 't') || (*compress == 'T'))) ? TRUE : FALSE,
 					     &error);
 	if (!mysql) {
-		GdaConnectionEvent *event_error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		GdaConnectionEvent *event_error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_sqlstate (event_error, _("Unknown"));
 		gda_connection_event_set_description (event_error,
 						      error && error->message ? error->message :
@@ -1392,6 +1396,7 @@ gda_mysql_provider_create_parser (GdaServerProvider  *provider,
  * 
  * This method renders a #GdaStatement into its SQL representation.
  */
+static gchar *mysql_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *context, GError **error);
 static gchar *mysql_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GError **error);
 static gchar *mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
 				 gboolean *is_default, gboolean *is_null,
@@ -1423,6 +1428,7 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
 										* and the opening parenthesis, see
 										* http://blog.152.org/2009/12/mysql-error-1305-function-xxx-does-not.html */
 	context.render_expr = mysql_render_expr; /* render "FALSE" as 0 and TRUE as 1 */
+	context.render_insert = (GdaSqlRenderingFunc) mysql_render_insert;
 
         str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1438,6 +1444,94 @@ gda_mysql_provider_statement_to_sql (GdaServerProvider    *provider,
                 g_slist_free (context.params_used);
         }
         return str;
+}
+
+static gchar *
+mysql_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+	gboolean pretty = context->flags & GDA_STATEMENT_SQL_PRETTY;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_INSERT, NULL);
+
+	string = g_string_new ("INSERT ");
+	
+	/* conflict algo */
+	if (stmt->on_conflict)
+		g_string_append_printf (string, "OR %s ", stmt->on_conflict);
+
+	/* INTO */
+	g_string_append (string, "INTO ");
+	str = context->render_table (GDA_SQL_ANY_PART (stmt->table), context, error);
+	if (!str) goto err;
+	g_string_append (string, str);
+	g_free (str);
+
+	/* fields list */
+	for (list = stmt->fields_list; list; list = list->next) {
+		if (list == stmt->fields_list)
+			g_string_append (string, " (");
+		else
+			g_string_append (string, ", ");
+		str = context->render_field (GDA_SQL_ANY_PART (list->data), context, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_free (str);
+	}
+	if (stmt->fields_list)
+		g_string_append_c (string, ')');
+
+	/* values */
+	if (stmt->select) {
+		if (pretty)
+			g_string_append_c (string, '\n');
+		else
+			g_string_append_c (string, ' ');
+		str = context->render_select (GDA_SQL_ANY_PART (stmt->select), context, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+			g_free (str);
+	}
+	else {
+		for (list = stmt->values_list; list; list = list->next) {
+			GSList *rlist;
+			if (list == stmt->values_list) {
+				if (pretty)
+					g_string_append (string, "\nVALUES");
+				else
+					g_string_append (string, " VALUES");
+			}
+			else
+				g_string_append_c (string, ',');
+			for (rlist = (GSList*) list->data; rlist; rlist = rlist->next) {
+				if (rlist == (GSList*) list->data)
+					g_string_append (string, " (");
+				else
+					g_string_append (string, ", ");
+				str = context->render_expr ((GdaSqlExpr*) rlist->data, context, NULL, NULL, error);
+				if (!str) goto err;
+				if (pretty && (rlist != (GSList*) list->data))
+					g_string_append (string, "\n\t");
+				g_string_append (string, str);
+				g_free (str);
+			}
+			g_string_append_c (string, ')');
+		}
+
+		if (!stmt->fields_list && !stmt->values_list)
+			g_string_append (string, " () VALUES ()");
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;	
 }
 
 static gchar *
@@ -2052,7 +2146,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -2072,7 +2166,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (!allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2092,7 +2186,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (!allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -2106,6 +2200,35 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
                                 empty_rs = TRUE;
                                 continue;
                         }
+		}
+		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
+			/* create a new GdaStatement to handle all default values and execute it instead */
+			GdaSqlStatement *sqlst;
+			GError *lerror = NULL;
+			sqlst = gda_statement_rewrite_for_default_values (stmt, params, FALSE, &lerror);
+			if (!sqlst) {
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, lerror && lerror->message ? 
+								      lerror->message :
+								      _("Can't rewrite statement handle default values"));
+				g_propagate_error (error, lerror);
+				break;
+			}
+			
+			GdaStatement *rstmt;
+			GObject *res;
+			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+			gda_sql_statement_free (sqlst);
+			free_bind_param_data (mem_to_free);
+			res = gda_mysql_provider_statement_execute (provider, cnc,
+								    rstmt, params,
+								    model_usage,
+								    col_types, last_inserted_row,
+								    task_id,
+								    async_cb, cb_data, error);
+			g_object_unref (rstmt);
+			return res;
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
@@ -2225,7 +2348,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 					str = _("BLOB is too big");
 				
 				if (str) {
-					event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+					event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 					gda_connection_event_set_description (event, str);
 					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 						     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
@@ -2261,7 +2384,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 									     G_VALUE_TYPE (value));
 			if (data_handler == NULL) {
 				/* there is an error here */
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
@@ -2310,7 +2433,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	}
 
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 
@@ -2385,7 +2508,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (affected_rows >= 0) {
 				GdaConnectionEvent *event;
                                 gchar *str;
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
                                 str = g_strdup_printf ("%llu", affected_rows);
                                 gda_connection_event_set_description (event, str);
                                 g_free (str);
@@ -2412,6 +2535,21 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	free_bind_param_data (mem_to_free);
 	return return_value;
 }
+
+/*
+ * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
+ */
+static GdaSqlStatement *
+gda_mysql_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+			     GdaStatement *stmt, GdaSet *params, GError **error)
+{
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+	}
+	return gda_statement_rewrite_for_default_values (stmt, params, FALSE, error);
+}
+
 
 /*
  * starts a distributed transaction: put the XA transaction in the ACTIVE state

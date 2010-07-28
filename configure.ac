@@ -367,8 +367,7 @@ AC_SUBST(NO_UNDEFINED)
 AC_SUBST(SOPREFIX)
 
 dnl *******************************************************
-dnl Checks for GIO or Gnome VFS, use GIO preferably
-dnl if GIO is not found, then see if FAM or gamin are found
+dnl Checks for GIO
 dnl *******************************************************
 
 GIO_MODULES="gio-2.0 >= 2.16"
@@ -377,44 +376,11 @@ AM_CONDITIONAL(HAVE_GIO, test x"$have_gio" = "xyes")
 if test x"$have_gio" = "xyes"
 then
         GIO_CFLAGS="$GIO_CFLAGS -DHAVE_GIO"
-	GNOMEVFS_CFLAGS=""
-	GNOMEVFS_LIBS=""
-	have_gnomevfs=no
 else
-	GNOMEVFS_MODULES="gnome-vfs-2.0 >= 2.20"
-	PKG_CHECK_MODULES(GNOMEVFS, $GNOMEVFS_MODULES, have_gnomevfs=yes, have_gnomevfs=no)
-	if test x"$have_gnomevfs" = "xyes"
-	then
-	        GNOMEVFS_CFLAGS="$GNOMEVFS_CFLAGS -DHAVE_GNOMEVFS"
-	fi
-
-	FAM_LIBS=
-	FAM_CFLAGS=
-	FAM_MISSING_WARNING="Libgda depends on FAM to provide notification when configuration files are changed, without FAM support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes"
-	PKG_CHECK_MODULES(GAMIN, gamin >= 0.1.8, have_fam=yes, have_fam=no)
-	if test x"$have_fam" = "xyes"
-	then
-	        FAM_CFLAGS="$GAMIN_CFLAGS"
-	        FAM_LIBS="$GAMIN_LIBS"
-		AC_DEFINE(HAVE_FAM, [], [Define if we have FAM])
-	else
-	        AC_CHECK_LIB(fam, FAMOpen,
-	          [AC_CHECK_HEADERS(fam.h,
-	            [AC_DEFINE(HAVE_FAM, [], [Define if we have FAM])
-	             FAM_LIBS="-lfam"],
-	            AC_MSG_WARN(*** FAM support will not be built (header files not found) $FAM_MISSING_WARNING ***))],
-	          AC_MSG_WARN(*** FAM support will not be built (FAM library not found) $FAM_MISSING_WARNING ***))
-	fi
-	AC_SUBST(FAM_LIBS)
-	AC_SUBST(FAM_CFLAGS)
+        AC_MSG_WARN([Libgda depends on Gio to provide notification when configuration files are changed, without Gio support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes]) 
 fi
 AC_SUBST(GIO_CFLAGS)
 AC_SUBST(GIO_LIBS)
-
-AC_SUBST(GNOMEVFS_CFLAGS)
-AC_SUBST(GNOMEVFS_LIBS)
-AM_CONDITIONAL(HAVE_GNOMEVFS, test x"$have_gnomevfs" = "xyes")
-
 
 dnl ******************************
 dnl Checks for libxslt
@@ -1632,7 +1598,7 @@ AC_ARG_WITH(libsoup,
 if test "$with_libsoup" = "auto" -o "$with_libsoup" = "yes"
 then
 	PKG_CHECK_MODULES(LIBSOUP, libsoup-2.4, [
-		AC_DEFINE(HAVE_LIBSOUP, [1], [libsoup support enable])
+		AC_DEFINE(HAVE_LIBSOUP, [1], [libsoup support enabled])
 		have_libsoup=yes], [
 		if test "$with_libsoup" = "yes"
 		then
@@ -1643,6 +1609,30 @@ fi
 AM_CONDITIONAL(LIBSOUP, test "$have_libsoup" = "yes")
 AC_SUBST(LIBSOUP_CFLAGS)
 AC_SUBST(LIBSOUP_LIBS)
+
+
+dnl ************************
+dnl Check for gnome-keyring
+dnl ************************
+
+AC_ARG_WITH(gnome-keyring,
+	AS_HELP_STRING([--with-gnome-keyring], [Enable gnome-keyring support]),
+	,with_gnome_keyring=auto)
+
+if test "$with_gnome_keyring" = "auto" -o "$with_gnome_keyring" = "yes"
+then
+	PKG_CHECK_MODULES(GNOME_KEYRING, gnome-keyring-1, [
+		AC_DEFINE(HAVE_GNOME_KEYRING, [1], [gnome-keyring support enabled])
+		have_gnome_keyring=yes], [
+		if test "$with_gnome_keyring" = "yes"
+		then
+			AC_MSG_ERROR([gnome-keyring support requested but not found.])
+		fi
+		have_gnome_keyring=no])
+fi
+AM_CONDITIONAL(GNOME_KEYRING, test "$have_gnome_keyring" = "yes")
+AC_SUBST(GNOME_KEYRING_CFLAGS)
+AC_SUBST(GNOME_KEYRING_LIBS)
 
 
 dnl **************************

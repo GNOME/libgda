@@ -56,7 +56,7 @@ struct _GdauiEntryWrapperClass
 	void              (*real_set_value)   (GdauiEntryWrapper *mgwrp, const GValue *value);
 	GValue           *(*real_get_value)   (GdauiEntryWrapper *mgwrp);
 	void              (*connect_signals)  (GdauiEntryWrapper *mgwrp, GCallback modify_cb, GCallback activate_cb);
-	gboolean          (*expand_in_layout) (GdauiEntryWrapper *mgwrp);
+	gboolean          (*can_expand)       (GdauiEntryWrapper *mgwrp, gboolean horiz);
 	void              (*set_editable)     (GdauiEntryWrapper *mgwrp, gboolean editable);
 
 	gboolean          (*value_is_equal_to)(GdauiEntryWrapper *mgwrp, const GValue *value);

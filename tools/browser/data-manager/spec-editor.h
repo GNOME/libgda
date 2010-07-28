@@ -25,6 +25,7 @@
 
 #include <gtk/gtk.h>
 #include "../browser-connection.h"
+#include "data-source-manager.h"
 
 G_BEGIN_DECLS
 
@@ -46,9 +47,6 @@ struct _SpecEditor {
 
 struct _SpecEditorClass {
 	GtkVBoxClass parent_class;
-
-	/* signals */
-	void        (*changed) (SpecEditor *editor);
 };
 
 typedef enum {
@@ -58,16 +56,12 @@ typedef enum {
 
 
 GType       spec_editor_get_type   (void) G_GNUC_CONST;
-SpecEditor *spec_editor_new        (BrowserConnection *bcnc);
+SpecEditor *spec_editor_new        (DataSourceManager *mgr);
 
 void        spec_editor_set_xml_text (SpecEditor *sped, const gchar *xml);
 gchar      *spec_editor_get_xml_text (SpecEditor *sped);
 void        spec_editor_set_mode     (SpecEditor *sped, SpecEditorMode mode);
 SpecEditorMode spec_editor_get_mode  (SpecEditor *sped);
-
-GdaSet     *spec_editor_get_params   (SpecEditor *sped);
-GArray     *spec_editor_get_sources_array (SpecEditor *sped, GError **error);
-void        spec_editor_destroy_sources_array (GArray *array);
 
 G_END_DECLS
 

@@ -314,6 +314,59 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *
 						gtk_text_buffer_insert (tbuffer, &current, 
 									g_value_get_string (cvalue), -1);
 					}
+					gtk_text_buffer_insert (tbuffer, &current, "\n\n", -1);
+				}
+				g_object_unref (model);
+			}
+
+			/* reverse FK constraints */
+			g_value_set_string ((catalog_v = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
+			model = gda_meta_store_extract (browser_connection_get_meta_store (tcolumns->priv->bcnc),
+							"SELECT c.table_schema, c.table_name, t.table_short_name FROM _referential_constraints c NATURAL JOIN _tables t WHERE ref_table_catalog = ##catalog::string AND ref_table_schema=##schema::string AND ref_table_name=##tname::string", &error,
+							"catalog", catalog_v,
+							"schema", schema_v,
+							"tname", name_v, NULL);
+			if (model) {
+				gint nrows;
+				
+				/*gda_data_model_dump (model, NULL);*/
+				nrows = gda_data_model_get_n_rows (model);
+				if (nrows > 0) {
+					gtk_text_buffer_insert_with_tags_by_name (tbuffer,
+										  &current, 
+										  _("Tables referencing this one"), -1,
+										  "section", NULL);
+					gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+
+					gint i;
+					const GValue *cvalue[3];
+					for (i = 0; i < nrows; i++) {
+						if (i > 0)
+							gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+
+						gint j;
+						for (j = 0; j < 3; j++) {
+							cvalue[j] = gda_data_model_get_value_at (model, j, i, NULL);
+							if (! cvalue[j])
+								break;
+						}
+						if (j != 3)
+							break;
+						GtkTextTag *tag;
+						tag = gtk_text_buffer_create_tag (tbuffer, NULL, 
+										  "foreground", "blue", 
+										  "weight", PANGO_WEIGHT_NORMAL,
+										  "underline", PANGO_UNDERLINE_SINGLE, 
+										  NULL);
+						g_object_set_data_full (G_OBJECT (tag), "table_schema", 
+									g_value_dup_string (cvalue[0]), g_free);
+						g_object_set_data_full (G_OBJECT (tag), "table_name", 
+									g_value_dup_string (cvalue[1]), g_free);
+						g_object_set_data_full (G_OBJECT (tag), "table_short_name", 
+									g_value_dup_string (cvalue[2]), g_free);
+						gtk_text_buffer_insert_with_tags (tbuffer, &current,
+										  g_value_get_string (cvalue[2]), -1, tag, NULL);
+					}
 				}
 				g_object_unref (model);
 			}
@@ -343,7 +396,8 @@ table_columns_new (TableInfo *tinfo)
 		COLUMN_TYPE,
 		COLUMN_NOTNULL,
 		COLUMN_DEFAULT,
-		COLUMN_ICON
+		COLUMN_ICON,
+		COLUMN_DETAILS
 	};
 
 	g_return_val_if_fail (IS_TABLE_INFO (tinfo), NULL);
@@ -382,13 +436,14 @@ table_columns_new (TableInfo *tinfo)
         GtkCellRenderer *renderer;
         GtkTreeViewColumn *column;
 
-        model = gdaui_tree_store_new (tcolumns->priv->columns_tree, 5,
+        model = gdaui_tree_store_new (tcolumns->priv->columns_tree, 6,
                                       G_TYPE_STRING, MGR_COLUMNS_COL_NAME_ATT_NAME,
 				      G_TYPE_STRING, MGR_COLUMNS_COL_TYPE_ATT_NAME,
 				      G_TYPE_BOOLEAN, MGR_COLUMNS_COL_NOTNULL_ATT_NAME,
 				      G_TYPE_STRING, MGR_COLUMNS_COL_DEFAULT_ATT_NAME,
-                                      G_TYPE_OBJECT, "icon");
-        treeview = gtk_tree_view_new_with_model (model);
+                                      G_TYPE_OBJECT, "icon",
+				      G_TYPE_STRING, MGR_COLUMNS_COL_DETAILS);
+        treeview = browser_make_tree_view (model);
         g_object_unref (model);
 
         /* Colum: Name */
@@ -421,6 +476,12 @@ table_columns_new (TableInfo *tinfo)
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes ("Default value", renderer,
 							   "text", COLUMN_DEFAULT, NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+
+	/* Colum: Details */
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes ("Details", renderer,
+							   "text", COLUMN_DETAILS, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
 	/* scrolled window packing */

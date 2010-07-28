@@ -262,7 +262,6 @@ gdaui_data_cell_renderer_password_set_property (GObject *object,
 			datacell->priv->value = NULL;
 		}
 
-		datacell->priv->invalid = FALSE;
 		if (value) {
 			GValue *gval = g_value_get_pointer (value);
 			if (gval && !gda_value_is_null (gval)) {
@@ -313,8 +312,7 @@ gdaui_data_cell_renderer_password_set_property (GObject *object,
 		g_object_notify (object, "value");
 		break;
 	case PROP_VALUE_ATTRIBUTES:
-		/*if (g_value_get_flags (value) & GDA_VALUE_ATTR_IS_DEFAULT)
-		  g_object_set (G_OBJECT (object), "text", "", NULL);*/
+		datacell->priv->invalid = g_value_get_flags (value) & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE;
 		break;
 	case PROP_TO_BE_DELETED:
 		datacell->priv->to_be_deleted = g_value_get_boolean (value);

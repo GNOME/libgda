@@ -1,5 +1,5 @@
 /* GDA mysql provider
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -37,7 +37,7 @@ _gda_mysql_make_error (GdaConnection  *cnc,
 		       GError        **error)
 {
 	GdaConnectionEvent *event_error =
-		gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 	if (mysql) {
 		gda_connection_event_set_sqlstate
 			(event_error, mysql_sqlstate (mysql));

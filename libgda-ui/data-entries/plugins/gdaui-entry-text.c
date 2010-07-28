@@ -50,7 +50,7 @@ static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
-static gboolean   expand_in_layout (GdauiEntryWrapper *mgwrap);
+static gboolean   can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -62,6 +62,7 @@ struct _GdauiEntryTextPrivate
 	GtkTextBuffer *buffer;
 	GtkWidget     *view;
 	gchar         *lang; /* for code colourisation */
+	GtkWrapMode    wrapmode;
 };
 
 
@@ -102,7 +103,7 @@ gdaui_entry_text_class_init (GdauiEntryTextClass * class)
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->expand_in_layout = expand_in_layout;
+	GDAUI_ENTRY_WRAPPER_CLASS (class)->can_expand = can_expand;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
 }
 
@@ -112,6 +113,7 @@ gdaui_entry_text_init (GdauiEntryText * gdaui_entry_text)
 	gdaui_entry_text->priv = g_new0 (GdauiEntryTextPrivate, 1);
 	gdaui_entry_text->priv->buffer = NULL;
 	gdaui_entry_text->priv->view = NULL;
+	gdaui_entry_text->priv->wrapmode = GTK_WRAP_NONE;
 }
 
 /**
@@ -136,18 +138,30 @@ gdaui_entry_text_new (GdaDataHandler *dh, GType type, const gchar *options)
 
 	obj = g_object_new (GDAUI_TYPE_ENTRY_TEXT, "handler", dh, NULL);
 	mgtxt = GDAUI_ENTRY_TEXT (obj);
-#ifdef HAVE_GTKSOURCEVIEW
 	if (options && *options) {
+
                 GdaQuarkList *params;
                 const gchar *str;
 
                 params = gda_quark_list_new_from_string (options);
+#ifdef HAVE_GTKSOURCEVIEW
                 str = gda_quark_list_find (params, "PROG_LANG");
                 if (str)
 			mgtxt->priv->lang = g_strdup (str);
+#endif
+		str = gda_quark_list_find (params, "WRAP_MODE");
+                if (str) {
+			if (*str == 'N')
+				mgtxt->priv->wrapmode = GTK_WRAP_NONE;
+			else if (*str == 'C')
+				mgtxt->priv->wrapmode = GTK_WRAP_CHAR;
+			else if (*str == 'W')
+				mgtxt->priv->wrapmode = GTK_WRAP_WORD;
+			else
+				mgtxt->priv->wrapmode = GTK_WRAP_WORD_CHAR;
+		}
                 gda_quark_list_free (params);
         }
-#endif
 
 	gdaui_data_entry_set_value_type (GDAUI_DATA_ENTRY (mgtxt), type);
 
@@ -274,6 +288,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgtxt->priv->view = gtk_text_view_new ();
 #endif
 	mgtxt->priv->buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (mgtxt->priv->view));
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (mgtxt->priv->view), mgtxt->priv->wrapmode);
 	sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_IN);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
@@ -396,9 +411,12 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-expand_in_layout (GdauiEntryWrapper *mgwrap)
+can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
 {
-	return TRUE;
+	if (horiz)
+		return FALSE;
+	else
+		return TRUE;
 }
 
 static void

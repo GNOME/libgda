@@ -26,6 +26,7 @@
 #include "../browser-window.h"
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
+#include "../common/ui-formgrid.h"
 
 struct _QueryResultPrivate {
 	QueryEditor *history;
@@ -331,12 +332,8 @@ static GtkWidget *
 make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar *sql)
 {
 	GtkWidget *grid;
-	grid = gdaui_grid_new (model);
-	gdaui_grid_set_sample_size (GDAUI_GRID (grid), 300);
-	g_object_set (G_OBJECT (grid), "info-flags",
-		      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS | 
-		      GDAUI_DATA_PROXY_INFO_CURRENT_ROW, NULL);
-
+	grid = ui_formgrid_new (model, 0);
+	ui_formgrid_set_sample_size (UI_FORMGRID (grid), 300);
 	if (sql) {
 		BrowserConnection *bcnc;
 		bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) qres));
@@ -350,51 +347,8 @@ make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar 
 		g_object_unref (parser);
 		if (!stmt)
 			goto out;
-
-		GdaSqlStatement *sqlst;
-		g_object_get ((GObject*) stmt, "structure", &sqlst, NULL);
+		ui_formgrid_handle_user_prefs (UI_FORMGRID (grid), bcnc, stmt);
 		g_object_unref (stmt);
-		
-		if ((sqlst->stmt_type != GDA_SQL_STATEMENT_SELECT) ||
-		    !browser_connection_normalize_sql_statement (bcnc, sqlst, NULL)) {
-			gda_sql_statement_free (sqlst);
-			goto out;
-		}
-
-		GdaSet *set;
-		set = (GdaSet*) gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid));
-
-		GdaSqlStatementSelect *sel;
-		GSList *list;
-		gint pos;
-		sel = (GdaSqlStatementSelect*) sqlst->contents;
-		for (pos = 0, list = sel->expr_list; list; pos ++, list = list->next) {
-			GdaSqlSelectField *field = (GdaSqlSelectField*) list->data;
-			if (! field->validity_meta_object ||
-			    (field->validity_meta_object->obj_type != GDA_META_DB_TABLE) ||
-			    !field->validity_meta_table_column)
-				continue;
-
-			gchar *plugin;
-			plugin = browser_connection_get_table_column_attribute (bcnc,
-										GDA_META_TABLE (field->validity_meta_object),
-										field->validity_meta_table_column,
-										BROWSER_CONNECTION_COLUMN_PLUGIN, NULL);
-			if (!plugin)
-				continue;
-
-			GdaHolder *holder;
-			holder = gda_set_get_nth_holder (set, pos);
-			if (holder) {
-				GValue *value;
-				value = gda_value_new_from_string (plugin, G_TYPE_STRING);
-				gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
-				gda_value_free (value);
-			}
-				
-		}
-
-		gda_sql_statement_free (sqlst);
 	}
  out:
 	return grid;

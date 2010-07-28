@@ -28,15 +28,10 @@ gdaui_data_cell_renderer_draw_invalid_area (GdkWindow *window, GdkRectangle *cel
 	cairo_rectangle (cr, cell_area->x, cell_area->y, cell_area->width,  cell_area->height);
 	cairo_clip (cr);
 	
-	gint i;
-	for (i = 0; ; i++) {
-		gint x = 10 * i;
-		if (x > cell_area->width + cell_area->height)
-			break;
-		cairo_move_to (cr, x + cell_area->x, cell_area->y);
-		cairo_line_to (cr, x + cell_area->x - cell_area->height,
-			       cell_area->y + cell_area->height);
-		cairo_stroke (cr);
-	}
+	cairo_set_source_rgba (cr, .8, .1, .1, .2);
+	cairo_rectangle (cr, cell_area->x, cell_area->y,
+			 cell_area->width, cell_area->height);
+	cairo_fill (cr);
+	
 	cairo_destroy (cr);
 }

@@ -52,7 +52,7 @@ static const GValue   *gdaui_entry_combo_get_ref_value     (GdauiDataEntry *de);
 static void            gdaui_entry_combo_set_value_default (GdauiDataEntry *de, const GValue * value);
 static void            gdaui_entry_combo_set_attributes    (GdauiDataEntry *de, guint attrs, guint mask);
 static GdaValueAttribute gdaui_entry_combo_get_attributes    (GdauiDataEntry *de);
-static gboolean        gdaui_entry_combo_expand_in_layout  (GdauiDataEntry *de);
+static gboolean        gdaui_entry_combo_can_expand  (GdauiDataEntry *de, gboolean horiz);
 static void            gdaui_entry_combo_grab_focus        (GdauiDataEntry *de);
 
 static void           _gdaui_entry_combo_construct(GdauiEntryCombo* combo, 
@@ -139,7 +139,7 @@ gdaui_entry_combo_data_entry_init (GdauiDataEntryIface *iface)
         iface->set_attributes = gdaui_entry_combo_set_attributes;
         iface->get_attributes = gdaui_entry_combo_get_attributes;
         iface->get_handler = NULL;
-        iface->expand_in_layout = gdaui_entry_combo_expand_in_layout;
+        iface->can_expand = gdaui_entry_combo_can_expand;
 	iface->grab_focus = gdaui_entry_combo_grab_focus;
 }
 
@@ -238,6 +238,26 @@ gdaui_entry_combo_new (GdauiSet *paramlist, GdauiSetSource *source)
 	return GTK_WIDGET (obj);
 }
 
+static void
+uiset_source_model_changed_cb (GdauiSet *paramlist, GdauiSetSource *source, GdauiEntryCombo* combo)
+{
+	if (source == combo->priv->source) {
+		GSList *list, *values = NULL;
+		for (list = source->source->nodes; list; list = list->next) {
+			const GValue *cvalue;
+			cvalue = gda_holder_get_value (GDA_SET_NODE (list->data)->holder);
+			values = g_slist_append (values, (GValue *) cvalue);
+		}
+		gdaui_combo_set_model (GDAUI_COMBO (combo->priv->combo_entry),
+				       source->source->data_model,
+				       combo->priv->source->shown_n_cols, 
+				       combo->priv->source->shown_cols_index);
+		_gdaui_combo_set_selected_ext (GDAUI_COMBO (combo->priv->combo_entry), values, NULL);
+		g_slist_free (values);
+		gdaui_combo_add_null (GDAUI_COMBO (combo->priv->combo_entry), combo->priv->null_possible);
+	}
+}
+
 /*
  * _gdaui_entry_combo_construct
  * @combo: a #GdauiEntryCombo object to be construced
@@ -262,6 +282,8 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	combo->priv->paramlist = paramlist;
 	combo->priv->source = source;
 	g_object_ref (G_OBJECT (paramlist));
+	g_signal_connect (paramlist, "source-model-changed",
+			  G_CALLBACK (uiset_source_model_changed_cb), combo);
 
 	/* create the ComboNode structures, 
 	 * and use the values provided by the parameters to display the correct row */
@@ -295,6 +317,8 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	_gdaui_combo_set_selected_ext (GDAUI_COMBO (entry), values, NULL);
 	g_slist_free (values);
 	gdaui_combo_add_null (GDAUI_COMBO (entry), combo->priv->null_possible);
+
+	combo->priv->data_valid = combo->priv->null_possible ? TRUE : FALSE;
 }
 
 static void
@@ -318,8 +342,12 @@ gdaui_entry_combo_dispose (GObject *object)
 	combo = GDAUI_ENTRY_COMBO (object);
 
 	if (combo->priv) {
-		if (combo->priv->paramlist) 
+		if (combo->priv->paramlist) {
+			g_signal_handlers_disconnect_by_func (combo->priv->paramlist,
+							      G_CALLBACK (uiset_source_model_changed_cb),
+							      combo);
 			g_object_unref (combo->priv->paramlist);
+		}
 
 		if (combo->priv->combo_nodes) {
 			GSList *list;
@@ -558,7 +586,7 @@ gdaui_entry_combo_get_all_values (GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_set_values_orig
+ * gdaui_entry_combo_set_reference_values
  * @combo: a #GdauiEntryCombo widet
  * @values: a list of #GValue values
  *
@@ -566,7 +594,7 @@ gdaui_entry_combo_get_all_values (GdauiEntryCombo *combo)
  * values provided in the list is modified.
  */
 void
-gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
+gdaui_entry_combo_set_reference_values (GdauiEntryCombo *combo, GSList *values)
 {
 	GSList *list;
 
@@ -626,7 +654,7 @@ gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
 }
 
 /**
- * gdaui_entry_combo_get_values_orig
+ * gdaui_entry_combo_get_reference_values
  * @combo: a #GdauiEntryCombo widet
  *
  * Get the original values stored within @combo. The returned values are the ones
@@ -635,7 +663,7 @@ gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
  * Returns: a new list of values
  */
 GSList *
-gdaui_entry_combo_get_values_orig (GdauiEntryCombo *combo)
+gdaui_entry_combo_get_reference_values (GdauiEntryCombo *combo)
 {
 	GSList *list;
 	GSList *retval = NULL;
@@ -663,7 +691,7 @@ gdaui_entry_combo_get_values_orig (GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_set_values_default
+ * gdaui_entry_combo_set_default_values
  * @combo: a #GdauiEntryCombo widet
  * @values: a list of #GValue values
  *
@@ -671,7 +699,7 @@ gdaui_entry_combo_get_values_orig (GdauiEntryCombo *combo)
  * values provided in the list is modified.
  */
 void
-gdaui_entry_combo_set_values_default (GdauiEntryCombo *combo, GSList *values)
+gdaui_entry_combo_set_default_values (GdauiEntryCombo *combo, GSList *values)
 {
 	g_return_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo));
 	g_return_if_fail (combo->priv);
@@ -981,7 +1009,7 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 	}
 
 	/* has original value? */
-	list2 = gdaui_entry_combo_get_values_orig (combo);
+	list2 = gdaui_entry_combo_get_reference_values (combo);
 	if (list2) {
 		retval = retval | GDA_VALUE_ATTR_HAS_VALUE_ORIG;
 		g_slist_free (list2);
@@ -992,7 +1020,7 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 
 
 static gboolean
-gdaui_entry_combo_expand_in_layout (GdauiDataEntry *iface)
+gdaui_entry_combo_can_expand (GdauiDataEntry *iface, gboolean horiz)
 {
 	GdauiEntryCombo *combo;
 

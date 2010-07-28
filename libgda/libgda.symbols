@@ -153,6 +153,7 @@
 	gda_connection_open_sqlite
 	gda_connection_options_get_type
 	gda_connection_perform_operation
+	gda_connection_point_available_event
 	gda_connection_quote_sql_identifier
 	gda_connection_repetitive_statement_execute
 	gda_connection_rollback_savepoint
@@ -519,6 +520,7 @@
 	gda_server_operation_op_type_to_string
 	gda_server_operation_save_data_to_xml
 	gda_server_operation_set_value_at
+	gda_server_operation_string_to_op_type
 	gda_server_operation_type_get_type
 	gda_server_provider_create_operation
 	gda_server_provider_create_parser
@@ -568,6 +570,7 @@
 	gda_set_new_from_spec_string
 	gda_set_new_inline
 	gda_set_remove_holder
+	gda_set_replace_source_model
 	gda_set_set_holder_value
 	gda_short_get_type
 	gda_sql_any_part_check_structure
@@ -762,6 +765,7 @@
 	gda_statement_model_usage_get_type
 	gda_statement_new
 	gda_statement_normalize
+	gda_statement_rewrite_for_default_values
 	gda_statement_serialize
 	gda_statement_sql_flag_get_type
 	gda_statement_to_sql_extended
@@ -784,9 +788,11 @@
 	gda_time_copy
 	gda_time_free
 	gda_time_get_type
+	gda_time_valid
 	gda_timestamp_copy
 	gda_timestamp_free
 	gda_timestamp_get_type
+	gda_timestamp_valid
 	gda_transaction_isolation_get_type
 	gda_transaction_status_add_event_sql
 	gda_transaction_status_add_event_sub

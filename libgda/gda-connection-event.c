@@ -117,6 +117,8 @@ gda_connection_event_init (GdaConnectionEvent *event, GdaConnectionEventClass *k
  * events from the different providers to the clients.
  *
  * Returns: the event object.
+ *
+ * Deprecated: 4.2: use gda_connection_point_available_event() instead
  */
 GdaConnectionEvent *
 gda_connection_event_new (GdaConnectionEventType type)
@@ -156,16 +158,9 @@ static void gda_connection_event_set_property (GObject *object, guint prop_id, c
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (object));
 	event = GDA_CONNECTION_EVENT (object);
 
-	switch(prop_id)
-	{
+	switch(prop_id)	{
 	case PROP_TYPE:
-		event->priv->type = g_value_get_int (value);
-		if (!event->priv->sqlstate && (event->priv->type == GDA_CONNECTION_EVENT_ERROR)) 
-			gda_connection_event_set_sqlstate (event, GDA_SQLSTATE_GENERAL_ERROR);
-		else if (((event->priv->type == GDA_CONNECTION_EVENT_NOTICE) || 
-			  (event->priv->type == GDA_CONNECTION_EVENT_COMMAND)) &&
-			 event->priv->sqlstate)
-			gda_connection_event_set_sqlstate (event, NULL);
+		gda_connection_event_set_event_type (event, g_value_get_int (value));
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -180,10 +175,9 @@ static void gda_connection_event_get_property (GObject *object, guint prop_id, G
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (object));
 	event = GDA_CONNECTION_EVENT (object);
 
-	switch(prop_id)
-	{
+	switch(prop_id) {
 	case PROP_TYPE:
-		g_value_set_int(value, event->priv->type);
+		g_value_set_int (value, event->priv->type);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -205,7 +199,16 @@ gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEve
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 	g_return_if_fail (event->priv);
 
-	g_object_set (G_OBJECT (event), "type", (int) type, NULL);
+	if (event->priv->type == type)
+		return;
+
+	event->priv->type = type;
+	if (!event->priv->sqlstate && (event->priv->type == GDA_CONNECTION_EVENT_ERROR)) 
+		gda_connection_event_set_sqlstate (event, GDA_SQLSTATE_GENERAL_ERROR);
+	else if (((event->priv->type == GDA_CONNECTION_EVENT_NOTICE) || 
+		  (event->priv->type == GDA_CONNECTION_EVENT_COMMAND)) &&
+		 event->priv->sqlstate)
+		gda_connection_event_set_sqlstate (event, NULL);
 }
 
 /**

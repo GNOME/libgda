@@ -26,6 +26,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-sql-builder.h>
+#include "../common/ui-formgrid.h"
 
 #include "data-source.h"
 
@@ -340,7 +341,9 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 {
 	GdaMetaStruct *mstruct;
 	GdaMetaDbObject *dbo;
-	GValue *vname;
+	GValue *vname[3] = {NULL, NULL, NULL};
+	gchar **split;
+	gint len;
 
 	mstruct = browser_connection_get_meta_struct (source->priv->bcnc);
 	if (! mstruct) {
@@ -349,9 +352,24 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 		return NULL;
 	}
 
-	g_value_set_string ((vname = gda_value_new (G_TYPE_STRING)), table_name);
-	dbo = gda_meta_struct_get_db_object (mstruct, NULL, NULL, vname);
-	gda_value_free (vname);
+	split = gda_sql_identifier_split (table_name);
+	if (! split) {
+		g_set_error (error, 0, 0,
+			     _("Malformed table name \"%s\""), table_name);
+		return NULL;
+	}
+	len = g_strv_length (split);
+	g_value_set_string ((vname[2] = gda_value_new (G_TYPE_STRING)), split[len - 1]);
+	if (len > 1)
+		g_value_set_string ((vname[1] = gda_value_new (G_TYPE_STRING)), split[len -2]);
+	if (len > 2)
+		g_value_set_string ((vname[0] = gda_value_new (G_TYPE_STRING)), split[len - 3]);
+
+	dbo = gda_meta_struct_get_db_object (mstruct, vname[0], vname[1], vname[2]);
+	if (vname[0]) gda_value_free (vname[0]);
+	if (vname[1]) gda_value_free (vname[1]);
+	if (vname[2]) gda_value_free (vname[2]);
+
 	if (! dbo) {
 		g_set_error (error, 0, 0,
 			     _("Could not find the \"%s\" table"), table_name);
@@ -491,18 +509,41 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 			else if (fk->cols_nb == 1) {
 				gchar *tmp;
 				GdaMetaTableColumn *col;
-				col = GDA_META_TABLE_COLUMN (g_slist_nth_data (mlinked->columns, fk->fk_cols_array [0]));
-				g_assert (col);
 				const GdaSqlBuilderId id1 = gda_sql_builder_add_id (b, fk->fk_names_array [0]);
 				tmp = g_strdup_printf ("%s@%s", id ? (gchar*) id : (gchar*) fk_table,
 						       fk->ref_pk_names_array [0]);
+
+				col = GDA_META_TABLE_COLUMN (g_slist_nth_data (mlinked->columns,
+									       fk->ref_pk_cols_array [0] - 1));
+				g_assert (col);
 				const GdaSqlBuilderId id2 = gda_sql_builder_add_param (b, tmp, col->gtype, FALSE);
 				g_free (tmp);
 				const GdaSqlBuilderId id_cond = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id1, id2, 0);
 				gda_sql_builder_set_where (b, id_cond);
 			}
 			else {
-				TO_IMPLEMENT;
+				gchar *tmp;
+				gint i;
+				GdaMetaTableColumn *col;
+				GdaSqlBuilderId andid;
+				GdaSqlBuilderId *op_ids;
+				op_ids = g_new (GdaSqlBuilderId, fk->cols_nb);
+				
+				for (i = 0; i < fk->cols_nb; i++) {
+					const GdaSqlBuilderId id1 = gda_sql_builder_add_id (b, fk->fk_names_array [i]);
+					tmp = g_strdup_printf ("%s@%s", id ? (gchar*) id : (gchar*) fk_table,
+							       fk->ref_pk_names_array [i]);
+
+					col = GDA_META_TABLE_COLUMN (g_slist_nth_data (mlinked->columns,
+										       fk->ref_pk_cols_array [i] - 1));
+					g_assert (col);
+					const GdaSqlBuilderId id2 = gda_sql_builder_add_param (b, tmp, col->gtype, FALSE);
+					g_free (tmp);
+					op_ids [i] = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id1, id2, 0);
+				}
+				andid = gda_sql_builder_add_cond_v (b, GDA_SQL_OPERATOR_TYPE_AND, op_ids, fk->cols_nb);
+				g_free (op_ids);
+				gda_sql_builder_set_where (b, andid);
 			}
 
 			xmlFree (fk_table);
@@ -526,7 +567,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 				  G_CALLBACK (params_changed_cb), source);
 	}
 
-	/*g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL));*/
+	g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL));
 	g_object_unref (b);
 
 	return source->priv->stmt ? TRUE : FALSE;
@@ -594,6 +635,16 @@ exec_end_timeout_cb (DataSource *source)
 	}
 	else
 		return TRUE; /* keep timer */
+}
+
+/**
+ *data_source_get_statement
+ */
+GdaStatement *
+data_source_get_statement (DataSource *source)
+{
+	g_return_val_if_fail (IS_DATA_SOURCE (source), NULL);
+	return source->priv->stmt;
 }
 
 /**
@@ -763,7 +814,7 @@ replace_double_underscores (const gchar *str)
  *
  * Returns: a new #GdauiRawGrid, or %NULL if an error occurred
  */
-GdauiRawGrid *
+GtkWidget *
 data_source_create_grid (DataSource *source)
 {
 	g_return_val_if_fail (IS_DATA_SOURCE (source), NULL);
@@ -771,9 +822,11 @@ data_source_create_grid (DataSource *source)
 	if (! source->priv->model)
 		return NULL;
 
+	GtkWidget *fg;
 	GdauiRawGrid *grid;
-	grid = (GdauiRawGrid*) gdaui_raw_grid_new (source->priv->model);
-	
+	fg = (GdauiRawGrid*) ui_formgrid_new (source->priv->model, 0);
+	grid = ui_formgrid_get_grid_widget (UI_FORMGRID (fg));
+
 	GList *columns, *list;
 	columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
 	for (list = columns; list; list = list->next) {
@@ -802,7 +855,7 @@ data_source_create_grid (DataSource *source)
 		for (list2 = renderers; list2; list2 = list2->next) {
 			if (GTK_IS_CELL_RENDERER_TEXT (list2->data))
 				g_object_set ((GObject*) list2->data,
-					      "scale", 0.7, NULL);
+					      "scale", 0.8, NULL);
 		}
 		g_list_free (renderers);
 	}
@@ -810,7 +863,7 @@ data_source_create_grid (DataSource *source)
 	/*if (!columns || !columns->next)*/
 		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (grid), FALSE);
 	g_list_free (columns);
-	return grid;
+	return fg;
 }
 
 /**

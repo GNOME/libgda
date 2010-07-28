@@ -37,6 +37,7 @@ gpointer gda_connection_internal_get_provider_data (GdaConnection *cnc);
 /*
  * Connection's events
  */
+GdaConnectionEvent  *gda_connection_point_available_event(GdaConnection *cnc, GdaConnectionEventType type);
 void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *event);
 GdaConnectionEvent  *gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);
 void                 gda_connection_clear_events_list    (GdaConnection *cnc);

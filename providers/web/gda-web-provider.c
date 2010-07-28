@@ -1,5 +1,5 @@
 /* GDA provider
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -116,6 +116,8 @@ static GObject             *gda_web_provider_statement_execute (GdaServerProvide
 								GType *col_types, GdaSet **last_inserted_row, 
 								guint *task_id, GdaServerProviderExecCallback async_cb, 
 								gpointer cb_data, GError **error);
+static GdaSqlStatement     *gda_web_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+								GdaStatement *stmt, GdaSet *params, GError **error);
 
 /* Quoting */
 static gchar               *gda_web_identifier_quote    (GdaServerProvider *provider, GdaConnection *cnc,
@@ -162,6 +164,7 @@ gda_web_provider_class_init (GdaWebProviderClass *klass)
 						   * because it only calls gda_statement_to_sql_extended() */
 	provider_class->statement_prepare = gda_web_provider_statement_prepare;
 	provider_class->statement_execute = gda_web_provider_statement_execute;
+	provider_class->statement_rewrite = gda_web_statement_rewrite;
 
 	provider_class->is_busy = NULL;
 	provider_class->cancel = NULL;
@@ -1463,7 +1466,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 		
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -1483,7 +1486,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1503,7 +1506,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 			if (! allow_noparam) {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
@@ -1516,6 +1519,40 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
                                 empty_rs = TRUE;
                                 continue;
                         }
+		}
+		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
+			/* create a new GdaStatement to handle all default values and execute it instead
+			 * needs to be adapted to take into account how the database server handles default
+			 * values (some accept the DEFAULT keyword), changing the 3rd argument of the
+			 * gda_statement_rewrite_for_default_values() call
+			 */
+			GdaSqlStatement *sqlst;
+			GError *lerror = NULL;
+			sqlst = gda_statement_rewrite_for_default_values (stmt, params, TRUE, &lerror);
+			if (!sqlst) {
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				gda_connection_event_set_description (event, lerror && lerror->message ? 
+								      lerror->message :
+								      _("Can't rewrite statement handle default values"));
+				g_propagate_error (error, lerror);
+				break;
+			}
+			
+			GdaStatement *rstmt;
+			GObject *res;
+			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+			gda_sql_statement_free (sqlst);
+			g_object_unref (ps);
+			xmlFreeDoc (doc);
+			res = gda_web_provider_statement_execute (provider, cnc,
+								  rstmt, params,
+								  model_usage,
+								  col_types, last_inserted_row,
+								  task_id,
+								  async_cb, cb_data, error);
+			g_object_unref (rstmt);
+			return res;
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
@@ -1536,7 +1573,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	}
 	
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
         gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
         gda_connection_add_event (cnc, event);
 
@@ -1593,7 +1630,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	}
 
 	/* required: help @cnc keep some stats */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
 	gda_connection_event_set_description (event, "Command OK");
 	gda_connection_add_event (cnc, event);
 	gda_connection_internal_statement_executed (cnc, stmt, params, event);
@@ -1635,6 +1672,22 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	xmlFreeDoc (replydoc);
 	g_object_unref (ps);
 	return retval;
+}
+
+/*
+ * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
+ *
+ * Removes any default value inserted or updated
+ */
+static GdaSqlStatement *
+gda_web_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+			   GdaStatement *stmt, GdaSet *params, GError **error)
+{
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+	}
+	return gda_statement_rewrite_for_default_values (stmt, params, TRUE, error);
 }
 
 static gchar *

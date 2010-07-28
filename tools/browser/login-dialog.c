@@ -277,12 +277,14 @@ sub_thread_open_cnc (GdaDsnInfo *info, GError **error)
 	GdaConnection *cnc;
 	if (info->name)
 		cnc = gda_connection_open_from_dsn (info->name, info->auth_string,
-						    GDA_CONNECTION_OPTIONS_THREAD_SAFE,
+						    GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+						    GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
 						    error);
 	else
 		cnc = gda_connection_open_from_string (info->provider, info->cnc_string,
 						       info->auth_string,
-						       GDA_CONNECTION_OPTIONS_THREAD_SAFE,
+						       GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
 						       error);
 	return cnc;
 #else

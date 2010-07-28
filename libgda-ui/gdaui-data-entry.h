@@ -1,6 +1,6 @@
 /* gdaui-data-entry.h
  *
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -58,14 +58,16 @@ struct _GdauiDataEntryIface
 	void            (*set_attributes)        (GdauiDataEntry *de, GdaValueAttribute attrs, GdaValueAttribute mask);
 	GdaValueAttribute (*get_attributes)      (GdauiDataEntry *de);
 	GdaDataHandler *(*get_handler)           (GdauiDataEntry *de);
-	gboolean        (*expand_in_layout)      (GdauiDataEntry *de);
+	gboolean        (*can_expand)            (GdauiDataEntry *de, gboolean horiz);
 	void            (*set_editable)          (GdauiDataEntry *de, gboolean editable);
 	gboolean        (*get_editable)          (GdauiDataEntry *de);
 	void            (*grab_focus)            (GdauiDataEntry *de);
 
+	/* another signal */
+	void            (* expand_changed)       (GdauiDataEntry *de);
+
 	/*< private >*/
 	/* Padding for future expansion */
-        void (*_gdaui_reserved1) (void);
         void (*_gdaui_reserved2) (void);
         void (*_gdaui_reserved3) (void);
         void (*_gdaui_reserved4) (void);
@@ -83,30 +85,19 @@ void            gdaui_data_entry_set_value              (GdauiDataEntry *de, con
 GValue         *gdaui_data_entry_get_value              (GdauiDataEntry *de);
 gboolean        gdaui_data_entry_content_is_valid       (GdauiDataEntry *de, GError **error);
 void            gdaui_data_entry_set_reference_value    (GdauiDataEntry *de, const GValue *value);
-const GValue   *gdaui_data_entry_get_original_value     (GdauiDataEntry *de);
-void            gdaui_data_entry_reset                  (GdauiDataEntry *de);
-void            gdaui_data_entry_set_value_default      (GdauiDataEntry *de, const GValue *value);
+const GValue   *gdaui_data_entry_get_reference_value    (GdauiDataEntry *de);
+void            gdaui_data_entry_set_reference_current  (GdauiDataEntry *de);
+void            gdaui_data_entry_set_default_value      (GdauiDataEntry *de, const GValue *value);
 
 void            gdaui_data_entry_set_attributes         (GdauiDataEntry *de, GdaValueAttribute attrs,
 							 GdaValueAttribute mask);
 GdaValueAttribute gdaui_data_entry_get_attributes       (GdauiDataEntry *de);
 
 GdaDataHandler *gdaui_data_entry_get_handler            (GdauiDataEntry *de);
-gboolean        gdaui_data_entry_expand_in_layout       (GdauiDataEntry *de);
+gboolean        gdaui_data_entry_can_expand             (GdauiDataEntry *de, gboolean horiz);
 void            gdaui_data_entry_set_editable           (GdauiDataEntry *de, gboolean editable);
 gboolean        gdaui_data_entry_get_editable           (GdauiDataEntry *de);
 void            gdaui_data_entry_grab_focus             (GdauiDataEntry *de);
-
-/* TO remove and replace with properties:
- * gdaui_data_entry_expand_in_layout
- * gdaui_data_entry_get_handler
- * gdaui_data_entry_set_attributes
- * gdaui_data_entry_get_attributes
- * gdaui_data_entry_set_value_default
- *
- * Don't replace at all:
- * gdaui_data_entry_grab_focus
- */
 
 G_END_DECLS
 

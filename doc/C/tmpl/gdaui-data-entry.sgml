@@ -68,6 +68,13 @@ Data entry widget
 @arg1: 
 @Returns: 
 
+<!-- ##### SIGNAL GdauiDataEntry::expand-changed ##### -->
+<para>
+
+</para>
+
+@gdauidataentry: the object which received the signal.
+
 <!-- ##### SIGNAL GdauiDataEntry::status-changed ##### -->
 <para>
 
@@ -130,7 +137,7 @@ Data entry widget
 @value: 
 
 
-<!-- ##### FUNCTION gdaui_data_entry_get_original_value ##### -->
+<!-- ##### FUNCTION gdaui_data_entry_get_reference_value ##### -->
 <para>
 
 </para>
@@ -139,7 +146,7 @@ Data entry widget
 @Returns: 
 
 
-<!-- ##### FUNCTION gdaui_data_entry_reset ##### -->
+<!-- ##### FUNCTION gdaui_data_entry_set_reference_current ##### -->
 <para>
 
 </para>
@@ -147,7 +154,7 @@ Data entry widget
 @de: 
 
 
-<!-- ##### FUNCTION gdaui_data_entry_set_value_default ##### -->
+<!-- ##### FUNCTION gdaui_data_entry_set_default_value ##### -->
 <para>
 
 </para>
@@ -184,12 +191,13 @@ Data entry widget
 @Returns: 
 
 
-<!-- ##### FUNCTION gdaui_data_entry_expand_in_layout ##### -->
+<!-- ##### FUNCTION gdaui_data_entry_can_expand ##### -->
 <para>
 
 </para>
 
 @de: 
+@horiz: 
 @Returns: 
 
 

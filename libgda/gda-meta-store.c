@@ -1748,7 +1748,7 @@ make_expr_EQUAL (GdaSqlAnyPart *parent, xmlChar *cname, xmlChar *type, GType pty
 
 	retexpr = gda_sql_expr_new (parent);
 
-	op = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
+	op = gda_sql_operation_new (GDA_SQL_ANY_PART (retexpr));
 	op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
 	retexpr->cond = op;
 	
