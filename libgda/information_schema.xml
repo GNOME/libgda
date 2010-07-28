@@ -23,7 +23,7 @@
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
     </provider>
     <provider name="MySQL">
-      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="text"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar (30)"/>
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
       <ignore context="/FKEY_S"/>
       <ignore context="/FIELDS_A/@COLUMN_PKEY"/>
