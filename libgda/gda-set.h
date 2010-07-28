@@ -107,10 +107,10 @@ struct _GdaSetClass
 							const gchar *attr_name, const GValue *attr_value);
 	void                  (*public_data_changed)   (GdaSet *set);
 	void                  (*holder_type_set)       (GdaSet *set, GdaHolder *holder);
+	void                  (*source_model_changed)  (GdaSet *set, GdaSetSource *source);
 
 	/*< private >*/
 	/* Padding for future expansion */
-	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
@@ -131,6 +131,9 @@ gboolean      gda_set_add_holder               (GdaSet *set, GdaHolder *holder);
 void          gda_set_remove_holder            (GdaSet *set, GdaHolder *holder);
 void          gda_set_merge_with_set           (GdaSet *set, GdaSet *set_to_merge);
 gboolean      gda_set_is_valid                 (GdaSet *set, GError **error);
+
+void          gda_set_replace_source_model     (GdaSet *set, GdaSetSource *source,
+						GdaDataModel *model);
 
 /* public data lookup functions */
 GdaSetNode   *gda_set_get_node                 (GdaSet *set, GdaHolder *holder);

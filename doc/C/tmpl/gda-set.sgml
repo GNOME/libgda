@@ -70,6 +70,14 @@ Container for several values
 
 @gdaset: the object which received the signal.
 
+<!-- ##### SIGNAL GdaSet::source-model-changed ##### -->
+<para>
+
+</para>
+
+@gdaset: the object which received the signal.
+@arg1: 
+
 <!-- ##### SIGNAL GdaSet::validate-holder-change ##### -->
 <para>
 
@@ -234,6 +242,16 @@ Container for several values
 
 @set: 
 @set_to_merge: 
+
+
+<!-- ##### FUNCTION gda_set_replace_source_model ##### -->
+<para>
+
+</para>
+
+@set: 
+@source: 
+@model: 
 
 
 <!-- ##### STRUCT GdaSetNode ##### -->

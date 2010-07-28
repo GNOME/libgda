@@ -85,10 +85,11 @@ enum
 	VALIDATE_HOLDER_CHANGE,
 	VALIDATE_SET,
 	HOLDER_TYPE_SET,
+	SOURCE_MODEL_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gda_set_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
+static gint gda_set_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0 };
 
 
 /* private structure */
@@ -333,6 +334,24 @@ gda_set_class_init (GdaSetClass *class)
 			      _gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
 			      GDA_TYPE_HOLDER);
 
+	/**
+	 * GdaSet::source-model-changed
+	 * @set: the #GdaSet
+	 * @source: the #GdaSetSource for which the @data_model attribute has changed
+	 *
+	 * Gets emitted when the data model in @source has changed
+	 *
+	 * Since: 4.2
+	 */
+	gda_set_signals[SOURCE_MODEL_CHANGED] =
+		g_signal_new ("source-model-changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GdaSetClass, source_model_changed),
+			      NULL, NULL,
+			      _gda_marshal_VOID__POINTER, G_TYPE_NONE, 1,
+			      G_TYPE_POINTER);
+
 
 	class->holder_changed = NULL;
 	class->validate_holder_change = m_validate_holder_change;
@@ -340,6 +359,7 @@ gda_set_class_init (GdaSetClass *class)
 	class->holder_attr_changed = NULL;
 	class->public_data_changed = NULL;
 	class->holder_type_set = NULL;
+	class->source_model_changed = NULL;
 
 	/* Properties */
 	object_class->set_property = gda_set_set_property;
@@ -1551,4 +1571,74 @@ gda_set_get_source_for_model (GdaSet *set, GdaDataModel *model)
 	}
 
 	return retval;
+}
+
+/**
+ * gda_set_replace_source_model
+ * @set: a #GdaSet object
+ * @source: a pointer to a #GdaSetSource in @set
+ * @model: a #GdaDataModel
+ *
+ * Replaces @source->data_model with @model, which must have the same
+ * characteristics as @source->data_model (same column types)
+ *
+ * Also for each #GdaHolder for which @source->data_model is a source model,
+ * this method calls gda_holder_set_source_model() with @model to replace
+ * the source by the new model
+ *
+ * Since: 4.2
+ */
+void
+gda_set_replace_source_model (GdaSet *set, GdaSetSource *source, GdaDataModel *model)
+{
+	g_return_if_fail (GDA_IS_SET (set));
+	g_return_if_fail (source);
+	g_return_if_fail (g_slist_find (set->sources_list, source));
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	
+	/* compare models */
+	gint ncols, i;
+	ncols = gda_data_model_get_n_columns (source->data_model);
+	if (ncols != gda_data_model_get_n_columns (model)) {
+		g_warning (_("Replacing data model must have the same characteristics as the "
+			     "data model it replaces"));
+		return;
+	}
+	for (i = 0; i < ncols; i++) {
+		GdaColumn *c1, *c2;
+		GType t1, t2;
+		c1 = gda_data_model_describe_column (source->data_model, i);
+		c2 = gda_data_model_describe_column (model, i);
+		t1 = gda_column_get_g_type (c1);
+		t2 = gda_column_get_g_type (c2);
+
+		if ((t1 != GDA_TYPE_NULL) && (t2 != GDA_TYPE_NULL) && (t1 != t2)) {
+			g_warning (_("Replacing data model must have the same characteristics as the "
+				     "data model it replaces"));
+			return;
+		}
+	}
+
+	/* actually swap the models */
+	GSList *list;
+	source->data_model = model;
+	for (list = source->nodes; list; list = list->next) {
+		GdaSetNode *node = (GdaSetNode*) list->data;
+		g_object_unref (node->source_model);
+		node->source_model = g_object_ref (model);
+		g_signal_handlers_block_by_func (G_OBJECT (node->holder),
+						 G_CALLBACK (source_changed_holder_cb), set);
+		gda_holder_set_source_model (GDA_HOLDER (node->holder), model, node->source_column,
+					     NULL);
+		g_signal_handlers_unblock_by_func (G_OBJECT (node->holder),
+						   G_CALLBACK (source_changed_holder_cb), set);
+
+	}
+#ifdef GDA_DEBUG_signal
+	g_print (">> 'SOURCE_MODEL_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	g_signal_emit (G_OBJECT (set), gda_set_signals[SOURCE_MODEL_CHANGED], 0, source);
+#ifdef GDA_DEBUG_signal
+	g_print ("<< 'SOURCE_MODEL_CHANGED' from %s\n", __FUNCTION__);
+#endif
 }

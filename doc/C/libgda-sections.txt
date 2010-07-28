@@ -1048,6 +1048,7 @@ gda_set_get_nth_holder
 gda_set_add_holder
 gda_set_remove_holder
 gda_set_merge_with_set
+gda_set_replace_source_model
 <SUBSECTION>
 GdaSetNode
 gda_set_get_node
