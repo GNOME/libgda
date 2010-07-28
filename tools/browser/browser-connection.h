@@ -114,6 +114,12 @@ guint               browser_connection_execute_statement_cb   (BrowserConnection
 							       BrowserConnectionExecuteCallback callback,
 							       gpointer data,
 							       GError **error);
+guint               browser_connection_rerun_select_cb        (BrowserConnection *bcnc,
+							       GdaDataModel *model,
+							       BrowserConnectionExecuteCallback callback,
+							       gpointer data,
+							       GError **error);
+
 
 /*
  * transactions

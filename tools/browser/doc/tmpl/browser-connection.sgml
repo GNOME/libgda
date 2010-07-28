@@ -281,6 +281,30 @@ An opened connection
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_connection_rerun_select ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@model: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_rerun_select_cb ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@model: 
+@callback: 
+@data: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION browser_connection_begin ##### -->
 <para>
 

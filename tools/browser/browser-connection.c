@@ -1115,6 +1115,13 @@ wrapper_rerun_select (RerunSelectData *data, GError **error)
 
 /**
  * browser_connection_rerun_select
+ * @bcnc: a #BrowserConnection object
+ * @model: a #GdaDataModel, which has to ba a #GdaDataSelect
+ * @error: a place to store errors, or %NULL
+ *
+ * Re-execute @model
+ *
+ * Returns: a job ID, or %0 if an error occurred
  */
 guint
 browser_connection_rerun_select (BrowserConnection *bcnc,
@@ -1248,6 +1255,51 @@ browser_connection_execute_statement_cb (BrowserConnection *bcnc,
 							      bcnc);
 	return exec_id;
 }
+
+/**
+ * browser_connection_rerun_select_cb
+ * @bcnc: a #BrowserConnection object
+ * @model: a #GdaDataModel, which has to ba a #GdaDataSelect
+ * @callback: the function to call when statement has been executed
+ * @data: data to pass to @callback, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Re-execute @model.
+ *
+ * Warning: gda_data_model_freeze() and gda_data_model_thaw() should be used
+ * before and after this call since the model will signal its changes in a thread
+ * which is not the GUI thread.
+ *
+ * Returns: a job ID, or %0 if an error occurred
+ */
+guint
+browser_connection_rerun_select_cb (BrowserConnection *bcnc,
+				    GdaDataModel *model,
+				    BrowserConnectionExecuteCallback callback,
+				    gpointer data,
+				    GError **error)
+{
+	guint exec_id;
+	g_return_val_if_fail (callback, 0);
+
+	exec_id = browser_connection_rerun_select (bcnc, model, error);
+	if (!exec_id)
+		return 0;
+	ExecCallbackData *cbdata;
+	cbdata = g_new0 (ExecCallbackData, 1);
+	cbdata->exec_id = exec_id;
+	cbdata->need_last_insert_row = FALSE;
+	cbdata->callback = callback;
+	cbdata->cb_data = data;
+
+	bcnc->priv->results_list = g_slist_append (bcnc->priv->results_list, cbdata);
+	if (! bcnc->priv->results_timer_id)
+		bcnc->priv->results_timer_id = g_timeout_add (200,
+							      (GSourceFunc) query_exec_fetch_cb,
+							      bcnc);
+	return exec_id;
+}
+
 
 static gboolean
 query_exec_fetch_cb (BrowserConnection *bcnc)
