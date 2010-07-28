@@ -329,7 +329,7 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *
 			if (model) {
 				gint nrows;
 				
-				gda_data_model_dump (model, NULL);
+				/*gda_data_model_dump (model, NULL);*/
 				nrows = gda_data_model_get_n_rows (model);
 				if (nrows > 0) {
 					gtk_text_buffer_insert_with_tags_by_name (tbuffer,
