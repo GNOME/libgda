@@ -914,23 +914,15 @@ action_insert_cb (GtkAction *action, TableInfo *tinfo)
 			       _("assign values to the following variables"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (popup))),
 			    label, FALSE, FALSE, 0);
-#else
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (popup)->vbox), label, FALSE, FALSE, 0);
-#endif
 	
 	form = gdaui_basic_form_new (params);
 	g_object_set ((GObject*) form, "show-actions", TRUE, NULL);
 	g_signal_connect (form, "holder-changed",
 			  G_CALLBACK (insert_form_params_changed_cb), popup);
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (popup))),
 			    form, TRUE, TRUE, 5);
-#else
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (popup)->vbox), form, TRUE, TRUE, 5);
-#endif
 
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (popup), GTK_RESPONSE_ACCEPT,
 					   gdaui_basic_form_is_valid (GDAUI_BASIC_FORM (form)));
