@@ -254,6 +254,7 @@ uiset_source_model_changed_cb (GdauiSet *paramlist, GdauiSetSource *source, Gdau
 				       combo->priv->source->shown_cols_index);
 		_gdaui_combo_set_selected_ext (GDAUI_COMBO (combo->priv->combo_entry), values, NULL);
 		g_slist_free (values);
+		gdaui_combo_add_null (GDAUI_COMBO (combo->priv->combo_entry), combo->priv->null_possible);
 	}
 }
 
@@ -316,6 +317,8 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	_gdaui_combo_set_selected_ext (GDAUI_COMBO (entry), values, NULL);
 	g_slist_free (values);
 	gdaui_combo_add_null (GDAUI_COMBO (entry), combo->priv->null_possible);
+
+	combo->priv->data_valid = combo->priv->null_possible ? TRUE : FALSE;
 }
 
 static void

@@ -821,7 +821,7 @@ create_entry_widget (SingleEntry *sentry)
 	else {
 		/* several parameters depending on the values of a GdaDataModel object */
 		GSList *plist;
-		gboolean nnul = TRUE;
+		gboolean nullok = TRUE;
 			
 		entry = gdaui_entry_combo_new (sentry->form->priv->set_info, group->source);
 
@@ -831,8 +831,8 @@ create_entry_widget (SingleEntry *sentry)
 			GdaHolder *param;
 
 			param = GDA_SET_NODE (plist->data)->holder;
-			if (!gda_holder_get_not_null (param))
-				nnul = FALSE;
+			if (gda_holder_get_not_null (param))
+				nullok = FALSE;
 
 			SignalData sd;
 			sd.holder = g_object_ref (param);
@@ -842,12 +842,11 @@ create_entry_widget (SingleEntry *sentry)
 			g_array_append_val (sentry->group_signals, sd);
 		}
 		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
-						 nnul ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL,
+						 nullok ? GDA_VALUE_ATTR_CAN_BE_NULL : 0,
 						 GDA_VALUE_ATTR_CAN_BE_NULL);
-		sentry->not_null = nnul;
+		sentry->not_null = !nullok;
 
 		/* label */
-		/* FIXME: find a better label and tooltip and improve data entry attributes */
 		gchar *title = NULL;
 		gchar *str;
 		GSList *params;
