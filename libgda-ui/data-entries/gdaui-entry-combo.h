@@ -59,9 +59,9 @@ GtkWidget      *gdaui_entry_combo_new               (GdauiSet *paramlist, GdauiS
 gboolean        gdaui_entry_combo_set_values        (GdauiEntryCombo *combo, GSList *values);
 GSList         *gdaui_entry_combo_get_values        (GdauiEntryCombo *combo);
 GSList         *gdaui_entry_combo_get_all_values    (GdauiEntryCombo *combo);
-void            gdaui_entry_combo_set_values_orig   (GdauiEntryCombo *combo, GSList *values);
-GSList         *gdaui_entry_combo_get_values_orig   (GdauiEntryCombo *combo);
-void            gdaui_entry_combo_set_values_default(GdauiEntryCombo *combo, GSList *values);
+void            gdaui_entry_combo_set_reference_values (GdauiEntryCombo *combo, GSList *values);
+GSList         *gdaui_entry_combo_get_reference_values (GdauiEntryCombo *combo);
+void            gdaui_entry_combo_set_default_values (GdauiEntryCombo *combo, GSList *values);
 
 G_END_DECLS
 

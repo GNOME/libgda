@@ -583,7 +583,7 @@ gdaui_entry_combo_get_all_values (GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_set_values_orig
+ * gdaui_entry_combo_set_reference_values
  * @combo: a #GdauiEntryCombo widet
  * @values: a list of #GValue values
  *
@@ -591,7 +591,7 @@ gdaui_entry_combo_get_all_values (GdauiEntryCombo *combo)
  * values provided in the list is modified.
  */
 void
-gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
+gdaui_entry_combo_set_reference_values (GdauiEntryCombo *combo, GSList *values)
 {
 	GSList *list;
 
@@ -651,7 +651,7 @@ gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
 }
 
 /**
- * gdaui_entry_combo_get_values_orig
+ * gdaui_entry_combo_get_reference_values
  * @combo: a #GdauiEntryCombo widet
  *
  * Get the original values stored within @combo. The returned values are the ones
@@ -660,7 +660,7 @@ gdaui_entry_combo_set_values_orig (GdauiEntryCombo *combo, GSList *values)
  * Returns: a new list of values
  */
 GSList *
-gdaui_entry_combo_get_values_orig (GdauiEntryCombo *combo)
+gdaui_entry_combo_get_reference_values (GdauiEntryCombo *combo)
 {
 	GSList *list;
 	GSList *retval = NULL;
@@ -688,7 +688,7 @@ gdaui_entry_combo_get_values_orig (GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_set_values_default
+ * gdaui_entry_combo_set_default_values
  * @combo: a #GdauiEntryCombo widet
  * @values: a list of #GValue values
  *
@@ -696,7 +696,7 @@ gdaui_entry_combo_get_values_orig (GdauiEntryCombo *combo)
  * values provided in the list is modified.
  */
 void
-gdaui_entry_combo_set_values_default (GdauiEntryCombo *combo, GSList *values)
+gdaui_entry_combo_set_default_values (GdauiEntryCombo *combo, GSList *values)
 {
 	g_return_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo));
 	g_return_if_fail (combo->priv);
@@ -1006,7 +1006,7 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 	}
 
 	/* has original value? */
-	list2 = gdaui_entry_combo_get_values_orig (combo);
+	list2 = gdaui_entry_combo_get_reference_values (combo);
 	if (list2) {
 		retval = retval | GDA_VALUE_ATTR_HAS_VALUE_ORIG;
 		g_slist_free (list2);

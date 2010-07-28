@@ -146,7 +146,7 @@ Data entry widget
 @Returns: 
 
 
-<!-- ##### FUNCTION gdaui_data_entry_reset ##### -->
+<!-- ##### FUNCTION gdaui_data_entry_set_reference_current ##### -->
 <para>
 
 </para>

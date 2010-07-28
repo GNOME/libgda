@@ -50,7 +50,7 @@
 	gdaui_data_entry_get_value
 	gdaui_data_entry_get_value_type
 	gdaui_data_entry_grab_focus
-	gdaui_data_entry_reset
+	gdaui_data_entry_set_reference_current
 	gdaui_data_entry_set_attributes
 	gdaui_data_entry_set_editable
 	gdaui_data_entry_set_reference_value
@@ -95,11 +95,11 @@
 	gdaui_entry_combo_get_all_values
 	gdaui_entry_combo_get_type
 	gdaui_entry_combo_get_values
-	gdaui_entry_combo_get_values_orig
+	gdaui_entry_combo_get_reference_values
 	gdaui_entry_combo_new
+	gdaui_entry_combo_set_default_values
 	gdaui_entry_combo_set_values
-	gdaui_entry_combo_set_values_default
-	gdaui_entry_combo_set_values_orig
+	gdaui_entry_combo_set_reference_values
 	gdaui_entry_common_time_get_type
 	gdaui_entry_common_time_new
 	gdaui_entry_date_get_type

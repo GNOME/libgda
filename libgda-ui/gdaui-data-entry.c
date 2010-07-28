@@ -263,7 +263,7 @@ gdaui_data_entry_set_reference_value (GdauiDataEntry *de, const GValue *value)
 }
 
 /**
- * gdaui_data_entry_reset
+ * gdaui_data_entry_set_reference_current
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Tells that the current value in @de is to be considered as the reference value
@@ -271,7 +271,7 @@ gdaui_data_entry_set_reference_value (GdauiDataEntry *de, const GValue *value)
  * Since: 4.2
  */
 void
-gdaui_data_entry_reset (GdauiDataEntry *de)
+gdaui_data_entry_set_reference_current (GdauiDataEntry *de)
 {
 	GValue *value;
 	g_return_if_fail (GDAUI_IS_DATA_ENTRY (de));

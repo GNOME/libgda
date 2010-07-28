@@ -1525,9 +1525,9 @@ gdaui_basic_form_set_as_reference (GdauiBasicForm *form)
 			}
 
 			if (!allnull)
-				gdaui_entry_combo_set_values_orig (GDAUI_ENTRY_COMBO (sentry->entry), values);
+				gdaui_entry_combo_set_reference_values (GDAUI_ENTRY_COMBO (sentry->entry), values);
 			else
-				gdaui_entry_combo_set_values_orig (GDAUI_ENTRY_COMBO (sentry->entry), NULL);
+				gdaui_entry_combo_set_reference_values (GDAUI_ENTRY_COMBO (sentry->entry), NULL);
 
 			g_slist_free (values);
 		}
@@ -1648,7 +1648,7 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 			/* Combo entry */
 			GSList *values = NULL;
 
-			values = gdaui_entry_combo_get_values_orig (GDAUI_ENTRY_COMBO (sentry->entry));
+			values = gdaui_entry_combo_get_reference_values (GDAUI_ENTRY_COMBO (sentry->entry));
 			gdaui_entry_combo_set_values (GDAUI_ENTRY_COMBO (sentry->entry), values);
 			g_slist_free (values);
 		}
