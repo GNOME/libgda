@@ -351,9 +351,9 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 	/* unref the paramlist */
 	g_signal_handlers_disconnect_by_func (form->priv->set_info,
 					      G_CALLBACK (paramlist_public_data_changed_cb), form);
+
 	g_signal_handlers_disconnect_by_func (paramlist,
 					      G_CALLBACK (paramlist_param_attr_changed_cb), form);
-
 	g_signal_handlers_disconnect_by_func (paramlist,
 					      G_CALLBACK (paramlist_holder_type_set_cb), form);
 
@@ -687,6 +687,7 @@ create_entry_widget (SingleEntry *sentry)
 	GdauiSetGroup *group;
 	GtkWidget *entry;
 	gboolean editable = TRUE;
+	GValue *ref_value = NULL;
 
 	disconnect_single_entry_signals (sentry);
 	if (sentry->entry) {
@@ -700,10 +701,15 @@ create_entry_widget (SingleEntry *sentry)
 			sentry->entry_shown_id = 0;
 		}
 
+		const GValue *cvalue;
+		cvalue = gdaui_data_entry_get_reference_value (sentry->entry);
+		if (cvalue)
+			ref_value = gda_value_copy (cvalue);
 		editable = gdaui_data_entry_get_editable (sentry->entry);
 		g_object_unref ((GObject *) sentry->entry);
 		sentry->entry = NULL;
 	}
+
 	if (sentry->label) {
 		GtkWidget *parent;
 		parent = gtk_widget_get_parent (sentry->label);
@@ -763,9 +769,13 @@ create_entry_widget (SingleEntry *sentry)
 		else
 			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (entry), NULL);
 
-		if (!nnul ||
-		    (nnul && value &&
-		     (G_VALUE_TYPE ((GValue *) value) != GDA_TYPE_NULL)))
+		if (ref_value) {
+			gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), ref_value);
+			gda_value_free (ref_value);
+		}
+		else if (!nnul ||
+			 (nnul && value &&
+			  (G_VALUE_TYPE ((GValue *) value) != GDA_TYPE_NULL)))
 			gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), value);
 
 		if (default_val) {
