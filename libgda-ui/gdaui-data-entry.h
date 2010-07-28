@@ -85,9 +85,9 @@ void            gdaui_data_entry_set_value              (GdauiDataEntry *de, con
 GValue         *gdaui_data_entry_get_value              (GdauiDataEntry *de);
 gboolean        gdaui_data_entry_content_is_valid       (GdauiDataEntry *de, GError **error);
 void            gdaui_data_entry_set_reference_value    (GdauiDataEntry *de, const GValue *value);
-const GValue   *gdaui_data_entry_get_original_value     (GdauiDataEntry *de);
+const GValue   *gdaui_data_entry_get_reference_value    (GdauiDataEntry *de);
 void            gdaui_data_entry_reset                  (GdauiDataEntry *de);
-void            gdaui_data_entry_set_value_default      (GdauiDataEntry *de, const GValue *value);
+void            gdaui_data_entry_set_default_value      (GdauiDataEntry *de, const GValue *value);
 
 void            gdaui_data_entry_set_attributes         (GdauiDataEntry *de, GdaValueAttribute attrs,
 							 GdaValueAttribute mask);

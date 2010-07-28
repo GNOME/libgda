@@ -769,7 +769,7 @@ create_entry_widget (SingleEntry *sentry)
 			gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), value);
 
 		if (default_val) {
-			gdaui_data_entry_set_value_default (GDAUI_DATA_ENTRY (entry), default_val);
+			gdaui_data_entry_set_default_value (GDAUI_DATA_ENTRY (entry), default_val);
 			gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
 							 GDA_VALUE_ATTR_CAN_BE_DEFAULT,
 							 GDA_VALUE_ATTR_CAN_BE_DEFAULT);
@@ -1646,7 +1646,7 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 			/* non combo entry */
 			const GValue *value;
 
-			value = gdaui_data_entry_get_original_value (GDAUI_DATA_ENTRY (sentry->entry));
+			value = gdaui_data_entry_get_reference_value (GDAUI_DATA_ENTRY (sentry->entry));
 			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (sentry->entry), value);
 		}
 	}

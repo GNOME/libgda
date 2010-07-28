@@ -249,7 +249,7 @@ gdaui_data_entry_content_is_valid (GdauiDataEntry *de, GError **error)
  * @value: a #GValue, or %NULL
  *
  * Push a value into the GdauiDataEntry in the same way as gdaui_data_entry_set_value() but
- * also sets this value as the original value.
+ * also sets this value as the reference value.
  *
  * Since: 4.2
  */
@@ -266,7 +266,7 @@ gdaui_data_entry_set_reference_value (GdauiDataEntry *de, const GValue *value)
  * gdaui_data_entry_reset
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
- * Tells that the current value in @de is to be considered as the original value
+ * Tells that the current value in @de is to be considered as the reference value
  *
  * Since: 4.2
  */
@@ -284,17 +284,17 @@ gdaui_data_entry_reset (GdauiDataEntry *de)
 
 
 /**
- * gdaui_data_entry_get_original_value
+ * gdaui_data_entry_get_reference_value
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
- * Fetch the original value held in the GdauiDataEntry widget
+ * Fetch the reference value held in the #GdauiDataEntry widget
  *
  * Returns: the #GValue (not modifiable)
  *
  * Since: 4.2
  */
 const GValue *
-gdaui_data_entry_get_original_value (GdauiDataEntry *de)
+gdaui_data_entry_get_reference_value (GdauiDataEntry *de)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), NULL);
 
@@ -306,7 +306,7 @@ gdaui_data_entry_get_original_value (GdauiDataEntry *de)
 
 
 /**
- * gdaui_data_entry_set_value_default
+ * gdaui_data_entry_set_default_value
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @value: a #GValue, or %NULL
  *
@@ -321,7 +321,7 @@ gdaui_data_entry_get_original_value (GdauiDataEntry *de)
  * Since: 4.2
  */
 void
-gdaui_data_entry_set_value_default (GdauiDataEntry *de, const GValue *value)
+gdaui_data_entry_set_default_value (GdauiDataEntry *de, const GValue *value)
 {
 	g_return_if_fail (GDAUI_IS_DATA_ENTRY (de));
 	g_return_if_fail (value);

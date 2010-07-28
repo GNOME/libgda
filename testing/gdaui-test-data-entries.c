@@ -924,7 +924,7 @@ default_clicked_cb (GtkButton *button, GtkWidget *entry)
 
 	wid = g_object_get_data (G_OBJECT (button), "entry");
 	value = gdaui_data_entry_get_value (GDAUI_DATA_ENTRY (wid));
-	gdaui_data_entry_set_value_default (GDAUI_DATA_ENTRY (entry), value);
+	gdaui_data_entry_set_default_value (GDAUI_DATA_ENTRY (entry), value);
 	gda_value_free (value);
 }
 
