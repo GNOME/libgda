@@ -943,18 +943,19 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
                 const GValue *value;
                 gint index;
 
-                list = values;
-                index = 0;
-                while (list && allequal) {
+                for (list = values, index = 0;
+		     list;
+		     list = list->next, index++) {
                         if (cols_index)
                                 g_return_val_if_fail (cols_index [index] < n_cols, FALSE);
                         value = gda_data_model_get_value_at (model, cols_index [index], current_row, NULL);
 
-                        if (!value || !(list->data) || gda_value_compare ((GValue *) (list->data), (GValue *) value))
+                        if (!value || !(list->data) ||
+			    (G_VALUE_TYPE (value) != G_VALUE_TYPE ((GValue *) list->data)) ||
+			    gda_value_compare ((GValue *) (list->data), (GValue *) value)) {
                                 allequal = FALSE;
-
-                        list = g_slist_next (list);
-                        index++;
+				break;
+			}
                 }
 
                 if (allequal)
