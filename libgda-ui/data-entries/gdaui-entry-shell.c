@@ -473,9 +473,11 @@ gdaui_entry_shell_set_unknown (GdauiEntryShell *shell, gboolean unknown)
 #if GTK_CHECK_VERSION (2,18,0)
 	widget_embedder_set_valid ((WidgetEmbedder*) shell->priv->embedder, !unknown);
 #else
+	/*
 	if (unknown)
 		gtk_widget_hide (shell->priv->embedder);
 	else
 		gtk_widget_show (shell->priv->embedder);
+	*/
 #endif
 }
