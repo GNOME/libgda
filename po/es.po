@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-07-21 19:18+0000\n"
-"PO-Revision-Date: 2010-07-31 11:12+0200\n"
+"POT-Creation-Date: 2010-07-31 09:13+0000\n"
+"PO-Revision-Date: 2010-07-31 11:25+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -105,8 +105,8 @@ msgstr "No se pudo ejecutar el programa del examinador"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:283
-#: ../libgda/gda-connection.c:1523 ../libgda/gda-data-model.c:2028
-#: ../libgda/gda-data-model.c:2036 ../libgda/gda-data-model-dir.c:382
+#: ../libgda/gda-connection.c:1523 ../libgda/gda-data-model.c:2029
+#: ../libgda/gda-data-model.c:2037 ../libgda/gda-data-model-dir.c:382
 #: ../libgda/gda-data-model-import.c:1574
 #: ../libgda/gda-data-model-import.c:1857
 #: ../libgda/gda-data-model-import.c:1930 ../libgda/gda-data-select.c:368
@@ -114,7 +114,7 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../libgda/gda-data-select.c:2051 ../libgda/gda-data-select.c:3446
 #: ../libgda/gda-holder.c:488 ../libgda/gda-holder.c:1708
 #: ../libgda/gda-server-operation.c:614 ../libgda/gda-server-operation.c:1005
-#: ../libgda/gda-set.c:533 ../libgda/gda-tree-mgr-select.c:188
+#: ../libgda/gda-set.c:553 ../libgda/gda-tree-mgr-select.c:188
 #: ../libgda/gda-tree-mgr-select.c:220
 #: ../libgda/sqlite/gda-sqlite-provider.c:2046
 #: ../libgda/sqlite/gda-sqlite-provider.c:2058
@@ -174,9 +174,10 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../tools/browser/schema-browser/favorite-selector.c:170
 #: ../tools/browser/schema-browser/favorite-selector.c:359
 #: ../tools/browser/schema-browser/relations-diagram.c:241
-#: ../tools/browser/schema-browser/table-info.c:461
-#: ../tools/browser/schema-browser/table-info.c:514
-#: ../tools/browser/schema-browser/table-info.c:540
+#: ../tools/browser/schema-browser/table-info.c:475
+#: ../tools/browser/schema-browser/table-info.c:528
+#: ../tools/browser/schema-browser/table-info.c:554
+#: ../tools/browser/schema-browser/table-info.c:848
 #: ../tools/browser/schema-browser/table-preferences.c:705
 #: ../tools/browser/schema-browser/table-preferences.c:778
 #: ../tools/gda-list-server-op.c:47 ../tools/gda-list-server-op.c:90
@@ -917,56 +918,56 @@ msgstr "El modelo no permite borrado de filas"
 msgid "Data model does not support row removal"
 msgstr "El modelo de datos no soporta la eliminación de filas"
 
-#: ../libgda/gda-data-model.c:1035 ../libgda/gda-data-model.c:1076
-#: ../libgda/gda-data-model.c:1090
+#: ../libgda/gda-data-model.c:1036 ../libgda/gda-data-model.c:1077
+#: ../libgda/gda-data-model.c:1091
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "El parámetro «%s» debe contener un valor de cadena, ignorado."
 
-#: ../libgda/gda-data-model.c:1099 ../libgda/gda-data-model.c:1109
-#: ../libgda/gda-data-model.c:1119 ../libgda/gda-data-model.c:1157
-#: ../libgda/gda-data-model.c:1250
+#: ../libgda/gda-data-model.c:1100 ../libgda/gda-data-model.c:1110
+#: ../libgda/gda-data-model.c:1120 ../libgda/gda-data-model.c:1158
+#: ../libgda/gda-data-model.c:1251
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "El parámetro «%s» debe contener un valor booleano, ignorado."
 
-#: ../libgda/gda-data-model.c:1258
+#: ../libgda/gda-data-model.c:1259
 #, c-format
 msgid "File '%s' already exists"
 msgstr "El archivo «%s» ya existe"
 
-#: ../libgda/gda-data-model.c:1398
+#: ../libgda/gda-data-model.c:1399
 msgid "Exported Data"
 msgstr "Datos exportados"
 
-#: ../libgda/gda-data-model.c:1515
+#: ../libgda/gda-data-model.c:1516
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "Se esperaba la etiqueta <gda_value> o <gda_array_value>, se obtuvo <%s>, "
 "ignorando"
 
-#: ../libgda/gda-data-model.c:1546
+#: ../libgda/gda-data-model.c:1547
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "No puede recuperar el tipo de datos de la columna (el tipo es DESCONOCIDO o "
 "no ha sido especificado)"
 
-#: ../libgda/gda-data-model.c:1632
+#: ../libgda/gda-data-model.c:1633
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Se esperaba la etiqueta <gda_array_data>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model.c:1695
+#: ../libgda/gda-data-model.c:1696
 msgid "Could not get an iterator for source data model"
 msgstr "No se ha pudo obtener un iterador para el modelo de datos de origen"
 
-#: ../libgda/gda-data-model.c:1712
+#: ../libgda/gda-data-model.c:1713
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Columna inexistente en el modelo de datos origen: %d"
 
-#: ../libgda/gda-data-model.c:1726
+#: ../libgda/gda-data-model.c:1727
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
@@ -975,7 +976,7 @@ msgstr ""
 "La columna de destino %d no puede ser NULL pero no tiene ninguna "
 "correspondencia en el modelo de datos origen"
 
-#: ../libgda/gda-data-model.c:1736
+#: ../libgda/gda-data-model.c:1737
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -984,27 +985,27 @@ msgstr ""
 "La columna de destino %d tiene un tipo gda (%s) incompatible con el  de la "
 "columna de origen %d (tipo %s)"
 
-#: ../libgda/gda-data-model.c:1833
+#: ../libgda/gda-data-model.c:1834
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "No se puede transformar «%s» del tipo GDA %s al tipo GDA %s"
 
-#: ../libgda/gda-data-model.c:2027
+#: ../libgda/gda-data-model.c:2028
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "No se pudo añadir el modelo de datos BDB a la conexión: %s"
 
-#: ../libgda/gda-data-model.c:2035
+#: ../libgda/gda-data-model.c:2036
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "No se pudo volcar el contenido del modelo de datos: %s"
 
-#: ../libgda/gda-data-model.c:2281
+#: ../libgda/gda-data-model.c:2282
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr ""
 "El modelo de datos no soporta acceso hacia atrás, no se mostrarán los datos"
 
-#: ../libgda/gda-data-model.c:2400
+#: ../libgda/gda-data-model.c:2401
 #, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
@@ -1216,7 +1217,7 @@ msgid "GdaDataProxy can't handle non random access data models"
 msgstr ""
 "GdaDataProxy no puede manipular modelos de acceso a datos no aleatorios"
 
-#: ../libgda/gda-data-proxy.c:1538 ../libgda/gda-data-proxy.c:3881
+#: ../libgda/gda-data-proxy.c:1538 ../libgda/gda-data-proxy.c:3880
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr "La primera fila es una fila vacía al comienzo y no se puede eliminar"
@@ -1257,22 +1258,22 @@ msgstr "Error en la expresión de filtrado"
 msgid "Incorrect filter expression"
 msgstr "Expresión de filtrado incorrecta"
 
-#: ../libgda/gda-data-proxy.c:3636
+#: ../libgda/gda-data-proxy.c:3635
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr "La primera fila es una fila vacía al comienzo y no se puede alterar"
 
-#: ../libgda/gda-data-proxy.c:3658
+#: ../libgda/gda-data-proxy.c:3657
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Tipo de valor erróneo: se esperaba «%s» y se obtuvo «%s»"
 
-#: ../libgda/gda-data-proxy.c:3744
+#: ../libgda/gda-data-proxy.c:3743
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "intentando cambiar una columna de sólo lectura: %d"
 
-#: ../libgda/gda-data-proxy.c:3781
+#: ../libgda/gda-data-proxy.c:3780
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "El tipo del valor no coincide %s en lugar de %s"
@@ -1474,7 +1475,7 @@ msgstr "Tipo no válido"
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "El servidor de la base de datos no soporta la operación CREATE TABLE"
 
-#: ../libgda/gda-holder.c:487 ../libgda/gda-set.c:532
+#: ../libgda/gda-holder.c:487 ../libgda/gda-set.c:552
 #, c-format
 msgid "Unable to set holder's value: %s"
 msgstr "No se pudo establecer el valor del mantenedor: %s"
@@ -2278,38 +2279,46 @@ msgstr ""
 "El modelo de datos para el esquema tiene un tipo gda erróneo: «%s» en vez de «%"
 "s»"
 
-#: ../libgda/gda-set.c:524 ../libgda/gda-set.c:625
+#: ../libgda/gda-set.c:544 ../libgda/gda-set.c:645
 #, c-format
 msgid "%s() does not handle values of type '%s'."
 msgstr "%s() no puede manejar valores de tipo «%s»."
 
-#: ../libgda/gda-set.c:579
+#: ../libgda/gda-set.c:599
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
 msgstr "No se encontró el GdaHolder con ID %s en el conjunto"
 
-#: ../libgda/gda-set.c:759
+#: ../libgda/gda-set.c:779
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "Nodo raíz de las especificaciones != 'data-set-spec': «%s»"
 
-#: ../libgda/gda-set.c:798
+#: ../libgda/gda-set.c:818
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Faltan <parameters> del nodo: «%s»"
 
-#: ../libgda/gda-set.c:1011
+#: ../libgda/gda-set.c:1031
 #, c-format
 msgid "Data set does not allow modifications"
 msgstr "El conjunto de datos no permite modificaciones"
 
-#: ../libgda/gda-set.c:1256
+#: ../libgda/gda-set.c:1276
 msgid "GdaHolder needs to have an ID"
 msgstr "GdaGolder necesita tener un ID"
 
-#: ../libgda/gda-set.c:1366
+#: ../libgda/gda-set.c:1386
 msgid "One or more values are invalid"
 msgstr "Uno o más valores no son válidos"
+
+#: ../libgda/gda-set.c:1603 ../libgda/gda-set.c:1616
+msgid ""
+"Replacing data model must have the same characteristics as the data model it "
+"replaces"
+msgstr ""
+"Reemplazar el modelo de datos debe tener las mismas características que el "
+"modelo de datos al que reemplaza"
 
 #: ../libgda/gda-sql-builder.c:294 ../libgda/gda-sql-builder.c:1399
 #, c-format
@@ -3384,7 +3393,7 @@ msgstr "Desconocido"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:167
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
-#: ../libgda-ui/gdaui-basic-form.c:797 ../libgda-ui/gdaui-basic-form.c:859
+#: ../libgda-ui/gdaui-basic-form.c:807 ../libgda-ui/gdaui-basic-form.c:875
 #: ../libgda-ui/gdaui-raw-grid.c:739 ../tools/gda-sql.c:2656
 #: ../tools/gda-sql.c:2831 ../tools/gda-sql.c:4011
 msgid "Value"
@@ -3881,7 +3890,7 @@ msgid "break lines anywhere the cursor can appear"
 msgstr "Saltar líneas siempre que pueda aparecer el cursor"
 
 #: ../libgda-ui/data/server_operation.glade.h:1
-#: ../tools/browser/schema-browser/table-info.c:370
+#: ../tools/browser/schema-browser/table-info.c:384
 msgid "Columns"
 msgstr "Columnas"
 
@@ -4051,26 +4060,26 @@ msgstr "Entradas autopredeterminadas"
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Cierto si tiene sentido expandir el formulario verticalmente"
 
-#: ../libgda-ui/gdaui-basic-form.c:755 ../libgda-ui/gdaui-raw-grid.c:780
+#: ../libgda-ui/gdaui-basic-form.c:761 ../libgda-ui/gdaui-raw-grid.c:780
 #: ../libgda-ui/gdaui-raw-grid.c:2619
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "El atributo «%s» debería ser un valor G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1669
+#: ../libgda-ui/gdaui-basic-form.c:1686
 msgid "Can't find data entry for GdaHolder"
 msgstr "No se puede encontrar la entrada para el GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:1941
+#: ../libgda-ui/gdaui-basic-form.c:1958
 msgid "Values to be filled"
 msgstr "Valores para rellenar"
 
-#: ../libgda-ui/gdaui-basic-form.c:2022 ../libgda-ui/gdaui-raw-grid.c:2446
+#: ../libgda-ui/gdaui-basic-form.c:2039 ../libgda-ui/gdaui-raw-grid.c:2446
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "El documento «%s» no se analizó correctamente"
 
-#: ../libgda-ui/gdaui-basic-form.c:2032 ../libgda-ui/gdaui-raw-grid.c:2456
+#: ../libgda-ui/gdaui-basic-form.c:2049 ../libgda-ui/gdaui-raw-grid.c:2456
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -4079,7 +4088,7 @@ msgstr ""
 "El DTD «%s» no se analizó correctamente. No se realizará la validación de la "
 "distribución de datos XML (podrían ocurrir algunos errores)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2163
+#: ../libgda-ui/gdaui-basic-form.c:2180
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -6867,24 +6876,24 @@ msgid "Error while analysing database schema: %s"
 msgstr "Error al analizar el esquema de la base de datos: %s"
 
 #: ../tools/browser/browser-connection.c:1096
-#: ../tools/browser/browser-connection.c:1139
+#: ../tools/browser/browser-connection.c:1146
 msgid "Executing a query"
 msgstr "Ejecutando una consulta"
 
-#: ../tools/browser/browser-connection.c:1356
+#: ../tools/browser/browser-connection.c:1408
 #, c-format
 msgid "Connection not yet opened"
 msgstr "La conexión aún no está abierta"
 
-#: ../tools/browser/browser-connection.c:1362
+#: ../tools/browser/browser-connection.c:1414
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
 "No se puede inicializar el diccionario para almacenar las preferencias de la "
 "tabla"
 
-#: ../tools/browser/browser-connection.c:1408
-#: ../tools/browser/browser-connection.c:1414
-#: ../tools/browser/browser-connection.c:1550
+#: ../tools/browser/browser-connection.c:1460
+#: ../tools/browser/browser-connection.c:1466
+#: ../tools/browser/browser-connection.c:1602
 #: ../tools/browser/browser-favorites.c:523
 #: ../tools/browser/browser-favorites.c:529
 #: ../tools/browser/browser-favorites.c:958
@@ -6892,7 +6901,7 @@ msgstr ""
 msgid "Can't initialize transaction to access favorites"
 msgstr "No se puede inicializar la transacción para acceder a los favoritos"
 
-#: ../tools/browser/browser-connection.c:1495
+#: ../tools/browser/browser-connection.c:1547
 #: ../tools/browser/browser-favorites.c:702
 #: ../tools/browser/browser-favorites.c:1016
 msgid "Can't commit transaction to access favorites"
@@ -7639,7 +7648,7 @@ msgstr "No se pudo quitar el favorito: %s"
 #: ../tools/browser/query-exec/query-favorite-selector.c:242
 #: ../tools/browser/query-exec/query-favorite-selector.c:600
 #: ../tools/browser/schema-browser/favorite-selector.c:358
-#: ../tools/browser/schema-browser/table-info.c:460
+#: ../tools/browser/schema-browser/table-info.c:474
 #, c-format
 msgid "Could not add favorite: %s"
 msgstr "No se pudo añadir el favorito: %s"
@@ -7809,7 +7818,7 @@ msgid "Invalid variable's contents"
 msgstr "Contenido de la variable no válido"
 
 #: ../tools/browser/query-exec/query-console.c:774
-#: ../tools/browser/schema-browser/table-info.c:672
+#: ../tools/browser/schema-browser/table-info.c:919
 msgid "assign values to the following variables"
 msgstr "asignar valores a las siguientes variables"
 
@@ -7827,14 +7836,14 @@ msgstr ""
 "conexión nueva."
 
 #: ../tools/browser/query-exec/query-console.c:873
-#: ../tools/browser/schema-browser/table-info.c:539
+#: ../tools/browser/schema-browser/table-info.c:553
 #, c-format
 msgid "Error executing query: %s"
 msgstr "Error al ejecutar la consulta: %s"
 
 #: ../tools/browser/query-exec/query-console.c:926
 #: ../tools/browser/query-exec/query-console.c:976
-#: ../tools/browser/schema-browser/table-info.c:512
+#: ../tools/browser/schema-browser/table-info.c:526
 #, c-format
 msgid ""
 "Error executing query:\n"
@@ -7958,6 +7967,11 @@ msgstr "No se encontró la tabla"
 msgid "Requested object is not a table or view"
 msgstr "El objeto solicitado no es una tabla o una vista"
 
+#: ../tools/browser/schema-browser/mgr-columns.c:390
+#| msgid "Auto increment"
+msgid "Auto incremented"
+msgstr "Autoincrementar"
+
 #: ../tools/browser/schema-browser/objects-index.c:170
 msgid "Tables' index"
 msgstr "Índice de la tabla"
@@ -8012,16 +8026,15 @@ msgid "Missing table attribute in favorite's contents"
 msgstr "Falta un atributo de la tabla en el contenido de los favoritos"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:519
-#: ../tools/browser/schema-browser/table-info.c:703
+#: ../tools/browser/schema-browser/table-info.c:951
 msgid "_Contents"
 msgstr "Índ_ice"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:519
-#: ../tools/browser/schema-browser/table-info.c:703
 msgid "View contents"
 msgstr "Ver contenido"
 
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:384
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:380
 msgid "Could not load diagram"
 msgstr "No se pudo cargar el diagrama"
 
@@ -8034,7 +8047,6 @@ msgid "Unique constraint"
 msgstr "Restricción única"
 
 #: ../tools/browser/schema-browser/table-columns.c:337
-#| msgid "Table's description"
 msgid "Tables referencing this one"
 msgstr "Tablas que referencian a esta"
 
@@ -8046,7 +8058,7 @@ msgstr "Nombre de columna"
 msgid "Constraints and integrity rules"
 msgstr "Reglas de restricciones e integridad"
 
-#: ../tools/browser/schema-browser/table-info.c:349
+#: ../tools/browser/schema-browser/table-info.c:363
 msgid ""
 "Table not found. If you think this is an error,\n"
 "please refresh the meta data from the database\n"
@@ -8056,28 +8068,27 @@ msgstr ""
 "actualice los metadatos de la base de datos\n"
 "(menú Conexión/Obtener metadatos)."
 
-#: ../tools/browser/schema-browser/table-info.c:380
+#: ../tools/browser/schema-browser/table-info.c:394
 msgid "Relations"
 msgstr "Relaciones"
 
-#: ../tools/browser/schema-browser/table-info.c:390
+#: ../tools/browser/schema-browser/table-info.c:404
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: ../tools/browser/schema-browser/table-info.c:518
-#| msgid "Connection successfully opened!"
+#: ../tools/browser/schema-browser/table-info.c:532
 msgid "Data successfully inserted"
 msgstr "Datos introducidos correctamente"
 
-#: ../tools/browser/schema-browser/table-info.c:564
+#: ../tools/browser/schema-browser/table-info.c:671
 msgid "Meta data not yet available"
 msgstr "Los metadatos aún no están disponibles"
 
-#: ../tools/browser/schema-browser/table-info.c:581
+#: ../tools/browser/schema-browser/table-info.c:688
 msgid "Can't find information about table"
 msgstr "No se puede encontrar información acerca de la tabla"
 
-#: ../tools/browser/schema-browser/table-info.c:615
+#: ../tools/browser/schema-browser/table-info.c:724
 #, c-format
 msgid ""
 "Internal error while building INSERT statement:\n"
@@ -8086,28 +8097,40 @@ msgstr ""
 "Error interno al construir la declaración INSERT:\n"
 "%s"
 
-#: ../tools/browser/schema-browser/table-info.c:654
-#: ../tools/browser/schema-browser/table-info.c:671
-#| msgid "Values to be filled"
+#: ../tools/browser/schema-browser/table-info.c:770
+#, c-format
+#| msgid "Default value"
+msgid "Default value: '%s'"
+msgstr "Valor predeterminado: «%s»"
+
+#: ../tools/browser/schema-browser/table-info.c:780
+#| msgid "Auto increment value"
+msgid "Default value: auto incremented value"
+msgstr "Valor predeterminado: valor autoincrementado"
+
+#: ../tools/browser/schema-browser/table-info.c:894
+#: ../tools/browser/schema-browser/table-info.c:918
 msgid "Values to insert into table"
 msgstr "Valores para insertar en la tabla"
 
-#: ../tools/browser/schema-browser/table-info.c:701
-#| msgid "Add SQL to favorite"
+#: ../tools/browser/schema-browser/table-info.c:949
 msgid "Add to _Favorites"
 msgstr "Añadir a _favoritos"
 
-#: ../tools/browser/schema-browser/table-info.c:701
+#: ../tools/browser/schema-browser/table-info.c:949
 msgid "Add table to favorites"
 msgstr "Añadir tabla a los favoritos"
 
-#: ../tools/browser/schema-browser/table-info.c:705
-#| msgid "Insert method"
+#: ../tools/browser/schema-browser/table-info.c:951
+#| msgid "View contents"
+msgid "View table's contents"
+msgstr "Ver contenido de la tabla"
+
+#: ../tools/browser/schema-browser/table-info.c:953
 msgid "_Insert data"
 msgstr "_Insertar datos"
 
-#: ../tools/browser/schema-browser/table-info.c:705
-#| msgid "Saving data to a file"
+#: ../tools/browser/schema-browser/table-info.c:953
 msgid "Insert data into table"
 msgstr "Insertar datos en la tabla"
 
