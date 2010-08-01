@@ -279,7 +279,9 @@ browser_connection_init (BrowserConnection *bcnc)
 }
 
 static void
-transaction_status_changed_cb (GdaConnection *cnc, BrowserConnection *bcnc)
+transaction_status_changed_cb (GdaThreadWrapper *wrapper, gpointer instance, const gchar *signame,
+			       gint n_param_values, const GValue *param_values, gpointer gda_reserved,
+			       BrowserConnection *bcnc)
 {
 	g_signal_emit (bcnc, browser_connection_signals [TRANSACTION_STATUS_CHANGED], 0);
 }
@@ -370,8 +372,14 @@ browser_connection_set_property (GObject *object,
 				return;
 
 			g_object_ref (bcnc->priv->cnc);
-			g_signal_connect (bcnc->priv->cnc, "transaction-status-changed",
-					  G_CALLBACK (transaction_status_changed_cb), bcnc);
+			bcnc->priv->transaction_status_signal =
+				gda_thread_wrapper_connect_raw (bcnc->priv->wrapper,
+								bcnc->priv->cnc,
+								"transaction-status-changed",
+								FALSE, FALSE,
+								(GdaThreadWrapperCallback) transaction_status_changed_cb,
+								bcnc);
+
 
 			/* meta store */
 			gchar *dict_file_name = NULL;
@@ -545,12 +553,12 @@ browser_connection_dispose (GObject *object)
 		if (bcnc->priv->p_mstruct_mutex)
 			g_mutex_free (bcnc->priv->p_mstruct_mutex);
 
-		if (bcnc->priv->cnc) {
-			g_signal_handlers_disconnect_by_func (bcnc->priv->cnc,
-							      G_CALLBACK (transaction_status_changed_cb),
-							      bcnc);
+		if (bcnc->priv->transaction_status_signal)
+			gda_thread_wrapper_disconnect (bcnc->priv->wrapper,
+						       bcnc->priv->transaction_status_signal);
+		if (bcnc->priv->cnc)
 			g_object_unref (bcnc->priv->cnc);
-		}
+
 		if (bcnc->priv->parser)
 			g_object_unref (bcnc->priv->parser);
 		if (bcnc->priv->bfav) {
