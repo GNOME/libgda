@@ -54,6 +54,7 @@ struct _GdaThreadWrapper {
 struct _GdaThreadWrapperClass {
 	GObjectClass       object_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
