@@ -262,6 +262,9 @@ init_from_query (DataSource *source, xmlNodePtr node)
 	const gchar *remain;
 	xmlChar *contents;
 
+#ifdef DEBUG_SOURCE
+	g_print ("%s(%s [%s])\n", __FUNCTION__, source->priv->id, source->priv->title);
+#endif
 	contents = xmlNodeGetContent (node);
 
 	g_clear_error (& source->priv->init_error);
@@ -305,7 +308,9 @@ init_from_query (DataSource *source, xmlNodePtr node)
 					g_array_append_val (source->priv->export_names, tmp);
 					g_hash_table_insert (source->priv->export_columns, tmp,
 							     GINT_TO_POINTER (i + 1));
-					/* g_print ("EXPORT [%s]\n", tmp); */
+#ifdef DEBUG_SOURCE
+					g_print ("\tEXPORT [%s]\n", tmp);
+#endif
 
 					GdaSqlSelectField *sf = (GdaSqlSelectField *) list->data;
 					if (sf->validity_meta_table_column) {
@@ -314,7 +319,9 @@ init_from_query (DataSource *source, xmlNodePtr node)
 						g_array_append_val (source->priv->export_names, tmp);
 						g_hash_table_insert (source->priv->export_columns, tmp,
 								     GINT_TO_POINTER (i + 1));
-						/* g_print ("EXPORT [%s]\n", tmp); */
+#ifdef DEBUG_SOURCE
+						g_print ("\tEXPORT [%s]\n", tmp);
+#endif
 					}
 				}
 			}
@@ -327,13 +334,21 @@ init_from_query (DataSource *source, xmlNodePtr node)
 					      &source->priv->init_error);
 		if (source->priv->params) {
 			GSList *list;
-			for (list = source->priv->params->holders; list; list = list->next)
+			for (list = source->priv->params->holders; list; list = list->next) {
 				gda_holder_set_not_null (GDA_HOLDER (list->data), FALSE);
+#ifdef DEBUG_SOURCE
+				g_print ("\tIMPORT [%s]\n", gda_holder_get_id (GDA_HOLDER (list->data)));
+#endif
+			}
 
 			g_signal_connect (source->priv->params, "holder-changed",
 					  G_CALLBACK (params_changed_cb), source);
 		}
 	}
+
+#ifdef DEBUG_SOURCE
+	g_print ("\n");
+#endif
 }
 
 static GdaMetaTable *
@@ -387,6 +402,10 @@ static gboolean
 init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 {
 	xmlChar *tname;
+
+#ifdef DEBUG_SOURCE
+	g_print ("%s(%s [%s])\n", __FUNCTION__, source->priv->id, source->priv->title);
+#endif
 	tname = xmlGetProp (node, BAD_CAST "name");
 	if (!tname) {
 		g_set_error (error, 0, 0,
@@ -452,7 +471,9 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 		g_array_append_val (source->priv->export_names, tmp);
 		g_hash_table_insert (source->priv->export_columns, tmp,
 				     GINT_TO_POINTER (i + 1));
-		/*g_print ("EXPORT [%s]\n", tmp);*/
+#ifdef DEBUG_SOURCE
+		g_print ("\tEXPORT [%s]\n", tmp);
+#endif
 
 		if (source->priv->id)
 			tmp = g_strdup_printf ("%s@%d", source->priv->id, i + 1);
@@ -461,7 +482,9 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 		g_array_append_val (source->priv->export_names, tmp);
 		g_hash_table_insert (source->priv->export_columns, tmp,
 				     GINT_TO_POINTER (i + 1));
-		/*g_print ("EXPORT [%s]\n", tmp);*/
+#ifdef DEBUG_SOURCE
+		g_print ("\tEXPORT [%s]\n", tmp);
+#endif
 	}
 	xmlFree (tname);
 
@@ -560,16 +583,23 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 				      &source->priv->init_error);
 	if (source->priv->params) {
 		GSList *list;
-		for (list = source->priv->params->holders; list; list = list->next)
+		for (list = source->priv->params->holders; list; list = list->next) {
 			gda_holder_set_not_null (GDA_HOLDER (list->data), FALSE);
+#ifdef DEBUG_SOURCE
+			g_print ("\tIMPORT [%s]\n", gda_holder_get_id (GDA_HOLDER (list->data)));
+#endif
+		}
 
 		g_signal_connect (source->priv->params, "holder-changed",
 				  G_CALLBACK (params_changed_cb), source);
 	}
 
-	g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL));
+	/*g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL));*/
 	g_object_unref (b);
 
+#ifdef DEBUG_SOURCE
+	g_print ("\n");
+#endif
 	return source->priv->stmt ? TRUE : FALSE;
 }
 
@@ -670,7 +700,7 @@ data_source_get_import (DataSource *source)
 }
 
 /**
- * data_source_set_external_import
+ * data_source_set_params
  */
 void
 data_source_set_params (DataSource *source, GdaSet *params)
@@ -706,7 +736,7 @@ data_source_set_params (DataSource *source, GdaSet *params)
 }
 
 /**
- * data_source_get_export_template
+ * data_source_get_export_names
  *
  * Returns: an array of strings, or %NULL
  */
@@ -880,4 +910,17 @@ data_source_get_title (DataSource *source)
 		return source->priv->id;
 	else
 		return _("No name");
+}
+
+/**
+ * data_source_should_rerun
+ *
+ * The SELECT statement will be re-executed the next time
+ * data_source_execute() is called 
+ */
+void
+data_source_should_rerun (DataSource *source)
+{
+	g_return_if_fail (IS_DATA_SOURCE (source));
+	source->priv->need_rerun = TRUE;
 }

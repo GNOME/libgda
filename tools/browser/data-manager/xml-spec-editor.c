@@ -277,8 +277,12 @@ xml_spec_editor_set_xml_text (XmlSpecEditor *sped, const gchar *xml)
 {
 	g_return_if_fail (IS_XML_SPEC_EDITOR (sped));
 
+	g_signal_handlers_block_by_func (sped->priv->buffer,
+					 G_CALLBACK (editor_changed_cb), sped);
 	gtk_text_buffer_set_text (sped->priv->buffer, xml, -1);
 	signal_editor_changed (sped);
+	g_signal_handlers_unblock_by_func (sped->priv->buffer,
+					   G_CALLBACK (editor_changed_cb), sped);
 }
 
 /**

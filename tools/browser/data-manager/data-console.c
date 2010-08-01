@@ -78,6 +78,8 @@ static void data_console_init       (DataConsole *dconsole, DataConsoleClass *kl
 static void data_console_dispose    (GObject *object);
 static void data_console_show_all   (GtkWidget *widget);
 
+static void data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole);
+
 /* BrowserPage interface */
 static void                 data_console_page_init (BrowserPageIface *iface);
 static GtkActionGroup      *data_console_page_get_actions_group (BrowserPage *page);
@@ -143,8 +145,12 @@ data_console_dispose (GObject *object)
 			g_object_unref (dconsole->priv->bcnc);
 		if (dconsole->priv->agroup)
 			g_object_unref (dconsole->priv->agroup);
-		if (dconsole->priv->mgr)
+		if (dconsole->priv->mgr) {
+			g_signal_handlers_disconnect_by_func (dconsole->priv->mgr,
+							      G_CALLBACK (data_source_mgr_changed_cb),
+							      dconsole);
 			g_object_unref (dconsole->priv->mgr);
+		}
 		g_free (dconsole->priv);
 		dconsole->priv = NULL;
 	}
@@ -189,7 +195,6 @@ static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void help_clicked_cb (GtkButton *button, DataConsole *dconsole);
 #endif
 static void spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole);
-static void data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole);
 
 /**
  * data_console_new
@@ -277,32 +282,6 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
 				  dconsole->priv->xml_sped, NULL);
 
-#define DEFAULT_XML \
-"<data>\n" \
-"    <!-- This is an example of XML code, this editor will be replaced by a UI editing,\n" \
-"         but will still be visible and useable for quick access\n" \
-"    -->\n" \
-"\n    <!-- specifies that we want the contents of the 'customers' table -->\n" \
-"    <table name=\"customers\"/>\n" \
-"\n    <!-- specifies that we want the contents of the 'orders' table, where the order ID \n" \
-"         depends on the selected customer's ID -->\n"						\
-"    <table name=\"orders\">\n" \
-"        <depend foreign_key_table=\"customers\"/>\n" \
-"    </table>\n" \
-"\n    <!-- specifies that we want the result of the execution of a SELECT query, notice the WHERE clause\n" \
-"          which enables to filter on the previously selected order ID-->\n" \
-"    <query title=\"Order's products\" id=\"products\">\n" \
-"        SELECT p.ref, p.name FROM products p INNER JOIN order_contents o ON (o.product_ref=p.ref) WHERE o.order_id=##orders@id::int\n" \
-"    </query>\n" \
-"\n    <!-- a more complicated query this time giving all the orders (for any customer) containing the \n" \
-"         selected product from the previous SELECT query-->\n" \
-"    <query title=\"All orders with this product\" id=\"aorders\">\n" \
-"        SELECT distinct c.name, o.creation_date, o.delivery_date FROM customers c INNER JOIN orders o ON (o.customer=c.id) INNER JOIN order_contents oc ON (oc.order_id=o.id) INNER JOIN products p ON (oc.product_ref=##products@ref::string)\n" \
-"    </query>\n" \
-"</data>"
-
-	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
-
 	dconsole->priv->ui_sped = ui_spec_editor_new (dconsole->priv->mgr);
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
 				  dconsole->priv->ui_sped, NULL);
@@ -364,6 +343,34 @@ data_console_new (BrowserConnection *bcnc)
 	/* show everything */
         gtk_widget_show_all (hpaned);
 	gtk_widget_hide (dconsole->priv->params_top);
+
+	/* initial contents for tests */
+#define DEFAULT_XML \
+"<data>\n" \
+"    <!-- This is an example of XML code, this editor will be replaced by a UI editing,\n" \
+"         but will still be visible and useable for quick access\n" \
+"    -->\n" \
+"\n    <!-- specifies that we want the contents of the 'customers' table -->\n" \
+"    <table name=\"customers\"/>\n" \
+"\n    <!-- specifies that we want the contents of the 'orders' table, where the order ID \n" \
+"         depends on the selected customer's ID -->\n"						\
+"    <table name=\"orders\">\n" \
+"        <depend foreign_key_table=\"customers\"/>\n" \
+"    </table>\n" \
+"\n    <!-- specifies that we want the result of the execution of a SELECT query, notice the WHERE clause\n" \
+"          which enables to filter on the previously selected order ID-->\n" \
+"    <query title=\"Order's products\" id=\"products\">\n" \
+"        SELECT p.ref, p.name FROM products p INNER JOIN order_contents o ON (o.product_ref=p.ref) WHERE o.order_id=##orders@id::int\n" \
+"    </query>\n" \
+"\n    <!-- a more complicated query this time giving all the orders (for any customer) containing the \n" \
+"         selected product from the previous SELECT query-->\n" \
+"    <query title=\"All orders with this product\" id=\"aorders\">\n" \
+"        SELECT distinct c.name, o.creation_date, o.delivery_date FROM customers c INNER JOIN orders o ON (o.customer=c.id) INNER JOIN order_contents oc ON (oc.order_id=o.id) INNER JOIN products p ON (oc.product_ref=##products@ref::string)\n" \
+"    </query>\n" \
+"</data>"
+
+	//xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
+
 
 	return (GtkWidget*) dconsole;
 }

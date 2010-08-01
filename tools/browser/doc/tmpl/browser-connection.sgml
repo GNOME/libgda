@@ -33,6 +33,7 @@ An opened connection
 @nb_no_job_waits: 
 @executed_statements: 
 @meta_store_signal: 
+@transaction_status_signal: 
 @name: 
 @cnc: 
 @dict_file_name: 

@@ -307,8 +307,14 @@ data_widget_new (GArray *sources_array)
 static void
 data_part_free (DataPart *part)
 {
-	if (part->source)
+	if (part->source) {
+		g_signal_handlers_disconnect_by_func (part->source,
+						      G_CALLBACK (source_exec_started_cb), part);
+		g_signal_handlers_disconnect_by_func (part->source,
+						      G_CALLBACK (source_exec_finished_cb), part);
 		g_object_unref (part->source);
+	}
+
 	if (part->export_data)
 		g_object_unref (part->export_data);
 	if (part->dep_parts)
@@ -342,7 +348,7 @@ source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
 	GtkWidget *wid;
 	browser_spinner_stop (part->spinner);
 	
-	/*g_print ("Execution of source [%s] finished\n", data_source_get_title (part->source));*/
+	g_print ("==== Execution of source [%s] finished\n", data_source_get_title (part->source));
 	if (error) {
 		gchar *tmp;
 		tmp = g_markup_printf_escaped ("\n<b>Error:\n</b>%s",
