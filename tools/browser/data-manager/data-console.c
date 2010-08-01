@@ -24,7 +24,8 @@
 #include <string.h>
 #include "data-console.h"
 #include "data-widget.h"
-#include "spec-editor.h"
+#include "xml-spec-editor.h"
+#include "ui-spec-editor.h"
 #include "../dnd.h"
 #include "../support.h"
 #include "../cc-gray-bar.h"
@@ -36,8 +37,11 @@
 #include <libgda-ui/libgda-ui.h>
 #include "data-source-manager.h"
 
-#define PAGE_XML 0
-#define PAGE_DATA 1
+#define MAIN_PAGE_EDITORS 0
+#define MAIN_PAGE_DATA 1
+
+#define EDITOR_PAGE_XML 0
+#define EDITOR_PAGE_UI 1
 
 typedef enum {
 	LAYOUT_HORIZ,
@@ -49,10 +53,16 @@ struct _DataConsolePrivate {
 
 	LayoutType layout_type;
 	BrowserConnection *bcnc;
-	GtkWidget *notebook;
-	SpecEditor *sped;
-	GtkWidget *data_box; /* in notebook */
+
+	GtkWidget *main_notebook; /* 2 pages: MAIN_PAGE_EDITORS & MAIN_PAGE_DATA */
+	GtkWidget *editors_notebook; /* 2 pages: EDITOR_PAGE_XML & EDITOR_PAGE_UI */
+
+	GtkWidget *data_box; /* in main_notebook */
 	GtkWidget *data;
+
+	GtkWidget *xml_sped; /* in editors_notebook */
+	GtkWidget *ui_sped; /* in editors_notebook */
+
 	GtkActionGroup *agroup;
 
 	gboolean toggling;
@@ -60,6 +70,7 @@ struct _DataConsolePrivate {
 	GtkWidget *params_top;
 	GtkWidget *params_form_box;
 	GtkWidget *params_form;
+
 };
 
 static void data_console_class_init (DataConsoleClass *klass);
@@ -242,29 +253,29 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_container_add (GTK_CONTAINER (dconsole->priv->params_form_box), label);
 	dconsole->priv->params_form = label;
 
-	/* main contents */
+	/* main contents: 1 page for editors and 1 for execution widget */
 	nb = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), FALSE);
 	gtk_paned_pack2 (GTK_PANED (hpaned), nb, TRUE, FALSE);
-	dconsole->priv->notebook = nb;
+	dconsole->priv->main_notebook = nb;
 
-	/* editor page */
+	/* editors page */
 	GtkWidget *hbox;
 	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), vbox, NULL);
-
-	label = gtk_label_new ("");
-	str = g_strdup_printf ("<b>%s</b>", _("SQL code to execute:"));
-	gtk_label_set_markup (GTK_LABEL (label), str);
-	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
 
 	hbox = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
-	dconsole->priv->sped = spec_editor_new (dconsole->priv->mgr);
-	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (dconsole->priv->sped), TRUE, TRUE, 0);
+	nb = gtk_notebook_new ();
+	gtk_box_pack_start (GTK_BOX (hbox), nb, TRUE, TRUE, 0);
+	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), FALSE);
+	gtk_notebook_set_show_border (GTK_NOTEBOOK (nb), FALSE);
+	dconsole->priv->editors_notebook = nb;
+
+	dconsole->priv->xml_sped = xml_spec_editor_new (dconsole->priv->mgr);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
+				  dconsole->priv->xml_sped, NULL);
 
 #define DEFAULT_XML \
 "<data>\n" \
@@ -290,7 +301,11 @@ data_console_new (BrowserConnection *bcnc)
 "    </query>\n" \
 "</data>"
 
-	//spec_editor_set_xml_text (dconsole->priv->sped, DEFAULT_XML);
+	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
+
+	dconsole->priv->ui_sped = ui_spec_editor_new (dconsole->priv->mgr);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
+				  dconsole->priv->ui_sped, NULL);
 
 	/* buttons */
 	GtkWidget *bbox, *button;
@@ -318,9 +333,7 @@ data_console_new (BrowserConnection *bcnc)
 	button = browser_make_small_button (TRUE, _("View XML"), NULL, _("View specifications\n"
 									 "as XML (advanced)"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				      spec_editor_get_mode (dconsole->priv->sped) == SPEC_EDITOR_XML ? 
-				      TRUE : FALSE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (spec_editor_toggled_cb), dconsole);
 
@@ -337,7 +350,7 @@ data_console_new (BrowserConnection *bcnc)
 
 	vbox = gtk_vbox_new (FALSE, 0);
 	dconsole->priv->data_box = vbox;
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), vbox, NULL);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
 
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("BBB:"));
@@ -382,10 +395,8 @@ variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole)
 static void
 spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole)
 {
-	if (gtk_toggle_button_get_active (button))
-		spec_editor_set_mode (dconsole->priv->sped, SPEC_EDITOR_XML);
-	else
-		spec_editor_set_mode (dconsole->priv->sped, SPEC_EDITOR_UI);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
+				       (gtk_toggle_button_get_active (button) ? EDITOR_PAGE_XML : EDITOR_PAGE_UI));
 }
 
 static void
@@ -420,8 +431,8 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 static void
 editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole)
 {
-	spec_editor_set_xml_text (dconsole->priv->sped, "");
-	gtk_widget_grab_focus (GTK_WIDGET (dconsole->priv->sped));
+	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), "");
+	gtk_widget_grab_focus (dconsole->priv->xml_sped);
 }
 
 static GtkWidget *
@@ -464,8 +475,8 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 		return;
 	}
 
-	pagenb = gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->notebook));
-	if (pagenb == PAGE_XML) {
+	pagenb = gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook));
+	if (pagenb == MAIN_PAGE_EDITORS) {
 		/* Get Data sources */
 		GArray *sources_array;
 		GError *lerror = NULL;
@@ -484,7 +495,7 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 				dconsole->priv->data = wid;
 				gtk_box_pack_start (GTK_BOX (dconsole->priv->data_box), wid, TRUE, TRUE, 0);
 				gtk_widget_show (wid);
-				pagenb = PAGE_DATA;
+				pagenb = MAIN_PAGE_DATA;
 			}
 		}
 		if (lerror) {
@@ -493,17 +504,17 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 					    _("Error parsing XML specifications"));
 			g_clear_error (&lerror);
 		}
-		if (pagenb == PAGE_XML) {
+		if (pagenb == MAIN_PAGE_EDITORS) {
 			dconsole->priv->toggling = TRUE;
 			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
 		}
 	}
 	else {
 		/* simply change the current page */
-		pagenb = PAGE_XML;
+		pagenb = MAIN_PAGE_EDITORS;
 	}
 
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->notebook), pagenb);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), pagenb);
 }
 
 static GtkToggleActionEntry ui_actions[] = {
@@ -565,8 +576,8 @@ data_console_set_text (DataConsole *console, const gchar *text)
 {
 	g_return_if_fail (IS_DATA_CONSOLE (console));
 
-	spec_editor_set_xml_text (console->priv->sped, text);
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (console->priv->notebook), PAGE_XML);
+	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (console->priv->xml_sped), text);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (console->priv->main_notebook), MAIN_PAGE_EDITORS);
 }
 
 /**
@@ -577,7 +588,7 @@ data_console_get_text (DataConsole *console)
 {
 	g_return_val_if_fail (IS_DATA_CONSOLE (console), NULL);
 	
-	return spec_editor_get_xml_text (console->priv->sped);
+	return xml_spec_editor_get_xml_text (XML_SPEC_EDITOR (console->priv->xml_sped));
 }
 
 /**

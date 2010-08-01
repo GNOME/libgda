@@ -28,8 +28,10 @@ libperspective_la_SOURCES = \
 	data-favorite-selector.h \
 	perspective-main.c \
 	perspective-main.h \
-	spec-editor.c \
-	spec-editor.h \
+	xml-spec-editor.c \
+	xml-spec-editor.h \
+	ui-spec-editor.c \
+	ui-spec-editor.h \
 	data-manager-perspective.h \
 	data-manager-perspective.c \
 	data-source-manager.h \
