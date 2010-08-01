@@ -182,6 +182,7 @@ signal_editor_changed (XmlSpecEditor *sped)
  out:
 	if (lerror) {
 		if (! sped->priv->info) {
+#if GTK_CHECK_VERSION (2,18,0)
 			sped->priv->info = gtk_info_bar_new ();
 			gtk_box_pack_start (GTK_BOX (sped), sped->priv->info, FALSE, FALSE, 0);
 			sped->priv->info_label = gtk_label_new ("");
@@ -189,6 +190,10 @@ signal_editor_changed (XmlSpecEditor *sped)
 			gtk_label_set_ellipsize (GTK_LABEL (sped->priv->info_label), PANGO_ELLIPSIZE_END);
 			gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (sped->priv->info))),
 					   sped->priv->info_label);
+#else
+			sped->priv->info = gtk_label_new ("");
+			sped->priv->info_label = sped->priv->info;
+#endif
 		}
 		gchar *str;
 		str = g_strdup_printf (_("Error: %s"), lerror->message);
