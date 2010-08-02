@@ -53,6 +53,7 @@ struct _DataWidgetClass {
 GType      data_widget_get_type   (void) G_GNUC_CONST;
 GtkWidget *data_widget_new        (GArray *sources_array);
 GdaSet    *data_widget_get_export (DataWidget *dwid, DataSource *source);
+void       data_widget_rerun      (DataWidget *dwid);
 
 G_END_DECLS
 

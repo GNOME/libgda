@@ -150,6 +150,8 @@ data_console_dispose (GObject *object)
 
 	/* free memory */
 	if (dconsole->priv) {
+		if (dconsole->priv->params_form)
+			gtk_widget_destroy (dconsole->priv->params_form);
 		if (dconsole->priv->popup_container)
                         gtk_widget_destroy (dconsole->priv->popup_container);
 		if (dconsole->priv->bcnc)
@@ -576,6 +578,16 @@ spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole)
 }
 
 static void
+param_activated_cb (GdauiBasicForm *form, DataConsole *dconsole)
+{
+	DataWidget *dwid = NULL;
+	if (dconsole->priv->data)
+		dwid = g_object_get_data ((GObject*) dconsole->priv->data, "data-widget");
+	if (dwid)
+		data_widget_rerun (DATA_WIDGET (dwid));
+}
+
+static void
 data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 {
 	if (dconsole->priv->params_form) {
@@ -590,6 +602,8 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 		dconsole->priv->params_form = gdaui_basic_form_new (params);
 		g_object_set ((GObject*) dconsole->priv->params_form,
 			      "show-actions", TRUE, NULL);
+		g_signal_connect (dconsole->priv->params_form, "activated",
+				  G_CALLBACK (param_activated_cb), dconsole);
 		show_variables = TRUE;
 	}
 	else {
@@ -633,6 +647,7 @@ create_widget (DataConsole *dconsole, GArray *sources_array, GError **error)
 
 	dwid = data_widget_new (sources_array);
 	gtk_container_add (GTK_CONTAINER (vp), dwid);
+	g_object_set_data ((GObject*) sw, "data-widget", dwid);
 
 	gtk_widget_show_all (vp);
 	return sw;

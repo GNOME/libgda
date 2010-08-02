@@ -30,7 +30,6 @@
 
 #include "data-source.h"
 
-
 /* signals */
 enum {
 	EXEC_STARTED,
@@ -148,8 +147,11 @@ params_changed_cb (GdaSet *params, GdaHolder *holder, DataSource *source)
 static void
 ext_params_changed_cb (GdaSet *params, GdaHolder *holder, DataSource *source)
 {
+#ifdef DEBUG_SOURCE
+	g_print ("  => data source [%s] should rerun\n",
+		 data_source_get_title (source));
+#endif
 	source->priv->need_rerun = TRUE;
-	data_source_execute (source, NULL);
 }
 
 static void

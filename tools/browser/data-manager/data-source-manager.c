@@ -29,7 +29,6 @@
 
 #include "data-source-manager.h"
 
-
 /* signals */
 enum {
 	CHANGED,
@@ -195,18 +194,6 @@ source_depends_on (DataSource *source1, DataSource *source2)
 	return FALSE;
 }
 
-
-static gint
-data_source_compare_func (DataSource *s1, DataSource *s2)
-{
-	if (source_depends_on (s1, s2))
-		return 1;
-	else if (source_depends_on (s2, s1))
-		return -1;
-	else
-		return 1;
-}
-
 /**
  * data_source_manager_add_source
  * @mgr:
@@ -332,7 +319,6 @@ data_source_manager_remove_source (DataSourceManager *mgr, DataSource *source)
 	g_object_unref (source);
 }
 
-
 static void
 compute_params (DataSourceManager *mgr)
 {
@@ -376,6 +362,7 @@ compute_params (DataSourceManager *mgr)
 					mgr->priv->params = gda_set_copy (set);
 				else
 					gda_set_merge_with_set (mgr->priv->params, set);
+				data_source_set_params (source, mgr->priv->params);
 			}
 		}
 	}

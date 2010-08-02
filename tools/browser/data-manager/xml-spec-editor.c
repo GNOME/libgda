@@ -170,9 +170,7 @@ signal_editor_changed (XmlSpecEditor *sped)
 	}
 
 	BrowserConnection *bcnc;
-	GdaSet *params;
-	
-	params = data_source_manager_get_params (sped->priv->mgr);
+
 	bcnc = data_source_manager_get_browser_cnc (sped->priv->mgr);
 	for (node = node->children; node; node = node->next) {
 		if (!strcmp ((gchar*) node->name, "table") ||
@@ -185,7 +183,6 @@ signal_editor_changed (XmlSpecEditor *sped)
 				goto out;
 			}
 			
-			data_source_set_params (source, params);
 			data_source_manager_add_source (sped->priv->mgr, source);
 			g_object_unref (source);
 		}
