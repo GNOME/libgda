@@ -136,7 +136,14 @@ signal_editor_changed (XmlSpecEditor *sped)
 	gtk_text_buffer_get_start_iter (sped->priv->buffer, &start);
 	gtk_text_buffer_get_end_iter (sped->priv->buffer, &end);
 	xml = gtk_text_buffer_get_text (sped->priv->buffer, &start, &end, FALSE);
+
 	if (xml) {
+		g_strstrip (xml);
+		if (! *xml) {
+			g_free (xml);
+			goto out;
+		}
+
 		doc = xmlParseDoc (BAD_CAST xml);
 		g_free (xml);
 	}
@@ -153,6 +160,12 @@ signal_editor_changed (XmlSpecEditor *sped)
 	if (!node) {
 		/* nothing to do => finished */
 		xmlFreeDoc (doc);
+		goto out;
+	}
+
+	if (strcmp ((gchar*) node->name, "data")) {
+		g_set_error (&lerror, 0, 0,
+			     _("Expecting <%s> root node"), "data");
 		goto out;
 	}
 
@@ -194,12 +207,14 @@ signal_editor_changed (XmlSpecEditor *sped)
 			sped->priv->info = gtk_label_new ("");
 			sped->priv->info_label = sped->priv->info;
 #endif
+			gtk_widget_show (sped->priv->info_label);
 		}
 		gchar *str;
 		str = g_strdup_printf (_("Error: %s"), lerror->message);
 		g_clear_error (&lerror);
 		gtk_label_set_text (GTK_LABEL (sped->priv->info_label), str);
 		g_free (str);
+		gtk_widget_show (sped->priv->info);
 	}
 	else if (sped->priv->info) {
 		gtk_widget_hide (sped->priv->info);
