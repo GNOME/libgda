@@ -32,6 +32,7 @@
 static void data_manager_perspective_class_init (DataManagerPerspectiveClass *klass);
 static void data_manager_perspective_init (DataManagerPerspective *stmt);
 static void data_manager_perspective_dispose (GObject *object);
+static void data_manager_perspective_grab_focus (GtkWidget *widget);
 
 /* BrowserPerspective interface */
 static void                 data_manager_perspective_perspective_init (BrowserPerspectiveIface *iface);
@@ -82,12 +83,23 @@ data_manager_perspective_get_type (void)
 }
 
 static void
-data_manager_perspective_class_init (DataManagerPerspectiveClass * klass)
+data_manager_perspective_class_init (DataManagerPerspectiveClass *klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
+	GTK_WIDGET_CLASS (klass)->grab_focus = data_manager_perspective_grab_focus;
 	object_class->dispose = data_manager_perspective_dispose;
+}
+
+static void
+data_manager_perspective_grab_focus (GtkWidget *widget)
+{
+	GtkNotebook *nb;
+
+        nb = GTK_NOTEBOOK (DATA_MANAGER_PERSPECTIVE (widget)->priv->notebook);
+        gtk_widget_grab_focus (gtk_notebook_get_nth_page (nb,
+                                                          gtk_notebook_get_current_page (nb)));
 }
 
 static void
@@ -168,6 +180,8 @@ data_manager_perspective_new (BrowserWindow *bwin)
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
 
+	gtk_widget_grab_focus (page);
+
 	return bpers;
 }
 
@@ -229,6 +243,7 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 	
 	data_console_set_text (page_to_reuse, selection);
 	data_console_set_fav_id (page_to_reuse, fav_id, NULL);
+	gtk_widget_grab_focus (page_to_reuse);
 }
 
 static void
@@ -299,7 +314,7 @@ manager_new_cb (GtkAction *action, BrowserPerspective *bpers)
 
 static GtkActionEntry ui_actions[] = {
         { "DataManagerMenu", NULL, "_Manager", NULL, "ManagerMenu", NULL },
-        { "NewDataManager", GTK_STOCK_NEW, "_New data manager", NULL, "New data manager",
+        { "NewDataManager", GTK_STOCK_NEW, "_New data manager", "<control>T", "New data manager",
           G_CALLBACK (manager_new_cb)},
 };
 
@@ -371,4 +386,5 @@ data_manager_perspective_new_tab (DataManagerPerspective *dmp, const gchar *xml_
 
 	data_console_set_text (DATA_CONSOLE (page), xml_spec); 
 	data_console_execute (DATA_CONSOLE (page));
+	gtk_widget_grab_focus (page);
 }

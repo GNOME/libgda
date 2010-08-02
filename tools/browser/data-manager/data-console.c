@@ -84,6 +84,7 @@ static void data_console_class_init (DataConsoleClass *klass);
 static void data_console_init       (DataConsole *dconsole, DataConsoleClass *klass);
 static void data_console_dispose    (GObject *object);
 static void data_console_show_all   (GtkWidget *widget);
+static void data_console_grab_focus (GtkWidget *widget);
 
 static void data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole);
 
@@ -113,6 +114,7 @@ data_console_class_init (DataConsoleClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	GTK_WIDGET_CLASS (klass)->show_all = data_console_show_all;
+	GTK_WIDGET_CLASS (klass)->grab_focus = data_console_grab_focus;
 	object_class->dispose = data_console_dispose;
 }
 
@@ -124,6 +126,15 @@ data_console_show_all (GtkWidget *widget)
 
 	if (!gtk_toggle_button_get_active (dconsole->priv->params_toggle))
 		gtk_widget_hide (dconsole->priv->params_top);
+}
+
+static void
+data_console_grab_focus (GtkWidget *widget)
+{
+	DataConsole *dconsole;
+
+	dconsole = DATA_CONSOLE (widget);
+	gtk_widget_grab_focus (GTK_WIDGET (dconsole->priv->xml_sped));
 }
 
 static void
@@ -414,7 +425,7 @@ data_console_new (BrowserConnection *bcnc)
 
 	//xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
 
-
+	gtk_widget_grab_focus (dconsole->priv->xml_sped);
 	return (GtkWidget*) dconsole;
 }
 

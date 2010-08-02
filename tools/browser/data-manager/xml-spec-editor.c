@@ -57,6 +57,7 @@ struct _XmlSpecEditorPrivate {
 static void xml_spec_editor_class_init (XmlSpecEditorClass *klass);
 static void xml_spec_editor_init       (XmlSpecEditor *sped, XmlSpecEditorClass *klass);
 static void xml_spec_editor_dispose    (GObject *object);
+static void xml_spec_editor_grab_focus (GtkWidget *widget);
 
 static GObjectClass *parent_class = NULL;
 
@@ -70,9 +71,15 @@ xml_spec_editor_class_init (XmlSpecEditorClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	GTK_WIDGET_CLASS (klass)->grab_focus = xml_spec_editor_grab_focus;
 	object_class->dispose = xml_spec_editor_dispose;
 }
 
+static void
+xml_spec_editor_grab_focus (GtkWidget *widget)
+{
+	gtk_widget_grab_focus (XML_SPEC_EDITOR (widget)->priv->text);
+}
 
 static void
 xml_spec_editor_init (XmlSpecEditor *sped, XmlSpecEditorClass *klass)

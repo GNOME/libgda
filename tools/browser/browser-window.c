@@ -518,6 +518,9 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
         gtk_widget_show (GTK_WIDGET (bwin));
 
+	gtk_widget_set_can_focus (pers->perspective_widget, TRUE);
+	gtk_widget_grab_focus (pers->perspective_widget);
+
 	return bwin;
 }
 
