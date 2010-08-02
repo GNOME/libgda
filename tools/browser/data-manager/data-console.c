@@ -31,6 +31,7 @@
 #include "../cc-gray-bar.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
+#include "../browser-perspective.h"
 #include "../browser-stock-icons.h"
 #include "../common/popup-container.h"
 #include <libgda/sql-parser/gda-sql-parser.h>
@@ -51,6 +52,7 @@ typedef enum {
 struct _DataConsolePrivate {
 	DataSourceManager *mgr;
 
+	CcGrayBar *header;
 	LayoutType layout_type;
 	BrowserConnection *bcnc;
 
@@ -71,6 +73,11 @@ struct _DataConsolePrivate {
 	GtkWidget *params_form_box;
 	GtkWidget *params_form;
 
+	gint fav_id; /* diagram's ID as a favorite, -1=>not a favorite */
+	GtkWidget *save_button;
+        GtkWidget *popup_container; /* to enter canvas's name */
+        GtkWidget *name_entry;
+        GtkWidget *real_save_button;
 };
 
 static void data_console_class_init (DataConsoleClass *klass);
@@ -132,6 +139,8 @@ data_console_init (DataConsole *dconsole, DataConsoleClass *klass)
 {
 	dconsole->priv = g_new0 (DataConsolePrivate, 1);
 	dconsole->priv->layout_type = LAYOUT_HORIZ;
+	dconsole->priv->fav_id = -1;
+	dconsole->priv->popup_container = NULL;
 }
 
 static void
@@ -141,6 +150,8 @@ data_console_dispose (GObject *object)
 
 	/* free memory */
 	if (dconsole->priv) {
+		if (dconsole->priv->popup_container)
+                        gtk_widget_destroy (dconsole->priv->popup_container);
 		if (dconsole->priv->bcnc)
 			g_object_unref (dconsole->priv->bcnc);
 		if (dconsole->priv->agroup)
@@ -188,6 +199,21 @@ data_console_get_type (void)
 	return type;
 }
 
+/**
+ * data_console_new
+ *
+ * Returns: a new #GtkWidget
+ */
+GtkWidget *
+data_console_new_with_fav_id (BrowserConnection *bcnc, gint fav_id)
+{
+	GtkWidget *dconsole;
+	dconsole = data_console_new (bcnc);
+	data_console_set_fav_id (DATA_CONSOLE (dconsole), fav_id, NULL);
+
+	return dconsole;
+}
+
 static void editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole);
 static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
@@ -195,6 +221,7 @@ static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void help_clicked_cb (GtkButton *button, DataConsole *dconsole);
 #endif
 static void spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole);
+static void save_clicked_cb (GtkWidget *button, DataConsole *dconsole);
 
 /**
  * data_console_new
@@ -216,13 +243,30 @@ data_console_new (BrowserConnection *bcnc)
 			  G_CALLBACK (data_source_mgr_changed_cb), dconsole);
 	
 	/* header */
-        GtkWidget *label;
+        GtkWidget *hbox, *label, *wid;
 	gchar *str;
-	str = g_strdup_printf ("<b>%s</b>", _("Data Manager"));
+
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (dconsole), hbox, FALSE, FALSE, 0);
+
+	str = g_strdup_printf ("<b>%s</b>\n%s", _("Data Manager"), _("Unsaved"));
 	label = cc_gray_bar_new (str);
 	g_free (str);
-        gtk_box_pack_start (GTK_BOX (dconsole), label, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
         gtk_widget_show (label);
+	dconsole->priv->header = CC_GRAY_BAR (label);
+
+	wid = gtk_button_new ();
+	label = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_BUTTON);
+	gtk_container_add (GTK_CONTAINER (wid), label);
+	gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+	g_object_set (G_OBJECT (wid), "label", NULL, NULL);
+	dconsole->priv->save_button = wid;
+
+	g_signal_connect (wid, "clicked",
+			  G_CALLBACK (save_clicked_cb), dconsole);
+
+        gtk_widget_show_all (hbox);
 
 	/* main container */
 	GtkWidget *hpaned, *nb;
@@ -265,7 +309,6 @@ data_console_new (BrowserConnection *bcnc)
 	dconsole->priv->main_notebook = nb;
 
 	/* editors page */
-	GtkWidget *hbox;
 	vbox = gtk_vbox_new (FALSE, 0);
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
 
@@ -325,8 +368,6 @@ data_console_new (BrowserConnection *bcnc)
 
 
 	/* data contents page */
-	GtkWidget *wid;
-
 	vbox = gtk_vbox_new (FALSE, 0);
 	dconsole->priv->data_box = vbox;
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
@@ -373,6 +414,134 @@ data_console_new (BrowserConnection *bcnc)
 
 
 	return (GtkWidget*) dconsole;
+}
+
+/**
+ * data_console_set_fav_id
+ *
+ * Sets the favorite ID of @dconsole: ensure every displayed information is up to date
+ */
+void
+data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
+{
+	g_return_if_fail (IS_DATA_CONSOLE (dconsole));
+	BrowserFavoritesAttributes fav;
+
+	if ((fav_id >=0) &&
+	    browser_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
+				   fav_id, &fav, error)) {
+		gchar *str, *tmp;
+		tmp = g_markup_printf_escaped (_("'%s' data manager"), fav.name);
+		str = g_strdup_printf ("<b>%s</b>\n%s", _("Data manager"), tmp);
+		g_free (tmp);
+		cc_gray_bar_set_text (dconsole->priv->header, str);
+		g_free (str);
+		
+		dconsole->priv->fav_id = fav.id;
+		
+		browser_favorites_reset_attributes (&fav);
+	}
+	else {
+		gchar *str;
+		str = g_strdup_printf ("<b>%s</b>\n%s", _("Data manager"), _("Unsaved"));
+		cc_gray_bar_set_text (dconsole->priv->header, str);
+		g_free (str);
+		dconsole->priv->fav_id = -1;
+	}
+
+	/* update notebook's tab label */
+	BrowserPerspective *pers;
+	pers = browser_page_get_perspective (BROWSER_PAGE (dconsole));
+	if (pers)
+		browser_perspective_page_tab_label_change (pers, BROWSER_PAGE (dconsole));
+}
+
+/*
+ * POPUP
+ */
+static void
+real_save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
+{
+	gchar *str;
+
+	str = xml_spec_editor_get_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped));
+
+	GError *lerror = NULL;
+	BrowserFavorites *bfav;
+	BrowserFavoritesAttributes fav;
+
+	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+	fav.id = dconsole->priv->fav_id;
+	fav.type = BROWSER_FAVORITES_DATA_MANAGERS;
+	fav.name = gtk_editable_get_chars (GTK_EDITABLE (dconsole->priv->name_entry), 0, -1);
+	if (!*fav.name) {
+		g_free (fav.name);
+		fav.name = g_strdup (_("Data manager"));
+	}
+	fav.contents = str;
+	
+	gtk_widget_hide (dconsole->priv->popup_container);
+	
+	bfav = browser_connection_get_favorites (dconsole->priv->bcnc);
+	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_DATA_MANAGERS, G_MAXINT, &lerror)) {
+		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel (button),
+				    "<b>%s:</b>\n%s",
+				    _("Could not save data manager"),
+				    lerror && lerror->message ? lerror->message : _("No detail"));
+		if (lerror)
+			g_error_free (lerror);
+	}
+
+	data_console_set_fav_id (dconsole, fav.id, NULL);
+
+	g_free (fav.name);
+	g_free (str);
+}
+
+static void
+save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
+{
+	gchar *str;
+
+	if (!dconsole->priv->popup_container) {
+		GtkWidget *window, *wid, *hbox;
+
+		window = popup_container_new (button);
+		dconsole->priv->popup_container = window;
+
+		hbox = gtk_hbox_new (FALSE, 0);
+		gtk_container_add (GTK_CONTAINER (window), hbox);
+		wid = gtk_label_new ("");
+		str = g_strdup_printf ("%s:", _("Data manager's name"));
+		gtk_label_set_markup (GTK_LABEL (wid), str);
+		g_free (str);
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+
+		wid = gtk_entry_new ();
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
+		dconsole->priv->name_entry = wid;
+		if (dconsole->priv->fav_id > 0) {
+			BrowserFavoritesAttributes fav;
+			if (browser_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
+						   dconsole->priv->fav_id, &fav, NULL)) {
+				gtk_entry_set_text (GTK_ENTRY (wid), fav.name);
+				browser_favorites_reset_attributes (&fav);
+			}
+		}
+
+		g_signal_connect (wid, "activate",
+				  G_CALLBACK (real_save_clicked_cb), dconsole);
+
+		wid = gtk_button_new_with_label (_("Save"));
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+		g_signal_connect (wid, "clicked",
+				  G_CALLBACK (real_save_clicked_cb), dconsole);
+		dconsole->priv->real_save_button = wid;
+
+		gtk_widget_show_all (hbox);
+	}
+
+        gtk_widget_show (dconsole->priv->popup_container);
 }
 
 static void

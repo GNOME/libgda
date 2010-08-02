@@ -49,10 +49,13 @@ struct _DataConsoleClass {
 
 GType                    data_console_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *data_console_new      (BrowserConnection *bcnc);
-void                     data_console_set_text (DataConsole *console, const gchar *text);
-gchar                   *data_console_get_text (DataConsole *console);
-void                     data_console_execute  (DataConsole *console);
+GtkWidget               *data_console_new             (BrowserConnection *bcnc);
+GtkWidget               *data_console_new_with_fav_id (BrowserConnection *bcnc, gint fav_id);
+void                     data_console_set_text        (DataConsole *console, const gchar *text);
+gchar                   *data_console_get_text        (DataConsole *console);
+void                     data_console_execute         (DataConsole *console);
+void                     data_console_set_fav_id      (DataConsole *dconsole, gint fav_id,
+						       GError **error);
 
 G_END_DECLS
 

@@ -172,14 +172,17 @@ data_manager_perspective_new (BrowserWindow *bwin)
 }
 
 static DataConsole *
-add_new_data_console (BrowserPerspective *bpers)
+add_new_data_console (BrowserPerspective *bpers, gint fav_id)
 {
 	GtkWidget *page, *tlabel, *button;
 	DataManagerPerspective *perspective;
 	gint page_nb;
 
 	perspective = DATA_MANAGER_PERSPECTIVE (bpers);
-	page = data_console_new (perspective->priv->bcnc);
+	if (fav_id >= 0)
+		page = data_console_new_with_fav_id (perspective->priv->bcnc, fav_id);
+	else
+		page = data_console_new (perspective->priv->bcnc);
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), &button);
         g_signal_connect (button, "clicked",
                           G_CALLBACK (close_button_clicked_cb), page);
@@ -206,6 +209,9 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 	gint current_page;
 	DataConsole *page_to_reuse = NULL;
 
+	if (fav_type != BROWSER_FAVORITES_DATA_MANAGERS)
+		return;
+
 	current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (perspective->priv->notebook));
 	if (current_page >= 0) {
 		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (perspective->priv->notebook), current_page);
@@ -219,9 +225,10 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 	}
 
 	if (! page_to_reuse)
-		page_to_reuse = add_new_data_console ((BrowserPerspective*) perspective);
+		page_to_reuse = add_new_data_console ((BrowserPerspective*) perspective, fav_id);
 	
 	data_console_set_text (page_to_reuse, selection);
+	data_console_set_fav_id (page_to_reuse, fav_id, NULL);
 }
 
 static void
@@ -287,7 +294,7 @@ data_manager_perspective_dispose (GObject *object)
 static void
 manager_new_cb (GtkAction *action, BrowserPerspective *bpers)
 {
-	add_new_data_console (bpers);
+	add_new_data_console (bpers, -1);
 }
 
 static GtkActionEntry ui_actions[] = {
@@ -356,7 +363,7 @@ data_manager_perspective_new_tab (DataManagerPerspective *dmp, const gchar *xml_
 	}
 
 	if (!page) {
-		add_new_data_console (BROWSER_PERSPECTIVE (dmp));
+		add_new_data_console (BROWSER_PERSPECTIVE (dmp), -1);
 		current = gtk_notebook_get_current_page (GTK_NOTEBOOK (dmp->priv->notebook));
 		page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (dmp->priv->notebook), current);
 		g_assert (IS_DATA_CONSOLE (page));
