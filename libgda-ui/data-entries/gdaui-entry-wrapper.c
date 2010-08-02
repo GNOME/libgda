@@ -377,7 +377,7 @@ static void
 contents_activated_cb (GtkWidget *entry, GdauiEntryWrapper *mgwrap)
 {
 	/* @entry is not used */
-	if (! mgwrap->priv->signals_blocked && mgwrap->priv->contents_has_changed) {
+	if (! mgwrap->priv->signals_blocked) {
 		mgwrap->priv->null_forced = FALSE;
 		mgwrap->priv->default_forced = FALSE;
 #ifdef debug_signal
