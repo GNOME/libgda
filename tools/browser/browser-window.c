@@ -67,6 +67,14 @@ static void connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, 
 static void transaction_status_changed_cb (BrowserConnection *bcnc, BrowserWindow *bwin);
 
 
+enum {
+        FULLSCREEN_CHANGED,
+        LAST_SIGNAL
+};
+
+static gint browser_window_signals[LAST_SIGNAL] = { 0 };
+
+
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
@@ -90,6 +98,8 @@ struct _BrowserWindowPrivate {
 
 	GtkWidget         *statusbar;
 	guint              cnc_statusbar_context;
+
+	gboolean           fullscreen;
 };
 
 GType
@@ -125,11 +135,21 @@ browser_window_class_init (BrowserWindowClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-	widget_class->window_state_event = window_state_event;
 
+	widget_class->window_state_event = window_state_event;
 	parent_class = g_type_class_peek_parent (klass);
 
+	browser_window_signals[FULLSCREEN_CHANGED] =
+                g_signal_new ("fullscreen_changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (BrowserWindowClass, fullscreen_changed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__BOOLEAN,
+                              G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
+
 	object_class->dispose = browser_window_dispose;
+	klass->fullscreen_changed = NULL;
 }
 
 static void
@@ -143,6 +163,7 @@ browser_window_init (BrowserWindow *bwin)
 	bwin->priv->cnc_added_sigid = 0;
 	bwin->priv->cnc_removed_sigid = 0;
 	bwin->priv->updating_transaction_status = FALSE;
+	bwin->priv->fullscreen = FALSE;
 }
 
 static void
@@ -886,6 +907,7 @@ window_state_event (GtkWidget *widget, GdkEventWindowState *event)
 		wid = gtk_ui_manager_get_widget (bwin->priv->ui_manager, "/ToolBar");
 
                 fullscreen = event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN;
+		bwin->priv->fullscreen = fullscreen;
 		if (fullscreen) {
 			gtk_toolbar_set_style (GTK_TOOLBAR (wid), GTK_TOOLBAR_ICONS);
 			browser_spinner_set_size (BROWSER_SPINNER (bwin->priv->spinner),
@@ -904,6 +926,7 @@ window_state_event (GtkWidget *widget, GdkEventWindowState *event)
 			gtk_widget_show (wid);
 		
 		gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (bwin->priv->statusbar), !fullscreen);
+		g_signal_emit (G_OBJECT (bwin), browser_window_signals[FULLSCREEN_CHANGED], 0, fullscreen);
         }
 	return FALSE;
 }
@@ -1302,4 +1325,15 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 			     current_pdata->factory->menu_shortcut);
 
 	return bpers;
+}
+
+/**
+ * browser_window_is_fullscreen
+ * @bwin: a #BrowserWindow
+ */
+gboolean
+browser_window_is_fullscreen (BrowserWindow *bwin)
+{
+	g_return_val_if_fail (BROWSER_IS_WINDOW (bwin), FALSE);
+	return bwin->priv->fullscreen;
 }

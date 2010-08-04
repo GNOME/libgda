@@ -46,6 +46,8 @@ static void                 query_exec_perspective_get_current_customization (Br
 									      const gchar **out_ui);
 static void                 query_exec_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
 
+static void                 adapt_notebook_for_fullscreen (QueryExecPerspective *perspective);
+
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
@@ -57,6 +59,7 @@ struct _QueryExecPerspectivePrivate {
 	BrowserConnection *bcnc;
 	
 	GtkActionGroup *action_group;
+	gboolean fullscreen;
 };
 
 GType
@@ -129,6 +132,7 @@ query_exec_perspective_init (QueryExecPerspective *perspective)
 	perspective->priv = g_new0 (QueryExecPerspectivePrivate, 1);
 	perspective->priv->action_group = NULL;
 	perspective->priv->favorites_shown = TRUE;
+	perspective->priv->fullscreen = FALSE;
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
@@ -136,8 +140,11 @@ static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFav
 static void nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
 			       QueryExecPerspective *perspective);
 static void nb_page_removed_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
-			       QueryExecPerspective *perspective);
+				QueryExecPerspective *perspective);
+static void nb_page_added_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+			      QueryExecPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
+static void fullscreen_changed_cb (BrowserWindow *bwin, gboolean fullscreen, QueryExecPerspective *perspective);
 
 /**
  * query_exec_perspective_new
@@ -155,8 +162,11 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	perspective = (QueryExecPerspective*) bpers;
 
 	perspective->priv->bwin = bwin;
+	g_signal_connect (bwin, "fullscreen-changed",
+			  G_CALLBACK (fullscreen_changed_cb), bpers);
 	bcnc = browser_window_get_connection (bwin);
 	perspective->priv->bcnc = g_object_ref (bcnc);
+	perspective->priv->fullscreen = browser_window_is_fullscreen (bwin);
 
 	/* contents */
 	GtkWidget *paned, *nb, *wid;
@@ -203,6 +213,11 @@ query_exec_perspective_new (BrowserWindow *bwin)
 			  G_CALLBACK (nb_switch_page_cb), perspective);
 	g_signal_connect (G_OBJECT (nb), "page-removed",
 			  G_CALLBACK (nb_page_removed_cb), perspective);
+	g_signal_connect (G_OBJECT (nb), "page-added",
+			  G_CALLBACK (nb_page_added_cb), perspective);
+
+	if (perspective->priv->fullscreen)
+		adapt_notebook_for_fullscreen (perspective);
 
 	return bpers;
 }
@@ -256,12 +271,38 @@ nb_page_removed_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
 							 BROWSER_PERSPECTIVE (perspective),
 							 NULL, NULL);
 	}
+	adapt_notebook_for_fullscreen (perspective);
+}
+
+static void
+nb_page_added_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+		  QueryExecPerspective *perspective)
+{
+	adapt_notebook_for_fullscreen (perspective);
 }
 
 static void
 close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget)
 {
 	gtk_widget_destroy (page_widget);
+}
+
+static void
+adapt_notebook_for_fullscreen (QueryExecPerspective *perspective)
+{
+	gboolean showtabs = TRUE;
+	
+	if (perspective->priv->fullscreen && 
+	    gtk_notebook_get_n_pages (GTK_NOTEBOOK (perspective->priv->notebook)) == 1)
+		showtabs = FALSE;
+	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (perspective->priv->notebook), showtabs);
+}
+
+static void
+fullscreen_changed_cb (BrowserWindow *bwin, gboolean fullscreen, QueryExecPerspective *perspective)
+{
+	perspective->priv->fullscreen = fullscreen;
+	adapt_notebook_for_fullscreen (perspective);
 }
 
 static void
@@ -282,6 +323,10 @@ query_exec_perspective_dispose (GObject *object)
 
 		g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
 						      G_CALLBACK (nb_page_removed_cb), perspective);
+		g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
+						      G_CALLBACK (nb_page_added_cb), perspective);
+		g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
+						      G_CALLBACK (nb_switch_page_cb), perspective);
 		g_free (perspective->priv);
 		perspective->priv = NULL;
 	}
@@ -319,6 +364,8 @@ query_exec_add_cb (GtkAction *action, BrowserPerspective *bpers)
 	gtk_notebook_set_menu_label (GTK_NOTEBOOK (perspective->priv->notebook), page, tlabel);
 
 	gtk_widget_grab_focus (page);
+
+	adapt_notebook_for_fullscreen (perspective);
 }
 
 static void

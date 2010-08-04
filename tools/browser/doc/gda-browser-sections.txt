@@ -9,6 +9,7 @@ browser_window_push_status
 browser_window_pop_status
 browser_window_customize_perspective_ui
 browser_window_change_perspective
+browser_window_is_fullscreen
 <SUBSECTION Standard>
 BROWSER_WINDOW
 BROWSER_IS_WINDOW
