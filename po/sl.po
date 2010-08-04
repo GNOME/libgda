@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-07-28 20:12+0000\n"
-"PO-Revision-Date: 2010-07-29 13:38+0100\n"
+"POT-Creation-Date: 2010-08-04 17:53+0000\n"
+"PO-Revision-Date: 2010-08-04 20:29+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -97,8 +97,8 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:283
 #: ../libgda/gda-connection.c:1523
-#: ../libgda/gda-data-model.c:2029
-#: ../libgda/gda-data-model.c:2037
+#: ../libgda/gda-data-model.c:2031
+#: ../libgda/gda-data-model.c:2039
 #: ../libgda/gda-data-model-dir.c:382
 #: ../libgda/gda-data-model-import.c:1574
 #: ../libgda/gda-data-model-import.c:1857
@@ -147,25 +147,26 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../providers/mysql/gda-mysql-util.c:73
 #: ../providers/postgres/gda-postgres-provider.c:1706
 #: ../providers/postgres/gda-postgres-provider.c:1721
-#: ../providers/postgres/gda-postgres-util.c:87
-#: ../providers/postgres/gda-postgres-util.c:90
-#: ../tools/browser/auth-dialog.c:676
-#: ../tools/browser/auth-dialog.c:679
-#: ../tools/browser/browser-connection.c:351
-#: ../tools/browser/browser-connection.c:411
-#: ../tools/browser/browser-connection.c:431
-#: ../tools/browser/browser-connection.c:615
-#: ../tools/browser/browser-connection.c:635
-#: ../tools/browser/browser-connection.c:843
-#: ../tools/browser/browser-window.c:805
-#: ../tools/browser/browser-window.c:819
-#: ../tools/browser/browser-window.c:833
-#: ../tools/browser/browser-window.c:945
+#: ../providers/postgres/gda-postgres-util.c:108
+#: ../providers/postgres/gda-postgres-util.c:111
+#: ../tools/browser/auth-dialog.c:678
+#: ../tools/browser/auth-dialog.c:681
+#: ../tools/browser/browser-connection.c:353
+#: ../tools/browser/browser-connection.c:419
+#: ../tools/browser/browser-connection.c:439
+#: ../tools/browser/browser-connection.c:623
+#: ../tools/browser/browser-connection.c:643
+#: ../tools/browser/browser-connection.c:851
+#: ../tools/browser/browser-window.c:842
+#: ../tools/browser/browser-window.c:856
+#: ../tools/browser/browser-window.c:870
 #: ../tools/browser/browser-window.c:986
+#: ../tools/browser/browser-window.c:1027
 #: ../tools/browser/login-dialog.c:239
 #: ../tools/browser/main.c:96
 #: ../tools/browser/main.c:110
 #: ../tools/browser/main.c:136
+#: ../tools/browser/data-manager/data-console.c:503
 #: ../tools/browser/data-manager/data-favorite-selector.c:201
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:629
@@ -379,7 +380,7 @@ msgstr ""
 
 #: ../control-center/main.c:57
 #: ../libgda-ui/internal/utility.c:529
-#: ../tools/browser/support.c:137
+#: ../tools/browser/support.c:138
 msgid "Error:"
 msgstr "Napaka:"
 
@@ -392,7 +393,7 @@ msgid "No valid data source info was created"
 msgstr "Ni ustvarjenih veljavnih podatkov o viru"
 
 #: ../control-center/main.c:184
-#: ../tools/browser/browser-window.c:1028
+#: ../tools/browser/browser-window.c:1069
 msgid "Database access services for the GNOME Desktop"
 msgstr "Storitev dostopa do podatkovnih zbirk za GNOME namizje."
 
@@ -632,8 +633,8 @@ msgid "Datasource configuration error: no provider specified"
 msgstr "Napaka nastavitve podatkovnega vira: ni navedenega ponudnika"
 
 #: ../libgda/gda-connection.c:1118
-#: ../tools/browser/auth-dialog.c:415
-#: ../tools/browser/auth-dialog.c:451
+#: ../tools/browser/auth-dialog.c:417
+#: ../tools/browser/auth-dialog.c:453
 #: ../tools/gda-sql.c:1309
 #, c-format
 msgid "Malformed connection string '%s'"
@@ -755,7 +756,7 @@ msgstr "Notranja napaka: neveljaven upravljalnik ponudnika"
 #: ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:295
 #: ../libgda/gda-data-model-iter.c:1018
-#: ../libgda/gda-data-proxy.c:3475
+#: ../libgda/gda-data-proxy.c:3494
 #: ../libgda/gda-data-select.c:1197
 #: ../libgda/gda-data-select.c:1693
 #: ../libgda/gda-data-select.c:2588
@@ -818,8 +819,8 @@ msgstr "Ali je mogoče podatkovni model spremeniti"
 #: ../libgda/gda-data-model-dir.c:959
 #: ../libgda/gda-data-model-dir.c:1313
 #: ../libgda/gda-data-model-dsn-list.c:319
-#: ../libgda/gda-data-proxy.c:3424
-#: ../libgda/gda-data-proxy.c:3462
+#: ../libgda/gda-data-proxy.c:3443
+#: ../libgda/gda-data-proxy.c:3481
 #: ../libgda/gda-data-select.c:1649
 #: ../libgda/gda-data-select.c:1703
 #, c-format
@@ -833,8 +834,8 @@ msgstr "Vrstica %d je izven območja (0-%d)"
 #: ../libgda/gda-data-model-dir.c:962
 #: ../libgda/gda-data-model-dir.c:1316
 #: ../libgda/gda-data-model-dsn-list.c:322
-#: ../libgda/gda-data-proxy.c:3427
-#: ../libgda/gda-data-proxy.c:3465
+#: ../libgda/gda-data-proxy.c:3446
+#: ../libgda/gda-data-proxy.c:3484
 #: ../libgda/gda-data-select.c:1652
 #: ../libgda/gda-data-select.c:1706
 #, c-format
@@ -899,123 +900,123 @@ msgstr "Pričakovana je vrednost GdaBinary, pridobljena pa %s"
 msgid "Key modification is not supported"
 msgstr "Spreminjanje ključa ni podprto"
 
-#: ../libgda/gda-data-model.c:618
+#: ../libgda/gda-data-model.c:620
 msgid "Data model does not support getting individual value"
 msgstr "Podatkovni model ne podpira pridobivanja posameznih vrednosti"
 
-#: ../libgda/gda-data-model.c:661
-#: ../libgda/gda-data-model.c:671
+#: ../libgda/gda-data-model.c:663
+#: ../libgda/gda-data-model.c:673
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr "Podatkovni model je vrnil neveljavno vrednost vrste '%s'"
 
-#: ../libgda/gda-data-model.c:668
+#: ../libgda/gda-data-model.c:670
 msgid "Data model returned invalid NULL value"
 msgstr "Podatkovni model je vrnil neveljavno NULL vrednost"
 
-#: ../libgda/gda-data-model.c:728
+#: ../libgda/gda-data-model.c:730
 msgid "Data model does not support setting individual value"
 msgstr "Podatkovni model ne podpira določanja posameznih vrednosti"
 
-#: ../libgda/gda-data-model.c:761
+#: ../libgda/gda-data-model.c:763
 msgid "Data model does not support setting values"
 msgstr "Podatkovni model ne podpira določevanja vrednosti"
 
-#: ../libgda/gda-data-model.c:824
-#: ../libgda/gda-data-model.c:858
+#: ../libgda/gda-data-model.c:826
+#: ../libgda/gda-data-model.c:860
 msgid "Data model does not support row append"
 msgstr "Podatkovni model ne podpira pripenjanja vrstic"
 
-#: ../libgda/gda-data-model.c:849
+#: ../libgda/gda-data-model.c:851
 msgid "Model does not allow row insertion"
 msgstr "Model ne dovoli vstavljanja vrstic"
 
-#: ../libgda/gda-data-model.c:884
+#: ../libgda/gda-data-model.c:886
 msgid "Model does not allow row deletion"
 msgstr "Model ne dovoli brisanja vrstic"
 
-#: ../libgda/gda-data-model.c:893
+#: ../libgda/gda-data-model.c:895
 msgid "Data model does not support row removal"
 msgstr "Podatkovni model ne podpira odstranjevanja vrstic"
 
-#: ../libgda/gda-data-model.c:1036
-#: ../libgda/gda-data-model.c:1077
-#: ../libgda/gda-data-model.c:1091
+#: ../libgda/gda-data-model.c:1038
+#: ../libgda/gda-data-model.c:1079
+#: ../libgda/gda-data-model.c:1093
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "Parameter '%s' mora vsebovati vrednost niza, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1100
-#: ../libgda/gda-data-model.c:1110
-#: ../libgda/gda-data-model.c:1120
-#: ../libgda/gda-data-model.c:1158
-#: ../libgda/gda-data-model.c:1251
+#: ../libgda/gda-data-model.c:1102
+#: ../libgda/gda-data-model.c:1112
+#: ../libgda/gda-data-model.c:1122
+#: ../libgda/gda-data-model.c:1160
+#: ../libgda/gda-data-model.c:1253
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "Parameter '%s' mora vsebovati logično vrednost, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1259
+#: ../libgda/gda-data-model.c:1261
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Datoteka '%s' že obstaja"
 
-#: ../libgda/gda-data-model.c:1399
+#: ../libgda/gda-data-model.c:1401
 msgid "Exported Data"
 msgstr "Izvoženi podatki"
 
-#: ../libgda/gda-data-model.c:1516
+#: ../libgda/gda-data-model.c:1518
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr "Pričakovana je oznaka <gda_value> ali <gda_array_value>, pridobljena pa <%s>, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1547
+#: ../libgda/gda-data-model.c:1549
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr "Ni mogoče pridobiti podatkov vrste stolpca (vrsta ni znana ali pa ni določena)"
 
-#: ../libgda/gda-data-model.c:1633
+#: ../libgda/gda-data-model.c:1635
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Pričakovano <gda_array_data>, dobljeno <%s>"
 
-#: ../libgda/gda-data-model.c:1696
+#: ../libgda/gda-data-model.c:1698
 msgid "Could not get an iterator for source data model"
 msgstr "Ni mogoče pridobiti ponavljalnika podatkovnega modela vira"
 
-#: ../libgda/gda-data-model.c:1713
+#: ../libgda/gda-data-model.c:1715
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Neobstoječ stolpec v izvornem podatkovnem modelu: %d"
 
-#: ../libgda/gda-data-model.c:1727
+#: ../libgda/gda-data-model.c:1729
 #, c-format
 msgid "Destination column %d can't be NULL but has no correspondence in the source data model"
 msgstr "Ciljni stolpec %d ne sme imeti določene vrednosti NULL, vendar nima povezave z izvornim podatkovnim modelom"
 
-#: ../libgda/gda-data-model.c:1737
+#: ../libgda/gda-data-model.c:1739
 #, c-format
 msgid "Destination column %d has a gda type (%s) incompatible with source column %d type (%s)"
 msgstr "Ciljni stolpec %d je vrste gda (%s) in je neskladen z izvornim stolpcem vrste %d (%s)"
 
-#: ../libgda/gda-data-model.c:1834
+#: ../libgda/gda-data-model.c:1836
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Ni mogoče pretvoriti '%s' iz GDA vrste %s v vrsto %s"
 
-#: ../libgda/gda-data-model.c:2028
+#: ../libgda/gda-data-model.c:2030
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "Ni mogoče spustiti atributov podatkovnega modela: %s"
 
-#: ../libgda/gda-data-model.c:2036
+#: ../libgda/gda-data-model.c:2038
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "Ni mogoče spustiti vsebine podatkovnega modela: %s"
 
-#: ../libgda/gda-data-model.c:2282
+#: ../libgda/gda-data-model.c:2286
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr "Podatkovni model ne podpira povratnega premika kazalnika, zato podatki ne bodo prikazani."
 
-#: ../libgda/gda-data-model.c:2401
+#: ../libgda/gda-data-model.c:2405
 #, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
@@ -1234,7 +1235,7 @@ msgid "GdaDataProxy can't handle non random access data models"
 msgstr "Predmet GdaDataProxy ne podpira naključnih modelov dostopa do podatkov"
 
 #: ../libgda/gda-data-proxy.c:1538
-#: ../libgda/gda-data-proxy.c:3880
+#: ../libgda/gda-data-proxy.c:3899
 msgid "The first row is an empty row artificially prepended and cannot be removed"
 msgstr "Prva vrstica, ki je ni mogoče odstraniti, je dodana programsko in je vedno prazna"
 
@@ -1263,21 +1264,21 @@ msgstr "Napaka v izrazu filtra"
 msgid "Incorrect filter expression"
 msgstr "Napaka v izrazu filtra"
 
-#: ../libgda/gda-data-proxy.c:3635
+#: ../libgda/gda-data-proxy.c:3654
 msgid "The first row is an empty row artificially prepended and cannot be altered"
 msgstr "Prva vrstica, ki je ni mogoče spreminjati, je dodana programsko in je vedno prazna"
 
-#: ../libgda/gda-data-proxy.c:3657
+#: ../libgda/gda-data-proxy.c:3676
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Napačna vrsta vrednosti: pričakovano je '%s', pridobljeno pa '%s'"
 
-#: ../libgda/gda-data-proxy.c:3743
+#: ../libgda/gda-data-proxy.c:3762
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Poskus spreminjanja stolpca le za branje: %d"
 
-#: ../libgda/gda-data-proxy.c:3780
+#: ../libgda/gda-data-proxy.c:3799
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Neskladnost vrste vrednosti %s namesto %s"
@@ -2077,8 +2078,8 @@ msgstr "Dodatni atributi"
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:158
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:164
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:166
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:172
 msgid "Index"
 msgstr "Kazalo"
 
@@ -2414,7 +2415,7 @@ msgstr "Ni mogoče pridobiti imena stolpce"
 
 #: ../libgda/gda-tree-mgr-label.c:207
 #: ../tools/browser/canvas/browser-canvas-table.c:309
-#: ../tools/browser/data-manager/data-source.c:882
+#: ../tools/browser/data-manager/data-source.c:914
 msgid "No name"
 msgstr "Brez imena"
 
@@ -3380,7 +3381,7 @@ msgid "Invalid UTF-8 format!"
 msgstr "neveljaven zapis UTF-8!"
 
 #. format tooltip
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:1044
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:1053
 msgid "Format is hh:mm:ss"
 msgstr "Zapis je hh:mm:ss"
 
@@ -4013,19 +4014,19 @@ msgstr "Poskus spreminjanja stolpca le za branje"
 msgid "Filter failed:"
 msgstr "Spodletel filter:"
 
-#: ../libgda-ui/gdaui-data-filter.c:213
+#: ../libgda-ui/gdaui-data-filter.c:216
 msgid "Filter"
 msgstr "Filter"
 
-#: ../libgda-ui/gdaui-data-filter.c:213
+#: ../libgda-ui/gdaui-data-filter.c:216
 msgid "any valid SQL expression"
 msgstr "katerakoli veljavni SQL izraz"
 
-#: ../libgda-ui/gdaui-data-filter.c:229
+#: ../libgda-ui/gdaui-data-filter.c:232
 msgid "Set filter"
 msgstr "Nastavitev filtra"
 
-#: ../libgda-ui/gdaui-data-filter.c:234
+#: ../libgda-ui/gdaui-data-filter.c:237
 msgid "Clear filter"
 msgstr "Počisti filter"
 
@@ -4038,6 +4039,7 @@ msgid "Could not open plugins directory, no plugin loaded."
 msgstr "Ni mogoče odpreti mape vstavkov, zato vstavki ne bodo naloženi."
 
 #: ../libgda-ui/gdaui-init.c:485
+#: ../tools/browser/data-manager/xml-spec-editor.c:217
 #: ../tools/browser/query-exec/query-result.c:256
 #: ../tools/web-server.c:2018
 #, c-format
@@ -6614,15 +6616,15 @@ msgstr "Nastavi kot prvotno"
 msgid "Set as default"
 msgstr "Nastavi kot privzeto"
 
-#: ../tools/browser/auth-dialog.c:520
+#: ../tools/browser/auth-dialog.c:522
 msgid "For connection"
 msgstr "Za povezavo:"
 
-#: ../tools/browser/auth-dialog.c:521
+#: ../tools/browser/auth-dialog.c:523
 msgid "enter authentication information"
 msgstr "vnos podrobnosti overitve"
 
-#: ../tools/browser/auth-dialog.c:677
+#: ../tools/browser/auth-dialog.c:679
 #: ../tools/browser/login-dialog.c:238
 #, c-format
 msgid ""
@@ -6637,47 +6639,47 @@ msgstr ""
 msgid "c%u"
 msgstr "c%u"
 
-#: ../tools/browser/browser-connection.c:348
-#: ../tools/browser/browser-connection.c:428
+#: ../tools/browser/browser-connection.c:350
+#: ../tools/browser/browser-connection.c:436
 msgid "Analysing database schema"
 msgstr "Poteka analiza podatkovne sheme"
 
-#: ../tools/browser/browser-connection.c:350
-#: ../tools/browser/browser-connection.c:410
-#: ../tools/browser/browser-connection.c:430
-#: ../tools/browser/browser-connection.c:842
+#: ../tools/browser/browser-connection.c:352
+#: ../tools/browser/browser-connection.c:418
+#: ../tools/browser/browser-connection.c:438
+#: ../tools/browser/browser-connection.c:850
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Napaka med pridobivanjem metapodatkov preko povezave: %s"
 
-#: ../tools/browser/browser-connection.c:408
-#: ../tools/browser/browser-connection.c:840
+#: ../tools/browser/browser-connection.c:416
+#: ../tools/browser/browser-connection.c:848
 msgid "Getting database schema information"
 msgstr "Pridobivanje podrobnosti sheme podatkovne zbirke"
 
-#: ../tools/browser/browser-connection.c:614
-#: ../tools/browser/browser-connection.c:634
+#: ../tools/browser/browser-connection.c:622
+#: ../tools/browser/browser-connection.c:642
 #, c-format
 msgid "Error while analysing database schema: %s"
 msgstr "Napaka ob proučevanju sheme podatkovne zbirke: %s"
 
-#: ../tools/browser/browser-connection.c:1096
-#: ../tools/browser/browser-connection.c:1146
+#: ../tools/browser/browser-connection.c:1104
+#: ../tools/browser/browser-connection.c:1154
 msgid "Executing a query"
 msgstr "Izvajanje poizvedbe"
 
-#: ../tools/browser/browser-connection.c:1408
+#: ../tools/browser/browser-connection.c:1416
 #, c-format
 msgid "Connection not yet opened"
 msgstr "Povezava še ni odprta"
 
-#: ../tools/browser/browser-connection.c:1414
+#: ../tools/browser/browser-connection.c:1422
 msgid "Can't initialize dictionary to store table preferences"
 msgstr "Ni mogoče začeti slovarja za shranjevanje možnosti preglednice"
 
-#: ../tools/browser/browser-connection.c:1460
-#: ../tools/browser/browser-connection.c:1466
-#: ../tools/browser/browser-connection.c:1602
+#: ../tools/browser/browser-connection.c:1468
+#: ../tools/browser/browser-connection.c:1474
+#: ../tools/browser/browser-connection.c:1610
 #: ../tools/browser/browser-favorites.c:523
 #: ../tools/browser/browser-favorites.c:529
 #: ../tools/browser/browser-favorites.c:958
@@ -6685,7 +6687,7 @@ msgstr "Ni mogoče začeti slovarja za shranjevanje možnosti preglednice"
 msgid "Can't initialize transaction to access favorites"
 msgstr "Ni mogoče začeti prenosa za dostop do priljubljenih"
 
-#: ../tools/browser/browser-connection.c:1547
+#: ../tools/browser/browser-connection.c:1555
 #: ../tools/browser/browser-favorites.c:702
 #: ../tools/browser/browser-favorites.c:1016
 msgid "Can't commit transaction to access favorites"
@@ -6769,17 +6771,17 @@ msgid "Bookmarks"
 msgstr "Zaznamki"
 
 #: ../tools/browser/browser-stock-icons.c:47
-#: ../tools/browser/browser-window.c:248
+#: ../tools/browser/browser-window.c:270
 msgid "Begin"
 msgstr "Začetek"
 
 #: ../tools/browser/browser-stock-icons.c:48
-#: ../tools/browser/browser-window.c:250
+#: ../tools/browser/browser-window.c:272
 msgid "Commit"
 msgstr "Uveljavi"
 
 #: ../tools/browser/browser-stock-icons.c:49
-#: ../tools/browser/browser-window.c:252
+#: ../tools/browser/browser-window.c:274
 msgid "Rollback"
 msgstr "Povrni"
 
@@ -6795,19 +6797,19 @@ msgstr "Uporabljene so zvezane povezave"
 msgid "Virtual connection using this connection is busy"
 msgstr "Navidezna povezava, ki uporablja to povezavo je zaposlena"
 
-#: ../tools/browser/browser-window.c:223
+#: ../tools/browser/browser-window.c:244
 msgid "_Fullscreen"
 msgstr "_Celozaslonski način"
 
-#: ../tools/browser/browser-window.c:223
+#: ../tools/browser/browser-window.c:244
 msgid "Use the whole screen"
 msgstr "Uporabi celoten zaslon"
 
-#: ../tools/browser/browser-window.c:229
+#: ../tools/browser/browser-window.c:250
 msgid "_Bind connection"
 msgstr "_Zveži povezave"
 
-#: ../tools/browser/browser-window.c:229
+#: ../tools/browser/browser-window.c:250
 msgid ""
 "Use connection to create\n"
 "a new binding connection to access data\n"
@@ -6817,77 +6819,77 @@ msgstr ""
 "novo vezno povezavo za dostop do\n"
 "več podatkovnih zbirk hkrati"
 
-#: ../tools/browser/browser-window.c:248
+#: ../tools/browser/browser-window.c:270
 msgid "Begin a new transaction"
 msgstr "Začni z novo transakcijo"
 
-#: ../tools/browser/browser-window.c:250
+#: ../tools/browser/browser-window.c:272
 msgid "Commit current transaction"
 msgstr "Uveljavi trenutno transakcijo"
 
-#: ../tools/browser/browser-window.c:252
+#: ../tools/browser/browser-window.c:274
 msgid "Rollback current transaction"
 msgstr "Povrni trenutno transakcijo"
 
-#: ../tools/browser/browser-window.c:340
+#: ../tools/browser/browser-window.c:364
 msgid "unnamed"
 msgstr "neimenovano"
 
-#: ../tools/browser/browser-window.c:341
+#: ../tools/browser/browser-window.c:365
 #, c-format
 msgid "Connection: %s"
 msgstr "Povezava: %s"
 
-#: ../tools/browser/browser-window.c:703
+#: ../tools/browser/browser-window.c:740
 #: ../tools/browser/support.c:75
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Ali želite zapreti '%s' povezavo?"
 
-#: ../tools/browser/browser-window.c:745
-#: ../tools/browser/browser-window.c:752
+#: ../tools/browser/browser-window.c:782
+#: ../tools/browser/browser-window.c:789
 msgid "Do you want to quit the application?"
 msgstr "Ali želite končati program?"
 
-#: ../tools/browser/browser-window.c:746
+#: ../tools/browser/browser-window.c:783
 msgid "all the connections will be closed."
 msgstr "vse povezave bodo zaprte."
 
-#: ../tools/browser/browser-window.c:753
+#: ../tools/browser/browser-window.c:790
 msgid "the connection will be closed."
 msgstr "povezava bo zaprta."
 
-#: ../tools/browser/browser-window.c:804
+#: ../tools/browser/browser-window.c:841
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Napaka med začenjanjem transakcije: %s"
 
-#: ../tools/browser/browser-window.c:818
+#: ../tools/browser/browser-window.c:855
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Napaka med uveljavljanjem transakcije: %s"
 
-#: ../tools/browser/browser-window.c:832
+#: ../tools/browser/browser-window.c:869
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Napaka med povrnitvijo transakcije: %s"
 
-#: ../tools/browser/browser-window.c:944
+#: ../tools/browser/browser-window.c:985
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Napaka med posodabljanjem povezave: %s"
 
-#: ../tools/browser/browser-window.c:985
+#: ../tools/browser/browser-window.c:1026
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "Ni mogoče odpreti povezave: %s"
 
-#: ../tools/browser/browser-window.c:1025
+#: ../tools/browser/browser-window.c:1066
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
 msgid "Database browser"
 msgstr "Brskalnik podatkovne zbirke"
 
-#: ../tools/browser/browser-window.c:1279
+#: ../tools/browser/browser-window.c:1320
 #, c-format
 msgid "The current perspective has changed to the '%s' perspective, you can switch back to previous perspective through the 'Perspective/%s' menu, or using the '%s' shortcut"
 msgstr "Trenutna perspektiva je spremenjena v '%s' perspektivo, nazaj pa jo je mogoče preklopiti preko vnosa menija 'Perspektiva/%s' ali pa s tipkovno bližnjico '%s'."
@@ -7030,7 +7032,7 @@ msgstr "DELETE SAVEPOINT izjava"
 msgid "Unknown statement"
 msgstr "Neznana izjava"
 
-#: ../tools/browser/mgr-favorites.c:541
+#: ../tools/browser/mgr-favorites.c:547
 msgid ""
 "Getting\n"
 "favorites..."
@@ -7038,7 +7040,7 @@ msgstr ""
 "Dobivanje\n"
 "priljubljenih"
 
-#: ../tools/browser/mgr-favorites.c:553
+#: ../tools/browser/mgr-favorites.c:559
 msgid ""
 "No favorite:\n"
 "drag item to\n"
@@ -7048,23 +7050,23 @@ msgstr ""
 "potegni predmet na\n"
 "določi predmet"
 
-#: ../tools/browser/support.c:208
+#: ../tools/browser/support.c:211
 msgid "Note:"
 msgstr "Opomba:"
 
-#: ../tools/browser/support.c:211
+#: ../tools/browser/support.c:214
 msgid "Don't show this message again"
 msgstr "Sporočila ne pokaži več"
 
-#: ../tools/browser/support.c:272
+#: ../tools/browser/support.c:275
 msgid "Unable to display help. Please make sure the documentation package is installed."
 msgstr "Ni mogoče pokazati pomoči. Prepričajte se, da je paket dokumentacije nameščen."
 
-#: ../tools/browser/support.c:298
+#: ../tools/browser/support.c:301
 msgid "Unable to open help file"
 msgstr "Ni mogoče odpreti datoteke pomoči"
 
-#: ../tools/browser/support.c:352
+#: ../tools/browser/support.c:355
 msgid "Close tab"
 msgstr "Zapri zavihek"
 
@@ -7327,27 +7329,29 @@ msgstr "Brez"
 msgid "Toggle between grid and form presentations"
 msgstr "Preklop med mrežnimi in oblikovnimi predstavitvami"
 
-#: ../tools/browser/data-manager/data-console.c:205
+#: ../tools/browser/data-manager/data-console.c:265
 msgid "Data Manager"
 msgstr "Upravljalnik podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:223
+#: ../tools/browser/data-manager/data-console.c:265
+#: ../tools/browser/data-manager/data-console.c:459
+#: ../tools/browser/schema-browser/relations-diagram.c:327
+#: ../tools/browser/schema-browser/relations-diagram.c:475
+msgid "Unsaved"
+msgstr "Neshranjeno"
+
+#: ../tools/browser/data-manager/data-console.c:296
 #: ../tools/browser/query-exec/query-console.c:336
 msgid "Variables' values:"
 msgstr "Vrednosti spremenljivke:"
 
-#: ../tools/browser/data-manager/data-console.c:257
-#: ../tools/browser/query-exec/query-console.c:315
-msgid "SQL code to execute:"
-msgstr "Koda SQL ia izvedbo:"
-
-#: ../tools/browser/data-manager/data-console.c:301
+#: ../tools/browser/data-manager/data-console.c:351
 #: ../tools/browser/query-exec/query-console.c:363
 #: ../tools/browser/query-exec/query-console.c:427
 msgid "Clear"
 msgstr "Počisti"
 
-#: ../tools/browser/data-manager/data-console.c:301
+#: ../tools/browser/data-manager/data-console.c:351
 #: ../tools/browser/query-exec/query-console.c:363
 msgid ""
 "Clear the editor's\n"
@@ -7356,21 +7360,21 @@ msgstr ""
 "Počisti vsebino\n"
 "urejevalnika"
 
-#: ../tools/browser/data-manager/data-console.c:306
+#: ../tools/browser/data-manager/data-console.c:356
 #: ../tools/browser/query-exec/query-console.c:368
 msgid "Variables"
 msgstr "Spremenljivke"
 
-#: ../tools/browser/data-manager/data-console.c:306
+#: ../tools/browser/data-manager/data-console.c:356
 msgid "Show variables needed"
 msgstr "Pokaži zahtevane spremenljivke"
 
-#: ../tools/browser/data-manager/data-console.c:312
+#: ../tools/browser/data-manager/data-console.c:362
 #: ../tools/browser/query-exec/query-console.c:374
 msgid "Execute"
 msgstr "Izvedi"
 
-#: ../tools/browser/data-manager/data-console.c:312
+#: ../tools/browser/data-manager/data-console.c:362
 msgid ""
 "Execute specified\n"
 "data manager"
@@ -7378,11 +7382,11 @@ msgstr ""
 "Izvedi določen\n"
 "upravljalnik podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:318
+#: ../tools/browser/data-manager/data-console.c:368
 msgid "View XML"
 msgstr "Pogled XML"
 
-#: ../tools/browser/data-manager/data-console.c:318
+#: ../tools/browser/data-manager/data-console.c:368
 msgid ""
 "View specifications\n"
 "as XML (advanced)"
@@ -7390,37 +7394,58 @@ msgstr ""
 "Pogled določil\n"
 "kot XML (napredno)"
 
-#: ../tools/browser/data-manager/data-console.c:328
+#: ../tools/browser/data-manager/data-console.c:376
 #: ../tools/html-doc.c:95
 msgid "Help"
 msgstr "Pomoč"
 
-#: ../tools/browser/data-manager/data-console.c:343
+#: ../tools/browser/data-manager/data-console.c:389
 msgid "BBB:"
 msgstr "BBB:"
 
-#: ../tools/browser/data-manager/data-console.c:434
+#: ../tools/browser/data-manager/data-console.c:447
+#, c-format
+msgid "'%s' data manager"
+msgstr "Upravljalnik podatkov '%s' "
+
+#: ../tools/browser/data-manager/data-console.c:448
+#: ../tools/browser/data-manager/data-console.c:459
+#: ../tools/browser/data-manager/data-console.c:492
+#: ../tools/browser/data-manager/data-console.c:767
+msgid "Data manager"
+msgstr "Upravljalnik podatkov"
+
+#: ../tools/browser/data-manager/data-console.c:502
+msgid "Could not save data manager"
+msgstr "Ni mogoče shraniti upravljalnika podatkov"
+
+#: ../tools/browser/data-manager/data-console.c:528
+msgid "Data manager's name"
+msgstr "Ime upravljalnika podatkov"
+
+#: ../tools/browser/data-manager/data-console.c:548
+#: ../tools/browser/schema-browser/relations-diagram.c:286
+msgid "Save"
+msgstr "Shrani"
+
+#: ../tools/browser/data-manager/data-console.c:646
 #, c-format
 msgid "No data source defined"
 msgstr "Ni določenega podatkovnega vira"
 
-#: ../tools/browser/data-manager/data-console.c:493
-#: ../tools/browser/data-manager/spec-editor.c:155
+#: ../tools/browser/data-manager/data-console.c:706
+#: ../tools/browser/data-manager/xml-spec-editor.c:161
 #, c-format
 msgid "Error parsing XML specifications"
 msgstr "Napaka med razčlenjevanjem XML določil"
 
-#: ../tools/browser/data-manager/data-console.c:510
+#: ../tools/browser/data-manager/data-console.c:723
 msgid "_Toggle mode"
 msgstr "_Preklopni način"
 
-#: ../tools/browser/data-manager/data-console.c:510
+#: ../tools/browser/data-manager/data-console.c:723
 msgid "Switch between compose and execute modes"
 msgstr "Preklop med načinom sestavljanja in izvajanja"
-
-#: ../tools/browser/data-manager/data-console.c:554
-msgid "Data manager"
-msgstr "Upravljalnik podatkov"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:200
 #: ../tools/browser/query-exec/query-favorite-selector.c:190
@@ -7459,77 +7484,99 @@ msgstr "Priljubljeno"
 msgid "Unnamed data manager"
 msgstr "Neimenovan upravljalnik podatkov"
 
+#: ../tools/browser/data-manager/data-manager-perspective.c:388
+#: ../tools/browser/query-exec/query-exec-perspective.c:385
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:317
+msgid "_Show favorites"
+msgstr "_Pokaži priljubljene"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:388
+#: ../tools/browser/query-exec/query-exec-perspective.c:385
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:317
+msgid "Show or hide favorites"
+msgstr "Pokaži ali skrij priljubljene"
+
 #. Translators: Do not translate "table" nor "query"
-#: ../tools/browser/data-manager/data-source.c:250
+#: ../tools/browser/data-manager/data-source.c:252
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
 msgstr "Vozlišče mora biti \"preglednica\" ali \"poizvedba\", je pa \"%s\""
 
-#: ../tools/browser/data-manager/data-source.c:279
+#: ../tools/browser/data-manager/data-source.c:284
 #, c-format
 msgid "Multiple statements detected, only the first will be used"
 msgstr "Zaznanih je več izjav, uporabljena pa bo le prva"
 
-#: ../tools/browser/data-manager/data-source.c:351
+#: ../tools/browser/data-manager/data-source.c:368
 #: ../tools/browser/schema-browser/mgr-columns.c:274
 #, c-format
 msgid "Not ready"
 msgstr "Ni pripravljeno"
 
-#: ../tools/browser/data-manager/data-source.c:358
+#: ../tools/browser/data-manager/data-source.c:375
 #, c-format
 msgid "Malformed table name \"%s\""
 msgstr "Izmaličeno ime preglednice \"%s\""
 
-#: ../tools/browser/data-manager/data-source.c:375
+#: ../tools/browser/data-manager/data-source.c:392
 #, c-format
 msgid "Could not find the \"%s\" table"
 msgstr "Ni mogoče najti preglednice \"%s\""
 
-#: ../tools/browser/data-manager/data-source.c:380
+#: ../tools/browser/data-manager/data-source.c:397
 #, c-format
 msgid "The \"%s\" object is not a table"
 msgstr "Predmet \"%s\" ni preglednica"
 
 #. Translators: Do not translate "name"
-#: ../tools/browser/data-manager/data-source.c:394
+#: ../tools/browser/data-manager/data-source.c:415
 #, c-format
 msgid "Missing attribute \"name\" for table"
 msgstr "Manjka atribut \"ime\" preglednice"
 
-#: ../tools/browser/data-manager/data-source.c:399
+#: ../tools/browser/data-manager/data-source.c:420
 #, c-format
 msgid "Contents of '%s'"
 msgstr "Vsebina '%s'"
 
-#: ../tools/browser/data-manager/data-source.c:417
+#: ../tools/browser/data-manager/data-source.c:438
 #, c-format
 msgid "Could not build SELECT statement"
 msgstr "Ni mogoče izgraditi izjave SELECT"
 
-#: ../tools/browser/data-manager/data-source.c:494
+#: ../tools/browser/data-manager/data-source.c:519
 #, c-format
 msgid "Could not find any foreign key to \"%s\""
 msgstr "Ni mogoče najti tujega ključa za \"'%s\""
 
-#: ../tools/browser/data-manager/data-source.c:502
+#: ../tools/browser/data-manager/data-source.c:527
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr "Polja povezana s tujim ključem za \"%s\" niso znana"
 
-#: ../tools/browser/data-manager/data-source.c:616
+#: ../tools/browser/data-manager/data-source.c:648
 #, c-format
 msgid "Statement to execute is not a selection statement"
 msgstr "Izjave za izvedbo ni izjava izbire"
 
-#: ../tools/browser/data-manager/data-source.c:756
+#: ../tools/browser/data-manager/data-source.c:788
 #, c-format
 msgid "No SELECT statement to execute"
 msgstr "Ni določene izjave SELECT za izvedbo"
 
-#: ../tools/browser/data-manager/data-widget.c:349
+#: ../tools/browser/data-manager/data-widget.c:357
 msgid "Error: no detail"
 msgstr "Napaka: ni podrobnosti"
+
+#: ../tools/browser/data-manager/xml-spec-editor.c:175
+#, c-format
+msgid "Expecting <%s> root node"
+msgstr "Pričakovano je <%s> korensko vozlišče"
+
+#: ../tools/browser/data-manager/xml-spec-editor.c:259
+#: ../tools/browser/query-exec/query-console.c:315
+msgid "SQL code to execute:"
+msgstr "Koda SQL ia izvedbo:"
 
 #: ../tools/browser/query-exec/query-console.c:289
 #: ../tools/browser/query-exec/query-console.c:1083
@@ -7704,15 +7751,15 @@ msgstr[1] "pred %lu dnevom\n"
 msgstr[2] "pred %lu dnevoma\n"
 msgstr[3] "pred %lu dnevi\n"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:314
+#: ../tools/browser/query-exec/query-exec-perspective.c:389
 msgid "_Query"
 msgstr "_Poizvedba"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:315
+#: ../tools/browser/query-exec/query-exec-perspective.c:390
 msgid "_New editor"
 msgstr "_Nov urejevalnik"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:315
+#: ../tools/browser/query-exec/query-exec-perspective.c:390
 msgid "Open a new query editor"
 msgstr "Odpri nov urejevalnik poizvedbe"
 
@@ -7779,21 +7826,12 @@ msgstr "Ni mogoče shraniti diagrama"
 msgid "Canvas's name"
 msgstr "Ime platna"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:286
-msgid "Save"
-msgstr "Shrani"
-
 #: ../tools/browser/schema-browser/relations-diagram.c:327
 #: ../tools/browser/schema-browser/relations-diagram.c:384
 #: ../tools/browser/schema-browser/relations-diagram.c:464
 #: ../tools/browser/schema-browser/relations-diagram.c:475
 msgid "Relations diagram"
 msgstr "Diagram povezav"
-
-#: ../tools/browser/schema-browser/relations-diagram.c:327
-#: ../tools/browser/schema-browser/relations-diagram.c:475
-msgid "Unsaved diagram"
-msgstr "Neshranjen diagram"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:374
 #, c-format
@@ -7820,7 +7858,7 @@ msgstr "_Vsebina"
 msgid "View contents"
 msgstr "Pogled vsebine"
 
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:380
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:416
 msgid "Could not load diagram"
 msgstr "Ni mogoče naložiti diagrama"
 
@@ -8931,29 +8969,24 @@ msgstr "Predmeti"
 msgid "Triggers"
 msgstr "Sprožilniki"
 
+#~ msgid "Unsaved diagram"
+#~ msgstr "Neshranjen diagram"
 #~ msgid "_Favorite"
 #~ msgstr "_Priljubljeno"
-
 #~ msgid "XML syntax help"
 #~ msgstr "Pomoč za XML skladnjo"
-
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
-
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
-
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
-
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
-
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokumenta ni mogoče uspešno razčleniti\n"
-
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
-
 #~ msgid "Tables:"
 #~ msgstr "Preglednice:"
+
