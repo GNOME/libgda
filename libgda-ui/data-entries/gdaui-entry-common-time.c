@@ -362,8 +362,10 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		if (value) {
-			if (gda_value_is_null ((GValue *) value))
+			if (gda_value_is_null ((GValue *) value)) {
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
 				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
+			}
 			else {
 				gchar *str, *ptr;
 				
