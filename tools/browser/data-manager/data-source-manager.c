@@ -29,6 +29,8 @@
 
 #include "data-source-manager.h"
 
+/*#define DEBUG_SOURCES_SORT*/
+
 /* signals */
 enum {
 	CHANGED,
@@ -442,7 +444,7 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error)
 					DataSource *source2 = g_array_index (subarray, DataSource*, j);
 					if (source_depends_on (source, source2)) {
 						dep_found = TRUE;
-						/* add source to column i+1 */
+						/* add source to column i+1 if not yet present */
 						if (i == array->len - 1) {
 							GArray *subarray = g_array_new (FALSE, FALSE,
 											sizeof (DataSource*));
@@ -450,8 +452,17 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error)
 							g_array_append_val (subarray, source);
 						}
 						else {
+							gint k;
 							GArray *subarray = g_array_index (array, GArray*, i+1);
-							g_array_append_val (subarray, source);
+							for (k = 0; k < subarray->len; k++) {
+								DataSource *source3 = g_array_index (subarray,
+												     DataSource*,
+												     k);
+								if (source3 == source)
+									break;
+							}
+							if (k == subarray->len)
+								g_array_append_val (subarray, source);
 						}
 						continue;
 					}
@@ -476,6 +487,18 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error)
 	}
 
 #ifdef DEBUG_SOURCES_SORT
+	g_print ("** DataSource arrays is: %p\n", array);
+	if (array) {
+		gint i;
+		for (i = 0; i < array->len; i++) {
+			GArray *subarray = g_array_index (array, GArray*, i);
+			gint j;
+			for (j = 0; j < subarray->len; j++) {
+				DataSource *source2 = g_array_index (subarray, DataSource*, j);
+				g_print ("   %d.%d => [%s]\n", i, j, data_source_get_title (source2));
+			}
+		}
+	}
 	g_print ("** DataSource arrays created\n");
 #endif
 	return array;
