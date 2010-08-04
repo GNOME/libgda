@@ -387,7 +387,7 @@ dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, gboolean row_selected, gpoint
 }
 
 static void
-main_nb_page_switched_cb (GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer data)
+main_nb_page_switched_cb (GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer data)
 {
 	gboolean show;
 	GtkAction *action;
