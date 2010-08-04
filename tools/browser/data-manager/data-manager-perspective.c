@@ -38,6 +38,10 @@ static void data_manager_perspective_grab_focus (GtkWidget *widget);
 static void                 data_manager_perspective_perspective_init (BrowserPerspectiveIface *iface);
 static GtkActionGroup      *data_manager_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *data_manager_perspective_get_actions_ui (BrowserPerspective *perspective);
+static void                 data_manager_perspective_get_current_customization (BrowserPerspective *perspective,
+										GtkActionGroup **out_agroup,
+										const gchar **out_ui);
+
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
@@ -107,6 +111,7 @@ data_manager_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
 	iface->i_get_actions_group = data_manager_perspective_get_actions_group;
 	iface->i_get_actions_ui = data_manager_perspective_get_actions_ui;
+	iface->i_get_current_customization = data_manager_perspective_get_current_customization;
 }
 
 
@@ -387,4 +392,21 @@ data_manager_perspective_new_tab (DataManagerPerspective *dmp, const gchar *xml_
 	data_console_set_text (DATA_CONSOLE (page), xml_spec); 
 	data_console_execute (DATA_CONSOLE (page));
 	gtk_widget_grab_focus (page);
+}
+
+static void
+data_manager_perspective_get_current_customization (BrowserPerspective *perspective,
+						    GtkActionGroup **out_agroup,
+						    const gchar **out_ui)
+{
+	DataManagerPerspective *bpers;
+	GtkWidget *page_contents;
+
+	bpers = DATA_MANAGER_PERSPECTIVE (perspective);
+	page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook),
+						   gtk_notebook_get_current_page (GTK_NOTEBOOK (bpers->priv->notebook)));
+	if (IS_BROWSER_PAGE (page_contents)) {
+		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
+		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
+	}
 }

@@ -144,6 +144,7 @@ BrowserPerspective
 browser_perspective_get_type
 browser_perspective_get_actions_group
 browser_perspective_get_actions_ui
+browser_perspective_get_current_customization
 browser_perspective_page_tab_label_change
 </SECTION>
 

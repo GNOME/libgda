@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -41,6 +41,9 @@ static void query_exec_perspective_grab_focus (GtkWidget *widget);
 static void                 query_exec_perspective_perspective_init (BrowserPerspectiveIface *iface);
 static GtkActionGroup      *query_exec_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *query_exec_perspective_get_actions_ui (BrowserPerspective *perspective);
+static void                 query_exec_perspective_get_current_customization (BrowserPerspective *perspective,
+									      GtkActionGroup **out_agroup,
+									      const gchar **out_ui);
 static void                 query_exec_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -114,9 +117,9 @@ query_exec_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
 	iface->i_get_actions_group = query_exec_perspective_get_actions_group;
 	iface->i_get_actions_ui = query_exec_perspective_get_actions_ui;
+	iface->i_get_current_customization = query_exec_perspective_get_current_customization;
 	iface->i_page_tab_label_change = query_exec_perspective_page_tab_label_change;
 }
-
 
 static void
 query_exec_perspective_init (QueryExecPerspective *perspective)
@@ -166,10 +169,6 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	gtk_paned_pack2 (GTK_PANED (paned), nb, TRUE, TRUE);
 	gtk_notebook_set_scrollable (GTK_NOTEBOOK (nb), TRUE);
 	gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
-	g_signal_connect (G_OBJECT (nb), "switch-page",
-			  G_CALLBACK (nb_switch_page_cb), perspective);
-	g_signal_connect (G_OBJECT (nb), "page-removed",
-			  G_CALLBACK (nb_page_removed_cb), perspective);
 
 	GtkWidget *page, *tlabel, *button;
 
@@ -192,6 +191,12 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	gtk_widget_show_all (paned);
 
 	gtk_widget_grab_focus (page);
+
+	/* signals to customize perspective */
+	g_signal_connect (G_OBJECT (nb), "switch-page",
+			  G_CALLBACK (nb_switch_page_cb), perspective);
+	g_signal_connect (G_OBJECT (nb), "page-removed",
+			  G_CALLBACK (nb_page_removed_cb), perspective);
 
 	return bpers;
 }
@@ -371,5 +376,22 @@ query_exec_perspective_page_tab_label_change (BrowserPerspective *perspective, B
 		tab_label = browser_page_get_tab_label (page, NULL);
 		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook),
 					     GTK_WIDGET (page), tab_label);
+	}
+}
+
+static void
+query_exec_perspective_get_current_customization (BrowserPerspective *perspective,
+						  GtkActionGroup **out_agroup,
+						  const gchar **out_ui)
+{
+	QueryExecPerspective *bpers;
+	GtkWidget *page_contents;
+
+	bpers = QUERY_EXEC_PERSPECTIVE (perspective);
+	page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook),
+						   gtk_notebook_get_current_page (GTK_NOTEBOOK (bpers->priv->notebook)));
+	if (IS_BROWSER_PAGE (page_contents)) {
+		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
+		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
 	}
 }

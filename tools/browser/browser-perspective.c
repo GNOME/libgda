@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -104,6 +104,31 @@ browser_perspective_get_actions_ui (BrowserPerspective *pers)
 		return (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_actions_ui) (pers);
 	else
 		return NULL;
+}
+
+/**
+ * browser_perspective_get_current_customization
+ * @pers: an object implementing the #BrowserPerspective interface
+ * @out_agroup: (transfer full): a place to store the returned GtkActionGroup, not %NULL
+ * @out_ui: (transfer none): a place to store the returned UI string, not %NULL
+ * 
+ * Rem: *@out_agroup is a new object and should be unref'ed when not needed anymore
+ */
+void
+browser_perspective_get_current_customization (BrowserPerspective *pers,
+					       GtkActionGroup **out_agroup,
+					       const gchar **out_ui)
+{
+	g_return_if_fail (IS_BROWSER_PERSPECTIVE (pers));
+	g_return_if_fail (out_agroup);
+	g_return_if_fail (out_ui);
+
+	*out_agroup = NULL;
+	*out_ui = NULL;
+	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_current_customization)
+		(BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_current_customization) (pers,
+										     out_agroup,
+										     out_ui);
 }
 
 /**

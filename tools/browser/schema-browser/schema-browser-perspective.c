@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -42,6 +42,9 @@ static void                 schema_browser_perspective_perspective_init (Browser
 static GtkActionGroup      *schema_browser_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *schema_browser_perspective_get_actions_ui (BrowserPerspective *perspective);
 static void                 schema_browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
+static void                 schema_browser_perspective_get_current_customization (BrowserPerspective *perspective,
+										  GtkActionGroup **out_agroup,
+										  const gchar **out_ui);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -101,6 +104,7 @@ schema_browser_perspective_perspective_init (BrowserPerspectiveIface *iface)
 	iface->i_get_actions_group = schema_browser_perspective_get_actions_group;
 	iface->i_get_actions_ui = schema_browser_perspective_get_actions_ui;
 	iface->i_page_tab_label_change = schema_browser_perspective_page_tab_label_change;
+	iface->i_get_current_customization = schema_browser_perspective_get_current_customization;
 }
 
 
@@ -458,5 +462,22 @@ schema_browser_perspective_display_table_info (SchemaBrowserPerspective *bpers,
 						  TRUE);
 		gtk_notebook_set_tab_detachable (GTK_NOTEBOOK (bpers->priv->notebook), ti,
 						 TRUE);
+	}
+}
+
+static void
+schema_browser_perspective_get_current_customization (BrowserPerspective *perspective,
+						      GtkActionGroup **out_agroup,
+						      const gchar **out_ui)
+{
+	SchemaBrowserPerspective *bpers;
+	GtkWidget *page_contents;
+
+	bpers = SCHEMA_BROWSER_PERSPECTIVE (perspective);
+	page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook),
+						   gtk_notebook_get_current_page (GTK_NOTEBOOK (bpers->priv->notebook)));
+	if (IS_BROWSER_PAGE (page_contents)) {
+		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
+		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
 	}
 }

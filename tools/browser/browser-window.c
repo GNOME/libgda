@@ -453,6 +453,12 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 		bwin->priv->ui_manager_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
 										     ui_info, -1, NULL);
 	bwin->priv->current_perspective = pers;
+	browser_perspective_get_current_customization (BROWSER_PERSPECTIVE (pers->perspective_widget),
+						       &actions, &ui_info);
+	browser_window_customize_perspective_ui (bwin, BROWSER_PERSPECTIVE (pers->perspective_widget),
+						 actions, ui_info);
+	if (actions)
+		g_object_unref (actions);
 	
 	/* insert perspective into window */
         bwin->priv->perspectives_nb = (GtkNotebook*) gtk_notebook_new ();
@@ -585,10 +591,14 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 
 	/* current perspective's customizations */
 	bwin->priv->current_perspective = pers;
-	if (pers->customized_ui)
-		pers->customized_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
-									       pers->customized_ui,
-									       -1, NULL);
+
+	GtkActionGroup *actions;
+	browser_perspective_get_current_customization (BROWSER_PERSPECTIVE (pers->perspective_widget),
+						       &actions, &ui_info);
+	browser_window_customize_perspective_ui (bwin, BROWSER_PERSPECTIVE (pers->perspective_widget),
+						 actions, ui_info);
+	if (actions)
+		g_object_unref (actions);
 }
 
 static void
