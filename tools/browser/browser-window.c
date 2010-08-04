@@ -518,8 +518,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
         gtk_widget_show (GTK_WIDGET (bwin));
 
-	gtk_widget_set_can_focus (pers->perspective_widget, TRUE);
-	gtk_widget_grab_focus (pers->perspective_widget);
+	gtk_widget_set_can_focus ((GtkWidget* )pers->perspective_widget, TRUE);
+	gtk_widget_grab_focus ((GtkWidget* )pers->perspective_widget);
 
 	return bwin;
 }
@@ -875,11 +875,13 @@ window_state_event (GtkWidget *widget, GdkEventWindowState *event)
                 fullscreen = event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN;
 		if (fullscreen) {
 			gtk_toolbar_set_style (GTK_TOOLBAR (wid), GTK_TOOLBAR_ICONS);
-			browser_spinner_set_size (BROWSER_SPINNER (bwin->priv->spinner), GTK_ICON_SIZE_LARGE_TOOLBAR);
+			browser_spinner_set_size (BROWSER_SPINNER (bwin->priv->spinner),
+						  GTK_ICON_SIZE_LARGE_TOOLBAR);
 		}
 		else {
 			gtk_toolbar_set_style (GTK_TOOLBAR (wid), bwin->priv->toolbar_style);
-			browser_spinner_set_size (BROWSER_SPINNER (bwin->priv->spinner), GTK_ICON_SIZE_DIALOG);
+			browser_spinner_set_size (BROWSER_SPINNER (bwin->priv->spinner),
+						  GTK_ICON_SIZE_SMALL_TOOLBAR);
 		}
 
 		wid = gtk_ui_manager_get_widget (bwin->priv->ui_manager, "/MenuBar");
