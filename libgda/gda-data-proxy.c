@@ -3325,7 +3325,8 @@ static void create_columns (GdaDataProxy *proxy)
 		GdaColumn *orig;
 		const gchar *cname;
 		gchar *newname;
-
+		gint k;
+		
 		orig = gda_data_model_describe_column (proxy->priv->model, 
 						       i -  proxy->priv->model_nb_cols);
 		proxy->priv->columns[i] = gda_column_copy (orig);
@@ -3334,6 +3335,24 @@ static void create_columns (GdaDataProxy *proxy)
 			newname = g_strdup_printf ("pre%s", cname);
 		else
 			newname = g_strdup_printf ("pre%d", i);
+		
+		/* make sure there is no duplicate name */
+		for (k = 0; ; k++) {
+			gint j;
+			for (j = 0; j < i; j++) {
+				const gchar *cname2;
+				cname2 =  gda_column_get_name (proxy->priv->columns[j]);
+				if (cname2 && *cname2 && !strcmp (cname2, newname))
+					break;
+			}
+			if (j == i)
+				break;
+			g_free (newname);
+			if (cname && *cname) 
+				newname = g_strdup_printf ("pre%s_%d", cname, k);
+			else
+				newname = g_strdup_printf ("pre%d_%d", i, k);
+		}
 		gda_column_set_name (proxy->priv->columns[i], newname);
 		gda_column_set_description (proxy->priv->columns[i], newname);
 		g_free (newname);
