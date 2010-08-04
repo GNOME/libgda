@@ -51,6 +51,8 @@ static GObjectClass  *parent_class = NULL;
 
 struct _QueryExecPerspectivePrivate {
 	GtkWidget *notebook;
+	GtkWidget *favorites;
+	gboolean favorites_shown;
 	BrowserWindow *bwin;
 	BrowserConnection *bcnc;
 	
@@ -126,6 +128,7 @@ query_exec_perspective_init (QueryExecPerspective *perspective)
 {
 	perspective->priv = g_new0 (QueryExecPerspectivePrivate, 1);
 	perspective->priv->action_group = NULL;
+	perspective->priv->favorites_shown = TRUE;
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
@@ -163,6 +166,7 @@ query_exec_perspective_new (BrowserWindow *bwin)
 			  G_CALLBACK (fav_selection_changed_cb), bpers);
 	gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
 	gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
+	perspective->priv->favorites = wid;
 
 	nb = gtk_notebook_new ();
 	perspective->priv->notebook = nb;
@@ -190,6 +194,8 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
 
+	if (!perspective->priv->favorites_shown)
+		gtk_widget_hide (perspective->priv->favorites);
 	gtk_widget_grab_focus (page);
 
 	/* signals to customize perspective */
@@ -315,6 +321,23 @@ query_exec_add_cb (GtkAction *action, BrowserPerspective *bpers)
 	gtk_widget_grab_focus (page);
 }
 
+static void
+favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
+{
+	QueryExecPerspective *perspective;
+	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
+	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
+	if (perspective->priv->favorites_shown)
+		gtk_widget_show (perspective->priv->favorites);
+	else
+		gtk_widget_hide (perspective->priv->favorites);
+}
+
+static const GtkToggleActionEntry ui_toggle_actions [] =
+{
+        { "QueryExecFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
+};
+
 static GtkActionEntry ui_actions[] = {
         { "QueryExecMenu", NULL, N_("_Query"), NULL, "QueryExecMenu", NULL },
         { "QueryExecItem1", STOCK_CONSOLE, N_("_New editor"), "<control>T", N_("Open a new query editor"),
@@ -324,6 +347,9 @@ static GtkActionEntry ui_actions[] = {
 static const gchar *ui_actions_info =
         "<ui>"
         "  <menubar name='MenuBar'>"
+	"    <menu name='Display' action='Display'>"
+	"      <menuitem name='QueryExecFavoritesShow' action='QueryExecFavoritesShow'/>"
+        "    </menu>"
 	"    <placeholder name='MenuExtension'>"
         "      <menu name='QueryExec' action='QueryExecMenu'>"
         "        <menuitem name='QueryExecItem1' action= 'QueryExecItem1'/>"
@@ -347,6 +373,13 @@ query_exec_perspective_get_actions_group (BrowserPerspective *perspective)
 		agroup = gtk_action_group_new ("QueryExecActions");
 		gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
 		bpers->priv->action_group = g_object_ref (agroup);
+
+		gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions),
+						     bpers);
+		GtkAction *action;
+		action = gtk_action_group_get_action (agroup, "QueryExecFavoritesShow");
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+					      QUERY_EXEC_PERSPECTIVE (bpers)->priv->favorites_shown);
 	}
 	
 	return bpers->priv->action_group;

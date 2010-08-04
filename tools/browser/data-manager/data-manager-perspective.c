@@ -47,6 +47,8 @@ static GObjectClass  *parent_class = NULL;
 
 struct _DataManagerPerspectivePriv {
 	GtkWidget *notebook;
+	GtkWidget *favorites;
+	gboolean favorites_shown;
 	BrowserWindow *bwin;
         BrowserConnection *bcnc;
 };
@@ -119,6 +121,7 @@ static void
 data_manager_perspective_init (DataManagerPerspective *perspective)
 {
 	perspective->priv = g_new0 (DataManagerPerspectivePriv, 1);
+	perspective->priv->favorites_shown = TRUE;
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
@@ -155,6 +158,7 @@ data_manager_perspective_new (BrowserWindow *bwin)
 			  G_CALLBACK (fav_selection_changed_cb), bpers);
         gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
 	gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
+	perspective->priv->favorites = wid;
 
 	nb = gtk_notebook_new ();
         perspective->priv->notebook = nb;
@@ -184,6 +188,9 @@ data_manager_perspective_new (BrowserWindow *bwin)
 
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
+
+	if (!perspective->priv->favorites_shown)
+		gtk_widget_hide (perspective->priv->favorites);
 
 	gtk_widget_grab_focus (page);
 
@@ -248,7 +255,7 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 	
 	data_console_set_text (page_to_reuse, selection);
 	data_console_set_fav_id (page_to_reuse, fav_id, NULL);
-	gtk_widget_grab_focus (page_to_reuse);
+	gtk_widget_grab_focus ((GtkWidget*) page_to_reuse);
 }
 
 static void
@@ -317,6 +324,23 @@ manager_new_cb (GtkAction *action, BrowserPerspective *bpers)
 	add_new_data_console (bpers, -1);
 }
 
+static void
+favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
+{
+	DataManagerPerspective *perspective;
+	perspective = DATA_MANAGER_PERSPECTIVE (bpers);
+	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
+	if (perspective->priv->favorites_shown)
+		gtk_widget_show (perspective->priv->favorites);
+	else
+		gtk_widget_hide (perspective->priv->favorites);
+}
+
+static const GtkToggleActionEntry ui_toggle_actions [] =
+{
+        { "DataManagerFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE}
+};
+
 static GtkActionEntry ui_actions[] = {
         { "DataManagerMenu", NULL, "_Manager", NULL, "ManagerMenu", NULL },
         { "NewDataManager", GTK_STOCK_NEW, "_New data manager", "<control>T", "New data manager",
@@ -326,6 +350,9 @@ static GtkActionEntry ui_actions[] = {
 static const gchar *ui_actions_info =
         "<ui>"
         "  <menubar name='MenuBar'>"
+        "    <menu name='Display' action='Display'>"
+        "      <menuitem name='DataManagerFavoritesShow' action='DataManagerFavoritesShow'/>"
+        "    </menu>"
 	"    <placeholder name='MenuExtension'>"
         "      <menu name='Data manager' action='DataManagerMenu'>"
         "        <menuitem name='NewDataManager' action= 'NewDataManager'/>"
@@ -344,7 +371,13 @@ data_manager_perspective_get_actions_group (BrowserPerspective *bpers)
 	GtkActionGroup *agroup;
 	agroup = gtk_action_group_new ("DataManagerActions");
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	
+	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions), bpers);
+
+	GtkAction *action;
+	action = gtk_action_group_get_action (agroup, "DataManagerFavoritesShow");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      DATA_MANAGER_PERSPECTIVE (bpers)->priv->favorites_shown);
+
 	return agroup;
 }
 

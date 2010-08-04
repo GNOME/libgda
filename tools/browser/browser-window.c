@@ -235,6 +235,7 @@ static const GtkActionEntry ui_actions[] = {
         { "ConnectionClose", GTK_STOCK_CLOSE, "_Close connection", NULL, "Close this connection", G_CALLBACK (connection_close_cb)},
         { "Quit", GTK_STOCK_QUIT, "_Quit", NULL, "Quit", G_CALLBACK (quit_cb)},
         { "Edit", NULL, "_Edit", NULL, "Edit", NULL },
+        { "Display", NULL, "_Display", NULL, "Display", NULL },
         { "Perspective", NULL, "_Perspective", NULL, "Perspective", NULL },
         { "Window", NULL, "_Window", NULL, "Window", NULL },
         { "WindowNew", STOCK_NEW_WINDOW, "_New window", "<control>N", "Open a new window for current connection", G_CALLBACK (window_new_cb)},
@@ -273,6 +274,8 @@ static const gchar *ui_actions_info =
         "      <separator/>"
         "    </menu>"
         "    <menu name='Edit' action='Edit'>"
+        "    </menu>"
+        "    <menu name='Display' action='Display'>"
         "    </menu>"
         "    <menu name='Perspective' action='Perspective'>"
         "      <placeholder name='PersList'/>"
@@ -565,7 +568,7 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 		bwin->priv->perspectives = g_slist_prepend (bwin->priv->perspectives, pers);
 		pers->page_number = gtk_notebook_append_page (bwin->priv->perspectives_nb,
 							      GTK_WIDGET (pers->perspective_widget), NULL);
-		gtk_widget_show_all ((GtkWidget*) bwin->priv->perspectives_nb);
+		gtk_widget_show (GTK_WIDGET (pers->perspective_widget));
 
 		GtkActionGroup *actions;
 		actions = browser_perspective_get_actions_group (BROWSER_PERSPECTIVE (pers->perspective_widget));

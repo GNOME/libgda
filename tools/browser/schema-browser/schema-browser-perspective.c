@@ -51,6 +51,8 @@ static GObjectClass  *parent_class = NULL;
 
 struct _SchemaBrowserPerspectivePrivate {
 	GtkWidget *notebook;
+	GtkWidget *favorites;
+	gboolean favorites_shown;
 	BrowserWindow *bwin;
 };
 
@@ -112,6 +114,7 @@ static void
 schema_browser_perspective_init (SchemaBrowserPerspective *perspective)
 {
 	perspective->priv = g_new0 (SchemaBrowserPerspectivePrivate, 1);
+	perspective->priv->favorites_shown = TRUE;
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
@@ -146,6 +149,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 			  G_CALLBACK (fav_selection_changed_cb), bpers);
 	gtk_paned_add1 (GTK_PANED (paned), wid);
 	gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
+	perspective->priv->favorites = wid;
 
 	nb = gtk_notebook_new ();
 	perspective->priv->notebook = nb;
@@ -169,6 +173,9 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 									NULL));
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
+
+	if (!perspective->priv->favorites_shown)
+		gtk_widget_hide (perspective->priv->favorites);
 
 	return bpers;
 }
@@ -293,6 +300,22 @@ action_create_diagram_cb (GtkAction *action, SchemaBrowserPerspective *bpers)
 }
 #endif
 
+static void
+favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
+{
+	SchemaBrowserPerspective *perspective;
+	perspective = SCHEMA_BROWSER_PERSPECTIVE (bpers);
+	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
+	if (perspective->priv->favorites_shown)
+		gtk_widget_show (perspective->priv->favorites);
+	else
+		gtk_widget_hide (perspective->priv->favorites);
+}
+
+static const GtkToggleActionEntry ui_toggle_actions [] =
+{
+        { "SchemaBrowserFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
+};
 
 static GtkActionEntry ui_actions[] = {
 #ifdef HAVE_GOOCANVAS
@@ -305,6 +328,9 @@ static GtkActionEntry ui_actions[] = {
 static const gchar *ui_actions_info =
         "<ui>"
         "  <menubar name='MenuBar'>"
+	"    <menu name='Display' action='Display'>"
+	"      <menuitem name='SchemaBrowserFavoritesShow' action='SchemaBrowserFavoritesShow'/>"
+        "    </menu>"
         "    <placeholder name='MenuExtension'>"
         "      <menu name='Schema' action='Schema'>"
         "        <menuitem name='NewDiagram' action= 'NewDiagram'/>"
@@ -319,7 +345,13 @@ schema_browser_perspective_get_actions_group (BrowserPerspective *bpers)
 	GtkActionGroup *agroup;
 	agroup = gtk_action_group_new ("SchemaBrowserActions");
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	
+	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions),
+					     bpers);
+	GtkAction *action;
+	action = gtk_action_group_get_action (agroup, "SchemaBrowserFavoritesShow");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      SCHEMA_BROWSER_PERSPECTIVE (bpers)->priv->favorites_shown);	
+
 	return agroup;
 }
 
