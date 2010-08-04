@@ -809,7 +809,7 @@ set_editable (GdauiEntryWrapper *entry_wrapper, gboolean editable)
 
 	GdauiEntryCGrid *cgrid = GDAUI_ENTRY_CGRID (entry_wrapper);
 
-	gtk_entry_set_editable (GTK_ENTRY(cgrid->priv->entry), editable);
+	gtk_editable_set_editable (GTK_EDITABLE (cgrid->priv->entry), editable);
 }
 
 static void

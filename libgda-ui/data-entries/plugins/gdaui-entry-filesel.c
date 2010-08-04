@@ -1,6 +1,6 @@
 /* gdaui-entry-filesel.c
  *
- * Copyright (C) 2005 - 2006 Vivien Malerba
+ * Copyright (C) 2005 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -328,6 +328,6 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 	filesel = GDAUI_ENTRY_FILESEL (mgwrap);
 	g_return_if_fail (filesel->priv);
 
-	gtk_entry_set_editable (GTK_ENTRY (filesel->priv->entry), editable);
+	gtk_editable_set_editable (GTK_EDITABLE (filesel->priv->entry), editable);
 	gtk_widget_set_sensitive (filesel->priv->button, editable);
 }

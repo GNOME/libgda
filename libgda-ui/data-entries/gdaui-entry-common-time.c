@@ -532,9 +532,9 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 	g_return_if_fail (mgtim->priv);
 
 	if (mgtim->priv->entry_date)
-		gtk_entry_set_editable (GTK_ENTRY (mgtim->priv->entry_date), editable);
+		gtk_editable_set_editable (GTK_EDITABLE (mgtim->priv->entry_date), editable);
 	if (mgtim->priv->entry_time)
-		gtk_entry_set_editable (GTK_ENTRY (mgtim->priv->entry_time), editable);
+		gtk_editable_set_editable (GTK_EDITABLE (mgtim->priv->entry_time), editable);
 	if (mgtim->priv->date_button)
 		gtk_widget_set_sensitive (mgtim->priv->date_button, editable);
 }
