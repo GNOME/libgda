@@ -44,6 +44,27 @@ gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)
 }
 
 /*
+ * Returns: @str
+ */
+static gchar *
+utf8_validate (gchar *str)
+{
+	gchar *tmp;
+	if (g_utf8_validate (str, -1, (const gchar **) &tmp))
+		return str;
+	else {
+		*tmp = ' ';
+		for (tmp++; tmp; tmp++) {
+			if (g_utf8_validate (tmp, -1, (const gchar **) &tmp))
+				return str;
+			else
+				*tmp = ' ';
+		}
+		return tmp;
+	}
+}
+
+/*
  * Create a new #GdaConnectionEvent object and "adds" it to @cnc
  *
  * Returns: a new GdaConnectionEvent which must not be unrefed()
@@ -71,7 +92,7 @@ _gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res, G
                         message = g_strdup (PQerrorMessage (pconn));
                         gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
                 }
-
+		utf8_validate (message);
 		
 		gchar *ptr = message;
 		if (g_str_has_prefix (message, "ERROR:"))
