@@ -4,14 +4,14 @@
 # This file is distributed under the same license as the libgda package.
 # Michal Bukovjan <bukm@centrum.cz>, 2002.
 # Miloslav Trmac <mitr@volny.cz>, 2003, 2004, 2005.
-# Marek Černocký <marek@manet.cz>, 2010,
-#: ../libgda/gda-connection.c:372
+# Marek Černocký <marek@manet.cz>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-15 21:12+0200\n"
-"PO-Revision-Date: 2010-07-15 10:21+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=libgda&component=general\n"
+"POT-Creation-Date: 2010-07-15 19:15+0000\n"
+"PO-Revision-Date: 2010-07-16 21:12+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -422,11 +422,9 @@ msgid "Conflicting parameter '%s'"
 msgstr "Konfliktní parametr „%s“"
 
 #: ../libgda/gda-config.c:264 ../libgda/gda-config.c:382
-#, fuzzy, c-format
+#, c-format
 msgid "Error loading authentification information for '%s' DSN: %s"
-msgstr ""
-"Chyba otevírání připojení pro soubor „%s“:\n"
-"%s\n"
+msgstr "Chyba při načítání ověřovacích informací pro DSN „%s“: %s"
 
 #: ../libgda/gda-config.c:542
 #, c-format
@@ -445,23 +443,23 @@ msgid "Malformed data source name '%s'"
 msgstr "Chybný název zdroje dat „%s“"
 
 #: ../libgda/gda-config.c:842
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't save authentification information for DSN '%s': %s"
-msgstr "zadejte ověřovací informace"
+msgstr "Nelze uložit ověřovací informace pro DSN „%s“: %s"
 
 #: ../libgda/gda-config.c:872 ../libgda/gda-config.c:998
 msgid "Can't manage system-wide configuration"
 msgstr "Nelze spravovat celosystémové nastavení"
 
 #: ../libgda/gda-config.c:927
-#, fuzzy, c-format
+#, c-format
 msgid "Authentification for the '%s' DSN"
-msgstr "Ověřovací řetězec, který se má použít"
+msgstr "Ověření pro DSN „%s“"
 
 #: ../libgda/gda-config.c:962
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
-msgstr "zadejte ověřovací informace"
+msgstr "Nelze smazat ověřovací informace pro DSN „%s“: %s"
 
 #: ../libgda/gda-config.c:992 ../libgda-ui/gdaui-login.c:632
 #, c-format
@@ -655,9 +653,9 @@ msgstr ""
 "Interní chyba: poskytovatel neimplementuje virtuální metodu open_connection()"
 
 #: ../libgda/gda-connection.c:1522
-#, fuzzy, c-format
+#, c-format
 msgid "Error while maintaining the meta data up to date: %s"
-msgstr "Chyba při získávání metadat z připojení: %s"
+msgstr "Chyba při snaze udržet metadata v aktuálním stavu: %s"
 
 #: ../libgda/gda-connection.c:2173
 msgid "Provider does not support statement preparation"
@@ -2241,9 +2239,9 @@ msgid "Missing node <parameters>: '%s'"
 msgstr "Schází uzel <parameters>: „%s“"
 
 #: ../libgda/gda-set.c:984
-#, fuzzy, c-format
+#, c-format
 msgid "Data set does not allow modifications"
-msgstr "Model neumožňuje mazání řádků"
+msgstr "Model neumožňuje úpravy"
 
 #: ../libgda/gda-set.c:1218
 msgid "GdaHolder needs to have an ID"
@@ -2280,9 +2278,9 @@ msgid "Wrong statement type"
 msgstr "Nesprávný typ příkazu"
 
 #: ../libgda/gda-sql-builder.c:596
-#, fuzzy, c-format
+#, c-format
 msgid "Could not convert value to type '%s', value not defined"
-msgstr "Nelze převést hodnotu na typ „%s“"
+msgstr "Nelze převést hodnotu na typ „%s“, hodnota není definována"
 
 #: ../libgda/gda-sql-builder.c:720
 msgid "Wrong field format"
@@ -7262,7 +7260,7 @@ msgstr "Oddělovač:"
 
 #: ../tools/browser/common/gdaui-data-import.c:208
 msgid "Comma"
-msgstr "Čářka"
+msgstr "Čárka"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
 msgid "Semi column"
@@ -7497,9 +7495,9 @@ msgid "Not ready"
 msgstr "Nepřipraveno"
 
 #: ../tools/browser/data-manager/data-source.c:357
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed table name \"%s\""
-msgstr "Chybný název tabulky"
+msgstr "Chybný název tabulky „%s“"
 
 #: ../tools/browser/data-manager/data-source.c:374
 #, c-format
@@ -7549,7 +7547,7 @@ msgstr "Žádný příkaz SELECT ke spuštění"
 
 #: ../tools/browser/data-manager/data-widget.c:347
 msgid "Error: no detail"
-msgstr "Chyba: žádné podrobnosti"
+msgstr "Chyba: bez upřesnění"
 
 #: ../tools/browser/query-exec/query-console.c:289
 #: ../tools/browser/query-exec/query-console.c:1083
