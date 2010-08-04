@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-07-21 19:18+0000\n"
-"PO-Revision-Date: 2010-07-22 11:17+0100\n"
+"POT-Creation-Date: 2010-07-28 20:12+0000\n"
+"PO-Revision-Date: 2010-07-29 13:38+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -97,8 +97,8 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:283
 #: ../libgda/gda-connection.c:1523
-#: ../libgda/gda-data-model.c:2028
-#: ../libgda/gda-data-model.c:2036
+#: ../libgda/gda-data-model.c:2029
+#: ../libgda/gda-data-model.c:2037
 #: ../libgda/gda-data-model-dir.c:382
 #: ../libgda/gda-data-model-import.c:1574
 #: ../libgda/gda-data-model-import.c:1857
@@ -112,7 +112,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda/gda-holder.c:1708
 #: ../libgda/gda-server-operation.c:614
 #: ../libgda/gda-server-operation.c:1005
-#: ../libgda/gda-set.c:533
+#: ../libgda/gda-set.c:553
 #: ../libgda/gda-tree-mgr-select.c:188
 #: ../libgda/gda-tree-mgr-select.c:220
 #: ../libgda/sqlite/gda-sqlite-provider.c:2046
@@ -182,9 +182,10 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/schema-browser/favorite-selector.c:170
 #: ../tools/browser/schema-browser/favorite-selector.c:359
 #: ../tools/browser/schema-browser/relations-diagram.c:241
-#: ../tools/browser/schema-browser/table-info.c:461
-#: ../tools/browser/schema-browser/table-info.c:514
-#: ../tools/browser/schema-browser/table-info.c:540
+#: ../tools/browser/schema-browser/table-info.c:475
+#: ../tools/browser/schema-browser/table-info.c:528
+#: ../tools/browser/schema-browser/table-info.c:554
+#: ../tools/browser/schema-browser/table-info.c:848
 #: ../tools/browser/schema-browser/table-preferences.c:705
 #: ../tools/browser/schema-browser/table-preferences.c:778
 #: ../tools/gda-list-server-op.c:47
@@ -937,84 +938,84 @@ msgstr "Model ne dovoli brisanja vrstic"
 msgid "Data model does not support row removal"
 msgstr "Podatkovni model ne podpira odstranjevanja vrstic"
 
-#: ../libgda/gda-data-model.c:1035
-#: ../libgda/gda-data-model.c:1076
-#: ../libgda/gda-data-model.c:1090
+#: ../libgda/gda-data-model.c:1036
+#: ../libgda/gda-data-model.c:1077
+#: ../libgda/gda-data-model.c:1091
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "Parameter '%s' mora vsebovati vrednost niza, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1099
-#: ../libgda/gda-data-model.c:1109
-#: ../libgda/gda-data-model.c:1119
-#: ../libgda/gda-data-model.c:1157
-#: ../libgda/gda-data-model.c:1250
+#: ../libgda/gda-data-model.c:1100
+#: ../libgda/gda-data-model.c:1110
+#: ../libgda/gda-data-model.c:1120
+#: ../libgda/gda-data-model.c:1158
+#: ../libgda/gda-data-model.c:1251
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "Parameter '%s' mora vsebovati logično vrednost, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1258
+#: ../libgda/gda-data-model.c:1259
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Datoteka '%s' že obstaja"
 
-#: ../libgda/gda-data-model.c:1398
+#: ../libgda/gda-data-model.c:1399
 msgid "Exported Data"
 msgstr "Izvoženi podatki"
 
-#: ../libgda/gda-data-model.c:1515
+#: ../libgda/gda-data-model.c:1516
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr "Pričakovana je oznaka <gda_value> ali <gda_array_value>, pridobljena pa <%s>, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1546
+#: ../libgda/gda-data-model.c:1547
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr "Ni mogoče pridobiti podatkov vrste stolpca (vrsta ni znana ali pa ni določena)"
 
-#: ../libgda/gda-data-model.c:1632
+#: ../libgda/gda-data-model.c:1633
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Pričakovano <gda_array_data>, dobljeno <%s>"
 
-#: ../libgda/gda-data-model.c:1695
+#: ../libgda/gda-data-model.c:1696
 msgid "Could not get an iterator for source data model"
 msgstr "Ni mogoče pridobiti ponavljalnika podatkovnega modela vira"
 
-#: ../libgda/gda-data-model.c:1712
+#: ../libgda/gda-data-model.c:1713
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Neobstoječ stolpec v izvornem podatkovnem modelu: %d"
 
-#: ../libgda/gda-data-model.c:1726
+#: ../libgda/gda-data-model.c:1727
 #, c-format
 msgid "Destination column %d can't be NULL but has no correspondence in the source data model"
 msgstr "Ciljni stolpec %d ne sme imeti določene vrednosti NULL, vendar nima povezave z izvornim podatkovnim modelom"
 
-#: ../libgda/gda-data-model.c:1736
+#: ../libgda/gda-data-model.c:1737
 #, c-format
 msgid "Destination column %d has a gda type (%s) incompatible with source column %d type (%s)"
 msgstr "Ciljni stolpec %d je vrste gda (%s) in je neskladen z izvornim stolpcem vrste %d (%s)"
 
-#: ../libgda/gda-data-model.c:1833
+#: ../libgda/gda-data-model.c:1834
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Ni mogoče pretvoriti '%s' iz GDA vrste %s v vrsto %s"
 
-#: ../libgda/gda-data-model.c:2027
+#: ../libgda/gda-data-model.c:2028
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "Ni mogoče spustiti atributov podatkovnega modela: %s"
 
-#: ../libgda/gda-data-model.c:2035
+#: ../libgda/gda-data-model.c:2036
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "Ni mogoče spustiti vsebine podatkovnega modela: %s"
 
-#: ../libgda/gda-data-model.c:2281
+#: ../libgda/gda-data-model.c:2282
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr "Podatkovni model ne podpira povratnega premika kazalnika, zato podatki ne bodo prikazani."
 
-#: ../libgda/gda-data-model.c:2400
+#: ../libgda/gda-data-model.c:2401
 #, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
@@ -1233,7 +1234,7 @@ msgid "GdaDataProxy can't handle non random access data models"
 msgstr "Predmet GdaDataProxy ne podpira naključnih modelov dostopa do podatkov"
 
 #: ../libgda/gda-data-proxy.c:1538
-#: ../libgda/gda-data-proxy.c:3881
+#: ../libgda/gda-data-proxy.c:3880
 msgid "The first row is an empty row artificially prepended and cannot be removed"
 msgstr "Prva vrstica, ki je ni mogoče odstraniti, je dodana programsko in je vedno prazna"
 
@@ -1262,21 +1263,21 @@ msgstr "Napaka v izrazu filtra"
 msgid "Incorrect filter expression"
 msgstr "Napaka v izrazu filtra"
 
-#: ../libgda/gda-data-proxy.c:3636
+#: ../libgda/gda-data-proxy.c:3635
 msgid "The first row is an empty row artificially prepended and cannot be altered"
 msgstr "Prva vrstica, ki je ni mogoče spreminjati, je dodana programsko in je vedno prazna"
 
-#: ../libgda/gda-data-proxy.c:3658
+#: ../libgda/gda-data-proxy.c:3657
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Napačna vrsta vrednosti: pričakovano je '%s', pridobljeno pa '%s'"
 
-#: ../libgda/gda-data-proxy.c:3744
+#: ../libgda/gda-data-proxy.c:3743
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Poskus spreminjanja stolpca le za branje: %d"
 
-#: ../libgda/gda-data-proxy.c:3781
+#: ../libgda/gda-data-proxy.c:3780
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Neskladnost vrste vrednosti %s namesto %s"
@@ -1475,7 +1476,7 @@ msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Opravilo ustvarjanja preglednice ni podprto preko strežnika podatkovne zbirke"
 
 #: ../libgda/gda-holder.c:487
-#: ../libgda/gda-set.c:532
+#: ../libgda/gda-set.c:552
 #, c-format
 msgid "Unable to set holder's value: %s"
 msgstr "Ni mogoče določiti vrednosti ročnika: %s"
@@ -2225,39 +2226,44 @@ msgstr "Podatkovni model sheme ima napačno ime stolpca: '%s' namesto '%s'"
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr "Podatkovni model sheme ima določeno napačno vrsto GDA: '%s' namesto '%s'"
 
-#: ../libgda/gda-set.c:524
-#: ../libgda/gda-set.c:625
+#: ../libgda/gda-set.c:544
+#: ../libgda/gda-set.c:645
 #, c-format
 msgid "%s() does not handle values of type '%s'."
 msgstr "%s() ne upravlja z vrednostmi vrste '%s'."
 
-#: ../libgda/gda-set.c:579
+#: ../libgda/gda-set.c:599
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
 msgstr "Gradnika GdaHolder z ID '%s' ni mogoče najti v naboru"
 
-#: ../libgda/gda-set.c:759
+#: ../libgda/gda-set.c:779
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "Spec korensko vozlišče != 'data-set-spec': '%s'"
 
-#: ../libgda/gda-set.c:798
+#: ../libgda/gda-set.c:818
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Manjkajo <parametri> vozlišča: '%s'"
 
-#: ../libgda/gda-set.c:1011
+#: ../libgda/gda-set.c:1031
 #, c-format
 msgid "Data set does not allow modifications"
 msgstr "Podatkovni model ne dovoli spreminjanja"
 
-#: ../libgda/gda-set.c:1256
+#: ../libgda/gda-set.c:1276
 msgid "GdaHolder needs to have an ID"
 msgstr "GdaHolder zahteva določitev ID"
 
-#: ../libgda/gda-set.c:1366
+#: ../libgda/gda-set.c:1386
 msgid "One or more values are invalid"
 msgstr "Ena ali več vrednosti ni veljavnih"
+
+#: ../libgda/gda-set.c:1603
+#: ../libgda/gda-set.c:1616
+msgid "Replacing data model must have the same characteristics as the data model it replaces"
+msgstr "Zamenjava podatkovnega modela mora imeti enake značilnosti kot prvotni podatkovni model."
 
 #: ../libgda/gda-sql-builder.c:294
 #: ../libgda/gda-sql-builder.c:1399
@@ -3296,8 +3302,8 @@ msgstr "Neznano"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:167
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
-#: ../libgda-ui/gdaui-basic-form.c:797
-#: ../libgda-ui/gdaui-basic-form.c:859
+#: ../libgda-ui/gdaui-basic-form.c:807
+#: ../libgda-ui/gdaui-basic-form.c:875
 #: ../libgda-ui/gdaui-raw-grid.c:739
 #: ../tools/gda-sql.c:2656
 #: ../tools/gda-sql.c:2831
@@ -3775,7 +3781,7 @@ msgid "break lines anywhere the cursor can appear"
 msgstr "prelomi vrstice kjerkoli je mogoče postaviti kazalko"
 
 #: ../libgda-ui/data/server_operation.glade.h:1
-#: ../tools/browser/schema-browser/table-info.c:370
+#: ../tools/browser/schema-browser/table-info.c:384
 msgid "Columns"
 msgstr "Stolpci"
 
@@ -3941,34 +3947,34 @@ msgstr "Samodejno privzeti vnosi"
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Izbrana možnost je uporabna, kadar ima navpično razširjanje obrazca pomen."
 
-#: ../libgda-ui/gdaui-basic-form.c:755
+#: ../libgda-ui/gdaui-basic-form.c:761
 #: ../libgda-ui/gdaui-raw-grid.c:780
 #: ../libgda-ui/gdaui-raw-grid.c:2619
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Atribut '%s' mora biti vrednost G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1669
+#: ../libgda-ui/gdaui-basic-form.c:1686
 msgid "Can't find data entry for GdaHolder"
 msgstr "Ni mogoče najti podatkovnega vnosa za GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:1941
+#: ../libgda-ui/gdaui-basic-form.c:1958
 msgid "Values to be filled"
 msgstr "Zahtevane vrednosti"
 
-#: ../libgda-ui/gdaui-basic-form.c:2022
+#: ../libgda-ui/gdaui-basic-form.c:2039
 #: ../libgda-ui/gdaui-raw-grid.c:2446
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "'%s' dokument ni uspešno razčlenjen"
 
-#: ../libgda-ui/gdaui-basic-form.c:2032
+#: ../libgda-ui/gdaui-basic-form.c:2049
 #: ../libgda-ui/gdaui-raw-grid.c:2456
 #, c-format
 msgid "'%s' DTD not parsed successfully. XML data layout validation will not be performed (some errors may occur)"
 msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda podatkov XML ne bo izvedeno (lahko se pojavijo napake)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2163
+#: ../libgda-ui/gdaui-basic-form.c:2180
 msgid "size group was not taken into account using gdaui_basic_form_add_to_size_group()"
 msgstr "velikost skupine ni vzeta v račun ob uporabi skupine gdaui_basic_form_add_to_size_group()"
 
@@ -6656,22 +6662,22 @@ msgid "Error while analysing database schema: %s"
 msgstr "Napaka ob proučevanju sheme podatkovne zbirke: %s"
 
 #: ../tools/browser/browser-connection.c:1096
-#: ../tools/browser/browser-connection.c:1139
+#: ../tools/browser/browser-connection.c:1146
 msgid "Executing a query"
 msgstr "Izvajanje poizvedbe"
 
-#: ../tools/browser/browser-connection.c:1356
+#: ../tools/browser/browser-connection.c:1408
 #, c-format
 msgid "Connection not yet opened"
 msgstr "Povezava še ni odprta"
 
-#: ../tools/browser/browser-connection.c:1362
+#: ../tools/browser/browser-connection.c:1414
 msgid "Can't initialize dictionary to store table preferences"
 msgstr "Ni mogoče začeti slovarja za shranjevanje možnosti preglednice"
 
-#: ../tools/browser/browser-connection.c:1408
-#: ../tools/browser/browser-connection.c:1414
-#: ../tools/browser/browser-connection.c:1550
+#: ../tools/browser/browser-connection.c:1460
+#: ../tools/browser/browser-connection.c:1466
+#: ../tools/browser/browser-connection.c:1602
 #: ../tools/browser/browser-favorites.c:523
 #: ../tools/browser/browser-favorites.c:529
 #: ../tools/browser/browser-favorites.c:958
@@ -6679,7 +6685,7 @@ msgstr "Ni mogoče začeti slovarja za shranjevanje možnosti preglednice"
 msgid "Can't initialize transaction to access favorites"
 msgstr "Ni mogoče začeti prenosa za dostop do priljubljenih"
 
-#: ../tools/browser/browser-connection.c:1495
+#: ../tools/browser/browser-connection.c:1547
 #: ../tools/browser/browser-favorites.c:702
 #: ../tools/browser/browser-favorites.c:1016
 msgid "Can't commit transaction to access favorites"
@@ -7429,7 +7435,7 @@ msgstr "Ni mogoče odstraniti priljubljenega: %s"
 #: ../tools/browser/query-exec/query-favorite-selector.c:242
 #: ../tools/browser/query-exec/query-favorite-selector.c:600
 #: ../tools/browser/schema-browser/favorite-selector.c:358
-#: ../tools/browser/schema-browser/table-info.c:460
+#: ../tools/browser/schema-browser/table-info.c:474
 #, c-format
 msgid "Could not add favorite: %s"
 msgstr "Ni mogoče dodati med priljubljeno: %s"
@@ -7598,7 +7604,7 @@ msgid "Invalid variable's contents"
 msgstr "Neveljavna vsebina spremenljivke"
 
 #: ../tools/browser/query-exec/query-console.c:774
-#: ../tools/browser/schema-browser/table-info.c:672
+#: ../tools/browser/schema-browser/table-info.c:919
 msgid "assign values to the following variables"
 msgstr "dodeli vrednosti naslednjim spremenljivkam"
 
@@ -7612,14 +7618,14 @@ msgid "A query is already being executed, to execute another query, open a new c
 msgstr "Poizvedba je že izvedena. Za izvedbo druge poizvedbe, odprite novo povezavo."
 
 #: ../tools/browser/query-exec/query-console.c:873
-#: ../tools/browser/schema-browser/table-info.c:539
+#: ../tools/browser/schema-browser/table-info.c:553
 #, c-format
 msgid "Error executing query: %s"
 msgstr "Napaka izvajanja poizvedbe: %s"
 
 #: ../tools/browser/query-exec/query-console.c:926
 #: ../tools/browser/query-exec/query-console.c:976
-#: ../tools/browser/schema-browser/table-info.c:512
+#: ../tools/browser/schema-browser/table-info.c:526
 #, c-format
 msgid ""
 "Error executing query:\n"
@@ -7748,6 +7754,10 @@ msgstr "Preglednice ni mogoče najti"
 msgid "Requested object is not a table or view"
 msgstr "Zahtevani predmet ni preglednica ali pogled"
 
+#: ../tools/browser/schema-browser/mgr-columns.c:390
+msgid "Auto incremented"
+msgstr "Samodejno povečevanje"
+
 #: ../tools/browser/schema-browser/objects-index.c:170
 msgid "Tables' index"
 msgstr "Kazalo preglednice"
@@ -7802,16 +7812,15 @@ msgid "Missing table attribute in favorite's contents"
 msgstr "Manjka atribut preglednice v vsebini priljubljenih"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:519
-#: ../tools/browser/schema-browser/table-info.c:703
+#: ../tools/browser/schema-browser/table-info.c:951
 msgid "_Contents"
 msgstr "_Vsebina"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:519
-#: ../tools/browser/schema-browser/table-info.c:703
 msgid "View contents"
 msgstr "Pogled vsebine"
 
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:384
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:380
 msgid "Could not load diagram"
 msgstr "Ni mogoče naložiti diagrama"
 
@@ -7835,7 +7844,7 @@ msgstr "Ime stolpca"
 msgid "Constraints and integrity rules"
 msgstr "Omejitve in celostna pravila"
 
-#: ../tools/browser/schema-browser/table-info.c:349
+#: ../tools/browser/schema-browser/table-info.c:363
 msgid ""
 "Table not found. If you think this is an error,\n"
 "please refresh the meta data from the database\n"
@@ -7845,27 +7854,27 @@ msgstr ""
 "osvežite metapodatke podatkovne zbirke\n"
 "(meni Povezava/Pridobi metapodatke)."
 
-#: ../tools/browser/schema-browser/table-info.c:380
+#: ../tools/browser/schema-browser/table-info.c:394
 msgid "Relations"
 msgstr "Povezave"
 
-#: ../tools/browser/schema-browser/table-info.c:390
+#: ../tools/browser/schema-browser/table-info.c:404
 msgid "Preferences"
 msgstr "Možnosti"
 
-#: ../tools/browser/schema-browser/table-info.c:518
+#: ../tools/browser/schema-browser/table-info.c:532
 msgid "Data successfully inserted"
 msgstr "Podatki so uspešno vstavljeni"
 
-#: ../tools/browser/schema-browser/table-info.c:564
+#: ../tools/browser/schema-browser/table-info.c:671
 msgid "Meta data not yet available"
 msgstr "Metapodatki niso na voljo"
 
-#: ../tools/browser/schema-browser/table-info.c:581
+#: ../tools/browser/schema-browser/table-info.c:688
 msgid "Can't find information about table"
 msgstr "Ni mogoče najti podrobnosti preglednice"
 
-#: ../tools/browser/schema-browser/table-info.c:615
+#: ../tools/browser/schema-browser/table-info.c:724
 #, c-format
 msgid ""
 "Internal error while building INSERT statement:\n"
@@ -7874,24 +7883,37 @@ msgstr ""
 "Notranja napaka med izgradnjo stavka INSERT:\n"
 "%s"
 
-#: ../tools/browser/schema-browser/table-info.c:654
-#: ../tools/browser/schema-browser/table-info.c:671
+#: ../tools/browser/schema-browser/table-info.c:770
+#, c-format
+msgid "Default value: '%s'"
+msgstr "Privzeta vrednost: '%s'"
+
+#: ../tools/browser/schema-browser/table-info.c:780
+msgid "Default value: auto incremented value"
+msgstr "Privzeta vrednost: samodejno povečana vrednost"
+
+#: ../tools/browser/schema-browser/table-info.c:894
+#: ../tools/browser/schema-browser/table-info.c:918
 msgid "Values to insert into table"
 msgstr "Vrednosti, ki naj se vstavijo v preglednico"
 
-#: ../tools/browser/schema-browser/table-info.c:701
+#: ../tools/browser/schema-browser/table-info.c:949
 msgid "Add to _Favorites"
 msgstr "Dodaj med _priljubljene"
 
-#: ../tools/browser/schema-browser/table-info.c:701
+#: ../tools/browser/schema-browser/table-info.c:949
 msgid "Add table to favorites"
 msgstr "Dodaj preglednico med priljubljene"
 
-#: ../tools/browser/schema-browser/table-info.c:705
+#: ../tools/browser/schema-browser/table-info.c:951
+msgid "View table's contents"
+msgstr "Pregled vsebine preglednice"
+
+#: ../tools/browser/schema-browser/table-info.c:953
 msgid "_Insert data"
 msgstr "_Vstavi podatke"
 
-#: ../tools/browser/schema-browser/table-info.c:705
+#: ../tools/browser/schema-browser/table-info.c:953
 msgid "Insert data into table"
 msgstr "Vstavi podatke v preglednico"
 

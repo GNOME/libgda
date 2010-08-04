@@ -357,11 +357,13 @@ update_dialog_focus (AuthDialog *dialog)
 		}
 	}
 
+#if GTK_CHECK_VERSION(2,20,0)
 	if (allvalid) {
 		GtkWidget *wid;
 		wid = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 		gtk_widget_grab_focus (wid);
 	}
+#endif
 }
 
 /**

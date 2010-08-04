@@ -362,8 +362,10 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		if (value) {
-			if (gda_value_is_null ((GValue *) value))
+			if (gda_value_is_null ((GValue *) value)) {
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
 				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
+			}
 			else {
 				gchar *str, *ptr;
 				
@@ -410,12 +412,18 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 	if (type == G_TYPE_DATE) {
 		str2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_date));
-		value = gda_data_handler_get_value_from_str (dh, str2, type); /* FIXME: not SQL but STR */
-		g_free (str2);
+		if (str2) {
+			value = gda_data_handler_get_value_from_str (dh, str2, type);
+			g_free (str2);
+		}
 	}
 	else if (type == GDA_TYPE_TIME) {
 		str2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
-		value = gda_data_handler_get_value_from_str (dh, str2, type);
+		if (str2) {
+			value = gda_data_handler_get_value_from_str (dh, str2, type);
+			g_free (str2);
+		}
+
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
 		    mgtim->priv->last_value_set && 
 		    gda_value_isa (mgtim->priv->last_value_set, GDA_TYPE_TIME)) {
@@ -427,18 +435,19 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 			gda_value_set_time (value, gdatime);
 			g_free (gdatime);
 		}
-		g_free (str2);
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		gchar *tmpstr, *tmpstr2;
 
 		tmpstr = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
 		tmpstr2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_date));
-		str2 = g_strdup_printf ("%s %s", tmpstr2, tmpstr);
+		if (tmpstr && tmpstr2) {
+			str2 = g_strdup_printf ("%s %s", tmpstr2, tmpstr);
+			value = gda_data_handler_get_value_from_str (dh, str2, type);
+			g_free (str2);
+		}
 		g_free (tmpstr);
 		g_free (tmpstr2);
-		value = gda_data_handler_get_value_from_str (dh, str2, type);
-		g_free (str2);
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
 		    mgtim->priv->last_value_set && 
 		    gda_value_isa (mgtim->priv->last_value_set, GDA_TYPE_TIMESTAMP)) {

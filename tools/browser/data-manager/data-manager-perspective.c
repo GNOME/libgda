@@ -32,18 +32,28 @@
 static void data_manager_perspective_class_init (DataManagerPerspectiveClass *klass);
 static void data_manager_perspective_init (DataManagerPerspective *stmt);
 static void data_manager_perspective_dispose (GObject *object);
+static void data_manager_perspective_grab_focus (GtkWidget *widget);
 
 /* BrowserPerspective interface */
 static void                 data_manager_perspective_perspective_init (BrowserPerspectiveIface *iface);
 static GtkActionGroup      *data_manager_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *data_manager_perspective_get_actions_ui (BrowserPerspective *perspective);
+static void                 data_manager_perspective_get_current_customization (BrowserPerspective *perspective,
+										GtkActionGroup **out_agroup,
+										const gchar **out_ui);
+static void                 adapt_notebook_for_fullscreen (DataManagerPerspective *perspective);
+
+
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
 struct _DataManagerPerspectivePriv {
 	GtkWidget *notebook;
+	GtkWidget *favorites;
+	gboolean favorites_shown;
 	BrowserWindow *bwin;
         BrowserConnection *bcnc;
+	gboolean fullscreen;
 };
 
 GType
@@ -82,12 +92,23 @@ data_manager_perspective_get_type (void)
 }
 
 static void
-data_manager_perspective_class_init (DataManagerPerspectiveClass * klass)
+data_manager_perspective_class_init (DataManagerPerspectiveClass *klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
+	GTK_WIDGET_CLASS (klass)->grab_focus = data_manager_perspective_grab_focus;
 	object_class->dispose = data_manager_perspective_dispose;
+}
+
+static void
+data_manager_perspective_grab_focus (GtkWidget *widget)
+{
+	GtkNotebook *nb;
+
+        nb = GTK_NOTEBOOK (DATA_MANAGER_PERSPECTIVE (widget)->priv->notebook);
+        gtk_widget_grab_focus (gtk_notebook_get_nth_page (nb,
+                                                          gtk_notebook_get_current_page (nb)));
 }
 
 static void
@@ -95,6 +116,7 @@ data_manager_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
 	iface->i_get_actions_group = data_manager_perspective_get_actions_group;
 	iface->i_get_actions_ui = data_manager_perspective_get_actions_ui;
+	iface->i_get_current_customization = data_manager_perspective_get_current_customization;
 }
 
 
@@ -102,6 +124,8 @@ static void
 data_manager_perspective_init (DataManagerPerspective *perspective)
 {
 	perspective->priv = g_new0 (DataManagerPerspectivePriv, 1);
+	perspective->priv->favorites_shown = TRUE;
+	perspective->priv->fullscreen = FALSE;
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
@@ -109,8 +133,12 @@ static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFav
 static void nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
                                DataManagerPerspective *perspective);
 static void nb_page_removed_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
-                               DataManagerPerspective *perspective);
+				DataManagerPerspective *perspective);
+static void nb_page_added_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+			      DataManagerPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
+
+static void fullscreen_changed_cb (BrowserWindow *bwin, gboolean fullscreen, DataManagerPerspective *perspective);
 
 /**
  * data_manager_perspective_new
@@ -127,8 +155,11 @@ data_manager_perspective_new (BrowserWindow *bwin)
 	perspective = (DataManagerPerspective*) bpers;
 
 	perspective->priv->bwin = bwin;
+	g_signal_connect (bwin, "fullscreen-changed",
+			  G_CALLBACK (fullscreen_changed_cb), bpers);
         bcnc = browser_window_get_connection (bwin);
         perspective->priv->bcnc = g_object_ref (bcnc);
+	perspective->priv->fullscreen = browser_window_is_fullscreen (bwin);
 
 	/* contents */
         GtkWidget *paned, *nb, *wid;
@@ -138,6 +169,7 @@ data_manager_perspective_new (BrowserWindow *bwin)
 			  G_CALLBACK (fav_selection_changed_cb), bpers);
         gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
 	gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
+	perspective->priv->favorites = wid;
 
 	nb = gtk_notebook_new ();
         perspective->priv->notebook = nb;
@@ -148,6 +180,8 @@ data_manager_perspective_new (BrowserWindow *bwin)
                           G_CALLBACK (nb_switch_page_cb), perspective);
         g_signal_connect (G_OBJECT (nb), "page-removed",
                           G_CALLBACK (nb_page_removed_cb), perspective);
+        g_signal_connect (G_OBJECT (nb), "page-added",
+                          G_CALLBACK (nb_page_added_cb), perspective);
 
 	GtkWidget *page, *tlabel, *button;
 	page = data_console_new (bcnc);
@@ -168,18 +202,29 @@ data_manager_perspective_new (BrowserWindow *bwin)
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
 
+	if (!perspective->priv->favorites_shown)
+		gtk_widget_hide (perspective->priv->favorites);
+
+	gtk_widget_grab_focus (page);
+
+	if (perspective->priv->fullscreen)
+		adapt_notebook_for_fullscreen (perspective);
+
 	return bpers;
 }
 
 static DataConsole *
-add_new_data_console (BrowserPerspective *bpers)
+add_new_data_console (BrowserPerspective *bpers, gint fav_id)
 {
 	GtkWidget *page, *tlabel, *button;
 	DataManagerPerspective *perspective;
 	gint page_nb;
 
 	perspective = DATA_MANAGER_PERSPECTIVE (bpers);
-	page = data_console_new (perspective->priv->bcnc);
+	if (fav_id >= 0)
+		page = data_console_new_with_fav_id (perspective->priv->bcnc, fav_id);
+	else
+		page = data_console_new (perspective->priv->bcnc);
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), &button);
         g_signal_connect (button, "clicked",
                           G_CALLBACK (close_button_clicked_cb), page);
@@ -193,6 +238,7 @@ add_new_data_console (BrowserPerspective *bpers)
 
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), NULL);
         gtk_notebook_set_menu_label (GTK_NOTEBOOK (perspective->priv->notebook), page, tlabel);
+	adapt_notebook_for_fullscreen (perspective);
 
 	return DATA_CONSOLE (page);
 }
@@ -205,6 +251,9 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
         GtkWidget *page_contents;
 	gint current_page;
 	DataConsole *page_to_reuse = NULL;
+
+	if (fav_type != BROWSER_FAVORITES_DATA_MANAGERS)
+		return;
 
 	current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (perspective->priv->notebook));
 	if (current_page >= 0) {
@@ -219,9 +268,11 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 	}
 
 	if (! page_to_reuse)
-		page_to_reuse = add_new_data_console ((BrowserPerspective*) perspective);
+		page_to_reuse = add_new_data_console ((BrowserPerspective*) perspective, fav_id);
 	
 	data_console_set_text (page_to_reuse, selection);
+	data_console_set_fav_id (page_to_reuse, fav_id, NULL);
+	gtk_widget_grab_focus ((GtkWidget*) page_to_reuse);
 }
 
 static void
@@ -253,12 +304,38 @@ nb_page_removed_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
                                                          BROWSER_PERSPECTIVE (perspective),
                                                          NULL, NULL);
         }
+	adapt_notebook_for_fullscreen (perspective);
+}
+
+static void
+nb_page_added_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+		  DataManagerPerspective *perspective)
+{
+	adapt_notebook_for_fullscreen (perspective);
 }
 
 static void
 close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget)
 {
         gtk_widget_destroy (page_widget);
+}
+
+static void
+adapt_notebook_for_fullscreen (DataManagerPerspective *perspective)
+{
+	gboolean showtabs = TRUE;
+	
+	if (perspective->priv->fullscreen && 
+	    gtk_notebook_get_n_pages (GTK_NOTEBOOK (perspective->priv->notebook)) == 1)
+		showtabs = FALSE;
+	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (perspective->priv->notebook), showtabs);
+}
+
+static void
+fullscreen_changed_cb (BrowserWindow *bwin, gboolean fullscreen, DataManagerPerspective *perspective)
+{
+	perspective->priv->fullscreen = fullscreen;
+	adapt_notebook_for_fullscreen (perspective);
 }
 
 static void
@@ -276,6 +353,10 @@ data_manager_perspective_dispose (GObject *object)
 
                 g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
                                                       G_CALLBACK (nb_page_removed_cb), perspective);
+                g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
+                                                      G_CALLBACK (nb_page_added_cb), perspective);
+                g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
+                                                      G_CALLBACK (nb_switch_page_cb), perspective);
                 g_free (perspective->priv);
                 perspective->priv = NULL;
         }
@@ -287,18 +368,38 @@ data_manager_perspective_dispose (GObject *object)
 static void
 manager_new_cb (GtkAction *action, BrowserPerspective *bpers)
 {
-	add_new_data_console (bpers);
+	add_new_data_console (bpers, -1);
 }
+
+static void
+favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
+{
+	DataManagerPerspective *perspective;
+	perspective = DATA_MANAGER_PERSPECTIVE (bpers);
+	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
+	if (perspective->priv->favorites_shown)
+		gtk_widget_show (perspective->priv->favorites);
+	else
+		gtk_widget_hide (perspective->priv->favorites);
+}
+
+static const GtkToggleActionEntry ui_toggle_actions [] =
+{
+        { "DataManagerFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE}
+};
 
 static GtkActionEntry ui_actions[] = {
         { "DataManagerMenu", NULL, "_Manager", NULL, "ManagerMenu", NULL },
-        { "NewDataManager", GTK_STOCK_NEW, "_New data manager", NULL, "New data manager",
+        { "NewDataManager", GTK_STOCK_NEW, "_New data manager", "<control>T", "New data manager",
           G_CALLBACK (manager_new_cb)},
 };
 
 static const gchar *ui_actions_info =
         "<ui>"
         "  <menubar name='MenuBar'>"
+        "    <menu name='Display' action='Display'>"
+        "      <menuitem name='DataManagerFavoritesShow' action='DataManagerFavoritesShow'/>"
+        "    </menu>"
 	"    <placeholder name='MenuExtension'>"
         "      <menu name='Data manager' action='DataManagerMenu'>"
         "        <menuitem name='NewDataManager' action= 'NewDataManager'/>"
@@ -317,7 +418,13 @@ data_manager_perspective_get_actions_group (BrowserPerspective *bpers)
 	GtkActionGroup *agroup;
 	agroup = gtk_action_group_new ("DataManagerActions");
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	
+	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions), bpers);
+
+	GtkAction *action;
+	action = gtk_action_group_get_action (agroup, "DataManagerFavoritesShow");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      DATA_MANAGER_PERSPECTIVE (bpers)->priv->favorites_shown);
+
 	return agroup;
 }
 
@@ -356,7 +463,7 @@ data_manager_perspective_new_tab (DataManagerPerspective *dmp, const gchar *xml_
 	}
 
 	if (!page) {
-		add_new_data_console (BROWSER_PERSPECTIVE (dmp));
+		add_new_data_console (BROWSER_PERSPECTIVE (dmp), -1);
 		current = gtk_notebook_get_current_page (GTK_NOTEBOOK (dmp->priv->notebook));
 		page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (dmp->priv->notebook), current);
 		g_assert (IS_DATA_CONSOLE (page));
@@ -364,4 +471,22 @@ data_manager_perspective_new_tab (DataManagerPerspective *dmp, const gchar *xml_
 
 	data_console_set_text (DATA_CONSOLE (page), xml_spec); 
 	data_console_execute (DATA_CONSOLE (page));
+	gtk_widget_grab_focus (page);
+}
+
+static void
+data_manager_perspective_get_current_customization (BrowserPerspective *perspective,
+						    GtkActionGroup **out_agroup,
+						    const gchar **out_ui)
+{
+	DataManagerPerspective *bpers;
+	GtkWidget *page_contents;
+
+	bpers = DATA_MANAGER_PERSPECTIVE (perspective);
+	page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook),
+						   gtk_notebook_get_current_page (GTK_NOTEBOOK (bpers->priv->notebook)));
+	if (IS_BROWSER_PAGE (page_contents)) {
+		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
+		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
+	}
 }

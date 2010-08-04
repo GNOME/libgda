@@ -173,6 +173,9 @@ apply_filter_cb (GtkButton *button, GdauiDataFilter *filter)
 		markup = g_strdup_printf ("<small><span foreground=\"#FF0000\"><b>%s</b>: %s</span></small>", 
 					  _("Filter failed:"), esc);
 		g_free (esc);
+		gtk_label_set_line_wrap (GTK_LABEL (filter->priv->notice), TRUE);
+		gtk_label_set_line_wrap_mode (GTK_LABEL (filter->priv->notice), PANGO_WRAP_WORD);
+		gtk_label_set_selectable (GTK_LABEL (filter->priv->notice), TRUE);
 		gtk_label_set_markup (GTK_LABEL (filter->priv->notice), markup);
 		g_free (markup);
 		gtk_widget_show (filter->priv->notice);

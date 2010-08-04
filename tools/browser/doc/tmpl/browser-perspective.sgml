@@ -85,6 +85,16 @@ A "perspective" in a #BrowserWindow window
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_perspective_get_current_customization ##### -->
+<para>
+
+</para>
+
+@perspective: 
+@out_agroup: 
+@out_ui: 
+
+
 <!-- ##### FUNCTION browser_perspective_page_tab_label_change ##### -->
 <para>
 

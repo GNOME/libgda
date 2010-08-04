@@ -46,6 +46,9 @@ struct _BrowserWindow
 struct _BrowserWindowClass
 {
 	GtkWindowClass        parent_class;
+	
+	/* signals */
+	void                (*fullscreen_changed) (BrowserWindow *bwin, gboolean fullscreen);
 };
 
 GType               browser_window_get_type               (void) G_GNUC_CONST;
@@ -61,6 +64,8 @@ void                browser_window_customize_perspective_ui (BrowserWindow *bwin
 							     const gchar *ui_info);
 
 BrowserPerspective *browser_window_change_perspective     (BrowserWindow *bwin, const gchar *perspective);
+
+gboolean            browser_window_is_fullscreen          (BrowserWindow *bwin);
 
 G_END_DECLS
 

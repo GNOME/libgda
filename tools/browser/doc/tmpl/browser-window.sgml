@@ -33,6 +33,14 @@ Top level browser window
 </para>
 
 
+<!-- ##### SIGNAL BrowserWindow::fullscreen-changed ##### -->
+<para>
+
+</para>
+
+@browserwindow: the object which received the signal.
+@arg1: 
+
 <!-- ##### FUNCTION browser_window_new ##### -->
 <para>
 
@@ -91,6 +99,15 @@ Top level browser window
 
 @bwin: 
 @perspective: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_window_is_fullscreen ##### -->
+<para>
+
+</para>
+
+@bwin: 
 @Returns: 
 
 

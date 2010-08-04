@@ -569,9 +569,10 @@ popup_export_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
 			if (error) {
 				GtkWidget *errdlg;
 
-				errdlg = gtk_message_dialog_new_with_markup ((GtkWindow*) toplevel,
-									     GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
-									     GTK_BUTTONS_CLOSE, "%s", error);
+				errdlg = gtk_message_dialog_new ((GtkWindow*) toplevel,
+								 GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
+								 GTK_BUTTONS_CLOSE, NULL);
+				gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (errdlg), error);
 				g_free (error);
 				gtk_dialog_run (GTK_DIALOG (errdlg));
 				gtk_widget_destroy (errdlg);

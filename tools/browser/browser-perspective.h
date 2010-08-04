@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -40,6 +40,9 @@ struct _BrowserPerspectiveIface {
 	/* virtual table */
 	GtkActionGroup      *(* i_get_actions_group) (BrowserPerspective *perspective);
 	const gchar         *(* i_get_actions_ui) (BrowserPerspective *perspective);
+	void                 (* i_get_current_customization) (BrowserPerspective *perspective,
+							      GtkActionGroup **out_agroup,
+							      const gchar **out_ui);
 	void                 (* i_page_tab_label_change) (BrowserPerspective *perspective, BrowserPage *page);
 };
 
@@ -47,6 +50,9 @@ GType           browser_perspective_get_type          (void) G_GNUC_CONST;
 
 GtkActionGroup *browser_perspective_get_actions_group (BrowserPerspective *perspective);
 const gchar    *browser_perspective_get_actions_ui    (BrowserPerspective *perspective);
+void            browser_perspective_get_current_customization (BrowserPerspective *perspective,
+							       GtkActionGroup **out_agroup,
+							       const gchar **out_ui);
 void            browser_perspective_page_tab_label_change (BrowserPerspective *perspective,
 							   BrowserPage *page);
 

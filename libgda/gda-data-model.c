@@ -38,7 +38,9 @@
 #include <libgda/gda-enums.h>
 #include <string.h>
 #ifdef HAVE_LOCALE_H
+#ifndef G_OS_WIN32
 #include <langinfo.h>
+#endif
 #include <locale.h>
 #endif
 #include "csv.h"
@@ -2121,6 +2123,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	GdaDataModel *ramodel = NULL;
 
 #ifdef HAVE_LOCALE_H
+#ifndef G_OS_WIN32
 	char *current_locale;
 	int utf8_mode;
 	current_locale = setlocale (LC_ALL, "");
@@ -2131,6 +2134,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		sep_row = "─┼─";
 	}
 	setlocale (LC_ALL, current_locale);
+#endif
 #endif
 
 	string = g_string_new ("");

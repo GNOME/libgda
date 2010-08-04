@@ -495,7 +495,7 @@ gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaSqlStatementCheckValidityData 
 	 *  - if expr->param_spec->type is NULL, then try to identify it (and expr->param_spec->g_type)
 	 *    using @expr context, set expr->param_spec->validity_meta_dict.
 	 */
-        TO_IMPLEMENT;
+        /*TO_IMPLEMENT;*/
         return TRUE;
 }
 

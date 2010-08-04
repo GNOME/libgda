@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -42,12 +42,17 @@ static void                 schema_browser_perspective_perspective_init (Browser
 static GtkActionGroup      *schema_browser_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *schema_browser_perspective_get_actions_ui (BrowserPerspective *perspective);
 static void                 schema_browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
+static void                 schema_browser_perspective_get_current_customization (BrowserPerspective *perspective,
+										  GtkActionGroup **out_agroup,
+										  const gchar **out_ui);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
 struct _SchemaBrowserPerspectivePrivate {
 	GtkWidget *notebook;
+	GtkWidget *favorites;
+	gboolean favorites_shown;
 	BrowserWindow *bwin;
 };
 
@@ -101,6 +106,7 @@ schema_browser_perspective_perspective_init (BrowserPerspectiveIface *iface)
 	iface->i_get_actions_group = schema_browser_perspective_get_actions_group;
 	iface->i_get_actions_ui = schema_browser_perspective_get_actions_ui;
 	iface->i_page_tab_label_change = schema_browser_perspective_page_tab_label_change;
+	iface->i_get_current_customization = schema_browser_perspective_get_current_customization;
 }
 
 
@@ -108,6 +114,7 @@ static void
 schema_browser_perspective_init (SchemaBrowserPerspective *perspective)
 {
 	perspective->priv = g_new0 (SchemaBrowserPerspectivePrivate, 1);
+	perspective->priv->favorites_shown = TRUE;
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
@@ -142,6 +149,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 			  G_CALLBACK (fav_selection_changed_cb), bpers);
 	gtk_paned_add1 (GTK_PANED (paned), wid);
 	gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
+	perspective->priv->favorites = wid;
 
 	nb = gtk_notebook_new ();
 	perspective->priv->notebook = nb;
@@ -165,6 +173,9 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 									NULL));
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
+
+	if (!perspective->priv->favorites_shown)
+		gtk_widget_hide (perspective->priv->favorites);
 
 	return bpers;
 }
@@ -289,6 +300,22 @@ action_create_diagram_cb (GtkAction *action, SchemaBrowserPerspective *bpers)
 }
 #endif
 
+static void
+favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
+{
+	SchemaBrowserPerspective *perspective;
+	perspective = SCHEMA_BROWSER_PERSPECTIVE (bpers);
+	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
+	if (perspective->priv->favorites_shown)
+		gtk_widget_show (perspective->priv->favorites);
+	else
+		gtk_widget_hide (perspective->priv->favorites);
+}
+
+static const GtkToggleActionEntry ui_toggle_actions [] =
+{
+        { "SchemaBrowserFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
+};
 
 static GtkActionEntry ui_actions[] = {
 #ifdef HAVE_GOOCANVAS
@@ -301,6 +328,9 @@ static GtkActionEntry ui_actions[] = {
 static const gchar *ui_actions_info =
         "<ui>"
         "  <menubar name='MenuBar'>"
+	"    <menu name='Display' action='Display'>"
+	"      <menuitem name='SchemaBrowserFavoritesShow' action='SchemaBrowserFavoritesShow'/>"
+        "    </menu>"
         "    <placeholder name='MenuExtension'>"
         "      <menu name='Schema' action='Schema'>"
         "        <menuitem name='NewDiagram' action= 'NewDiagram'/>"
@@ -315,7 +345,13 @@ schema_browser_perspective_get_actions_group (BrowserPerspective *bpers)
 	GtkActionGroup *agroup;
 	agroup = gtk_action_group_new ("SchemaBrowserActions");
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	
+	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions),
+					     bpers);
+	GtkAction *action;
+	action = gtk_action_group_get_action (agroup, "SchemaBrowserFavoritesShow");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      SCHEMA_BROWSER_PERSPECTIVE (bpers)->priv->favorites_shown);	
+
 	return agroup;
 }
 
@@ -458,5 +494,22 @@ schema_browser_perspective_display_table_info (SchemaBrowserPerspective *bpers,
 						  TRUE);
 		gtk_notebook_set_tab_detachable (GTK_NOTEBOOK (bpers->priv->notebook), ti,
 						 TRUE);
+	}
+}
+
+static void
+schema_browser_perspective_get_current_customization (BrowserPerspective *perspective,
+						      GtkActionGroup **out_agroup,
+						      const gchar **out_ui)
+{
+	SchemaBrowserPerspective *bpers;
+	GtkWidget *page_contents;
+
+	bpers = SCHEMA_BROWSER_PERSPECTIVE (perspective);
+	page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook),
+						   gtk_notebook_get_current_page (GTK_NOTEBOOK (bpers->priv->notebook)));
+	if (IS_BROWSER_PAGE (page_contents)) {
+		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
+		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
 	}
 }

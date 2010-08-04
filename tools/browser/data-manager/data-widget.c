@@ -303,8 +303,14 @@ data_widget_new (GArray *sources_array)
 static void
 data_part_free (DataPart *part)
 {
-	if (part->source)
+	if (part->source) {
+		g_signal_handlers_disconnect_by_func (part->source,
+						      G_CALLBACK (source_exec_started_cb), part);
+		g_signal_handlers_disconnect_by_func (part->source,
+						      G_CALLBACK (source_exec_finished_cb), part);
 		g_object_unref (part->source);
+	}
+
 	if (part->export_data)
 		g_object_unref (part->export_data);
 	if (part->dep_parts)
@@ -338,7 +344,9 @@ source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
 	GtkWidget *wid;
 	browser_spinner_stop (part->spinner);
 	
-	/*g_print ("Execution of source [%s] finished\n", data_source_get_title (part->source));*/
+#ifdef GDA_DEBUG_NO
+	g_print ("==== Execution of source [%s] finished\n", data_source_get_title (part->source));*/
+#endif
 	if (error) {
 		gchar *tmp;
 		tmp = g_markup_printf_escaped ("\n<b>Error:\n</b>%s",
@@ -368,7 +376,10 @@ source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
 		part->data_widget = wid;
 		part->data_widget_page = gtk_notebook_append_page (part->nb, cwid, NULL);
 		gtk_widget_show (cwid);
-		g_print ("Creating data widget for source [%s]\n", data_source_get_title (part->source));
+#ifdef GDA_DEBUG_NO
+		g_print ("Creating data widget for source [%s]\n",
+			 data_source_get_title (part->source));
+#endif
 
 		/* compute part->export_data */
 		GArray *export_names;
@@ -477,11 +488,13 @@ compute_sources_dependencies (DataPart *part)
 						 lerror->message : "???");
 					g_clear_error (&lerror);
 				}
+#ifdef GDA_DEBUG_NO
 				g_print ("[%s.][%s] bound to [%s].[%s]\n",
 					 data_source_get_title (part->source),
 					 hid,
 					 data_source_get_title (opart->source),
 					 gda_holder_get_id (holder2));
+#endif
 				
 				if (! g_slist_find (opart->dep_parts, part))
 					opart->dep_parts = g_slist_append (opart->dep_parts, part);
@@ -508,4 +521,20 @@ data_widget_get_export (DataWidget *dwid, DataSource *source)
 		return NULL;
 	}
 	return part->export_data;
+}
+
+/**
+ * data_widget_rerun
+ */
+void
+data_widget_rerun (DataWidget *dwid)
+{
+	GSList *parts;
+	g_return_if_fail (IS_DATA_WIDGET (dwid));
+
+	for (parts = dwid->priv->parts; parts; parts = parts->next) {
+		DataPart *part;
+		part = (DataPart*) parts->data;
+		data_source_execute (part->source, NULL);		
+	}
 }

@@ -29,6 +29,7 @@
 
 #include "data-source-manager.h"
 
+/*#define DEBUG_SOURCES_SORT*/
 
 /* signals */
 enum {
@@ -166,8 +167,10 @@ source_depends_on (DataSource *source1, DataSource *source2)
 	GdaSet *import;
 	import = data_source_get_import (source1);
 	if (!import) {
+#ifdef DEBUG_SOURCES_SORT
 		g_print ("[%s] has no import\n",
 			 data_source_get_title (source1));
+#endif
 		return FALSE;
 	}
 
@@ -177,28 +180,20 @@ source_depends_on (DataSource *source1, DataSource *source2)
 	for (holders = import->holders; holders; holders = holders->next) {
 		GdaHolder *holder = (GdaHolder*) holders->data;
 		if (GPOINTER_TO_INT (g_hash_table_lookup (export_columns, gda_holder_get_id (holder))) >= 1) {
+#ifdef DEBUG_SOURCES_SORT
 			g_print ("[%s] ====> [%s]\n",
 				 data_source_get_title (source1),
 				 data_source_get_title (source2));
+#endif
 			return TRUE;
 		}
 	}
+#ifdef DEBUG_SOURCES_SORT
 	g_print ("[%s] ..... [%s]\n",
 		 data_source_get_title (source1),
 		 data_source_get_title (source2));
+#endif
 	return FALSE;
-}
-
-
-static gint
-data_source_compare_func (DataSource *s1, DataSource *s2)
-{
-	if (source_depends_on (s1, s2))
-		return 1;
-	else if (source_depends_on (s2, s1))
-		return -1;
-	else
-		return 0;
 }
 
 /**
@@ -213,18 +208,80 @@ data_source_manager_add_source (DataSourceManager *mgr, DataSource *source)
 	g_return_if_fail (IS_DATA_SOURCE (source));
 
 	g_return_if_fail (! g_slist_find (mgr->priv->sources_list, source));
-	mgr->priv->sources_list = g_slist_insert_sorted (mgr->priv->sources_list,
-							 g_object_ref (source),
-							 (GCompareFunc) data_source_compare_func);
+
+#ifdef DEBUG_SOURCES_SORT
+	g_print ("Adding source [%s]\n", data_source_get_title (source));
+#endif
+	if (! mgr->priv->sources_list)
+		mgr->priv->sources_list = g_slist_append (NULL, g_object_ref (source));
+	else {
+		GSList *list;
+		gint lefti, righti, curi;
+		gboolean deperror = FALSE;
+		lefti = -1;
+		righti = g_slist_length (mgr->priv->sources_list);
+		for (curi = 0, list = mgr->priv->sources_list;
+		     list;
+		     curi++, list = list->next) {
+			if (source_depends_on (source, (DataSource*) list->data))
+				lefti = MAX (lefti, curi);
+			else if (source_depends_on ((DataSource*) list->data, source))
+				righti = MIN (righti, curi);
+		}
+		if (lefti < righti) {
+			/*g_print ("\tleft=%d right=%d\n", lefti, righti);*/
+			list = g_slist_nth (mgr->priv->sources_list, righti);
+			if (list)
+				mgr->priv->sources_list = g_slist_insert_before (mgr->priv->sources_list, list,
+										 g_object_ref (source));
+			else
+				mgr->priv->sources_list = g_slist_append (mgr->priv->sources_list,
+									  g_object_ref (source));
+		}
+		else {
+			if (lefti == righti) {
+				DataSource *sourcei;
+				sourcei = (DataSource*) g_slist_nth_data (mgr->priv->sources_list,
+									  lefti);
+				if (source_depends_on (source, sourcei) &&
+				    source_depends_on (sourcei, source)) {
+					/* there is an error */
+					deperror = TRUE;
+					TO_IMPLEMENT;
+				}
+			}
+			if (!deperror) {
+				GSList *olist;
+#ifdef DEBUG_SOURCES_SORT
+				g_print ("Reorganizing sources order\n");
+#endif
+				olist = g_slist_reverse (mgr->priv->sources_list);
+				mgr->priv->sources_list = NULL;
+				for (list = olist; list; list = list->next) {
+					data_source_manager_add_source (mgr, (DataSource*) list->data);
+					g_object_unref ((GObject*) list->data);
+				}
+				data_source_manager_add_source (mgr, source);
+			}
+		}
+	}
 	g_signal_emit (mgr, data_source_manager_signals[CHANGED], 0);
 
+#ifdef DEBUG_SOURCES_SORT
+	g_print ("Sources in manager:\n");
+#endif
 	GSList *list;
 	gint i;
 	for (i = 0, list = mgr->priv->sources_list; list; list = list->next, i++) {
 		DataSource *source = DATA_SOURCE (list->data);
+#ifdef DEBUG_SOURCES_SORT
 		g_print ("\t %d ... %s\n", i, 
-		 data_source_get_title (source));
+			 data_source_get_title (source));
+#endif
 	}
+#ifdef DEBUG_SOURCES_SORT
+	g_print ("\n");
+#endif
 }
 
 /**
@@ -263,7 +320,6 @@ data_source_manager_remove_source (DataSourceManager *mgr, DataSource *source)
 	g_signal_emit (mgr, data_source_manager_signals[CHANGED], 0);
 	g_object_unref (source);
 }
-
 
 static void
 compute_params (DataSourceManager *mgr)
@@ -308,6 +364,7 @@ compute_params (DataSourceManager *mgr)
 					mgr->priv->params = gda_set_copy (set);
 				else
 					gda_set_merge_with_set (mgr->priv->params, set);
+				data_source_set_params (source, mgr->priv->params);
 			}
 		}
 	}
@@ -348,12 +405,18 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error)
 
 	GSList *list;
 	GArray *array = NULL;
+#ifdef DEBUG_SOURCES_SORT
 	g_print ("** Creating DataSource arrays\n");
+#endif
 	for (list = mgr->priv->sources_list; list; list = list->next) {
 		DataSource *source;
 		source = DATA_SOURCE (g_object_ref (G_OBJECT (list->data)));
+#ifdef DEBUG_SOURCES_SORT
 		g_print ("Taking into account source [%s]\n",
 			 data_source_get_title (source));
+#endif
+
+		data_source_should_rerun (source);
 
 		GdaSet *import;
 		import = data_source_get_import (source);
@@ -379,14 +442,9 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error)
 				gint j;
 				for (j = 0; j < subarray->len; j++) {
 					DataSource *source2 = g_array_index (subarray, DataSource*, j);
-					g_print ("Source [%s] %s on source [%s]\n",
-						 data_source_get_title (source),
-						 source_depends_on (source, source2) ?
-						 "depends" : "does not depend",
-						 data_source_get_title (source2));
 					if (source_depends_on (source, source2)) {
 						dep_found = TRUE;
-						/* add source to column i+1 */
+						/* add source to column i+1 if not yet present */
 						if (i == array->len - 1) {
 							GArray *subarray = g_array_new (FALSE, FALSE,
 											sizeof (DataSource*));
@@ -394,8 +452,17 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error)
 							g_array_append_val (subarray, source);
 						}
 						else {
+							gint k;
 							GArray *subarray = g_array_index (array, GArray*, i+1);
-							g_array_append_val (subarray, source);
+							for (k = 0; k < subarray->len; k++) {
+								DataSource *source3 = g_array_index (subarray,
+												     DataSource*,
+												     k);
+								if (source3 == source)
+									break;
+							}
+							if (k == subarray->len)
+								g_array_append_val (subarray, source);
 						}
 						continue;
 					}
@@ -419,7 +486,21 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error)
 		}
 	}
 
+#ifdef DEBUG_SOURCES_SORT
+	g_print ("** DataSource arrays is: %p\n", array);
+	if (array) {
+		gint i;
+		for (i = 0; i < array->len; i++) {
+			GArray *subarray = g_array_index (array, GArray*, i);
+			gint j;
+			for (j = 0; j < subarray->len; j++) {
+				DataSource *source2 = g_array_index (subarray, DataSource*, j);
+				g_print ("   %d.%d => [%s]\n", i, j, data_source_get_title (source2));
+			}
+		}
+	}
 	g_print ("** DataSource arrays created\n");
+#endif
 	return array;
 }
 

@@ -581,7 +581,7 @@ create_typed_value (GType type, va_list *ap)
 	else if (type == G_TYPE_ULONG)
 		g_value_set_ulong ((v = gda_value_new (G_TYPE_ULONG)), va_arg (*ap, gulong));
 	else if (type == G_TYPE_LONG)
-		g_value_set_long ((v = gda_value_new (G_TYPE_LONG)), va_arg (*ap, ulong));
+		g_value_set_long ((v = gda_value_new (G_TYPE_LONG)), va_arg (*ap, glong));
 	else if (type == GDA_TYPE_BINARY) {
 		GdaBinary *bin;
 		bin = va_arg (*ap, GdaBinary *);

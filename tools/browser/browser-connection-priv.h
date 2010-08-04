@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -33,6 +33,7 @@ struct _BrowserConnectionPrivate {
 	GHashTable       *executed_statements; /* key = guint exec ID, value = a StatementResult pointer */
 
 	gulong            meta_store_signal;
+	gulong            transaction_status_signal;
 
 	gchar         *name;
 	GdaConnection *cnc;

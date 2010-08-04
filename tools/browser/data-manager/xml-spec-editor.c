@@ -22,31 +22,29 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include "spec-editor.h"
+#include "xml-spec-editor.h"
 #include "data-source.h"
 #include <libgda/libgda.h>
 #include "../support.h"
 
 #ifdef HAVE_GTKSOURCEVIEW
-  #ifdef GTK_DISABLE_SINGLE_INCLUDES
-    #undef GTK_DISABLE_SINGLE_INCLUDES
-  #endif
-
-  #include <gtksourceview/gtksourceview.h>
-  #include <gtksourceview/gtksourcelanguagemanager.h>
-  #include <gtksourceview/gtksourcebuffer.h>
-  #include <gtksourceview/gtksourcestyleschememanager.h>
-  #include <gtksourceview/gtksourcestylescheme.h>
+#ifdef GTK_DISABLE_SINGLE_INCLUDES
+#undef GTK_DISABLE_SINGLE_INCLUDES
 #endif
 
-struct _SpecEditorPrivate {
+#include <gtksourceview/gtksourceview.h>
+#include <gtksourceview/gtksourcelanguagemanager.h>
+#include <gtksourceview/gtksourcebuffer.h>
+#include <gtksourceview/gtksourcestyleschememanager.h>
+#include <gtksourceview/gtksourcestylescheme.h>
+#endif
+
+struct _XmlSpecEditorPrivate {
 	DataSourceManager *mgr;
-
-	SpecEditorMode mode;
-	GtkNotebook *notebook;
-
-	/* reference for all views */
-	xmlDocPtr doc;
+	
+	/* warnings */
+	GtkWidget  *info;
+	GtkWidget  *info_label;
 
 	/* XML view */
 	gboolean xml_view_up_to_date;
@@ -54,76 +52,77 @@ struct _SpecEditorPrivate {
 	GtkWidget *text;
 	GtkTextBuffer *buffer;
 	GtkWidget *help;
-
-	/* UI view */
-	gboolean ui_view_up_to_date;
 };
 
-static void spec_editor_class_init (SpecEditorClass *klass);
-static void spec_editor_init       (SpecEditor *sped, SpecEditorClass *klass);
-static void spec_editor_dispose    (GObject *object);
+static void xml_spec_editor_class_init (XmlSpecEditorClass *klass);
+static void xml_spec_editor_init       (XmlSpecEditor *sped, XmlSpecEditorClass *klass);
+static void xml_spec_editor_dispose    (GObject *object);
+static void xml_spec_editor_grab_focus (GtkWidget *widget);
 
 static GObjectClass *parent_class = NULL;
 
 /*
- * SpecEditor class implementation
+ * XmlSpecEditor class implementation
  */
 static void
-spec_editor_class_init (SpecEditorClass *klass)
+xml_spec_editor_class_init (XmlSpecEditorClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->dispose = spec_editor_dispose;
+	GTK_WIDGET_CLASS (klass)->grab_focus = xml_spec_editor_grab_focus;
+	object_class->dispose = xml_spec_editor_dispose;
 }
 
+static void
+xml_spec_editor_grab_focus (GtkWidget *widget)
+{
+	gtk_widget_grab_focus (XML_SPEC_EDITOR (widget)->priv->text);
+}
 
 static void
-spec_editor_init (SpecEditor *sped, SpecEditorClass *klass)
+xml_spec_editor_init (XmlSpecEditor *sped, XmlSpecEditorClass *klass)
 {
-	g_return_if_fail (IS_SPEC_EDITOR (sped));
+	g_return_if_fail (IS_XML_SPEC_EDITOR (sped));
 
 	/* allocate private structure */
-	sped->priv = g_new0 (SpecEditorPrivate, 1);
+	sped->priv = g_new0 (XmlSpecEditorPrivate, 1);
 	sped->priv->signal_editor_changed_id = 0;
-	sped->priv->mode = SPEC_EDITOR_XML;
 }
 
 GType
-spec_editor_get_type (void)
+xml_spec_editor_get_type (void)
 {
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
-			sizeof (SpecEditorClass),
+			sizeof (XmlSpecEditorClass),
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) spec_editor_class_init,
+			(GClassInitFunc) xml_spec_editor_class_init,
 			NULL,
 			NULL,
-			sizeof (SpecEditor),
+			sizeof (XmlSpecEditor),
 			0,
-			(GInstanceInitFunc) spec_editor_init
+			(GInstanceInitFunc) xml_spec_editor_init
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "SpecEditor", &info, 0);
+		type = g_type_register_static (GTK_TYPE_VBOX, "XmlSpecEditor", &info, 0);
 	}
 	return type;
 }
 
 static void
-spec_editor_dispose (GObject *object)
+xml_spec_editor_dispose (GObject *object)
 {
-	SpecEditor *sped = (SpecEditor*) object;
+	XmlSpecEditor *sped = (XmlSpecEditor*) object;
 	if (sped->priv) {
 		if (sped->priv->signal_editor_changed_id)
 			g_source_remove (sped->priv->signal_editor_changed_id);
 		if (sped->priv->mgr)
 			g_object_unref (sped->priv->mgr);
 
-		if (sped->priv->doc)
-			xmlFreeDoc (sped->priv->doc);
 		g_free (sped->priv);
 		sped->priv = NULL;
 	}
@@ -131,7 +130,7 @@ spec_editor_dispose (GObject *object)
 }
 
 static gboolean
-signal_editor_changed (SpecEditor *sped)
+signal_editor_changed (XmlSpecEditor *sped)
 {
 	/* modify the DataSourceManager */
 	data_source_manager_remove_all (sped->priv->mgr);
@@ -144,7 +143,14 @@ signal_editor_changed (SpecEditor *sped)
 	gtk_text_buffer_get_start_iter (sped->priv->buffer, &start);
 	gtk_text_buffer_get_end_iter (sped->priv->buffer, &end);
 	xml = gtk_text_buffer_get_text (sped->priv->buffer, &start, &end, FALSE);
+
 	if (xml) {
+		g_strstrip (xml);
+		if (! *xml) {
+			g_free (xml);
+			goto out;
+		}
+
 		doc = xmlParseDoc (BAD_CAST xml);
 		g_free (xml);
 	}
@@ -164,10 +170,14 @@ signal_editor_changed (SpecEditor *sped)
 		goto out;
 	}
 
+	if (strcmp ((gchar*) node->name, "data")) {
+		g_set_error (&lerror, 0, 0,
+			     _("Expecting <%s> root node"), "data");
+		goto out;
+	}
+
 	BrowserConnection *bcnc;
-	GdaSet *params;
-	
-	params = data_source_manager_get_params (sped->priv->mgr);
+
 	bcnc = data_source_manager_get_browser_cnc (sped->priv->mgr);
 	for (node = node->children; node; node = node->next) {
 		if (!strcmp ((gchar*) node->name, "table") ||
@@ -180,7 +190,6 @@ signal_editor_changed (SpecEditor *sped)
 				goto out;
 			}
 			
-			data_source_set_params (source, params);
 			data_source_manager_add_source (sped->priv->mgr, source);
 			g_object_unref (source);
 		}
@@ -189,16 +198,39 @@ signal_editor_changed (SpecEditor *sped)
 
  out:
 	if (lerror) {
-		TO_IMPLEMENT;
+		if (! sped->priv->info) {
+#if GTK_CHECK_VERSION (2,18,0)
+			sped->priv->info = gtk_info_bar_new ();
+			gtk_box_pack_start (GTK_BOX (sped), sped->priv->info, FALSE, FALSE, 0);
+			sped->priv->info_label = gtk_label_new ("");
+			gtk_misc_set_alignment (GTK_MISC (sped->priv->info_label), 0., -1);
+			gtk_label_set_ellipsize (GTK_LABEL (sped->priv->info_label), PANGO_ELLIPSIZE_END);
+			gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (sped->priv->info))),
+					   sped->priv->info_label);
+#else
+			sped->priv->info = gtk_label_new ("");
+			sped->priv->info_label = sped->priv->info;
+#endif
+			gtk_widget_show (sped->priv->info_label);
+		}
+		gchar *str;
+		str = g_strdup_printf (_("Error: %s"), lerror->message);
 		g_clear_error (&lerror);
+		gtk_label_set_text (GTK_LABEL (sped->priv->info_label), str);
+		g_free (str);
+		gtk_widget_show (sped->priv->info);
 	}
+	else if (sped->priv->info) {
+		gtk_widget_hide (sped->priv->info);
+	}
+
 	/* remove timeout */
 	sped->priv->signal_editor_changed_id = 0;
 	return FALSE;
 }
 
 static void
-editor_changed_cb (GtkTextBuffer *buffer, SpecEditor *sped)
+editor_changed_cb (GtkTextBuffer *buffer, XmlSpecEditor *sped)
 {
 	if (sped->priv->signal_editor_changed_id)
 		g_source_remove (sped->priv->signal_editor_changed_id);
@@ -206,37 +238,36 @@ editor_changed_cb (GtkTextBuffer *buffer, SpecEditor *sped)
 }
 
 /**
- * spec_editor_new
+ * xml_spec_editor_new
  *
  * Returns: the newly created editor.
  */
-SpecEditor *
-spec_editor_new (DataSourceManager *mgr)
+GtkWidget *
+xml_spec_editor_new (DataSourceManager *mgr)
 {
-	SpecEditor *sped;
-	GtkWidget *sw, *nb, *vbox;
+	XmlSpecEditor *sped;
+	GtkWidget *sw, *label;
+	gchar *str;
 
 	g_return_val_if_fail (IS_DATA_SOURCE_MANAGER (mgr), NULL);
 
-	sped = g_object_new (SPEC_EDITOR_TYPE, NULL);
+	sped = g_object_new (XML_SPEC_EDITOR_TYPE, NULL);
 	sped->priv->mgr = g_object_ref (mgr);
 
-	nb = gtk_notebook_new ();
-	gtk_box_pack_start (GTK_BOX (sped), nb, TRUE, TRUE, 0);
-	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), FALSE);
-	gtk_notebook_set_show_border (GTK_NOTEBOOK (nb), FALSE);
-	sped->priv->notebook = (GtkNotebook*) nb;
-
-	/* XML editor page */
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), vbox, NULL);
+	/* XML editor */
+	label = gtk_label_new ("");
+	str = g_strdup_printf ("<b>%s</b>", _("SQL code to execute:"));
+	gtk_label_set_markup (GTK_LABEL (label), str);
+	g_free (str);
+	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_box_pack_start (GTK_BOX (sped), label, FALSE, FALSE, 0);
 
 	sw = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_ETCHED_OUT);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
                                         GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	
-	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (sped), sw, TRUE, TRUE, 0);
 
 #ifdef HAVE_GTKSOURCEVIEW
         sped->priv->text = gtk_source_view_new ();
@@ -254,70 +285,40 @@ spec_editor_new (DataSourceManager *mgr)
 
 	g_signal_connect (sped->priv->buffer, "changed",
 			  G_CALLBACK (editor_changed_cb), sped);
+	gtk_widget_show_all (sw);
 
-	/* UI page */
-	GtkWidget *wid;
-	wid = gtk_label_new ("TODO");
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), wid, NULL);
+	/* warning, not shown */
+	sped->priv->info = NULL;
 
-	gtk_widget_show_all (nb);
-
-	return SPEC_EDITOR (sped);
+	return (GtkWidget*) sped;
 }
 
 /**
- * spec_editor_set_xml_text
+ * xml_spec_editor_set_xml_text
  */
 void
-spec_editor_set_xml_text (SpecEditor *sped, const gchar *xml)
+xml_spec_editor_set_xml_text (XmlSpecEditor *sped, const gchar *xml)
 {
-	g_return_if_fail (IS_SPEC_EDITOR (sped));
+	g_return_if_fail (IS_XML_SPEC_EDITOR (sped));
 
+	g_signal_handlers_block_by_func (sped->priv->buffer,
+					 G_CALLBACK (editor_changed_cb), sped);
 	gtk_text_buffer_set_text (sped->priv->buffer, xml, -1);
 	signal_editor_changed (sped);
+	g_signal_handlers_unblock_by_func (sped->priv->buffer,
+					   G_CALLBACK (editor_changed_cb), sped);
 }
 
 /**
- * spec_editor_get_xml_text
+ * xml_spec_editor_get_xml_text
  */
 gchar *
-spec_editor_get_xml_text (SpecEditor *sped)
+xml_spec_editor_get_xml_text (XmlSpecEditor *sped)
 {
 	GtkTextIter start, end;
-	g_return_val_if_fail (IS_SPEC_EDITOR (sped), NULL);
+	g_return_val_if_fail (IS_XML_SPEC_EDITOR (sped), NULL);
 	gtk_text_buffer_get_start_iter (sped->priv->buffer, &start);
 	gtk_text_buffer_get_end_iter (sped->priv->buffer, &end);
 
 	return gtk_text_buffer_get_text (sped->priv->buffer, &start, &end, FALSE);
 }
-
-/**
- * spec_editor_set_mode
- */
-void
-spec_editor_set_mode (SpecEditor *sped, SpecEditorMode mode)
-{
-	g_return_if_fail (IS_SPEC_EDITOR (sped));
-	switch (mode) {
-	case SPEC_EDITOR_XML:
-		gtk_notebook_set_current_page (sped->priv->notebook, 0);
-		break;
-	case SPEC_EDITOR_UI:
-		gtk_notebook_set_current_page (sped->priv->notebook, 1);
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
-	}
-}
-
-/**
- * spec_editor_get_mode
- */
-SpecEditorMode
-spec_editor_get_mode (SpecEditor *sped)
-{
-	g_return_val_if_fail (IS_SPEC_EDITOR (sped), SPEC_EDITOR_UI);
-	return sped->priv->mode;
-}
-

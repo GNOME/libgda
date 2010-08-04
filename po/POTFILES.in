@@ -255,9 +255,11 @@ tools/browser/common/objects-cloud.c
 tools/browser/common/ui-formgrid.c
 tools/browser/data-manager/data-console.c
 tools/browser/data-manager/data-favorite-selector.c
+tools/browser/data-manager/data-manager-perspective.c
 tools/browser/data-manager/data-source.c
 tools/browser/data-manager/data-widget.c
-tools/browser/data-manager/spec-editor.c
+tools/browser/data-manager/ui-spec-editor.c
+tools/browser/data-manager/xml-spec-editor.c
 tools/browser/query-exec/query-console.c
 tools/browser/query-exec/query-editor.c
 tools/browser/query-exec/query-exec-perspective.c

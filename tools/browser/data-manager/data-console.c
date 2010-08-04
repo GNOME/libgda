@@ -24,20 +24,25 @@
 #include <string.h>
 #include "data-console.h"
 #include "data-widget.h"
-#include "spec-editor.h"
+#include "xml-spec-editor.h"
+#include "ui-spec-editor.h"
 #include "../dnd.h"
 #include "../support.h"
 #include "../cc-gray-bar.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
+#include "../browser-perspective.h"
 #include "../browser-stock-icons.h"
 #include "../common/popup-container.h"
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
 #include "data-source-manager.h"
 
-#define PAGE_XML 0
-#define PAGE_DATA 1
+#define MAIN_PAGE_EDITORS 0
+#define MAIN_PAGE_DATA 1
+
+#define EDITOR_PAGE_XML 0
+#define EDITOR_PAGE_UI 1
 
 typedef enum {
 	LAYOUT_HORIZ,
@@ -47,12 +52,19 @@ typedef enum {
 struct _DataConsolePrivate {
 	DataSourceManager *mgr;
 
+	CcGrayBar *header;
 	LayoutType layout_type;
 	BrowserConnection *bcnc;
-	GtkWidget *notebook;
-	SpecEditor *sped;
-	GtkWidget *data_box; /* in notebook */
+
+	GtkWidget *main_notebook; /* 2 pages: MAIN_PAGE_EDITORS & MAIN_PAGE_DATA */
+	GtkWidget *editors_notebook; /* 2 pages: EDITOR_PAGE_XML & EDITOR_PAGE_UI */
+
+	GtkWidget *data_box; /* in main_notebook */
 	GtkWidget *data;
+
+	GtkWidget *xml_sped; /* in editors_notebook */
+	GtkWidget *ui_sped; /* in editors_notebook */
+
 	GtkActionGroup *agroup;
 
 	gboolean toggling;
@@ -60,12 +72,21 @@ struct _DataConsolePrivate {
 	GtkWidget *params_top;
 	GtkWidget *params_form_box;
 	GtkWidget *params_form;
+
+	gint fav_id; /* diagram's ID as a favorite, -1=>not a favorite */
+	GtkWidget *save_button;
+        GtkWidget *popup_container; /* to enter canvas's name */
+        GtkWidget *name_entry;
+        GtkWidget *real_save_button;
 };
 
 static void data_console_class_init (DataConsoleClass *klass);
 static void data_console_init       (DataConsole *dconsole, DataConsoleClass *klass);
 static void data_console_dispose    (GObject *object);
 static void data_console_show_all   (GtkWidget *widget);
+static void data_console_grab_focus (GtkWidget *widget);
+
+static void data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole);
 
 /* BrowserPage interface */
 static void                 data_console_page_init (BrowserPageIface *iface);
@@ -93,6 +114,7 @@ data_console_class_init (DataConsoleClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	GTK_WIDGET_CLASS (klass)->show_all = data_console_show_all;
+	GTK_WIDGET_CLASS (klass)->grab_focus = data_console_grab_focus;
 	object_class->dispose = data_console_dispose;
 }
 
@@ -104,6 +126,15 @@ data_console_show_all (GtkWidget *widget)
 
 	if (!gtk_toggle_button_get_active (dconsole->priv->params_toggle))
 		gtk_widget_hide (dconsole->priv->params_top);
+}
+
+static void
+data_console_grab_focus (GtkWidget *widget)
+{
+	DataConsole *dconsole;
+
+	dconsole = DATA_CONSOLE (widget);
+	gtk_widget_grab_focus (GTK_WIDGET (dconsole->priv->xml_sped));
 }
 
 static void
@@ -119,6 +150,8 @@ data_console_init (DataConsole *dconsole, DataConsoleClass *klass)
 {
 	dconsole->priv = g_new0 (DataConsolePrivate, 1);
 	dconsole->priv->layout_type = LAYOUT_HORIZ;
+	dconsole->priv->fav_id = -1;
+	dconsole->priv->popup_container = NULL;
 }
 
 static void
@@ -128,12 +161,20 @@ data_console_dispose (GObject *object)
 
 	/* free memory */
 	if (dconsole->priv) {
+		if (dconsole->priv->params_form)
+			gtk_widget_destroy (dconsole->priv->params_form);
+		if (dconsole->priv->popup_container)
+                        gtk_widget_destroy (dconsole->priv->popup_container);
 		if (dconsole->priv->bcnc)
 			g_object_unref (dconsole->priv->bcnc);
 		if (dconsole->priv->agroup)
 			g_object_unref (dconsole->priv->agroup);
-		if (dconsole->priv->mgr)
+		if (dconsole->priv->mgr) {
+			g_signal_handlers_disconnect_by_func (dconsole->priv->mgr,
+							      G_CALLBACK (data_source_mgr_changed_cb),
+							      dconsole);
 			g_object_unref (dconsole->priv->mgr);
+		}
 		g_free (dconsole->priv);
 		dconsole->priv = NULL;
 	}
@@ -171,6 +212,21 @@ data_console_get_type (void)
 	return type;
 }
 
+/**
+ * data_console_new
+ *
+ * Returns: a new #GtkWidget
+ */
+GtkWidget *
+data_console_new_with_fav_id (BrowserConnection *bcnc, gint fav_id)
+{
+	GtkWidget *dconsole;
+	dconsole = data_console_new (bcnc);
+	data_console_set_fav_id (DATA_CONSOLE (dconsole), fav_id, NULL);
+
+	return dconsole;
+}
+
 static void editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole);
 static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
@@ -178,7 +234,7 @@ static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void help_clicked_cb (GtkButton *button, DataConsole *dconsole);
 #endif
 static void spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole);
-static void data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole);
+static void save_clicked_cb (GtkWidget *button, DataConsole *dconsole);
 
 /**
  * data_console_new
@@ -200,13 +256,30 @@ data_console_new (BrowserConnection *bcnc)
 			  G_CALLBACK (data_source_mgr_changed_cb), dconsole);
 	
 	/* header */
-        GtkWidget *label;
+        GtkWidget *hbox, *label, *wid;
 	gchar *str;
-	str = g_strdup_printf ("<b>%s</b>", _("Data Manager"));
+
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (dconsole), hbox, FALSE, FALSE, 0);
+
+	str = g_strdup_printf ("<b>%s</b>\n%s", _("Data Manager"), _("Unsaved"));
 	label = cc_gray_bar_new (str);
 	g_free (str);
-        gtk_box_pack_start (GTK_BOX (dconsole), label, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
         gtk_widget_show (label);
+	dconsole->priv->header = CC_GRAY_BAR (label);
+
+	wid = gtk_button_new ();
+	label = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_BUTTON);
+	gtk_container_add (GTK_CONTAINER (wid), label);
+	gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+	g_object_set (G_OBJECT (wid), "label", NULL, NULL);
+	dconsole->priv->save_button = wid;
+
+	g_signal_connect (wid, "clicked",
+			  G_CALLBACK (save_clicked_cb), dconsole);
+
+        gtk_widget_show_all (hbox);
 
 	/* main container */
 	GtkWidget *hpaned, *nb;
@@ -242,55 +315,32 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_container_add (GTK_CONTAINER (dconsole->priv->params_form_box), label);
 	dconsole->priv->params_form = label;
 
-	/* main contents */
+	/* main contents: 1 page for editors and 1 for execution widget */
 	nb = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), FALSE);
 	gtk_paned_pack2 (GTK_PANED (hpaned), nb, TRUE, FALSE);
-	dconsole->priv->notebook = nb;
+	dconsole->priv->main_notebook = nb;
 
-	/* editor page */
-	GtkWidget *hbox;
+	/* editors page */
 	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), vbox, NULL);
-
-	label = gtk_label_new ("");
-	str = g_strdup_printf ("<b>%s</b>", _("SQL code to execute:"));
-	gtk_label_set_markup (GTK_LABEL (label), str);
-	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
 
 	hbox = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
-	dconsole->priv->sped = spec_editor_new (dconsole->priv->mgr);
-	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (dconsole->priv->sped), TRUE, TRUE, 0);
+	nb = gtk_notebook_new ();
+	gtk_box_pack_start (GTK_BOX (hbox), nb, TRUE, TRUE, 0);
+	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), FALSE);
+	gtk_notebook_set_show_border (GTK_NOTEBOOK (nb), FALSE);
+	dconsole->priv->editors_notebook = nb;
 
-#define DEFAULT_XML \
-"<data>\n" \
-"    <!-- This is an example of XML code, this editor will be replaced by a UI editing,\n" \
-"         but will still be visible and useable for quick access\n" \
-"    -->\n" \
-"\n    <!-- specifies that we want the contents of the 'customers' table -->\n" \
-"    <table name=\"customers\"/>\n" \
-"\n    <!-- specifies that we want the contents of the 'orders' table, where the order ID \n" \
-"         depends on the selected customer's ID -->\n"						\
-"    <table name=\"orders\">\n" \
-"        <depend foreign_key_table=\"customers\"/>\n" \
-"    </table>\n" \
-"\n    <!-- specifies that we want the result of the execution of a SELECT query, notice the WHERE clause\n" \
-"          which enables to filter on the previously selected order ID-->\n" \
-"    <query title=\"Order's products\" id=\"products\">\n" \
-"        SELECT p.ref, p.name FROM products p INNER JOIN order_contents o ON (o.product_ref=p.ref) WHERE o.order_id=##orders@id::int\n" \
-"    </query>\n" \
-"\n    <!-- a more complicated query this time giving all the orders (for any customer) containing the \n" \
-"         selected product from the previous SELECT query-->\n" \
-"    <query title=\"All orders with this product\" id=\"aorders\">\n" \
-"        SELECT distinct c.name, o.creation_date, o.delivery_date FROM customers c INNER JOIN orders o ON (o.customer=c.id) INNER JOIN order_contents oc ON (oc.order_id=o.id) INNER JOIN products p ON (oc.product_ref=##products@ref::string)\n" \
-"    </query>\n" \
-"</data>"
+	dconsole->priv->xml_sped = xml_spec_editor_new (dconsole->priv->mgr);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
+				  dconsole->priv->xml_sped, NULL);
 
-	//spec_editor_set_xml_text (dconsole->priv->sped, DEFAULT_XML);
+	dconsole->priv->ui_sped = ui_spec_editor_new (dconsole->priv->mgr);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
+				  dconsole->priv->ui_sped, NULL);
 
 	/* buttons */
 	GtkWidget *bbox, *button;
@@ -318,9 +368,7 @@ data_console_new (BrowserConnection *bcnc)
 	button = browser_make_small_button (TRUE, _("View XML"), NULL, _("View specifications\n"
 									 "as XML (advanced)"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				      spec_editor_get_mode (dconsole->priv->sped) == SPEC_EDITOR_XML ? 
-				      TRUE : FALSE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (spec_editor_toggled_cb), dconsole);
 
@@ -333,11 +381,9 @@ data_console_new (BrowserConnection *bcnc)
 
 
 	/* data contents page */
-	GtkWidget *wid;
-
 	vbox = gtk_vbox_new (FALSE, 0);
 	dconsole->priv->data_box = vbox;
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), vbox, NULL);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
 
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("BBB:"));
@@ -352,7 +398,163 @@ data_console_new (BrowserConnection *bcnc)
         gtk_widget_show_all (hpaned);
 	gtk_widget_hide (dconsole->priv->params_top);
 
+	/* initial contents for tests */
+#define DEFAULT_XML \
+"<data>\n" \
+"    <!-- This is an example of XML code, this editor will be replaced by a UI editing,\n" \
+"         but will still be visible and useable for quick access\n" \
+"    -->\n" \
+"\n    <!-- specifies that we want the contents of the 'customers' table -->\n" \
+"    <table name=\"customers\"/>\n" \
+"\n    <!-- specifies that we want the contents of the 'orders' table, where the order ID \n" \
+"         depends on the selected customer's ID -->\n"						\
+"    <table name=\"orders\">\n" \
+"        <depend foreign_key_table=\"customers\"/>\n" \
+"    </table>\n" \
+"\n    <!-- specifies that we want the result of the execution of a SELECT query, notice the WHERE clause\n" \
+"          which enables to filter on the previously selected order ID-->\n" \
+"    <query title=\"Order's products\" id=\"products\">\n" \
+"        SELECT p.ref, p.name FROM products p INNER JOIN order_contents o ON (o.product_ref=p.ref) WHERE o.order_id=##orders@id::int\n" \
+"    </query>\n" \
+"\n    <!-- a more complicated query this time giving all the orders (for any customer) containing the \n" \
+"         selected product from the previous SELECT query-->\n" \
+"    <query title=\"All orders with this product\" id=\"aorders\">\n" \
+"        SELECT distinct c.name, o.creation_date, o.delivery_date FROM customers c INNER JOIN orders o ON (o.customer=c.id) INNER JOIN order_contents oc ON (oc.order_id=o.id) INNER JOIN products p ON (oc.product_ref=##products@ref::string)\n" \
+"    </query>\n" \
+"</data>"
+
+	//xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
+
+	gtk_widget_grab_focus (dconsole->priv->xml_sped);
 	return (GtkWidget*) dconsole;
+}
+
+/**
+ * data_console_set_fav_id
+ *
+ * Sets the favorite ID of @dconsole: ensure every displayed information is up to date
+ */
+void
+data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
+{
+	g_return_if_fail (IS_DATA_CONSOLE (dconsole));
+	BrowserFavoritesAttributes fav;
+
+	if ((fav_id >=0) &&
+	    browser_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
+				   fav_id, &fav, error)) {
+		gchar *str, *tmp;
+		tmp = g_markup_printf_escaped (_("'%s' data manager"), fav.name);
+		str = g_strdup_printf ("<b>%s</b>\n%s", _("Data manager"), tmp);
+		g_free (tmp);
+		cc_gray_bar_set_text (dconsole->priv->header, str);
+		g_free (str);
+		
+		dconsole->priv->fav_id = fav.id;
+		
+		browser_favorites_reset_attributes (&fav);
+	}
+	else {
+		gchar *str;
+		str = g_strdup_printf ("<b>%s</b>\n%s", _("Data manager"), _("Unsaved"));
+		cc_gray_bar_set_text (dconsole->priv->header, str);
+		g_free (str);
+		dconsole->priv->fav_id = -1;
+	}
+
+	/* update notebook's tab label */
+	BrowserPerspective *pers;
+	pers = browser_page_get_perspective (BROWSER_PAGE (dconsole));
+	if (pers)
+		browser_perspective_page_tab_label_change (pers, BROWSER_PAGE (dconsole));
+}
+
+/*
+ * POPUP
+ */
+static void
+real_save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
+{
+	gchar *str;
+
+	str = xml_spec_editor_get_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped));
+
+	GError *lerror = NULL;
+	BrowserFavorites *bfav;
+	BrowserFavoritesAttributes fav;
+
+	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+	fav.id = dconsole->priv->fav_id;
+	fav.type = BROWSER_FAVORITES_DATA_MANAGERS;
+	fav.name = gtk_editable_get_chars (GTK_EDITABLE (dconsole->priv->name_entry), 0, -1);
+	if (!*fav.name) {
+		g_free (fav.name);
+		fav.name = g_strdup (_("Data manager"));
+	}
+	fav.contents = str;
+	
+	gtk_widget_hide (dconsole->priv->popup_container);
+	
+	bfav = browser_connection_get_favorites (dconsole->priv->bcnc);
+	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_DATA_MANAGERS, G_MAXINT, &lerror)) {
+		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel (button),
+				    "<b>%s:</b>\n%s",
+				    _("Could not save data manager"),
+				    lerror && lerror->message ? lerror->message : _("No detail"));
+		if (lerror)
+			g_error_free (lerror);
+	}
+
+	data_console_set_fav_id (dconsole, fav.id, NULL);
+
+	g_free (fav.name);
+	g_free (str);
+}
+
+static void
+save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
+{
+	gchar *str;
+
+	if (!dconsole->priv->popup_container) {
+		GtkWidget *window, *wid, *hbox;
+
+		window = popup_container_new (button);
+		dconsole->priv->popup_container = window;
+
+		hbox = gtk_hbox_new (FALSE, 0);
+		gtk_container_add (GTK_CONTAINER (window), hbox);
+		wid = gtk_label_new ("");
+		str = g_strdup_printf ("%s:", _("Data manager's name"));
+		gtk_label_set_markup (GTK_LABEL (wid), str);
+		g_free (str);
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+
+		wid = gtk_entry_new ();
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
+		dconsole->priv->name_entry = wid;
+		if (dconsole->priv->fav_id > 0) {
+			BrowserFavoritesAttributes fav;
+			if (browser_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
+						   dconsole->priv->fav_id, &fav, NULL)) {
+				gtk_entry_set_text (GTK_ENTRY (wid), fav.name);
+				browser_favorites_reset_attributes (&fav);
+			}
+		}
+
+		g_signal_connect (wid, "activate",
+				  G_CALLBACK (real_save_clicked_cb), dconsole);
+
+		wid = gtk_button_new_with_label (_("Save"));
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+		g_signal_connect (wid, "clicked",
+				  G_CALLBACK (real_save_clicked_cb), dconsole);
+		dconsole->priv->real_save_button = wid;
+
+		gtk_widget_show_all (hbox);
+	}
+
+        gtk_widget_show (dconsole->priv->popup_container);
 }
 
 static void
@@ -382,10 +584,18 @@ variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole)
 static void
 spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole)
 {
-	if (gtk_toggle_button_get_active (button))
-		spec_editor_set_mode (dconsole->priv->sped, SPEC_EDITOR_XML);
-	else
-		spec_editor_set_mode (dconsole->priv->sped, SPEC_EDITOR_UI);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
+				       (gtk_toggle_button_get_active (button) ? EDITOR_PAGE_XML : EDITOR_PAGE_UI));
+}
+
+static void
+param_activated_cb (GdauiBasicForm *form, DataConsole *dconsole)
+{
+	DataWidget *dwid = NULL;
+	if (dconsole->priv->data)
+		dwid = g_object_get_data ((GObject*) dconsole->priv->data, "data-widget");
+	if (dwid)
+		data_widget_rerun (DATA_WIDGET (dwid));
 }
 
 static void
@@ -403,6 +613,8 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 		dconsole->priv->params_form = gdaui_basic_form_new (params);
 		g_object_set ((GObject*) dconsole->priv->params_form,
 			      "show-actions", TRUE, NULL);
+		g_signal_connect (dconsole->priv->params_form, "activated",
+				  G_CALLBACK (param_activated_cb), dconsole);
 		show_variables = TRUE;
 	}
 	else {
@@ -420,8 +632,8 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 static void
 editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole)
 {
-	spec_editor_set_xml_text (dconsole->priv->sped, "");
-	gtk_widget_grab_focus (GTK_WIDGET (dconsole->priv->sped));
+	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), "");
+	gtk_widget_grab_focus (dconsole->priv->xml_sped);
 }
 
 static GtkWidget *
@@ -446,6 +658,7 @@ create_widget (DataConsole *dconsole, GArray *sources_array, GError **error)
 
 	dwid = data_widget_new (sources_array);
 	gtk_container_add (GTK_CONTAINER (vp), dwid);
+	g_object_set_data ((GObject*) sw, "data-widget", dwid);
 
 	gtk_widget_show_all (vp);
 	return sw;
@@ -464,8 +677,8 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 		return;
 	}
 
-	pagenb = gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->notebook));
-	if (pagenb == PAGE_XML) {
+	pagenb = gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook));
+	if (pagenb == MAIN_PAGE_EDITORS) {
 		/* Get Data sources */
 		GArray *sources_array;
 		GError *lerror = NULL;
@@ -484,7 +697,7 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 				dconsole->priv->data = wid;
 				gtk_box_pack_start (GTK_BOX (dconsole->priv->data_box), wid, TRUE, TRUE, 0);
 				gtk_widget_show (wid);
-				pagenb = PAGE_DATA;
+				pagenb = MAIN_PAGE_DATA;
 			}
 		}
 		if (lerror) {
@@ -493,17 +706,17 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 					    _("Error parsing XML specifications"));
 			g_clear_error (&lerror);
 		}
-		if (pagenb == PAGE_XML) {
+		if (pagenb == MAIN_PAGE_EDITORS) {
 			dconsole->priv->toggling = TRUE;
 			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
 		}
 	}
 	else {
 		/* simply change the current page */
-		pagenb = PAGE_XML;
+		pagenb = MAIN_PAGE_EDITORS;
 	}
 
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->notebook), pagenb);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), pagenb);
 }
 
 static GtkToggleActionEntry ui_actions[] = {
@@ -565,8 +778,8 @@ data_console_set_text (DataConsole *console, const gchar *text)
 {
 	g_return_if_fail (IS_DATA_CONSOLE (console));
 
-	spec_editor_set_xml_text (console->priv->sped, text);
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (console->priv->notebook), PAGE_XML);
+	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (console->priv->xml_sped), text);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (console->priv->main_notebook), MAIN_PAGE_EDITORS);
 }
 
 /**
@@ -577,7 +790,7 @@ data_console_get_text (DataConsole *console)
 {
 	g_return_val_if_fail (IS_DATA_CONSOLE (console), NULL);
 	
-	return spec_editor_get_xml_text (console->priv->sped);
+	return xml_spec_editor_get_xml_text (XML_SPEC_EDITOR (console->priv->xml_sped));
 }
 
 /**

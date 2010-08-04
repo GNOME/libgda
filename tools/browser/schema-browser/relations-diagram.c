@@ -324,7 +324,7 @@ relations_diagram_new (BrowserConnection *bcnc)
 
         GtkWidget *label;
 	gchar *str;
-	str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), _("Unsaved diagram"));
+	str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), _("Unsaved"));
 	label = cc_gray_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
@@ -472,7 +472,7 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 	}
 	else {
 		gchar *str;
-		str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), _("Unsaved diagram"));
+		str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), _("Unsaved"));
 		cc_gray_bar_set_text (diagram->priv->header, str);
 		g_free (str);
 		diagram->priv->fav_id = -1;

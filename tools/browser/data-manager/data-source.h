@@ -75,6 +75,8 @@ DataSource         *data_source_new_from_table      (BrowserConnection *bcnc,
 DataSource         *data_source_new_from_select     (BrowserConnection *bcnc, const gchar *select_sql);
 */
 
+void                data_source_should_rerun        (DataSource *source);
+
 G_END_DECLS
 
 #endif
