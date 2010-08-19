@@ -69,6 +69,7 @@ typedef struct {
 	gboolean        hidden;
 	gboolean        not_null; /* TRUE if @entry's contents can't be NULL */
 	gboolean        can_expand; /* tells if @entry can expand */
+	gboolean        forward_param_updates; /* forward them to the GdauiDataEntry widgets ? */
 
 	gulong          entry_shown_id; /* signal ID */
 	gulong          label_shown_id; /* signal ID */
@@ -155,7 +156,6 @@ struct _GdauiBasicFormPriv
 	GtkWidget              *top_container;
 
 	gboolean                headers_sensitive;
-	gboolean                forward_param_updates; /* forward them to the GdauiDataEntry widgets ? */
 	gboolean                show_actions;
 	gboolean                entries_auto_default;
 
@@ -297,8 +297,6 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
 	wid->priv->headers_sensitive = FALSE;
 	wid->priv->show_actions = FALSE;
 	wid->priv->entries_auto_default = FALSE;
-
-	wid->priv->forward_param_updates = TRUE;
 }
 
 /**
@@ -940,6 +938,7 @@ create_entries (GdauiBasicForm *form)
 
 		sentry = g_new0 (SingleEntry, 1);
 		sentry->form = form;
+		sentry->forward_param_updates = TRUE;
 		form->priv->s_entries = g_slist_append (form->priv->s_entries, sentry);
 
 		sentry->group = GDAUI_SET_GROUP (list->data);
@@ -1304,7 +1303,7 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 	if (param) { /* single parameter */
 		GValue *value;
 
-		sentry->form->priv->forward_param_updates = FALSE;
+		sentry->forward_param_updates = FALSE;
 
 		/* parameter's value */
 		value = gdaui_data_entry_get_value (entry);
@@ -1329,7 +1328,7 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 						  sentry->entry_contents_modified_id);
 		}
 		gda_value_free (value);
-		sentry->form->priv->forward_param_updates = TRUE;
+		sentry->forward_param_updates = TRUE;
 	}
 	else { /* multiple parameters */
 		GSList *params;
@@ -1352,14 +1351,14 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 			 *   and emit only one signal.
 			 */
 			GdaHolder *param;
-			sentry->form->priv->forward_param_updates = FALSE;
+			sentry->forward_param_updates = FALSE;
 
 			/* parameter's value */
 			param = GDA_SET_NODE (params->data)->holder;
 			gda_holder_set_value (param, (GValue *)(list->data), NULL);
 			g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED],
 				       0, param, TRUE);
-			sentry->form->priv->forward_param_updates = TRUE;
+			sentry->forward_param_updates = TRUE;
 		}
 		g_slist_free (values);
 
@@ -1403,7 +1402,7 @@ entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry)
 
 /*
  * Called when a parameter changes
- * We emit a "holder-changed" signal only if the 'form->priv->forward_param_updates' is TRUE, which means
+ * We emit a "holder-changed" signal only if the 'sentry->forward_param_updates' is TRUE, which means
  * the param change does not come from a GdauiDataEntry change.
  */
 static void
@@ -1413,7 +1412,7 @@ parameter_changed_cb (GdaHolder *param, SingleEntry *sentry)
 	GdauiDataEntry *entry;
 
 	entry = sentry->entry;
-	if (sentry->form->priv->forward_param_updates) {
+	if (sentry->forward_param_updates) {
 		gboolean param_valid;
 		gboolean default_if_invalid = FALSE;
 
