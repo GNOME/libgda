@@ -663,6 +663,13 @@ gdaui_login_set_connection_information (GdauiLogin *login, const GdaDsnInfo *cin
 			/* force switch to */
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (login->priv->rb_dsn), FALSE);
 		}
+		g_signal_handlers_block_by_func (login->priv->prov_selector,
+						 G_CALLBACK (prov_entry_changed_cb), login);
+		gdaui_provider_selector_set_provider (GDAUI_PROVIDER_SELECTOR (login->priv->prov_selector),
+		                                      cinfo->provider);
+		g_signal_handlers_unblock_by_func (login->priv->prov_selector,
+						   G_CALLBACK (prov_entry_changed_cb), login);
+
 		_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
 							  cinfo->provider);
 		_gdaui_provider_spec_editor_set_specs (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
