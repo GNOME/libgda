@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "POT-Creation-Date: 2010-08-24 21:07+0000\n"
-"PO-Revision-Date: 2010-08-25 20:54+0100\n"
+"PO-Revision-Date: 2010-08-25 21:36+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -37,14 +37,12 @@ msgstr ""
 #: C/diagram.page:5(title)
 #: C/data-manager-xml-syntax.page:5(title)
 #: C/data-manager-perspective.page:5(title)
-#, fuzzy
 msgid "1"
 msgstr "1"
 
 #: C/variables.page:9(title)
-#, fuzzy
 msgid "Variables in SQL code"
-msgstr "Koda SQL ia izvedbo:"
+msgstr "Spremenljivke v kodi SQL"
 
 #: C/variables.page:10(p)
 msgid "Variables (sometimes refered to as <em>placeholders</em>) are places in SQL code which are replaced by actual values when the SQL code is executed. The benefits are faster execution times (as the SQL code is parsed only once) and a protection against SQL injection vulnerabilities."
@@ -96,18 +94,16 @@ msgid "@@image: 'figures/table-insert-data.png'; md5=308807b8443d5ab26c8704a6e01
 msgstr "@@image: 'figures/table-insert-data.png'; md5=308807b8443d5ab26c8704a6e01aa1ab"
 
 #: C/table-insert-data.page:8(title)
-#, fuzzy
 msgid "Inserting data in a table"
-msgstr "Število vrstic v preglednici"
+msgstr "Vstavljanje podatkov v preglednico"
 
 #: C/table-insert-data.page:9(p)
 msgid "From the <link xref=\"schema-browser-perspective\">schema browser perspective</link>, when a table's properties is displayed in a tab, use the <guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu to have a popup appear containing a data entry for each column of the table to insert data into."
 msgstr ""
 
 #: C/table-insert-data.page:14(p)
-#, fuzzy
 msgid "A popup similar to the following will appear:"
-msgstr "Naslednje datoteke so videti pokvarjene:"
+msgstr "Prikazano bo pojavno okno podobno naslednjemu:"
 
 #: C/table-insert-data.page:18(title)
 msgid "Popup to insert data into table"
@@ -118,9 +114,8 @@ msgid "A popup to insert data in a table"
 msgstr ""
 
 #: C/table-insert-data.page:22(p)
-#, fuzzy
 msgid "The noticeable points here are:"
-msgstr "Izpis izračunanih nadzornih vsot:"
+msgstr "Pomembnejše točke so:"
 
 #: C/table-insert-data.page:26(p)
 msgid "There is one data entry per column in the table, with the exception (not shown in this figure) of multiple foreign key fields for which a single drop down choice widget is shown;"
@@ -169,9 +164,8 @@ msgid "@@image: 'figures/trans-rollback.png'; md5=470522738b1d6bf91b9787baac1c01
 msgstr "@@image: 'figures/trans-rollback.png'; md5=470522738b1d6bf91b9787baac1c0191"
 
 #: C/transactions.page:9(title)
-#, fuzzy
 msgid "Transactions"
-msgstr "_Transakcije"
+msgstr "Transakcije"
 
 #: C/transactions.page:10(p)
 msgid "Transactions can be started, committed or rolled back on a per connection basis:"
@@ -201,9 +195,8 @@ msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
 msgstr "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
 
 #: C/schema-browser-perspective.page:8(title)
-#, fuzzy
 msgid "The schema browser perspective"
-msgstr "Brskalnik na levi"
+msgstr "Pogled brskalnika sheme"
 
 #: C/schema-browser-perspective.page:9(p)
 msgid "Use the schema browser perspective to understand the database's organisation (schema). To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Schema browser</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>B</key></keyseq> shortcut."
@@ -218,9 +211,8 @@ msgid "Schema browser perspective's default view"
 msgstr ""
 
 #: C/schema-browser-perspective.page:20(desc)
-#, fuzzy
 msgid "The default Schema browser perspective"
-msgstr "Privzet brskalnik ni nastavljen"
+msgstr "Pogled privzetega brskalnika shem"
 
 #: C/schema-browser-perspective.page:24(p)
 msgid "The left part of the perspective lists the favorite database objects or diagrams. Double clicking on a favorite opens its properties in the right pane."
@@ -249,9 +241,8 @@ msgid "@@image: 'figures/query-exec-persp.png'; md5=14f701b0619a497da6c7902facad
 msgstr "@@image: 'figures/query-exec-persp.png'; md5=14f701b0619a497da6c7902facad9f42"
 
 #: C/query-execution-perspective.page:8(title)
-#, fuzzy
 msgid "The query execution perspective"
-msgstr "Nadaljuj z izvajanjem programa"
+msgstr "Pogled izvajanje poizvedbe"
 
 #: C/query-execution-perspective.page:9(p)
 msgid "Use the query perspective to execute SQL statements. To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> shortcut."
@@ -262,9 +253,8 @@ msgid "The perspective is divided in two horizontal panes: the left pane for the
 msgstr ""
 
 #: C/query-execution-perspective.page:19(title)
-#, fuzzy
 msgid "Query exec perspective"
-msgstr "Poizvedbe ni mogoče izgraditi"
+msgstr "Pogled poizvedbe"
 
 #: C/query-execution-perspective.page:20(desc)
 msgid "The query exec perspective with one SELECT statement executed"
@@ -295,9 +285,8 @@ msgid "execution results in the lower right part"
 msgstr ""
 
 #: C/query-execution-perspective.page:41(title)
-#, fuzzy
 msgid "SQL area"
-msgstr "risalna površina"
+msgstr "Območje SQL"
 
 #: C/query-execution-perspective.page:42(p)
 msgid "The SQL area is an SQL editor. The SQL can be any SQL understood by the database, with the exception of <link xref=\"variables-syntax\">variables</link> (which must have a specific syntax)."
@@ -324,9 +313,8 @@ msgid "<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</key>
 msgstr ""
 
 #: C/query-execution-perspective.page:59(title)
-#, fuzzy
 msgid "Command buttons"
-msgstr "Opozorilni gumbi"
+msgstr "Ukazni gumbi"
 
 #: C/query-execution-perspective.page:60(p)
 #: C/data-manager-perspective.page:63(p)
@@ -354,9 +342,8 @@ msgid "<gui>Favorites</gui>: adds the current SQL code to the favorites"
 msgstr ""
 
 #: C/query-execution-perspective.page:77(title)
-#, fuzzy
 msgid "Execution history"
-msgstr "Zgodovina izvedbe:"
+msgstr "Zgodovina izvajanja"
 
 #: C/query-execution-perspective.page:78(p)
 msgid "The execution history part contains a list of the past executed statements, ordered by execution date along with an indication when the statement was executed (11 minutes in the figure above). Selecting an history item displays the corresponding result in the execution results part."
@@ -371,9 +358,8 @@ msgid "Note that any given history item can also be removed individually using t
 msgstr ""
 
 #: C/query-execution-perspective.page:93(title)
-#, fuzzy
 msgid "Execution results"
-msgstr "Rezultati izvedbe"
+msgstr "Rezultati izvajanja"
 
 #: C/query-execution-perspective.page:94(p)
 msgid "The Execution results part displays the execution result of the currently selected execution history item, as a table for SELECT statement, giving information for other types of statement, or giving the execution error notice if the execution failed."
@@ -384,14 +370,12 @@ msgid "Vivien Malerba"
 msgstr "Vivien Malerba"
 
 #: C/index.page:7(email)
-#, fuzzy
 msgid "malerba@gnome-db.org"
-msgstr "freedesktop.org (zunanji programi)"
+msgstr "malerba@gnome-db.org"
 
 #: C/index.page:11(title)
-#, fuzzy
 msgid "Gda Browser Help"
-msgstr "Zaženi brskalnik pomoči"
+msgstr "Pomoč brskalnika GDA"
 
 #: C/index.page:12(p)
 msgid "<app>gda-browser</app> is a tool for database administrators: they can analyse database's schemas to understand how data is organized, run SQL commands interactively, and in a broader way manage the data contained in the databases."
@@ -411,26 +395,23 @@ msgstr "Predstavitev"
 
 #: C/index.page:31(title)
 msgid "Perspectives"
-msgstr "Perspektive"
+msgstr "Pogledi"
 
 #: C/index.page:35(title)
-#, fuzzy
 msgid "Connections management"
-msgstr "Upravljanje omrežij"
+msgstr "Upravljanje povezav"
 
 #: C/general-ui.page:8(title)
-#, fuzzy
 msgid "General interface organization"
-msgstr "Organizacija datotečnega sistema"
+msgstr "Splošna organizacija vmesnika"
 
 #: C/general-ui.page:9(p)
 msgid "The <app>gda-browser</app> is composed of one or more top level windows, each window relating to a single connection (which name is in its title). For any given connection, several windows can be opened (use the <guiseq><gui>Window</gui><gui>New window</gui></guiseq> menu or the <keyseq><key>Ctrl</key><key>N</key></keyseq> shortcut)."
 msgstr ""
 
 #: C/general-ui.page:16(title)
-#, fuzzy
 msgid "A connection window"
-msgstr "Skrij okno"
+msgstr "Okno povezave"
 
 #: C/general-ui.page:17(desc)
 msgid "Window opened for the 'c1' connection (and the Schema browser perspective)"
@@ -457,9 +438,8 @@ msgid "The currently displayed perspective can be changed individually for each 
 msgstr ""
 
 #: C/features.page:8(title)
-#, fuzzy
 msgid "Features"
-msgstr "Lastnosti Groupwise"
+msgstr "Zmožnosti"
 
 #: C/features.page:9(p)
 msgid "<app>gda-browser</app>'s current features are:"
@@ -540,9 +520,8 @@ msgid "removing items, through the items's contextual menu"
 msgstr ""
 
 #: C/data-manager-xml-syntax.page:7(title)
-#, fuzzy
 msgid "The data manager's XML syntax"
-msgstr "Ni mogoče zapisati podatkov XML v `%s': %s"
+msgstr "Skladnja XML podatkovnega upravljalnika"
 
 #: C/data-manager-xml-syntax.page:8(p)
 msgid "The XML tree's root node must be a <code>&lt;data&gt;</code>, which is allowed to contain one or more data source definitions. Each data source is defined by <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> nodes, both accepting the following optional attributes:"
@@ -553,9 +532,8 @@ msgid "\"id\" to specify a data source string ID, used when linking data sources
 msgstr ""
 
 #: C/data-manager-xml-syntax.page:16(p)
-#, fuzzy
 msgid "\"title\" to specify a title."
-msgstr "Pojdi na naslov"
+msgstr "\"naziv\" za določevanje naziva."
 
 #: C/data-manager-xml-syntax.page:18(p)
 msgid "It is of course possible to use both the <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> tags in the same data sources specifications."
@@ -564,9 +542,8 @@ msgstr ""
 #: C/data-manager-xml-syntax.page:24(title)
 #: C/data-manager-xml-syntax.page:73(title)
 #: C/data-manager-xml-syntax.page:132(title)
-#, fuzzy
 msgid "Exported variables"
-msgstr "Okoljske spremenljivke:"
+msgstr "Izvožene spremenljivke"
 
 #: C/data-manager-xml-syntax.page:25(p)
 msgid "Each data source exports some variables which can be reused by other data sources to introduce a dependency. When the data sources are executed, the contents of these exported variables are reset depending on the row actually selected in the resulting tabular view. If no row is selected then the variable is unset."
@@ -640,9 +617,8 @@ msgid "the <code>orders</code> data source which selects among contents of the <
 msgstr ""
 
 #: C/data-manager-xml-syntax.page:121(p)
-#, fuzzy
 msgid "Note in this example that:"
-msgstr "Ustvari novo sporočilce v tej beležnici"
+msgstr "Bodite pozorni, da v tem primeru:"
 
 #: C/data-manager-xml-syntax.page:125(p)
 msgid "you don't have to specify the fields involved in the foreign key linking the <code>orders</code> and <code>customers</code> tables"
@@ -681,9 +657,8 @@ msgid "@@image: 'figures/data-man-xmlcompose.png'; md5=47629c29ef2c7d336e4401e66
 msgstr "@@image: 'figures/data-man-xmlcompose.png'; md5=47629c29ef2c7d336e4401e66ba849e0"
 
 #: C/data-manager-perspective.page:8(title)
-#, fuzzy
 msgid "The data manager perspective"
-msgstr "Pogled upravljalnika nalog"
+msgstr "Pogled upravljalnika podatkov"
 
 #: C/data-manager-perspective.page:9(p)
 msgid "Use the data manager perspective to navigate through the database's data. To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Data Manager</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>D</key></keyseq> shortcut."
@@ -698,7 +673,6 @@ msgid "The perspective is divided in two horizontal panes: the left pane to keep
 msgstr ""
 
 #: C/data-manager-perspective.page:25(title)
-#, fuzzy
 msgid "Data manager perspective"
 msgstr "Pogled upravljalnika nalog"
 
@@ -715,9 +689,8 @@ msgid "Because the 'orders' data source depends on the 'customers' data source, 
 msgstr ""
 
 #: C/data-manager-perspective.page:44(title)
-#, fuzzy
 msgid "Defining data sources"
-msgstr "Seznam določenih podatkovnih virov"
+msgstr "Določevanje podatkovnih virov"
 
 #: C/data-manager-perspective.page:45(p)
 msgid "The simplest data source is a data source which represents all the data from a table, displayed when executed as a single tabular view, as if one executed the <code>SELECT * FROM mytable</code> statement in the <link xref=\"query-execution-perspective\"/>."
@@ -728,9 +701,8 @@ msgid "The following figure shows the data sources editing mode (switch to editi
 msgstr ""
 
 #: C/data-manager-perspective.page:58(title)
-#, fuzzy
 msgid "Data sources edition"
-msgstr "Seznam določenih podatkovnih virov"
+msgstr "Urejanje podatkovnih virov"
 
 #: C/data-manager-perspective.page:59(desc)
 msgid "Editing data sources in the data manager perspective"
@@ -753,14 +725,12 @@ msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
 msgstr ""
 
 #: C/data-manager-perspective.page:73(p)
-#, fuzzy
 msgid "<gui>Help</gui>: shows some help"
-msgstr "Pokaže ta zaslon pomoči"
+msgstr "<gui>Pomoč</gui>: pokaže pomoč"
 
 #: C/data-manager-perspective.page:77(title)
-#, fuzzy
 msgid "Executing defined data sources"
-msgstr "Seznam določenih podatkovnih virov"
+msgstr "Izvajanje določenih podatkovnih virov"
 
 #: C/data-manager-perspective.page:78(p)
 msgid "To execute a defined set of data sources, simply switch to execute mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-mode.png\"/> toolbar button or the <gui>Execute</gui> button."
