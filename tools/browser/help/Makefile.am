@@ -30,6 +30,6 @@ DOC_PAGES = \
 	table-insert-data.page \
 	variables.page
 
-DOC_LINGUAS = de es
+DOC_LINGUAS = de es sl
 
 dist-hook: doc-dist-hook
