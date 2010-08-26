@@ -4326,11 +4326,11 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 
-	gda_connection_lock ((GdaLockable*) cnc);
+	g_mutex_lock (cnc->priv->object_mutex);
 	if (!cnc->priv->meta_store)
 		cnc->priv->meta_store = gda_meta_store_new (NULL);
 	store = cnc->priv->meta_store;
-	gda_connection_unlock ((GdaLockable*) cnc);
+	g_mutex_unlock (cnc->priv->object_mutex);
 	
 	return store;
 }
