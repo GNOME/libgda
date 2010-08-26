@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "POT-Creation-Date: 2010-08-24 21:07+0000\n"
-"PO-Revision-Date: 2010-08-25 21:36+0100\n"
+"PO-Revision-Date: 2010-08-26 14:53+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -107,11 +107,11 @@ msgstr "Prikazano bo pojavno okno podobno naslednjemu:"
 
 #: C/table-insert-data.page:18(title)
 msgid "Popup to insert data into table"
-msgstr ""
+msgstr "Pojavno okno za vstavljanje podatkov v preglednico"
 
 #: C/table-insert-data.page:19(desc)
 msgid "A popup to insert data in a table"
-msgstr ""
+msgstr "Pojavno okno za vstavljanje podatkov v preglednico"
 
 #: C/table-insert-data.page:22(p)
 msgid "The noticeable points here are:"
@@ -127,19 +127,19 @@ msgstr ""
 
 #: C/table-insert-data.page:33(p)
 msgid "Red: means the current value in the data entry is invalid"
-msgstr ""
+msgstr "Rdeče: trenutna vrednost podatka vnosa je neveljavna."
 
 #: C/table-insert-data.page:34(p)
 msgid "Blue: means the current value in the data entry is unused and the column's default value will be used instead (usefull for example for auto incremented columns)"
-msgstr ""
+msgstr "Modro: trenutna vrednost podatka vnosa je neuporabljena in bo uporabljena privzeta vrednost stolpca (koristno pri samodejno spremenljivih stolpcih)."
 
 #: C/table-insert-data.page:36(p)
 msgid "Green: means the current value in the data entry is NULL"
-msgstr ""
+msgstr "Zelena: trenutna vrednost podatka vnosa je NULL."
 
 #: C/table-insert-data.page:37(p)
 msgid "Same color as the rest of the UI: means none of the above situations apply"
-msgstr ""
+msgstr "Barva vmesnika: ni posebnih opomb o podatku vnosa."
 
 #: C/table-insert-data.page:40(p)
 msgid "Columns which are foreign keys to other tables are presented as a drop down combo box where you can only choose among the values in the referenced table (hint: to have that values list refresned you should close the popup dialog and reopen it);"
@@ -169,19 +169,19 @@ msgstr "Transakcije"
 
 #: C/transactions.page:10(p)
 msgid "Transactions can be started, committed or rolled back on a per connection basis:"
-msgstr ""
+msgstr "Prenos je lahko začet, uveljavljen ali povrnjen na osnovi vsake povezave:"
 
 #: C/transactions.page:14(p)
 msgid "use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin.png\"/> toolbar button to start a transaction"
-msgstr ""
+msgstr "uporabite <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin.png\"/> gumb orodne vrstice za začetek prenosa."
 
 #: C/transactions.page:16(p)
 msgid "use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit.png\"/> toolbar button to commit the current transaction (apply all the changes)"
-msgstr ""
+msgstr "uporabite <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit.png\"/> gumb orodne vrstice za uveljavitev prenosa (uveljavi vse spremembe)."
 
 #: C/transactions.page:18(p)
 msgid "use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-rollback.png\"/> toolbar button to abort the current transaction (forget all the changes)"
-msgstr ""
+msgstr "uporabite <media type=\"image\" mime=\"image/png\" src=\"figures/trans-rollback.png\"/> gumb orodne vrstice za prekinitev prenosa (prezri vse spremembe)."
 
 #: C/transactions.page:22(p)
 msgid "A transaction may be started automatically when executing a SELECT statement which involves binary objects (BLOBs), and the transaction may be locked while the resulting data set is kept in memory (to get rid of a data set in a <link xref=\"query-execution-perspective\">query execution perspective</link>, clear the history item relating to the data set)."
@@ -204,11 +204,11 @@ msgstr ""
 
 #: C/schema-browser-perspective.page:14(p)
 msgid "The perspective is divided in two horizontal panes: the left pane for the user defined favorites, and the right pane being the action area."
-msgstr ""
+msgstr "Pogled je razdeljen na dva vodoravna pladnja: levi pladenj je namenjen priljubljenim, desni pa je območje dejanj."
 
 #: C/schema-browser-perspective.page:19(title)
 msgid "Schema browser perspective's default view"
-msgstr ""
+msgstr "Privzeti pogled brskalnika sheme"
 
 #: C/schema-browser-perspective.page:20(desc)
 msgid "The default Schema browser perspective"
@@ -270,19 +270,19 @@ msgstr ""
 
 #: C/query-execution-perspective.page:34(p)
 msgid "an SQL area in the top left part"
-msgstr ""
+msgstr "območje SQL na zgornjem levem delu"
 
 #: C/query-execution-perspective.page:35(p)
 msgid "command buttons in the top right part"
-msgstr ""
+msgstr "ukazni gumbi na zgornjem desnem delu"
 
 #: C/query-execution-perspective.page:36(p)
 msgid "execution history in the lower left part"
-msgstr ""
+msgstr "zgodovina izvajanja na spodnjem levem delu"
 
 #: C/query-execution-perspective.page:37(p)
 msgid "execution results in the lower right part"
-msgstr ""
+msgstr "rezultati izvajanja v spodnjem desnem delu"
 
 #: C/query-execution-perspective.page:41(title)
 msgid "SQL area"
@@ -294,23 +294,23 @@ msgstr ""
 
 #: C/query-execution-perspective.page:46(p)
 msgid "The keyboard shortcuts in the SQL editor are:"
-msgstr ""
+msgstr "Tipkovne bližnjica v urejevalniku SQL so:"
 
 #: C/query-execution-perspective.page:50(p)
 msgid "<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>PRESLEDEK</key></keyseq> za izpis seznama dopolnjevanja"
 
 #: C/query-execution-perspective.page:51(p)
 msgid "<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> za  izvedbo kode SQL"
 
 #: C/query-execution-perspective.page:52(p)
 msgid "<keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>l</key></keyseq> za počiščenje urejevalnika"
 
 #: C/query-execution-perspective.page:53(p)
 msgid "<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</key><key>Down</key></keyseq> to navigate through the editor's history"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>Gor</key></keyseq> in <keyseq><key>Ctrl</key><key>Dol</key></keyseq> za krmarjenje po zgodovini urejevalnika"
 
 #: C/query-execution-perspective.page:59(title)
 msgid "Command buttons"
