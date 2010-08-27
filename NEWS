@@ -1,3 +1,8 @@
+libgda 4.0.11, 2010-08-27
+
+ - Small corrections: mainly in the SQLite and MySQL provider, and connection locking.
+ - version bump to 4.0.11 because of a misplaced 4.0.10 tag in git
+
 libgda 4.0.9, 2010-06-12
 
  - Better GObject introspection support through annotations and better build
