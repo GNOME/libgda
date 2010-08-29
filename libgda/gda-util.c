@@ -2223,35 +2223,35 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 			for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
 			if (ptr != pos + 9)
 				*out_username = g_strndup (pos + 9, ptr - (pos + 9));
+
+			if (*ptr)
+				g_memmove (pos, ptr + 1, strlen (ptr));
+			else
+				*pos = 0;
 			gchar *tmp;
-			gint lastpos;
-			tmp = g_strndup (*out_cnc_params, pos - *out_cnc_params);
-			*out_cnc_params = g_strconcat (tmp,
-						       (ptr ? (ptr + 1 ? ptr + 1 : ptr) : ""),
-						       NULL);
-			g_free (tmp);
+			gint len;
 			tmp = *out_cnc_params;
-			lastpos = strlen(tmp) - 1;
-			if (tmp [lastpos] == ';')
-				tmp [lastpos] = 0;
+			len = strlen (tmp) - 1;
+			if (tmp [len] == ';')
+				tmp [len] = 0;
 		}
-		
+
 		pos = g_strrstr (*out_cnc_params, "PASSWORD=");
 		if (pos) {
 			for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
 			if (ptr != pos + 9)
 				*out_password = g_strndup (pos + 9, ptr - (pos + 9));
+
+			if (*ptr)
+				g_memmove (pos, ptr + 1, strlen (ptr));
+			else
+				*pos = 0;
 			gchar *tmp;
-			gint lastpos;
-			tmp = g_strndup (*out_cnc_params, pos - *out_cnc_params);
-			*out_cnc_params = g_strconcat (tmp,
-						       (ptr ? (ptr + 1 ? ptr + 1 : ptr) : ""),
-						       NULL);
-			g_free (tmp);
+			gint len;
 			tmp = *out_cnc_params;
-			lastpos = strlen(tmp) - 1;
-			if (tmp [lastpos] == ';')
-				tmp [lastpos] = 0;
+			len = strlen (tmp) - 1;
+			if (tmp [len] == ';')
+				tmp [len] = 0;
 		}
 	}
 
