@@ -1749,23 +1749,23 @@ gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *param)
 /**
  * gdaui_basic_form_entry_set_editable
  * @form: a #GdauiBasicForm widget
- * @param: a #GdaHolder object; or %NULL
+ * @holder: a #GdaHolder object; or %NULL
  * @editable: %TRUE if corresponding data entry must be editable
  *
  * Sets the #GdauiDataEntry in @form which corresponds to the
- * @param parameter editable or not. If @param is %NULL, then all the parameters
+ * @holder parameter editable or not. If @holder is %NULL, then all the parameters
  * are concerned.
  *
  * Since: 4.2
  */
 void
-gdaui_basic_form_entry_set_editable (GdauiBasicForm *form, GdaHolder *param, gboolean editable)
+gdaui_basic_form_entry_set_editable (GdauiBasicForm *form, GdaHolder *holder, gboolean editable)
 {
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 
-	if (param) {
+	if (holder) {
 		SingleEntry *sentry;
-		sentry = get_single_entry_for_holder (form, param);
+		sentry = get_single_entry_for_holder (form, holder);
 		if (sentry)
 			gdaui_data_entry_set_editable (sentry->entry, editable);
 	}
