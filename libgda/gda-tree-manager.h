@@ -62,8 +62,9 @@ struct _GdaTreeManagerClass {
 	 *
 	 * Returns: NULL if an error occurred, and @out_error is set to TRUE
 	 */
-	GdaTreeManagerNodesFunc update_children;
-
+	GSList *(*update_children) (GdaTreeManager *manager, GdaTreeNode *node,
+                                const GSList *children_nodes,
+                                gboolean *out_error, GError **error);
 
 	/*< private >*/
 	/* Padding for future expansion */

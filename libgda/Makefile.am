@@ -348,7 +348,7 @@ Gda-4_0.gir: $(lib_LTLIBRARIES)
 Gda_4_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
 Gda_4_0_gir_CFLAGS = $(AM_CPPFLAGS)
 Gda_4_0_gir_LIBS = $(lib_LTLIBRARIES)
-Gda_4_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+Gda_4_0_gir_FILES = $(introspection_sources)
 INTROSPECTION_GIRS += Gda-4.0.gir
 
 girdir = $(datadir)/gir-1.0
