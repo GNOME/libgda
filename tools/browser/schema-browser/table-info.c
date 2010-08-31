@@ -82,12 +82,6 @@ enum {
         PROP_0,
 };
 
-enum {
-	SELECTION_CHANGED,
-	LAST_SIGNAL
-};
-
-static guint table_info_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 

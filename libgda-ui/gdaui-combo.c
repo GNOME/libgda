@@ -627,7 +627,7 @@ _gdaui_combo_get_selected_ext (GdauiCombo *combo, gint n_cols, gint *cols_index)
 /**
  * gdaui_combo_add_null
  * @combo: a #GdauiCombo widget
- * @add_undef_choice:
+ * @add_null: set to %TRUE to add a NULL value to the combo box
  *
  * Tells if @combo should add a special entry representing an "undefined choice", as a %NULL entry. The default is
  * that only the available choices in @combo's model are presented.

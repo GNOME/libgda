@@ -191,7 +191,7 @@ gda_xslt_bk_fun_getnodeset (xmlChar * set, GdaXsltExCont * exec,
 #ifdef GDA_DEBUG_NO
 	printf ("running function:gda_xslt_bk_fun_getnodeset\n");
 #endif
-	res = get_resultset_nodeset (pdata, set, &nodeset, &(exec->error));
+	res = get_resultset_nodeset (pdata, (gchar*) set, &nodeset, &(exec->error));
 	if (res < 0 || nodeset == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "gda_xslt_bk_fun_getnodeset error\n");
@@ -325,7 +325,7 @@ get_resultset_col_value (GdaXsltIntCont * pdata, const char *resultset_name,
 		return -1;
 	}
 	gchar *gvalue_string;
-	gvalue_string = value_to_xmlchar (db_value);
+	gvalue_string = (gchar*) value_to_xmlchar (db_value);
 	if (gvalue_string == NULL) {
 #ifdef GDA_DEBUG_NO
 		g_print ("faild to stringify gvalue");
@@ -510,7 +510,7 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 		return -1;
 	}
 
-	look_predefined_query_by_name (exec, query_name, &(query));
+	look_predefined_query_by_name (exec, (gchar*) query_name, &(query));
 	if (!query) {
 		/* the query is not predefined */
 		/* get the xml text node with the sql */
@@ -526,7 +526,7 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 		/* create the query */
 		GdaSqlParser *parser;
 		parser = gda_connection_create_parser (exec->cnc);
-		query = gda_sql_parser_parse_string (parser, XML_GET_CONTENT (sqltxt_node), NULL, &(exec->error));
+		query = gda_sql_parser_parse_string (parser, (gchar*) XML_GET_CONTENT (sqltxt_node), NULL, &(exec->error));
 		g_object_unref (parser);
 		if (!query) {
 #ifdef GDA_DEBUG_NO

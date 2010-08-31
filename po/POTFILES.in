@@ -96,10 +96,8 @@ libgda-ui/data-entries/gdaui-formatted-entry.c
 libgda-ui/data-entries/gdaui-numeric-entry.c
 libgda-ui/data-entries/plugins/common-pict.c
 libgda-ui/data-entries/plugins/gda-sql.lang
-libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-cgrid.c
 libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c
 libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c
-libgda-ui/data-entries/plugins/gdaui-entry-cgrid.c
 libgda-ui/data-entries/plugins/gdaui-entry-cidr.c
 libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-filesel.c

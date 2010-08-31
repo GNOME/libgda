@@ -94,12 +94,6 @@ static GtkActionGroup      *data_console_page_get_actions_group (BrowserPage *pa
 static const gchar         *data_console_page_get_actions_ui (BrowserPage *page);
 static GtkWidget           *data_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
-enum {
-	DUMMY,
-	LAST_SIGNAL
-};
-
-static guint data_console_signals[LAST_SIGNAL] = { };
 static GObjectClass *parent_class = NULL;
 
 /*

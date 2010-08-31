@@ -350,7 +350,7 @@ gda_internal_command_dict_sync (SqlConsole *console, GdaConnection *cnc, const g
 		GdaMetaContext context;
 		memset (&context, 0, sizeof (context));
 		if (*args[0] == '_')
-			context.table_name = args[0];
+			context.table_name = (gchar*) args[0];
 		else
 			context.table_name = g_strdup_printf ("_%s", args[0]);
 		if (!gda_connection_update_meta_store (cnc, &context, error)) {

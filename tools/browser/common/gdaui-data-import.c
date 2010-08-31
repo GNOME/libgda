@@ -294,6 +294,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 
 /**
  * gdaui_data_import_new
+ *
  * Creates a new #GdauiDataImport widget. After import, a #GdaDataModel will be created.
  *
  * Returns: the new widget

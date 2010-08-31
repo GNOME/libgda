@@ -1974,9 +1974,11 @@ static GdaInternalCommandResult *extra_command_httpd (SqlConsole *console, GdaCo
 						      GError **error, gpointer data);
 #endif
 
+#ifdef NONE
 static GdaInternalCommandResult *extra_command_lo_update (SqlConsole *console, GdaConnection *cnc,
 							  const gchar **args,
 							  GError **error, gpointer data);
+#endif
 static GdaInternalCommandResult *extra_command_export (SqlConsole *console, GdaConnection *cnc,
 						       const gchar **args,
 						       GError **error, gpointer data);
@@ -2412,7 +2414,7 @@ build_internal_commands_list (void)
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
-	*/
+	*/	
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");

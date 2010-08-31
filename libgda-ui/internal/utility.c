@@ -456,7 +456,7 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 
 /**
  * _gdaui_utility_display_error_with_keep_or_discard_choice
- * @form:
+ * @form: a #GdauiDataProxy
  * @filled_error: a #GError containing the error to display
  *
  * Displays a dialog showing @filled_error's message and asks the user to either keep the data which
@@ -485,7 +485,7 @@ _gdaui_utility_display_error_with_keep_or_discard_choice (GdauiDataProxy *form, 
 
 /**
  * _gdaui_utility_display_error
- * @form:
+ * @form: a #GdauiDataProxy
  * @filled_error: a #GError containing the error to display
  *
  * Displays a dialog showing @filled_error's message and asks the user to either keep the data which

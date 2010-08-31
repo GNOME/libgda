@@ -410,9 +410,6 @@ static gboolean tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar 
 					     QueryFavoriteSelector *tsel);
 static gboolean tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path,
 					GtkSelectionData *selection_data, QueryFavoriteSelector *tsel);
-static void trash_data_received_cb (GtkWidget *widget, GdkDragContext *context, gint x, gint y,
-				    GtkSelectionData *selection_data, guint target_type, guint time,
-				    QueryFavoriteSelector *tsel);
 /**
  * query_favorite_selector_new
  *

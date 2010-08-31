@@ -73,12 +73,6 @@ enum {
         PROP_0,
 };
 
-enum {
-	SELECTION_CHANGED,
-	LAST_SIGNAL
-};
-
-static guint relations_diagram_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 

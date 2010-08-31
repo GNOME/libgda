@@ -1665,7 +1665,7 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
  * gdaui_basic_form_entry_set_visible
  * @form: a #GdauiBasicForm widget
  * @param: a #GdaHolder object
- * @show:
+ * @show: set to %TRUE to show the data entry, and to %FALSE to hide it
  *
  * Shows or hides the #GdauiDataEntry in @form which corresponds to the
  * @param parameter

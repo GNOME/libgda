@@ -25,11 +25,9 @@ endif
 
 plugins_headers = \
 	common-pict.h \
-	gdaui-data-cell-renderer-cgrid.h \
 	gdaui-data-cell-renderer-pict.h \
 	gdaui-entry-filesel.h \
 	gdaui-entry-cidr.h \
-	gdaui-entry-cgrid.h \
 	gdaui-entry-text.h \
 	gdaui-entry-pict.h \
 	$(gcrypt_headers)
@@ -40,11 +38,9 @@ libgda_ui_plugins_la_SOURCES = \
 	custom-marshal.c \
 	custom-marshal.h \
 	libmain.c \
-	gdaui-data-cell-renderer-cgrid.c \
 	gdaui-data-cell-renderer-pict.c \
 	gdaui-entry-filesel.c \
 	gdaui-entry-cidr.c \
-	gdaui-entry-cgrid.c \
 	gdaui-entry-text.c \
 	gdaui-entry-pict.c \
 	$(gcrypt_sources)

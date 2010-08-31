@@ -1267,7 +1267,7 @@ create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOp
 	GdaHolder *holder;
 	GdaServerProvider *prov;
 	GdaConnection *cnc;
-	gchar *type = NULL;
+	const gchar *type = NULL;
 
 	iter = gda_data_model_create_iter (GDA_DATA_MODEL (proxy));
 	gda_data_model_iter_move_to_row (iter, row);

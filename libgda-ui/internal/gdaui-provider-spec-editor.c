@@ -482,7 +482,7 @@ _gdaui_provider_spec_editor_get_specs (GdauiProviderSpecEditor *spec)
 /**
  * _gdaui_provider_spec_editor_set_specs
  * @spec: a #GdauiProviderSpecEditor widget
- * @specs_string: 
+ * @specs_string: the connection string
  *
  * Sets the connection string to be displayed in the widget
  */

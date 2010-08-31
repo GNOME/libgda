@@ -348,7 +348,7 @@ gdaui_data_store_new (GdaDataModel *model)
  * gdaui_data_store_set_value
  * @store: a #GdauiDataStore object
  * @iter: the considered row
- * @col:
+ * @col: the data model column
  * @value: the value to store (gets copied)
  *
  * Stores a value in the @store data model.

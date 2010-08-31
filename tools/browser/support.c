@@ -33,6 +33,9 @@ GtkOSXApplication *theApp = NULL;
 #endif
 
 /**
+ * browser_connection_open
+ * @error: a place to store errors, or %NULL
+ * 
  * Display a login dialog and, if validated, create a new #BrowserConnection
  *
  * Returns: a new #BrowserConnection, or %NULL (the caller DOES NOT OWN a reference to the returned value)
@@ -59,6 +62,10 @@ browser_connection_open (GError **error)
 }
 
 /**
+ * browser_connection_close
+ * @parent: a #GtkWindow
+ * @bcnc: a #BrowserConnection object
+ *
  * Displays a warning dialog and close @bcnc
  *
  * Returns: %TRUE if the connection has been closed

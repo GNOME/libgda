@@ -326,7 +326,7 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * @nb_cols: the number of columns in @cols
  * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
- * @use_col_ids:
+ * @use_col_ids: set to %TRUE to add column ID information
  *
  * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
  *
@@ -512,7 +512,7 @@ gda_utility_data_model_find_column_description (GdaDataSelect *model, const gcha
 
 /**
  * gda_utility_holder_load_attributes
- * @holder:
+ * @holder: a #GdaHolder
  * @node: an xmlNodePtr with a &lt;parameter&gt; tag
  * @sources: a list of #GdaDataModel
  * @error: a place to store errors, or %NULL
@@ -686,7 +686,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 #define GDA_PARAM_ENCODE_TOKEN "__gda"
 /**
  * gda_text_to_alphanum
- * @text:
+ * @text: the text to convert
  *
  * The "encoding" consists in replacing non
  * alphanumeric character with the string "__gdaXX" where XX is the hex. representation

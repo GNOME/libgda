@@ -323,8 +323,8 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				bin = (GdaBinary *) blob;
 				if (blob->op &&
 				    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-                                        gda_blob_op_read_all (blob->op, blob);
-				if (g_utf8_validate (bin->data, bin->binary_length, NULL)) {
+                                        gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
+				if (g_utf8_validate ((gchar*) bin->data, bin->binary_length, NULL)) {
 					gtk_text_buffer_set_text (mgtxt->priv->buffer, (gchar*) bin->data, 
 								  bin->binary_length);
 					done = TRUE;
@@ -333,7 +333,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 			else  if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 				const GdaBinary *bin;
 				bin = gda_value_get_binary (value);
-				if (g_utf8_validate (bin->data, bin->binary_length, NULL)) {
+				if (g_utf8_validate ((gchar*) bin->data, bin->binary_length, NULL)) {
 					gtk_text_buffer_set_text (mgtxt->priv->buffer, (gchar*) bin->data, 
 								  bin->binary_length);
 					done = TRUE;

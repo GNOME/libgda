@@ -53,7 +53,7 @@ gda_xslt_extension_init (xsltTransformContextPtr ctxt, const xmlChar * URI)
 #ifdef GDA_DEBUG_NO
 	g_print ("gda_xslt_extension_init");
 #endif
-	if (!URI || strcmp (URI, GDA_XSLT_EXTENSION_URI)) {
+	if (!URI || strcmp ((gchar*) URI, GDA_XSLT_EXTENSION_URI)) {
 #ifdef GDA_DEBUG_NO
 		g_print ("called for another URI, exit");
 #endif
@@ -136,7 +136,7 @@ gda_xslt_getnodeset_function (xmlXPathParserContextPtr ctxt, int nargs)
 	}
 	execc = (GdaXsltExCont *) tctxt->_private;
 	data = (GdaXsltIntCont *) xsltGetExtData (tctxt,
-						  GDA_XSLT_EXTENSION_URI);
+						  BAD_CAST GDA_XSLT_EXTENSION_URI);
 	if (data == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "sqlxslt: failed to get module data\n");
@@ -189,7 +189,7 @@ gda_xslt_checkif_function (xmlXPathParserContextPtr ctxt, int nargs)
 	}
 	execc = (GdaXsltExCont *) tctxt->_private;
 	data = (GdaXsltIntCont *) xsltGetExtData (tctxt,
-						  GDA_XSLT_EXTENSION_URI);
+						  BAD_CAST GDA_XSLT_EXTENSION_URI);
 	if (data == NULL || execc == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "gda_xslt_checkif_function: failed to get module internal data\n");
@@ -255,7 +255,7 @@ gda_xslt_getvalue_function (xmlXPathParserContextPtr ctxt, int nargs)
 
 	execc = (GdaXsltExCont *) tctxt->_private;
 	data = (GdaXsltIntCont *) xsltGetExtData (tctxt,
-						  GDA_XSLT_EXTENSION_URI);
+						  BAD_CAST GDA_XSLT_EXTENSION_URI);
 	if (data == NULL || execc == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "gda_xslt_getvalue_function: failed to get module internal data\n");
@@ -322,7 +322,7 @@ gda_xslt_getxmlvalue_function (xmlXPathParserContextPtr ctxt, int nargs)
 
 	execc = (GdaXsltExCont *) tctxt->_private;
 	data = (GdaXsltIntCont *) xsltGetExtData (tctxt,
-						  GDA_XSLT_EXTENSION_URI);
+						  BAD_CAST GDA_XSLT_EXTENSION_URI);
 	if (data == NULL || execc == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "gda_xslt_getxmlvalue_function: failed to get module internal data\n");
@@ -387,7 +387,7 @@ gda_xslt_section_element (xsltTransformContextPtr tctxt,
 
 	execc = (GdaXsltExCont *) tctxt->_private;
 	data = (GdaXsltIntCont *) xsltGetExtData (tctxt,
-						  GDA_XSLT_EXTENSION_URI);
+						  BAD_CAST GDA_XSLT_EXTENSION_URI);
 	if (data == NULL || execc == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "gda_xslt_section_element: failed to get module internal data\n");

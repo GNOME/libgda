@@ -19,20 +19,20 @@ html_file_new (HtmlConfig *config, const gchar *name, const gchar *title)
 
 	file = g_new0 (HtmlFile, 1);
 	file->name = g_strdup (name);
-	file->doc = xmlNewDoc ("1.0");
-	topnode = xmlNewDocNode (file->doc, NULL, "html", NULL);
+	file->doc = xmlNewDoc (BAD_CAST "1.0");
+	topnode = xmlNewDocNode (file->doc, NULL, BAD_CAST "html", NULL);
 	xmlDocSetRootElement (file->doc, topnode);
 
 	/* head */
-	head = xmlNewChild (topnode, NULL, "head", NULL);
+	head = xmlNewChild (topnode, NULL, BAD_CAST "head", NULL);
 
-	node = xmlNewChild (head, NULL, "meta", NULL);
-	xmlSetProp(node, "content", (xmlChar*)"charset=UTF-8");
-	xmlSetProp(node, "http-equiv", (xmlChar*)"content-type");
+	node = xmlNewChild (head, NULL, BAD_CAST "meta", NULL);
+	xmlSetProp(node, BAD_CAST "content", BAD_CAST "charset=UTF-8");
+	xmlSetProp(node, BAD_CAST "http-equiv", BAD_CAST "content-type");
 
-	node = xmlNewChild (head, NULL, "title", title);
-	node = xmlNewChild (head, NULL, "style", 
-"body { "
+	node = xmlNewChild (head, NULL, BAD_CAST "title", BAD_CAST title);
+	node = xmlNewChild (head, NULL, BAD_CAST "style", 
+BAD_CAST "body { "
 "       margin: 0px; padding: 0px;  border:0px; "
 "	font: 8pt/16pt georgia; "
 "	color: #555753; "
@@ -106,12 +106,12 @@ html_file_new (HtmlConfig *config, const gchar *name, const gchar *title)
 );
 
 	/* body */
-	node = xmlNewChild (topnode, NULL, "body", NULL);
+	node = xmlNewChild (topnode, NULL, BAD_CAST "body", NULL);
 	file->body = node;
 
 	/* title */
-	node = xmlNewChild (file->body, NULL, "h1", title);
-	xmlSetProp(node, "class", (xmlChar*)"title");
+	node = xmlNewChild (file->body, NULL, BAD_CAST "h1", BAD_CAST title);
+	xmlSetProp(node, BAD_CAST "class", BAD_CAST "title");
 
 #ifdef NO
 	/* toc */
@@ -181,7 +181,7 @@ real_html_add_link_to_node (xmlNodePtr node, const gchar *text, const gchar *lin
 
 	href = xmlNewNode (NULL, (xmlChar*)"a");
 	tmp = g_strdup_printf (" [%s] ", text);
-	xmlNodeSetContent (href, tmp);
+	xmlNodeSetContent (href, BAD_CAST tmp);
 	g_free (tmp);
 	if (node->children) {
 		xmlNodePtr sibl;
@@ -198,11 +198,11 @@ real_html_add_link_to_node (xmlNodePtr node, const gchar *text, const gchar *lin
 		xmlAddChild (node, href);
 	if (*link_to == '/') {
 		tmp = g_strdup_printf ("#%s", link_to);
-		xmlSetProp(href, (xmlChar*)"href", tmp);
+		xmlSetProp(href, BAD_CAST "href", BAD_CAST tmp);
 		g_free (tmp);
 	}
 	else
-		xmlSetProp(href, (xmlChar*)"href", link_to);
+		xmlSetProp(href, BAD_CAST "href", BAD_CAST link_to);
 }
 
 void
@@ -224,7 +224,7 @@ html_add_to_toc (HtmlConfig *config, HtmlFile *file, const gchar *text, const gc
 {
 	xmlNodePtr li;
 
-	li = xmlNewChild (file->toc, NULL, "li", NULL);
+	li = xmlNewChild (file->toc, NULL, BAD_CAST "li", NULL);
 	real_html_add_link_to_node (li, text, link_to);
 }
 
@@ -234,11 +234,11 @@ html_add_header (HtmlConfig *config, HtmlFile *file, const gchar *text)
 	xmlNodePtr hnode, ntmp;
 	gchar *tmp;
 	
-	hnode = xmlNewChild (file->body, NULL, "h2", text);
+	hnode = xmlNewChild (file->body, NULL, BAD_CAST "h2", BAD_CAST text);
 	tmp = g_strdup_printf ("/a/%d", counter++);
 	html_add_to_toc (config, file, text, tmp);
-	ntmp = xmlNewChild (hnode, NULL, "a", "");
-	xmlSetProp(ntmp, (xmlChar*)"name", tmp);
+	ntmp = xmlNewChild (hnode, NULL, BAD_CAST "a", BAD_CAST "");
+	xmlSetProp(ntmp, BAD_CAST "name", BAD_CAST tmp);
 	g_free (tmp);
 	
 	return hnode;
@@ -260,19 +260,19 @@ html_mark_path_error (HtmlConfig *config, const gchar *nodepath)
 void
 html_mark_node_error (HtmlConfig *config, xmlNodePtr node)
 {
-	xmlSetProp(node, "class", (xmlChar*)"error");
+	xmlSetProp(node, BAD_CAST "class", BAD_CAST "error");
 }
 
 void
 html_mark_node_warning (HtmlConfig *config, xmlNodePtr node)
 {
-	xmlSetProp(node, "class", (xmlChar*)"warning");
+	xmlSetProp(node, BAD_CAST "class", BAD_CAST "warning");
 }
 
 void
 html_mark_node_notice (HtmlConfig *config, xmlNodePtr node)
 {
-	xmlSetProp(node, "class", (xmlChar*)"notice");
+	xmlSetProp(node, BAD_CAST "class", BAD_CAST "notice");
 }
 
 xmlNodePtr
@@ -283,7 +283,7 @@ html_render_attribute_str (xmlNodePtr parent, const gchar *node_type,
 	gchar *tmp;
 
 	tmp = g_strdup_printf ("%s = %s", att_name, att_val);
-	node = xmlNewChild (parent, NULL, node_type, tmp);
+	node = xmlNewChild (parent, NULL, BAD_CAST node_type, BAD_CAST tmp);
 	g_free (tmp);
 
 	return node;
@@ -297,7 +297,7 @@ html_render_attribute_bool (xmlNodePtr parent, const gchar *node_type,
 	gchar *tmp;
 
 	tmp = g_strdup_printf ("%s = %s", att_name, att_val ? _("Yes") : _("No"));
-	node = xmlNewChild (parent, NULL, node_type, tmp);
+	node = xmlNewChild (parent, NULL, BAD_CAST node_type, BAD_CAST tmp);
 	g_free (tmp);
 
 	return node;
@@ -311,13 +311,13 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 
         g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-        node = xmlNewChild (parent, NULL, "table", "");
+        node = xmlNewChild (parent, NULL, BAD_CAST "table", BAD_CAST "");
 
 	cols = gda_data_model_get_n_columns (model);
 	rows = gda_data_model_get_n_rows (model);
 
         /* set the table structure */
-	tr = xmlNewChild (node, NULL, "tr", NULL);
+	tr = xmlNewChild (node, NULL, BAD_CAST "tr", NULL);
         for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
@@ -327,7 +327,7 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
                         return NULL;
                 }
 
-                td = xmlNewChild (tr, NULL, "th", gda_column_get_name (column));
+                td = xmlNewChild (tr, NULL, BAD_CAST "th", BAD_CAST gda_column_get_name (column));
         }
 	
 	/* add the model data to the XML output */
@@ -335,22 +335,22 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
                 gint r, c;
 
                 for (r = 0; r < rows; r++) {
-			tr = xmlNewChild (node, NULL, "tr", "");
+			tr = xmlNewChild (node, NULL, BAD_CAST "tr", BAD_CAST "");
                         for (c = 0 ; c < cols; c++) {
                                 GValue *value;
 
                                 value = (GValue *) gda_data_model_get_value_at (model, c, r, NULL);
 				if (!value) {
 					xmlNodePtr p;
-					td = xmlNewChild (tr, NULL, "td", NULL);
-					p = xmlNewChild (td, NULL, "p", "ERROR");
-					xmlSetProp(p, "class", (xmlChar*)"null");
+					td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
+					p = xmlNewChild (td, NULL, BAD_CAST "p", BAD_CAST "ERROR");
+					xmlSetProp(p, BAD_CAST "class", BAD_CAST "null");
 				}
 				else if (gda_value_is_null (value)) {
 					xmlNodePtr p;
-					td = xmlNewChild (tr, NULL, "td", NULL);
-					p = xmlNewChild (td, NULL, "p", "NULL");
-					xmlSetProp(p, "class", (xmlChar*)"null");
+					td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
+					p = xmlNewChild (td, NULL, BAD_CAST "p", BAD_CAST "NULL");
+					xmlSetProp(p, BAD_CAST "class", BAD_CAST "null");
 				}
 				else {
 					gchar *str;
@@ -358,7 +358,7 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
 					else
 						str = gda_value_stringify (value);
-					td = xmlNewChild (tr, NULL, "td", str);
+					td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST str);
 					g_free (str);
 				}
                         }

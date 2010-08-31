@@ -136,12 +136,6 @@ static GtkActionGroup      *query_console_page_get_actions_group (BrowserPage *p
 static const gchar         *query_console_page_get_actions_ui (BrowserPage *page);
 static GtkWidget           *query_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
-enum {
-	DUMMY,
-	LAST_SIGNAL
-};
-
-static guint query_console_signals[LAST_SIGNAL] = { };
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -1000,8 +994,8 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 
 /**
  * query_console_set_text
- * @console:
- * @text:
+ * @console: a #QueryConsole
+ * @text: the new text
  *
  * Replaces the edited SQL with @text in @console
  */

@@ -317,7 +317,7 @@ gdaui_data_cell_renderer_bin_set_property (GObject *object,
 /**
  * gdaui_data_cell_renderer_bin_new:
  * @dh: a #GdaDataHandler object
- * @type:
+ * @type: the #GType of the data to be displayed
  * 
  * Creates a new #GdauiDataCellRendererBin. Adjust rendering
  * parameters using object properties. Object properties can be set

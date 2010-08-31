@@ -100,7 +100,6 @@ typedef struct {
 } TmpResource;
 
 static TmpResource  *tmp_resource_add (WebServer *server, const gchar *path, gchar *data, gsize data_length);
-static TmpResource  *tmp_static_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length);
 static gboolean       delete_tmp_resource (WebServer *server);
 static void           tmp_resource_free (TmpResource *data);
 
@@ -2076,24 +2075,6 @@ tmp_resource_add (WebServer *server, const gchar *path, gchar *data, gsize data_
 	server->priv->resources_list = g_slist_prepend (server->priv->resources_list, td);
 	if (!server->priv->resources_timer)
 		server->priv->resources_timer = g_timeout_add_seconds (5, (GSourceFunc) delete_tmp_resource, server);
-	return td;
-}
-
-/*
- * @data is static
- */
-static TmpResource *
-tmp_static_data_add (WebServer *server, const gchar *path, gchar *data, gsize data_length)
-{
-	TmpResource *td;
-
-	td = g_new0 (TmpResource, 1);
-	td->path = g_strdup (path);
-	td->data = data;
-	td->size = data_length;
-	td->expiration_date = 0;
-	g_hash_table_insert (server->priv->resources_hash, g_strdup (path), td);
-	server->priv->resources_list = g_slist_prepend (server->priv->resources_list, td);
 	return td;
 }
 

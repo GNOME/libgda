@@ -67,12 +67,6 @@ static void       update_column_properties (TablePreferences *tpref);
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TablePreferences *tpreferences);
 static void plugins_combo_changed_cb (GtkComboBox *combo, TablePreferences *tpref);
 
-enum {
-	DUMMY,
-	LAST_SIGNAL
-};
-
-static guint table_preferences_signals[LAST_SIGNAL] = { };
 static GObjectClass *parent_class = NULL;
 
 #ifdef G_OS_WIN32

@@ -953,7 +953,7 @@ rewrite_statement_foreach_func (GdaSqlAnyPart *node, ForeachData *fdata, GError 
 			return TRUE;
 
 		GdaHolder *source_param;
-		source_param = run_context_find_param (fdata->engine, fdata->context, pspec->name);
+		source_param = run_context_find_param (fdata->engine, fdata->context, BAD_CAST pspec->name);
 		if (!source_param) {
 			g_set_error (error, 0, 0,
 				     _("Unknown parameter '%s'"), pspec->name);

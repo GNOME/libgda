@@ -312,7 +312,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
 	
 	/* computations */
 	if (!error) {
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 		gchar *strings[3];
 #endif
 		gint i;
