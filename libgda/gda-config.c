@@ -849,7 +849,9 @@ password_stored_cb (GnomeKeyringResult res, const gchar *dsnname)
  * @info: a pointer to a filled GdaDsnInfo structure
  * @error: a place to store errors, or %NULL
  *
- * Add or update a DSN from the definition in @info
+ * Add or update a DSN from the definition in @info.
+ *
+ * This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
  * Returns: TRUE if no error occurred
  */
@@ -969,7 +971,9 @@ password_deleted_cb (GnomeKeyringResult res, const gchar *dsnname)
  * @dsn_name: the name of the DSN to remove
  * @error: a place to store errors, or %NULL
  *
- * Remove the DSN named @dsn_name
+ * Remove the DSN named @dsn_name.
+ *
+ * This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
  * Returns: TRUE if no error occurred
  */
@@ -1228,6 +1232,8 @@ gda_config_get_provider_info (const gchar *provider_name)
  * Get a pointer to the session-wide #GdaServerProvider for the
  * provider named @provider_name. The caller must not call g_object_unref() on the
  * returned object.
+ *
+ * This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
  * Returns: (transfer none): a pointer to the #GdaServerProvider, or %NULL if an error occurred
  */
