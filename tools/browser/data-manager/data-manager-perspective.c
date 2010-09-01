@@ -249,15 +249,34 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 {
 	/* find or create page for this favorite */
         GtkWidget *page_contents;
-	gint current_page;
+	gint current_page, npages, i;
 	DataConsole *page_to_reuse = NULL;
 
 	if (fav_type != BROWSER_FAVORITES_DATA_MANAGERS)
 		return;
 
+	/* change current page if possible */
+	npages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (perspective->priv->notebook));
+	for (i = 0; i < npages; i++) {
+		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (perspective->priv->notebook),
+							   i);
+		
+		if (IS_DATA_CONSOLE (page_contents)) {
+			gchar *text;
+			text = data_console_get_text (DATA_CONSOLE (page_contents));
+			if (text && selection && !strcmp (text, selection)) {
+				gtk_notebook_set_current_page (GTK_NOTEBOOK (perspective->priv->notebook),
+							       i);
+				return;
+			}
+		}
+	}
+
+	/* create a new page, or reuse the current empty one */
 	current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (perspective->priv->notebook));
 	if (current_page >= 0) {
-		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (perspective->priv->notebook), current_page);
+		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (perspective->priv->notebook),
+							   current_page);
 		
 		if (IS_DATA_CONSOLE (page_contents)) {
 			gchar *text;

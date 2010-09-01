@@ -313,6 +313,8 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 		
 		g_error_free (error);
 	}
+	else
+		browser_show_notice (parent, "show-help", _("Help is being loaded, please wait..."));
 
 	g_free (uri);
 }
@@ -568,6 +570,7 @@ browser_make_small_button (gboolean is_toggle, const gchar *label, const gchar *
 	if (label) {
 		GtkWidget *wid;
 		wid = gtk_label_new (label);
+		gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
 		if (hbox)
 			gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
 		else

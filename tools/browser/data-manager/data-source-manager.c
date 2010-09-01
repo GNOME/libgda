@@ -33,11 +33,12 @@
 
 /* signals */
 enum {
-	CHANGED,
+	LIST_CHANGED,
+	SOURCE_CHANGED,
 	LAST_SIGNAL
 };
 
-gint data_source_manager_signals [LAST_SIGNAL] = { 0 };
+gint data_source_manager_signals [LAST_SIGNAL] = { 0, 0 };
 
 /* 
  * Main static functions 
@@ -53,6 +54,7 @@ struct _DataSourceManagerPrivate {
 	BrowserConnection *bcnc;
 	GSList *sources_list;
         GdaSet *params; /* execution params */
+	gboolean emit_changes;
 };
 
 GType
@@ -90,13 +92,23 @@ data_source_manager_class_init (DataSourceManagerClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/* signals */
-	data_source_manager_signals [CHANGED] =
-                g_signal_new ("changed",
+	data_source_manager_signals [LIST_CHANGED] =
+                g_signal_new ("list-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (DataSourceManagerClass, changed),
+                              G_STRUCT_OFFSET (DataSourceManagerClass, list_changed),
                               NULL, NULL,
                               _dm_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	data_source_manager_signals [SOURCE_CHANGED] =
+                g_signal_new ("source-changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (DataSourceManagerClass, source_changed),
+                              NULL, NULL,
+                              _dm_marshal_VOID__OBJECT, G_TYPE_NONE, 1, DATA_SOURCE_TYPE);
+
+	klass->list_changed = NULL;
+	klass->source_changed = NULL;
 
 	object_class->dispose = data_source_manager_dispose;
 }
@@ -105,6 +117,13 @@ static void
 data_source_manager_init (DataSourceManager *mgr)
 {
 	mgr->priv = g_new0 (DataSourceManagerPrivate, 1);
+	mgr->priv->emit_changes = TRUE;
+}
+
+static void
+source_changed_cb (DataSource *source, DataSourceManager *mgr)
+{
+	g_signal_emit (mgr, data_source_manager_signals[SOURCE_CHANGED], 0, source);
 }
 
 static void
@@ -121,7 +140,13 @@ data_source_manager_dispose (GObject *object)
 			g_object_unref (mgr->priv->params);
 
 		if (mgr->priv->sources_list) {
-			g_slist_foreach (mgr->priv->sources_list, (GFunc) g_object_unref, NULL);
+			GSList *list;
+			for (list = mgr->priv->sources_list; list; list = list->next) {
+				g_signal_handlers_disconnect_by_func (list->data,
+								      G_CALLBACK (source_changed_cb), mgr);
+				g_object_unref ((GObject*) list->data);
+
+			}
 			g_slist_free (mgr->priv->sources_list);
 			mgr->priv->sources_list = NULL;
 		}
@@ -265,43 +290,50 @@ data_source_manager_add_source (DataSourceManager *mgr, DataSource *source)
 			}
 		}
 	}
-	g_signal_emit (mgr, data_source_manager_signals[CHANGED], 0);
+	if (mgr->priv->emit_changes)
+		g_signal_emit (mgr, data_source_manager_signals[LIST_CHANGED], 0);
+
+	g_signal_connect (source, "changed",
+			  G_CALLBACK (source_changed_cb), mgr);
 
 #ifdef DEBUG_SOURCES_SORT
 	g_print ("Sources in manager:\n");
-#endif
 	GSList *list;
 	gint i;
 	for (i = 0, list = mgr->priv->sources_list; list; list = list->next, i++) {
 		DataSource *source = DATA_SOURCE (list->data);
-#ifdef DEBUG_SOURCES_SORT
 		g_print ("\t %d ... %s\n", i, 
 			 data_source_get_title (source));
-#endif
 	}
-#ifdef DEBUG_SOURCES_SORT
 	g_print ("\n");
 #endif
 }
 
 /**
- * data_source_manager_remove_all
- * @mgr:
+ * data_source_manager_replace_all
+ * @mgr: a #DataSourceManager object
+ * @sources_list: a list of #DataSource objects, or %NULL
+ *
+ * Replaces all the data sources by the ones in @sources_list.
  */
 void
-data_source_manager_remove_all (DataSourceManager *mgr)
+data_source_manager_replace_all (DataSourceManager *mgr, const GSList *sources_list)
 {
+	GSList *list;
 	g_return_if_fail (IS_DATA_SOURCE_MANAGER (mgr));
 
-	if (mgr->priv->sources_list) {
-		GSList *list;
-		list = mgr->priv->sources_list;
-		mgr->priv->sources_list = NULL;
-		g_signal_emit (mgr, data_source_manager_signals[CHANGED], 0);
+	mgr->priv->emit_changes = FALSE;
 
-		g_slist_foreach (list, (GFunc) g_object_unref, NULL);
-		g_slist_free (list);
-	}
+	/* remove any existing data source */
+	for (; mgr->priv->sources_list; )
+		data_source_manager_remove_source (mgr,
+						   DATA_SOURCE (mgr->priv->sources_list->data));
+
+	for (list = sources_list; list; list = list->next)
+		data_source_manager_add_source (mgr, DATA_SOURCE (list->data));
+
+	mgr->priv->emit_changes = TRUE;
+	g_signal_emit (mgr, data_source_manager_signals[LIST_CHANGED], 0);
 }
 
 /**
@@ -316,8 +348,11 @@ data_source_manager_remove_source (DataSourceManager *mgr, DataSource *source)
 	g_return_if_fail (IS_DATA_SOURCE (source));
 
 	g_return_if_fail (g_slist_find (mgr->priv->sources_list, source));
+	g_signal_handlers_disconnect_by_func (source,
+					      G_CALLBACK (source_changed_cb), mgr);
 	mgr->priv->sources_list = g_slist_remove (mgr->priv->sources_list, source);
-	g_signal_emit (mgr, data_source_manager_signals[CHANGED], 0);
+	if (mgr->priv->emit_changes)
+		g_signal_emit (mgr, data_source_manager_signals[LIST_CHANGED], 0);
 	g_object_unref (source);
 }
 
@@ -536,4 +571,15 @@ data_source_manager_get_browser_cnc (DataSourceManager *mgr)
 {
 	g_return_val_if_fail (IS_DATA_SOURCE_MANAGER (mgr), NULL);
 	return mgr->priv->bcnc;
+}
+
+/**
+ * data_source_manager_get_sources
+ * @mgr:
+ */
+const GSList *
+data_source_manager_get_sources (DataSourceManager *mgr)
+{
+	g_return_val_if_fail (IS_DATA_SOURCE_MANAGER (mgr), NULL);
+	return mgr->priv->sources_list;
 }

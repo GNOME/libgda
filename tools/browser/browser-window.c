@@ -30,6 +30,7 @@
 #include "browser-spinner.h"
 #include "browser-stock-icons.h"
 #include "connection-binding-properties.h"
+#include <gdk/gdkkeysyms.h>
 
 /*
  * structure representing a 'tab' in a window
@@ -59,6 +60,7 @@ static void browser_window_init (BrowserWindow *bwin);
 static void browser_window_dispose (GObject *object);
 
 static gboolean window_state_event (GtkWidget *widget, GdkEventWindowState *event);
+static gboolean key_press_event (GtkWidget *widget, GdkEventKey *event);
 static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, BrowserWindow *bwin);
 
 static void connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin);
@@ -137,6 +139,7 @@ browser_window_class_init (BrowserWindowClass *klass)
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	widget_class->window_state_event = window_state_event;
+	widget_class->key_press_event = key_press_event;
 	parent_class = g_type_class_peek_parent (klass);
 
 	browser_window_signals[FULLSCREEN_CHANGED] =
@@ -883,10 +886,27 @@ window_close_cb (GtkAction *action, BrowserWindow *bwin)
 static void
 window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 {
-	if (gtk_toggle_action_get_active (action))
+	if (gtk_toggle_action_get_active (action)) {
 		gtk_window_fullscreen (GTK_WINDOW (bwin));
+		browser_show_notice (GTK_WINDOW (bwin),
+				     "fullscreen-esc",
+				     _("Hit the Escape key\nto leave the fullscreen mode"));
+	}
 	else
 		gtk_window_unfullscreen (GTK_WINDOW (bwin));
+}
+
+static gboolean
+key_press_event (GtkWidget *widget, GdkEventKey *event)
+{
+	if ((event->keyval == GDK_Escape) &&
+	    browser_window_is_fullscreen (BROWSER_WINDOW (widget))) {
+		browser_window_set_fullscreen (BROWSER_WINDOW (widget), FALSE);
+		return TRUE;
+	}
+
+	/* parent class */
+	return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, event);
 }
 
 static gboolean
@@ -1330,10 +1350,29 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 /**
  * browser_window_is_fullscreen
  * @bwin: a #BrowserWindow
+ *
+ * Returns: %TRUE if @bwin is fullscreen
  */
 gboolean
 browser_window_is_fullscreen (BrowserWindow *bwin)
 {
 	g_return_val_if_fail (BROWSER_IS_WINDOW (bwin), FALSE);
 	return bwin->priv->fullscreen;
+}
+
+/**
+ * browser_window_set_fullscreen
+ * @bwin: a #BrowserWindow
+ * @fullscreen:
+ *
+ * Requires @bwin to be fullscreen if @fullscreen is %TRUE
+ */
+void
+browser_window_set_fullscreen (BrowserWindow *bwin, gboolean fullscreen)
+{
+	GtkAction *action;
+	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
+	
+	action = gtk_action_group_get_action (bwin->priv->agroup, "WindowFullScreen");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fullscreen);
 }

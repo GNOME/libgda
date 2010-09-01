@@ -36,6 +36,12 @@ typedef struct _DataSource DataSource;
 typedef struct _DataSourceClass DataSourceClass;
 typedef struct _DataSourcePrivate DataSourcePrivate;
 
+typedef enum {
+	DATA_SOURCE_UNKNOWN,
+	DATA_SOURCE_TABLE,
+	DATA_SOURCE_SELECT,
+} DataSourceType;
+
 /* struct for the object's data */
 struct _DataSource
 {
@@ -49,15 +55,34 @@ struct _DataSourceClass
 	GObjectClass       parent_class;
 
 	/* signals */
+	void             (*changed) (DataSource *source);
 	void             (*execution_started) (DataSource *source);
 	void             (*execution_finished) (DataSource *source, GError *error);
 };
 
 GType               data_source_get_type            (void) G_GNUC_CONST;
 
+DataSourceType      data_source_get_source_type     (DataSource *source);
+void                data_source_set_id              (DataSource *source, const gchar *id);
+const gchar        *data_source_get_id              (DataSource *source);
+void                data_source_set_title           (DataSource *source, const gchar *title);
+const gchar        *data_source_get_title           (DataSource *source);
+
+/* Data source as table API */
+gboolean            data_source_set_table           (DataSource *source, const gchar *table, GError **error);
+const gchar        *data_source_get_table           (DataSource *source);
+gboolean            data_source_add_dependendency   (DataSource *source, const gchar *table,
+						     const char *id, GError **error);
+
+/* Data source as SQL query API */
+void                data_source_set_query           (DataSource *source, const gchar *sql, GError **warning);
+
+/* other API */
+DataSource         *data_source_new                 (BrowserConnection *bcnc, DataSourceType type);
 DataSource         *data_source_new_from_xml_node   (BrowserConnection *bcnc, xmlNodePtr node, GError **error);
 void                data_source_set_params          (DataSource *source, GdaSet *params);
 xmlNodePtr          data_source_to_xml_node         (DataSource *source);
+
 GdaStatement       *data_source_get_statement       (DataSource *source);
 
 GdaSet             *data_source_get_import          (DataSource *source);
@@ -67,7 +92,6 @@ GHashTable         *data_source_get_export_columns  (DataSource *source);
 void                data_source_execute             (DataSource *source, GError **error);
 gboolean            data_source_execution_going_on  (DataSource *source);
 GtkWidget          *data_source_create_grid         (DataSource *source);
-const gchar        *data_source_get_title           (DataSource *source);
 
 /*
 DataSource         *data_source_new_from_table      (BrowserConnection *bcnc,

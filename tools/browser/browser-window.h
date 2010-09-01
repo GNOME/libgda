@@ -65,6 +65,7 @@ void                browser_window_customize_perspective_ui (BrowserWindow *bwin
 
 BrowserPerspective *browser_window_change_perspective     (BrowserWindow *bwin, const gchar *perspective);
 
+void                browser_window_set_fullscreen         (BrowserWindow *bwin, gboolean fullscreen);
 gboolean            browser_window_is_fullscreen          (BrowserWindow *bwin);
 
 G_END_DECLS

@@ -34,6 +34,8 @@ libperspective_la_SOURCES = \
 	ui-spec-editor.h \
 	data-manager-perspective.h \
 	data-manager-perspective.c \
+	data-source-editor.h \
+	data-source-editor.c \
 	data-source-manager.h \
 	data-source-manager.c
 

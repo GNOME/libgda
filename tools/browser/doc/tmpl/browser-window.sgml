@@ -111,3 +111,12 @@ Top level browser window
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_window_set_fullscreen ##### -->
+<para>
+
+</para>
+
+@bwin: 
+@fullscreen: 
+
+
