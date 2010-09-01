@@ -551,7 +551,16 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
         gtk_widget_show (GTK_WIDGET (bwin));
 
+#if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_set_can_focus ((GtkWidget* )pers->perspective_widget, TRUE);
+#else
+	GtkWidget *fwid = (GtkWidget* )pers->perspective_widget;
+	if (! GTK_WIDGET_CAN_FOCUS (fwid)) {
+		GTK_WIDGET_SET_FLAGS (fwid, GTK_CAN_FOCUS);
+		gtk_widget_queue_resize (fwid);
+		g_object_notify (G_OBJECT (fwid), "can-focus");
+	}
+#endif
 	gtk_widget_grab_focus ((GtkWidget* )pers->perspective_widget);
 
 	return bwin;
