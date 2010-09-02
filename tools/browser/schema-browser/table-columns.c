@@ -295,6 +295,9 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *
 						cvalue = gda_data_model_get_value_at (model, 0, i, NULL);
 						if (!current_value || 
 						    gda_value_compare (cvalue, current_value)) {
+							if (current_value)
+								gtk_text_buffer_insert (tbuffer, &current,
+											"\n\n", -1);
 							gtk_text_buffer_insert_with_tags_by_name (tbuffer,
 												  &current, 
 												  _("Unique constraint"), -1,
@@ -307,8 +310,8 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *
 						cvalue = gda_data_model_get_value_at (model, 1, i, NULL);
 						gtk_text_buffer_insert (tbuffer, &current, 
 									g_value_get_string (cvalue), -1);
-						gtk_text_buffer_insert (tbuffer, &current, "\n\n", -1);
 					}
+					gtk_text_buffer_insert (tbuffer, &current, "\n\n", -1);
 				}
 				g_object_unref (model);
 			}
