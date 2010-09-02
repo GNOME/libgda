@@ -934,14 +934,14 @@ query_exec_fetch_cb (QueryConsole *tconsole)
 				if (! history->within_transaction &&
 				    browser_connection_get_transaction_status (tconsole->priv->bcnc) &&
 				    gda_statement_get_statement_type (estmt->stmt) != GDA_SQL_STATEMENT_BEGIN) {
-					browser_show_notice (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-							     "QueryExecTransactionStarted",
-							     "%s", _("A transaction has automatically been started\n"
-								     "during this statement's execution, this usually\n"
-								     "happens when blobs are selected (and the transaction\n"
-								     "will have to remain opened while the blobs are still\n"
-								     "accessible, clear the corresponding history item before\n"
-								     "closing the transaction)."));
+					browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+									"QueryExecTransactionStarted",
+									"%s", _("A transaction has automatically been started\n"
+										"during this statement's execution, this usually\n"
+										"happens when blobs are selected (and the transaction\n"
+										"will have to remain opened while the blobs are still\n"
+										"accessible, clear the corresponding history item before\n"
+										"closing the transaction)."));
 				}
 				
 				query_editor_add_history_item (tconsole->priv->history, history);

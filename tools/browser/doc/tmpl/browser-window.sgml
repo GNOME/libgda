@@ -81,6 +81,27 @@ Top level browser window
 @context: 
 
 
+<!-- ##### FUNCTION browser_window_show_notice ##### -->
+<para>
+
+</para>
+
+@bwin: 
+@context: 
+@text: 
+
+
+<!-- ##### FUNCTION browser_window_show_notice_printf ##### -->
+<para>
+
+</para>
+
+@bwin: 
+@context: 
+@format: 
+@Varargs: 
+
+
 <!-- ##### FUNCTION browser_window_customize_perspective_ui ##### -->
 <para>
 

@@ -880,9 +880,9 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 	}
 
 	if (pagenb == MAIN_PAGE_DATA)
-		browser_show_notice ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dconsole),
+		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) dconsole)),
 				     "data-manager-exec-mode-switched",
-				     _("Switching to execution mode.\n\nHit the Escape key\n"
+				     _("Switching to execution mode. Hit the Escape key "
 				       "to return to the compose mode"));
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), pagenb);
 }

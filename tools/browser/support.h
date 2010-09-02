@@ -36,7 +36,6 @@ G_BEGIN_DECLS
 BrowserConnection *browser_connection_open (GError **error);
 gboolean           browser_connection_close (GtkWindow *parent, BrowserConnection *bcnc);
 void               browser_show_error (GtkWindow *parent, const gchar *format, ...);
-void               browser_show_notice (GtkWindow *parent, const gchar *context, const gchar *format, ...);
 #ifdef HAVE_GDU
 void               browser_show_help (GtkWindow *parent, const gchar *topic);
 #endif

@@ -98,6 +98,11 @@ struct _BrowserWindowPrivate {
 	gulong             cnc_added_sigid;
 	gulong             cnc_removed_sigid;
 
+#if GTK_CHECK_VERSION (2,18,0)
+	GtkWidget         *notif_box;
+	GSList            *notif_widgets;
+#endif
+
 	GtkWidget         *statusbar;
 	guint              cnc_statusbar_context;
 
@@ -206,6 +211,11 @@ browser_window_dispose (GObject *object)
 		}
 		if (bwin->priv->perspectives_nb)
 			g_object_unref (bwin->priv->perspectives_nb);
+
+#if GTK_CHECK_VERSION (2,18,0)
+		if (bwin->priv->notif_widgets)
+			g_slist_free (bwin->priv->notif_widgets);
+#endif
 		g_free (bwin->priv);
 		bwin->priv = NULL;
 	}
@@ -423,6 +433,13 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
         gtk_widget_show (toolbar);
 	bwin->priv->toolbar_style = gtk_toolbar_get_style (GTK_TOOLBAR (toolbar));
 
+#if GTK_CHECK_VERSION (2,18,0)
+	bwin->priv->notif_box = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->notif_box, FALSE, FALSE, 0);
+        gtk_widget_show (bwin->priv->notif_box);
+	bwin->priv->notif_widgets = NULL;
+#endif
+
 	GtkToolItem *ti;
 	GtkWidget *spinner, *svbox, *align;
 
@@ -448,7 +465,6 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
 	/* statusbar */
 	bwin->priv->statusbar = gtk_statusbar_new ();
-
 
 	GSList *connections, *list;
 	bwin->priv->cnc_agroup = gtk_action_group_new ("CncActions");
@@ -897,9 +913,9 @@ window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 {
 	if (gtk_toggle_action_get_active (action)) {
 		gtk_window_fullscreen (GTK_WINDOW (bwin));
-		browser_show_notice (GTK_WINDOW (bwin),
-				     "fullscreen-esc",
-				     _("Hit the Escape key\nto leave the fullscreen mode"));
+		browser_window_show_notice_printf (bwin,
+						"fullscreen-esc",
+						_("Hit the Escape key to leave the fullscreen mode"));
 	}
 	else
 		gtk_window_unfullscreen (GTK_WINDOW (bwin));
@@ -1008,7 +1024,7 @@ connection_properties_cb (GtkAction *action, BrowserWindow *bwin)
 		if (res == GTK_RESPONSE_OK) {
 			GError *error = NULL;
 			if (!browser_virtual_connection_modify_specs (BROWSER_VIRTUAL_CONNECTION (bwin->priv->bcnc),
-					connection_binding_properties_get_specs (CONNECTION_BINDING_PROPERTIES (win)),
+								      connection_binding_properties_get_specs (CONNECTION_BINDING_PROPERTIES (win)),
 								      &error)) {
 				browser_show_error ((GtkWindow*) bwin,
 						    _("Error updating bound connection: %s"),
@@ -1247,6 +1263,147 @@ browser_window_pop_status (BrowserWindow *bwin, const gchar *context)
 }
 
 /**
+ * browser_window_show_notice_printf
+ * @bwin: a #BrowserWindow
+ * @context: textual description of what context the message is being used in
+ * @format: the text to display
+ *
+ * Make @bwin display a notice
+ */
+void
+browser_window_show_notice_printf (BrowserWindow *bwin, const gchar *context,
+				   const gchar *format, ...)
+{
+	va_list args;
+        gchar sz[2048];
+
+	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
+
+        /* build the message string */
+        va_start (args, format);
+        vsnprintf (sz, sizeof (sz), format, args);
+        va_end (args);
+	browser_window_show_notice (bwin, context, sz);
+}
+
+
+#if GTK_CHECK_VERSION (2,18,0)
+static void
+info_bar_response_cb (GtkInfoBar *ibar, gint response, BrowserWindow *bwin)
+{
+	bwin->priv->notif_widgets = g_slist_remove (bwin->priv->notif_widgets, ibar);	
+	gtk_widget_destroy ((GtkWidget*) ibar);
+}
+#endif
+
+/* hash table to remain which context notices have to be hidden: key=context, value=GINT_TO_POINTER (1) */
+static GHashTable *hidden_contexts = NULL;
+
+static void
+hide_notice_toggled_cb (GtkToggleButton *toggle, gchar *context)
+{
+	g_assert (hidden_contexts);
+	if (gtk_toggle_button_get_active (toggle))
+		g_hash_table_insert (hidden_contexts, g_strdup (context), GINT_TO_POINTER (TRUE));
+	else
+		g_hash_table_remove (hidden_contexts, context);
+}
+
+/**
+ * browser_window_show_notice
+ * @bwin: a #BrowserWindow
+ * @context: textual description of what context the message is being used in
+ * @text: the information's text
+ *
+ * Makes @bwin display a notice
+ */
+void
+browser_window_show_notice (BrowserWindow *bwin, const gchar *context, const gchar *text)
+{
+	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
+	gboolean hide = FALSE;
+
+	if (context) {
+		if (!hidden_contexts)
+			hidden_contexts = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+		hide = GPOINTER_TO_INT (g_hash_table_lookup (hidden_contexts, context));
+	}
+
+	if (hide) {
+		gchar *ptr, *tmp;
+		tmp = g_strdup (text);
+		for (ptr = tmp; *ptr && (*ptr != '\n'); ptr++);
+		if (*ptr) {
+			*ptr = '.'; ptr++;
+			*ptr = '.'; ptr++;
+			*ptr = '.'; ptr++;
+			*ptr = 0;
+		}
+		browser_window_push_status (bwin, "SupportNotice", tmp, TRUE);
+		g_free (tmp);
+	}
+	else {
+		GtkWidget *cb = NULL;
+		if (context) {
+			cb = gtk_check_button_new_with_label (_("Don't show this message again"));
+			g_signal_connect_data (cb, "toggled",
+					       G_CALLBACK (hide_notice_toggled_cb), g_strdup (context),
+					       (GClosureNotify) g_free, 0);
+		}
+
+#if GTK_CHECK_VERSION (2,18,0)
+		/* use a GtkInfoBar */
+		GtkWidget *ibar, *content_area, *label;
+		
+		ibar = gtk_info_bar_new_with_buttons (GTK_STOCK_CLOSE, 1, NULL);
+		gtk_info_bar_set_message_type (GTK_INFO_BAR (ibar), GTK_MESSAGE_INFO);
+		label = gtk_label_new ("");
+		gtk_label_set_markup (GTK_LABEL (label), text);
+		gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (ibar));
+		if (cb) {
+			GtkWidget *box;
+			box = gtk_hbox_new (FALSE, 0);
+			gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
+			gtk_box_pack_start (GTK_BOX (box), cb, FALSE, FALSE, 0);
+			gtk_container_add (GTK_CONTAINER (content_area), box);
+			gtk_widget_show_all (box);
+		}
+		else {
+			gtk_container_add (GTK_CONTAINER (content_area), label);
+			gtk_widget_show (label);
+		}
+		g_signal_connect (ibar, "response",
+				  G_CALLBACK (info_bar_response_cb), bwin);
+		gtk_box_pack_start (GTK_BOX (bwin->priv->notif_box), ibar, TRUE, TRUE, 0);
+		bwin->priv->notif_widgets = g_slist_append (bwin->priv->notif_widgets, ibar);
+		if (g_slist_length (bwin->priv->notif_widgets) > 2) {
+			gtk_widget_destroy (GTK_WIDGET (bwin->priv->notif_widgets->data));
+			bwin->priv->notif_widgets = g_slist_delete_link (bwin->priv->notif_widgets,
+									 bwin->priv->notif_widgets);
+		}
+		gtk_widget_show (ibar);
+#else
+		/* create the error message dialog */
+		GtkWidget *dialog;
+		dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (bwin),
+							     GTK_DIALOG_DESTROY_WITH_PARENT |
+							     GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
+							     GTK_BUTTONS_CLOSE,
+							     "<span weight=\"bold\">%s</span>\n%s", _("Note:"), text);
+		if (cb)
+			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), cb, FALSE, FALSE, 10);
+	
+		gtk_widget_show_all (dialog);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+#endif
+	}
+}
+
+
+/**
  * browser_window_customize_perspective_ui
  * @bwin: a #BrowserWindow
  * @bpers: the #BrowserPerspective concerned
@@ -1345,13 +1502,17 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 	}
 	g_list_free (actions);
 
-	browser_show_notice (GTK_WINDOW (bwin), "Perspective change",
-			     _("The current perspective has changed to the '%s' perspective, you "
-			       "can switch back to previous perspective through the "
-			       "'Perspective/%s' menu, or using the '%s' shortcut"),
-			     bwin->priv->current_perspective->factory->perspective_name,
-			     current_pdata->factory->perspective_name,
-			     current_pdata->factory->menu_shortcut);
+	gchar *tmp;
+	tmp = g_markup_printf_escaped (_("The current perspective has changed to the '%s' perspective, you "
+					 "can switch back to previous perspective through the "
+					 "'Perspective/%s' menu, or using the '%s' shortcut"),
+				       bwin->priv->current_perspective->factory->perspective_name,
+				       current_pdata->factory->perspective_name,
+				       current_pdata->factory->menu_shortcut);
+
+			
+	browser_window_show_notice (bwin, "Perspective change", tmp);
+	g_free (tmp);
 
 	return bpers;
 }
