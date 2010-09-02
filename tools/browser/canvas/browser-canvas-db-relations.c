@@ -339,6 +339,7 @@ static GtkWidget *canvas_entity_popup_func (BrowserCanvasTable *ce);
 
 static void popup_func_delete_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce);
 static void popup_func_add_depend_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce);
+static void popup_func_add_ref_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce);
 static GtkWidget *
 canvas_entity_popup_func (BrowserCanvasTable *ce)
 {
@@ -351,6 +352,10 @@ canvas_entity_popup_func (BrowserCanvasTable *ce)
 	gtk_widget_show (entry);
 	entry = gtk_menu_item_new_with_label (_("Add referenced tables"));
 	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_func_add_depend_cb), ce);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
+	gtk_widget_show (entry);
+	entry = gtk_menu_item_new_with_label (_("Add tables referencing this table"));
+	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_func_add_ref_cb), ce);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 	gtk_widget_show (entry);
 
@@ -411,10 +416,6 @@ popup_func_add_depend_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
 	
 	GdaMetaTable *mtable = GDA_META_TABLE (dbo);
 	GSList *list;
-	GooCanvasBounds bounds;
-	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ce), &bounds);
-	bounds.y1 = bounds.y2 + 35.;
-	bounds.x2 = bounds.x1 - 20.;
 
 	for (list = mtable->fk_list; list; list = list->next) {
 		GdaMetaTableForeignKey *fk = GDA_META_TABLE_FOREIGN_KEY (list->data);
@@ -432,9 +433,50 @@ popup_func_add_depend_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
 		gda_value_free (v1);
 		gda_value_free (v2);
 		gda_value_free (v3);
-								       
-		goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (new_item), &bounds);
 	}
+}
+
+static void
+popup_func_add_ref_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
+{
+	BrowserCanvasDbRelations *dbrel;
+	GdaMetaDbObject *dbo;
+
+	dbrel = BROWSER_CANVAS_DB_RELATIONS (browser_canvas_item_get_canvas (BROWSER_CANVAS_ITEM (ce)));
+	dbo = g_hash_table_lookup (dbrel->priv->hash_tables, ce);
+	if (!dbo || (dbo->obj_type != GDA_META_DB_TABLE))
+		return;
+
+	if (!dbrel->priv->mstruct)
+		return;
+	
+	GSList *alldbo, *list;
+
+	alldbo = gda_meta_struct_get_all_db_objects (dbrel->priv->mstruct);
+	for (list = alldbo; list; list = list->next) {
+		GdaMetaDbObject *fkdbo = GDA_META_DB_OBJECT (list->data);
+		if (fkdbo->obj_type != GDA_META_DB_TABLE)
+			continue;
+
+		GSList *fklist;
+		for (fklist = GDA_META_TABLE (fkdbo)->fk_list; fklist; fklist = fklist->next) {
+			GdaMetaTableForeignKey *fk = GDA_META_TABLE_FOREIGN_KEY (fklist->data);
+			if (fk->depend_on != dbo)
+				continue;
+			if (g_hash_table_lookup (dbrel->priv->hash_tables, fkdbo))
+				continue;
+			BrowserCanvasTable *new_item;
+			GValue *v1, *v2, *v3;
+			g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), fkdbo->obj_catalog);
+			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), fkdbo->obj_schema);
+			g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), fkdbo->obj_name);
+			new_item = browser_canvas_db_relations_add_table (dbrel, v1, v2, v3);
+			gda_value_free (v1);
+			gda_value_free (v2);
+			gda_value_free (v3);
+		}
+	}
+	g_slist_free (alldbo);
 }
 
 static GSList *
@@ -562,13 +604,18 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 
 	GdaMetaTable *mtable;
 	GooCanvas *goocanvas;
+	GError *lerror = NULL;
 
 	if (!canvas->priv->mstruct)
 		return NULL;
 
 	goocanvas = BROWSER_CANVAS (canvas)->priv->goocanvas;
 	mtable = (GdaMetaTable *) gda_meta_struct_complement (canvas->priv->mstruct, GDA_META_DB_TABLE,
-							      table_catalog, table_schema, table_name, NULL);
+							      table_catalog, table_schema, table_name, &lerror);
+	g_print ("%s () mstruct=%p (%s,%s,%s)=>%p\n", __FUNCTION__, canvas->priv->mstruct,
+		 g_value_get_string (table_catalog),
+		 g_value_get_string (table_schema),
+		 g_value_get_string (table_name), mtable);
 	if (mtable) {
 		gdouble x = 0, y = 0;
 		GooCanvasItem *table_item;
@@ -630,8 +677,11 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 
 		return BROWSER_CANVAS_TABLE (table_item);
 	}
-	else
+	else {
+		g_print ("ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+		g_clear_error (&lerror);
 		return NULL;
+	}
 }
 
 /**
