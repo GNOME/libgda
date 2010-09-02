@@ -40,11 +40,11 @@
   </table>
 
   <table name="_information_schema_catalog_name" descr="Name of the current database (current catalog), has only one row">
-    <column name="catalog_name" pkey="TRUE"/>
+    <column name="catalog_name" pkey="TRUE" ident="TRUE"/>
   </table>
 
   <table name="_schemata" descr="List of schemas">
-    <column name="catalog_name" pkey="TRUE" descr="Name of the catalog that contains the schema"/>
+    <column name="catalog_name" pkey="TRUE" ident="TRUE" descr="Name of the catalog that contains the schema"/>
     <column name="schema_name" pkey="TRUE" ident="TRUE"/>
     <column name="schema_owner" nullok="TRUE" descr="Name of the schema"/>
     <column name="schema_internal" type="boolean"  descr="Tells if the schema is specific to the database implementation (and usually can't be modified)"/>
@@ -66,7 +66,7 @@
   </table>
 
   <table name="_udt" descr="User defined data types">
-    <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the data type"/>
+    <column name="udt_catalog" pkey="TRUE" ident="TRUE" descr="Name of the catalog that contains the data type"/>
     <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the data type" ident="TRUE"/>
     <column name="udt_name" pkey="TRUE" descr="Name of the data type" ident="TRUE"/>
     <column name="udt_gtype" nullok="TRUE" descr="GType associated to the data type"/>
@@ -85,7 +85,7 @@
   </table>
 
   <table name="_udt_columns" descr="List of components for a user defined data type for composed data types (such as a complex number data type which has real and imaginary parts)">
-    <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the user defined data type for which the column is"/>
+    <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the user defined data type for which the column is" ident="TRUE"/>
     <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the user defined data type for which the column is" ident="TRUE"/>
     <column name="udt_name" pkey="TRUE" descr="Name of the user defined data type for which the column is" ident="TRUE"/>
     <column name="udt_column" pkey="TRUE" descr="Name of the column (part)" ident="TRUE"/>
@@ -119,7 +119,7 @@
   </table>
 
   <table name="_enums" descr="List of possible enumeration labels for enumerations">
-    <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the ENUM user defined data type"/>
+    <column name="udt_catalog" pkey="TRUE" descr="Name of the catalog that contains the ENUM user defined data type" ident="TRUE"/>
     <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the ENUM user defined data type" ident="TRUE"/>
     <column name="udt_name" pkey="TRUE" descr="Name of the ENUM user defined data type" ident="TRUE"/>
     <column name="label" pkey="TRUE"/>
@@ -133,7 +133,7 @@
 
   <table name="_element_types" descr="Array specific attributes for array data types">
     <column name="specific_name" pkey="TRUE" descr="No specific meaning, used as a primary key, and for joining"/>
-    <column name="object_catalog" descr="Name of the catalog that contains the object that uses the array being described"/>
+    <column name="object_catalog" descr="Name of the catalog that contains the object that uses the array being described" ident="TRUE"/>
     <column name="object_schema" descr="Name of the schema that contains the object that uses the array being described" ident="TRUE"/>
     <column name="object_name" descr="Name of the object that uses the array being described" ident="TRUE"/>
     <column name="object_type" descr="The type of the object that uses the array being described TABLE_COL, DOMAIN, UDT_COL, ROUTINE_COL, ROUTINE_PAR"/>
@@ -144,7 +144,7 @@
   </table>
 
   <table name="_domains" descr="List of domains">
-    <column name="domain_catalog" pkey="TRUE" descr="Name of catalog that contains the domain"/>
+    <column name="domain_catalog" pkey="TRUE" descr="Name of catalog that contains the domain" ident="TRUE"/>
     <column name="domain_schema" pkey="TRUE" descr="Name of schema that contains the domain" ident="TRUE"/>
     <column name="domain_name" pkey="TRUE" descr="Name of the domain" ident="TRUE"/>
     <column name="data_type" nullok="TRUE" descr="Data type of the domain (if the domain is an array, then 'array_spec' is set, and this may be NULL)"/>
@@ -152,10 +152,10 @@
     <column name="domain_gtype"/>
     <column name="character_maximum_length" type="gint" nullok="TRUE"/>
     <column name="character_octet_length" type="gint" nullok="TRUE"/>
-    <column name="collation_catalog" nullok="TRUE" descr="Name of catalog that contains the associated collation"/>
+    <column name="collation_catalog" nullok="TRUE" descr="Name of catalog that contains the associated collation" ident="TRUE"/>
     <column name="collation_schema" nullok="TRUE" descr="Name of schema that contains the associated collation" ident="TRUE"/>
     <column name="collation_name" nullok="TRUE" descr="Name of the associated collation" ident="TRUE"/>
-    <column name="character_set_catalog" nullok="TRUE" descr="Name of catalog that contains the associated character set"/>
+    <column name="character_set_catalog" nullok="TRUE" descr="Name of catalog that contains the associated character set" ident="TRUE"/>
     <column name="character_set_schema" nullok="TRUE" descr="Name of schema that contains the associated character set" ident="TRUE"/>
     <column name="character_set_name" nullok="TRUE" descr="Name of the associated character set" ident="TRUE"/>
     <column name="numeric_precision" type="gint" nullok="TRUE"/>
@@ -184,7 +184,7 @@
   </table>
 
   <table name="_tables" descr="List of tables (tables, views or other objects which can contain data)">
-    <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the table"/>
+    <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the table" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the table" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" descr="Name of the table" ident="TRUE"/>
     <column name="table_type" descr="Type of table: BASE TABLE, VIEW, LOCAL TEMPORARY, SYSTEM TABLE, GLOBAL TEMPORARY, ALIAS or SYNONYM"/>
@@ -203,7 +203,7 @@
   </table>
 
   <table name="_views" descr="List of views and their specific information">
-    <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the view"/>
+    <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the view" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the view" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" descr="Name of the view" ident="TRUE"/>
     <column name="view_definition" nullok="TRUE" descr="View as SQL"/>
@@ -217,7 +217,7 @@
   </table>
 
   <table name="_collations" descr="List of collations methods">
-    <column name="collation_catalog" pkey="TRUE"/>
+    <column name="collation_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="collation_schema" pkey="TRUE" ident="TRUE"/>
     <column name="collation_name" pkey="TRUE" ident="TRUE"/>
     <column name="collation_comments" nullok="TRUE"/>
@@ -233,7 +233,7 @@
   </table>
 
   <table name="_character_sets" descr="List of character sets">
-    <column name="character_set_catalog" pkey="TRUE"/>
+    <column name="character_set_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="character_set_schema" pkey="TRUE" ident="TRUE"/>
     <column name="character_set_name" pkey="TRUE" ident="TRUE"/>
     <column name="default_collate_catalog" nullok="TRUE"/>
@@ -257,7 +257,7 @@
   </table>
 
   <table name="_routines" descr="List of functions and stored procedures (note: the primary jey for that table is composed of (specific_catalog, specific_schema, specific_name))">
-    <column name="specific_catalog" pkey="TRUE" descr="Specific name of catalog that contains the routine"/>
+    <column name="specific_catalog" pkey="TRUE" descr="Specific name of catalog that contains the routine" ident="TRUE"/>
     <column name="specific_schema" pkey="TRUE" descr="Specific name of schema that contains the routine" ident="TRUE"/>
     <column name="specific_name" pkey="TRUE" descr="Specific name of the routine (may be mangled for polymorphic routines)"/>
     <column name="routine_catalog" nullok="TRUE" descr="Name of catalog that contains the routine (may be NULL)"/>
@@ -289,11 +289,11 @@
   </table>
 
   <table name="_triggers" descr="List of triggers">
-    <column name="trigger_catalog" pkey="TRUE"/>
+    <column name="trigger_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="trigger_schema" pkey="TRUE" ident="TRUE"/>
     <column name="trigger_name" pkey="TRUE" ident="TRUE"/>
     <column name="event_manipulation" pkey="TRUE" descr="Event that fires the trigger (INSERT, UPDATE, or DELETE)"/>
-    <column name="event_object_catalog" pkey="TRUE" descr="Name of the database that contains the table that the trigger is defined on"/>
+    <column name="event_object_catalog" pkey="TRUE" descr="Name of the database that contains the table that the trigger is defined on" ident="TRUE"/>
     <column name="event_object_schema" pkey="TRUE" descr="Name of the schema that contains the table that the trigger is defined on" ident="TRUE"/>
     <column name="event_object_table" pkey="TRUE" descr="Name of the table that the trigger is defined on" ident="TRUE"/>
 
@@ -318,7 +318,7 @@
   </table>
 
   <table name="_columns" descr="List of columns composing tables">
-    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="column_name" pkey="TRUE" ident="TRUE"/>
@@ -333,10 +333,10 @@
     <column name="numeric_precision" type="gint" nullok="TRUE" descr="If data_type identifies a numeric type, this column contains the precision of the type for this column (the number of significant digits)"/>
     <column name="numeric_scale" type="gint" nullok="TRUE" descr="If data_type identifies an exact numeric type, this column contains the scale of the type for this column (the number of significant digits to the right of the decimal point)"/>
     <column name="datetime_precision" type="gint" nullok="TRUE"/>
-    <column name="character_set_catalog" nullok="TRUE"/>
+    <column name="character_set_catalog" nullok="TRUE" ident="TRUE"/>
     <column name="character_set_schema" nullok="TRUE" ident="TRUE"/>
     <column name="character_set_name" nullok="TRUE" ident="TRUE"/>
-    <column name="collation_catalog" nullok="TRUE"/>
+    <column name="collation_catalog" nullok="TRUE" ident="TRUE"/>
     <column name="collation_schema" nullok="TRUE" ident="TRUE"/>
     <column name="collation_name" nullok="TRUE" ident="TRUE"/>
     <column name="extra" nullok="TRUE" descr="CSV string with: AUTO_INCREMENT"/> <!-- set the gda-enums.h file -->
@@ -368,11 +368,11 @@
   </table>
 
   <table name="_table_constraints" descr="List of constraints applied to tables (Check, primary or foreign key, or unique constraints)">
-    <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint"/>
+    <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint" ident="TRUE"/>
     <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint" ident="TRUE"/>
 
     <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
-    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="constraint_type" descr="CHECK, FOREIGN KEY, PRIMARY KEY or UNIQUE"/>
@@ -387,12 +387,12 @@
   </table>
 
   <table name="_referential_constraints" descr="List of foreign key constraints, along with some specific attributes">
-    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
 
-    <column name="ref_table_catalog"/>
+    <column name="ref_table_catalog" ident="TRUE"/>
     <column name="ref_table_schema" ident="TRUE"/>
     <column name="ref_table_name" ident="TRUE"/>
     <column name="ref_constraint_name" ident="TRUE"/>
@@ -415,7 +415,7 @@
   </table>
 
   <table name="_key_column_usage" descr="List of primary key constraints and the name of the tables' columns involved">
-    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
@@ -436,7 +436,7 @@
   </table>
 
   <table name="_check_column_usage" descr="List of check constraints and the name of the tables' columns involved">
-    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
@@ -456,10 +456,10 @@
   </table>
 
   <table name="_view_column_usage" descr="List of the tables' columns involved in a view">
-    <column name="view_catalog" pkey="TRUE"/>
+    <column name="view_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="view_schema" pkey="TRUE" ident="TRUE"/>
     <column name="view_name" pkey="TRUE" ident="TRUE"/>
-    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="column_name" pkey="TRUE" ident="TRUE"/>
@@ -477,11 +477,11 @@
   </table>
 
   <table name="_domain_constraints" descr="List of constraints applicable to domains">
-    <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint"/>
+    <column name="constraint_catalog" nullok="TRUE" descr="Name of the catalog that contains the constraint" ident="TRUE"/>
     <column name="constraint_schema" nullok="TRUE" descr="Name of the schema that contains the constraint" ident="TRUE"/>
 
     <column name="constraint_name" pkey="TRUE" ident="TRUE"/>
-    <column name="domain_catalog" pkey="TRUE"/>
+    <column name="domain_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="domain_schema" pkey="TRUE" ident="TRUE"/>
     <column name="domain_name" pkey="TRUE" ident="TRUE"/>
 
@@ -500,7 +500,7 @@
   </table>
 
   <table name="_parameters" descr="List of routines' (functions and stored procedures) parameters (may not contain data for some routines which accept any type of parameter)">
-    <column name="specific_catalog" pkey="TRUE"/>
+    <column name="specific_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="specific_schema" pkey="TRUE" ident="TRUE"/>
     <column name="specific_name" pkey="TRUE"/>
     <column name="ordinal_position" type="gint" pkey="TRUE"/>
@@ -524,7 +524,7 @@
   </table>
 
   <table name="_routine_columns" descr="List of routines' (functions and stored procedures) returned values' parts (columns) for routines returning composed values">
-    <column name="specific_catalog" pkey="TRUE"/>
+    <column name="specific_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="specific_schema" pkey="TRUE" ident="TRUE"/>
     <column name="specific_name" pkey="TRUE"/>
     <column name="column_name" pkey="TRUE" ident="TRUE"/>
@@ -547,10 +547,10 @@
   </table>
 
   <table name="_table_indexes" descr="List of tables' indexes which do not relate to primary keys">
-    <column name="index_catalog" nullok="TRUE" descr="Name of the catalog that contains the index"/>
+    <column name="index_catalog" nullok="TRUE" descr="Name of the catalog that contains the index" ident="TRUE"/>
     <column name="index_schema" nullok="TRUE" descr="Name of the schema that contains the index" ident="TRUE"/>
     <column name="index_name" pkey="TRUE" ident="TRUE"/>
-    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="is_unique" type="boolean" descr="" nullok="TRUE"/>
@@ -567,10 +567,10 @@
   </table>
 
   <table name="_index_column_usage" descr="List of the tables' columns involved in an index listed in the _table_indexes table">
-    <column name="index_catalog" nullok="TRUE"/>
+    <column name="index_catalog" nullok="TRUE" ident="TRUE"/>
     <column name="index_schema" nullok="TRUE" ident="TRUE"/>
     <column name="index_name" pkey="TRUE" ident="TRUE"/>
-    <column name="table_catalog" pkey="TRUE"/>
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="column_name" pkey="TRUE" nullok="TRUE" ident="TRUE"/>
