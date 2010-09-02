@@ -1409,7 +1409,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         ust->fields_list = g_slist_append (ust->fields_list, field);
 
 			/* SQL identifier ? */
-#define MAX_IDENT_IN_TABLE 10
+#define MAX_IDENT_IN_TABLE 11
 			xstr = xmlGetProp (cnode, BAD_CAST "ident");
                         if (xstr) {
                                 if ((*xstr == 'T') || (*xstr == 't')) {
