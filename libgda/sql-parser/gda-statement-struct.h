@@ -51,6 +51,10 @@ GdaSqlStatementType          gda_sql_statement_string_to_type (const gchar *type
 
 gboolean                     gda_sql_statement_check_structure (GdaSqlStatement *stmt, GError **error);
 gboolean                     gda_sql_statement_check_validity  (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error);
+gboolean                     gda_sql_statement_check_validity_m (GdaSqlStatement *stmt,
+								 GdaMetaStruct *mstruct,
+								 GError **error);
+
 void                         gda_sql_statement_check_clean     (GdaSqlStatement *stmt);
 gboolean                     gda_sql_statement_normalize       (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error);
 

@@ -355,6 +355,60 @@ gda_sql_statement_check_validity (GdaSqlStatement *stmt, GdaConnection *cnc, GEr
 		return TRUE;
 }
 
+/**
+ * gda_sql_statement_check_validity_m
+ * @stmt: a #GdaSqlStatement pointer
+ * @mstruct: a #GdaMetaStruct object, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * If @mstruct is not %NULL, then checks that all the database objects referenced in the statement i
+ * actually referenced in @mstruct
+ *  (for example the table being updated in a UPDATE statement must exist in the
+ * connection's database for the check to succeed).
+ * This method sets the @stmt-&gt;validity_meta_struct attribute to @mstruct.
+ *
+ * If @mstruct is %NULL, then remove any information from a previous call to this method stored in @stmt. In this case,
+ * the @stmt-&gt;validity_meta_struct attribute is cleared.
+ *
+ * Also note that some parts of @stmt may be modified: for example leading and trailing spaces in aliases or
+ * objects names will be removed.
+ *
+ * Returns: TRUE if no error occurred
+ *
+ * Since: 4.2
+ */
+gboolean
+gda_sql_statement_check_validity_m (GdaSqlStatement *stmt, GdaMetaStruct *mstruct, GError **error)
+{
+	g_return_val_if_fail (stmt, FALSE);
+	g_return_val_if_fail (!mstruct || GDA_IS_META_STRUCT (mstruct), FALSE);
+
+	/* check the structure first */
+	if (!gda_sql_statement_check_structure (stmt, error))
+		return FALSE;
+
+	/* clear any previous setting */
+	gda_sql_statement_check_clean (stmt);
+
+	if (mstruct) {
+		GdaSqlStatementCheckValidityData data;
+		gboolean retval;
+
+		/* prepare data */
+		data.cnc = NULL;
+		data.store = NULL;
+		data.mstruct = g_object_ref (mstruct);
+
+		/* attach the GdaMetaStruct to @stmt */
+		stmt->validity_meta_struct = data.mstruct;
+		retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents),
+						   (GdaSqlForeachFunc) foreach_check_validity, &data, error);
+		return retval;
+	}
+	else
+		return TRUE;
+}
+
 static gboolean
 foreach_check_validity (GdaSqlAnyPart *node, GdaSqlStatementCheckValidityData *data, GError **error)
 {
@@ -515,8 +569,6 @@ gda_sql_field_check_validity (GdaSqlField *field, GdaSqlStatementCheckValidityDa
 
 	if (!field) return TRUE;
 	_gda_sql_field_check_clean (field);
-
-	if (!data->cnc) return TRUE;
 
 	for (any = GDA_SQL_ANY_PART(field)->parent;
 	     any && (any->type != GDA_SQL_ANY_STMT_INSERT) && (any->type != GDA_SQL_ANY_STMT_UPDATE);

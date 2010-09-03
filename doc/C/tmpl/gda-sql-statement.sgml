@@ -142,6 +142,17 @@ Known types of statements
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_sql_statement_check_validity_m ##### -->
+<para>
+
+</para>
+
+@stmt: 
+@mstruct: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_sql_statement_check_clean ##### -->
 <para>
 
