@@ -1376,6 +1376,24 @@ browser_connection_normalize_sql_statement (BrowserConnection *bcnc,
 	return gda_sql_statement_normalize (sqlst, bcnc->priv->cnc, error);
 }
 
+/**
+ * browser_connection_check_sql_statement_validify
+ */
+gboolean
+browser_connection_check_sql_statement_validify (BrowserConnection *bcnc,
+						 GdaSqlStatement *sqlst, GError **error)
+{
+	g_return_val_if_fail (sqlst, FALSE);
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+
+	/* check the structure first */
+        if (!gda_sql_statement_check_structure (sqlst, error))
+                return FALSE;
+
+	return gda_sql_statement_check_validity_m (sqlst, bcnc->priv->mstruct, error);
+}
+
+
 
 /*
  * DOES NOT emit any signal

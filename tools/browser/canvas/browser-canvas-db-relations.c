@@ -612,10 +612,6 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 	goocanvas = BROWSER_CANVAS (canvas)->priv->goocanvas;
 	mtable = (GdaMetaTable *) gda_meta_struct_complement (canvas->priv->mstruct, GDA_META_DB_TABLE,
 							      table_catalog, table_schema, table_name, &lerror);
-	g_print ("%s () mstruct=%p (%s,%s,%s)=>%p\n", __FUNCTION__, canvas->priv->mstruct,
-		 g_value_get_string (table_catalog),
-		 g_value_get_string (table_schema),
-		 g_value_get_string (table_name), mtable);
 	if (mtable) {
 		gdouble x = 0, y = 0;
 		GooCanvasItem *table_item;

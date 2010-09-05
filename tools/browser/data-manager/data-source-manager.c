@@ -47,6 +47,8 @@ static void data_source_manager_class_init (DataSourceManagerClass *klass);
 static void data_source_manager_init (DataSourceManager *mgr);
 static void data_source_manager_dispose (GObject *object);
 
+static void ensure_source_unique_id (DataSourceManager *mgr, DataSource *source);
+
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
@@ -120,10 +122,61 @@ data_source_manager_init (DataSourceManager *mgr)
 	mgr->priv->emit_changes = TRUE;
 }
 
+/*
+ * find_data_source
+ *
+ * Finds a data source which id is @id, exclusing @excl_source if not %NULL
+ */
+static DataSource *
+find_data_source (DataSourceManager *mgr, const gchar *id, DataSource *excl_source)
+{
+	GSList *list;
+	g_return_val_if_fail (id && *id, NULL);
+	for (list = mgr->priv->sources_list; list; list = list->next) {
+		DataSource *source = (DataSource *) list->data;
+		if (excl_source && (source == excl_source))
+			continue;
+		const gchar *sid = data_source_get_id (source);
+		if (!sid) {
+			g_warning ("Data source has no ID!");
+			continue;
+		}
+		if (!strcmp (id, sid))
+			return source;
+	}
+	return NULL;
+}
+
 static void
 source_changed_cb (DataSource *source, DataSourceManager *mgr)
 {
+	ensure_source_unique_id (mgr, source);
 	g_signal_emit (mgr, data_source_manager_signals[SOURCE_CHANGED], 0, source);
+}
+
+static void
+ensure_source_unique_id (DataSourceManager *mgr, DataSource *source)
+{
+	/* make sure the source's ID is unique among @mgr's data sources */
+	DataSource *es;
+	es = find_data_source (mgr, data_source_get_id (source), source);
+	if (es) {
+		gint i;
+		for (i = 1; ; i++) {
+			gchar *tmp;
+			tmp = g_strdup_printf ("%s_%d", data_source_get_id (source), i);
+			if (! find_data_source (mgr, tmp, NULL)) {
+				g_signal_handlers_block_by_func (source,
+								 G_CALLBACK (source_changed_cb), mgr);
+				data_source_set_id (source, tmp);
+				g_signal_handlers_unblock_by_func (source,
+								   G_CALLBACK (source_changed_cb), mgr);
+				g_free (tmp);
+				break;
+			}
+			g_free (tmp);
+		}
+	}
 }
 
 static void
@@ -225,6 +278,8 @@ source_depends_on (DataSource *source1, DataSource *source2)
  * data_source_manager_add_source
  * @mgr:
  * @source:
+ *
+ * @source is referenced by @mgr
  */
 void
 data_source_manager_add_source (DataSourceManager *mgr, DataSource *source)
@@ -237,6 +292,7 @@ data_source_manager_add_source (DataSourceManager *mgr, DataSource *source)
 #ifdef DEBUG_SOURCES_SORT
 	g_print ("Adding source [%s]\n", data_source_get_title (source));
 #endif
+	ensure_source_unique_id (mgr, source);
 	if (! mgr->priv->sources_list)
 		mgr->priv->sources_list = g_slist_append (NULL, g_object_ref (source));
 	else {
@@ -319,7 +375,7 @@ data_source_manager_add_source (DataSourceManager *mgr, DataSource *source)
 void
 data_source_manager_replace_all (DataSourceManager *mgr, const GSList *sources_list)
 {
-	GSList *list;
+	const GSList *list;
 	g_return_if_fail (IS_DATA_SOURCE_MANAGER (mgr));
 
 	mgr->priv->emit_changes = FALSE;

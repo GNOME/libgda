@@ -122,7 +122,8 @@ browser_connection_close (GtkWindow *parent, BrowserConnection *bcnc)
  * @format: printf() style format string
  * @...: arguments for @format
  *
- * Displays a modal error until the user aknowledges it.
+ * Displays an error message until the user aknowledges it. I @parent is a #BrowserWindow, then
+ * the error message is displayed in the window if possible
  */
 void
 browser_show_error (GtkWindow *parent, const gchar *format, ...)
@@ -136,6 +137,12 @@ browser_show_error (GtkWindow *parent, const gchar *format, ...)
         va_start (args, format);
         vsnprintf (sz, sizeof (sz), format, args);
         va_end (args);
+
+	if (BROWSER_IS_WINDOW (parent)) {
+		browser_window_show_notice (BROWSER_WINDOW (parent), GTK_MESSAGE_ERROR,
+					    NULL, sz);
+		return;
+	}
 
         /* create the error message dialog */
 	dialog = gtk_message_dialog_new (parent,
@@ -230,8 +237,8 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 		g_error_free (error);
 	}
 	else
-		browser_window_show_notice (BROWSER_WINDOW (parent),
-					 "show-help", _("Help is being loaded, please wait..."));
+		browser_window_show_notice (BROWSER_WINDOW (parent), GTK_MESSAGE_INFO,
+					    "show-help", _("Help is being loaded, please wait..."));
 
 	g_free (uri);
 }
@@ -342,6 +349,7 @@ browser_get_pixbuf_icon (BrowserIconType type)
 		"gda-browser-query.png",
 		"gda-browser-grid.png",
 		"gda-browser-form.png",
+		"gda-browser-menu-ind.png",
 	};
 
 	if (!array)

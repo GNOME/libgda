@@ -58,10 +58,10 @@ BrowserConnection  *browser_window_get_connection         (BrowserWindow *bwin);
 guint               browser_window_push_status            (BrowserWindow *bwin, const gchar *context,
 							   const gchar *text, gboolean auto_clear);
 void                browser_window_pop_status             (BrowserWindow *bwin, const gchar *context);
-void                browser_window_show_notice            (BrowserWindow *bwin, const gchar *context,
-							   const gchar *text);
-void                browser_window_show_notice_printf     (BrowserWindow *bwin, const gchar *context,
-							   const gchar *format, ...);
+void                browser_window_show_notice            (BrowserWindow *bwin, GtkMessageType type,
+							   const gchar *context, const gchar *text);
+void                browser_window_show_notice_printf     (BrowserWindow *bwin, GtkMessageType type,
+							   const gchar *context, const gchar *format, ...);
 
 void                browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective *bpers,
 							     GtkActionGroup *actions_group,

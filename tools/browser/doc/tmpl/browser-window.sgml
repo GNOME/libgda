@@ -87,6 +87,7 @@ Top level browser window
 </para>
 
 @bwin: 
+@type: 
 @context: 
 @text: 
 
@@ -97,6 +98,7 @@ Top level browser window
 </para>
 
 @bwin: 
+@type: 
 @context: 
 @format: 
 @Varargs: 

@@ -522,8 +522,9 @@ static void statement_executed_cb (BrowserConnection *bcnc,
 				    error->message : _("No detail"));
 	else
 		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
-						"DataInsertQuery",
-						_("Data successfully inserted"));
+						   GTK_MESSAGE_INFO,
+						   "DataInsertQuery",
+						   _("Data successfully inserted"));
 }
 
 static void

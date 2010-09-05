@@ -794,34 +794,6 @@ add_source_clicked_cb (GtkButton *button, DataConsole *dconsole)
 			gtk_get_current_event_time ());
 }
 
-static GtkWidget *
-create_widget (DataConsole *dconsole, GArray *sources_array, GError **error)
-{
-	GtkWidget *sw, *vp, *dwid;
-
-	if (! sources_array) {
-		g_set_error (error, 0, 0,
-			     _("No data source defined"));
-		return NULL;
-	}
-
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
-
-	vp = gtk_viewport_new (NULL, NULL);
-	gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
-	gtk_container_add (GTK_CONTAINER (sw), vp);
-
-	dwid = data_widget_new (sources_array);
-	gtk_container_add (GTK_CONTAINER (vp), dwid);
-	g_object_set_data ((GObject*) sw, "data-widget", dwid);
-
-	gtk_widget_show_all (vp);
-	return sw;
-}
-
 /*
  * UI actions
  */
@@ -843,36 +815,33 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 	pagenb = gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook));
 	if (pagenb == MAIN_PAGE_EDITORS) {
 		/* Get Data sources */
-		GArray *sources_array;
-		GError *lerror = NULL;
-		sources_array = data_source_manager_get_sources_array (dconsole->priv->mgr, &lerror);
-		if (sources_array) {
-			if (dconsole->priv->data) {
-				/* destroy existing data widgets */
-				gtk_widget_destroy (dconsole->priv->data);
-				dconsole->priv->data = NULL;
-			}
+		pagenb = MAIN_PAGE_DATA;
+		if (dconsole->priv->data) {
+			/* destroy existing data widgets */
+			gtk_widget_destroy (dconsole->priv->data);
+			dconsole->priv->data = NULL;
+		}
 
-			GtkWidget *wid;
-			wid = create_widget (dconsole, sources_array, &lerror);
-			data_source_manager_destroy_sources_array (sources_array);
-			if (wid) {
-				dconsole->priv->data = wid;
-				gtk_box_pack_start (GTK_BOX (dconsole->priv->data_box), wid, TRUE, TRUE, 0);
-				gtk_widget_show (wid);
-				pagenb = MAIN_PAGE_DATA;
-			}
-		}
-		if (lerror) {
-			browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dconsole),
-					    lerror && lerror->message ? lerror->message :
-					    _("Error parsing XML specifications"));
-			g_clear_error (&lerror);
-		}
-		if (pagenb == MAIN_PAGE_EDITORS) {
-			dconsole->priv->toggling = TRUE;
-			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
-		}
+		GtkWidget *sw, *vp, *dwid;
+		
+		sw = gtk_scrolled_window_new (NULL, NULL);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
+		
+		vp = gtk_viewport_new (NULL, NULL);
+		gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
+		gtk_container_add (GTK_CONTAINER (sw), vp);
+		
+		dwid = data_widget_new (dconsole->priv->mgr);
+		gtk_container_add (GTK_CONTAINER (vp), dwid);
+		g_object_set_data ((GObject*) sw, "data-widget", dwid);
+		
+		gtk_widget_show_all (vp);
+
+		dconsole->priv->data = sw;
+		gtk_box_pack_start (GTK_BOX (dconsole->priv->data_box), sw, TRUE, TRUE, 0);
+		gtk_widget_show (sw);
 	}
 	else {
 		/* simply change the current page */
@@ -881,9 +850,10 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 
 	if (pagenb == MAIN_PAGE_DATA)
 		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) dconsole)),
-				     "data-manager-exec-mode-switched",
-				     _("Switching to execution mode. Hit the Escape key "
-				       "to return to the compose mode"));
+						   GTK_MESSAGE_INFO,
+						   "data-manager-exec-mode-switched",
+						   _("Switching to execution mode. Hit the Escape key "
+						     "to return to the compose mode"));
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), pagenb);
 }
 

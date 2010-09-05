@@ -913,9 +913,9 @@ window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 {
 	if (gtk_toggle_action_get_active (action)) {
 		gtk_window_fullscreen (GTK_WINDOW (bwin));
-		browser_window_show_notice_printf (bwin,
-						"fullscreen-esc",
-						_("Hit the Escape key to leave the fullscreen mode"));
+		browser_window_show_notice_printf (bwin, GTK_MESSAGE_INFO,
+						   "fullscreen-esc",
+						   _("Hit the Escape key to leave the fullscreen mode"));
 	}
 	else
 		gtk_window_unfullscreen (GTK_WINDOW (bwin));
@@ -1271,7 +1271,7 @@ browser_window_pop_status (BrowserWindow *bwin, const gchar *context)
  * Make @bwin display a notice
  */
 void
-browser_window_show_notice_printf (BrowserWindow *bwin, const gchar *context,
+browser_window_show_notice_printf (BrowserWindow *bwin, GtkMessageType type, const gchar *context,
 				   const gchar *format, ...)
 {
 	va_list args;
@@ -1283,7 +1283,7 @@ browser_window_show_notice_printf (BrowserWindow *bwin, const gchar *context,
         va_start (args, format);
         vsnprintf (sz, sizeof (sz), format, args);
         va_end (args);
-	browser_window_show_notice (bwin, context, sz);
+	browser_window_show_notice (bwin, type, context, sz);
 }
 
 
@@ -1318,12 +1318,12 @@ hide_notice_toggled_cb (GtkToggleButton *toggle, gchar *context)
  * Makes @bwin display a notice
  */
 void
-browser_window_show_notice (BrowserWindow *bwin, const gchar *context, const gchar *text)
+browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gchar *context, const gchar *text)
 {
 	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
 	gboolean hide = FALSE;
 
-	if (context) {
+	if ((type != GTK_MESSAGE_ERROR) && context) {
 		if (!hidden_contexts)
 			hidden_contexts = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 		hide = GPOINTER_TO_INT (g_hash_table_lookup (hidden_contexts, context));
@@ -1344,7 +1344,7 @@ browser_window_show_notice (BrowserWindow *bwin, const gchar *context, const gch
 	}
 	else {
 		GtkWidget *cb = NULL;
-		if (context) {
+		if (context && (type == GTK_MESSAGE_INFO)) {
 			cb = gtk_check_button_new_with_label (_("Don't show this message again"));
 			g_signal_connect_data (cb, "toggled",
 					       G_CALLBACK (hide_notice_toggled_cb), g_strdup (context),
@@ -1356,7 +1356,7 @@ browser_window_show_notice (BrowserWindow *bwin, const gchar *context, const gch
 		GtkWidget *ibar, *content_area, *label;
 		
 		ibar = gtk_info_bar_new_with_buttons (GTK_STOCK_CLOSE, 1, NULL);
-		gtk_info_bar_set_message_type (GTK_INFO_BAR (ibar), GTK_MESSAGE_INFO);
+		gtk_info_bar_set_message_type (GTK_INFO_BAR (ibar), type);
 		label = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (label), text);
 		gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
@@ -1511,7 +1511,7 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 				       current_pdata->factory->menu_shortcut);
 
 			
-	browser_window_show_notice (bwin, "Perspective change", tmp);
+	browser_window_show_notice (bwin, GTK_MESSAGE_INFO, "Perspective change", tmp);
 	g_free (tmp);
 
 	return bpers;

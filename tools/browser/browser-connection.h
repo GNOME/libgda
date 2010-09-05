@@ -94,6 +94,8 @@ GObject            *browser_connection_execution_get_result   (BrowserConnection
 							       GdaSet **last_insert_row, GError **error);
 gboolean            browser_connection_normalize_sql_statement(BrowserConnection *bcnc,
 							       GdaSqlStatement *sqlst, GError **error);
+gboolean            browser_connection_check_sql_statement_validify (BrowserConnection *bcnc,
+								     GdaSqlStatement *sqlst, GError **error);
 /**
  * BrowserConnectionExecuteCallback
  *
