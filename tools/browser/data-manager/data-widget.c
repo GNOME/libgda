@@ -42,6 +42,7 @@ typedef struct {
 	gint data_widget_page;
 	gint error_widget_page;
 	BrowserSpinner *spinner;
+	guint spinner_show_timer_id;
 	GtkWidget *data_widget;
 	GtkWidget *error_widget;
 	GdaSet *export_data;
@@ -720,6 +721,11 @@ data_widget_new (DataSourceManager *mgr)
 static void
 data_part_free (DataPart *part, GSList *all_parts)
 {
+	if (part->spinner_show_timer_id) {
+		g_source_remove (part->spinner_show_timer_id);
+		part->spinner_show_timer_id = 0;
+	}
+
 	if (all_parts) {
 		GSList *list;
 		for (list = all_parts; list; list = list->next) {
@@ -761,11 +767,22 @@ data_part_find (DataWidget *dwid, DataSource *source)
 	return NULL;
 }
 
-static void
-source_exec_started_cb (DataSource *source, DataPart *part)
+static gboolean
+source_exec_started_cb_timeout (DataPart *part)
 {
 	gtk_notebook_set_current_page (part->nb, 0);
 	browser_spinner_start (part->spinner);
+	part->spinner_show_timer_id = 0;
+	return FALSE; /* remove timer */
+}
+
+static void
+source_exec_started_cb (DataSource *source, DataPart *part)
+{
+	if (! part->spinner_show_timer_id)
+		part->spinner_show_timer_id = g_timeout_add (300,
+							     (GSourceFunc) source_exec_started_cb_timeout,
+							     part);
 }
 
 static void data_part_selection_changed_cb (GdauiDataSelector *gdauidataselector, DataPart *part);
@@ -774,94 +791,99 @@ static void
 source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
 {
 	GtkWidget *wid;
-	browser_spinner_stop (part->spinner);
+	if (part->spinner_show_timer_id) {
+		g_source_remove (part->spinner_show_timer_id);
+		part->spinner_show_timer_id = 0;
+	}
+	else
+		browser_spinner_stop (part->spinner);
 	
 #ifdef GDA_DEBUG_NO
-	g_print ("==== Execution of source [%s] finished\n", data_source_get_title (part->source));*/
+	g_print ("==== Execution of source [%s] finished\n", data_source_get_title (part->source));
 #endif
-		if (error) {
-			gchar *tmp;
-			tmp = g_markup_printf_escaped ("\n<b>Error:\n</b>%s",
-						       error->message ? error->message : _("Error: no detail"));
-			if (! part->error_widget) {
-				part->error_widget = gtk_label_new ("");
-				gtk_misc_set_alignment (GTK_MISC (part->error_widget), 0., 0.);
-				part->error_widget_page = gtk_notebook_append_page (part->nb, part->error_widget,
-										    NULL);
-				gtk_widget_show (part->error_widget);
-			}
-			gtk_label_set_markup (GTK_LABEL (part->error_widget), tmp);
-			g_free (tmp);
-			gtk_notebook_set_current_page (part->nb, part->error_widget_page);
-			return;
+	if (error) {
+		gchar *tmp;
+		tmp = g_markup_printf_escaped ("\n<b>Error:\n</b>%s",
+					       error->message ? error->message : _("Error: no detail"));
+		if (! part->error_widget) {
+			part->error_widget = gtk_label_new ("");
+			gtk_misc_set_alignment (GTK_MISC (part->error_widget), 0., 0.);
+			part->error_widget_page = gtk_notebook_append_page (part->nb, part->error_widget,
+									    NULL);
+			gtk_widget_show (part->error_widget);
 		}
+		gtk_label_set_markup (GTK_LABEL (part->error_widget), tmp);
+		g_free (tmp);
+		gtk_notebook_set_current_page (part->nb, part->error_widget_page);
+		return;
+	}
 	
-		if (! part->data_widget) {
-			GtkWidget *cwid;
-			BrowserConnection *bcnc;
-			bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) part->dwid));
-			cwid = (GtkWidget*) data_source_create_grid (part->source);
-			ui_formgrid_handle_user_prefs (UI_FORMGRID (cwid), bcnc,
-						       data_source_get_statement (part->source));
-
-			wid = (GtkWidget*) ui_formgrid_get_grid_widget (UI_FORMGRID (cwid));
-			part->data_widget = wid;
-			part->data_widget_page = gtk_notebook_append_page (part->nb, cwid, NULL);
-			gtk_widget_show (cwid);
+	if (! part->data_widget) {
+		GtkWidget *cwid;
+		BrowserConnection *bcnc;
+		bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) part->dwid));
+		cwid = (GtkWidget*) data_source_create_grid (part->source);
+		ui_formgrid_handle_user_prefs (UI_FORMGRID (cwid), bcnc,
+					       data_source_get_statement (part->source));
+		
+		wid = (GtkWidget*) ui_formgrid_get_grid_widget (UI_FORMGRID (cwid));
+		part->data_widget = wid;
+		part->data_widget_page = gtk_notebook_append_page (part->nb, cwid, NULL);
+		gtk_widget_show (cwid);
 #ifdef GDA_DEBUG_NO
-			g_print ("Creating data widget for source [%s]\n",
-				 data_source_get_title (part->source));
+		g_print ("Creating data widget for source [%s]\n",
+			 data_source_get_title (part->source));
 #endif
-
-			/* compute part->export_data */
-			GArray *export_names;
-			export_names = data_source_get_export_names (part->source);
-			if (export_names && (export_names->len > 0)) {
-				GSList *holders = NULL;
-				GdaDataModel *model;
-				GHashTable *export_columns;
-				gint i;
-				GdaDataModelIter *iter;
-
-				iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid));
-				g_object_get (wid, "model", &model, NULL);
-
-				export_columns = data_source_get_export_columns (part->source);
-				for (i = 0; i < export_names->len; i++) {
-					gint col;
-					GdaHolder *bindto;
-					col = GPOINTER_TO_INT (g_hash_table_lookup (export_columns,
-										    g_array_index (export_names,
-												   gchar*, i))) - 1;
-					bindto = gda_data_model_iter_get_holder_for_field (iter, col);
-					if (bindto) {
-						GdaHolder *holder;
-						holder = gda_holder_copy (bindto);
-						g_object_set ((GObject*) holder, "id",
-							      g_array_index (export_names, gchar*, i), NULL);
-						holders = g_slist_prepend (holders, holder);
-#ifdef DEBUG_NO
-						g_print ("HOLDER [%s::%s]\n",
-							 gda_holder_get_id (holder),
-							 g_type_name (gda_holder_get_g_type (holder)));
-#endif
-						g_assert (gda_holder_set_bind (holder, bindto, NULL));
-					}
-				}
+		
+		/* compute part->export_data */
+		GArray *export_names;
+		export_names = data_source_get_export_names (part->source);
+		if (export_names && (export_names->len > 0)) {
+			GSList *holders = NULL;
+			GdaDataModel *model;
+			GHashTable *export_columns;
+			gint i;
+			GdaDataModelIter *iter;
 			
-				g_object_unref (model);
-				if (holders) {
-					part->export_data = gda_set_new (holders);
-					g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-					g_slist_free (holders);
-
-					g_signal_connect (wid, "selection-changed",
-							  G_CALLBACK (data_part_selection_changed_cb), part);
+			iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid));
+			g_object_get (wid, "model", &model, NULL);
+			
+			export_columns = data_source_get_export_columns (part->source);
+			for (i = 0; i < export_names->len; i++) {
+				gint col;
+				GdaHolder *bindto;
+				col = GPOINTER_TO_INT (g_hash_table_lookup (export_columns,
+									    g_array_index (export_names,
+											   gchar*, i))) - 1;
+				bindto = gda_data_model_iter_get_holder_for_field (iter, col);
+				if (bindto) {
+					GdaHolder *holder;
+					holder = gda_holder_copy (bindto);
+					g_object_set ((GObject*) holder, "id",
+						      g_array_index (export_names, gchar*, i), NULL);
+					holders = g_slist_prepend (holders, holder);
+#ifdef DEBUG_NO
+					g_print ("HOLDER [%s::%s]\n",
+						 gda_holder_get_id (holder),
+						 g_type_name (gda_holder_get_g_type (holder)));
+#endif
+					g_assert (gda_holder_set_bind (holder, bindto, NULL));
 				}
 			}
+			
+			g_object_unref (model);
+			if (holders) {
+				part->export_data = gda_set_new (holders);
+				g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
+				g_slist_free (holders);
+				
+				g_signal_connect (wid, "selection-changed",
+						  G_CALLBACK (data_part_selection_changed_cb), part);
+			}
 		}
-		gtk_notebook_set_current_page (part->nb, part->data_widget_page);
-		compute_sources_dependencies (part);
+	}
+	gtk_notebook_set_current_page (part->nb, part->data_widget_page);
+	compute_sources_dependencies (part);
 }
 
 static void
