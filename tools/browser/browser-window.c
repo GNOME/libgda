@@ -1298,6 +1298,12 @@ info_bar_response_cb (GtkInfoBar *ibar, gint response, BrowserWindow *bwin)
 
 /* hash table to remain which context notices have to be hidden: key=context, value=GINT_TO_POINTER (1) */
 static GHashTable *hidden_contexts = NULL;
+static void
+hidden_contexts_foreach_save (const gchar *context, gint value, xmlNodePtr root)
+{
+	xmlNodePtr node;
+	node = xmlNewChild (root, NULL, BAD_CAST "hide-notice", BAD_CAST context);
+}
 
 static void
 hide_notice_toggled_cb (GtkToggleButton *toggle, gchar *context)
@@ -1307,7 +1313,80 @@ hide_notice_toggled_cb (GtkToggleButton *toggle, gchar *context)
 		g_hash_table_insert (hidden_contexts, g_strdup (context), GINT_TO_POINTER (TRUE));
 	else
 		g_hash_table_remove (hidden_contexts, context);
+
+	/* save config */
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	xmlChar *xml_contents;
+	gint size;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewNode (NULL, BAD_CAST "gda-browser-preferences");
+	xmlDocSetRootElement (doc, root);
+	g_hash_table_foreach (hidden_contexts, (GHFunc) hidden_contexts_foreach_save, root);
+	xmlDocDumpFormatMemory (doc, &xml_contents, &size, 1);
+	xmlFreeDoc (doc);
+
+	/* save to disk */
+	gchar *confdir, *conffile = NULL;
+	GError *lerror = NULL;
+	confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_user_config_dir(), "gda-browser", NULL);
+	if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
+		if (g_mkdir_with_parents (confdir, 0700)) {
+			g_warning ("Can't create configuration directory '%s' to save preferences.",
+				   confdir);
+			goto out;
+		}
+	}
+	conffile = g_build_filename (confdir, "preferences.xml", NULL);
+	if (! g_file_set_contents (conffile, (gchar *) xml_contents, size, &lerror)) {
+		g_warning ("Can't save preferences file '%s': %s", conffile,
+			   lerror && lerror->message ? lerror->message : _("No detail"));
+		g_clear_error (&lerror);
+	}
+
+ out:
+	xmlFree (xml_contents);
+	g_free (confdir);
+	g_free (conffile);
 }
+
+static void
+load_preferences (void)
+{
+	/* load preferences */
+	xmlDocPtr doc;
+	xmlNodePtr root, node;
+	gchar *conffile;
+	conffile = g_build_path (G_DIR_SEPARATOR_S, g_get_user_config_dir(),
+				 "gda-browser", "preferences.xml", NULL);
+	if (!g_file_test (conffile, G_FILE_TEST_EXISTS)) {
+		g_free (conffile);
+		return;
+	}
+
+	doc = xmlParseFile (conffile);
+	if (!doc) {
+		g_warning ("Error loading preferences from file '%s'", conffile);
+		g_free (conffile);
+		return;
+	}
+	g_free (conffile);
+
+	root = xmlDocGetRootElement (doc);
+	for (node = root->children; node; node = node->next) {
+		xmlChar *contents;
+		if (strcmp ((gchar *) node->name, "hide-notice"))
+			continue;
+		contents = xmlNodeGetContent (node);
+		if (contents) {
+			g_hash_table_insert (hidden_contexts, g_strdup ((gchar*) contents),
+					     GINT_TO_POINTER (TRUE));
+			xmlFree (contents);
+		}
+	}
+	xmlFreeDoc (doc);
+}
+
 
 /**
  * browser_window_show_notice
@@ -1324,8 +1403,10 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 	gboolean hide = FALSE;
 
 	if ((type != GTK_MESSAGE_ERROR) && context) {
-		if (!hidden_contexts)
+		if (!hidden_contexts) {
 			hidden_contexts = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+			load_preferences ();
+		}
 		hide = GPOINTER_TO_INT (g_hash_table_lookup (hidden_contexts, context));
 	}
 
