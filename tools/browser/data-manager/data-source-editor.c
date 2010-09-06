@@ -105,6 +105,12 @@ data_source_editor_init (DataSourceEditor *editor)
 	g_signal_connect (editor->priv->attributes, "holder-changed",
 			  G_CALLBACK (attribute_changed_cb), editor);
 
+	GtkWidget *form;
+	form = gdaui_basic_form_new (editor->priv->attributes);
+	editor->priv->form = GDAUI_BASIC_FORM (form);
+	gtk_box_pack_start (GTK_BOX (editor), form, TRUE, TRUE, 0);
+	gtk_widget_show (form);
+
 	GdaHolder *holder;
 	GValue *value;
 	holder = gda_set_get_holder (editor->priv->attributes, "id");
@@ -112,6 +118,7 @@ data_source_editor_init (DataSourceEditor *editor)
 		      "description",
 		      _("Data source's ID\n"
 			"(as referenced by other data sources)"), NULL);
+	gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (form), holder, FALSE);
 
 	holder = gda_set_get_holder (editor->priv->attributes, "descr");
 	g_object_set ((GObject*) holder, "name", _("Description"),
@@ -128,12 +135,6 @@ data_source_editor_init (DataSourceEditor *editor)
 	value = gda_value_new_from_string ("text:PROG_LANG=gda-sql", G_TYPE_STRING);
         gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
         gda_value_free (value);
-
-	GtkWidget *form;
-	form = gdaui_basic_form_new (editor->priv->attributes);
-	editor->priv->form = GDAUI_BASIC_FORM (form);
-	gtk_box_pack_start (GTK_BOX (editor), form, TRUE, TRUE, 0);
-	gtk_widget_show (form);
 }
 
 static void

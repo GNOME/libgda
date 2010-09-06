@@ -773,7 +773,7 @@ data_source_set_params (DataSource *source, GdaSet *params)
 			GdaHolder *bind = NULL;
 			if (params)
 				bind = gda_set_get_holder (params, gda_holder_get_id (holder));
-			if (gda_holder_set_bind (holder, bind, NULL))
+			if ((holder != bind) && gda_holder_set_bind (holder, bind, NULL))
 				bound = TRUE;
 		}
 	}
