@@ -87,6 +87,8 @@ struct _BrowserWindowPrivate {
 	PerspectiveData   *current_perspective;
 	guint              ui_manager_merge_id; /* for current perspective */
 
+	GtkWidget         *toolbar;
+	gboolean           toolbar_shown;
 	GtkWidget         *spinner;
 	GtkUIManager      *ui_manager;
 	GtkActionGroup    *agroup;
@@ -107,6 +109,8 @@ struct _BrowserWindowPrivate {
 	guint              cnc_statusbar_context;
 
 	gboolean           fullscreen;
+	gulong             fullscreen_motion_sig_id;
+	guint              fullscreen_timer_id;
 };
 
 GType
@@ -172,6 +176,8 @@ browser_window_init (BrowserWindow *bwin)
 	bwin->priv->cnc_removed_sigid = 0;
 	bwin->priv->updating_transaction_status = FALSE;
 	bwin->priv->fullscreen = FALSE;
+	bwin->priv->fullscreen_motion_sig_id = 0;
+	bwin->priv->fullscreen_timer_id = 0;
 }
 
 static void
@@ -189,6 +195,12 @@ browser_window_dispose (GObject *object)
 		for (list = connections; list; list = list->next)
 			connection_removed_cb (browser_core_get(), BROWSER_CONNECTION (list->data), bwin);
 		g_slist_free (connections);
+
+		if (bwin->priv->fullscreen_timer_id)
+			g_source_remove (bwin->priv->fullscreen_timer_id);
+
+		if (bwin->priv->fullscreen_motion_sig_id)
+			g_signal_handler_disconnect (bwin, bwin->priv->fullscreen_motion_sig_id);
 
 		if (bwin->priv->cnc_added_sigid > 0)
 			g_signal_handler_disconnect (browser_core_get (), bwin->priv->cnc_added_sigid);
@@ -428,6 +440,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 #endif
 
         toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
+	bwin->priv->toolbar = toolbar;
+	bwin->priv->toolbar_shown = TRUE;
         gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, TRUE, 0);
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
         gtk_widget_show (toolbar);
@@ -908,6 +922,48 @@ window_close_cb (GtkAction *action, BrowserWindow *bwin)
 	delete_event (NULL, NULL, bwin);
 }
 
+static gboolean
+toolbar_hide_timeout_cb (BrowserWindow *bwin)
+{
+	gtk_widget_hide (bwin->priv->toolbar);
+	bwin->priv->toolbar_shown = FALSE;
+
+	/* remove timer */
+	bwin->priv->fullscreen_timer_id = 0;
+	return FALSE;
+}
+
+#define BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD 5
+#define BWIN_WINDOW_FULLSCREEN_POPUP_TIMER 1
+
+static gboolean
+fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
+{
+	BrowserWindow *bwin = BROWSER_WINDOW (widget);
+#if GTK_CHECK_VERSION(2,14,0)
+	if (gtk_widget_get_window (widget) != event->window)
+		return FALSE;
+#else
+	if (widget->window != event->window)
+		return FALSE;
+#endif
+
+	if (event->y < BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD) {
+		gtk_widget_show (bwin->priv->toolbar);
+		bwin->priv->toolbar_shown = TRUE;
+	}
+
+	if (bwin->priv->toolbar_shown) {
+		/* reset toolbar hiding timer */
+		if (bwin->priv->fullscreen_timer_id)
+			g_source_remove (bwin->priv->fullscreen_timer_id);
+		bwin->priv->fullscreen_timer_id = g_timeout_add_seconds (BWIN_WINDOW_FULLSCREEN_POPUP_TIMER,
+									 (GSourceFunc) toolbar_hide_timeout_cb,
+									 bwin);
+	}
+	return FALSE;
+}
+
 static void
 window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 {
@@ -916,9 +972,25 @@ window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 		browser_window_show_notice_printf (bwin, GTK_MESSAGE_INFO,
 						   "fullscreen-esc",
 						   _("Hit the Escape key to leave the fullscreen mode"));
+		gtk_widget_hide (bwin->priv->toolbar);
+		bwin->priv->toolbar_shown = FALSE;
+		bwin->priv->fullscreen_motion_sig_id = g_signal_connect (bwin, "motion-notify-event",
+									 G_CALLBACK (fullscreen_motion_notify_cb),
+									 NULL);
 	}
-	else
+	else {
 		gtk_window_unfullscreen (GTK_WINDOW (bwin));
+		g_signal_handler_disconnect (bwin, bwin->priv->fullscreen_motion_sig_id);
+		bwin->priv->fullscreen_motion_sig_id = 0;
+
+		gtk_widget_show (bwin->priv->toolbar);
+		bwin->priv->toolbar_shown = TRUE;
+
+		if (bwin->priv->fullscreen_timer_id) {
+			g_source_remove (bwin->priv->fullscreen_timer_id);
+			bwin->priv->fullscreen_timer_id = 0;
+		}
+	}
 }
 
 static gboolean
