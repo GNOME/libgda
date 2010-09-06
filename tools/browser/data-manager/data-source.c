@@ -29,6 +29,7 @@
 #include "../common/ui-formgrid.h"
 
 #include "data-source.h"
+#define DEFAULT_DATA_SOURCE_NAME "DataSource"
 
 /* signals */
 enum {
@@ -48,12 +49,38 @@ static void data_source_init (DataSource *source);
 static void data_source_dispose (GObject *object);
 
 
+static void update_export_information (DataSource *source);
 static void compute_stmt_and_params (DataSource *source);
 static void compute_import_params (DataSource *source);
 
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+
+typedef struct {
+	gchar *dep_id;
+	gchar *dep_table;
+} Dependency;
+
+static void
+dependency_free (Dependency *dep)
+{
+	g_free (dep->dep_id);
+	g_free (dep->dep_table);
+	g_free (dep);
+}
+static Dependency *
+dependency_find (GSList *dep_list, const gchar *id, const gchar *table)
+{
+	GSList *list;
+	for (list = dep_list; list; list = list->next) {
+		Dependency *dep = (Dependency*) list->data;
+		if (strcmp (dep->dep_id, id) || strcmp (dep->dep_table, table))
+			continue;
+		return dep;
+	}
+	return NULL;
+}
 
 struct _DataSourcePrivate {
 	BrowserConnection *bcnc;
@@ -72,7 +99,7 @@ struct _DataSourcePrivate {
 
 	gchar             *tablename;
 	GdaSqlBuilder     *builder;
-	GSList            *dependencies; /* list of strings of table name or ID */
+	GSList            *dependencies; /* list of Dependency pointers */
 
 	GdaStatement      *stmt;
 	GdaSet            *ext_params; /* "free" parameters */
@@ -151,6 +178,7 @@ static void
 data_source_init (DataSource *source)
 {
 	source->priv = g_new0 (DataSourcePrivate, 1);
+	source->priv->id = g_strdup (DEFAULT_DATA_SOURCE_NAME);
 	source->priv->bcnc = NULL;
 	source->priv->source_type = DATA_SOURCE_UNKNOWN;
 	source->priv->need_rerun = FALSE;
@@ -209,7 +237,7 @@ data_source_reset (DataSource *source)
 	}
 	
 	if (source->priv->dependencies) {
-		g_slist_foreach (source->priv->dependencies, (GFunc) g_free, NULL);
+		g_slist_foreach (source->priv->dependencies, (GFunc) dependency_free, NULL);
 		g_slist_free (source->priv->dependencies);
 		source->priv->dependencies = NULL;
 	}
@@ -275,7 +303,6 @@ data_source_new (BrowserConnection *bcnc, DataSourceType type)
 	source = DATA_SOURCE (g_object_new (DATA_SOURCE_TYPE, NULL));
 	source->priv->bcnc = g_object_ref (bcnc);
 	source->priv->source_type = type;
-	source->priv->id = g_strdup ("NewSource");
 
 	return source;
 }
@@ -454,7 +481,7 @@ data_source_add_dependendency (DataSource *source, const gchar *table,
 	g_return_val_if_fail (source->priv->source_type == DATA_SOURCE_TABLE, FALSE);
 	g_return_val_if_fail (source->priv->builder, FALSE);
 
-	if (g_slist_find (source->priv->dependencies, id ? id : table))
+	if (dependency_find (source->priv->dependencies, id ? id : table, table))
 		return TRUE;
 
 	GdaMetaTable *mtable, *mlinked;
@@ -568,7 +595,10 @@ data_source_add_dependendency (DataSource *source, const gchar *table,
 		gda_sql_builder_set_where (source->priv->builder, andid);
 	}
 
-	source->priv->dependencies = g_slist_append (source->priv->dependencies, g_strdup (id ? id : table));
+	Dependency *dep = g_new0 (Dependency, 1);
+	dep->dep_id = g_strdup (id ? id : table);
+	dep->dep_table = g_strdup (table);
+	source->priv->dependencies = g_slist_append (source->priv->dependencies, dep);
 
 	compute_stmt_and_params (source);
 	return TRUE;
@@ -586,7 +616,7 @@ data_source_to_xml_node (DataSource *source)
 	switch (source->priv->source_type) {
 	case DATA_SOURCE_TABLE:
 		node = xmlNewNode (NULL, BAD_CAST "table");
-		if (source->priv->id && g_strcmp0 (source->priv->id, source->priv->tablename))
+		if (g_strcmp0 (source->priv->id, source->priv->tablename))
 			xmlSetProp (node, BAD_CAST "id", BAD_CAST source->priv->id);
 		if (source->priv->title && g_strcmp0 (source->priv->title, source->priv->tablename))
 			xmlSetProp (node, BAD_CAST "title", BAD_CAST source->priv->title);
@@ -596,17 +626,20 @@ data_source_to_xml_node (DataSource *source)
 		if (source->priv->dependencies) {
 			GSList *list;
 			for (list = source->priv->dependencies; list; list = list->next) {
+				Dependency *dep = (Dependency*) list->data;
 				xmlNodePtr depnode;
 				depnode = xmlNewChild (node, NULL, BAD_CAST "depend", NULL);
 				xmlSetProp (depnode, BAD_CAST "foreign_key_table",
-					    BAD_CAST (list->data));
+					    BAD_CAST (dep->dep_table));
+				if (strcmp (dep->dep_id, dep->dep_table))
+					xmlSetProp (depnode, BAD_CAST "id",
+						    BAD_CAST (dep->dep_id));
 			}
 		}
 		break;
 	case DATA_SOURCE_SELECT: {
 		node = xmlNewNode (NULL, BAD_CAST "query");
-		if (source->priv->id)
-			xmlSetProp (node, BAD_CAST "id", BAD_CAST source->priv->id);
+		xmlSetProp (node, BAD_CAST "id", BAD_CAST source->priv->id);
 		if (source->priv->title)
 			xmlSetProp (node, BAD_CAST "title", BAD_CAST source->priv->title);
 
@@ -916,7 +949,7 @@ data_source_create_grid (DataSource *source)
 /**
  * data_source_set_id
  * @source: a #DataSource
- * @id: the new source's ID
+ * @id: the new source's ID, not %NULL
  *
  * @source MUST NOT be executed when calling this method.
  */
@@ -925,12 +958,11 @@ data_source_set_id (DataSource *source, const gchar * id)
 {
 	g_return_if_fail (IS_DATA_SOURCE (source));
 	g_return_if_fail (! data_source_execution_going_on (source));
+	g_return_if_fail (id && *id);
 
 	g_free (source->priv->id);
-	if (id)
-		source->priv->id = g_strdup (id);
-	else
-		source->priv->id = NULL;
+	source->priv->id = g_strdup (id);
+	update_export_information (source);
 	g_signal_emit (source, data_source_signals [CHANGED], 0);
 }
 
@@ -983,10 +1015,75 @@ data_source_get_title (DataSource *source)
 		return source->priv->title;
 	else if (source->priv->impl_title)
 		return source->priv->impl_title;
-	else if (source->priv->id)
-		return source->priv->id;
 	else
-		return _("No name");
+		return source->priv->id;
+}
+
+static void
+update_export_information (DataSource *source)
+{
+	g_assert (source->priv->id);
+
+	/* clear previous information */
+	if (source->priv->export_names) {
+		g_array_free (source->priv->export_names, TRUE);
+		source->priv->export_names = NULL;
+	}
+	if (source->priv->export_columns) {
+		g_hash_table_destroy (source->priv->export_columns);
+		source->priv->export_columns = NULL;
+	}
+
+	if (! source->priv->stmt)
+		return;
+
+	/* Get GdaSqlStatement */
+	GdaSqlStatement *sqlst;
+	g_object_get ((GObject*) source->priv->stmt, "structure", &sqlst, NULL);
+	if (browser_connection_check_sql_statement_validify (source->priv->bcnc, sqlst, NULL))
+		g_object_set ((GObject*) source->priv->stmt, "structure", sqlst, NULL);
+	if (! sqlst)
+		return;
+
+	/* compute exported data */
+	if (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) {
+		GdaSqlStatementSelect *selst;
+		selst = (GdaSqlStatementSelect*) sqlst->contents;
+		GSList *list;
+		gint i;
+		for (i = 0, list = selst->expr_list; list; i++, list = list->next) {
+			gchar *tmp;
+			if (! source->priv->export_names)
+				source->priv->export_names = g_array_new (FALSE, FALSE,
+									  sizeof (gchar*));
+			if (! source->priv->export_columns)
+				source->priv->export_columns =
+					g_hash_table_new_full (g_str_hash, g_str_equal,
+							       g_free, NULL);
+			
+			tmp = g_strdup_printf ("%s@%d", source->priv->id, i+1);
+			g_array_append_val (source->priv->export_names, tmp);
+			g_hash_table_insert (source->priv->export_columns, tmp,
+					     GINT_TO_POINTER (i + 1));
+#ifdef DEBUG_SOURCE
+			g_print ("\tEXPORT [%s]\n", tmp);
+#endif
+			
+			GdaSqlSelectField *sf = (GdaSqlSelectField *) list->data;
+			if (sf->validity_meta_table_column) {
+				tmp = g_strdup_printf ("%s@%s", source->priv->id,
+						       sf->validity_meta_table_column->column_name);
+				g_array_append_val (source->priv->export_names, tmp);
+				g_hash_table_insert (source->priv->export_columns, tmp,
+						     GINT_TO_POINTER (i + 1));
+#ifdef DEBUG_SOURCE
+				g_print ("\tEXPORT [%s]\n", tmp);
+#endif
+			}
+		}
+	}
+
+	gda_sql_statement_free (sqlst);
 }
 
 /**
@@ -1013,16 +1110,18 @@ data_source_set_table (DataSource *source, const gchar *table, GError **error)
 	source->priv->source_type = DATA_SOURCE_TABLE;
 	source->priv->tablename = g_strdup (table);
 
+	if (! strcmp (source->priv->id, DEFAULT_DATA_SOURCE_NAME)) {
+		g_free (source->priv->id);
+		source->priv->id = g_strdup (table);
+	}
+
 	g_free (source->priv->impl_title);
 	source->priv->impl_title = g_strdup_printf (_("Contents of '%s'"), table);
 
-	if (! source->priv->id)
-		source->priv->id = g_strdup ((gchar*) table);
-
 	/* build statement */
-	GSList *list;
 	GdaSqlBuilder *b;
 	gint i;
+	GSList *list;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	source->priv->builder = b;
@@ -1035,7 +1134,6 @@ data_source_set_table (DataSource *source, const gchar *table, GError **error)
 					  gda_sql_builder_add_expr (b, NULL,
 								    G_TYPE_INT, DEFAULT_DATA_SELECT_LIMIT),
 					  0);
-
 	for (i = 0, list = mtable->columns; list; i++, list = list->next) {
 		GdaMetaTableColumn *mcol;
 		mcol = GDA_META_TABLE_COLUMN (list->data);
@@ -1048,42 +1146,13 @@ data_source_set_table (DataSource *source, const gchar *table, GError **error)
 										 mcol->column_name),
 							 FALSE, NULL);
 		}
-
-		/* export value */
-		gchar *tmp;
-		if (source->priv->id)
-			tmp = g_strdup_printf ("%s@%s", source->priv->id, mcol->column_name);
-		else
-			tmp = g_strdup_printf ("%s@%s", table, mcol->column_name);
-		if (! source->priv->export_names)
-			source->priv->export_names = g_array_new (FALSE, FALSE,
-								  sizeof (gchar*));
-		if (! source->priv->export_columns)
-			source->priv->export_columns =
-				g_hash_table_new_full (g_str_hash, g_str_equal,
-						       g_free, NULL);
-		g_array_append_val (source->priv->export_names, tmp);
-		g_hash_table_insert (source->priv->export_columns, tmp,
-				     GINT_TO_POINTER (i + 1));
-#ifdef DEBUG_SOURCE
-		g_print ("\tEXPORT [%s]\n", tmp);
-#endif
-
-		if (source->priv->id)
-			tmp = g_strdup_printf ("%s@%d", source->priv->id, i + 1);
-		else
-			tmp = g_strdup_printf ("%s@%d", table, i + 1);
-		g_array_append_val (source->priv->export_names, tmp);
-		g_hash_table_insert (source->priv->export_columns, tmp,
-				     GINT_TO_POINTER (i + 1));
-#ifdef DEBUG_SOURCE
-		g_print ("\tEXPORT [%s]\n", tmp);
-#endif
 	}
 
 	/* compute statement & parameters */
 	compute_stmt_and_params (source);
 	/*g_print ("SQL [%s]\n", gda_statement_to_sql (source->priv->stmt, NULL, NULL));*/
+
+	update_export_information (source);
 
 #ifdef DEBUG_SOURCE
 	g_print ("\n");
@@ -1132,47 +1201,9 @@ data_source_set_query (DataSource *source, const gchar *sql, GError **warning)
 	g_object_get ((GObject*) source->priv->stmt, "structure", &sqlst, NULL);
 	if (browser_connection_normalize_sql_statement (source->priv->bcnc, sqlst, NULL))
 		g_object_set ((GObject*) source->priv->stmt, "structure", sqlst, NULL);
-	
-	/* compute export data */
-	if (source->priv->id) {
-		if (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) {
-			GdaSqlStatementSelect *selst;
-			selst = (GdaSqlStatementSelect*) sqlst->contents;
-			GSList *list;
-			gint i;
-			for (i = 0, list = selst->expr_list; list; i++, list = list->next) {
-				gchar *tmp;
-				if (! source->priv->export_names)
-					source->priv->export_names = g_array_new (FALSE, FALSE,
-										  sizeof (gchar*));
-				if (! source->priv->export_columns)
-					source->priv->export_columns =
-						g_hash_table_new_full (g_str_hash, g_str_equal,
-								       g_free, NULL);
-				
-				tmp = g_strdup_printf ("%s@%d", source->priv->id, i+1);
-				g_array_append_val (source->priv->export_names, tmp);
-				g_hash_table_insert (source->priv->export_columns, tmp,
-						     GINT_TO_POINTER (i + 1));
-#ifdef DEBUG_SOURCE
-				g_print ("\tEXPORT [%s]\n", tmp);
-#endif
-				
-				GdaSqlSelectField *sf = (GdaSqlSelectField *) list->data;
-				if (sf->validity_meta_table_column) {
-					tmp = g_strdup_printf ("%s@%s", source->priv->id,
-							       sf->validity_meta_table_column->column_name);
-					g_array_append_val (source->priv->export_names, tmp);
-					g_hash_table_insert (source->priv->export_columns, tmp,
-							     GINT_TO_POINTER (i + 1));
-#ifdef DEBUG_SOURCE
-					g_print ("\tEXPORT [%s]\n", tmp);
-#endif
-				}
-			}
-		}
-	}
 	gda_sql_statement_free (sqlst);
+	
+	update_export_information (source);
 	
 	/* compute parameters */
 	source->priv->need_rerun = FALSE;
@@ -1194,10 +1225,12 @@ compute_stmt_and_params (DataSource *source)
 	source->priv->stmt = gda_sql_builder_get_statement (source->priv->builder, NULL);
 	compute_import_params (source);
 
+#ifdef DEBUG_SOURCE
 	gchar *sql;
 	sql = gda_statement_to_sql (source->priv->stmt, NULL, NULL);
 	g_print ("[%s]\n", sql);
 	g_free (sql);
+#endif
 }
 
 static void

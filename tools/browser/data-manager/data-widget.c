@@ -68,7 +68,7 @@ struct _DataWidgetPrivate {
 static void data_widget_class_init (DataWidgetClass *klass);
 static void data_widget_init       (DataWidget *dwid, DataWidgetClass *klass);
 static void data_widget_dispose    (GObject *object);
-
+static void compute_sources_dependencies (DataPart *part);
 static void mgr_list_changed_cb (DataSourceManager *mgr, DataWidget *dwid);
 
 static GObjectClass *parent_class = NULL;
@@ -329,7 +329,6 @@ add_data_source_mitem_activated_cb (GtkMenuItem *mitem, DataPart *part)
 	if (source) {
 		data_source_manager_add_source (part->dwid->priv->mgr, source);
 		g_object_unref (source);
-		g_print ("Source Added!\n");
 	}
 	else {
 		BrowserWindow *bwin;
@@ -596,8 +595,10 @@ update_layout (DataWidget *dwid)
 			gtk_box_pack_start (GTK_BOX (new_contents), part->top, TRUE, TRUE, 0);
 			g_object_unref ((GObject*) part->top);
 			newparts_list = g_slist_prepend (newparts_list, part);
-			if (!reused)
+			if (!reused) {
+				compute_sources_dependencies (part);
 				data_source_execute (source, NULL);
+			}
 		}
 		else {
 			GSList *paned_list;
@@ -614,8 +615,10 @@ update_layout (DataWidget *dwid)
 				pack_in_paned_list (paned_list, subarray->len, i, part->top);
 				g_object_unref ((GObject*) part->top);
 				newparts_list = g_slist_prepend (newparts_list, part);
-				if (!reused)
+				if (!reused) {
+					compute_sources_dependencies (part);
 					data_source_execute (source, NULL);
+				}
 			}
 			g_slist_free (paned_list);
 		}
@@ -639,8 +642,10 @@ update_layout (DataWidget *dwid)
 				pack_in_paned_list (top_paned_list, sources_array->len, j, part->top);
 				g_object_unref ((GObject*) part->top);
 				newparts_list = g_slist_prepend (newparts_list, part);
-				if (!reused)
+				if (!reused) {
+					compute_sources_dependencies (part);
 					data_source_execute (source, NULL);
+				}
 			}
 			else {
 				GSList *paned_list;
@@ -656,8 +661,10 @@ update_layout (DataWidget *dwid)
 					pack_in_paned_list (paned_list, subarray->len, i, part->top);
 					g_object_unref ((GObject*) part->top);
 					newparts_list = g_slist_prepend (newparts_list, part);
-					if (!reused)
+					if (!reused) {
+						compute_sources_dependencies (part);
 						data_source_execute (source, NULL);
+					}
 				}
 				g_slist_free (paned_list);
 			}
@@ -786,7 +793,6 @@ source_exec_started_cb (DataSource *source, DataPart *part)
 }
 
 static void data_part_selection_changed_cb (GdauiDataSelector *gdauidataselector, DataPart *part);
-static void compute_sources_dependencies (DataPart *part);
 static void
 source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
 {
