@@ -100,6 +100,7 @@ static void pack_entries_in_table (GdauiBasicForm *form);
 static void pack_entries_in_xml_layout (GdauiBasicForm *form, xmlNodePtr form_node);
 static void unpack_entries (GdauiBasicForm *form);
 static void destroy_entries (GdauiBasicForm *form);
+static gchar *create_text_label_for_sentry (SingleEntry *sentry, gchar **out_title);
 
 static void gdaui_basic_form_show_entry_actions (GdauiBasicForm *form, gboolean show_actions);
 static void gdaui_basic_form_set_entries_auto_default (GdauiBasicForm *form, gboolean auto_default);
@@ -446,7 +447,33 @@ paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param,
 			gdaui_basic_form_entry_set_visible (form, param, !sentry->hidden);
 		}
 		else
-			paramlist_public_data_changed_cb (form->priv->set_info, form);	
+			paramlist_public_data_changed_cb (form->priv->set_info, form);
+	}
+	else if (!strcmp (att_name, GDA_ATTRIBUTE_NAME) ||
+		 !strcmp (att_name, GDA_ATTRIBUTE_DESCRIPTION)) {
+		if (sentry) {
+			gchar *str, *title;
+			str = create_text_label_for_sentry (sentry, &title);
+			gtk_label_set_text (GTK_LABEL (sentry->label), str);
+			g_free (str);
+			g_free (sentry->label_title);
+			sentry->label_title = title;
+			
+			if (! sentry->group->group->nodes_source) {
+				g_object_get (G_OBJECT (param), "description", &title, NULL);
+				if (title && *title)
+					gtk_widget_set_tooltip_text (sentry->label, title);
+				g_free (title);
+			}
+			else {
+				title = g_object_get_data (G_OBJECT (sentry->group->group->nodes_source->data_model),
+							   "descr");
+				if (title && *title)
+					gtk_widget_set_tooltip_text (sentry->label, title);
+			}
+		}
+		else
+			paramlist_public_data_changed_cb (form->priv->set_info, form);
 	}
 }
 
@@ -679,6 +706,59 @@ destroy_entries (GdauiBasicForm *form)
 	}
 }
 
+static gchar *
+create_text_label_for_sentry (SingleEntry *sentry, gchar **out_title)
+{
+	gchar *label = NULL;
+	g_assert (out_title);
+	if (! sentry->group->group->nodes_source) {
+		g_object_get (G_OBJECT (sentry->single_param), "name", out_title, NULL);
+		if (!*out_title)
+			*out_title = g_strdup (_("Value"));
+		label = g_strdup_printf ("%s:", *out_title);
+		/*
+		g_object_get (G_OBJECT (param), "description", &title, NULL);
+		if (title && *title)
+			gtk_widget_set_tooltip_text (sentry->label, title);
+		g_free (title);
+		*/
+
+	}
+	else {
+		gchar *label;
+		GSList *params;
+		gchar *title = NULL;
+
+		label = g_object_get_data (G_OBJECT (sentry->group->group->nodes_source->data_model), "name");
+		if (label)
+			title = g_strdup (label);
+		else {
+			GString *tstring = NULL;
+			for (params = sentry->group->group->nodes; params; params = params->next) {
+				g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
+					      "name", &title, NULL);
+				if (title) {
+					if (tstring) 
+						g_string_append (tstring, ",\n");
+					else
+						tstring = g_string_new ("");
+					g_string_append (tstring, title);
+				}
+			}
+			if (tstring)
+				title = g_string_free (tstring, FALSE);
+		}
+
+		if (!title)
+			title = g_strdup (_("Value"));
+
+		label = g_strdup_printf ("%s:", title);
+		*out_title = title;
+	}
+
+	return label;
+}
+
 static void
 create_entry_widget (SingleEntry *sentry)
 {
@@ -737,7 +817,7 @@ create_entry_widget (SingleEntry *sentry)
 
 		param = GDA_HOLDER (GDA_SET_NODE (group->group->nodes->data)->holder);
 		sentry->single_param = param;
-			
+		
 		val = gda_holder_get_value (param);
 		default_val = gda_holder_get_default_value (param);
 		nnul = gda_holder_get_not_null (param);
@@ -800,10 +880,7 @@ create_entry_widget (SingleEntry *sentry)
 		/* label */
 		gchar *title;
 		gchar *str;
-		g_object_get (G_OBJECT (param), "name", &title, NULL);
-		if (!title)
-			title = g_strdup (_("Value"));
-		str = g_strdup_printf ("%s:", title);
+		str = create_text_label_for_sentry (sentry, &title);
 		sentry->label = gtk_label_new (str);
 		g_free (str);
 		g_object_ref_sink (sentry->label);
@@ -847,32 +924,8 @@ create_entry_widget (SingleEntry *sentry)
 		/* label */
 		gchar *title = NULL;
 		gchar *str;
-		GSList *params;
 
-		str = g_object_get_data (G_OBJECT (group->group->nodes_source->data_model), "name");
-		if (str)
-			title = g_strdup (str);
-		else {
-			GString *tstring = NULL;
-			for (params = sentry->group->group->nodes; params; params = params->next) {
-				g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
-					      "name", &title, NULL);
-				if (title) {
-					if (tstring) 
-						g_string_append (tstring, ",\n");
-					else
-						tstring = g_string_new ("");
-					g_string_append (tstring, title);
-				}
-			}
-			if (tstring)
-				title = g_string_free (tstring, FALSE);
-		}
-
-		if (!title)
-			title = g_strdup (_("Value"));
-
-		str = g_strdup_printf ("%s:", title);
+		str = create_text_label_for_sentry (sentry, &title);
 		sentry->label = gtk_label_new (str);
 		g_free (str);
 		g_object_ref_sink (sentry->label);
