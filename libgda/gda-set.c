@@ -977,9 +977,8 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
 						      G_CALLBACK (att_holder_changed_cb), set);
 	}
-	if (gda_holder_get_g_type (holder) == GDA_TYPE_NULL)
-		g_signal_handlers_disconnect_by_func (holder,
-						      G_CALLBACK (holder_notify_cb), set);
+	g_signal_handlers_disconnect_by_func (holder,
+					      G_CALLBACK (holder_notify_cb), set);
 
 	/* now destroy the GdaSetNode and the GdaSetSource if necessary */
 	node = gda_set_get_node (set, holder);
@@ -1255,10 +1254,30 @@ holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
 {
 	GType gtype;
 	gtype = gda_holder_get_g_type (holder);
-	g_assert (gtype != GDA_TYPE_NULL);
-	g_signal_handlers_disconnect_by_func (holder,
-					      G_CALLBACK (holder_notify_cb), dataset);
-	g_signal_emit (dataset, gda_set_signals[HOLDER_TYPE_SET], 0, holder);
+	if (!strcmp (pspec->name, "g-type")) {
+		g_assert (gtype != GDA_TYPE_NULL);
+		g_signal_emit (dataset, gda_set_signals[HOLDER_TYPE_SET], 0, holder);
+	}
+	else if (!strcmp (pspec->name, "name")) {
+#ifdef GDA_DEBUG_signal
+	g_print (">> 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
+		       GDA_ATTRIBUTE_NAME, gda_holder_get_attribute (holder, GDA_ATTRIBUTE_NAME));
+#ifdef GDA_DEBUG_signal
+	g_print ("<< 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	}
+	else if (!strcmp (pspec->name, "description")) {
+#ifdef GDA_DEBUG_signal
+	g_print (">> 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
+		       GDA_ATTRIBUTE_DESCRIPTION, gda_holder_get_attribute (holder, GDA_ATTRIBUTE_DESCRIPTION));
+#ifdef GDA_DEBUG_signal
+	g_print ("<< 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	}
 }
 
 static gboolean
@@ -1300,7 +1319,10 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 		if (gda_holder_get_g_type (holder) == GDA_TYPE_NULL)
 			g_signal_connect (G_OBJECT (holder), "notify::g-type",
 					  G_CALLBACK (holder_notify_cb), set);
-
+		g_signal_connect (G_OBJECT (holder), "notify::name",
+				  G_CALLBACK (holder_notify_cb), set);
+		g_signal_connect (G_OBJECT (holder), "notify::description",
+				  G_CALLBACK (holder_notify_cb), set);
 		return TRUE;
 	}
 	else if (similar == holder)

@@ -59,6 +59,7 @@ struct _GdaHolderClass
 	GError                  *(*validate_change)  (GdaHolder *holder, const GValue *new_value);
 	void                     (*att_changed)      (GdaHolder *holder, const gchar *att_name, const GValue *att_value);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
