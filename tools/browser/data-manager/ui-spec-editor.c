@@ -145,7 +145,7 @@ ui_spec_editor_init (UiSpecEditor *sped, UiSpecEditorClass *klass)
 	
 	GtkWidget *vbox;
 	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_paned_add1 (GTK_PANED (hpaned), vbox);
+	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 
 	GtkWidget *label;
 	gchar *str;
@@ -165,7 +165,7 @@ ui_spec_editor_init (UiSpecEditor *sped, UiSpecEditorClass *klass)
 
 	sped->priv->sources_tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (sped->priv->sources_model));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (sped->priv->sources_tree), FALSE);
-	gtk_widget_set_size_request (sped->priv->sources_tree, 120, -1);
+	gtk_widget_set_size_request (sped->priv->sources_tree, 170, -1);
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
@@ -198,7 +198,7 @@ ui_spec_editor_init (UiSpecEditor *sped, UiSpecEditorClass *klass)
 	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
 
 	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_paned_add2 (GTK_PANED (hpaned), vbox);
+	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 
 	label = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("Selected data source's properties:"));

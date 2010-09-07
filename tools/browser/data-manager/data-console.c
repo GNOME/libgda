@@ -734,6 +734,16 @@ add_source_mitem_activated_cb (GtkMenuItem *mitem, DataConsole *dconsole)
 	g_object_unref (source);
 }
 
+static gint
+dbo_sort (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
+{
+	gint res;
+	res = g_strcmp0 (dbo1->obj_schema, dbo2->obj_schema);
+	if (res)
+		return - res;
+	return g_strcmp0 (dbo1->obj_name, dbo2->obj_name);
+}
+
 static void
 add_source_clicked_cb (GtkButton *button, DataConsole *dconsole)
 {
@@ -753,7 +763,7 @@ add_source_clicked_cb (GtkButton *button, DataConsole *dconsole)
 		return;
 	}
 
-	GtkWidget *menu, *mitem;
+	GtkWidget *menu, *mitem, *submenu = NULL;
 	menu = gtk_menu_new ();
 	mitem = gtk_menu_item_new_with_label (_("Data source from query"));
 	g_signal_connect (mitem, "activate",
@@ -764,7 +774,11 @@ add_source_clicked_cb (GtkButton *button, DataConsole *dconsole)
 	if (mstruct) {
 		gboolean sep_added = FALSE;
 		GSList *dbo_list, *list;
+		gchar *current_schema = NULL;
+
 		dbo_list = gda_meta_struct_get_all_db_objects (mstruct);
+		list = g_slist_sort (dbo_list, (GCompareFunc) dbo_sort);
+		dbo_list = list;
 		for (list = dbo_list; list; list = list->next) {
 			GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
 			gchar *str;
@@ -776,16 +790,40 @@ add_source_clicked_cb (GtkButton *button, DataConsole *dconsole)
 				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				sep_added = TRUE;
 			}
-			str = g_strdup_printf (_("For table: %s"), dbo->obj_short_name);
+
+			if (!strcmp (dbo->obj_short_name, dbo->obj_full_name)) {
+				gboolean schema_changed = TRUE;
+				if (!current_schema)
+					current_schema = g_strdup (dbo->obj_schema);
+				else if (strcmp (current_schema, dbo->obj_schema)) {
+					g_free (current_schema);
+					current_schema = g_strdup (dbo->obj_schema);
+				}
+				else
+					schema_changed = FALSE;
+
+				if (schema_changed) {
+					str = g_strdup_printf (_("In schema %s"), current_schema);
+					mitem = gtk_menu_item_new_with_label (str);
+					gtk_widget_show (mitem);
+					g_free (str);
+					gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+					submenu = gtk_menu_new ();
+					gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+				}
+			}
+
+			str = g_strdup_printf (_("For table: %s"), dbo->obj_name);
 			mitem = gtk_menu_item_new_with_label (str);
 			g_object_set_data_full ((GObject*) mitem, "_table",
 						g_strdup (dbo->obj_short_name), g_free);
 			g_signal_connect (mitem, "activate",
 					  G_CALLBACK (add_source_mitem_activated_cb), dconsole);
 			gtk_widget_show (mitem);
-			gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);			
+			gtk_menu_shell_append (GTK_MENU_SHELL (submenu ? submenu : menu), mitem);
 		}
 		g_slist_free (dbo_list);
+		g_free (current_schema);
 	}
 	dconsole->priv->add_source_menu_index = (gpointer) mstruct;
 	dconsole->priv->add_source_menu = menu;
