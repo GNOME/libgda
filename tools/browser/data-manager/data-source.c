@@ -900,7 +900,7 @@ data_source_set_params (DataSource *source, GdaSet *params)
 /**
  * data_source_get_export_names
  *
- * Returns: an array of strings, or %NULL
+ * Returns: an array of strings (don't modify) or %NULL
  */
 GArray *
 data_source_get_export_names (DataSource *source)

@@ -388,7 +388,7 @@ data_console_new (BrowserConnection *bcnc)
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (editor_clear_clicked_cb), dconsole);
 
-	button = browser_make_small_button (FALSE, _("Add data source"), GTK_STOCK_ADD,
+	button = browser_make_small_button (FALSE, _("Add"), GTK_STOCK_ADD,
 					    _("Add a new data source"));
 	dconsole->priv->add_source_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
@@ -718,7 +718,6 @@ add_source_mitem_activated_cb (GtkMenuItem *mitem, DataConsole *dconsole)
 	GSList *list;
 
 	table = (gchar*) g_object_get_data ((GObject*) mitem, "_table");
-	g_print ("Add data source for [%s]\n", table);
 
 	source = data_source_new (dconsole->priv->bcnc, DATA_SOURCE_UNKNOWN);
 	list = (GSList*) data_source_manager_get_sources (dconsole->priv->mgr);

@@ -255,6 +255,9 @@ source_depends_on (DataSource *source1, DataSource *source2)
 	GSList *holders;
 	GHashTable *export_columns;
 	export_columns = data_source_get_export_columns (source2);
+	if (!export_columns)
+		return FALSE;
+
 	for (holders = import->holders; holders; holders = holders->next) {
 		GdaHolder *holder = (GdaHolder*) holders->data;
 		if (GPOINTER_TO_INT (g_hash_table_lookup (export_columns, gda_holder_get_id (holder))) >= 1) {

@@ -66,7 +66,7 @@
   <list>
     <item><p><gui>Reset</gui>: resets the XML editor to a default XML template, only available when the XML
     view is currently displayed</p></item>
-    <item><p><gui>Add data source</gui>: displays a popup menu with an entry per table to quickly add
+    <item><p><gui>Add</gui>: displays a popup menu with an entry per table to quickly add
     the whole contents of a table as a data source, only available when the UI
     editor is currently displayed</p></item>
     <item><p><gui>Variables</gui>: shows/hide the <link xref="variables-syntax">variables</link> panel where you can give values to the variables
