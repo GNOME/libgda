@@ -42,8 +42,8 @@
 #define MAIN_PAGE_EDITORS 0
 #define MAIN_PAGE_DATA 1
 
-#define EDITOR_PAGE_XML 0
-#define EDITOR_PAGE_UI 1
+#define EDITOR_PAGE_XML 1
+#define EDITOR_PAGE_UI 0
 
 typedef enum {
 	LAYOUT_HORIZ,
@@ -365,15 +365,15 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (nb), FALSE);
 	dconsole->priv->editors_notebook = nb;
 
-	dconsole->priv->xml_sped = xml_spec_editor_new (dconsole->priv->mgr);
-	gtk_widget_show (dconsole->priv->xml_sped);
-	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
-				  dconsole->priv->xml_sped, NULL);
-
 	dconsole->priv->ui_sped = ui_spec_editor_new (dconsole->priv->mgr);
 	gtk_widget_show (dconsole->priv->ui_sped);
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
 				  dconsole->priv->ui_sped, NULL);
+
+	dconsole->priv->xml_sped = xml_spec_editor_new (dconsole->priv->mgr);
+	gtk_widget_show (dconsole->priv->xml_sped);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
+				  dconsole->priv->xml_sped, NULL);
 
 	/* buttons */
 	GtkWidget *bbox, *button;

@@ -71,8 +71,10 @@ const gchar        *data_source_get_title           (DataSource *source);
 /* Data source as table API */
 gboolean            data_source_set_table           (DataSource *source, const gchar *table, GError **error);
 const gchar        *data_source_get_table           (DataSource *source);
-gboolean            data_source_add_dependendency   (DataSource *source, const gchar *table,
-						     const char *id, GError **error);
+gboolean            data_source_add_dependency      (DataSource *source, const gchar *table,
+						     const char *id,
+						     gint col_name_size, const gchar **col_names,
+						     GError **error);
 
 /* Data source as SQL query API */
 void                data_source_set_query           (DataSource *source, const gchar *sql, GError **warning);

@@ -547,6 +547,11 @@ compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean
 			    BAD_CAST GDA_META_DB_OBJECT (table)->obj_short_name);
 
 		xmlSetProp (snode, BAD_CAST "id", BAD_CAST data_source_get_id (part->source));
+
+		gint i;
+		for (i = 0; i < fkey->cols_nb; i++)
+			xmlNewChild (snode, NULL, BAD_CAST "column", BAD_CAST (fkey->fk_names_array[i]));
+
 		*out_sourcespec = node;
 		return g_string_free (string, FALSE);
 	}

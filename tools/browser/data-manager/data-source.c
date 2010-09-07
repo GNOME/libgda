@@ -30,6 +30,7 @@
 
 #include "data-source.h"
 #define DEFAULT_DATA_SOURCE_NAME "DataSource"
+#define DEPENDENCY_SEPARATOR "<|>"
 
 /* signals */
 enum {
@@ -60,6 +61,7 @@ static GObjectClass  *parent_class = NULL;
 typedef struct {
 	gchar *dep_id;
 	gchar *dep_table;
+	gchar *dep_columns; /* column names, separated by a |, sorted */
 } Dependency;
 
 static void
@@ -67,18 +69,61 @@ dependency_free (Dependency *dep)
 {
 	g_free (dep->dep_id);
 	g_free (dep->dep_table);
+	g_free (dep->dep_columns);
 	g_free (dep);
 }
+
+/*
+ * converts an array of column names into a single string in the format:
+ * <colname>[SEP<colname>...] where SEP is DEPENDENCY_SEPARATOR
+ * 
+ * Returns: a new string, never %NULL
+ */
+static gchar *
+column_names_to_string (gint size, const gchar **colnames)
+{
+	if (!colnames)
+		return g_strdup ("");
+
+	GString *string = NULL;
+	GArray *colsarray;
+	gint i;
+	colsarray = g_array_new (FALSE, FALSE, sizeof (gchar*));
+	for (i = 0; i < size; i++)
+		g_array_append_val (colsarray, colnames[i]);
+	g_array_sort (colsarray, (GCompareFunc) g_strcmp0);
+	for (i = 0; i < size; i++) {
+		gchar *tmp;
+		tmp = g_array_index (colsarray, gchar *, i);
+		if (!string)
+			string = g_string_new (tmp);
+		else {
+			g_string_append (string, DEPENDENCY_SEPARATOR);
+			g_string_append (string, tmp);
+		}
+	}
+	g_array_free (colsarray, TRUE);
+	return g_string_free (string, FALSE);
+}
+
 static Dependency *
-dependency_find (GSList *dep_list, const gchar *id, const gchar *table)
+dependency_find (GSList *dep_list, const gchar *id, const gchar *table, gint size, const gchar **colnames)
 {
 	GSList *list;
+	gchar *colsstring = NULL;
 	for (list = dep_list; list; list = list->next) {
 		Dependency *dep = (Dependency*) list->data;
 		if (strcmp (dep->dep_id, id) || strcmp (dep->dep_table, table))
 			continue;
-		return dep;
+
+		if (!colsstring)
+			colsstring = column_names_to_string (size, colnames);
+		if (!strcmp (colsstring, dep->dep_columns)) {
+			g_free (colsstring);
+			return dep;
+		}
 	}
+	g_free (colsstring);
 	return NULL;
 }
 
@@ -446,17 +491,42 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 	for (subnode = node->children; subnode; subnode = subnode->next) {
 		if (!strcmp ((gchar*)subnode->name, "depend")) {
 			xmlChar *fk_table, *id;
+			GArray *cols_array = NULL;
+			xmlNodePtr chnode;
 			
 			fk_table = xmlGetProp (subnode, BAD_CAST "foreign_key_table");
 			id = xmlGetProp (subnode, BAD_CAST "id");
+			for (chnode = subnode->children; chnode; chnode = chnode->next) {
+				xmlChar *colname;
+				if (strcmp ((gchar*)chnode->name, "column"))
+					continue;
+				colname = xmlNodeGetContent (chnode);
+				if (colname) {
+					if (! cols_array)
+						cols_array = g_array_new (FALSE, FALSE, sizeof (gchar*));
+					g_array_append_val (cols_array, colname);
+				}
+			}
 
 			if (fk_table &&
-			    ! data_source_add_dependendency (source, (gchar *) fk_table, (gchar*) id, error))
+			    ! data_source_add_dependency (source, (gchar *) fk_table, (gchar*) id,
+							  cols_array ? cols_array->len : 0,
+							  (const gchar **) (cols_array ? cols_array->data : NULL),
+							  error))
 				retval = FALSE;
 			if (fk_table)
 				xmlFree (fk_table);
 			if (id)
 				xmlFree (id);
+			if (cols_array) {
+				gint i;
+				for (i = 0; i < cols_array->len; i++) {
+					xmlChar *colname;
+					colname = g_array_index (cols_array, xmlChar*, i);
+					xmlFree (colname);
+				}
+				g_array_free (cols_array, TRUE);
+			}
 			break;
 		}
 	}
@@ -465,23 +535,27 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 }
 
 /**
- * data_source_add_dependendency
+ * data_source_add_dependency
  * @source: a #DataSource
  * @table: the name of the referenced table
  * @id: the ID of the referenced data source, or %NULL if its ID is the same as the table name
+ * @col_name_size: the size of @col_names
+ * @col_names: names of the FK columns involved in the foreign key, or %NULL
+ * @error: a place to store errors, or %NULL
  *
  * Adds a dependency on the @table table, only for DATA_SOURCE_TABLE sources
  */
 gboolean
-data_source_add_dependendency (DataSource *source, const gchar *table,
-			       const char *id, GError **error)
+data_source_add_dependency (DataSource *source, const gchar *table,
+			    const char *id, gint col_name_size, const gchar **col_names,
+			    GError **error)
 {
 	g_return_val_if_fail (IS_DATA_SOURCE (source), FALSE);
 	g_return_val_if_fail (table && *table, FALSE);
 	g_return_val_if_fail (source->priv->source_type == DATA_SOURCE_TABLE, FALSE);
 	g_return_val_if_fail (source->priv->builder, FALSE);
 
-	if (dependency_find (source->priv->dependencies, id ? id : table, table))
+	if (dependency_find (source->priv->dependencies, id ? id : table, table, col_name_size, col_names))
 		return TRUE;
 
 	GdaMetaTable *mtable, *mlinked;
@@ -500,7 +574,22 @@ data_source_add_dependendency (DataSource *source, const gchar *table,
 	for (list = mtable->fk_list; list; list = list->next) {
 		if (GDA_META_TABLE_FOREIGN_KEY (list->data)->depend_on == GDA_META_DB_OBJECT (mlinked)) {
 			fk = GDA_META_TABLE_FOREIGN_KEY (list->data);
-			break;
+			if (col_names && (col_name_size == fk->cols_nb)) {
+				gint i;
+				for (i = 0; i < col_name_size; i++) {
+					gint j;
+					for (j = 0; j < col_name_size; j++) {
+						if (!strcmp (col_names [i], fk->fk_names_array [j]))
+							break;
+					}
+					if (j == col_name_size) {
+						fk = NULL; /* not this FK */
+						break;
+					}
+				}
+			}
+			if (fk)
+				break;
 		}
 	}
 	if (!fk) {
@@ -508,7 +597,23 @@ data_source_add_dependendency (DataSource *source, const gchar *table,
 			if (GDA_META_TABLE_FOREIGN_KEY (list->data)->depend_on == GDA_META_DB_OBJECT (mtable)) {
 				fk = GDA_META_TABLE_FOREIGN_KEY (list->data);
 				reverse = TRUE;
-				break;
+				if (col_names && (col_name_size == fk->cols_nb)) {
+					gint i;
+					for (i = 0; i < col_name_size; i++) {
+						gint j;
+						for (j = 0; j < col_name_size; j++) {
+							if (!strcmp (col_names [i],
+								     fk->fk_names_array [j]))
+								break;
+						}
+						if (j == col_name_size) {
+							fk = NULL; /* not this FK */
+							break;
+						}
+					}
+				}
+				if (fk)
+					break;
 			}
 		}
 	}
@@ -598,6 +703,7 @@ data_source_add_dependendency (DataSource *source, const gchar *table,
 	Dependency *dep = g_new0 (Dependency, 1);
 	dep->dep_id = g_strdup (id ? id : table);
 	dep->dep_table = g_strdup (table);
+	dep->dep_columns = column_names_to_string (col_name_size, col_names);
 	source->priv->dependencies = g_slist_append (source->priv->dependencies, dep);
 
 	compute_stmt_and_params (source);
@@ -631,9 +737,15 @@ data_source_to_xml_node (DataSource *source)
 				depnode = xmlNewChild (node, NULL, BAD_CAST "depend", NULL);
 				xmlSetProp (depnode, BAD_CAST "foreign_key_table",
 					    BAD_CAST (dep->dep_table));
-				if (strcmp (dep->dep_id, dep->dep_table))
-					xmlSetProp (depnode, BAD_CAST "id",
-						    BAD_CAST (dep->dep_id));
+				xmlSetProp (depnode, BAD_CAST "id",
+					    BAD_CAST (dep->dep_id));
+
+				gchar **array;
+				gint i;
+				array = g_strsplit (dep->dep_columns, DEPENDENCY_SEPARATOR, 0);
+				for (i = 0; array[i]; i++)
+					xmlNewChild (depnode, NULL, BAD_CAST "column", BAD_CAST (array[i]));
+				g_strfreev (array);
 			}
 		}
 		break;
