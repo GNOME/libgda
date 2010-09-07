@@ -87,8 +87,10 @@ struct _BrowserWindowPrivate {
 	PerspectiveData   *current_perspective;
 	guint              ui_manager_merge_id; /* for current perspective */
 
+	GtkWidget         *menubar;
 	GtkWidget         *toolbar;
 	gboolean           toolbar_shown;
+	gboolean           cursor_in_toolbar;
 	GtkWidget         *spinner;
 	GtkUIManager      *ui_manager;
 	GtkActionGroup    *agroup;
@@ -432,6 +434,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	gtk_window_add_accel_group (GTK_WINDOW (bwin), accel_group);
 
         menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
+	bwin->priv->menubar = menubar;
 #ifdef HAVE_MAC_INTEGRATION
 	gtk_osxapplication_set_menu_bar (theApp, GTK_MENU_SHELL (menubar));
 #else
@@ -925,12 +928,18 @@ window_close_cb (GtkAction *action, BrowserWindow *bwin)
 static gboolean
 toolbar_hide_timeout_cb (BrowserWindow *bwin)
 {
-	gtk_widget_hide (bwin->priv->toolbar);
-	bwin->priv->toolbar_shown = FALSE;
-
-	/* remove timer */
-	bwin->priv->fullscreen_timer_id = 0;
-	return FALSE;
+	if (!bwin->priv->cursor_in_toolbar) {
+		gtk_widget_hide (bwin->priv->toolbar);
+		gtk_widget_hide (bwin->priv->menubar);
+		bwin->priv->toolbar_shown = FALSE;
+		
+		/* remove timer */
+		bwin->priv->fullscreen_timer_id = 0;
+		return FALSE;
+	}
+	else
+		/* keep timer */
+		return TRUE;
 }
 
 #define BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD 5
@@ -950,6 +959,7 @@ fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, gpointer 
 
 	if (event->y < BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD) {
 		gtk_widget_show (bwin->priv->toolbar);
+		gtk_widget_show (bwin->priv->menubar);
 		bwin->priv->toolbar_shown = TRUE;
 	}
 
@@ -964,6 +974,20 @@ fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, gpointer 
 	return FALSE;
 }
 
+gboolean
+toolbar_enter_notify_cb (GtkWidget *widget, GdkEventCrossing *event, BrowserWindow *bwin)
+{
+	bwin->priv->cursor_in_toolbar = TRUE;
+	return FALSE;
+}
+
+gboolean
+toolbar_leave_notify_cb (GtkWidget *widget, GdkEventCrossing *event, BrowserWindow *bwin)
+{
+	bwin->priv->cursor_in_toolbar = FALSE;
+	return FALSE;
+}
+
 static void
 window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 {
@@ -973,17 +997,35 @@ window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 						   "fullscreen-esc",
 						   _("Hit the Escape key to leave the fullscreen mode"));
 		gtk_widget_hide (bwin->priv->toolbar);
+		gtk_widget_hide (bwin->priv->menubar);
 		bwin->priv->toolbar_shown = FALSE;
 		bwin->priv->fullscreen_motion_sig_id = g_signal_connect (bwin, "motion-notify-event",
 									 G_CALLBACK (fullscreen_motion_notify_cb),
 									 NULL);
+		g_signal_connect (bwin->priv->toolbar, "enter-notify-event",
+				  G_CALLBACK (toolbar_enter_notify_cb), bwin);
+		g_signal_connect (bwin->priv->toolbar, "leave-notify-event",
+				  G_CALLBACK (toolbar_leave_notify_cb), bwin);
+		g_signal_connect (bwin->priv->menubar, "enter-notify-event",
+				  G_CALLBACK (toolbar_enter_notify_cb), bwin);
+		g_signal_connect (bwin->priv->menubar, "leave-notify-event",
+				  G_CALLBACK (toolbar_leave_notify_cb), bwin);
 	}
 	else {
 		gtk_window_unfullscreen (GTK_WINDOW (bwin));
 		g_signal_handler_disconnect (bwin, bwin->priv->fullscreen_motion_sig_id);
 		bwin->priv->fullscreen_motion_sig_id = 0;
+		g_signal_handlers_disconnect_by_func (bwin->priv->toolbar,
+						      G_CALLBACK (toolbar_enter_notify_cb), bwin);
+		g_signal_handlers_disconnect_by_func (bwin->priv->toolbar,
+						      G_CALLBACK (toolbar_leave_notify_cb), bwin);
+		g_signal_handlers_disconnect_by_func (bwin->priv->menubar,
+						      G_CALLBACK (toolbar_enter_notify_cb), bwin);
+		g_signal_handlers_disconnect_by_func (bwin->priv->menubar,
+						      G_CALLBACK (toolbar_leave_notify_cb), bwin);
 
 		gtk_widget_show (bwin->priv->toolbar);
+		gtk_widget_show (bwin->priv->menubar);
 		bwin->priv->toolbar_shown = TRUE;
 
 		if (bwin->priv->fullscreen_timer_id) {
