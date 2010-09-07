@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -134,6 +134,16 @@ objects_cloud_get_type (void)
 	return type;
 }
 
+static gint
+dbo_sort (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
+{
+	gint res;
+	res = g_strcmp0 (dbo1->obj_schema, dbo2->obj_schema);
+	if (res)
+		return - res;
+	return - g_strcmp0 (dbo1->obj_name, dbo2->obj_name);
+}
+
 typedef struct {
 	gchar *schema;
 	GtkTextMark *mark;
@@ -179,6 +189,8 @@ update_display (ObjectsCloud *cloud)
 		goto out;
 	}
 	dbo_list = g_slist_reverse (gda_meta_struct_get_all_db_objects (mstruct));
+	list = g_slist_sort (dbo_list, (GCompareFunc) dbo_sort);
+	dbo_list = list;
 	for (list = dbo_list; list; list = list->next) {
 		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
 		GSList *list;
