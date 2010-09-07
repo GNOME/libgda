@@ -65,7 +65,7 @@ struct _BrowserCanvasDbRelationsPrivate
 	GdaMetaStruct    *mstruct;
 	GooCanvasItem    *level_separator; /* all tables items will be above this item and FK lines below */
 
-	GtkWidget        *popup_container;
+	GtkWidget        *add_dialog;
 	ObjectsCloud     *cloud;
 };
 
@@ -140,7 +140,8 @@ browser_canvas_db_relations_dispose (GObject *object)
 		g_hash_table_destroy (canvas->priv->hash_tables);
 		g_hash_table_destroy (canvas->priv->hash_fkeys);
 
-		gtk_widget_destroy (canvas->priv->popup_container);
+		if (canvas->priv->add_dialog)
+			gtk_widget_destroy (canvas->priv->add_dialog);
 
 		g_free (canvas->priv);
 		canvas->priv = NULL;
@@ -199,44 +200,9 @@ browser_canvas_db_relations_get_property (GObject *object,
 }
 
 static void
-popup_position (PopupContainer *container, gint *out_x, gint *out_y)
-{
-	GtkWidget *canvas;
-        canvas = g_object_get_data (G_OBJECT (container), "__canvas");
-
-        gint x, y;
-        GtkRequisition req;
-
-        gtk_widget_size_request (canvas, &req);
-
-#if GTK_CHECK_VERSION(2,18,0)
-	GtkAllocation alloc;
-	gdk_window_get_origin (gtk_widget_get_window (canvas), &x, &y);
-	gtk_widget_get_allocation (canvas, &alloc);
-        x += alloc.x;
-        y += alloc.y;
-#else
-        gdk_window_get_origin (canvas->window, &x, &y);
-
-        x += canvas->allocation.x;
-        y += canvas->allocation.y;
-#endif
-
-        if (x < 0)
-                x = 0;
-
-        if (y < 0)
-                y = 0;
-        *out_x = x;
-        *out_y = y;
-}
-
-static void
 cloud_object_selected_cb (ObjectsCloud *ocloud, ObjectsCloudObjType sel_type, 
 			  const gchar *sel_contents, BrowserCanvasDbRelations *dbrel)
 {
-	g_print ("-> %s\n", sel_contents);
-
 	GdaMetaTable *mtable;
 	GValue *table_schema;
 	GValue *table_name;
@@ -249,8 +215,10 @@ cloud_object_selected_cb (ObjectsCloud *ocloud, ObjectsCloudObjType sel_type,
 			    gda_quark_list_find (ql, "OBJ_NAME"));
 	gda_quark_list_free (ql);
 
+#ifdef GDA_DEBUG_NO
 	g_print ("Add %s.%s\n",
 		 g_value_get_string (table_schema), g_value_get_string (table_name));
+#endif
 	mtable = (GdaMetaTable*) gda_meta_struct_complement (dbrel->priv->mstruct, GDA_META_DB_TABLE,
 							     NULL, table_schema, table_name, NULL);
 	if (mtable) {
@@ -287,31 +255,13 @@ browser_canvas_db_relations_new (GdaMetaStruct *mstruct)
 	BrowserCanvas *canvas;
 	BrowserCanvasDbRelations *dbrels;
 	GooCanvasItem *item;
-	GtkWidget *vbox, *cloud, *find;
 	g_return_val_if_fail (!mstruct || GDA_IS_META_STRUCT (mstruct), NULL);
 
-	canvas = BROWSER_CANVAS (g_object_new (TYPE_BROWSER_CANVAS_DB_RELATIONS, "meta-struct", mstruct, NULL));
+	canvas = BROWSER_CANVAS (g_object_new (TYPE_BROWSER_CANVAS_DB_RELATIONS,
+					       "meta-struct", mstruct, NULL));
 	dbrels = BROWSER_CANVAS_DB_RELATIONS (canvas);
 	item = goo_canvas_group_new (goo_canvas_get_root_item (canvas->priv->goocanvas), NULL);
 	dbrels->priv->level_separator = item;
-
-	dbrels->priv->popup_container = popup_container_new_with_func (popup_position);
-	g_object_set_data (G_OBJECT (dbrels->priv->popup_container), "__canvas", canvas);
-
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (dbrels->priv->popup_container), vbox);
-
-	cloud = objects_cloud_new (mstruct, OBJECTS_CLOUD_TYPE_TABLE);
-	dbrels->priv->cloud = OBJECTS_CLOUD (cloud);
-	gtk_widget_set_size_request (GTK_WIDGET (cloud), 200, 300);
-	g_signal_connect (cloud, "selected",
-			  G_CALLBACK (cloud_object_selected_cb), dbrels);
-	gtk_box_pack_start (GTK_BOX (vbox), cloud, TRUE, TRUE, 0);
-
-	find = objects_cloud_create_filter (OBJECTS_CLOUD (cloud));
-	gtk_box_pack_start (GTK_BOX (vbox), find, FALSE, FALSE, 0);
-	
-	gtk_widget_show_all (vbox);
 
         return GTK_WIDGET (canvas);
 }
@@ -560,10 +510,52 @@ build_context_menu (BrowserCanvas *canvas)
 	return menu;
 }
 
-static void
-popup_add_table_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrel)
+static gboolean
+add_dialog_delete_event (GtkWidget *dialog, GdkEvent *event, gpointer data)
 {
-	gtk_widget_show (dbrel->priv->popup_container);
+	gtk_widget_hide (dialog);
+	return TRUE;
+}
+
+static void
+popup_add_table_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrels)
+{
+	if (! dbrels->priv->add_dialog) {
+		GtkWidget *vbox, *cloud, *find, *dcontents;
+		dbrels->priv->add_dialog = gtk_dialog_new_with_buttons (_("Select tables to add to diagram"),
+									(GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dbrels),
+									GTK_DIALOG_NO_SEPARATOR,
+									NULL);
+		g_signal_connect (dbrels->priv->add_dialog, "close",
+				  G_CALLBACK (gtk_widget_hide), NULL);
+		g_signal_connect (dbrels->priv->add_dialog, "delete-event",
+				  G_CALLBACK (add_dialog_delete_event), NULL);
+		gtk_window_set_default_size (GTK_WINDOW (dbrels->priv->add_dialog), 430, 400);
+		
+		g_object_set_data (G_OBJECT (dbrels->priv->add_dialog), "__canvas", dbrels);
+
+		vbox = gtk_vbox_new (FALSE, 0);
+#if GTK_CHECK_VERSION(2,18,0)
+		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dbrels->priv->add_dialog));
+#else
+		dcontents = GTK_DIALOG (dbrels->priv->add_dialog)->vbox;
+#endif
+		gtk_container_add (GTK_CONTAINER (dcontents), vbox);
+		
+		cloud = objects_cloud_new (dbrels->priv->mstruct, OBJECTS_CLOUD_TYPE_TABLE);
+		dbrels->priv->cloud = OBJECTS_CLOUD (cloud);
+		gtk_widget_set_size_request (GTK_WIDGET (cloud), 200, 300);
+		g_signal_connect (cloud, "selected",
+				  G_CALLBACK (cloud_object_selected_cb), dbrels);
+		gtk_box_pack_start (GTK_BOX (vbox), cloud, TRUE, TRUE, 0);
+		
+		find = objects_cloud_create_filter (OBJECTS_CLOUD (cloud));
+		gtk_box_pack_start (GTK_BOX (vbox), find, FALSE, FALSE, 0);
+		
+		gtk_widget_show_all (vbox);
+	}
+
+	gtk_widget_show (dbrels->priv->add_dialog);
 }
 
 /**
