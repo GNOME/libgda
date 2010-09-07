@@ -758,37 +758,41 @@ gda_sql_select_field_check_validity (GdaSqlSelectField *field, GdaSqlStatementCh
 			return FALSE;
 		}
 
-		for (targets = ((GdaSqlStatementSelect *)any)->from->targets; targets; targets = targets->next) {
-			GdaSqlSelectTarget *target = (GdaSqlSelectTarget *) targets->data;
-			if (!target->validity_meta_object &&
-			    !gda_sql_select_target_check_validity (target, data, error))
-				return FALSE;
-
-			g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
-			tcol = gda_meta_struct_get_table_column (data->mstruct,
-								 GDA_META_TABLE (target->validity_meta_object),
-								 &value);
-			g_value_unset (&value);
-			if (tcol) {
-				/* found a candidate */
-				if (dbo) {
-					g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
-						     _("Could not identify table for field '%s'"), field->field_name);
+		if (((GdaSqlStatementSelect *)any)->from) {
+			for (targets = ((GdaSqlStatementSelect *)any)->from->targets;
+			     targets;
+			     targets = targets->next) {
+				GdaSqlSelectTarget *target = (GdaSqlSelectTarget *) targets->data;
+				if (!target->validity_meta_object &&
+				    !gda_sql_select_target_check_validity (target, data, error))
 					return FALSE;
+				
+				g_value_set_string (g_value_init (&value, G_TYPE_STRING), field->field_name);
+				tcol = gda_meta_struct_get_table_column (data->mstruct,
+									 GDA_META_TABLE (target->validity_meta_object),
+									 &value);
+				g_value_unset (&value);
+				if (tcol) {
+					/* found a candidate */
+					if (dbo) {
+						g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+							     _("Could not identify table for field '%s'"), field->field_name);
+						return FALSE;
+					}
+					dbo = target->validity_meta_object;
 				}
-				dbo = target->validity_meta_object;
+			}
+			if (!dbo) {
+				targets = ((GdaSqlStatementSelect *)any)->from->targets;
+				if (starred_field && targets && !targets->next)
+					/* only one target => it's the one */
+					dbo = ((GdaSqlSelectTarget*) targets->data)->validity_meta_object;
 			}
 		}
 		if (!dbo) {
-			targets = ((GdaSqlStatementSelect *)any)->from->targets;
-			if (starred_field && targets && !targets->next)
-				/* only one target => it's the one */
-				dbo = ((GdaSqlSelectTarget*) targets->data)->validity_meta_object;
-			else {
-				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
-					     _("Could not identify table for field '%s'"), field->field_name);
-				return FALSE;
-			}
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+				     _("Could not identify table for field '%s'"), field->field_name);
+			return FALSE;
 		}
 		field->validity_meta_object = dbo;
 		field->validity_meta_table_column = tcol;
