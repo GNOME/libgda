@@ -28,6 +28,7 @@
 #include "../common/ui-formgrid.h"
 #include "../browser-window.h"
 #include "../support.h"
+#include "data-source-editor.h"
 
 /*
  * The DataPart structure represents the execution of a single DataSource 
@@ -38,13 +39,17 @@ typedef struct {
 
 	GtkWidget *top;
 	GtkNotebook *nb; /* page 0: spinner
-			    page 1 or 2, depends on @data_widget_page */
+			    page 1 or 2, depends on @data_widget_page, @error_widget_page and @edit_widget_page*/
 	gint data_widget_page;
 	gint error_widget_page;
+	gint edit_widget_page;
+	gint edit_widget_previous_page;
+
 	BrowserSpinner *spinner;
 	guint spinner_show_timer_id;
 	GtkWidget *data_widget;
 	GtkWidget *error_widget;
+	GtkWidget *edit_widget;
 	GdaSet *export_data;
 
 	GSList *dep_parts; /* list of DataPart which need to be re-run when anything in @export_data
@@ -200,6 +205,7 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	part = g_new0 (DataPart, 1);
 	part->dwid = dwid;
 	part->source = g_object_ref (source);
+	part->edit_widget_previous_page = -1;
 	g_signal_connect (source, "execution-started",
 			  G_CALLBACK (source_exec_started_cb), part);
 	g_signal_connect (source, "execution-finished",
@@ -349,6 +355,26 @@ add_data_source_mitem_activated_cb (GtkMenuItem *mitem, DataPart *part)
 #endif
 }
 
+static void
+data_source_props_activated_cb (GtkCheckMenuItem *mitem, DataPart *part)
+{
+	if (gtk_check_menu_item_get_active (mitem)) {
+		part->edit_widget_previous_page = gtk_notebook_get_current_page (part->nb);
+		if (! part->edit_widget) {
+			part->edit_widget = data_source_editor_new ();
+			data_source_editor_set_readonly (DATA_SOURCE_EDITOR (part->edit_widget));
+			part->edit_widget_page = gtk_notebook_append_page (part->nb, part->edit_widget,
+									   NULL);
+			gtk_widget_show (part->edit_widget);
+		}
+		data_source_editor_display_source (DATA_SOURCE_EDITOR (part->edit_widget),
+						   part->source);
+		gtk_notebook_set_current_page (part->nb, part->edit_widget_page);
+	}
+	else
+		gtk_notebook_set_current_page (part->nb, part->edit_widget_previous_page);
+}
+
 static gchar *compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean reverse,
 				     DataPart *part, xmlNodePtr *out_sourcespec);
 static void
@@ -362,6 +388,12 @@ data_source_menu_clicked_cb (GtkButton *button, DataPart *part)
 		mitem = gtk_menu_item_new_with_label (_("Remove data source"));
 		g_signal_connect (mitem, "activate",
 				  G_CALLBACK (remove_data_source_mitem_activated_cb), part);
+		gtk_widget_show (mitem);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+
+		mitem = gtk_check_menu_item_new_with_label (_("Show data source's properties"));
+		g_signal_connect (mitem, "activate",
+				  G_CALLBACK (data_source_props_activated_cb), part);
 		gtk_widget_show (mitem);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 

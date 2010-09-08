@@ -54,6 +54,7 @@ GType         data_source_editor_get_type            (void) G_GNUC_CONST;
 
 GtkWidget    *data_source_editor_new                 (void);
 void          data_source_editor_display_source      (DataSourceEditor *editor, DataSource *source);
+void          data_source_editor_set_readonly        (DataSourceEditor *editor);
 
 G_END_DECLS
 
