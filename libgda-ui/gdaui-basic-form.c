@@ -2141,7 +2141,8 @@ gdaui_basic_form_set_layout_from_file (GdauiBasicForm *form, const gchar *file_n
  * @form: a #GdauiBasicForm
  * @placeholder_id: the name of the requested place holder
  *
- * Retreives a pointer to a place holder widget
+ * Retreives a pointer to a place holder widget. This feature is only available if a specific
+ * layout has been defined for @form using gdaui_basic_form_set_layout_from_file().
  *
  * Returns: a pointer to the requested place holder, or %NULL if not found
  *

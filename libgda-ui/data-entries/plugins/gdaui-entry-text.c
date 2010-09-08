@@ -290,7 +290,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgtxt->priv->buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (mgtxt->priv->view));
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (mgtxt->priv->view), mgtxt->priv->wrapmode);
 	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_IN);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 					GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
@@ -427,5 +427,5 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_TEXT (mgwrap));
 	mgtxt = GDAUI_ENTRY_TEXT (mgwrap);
 
-	gtk_widget_set_sensitive (mgtxt->priv->view, editable);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (mgtxt->priv->view), editable);
 }
