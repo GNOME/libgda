@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-09-05 13:12+0000\n"
-"PO-Revision-Date: 2010-09-06 14:01+0100\n"
+"POT-Creation-Date: 2010-09-09 14:42+0000\n"
+"PO-Revision-Date: 2010-09-10 20:31+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -157,11 +157,12 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/browser-connection.c:626
 #: ../tools/browser/browser-connection.c:646
 #: ../tools/browser/browser-connection.c:854
-#: ../tools/browser/browser-window.c:870
-#: ../tools/browser/browser-window.c:884
-#: ../tools/browser/browser-window.c:898
-#: ../tools/browser/browser-window.c:1031
-#: ../tools/browser/browser-window.c:1072
+#: ../tools/browser/browser-window.c:887
+#: ../tools/browser/browser-window.c:901
+#: ../tools/browser/browser-window.c:915
+#: ../tools/browser/browser-window.c:1145
+#: ../tools/browser/browser-window.c:1186
+#: ../tools/browser/browser-window.c:1457
 #: ../tools/browser/login-dialog.c:239
 #: ../tools/browser/main.c:96
 #: ../tools/browser/main.c:110
@@ -170,8 +171,8 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/data-manager/data-favorite-selector.c:201
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:627
-#: ../tools/browser/data-manager/data-widget.c:339
-#: ../tools/browser/data-manager/data-widget.c:576
+#: ../tools/browser/data-manager/data-widget.c:345
+#: ../tools/browser/data-manager/data-widget.c:613
 #: ../tools/browser/query-exec/query-console.c:684
 #: ../tools/browser/query-exec/query-console.c:823
 #: ../tools/browser/query-exec/query-console.c:868
@@ -395,7 +396,7 @@ msgid "No valid data source info was created"
 msgstr "Ni ustvarjenih veljavnih podatkov o viru"
 
 #: ../control-center/main.c:184
-#: ../tools/browser/browser-window.c:1114
+#: ../tools/browser/browser-window.c:1228
 msgid "Database access services for the GNOME Desktop"
 msgstr "Storitev dostopa do podatkovnih zbirk za GNOME namizje."
 
@@ -507,7 +508,7 @@ msgstr "Ponudnik"
 #: ../libgda/gda-data-model-dsn-list.c:118
 #: ../libgda/gda-server-provider-extra.c:377
 #: ../libgda/gda-server-provider-extra.c:400
-#: ../tools/browser/data-manager/data-source-editor.c:117
+#: ../tools/browser/data-manager/data-source-editor.c:130
 #: ../tools/gda-sql.c:1851
 #: ../tools/gda-sql.c:2697
 #: ../tools/gda-sql.c:2871
@@ -1932,7 +1933,7 @@ msgstr "Skupek"
 
 #: ../libgda/gda-server-provider-extra.c:313
 #: ../libgda/gda-server-provider-extra.c:357
-#: ../tools/browser/data-manager/data-source-editor.c:111
+#: ../tools/browser/data-manager/data-source-editor.c:123
 msgid "Id"
 msgstr "ID"
 
@@ -2113,7 +2114,7 @@ msgstr "Imenski prostor"
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
-#: ../tools/browser/data-manager/data-source-editor.c:121
+#: ../tools/browser/data-manager/data-source-editor.c:134
 msgid "Table"
 msgstr "Preglednica"
 
@@ -2253,21 +2254,21 @@ msgstr "Spec korensko vozlišče != 'data-set-spec': '%s'"
 msgid "Missing node <parameters>: '%s'"
 msgstr "Manjkajo <parametri> vozlišča: '%s'"
 
-#: ../libgda/gda-set.c:1031
+#: ../libgda/gda-set.c:1030
 #, c-format
 msgid "Data set does not allow modifications"
 msgstr "Podatkovni model ne dovoli spreminjanja"
 
-#: ../libgda/gda-set.c:1276
+#: ../libgda/gda-set.c:1295
 msgid "GdaHolder needs to have an ID"
 msgstr "GdaHolder zahteva določitev ID"
 
-#: ../libgda/gda-set.c:1386
+#: ../libgda/gda-set.c:1408
 msgid "One or more values are invalid"
 msgstr "Ena ali več vrednosti ni veljavnih"
 
-#: ../libgda/gda-set.c:1603
-#: ../libgda/gda-set.c:1616
+#: ../libgda/gda-set.c:1625
+#: ../libgda/gda-set.c:1638
 msgid "Replacing data model must have the same characteristics as the data model it replaces"
 msgstr "Zamenjava podatkovnega modela mora imeti enake značilnosti kot prvotni podatkovni model."
 
@@ -2420,7 +2421,6 @@ msgstr "Ni mogoče pridobiti imena stolpce"
 
 #: ../libgda/gda-tree-mgr-label.c:207
 #: ../tools/browser/canvas/browser-canvas-table.c:309
-#: ../tools/browser/data-manager/data-source.c:989
 msgid "No name"
 msgstr "Brez imena"
 
@@ -2934,7 +2934,7 @@ msgid "Missing table in statement"
 msgstr "Manjka preglednica v izjavi"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:611
-#: ../libgda/sql-parser/gda-statement-struct.c:820
+#: ../libgda/sql-parser/gda-statement-struct.c:824
 #, c-format
 msgid "Column '%s' not found"
 msgstr "Stolpca '%s' ni mogoče najti"
@@ -2949,73 +2949,73 @@ msgid "Missing table name in statement"
 msgstr "Manjka ime preglednice v izjavi"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:713
-#: ../libgda/sql-parser/gda-statement-struct.c:802
-#: ../libgda/sql-parser/gda-statement-struct.c:849
+#: ../libgda/sql-parser/gda-statement-struct.c:806
+#: ../libgda/sql-parser/gda-statement-struct.c:853
 #, c-format
 msgid "Table '%s' not found"
 msgstr "Preglednice '%s' ni mogoče najti"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:776
-#: ../libgda/sql-parser/gda-statement-struct.c:789
+#: ../libgda/sql-parser/gda-statement-struct.c:779
+#: ../libgda/sql-parser/gda-statement-struct.c:794
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "Ni mogoče določiti preglednice za polje '%s'"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:979
+#: ../libgda/sql-parser/gda-statement-struct.c:983
 msgid "Expression can't have both a type cast and a parameter specification"
 msgstr "Izraz ne more imeti obeh določil; vrste in določila parametra"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:989
-#: ../libgda/sql-parser/gda-statement-struct.c:1002
-#: ../libgda/sql-parser/gda-statement-struct.c:1015
+#: ../libgda/sql-parser/gda-statement-struct.c:993
+#: ../libgda/sql-parser/gda-statement-struct.c:1006
+#: ../libgda/sql-parser/gda-statement-struct.c:1019
 #, c-format
 msgid "'%s' is not a valid identifier"
 msgstr "'%s' ni veljavno določilo"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:992
-#: ../libgda/sql-parser/gda-statement-struct.c:1005
-#: ../libgda/sql-parser/gda-statement-struct.c:1018
+#: ../libgda/sql-parser/gda-statement-struct.c:996
+#: ../libgda/sql-parser/gda-statement-struct.c:1009
+#: ../libgda/sql-parser/gda-statement-struct.c:1022
 msgid "Empty identifier"
 msgstr "Prazno določilo"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1027
+#: ../libgda/sql-parser/gda-statement-struct.c:1031
 msgid "Operation has no operand"
 msgstr "Opravilo nima operanda"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1050
-#: ../libgda/sql-parser/gda-statement-struct.c:1057
-#: ../libgda/sql-parser/gda-statement-struct.c:1067
-#: ../libgda/sql-parser/gda-statement-struct.c:1079
-#: ../libgda/sql-parser/gda-statement-struct.c:1087
+#: ../libgda/sql-parser/gda-statement-struct.c:1054
+#: ../libgda/sql-parser/gda-statement-struct.c:1061
+#: ../libgda/sql-parser/gda-statement-struct.c:1071
+#: ../libgda/sql-parser/gda-statement-struct.c:1083
+#: ../libgda/sql-parser/gda-statement-struct.c:1091
 msgid "Wrong number of operands"
 msgstr "Napačno število operandov"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1093
+#: ../libgda/sql-parser/gda-statement-struct.c:1097
 #, c-format
 msgid "Unknown operator %d"
 msgstr "neznan operator %d"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1116
+#: ../libgda/sql-parser/gda-statement-struct.c:1120
 msgid "Missing expression in select field"
 msgstr "Manjka izraz v polju izbire"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1125
+#: ../libgda/sql-parser/gda-statement-struct.c:1129
 msgid "Missing expression in select target"
 msgstr "Manjka izraz v polju cilja"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1134
+#: ../libgda/sql-parser/gda-statement-struct.c:1138
 msgid "Join can't at the same time specify a join condition and a list of fields to join on"
 msgstr "S predmetom JOIN ni mogoče sočasno določiti pogoj združevanja in seznam polj za združevanje"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1139
+#: ../libgda/sql-parser/gda-statement-struct.c:1143
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr "S predmetom križnega JOIN ni mogoče sočasno določiti pogoj združevanja in seznam polj za združevanje"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1148
+#: ../libgda/sql-parser/gda-statement-struct.c:1152
 msgid "Empty FROM clause"
 msgstr "Prazen FROM stavek"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1423
+#: ../libgda/sql-parser/gda-statement-struct.c:1427
 msgid "Select field is not in a SELECT statement"
 msgstr "V izjavi SELECT ni polja izbire"
 
@@ -3308,8 +3308,8 @@ msgstr "Neznano"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:167
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
-#: ../libgda-ui/gdaui-basic-form.c:805
-#: ../libgda-ui/gdaui-basic-form.c:873
+#: ../libgda-ui/gdaui-basic-form.c:717
+#: ../libgda-ui/gdaui-basic-form.c:753
 #: ../libgda-ui/gdaui-raw-grid.c:739
 #: ../tools/gda-sql.c:2658
 #: ../tools/gda-sql.c:2833
@@ -3855,58 +3855,58 @@ msgstr "Zavrzi spremenjene podatke"
 msgid "Correct data first"
 msgstr "Najprej pravilni podatki"
 
-#: ../libgda-ui/gdaui-basic-form.c:259
+#: ../libgda-ui/gdaui-basic-form.c:260
 msgid "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> node)"
 msgstr "Kazalnik do določil razporeditve XML (kot xmlNodePtr za <gdaui_form> vozlišče)"
 
-#: ../libgda-ui/gdaui-basic-form.c:263
+#: ../libgda-ui/gdaui-basic-form.c:264
 msgid "List of parameters to show in the form"
 msgstr "Seznam parametrov prikazanih v obrazcu"
 
-#: ../libgda-ui/gdaui-basic-form.c:267
+#: ../libgda-ui/gdaui-basic-form.c:268
 msgid "Entry headers are sensitive"
 msgstr "Glave vnosov so občutljive"
 
-#: ../libgda-ui/gdaui-basic-form.c:272
+#: ../libgda-ui/gdaui-basic-form.c:273
 msgid "Show Entry actions"
 msgstr "Pokaži dejanja vnosa"
 
-#: ../libgda-ui/gdaui-basic-form.c:277
+#: ../libgda-ui/gdaui-basic-form.c:278
 msgid "Entries Auto-default"
 msgstr "Samodejno privzeti vnosi"
 
-#: ../libgda-ui/gdaui-basic-form.c:282
+#: ../libgda-ui/gdaui-basic-form.c:283
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Izbrana možnost je uporabna, kadar ima navpično razširjanje obrazca pomen."
 
-#: ../libgda-ui/gdaui-basic-form.c:759
+#: ../libgda-ui/gdaui-basic-form.c:839
 #: ../libgda-ui/gdaui-raw-grid.c:780
 #: ../libgda-ui/gdaui-raw-grid.c:2619
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Atribut '%s' mora biti vrednost G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1685
+#: ../libgda-ui/gdaui-basic-form.c:1738
 msgid "Can't find data entry for GdaHolder"
 msgstr "Ni mogoče najti podatkovnega vnosa za GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:1957
+#: ../libgda-ui/gdaui-basic-form.c:2010
 msgid "Values to be filled"
 msgstr "Zahtevane vrednosti"
 
-#: ../libgda-ui/gdaui-basic-form.c:2038
+#: ../libgda-ui/gdaui-basic-form.c:2091
 #: ../libgda-ui/gdaui-raw-grid.c:2446
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "'%s' dokument ni uspešno razčlenjen"
 
-#: ../libgda-ui/gdaui-basic-form.c:2048
+#: ../libgda-ui/gdaui-basic-form.c:2101
 #: ../libgda-ui/gdaui-raw-grid.c:2456
 #, c-format
 msgid "'%s' DTD not parsed successfully. XML data layout validation will not be performed (some errors may occur)"
 msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda podatkov XML ne bo izvedeno (lahko se pojavijo napake)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2179
+#: ../libgda-ui/gdaui-basic-form.c:2233
 msgid "size group was not taken into account using gdaui_basic_form_add_to_size_group()"
 msgstr "velikost skupine ni vzeta v račun ob uporabi skupine gdaui_basic_form_add_to_size_group()"
 
@@ -3917,7 +3917,7 @@ msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr "Napačna vrsta za oznako stolpca: pričakovan je niz, dobljen pa %s"
 
 #: ../libgda-ui/gdaui-cloud.c:1074
-#: ../tools/browser/common/objects-cloud.c:445
+#: ../tools/browser/common/objects-cloud.c:457
 msgid "Find:"
 msgstr "Poišči:"
 
@@ -3970,9 +3970,9 @@ msgid "Could not open plugins directory, no plugin loaded."
 msgstr "Ni mogoče odpreti mape vstavkov, zato vstavki ne bodo naloženi."
 
 #: ../libgda-ui/gdaui-init.c:485
-#: ../tools/browser/data-manager/data-widget.c:571
-#: ../tools/browser/data-manager/data-widget.c:576
-#: ../tools/browser/data-manager/data-widget.c:578
+#: ../tools/browser/data-manager/data-widget.c:608
+#: ../tools/browser/data-manager/data-widget.c:613
+#: ../tools/browser/data-manager/data-widget.c:615
 #: ../tools/browser/data-manager/xml-spec-editor.c:235
 #: ../tools/browser/query-exec/query-result.c:256
 #: ../tools/web-server.c:2017
@@ -4174,6 +4174,7 @@ msgstr "Zahtevaj skrivanje glave odseka, kadar je na voljo le ena glava."
 
 #. last row is for new entries
 #: ../libgda-ui/gdaui-server-operation.c:596
+#: ../tools/browser/data-manager/data-console.c:391
 msgid "Add"
 msgstr "Dodaj"
 
@@ -6705,17 +6706,17 @@ msgid "Bookmarks"
 msgstr "Zaznamki"
 
 #: ../tools/browser/browser-stock-icons.c:47
-#: ../tools/browser/browser-window.c:283
+#: ../tools/browser/browser-window.c:297
 msgid "Begin"
 msgstr "Začetek"
 
 #: ../tools/browser/browser-stock-icons.c:48
-#: ../tools/browser/browser-window.c:285
+#: ../tools/browser/browser-window.c:299
 msgid "Commit"
 msgstr "Uveljavi"
 
 #: ../tools/browser/browser-stock-icons.c:49
-#: ../tools/browser/browser-window.c:287
+#: ../tools/browser/browser-window.c:301
 msgid "Rollback"
 msgstr "Povrni"
 
@@ -6731,19 +6732,19 @@ msgstr "Uporabljene so zvezane povezave"
 msgid "Virtual connection using this connection is busy"
 msgstr "Navidezna povezava, ki uporablja to povezavo je zaposlena"
 
-#: ../tools/browser/browser-window.c:257
+#: ../tools/browser/browser-window.c:271
 msgid "_Fullscreen"
 msgstr "_Celozaslonski način"
 
-#: ../tools/browser/browser-window.c:257
+#: ../tools/browser/browser-window.c:271
 msgid "Use the whole screen"
 msgstr "Uporabi celoten zaslon"
 
-#: ../tools/browser/browser-window.c:263
+#: ../tools/browser/browser-window.c:277
 msgid "_Bind connection"
 msgstr "_Zveži povezave"
 
-#: ../tools/browser/browser-window.c:263
+#: ../tools/browser/browser-window.c:277
 msgid ""
 "Use connection to create\n"
 "a new binding connection to access data\n"
@@ -6753,89 +6754,89 @@ msgstr ""
 "novo vezno povezavo za dostop do\n"
 "več podatkovnih zbirk hkrati"
 
-#: ../tools/browser/browser-window.c:283
+#: ../tools/browser/browser-window.c:297
 msgid "Begin a new transaction"
 msgstr "Začni z novo transakcijo"
 
-#: ../tools/browser/browser-window.c:285
+#: ../tools/browser/browser-window.c:299
 msgid "Commit current transaction"
 msgstr "Uveljavi trenutno transakcijo"
 
-#: ../tools/browser/browser-window.c:287
+#: ../tools/browser/browser-window.c:301
 msgid "Rollback current transaction"
 msgstr "Povrni trenutno transakcijo"
 
-#: ../tools/browser/browser-window.c:377
+#: ../tools/browser/browser-window.c:391
 msgid "unnamed"
 msgstr "neimenovano"
 
-#: ../tools/browser/browser-window.c:378
+#: ../tools/browser/browser-window.c:392
 #, c-format
 msgid "Connection: %s"
 msgstr "Povezava: %s"
 
-#: ../tools/browser/browser-window.c:768
+#: ../tools/browser/browser-window.c:785
 #: ../tools/browser/support.c:82
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Ali želite zapreti '%s' povezavo?"
 
-#: ../tools/browser/browser-window.c:810
-#: ../tools/browser/browser-window.c:817
+#: ../tools/browser/browser-window.c:827
+#: ../tools/browser/browser-window.c:834
 msgid "Do you want to quit the application?"
 msgstr "Ali želite končati program?"
 
-#: ../tools/browser/browser-window.c:811
+#: ../tools/browser/browser-window.c:828
 msgid "all the connections will be closed."
 msgstr "vse povezave bodo zaprte."
 
-#: ../tools/browser/browser-window.c:818
+#: ../tools/browser/browser-window.c:835
 msgid "the connection will be closed."
 msgstr "povezava bo zaprta."
 
-#: ../tools/browser/browser-window.c:869
+#: ../tools/browser/browser-window.c:886
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Napaka med začenjanjem transakcije: %s"
 
-#: ../tools/browser/browser-window.c:883
+#: ../tools/browser/browser-window.c:900
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Napaka med uveljavljanjem transakcije: %s"
 
-#: ../tools/browser/browser-window.c:897
+#: ../tools/browser/browser-window.c:914
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Napaka med povrnitvijo transakcije: %s"
 
-#: ../tools/browser/browser-window.c:918
+#: ../tools/browser/browser-window.c:998
 msgid "Hit the Escape key to leave the fullscreen mode"
-msgstr "Pritisnite tipko Esc za konec celozaslonskega načina"
+msgstr "Pritisnite tipko Esc za izhod iz celozaslonskega načina"
 
-#: ../tools/browser/browser-window.c:1030
+#: ../tools/browser/browser-window.c:1144
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Napaka med posodabljanjem povezave: %s"
 
-#: ../tools/browser/browser-window.c:1071
+#: ../tools/browser/browser-window.c:1185
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "Ni mogoče odpreti povezave: %s"
 
-#: ../tools/browser/browser-window.c:1111
+#: ../tools/browser/browser-window.c:1225
 #: ../tools/browser/gda-browser-4.0.desktop.in.h:2
 msgid "Database browser"
 msgstr "Brskalnik podatkovne zbirke"
 
-#: ../tools/browser/browser-window.c:1348
+#: ../tools/browser/browser-window.c:1543
 msgid "Don't show this message again"
 msgstr "Sporočila ne pokaži več"
 
-#: ../tools/browser/browser-window.c:1394
+#: ../tools/browser/browser-window.c:1589
 msgid "Note:"
 msgstr "Opomba:"
 
-#: ../tools/browser/browser-window.c:1506
+#: ../tools/browser/browser-window.c:1701
 #, c-format
 msgid "The current perspective has changed to the '%s' perspective, you can switch back to previous perspective through the 'Perspective/%s' menu, or using the '%s' shortcut"
 msgstr "Trenutna perspektiva je spremenjena v '%s' perspektivo, nazaj pa jo je mogoče preklopiti preko vnosa menija 'Perspektiva/%s' ali pa s tipkovno bližnjico '%s'."
@@ -7047,21 +7048,25 @@ msgstr ""
 msgid "Type: %s"
 msgstr "Vrsta: %s"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:349
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:299
 msgid "Remove"
 msgstr "Odstrani"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:353
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:303
 msgid "Add referenced tables"
 msgstr "Dodaj sklicno preglednico"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:357
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:307
 msgid "Add tables referencing this table"
-msgstr "Dodaj preglednice s sklicem na to preglednico"
+msgstr "Dodaj preglednice s sklici na to preglednico"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:555
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:505
 msgid "Add table"
 msgstr "Dodaj preglednico"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:525
+msgid "Select tables to add to diagram"
+msgstr "Izbor preglednic za dodajanje na diagram"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:82
 msgid "Page size and zoom"
@@ -7243,7 +7248,7 @@ msgstr "Podatkovni set %s in %s"
 msgid "No data set"
 msgstr "Ni določenih podatkov"
 
-#: ../tools/browser/common/objects-cloud.c:237
+#: ../tools/browser/common/objects-cloud.c:249
 #, c-format
 msgid "%d table in current schema:"
 msgid_plural "%d tables in current schema:"
@@ -7252,11 +7257,11 @@ msgstr[1] "%d preglednica v trenutni shemi"
 msgstr[2] "%d preglednici v trenutni shemi"
 msgstr[3] "%d preglednice v trenutni shemi"
 
-#: ../tools/browser/common/objects-cloud.c:241
+#: ../tools/browser/common/objects-cloud.c:253
 msgid "Tables in current schema:"
 msgstr "Preglednice v trenutni shemi"
 
-#: ../tools/browser/common/objects-cloud.c:244
+#: ../tools/browser/common/objects-cloud.c:256
 #, c-format
 msgid "%d Table in schema '%s':"
 msgid_plural "%d Tables in schema '%s':"
@@ -7266,7 +7271,7 @@ msgstr[2] "%d preglednici v shemi '%s':"
 msgstr[3] "%d preglednice v shemi '%s':"
 
 #. no connection at all or not authenticated
-#: ../tools/browser/common/objects-cloud.c:254
+#: ../tools/browser/common/objects-cloud.c:266
 #: ../tools/web-server.c:712
 msgid "None"
 msgstr "Brez"
@@ -7302,10 +7307,6 @@ msgid ""
 msgstr ""
 "Počisti vsebino\n"
 "urejevalnika"
-
-#: ../tools/browser/data-manager/data-console.c:391
-msgid "Add data source"
-msgstr "Dodaj podatkovni vir"
 
 #: ../tools/browser/data-manager/data-console.c:392
 msgid "Add a new data source"
@@ -7362,7 +7363,7 @@ msgstr "Upravljalnik podatkov '%s' "
 #: ../tools/browser/data-manager/data-console.c:504
 #: ../tools/browser/data-manager/data-console.c:515
 #: ../tools/browser/data-manager/data-console.c:548
-#: ../tools/browser/data-manager/data-console.c:905
+#: ../tools/browser/data-manager/data-console.c:942
 msgid "Data manager"
 msgstr "Upravljalnik podatkov"
 
@@ -7379,29 +7380,34 @@ msgstr "Ime upravljalnika podatkov"
 msgid "Save"
 msgstr "Shrani"
 
-#: ../tools/browser/data-manager/data-console.c:725
+#: ../tools/browser/data-manager/data-console.c:724
 #, c-format
 msgid "source%d"
 msgstr "vir%d"
 
-#: ../tools/browser/data-manager/data-console.c:758
+#: ../tools/browser/data-manager/data-console.c:767
 msgid "Data source from query"
 msgstr "Podatkovni vir poizvedbe"
 
-#: ../tools/browser/data-manager/data-console.c:779
+#: ../tools/browser/data-manager/data-console.c:805
+#, c-format
+msgid "In schema %s"
+msgstr "V shemi %s"
+
+#: ../tools/browser/data-manager/data-console.c:815
 #, c-format
 msgid "For table: %s"
 msgstr "Za preglednico: %s"
 
-#: ../tools/browser/data-manager/data-console.c:855
+#: ../tools/browser/data-manager/data-console.c:892
 msgid "Switching to execution mode. Hit the Escape key to return to the compose mode"
 msgstr "Preklapljanje načina izvajanja. Pritisnite tipko Esc za vrnitev v način izgradnje"
 
-#: ../tools/browser/data-manager/data-console.c:861
+#: ../tools/browser/data-manager/data-console.c:898
 msgid "_Toggle mode"
 msgstr "_Preklopni način"
 
-#: ../tools/browser/data-manager/data-console.c:861
+#: ../tools/browser/data-manager/data-console.c:898
 msgid "Switch between compose and execute modes"
 msgstr "Preklop med načinom sestavljanja in izvajanja"
 
@@ -7455,74 +7461,74 @@ msgid "Show or hide favorites"
 msgstr "Pokaži ali skrij priljubljene"
 
 #. Translators: Do not translate "table" nor "query"
-#: ../tools/browser/data-manager/data-source.c:329
+#: ../tools/browser/data-manager/data-source.c:401
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
 msgstr "Vozlišče mora biti \"preglednica\" ali \"poizvedba\", je pa \"%s\""
 
-#: ../tools/browser/data-manager/data-source.c:362
+#: ../tools/browser/data-manager/data-source.c:434
 #: ../tools/browser/schema-browser/mgr-columns.c:274
 #, c-format
 msgid "Not ready"
 msgstr "Ni pripravljeno"
 
-#: ../tools/browser/data-manager/data-source.c:369
+#: ../tools/browser/data-manager/data-source.c:441
 #, c-format
 msgid "Malformed table name \"%s\""
 msgstr "Izmaličeno ime preglednice \"%s\""
 
-#: ../tools/browser/data-manager/data-source.c:386
+#: ../tools/browser/data-manager/data-source.c:458
 #, c-format
 msgid "Could not find the \"%s\" table"
 msgstr "Ni mogoče najti preglednice \"%s\""
 
-#: ../tools/browser/data-manager/data-source.c:391
+#: ../tools/browser/data-manager/data-source.c:463
 #, c-format
 msgid "The \"%s\" object is not a table"
 msgstr "Predmet \"%s\" ni preglednica"
 
 #. Translators: Do not translate "name"
-#: ../tools/browser/data-manager/data-source.c:410
+#: ../tools/browser/data-manager/data-source.c:482
 #, c-format
 msgid "Missing attribute \"name\" for table"
 msgstr "Manjka atribut \"ime\" preglednice"
 
-#: ../tools/browser/data-manager/data-source.c:490
+#: ../tools/browser/data-manager/data-source.c:622
 #, c-format
 msgid "Could not find any foreign key to \"%s\""
 msgstr "Ni mogoče najti tujega ključa za \"'%s\""
 
-#: ../tools/browser/data-manager/data-source.c:495
+#: ../tools/browser/data-manager/data-source.c:627
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr "Polja povezana s tujim ključem za \"%s\" niso znana"
 
-#: ../tools/browser/data-manager/data-source.c:663
+#: ../tools/browser/data-manager/data-source.c:808
 #, c-format
 msgid "Statement to execute is not a selection statement"
 msgstr "Izjave za izvedbo ni izjava izbire"
 
-#: ../tools/browser/data-manager/data-source.c:803
+#: ../tools/browser/data-manager/data-source.c:948
 #, c-format
 msgid "No SELECT statement to execute"
 msgstr "Ni določene izjave SELECT za izvedbo"
 
-#: ../tools/browser/data-manager/data-source.c:1017
+#: ../tools/browser/data-manager/data-source.c:1231
 #, c-format
 msgid "Contents of '%s'"
 msgstr "Vsebina '%s'"
 
-#: ../tools/browser/data-manager/data-source.c:1031
+#: ../tools/browser/data-manager/data-source.c:1242
 #, c-format
 msgid "Could not build SELECT statement"
 msgstr "Ni mogoče izgraditi izjave SELECT"
 
-#: ../tools/browser/data-manager/data-source.c:1128
+#: ../tools/browser/data-manager/data-source.c:1309
 #, c-format
 msgid "Multiple statements detected, only the first will be used"
 msgstr "Zaznanih je več izjav, uporabljena pa bo le prva"
 
-#: ../tools/browser/data-manager/data-source-editor.c:113
+#: ../tools/browser/data-manager/data-source-editor.c:125
 msgid ""
 "Data source's ID\n"
 "(as referenced by other data sources)"
@@ -7530,11 +7536,11 @@ msgstr ""
 "ID podatkovnega vira\n"
 "(kot je sklicano z drugimi podatkovnimi viri)"
 
-#: ../tools/browser/data-manager/data-source-editor.c:118
+#: ../tools/browser/data-manager/data-source-editor.c:131
 msgid "Data source's description"
 msgstr "Opis podatkovnega vira"
 
-#: ../tools/browser/data-manager/data-source-editor.c:122
+#: ../tools/browser/data-manager/data-source-editor.c:135
 msgid ""
 "Table to display data from, leave empty\n"
 "to specify a SELECT statement instead"
@@ -7542,7 +7548,7 @@ msgstr ""
 "Preglednica za prikaz podatkov pustite prazno\n"
 "za določitev stavka SELECT"
 
-#: ../tools/browser/data-manager/data-source-editor.c:126
+#: ../tools/browser/data-manager/data-source-editor.c:139
 msgid ""
 "SELECT\n"
 "SQL"
@@ -7550,36 +7556,56 @@ msgstr ""
 "SELECT\n"
 "SQL"
 
-#: ../tools/browser/data-manager/data-source-editor.c:127
-msgid "SQL to select data"
-msgstr "Ukaz SQL za izbor podatkov"
+#: ../tools/browser/data-manager/data-source-editor.c:140
+msgid ""
+"Actual SQL executed\n"
+"to select data"
+msgstr ""
+"Izvedeni ukaz SQL\n"
+"za izbor podatkov"
 
-#: ../tools/browser/data-manager/data-widget.c:240
+#: ../tools/browser/data-manager/data-source-editor.c:150
+msgid "Dependencies:"
+msgstr "Odvisnosti:"
+
+#: ../tools/browser/data-manager/data-source-editor.c:243
+msgid "Requires:"
+msgstr "Zahteva:"
+
+#: ../tools/browser/data-manager/data-source-editor.c:260
+msgid "Exports:"
+msgstr "Izvozi:"
+
+#: ../tools/browser/data-manager/data-widget.c:247
 msgid "Link to other data"
-msgstr "Poveži z ostalimi podatki"
+msgstr "Poveži z drugimi podatki"
 
-#: ../tools/browser/data-manager/data-widget.c:337
+#: ../tools/browser/data-manager/data-widget.c:343
 #, c-format
 msgid "Error adding new data source: %s"
-msgstr "Napaka med dodajanjem podatkovnega vira: %s"
+msgstr "Napaka med dodajanjem novega podatkovnega vira: %s"
 
-#: ../tools/browser/data-manager/data-widget.c:362
+#: ../tools/browser/data-manager/data-widget.c:388
 msgid "Remove data source"
 msgstr "Odstrani podatkovni vir"
 
-#: ../tools/browser/data-manager/data-widget.c:500
+#: ../tools/browser/data-manager/data-widget.c:394
+msgid "Show data source's properties"
+msgstr "Pokaži lastnosti podatkovnega vira"
+
+#: ../tools/browser/data-manager/data-widget.c:532
 msgid "Obtain referenced data in table "
 msgstr "Pridobi sklicne podatke v preglednici"
 
-#: ../tools/browser/data-manager/data-widget.c:517
+#: ../tools/browser/data-manager/data-widget.c:549
 msgid "List referencing data in "
-msgstr "Izpiši seznam sklicnih podatkov v"
+msgstr "Sklicni seznam podatkov v"
 
-#: ../tools/browser/data-manager/data-widget.c:578
+#: ../tools/browser/data-manager/data-widget.c:615
 msgid "No data source defined"
 msgstr "Ni določenega podatkovnega vira"
 
-#: ../tools/browser/data-manager/data-widget.c:785
+#: ../tools/browser/data-manager/data-widget.c:850
 msgid "Error: no detail"
 msgstr "Napaka: ni podrobnosti"
 
@@ -9010,6 +9036,8 @@ msgstr "Predmeti"
 msgid "Triggers"
 msgstr "Sprožilniki"
 
+#~ msgid "Add data source"
+#~ msgstr "Dodaj podatkovni vir"
 #~ msgid "Cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
 #~ msgid "The cgrid data handler"
