@@ -100,6 +100,7 @@ gda_browser_4_0_LDADD=\
 	query-exec/libperspective.la \
 	data-manager/libperspective.la \
 	libbrowser.la \
+	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
 	$(CANVAS_LDADD) \
 	common/libcommon.la \
 	$(top_builddir)/libgda/libgda-4.0.la \

@@ -362,6 +362,7 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (tree_view), TRUE);
 	g_signal_connect (G_OBJECT (tree_view), "event",
 			  G_CALLBACK (tree_view_event_cb), grid);
+	_gdaui_setup_right_click_selection_on_treeview (tree_view);
 	g_signal_connect (G_OBJECT (tree_view), "button-press-event",
                           G_CALLBACK (tree_view_popup_button_pressed_cb), grid);
 	gtk_tree_view_set_enable_search (tree_view, FALSE);
@@ -1745,15 +1746,6 @@ tree_view_popup_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, Gda
 	tree_view = GTK_TREE_VIEW (grid);
 	selection = gtk_tree_view_get_selection (tree_view);
 	sel_mode = gtk_tree_selection_get_mode (selection);
-
-	/* force selection of row on which clicked occurred */
-	GtkTreePath *path;
-	if ((event->window == gtk_tree_view_get_bin_window (tree_view)) &&
-	    gtk_tree_view_get_path_at_pos (tree_view, event->x, event->y, &path, NULL, NULL, NULL)) {
-		gtk_tree_selection_unselect_all (selection);
-		gtk_tree_selection_select_path (selection, path);
-		gtk_tree_path_free (path);
-	}
 
 	/* create the menu */
 	menu = gtk_menu_new ();

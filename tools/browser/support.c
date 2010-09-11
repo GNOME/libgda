@@ -26,6 +26,7 @@
 #include "browser-core.h"
 #include "browser-window.h"
 #include "login-dialog.h"
+#include <libgda-ui/internal/utility.h>
 
 #ifdef HAVE_MAC_INTEGRATION
 #include <gtkosxapplication.h>
@@ -508,30 +509,6 @@ browser_make_small_button (gboolean is_toggle, const gchar *label, const gchar *
 	return button;
 }
 
-static gboolean
-tree_view_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, gpointer data)
-{
-	GtkTreeView *tree_view;
-	GtkTreeSelection *selection;
-
-	if (event->button != 3)
-		return FALSE;
-
-	tree_view = GTK_TREE_VIEW (widget);
-	selection = gtk_tree_view_get_selection (tree_view);
-
-	/* force selection of row on which clicked occurred */
-	GtkTreePath *path;
-	if ((event->window == gtk_tree_view_get_bin_window (tree_view)) &&
-	    gtk_tree_view_get_path_at_pos (tree_view, event->x, event->y, &path, NULL, NULL, NULL)) {
-		gtk_tree_selection_unselect_all (selection);
-		gtk_tree_selection_select_path (selection, path);
-		gtk_tree_path_free (path);
-	}
-
-	return FALSE;
-}
-
 /**
  * browser_make_tree_view
  * @model: a #GtkTreeModel
@@ -548,8 +525,6 @@ browser_make_tree_view (GtkTreeModel *model)
 	g_return_val_if_fail (GTK_IS_TREE_MODEL (model), NULL);
 	tv = gtk_tree_view_new_with_model (model);
 
-	g_signal_connect (G_OBJECT (tv), "button-press-event",
-                          G_CALLBACK (tree_view_button_pressed_cb), NULL);
-
+	_gdaui_setup_right_click_selection_on_treeview (GTK_TREE_VIEW (tv));
 	return tv;
 }
