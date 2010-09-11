@@ -117,9 +117,8 @@ data_widget_init (DataWidget *dwid, DataWidgetClass *klass)
 	gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (info))),
 			   dwid->priv->info_label);
 #else
-	dwid->priv->info = gtk_label_new ("");
-	gtk_notebook_append_page (GTK_NOTEBOOK (dwid->priv->top_nb), info);
-	dwid->priv->info_label = dwid->priv->info;
+	dwid->priv->info_label = gtk_label_new ("");
+	gtk_notebook_append_page (GTK_NOTEBOOK (dwid->priv->top_nb), dwid->priv->info_label, NULL);
 #endif
 
 	/* contents page */
