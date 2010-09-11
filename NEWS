@@ -1,3 +1,12 @@
+libgda 4.1.10, 2010-09-11
+
+ - GdaBrowser improvements & corrections (better full screen mode and notifications, improved
+   data manager perspective and more)
+ - misc corrections
+ - translations:
+	- sl (Matej Urbančič)
+	- id (Andika Triwidada)
+
 libgda 4.1.8, 2010-09-01
 
  - improved core API (GdaSqlBuilder, GdaServerOperation, GdaThreadWrapper, GdaConnection)
