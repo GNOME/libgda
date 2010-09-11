@@ -348,7 +348,7 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 #endif
 
 	pos = atoi (path);
-	g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);
+	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
 	
 	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
 	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, pos, &error)) {

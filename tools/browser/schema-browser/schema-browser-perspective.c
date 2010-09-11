@@ -269,7 +269,7 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 		g_warning ("Can't display diagram because canvas not compiled.");
 #endif
 	}
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	g_print ("Reacted to selection fav_id=>%d type=>%u, contents=>%s\n", fav_id, fav_type, selection);	
 #endif
 }
