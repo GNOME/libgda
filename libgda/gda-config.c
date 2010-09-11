@@ -853,7 +853,9 @@ gda_config_get_dsn_info (const gchar *dsn_name)
  * @info: a pointer to a filled GdaDsnInfo structure
  * @error: a place to store errors, or %NULL
  *
- * Add or update a DSN from the definition in @info
+ * Add or update a DSN from the definition in @info.
+ *
+ * This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
  * Returns: TRUE if no error occurred
  */
@@ -936,7 +938,9 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
  * @dsn_name: the name of the DSN to remove
  * @error: a place to store errors, or %NULL
  *
- * Add or update a DSN from the definition in @info
+ * Remove the DSN named @dsn_name.
+ *
+ * This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
  * Returns: TRUE if no error occurred
  */
@@ -1175,7 +1179,9 @@ gda_config_get_provider_info (const gchar *provider_name)
  * provider named @provider_name. The caller must not call g_object_unref() on the
  * returned object.
  *
- * Returns: a pointer to the #GdaServerProvider, or %NULL if an error occurred
+ * This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
+ *
+ * Returns: (transfer none): a pointer to the #GdaServerProvider, or %NULL if an error occurred
  */
 GdaServerProvider *
 gda_config_get_provider (const gchar *provider_name, GError **error)

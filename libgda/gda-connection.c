@@ -652,6 +652,9 @@ gda_connection_get_property (GObject *object,
  * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-4.0 -L" command to 
  * list the possible named parameters.
  *
+ * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
+ * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
+ *
  * Returns: a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
  */
 GdaConnection *
@@ -778,7 +781,10 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * Additionally, it is possible to have the connection string
  * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name
  * and the real connection string will be extracted from that string (note that if @provider_name
- * is not %NULL then it will still be used as the provider ID).
+ * is not %NULL then it will still be used as the provider ID).\
+ *
+ * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
+ * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
  * Returns: a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
  */
