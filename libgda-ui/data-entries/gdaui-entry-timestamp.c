@@ -58,8 +58,6 @@ gdaui_entry_timestamp_get_type (void)
 static void
 gdaui_entry_timestamp_class_init (GdauiEntryTimestampClass * class)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-
 	parent_class = g_type_class_peek_parent (class);
 }
 

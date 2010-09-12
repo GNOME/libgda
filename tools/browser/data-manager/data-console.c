@@ -37,12 +37,13 @@
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
 #include "data-source-manager.h"
+#include <gdk/gdkkeysyms.h>
 
 #define MAIN_PAGE_EDITORS 0
 #define MAIN_PAGE_DATA 1
 
-#define EDITOR_PAGE_XML 0
-#define EDITOR_PAGE_UI 1
+#define EDITOR_PAGE_XML 1
+#define EDITOR_PAGE_UI 0
 
 typedef enum {
 	LAYOUT_HORIZ,
@@ -78,6 +79,11 @@ struct _DataConsolePrivate {
         GtkWidget *popup_container; /* to enter canvas's name */
         GtkWidget *name_entry;
         GtkWidget *real_save_button;
+
+	GtkWidget *clear_xml_button;
+	GtkWidget *add_source_button;
+	GtkWidget *add_source_menu;
+	gpointer   add_source_menu_index; /* used to know if @add_source_menu needs to be rebuilt */
 };
 
 static void data_console_class_init (DataConsoleClass *klass);
@@ -85,8 +91,11 @@ static void data_console_init       (DataConsole *dconsole, DataConsoleClass *kl
 static void data_console_dispose    (GObject *object);
 static void data_console_show_all   (GtkWidget *widget);
 static void data_console_grab_focus (GtkWidget *widget);
+static gboolean key_press_event     (GtkWidget *widget, GdkEventKey *event);
+
 
 static void data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole);
+static void data_source_source_changed_cb (DataSourceManager *mgr, DataSource *source, DataConsole *dconsole);
 
 /* BrowserPage interface */
 static void                 data_console_page_init (BrowserPageIface *iface);
@@ -94,12 +103,6 @@ static GtkActionGroup      *data_console_page_get_actions_group (BrowserPage *pa
 static const gchar         *data_console_page_get_actions_ui (BrowserPage *page);
 static GtkWidget           *data_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
-enum {
-	DUMMY,
-	LAST_SIGNAL
-};
-
-static guint data_console_signals[LAST_SIGNAL] = { };
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -115,6 +118,7 @@ data_console_class_init (DataConsoleClass *klass)
 
 	GTK_WIDGET_CLASS (klass)->show_all = data_console_show_all;
 	GTK_WIDGET_CLASS (klass)->grab_focus = data_console_grab_focus;
+	GTK_WIDGET_CLASS (klass)->key_press_event = key_press_event;
 	object_class->dispose = data_console_dispose;
 }
 
@@ -135,6 +139,25 @@ data_console_grab_focus (GtkWidget *widget)
 
 	dconsole = DATA_CONSOLE (widget);
 	gtk_widget_grab_focus (GTK_WIDGET (dconsole->priv->xml_sped));
+}
+
+static gboolean
+key_press_event (GtkWidget *widget, GdkEventKey *event)
+{
+	DataConsole *dconsole;
+	dconsole = DATA_CONSOLE (widget);
+	if ((event->keyval == GDK_Escape) &&
+	    (gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook)) == MAIN_PAGE_DATA)) {
+		if (dconsole->priv->agroup) {
+			GtkAction *action;
+			action = gtk_action_group_get_action (dconsole->priv->agroup, "ComposeMode");
+			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
+			return TRUE;
+		}
+	}
+
+	/* parent class */
+	return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, event);
 }
 
 static void
@@ -161,6 +184,8 @@ data_console_dispose (GObject *object)
 
 	/* free memory */
 	if (dconsole->priv) {
+		if (dconsole->priv->add_source_menu)
+			gtk_widget_destroy (dconsole->priv->add_source_menu);
 		if (dconsole->priv->params_form)
 			gtk_widget_destroy (dconsole->priv->params_form);
 		if (dconsole->priv->popup_container)
@@ -172,6 +197,9 @@ data_console_dispose (GObject *object)
 		if (dconsole->priv->mgr) {
 			g_signal_handlers_disconnect_by_func (dconsole->priv->mgr,
 							      G_CALLBACK (data_source_mgr_changed_cb),
+							      dconsole);
+			g_signal_handlers_disconnect_by_func (dconsole->priv->mgr,
+							      G_CALLBACK (data_source_source_changed_cb),
 							      dconsole);
 			g_object_unref (dconsole->priv->mgr);
 		}
@@ -228,6 +256,7 @@ data_console_new_with_fav_id (BrowserConnection *bcnc, gint fav_id)
 }
 
 static void editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole);
+static void add_source_clicked_cb (GtkButton *button, DataConsole *dconsole);
 static void variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole);
 static void execute_clicked_cb (GtkButton *button, DataConsole *dconsole);
 #ifdef HAVE_GDU
@@ -252,8 +281,10 @@ data_console_new (BrowserConnection *bcnc)
 
 	dconsole->priv->bcnc = g_object_ref (bcnc);
 	dconsole->priv->mgr = data_source_manager_new (bcnc);
-	g_signal_connect (dconsole->priv->mgr, "changed",
+	g_signal_connect (dconsole->priv->mgr, "list-changed",
 			  G_CALLBACK (data_source_mgr_changed_cb), dconsole);
+	g_signal_connect (dconsole->priv->mgr, "source-changed",
+			  G_CALLBACK (data_source_source_changed_cb), dconsole);
 	
 	/* header */
         GtkWidget *hbox, *label, *wid;
@@ -334,13 +365,15 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (nb), FALSE);
 	dconsole->priv->editors_notebook = nb;
 
-	dconsole->priv->xml_sped = xml_spec_editor_new (dconsole->priv->mgr);
-	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
-				  dconsole->priv->xml_sped, NULL);
-
 	dconsole->priv->ui_sped = ui_spec_editor_new (dconsole->priv->mgr);
+	gtk_widget_show (dconsole->priv->ui_sped);
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
 				  dconsole->priv->ui_sped, NULL);
+
+	dconsole->priv->xml_sped = xml_spec_editor_new (dconsole->priv->mgr);
+	gtk_widget_show (dconsole->priv->xml_sped);
+	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
+				  dconsole->priv->xml_sped, NULL);
 
 	/* buttons */
 	GtkWidget *bbox, *button;
@@ -348,10 +381,19 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 
-	button = browser_make_small_button (FALSE, _("Clear"), GTK_STOCK_CLEAR, _("Clear the editor's\ncontents"));
+	button = browser_make_small_button (FALSE, _("Reset"), GTK_STOCK_CLEAR,
+					    _("Reset the editor's\ncontents"));
+	dconsole->priv->clear_xml_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (editor_clear_clicked_cb), dconsole);
+
+	button = browser_make_small_button (FALSE, _("Add"), GTK_STOCK_ADD,
+					    _("Add a new data source"));
+	dconsole->priv->add_source_button = button;
+	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (add_source_clicked_cb), dconsole);
 
 	button = browser_make_small_button (TRUE, _("Variables"), NULL, _("Show variables needed"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
@@ -368,7 +410,7 @@ data_console_new (BrowserConnection *bcnc)
 	button = browser_make_small_button (TRUE, _("View XML"), NULL, _("View specifications\n"
 									 "as XML (advanced)"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+	spec_editor_toggled_cb (GTK_TOGGLE_BUTTON (button), dconsole);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (spec_editor_toggled_cb), dconsole);
 
@@ -422,8 +464,22 @@ data_console_new (BrowserConnection *bcnc)
 "        SELECT distinct c.name, o.creation_date, o.delivery_date FROM customers c INNER JOIN orders o ON (o.customer=c.id) INNER JOIN order_contents oc ON (oc.order_id=o.id) INNER JOIN products p ON (oc.product_ref=##products@ref::string)\n" \
 "    </query>\n" \
 "</data>"
+#undef DEFAULT_XML
 
-	//xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
+
+#define DEFAULT_XML \
+"<data>\n" \
+"    <!--\n\n" \
+"    <table name=\"\"/>\n" \
+"        <depend foreign_key_table=\"\"/>\n" \
+"    </table>\n" \
+"    <query title=\"\" id=\"\">\n" \
+"        SELECT ...\n" \
+"    </query>\n\n" \
+"    -->\n" \
+"</data>"
+
+	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
 
 	gtk_widget_grab_focus (dconsole->priv->xml_sped);
 	return (GtkWidget*) dconsole;
@@ -584,8 +640,22 @@ variables_clicked_cb (GtkToggleButton *button, DataConsole *dconsole)
 static void
 spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole)
 {
+	gint display;
+	display = gtk_toggle_button_get_active (button) ? EDITOR_PAGE_XML : EDITOR_PAGE_UI;
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->editors_notebook),
-				       (gtk_toggle_button_get_active (button) ? EDITOR_PAGE_XML : EDITOR_PAGE_UI));
+				       display);
+	switch (display) {
+	case EDITOR_PAGE_XML:
+		gtk_widget_set_sensitive (dconsole->priv->clear_xml_button, TRUE);
+		gtk_widget_set_sensitive (dconsole->priv->add_source_button, FALSE);
+		break;
+	case EDITOR_PAGE_UI:
+		gtk_widget_set_sensitive (dconsole->priv->clear_xml_button, FALSE);
+		gtk_widget_set_sensitive (dconsole->priv->add_source_button, TRUE);
+		break;
+	default:
+		g_assert_not_reached ();
+	}
 }
 
 static void
@@ -596,6 +666,12 @@ param_activated_cb (GdauiBasicForm *form, DataConsole *dconsole)
 		dwid = g_object_get_data ((GObject*) dconsole->priv->data, "data-widget");
 	if (dwid)
 		data_widget_rerun (DATA_WIDGET (dwid));
+}
+
+static void
+data_source_source_changed_cb (DataSourceManager *mgr, DataSource *source, DataConsole *dconsole)
+{
+	data_source_mgr_changed_cb (mgr, dconsole);
 }
 
 static void
@@ -624,44 +700,135 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 	gtk_container_add (GTK_CONTAINER (dconsole->priv->params_form_box),
 			   dconsole->priv->params_form);
 	gtk_widget_show (dconsole->priv->params_form);
-
-	/* force showing variables */
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dconsole->priv->params_toggle), show_variables);
 }
 
 static void
 editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole)
 {
-	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), "");
+	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
 	gtk_widget_grab_focus (dconsole->priv->xml_sped);
 }
 
-static GtkWidget *
-create_widget (DataConsole *dconsole, GArray *sources_array, GError **error)
+static void
+add_source_mitem_activated_cb (GtkMenuItem *mitem, DataConsole *dconsole)
 {
-	GtkWidget *sw, *vp, *dwid;
+	const gchar *table;
+	DataSource *source;
+	gchar *str;
+	GSList *list;
 
-	if (! sources_array) {
-		g_set_error (error, 0, 0,
-			     _("No data source defined"));
-		return NULL;
+	table = (gchar*) g_object_get_data ((GObject*) mitem, "_table");
+
+	source = data_source_new (dconsole->priv->bcnc, DATA_SOURCE_UNKNOWN);
+	list = (GSList*) data_source_manager_get_sources (dconsole->priv->mgr);
+	str = g_strdup_printf (_("source%d"), g_slist_length (list) + 1);
+	data_source_set_id (source, str);
+	g_free (str);
+	if (table)
+		data_source_set_table (source, table, NULL);
+	else
+		data_source_set_query (source, "SELECT", NULL);
+	data_source_manager_add_source (dconsole->priv->mgr, source);
+	ui_spec_editor_select_source (UI_SPEC_EDITOR (dconsole->priv->ui_sped), source);
+	g_object_unref (source);
+}
+
+static gint
+dbo_sort (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
+{
+	gint res;
+	res = g_strcmp0 (dbo1->obj_schema, dbo2->obj_schema);
+	if (res)
+		return - res;
+	return g_strcmp0 (dbo1->obj_name, dbo2->obj_name);
+}
+
+static void
+add_source_clicked_cb (GtkButton *button, DataConsole *dconsole)
+{
+	GdaMetaStruct *mstruct;
+	mstruct = browser_connection_get_meta_struct (dconsole->priv->bcnc);
+
+	if (dconsole->priv->add_source_menu &&
+	    (dconsole->priv->add_source_menu_index != (gpointer) mstruct)) {
+		gtk_widget_destroy (dconsole->priv->add_source_menu);
+		dconsole->priv->add_source_menu = NULL;
+		dconsole->priv->add_source_menu_index = NULL;
+	}
+	if (dconsole->priv->add_source_menu) {
+		gtk_menu_popup (GTK_MENU (dconsole->priv->add_source_menu), NULL, NULL,
+			NULL, NULL, 0,
+			gtk_get_current_event_time ());
+		return;
 	}
 
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
+	GtkWidget *menu, *mitem, *submenu = NULL;
+	menu = gtk_menu_new ();
+	mitem = gtk_menu_item_new_with_label (_("Data source from query"));
+	g_signal_connect (mitem, "activate",
+			  G_CALLBACK (add_source_mitem_activated_cb), dconsole);
+	gtk_widget_show (mitem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 
-	vp = gtk_viewport_new (NULL, NULL);
-	gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
-	gtk_container_add (GTK_CONTAINER (sw), vp);
+	if (mstruct) {
+		gboolean sep_added = FALSE;
+		GSList *dbo_list, *list;
+		gchar *current_schema = NULL;
 
-	dwid = data_widget_new (sources_array);
-	gtk_container_add (GTK_CONTAINER (vp), dwid);
-	g_object_set_data ((GObject*) sw, "data-widget", dwid);
+		dbo_list = gda_meta_struct_get_all_db_objects (mstruct);
+		list = g_slist_sort (dbo_list, (GCompareFunc) dbo_sort);
+		dbo_list = list;
+		for (list = dbo_list; list; list = list->next) {
+			GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
+			gchar *str;
+			if (dbo->obj_type != GDA_META_DB_TABLE)
+				continue;
+			if (! sep_added) {
+				mitem = gtk_separator_menu_item_new ();
+				gtk_widget_show (mitem);
+				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+				sep_added = TRUE;
+			}
 
-	gtk_widget_show_all (vp);
-	return sw;
+			if (!strcmp (dbo->obj_short_name, dbo->obj_full_name)) {
+				gboolean schema_changed = TRUE;
+				if (!current_schema)
+					current_schema = g_strdup (dbo->obj_schema);
+				else if (strcmp (current_schema, dbo->obj_schema)) {
+					g_free (current_schema);
+					current_schema = g_strdup (dbo->obj_schema);
+				}
+				else
+					schema_changed = FALSE;
+
+				if (schema_changed) {
+					str = g_strdup_printf (_("In schema %s"), current_schema);
+					mitem = gtk_menu_item_new_with_label (str);
+					gtk_widget_show (mitem);
+					g_free (str);
+					gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+					submenu = gtk_menu_new ();
+					gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+				}
+			}
+
+			str = g_strdup_printf (_("For table: %s"), dbo->obj_name);
+			mitem = gtk_menu_item_new_with_label (str);
+			g_object_set_data_full ((GObject*) mitem, "_table",
+						g_strdup (dbo->obj_short_name), g_free);
+			g_signal_connect (mitem, "activate",
+					  G_CALLBACK (add_source_mitem_activated_cb), dconsole);
+			gtk_widget_show (mitem);
+			gtk_menu_shell_append (GTK_MENU_SHELL (submenu ? submenu : menu), mitem);
+		}
+		g_slist_free (dbo_list);
+		g_free (current_schema);
+	}
+	dconsole->priv->add_source_menu_index = (gpointer) mstruct;
+	dconsole->priv->add_source_menu = menu;
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
+			NULL, NULL, 0,
+			gtk_get_current_event_time ());
 }
 
 /*
@@ -672,6 +839,11 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 {
 	gint pagenb;
 
+	/* show variables if necessary */
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dconsole->priv->params_toggle),
+				      dconsole->priv->params_form &&
+				      GDAUI_IS_BASIC_FORM (dconsole->priv->params_form) ? TRUE : FALSE);
+
 	if (dconsole->priv->toggling) {
 		dconsole->priv->toggling = FALSE;
 		return;
@@ -680,42 +852,45 @@ compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
 	pagenb = gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook));
 	if (pagenb == MAIN_PAGE_EDITORS) {
 		/* Get Data sources */
-		GArray *sources_array;
-		GError *lerror = NULL;
-		sources_array = data_source_manager_get_sources_array (dconsole->priv->mgr, &lerror);
-		if (sources_array) {
-			if (dconsole->priv->data) {
-				/* destroy existing data widgets */
-				gtk_widget_destroy (dconsole->priv->data);
-				dconsole->priv->data = NULL;
-			}
+		pagenb = MAIN_PAGE_DATA;
+		if (dconsole->priv->data) {
+			/* destroy existing data widgets */
+			gtk_widget_destroy (dconsole->priv->data);
+			dconsole->priv->data = NULL;
+		}
 
-			GtkWidget *wid;
-			wid = create_widget (dconsole, sources_array, &lerror);
-			data_source_manager_destroy_sources_array (sources_array);
-			if (wid) {
-				dconsole->priv->data = wid;
-				gtk_box_pack_start (GTK_BOX (dconsole->priv->data_box), wid, TRUE, TRUE, 0);
-				gtk_widget_show (wid);
-				pagenb = MAIN_PAGE_DATA;
-			}
-		}
-		if (lerror) {
-			browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dconsole),
-					    lerror && lerror->message ? lerror->message :
-					    _("Error parsing XML specifications"));
-			g_clear_error (&lerror);
-		}
-		if (pagenb == MAIN_PAGE_EDITORS) {
-			dconsole->priv->toggling = TRUE;
-			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
-		}
+		GtkWidget *sw, *vp, *dwid;
+		
+		sw = gtk_scrolled_window_new (NULL, NULL);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
+		
+		vp = gtk_viewport_new (NULL, NULL);
+		gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
+		gtk_container_add (GTK_CONTAINER (sw), vp);
+		
+		dwid = data_widget_new (dconsole->priv->mgr);
+		gtk_container_add (GTK_CONTAINER (vp), dwid);
+		g_object_set_data ((GObject*) sw, "data-widget", dwid);
+		
+		gtk_widget_show_all (vp);
+
+		dconsole->priv->data = sw;
+		gtk_box_pack_start (GTK_BOX (dconsole->priv->data_box), sw, TRUE, TRUE, 0);
+		gtk_widget_show (sw);
 	}
 	else {
 		/* simply change the current page */
 		pagenb = MAIN_PAGE_EDITORS;
 	}
 
+	if (pagenb == MAIN_PAGE_DATA)
+		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) dconsole)),
+						   GTK_MESSAGE_INFO,
+						   "data-manager-exec-mode-switched",
+						   _("Switching to execution mode. Hit the Escape key "
+						     "to return to the compose mode"));
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), pagenb);
 }
 

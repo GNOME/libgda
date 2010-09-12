@@ -69,7 +69,7 @@ gdaui_login_dialog_class_init (GdauiLoginDialogClass *klass)
 }
 
 static void
-login_dsn_changed_cb (GdauiLogin *login, GdauiLoginDialog *dialog)
+login_changed_cb (GdauiLogin *login, gboolean valid, GdauiLoginDialog *dialog)
 {
 	gchar *str;
 	const GdaDsnInfo *cinfo;
@@ -153,8 +153,8 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, GdauiLoginDialogClass *klass)
 		      GDA_UI_LOGIN_HIDE_DSN_SELECTION_MODE, NULL);
 	gtk_widget_show (dialog->priv->login);
 	gtk_box_pack_start (GTK_BOX (vbox), dialog->priv->login, TRUE, TRUE, 0);
-	g_signal_connect (G_OBJECT (dialog->priv->login), "dsn-changed",
-			  G_CALLBACK (login_dsn_changed_cb), dialog);
+	g_signal_connect (G_OBJECT (dialog->priv->login), "changed",
+			  G_CALLBACK (login_changed_cb), dialog);
 
 	gchar *path;
 	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gdaui-generic.png", NULL);

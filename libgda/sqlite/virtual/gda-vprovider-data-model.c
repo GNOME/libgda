@@ -564,7 +564,6 @@ virtual_table_manage_real_data_model (VirtualTable *vtable)
 		}
 		else {
 			/* no random access => use a wrapper */
-			GdaDataModel *wrapper;
 			vtable->wrapper = gda_data_access_wrapper_new (vtable->td->real_model);
 		}
 	}
@@ -617,7 +616,7 @@ static int
 virtualNext (sqlite3_vtab_cursor *cur)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
-	VirtualTable *vtable = (VirtualTable*) cur->pVtab;
+	/*VirtualTable *vtable = (VirtualTable*) cur->pVtab;*/
 
 	TRACE ();
 
@@ -851,17 +850,13 @@ virtualSync (sqlite3_vtab *tab)
 static int
 virtualCommit (sqlite3_vtab *tab)
 {
-	VirtualTable *vtable = (VirtualTable *) tab;
-	
 	TRACE ();
 	return SQLITE_OK;
 }
 
 static int
 virtualRollback (sqlite3_vtab *tab)
-{
-	VirtualTable *vtable = (VirtualTable *) tab;
-	
+{	
 	TRACE ();
 	return SQLITE_OK;
 }

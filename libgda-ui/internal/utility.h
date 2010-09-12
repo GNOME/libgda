@@ -58,3 +58,8 @@ void             _gdaui_utility_show_error (GtkWindow *parent, const gchar *form
  * Misc
  */
 gboolean         _gdaui_utility_iter_differ (GdaDataModelIter *iter1, GdaDataModelIter *iter2);
+
+/*
+ * Handle selection and right click on treeviews
+ */
+void             _gdaui_setup_right_click_selection_on_treeview (GtkTreeView *tview);

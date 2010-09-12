@@ -64,10 +64,14 @@
     The commands available through the command buttons are:
   </p>
   <list>
-    <item><p><gui>Clear</gui>: clears the XML editor</p></item>
+    <item><p><gui>Reset</gui>: resets the XML editor to a default XML template, only available when the XML
+    view is currently displayed</p></item>
+    <item><p><gui>Add</gui>: displays a popup menu with an entry per table to quickly add
+    the whole contents of a table as a data source, only available when the UI
+    editor is currently displayed</p></item>
     <item><p><gui>Variables</gui>: shows/hide the <link xref="variables-syntax">variables</link> panel where you can give values to the variables
-	present in the SQL code of any data source's definition. The panel is automatically shown when a variable is detected in 
-	the SQL code.</p></item>
+    present in the SQL code of any data source's definition. The panel is automatically shown when a variable is detected in 
+    the SQL code.</p></item>
     <item><p><gui>Execute</gui>: executes the defined data sources</p></item>
     <item><p><gui>View XML</gui>: toggles between the XML editor and the UI editor</p></item>
     <item><p><gui>Help</gui>: shows some help</p></item>

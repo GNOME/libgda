@@ -177,14 +177,17 @@ AC_SUBST(GTK_LIBS)
 
 AC_ARG_WITH(gtksourceview,
 AS_HELP_STRING([--with-gtksourceview], [Enable using GtkSourceView]),
+	[with_sourceview=$withval]
 	,with_sourceview=auto)
 
 AC_ARG_WITH(goocanvas,
 AS_HELP_STRING([--with-goocanvas], [Enable using GooCanvas]),
+	[with_goo=$withval]
 	,with_goo=auto)
 
 AC_ARG_WITH(graphviz,
 AS_HELP_STRING([--with-graphviz], [Enable using Graphviz]),
+	[with_graphviz=$withval]
 	,with_graphviz=auto)
 
 if test x"$have_ui" = "xyes"

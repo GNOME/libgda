@@ -61,7 +61,7 @@ file_load_cb (GtkWidget *button, BinMenu *menu)
 				GdaBinary *bin;
 				GValue *nvalue;
 				bin = g_new0 (GdaBinary, 1);
-				bin->data = data;
+				bin->data = (guchar*) data;
 				bin->binary_length = length;
 				nvalue = gda_value_new (GDA_TYPE_BINARY);
 				gda_value_take_binary (nvalue, bin);

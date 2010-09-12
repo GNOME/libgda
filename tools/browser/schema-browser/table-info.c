@@ -82,12 +82,6 @@ enum {
         PROP_0,
 };
 
-enum {
-	SELECTION_CHANGED,
-	LAST_SIGNAL
-};
-
-static guint table_info_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 
@@ -522,9 +516,10 @@ static void statement_executed_cb (BrowserConnection *bcnc,
 				    error->message ?
 				    error->message : _("No detail"));
 	else
-		browser_show_notice (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
-				     "DataInsertQuery",
-				     _("Data successfully inserted"));
+		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
+						   GTK_MESSAGE_INFO,
+						   "DataInsertQuery",
+						   _("Data successfully inserted"));
 }
 
 static void

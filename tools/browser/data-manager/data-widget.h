@@ -26,6 +26,7 @@
 #include <gtk/gtk.h>
 #include <libgda/libgda.h>
 #include "data-source.h"
+#include "data-source-manager.h"
 
 G_BEGIN_DECLS
 
@@ -51,7 +52,7 @@ struct _DataWidgetClass {
 
 
 GType      data_widget_get_type   (void) G_GNUC_CONST;
-GtkWidget *data_widget_new        (GArray *sources_array);
+GtkWidget *data_widget_new        (DataSourceManager *mgr);
 GdaSet    *data_widget_get_export (DataWidget *dwid, DataSource *source);
 void       data_widget_rerun      (DataWidget *dwid);
 

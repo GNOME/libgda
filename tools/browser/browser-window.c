@@ -30,6 +30,7 @@
 #include "browser-spinner.h"
 #include "browser-stock-icons.h"
 #include "connection-binding-properties.h"
+#include <gdk/gdkkeysyms.h>
 
 /*
  * structure representing a 'tab' in a window
@@ -59,6 +60,7 @@ static void browser_window_init (BrowserWindow *bwin);
 static void browser_window_dispose (GObject *object);
 
 static gboolean window_state_event (GtkWidget *widget, GdkEventWindowState *event);
+static gboolean key_press_event (GtkWidget *widget, GdkEventKey *event);
 static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, BrowserWindow *bwin);
 
 static void connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin);
@@ -85,6 +87,10 @@ struct _BrowserWindowPrivate {
 	PerspectiveData   *current_perspective;
 	guint              ui_manager_merge_id; /* for current perspective */
 
+	GtkWidget         *menubar;
+	GtkWidget         *toolbar;
+	gboolean           toolbar_shown;
+	gboolean           cursor_in_toolbar;
 	GtkWidget         *spinner;
 	GtkUIManager      *ui_manager;
 	GtkActionGroup    *agroup;
@@ -96,10 +102,17 @@ struct _BrowserWindowPrivate {
 	gulong             cnc_added_sigid;
 	gulong             cnc_removed_sigid;
 
+#if GTK_CHECK_VERSION (2,18,0)
+	GtkWidget         *notif_box;
+	GSList            *notif_widgets;
+#endif
+
 	GtkWidget         *statusbar;
 	guint              cnc_statusbar_context;
 
 	gboolean           fullscreen;
+	gulong             fullscreen_motion_sig_id;
+	guint              fullscreen_timer_id;
 };
 
 GType
@@ -137,6 +150,7 @@ browser_window_class_init (BrowserWindowClass *klass)
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	widget_class->window_state_event = window_state_event;
+	widget_class->key_press_event = key_press_event;
 	parent_class = g_type_class_peek_parent (klass);
 
 	browser_window_signals[FULLSCREEN_CHANGED] =
@@ -164,6 +178,8 @@ browser_window_init (BrowserWindow *bwin)
 	bwin->priv->cnc_removed_sigid = 0;
 	bwin->priv->updating_transaction_status = FALSE;
 	bwin->priv->fullscreen = FALSE;
+	bwin->priv->fullscreen_motion_sig_id = 0;
+	bwin->priv->fullscreen_timer_id = 0;
 }
 
 static void
@@ -181,6 +197,12 @@ browser_window_dispose (GObject *object)
 		for (list = connections; list; list = list->next)
 			connection_removed_cb (browser_core_get(), BROWSER_CONNECTION (list->data), bwin);
 		g_slist_free (connections);
+
+		if (bwin->priv->fullscreen_timer_id)
+			g_source_remove (bwin->priv->fullscreen_timer_id);
+
+		if (bwin->priv->fullscreen_motion_sig_id)
+			g_signal_handler_disconnect (bwin, bwin->priv->fullscreen_motion_sig_id);
 
 		if (bwin->priv->cnc_added_sigid > 0)
 			g_signal_handler_disconnect (browser_core_get (), bwin->priv->cnc_added_sigid);
@@ -203,6 +225,11 @@ browser_window_dispose (GObject *object)
 		}
 		if (bwin->priv->perspectives_nb)
 			g_object_unref (bwin->priv->perspectives_nb);
+
+#if GTK_CHECK_VERSION (2,18,0)
+		if (bwin->priv->notif_widgets)
+			g_slist_free (bwin->priv->notif_widgets);
+#endif
 		g_free (bwin->priv);
 		bwin->priv = NULL;
 	}
@@ -407,6 +434,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	gtk_window_add_accel_group (GTK_WINDOW (bwin), accel_group);
 
         menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
+	bwin->priv->menubar = menubar;
 #ifdef HAVE_MAC_INTEGRATION
 	gtk_osxapplication_set_menu_bar (theApp, GTK_MENU_SHELL (menubar));
 #else
@@ -415,10 +443,19 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 #endif
 
         toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
+	bwin->priv->toolbar = toolbar;
+	bwin->priv->toolbar_shown = TRUE;
         gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, TRUE, 0);
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
         gtk_widget_show (toolbar);
 	bwin->priv->toolbar_style = gtk_toolbar_get_style (GTK_TOOLBAR (toolbar));
+
+#if GTK_CHECK_VERSION (2,18,0)
+	bwin->priv->notif_box = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->notif_box, FALSE, FALSE, 0);
+        gtk_widget_show (bwin->priv->notif_box);
+	bwin->priv->notif_widgets = NULL;
+#endif
 
 	GtkToolItem *ti;
 	GtkWidget *spinner, *svbox, *align;
@@ -445,7 +482,6 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
 	/* statusbar */
 	bwin->priv->statusbar = gtk_statusbar_new ();
-
 
 	GSList *connections, *list;
 	bwin->priv->cnc_agroup = gtk_action_group_new ("CncActions");
@@ -548,7 +584,16 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
         gtk_widget_show (GTK_WIDGET (bwin));
 
+#if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_set_can_focus ((GtkWidget* )pers->perspective_widget, TRUE);
+#else
+	GtkWidget *fwid = (GtkWidget* )pers->perspective_widget;
+	if (! GTK_WIDGET_CAN_FOCUS (fwid)) {
+		GTK_WIDGET_SET_FLAGS (fwid, GTK_CAN_FOCUS);
+		gtk_widget_queue_resize (fwid);
+		g_object_notify (G_OBJECT (fwid), "can-focus");
+	}
+#endif
 	gtk_widget_grab_focus ((GtkWidget* )pers->perspective_widget);
 
 	return bwin;
@@ -880,13 +925,127 @@ window_close_cb (GtkAction *action, BrowserWindow *bwin)
 	delete_event (NULL, NULL, bwin);
 }
 
+static gboolean
+toolbar_hide_timeout_cb (BrowserWindow *bwin)
+{
+	if (!bwin->priv->cursor_in_toolbar) {
+		gtk_widget_hide (bwin->priv->toolbar);
+		gtk_widget_hide (bwin->priv->menubar);
+		bwin->priv->toolbar_shown = FALSE;
+		
+		/* remove timer */
+		bwin->priv->fullscreen_timer_id = 0;
+		return FALSE;
+	}
+	else
+		/* keep timer */
+		return TRUE;
+}
+
+#define BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD 5
+#define BWIN_WINDOW_FULLSCREEN_POPUP_TIMER 1
+
+static gboolean
+fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
+{
+	BrowserWindow *bwin = BROWSER_WINDOW (widget);
+#if GTK_CHECK_VERSION(2,14,0)
+	if (gtk_widget_get_window (widget) != event->window)
+		return FALSE;
+#else
+	if (widget->window != event->window)
+		return FALSE;
+#endif
+
+	if (event->y < BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD) {
+		gtk_widget_show (bwin->priv->toolbar);
+		gtk_widget_show (bwin->priv->menubar);
+		bwin->priv->toolbar_shown = TRUE;
+	}
+
+	if (bwin->priv->toolbar_shown) {
+		/* reset toolbar hiding timer */
+		if (bwin->priv->fullscreen_timer_id)
+			g_source_remove (bwin->priv->fullscreen_timer_id);
+		bwin->priv->fullscreen_timer_id = g_timeout_add_seconds (BWIN_WINDOW_FULLSCREEN_POPUP_TIMER,
+									 (GSourceFunc) toolbar_hide_timeout_cb,
+									 bwin);
+	}
+	return FALSE;
+}
+
+gboolean
+toolbar_enter_notify_cb (GtkWidget *widget, GdkEventCrossing *event, BrowserWindow *bwin)
+{
+	bwin->priv->cursor_in_toolbar = TRUE;
+	return FALSE;
+}
+
+gboolean
+toolbar_leave_notify_cb (GtkWidget *widget, GdkEventCrossing *event, BrowserWindow *bwin)
+{
+	bwin->priv->cursor_in_toolbar = FALSE;
+	return FALSE;
+}
+
 static void
 window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 {
-	if (gtk_toggle_action_get_active (action))
+	if (gtk_toggle_action_get_active (action)) {
 		gtk_window_fullscreen (GTK_WINDOW (bwin));
-	else
+		browser_window_show_notice_printf (bwin, GTK_MESSAGE_INFO,
+						   "fullscreen-esc",
+						   _("Hit the Escape key to leave the fullscreen mode"));
+		gtk_widget_hide (bwin->priv->toolbar);
+		gtk_widget_hide (bwin->priv->menubar);
+		bwin->priv->toolbar_shown = FALSE;
+		bwin->priv->fullscreen_motion_sig_id = g_signal_connect (bwin, "motion-notify-event",
+									 G_CALLBACK (fullscreen_motion_notify_cb),
+									 NULL);
+		g_signal_connect (bwin->priv->toolbar, "enter-notify-event",
+				  G_CALLBACK (toolbar_enter_notify_cb), bwin);
+		g_signal_connect (bwin->priv->toolbar, "leave-notify-event",
+				  G_CALLBACK (toolbar_leave_notify_cb), bwin);
+		g_signal_connect (bwin->priv->menubar, "enter-notify-event",
+				  G_CALLBACK (toolbar_enter_notify_cb), bwin);
+		g_signal_connect (bwin->priv->menubar, "leave-notify-event",
+				  G_CALLBACK (toolbar_leave_notify_cb), bwin);
+	}
+	else {
 		gtk_window_unfullscreen (GTK_WINDOW (bwin));
+		g_signal_handler_disconnect (bwin, bwin->priv->fullscreen_motion_sig_id);
+		bwin->priv->fullscreen_motion_sig_id = 0;
+		g_signal_handlers_disconnect_by_func (bwin->priv->toolbar,
+						      G_CALLBACK (toolbar_enter_notify_cb), bwin);
+		g_signal_handlers_disconnect_by_func (bwin->priv->toolbar,
+						      G_CALLBACK (toolbar_leave_notify_cb), bwin);
+		g_signal_handlers_disconnect_by_func (bwin->priv->menubar,
+						      G_CALLBACK (toolbar_enter_notify_cb), bwin);
+		g_signal_handlers_disconnect_by_func (bwin->priv->menubar,
+						      G_CALLBACK (toolbar_leave_notify_cb), bwin);
+
+		gtk_widget_show (bwin->priv->toolbar);
+		gtk_widget_show (bwin->priv->menubar);
+		bwin->priv->toolbar_shown = TRUE;
+
+		if (bwin->priv->fullscreen_timer_id) {
+			g_source_remove (bwin->priv->fullscreen_timer_id);
+			bwin->priv->fullscreen_timer_id = 0;
+		}
+	}
+}
+
+static gboolean
+key_press_event (GtkWidget *widget, GdkEventKey *event)
+{
+	if ((event->keyval == GDK_Escape) &&
+	    browser_window_is_fullscreen (BROWSER_WINDOW (widget))) {
+		browser_window_set_fullscreen (BROWSER_WINDOW (widget), FALSE);
+		return TRUE;
+	}
+
+	/* parent class */
+	return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, event);
 }
 
 static gboolean
@@ -979,7 +1138,7 @@ connection_properties_cb (GtkAction *action, BrowserWindow *bwin)
 		if (res == GTK_RESPONSE_OK) {
 			GError *error = NULL;
 			if (!browser_virtual_connection_modify_specs (BROWSER_VIRTUAL_CONNECTION (bwin->priv->bcnc),
-					connection_binding_properties_get_specs (CONNECTION_BINDING_PROPERTIES (win)),
+								      connection_binding_properties_get_specs (CONNECTION_BINDING_PROPERTIES (win)),
 								      &error)) {
 				browser_show_error ((GtkWindow*) bwin,
 						    _("Error updating bound connection: %s"),
@@ -1218,6 +1377,228 @@ browser_window_pop_status (BrowserWindow *bwin, const gchar *context)
 }
 
 /**
+ * browser_window_show_notice_printf
+ * @bwin: a #BrowserWindow
+ * @context: textual description of what context the message is being used in
+ * @format: the text to display
+ *
+ * Make @bwin display a notice
+ */
+void
+browser_window_show_notice_printf (BrowserWindow *bwin, GtkMessageType type, const gchar *context,
+				   const gchar *format, ...)
+{
+	va_list args;
+        gchar sz[2048];
+
+	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
+
+        /* build the message string */
+        va_start (args, format);
+        vsnprintf (sz, sizeof (sz), format, args);
+        va_end (args);
+	browser_window_show_notice (bwin, type, context, sz);
+}
+
+
+#if GTK_CHECK_VERSION (2,18,0)
+static void
+info_bar_response_cb (GtkInfoBar *ibar, gint response, BrowserWindow *bwin)
+{
+	bwin->priv->notif_widgets = g_slist_remove (bwin->priv->notif_widgets, ibar);	
+	gtk_widget_destroy ((GtkWidget*) ibar);
+}
+#endif
+
+/* hash table to remain which context notices have to be hidden: key=context, value=GINT_TO_POINTER (1) */
+static GHashTable *hidden_contexts = NULL;
+static void
+hidden_contexts_foreach_save (const gchar *context, gint value, xmlNodePtr root)
+{
+	xmlNodePtr node;
+	node = xmlNewChild (root, NULL, BAD_CAST "hide-notice", BAD_CAST context);
+}
+
+static void
+hide_notice_toggled_cb (GtkToggleButton *toggle, gchar *context)
+{
+	g_assert (hidden_contexts);
+	if (gtk_toggle_button_get_active (toggle))
+		g_hash_table_insert (hidden_contexts, g_strdup (context), GINT_TO_POINTER (TRUE));
+	else
+		g_hash_table_remove (hidden_contexts, context);
+
+	/* save config */
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	xmlChar *xml_contents;
+	gint size;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewNode (NULL, BAD_CAST "gda-browser-preferences");
+	xmlDocSetRootElement (doc, root);
+	g_hash_table_foreach (hidden_contexts, (GHFunc) hidden_contexts_foreach_save, root);
+	xmlDocDumpFormatMemory (doc, &xml_contents, &size, 1);
+	xmlFreeDoc (doc);
+
+	/* save to disk */
+	gchar *confdir, *conffile = NULL;
+	GError *lerror = NULL;
+	confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_user_config_dir(), "gda-browser", NULL);
+	if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
+		if (g_mkdir_with_parents (confdir, 0700)) {
+			g_warning ("Can't create configuration directory '%s' to save preferences.",
+				   confdir);
+			goto out;
+		}
+	}
+	conffile = g_build_filename (confdir, "preferences.xml", NULL);
+	if (! g_file_set_contents (conffile, (gchar *) xml_contents, size, &lerror)) {
+		g_warning ("Can't save preferences file '%s': %s", conffile,
+			   lerror && lerror->message ? lerror->message : _("No detail"));
+		g_clear_error (&lerror);
+	}
+
+ out:
+	xmlFree (xml_contents);
+	g_free (confdir);
+	g_free (conffile);
+}
+
+static void
+load_preferences (void)
+{
+	/* load preferences */
+	xmlDocPtr doc;
+	xmlNodePtr root, node;
+	gchar *conffile;
+	conffile = g_build_path (G_DIR_SEPARATOR_S, g_get_user_config_dir(),
+				 "gda-browser", "preferences.xml", NULL);
+	if (!g_file_test (conffile, G_FILE_TEST_EXISTS)) {
+		g_free (conffile);
+		return;
+	}
+
+	doc = xmlParseFile (conffile);
+	if (!doc) {
+		g_warning ("Error loading preferences from file '%s'", conffile);
+		g_free (conffile);
+		return;
+	}
+	g_free (conffile);
+
+	root = xmlDocGetRootElement (doc);
+	for (node = root->children; node; node = node->next) {
+		xmlChar *contents;
+		if (strcmp ((gchar *) node->name, "hide-notice"))
+			continue;
+		contents = xmlNodeGetContent (node);
+		if (contents) {
+			g_hash_table_insert (hidden_contexts, g_strdup ((gchar*) contents),
+					     GINT_TO_POINTER (TRUE));
+			xmlFree (contents);
+		}
+	}
+	xmlFreeDoc (doc);
+}
+
+
+/**
+ * browser_window_show_notice
+ * @bwin: a #BrowserWindow
+ * @context: textual description of what context the message is being used in
+ * @text: the information's text
+ *
+ * Makes @bwin display a notice
+ */
+void
+browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gchar *context, const gchar *text)
+{
+	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
+	gboolean hide = FALSE;
+
+	if ((type != GTK_MESSAGE_ERROR) && context) {
+		if (!hidden_contexts) {
+			hidden_contexts = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+			load_preferences ();
+		}
+		hide = GPOINTER_TO_INT (g_hash_table_lookup (hidden_contexts, context));
+	}
+
+	if (hide) {
+		gchar *ptr, *tmp;
+		tmp = g_strdup (text);
+		for (ptr = tmp; *ptr && (*ptr != '\n'); ptr++);
+		if (*ptr) {
+			*ptr = '.'; ptr++;
+			*ptr = '.'; ptr++;
+			*ptr = '.'; ptr++;
+			*ptr = 0;
+		}
+		browser_window_push_status (bwin, "SupportNotice", tmp, TRUE);
+		g_free (tmp);
+	}
+	else {
+		GtkWidget *cb = NULL;
+		if (context && (type == GTK_MESSAGE_INFO)) {
+			cb = gtk_check_button_new_with_label (_("Don't show this message again"));
+			g_signal_connect_data (cb, "toggled",
+					       G_CALLBACK (hide_notice_toggled_cb), g_strdup (context),
+					       (GClosureNotify) g_free, 0);
+		}
+
+#if GTK_CHECK_VERSION (2,18,0)
+		/* use a GtkInfoBar */
+		GtkWidget *ibar, *content_area, *label;
+		
+		ibar = gtk_info_bar_new_with_buttons (GTK_STOCK_CLOSE, 1, NULL);
+		gtk_info_bar_set_message_type (GTK_INFO_BAR (ibar), type);
+		label = gtk_label_new ("");
+		gtk_label_set_markup (GTK_LABEL (label), text);
+		gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (ibar));
+		if (cb) {
+			GtkWidget *box;
+			box = gtk_hbox_new (FALSE, 0);
+			gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
+			gtk_box_pack_start (GTK_BOX (box), cb, FALSE, FALSE, 0);
+			gtk_container_add (GTK_CONTAINER (content_area), box);
+			gtk_widget_show_all (box);
+		}
+		else {
+			gtk_container_add (GTK_CONTAINER (content_area), label);
+			gtk_widget_show (label);
+		}
+		g_signal_connect (ibar, "response",
+				  G_CALLBACK (info_bar_response_cb), bwin);
+		gtk_box_pack_start (GTK_BOX (bwin->priv->notif_box), ibar, TRUE, TRUE, 0);
+		bwin->priv->notif_widgets = g_slist_append (bwin->priv->notif_widgets, ibar);
+		if (g_slist_length (bwin->priv->notif_widgets) > 2) {
+			gtk_widget_destroy (GTK_WIDGET (bwin->priv->notif_widgets->data));
+			bwin->priv->notif_widgets = g_slist_delete_link (bwin->priv->notif_widgets,
+									 bwin->priv->notif_widgets);
+		}
+		gtk_widget_show (ibar);
+#else
+		/* create the error message dialog */
+		GtkWidget *dialog;
+		dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (bwin),
+							     GTK_DIALOG_DESTROY_WITH_PARENT |
+							     GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
+							     GTK_BUTTONS_CLOSE,
+							     "<span weight=\"bold\">%s</span>\n%s", _("Note:"), text);
+		if (cb)
+			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), cb, FALSE, FALSE, 10);
+	
+		gtk_widget_show_all (dialog);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+#endif
+	}
+}
+
+
+/**
  * browser_window_customize_perspective_ui
  * @bwin: a #BrowserWindow
  * @bpers: the #BrowserPerspective concerned
@@ -1316,13 +1697,17 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 	}
 	g_list_free (actions);
 
-	browser_show_notice (GTK_WINDOW (bwin), "Perspective change",
-			     _("The current perspective has changed to the '%s' perspective, you "
-			       "can switch back to previous perspective through the "
-			       "'Perspective/%s' menu, or using the '%s' shortcut"),
-			     bwin->priv->current_perspective->factory->perspective_name,
-			     current_pdata->factory->perspective_name,
-			     current_pdata->factory->menu_shortcut);
+	gchar *tmp;
+	tmp = g_markup_printf_escaped (_("The current perspective has changed to the '%s' perspective, you "
+					 "can switch back to previous perspective through the "
+					 "'Perspective/%s' menu, or using the '%s' shortcut"),
+				       bwin->priv->current_perspective->factory->perspective_name,
+				       current_pdata->factory->perspective_name,
+				       current_pdata->factory->menu_shortcut);
+
+			
+	browser_window_show_notice (bwin, GTK_MESSAGE_INFO, "Perspective change", tmp);
+	g_free (tmp);
 
 	return bpers;
 }
@@ -1330,10 +1715,29 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 /**
  * browser_window_is_fullscreen
  * @bwin: a #BrowserWindow
+ *
+ * Returns: %TRUE if @bwin is fullscreen
  */
 gboolean
 browser_window_is_fullscreen (BrowserWindow *bwin)
 {
 	g_return_val_if_fail (BROWSER_IS_WINDOW (bwin), FALSE);
 	return bwin->priv->fullscreen;
+}
+
+/**
+ * browser_window_set_fullscreen
+ * @bwin: a #BrowserWindow
+ * @fullscreen:
+ *
+ * Requires @bwin to be fullscreen if @fullscreen is %TRUE
+ */
+void
+browser_window_set_fullscreen (BrowserWindow *bwin, gboolean fullscreen)
+{
+	GtkAction *action;
+	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
+	
+	action = gtk_action_group_get_action (bwin->priv->agroup, "WindowFullScreen");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fullscreen);
 }

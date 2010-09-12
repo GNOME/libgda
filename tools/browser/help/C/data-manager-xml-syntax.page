@@ -92,18 +92,38 @@
   </p>
   <list>
     <item><p>requires the "name" attribute which represents the table name.</p></item>
-    <item><p>can contain a <code>&lt;depend&gt;</code> node which defines a dependency on another
+    <item><p>can have a "id" attribute corresponding to the data source's ID. If not present,
+    and ID will be assigned automatically.</p></item>
+    <item><p>can contain a <code>&lt;depend&gt;</code> tag which defines a dependency on another
 	data source with
 	the "foreign_key_table" attribute defining the name of the table to which there are foreign keys
 	used to determine the dependency, and the "id" attribute can specify a data source ID if different than
 	the aforementioned table</p></item>
   </list>
+  <p>
+    The <code>&lt;depend&gt;</code> tag, which, for a data source from a table, defines a dependency to
+    another data source from a table:
+  </p>
+    <list>
+    <item><p>requires the "foreign_key_table" attribute defining the name of the table to which there are
+    foreign keys used to determine the dependency</p></item>
+    <item><p>can have a "id" attribute corresponding to the ID of the referenced data source. If not
+    provided, then the dependency may fail if there is no data source which ID is the"foreign_key_table"
+    attribute.</p></item>
+    <item><p>can contain one or more <code>&lt;column&gt;</code> tag which contents define the columns
+    to identify the foreign key to use; this is necessary if there are multiple foreign keys,
+    and can be omitted if there is only one possible koreign key. The listed columns are the one
+    from the table where the foreign key exists.</p></item>
+  </list>
+
 
   <code><![CDATA[
 <data>
-  <table name="customers"/>
+  <table id="the_cust" name="customers"/>
   <table name="orders">
-    <depend foreign_key_table="customers"/>
+    <depend id="the_cust" foreign_key_table="customers">
+      <column>customer_id</column>
+    </depend>
   </table>
 </data>]]>
   </code>
@@ -114,8 +134,10 @@
     <item><p>the <code>customers</code> data source which selects all the contents of the
 	<em>customers</em> table.</p></item>
     <item><p>the <code>orders</code> data source which selects among contents of the <code>orders</code>
-	table, the rows which correspond to a row in the <code>customers</code> table (assuming here
-	that the <code>orders</code> references the <code>customers</code> table in some way).
+	table, the rows which correspond to a row in the <code>customers</code> table using the foreign key
+	on table orders which involves the "orders.customer_id" column and the primary key of the
+	customers table. The "id" attribute of the <code>&lt;depend&gt;</code> tag is necessary here to
+	identify referenced the data source.
     </p></item>
   </list>
   <p>

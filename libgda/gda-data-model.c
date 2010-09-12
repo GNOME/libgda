@@ -900,7 +900,7 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 /**
  * gda_data_model_get_row_from_values:
  * @model: a #GdaDataModel object.
- * @values: (element-type Gobject.Value): a list of #GValue values (no %NULL is allowed)
+ * @values: (element-type GObject.Value): a list of #GValue values (no %NULL is allowed)
  * @cols_index: (array): an array of #gint containing the column number to match each value of @values
  *
  * Returns the first row where all the values in @values at the columns identified at

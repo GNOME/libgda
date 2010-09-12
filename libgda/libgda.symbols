@@ -711,6 +711,7 @@
 	gda_sql_statement_check_clean
 	gda_sql_statement_check_structure
 	gda_sql_statement_check_validity
+	gda_sql_statement_check_validity_m
 	gda_sql_statement_compound_set_type
 	gda_sql_statement_compound_take_stmt
 	gda_sql_statement_compound_type_get_type

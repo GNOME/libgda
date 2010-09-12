@@ -100,6 +100,7 @@ gda_browser_5_0_LDADD=\
 	query-exec/libperspective.la \
 	data-manager/libperspective.la \
 	libbrowser.la \
+	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
 	$(CANVAS_LDADD) \
 	common/libcommon.la \
 	$(top_builddir)/libgda/libgda-5.0.la \
@@ -149,7 +150,8 @@ icons_DATA= \
 	gda-browser-diagram.png \
 	gda-browser-query.png \
 	gda-browser-form.png \
-	gda-browser-grid.png
+	gda-browser-grid.png \
+	gda-browser-menu-ind.png
 
 # app icon
 appiconsdir=$(datadir)/pixmaps

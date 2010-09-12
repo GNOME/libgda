@@ -222,7 +222,7 @@ drag_data_received_cb (BrowserCanvas *canvas, GdkDragContext *context,
 	GooCanvasItem *item;
 	item = goo_canvas_get_item_at (gcanvas, x, y, TRUE);
 	if (item) {
-		g_print ("Dragged into %s\n", G_OBJECT_TYPE_NAME (item));
+		/*g_print ("Dragged into %s\n", G_OBJECT_TYPE_NAME (item));*/
 		gtk_drag_finish (context, TRUE, FALSE, time);
 	}
 	else {
@@ -988,10 +988,9 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 		gvLayout (gvc, graph, "circo");
 		break;
 	}
-        gvRender (gvc, graph, "dot", NULL);
+        /*gvRender (gvc, graph, "dot", NULL);*/
 	/*gvRenderFilename (gvc, graph, "png", "out.png");*/
         /*gvRender (gvc, graph, "dot", stdout);*/
-
 
 	for (list = nodes_list; list; list = list->next) {
 		NodeLayout *nl = (NodeLayout*) list->data;

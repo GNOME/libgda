@@ -206,7 +206,7 @@ _gdaui_provider_auth_editor_get_type (void)
  *
  * Creates a new #GdauiProviderAuthEditor widget
  *
- * Returns:
+ * Returns: a new widget
  */
 GtkWidget *
 _gdaui_provider_auth_editor_new (const gchar *provider)

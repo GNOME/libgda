@@ -49,8 +49,9 @@ struct _UiSpecEditorClass {
 	GtkVBoxClass parent_class;
 };
 
-GType          ui_spec_editor_get_type     (void) G_GNUC_CONST;
-GtkWidget     *ui_spec_editor_new          (DataSourceManager *mgr);
+GType          ui_spec_editor_get_type      (void) G_GNUC_CONST;
+GtkWidget     *ui_spec_editor_new           (DataSourceManager *mgr);
+void           ui_spec_editor_select_source (UiSpecEditor *editor, DataSource *source);
 
 G_END_DECLS
 

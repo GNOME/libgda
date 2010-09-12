@@ -21,8 +21,6 @@
 #include <math.h>
 #include <string.h>
 
-static gchar *points_to_path (GooCanvasPoints *points);
-
 static gboolean compute_intersect_rect_line (gdouble rectx1, gdouble recty1, gdouble rectx2, gdouble recty2,
 					     gdouble P1x, gdouble P1y, gdouble P2x, gdouble P2y,
 					     gdouble *R1x, gdouble *R1y, gdouble *R2x, gdouble *R2y);
@@ -724,28 +722,6 @@ browser_canvas_util_compute_handle_shapes (GooCanvasItem *parent, GSList *shapes
 	}
 	
 	return retval;
-}
-
-static gchar *
-points_to_path (GooCanvasPoints *points)
-{
-	GString *string;
-	gchar *path;
-	gint i;
-
-	g_return_val_if_fail (points, NULL);
-	g_return_val_if_fail (points->num_points >= 2, NULL);
-
-	string = g_string_new ("");
-	g_string_append_printf (string, "M%d %d", (int) points->coords[0], (int) points->coords[1]);
-
-	for (i = 1; i < points->num_points; i++)
-		g_string_append_printf (string, " L%d %d", 
-					(int) points->coords[2*i], (int) points->coords[2*i+1]);
-
-	path = string->str;
-	g_string_free (string, FALSE);
-	return path;
 }
 
 static GSList *

@@ -104,7 +104,7 @@ gdaui_data_proxy_get_proxy (GdauiDataProxy *iface)
  * gdaui_data_proxy_column_set_editable
  * @iface: an object which implements the #GdauiDataProxy interface
  * @column: column number of the data
- * @editable:
+ * @editable: set to %TRUE to make the column editable
  *
  * Sets if the data entry in the @iface widget at @column (in the data model @iface operates on)
  * can be edited or not.
@@ -250,7 +250,7 @@ gdaui_data_proxy_perform_action (GdauiDataProxy *iface, GdauiAction action)
 /**
  * gdaui_data_proxy_set_write_mode
  * @iface: an object which implements the #GdauiDataProxy interface
- * @mode:
+ * @mode: the requested #GdauiDataProxyWriteMode mode
  *
  * Specifies the way the modifications stored in the #GdaDataProxy used internally by @iface are written back to
  * the #GdaDataModel which holds the data displayed in @iface.

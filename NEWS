@@ -1,3 +1,32 @@
+libgda 4.1.10, 2010-09-11
+
+ - GdaBrowser improvements & corrections (better full screen mode and notifications, improved
+   data manager perspective and more)
+ - misc corrections
+ - translations:
+	- sl (Matej Urbančič)
+	- id (Andika Triwidada)
+
+libgda 4.1.8, 2010-09-01
+
+ - improved core API (GdaSqlBuilder, GdaServerOperation, GdaThreadWrapper, GdaConnection)
+ - core corrections and optimization, mainly in the SQLite and MySQL providers, connection (locking
+   and thread safe usage)
+ - use Gnome Keryring if available to store username and passwords to be used for data sources (DSN)
+ - configuration file monitoring: only use GIO (removed GnomeVFS, gamin or FAM)
+ - many improvements to the UI extension
+ - many improvements and corrections to the GdaBrowser tool
+ - embedd SQLite 3.6.22
+ - translations:
+	- es (Jorge González)
+	- sl (Matej Urbančič)
+	- da (Joe Hansen)
+	- pt (Nicolau Gonçalves)
+	- cs (Petr Kovar, Marek Cernocky)
+	- de (Mario Blättermann, Christian Kirbach)
+	- nb (Kjartan Maraas)
+	- id (Andika Triwidada)
+
 libgda 4.1.7, 2010-06-27
 
  - new provider for Oracle Berkeley DB's SQL frontend (which has the same API as sqlite)

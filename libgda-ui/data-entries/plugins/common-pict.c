@@ -590,7 +590,7 @@ common_pict_add_cached_pixbuf (PictOptions *options, const GValue *value, GdkPix
 		bin = (GdaBinary *) blob;
 		if (bin) {
 			if (!bin->data && blob->op)
-				gda_blob_op_read_all (blob->op, blob);
+				gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
 			hash = compute_hash (bin->data, bin->binary_length);
 			g_hash_table_insert (options->pixbuf_hash, GUINT_TO_POINTER (hash), pixbuf);
 			g_object_ref (pixbuf);
@@ -626,7 +626,7 @@ common_pict_fetch_cached_pixbuf (PictOptions *options, const GValue *value)
 		bin = (GdaBinary *) blob;
 		if (bin) {
 			if (!bin->data && blob->op)
-				gda_blob_op_read_all (blob->op, blob);
+				gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
 			hash = compute_hash (bin->data, bin->binary_length);
 			pixbuf = g_hash_table_lookup (options->pixbuf_hash, GUINT_TO_POINTER (hash));
 		}

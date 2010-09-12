@@ -61,14 +61,6 @@ struct _GdaSqlBuilderPrivate {
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
 
-/* signals */
-enum {
-	DUMMY,
-	LAST_SIGNAL
-};
-
-static gint gda_sql_builder_signals[LAST_SIGNAL] = { 0 };
-
 /* properties */
 enum {
 	PROP_0,

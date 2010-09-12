@@ -1153,6 +1153,7 @@ gda_sql_statement_type_to_string
 gda_sql_statement_string_to_type
 gda_sql_statement_check_structure
 gda_sql_statement_check_validity
+gda_sql_statement_check_validity_m
 gda_sql_statement_check_clean
 gda_sql_statement_normalize
 <SUBSECTION>

@@ -48,7 +48,8 @@ struct _DataSourceManagerClass
 	GObjectClass       parent_class;
 
 	/* signals */
-	void             (*changed) (DataSourceManager *mgr);
+	void             (*list_changed) (DataSourceManager *mgr);
+	void             (*source_changed) (DataSourceManager *mgr, DataSource *source);
 };
 
 GType               data_source_manager_get_type            (void) G_GNUC_CONST;
@@ -56,13 +57,15 @@ GType               data_source_manager_get_type            (void) G_GNUC_CONST;
 DataSourceManager  *data_source_manager_new                 (BrowserConnection *bcnc);
 void                data_source_manager_add_source          (DataSourceManager *mgr, DataSource *source);
 void                data_source_manager_remove_source       (DataSourceManager *mgr, DataSource *source);
-void                data_source_manager_remove_all          (DataSourceManager *mgr);
+void                data_source_manager_replace_all         (DataSourceManager *mgr, const GSList *sources_list);
 
 GdaSet              *data_source_manager_get_params (DataSourceManager *mgr);
 BrowserConnection   *data_source_manager_get_browser_cnc (DataSourceManager *mgr);
 
 GArray              *data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error);
 void                 data_source_manager_destroy_sources_array (GArray *array);
+
+const GSList        *data_source_manager_get_sources       (DataSourceManager *mgr);
 
 
 G_END_DECLS

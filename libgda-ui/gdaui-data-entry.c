@@ -132,7 +132,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 /**
  * gdaui_data_entry_set_value_type
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @type:
+ * @type: the #GType of the data to be displayed
  *
  * Sets the type of value the GdauiDataEntry will handle. The type must be compatible with what
  * the widget can handle.

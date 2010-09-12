@@ -21,7 +21,7 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include <libgda.h>
+#include <libgda/libgda.h>
 #include "gda-symbols-util.h"
 
 Sqlite3ApiRoutines *s3r = NULL;

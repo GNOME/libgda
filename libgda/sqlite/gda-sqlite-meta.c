@@ -2109,6 +2109,7 @@ _gda_sqlite_meta__routines (GdaServerProvider *prov, GdaConnection *cnc,
 	return _gda_sqlite_meta_routines (prov, cnc, store, context, error, NULL, NULL, NULL);
 }
 
+#ifndef HAVE_SQLITE
 static gboolean
 fill_routines (GdaDataModel *mod_model, 
 	       const GValue *rname, const GValue *is_agg, const GValue *rnargs, const GValue *sname, GError **error)
@@ -2148,6 +2149,7 @@ fill_routines (GdaDataModel *mod_model,
 
 	return retval;
 }
+#endif
 
 gboolean
 _gda_sqlite_meta_routines (GdaServerProvider *prov, GdaConnection *cnc, 

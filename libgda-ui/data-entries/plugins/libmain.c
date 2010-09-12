@@ -31,8 +31,6 @@
 #include "gdaui-entry-text.h"
 #include "gdaui-entry-pict.h"
 #include "gdaui-data-cell-renderer-pict.h"
-#include "gdaui-entry-cgrid.h"
-#include "gdaui-data-cell-renderer-cgrid.h"
 
 #ifdef HAVE_LIBGCRYPT
 #include "gdaui-entry-password.h"
@@ -56,8 +54,6 @@ static GdauiDataEntry *plugin_entry_cidr_create_func (GdaDataHandler *handler, G
 static GdauiDataEntry *plugin_entry_text_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_pict_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GtkCellRenderer  *plugin_cell_renderer_pict_create_func (GdaDataHandler *handler, GType type, const gchar *options);
-static GdauiDataEntry *plugin_entry_cgrid_create_func (GdaDataHandler *handler, GType type, const gchar *options);
-static GtkCellRenderer  *plugin_cell_renderer_cgrid_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 
 #ifdef HAVE_LIBGCRYPT
 static GdauiDataEntry *plugin_entry_password_create_func (GdaDataHandler *handler, GType type, const gchar *options);
@@ -297,18 +293,6 @@ static GtkCellRenderer *
 plugin_cell_renderer_pict_create_func (GdaDataHandler *handler, GType type, const gchar *options)
 {
 	return gdaui_data_cell_renderer_pict_new (handler, type, options);
-}
-
-static GdauiDataEntry *
-plugin_entry_cgrid_create_func (GdaDataHandler *handler, GType type, const gchar *options)
-{
-	return (GdauiDataEntry *) gdaui_entry_cgrid_new (handler, type, options);
-}
-
-static GtkCellRenderer *
-plugin_cell_renderer_cgrid_create_func (GdaDataHandler *handler, GType type, const gchar *options)
-{
-	return (GtkCellRenderer *) gdaui_data_cell_renderer_cgrid_new (handler, type, options);
 }
 
 #ifdef HAVE_LIBGCRYPT

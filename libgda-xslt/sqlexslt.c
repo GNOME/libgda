@@ -49,7 +49,7 @@ gda_xslt_register (void)
 		int init_res;
 		init = 1;
 		init_res =
-			xsltRegisterExtModule (GDA_XSLT_EXTENSION_URI,
+			xsltRegisterExtModule (BAD_CAST GDA_XSLT_EXTENSION_URI,
 					       gda_xslt_extension_init,
 					       gda_xslt_extension_shutdown);
 		if (init_res != 0) {
@@ -74,13 +74,15 @@ gda_xslt_set_execution_context (xsltTransformContextPtr tcxt,
 
 /**
  * gda_xslt_create_context_simple
+ * @cnc: a #GdaConnection
+ * @error: a place to store errors, or %NULL
  *
- *  create a gda-xslt context with the Gdaconnection and not predefined queries
+ * create a gda-xslt context with the Gdaconnection and not predefined queries
  *
  * Returns:
  */
 GdaXsltExCont *
-gda_xslt_create_context_simple (GdaConnection * cnc, GError ** error)
+gda_xslt_create_context_simple (GdaConnection *cnc, GError **error)
 {
 	GdaXsltExCont *local = NULL;
 

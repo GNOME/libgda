@@ -452,7 +452,7 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 
 /**
  * _gdaui_utility_display_error_with_keep_or_discard_choice
- * @form:
+ * @form: a #GdauiDataProxy
  * @filled_error: a #GError containing the error to display
  *
  * Displays a dialog showing @filled_error's message and asks the user to either keep the data which
@@ -481,7 +481,7 @@ _gdaui_utility_display_error_with_keep_or_discard_choice (GdauiDataProxy *form, 
 
 /**
  * _gdaui_utility_display_error
- * @form:
+ * @form: a #GdauiDataProxy
  * @filled_error: a #GError containing the error to display
  *
  * Displays a dialog showing @filled_error's message and asks the user to either keep the data which
@@ -579,4 +579,52 @@ _gdaui_utility_iter_differ (GdaDataModelIter *iter1, GdaDataModelIter *iter2)
 
  out:
         return retval;
+}
+
+
+static gboolean tree_view_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, gpointer unuseddata);
+/*
+ * Setup a callback on the treeview to, on right click:
+ *   - if there is no row under the cursor, then force an empty selection
+ *   OR
+ *   - if the row under the cursor is not selected, then force the selection of only that row
+ *   OR
+ *   - otherwise don't change anything
+ */
+void
+_gdaui_setup_right_click_selection_on_treeview (GtkTreeView *tview)
+{
+	g_return_if_fail (GTK_IS_TREE_VIEW (tview));
+	g_signal_connect (G_OBJECT (tview), "button-press-event",
+                          G_CALLBACK (tree_view_button_pressed_cb), NULL);
+}
+
+static gboolean
+tree_view_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, gpointer unuseddata)
+{
+	GtkTreeView *tree_view;
+	GtkTreeSelection *selection;
+
+	if (event->button != 3)
+		return FALSE;
+
+	tree_view = GTK_TREE_VIEW (widget);
+	selection = gtk_tree_view_get_selection (tree_view);
+
+	/* force selection of row on which clicked occurred */
+	if (event->window == gtk_tree_view_get_bin_window (tree_view)) {
+		GtkTreePath *path;
+		if (gtk_tree_view_get_path_at_pos (tree_view, event->x, event->y, &path,
+						   NULL, NULL, NULL)) {
+			if (! gtk_tree_selection_path_is_selected (selection, path)) {
+				gtk_tree_selection_unselect_all (selection);
+				gtk_tree_selection_select_path (selection, path);
+			}
+			gtk_tree_path_free (path);
+		}
+		else
+			gtk_tree_selection_unselect_all (selection);
+	}
+
+	return FALSE;
 }

@@ -309,17 +309,20 @@ wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 	mstruct = (GdaMetaStruct *) bcnc->priv->p_mstruct_list->data;
 	bcnc->priv->p_mstruct_list = g_slist_delete_link (bcnc->priv->p_mstruct_list,
 							  bcnc->priv->p_mstruct_list);
-	if (bcnc->priv->p_mstruct_list)
+	if (bcnc->priv->p_mstruct_list) {
 		/* don't care about this one */
 		g_object_unref (G_OBJECT (mstruct));
+		g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+	}
 	else {
 		if (bcnc->priv->c_mstruct)
 			g_object_unref (bcnc->priv->c_mstruct);
 		bcnc->priv->c_mstruct = mstruct;
+		g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+
 		/*g_print ("Meta struct sync for %p\n", mstruct);*/
 		retval = gda_meta_struct_complement_all (mstruct, error);
 	}
-	g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
 
 	return GINT_TO_POINTER (retval ? 2 : 1);
 }
@@ -1372,6 +1375,24 @@ browser_connection_normalize_sql_statement (BrowserConnection *bcnc,
 	
 	return gda_sql_statement_normalize (sqlst, bcnc->priv->cnc, error);
 }
+
+/**
+ * browser_connection_check_sql_statement_validify
+ */
+gboolean
+browser_connection_check_sql_statement_validify (BrowserConnection *bcnc,
+						 GdaSqlStatement *sqlst, GError **error)
+{
+	g_return_val_if_fail (sqlst, FALSE);
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+
+	/* check the structure first */
+        if (!gda_sql_statement_check_structure (sqlst, error))
+                return FALSE;
+
+	return gda_sql_statement_check_validity_m (sqlst, bcnc->priv->mstruct, error);
+}
+
 
 
 /*

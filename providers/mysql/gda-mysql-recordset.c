@@ -907,27 +907,6 @@ gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 }
 
 /*
- * Create and "give" filled #GdaRow object for all the rows in the model
- */
-static gboolean
-gda_mysql_recordset_store_all (GdaDataSelect  *model,
-			       GError        **error)
-{
-	GdaMysqlRecordset *imodel;
-	gint i;
-
-	imodel = GDA_MYSQL_RECORDSET (model);
-
-	/* default implementation */
-	for (i = 0; i < model->advertized_nrows; i++) {
-		GdaRow *row;
-		if (! gda_mysql_recordset_fetch_random (model, &row, i, error))
-			return FALSE;
-	}
-	return TRUE;
-}
-
-/*
  * Create a new filled #GdaRow object for the next cursor row, and put it into *row.
  *
  * WARNING: @row will NOT be NULL, but *row may or may not be NULL:

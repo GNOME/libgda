@@ -1378,7 +1378,7 @@ getToken (GdaSqlParser *parser)
 						retval = token_as_string (parser->priv->context->next_token_start, consumed_chars);
 						/* remove comments from returned string */
 						gchar *tmp, *ptr;
-						tmp = g_value_get_string (retval);
+						tmp = (gchar*) g_value_get_string (retval);
 						for (ptr = tmp; *ptr; ptr++) {
 							if (((ptr == tmp) || (*(ptr-1) == '\n')) && (*ptr == '-') && (ptr[1] == '-')) {
 								/* we have a comment */

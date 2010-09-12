@@ -208,9 +208,7 @@ static gboolean tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar 
 					     FavoriteSelector *tsel);
 static gboolean tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path,
 					GtkSelectionData *selection_data, FavoriteSelector *tsel);
-static void trash_data_received_cb (GtkWidget *widget, GdkDragContext *context, gint x, gint y,
-				    GtkSelectionData *selection_data, guint target_type, guint time,
-				    FavoriteSelector *tsel);
+
 /**
  * favorite_selector_new
  *
@@ -346,7 +344,7 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 	fav.contents = (gchar*) gtk_selection_data_get_data (selection_data);
 
 	pos = atoi (path);
-	g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);
+	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
 	
 	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
 	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, pos, &error)) {

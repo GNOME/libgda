@@ -42,6 +42,7 @@ static void ui_formgrid_get_property (GObject *object,
 struct _UiFormGridPriv
 {
 	GtkWidget   *nb;
+	GtkWidget   *sw;
 	GtkWidget   *raw_form;
 	GtkWidget   *raw_grid;
 	GtkWidget   *info;
@@ -140,9 +141,15 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	gtk_widget_show (formgrid->priv->raw_grid);
 
 	/* form on the 2nd page of the notebook */
+	formgrid->priv->sw = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (formgrid->priv->sw), GTK_SHADOW_NONE);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (formgrid->priv->sw), GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
 	formgrid->priv->raw_form = gdaui_raw_form_new (NULL);
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (formgrid->priv->sw), formgrid->priv->raw_form);
 	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_form), -1, FALSE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), formgrid->priv->raw_form, NULL);
+	gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), formgrid->priv->sw, NULL);
+        gtk_widget_show (formgrid->priv->sw);
         gtk_widget_show (formgrid->priv->raw_form);
 
 	/* info widget and toggle button at last */

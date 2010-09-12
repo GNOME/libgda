@@ -59,6 +59,9 @@ static void xml_spec_editor_init       (XmlSpecEditor *sped, XmlSpecEditorClass 
 static void xml_spec_editor_dispose    (GObject *object);
 static void xml_spec_editor_grab_focus (GtkWidget *widget);
 
+static void source_list_changed_cb (DataSourceManager *mgr, XmlSpecEditor *sped);
+static void data_source_changed_cb (DataSourceManager *mgr, DataSource *source, XmlSpecEditor *sped);
+
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -120,8 +123,14 @@ xml_spec_editor_dispose (GObject *object)
 	if (sped->priv) {
 		if (sped->priv->signal_editor_changed_id)
 			g_source_remove (sped->priv->signal_editor_changed_id);
-		if (sped->priv->mgr)
+		if (sped->priv->mgr) {
+			g_signal_handlers_disconnect_by_func (sped->priv->mgr,
+							      G_CALLBACK (source_list_changed_cb), sped);
+			g_signal_handlers_disconnect_by_func (sped->priv->mgr,
+							      G_CALLBACK (data_source_changed_cb), sped);
+
 			g_object_unref (sped->priv->mgr);
+		}
 
 		g_free (sped->priv);
 		sped->priv = NULL;
@@ -132,8 +141,9 @@ xml_spec_editor_dispose (GObject *object)
 static gboolean
 signal_editor_changed (XmlSpecEditor *sped)
 {
-	/* modify the DataSourceManager */
-	data_source_manager_remove_all (sped->priv->mgr);
+	GSList *newlist = NULL;
+	g_signal_handlers_block_by_func (sped->priv->mgr,
+					 G_CALLBACK (source_list_changed_cb), sped);
 
 	/* create new DataSource objects */
 	GError *lerror = NULL;
@@ -173,11 +183,11 @@ signal_editor_changed (XmlSpecEditor *sped)
 	if (strcmp ((gchar*) node->name, "data")) {
 		g_set_error (&lerror, 0, 0,
 			     _("Expecting <%s> root node"), "data");
+		xmlFreeDoc (doc);
 		goto out;
 	}
 
 	BrowserConnection *bcnc;
-
 	bcnc = data_source_manager_get_browser_cnc (sped->priv->mgr);
 	for (node = node->children; node; node = node->next) {
 		if (!strcmp ((gchar*) node->name, "table") ||
@@ -185,18 +195,26 @@ signal_editor_changed (XmlSpecEditor *sped)
 			DataSource *source;
 			source = data_source_new_from_xml_node (bcnc, node, &lerror);
 			if (!source) {
-				data_source_manager_remove_all (sped->priv->mgr);
-				TO_IMPLEMENT;
+				if (newlist) {
+					g_slist_foreach (newlist, (GFunc) g_object_unref, NULL);
+					g_slist_free (newlist);
+					newlist = NULL;
+				}
+				xmlFreeDoc (doc);
 				goto out;
 			}
-			
-			data_source_manager_add_source (sped->priv->mgr, source);
-			g_object_unref (source);
+			else
+				newlist = g_slist_prepend (newlist, source);
 		}
 	}
 	xmlFreeDoc (doc);
 
  out:
+	newlist = g_slist_reverse (newlist);
+	data_source_manager_replace_all (sped->priv->mgr, newlist);
+	if (newlist)
+		g_slist_free (newlist);
+
 	if (lerror) {
 		if (! sped->priv->info) {
 			sped->priv->info = gtk_info_bar_new ();
@@ -221,6 +239,10 @@ signal_editor_changed (XmlSpecEditor *sped)
 
 	/* remove timeout */
 	sped->priv->signal_editor_changed_id = 0;
+
+	g_signal_handlers_unblock_by_func (sped->priv->mgr,
+					   G_CALLBACK (source_list_changed_cb), sped);
+
 	return FALSE;
 }
 
@@ -230,6 +252,41 @@ editor_changed_cb (GtkTextBuffer *buffer, XmlSpecEditor *sped)
 	if (sped->priv->signal_editor_changed_id)
 		g_source_remove (sped->priv->signal_editor_changed_id);
 	sped->priv->signal_editor_changed_id = g_timeout_add_seconds (1, (GSourceFunc) signal_editor_changed, sped);
+}
+
+static void
+source_list_changed_cb (DataSourceManager *mgr, XmlSpecEditor *sped)
+{
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	doc = xmlNewDoc (BAD_CAST "1.0");
+	root = xmlNewNode (NULL, BAD_CAST "data");
+	xmlDocSetRootElement (doc, root);
+
+	const GSList *list;
+	for (list = data_source_manager_get_sources (sped->priv->mgr); list; list = list->next) {
+		xmlNodePtr node;
+		node = data_source_to_xml_node (DATA_SOURCE (list->data));
+		xmlAddChild (root, node);
+	}
+
+	xmlChar *mem;
+	int size;
+	xmlDocDumpFormatMemory (doc, &mem, &size, 1);
+	xmlFreeDoc (doc);
+
+	g_signal_handlers_block_by_func (sped->priv->buffer,
+					 G_CALLBACK (editor_changed_cb), sped);
+	gtk_text_buffer_set_text (sped->priv->buffer, (gchar*) mem, -1);
+	g_signal_handlers_unblock_by_func (sped->priv->buffer,
+					   G_CALLBACK (editor_changed_cb), sped);
+	xmlFree (mem);
+}
+
+static void
+data_source_changed_cb (DataSourceManager *mgr, DataSource *source, XmlSpecEditor *sped)
+{
+	source_list_changed_cb (mgr, sped);
 }
 
 /**
@@ -248,6 +305,10 @@ xml_spec_editor_new (DataSourceManager *mgr)
 
 	sped = g_object_new (XML_SPEC_EDITOR_TYPE, NULL);
 	sped->priv->mgr = g_object_ref (mgr);
+	g_signal_connect (mgr, "list-changed",
+			  G_CALLBACK (source_list_changed_cb), sped);
+	g_signal_connect (mgr, "source-changed",
+			  G_CALLBACK (data_source_changed_cb), sped);
 
 	/* XML editor */
 	label = gtk_label_new ("");

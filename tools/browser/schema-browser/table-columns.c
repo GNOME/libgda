@@ -49,12 +49,6 @@ static void table_columns_dispose   (GObject *object);
 
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns);
 
-enum {
-	SELECTION_CHANGED,
-	LAST_SIGNAL
-};
-
-static guint table_columns_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 
@@ -301,6 +295,9 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *
 						cvalue = gda_data_model_get_value_at (model, 0, i, NULL);
 						if (!current_value || 
 						    gda_value_compare (cvalue, current_value)) {
+							if (current_value)
+								gtk_text_buffer_insert (tbuffer, &current,
+											"\n\n", -1);
 							gtk_text_buffer_insert_with_tags_by_name (tbuffer,
 												  &current, 
 												  _("Unique constraint"), -1,

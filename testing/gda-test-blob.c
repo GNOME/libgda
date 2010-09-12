@@ -226,7 +226,7 @@ insert_blob (GdaConnection *cnc, gint id, const gchar *data, glong binary_length
 
 	/* blob data */
 	param = gda_set_get_holder (plist, "theblob");
-	value = gda_value_new_blob (data, binary_length);
+	value = gda_value_new_blob ((guchar*) data, binary_length);
 	if (! gda_holder_set_value (param, value, error))
 		return FALSE;
 	gda_value_free (value);
@@ -273,7 +273,7 @@ update_blob (GdaConnection *cnc, gint id, const gchar *data, glong binary_length
 
 	/* blob data */
 	param = gda_set_get_holder (plist, "theblob");
-	value = gda_value_new_blob (data, binary_length);
+	value = gda_value_new_blob ((guchar*) data, binary_length);
 	if (! gda_holder_set_value (param, value, error))
 		return FALSE;
 	gda_value_free (value);
@@ -310,7 +310,7 @@ update_multiple_blobs (GdaConnection *cnc, const gchar *data, glong binary_lengt
 
 	/* blob data */
 	param = gda_set_get_holder (plist, "theblob");
-	value = gda_value_new_blob (data, binary_length);
+	value = gda_value_new_blob ((guchar*) data, binary_length);
 	if (! gda_holder_set_value (param, value, error))
 		return FALSE;
 	gda_value_free (value);

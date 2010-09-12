@@ -98,7 +98,7 @@ gboolean
 _gda_capi_meta__info (GdaServerProvider *prov, GdaConnection *cnc, 
 		      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 	gboolean retval;
 
 	TO_IMPLEMENT;
@@ -137,7 +137,7 @@ _gda_capi_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 		    GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		    const GValue *udt_catalog, const GValue *udt_schema)
 {
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 	gboolean retval = TRUE;
 
 	/* set internal holder's values from the arguments */

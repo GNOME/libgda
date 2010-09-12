@@ -326,7 +326,7 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * @nb_cols: the number of columns in @cols
  * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
- * @use_col_ids:
+ * @use_col_ids: set to %TRUE to add column ID information
  *
  * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
  *
@@ -512,7 +512,7 @@ gda_utility_data_model_find_column_description (GdaDataSelect *model, const gcha
 
 /**
  * gda_utility_holder_load_attributes
- * @holder:
+ * @holder: a #GdaHolder
  * @node: an xmlNodePtr with a &lt;parameter&gt; tag
  * @sources: a list of #GdaDataModel
  * @error: a place to store errors, or %NULL
@@ -686,7 +686,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 #define GDA_PARAM_ENCODE_TOKEN "__gda"
 /**
  * gda_text_to_alphanum
- * @text:
+ * @text: the text to convert
  *
  * The "encoding" consists in replacing non
  * alphanumeric character with the string "__gdaXX" where XX is the hex. representation
@@ -2392,6 +2392,26 @@ gda_dsn_split (const gchar *string, gchar **out_dsn, gchar **out_username, gchar
  * in @string, the various parts are strings
  * which are expected to be encoded using an RFC 1738 compliant encoding. If they are specified, 
  * the returned provider, username and password strings are correctly decoded.
+ *
+ * For example all the following connection strings:
+ * <programlisting><![CDATA[
+PostgreSQL://meme:pass@DB_NAME=mydb;HOST=server
+PostgreSQL://meme@DB_NAME=mydb;HOST=server;PASSWORD=pass
+PostgreSQL://meme@DB_NAME=mydb;PASSWORD=pass;HOST=server
+PostgreSQL://meme@PASSWORD=pass;DB_NAME=mydb;HOST=server
+PostgreSQL://DB_NAME=mydb;HOST=server;USERNAME=meme;PASSWORD=pass
+PostgreSQL://DB_NAME=mydb;HOST=server;PASSWORD=pass;USERNAME=meme
+PostgreSQL://DB_NAME=mydb;USERNAME=meme;PASSWORD=pass;HOST=server
+PostgreSQL://PASSWORD=pass;USERNAME=meme;DB_NAME=mydb;HOST=server
+PostgreSQL://:pass@USERNAME=meme;DB_NAME=mydb;HOST=server
+PostgreSQL://:pass@DB_NAME=mydb;HOST=server;USERNAME=meme]]></programlisting>
+ *
+ * will return the following new strings (double quotes added here to delimit strings):
+ * <programlisting><![CDATA[
+out_cnc_params: "DB_NAME=mydb;HOST=server"
+out_provider: "PostgreSQL"
+out_username: "meme"
+out_password: "pass"]]></programlisting>
  */
 void
 gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar **out_provider, 
@@ -2439,6 +2459,46 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 	}
 	if (!*out_cnc_params)
 		*out_cnc_params = g_strdup (ap);
+
+	if (*out_cnc_params) {
+		gchar *pos;
+
+		pos = g_strrstr (*out_cnc_params, "USERNAME=");
+		if (pos) {
+			for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
+			if (ptr != pos + 9)
+				*out_username = g_strndup (pos + 9, ptr - (pos + 9));
+
+			if (*ptr)
+				g_memmove (pos, ptr + 1, strlen (ptr));
+			else
+				*pos = 0;
+			gchar *tmp;
+			gint len;
+			tmp = *out_cnc_params;
+			len = strlen (tmp) - 1;
+			if (tmp [len] == ';')
+				tmp [len] = 0;
+		}
+
+		pos = g_strrstr (*out_cnc_params, "PASSWORD=");
+		if (pos) {
+			for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
+			if (ptr != pos + 9)
+				*out_password = g_strndup (pos + 9, ptr - (pos + 9));
+
+			if (*ptr)
+				g_memmove (pos, ptr + 1, strlen (ptr));
+			else
+				*pos = 0;
+			gchar *tmp;
+			gint len;
+			tmp = *out_cnc_params;
+			len = strlen (tmp) - 1;
+			if (tmp [len] == ';')
+				tmp [len] = 0;
+		}
+	}
 
 	/* RFC 1738 decode provider, username and password strings */
 	gda_rfc1738_decode (*out_provider);

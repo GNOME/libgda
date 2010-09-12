@@ -3,3 +3,4 @@ test-ddl-creator
 test-sql-identifier
 test-identifiers-quotes
 test-sql-builder
+test-connection-string-split

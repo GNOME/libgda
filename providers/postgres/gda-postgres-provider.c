@@ -353,39 +353,6 @@ gda_postgres_provider_get_version (GdaServerProvider *provider)
 	return PACKAGE_VERSION;
 }
 
-/* get the float version of a Postgres version which looks like:
- * PostgreSQL 7.2.2 on i686-pc-linux-gnu, compiled by GCC 2.96 => returns 7.22
- * PostgreSQL 7.3 on i686-pc-linux-gnu, compiled by GCC 2.95.3 => returns 7.3
- * WARNING: no serious test is made on the validity of the string
- */
-static gfloat
-get_pg_version_float (const gchar *str)
-{
-        gfloat retval = 0.;
-        const gchar *ptr;
-        gfloat div = 1;
-
-        if (!str)
-                return retval;
-
-        /* go on  the first digit of version number */
-        ptr = str;
-        while (*ptr != ' ')
-                ptr++;
-        ptr++;
-
-        /* elaborate the real version number */
-        while (*ptr != ' ') {
-                if (*ptr != '.') {
-                        retval += (*ptr - '0')/div;
-                        div *= 10;
-                }
-                ptr++;
-        }
-
-        return retval;
-}
-
 static void
 pq_notice_processor (GdaConnection *cnc, const char *message)
 {

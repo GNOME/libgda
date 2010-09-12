@@ -282,6 +282,17 @@ An opened connection
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_connection_check_sql_statement_validify ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@sqlst: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION browser_connection_rerun_select ##### -->
 <para>
 

@@ -132,13 +132,6 @@ browser_canvas_fkey_init (BrowserCanvasFkey *cc)
 	cc->priv->shapes = NULL;
 }
 
-static gboolean
-idle_remove_item (BrowserCanvasFkey *cc)
-{
-	goo_canvas_item_remove (GOO_CANVAS_ITEM (cc));
-	return FALSE;
-}
-
 static void
 fk_table_item_weak_ref_lost (BrowserCanvasFkey *cc, BrowserCanvasTable *old_table_item)
 {
@@ -384,8 +377,6 @@ update_items (BrowserCanvasFkey *cc)
 	cc->priv->shapes = browser_canvas_canvas_shapes_remove_obsolete_shapes (cc->priv->shapes);
 }
 
-static void popup_delete_cb (GtkMenuItem *mitem, BrowserCanvasFkey *cc);
-
 /*
  * item is for a single FK constraint
  */
@@ -465,13 +456,6 @@ single_item_button_press_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item
 			((GdkEventButton *)event)->time);
 	return TRUE;
 	*/
-}
-
-
-static void
-popup_delete_cb (GtkMenuItem *mitem, BrowserCanvasFkey *cc)
-{
-	TO_IMPLEMENT;
 }
 
 static void

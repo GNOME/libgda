@@ -46,12 +46,6 @@ static void table_relations_dispose   (GObject *object);
 
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations *trels);
 
-enum {
-	SELECTION_CHANGED,
-	LAST_SIGNAL
-};
-
-static guint table_relations_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 

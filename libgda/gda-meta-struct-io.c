@@ -31,8 +31,10 @@
 
 static GdaMetaDbObject *create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar *quoted_catalog,
 					     const GValue *schema, const gchar *quoted_schema, xmlNodePtr node, GError **error);
+/*
 static GdaMetaDbObject *create_view_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar *quoted_catalog,
 					    const GValue *schema, const gchar *quoted_schema, xmlNodePtr node, GError **error);
+*/
 
 
 
@@ -394,6 +396,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	return NULL;
 }
 
+/*
 static GdaMetaDbObject *
 create_view_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar *quoted_catalog,
 		    const GValue *schema, const gchar *quoted_schema, xmlNodePtr node, GError **error)
@@ -401,4 +404,5 @@ create_view_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar *
 	TO_IMPLEMENT;
 	return NULL;
 }
+*/
 

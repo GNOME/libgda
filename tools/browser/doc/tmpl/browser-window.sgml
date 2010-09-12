@@ -81,6 +81,29 @@ Top level browser window
 @context: 
 
 
+<!-- ##### FUNCTION browser_window_show_notice ##### -->
+<para>
+
+</para>
+
+@bwin: 
+@type: 
+@context: 
+@text: 
+
+
+<!-- ##### FUNCTION browser_window_show_notice_printf ##### -->
+<para>
+
+</para>
+
+@bwin: 
+@type: 
+@context: 
+@format: 
+@Varargs: 
+
+
 <!-- ##### FUNCTION browser_window_customize_perspective_ui ##### -->
 <para>
 
@@ -109,5 +132,14 @@ Top level browser window
 
 @bwin: 
 @Returns: 
+
+
+<!-- ##### FUNCTION browser_window_set_fullscreen ##### -->
+<para>
+
+</para>
+
+@bwin: 
+@fullscreen: 
 
 

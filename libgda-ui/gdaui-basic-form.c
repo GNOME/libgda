@@ -69,6 +69,7 @@ typedef struct {
 	gboolean        hidden;
 	gboolean        not_null; /* TRUE if @entry's contents can't be NULL */
 	gboolean        can_expand; /* tells if @entry can expand */
+	gboolean        forward_param_updates; /* forward them to the GdauiDataEntry widgets ? */
 
 	gulong          entry_shown_id; /* signal ID */
 	gulong          label_shown_id; /* signal ID */
@@ -99,6 +100,7 @@ static void pack_entries_in_table (GdauiBasicForm *form);
 static void pack_entries_in_xml_layout (GdauiBasicForm *form, xmlNodePtr form_node);
 static void unpack_entries (GdauiBasicForm *form);
 static void destroy_entries (GdauiBasicForm *form);
+static gchar *create_text_label_for_sentry (SingleEntry *sentry, gchar **out_title);
 
 static void gdaui_basic_form_show_entry_actions (GdauiBasicForm *form, gboolean show_actions);
 static void gdaui_basic_form_set_entries_auto_default (GdauiBasicForm *form, gboolean auto_default);
@@ -155,7 +157,6 @@ struct _GdauiBasicFormPriv
 	GtkWidget              *top_container;
 
 	gboolean                headers_sensitive;
-	gboolean                forward_param_updates; /* forward them to the GdauiDataEntry widgets ? */
 	gboolean                show_actions;
 	gboolean                entries_auto_default;
 
@@ -297,8 +298,6 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
 	wid->priv->headers_sensitive = FALSE;
 	wid->priv->show_actions = FALSE;
 	wid->priv->entries_auto_default = FALSE;
-
-	wid->priv->forward_param_updates = TRUE;
 }
 
 /**
@@ -448,7 +447,33 @@ paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param,
 			gdaui_basic_form_entry_set_visible (form, param, !sentry->hidden);
 		}
 		else
-			paramlist_public_data_changed_cb (form->priv->set_info, form);	
+			paramlist_public_data_changed_cb (form->priv->set_info, form);
+	}
+	else if (!strcmp (att_name, GDA_ATTRIBUTE_NAME) ||
+		 !strcmp (att_name, GDA_ATTRIBUTE_DESCRIPTION)) {
+		if (sentry) {
+			gchar *str, *title;
+			str = create_text_label_for_sentry (sentry, &title);
+			gtk_label_set_text (GTK_LABEL (sentry->label), str);
+			g_free (str);
+			g_free (sentry->label_title);
+			sentry->label_title = title;
+			
+			if (! sentry->group->group->nodes_source) {
+				g_object_get (G_OBJECT (param), "description", &title, NULL);
+				if (title && *title)
+					gtk_widget_set_tooltip_text (sentry->label, title);
+				g_free (title);
+			}
+			else {
+				title = g_object_get_data (G_OBJECT (sentry->group->group->nodes_source->data_model),
+							   "descr");
+				if (title && *title)
+					gtk_widget_set_tooltip_text (sentry->label, title);
+			}
+		}
+		else
+			paramlist_public_data_changed_cb (form->priv->set_info, form);
 	}
 }
 
@@ -681,6 +706,59 @@ destroy_entries (GdauiBasicForm *form)
 	}
 }
 
+static gchar *
+create_text_label_for_sentry (SingleEntry *sentry, gchar **out_title)
+{
+	gchar *label = NULL;
+	g_assert (out_title);
+	if (! sentry->group->group->nodes_source) {
+		g_object_get (G_OBJECT (sentry->single_param), "name", out_title, NULL);
+		if (!*out_title)
+			*out_title = g_strdup (_("Value"));
+		label = g_strdup_printf ("%s:", *out_title);
+		/*
+		g_object_get (G_OBJECT (param), "description", &title, NULL);
+		if (title && *title)
+			gtk_widget_set_tooltip_text (sentry->label, title);
+		g_free (title);
+		*/
+
+	}
+	else {
+		gchar *label;
+		GSList *params;
+		gchar *title = NULL;
+
+		label = g_object_get_data (G_OBJECT (sentry->group->group->nodes_source->data_model), "name");
+		if (label)
+			title = g_strdup (label);
+		else {
+			GString *tstring = NULL;
+			for (params = sentry->group->group->nodes; params; params = params->next) {
+				g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
+					      "name", &title, NULL);
+				if (title) {
+					if (tstring) 
+						g_string_append (tstring, ",\n");
+					else
+						tstring = g_string_new ("");
+					g_string_append (tstring, title);
+				}
+			}
+			if (tstring)
+				title = g_string_free (tstring, FALSE);
+		}
+
+		if (!title)
+			title = g_strdup (_("Value"));
+
+		label = g_strdup_printf ("%s:", title);
+		*out_title = title;
+	}
+
+	return label;
+}
+
 static void
 create_entry_widget (SingleEntry *sentry)
 {
@@ -739,7 +817,7 @@ create_entry_widget (SingleEntry *sentry)
 
 		param = GDA_HOLDER (GDA_SET_NODE (group->group->nodes->data)->holder);
 		sentry->single_param = param;
-			
+		
 		val = gda_holder_get_value (param);
 		default_val = gda_holder_get_default_value (param);
 		nnul = gda_holder_get_not_null (param);
@@ -802,10 +880,7 @@ create_entry_widget (SingleEntry *sentry)
 		/* label */
 		gchar *title;
 		gchar *str;
-		g_object_get (G_OBJECT (param), "name", &title, NULL);
-		if (!title)
-			title = g_strdup (_("Value"));
-		str = g_strdup_printf ("%s:", title);
+		str = create_text_label_for_sentry (sentry, &title);
 		sentry->label = gtk_label_new (str);
 		g_free (str);
 		g_object_ref_sink (sentry->label);
@@ -849,32 +924,8 @@ create_entry_widget (SingleEntry *sentry)
 		/* label */
 		gchar *title = NULL;
 		gchar *str;
-		GSList *params;
 
-		str = g_object_get_data (G_OBJECT (group->group->nodes_source->data_model), "name");
-		if (str)
-			title = g_strdup (str);
-		else {
-			GString *tstring = NULL;
-			for (params = sentry->group->group->nodes; params; params = params->next) {
-				g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
-					      "name", &title, NULL);
-				if (title) {
-					if (tstring) 
-						g_string_append (tstring, ",\n");
-					else
-						tstring = g_string_new ("");
-					g_string_append (tstring, title);
-				}
-			}
-			if (tstring)
-				title = g_string_free (tstring, FALSE);
-		}
-
-		if (!title)
-			title = g_strdup (_("Value"));
-
-		str = g_strdup_printf ("%s:", title);
+		str = create_text_label_for_sentry (sentry, &title);
 		sentry->label = gtk_label_new (str);
 		g_free (str);
 		g_object_ref_sink (sentry->label);
@@ -940,6 +991,7 @@ create_entries (GdauiBasicForm *form)
 
 		sentry = g_new0 (SingleEntry, 1);
 		sentry->form = form;
+		sentry->forward_param_updates = TRUE;
 		form->priv->s_entries = g_slist_append (form->priv->s_entries, sentry);
 
 		sentry->group = GDAUI_SET_GROUP (list->data);
@@ -1304,7 +1356,7 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 	if (param) { /* single parameter */
 		GValue *value;
 
-		sentry->form->priv->forward_param_updates = FALSE;
+		sentry->forward_param_updates = FALSE;
 
 		/* parameter's value */
 		value = gdaui_data_entry_get_value (entry);
@@ -1329,7 +1381,7 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 						  sentry->entry_contents_modified_id);
 		}
 		gda_value_free (value);
-		sentry->form->priv->forward_param_updates = TRUE;
+		sentry->forward_param_updates = TRUE;
 	}
 	else { /* multiple parameters */
 		GSList *params;
@@ -1352,14 +1404,14 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 			 *   and emit only one signal.
 			 */
 			GdaHolder *param;
-			sentry->form->priv->forward_param_updates = FALSE;
+			sentry->forward_param_updates = FALSE;
 
 			/* parameter's value */
 			param = GDA_SET_NODE (params->data)->holder;
 			gda_holder_set_value (param, (GValue *)(list->data), NULL);
 			g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED],
 				       0, param, TRUE);
-			sentry->form->priv->forward_param_updates = TRUE;
+			sentry->forward_param_updates = TRUE;
 		}
 		g_slist_free (values);
 
@@ -1403,7 +1455,7 @@ entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry)
 
 /*
  * Called when a parameter changes
- * We emit a "holder-changed" signal only if the 'form->priv->forward_param_updates' is TRUE, which means
+ * We emit a "holder-changed" signal only if the 'sentry->forward_param_updates' is TRUE, which means
  * the param change does not come from a GdauiDataEntry change.
  */
 static void
@@ -1413,7 +1465,7 @@ parameter_changed_cb (GdaHolder *param, SingleEntry *sentry)
 	GdauiDataEntry *entry;
 
 	entry = sentry->entry;
-	if (sentry->form->priv->forward_param_updates) {
+	if (sentry->forward_param_updates) {
 		gboolean param_valid;
 		gboolean default_if_invalid = FALSE;
 
@@ -1666,7 +1718,7 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
  * gdaui_basic_form_entry_set_visible
  * @form: a #GdauiBasicForm widget
  * @param: a #GdaHolder object
- * @show:
+ * @show: set to %TRUE to show the data entry, and to %FALSE to hide it
  *
  * Shows or hides the #GdauiDataEntry in @form which corresponds to the
  * @param parameter
@@ -1750,23 +1802,23 @@ gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *param)
 /**
  * gdaui_basic_form_entry_set_editable
  * @form: a #GdauiBasicForm widget
- * @param: a #GdaHolder object; or %NULL
+ * @holder: a #GdaHolder object; or %NULL
  * @editable: %TRUE if corresponding data entry must be editable
  *
  * Sets the #GdauiDataEntry in @form which corresponds to the
- * @param parameter editable or not. If @param is %NULL, then all the parameters
+ * @holder parameter editable or not. If @holder is %NULL, then all the parameters
  * are concerned.
  *
  * Since: 4.2
  */
 void
-gdaui_basic_form_entry_set_editable (GdauiBasicForm *form, GdaHolder *param, gboolean editable)
+gdaui_basic_form_entry_set_editable (GdauiBasicForm *form, GdaHolder *holder, gboolean editable)
 {
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 
-	if (param) {
+	if (holder) {
 		SingleEntry *sentry;
-		sentry = get_single_entry_for_holder (form, param);
+		sentry = get_single_entry_for_holder (form, holder);
 		if (sentry)
 			gdaui_data_entry_set_editable (sentry->entry, editable);
 	}
@@ -2079,7 +2131,8 @@ gdaui_basic_form_set_layout_from_file (GdauiBasicForm *form, const gchar *file_n
  * @form: a #GdauiBasicForm
  * @placeholder_id: the name of the requested place holder
  *
- * Retreives a pointer to a place holder widget
+ * Retreives a pointer to a place holder widget. This feature is only available if a specific
+ * layout has been defined for @form using gdaui_basic_form_set_layout_from_file().
  *
  * Returns: a pointer to the requested place holder, or %NULL if not found
  *

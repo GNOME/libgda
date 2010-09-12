@@ -337,8 +337,6 @@ handlers = \
 	handlers/gda-handler-type.c
 
 introspection_sources = $(gda_sources) \
-	gda-types.c \
-	gda-types.h \
 	$(gda_headers) \
 	$(psupport) \
 	$(threadwrapper) \
