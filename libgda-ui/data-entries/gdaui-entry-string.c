@@ -162,7 +162,7 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 static gboolean
 key_press_event_cb (GdauiEntryString *mgstr, GdkEventKey *key_event, gpointer data)
 {
-	if (key_event->keyval == GDK_Escape)
+	if (key_event->keyval == GDK_KEY_Escape)
 		mgstr->priv->editing_canceled = TRUE;
 	return FALSE;
 }

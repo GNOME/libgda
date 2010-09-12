@@ -37,7 +37,7 @@ check_script_LDADD = \
 
 check_rewrite_for_default_SOURCES = check_rewrite_for_default.c
 check_rewrite_for_default_LDADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 

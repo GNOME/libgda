@@ -342,7 +342,7 @@ create_items (BrowserCanvasText *ct)
 	/* text: text's name */
 	text = goo_canvas_text_new (GOO_CANVAS_ITEM (ct), ct->priv->text,
 				    0., 0.,
-				    -1, GTK_ANCHOR_NORTH_WEST, 
+				    -1, GOO_CANVAS_ANCHOR_NORTH_WEST, 
 				    "fill_color", "black",
 				    "font", BROWSER_CANVAS_FONT,
 				    "alignment", PANGO_ALIGN_RIGHT, 

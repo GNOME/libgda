@@ -345,7 +345,7 @@ event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 		GtkWidget *menu;
 		GdkEventKey *kevent = (GdkEventKey *) event;
 
-		if (kevent->keyval == GDK_space) {
+		if (kevent->keyval == GDK_KEY_space) {
 			guint attributes;
 
 			attributes = gdaui_entry_shell_refresh_attributes (shell);
@@ -357,7 +357,7 @@ event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 			done = TRUE;
 		}
 		else {
-			if (kevent->keyval == GDK_Tab)
+			if (kevent->keyval == GDK_KEY_Tab)
 				done = FALSE;
 			else
 				done = TRUE;

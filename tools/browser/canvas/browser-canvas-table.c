@@ -311,7 +311,7 @@ create_items (BrowserCanvasTable *ce)
 	y = RADIUS_Y;
         title = goo_canvas_text_new  (GOO_CANVAS_ITEM (ce), tmpstr,
 				      RADIUS_X + X_PAD, y, 
-				      -1, GTK_ANCHOR_NORTH_WEST,
+				      -1, GOO_CANVAS_ANCHOR_NORTH_WEST,
 				      "font", "Sans 11",
 				      "use-markup", TRUE, NULL);
 

@@ -1479,10 +1479,10 @@ filter_event (GtkWidget *widget, GdkEventAny *event, GdauiRawGrid *grid)
 static gboolean
 key_press_filter_event (GtkWidget *widget, GdkEventKey *event, GdauiRawGrid *grid)
 {
-	if (event->keyval == GDK_Escape ||
-	    event->keyval == GDK_Tab ||
-            event->keyval == GDK_KP_Tab ||
-            event->keyval == GDK_ISO_Left_Tab) {
+	if (event->keyval == GDK_KEY_Escape ||
+	    event->keyval == GDK_KEY_Tab ||
+            event->keyval == GDK_KEY_KP_Tab ||
+            event->keyval == GDK_KEY_ISO_Left_Tab) {
 		hide_filter_window (grid);
 		return TRUE;
 	}
@@ -1627,7 +1627,7 @@ tree_view_event_cb (GtkWidget *treeview, GdkEvent *event, GdauiRawGrid *grid)
 		guint modifiers = gtk_accelerator_get_default_mod_mask ();
 
 		/* Tab to move one column left or right */
-		if (ekey->keyval == GDK_Tab) {
+		if (ekey->keyval == GDK_KEY_Tab) {
 			GtkTreeViewColumn *column;
 			GtkTreePath *path;
 
@@ -1662,7 +1662,7 @@ tree_view_event_cb (GtkWidget *treeview, GdkEvent *event, GdauiRawGrid *grid)
 		}
 
 		/* DELETE to delete the selected row */
-		if (ekey->keyval == GDK_Delete) {
+		if (ekey->keyval == GDK_KEY_Delete) {
 			GtkTreeIter iter;
 			GtkTreeSelection *selection;
 			GtkTreeModel *model;

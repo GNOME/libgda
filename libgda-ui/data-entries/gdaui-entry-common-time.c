@@ -155,7 +155,7 @@ gdaui_entry_common_time_class_init (GdauiEntryCommonTimeClass * class)
 static gboolean
 key_press_event_cb (GdauiEntryCommonTime *mgtim, GdkEventKey *key_event, gpointer data)
 {
-	if (key_event->keyval == GDK_Escape)
+	if (key_event->keyval == GDK_KEY_Escape)
 		mgtim->priv->editing_canceled = TRUE;
 	return FALSE;
 }
@@ -769,7 +769,7 @@ date_delete_popup (GtkWidget *widget, GdauiEntryCommonTime *mgtim)
 static gint
 date_key_press_popup (GtkWidget *widget, GdkEventKey *event, GdauiEntryCommonTime *mgtim)
 {
-	if (event->keyval != GDK_Escape)
+	if (event->keyval != GDK_KEY_Escape)
                 return FALSE;
 
         g_signal_stop_emission_by_name (widget, "key-press-event");

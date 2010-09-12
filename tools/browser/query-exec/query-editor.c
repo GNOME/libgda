@@ -490,10 +490,10 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 	else if (ev->type == GDK_KEY_PRESS) {
 		GdkEventKey *evkey = ((GdkEventKey*) ev);
 		if ((editor->priv->mode == QUERY_EDITOR_HISTORY) &&
-		    ((evkey->keyval == GDK_Up) || (evkey->keyval == GDK_Down))) {
+		    ((evkey->keyval == GDK_KEY_Up) || (evkey->keyval == GDK_KEY_Down))) {
 			HistItemData *nfocus = NULL;
 			if (editor->priv->hist_focus) {
-				if (((GdkEventKey*) ev)->keyval == GDK_Up)
+				if (((GdkEventKey*) ev)->keyval == GDK_KEY_Up)
 					nfocus = get_prev_hist_data (editor, editor->priv->hist_focus);
 				else
 					nfocus = get_next_hist_data (editor, editor->priv->hist_focus);
@@ -505,7 +505,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 			return TRUE;
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_HISTORY) &&
-			 ((evkey->keyval == GDK_Delete) && editor->priv->hist_focus)) {
+			 ((evkey->keyval == GDK_KEY_Delete) && editor->priv->hist_focus)) {
 			if (editor->priv->hist_focus->item)
 				query_editor_del_current_history_item (editor);
 			else if (editor->priv->hist_focus->batch)
@@ -514,7 +514,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 ((evkey->keyval == GDK_L) || (evkey->keyval == GDK_l))) {
+			 ((evkey->keyval == GDK_KEY_L) || (evkey->keyval == GDK_KEY_l))) {
 			GtkTextIter start, end;
 			gtk_text_buffer_get_start_iter (buffer, &start);
 			gtk_text_buffer_get_end_iter (buffer, &end);
@@ -523,13 +523,13 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 (evkey->keyval == GDK_Return)) {
+			 (evkey->keyval == GDK_KEY_Return)) {
 			g_signal_emit (editor, query_editor_signals[EXECUTE_REQUEST], 0);
 			return TRUE;
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 (evkey->keyval == GDK_Up) &&
+			 (evkey->keyval == GDK_KEY_Up) &&
 			 editor->priv->states) {
 			if (editor->priv->states->len > 0) {
 				gint i = -1;
@@ -560,7 +560,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 (evkey->keyval == GDK_Down) &&
+			 (evkey->keyval == GDK_KEY_Down) &&
 			 editor->priv->states) {
 			if (editor->priv->states->len > 0) {
 				if (editor->priv->current_state < editor->priv->states->len - 1) {
@@ -580,7 +580,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 (evkey->keyval == GDK_space)) {
+			 (evkey->keyval == GDK_KEY_space)) {
 			display_completions (editor);
 			return TRUE;
 		}
@@ -608,7 +608,6 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	gint y, ye;
 	gint height, heighte;
 	gint win_y;
-	GdkGC *gc;
 	gint margin;
 	GtkTextBuffer *tbuffer;
 	
@@ -649,18 +648,16 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	redraw_rect.width = visible_rect.width;
 	redraw_rect.height = visible_rect.height;
 	
-	GtkStateType state;
-	state = gtk_widget_get_state (GTK_WIDGET (tv));
-	gc = gtk_widget_get_style (GTK_WIDGET (tv))->bg_gc[state];
+	cairo_t *cr = gdk_cairo_create (GDK_DRAWABLE (win));
+	GdkRectangle rect;
 	margin = gtk_text_view_get_left_margin (tv);
-	
-	gdk_draw_rectangle (event->window,
-			    gc,
-			    TRUE,
-			    redraw_rect.x + MAX (0, margin - 1),
-			    win_y,
-			    redraw_rect.width,
-			    height);
+	rect.x = redraw_rect.x + MAX (0, margin - 1);
+	rect.y = win_y;
+	rect.width = redraw_rect.width;
+	rect.height = height;
+	gdk_cairo_rectangle (cr, &rect);
+	cairo_fill (cr);
+	cairo_destroy (cr);
 
 	return FALSE;
 }

@@ -172,7 +172,7 @@ browser_canvas_init (BrowserCanvas *canvas)
 		      "automatic-bounds", TRUE,
 		      "bounds-padding", 5., 
 		      "bounds-from-origin", FALSE, 
-		      "anchor", GTK_ANCHOR_CENTER, NULL);
+		      "anchor", GOO_CANVAS_ANCHOR_CENTER, NULL);
 
 	/* reseting the zoom */
 	goo_canvas_set_scale (canvas->priv->goocanvas, DEFAULT_SCALE);

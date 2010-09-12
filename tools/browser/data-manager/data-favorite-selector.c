@@ -180,7 +180,7 @@ data_favorite_selector_get_type (void)
 static gboolean
 key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, DataFavoriteSelector *tsel)
 {
-	if (event->keyval == GDK_Delete) {
+	if (event->keyval == GDK_KEY_Delete) {
 		GtkTreeModel *model;
 		GtkTreeSelection *select;
 		GtkTreeIter iter;

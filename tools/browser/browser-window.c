@@ -1038,7 +1038,7 @@ window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 static gboolean
 key_press_event (GtkWidget *widget, GdkEventKey *event)
 {
-	if ((event->keyval == GDK_Escape) &&
+	if ((event->keyval == GDK_KEY_Escape) &&
 	    browser_window_is_fullscreen (BROWSER_WINDOW (widget))) {
 		browser_window_set_fullscreen (BROWSER_WINDOW (widget), FALSE);
 		return TRUE;

@@ -146,7 +146,7 @@ key_press_event (GtkWidget *widget, GdkEventKey *event)
 {
 	DataConsole *dconsole;
 	dconsole = DATA_CONSOLE (widget);
-	if ((event->keyval == GDK_Escape) &&
+	if ((event->keyval == GDK_KEY_Escape) &&
 	    (gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook)) == MAIN_PAGE_DATA)) {
 		if (dconsole->priv->agroup) {
 			GtkAction *action;

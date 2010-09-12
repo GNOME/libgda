@@ -66,7 +66,7 @@ delete_popup (GtkWidget *widget, PopupContainer *container)
 static gboolean
 key_press_popup (GtkWidget *widget, GdkEventKey *event, PopupContainer *container)
 {
-        if (event->keyval != GDK_Escape)
+        if (event->keyval != GDK_KEY_Escape)
                 return FALSE;
 
         g_signal_stop_emission_by_name (widget, "key-press-event");

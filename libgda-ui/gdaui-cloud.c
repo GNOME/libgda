@@ -827,18 +827,18 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
         GtkTextBuffer *buffer;
 
         switch (event->keyval) {
-        case GDK_Return:
-        case GDK_space:
-        case GDK_KP_Enter:
+        case GDK_KEY_Return:
+        case GDK_KEY_space:
+        case GDK_KEY_KP_Enter:
                 buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
                 gtk_text_buffer_get_iter_at_mark (buffer, &iter,
                                                   gtk_text_buffer_get_insert (buffer));
                 follow_if_link (text_view, &iter, cloud);
 		return TRUE;
-	case GDK_Up:
-	case GDK_Down:
-	case GDK_Left:
-	case GDK_Right:
+	case GDK_KEY_Up:
+	case GDK_KEY_Down:
+	case GDK_KEY_Left:
+	case GDK_KEY_Right:
 		if ((cloud->priv->selection_mode == GTK_SELECTION_SINGLE) ||
 		    (cloud->priv->selection_mode == GTK_SELECTION_BROWSE)) {
 			GtkTextIter iter;
@@ -847,7 +847,7 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 				mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
 				gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter, mark);
 			}
-			else if ((event->keyval == GDK_Right) || (event->keyval == GDK_Down))
+			else if ((event->keyval == GDK_KEY_Right) || (event->keyval == GDK_KEY_Down))
 				gtk_text_buffer_get_start_iter (cloud->priv->tbuffer, &iter);
 			else
 				gtk_text_buffer_get_end_iter (cloud->priv->tbuffer, &iter);
@@ -858,22 +858,22 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 				GtkMovementStep mvt_type;
 				gint mvt_amount;
 				switch (event->keyval) {
-				case GDK_Up:
+				case GDK_KEY_Up:
 					done = ! gtk_text_view_backward_display_line ((GtkTextView*)cloud->priv->tview, &iter);
 					mvt_type = GTK_MOVEMENT_DISPLAY_LINES;
 					mvt_amount = -1;
 					break;
-				case GDK_Down:
+				case GDK_KEY_Down:
 					done = ! gtk_text_view_forward_display_line ((GtkTextView*)cloud->priv->tview, &iter);
 					mvt_type = GTK_MOVEMENT_DISPLAY_LINES;
 					mvt_amount = 1;
 					break;
-				case GDK_Left:
+				case GDK_KEY_Left:
 					done = ! gtk_text_iter_backward_char (&iter);
 					mvt_type = GTK_MOVEMENT_VISUAL_POSITIONS;
 					mvt_amount = -1;
 					break;
-				case GDK_Right:
+				case GDK_KEY_Right:
 					done = ! gtk_text_iter_forward_char (&iter);
 					mvt_type = GTK_MOVEMENT_VISUAL_POSITIONS;
 					mvt_amount = 1;
