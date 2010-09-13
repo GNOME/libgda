@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgda-bdbsql-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
-Description: GDA (GNOME Data Access) BDBSql provider
+Name: libgda-sqlcipher-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
+Description: GDA (GNOME Data Access) SQLCipher provider
 Requires: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Version: @VERSION@
