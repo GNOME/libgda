@@ -165,8 +165,10 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 							"connection string."));
 		return FALSE;
 	}
-	if (bdb_db != NULL && *(g_strstrip (bdb_db)) == '\0')
+	if (bdb_db && (*(g_strstrip (bdb_db)) == '\0')) {
+		g_free (bdb_db);
 		bdb_db = NULL;
+	}
 
 	/* create GdaDataModelBdb object */
 	if (dirname) {
@@ -216,7 +218,7 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 		/* set associated data */
 		cdata = g_new0 (BdbConnectionData, 1);
 		cdata->table_model = model;
-		cdata->dbname = g_strdup_printf ("%s (%s)", bdb_file,bdb_db ? bdb_db : _("-"));
+		cdata->dbname = g_strdup_printf ("%s (%s)", bdb_file, bdb_db ? bdb_db : _("-"));
 		gda_virtual_connection_internal_set_provider_data (GDA_VIRTUAL_CONNECTION (cnc), 
 								   cdata, (GDestroyNotify) gda_bdb_free_cnc_data);
 	}
