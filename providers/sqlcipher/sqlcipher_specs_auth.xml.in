@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="PASSWORD" _name="Passphrase" _descr="Encryption passphrase" gdatype="gchararray" nullok="TRUE" plugin="string:HIDDEN=true"/>
+  </parameters>
+</data-set-spec>

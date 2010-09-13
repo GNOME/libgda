@@ -57,11 +57,7 @@ _gda_sqlite_pstmt_get_type (void)
 
 		g_static_mutex_lock (&registering);
 		if (type == 0)
-#ifdef WITH_BDBSQLITE
-			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaDBDSqlPStmt", &info, 0);
-#else
-			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaSqlitePStmt", &info, 0);
-#endif
+			type = g_type_register_static (GDA_TYPE_PSTMT, CLASS_PREFIX "PStmt", &info, 0);
 		g_static_mutex_unlock (&registering);
 	}
 	return type;

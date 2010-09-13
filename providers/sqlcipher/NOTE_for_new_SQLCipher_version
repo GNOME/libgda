@@ -1,0 +1,17 @@
+To upgrade SQLCipher version, all is needed is to create a patch against
+the sqlite3.c and sqlite3.h files in ${top_srcdir}/libgda/sqlite/sqlite-src
+and replace the sqlcipher.patch file:
+
+
+* define the LIBGDA_SOURCE_DIR to point to the top source directory where Libgda's files are
+* download the SQLCipher code source and extract (from http://www.zetetic.net/code/sqlcipher or
+  http://www.zetetic.net/code/sqlcipher)
+* into the extracted archive, run:
+  ./configure --enable-tempstore=yes CFLAGS="-DSQLITE_HAS_CODEC"
+  make sqlite3.c
+  cp $LIBGDA_SOURCE_DIR/libgda/sqlite/sqlite-src/sqlite3.c sqlite3.c.sqlite
+  cp $LIBGDA_SOURCE_DIR/libgda/sqlite/sqlite-src/sqlite3.h sqlite3.h.sqlite
+  diff -u sqlite3.h.sqlite sqlite3.h > sqlcipher.patch
+  diff -u sqlite3.c.sqlite sqlite3.c >> sqlcipher.patch
+  mv sqlcipher.patch $LIBGDA_SOURCE_DIR/providers/sqlcipher/
+* you can now delete all these temporary files

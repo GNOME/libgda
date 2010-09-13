@@ -40,5 +40,56 @@
       Also refer to the <link linkend="limitations_oracle">Oracle's provider's limitations</link>.
     </para>
   </sect1>
+
+  <sect1 id="provider_notes_sqlcipher"><title>For SQLCipher</title>
+  <para>
+    The SQLCipher database provider allows one to connect to a database encrypted using the
+    <ulink url="http://www.zetetic.net/code/sqlcipher">SQLCipher</ulink> adaptations to the SQLite
+    database. This section deals about how to manage the passphrase associated with a database file, please
+    also consult the information <ulink url="http://www.zetetic.net/code/sqlcipher">provided by SQLCipher</ulink>
+    before attempting to use this database provider.
+  </para>
+  <para>
+    The first noticeable point is that any SQLite database file can be opened using the SQLCipher and
+    will remain useable with the "standard" SQLite provider as long as it's not explicitely encrypted using
+    a passphrase.
+  </para>
+  <sect2>
+    <title>How to create and encrypted database</title>
+    <para>
+      To create an encrypted database, you can use the <application>gda-sql</application> and when prompted
+      enter the requested passphrase, as:
+      <programlisting><![CDATA[prompt> gda-sql-4.0 "SQLCipher://DB_NAME=testcrypt"
+Welcome to the GDA SQL console, version 4.1.11
+
+Type: .copyright to show usage and distribution terms
+      .? for help with internal commands
+      .q (or CTRL-D) to quit
+      (the '.' can be replaced by a '\')
+      or any query terminated by a semicolon
+
+Opening connection 'c0' for: SQLCipher://DB_NAME=testcrypt
+	Password for 'c0':]]></programlisting>
+    </para>
+  </sect2>
+  <sect2>
+    <title>How to encrypt an existing database</title>
+    <para>
+      To encrypt an existing database, connect to the database using the SQLCipher provider and execute the
+      following SQL command (replace the passphrase with the requested passphrase):
+      <programlisting>PRAGMA key = 'passphrase';</programlisting>
+      setting the requested passphrase which will be later required to reopen the database. This step
+      prevents opening the database file by the "standard" SQLite provider.
+    </para>
+  </sect2>
+  <sect2>
+    <title>How to change the passphrase of an encrypted database</title>
+    <para>
+      To change an encrypted database's passphrase, open a connection to the database and enter the following
+      SQL command (replace the passphrase with the requested new passphrase):
+      <programlisting>PRAGMA rekey = 'passphrase';</programlisting>
+    </para>
+  </sect2>
+  </sect1>
   
 </chapter>

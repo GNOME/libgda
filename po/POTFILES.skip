@@ -49,6 +49,7 @@ providers/skel-implementation/capi/libmain.c
 providers/skel-implementation/models/gda-models-provider.c
 providers/skel-implementation/models/libmain.c
 providers/skel-implementation/models/models_specs_dsn.xml.in
+providers/sqlcipher/sqlite3.c
 providers/sybase/gda-sybase-provider.c
 providers/sybase/gda-sybase-recordset.c
 providers/sybase/gda-sybase-types.c

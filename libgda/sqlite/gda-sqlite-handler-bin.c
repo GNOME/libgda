@@ -76,11 +76,7 @@ _gda_sqlite_handler_bin_get_type (void)
 
 		g_static_mutex_lock (&registering);
 		if (type == 0) {
-#ifdef WITH_BDBSQLITE
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDBDSqlHandlerBin", &info, 0);
-#else
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaSqliteHandlerBin", &info, 0);
-#endif
+			type = g_type_register_static (G_TYPE_OBJECT, CLASS_PREFIX "HandlerBin", &info, 0);
 			g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
 		}
 		g_static_mutex_unlock (&registering);

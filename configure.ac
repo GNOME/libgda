@@ -419,6 +419,20 @@ dnl *********************************
 GOBJECT_INTROSPECTION_CHECK([0.6.5])
 
 dnl ******************************
+dnl Checks for libcrypto
+dnl ******************************
+
+LIBCRYPTO_MODULES="libcrypto"
+PKG_CHECK_MODULES(LIBCRYPTO, $LIBCRYPTO_MODULES, have_crypto=yes, have_crypto=no)
+AM_CONDITIONAL(HAVE_LIBCRYPTO, test x"$have_crypto" = "xyes")
+if test x"$have_crypto" = "xyes"
+then
+        LIBCRYPTO_CFLAGS="$LIBCRYPTO_CFLAGS -DHAVE_LIBCRYPTO"
+fi
+AC_SUBST(LIBCRYPTO_CFLAGS)
+AC_SUBST(LIBCRYPTO_LIBS)
+
+dnl ******************************
 dnl Checks for libgcrypt
 dnl ******************************
 LIBGCRYPT_CFLAGS=""
@@ -1810,6 +1824,8 @@ providers/skel-implementation/capi/Makefile
 providers/skel-implementation/capi/libgda-capi-4.0.pc
 providers/skel-implementation/models/Makefile
 providers/skel-implementation/models/libgda-models-4.0.pc
+providers/sqlcipher/Makefile
+providers/sqlcipher/libgda-sqlcipher-4.0.pc
 libgda-report/Makefile
 libgda-report/engine/Makefile
 libgda-report/DocBook/Makefile
@@ -1895,6 +1911,7 @@ dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
+echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
 dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
 dnl echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 dnl echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"

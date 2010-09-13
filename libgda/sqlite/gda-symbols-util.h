@@ -106,6 +106,9 @@ typedef struct {
 	int  (*sqlite3_value_int)(sqlite3_value*);
 	const unsigned char * (*sqlite3_value_text)(sqlite3_value*);
 	int  (*sqlite3_value_type)(sqlite3_value*);
+
+	int  (*sqlite3_key)(sqlite3 *, const void *, int);
+	int  (*sqlite3_rekey)(sqlite3 *, const void *, int);
 } Sqlite3ApiRoutines;
 
 extern Sqlite3ApiRoutines *s3r;

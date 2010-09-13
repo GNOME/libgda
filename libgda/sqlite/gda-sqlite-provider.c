@@ -496,20 +496,24 @@ gda_sqlite_provider_get_type (void)
 		g_static_mutex_lock (&registering);
 		if (type == 0) {
 #ifdef WITH_BDBSQLITE
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaDBDSqlProvider", &info, 0);
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
 #else
-  #ifdef HAVE_SQLITE
+  #ifdef STATIC_SQLITE
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+  #else
+    #ifdef HAVE_SQLITE
 			GModule *module2;
 			
 			module2 = find_sqlite_library ("libsqlite3");
 			if (module2)
 				load_symbols (module2);
 			if (s3r)
-				type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaSqliteProvider", &info, 0);
+				type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
 			else
 				g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
-  #else
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaSqliteProvider", &info, 0);
+    #else
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+    #endif
   #endif
 #endif
 		}
@@ -552,6 +556,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
+	const gchar *passphrase = NULL;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -571,6 +576,8 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	is_virtual = gda_quark_list_find (params, "_IS_VIRTUAL");
 	with_fk = gda_quark_list_find (params, "FK");
 	use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
+	if (auth)
+		passphrase = gda_quark_list_find (auth, "PASSWORD");
 
 	if (! is_virtual) {
 		if (!dbname) {
@@ -666,6 +673,18 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		g_static_rec_mutex_unlock (&cnc_mutex);
 		return FALSE;
 	}
+
+#ifdef SQLITE_HAS_CODEC
+	if (passphrase && *passphrase && SQLITE3_CALL (sqlite3_key)) {
+		errmsg = SQLITE3_CALL (sqlite3_key) (cdata->connection, (void*) passphrase, strlen (passphrase));
+		if (errmsg != SQLITE_OK) {
+			gda_connection_add_event_string (cnc, _("Wrong encryption passphrase"));
+			gda_sqlite_free_cnc_data (cdata);
+			g_static_rec_mutex_unlock (&cnc_mutex);
+			return FALSE;
+		}
+	}
+#endif
 
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_sqlite_free_cnc_data);
 
