@@ -6,7 +6,7 @@
     <parameter id="PORT" _name="Port" _descr="Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty)" gdatype="gint"/>
     <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray"/>
     <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray"/>
-    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray"/>
+    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
     <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to require SSL or not when connecting" gdatype="gboolean"/>
   </parameters>
 

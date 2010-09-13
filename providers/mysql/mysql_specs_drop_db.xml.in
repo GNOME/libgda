@@ -7,7 +7,7 @@
     <parameter id="UNIX_SOCKET" _name="UNIX Socket" _descr="Full path of the UNIX socket to use when connecting locally" gdatype="gchararray"/>
     <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
     <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray"/>
-    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray"/>
+    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
   </parameters>
 
     <!-- DSN parameters -->

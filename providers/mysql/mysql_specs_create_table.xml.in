@@ -77,7 +77,7 @@
     <parameter id="TABLE_MAX_ROWS" _name="Max rows" gdatype="gint"/>
     <parameter id="TABLE_PACK_KEYS" _name="Pack keys" gdatype="gchararray" source="pack_keys"/>
     <parameter id="TABLE_DELAY_KEY_WRITE" _name="Delay key write" gdatype="gboolean"/>
-    <parameter id="TABLE_PASSWORD" _name="Password" gdatype="gchararray"/>
+    <parameter id="TABLE_PASSWORD" _name="Password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
     <parameter id="TABLE_ROW_FORMAT" _name="Row format" gdatype="gchararray" source="row_format:0"/>
     <parameter id="TABLE_UNION" _name="Union" _descr="tbl_name[,tbl_name]...: only with MERGE engine" gdatype="gchararray"/>
     <parameter id="TABLE_INSERT_METHOD" _name="Insert method" _descr="FIRST, LAST or NO: only with MERGE engine" gdatype="gchararray"/>
