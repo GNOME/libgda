@@ -125,6 +125,15 @@ Container for several values
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_set_new_read_only ##### -->
+<para>
+
+</para>
+
+@holders: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_set_copy ##### -->
 <para>
 

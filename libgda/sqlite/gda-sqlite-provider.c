@@ -2124,7 +2124,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 
 		if (holders) {
 			holders = g_slist_reverse (holders);
-			set = _gda_set_new_read_only (holders);
+			set = gda_set_new_read_only (holders);
 			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
 			g_slist_free (holders);
 		}
@@ -2765,12 +2765,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				g_value_set_int ((value = gda_value_new (G_TYPE_INT)), changes);
 				gda_holder_take_value (holder, value, NULL);
 				list = g_slist_append (NULL, holder);
-				set = (GObject*) _gda_set_new_read_only (list);
+				set = (GObject*) gda_set_new_read_only (list);
 				g_slist_free (list);
 				g_object_unref (holder);
 			}
 			else
-				set = (GObject*) _gda_set_new_read_only (NULL);
+				set = (GObject*) gda_set_new_read_only (NULL);
 
 			return set;
 		}
