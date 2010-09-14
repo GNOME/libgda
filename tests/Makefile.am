@@ -79,7 +79,7 @@ test_connection_string_split_SOURCES = \
         test-connection-string-split.c
 
 test_connection_string_split_LDADD = \
-        $(top_builddir)/libgda/libgda-4.0.la \
+        $(top_builddir)/libgda/libgda-5.0.la \
         $(LIBGDA_LIBS)
 
 EXTRA_DIST = dbstruct.xml

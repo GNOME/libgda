@@ -1804,7 +1804,7 @@ providers/reuseable/mysql/Makefile
 providers/bdb/Makefile
 providers/bdb/libgda-bdb-5.0.pc
 providers/bdbsql/Makefile
-providers/bdbsql/libgda-bdbsql-4.0.pc
+providers/bdbsql/libgda-bdbsql-5.0.pc
 providers/mdb/Makefile
 providers/mdb/libgda-mdb-5.0.pc
 providers/mysql/Makefile

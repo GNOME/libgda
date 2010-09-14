@@ -18,7 +18,7 @@ libgda_bdbsql_la_LDFLAGS = -export-dynamic -module -avoid-version $(LIBTOOL_PROV
 libgda_bdbsql_la_LIBADD = \
 	$(top_builddir)/libgda/sqlite/libgda-bdbsqlite.la
 
-xmldir   = $(datadir)/libgda-4.0
+xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \
 	bdbsql_specs_dsn.xml.in \
 	bdbsql_specs_create_db.xml.in \
@@ -37,7 +37,7 @@ xml_in_files = \
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-bdbsql-4.0.pc
+pkgconfig_DATA = libgda-bdbsql-5.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-bdbsql-4.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-bdbsql-5.0.pc.in
 DISTCLEANFILES = $(xml_DATA)
