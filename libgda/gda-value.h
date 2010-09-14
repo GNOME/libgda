@@ -41,7 +41,6 @@ G_BEGIN_DECLS
 #define	GDA_TYPE_BINARY (gda_binary_get_type())
 #define GDA_TYPE_BLOB (gda_blob_get_type())
 #define	GDA_TYPE_GEOMETRIC_POINT (gda_geometricpoint_get_type())
-#define	GDA_TYPE_LIST (gda_value_list_get_type())
 #define	GDA_TYPE_NUMERIC (gda_numeric_get_type())
 #define	GDA_TYPE_SHORT (gda_short_get_type()) 
 #define	GDA_TYPE_USHORT (gda_ushort_get_type())
@@ -53,7 +52,6 @@ G_BEGIN_DECLS
 #define GDA_VALUE_HOLDS_BINARY(value)          G_VALUE_HOLDS(value, GDA_TYPE_BINARY)
 #define GDA_VALUE_HOLDS_BLOB(value)            G_VALUE_HOLDS(value, GDA_TYPE_BLOB)
 #define GDA_VALUE_HOLDS_GEOMETRIC_POINT(value) G_VALUE_HOLDS(value, GDA_TYPE_GEOMETRIC_POINT)
-#define GDA_VALUE_HOLDS_LIST(value)            G_VALUE_HOLDS(value, GDA_TYPE_LIST)
 #define GDA_VALUE_HOLDS_NUMERIC(value)         G_VALUE_HOLDS(value, GDA_TYPE_NUMERIC)
 #define GDA_VALUE_HOLDS_SHORT(value)           G_VALUE_HOLDS(value, GDA_TYPE_SHORT)
 #define GDA_VALUE_HOLDS_USHORT(value)          G_VALUE_HOLDS(value, GDA_TYPE_USHORT)
@@ -110,8 +108,6 @@ typedef struct {
 	GdaBlobOp *op;
 } GdaBlob;
 
-typedef GList GdaValueList;
-
 #define gda_value_isa(value, type) (G_VALUE_HOLDS(value, type))
 
 GValue                           *gda_value_new (GType type);
@@ -142,8 +138,6 @@ void                              gda_value_take_blob (GValue *value, GdaBlob *b
 
 G_CONST_RETURN GdaGeometricPoint *gda_value_get_geometric_point (const GValue *value);
 void                              gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val);
-G_CONST_RETURN GdaValueList      *gda_value_get_list (const GValue *value);
-void                              gda_value_set_list (GValue *value, const GdaValueList *val);
 void                              gda_value_set_null (GValue *value);
 G_CONST_RETURN GdaNumeric        *gda_value_get_numeric (const GValue *value);
 void                              gda_value_set_numeric (GValue *value, const GdaNumeric *val);
@@ -206,7 +200,6 @@ gpointer                          gda_blob_copy (gpointer boxed);
 void                              gda_blob_free (gpointer boxed);
 void                              gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op);
 
-GType                             gda_value_list_get_type (void) G_GNUC_CONST;
 GType                             gda_short_get_type (void) G_GNUC_CONST;
 GType                             gda_ushort_get_type (void) G_GNUC_CONST;
 

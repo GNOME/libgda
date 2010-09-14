@@ -1385,8 +1385,6 @@ gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
                 return "text";
         if (type == G_TYPE_INT)
                 return "int4";
-        if (type == GDA_TYPE_LIST)
-                return "text";
         if (type == GDA_TYPE_NUMERIC)
                 return "numeric";
         if (type == G_TYPE_FLOAT)

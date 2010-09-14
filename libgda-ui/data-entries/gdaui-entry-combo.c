@@ -719,9 +719,6 @@ gdaui_entry_combo_set_value (GdauiDataEntry *iface, const GValue *value)
         g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
         combo = GDAUI_ENTRY_COMBO (iface);
         g_return_if_fail (combo->priv);
-        g_return_if_fail (!value ||
-                          (value && (gda_value_isa ((GValue*) value, GDA_TYPE_LIST) ||
-                                     gda_value_isa ((GValue*) value, GDA_TYPE_LIST))));
 
 	TO_IMPLEMENT;
 }

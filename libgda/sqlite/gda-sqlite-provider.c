@@ -1319,7 +1319,6 @@ gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	
 	if ((type == GDA_TYPE_GEOMETRIC_POINT) ||
 	    (type == G_TYPE_OBJECT) ||
-	    (type == GDA_TYPE_LIST) ||
 	    (type == G_TYPE_STRING) ||
 	    (type == G_TYPE_INVALID) ||
 	    (type == G_TYPE_GTYPE))

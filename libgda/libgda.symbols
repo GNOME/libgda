@@ -875,7 +875,6 @@
 	gda_value_get_ushort
 	gda_value_is_null
 	gda_value_is_number
-	gda_value_list_get_type
 	gda_value_new
 	gda_value_new_binary
 	gda_value_new_blob

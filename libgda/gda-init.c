@@ -103,8 +103,6 @@ gda_init (void)
 	g_assert (type);
 	type = GDA_TYPE_GEOMETRIC_POINT;
 	g_assert (type);
-	type = GDA_TYPE_LIST;
-	g_assert (type);
 	type = GDA_TYPE_NUMERIC;
 	g_assert (type);
 	type = GDA_TYPE_SHORT;

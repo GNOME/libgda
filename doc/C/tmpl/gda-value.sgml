@@ -417,30 +417,6 @@ Assorted functions for dealing with #GValue values.
 @val: 
 
 
-<!-- ##### TYPEDEF GdaValueList ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION gda_value_get_list ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_list ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
 <!-- ##### STRUCT GdaNumeric ##### -->
 <para>
 
