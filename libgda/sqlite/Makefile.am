@@ -36,10 +36,7 @@ xml_embedded.h: gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite
 	./gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite/*.xml.in > xml_embedded.h
 
 sqliteheaders = gda-sqlite-provider.h
-
-$(libgda_sqlite_la_OBJECTS): xml_embedded.h keywords_hash.c
-
-libgda_sqlite_la_SOURCES = \
+sqlitesources = \
 	$(sqliteheaders) \
 	gda-sqlite-blob-op.c \
 	gda-sqlite-blob-op.h \
@@ -63,66 +60,23 @@ libgda_sqlite_la_SOURCES = \
 	gda-symbols-util.h \
 	gda-symbols-util.c
 
-libgda_sqlite_la_CFLAGS = -DSEARCH_LIB_PATH=\""$(SQLITE_PATH)"\" -DCLASS_PREFIX=\""GdaSqlite"\"
+$(libgda_sqlite_la_OBJECTS): xml_embedded.h keywords_hash.c
+
+libgda_sqlite_la_SOURCES = $(sqlitesources)
+libgda_sqlite_la_CFLAGS = -DPNAME=\""SQLite"\" -DCLASS_PREFIX=\""GdaSqlite"\" -DSEARCH_LIB_PATH=\""$(SQLITE_PATH)"\"
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sqlite_la_LIBADD = \
 	virtual/libgda-virtual-4.0.la \
 	$(sqlitelibs) \
 	$(LIBGDA_LIBS)
 
-libgda_bdbsqlite_la_SOURCES = \
-	$(sqliteheaders) \
-	gda-sqlite-blob-op.c \
-	gda-sqlite-blob-op.h \
-	gda-sqlite-ddl.c \
-	gda-sqlite-ddl.h \
-	gda-sqlite-handler-bin.c \
-	gda-sqlite-handler-bin.h \
-	gda-sqlite-handler-boolean.c \
-	gda-sqlite-handler-boolean.h \
-	gda-sqlite-meta.c \
-	gda-sqlite-meta.h \
-	gda-sqlite-provider.c \
-	gda-sqlite-pstmt.h \
-	gda-sqlite-pstmt.c \
-	gda-sqlite-recordset.c \
-	gda-sqlite-recordset.h \
-	gda-sqlite-util.c \
-	gda-sqlite-util.h \
-	gda-sqlite.h \
-	keywords_hash.h \
-	gda-symbols-util.h \
-	gda-symbols-util.c
-
-libgda_bdbsqlite_la_CFLAGS = $(BDBSQL_CFLAGS) -DWITH_BDBSQLITE -DCLASS_PREFIX=\""GdaDBDSql"\" -DSEARCH_LIB_PATH=\""$(BDBSQL_PATH)"\"
+libgda_bdbsqlite_la_SOURCES = $(sqlitesources)
+libgda_bdbsqlite_la_CFLAGS = $(BDBSQL_CFLAGS) -DPNAME=\""BDBSql"\" -DCLASS_PREFIX=\""GdaDBDSql"\" -DWITH_BDBSQLITE -DSEARCH_LIB_PATH=\""$(BDBSQL_PATH)"\"
 libgda_bdbsqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_bdbsqlite_la_LIBADD = 
 
-libgda_sqlcipher_la_SOURCES = \
-	$(sqliteheaders) \
-	gda-sqlite-blob-op.c \
-	gda-sqlite-blob-op.h \
-	gda-sqlite-ddl.c \
-	gda-sqlite-ddl.h \
-	gda-sqlite-handler-bin.c \
-	gda-sqlite-handler-bin.h \
-	gda-sqlite-handler-boolean.c \
-	gda-sqlite-handler-boolean.h \
-	gda-sqlite-meta.c \
-	gda-sqlite-meta.h \
-	gda-sqlite-provider.c \
-	gda-sqlite-pstmt.h \
-	gda-sqlite-pstmt.c \
-	gda-sqlite-recordset.c \
-	gda-sqlite-recordset.h \
-	gda-sqlite-util.c \
-	gda-sqlite-util.h \
-	gda-sqlite.h \
-	keywords_hash.h \
-	gda-symbols-util.h \
-	gda-symbols-util.c
-
-libgda_sqlcipher_la_CFLAGS = -DSTATIC_SQLITE -DSQLITE_HAS_CODEC -DCLASS_PREFIX=\""GdaSQLCipher"\" -DSEARCH_LIB_PATH=\"""\"
+libgda_sqlcipher_la_SOURCES = $(sqlitesources)
+libgda_sqlcipher_la_CFLAGS = -DPNAME=\""SQLCipher"\" -DCLASS_PREFIX=\""GdaSQLCipher"\" -DSTATIC_SQLITE -DSQLITE_HAS_CODEC -DSEARCH_LIB_PATH=\"""\"
 libgda_sqlcipher_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sqlcipher_la_LIBADD = 
 

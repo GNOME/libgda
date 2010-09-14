@@ -529,7 +529,7 @@ gda_sqlite_provider_get_type (void)
 static const gchar *
 gda_sqlite_provider_get_name (GdaServerProvider *provider)
 {
-	return "SQLite";
+	return PNAME;
 }
 
 /* 
@@ -905,8 +905,8 @@ gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection
         gchar *str;
 	gchar *dir;
 
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-        str = g_strdup_printf ("sqlite_specs_%s.xml", file);
+        file = g_strdup_printf (PNAME "_specs_%s.xml", gda_server_operation_op_type_to_string (type));
+        str = g_utf8_strdown (file, -1);
         g_free (file);
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
@@ -948,8 +948,9 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	gchar *dir;
 
 	/* test @op's validity */
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
-        str = g_strdup_printf ("sqlite_specs_%s.xml", file);
+	file = g_strdup_printf (PNAME "_specs_%s.xml",
+				gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)));
+        str = g_utf8_strdown (file, -1);
         g_free (file);
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
@@ -1058,6 +1059,70 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 			g_set_error (error, 0, 0, "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection)); 
 			retval = FALSE;
 		}
+
+#ifdef SQLITE_HAS_CODEC
+		value = gda_server_operation_get_value_at (op, "/DB_DEF_P/PASSWORD");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) &&
+		    g_value_get_string (value) &&
+		    *g_value_get_string (value) &&
+		    SQLITE3_CALL (sqlite3_key)) {
+			const gchar *passphrase = g_value_get_string (value);
+			errmsg = SQLITE3_CALL (sqlite3_key) (cdata->connection, (void*) passphrase,
+							     strlen (passphrase));
+			if (errmsg != SQLITE_OK) {
+				g_set_error (error, 0, 0, "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection)); 
+				retval = FALSE;
+			}
+			else {
+				/* create some contents */
+				int res;
+				sqlite3_stmt *pStmt;
+				res = SQLITE3_CALL (sqlite3_prepare) (cdata->connection,
+								      "CREATE TABLE data (id int)", -1,
+								      &pStmt, NULL);
+
+				if (res != SQLITE_OK) {
+					g_set_error (error, 0, 0, "%s",
+						     _("Error initializing database with passphrase"));
+					retval = FALSE;
+					goto outcontents;
+				}
+				res = SQLITE3_CALL (sqlite3_step) (pStmt);
+				SQLITE3_CALL (sqlite3_reset) (pStmt);
+				SQLITE3_CALL (sqlite3_finalize) (pStmt);
+				if (res != SQLITE_DONE) {
+					g_set_error (error, 0, 0, "%s",
+						     _("Error initializing database with passphrase"));
+					retval = FALSE;
+					goto outcontents;
+					/* end */
+				}
+
+				res = SQLITE3_CALL (sqlite3_prepare) (cdata->connection,
+								      "DROP TABLE data", -1,
+								      &pStmt, NULL);
+
+				if (res != SQLITE_OK) {
+					g_set_error (error, 0, 0, "%s",
+						     _("Error initializing database with passphrase"));
+					retval = FALSE;
+					goto outcontents;
+				}
+				res = SQLITE3_CALL (sqlite3_step) (pStmt);
+				SQLITE3_CALL (sqlite3_reset) (pStmt);
+				SQLITE3_CALL (sqlite3_finalize) (pStmt);
+				if (res != SQLITE_DONE) {
+					g_set_error (error, 0, 0, "%s",
+						     _("Error initializing database with passphrase"));
+					retval = FALSE;
+					goto outcontents;
+					/* end */
+				}
+			outcontents:
+				;
+			}
+		}
+#endif
 		gda_sqlite_free_cnc_data (cdata);
 
 		return retval;
