@@ -208,7 +208,7 @@ introspection_sources = \
 	$(ui_data_entries_sources)
 
 Gdaui-4_0.gir: $(lib_LTLIBRARIES)
-Gdaui_5_0_gir_INCLUDES = Gtk-2.0 Gda-5.0
+Gdaui_5_0_gir_INCLUDES = Gtk-3.0 Gda-5.0
 Gdaui_5_0_gir_CFLAGS = $(AM_CPPFLAGS)
 Gdaui_5_0_gir_LIBS = $(lib_LTLIBRARIES)
 Gdaui_5_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
