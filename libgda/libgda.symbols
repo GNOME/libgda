@@ -566,6 +566,7 @@
 	gda_set_is_valid
 	gda_set_merge_with_set
 	gda_set_new
+	gda_set_new_read_only
 	gda_set_new_from_spec_node
 	gda_set_new_from_spec_string
 	gda_set_new_inline

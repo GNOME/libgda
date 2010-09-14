@@ -419,11 +419,19 @@ gda_set_new (GSList *holders)
 	return (GdaSet*) obj;
 }
 
-/*
- * _gda_set_new_read_only
+/**
+ * gda_set_new_read_only:
+ * @holders: (element-type GdaHolder) (transfer:none): a list of #GdaHolder objects
+ *
+ * Creates a new #GdaSet like gda_set_new(), but does not allow modifications to any of the #GdaHolder
+ * object in @holders. This function is used for Libgda's database providers' implementation.
+ *
+ * Returns: a new #GdaSet object
+ *
+ * Since: 4.2
  */
 GdaSet *
-_gda_set_new_read_only (GSList *holders)
+gda_set_new_read_only (GSList *holders)
 {
 	GObject *obj;
 
@@ -435,8 +443,6 @@ _gda_set_new_read_only (GSList *holders)
 
 	return (GdaSet*) obj;
 }
-
-
 
 /**
  * gda_set_copy:

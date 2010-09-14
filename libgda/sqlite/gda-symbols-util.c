@@ -271,6 +271,10 @@ load_symbols (GModule *module)
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_value_type", (gpointer*) &(s3r->sqlite3_value_type)))
 		goto onerror;
+	if (! g_module_symbol (module, "sqlite3_key", (gpointer*) &(s3r->sqlite3_key)))
+		s3r->sqlite3_key = NULL;
+	if (! g_module_symbol (module, "sqlite3_rekey", (gpointer*) &(s3r->sqlite3_key)))
+		s3r->sqlite3_rekey = NULL;
 	return;
 
  onerror:

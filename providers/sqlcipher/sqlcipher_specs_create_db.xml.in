@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<serv_op>
+  <!-- DSN parameters -->
+  <parameters id="DB_DEF_P" _name="Database's description">
+    <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to create" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="DB_DIR" _name="Directory" _descr="Directory where the database file will be" gdatype="gchararray" nullok="FALSE" plugin="filesel:MODE=PICKFOLDER"/>
+    <parameter id="PASSWORD" _name="Passphrase" _descr="Encryption passphrase" gdatype="gchararray" nullok="TRUE" plugin="string:HIDDEN=true"/>
+  </parameters>
+</serv_op>

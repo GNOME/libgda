@@ -132,11 +132,7 @@ _gda_sqlite_recordset_get_type (void)
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
-#ifdef WITH_BDBSQLITE
-			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaDBDSqlRecordset", &info, 0);
-#else
-			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaSqliteRecordset", &info, 0);
-#endif
+			type = g_type_register_static (GDA_TYPE_DATA_SELECT, CLASS_PREFIX "Recordset", &info, 0);
 		g_static_mutex_unlock (&registering);
 	}
 

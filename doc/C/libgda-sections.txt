@@ -1034,6 +1034,7 @@ gda_holder_get_type
 <TITLE>GdaSet</TITLE>
 GdaSet
 gda_set_new
+gda_set_new_read_only
 gda_set_copy
 gda_set_new_inline
 gda_set_new_from_spec_string

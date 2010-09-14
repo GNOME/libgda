@@ -33,16 +33,21 @@
   #include "gda-symbols-util.h"
   #define SQLITE3_CALL(x) (s3r->x)
 #else
-  #ifdef HAVE_SQLITE
-    #include <sqlite3.h>
-    #include "gda-symbols-util.h"
-    #define SQLITE3_CALL(x) (s3r->x)
-    #if (SQLITE_VERSION_NUMBER < 3005000)
-      typedef sqlite_int64 sqlite3_int64;
-    #endif
-  #else
+  #ifdef STATIC_SQLITE
     #include "sqlite-src/sqlite3.h"
     #define SQLITE3_CALL(x) (x)
+  #else
+    #ifdef HAVE_SQLITE
+      #include <sqlite3.h>
+      #include "gda-symbols-util.h"
+      #define SQLITE3_CALL(x) (s3r->x)
+      #if (SQLITE_VERSION_NUMBER < 3005000)
+        typedef sqlite_int64 sqlite3_int64;
+      #endif
+    #else
+      #include "sqlite-src/sqlite3.h"
+      #define SQLITE3_CALL(x) (x)
+    #endif
   #endif
 #endif
 

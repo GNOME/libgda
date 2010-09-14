@@ -496,20 +496,24 @@ gda_sqlite_provider_get_type (void)
 		g_static_mutex_lock (&registering);
 		if (type == 0) {
 #ifdef WITH_BDBSQLITE
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaDBDSqlProvider", &info, 0);
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
 #else
-  #ifdef HAVE_SQLITE
+  #ifdef STATIC_SQLITE
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+  #else
+    #ifdef HAVE_SQLITE
 			GModule *module2;
 			
 			module2 = find_sqlite_library ("libsqlite3");
 			if (module2)
 				load_symbols (module2);
 			if (s3r)
-				type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaSqliteProvider", &info, 0);
+				type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
 			else
 				g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
-  #else
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaSqliteProvider", &info, 0);
+    #else
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+    #endif
   #endif
 #endif
 		}
@@ -525,7 +529,7 @@ gda_sqlite_provider_get_type (void)
 static const gchar *
 gda_sqlite_provider_get_name (GdaServerProvider *provider)
 {
-	return "SQLite";
+	return PNAME;
 }
 
 /* 
@@ -552,6 +556,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
+	const gchar *passphrase = NULL;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -571,6 +576,8 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	is_virtual = gda_quark_list_find (params, "_IS_VIRTUAL");
 	with_fk = gda_quark_list_find (params, "FK");
 	use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
+	if (auth)
+		passphrase = gda_quark_list_find (auth, "PASSWORD");
 
 	if (! is_virtual) {
 		if (!dbname) {
@@ -666,6 +673,18 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		g_static_rec_mutex_unlock (&cnc_mutex);
 		return FALSE;
 	}
+
+#ifdef SQLITE_HAS_CODEC
+	if (passphrase && *passphrase && SQLITE3_CALL (sqlite3_key)) {
+		errmsg = SQLITE3_CALL (sqlite3_key) (cdata->connection, (void*) passphrase, strlen (passphrase));
+		if (errmsg != SQLITE_OK) {
+			gda_connection_add_event_string (cnc, _("Wrong encryption passphrase"));
+			gda_sqlite_free_cnc_data (cdata);
+			g_static_rec_mutex_unlock (&cnc_mutex);
+			return FALSE;
+		}
+	}
+#endif
 
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_sqlite_free_cnc_data);
 
@@ -886,8 +905,8 @@ gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection
         gchar *str;
 	gchar *dir;
 
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-        str = g_strdup_printf ("sqlite_specs_%s.xml", file);
+        file = g_strdup_printf (PNAME "_specs_%s.xml", gda_server_operation_op_type_to_string (type));
+        str = g_utf8_strdown (file, -1);
         g_free (file);
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
@@ -929,8 +948,9 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	gchar *dir;
 
 	/* test @op's validity */
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
-        str = g_strdup_printf ("sqlite_specs_%s.xml", file);
+	file = g_strdup_printf (PNAME "_specs_%s.xml",
+				gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)));
+        str = g_utf8_strdown (file, -1);
         g_free (file);
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
@@ -1039,6 +1059,70 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 			g_set_error (error, 0, 0, "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection)); 
 			retval = FALSE;
 		}
+
+#ifdef SQLITE_HAS_CODEC
+		value = gda_server_operation_get_value_at (op, "/DB_DEF_P/PASSWORD");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) &&
+		    g_value_get_string (value) &&
+		    *g_value_get_string (value) &&
+		    SQLITE3_CALL (sqlite3_key)) {
+			const gchar *passphrase = g_value_get_string (value);
+			errmsg = SQLITE3_CALL (sqlite3_key) (cdata->connection, (void*) passphrase,
+							     strlen (passphrase));
+			if (errmsg != SQLITE_OK) {
+				g_set_error (error, 0, 0, "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection)); 
+				retval = FALSE;
+			}
+			else {
+				/* create some contents */
+				int res;
+				sqlite3_stmt *pStmt;
+				res = SQLITE3_CALL (sqlite3_prepare) (cdata->connection,
+								      "CREATE TABLE data (id int)", -1,
+								      &pStmt, NULL);
+
+				if (res != SQLITE_OK) {
+					g_set_error (error, 0, 0, "%s",
+						     _("Error initializing database with passphrase"));
+					retval = FALSE;
+					goto outcontents;
+				}
+				res = SQLITE3_CALL (sqlite3_step) (pStmt);
+				SQLITE3_CALL (sqlite3_reset) (pStmt);
+				SQLITE3_CALL (sqlite3_finalize) (pStmt);
+				if (res != SQLITE_DONE) {
+					g_set_error (error, 0, 0, "%s",
+						     _("Error initializing database with passphrase"));
+					retval = FALSE;
+					goto outcontents;
+					/* end */
+				}
+
+				res = SQLITE3_CALL (sqlite3_prepare) (cdata->connection,
+								      "DROP TABLE data", -1,
+								      &pStmt, NULL);
+
+				if (res != SQLITE_OK) {
+					g_set_error (error, 0, 0, "%s",
+						     _("Error initializing database with passphrase"));
+					retval = FALSE;
+					goto outcontents;
+				}
+				res = SQLITE3_CALL (sqlite3_step) (pStmt);
+				SQLITE3_CALL (sqlite3_reset) (pStmt);
+				SQLITE3_CALL (sqlite3_finalize) (pStmt);
+				if (res != SQLITE_DONE) {
+					g_set_error (error, 0, 0, "%s",
+						     _("Error initializing database with passphrase"));
+					retval = FALSE;
+					goto outcontents;
+					/* end */
+				}
+			outcontents:
+				;
+			}
+		}
+#endif
 		gda_sqlite_free_cnc_data (cdata);
 
 		return retval;
@@ -2123,7 +2207,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 
 		if (holders) {
 			holders = g_slist_reverse (holders);
-			set = _gda_set_new_read_only (holders);
+			set = gda_set_new_read_only (holders);
 			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
 			g_slist_free (holders);
 		}
@@ -2764,12 +2848,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				g_value_set_int ((value = gda_value_new (G_TYPE_INT)), changes);
 				gda_holder_take_value (holder, value, NULL);
 				list = g_slist_append (NULL, holder);
-				set = (GObject*) _gda_set_new_read_only (list);
+				set = (GObject*) gda_set_new_read_only (list);
 				g_slist_free (list);
 				g_object_unref (holder);
 			}
 			else
-				set = (GObject*) _gda_set_new_read_only (NULL);
+				set = (GObject*) gda_set_new_read_only (NULL);
 
 			return set;
 		}
