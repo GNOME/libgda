@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-09-09 14:42+0000\n"
-"PO-Revision-Date: 2010-09-15 15:16+0100\n"
+"POT-Creation-Date: 2010-09-15 13:17+0000\n"
+"PO-Revision-Date: 2010-09-15 15:19+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -112,15 +112,15 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda/gda-holder.c:1708
 #: ../libgda/gda-server-operation.c:614
 #: ../libgda/gda-server-operation.c:1005
-#: ../libgda/gda-set.c:553
+#: ../libgda/gda-set.c:559
 #: ../libgda/gda-tree-mgr-select.c:188
 #: ../libgda/gda-tree-mgr-select.c:220
-#: ../libgda/sqlite/gda-sqlite-provider.c:2046
-#: ../libgda/sqlite/gda-sqlite-provider.c:2058
-#: ../libgda/sqlite/gda-sqlite-provider.c:2080
-#: ../libgda/sqlite/gda-sqlite-provider.c:2270
-#: ../libgda/sqlite/gda-sqlite-provider.c:2555
-#: ../libgda/sqlite/gda-sqlite-provider.c:2567
+#: ../libgda/sqlite/gda-sqlite-provider.c:2130
+#: ../libgda/sqlite/gda-sqlite-provider.c:2142
+#: ../libgda/sqlite/gda-sqlite-provider.c:2164
+#: ../libgda/sqlite/gda-sqlite-provider.c:2354
+#: ../libgda/sqlite/gda-sqlite-provider.c:2639
+#: ../libgda/sqlite/gda-sqlite-provider.c:2651
 #: ../libgda/thread-wrapper/gda-thread-provider.c:454
 #: ../libgda-ui/data-entries/common-bin.c:79
 #: ../libgda-ui/data-entries/common-bin.c:156
@@ -171,8 +171,8 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/data-manager/data-favorite-selector.c:201
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:627
-#: ../tools/browser/data-manager/data-widget.c:345
-#: ../tools/browser/data-manager/data-widget.c:613
+#: ../tools/browser/data-manager/data-widget.c:344
+#: ../tools/browser/data-manager/data-widget.c:612
 #: ../tools/browser/query-exec/query-console.c:684
 #: ../tools/browser/query-exec/query-console.c:823
 #: ../tools/browser/query-exec/query-console.c:868
@@ -383,7 +383,7 @@ msgstr ""
 
 #: ../control-center/main.c:57
 #: ../libgda-ui/internal/utility.c:529
-#: ../tools/browser/support.c:152
+#: ../tools/browser/support.c:153
 msgid "Error:"
 msgstr "Napaka:"
 
@@ -697,7 +697,7 @@ msgid "Can't find task %u"
 msgstr "Ni mogoče najti naloge %u"
 
 #: ../libgda/gda-connection.c:2553
-#: ../libgda/sqlite/gda-sqlite-provider.c:1008
+#: ../libgda/sqlite/gda-sqlite-provider.c:1028
 #: ../libgda/thread-wrapper/gda-thread-provider.c:917
 #: ../providers/jdbc/gda-jdbc-provider.c:575
 #: ../providers/mysql/gda-mysql-provider.c:963
@@ -1138,8 +1138,8 @@ msgid "Character conversion at line %d, error: %s"
 msgstr "Znakovna pretvorba v vrstici %d; vrnjena napaka: %s"
 
 #: ../libgda/gda-data-model-import.c:904
-#: ../libgda/sqlite/gda-sqlite-provider.c:691
-#: ../providers/bdb/gda-bdb-provider.c:208
+#: ../libgda/sqlite/gda-sqlite-provider.c:710
+#: ../providers/bdb/gda-bdb-provider.c:210
 #: ../tools/browser/common/gdaui-data-import.c:177
 msgid "no detail"
 msgstr "brez podrobnosti"
@@ -1481,7 +1481,7 @@ msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Opravilo ustvarjanja preglednice ni podprto preko strežnika podatkovne zbirke"
 
 #: ../libgda/gda-holder.c:487
-#: ../libgda/gda-set.c:552
+#: ../libgda/gda-set.c:558
 #, c-format
 msgid "Unable to set holder's value: %s"
 msgstr "Ni mogoče določiti vrednosti ročnika: %s"
@@ -1972,6 +1972,7 @@ msgstr "VhodnaVrsta"
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:2
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:2
 msgid "Definition"
 msgstr "Definicija"
@@ -1993,6 +1994,8 @@ msgstr "Podatkovna zbirka"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:8
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:3
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:7
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:23
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:23
 msgid "Field name"
@@ -2009,6 +2012,8 @@ msgstr "Ime polja"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:6
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:4
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:17
 msgid "Data type"
@@ -2022,6 +2027,8 @@ msgstr "Podatkovna vrsta"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:167
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:10
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:35
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:10
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:35
 msgid "Size"
@@ -2035,6 +2042,8 @@ msgstr "Velikost"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:161
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:9
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:33
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:33
 msgid "Scale"
@@ -2070,6 +2079,7 @@ msgstr "Sklici"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:21
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
 msgid "Default value"
 msgstr "Privzeta vrednost"
@@ -2082,6 +2092,7 @@ msgstr "Dodatni atributi"
 #: ../providers/bdbsql/bdbsql_specs_drop_index.xml.in.h:3
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:166
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:172
@@ -2111,6 +2122,9 @@ msgstr "Imenski prostor"
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:6
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:4
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:11
+#: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:3
+#: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
@@ -2148,6 +2162,7 @@ msgstr "Sprožilnik"
 #: ../libgda/gda-server-provider-extra.c:406
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 #: ../tools/command-exec.c:642
 #: ../tools/command-exec.c:716
@@ -2172,6 +2187,7 @@ msgstr "Uporabnik"
 #: ../providers/bdbsql/bdbsql_specs_drop_view.xml.in.h:3
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:3
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:6
+#: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:3
 msgid "View"
 msgstr "Pogled"
@@ -2196,6 +2212,9 @@ msgstr "Pogled"
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:3
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:3
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:3
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:12
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
+#: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:3
@@ -2233,42 +2252,42 @@ msgstr "Podatkovni model sheme ima napačno ime stolpca: '%s' namesto '%s'"
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr "Podatkovni model sheme ima določeno napačno vrsto GDA: '%s' namesto '%s'"
 
-#: ../libgda/gda-set.c:544
-#: ../libgda/gda-set.c:645
+#: ../libgda/gda-set.c:550
+#: ../libgda/gda-set.c:651
 #, c-format
 msgid "%s() does not handle values of type '%s'."
 msgstr "%s() ne upravlja z vrednostmi vrste '%s'."
 
-#: ../libgda/gda-set.c:599
+#: ../libgda/gda-set.c:605
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
 msgstr "Gradnika GdaHolder z ID '%s' ni mogoče najti v naboru"
 
-#: ../libgda/gda-set.c:779
+#: ../libgda/gda-set.c:785
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "Spec korensko vozlišče != 'data-set-spec': '%s'"
 
-#: ../libgda/gda-set.c:818
+#: ../libgda/gda-set.c:824
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Manjkajo <parametri> vozlišča: '%s'"
 
-#: ../libgda/gda-set.c:1030
+#: ../libgda/gda-set.c:1036
 #, c-format
 msgid "Data set does not allow modifications"
 msgstr "Podatkovni model ne dovoli spreminjanja"
 
-#: ../libgda/gda-set.c:1295
+#: ../libgda/gda-set.c:1301
 msgid "GdaHolder needs to have an ID"
 msgstr "GdaHolder zahteva določitev ID"
 
-#: ../libgda/gda-set.c:1408
+#: ../libgda/gda-set.c:1414
 msgid "One or more values are invalid"
 msgstr "Ena ali več vrednosti ni veljavnih"
 
-#: ../libgda/gda-set.c:1625
-#: ../libgda/gda-set.c:1638
+#: ../libgda/gda-set.c:1631
+#: ../libgda/gda-set.c:1644
 msgid "Replacing data model must have the same characteristics as the data model it replaces"
 msgstr "Zamenjava podatkovnega modela mora imeti enake značilnosti kot prvotni podatkovni model."
 
@@ -2367,7 +2386,7 @@ msgid "Missing parameter '%s'"
 msgstr "Manjkajoči parameter '%s'"
 
 #: ../libgda/gda-statement.c:1243
-#: ../libgda/sqlite/gda-sqlite-provider.c:2448
+#: ../libgda/sqlite/gda-sqlite-provider.c:2532
 #: ../providers/jdbc/gda-jdbc-provider.c:1347
 #: ../providers/mysql/gda-mysql-provider.c:2188
 #: ../providers/postgres/gda-postgres-provider.c:1949
@@ -2512,7 +2531,7 @@ msgstr "Ni mogoče prepisati privzete vrednosti ročnika stavka UPDATE"
 #: ../libgda/gda-util.c:1316
 #: ../libgda/gda-util.c:1373
 #: ../libgda/gda-util.c:1413
-#: ../libgda/sqlite/gda-sqlite-provider.c:2429
+#: ../libgda/sqlite/gda-sqlite-provider.c:2513
 #: ../providers/jdbc/gda-jdbc-provider.c:1318
 #: ../providers/mysql/gda-mysql-provider.c:2168
 #: ../providers/postgres/gda-postgres-provider.c:1931
@@ -2559,7 +2578,7 @@ msgid "Binary representation"
 msgstr "Dvojiško prikazovanje"
 
 #: ../libgda/handlers/gda-handler-boolean.c:117
-#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:121
+#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:117
 #: ../providers/mysql/gda-mysql-handler-boolean.c:117
 msgid "Boolean values handler"
 msgstr "Upravljalnik logičnih vrednosti"
@@ -2609,15 +2628,15 @@ msgstr "Predstavitev vrste Gda"
 msgid "Table to create must have at least one row"
 msgstr "Preglednica mora imeti vsaj eno vrstico"
 
-#: ../libgda/sqlite/gda-sqlite-handler-bin.c:119
+#: ../libgda/sqlite/gda-sqlite-handler-bin.c:115
 msgid "SQlite binary handler"
 msgstr "SQLite dvojiški upravljalnik"
 
-#: ../libgda/sqlite/gda-sqlite-handler-bin.c:125
+#: ../libgda/sqlite/gda-sqlite-handler-bin.c:121
 msgid "SQlite binary representation"
 msgstr "SQLite dvojiško prikazovanje"
 
-#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:127
+#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:123
 msgid "Sqlite boolean representation"
 msgstr "Sqlite logično prikazovanje"
 
@@ -2637,11 +2656,11 @@ msgstr "Parameter '%s' ni v skladu s stolpcem preglednice"
 msgid "Binding a BLOB for this type of statement is not supported"
 msgstr "Povezovanje predmeta BLOB za to vrsto stavka ni podprto"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:510
+#: ../libgda/sqlite/gda-sqlite-provider.c:513
 msgid "Can't find libsqlite3."
 msgstr "Ni mogoče najti libsqlite3."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:560
+#: ../libgda/sqlite/gda-sqlite-provider.c:565
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:264
 #: ../libgda/thread-wrapper/gda-thread-provider.c:389
 #: ../providers/bdb/gda-bdb-provider.c:155
@@ -2653,29 +2672,33 @@ msgstr "Ni mogoče najti libsqlite3."
 msgid "Provider does not support asynchronous connection open"
 msgstr "Ponudnik ne podpira asinhronega odpiranja povezave"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:582
+#: ../libgda/sqlite/gda-sqlite-provider.c:589
 #: ../providers/mdb/gda-mdb-provider.c:246
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "Niz povezave mora vsebovati vrednosti predmetov DB_DIR in DB_NAME values"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:609
-#: ../libgda/sqlite/gda-sqlite-provider.c:617
+#: ../libgda/sqlite/gda-sqlite-provider.c:616
+#: ../libgda/sqlite/gda-sqlite-provider.c:624
 #, c-format
 msgid "The connection string format has changed: replace URI with DB_DIR (the path to the database file) and DB_NAME (the database file without the '%s' at the end)."
 msgstr "Zapis niza povezave je spremenjen: zamenjati je treba naslov URI s podatki DB_DIR (pot do datoteke podatkovne zbirke) in DB_NAME (datoteka podatkovne zbirke brez '%s' na koncu imena)."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:632
+#: ../libgda/sqlite/gda-sqlite-provider.c:639
 #: ../providers/mdb/gda-mdb-provider.c:288
 msgid "The DB_DIR part of the connection string must point to a valid directory"
 msgstr "Del povezave DB_DIR mora kazati na veljavno mapo"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:690
+#: ../libgda/sqlite/gda-sqlite-provider.c:681
+msgid "Wrong encryption passphrase"
+msgstr "Napačno šifrirno geslo"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:709
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "Ni mogoče določiti praznega rezultata SQLite možnosti: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:905
-#: ../libgda/sqlite/gda-sqlite-provider.c:944
+#: ../libgda/sqlite/gda-sqlite-provider.c:924
+#: ../libgda/sqlite/gda-sqlite-provider.c:964
 #: ../libgda-ui/data-entries/plugins/libmain.c:85
 #: ../libgda-ui/data-entries/plugins/libmain.c:123
 #: ../libgda-ui/data-entries/plugins/libmain.c:151
@@ -2690,75 +2713,82 @@ msgstr "Ni mogoče določiti praznega rezultata SQLite možnosti: %s"
 msgid "Missing spec. file '%s'"
 msgstr "Manjka določilna datoteka '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1074
+#: ../libgda/sqlite/gda-sqlite-provider.c:1086
+#: ../libgda/sqlite/gda-sqlite-provider.c:1095
+#: ../libgda/sqlite/gda-sqlite-provider.c:1107
+#: ../libgda/sqlite/gda-sqlite-provider.c:1116
+msgid "Error initializing database with passphrase"
+msgstr "Napaka med začenjanjem podatkovne zbirke s šifrirnim geslom"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:1158
 msgid "Missing database name or directory"
 msgstr "Manjka ime podatkovne zbirke ali mapa"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1100
+#: ../libgda/sqlite/gda-sqlite-provider.c:1184
 #: ../providers/postgres/gda-postgres-provider.c:992
 #: ../providers/postgres/gda-postgres-provider.c:993
 msgid "Transactions are not supported in read-only mode"
 msgstr "Prenosi niso podprti v načinu le za branje"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1933
+#: ../libgda/sqlite/gda-sqlite-provider.c:2017
 #: ../providers/jdbc/gda-jdbc-provider.c:1115
 #: ../providers/postgres/gda-postgres-provider.c:1528
 #: ../providers/web/gda-web-provider.c:1259
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Neimenovan parameter izjave ni dovoljen v pripravljeni izjavi."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2045
-#: ../libgda/sqlite/gda-sqlite-provider.c:2057
+#: ../libgda/sqlite/gda-sqlite-provider.c:2129
+#: ../libgda/sqlite/gda-sqlite-provider.c:2141
 #: ../providers/mysql/gda-mysql-provider.c:1955
 #: ../providers/postgres/gda-postgres-provider.c:1672
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s)"
 msgstr "Ni mogoče izgraditi izjave SELECT za pridobitev zadnje vstavljene vrstice: %s)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2079
+#: ../libgda/sqlite/gda-sqlite-provider.c:2163
 #: ../providers/mysql/gda-mysql-provider.c:1970
 #: ../providers/postgres/gda-postgres-provider.c:1687
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr "Ni mogoče izvesti izjave SELECT za pridobitev zadnje vstavljene vrstice: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2092
+#: ../libgda/sqlite/gda-sqlite-provider.c:2176
 #: ../providers/mysql/gda-mysql-provider.c:1983
 #: ../providers/postgres/gda-postgres-provider.c:1700
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr "Z izjavo SELECT za izbiro zadnje vstavljene vrstice, ni bilo mogoče pridobiti nobene vrstice."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2096
+#: ../libgda/sqlite/gda-sqlite-provider.c:2180
 #: ../providers/mysql/gda-mysql-provider.c:1987
 #: ../providers/postgres/gda-postgres-provider.c:1704
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr "Z izjavo SELECT za izbiro zadnje vstavljene vrstice, je bilo pridobljeno preveč (%d) vrstic."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2161
+#: ../libgda/sqlite/gda-sqlite-provider.c:2245
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Pripravljena izjava ni povezana s predmetom GdaStatement"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2201
-#: ../libgda/sqlite/gda-sqlite-provider.c:2238
+#: ../libgda/sqlite/gda-sqlite-provider.c:2285
+#: ../libgda/sqlite/gda-sqlite-provider.c:2322
 msgid "Can't create SQLite BLOB handle"
 msgstr "Ni mogoče ustvariti SQLite upravljalnika predmeta BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2205
-#: ../libgda/sqlite/gda-sqlite-provider.c:2243
+#: ../libgda/sqlite/gda-sqlite-provider.c:2289
+#: ../libgda/sqlite/gda-sqlite-provider.c:2327
 msgid "Can't write to SQLite's BLOB"
 msgstr "Ni mogoče pisati v SQLite's predmet BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2228
+#: ../libgda/sqlite/gda-sqlite-provider.c:2312
 #, c-format
 msgid "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
 msgstr "Ni mogoče pridobiti ročnika SQLite BLOB (poročana napaka je '%s'). O napaki pošljite poročilo na http://bugzilla.gnome.org/ za paket \"libgda\"."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2253
+#: ../libgda/sqlite/gda-sqlite-provider.c:2337
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Ni mogoče določiti vrednosti ROWID zbirke dvojiških podatkov za izpolnjevanje"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2301
+#: ../libgda/sqlite/gda-sqlite-provider.c:2385
 #: ../providers/jdbc/gda-jdbc-provider.c:1213
 #: ../providers/mysql/gda-mysql-provider.c:2076
 #: ../providers/postgres/gda-postgres-provider.c:1799
@@ -2766,14 +2796,14 @@ msgstr "Ni mogoče določiti vrednosti ROWID zbirke dvojiških podatkov za izpol
 msgid "Provider does not support asynchronous statement execution"
 msgstr "Ponudnik ne podpira asinhronega izvajanja izjav"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2369
+#: ../libgda/sqlite/gda-sqlite-provider.c:2453
 #: ../tools/browser/mgr-favorites.c:217
 #: ../tools/browser/mgr-favorites.c:259
 msgid "Empty statement"
 msgstr "Prazna izjava"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2411
-#: ../libgda/sqlite/gda-sqlite-provider.c:2414
+#: ../libgda/sqlite/gda-sqlite-provider.c:2495
+#: ../libgda/sqlite/gda-sqlite-provider.c:2498
 #: ../providers/jdbc/gda-jdbc-provider.c:1300
 #: ../providers/jdbc/gda-jdbc-provider.c:1303
 #: ../providers/mysql/gda-mysql-provider.c:2150
@@ -2786,7 +2816,7 @@ msgstr "Prazna izjava"
 msgid "Missing parameter(s) to execute query"
 msgstr "Manjka parameter za izvedbo poizvedbe"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2473
+#: ../libgda/sqlite/gda-sqlite-provider.c:2557
 #: ../providers/jdbc/gda-jdbc-provider.c:1382
 #: ../providers/mysql/gda-mysql-provider.c:2214
 #: ../providers/postgres/gda-postgres-provider.c:1974
@@ -2794,33 +2824,33 @@ msgstr "Manjka parameter za izvedbo poizvedbe"
 msgid "Can't rewrite statement handle default values"
 msgstr "Ni mogoče prepisati privzete vrednosti ročnika stavka"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2537
+#: ../libgda/sqlite/gda-sqlite-provider.c:2621
 #: ../providers/mysql/gda-mysql-provider.c:2346
 msgid "Can't get BLOB's length"
 msgstr "Ni mogoče pridobiti dolžine predmeta BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2539
+#: ../libgda/sqlite/gda-sqlite-provider.c:2623
 #: ../providers/mysql/gda-mysql-provider.c:2348
 msgid "BLOB is too big"
 msgstr "Predmet BLOB je prevelik"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2621
+#: ../libgda/sqlite/gda-sqlite-provider.c:2705
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Neupravljana vrsta podatkov '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2805
-#: ../libgda/sqlite/gda-sqlite-provider.c:2826
-#: ../libgda/sqlite/gda-sqlite-provider.c:2892
+#: ../libgda/sqlite/gda-sqlite-provider.c:2889
+#: ../libgda/sqlite/gda-sqlite-provider.c:2910
+#: ../libgda/sqlite/gda-sqlite-provider.c:2976
 msgid "Function requires one argument"
 msgstr "Funkcija zahteva en argument"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2858
-#: ../libgda/sqlite/gda-sqlite-provider.c:2924
+#: ../libgda/sqlite/gda-sqlite-provider.c:2942
+#: ../libgda/sqlite/gda-sqlite-provider.c:3008
 msgid "Function requires two arguments"
 msgstr "Funkcija zahteva dva argumenta"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:238
+#: ../libgda/sqlite/gda-sqlite-recordset.c:234
 #: ../providers/jdbc/gda-jdbc-recordset.c:278
 #: ../providers/mysql/gda-mysql-recordset.c:427
 #: ../providers/postgres/gda-postgres-recordset.c:277
@@ -2829,38 +2859,38 @@ msgstr "Funkcija zahteva dva argumenta"
 msgid "Column %d out of range (0-%d), ignoring its specified type"
 msgstr "Stolpec %d je izven območja (0-%d), zato bo določena vrsta prezrta"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:389
-#: ../libgda/sqlite/gda-sqlite-recordset.c:401
+#: ../libgda/sqlite/gda-sqlite-recordset.c:385
+#: ../libgda/sqlite/gda-sqlite-recordset.c:397
 msgid "Integer value is too big"
 msgstr "Številčna vrednost je prevelika"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:466
+#: ../libgda/sqlite/gda-sqlite-recordset.c:462
 msgid "Unable to open BLOB"
 msgstr "Ni mogoče odpreti predmeta BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:486
+#: ../libgda/sqlite/gda-sqlite-recordset.c:482
 #: ../providers/postgres/gda-postgres-recordset.c:620
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr "Neveljaven zapis datuma '%s' (zapis mora biti v obliki YYYY-MM-DD)"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:500
+#: ../libgda/sqlite/gda-sqlite-recordset.c:496
 #: ../providers/postgres/gda-postgres-recordset.c:631
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Neveljaven zapis časa '%s' (zapis mora biti v obliki HH:MM:SS[.ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:514
+#: ../libgda/sqlite/gda-sqlite-recordset.c:510
 #: ../providers/postgres/gda-postgres-recordset.c:675
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr "Neveljaven zapis časovnega žiga '%s' (zapis mora biti v obliki YYYY-MM-DD HH:MM:SS[.ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:548
+#: ../libgda/sqlite/gda-sqlite-recordset.c:544
 msgid "SQLite provider fatal internal error"
 msgstr "Usodna notranja napaka ponudnika SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:596
+#: ../libgda/sqlite/gda-sqlite-recordset.c:592
 #: ../providers/jdbc/gda-jdbc-recordset.c:490
 #, c-format
 msgid "Row %d not found"
@@ -3310,7 +3340,7 @@ msgstr "Neznano"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
 #: ../libgda-ui/gdaui-basic-form.c:717
 #: ../libgda-ui/gdaui-basic-form.c:753
-#: ../libgda-ui/gdaui-raw-grid.c:739
+#: ../libgda-ui/gdaui-raw-grid.c:740
 #: ../tools/gda-sql.c:2658
 #: ../tools/gda-sql.c:2833
 #: ../tools/gda-sql.c:4013
@@ -3880,8 +3910,8 @@ msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Izbrana možnost je uporabna, kadar ima navpično razširjanje obrazca pomen."
 
 #: ../libgda-ui/gdaui-basic-form.c:839
-#: ../libgda-ui/gdaui-raw-grid.c:780
-#: ../libgda-ui/gdaui-raw-grid.c:2619
+#: ../libgda-ui/gdaui-raw-grid.c:781
+#: ../libgda-ui/gdaui-raw-grid.c:2611
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Atribut '%s' mora biti vrednost G_TYPE_STRING"
@@ -3895,13 +3925,13 @@ msgid "Values to be filled"
 msgstr "Zahtevane vrednosti"
 
 #: ../libgda-ui/gdaui-basic-form.c:2091
-#: ../libgda-ui/gdaui-raw-grid.c:2446
+#: ../libgda-ui/gdaui-raw-grid.c:2438
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "'%s' dokument ni uspešno razčlenjen"
 
 #: ../libgda-ui/gdaui-basic-form.c:2101
-#: ../libgda-ui/gdaui-raw-grid.c:2456
+#: ../libgda-ui/gdaui-raw-grid.c:2448
 #, c-format
 msgid "'%s' DTD not parsed successfully. XML data layout validation will not be performed (some errors may occur)"
 msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda podatkov XML ne bo izvedeno (lahko se pojavijo napake)"
@@ -3970,9 +4000,9 @@ msgid "Could not open plugins directory, no plugin loaded."
 msgstr "Ni mogoče odpreti mape vstavkov, zato vstavki ne bodo naloženi."
 
 #: ../libgda-ui/gdaui-init.c:485
-#: ../tools/browser/data-manager/data-widget.c:608
-#: ../tools/browser/data-manager/data-widget.c:613
-#: ../tools/browser/data-manager/data-widget.c:615
+#: ../tools/browser/data-manager/data-widget.c:607
+#: ../tools/browser/data-manager/data-widget.c:612
+#: ../tools/browser/data-manager/data-widget.c:614
 #: ../tools/browser/data-manager/xml-spec-editor.c:235
 #: ../tools/browser/query-exec/query-result.c:256
 #: ../tools/web-server.c:2017
@@ -4031,97 +4061,97 @@ msgid "Global Actions visible"
 msgstr "Splošna dejanja so vidna"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
-#: ../libgda-ui/gdaui-raw-grid.c:742
-#: ../libgda-ui/gdaui-raw-grid.c:765
+#: ../libgda-ui/gdaui-raw-grid.c:743
+#: ../libgda-ui/gdaui-raw-grid.c:766
 msgid "Can't be NULL"
 msgstr "Vrednost NULL ni mogoča"
 
-#: ../libgda-ui/gdaui-raw-grid.c:773
+#: ../libgda-ui/gdaui-raw-grid.c:774
 msgid "No title"
 msgstr "Brez naslova"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1762
+#: ../libgda-ui/gdaui-raw-grid.c:1754
 msgid "Select _All"
 msgstr "Izberi _vse"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1767
+#: ../libgda-ui/gdaui-raw-grid.c:1759
 msgid "_Clear Selection"
 msgstr "_Počisti izbrano"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1770
+#: ../libgda-ui/gdaui-raw-grid.c:1762
 msgid "Show Column _Titles"
 msgstr "Pokaži _naslove stolpcev"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1775
+#: ../libgda-ui/gdaui-raw-grid.c:1767
 msgid "_Set filter"
 msgstr "_Nastavi filter"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1778
+#: ../libgda-ui/gdaui-raw-grid.c:1770
 msgid "_Unset filter"
 msgstr "_Počisti filter"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:1878
+#: ../libgda-ui/gdaui-raw-grid.c:1870
 msgid "Saving Data"
 msgstr "Shranjevanje podatkov"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1886
+#: ../libgda-ui/gdaui-raw-grid.c:1878
 msgid "Saving data to a file"
 msgstr "Shranjevanje podatkov v datoteko"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1887
+#: ../libgda-ui/gdaui-raw-grid.c:1879
 msgid "The data will be exported without any of the modifications which may have been made and have not been committed."
 msgstr "Podatki bodo izvoženi brez sprememb, ki so bile narejene, vendar niso bile objavljene."
 
-#: ../libgda-ui/gdaui-raw-grid.c:1902
+#: ../libgda-ui/gdaui-raw-grid.c:1894
 msgid "File name"
 msgstr "Ime datoteke"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1921
+#: ../libgda-ui/gdaui-raw-grid.c:1913
 msgid "Details"
 msgstr "Podrobnosti"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:1942
+#: ../libgda-ui/gdaui-raw-grid.c:1934
 msgid "File type:"
 msgstr "Vrsta datoteke:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1952
+#: ../libgda-ui/gdaui-raw-grid.c:1944
 msgid "Tab-delimited"
 msgstr "Podatki ločeni s tabulatorji"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1953
+#: ../libgda-ui/gdaui-raw-grid.c:1945
 msgid "Comma-delimited"
 msgstr "Podatki ločeni z vejicami"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1954
+#: ../libgda-ui/gdaui-raw-grid.c:1946
 msgid "XML"
 msgstr "XML"
 
 #. limit to selection ?
-#: ../libgda-ui/gdaui-raw-grid.c:1961
+#: ../libgda-ui/gdaui-raw-grid.c:1953
 msgid "Limit to selection?"
 msgstr "Ali naj se omeji na izbiro?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1982
+#: ../libgda-ui/gdaui-raw-grid.c:1974
 msgid "Other options"
 msgstr "Druge možnosti"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1989
+#: ../libgda-ui/gdaui-raw-grid.c:1981
 msgid "Empty string when NULL?"
 msgstr "Ali naj se izpraznijo niti, kadar so te vrednosti NULL?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1992
-#: ../libgda-ui/gdaui-raw-grid.c:1997
+#: ../libgda-ui/gdaui-raw-grid.c:1984
+#: ../libgda-ui/gdaui-raw-grid.c:1989
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Izvozi vrednosti NULL kot prazen \"\" niz"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1999
+#: ../libgda-ui/gdaui-raw-grid.c:1991
 msgid "Invalid data as NULL?"
 msgstr "Ali so podatki vrednosti NULL neveljavni?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2002
-#: ../libgda-ui/gdaui-raw-grid.c:2007
+#: ../libgda-ui/gdaui-raw-grid.c:1994
+#: ../libgda-ui/gdaui-raw-grid.c:1999
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4129,29 +4159,29 @@ msgstr ""
 "Namesto neveljavnih podatkov,\n"
 "izvozi podatke z vrednostmi NULL."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2009
+#: ../libgda-ui/gdaui-raw-grid.c:2001
 msgid "Field names on first row?"
 msgstr "Ali so v prvi vrstici imena polj?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2012
-#: ../libgda-ui/gdaui-raw-grid.c:2017
+#: ../libgda-ui/gdaui-raw-grid.c:2004
+#: ../libgda-ui/gdaui-raw-grid.c:2009
 msgid "Add a row at beginning with columns names"
 msgstr "Dodaj vrstico na začetku z imeni stolpcev"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2184
+#: ../libgda-ui/gdaui-raw-grid.c:2176
 #, c-format
 msgid "Could not save file %s"
 msgstr "Ni mogoče shraniti datoteke %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2192
+#: ../libgda-ui/gdaui-raw-grid.c:2184
 msgid "You must specify a file name"
 msgstr "Navesti je treba ime datoteke"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2198
+#: ../libgda-ui/gdaui-raw-grid.c:2190
 msgid "Got empty file while converting the data"
 msgstr "Dobljena prazna datoteka med pretvarjanjem podatkov"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2211
+#: ../libgda-ui/gdaui-raw-grid.c:2203
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4160,7 +4190,7 @@ msgstr ""
 "Datoteka '%s' že obstaja.\n"
 "Ali jo želite prepisati?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2221
+#: ../libgda-ui/gdaui-raw-grid.c:2213
 msgid "If you choose yes, the contents will be lost."
 msgstr "V koliko odgovorite z da, bo vsebina izgubljena."
 
@@ -4232,6 +4262,9 @@ msgstr "Datoteka podatkovne zbirke"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:9
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:6
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:1
+#: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_drop_db.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:1
@@ -4245,6 +4278,9 @@ msgstr "Ime podatkovne zbirke"
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:6
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:2
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:6
+#: ../providers/sqlcipher/sqlcipher_specs_drop_db.xml.in.h:6
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:2
@@ -4254,6 +4290,7 @@ msgstr "Mapa"
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:5
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:3
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:3
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:3
 msgid "Directory where the database file is stored"
 msgstr "Mapa v kateri je shranjena datoteka podatkovne zbirke"
@@ -4266,21 +4303,21 @@ msgstr "Ime podatkovne zbirke v datoteki zbirke za uporabo"
 msgid "The DB_NAME parameter is not defined in the connection string."
 msgstr "Parameter DB_NAME ni določen v nizu povezave podatkov."
 
-#: ../providers/bdb/gda-bdb-provider.c:192
+#: ../providers/bdb/gda-bdb-provider.c:194
 msgid "An error occurred while accessing the BDB database"
 msgstr "Prišlo je do napake med dostopom do podatkovne zbirke BDB"
 
-#: ../providers/bdb/gda-bdb-provider.c:200
+#: ../providers/bdb/gda-bdb-provider.c:202
 #: ../providers/mdb/gda-mdb-provider.c:315
 msgid "Can't open virtual connection"
 msgstr "Ni mogoče odpreti navidezne povezave"
 
-#: ../providers/bdb/gda-bdb-provider.c:207
+#: ../providers/bdb/gda-bdb-provider.c:209
 #, c-format
 msgid "Could not add BDB data model to connection: %s"
 msgstr "Ni mogoče dodati BDB podatkovnega modela k povezavi: %s"
 
-#: ../providers/bdb/gda-bdb-provider.c:219
+#: ../providers/bdb/gda-bdb-provider.c:221
 msgid "-"
 msgstr "-"
 
@@ -4297,6 +4334,8 @@ msgstr "Ponudnik Berkeley podatkovnih zbirk"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:2
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:1
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
 msgid "Check"
@@ -4311,6 +4350,8 @@ msgstr "Preveri"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:4
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
 msgid "Check constraint"
@@ -4322,6 +4363,7 @@ msgstr "Preveri omejitev"
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:3
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:3
 msgid "Column's description"
 msgstr "Opis stolpca"
@@ -4335,6 +4377,8 @@ msgstr "Opis stolpca"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:8
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:5
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:19
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
 #: ../tools/command-exec.c:718
@@ -4343,6 +4387,7 @@ msgid "Default"
 msgstr "Privzeto"
 
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:6
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:6
 msgid "Default value, mandatory if column is NOT NULL"
 msgstr "Privzeta vrednost je obvezna če stolpec ni NULL"
@@ -4356,6 +4401,8 @@ msgstr "Privzeta vrednost je obvezna če stolpec ni NULL"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:8
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:28
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
 msgid "Not NULL"
@@ -4373,6 +4420,8 @@ msgstr "Vrednost ni NULL"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:12
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:39
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:39
 msgid "Table's name"
@@ -4385,6 +4434,8 @@ msgstr "Ime preglednice"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:9
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:13
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:10
+#: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:4
+#: ../providers/sqlcipher/sqlcipher_specs_drop_db.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:4
 msgid "Database's description"
@@ -4393,6 +4444,8 @@ msgstr "Opis podatkovne zbirke"
 #. DSN parameters
 #: ../providers/bdbsql/bdbsql_specs_create_db.xml.in.h:8
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:8
+#: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:8
+#: ../providers/sqlcipher/sqlcipher_specs_drop_db.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:8
 msgid "Directory where the database file will be"
@@ -4404,6 +4457,8 @@ msgstr "Mapa kjer bo datoteka podatkovne zbirke"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:86
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:22
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:67
+#: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:14
+#: ../providers/sqlcipher/sqlcipher_specs_drop_db.xml.in.h:10
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:10
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:10
 msgid "The name of a database to create"
@@ -4412,6 +4467,8 @@ msgstr "Ime podatkovne zbirke za ustvarjanje"
 #. To translators: "Compare method" refers to the method SQLite has to compare values
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:2
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:8
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
 msgid "Collation name (BINARY|NOCASE)"
@@ -4420,12 +4477,15 @@ msgstr "Ime zbiranja (BINARY|NOCASE)"
 #. To translators: "Compare method" refers to the method SQLite has to compare values
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:4
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:10
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:4
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:10
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:10
 msgid "Compare method"
 msgstr "Način primerjave"
 
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:5
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:5
 msgid "Create index only if it does not yet exist"
 msgstr "Ustvari kazalo le v primeru, da še ne obstaja"
@@ -4433,6 +4493,7 @@ msgstr "Ustvari kazalo le v primeru, da še ne obstaja"
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:6
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:6
 msgid "Index description"
 msgstr "Opis kazala"
@@ -4440,6 +4501,7 @@ msgstr "Opis kazala"
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:7
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 msgid "Index name"
 msgstr "Ime kazala"
@@ -4448,6 +4510,7 @@ msgstr "Ime kazala"
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:9
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:5
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
 msgid "Indexed field or expression"
 msgstr "Ustvarjeno kazalo polja ali niza"
@@ -4456,6 +4519,7 @@ msgstr "Ustvarjeno kazalo polja ali niza"
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
 msgid "Indexed field(s)"
 msgstr "Indeksirana polja"
@@ -4464,6 +4528,7 @@ msgstr "Indeksirana polja"
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:12
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:3
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:13
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
 msgid "On table"
 msgstr "V preglednici"
@@ -4474,6 +4539,9 @@ msgstr "V preglednici"
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:75
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:142
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:14
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:29
+#: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:29
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:4
@@ -4483,6 +4551,7 @@ msgstr "Le v kolikor še ne obstaja"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:16
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:14
+#: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:16
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:16
 msgid "Sort type"
 msgstr "Vrsta razvrščanja"
@@ -4492,6 +4561,7 @@ msgstr "Vrsta razvrščanja"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
 #: ../tools/command-exec.c:581
 #: ../tools/command-exec.c:584
@@ -4502,18 +4572,21 @@ msgstr "Samodejno povečevanje"
 
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:12
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:12
 msgid "Conflict"
 msgstr "Spor"
 
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:14
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:14
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
 msgstr "Način razreševanja sporov (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
 
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:15
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:15
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:15
 msgid "Create table only if it does not yet exist"
 msgstr "Ustvari preglednico le v primeru, da še ne obstaja"
@@ -4524,6 +4597,7 @@ msgstr "Ustvari preglednico le v primeru, da še ne obstaja"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:14
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:25
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:25
 msgid "Global constraints"
 msgstr "Splošne omejitve"
@@ -4536,6 +4610,7 @@ msgstr "Splošne omejitve"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:31
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
 #: ../tools/browser/schema-browser/mgr-columns.c:375
 #: ../tools/browser/schema-browser/table-columns.c:190
@@ -4549,6 +4624,7 @@ msgstr "Osnovni ključ"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:171
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:21
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:37
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:37
 msgid "Table's columns"
 msgstr "Stolpci preglednice"
@@ -4559,6 +4635,7 @@ msgstr "Stolpci preglednice"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:173
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:22
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:38
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:38
 msgid "Table's description"
 msgstr "Opis preglednice"
@@ -4567,6 +4644,7 @@ msgstr "Opis preglednice"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:179
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:9
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:40
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
 msgid "Temporary table"
 msgstr "Začasna preglednica"
@@ -4580,18 +4658,21 @@ msgstr "Začasna preglednica"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:42
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
 #: ../tools/command-exec.c:932
 msgid "Unique"
 msgstr "Enoznačno"
 
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:1
+#: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:1
 msgid "Create view only if it does not yet exist"
 msgstr "Ustvari pogled le v primeru, da še ne obstaja"
 
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:6
+#: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:5
 msgid "Temporary view"
 msgstr "Začasni pogled"
@@ -4599,6 +4680,7 @@ msgstr "Začasni pogled"
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:6
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:7
+#: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:6
 msgid "View's definition"
 msgstr "Določilo pogleda"
@@ -4606,6 +4688,7 @@ msgstr "Določilo pogleda"
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:7
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:7
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:8
+#: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:7
 msgid "View's description"
 msgstr "Opis pogleda"
@@ -4613,11 +4696,13 @@ msgstr "Opis pogleda"
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:8
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:8
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:9
+#: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:8
 msgid "View's name"
 msgstr "Ime pogleda"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_index.xml.in.h:1
+#: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:1
 msgid "Drop index only if it exists"
 msgstr "Spusti kazalo le, če obstaja"
@@ -4630,6 +4715,9 @@ msgstr "Spusti kazalo le, če obstaja"
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:3
+#: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:2
@@ -4639,12 +4727,14 @@ msgstr "Če obstaja"
 #: ../providers/bdbsql/bdbsql_specs_drop_index.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:3
+#: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:4
 msgid "Index to delete"
 msgstr "Kazalo za izbris"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_table.xml.in.h:1
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
 msgid "Drop table only if it exists"
 msgstr "Spusti preglednico le, če obstaja"
@@ -4652,6 +4742,7 @@ msgstr "Spusti preglednico le, če obstaja"
 #: ../providers/bdbsql/bdbsql_specs_drop_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
+#: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:4
 msgid "Table to delete"
 msgstr "Preglednica za brisanje"
@@ -4659,6 +4750,7 @@ msgstr "Preglednica za brisanje"
 #: ../providers/bdbsql/bdbsql_specs_drop_view.xml.in.h:1
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:1
 msgid "Drop view only if it exists"
 msgstr "Spusti pogled le, če obstaja"
@@ -4666,31 +4758,37 @@ msgstr "Spusti pogled le, če obstaja"
 #: ../providers/bdbsql/bdbsql_specs_drop_view.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:4
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:7
+#: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:4
 msgid "View to delete"
 msgstr "pogled za brisanje"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:4
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
 msgid "Enable usage of some extra functions in SQL"
 msgstr "Omogoči uporabo posebnih funkcij SQL"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:5
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:5
 msgid "Enforce foreign keys"
 msgstr "Vsili tuje ključe"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:6
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:6
 msgid "Extra functions"
 msgstr "Dodatne funkcije"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:7
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:7
 msgid "The name of a database to use (without the .db)"
 msgstr "Ime podatkovne zbirke za uporabo (brez pripone .db)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:8
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:8
 msgid "With foreign keys"
 msgstr "S tujimi ključi"
@@ -4698,6 +4796,7 @@ msgstr "S tujimi ključi"
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
+#: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 msgid "New name"
 msgstr "Novo ime"
@@ -4705,6 +4804,7 @@ msgstr "Novo ime"
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:2
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:2
 msgid "New table name"
 msgstr "Novo ime preglednice"
@@ -4712,6 +4812,7 @@ msgstr "Novo ime preglednice"
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:4
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:4
+#: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:4
 msgid "Table to rename"
 msgstr "Preglednica za preimenovanje"
@@ -6329,6 +6430,22 @@ msgstr "Ni mogoče uvoziti podatkov iz spletnega strežnika"
 msgid "could not determine the indexed columns for index"
 msgstr "ni mogoče določiti indeksiranega stolpca kazala"
 
+#: ../providers/sqlcipher/libmain.c:72
+msgid "Provider for SQLCipher"
+msgstr "Ponudnik SQLCipher"
+
+#. DSN parameters
+#: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:1
+#: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:10
+msgid "Encryption passphrase"
+msgstr "Šifrirno geslo"
+
+#. DSN parameters
+#: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:2
+#: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:12
+msgid "Passphrase"
+msgstr "Šifrirno geslo"
+
 #: ../providers/sqlite/libmain.c:73
 msgid "Provider for SQLite databases"
 msgstr "Ponudnik SQLite podatkovnih zbirk"
@@ -6776,7 +6893,7 @@ msgid "Connection: %s"
 msgstr "Povezava: %s"
 
 #: ../tools/browser/browser-window.c:785
-#: ../tools/browser/support.c:82
+#: ../tools/browser/support.c:83
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Ali želite zapreti '%s' povezavo?"
@@ -6997,19 +7114,19 @@ msgstr ""
 "potegni predmet na\n"
 "določi predmet"
 
-#: ../tools/browser/support.c:205
+#: ../tools/browser/support.c:206
 msgid "Unable to display help. Please make sure the documentation package is installed."
 msgstr "Ni mogoče pokazati pomoči. Prepričajte se, da je paket dokumentacije nameščen."
 
-#: ../tools/browser/support.c:231
+#: ../tools/browser/support.c:232
 msgid "Unable to open help file"
 msgstr "Ni mogoče odpreti datoteke pomoči"
 
-#: ../tools/browser/support.c:241
+#: ../tools/browser/support.c:242
 msgid "Help is being loaded, please wait..."
 msgstr "Dokumenti pomoči se nalagajo, počakajte ..."
 
-#: ../tools/browser/support.c:288
+#: ../tools/browser/support.c:289
 msgid "Close tab"
 msgstr "Zapri zavihek"
 
@@ -7576,36 +7693,36 @@ msgstr "Zahteva:"
 msgid "Exports:"
 msgstr "Izvozi:"
 
-#: ../tools/browser/data-manager/data-widget.c:247
+#: ../tools/browser/data-manager/data-widget.c:246
 msgid "Link to other data"
 msgstr "Poveži z drugimi podatki"
 
-#: ../tools/browser/data-manager/data-widget.c:343
+#: ../tools/browser/data-manager/data-widget.c:342
 #, c-format
 msgid "Error adding new data source: %s"
 msgstr "Napaka med dodajanjem novega podatkovnega vira: %s"
 
-#: ../tools/browser/data-manager/data-widget.c:388
+#: ../tools/browser/data-manager/data-widget.c:387
 msgid "Remove data source"
 msgstr "Odstrani podatkovni vir"
 
-#: ../tools/browser/data-manager/data-widget.c:394
+#: ../tools/browser/data-manager/data-widget.c:393
 msgid "Show data source's properties"
 msgstr "Pokaži lastnosti podatkovnega vira"
 
-#: ../tools/browser/data-manager/data-widget.c:532
+#: ../tools/browser/data-manager/data-widget.c:531
 msgid "Obtain referenced data in table "
 msgstr "Pridobi sklicne podatke v preglednici"
 
-#: ../tools/browser/data-manager/data-widget.c:549
+#: ../tools/browser/data-manager/data-widget.c:548
 msgid "List referencing data in "
 msgstr "Sklicni seznam podatkov v"
 
-#: ../tools/browser/data-manager/data-widget.c:615
+#: ../tools/browser/data-manager/data-widget.c:614
 msgid "No data source defined"
 msgstr "Ni določenega podatkovnega vira"
 
-#: ../tools/browser/data-manager/data-widget.c:850
+#: ../tools/browser/data-manager/data-widget.c:849
 msgid "Error: no detail"
 msgstr "Napaka: ni podrobnosti"
 
