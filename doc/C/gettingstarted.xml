@@ -451,6 +451,22 @@ create_table (GdaConnection *cnc)
     </para>
   </sect1>
 
+  <sect1 id="blobs_example">
+    <title>Binary large objects (BLOBs) example</title>
+    <para>
+       The following example is available in the <filename>samples/Blobs</filename> source directory
+       and illustrate how to manipulate BLOBs. This test program offers 2 operations which are to
+       store the contents of a file to the database (which returns the ID of the stored data), and to
+       fetch a stored data from the database from its ID (which creates a fetched_&lt;ID&gt; file).
+    </para>
+    <para>
+      The code is:
+      <programlisting>
+&blobsexample;
+      </programlisting>
+    </para>
+  </sect1>
+
   <sect1 id="other_examples">
     <title>Other examples</title>
     <para>

@@ -41,6 +41,42 @@
     </para>
   </sect1>
 
+<sect1 id="provider_notes_sqlite"><title>For SQLite</title>
+    <para>
+      The following arguments are used to connect to an SQLite database:
+      <table frame="all">
+        <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+          <thead>
+	    <row>
+              <entry>Argument name</entry>
+              <entry>Description</entry>
+              <entry>Required</entry>
+	    </row>
+          </thead>
+          <tbody>
+	    <row>
+              <entry>DB_NAME</entry>
+              <entry>Name of the database. This should be the name of the database file without
+	      the ".db" extension. However when opening a database, if a file named after the DB_NAME
+	      value exists then it is used (so beware, for example if DB_NAME is set to "mydb" and a file
+	      named "mydb" exists but is not an SQLite database, then an error will occur)</entry>
+              <entry>Yes</entry>
+	    </row>
+	    <row>
+              <entry>DB_DIR</entry>
+              <entry>The directory where the database file is; if not specified, the current working
+	      directory is used.</entry>
+              <entry>No</entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+    </para>
+    <para>
+      Also refer to the <link linkend="limitations_sqlite">SQLite's provider's limitations</link>.
+    </para>
+  </sect1>
+
   <sect1 id="provider_notes_sqlcipher"><title>For SQLCipher</title>
   <para>
     The SQLCipher database provider allows one to connect to a database encrypted using the
@@ -92,7 +128,8 @@ Opening connection 'c0' for: SQLCipher://DB_NAME=testcrypt
   </sect2>
 
   <para>
-    Also refer to the <link linkend="limitations_sqlcipher">SQLCipher provider's limitations</link>.
+    Also refer to the <link linkend="provider_notes_sqlite">SQLite's provider's notes</link>,
+    and <link linkend="limitations_sqlcipher">SQLCipher provider's limitations</link>.
   </para>
   </sect1>
   

@@ -1196,11 +1196,11 @@ gda_value_new_blob (const guchar *val, glong size)
 }
 
 /**
- * gda_value_new_blob
- * @val: value to set for the new #GValue.
- * @size: the size of the memory pool pointer to by @val.
+ * gda_value_new_blob_from_file
+ * @filename: name of the file to manipulate
  *
- * Makes a new #GValue of type #GDA_TYPE_BLOB with the data contained by @val.
+ * Makes a new #GValue of type #GDA_TYPE_BLOB interfacing with the contents of the file
+ * named @filename
  *
  * Returns: the newly created #GValue.
  */

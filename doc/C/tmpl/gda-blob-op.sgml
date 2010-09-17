@@ -69,7 +69,7 @@ gda_value_free (tmp_value);
 <para>
   For further information, see:
   <itemizedlist>
-    <listitem><para>the section about <link linkend="gen:blobs">Binary large objects (BLOBs)</link>'s
+    <listitem><para>the section about <link linkend="gen_blobs">Binary large objects (BLOBs)</link>'s
 	abstraction</para></listitem>
     <listitem><para><link linkend="libgda-provider-blobop">Virtual methods for Blob operations</link>
 	section for more information

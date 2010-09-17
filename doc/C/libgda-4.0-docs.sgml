@@ -35,6 +35,7 @@
 <!ENTITY gda-sql "<command>gda-sql</command>">
 <!ENTITY gda-test-connection "<command>gda-test-connection-4.0</command>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c">
+<!ENTITY blobsexample SYSTEM "examples/blobtest.c">
 <!ENTITY install SYSTEM "installation.xml">
 <!ENTITY examples SYSTEM "gettingstarted.xml">
 <!ENTITY migration SYSTEM "migration.xml">
@@ -514,15 +515,16 @@
 	</para>
       </sect1>
 
-      <sect1 id="gen:blobs">
+      <sect1 id="gen_blobs">
 	<title>Binary large objects (BLOBs)</title>
 	<para>
-	  Binary large objects (BLOBs) are potentially very big (serevral GigaBytes) pieces of binary
+	  Binary large objects (BLOBs) are potentially very big (several GigaBytes) pieces of binary
 	  data which databases can store. Because of their potential size, they are not manipulated
-	  like any other data, and are usually not transfered when running a statement: first
-	  a reference to a blob is created for an existing or a new blob using a statement, and then
-	  that reference is used, <emphasis>after the statement has been executed</emphasis>, to
-	  get or set some parts of the blob.
+	  like any other data, and are usually not transfered to the database engine at the same time
+	  as the SQL text is transfered: first
+	  a reference to a blob is created for an existing or a new blob, and then
+	  that reference is used, <emphasis>before or after the statement is being executed,
+	    depending on the database engine accessed</emphasis>, to get or set some parts of the blob.
 	</para>
 	<para>
 	  &LIBGDA; makes its best to hide the complexity of this and most of the time blobs can be used
@@ -538,6 +540,12 @@
 		<link linkend="GdaBlobOp">GdaBlobOp</link> object embedded in a blob value to get the blob's
 		contents.</para></listitem>
 	  </itemizedlist>
+	</para>
+	<para>
+	  Please consult each database provider's <link linkend="provider-notes">notes</link> and
+	  <link linkend="limitations">limitations</link> for database specific rules
+	  regarding BLOBs. Also have a look at the
+	  <link linkend="blobs_example">Blobs manipulation source code example</link>.
 	</para>
       </sect1>
 
