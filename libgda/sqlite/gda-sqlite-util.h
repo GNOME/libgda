@@ -38,6 +38,8 @@ gchar                     *_gda_sqlite_identifier_quote          (GdaServerProvi
 								  const gchar *id,
 								  gboolean meta_store_convention, gboolean force_quotes);
 
+gboolean _gda_sqlite_check_transaction_started (GdaConnection *cnc, gboolean *out_started, GError **error);
+
 G_END_DECLS
 
 #endif

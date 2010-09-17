@@ -2752,6 +2752,32 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	else {
                 int status, changes;
                 sqlite3 *handle;
+		gboolean transaction_started = FALSE;
+
+		if (blobs_list) {
+			GError *lerror = NULL;
+			if (! _gda_sqlite_check_transaction_started (cdata->gdacnc,
+								     &transaction_started, &lerror)) {
+				const gchar *errmsg = _("Could not start transaction to create BLOB");
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				if (lerror) {
+					gda_connection_event_set_description (event,
+									      lerror && lerror->message ?
+									      lerror->message : errmsg);
+					g_propagate_error (error, lerror);
+				}
+				else {
+					gda_connection_event_set_description (event, errmsg);
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, "%s", errmsg);
+				}
+				if (new_ps)
+					g_object_unref (ps);
+				pending_blobs_free_list (blobs_list);
+				return NULL;
+			}
+		}
 
                 /* actually execute the command */
                 handle = SQLITE3_CALL (sqlite3_db_handle) (ps->sqlite_stmt);
@@ -2770,6 +2796,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				if (new_ps)
 					g_object_unref (ps);
 				pending_blobs_free_list (blobs_list);
+				if (transaction_started)
+					gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
 				return NULL;
                         }
 			else {
@@ -2779,6 +2807,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				if (new_ps)
 					g_object_unref (ps);
 				pending_blobs_free_list (blobs_list);
+				if (transaction_started)
+					gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
 				return NULL;
 			}
                 }
@@ -2790,8 +2820,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 				if (new_ps)
 					g_object_unref (ps);
+				if (transaction_started)
+					gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
 				return NULL;
 			}
+			else if (transaction_started)
+				gda_connection_commit_transaction (cdata->gdacnc, NULL, NULL);
 			
 			gchar *str = NULL;
 			gboolean count_changes = FALSE;
