@@ -60,8 +60,8 @@ example_files = \
 	samples/Report/customers-report-spec.xml \
 	samples/Report/schema-report.c \
 	samples/Report/schema-report-spec.xml \
-	samples/Report/Makefile
-	samples/Report/README
+	samples/Report/Makefile \
+	samples/Report/README \
 	samples/Virtual/Makefile \
 	samples/Virtual/README \
 	samples/Virtual/city.csv \
