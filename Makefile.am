@@ -92,7 +92,11 @@ example_files = \
 	samples/SimpleUIForm/README \
 	samples/SimpleUIForm/example.c \
 	samples/SimpleUIForm/Makefile \
-	samples/SimpleUIForm/ScreenShot.png
+	samples/SimpleUIForm/ScreenShot.png \
+	samples/Blobs/blobtest.c \
+	samples/Blobs/Makefile \
+	samples/Blobs/README \
+	samples/Blobs/testblob.db
 
 EXTRA_DIST = \
 	COPYING \

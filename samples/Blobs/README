@@ -1,0 +1,41 @@
+Libgda Blobs example
+====================
+
+Description:
+------------
+
+The example in this directory illustrate how to manipulate BLOBS (binary large objects).
+This example uses an SQLite database, but can be modified to use any type of database,
+in this case you have to create the appropriate test table in your database, and modify the
+code of the open_connection() function.
+
+The SQLite SQL to create the test table is:
+CREATE TABLE blobstable (id INTEGER PRIMARY KEY AUTOINCREMENT, data blob);
+The PostgreSQL SQL to create the test table is (the "WITH OIDS" clause is optionnal
+but it's required to get the inserted row):
+CREATE TABLE blobstable (id serial PRIMARY KEY, data oid) WITH OIDS;
+
+This test program offers 2 operations which are to store the contents of a file to the
+database (which returns the ID of the stored data), and to fetch a stored data from
+the database from its ID (which creates a fetched_<ID> file).
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run (stores the blobtest executable file):
+> ./blobtest store blobtest
+STORING file 'blobtest' to database BLOB
+Inserted row is (for each numbered column in the table):
+  [+0] = [1]
+  [+1] = [\177ELF\001\001\001\000\000\000\000\000\000\000\000\000\002\000\003\000\001\000\000\000p\215\004\0104\000\000\000\260/\000\000\000\000\000\000]
+Ok.
+> /blobtest fetch 1
+FETCHING BLOB with ID 1 to file 'fetched_1'
+Ok.
+
+> cmp blobtest fetched_1
+
+Should not return any difference
