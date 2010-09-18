@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-09-15 13:17+0000\n"
-"PO-Revision-Date: 2010-09-15 15:19+0100\n"
+"POT-Creation-Date: 2010-09-18 11:02+0000\n"
+"PO-Revision-Date: 2010-09-18 19:19+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -2839,14 +2839,18 @@ msgstr "Predmet BLOB je prevelik"
 msgid "Non handled data type '%s'"
 msgstr "Neupravljana vrsta podatkov '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2889
-#: ../libgda/sqlite/gda-sqlite-provider.c:2910
-#: ../libgda/sqlite/gda-sqlite-provider.c:2976
+#: ../libgda/sqlite/gda-sqlite-provider.c:2761
+msgid "Could not start transaction to create BLOB"
+msgstr "Ni mogoče začeti prenosa za ustvarjanje predmeta BLOB"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:2923
+#: ../libgda/sqlite/gda-sqlite-provider.c:2944
+#: ../libgda/sqlite/gda-sqlite-provider.c:3010
 msgid "Function requires one argument"
 msgstr "Funkcija zahteva en argument"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2942
-#: ../libgda/sqlite/gda-sqlite-provider.c:3008
+#: ../libgda/sqlite/gda-sqlite-provider.c:2976
+#: ../libgda/sqlite/gda-sqlite-provider.c:3042
 msgid "Function requires two arguments"
 msgstr "Funkcija zahteva dva argumenta"
 
