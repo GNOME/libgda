@@ -18,7 +18,7 @@
  * USA
  */
 #include "widget-embedder.h"
-#if GTK_CHECK_VERSION (2,18,0)
+#if GTK_CHECK_VERSION (2,20,0)
 static void     widget_embedder_realize       (GtkWidget       *widget);
 static void     widget_embedder_unrealize     (GtkWidget       *widget);
 static void     widget_embedder_size_request  (GtkWidget       *widget,

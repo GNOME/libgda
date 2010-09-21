@@ -19,7 +19,7 @@
  */
 #include <gtk/gtk.h>
 
-#if GTK_CHECK_VERSION(2,18,0)
+#if GTK_CHECK_VERSION(2,20,0)
 #define WIDGET_EMBEDDER_TYPE              (widget_embedder_get_type ())
 #define WIDGET_EMBEDDER(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), WIDGET_EMBEDDER_TYPE, WidgetEmbedder))
 #define WIDGET_EMBEDDER_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), WIDGET_EMBEDDER_TYPE, WidgetEmbedderClass))
