@@ -1,6 +1,6 @@
 /* gdaui-data-filter.c
  *
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -246,13 +246,13 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 }
 
 /**
- * gdaui_data_filter_new
+ * gdaui_data_filter_new:
  * @data_widget: a widget implementing the #GdauiDataProxy interface
  *
  * Creates a new #GdauiDataFilter widget suitable to change the filter expression
  * for @data_widget's displayed rows
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */

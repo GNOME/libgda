@@ -1,6 +1,6 @@
 /* gdaui-raw-form.c
  *
- * Copyright (C) 2002 - 2009 Vivien Malerba  <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2010 Vivien Malerba  <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -294,12 +294,12 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 }
 
 /**
- * gdaui_raw_form_new
+ * gdaui_raw_form_new:
  * @model: a #GdaDataModel, or %NULL
  *
  * Creates a new #GdauiRawForm widget to display data in @model
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */

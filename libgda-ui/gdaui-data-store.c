@@ -1,6 +1,6 @@
 /* gdaui-data-store.c
  *
- * Copyright (C) 2005 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -324,12 +324,12 @@ gdaui_data_store_get_property (GObject *object,
 }
 
 /**
- * gdaui_data_store_new
+ * gdaui_data_store_new:
  * @model: a #GdaDataModel object
  *
  * Creates a #GtkTreeModel interface with a #GdaDataModel
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  *
  * Since: 4.2
  */
@@ -345,7 +345,7 @@ gdaui_data_store_new (GdaDataModel *model)
 }
 
 /**
- * gdaui_data_store_set_value
+ * gdaui_data_store_set_value:
  * @store: a #GdauiDataStore object
  * @iter: the considered row
  * @col: the data model column
@@ -353,7 +353,7 @@ gdaui_data_store_new (GdaDataModel *model)
  *
  * Stores a value in the @store data model.
  *
- * Returns: TRUE on success
+ * Returns: %TRUE on success
  *
  * Since: 4.2
  */
@@ -412,7 +412,7 @@ gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
 }
 
 /**
- * gdaui_data_store_delete
+ * gdaui_data_store_delete:
  * @store: a #GdauiDataStore object
  * @iter: the considered row
  *
@@ -437,7 +437,7 @@ gdaui_data_store_delete (GdauiDataStore *store, GtkTreeIter *iter)
 
 
 /**
- * gdaui_data_store_undelete
+ * gdaui_data_store_undelete:
  * @store: a #GdauiDataStore object
  * @iter: the considered row
  *
@@ -462,13 +462,13 @@ gdaui_data_store_undelete (GdauiDataStore *store, GtkTreeIter *iter)
 
 
 /**
- * gdaui_data_store_append
+ * gdaui_data_store_append:
  * @store: a #GdauiDataStore object
  * @iter: an unset #GtkTreeIter to set to the appended row
  *
  * Appends a new row.
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  *
  * Since: 4.2
  */
@@ -494,10 +494,10 @@ gdaui_data_store_append (GdauiDataStore *store, GtkTreeIter *iter)
 }
 
 /**
- * gdaui_data_store_get_proxy
+ * gdaui_data_store_get_proxy:
  * @store: a #GdauiDataStore object
  *
- * Returns: the internal #GdaDataProxy being used by @store
+ * Returns: (transfer none): the internal #GdaDataProxy being used by @store
  *
  * Since: 4.2
  */
@@ -511,7 +511,7 @@ gdaui_data_store_get_proxy (GdauiDataStore *store)
 }
 
 /**
- * gdaui_data_store_get_row_from_iter
+ * gdaui_data_store_get_row_from_iter:
  * @store: a #GdauiDataStore object
  * @iter: a valid #GtkTreeIter
  *
@@ -533,9 +533,9 @@ gdaui_data_store_get_row_from_iter (GdauiDataStore *store, GtkTreeIter *iter)
 }
 
 /**
- * gdaui_data_store_get_iter_from_values
+ * gdaui_data_store_get_iter_from_values:
  * @store: a #GdauiDataStore object
- * @iter: an unset #GtkTreeIter to set to the requested row
+ * @iter: (out): an unset #GtkTreeIter to set to the requested row
  * @values: a list of #GValue values
  * @cols_index: an array of #gint containing the column number to match each value of @values
  *
@@ -544,7 +544,7 @@ gdaui_data_store_get_row_from_iter (GdauiDataStore *store, GtkTreeIter *iter)
  *
  * NOTE: the @cols_index array MUST contain a column index for each value in @values
  *
- * Returns: TRUE if the row has been identified @iter was set
+ * Returns: %TRUE if the row has been identified @iter was set
  *
  * Since: 4.2
  */

@@ -74,7 +74,7 @@ struct  _GdauiEntryShellPriv {
 static GObjectClass *parent_class = NULL;
 
 /**
- * gdaui_entry_shell_get_type
+ * gdaui_entry_shell_get_type:
  *
  * Register the GdauiEntryShell class on the GLib type system.
  *
@@ -295,7 +295,7 @@ gdaui_entry_shell_get_property (GObject *object,
 
 
 /**
- * gdaui_entry_shell_pack_entry
+ * gdaui_entry_shell_pack_entry:
  * @shell: a #GdauiEntryShell object
  * @main_widget: a #GtkWidget to pack into @shell
  *
@@ -444,7 +444,7 @@ gdaui_entry_shell_refresh_attributes (GdauiEntryShell *shell)
 }
 
 /**
- * gdaui_entry_shell_refresh
+ * gdaui_entry_shell_refresh:
  * @shell: the GdauiEntryShell widget to refresh
  *
  * Forces the shell to refresh its display (mainly the color of the
@@ -459,7 +459,7 @@ gdaui_entry_shell_refresh (GdauiEntryShell *shell)
 }
 
 /**
- * gdaui_entry_shell_set_unknown
+ * gdaui_entry_shell_set_unknown:
  * @shell: the GdauiEntryShell widget to refresh
  * @unknown: set to %TRUE if @shell's contents is unavailable and should not be modified
  *

@@ -96,12 +96,12 @@ gdaui_entry_none_init (GdauiEntryNone * entry)
 }
 
 /**
- * gdaui_entry_none_new
+ * gdaui_entry_none_new:
  * @type: the requested data type (compatible with @dh)
  *
- * Creates a new widget which is mainly a GtkEntry
+ * Creates a new data entry widget
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  */
 GtkWidget *
 gdaui_entry_none_new (GType type)

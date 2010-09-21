@@ -1,6 +1,6 @@
 /* gdaui-formatted-entry.c
  *
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -457,7 +457,7 @@ gdaui_formatted_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gin
  * position in @mask is the space character (' '), then C will not interpreted as a writable format
  * character as defined above. @mask does not be to have the same length as @format.
  *
- * Returns: the newly created #GdauiFormattedEntry widget.
+ * Returns: (transfer full): the newly created #GdauiFormattedEntry widget.
  */
 GtkWidget*
 gdaui_formatted_entry_new (const gchar *format, const gchar *mask)
@@ -469,14 +469,14 @@ gdaui_formatted_entry_new (const gchar *format, const gchar *mask)
 }
 
 /**
- * gdaui_formatted_entry_get_text
+ * gdaui_formatted_entry_get_text:
  * @entry: a #GdauiFormattedEntry widget
  *
  * Get @entry's contents. This function is similar to gdaui_get_text() except
  * that it optionnally uses the information contained in @mask when gdaui_formatted_entry_new()
  * was called to format the output differently.
  *
- * Returns: a new string, or %NULL
+ * Returns: (transfer full): a new string, or %NULL
  */
 gchar *
 gdaui_formatted_entry_get_text (GdauiFormattedEntry *entry)
@@ -505,10 +505,10 @@ gdaui_formatted_entry_get_text (GdauiFormattedEntry *entry)
 }
 
 /**
- * gdaui_formatted_entry_set_insert_func
+ * gdaui_formatted_entry_set_insert_func:
  * @entry: a #GdauiFormattedEntry widget
- * @insert_func: a #GdauiFormattedEntryInsertFunc, or %NULL
- * @data: a pointer which will be passed to @insert_func
+ * @insert_func: (allow-none): a #GdauiFormattedEntryInsertFunc, or %NULL
+ * @data: (allow-none): a pointer which will be passed to @insert_func
  *
  * Specifies that @entry should call @insert_func when the user wants to insert a char
  * which is anot allowed, to perform other actions

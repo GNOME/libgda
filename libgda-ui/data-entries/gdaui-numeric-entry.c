@@ -1,6 +1,6 @@
 /* gdaui-numeric-entry.c
  *
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -668,7 +668,7 @@ gdaui_numeric_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gint 
  *
  * Creates a new #GdauiNumericEntry widget.
  *
- * Returns: the newly created #GdauiNumericEntry widget.
+ * Returns: (transfer full): the newly created #GdauiNumericEntry widget.
  */
 GtkWidget*
 gdaui_numeric_entry_new (GType type)
@@ -680,12 +680,12 @@ gdaui_numeric_entry_new (GType type)
 }
 
 /**
- * gdaui_numeric_entry_get_text
+ * gdaui_numeric_entry_get_text:
  * @entry: a #GdauiNumericEntry widget
  *
  * Get @entry's contents as a #GValue.
  *
- * Returns: a new #GValue, or %NULL
+ * Returns: (transfer full): a new #GValue, or %NULL
  */
 GValue *
 gdaui_numeric_entry_get_value (GdauiNumericEntry *entry)

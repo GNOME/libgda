@@ -294,9 +294,9 @@ gdaui_data_cell_renderer_info_set_property (GObject *object,
 
 /**
  * gdaui_data_cell_renderer_info_new:
- * @store:
- * @iter:
- * @node:
+ * @store: a #GdauiDataStore
+ * @iter: a #GdaDataModelIter
+ * @node: a #GdauiSetGroup pointer
  * 
  * Creates a new #GdauiDataCellRendererInfo. Adjust rendering
  * parameters using object properties. Object properties can be set
@@ -306,11 +306,11 @@ gdaui_data_cell_renderer_info_set_property (GObject *object,
  * in the model, thus causing the check button to reflect the state of
  * the model.
  * 
- * Returns: the new cell renderer
+ * Returns: (transfer full): the new cell renderer
  **/
 GtkCellRenderer *
 gdaui_data_cell_renderer_info_new (GdauiDataStore *store, 
-				      GdaDataModelIter *iter, GdauiSetGroup *group)
+				   GdaDataModelIter *iter, GdauiSetGroup *group)
 {
 	GObject *obj;
 

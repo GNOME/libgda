@@ -1,6 +1,6 @@
 /* gdaui-data-selector.c
  *
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -81,14 +81,14 @@ gdaui_data_selector_iface_init (gpointer g_class)
 }
 
 /**
- * gdaui_data_selector_get_model
+ * gdaui_data_selector_get_model:
  * @iface: an object which implements the #GdauiDataSelector interface
  *
  * Queries the #GdaDataModel from which the data displayed by the widget implementing @iface
  * are. Beware that the returned data model may be different than the one used when the
  * widget was created in case it uses a #GdaDataProxy.
  *
- * Returns: the #GdaDataModel
+ * Returns: (transfer none): the #GdaDataModel
  *
  * Since: 4.2
  */
@@ -103,7 +103,7 @@ gdaui_data_selector_get_model (GdauiDataSelector *iface)
 }
 
 /**
- * gdaui_data_selector_set_model
+ * gdaui_data_selector_set_model:
  * @iface: an object which implements the #GdauiDataSelector interface
  * @model: a #GdaDataModel to use
  *
@@ -122,7 +122,7 @@ gdaui_data_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model)
 }
 
 /**
- * gdaui_data_selector_get_selected_rows
+ * gdaui_data_selector_get_selected_rows:
  * @iface: an object which implements the #GdauiDataSelector interface
  *
  * Gat an array of selected rows. If no row is selected, the the returned value is %NULL.
@@ -132,8 +132,7 @@ gdaui_data_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model)
  * uses a #GdaDataProxy (as is the case for example for the #GdauiRawForm, #GdauiForm, #GdauiRawGrid
  * and #GdauiGrid).
  *
- * Returns: an array of #gint values, one for each selected row. Use g_array_free() when
- * finished (passing %TRUE as the last argument)
+ * Returns: (transfer full): an array of #gint values, one for each selected row. Use g_array_free() when finished (passing %TRUE as the last argument)
  *
  * Since: 4.2
  */
@@ -149,7 +148,7 @@ gdaui_data_selector_get_selected_rows (GdauiDataSelector *iface)
 }
 
 /**
- * gdaui_data_selector_select_row
+ * gdaui_data_selector_select_row:
  * @iface: an object which implements the #GdauiDataSelector interface
  * @row: the row to select
  *
@@ -176,7 +175,7 @@ gdaui_data_selector_select_row (GdauiDataSelector *iface, gint row)
 }
 
 /**
- * gdaui_data_selector_unselect_row
+ * gdaui_data_selector_unselect_row:
  * @iface: an object which implements the #GdauiDataSelector interface
  * @row: the row to unselect
  *
@@ -197,9 +196,9 @@ gdaui_data_selector_unselect_row (GdauiDataSelector *iface, gint row)
 }
 
 /**
- * gdaui_data_selector_set_column_visible
+ * gdaui_data_selector_set_column_visible:
  * @iface: an object which implements the #GdauiDataSelector interface
- * @column: a column number, starting at 0
+ * @column: a column number, starting at %0
  * @visible: required visibility of the data in the @column column
  *
  * Shows or hides the data at column @column
@@ -216,7 +215,7 @@ gdaui_data_selector_set_column_visible (GdauiDataSelector *iface, gint column, g
 }
 
 /**
- * gdaui_data_selector_get_data_set
+ * gdaui_data_selector_get_data_set:
  * @iface: an object which implements the #GdauiDataSelector interface
  *
  * Get the #GdaDataModelIter object represented the current selected row in @iface. This
@@ -226,7 +225,7 @@ gdaui_data_selector_set_column_visible (GdauiDataSelector *iface, gint column, g
  * Note that the returned #GdaDataModelIter is actually an iterator iterating on the #GdaDataModel
  * returned by the gdaui_data_selector_get_model() method.
  *
- * Returns: a pointer to a #GdaDataModelIter object, or %NULL
+ * Returns: (transfer none): a pointer to a #GdaDataModelIter object, or %NULL
  *
  * Since: 4.2
  */

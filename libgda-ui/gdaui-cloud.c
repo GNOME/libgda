@@ -1,6 +1,6 @@
 /* gdaui-cloud.c
  *
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -384,12 +384,12 @@ gdaui_cloud_init (GdauiCloud *cloud)
 }
 
 /**
- * gdaui_cloud_new
+ * gdaui_cloud_new:
  * @model: a #GdaDataModel
  *
  * Creates a new #GdauiCloud widget suitable to display the data in @model
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */
@@ -536,7 +536,7 @@ gdaui_cloud_get_property (GObject *object,
 }
 
 /**
- * gdaui_cloud_set_selection_mode
+ * gdaui_cloud_set_selection_mode:
  * @cloud: a #GdauiCloud widget
  * @mode: the desired selection mode
  *
@@ -1023,9 +1023,9 @@ text_tag_table_foreach_cb (GtkTextTag *tag, FilterData *fdata)
 }
 
 /**
- * gdaui_cloud_filter
+ * gdaui_cloud_filter:
  * @cloud: a #GdauiCloud widget
- * @filter: the filter to use, or %NULL to remove any filter
+ * @filter: (allow-none): the filter to use, or %NULL to remove any filter
  *
  * Filters the elements displayed in @cloud, by altering their color.
  *
@@ -1054,12 +1054,12 @@ find_entry_changed_cb (GtkWidget *entry, GdauiCloud *cloud)
 }
 
 /**
- * gdaui_cloud_create_filter_widget
+ * gdaui_cloud_create_filter_widget:
  * @cloud: a #GdauiCloud widget
  *
  * Creates a search widget linked directly to modify @cloud's appearance.
  *
- * Returns: a new widget
+ * Returns: (transfer full): a new widget
  *
  * Since: 4.2
  */
@@ -1084,10 +1084,10 @@ gdaui_cloud_create_filter_widget (GdauiCloud *cloud)
 }
 
 /**
- * gdaui_cloud_set_weight_func
+ * gdaui_cloud_set_weight_func:
  * @cloud: a #GdauiCloud widget
- * @func: a #GdauiCloudWeightFunc function which computes weights, or %NULL to unset
- * @data: a pointer to pass as last argument of @func each time it is called
+ * @func: (allow-none): a #GdauiCloudWeightFunc function which computes weights, or %NULL to unset
+ * @data: (allow-none): a pointer to pass as last argument of @func each time it is called
  *
  * Specifies a function called by @cloud to compute each row's respective weight.
  *

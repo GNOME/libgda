@@ -1,6 +1,6 @@
 /* gdaui-form.c
  *
- * Copyright (C) 2002 - 2009 Vivien Malerba
+ * Copyright (C) 2002 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -200,13 +200,12 @@ gdaui_form_init (GdauiForm *form)
 }
 
 /**
- * gdaui_form_new
+ * gdaui_form_new:
  * @model: a #GdaDataModel
  *
  * Creates a new #GdauiForm widget suitable to display the data in @model
  *
- *  Returns: the new widget
- *
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */

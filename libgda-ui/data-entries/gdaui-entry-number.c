@@ -1,6 +1,6 @@
 /* gdaui-entry-number.c
  *
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -183,13 +183,13 @@ gdaui_entry_number_is_type_numeric (GType type)
 }
 
 /**
- * gdaui_entry_number_new
+ * gdaui_entry_number_new:
  * @dh: the data handler to be used by the new widget
  * @type: the requested data type (compatible with @dh)
  *
- * Creates a new widget which is mainly a GtkEntry
+ * Creates a new data entry widget
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  */
 GtkWidget *
 gdaui_entry_number_new (GdaDataHandler *dh, GType type, const gchar *options)

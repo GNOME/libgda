@@ -389,12 +389,12 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 }
 
 /**
- * gdaui_raw_grid_new
+ * gdaui_raw_grid_new:
  * @model: a #GdaDataModel
  *
  * Creates a new #GdauiRawGrid widget suitable to display the data in @model
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */
@@ -2382,9 +2382,12 @@ get_column_data_for_id (GdauiRawGrid *grid, const gchar *id)
 }
 
 /**
- * gdaui_raw_grid_set_sample_size
+ * gdaui_raw_grid_set_sample_size:
  * @grid: a #GdauiRawGrid
- * @sample_size:
+ * @sample_size: the size of the sample displayed in @grid
+ *
+ * Sets the size of each chunk of data to display: the maximum number of rows which
+ * can be displayed at a time. See gdaui_grid_set_sample_size() and gda_data_proxy_set_sample_size()
  *
  * Since: 4.2
  */
@@ -2398,7 +2401,7 @@ gdaui_raw_grid_set_sample_size (GdauiRawGrid *grid, gint sample_size)
 }
 
 /**
- * gdaui_raw_grid_set_sample_start
+ * gdaui_raw_grid_set_sample_start:
  * @grid: a #GdauiRawGrid
  * @sample_start:
  *

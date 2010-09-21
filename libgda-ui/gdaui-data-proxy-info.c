@@ -1,6 +1,6 @@
 /* gdaui-data-proxy-info.c
  *
- * Copyright (C) 2006 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -132,13 +132,13 @@ gdaui_data_proxy_info_init (GdauiDataProxyInfo *wid)
 }
 
 /**
- * gdaui_data_proxy_info_new
+ * gdaui_data_proxy_info_new:
  * @data_proxy: a widget implementing the #GdauiDataProxy interface
  * @flags: OR'ed values, specifying what to display in the new widget
  *
  * Creates a new #GdauiDataProxyInfo widget suitable to display information about @data_proxy
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */

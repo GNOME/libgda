@@ -486,12 +486,12 @@ cnc_params_editor_changed_cb (GdauiProviderSpecEditor *editor, GdauiLogin *login
 }
 
 /**
- * gdaui_login_new
+ * gdaui_login_new:
  * @dsn: a data source name, or %NULL
  *
  * Creates a new login widget which enables the user to specify connection parameters.
  *
- * Returns: a new widget
+ * Returns: (transfer full): a new widget
   *
  * Since: 4.2
 */
@@ -506,7 +506,7 @@ gdaui_login_new (const gchar *dsn)
 
 
 /**
- * gdaui_login_set_mode
+ * gdaui_login_set_mode:
  * @login: a #GdauiLogin object
  * @mode: a flag
  *
@@ -559,14 +559,14 @@ gdaui_login_set_mode (GdauiLogin *login, GdauiLoginMode mode)
 }
 
 /**
- * gdaui_login_get_connection_information
+ * gdaui_login_get_connection_information:
  * @login: a #GdauiLogin object
  *
  * Get the information specified in @login as a pointer to a (read-only) #GdaDsnInfo.
  * If the connection is not specified by a DSN, then the 'name' attribute of the returned
  * #GdaDsnInfo will be %NULL, and otherwise it will contain the name of the selected DSN.
  *
- * Retuns: a pointer to a (read-only) #GdaDsnInfo.
+ * Retuns: (transfer none): a pointer to a (read-only) #GdaDsnInfo.
  *
  * Since: 4.2
  */
@@ -608,7 +608,7 @@ gdaui_login_get_connection_information (GdauiLogin *login)
 }
 
 /**
- * gdaui_login_set_dsn
+ * gdaui_login_set_dsn:
  * @login: a #GdauiLogin object
  * @dsn: a data source name, or %NULL
  *
@@ -634,7 +634,7 @@ gdaui_login_set_dsn (GdauiLogin *login, const gchar *dsn)
 }
 
 /**
- * gdaui_login_set_connection_information
+ * gdaui_login_set_connection_information:
  * @login: a #GdauiLogin object
  * @cinfo: a pointer to a structure representing the information to display.
  *
