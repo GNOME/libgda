@@ -36,13 +36,13 @@ struct _GdaMutex {
 };
 
 /**
- * gda_mutex_new
+ * gda_mutex_new:
  *
  * Creates a new #GdaMutex.
  *
  * Note: Unlike g_mutex_new(), this function will return %NULL if g_thread_init() has not been called yet.
  *
- * Returns: a new #GdaMutex
+ * Returns: (transfer full): a new #GdaMutex
  */
 GdaMutex*
 gda_mutex_new ()
@@ -92,7 +92,7 @@ gda_mutex_new ()
 }
 
 /**
- * gda_mutex_lock
+ * gda_mutex_lock:
  * @mutex: a #GdaMutex
  *
  * Locks @mutex. If @mutex is already locked by another thread, the current thread will block until @mutex is unlocked by the other thread.
@@ -131,7 +131,7 @@ gda_mutex_lock (GdaMutex *mutex)
 }
 
 /**
- * gda_mutex_trylock
+ * gda_mutex_trylock:
  * @mutex: a #GdaMutex
  * 
  * Tries to lock @mutex. If @mutex is already locked by another thread, it immediately returns FALSE.
@@ -172,7 +172,7 @@ gda_mutex_trylock (GdaMutex *mutex)
 }
 
 /**
- * gda_mutex_unlock
+ * gda_mutex_unlock:
  * @mutex: a #GdaMutex
  *
  * Unlocks @mutex. If another thread is blocked in a gda_mutex_lock() call for @mutex, it wil
@@ -200,8 +200,8 @@ gda_mutex_unlock (GdaMutex *mutex)
 }
 
 /**
- * gda_mutex_free
- * @mutex: a #GdaMutex
+ * gda_mutex_free:
+ * @mutex: (transfer full): a #GdaMutex
  *
  * Destroys @mutex.
  */

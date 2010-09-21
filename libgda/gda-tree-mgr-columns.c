@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -140,7 +140,7 @@ gda_tree_mgr_columns_dispose (GObject *object)
 }
 
 /**
- * gda_tree_mgr_columns_get_type
+ * gda_tree_mgr_columns_get_type:
  *
  * Returns: the GType
  *
@@ -224,7 +224,7 @@ gda_tree_mgr_columns_get_property (GObject *object,
 }
 
 /**
- * gda_tree_mgr_columns_new
+ * gda_tree_mgr_columns_new:
  * @cnc: a #GdaConnection object
  * @schema: a schema name
  * @table_name: the name of the table
@@ -232,7 +232,7 @@ gda_tree_mgr_columns_get_property (GObject *object,
  * Creates a new #GdaTreeManager object which will add one tree node for each
  * column in the table named @table_name in the @schema schema.
  *
- * Returns: a new #GdaTreeManager object 
+ * Returns: (transfer full): a new #GdaTreeManager object 
  *
  * Since: 4.2
  */
@@ -243,8 +243,8 @@ gda_tree_mgr_columns_new (GdaConnection *cnc, const gchar *schema, const gchar *
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	mgr = (GdaTreeMgrColumns*) g_object_new (GDA_TYPE_TREE_MGR_COLUMNS,
-						"connection", cnc, 
-						"schema", schema, 
+						 "connection", cnc, 
+						 "schema", schema, 
 						 "table-name", table_name, NULL);
 	return (GdaTreeManager*) mgr;
 }

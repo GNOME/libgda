@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -129,7 +129,7 @@ gda_tree_mgr_select_dispose (GObject *object)
 }
 
 /**
- * gda_tree_mgr_select_get_type
+ * gda_tree_mgr_select_get_type:
  *
  * Returns: the GType
  *
@@ -255,7 +255,7 @@ gda_tree_mgr_select_get_property (GObject *object,
 }
 
 /**
- * gda_tree_mgr_select_new
+ * gda_tree_mgr_select_new:
  * @cnc: a #GdaConnection object
  * @stmt: a #GdaStatement object representing a SELECT statement
  * @params: a #GdaSet object representing fixed parameters which are to be used when executing @stmt
@@ -263,7 +263,7 @@ gda_tree_mgr_select_get_property (GObject *object,
  * Creates a new #GdaTreeMgrSelect object which will add one tree node for each row in
  * the #GdaDataModel resulting from the execution of @stmt.
  *
- * Returns: a new #GdaTreeManager object
+ * Returns: (transfer full): a new #GdaTreeManager object
  *
  * Since: 4.2
  */

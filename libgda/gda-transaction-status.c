@@ -1,5 +1,5 @@
 /* GDA client library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -130,13 +130,13 @@ gda_transaction_status_get_type (void)
 }
 
 /**
- * gda_transaction_status_new
+ * gda_transaction_status_new:
  * @name: name for the transaction
  *
  * Creates a new #GdaTransactionStatus object, which allows a fine-tune and
  * full control of transactions to be used with providers.
  *
- * Returns: the newly created object.
+ * Returns: (transfer full): the newly created object.
  */
 GdaTransactionStatus *
 gda_transaction_status_new (const gchar *name)

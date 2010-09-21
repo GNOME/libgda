@@ -1,6 +1,6 @@
 /* gda-meta-store.c
  *
- * Copyright (C) 2008 - 2009 Vivien Malerba
+ * Copyright (C) 2008 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -598,13 +598,13 @@ gda_meta_store_constructor (GType type,
 }
 
 /**
- * gda_meta_store_new_with_file
+ * gda_meta_store_new_with_file:
  * @file_name: a file name
  *
  * Create a new #GdaMetaStore object using @file_name as its internal
  * database
  *
- * Returns: the newly created object, or %NULL if an error occurred
+ * Returns: (transfer full): the newly created object, or %NULL if an error occurred
  */
 GdaMetaStore *
 gda_meta_store_new_with_file (const gchar *file_name) 
@@ -628,12 +628,12 @@ gda_meta_store_new_with_file (const gchar *file_name)
 }
 
 /**
- * gda_meta_store_new
+ * gda_meta_store_new:
  * @cnc_string: a connection string, or %NULL for an in-memory internal database
  *
  * Create a new #GdaMetaStore object.
  *
- * Returns: the newly created object, or %NULL if an error occurred
+ * Returns: (transfer full): the newly created object, or %NULL if an error occurred
  */
 GdaMetaStore *
 gda_meta_store_new (const gchar *cnc_string) 
@@ -810,7 +810,7 @@ gda_meta_store_get_property (GObject *object,
 }
 
 /**
- * gda_meta_store_set_identifiers_style
+ * gda_meta_store_set_identifiers_style:
  * @store: a #GdaMetaStore object
  * @style: a style
  *
@@ -827,9 +827,9 @@ gda_meta_store_set_identifiers_style (GdaMetaStore *store, GdaSqlIdentifierStyle
 }
 
 /**
- * gda_meta_store_set_reserved_keywords_func
+ * gda_meta_store_set_reserved_keywords_func:
  * @store: a #GdaMetaStore object
- * @func: a #GdaSqlReservedKeywordsFunc function, or %NULL
+ * @func: (allow-none): a #GdaSqlReservedKeywordsFunc function, or %NULL
  *
  * Specifies a function which @store will use to determine if a keyword is an SQL reserved
  * keyword or not.
@@ -2186,7 +2186,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 }
 
 /**
- * gda_meta_store_get_version
+ * gda_meta_store_get_version:
  * @store: a #GdaMetaStore object
  *
  * Get @store's internal schema's version
@@ -2202,7 +2202,7 @@ gda_meta_store_get_version (GdaMetaStore *store) {
 }
 
 /**
- * gda_meta_store_get_internal_connection
+ * gda_meta_store_get_internal_connection:
  * @store: a #GdaMetaStore object
  *
  * Get a pointer to the #GdaConnection object internally used by @store to store
@@ -2212,7 +2212,7 @@ gda_meta_store_get_version (GdaMetaStore *store) {
  * itself. The returned object is not owned by the caller (if you need to keep it, then use g_object_ref()).
  * Do not close the connection.
  *
- * Returns: a #GdaConnection, or %NULL
+ * Returns: (transfer none): a #GdaConnection, or %NULL
  */
 GdaConnection *
 gda_meta_store_get_internal_connection (GdaMetaStore *store) {
@@ -2223,7 +2223,7 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
 }
 
 /**
- * gda_meta_store_sql_identifier_quote
+ * gda_meta_store_sql_identifier_quote:
  * @id: an SQL identifier
  * @cnc: a #GdaConnection
  *
@@ -2234,7 +2234,7 @@ gda_meta_store_get_internal_connection (GdaMetaStore *store) {
  * gda_connection_get_meta_store_data(), gda_connection_get_meta_store_data_v() and
  * gda_meta_store_extract().
  *
- * Returns: a new string, to free with g_free() once not needed anymore
+ * Returns: (transfer full): a new string, to free with g_free() once not needed anymore
  *
  * Since: 4.0.3
  */
@@ -2250,10 +2250,10 @@ gda_meta_store_sql_identifier_quote (const gchar *id, GdaConnection *cnc)
 }
 
 /**
- * gda_meta_store_extract
+ * gda_meta_store_extract:
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  * @...: a list of (variable name (gchar *), GValue *value) terminated with NULL, representing values for all the
  * variables mentioned in @select_sql. If there is no variable then this part can be omitted.
  *
@@ -2265,7 +2265,7 @@ gda_meta_store_sql_identifier_quote (const gchar *id, GdaConnection *cnc)
  * SQL identifiers are represented in @store, see the
  * <link linkend="information_schema:sql_identifiers">meta data section about SQL identifiers</link>.
  *
- * Returns: a new #GdaDataModel, or %NULL if an error occurred
+ * Returns: (transfer full): a new #GdaDataModel, or %NULL if an error occurred
  */
 GdaDataModel *
 gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **error, ...)
@@ -2275,6 +2275,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 	GdaSet *params = NULL;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+	g_return_val_if_fail (select_sql, NULL);
 
 	if (store->priv->init_error) {
 		g_propagate_error (error, g_error_copy (store->priv->init_error));
@@ -2376,13 +2377,13 @@ static gboolean gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table
 					 gint nvalues, const gchar **value_names, const GValue **values);
 
 /**
- * gda_meta_store_modify
+ * gda_meta_store_modify:
  * @store: a #GdaMetaStore object
  * @table_name: the name of the table to modify within @store
- * @new_data: a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
+ * @new_data: (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
  * with no row at all)
- * @condition: SQL expression (which may contain variables) defining the rows which are being obsoleted by @new_data, or %NULL
- * @error: a place to store errors, or %NULL
+ * @condition: (allow-none): SQL expression (which may contain variables) defining the rows which are being obsoleted by @new_data, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  * @...: a list of (variable name (gchar *), GValue *value) terminated with NULL, representing values for all the
  * variables mentioned in @condition.
  *
@@ -2443,10 +2444,10 @@ gda_meta_store_modify (GdaMetaStore *store, const gchar *table_name,
 }
 
 /**
- * gda_meta_store_modify_with_context
+ * gda_meta_store_modify_with_context:
  * @store: a #GdaMetaStore object
- * @context: a #GdaMetaContext context describing what to modify in @store
- * @new_data: a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
+ * @context: (transfer none): a #GdaMetaContext context describing what to modify in @store
+ * @new_data: (transfer none) (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
  * with no row at all)
  * @error: a place to store errors, or %NULL
  *
@@ -2462,6 +2463,8 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
 	GString *cond = NULL;
 	gint i;
 	gboolean retval;
+
+	g_return_val_if_fail (context, FALSE);
 
 	for (i = 0; i < context->size; i++) {
 		if (i == 0)
@@ -3044,9 +3047,9 @@ out:
 }
 
 /**
- * _gda_meta_store_begin_data_reset
+ * _gda_meta_store_begin_data_reset:
  * @store: a #GdaMetaStore object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Sets @store in a mode where only the modifications completely overriding a table
  * will be allowed, where no detailed modifications report is made and where the "suggest-update"
@@ -3088,9 +3091,9 @@ _gda_meta_store_begin_data_reset (GdaMetaStore *store, GError **error)
 }
 
 /**
- * _gda_meta_store_cancel_data_reset
+ * _gda_meta_store_cancel_data_reset:
  * @store: a #GdaMetaStore object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Cancels any modification done since _gda_meta_store_begin_data_reset() was called.
  *
@@ -3120,9 +3123,9 @@ _gda_meta_store_cancel_data_reset (GdaMetaStore *store, GError **error)
 }
 
 /**
- * _gda_meta_store_finish_data_reset
+ * _gda_meta_store_finish_data_reset:
  * @store: a #GdaMetaStore object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Commits any modification done since _gda_meta_store_begin_data_reset() was called.
  *
@@ -3174,7 +3177,7 @@ gda_meta_store_change_free (GdaMetaStoreChange *change) {
 }
 
 /**
- * gda_meta_store_create_modify_data_model
+ * gda_meta_store_create_modify_data_model:
  * @store: a #GdaMetaStore object
  * @table_name: the name of a table present in @store
  * 
@@ -3183,7 +3186,7 @@ gda_meta_store_change_free (GdaMetaStoreChange *change) {
  *
  * To be used by provider's implementation
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  */
 GdaDataModel *
 gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table_name)
@@ -3229,15 +3232,14 @@ gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table
 }
 
 /**
- * gda_meta_store_schema_get_all_tables
+ * gda_meta_store_schema_get_all_tables:
  * @store: a #GdaMetaStore object
  *
  * Get an ordered list of the tables @store knows about. The tables are ordered in a way that tables dependencies
  * are respected: if table B has a foreign key on table A, then table A will be listed before table B in the returned
  * list.
  *
- * Returns: a new list of tables names (as gchar*), the list must be freed when no longer needed, 
- * but the strings present in the list must not be modified.
+ * Returns: (transfer container) (element type gchar*): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
  */
 GSList *
 gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
@@ -3267,7 +3269,7 @@ gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
 }
 
 /**
- * gda_meta_store_schema_get_depend_tables
+ * gda_meta_store_schema_get_depend_tables:
  * @store: a #GdaMetaStore object
  * @table_name: the name of the table for which all the dependencies must be listed
  * 
@@ -3277,8 +3279,7 @@ gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
  * are respected: if table B has a foreign key on table A, then table A will be listed before table B in the returned
  * list.
  *
- * Returns: a new list of tables names (as gchar*), the list must be freed when no longer needed, 
- * but the strings present in the list must not be modified.
+ * Returns: (transfer container) (element type gchar*): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
  */
 GSList *
 gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table_name)
@@ -3312,13 +3313,13 @@ gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table
 
 
 /**
- * gda_meta_store_schema_get_structure
+ * gda_meta_store_schema_get_structure:
  * @store: a #GdaMetaStore object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Creates a new #GdaMetaStruct object representing @store's internal database structure.
  *
- * Returns: a new #GdaMetaStruct object, or %NULL if an error occurred
+ * Returns: (transfer full): a new #GdaMetaStruct object, or %NULL if an error occurred
  */
 GdaMetaStruct *
 gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
@@ -3424,11 +3425,11 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 }
 
 /**
- * gda_meta_store_get_attribute_value
+ * gda_meta_store_get_attribute_value:
  * @store: a #GdaMetaStore object
  * @att_name: name of the attribute to get
- * @att_value: the place to store the attribute value
- * @error: a place to store errors, or %NULL
+ * @att_value: (out): the place to store the attribute value
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * The #GdaMetaStore object maintains a list of (name,value) attributes (attributes names starting with a '_'
  * character are for internal use only and cannot be altered). This method and the gda_meta_store_set_attribute_value()
@@ -3496,11 +3497,11 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
 }
 
 /**
- * gda_meta_store_set_attribute_value
+ * gda_meta_store_set_attribute_value:
  * @store: a #GdaMetaStore object
  * @att_name: name of the attribute to set
- * @att_value: value of the attribute to set, or %NULL to unset the attribute
- * @error: a place to store errors, or %NULL
+ * @att_value: (allow-none): value of the attribute to set, or %NULL to unset the attribute
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Set the value of the attribute named @att_name to @att_value; see gda_meta_store_get_attribute_value() for
  * more information.
@@ -3580,10 +3581,10 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 }
 
 /**
- * gda_meta_store_schema_add_custom_object
+ * gda_meta_store_schema_add_custom_object:
  * @store: a #GdaMetaStore object
  * @xml_description: an XML description of the table or view to add to @store
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * The internal database used by @store can be 'augmented' with some user-defined database objects
  * (such as tables or views). This method allows one to add a new database object.
@@ -3837,10 +3838,10 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 }
 
 /**
- * gda_meta_store_schema_remove_custom_object
+ * gda_meta_store_schema_remove_custom_object:
  * @store: a #GdaMetaStore object
  * @obj_name: name of the custom object to remove
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Removes the custom database object named @obj_name.
  *

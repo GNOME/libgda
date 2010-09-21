@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 - 2009 The GNOME Foundation.
+ * Copyright (C) 2006 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -1013,7 +1013,7 @@ _gda_server_operation_new_from_string (GdaServerOperationType op_type,
 
 
 /**
- * gda_server_operation_new
+ * gda_server_operation_new:
  * @op_type: type of operation
  * @xml_file: a file which has the specifications for the GdaServerOperation object to create
  *
@@ -1051,7 +1051,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 }
 
 /**
- * gda_server_operation_get_node_info
+ * gda_server_operation_get_node_info:
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/") as a format string, similar to g_strdup_printf()'s argument
  * @...: the arguments to insert into the format string
@@ -1059,7 +1059,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
  * Get information about the node identified by @path. The returned #GdaServerOperationNode structure can be 
  * copied but not modified; it may change or cease to exist if @op changes
  *
- * Returns: a #GdaServerOperationNode structure, or %NULL if the node was not found
+ * Returns: (transfer none): a #GdaServerOperationNode structure, or %NULL if the node was not found
  */
 GdaServerOperationNode *
 gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_format, ...)
@@ -1169,7 +1169,7 @@ gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_fo
 }
 
 /**
- * gda_server_operation_get_op_type
+ * gda_server_operation_get_op_type:
  * @op: a #GdaServerOperation object
  * 
  * Get the type of operation @op is for
@@ -1186,12 +1186,12 @@ gda_server_operation_get_op_type (GdaServerOperation *op)
 }
 
 /**
- * gda_server_operation_op_type_to_string
+ * gda_server_operation_op_type_to_string:
  * @type: a #GdaServerOperationType value
  * 
  * Get a string version of @type
  *
- * Returns: a non %NULL string (do not free or modify)
+ * Returns: (transfer none): a non %NULL string (do not free or modify)
  */
 const gchar *
 gda_server_operation_op_type_to_string (GdaServerOperationType type)
@@ -1237,7 +1237,7 @@ gda_server_operation_op_type_to_string (GdaServerOperationType type)
 }
 
 /**
- * gda_server_operation_string_to_op_type
+ * gda_server_operation_string_to_op_type:
  * @str: a string
  *
  * Performs the reverse of gda_server_operation_op_type_to_string()
@@ -1292,15 +1292,15 @@ gda_server_operation_string_to_op_type (const gchar *str)
 static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent);
 
 /**
- * gda_server_operation_save_data_to_xml
+ * gda_server_operation_save_data_to_xml:
  * @op: a #GdaServerOperation object
- * @error: a place to store errors or %NULL
+ * @error: (allow-none): a place to store errors or %NULL
  * 
  * Creates a new #xmlNodePtr tree which can be used to save the #op object. This
  * XML structure can then be saved to disk if necessary. Use xmlFreeNode to free
  * the associated memory when not needed anymore.
  *
- * Returns: a new #xmlNodePtr structure, or %NULL
+ * Returns: (transfer full): a new #xmlNodePtr structure, or %NULL
  */
 xmlNodePtr
 gda_server_operation_save_data_to_xml (GdaServerOperation *op, GError **error)
@@ -1413,10 +1413,10 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 }
 
 /**
- * gda_server_operation_load_data_from_xml
+ * gda_server_operation_load_data_from_xml:
  * @op: a #GdaServerOperation object
  * @node: a #xmlNodePtr
- * @error: a place to store errors or %NULL
+ * @error: (allow-none): a place to store errors or %NULL
  * 
  * Loads the contents of @node into @op. The XML tree passed through the @node
  * argument must correspond to an XML tree saved using gda_server_operation_save_data_to_xml().
@@ -1577,12 +1577,12 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 }
 
 /**
- * gda_server_operation_get_root_nodes
+ * gda_server_operation_get_root_nodes:
  * @op: a #GdaServerOperation object
  *
  * Get an array of strings containing the paths of nodes situated at the root of @op.
  * 
- * Returns: a new array, which must be freed with g_strfreev().
+ * Returns: (transfer full): a new array, which must be freed with g_strfreev().
  */ 
 gchar**
 gda_server_operation_get_root_nodes (GdaServerOperation *op)
@@ -1602,10 +1602,10 @@ gda_server_operation_get_root_nodes (GdaServerOperation *op)
 }
 
 /**
- * gda_server_operation_get_node_type
+ * gda_server_operation_get_node_type:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a node (starting with "/")
- * @status: a place to store the status of the node, or %NULL
+ * @status: (allow-none): a place to store the status of the node, or %NULL
  *
  * Convenience function to get the type of a node.
  *
@@ -1630,13 +1630,13 @@ gda_server_operation_get_node_type (GdaServerOperation *op, const gchar *path,
 }
 
 /**
- * gda_server_operation_get_node_parent
+ * gda_server_operation_get_node_parent:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a node (starting with "/")
  *
  * Get the complete path to the parent of the node defined by @path
  *
- * Returns: a new string or %NULL if the node does not have any parent or does not exist.
+ * Returns: (transfer full): a new string or %NULL if the node does not have any parent or does not exist.
  */
 gchar *
 gda_server_operation_get_node_parent (GdaServerOperation *op, const gchar *path)
@@ -1671,13 +1671,13 @@ gda_server_operation_get_node_parent (GdaServerOperation *op, const gchar *path)
 }
 
 /**
- * gda_server_operation_get_node_path_portion
+ * gda_server_operation_get_node_path_portion:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a node (starting with "/")
  *
  * Get the last part of @path
  *
- * Returns: a new string, or %NULL if an error occurred
+ * Returns: (transfer full): a new string, or %NULL if an error occurred
  */
 gchar *
 gda_server_operation_get_node_path_portion (GdaServerOperation *op, const gchar *path)
@@ -1712,14 +1712,14 @@ gda_server_operation_get_node_path_portion (GdaServerOperation *op, const gchar 
 }
 
 /**
- * gda_server_operation_get_sequence_item_names
+ * gda_server_operation_get_sequence_item_names:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a sequence node (starting with "/")
  *
  * Fetch the contents of a sequence. @path can describe either a sequence (for example "/SEQNAME") or an item in a sequence
  * (for example "/SEQNAME/3")
  *
- * Returns: a array of strings containing the complete paths of the nodes contained at @path (free with g_strfreev())
+ * Returns: (transfer full): a array of strings containing the complete paths of the nodes contained at @path (free with g_strfreev())
  */
 gchar **
 gda_server_operation_get_sequence_item_names (GdaServerOperation *op, const gchar *path)
@@ -1750,11 +1750,11 @@ gda_server_operation_get_sequence_item_names (GdaServerOperation *op, const gcha
 }
 
 /**
- * gda_server_operation_get_sequence_name
+ * gda_server_operation_get_sequence_name:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a sequence node (starting with "/")
  *
- * Returns: the name of the sequence at @path
+ * Returns: (transfer none): the name of the sequence at @path
  */
 const gchar *
 gda_server_operation_get_sequence_name (GdaServerOperation *op, const gchar *path)
@@ -1772,7 +1772,7 @@ gda_server_operation_get_sequence_name (GdaServerOperation *op, const gchar *pat
 }
 
 /**
- * gda_server_operation_get_sequence_size
+ * gda_server_operation_get_sequence_size:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a sequence node (starting with "/")
  *
@@ -1794,7 +1794,7 @@ gda_server_operation_get_sequence_size (GdaServerOperation *op, const gchar *pat
 }
 
 /**
- * gda_server_operation_get_sequence_max_size
+ * gda_server_operation_get_sequence_max_size:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a sequence node (starting with "/")
  *
@@ -1816,7 +1816,7 @@ gda_server_operation_get_sequence_max_size (GdaServerOperation *op, const gchar 
 }
 
 /**
- * gda_server_operation_get_sequence_min_size
+ * gda_server_operation_get_sequence_min_size:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a sequence node (starting with "/")
  *
@@ -1863,7 +1863,7 @@ dump (GdaServerOperation *op)
 #endif
 
 /**
- * gda_server_operation_add_item_to_sequence
+ * gda_server_operation_add_item_to_sequence:
  * @op: a #GdaServerOperation object
  * @seq_path: the path to the sequence to which an item must be added (like "/SEQ_NAME" for instance)
  *
@@ -1895,7 +1895,7 @@ gda_server_operation_add_item_to_sequence (GdaServerOperation *op, const gchar *
 }
 
 /**
- * gda_server_operation_del_item_from_sequence
+ * gda_server_operation_del_item_from_sequence:
  * @op: a #GdaServerOperation object
  * @item_path: the path to the sequence's item to remove (like "/SEQ_NAME/5" for instance)
  *
@@ -2018,7 +2018,7 @@ real_gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *pat
 }
 
 /**
- * gda_server_operation_get_value_at
+ * gda_server_operation_get_value_at:
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path
@@ -2026,7 +2026,7 @@ real_gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *pat
  * Get the value for the node at the path formed using @path_format and ... (the rules are the same as
  * for g_strdup_printf())
  *
- * Returns: a constant #GValue if a value has been defined, or %NULL if the value is undefined or
+ * Returns: (transfer none): a constant #GValue if a value has been defined, or %NULL if the value is undefined or
  * if the @path is not defined or @path does not hold any value.
  */
 const GValue *
@@ -2051,7 +2051,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 }
 
 /**
- * gda_server_operation_get_sql_identifier_at
+ * gda_server_operation_get_sql_identifier_at:
  * @op: a #GdaServerOperation object
  * @cnc: a #GdaConnection, or %NULL
  * @prov: a #GdaServerProvider, or %NULL
@@ -2063,7 +2063,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
  * and will correctly be quoted to be used with @cnc, or @prov if @cnc is %NULL (a generic quoting rule
  * will be applied if both are %NULL).
  *
- * Returns: a new string, or %NULL if the value is undefined or
+ * Returns: (transfer full): a new string, or %NULL if the value is undefined or
  * if the @path is not defined or @path does not hold any value, or if the value held is not a string
  * (in that last case a warning is shown).
  *
@@ -2099,7 +2099,7 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 }
 
 /**
- * gda_server_operation_set_value_at
+ * gda_server_operation_set_value_at:
  * @op: a #GdaServerOperation object
  * @value: a string
  * @error: a place to store errors or %NULL
@@ -2136,7 +2136,7 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
  *  </para></listitem>
  * </itemizedlist>
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, GError **error,
@@ -2287,7 +2287,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 }
 
 /**
- * gda_server_operation_is_valid
+ * gda_server_operation_is_valid:
  * @op: a #GdaServerOperation widget
  * @xml_file: an XML specification file (see gda_server_operation_new())
  * @error: a place to store an error, or %NULL
@@ -2297,7 +2297,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
  * if @xml_file is not %NULL, the validity of @op is tested against that specification, 
  * and not against the current @op's specification.
  *
- * Returns: TRUE if @op is valid
+ * Returns: %TRUE if @op is valid
  */
 gboolean
 gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GError **error)

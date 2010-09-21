@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -250,12 +250,12 @@ gda_server_provider_get_property (GObject *object,
 }
 
 /**
- * gda_server_provider_get_version
+ * gda_server_provider_get_version:
  * @provider: a #GdaServerProvider object.
  *
  * Get the version of the provider.
  *
- * Returns: a string containing the version identification.
+ * Returns: (transfer none): a string containing the version identification.
  */
 const gchar *
 gda_server_provider_get_version (GdaServerProvider *provider)
@@ -267,12 +267,12 @@ gda_server_provider_get_version (GdaServerProvider *provider)
 }
 
 /**
- * gda_server_provider_get_name
+ * gda_server_provider_get_name:
  * @provider: a #GdaServerProvider object.
  *
  * Get the name (identifier) of the provider
  *
- * Returns: a string containing the provider's name
+ * Returns: (transfer none): a string containing the provider's name
  */
 const gchar *
 gda_server_provider_get_name (GdaServerProvider *provider)
@@ -284,13 +284,13 @@ gda_server_provider_get_name (GdaServerProvider *provider)
 }
 
 /**
- * gda_server_provider_get_server_version
+ * gda_server_provider_get_server_version:
  * @provider: a #GdaServerProvider object.
  * @cnc: a #GdaConnection object
  *
  * Get the version of the database to which the connection is opened.
  * 
- * Returns: a (read only) string, or %NULL if an error occurred
+ * Returns: (transfer none): a (read only) string, or %NULL if an error occurred
  */
 const gchar *
 gda_server_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
@@ -308,16 +308,16 @@ gda_server_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 }
 
 /**
- * gda_server_provider_supports_operation
+ * gda_server_provider_supports_operation:
  * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object which would be used to perform an action, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object which would be used to perform an action, or %NULL
  * @type: the type of operation requested
- * @options: a list of named parameters, or %NULL
+ * @options: (allow-none): a list of named parameters, or %NULL
  *
  * Tells if @provider supports the @type of operation on the @cnc connection, using the
  * (optional) @options parameters.
  *
- * Returns: TRUE if the operation is supported
+ * Returns: %TRUE if the operation is supported
  */
 gboolean
 gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -437,12 +437,12 @@ static OpReq op_req_CREATE_USER [] = {
 
 
 /**
- * gda_server_provider_create_operation
+ * gda_server_provider_create_operation:
  * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object which will be used to perform an action, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object which will be used to perform an action, or %NULL
  * @type: the type of operation requested
  * @options: an optional list of parameters
- * @error: a place to store an error, or %NULL
+ * @error: (allow-none): a place to store an error, or %NULL
  *
  * Creates a new #GdaServerOperation object which can be modified in order to perform the @type type of
  * action. The @options can contain:
@@ -451,8 +451,7 @@ static OpReq op_req_CREATE_USER [] = {
  *  <listitem>named values which may change the contents of the GdaServerOperation, see <link linkend="gda-server-op-information-std">this section</link> for more information</listitem>
  * </itemizedlist>
  *
- * Returns: a new #GdaServerOperation object, or %NULL in the provider does not support the @type type
- * of operation or if an error occurred
+ * Returns: (transfer full): a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred
  */
 GdaServerOperation *
 gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -548,11 +547,11 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 }
 
 /**
- * gda_server_provider_render_operation
+ * gda_server_provider_render_operation:
  * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object which will be used to render the action, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object which will be used to render the action, or %NULL
  * @op: a #GdaServerOperation object
- * @error: a place to store an error, or %NULL
+ * @error: (allow-none): a place to store an error, or %NULL
  *
  * Creates an SQL statement (possibly using some specific extensions of the DBMS) corresponding to the
  * @op operation. Note that the returned string may actually contain more than one SQL statement.
@@ -560,7 +559,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
  * This function's purpose is mainly informative to get the actual SQL code which would be executed to perform
  * the operation; to actually perform the operation, use gda_server_provider_perform_operation().
  *
- * Returns: a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
+ * Returns: (transfer full): a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
  */
 gchar *
 gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -583,16 +582,16 @@ gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection
 }
 
 /**
- * gda_server_provider_perform_operation
+ * gda_server_provider_perform_operation:
  * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object which will be used to perform the action, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object which will be used to perform the action, or %NULL
  * @op: a #GdaServerOperation object
- * @error: a place to store an error, or %NULL
+ * @error: (allow-none): a place to store an error, or %NULL
  *
  * Performs the operation described by @op. Note that @op is not destroyed by this method
  * and can be reused.
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -626,14 +625,14 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 }
 
 /**
- * gda_server_provider_supports_feature
+ * gda_server_provider_supports_feature:
  * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @feature: #GdaConnectionFeature feature to test
  *
  * Tests if a feature is supported
  *
- * Returns: TRUE if @feature is supported
+ * Returns: %TRUE if @feature is supported
  */
 gboolean
 gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
@@ -676,14 +675,14 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 }
 
 /**
- * gda_server_provider_get_data_handler_g_type
+ * gda_server_provider_get_data_handler_g_type:
  * @provider: a server provider.
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @for_type: a #GType
  *
  * Find a #GdaDataHandler object to manipulate data of type @for_type. The returned object must not be modified.
  * 
- * Returns: a #GdaDataHandler, or %NULL if the provider does not support the requested @for_type data type 
+ * Returns: (transfer none): a #GdaDataHandler, or %NULL if the provider does not support the requested @for_type data type 
  */
 GdaDataHandler *
 gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaConnection *cnc, GType for_type)
@@ -704,14 +703,14 @@ gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaCon
 }
 
 /**
- * gda_server_provider_get_data_handler_dbms
+ * gda_server_provider_get_data_handler_dbms:
  * @provider: a server provider.
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @for_type: a DBMS type definition
  *
  * Find a #GdaDataHandler object to manipulate data of type @for_type.
  * 
- * Returns: a #GdaDataHandler, or %NULL if the provider does not know about the @for_type type
+ * Returns: (transfer none): a #GdaDataHandler, or %NULL if the provider does not know about the @for_type type
  */
 GdaDataHandler *
 gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConnection *cnc, const gchar *for_type)
@@ -733,9 +732,9 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
 }
 
 /**
- * gda_server_provider_get_default_dbms_type
+ * gda_server_provider_get_default_dbms_type:
  * @provider: a server provider.
- * @cnc: a #GdaConnection object or %NULL
+ * @cnc:(allow-none):  a #GdaConnection object or %NULL
  * @type: a #GType value type
  *
  * Get the name of the most common data type which has @type type.
@@ -744,7 +743,7 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
  * there is no DBMS data type which could contain data of the @g_type type (for example %NULL may be
  * returned if a DBMS has integers only up to 4 bytes and a G_TYPE_INT64 is requested).
  *
- * Returns: the name of the DBMS type, or %NULL
+ * Returns: (transfer none): the name of the DBMS type, or %NULL
  */
 const gchar *
 gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, GType type)
@@ -766,12 +765,12 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 
 
 /**
- * gda_server_provider_string_to_value
+ * gda_server_provider_string_to_value:
  * @provider: a server provider.
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @string: the SQL string to convert to a value
  * @preferred_type: a #GType, or G_TYPE_INVALID
- * @dbms_type: place to get the actual database type used if the conversion succeeded, or %NULL
+ * @dbms_type: (allow-none): place to get the actual database type used if the conversion succeeded, or %NULL
  *
  * Use @provider to create a new #GValue from a single string representation. 
  *
@@ -788,7 +787,7 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
  * the database type used for the conversion if the conversion was successfull, or %NULL
  * otherwise.
  *
- * Returns: a new #GValue, or %NULL
+ * Returns: (transfer full): a new #GValue, or %NULL
  */
 GValue *
 gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection *cnc, const gchar *string, 
@@ -882,14 +881,14 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 
  
 /**
- * gda_server_provider_value_to_sql_string
+ * gda_server_provider_value_to_sql_string:
  * @provider: a server provider.
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @from: #GValue to convert from
  *
  * Produces a fully quoted and escaped string from a GValue
  *
- * Returns: escaped and quoted value or NULL if not supported.
+ * Returns: (transfer full): escaped and quoted value or NULL if not supported.
  */
 gchar *
 gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
@@ -914,15 +913,15 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 }
 
 /**
- * gda_server_provider_escape_string
+ * gda_server_provider_escape_string:
  * @provider: a server provider.
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @str: a string to escape
  *
  * Escapes @str for use within an SQL command (to avoid SQL injection attacks). Note that the returned value still needs
  * to be enclosed in single quotes before being used in an SQL statement.
  *
- * Returns: a new string suitable to use in SQL statements
+ * Returns: (transfer full): a new string suitable to use in SQL statements
  */
 gchar *
 gda_server_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
@@ -949,14 +948,14 @@ gda_server_provider_escape_string (GdaServerProvider *provider, GdaConnection *c
 }
 
 /**
- * gda_server_provider_unescape_string
+ * gda_server_provider_unescape_string:
  * @provider: a server provider.
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @str: a string to escape
  *
  * Unescapes @str for use within an SQL command. This is the exact opposite of gda_server_provider_escape_string().
  *
- * Returns: a new string
+ * Returns: (transfer full): a new string
  */
 gchar *
 gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
@@ -984,9 +983,9 @@ gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection 
 
 
 /**
- * gda_server_provider_create_parser
+ * gda_server_provider_create_parser:
  * @provider: a #GdaServerProvider provider object
- * @cnc: a #GdaConnection, or %NULL
+ * @cnc: (allow-none): a #GdaConnection, or %NULL
  *
  * Creates a new #GdaSqlParser object which is adapted to @provider (and possibly depending on
  * @cnc for the actual database version).
@@ -994,7 +993,7 @@ gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection 
  * If @prov does not have its own parser, then %NULL is returned, and a general SQL parser can be obtained
  * using gda_sql_parser_new().
  *
- * Returns: a new #GdaSqlParser object, or %NULL.
+ * Returns: (transfer full): a new #GdaSqlParser object, or %NULL.
  */
 GdaSqlParser *
 gda_server_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)

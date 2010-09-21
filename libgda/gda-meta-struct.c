@@ -1,6 +1,6 @@
 /* gda-meta-struct.c
  *
- * Copyright (C) 2008 Vivien Malerba
+ * Copyright (C) 2008 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -158,7 +158,7 @@ gda_meta_struct_init (GdaMetaStruct *mstruct) {
 
 
 /**
- * gda_meta_struct_new
+ * gda_meta_struct_new:
  * @store: a #GdaMetaStore from which the new #GdaMetaStruct object will fetch information
  * @features: the kind of extra information the new #GdaMetaStruct object will compute
  *
@@ -166,7 +166,7 @@ gda_meta_struct_init (GdaMetaStruct *mstruct) {
  * the more features, the more time it takes to run. Features such as table's columns, each column's attributes, etc
  * are not optional and will always be computed.
  *
- * Returns: the newly created #GdaMetaStruct object
+ * Returns: (transfer full): the newly created #GdaMetaStruct object
  */
 GdaMetaStruct *
 gda_meta_struct_new (GdaMetaStore *store, GdaMetaStructFeature features) 
@@ -417,13 +417,13 @@ prepare_sql_identifier_for_compare (gchar *str)
 }
 
 /**
- * gda_meta_struct_complement
+ * gda_meta_struct_complement:
  * @mstruct: a #GdaMetaStruct object
  * @type: the type of object to add (which can be GDA_META_DB_UNKNOWN)
- * @catalog: the catalog the object belongs to (as a G_TYPE_STRING GValue), or %NULL
- * @schema: the schema the object belongs to (as a G_TYPE_STRING GValue), or %NULL
+ * @catalog: (allow-none): the catalog the object belongs to (as a G_TYPE_STRING GValue), or %NULL
+ * @schema: (allow-none): the schema the object belongs to (as a G_TYPE_STRING GValue), or %NULL
  * @name: the object's name (as a G_TYPE_STRING GValue), not %NULL
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Creates a new #GdaMetaDbObject structure in @mstruct to represent the database object (of type @type)
  * which can be uniquely identified as @catalog.@schema.@name.
@@ -445,7 +445,7 @@ prepare_sql_identifier_for_compare (gchar *str)
  * For more information, see the <link linkend="information_schema:sql_identifiers">
  * meta data section about SQL identifiers</link>.
  *
- * Returns: the #GdaMetaDbObject corresponding to the database object if no error occurred, or %NULL
+ * Returns: (transfer none): the #GdaMetaDbObject corresponding to the database object if no error occurred, or %NULL
  */
 GdaMetaDbObject *
 gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
@@ -1091,11 +1091,11 @@ array_type_to_sql (GdaMetaStore *store, const GValue *specific_name)
 
 
 /**
- * gda_meta_struct_complement_schema
+ * gda_meta_struct_complement_schema:
  * @mstruct: a #GdaMetaStruct object
- * @catalog: name of a catalog, or %NULL
- * @schema: name of a schema, or %NULL
- * @error: a place to store errors, or %NULL
+ * @catalog: (allow-none): name of a catalog, or %NULL
+ * @schema: (allow-none): name of a schema, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * This method is similar to gda_meta_struct_complement() but creates #GdaMetaDbObject for all the
  * database object which are in the @schema schema (and in the @catalog catalog).
@@ -1293,9 +1293,9 @@ real_gda_meta_struct_complement_all (GdaMetaStruct *mstruct, gboolean default_on
 }
 
 /**
- * gda_meta_struct_complement_default
+ * gda_meta_struct_complement_default:
  * @mstruct: a #GdaMetaStruct object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * This method is similar to gda_meta_struct_complement() and gda_meta_struct_complement_all()
  * but creates #GdaMetaDbObject for all the
@@ -1313,9 +1313,9 @@ gda_meta_struct_complement_default (GdaMetaStruct *mstruct, GError **error)
 }
 
 /**
- * gda_meta_struct_complement_all
+ * gda_meta_struct_complement_all:
  * @mstruct: a #GdaMetaStruct object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * This method is similar to gda_meta_struct_complement() and gda_meta_struct_complement_default()
  * but creates #GdaMetaDbObject for all the database object.
@@ -1331,10 +1331,10 @@ gda_meta_struct_complement_all (GdaMetaStruct *mstruct, GError **error)
 }
 
 /**
- * gda_meta_struct_complement_depend
+ * gda_meta_struct_complement_depend:
  * @mstruct: a #GdaMetaStruct object
  * @dbo: a #GdaMetaDbObject part of @mstruct
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * This method is similar to gda_meta_struct_complement() but creates #GdaMetaDbObject for all the dependencies
  * of @dbo.
@@ -1440,10 +1440,10 @@ db_object_sort_func (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
 }
 
 /**
- * gda_meta_struct_sort_db_objects
+ * gda_meta_struct_sort_db_objects:
  * @mstruct: a #GdaMetaStruct object
  * @sort_type: the kind of sorting requested
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Reorders the list of database objects within @mstruct in a way specified by @sort_type.
  *
@@ -1543,14 +1543,13 @@ _meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const
 }
 
 /**
- * gda_meta_struct_get_all_db_objects
+ * gda_meta_struct_get_all_db_objects:
  * @mstruct: a #GdaMetaStruct object
  *
  * Get a list of all the #GdaMetaDbObject structures representing database objects in @mstruct. Note that
  * no #GdaMetaDbObject structure must not be modified.
  *
- * Returns: a new #GSList list of pointers to #GdaMetaDbObject structures which must be destroyed after
- * usage using g_slist_free(). The individual #GdaMetaDbObject must not be modified.
+ * Returns: (transfer container): a new #GSList list of pointers to #GdaMetaDbObject structures which must be destroyed after usage using g_slist_free(). The individual #GdaMetaDbObject must not be modified.
  */
 GSList *
 gda_meta_struct_get_all_db_objects (GdaMetaStruct *mstruct)
@@ -1563,10 +1562,10 @@ gda_meta_struct_get_all_db_objects (GdaMetaStruct *mstruct)
 }
 
 /**
- * gda_meta_struct_get_db_object
+ * gda_meta_struct_get_db_object:
  * @mstruct: a #GdaMetaStruct object
- * @catalog: the catalog the object belongs to (as a G_TYPE_STRING GValue), or %NULL
- * @schema: the schema the object belongs to (as a G_TYPE_STRING GValue), or %NULL
+ * @catalog: (allow-none): the catalog the object belongs to (as a G_TYPE_STRING GValue), or %NULL
+ * @schema: (allow-none): the schema the object belongs to (as a G_TYPE_STRING GValue), or %NULL
  * @name: the object's name (as a G_TYPE_STRING GValue), not %NULL
  *
  * Tries to locate the #GdaMetaDbObject structure representing the database object named after
@@ -1575,7 +1574,7 @@ gda_meta_struct_get_all_db_objects (GdaMetaStruct *mstruct)
  * If one or both of @catalog and @schema are %NULL, and more than one database object matches the name, then
  * the return value is also %NULL.
  *
- * Returns: the #GdaMetaDbObject or %NULL if not found
+ * Returns: (transfer none): the #GdaMetaDbObject or %NULL if not found
  */
 GdaMetaDbObject *
 gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const GValue *schema, const GValue *name)
@@ -1614,7 +1613,7 @@ gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, co
  *
  * Tries to find the #GdaMetaTableColumn representing the column named @col_name in @table.
  *
- * Returns: the #GdaMetaTableColumn or %NULL if not found
+ * Returns: (transfer none): the #GdaMetaTableColumn or %NULL if not found
  */
 GdaMetaTableColumn *
 gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table, const GValue *col_name)
@@ -1636,14 +1635,14 @@ gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table, c
 }
 
 /**
- * gda_meta_struct_dump_as_graph
+ * gda_meta_struct_dump_as_graph:
  * @mstruct: a #GdaMetaStruct object
  * @info: informs what kind of information to show in the resulting graph
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Creates a new graph (in the GraphViz syntax) representation of @mstruct.
  *
- * Returns: a new string, or %NULL if an error occurred.
+ * Returns: (transfer full): a new string, or %NULL if an error occurred.
  */
 gchar *
 gda_meta_struct_dump_as_graph (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GError **error)
@@ -2233,17 +2232,17 @@ copyerror:
 }
 
 /**
- * gda_meta_struct_add_db_object
+ * gda_meta_struct_add_db_object:
  * @mstruct: a #GdaMetaStruct object
  * @dbo: a #GdaMetaDbObject structure
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Adds @dbo to the database objects known to @mstruct. In any case (whether an error occured or not)
  * @dbo's responsibility is then transferred to @smtruct and should
  * not be used after calling this function (it may have been destroyed). If you need a pointer to the #GdaMetaDbObject
  * for a database object, use gda_meta_struct_get_db_object().
  *
- * Returns: a pointer to the #GdaMetaDbObject used in @mstruct to represent the added database object (may be @dbo or not)
+ * Returns: (transfer none): a pointer to the #GdaMetaDbObject used in @mstruct to represent the added database object (may be @dbo or not)
  */
 GdaMetaDbObject *
 gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GError **error)
@@ -2293,7 +2292,7 @@ gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GEr
 }
 
 /**
- * gda_meta_table_column_get_attribute
+ * gda_meta_table_column_get_attribute:
  * @tcol: a #GdaMetaTableColumn
  * @attribute: attribute name as a string
  *
@@ -2301,7 +2300,7 @@ gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GEr
  *
  * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
  *
- * Returns: a read-only #GValue, or %NULL if not attribute named @attribute has been set for @column
+ * Returns: (transfer none): a read-only #GValue, or %NULL if not attribute named @attribute has been set for @column
  */
 const GValue *
 gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attribute)
@@ -2310,11 +2309,11 @@ gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attr
 }
 
 /**
- * gda_meta_table_column_set_attribute
+ * gda_meta_table_column_set_attribute:
  * @tcol: a #GdaMetaTableColumn
  * @attribute: attribute name as a static string
- * @value: a #GValue, or %NULL
- * @destroy: function called when @attribute has to be freed, or %NULL
+ * @value: (allow-none): a #GValue, or %NULL
+ * @destroy: (allow-none): function called when @attribute has to be freed, or %NULL
  *
  * Set the value associated to a named attribute.
  *
@@ -2339,7 +2338,7 @@ gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attr
 }
 
 /**
- * gda_meta_table_column_foreach_attribute
+ * gda_meta_table_column_foreach_attribute:
  * @tcol: a #GdaMetaTableColumn
  * @func: a #GdaAttributesManagerFunc function
  * @data: user data to be passed as last argument of @func each time it is called

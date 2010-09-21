@@ -2180,8 +2180,9 @@ gda_data_proxy_get_n_modified_rows (GdaDataProxy *proxy)
  * @proxy: a #GdaDataProxy object
  * @sample_size: the requested size of a chunk, or 0
  *
- * Sets the size of each chunk of fata to display: the maximum number of rows which
- * can be displayed at a time. The default value is arbitrary 300 as it is big enough to
+ * Sets the size of each chunk of data to display: the maximum number of rows which
+ * can be "displayed" at a time (the maximum number of rows which @proxy pretends to have).
+ * The default value is arbitrary 300 as it is big enough to
  * be able to display quite a lot of data, but small enough to avoid too much data
  * displayed at the same time.
  *
@@ -2189,7 +2190,7 @@ gda_data_proxy_get_n_modified_rows (GdaDataProxy *proxy)
  * regardless of the current chunk of data, and the modified rows which are not visible
  * when the displayed chunk of data changes are still held as modified rows.
  *
- * To remove the chunking of the data to display, simply pass @sample_size the 0 value.
+ * To remove the chunking of the data to display, simply pass @sample_size the %0 value.
  */
 void
 gda_data_proxy_set_sample_size (GdaDataProxy *proxy, gint sample_size)

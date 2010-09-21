@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -132,7 +132,7 @@ gda_tree_mgr_tables_dispose (GObject *object)
 }
 
 /**
- * gda_tree_mgr_select_get_type
+ * gda_tree_mgr_select_get_type:
  *
  * Returns: the GType
  *
@@ -210,14 +210,14 @@ gda_tree_mgr_tables_get_property (GObject *object,
 }
 
 /**
- * gda_tree_mgr_tables_new
+ * gda_tree_mgr_tables_new:
  * @cnc: a #GdaConnection object
- * @schema: a schema name or %NULL
+ * @schema: (allow-none): a schema name or %NULL
  *
  * Creates a new #GdaTreeManager object which will add one tree node for each table found in the
  * @schema if it is not %NULL, or for each table visible by default in @cnc.
  *
- * Returns: a new #GdaTreeManager object
+ * Returns: (transfer full): a new #GdaTreeManager object
  *
  * Since: 4.2
  */

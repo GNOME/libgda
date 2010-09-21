@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -300,7 +300,7 @@ GQuark gda_tree_node_error_quark (void)
 }
 
 /**
- * gda_tree_node_get_type
+ * gda_tree_node_get_type:
  * 
  * Registers the #GdaTreeNode class on the GLib type system.
  * 
@@ -452,12 +452,12 @@ gda_tree_node_dump_children (GdaTreeNode *node, const gchar *prefix, GString *in
 }
 
 /**
- * gda_tree_node_new
+ * gda_tree_node_new:
  * @name: a name, or %NULL
  *
  * Creates a new #GdaTreeNode object
  *
- * Returns: a new #GdaTreeNode
+ * Returns: (transfer full): a new #GdaTreeNode
  *
  * Since: 4.2
  */
@@ -467,8 +467,8 @@ gda_tree_node_new (const gchar *name)
 	return (GdaTreeNode*) g_object_new (GDA_TYPE_TREE_NODE, "name", name, NULL);
 }
 
-/**
- * _gda_tree_node_add_children
+/*
+ * _gda_tree_node_add_children:
  * @node: a #GdaTreeNode
  * @mgr: a #GdaTreeManager object
  * @childen: a list of #GdaTreeNode objects, or %NULL
@@ -605,8 +605,8 @@ _gda_tree_node_add_children (GdaTreeNode *node, GdaTreeManager *mgr, const GSLis
 	}
 }
 
-/**
- * _gda_tree_node_get_children_for_manager
+/*
+ * _gda_tree_node_get_children_for_manager:
  * @node: a #GdaTreeNode
  * @manager: a #GdaTreeManager
  *
@@ -629,8 +629,8 @@ _gda_tree_node_get_children_for_manager (GdaTreeNode *node, GdaTreeManager *mgr)
 	return NULL;
 }
 
-/**
- * _gda_tree_node_get_managers_for_children
+/*
+ * _gda_tree_node_get_managers_for_children:
  */
 GSList *
 _gda_tree_node_get_managers_for_children (GdaTreeNode *node)
@@ -644,8 +644,8 @@ _gda_tree_node_get_managers_for_children (GdaTreeNode *node)
 	return g_slist_reverse (mgrlist);
 }
 
-/**
- * _gda_tree_node_get_manager_for_child
+/*
+ * _gda_tree_node_get_manager_for_child:
  */
 GdaTreeManager *
 _gda_tree_node_get_manager_for_child (GdaTreeNode *node, GdaTreeNode *child)
@@ -663,7 +663,7 @@ _gda_tree_node_get_manager_for_child (GdaTreeNode *node, GdaTreeNode *child)
 }
 
 /**
- * gda_tree_node_fetch_attribute
+ * gda_tree_node_fetch_attribute:
  * @node: a #GdaTreeNode
  * @attribute: attribute name as a string
  *
@@ -673,7 +673,7 @@ _gda_tree_node_get_manager_for_child (GdaTreeNode *node, GdaTreeNode *child)
  * Attributes can have any name, but Libgda proposes some default names,
  * see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
  *
- * Returns: a read-only #GValue, or %NULL if not attribute named @attribute has been set for @node
+ * Returns: (transfer none): a read-only #GValue, or %NULL if not attribute named @attribute has been set for @node
  *
  * Since: 4.2
  */
@@ -690,7 +690,7 @@ gda_tree_node_fetch_attribute (GdaTreeNode *node, const gchar *attribute)
 }
 
 /**
- * gda_tree_node_get_node_attribute
+ * gda_tree_node_get_node_attribute:
  * @node: a #GdaTreeNode
  * @attribute: attribute name as a string
  *
@@ -701,7 +701,7 @@ gda_tree_node_fetch_attribute (GdaTreeNode *node, const gchar *attribute)
  * Attributes can have any name, but Libgda proposes some default names, 
  * see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
  *
- * Returns: a read-only #GValue, or %NULL if not attribute named @attribute has been set for @node
+ * Returns: (transfer none): a read-only #GValue, or %NULL if not attribute named @attribute has been set for @node
  *
  * Since: 4.2
  */
@@ -714,7 +714,7 @@ gda_tree_node_get_node_attribute (GdaTreeNode *node, const gchar *attribute)
 }
 
 /**
- * gda_tree_node_set_node_attribute
+ * gda_tree_node_set_node_attribute:
  * @node: a #GdaTreeNode
  * @attribute: attribute name
  * @value: a #GValue, or %NULL
@@ -755,13 +755,13 @@ gda_tree_node_set_node_attribute (GdaTreeNode *node, const gchar *attribute, con
 }
 
 /**
- * gda_tree_node_get_parent
+ * gda_tree_node_get_parent:
  * @node: a #GdaTreeNode object
  *
  * Get the #GdaTreeNode parent of @node in the #GdaTree node belongs to. If @node is at the top level,
  * then this method return %NULL.
  *
- * Returns: the parent #GdaTreeNode
+ * Returns: (transfer none): the parent #GdaTreeNode
  *
  * Since: 4.2
  */
@@ -779,12 +779,12 @@ gda_tree_node_get_parent (GdaTreeNode *node)
 }
 
 /**
- * gda_tree_node_get_children
+ * gda_tree_node_get_children:
  * @node: a #GdaTreeNode object
  *
  * Get a list of all @node's children, free it with g_slist_free() after usage
  *
- * Returns: a new #GSList of #GdaTreeNode objects, or %NULL if @node does not have any child
+ * Returns: (transfer container) (element-type GdaTreeNode): a new #GSList of #GdaTreeNode objects, or %NULL if @node does not have any child
  *
  * Since: 4.2
  */
@@ -806,13 +806,13 @@ gda_tree_node_get_children (GdaTreeNode *node)
 }
 
 /**
- * gda_tree_node_get_child_index
+ * gda_tree_node_get_child_index:
  * @node: a #GdaTreeNode object
  * @index: a index
  *
  * Get the #GdaTreeNode child of @node at position @index (starting at 0).
  *
- * Returns: the #GdaTreeNode, or %NULL if not found
+ * Returns: (transfer none): the #GdaTreeNode, or %NULL if not found
  *
  * Since: 4.2
  */
@@ -838,13 +838,13 @@ gda_tree_node_get_child_index (GdaTreeNode *node, gint index)
 }
 
 /**
- * gda_tree_node_get_child_name
+ * gda_tree_node_get_child_name:
  * @node: a #GdaTreeNode object
  * @name: requested node's name
  *
  * Get the #GdaTreeNode child of @node which has the #GDA_ATTRIBUTE_NAME set to @name
  *
- * Returns: the #GdaTreeNode, or %NULL if not found
+ * Returns: (transfer none): the #GdaTreeNode, or %NULL if not found
  *
  * Since: 4.2
  */

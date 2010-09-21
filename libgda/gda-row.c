@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -193,7 +193,7 @@ gda_row_get_type (void)
 }
 
 /**
- * gda_row_new
+ * gda_row_new:
  * @count: number of #GValue in the new #GdaRow.
  *
  * Creates a #GdaRow which can hold @count #GValue values.
@@ -209,7 +209,7 @@ gda_row_new (gint count)
 }
 
 /**
- * gda_row_get_value
+ * gda_row_get_value:
  * @row: a #GdaRow
  * @num: field index.
  *
@@ -218,7 +218,7 @@ gda_row_new (gint count)
  * This is a pointer to the internal array of values. Don't try to free
  * or modify it (modifying is reserved to database provider's implementations).
  *
- * Returns: a pointer to the #GValue in the position @num of @row.
+ * Returns: (transfer none): a pointer to the #GValue in the position @num of @row.
  */
 GValue *
 gda_row_get_value (GdaRow *row, gint num)
@@ -230,7 +230,7 @@ gda_row_get_value (GdaRow *row, gint num)
 }
 
 /**
- * gda_row_invalidate_value
+ * gda_row_invalidate_value:
  * @row: a #GdaRow
  * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
  * 
@@ -245,7 +245,7 @@ gda_row_invalidate_value (GdaRow *row, GValue *value)
 }
 
 /**
- * gda_row_value_is_valid
+ * gda_row_value_is_valid:
  * @row: a #GdaRow.
  * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
  *
@@ -253,7 +253,7 @@ gda_row_invalidate_value (GdaRow *row, GValue *value)
  * This method is mainly used by database
  * providers' implementations to report any error while reading a value from the database.
  *
- * Returns: TRUE if @value is valid
+ * Returns: %TRUE if @value is valid
  */
 gboolean
 gda_row_value_is_valid (GdaRow *row, GValue *value)
@@ -262,7 +262,7 @@ gda_row_value_is_valid (GdaRow *row, GValue *value)
 }
 
 /**
- * gda_row_get_length
+ * gda_row_get_length:
  * @row: a #GdaRow.
  *
  * Returns: the number of columns that the @row has.
