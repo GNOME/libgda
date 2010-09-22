@@ -24,7 +24,7 @@
 #include <libgda/gda-data-handler.h>
 #include <libgda-ui/internal/utility.h>
 #include <glib/gi18n-lib.h>
-#if GTK_CHECK_VERSION (2,18,0)
+#if GTK_CHECK_VERSION (2,20,0)
 #include "widget-embedder.h"
 #endif
 static void gdaui_entry_shell_class_init (GdauiEntryShellClass *class);
@@ -169,7 +169,7 @@ gdaui_entry_shell_init (GdauiEntryShell * shell)
 	shell->priv->hbox = hbox;
 
 	/* vbox to insert the real widget to edit data */
-#if GTK_CHECK_VERSION (2,18,0)
+#if GTK_CHECK_VERSION (2,20,0)
 	shell->priv->embedder = widget_embedder_new ();
 #else
 	shell->priv->embedder = gtk_vbox_new (FALSE, 0);
@@ -470,7 +470,7 @@ gdaui_entry_shell_set_unknown (GdauiEntryShell *shell, gboolean unknown)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
 
-#if GTK_CHECK_VERSION (2,18,0)
+#if GTK_CHECK_VERSION (2,20,0)
 	widget_embedder_set_valid ((WidgetEmbedder*) shell->priv->embedder, !unknown);
 #else
 	/*
