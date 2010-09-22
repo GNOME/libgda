@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-22 01:28+0200\n"
-"PO-Revision-Date: 2010-09-13 15:15+0200\n"
+"POT-Creation-Date: 2010-09-22 13:49+0200\n"
+"PO-Revision-Date: 2010-09-22 07:35+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -2681,7 +2681,7 @@ msgstr "Část DB_DIR připojovací řetězce musí ukazovat na platnou složku"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:681
 msgid "Wrong encryption passphrase"
-msgstr ""
+msgstr "Nesprávná heslová fráze"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:709
 #, c-format
@@ -2708,9 +2708,8 @@ msgstr "Schází soubor spec. „%s“"
 #: ../libgda/sqlite/gda-sqlite-provider.c:1095
 #: ../libgda/sqlite/gda-sqlite-provider.c:1107
 #: ../libgda/sqlite/gda-sqlite-provider.c:1116
-#, fuzzy
 msgid "Error initializing database with passphrase"
-msgstr "Chyba při analýze databázového schématu: %s"
+msgstr "Chyba při inicializaci databáze heslovou frází"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1158
 msgid "Missing database name or directory"
@@ -2841,9 +2840,9 @@ msgid "Non handled data type '%s'"
 msgstr "Neobsluhovaný datový typ „%s“"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2761
-#, fuzzy
 msgid "Could not start transaction to create BLOB"
-msgstr "Nelze nastavit parametr ID transakce XA"
+msgstr ""
+"Nelze začít transakci potřebnou k vytvoření rozsáhlého binárního objektu BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2923
 #: ../libgda/sqlite/gda-sqlite-provider.c:2944
@@ -6551,22 +6550,20 @@ msgid "could not determine the indexed columns for index"
 msgstr "nelze určit indexové sloupce pro index"
 
 #: ../providers/sqlcipher/libmain.c:72
-#, fuzzy
 msgid "Provider for SQLCipher"
-msgstr "Poskytovatel pro databáze SQLite"
+msgstr "Poskytovatel pro databáze SQLCipher"
 
 #. DSN parameters
 #: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:10
-#, fuzzy
 msgid "Encryption passphrase"
-msgstr "Šifrovat heslo"
+msgstr "Šifrovací heslová fráze"
 
 #. DSN parameters
 #: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:12
 msgid "Passphrase"
-msgstr ""
+msgstr "Heslová fráze"
 
 #: ../providers/sqlite/libmain.c:73
 msgid "Provider for SQLite databases"
@@ -9236,63 +9233,3 @@ msgstr "Objekty"
 #: ../tools/web-server.c:1882
 msgid "Triggers"
 msgstr "Triggery"
-
-#~ msgid "Cgrid data handler"
-#~ msgstr "Obsluha dat cgrid"
-
-#~ msgid "The cgrid data handler"
-#~ msgstr "Obslužný ovladač dat cgrid"
-
-#~ msgid "Cgrid gtype"
-#~ msgstr "Gtype cgrid"
-
-#~ msgid "The cgrid gtype"
-#~ msgstr "Gtype cgrid"
-
-#~ msgid "Cgrid options"
-#~ msgstr "Volby cgrid"
-
-#~ msgid "The cgrid options"
-#~ msgstr "Volby cgrid"
-
-#~ msgid "Cgrid is editable"
-#~ msgstr "Cgrid je upravitelný"
-
-#~ msgid "Cgrid editable"
-#~ msgstr "Upravitelný cgrid"
-
-#~ msgid "Cgrid is to be deleted"
-#~ msgstr "Cgrid, který se má zmazat"
-
-#~ msgid "Cgrid to be deleted"
-#~ msgstr "Cgrid ke smazání"
-
-#~ msgid "Cgrid value"
-#~ msgstr "Hodnota cgrid"
-
-#~ msgid "Cgrid value attributes"
-#~ msgstr "Hodnota atributů cgrid"
-
-#~ msgid "Cgrid text column"
-#~ msgstr "Textový sloupec cgrid"
-
-#~ msgid "A column in the data source model to get the string from."
-#~ msgstr "Sloupce v modelu zdroje dat, ze kterého se má získat řetězec."
-
-#~ msgid "Cgrid grid height"
-#~ msgstr "Výška mřížky cgrid"
-
-#~ msgid "Cgrid height's."
-#~ msgstr "Výška cgrid"
-
-#~ msgid "Cgrid has its headers visible"
-#~ msgstr "Cgrid má viditelné své záhlaví"
-
-#~ msgid "Cgrid headers visible"
-#~ msgstr "Viditelné záhlaví cgrid"
-
-#~ msgid "Unsaved diagram"
-#~ msgstr "Neuložený diagram"
-
-#~ msgid "_Favorite"
-#~ msgstr "O_blíbené"
