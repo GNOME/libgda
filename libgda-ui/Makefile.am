@@ -218,14 +218,9 @@ INTROSPECTION_GIRS += Gdaui-4.0.gir
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)
 
-
-endif
-
-girdir = $(datadir)/gir-1.0
-gir_DATA = $(INTROSPECTION_GIRS)
-
 typelibsdir = $(libdir)/girepository-1.0/
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
 CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA)
 
+endif
