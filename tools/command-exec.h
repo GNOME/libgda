@@ -42,6 +42,8 @@ typedef enum {
 
 typedef struct {
 	GdaInternalCommandResultType type;
+	GdaConnection               *cnc;
+	gboolean                     was_in_transaction_before_exec;
 	union {
 		GdaDataModel     *model;
 		GdaSet           *set;
