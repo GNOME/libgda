@@ -1,6 +1,6 @@
 m4_define(major, 4)
-m4_define(minor, 1)
-m4_define(micro, 11)
+m4_define(minor, 2)
+m4_define(micro, 0)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no])) 
 m4_include(m4/introspection.m4)
@@ -511,14 +511,14 @@ then
 		AC_MSG_CHECKING(for Berkeley DB files)
 		for d in $dir
 		do
-			if test $platform_win32 = yes -a -f $d/include/db.h -a -f $d/bin/libdb47.dll
+			if test $platform_win32 = yes -a -f $d/include/db.h -a -f $d/bin/libdb51.dll
 			then
 				AC_MSG_RESULT(found Berkeley DB in $d)
 				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
 				bdbdir=$d
 				BDB_CFLAGS="-I${bdbdir}/include"
-				BDB_LIB="$d/bin/libdb47.dll"
-				BDB_LIBS="-L${bdbdir}/bin -ldb47"
+				BDB_LIB="$d/bin/libdb51.dll"
+				BDB_LIBS="-L${bdbdir}/bin -ldb51"
 				break
 			fi
 
