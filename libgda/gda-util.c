@@ -1195,8 +1195,10 @@ gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **er
 	g_value_set_string ((target->expr->value = gda_value_new (G_TYPE_STRING)), ust->table->table_name);
 
 	/* WHERE */
-	sst->where_cond = gda_sql_expr_copy (ust->cond);
-	GDA_SQL_ANY_PART (sst->where_cond)->parent = GDA_SQL_ANY_PART (sst);
+	if (ust->cond) {
+		sst->where_cond = gda_sql_expr_copy (ust->cond);
+		GDA_SQL_ANY_PART (sst->where_cond)->parent = GDA_SQL_ANY_PART (sst);
+	}
 
 	gda_sql_statement_free (upd_stmt);
 
