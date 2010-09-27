@@ -197,6 +197,8 @@ int main() {
 	    fi
 	    CFLAGS="$save_CFLAGS"
 	fi
+    else
+        AM_CONDITIONAL(MDB,[false])
     fi
 
     AC_SUBST(MDB_LIBS)
