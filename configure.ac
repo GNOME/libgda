@@ -414,10 +414,7 @@ then
     PKG_CHECK_MODULES(JSON_GLIB, $JSON_GLIB_MODULES,
 	AC_DEFINE(HAVE_JSON_GLIB, [], [Defined if JSON support is enabled])
 	have_json=yes,
-	if test "$enable_json" = "yes"; then
-		AC_MSG_ERROR([JSON support requested but not found])
-	fi
-	have_json=no
+	AC_MSG_ERROR([JSON support requested but not found])
     )
 fi
 AM_CONDITIONAL(HAVE_JSON_GLIB, [test "$have_json" = "yes"])
