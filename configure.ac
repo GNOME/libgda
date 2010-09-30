@@ -402,14 +402,25 @@ AC_SUBST(LIBXSLT_LIBS)
 dnl ******************************
 dnl Checks for json-glib
 dnl ******************************
+enable_json=no
+have_json=no
+AC_ARG_ENABLE([json],
+	AS_HELP_STRING([--enable-json], [Enable support for JSON, disabled by default]),
+	[enable_json=yes])
 
-JSON_GLIB_MODULES="json-glib-1.0"
-PKG_CHECK_MODULES(JSON_GLIB, $JSON_GLIB_MODULES, have_json=yes, have_json=no)
-AM_CONDITIONAL(HAVE_JSON_GLIB, test x"$have_json" = "xyes")
-if test x"$have_json" = "xyes"
+if test "x$enable_json" = xyes
 then
-        JSON_GLIB_CFLAGS="$JSON_GLIB_CFLAGS -DHAVE_JSON_GLIB"
+    JSON_GLIB_MODULES="json-glib-1.0"
+    PKG_CHECK_MODULES(JSON_GLIB, $JSON_GLIB_MODULES,
+	AC_DEFINE(HAVE_JSON_GLIB, [], [Defined if JSON support is enabled])
+	have_json=yes,
+	if test "$enable_json" = "yes"; then
+		AC_MSG_ERROR([JSON support requested but not found])
+	fi
+	have_json=no
+    )
 fi
+AM_CONDITIONAL(HAVE_JSON_GLIB, [test "$have_json" = "yes"])
 AC_SUBST(JSON_GLIB_CFLAGS)
 AC_SUBST(JSON_GLIB_LIBS)
 
@@ -421,14 +432,21 @@ GOBJECT_INTROSPECTION_CHECK([0.6.5])
 dnl ******************************
 dnl Checks for libcrypto
 dnl ******************************
+AC_ARG_ENABLE([crypto],
+	AS_HELP_STRING([--disable-crypto], [Disable SqlCipher database provider (using the libcrypto library)]),
+	,
+	[enable_crypto=yes])
 
 LIBCRYPTO_MODULES="libcrypto"
-PKG_CHECK_MODULES(LIBCRYPTO, $LIBCRYPTO_MODULES, have_crypto=yes, have_crypto=no)
-AM_CONDITIONAL(HAVE_LIBCRYPTO, test x"$have_crypto" = "xyes")
-if test x"$have_crypto" = "xyes"
-then
-        LIBCRYPTO_CFLAGS="$LIBCRYPTO_CFLAGS -DHAVE_LIBCRYPTO"
-fi
+PKG_CHECK_MODULES(LIBCRYPTO, $LIBCRYPTO_MODULES,
+	AC_DEFINE(HAVE_LIBCRYPTO, [], [Defined if cryptographic support is enabled])
+	have_crypto=yes,
+	if test "$enable_crypto" = "yes"; then
+		AC_MSG_ERROR([libcrypto support requested but not found])
+	fi
+	have_crypto=no
+)
+AM_CONDITIONAL(HAVE_LIBCRYPTO, [test "$have_crypto" = "yes"])
 AC_SUBST(LIBCRYPTO_CFLAGS)
 AC_SUBST(LIBCRYPTO_LIBS)
 
@@ -1832,6 +1850,7 @@ dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`
 dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
+echo "      JSON = `if test x$have_json != xyes; then echo no; else echo yes; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
 dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
