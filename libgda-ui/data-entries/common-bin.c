@@ -320,7 +320,7 @@ common_bin_adjust_menu (BinMenu *binmenu, gboolean editable, const GValue *value
 		GList *list;
 		gchar *descr, *tmp;
 		descr = g_content_type_get_description (ctype);
-		tmp = g_markup_printf_escaped (descr);
+		tmp = g_markup_escape_text (descr, -1);
 		g_free (descr);
 		g_string_append_printf (string, "\n%s: %s", _("Data type"), tmp);
 		g_free (tmp);

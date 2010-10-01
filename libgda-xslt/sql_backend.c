@@ -587,12 +587,6 @@ gtype_equal (gconstpointer a, gconstpointer b)
 	return (GType) a == (GType) b ? TRUE : FALSE;
 }
 
-static guint
-gtype_hash (gconstpointer key)
-{
-	return (guint) key;
-}
-
 static xmlChar *
 value_to_xmlchar (const GValue * value)
 {
@@ -609,7 +603,7 @@ value_to_xmlchar (const GValue * value)
 	if (!data_handlers) {
 		/* initialize the internal data handlers */
 		data_handlers =
-			g_hash_table_new_full (gtype_hash, gtype_equal,
+			g_hash_table_new_full (g_direct_hash, gtype_equal,
 					       NULL, (GDestroyNotify)
 					       g_object_unref);
 

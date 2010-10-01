@@ -50,12 +50,6 @@ static void       fill_tested_models (void);
 static GtkWidget *build_test_for_plugin_struct (GdauiPlugin *plugin);
 static void       build_test_widget (TestWidgetData *tdata);
 
-static guint
-gtype_hash (gconstpointer key)
-{
-	return (guint) key;
-}
-
 static gboolean 
 gtype_equal (gconstpointer a, gconstpointer b)
 {
@@ -67,7 +61,7 @@ get_handler (GType for_type)
 {
 	static GHashTable *hash = NULL;
 	if (!hash) {
-		hash = g_hash_table_new_full (gtype_hash, gtype_equal, 
+		hash = g_hash_table_new_full (g_direct_hash, gtype_equal, 
 					      NULL, (GDestroyNotify) g_object_unref);
 
 		g_hash_table_insert (hash, (gpointer) G_TYPE_UINT64, gda_handler_numerical_new ());

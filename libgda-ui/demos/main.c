@@ -573,17 +573,19 @@ selection_cb (GtkTreeSelection *selection,
 	      GtkTreeModel     *model)
 {
 	GtkTreeIter iter;
-	GValue value = {0, };
+	GValue *value;
 
 	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
 		return;
 
+	value = g_slice_new0(GValue);
 	gtk_tree_model_get_value (model, &iter,
 				  FILENAME_COLUMN,
-				  &value);
-	if (g_value_get_string (&value))
-		load_file (g_value_get_string (&value));
-	g_value_unset (&value);
+				  value);
+	if (g_value_get_string (value))
+		load_file (g_value_get_string (value));
+	g_value_unset (value);
+	g_slice_free(GValue, value);
 }
 
 static GtkWidget *

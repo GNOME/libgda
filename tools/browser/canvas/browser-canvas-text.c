@@ -389,7 +389,7 @@ leave_notify_cb (G_GNUC_UNUSED GooCanvasItem *item, G_GNUC_UNUSED GooCanvasItem 
 static guint
 compute_step_value (guint current, guint end)
 {
-#define STEP 15
+	const guint STEP = 15;
 	if (current < end)
 		return current + MIN (STEP, (end - current));
 	else if (current > end)

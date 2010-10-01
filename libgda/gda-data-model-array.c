@@ -484,7 +484,7 @@ column_g_type_changed_cb (GdaColumn *column, G_GNUC_UNUSED GType old, GType new,
         const GValue *value;
         gchar *str;
         gint nb_warnings = 0;
-#define max_warnings 5
+	const gint max_warnings = 5;
 
         if ((new == G_TYPE_INVALID) ||
             (new == GDA_TYPE_NULL))
