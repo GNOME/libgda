@@ -39,7 +39,7 @@
  * Meta initialization
  */
 void
-_gda_web_provider_meta_init (GdaServerProvider *provider)
+_gda_web_provider_meta_init (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 }
 
@@ -115,7 +115,7 @@ run_meta_command (GdaConnection *cnc, WebConnectionData *cdata, const gchar *typ
 }
 
 gboolean
-_gda_web_meta__info (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__info (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		     GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -146,7 +146,7 @@ _gda_web_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__btypes (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -177,7 +177,7 @@ _gda_web_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__udt (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -200,7 +200,7 @@ _gda_web_meta__udt (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_udt (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		   const GValue *udt_catalog, const GValue *udt_schema)
 {
@@ -226,7 +226,7 @@ _gda_web_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 gboolean
-_gda_web_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -249,7 +249,7 @@ _gda_web_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
 {
@@ -275,7 +275,7 @@ _gda_web_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__enums (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -298,7 +298,7 @@ _gda_web_meta__enums (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_enums (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		     GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		     const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
 {
@@ -325,7 +325,7 @@ _gda_web_meta_enums (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 gboolean
-_gda_web_meta__domains (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -348,7 +348,7 @@ _gda_web_meta__domains (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_domains (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		       GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		       const GValue *domain_catalog, const GValue *domain_schema)
 {
@@ -373,7 +373,7 @@ _gda_web_meta_domains (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -396,7 +396,7 @@ _gda_web_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			       const GValue *domain_catalog, const GValue *domain_schema, 
 			       const GValue *domain_name)
@@ -423,7 +423,7 @@ _gda_web_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -446,7 +446,7 @@ _gda_web_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			const GValue *specific_name)
 {
@@ -471,7 +471,7 @@ _gda_web_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__collations (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__collations (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -494,7 +494,7 @@ _gda_web_meta__collations (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_collations (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_collations (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			  const GValue *collation_catalog, const GValue *collation_schema, 
 			  const GValue *collation_name_n)
@@ -522,7 +522,7 @@ _gda_web_meta_collations (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__character_sets (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -545,7 +545,7 @@ _gda_web_meta__character_sets (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_character_sets (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			      const GValue *chset_catalog, const GValue *chset_schema, 
 			      const GValue *chset_name_n)
@@ -572,7 +572,7 @@ _gda_web_meta_character_sets (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -603,7 +603,7 @@ _gda_web_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error, 
 			const GValue *catalog_name, const GValue *schema_name_n)
 {
@@ -641,7 +641,7 @@ _gda_web_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *tables_model, *views_model;
@@ -688,7 +688,7 @@ _gda_web_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			    const GValue *table_catalog, const GValue *table_schema, 
 			    const GValue *table_name_n)
@@ -756,7 +756,7 @@ _gda_web_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -787,7 +787,7 @@ _gda_web_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		       GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		       const GValue *table_catalog, const GValue *table_schema, 
 		       const GValue *table_name)
@@ -824,7 +824,7 @@ _gda_web_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -847,7 +847,7 @@ _gda_web_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			 const GValue *view_catalog, const GValue *view_schema, 
 			 const GValue *view_name)
@@ -874,7 +874,7 @@ _gda_web_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -905,7 +905,7 @@ _gda_web_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error, 
 			       const GValue *table_catalog, const GValue *table_schema, 
 			       const GValue *table_name, const GValue *constraint_name_n)
@@ -950,7 +950,7 @@ _gda_web_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -981,7 +981,7 @@ _gda_web_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			       const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
 			       const GValue *constraint_name)
@@ -1021,7 +1021,7 @@ _gda_web_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -1052,7 +1052,7 @@ _gda_web_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *table_catalog, const GValue *table_schema, 
 			   const GValue *table_name, const GValue *constraint_name)
@@ -1092,7 +1092,7 @@ _gda_web_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -1123,7 +1123,7 @@ _gda_web_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			     const GValue *table_catalog, const GValue *table_schema, 
 			     const GValue *table_name, const GValue *constraint_name)
@@ -1163,7 +1163,7 @@ _gda_web_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	GdaDataModel *model;
@@ -1194,7 +1194,7 @@ _gda_web_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			const GValue *table_catalog, const GValue *table_schema, 
 			const GValue *table_name)
@@ -1232,7 +1232,7 @@ _gda_web_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__routines (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -1255,7 +1255,7 @@ _gda_web_meta__routines (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_routines (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			const GValue *routine_catalog, const GValue *routine_schema, 
 			const GValue *routine_name_n)
@@ -1282,7 +1282,7 @@ _gda_web_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -1305,7 +1305,7 @@ _gda_web_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *rout_catalog, const GValue *rout_schema, 
 			   const GValue *rout_name)
@@ -1332,7 +1332,7 @@ _gda_web_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__routine_par (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -1355,7 +1355,7 @@ _gda_web_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_routine_par (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *rout_catalog, const GValue *rout_schema, 
 			   const GValue *rout_name)
@@ -1382,7 +1382,7 @@ _gda_web_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -1405,7 +1405,7 @@ _gda_web_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
 			   const GValue *index_name_n)
@@ -1432,7 +1432,7 @@ _gda_web_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta__index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	WebConnectionData *cdata;
@@ -1455,7 +1455,7 @@ _gda_web_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_web_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_web_meta_index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			  const GValue *table_catalog, const GValue *table_schema,
 			  const GValue *table_name, const GValue *index_name)

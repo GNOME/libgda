@@ -75,7 +75,7 @@ gda_dir_blob_op_get_type (void)
 
 static void
 gda_dir_blob_op_init (GdaDirBlobOp *op,
-			   GdaDirBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaDirBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_DIR_BLOB_OP (op));
 

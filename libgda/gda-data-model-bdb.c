@@ -134,7 +134,7 @@ gda_data_model_bdb_data_model_init (GdaDataModelIface *iface)
 
 static void
 gda_data_model_bdb_init (GdaDataModelBdb *model,
-			 GdaDataModelBdbClass *klass)
+			 G_GNUC_UNUSED GdaDataModelBdbClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_BDB (model));
 
@@ -324,7 +324,7 @@ static void
 gda_data_model_bdb_set_property (GObject *object,
 				 guint param_id,
 				 const GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaDataModelBdb *model;
         const gchar *string;
@@ -440,7 +440,7 @@ static void
 gda_data_model_bdb_get_property (GObject *object,
                                     guint param_id,
                                     GValue *value,
-                                    GParamSpec *pspec)
+                                    G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaDataModelBdb *model;
 
@@ -743,7 +743,7 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 }
 
 static GdaValueAttribute
-gda_data_model_bdb_get_attributes_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_bdb_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
 {
 	GdaDataModelBdb *imodel;
 	GdaValueAttribute flags;
@@ -962,7 +962,8 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 }
 
 static gint
-gda_data_model_bdb_append_values (GdaDataModel *model, const GList *values, GError **error)
+gda_data_model_bdb_append_values (GdaDataModel *model, G_GNUC_UNUSED const GList *values,
+				  G_GNUC_UNUSED GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BDB (model), -1);
 

@@ -11,7 +11,7 @@ static void label_drag_data_received (GtkWidget *label, GdkDragContext *context,
 				      guint info, guint time);
 
 static int
-scroll_event_cb (GtkWidget *wid, GdkEvent *event, gpointer data)
+scroll_event_cb (G_GNUC_UNUSED GtkWidget *wid, GdkEvent *event, G_GNUC_UNUSED gpointer data)
 {
 	gboolean done = TRUE;
 
@@ -123,15 +123,15 @@ main (int argc, char *argv[])
 }
 
 static void
-auto_layout_cb (GtkWidget *button, BrowserCanvas *canvas)
+auto_layout_cb (G_GNUC_UNUSED GtkWidget *button, BrowserCanvas *canvas)
 {
 	browser_canvas_perform_auto_layout (BROWSER_CANVAS (canvas), TRUE, BROWSER_CANVAS_LAYOUT_RADIAL);
 }
 
 static void
-label_drag_data_received (GtkWidget *label, GdkDragContext *context,
-			  gint x, gint y, GtkSelectionData *data,
-			  guint info, guint time)
+label_drag_data_received (G_GNUC_UNUSED GtkWidget *label, GdkDragContext *context,
+			  G_GNUC_UNUSED gint x, G_GNUC_UNUSED gint y, GtkSelectionData *data,
+			  G_GNUC_UNUSED guint info, guint time)
 {
 #if GTK_CHECK_VERSION(2,18,0)
 	if ((gtk_selection_data_get_length (data) >= 0) && (gtk_selection_data_get_format (data) == 8)) {
@@ -152,7 +152,7 @@ label_drag_data_received (GtkWidget *label, GdkDragContext *context,
 }
 
 static gboolean
-on_delete_event (GtkWidget *window, GdkEvent *event, gpointer unused_data)
+on_delete_event (G_GNUC_UNUSED GtkWidget *window, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data)
 {
 	exit (0);
 }

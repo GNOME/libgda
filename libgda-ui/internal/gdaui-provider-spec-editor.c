@@ -168,7 +168,7 @@ update_form_contents (GdauiProviderSpecEditor *spec)
 }
 
 static void
-dsn_form_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif, GdauiProviderSpecEditor *spec)
+dsn_form_changed (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param, gboolean is_user_modif, GdauiProviderSpecEditor *spec)
 {
 	if (! is_user_modif)
 		return;
@@ -230,7 +230,8 @@ adapt_form_widget (GdauiProviderSpecEditor *spec)
 
 
 static void
-gdaui_provider_spec_editor_init (GdauiProviderSpecEditor *spec, GdauiProviderSpecEditorClass *klass)
+gdaui_provider_spec_editor_init (GdauiProviderSpecEditor *spec,
+				 G_GNUC_UNUSED GdauiProviderSpecEditorClass *klass)
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_SPEC_EDITOR (spec));
 
@@ -283,7 +284,7 @@ static void
 gdaui_provider_spec_editor_set_property (GObject *object,
                                             guint param_id,
                                             const GValue *value,
-                                            GParamSpec *pspec)
+                                            G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiProviderSpecEditor *spec;
 	spec = GDAUI_PROVIDER_SPEC_EDITOR (object);
@@ -300,7 +301,7 @@ static void
 gdaui_provider_spec_editor_get_property (GObject *object,
                                             guint param_id,
                                             GValue *value,
-                                            GParamSpec *pspec)
+                                            G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiProviderSpecEditor *spec;
 	spec = GDAUI_PROVIDER_SPEC_EDITOR (object);

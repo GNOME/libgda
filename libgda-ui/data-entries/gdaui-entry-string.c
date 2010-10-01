@@ -160,7 +160,7 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 }
 
 static gboolean
-key_press_event_cb (GdauiEntryString *mgstr, GdkEventKey *key_event, gpointer data)
+key_press_event_cb (GdauiEntryString *mgstr, GdkEventKey *key_event, G_GNUC_UNUSED gpointer data)
 {
 	if (key_event->keyval == GDK_Escape)
 		mgstr->priv->editing_canceled = TRUE;
@@ -473,7 +473,7 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 typedef void (*Callback2) (gpointer, gpointer);
 static gboolean
-focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryString *mgstr)
+focus_out_cb (GtkWidget *widget, G_GNUC_UNUSED GdkEventFocus *event, GdauiEntryString *mgstr)
 {
 	GCallback activate_cb;
 	activate_cb = g_object_get_data (G_OBJECT (widget), "_activate_cb");
@@ -555,13 +555,13 @@ grab_focus (GdauiEntryWrapper *mgwrap)
  * GtkCellEditable interface
  */
 static void
-gtk_cell_editable_entry_editing_done_cb (GtkEntry *entry, GdauiEntryString *mgstr) 
+gtk_cell_editable_entry_editing_done_cb (G_GNUC_UNUSED GtkEntry *entry, GdauiEntryString *mgstr)
 {
 	gtk_cell_editable_editing_done (GTK_CELL_EDITABLE (mgstr));
 }
 
 static void
-gtk_cell_editable_entry_remove_widget_cb (GtkEntry *entry, GdauiEntryString *mgstr) 
+gtk_cell_editable_entry_remove_widget_cb (G_GNUC_UNUSED GtkEntry *entry, GdauiEntryString *mgstr)
 {
 	gtk_cell_editable_remove_widget (GTK_CELL_EDITABLE (mgstr));
 }

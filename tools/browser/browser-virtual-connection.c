@@ -81,8 +81,8 @@ browser_virtual_connection_get_type (void)
 }
 
 static void
-source_cnc_busy_cb (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason,
-		    BrowserConnection *virtual)
+source_cnc_busy_cb (G_GNUC_UNUSED BrowserConnection *bcnc, gboolean is_busy,
+		    G_GNUC_UNUSED const gchar *reason, BrowserConnection *virtual)
 {
 	g_signal_emit_by_name (virtual, "busy", is_busy,
 			       is_busy ? _("Bound connection is used") : NULL);
@@ -182,7 +182,7 @@ static void
 browser_virtual_connection_set_property (GObject *object,
 					 guint param_id,
 					 const GValue *value,
-					 GParamSpec *pspec)
+					 G_GNUC_UNUSED GParamSpec *pspec)
 {
         BrowserVirtualConnection *bcnc;
 
@@ -212,7 +212,7 @@ static void
 browser_virtual_connection_get_property (GObject *object,
 					 guint param_id,
 					 GValue *value,
-					 GParamSpec *pspec)
+					 G_GNUC_UNUSED GParamSpec *pspec)
 {
         BrowserVirtualConnection *bcnc;
 

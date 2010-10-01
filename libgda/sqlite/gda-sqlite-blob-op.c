@@ -73,7 +73,7 @@ _gda_sqlite_blob_op_get_type (void)
 }
 
 static void
-gda_sqlite_blob_op_init (GdaSqliteBlobOp *op, GdaSqliteBlobOpClass *klass)
+gda_sqlite_blob_op_init (GdaSqliteBlobOp *op, G_GNUC_UNUSED GdaSqliteBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_SQLITE_BLOB_OP (op));
 

@@ -8,7 +8,7 @@
 static GtkWidget *window = NULL;
 
 static void
-cb1_toggled_cb (GtkCheckButton *cb, GtkWidget *login)
+cb1_toggled_cb (G_GNUC_UNUSED GtkCheckButton *cb, GtkWidget *login)
 {
 	GdauiLoginMode mode;
 	g_object_get (G_OBJECT (login), "mode", &mode, NULL);
@@ -17,7 +17,7 @@ cb1_toggled_cb (GtkCheckButton *cb, GtkWidget *login)
 }
 
 static void
-cb2_toggled_cb (GtkCheckButton *cb, GtkWidget *login)
+cb2_toggled_cb (G_GNUC_UNUSED GtkCheckButton *cb, GtkWidget *login)
 {
 	GdauiLoginMode mode;
 	g_object_get (G_OBJECT (login), "mode", &mode, NULL);
@@ -26,7 +26,7 @@ cb2_toggled_cb (GtkCheckButton *cb, GtkWidget *login)
 }
 
 static void
-cb3_toggled_cb (GtkCheckButton *cb, GtkWidget *login)
+cb3_toggled_cb (G_GNUC_UNUSED GtkCheckButton *cb, GtkWidget *login)
 {
 	GdauiLoginMode mode;
 	g_object_get (G_OBJECT (login), "mode", &mode, NULL);
@@ -35,7 +35,7 @@ cb3_toggled_cb (GtkCheckButton *cb, GtkWidget *login)
 }
 
 static void
-button_clicked_cb (GtkButton *button, GtkWidget *login)
+button_clicked_cb (G_GNUC_UNUSED GtkButton *button, GtkWidget *login)
 {
 	const GdaDsnInfo *info;
 	info = gdaui_login_get_connection_information (GDAUI_LOGIN (login));
@@ -49,7 +49,7 @@ button_clicked_cb (GtkButton *button, GtkWidget *login)
 }
 
 static void
-login_changed_cb (GdauiLogin *login, gboolean is_valid, GtkLabel *label)
+login_changed_cb (G_GNUC_UNUSED GdauiLogin *login, gboolean is_valid, GtkLabel *label)
 {
 	if (is_valid)
 		gtk_label_set_markup (label, "<span foreground='#00AA00'>Valid information</span>");

@@ -21,7 +21,7 @@ mode_changed_cb (GtkToggleButton *button, GdauiCloud *cloud)
 }
 
 static void
-selection_changed_cb (GdauiDataSelector *selector, gpointer data)
+selection_changed_cb (GdauiDataSelector *selector, G_GNUC_UNUSED gpointer data)
 {
 	GString *string = NULL;
 	GArray *sel;

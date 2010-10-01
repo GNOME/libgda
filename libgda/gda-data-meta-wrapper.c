@@ -204,7 +204,7 @@ gda_data_meta_wrapper_data_model_init (GdaDataModelIface *iface)
 }
 
 static void
-gda_data_meta_wrapper_init (GdaDataMetaWrapper *model, GdaDataMetaWrapperClass *klass)
+gda_data_meta_wrapper_init (GdaDataMetaWrapper *model, G_GNUC_UNUSED GdaDataMetaWrapperClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_META_WRAPPER (model));
 	model->priv = g_new0 (GdaDataMetaWrapperPrivate, 1);
@@ -274,7 +274,7 @@ static void
 gda_data_meta_wrapper_set_property (GObject *object,
 				      guint param_id,
 				      const GValue *value,
-				      GParamSpec *pspec)
+				      G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataMetaWrapper *model;
 
@@ -310,7 +310,7 @@ static void
 gda_data_meta_wrapper_get_property (GObject *object,
 					guint param_id,
 					GValue *value,
-					GParamSpec *pspec)
+					G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataMetaWrapper *model;
 

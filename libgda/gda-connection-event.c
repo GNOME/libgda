@@ -102,7 +102,7 @@ gda_connection_event_class_init (GdaConnectionEventClass *klass)
 }
 
 static void
-gda_connection_event_init (GdaConnectionEvent *event, GdaConnectionEventClass *klass)
+gda_connection_event_init (GdaConnectionEvent *event, G_GNUC_UNUSED GdaConnectionEventClass *klass)
 {
 	event->priv = g_new0 (GdaConnectionEventPrivate, 1);
 	event->priv->type = GDA_CONNECTION_EVENT_ERROR;

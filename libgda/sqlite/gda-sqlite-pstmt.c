@@ -74,7 +74,7 @@ gda_sqlite_pstmt_class_init (GdaSqlitePStmtClass *klass)
 }
 
 static void
-gda_sqlite_pstmt_init (GdaSqlitePStmt *pstmt, GdaSqlitePStmtClass *klass)
+gda_sqlite_pstmt_init (GdaSqlitePStmt *pstmt, G_GNUC_UNUSED GdaSqlitePStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	pstmt->sqlite_stmt = NULL;

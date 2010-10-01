@@ -193,9 +193,9 @@ debug_display_query (gchar *key, gchar *value, gpointer data)
 #endif
 
 static void
-server_callback (SoupServer *server, SoupMessage *msg,
+server_callback (G_GNUC_UNUSED SoupServer *server, SoupMessage *msg,
                  const char *path, GHashTable *query,
-                 SoupClientContext *context, WebServer *webserver)
+                 G_GNUC_UNUSED SoupClientContext *context, WebServer *webserver)
 {
 #ifdef DEBUG_SERVER
         printf ("%s %s HTTP/1.%d\n", msg->method, path, soup_message_get_http_version (msg));
@@ -438,7 +438,7 @@ static void get_variables (SoupMessage *msg, GHashTable *query, ...);
  * GET for a file
  */
 static gboolean
-get_file (WebServer *server, SoupMessage *msg, const char *path, GError **error)
+get_file (G_GNUC_UNUSED WebServer *server, SoupMessage *msg, const char *path, GError **error)
 {
 	GMappedFile *mfile;
 	gchar *real_path;
@@ -732,7 +732,7 @@ cnc_ul (gboolean is_authenticated)
 }
 
 static void
-get_for_cnclist (WebServer *webserver, SoupMessage *msg, gboolean is_authenticated)
+get_for_cnclist (G_GNUC_UNUSED WebServer *webserver, SoupMessage *msg, gboolean is_authenticated)
 {
 	xmlNodePtr ul;
 	SoupBuffer *buffer;
@@ -1118,7 +1118,7 @@ compute_table_details (const ConnectionSetting *cs, HtmlDoc *hdoc, WebServer *we
  */
 static gchar *
 meta_struct_dump_as_graph (const ConnectionSetting *cs, GdaMetaStruct *mstruct, GdaMetaDbObject *central_dbo, 
-			   GError **error)
+			   G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	gchar *result;
@@ -1262,8 +1262,9 @@ meta_struct_dump_as_graph (const ConnectionSetting *cs, GdaMetaStruct *mstruct, 
 }
 
 static gboolean
-compute_view_details (const ConnectionSetting *cs, HtmlDoc *hdoc, GdaMetaStruct *mstruct,
-		      GdaMetaDbObject *dbo, GError **error)
+compute_view_details (G_GNUC_UNUSED const ConnectionSetting *cs, HtmlDoc *hdoc,
+		      G_GNUC_UNUSED GdaMetaStruct *mstruct, GdaMetaDbObject *dbo,
+		      G_GNUC_UNUSED GError **error)
 {
 	GdaMetaView *view = GDA_META_VIEW (dbo);
 	if (view->view_def) {
@@ -1282,7 +1283,7 @@ compute_view_details (const ConnectionSetting *cs, HtmlDoc *hdoc, GdaMetaStruct 
  * Returns: TRUE if the object was really a trigger
  */
 static gboolean
-compute_trigger_content (HtmlDoc *hdoc, WebServer *webserver, const ConnectionSetting *cs,
+compute_trigger_content (HtmlDoc *hdoc, G_GNUC_UNUSED WebServer *webserver, const ConnectionSetting *cs,
 			 const gchar *schema, const gchar *name, GError **error)
 {
 	GdaMetaStore *store;
@@ -1843,7 +1844,7 @@ get_cookies (SoupMessage *msg, ...)
 }
 
 static HtmlDoc*
-create_new_htmldoc (WebServer *webserver, const ConnectionSetting *cs)
+create_new_htmldoc (G_GNUC_UNUSED WebServer *webserver, const ConnectionSetting *cs)
 {
 	HtmlDoc *hdoc;
 	gchar *str;
@@ -1926,8 +1927,8 @@ delete_consoles (WebServer *server)
  * GET/POST  method for IRB
  */
 static gboolean
-get_post_for_irb (WebServer *webserver, SoupMessage *msg, const ConnectionSetting *cs,
-		  GHashTable *query, GError **error)
+get_post_for_irb (WebServer *webserver, SoupMessage *msg, G_GNUC_UNUSED const ConnectionSetting *cs,
+		  GHashTable *query, G_GNUC_UNUSED GError **error)
 {
 	gboolean retval = FALSE;
 	SoupBuffer *buffer;

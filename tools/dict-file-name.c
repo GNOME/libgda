@@ -22,7 +22,7 @@
 /* must be included AS-IS in .c file */
 
 static void
-compute_dict_file_name_foreach_cb (const gchar *key, const gchar *value, GSList **list)
+compute_dict_file_name_foreach_cb (const gchar *key, G_GNUC_UNUSED const gchar *value, GSList **list)
 {
 	if (!*list) 
 		*list = g_slist_prepend (NULL, (gpointer) key);

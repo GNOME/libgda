@@ -112,7 +112,7 @@ table_info_page_init (BrowserPageIface *iface)
 }
 
 static void
-table_info_init (TableInfo *tinfo, TableInfoClass *klass)
+table_info_init (TableInfo *tinfo, G_GNUC_UNUSED TableInfoClass *klass)
 {
 	tinfo->priv = g_new0 (TableInfoPrivate, 1);
 }
@@ -177,8 +177,8 @@ table_info_get_type (void)
 static void
 table_info_set_property (GObject *object,
 			 guint param_id,
-			 const GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED const GValue *value,
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	TableInfo *tinfo;
 	tinfo = TABLE_INFO (object);
@@ -189,8 +189,8 @@ table_info_set_property (GObject *object,
 static void
 table_info_get_property (GObject *object,
 			 guint param_id,
-			 GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GValue *value,
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	TableInfo *tinfo;
 	tinfo = TABLE_INFO (object);
@@ -226,9 +226,9 @@ table_info_to_selection (TableInfo *tinfo)
 }
 
 static void
-source_drag_data_get_cb (GtkWidget *widget, GdkDragContext *context,
+source_drag_data_get_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkDragContext *context,
 			 GtkSelectionData *selection_data,
-			 guint info, guint time, TableInfo *tinfo)
+			 guint info, G_GNUC_UNUSED guint time, TableInfo *tinfo)
 {
 	switch (info) {
 	case TARGET_KEY_VALUE: {
@@ -260,7 +260,7 @@ source_drag_data_get_cb (GtkWidget *widget, GdkDragContext *context,
 }
 
 static void
-meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableInfo *tinfo)
+meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableInfo *tinfo)
 {
 	GdaMetaDbObject *dbo;
 	GValue *schema_v = NULL, *name_v;
@@ -449,7 +449,7 @@ table_info_get_connection (TableInfo *tinfo)
  * UI actions
  */
 static void
-action_add_to_fav_cb (GtkAction *action, TableInfo *tinfo)
+action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 {
 	BrowserFavorites *bfav;
         BrowserFavoritesAttributes fav;
@@ -474,7 +474,7 @@ action_add_to_fav_cb (GtkAction *action, TableInfo *tinfo)
 }
 
 static void
-action_view_contents_cb (GtkAction *action, TableInfo *tinfo)
+action_view_contents_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 {
 	if (! tinfo->priv->table_short_name)
 		return;
@@ -501,18 +501,18 @@ action_view_contents_cb (GtkAction *action, TableInfo *tinfo)
 }
 
 static void
-insert_form_params_changed_cb (GdauiBasicForm *form, GdaHolder *param,
-			       gboolean is_user_modif, GtkWidget *popup)
+insert_form_params_changed_cb (GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param,
+			       G_GNUC_UNUSED gboolean is_user_modif, GtkWidget *popup)
 {
 	/* if all params are valid => authorize the execute button */
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (popup), GTK_RESPONSE_ACCEPT,
 					   gdaui_basic_form_is_valid (form));
 }
 
-static void statement_executed_cb (BrowserConnection *bcnc,
-				   guint exec_id,
-				   GObject *out_result,
-				   GdaSet *out_last_inserted_row, GError *error,
+static void statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
+				   G_GNUC_UNUSED guint exec_id,
+				   G_GNUC_UNUSED GObject *out_result,
+				   G_GNUC_UNUSED GdaSet *out_last_inserted_row, GError *error,
 				   TableInfo *tinfo)
 {
 	if (error)
@@ -572,10 +572,10 @@ typedef struct {
 } FKBindData;
 
 static void
-fk_bind_select_executed_cb (BrowserConnection *bcnc,
-			    guint exec_id,
+fk_bind_select_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
+			    G_GNUC_UNUSED guint exec_id,
 			    GObject *out_result,
-			    GdaSet *out_last_inserted_row, GError *error,
+			    G_GNUC_UNUSED GdaSet *out_last_inserted_row, G_GNUC_UNUSED GError *error,
 			    FKBindData *fkdata)
 {
 	gint i;
@@ -632,7 +632,7 @@ fkdata_list_free (GSList *fkdata_list)
 }
 
 static void
-action_insert_cb (GtkAction *action, TableInfo *tinfo)
+action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 {
 	/* init */
 	if (! tinfo->priv->table_short_name)
@@ -978,7 +978,7 @@ table_info_page_get_actions_group (BrowserPage *page)
 }
 
 static const gchar *
-table_info_page_get_actions_ui (BrowserPage *page)
+table_info_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
 {
 	return ui_actions_info;
 }

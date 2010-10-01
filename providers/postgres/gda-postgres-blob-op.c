@@ -74,7 +74,7 @@ gda_postgres_blob_op_get_type (void)
 
 static void
 gda_postgres_blob_op_init (GdaPostgresBlobOp *op,
-			   GdaPostgresBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaPostgresBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_POSTGRES_BLOB_OP (op));
 

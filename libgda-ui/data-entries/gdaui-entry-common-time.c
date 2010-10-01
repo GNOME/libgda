@@ -153,7 +153,7 @@ gdaui_entry_common_time_class_init (GdauiEntryCommonTimeClass * class)
 }
 
 static gboolean
-key_press_event_cb (GdauiEntryCommonTime *mgtim, GdkEventKey *key_event, gpointer data)
+key_press_event_cb (GdauiEntryCommonTime *mgtim, GdkEventKey *key_event, G_GNUC_UNUSED gpointer data)
 {
 	if (key_event->keyval == GDK_Escape)
 		mgtim->priv->editing_canceled = TRUE;
@@ -475,7 +475,7 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 typedef void (*Callback2) (gpointer, gpointer);
 static gboolean
-focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryCommonTime *mgtim)
+focus_out_cb (GtkWidget *widget, G_GNUC_UNUSED GdkEventFocus *event, GdauiEntryCommonTime *mgtim)
 {
 	GCallback activate_cb;
 	activate_cb = g_object_get_data (G_OBJECT (widget), "_activate_cb");
@@ -519,7 +519,7 @@ connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activ
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }
@@ -646,7 +646,8 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 }
 
 static void
-entry_date_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data)
+entry_date_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_char,
+			G_GNUC_UNUSED gint virt_pos, gpointer data)
 {
 	GValue *value;
 	GType type;
@@ -725,7 +726,7 @@ entry_date_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint 
 }
 
 static void
-internal_set_time (GtkWidget *widget, GdauiEntryCommonTime *mgtim)
+internal_set_time (G_GNUC_UNUSED GtkWidget *widget, GdauiEntryCommonTime *mgtim)
 {
 	/* the aim is that when the mode is TIMESTAMP, when the user sets a date,
 	 * then the time automatically sets to 00:00:00
@@ -760,7 +761,7 @@ hide_popup (GdauiEntryCommonTime *mgtim)
 }
 
 static gint
-date_delete_popup (GtkWidget *widget, GdauiEntryCommonTime *mgtim)
+date_delete_popup (G_GNUC_UNUSED GtkWidget *widget, GdauiEntryCommonTime *mgtim)
 {
 	hide_popup (mgtim);
 	return TRUE;
@@ -832,7 +833,7 @@ date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
 }
 
 static void
-date_day_selected_double_click (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
+date_day_selected_double_click (G_GNUC_UNUSED GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
 {
 	hide_popup (mgtim);
 }
@@ -1056,7 +1057,8 @@ create_entry_time (GdauiEntryCommonTime *mgtim)
 }
 
 static void
-entry_time_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data)
+entry_time_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_char,
+			G_GNUC_UNUSED gint virt_pos, gpointer data)
 {
 	GValue *value;
 	GType type;
@@ -1122,13 +1124,13 @@ create_entry_ts (GdauiEntryCommonTime *mgtim)
  * GtkCellEditable interface
  */
 static void
-gtk_cell_editable_entry_editing_done_cb (GtkEntry *entry, GdauiEntryCommonTime *mgtim) 
+gtk_cell_editable_entry_editing_done_cb (G_GNUC_UNUSED GtkEntry *entry, GdauiEntryCommonTime *mgtim)
 {
 	gtk_cell_editable_editing_done (GTK_CELL_EDITABLE (mgtim));
 }
 
 static void
-gtk_cell_editable_entry_remove_widget_cb (GtkEntry *entry, GdauiEntryCommonTime *mgtim) 
+gtk_cell_editable_entry_remove_widget_cb (G_GNUC_UNUSED GtkEntry *entry, GdauiEntryCommonTime *mgtim)
 {
 	gtk_cell_editable_remove_widget (GTK_CELL_EDITABLE (mgtim));
 }

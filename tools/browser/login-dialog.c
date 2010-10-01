@@ -92,7 +92,7 @@ login_dialog_class_init (LoginDialogClass *class)
 }
 
 static void
-login_contents_changed_cb (GdauiLogin *login, gboolean is_valid, LoginDialog *dialog)
+login_contents_changed_cb (G_GNUC_UNUSED GdauiLogin *login, gboolean is_valid, LoginDialog *dialog)
 {
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, is_valid);
 	if (is_valid)

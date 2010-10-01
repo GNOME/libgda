@@ -268,7 +268,7 @@ gda_sql_statement_update_take_set_value (GdaSqlStatement *stmt, GValue *fname, G
 }
 
 static gboolean
-gda_sql_statement_update_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+gda_sql_statement_update_check_structure (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	GdaSqlStatementUpdate *update = (GdaSqlStatementUpdate *) stmt;
 

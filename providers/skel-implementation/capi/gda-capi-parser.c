@@ -79,6 +79,6 @@ gda_capi_parser_class_init (GdaCapiParserClass * klass)
 }
 
 static void
-gda_capi_parser_init (GdaCapiParser *parser)
+gda_capi_parser_init (G_GNUC_UNUSED GdaCapiParser *parser)
 {
 }

@@ -339,10 +339,10 @@ ProviderSpecific_equal (gconstpointer a, gconstpointer b)
 }
 
 static gboolean
-suggest_update_accumulator (GSignalInvocationHint *ihint,
+suggest_update_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
 			    GValue *return_accu,
 			    const GValue *handler_return,
-			    gpointer data)
+			    G_GNUC_UNUSED gpointer data)
 {
         GError *error;
 
@@ -353,7 +353,7 @@ suggest_update_accumulator (GSignalInvocationHint *ihint,
 }
 
 static GError *
-m_suggest_update (GdaMetaStore *store, GdaMetaContext *suggest)
+m_suggest_update (G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *suggest)
 {
         return NULL; /* defaults allows update suggest */
 }
@@ -733,7 +733,7 @@ static void
 gda_meta_store_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
-			     GParamSpec *pspec) 
+			     G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaMetaStore *store;
 	const gchar *cnc_string;
@@ -786,7 +786,7 @@ static void
 gda_meta_store_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     GParamSpec *pspec) 
+			     G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaMetaStore *store;
 	store = GDA_META_STORE (object);
@@ -1043,7 +1043,7 @@ create_server_operation_for_table (GHashTable *specific_hash,
 }
 
 static GdaServerOperation *
-create_server_operation_for_view (GHashTable *specific_hash, 
+create_server_operation_for_view (G_GNUC_UNUSED GHashTable *specific_hash,
 				  GdaServerProvider *prov, GdaConnection *cnc, DbObject *dbobj, GError **error)
 {
 	GdaServerOperation *op;
@@ -1740,7 +1740,8 @@ make_expr_AND (GdaSqlAnyPart *parent, GdaSqlExpr *current)
 }
 
 static GdaSqlExpr *
-make_expr_EQUAL (GdaSqlAnyPart *parent, xmlChar *cname, xmlChar *type, GType ptype, gboolean nullok, gint index) 
+make_expr_EQUAL (GdaSqlAnyPart *parent, xmlChar *cname, G_GNUC_UNUSED xmlChar *type, GType ptype,
+		 gboolean nullok, gint index)
 {
 	GdaSqlOperation *op;
 	GdaSqlExpr *retexpr, *expr;
@@ -1855,7 +1856,7 @@ build_pass (GSList *objects, GSList *ordered_list)
  * in a way that for any given DbObject in the list, all the dependencies are _before_ it in the list
  */
 static GSList *
-reorder_db_objects (GSList *objects, GHashTable *hash)
+reorder_db_objects (GSList *objects, G_GNUC_UNUSED GHashTable *hash)
 {
 	GSList *pass_list;
 	GSList *ordered_list = NULL;
@@ -1878,7 +1879,7 @@ reorder_db_objects (GSList *objects, GHashTable *hash)
  * Returns: TRUE if all information is Ok
  */
 static gboolean
-complement_db_objects (GSList *objects, GHashTable *hash, GError **error)
+complement_db_objects (GSList *objects, G_GNUC_UNUSED GHashTable *hash, GError **error)
 {
 	GSList *list;
 	for (list = objects; list; list = list->next) {
@@ -2013,7 +2014,7 @@ table_fkey_free (TableFKey *tfk)
 }
 
 static gboolean
-update_schema_version (GdaMetaStore *store, const gchar *version, GError **error)
+update_schema_version (GdaMetaStore *store, G_GNUC_UNUSED const gchar *version, GError **error)
 {
 	GdaSet *params;
 	GdaMetaStoreClass *klass;

@@ -105,7 +105,8 @@ static ComputePromptFunc line_prompt_func = NULL;
 static GIOChannel *ioc = NULL;
 
 static gboolean
-chars_for_readline_cb (GIOChannel *ioc, GIOCondition condition, gpointer data)
+chars_for_readline_cb (G_GNUC_UNUSED GIOChannel *ioc, G_GNUC_UNUSED GIOCondition condition,
+		       G_GNUC_UNUSED gpointer data)
 {
 #ifdef HAVE_READLINE
         rl_callback_read_char ();

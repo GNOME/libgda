@@ -79,7 +79,7 @@ gda_vprovider_hub_class_init (GdaVproviderHubClass *klass)
 }
 
 static void
-gda_vprovider_hub_init (GdaVproviderHub *prov, GdaVproviderHubClass *klass)
+gda_vprovider_hub_init (GdaVproviderHub *prov, G_GNUC_UNUSED GdaVproviderHubClass *klass)
 {
 	prov->priv = g_new (GdaVproviderHubPrivate, 1);
 }
@@ -131,8 +131,8 @@ gda_vprovider_hub_get_type (void)
 static void
 gda_vprovider_hub_set_property (GObject *object,
 				       guint param_id,
-				       const GValue *value,
-				       GParamSpec *pspec)
+				       G_GNUC_UNUSED const GValue *value,
+				       G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVproviderHub *prov;
 
@@ -148,8 +148,8 @@ gda_vprovider_hub_set_property (GObject *object,
 static void
 gda_vprovider_hub_get_property (GObject *object,
 				       guint param_id,
-				       GValue *value,
-				       GParamSpec *pspec)
+				       G_GNUC_UNUSED GValue *value,
+				       G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVproviderHub *prov;
 
@@ -203,7 +203,7 @@ gda_vprovider_hub_open_connection (GdaServerProvider *provider, GdaConnection *c
 }
 
 static void
-cnc_close_foreach_func (GdaConnection *cnc, const gchar *ns, GdaVconnectionHub *hub)
+cnc_close_foreach_func (GdaConnection *cnc, G_GNUC_UNUSED const gchar *ns, GdaVconnectionHub *hub)
 {
 	/*g_print ("---- FOREACH: Removing connection %p ('%s') from HUB\n", cnc, ns);*/
 	if (! gda_vconnection_hub_remove (hub, cnc, NULL))

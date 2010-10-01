@@ -95,7 +95,7 @@ gda_report_engine_class_init (GdaReportEngineClass *klass)
 }
 
 static void
-gda_report_engine_init (GdaReportEngine *eng, GdaReportEngineClass *klass)
+gda_report_engine_init (GdaReportEngine *eng, G_GNUC_UNUSED GdaReportEngineClass *klass)
 {
 	eng->priv = g_new0 (GdaReportEnginePrivate, 1);
 	eng->priv->objects = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
@@ -164,7 +164,7 @@ static void
 gda_report_engine_set_property (GObject *object,
 				guint param_id,
 				const GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaReportEngine *eng;
 
@@ -219,7 +219,7 @@ static void
 gda_report_engine_get_property (GObject *object,
 				guint param_id,
 				GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaReportEngine *eng;
 
@@ -784,7 +784,7 @@ run_context_push_with_stmt (GdaReportEngine *engine, RunContext *context, GdaCon
  * Frees any memory associated to @context
  */
 static void
-run_context_pop (GdaReportEngine *engine, RunContext *context)
+run_context_pop (G_GNUC_UNUSED GdaReportEngine *engine, RunContext *context)
 {
 	/*g_print ("<<<< POP CONTEXT %p\n", context);*/
 	if (context->stmt)
@@ -1163,7 +1163,7 @@ gtype_equal (gconstpointer a, gconstpointer b)
  * Converts @value to a string
  */
 static xmlNodePtr
-value_to_node (GdaReportEngine *engine, RunContext *context, const GValue *value)
+value_to_node (G_GNUC_UNUSED GdaReportEngine *engine, G_GNUC_UNUSED RunContext *context, const GValue *value)
 {
 	xmlNodePtr retnode;
 

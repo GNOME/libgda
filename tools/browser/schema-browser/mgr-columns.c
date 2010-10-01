@@ -82,7 +82,7 @@ mgr_columns_class_init (MgrColumnsClass *klass)
 }
 
 static void
-mgr_columns_init (MgrColumns *mgr, MgrColumnsClass *klass)
+mgr_columns_init (MgrColumns *mgr, G_GNUC_UNUSED MgrColumnsClass *klass)
 {
 	mgr->priv = g_new0 (MgrColumnsPriv, 1);
 }
@@ -151,7 +151,7 @@ static void
 mgr_columns_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         MgrColumns *mgr;
 
@@ -172,7 +172,7 @@ static void
 mgr_columns_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         MgrColumns *mgr;
 

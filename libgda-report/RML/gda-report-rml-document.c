@@ -83,7 +83,7 @@ gda_report_rml_document_class_init (GdaReportRmlDocumentClass *klass)
 }
 
 static void
-gda_report_rml_document_init (GdaReportRmlDocument *doc, GdaReportRmlDocumentClass *klass)
+gda_report_rml_document_init (GdaReportRmlDocument *doc, G_GNUC_UNUSED GdaReportRmlDocumentClass *klass)
 {
 	doc->priv = g_new0 (GdaReportRmlDocumentPrivate, 1);
 }
@@ -135,8 +135,8 @@ gda_report_rml_document_get_type (void)
 static void
 gda_report_rml_document_set_property (GObject *object,
 				guint param_id,
-				const GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED const GValue *value,
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaReportRmlDocument *doc;
 
@@ -152,8 +152,8 @@ gda_report_rml_document_set_property (GObject *object,
 static void
 gda_report_rml_document_get_property (GObject *object,
 				guint param_id,
-				GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GValue *value,
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaReportRmlDocument *doc;
 

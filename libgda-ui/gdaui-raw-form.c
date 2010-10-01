@@ -212,7 +212,7 @@ static GtkActionEntry ui_actions[] = {
 };
 
 static void
-action_new_activated_cb (GtkAction *action, GdauiRawForm *wid)
+action_new_activated_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *wid)
 {
 	/* make the first entry grab the focus */
 	if (wid->priv->iter && GDA_SET (wid->priv->iter)->holders)
@@ -222,7 +222,7 @@ action_new_activated_cb (GtkAction *action, GdauiRawForm *wid)
 }
 
 static void
-form_activated_cb (GdauiRawForm *form, gpointer data)
+form_activated_cb (GdauiRawForm *form, G_GNUC_UNUSED gpointer data)
 {
 	if (form->priv->write_mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_ACTIVATED) {
 		gint row;
@@ -246,7 +246,7 @@ form_activated_cb (GdauiRawForm *form, gpointer data)
 }
 
 static void
-form_holder_changed_cb (GdauiRawForm *form, gpointer data)
+form_holder_changed_cb (GdauiRawForm *form, G_GNUC_UNUSED gpointer data)
 {
 	if (form->priv->write_mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE) {
 		gint row;
@@ -556,7 +556,7 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiRawForm *form)
 }
 
 static void
-proxy_changed_cb (GdaDataProxy *proxy, GdauiRawForm *form)
+proxy_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, GdauiRawForm *form)
 {
 	/* TO remove ? */
 	gtk_widget_set_sensitive (GTK_WIDGET (form),
@@ -572,7 +572,7 @@ proxy_reset_cb (GdaDataProxy *proxy, GdauiRawForm *form)
 }
 
 static void
-proxy_row_inserted_or_removed_cb (GdaDataProxy *proxy, gint row, GdauiRawForm *form)
+proxy_row_inserted_or_removed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GdauiRawForm *form)
 {
 	if (gda_data_model_get_n_rows (GDA_DATA_MODEL (form->priv->proxy)) != 0)
 		if (gda_data_model_iter_get_row (form->priv->iter) == -1)
@@ -585,7 +585,7 @@ proxy_row_inserted_or_removed_cb (GdaDataProxy *proxy, gint row, GdauiRawForm *f
  *
  */
 static void
-action_new_cb (GtkAction *action, GdauiRawForm *form)
+action_new_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	gint newrow;
 	GError *error = NULL;
@@ -635,7 +635,7 @@ action_new_cb (GtkAction *action, GdauiRawForm *form)
 }
 
 static void
-action_delete_cb (GtkAction *action, GdauiRawForm *form)
+action_delete_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	gint row;
 
@@ -660,7 +660,7 @@ action_delete_cb (GtkAction *action, GdauiRawForm *form)
 }
 
 static void
-action_undelete_cb (GtkAction *action, GdauiRawForm *form)
+action_undelete_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	gint row;
 
@@ -670,7 +670,7 @@ action_undelete_cb (GtkAction *action, GdauiRawForm *form)
 }
 
 static void
-action_commit_cb (GtkAction *action, GdauiRawForm *form)
+action_commit_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	gint row;
 	GError *error = NULL;
@@ -710,7 +710,7 @@ action_commit_cb (GtkAction *action, GdauiRawForm *form)
 }
 
 static void
-action_reset_cb (GtkAction *action, GdauiRawForm *form)
+action_reset_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	gda_data_proxy_cancel_all_changes (form->priv->proxy);
 	gda_data_model_send_hint (GDA_DATA_MODEL (form->priv->proxy), GDA_DATA_MODEL_HINT_REFRESH, NULL);
@@ -718,25 +718,25 @@ action_reset_cb (GtkAction *action, GdauiRawForm *form)
 
 static void arrow_actions_real_do (GdauiRawForm *form, gint movement);
 static void
-action_first_record_cb (GtkAction *action, GdauiRawForm *form)
+action_first_record_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	arrow_actions_real_do (form, -2);
 }
 
 static void
-action_prev_record_cb (GtkAction *action, GdauiRawForm *form)
+action_prev_record_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	arrow_actions_real_do (form, -1);
 }
 
 static void
-action_next_record_cb (GtkAction *action, GdauiRawForm *form)
+action_next_record_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	arrow_actions_real_do (form, 1);
 }
 
 static void
-action_last_record_cb (GtkAction *action, GdauiRawForm *form)
+action_last_record_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	arrow_actions_real_do (form, 2);
 }
@@ -749,14 +749,14 @@ hide_filter_window (GdauiRawForm *form)
 }
 
 static gboolean
-filter_event (GtkWidget *widget, GdkEventAny *event, GdauiRawForm *form)
+filter_event (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventAny *event, GdauiRawForm *form)
 {
 	hide_filter_window (form);
 	return TRUE;
 }
 
 static gboolean
-key_press_filter_event (GtkWidget *widget, GdkEventKey *event, GdauiRawForm *form)
+key_press_filter_event (G_GNUC_UNUSED GtkWidget *widget, GdkEventKey *event, GdauiRawForm *form)
 {
 	if (event->keyval == GDK_Escape ||
 	    event->keyval == GDK_Tab ||
@@ -771,7 +771,7 @@ key_press_filter_event (GtkWidget *widget, GdkEventKey *event, GdauiRawForm *for
 static void
 filter_position_func (GtkWidget *widget,
 		      GtkWidget *search_dialog,
-		      gpointer   user_data)
+		      G_GNUC_UNUSED gpointer   user_data)
 {
 	gint x, y;
 	gint tree_x, tree_y;
@@ -837,7 +837,7 @@ popup_grab_on_window (GdkWindow  *window,
 }
 
 static void
-action_filter_cb (GtkAction *action, GdauiRawForm *form)
+action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 {
 	GtkWidget *toplevel;
 	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (form));
@@ -973,7 +973,7 @@ gdaui_raw_form_get_proxy (GdauiDataProxy *iface)
 }
 
 void
-gdaui_raw_form_set_column_editable (GdauiDataProxy *iface, gint column, gboolean editable)
+gdaui_raw_form_set_column_editable (GdauiDataProxy *iface, G_GNUC_UNUSED gint column, G_GNUC_UNUSED gboolean editable)
 {
 	GdauiRawForm *form;
 
@@ -992,7 +992,7 @@ gdaui_raw_form_set_column_editable (GdauiDataProxy *iface, gint column, gboolean
 }
 
 static void
-gdaui_raw_form_show_column_actions (GdauiDataProxy *iface, gint column, gboolean show_actions)
+gdaui_raw_form_show_column_actions (GdauiDataProxy *iface, G_GNUC_UNUSED gint column, gboolean show_actions)
 {
 	GdauiRawForm *form;
 
@@ -1107,7 +1107,7 @@ gdaui_raw_form_selector_select_row (GdauiDataSelector *iface, gint row)
 }
 
 static void
-gdaui_raw_form_selector_unselect_row (GdauiDataSelector *iface, gint row)
+gdaui_raw_form_selector_unselect_row (G_GNUC_UNUSED GdauiDataSelector *iface, G_GNUC_UNUSED gint row)
 {
 	g_warning ("%s() method not supported\n", __FUNCTION__);
 }

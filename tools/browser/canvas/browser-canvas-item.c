@@ -193,7 +193,7 @@ static void
 browser_canvas_item_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasItem *citem = NULL;
 	const gchar *str = NULL;
@@ -290,8 +290,8 @@ browser_canvas_item_get_edge_nodes (BrowserCanvasItem *item,
 }
 
 static gboolean
-leave_notify_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
-		    GdkEventCrossing *event, gpointer data)
+leave_notify_event (BrowserCanvasItem *citem, G_GNUC_UNUSED GooCanvasItem *target_item,
+		    G_GNUC_UNUSED GdkEventCrossing *event, G_GNUC_UNUSED gpointer data)
 {
 	gtk_widget_set_has_tooltip (GTK_WIDGET (goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (citem))),
 				    FALSE);
@@ -299,8 +299,8 @@ leave_notify_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
 }
 
 static gboolean
-button_press_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
-		    GdkEventButton *event, gpointer data)
+button_press_event (BrowserCanvasItem *citem, G_GNUC_UNUSED GooCanvasItem *target_item,
+		    GdkEventButton *event, G_GNUC_UNUSED gpointer data)
 {
 	gboolean done = FALSE;
 
@@ -353,8 +353,8 @@ button_press_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
 }
 
 static gboolean
-button_release_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
-		      GdkEventButton *event, gpointer data)
+button_release_event (BrowserCanvasItem *citem, G_GNUC_UNUSED GooCanvasItem *target_item,
+		      GdkEventButton *event, G_GNUC_UNUSED gpointer data)
 {
 	if (citem->priv->allow_move) {
 		citem->priv->moving = FALSE;
@@ -373,8 +373,8 @@ button_release_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
 }
 
 static gboolean
-motion_notify_event (BrowserCanvasItem *citem, GooCanvasItem *target_item,
-		     GdkEventMotion *event, gpointer data)
+motion_notify_event (BrowserCanvasItem *citem, G_GNUC_UNUSED GooCanvasItem *target_item,
+		     GdkEventMotion *event, G_GNUC_UNUSED gpointer data)
 {
 	gboolean retval = FALSE;
 

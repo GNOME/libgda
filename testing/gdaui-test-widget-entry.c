@@ -34,7 +34,7 @@ entry_changed_cb (GdauiEntry *entry, const gchar *id)
 }
 
 static void
-prop_length_set_cb (GtkButton *buntton, GdauiEntry *entry)
+prop_length_set_cb (G_GNUC_UNUSED GtkButton *button, GdauiEntry *entry)
 {
 	gchar *tmp;
 	gint max, i;
@@ -49,7 +49,7 @@ prop_length_set_cb (GtkButton *buntton, GdauiEntry *entry)
 }
 
 static void
-prop_text_set_cb (GtkButton *buntton, GdauiEntry *entry)
+prop_text_set_cb (G_GNUC_UNUSED GtkButton *button, GdauiEntry *entry)
 {
 	gchar *tmp;
 	gint i;
@@ -62,7 +62,7 @@ prop_text_set_cb (GtkButton *buntton, GdauiEntry *entry)
 }
 
 static void
-prop_text_null_cb (GtkButton *buntton, gpointer data)
+prop_text_null_cb (G_GNUC_UNUSED GtkButton *button, G_GNUC_UNUSED gpointer data)
 {
 	gint i;
 

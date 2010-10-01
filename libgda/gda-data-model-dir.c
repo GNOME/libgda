@@ -171,7 +171,7 @@ gda_data_model_dir_data_model_init (GdaDataModelIface *iface)
 
 static void
 gda_data_model_dir_init (GdaDataModelDir *model,
-			 GdaDataModelDirClass *klass)
+			 G_GNUC_UNUSED GdaDataModelDirClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_DIR (model));
 
@@ -202,7 +202,7 @@ gda_data_model_dir_class_init (GdaDataModelDirClass *klass)
 }
 
 static void
-file_row_foreach_func (FileRow *row, gpointer data)
+file_row_foreach_func (FileRow *row, G_GNUC_UNUSED gpointer data)
 {
 	file_row_free (row);
 }
@@ -296,7 +296,7 @@ static void
 gda_data_model_dir_set_property (GObject *object,
 				 guint param_id,
 				 const GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaDataModelDir *model;
         const gchar *string;
@@ -639,7 +639,7 @@ static void
 gda_data_model_dir_get_property (GObject *object,
 				 guint param_id,
 				 GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataModelDir *model;
 
@@ -862,7 +862,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 }
 
 static GdaValueAttribute
-gda_data_model_dir_get_attributes_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_dir_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
 {
 	GdaDataModelDir *imodel;
 	GdaValueAttribute flags = 0;

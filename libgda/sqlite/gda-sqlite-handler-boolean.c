@@ -192,7 +192,7 @@ gda_sqlite_handler_boolean_get_str_from_value (GdaDataHandler *iface, const GVal
 }
 
 static GValue *
-gda_sqlite_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
+gda_sqlite_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
 {
 	GdaSqliteHandlerBoolean *hdl;
 	GValue *value;
@@ -210,7 +210,7 @@ gda_sqlite_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gcha
 }
 
 static GValue *
-gda_sqlite_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
+gda_sqlite_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
 {
 	GdaSqliteHandlerBoolean *hdl;
 	GValue *value = NULL;
@@ -230,7 +230,7 @@ gda_sqlite_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gcha
 
 
 static GValue *
-gda_sqlite_handler_boolean_get_sane_init_value (GdaDataHandler *iface, GType type)
+gda_sqlite_handler_boolean_get_sane_init_value (GdaDataHandler *iface, G_GNUC_UNUSED GType type)
 {
 	GdaSqliteHandlerBoolean *hdl;
 	GValue *value;

@@ -83,7 +83,7 @@ mgr_favorites_class_init (MgrFavoritesClass *klass)
 }
 
 static void
-mgr_favorites_init (MgrFavorites *mgr, MgrFavoritesClass *klass)
+mgr_favorites_init (MgrFavorites *mgr, G_GNUC_UNUSED MgrFavoritesClass *klass)
 {
 	mgr->priv = g_new0 (MgrFavoritesPriv, 1);
 }
@@ -141,7 +141,7 @@ static void
 mgr_favorites_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         MgrFavorites *mgr;
 
@@ -162,7 +162,7 @@ static void
 mgr_favorites_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         MgrFavorites *mgr;
 

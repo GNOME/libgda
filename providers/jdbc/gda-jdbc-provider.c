@@ -264,7 +264,7 @@ gda_jdbc_provider_class_init (GdaJdbcProviderClass *klass)
 extern JavaVM *_jdbc_provider_java_vm;
 
 static void
-gda_jdbc_provider_init (GdaJdbcProvider *jdbc_prv, GdaJdbcProviderClass *klass)
+gda_jdbc_provider_init (GdaJdbcProvider *jdbc_prv, G_GNUC_UNUSED GdaJdbcProviderClass *klass)
 {
 	InternalStatementItem i;
 	GdaSqlParser *parser;
@@ -323,7 +323,7 @@ gda_jdbc_provider_get_name (GdaServerProvider *provider)
  * Get provider's version, no need to change this
  */
 static const gchar *
-gda_jdbc_provider_get_version (GdaServerProvider *provider)
+gda_jdbc_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -342,7 +342,8 @@ gda_jdbc_provider_get_version (GdaServerProvider *provider)
 static gboolean
 gda_jdbc_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
 				   GdaQuarkList *params, GdaQuarkList *auth,
-				   guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				   G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				   G_GNUC_UNUSED gpointer cb_data)
 {
 	GdaJdbcProvider *jprov;
 	g_return_val_if_fail (GDA_IS_JDBC_PROVIDER (provider), FALSE);
@@ -509,7 +510,8 @@ gda_jdbc_provider_get_server_version (GdaServerProvider *provider, GdaConnection
  */
 static gboolean
 gda_jdbc_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				      GdaServerOperationType type, GdaSet *options)
+				      G_GNUC_UNUSED GdaServerOperationType type,
+				      G_GNUC_UNUSED GdaSet *options)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -530,7 +532,8 @@ gda_jdbc_provider_supports_operation (GdaServerProvider *provider, GdaConnection
  */
 static GdaServerOperation *
 gda_jdbc_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				    GdaServerOperationType type, GdaSet *options, GError **error)
+				    G_GNUC_UNUSED GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options,
+				    G_GNUC_UNUSED GError **error)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -548,7 +551,7 @@ gda_jdbc_provider_create_operation (GdaServerProvider *provider, GdaConnection *
  */
 static gchar *
 gda_jdbc_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				    GdaServerOperation *op, GError **error)
+				    G_GNUC_UNUSED GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -566,8 +569,9 @@ gda_jdbc_provider_render_operation (GdaServerProvider *provider, GdaConnection *
  */
 static gboolean
 gda_jdbc_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaServerOperation *op, guint *task_id, 
-				     GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+				     G_GNUC_UNUSED GdaServerOperation *op, G_GNUC_UNUSED guint *task_id,
+				     GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data,
+				     GError **error)
 {
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
@@ -591,8 +595,8 @@ gda_jdbc_provider_perform_operation (GdaServerProvider *provider, GdaConnection 
  */
 static gboolean
 gda_jdbc_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-				     const gchar *name, GdaTransactionIsolation level,
-				     GError **error)
+				     G_GNUC_UNUSED const gchar *name,
+				     G_GNUC_UNUSED GdaTransactionIsolation level, GError **error)
 {
 	JdbcConnectionData *cdata;
 	GValue *jexec_res;
@@ -633,7 +637,7 @@ gda_jdbc_provider_begin_transaction (GdaServerProvider *provider, GdaConnection 
  */
 static gboolean
 gda_jdbc_provider_commit_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-				      const gchar *name, GError **error)
+				      G_GNUC_UNUSED const gchar *name, GError **error)
 {
 	JdbcConnectionData *cdata;
 	GValue *jexec_res;
@@ -674,7 +678,7 @@ gda_jdbc_provider_commit_transaction (GdaServerProvider *provider, GdaConnection
  */
 static gboolean
 gda_jdbc_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-					const gchar *name, GError **error)
+					G_GNUC_UNUSED const gchar *name, GError **error)
 {
 	JdbcConnectionData *cdata;
 	GValue *jexec_res;
@@ -1563,7 +1567,7 @@ gda_jdbc_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_jdbc_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc, 
-				const GdaXaTransactionId *xid, GError **error)
+				const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	JdbcConnectionData *cdata;
 
@@ -1589,7 +1593,7 @@ gda_jdbc_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_jdbc_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc, 
-			      const GdaXaTransactionId *xid, GError **error)
+			      const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	JdbcConnectionData *cdata;
 
@@ -1610,7 +1614,7 @@ gda_jdbc_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_jdbc_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc, 
-				  const GdaXaTransactionId *xid, GError **error)
+				  const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	JdbcConnectionData *cdata;
 
@@ -1632,7 +1636,7 @@ gda_jdbc_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_jdbc_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc, 
-				 const GdaXaTransactionId *xid, GError **error)
+				 const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	JdbcConnectionData *cdata;
 
@@ -1653,7 +1657,7 @@ gda_jdbc_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_jdbc_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
-				   const GdaXaTransactionId *xid, GError **error)
+				   const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	JdbcConnectionData *cdata;
 
@@ -1676,7 +1680,7 @@ gda_jdbc_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static GList *
 gda_jdbc_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
-				  GError **error)
+				  G_GNUC_UNUSED GError **error)
 {
 	JdbcConnectionData *cdata;
 

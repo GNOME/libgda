@@ -84,7 +84,7 @@ objects_cloud_class_init (ObjectsCloudClass *klass)
 
 
 static void
-objects_cloud_init (ObjectsCloud *cloud, ObjectsCloudClass *klass)
+objects_cloud_init (ObjectsCloud *cloud, G_GNUC_UNUSED ObjectsCloudClass *klass)
 {
 	cloud->priv = g_new0 (ObjectsCloudPrivate, 1);
 	cloud->priv->show_schemas = FALSE;
@@ -522,7 +522,7 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, ObjectsCloud 
  * (e.g. when a window covering it got iconified).
  */
 static gboolean
-visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, ObjectsCloud *cloud)
+visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility *event, ObjectsCloud *cloud)
 {
 	gint wx, wy, bx, by;
 
@@ -568,7 +568,7 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ObjectsCloud *
  * by the data attached to it.
  */
 static void
-follow_if_link (GtkWidget *text_view, GtkTextIter *iter, ObjectsCloud *cloud)
+follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, ObjectsCloud *cloud)
 {
 	GSList *tags = NULL, *tagp = NULL;
 	

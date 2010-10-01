@@ -107,7 +107,7 @@ dummy_perspective_init (DummyPerspective *perspective)
  * Creates new #BrowserPerspective widget which 
  */
 BrowserPerspective *
-dummy_perspective_new (BrowserWindow *bwin)
+dummy_perspective_new (G_GNUC_UNUSED BrowserWindow *bwin)
 {
 	BrowserPerspective *bpers;
 	bpers = (BrowserPerspective*) g_object_new (TYPE_DUMMY_PERSPECTIVE, NULL);
@@ -131,13 +131,13 @@ dummy_perspective_dispose (GObject *object)
 }
 
 static void
-dummy_add_cb (GtkAction *action, BrowserPerspective *bpers)
+dummy_add_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED BrowserPerspective *bpers)
 {
 	g_print ("Add something...\n");
 }
 
 static void
-dummy_list_cb (GtkAction *action, BrowserPerspective *bpers)
+dummy_list_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED BrowserPerspective *bpers)
 {
 	g_print ("List something...\n");
 }
@@ -178,7 +178,7 @@ dummy_perspective_get_actions_group (BrowserPerspective *bpers)
 }
 
 static const gchar *
-dummy_perspective_get_actions_ui (BrowserPerspective *bpers)
+dummy_perspective_get_actions_ui (G_GNUC_UNUSED BrowserPerspective *bpers)
 {
 	return ui_actions_info;
 }

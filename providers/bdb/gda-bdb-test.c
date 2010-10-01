@@ -129,7 +129,7 @@ gda_stuff (gpointer filename)
 	gda_connection_close (cnc);
 }
 
-int main (int argc, char **argv)
+int main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	gda_init ();
 	create_db (DB_FILE);

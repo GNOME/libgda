@@ -239,7 +239,7 @@ gdaui_entry_combo_new (GdauiSet *paramlist, GdauiSetSource *source)
 }
 
 static void
-uiset_source_model_changed_cb (GdauiSet *paramlist, GdauiSetSource *source, GdauiEntryCombo* combo)
+uiset_source_model_changed_cb (G_GNUC_UNUSED GdauiSet *paramlist, GdauiSetSource *source, GdauiEntryCombo* combo)
 {
 	if (source == combo->priv->source) {
 		GSList *list, *values = NULL;
@@ -378,7 +378,7 @@ static void
 gdaui_entry_combo_set_property (GObject *object,
 				guint param_id,
 				const GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiEntryCombo *combo = GDAUI_ENTRY_COMBO (object);
 	if (combo->priv) {
@@ -402,7 +402,7 @@ static void
 gdaui_entry_combo_get_property (GObject *object,
 				guint param_id,
 				GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiEntryCombo *combo = GDAUI_ENTRY_COMBO (object);
 	if (combo->priv) {
@@ -415,7 +415,7 @@ gdaui_entry_combo_get_property (GObject *object,
 }
 
 static void
-combo_contents_changed_cb (GdauiCombo *entry, GdauiEntryCombo *combo)
+combo_contents_changed_cb (G_GNUC_UNUSED GdauiCombo *entry, GdauiEntryCombo *combo)
 {
 	if (gdaui_combo_is_null_selected (GDAUI_COMBO (combo->priv->combo_entry))) /* Set to NULL? */ {
 		gdaui_entry_combo_set_values (combo, NULL);
@@ -699,7 +699,7 @@ gdaui_entry_combo_get_reference_values (GdauiEntryCombo *combo)
  * values provided in the list is modified.
  */
 void
-gdaui_entry_combo_set_default_values (GdauiEntryCombo *combo, GSList *values)
+gdaui_entry_combo_set_default_values (GdauiEntryCombo *combo, G_GNUC_UNUSED GSList *values)
 {
 	g_return_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo));
 	g_return_if_fail (combo->priv);
@@ -741,7 +741,7 @@ gdaui_entry_combo_get_value (GdauiDataEntry *iface)
 }
 
 static void
-gdaui_entry_combo_set_ref_value (GdauiDataEntry *iface, const GValue * value)
+gdaui_entry_combo_set_ref_value (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue * value)
 {
         GdauiEntryCombo *combo;
 	
@@ -767,7 +767,7 @@ gdaui_entry_combo_get_ref_value (GdauiDataEntry *iface)
 }
 
 static void
-gdaui_entry_combo_set_value_default (GdauiDataEntry *iface, const GValue * value)
+gdaui_entry_combo_set_value_default (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue * value)
 {
         GdauiEntryCombo *combo;
 	
@@ -1020,7 +1020,7 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 
 
 static gboolean
-gdaui_entry_combo_can_expand (GdauiDataEntry *iface, gboolean horiz)
+gdaui_entry_combo_can_expand (GdauiDataEntry *iface, G_GNUC_UNUSED gboolean horiz)
 {
 	GdauiEntryCombo *combo;
 

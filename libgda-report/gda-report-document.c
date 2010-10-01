@@ -83,7 +83,7 @@ gda_report_document_class_init (GdaReportDocumentClass *klass)
 }
 
 static void
-gda_report_document_init (GdaReportDocument *doc, GdaReportDocumentClass *klass)
+gda_report_document_init (GdaReportDocument *doc, G_GNUC_UNUSED GdaReportDocumentClass *klass)
 {
 	doc->priv = g_new0 (GdaReportDocumentPrivate, 1);
 }
@@ -146,7 +146,7 @@ static void
 gda_report_document_set_property (GObject *object,
 				guint param_id,
 				const GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaReportDocument *doc;
 
@@ -175,7 +175,7 @@ static void
 gda_report_document_get_property (GObject *object,
 				guint param_id,
 				GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaReportDocument *doc;
 

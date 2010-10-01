@@ -321,7 +321,7 @@ gdaui_entry_shell_pack_entry (GdauiEntryShell *shell, GtkWidget *main_widget)
 }
 
 static void
-contents_modified_cb (GdauiEntryShell *shell, gpointer unused)
+contents_modified_cb (GdauiEntryShell *shell, G_GNUC_UNUSED gpointer unused)
 {
 	gdaui_entry_shell_refresh (shell);
 }
@@ -329,7 +329,7 @@ contents_modified_cb (GdauiEntryShell *shell, gpointer unused)
 static void mitem_activated_cb (GtkWidget *mitem, GdauiEntryShell *shell);
 static GdaValueAttribute gdaui_entry_shell_refresh_attributes (GdauiEntryShell *shell);
 static gint
-event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
+event_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 {
 	gboolean done = FALSE;
 

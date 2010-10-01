@@ -73,7 +73,7 @@ timout_cb (GdaTreeNode *node)
 
 static GSList *
 node_func (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
-	   gboolean *out_error, GError **error)
+	   G_GNUC_UNUSED gboolean *out_error, G_GNUC_UNUSED GError **error)
 {
 	if (children_nodes) {
 		/* we don't create or modify already created GdaTreeNode object => simply ref them */

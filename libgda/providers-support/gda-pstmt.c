@@ -80,7 +80,7 @@ gda_pstmt_class_init (GdaPStmtClass *klass)
 }
 
 static void
-gda_pstmt_init (GdaPStmt *pstmt, GdaPStmtClass *klass)
+gda_pstmt_init (GdaPStmt *pstmt, G_GNUC_UNUSED GdaPStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	pstmt->priv = g_new0 (GdaPStmtPrivate, 1);

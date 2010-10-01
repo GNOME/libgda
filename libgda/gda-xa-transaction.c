@@ -89,7 +89,7 @@ gda_xa_transaction_class_init (GdaXaTransactionClass *klass)
 }
 
 static void
-gda_xa_transaction_init (GdaXaTransaction *xa_trans, GdaXaTransactionClass *klass)
+gda_xa_transaction_init (GdaXaTransaction *xa_trans, G_GNUC_UNUSED GdaXaTransactionClass *klass)
 {
 	xa_trans->priv = g_new0 (GdaXaTransactionPrivate, 1);
 	xa_trans->priv->xid.format = 1;

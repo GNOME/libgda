@@ -42,7 +42,7 @@ JNICALL Java_GdaJValue_initIDs (JNIEnv *env, jclass klass)
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCString (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jstring str)
+JNICALL Java_GdaJValue_setCString (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer, jint col, jstring str)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	gchar *tmp;
@@ -67,7 +67,7 @@ JNICALL Java_GdaJValue_setCString (JNIEnv *jenv, jobject obj, jlong c_pointer, j
 }
 
 JNIEXPORT jstring
-JNICALL Java_GdaJValue_getCString (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCString (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	const gchar *str;
 	
@@ -76,7 +76,8 @@ JNICALL Java_GdaJValue_getCString (JNIEnv *jenv, jobject obj, jlong c_pointer)
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCInt (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jint i)
+JNICALL Java_GdaJValue_setCInt (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer,
+				jint col, jint i)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	g_value_init (value, G_TYPE_INT);
@@ -84,13 +85,14 @@ JNICALL Java_GdaJValue_setCInt (JNIEnv *jenv, jobject obj, jlong c_pointer, jint
 }
 
 JNIEXPORT jint
-JNICALL Java_GdaJValue_getCInt (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCInt (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	return (jint) g_value_get_int ((GValue *) c_pointer);
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCChar (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jbyte b)
+JNICALL Java_GdaJValue_setCChar (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer,
+				 jint col, jbyte b)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	g_value_init (value, G_TYPE_CHAR);
@@ -98,13 +100,14 @@ JNICALL Java_GdaJValue_setCChar (JNIEnv *jenv, jobject obj, jlong c_pointer, jin
 }
 
 JNIEXPORT jbyte
-JNICALL Java_GdaJValue_getCChar (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCChar (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	return (jbyte) g_value_get_char ((GValue *) c_pointer);
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCDouble (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jdouble d)
+JNICALL Java_GdaJValue_setCDouble (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer,
+				   jint col, jdouble d)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	g_value_init (value, G_TYPE_DOUBLE);
@@ -112,13 +115,14 @@ JNICALL Java_GdaJValue_setCDouble (JNIEnv *jenv, jobject obj, jlong c_pointer, j
 }
 
 JNIEXPORT jdouble
-JNICALL Java_GdaJValue_getCDouble (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCDouble (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	return (jdouble) g_value_get_double ((GValue *) c_pointer);
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCFloat (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jfloat f)
+JNICALL Java_GdaJValue_setCFloat (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer,
+				  jint col, jfloat f)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	g_value_init (value, G_TYPE_FLOAT);
@@ -126,13 +130,14 @@ JNICALL Java_GdaJValue_setCFloat (JNIEnv *jenv, jobject obj, jlong c_pointer, ji
 }
 
 JNIEXPORT jfloat
-JNICALL Java_GdaJValue_getCFloat (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCFloat (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	return (jfloat) g_value_get_float ((GValue *) c_pointer);
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCBoolean (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jboolean b)
+JNICALL Java_GdaJValue_setCBoolean (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer,
+				    jint col, jboolean b)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	g_value_init (value, G_TYPE_BOOLEAN);
@@ -140,13 +145,14 @@ JNICALL Java_GdaJValue_setCBoolean (JNIEnv *jenv, jobject obj, jlong c_pointer, 
 }
 
 JNIEXPORT jboolean
-JNICALL Java_GdaJValue_getCBoolean (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCBoolean (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	return (jboolean) g_value_get_boolean ((GValue *) c_pointer);
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCDate (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jint year, jint month, jint day)
+JNICALL Java_GdaJValue_setCDate (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer, jint col,
+				 jint year, jint month, jint day)
 {
 	GDate *date;
 
@@ -197,7 +203,8 @@ Java_GdaJValue_getCDate (JNIEnv *jenv, jobject obj, jlong c_pointer)
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCTime (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jint hour, jint min, jint sec)
+JNICALL Java_GdaJValue_setCTime (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer,
+				 jint col, jint hour, jint min, jint sec)
 {
 	GdaTime *tim;
 	GValue *value;
@@ -240,8 +247,9 @@ JNICALL Java_GdaJValue_getCTime (JNIEnv *jenv, jobject obj, jlong c_pointer)
 
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCTimestamp (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jint year, jint month, jint day,
-				      jint hour, jint min, jint sec)
+JNICALL Java_GdaJValue_setCTimestamp (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer,
+				      jint col, jint year, jint month, jint day, jint hour, jint min,
+				      jint sec)
 {
 	GdaTimestamp *ts;
 	GValue *value;
@@ -287,7 +295,8 @@ JNICALL Java_GdaJValue_getCTimestamp (JNIEnv *jenv, jobject obj, jlong c_pointer
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCBinary (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jbyteArray bytes)
+JNICALL Java_GdaJValue_setCBinary (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer, jint col,
+				   jbyteArray bytes)
 {
 	jint len;
 	GdaBinary *bin;
@@ -306,7 +315,7 @@ JNICALL Java_GdaJValue_setCBinary (JNIEnv *jenv, jobject obj, jlong c_pointer, j
 }
 
 JNIEXPORT jbyteArray
-JNICALL Java_GdaJValue_getCBinary (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCBinary (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	const GdaBinary *bin;
 	jbyteArray jbytes;
@@ -335,7 +344,8 @@ JNICALL Java_GdaJValue_getCBinary (JNIEnv *jenv, jobject obj, jlong c_pointer)
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCBlob (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jlong cnc_c_pointer, jobject blobop)
+JNICALL Java_GdaJValue_setCBlob (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer, jint col,
+				 jlong cnc_c_pointer, jobject blobop)
 {
 	GdaBlob *blob;
 	GValue *value;
@@ -349,7 +359,7 @@ JNICALL Java_GdaJValue_setCBlob (JNIEnv *jenv, jobject obj, jlong c_pointer, jin
 }
 
 JNIEXPORT jobject
-JNICALL Java_GdaJValue_getCBlob (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCBlob (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	const GdaBlob *blob;
 
@@ -417,7 +427,7 @@ JNICALL Java_GdaJValue_getCBlob (JNIEnv *jenv, jobject obj, jlong c_pointer)
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCLong (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jlong l)
+JNICALL Java_GdaJValue_setCLong (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer, jint col, jlong l)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	g_value_init (value, G_TYPE_INT64);
@@ -425,13 +435,14 @@ JNICALL Java_GdaJValue_setCLong (JNIEnv *jenv, jobject obj, jlong c_pointer, jin
 }
 
 JNIEXPORT jshort
-JNICALL Java_GdaJValue_getCLong (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCLong (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	return (jlong) g_value_get_int64 ((GValue *) c_pointer);
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCShort (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jshort s)
+JNICALL Java_GdaJValue_setCShort (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer,
+				  jint col, jshort s)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	g_value_init (value, G_TYPE_INT64);
@@ -439,14 +450,14 @@ JNICALL Java_GdaJValue_setCShort (JNIEnv *jenv, jobject obj, jlong c_pointer, ji
 }
 
 JNIEXPORT jshort
-JNICALL Java_GdaJValue_getCShort (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCShort (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	return (jshort) gda_value_get_short ((GValue *) c_pointer);
 }
 
 JNIEXPORT void
-JNICALL Java_GdaJValue_setCNumeric (JNIEnv *jenv, jobject obj, jlong c_pointer, jint col, jstring str, 
-				    jint precision, jint scale)
+JNICALL Java_GdaJValue_setCNumeric (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer, jint col,
+				    jstring str, jint precision, jint scale)
 {
 	GdaNumeric *num;
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
@@ -476,7 +487,7 @@ JNICALL Java_GdaJValue_setCNumeric (JNIEnv *jenv, jobject obj, jlong c_pointer, 
 }
 
 JNIEXPORT jobject
-JNICALL Java_GdaJValue_getCNumeric (JNIEnv *jenv, jobject obj, jlong c_pointer)
+JNICALL Java_GdaJValue_getCNumeric (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
 	const GdaNumeric *num;
 	num = gda_value_get_numeric ((GValue *) c_pointer);

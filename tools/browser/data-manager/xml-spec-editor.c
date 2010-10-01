@@ -85,7 +85,7 @@ xml_spec_editor_grab_focus (GtkWidget *widget)
 }
 
 static void
-xml_spec_editor_init (XmlSpecEditor *sped, XmlSpecEditorClass *klass)
+xml_spec_editor_init (XmlSpecEditor *sped, G_GNUC_UNUSED XmlSpecEditorClass *klass)
 {
 	g_return_if_fail (IS_XML_SPEC_EDITOR (sped));
 
@@ -252,7 +252,7 @@ signal_editor_changed (XmlSpecEditor *sped)
 }
 
 static void
-editor_changed_cb (GtkTextBuffer *buffer, XmlSpecEditor *sped)
+editor_changed_cb (G_GNUC_UNUSED GtkTextBuffer *buffer, XmlSpecEditor *sped)
 {
 	if (sped->priv->signal_editor_changed_id)
 		g_source_remove (sped->priv->signal_editor_changed_id);
@@ -260,7 +260,7 @@ editor_changed_cb (GtkTextBuffer *buffer, XmlSpecEditor *sped)
 }
 
 static void
-source_list_changed_cb (DataSourceManager *mgr, XmlSpecEditor *sped)
+source_list_changed_cb (G_GNUC_UNUSED DataSourceManager *mgr, XmlSpecEditor *sped)
 {
 	xmlDocPtr doc;
 	xmlNodePtr root;
@@ -289,7 +289,7 @@ source_list_changed_cb (DataSourceManager *mgr, XmlSpecEditor *sped)
 }
 
 static void
-data_source_changed_cb (DataSourceManager *mgr, DataSource *source, XmlSpecEditor *sped)
+data_source_changed_cb (DataSourceManager *mgr, G_GNUC_UNUSED DataSource *source, XmlSpecEditor *sped)
 {
 	source_list_changed_cb (mgr, sped);
 }

@@ -62,7 +62,7 @@ gdaui_data_proxy_get_type (void)
 
 
 static void
-gdaui_data_proxy_iface_init (gpointer g_class)
+gdaui_data_proxy_iface_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 

@@ -109,8 +109,8 @@ gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaC
  * Returns: (transfer none): a #GdaDataHandler, or %NULL
  */
 GdaDataHandler *
-gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaConnection *cnc,
-					      GType type, const gchar *dbms_type)
+gda_server_provider_get_data_handler_default (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc,
+					      GType type, G_GNUC_UNUSED const gchar *dbms_type)
 {
 	GdaDataHandler *dh;
 	if ((type == G_TYPE_INT64) ||
@@ -185,7 +185,7 @@ gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaCo
 }
 
 static gboolean
-param_to_null_foreach (GdaSqlAnyPart *part, gpointer data, GError **error)
+param_to_null_foreach (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
 	if (part->type == GDA_SQL_ANY_EXPR) {
 		GdaSqlExpr *expr = (GdaSqlExpr*) part;
@@ -216,7 +216,7 @@ param_to_null_foreach (GdaSqlAnyPart *part, gpointer data, GError **error)
  * Returns: (transfer full): a new #GdaStatement
  */
 GdaStatement *
-gda_select_alter_select_for_empty (GdaStatement *stmt, GError **error)
+gda_select_alter_select_for_empty (GdaStatement *stmt, G_GNUC_UNUSED GError **error)
 {
 	GdaStatement *estmt;
 	GdaSqlStatement *sqlst;

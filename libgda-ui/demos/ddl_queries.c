@@ -160,7 +160,7 @@ do_ddl_queries (GtkWidget *do_widget)
 }
 
 static void
-tested_provider_changed_cb (GdauiProviderSelector *prov_sel, DemoData *data)
+tested_provider_changed_cb (G_GNUC_UNUSED GdauiProviderSelector *prov_sel, DemoData *data)
 {
 	if (data->prov) {
 		g_object_unref (data->prov);
@@ -225,7 +225,7 @@ get_provider_obj (DemoData *data)
 }
 
 static void
-tested_operation_changed_cb (GdauiCombo *combo, DemoData *data)
+tested_operation_changed_cb (G_GNUC_UNUSED GdauiCombo *combo, DemoData *data)
 {
 	GdaServerProvider *prov = NULL;
 	GdaServerOperationType type;
@@ -395,7 +395,7 @@ extract_named_parameters (GdaServerOperation *op, const gchar *root_path, GtkTex
 }
 
 static void
-show_named_parameters (GtkButton *button, DemoData *data)
+show_named_parameters (G_GNUC_UNUSED GtkButton *button, DemoData *data)
 {
 	GtkWidget *dlg, *label;
 	gchar **root_nodes;
@@ -461,7 +461,7 @@ show_named_parameters (GtkButton *button, DemoData *data)
 }
 
 static void
-show_sql (GtkButton *button, DemoData *data)
+show_sql (G_GNUC_UNUSED GtkButton *button, DemoData *data)
 {
 	GdaServerProvider *prov;
 

@@ -141,7 +141,7 @@ typedef struct {
  * Meta initialization
  */
 void
-_gda_thread_provider_meta_init (GdaServerProvider *provider)
+_gda_thread_provider_meta_init (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	/* nothing to be done */
 }
@@ -156,7 +156,7 @@ sub_thread__gda_thread_meta__info (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__info (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__info (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__info, prov, cnc, store, context, error);
@@ -172,7 +172,7 @@ sub_thread__gda_thread_meta__btypes (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__btypes (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__btypes, prov, cnc, store, context, error);
@@ -186,7 +186,7 @@ sub_thread__gda_thread_meta__udt (BasicThreadData *data, GError **error)
 	sub_thread_basic_core (PROV_CLASS (data->prov)->meta_funcs._udt, "_udt");
 }
 gboolean
-_gda_thread_meta__udt (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__udt, prov, cnc, store, context, error);
@@ -199,7 +199,7 @@ sub_thread__gda_thread_meta_udt (DetailedThreadData *data, GError **error)
 	sub_thread_detailed2_core (PROV_CLASS (data->prov)->meta_funcs.udt, "_udt");
 }
 gboolean
-_gda_thread_meta_udt (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		      const GValue *udt_catalog, const GValue *udt_schema)
 {
@@ -217,7 +217,7 @@ sub_thread__gda_thread_meta__udt_cols (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__udt_cols, prov, cnc, store, context, error);
@@ -231,7 +231,7 @@ sub_thread__gda_thread_meta_udt_cols (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
 {
@@ -247,7 +247,7 @@ sub_thread__gda_thread_meta__enums (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__enums (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__enums, prov, cnc, store, context, error);
@@ -261,7 +261,7 @@ sub_thread__gda_thread_meta_enums (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_enums (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
 {
@@ -277,7 +277,7 @@ sub_thread__gda_thread_meta__domains (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__domains (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__domains, prov, cnc, store, context, error);
@@ -291,7 +291,7 @@ sub_thread__gda_thread_meta_domains (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_domains (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			  const GValue *domain_catalog, const GValue *domain_schema)
 {
@@ -307,7 +307,7 @@ sub_thread__gda_thread_meta__constraints_dom (BasicThreadData *data, GError **er
 }
 
 gboolean
-_gda_thread_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				   GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__constraints_dom, prov, cnc, store, context, error);
@@ -321,7 +321,7 @@ sub_thread__gda_thread_meta_constraints_dom (DetailedThreadData *data, GError **
 }
 
 gboolean
-_gda_thread_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 				  const GValue *domain_catalog, const GValue *domain_schema, 
 				  const GValue *domain_name)
@@ -338,7 +338,7 @@ sub_thread__gda_thread_meta__el_types (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__el_types, prov, cnc, store, context, error);
@@ -352,7 +352,7 @@ sub_thread__gda_thread_meta_el_types (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *specific_name)
 {
@@ -368,7 +368,7 @@ sub_thread__gda_thread_meta__collations (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__collations (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__collations (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__collations, prov, cnc, store, context, error);
@@ -382,7 +382,7 @@ sub_thread__gda_thread_meta_collations (DetailedThreadData *data, GError **error
 }
 
 gboolean
-_gda_thread_meta_collations (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_collations (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			     const GValue *collation_catalog, const GValue *collation_schema, 
 			     const GValue *collation_name_n)
@@ -399,7 +399,7 @@ sub_thread__gda_thread_meta__character_sets (BasicThreadData *data, GError **err
 }
 
 gboolean
-_gda_thread_meta__character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__character_sets (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__character_sets, prov, cnc, store, context, error);
@@ -413,7 +413,7 @@ sub_thread__gda_thread_meta_character_sets (DetailedThreadData *data, GError **e
 }
 
 gboolean
-_gda_thread_meta_character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_character_sets (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				 GdaMetaStore *store, GdaMetaContext *context, GError **error,
 				 const GValue *chset_catalog, const GValue *chset_schema, 
 				 const GValue *chset_name_n)
@@ -431,7 +431,7 @@ sub_thread__gda_thread_meta__schemata (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__schemata, prov, cnc, store, context, error);
@@ -445,7 +445,7 @@ sub_thread__gda_thread_meta_schemata (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error, 
 			   const GValue *catalog_name, const GValue *schema_name_n)
 {
@@ -461,7 +461,7 @@ sub_thread__gda_thread_meta__tables_views (BasicThreadData *data, GError **error
 }
 
 gboolean
-_gda_thread_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__tables_views, prov, cnc, store, context, error);
@@ -475,7 +475,7 @@ sub_thread__gda_thread_meta_tables_views (DetailedThreadData *data, GError **err
 }
 
 gboolean
-_gda_thread_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			       const GValue *table_catalog, const GValue *table_schema, 
 			       const GValue *table_name_n)
@@ -492,7 +492,7 @@ sub_thread__gda_thread_meta__columns (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__columns, prov, cnc, store, context, error);
@@ -506,7 +506,7 @@ sub_thread__gda_thread_meta_columns (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			  const GValue *table_catalog, const GValue *table_schema, 
 			  const GValue *table_name)
@@ -523,7 +523,7 @@ sub_thread__gda_thread_meta__view_cols (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__view_cols, prov, cnc, store, context, error);
@@ -537,7 +537,7 @@ sub_thread__gda_thread_meta_view_cols (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			    const GValue *view_catalog, const GValue *view_schema, 
 			    const GValue *view_name)
@@ -554,7 +554,7 @@ sub_thread__gda_thread_meta__constraints_tab (BasicThreadData *data, GError **er
 }
 
 gboolean
-_gda_thread_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				   GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__constraints_tab, prov, cnc, store, context, error);
@@ -568,7 +568,7 @@ sub_thread__gda_thread_meta_constraints_tab (DetailedThreadData *data, GError **
 }
 
 gboolean
-_gda_thread_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error, 
 				  const GValue *table_catalog, const GValue *table_schema, 
 				  const GValue *table_name, const GValue *constraint_name_n)
@@ -585,7 +585,7 @@ sub_thread__gda_thread_meta__constraints_ref (BasicThreadData *data, GError **er
 }
 
 gboolean
-_gda_thread_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				   GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__constraints_ref, prov, cnc, store, context, error);
@@ -599,7 +599,7 @@ sub_thread__gda_thread_meta_constraints_ref (DetailedThreadData *data, GError **
 }
 
 gboolean
-_gda_thread_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 				  const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
 				  const GValue *constraint_name)
@@ -616,7 +616,7 @@ sub_thread__gda_thread_meta__key_columns (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__key_columns, prov, cnc, store, context, error);
@@ -630,7 +630,7 @@ sub_thread__gda_thread_meta_key_columns (DetailedThreadData *data, GError **erro
 }
 
 gboolean
-_gda_thread_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			      const GValue *table_catalog, const GValue *table_schema, 
 			      const GValue *table_name, const GValue *constraint_name)
@@ -647,7 +647,7 @@ sub_thread__gda_thread_meta__check_columns (BasicThreadData *data, GError **erro
 }
 
 gboolean
-_gda_thread_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__check_columns, prov, cnc, store, context, error);
@@ -661,7 +661,7 @@ sub_thread__gda_thread_meta_check_columns (DetailedThreadData *data, GError **er
 }
 
 gboolean
-_gda_thread_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				GdaMetaStore *store, GdaMetaContext *context, GError **error,
 				const GValue *table_catalog, const GValue *table_schema, 
 				const GValue *table_name, const GValue *constraint_name)
@@ -678,7 +678,7 @@ sub_thread__gda_thread_meta__triggers (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__triggers, prov, cnc, store, context, error);
@@ -692,7 +692,7 @@ sub_thread__gda_thread_meta_triggers (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *table_catalog, const GValue *table_schema, 
 			   const GValue *table_name)
@@ -709,7 +709,7 @@ sub_thread__gda_thread_meta__routines (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__routines (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__routines, prov, cnc, store, context, error);
@@ -723,7 +723,7 @@ sub_thread__gda_thread_meta_routines (DetailedThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta_routines (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *routine_catalog, const GValue *routine_schema, 
 			   const GValue *routine_name_n)
@@ -740,7 +740,7 @@ sub_thread__gda_thread_meta__routine_col (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__routine_col, prov, cnc, store, context, error);
@@ -754,7 +754,7 @@ sub_thread__gda_thread_meta_routine_col (DetailedThreadData *data, GError **erro
 }
 
 gboolean
-_gda_thread_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			      const GValue *rout_catalog, const GValue *rout_schema, 
 			      const GValue *rout_name)
@@ -771,7 +771,7 @@ sub_thread__gda_thread_meta__routine_par (BasicThreadData *data, GError **error)
 }
 
 gboolean
-_gda_thread_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta__routine_par (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__routine_par, prov, cnc, store, context, error);
@@ -785,7 +785,7 @@ sub_thread__gda_thread_meta_routine_par (DetailedThreadData *data, GError **erro
 }
 
 gboolean
-_gda_thread_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_thread_meta_routine_par (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			      const GValue *rout_catalog, const GValue *rout_schema, 
 			      const GValue *rout_name)
@@ -802,7 +802,7 @@ sub_thread__gda_thread_meta__indexes_tab (DetailedThreadData *data, GError **err
 }
 
 gboolean
-_gda_thread_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc,
+_gda_thread_meta__indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__indexes_tab, prov, cnc, store, context, error);
@@ -816,7 +816,7 @@ sub_thread__gda_thread_meta_indexes_tab (DetailedThreadData *data, GError **erro
 }
 
 gboolean
-_gda_thread_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc,
+_gda_thread_meta_indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
 			      const GValue *index_name_n)
@@ -833,7 +833,7 @@ sub_thread__gda_thread_meta__index_cols (DetailedThreadData *data, GError **erro
 }
 
 gboolean
-_gda_thread_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc,
+_gda_thread_meta__index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	main_thread_basic_core (sub_thread__gda_thread_meta__index_cols, prov, cnc, store, context, error);
@@ -847,7 +847,7 @@ sub_thread__gda_thread_meta_index_cols (DetailedThreadData *data, GError **error
 }
 
 gboolean
-_gda_thread_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc,
+_gda_thread_meta_index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			     const GValue *table_catalog, const GValue *table_schema,
 			     const GValue *table_name, const GValue *index_name)

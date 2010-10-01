@@ -100,7 +100,7 @@ enum
  * Object init and finalize
  */
 static void
-gda_postgres_recordset_init (GdaPostgresRecordset *recset, GdaPostgresRecordsetClass *klass)
+gda_postgres_recordset_init (GdaPostgresRecordset *recset, G_GNUC_UNUSED GdaPostgresRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_POSTGRES_RECORDSET (recset));
 	recset->priv = g_new0 (GdaPostgresRecordsetPrivate, 1);
@@ -179,7 +179,7 @@ static void
 gda_postgres_recordset_set_property (GObject *object,
 				     guint param_id,
 				     const GValue *value,
-				     GParamSpec *pspec)
+				     G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaPostgresRecordset *model = (GdaPostgresRecordset *) object;
         if (model->priv) {
@@ -197,7 +197,7 @@ static void
 gda_postgres_recordset_get_property (GObject *object,
 				     guint param_id,
 				     GValue *value,
-				     GParamSpec *pspec)
+				     G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaPostgresRecordset *model = (GdaPostgresRecordset *) object;
         if (model->priv) {
@@ -599,7 +599,8 @@ make_point (GdaGeometricPoint *point, const gchar *value)
 }
 
 static void
-set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gchar *thevalue, gint length, GError **error)
+set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gchar *thevalue,
+	   G_GNUC_UNUSED gint length, GError **error)
 {
 	gda_value_reset_with_type (value, type);
 

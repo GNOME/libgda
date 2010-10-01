@@ -438,9 +438,9 @@ gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
 					GdkEvent                   *event,
 					GtkWidget                  *widget,
 					const gchar                *path,
-					GdkRectangle               *background_area,
+					G_GNUC_UNUSED GdkRectangle               *background_area,
 					GdkRectangle               *cell_area,
-					GtkCellRendererState        flags)
+					G_GNUC_UNUSED GtkCellRendererState        flags)
 {
 	GdauiDataCellRendererBin *bincell;
 	GtkTreeModel *model;

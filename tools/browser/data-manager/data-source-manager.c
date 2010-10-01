@@ -493,7 +493,7 @@ data_source_manager_get_params (DataSourceManager *mgr)
  * Returns: an array of arrays of pointer to the #DataSource objects
  */
 GArray *
-data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error)
+data_source_manager_get_sources_array (DataSourceManager *mgr, G_GNUC_UNUSED GError **error)
 {
 	g_return_val_if_fail (IS_DATA_SOURCE_MANAGER (mgr), NULL);
 

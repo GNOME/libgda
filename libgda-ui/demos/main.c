@@ -73,7 +73,7 @@ demo_find_file (const char *base, GError **err)
 }
 
 static void
-window_closed_cb (GtkWidget *window, gpointer data)
+window_closed_cb (G_GNUC_UNUSED GtkWidget *window, gpointer data)
 {
 	CallbackData *cbdata = data;
 	GtkTreeIter iter;
@@ -531,7 +531,7 @@ load_file (const gchar *filename)
 void
 row_activated_cb (GtkTreeView       *tree_view,
                   GtkTreePath       *path,
-		  GtkTreeViewColumn *column)
+		  G_GNUC_UNUSED GtkTreeViewColumn *column)
 {
 	GtkTreeIter iter;
 	PangoStyle style;

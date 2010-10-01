@@ -211,7 +211,7 @@ static gboolean event_cb (GtkWidget *button, GdkEvent *event, GdauiEntryPict *mg
 static void size_allocate_cb (GtkWidget *wid, GtkAllocation *allocation, GdauiEntryPict *mgpict);
 
 static void
-realize_cb (GdauiEntryPict *mgpict, GdauiEntryWrapper *mgwrap)
+realize_cb (GdauiEntryPict *mgpict, G_GNUC_UNUSED GdauiEntryWrapper *mgwrap)
 {
 	display_image (mgpict, NULL, NULL, NULL);
 }
@@ -264,7 +264,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 }
 
 static void
-size_allocate_cb (GtkWidget *wid, GtkAllocation *allocation, GdauiEntryPict *mgpict)
+size_allocate_cb (G_GNUC_UNUSED GtkWidget *wid, GtkAllocation *allocation, GdauiEntryPict *mgpict)
 {
 	if ((mgpict->priv->size.width != allocation->width) ||
 	    (mgpict->priv->size.height != allocation->height)) {
@@ -440,13 +440,14 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 }
 
 static void
-connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb)
+connect_signals(G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED GCallback modify_cb,
+		G_GNUC_UNUSED GCallback activate_cb)
 {
-	/* doe nothing because we manullay call gdaui_entry_wrapper_contents_changed() */
+	/* do nothing because we manually call gdaui_entry_wrapper_contents_changed() */
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return TRUE;
 }

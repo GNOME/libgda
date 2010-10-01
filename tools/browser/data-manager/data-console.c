@@ -169,7 +169,7 @@ data_console_page_init (BrowserPageIface *iface)
 }
 
 static void
-data_console_init (DataConsole *dconsole, DataConsoleClass *klass)
+data_console_init (DataConsole *dconsole, G_GNUC_UNUSED DataConsoleClass *klass)
 {
 	dconsole->priv = g_new0 (DataConsolePrivate, 1);
 	dconsole->priv->layout_type = LAYOUT_HORIZ;
@@ -614,14 +614,14 @@ save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
 }
 
 static void
-execute_clicked_cb (GtkButton *button, DataConsole *dconsole)
+execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 {
 	data_console_execute (dconsole);
 }
 
 #ifdef HAVE_GDU
 static void
-help_clicked_cb (GtkButton *button, DataConsole *dconsole)
+help_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 {
 	browser_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dconsole),
 			   "data-manager-perspective");
@@ -659,7 +659,7 @@ spec_editor_toggled_cb (GtkToggleButton *button, DataConsole *dconsole)
 }
 
 static void
-param_activated_cb (GdauiBasicForm *form, DataConsole *dconsole)
+param_activated_cb (G_GNUC_UNUSED GdauiBasicForm *form, DataConsole *dconsole)
 {
 	DataWidget *dwid = NULL;
 	if (dconsole->priv->data)
@@ -669,7 +669,8 @@ param_activated_cb (GdauiBasicForm *form, DataConsole *dconsole)
 }
 
 static void
-data_source_source_changed_cb (DataSourceManager *mgr, DataSource *source, DataConsole *dconsole)
+data_source_source_changed_cb (DataSourceManager *mgr, G_GNUC_UNUSED DataSource *source,
+			       DataConsole *dconsole)
 {
 	data_source_mgr_changed_cb (mgr, dconsole);
 }
@@ -703,7 +704,7 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 }
 
 static void
-editor_clear_clicked_cb (GtkButton *button, DataConsole *dconsole)
+editor_clear_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 {
 	xml_spec_editor_set_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped), DEFAULT_XML);
 	gtk_widget_grab_focus (dconsole->priv->xml_sped);
@@ -744,7 +745,7 @@ dbo_sort (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
 }
 
 static void
-add_source_clicked_cb (GtkButton *button, DataConsole *dconsole)
+add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 {
 	GdaMetaStruct *mstruct;
 	mstruct = browser_connection_get_meta_struct (dconsole->priv->bcnc);
@@ -835,7 +836,7 @@ add_source_clicked_cb (GtkButton *button, DataConsole *dconsole)
  * UI actions
  */
 static void
-compose_mode_toggled_cb (GtkToggleAction *action, DataConsole *dconsole)
+compose_mode_toggled_cb (G_GNUC_UNUSED GtkToggleAction *action, DataConsole *dconsole)
 {
 	gint pagenb;
 
@@ -927,7 +928,7 @@ data_console_page_get_actions_group (BrowserPage *page)
 }
 
 static const gchar *
-data_console_page_get_actions_ui (BrowserPage *page)
+data_console_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
 {
 	return ui_actions_console;
 }

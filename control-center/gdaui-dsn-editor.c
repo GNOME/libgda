@@ -97,13 +97,13 @@ field_changed_cb (GtkWidget *widget, GdauiDsnEditor *config)
 }
 
 static void
-field_toggled_cb (GtkWidget *widget, GdauiDsnEditor *config)
+field_toggled_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiDsnEditor *config)
 {
 	g_signal_emit (config, gdaui_dsn_editor_signals[CHANGED], 0, NULL);
 }
 
 static void
-gdaui_dsn_editor_init (GdauiDsnEditor *config, GdauiDsnEditorClass *klass)
+gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass *klass)
 {
 	GtkWidget *table;
 	GtkWidget *label;

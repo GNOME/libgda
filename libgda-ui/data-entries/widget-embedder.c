@@ -43,7 +43,7 @@ static GType    widget_embedder_child_type    (GtkContainer    *container);
 G_DEFINE_TYPE (WidgetEmbedder, widget_embedder, GTK_TYPE_CONTAINER);
 
 static void
-to_child (WidgetEmbedder *bin,
+to_child (G_GNUC_UNUSED WidgetEmbedder *bin,
           double         widget_x,
           double         widget_y,
           double        *x_out,
@@ -54,7 +54,7 @@ to_child (WidgetEmbedder *bin,
 }
 
 static void
-to_parent (WidgetEmbedder *bin,
+to_parent (G_GNUC_UNUSED WidgetEmbedder *bin,
            double         offscreen_x,
            double         offscreen_y,
            double        *x_out,
@@ -101,7 +101,7 @@ widget_embedder_new (void)
 }
 
 static GdkWindow *
-pick_offscreen_child (GdkWindow     *offscreen_window,
+pick_offscreen_child (G_GNUC_UNUSED GdkWindow     *offscreen_window,
                       double         widget_x,
                       double         widget_y,
                       WidgetEmbedder *bin)
@@ -122,7 +122,7 @@ pick_offscreen_child (GdkWindow     *offscreen_window,
 }
 
 static void
-offscreen_window_to_parent (GdkWindow     *offscreen_window,
+offscreen_window_to_parent (G_GNUC_UNUSED GdkWindow     *offscreen_window,
                             double         offscreen_x,
                             double         offscreen_y,
                             double        *parent_x,
@@ -133,7 +133,7 @@ offscreen_window_to_parent (GdkWindow     *offscreen_window,
 }
 
 static void
-offscreen_window_from_parent (GdkWindow     *window,
+offscreen_window_from_parent (G_GNUC_UNUSED GdkWindow     *window,
                               double         parent_x,
                               double         parent_y,
                               double        *offscreen_x,
@@ -275,7 +275,7 @@ widget_embedder_remove (GtkContainer *container,
 
 static void
 widget_embedder_forall (GtkContainer *container,
-                        gboolean      include_internals,
+                        G_GNUC_UNUSED gboolean      include_internals,
                         GtkCallback   callback,
                         gpointer      callback_data)
 {
@@ -354,7 +354,7 @@ widget_embedder_size_allocate (GtkWidget     *widget,
 
 static gboolean
 widget_embedder_damage (GtkWidget      *widget,
-                        GdkEventExpose *event)
+                        G_GNUC_UNUSED GdkEventExpose *event)
 {
 	gdk_window_invalidate_rect (gtk_widget_get_window (widget), NULL, FALSE);
 

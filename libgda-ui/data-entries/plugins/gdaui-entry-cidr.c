@@ -204,7 +204,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 /* makes sure the mask part of the widget is compatible with the ip part */
 static gboolean
-ip_focus_out_event_cb (GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *mgcidr)
+ip_focus_out_event_cb (G_GNUC_UNUSED GtkEntry *entry, G_GNUC_UNUSED GdkEventFocus *event, GdauiEntryCidr *mgcidr)
 {
 	gint ip;
 
@@ -236,7 +236,7 @@ ip_focus_out_event_cb (GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *mg
 /* makes sure the ip part of the widget is truncated to the right number of bits corresponding to
  * the mask part */
 static gboolean
-mask_focus_out_event_cb (GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *mgcidr)
+mask_focus_out_event_cb (G_GNUC_UNUSED GtkEntry *entry, G_GNUC_UNUSED GdkEventFocus *event, GdauiEntryCidr *mgcidr)
 {
 	gint mask;
 
@@ -249,7 +249,7 @@ mask_focus_out_event_cb (GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *
 
 static void popup_menu_item_activate_cb (GtkMenuItem *item, GdauiEntryCidr *mgcidr);
 static void
-mask_popup (GtkEntry *entry, GtkMenu *arg1, GdauiEntryCidr *mgcidr)
+mask_popup (G_GNUC_UNUSED GtkEntry *entry, GtkMenu *arg1, GdauiEntryCidr *mgcidr)
 {
 	GtkWidget *submenu, *item;
 	gint net;
@@ -594,7 +594,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }

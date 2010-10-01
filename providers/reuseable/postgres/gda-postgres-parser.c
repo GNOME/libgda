@@ -79,6 +79,6 @@ gda_postgres_parser_class_init (GdaPostgresParserClass * klass)
 }
 
 static void
-gda_postgres_parser_init (GdaPostgresParser *parser)
+gda_postgres_parser_init (G_GNUC_UNUSED GdaPostgresParser *parser)
 {
 }

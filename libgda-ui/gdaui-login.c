@@ -129,7 +129,7 @@ gdaui_login_class_init (GdauiLoginClass *klass)
 }
 
 static void
-config_dsn_changed_cb (GdaConfig *config, GdaDsnInfo *dsn, GdauiLogin *login)
+config_dsn_changed_cb (G_GNUC_UNUSED GdaConfig *config, GdaDsnInfo *dsn, GdauiLogin *login)
 {
 	if (!login->priv->prov_selector)
 		return;
@@ -142,7 +142,7 @@ config_dsn_changed_cb (GdaConfig *config, GdaDsnInfo *dsn, GdauiLogin *login)
 }
 
 static void
-gdaui_login_init (GdauiLogin *login, GdauiLoginClass *klass)
+gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 {
 	GtkWidget *table;
 	GtkWidget *wid;
@@ -377,7 +377,7 @@ radio_button_use_dsn_toggled_cb (GtkToggleButton *button, GdauiLogin *login)
 }
 
 static void
-run_cc_cb (GtkButton *button, GdauiLogin *login)
+run_cc_cb (G_GNUC_UNUSED GtkButton *button, GdauiLogin *login)
 {
 	char *argv[2];
 	gboolean sresult;
@@ -480,7 +480,7 @@ prov_entry_changed_cb (GdauiProviderSelector *sel, GdauiLogin *login)
 }
 
 static void
-cnc_params_editor_changed_cb (GdauiProviderSpecEditor *editor, GdauiLogin *login)
+cnc_params_editor_changed_cb (G_GNUC_UNUSED GdauiProviderSpecEditor *editor, GdauiLogin *login)
 {
 	g_signal_emit (login, gdaui_login_signals [CHANGED], 0, settings_are_valid (login));
 }
@@ -496,7 +496,7 @@ cnc_params_editor_changed_cb (GdauiProviderSpecEditor *editor, GdauiLogin *login
  * Since: 4.2
 */
 GtkWidget *
-gdaui_login_new (const gchar *dsn)
+gdaui_login_new (G_GNUC_UNUSED const gchar *dsn)
 {
 	GtkWidget *login;
 

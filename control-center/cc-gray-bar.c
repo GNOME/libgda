@@ -309,7 +309,7 @@ cc_gray_bar_class_init (CcGrayBarClass *klass)
 }
 
 static void
-cc_gray_bar_init (CcGrayBar *bar, CcGrayBarClass *klass)
+cc_gray_bar_init (CcGrayBar *bar, G_GNUC_UNUSED CcGrayBarClass *klass)
 {
 #if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_set_has_window (GTK_WIDGET (bar), TRUE);

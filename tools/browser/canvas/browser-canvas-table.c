@@ -199,7 +199,7 @@ static void
 browser_canvas_table_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasTable *ce = NULL;
 
@@ -236,7 +236,7 @@ static void
 browser_canvas_table_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasTable *ce = NULL;
 
@@ -403,8 +403,9 @@ create_items (BrowserCanvasTable *ce)
 }
 
 static gboolean
-button_press_event_cb (BrowserCanvasTable *ce, GooCanvasItem  *target_item, GdkEventButton *event,
-		       gpointer unused_data)
+button_press_event_cb (BrowserCanvasTable *ce, G_GNUC_UNUSED GooCanvasItem  *target_item,
+		       GdkEventButton *event,
+		       G_GNUC_UNUSED gpointer data)
 {
 	if ((event->button == 3) && ce->priv->popup_menu_func) {
 		GtkWidget *menu;
@@ -515,8 +516,9 @@ browser_canvas_table_new (GooCanvasItem *parent, GdaMetaStruct *mstruct, GdaMeta
 }
 
 static void
-browser_canvas_table_drag_data_get (BrowserCanvasItem *citem, GdkDragContext *drag_context,
-				    GtkSelectionData *data, guint info, guint time)
+browser_canvas_table_drag_data_get (BrowserCanvasItem *citem, G_GNUC_UNUSED GdkDragContext *drag_context,
+				    GtkSelectionData *data, G_GNUC_UNUSED guint info,
+				    G_GNUC_UNUSED guint time)
 {
 	BrowserCanvasTable *ctable;
 

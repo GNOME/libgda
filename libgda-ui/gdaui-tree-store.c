@@ -329,7 +329,7 @@ static void
 gdaui_tree_store_set_property (GObject *object,
 			       guint param_id,
 			       const GValue *value,
-			       GParamSpec *pspec)
+			       G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiTreeStore *store;
 
@@ -364,7 +364,7 @@ static void
 gdaui_tree_store_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiTreeStore *store;
 
@@ -861,7 +861,7 @@ tree_node_has_child_toggled_cb (GdaTree *tree, GdaTreeNode *node, GdauiTreeStore
 }
 
 static void
-tree_node_deleted_cb (GdaTree *tree, const gchar *node_path, GdauiTreeStore *store)
+tree_node_deleted_cb (G_GNUC_UNUSED GdaTree *tree, const gchar *node_path, GdauiTreeStore *store)
 {
 	GtkTreePath *path;
 

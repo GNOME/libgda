@@ -272,7 +272,7 @@ plugin_entry_filesel_create_func (GdaDataHandler *handler, GType type, const gch
 }
 
 static GdauiDataEntry *
-plugin_entry_cidr_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+plugin_entry_cidr_create_func (GdaDataHandler *handler, GType type, G_GNUC_UNUSED const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_cidr_new (handler, type);
 }

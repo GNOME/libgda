@@ -73,7 +73,7 @@ gda_jdbc_pstmt_class_init (GdaJdbcPStmtClass *klass)
 }
 
 static void
-gda_jdbc_pstmt_init (GdaJdbcPStmt *pstmt, GdaJdbcPStmtClass *klass)
+gda_jdbc_pstmt_init (GdaJdbcPStmt *pstmt, G_GNUC_UNUSED GdaJdbcPStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	

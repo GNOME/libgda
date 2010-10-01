@@ -251,8 +251,8 @@ default_gda_internal_commandargs_func (const gchar *string)
 }
 
 GdaInternalCommandResult *
-gda_internal_command_help (SqlConsole *console, GdaConnection *cnc, const gchar **args, 
-			   GError **error,
+gda_internal_command_help (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
+			   G_GNUC_UNUSED const gchar **args, G_GNUC_UNUSED GError **error,
 			   GdaInternalCommandsList *clist)
 {
 	GdaInternalCommandResult *res;
@@ -296,7 +296,8 @@ gda_internal_command_help (SqlConsole *console, GdaConnection *cnc, const gchar 
 }
 
 GdaInternalCommandResult *
-gda_internal_command_history (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_history (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
+			      GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 
@@ -341,7 +342,8 @@ gda_internal_command_history (SqlConsole *console, GdaConnection *cnc, const gch
 }
 
 GdaInternalCommandResult *
-gda_internal_command_dict_sync (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_dict_sync (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+				GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 
@@ -376,7 +378,8 @@ gda_internal_command_dict_sync (SqlConsole *console, GdaConnection *cnc, const g
 }
 
 GdaInternalCommandResult *
-gda_internal_command_list_tables (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_list_tables (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+				  GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;
@@ -419,7 +422,8 @@ gda_internal_command_list_tables (SqlConsole *console, GdaConnection *cnc, const
 }
 
 GdaInternalCommandResult *
-gda_internal_command_list_views (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_list_views (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+				 GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;
@@ -461,7 +465,8 @@ gda_internal_command_list_views (SqlConsole *console, GdaConnection *cnc, const 
 }
 
 GdaInternalCommandResult *
-gda_internal_command_list_schemas (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error, gpointer data)
+gda_internal_command_list_schemas (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+				   GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;
@@ -593,8 +598,8 @@ meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *v
 }
 
 GdaInternalCommandResult *
-gda_internal_command_detail (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			     GError **error, gpointer data)
+gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			     GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;

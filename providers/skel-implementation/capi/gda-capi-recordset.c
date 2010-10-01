@@ -55,7 +55,7 @@ static GObjectClass *parent_class = NULL;
  */
 static void
 gda_capi_recordset_init (GdaCapiRecordset *recset,
-			   GdaCapiRecordsetClass *klass)
+			   G_GNUC_UNUSED GdaCapiRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_CAPI_RECORDSET (recset));
 	recset->priv = g_new0 (GdaCapiRecordsetPrivate, 1);
@@ -253,7 +253,8 @@ gda_capi_recordset_fetch_nb_rows (GdaDataSelect *model)
  * as it won't be used anymore to fetch rows.
  */
 static gboolean 
-gda_capi_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+gda_capi_recordset_fetch_random (GdaDataSelect *model, G_GNUC_UNUSED GdaRow **prow, G_GNUC_UNUSED gint rownum,
+				 G_GNUC_UNUSED GError **error)
 {
 	GdaCapiRecordset *imodel;
 
@@ -267,6 +268,7 @@ gda_capi_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownu
 /*
  * Create and "give" filled #GdaRow object for all the rows in the model
  */
+#if 0
 static gboolean
 gda_capi_recordset_store_all (GdaDataSelect *model, GError **error)
 {
@@ -283,6 +285,7 @@ gda_capi_recordset_store_all (GdaDataSelect *model, GError **error)
 	}
 	return TRUE;
 }
+#endif
 
 /*
  * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
@@ -297,9 +300,10 @@ gda_capi_recordset_store_all (GdaDataSelect *model, GError **error)
  * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_capi_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+gda_capi_recordset_fetch_next (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED GdaRow **prow,
+			       G_GNUC_UNUSED gint rownum, G_GNUC_UNUSED GError **error)
 {
-	GdaCapiRecordset *imodel = (GdaCapiRecordset*) model;
+	/* GdaCapiRecordset *imodel = (GdaCapiRecordset*) model; */
 
 	TO_IMPLEMENT;
 
@@ -319,9 +323,10 @@ gda_capi_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum,
  * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_capi_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+gda_capi_recordset_fetch_prev (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED GdaRow **prow,
+			       G_GNUC_UNUSED gint rownum, G_GNUC_UNUSED GError **error)
 {
-	GdaCapiRecordset *imodel = (GdaCapiRecordset*) model;
+	/* GdaCapiRecordset *imodel = (GdaCapiRecordset*) model; */
 
 	TO_IMPLEMENT;
 
@@ -341,9 +346,10 @@ gda_capi_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum,
  * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_capi_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+gda_capi_recordset_fetch_at (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED GdaRow **prow,
+			     G_GNUC_UNUSED gint rownum, G_GNUC_UNUSED GError **error)
 {
-	GdaCapiRecordset *imodel = (GdaCapiRecordset*) model;
+	/* GdaCapiRecordset *imodel = (GdaCapiRecordset*) model; */
 	
 	TO_IMPLEMENT;
 

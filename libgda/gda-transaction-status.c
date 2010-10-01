@@ -50,7 +50,7 @@ gda_transaction_status_class_init (GdaTransactionStatusClass *klass)
 }
 
 static void
-gda_transaction_status_init (GdaTransactionStatus *tstatus, GdaTransactionStatusClass *klass)
+gda_transaction_status_init (GdaTransactionStatus *tstatus, G_GNUC_UNUSED GdaTransactionStatusClass *klass)
 {
 	tstatus->name = NULL;
 	tstatus->isolation_level = GDA_TRANSACTION_ISOLATION_UNKNOWN;

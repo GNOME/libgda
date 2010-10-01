@@ -92,7 +92,7 @@ table_preferences_class_init (TablePreferencesClass *klass)
 
 
 static void
-table_preferences_init (TablePreferences *tpreferences, TablePreferencesClass *klass)
+table_preferences_init (TablePreferences *tpreferences, G_GNUC_UNUSED TablePreferencesClass *klass)
 {
 	tpreferences->priv = g_new0 (TablePreferencesPrivate, 1);
 }
@@ -154,7 +154,7 @@ enum
 };
 
 static void
-meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TablePreferences *tpref)
+meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TablePreferences *tpref)
 {
 	gtk_list_store_clear (tpref->priv->columns_store);
 
@@ -211,7 +211,7 @@ meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TablePreferenc
 }
 
 static void
-table_column_pref_changed_cb (BrowserConnection *bcnc, GdaMetaTable *table,
+table_column_pref_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, G_GNUC_UNUSED GdaMetaTable *table,
 			      GdaMetaTableColumn *column,
 			      const gchar *attr_name, const gchar *value, TablePreferences *tpref)
 {
@@ -237,11 +237,11 @@ table_column_pref_changed_cb (BrowserConnection *bcnc, GdaMetaTable *table,
 }
 
 static void
-cell_name_data_func (GtkTreeViewColumn *tree_column,
+cell_name_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 		     GtkCellRenderer *cell,
 		     GtkTreeModel *tree_model,
 		     GtkTreeIter *iter,
-		     gpointer data)
+		     G_GNUC_UNUSED gpointer data)
 {
 	gchar *plugin;
 	GdaMetaTableColumn *column;
@@ -288,8 +288,8 @@ selection_changed_cb (GtkTreeSelection *select, TablePreferences *tpref)
 }
 
 static void
-columns_model_row_changed_cb (GtkTreeModel *tree_model, GtkTreePath *path, GtkTreeIter *iter,
-			      TablePreferences *tpref)
+columns_model_row_changed_cb (G_GNUC_UNUSED GtkTreeModel *tree_model, G_GNUC_UNUSED GtkTreePath *path,
+			      G_GNUC_UNUSED GtkTreeIter *iter, TablePreferences *tpref)
 {
 	tpref->priv->save_plugin_changes = FALSE;
 	plugins_combo_changed_cb (GTK_COMBO_BOX (tpref->priv->plugins_combo), tpref);
@@ -493,7 +493,7 @@ create_column_properties (TablePreferences *tpref)
 }
 
 static void
-plugin_hash_foreach_func (const gchar *plugin_name, GdauiPlugin *plugin, ForeachData *fdata)
+plugin_hash_foreach_func (G_GNUC_UNUSED const gchar *plugin_name, GdauiPlugin *plugin, ForeachData *fdata)
 {
 	gboolean add_it = FALSE;
 	if ((plugin->nb_g_types == 0) || (!plugin->plugin_file && !plugin->options_xml_spec))
@@ -711,8 +711,8 @@ plugins_combo_changed_cb (GtkComboBox *combo, TablePreferences *tpref)
 }
 
 static void
-options_form_param_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif,
-			       TablePreferences *tpref)
+options_form_param_changed_cb (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param,
+			       G_GNUC_UNUSED gboolean is_user_modif, TablePreferences *tpref)
 {
 	GtkTreeIter iter;
 

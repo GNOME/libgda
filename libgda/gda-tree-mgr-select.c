@@ -95,7 +95,7 @@ gda_tree_mgr_select_class_init (GdaTreeMgrSelectClass *klass)
 }
 
 static void
-gda_tree_mgr_select_init (GdaTreeMgrSelect *mgr, GdaTreeMgrSelectClass *klass)
+gda_tree_mgr_select_init (GdaTreeMgrSelect *mgr, G_GNUC_UNUSED GdaTreeMgrSelectClass *klass)
 {
 	g_return_if_fail (GDA_IS_TREE_MGR_SELECT (mgr));
 	mgr->priv = g_new0 (GdaTreeMgrSelectPriv, 1);
@@ -166,7 +166,7 @@ static void
 gda_tree_mgr_select_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaTreeMgrSelect *mgr;
 
@@ -234,7 +234,7 @@ static void
 gda_tree_mgr_select_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaTreeMgrSelect *mgr;
 
@@ -282,8 +282,9 @@ gda_tree_mgr_select_new (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params)
 }
 
 static GSList *
-gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
-				     gboolean *out_error, GError **error)
+gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
+				     G_GNUC_UNUSED const GSList *children_nodes, gboolean *out_error,
+				     GError **error)
 {
 	GdaTreeMgrSelect *mgr = GDA_TREE_MGR_SELECT (manager);
 	GdaDataModel *model;

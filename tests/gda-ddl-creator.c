@@ -266,7 +266,7 @@ static void
 gda_ddl_creator_set_property (GObject *object,
 			      guint param_id,
 			      const GValue *value,
-			      GParamSpec *pspec) 
+			      G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDDLCreator *creator;
 	
@@ -319,7 +319,7 @@ static void
 gda_ddl_creator_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     GParamSpec *pspec) 
+			     G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDDLCreator *creator;
 	creator = GDA_DDL_CREATOR (object);
@@ -632,7 +632,7 @@ create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov,
 }
 
 static GdaServerOperation *
-create_server_operation_for_view (GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, 
+create_server_operation_for_view (G_GNUC_UNUSED GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
 				  GdaMetaDbObject *dbobj, GError **error)
 {
 	GdaServerOperation *op;

@@ -98,7 +98,7 @@ gda_tree_mgr_tables_class_init (GdaTreeMgrTablesClass *klass)
 }
 
 static void
-gda_tree_mgr_tables_init (GdaTreeMgrTables *mgr, GdaTreeMgrTablesClass *klass)
+gda_tree_mgr_tables_init (GdaTreeMgrTables *mgr, G_GNUC_UNUSED GdaTreeMgrTablesClass *klass)
 {
 	g_return_if_fail (GDA_IS_TREE_MGR_TABLES (mgr));
 	mgr->priv = g_new0 (GdaTreeMgrTablesPriv, 1);
@@ -169,7 +169,7 @@ static void
 gda_tree_mgr_tables_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaTreeMgrTables *mgr;
 
@@ -192,7 +192,7 @@ static void
 gda_tree_mgr_tables_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaTreeMgrTables *mgr;
 
@@ -234,8 +234,9 @@ gda_tree_mgr_tables_new (GdaConnection *cnc, const gchar *schema)
 }
 
 static GSList *
-gda_tree_mgr_tables_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
-				     gboolean *out_error, GError **error)
+gda_tree_mgr_tables_update_children (GdaTreeManager *manager, GdaTreeNode *node,
+				     G_GNUC_UNUSED const GSList *children_nodes, gboolean *out_error,
+				     GError **error)
 {
 	GdaTreeMgrTables *mgr = GDA_TREE_MGR_TABLES (manager);
 	GdaMetaStore *store;

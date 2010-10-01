@@ -104,7 +104,7 @@ gda_data_model_get_type (void)
 }
 
 static void
-gda_data_model_class_init (gpointer g_class)
+gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 
@@ -1228,8 +1228,8 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 gboolean
 gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format, 
 			       const gchar *file,
-			       const gint *cols, gint nb_cols, 
-			       const gint *rows, gint nb_rows, 
+			       const gint *cols, G_GNUC_UNUSED gint nb_cols,
+			       const gint *rows, G_GNUC_UNUSED gint nb_rows,
 			       GdaSet *options, GError **error)
 {
 	gchar *body;

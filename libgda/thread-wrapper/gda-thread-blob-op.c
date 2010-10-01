@@ -71,7 +71,7 @@ _gda_thread_blob_op_get_type (void)
 
 static void
 gda_thread_blob_op_init (GdaThreadBlobOp *op,
-			   GdaThreadBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaThreadBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_THREAD_BLOB_OP (op));
 
@@ -131,7 +131,7 @@ _gda_thread_blob_op_new (GdaThreadWrapper *wrapper, GdaBlobOp *op)
  * Virtual functions
  */
 static glong *
-sub_thread_blob_op_get_length (GdaBlobOp *wrapped_op, GError **error)
+sub_thread_blob_op_get_length (GdaBlobOp *wrapped_op, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	glong *retptr;
@@ -170,7 +170,7 @@ typedef struct {
 } ThreadData;
 
 static glong *
-sub_thread_blob_op_read (ThreadData *td, GError **error)
+sub_thread_blob_op_read (ThreadData *td, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	glong *retptr;
@@ -208,7 +208,7 @@ gda_thread_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 }
 
 static glong *
-sub_thread_blob_op_write (ThreadData *td, GError **error)
+sub_thread_blob_op_write (ThreadData *td, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	glong *retptr;

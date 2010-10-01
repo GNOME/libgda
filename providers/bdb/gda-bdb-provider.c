@@ -74,7 +74,7 @@ gda_bdb_provider_class_init (GdaBdbProviderClass *klass)
 }
 
 static void
-gda_bdb_provider_init (GdaBdbProvider *pg_prv, GdaBdbProviderClass *klass)
+gda_bdb_provider_init (G_GNUC_UNUSED GdaBdbProvider *pg_prv, G_GNUC_UNUSED GdaBdbProviderClass *klass)
 {
 }
 
@@ -119,7 +119,7 @@ gda_bdb_provider_get_type (void)
  * Get provider name request
  */
 static const gchar *
-gda_bdb_provider_get_name (GdaServerProvider *provider)
+gda_bdb_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return BDB_PROVIDER_NAME;
 }
@@ -128,7 +128,7 @@ gda_bdb_provider_get_name (GdaServerProvider *provider)
  * Get version request
  */
 static const gchar *
-gda_bdb_provider_get_version (GdaServerProvider *provider)
+gda_bdb_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -138,8 +138,9 @@ gda_bdb_provider_get_version (GdaServerProvider *provider)
  */
 static gboolean
 gda_bdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				  GdaQuarkList *params, GdaQuarkList *auth,
-				  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				  GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
+				  G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				  G_GNUC_UNUSED gpointer cb_data)
 {
 	BdbConnectionData *cdata;
 	gchar *bdb_file, *bdb_db, *dirname;

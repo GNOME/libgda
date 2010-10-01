@@ -56,7 +56,7 @@ popup_container_class_init (PopupContainerClass *klass)
 }
 
 static gboolean
-delete_popup (GtkWidget *widget, PopupContainer *container)
+delete_popup (G_GNUC_UNUSED GtkWidget *widget, PopupContainer *container)
 {
         gtk_widget_hide (GTK_WIDGET (container));
         gtk_grab_remove (GTK_WIDGET (container));
@@ -102,7 +102,7 @@ button_press_popup (GtkWidget *widget, GdkEventButton *event, PopupContainer *co
 }
 
 static void
-popup_container_init (PopupContainer *container, PopupContainerClass *klass)
+popup_container_init (PopupContainer *container, G_GNUC_UNUSED PopupContainerClass *klass)
 {
 	container->priv = g_new0 (PopupContainerPrivate, 1);
 	container->priv->position_func = NULL;
@@ -140,7 +140,7 @@ popup_container_dispose (GObject *object)
 }
 
 static void
-default_position_func (PopupContainer *container, gint *out_x, gint *out_y)
+default_position_func (G_GNUC_UNUSED PopupContainer *container, gint *out_x, gint *out_y)
 {
 	gdk_display_get_pointer (gdk_display_get_default (), NULL,
 				 out_x, out_y, NULL);

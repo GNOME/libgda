@@ -62,7 +62,7 @@ gdaui_entry_date_class_init (GdauiEntryDateClass * class)
 }
 
 static void
-gdaui_entry_date_init (GdauiEntryDate * gdaui_entry_date)
+gdaui_entry_date_init (G_GNUC_UNUSED GdauiEntryDate * gdaui_entry_date)
 {
 }
 

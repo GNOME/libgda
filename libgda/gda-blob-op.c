@@ -76,7 +76,7 @@ gda_blob_op_class_init (GdaBlobOpClass *klass)
 }
 
 static void
-gda_blob_op_init (GdaBlobOp *provider, GdaBlobOpClass *klass)
+gda_blob_op_init (G_GNUC_UNUSED GdaBlobOp *provider, G_GNUC_UNUSED GdaBlobOpClass *klass)
 {
 
 }

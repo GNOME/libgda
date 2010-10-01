@@ -73,7 +73,7 @@ gda_capi_blob_op_get_type (void)
 
 static void
 gda_capi_blob_op_init (GdaCapiBlobOp *op,
-			   GdaCapiBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaCapiBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_CAPI_BLOB_OP (op));
 
@@ -176,7 +176,7 @@ gda_capi_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
  * Blob write request
  */
 static glong
-gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
+gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset)
 {
 	GdaCapiBlobOp *bop;
 	GdaBinary *bin;

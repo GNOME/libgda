@@ -823,7 +823,7 @@ make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, const gchar *value
 
 /* Makes a GDate from a string like "24-12-2003" */
 static gboolean
-make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *locale)
+make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *locale)
 {
 	gboolean retval = TRUE;
 	gushort nums[3];
@@ -923,7 +923,7 @@ make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *
  * Also works if there is only 0 or 1 digit instead of 2
  */
 static gboolean
-make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
+make_time (G_GNUC_UNUSED GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
 {
 	const gchar *ptr;
 

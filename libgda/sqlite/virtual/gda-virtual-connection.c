@@ -72,7 +72,7 @@ gda_virtual_connection_class_init (GdaVirtualConnectionClass *klass)
 }
 
 static void
-gda_virtual_connection_init (GdaVirtualConnection *vcnc, GdaVirtualConnectionClass *klass)
+gda_virtual_connection_init (GdaVirtualConnection *vcnc, G_GNUC_UNUSED GdaVirtualConnectionClass *klass)
 {
 	vcnc->priv = g_new0 (GdaVirtualConnectionPrivate, 1);
 	vcnc->priv->v_provider_data = NULL;

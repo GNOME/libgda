@@ -74,7 +74,7 @@ gda_postgres_pstmt_class_init (GdaPostgresPStmtClass *klass)
 }
 
 static void
-gda_postgres_pstmt_init (GdaPostgresPStmt *pstmt, GdaPostgresPStmtClass *klass)
+gda_postgres_pstmt_init (GdaPostgresPStmt *pstmt, G_GNUC_UNUSED GdaPostgresPStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	

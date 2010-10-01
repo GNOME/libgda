@@ -228,7 +228,7 @@ gda_web_provider_class_init (GdaWebProviderClass *klass)
 }
 
 static void
-gda_web_provider_init (GdaWebProvider *web_prv, GdaWebProviderClass *klass)
+gda_web_provider_init (G_GNUC_UNUSED GdaWebProvider *web_prv, G_GNUC_UNUSED GdaWebProviderClass *klass)
 {
 }
 
@@ -263,7 +263,7 @@ gda_web_provider_get_type (void)
  * Get provider name request
  */
 static const gchar *
-gda_web_provider_get_name (GdaServerProvider *provider)
+gda_web_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return WEB_PROVIDER_NAME;
 }
@@ -272,7 +272,7 @@ gda_web_provider_get_name (GdaServerProvider *provider)
  * Get provider's version, no need to change this
  */
 static const gchar *
-gda_web_provider_get_version (GdaServerProvider *provider)
+gda_web_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -331,7 +331,8 @@ do_server_setup (GdaConnection *cnc, WebConnectionData *cdata)
 static gboolean
 gda_web_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
 				  GdaQuarkList *params, GdaQuarkList *auth,
-				  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				  G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				  G_GNUC_UNUSED gpointer cb_data)
 {
 	g_return_val_if_fail (GDA_IS_WEB_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -578,7 +579,7 @@ gda_web_provider_get_server_version (GdaServerProvider *provider, GdaConnection 
  */
 static gboolean
 gda_web_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaServerOperationType type, GdaSet *options)
+				     GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -613,7 +614,8 @@ gda_web_provider_supports_operation (GdaServerProvider *provider, GdaConnection 
  */
 static GdaServerOperation *
 gda_web_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaServerOperationType type, GdaSet *options, GError **error)
+				   G_GNUC_UNUSED GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options,
+				   GError **error)
 {
 	WebConnectionData *cdata = NULL;
 
@@ -638,7 +640,7 @@ gda_web_provider_create_operation (GdaServerProvider *provider, GdaConnection *c
  */
 static gchar *
 gda_web_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaServerOperation *op, GError **error)
+				   G_GNUC_UNUSED GdaServerOperation *op, GError **error)
 {
 	WebConnectionData *cdata = NULL;
 
@@ -663,8 +665,9 @@ gda_web_provider_render_operation (GdaServerProvider *provider, GdaConnection *c
  */
 static gboolean
 gda_web_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				    GdaServerOperation *op, guint *task_id, 
-				    GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+				    GdaServerOperation *op, G_GNUC_UNUSED guint *task_id,
+				    GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data,
+				    GError **error)
 {
         GdaServerOperationType optype;
 
@@ -1002,7 +1005,7 @@ gda_web_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection 
  */
 static gboolean
 gda_web_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-				   const gchar *name, GError **error)
+				   G_GNUC_UNUSED const gchar *name, G_GNUC_UNUSED GError **error)
 {
 	WebConnectionData *cdata;
 
@@ -1054,7 +1057,7 @@ gda_web_provider_supports_feature (GdaServerProvider *provider, GdaConnection *c
  */
 static GdaDataHandler *
 gda_web_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
-				   GType type, const gchar *dbms_type)
+				   G_GNUC_UNUSED GType type, G_GNUC_UNUSED const gchar *dbms_type)
 {
 	WebConnectionData *cdata = NULL;
 
@@ -1077,7 +1080,7 @@ gda_web_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *c
  * This method returns the "preferred" DBMS type for GType
  */
 static const gchar*
-gda_web_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, GType type)
+gda_web_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, G_GNUC_UNUSED GType type)
 {
 	WebConnectionData *cdata = NULL;
 
@@ -1101,7 +1104,7 @@ gda_web_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnecti
  * by the database. See the PostgreSQL provider implementation for an example.
  */
 static GdaSqlParser *
-gda_web_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
+gda_web_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc)
 {
 	WebConnectionData *cdata = NULL;
 

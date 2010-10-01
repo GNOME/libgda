@@ -569,12 +569,12 @@ static gboolean gdaui_data_cell_renderer_combo_focus_out_event (GtkWidget *widge
 
 static GtkCellEditable *
 gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
-					      GdkEvent            *event,
-					      GtkWidget           *widget,
+					      G_GNUC_UNUSED GdkEvent            *event,
+					      G_GNUC_UNUSED GtkWidget           *widget,
 					      const gchar         *path,
-					      GdkRectangle        *background_area,
-					      GdkRectangle        *cell_area,
-					      GtkCellRendererState flags)
+					      G_GNUC_UNUSED GdkRectangle        *background_area,
+					      G_GNUC_UNUSED GdkRectangle        *cell_area,
+					      G_GNUC_UNUSED GtkCellRendererState flags)
 {
 	GdauiDataCellRendererCombo *datacell;
 	GtkWidget *combo;
@@ -638,7 +638,7 @@ gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCe
 
 
 static gboolean
-gdaui_data_cell_renderer_combo_focus_out_event (GtkWidget *widget, GdkEvent  *event, 
+gdaui_data_cell_renderer_combo_focus_out_event (GtkWidget *widget, G_GNUC_UNUSED GdkEvent  *event,
 						GdauiDataCellRendererCombo *datacell)
 {
   

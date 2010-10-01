@@ -27,7 +27,7 @@
 
 gchar *
 gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc, 
-			       GdaServerOperation *op, GError **error)
+			       GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -80,7 +80,7 @@ gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc, 
-			     GdaServerOperation *op, GError **error)
+			     GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	gchar *sql = NULL;
@@ -379,7 +379,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 
 gchar *
 gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cnc, 
-				  GdaServerOperation *op, GError **error)
+				  GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -407,7 +407,7 @@ gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cn
 
 gchar *
 gda_postgres_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-				  GdaServerOperation *op, GError **error)
+				  GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	gchar *sql = NULL;
@@ -433,7 +433,7 @@ gda_postgres_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cn
 
 gchar *
 gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
-				GdaServerOperation *op, GError **error)
+				GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -511,7 +511,7 @@ gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_postgres_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
-				  GdaServerOperation *op, GError **error)
+				  GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -546,7 +546,7 @@ gda_postgres_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnection *cn
 
 gchar *
 gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
-				  GdaServerOperation *op, GError **error)
+				  GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -621,7 +621,7 @@ gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cn
 
 gchar *
 gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
-				  GdaServerOperation *op, GError **error)
+				  GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -648,7 +648,7 @@ gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cn
 
 gchar *
 gda_postgres_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
-				 GdaServerOperation *op, GError **error)
+				 GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -721,7 +721,7 @@ gda_postgres_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc
 	
 gchar *
 gda_postgres_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
-			       GdaServerOperation *op, GError **error)
+			       GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -753,7 +753,7 @@ gda_postgres_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc, 
-				 GdaServerOperation *op, GError **error)
+				 GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -962,7 +962,7 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 
 gchar *
 gda_postgres_render_DROP_USER (GdaServerProvider *provider, GdaConnection *cnc,
-			       GdaServerOperation *op, GError **error)
+			       GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;

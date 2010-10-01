@@ -101,7 +101,7 @@ data_model_errors_data_model_init (GdaDataModelIface *iface)
 
 static void
 data_model_errors_init (DataModelErrors *model,
-			DataModelErrorsClass *klass)
+			G_GNUC_UNUSED DataModelErrorsClass *klass)
 {
 	gint i;
 	g_return_if_fail (IS_DATA_MODEL_ERRORS (model));
@@ -363,7 +363,7 @@ data_model_errors_get_value_at (GdaDataModel *model, gint col, gint row, GError 
 }
 
 static GdaValueAttribute
-data_model_errors_get_attributes_at (GdaDataModel *model, gint col, gint row)
+data_model_errors_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
 {
 	DataModelErrors *imodel;
 	GdaValueAttribute flags = 0;
@@ -417,7 +417,7 @@ data_model_errors_set_value_at (GdaDataModel *model, gint col, gint row, const G
 
 
 static gint
-data_model_errors_append_values (GdaDataModel *model, const GList *values, GError **error)
+data_model_errors_append_values (GdaDataModel *model, G_GNUC_UNUSED const GList *values, GError **error)
 {
 	DataModelErrors *imodel;
 	

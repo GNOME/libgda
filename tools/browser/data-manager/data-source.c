@@ -233,13 +233,13 @@ data_source_init (DataSource *source)
 }
 
 static void
-params_changed_cb (GdaSet *params, GdaHolder *holder, DataSource *source)
+params_changed_cb (G_GNUC_UNUSED GdaSet *params, G_GNUC_UNUSED GdaHolder *holder, DataSource *source)
 {
 	source->priv->need_rerun = TRUE;
 }
 
 static void
-ext_params_changed_cb (GdaSet *params, GdaHolder *holder, DataSource *source)
+ext_params_changed_cb (G_GNUC_UNUSED GdaSet *params, G_GNUC_UNUSED GdaHolder *holder, DataSource *source)
 {
 #ifdef DEBUG_SOURCE
 	g_print ("  => data source [%s] should rerun\n",

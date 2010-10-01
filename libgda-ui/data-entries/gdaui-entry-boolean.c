@@ -251,13 +251,13 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static void
-check_toggled_cb (GtkToggleButton *toggle, GdauiEntryBoolean *mgbool)
+check_toggled_cb (GtkToggleButton *toggle, G_GNUC_UNUSED GdauiEntryBoolean *mgbool)
 {
 	gtk_toggle_button_set_inconsistent (toggle, FALSE);
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }

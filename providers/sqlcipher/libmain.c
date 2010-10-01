@@ -37,14 +37,14 @@ GdaServerProvider *plugin_create_provider (void);
  * Functions executed when calling g_module_open() and g_module_close()
  */
 const gchar *
-g_module_check_init (GModule *module)
+g_module_check_init (G_GNUC_UNUSED GModule *module)
 {
         /*g_module_make_resident (module);*/
         return NULL;
 }
 
 void
-g_module_unload (GModule *module)
+g_module_unload (G_GNUC_UNUSED GModule *module)
 {
         g_free (module_path);
         module_path = NULL;

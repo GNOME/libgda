@@ -103,7 +103,7 @@ relations_diagram_page_init (BrowserPageIface *iface)
 }
 
 static void
-relations_diagram_init (RelationsDiagram *diagram, RelationsDiagramClass *klass)
+relations_diagram_init (RelationsDiagram *diagram, G_GNUC_UNUSED RelationsDiagramClass *klass)
 {
 	diagram->priv = g_new0 (RelationsDiagramPrivate, 1);
 	diagram->priv->fav_id = -1;
@@ -167,8 +167,8 @@ relations_diagram_get_type (void)
 static void
 relations_diagram_set_property (GObject *object,
 				guint param_id,
-				const GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED const GValue *value,
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
 	RelationsDiagram *diagram;
 	diagram = RELATIONS_DIAGRAM (object);
@@ -179,8 +179,8 @@ relations_diagram_set_property (GObject *object,
 static void
 relations_diagram_get_property (GObject *object,
 				guint param_id,
-				GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GValue *value,
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
 	RelationsDiagram *diagram;
 	diagram = RELATIONS_DIAGRAM (object);
@@ -189,13 +189,13 @@ relations_diagram_get_property (GObject *object,
 }
 
 static void
-meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram)
+meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram)
 {
 	g_object_set (G_OBJECT (diagram->priv->canvas), "meta-struct", mstruct, NULL);
 }
 
 static void
-favorites_changed_cb (BrowserConnection *bcnc, RelationsDiagram *diagram)
+favorites_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, RelationsDiagram *diagram)
 {
 	if (diagram->priv->fav_id >= 0)
 		relations_diagram_set_fav_id (diagram, diagram->priv->fav_id, NULL);
@@ -491,7 +491,7 @@ relations_diagram_get_fav_id (RelationsDiagram *diagram)
 }
 
 static void
-action_view_contents_cb  (GtkAction *action, RelationsDiagram *diagram)
+action_view_contents_cb  (G_GNUC_UNUSED GtkAction *action, RelationsDiagram *diagram)
 {
 	gchar *str;
 	str = browser_canvas_db_relations_items_to_data_manager (BROWSER_CANVAS_DB_RELATIONS (diagram->priv->canvas));
@@ -534,7 +534,7 @@ relations_diagram_page_get_actions_group (BrowserPage *page)
 }
 
 static const gchar *
-relations_diagram_page_get_actions_ui (BrowserPage *page)
+relations_diagram_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
 {
 	return ui_actions_info;
 }

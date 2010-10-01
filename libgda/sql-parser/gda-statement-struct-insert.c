@@ -338,7 +338,7 @@ gda_sql_statement_insert_take_select (GdaSqlStatement *stmt, GdaSqlStatement *se
 }
 
 static gboolean
-gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	GdaSqlStatementInsert *insert = (GdaSqlStatementInsert *) stmt;
 	gint nb_values;

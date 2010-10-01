@@ -55,7 +55,7 @@ browser_page_get_type (void)
 }
 
 static void
-browser_page_class_init (gpointer g_class)
+browser_page_class_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 

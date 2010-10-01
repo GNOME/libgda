@@ -349,7 +349,7 @@ data_source_editor_display_source (DataSourceEditor *editor, DataSource *source)
 }
 
 static void
-attribute_changed_cb (GdaSet *set, GdaHolder *holder, DataSourceEditor *editor)
+attribute_changed_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *holder, DataSourceEditor *editor)
 {
 	const gchar *id, *str = NULL;
 	const GValue *cvalue;

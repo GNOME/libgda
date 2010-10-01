@@ -85,7 +85,7 @@ data_source_info_free (GdaDsnInfo *info)
 }
 
 static void
-delete_event_cb (GtkDialog *dlg, gpointer data)
+delete_event_cb (GtkDialog *dlg, G_GNUC_UNUSED gpointer data)
 {
 	gtk_dialog_response (dlg, GTK_RESPONSE_OK);
 }

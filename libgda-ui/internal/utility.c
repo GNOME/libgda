@@ -604,7 +604,7 @@ _gdaui_setup_right_click_selection_on_treeview (GtkTreeView *tview)
 }
 
 static gboolean
-tree_view_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, gpointer unuseddata)
+tree_view_button_pressed_cb (GtkWidget *widget, GdkEventButton *event, G_GNUC_UNUSED gpointer data)
 {
 	GtkTreeView *tree_view;
 	GtkTreeSelection *selection;

@@ -370,7 +370,7 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 }
 
 static void
-paramlist_holder_type_set_cb (GdaSet *paramlist, GdaHolder *param,
+paramlist_holder_type_set_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *param,
 			      GdauiBasicForm *form)
 {
 	SingleEntry *sentry;
@@ -388,7 +388,7 @@ paramlist_holder_type_set_cb (GdaSet *paramlist, GdaHolder *param,
 
 
 static void
-paramlist_public_data_changed_cb (GdauiSet *paramlist, GdauiBasicForm *form)
+paramlist_public_data_changed_cb (G_GNUC_UNUSED GdauiSet *paramlist, GdauiBasicForm *form)
 {
 	/* here we want to re-define all the data entry widgets */
 	destroy_entries (form);
@@ -398,8 +398,9 @@ paramlist_public_data_changed_cb (GdauiSet *paramlist, GdauiBasicForm *form)
 }
 
 static void
-paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param,
-				 const gchar *att_name, const GValue *att_value, GdauiBasicForm *form)
+paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *param,
+				 const gchar *att_name, G_GNUC_UNUSED const GValue *att_value,
+				 GdauiBasicForm *form)
 {
 	SingleEntry *sentry;
 
@@ -1340,7 +1341,7 @@ mark_not_null_entry_labels (GdauiBasicForm *form, gboolean show_mark)
 }
 
 static void
-entry_contents_activated (GdauiDataEntry *entry, GdauiBasicForm *form)
+entry_contents_activated (G_GNUC_UNUSED GdauiDataEntry *entry, GdauiBasicForm *form)
 {
 	g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[ACTIVATED], 0);
 }
@@ -1447,7 +1448,7 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 }
 
 static void
-entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry)
+entry_expand_changed_cb (G_GNUC_UNUSED GdauiDataEntry *entry, SingleEntry *sentry)
 {
 	pack_entry_widget (sentry);
 }
@@ -2058,7 +2059,8 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 }
 
 static void
-form_holder_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif, GtkDialog *dlg)
+form_holder_changed (GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param,
+		     G_GNUC_UNUSED gboolean is_user_modif, GtkDialog *dlg)
 {
 	gboolean valid;
 

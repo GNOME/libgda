@@ -181,7 +181,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 }
 
 static void
-nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkNotebookPage *page, gint page_num,
 		   SchemaBrowserPerspective *perspective)
 {
 	GtkWidget *page_contents;
@@ -201,7 +201,7 @@ nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
 }
 
 static void
-close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget)
+close_button_clicked_cb (G_GNUC_UNUSED GtkWidget *wid, GtkWidget *page_widget)
 {
 	gtk_widget_destroy (page_widget);
 }
@@ -215,7 +215,7 @@ objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_
 
 
 static void
-fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
 			  const gchar *selection, SchemaBrowserPerspective *bpers)
 {
 	if (fav_type == BROWSER_FAVORITES_TABLES) {
@@ -294,7 +294,7 @@ schema_browser_perspective_dispose (GObject *object)
 
 #ifdef HAVE_GOOCANVAS
 static void
-action_create_diagram_cb (GtkAction *action, SchemaBrowserPerspective *bpers)
+action_create_diagram_cb (G_GNUC_UNUSED GtkAction *action, SchemaBrowserPerspective *bpers)
 {
 	schema_browser_perspective_display_diagram (bpers, -1);
 }
@@ -356,7 +356,7 @@ schema_browser_perspective_get_actions_group (BrowserPerspective *bpers)
 }
 
 static const gchar *
-schema_browser_perspective_get_actions_ui (BrowserPerspective *bpers)
+schema_browser_perspective_get_actions_ui (G_GNUC_UNUSED BrowserPerspective *bpers)
 {
 	return ui_actions_info;
 }
@@ -454,7 +454,7 @@ void
 schema_browser_perspective_display_table_info (SchemaBrowserPerspective *bpers,
 					       const gchar *table_schema,
 					       const gchar *table_name,
-					       const gchar *table_short_name)
+					       G_GNUC_UNUSED const gchar *table_short_name)
 {
 	g_return_if_fail (IS_SCHEMA_BROWSER_PERSPECTIVE (bpers));
 

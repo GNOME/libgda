@@ -69,7 +69,8 @@ gda_models_provider_class_init (GdaModelsProviderClass *klass)
 }
 
 static void
-gda_models_provider_init (GdaModelsProvider *pg_prv, GdaModelsProviderClass *klass)
+gda_models_provider_init (G_GNUC_UNUSED GdaModelsProvider *pg_prv,
+			  G_GNUC_UNUSED GdaModelsProviderClass *klass)
 {
 	/* initialization of provider instance is to add here */
 	TO_IMPLEMENT;
@@ -116,7 +117,7 @@ gda_models_provider_get_type (void)
  * Get provider name request
  */
 static const gchar *
-gda_models_provider_get_name (GdaServerProvider *provider)
+gda_models_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return MODELS_PROVIDER_NAME;
 }
@@ -125,7 +126,7 @@ gda_models_provider_get_name (GdaServerProvider *provider)
  * Get version request
  */
 static const gchar *
-gda_models_provider_get_version (GdaServerProvider *provider)
+gda_models_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -145,8 +146,9 @@ gda_models_provider_get_version (GdaServerProvider *provider)
  */
 static gboolean
 gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaQuarkList *params, GdaQuarkList *auth,
-				     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
+				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				     G_GNUC_UNUSED gpointer cb_data)
 {
 	g_return_val_if_fail (GDA_IS_MODELS_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);

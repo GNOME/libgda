@@ -62,7 +62,7 @@ static GObjectClass *parent_class = NULL;
  */
 static void
 gda_web_recordset_init (GdaWebRecordset *recset,
-			   GdaWebRecordsetClass *klass)
+			   G_GNUC_UNUSED GdaWebRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_WEB_RECORDSET (recset));
 	recset->priv = g_new0 (GdaWebRecordsetPrivate, 1);

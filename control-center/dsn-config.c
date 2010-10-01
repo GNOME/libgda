@@ -48,19 +48,19 @@ free_private_data (gpointer data)
 }
 
 static void
-list_double_clicked_cb (GdauiGrid *grid, gint row, gpointer user_data)
+list_double_clicked_cb (G_GNUC_UNUSED GdauiGrid *grid, G_GNUC_UNUSED gint row, gpointer user_data)
 {
 	dsn_config_edit_properties (GTK_WIDGET (user_data));
 }
 
 static void
-list_popup_properties_cb (GtkWidget *menu, gpointer user_data)
+list_popup_properties_cb (G_GNUC_UNUSED GtkWidget *menu, gpointer user_data)
 {
 	dsn_config_edit_properties (GTK_WIDGET (user_data));
 }
 
 static void
-list_popup_delete_cb (GtkWidget *menu, gpointer user_data)
+list_popup_delete_cb (G_GNUC_UNUSED GtkWidget *menu, gpointer user_data)
 {
 	dsn_config_delete (GTK_WIDGET (user_data));
 }

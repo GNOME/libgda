@@ -4,7 +4,7 @@
 #include <glib/gi18n-lib.h>
 
 gint
-main (int argc, char **argv) {
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv) {
 	GdaDataModel *model;
 
 	gda_init ();

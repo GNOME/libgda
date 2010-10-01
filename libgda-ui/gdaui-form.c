@@ -169,7 +169,7 @@ gdaui_form_class_init (GdauiFormClass *class)
 }
 
 static void
-form_layout_changed_cb (GdauiBasicForm *raw_form, GdauiForm *form)
+form_layout_changed_cb (G_GNUC_UNUSED GdauiBasicForm *raw_form, GdauiForm *form)
 {
 	gboolean expand;
 	g_object_get (G_OBJECT (form->priv->raw_form), "can-expand-v", &expand, NULL);

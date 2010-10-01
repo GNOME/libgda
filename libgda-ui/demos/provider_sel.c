@@ -9,7 +9,7 @@
 static GtkWidget *window = NULL;
 
 static void
-selection_changed_cb (GdauiProviderSelector *psel, gpointer data)
+selection_changed_cb (GdauiProviderSelector *psel, G_GNUC_UNUSED gpointer data)
 {
 	g_print ("Provider selected: %s\n", gdaui_provider_selector_get_provider (psel));
 }

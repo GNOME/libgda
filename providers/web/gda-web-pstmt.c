@@ -74,7 +74,7 @@ gda_web_pstmt_class_init (GdaWebPStmtClass *klass)
 }
 
 static void
-gda_web_pstmt_init (GdaWebPStmt *pstmt, GdaWebPStmtClass *klass)
+gda_web_pstmt_init (GdaWebPStmt *pstmt, G_GNUC_UNUSED GdaWebPStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	

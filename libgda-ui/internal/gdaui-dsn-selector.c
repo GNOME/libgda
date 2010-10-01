@@ -77,7 +77,7 @@ gdaui_dsn_selector_class_init (GdauiDsnSelectorClass *klass)
 
 static void
 gdaui_dsn_selector_init (GdauiDsnSelector *selector,
-				    GdauiDsnSelectorClass *klass)
+				    G_GNUC_UNUSED GdauiDsnSelectorClass *klass)
 {
 	GdaDataModel *model;
 	gint cols_index[] = {0};
@@ -109,7 +109,7 @@ static void
 gdaui_dsn_selector_set_property (GObject *object,
 				 guint param_id,
 				 const GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiDsnSelector *selector;
 	GSList *list;
@@ -129,7 +129,7 @@ static void
 gdaui_dsn_selector_get_property (GObject *object,
 				 guint param_id,
 				 GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiDsnSelector *selector;
 	GSList *list;

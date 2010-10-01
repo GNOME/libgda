@@ -75,7 +75,7 @@ gda_jdbc_blob_op_get_type (void)
 
 static void
 gda_jdbc_blob_op_init (GdaJdbcBlobOp *op,
-			   GdaJdbcBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaJdbcBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_JDBC_BLOB_OP (op));
 

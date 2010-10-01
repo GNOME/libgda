@@ -79,6 +79,6 @@ gda_mysql_parser_class_init (GdaMysqlParserClass * klass)
 }
 
 static void
-gda_mysql_parser_init (GdaMysqlParser *parser)
+gda_mysql_parser_init (G_GNUC_UNUSED GdaMysqlParser *parser)
 {
 }

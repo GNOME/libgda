@@ -83,7 +83,7 @@ objects_index_class_init (ObjectsIndexClass *klass)
 
 
 static void
-objects_index_init (ObjectsIndex *index, ObjectsIndexClass *klass)
+objects_index_init (ObjectsIndex *index, G_GNUC_UNUSED ObjectsIndexClass *klass)
 {
 	index->priv = g_new0 (ObjectsIndexPrivate, 1);
 }
@@ -132,7 +132,7 @@ objects_index_get_type (void)
 }
 
 static void
-cloud_object_selected_cb (ObjectsCloud *sel, ObjectsCloudObjType sel_type, 
+cloud_object_selected_cb (G_GNUC_UNUSED ObjectsCloud *sel, G_GNUC_UNUSED ObjectsCloudObjType sel_type,
 			  const gchar *sel_contents, ObjectsIndex *index)
 {
 	/* FIXME: adjust with sel->priv->type */
@@ -206,7 +206,7 @@ objects_index_new (BrowserConnection *bcnc)
 }
 
 static void
-meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, ObjectsIndex *index)
+meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, ObjectsIndex *index)
 {
 	objects_cloud_set_meta_struct (index->priv->cloud, mstruct);
 }

@@ -213,7 +213,8 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 }
 
 static void
-connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb)
+connect_signals(GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED GCallback modify_cb,
+		G_GNUC_UNUSED GCallback activate_cb)
 {
 	GdauiEntryNone *entry;
 
@@ -223,7 +224,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }

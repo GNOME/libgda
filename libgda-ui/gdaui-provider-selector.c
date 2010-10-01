@@ -78,7 +78,7 @@ gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klass)
 
 static void
 gdaui_provider_selector_init (GdauiProviderSelector *selector,
-			      GdauiProviderSelectorClass *klass)
+			      G_GNUC_UNUSED GdauiProviderSelectorClass *klass)
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_SELECTOR (selector));
 

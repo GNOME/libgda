@@ -241,7 +241,7 @@ _gda_sql_statement_compound_get_n_cols (GdaSqlStatementCompound *compound, GErro
 }
 
 static gboolean
-gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+gda_sql_statement_compound_check_structure (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	GdaSqlStatementCompound *compound = (GdaSqlStatementCompound *) stmt;
 	gint nb_cols = -1;

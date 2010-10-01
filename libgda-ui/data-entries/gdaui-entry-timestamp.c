@@ -62,7 +62,7 @@ gdaui_entry_timestamp_class_init (GdauiEntryTimestampClass * class)
 }
 
 static void
-gdaui_entry_timestamp_init (GdauiEntryTimestamp * gdaui_entry_timestamp)
+gdaui_entry_timestamp_init (G_GNUC_UNUSED GdauiEntryTimestamp * gdaui_entry_timestamp)
 {
 }
 

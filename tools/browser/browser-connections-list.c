@@ -131,17 +131,17 @@ enum
 };
 
 static gboolean
-delete_event (GtkWidget *widget, GdkEvent *event, gpointer data)
+delete_event (GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data)
 {
 	gtk_widget_hide (widget);
 	return TRUE;
 }
 
-static void cell_name_data_func (GtkTreeViewColumn *tree_column,
+static void cell_name_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 				 GtkCellRenderer *cell,
 				 GtkTreeModel *tree_model,
 				 GtkTreeIter *iter,
-				 gpointer data)
+				 G_GNUC_UNUSED gpointer data)
 {
 	BrowserConnection *bcnc;
 	gchar *str, *cncstr = NULL;
@@ -269,7 +269,7 @@ selection_changed_cb (GtkTreeSelection *select, BrowserConnectionsList *clist)
 }
 
 static void
-connection_close_cb (GtkButton *button, BrowserConnectionsList *clist)
+connection_close_cb (G_GNUC_UNUSED GtkButton *button, BrowserConnectionsList *clist)
 {
 	GtkTreeSelection *select;
 	GtkTreeModel *model;
@@ -285,7 +285,7 @@ connection_close_cb (GtkButton *button, BrowserConnectionsList *clist)
 }
 
 static void
-connection_new_cb (GtkButton *button, BrowserConnectionsList *clist)
+connection_new_cb (G_GNUC_UNUSED GtkButton *button, G_GNUC_UNUSED BrowserConnectionsList *clist)
 {
 	LoginDialog *dialog;
 	GdaConnection *cnc;
@@ -482,7 +482,7 @@ browser_connections_list_show (BrowserConnection *current)
 }
 
 static void
-connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnectionsList *clist)
+connection_added_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnectionsList *clist)
 {
 	GtkListStore *store;
 	GtkTreeIter iter;
@@ -494,7 +494,7 @@ connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnect
 }
 
 static void
-connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnectionsList *clist)
+connection_removed_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnectionsList *clist)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;

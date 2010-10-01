@@ -158,7 +158,7 @@ gda_server_provider_handler_info_free (GdaServerProviderHandlerInfo *info)
 
 static void
 gda_server_provider_init (GdaServerProvider *provider,
-			  GdaServerProviderClass *klass)
+			  G_GNUC_UNUSED GdaServerProviderClass *klass)
 {
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
 
@@ -220,8 +220,8 @@ gda_server_provider_get_type (void)
 static void
 gda_server_provider_set_property (GObject *object,
 				  guint param_id,
-				  const GValue *value,
-				  GParamSpec *pspec) {
+				  G_GNUC_UNUSED const GValue *value,
+				  G_GNUC_UNUSED GParamSpec *pspec) {
         GdaServerProvider *prov;
 
         prov = GDA_SERVER_PROVIDER (object);
@@ -236,8 +236,8 @@ gda_server_provider_set_property (GObject *object,
 static void
 gda_server_provider_get_property (GObject *object,
 				  guint param_id,
-				  GValue *value,
-				  GParamSpec *pspec) {
+				  G_GNUC_UNUSED GValue *value,
+				  G_GNUC_UNUSED GParamSpec *pspec) {
         GdaServerProvider *prov;
 
         prov = GDA_SERVER_PROVIDER (object);

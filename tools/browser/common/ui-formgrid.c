@@ -329,7 +329,7 @@ ui_formgrid_handle_user_prefs (UiFormGrid *formgrid, BrowserConnection *bcnc, Gd
 static void
 ui_formgrid_set_property (GObject *object,
 				guint param_id,
-				const GValue *value,
+				G_GNUC_UNUSED const GValue *value,
 				GParamSpec *pspec)
 {
 	UiFormGrid *formgrid;

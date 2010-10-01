@@ -55,7 +55,7 @@ gda_lockable_get_type (void)
 }
 
 static void
-gda_lockable_class_init (gpointer g_class)
+gda_lockable_class_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 

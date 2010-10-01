@@ -88,7 +88,7 @@ gda_vconnection_hub_class_init (GdaVconnectionHubClass *klass)
 }
 
 static void
-gda_vconnection_hub_init (GdaVconnectionHub *cnc, GdaVconnectionHubClass *klass)
+gda_vconnection_hub_init (GdaVconnectionHub *cnc, G_GNUC_UNUSED GdaVconnectionHubClass *klass)
 {
 	cnc->priv = g_new (GdaVconnectionHubPrivate, 1);
 	cnc->priv->hub_connections = NULL;
@@ -146,8 +146,8 @@ gda_vconnection_hub_get_type (void)
 static void
 gda_vconnection_hub_set_property (GObject *object,
 					 guint param_id,
-					 const GValue *value,
-					 GParamSpec *pspec)
+					 G_GNUC_UNUSED const GValue *value,
+					 G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVconnectionHub *cnc;
 
@@ -163,8 +163,8 @@ gda_vconnection_hub_set_property (GObject *object,
 static void
 gda_vconnection_hub_get_property (GObject *object,
 					 guint param_id,
-					 GValue *value,
-					 GParamSpec *pspec)
+					 G_GNUC_UNUSED GValue *value,
+					 G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVconnectionHub *cnc;
 
@@ -489,7 +489,7 @@ get_complete_table_name (HubConnection *hc, const GValue *table_name)
 }
 
 static void
-meta_changed_cb (GdaMetaStore *store, GSList *changes, HubConnection *hc)
+meta_changed_cb (G_GNUC_UNUSED GdaMetaStore *store, GSList *changes, HubConnection *hc)
 {
 	GSList *list;
 	for (list = changes; list; list = list->next) {

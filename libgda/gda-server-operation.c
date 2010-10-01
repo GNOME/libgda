@@ -201,7 +201,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 
 static void
 gda_server_operation_init (GdaServerOperation *operation,
-			  GdaServerOperationClass *klass)
+			  G_GNUC_UNUSED GdaServerOperationClass *klass)
 {
 	g_return_if_fail (GDA_IS_SERVER_OPERATION (operation));
 
@@ -443,7 +443,7 @@ node_find_or_create (GdaServerOperation *op, const gchar *path)
  * Computes the complete path of a node
  */
 static gchar *
-node_get_complete_path (GdaServerOperation *op, Node *node)
+node_get_complete_path (G_GNUC_UNUSED GdaServerOperation *op, Node *node)
 {
 	GString *string;
 	gchar *retval;
@@ -525,7 +525,7 @@ static void
 gda_server_operation_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaServerOperation *op;
 
@@ -622,7 +622,7 @@ static void
 gda_server_operation_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaServerOperation *op;
 
@@ -1303,7 +1303,7 @@ static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr pare
  * Returns: (transfer full): a new #xmlNodePtr structure, or %NULL
  */
 xmlNodePtr
-gda_server_operation_save_data_to_xml (GdaServerOperation *op, GError **error)
+gda_server_operation_save_data_to_xml (GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	xmlNodePtr topnode = NULL;
 	GSList *list;

@@ -173,7 +173,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 }
 
 static void
-gda_data_model_array_init (GdaDataModelArray *model, GdaDataModelArrayClass *klass)
+gda_data_model_array_init (GdaDataModelArray *model, G_GNUC_UNUSED GdaDataModelArrayClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
@@ -189,7 +189,7 @@ gda_data_model_array_init (GdaDataModelArray *model, GdaDataModelArrayClass *kla
 static void column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelArray *model);
 
 static void
-hash_free_column (gpointer key, GdaColumn *column, GdaDataModelArray *model)
+hash_free_column (G_GNUC_UNUSED gpointer key, GdaColumn *column, GdaDataModelArray *model)
 {
         g_signal_handlers_disconnect_by_func (G_OBJECT (column),
                                               G_CALLBACK (column_g_type_changed_cb), model);
@@ -475,7 +475,7 @@ gda_data_model_array_describe_column (GdaDataModel *model, gint col)
 }
 
 static void
-column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelArray *model)
+column_g_type_changed_cb (GdaColumn *column, G_GNUC_UNUSED GType old, GType new, GdaDataModelArray *model)
 {
         /* emit a warning if there are GValues which are not compatible with the new type */
         gint i, nrows, col;

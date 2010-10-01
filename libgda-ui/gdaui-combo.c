@@ -149,7 +149,7 @@ gdaui_combo_selector_init (GdauiDataSelectorIface *iface)
 static void selection_changed_cb (GtkComboBox *widget, gpointer data);
 
 static void
-gdaui_combo_init (GdauiCombo *combo, GdauiComboClass *klass)
+gdaui_combo_init (GdauiCombo *combo, G_GNUC_UNUSED GdauiComboClass *klass)
 {
 	g_return_if_fail (GDAUI_IS_COMBO (combo));
 
@@ -185,7 +185,7 @@ sync_iter_with_selection (GdauiCombo *combo)
 }
 
 static void
-selection_changed_cb (GtkComboBox *widget, gpointer data)
+selection_changed_cb (GtkComboBox *widget, G_GNUC_UNUSED gpointer data)
 {
 	sync_iter_with_selection ((GdauiCombo *)widget);
 	g_signal_emit_by_name (widget, "selection-changed");
@@ -476,8 +476,8 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 }
 
 static void
-cell_layout_data_func (GtkCellLayout *cell_layout, GtkCellRenderer *cell,
-		       GtkTreeModel *tree_model, GtkTreeIter *iter, GdauiCombo *combo)
+cell_layout_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout, GtkCellRenderer *cell,
+		       GtkTreeModel *tree_model, GtkTreeIter *iter, G_GNUC_UNUSED GdauiCombo *combo)
 {
 	GdaDataHandler *dh;
 	gint colnum;

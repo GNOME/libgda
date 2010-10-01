@@ -517,7 +517,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 }
 
 static void
-gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, GdaSqliteProviderClass *klass)
+gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, G_GNUC_UNUSED GdaSqliteProviderClass *klass)
 {
 	InternalStatementItem i;
 	GdaSqlParser *parser;
@@ -595,7 +595,7 @@ gda_sqlite_provider_get_type (void)
  * Get provider name request
  */
 static const gchar *
-gda_sqlite_provider_get_name (GdaServerProvider *provider)
+gda_sqlite_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PNAME;
 }
@@ -604,7 +604,7 @@ gda_sqlite_provider_get_name (GdaServerProvider *provider)
  * Get provider's version
  */
 static const gchar *
-gda_sqlite_provider_get_version (GdaServerProvider *provider)
+gda_sqlite_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -615,7 +615,7 @@ gda_sqlite_provider_get_version (GdaServerProvider *provider)
 static gboolean
 gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
 				     GdaQuarkList *params, GdaQuarkList *auth,
-				     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data)
 {
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
@@ -936,8 +936,8 @@ gda_sqlite_provider_get_database (GdaServerProvider *provider, GdaConnection *cn
  * Support operation request
  */
 static gboolean
-gda_sqlite_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
-					GdaServerOperationType type, GdaSet *options)
+gda_sqlite_provider_supports_operation (G_GNUC_UNUSED GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc,
+					GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options)
 {
         switch (type) {
         case GDA_SERVER_OPERATION_CREATE_DB:
@@ -964,9 +964,9 @@ gda_sqlite_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
  * Create operation request
  */
 static GdaServerOperation *
-gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
+gda_sqlite_provider_create_operation (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc,
 				      GdaServerOperationType type,
-				      GdaSet *options, GError **error)
+				      G_GNUC_UNUSED GdaSet *options, GError **error)
 {
         gchar *file;
         GdaServerOperation *op;
@@ -1086,8 +1086,8 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
  */
 static gboolean
 gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-                                      GdaServerOperation *op, guint *task_id, GdaServerProviderAsyncCallback async_cb, 
-				       gpointer cb_data, GError **error)
+                                      GdaServerOperation *op, G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				       G_GNUC_UNUSED gpointer cb_data, GError **error)
 {
         GdaServerOperationType optype;
 
@@ -1240,7 +1240,7 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
  */
 static gboolean
 gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-				       const gchar *name, GdaTransactionIsolation level,
+				       const gchar *name, G_GNUC_UNUSED GdaTransactionIsolation level,
 				       GError **error)
 {
 	gboolean status = TRUE;
@@ -1449,7 +1449,7 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
  * Get default DBMS type request
  */
 static const gchar*
-gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, GType type)
+gda_sqlite_provider_get_default_dbms_type (G_GNUC_UNUSED GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc, GType type)
 {
 	if ((type == G_TYPE_INT64) ||
 	    (type == G_TYPE_INT) ||
@@ -1496,7 +1496,7 @@ gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
  * Create parser request
  */
 static GdaSqlParser *
-gda_sqlite_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
+gda_sqlite_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc)
 {
 	return (GdaSqlParser*) g_object_new (GDA_TYPE_SQL_PARSER, "tokenizer-flavour", GDA_SQL_PARSER_FLAVOUR_SQLITE, NULL);
 }
@@ -2117,7 +2117,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 
 #define MAKE_LAST_INSERTED_SET_ID "__gda"
 static void
-lir_stmt_reset_cb (GdaStatement *stmt, gpointer data)
+lir_stmt_reset_cb (GdaStatement *stmt, G_GNUC_UNUSED gpointer data)
 {
 	/* get rid of the SELECT statement used in make_last_inserted_set() */
 	g_object_set_data ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID, NULL);
@@ -3150,7 +3150,7 @@ gda_sqlite_free_cnc_data (SqliteConnectionData *cdata)
 }
 
 static gchar *
-gda_sqlite_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *string)
+gda_sqlite_provider_escape_string (G_GNUC_UNUSED GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc, const gchar *string)
 {
 	gchar *ptr, *ret, *retptr;
 	gint size;
@@ -3190,7 +3190,7 @@ gda_sqlite_provider_escape_string (GdaServerProvider *provider, GdaConnection *c
 }
 
 gchar *
-gda_sqlite_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *string)
+gda_sqlite_provider_unescape_string (G_GNUC_UNUSED GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc, const gchar *string)
 {
 	glong total;
 	gchar *ptr;

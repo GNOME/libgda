@@ -326,7 +326,7 @@ gdaui_data_cell_renderer_info_new (GdauiDataStore *store,
 
 static void
 gdaui_data_cell_renderer_info_get_size (GtkCellRenderer *cell,
-					   GtkWidget       *widget,
+					   G_GNUC_UNUSED GtkWidget       *widget,
 					   GdkRectangle    *cell_area,
 					   gint            *x_offset,
 					   gint            *y_offset,
@@ -368,10 +368,10 @@ static void
 gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 					 GdkWindow            *window,
 					 GtkWidget            *widget,
-					 GdkRectangle         *background_area,
+					 G_GNUC_UNUSED GdkRectangle         *background_area,
 					 GdkRectangle         *cell_area,
-					 GdkRectangle         *expose_area,
-					 GtkCellRendererState  flags)
+					 G_GNUC_UNUSED GdkRectangle         *expose_area,
+					 G_GNUC_UNUSED GtkCellRendererState  flags)
 {
 	GdauiDataCellRendererInfo *cellinfo = (GdauiDataCellRendererInfo *) cell;
 	gint width, height;
@@ -446,12 +446,12 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 static void mitem_activated_cb (GtkWidget *mitem, GdauiDataCellRendererInfo *cellinfo);
 static gint
 gdaui_data_cell_renderer_info_activate (GtkCellRenderer      *cell,
-					   GdkEvent             *event,
-					   GtkWidget            *widget,
+					   G_GNUC_UNUSED GdkEvent             *event,
+					   G_GNUC_UNUSED GtkWidget            *widget,
 					   const gchar          *path,
-					   GdkRectangle         *background_area,
-					   GdkRectangle         *cell_area,
-					   GtkCellRendererState  flags)
+					   G_GNUC_UNUSED GdkRectangle         *background_area,
+					   G_GNUC_UNUSED GdkRectangle         *cell_area,
+					   G_GNUC_UNUSED GtkCellRendererState  flags)
 {
 	GdauiDataCellRendererInfo *cellinfo;
 	gchar *tmp;

@@ -55,7 +55,7 @@ browser_perspective_get_type (void)
 }
 
 static void
-browser_perspective_class_init (gpointer g_class)
+browser_perspective_class_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 

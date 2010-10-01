@@ -206,10 +206,10 @@ gda_set_get_type (void)
 }
 
 static gboolean
-validate_accumulator (GSignalInvocationHint *ihint,
+validate_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
 		      GValue *return_accu,
 		      const GValue *handler_return,
-		      gpointer data)
+		      G_GNUC_UNUSED gpointer data)
 {
 	GError *error;
 
@@ -220,13 +220,14 @@ validate_accumulator (GSignalInvocationHint *ihint,
 }
 
 static GError *
-m_validate_holder_change (GdaSet *set, GdaHolder *holder, const GValue *new_value)
+m_validate_holder_change (G_GNUC_UNUSED GdaSet *set, G_GNUC_UNUSED GdaHolder *holder,
+			  G_GNUC_UNUSED const GValue *new_value)
 {
 	return NULL;
 }
 
 static GError *
-m_validate_set (GdaSet *set)
+m_validate_set (G_GNUC_UNUSED GdaSet *set)
 {
 	return NULL;
 }
@@ -1010,7 +1011,7 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 }
 
 static void
-source_changed_holder_cb (GdaHolder *holder, GdaSet *set)
+source_changed_holder_cb (G_GNUC_UNUSED GdaHolder *holder, GdaSet *set)
 {
 	compute_public_data (set);
 }
@@ -1060,7 +1061,7 @@ changed_holder_cb (GdaHolder *holder, GdaSet *set)
 }
 
 static void
-group_free (GdaSetGroup *group, gpointer data)
+group_free (GdaSetGroup *group, G_GNUC_UNUSED gpointer data)
 {
 	g_slist_free (group->nodes);
 	g_free (group);

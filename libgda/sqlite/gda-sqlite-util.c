@@ -236,7 +236,7 @@ sqlite_remove_quotes (gchar *str)
 }
 
 gchar *
-_gda_sqlite_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+_gda_sqlite_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc,
 			     const gchar *id,
 			     gboolean for_meta_store, gboolean force_quotes)
 {

@@ -132,7 +132,7 @@ gda_batch_class_init (GdaBatchClass * klass)
 }
 
 static void
-m_changed_cb (GdaBatch *batch, GdaStatement *changed_stmt)
+m_changed_cb (G_GNUC_UNUSED GdaBatch *batch, G_GNUC_UNUSED GdaStatement *changed_stmt)
 {
 	
 }
@@ -236,7 +236,7 @@ gda_batch_finalize (GObject *object)
 static void 
 gda_batch_set_property (GObject *object,
 			     guint param_id,
-			     const GValue *value,
+			     G_GNUC_UNUSED const GValue *value,
 			     GParamSpec *pspec)
 {
 	GdaBatch *batch;
@@ -254,7 +254,7 @@ gda_batch_set_property (GObject *object,
 static void
 gda_batch_get_property (GObject *object,
 			     guint param_id,
-			     GValue *value,
+			     G_GNUC_UNUSED GValue *value,
 			     GParamSpec *pspec)
 {
 	GdaBatch *batch;

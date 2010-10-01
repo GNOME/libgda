@@ -291,7 +291,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 }
 
 static void
-gda_postgres_provider_init (GdaPostgresProvider *postgres_prv, GdaPostgresProviderClass *klass)
+gda_postgres_provider_init (GdaPostgresProvider *postgres_prv, G_GNUC_UNUSED GdaPostgresProviderClass *klass)
 {
 	InternalStatementItem i;
 	GdaSqlParser *parser;
@@ -339,7 +339,7 @@ gda_postgres_provider_get_type (void)
  * Get provider name request
  */
 static const gchar *
-gda_postgres_provider_get_name (GdaServerProvider *provider)
+gda_postgres_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return POSTGRES_PROVIDER_NAME;
 }
@@ -348,7 +348,7 @@ gda_postgres_provider_get_name (GdaServerProvider *provider)
  * Get provider's version, no need to change this
  */
 static const gchar *
-gda_postgres_provider_get_version (GdaServerProvider *provider)
+gda_postgres_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -388,7 +388,8 @@ pq_notice_processor (GdaConnection *cnc, const char *message)
 static gboolean
 gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
 				       GdaQuarkList *params, GdaQuarkList *auth,
-				       guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				       G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				       G_GNUC_UNUSED gpointer cb_data)
 {
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -656,7 +657,7 @@ gda_postgres_provider_get_database (GdaServerProvider *provider, GdaConnection *
  */
 static gboolean
 gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
-					  GdaServerOperationType type, GdaSet *options)
+					  GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -696,7 +697,8 @@ gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnec
  */
 static GdaServerOperation *
 gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
-					GdaServerOperationType type, GdaSet *options, GError **error)
+					GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options,
+					GError **error)
 {
         gchar *file;
         GdaServerOperation *op;
@@ -852,8 +854,9 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
  */
 static gboolean
 gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-					 GdaServerOperation *op, guint *task_id,
-					 GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+					 GdaServerOperation *op, G_GNUC_UNUSED guint *task_id,
+					 GdaServerProviderAsyncCallback async_cb,
+					 G_GNUC_UNUSED gpointer cb_data, GError **error)
 {
         GdaServerOperationType optype;
 
@@ -1051,7 +1054,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
  */
 static gboolean
 gda_postgres_provider_commit_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-					  const gchar *name, GError **error)
+					  G_GNUC_UNUSED const gchar *name, GError **error)
 {
 	PostgresConnectionData *cdata;
 
@@ -1075,7 +1078,7 @@ gda_postgres_provider_commit_transaction (GdaServerProvider *provider, GdaConnec
 static gboolean
 gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 					    GdaConnection *cnc,
-					    const gchar *name, GError **error)
+					    G_GNUC_UNUSED const gchar *name, GError **error)
 {
 	PostgresConnectionData *cdata;
 
@@ -1424,7 +1427,8 @@ gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
  * by the database. See the PostgreSQL provider implementation for an example.
  */
 static GdaSqlParser *
-gda_postgres_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
+gda_postgres_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider,
+				     G_GNUC_UNUSED GdaConnection *cnc)
 {
 	return (GdaSqlParser*) g_object_new (GDA_TYPE_POSTGRES_PARSER, "tokenizer-flavour",
                                              GDA_SQL_PARSER_FLAVOUR_POSTGRESQL, NULL);
@@ -2186,7 +2190,7 @@ gda_postgres_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_postgres_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
-			      const GdaXaTransactionId *xid, GError **error)
+			      const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -2455,7 +2459,7 @@ pg_remove_quotes (gchar *str)
 }
 
 static gchar *
-gda_postgresql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc,
 				 const gchar *id,
 				 gboolean for_meta_store, gboolean force_quotes)
 {

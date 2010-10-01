@@ -60,7 +60,7 @@ static GObjectClass *parent_class = NULL;
  */
 static void
 gda_jdbc_recordset_init (GdaJdbcRecordset *recset,
-			 GdaJdbcRecordsetClass *klass)
+			 G_GNUC_UNUSED GdaJdbcRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_JDBC_RECORDSET (recset));
 	recset->priv = g_new0 (GdaJdbcRecordsetPrivate, 1);
@@ -505,7 +505,7 @@ gda_jdbc_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownu
  * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean 
-gda_jdbc_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+gda_jdbc_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, G_GNUC_UNUSED gint rownum, GError **error)
 {
 	GdaJdbcRecordset *imodel = (GdaJdbcRecordset*) model;
 	JNIEnv *jenv = NULL;

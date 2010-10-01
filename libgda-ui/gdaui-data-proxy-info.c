@@ -196,7 +196,7 @@ release_iter (GdauiDataProxyInfo *info)
 }
 
 static void
-data_proxy_proxy_changed_cb (GdauiDataProxy *data_proxy, GdaDataProxy *proxy, GdauiDataProxyInfo *info)
+data_proxy_proxy_changed_cb (GdauiDataProxy *data_proxy, G_GNUC_UNUSED GdaDataProxy *proxy, GdauiDataProxyInfo *info)
 {
 	g_object_set (G_OBJECT (info), "data-proxy", data_proxy, NULL);
 }
@@ -338,31 +338,32 @@ gdaui_data_proxy_info_get_property (GObject *object,
 
 
 static void
-proxy_changed_cb (GdaDataProxy *proxy, GdauiDataProxyInfo *info)
+proxy_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, G_GNUC_UNUSED GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
 
 static void
-proxy_sample_changed_cb (GdaDataProxy *proxy, gint sample_start, gint sample_end, GdauiDataProxyInfo *info)
+proxy_sample_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, G_GNUC_UNUSED gint sample_start,
+			 G_GNUC_UNUSED gint sample_end, G_GNUC_UNUSED GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
 
 static void
-proxy_row_changed_cb (GdaDataProxy *proxy, gint row, GdauiDataProxyInfo *info)
+proxy_row_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, G_GNUC_UNUSED gint row, GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
 
 static void
-iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiDataProxyInfo *info)
+iter_row_changed_cb (G_GNUC_UNUSED GdaDataModelIter *iter, G_GNUC_UNUSED gint row, GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }
 
 static void
-raw_grid_selection_changed_cb (GdauiRawGrid *grid, GdauiDataProxyInfo *info)
+raw_grid_selection_changed_cb (G_GNUC_UNUSED GdauiRawGrid *grid, GdauiDataProxyInfo *info)
 {
 	modif_buttons_update (info);
 }

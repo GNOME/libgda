@@ -261,7 +261,7 @@ m_node_deleted (GdaTreeNode *reporting, const gchar *relative_path)
 }
 
 static void
-gda_tree_node_init (GdaTreeNode *tnode, GdaTreeNodeClass *klass)
+gda_tree_node_init (GdaTreeNode *tnode, G_GNUC_UNUSED GdaTreeNodeClass *klass)
 {
 	g_return_if_fail (GDA_IS_TREE_NODE (tnode));
 
@@ -337,7 +337,7 @@ static void
 gda_tree_node_set_property (GObject *object,
 			    guint param_id,
 			    const GValue *value,
-			    GParamSpec *pspec)
+			    G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaTreeNode *tnode;
 
@@ -355,7 +355,7 @@ static void
 gda_tree_node_get_property (GObject *object,
 			    guint param_id,
 			    GValue *value,
-			    GParamSpec *pspec)
+			    G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaTreeNode *tnode;
 	

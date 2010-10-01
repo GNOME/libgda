@@ -234,7 +234,7 @@ query_editor_class_init (QueryEditorClass *klass)
 }
 
 static void
-text_buffer_changed_cb (GtkTextBuffer *buffer, QueryEditor *editor)
+text_buffer_changed_cb (G_GNUC_UNUSED GtkTextBuffer *buffer, QueryEditor *editor)
 {
 	if (editor->priv->mode != QUERY_EDITOR_HISTORY)
 		g_signal_emit (editor, query_editor_signals[CHANGED], 0);
@@ -314,8 +314,8 @@ get_string_to_complete (QueryEditor *editor, gchar **out_start_pos)
 }
 
 static void
-completion_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
-			     GtkTreeViewColumn *column, QueryEditor *editor)
+completion_row_activated_cb (G_GNUC_UNUSED GtkTreeView *treeview, GtkTreePath *path,
+			     G_GNUC_UNUSED GtkTreeViewColumn *column, QueryEditor *editor)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -670,7 +670,7 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 }
 
 static void
-query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
+query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 {
 	int tab = 8;
 	gboolean highlight = TRUE;

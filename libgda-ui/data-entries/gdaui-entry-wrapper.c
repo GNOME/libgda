@@ -284,7 +284,7 @@ static void
 gdaui_entry_wrapper_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiEntryWrapper *mgwrap = GDAUI_ENTRY_WRAPPER (object);
 	if (mgwrap->priv) {
@@ -318,7 +318,7 @@ static void
 gdaui_entry_wrapper_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiEntryWrapper *mgwrap = GDAUI_ENTRY_WRAPPER (object);
 	if (mgwrap->priv) {
@@ -362,7 +362,7 @@ gdaui_entry_wrapper_contents_activated (GdauiEntryWrapper *mgwrap)
 
 static void gdaui_entry_wrapper_emit_signal (GdauiEntryWrapper *mgwrap);
 static void
-contents_changed_cb (GtkWidget *entry, GdauiEntryWrapper *mgwrap)
+contents_changed_cb (G_GNUC_UNUSED GtkWidget *entry, GdauiEntryWrapper *mgwrap)
 {
 	/* @entry is not used */
 	if (! mgwrap->priv->signals_blocked) {
@@ -374,7 +374,7 @@ contents_changed_cb (GtkWidget *entry, GdauiEntryWrapper *mgwrap)
 }
 
 static void
-contents_activated_cb (GtkWidget *entry, GdauiEntryWrapper *mgwrap)
+contents_activated_cb (G_GNUC_UNUSED GtkWidget *entry, GdauiEntryWrapper *mgwrap)
 {
 	/* @entry is not used */
 	if (! mgwrap->priv->signals_blocked) {

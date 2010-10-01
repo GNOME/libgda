@@ -174,7 +174,7 @@ update_ad_auth (AuthData *ad)
   * Update the auth part
   */
 static void
-dsn_changed_cb (GdaConfig *config, GdaDsnInfo *info, AuthDialog *dialog)
+dsn_changed_cb (G_GNUC_UNUSED GdaConfig *config, GdaDsnInfo *info, AuthDialog *dialog)
 {
 	GSList *list;
 	if (!info || !info->name) /* should not happen */

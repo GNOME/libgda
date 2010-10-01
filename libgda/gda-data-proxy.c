@@ -522,10 +522,10 @@ gda_data_proxy_get_type (void)
 }
 
 static gboolean
-validate_row_changes_accumulator (GSignalInvocationHint *ihint,
+validate_row_changes_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
 				  GValue *return_accu,
 				  const GValue *handler_return,
-				  gpointer data)
+				  G_GNUC_UNUSED gpointer data)
 {
 	GError *error;
 
@@ -536,7 +536,8 @@ validate_row_changes_accumulator (GSignalInvocationHint *ihint,
 }
 
 static GError *
-m_validate_row_changes (GdaDataProxy *proxy, gint row, gint proxied_row)
+m_validate_row_changes (G_GNUC_UNUSED GdaDataProxy *proxy, G_GNUC_UNUSED gint row,
+			G_GNUC_UNUSED gint proxied_row)
 {
         return NULL; /* defaults allows changes */
 }
@@ -892,7 +893,7 @@ static void
 gda_data_proxy_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
-			     GParamSpec *pspec)
+			     G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataProxy *proxy;
 
@@ -989,7 +990,7 @@ static void
 gda_data_proxy_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     GParamSpec *pspec)
+			     G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataProxy *proxy;
 
@@ -1012,7 +1013,7 @@ gda_data_proxy_get_property (GObject *object,
 }
 
 static void
-proxied_model_row_inserted_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy)
+proxied_model_row_inserted_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDataProxy *proxy)
 {
 	gint abs_row;
 	gint signal_row_offset = proxy->priv->add_null_entry ? 1 : 0;
@@ -1064,7 +1065,7 @@ proxied_model_row_inserted_cb (GdaDataModel *model, gint row, GdaDataProxy *prox
 }
 
 static void 
-proxied_model_row_updated_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy)
+proxied_model_row_updated_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDataProxy *proxy)
 {
 	gint proxy_row;
 	RowModif *rm;
@@ -1087,7 +1088,7 @@ proxied_model_row_updated_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy
 }
 
 static void
-proxied_model_row_removed_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy)
+proxied_model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDataProxy *proxy)
 {
 	gint proxy_row, abs_row;
 	RowModif *rm;
@@ -2350,7 +2351,7 @@ display_chunks_dump (GdaDataProxy *proxy)
 }
 #else 
 static void
-display_chunks_dump (GdaDataProxy *proxy)
+display_chunks_dump (G_GNUC_UNUSED GdaDataProxy *proxy)
 {}
 #endif
 
@@ -2856,7 +2857,7 @@ gda_data_proxy_cancel_all_changes (GdaDataProxy *proxy)
 }
 
 static gboolean
-sql_where_foreach (GdaSqlAnyPart *part, GdaDataProxy *proxy, GError **error)
+sql_where_foreach (GdaSqlAnyPart *part, GdaDataProxy *proxy, G_GNUC_UNUSED GError **error)
 {
 	if (part->type == GDA_SQL_ANY_EXPR) {
 		GdaSqlExpr *expr = (GdaSqlExpr*) part;
@@ -3871,7 +3872,7 @@ gda_data_proxy_append_values (GdaDataModel *model, const GList *values, GError *
 }
 
 static gint
-gda_data_proxy_append_row (GdaDataModel *model, GError **error)
+gda_data_proxy_append_row (GdaDataModel *model, G_GNUC_UNUSED GError **error)
 {
 	GdaDataProxy *proxy;
 	gint i;

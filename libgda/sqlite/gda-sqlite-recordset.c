@@ -61,7 +61,7 @@ static GObjectClass *parent_class = NULL;
  */
 static void
 gda_sqlite_recordset_init (GdaSqliteRecordset *recset,
-			   GdaSqliteRecordsetClass *klass)
+			   G_GNUC_UNUSED GdaSqliteRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
 	recset->priv = g_new0 (GdaSqliteRecordsetPrivate, 1);
@@ -610,7 +610,7 @@ gda_sqlite_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
  * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean
-gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, G_GNUC_UNUSED gint rownum, GError **error)
 {
 	GdaSqliteRecordset *imodel = (GdaSqliteRecordset*) model;
 

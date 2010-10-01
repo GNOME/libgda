@@ -1152,7 +1152,8 @@ static void create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *grid
 static void create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form);
 static GtkWidget *
 create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path,
-					 gchar **section_str, GSList **label_widgets)
+					 G_GNUC_UNUSED gchar **section_str,
+					 G_GNUC_UNUSED GSList **label_widgets)
 {
 	GdaServerOperationNode *info_node;
 	GtkWidget *hlayout, *sw, *box, *label;

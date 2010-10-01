@@ -80,14 +80,14 @@ static gint    sub_nb; /* size of sub_names */
  * would be the solution...
  */
 EXPORT const gchar *
-g_module_check_init (GModule *module)
+g_module_check_init (G_GNUC_UNUSED GModule *module)
 {
 	//g_module_make_resident (module);
 	return NULL;
 }
 
 EXPORT void
-g_module_unload (GModule *module)
+g_module_unload (G_GNUC_UNUSED GModule *module)
 {
 	if (! __CreateJavaVM) {
 		g_free (module_path);
@@ -297,7 +297,7 @@ plugin_get_sub_description (const gchar *name)
 }
 
 EXPORT gchar *
-plugin_get_sub_dsn_spec (const gchar *name)
+plugin_get_sub_dsn_spec (G_GNUC_UNUSED const gchar *name)
 {
 	gchar *ret, *dir;
 
