@@ -126,7 +126,8 @@ objects_cloud_get_type (void)
 			NULL,
 			sizeof (ObjectsCloud),
 			0,
-			(GInstanceInitFunc) objects_cloud_init
+			(GInstanceInitFunc) objects_cloud_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "ObjectsCloud",
 					       &info, 0);

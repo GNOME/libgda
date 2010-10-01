@@ -120,7 +120,8 @@ gda_virtual_provider_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVirtualProvider),
 				0,
-				(GInstanceInitFunc) gda_virtual_provider_init
+				(GInstanceInitFunc) gda_virtual_provider_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);

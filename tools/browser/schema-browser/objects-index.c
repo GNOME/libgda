@@ -123,7 +123,8 @@ objects_index_get_type (void)
 			NULL,
 			sizeof (ObjectsIndex),
 			0,
-			(GInstanceInitFunc) objects_index_init
+			(GInstanceInitFunc) objects_index_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "ObjectsIndex",
 					       &info, 0);

@@ -87,7 +87,8 @@ gda_batch_get_type (void)
 			NULL,
 			sizeof (GdaBatch),
 			0,
-			(GInstanceInitFunc) gda_batch_init
+			(GInstanceInitFunc) gda_batch_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

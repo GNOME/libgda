@@ -96,7 +96,8 @@ gdaui_combo_get_type (void)
 			NULL,
 			sizeof (GdauiCombo),
 			0,
-			(GInstanceInitFunc) gdaui_combo_init
+			(GInstanceInitFunc) gdaui_combo_init,
+			0
 		};
 
 		static const GInterfaceInfo selector_info = {

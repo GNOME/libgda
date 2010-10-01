@@ -67,7 +67,8 @@ gda_handler_boolean_get_type (void)
 			NULL,
 			sizeof (GdaHandlerBoolean),
 			0,
-			(GInstanceInitFunc) gda_handler_boolean_init
+			(GInstanceInitFunc) gda_handler_boolean_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {

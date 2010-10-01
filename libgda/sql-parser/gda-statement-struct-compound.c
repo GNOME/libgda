@@ -36,6 +36,10 @@ GdaSqlStatementContentsInfo compound_infos = {
 	_gda_sql_statement_compound_serialize,
 
 	gda_sql_statement_compound_check_structure,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 

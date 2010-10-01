@@ -100,7 +100,8 @@ gda_meta_struct_get_type (void) {
 			NULL,
 			sizeof (GdaMetaStruct),
 			0,
-			(GInstanceInitFunc) gda_meta_struct_init
+			(GInstanceInitFunc) gda_meta_struct_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

@@ -63,7 +63,8 @@ gdaui_entry_boolean_get_type (void)
 			NULL,
 			sizeof (GdauiEntryBoolean),
 			0,
-			(GInstanceInitFunc) gdaui_entry_boolean_init
+			(GInstanceInitFunc) gdaui_entry_boolean_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryBoolean", &info, 0);

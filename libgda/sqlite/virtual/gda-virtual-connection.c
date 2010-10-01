@@ -110,7 +110,8 @@ gda_virtual_connection_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVirtualConnection),
 				0,
-				(GInstanceInitFunc) gda_virtual_connection_init
+				(GInstanceInitFunc) gda_virtual_connection_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);

@@ -102,7 +102,8 @@ gda_models_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaModelsProvider),
 			0,
-			(GInstanceInitFunc) gda_models_provider_init
+			(GInstanceInitFunc) gda_models_provider_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

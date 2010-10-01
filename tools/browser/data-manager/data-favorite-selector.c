@@ -169,7 +169,8 @@ data_favorite_selector_get_type (void)
 			NULL,
 			sizeof (DataFavoriteSelector),
 			0,
-			(GInstanceInitFunc) data_favorite_selector_init
+			(GInstanceInitFunc) data_favorite_selector_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "DataFavoriteSelector",
 					       &info, 0);

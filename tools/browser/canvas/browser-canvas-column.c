@@ -73,7 +73,8 @@ browser_canvas_column_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasColumn),
 			0,
-			(GInstanceInitFunc) browser_canvas_column_init
+			(GInstanceInitFunc) browser_canvas_column_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS_TEXT, "BrowserCanvasColumn", &info, 0);

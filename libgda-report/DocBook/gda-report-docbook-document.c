@@ -147,7 +147,8 @@ gda_report_docbook_document_get_type (void)
 			NULL, NULL,
 			sizeof (GdaReportDocbookDocument),
 			0,
-			(GInstanceInitFunc) gda_report_docbook_document_init
+			(GInstanceInitFunc) gda_report_docbook_document_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

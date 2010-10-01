@@ -141,7 +141,8 @@ gdaui_tree_store_get_type (void)
 			NULL,
 			sizeof (GdauiTreeStore),
 			0,
-			(GInstanceInitFunc) gdaui_tree_store_init
+			(GInstanceInitFunc) gdaui_tree_store_init,
+			0
 		};		
 
 		static const GInterfaceInfo tree_model_info = {

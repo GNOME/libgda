@@ -138,7 +138,8 @@ favorite_selector_get_type (void)
 			NULL,
 			sizeof (FavoriteSelector),
 			0,
-			(GInstanceInitFunc) favorite_selector_init
+			(GInstanceInitFunc) favorite_selector_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "FavoriteSelector",
 					       &info, 0);

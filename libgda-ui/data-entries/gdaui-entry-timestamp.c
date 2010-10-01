@@ -47,7 +47,8 @@ gdaui_entry_timestamp_get_type (void)
 			NULL,
 			sizeof (GdauiEntryTimestamp),
 			0,
-			(GInstanceInitFunc) gdaui_entry_timestamp_init
+			(GInstanceInitFunc) gdaui_entry_timestamp_init,
+			0
 		};
 	
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_COMMON_TIME, "GdauiEntryTimestamp", &info, 0);

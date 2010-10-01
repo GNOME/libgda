@@ -420,7 +420,8 @@ cc_gray_bar_get_type (void)
 			NULL,
 			sizeof (CcGrayBar),
 			0,
-			(GInstanceInitFunc) cc_gray_bar_init
+			(GInstanceInitFunc) cc_gray_bar_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_BIN, "CcGrayBar", &info, 0);
 	}

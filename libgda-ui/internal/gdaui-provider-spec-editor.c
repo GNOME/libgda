@@ -328,7 +328,8 @@ _gdaui_provider_spec_editor_get_type (void)
 			NULL,
 			sizeof (GdauiProviderSpecEditor),
 			0,
-			(GInstanceInitFunc) gdaui_provider_spec_editor_init
+			(GInstanceInitFunc) gdaui_provider_spec_editor_init,
+			0
 		};
 		type = g_type_from_name ("GdauiProviderSpecEditor");
 		if (type == 0)

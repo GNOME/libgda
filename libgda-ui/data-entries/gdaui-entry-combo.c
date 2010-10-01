@@ -111,7 +111,8 @@ gdaui_entry_combo_get_type (void)
 			NULL,
 			sizeof (GdauiEntryCombo),
 			0,
-			(GInstanceInitFunc) gdaui_entry_combo_init
+			(GInstanceInitFunc) gdaui_entry_combo_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {

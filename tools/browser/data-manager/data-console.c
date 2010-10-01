@@ -225,7 +225,8 @@ data_console_get_type (void)
 			NULL,
 			sizeof (DataConsole),
 			0,
-			(GInstanceInitFunc) data_console_init
+			(GInstanceInitFunc) data_console_init,
+			0
 		};
 
 		static GInterfaceInfo page_console = {

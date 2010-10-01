@@ -226,7 +226,8 @@ data_model_errors_get_type (void)
 			NULL,
 			sizeof (DataModelErrors),
 			0,
-			(GInstanceInitFunc) data_model_errors_init
+			(GInstanceInitFunc) data_model_errors_init,
+			0
 		};
 		static const GInterfaceInfo data_model_info = {
                         (GInterfaceInitFunc) data_model_errors_data_model_init,

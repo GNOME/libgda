@@ -59,7 +59,8 @@ _gda_thread_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaThreadBlobOp),
 			0,
-			(GInstanceInitFunc) gda_thread_blob_op_init
+			(GInstanceInitFunc) gda_thread_blob_op_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

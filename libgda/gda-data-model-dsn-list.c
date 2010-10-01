@@ -242,7 +242,8 @@ gda_data_model_dsn_list_get_type (void)
 			NULL,
 			sizeof (GdaDataModelDsnList),
 			0,
-			(GInstanceInitFunc) gda_data_model_dsn_list_init
+			(GInstanceInitFunc) gda_data_model_dsn_list_init,
+			0
 		};
 		static const GInterfaceInfo data_model_info = {
                         (GInterfaceInitFunc) gda_data_model_dsn_list_data_model_init,

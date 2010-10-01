@@ -139,7 +139,8 @@ _gda_thread_recordset_get_type (void)
 			NULL,
 			sizeof (GdaThreadRecordset),
 			0,
-			(GInstanceInitFunc) gda_thread_recordset_init
+			(GInstanceInitFunc) gda_thread_recordset_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

@@ -233,7 +233,8 @@ ui_spec_editor_get_type (void)
 			NULL,
 			sizeof (UiSpecEditor),
 			0,
-			(GInstanceInitFunc) ui_spec_editor_init
+			(GInstanceInitFunc) ui_spec_editor_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "UiSpecEditor", &info, 0);
 	}

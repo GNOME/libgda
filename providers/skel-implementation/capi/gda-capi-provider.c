@@ -293,7 +293,8 @@ gda_capi_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaCapiProvider),
 			0,
-			(GInstanceInitFunc) gda_capi_provider_init
+			(GInstanceInitFunc) gda_capi_provider_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

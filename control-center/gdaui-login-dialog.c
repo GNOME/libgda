@@ -235,7 +235,8 @@ gdaui_login_dialog_get_type (void)
 			NULL,
 			sizeof (GdauiLoginDialog),
 			0,
-			(GInstanceInitFunc) gdaui_login_dialog_init
+			(GInstanceInitFunc) gdaui_login_dialog_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_DIALOG, "GdauiLoginDialog", &info, 0);
 	}

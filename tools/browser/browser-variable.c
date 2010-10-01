@@ -51,7 +51,8 @@ browser_variable_get_type (void)
 			NULL,
 			sizeof (BrowserVariable),
 			0,
-			(GInstanceInitFunc) browser_variable_init
+			(GInstanceInitFunc) browser_variable_init,
+			0
 		};
 
 		

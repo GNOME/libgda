@@ -105,7 +105,8 @@ gdaui_entry_wrapper_get_type (void)
 			NULL,
 			sizeof (GdauiEntryWrapper),
 			0,
-			(GInstanceInitFunc) gdaui_entry_wrapper_init
+			(GInstanceInitFunc) gdaui_entry_wrapper_init,
+			0
 		};
 
 		static const GInterfaceInfo data_entry_info = {

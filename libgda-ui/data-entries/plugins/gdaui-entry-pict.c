@@ -83,7 +83,8 @@ gdaui_entry_pict_get_type (void)
 			NULL,
 			sizeof (GdauiEntryPict),
 			0,
-			(GInstanceInitFunc) gdaui_entry_pict_init
+			(GInstanceInitFunc) gdaui_entry_pict_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryPict", &info, 0);

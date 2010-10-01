@@ -75,7 +75,8 @@ ui_formgrid_get_type (void)
 			NULL,
 			sizeof (UiFormGrid),
 			0,
-			(GInstanceInitFunc) ui_formgrid_init
+			(GInstanceInitFunc) ui_formgrid_init,
+			0
 		};		
 
 		type = g_type_register_static (GTK_TYPE_VBOX, "UiFormGrid", &info, 0);

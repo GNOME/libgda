@@ -69,7 +69,8 @@ browser_core_get_type (void)
 			NULL,
 			sizeof (BrowserCore),
 			0,
-			(GInstanceInitFunc) browser_core_init
+			(GInstanceInitFunc) browser_core_init,
+			0
 		};
 
 		

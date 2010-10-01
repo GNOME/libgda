@@ -114,7 +114,8 @@ gdaui_provider_selector_get_type (void)
 			NULL,
 			sizeof (GdauiProviderSelector),
 			0,
-			(GInstanceInitFunc) gdaui_provider_selector_init
+			(GInstanceInitFunc) gdaui_provider_selector_init,
+			0
 		};
 		type = g_type_register_static (GDAUI_TYPE_COMBO, "GdauiProviderSelector", &info, 0);
 	}

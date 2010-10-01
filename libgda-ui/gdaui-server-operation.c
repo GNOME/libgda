@@ -170,7 +170,8 @@ gdaui_server_operation_get_type (void)
 			NULL,
 			sizeof (GdauiServerOperation),
 			0,
-			(GInstanceInitFunc) gdaui_server_operation_init
+			(GInstanceInitFunc) gdaui_server_operation_init,
+			0
 		};
 
 		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiServerOperation", &info, 0);

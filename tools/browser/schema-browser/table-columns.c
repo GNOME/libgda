@@ -113,7 +113,8 @@ table_columns_get_type (void)
 			NULL,
 			sizeof (TableColumns),
 			0,
-			(GInstanceInitFunc) table_columns_init
+			(GInstanceInitFunc) table_columns_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "TableColumns", &columns, 0);
 	}

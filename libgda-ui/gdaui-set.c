@@ -83,7 +83,8 @@ _gdaui_set_get_type (void)
 			NULL,
 			sizeof (GdauiSet),
 			0,
-			(GInstanceInitFunc) gdaui_set_init
+			(GInstanceInitFunc) gdaui_set_init,
+			0
 		};		
 
 		type = g_type_register_static (G_TYPE_OBJECT, "GdauiSet", &info, 0);

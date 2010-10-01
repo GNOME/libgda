@@ -279,7 +279,8 @@ _gda_thread_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaThreadProvider),
 			0,
-			(GInstanceInitFunc) gda_thread_provider_init
+			(GInstanceInitFunc) gda_thread_provider_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

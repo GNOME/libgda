@@ -159,7 +159,8 @@ query_favorite_selector_get_type (void)
 			NULL,
 			sizeof (QueryFavoriteSelector),
 			0,
-			(GInstanceInitFunc) query_favorite_selector_init
+			(GInstanceInitFunc) query_favorite_selector_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "QueryFavoriteSelector",
 					       &info, 0);

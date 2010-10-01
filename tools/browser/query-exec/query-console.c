@@ -235,7 +235,8 @@ query_console_get_type (void)
 			NULL,
 			sizeof (QueryConsole),
 			0,
-			(GInstanceInitFunc) query_console_init
+			(GInstanceInitFunc) query_console_init,
+			0
 		};
 
 		static GInterfaceInfo page_console = {

@@ -137,6 +137,7 @@ gdaui_data_cell_renderer_textual_get_type (void)
 			sizeof (GdauiDataCellRendererTextual),
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_textual_init,
+			0
 		};
 
 		cell_text_type =

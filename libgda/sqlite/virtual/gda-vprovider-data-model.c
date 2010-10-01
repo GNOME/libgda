@@ -132,7 +132,8 @@ gda_vprovider_data_model_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVproviderDataModel),
 				0,
-				(GInstanceInitFunc) gda_vprovider_data_model_init
+				(GInstanceInitFunc) gda_vprovider_data_model_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);

@@ -76,6 +76,7 @@ gdaui_formatted_entry_get_type (void)
 			sizeof (GdauiFormattedEntry),
 			0,		/* n_preallocs */
 			(GInstanceInitFunc) gdaui_formatted_entry_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY, "GdauiFormattedEntry", &type_info, 0);

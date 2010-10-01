@@ -80,7 +80,8 @@ gdaui_entry_cidr_get_type (void)
 			NULL,
 			sizeof (GdauiEntryCidr),
 			0,
-			(GInstanceInitFunc) gdaui_entry_cidr_init
+			(GInstanceInitFunc) gdaui_entry_cidr_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryCidr", &info, 0);

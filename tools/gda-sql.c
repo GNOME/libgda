@@ -89,7 +89,7 @@ static GOptionEntry entries[] = {
 	{ "http-port", 's', 0, G_OPTION_ARG_INT, &http_port, "Run embedded HTTP server on specified port", "port" },
 	{ "http-token", 't', 0, G_OPTION_ARG_STRING, &auth_token, "Authentication token (required to authenticate clients)", "token phrase" },
 #endif
-        { NULL }
+        { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
 /* interruption handling */
@@ -123,7 +123,7 @@ typedef struct {
 	WebServer *server;
 #endif
 } MainData;
-MainData *main_data;
+	MainData *main_data;
 GString *prompt = NULL;
 GMainLoop *main_loop = NULL;
 

@@ -172,7 +172,8 @@ data_source_get_type (void)
 			NULL,
 			sizeof (DataSource),
 			0,
-			(GInstanceInitFunc) data_source_init
+			(GInstanceInitFunc) data_source_init,
+			0
 		};
 
 		

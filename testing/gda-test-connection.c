@@ -14,7 +14,7 @@ static GOptionEntry entries[] = {
 	{ "dsn", 's', 0, G_OPTION_ARG_STRING, &dsn, "Data source", NULL},
 	{ "user", 'U', 0, G_OPTION_ARG_STRING, &user, "Username", "username" },
 	{ "password", 'P', 0, G_OPTION_ARG_STRING, &pass, "Password", "password" },
-	{ NULL }
+	{ NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
 

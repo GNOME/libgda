@@ -247,7 +247,8 @@ gda_web_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaWebProvider),
 			0,
-			(GInstanceInitFunc) gda_web_provider_init
+			(GInstanceInitFunc) gda_web_provider_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

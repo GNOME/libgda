@@ -84,7 +84,8 @@ browser_canvas_fkey_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasFkey),
 			0,
-			(GInstanceInitFunc) browser_canvas_fkey_init
+			(GInstanceInitFunc) browser_canvas_fkey_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS_ITEM, "BrowserCanvasFkey", &info, 0);

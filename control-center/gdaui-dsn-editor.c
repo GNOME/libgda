@@ -272,7 +272,8 @@ gdaui_dsn_editor_get_type (void)
 			NULL,
 			sizeof (GdauiDsnEditor),
 			0,
-			(GInstanceInitFunc) gdaui_dsn_editor_init
+			(GInstanceInitFunc) gdaui_dsn_editor_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiDsnEditor", &info, 0);
 	}

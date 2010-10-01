@@ -64,7 +64,8 @@ gdaui_entry_filesel_get_type (void)
 			NULL,
 			sizeof (GdauiEntryFilesel),
 			0,
-			(GInstanceInitFunc) gdaui_entry_filesel_init
+			(GInstanceInitFunc) gdaui_entry_filesel_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryFilesel", &info, 0);

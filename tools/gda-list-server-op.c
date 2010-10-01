@@ -15,7 +15,7 @@ static GOptionEntry entries[] = {
         { "provider", 'p', 0, G_OPTION_ARG_STRING, &prov, "Provider name", "provider"},
         { "op", 'o', 0, G_OPTION_ARG_STRING, &op, "Operation", "operation name"},
         { "list-ops", 'l', 0, G_OPTION_ARG_NONE, &list_ops, "List existing operations", NULL },
-        { NULL }
+        { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
 static xmlDocPtr merge_specs (const gchar *xml_dir, GdaServerOperationType type, gboolean *op_supported, GError **error);

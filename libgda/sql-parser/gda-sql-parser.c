@@ -124,7 +124,8 @@ gda_sql_parser_get_type (void)
 			NULL,
 			sizeof (GdaSqlParser),
 			0,
-			(GInstanceInitFunc) gda_sql_parser_init
+			(GInstanceInitFunc) gda_sql_parser_init,
+			0
 		};
 
 		static GInterfaceInfo lockable_info = {

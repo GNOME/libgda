@@ -164,7 +164,8 @@ _gdaui_dsn_selector_get_type (void)
 			NULL,
 			sizeof (GdauiDsnSelector),
 			0,
-			(GInstanceInitFunc) gdaui_dsn_selector_init
+			(GInstanceInitFunc) gdaui_dsn_selector_init,
+			0
 		};
 		type = g_type_from_name ("GdauiDsnSelector");
 		if (type == 0)

@@ -33,7 +33,7 @@ gchar *outfile = NULL;
 static GOptionEntry entries[] = {
         { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ast for a password when it is empty", NULL },
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
-        { NULL }
+        { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
 HtmlConfig *config;

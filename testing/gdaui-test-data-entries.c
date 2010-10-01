@@ -100,7 +100,7 @@ static void plugin_hash_foreach_func (const gchar *plugin_name, GdauiPlugin *plu
 gchar *test_type;
 static GOptionEntry entries[] = {
         { "test-type", 't', 0, G_OPTION_ARG_STRING, &test_type, "Test condition", "{basic,form,grid}"},
-        { NULL }
+        { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
 int 

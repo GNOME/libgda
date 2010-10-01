@@ -87,7 +87,8 @@ browser_canvas_table_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasTable),
 			0,
-			(GInstanceInitFunc) browser_canvas_table_init
+			(GInstanceInitFunc) browser_canvas_table_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS_ITEM, "BrowserCanvasTable", &info, 0);

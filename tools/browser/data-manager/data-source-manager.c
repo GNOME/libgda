@@ -75,7 +75,8 @@ data_source_manager_get_type (void)
 			NULL,
 			sizeof (DataSourceManager),
 			0,
-			(GInstanceInitFunc) data_source_manager_init
+			(GInstanceInitFunc) data_source_manager_init,
+			0
 		};
 
 		

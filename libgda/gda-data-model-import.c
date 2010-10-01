@@ -194,7 +194,8 @@ gda_data_model_import_get_type (void)
 			NULL,
 			sizeof (GdaDataModelImport),
 			0,
-			(GInstanceInitFunc) gda_data_model_import_init
+			(GInstanceInitFunc) gda_data_model_import_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {

@@ -184,7 +184,8 @@ gdaui_basic_form_get_type (void)
 			NULL,
 			sizeof (GdauiBasicForm),
 			0,
-			(GInstanceInitFunc) gdaui_basic_form_init
+			(GInstanceInitFunc) gdaui_basic_form_init,
+			0
 		};
 
 		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiBasicForm", &info, 0);

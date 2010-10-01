@@ -274,7 +274,8 @@ gda_data_model_dir_get_type (void)
 			NULL,
 			sizeof (GdaDataModelDir),
 			0,
-			(GInstanceInitFunc) gda_data_model_dir_init
+			(GInstanceInitFunc) gda_data_model_dir_init,
+			0
 		};
 		static const GInterfaceInfo data_model_info = {
                         (GInterfaceInitFunc) gda_data_model_dir_data_model_init,

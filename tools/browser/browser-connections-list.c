@@ -70,7 +70,8 @@ browser_connections_list_get_type (void)
 			NULL,
 			sizeof (BrowserConnectionsList),
 			0,
-			(GInstanceInitFunc) browser_connections_list_init
+			(GInstanceInitFunc) browser_connections_list_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);

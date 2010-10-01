@@ -88,7 +88,8 @@ browser_canvas_text_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasText),
 			0,
-			(GInstanceInitFunc) browser_canvas_text_init
+			(GInstanceInitFunc) browser_canvas_text_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS_ITEM, "BrowserCanvasText", &info, 0);

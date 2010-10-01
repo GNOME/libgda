@@ -715,7 +715,8 @@ gda_config_get_type (void)
 			NULL, NULL,
 			sizeof (GdaConfig),
 			0,
-			(GInstanceInitFunc) gda_config_init
+			(GInstanceInitFunc) gda_config_init,
+			0
 		};
 		GDA_CONFIG_LOCK ();
 		if (type == 0)

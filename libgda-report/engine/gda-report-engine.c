@@ -148,7 +148,8 @@ gda_report_engine_get_type (void)
 			NULL, NULL,
 			sizeof (GdaReportEngine),
 			0,
-			(GInstanceInitFunc) gda_report_engine_init
+			(GInstanceInitFunc) gda_report_engine_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

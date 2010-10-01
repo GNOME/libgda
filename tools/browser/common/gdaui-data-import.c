@@ -82,7 +82,8 @@ gdaui_data_import_get_type (void)
 			NULL,
 			sizeof (GdauiDataImport),
 			0,
-			(GInstanceInitFunc) gdaui_data_import_init
+			(GInstanceInitFunc) gdaui_data_import_init,
+			0
 		};		
 		
 		type = g_type_register_static (GTK_TYPE_VPANED, "GdauiDataImport", &info, 0);

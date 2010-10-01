@@ -116,7 +116,8 @@ gda_data_model_iter_get_type (void)
 			NULL,
 			sizeof (GdaDataModelIter),
 			0,
-			(GInstanceInitFunc) gda_data_model_iter_init
+			(GInstanceInitFunc) gda_data_model_iter_init,
+			0
 		};
 
 		

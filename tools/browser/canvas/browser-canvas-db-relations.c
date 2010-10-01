@@ -84,7 +84,8 @@ browser_canvas_db_relations_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasDbRelations),
 			0,
-			(GInstanceInitFunc) browser_canvas_db_relations_init
+			(GInstanceInitFunc) browser_canvas_db_relations_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS, "BrowserCanvasDbRelations", &info, 0);

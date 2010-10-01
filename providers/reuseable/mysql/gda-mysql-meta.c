@@ -331,10 +331,10 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
 		gchar  *synonyms;
 	} BuiltinDataType;
 	BuiltinDataType data_types[] = {
-		{ "AUTO_INCREMENT", "gint" "The AUTO_INCREMENT attribute can be used to generate a unique identity for new rows", "" },
+		{ "AUTO_INCREMENT", "gint", "The AUTO_INCREMENT attribute can be used to generate a unique identity for new rows", "" },
 		{ "BIGINT", "gint64", "A large integer. The signed range is -9223372036854775808 to 9223372036854775807. The unsigned range is 0 to 18446744073709551615.", "" },
 		{ "BINARY", "GdaBinary", "The BINARY type is similar to the CHAR type, but stores binary byte strings rather than non-binary character strings. M represents the column length in bytes.", "CHAR BYTE" },
-		{ "BIT", "gint" "A bit-field type. M indicates the number of bits per value, from 1 to 64. The default is 1 if M is omitted.", "" },
+		{ "BIT", "gint", "A bit-field type. M indicates the number of bits per value, from 1 to 64. The default is 1 if M is omitted.", "" },
 		{ "BLOB", "GdaBinary", "A BLOB column with a maximum length of 65,535 (216 - 1) bytes. Each BLOB value is stored using a two-byte length prefix that indicates the number of bytes in the value.", "" },
 		{ "BLOB DATA TYPE", "GdaBinary", "A BLOB is a binary large object that can hold a variable amount of data. The four BLOB types are TINYBLOB, BLOB, MEDIUMBLOB, and LONGBLOB. These differ only in the maximum length of the values they can hold.", "" },
 		{ "BOOLEAN", "gboolean", "These types are synonyms for TINYINT(1). A value of zero is considered false. Non-zero values are considered true", "" },

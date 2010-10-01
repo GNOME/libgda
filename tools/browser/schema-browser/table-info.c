@@ -159,7 +159,8 @@ table_info_get_type (void)
 			NULL,
 			sizeof (TableInfo),
 			0,
-			(GInstanceInitFunc) table_info_init
+			(GInstanceInitFunc) table_info_init,
+			0
 		};
 
 		static GInterfaceInfo page_info = {

@@ -190,7 +190,8 @@ _gdaui_provider_auth_editor_get_type (void)
 			NULL,
 			sizeof (GdauiProviderAuthEditor),
 			0,
-			(GInstanceInitFunc) gdaui_provider_auth_editor_init
+			(GInstanceInitFunc) gdaui_provider_auth_editor_init,
+			0
 		};
 		type = g_type_from_name ("GdauiProviderAuthEditor");
 		if (type == 0)

@@ -115,7 +115,8 @@ gda_ddl_creator_get_type (void) {
 			NULL,
 			sizeof (GdaDDLCreator),
 			0,
-			(GInstanceInitFunc) gda_ddl_creator_init
+			(GInstanceInitFunc) gda_ddl_creator_init,
+			0
 		};
 		
 		g_static_rec_mutex_lock (&init_mutex);

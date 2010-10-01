@@ -162,7 +162,8 @@ gda_tree_mgr_columns_get_type (void)
                         NULL,
                         sizeof (GdaTreeMgrColumns),
                         0,
-                        (GInstanceInitFunc) gda_tree_mgr_columns_init
+                        (GInstanceInitFunc) gda_tree_mgr_columns_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);

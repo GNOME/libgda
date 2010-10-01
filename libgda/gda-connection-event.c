@@ -68,7 +68,8 @@ gda_connection_event_get_type (void)
 			NULL,
 			sizeof (GdaConnectionEvent),
 			0,
-			(GInstanceInitFunc) gda_connection_event_init
+			(GInstanceInitFunc) gda_connection_event_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

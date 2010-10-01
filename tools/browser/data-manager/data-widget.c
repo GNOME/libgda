@@ -145,7 +145,8 @@ data_widget_get_type (void)
 			NULL,
 			sizeof (DataWidget),
 			0,
-			(GInstanceInitFunc) data_widget_init
+			(GInstanceInitFunc) data_widget_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "DataWidget", &info, 0);
 	}

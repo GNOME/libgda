@@ -72,7 +72,8 @@ data_manager_perspective_get_type (void)
 			NULL,
 			sizeof (DataManagerPerspective),
 			0,
-			(GInstanceInitFunc) data_manager_perspective_init
+			(GInstanceInitFunc) data_manager_perspective_init,
+			0
 		};
 
 		static GInterfaceInfo perspective_info = {

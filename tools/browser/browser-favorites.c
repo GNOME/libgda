@@ -65,7 +65,8 @@ browser_favorites_get_type (void)
 			NULL,
 			sizeof (BrowserFavorites),
 			0,
-			(GInstanceInitFunc) browser_favorites_init
+			(GInstanceInitFunc) browser_favorites_init,
+			0
 		};
 
 

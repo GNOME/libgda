@@ -856,7 +856,8 @@ query_editor_get_type (void)
 			NULL,
 			sizeof (QueryEditor),
 			0,
-			(GInstanceInitFunc) query_editor_init
+			(GInstanceInitFunc) query_editor_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "QueryEditor", &info, 0);
 	}

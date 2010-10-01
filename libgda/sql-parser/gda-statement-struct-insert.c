@@ -41,6 +41,10 @@ GdaSqlStatementContentsInfo insert_infos = {
 	gda_sql_statement_insert_serialize,
 
 	gda_sql_statement_insert_check_structure,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 

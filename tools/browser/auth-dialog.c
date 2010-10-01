@@ -98,7 +98,8 @@ auth_dialog_get_type (void)
 			NULL,
 			sizeof (AuthDialog),
 			0,
-			(GInstanceInitFunc) auth_dialog_init
+			(GInstanceInitFunc) auth_dialog_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

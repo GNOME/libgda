@@ -89,7 +89,8 @@ gda_sql_builder_get_type (void) {
 			NULL,
 			sizeof (GdaSqlBuilder),
 			0,
-			(GInstanceInitFunc) gda_sql_builder_init
+			(GInstanceInitFunc) gda_sql_builder_init,
+			0
 		};
 
 		g_static_rec_mutex_lock (&init_mutex);

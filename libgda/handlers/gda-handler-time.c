@@ -93,7 +93,8 @@ gda_handler_time_get_type (void)
 			NULL,
 			sizeof (GdaHandlerTime),
 			0,
-			(GInstanceInitFunc) gda_handler_time_init
+			(GInstanceInitFunc) gda_handler_time_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {

@@ -105,7 +105,8 @@ table_relations_get_type (void)
 			NULL,
 			sizeof (TableRelations),
 			0,
-			(GInstanceInitFunc) table_relations_init
+			(GInstanceInitFunc) table_relations_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "TableRelations", &relations, 0);
 	}

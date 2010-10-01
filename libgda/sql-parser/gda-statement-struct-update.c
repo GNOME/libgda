@@ -40,6 +40,10 @@ GdaSqlStatementContentsInfo update_infos = {
 	gda_sql_statement_update_serialize,
 
 	gda_sql_statement_update_check_structure,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 

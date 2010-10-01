@@ -154,7 +154,8 @@ gda_tree_mgr_tables_get_type (void)
                         NULL,
                         sizeof (GdaTreeMgrTables),
                         0,
-                        (GInstanceInitFunc) gda_tree_mgr_tables_init
+                        (GInstanceInitFunc) gda_tree_mgr_tables_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);

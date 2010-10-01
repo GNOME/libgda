@@ -207,7 +207,8 @@ gdaui_raw_grid_get_type (void)
 			NULL,
 			sizeof (GdauiRawGrid),
 			0,
-			(GInstanceInitFunc) gdaui_raw_grid_init
+			(GInstanceInitFunc) gdaui_raw_grid_init,
+			0
 		};
 
 		static const GInterfaceInfo proxy_info = {

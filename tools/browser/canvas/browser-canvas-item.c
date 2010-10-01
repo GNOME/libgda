@@ -83,7 +83,8 @@ browser_canvas_item_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasItem),
 			0,
-			(GInstanceInitFunc) browser_canvas_item_init
+			(GInstanceInitFunc) browser_canvas_item_init,
+			0
 		};
 		type = g_type_register_static (GOO_TYPE_CANVAS_GROUP, "BrowserCanvasItem", &info, 0);
 	}

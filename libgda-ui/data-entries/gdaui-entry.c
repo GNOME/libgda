@@ -103,6 +103,7 @@ gdaui_entry_get_type (void)
 			sizeof (GdauiEntry),
 			0,		/* n_preallocs */
 			(GInstanceInitFunc) gdaui_entry_init,
+			0
 		};
 		
 		type = g_type_register_static (GTK_TYPE_ENTRY, "GdauiEntry", &type_info, 0);

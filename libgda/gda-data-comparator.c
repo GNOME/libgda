@@ -98,7 +98,8 @@ gda_data_comparator_get_type (void)
 			NULL,
 			sizeof (GdaDataComparator),
 			0,
-			(GInstanceInitFunc) gda_data_comparator_init
+			(GInstanceInitFunc) gda_data_comparator_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);

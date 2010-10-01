@@ -246,7 +246,8 @@ popup_container_get_type (void)
 			NULL,
 			sizeof (PopupContainer),
 			0,
-			(GInstanceInitFunc) popup_container_init
+			(GInstanceInitFunc) popup_container_init,
+			0
 		};
 #ifdef PRIV_OBJ_PREFIX
 		type = g_type_register_static (GTK_TYPE_WINDOW, PRIV_OBJ_PREFIX "GdauiPopupContainer",

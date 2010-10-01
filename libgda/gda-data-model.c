@@ -90,7 +90,8 @@ gda_data_model_get_type (void)
 			NULL,
 			0,
 			0,
-			(GInstanceInitFunc) NULL
+			(GInstanceInitFunc) NULL,
+			0
 		};
 		
 		g_static_rec_mutex_lock (&init_mutex);

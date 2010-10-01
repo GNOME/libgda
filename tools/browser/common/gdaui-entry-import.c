@@ -66,7 +66,8 @@ gdaui_entry_import_get_type (void)
 			NULL,
 			sizeof (GdauiEntryImport),
 			0,
-			(GInstanceInitFunc) gdaui_entry_import_init
+			(GInstanceInitFunc) gdaui_entry_import_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryImport", &info, 0);

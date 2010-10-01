@@ -242,7 +242,8 @@ gda_data_model_bdb_get_type (void)
 			NULL,
 			sizeof (GdaDataModelBdb),
 			0,
-			(GInstanceInitFunc) gda_data_model_bdb_init
+			(GInstanceInitFunc) gda_data_model_bdb_init,
+			0
 		};
 		static const GInterfaceInfo data_model_info = {
                         (GInterfaceInitFunc) gda_data_model_bdb_data_model_init,

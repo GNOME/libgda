@@ -113,7 +113,8 @@ gdaui_entry_string_get_type (void)
 			NULL,
 			sizeof (GdauiEntryString),
 			0,
-			(GInstanceInitFunc) gdaui_entry_string_init
+			(GInstanceInitFunc) gdaui_entry_string_init,
+			0
 		};
 		
 		static const GInterfaceInfo cell_editable_info = {

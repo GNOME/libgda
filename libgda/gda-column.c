@@ -191,7 +191,8 @@ gda_column_get_type (void)
 			NULL,
 			sizeof (GdaColumn),
 			0,
-			(GInstanceInitFunc) gda_column_init
+			(GInstanceInitFunc) gda_column_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

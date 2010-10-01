@@ -115,6 +115,7 @@ gdaui_data_cell_renderer_pict_get_type (void)
 			sizeof (GdauiDataCellRendererPict),
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_pict_init,
+			0
 		};
 
 		cell_type = g_type_register_static (GTK_TYPE_CELL_RENDERER_PIXBUF, "GdauiDataCellRendererPict",

@@ -52,7 +52,8 @@ dummy_perspective_get_type (void)
 			NULL,
 			sizeof (DummyPerspective),
 			0,
-			(GInstanceInitFunc) dummy_perspective_init
+			(GInstanceInitFunc) dummy_perspective_init,
+			0
 		};
 
 		static GInterfaceInfo perspective_info = {

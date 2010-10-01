@@ -119,6 +119,7 @@ gdaui_data_cell_renderer_password_get_type (void)
 			sizeof (GdauiDataCellRendererPassword),
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_password_init,
+			0
 		};
 
 		cell_text_type =

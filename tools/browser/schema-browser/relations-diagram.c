@@ -150,7 +150,8 @@ relations_diagram_get_type (void)
 			NULL,
 			sizeof (RelationsDiagram),
 			0,
-			(GInstanceInitFunc) relations_diagram_init
+			(GInstanceInitFunc) relations_diagram_init,
+			0
 		};
 		static GInterfaceInfo page_info = {
                         (GInterfaceInitFunc) relations_diagram_page_init,

@@ -136,7 +136,8 @@ query_result_get_type (void)
 			NULL,
 			sizeof (QueryResult),
 			0,
-			(GInstanceInitFunc) query_result_init
+			(GInstanceInitFunc) query_result_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "QueryResult", &info, 0);
 	}

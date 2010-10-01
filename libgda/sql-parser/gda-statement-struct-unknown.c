@@ -35,6 +35,10 @@ GdaSqlStatementContentsInfo unknown_infos = {
 	gda_sql_statement_unknown_copy,
 	gda_sql_statement_unknown_serialize,
 	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 

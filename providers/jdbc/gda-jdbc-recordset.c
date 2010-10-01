@@ -128,7 +128,8 @@ gda_jdbc_recordset_get_type (void)
 			NULL,
 			sizeof (GdaJdbcRecordset),
 			0,
-			(GInstanceInitFunc) gda_jdbc_recordset_init
+			(GInstanceInitFunc) gda_jdbc_recordset_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

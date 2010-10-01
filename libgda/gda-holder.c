@@ -134,7 +134,8 @@ gda_holder_get_type (void)
 			NULL,
 			sizeof (GdaHolder),
 			0,
-			(GInstanceInitFunc) gda_holder_init
+			(GInstanceInitFunc) gda_holder_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

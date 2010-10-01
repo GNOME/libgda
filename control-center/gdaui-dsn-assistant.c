@@ -696,7 +696,8 @@ gdaui_dsn_assistant_get_type (void)
 			NULL,
 			sizeof (GdauiDsnAssistant),
 			0,
-			(GInstanceInitFunc) gdaui_dsn_assistant_init
+			(GInstanceInitFunc) gdaui_dsn_assistant_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_ASSISTANT, "GdauiDsnAssistant",
 					       &info, 0);

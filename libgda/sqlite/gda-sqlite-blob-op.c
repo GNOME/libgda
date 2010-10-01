@@ -62,7 +62,8 @@ _gda_sqlite_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaSqliteBlobOp),
 			0,
-			(GInstanceInitFunc) gda_sqlite_blob_op_init
+			(GInstanceInitFunc) gda_sqlite_blob_op_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

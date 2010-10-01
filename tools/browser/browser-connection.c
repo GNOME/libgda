@@ -170,7 +170,8 @@ browser_connection_get_type (void)
 			NULL,
 			sizeof (BrowserConnection),
 			0,
-			(GInstanceInitFunc) browser_connection_init
+			(GInstanceInitFunc) browser_connection_init,
+			0
 		};
 
 		

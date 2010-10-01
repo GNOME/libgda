@@ -72,7 +72,8 @@ schema_browser_perspective_get_type (void)
 			NULL,
 			sizeof (SchemaBrowserPerspective),
 			0,
-			(GInstanceInitFunc) schema_browser_perspective_init
+			(GInstanceInitFunc) schema_browser_perspective_init,
+			0
 		};
 
 		static GInterfaceInfo perspective_info = {

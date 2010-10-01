@@ -108,7 +108,8 @@ gdaui_entry_common_time_get_type (void)
 			NULL,
 			sizeof (GdauiEntryCommonTime),
 			0,
-			(GInstanceInitFunc) gdaui_entry_common_time_init
+			(GInstanceInitFunc) gdaui_entry_common_time_init,
+			0
 		};
 
 		static const GInterfaceInfo cell_editable_info = {
@@ -811,7 +812,7 @@ date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
 {
 	char buffer [256];
         guint year, month, day;
-        struct tm mtm = {0};
+        struct tm mtm = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         char *str_utf8;
 
         gtk_calendar_get_date (calendar, &year, &month, &day);

@@ -69,7 +69,8 @@ gda_postgres_handler_bin_get_type (void)
 			NULL,
 			sizeof (GdaPostgresHandlerBin),
 			0,
-			(GInstanceInitFunc) gda_postgres_handler_bin_init
+			(GInstanceInitFunc) gda_postgres_handler_bin_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {

@@ -273,7 +273,8 @@ gda_server_operation_get_type (void)
 			NULL,
 			sizeof (GdaServerOperation),
 			0,
-			(GInstanceInitFunc) gda_server_operation_init
+			(GInstanceInitFunc) gda_server_operation_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);

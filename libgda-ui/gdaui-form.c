@@ -92,7 +92,8 @@ gdaui_form_get_type (void)
 			NULL,
 			sizeof (GdauiForm),
 			0,
-			(GInstanceInitFunc) gdaui_form_init
+			(GInstanceInitFunc) gdaui_form_init,
+			0
 		};
 
 		static const GInterfaceInfo proxy_info = {

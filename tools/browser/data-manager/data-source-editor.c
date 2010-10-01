@@ -64,7 +64,8 @@ data_source_editor_get_type (void)
 			NULL,
 			sizeof (DataSourceEditor),
 			0,
-			(GInstanceInitFunc) data_source_editor_init
+			(GInstanceInitFunc) data_source_editor_init,
+			0
 		};
 
 		

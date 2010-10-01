@@ -126,7 +126,8 @@ mgr_favorites_get_type (void)
                         NULL,
                         sizeof (MgrFavorites),
                         0,
-                        (GInstanceInitFunc) mgr_favorites_init
+                        (GInstanceInitFunc) mgr_favorites_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);

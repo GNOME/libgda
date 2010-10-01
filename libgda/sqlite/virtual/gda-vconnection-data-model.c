@@ -114,7 +114,8 @@ gda_vconnection_data_model_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVconnectionDataModel),
 				0,
-				(GInstanceInitFunc) gda_vconnection_data_model_init
+				(GInstanceInitFunc) gda_vconnection_data_model_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);

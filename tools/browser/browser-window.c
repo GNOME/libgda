@@ -131,7 +131,8 @@ browser_window_get_type (void)
 			NULL,
 			sizeof (BrowserWindow),
 			0,
-			(GInstanceInitFunc) browser_window_init
+			(GInstanceInitFunc) browser_window_init,
+			0
 		};
 
 		

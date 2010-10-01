@@ -151,7 +151,8 @@ gda_tree_mgr_select_get_type (void)
                         NULL,
                         sizeof (GdaTreeMgrSelect),
                         0,
-                        (GInstanceInitFunc) gda_tree_mgr_select_init
+                        (GInstanceInitFunc) gda_tree_mgr_select_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);

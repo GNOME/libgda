@@ -130,7 +130,8 @@ gda_vconnection_hub_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVconnectionHub),
 				0,
-				(GInstanceInitFunc) gda_vconnection_hub_init
+				(GInstanceInitFunc) gda_vconnection_hub_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);

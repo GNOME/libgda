@@ -128,7 +128,8 @@ web_server_get_type (void)
 			NULL,
 			sizeof (WebServer),
 			0,
-			(GInstanceInitFunc) web_server_init
+			(GInstanceInitFunc) web_server_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

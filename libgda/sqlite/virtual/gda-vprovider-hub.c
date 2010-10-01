@@ -115,7 +115,8 @@ gda_vprovider_hub_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVproviderHub),
 				0,
-				(GInstanceInitFunc) gda_vprovider_hub_init
+				(GInstanceInitFunc) gda_vprovider_hub_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);

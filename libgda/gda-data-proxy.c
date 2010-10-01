@@ -502,7 +502,8 @@ gda_data_proxy_get_type (void)
 			NULL,
 			sizeof (GdaDataProxy),
 			0,
-			(GInstanceInitFunc) gda_data_proxy_init
+			(GInstanceInitFunc) gda_data_proxy_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {

@@ -76,7 +76,8 @@ gdaui_entry_bin_get_type (void)
 			NULL,
 			sizeof (GdauiEntryBin),
 			0,
-			(GInstanceInitFunc) gdaui_entry_bin_init
+			(GInstanceInitFunc) gdaui_entry_bin_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryBin", &info, 0);

@@ -91,7 +91,8 @@ gdaui_data_proxy_info_get_type (void)
 			NULL,
 			sizeof (GdauiDataProxyInfo),
 			0,
-			(GInstanceInitFunc) gdaui_data_proxy_info_init
+			(GInstanceInitFunc) gdaui_data_proxy_info_init,
+			0
 		};
 
 		type = g_type_register_static (GTK_TYPE_HBOX, "GdauiDataProxyInfo", &info, 0);

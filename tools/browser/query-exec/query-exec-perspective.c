@@ -78,7 +78,8 @@ query_exec_perspective_get_type (void)
 			NULL,
 			sizeof (QueryExecPerspective),
 			0,
-			(GInstanceInitFunc) query_exec_perspective_init
+			(GInstanceInitFunc) query_exec_perspective_init,
+			0
 		};
 
 		static GInterfaceInfo perspective_info = {

@@ -49,7 +49,8 @@ gdaui_data_entry_get_type (void)
 			NULL,
 			0,
 			0,
-			(GInstanceInitFunc) NULL
+			(GInstanceInitFunc) NULL,
+			0
 		};
 
 		type = g_type_register_static (G_TYPE_INTERFACE, "GdauiDataEntry", &info, 0);

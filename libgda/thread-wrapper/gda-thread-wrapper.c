@@ -442,7 +442,8 @@ gda_thread_wrapper_get_type (void)
                         NULL,
                         sizeof (GdaThreadWrapper),
                         0,
-                        (GInstanceInitFunc) gda_thread_wrapper_init
+                        (GInstanceInitFunc) gda_thread_wrapper_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);

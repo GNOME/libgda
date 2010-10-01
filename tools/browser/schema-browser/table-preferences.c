@@ -138,7 +138,8 @@ table_preferences_get_type (void)
 			NULL,
 			sizeof (TablePreferences),
 			0,
-			(GInstanceInitFunc) table_preferences_init
+			(GInstanceInitFunc) table_preferences_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "TablePreferences", &preferences, 0);
 	}

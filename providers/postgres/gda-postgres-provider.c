@@ -323,7 +323,8 @@ gda_postgres_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaPostgresProvider),
 			0,
-			(GInstanceInitFunc) gda_postgres_provider_init
+			(GInstanceInitFunc) gda_postgres_provider_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

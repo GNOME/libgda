@@ -40,6 +40,10 @@ GdaSqlStatementContentsInfo delete_infos = {
 	gda_sql_statement_delete_serialize,
 
 	gda_sql_statement_delete_check_structure,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 

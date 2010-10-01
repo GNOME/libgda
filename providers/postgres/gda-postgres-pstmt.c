@@ -52,7 +52,8 @@ gda_postgres_pstmt_get_type (void)
 			NULL,
 			sizeof (GdaPostgresPStmt),
 			0,
-			(GInstanceInitFunc) gda_postgres_pstmt_init
+			(GInstanceInitFunc) gda_postgres_pstmt_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);

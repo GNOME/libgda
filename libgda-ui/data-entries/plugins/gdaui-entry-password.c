@@ -73,7 +73,8 @@ gdaui_entry_password_get_type (void)
 			NULL,
 			sizeof (GdauiEntryPassword),
 			0,
-			(GInstanceInitFunc) gdaui_entry_password_init
+			(GInstanceInitFunc) gdaui_entry_password_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryPassword", &info, 0);

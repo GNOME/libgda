@@ -582,7 +582,8 @@ gda_connection_get_type (void)
 			NULL, NULL,
 			sizeof (GdaConnection),
 			0,
-			(GInstanceInitFunc) gda_connection_init
+			(GInstanceInitFunc) gda_connection_init,
+			0
 		};
 
 		static GInterfaceInfo lockable_info = {

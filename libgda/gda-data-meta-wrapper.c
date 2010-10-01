@@ -131,7 +131,8 @@ _gda_data_meta_wrapper_get_type (void)
 			NULL,
 			sizeof (GdaDataMetaWrapper),
 			0,
-			(GInstanceInitFunc) gda_data_meta_wrapper_init
+			(GInstanceInitFunc) gda_data_meta_wrapper_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {

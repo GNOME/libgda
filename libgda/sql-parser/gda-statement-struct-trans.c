@@ -37,6 +37,10 @@ GdaSqlStatementContentsInfo begin_infos = {
 	gda_sql_statement_trans_copy,
 	gda_sql_statement_trans_serialize,
 	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 
@@ -54,6 +58,11 @@ GdaSqlStatementContentsInfo commit_infos = {
 	gda_sql_statement_trans_free,
 	gda_sql_statement_trans_copy,
 	gda_sql_statement_trans_serialize,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 
@@ -71,6 +80,11 @@ GdaSqlStatementContentsInfo rollback_infos = {
 	gda_sql_statement_trans_free,
 	gda_sql_statement_trans_copy,
 	gda_sql_statement_trans_serialize,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 
@@ -88,6 +102,11 @@ GdaSqlStatementContentsInfo svp_infos = {
 	gda_sql_statement_trans_free,
 	gda_sql_statement_trans_copy,
 	gda_sql_statement_trans_serialize,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 
@@ -105,6 +124,11 @@ GdaSqlStatementContentsInfo rollback_svp_infos = {
 	gda_sql_statement_trans_free,
 	gda_sql_statement_trans_copy,
 	gda_sql_statement_trans_serialize,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 
@@ -122,6 +146,11 @@ GdaSqlStatementContentsInfo delete_svp_infos = {
 	gda_sql_statement_trans_free,
 	gda_sql_statement_trans_copy,
 	gda_sql_statement_trans_serialize,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 

@@ -69,7 +69,8 @@ browser_virtual_connection_get_type (void)
 			NULL,
 			sizeof (BrowserVirtualConnection),
 			0,
-			(GInstanceInitFunc) browser_virtual_connection_init
+			(GInstanceInitFunc) browser_virtual_connection_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);

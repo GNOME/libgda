@@ -67,7 +67,8 @@ login_dialog_get_type (void)
 			NULL,
 			sizeof (LoginDialog),
 			0,
-			(GInstanceInitFunc) login_dialog_init
+			(GInstanceInitFunc) login_dialog_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

@@ -63,7 +63,8 @@ connection_binding_properties_get_type (void)
 			NULL,
 			sizeof (ConnectionBindingProperties),
 			0,
-			(GInstanceInitFunc) connection_binding_properties_init
+			(GInstanceInitFunc) connection_binding_properties_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);

@@ -181,7 +181,8 @@ gda_tree_manager_get_type (void)
                         NULL,
                         sizeof (GdaTreeManager),
                         0,
-                        (GInstanceInitFunc) gda_tree_manager_init
+                        (GInstanceInitFunc) gda_tree_manager_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);

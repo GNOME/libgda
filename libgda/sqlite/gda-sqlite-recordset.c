@@ -128,7 +128,8 @@ _gda_sqlite_recordset_get_type (void)
 			NULL,
 			sizeof (GdaSqliteRecordset),
 			0,
-			(GInstanceInitFunc) gda_sqlite_recordset_init
+			(GInstanceInitFunc) gda_sqlite_recordset_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

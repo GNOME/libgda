@@ -71,7 +71,8 @@ gda_handler_string_get_type (void)
 			NULL,
 			sizeof (GdaHandlerString),
 			0,
-			(GInstanceInitFunc) gda_handler_string_init
+			(GInstanceInitFunc) gda_handler_string_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {

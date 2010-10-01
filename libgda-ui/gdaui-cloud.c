@@ -104,7 +104,8 @@ gdaui_cloud_get_type (void)
 			NULL,
 			sizeof (GdauiCloud),
 			0,
-			(GInstanceInitFunc) gdaui_cloud_init
+			(GInstanceInitFunc) gdaui_cloud_init,
+			0
 		};
 
 		static const GInterfaceInfo selector_info = {

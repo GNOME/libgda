@@ -293,7 +293,8 @@ gda_meta_store_get_type (void) {
 			NULL,
 			sizeof (GdaMetaStore),
 			0,
-			(GInstanceInitFunc) gda_meta_store_init
+			(GInstanceInitFunc) gda_meta_store_init,
+			0
 		};
 		
 		g_static_rec_mutex_lock (&init_mutex);

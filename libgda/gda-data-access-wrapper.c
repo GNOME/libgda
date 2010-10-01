@@ -109,7 +109,8 @@ gda_data_access_wrapper_get_type (void)
 			NULL,
 			sizeof (GdaDataAccessWrapper),
 			0,
-			(GInstanceInitFunc) gda_data_access_wrapper_init
+			(GInstanceInitFunc) gda_data_access_wrapper_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {

@@ -118,7 +118,8 @@ gda_transaction_status_get_type (void)
 			NULL, NULL,
 			sizeof (GdaTransactionStatus),
 			0,
-			(GInstanceInitFunc) gda_transaction_status_init
+			(GInstanceInitFunc) gda_transaction_status_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

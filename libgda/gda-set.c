@@ -193,7 +193,8 @@ gda_set_get_type (void)
 			NULL,
 			sizeof (GdaSet),
 			0,
-			(GInstanceInitFunc) gda_set_init
+			(GInstanceInitFunc) gda_set_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

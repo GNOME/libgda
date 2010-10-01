@@ -324,7 +324,8 @@ gdaui_login_get_type (void)
 			NULL,
 			sizeof (GdauiLogin),
 			0,
-			(GInstanceInitFunc) gdaui_login_init
+			(GInstanceInitFunc) gdaui_login_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiLogin", &info, 0);
 	}

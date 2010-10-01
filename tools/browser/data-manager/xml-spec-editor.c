@@ -109,7 +109,8 @@ xml_spec_editor_get_type (void)
 			NULL,
 			sizeof (XmlSpecEditor),
 			0,
-			(GInstanceInitFunc) xml_spec_editor_init
+			(GInstanceInitFunc) xml_spec_editor_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "XmlSpecEditor", &info, 0);
 	}

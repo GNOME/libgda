@@ -37,7 +37,11 @@ GdaSqlStatementContentsInfo select_infos = {
 	_gda_sql_statement_select_serialize,
 
 	gda_sql_statement_select_check_structure,
-	gda_sql_statement_select_check_validity
+	gda_sql_statement_select_check_validity,
+	NULL,
+	NULL,
+	NULL,
+	NULL
 };
 
 GdaSqlStatementContentsInfo *

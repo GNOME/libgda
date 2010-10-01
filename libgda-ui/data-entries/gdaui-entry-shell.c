@@ -95,7 +95,8 @@ gdaui_entry_shell_get_type (void)
 			NULL,
 			sizeof (GdauiEntryShell),
 			0,
-			(GInstanceInitFunc) gdaui_entry_shell_init
+			(GInstanceInitFunc) gdaui_entry_shell_init,
+			0
 		};
 
 		type = g_type_register_static (GTK_TYPE_VIEWPORT, "GdauiEntryShell", &info, 0);

@@ -125,7 +125,8 @@ gda_data_model_array_get_type (void)
 			NULL,
 			sizeof (GdaDataModelArray),
 			0,
-			(GInstanceInitFunc) gda_data_model_array_init
+			(GInstanceInitFunc) gda_data_model_array_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {

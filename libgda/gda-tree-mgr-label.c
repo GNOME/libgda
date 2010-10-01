@@ -125,7 +125,8 @@ gda_tree_mgr_label_get_type (void)
                         NULL,
                         sizeof (GdaTreeMgrLabel),
                         0,
-                        (GInstanceInitFunc) gda_tree_mgr_label_init
+                        (GInstanceInitFunc) gda_tree_mgr_label_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);

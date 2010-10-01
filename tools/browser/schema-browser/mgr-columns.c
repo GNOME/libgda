@@ -136,7 +136,8 @@ mgr_columns_get_type (void)
                         NULL,
                         sizeof (MgrColumns),
                         0,
-                        (GInstanceInitFunc) mgr_columns_init
+                        (GInstanceInitFunc) mgr_columns_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);

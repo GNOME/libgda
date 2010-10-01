@@ -85,7 +85,8 @@ gdaui_data_store_get_type (void)
 			NULL,
 			sizeof (GdauiDataStore),
 			0,
-			(GInstanceInitFunc) gdaui_data_store_init
+			(GInstanceInitFunc) gdaui_data_store_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {

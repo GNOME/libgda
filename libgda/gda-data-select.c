@@ -198,7 +198,8 @@ gda_data_select_get_type (void)
 			NULL,
 			sizeof (GdaDataSelect),
 			0,
-			(GInstanceInitFunc) gda_data_select_init
+			(GInstanceInitFunc) gda_data_select_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {
