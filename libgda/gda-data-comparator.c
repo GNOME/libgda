@@ -202,7 +202,7 @@ static void
 clean_diff (GdaDataComparator *comparator)
 {
 	if (comparator->priv->diffs) {
-		gint i;
+		gsize i;
 		for (i = 0; i < comparator->priv->diffs->len; i++) {
 			GdaDiff *diff = g_array_index (comparator->priv->diffs, GdaDiff *, i);
 			gda_diff_free (diff);

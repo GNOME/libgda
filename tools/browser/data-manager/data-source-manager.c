@@ -530,11 +530,11 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, G_GNUC_UNUSED GEr
 		}
 		
 		if (array) {
-			gint i;
+			gssize i;
 			gboolean dep_found = FALSE;
 			for (i = array->len - 1; i >= 0 ; i--) {
 				GArray *subarray = g_array_index (array, GArray*, i);
-				gint j;
+				gsize j;
 				for (j = 0; j < subarray->len; j++) {
 					DataSource *source2 = g_array_index (subarray, DataSource*, j);
 					if (source_depends_on (source, source2)) {
@@ -547,7 +547,7 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, G_GNUC_UNUSED GEr
 							g_array_append_val (subarray, source);
 						}
 						else {
-							gint k;
+							gsize k;
 							GArray *subarray = g_array_index (array, GArray*, i+1);
 							for (k = 0; k < subarray->len; k++) {
 								DataSource *source3 = g_array_index (subarray,
@@ -605,12 +605,12 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, G_GNUC_UNUSED GEr
 void
 data_source_manager_destroy_sources_array (GArray *array)
 {
-	gint i;
+	gsize i;
 	g_return_if_fail (array);
 	for (i = 0; i < array->len; i++) {
 		GArray *subarray;
 		subarray = g_array_index (array, GArray *, i);
-		gint j;
+		gsize j;
 		for (j = 0; j < subarray->len; j++) {
 			DataSource *source;
 			source = g_array_index (subarray, DataSource *, j);

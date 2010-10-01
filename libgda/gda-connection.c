@@ -383,9 +383,11 @@ gda_connection_class_init (GdaConnectionClass *klass)
 		str = getenv ("GDA_CONNECTION_EVENTS_SHOW");
 		if (str) {
 			gchar **array;
-			gint i;
+			guint i;
+			guint array_len;
 			array = g_strsplit_set (str, " ,/;:", 0);
-			for (i = 0; i < g_strv_length (array); i++) {
+			array_len = g_strv_length (array);
+			for (i = 0; i < array_len; i++) {
 				if (!g_ascii_strcasecmp (array[i], "notice"))
 					debug_level += 1;
 				else if (!g_ascii_strcasecmp (array[i], "warning"))
@@ -504,7 +506,7 @@ gda_connection_dispose (GObject *object)
 	}
 
 	if (cnc->priv->completed_tasks) {
-		gint i, len = cnc->priv->completed_tasks->len;
+		gssize i, len = cnc->priv->completed_tasks->len;
 		for (i = 0; i < len; i++)
 			cnc_task_free (CNC_TASK (g_array_index (cnc->priv->completed_tasks, gpointer, i)));
 		g_array_free (cnc->priv->completed_tasks, TRUE);
@@ -512,7 +514,7 @@ gda_connection_dispose (GObject *object)
 	}
 
 	if (cnc->priv->trans_meta_context) {
-		gint i;
+		gsize i;
 		for (i = 0; i < cnc->priv->trans_meta_context->len; i++) {
 			GdaMetaContext *context;
 			context = g_array_index (cnc->priv->trans_meta_context, GdaMetaContext*, i);
@@ -767,7 +769,7 @@ gda_connection_set_property (GObject *object,
 											       (GSourceFunc) monitor_wrapped_cnc,
 											       cdata->wrapper);
 						/* steal signals for current thread */
-						gint i;
+						gsize i;
 						for (i = 0; i < cdata->handlers_ids->len; i++) {
 							gulong id;
 							id = g_array_index (cdata->handlers_ids, gulong, i);
@@ -1566,7 +1568,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 		GdaConnection *mscnc;
 		mscnc = gda_meta_store_get_internal_connection (cnc->priv->meta_store);
 		if (cnc != mscnc) {
-			gint i;
+			gsize i;
 			for (i = 0; i < cnc->priv->trans_meta_context->len; i++) {
 				GdaMetaContext *context;
 				GError *lerror = NULL;
@@ -5680,7 +5682,7 @@ update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, 
 		GdaConnection *mscnc;
 		mscnc = gda_meta_store_get_internal_connection (cnc->priv->meta_store);
 		if (cnc != mscnc) {
-			gint i;
+			gsize i;
 			g_assert (cnc->priv->trans_meta_context);
 			for (i = 0; i < cnc->priv->trans_meta_context->len; i++) {
 				GdaMetaContext *context;
@@ -5700,7 +5702,7 @@ update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, 
 		GdaConnection *mscnc;
 		mscnc = gda_meta_store_get_internal_connection (cnc->priv->meta_store);
 		if (cnc != mscnc) {
-			gint i;
+			gsize i;
 			g_assert (cnc->priv->trans_meta_context);
 			for (i = 0; i < cnc->priv->trans_meta_context->len; i++) {
 				GdaMetaContext *context;

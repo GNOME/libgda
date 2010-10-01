@@ -473,7 +473,7 @@ static void
 create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 {
 	GtkWidget *wid, *nb, *label;
-	gint i;
+	gsize i;
 	GType type;
 	GdaDataHandler *dh;
 
@@ -487,7 +487,7 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 	g_object_set_data (G_OBJECT (table), "nb", nb);
 	g_object_set_data (G_OBJECT (table), "plugin", plugin);
 
-	if (plugin->nb_g_types > 0)
+	if (plugin->nb_g_types > 0) {
 		for (i = 0; i < plugin->nb_g_types; i++) {
 			type = plugin->valid_g_types[i];
 			dh = get_handler (type);
@@ -510,9 +510,11 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 						  G_CALLBACK (vbox_destroyed_cb), NULL);
 			}
 		}
-	else
-		for (i = 0; i < mainconf.nb_tested_gtypes; i++) {
-			type = mainconf.tested_gtypes [i];
+	}
+	else {
+		gint j;
+		for (j = 0; j < mainconf.nb_tested_gtypes; j++) {
+			type = mainconf.tested_gtypes [j];
 			dh = get_handler (type);
 			if (dh) {
 				TestWidgetData *tdata;
@@ -533,6 +535,7 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 						  G_CALLBACK (vbox_destroyed_cb), NULL);
 			}
 		}
+	}
 }
 
 static void

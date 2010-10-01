@@ -544,7 +544,7 @@ virtual_table_manage_real_data_model (VirtualTable *vtable)
 		if (vtable->td->columns) {
 			/* columns */
 			GList *list;
-			gint i, ncols;
+			guint i, ncols;
 			ncols = gda_data_model_get_n_columns (vtable->td->real_model);
 			g_assert (ncols == g_list_length (vtable->td->columns));
 			for (i = 0, list = vtable->td->columns;

@@ -350,7 +350,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 			GList *gvalues = g_value_get_pointer (value);
 			gchar *str;
 
-			g_assert (g_list_length (gvalues) == datacell->priv->source->shown_n_cols);
+			g_assert (g_list_length (gvalues) == (guint)datacell->priv->source->shown_n_cols);
 			str = render_text_to_display_from_values (gvalues);
 			g_object_set (G_OBJECT (object), "text", str, NULL);
 			g_free (str);

@@ -294,7 +294,7 @@ gdaui_tree_store_dispose (GObject *object)
 
 	if (store->priv) {
 		if (store->priv->column_specs) {
-			gint i;
+			gsize i;
 			for (i = 0; i < store->priv->column_specs->len; i++) {
 				ColumnSpec *cs;
 				cs = g_array_index (store->priv->column_specs, ColumnSpec*, i);
@@ -403,7 +403,7 @@ gdaui_tree_store_new (GdaTree *tree, guint n_columns, ...)
 {
 	GObject *obj;
 	va_list args;
-	gint i;
+	guint i;
 	GdauiTreeStore *store;
 
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);
@@ -450,7 +450,7 @@ GtkTreeModel *
 gdaui_tree_store_newv (GdaTree *tree, guint n_columns, GType *types, const gchar **attribute_names)
 {
 	GObject *obj;
-	gint i;
+	guint i;
 	GdauiTreeStore *store;
 
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);

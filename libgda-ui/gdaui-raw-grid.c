@@ -315,7 +315,7 @@ gdaui_raw_grid_query_tooltip (GtkWidget   *widget,
 		return FALSE;
 
 	gint position = 0;
-	guint col_x = 0;
+	gint col_x = 0;
 	GList *list, *columns = gtk_tree_view_get_columns (tree_view);
 	for (list = columns; list; list = list->next) {
 		GtkTreeViewColumn *column = list->data;

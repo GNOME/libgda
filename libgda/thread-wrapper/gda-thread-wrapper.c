@@ -99,7 +99,7 @@ job_free (Job *job)
 			g_error_free (job->u.exe.error);
 	}
 	else if (job->type == JOB_TYPE_SIGNAL) {
-		gint i;
+		guint i;
 		for (i = 0; i < job->u.signal.n_param_values; i++) {
 			GValue *value = job->u.signal.param_values + i;
 			if (G_VALUE_TYPE (value) != GDA_TYPE_NULL)
@@ -835,7 +835,7 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 		if (may_lock) 
 			gda_thread_wrapper_iterate (wrapper, TRUE);
 		else {
-			gint len;
+			gsize len;
 			len = g_slist_length (td->results);
 			gda_thread_wrapper_iterate (wrapper, FALSE);
 			if (g_slist_length (td->results) == len) {
@@ -922,7 +922,7 @@ worker_thread_closure_marshal (GClosure *closure,
 	    g_static_private_get (&worker_thread_current_queue) != sigspec->reply_queue)
 		return;
 
-	gint i;
+	gsize i;
 	/*
 	  for (i = 1; i < n_param_values; i++) {
 		g_print ("\t%d => %s\n", i, gda_value_stringify (param_values + i));
@@ -964,7 +964,7 @@ worker_thread_closure_marshal_anythread (GClosure *closure,
 {
 	SignalSpec *sigspec = (SignalSpec *) closure->data;
 
-	gint i;
+	gsize i;
 	/*
 	  for (i = 1; i < n_param_values; i++) {
 		g_print ("\t%d => %s\n", i, gda_value_stringify (param_values + i));

@@ -561,7 +561,7 @@ get_database_name_from_driver_name (const gchar *driver_name)
 		{"com.mysql.jdbc.Driver", "MySQL"}
 	};
 
-	gint i;
+	gsize i;
 	for (i = 0; i < sizeof (carray) / sizeof (Corresp); i++) {
 		if (!strcmp (carray[i].jdbc_name, driver_name))
 			return carray[i].db_name;

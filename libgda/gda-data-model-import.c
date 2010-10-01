@@ -307,7 +307,7 @@ gda_data_model_import_init (GdaDataModelImport *model, G_GNUC_UNUSED GdaDataMode
 static void
 csv_free_stored_rows (GdaDataModelImport *model)
 {
-	gint i;
+	gsize i;
 	g_assert (model->priv->format == FORMAT_CSV);
 	for (i = 0; i < model->priv->extract.csv.rows_read->len; i++) {
 		GSList *list = g_array_index (model->priv->extract.csv.rows_read,

@@ -318,7 +318,7 @@ proxy_row_to_absolute_row (GdaDataProxy *proxy, gint proxy_row)
 			proxy_row--;
 	}
 	if (proxy->priv->chunk) {
-		if (proxy_row < proxy->priv->chunk->mapping->len)
+		if ((guint)proxy_row < proxy->priv->chunk->mapping->len)
 			return g_array_index (proxy->priv->chunk->mapping, gint, proxy_row);
 		else
 			return -1;
@@ -327,7 +327,7 @@ proxy_row_to_absolute_row (GdaDataProxy *proxy, gint proxy_row)
 		if (proxy->priv->chunk_to && 
 		    proxy->priv->chunk_to->mapping &&
 		    (proxy_row < proxy->priv->chunk_sep) && 
-		    (proxy_row < proxy->priv->chunk_to->mapping->len))
+		    ((guint)proxy_row < proxy->priv->chunk_to->mapping->len))
 			return g_array_index (proxy->priv->chunk_to->mapping, gint, proxy_row);
 		else
 			return proxy_row;
@@ -371,7 +371,7 @@ absolute_row_to_proxy_row (GdaDataProxy *proxy, gint abs_row)
 	}
 
 	if (proxy->priv->chunk) {
-		gint i;
+		gsize i;
 		for (i = 0; i < proxy->priv->chunk->mapping->len; i++) {
 			if (g_array_index (proxy->priv->chunk->mapping, gint, i) == abs_row) {
 				proxy_row = i;
@@ -1022,7 +1022,8 @@ proxied_model_row_inserted_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaD
 
 	/* internal cleanups: update chunk and chunk_to arrays */
 	if (proxy->priv->chunk) {
-		gint i, *v;
+		gsize i;
+		gint *v;
 
 		for (i = 0; i < proxy->priv->chunk->mapping->len; i++) {
 			v = &g_array_index (proxy->priv->chunk->mapping, gint, i);
@@ -1031,7 +1032,8 @@ proxied_model_row_inserted_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaD
 		}
 	}
 	if (proxy->priv->chunk_to && proxy->priv->chunk->mapping) {
-		gint i, *v;
+		gsize i;
+		gint *v;
 
 		for (i = 0; i < proxy->priv->chunk_to->mapping->len; i++) {
 			v = &g_array_index (proxy->priv->chunk_to->mapping, gint, i);
@@ -1099,7 +1101,8 @@ proxied_model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDa
 
 	/* internal cleanups: update chunk and chunk_to arrays */
 	if (proxy->priv->chunk) {
-		gint i, *v, remove_index = -1;
+		gsize i;
+		gint *v, remove_index = -1;
 
 		for (i = 0; i < proxy->priv->chunk->mapping->len; i++) {
 			v = &g_array_index (proxy->priv->chunk->mapping, gint, i);
@@ -1116,7 +1119,8 @@ proxied_model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDa
 			proxy->priv->chunk_sep--;
 	}
 	if (proxy->priv->chunk_to && proxy->priv->chunk->mapping) {
-		gint i, *v, remove_index = -1;
+		guint i;
+		gint *v, remove_index = -1;
 
 		for (i = 0; i < proxy->priv->chunk_to->mapping->len; i++) {
 			v = &g_array_index (proxy->priv->chunk_to->mapping, gint, i);
@@ -1559,7 +1563,8 @@ gda_data_proxy_delete (GdaDataProxy *proxy, gint proxy_row)
 				
 				if (proxy->priv->chunk) {
 					/* Update chunk */
-					gint i, *v;
+					gsize i;
+					gint *v;
 					gint row_cmp = proxy_row - (proxy->priv->add_null_entry ? 1 : 0);
 					for (i = 0; i < proxy->priv->chunk->mapping->len; i++) {
 						v = &g_array_index (proxy->priv->chunk->mapping, gint, i);
@@ -1835,7 +1840,8 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 						if (rm->model_row < 0) {
 							if (proxy->priv->chunk) {
 								/* Update chunk */
-								gint i, *v, abs_row;
+								gsize i;
+								gint *v, abs_row;
 								gint row_cmp = proxy_row - (proxy->priv->add_null_entry ? 1 : 0);
 								abs_row = proxy_row_to_absolute_row (proxy, proxy_row);
 								for (i = 0; i < proxy->priv->chunk->mapping->len; i++) {
@@ -2384,8 +2390,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 	gda_mutex_lock (proxy->priv->mutex);
 
 	gboolean finished = FALSE;
-	gint index;
-	gint step, max_steps;
+	guint index, max_steps, step;
 	GdaDataModelIter *iter = NULL;
 	gint signal_row_offset = proxy->priv->add_null_entry ? 1 : 0;
 
@@ -2691,7 +2696,7 @@ adjust_displayed_chunk (GdaDataProxy *proxy)
 	if (proxy->priv->chunk && proxy->priv->chunk_to->mapping) {
 		/* compare the 2 chunks */
 		if (proxy->priv->chunk->mapping->len == proxy->priv->chunk_to->mapping->len) {
-			gint i;
+			gsize i;
 			equal = TRUE;
 			for (i = 0; i < proxy->priv->chunk->mapping->len; i++) {
 				if (g_array_index (proxy->priv->chunk->mapping, gint, i) !=
@@ -3786,7 +3791,7 @@ gda_data_proxy_set_values (GdaDataModel *model, gint row, GList *values, GError 
 	if (!values)
 		return TRUE;
 
-	g_return_val_if_fail (g_list_length (values) <= gda_data_proxy_get_n_columns (model) , FALSE);
+	g_return_val_if_fail (g_list_length (values) <= gda_data_proxy_get_n_columns (model), FALSE);
 
 	/* check values */
 	col = 0;

@@ -262,7 +262,7 @@ update_dependencies_display (DataSourceEditor *editor)
 							  "section", NULL);
 		gtk_text_buffer_insert (tbuffer, &start, "\n", -1);
 		if (export) {
-			gint i;
+			gsize i;
 			for (i = 0; i < export->len ; i++) {
 				gchar *tmp;
 				tmp = g_array_index (export, gchar *, i);

@@ -1494,7 +1494,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 	xmlNodePtr xml_field;
 	GList *value_list = NULL;
 	GPtrArray *values;
-	gint i;
+	gsize i;
 	gboolean retval = TRUE;
 	gint pos = 0;
 
@@ -2196,7 +2196,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			if (! dump_attributes) {
 				value = gda_data_model_get_value_at (model, i, j, NULL);
 				if (!value) {
-					cols_size [i + col_offset] = MAX (cols_size [i + col_offset], strlen (ERROR_STRING));
+					cols_size [i + col_offset] = MAX ((guint)cols_size [i + col_offset], strlen (ERROR_STRING));
 				}
 				else {
 					str = NULL;
@@ -2231,7 +2231,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		const gchar *title;
 		title = g_object_get_data (G_OBJECT (model), "name");
 		if (title) {
-			gint total_width = n_cols -1, i;
+			gsize total_width = n_cols -1;
 
 			for (i = 0; i < n_cols; i++)
 				total_width += cols_size [i];

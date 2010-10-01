@@ -520,7 +520,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 			if (id)
 				xmlFree (id);
 			if (cols_array) {
-				gint i;
+				gsize i;
 				for (i = 0; i < cols_array->len; i++) {
 					xmlChar *colname;
 					colname = g_array_index (cols_array, xmlChar*, i);

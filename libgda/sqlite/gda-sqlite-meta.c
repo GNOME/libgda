@@ -260,7 +260,7 @@ _gda_sqlite_meta__btypes (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED G
 {
 	GdaDataModel *mod_model;
 	gboolean retval = TRUE;
-	gint i;
+	gsize i;
 	typedef struct {
 		gchar *tname;
 		gchar *gtype;

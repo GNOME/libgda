@@ -511,7 +511,7 @@ _gdaui_combo_set_selected (GdauiCombo *combo, const GSList *values)
 {
 	g_return_val_if_fail (GDAUI_IS_COMBO (combo), FALSE);
 	g_return_val_if_fail (combo->priv->cols_index, FALSE);
-	g_return_val_if_fail (g_slist_length ((GSList *) values) == combo->priv->n_cols, FALSE);
+	g_return_val_if_fail (g_slist_length ((GSList *) values) == (guint)combo->priv->n_cols, FALSE);
 
 	return _gdaui_combo_set_selected_ext (combo, values, combo->priv->cols_index);
 }

@@ -543,7 +543,7 @@ gda_meta_store_constructor (GType type,
 			    GObjectConstructParam *construct_properties) 
 {
 	GObject *object;
-	gint i;
+	guint i;
 	GdaMetaStore *store;
 	gboolean been_specified = FALSE;
 	

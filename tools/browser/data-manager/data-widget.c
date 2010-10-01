@@ -639,7 +639,7 @@ update_layout (DataWidget *dwid)
 		}
 		else {
 			GSList *paned_list;
-			gint i;
+			gsize i;
 			paned_list = make_paned_list (subarray->len, FALSE);
 			gtk_box_pack_start (GTK_BOX (new_contents),
 					    GTK_WIDGET (paned_list->data), TRUE, TRUE, 0);
@@ -662,7 +662,7 @@ update_layout (DataWidget *dwid)
 	}
 	else {
 		GSList *top_paned_list;
-		gint j;
+		gsize j;
 		
 		top_paned_list = make_paned_list (sources_array->len, TRUE);
 		gtk_box_pack_start (GTK_BOX (new_contents),
@@ -686,7 +686,7 @@ update_layout (DataWidget *dwid)
 			}
 			else {
 				GSList *paned_list;
-				gint i;
+				gsize i;
 				paned_list = make_paned_list (subarray->len, FALSE);
 				pack_in_paned_list (top_paned_list, sources_array->len, j,
 						    GTK_WIDGET (paned_list->data));
@@ -885,7 +885,7 @@ source_exec_finished_cb (G_GNUC_UNUSED DataSource *source, GError *error, DataPa
 			GSList *holders = NULL;
 			GdaDataModel *model;
 			GHashTable *export_columns;
-			gint i;
+			gsize i;
 			GdaDataModelIter *iter;
 			
 			iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid));

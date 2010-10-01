@@ -25,7 +25,7 @@
 #include <libgda/gda-data-handler.h>
 #include "gdk/gdkkeysyms.h"
 
-#define MAX_ACCEPTED_STRING_LENGTH 500
+#define MAX_ACCEPTED_STRING_LENGTH 500U
 
 /* 
  * Main static functions 

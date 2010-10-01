@@ -38,7 +38,7 @@ selection_changed_cb (GdauiDataSelector *selector, G_GNUC_UNUSED gpointer data)
 {
 	GString *string = NULL;
 	GArray *sel;
-	gint i;
+	gsize i;
 
 	sel = gdaui_data_selector_get_selected_rows (selector);
 	if (sel) {

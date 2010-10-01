@@ -640,7 +640,7 @@ disconnect_single_entry_signals (SingleEntry *sentry)
 		sd->holder = NULL;
 	}
 	if (sentry->group_signals) {
-		gint i;
+		gsize i;
 		for (i = 0; i < sentry->group_signals->len; i++) {
 			SignalData sd = g_array_index (sentry->group_signals, SignalData,
 						       i);

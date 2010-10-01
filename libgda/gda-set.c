@@ -1474,6 +1474,8 @@ GdaHolder *
 gda_set_get_nth_holder (GdaSet *set, gint pos)
 {
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
+	g_return_val_if_fail (pos >= 0, NULL);
+
 	if (! set->priv->holders_array) {
 		GSList *list;
 		set->priv->holders_array = g_array_sized_new (FALSE, FALSE, sizeof (GdaHolder*),
@@ -1481,7 +1483,7 @@ gda_set_get_nth_holder (GdaSet *set, gint pos)
 		for (list = set->holders; list; list = list->next)
 			g_array_append_val (set->priv->holders_array, list->data);
 	}
-	if ((pos < 0) || (pos > set->priv->holders_array->len))
+	if ((guint)pos > set->priv->holders_array->len)
 		return NULL;
 	else
 		return g_array_index (set->priv->holders_array, GdaHolder*, pos);

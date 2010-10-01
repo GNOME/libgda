@@ -964,9 +964,9 @@ gda_time_valid (const GdaTime *time)
 {
 	g_return_val_if_fail (time, FALSE);
 
-	if (time->hour < 0 || time->hour > 24 ||
-	    time->minute < 0 || time->minute > 59 ||
-	    time->second < 0 || time->second > 59)
+	if (time->hour > 24 ||
+	    time->minute > 59 ||
+	    time->second > 59)
 		return FALSE;
 	else
 		return TRUE;
@@ -1113,9 +1113,9 @@ gda_timestamp_valid (const GdaTimestamp *timestamp)
 	g_date_free (gdate);
 
 	/* check the time part */
-	if (timestamp->hour < 0 || timestamp->hour > 24 ||
-	    timestamp->minute < 0 || timestamp->minute > 59 ||
-	    timestamp->second < 0 || timestamp->second > 59)
+	if (timestamp->hour > 24 ||
+	    timestamp->minute > 59 ||
+	    timestamp->second > 59)
 		return FALSE;
 	else
 		return TRUE;
@@ -2593,7 +2593,7 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 	gulong realsize = MYMIN (bin->binary_length, maxlen);
 
 	gchar *retval;
-	glong offset = 0;
+	gulong offset = 0;
 
 	if (!bin->data || (bin->binary_length == 0))
 		return g_strdup ("");

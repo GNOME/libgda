@@ -381,7 +381,7 @@ free_private_shared_data (GdaDataSelect *model)
 
 	model->priv->sh->ref_count --;
 	if (model->priv->sh->ref_count == 0) {
-		gint i;
+		guint i;
 
 		if (model->priv->sh->sel_stmt) {
 			g_object_unref (model->priv->sh->sel_stmt);
@@ -1631,7 +1631,7 @@ external_to_internal_row (GdaDataSelect *model, gint ext_row, GError **error)
 	/* row number alteration: deleted rows */
 	if (model->priv->sh->del_rows) {
 		gint i;
-		for (i = 0; i < model->priv->sh->del_rows->len; i++) {
+		for (i = 0; (guint)i < model->priv->sh->del_rows->len; i++) {
 			gint indexed = g_array_index (model->priv->sh->del_rows, gint, i);
 			if (indexed <= ext_row + i)
 				int_row += 1;
@@ -2993,7 +2993,8 @@ static gboolean
 gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 {
 	GdaDataSelect *imodel;
-	gint int_row, i, ncols, index;
+	guint i, ncols;
+	gint int_row, index;
 	GdaHolder *holder;
 	gchar *str;
 

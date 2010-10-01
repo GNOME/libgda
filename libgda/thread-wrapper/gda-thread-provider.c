@@ -2093,7 +2093,7 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 		return;
 
 	/* disconnect signals handlers */
-	gint i;
+	gsize i;
 	for (i = 0; i < cdata->handlers_ids->len; i++) {
 		gulong hid = g_array_index (cdata->handlers_ids, gulong, i);
 		gda_thread_wrapper_disconnect (cdata->wrapper, hid);

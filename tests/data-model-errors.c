@@ -103,7 +103,7 @@ static void
 data_model_errors_init (DataModelErrors *model,
 			G_GNUC_UNUSED DataModelErrorsClass *klass)
 {
-	gint i;
+	gsize i;
 	g_return_if_fail (IS_DATA_MODEL_ERRORS (model));
 
 	model->priv = g_new0 (DataModelErrorsPrivate, 1);
@@ -115,7 +115,7 @@ data_model_errors_init (DataModelErrors *model,
 		gchar *str;
 		col = gda_column_new ();
 		gda_column_set_g_type (col, G_TYPE_STRING);
-		str = g_strdup_printf ("col%d", i);
+		str = g_strdup_printf ("col%" G_GSIZE_FORMAT, i);
 		gda_column_set_name (col, str);
 		gda_column_set_description (col, str);
 		g_object_set (G_OBJECT (col), "id", str, NULL);

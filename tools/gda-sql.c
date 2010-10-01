@@ -825,7 +825,7 @@ find_command (GdaInternalCommandsList *commands_list, const gchar *command_str, 
 {
 	GdaInternalCommand *command = NULL;
 	GSList *list;
-	gint length;
+	gsize length;
 
 	if (!command_str || ((*command_str != '\\') && (*command_str != '.')))
 		return NULL;
@@ -834,7 +834,7 @@ find_command (GdaInternalCommandsList *commands_list, const gchar *command_str, 
 	for (list = commands_list->name_ordered; list; list = list->next) {
 		command = (GdaInternalCommand*) list->data;
 		if (!strncmp (command->name, command_str + 1, MIN (length, strlen (command->name)))) {
-			gint l;
+			gsize l;
 			gchar *ptr;
 			for (ptr = command->name, l = 0; *ptr && (*ptr != ' '); ptr++, l++);
 				
@@ -3357,7 +3357,7 @@ extra_command_cd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const g
 	if (!init_done) {
 		init_done = TRUE;
 		memset (start_dir, 0, DIR_LENGTH);
-		if (getcwd (start_dir, DIR_LENGTH) <= 0) {
+		if (getcwd (start_dir, DIR_LENGTH) != NULL) {
 			/* default to $HOME */
 #ifdef G_OS_WIN32
 			TO_IMPLEMENT;
@@ -3371,7 +3371,7 @@ extra_command_cd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const g
 				return NULL;
 			}
 			else {
-				gint l = strlen (pw->pw_dir);
+				gsize l = strlen (pw->pw_dir);
 				if (l > DIR_LENGTH - 1)
 					strncpy (start_dir, "/", 2);
 				else
@@ -3440,7 +3440,7 @@ extra_command_edit_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 		if (fd < 0)
 			goto end_of_command;
 		if (write (fd, main_data->current->query_buffer->str, 
-			   main_data->current->query_buffer->len) != main_data->current->query_buffer->len) {
+			   main_data->current->query_buffer->len) != (gint)main_data->current->query_buffer->len) {
 			g_set_error (error, 0, 0,
 				     _("Could not write to temporary file '%s': %s"),
 				     filename, strerror (errno));

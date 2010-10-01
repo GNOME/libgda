@@ -374,7 +374,7 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
         if (model == NULL)
                 retval = FALSE;
 	else {
-		gint i;
+		gsize i;
 		for (i = 0; i < sizeof(data_types) / sizeof(BuiltinDataType); ++i) {
 			BuiltinDataType *data_type = &(data_types[i]);
 			GList *values = NULL;

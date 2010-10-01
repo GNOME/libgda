@@ -627,7 +627,7 @@ update_data_model (GdaDataModelDir *model)
 	update_data_model_real (model, "");
 
 	/* clean extra rows */
-	gint i;
+	gsize i;
 	for (i = model->priv->upd_row + 1; i < model->priv->rows->len; i++) {
 		FileRow *row = g_ptr_array_index (model->priv->rows, model->priv->rows->len - 1);
 		file_row_free (row);
@@ -769,6 +769,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 	FileRow *frow;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), NULL);
+	g_return_val_if_fail (row >= 0, NULL);
 	imodel = GDA_DATA_MODEL_DIR (model);
 	g_return_val_if_fail (imodel->priv, NULL);
 
@@ -782,7 +783,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 		return NULL;
 	}
 
-	if (row >= imodel->priv->rows->len) {
+	if ((guint)row >= imodel->priv->rows->len) {
 		gchar *str;
 		if (imodel->priv->rows->len > 0)
 			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
@@ -949,12 +950,13 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 	gboolean has_changed = FALSE;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), FALSE);
+	g_return_val_if_fail (row >= 0, FALSE);
 	imodel = (GdaDataModelDir *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
 	if (!values)
 		return TRUE;
 
-	if (row >= imodel->priv->rows->len) {
+	if ((guint)row >= imodel->priv->rows->len) {
 		gchar *str;
 		if (imodel->priv->rows->len > 0)
 			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
@@ -1305,10 +1307,11 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 	FileRow *frow;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), FALSE);
+	g_return_val_if_fail (row >=0, FALSE);
 	imodel = (GdaDataModelDir *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
 
-	if (row >= imodel->priv->rows->len) {
+	if ((guint)row >= imodel->priv->rows->len) {
 		gchar *str;
 		if (imodel->priv->rows->len > 0)
 			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,

@@ -236,7 +236,7 @@ server_callback (G_GNUC_UNUSED SoupServer *server, SoupMessage *msg,
 		get_cookies (msg, "coa", &cookie, NULL);
 
 		if (cookie) {
-			gint n;
+			gsize n;
 			for (n = 0; n < webserver->priv->cookies->len; n++) {
 				TimedString *ts = g_array_index (webserver->priv->cookies, TimedString *, n);
 #ifdef DEBUG_SERVER
@@ -403,7 +403,7 @@ web_server_finalize (GObject   * object)
 
 	server = WEB_SERVER (object);
 	if (server->priv) {
-		gint i;
+		gsize i;
 		for (i = 0; i < server->priv->challenges->len; i++) {
 			TimedString *ts = g_array_index (server->priv->challenges, TimedString *, i);
 			timed_string_free (ts);
@@ -574,7 +574,7 @@ get_auth (WebServer *server, SoupMessage *msg, GHashTable *query)
 	get_variables (msg, query, "etoken", &token, NULL);
 
 	if (token) {
-		gint n;
+		gsize n;
 		for (n = 0; n < server->priv->challenges->len; n++) {
 			TimedString *ts = g_array_index (server->priv->challenges, TimedString *, n);
 			uint8_t hmac[16];
@@ -2183,7 +2183,7 @@ challenge_add (WebServer *server)
 static void
 challenges_manage (WebServer *server)
 {
-	gint i;
+	gsize i;
 	GTimeVal current_ts;
 	
 	if (server->priv->challenges->len > MAX_CHALLENGES) {
@@ -2224,7 +2224,7 @@ auth_cookie_add (WebServer *server)
 static void
 auth_cookies_manage (WebServer *server)
 {
-	gint i;
+	gsize i;
 	GTimeVal current_ts;
 	
 	if (server->priv->cookies->len > MAX_AUTH_COOKIES) {

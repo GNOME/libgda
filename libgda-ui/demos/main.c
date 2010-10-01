@@ -453,11 +453,11 @@ load_file (const gchar *filename)
 				q--;
 			
 			if (q > p) {
-				int len_chars = g_utf8_pointer_to_offset (p, q);
+				glong len_chars = g_utf8_pointer_to_offset (p, q);
 				
 				end = start;
 				
-				g_assert (strlen (p) >= q - p);
+				g_assert (strlen (p) >= (gsize)(q - p));
 				gtk_text_buffer_insert (info_buffer, &end, p, q - p);
 				start = end;
 				
@@ -479,7 +479,7 @@ load_file (const gchar *filename)
 				state++;
 			}
 			else {
-				int len;
+				gsize len;
 				
 				while (*p == '*' || g_ascii_isspace (*p))
 					p++;

@@ -37,7 +37,7 @@
 #include "marshallers/gdaui-custom-marshal.h"
 #include "gdaui-data-cell-renderer-util.h"
 
-#define MAX_ACCEPTED_STRING_LENGTH 500
+#define MAX_ACCEPTED_STRING_LENGTH 500U
 
 static void gdaui_data_cell_renderer_textual_init       (GdauiDataCellRendererTextual      *celltext);
 static void gdaui_data_cell_renderer_textual_class_init (GdauiDataCellRendererTextualClass *class);

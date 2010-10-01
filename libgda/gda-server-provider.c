@@ -796,7 +796,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 {
 	GValue *retval = NULL;
 	GdaDataHandler *dh;
-	gint i;
+	gsize i;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);

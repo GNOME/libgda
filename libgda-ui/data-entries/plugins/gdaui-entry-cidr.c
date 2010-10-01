@@ -376,7 +376,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 static void truncate_entries_to_mask_length (GdauiEntryCidr *mgcidr, gboolean target_mask, guint mask_nb_bits)
 {
-	gint i, j;
+	guint i, j;
 	gchar *val;
 	guint mask, maskiter;
 	gint oldval, newval;

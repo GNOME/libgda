@@ -601,7 +601,7 @@ gda_tree_get_node_path (GdaTree *tree, GdaTreeNode *node)
 	if (build_node_path (tree, node, array))
 		str = g_strjoinv (":", (gchar **) array->data);
 	
-	gint i;
+	gsize i;
 	for (i = 0; i < array->len; i++)
 		g_free (g_array_index (array, gchar *, i));
 	g_array_free (array, TRUE);

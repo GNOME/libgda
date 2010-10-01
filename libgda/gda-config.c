@@ -497,7 +497,7 @@ gda_config_constructor (GType type,
 			sync_keyring = TRUE;
 #endif
 
-		gint i;
+		guint i;
 		gboolean user_file_set = FALSE, system_file_set = FALSE;
 
 		object = G_OBJECT_CLASS (parent_class)->constructor (type,

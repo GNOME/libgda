@@ -482,7 +482,7 @@ real_run_at_node (GdaReportEngine *engine, xmlNodePtr topnode, RunContext *conte
 		if (!strncmp ((gchar *) node->name, "gda_report", 10)) {
 			GSList *created_nodes = NULL;
 			gboolean cmd_res = TRUE;
-			gint i;
+			gsize i;
 			gboolean command_found = FALSE;
 			
 			for (i = 0; i < sizeof (commands) / sizeof (EngineCommand); i++) {

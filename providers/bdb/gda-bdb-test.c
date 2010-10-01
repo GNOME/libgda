@@ -30,7 +30,8 @@ static void
 create_db (const gchar *filename)
 {
 	DB *dbp;
-	int ret, i;
+	gint ret;
+	gsize i;
 	
 	g_print ("Creating BDB database in '%s'\n", filename);
 	g_assert (db_create (&dbp, NULL, 0) == 0);

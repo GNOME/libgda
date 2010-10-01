@@ -19,7 +19,7 @@ static JniWrapperMethod *GdaJValue__createTimestamp = NULL;
 JNIEXPORT void
 JNICALL Java_GdaJValue_initIDs (JNIEnv *env, jclass klass)
 {
-	gint i;
+	gsize i;
 	typedef struct {
 		const gchar       *name;
 		const gchar       *sig;

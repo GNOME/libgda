@@ -816,7 +816,7 @@ query_editor_finalize (GObject *object)
 	/* free memory */
 	hist_data_free_all (editor);
 	if (editor->priv->states) {
-		gint i;
+		gsize i;
 		for (i = 0; i < editor->priv->states->len; i++) {
 			gchar *str;
 			str = g_array_index (editor->priv->states, gchar*, i);

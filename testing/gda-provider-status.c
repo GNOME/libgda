@@ -336,7 +336,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 	xmlNodePtr table, tr, td, span;
 	GdaSqlParser *parser;
 	GString *string;
-	gint i;
+	gsize i;
 	GdaProviderInfo *pinfo;
 
 	pinfo = gda_config_get_provider_info (gda_server_provider_get_name (prov));

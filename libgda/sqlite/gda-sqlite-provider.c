@@ -857,7 +857,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	}
 
 	if (use_extra_functions && ((*use_extra_functions == 't') || (*use_extra_functions == 'T'))) {
-		int i;
+		gsize i;
 
 		for (i = 0; i < sizeof (scalars) / sizeof (ScalarFunction); i++) {
 			ScalarFunction *func = (ScalarFunction *) &(scalars [i]);
@@ -2677,7 +2677,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else if (G_VALUE_TYPE (value) == G_TYPE_UCHAR)
 			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_uchar (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
-			gulong blob_len;
+			glong blob_len;
 			GdaBlob *blob = (GdaBlob*) gda_value_get_blob (value);
 			const gchar *str = NULL;
 
@@ -3105,7 +3105,7 @@ scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_value **argv)
 	gint length;
 	GString *string;
 	gint i;
-	gint size;
+	guint size;
 
 	if (argc != 2) {
 		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires two arguments"), -1);

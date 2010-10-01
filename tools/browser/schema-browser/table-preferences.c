@@ -503,7 +503,7 @@ plugin_hash_foreach_func (G_GNUC_UNUSED const gchar *plugin_name, GdauiPlugin *p
 	if (! fdata->type)
 		add_it = TRUE;
 	else {
-		gint i;
+		gsize i;
 		for (i = 0; i < plugin->nb_g_types; i++) {
 			if (fdata->type == plugin->valid_g_types[i]) {
 				add_it = TRUE;
