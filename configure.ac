@@ -500,68 +500,6 @@ BDB_CHECK($lib)
 dnl Test for MySQL
 MYSQL_CHECK($lib)
 
-dnl Test for mSQL
-try_msql=true
-AC_ARG_WITH(msql,
-[  --with-mSQL=<directory>	use mSQL backend in <directory>],[
-if test $withval = no
-then
-	try_msql=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-msqldir=""
-if test $try_msql = true
-then
-	AC_MSG_CHECKING(for mSQL files)
-	for d in $dir /usr /usr/local /usr/local/msql /opt/msql /opt/packages/msql
-	do
-		if test -f $d/include/msql/msql.h
-		then
-			msqldir_suffix=/msql
-		else
-			msqldir_suffix=
-		fi
-		if test -f $d/$lib/msql/libmsql.a -o -f $d/$lib/msql/libmsql$linklibext
-		then
-			AC_MSG_RESULT(found mSQL in $d)
-			msqldir=$d
-			msqllibdir_suffix=/msql
-			break
-		fi
-		if test -f $d/$lib/libmsql.a -o -f $d/$lib/libmsql$linklibext
-		then
-			AC_MSG_RESULT(found mSQL in $d)
-			msqldir=$d
-			msqllibdir_suffix=
-			break
-		fi
-	done
-	if test x$msqldir = x
-	then
-		AC_MSG_WARN(mSQL backend not used)
-	else
-		AC_DEFINE(HAVE_MSQL, 1, [Have mSQL])
-		MSQL_CFLAGS="-I${msqldir}/include${msqldir_suffix}"
-		MSQL_LIBS="-L${msqldir}/lib${msqllibdir_suffix} -lmsql"
-                AC_MSG_CHECKING(for mSQL 3.x API)
-                AC_TRY_RUN([
-                  #include "${msqldir}/include${msqldir_suffix}/msql.h"
-                  int main() {
-                    int rc = INT64_TYPE;
-                    return (rc>0) ? 0 : -1;
-                  }
-                ], AC_DEFINE(HAVE_MSQL3, 1, [Have mSQL 3.x API]) AC_MSG_RESULT(found),
-                AC_MSG_RESULT(not found))
-	fi
-fi
-
-AM_CONDITIONAL(MSQL, test x$msqldir != x)
-
 dnl Test for PostgreSQL
 postgres_req=auto
 AC_ARG_WITH(postgres,
@@ -1430,9 +1368,6 @@ AC_SUBST(LIBGDA_DTDDIR)
 dnl ******************************
 dnl Variables
 dnl ******************************
-AC_SUBST(MSQL_LIBS)
-AC_SUBST(HAVE_MSQL3)
-AC_SUBST(MSQL_CFLAGS)
 AC_SUBST(POSTGRES_LIBS)
 AC_SUBST(POSTGRES_CFLAGS)
 AC_SUBST(PRIMEBASE_LIBS)
@@ -1621,7 +1556,6 @@ dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo n
 dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = $mysql_found"
-dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"

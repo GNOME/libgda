@@ -22,10 +22,6 @@ providers/ldap/gda-ldap-provider.c
 providers/ldap/gda-ldap-recordset.c
 providers/ldap/ldap_specs_dsn.xml.in
 providers/ldap/libmain.c
-providers/msql/gda-msql-provider.c
-providers/msql/gda-msql-recordset.c
-providers/msql/libmain.c
-providers/msql/msql_specs_dsn.xml.in
 providers/oracle/gda-oracle-blob-op.c
 providers/oracle/gda-oracle-provider.c
 providers/oracle/gda-oracle-recordset.c

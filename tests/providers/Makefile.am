@@ -34,11 +34,6 @@ check_PROGRAMS += check_mysql
 TESTS += check_mysql
 endif
 
-if MSQL
-check_PROGRAMS += check_msql
-TESTS += check_msql
-endif
-
 if ORACLE
 check_PROGRAMS += check_oracle
 TESTS += check_oracle
@@ -113,13 +108,6 @@ check_mdb_LDADD =  \
 check_mysql_SOURCES = $(common_sources) check_mysql.c
 check_mysql_CFLAGS = 
 check_mysql_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
-	$(LIBGDA_LIBS)
-
-check_msql_SOURCES = $(common_sources) check_msql.c
-check_msql_CFLAGS = 
-check_msql_LDADD =  \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/tests/libgda-test-4.0.la \
 	$(LIBGDA_LIBS)
