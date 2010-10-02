@@ -44,11 +44,6 @@ check_PROGRAMS += check_freetds
 TESTS += check_freetds
 endif
 
-if XBASE
-check_PROGRAMS += check_xbase
-TESTS += check_xbase
-endif
-
 if LDAP
 check_PROGRAMS += check_ldap
 TESTS += check_ldap
@@ -112,13 +107,6 @@ check_postgres_LDADD =  \
 check_freetds_SOURCES = $(common_sources) check_freetds.c
 check_freetds_CFLAGS = 
 check_freetds_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
-	$(LIBGDA_LIBS)
-
-check_xbase_SOURCES = $(common_sources) check_xbase.c
-check_xbase_CFLAGS = 
-check_xbase_LDADD =  \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/tests/libgda-test-4.0.la \
 	$(LIBGDA_LIBS)

@@ -720,45 +720,6 @@ fi
 
 AM_CONDITIONAL(FIREBIRD, test x$firebirddir != x)
 
-dnl Test for Xbase
-try_xbase=true
-AC_ARG_WITH(xbase,
-[  --with-xbase=<directory>     use Xbase files in <directory>],[
-if test $withval = no
-then
-	try_xbase=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-if test $try_xbase = true
-then
-	AC_MSG_CHECKING(for Xbase files)
-	xbasedir=""
-	for d in $dir /usr /usr/local /opt/xbase
-	do
-		if test -f $d/include/xbase/xbase.h
-		then
-			AC_MSG_RESULT(found Xbase in $d)
-			xbasedir=$d
-			break
-		fi
-	done
-	if test x$xbasedir = x
-	then
-		AC_MSG_WARN(Xbase backend not used)
-	else
-		XBASE_CFLAGS=-I${xbasedir}/include
-		XBASE_LIBS="-L${xbasedir}/lib -lxbase"
-		AC_DEFINE(HAVE_XBASE, 1, [Have Xbase])
-	fi
-fi
-
-AM_CONDITIONAL(XBASE, test x$xbasedir != x)
-
 dnl Test for MDB Tools (for MS Access files)
 MDBTOOLS_CHECK([$lib])
 
@@ -1206,8 +1167,6 @@ AC_SUBST(FIREBIRD_LIBS)
 AC_SUBST(FIREBIRD_CFLAGS)
 AC_SUBST(CAMEL_LIBS)
 AC_SUBST(CAMEL_CFLAGS)
-AC_SUBST(XBASE_LIBS)
-AC_SUBST(XBASE_CFLAGS)
 AC_SUBST(JAVA_LIBS)
 AC_SUBST(JAVA_CFLAGS)
 
@@ -1378,7 +1337,6 @@ echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
-dnl echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 dnl echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
 echo "      JDBC = `if test x$have_java = xyes; then echo "yes (using $JTYPE)"; else echo no; fi`"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"

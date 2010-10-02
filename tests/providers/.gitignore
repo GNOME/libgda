@@ -4,7 +4,6 @@ check_firebird
 check_mdb
 check_freetds
 check_bdb
-check_xbase
 check_mysql
 check_oracle
 check_ldap
