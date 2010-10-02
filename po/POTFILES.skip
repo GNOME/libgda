@@ -9,11 +9,6 @@ providers/firebird/gda-firebird-ddl.c
 providers/firebird/gda-firebird-provider.c
 providers/firebird/gda-firebird-recordset.c
 providers/firebird/libmain.c
-providers/freetds/freetds_specs_dsn.xml.in
-providers/freetds/gda-freetds-provider.c
-providers/freetds/gda-freetds-recordset.c
-providers/freetds/libmain.c
-providers/freetds/utils.c
 providers/ldap/gda-ldap-provider.c
 providers/ldap/gda-ldap-recordset.c
 providers/ldap/ldap_specs_dsn.xml.in

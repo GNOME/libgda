@@ -560,71 +560,6 @@ else
 fi
 AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
-dnl Test for freetds provider
-dnl
-try_freetds=true
-AC_ARG_WITH(tds,
-[  --with-tds=<directory>	use freetds library in <directory>],[
-if test $withval = no
-then
-	try_freetds=false
-elif test $withval = yes
-then
-	dir="/usr/local/freetds"
-else
-	dir=$withval
-fi
-])
-freetdsdir=""
-freetds_incdir=""
-freetdsvercheck=""
-if test $try_freetds = true
-then
-	AC_MSG_CHECKING(for freetds files)
-	for d in $dir /usr/local/freetds /usr /opt/freetds /opt/packages/freetds /opt/freetds-0.50
-	do
-		if test -f "$d/include/tds.h" -a -e "$d/$lib/libtds$linklibext" -a -f "$d/include/tdsver.h"
-		then
-			AC_MSG_RESULT(found freetds in $d)
-			freetdsdir="$d"
-			freetds_incdir="$d/include"
-			break
-		elif test -f "$d/include/freetds/tds.h" -a -e "$d/$lib/libtds$linklibext" -a -f "$d/include/freetds/tdsver.h"
-		then
-			AC_MSG_RESULT(found freetds in $d and includes in $d/include/freetds)
-			freetdsdir="$d"
-			freetds_incdir="$d/include/freetds"
-			break
-		fi
-	done
-	if test "x$freetdsdir" = "x"
-	then
-		AC_MSG_WARN(tds backend not used)
-	else
-		AC_MSG_CHECKING(for freetds version)
-		freetdsvercheck="`grep \"^#define \(VERSION_NO \|TDS_VERSION_NO \)\" $freetds_incdir/tdsver.h|sed 's|^.*".*v\(.*\)"|\1|'`"
-		if test "x$freetdsvercheck" = "x"
-		then
-			AC_MSG_WARN(freetds version check failed - backend not used)
-			freetdsdir=""
-			freetds_incdir=""
-		else
-			AC_MSG_RESULT($freetdsvercheck)
-			FREETDS_CFLAGS="-I${freetds_incdir}"
-			FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
-			AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
-
-			freetds_version_major="`echo $freetdsvercheck|sed 's:^\([[^.]]*\).*:\1:'`"
-			freetds_version_minor="`echo $freetdsvercheck|sed 's:^[[^.]]*\.\([[^.]]*\).*:\1:'`"
-
-			AC_DEFINE_UNQUOTED(FREETDS_VERSION_MAJOR, [$freetds_version_major])
-			AC_DEFINE_UNQUOTED(FREETDS_VERSION_MINOR, [$freetds_version_minor])
-		fi	
-	fi
-fi
-
-AM_CONDITIONAL(FREETDS, test x$freetdsdir != x)
-
 dnl test for ORACLE
 try_oracle=true
 AC_ARG_WITH(oracle,
@@ -1157,8 +1092,6 @@ AC_SUBST(POSTGRES_LIBS)
 AC_SUBST(POSTGRES_CFLAGS)
 AC_SUBST(PRIMEBASE_LIBS)
 AC_SUBST(PRIMEBASE_CFLAGS)
-AC_SUBST(FREETDS_LIBS)
-AC_SUBST(FREETDS_CFLAGS)
 AC_SUBST(LDAP_LIBS)
 AC_SUBST(LDAP_CFLAGS)
 AC_SUBST(ORACLE_LIBS)
@@ -1330,7 +1263,6 @@ echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
 echo "      Berkeley DB SQL = $bdbsql_found"
 dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
-dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = $mysql_found"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
