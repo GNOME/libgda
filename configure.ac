@@ -625,75 +625,6 @@ fi
 
 AM_CONDITIONAL(FREETDS, test x$freetdsdir != x)
 
-dnl Test for IBM DB2
-try_ibmdb2=true
-AC_ARG_WITH(ibmdb2,
-[  --with-ibmdb2=<directory>	use IBM DB2 backend in <directory>],[
-if test $withval = no
-then
-	try_ibmdb2=false
-elif test $withval = yes
-then
-	if test -z "$DB2DIR"
-	then
-		dir="/usr/IBMdb2/V7.1"
-	else
-		dir="$DB2DIR"
-	fi
-else
-	dir=$withval
-fi
-])
-if test $try_ibmdb2 = true
-then
-	AC_MSG_CHECKING(for IBM DB2 files)
-	if test -f "$dir/include/sqlcli1.h"
-	then
-		if test -e "$dir/lib/libdb2.so"
-		then
-			ibmdb2dir="$dir"
-			ibmdb2libdir="lib"
-			break
-		fi
-		if test -e "$dir/lib32/libdb2.so"
-		then
-			ibmdb2dir="$dir"
-                        ibmdb2libdir="lib32"
-                        break
-		fi
-	else
-		for d in /usr/IBMdb2 /usr/local/IBMdb2 /opt/IBMdb2 /opt/packages/IBMdb2 /opt/ibm/db2
-		do
-			for v in V5.0 V.6.1 V7.1 V9.1
-			do
-				if test -f "$d/$v/include/sqlcli1.h" -a -e "$d/$v/lib/libdb2.so"
-				then
-					ibmdb2dir="$d/$v"
-					ibmdb2libdir="lib"
-					break
-				fi
-				if test -f "$d/$v/include/sqlcli1.h" -a -e "$d/$v/lib32/libdb2.so"
-                                then
-                                        ibmdb2dir="$d/$v"
-                                        ibmdb2libdir="lib32"
-                                        break
-                                fi
-			done
-		done
-	fi
-	if test x$ibmdb2dir = x
-	then
-		AC_MSG_WARN(IBM DB2 backend not used)
-	else
-		AC_MSG_RESULT(found IBM DB2 in $ibmdb2dir)
-		AC_DEFINE(HAVE_IBMDB2, 1, [Have IBM DB2])
-		IBMDB2_CFLAGS="-DIBMDB2_DIR=\\\"${ibmdb2dir}\\\" -I${ibmdb2dir}/include"
-		IBMDB2_LIBS="-L${ibmdb2dir}/${ibmdb2libdir} -Wl,-rpath,${ibmdb2dir}/${ibmdb2libdir} -ldb2"
-	fi
-fi
-
-AM_CONDITIONAL(IBMDB2, test x$ibmdb2dir != x)
-
 dnl Test for Sybase
 try_sybase=true
 dir=""
@@ -1374,8 +1305,6 @@ AC_SUBST(PRIMEBASE_LIBS)
 AC_SUBST(PRIMEBASE_CFLAGS)
 AC_SUBST(FREETDS_LIBS)
 AC_SUBST(FREETDS_CFLAGS)
-AC_SUBST(IBMDB2_LIBS)
-AC_SUBST(IBMDB2_CFLAGS)
 AC_SUBST(SYBASE_DIR)
 AC_SUBST(SYBASE_LIBS)
 AC_SUBST(SYBASE_CFLAGS)
@@ -1553,7 +1482,6 @@ echo "      Berkeley DB = $bdb_found"
 echo "      Berkeley DB SQL = $bdbsql_found"
 dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
-dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = $mysql_found"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"

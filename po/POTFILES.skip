@@ -14,10 +14,6 @@ providers/freetds/gda-freetds-provider.c
 providers/freetds/gda-freetds-recordset.c
 providers/freetds/libmain.c
 providers/freetds/utils.c
-providers/ibmdb2/gda-ibmdb2-provider.c
-providers/ibmdb2/gda-ibmdb2-types.c
-providers/ibmdb2/ibmdb2_specs_dsn.xml.in
-providers/ibmdb2/libmain.c
 providers/ldap/gda-ldap-provider.c
 providers/ldap/gda-ldap-recordset.c
 providers/ldap/ldap_specs_dsn.xml.in

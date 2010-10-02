@@ -14,11 +14,6 @@ check_PROGRAMS += check_bdb
 TESTS += check_bdb
 endif
 
-if IBMDB2
-check_PROGRAMS += check_ibmdb2
-TESTS += check_ibmdb2
-endif
-
 if FIREBIRD
 check_PROGRAMS += check_firebird
 TESTS += check_firebird
@@ -80,13 +75,6 @@ check_sqlite_LDADD =  \
 check_bdb_SOURCES = $(common_sources) check_bdb.c
 check_bdb_CFLAGS = 
 check_bdb_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
-	$(LIBGDA_LIBS)
-
-check_ibmdb2_SOURCES = $(common_sources) check_ibmdb2.c
-check_ibmdb2_CFLAGS = 
-check_ibmdb2_LDADD =  \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/tests/libgda-test-4.0.la \
 	$(LIBGDA_LIBS)
