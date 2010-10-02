@@ -39,11 +39,6 @@ check_PROGRAMS += check_postgres
 TESTS += check_postgres
 endif
 
-if SYBASE
-check_PROGRAMS += check_sybase
-TESTS += check_sybase
-endif
-
 if FREETDS
 check_PROGRAMS += check_freetds
 TESTS += check_freetds
@@ -112,12 +107,6 @@ check_postgres_CFLAGS =
 check_postgres_LDADD =  \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(top_builddir)/tests/libgda-test-4.0.la \
-	$(LIBGDA_LIBS)
-
-check_sybase_SOURCES = $(common_sources) check_sybase.c
-check_sybase_CFLAGS = 
-check_sybase_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS)
 
 check_freetds_SOURCES = $(common_sources) check_freetds.c

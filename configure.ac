@@ -625,113 +625,6 @@ fi
 
 AM_CONDITIONAL(FREETDS, test x$freetdsdir != x)
 
-dnl Test for Sybase
-try_sybase=true
-dir=""
-AC_ARG_WITH(sybase,
-[  --with-sybase=<directory>	use Sybase backend in <directory>],[
-AC_MSG_CHECKING(for Sybase files)
-if test $withval = no
-then
-	try_sybase=false
-elif test $withval = yes
-then
-	dir="/opt2/sybase"
-else
-	dir=$withval
-fi
-])
-sybasedir=""
-if test $try_sybase = true
-then
-	AC_MSG_CHECKING(for Sybase files)
-	for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase
-	do
-		if test -f "$d/include/ctpublic.h"
-		then
-			AC_MSG_RESULT(found Sybase in $d)
-			sybasedir="$d"
-			break
-		fi
-		for v in 11.9.2 12.5 11.0.3.3
-		do
-			if test -f "$d-$v/include/ctpublic.h"
-			then
-				AC_MSG_RESULT(found Sybase in $d-$v)
-				sybasedir="$d-$v"
-				break
-			elif test -f "$d-$v/OCS/include/ctpublic.h"
-			then
-				AC_MSG_RESULT(found Sybase in $d-$v)
-				sybasedir="$d-$v/OCS"
-				break
-			fi
-		done
-	done
-	if test x$sybasedir = x
-	then
-		AC_MSG_WARN(Sybase backend not used)
-	else
-		SYBASE_DIR=${sybasedir}
-		SYBASE_CFLAGS="-I${sybasedir}/include"
-		SYBASE_LIBS="-lnsl -ldl -lm"
-		AC_MSG_CHECKING(for Sybase host system type)
-		AC_MSG_RESULT($host)
-		case "$host" in
-		*linux*) sybase_ctlibs="-L${sybasedir}/lib -lct -lcs -lsybtcl -lcomn -lintl"
-			sybase_blklibs="-L${sybasedir}/lib -lblk ${sybase_ctlibs}"
-			SYBASE_LIBS="${SYBASE_LIBS} ${sybase_blklibs}"
-			AC_CHECK_LIB(ct,tdsdump_on,[
-			AC_MSG_WARN(linking against freetds libct)
-			AC_DEFINE(HAVE_SYBASE, 1, [Have Sybase])
-			], AC_DEFINE(HAVE_SYBASE, 1, [Have Sybase]))
-			;;
-		*) AC_MSG_WARN(this host type is unsupported; sybase backend not used)
-			sybasedir=""
-			;;
-		esac
-	fi
-fi
-
-AM_CONDITIONAL(SYBASE, test x$sybasedir != x)
-
-dnl Link gda-sybase-srv against debugable libs
-AC_ARG_ENABLE(sybase-debug,
-    [  --enable-sybase-debug=[no/min/max]      no=none, min=debug msgs, max=min and link against sybase devlibs (which are static!).],,enable_sybase_debug=no)
-if test "x$sybasedir" != "x"
-then
-       AC_MSG_CHECKING(for Sybase debugging level)
-       if test "x$enable_sybase_debug" = "xmax"
-       then
-               AC_DEFINE(SYBASE_DEBUG, 1, [Enable Sybase debugging level])
-               if test -f $sybasedir/devlib/libct.a
-               then
-                       AC_MSG_RESULT(max)
-                       AC_MSG_WARN(erase passwords in bug-buddy debug output before sending bugreports)
-                       SYBASE_LIBS=${sybasedir}/devlib
-               else
-                       AC_MSG_RESULT(min)
-                       AC_MSG_WARN(no debug libraries found, using --enable-sybase-debug=min)
-                       enable_sybase_debug=min
-               fi
-       else
-               AC_MSG_RESULT($enable_sybase_debug)
-               if test "x$enable_sybase_debug" != "x"
-               then
-                       if test "x$enable_sybase_debug" != "xno"
-                       then
-                               AC_DEFINE(SYBASE_DEBUG)
-                       fi
-               fi
-       fi
-else
-       if test "x$enable_sybase_debug" != "xno"
-       then
-               AC_MSG_WARN(you applied sybase debugging options, but sybase has not been found or is unsupported, disabling debug options)
-       fi
-       enable_sybase_debug=no
-fi
-
 dnl test for ORACLE
 try_oracle=true
 AC_ARG_WITH(oracle,
@@ -1305,9 +1198,6 @@ AC_SUBST(PRIMEBASE_LIBS)
 AC_SUBST(PRIMEBASE_CFLAGS)
 AC_SUBST(FREETDS_LIBS)
 AC_SUBST(FREETDS_CFLAGS)
-AC_SUBST(SYBASE_DIR)
-AC_SUBST(SYBASE_LIBS)
-AC_SUBST(SYBASE_CFLAGS)
 AC_SUBST(LDAP_LIBS)
 AC_SUBST(LDAP_CFLAGS)
 AC_SUBST(ORACLE_LIBS)
@@ -1488,7 +1378,6 @@ echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
-dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
 dnl echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 dnl echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
 echo "      JDBC = `if test x$have_java = xyes; then echo "yes (using $JTYPE)"; else echo no; fi`"
