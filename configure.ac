@@ -2,9 +2,12 @@ m4_define(major, 4)
 m4_define(minor, 2)
 m4_define(micro, 0)
 m4_define([gda_stable],
-	m4_if(m4_eval(minor % 2), [0], [yes], [no])) 
+	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
+AC_CONFIG_MACRO_DIR([m4])
 m4_include(m4/introspection.m4)
 m4_include(m4/mdbtools.m4)
+m4_include(m4/bdb.m4)
+m4_include(m4/mysql.m4)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
@@ -303,7 +306,6 @@ case "$host" in
 *-cygwin*)
     AC_MSG_RESULT([Win32 - cygwin])
     NO_UNDEFINED='-no-undefined'
-    SOPREFIX='cyg'
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
     LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
@@ -315,11 +317,10 @@ case "$host" in
     platform_win32=yes
     AC_DEFINE(USING_MINGW)
     NO_UNDEFINED='-no-undefined'
-    SOPREFIX='lib'
     LIBTOOL_EXPORT_OPTIONS=
     LIBTOOL_PROV_EXPORT_OPTIONS=
     LIBTOOL_UI_EXPORT_OPTIONS=
-    linklibext=".dll.a"
+    linklibext=".dll"
     AC_CHECK_TOOL(WINDRES, windres, windres)
     AC_SUBST(WINDRES)
     AC_CHECK_TOOL(DLLTOOL, dlltool, dlltool)
@@ -329,7 +330,6 @@ case "$host" in
     dnl Darwin based distributions (including Mac OS X)
     AC_MSG_RESULT([Mac OS X - carbon])
     platform_carbon=yes
-    SOPREFIX='lib'
     if test "$enable_binreloc" != "no"
     then
 	AC_DEFINE(ENABLE_BINRELOC)
@@ -347,7 +347,6 @@ case "$host" in
     LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
     AC_DEFINE(HAVE_CARBON)
     LIBGDA_LIBS="$LIBGDA_LIBS -framework Carbon"
-    dnl SO_SUFFIX=dylib
   ;;
 *)
     AC_MSG_RESULT([Unix])
@@ -402,11 +401,10 @@ AC_SUBST(LIBXSLT_LIBS)
 dnl ******************************
 dnl Checks for json-glib
 dnl ******************************
-enable_json=no
 have_json=no
 AC_ARG_ENABLE([json],
 	AS_HELP_STRING([--enable-json], [Enable support for JSON, disabled by default]),
-	[enable_json=yes])
+	[enable_json=yes],[enable_json=no])
 
 if test "x$enable_json" = xyes
 then
@@ -490,227 +488,17 @@ dnl ******************************
 dnl Checks for providers
 dnl ******************************
 
-dnl Test for lib64 architectures
-dnl FIXME: should really check target
-case $host_cpu in
-x86_64* | sparc64* | s390x* | ppc64* | powerpc64* ) lib="lib64";;
-*) lib="lib";;
-esac
+AC_ARG_WITH(libdir-name,
+    AS_HELP_STRING([--with-libdir-name[=@<:@<dir. name>@:>@]],
+                   [Speficy the library name used to locate libraries, relative to the prefix of each install (for example lib64)]),
+                   [lib=$withval],
+		   [lib=""])
 
 dnl Test for Berkeley DB
-try_bdb=true
-AC_ARG_WITH(bdb,
-[  --with-bdb=<directory>	use bdb library in <directory>],[
-if test $withval = no
-then
-	try_bdb=false
-elif test $withval = yes
-then
-	dir="/usr /usr/local"
-else
-	dir=$withval
-fi
-])
-bdbdir=""
-if test $try_bdb = true
-then
-	if test $withval = yes
-	then
-		AC_CHECK_HEADER(db.h, bdb_ok=yes, bdb_ok=no, [])
-		if test $bdb_ok = yes ; then
-		        bdbdir=yes
-		   	BDB_LIB="libdb$linklibext"
-			BDB_LIBS="-ldb"
-		fi
-	else
-		AC_MSG_CHECKING(for Berkeley DB files)
-		for d in $dir
-		do
-			if test $platform_win32 = yes -a -f $d/include/db.h -a -f $d/bin/libdb51.dll
-			then
-				AC_MSG_RESULT(found Berkeley DB in $d)
-				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
-				bdbdir=$d
-				BDB_CFLAGS="-I${bdbdir}/include"
-				BDB_LIB="$d/bin/libdb51.dll"
-				BDB_LIBS="-L${bdbdir}/bin -ldb51"
-				break
-			fi
-
-			if test $platform_win32 = no -a -f $d/include/db.h -a -f $d/$lib/libdb$linklibext
-			then
-				AC_MSG_RESULT(found Berkeley DB in $d)
-				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
-				bdbdir=$d
-				BDB_CFLAGS="-I${bdbdir}/include"
-				BDB_LIB="$d/$lib/libdb$linklibext"
-				BDB_LIBS="-L${bdbdir}/${lib} -ldb"
-				break
-			fi
-			if test $platform_win32 = no -a -f $d/include/db.h -a -f $d/lib/libdb$linklibext
-			then
-				AC_MSG_RESULT(found Berkeley DB in $d)
-				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
-				bdbdir=$d
-				BDB_CFLAGS="-I${bdbdir}/include"
-				BDB_LIB="$d/lib/libdb$linklibext"
-				BDB_LIBS="-L${bdbdir}/lib -ldb"
-				break
-			fi
-			dnl FIXME: check for db1 (non-sleepycat implementation)
-		done
-		if test x$bdbdir = x
-		then
-			AC_MSG_WARN(Berkeley DB backend not used)
-		fi
-	fi
-fi
-
-bdbsqldir=""
-AM_CONDITIONAL(BDB, test x$bdbdir != x)
-if test x$bdbdir != x; then
-	LIBGDA_BDB_INC="#include <libgda/gda-data-model-bdb.h>"
-	LIBGDA_BDB_TYPE="gda_data_model_bdb_get_type"
-
-	if test -f $bdbdir/include/dbsql.h
-	then
-		BDBSQL_CFLAGS="-I${bdbdir}/include"
-		BDBSQL_LIBS="-L${bdbdir}/lib -ldb_sql"
-		BDBSQL_PATH="${bdbdir}/lib"
-		AC_CHECK_LIB(db_sql, sqlite3_table_column_metadata,[bdbsql_api=1], [bdbsql_api=0], $BDBSQL_CFLAGS $BDBSQL_LIBS -pthread -ldl)
-
-		if test $bdbsql_api = 0
-		then
-			BDBSQL_CFLAGS=""
-			BDBSQL_LIBS=""
-			AC_MSG_WARN([Installed BDB Sql was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, BDB Sql provider not compiled])
-		else
-			bdbsqldir="$bdbdir"
-			AC_DEFINE(HAVE_BDBSQL, 1, [Have Berkeley DB SQL])
-		fi
-	fi
-fi
-AM_CONDITIONAL(BDBSQL, test x$bdbsqldir != x)
-AC_SUBST(LIBGDA_BDB_INC)
-AC_SUBST(LIBGDA_BDB_TYPE)
-
-dnl Test for ODBC
-try_odbc=true
-AC_ARG_WITH(odbc,
-[  --with-odbc=<directory>	use ODBC libraries in <directory>],[
-if test $withval = no
-then
-	try_odbc=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-odbcdir=""
-if test $try_odbc = true
-then
-	AC_MSG_CHECKING(for ODBC files)
-	for d in $dir /usr /usr/local
-	do
-		if test -f $d/$lib/libodbc$linklibext -a -f $d/include/sql.h
-		then
-			AC_MSG_RESULT(found ODBC in $d)
-			odbclib="-lodbc"
-			odbcdir=$d
-			break
-		fi
-		if test -f $d/$lib/libiodbc$linklibext -a -f $d/include/sql.h
-		then
-			AC_MSG_RESULT(found iODBC in $d)
-			odbclib="-liodbc"
-			odbcdir=$d
-			break
-		fi
-		if test -f $d/$lib/w32api/libodbc32.a -a -f $d/include/w32api/sql.h
-		then
-			AC_MSG_RESULT(found ODBC32 in $d)
-			odbclib="-lodbc32"
-			odbcdir=$d
-			break
-		fi
-	done
-	if test x$odbcdir = x
-	then
-		AC_MSG_WARN(ODBC backend not used)
-	else
-		AC_DEFINE(HAVE_ODBC, 1, [Have ODBC])
-		ODBC_CFLAGS="-I${odbcdir}/include"
-		ODBC_LIBS="-L${odbcdir}/lib ${odbclib}"
-	fi
-fi
-
-AM_CONDITIONAL(ODBC, test x$odbcdir != x)
+BDB_CHECK($lib)
 
 dnl Test for MySQL
-mysql_req=auto
-AC_ARG_WITH(mysql,
-[  --with-mysql=<directory>	use mysql backend in <directory>],[
-if test $withval = no
-then
-	mysql_req=none
-elif test $withval = yes
-then
-	mysql_req=none
-	if test $cross_compiling = yes
-	then
-		AC_MSG_WARN(Can't auto determine Mysql installation in cross-compiling environment)
-	else
-		AC_MSG_CHECKING(for MySQL files)
-		AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5)
-	fi
-else
-	AC_MSG_CHECKING(for MySQL files in $withval)
-	if test $cross_compiling = yes
-	then
-		mysql_req=$withval	
-	else
-		AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5, [], $withval/bin)
-	fi	
-fi
-])
-mysqldir=""
-
-if test $mysql_req = auto
-then
-	AC_MSG_CHECKING(for MySQL files)
-	AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5)
-fi
-
-if test x$MYSQL_CONFIG != x
-then
-	mysqldir=yes
-	AC_MSG_RESULT(found mysql)
-	AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
-	if test "x$MYSQL_CFLAGS" = "x"; then
-		MYSQL_CFLAGS=`$MYSQL_CONFIG --cflags`
-	fi
-	MYSQL_LIBS=`$MYSQL_CONFIG --libs`
-else
-	if test $cross_compiling = yes
-	then
-		if test $platform_win32 = yes -a -f $mysql_req/$lib/opt/libmysql.lib
-		then
-			mysqldir=$mysql_req
-			
-			mysqllibdir_suffix=/opt
-			AC_MSG_RESULT(found mysql)
-			AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
-			MYSQL_CFLAGS="-I${mysqldir}/include${mysqldir_suffix}"
-			MYSQL_LIBS="-L${mysqldir}/${lib}${mysqllibdir_suffix} -lmysql"
-		else
-			AC_MSG_WARN(MySQL backend not used)
-		fi
-	fi
-fi
-AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
-
+MYSQL_CHECK($lib)
 
 dnl Test for mSQL
 try_msql=true
@@ -1642,16 +1430,6 @@ AC_SUBST(LIBGDA_DTDDIR)
 dnl ******************************
 dnl Variables
 dnl ******************************
-AC_SUBST(BDB_LIB)
-AC_SUBST(BDB_LIBS)
-AC_SUBST(BDB_CFLAGS)
-AC_SUBST(BDBSQL_LIBS)
-AC_SUBST(BDBSQL_PATH)
-AC_SUBST(BDBSQL_CFLAGS)
-AC_SUBST(ODBC_LIBS)
-AC_SUBST(ODBC_CFLAGS)
-AC_SUBST(MYSQL_LIBS)
-AC_SUBST(MYSQL_CFLAGS)
 AC_SUBST(MSQL_LIBS)
 AC_SUBST(HAVE_MSQL3)
 AC_SUBST(MSQL_CFLAGS)
@@ -1836,18 +1614,17 @@ echo "   Installation prefix = $prefix"
 echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
-echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"
-echo "      Berkeley DB SQL = `if test x$bdbsqldir = x; then echo no; else echo yes; fi`"
+echo "      Berkeley DB = $bdb_found"
+echo "      Berkeley DB SQL = $bdbsql_found"
 dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
 dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = $mdbtools_found"
-echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
+echo "      MySQL = $mysql_found"
 dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
 dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
-echo "      JSON = `if test x$have_json != xyes; then echo no; else echo yes; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
 dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"

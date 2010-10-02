@@ -39,11 +39,6 @@ check_PROGRAMS += check_msql
 TESTS += check_msql
 endif
 
-if ODBC
-check_PROGRAMS += check_odbc
-TESTS += check_odbc
-endif
-
 if ORACLE
 check_PROGRAMS += check_oracle
 TESTS += check_oracle

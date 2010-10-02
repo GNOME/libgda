@@ -26,10 +26,6 @@ if MSQL
 GDA_MSQL_SERVER=msql
 endif
 
-if ODBC
-GDA_ODBC_SERVER=odbc
-endif
-
 if ORACLE
 GDA_ORACLE_SERVER=oracle
 endif
@@ -83,7 +79,6 @@ SUBDIRS = \
 #	$(GDA_IBMDB2_SERVER) \
 #	$(GDA_FIREBIRD_SERVER) \
 #       $(GDA_MSQL_SERVER) \
-#	$(GDA_ODBC_SERVER) \
 #	$(GDA_SYBASE_SERVER) \
 #	$(GDA_XBASE_SERVER) \
 #	$(GDA_LDAP_SERVER) 
