@@ -5,4 +5,3 @@ check_mdb
 check_bdb
 check_mysql
 check_oracle
-check_ldap

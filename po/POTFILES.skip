@@ -9,10 +9,6 @@ providers/firebird/gda-firebird-ddl.c
 providers/firebird/gda-firebird-provider.c
 providers/firebird/gda-firebird-recordset.c
 providers/firebird/libmain.c
-providers/ldap/gda-ldap-provider.c
-providers/ldap/gda-ldap-recordset.c
-providers/ldap/ldap_specs_dsn.xml.in
-providers/ldap/libmain.c
 providers/oracle/gda-oracle-blob-op.c
 providers/oracle/gda-oracle-provider.c
 providers/oracle/gda-oracle-recordset.c

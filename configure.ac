@@ -658,45 +658,6 @@ AM_CONDITIONAL(FIREBIRD, test x$firebirddir != x)
 dnl Test for MDB Tools (for MS Access files)
 MDBTOOLS_CHECK([$lib])
 
-dnl Test for LDAP
-try_ldap=true
-AC_ARG_WITH(ldap,
-[  --with-ldap=<directory>     use LDAP library in <directory>],[
-if test $withval = no
-then
-	try_ldap=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-if test $try_ldap = true
-then
-	AC_MSG_CHECKING(for LDAP files)
-	ldapdir=""
-	for d in $dir /usr /usr/local /opt/openldap
-	do
-		if test -f $d/include/ldap.h -a -f $d/include/lber.h
-		then
-			AC_MSG_RESULT(found LDAP in $d)
-			ldapdir=$d
-			break
-		fi
-	done
-	if test x$ldapdir = x
-	then
-		AC_MSG_WARN(LDAP backend not used)
-	else
-		LDAP_CFLAGS="-I${ldapdir}/include"
-		LDAP_LIBS="-L${ldapdir}/lib -lldap -llber"
-		AC_DEFINE(HAVE_LDAP, 1, [Have LDAP])
-	fi
-fi
-
-AM_CONDITIONAL(LDAP, test x$ldapdir != x)
-
 dnl test for system-installed SQLite
 dnl If no SQLite is found or if the SQLite found does not have the sqlite3_table_column_metadata()
 dnl function call, then use the embedded version
@@ -1092,8 +1053,6 @@ AC_SUBST(POSTGRES_LIBS)
 AC_SUBST(POSTGRES_CFLAGS)
 AC_SUBST(PRIMEBASE_LIBS)
 AC_SUBST(PRIMEBASE_CFLAGS)
-AC_SUBST(LDAP_LIBS)
-AC_SUBST(LDAP_CFLAGS)
 AC_SUBST(ORACLE_LIBS)
 AC_SUBST(ORACLE_CFLAGS)
 AC_SUBST(FIREBIRD_LIBS)
@@ -1269,7 +1228,6 @@ echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
-dnl echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
 echo "      JDBC = `if test x$have_java = xyes; then echo "yes (using $JTYPE)"; else echo no; fi`"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
