@@ -643,14 +643,14 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 					if (label_entry) {
 						parent = gtk_widget_get_parent (label_entry);
 						if (parent) {
-							gtk_widget_ref (label_entry);
+							g_object_ref (label_entry);
 							gtk_container_remove (GTK_CONTAINER (parent), label_entry);
 						}
 						gtk_table_attach (GTK_TABLE (table), label_entry,
 								  0, 1, tab_index, tab_index+1,
 								  GTK_FILL | GTK_SHRINK, GTK_SHRINK, 0, 0);
 						if (parent)
-							gtk_widget_unref (label_entry);
+							g_object_unref (label_entry);
 					}
 					nb_labels++;
 					tab_index++;

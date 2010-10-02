@@ -1852,8 +1852,7 @@ menu_show_columns_cb (GtkWidget *widget, GdauiRawGrid *grid)
 }
 
 static void export_type_changed_cb (GtkComboBox *types, GtkWidget *dialog);
-static void save_as_response_cb (GtkDialog *dialog, guint response_id, GdauiRawGrid *grid);
-
+static void save_as_response_cb (GtkDialog *dialog, gint response_id, GdauiRawGrid *grid);
 static void
 menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 {
