@@ -3,7 +3,6 @@ check_postgres
 check_firebird
 check_mdb
 check_freetds
-check_odbc
 check_msql
 check_sybase
 check_bdb

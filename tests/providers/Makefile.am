@@ -124,13 +124,6 @@ check_msql_LDADD =  \
 	$(top_builddir)/tests/libgda-test-4.0.la \
 	$(LIBGDA_LIBS)
 
-check_odbc_SOURCES = $(common_sources) check_odbc.c
-check_odbc_CFLAGS = 
-check_odbc_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
-	$(LIBGDA_LIBS)
-
 check_oracle_SOURCES = $(common_sources) check_oracle.c
 check_oracle_CFLAGS = 
 check_oracle_LDADD =  \

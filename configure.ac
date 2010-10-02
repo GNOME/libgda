@@ -1622,7 +1622,6 @@ dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no
 echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = $mysql_found"
 dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
-dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
