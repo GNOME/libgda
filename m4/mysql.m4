@@ -81,7 +81,7 @@ m4_define([_MYSQL_CHECK_INTERNAL],
     mysql_test_dir=""
     AC_ARG_WITH(mysql,
               AS_HELP_STRING([--with-mysql[=@<:@yes/no/<directory>@:>@]],
-                             [Locate Mysql files for the MS Access backend (read only)]),[
+                             [Locate Mysql files]),[
 			     if test $withval = no
 			     then
 			         try_mysql=false
@@ -143,7 +143,7 @@ int main() {
   	                LIBS="$save_LIBS"
 			if test "x$mysql_found" = xyes
 			then
-		            AC_MSG_RESULT([not found])
+		            AC_MSG_RESULT([found])
 			    MYSQL_CFLAGS=-I$d/include
 			    MYSQL_LIBS="-L$d/$mysql_loclibdir -lmysql"
 			    break
