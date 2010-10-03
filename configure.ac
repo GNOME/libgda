@@ -8,6 +8,7 @@ m4_include(m4/introspection.m4)
 m4_include(m4/mdbtools.m4)
 m4_include(m4/bdb.m4)
 m4_include(m4/mysql.m4)
+m4_include(m4/postgresql.m4)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
@@ -499,64 +500,7 @@ dnl Test for MySQL
 MYSQL_CHECK($lib)
 
 dnl Test for PostgreSQL
-postgres_req=auto
-AC_ARG_WITH(postgres,
-[  --with-postgres=<directory>	use PostgreSQL backend in <directory>],[
-if test $withval = no
-then
-	postgres_req=none
-elif test $withval = yes
-then
-	postgres_req=none
-	if test $cross_compiling = yes
-	then
-		AC_MSG_WARN(Can't auto determine PostgreSQL installation in cross-compiling environment)
-	else
-		AC_MSG_CHECKING(for PostgreSQL files)
-		AC_PATH_PROG(POSTGRES_CONFIG, pg_config)
-	fi
-else
-	AC_MSG_CHECKING(for PostgreSQL files in $withval)
-	if test $cross_compiling = yes
-	then
-		postgres_req=$withval	
-	else
-		AC_PATH_PROG(POSTGRES_CONFIG, pg_config, [], $withval/bin)
-	fi	
-fi
-])
-postgresdir=""
-
-if test $postgres_req = auto
-then
-	AC_MSG_CHECKING(for PostgreSQL files)
-	AC_PATH_PROG(POSTGRES_CONFIG, pg_config)
-fi
-
-if test x$POSTGRES_CONFIG != x
-then
-	postgresdir=yes
-	AC_MSG_RESULT(found postgres)
-	AC_DEFINE(HAVE_POSTGRES, 1, [Have Postgres])
-	POSTGRES_CFLAGS=-I`$POSTGRES_CONFIG --includedir`
-	POSTGRES_LIBS="-L`$POSTGRES_CONFIG --libdir` -lpq"
-else
-	if test $cross_compiling = yes
-	then
-		if test $platform_win32 = yes -a -f $postgres_req/$lib/libpq.lib
-		then
-			postgresdir=$postgres_req
-			postgreslibdir_suffix=
-			AC_MSG_RESULT(found postgres)
-			AC_DEFINE(HAVE_POSTGRES, 1, [Have Postgres])
-			POSTGRES_CFLAGS="-I${postgresdir}/include${postgresdir_suffix}"
-			POSTGRES_LIBS="-L${postgresdir}/${lib}${postgreslibdir_suffix} -lpq"
-		else
-			AC_MSG_WARN(Postgres backend not used)
-		fi
-	fi
-fi
-AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
+POSTGRES_CHECK($lib)
 
 dnl test for ORACLE
 try_oracle=true
@@ -1043,8 +987,6 @@ AC_SUBST(LIBGDA_DTDDIR)
 dnl ******************************
 dnl Variables
 dnl ******************************
-AC_SUBST(POSTGRES_LIBS)
-AC_SUBST(POSTGRES_CFLAGS)
 AC_SUBST(ORACLE_LIBS)
 AC_SUBST(ORACLE_CFLAGS)
 AC_SUBST(FIREBIRD_LIBS)
@@ -1215,7 +1157,7 @@ dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo
 echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = $mysql_found"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
-echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
+echo "      PostgreSQL = $postgres_found"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
 echo "      JDBC = `if test x$have_java = xyes; then echo "yes (using $JTYPE)"; else echo no; fi`"
