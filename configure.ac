@@ -9,6 +9,7 @@ m4_include(m4/mdbtools.m4)
 m4_include(m4/bdb.m4)
 m4_include(m4/mysql.m4)
 m4_include(m4/postgresql.m4)
+m4_include(m4/oracle.m4)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
@@ -503,51 +504,7 @@ dnl Test for PostgreSQL
 POSTGRES_CHECK($lib)
 
 dnl test for ORACLE
-try_oracle=true
-AC_ARG_WITH(oracle,
-[  --with-oracle=<directory>	use ORACLE backend in <directory>],[
-if test $withval = no
-then
-	try_oracle=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-if test $try_oracle = true
-then
-	AC_MSG_CHECKING(for ORACLE installation)
-	for d in $dir $ORACLE_HOME /opt/oracle /usr
-	do
-		if test -f $d/$lib/libclntsh.so
-		then
-			AC_MSG_RESULT(found ORACLE in $d)
-			oracledir=$d
-			oraclelibdir=$lib
-			break
-		else
-			if test -f $d/lib/libclntsh.so
-			then
-				AC_MSG_RESULT(found ORACLE in $d)
-				oracledir=$d
-				oraclelibdir="lib"
-				break
-			fi
-		fi
-	done
-	if test x$oracledir = x
-	then
-		AC_MSG_WARN(ORACLE backend not used)
-	else
-		AC_DEFINE(HAVE_ORACLE, 1, [Have ORACLE])
-		ORACLE_CFLAGS=" -I$oracledir/include -I$oracledir/include/oracle/client -I$oracledir/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$oracledir/network/public"
-		ORACLE_LIBS="-L$oracledir/$oraclelibdir -lm -ldl -lclntsh"
-	fi
-fi
-
-AM_CONDITIONAL(ORACLE, test x$oracledir != x)
+ORACLE_CHECK($lib)
 
 dnl test for FireBird
 try_firebird=true
@@ -987,8 +944,6 @@ AC_SUBST(LIBGDA_DTDDIR)
 dnl ******************************
 dnl Variables
 dnl ******************************
-AC_SUBST(ORACLE_LIBS)
-AC_SUBST(ORACLE_CFLAGS)
 AC_SUBST(FIREBIRD_LIBS)
 AC_SUBST(FIREBIRD_CFLAGS)
 AC_SUBST(JAVA_LIBS)
@@ -1156,7 +1111,7 @@ echo "      Berkeley DB SQL = $bdbsql_found"
 dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = $mysql_found"
-echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
+echo "      Oracle = $oracle_found"
 echo "      PostgreSQL = $postgres_found"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
