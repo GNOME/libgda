@@ -12,7 +12,7 @@ dnl
 dnl   This macro tries to find the Bdb libraries and header files. If the BDB setup is found
 dnl   then it also tries to find the SQL extension to BDB (starting from version 5.0)
 dnl
-dnl   It defined two options:
+dnl   It defines two options:
 dnl   --with-bdb=yes/no/<directory>
 dnl   --with-bdb-libdir-name=<dir. name>
 dnl

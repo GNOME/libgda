@@ -15,7 +15,7 @@ dnl DESCRIPTION
 dnl
 dnl   This macro tries to find the MDBTools libraries and header files
 dnl
-dnl   It defined two options:
+dnl   It defines two options:
 dnl   --with-mdb=yes/no/<directory>
 dnl   --with-mdb-libdir-name=<dir. name>
 dnl

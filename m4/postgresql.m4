@@ -11,7 +11,7 @@ dnl DESCRIPTION
 dnl
 dnl   This macro tries to find the PostgreSQL libraries and header files
 dnl
-dnl   It defined two options:
+dnl   It defines two options:
 dnl   --with-postgres=yes/no/<directory>
 dnl   --with-postgres-libdir-name=<dir. name>
 dnl
@@ -157,7 +157,7 @@ int main() {
 	        for d in $postgres_test_dir
 	        do
 	            AC_MSG_NOTICE([checking for pg_config tool in $d])
-                    AC_PATH_PROGS(PG_CONFIG, pg_config,,[$d])
+                    AC_PATH_PROGS(PG_CONFIG, pg_config,,[$d/bin])
 		    if test "x$PG_CONFIG" != x
 		    then
 	    	        pkgpostgres=yes

@@ -11,7 +11,7 @@ dnl DESCRIPTION
 dnl
 dnl   This macro tries to find the Mysql libraries and header files
 dnl
-dnl   It defined two options:
+dnl   It defines two options:
 dnl   --with-mysql=yes/no/<directory>
 dnl   --with-mysql-libdir-name=<dir. name>
 dnl

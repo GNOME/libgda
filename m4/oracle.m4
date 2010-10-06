@@ -9,10 +9,9 @@ dnl   [libdirname]: defaults to "lib". Can be overridden by the --with-oracle-li
 dnl
 dnl DESCRIPTION
 dnl
-dnl   This macro tries to find the Oracle libraries and header files. If the ORACLE setup is found
-dnl   then it also tries to find the SQL extension to ORACLE (starting from version 5.0)
+dnl   This macro tries to find the Oracle libraries and header files.
 dnl
-dnl   It defined two options:
+dnl   It defines two options:
 dnl   --with-oracle=yes/no/<directory>
 dnl   --with-oracle-libdir-name=<dir. name>
 dnl
@@ -73,7 +72,6 @@ m4_define([_ORACLE_CHECK_INTERNAL],
     fi
 
     # determine if Oracle should be searched for
-    # and use pkg-config if the "yes" option is used
     oracle_found=no
     try_oracle=true
     ORACLE_LIBS=""
