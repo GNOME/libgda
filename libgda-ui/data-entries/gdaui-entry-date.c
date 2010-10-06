@@ -1,6 +1,6 @@
 /* gdaui-entry-date.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -67,12 +67,12 @@ gdaui_entry_date_init (GdauiEntryDate * gdaui_entry_date)
 }
 
 /**
- * gdaui_entry_date_new
+ * gdaui_entry_date_new:
  * @dh: the data handler to be used by the new widget
  *
- * Creates a new widget which is mainly a GtkEntry
+ * Creates a new data entry widget
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  */
 GtkWidget *
 gdaui_entry_date_new (GdaDataHandler *dh)

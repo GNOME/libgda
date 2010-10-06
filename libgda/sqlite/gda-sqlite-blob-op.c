@@ -25,6 +25,7 @@
 #include <libgda/libgda.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-blob-op.h"
+#include "gda-sqlite-util.h"
 #include <sql-parser/gda-sql-parser.h>
 
 struct _GdaSqliteBlobOpPrivate {
@@ -114,22 +115,6 @@ gda_sqlite_blob_op_finalize (GObject * object)
 	parent_class->finalize (object);
 }
 
-static gboolean
-check_transaction_started (GdaConnection *cnc, gboolean *out_started)
-{
-        GdaTransactionStatus *trans;
-
-        trans = gda_connection_get_transaction_status (cnc);
-        if (!trans) {
-		if (!gda_connection_begin_transaction (cnc, NULL,
-						       GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
-			return FALSE;
-		else
-			*out_started = TRUE;
-	}
-	return TRUE;
-}
-
 GdaBlobOp *
 _gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
 			 const gchar *db_name, const gchar *table_name,
@@ -153,7 +138,7 @@ _gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
 	else if (! _split_identifier_string (g_strdup (table_name), &db, &table))
 		return NULL;
 
-	if (! check_transaction_started (cdata->gdacnc, &transaction_started))
+	if (! _gda_sqlite_check_transaction_started (cdata->gdacnc, &transaction_started, NULL))
 		return NULL;
 
 	rc = SQLITE3_CALL (sqlite3_blob_open) (cdata->connection, db ? db : "main",

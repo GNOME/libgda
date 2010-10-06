@@ -2,8 +2,9 @@ m4_define(major, 4)
 m4_define(minor, 99)
 m4_define(micro, 0)
 m4_define([gda_stable],
-	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
-m4_include(introspection.m4)
+	m4_if(m4_eval(minor % 2), [0], [yes], [no])) 
+m4_include(m4/introspection.m4)
+m4_include(m4/mdbtools.m4)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
@@ -11,7 +12,6 @@ AC_CONFIG_SRCDIR(libgda/libgda.h.in)
 AM_INIT_AUTOMAKE(1.8 -Wall no-define dist-bzip2)
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
-
 
 AC_SUBST(GDA_VERSION, major.minor.micro)
 
@@ -33,7 +33,7 @@ m4_undefine([minor])
 m4_undefine([micro])
 
 dnl required versions of other tools.
-m4_define([req_ver_glib],	[2.12.11])
+m4_define([req_ver_glib],[2.12.11])
 
 #
 # Making releases:
@@ -511,14 +511,14 @@ then
 		AC_MSG_CHECKING(for Berkeley DB files)
 		for d in $dir
 		do
-			if test $platform_win32 = yes -a -f $d/include/db.h -a -f $d/bin/libdb47.dll
+			if test $platform_win32 = yes -a -f $d/include/db.h -a -f $d/bin/libdb51.dll
 			then
 				AC_MSG_RESULT(found Berkeley DB in $d)
 				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
 				bdbdir=$d
 				BDB_CFLAGS="-I${bdbdir}/include"
-				BDB_LIB="$d/bin/libdb47.dll"
-				BDB_LIBS="-L${bdbdir}/bin -ldb47"
+				BDB_LIB="$d/bin/libdb51.dll"
+				BDB_LIBS="-L${bdbdir}/bin -ldb51"
 				break
 			fi
 
@@ -1195,83 +1195,7 @@ fi
 AM_CONDITIONAL(XBASE, test x$xbasedir != x)
 
 dnl Test for MDB Tools (for MS Access files)
-try_mdb=true
-AC_ARG_WITH(mdb,
-[  --with-mdb=<directory>     use MDB tools library in <directory>],[
-if test $withval = no
-then
-	try_mdb=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-if test $try_mdb = true
-then
-	AC_MSG_CHECKING(for MDB Tools files)
-	mdbdir=""
-	for d in $dir /usr /usr/local /opt/gnome
-	do
-		if test -f $d/include/mdbtools.h -a -f $d/$lib/libmdb$linklibext -o -f $d/include/mdbtools.h -a -f $d/$lib/libmdb.a
-		then
-			AC_MSG_RESULT(found MDB Tools in $d)
-			mdbdir=$d
-			break
-		fi
-	done
-	if test x$mdbdir = x
-	then
-		AC_MSG_WARN(MDB backend not used)
-	else
-		MDB_CFLAGS=-I${mdbdir}/include
-		MDB_LIBS="-L${mdbdir}/lib -lmdb"
-		AC_DEFINE(HAVE_MDB, 1, [Have MDB])
-
-		save_CFLAGS="$CFLAGS"
-		CFLAGS="$CFLAGS $MDB_CFLAGS $TST_CFLAGS"
-
-		AC_MSG_CHECKING([whether mdb_open takes one or two arguments])
-
-		AC_COMPILE_IFELSE([[
-#include <mdbtools.h>
-int main() {
-    const char *filename;
-	mdb_open(filename, MDB_WRITABLE);
-	return 0;
-}
-]], mdb_open_args=two, mdb_open_args=one)
-
-		AC_MSG_RESULT($mdb_open_args)
-		if test "$mdb_open_args" = "two"; then
-			AC_DEFINE(MDB_WITH_WRITE_SUPPORT, 1, [define if mdb_open accepts MDB_WRITABLE])
-		fi
-
-		AC_MSG_CHECKING([whether mdb_bind_column takes three or four arguments])
-
-		AC_COMPILE_IFELSE([[
-#include <mdbtools.h>
-int main() {
-	MdbHandle *mdb;
-	int c;
-	char *bound_data[256];
-	int len;
-	mdb_bind_column(mdb, c, bound_data[c], &len);
-	return 0;
-}
-]], mdb_bind_column_args=four, mdb_bind_column_args=three)
-
-		AC_MSG_RESULT($mdb_bind_column_args)
-		if test "$mdb_bind_column_args" = "four"; then
-			AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS, 1, [define if mdb_bind_column accepts four args])
-		fi
-
-		CFLAGS="$save_CFLAGS"
-	fi
-fi
-
-AM_CONDITIONAL(MDB, test x$mdbdir != x)
+MDBTOOLS_CHECK([$lib])
 
 dnl Test for LDAP
 try_ldap=true
@@ -1733,8 +1657,6 @@ AC_SUBST(ORACLE_LIBS)
 AC_SUBST(ORACLE_CFLAGS)
 AC_SUBST(FIREBIRD_LIBS)
 AC_SUBST(FIREBIRD_CFLAGS)
-AC_SUBST(MDB_LIBS)
-AC_SUBST(MDB_CFLAGS)
 AC_SUBST(CAMEL_LIBS)
 AC_SUBST(CAMEL_CFLAGS)
 AC_SUBST(XBASE_LIBS)
@@ -1904,7 +1826,7 @@ echo "      Berkeley DB SQL = `if test x$bdbsqldir = x; then echo no; else echo 
 dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
 dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
-echo "      MDB (MS Access) = `if test x$mdbdir != x; then echo yes; else echo no; fi`"
+echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
 dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
 dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"

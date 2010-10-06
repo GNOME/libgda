@@ -430,14 +430,14 @@ render_text_to_display_from_values (GList *values)
 }
 
 /**
- * gdaui_data_cell_renderer_combo_new
+ * gdaui_data_cell_renderer_combo_new:
  * @paramlist: a #GdaSet object
  * @source: a #GdauiSetSource structure listed in @paramlist->sources_list
  * 
  * Creates a new #GdauiDataCellRendererCombo which will fill the parameters listed in
  * @source->nodes with values available from @source->data_model.
  * 
- * Return value: the new cell renderer
+ * Return value: (transfer full): the new cell renderer
  **/
 GtkCellRenderer *
 gdaui_data_cell_renderer_combo_new (GdauiSet *paramlist, GdauiSetSource *source)

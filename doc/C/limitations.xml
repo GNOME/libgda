@@ -73,7 +73,7 @@
 	      blob. If this is not the case, then you must cast it to the correct data type within your SQL query (for example
 	      as "SELECT oid::varchar FROM...")</para></listitem>
 	  <listitem><para>&LIBGDA; does not try to avoid orphaned BLOBs, to solve the problem of orphaned BLOBs, set up
-	      the "lo" extension from PöstgreSQL's contrib, and/or use the "vacuumlo" also from the contrib.</para>
+	      the "lo" extension from PostgreSQL's contrib, and/or use the "vacuumlo" also from the contrib.</para>
 	  <para>Note that in the future the PostgreSQL's provider will have an option to ensure that there are no
 	    orphaned BLOBs itself.</para></listitem>
 	  <listitem><para>BLOB manipulations can only occur within a transaction, 
@@ -85,7 +85,9 @@
 
     <sect2><title>Last inserted row's values</title>
       <para>
-	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s last_insert_row attribute will return a <link linkend="GdaSet">GdaSet</link> object only if the table has OIDs.
+	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s
+	last_insert_row parameter will return a new <link linkend="GdaSet">GdaSet</link> object only if the table has OIDs
+	(to ensure this, the "WITH OIDS" option should be added at the end of a CREATE TABLE query).
       </para>
     </sect2>
 
@@ -131,6 +133,14 @@
 	No limitation if sqlite has been compiled with the SQLITE_THREADSAFE=1 flag (which is the case for the
 	embedded version of SQLite). If the system installed SQLite is used and if it was not compiled using that
 	flag, then &LIBGDA; sets the SQLite library in a state where multi threading is fully supported.
+      </para>
+    </sect2>
+
+    <sect2><title>Error reporting</title>
+      <para>
+	If there is not enough free space on the disk which stores an SQLite database, you may have some
+	"Disk I/O error" errors. This is also true for meta data connections which are by default
+	created in a temporary location.
       </para>
     </sect2>
   </sect1>

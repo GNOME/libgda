@@ -60,8 +60,8 @@ example_files = \
 	samples/Report/customers-report-spec.xml \
 	samples/Report/schema-report.c \
 	samples/Report/schema-report-spec.xml \
-	samples/Report/Makefile
-	samples/Report/README
+	samples/Report/Makefile \
+	samples/Report/README \
 	samples/Virtual/Makefile \
 	samples/Virtual/README \
 	samples/Virtual/city.csv \
@@ -92,7 +92,11 @@ example_files = \
 	samples/SimpleUIForm/README \
 	samples/SimpleUIForm/example.c \
 	samples/SimpleUIForm/Makefile \
-	samples/SimpleUIForm/ScreenShot.png
+	samples/SimpleUIForm/ScreenShot.png \
+	samples/Blobs/blobtest.c \
+	samples/Blobs/Makefile \
+	samples/Blobs/README \
+	samples/Blobs/testblob.db
 
 EXTRA_DIST = \
 	COPYING \

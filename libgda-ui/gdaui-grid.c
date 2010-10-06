@@ -1,6 +1,6 @@
 /* gdaui-grid.c
  *
- * Copyright (C) 2002 - 2009 Vivien Malerba
+ * Copyright (C) 2002 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -194,12 +194,12 @@ gdaui_grid_init (GdauiGrid *grid)
 }
 
 /**
- * gdaui_grid_new
+ * gdaui_grid_new:
  * @model: a #GdaDataModel
  *
  * Creates a new #GdauiGrid widget suitable to display the data in @model
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */
@@ -277,9 +277,12 @@ gdaui_grid_get_property (GObject *object,
 }
 
 /**
- * gdaui_grid_set_sample_size
+ * gdaui_grid_set_sample_size:
  * @grid: a #GdauiGrid widget
- * @sample_size:
+ * @sample_size: the size of the sample displayed in @grid
+ *
+ * Sets the size of each chunk of data to display: the maximum number of rows which
+ * can be displayed at a time. See gdaui_raw_grid_set_sample_size() and gda_data_proxy_set_sample_size()
  *
  * Since: 4.2
  */

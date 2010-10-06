@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * Authors:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -52,14 +52,16 @@ copy_hash_pair (gpointer key, gpointer value, gpointer user_data)
 }
 
 /**
- * gda_quark_list_new
+ * gda_quark_list_new:
  *
  * Creates a new #GdaQuarkList, which is a set of key->value pairs,
  * very similar to GLib's GHashTable, but with the only purpose to
  * make easier the parsing and creation of data source connection
  * strings.
  *
- * Returns: the newly created #GdaQuarkList.
+ * Returns: (transfer full): the newly created #GdaQuarkList.
+ *
+ * Free-function: gda_quark_list_free
  */
 GdaQuarkList *
 gda_quark_list_new (void)
@@ -73,7 +75,7 @@ gda_quark_list_new (void)
 }
 
 /**
- * gda_quark_list_new_from_string
+ * gda_quark_list_new_from_string:
  * @string: a string.
  *
  * Creates a new #GdaQuarkList given a string.
@@ -86,7 +88,9 @@ gda_quark_list_new (void)
  * "DB_NAME=notes;USERNAME=al%%20fred" string will specify a username as "al fred"). If this formalism
  * is not respected, then some unexpected results may occur.
  *
- * Returns: the newly created #GdaQuarkList.
+ * Returns: (transfer full): the newly created #GdaQuarkList.
+ *
+ * Free-function: gda_quark_list_free
  */
 GdaQuarkList *
 gda_quark_list_new_from_string (const gchar *string)
@@ -100,7 +104,7 @@ gda_quark_list_new_from_string (const gchar *string)
 }
 
 /**
- * gda_quark_list_clear
+ * gda_quark_list_clear:
  * @qlist: a #GdaQuarkList.
  *
  * Removes all strings in the given #GdaQuarkList.
@@ -114,7 +118,7 @@ gda_quark_list_clear (GdaQuarkList *qlist)
 }
 
 /**
- * gda_quark_list_free
+ * gda_quark_list_free:
  * @qlist: a #GdaQuarkList.
  *
  * Releases all memory occupied by the given #GdaQuarkList.

@@ -1,6 +1,6 @@
 /* gda-meta-struct-io.c
  *
- * Copyright (C) 2008 Vivien Malerba
+ * Copyright (C) 2008 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -39,10 +39,14 @@ static GdaMetaDbObject *create_view_object (GdaMetaStruct *mstruct, const GValue
 
 
 /**
- * gda_meta_struct_load_from_xml_file
- * @mstruct:
- * @xml_spec_file:
- * @error:
+ * gda_meta_struct_load_from_xml_file:
+ * @mstruct: a #GdaMetaStruct object
+ * @catalog: (allow-none): the catalog name, or %NULL
+ * @schema: (allow-none): the schema name, or %NULL
+ * @xml_spec_file: the specifications as the name of an XML file
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Loads an XML description into @mstruct
  *
  * returns: TRUE if no error has occurred
  */

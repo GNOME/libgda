@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -157,7 +157,7 @@ GQuark gda_tree_manager_error_quark (void)
 }
 
 /**
- * gda_tree_manager_get_type
+ * gda_tree_manager_get_type:
  * 
  * Registers the #GdaTreeManager class on the GLib type system.
  * 
@@ -301,15 +301,14 @@ _gda_tree_manager_update_children (GdaTreeManager *manager, GdaTreeNode *node, c
 
 
 /**
- * gda_tree_manager_new_with_func
+ * gda_tree_manager_new_with_func:
  * @update_func: the function to call when the manager object is requested to create or update its list of
  * #GdaTreeNode nodes
  *
  * Use this method to create a new #GdaTreeManager if it's more convenient than subclassing; all is needed
- * is the @update_func function which is responsible for creating or updating the children nodes of a specified
- * #GdaTreeNode.
+ * is the @update_func function which is responsible for creating or updating the children nodes of a specified #GdaTreeNode.
  *
- * Returns: a new #GdaTreeManager
+ * Returns: (transfer full): a new #GdaTreeManager
  *
  * Since: 4.2
  */
@@ -322,10 +321,10 @@ gda_tree_manager_new_with_func (GdaTreeManagerNodesFunc update_func)
 }
 
 /**
- * gda_tree_manager_add_new_node_attribute
+ * gda_tree_manager_add_new_node_attribute:
  * @manager: a #GdaTreeManager
  * @attribute: an attribute name
- * @value: the attribute's value, or %NULL
+ * @value: (allow-none): the attribute's value, or %NULL
  *
  * Requests that for any new node managed (eg. created) by @manager, a new attribute will be set. This allows
  * one to customize the attributes of new nodes created by an existing #GdaTreeManager.
@@ -363,10 +362,10 @@ gda_tree_manager_add_new_node_attribute (GdaTreeManager *manager, const gchar *a
 }
 
 /**
- * gda_tree_manager_create_node
+ * gda_tree_manager_create_node:
  * @manager: a #GdaTreeManager
- * @parent: the parent the new node may have, or %NULL
- * @name: name given to the new node, or %NULL
+ * @parent: (allow-none): the parent the new node may have, or %NULL
+ * @name: (allow-none): name given to the new node, or %NULL
  *
  * Requests that @manager creates a new #GdaTreeNode. The new node is not in any
  * way linked to @manager yet, consider this method as a #GdaTreeNode factory.
@@ -374,7 +373,7 @@ gda_tree_manager_add_new_node_attribute (GdaTreeManager *manager, const gchar *a
  * This method is usually used when implementing a #GdaTreeManagerNodesFunc function (to create nodes),
  * or when subclassing the #GdaTreeManager.
  *
- * Returns: a new #GdaTreeNode
+ * Returns: (transfer full): a new #GdaTreeNode
  *
  * Since: 4.2
  */
@@ -398,7 +397,7 @@ gda_tree_manager_create_node (GdaTreeManager *manager, GdaTreeNode *parent, cons
 }
 
 /**
- * gda_tree_manager_add_manager
+ * gda_tree_manager_add_manager:
  * @manager: a #GdaTreeManager object
  * @sub: a #GdaTreeManager object to add
  *
@@ -420,12 +419,12 @@ gda_tree_manager_add_manager (GdaTreeManager *manager, GdaTreeManager *sub)
 }
 
 /**
- * gda_tree_manager_get_managers
+ * gda_tree_manager_get_managers:
  * @manager: a #GdaTreeManager object
  *
  * Get the list of sub managers which have already been added using gda_tree_manager_add_manager()
  *
- * Returns: a listof #GdaTreeMenager which should not be modified.
+ * Returns: (transfer none): a list of #GdaTreeMenager which should not be modified.
  *
  * Since: 4.2
  */
@@ -437,9 +436,9 @@ gda_tree_manager_get_managers (GdaTreeManager *manager)
 }
 
 /**
- * gda_tree_manager_set_node_create_func
+ * gda_tree_manager_set_node_create_func:
  * @manager: a #GdaTreeManager tree manager object
- * @func: a #GdaTreeManagerNodeFunc function pointer, or %NULL
+ * @func: (allow-none): a #GdaTreeManagerNodeFunc function pointer, or %NULL
  *
  * Sets the function to be called when a new node is being created by @manager. If @func is %NULL
  * then each created node will be a #GdaTreeNode object.
@@ -457,12 +456,12 @@ gda_tree_manager_set_node_create_func (GdaTreeManager *manager, GdaTreeManagerNo
 }
 
 /**
- * gda_tree_manager_get_node_create_func
+ * gda_tree_manager_get_node_create_func:
  * @manager: a #GdaTreeManager tree manager object
  *
  * Get the function used by @manager when creating new #GdaTreeNode nodes
  *
- * Returns: the #GdaTreeManagerNodeFunc function, or %NULL if the default function is used
+ * Returns: (transfer none): the #GdaTreeManagerNodeFunc function, or %NULL if the default function is used
  *
  * Since: 4.2
  */

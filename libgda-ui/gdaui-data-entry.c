@@ -130,7 +130,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 }
 
 /**
- * gdaui_data_entry_set_value_type
+ * gdaui_data_entry_set_value_type:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @type: the #GType of the data to be displayed
  *
@@ -150,7 +150,7 @@ gdaui_data_entry_set_value_type (GdauiDataEntry *de, GType type)
 
 
 /**
- * gdaui_data_entry_get_value_type
+ * gdaui_data_entry_get_value_type:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Fetch the type of data the GdauiDataEntry handles
@@ -170,9 +170,9 @@ gdaui_data_entry_get_value_type (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_set_value
+ * gdaui_data_entry_set_value:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @value: a #GValue, or %NULL
+ * @value: (allow-none): a #GValue, or %NULL
  *
  * Push a value into the #GdauiDataEntry. The value parameter must either be:
  * <itemizedlist>
@@ -194,7 +194,7 @@ gdaui_data_entry_set_value (GdauiDataEntry *de, const GValue *value)
 }
 
 /**
- * gdaui_data_entry_get_value
+ * gdaui_data_entry_get_value:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Fetch the value held in the GdauiDataEntry widget. If the value is set to NULL,
@@ -202,7 +202,7 @@ gdaui_data_entry_set_value (GdauiDataEntry *de, const GValue *value)
  * then the returned value is of type GDA_TYPE_NULL or is the default value if it
  * has been provided to the widget (and is of the same type as the one provided by @de).
  *
- * Returns: a new #GValue
+ * Returns: (transfer none): a new #GValue
  *
  * Since: 4.2
  */
@@ -218,9 +218,9 @@ gdaui_data_entry_get_value (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_content_is_valid
+ * gdaui_data_entry_content_is_valid:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @error: a place to store an error, or %NULL
+ * @error: (allow-none): a place to store an error, or %NULL
  *
  * Tests the validity of @de's contents. The validity is a determined from:
  * <itemizedlist>
@@ -244,9 +244,9 @@ gdaui_data_entry_content_is_valid (GdauiDataEntry *de, GError **error)
 
 
 /**
- * gdaui_data_entry_set_reference_value
+ * gdaui_data_entry_set_reference_value:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @value: a #GValue, or %NULL
+ * @value: (allow-none): a #GValue, or %NULL
  *
  * Push a value into the GdauiDataEntry in the same way as gdaui_data_entry_set_value() but
  * also sets this value as the reference value.
@@ -263,7 +263,7 @@ gdaui_data_entry_set_reference_value (GdauiDataEntry *de, const GValue *value)
 }
 
 /**
- * gdaui_data_entry_set_reference_current
+ * gdaui_data_entry_set_reference_current:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Tells that the current value in @de is to be considered as the reference value
@@ -284,12 +284,12 @@ gdaui_data_entry_set_reference_current (GdauiDataEntry *de)
 
 
 /**
- * gdaui_data_entry_get_reference_value
+ * gdaui_data_entry_get_reference_value:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Fetch the reference value held in the #GdauiDataEntry widget
  *
- * Returns: the #GValue (not modifiable)
+ * Returns: (transfer none): the #GValue (not modifiable)
  *
  * Since: 4.2
  */
@@ -306,9 +306,9 @@ gdaui_data_entry_get_reference_value (GdauiDataEntry *de)
 
 
 /**
- * gdaui_data_entry_set_default_value
+ * gdaui_data_entry_set_default_value:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @value: a #GValue, or %NULL
+ * @value: (allow-none): a #GValue, or %NULL
  *
  * Sets the default value for the GdauiDataEntry which gets displayed when the
  * user forces the default value. If it is not set then it is set to type GDA_TYPE_NULL.
@@ -331,12 +331,12 @@ gdaui_data_entry_set_default_value (GdauiDataEntry *de, const GValue *value)
 }
 
 /**
- * gdaui_data_entry_set_attributes
+ * gdaui_data_entry_set_attributes:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @attrs: the attributes to set (OR'ed between them)
  * @mask: the mask corresponding to the considered attributes
  *
- * Sets the parameters of the GdauiDataEntry. Only the attributes corresponding to the
+ * Sets the parameters of the #GdauiDataEntry. Only the attributes corresponding to the
  * mask are set, the other ones are ignored.
  *
  * Since: 4.2
@@ -351,7 +351,7 @@ gdaui_data_entry_set_attributes (GdauiDataEntry *de, GdaValueAttribute attrs, Gd
 }
 
 /**
- * gdaui_data_entry_get_attributes
+ * gdaui_data_entry_get_attributes:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Retrieves the parameters of the GdauiDataEntry widget.
@@ -373,12 +373,12 @@ gdaui_data_entry_get_attributes (GdauiDataEntry *de)
 
 
 /**
- * gdaui_data_entry_get_handler
+ * gdaui_data_entry_get_handler:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Fetch the GdaDataHandler the GdauiDataEntry is using
  *
- * Returns: the GdaDataHandler object
+ * Returns: (transfer none): the GdaDataHandler object
  *
  * Since: 4.2
  */
@@ -394,14 +394,14 @@ gdaui_data_entry_get_handler (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_can_expand
+ * gdaui_data_entry_can_expand:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @horiz: %TRUE to query horizontal expansion requirements, or %FALSE for vertical
  *
  * Used for the layout of #GdaDataEntry widgets in containers: queries if @de requires
  * horizontal or vertical expansion, depending on @horiz
  *
- * Returns: TRUE if the widget requires expansion
+ * Returns: %TRUE if the widget requires expansion
  *
  * Since: 4.2
  */
@@ -417,7 +417,7 @@ gdaui_data_entry_can_expand (GdauiDataEntry *de, gboolean horiz)
 }
 
 /**
- * gdaui_data_entry_set_editable
+ * gdaui_data_entry_set_editable:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @editable: set to %TRUE to have an editable data entry
  *
@@ -437,7 +437,7 @@ gdaui_data_entry_set_editable (GdauiDataEntry *de, gboolean editable)
 }
 
 /**
- * gdaui_data_entry_get_editable
+ * gdaui_data_entry_get_editable:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Tells if @de can be edited by the user
@@ -461,7 +461,7 @@ gdaui_data_entry_get_editable (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_grab_focus
+ * gdaui_data_entry_grab_focus:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  *
  * Makes @de grab the focus for the window it's in

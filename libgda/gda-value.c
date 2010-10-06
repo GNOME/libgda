@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+/* GDA library
+ * Copyright (C) 1998 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
@@ -308,13 +308,14 @@ gda_binary_get_type (void)
 }
 
 /**
- * gda_binary_copy
+ * gda_binary_copy:
  * @boxed: source to get a copy from.
  *
  * Creates a new #GdaBinary structure from an existing one.
 
- * Returns: a newly allocated #GdaBinary which contains a copy of
- * information in @boxed.
+ * Returns: (transfer full): a newly allocated #GdaBinary which contains a copy of information in @boxed.
+ *
+ * Free-function: gda_binary_free
  */
 gpointer
 gda_binary_copy (gpointer boxed)
@@ -332,8 +333,8 @@ gda_binary_copy (gpointer boxed)
 }
 
 /**
- * gda_binary_free
- * @boxed: #GdaBinary to free.
+ * gda_binary_free:
+ * @boxed: (transfer full): #GdaBinary to free.
  *
  * Deallocates all memory associated to the given #GdaBinary.
  */
@@ -405,13 +406,14 @@ gda_blob_get_type (void)
 }
 
 /**
- * gda_blob_copy
+ * gda_blob_copy:
  * @boxed: source to get a copy from.
  *
  * Creates a new #GdaBlob structure from an existing one.
 
- * Returns: a newly allocated #GdaBlob which contains a copy of
- * information in @boxed.
+ * Returns: (transfer full): a newly allocated #GdaBlob which contains a copy of information in @boxed.
+ *
+ * Free-function: gda_blob_free
  */
 gpointer
 gda_blob_copy (gpointer boxed)
@@ -432,8 +434,8 @@ gda_blob_copy (gpointer boxed)
 }
 
 /**
- * gda_blob_free
- * @boxed: #GdaBlob to free.
+ * gda_blob_free:
+ * @boxed: (transfer full): #GdaBlob to free.
  *
  * Deallocates all memory associated to the given #GdaBlob.
  */
@@ -452,7 +454,7 @@ gda_blob_free (gpointer boxed)
 }
 
 /**
- * gda_blob_set_op 
+ * gda_blob_set_op:
  * @blob: a #GdaBlob value
  * @op: a #GdaBlobOp object, or %NULL
  *
@@ -647,13 +649,14 @@ gda_numeric_get_type (void)
 }
 
 /**
- * gda_numeric_copy
+ * gda_numeric_copy:
  * @boxed: source to get a copy from.
  *
  * Creates a new #GdaNumeric structure from an existing one.
 
- * Returns: a newly allocated #GdaNumeric which contains a copy of
- * information in @boxed.
+ * Returns: (transfer full): a newly allocated #GdaNumeric which contains a copy of information in @boxed.
+ *
+ * Free-function: gda_numeric_free
  */
 
 gpointer
@@ -673,8 +676,8 @@ gda_numeric_copy (gpointer boxed)
 }
 
 /**
- * gda_numeric_free
- * @boxed: a #GdaNumeric pointer
+ * gda_numeric_free:
+ * @boxed: (transfer full): a #GdaNumeric pointer
  *
  * Deallocates all memory associated to the given @boxed
  */
@@ -858,10 +861,10 @@ gda_time_free (gpointer boxed)
 }
 
 /**
- * gda_time_valid
+ * gda_time_valid:
  * @time: a #GdaTime value to check if it is valid
  *
- * Returns: #TRUE if #GdaTime is valid; FALSE otherwise.
+ * Returns: #TRUE if #GdaTime is valid; %FALSE otherwise.
  *
  * Since: 4.2
  */
@@ -993,10 +996,10 @@ gda_timestamp_free (gpointer boxed)
 }
 
 /**
- * gda_timestamp_valid
+ * gda_timestamp_valid:
  * @timestamp: a #GdaTimestamp value to check if it is valid
  *
- * Returns: #TRUE if #GdaTimestamp is valid; FALSE otherwise.
+ * Returns: #TRUE if #GdaTimestamp is valid; %FALSE otherwise.
  *
  * Since: 4.2
  */
@@ -1028,13 +1031,14 @@ gda_timestamp_valid (const GdaTimestamp *timestamp)
 }
 
 /**
- * gda_value_new
+ * gda_value_new:
  * @type: the new value type.
  *
  * Makes a new #GValue of type @type.
  *
- * Returns: the newly created #GValue with the specified @type. 
- *	You need to set the value in the returned GValue.
+ * Returns: (transfer full): the newly created #GValue with the specified @type. You need to set the value in the returned GValue.
+ *
+ * Free-function: gda_value_free
  */
 GValue *
 gda_value_new (GType type)
@@ -1048,13 +1052,15 @@ gda_value_new (GType type)
 }
 
 /**
- * gda_value_new_binary
+ * gda_value_new_binary:
  * @val: value to set for the new #GValue.
  * @size: the size of the memory pool pointer to by @val.
  *
  * Makes a new #GValue of type #GDA_TYPE_BINARY with value @val.
  *
- * Returns: the newly created #GValue.
+ * Returns: (transfer full): the newly created #GValue.
+ *
+ * Free-function: gda_value_free
  */
 GValue *
 gda_value_new_binary (const guchar *val, glong size)
@@ -1075,13 +1081,15 @@ gda_value_new_binary (const guchar *val, glong size)
 }
 
 /**
- * gda_value_new_blob
+ * gda_value_new_blob:
  * @val: value to set for the new #GValue.
  * @size: the size of the memory pool pointer to by @val.
  *
  * Makes a new #GValue of type #GDA_TYPE_BLOB with the data contained by @val.
  *
- * Returns: the newly created #GValue.
+ * Returns: (transfer full): the newly created #GValue.
+ *
+ * Free-function: gda_value_free
  */
 GValue *
 gda_value_new_blob (const guchar *val, glong size)
@@ -1105,13 +1113,15 @@ gda_value_new_blob (const guchar *val, glong size)
 }
 
 /**
- * gda_value_new_blob
- * @val: value to set for the new #GValue.
- * @size: the size of the memory pool pointer to by @val.
+ * gda_value_new_blob_from_file:
+ * @filename: name of the file to manipulate
  *
- * Makes a new #GValue of type #GDA_TYPE_BLOB with the data contained by @val.
+ * Makes a new #GValue of type #GDA_TYPE_BLOB interfacing with the contents of the file
+ * named @filename
  *
- * Returns: the newly created #GValue.
+ * Returns: (transfer full): the newly created #GValue.
+ *
+ * Free-function: gda_value_free
  */
 GValue *
 gda_value_new_blob_from_file (const gchar *filename)
@@ -1130,13 +1140,15 @@ gda_value_new_blob_from_file (const gchar *filename)
 }
 
 /**
- * gda_value_new_timestamp_from_timet
+ * gda_value_new_timestamp_from_timet:
  * @val: value to set for the new #GValue.
  *
  * Makes a new #GValue of type #GDA_TYPE_TIMESTAMP with value @val
  * (of type time_t).
  *
- * Returns: the newly created #GValue.
+ * Returns: (transfer full): the newly created #GValue.
+ *
+ * Free-function: gda_value_free
  */
 GValue *
 gda_value_new_timestamp_from_timet (time_t val)
@@ -1164,7 +1176,7 @@ gda_value_new_timestamp_from_timet (time_t val)
 }
 
 /**
- * gda_value_new_from_string
+ * gda_value_new_from_string:
  * @as_string: stringified representation of the value.
  * @type: the new value type.
  *
@@ -1175,8 +1187,9 @@ gda_value_new_timestamp_from_timet (time_t val)
  * This function is typically used when reading configuration files or other non-user input that should be locale 
  * independent.
  *
- * Returns: the newly created #GValue or %NULL if the string representation
- * cannot be converted to the specified @type.
+ * Returns: (transfer full): the newly created #GValue or %NULL if the string representation cannot be converted to the specified @type.
+ *
+ * Free-function: gda_value_free
  */
 GValue *
 gda_value_new_from_string (const gchar *as_string, GType type)
@@ -1195,7 +1208,7 @@ gda_value_new_from_string (const gchar *as_string, GType type)
 }
 
 /**
- * gda_value_new_from_xml
+ * gda_value_new_from_xml:
  * @node: an XML node representing the value.
  *
  * Creates a GValue from an XML representation of it. That XML
@@ -1207,7 +1220,9 @@ gda_value_new_from_string (const gchar *as_string, GType type)
  * This function is typically used when reading configuration files or other non-user input that should be locale 
  * independent.
  *
- * Returns: the newly created #GValue.
+ * Returns: (transfer full): the newly created #GValue.
+ *
+ * Free-function: gda_value_free
  */
 GValue *
 gda_value_new_from_xml (const xmlNodePtr node)
@@ -1236,8 +1251,8 @@ gda_value_new_from_xml (const xmlNodePtr node)
 }
 
 /**
- * gda_value_free
- * @value: the resource to free.
+ * gda_value_free:
+ * @value: (transfer full): the resource to free.
  *
  * Deallocates all memory associated to a #GValue.
  */
@@ -1275,13 +1290,12 @@ gda_value_reset_with_type (GValue *value, GType type)
 
 
 /**
- * gda_value_is_null
+ * gda_value_is_null:
  * @value: value to test.
  *
  * Tests if a given @value is of type #GDA_TYPE_NULL.
  *
- * Returns: a boolean that says whether or not @value is of type
- * #GDA_TYPE_NULL.
+ * Returns: a boolean that says whether or not @value is of type #GDA_TYPE_NULL.
  */
 gboolean
 gda_value_is_null (const GValue *value)
@@ -1291,11 +1305,10 @@ gda_value_is_null (const GValue *value)
 }
 
 /**
- * gda_value_is_number
+ * gda_value_is_number:
  * @value: a #GValue.
  *
- * Gets whether the value stored in the given #GValue is of
- * numeric type or not.
+ * Gets whether the value stored in the given #GValue is of numeric type or not.
  *
  * Returns: %TRUE if a number, %FALSE otherwise.
  */
@@ -1315,15 +1328,17 @@ gda_value_is_number (const GValue *value)
 }
 
 /**
- * gda_value_copy
+ * gda_value_copy:
  * @value: value to get a copy from.
  *
  * Creates a new #GValue from an existing one.
  * 
- * Returns: a newly allocated #GValue with a copy of the data in @value.
+ * Returns: (transfer full): a newly allocated #GValue with a copy of the data in @value.
+ *
+ * Free-function: gda_value_free
  */
 GValue *
-gda_value_copy (const  GValue *value)
+gda_value_copy (const GValue *value)
 {
 	GValue *copy;
 	
@@ -1340,10 +1355,10 @@ gda_value_copy (const  GValue *value)
 }
 
 /**
- * gda_value_get_binary
+ * gda_value_get_binary:
  * @value: a #GValue whose value we want to get.
  *
- * Returns: the value stored in @value.
+ * Returns: (transfer none): the value stored in @value.
  */
 G_CONST_RETURN GdaBinary *
 gda_value_get_binary (const GValue *value)
@@ -1360,7 +1375,7 @@ gda_value_get_binary (const GValue *value)
 
 
 /**
- * gda_value_set_binary
+ * gda_value_set_binary:
  * @value: a #GValue that will store @val.
  * @binary: a #GdaBinary structure with the data and its size to be stored in @value.
  *
@@ -1382,9 +1397,9 @@ gda_value_set_binary (GValue *value, const GdaBinary *binary)
 }
 
 /**
- * gda_value_take_binary
+ * gda_value_take_binary:
  * @value: a #GValue that will store @val.
- * @binary: a #GdaBinary structure with the data and its size to be stored in @value.
+ * @binary: (transfer full): a #GdaBinary structure with the data and its size to be stored in @value.
  *
  * Stores @val into @value, but on the contrary to gda_value_set_binary(), the @binary
  * argument is not copied, but used as-is and it should be considered owned by @value.
@@ -1401,7 +1416,7 @@ gda_value_take_binary (GValue *value, GdaBinary *binary)
 }
 
 /**
- * gda_value_set_blob
+ * gda_value_set_blob:
  * @value: a #GValue that will store @val.
  * @blob: a #GdaBlob structure with the data and its size to be stored in @value.
  *
@@ -1419,10 +1434,10 @@ gda_value_set_blob (GValue *value, const GdaBlob *blob)
 }
 
 /**
- * gda_value_get_blob
+ * gda_value_get_blob:
  * @value: a #GValue whose value we want to get.
  *
- * Returns: the value stored in @value.
+ * Returns: (transfer none): the value stored in @value.
  */
 G_CONST_RETURN GdaBlob *
 gda_value_get_blob (const GValue *value)
@@ -1438,9 +1453,9 @@ gda_value_get_blob (const GValue *value)
 }
 
 /**
- * gda_value_take_blob
+ * gda_value_take_blob:
  * @value: a #GValue that will store @val.
- * @blob: a #GdaBlob structure with the data and its size to be stored in @value.
+ * @blob: (transfer full): a #GdaBlob structure with the data and its size to be stored in @value.
  *
  * Stores @val into @value, but on the contrary to gda_value_set_blob(), the @blob
  * argument is not copied, but used as-is and it should be considered owned by @value.
@@ -1457,10 +1472,10 @@ gda_value_take_blob (GValue *value, GdaBlob *blob)
 }
 
 /**
- * gda_value_get_geometric_point
+ * gda_value_get_geometric_point:
  * @value: a #GValue whose value we want to get.
  *
- * Returns: the value stored in @value.
+ * Returns: (transfer none): the value stored in @value.
  */
 G_CONST_RETURN GdaGeometricPoint *
 gda_value_get_geometric_point (const GValue *value)
@@ -1471,7 +1486,7 @@ gda_value_get_geometric_point (const GValue *value)
 }
 
 /**
- * gda_value_set_geometric_point
+ * gda_value_set_geometric_point:
  * @value: a #GValue that will store @val.
  * @val: value to be stored in @value.
  *
@@ -1506,7 +1521,7 @@ gda_value_set_null (GValue *value)
  * gda_value_get_numeric
  * @value: a #GValue whose value we want to get.
  *
- * Returns: the value stored in @value.
+ * Returns: (transfer none): the value stored in @value.
  */
 G_CONST_RETURN GdaNumeric *
 gda_value_get_numeric (const GValue *value)
@@ -1517,7 +1532,7 @@ gda_value_get_numeric (const GValue *value)
 }
 
 /**
- * gda_value_set_numeric
+ * gda_value_set_numeric:
  * @value: a #GValue that will store @val.
  * @val: value to be stored in @value.
  *
@@ -1535,7 +1550,7 @@ gda_value_set_numeric (GValue *value, const GdaNumeric *val)
 }
 
 /**
- * gda_value_get_short
+ * gda_value_get_short:
  * @value: a #GValue whose value we want to get.
  *
  * Returns: the value stored in @value.
@@ -1549,7 +1564,7 @@ gda_value_get_short (const GValue *value)
 }
 
 /**
- * gda_value_set_short
+ * gda_value_set_short:
  * @value: a #GValue that will store @val.
  * @val: value to be stored in @value.
  *
@@ -1566,7 +1581,7 @@ gda_value_set_short (GValue *value, gshort val)
 }
 
 /**
- * gda_value_get_ushort
+ * gda_value_get_ushort:
  * @value: a #GValue whose value we want to get.
  *
  * Returns: the value stored in @value.
@@ -1580,7 +1595,7 @@ gda_value_get_ushort (const GValue *value)
 }
 
 /**
- * gda_value_set_ushort
+ * gda_value_set_ushort:
  * @value: a #GValue that will store @val.
  * @val: value to be stored in @value.
  *
@@ -1598,10 +1613,10 @@ gda_value_set_ushort (GValue *value, gushort val)
 
 
 /**
- * gda_value_get_time
+ * gda_value_get_time:
  * @value: a #GValue whose value we want to get.
  *
- * Returns: the value stored in @value.
+ * Returns: (transfer none): the value stored in @value.
  */
 const GdaTime *
 gda_value_get_time (const GValue *value)
@@ -1612,7 +1627,7 @@ gda_value_get_time (const GValue *value)
 }
 
 /**
- * gda_value_set_time
+ * gda_value_set_time:
  * @value: a #GValue that will store @val.
  * @val: value to be stored in @value.
  *
@@ -1630,10 +1645,10 @@ gda_value_set_time (GValue *value, const GdaTime *val)
 }
 
 /**
- * gda_value_get_timestamp
+ * gda_value_get_timestamp:
  * @value: a #GValue whose value we want to get.
  *
- * Returns: the value stored in @value.
+ * Returns: (transfer none): the value stored in @value.
  */
 const GdaTimestamp *
 gda_value_get_timestamp (const GValue *value)
@@ -1644,7 +1659,7 @@ gda_value_get_timestamp (const GValue *value)
 }
 
 /**
- * gda_value_set_timestamp
+ * gda_value_set_timestamp:
  * @value: a #GValue that will store @val.
  * @val: value to be stored in @value.
  *
@@ -1662,7 +1677,7 @@ gda_value_set_timestamp (GValue *value, const GdaTimestamp *val)
 }
 
 /**
- * gda_value_set_from_string
+ * gda_value_set_from_string:
  * @value: a #GValue that will store @val.
  * @as_string: the stringified representation of the value.
  * @type: the type of the value
@@ -1700,7 +1715,7 @@ gda_value_set_from_string (GValue *value,
 }
 
 /**
- * gda_value_set_from_value
+ * gda_value_set_from_value:
  * @value: a #GValue.
  * @from: the value to copy from.
  *
@@ -1733,7 +1748,7 @@ gda_value_set_from_value (GValue *value, const GValue *from)
 }
 
 /**
- * gda_value_stringify
+ * gda_value_stringify:
  * @value: a #GValue.
  *
  * Converts a GValue to its string representation which is a human readable value. Note that the
@@ -1743,8 +1758,7 @@ gda_value_set_from_value (GValue *value, const GValue *from)
  *
  * Dates are converted in a YYYY-MM-DD format.
  *
- * Returns: a new string, or %NULL if the conversion cannot be done. Free the value with a g_free() when you've finished
- * using it. 
+ * Returns: (transfer full): a new string, or %NULL if the conversion cannot be done. Free the value with a g_free() when you've finished using it. 
  */
 gchar *
 gda_value_stringify (const GValue *value)
@@ -1787,7 +1801,7 @@ gda_value_stringify (const GValue *value)
 }
 	
 /**
- * gda_value_differ
+ * gda_value_differ:
  * @value1: a #GValue to compare.
  * @value2: the other #GValue to be compared to @value1.
  *
@@ -1943,7 +1957,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 }
 
 /**
- * gda_value_compare
+ * gda_value_compare:
  * @value1: a #GValue to compare (not %NULL)
  * @value2: the other #GValue to be compared to @value1 (not %NULL)
  *
@@ -2241,12 +2255,12 @@ to_string (const GValue *value)
 
 
 /**
- * gda_value_to_xml
+ * gda_value_to_xml:
  * @value: a #GValue.
  *
  * Serializes the given #GValue to an XML node string.
  *
- * Returns: the XML node. Once not needed anymore, you should free it.
+ * Returns: (transfer full): the XML node. Once not needed anymore, you should free it.
  */
 xmlNodePtr
 gda_value_to_xml (const GValue *value)
@@ -2384,9 +2398,9 @@ gda_ushort_get_type (void) {
 #define MYMIN(a,b) (((b) > 0) ? ((a) < (b) ? (a) : (b)) : (a))
 
 /**
- * gda_binary_to_string
+ * gda_binary_to_string:
  * @bin: a correctly filled @GdaBinary structure
- * @maxlen: a maximum len used to truncate, or 0 for no maximum length
+ * @maxlen: a maximum len used to truncate, or %0 for no maximum length
  *
  * Converts all the non printable characters of bin->data into the "\xyz" representation
  * where "xyz" is the octal representation of the byte, and the '\' (backslash) character
@@ -2399,7 +2413,7 @@ gda_ushort_get_type (void) {
  * chunk. Note that this function is internally called when transforming a binary value to
  * a string for example when using g_value_transform() or gda_value_stringify().
  *
- * Returns: a new string from @bin
+ * Returns: (transfer full): a new string from @bin
  */
 gchar *
 gda_binary_to_string (const GdaBinary *bin, guint maxlen)
@@ -2467,14 +2481,14 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 }
 
 /**
- * gda_string_to_binary
+ * gda_string_to_binary:
  * @str: a string to convert
  *
  * Performs the reverse of gda_binary_to_string() (note that for any "\xyz" succession
  * of 4 characters where "xyz" represents a valid octal value, the resulting read value will
  * be modulo 256)
  *
- * Returns: a new #GdaBinary if no error were found in @str, or NULL otherwise
+ * Returns: (transfer full): a new #GdaBinary if no error were found in @str, or NULL otherwise
  */
 GdaBinary *
 gda_string_to_binary (const gchar *str)
@@ -2535,7 +2549,7 @@ gda_string_to_binary (const gchar *str)
 }
 
 /**
- * gda_blob_to_string
+ * gda_blob_to_string:
  * @blob: a correctly filled @GdaBlob structure
  * @maxlen: a maximum len used to truncate, or 0 for no maximum length
  *
@@ -2543,7 +2557,7 @@ gda_string_to_binary (const gchar *str)
  * where xxx is the octal representation of the byte, and the '\' (backslash) character
  * is converted to "\\".
  *
- * Returns: a new string from @blob
+ * Returns: (transfer full): a new string from @blob
  */
 gchar *
 gda_blob_to_string (GdaBlob *blob, guint maxlen)
@@ -2556,12 +2570,12 @@ gda_blob_to_string (GdaBlob *blob, guint maxlen)
 }
 
 /**
- * gda_string_to_blob
+ * gda_string_to_blob:
  * @str: a string to convert
  *
  * Performs the reverse of gda_blob_to_string().
  *
- * Returns: a new #gdaBlob if no error were found in @str, or NULL otherwise
+ * Returns: (transfer full): a new #gdaBlob if no error were found in @str, or NULL otherwise
  */
 GdaBlob *
 gda_string_to_blob (const gchar *str)

@@ -1,6 +1,10 @@
 /* GDA library
  * 
- * Copyright (C) Daniel Espinosa Ortiz 2008 <esodan@gmail.com>
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Daniel Espinosa Ortiz 2008 <esodan@gmail.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  * 
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -121,7 +125,7 @@ gda_repetitive_statement_class_init (GdaRepetitiveStatementClass *klass)
 }
 
 /**
- * gda_repetitive_statement_new
+ * gda_repetitive_statement_new:
  * @stmt: a #GdaStatement object
  *
  * Creates a new #GdaRepetitiveStatement object which, when executed, will execute @stmt once for all
@@ -144,17 +148,17 @@ gda_repetitive_statement_new (GdaStatement *stmt)
 }
 
 /**
- * gda_repetitive_statement_get_template_set
+ * gda_repetitive_statement_get_template_set:
  * @rstmt: a #GdaRepetitiveStatement object
  * @set: a place to store the returned template set
- * @error: a place to store error, or %NULL
+ * @error: (allow-none): a place to store error, or %NULL
  *
  * Gets a new #GdaSet object with the parameters used by the template statement in the
  * @rstmt object. 
  *
  * Use this object with gda_repetitive_statement_append_set().
  *
- * Returns: TRUE on success, FALSE on error
+ * Returns: %TRUE on success, %FALSE on error
  *
  * Since: 4.2
  */
@@ -169,7 +173,7 @@ gda_repetitive_statement_get_template_set (GdaRepetitiveStatement *rstmt, GdaSet
 }
 
 /**
- * gda_repetitive_statement_append_set
+ * gda_repetitive_statement_append_set:
  * @rstmt: a #GdaRepetitiveStatement object
  * @values: a #GdaSet object with the values to be used
  * @make_copy: %TRUE if @values is copied, and %FALSE if @values is only ref'ed
@@ -204,12 +208,12 @@ gda_repetitive_statement_append_set (GdaRepetitiveStatement *rstmt, GdaSet *valu
 }
 
 /**
- * gda_repetitive_statement_get_all_sets
+ * gda_repetitive_statement_get_all_sets:
  * @rstmt: a #GdaRepetitiveStatement object
  *
  * Get all the values sets which will have been added using gda_repetitive_statement_append_set().
  *
- * Returns: a new #GSList of #GdaSet objects (free with g_slist_free()).
+ * Returns: (transfer container) (element-type GdaSet): a new #GSList of #GdaSet objects (free with g_slist_free()).
  *
  * Since: 4.2
  */
@@ -220,5 +224,5 @@ gda_repetitive_statement_get_all_sets (GdaRepetitiveStatement *rstmt)
 	
 	priv = GDA_REPETITIVE_STATEMENT_PRIVATE (rstmt);
 	
-	return g_slist_reverse (priv->values_sets);
+	return g_slist_copy (g_slist_reverse (priv->values_sets));
 }

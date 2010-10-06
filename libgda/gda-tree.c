@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -223,7 +223,7 @@ GQuark gda_tree_error_quark (void)
 }
 
 /**
- * gda_tree_get_type
+ * gda_tree_get_type:
  * 
  * Registers the #GdaTree class on the GLib type system.
  * 
@@ -301,11 +301,11 @@ gda_tree_get_property (GObject *object,
 }
 
 /**
- * gda_tree_new
+ * gda_tree_new:
  * 
  * Creates a new #GdaTree object
  *
- * Returns: a new #GdaTree object
+ * Returns: (transfer full): a new #GdaTree object
  *
  * Since: 4.2
  */
@@ -317,7 +317,7 @@ gda_tree_new (void)
 
 
 /**
- * gda_tree_add_manager
+ * gda_tree_add_manager:
  * @tree: a #GdaTree object
  * @manager: a #GdaTreeManager object
  * 
@@ -351,7 +351,7 @@ dump_root_attributes (GdaTreeNode *root)
 #endif
 
 /**
- * gda_tree_clean
+ * gda_tree_clean:
  * @tree: a #GdaTree object
  *
  * Removes any node in @tree
@@ -375,9 +375,9 @@ gda_tree_clean (GdaTree *tree)
 }
 
 /**
- * gda_tree_update_all
+ * gda_tree_update_all:
  * @tree: a #GdaTree object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Requests that @tree be populated with nodes. If an error occurs, then @tree's contents is left
  * unchanged, and otherwise @tree's previous contents is completely replaced by the new one.
@@ -394,10 +394,10 @@ gda_tree_update_all (GdaTree *tree, GError **error)
 }
 
 /**
- * gda_tree_update_part
+ * gda_tree_update_part:
  * @tree: a #GdaTree object
  * @node: a #GdaTreeNode node in @tree
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Requests that @tree be populated with nodes, starting from @node
  *
@@ -425,7 +425,7 @@ gda_tree_update_part (GdaTree *tree, GdaTreeNode *node, GError **error)
 }
 
 /**
- * gda_tree_dump
+ * gda_tree_dump:
  * @tree: a #GdaTree
  * @node: a #GdaTreeNode to start the dump from, or %NULL for a full dump
  * @stream: a stream to send the dump to, or %NULL for STDOUT
@@ -457,7 +457,7 @@ static GSList *real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments,
 static GSList *decompose_path_as_segments (const gchar *path, gboolean use_names);
 
 /**
- * gda_tree_get_nodes_in_path
+ * gda_tree_get_nodes_in_path:
  * @tree: a #GdaTree object
  * @tree_path: full path to the required nodes (if @use_names is %TRUE, then it must start with '/')
  * @use_names: if %TRUE, then @tree_path will be interpreted as a unix style path, and if %FALSE,
@@ -468,7 +468,7 @@ static GSList *decompose_path_as_segments (const gchar *path, gboolean use_names
  *
  * As a corner case if @tree_path is %NULL, then the returned list contains all the top level nodes.
  *
- * Returns: a new list of #GdaTreeNode pointers, free it with g_slist_free()
+ * Returns: (transfer container) (element-type GdaTreeNode): a new list of #GdaTreeNode pointers, free it with g_slist_free()
  *
  * Since: 4.2
  */
@@ -575,13 +575,13 @@ real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_n
 static gboolean build_node_path (GdaTree *tree, GdaTreeNode *node, GArray *array);
 
 /**
- * gda_tree_get_node_path
+ * gda_tree_get_node_path:
  * @tree: a #GdaTree
  * @node: a #GdaTreeNode node in @tree
  *
  * Get the path associated to @node in @tree.
  *
- * Returns: a new string, or %NULL if @node is not in @tree
+ * Returns: (transfer full): a new string, or %NULL if @node is not in @tree
  *
  * Since: 4.2
  */
@@ -644,7 +644,7 @@ build_node_path (GdaTree *tree, GdaTreeNode *node, GArray *array)
  *
  * Locates a #GdaTreeNode using the @tree_path path.
  *
- * Returns: the requested #GdaTreeNode pointer, or %NULL if not found
+ * Returns: (transfer none): the requested #GdaTreeNode pointer, or %NULL if not found
  *
  * Since: 4.2
  */
@@ -671,13 +671,13 @@ gda_tree_get_node (GdaTree *tree, const gchar *tree_path, gboolean use_names)
 }
 
 /**
- * gda_tree_get_node_manager
+ * gda_tree_get_node_manager:
  * @tree: a #GdaTree
  * @node: a #GdaTreeNode present in @tree
  *
  * Get the #GdaTreeManager which created @node in @tree
  *
- * Returns: the #GdaTreeManager, or %NULL if @node is not present in @tree
+ * Returns: (transfer none): the #GdaTreeManager, or %NULL if @node is not present in @tree
  *
  * Since: 4.2
  */
@@ -851,7 +851,7 @@ split_indexed_path (const gchar *path, gboolean *out_error)
 }
 
 /**
- * gda_tree_set_attribute
+ * gda_tree_set_attribute:
  * @tree: a #GdaTree object
  * @attribute: attribute name
  * @value: a #GValue, or %NULL

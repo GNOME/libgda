@@ -1,6 +1,6 @@
 /* GNOME DB library
  *
- * Copyright (C) 1999 - 2009 The Free Software Foundation
+ * Copyright (C) 1999 - 2010 The Free Software Foundation
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -297,11 +297,11 @@ gdaui_combo_finalize (GObject *object)
 }
 
 /**
- * gdaui_combo_new
+ * gdaui_combo_new:
  *
  * Create a new GdauiCombo widget.
  *
- * Returns: the newly-created widget.
+ * Returns: (transfer full): the newly-created widget.
  *
  * Since: 4.2
  */
@@ -316,7 +316,7 @@ gdaui_combo_new ()
 }
 
 /**
- * gdaui_combo_new_with_model
+ * gdaui_combo_new_with_model:
  * @model: a #GdaDataModel object.
  * @n_cols: number of columns in the model to be shown
  * @cols_index: an array of columns to be shown, its size must be @n_cols
@@ -324,7 +324,7 @@ gdaui_combo_new ()
  * Create a new GdauiCombo widget with a model. See gdaui_combo_set_model() for
  * more information about the @n_cols and @cols_index usage.
  *
- * Returns: the newly-created widget.
+ * Returns: (transfer full): the newly-created widget.
  *
  * Since: 4.2
  */
@@ -345,18 +345,18 @@ static void cell_layout_data_func (GtkCellLayout *cell_layout, GtkCellRenderer *
 				   GtkTreeModel *tree_model, GtkTreeIter *iter, GdauiCombo *combo);
 
 /**
- * gdaui_combo_set_model
+ * gdaui_combo_set_model:
  * @combo: a #GdauiCombo widget.
  * @model: a #GdaDataModel object.
  * @n_cols: number of columns in the model to be shown
- * @cols_index: an array of columns to be shown, its size must be @n_cols
+ * @cols_index: (array length=n_cols): an array of columns to be shown, its size must be @n_cols
  *
  * Makes @combo display data stored in @model (makes the
  * combo widget refresh its list of values and display the values contained
  * in the model). A NULL @model will make the combo empty
  * and disassociate the previous model, if any.
  *
- * if @n_cols is 0, then all the columns of @model will be displayed in @combo.
+ * if @n_cols is %0, then all the columns of @model will be displayed in @combo.
  *
  * Since: 4.2
  */
@@ -625,7 +625,7 @@ _gdaui_combo_get_selected_ext (GdauiCombo *combo, gint n_cols, gint *cols_index)
 }
 
 /**
- * gdaui_combo_add_null
+ * gdaui_combo_add_null:
  * @combo: a #GdauiCombo widget
  * @add_null: set to %TRUE to add a NULL value to the combo box
  *
@@ -643,7 +643,7 @@ gdaui_combo_add_null (GdauiCombo *combo, gboolean add_null)
 }
 
 /**
- * gdaui_combo_is_null_selected
+ * gdaui_combo_is_null_selected:
  * @combo: a #GdauiCombo widget
  *
  * Tell if the currently selected entry represents the "undefined choice" entry.

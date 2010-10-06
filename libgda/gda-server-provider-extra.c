@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2005 - 2008 The GNOME Foundation.
+ * Copyright (C) 2005 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -36,19 +36,19 @@
 #include <libgda/handlers/gda-handler-type.h>
 
 /**
- * gda_server_provider_internal_get_parser
+ * gda_server_provider_internal_get_parser:
  * @prov: a #GdaServerProvider
  *
  * This is a factory method to get a unique instance of a #GdaSqlParser object
  * for each #GdaServerProvider object
- * Don't unref() it.
+ * Don't unref it.
  *
- * Returns: a #GdaSqlParser
+ * Returns: (transfer none): a #GdaSqlParser
  */
 GdaSqlParser *
 gda_server_provider_internal_get_parser (GdaServerProvider *prov)
 {
-	
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
 	if (prov->priv->parser)
 		return prov->priv->parser;
 	prov->priv->parser = gda_server_provider_create_parser (prov, NULL);
@@ -58,15 +58,15 @@ gda_server_provider_internal_get_parser (GdaServerProvider *prov)
 }
 
 /**
- * gda_server_provider_perform_operation_default
+ * gda_server_provider_perform_operation_default:
  * @provider: a #GdaServerProvider object
- * @cnc: a #GdaConnection object which will be used to perform an action, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object which will be used to perform an action, or %NULL
  * @op: a #GdaServerOperation object
  * @error: a place to store an error, or %NULL
  *
  * Performs the operation described by @op, using the SQL from the rendering of the operation
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaConnection *cnc,
@@ -98,15 +98,15 @@ gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaC
 }
 
 /**
- * gda_server_provider_get_data_handler_default
+ * gda_server_provider_get_data_handler_default:
  * @provider: a server provider.
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @type: a #GType
  * @dbms_type: a DBMS type definition
  *
  * Provides the implementation when the default Libgda's data handlers must be used
  * 
- * Returns: a #GdaDataHandler, or %NULL
+ * Returns: (transfer none): a #GdaDataHandler, or %NULL
  */
 GdaDataHandler *
 gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaConnection *cnc,
@@ -206,9 +206,14 @@ param_to_null_foreach (GdaSqlAnyPart *part, gpointer data, GError **error)
 }
 
 /**
- * gda_select_alter_select_for_empty
+ * gda_select_alter_select_for_empty:
+ * @stmt: a SELECT #GdaStatement
+ * @error: (allow-none): a place to store errors, or %NULL
  *
- * Returns: a new #GdaStatement
+ * Creates a new #GdaStatement, selecting the same data as @stmt, but which always returns an
+ * empty (no row) data model. This is use dy database providers' implementations.
+ *
+ * Returns: (transfer full): a new #GdaStatement
  */
 GdaStatement *
 gda_select_alter_select_for_empty (GdaStatement *stmt, GError **error)
@@ -255,8 +260,8 @@ gda_select_alter_select_for_empty (GdaStatement *stmt, GError **error)
 }
 
 /**
- * gda_server_provider_get_schema_nb_columns
- * @schema:
+ * gda_server_provider_get_schema_nb_columns:
+ * @schema: a #GdaConnectionSchema
  *
  * Returns: the number of columns the #GdaDataModel for the requested schema
  * must have
@@ -468,13 +473,13 @@ schema_get_spec (GdaConnectionSchema schema)
 }
 
 /**
- * gda_server_provider_init_schema_model
+ * gda_server_provider_init_schema_model:
  * @model: a #GdaDataModel
  * @schema: a #GdaConnectionSchema
  *
  * Sets the column attributes of @model for the requested schema
  *
- * Returns: TRUE if there was no error
+ * Returns: %TRUE if there was no error
  *
  * Deprecated: 4.2: This was a leftover from the pre 4.0 area
  */
@@ -504,14 +509,14 @@ gda_server_provider_init_schema_model (GdaDataModel *model, GdaConnectionSchema 
 }
 
 /**
- * gda_server_provider_test_schema_model
+ * gda_server_provider_test_schema_model:
  * @model: a #GdaDataModel to test
  * @schema:
  * @error:
  *
  * Test that the structure of @model is correct in regard with @schema
  *
- * Returns: TRUE if @model has the correct structure
+ * Returns: %TRUE if @model has the correct structure
  *
  * Deprecated: 4.2: This was a leftover from the pre 4.0 area
  */
@@ -594,7 +599,7 @@ gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh
 }
 
 /**
- * gda_server_provider_find_file
+ * gda_server_provider_find_file:
  * @prov: a #GdaServerProvider
  * @inst_dir: directory where @prov is installed
  * @filename: name of the file to find
@@ -602,7 +607,7 @@ gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh
  * Finds the location of a @filename. This function should only be used by database provider's
  * implementations
  *
- * Returns: the complete path to @filename, or %NULL if not found
+ * Returns: (transfer full): the complete path to @filename, or %NULL if not found
  */
 gchar *
 gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename)
@@ -636,7 +641,7 @@ gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, c
 }
 
 /**
- * gda_server_provider_load_file_contents
+ * gda_server_provider_load_file_contents:
  * @inst_dir: directory where the database provider has been installed
  * @data_dir: DATA directory to look for ($prefix/share)
  * @filename: name of the file to load
@@ -645,7 +650,7 @@ gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, c
  * This function should only be used by database provider's
  * implementations
  *
- * Returns: a new string containing @filename's contents, or %NULL if not found or if an error occurred
+ * Returns: (transfer full): a new string containing @filename's contents, or %NULL if not found or if an error occurred
  */
 gchar *
 gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data_dir, const gchar *filename)

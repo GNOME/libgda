@@ -1,6 +1,6 @@
 /* gdaui-entry-combo.c
  *
- * Copyright (C) 2003 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2003 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -214,7 +214,7 @@ gdaui_entry_combo_init (GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_new
+ * gdaui_entry_combo_new:
  * @paramlist: a #GdauiSet object
  * @source: a #GdauiSetSource structure, part of @paramlist
  *
@@ -224,7 +224,7 @@ gdaui_entry_combo_init (GdauiEntryCombo *combo)
  * The widget allows the value setting of one or more #GdaHolder objects
  * (one for each 'source->nodes') while proposing potentially "more readable" choices.
  * 
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  */
 GtkWidget *
 gdaui_entry_combo_new (GdauiSet *paramlist, GdauiSetSource *source)
@@ -448,9 +448,9 @@ combo_contents_changed_cb (GdauiCombo *entry, GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_set_values
+ * gdaui_entry_combo_set_values:
  * @combo: a #GdauiEntryCombo widet
- * @values: a list of #GValue values, or %NULL
+ * @values: (element-type GValue): a list of #GValue values, or %NULL
  *
  * Sets the values of @combo to the specified ones. None of the
  * values provided in the list is modified.
@@ -463,7 +463,7 @@ combo_contents_changed_cb (GdauiCombo *entry, GdauiEntryCombo *combo)
  *
  * If @values is %NULL, then the entry itself is set to NULL;
  *
- * Returns: TRUE if no error occurred.
+ * Returns: %TRUE if no error occurred.
  */
 gboolean
 gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
@@ -542,14 +542,14 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 }
 
 /**
- * gdaui_entry_combo_get_values
+ * gdaui_entry_combo_get_values:
  * @combo: a #GdauiEntryCombo widet
  *
  * Get the values stored within @combo. The returned values are the ones
  * within @combo, so they must not be freed afterwards, however the returned
  * list has to be freed afterwards.
  *
- * Returns: a new list of values
+ * Returns: (transfer container) (element-type GValue): a new list of values
  */
 GSList *
 gdaui_entry_combo_get_values (GdauiEntryCombo *combo)
@@ -568,13 +568,13 @@ gdaui_entry_combo_get_values (GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_get_all_values
+ * gdaui_entry_combo_get_all_values:
  * @combo: a #GdauiEntryCombo widet
  *
  * Get a list of all the values in @combo's data model's selected row. The list
  * must be freed by the caller.
  *
- * Returns: a new list of values
+ * Returns: (transfer container) (element-type GValue): a new list of values
  */
 GSList *
 gdaui_entry_combo_get_all_values (GdauiEntryCombo *combo)
@@ -586,9 +586,9 @@ gdaui_entry_combo_get_all_values (GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_set_reference_values
+ * gdaui_entry_combo_set_reference_values:
  * @combo: a #GdauiEntryCombo widet
- * @values: a list of #GValue values
+ * @values: (element-type GValue): a list of #GValue values
  *
  * Sets the original values of @combo to the specified ones. None of the
  * values provided in the list is modified.
@@ -654,13 +654,13 @@ gdaui_entry_combo_set_reference_values (GdauiEntryCombo *combo, GSList *values)
 }
 
 /**
- * gdaui_entry_combo_get_reference_values
+ * gdaui_entry_combo_get_reference_values:
  * @combo: a #GdauiEntryCombo widet
  *
  * Get the original values stored within @combo. The returned values are the ones
  * within @combo, so they must not be freed afterwards; the list has to be freed afterwards.
  *
- * Returns: a new list of values
+ * Returns: (transfer container) (element-type GValue): a new list of values
  */
 GSList *
 gdaui_entry_combo_get_reference_values (GdauiEntryCombo *combo)
@@ -691,9 +691,9 @@ gdaui_entry_combo_get_reference_values (GdauiEntryCombo *combo)
 }
 
 /**
- * gdaui_entry_combo_set_default_values
+ * gdaui_entry_combo_set_default_values:
  * @combo: a #GdauiEntryCombo widet
- * @values: a list of #GValue values
+ * @values: (element-type GValue): a list of #GValue values
  *
  * Sets the default values of @combo to the specified ones. None of the
  * values provided in the list is modified.

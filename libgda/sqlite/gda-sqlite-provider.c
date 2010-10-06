@@ -57,6 +57,7 @@
 
 #define FILE_EXTENSION ".db"
 static GStaticRecMutex cnc_mutex = G_STATIC_REC_MUTEX_INIT;
+static gchar *get_table_nth_column_name (GdaConnection *cnc, const gchar *table_name, gint pos);
 
 /* TMP */
 typedef struct {
@@ -64,11 +65,12 @@ typedef struct {
 	gchar   *db;
 	gchar   *table;
 	gchar   *column;
+	gboolean free_column; /* set to %TRUE if @column has been dynamically allocated */
 	GdaBlob *blob;
 } PendingBlob;
 
 static PendingBlob*
-make_pending_blob (GdaStatement *stmt, GdaHolder *holder, GError **error)
+make_pending_blob (GdaConnection *cnc, GdaStatement *stmt, GdaHolder *holder, GError **error)
 {
 	PendingBlob *pb = NULL;
 	GdaSqlStatement *sqlst;
@@ -111,16 +113,37 @@ make_pending_blob (GdaStatement *stmt, GdaHolder *holder, GError **error)
 		}
 		GdaSqlField *field;
 		field = g_slist_nth_data (istmt->fields_list, pos);
-		if (!field) {
+		if (field) {
+			pb = g_new0 (PendingBlob, 1);
+			pb->table = istmt->table->table_name;
+			pb->column = field->field_name;
+			pb->free_column = FALSE;
+		}
+		else if (istmt->fields_list) {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-				     _("Parameter '%s' does not correspond to a table's column"),
+				     _("No column name to associate to parameter '%s'"),
 				     hname);
 			goto out;
 		}
-		pb = g_new0 (PendingBlob, 1);
-		pb->table = istmt->table->table_name;
-		pb->column = field->field_name;
+		else {
+			gchar *fname;
+			fname = get_table_nth_column_name (cnc, istmt->table->table_name, pos);
+			if (fname) {
+				pb = g_new0 (PendingBlob, 1);
+				pb->table = istmt->table->table_name;
+				pb->column = fname;
+				pb->free_column = TRUE;
+			}
+			else {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+					     _("No column name to associate to parameter '%s'"),
+					     hname);
+				goto out;
+			}
+		}
+	
 		break;
 	}
 	case GDA_SQL_STATEMENT_UPDATE: {
@@ -148,16 +171,36 @@ make_pending_blob (GdaStatement *stmt, GdaHolder *holder, GError **error)
 		}
 		GdaSqlField *field;
 		field = g_slist_nth_data (ustmt->fields_list, pos);
-		if (!field) {
+		if (field) {
+			pb = g_new0 (PendingBlob, 1);
+			pb->table = ustmt->table->table_name;
+			pb->column = field->field_name;
+			pb->free_column = FALSE;
+		}
+		if (ustmt->fields_list) {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-				     _("Parameter '%s' does not correspond to a table's column"),
+				     _("No column name to associate to parameter '%s'"),
 				     hname);
 			goto out;
 		}
-		pb = g_new0 (PendingBlob, 1);
-		pb->table = ustmt->table->table_name;
-		pb->column = field->field_name;
+		else {
+			gchar *fname;
+			fname = get_table_nth_column_name (cnc, ustmt->table->table_name, pos);
+			if (fname) {
+				pb = g_new0 (PendingBlob, 1);
+				pb->table = ustmt->table->table_name;
+				pb->column = fname;
+				pb->free_column = TRUE;
+			}
+			else {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+					     _("No column name to associate to parameter '%s'"),
+					     hname);
+				goto out;
+			}
+		}
 		break;
 	}
 	default:
@@ -185,6 +228,8 @@ pending_blobs_free_list (GSList *blist)
 		PendingBlob *pb = (PendingBlob*) l->data;
 		if (pb->stmt)
 			gda_sql_statement_free (pb->stmt);
+		if (pb->free_column)
+			g_free (pb->column);
 		g_free (pb);
 	}
 
@@ -339,6 +384,29 @@ static gchar *internal_sql[] = {
 	"ROLLBACK TRANSACTION",
 	"ROLLBACK TRANSACTION ##name::string"
 };
+
+static gchar *
+get_table_nth_column_name (GdaConnection *cnc, const gchar *table_name, gint pos)
+{
+	static GdaSet *params_set = NULL;
+	GdaDataModel *model;
+	gchar *fname = NULL;
+
+	g_assert (table_name);
+	params_set = gda_set_new_inline (1, "tblname", G_TYPE_STRING, table_name);
+	model = gda_connection_statement_execute_select (cnc,
+							 internal_stmt[INTERNAL_PRAGMA_TABLE_INFO],
+							 params_set, NULL);
+	g_object_unref (params_set);
+	if (model) {
+		const GValue *cvalue;
+		cvalue = gda_data_model_get_value_at (model, 1, pos, NULL);
+		if (cvalue)
+			fname = g_value_dup_string (cvalue);
+		g_object_unref (model);
+	}
+	return fname;
+}
 
 /*
  * GdaSqliteProvider class implementation
@@ -2631,7 +2699,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 			PendingBlob *pb;
 			GError *lerror = NULL;
-			pb = make_pending_blob (stmt, h, &lerror);
+			pb = make_pending_blob (cnc, stmt, h, &lerror);
 			if (!pb) {
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, 
@@ -2751,6 +2819,32 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	else {
                 int status, changes;
                 sqlite3 *handle;
+		gboolean transaction_started = FALSE;
+
+		if (blobs_list) {
+			GError *lerror = NULL;
+			if (! _gda_sqlite_check_transaction_started (cdata->gdacnc,
+								     &transaction_started, &lerror)) {
+				const gchar *errmsg = _("Could not start transaction to create BLOB");
+				event = gda_connection_point_available_event (cnc,
+									      GDA_CONNECTION_EVENT_ERROR);
+				if (lerror) {
+					gda_connection_event_set_description (event,
+									      lerror && lerror->message ?
+									      lerror->message : errmsg);
+					g_propagate_error (error, lerror);
+				}
+				else {
+					gda_connection_event_set_description (event, errmsg);
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, "%s", errmsg);
+				}
+				if (new_ps)
+					g_object_unref (ps);
+				pending_blobs_free_list (blobs_list);
+				return NULL;
+			}
+		}
 
                 /* actually execute the command */
                 handle = SQLITE3_CALL (sqlite3_db_handle) (ps->sqlite_stmt);
@@ -2769,6 +2863,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				if (new_ps)
 					g_object_unref (ps);
 				pending_blobs_free_list (blobs_list);
+				if (transaction_started)
+					gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
 				return NULL;
                         }
 			else {
@@ -2778,6 +2874,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				if (new_ps)
 					g_object_unref (ps);
 				pending_blobs_free_list (blobs_list);
+				if (transaction_started)
+					gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
 				return NULL;
 			}
                 }
@@ -2789,8 +2887,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 				if (new_ps)
 					g_object_unref (ps);
+				if (transaction_started)
+					gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
 				return NULL;
 			}
+			else if (transaction_started)
+				gda_connection_commit_transaction (cdata->gdacnc, NULL, NULL);
 			
 			gchar *str = NULL;
 			gboolean count_changes = FALSE;

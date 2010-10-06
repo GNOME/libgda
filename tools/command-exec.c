@@ -117,6 +117,11 @@ gda_internal_command_exec_result_free (GdaInternalCommandResult *res)
 	case GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL:
 		if (res->u.model)
 			g_object_unref (res->u.model);
+		if (! res->was_in_transaction_before_exec &&
+		    res->cnc &&
+		    gda_connection_get_transaction_status (res->cnc))
+			gda_connection_rollback_transaction (res->cnc, NULL, NULL);
+		    
 		break;
 	case GDA_INTERNAL_COMMAND_RESULT_SET:
 		if (res->u.set)
@@ -138,6 +143,8 @@ gda_internal_command_exec_result_free (GdaInternalCommandResult *res)
 	default:
 		break;
 	}
+	if (res->cnc)
+		g_object_unref (res->cnc);
 	g_free (res);
 }
 

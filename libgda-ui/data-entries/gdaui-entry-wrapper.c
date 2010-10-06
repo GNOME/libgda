@@ -1,6 +1,6 @@
 /* gdaui-entry-wrapper.c
  *
- * Copyright (C) 2003 - 2009 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -331,7 +331,7 @@ gdaui_entry_wrapper_get_property (GObject *object,
 }
 
 /**
- * gdaui_entry_wrapper_contents_changed
+ * gdaui_entry_wrapper_contents_changed:
  * @mgwrap: a #GdauiEntryWrapper widget
  *
  * Signals to @gwrap that the entry has changed
@@ -345,7 +345,7 @@ gdaui_entry_wrapper_contents_changed (GdauiEntryWrapper *mgwrap)
 }
 
 /**
- * gdaui_entry_wrapper_contents_activated
+ * gdaui_entry_wrapper_contents_activated:
  * @mgwrap: a #GdauiEntryWrapper widget
  *
  * Signals to @gwrap that the entry has been activated (that is the user

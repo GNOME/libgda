@@ -132,13 +132,13 @@ gdaui_data_proxy_info_init (GdauiDataProxyInfo *wid)
 }
 
 /**
- * gdaui_data_proxy_info_new
+ * gdaui_data_proxy_info_new:
  * @data_proxy: a widget implementing the #GdauiDataProxy interface
  * @flags: OR'ed values, specifying what to display in the new widget
  *
  * Creates a new #GdauiDataProxyInfo widget suitable to display information about @data_proxy
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */

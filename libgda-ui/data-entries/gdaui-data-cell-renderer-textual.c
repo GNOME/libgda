@@ -554,7 +554,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 }
 
 /**
- * gdaui_data_cell_renderer_textual_new
+ * gdaui_data_cell_renderer_textual_new:
  * @dh: a #GdaDataHandler object, or %NULL
  * @type: the #GType being edited
  * @options: options as a string
@@ -567,7 +567,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
  * value in the model, thus rendering a different string in each row
  * of the #GtkTreeView
  *
- * Return value: the new cell renderer
+ * Return value: (transfer full): the new cell renderer
  **/
 GtkCellRenderer *
 gdaui_data_cell_renderer_textual_new (GdaDataHandler *dh, GType type, const gchar *options)

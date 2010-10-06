@@ -450,7 +450,7 @@ gda_set_new_read_only (GSList *holders)
  *
  * Creates a new #GdaSet object, copy of @set
  *
- * Returns: a new #GdaSet object
+ * Returns: (transfer full): a new #GdaSet object
  */
 GdaSet *
 gda_set_copy (GdaSet *set)
@@ -483,7 +483,7 @@ gda_set_copy (GdaSet *set)
  * to use an unsupported type will result in a warning, and the returned value holder holding a safe default
  * value.
  *
- * Returns: a new #GdaSet object
+ * Returns: (transfer full): a new #GdaSet object
  */ 
 GdaSet *
 gda_set_new_inline (gint nb, ...)
@@ -580,13 +580,13 @@ gda_set_new_inline (gint nb, ...)
 /**
  * gda_set_set_holder_value:
  * @set: a #GdaSet object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  * @holder_id: the ID of the holder to set the value
  * @...: value, of the correct type, depending on the requested holder's type (not NULL)
  *
  * Set the value of the #GdaHolder which ID is @holder_id to a specified value
  *
- * Returns: TRUE if no error occurred and the value was set correctly
+ * Returns: %TRUE if no error occurred and the value was set correctly
  */
 gboolean
 gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, ...)
@@ -665,7 +665,7 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
  *
  * Get the value of the #GdaHolder which ID is @holder_id
  *
- * Returns: the requested GValue, or %NULL (see gda_holder_get_value())
+ * Returns: (transfer none): the requested GValue, or %NULL (see gda_holder_get_value())
  */
 const GValue *
 gda_set_get_holder_value (GdaSet *set, const gchar *holder_id)
@@ -708,12 +708,12 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
 /**
  * gda_set_new_from_spec_string:
  * @xml_spec: a string
- * @error: a place to store the error, or %NULL
+ * @error: (allow-none): a place to store the error, or %NULL
  *
  * Creates a new #GdaSet object from the @xml_spec
  * specifications
  *
- * Returns: a new object, or %NULL if an error occurred
+ * Returns: (transfer full): a new object, or %NULL if an error occurred
  */
 GdaSet *
 gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
@@ -800,12 +800,12 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 /**
  * gda_set_new_from_spec_node:
  * @xml_spec: a #xmlNodePtr for a &lt;holders&gt; tag
- * @error: a place to store the error, or %NULL
+ * @error: (allow-none): a place to store the error, or %NULL
  *
  * Creates a new #GdaSet object from the @xml_spec
  * specifications
  *
- * Returns: a new object, or %NULL if an error occurred
+ * Returns: (transfer full): a new object, or %NULL if an error occurred
  */
 GdaSet *
 gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
@@ -1390,7 +1390,7 @@ set_remove_source (GdaSet *set, GdaSetSource *source)
 /**
  * gda_set_is_valid:
  * @set: a #GdaSet object
- * @error: a place to store validation errors, or %NULL
+ * @error: (allow-none): a place to store validation errors, or %NULL
  *
  * This method tells if all @set's #GdaHolder objects are valid, and if
  * they represent a valid combination of values, as defined by rules

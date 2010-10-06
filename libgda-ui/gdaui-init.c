@@ -1,5 +1,5 @@
 /* GNOME DB library
- * Copyright (C) 1999 - 2009 The GNOME Foundation.
+ * Copyright (C) 1999 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -48,7 +48,7 @@ GHashTable *gdaui_plugins_hash = NULL; /* key = plugin name, value = GdauiPlugin
 
 
 /**
- * gdaui_init
+ * gdaui_init:
  *
  * Initialization of the libgda-ui library, must be called before any usage of the library.
  *
@@ -89,7 +89,7 @@ gdaui_init (void)
 }
 
 /**
- * gdaui_new_data_entry
+ * gdaui_new_data_entry:
  * @type: a #GType
  * @plugin_name: the name of an entry plugin, or %NULL
  *
@@ -100,7 +100,7 @@ gdaui_init (void)
  * @plugin_name format is interpreted as two parts: &lt;plugin name&gt;:&lt;plugin options&gt;, and
  * if the plugins has no option, then the ":&lt;plugin options&gt;" part may be omitted.
  * 
- * Returns: a new #GdauiDataEntry widget, _NEVER_ %NULL
+ * Returns: (transfer full): a new #GdauiDataEntry widget, _NEVER_ %NULL
  */
 GdauiDataEntry *
 gdaui_new_data_entry (GType type, const gchar *plugin_name)
@@ -235,7 +235,7 @@ _gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
 }
 
 /**
- * gdaui_plugin_declare
+ * gdaui_plugin_declare:
  * @plugin: a pointer to a structure filled to describe the new plugin
  *
  * Adds a new plugin which will be used by the forms and grids. The new plugin, as

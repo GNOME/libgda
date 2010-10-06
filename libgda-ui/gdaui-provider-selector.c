@@ -1,5 +1,5 @@
 /* GNOME DB library
- * Copyright (C) 1999 - 2009 The GNOME Foundation.
+ * Copyright (C) 1999 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -122,11 +122,11 @@ gdaui_provider_selector_get_type (void)
 }
 
 /**
- * gdaui_provider_selector_new
+ * gdaui_provider_selector_new:
  *
  * Create a new #GdauiProviderSelector widget.
  *
- * Returns: the newly created widget.
+ * Returns: (transfer full): the newly created widget.
  */
 GtkWidget *
 gdaui_provider_selector_new (void)
@@ -138,12 +138,12 @@ gdaui_provider_selector_new (void)
 }
 
 /**
- * gdaui_provider_selector_get_provider
+ * gdaui_provider_selector_get_provider:
  * @selector: a #GdauiProviderSelector widget
  *
  * Get the selected provider.
  *
- * Returns: the selected provider, or %NULL if no provider is selected
+ * Returns: (transfer none): the selected provider, or %NULL if no provider is selected
  *
  * Since: 4.2
  */
@@ -165,13 +165,13 @@ gdaui_provider_selector_get_provider (GdauiProviderSelector *selector)
 }
 
 /**
- * gdaui_provider_selector_set_provider
+ * gdaui_provider_selector_set_provider:
  * @selector: a #GdauiProviderSelector widget
- * @provider: the provider to be selected, or %NULL for the default (SQLite)
+ * @provider: (allow-none): the provider to be selected, or %NULL for the default (SQLite)
  *
  * Forces @selector to be set on @provider
  *
- * Returns: TRUE if @provider has been selected
+ * Returns: %TRUE if @provider has been selected
  *
  * Since: 4.2
  */
@@ -198,12 +198,12 @@ gdaui_provider_selector_set_provider (GdauiProviderSelector *selector, const gch
 }
 
 /**
- * gdaui_provider_selector_get_provider_obj
+ * gdaui_provider_selector_get_provider_obj:
  * @selector: a #GdauiProviderSelector widget
  *
  * Get the selected provider as a #GdaServerProvider object
  *
- * Returns: a new #GdaServerProvider or %NULL if an error occurred
+ * Returns: (transfer none): a #GdaServerProvider or %NULL if an error occurred
  *
  * Since: 4.2
  */

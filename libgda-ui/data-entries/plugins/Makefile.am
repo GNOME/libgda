@@ -34,6 +34,8 @@ plugins_headers = \
 
 libgda_ui_plugins_la_SOURCES = \
 	$(plugins_headers) \
+	gdaui-data-cell-renderer-util.c \
+	gdaui-data-cell-renderer-util.h \
 	common-pict.c \
 	custom-marshal.c \
 	custom-marshal.h \
@@ -45,10 +47,10 @@ libgda_ui_plugins_la_SOURCES = \
 	gdaui-entry-pict.c \
 	$(gcrypt_sources)
 
-libgda_ui_plugins_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_ui_plugins_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_ui_plugins_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGCRYPT_LIBS) \
 	$(LIBGDA_LIBS) \
         $(GTK_LIBS) \

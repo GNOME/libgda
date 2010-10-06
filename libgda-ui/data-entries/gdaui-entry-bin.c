@@ -144,13 +144,13 @@ show (GtkWidget *widget)
 }
 
 /**
- * gdaui_entry_bin_new
+ * gdaui_entry_bin_new:
  * @dh: the data handler to be used by the new widget
  * @type: the requested data type (compatible with @dh)
  *
- * Creates a new widget which is mainly a GtkEntry
+ * Creates a new widget which is mainly a #GtkEntry
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  */
 GtkWidget *
 gdaui_entry_bin_new (GdaDataHandler *dh, GType type)

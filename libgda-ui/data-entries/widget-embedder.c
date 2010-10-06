@@ -417,6 +417,10 @@ widget_embedder_expose (GtkWidget      *widget,
 
 /**
  * widget_embedder_set_valid
+ * @bin: a #WidgetEmbedder
+ * @valid: set to %TRUE for a valid entry
+ *
+ * Changes the validity aspect of @bin
  */
 void
 widget_embedder_set_valid (WidgetEmbedder *bin, gboolean valid)

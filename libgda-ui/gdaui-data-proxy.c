@@ -1,6 +1,6 @@
 /* gdaui-data-widget.c
  *
- * Copyright (C) 2004 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -80,12 +80,12 @@ gdaui_data_proxy_iface_init (gpointer g_class)
 }
 
 /**
- * gdaui_data_proxy_get_proxy
+ * gdaui_data_proxy_get_proxy:
  * @iface: an object which implements the #GdauiDataProxy interface
  *
  * Get a pointer to the #GdaDataProxy being used by @iface
  *
- * Returns: a #GdaDataProxy pointer
+ * Returns: (transfer none): a #GdaDataProxy pointer
  *
  * Since: 4.2
  */
@@ -101,7 +101,7 @@ gdaui_data_proxy_get_proxy (GdauiDataProxy *iface)
 }
 
 /**
- * gdaui_data_proxy_column_set_editable
+ * gdaui_data_proxy_column_set_editable:
  * @iface: an object which implements the #GdauiDataProxy interface
  * @column: column number of the data
  * @editable: set to %TRUE to make the column editable
@@ -121,10 +121,10 @@ gdaui_data_proxy_column_set_editable (GdauiDataProxy *iface, gint column, gboole
 }
 
 /**
- * gdaui_data_proxy_column_show_actions
+ * gdaui_data_proxy_column_show_actions:
  * @iface: an object which implements the #GdauiDataProxy interface
  * @column: column number of the data, or -1 to apply the setting to all the columns
- * @show_actions:
+ * @show_actions: set to %TRUE if the actions menu must be shown
  * 
  * Sets if the data entry in the @iface widget at @column (in the data model @iface operates on) must show its
  * actions menu or not.
@@ -141,7 +141,7 @@ gdaui_data_proxy_column_show_actions (GdauiDataProxy *iface, gint column, gboole
 }
 
 /**
- * gdaui_data_proxy_get_actions_group
+ * gdaui_data_proxy_get_actions_group:
  * @iface: an object which implements the #GdauiDataProxy interface
  *
  * Each widget imlplementing the #GdauiDataProxy interface provides actions. Actions can be triggered
@@ -157,7 +157,7 @@ gdaui_data_proxy_column_show_actions (GdauiDataProxy *iface, gint column, gboole
  *     "ActionNextChunck", "ActionLastChunck".</para></listitem>
  * <listitem><para>Filtering: "ActionFilter"</para></listitem></itemizedlist>
  * 
- * Returns: the #GtkActionGroup with all the possible actions on the widget.
+ * Returns: (transfer none): the #GtkActionGroup with all the possible actions on the widget.
  *
  * Since: 4.2
  */
@@ -172,7 +172,7 @@ gdaui_data_proxy_get_actions_group (GdauiDataProxy *iface)
 }
 
 /**
- * gdaui_data_proxy_perform_action
+ * gdaui_data_proxy_perform_action:
  * @iface: an object which implements the #GdauiDataProxy interface
  * @action: a #GdauiAction action
  *
@@ -248,7 +248,7 @@ gdaui_data_proxy_perform_action (GdauiDataProxy *iface, GdauiAction action)
 }
 
 /**
- * gdaui_data_proxy_set_write_mode
+ * gdaui_data_proxy_set_write_mode:
  * @iface: an object which implements the #GdauiDataProxy interface
  * @mode: the requested #GdauiDataProxyWriteMode mode
  *
@@ -271,7 +271,7 @@ gdaui_data_proxy_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode 
 }
 
 /**
- * gdaui_data_proxy_get_write_mode
+ * gdaui_data_proxy_get_write_mode:
  * @iface: an object which implements the #GdauiDataProxy interface
  *
  * Get the way the modifications stored in the #GdaDataProxy used internally by @iface are written back to

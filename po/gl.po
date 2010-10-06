@@ -6,19 +6,20 @@
 #
 # Proxecto Trasno - Adaptación do software libre á lingua galega:  Se desexas
 # colaborar connosco, podes atopar máis información en http://trasno.net
+# Fran Diéguez <frandieguez@ubuntu.com>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-09 18:30+0200\n"
-"PO-Revision-Date: 2010-03-14 14:43+0100\n"
-"Last-Translator: Leandro Regueiro <leandro.regueiro@gmail.com>\n"
-"Language-Team: Galician <proxecto@trasno.net>\n"
+"PO-Revision-Date: 2010-09-21 09:34+0200\n"
+"Last-Translator: Fran Diéguez <frandieguez@ubuntu.com>\n"
+"Language-Team: Galician <gnome-gl-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. title
 #: ../control-center/dsn-config.c:125 ../control-center/main.c:425
@@ -57,7 +58,6 @@ msgid "Data Source Properties"
 msgstr "Propiedades da fonte de datos"
 
 #: ../control-center/dsn-properties-dialog.c:111
-#, fuzzy
 msgid "Test"
 msgstr "Proba"
 
@@ -78,9 +78,9 @@ msgstr ""
 "todo o sistema e non ten permisos para cambiala."
 
 #: ../control-center/dsn-properties-dialog.c:209
-#, fuzzy, c-format
+#, c-format
 msgid "Login for %s"
-msgstr "<big><b>Inicio de sesión para %s</b></big>"
+msgstr "Inicio de sesión para %s"
 
 #: ../control-center/dsn-properties-dialog.c:231
 msgid "Connection successfully opened!"
@@ -97,9 +97,8 @@ msgid "Unknown error"
 msgstr "Erro descoñecido"
 
 #: ../control-center/dsn-properties-dialog.c:282
-#, fuzzy
 msgid "Could not execute browser program"
-msgstr "Non se pode localizar o navegador principal"
+msgstr "Non foi posíbel executar o programa do examinador"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:283
@@ -237,9 +236,8 @@ msgid "Data source name"
 msgstr "Nome da fonte de datos"
 
 #: ../control-center/gdaui-dsn-assistant.c:475
-#, fuzzy
 msgid "System wide data source:"
-msgstr "Exportar datos a código HTML"
+msgstr "Fonte de datos para todo o sistema"
 
 #: ../control-center/gdaui-dsn-assistant.c:485
 msgid "Database type"
@@ -332,9 +330,8 @@ msgid "Data source _name:"
 msgstr "_Nome da fonte de datos:"
 
 #: ../control-center/gdaui-dsn-editor.c:147
-#, fuzzy
 msgid "_System wide data source:"
-msgstr "Exportar datos a código HTML"
+msgstr "Fonte de datos do _sistema"
 
 #: ../control-center/gdaui-dsn-editor.c:158
 msgid "_Provider:"
@@ -419,7 +416,7 @@ msgstr ""
 
 #: ../libgda/gda-batch.c:316
 msgid "Statement could not be found in batch's statements"
-msgstr ""
+msgstr "Non foi posíbel encontrar a declaración nas declaracións batch"
 
 #: ../libgda/gda-batch.c:441
 #, c-format
@@ -442,18 +439,18 @@ msgstr ""
 "un directorio"
 
 #: ../libgda/gda-config.c:832
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed data source name '%s'"
-msgstr "Obter o nome da fonte predeterminada"
+msgstr "O nome da fonte de datos está mal formado «%s»"
 
 #: ../libgda/gda-config.c:876 ../libgda/gda-config.c:965
 msgid "Can't manage system-wide configuration"
-msgstr ""
+msgstr "Non é posíbel xestionar a configuración para todo o sistema"
 
 #: ../libgda/gda-config.c:959 ../libgda-ui/gdaui-login.c:613
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown DSN '%s'"
-msgstr "Elemento descoñecido"
+msgstr "DNS «%s» descoñecido"
 
 #: ../libgda/gda-config.c:1009
 #, c-format
@@ -472,9 +469,9 @@ msgid "Can't load provider: %s"
 msgstr "Non foi posíbel cargar o provedor: %s"
 
 #: ../libgda/gda-config.c:1230
-#, fuzzy, c-format
+#, c-format
 msgid "Can't instantiate provider '%s'"
-msgstr "Engadir provedor de acceso"
+msgstr "Non é posíbel instanciar o fornecedor «%s»"
 
 #: ../libgda/gda-config.c:1274 ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112 ../tools/gda-sql.c:1729
@@ -491,9 +488,8 @@ msgid "Description"
 msgstr "Descrición"
 
 #: ../libgda/gda-config.c:1276
-#, fuzzy
 msgid "DSN parameters"
-msgstr "Parámetros do programa"
+msgstr "Parámetros DSN"
 
 #: ../libgda/gda-config.c:1278
 msgid "File"
@@ -521,9 +517,8 @@ msgid "Error loading provider '%s': %s"
 msgstr "Produciuse un erro ao cargar o provedor '%s': %s"
 
 #: ../libgda/gda-connection.c:291
-#, fuzzy
 msgid "DSN to use"
-msgstr "A portada para usar"
+msgstr "DSN a usar"
 
 #: ../libgda/gda-connection.c:294
 msgid "Connection string to use"
@@ -564,12 +559,16 @@ msgid ""
 "Tells if the connection acts as a thread wrapper around another connection, "
 "making it completely thread safe"
 msgstr ""
+"Comunica se a conexión actúa como un envoltorio dun fío ao redor de outra "
+"conexión, facéndoa segura frente a fíos («thread safe»)"
 
 #: ../libgda/gda-connection.c:343
 msgid ""
 "Make the connection set up a monitoring function in the mainloop to monitor "
 "the wrapped connection"
 msgstr ""
+"Fai que a conexión estabeleza unha función de monitorización no bucle "
+"principal para monitorizar a conexión envolta"
 
 #: ../libgda/gda-connection.c:578 ../libgda/gda-connection.c:606
 #: ../libgda/gda-connection.c:620 ../libgda/gda-connection.c:635
@@ -578,9 +577,9 @@ msgid "Could not set the '%s' property when the connection is opened"
 msgstr "Non foi posíbel definir a propiedade '%s' ao abrir a conexión"
 
 #: ../libgda/gda-connection.c:586
-#, fuzzy, c-format
+#, c-format
 msgid "No DSN named '%s' defined"
-msgstr "Ningún contacto propio definido"
+msgstr "Non hai definido ningún DSN chamado «%s»"
 
 #: ../libgda/gda-connection.c:656
 #, c-format
@@ -591,12 +590,12 @@ msgstr "Non se pode definir a propiedade '%s' unha vez que se abre a conexión"
 #: ../libgda/thread-wrapper/gda-thread-provider.c:428
 #: ../libgda/thread-wrapper/gda-thread-provider.c:513
 msgid "Multi threading is not supported or enabled"
-msgstr ""
+msgstr "O procesado multifío non é compatíbel ou non está activado"
 
 #: ../libgda/gda-connection.c:891
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed data source specification '%s'"
-msgstr "Os datos serializados están formados incorrectamente"
+msgstr "Especificación de orixe de datos «%s» mal formada"
 
 #: ../libgda/gda-connection.c:899 ../libgda/gda-connection.c:1271
 #: ../libgda/gda-connection.c:1273
@@ -611,9 +610,9 @@ msgstr ""
 
 #: ../libgda/gda-connection.c:1037 ../tools/browser/auth-dialog.c:327
 #: ../tools/browser/auth-dialog.c:363 ../tools/gda-sql.c:1300
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed connection string '%s'"
-msgstr "Usar cadea personalizada"
+msgstr "Cadea de conexión «%s» mal formada"
 
 #: ../libgda/gda-connection.c:1043 ../libgda/gda-connection.c:1295
 msgid "No provider specified"
@@ -621,11 +620,11 @@ msgstr "Non se especificou ningún provedor"
 
 #: ../libgda/gda-connection.c:1283 ../libgda/gda-connection.c:1285
 msgid "No DSN or connection string specified"
-msgstr ""
+msgstr "Non se especificou un DSN ou unha cadea de conexión"
 
 #: ../libgda/gda-connection.c:1309
 msgid "Provider does not allow usage from this thread"
-msgstr ""
+msgstr "O fornecedor non permito o uso desde este fío"
 
 #: ../libgda/gda-connection.c:1323
 msgid ""
@@ -636,7 +635,7 @@ msgstr ""
 
 #: ../libgda/gda-connection.c:1939
 msgid "Provider does not support statement preparation"
-msgstr ""
+msgstr "O fornecedor non admite a preparación de declaracións"
 
 #: ../libgda/gda-connection.c:2132 ../libgda/gda-connection.c:2216
 #: ../libgda/gda-connection.c:2286 ../libgda/gda-meta-store.c:659
@@ -665,7 +664,7 @@ msgstr "Non foi posíbel atopar a tarefa %u"
 #: ../providers/postgres/gda-postgres-provider.c:844
 #: ../providers/web/gda-web-provider.c:671
 msgid "Provider does not support asynchronous server operation"
-msgstr ""
+msgstr "O fornecedor non admite operacións asíncronas de servidor"
 
 #: ../libgda/gda-connection.c:2492 ../libgda/gda-connection.c:2507
 msgid "Statement is a selection statement"
@@ -681,15 +680,13 @@ msgid "Invalid argument"
 msgstr "O argumento non é válido"
 
 #: ../libgda/gda-connection.c:3177
-#, fuzzy, c-format
+#, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
-msgstr ""
-"Non foi posible engadir o soporte, faltan argumentos ou estes son incorrectos"
+msgstr "Faltan argumentos ou son erróneos para a táboa «%s»: %s"
 
 #: ../libgda/gda-connection.c:3932
-#, fuzzy
 msgid "Meta update error"
-msgstr "¡Non se pode determinar o disco!"
+msgstr "Erro na metaactualización"
 
 #: ../libgda/gda-connection.c:4495
 msgid "Wrong filter arguments"
@@ -706,9 +703,8 @@ msgstr ""
 
 #: ../libgda/gda-connection.c:5139
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:234
-#, fuzzy
 msgid "Internal error: invalid provider handle"
-msgstr "Erro interno: UID nun formato non válido: %s"
+msgstr "Erro interno: xestión do fornecedor non válida"
 
 #: ../libgda/gda-data-access-wrapper.c:486
 #: ../libgda/gda-data-meta-wrapper.c:577 ../libgda/gda-data-model-array.c:544
@@ -720,14 +716,13 @@ msgstr "Erro interno: UID nun formato non válido: %s"
 #: ../libgda/gda-data-select.c:1196 ../libgda/gda-data-select.c:1694
 #: ../libgda/gda-data-select.c:2589 ../libgda/gda-data-select.c:2656
 #: ../libgda-ui/gdaui-combo.c:789
-#, fuzzy, c-format
+#, c-format
 msgid "Column %d out of range (0-%d)"
-msgstr "Valor fóra de intervalo.\n"
+msgstr "A columna %d está fora de rango (0 - %d)"
 
 #: ../libgda/gda-data-access-wrapper.c:519
-#, fuzzy
 msgid "Can't set iterator's position"
-msgstr "Non se pode configurar PAM_TTY=%s"
+msgstr "Non se pode estabelecer a posición do iterador"
 
 #: ../libgda/gda-data-access-wrapper.c:592
 msgid "Can't access data"
@@ -758,13 +753,13 @@ msgid "Data models to compare don't have the same number of columns"
 msgstr "Os modelos de datos a comparar non teñen o mesmo número de columnas"
 
 #: ../libgda/gda-data-comparator.c:472
-#, fuzzy, c-format
+#, c-format
 msgid "Type mismatch for column %d: '%s' and '%s'"
-msgstr "Controla a visibilidade da columna de tipo do xestor de chaves."
+msgstr "O tipo non coincide para a columna %d: «%s» e «%s»"
 
 #: ../libgda/gda-data-comparator.c:561 ../libgda/gda-data-comparator.c:597
 msgid "Differences computation cancelled on signal handling"
-msgstr ""
+msgstr "Cancelouse a computación das diferenzas ao xestionar un sinal"
 
 #: ../libgda/gda-data-model-array.c:170
 msgid "Whether data model can be modified"
@@ -776,9 +771,9 @@ msgstr "Indica se se pode modificar o modelo de datos"
 #: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3427
 #: ../libgda/gda-data-proxy.c:3465 ../libgda/gda-data-select.c:1650
 #: ../libgda/gda-data-select.c:1704
-#, fuzzy, c-format
+#, c-format
 msgid "Row %d out of range (0-%d)"
-msgstr "Valor fóra de intervalo.\n"
+msgstr "A fila %d está fora do rango (0 - %d)"
 
 #: ../libgda/gda-data-model-array.c:392 ../libgda/gda-data-model-array.c:538
 #: ../libgda/gda-data-model-array.c:625 ../libgda/gda-data-model-dir.c:806
@@ -1335,7 +1330,7 @@ msgstr "Non foi posíbel obter o valor da fila %d e columna %d"
 #: ../libgda/gda-data-select.c:2051
 #, c-format
 msgid "Could not change iter's value for column %d: %s"
-msgstr ""
+msgstr "Non foi posíbel cambiar o valor de iteración para a columna %d: %s"
 
 #: ../libgda/gda-data-select.c:2046
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
@@ -1348,6 +1343,7 @@ msgstr "Non é posíbel modificar algunhas columnas"
 #: ../libgda/gda-data-select.c:2273
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
+"Erro interno: non é posíbel obter a consulta actual da declaración preparada"
 
 #: ../libgda/gda-data-select.c:2313
 msgid "Unable to identify a way to fetch a single row"
@@ -1355,14 +1351,13 @@ msgstr "Non foi posíbel identificar ningunha forma para obter unha única fila"
 
 #: ../libgda/gda-data-select.c:2320
 msgid "Can only operate on non compound SELECT statements"
-msgstr ""
+msgstr "Só se pode operar con declaracións SELECT non compostas"
 
 #: ../libgda/gda-data-select.c:2401 ../libgda/gda-data-select.c:2571
 #: ../libgda/gda-data-select.c:2642 ../libgda/gda-data-select.c:2723
 #: ../libgda/gda-data-select.c:2811 ../libgda/gda-data-select.c:3005
-#, fuzzy
 msgid "Modifications are not allowed anymore"
-msgstr "Os nomes de ficheiro non poden levar barras"
+msgstr "Xa non se admiten modificacións"
 
 #: ../libgda/gda-data-select.c:2411 ../libgda/gda-data-select.c:2581
 #: ../libgda/gda-data-select.c:2647 ../libgda/gda-data-select.c:2733
@@ -1370,9 +1365,8 @@ msgid "No UPDATE statement provided"
 msgstr "Non se proporcionou ningunha instrución UPDATE"
 
 #: ../libgda/gda-data-select.c:2451
-#, fuzzy
 msgid "Could not get iterator's value"
-msgstr "Non foi posíbel obter información do ficheiro"
+msgstr "Non é posíbel obter o valor do iterador"
 
 #: ../libgda/gda-data-select.c:2608 ../libgda/gda-data-select.c:2675
 #, c-format
@@ -2255,8 +2249,8 @@ msgstr "Non hai soporte para o tipo de autenticación %s"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipo de parámetro erróneo para '%s': agardábase o tipo '%s' pero obtívose '%"
-"s'"
+"Tipo de parámetro erróneo para '%s': agardábase o tipo '%s' pero obtívose "
+"'%s'"
 
 #: ../libgda/gda-statement.c:1224
 #, c-format
@@ -7122,9 +7116,9 @@ msgstr "Erro: sen detalles"
 
 #: ../tools/browser/data-manager/spec-editor.c:174
 msgid ""
-"<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
-"\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
-"data source definitions.\n"
+"<small>The XML tree's root node must be a <span foreground="
+"\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or "
+"more data source definitions.\n"
 "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;query&gt;"
 "</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</tt></span> "
 "nodes, both accepting the following optional attributes:\n"

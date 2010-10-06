@@ -1,6 +1,6 @@
 /* gda-sql-builder.c
  *
- * Copyright (C) 2008 Vivien Malerba
+ * Copyright (C) 2008 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -154,13 +154,13 @@ gda_sql_builder_init (GdaSqlBuilder *builder)
 
 
 /**
- * gda_sql_builder_new
+ * gda_sql_builder_new:
  * @stmt_type: the type of statement to build
  *
  * Create a new #GdaSqlBuilder object to build #GdaStatement or #GdaSqlStatement
  * objects of type @stmt_type
  *
- * Returns: the newly created object, or %NULL if an error occurred (such as unsupported
+ * Returns: (transfer full): the newly created object, or %NULL if an error occurred (such as unsupported
  * statement type)
  *
  * Since: 4.2
@@ -315,13 +315,13 @@ use_part (SqlPart *p, GdaSqlAnyPart *parent)
 }
 
 /**
- * gda_sql_builder_get_statement
+ * gda_sql_builder_get_statement:
  * @builder: a #GdaSqlBuilder object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Creates a new #GdaStatement statement from @builder's contents.
  *
- * Returns: a new #GdaStatement object, or %NULL if an error occurred
+ * Returns: (transfer full): a new #GdaStatement object, or %NULL if an error occurred
  *
  * Since: 4.2
  */
@@ -341,7 +341,7 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
 }
 
 /**
- * gda_sql_builder_get_sql_statement
+ * gda_sql_builder_get_sql_statement:
  * @builder: a #GdaSqlBuilder object
  * @copy_it: set to %TRUE to be able to reuse @builder
  *
@@ -350,7 +350,7 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
  * The returned pointer belongs to @builder's internal representation.
  * Use gda_sql_statement_copy() if you need to keep it.
  *
- * Returns: a #GdaSqlStatement pointer
+ * Returns: (transfer none): a #GdaSqlStatement pointer
  *
  * Since: 4.2
  */
@@ -365,7 +365,7 @@ gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder)
 }
 
 /**
- * gda_sql_builder_set_table
+ * gda_sql_builder_set_table:
  * @builder: a #GdaSqlBuilder object
  * @table_name: a table name
  *
@@ -418,7 +418,7 @@ gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar *table_name)
 }
 
 /**
- * gda_sql_builder_set_where
+ * gda_sql_builder_set_where:
  * @builder: a #GdaSqlBuilder object
  * @cond_id: the ID of the expression to set as WHERE condition, or 0 to unset any previous WHERE condition
  *
@@ -470,7 +470,7 @@ gda_sql_builder_set_where (GdaSqlBuilder *builder, GdaSqlBuilderId cond_id)
 }
 
 /**
- * gda_sql_builder_select_add_field
+ * gda_sql_builder_select_add_field:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
  * @table_name: a table name, or %NULL
@@ -482,7 +482,7 @@ gda_sql_builder_set_where (GdaSqlBuilder *builder, GdaSqlBuilderId cond_id)
  *
  * For non-SELECT statements, see gda_sql_builder_add_field_id().
  *
- * Returns: the ID of the added field, or 0 if there was an error
+ * Returns: the ID of the added field, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -590,7 +590,7 @@ create_typed_value (GType type, va_list *ap)
 }
 
 /**
- * gda_sql_builder_add_field_value
+ * gda_sql_builder_add_field_value:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
  * @type: the GType of the following argument
@@ -635,7 +635,7 @@ gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name
 }
 
 /**
- * gda_sql_builder_add_field_value_as_gvalue
+ * gda_sql_builder_add_field_value_as_gvalue:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
  * @value: value to set the field to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
@@ -667,7 +667,7 @@ gda_sql_builder_add_field_value_as_gvalue (GdaSqlBuilder *builder, const gchar *
 }
 
 /**
- * gda_sql_builder_add_field_value_id
+ * gda_sql_builder_add_field_value_id:
  * @builder: a #GdaSqlBuilder object
  * @field_id: the ID of the field's name or definition
  * @value_id: the ID of the value to set the field to, or %0
@@ -784,7 +784,7 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
 }
 
 /**
- * gda_sql_builder_add_expr_value
+ * gda_sql_builder_add_expr_value:
  * @builder: a #GdaSqlBuilder object
  * @dh: a #GdaDataHandler to use, or %NULL
  * @value: value to set the expression to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
@@ -794,7 +794,7 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
  * The new expression will contain the value passed as the @value argument. It is possible to
  * customize how the value has to be interpreted by passing a specific #GdaDataHandler object as @dh.
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -840,7 +840,7 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
 }
 
 /**
- * gda_sql_builder_add_expr
+ * gda_sql_builder_add_expr:
  * @builder: a #GdaSqlBuilder object
  * @dh: a #GdaDataHandler to use, or %NULL
  * @type: the GType of the following argument
@@ -868,7 +868,7 @@ id = gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 25);
  * 25
  * </programlisting>
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -896,7 +896,7 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type
 }
 
 /**
- * gda_sql_builder_add_id
+ * gda_sql_builder_add_id:
  * @builder: a #GdaSqlBuilder object
  * @string: a string
  *
@@ -922,7 +922,7 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type
  *
  * For fields, see gda_sql_builder_add_field_id().
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -944,10 +944,10 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string)
 }
 
 /**
- * gda_sql_builder_add_field_id
+ * gda_sql_builder_add_field_id:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @table_name: a table name, or %NULL
+ * @table_name: (allow-null): a table name, or %NULL
  *
  * Defines an expression representing a field in @builder,
  * which may be reused to build other parts of a statement,
@@ -958,7 +958,7 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string)
  *
  * For SELECT queries, see gda_sql_builder_select_add_field().
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -980,7 +980,7 @@ gda_sql_builder_add_field_id (GdaSqlBuilder *builder, const gchar *field_name, c
 }
 
 /**
- * gda_sql_builder_add_param
+ * gda_sql_builder_add_param:
  * @builder: a #GdaSqlBuilder object
  * @param_name: parameter's name
  * @type: parameter's type
@@ -1000,7 +1000,7 @@ gda_sql_builder_add_field_id (GdaSqlBuilder *builder, const gchar *field_name, c
  * ]]>
  * </programlisting>
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1023,7 +1023,7 @@ gda_sql_builder_add_param (GdaSqlBuilder *builder, const gchar *param_name, GTyp
 }
 
 /**
- * gda_sql_builder_add_cond
+ * gda_sql_builder_add_cond:
  * @builder: a #GdaSqlBuilder object
  * @op: type of condition
  * @op1: the ID of the 1st argument (not 0)
@@ -1032,7 +1032,7 @@ gda_sql_builder_add_param (GdaSqlBuilder *builder, const gchar *param_name, GTyp
  *
  * Builds a new expression which reprenents a condition (or operation).
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1067,11 +1067,11 @@ gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op, GdaSqlB
 }
 
 /**
- * gda_sql_builder_add_cond_v
+ * gda_sql_builder_add_cond_v:
  * @builder: a #GdaSqlBuilder object
  * @op: type of condition
- * @op_ids: an array of ID for the arguments (not %0)
- * @ops_ids_size: size of @ops_ids
+ * @op_ids: (array length=op_ids_size): an array of ID for the arguments (not %0)
+ * @op_ids_size: size of @ops_ids
  *
  * Builds a new expression which reprenents a condition (or operation).
  *
@@ -1079,7 +1079,7 @@ gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op, GdaSqlB
  * then @op is ignored, and the returned ID represents @op_ids[0] (this avoids any problem for example
  * when @op is GDA_SQL_OPERATOR_TYPE_AND and there is in fact only one operand).
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1130,16 +1130,16 @@ typedef struct {
 } BuildTarget;
 
 /**
- * gda_sql_builder_select_add_target_id
+ * gda_sql_builder_select_add_target_id:
  * @builder: a #GdaSqlBuilder object
  * @table_id: the ID of the expression holding a table reference (not %0)
- * @alias: the alias to give to the target, or %NULL
+ * @alias: (allow-none): the alias to give to the target, or %NULL
  *
  * Adds a new target to a SELECT statement. If there already exists a target representing
  * the same table and the same alias (or with the same absence of alias) then the same target
  * ID is returned instead of the ID of a new target.
  *
- * Returns: the ID of the new (or existing) target, or 0 if there was an error
+ * Returns: the ID of the new (or existing) target, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1215,14 +1215,14 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, GdaSqlBuilderId ta
 
 
 /**
- * gda_sql_builder_select_add_target
+ * gda_sql_builder_select_add_target:
  * @builder: a #GdaSqlBuilder object
  * @table_name: the name of the target table
- * @alias: the alias to give to the target, or %NULL
+ * @alias: (allow-none): the alias to give to the target, or %NULL
  *
  * Adds a new target to a SELECT statement
  *
- * Returns: the ID of the new target, or 0 if there was an error
+ * Returns: the ID of the new target, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1251,7 +1251,7 @@ typedef struct {
 } BuilderJoin;
 
 /**
- * gda_sql_builder_select_join_targets
+ * gda_sql_builder_select_join_targets:
  * @builder: a #GdaSqlBuilder object
  * @left_target_id: the ID of the left target to use (not %0)
  * @right_target_id: the ID of the right target to use (not %0)
@@ -1265,7 +1265,7 @@ typedef struct {
  * %GDA_SQL_SELECT_JOIN_LEFT to %GDA_SQL_SELECT_JOIN_RIGHT or from %GDA_SQL_SELECT_JOIN_RIGHT to
  * %GDA_SQL_SELECT_JOIN_LEFT.
  *
- * Returns: the ID of the new join, or 0 if there was an error
+ * Returns: the ID of the new join, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1350,7 +1350,7 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
 }
 
 /**
- * gda_sql_builder_join_add_field
+ * gda_sql_builder_join_add_field:
  * @builder: a #GdaSqlBuilder object
  * @join_id: the ID of the join to modify (not %0)
  * @field_name: the name of the field to use in the join condition (not %NULL)
@@ -1358,7 +1358,7 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
  * Alter a joins in a SELECT statement to make its condition on the field which name
  * is @field_name
  *
- * Returns: the ID of the new join, or 0 if there was an error
+ * Returns: the ID of the new join, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1399,11 +1399,11 @@ gda_sql_builder_join_add_field (GdaSqlBuilder *builder, GdaSqlBuilderId join_id,
 }
 
 /**
- * gda_sql_builder_select_order_by
+ * gda_sql_builder_select_order_by:
  * @builder: a #GdaSqlBuiler
  * @expr_id: the ID of the expression to use during sorting (not %0)
  * @asc: %TRUE for an ascending sorting
- * @collation_name: name of the collation to use when sorting, or %NULL
+ * @collation_name: (allow-none):  name of the collation to use when sorting, or %NULL
  *
  * Adds a new ORDER BY expression to a SELECT statement.
  *
@@ -1439,7 +1439,7 @@ gda_sql_builder_select_order_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id
 }
 
 /**
- * gda_sql_builder_select_set_distinct
+ * gda_sql_builder_select_set_distinct:
  * @builder: a #GdaSqlBuilder object
  * @distinct: set to %TRUE to have the DISTINCT requirement
  * @expr_id: the ID of the DISTINCT ON expression, or %0 if no expression is to be used. It is ignored
@@ -1485,7 +1485,7 @@ gda_sql_builder_select_set_distinct (GdaSqlBuilder *builder, gboolean distinct, 
 }
 
 /**
- * gda_sql_builder_select_set_limit
+ * gda_sql_builder_select_set_limit:
  * @builder: a #GdaSqlBuilder object
  * @limit_count_expr_id: the ID of the LIMIT expression, or %0
  * @limit_offset_expr_id: the ID of the OFFSET expression, or %0
@@ -1542,7 +1542,7 @@ gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
 }
 
 /**
- * gda_sql_builder_select_set_having
+ * gda_sql_builder_select_set_having:
  * @builder: a #GdaSqlBuilder object
  * @cond_id: the ID of the expression to set as HAVING condition, or 0 to unset any previous HAVING condition
  *
@@ -1578,7 +1578,7 @@ gda_sql_builder_select_set_having (GdaSqlBuilder *builder, GdaSqlBuilderId cond_
 }
 
 /**
- * gda_sql_builder_select_group_by
+ * gda_sql_builder_select_group_by:
  * @builder: a #GdaSqlBuilder object
  * @expr_id: the ID of the expression to set use in the GROUP BY clause, or 0 to unset any previous GROUP BY clause
  *
@@ -1619,14 +1619,14 @@ gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id
 }
 
 /**
- * gda_sql_builder_add_function
+ * gda_sql_builder_add_function:
  * @builder: a #GdaSqlBuilder object
  * @function_id: the ID of the functions's name
  * @...: a list, terminated with %0, of each function's argument's ID
  *
  * Builds a new expression which reprenents a function applied to some arguments
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1664,15 +1664,15 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
 }
 
 /**
- * gda_sql_builder_add_function_v
+ * gda_sql_builder_add_function_v:
  * @builder: a #GdaSqlBuilder object
  * @function_id: the ID of the functions's name
- * @args: an array of IDs representing the function's arguments
+ * @args: (array length=args_size): an array of IDs representing the function's arguments
  * @args_size: @args's size
  *
  * Builds a new expression which represents a function applied to some arguments
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1707,14 +1707,14 @@ gda_sql_builder_add_function_v (GdaSqlBuilder *builder, const gchar *func_name,
 }
 
 /**
- * gda_sql_builder_add_sub_select
+ * gda_sql_builder_add_sub_select:
  * @builder: a #GdaSqlBuilder object
  * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT. This will be copied.
  * @steal: if %TRUE, then @sqlst will be "stolen" by @b and should not be used anymore
  *
  * Adds an expression which is a subselect.
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1747,7 +1747,7 @@ gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst)
 }
 
 /**
- * gda_sql_builder_compound_set_type
+ * gda_sql_builder_compound_set_type:
  * @builder: a #GdaSqlBuilder object
  * @compound_type: a type of compound
  *
@@ -1771,7 +1771,7 @@ gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompou
 }
 
 /**
- * gda_sql_builder_compound_add_sub_select
+ * gda_sql_builder_compound_add_sub_select:
  * @builder: a #GdaSqlBuilder object
  * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT. This will be copied.
  *
@@ -1802,7 +1802,7 @@ gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement
 }
 
 /**
- * gda_sql_builder_add_case
+ * gda_sql_builder_add_case:
  * @builder: a #GdaSqlBuilder object
  * @test_expr: the expression ID representing the test of the CASE, or %0
  * @else_expr: the expression ID representing the ELSE expression, or %0
@@ -1811,7 +1811,7 @@ gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement
  *
  * Creates a new CASE ... WHEN ... THEN ... ELSE ... END expression.
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1866,19 +1866,19 @@ gda_sql_builder_add_case (GdaSqlBuilder *builder,
 }
 
 /**
- * gda_sql_builder_add_case_v
+ * gda_sql_builder_add_case_v:
  * @builder: a #GdaSqlBuilder object
  * @test_expr: the expression ID representing the test of the CASE, or %0
  * @else_expr: the expression ID representing the ELSE expression, or %0
- * @when_array: an array containing each WHEN expression ID, having at least @args_size elements
- * @then_array: an array containing each THEN expression ID, having at least @args_size elements
+ * @when_array: (array length=args_size): an array containing each WHEN expression ID, having at least @args_size elements
+ * @then_array: (array length=args_size): an array containing each THEN expression ID, having at least @args_size elements
  * @args_size: the size of @when_array and @then_array
  *
  * Creates a new CASE ... WHEN ... THEN ... ELSE ... END expression. The WHEN expression and the THEN
  * expression IDs are taken from the @when_array and @then_array at the same index, for each index inferior to
  * @args_size.
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */
@@ -1927,7 +1927,7 @@ gda_sql_builder_add_case_v (GdaSqlBuilder *builder,
 }
 
 /**
- * gda_sql_builder_export_expression
+ * gda_sql_builder_export_expression:
  * @builder: a #GdaSqlBuilder object
  * @id: the ID of the expression to be exported, (must be a valid ID in @builder, not %0)
  *
@@ -1954,13 +1954,13 @@ gda_sql_builder_export_expression (GdaSqlBuilder *builder, GdaSqlBuilderId id)
 }
 
 /**
- * gda_sql_builder_import_expression
+ * gda_sql_builder_import_expression:
  * @builder: a #GdaSqlBuilder object
  * @expr: a #GdaSqlExpr obtained using gda_sql_builder_export_expression()
  *
  * Imports the @expr into @builder.
  *
- * Returns: the ID of the new expression, or 0 if there was an error
+ * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
  */

@@ -17,7 +17,7 @@
 cross_path=/local/Win32/gtk
 depend_path=/local/Win32
 prefix=/local/Win32/Libgda
-version=4.1.11
+version=4.2.0
 
 
 
@@ -84,10 +84,10 @@ function add_all_files_to_zip
 #
 # dependencies DLLs
 #
-files=(charset.dll iconv.dll intl.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll zlib1.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-win32-2.*.dll libgtk-win32-2.*.dll libatk-1.*.dll libpng12-*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libfontconfig-1.dll libgoocanvas-*.dll libgtksourceview-2.0-0.dll)
+files=(Pathplan.dll ltdl.dll libexpat*.dll intl.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll zlib1.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-win32-2.*.dll libgtk-win32-2.*.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libfontconfig-1.dll libgoocanvas-*.dll libgtksourceview-2.0-0.dll cdt.dll graph.dll gvc.dll)
 add_files_to_zip $archive_ext ${depend_path}/gtk bin $files
 
-files=(libdb47.dll msvcp80.dll msvcr80.dll)
+files=(libdb51.dll)
 add_files_to_zip $archive_ext ${depend_path}/bdb bin $files
 
 files=(libmdb-0.dll)
@@ -96,19 +96,19 @@ add_files_to_zip $archive_ext ${depend_path}/mdb bin $files
 files=(libmySQL.dll)
 add_files_to_zip $archive_ext ${depend_path}/mysql bin $files
 
-files=(libpq.dll comerr32.dll gssapi32.dll k5sprt32.dll krb5_32.dll libeay32.dll libiconv2.dll libintl3.dll msvcr71.dll pgaevent.dll ssleay32.dll)
+files=(iconv.dll libeay32.dll libiconv-2.dll libintl-8.dll libpq.dll libxml2.dll libxslt.dll msvcr71.dll ssleay32.dll)
 add_files_to_zip $archive_ext ${depend_path}/pgsql bin $files
 
 #
 # dependencies from the cross compilation environment
 #
-files=(readline5.dll)
-add_files_to_zip $archive $cross_path bin $files
+#files=(readline5.dll)
+#add_files_to_zip $archive $cross_path bin $files
 
 #
 # Libgda's files
 #
-files=(bdb_specs_dsn.xml information_schema.xml mdb_specs_dsn.xml mysql_specs_add_column.xml mysql_specs_create_db.xml mysql_specs_create_index.xml mysql_specs_create_table.xml mysql_specs_create_view.xml mysql_specs_drop_column.xml mysql_specs_drop_db.xml mysql_specs_drop_index.xml mysql_specs_drop_table.xml mysql_specs_drop_view.xml mysql_specs_dsn.xml mysql_specs_rename_table.xml postgres_specs_add_column.xml postgres_specs_create_db.xml postgres_specs_create_index.xml postgres_specs_create_table.xml postgres_specs_create_view.xml postgres_specs_drop_column.xml postgres_specs_drop_db.xml postgres_specs_drop_index.xml postgres_specs_drop_table.xml postgres_specs_drop_view.xml postgres_specs_dsn.xml postgres_specs_rename_table.xml sqlite_specs_add_column.xml sqlite_specs_create_db.xml sqlite_specs_create_index.xml sqlite_specs_create_table.xml sqlite_specs_create_view.xml sqlite_specs_drop_db.xml sqlite_specs_drop_index.xml sqlite_specs_drop_table.xml sqlite_specs_drop_view.xml sqlite_specs_dsn.xml sqlite_specs_rename_table.xml import_encodings.xml)
+files=(bdb_specs_dsn.xml information_schema.xml mdb_specs_dsn.xml mysql_specs_add_column.xml mysql_specs_create_db.xml mysql_specs_create_index.xml mysql_specs_create_table.xml mysql_specs_create_view.xml mysql_specs_drop_column.xml mysql_specs_drop_db.xml mysql_specs_drop_index.xml mysql_specs_drop_table.xml mysql_specs_drop_view.xml mysql_specs_dsn.xml mysql_specs_rename_table.xml postgres_specs_add_column.xml postgres_specs_create_db.xml postgres_specs_create_index.xml postgres_specs_create_table.xml postgres_specs_create_view.xml postgres_specs_drop_column.xml postgres_specs_drop_db.xml postgres_specs_drop_index.xml postgres_specs_drop_table.xml postgres_specs_drop_view.xml postgres_specs_dsn.xml postgres_specs_rename_table.xml sqlite_specs_add_column.xml sqlite_specs_create_db.xml sqlite_specs_create_index.xml sqlite_specs_create_table.xml sqlite_specs_create_view.xml sqlite_specs_drop_db.xml sqlite_specs_drop_index.xml sqlite_specs_drop_table.xml sqlite_specs_drop_view.xml sqlite_specs_dsn.xml sqlite_specs_rename_table.xml import_encodings.xml web_specs_auth.xml web_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
 
 files=(gdaui-generic.png)
@@ -147,8 +147,11 @@ files=(index.theme)
 add_files_to_zip $archive . share/libgda-5.0/icons/hicolor $files
 
 
-files=(gda-browser-5.0.png gda-control-center-5.0.png)
+files=(gda-browser-5.0.png)
 add_files_to_zip $archive $prefix share/pixmaps $files
+
+files=(gda-control-center.png)
+add_files_to_zip $archive $prefix share/libgda-4.0/pixmaps $files
 
 files=(gdaui-entry-number.xml gdaui-entry-string.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0/ui $files
@@ -180,7 +183,7 @@ add_files_to_zip $archive $cross_path bin $files
 files=(gdaui-demo-5.0.exe)
 add_files_to_zip $archive_dev $prefix bin $files
 
-files=(libgda-sqlite.dll libgda-postgres.dll libgda-mysql.dll libgda-bdb.dll)
+files=(libgda-bdb.dll libgda-mdb.dll libgda-mysql.dll libgda-postgres.dll libgda-sqlite.dll libgda-web.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
 
 files=(gdaui-entry-filesel-spec.xml gdaui-entry-password.xml gdaui-entry-pict-spec.xml gdaui-entry-pict-spec_string.xml libgda-ui-plugins.dll)
@@ -188,9 +191,6 @@ add_files_to_zip $archive $prefix lib/libgda-5.0/plugins $files
 
 files=(libpixmap.dll libwimp.dll)
 add_files_to_zip $archive_ext $cross_path lib/gtk-2.0/2.10.0/engines $files
-
-files=(libpixbufloader-ani.dll libpixbufloader-bmp.dll libpixbufloader-gif.dll libpixbufloader-ico.dll libpixbufloader-jpeg.dll libpixbufloader-pcx.dll libpixbufloader-png.dll libpixbufloader-pnm.dll libpixbufloader-ras.dll libpixbufloader-tga.dll libpixbufloader-tiff.dll libpixbufloader-wbmp.dll libpixbufloader-xbm.dll libpixbufloader-xpm.dll)
-add_files_to_zip $archive_ext $cross_path lib/gtk-2.0/2.10.0/loaders $files
 
 #
 # includes
@@ -219,8 +219,8 @@ add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda/sql-parser $file
 files=(gda-vconnection-data-model.h gda-vconnection-hub.h gda-virtual-connection.h gda-virtual-provider.h gda-vprovider-data-model.h gda-vprovider-hub.h libgda-virtual.h)
 add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda/virtual $files
 
-files=(gdaui-basic-form.h gdaui-cloud.h gdaui-combo.h gdaui-data-entry.h gdaui-data-filter.h gdaui-data-proxy.h gdaui-data-proxy-info.h gdaui-data-selector.h gdaui-data-store.h gdaui-data-widget-filter.h gdaui-data-widget.h gdaui-data-widget-info.h gdaui-decl.h gdaui-easy.h gdaui-enums.h gdaui-enum-types.h gdaui-form.h gdaui-grid.h gdaui-login.h gdaui-plugin.h gdaui-provider-selector.h gdaui-raw-form.h gdaui-raw-grid.h gdaui-server-operation.h gdaui-set.h gdaui-tree-store.h libgda-ui.h gdaui-data-cell-renderer-util.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda-ui $files
+files=(gdaui-basic-form.h gdaui-data-entry.h gdaui-data-selector.h gdaui-enums.h gdaui-login.h gdaui-raw-grid.h gdaui-cloud.h gdaui-data-filter.h gdaui-data-store.h gdaui-enum-types.h gdaui-plugin.h gdaui-server-operation.h gdaui-combo.h gdaui-data-proxy.h gdaui-decl.h gdaui-form.h gdaui-provider-selector.h gdaui-tree-store.h gdaui-data-cell-renderer-util.h gdaui-data-proxy-info.h gdaui-easy.h gdaui-grid.h gdaui-raw-form.h libgda-ui.h)
+add_files_to_zip $archive_dev $prefix include/libgda-4.0/libgda-ui $files
 
 #
 # PC files
@@ -236,7 +236,7 @@ add_files_to_zip $archive_dev $prefix lib $files
 #
 # demo
 #
-files=(data_model_dir.c ddl_queries.c demo_db.db example_automatic_layout.xml form.c form_data_layout.c form_pict.c form_rw.c grid.c grid_data_layout.c grid_pict.c grid_rw.c linked_grid_form.c linked_model_param.c login.c)
+files=(basic_form.c cloud.c combo.c custom_layout.xml data_model_dir.c ddl_queries.c demo_db.db form.c form_data_layout.c form_pict.c form_rw.c grid.c grid_data_layout.c grid_pict.c grid_rw.c linked_grid_form.c linked_model_param.c login.c provider_sel.c tree.c)
 add_files_to_zip $archive_dev $prefix share/libgda-5.0/demo $files
 
 #

@@ -301,7 +301,7 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
 }
 
 /**
- * gdaui_basic_form_new
+ * gdaui_basic_form_new:
  * @data_set: a #GdaSet structure
  *
  * Creates a new #GdauiBasicForm widget using all the #GdaHolder objects provided in @data_set.
@@ -309,7 +309,7 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
  * The global layout is rendered using a table (a #GtkTable), and an entry is created for each
  * node of @data_set.
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */
@@ -1529,13 +1529,13 @@ parameter_changed_cb (GdaHolder *param, SingleEntry *sentry)
 }
 
 /**
- * gdaui_basic_form_set_as_reference
+ * gdaui_basic_form_set_as_reference:
  * @form: a #GdauiBasicForm widget
  *
  * Tells @form that the current values in the different entries are
  * to be considered as the original values for all the entries; the immediate
  * consequence is that any sub-sequent call to gdaui_basic_form_has_changed()
- * will return FALSE (of course until any entry is changed).
+ * will return %FALSE (of course until any entry is changed).
  *
  * Since: 4.2
  */
@@ -1586,12 +1586,12 @@ gdaui_basic_form_set_as_reference (GdauiBasicForm *form)
 }
 
 /**
- * gdaui_basic_form_is_valid
+ * gdaui_basic_form_is_valid:
  * @form: a #GdauiBasicForm widget
  *
  * Tells if the form can be used as-is (if all the parameters do have some valid values)
  *
- * Returns: TRUE if the form is valid
+ * Returns: %TRUE if the form is valid
  *
  * Since: 4.2
  */
@@ -1604,13 +1604,13 @@ gdaui_basic_form_is_valid (GdauiBasicForm *form)
 }
 
 /**
- * gdaui_basic_form_get_data_set
+ * gdaui_basic_form_get_data_set:
  * @form: a #GdauiBasicForm widget
  *
  * Get a pointer to the #GdaSet object which
  * is modified by @form
  *
- * Returns: a pointer to the #GdaSet
+ * Returns: (transfer none): a pointer to the #GdaSet
  *
  * Since: 4.2
  */
@@ -1623,7 +1623,7 @@ gdaui_basic_form_get_data_set (GdauiBasicForm *form)
 }
 
 /**
- * gdaui_basic_form_has_changed
+ * gdaui_basic_form_has_changed:
  * @form: a #GdauiBasicForm widget
  *
  * Tells if the form has had at least on entry changed since @form was created or
@@ -1677,7 +1677,7 @@ gdaui_basic_form_show_entry_actions (GdauiBasicForm *form, gboolean show_actions
 }
 
 /**
- * gdaui_basic_form_reset
+ * gdaui_basic_form_reset:
  * @form: a #GdauiBasicForm widget
  *
  * Resets all the entries in the form to their
@@ -1715,7 +1715,7 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 
 
 /**
- * gdaui_basic_form_entry_set_visible
+ * gdaui_basic_form_entry_set_visible:
  * @form: a #GdauiBasicForm widget
  * @param: a #GdaHolder object
  * @show: set to %TRUE to show the data entry, and to %FALSE to hide it
@@ -1778,7 +1778,7 @@ gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *param, gboo
 }
 
 /**
- * gdaui_basic_form_entry_grab_focus
+ * gdaui_basic_form_entry_grab_focus:
  * @form: a #GdauiBasicForm widget
  * @param: a #GdaHolder object
  *
@@ -1800,9 +1800,9 @@ gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *param)
 }
 
 /**
- * gdaui_basic_form_entry_set_editable
+ * gdaui_basic_form_entry_set_editable:
  * @form: a #GdauiBasicForm widget
- * @holder: a #GdaHolder object; or %NULL
+ * @holder: (allow-none): a #GdaHolder object; or %NULL
  * @editable: %TRUE if corresponding data entry must be editable
  *
  * Sets the #GdauiDataEntry in @form which corresponds to the
@@ -1860,7 +1860,7 @@ gdaui_basic_form_set_entries_auto_default (GdauiBasicForm *form, gboolean auto_d
 }
 
 /**
- * gdaui_basic_form_set_entries_to_default
+ * gdaui_basic_form_set_entries_to_default:
  * @form: a #GdauiBasicForm widget
  *
  * For each entry in the form, sets it to a default value if it is possible to do so.
@@ -1928,13 +1928,13 @@ get_single_entry_for_id (GdauiBasicForm *form, const gchar *id)
 }
 
 /**
- * gdaui_basic_form_get_entry_widget
+ * gdaui_basic_form_get_entry_widget:
  * @form: a #GdauiBasicForm widget
  * @param: a #GdaHolder object
  *
  * Get the #GdauiDataEntry in @form which corresponds to the param parameter.
  *
- * Returns: the requested widget, or %NULL if not found
+ * Returns: (transfer none): the requested widget, or %NULL if not found
  *
  * Since: 4.2
  */
@@ -1953,13 +1953,13 @@ gdaui_basic_form_get_entry_widget (GdauiBasicForm *form, GdaHolder *param)
 }
 
 /**
- * gdaui_basic_form_get_label_widget
+ * gdaui_basic_form_get_label_widget:
  * @form: a #GdauiBasicForm widget
  * @param: a #GdaHolder object
  *
  * Get the label in @form which corresponds to the param parameter.
  *
- * Returns: the requested widget, or %NULL if not found
+ * Returns: (transfer none): the requested widget, or %NULL if not found
  *
  * Since: 4.2
  */
@@ -1978,11 +1978,11 @@ gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *param)
 }
 
 /**
- * gdaui_basic_form_new_in_dialog
+ * gdaui_basic_form_new_in_dialog:
  * @data_set: a #GdaSet object
- * @parent: the parent window for the new dialog, or %NULL
- * @title: the title of the dialog window, or %NULL
- * @header: a helper text displayed at the top of the dialog, or %NULL
+ * @parent: (allow-none): the parent window for the new dialog, or %NULL
+ * @title: (allow-none): the title of the dialog window, or %NULL
+ * @header: (allow-none): a helper text displayed at the top of the dialog, or %NULL
  *
  * Creates a new #GdauiBasicForm widget in the same way as gdaui_basic_form_new()
  * and puts it into a #GtkDialog widget. The returned dialog has the "Ok" and "Cancel" buttons
@@ -1991,7 +1991,7 @@ gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *param)
  * The #GdauiBasicForm widget is attached to the dialog using the user property
  * "form".
  *
- * Returns: the new #GtkDialog widget
+ * Returns: (transfer full): the new #GtkDialog widget
  *
  * Since: 4.2
  */
@@ -2058,7 +2058,7 @@ form_holder_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_mo
 }
 
 /**
- * gdaui_basic_form_set_layout_from_file
+ * gdaui_basic_form_set_layout_from_file:
  * @form: a #GdauiBasicForm
  * @file_name: XML file name to use
  * @form_name: the name of the form to use, in @file_name
@@ -2127,14 +2127,14 @@ gdaui_basic_form_set_layout_from_file (GdauiBasicForm *form, const gchar *file_n
 }
 
 /**
- * gdaui_basic_form_get_place_holder
+ * gdaui_basic_form_get_place_holder:
  * @form: a #GdauiBasicForm
  * @placeholder_id: the name of the requested place holder
  *
  * Retreives a pointer to a place holder widget. This feature is only available if a specific
  * layout has been defined for @form using gdaui_basic_form_set_layout_from_file().
  *
- * Returns: a pointer to the requested place holder, or %NULL if not found
+ * Returns: (transfer none): a pointer to the requested place holder, or %NULL if not found
  *
  * Since: 4.2
  */
@@ -2150,7 +2150,7 @@ gdaui_basic_form_get_place_holder (GdauiBasicForm *form, const gchar *placeholde
 }
 
 /**
- * gdaui_basic_form_add_to_size_group
+ * gdaui_basic_form_add_to_size_group:
  * @form: a #GdauiBasicForm
  * @size_group: a #GtkSizeGroup object
  * @part: specifies which widgets in @form are concerned
@@ -2191,7 +2191,7 @@ gdaui_basic_form_add_to_size_group (GdauiBasicForm *form, GtkSizeGroup *size_gro
 }
 
 /**
- * gdaui_basic_form_remove_from_size_group
+ * gdaui_basic_form_remove_from_size_group:
  * @form: a #GdauiBasicForm
  * @size_group: a #GtkSizeGroup object
  * @part: specifies which widgets in @form are concerned

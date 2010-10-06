@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -237,14 +237,14 @@ gda_xa_transaction_get_type (void)
 }
 
 /**
- * gda_xa_transaction_new
+ * gda_xa_transaction_new:
  * @format: a format ID
  * @global_transaction_id: the global transaction ID
  *
  * Creates a new #GdaXaTransaction object, which will control the process of
  * performing a distributed transaction across several connections.
  *
- * Returns: the newly created object.
+ * Returns: (transfer full): the newly created object.
  */
 GdaXaTransaction *
 gda_xa_transaction_new (guint32 format, const gchar *global_transaction_id)
@@ -255,11 +255,11 @@ gda_xa_transaction_new (guint32 format, const gchar *global_transaction_id)
 }
 
 /**
- * gda_xa_transaction_register_connection
+ * gda_xa_transaction_register_connection:
  * @xa_trans: a #GdaXaTransaction object
  * @cnc: the connection to add to @xa_trans
  * @branch: the branch qualifier
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Registers @cnc to be used by @xa_trans to create a distributed transaction.
  *
@@ -267,7 +267,7 @@ gda_xa_transaction_new (guint32 format, const gchar *global_transaction_id)
  * some connections may not be registered at all with a #GdaXaTransaction object because the database
  * provider being used does not support it.
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnection *cnc, 
@@ -325,7 +325,7 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 }
 
 /**
- * gda_xa_transaction_unregister_connection
+ * gda_xa_transaction_unregister_connection:
  * @xa_trans: a #GdaXaTransaction object
  * @cnc: the connection to add to @xa_trans
  *
@@ -349,9 +349,9 @@ gda_xa_transaction_unregister_connection (GdaXaTransaction *xa_trans, GdaConnect
 }
 
 /**
- * gda_xa_transaction_begin
+ * gda_xa_transaction_begin:
  * @xa_trans: a #GdaXaTransaction object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Begins a distributed transaction (managed by @xa_trans). Please note that this phase may fail
  * for some connections if a (normal) transaction is already started (this depends on the database
@@ -427,10 +427,10 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 }
 
 /**
- * gda_xa_transaction_commit
+ * gda_xa_transaction_commit:
  * @xa_trans: a #GdaXaTransaction object
  * @cnc_to_recover: a place to store the list of connections for which the commit phase failed, or %NULL
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Commits a distributed transaction (managed by @xa_trans). The commit is composed of two phases:
  * <itemizedlist>
@@ -568,13 +568,13 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 }
 
 /**
- * gda_xa_transaction_rollback
+ * gda_xa_transaction_rollback:
  * @xa_trans: a #GdaXaTransaction object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Cancels a distributed transaction (managed by @xa_trans). 
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
@@ -607,17 +607,16 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
 }
 
 /**
- * gda_xa_transaction_commit_recovered
+ * gda_xa_transaction_commit_recovered:
  * @xa_trans: a #GdaXaTransaction object
- * @cnc_to_recover: a place to store the list of connections for which the there were data to recover and which failed
- * to be actually committed, or %NULL
- * @error: a place to store errors, or %NULL
+ * @cnc_to_recover: (allow-none): a place to store the list of connections for which the there were data to recover and which failed to be actually committed, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Tries to commit the data prepared but which failed to commit (see gda_xa_transaction_commit()). This
  * method allows one to terminate a distributed transaction which succeeded but for which some
  * connections needed to be recovered.
  *
- * Returns: TRUE if all the data which was still uncommitted has been committed
+ * Returns: %TRUE if all the data which was still uncommitted has been committed
  */
 gboolean
 gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, GError **error)
@@ -697,14 +696,14 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 }
 
 /**
- * gda_xa_transaction_id_to_string
+ * gda_xa_transaction_id_to_string:
  * @xid: a #GdaXaTransactionId pointer
  *
  * Creates a string representation of @xid, in the format &lt;gtrid&gt;,&lt;bqual&gt;,&lt;formatID&gt; the 
  * &lt;gtrid&gt; and &lt;bqual&gt; strings contain alphanumeric characters, and non alphanumeric characters
  * are converted to "%ab" where ab is the hexadecimal representation of the character.
  *
- * Returns: a new string representation of @xid
+ * Returns: (transfer full): a new string representation of @xid
  */
 gchar *
 gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid)
@@ -744,13 +743,15 @@ gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid)
 }
 
 /**
- * gda_xa_transaction_string_to_id
+ * gda_xa_transaction_string_to_id:
  * @str: a string representation of a #GdaXaTransactionId, in the "gtrid,bqual,formatID" format
  *
  * Creates a new #GdaXaTransactionId structure from its string representation, it's the opposite
  * of gda_xa_transaction_id_to_string().
  *
- * Returns: a new #GdaXaTransactionId structure, or %NULL in @str has a wrong format
+ * Returns: (transfer full): a new #GdaXaTransactionId structure, or %NULL in @str has a wrong format
+ *
+ * Free-function: g_free
  */
 GdaXaTransactionId *
 gda_xa_transaction_string_to_id (const gchar *str)

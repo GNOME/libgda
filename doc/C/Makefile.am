@@ -83,7 +83,8 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
 	version.xml.in \
 	visual_index.xml prov-notes.xml \
-	libgda-sections.txt libgda-ui-sections.txt libgda.types libgda.types.in libgda-ui.types
+	libgda-sections.txt libgda-ui-sections.txt libgda.types libgda.types.in libgda-ui.types \
+	examples/blobtest.c
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types

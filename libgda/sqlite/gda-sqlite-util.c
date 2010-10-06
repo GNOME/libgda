@@ -297,3 +297,19 @@ _gda_sqlite_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 		return g_strdup (id);
 	}
 }
+
+gboolean
+_gda_sqlite_check_transaction_started (GdaConnection *cnc, gboolean *out_started, GError **error)
+{
+	GdaTransactionStatus *trans;
+
+        trans = gda_connection_get_transaction_status (cnc);
+        if (!trans) {
+		if (!gda_connection_begin_transaction (cnc, NULL,
+						       GDA_TRANSACTION_ISOLATION_UNKNOWN, error))
+			return FALSE;
+		else
+			*out_started = TRUE;
+	}
+	return TRUE;
+}

@@ -1,5 +1,5 @@
 /* GDA - SQL console
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+ * Copyright (C) 2007 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Vivien Malerba <malerba@gnome-db.org>
@@ -1037,7 +1037,9 @@ execute_external_command (SqlConsole *console, const gchar *command, GError **er
 		}
 	}
 
-	res = g_new0 (GdaInternalCommandResult, 1);	
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->was_in_transaction_before_exec = gda_connection_get_transaction_status (cs->cnc) ? TRUE : FALSE;
+	res->cnc = g_object_ref (cs->cnc);
 	obj = gda_connection_statement_execute (cs->cnc, stmt, params, 
 						GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL, error);
 	if (!obj) {

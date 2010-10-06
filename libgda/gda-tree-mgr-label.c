@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -105,7 +105,7 @@ gda_tree_mgr_label_dispose (GObject *object)
 }
 
 /**
- * gda_tree_mgr_label_get_type
+ * gda_tree_mgr_label_get_type:
  *
  * Since: 4.2
  */
@@ -173,12 +173,12 @@ gda_tree_mgr_label_get_property (GObject *object,
 }
 
 /**
- * gda_tree_mgr_label_new
+ * gda_tree_mgr_label_new:
  * @label: a label string
  *
  * Creates a new #GdaTreeManager object which will add one tree node labelled @label
  *
- * Returns: a new #GdaTreeManager object
+ * Returns: (transfer full): a new #GdaTreeManager object
  * 
  * Since: 4.2
  */

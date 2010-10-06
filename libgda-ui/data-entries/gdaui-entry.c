@@ -1,6 +1,6 @@
 /* gdaui-entry.c
  *
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2010 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -328,12 +328,12 @@ adjust_display (GdauiEntry *entry, gchar *existing_text)
 
 /**
  * gdaui_entry_new:
- * @prefix: a prefix (not modifiable) string, or %NULL
- * @suffix: a suffix (not modifiable) string, or %NULL
+ * @prefix: (allow-none): a prefix (not modifiable) string, or %NULL
+ * @suffix: (allow-none): a suffix (not modifiable) string, or %NULL
  *
  * Creates a new #GdauiEntry widget.
  *
- * Returns: the newly created #GdauiEntry widget.
+ * Returns: (transfer full): the newly created #GdauiEntry widget.
  */
 GtkWidget*
 gdaui_entry_new (const gchar *prefix, const gchar *suffix)
@@ -345,7 +345,7 @@ gdaui_entry_new (const gchar *prefix, const gchar *suffix)
 }
 
 /**
- * gdaui_entry_set_max_length
+ * gdaui_entry_set_max_length:
  * @entry: a #GdauiEntry.
  * @max: the maximum length of the entry, or 0 for no maximum.
  *
@@ -411,7 +411,7 @@ gdaui_entry_get_text (GdauiEntry *entry)
 }
 
 /**
- * gdaui_entry_set_text
+ * gdaui_entry_set_text:
  * @entry: a #GdauiEntry widget
  * @text: the text to set into @entry, or %NULL
  *
@@ -449,7 +449,7 @@ gdaui_entry_set_text (GdauiEntry *entry, const gchar *text)
 }
 
 /**
- * gdaui_entry_set_prefix
+ * gdaui_entry_set_prefix:
  * @entry: a #GdauiEntry widget
  * @prefix: a prefix string
  *
@@ -465,7 +465,7 @@ gdaui_entry_set_prefix (GdauiEntry *entry, const gchar *prefix)
 }
 
 /**
- * gdaui_entry_set_suffix
+ * gdaui_entry_set_suffix:
  * @entry: a #GdauiEntry widget
  * @suffix: a suffix string
  *
@@ -482,7 +482,7 @@ gdaui_entry_set_suffix (GdauiEntry *entry, const gchar *suffix)
 
 
 /**
- * gdaui_entry_set_width_chars
+ * gdaui_entry_set_width_chars:
  * @entry: a #GdauiEntry widget
  * @max_width: maximum width, or -1
  *

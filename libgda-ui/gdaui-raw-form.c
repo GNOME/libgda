@@ -294,12 +294,12 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 }
 
 /**
- * gdaui_raw_form_new
+ * gdaui_raw_form_new:
  * @model: a #GdaDataModel, or %NULL
  *
  * Creates a new #GdauiRawForm widget to display data in @model
  *
- * Returns: the new widget
+ * Returns: (transfer full): the new widget
  *
  * Since: 4.2
  */
