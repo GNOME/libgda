@@ -205,7 +205,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 /* makes sure the mask part of the widget is compatible with the ip part */
 static gboolean
-ip_focus_out_event_cb (G_GNUC_UNUSED GtkEntry *entry, G_GNUC_UNUSED GdkEventFocus *event, GdauiEntryCidr *mgcidr)
+ip_focus_out_event_cb (G_GNUC_UNUSED GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *mgcidr)
 {
 	gint ip;
 
@@ -231,7 +231,7 @@ ip_focus_out_event_cb (G_GNUC_UNUSED GtkEntry *entry, G_GNUC_UNUSED GdkEventFocu
 		}
 	}
 
-	return FALSE;
+	return gtk_widget_event (GTK_WIDGET (mgcidr), (GdkEvent*) event);
 }
 
 /* makes sure the ip part of the widget is truncated to the right number of bits corresponding to

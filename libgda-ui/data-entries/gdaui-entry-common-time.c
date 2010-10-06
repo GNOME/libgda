@@ -476,14 +476,14 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 typedef void (*Callback2) (gpointer, gpointer);
 static gboolean
-focus_out_cb (GtkWidget *widget, G_GNUC_UNUSED GdkEventFocus *event, GdauiEntryCommonTime *mgtim)
+focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryCommonTime *mgtim)
 {
 	GCallback activate_cb;
 	activate_cb = g_object_get_data (G_OBJECT (widget), "_activate_cb");
 	g_assert (activate_cb);
 	((Callback2)activate_cb) (widget, mgtim);
 
-	return FALSE;
+	return gtk_widget_event (GTK_WIDGET (mgtim), (GdkEvent*) event);
 }
 
 static void
