@@ -90,6 +90,10 @@ Opening connection 'c0' for: SQLCipher://DB_NAME=testcrypt
       <programlisting>PRAGMA rekey = 'passphrase';</programlisting>
     </para>
   </sect2>
+
+  <para>
+    Also refer to the <link linkend="limitations_sqlcipher">SQLCipher provider's limitations</link>.
+  </para>
   </sect1>
   
 </chapter>

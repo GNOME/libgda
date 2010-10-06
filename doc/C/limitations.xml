@@ -135,6 +135,18 @@
     </sect2>
   </sect1>
 
+  <sect1 id="limitations_sqlcipher"><title>For SqlCipher</title>
+    <para>
+      The following limitations apply to SQLite database accessed through the SQLCipher database
+      provider. The SQLCipher database provider allows one to connect to a database encrypted using the
+      <ulink url="http://www.zetetic.net/code/sqlcipher">SQLCipher</ulink> adaptations to the SQLite
+      database.
+    </para>
+    <para>
+      The <link linkend="limitations_sqlite">SQLite provider's limitations</link> also apply in this context
+      and it is also currently not possible to uncrypt an encrypted database.
+    </para>
+  </sect1>
 
   <sect1 id="limitations_jdbc"><title>For JDBC based providers</title>
     <para>

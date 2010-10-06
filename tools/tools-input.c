@@ -268,7 +268,7 @@ init_history ()
 		cache_dir = g_build_filename (g_get_user_cache_dir (), "libgda", NULL);
 		history_file = g_build_filename (cache_dir, HISTORY_FILE, NULL);
 		if (!g_file_test (cache_dir, G_FILE_TEST_EXISTS)) {
-			if (g_mkdir (cache_dir, 0700)) {
+			if (g_mkdir_with_parents (cache_dir, 0700)) {
 				g_free (history_file);
 				history_file = NULL;
 			}

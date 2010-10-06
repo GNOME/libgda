@@ -1,3 +1,11 @@
+libgda 4.1.11, 2010-09-15
+
+ - misc corrections
+ - new SQLCipher provider (integrated SQLCipher into Libgda) to encrypt
+   SQLite databases
+ - translations:
+	- sl (Matej Urbančič)
+
 libgda 4.1.10, 2010-09-11
 
  - GdaBrowser improvements & corrections (better full screen mode and notifications, improved
