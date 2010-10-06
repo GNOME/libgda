@@ -104,7 +104,8 @@ gda_report_docbook_document_class_init (GdaReportDocbookDocumentClass *klass)
 }
 
 static void
-gda_report_docbook_document_init (GdaReportDocbookDocument *doc, GdaReportDocbookDocumentClass *klass)
+gda_report_docbook_document_init (GdaReportDocbookDocument *doc,
+				  G_GNUC_UNUSED GdaReportDocbookDocumentClass *klass)
 {
 	doc->priv = g_new0 (GdaReportDocbookDocumentPrivate, 1);
 }
@@ -146,7 +147,8 @@ gda_report_docbook_document_get_type (void)
 			NULL, NULL,
 			sizeof (GdaReportDocbookDocument),
 			0,
-			(GInstanceInitFunc) gda_report_docbook_document_init
+			(GInstanceInitFunc) gda_report_docbook_document_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -162,7 +164,7 @@ static void
 gda_report_docbook_document_set_property (GObject *object,
 				guint param_id,
 				const GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaReportDocbookDocument *doc;
 
@@ -211,7 +213,7 @@ static void
 gda_report_docbook_document_get_property (GObject *object,
 				guint param_id,
 				GValue *value,
-				GParamSpec *pspec)
+				G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaReportDocbookDocument *doc;
 

@@ -234,7 +234,7 @@ query_editor_class_init (QueryEditorClass *klass)
 }
 
 static void
-text_buffer_changed_cb (GtkTextBuffer *buffer, QueryEditor *editor)
+text_buffer_changed_cb (G_GNUC_UNUSED GtkTextBuffer *buffer, QueryEditor *editor)
 {
 	if (editor->priv->mode != QUERY_EDITOR_HISTORY)
 		g_signal_emit (editor, query_editor_signals[CHANGED], 0);
@@ -314,8 +314,8 @@ get_string_to_complete (QueryEditor *editor, gchar **out_start_pos)
 }
 
 static void
-completion_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
-			     GtkTreeViewColumn *column, QueryEditor *editor)
+completion_row_activated_cb (G_GNUC_UNUSED GtkTreeView *treeview, GtkTreePath *path,
+			     G_GNUC_UNUSED GtkTreeViewColumn *column, QueryEditor *editor)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -663,7 +663,7 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 }
 
 static void
-query_editor_init (QueryEditor *editor, QueryEditorClass *klass)
+query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 {
 	int tab = 8;
 	gboolean highlight = TRUE;
@@ -809,7 +809,7 @@ query_editor_finalize (GObject *object)
 	/* free memory */
 	hist_data_free_all (editor);
 	if (editor->priv->states) {
-		gint i;
+		gsize i;
 		for (i = 0; i < editor->priv->states->len; i++) {
 			gchar *str;
 			str = g_array_index (editor->priv->states, gchar*, i);
@@ -849,7 +849,8 @@ query_editor_get_type (void)
 			NULL,
 			sizeof (QueryEditor),
 			0,
-			(GInstanceInitFunc) query_editor_init
+			(GInstanceInitFunc) query_editor_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "QueryEditor", &info, 0);
 	}

@@ -52,7 +52,8 @@ _gda_sqlite_pstmt_get_type (void)
 			NULL,
 			sizeof (GdaSqlitePStmt),
 			0,
-			(GInstanceInitFunc) gda_sqlite_pstmt_init
+			(GInstanceInitFunc) gda_sqlite_pstmt_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);
@@ -74,7 +75,7 @@ gda_sqlite_pstmt_class_init (GdaSqlitePStmtClass *klass)
 }
 
 static void
-gda_sqlite_pstmt_init (GdaSqlitePStmt *pstmt, GdaSqlitePStmtClass *klass)
+gda_sqlite_pstmt_init (GdaSqlitePStmt *pstmt, G_GNUC_UNUSED GdaSqlitePStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	pstmt->sqlite_stmt = NULL;

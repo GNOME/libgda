@@ -67,7 +67,8 @@ login_dialog_get_type (void)
 			NULL,
 			sizeof (LoginDialog),
 			0,
-			(GInstanceInitFunc) login_dialog_init
+			(GInstanceInitFunc) login_dialog_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -92,7 +93,7 @@ login_dialog_class_init (LoginDialogClass *class)
 }
 
 static void
-login_contents_changed_cb (GdauiLogin *login, gboolean is_valid, LoginDialog *dialog)
+login_contents_changed_cb (G_GNUC_UNUSED GdauiLogin *login, gboolean is_valid, LoginDialog *dialog)
 {
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, is_valid);
 	if (is_valid)

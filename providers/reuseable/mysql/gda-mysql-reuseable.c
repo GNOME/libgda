@@ -289,7 +289,8 @@ mysql_name_to_g_type (const gchar *name, const gchar *conv_func_name)
 }
 
 GType
-_gda_mysql_reuseable_get_g_type (GdaConnection *cnc, GdaProviderReuseable *rdata, const gchar *db_type)
+_gda_mysql_reuseable_get_g_type (G_GNUC_UNUSED GdaConnection *cnc, G_GNUC_UNUSED GdaProviderReuseable *rdata,
+				 const gchar *db_type)
 {
 	g_return_val_if_fail (db_type, GDA_TYPE_NULL);
 
@@ -318,7 +319,7 @@ _gda_mysql_reuseable_get_reserved_keywords_func (GdaProviderReuseable *rdata)
 }
 
 GdaSqlParser *
-_gda_mysql_reuseable_create_parser (GdaProviderReuseable *rdata)
+_gda_mysql_reuseable_create_parser (G_GNUC_UNUSED GdaProviderReuseable *rdata)
 {
 	return GDA_SQL_PARSER (g_object_new (GDA_TYPE_MYSQL_PARSER, NULL));
 }

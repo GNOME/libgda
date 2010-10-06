@@ -381,20 +381,7 @@
             <para>Firebird: compiles, needs testing;</para>
           </listitem>
           <listitem>
-            <para>IBM DB2: compiles but is not usable, work in progress;</para>
-          </listitem>
-          <listitem>
-            <para>Microsoft SQL Server and Sybase using the <ulink url="http://www.freetds.org/">FreeTDS</ulink> library:
-	      compiles, needs testing;</para>
-          </listitem>
-          <listitem>
-            <para>mSQL: compiles, needs testing;</para>
-          </listitem>
-          <listitem>
             <para>MySQL: fully functional;</para>
-          </listitem>
-          <listitem>
-            <para>ODBC: seems to work correctly, needs testing;</para>
           </listitem>
           <listitem>
             <para>Oracle: work is progress, usable;</para>
@@ -406,10 +393,13 @@
             <para>SQLite: fully functional;</para>
           </listitem>
           <listitem>
-            <para>Sybase: compiles, needs testing;</para>
+            <para>Oracle Berkeley DB: fully functional;</para>
           </listitem>
           <listitem>
-            <para>Xbase: compiles, needs testing</para>
+            <para>Oracle Berkeley DB with SQL: fully functional;</para>
+          </listitem>
+          <listitem>
+            <para>SQLCipher: fully functional;</para>
           </listitem>
 	</itemizedlist>
       </para>

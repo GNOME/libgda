@@ -81,7 +81,8 @@ gdaui_entry_text_get_type (void)
 			NULL,
 			sizeof (GdauiEntryText),
 			0,
-			(GInstanceInitFunc) gdaui_entry_text_init
+			(GInstanceInitFunc) gdaui_entry_text_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryText", &info, 0);
@@ -390,7 +391,7 @@ focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryText *mgtxt)
 	g_assert (activate_cb);
 	((Callback2)activate_cb) (widget, mgtxt);
 
-	return FALSE;
+	return gtk_widget_event (GTK_WIDGET (mgtxt), (GdkEvent*) event);
 }
 
 static void
@@ -411,7 +412,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, gboolean horiz)
 {
 	if (horiz)
 		return FALSE;

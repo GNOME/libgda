@@ -72,7 +72,8 @@ data_manager_perspective_get_type (void)
 			NULL,
 			sizeof (DataManagerPerspective),
 			0,
-			(GInstanceInitFunc) data_manager_perspective_init
+			(GInstanceInitFunc) data_manager_perspective_init,
+			0
 		};
 
 		static GInterfaceInfo perspective_info = {
@@ -244,7 +245,7 @@ add_new_data_console (BrowserPerspective *bpers, gint fav_id)
 }
 
 static void
-fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
                           const gchar *selection, DataManagerPerspective *perspective)
 {
 	/* find or create page for this favorite */
@@ -295,7 +296,7 @@ fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType f
 }
 
 static void
-nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
+nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint page_num,
                    DataManagerPerspective *perspective)
 {
         GtkWidget *page_contents;
@@ -315,7 +316,7 @@ nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
 }
 
 static void
-nb_page_removed_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
+nb_page_removed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, G_GNUC_UNUSED gint page_num,
                     DataManagerPerspective *perspective)
 {
         if (gtk_notebook_get_n_pages (nb) == 0) {
@@ -327,14 +328,14 @@ nb_page_removed_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
 }
 
 static void
-nb_page_added_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
-		  DataManagerPerspective *perspective)
+nb_page_added_cb (G_GNUC_UNUSED GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page,
+		  G_GNUC_UNUSED gint page_num, DataManagerPerspective *perspective)
 {
 	adapt_notebook_for_fullscreen (perspective);
 }
 
 static void
-close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget)
+close_button_clicked_cb (G_GNUC_UNUSED GtkWidget *wid, GtkWidget *page_widget)
 {
         gtk_widget_destroy (page_widget);
 }
@@ -351,7 +352,7 @@ adapt_notebook_for_fullscreen (DataManagerPerspective *perspective)
 }
 
 static void
-fullscreen_changed_cb (BrowserWindow *bwin, gboolean fullscreen, DataManagerPerspective *perspective)
+fullscreen_changed_cb (G_GNUC_UNUSED BrowserWindow *bwin, gboolean fullscreen, DataManagerPerspective *perspective)
 {
 	perspective->priv->fullscreen = fullscreen;
 	adapt_notebook_for_fullscreen (perspective);
@@ -385,7 +386,7 @@ data_manager_perspective_dispose (GObject *object)
 }
 
 static void
-manager_new_cb (GtkAction *action, BrowserPerspective *bpers)
+manager_new_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
 {
 	add_new_data_console (bpers, -1);
 }
@@ -448,7 +449,7 @@ data_manager_perspective_get_actions_group (BrowserPerspective *bpers)
 }
 
 static const gchar *
-data_manager_perspective_get_actions_ui (BrowserPerspective *bpers)
+data_manager_perspective_get_actions_ui (G_GNUC_UNUSED BrowserPerspective *bpers)
 {
 	return ui_actions_info;
 }

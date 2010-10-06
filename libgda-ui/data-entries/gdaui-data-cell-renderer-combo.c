@@ -117,6 +117,7 @@ gdaui_data_cell_renderer_combo_get_type (void)
 			sizeof (GdauiDataCellRendererCombo),
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_combo_init,
+			0
 		};
 		
 		cell_text_type =
@@ -349,7 +350,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 			GList *gvalues = g_value_get_pointer (value);
 			gchar *str;
 
-			g_assert (g_list_length (gvalues) == datacell->priv->source->shown_n_cols);
+			g_assert (g_list_length (gvalues) == (guint)datacell->priv->source->shown_n_cols);
 			str = render_text_to_display_from_values (gvalues);
 			g_object_set (G_OBJECT (object), "text", str, NULL);
 			g_free (str);
@@ -569,12 +570,12 @@ static gboolean gdaui_data_cell_renderer_combo_focus_out_event (GtkWidget *widge
 
 static GtkCellEditable *
 gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
-					      GdkEvent            *event,
-					      GtkWidget           *widget,
+					      G_GNUC_UNUSED GdkEvent            *event,
+					      G_GNUC_UNUSED GtkWidget           *widget,
 					      const gchar         *path,
-					      GdkRectangle        *background_area,
-					      GdkRectangle        *cell_area,
-					      GtkCellRendererState flags)
+					      G_GNUC_UNUSED GdkRectangle        *background_area,
+					      G_GNUC_UNUSED GdkRectangle        *cell_area,
+					      G_GNUC_UNUSED GtkCellRendererState flags)
 {
 	GdauiDataCellRendererCombo *datacell;
 	GtkWidget *combo;
@@ -638,7 +639,7 @@ gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCe
 
 
 static gboolean
-gdaui_data_cell_renderer_combo_focus_out_event (GtkWidget *widget, GdkEvent  *event, 
+gdaui_data_cell_renderer_combo_focus_out_event (GtkWidget *widget, G_GNUC_UNUSED GdkEvent  *event,
 						GdauiDataCellRendererCombo *datacell)
 {
   

@@ -47,7 +47,8 @@ gdaui_entry_date_get_type (void)
 			NULL,
 			sizeof (GdauiEntryDate),
 			0,
-			(GInstanceInitFunc) gdaui_entry_date_init
+			(GInstanceInitFunc) gdaui_entry_date_init,
+			0
 		};
 	
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_COMMON_TIME, "GdauiEntryDate", &info, 0);
@@ -62,7 +63,7 @@ gdaui_entry_date_class_init (GdauiEntryDateClass * class)
 }
 
 static void
-gdaui_entry_date_init (GdauiEntryDate * gdaui_entry_date)
+gdaui_entry_date_init (G_GNUC_UNUSED GdauiEntryDate * gdaui_entry_date)
 {
 }
 

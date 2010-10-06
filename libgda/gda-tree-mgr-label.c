@@ -81,7 +81,7 @@ gda_tree_mgr_label_class_init (GdaTreeMgrLabelClass *klass)
 }
 
 static void
-gda_tree_mgr_label_init (GdaTreeMgrLabel *mgr, GdaTreeMgrLabelClass *klass)
+gda_tree_mgr_label_init (GdaTreeMgrLabel *mgr, G_GNUC_UNUSED GdaTreeMgrLabelClass *klass)
 {
 	g_return_if_fail (GDA_IS_TREE_MGR_LABEL (mgr));
 	mgr->priv = g_new0 (GdaTreeMgrLabelPriv, 1);
@@ -125,7 +125,8 @@ gda_tree_mgr_label_get_type (void)
                         NULL,
                         sizeof (GdaTreeMgrLabel),
                         0,
-                        (GInstanceInitFunc) gda_tree_mgr_label_init
+                        (GInstanceInitFunc) gda_tree_mgr_label_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);
@@ -140,7 +141,7 @@ static void
 gda_tree_mgr_label_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaTreeMgrLabel *mgr;
 
@@ -158,7 +159,7 @@ static void
 gda_tree_mgr_label_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaTreeMgrLabel *mgr;
 
@@ -193,7 +194,7 @@ gda_tree_mgr_label_new (const gchar *label)
 
 static GSList *
 gda_tree_mgr_label_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
-				    gboolean *out_error, GError **error)
+				    G_GNUC_UNUSED gboolean *out_error, G_GNUC_UNUSED GError **error)
 {
 	if (children_nodes) {
 		GSList *list = g_slist_copy ((GSList*) children_nodes);

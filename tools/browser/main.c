@@ -56,7 +56,7 @@ gchar *perspective = NULL;
 static GOptionEntry entries[] = {
         { "perspective", 'p', 0, G_OPTION_ARG_STRING, &perspective, "Perspective", "default perspective "
 	  "to use when opening windows"},
-	{ NULL }
+	{ NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
 int

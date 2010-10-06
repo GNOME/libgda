@@ -89,7 +89,8 @@ gda_sql_builder_get_type (void) {
 			NULL,
 			sizeof (GdaSqlBuilder),
 			0,
-			(GInstanceInitFunc) gda_sql_builder_init
+			(GInstanceInitFunc) gda_sql_builder_init,
+			0
 		};
 
 		g_static_rec_mutex_lock (&init_mutex);
@@ -220,7 +221,7 @@ static void
 gda_sql_builder_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
-			     GParamSpec *pspec)
+			     G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaSqlBuilder *builder;
 	GdaSqlStatementType stmt_type;
@@ -249,8 +250,8 @@ gda_sql_builder_set_property (GObject *object,
 static void
 gda_sql_builder_get_property (GObject *object,
 			     guint param_id,
-			     GValue *value,
-			     GParamSpec *pspec)
+			     G_GNUC_UNUSED GValue *value,
+			     G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaSqlBuilder *builder;
 	builder = GDA_SQL_BUILDER (object);

@@ -525,19 +525,20 @@ init_plugins_hash (void)
 }
 
 static GdauiDataEntry *
-entry_none_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+entry_none_create_func (G_GNUC_UNUSED GdaDataHandler *handler, GType type, G_GNUC_UNUSED const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_none_new (type);
 }
 
 static GdauiDataEntry *
-entry_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+entry_boolean_create_func (GdaDataHandler *handler, G_GNUC_UNUSED GType type,
+			   G_GNUC_UNUSED const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_boolean_new (handler, G_TYPE_BOOLEAN);
 }
 
 static GdauiDataEntry *
-entry_bin_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+entry_bin_create_func (GdaDataHandler *handler, GType type, G_GNUC_UNUSED const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_bin_new (handler, type);
 }
@@ -555,19 +556,20 @@ entry_number_create_func (GdaDataHandler *handler, GType type, const gchar *opti
 }
 
 static GdauiDataEntry *
-entry_time_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+entry_time_create_func (GdaDataHandler *handler, G_GNUC_UNUSED GType type, G_GNUC_UNUSED const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_time_new (handler);
 }
 
 static GdauiDataEntry *
-entry_timestamp_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+entry_timestamp_create_func (GdaDataHandler *handler, G_GNUC_UNUSED GType type,
+			     G_GNUC_UNUSED const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_timestamp_new (handler);
 }
 
 static GdauiDataEntry *
-entry_date_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+entry_date_create_func (GdaDataHandler *handler, G_GNUC_UNUSED GType type, G_GNUC_UNUSED const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_date_new (handler);
 }
@@ -579,13 +581,14 @@ cell_textual_create_func (GdaDataHandler *handler, GType type, const gchar *opti
 }
 
 static GtkCellRenderer *
-cell_boolean_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+cell_boolean_create_func (GdaDataHandler *handler, G_GNUC_UNUSED GType type,
+			  G_GNUC_UNUSED const gchar *options)
 {
 	return gdaui_data_cell_renderer_boolean_new (handler, G_TYPE_BOOLEAN);
 }
 
 static GtkCellRenderer *
-cell_bin_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+cell_bin_create_func (GdaDataHandler *handler, GType type, G_GNUC_UNUSED const gchar *options)
 {
 	return gdaui_data_cell_renderer_bin_new (handler, type);
 }

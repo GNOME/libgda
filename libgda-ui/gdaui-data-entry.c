@@ -49,7 +49,8 @@ gdaui_data_entry_get_type (void)
 			NULL,
 			0,
 			0,
-			(GInstanceInitFunc) NULL
+			(GInstanceInitFunc) NULL,
+			0
 		};
 
 		type = g_type_register_static (G_TYPE_INTERFACE, "GdauiDataEntry", &info, 0);
@@ -58,10 +59,10 @@ gdaui_data_entry_get_type (void)
 }
 
 static gboolean
-contents_valid_accumulator (GSignalInvocationHint *ihint,
+contents_valid_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
 			    GValue *return_accu,
 			    const GValue *handler_return,
-			    gpointer data)
+			    G_GNUC_UNUSED gpointer data)
 {
         gboolean thisvalue;
 
@@ -72,7 +73,7 @@ contents_valid_accumulator (GSignalInvocationHint *ihint,
 }
 
 static gboolean
-m_class_contents_valid (GdauiDataEntry *de, GError **error)
+m_class_contents_valid (G_GNUC_UNUSED GdauiDataEntry *de, G_GNUC_UNUSED GError **error)
 {
 	return TRUE;
 }

@@ -47,7 +47,8 @@ gda_capi_parser_get_type (void)
 			NULL,
 			sizeof (GdaCapiParser),
 			0,
-			(GInstanceInitFunc) gda_capi_parser_init
+			(GInstanceInitFunc) gda_capi_parser_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -79,6 +80,6 @@ gda_capi_parser_class_init (GdaCapiParserClass * klass)
 }
 
 static void
-gda_capi_parser_init (GdaCapiParser *parser)
+gda_capi_parser_init (G_GNUC_UNUSED GdaCapiParser *parser)
 {
 }

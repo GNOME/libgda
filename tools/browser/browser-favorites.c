@@ -65,7 +65,8 @@ browser_favorites_get_type (void)
 			NULL,
 			sizeof (BrowserFavorites),
 			0,
-			(GInstanceInitFunc) browser_favorites_init
+			(GInstanceInitFunc) browser_favorites_init,
+			0
 		};
 
 
@@ -1025,7 +1026,7 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 	gda_lockable_unlock (GDA_LOCKABLE (bfav->priv->store_cnc));
 	if (retval)
 		g_signal_emit (bfav, browser_favorites_signals [FAV_CHANGED],
-			       g_quark_from_string (favorite_type_to_string (efav.type >= 0 ? efav.type : fav->type)));
+			       g_quark_from_string (favorite_type_to_string (efav.type)));
 	browser_favorites_reset_attributes (&efav);
 	if (params)
 		g_object_unref (G_OBJECT (params));

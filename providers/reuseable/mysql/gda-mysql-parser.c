@@ -47,7 +47,8 @@ gda_mysql_parser_get_type (void)
 			NULL,
 			sizeof (GdaMysqlParser),
 			0,
-			(GInstanceInitFunc) gda_mysql_parser_init
+			(GInstanceInitFunc) gda_mysql_parser_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -79,6 +80,6 @@ gda_mysql_parser_class_init (GdaMysqlParserClass * klass)
 }
 
 static void
-gda_mysql_parser_init (GdaMysqlParser *parser)
+gda_mysql_parser_init (G_GNUC_UNUSED GdaMysqlParser *parser)
 {
 }

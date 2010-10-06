@@ -34,11 +34,11 @@ column_show_changed_cb (GtkCheckButton *cbutton, GdauiCombo *combo)
 }
 
 static void
-selection_changed_cb (GdauiDataSelector *selector, gpointer data)
+selection_changed_cb (GdauiDataSelector *selector, G_GNUC_UNUSED gpointer data)
 {
 	GString *string = NULL;
 	GArray *sel;
-	gint i;
+	gsize i;
 
 	sel = gdaui_data_selector_get_selected_rows (selector);
 	if (sel) {

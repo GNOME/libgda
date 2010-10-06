@@ -75,7 +75,8 @@ ui_formgrid_get_type (void)
 			NULL,
 			sizeof (UiFormGrid),
 			0,
-			(GInstanceInitFunc) ui_formgrid_init
+			(GInstanceInitFunc) ui_formgrid_init,
+			0
 		};		
 
 		type = g_type_register_static (GTK_TYPE_VBOX, "UiFormGrid", &info, 0);
@@ -329,7 +330,7 @@ ui_formgrid_handle_user_prefs (UiFormGrid *formgrid, BrowserConnection *bcnc, Gd
 static void
 ui_formgrid_set_property (GObject *object,
 				guint param_id,
-				const GValue *value,
+				G_GNUC_UNUSED const GValue *value,
 				GParamSpec *pspec)
 {
 	UiFormGrid *formgrid;

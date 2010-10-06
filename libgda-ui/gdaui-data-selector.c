@@ -51,7 +51,8 @@ gdaui_data_selector_get_type (void)
 			NULL,
 			0,
 			0,
-			(GInstanceInitFunc) NULL
+			(GInstanceInitFunc) NULL,
+			0
 		};
 		
 		type = g_type_register_static (G_TYPE_INTERFACE, "GdauiDataSelector", &info, 0);
@@ -62,7 +63,7 @@ gdaui_data_selector_get_type (void)
 
 
 static void
-gdaui_data_selector_iface_init (gpointer g_class)
+gdaui_data_selector_iface_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 

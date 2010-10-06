@@ -63,7 +63,8 @@ connection_binding_properties_get_type (void)
 			NULL,
 			sizeof (ConnectionBindingProperties),
 			0,
-			(GInstanceInitFunc) connection_binding_properties_init
+			(GInstanceInitFunc) connection_binding_properties_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);
@@ -315,7 +316,7 @@ add_part_mitem_cb (GtkMenuItem *mitem, ConnectionBindingProperties *cprop)
 }
 
 static void
-add_part_clicked_cb (GtkWidget *button, ConnectionBindingProperties *cprop)
+add_part_clicked_cb (G_GNUC_UNUSED GtkWidget *button, ConnectionBindingProperties *cprop)
 {
 	if (! cprop->priv->menu) {
 		GtkWidget *menu, *entry;
@@ -381,7 +382,8 @@ part_for_model_holder_changed_cb (GdaSet *set, GdaHolder *holder, BrowserVirtual
 }
 
 static GdauiDataEntry *
-plugin_entry_import_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+plugin_entry_import_create_func (G_GNUC_UNUSED GdaDataHandler *handler, GType type,
+				 G_GNUC_UNUSED const gchar *options)
 {
 	return GDAUI_DATA_ENTRY (gdaui_entry_import_new (type));
 }
@@ -439,8 +441,8 @@ create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnect
 }
 
 static GError *
-part_for_cnc_validate_holder_change_cb (GdaSet *set, GdaHolder *holder, GValue *new_value,
-					BrowserVirtualConnectionCnc *cnc)
+part_for_cnc_validate_holder_change_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *holder, GValue *new_value,
+					G_GNUC_UNUSED BrowserVirtualConnectionCnc *cnc)
 {
 	const gchar *hid;
 

@@ -66,7 +66,8 @@ gdaui_entry_import_get_type (void)
 			NULL,
 			sizeof (GdauiEntryImport),
 			0,
-			(GInstanceInitFunc) gdaui_entry_import_init
+			(GInstanceInitFunc) gdaui_entry_import_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryImport", &info, 0);
@@ -281,7 +282,7 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 }
 
 static void
-connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb)
+connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, G_GNUC_UNUSED GCallback activate_cb)
 {
 	GdauiEntryImport *mgtxt;
 
@@ -293,7 +294,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }

@@ -13,8 +13,7 @@ print_unicode (const gchar *ptr)
 {
 	gunichar wc;
 	wc = g_utf8_get_char_validated (ptr, -1);
-	g_assert (wc >= 0);
-	g_print ("%s <=> %u, IS_print: %d\n", ptr, wc, g_unichar_isprint (wc));
+	g_print ("%s <=> %" G_GUINT32_FORMAT ", IS_print: %d\n", ptr, wc, g_unichar_isprint (wc));
 }
 
 static void
@@ -34,10 +33,11 @@ entry_changed_cb (GdauiEntry *entry, const gchar *id)
 }
 
 static void
-prop_length_set_cb (GtkButton *buntton, GdauiEntry *entry)
+prop_length_set_cb (G_GNUC_UNUSED GtkButton *button, GdauiEntry *entry)
 {
 	gchar *tmp;
-	gint max, i;
+	gint max;
+	gsize i;
 	tmp = gdaui_entry_get_text (entry);
 	max = atoi (tmp);
 	g_free (tmp);
@@ -49,10 +49,10 @@ prop_length_set_cb (GtkButton *buntton, GdauiEntry *entry)
 }
 
 static void
-prop_text_set_cb (GtkButton *buntton, GdauiEntry *entry)
+prop_text_set_cb (G_GNUC_UNUSED GtkButton *button, GdauiEntry *entry)
 {
 	gchar *tmp;
-	gint i;
+	gsize i;
 	tmp = gdaui_entry_get_text (entry);
 	g_print ("Setting entries' text to [%s]\n", tmp);
 	for (i = 0; i < NB_ENTRIES; i++)
@@ -62,9 +62,9 @@ prop_text_set_cb (GtkButton *buntton, GdauiEntry *entry)
 }
 
 static void
-prop_text_null_cb (GtkButton *buntton, gpointer data)
+prop_text_null_cb (G_GNUC_UNUSED GtkButton *button, G_GNUC_UNUSED gpointer data)
 {
-	gint i;
+	gsize i;
 
 	g_print ("Setting entries' text to NULL\n");
 	for (i = 0; i < NB_ENTRIES; i++)

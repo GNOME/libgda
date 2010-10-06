@@ -538,7 +538,7 @@ foreach_check_validity (GdaSqlAnyPart *node, GdaSqlStatementCheckValidityData *d
 }
 
 static gboolean
-gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaSqlStatementCheckValidityData *data, GError **error)
+gda_sql_expr_check_validity (GdaSqlExpr *expr, G_GNUC_UNUSED GdaSqlStatementCheckValidityData *data, G_GNUC_UNUSED GError **error)
 {
 	if (!expr) return TRUE;
 	if (!expr->param_spec) return TRUE;
@@ -886,7 +886,7 @@ gda_sql_statement_check_clean (GdaSqlStatement *stmt)
 }
 
 static gboolean
-foreach_check_clean (GdaSqlAnyPart *node, gpointer data, GError **error)
+foreach_check_clean (GdaSqlAnyPart *node, G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
 	if (!node) return TRUE;
 
@@ -936,7 +936,7 @@ gda_sql_statement_check_structure (GdaSqlStatement *stmt, GError **error)
 }
 
 static gboolean
-foreach_check_struct (GdaSqlAnyPart *node, gpointer data, GError **error)
+foreach_check_struct (GdaSqlAnyPart *node, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	return gda_sql_any_part_check_structure (node, error);
 }
@@ -1407,7 +1407,7 @@ gda_sql_statement_normalize (GdaSqlStatement *stmt, GdaConnection *cnc, GError *
 }
 
 static gboolean
-foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error)
+foreach_normalize (GdaSqlAnyPart *node, G_GNUC_UNUSED GdaConnection *cnc, GError **error)
 {
 	if (!node) return TRUE;
 

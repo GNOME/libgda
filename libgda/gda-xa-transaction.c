@@ -89,7 +89,7 @@ gda_xa_transaction_class_init (GdaXaTransactionClass *klass)
 }
 
 static void
-gda_xa_transaction_init (GdaXaTransaction *xa_trans, GdaXaTransactionClass *klass)
+gda_xa_transaction_init (GdaXaTransaction *xa_trans, G_GNUC_UNUSED GdaXaTransactionClass *klass)
 {
 	xa_trans->priv = g_new0 (GdaXaTransactionPrivate, 1);
 	xa_trans->priv->xid.format = 1;
@@ -225,7 +225,8 @@ gda_xa_transaction_get_type (void)
 			NULL, NULL,
 			sizeof (GdaXaTransaction),
 			0,
-			(GInstanceInitFunc) gda_xa_transaction_init
+			(GInstanceInitFunc) gda_xa_transaction_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

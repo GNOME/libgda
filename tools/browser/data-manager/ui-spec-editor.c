@@ -64,8 +64,8 @@ ui_spec_editor_class_init (UiSpecEditorClass *klass)
 }
 
 static void
-cell_text_data_func (GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
-		     GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data)
+cell_text_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
+		     GtkTreeModel *tree_model, GtkTreeIter *iter, G_GNUC_UNUSED gpointer data)
 {
 	DataSource *source;
 	gtk_tree_model_get (tree_model, iter, COLUMN_DATA_SOURCE, &source, -1);
@@ -97,8 +97,8 @@ cell_text_data_func (GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
 }
 
 static void
-cell_pixbuf_data_func (GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
-		       GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data)
+cell_pixbuf_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
+		       GtkTreeModel *tree_model, GtkTreeIter *iter, G_GNUC_UNUSED gpointer data)
 {
 	DataSource *source;
 	gtk_tree_model_get (tree_model, iter, COLUMN_DATA_SOURCE, &source, -1);
@@ -132,7 +132,7 @@ data_source_selection_changed_cb (GtkTreeSelection *sel, UiSpecEditor *uied)
 }
 
 static void
-ui_spec_editor_init (UiSpecEditor *sped, UiSpecEditorClass *klass)
+ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 {
 	g_return_if_fail (IS_UI_SPEC_EDITOR (sped));
 
@@ -233,7 +233,8 @@ ui_spec_editor_get_type (void)
 			NULL,
 			sizeof (UiSpecEditor),
 			0,
-			(GInstanceInitFunc) ui_spec_editor_init
+			(GInstanceInitFunc) ui_spec_editor_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "UiSpecEditor", &info, 0);
 	}
@@ -293,7 +294,7 @@ mgr_changed_cb (DataSourceManager *mgr, UiSpecEditor *sped)
 }
 
 static void
-mgr_source_changed_cb (DataSourceManager *mgr, DataSource *source, UiSpecEditor *sped)
+mgr_source_changed_cb (G_GNUC_UNUSED DataSourceManager *mgr, DataSource *source, UiSpecEditor *sped)
 {
 	GtkTreeIter iter;
 	GtkTreeModel *tree_model = GTK_TREE_MODEL (sped->priv->sources_model);

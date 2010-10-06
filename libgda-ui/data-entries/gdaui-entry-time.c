@@ -47,7 +47,8 @@ gdaui_entry_time_get_type (void)
 			NULL,
 			sizeof (GdauiEntryTime),
 			0,
-			(GInstanceInitFunc) gdaui_entry_time_init
+			(GInstanceInitFunc) gdaui_entry_time_init,
+			0
 		};
 	
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_COMMON_TIME, "GdauiEntryTime", &info, 0);
@@ -62,7 +63,7 @@ gdaui_entry_time_class_init (GdauiEntryTimeClass * class)
 }
 
 static void
-gdaui_entry_time_init (GdauiEntryTime * gdaui_entry_time)
+gdaui_entry_time_init (G_GNUC_UNUSED GdauiEntryTime * gdaui_entry_time)
 {
 }
 

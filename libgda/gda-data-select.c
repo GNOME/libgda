@@ -198,7 +198,8 @@ gda_data_select_get_type (void)
 			NULL,
 			sizeof (GdaDataSelect),
 			0,
-			(GInstanceInitFunc) gda_data_select_init
+			(GInstanceInitFunc) gda_data_select_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {
@@ -315,7 +316,7 @@ gda_data_select_data_model_init (GdaDataModelIface *iface)
 }
 
 static void
-gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
+gda_data_select_init (GdaDataSelect *model, G_GNUC_UNUSED GdaDataSelectClass *klass)
 {
 	ModType i;
 
@@ -359,7 +360,8 @@ gda_data_select_init (GdaDataSelect *model, GdaDataSelectClass *klass)
 }
 
 static void
-ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect *model)
+ext_params_holder_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, G_GNUC_UNUSED GdaHolder *param,
+			      GdaDataSelect *model)
 {
 	if (model->priv->sh->reset_with_ext_params_change) {
 		GError *error = NULL;
@@ -379,7 +381,7 @@ free_private_shared_data (GdaDataSelect *model)
 
 	model->priv->sh->ref_count --;
 	if (model->priv->sh->ref_count == 0) {
-		gint i;
+		guint i;
 
 		if (model->priv->sh->sel_stmt) {
 			g_object_unref (model->priv->sh->sel_stmt);
@@ -619,7 +621,7 @@ static void
 gda_data_select_set_property (GObject *object,
 			 guint param_id,
 			 const GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 	if (model->priv) {
@@ -708,7 +710,7 @@ static void
 gda_data_select_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 	if (model->priv) {
@@ -1328,7 +1330,7 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **
 }
 
 static gboolean
-row_selection_condition_foreach_func (GdaSqlAnyPart *part, gpointer data, GError **error)
+row_selection_condition_foreach_func (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	if (part->type != GDA_SQL_ANY_SQL_OPERATION) 
 		return TRUE;
@@ -1629,7 +1631,7 @@ external_to_internal_row (GdaDataSelect *model, gint ext_row, GError **error)
 	/* row number alteration: deleted rows */
 	if (model->priv->sh->del_rows) {
 		gint i;
-		for (i = 0; i < model->priv->sh->del_rows->len; i++) {
+		for (i = 0; (guint)i < model->priv->sh->del_rows->len; i++) {
 			gint indexed = g_array_index (model->priv->sh->del_rows, gint, i);
 			if (indexed <= ext_row + i)
 				int_row += 1;
@@ -1811,7 +1813,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 }
 
 static GdaValueAttribute
-gda_data_select_get_attributes_at (GdaDataModel *model, gint col, gint row)
+gda_data_select_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
 {
 	GdaValueAttribute flags = GDA_VALUE_ATTR_IS_UNCHANGED;
 	GdaDataSelect *imodel;
@@ -2991,7 +2993,8 @@ static gboolean
 gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 {
 	GdaDataSelect *imodel;
-	gint int_row, i, ncols, index;
+	guint i, ncols;
+	gint int_row, index;
 	GdaHolder *holder;
 	gchar *str;
 
@@ -3174,7 +3177,8 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 }
 
 static gboolean
-compute_insert_select_params_mapping_foreach_func (GdaSqlAnyPart *part, CorrespData *data, GError **error)
+compute_insert_select_params_mapping_foreach_func (GdaSqlAnyPart *part, CorrespData *data,
+						   G_GNUC_UNUSED GError **error)
 {
 	if (part->type != GDA_SQL_ANY_SQL_OPERATION) 
 		return TRUE;

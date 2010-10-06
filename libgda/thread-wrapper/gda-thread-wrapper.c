@@ -99,7 +99,7 @@ job_free (Job *job)
 			g_error_free (job->u.exe.error);
 	}
 	else if (job->type == JOB_TYPE_SIGNAL) {
-		gint i;
+		guint i;
 		for (i = 0; i < job->u.signal.n_param_values; i++) {
 			GValue *value = job->u.signal.param_values + i;
 			if (G_VALUE_TYPE (value) != GDA_TYPE_NULL)
@@ -329,7 +329,7 @@ worker_thread_entry_point (GAsyncQueue *to_worker_thread)
 }
 
 static void
-gda_thread_wrapper_init (GdaThreadWrapper *wrapper, GdaThreadWrapperClass *klass)
+gda_thread_wrapper_init (GdaThreadWrapper *wrapper, G_GNUC_UNUSED GdaThreadWrapperClass *klass)
 {
 	g_return_if_fail (GDA_IS_THREAD_WRAPPER (wrapper));
 
@@ -347,7 +347,7 @@ gda_thread_wrapper_init (GdaThreadWrapper *wrapper, GdaThreadWrapperClass *klass
 }
 
 static gboolean
-thread_data_remove_jobs_func (GThread *key, ThreadData *td, gpointer data)
+thread_data_remove_jobs_func (G_GNUC_UNUSED GThread *key, ThreadData *td, G_GNUC_UNUSED gpointer data)
 {
 	if (td->jobs)  {
 		GSList *list;
@@ -442,7 +442,8 @@ gda_thread_wrapper_get_type (void)
                         NULL,
                         sizeof (GdaThreadWrapper),
                         0,
-                        (GInstanceInitFunc) gda_thread_wrapper_init
+                        (GInstanceInitFunc) gda_thread_wrapper_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);
@@ -456,8 +457,8 @@ gda_thread_wrapper_get_type (void)
 static void
 gda_thread_wrapper_set_property (GObject *object,
 			       guint param_id,
-			       const GValue *value,
-			       GParamSpec *pspec)
+			       G_GNUC_UNUSED const GValue *value,
+			       G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaThreadWrapper *wrapper;
 
@@ -471,8 +472,8 @@ gda_thread_wrapper_set_property (GObject *object,
 static void
 gda_thread_wrapper_get_property (GObject *object,
 			       guint param_id,
-			       GValue *value,
-			       GParamSpec *pspec)
+			       G_GNUC_UNUSED GValue *value,
+			       G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaThreadWrapper *wrapper;
 	
@@ -525,7 +526,7 @@ gda_thread_wrapper_new (void)
  */
 guint
 gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func,
-			    gpointer arg, GDestroyNotify arg_destroy_func, GError **error)
+			    gpointer arg, GDestroyNotify arg_destroy_func, G_GNUC_UNUSED GError **error)
 {
 	Job *job;
 	guint id;
@@ -599,7 +600,7 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
  */
 guint
 gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoidFunc func,
-				 gpointer arg, GDestroyNotify arg_destroy_func, GError **error)
+				 gpointer arg, GDestroyNotify arg_destroy_func, G_GNUC_UNUSED GError **error)
 {
 	Job *job;
 	guint id;
@@ -834,7 +835,7 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 		if (may_lock) 
 			gda_thread_wrapper_iterate (wrapper, TRUE);
 		else {
-			gint len;
+			gsize len;
 			len = g_slist_length (td->results);
 			gda_thread_wrapper_iterate (wrapper, FALSE);
 			if (g_slist_length (td->results) == len) {
@@ -905,11 +906,11 @@ gda_thread_wrapper_get_waiting_size (GdaThreadWrapper *wrapper)
  */
 static void
 worker_thread_closure_marshal (GClosure *closure,
-			       GValue *return_value,
+			       G_GNUC_UNUSED GValue *return_value,
 			       guint n_param_values,
 			       const GValue *param_values,
-			       gpointer invocation_hint,
-			       gpointer marshal_data)
+			       G_GNUC_UNUSED gpointer invocation_hint,
+			       G_GNUC_UNUSED gpointer marshal_data)
 {
 	SignalSpec *sigspec = (SignalSpec *) closure->data;
 
@@ -921,7 +922,7 @@ worker_thread_closure_marshal (GClosure *closure,
 	    g_static_private_get (&worker_thread_current_queue) != sigspec->reply_queue)
 		return;
 
-	gint i;
+	gsize i;
 	/*
 	  for (i = 1; i < n_param_values; i++) {
 		g_print ("\t%d => %s\n", i, gda_value_stringify (param_values + i));
@@ -955,15 +956,15 @@ worker_thread_closure_marshal (GClosure *closure,
  */
 static void
 worker_thread_closure_marshal_anythread (GClosure *closure,
-					 GValue *return_value,
+					 G_GNUC_UNUSED GValue *return_value,
 					 guint n_param_values,
 					 const GValue *param_values,
-					 gpointer invocation_hint,
-					 gpointer marshal_data)
+					 G_GNUC_UNUSED gpointer invocation_hint,
+					 G_GNUC_UNUSED gpointer marshal_data)
 {
 	SignalSpec *sigspec = (SignalSpec *) closure->data;
 
-	gint i;
+	gsize i;
 	/*
 	  for (i = 1; i < n_param_values; i++) {
 		g_print ("\t%d => %s\n", i, gda_value_stringify (param_values + i));
@@ -1093,7 +1094,7 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 }
 
 static gboolean
-find_signal_r_func (GThread *thread, ThreadData *td, gulong *id)
+find_signal_r_func (G_GNUC_UNUSED GThread *thread, ThreadData *td, gulong *id)
 {
 	GSList *list;
 	for (list = td->signals_list; list; list = list->next) {

@@ -100,7 +100,8 @@ gda_meta_struct_get_type (void) {
 			NULL,
 			sizeof (GdaMetaStruct),
 			0,
-			(GInstanceInitFunc) gda_meta_struct_init
+			(GInstanceInitFunc) gda_meta_struct_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -220,7 +221,7 @@ static void
 gda_meta_struct_set_property (GObject *object,
 			      guint param_id,
 			      const GValue *value,
-			      GParamSpec *pspec)
+			      G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaMetaStruct *mstruct;
 
@@ -250,7 +251,7 @@ static void
 gda_meta_struct_get_property (GObject *object,
 			      guint param_id,
 			      GValue *value,
-			      GParamSpec *pspec)
+			      G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaMetaStruct *mstruct;
         mstruct = GDA_META_STRUCT (object);
@@ -270,14 +271,14 @@ gda_meta_struct_get_property (GObject *object,
 }
 
 static void
-meta_store_changed_cb (GdaMetaStore *store, GSList *changes, GdaMetaStruct *mstruct)
+meta_store_changed_cb (GdaMetaStore *store, G_GNUC_UNUSED GSList *changes, GdaMetaStruct *mstruct)
 {
 	/* for now we mark ALL the db objects as outdated */
 	meta_store_reset_cb (store, mstruct);
 }
 
 static void
-meta_store_reset_cb (GdaMetaStore *store, GdaMetaStruct *mstruct)
+meta_store_reset_cb (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaStruct *mstruct)
 {
 	/* mark ALL the db objects as outdated */
 	GSList *list;
@@ -1450,7 +1451,8 @@ db_object_sort_func (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
  * Returns: TRUE if no error occurred
  */ 
 gboolean
-gda_meta_struct_sort_db_objects (GdaMetaStruct *mstruct, GdaMetaSortType sort_type, GError **error)
+gda_meta_struct_sort_db_objects (GdaMetaStruct *mstruct, GdaMetaSortType sort_type,
+				 G_GNUC_UNUSED GError **error)
 {
 	GSList *pass_list;
 	GSList *ordered_list = NULL;
@@ -1645,7 +1647,7 @@ gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table, c
  * Returns: (transfer full): a new string, or %NULL if an error occurred.
  */
 gchar *
-gda_meta_struct_dump_as_graph (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, GError **error)
+gda_meta_struct_dump_as_graph (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	gchar *result;

@@ -92,7 +92,7 @@ favorite_selector_class_init (FavoriteSelectorClass *klass)
 
 
 static void
-favorite_selector_init (FavoriteSelector *tsel,	FavoriteSelectorClass *klass)
+favorite_selector_init (FavoriteSelector *tsel,	G_GNUC_UNUSED FavoriteSelectorClass *klass)
 {
 	tsel->priv = g_new0 (FavoriteSelectorPrivate, 1);
 	tsel->priv->idle_update_favorites = 0;
@@ -138,7 +138,8 @@ favorite_selector_get_type (void)
 			NULL,
 			sizeof (FavoriteSelector),
 			0,
-			(GInstanceInitFunc) favorite_selector_init
+			(GInstanceInitFunc) favorite_selector_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "FavoriteSelector",
 					       &info, 0);
@@ -180,8 +181,8 @@ key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, FavoriteSelector 
 
 
 static void
-selection_changed_cb (GtkTreeView *treeview, GtkTreePath *path,
-		      GtkTreeViewColumn *column, FavoriteSelector *tsel)
+selection_changed_cb (GtkTreeView *treeview, G_GNUC_UNUSED GtkTreePath *path,
+		      G_GNUC_UNUSED GtkTreeViewColumn *column, FavoriteSelector *tsel)
 {
 	GtkTreeModel *model;
 	GtkTreeSelection *select;
@@ -328,8 +329,8 @@ idle_update_favorites (FavoriteSelector *tsel)
 }
 
 static gboolean
-tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data,
-			 FavoriteSelector *tsel)
+tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
+			 GtkSelectionData *selection_data, FavoriteSelector *tsel)
 {
 	BrowserFavorites *bfav;
 	BrowserFavoritesAttributes fav;
@@ -360,7 +361,7 @@ tree_store_drag_drop_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionD
 }
 
 static gboolean
-tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar *path, FavoriteSelector *tsel)
+tree_store_drag_can_drag_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path, FavoriteSelector *tsel)
 {
 	GdaTreeNode *node;
 	node = gda_tree_get_node (tsel->priv->tree, path, FALSE);
@@ -374,8 +375,8 @@ tree_store_drag_can_drag_cb (GdauiTreeStore *store, const gchar *path, FavoriteS
 }
 
 static gboolean
-tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data,
-			FavoriteSelector *tsel)
+tree_store_drag_get_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
+			GtkSelectionData *selection_data, FavoriteSelector *tsel)
 {
 	GdaTreeNode *node;
 	node = gda_tree_get_node (tsel->priv->tree, path, FALSE);
@@ -395,7 +396,7 @@ tree_store_drag_get_cb (GdauiTreeStore *store, const gchar *path, GtkSelectionDa
 }
 
 static void
-favorites_changed_cb (BrowserFavorites *bfav, FavoriteSelector *tsel)
+favorites_changed_cb (G_GNUC_UNUSED BrowserFavorites *bfav, FavoriteSelector *tsel)
 {
 	if (! gda_tree_update_all (tsel->priv->tree, NULL)) {
 		if (tsel->priv->idle_update_favorites == 0)

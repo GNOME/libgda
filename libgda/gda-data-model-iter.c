@@ -116,7 +116,8 @@ gda_data_model_iter_get_type (void)
 			NULL,
 			sizeof (GdaDataModelIter),
 			0,
-			(GInstanceInitFunc) gda_data_model_iter_init
+			(GInstanceInitFunc) gda_data_model_iter_init,
+			0
 		};
 
 		
@@ -222,7 +223,7 @@ model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 }
 
 static void 
-model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
+model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDataModelIter *iter)
 {
 	if (iter->priv->row < 0)
 		/* we are not concerned by handling this signal */
@@ -408,7 +409,7 @@ static void
 gda_data_model_iter_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataModelIter *iter;
 
@@ -541,7 +542,7 @@ static void
 gda_data_model_iter_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataModelIter *iter = GDA_DATA_MODEL_ITER (object);
 	

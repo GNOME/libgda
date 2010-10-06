@@ -52,7 +52,8 @@ gda_web_pstmt_get_type (void)
 			NULL,
 			sizeof (GdaWebPStmt),
 			0,
-			(GInstanceInitFunc) gda_web_pstmt_init
+			(GInstanceInitFunc) gda_web_pstmt_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);
@@ -74,7 +75,7 @@ gda_web_pstmt_class_init (GdaWebPStmtClass *klass)
 }
 
 static void
-gda_web_pstmt_init (GdaWebPStmt *pstmt, GdaWebPStmtClass *klass)
+gda_web_pstmt_init (GdaWebPStmt *pstmt, G_GNUC_UNUSED GdaWebPStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	

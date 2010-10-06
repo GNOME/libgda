@@ -72,7 +72,7 @@ show_error (GtkWindow *parent, const gchar *format, ...)
 }
 
 static void
-assistant_finished_cb (GdauiDsnAssistant *assistant, gboolean error, gpointer user_data)
+assistant_finished_cb (GdauiDsnAssistant *assistant, gboolean error, G_GNUC_UNUSED gpointer user_data)
 {
 	const GdaDsnInfo *dsn_info;
 
@@ -88,13 +88,13 @@ assistant_finished_cb (GdauiDsnAssistant *assistant, gboolean error, gpointer us
 }
 
 static void
-assistant_closed_cb (GdauiDsnAssistant *assistant, gpointer user_data)
+assistant_closed_cb (GdauiDsnAssistant *assistant, G_GNUC_UNUSED gpointer user_data)
 {
 	gtk_widget_destroy (GTK_WIDGET (assistant));
 }
 
 static void
-file_new_cb (GtkAction *action, gpointer user_data)
+file_new_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 {
 	GtkWidget *assistant;
 
@@ -107,7 +107,7 @@ file_new_cb (GtkAction *action, gpointer user_data)
 }
 
 static void
-file_properties_cb (GtkAction *action, gpointer user_data)
+file_properties_cb (G_GNUC_UNUSED GtkAction *action, gpointer user_data)
 {
 	GtkWidget *nb = GTK_WIDGET (user_data);
 	GtkWidget *dsn, *provider, *current_widget;
@@ -126,7 +126,7 @@ file_properties_cb (GtkAction *action, gpointer user_data)
 }
 
 static void
-file_delete_cb (GtkAction *action, gpointer user_data)
+file_delete_cb (G_GNUC_UNUSED GtkAction *action, gpointer user_data)
 {
 	GtkWidget *nb = GTK_WIDGET (user_data);
 	GtkWidget *dsn, *provider, *current_widget;
@@ -145,13 +145,13 @@ file_delete_cb (GtkAction *action, gpointer user_data)
 }
 
 static void
-window_closed_cb (GtkAction *action, gpointer user_data)
+window_closed_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 {
 	gtk_main_quit ();
 }
 
 static void
-about_cb (GtkAction *action, gpointer user_data)
+about_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 {
 	GdkPixbuf *icon;
 	GtkWidget *dialog;
@@ -178,7 +178,7 @@ about_cb (GtkAction *action, gpointer user_data)
 	g_free (path);
 
 	dialog = gtk_about_dialog_new ();
-	gtk_about_dialog_set_name (GTK_ABOUT_DIALOG (dialog), _("Database access control center"));
+	gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database access control center"));
 	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), PACKAGE_VERSION);
 	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 1998-2009 GNOME Foundation");
 	gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (dialog), _("Database access services for the GNOME Desktop"));
@@ -301,10 +301,10 @@ create_main_window (void)
 
 #ifdef HAVE_UNIQUE
 static UniqueResponse
-message_received_cb (UniqueApp         *app,
+message_received_cb (G_GNUC_UNUSED UniqueApp         *app,
                      UniqueCommand      command,
                      UniqueMessageData *message,
-                     guint              time_,
+                     G_GNUC_UNUSED guint              time_,
                      gpointer           user_data)
 {
 	UniqueResponse res = UNIQUE_RESPONSE_OK;
@@ -371,7 +371,7 @@ main (int argc, char *argv[])
 }
 
 static void
-dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, gboolean row_selected, gpointer data)
+dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, gboolean row_selected, G_GNUC_UNUSED gpointer data)
 {
 	GtkAction *action;
 	GArray *selection;
@@ -387,7 +387,7 @@ dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, gboolean row_selected, gpoint
 }
 
 static void
-main_nb_page_switched_cb (GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer data)
+main_nb_page_switched_cb (G_GNUC_UNUSED GtkNotebook *notebook, G_GNUC_UNUSED GtkWidget *page, guint page_num, G_GNUC_UNUSED gpointer data)
 {
 	gboolean show;
 	GtkAction *action;

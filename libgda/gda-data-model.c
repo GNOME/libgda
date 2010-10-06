@@ -90,7 +90,8 @@ gda_data_model_get_type (void)
 			NULL,
 			0,
 			0,
-			(GInstanceInitFunc) NULL
+			(GInstanceInitFunc) NULL,
+			0
 		};
 		
 		g_static_rec_mutex_lock (&init_mutex);
@@ -104,7 +105,7 @@ gda_data_model_get_type (void)
 }
 
 static void
-gda_data_model_class_init (gpointer g_class)
+gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 
@@ -1228,8 +1229,8 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 gboolean
 gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format, 
 			       const gchar *file,
-			       const gint *cols, gint nb_cols, 
-			       const gint *rows, gint nb_rows, 
+			       const gint *cols, G_GNUC_UNUSED gint nb_cols,
+			       const gint *rows, G_GNUC_UNUSED gint nb_rows,
 			       GdaSet *options, GError **error)
 {
 	gchar *body;
@@ -1493,7 +1494,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 	xmlNodePtr xml_field;
 	GList *value_list = NULL;
 	GPtrArray *values;
-	gint i;
+	gsize i;
 	gboolean retval = TRUE;
 	gint pos = 0;
 
@@ -2195,7 +2196,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			if (! dump_attributes) {
 				value = gda_data_model_get_value_at (model, i, j, NULL);
 				if (!value) {
-					cols_size [i + col_offset] = MAX (cols_size [i + col_offset], strlen (ERROR_STRING));
+					cols_size [i + col_offset] = MAX ((guint)cols_size [i + col_offset], strlen (ERROR_STRING));
 				}
 				else {
 					str = NULL;
@@ -2230,7 +2231,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		const gchar *title;
 		title = g_object_get_data (G_OBJECT (model), "name");
 		if (title) {
-			gint total_width = n_cols -1, i;
+			gsize total_width = n_cols -1;
 
 			for (i = 0; i < n_cols; i++)
 				total_width += cols_size [i];

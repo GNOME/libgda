@@ -134,7 +134,8 @@ gda_holder_get_type (void)
 			NULL,
 			sizeof (GdaHolder),
 			0,
-			(GInstanceInitFunc) gda_holder_init
+			(GInstanceInitFunc) gda_holder_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -147,10 +148,10 @@ gda_holder_get_type (void)
 }
 
 static gboolean
-validate_change_accumulator (GSignalInvocationHint *ihint,
+validate_change_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
 			   GValue *return_accu,
 			   const GValue *handler_return,
-			   gpointer data)
+			   G_GNUC_UNUSED gpointer data)
 {
 	GError *error;
 
@@ -161,13 +162,14 @@ validate_change_accumulator (GSignalInvocationHint *ihint,
 }
 
 static GError *
-m_validate_change (GdaHolder *holder, const GValue *new_value)
+m_validate_change (G_GNUC_UNUSED GdaHolder *holder, G_GNUC_UNUSED const GValue *new_value)
 {
 	return NULL;
 }
 
 static void
-holder_attribute_set_cb (GObject *obj, const gchar *att_name, const GValue *value, gpointer data)
+holder_attribute_set_cb (GObject *obj, const gchar *att_name, const GValue *value,
+			 G_GNUC_UNUSED gpointer data)
 {
 	g_signal_emit (obj, gda_holder_signals[ATT_CHANGED], 0, att_name, value);
 }
@@ -555,7 +557,7 @@ static void
 gda_holder_set_property (GObject *object,
 			 guint param_id,
 			 const GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaHolder *holder;
 
@@ -622,7 +624,7 @@ static void
 gda_holder_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaHolder *holder;
 	const GValue *cvalue;
@@ -1439,7 +1441,7 @@ gda_holder_get_not_null (GdaHolder *holder)
  */
 gboolean
 gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
-			     gint col, GError **error)
+			     gint col, G_GNUC_UNUSED GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
@@ -1508,7 +1510,7 @@ gda_holder_get_source_model (GdaHolder *holder, gint *col)
  * gda_holder_set_bind() was called, and it makes sure @holder's GType is the same as @holder->priv->simple_bind's
  */
 static void
-bind_to_notify_cb (GdaHolder *bind_to, GParamSpec *pspec, GdaHolder *holder)
+bind_to_notify_cb (GdaHolder *bind_to, G_GNUC_UNUSED GParamSpec *pspec, GdaHolder *holder)
 {
 	g_signal_handler_disconnect (holder->priv->simple_bind,
 				     holder->priv->simple_bind_notify_signal_id);

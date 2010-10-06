@@ -51,7 +51,8 @@ gda_blob_op_get_type (void)
                         NULL,
                         sizeof (GdaBlobOp),
                         0,
-                        (GInstanceInitFunc) gda_blob_op_init
+                        (GInstanceInitFunc) gda_blob_op_init,
+			0
                 };
 
 		g_static_mutex_lock (&registering);
@@ -76,7 +77,7 @@ gda_blob_op_class_init (GdaBlobOpClass *klass)
 }
 
 static void
-gda_blob_op_init (GdaBlobOp *provider, GdaBlobOpClass *klass)
+gda_blob_op_init (G_GNUC_UNUSED GdaBlobOp *provider, G_GNUC_UNUSED GdaBlobOpClass *klass)
 {
 
 }

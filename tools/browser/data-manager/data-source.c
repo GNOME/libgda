@@ -172,7 +172,8 @@ data_source_get_type (void)
 			NULL,
 			sizeof (DataSource),
 			0,
-			(GInstanceInitFunc) data_source_init
+			(GInstanceInitFunc) data_source_init,
+			0
 		};
 
 		
@@ -233,13 +234,13 @@ data_source_init (DataSource *source)
 }
 
 static void
-params_changed_cb (GdaSet *params, GdaHolder *holder, DataSource *source)
+params_changed_cb (G_GNUC_UNUSED GdaSet *params, G_GNUC_UNUSED GdaHolder *holder, DataSource *source)
 {
 	source->priv->need_rerun = TRUE;
 }
 
 static void
-ext_params_changed_cb (GdaSet *params, GdaHolder *holder, DataSource *source)
+ext_params_changed_cb (G_GNUC_UNUSED GdaSet *params, G_GNUC_UNUSED GdaHolder *holder, DataSource *source)
 {
 #ifdef DEBUG_SOURCE
 	g_print ("  => data source [%s] should rerun\n",
@@ -519,7 +520,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 			if (id)
 				xmlFree (id);
 			if (cols_array) {
-				gint i;
+				gsize i;
 				for (i = 0; i < cols_array->len; i++) {
 					xmlChar *colname;
 					colname = g_array_index (cols_array, xmlChar*, i);

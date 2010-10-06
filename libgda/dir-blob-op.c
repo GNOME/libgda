@@ -63,7 +63,8 @@ gda_dir_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaDirBlobOp),
 			0,
-			(GInstanceInitFunc) gda_dir_blob_op_init
+			(GInstanceInitFunc) gda_dir_blob_op_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -75,7 +76,7 @@ gda_dir_blob_op_get_type (void)
 
 static void
 gda_dir_blob_op_init (GdaDirBlobOp *op,
-			   GdaDirBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaDirBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_DIR_BLOB_OP (op));
 
@@ -206,7 +207,7 @@ gda_dir_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 	}
 	bin->data = g_new0 (guchar, size);
 	nread = fread ((char *) (bin->data), 1, size, file);
-	bin->binary_length = (nread >= 0) ? nread : 0;
+	bin->binary_length = nread;
 	fclose (file);
 
 	return nread;

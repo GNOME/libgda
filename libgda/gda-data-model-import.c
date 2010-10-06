@@ -194,7 +194,8 @@ gda_data_model_import_get_type (void)
 			NULL,
 			sizeof (GdaDataModelImport),
 			0,
-			(GInstanceInitFunc) gda_data_model_import_init
+			(GInstanceInitFunc) gda_data_model_import_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {
@@ -281,7 +282,7 @@ gda_data_model_import_data_model_init (GdaDataModelIface *iface)
 }
 
 static void
-gda_data_model_import_init (GdaDataModelImport *model, GdaDataModelImportClass *klass)
+gda_data_model_import_init (GdaDataModelImport *model, G_GNUC_UNUSED GdaDataModelImportClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_IMPORT (model));
 	model->priv = g_new0 (GdaDataModelImportPrivate, 1);
@@ -306,7 +307,7 @@ gda_data_model_import_init (GdaDataModelImport *model, GdaDataModelImportClass *
 static void
 csv_free_stored_rows (GdaDataModelImport *model)
 {
-	gint i;
+	gsize i;
 	g_assert (model->priv->format == FORMAT_CSV);
 	for (i = 0; i < model->priv->extract.csv.rows_read->len; i++) {
 		GSList *list = g_array_index (model->priv->extract.csv.rows_read,
@@ -477,7 +478,7 @@ static void
 gda_data_model_import_set_property (GObject *object,
 				    guint param_id,
 				    const GValue *value,
-				    GParamSpec *pspec)
+				    G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataModelImport *model;
 	const gchar *string;
@@ -637,7 +638,7 @@ static void
 gda_data_model_import_get_property (GObject *object,
 				    guint param_id,
 				    GValue *value,
-				    GParamSpec *pspec)
+				    G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataModelImport *model;
 
@@ -955,7 +956,7 @@ csv_parser_field_read_cb (char *s, size_t len, void *data)
 }
 
 static void 
-csv_parser_row_read_cb (char c, void *data) 
+csv_parser_row_read_cb (G_GNUC_UNUSED char c, void *data)
 {
 	CsvParserData *pdata = (CsvParserData* ) data;
 	GSList *row;
@@ -1711,7 +1712,7 @@ gda_data_model_import_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 }
 
 static GdaValueAttribute
-gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
 {
 	GdaValueAttribute flags = 0;
 	GdaDataModelImport *imodel;

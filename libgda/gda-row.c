@@ -79,7 +79,7 @@ gda_row_class_init (GdaRowClass *klass)
 }
 
 static void
-gda_row_init (GdaRow *row, GdaRowClass *klass)
+gda_row_init (GdaRow *row, G_GNUC_UNUSED GdaRowClass *klass)
 {
 	g_return_if_fail (GDA_IS_ROW (row));
 	
@@ -124,7 +124,7 @@ static void
 gda_row_set_property (GObject *object,
 		      guint param_id,
 		      const GValue *value,
-		      GParamSpec *pspec)
+		      G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaRow *row;
 
@@ -148,7 +148,7 @@ static void
 gda_row_get_property (GObject *object,
 		      guint param_id,
 		      GValue *value,
-		      GParamSpec *pspec)
+		      G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaRow *row;
 
@@ -181,7 +181,8 @@ gda_row_get_type (void)
 			NULL,
 			sizeof (GdaRow),
 			0,
-			(GInstanceInitFunc) gda_row_init
+			(GInstanceInitFunc) gda_row_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -238,7 +239,7 @@ gda_row_get_value (GdaRow *row, gint num)
  * providers' implementations to report any error while reading a value from the database.
  */
 void
-gda_row_invalidate_value (GdaRow *row, GValue *value)
+gda_row_invalidate_value (G_GNUC_UNUSED GdaRow *row, GValue *value)
 {
 	gda_value_set_null (value);
 	G_VALUE_TYPE (value) = G_TYPE_NONE;
@@ -256,7 +257,7 @@ gda_row_invalidate_value (GdaRow *row, GValue *value)
  * Returns: %TRUE if @value is valid
  */
 gboolean
-gda_row_value_is_valid (GdaRow *row, GValue *value)
+gda_row_value_is_valid (G_GNUC_UNUSED GdaRow *row, GValue *value)
 {
 	return (G_VALUE_TYPE (value) == G_TYPE_NONE) ? FALSE : TRUE;
 }

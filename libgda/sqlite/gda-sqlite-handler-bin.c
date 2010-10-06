@@ -65,7 +65,8 @@ _gda_sqlite_handler_bin_get_type (void)
 			NULL,
 			sizeof (GdaSqliteHandlerBin),
 			0,
-			(GInstanceInitFunc) gda_sqlite_handler_bin_init
+			(GInstanceInitFunc) gda_sqlite_handler_bin_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {

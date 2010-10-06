@@ -84,7 +84,8 @@ browser_canvas_db_relations_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasDbRelations),
 			0,
-			(GInstanceInitFunc) browser_canvas_db_relations_init
+			(GInstanceInitFunc) browser_canvas_db_relations_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS, "BrowserCanvasDbRelations", &info, 0);
@@ -155,7 +156,7 @@ static void
 browser_canvas_db_relations_set_property (GObject *object,
 					  guint param_id,
 					  const GValue *value,
-					  GParamSpec *pspec)
+					  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasDbRelations *canvas;
 
@@ -185,7 +186,7 @@ static void
 browser_canvas_db_relations_get_property (GObject *object,
 					  guint param_id,
 					  GValue *value,
-					  GParamSpec *pspec)
+					  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasDbRelations *canvas;
 
@@ -200,7 +201,7 @@ browser_canvas_db_relations_get_property (GObject *object,
 }
 
 static void
-cloud_object_selected_cb (ObjectsCloud *ocloud, ObjectsCloudObjType sel_type, 
+cloud_object_selected_cb (G_GNUC_UNUSED ObjectsCloud *ocloud, G_GNUC_UNUSED ObjectsCloudObjType sel_type,
 			  const gchar *sel_contents, BrowserCanvasDbRelations *dbrel)
 {
 	GdaMetaTable *mtable;
@@ -313,7 +314,7 @@ canvas_entity_popup_func (BrowserCanvasTable *ce)
 }
 
 static void
-popup_func_delete_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
+popup_func_delete_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasTable *ce)
 {
 	GdaMetaTable *mtable;
 	BrowserCanvasDbRelations *dbrel;
@@ -351,7 +352,7 @@ popup_func_delete_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
 }
 
 static void
-popup_func_add_depend_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
+popup_func_add_depend_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasTable *ce)
 {
 	BrowserCanvasDbRelations *dbrel;
 	GdaMetaDbObject *dbo;
@@ -387,7 +388,7 @@ popup_func_add_depend_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
 }
 
 static void
-popup_func_add_ref_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
+popup_func_add_ref_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasTable *ce)
 {
 	BrowserCanvasDbRelations *dbrel;
 	GdaMetaDbObject *dbo;
@@ -511,14 +512,14 @@ build_context_menu (BrowserCanvas *canvas)
 }
 
 static gboolean
-add_dialog_delete_event (GtkWidget *dialog, GdkEvent *event, gpointer data)
+add_dialog_delete_event (GtkWidget *dialog, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data)
 {
 	gtk_widget_hide (dialog);
 	return TRUE;
 }
 
 static void
-popup_add_table_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrels)
+popup_add_table_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrels)
 {
 	if (! dbrels->priv->add_dialog) {
 		GtkWidget *vbox, *cloud, *find, *dcontents;

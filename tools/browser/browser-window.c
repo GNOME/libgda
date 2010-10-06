@@ -131,7 +131,8 @@ browser_window_get_type (void)
 			NULL,
 			sizeof (BrowserWindow),
 			0,
-			(GInstanceInitFunc) browser_window_init
+			(GInstanceInitFunc) browser_window_init,
+			0
 		};
 
 		
@@ -240,7 +241,7 @@ browser_window_dispose (GObject *object)
 
 
 static gboolean
-delete_event (GtkWidget *widget, GdkEvent *event, BrowserWindow *bwin)
+delete_event (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, BrowserWindow *bwin)
 {
 	browser_core_close_window (bwin);
         return TRUE;
@@ -716,7 +717,7 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Br
 
 /* update @bwin->priv->cnc_agroup and @bwin->priv->ui_manager */
 static void
-connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin)
+connection_added_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin)
 {
 	GtkAction *action;
 	const gchar *cncname;
@@ -750,7 +751,7 @@ connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow 
 
 /* update @bwin->priv->cnc_agroup and @bwin->priv->ui_manager */
 static void
-connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin)
+connection_removed_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin)
 {
 	GtkAction *action;
 	gchar *path;
@@ -774,7 +775,7 @@ connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindo
 }
 
 static void
-connection_close_cb (GtkAction *action, BrowserWindow *bwin)
+connection_close_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	/* confirmation dialog */
 	GtkWidget *dialog;
@@ -812,7 +813,7 @@ connection_close_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-quit_cb (GtkAction *action, BrowserWindow *bwin)
+quit_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	/* confirmation dialog */
 	GtkWidget *dialog;
@@ -877,7 +878,7 @@ transaction_status_changed_cb (BrowserConnection *bcnc, BrowserWindow *bwin)
 }
 
 static void
-transaction_begin_cb (GtkAction *action, BrowserWindow *bwin)
+transaction_begin_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	if (!bwin->priv->updating_transaction_status) {
 		GError *error = NULL;
@@ -891,7 +892,7 @@ transaction_begin_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-transaction_commit_cb (GtkAction *action, BrowserWindow *bwin)
+transaction_commit_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	if (!bwin->priv->updating_transaction_status) {
 		GError *error = NULL;
@@ -905,7 +906,7 @@ transaction_commit_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-transaction_rollback_cb (GtkAction *action, BrowserWindow *bwin)
+transaction_rollback_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	if (!bwin->priv->updating_transaction_status) {
 		GError *error = NULL;
@@ -920,7 +921,7 @@ transaction_rollback_cb (GtkAction *action, BrowserWindow *bwin)
 
 
 static void
-window_close_cb (GtkAction *action, BrowserWindow *bwin)
+window_close_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	delete_event (NULL, NULL, bwin);
 }
@@ -946,7 +947,7 @@ toolbar_hide_timeout_cb (BrowserWindow *bwin)
 #define BWIN_WINDOW_FULLSCREEN_POPUP_TIMER 1
 
 static gboolean
-fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
+fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, G_GNUC_UNUSED gpointer user_data)
 {
 	BrowserWindow *bwin = BROWSER_WINDOW (widget);
 #if GTK_CHECK_VERSION(2,14,0)
@@ -975,14 +976,15 @@ fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, gpointer 
 }
 
 gboolean
-toolbar_enter_notify_cb (GtkWidget *widget, GdkEventCrossing *event, BrowserWindow *bwin)
+toolbar_enter_notify_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event,
+			 BrowserWindow *bwin)
 {
 	bwin->priv->cursor_in_toolbar = TRUE;
 	return FALSE;
 }
 
 gboolean
-toolbar_leave_notify_cb (GtkWidget *widget, GdkEventCrossing *event, BrowserWindow *bwin)
+toolbar_leave_notify_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event, BrowserWindow *bwin)
 {
 	bwin->priv->cursor_in_toolbar = FALSE;
 	return FALSE;
@@ -1091,7 +1093,7 @@ window_state_event (GtkWidget *widget, GdkEventWindowState *event)
 }
 
 static void
-window_new_cb (GtkAction *action, BrowserWindow *bwin)
+window_new_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	BrowserWindow *nbwin;
 	BrowserConnection *bcnc;
@@ -1102,7 +1104,7 @@ window_new_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-window_new_with_cnc_cb (GtkAction *action, BrowserWindow *bwin)
+window_new_with_cnc_cb (GtkAction *action, G_GNUC_UNUSED BrowserWindow *bwin)
 {
 	BrowserWindow *nbwin;
 	BrowserConnection *bcnc;
@@ -1115,13 +1117,13 @@ window_new_with_cnc_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-connection_open_cb (GtkAction *action, BrowserWindow *bwin)
+connection_open_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED BrowserWindow *bwin)
 {
 	browser_connection_open (NULL);
 }
 
 static void
-connection_properties_cb (GtkAction *action, BrowserWindow *bwin)
+connection_properties_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	if (BROWSER_IS_VIRTUAL_CONNECTION (bwin->priv->bcnc)) {
 		GtkWidget *win;
@@ -1157,7 +1159,7 @@ connection_properties_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-connection_bind_cb (GtkAction *action, BrowserWindow *bwin)
+connection_bind_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	GtkWidget *win;
 	gint res;
@@ -1191,19 +1193,19 @@ connection_bind_cb (GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-connection_list_cb (GtkAction *action, BrowserWindow *bwin)
+connection_list_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	browser_connections_list_show (bwin->priv->bcnc);
 }
 
 static void
-connection_meta_update_cb (GtkAction *action, BrowserWindow *bwin)
+connection_meta_update_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	browser_connection_update_meta_data (bwin->priv->bcnc);
 }
 
 static void
-about_cb (GtkAction *action, BrowserWindow *bwin)
+about_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	GdkPixbuf *icon;
         GtkWidget *dialog;
@@ -1241,7 +1243,7 @@ about_cb (GtkAction *action, BrowserWindow *bwin)
 
 #ifdef HAVE_GDU
 void
-manual_cb (GtkAction *action, BrowserWindow *bwin)
+manual_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 {
 	browser_show_help (GTK_WINDOW (bwin), NULL);
 }
@@ -1403,7 +1405,7 @@ browser_window_show_notice_printf (BrowserWindow *bwin, GtkMessageType type, con
 
 #if GTK_CHECK_VERSION (2,18,0)
 static void
-info_bar_response_cb (GtkInfoBar *ibar, gint response, BrowserWindow *bwin)
+info_bar_response_cb (GtkInfoBar *ibar, G_GNUC_UNUSED gint response, BrowserWindow *bwin)
 {
 	bwin->priv->notif_widgets = g_slist_remove (bwin->priv->notif_widgets, ibar);	
 	gtk_widget_destroy ((GtkWidget*) ibar);
@@ -1413,7 +1415,7 @@ info_bar_response_cb (GtkInfoBar *ibar, gint response, BrowserWindow *bwin)
 /* hash table to remain which context notices have to be hidden: key=context, value=GINT_TO_POINTER (1) */
 static GHashTable *hidden_contexts = NULL;
 static void
-hidden_contexts_foreach_save (const gchar *context, gint value, xmlNodePtr root)
+hidden_contexts_foreach_save (const gchar *context, G_GNUC_UNUSED gint value, xmlNodePtr root)
 {
 	xmlNodePtr node;
 	node = xmlNewChild (root, NULL, BAD_CAST "hide-notice", BAD_CAST context);

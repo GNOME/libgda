@@ -138,7 +138,7 @@ gda_column_class_init (GdaColumnClass *klass)
 }
 
 static void
-gda_column_init (GdaColumn *column, GdaColumnClass *klass)
+gda_column_init (GdaColumn *column, G_GNUC_UNUSED GdaColumnClass *klass)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
 	
@@ -191,7 +191,8 @@ gda_column_get_type (void)
 			NULL,
 			sizeof (GdaColumn),
 			0,
-			(GInstanceInitFunc) gda_column_init
+			(GInstanceInitFunc) gda_column_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -206,7 +207,7 @@ static void
 gda_column_set_property (GObject *object,
                                    guint param_id,
                                    const GValue *value,
-                                   GParamSpec *pspec)
+                                   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaColumn *col;
 
@@ -230,7 +231,7 @@ static void
 gda_column_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaColumn *col;
 

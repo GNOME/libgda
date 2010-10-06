@@ -93,7 +93,7 @@ data_widget_class_init (DataWidgetClass *klass)
 
 
 static void
-data_widget_init (DataWidget *dwid, DataWidgetClass *klass)
+data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 {
 	g_return_if_fail (IS_DATA_WIDGET (dwid));
 
@@ -145,7 +145,8 @@ data_widget_get_type (void)
 			NULL,
 			sizeof (DataWidget),
 			0,
-			(GInstanceInitFunc) data_widget_init
+			(GInstanceInitFunc) data_widget_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "DataWidget", &info, 0);
 	}
@@ -311,7 +312,7 @@ pack_in_paned_list (GSList *paned_list, gint length, gint pos, GtkWidget *wid)
 }
 
 static void
-remove_data_source_mitem_activated_cb (GtkMenuItem *mitem, DataPart *part)
+remove_data_source_mitem_activated_cb (G_GNUC_UNUSED GtkMenuItem *mitem, DataPart *part)
 {
 	data_source_manager_remove_source (part->dwid->priv->mgr, part->source);
 }
@@ -373,7 +374,7 @@ data_source_props_activated_cb (GtkCheckMenuItem *mitem, DataPart *part)
 static gchar *compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean reverse,
 				     DataPart *part, xmlNodePtr *out_sourcespec);
 static void
-data_source_menu_clicked_cb (GtkButton *button, DataPart *part)
+data_source_menu_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataPart *part)
 {
 	if (! part->menu) {
 		GtkWidget *menu, *mitem;
@@ -634,7 +635,7 @@ update_layout (DataWidget *dwid)
 		}
 		else {
 			GSList *paned_list;
-			gint i;
+			gsize i;
 			paned_list = make_paned_list (subarray->len, FALSE);
 			gtk_box_pack_start (GTK_BOX (new_contents),
 					    GTK_WIDGET (paned_list->data), TRUE, TRUE, 0);
@@ -657,7 +658,7 @@ update_layout (DataWidget *dwid)
 	}
 	else {
 		GSList *top_paned_list;
-		gint j;
+		gsize j;
 		
 		top_paned_list = make_paned_list (sources_array->len, TRUE);
 		gtk_box_pack_start (GTK_BOX (new_contents),
@@ -681,7 +682,7 @@ update_layout (DataWidget *dwid)
 			}
 			else {
 				GSList *paned_list;
-				gint i;
+				gsize i;
 				paned_list = make_paned_list (subarray->len, FALSE);
 				pack_in_paned_list (top_paned_list, sources_array->len, j,
 						    GTK_WIDGET (paned_list->data));
@@ -730,7 +731,7 @@ update_layout (DataWidget *dwid)
 }
 
 static void
-mgr_list_changed_cb (DataSourceManager *mgr, DataWidget *dwid)
+mgr_list_changed_cb (G_GNUC_UNUSED DataSourceManager *mgr, DataWidget *dwid)
 {
 	update_layout (dwid);
 }
@@ -816,7 +817,7 @@ source_exec_started_cb_timeout (DataPart *part)
 }
 
 static void
-source_exec_started_cb (DataSource *source, DataPart *part)
+source_exec_started_cb (G_GNUC_UNUSED DataSource *source, DataPart *part)
 {
 	if (! part->spinner_show_timer_id)
 		part->spinner_show_timer_id = g_timeout_add (300,
@@ -826,7 +827,7 @@ source_exec_started_cb (DataSource *source, DataPart *part)
 
 static void data_part_selection_changed_cb (GdauiDataSelector *gdauidataselector, DataPart *part);
 static void
-source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
+source_exec_finished_cb (G_GNUC_UNUSED DataSource *source, GError *error, DataPart *part)
 {
 	GtkWidget *wid;
 	if (part->spinner_show_timer_id) {
@@ -880,7 +881,7 @@ source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
 			GSList *holders = NULL;
 			GdaDataModel *model;
 			GHashTable *export_columns;
-			gint i;
+			gsize i;
 			GdaDataModelIter *iter;
 			
 			iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid));
@@ -925,7 +926,7 @@ source_exec_finished_cb (DataSource *source, GError *error, DataPart *part)
 }
 
 static void
-data_part_selection_changed_cb (GdauiDataSelector *gdauidataselector, DataPart *part)
+data_part_selection_changed_cb (G_GNUC_UNUSED GdauiDataSelector *gdauidataselector, DataPart *part)
 {
 	if (part->export_data) {
 		GSList *list;

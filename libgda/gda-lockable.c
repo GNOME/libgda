@@ -41,7 +41,8 @@ gda_lockable_get_type (void)
 			NULL,
 			0,
 			0,
-			(GInstanceInitFunc) NULL
+			(GInstanceInitFunc) NULL,
+			0
 		};
 		
 		g_static_rec_mutex_lock (&init_mutex);
@@ -55,7 +56,7 @@ gda_lockable_get_type (void)
 }
 
 static void
-gda_lockable_class_init (gpointer g_class)
+gda_lockable_class_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 

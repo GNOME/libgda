@@ -193,7 +193,8 @@ gda_set_get_type (void)
 			NULL,
 			sizeof (GdaSet),
 			0,
-			(GInstanceInitFunc) gda_set_init
+			(GInstanceInitFunc) gda_set_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -206,10 +207,10 @@ gda_set_get_type (void)
 }
 
 static gboolean
-validate_accumulator (GSignalInvocationHint *ihint,
+validate_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
 		      GValue *return_accu,
 		      const GValue *handler_return,
-		      gpointer data)
+		      G_GNUC_UNUSED gpointer data)
 {
 	GError *error;
 
@@ -220,13 +221,14 @@ validate_accumulator (GSignalInvocationHint *ihint,
 }
 
 static GError *
-m_validate_holder_change (GdaSet *set, GdaHolder *holder, const GValue *new_value)
+m_validate_holder_change (G_GNUC_UNUSED GdaSet *set, G_GNUC_UNUSED GdaHolder *holder,
+			  G_GNUC_UNUSED const GValue *new_value)
 {
 	return NULL;
 }
 
 static GError *
-m_validate_set (GdaSet *set)
+m_validate_set (G_GNUC_UNUSED GdaSet *set)
 {
 	return NULL;
 }
@@ -1010,7 +1012,7 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 }
 
 static void
-source_changed_holder_cb (GdaHolder *holder, GdaSet *set)
+source_changed_holder_cb (G_GNUC_UNUSED GdaHolder *holder, GdaSet *set)
 {
 	compute_public_data (set);
 }
@@ -1060,7 +1062,7 @@ changed_holder_cb (GdaHolder *holder, GdaSet *set)
 }
 
 static void
-group_free (GdaSetGroup *group, gpointer data)
+group_free (GdaSetGroup *group, G_GNUC_UNUSED gpointer data)
 {
 	g_slist_free (group->nodes);
 	g_free (group);
@@ -1472,6 +1474,8 @@ GdaHolder *
 gda_set_get_nth_holder (GdaSet *set, gint pos)
 {
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
+	g_return_val_if_fail (pos >= 0, NULL);
+
 	if (! set->priv->holders_array) {
 		GSList *list;
 		set->priv->holders_array = g_array_sized_new (FALSE, FALSE, sizeof (GdaHolder*),
@@ -1479,7 +1483,7 @@ gda_set_get_nth_holder (GdaSet *set, gint pos)
 		for (list = set->holders; list; list = list->next)
 			g_array_append_val (set->priv->holders_array, list->data);
 	}
-	if ((pos < 0) || (pos > set->priv->holders_array->len))
+	if ((guint)pos > set->priv->holders_array->len)
 		return NULL;
 	else
 		return g_array_index (set->priv->holders_array, GdaHolder*, pos);

@@ -158,7 +158,7 @@ gda_server_provider_handler_info_free (GdaServerProviderHandlerInfo *info)
 
 static void
 gda_server_provider_init (GdaServerProvider *provider,
-			  GdaServerProviderClass *klass)
+			  G_GNUC_UNUSED GdaServerProviderClass *klass)
 {
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
 
@@ -206,7 +206,8 @@ gda_server_provider_get_type (void)
 			NULL,
 			sizeof (GdaServerProvider),
 			0,
-			(GInstanceInitFunc) gda_server_provider_init
+			(GInstanceInitFunc) gda_server_provider_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -220,8 +221,8 @@ gda_server_provider_get_type (void)
 static void
 gda_server_provider_set_property (GObject *object,
 				  guint param_id,
-				  const GValue *value,
-				  GParamSpec *pspec) {
+				  G_GNUC_UNUSED const GValue *value,
+				  G_GNUC_UNUSED GParamSpec *pspec) {
         GdaServerProvider *prov;
 
         prov = GDA_SERVER_PROVIDER (object);
@@ -236,8 +237,8 @@ gda_server_provider_set_property (GObject *object,
 static void
 gda_server_provider_get_property (GObject *object,
 				  guint param_id,
-				  GValue *value,
-				  GParamSpec *pspec) {
+				  G_GNUC_UNUSED GValue *value,
+				  G_GNUC_UNUSED GParamSpec *pspec) {
         GdaServerProvider *prov;
 
         prov = GDA_SERVER_PROVIDER (object);
@@ -345,13 +346,13 @@ typedef struct {
 static OpReq op_req_CREATE_DB [] = {
 	{"/DB_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
 	{"/DB_DEF_P/DB_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_DROP_DB [] = {
 	{"/DB_DESC_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
 	{"/DB_DESC_P/DB_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_CREATE_TABLE [] = {
@@ -360,26 +361,26 @@ static OpReq op_req_CREATE_TABLE [] = {
 	{"/FIELDS_A",                  GDA_SERVER_OPERATION_NODE_DATA_MODEL, 0},
 	{"/FIELDS_A/@COLUMN_NAME",     GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN, G_TYPE_STRING},
 	{"/FIELDS_A/@COLUMN_TYPE",     GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_DROP_TABLE [] = {
 	{"/TABLE_DESC_P/TABLE_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_RENAME_TABLE [] = {
 	{"/TABLE_DESC_P",                  GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
 	{"/TABLE_DESC_P/TABLE_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/TABLE_DESC_P/TABLE_NEW_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_COMMENT_TABLE [] = {
 	{"/TABLE_DESC_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
 	{"/TABLE_DESC_P/TABLE_NAME",    GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/TABLE_DESC_P/TABLE_COMMENT", GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_ADD_COLUMN [] = {
@@ -387,14 +388,14 @@ static OpReq op_req_ADD_COLUMN [] = {
 	{"/COLUMN_DEF_P/TABLE_NAME",    GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/COLUMN_DEF_P/COLUMN_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/COLUMN_DEF_P/COLUMN_TYPE",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_DROP_COLUMN [] = {
 	{"/COLUMN_DESC_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
 	{"/COLUMN_DESC_P/TABLE_NAME",    GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/COLUMN_DESC_P/COLUMN_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_COMMENT_COLUMN [] = {
@@ -402,37 +403,37 @@ static OpReq op_req_COMMENT_COLUMN [] = {
 	{"/COLUMN_DESC_P/TABLE_NAME",     GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/COLUMN_DESC_P/COLUMN_NAME",    GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/COLUMN_DESC_P/COLUMN_COMMENT", GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_CREATE_INDEX [] = {
 	{"/INDEX_DEF_P/INDEX_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/INDEX_DEF_P/INDEX_ON_TABLE",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/INDEX_FIELDS_S",               GDA_SERVER_OPERATION_NODE_SEQUENCE, 0},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_DROP_INDEX [] = {
 	{"/INDEX_DESC_P/INDEX_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_CREATE_VIEW [] = {
 	{"/VIEW_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
 	{"/VIEW_DEF_P/VIEW_NAME",     GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/VIEW_DEF_P/VIEW_DEF",      GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_DROP_VIEW [] = {
 	{"/VIEW_DESC_P/VIEW_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 static OpReq op_req_CREATE_USER [] = {
 	{"/USER_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
 	{"/USER_DEF_P/USER_NAME",     GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 
@@ -795,7 +796,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,  GdaConnection
 {
 	GValue *retval = NULL;
 	GdaDataHandler *dh;
-	gint i;
+	gsize i;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);

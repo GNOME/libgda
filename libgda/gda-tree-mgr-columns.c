@@ -107,7 +107,7 @@ gda_tree_mgr_columns_class_init (GdaTreeMgrColumnsClass *klass)
 }
 
 static void
-gda_tree_mgr_columns_init (GdaTreeMgrColumns *mgr, GdaTreeMgrColumnsClass *klass)
+gda_tree_mgr_columns_init (GdaTreeMgrColumns *mgr, G_GNUC_UNUSED GdaTreeMgrColumnsClass *klass)
 {
 	g_return_if_fail (GDA_IS_TREE_MGR_COLUMNS (mgr));
 	mgr->priv = g_new0 (GdaTreeMgrColumnsPriv, 1);
@@ -162,7 +162,8 @@ gda_tree_mgr_columns_get_type (void)
                         NULL,
                         sizeof (GdaTreeMgrColumns),
                         0,
-                        (GInstanceInitFunc) gda_tree_mgr_columns_init
+                        (GInstanceInitFunc) gda_tree_mgr_columns_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);
@@ -177,7 +178,7 @@ static void
 gda_tree_mgr_columns_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaTreeMgrColumns *mgr;
 
@@ -203,7 +204,7 @@ static void
 gda_tree_mgr_columns_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaTreeMgrColumns *mgr;
 
@@ -250,7 +251,7 @@ gda_tree_mgr_columns_new (GdaConnection *cnc, const gchar *schema, const gchar *
 }
 
 static GSList *
-gda_tree_mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
+gda_tree_mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, G_GNUC_UNUSED const GSList *children_nodes,
 				      gboolean *out_error, GError **error)
 {
 	GdaTreeMgrColumns *mgr = GDA_TREE_MGR_COLUMNS (manager);

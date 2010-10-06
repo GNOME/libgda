@@ -5,7 +5,7 @@
 #define SO_NAME "libgda-jdbc." G_MODULE_SUFFIX
 
 int
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	GdaDataModel *providers;
 	gint i, nrows;

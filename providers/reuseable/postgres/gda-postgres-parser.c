@@ -47,7 +47,8 @@ gda_postgres_parser_get_type (void)
 			NULL,
 			sizeof (GdaPostgresParser),
 			0,
-			(GInstanceInitFunc) gda_postgres_parser_init
+			(GInstanceInitFunc) gda_postgres_parser_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -79,6 +80,6 @@ gda_postgres_parser_class_init (GdaPostgresParserClass * klass)
 }
 
 static void
-gda_postgres_parser_init (GdaPostgresParser *parser)
+gda_postgres_parser_init (G_GNUC_UNUSED GdaPostgresParser *parser)
 {
 }

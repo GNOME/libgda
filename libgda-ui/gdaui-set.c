@@ -83,7 +83,8 @@ _gdaui_set_get_type (void)
 			NULL,
 			sizeof (GdauiSet),
 			0,
-			(GInstanceInitFunc) gdaui_set_init
+			(GInstanceInitFunc) gdaui_set_init,
+			0
 		};		
 
 		type = g_type_register_static (G_TYPE_OBJECT, "GdauiSet", &info, 0);
@@ -226,7 +227,7 @@ gdaui_set_set_property (GObject *object,
 }
 
 static void
-wrapped_set_public_data_changed_cb (GdaSet *wset, GdauiSet *set)
+wrapped_set_public_data_changed_cb (G_GNUC_UNUSED GdaSet *wset, GdauiSet *set)
 {
 	clean_public_data (set);
 	compute_public_data (set);
@@ -234,7 +235,7 @@ wrapped_set_public_data_changed_cb (GdaSet *wset, GdauiSet *set)
 }
 
 static void
-wrapped_set_source_model_changed_cb (GdaSet *wset, GdaSetSource *source, GdauiSet *set)
+wrapped_set_source_model_changed_cb (G_GNUC_UNUSED GdaSet *wset, GdaSetSource *source, GdauiSet *set)
 {
 	GdauiSetSource *uisource;
 	GSList *list;

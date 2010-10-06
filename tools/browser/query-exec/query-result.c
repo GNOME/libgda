@@ -63,7 +63,7 @@ query_result_class_init (QueryResultClass *klass)
 }
 
 static void
-query_result_init (QueryResult *result, QueryResultClass *klass)
+query_result_init (QueryResult *result, G_GNUC_UNUSED QueryResultClass *klass)
 {
 	GtkWidget *wid;
 
@@ -81,13 +81,14 @@ query_result_init (QueryResult *result, QueryResultClass *klass)
 }
 
 static void
-history_item_removed_cb (QueryEditor *history, QueryEditorHistoryItem *item, QueryResult *result)
+history_item_removed_cb (G_GNUC_UNUSED QueryEditor *history, QueryEditorHistoryItem *item,
+			 QueryResult *result)
 {
 	g_hash_table_remove (result->priv->hash, item);
 }
 
 static void
-history_cleared_cb (QueryEditor *history, QueryResult *result)
+history_cleared_cb (G_GNUC_UNUSED QueryEditor *history, QueryResult *result)
 {
 	g_hash_table_remove_all (result->priv->hash);
 }
@@ -135,7 +136,8 @@ query_result_get_type (void)
 			NULL,
 			sizeof (QueryResult),
 			0,
-			(GInstanceInitFunc) query_result_init
+			(GInstanceInitFunc) query_result_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "QueryResult", &info, 0);
 	}

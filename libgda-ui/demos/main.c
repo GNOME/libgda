@@ -73,7 +73,7 @@ demo_find_file (const char *base, GError **err)
 }
 
 static void
-window_closed_cb (GtkWidget *window, gpointer data)
+window_closed_cb (G_GNUC_UNUSED GtkWidget *window, gpointer data)
 {
 	CallbackData *cbdata = data;
 	GtkTreeIter iter;
@@ -453,11 +453,11 @@ load_file (const gchar *filename)
 				q--;
 			
 			if (q > p) {
-				int len_chars = g_utf8_pointer_to_offset (p, q);
+				glong len_chars = g_utf8_pointer_to_offset (p, q);
 				
 				end = start;
 				
-				g_assert (strlen (p) >= q - p);
+				g_assert (strlen (p) >= (gsize)(q - p));
 				gtk_text_buffer_insert (info_buffer, &end, p, q - p);
 				start = end;
 				
@@ -479,7 +479,7 @@ load_file (const gchar *filename)
 				state++;
 			}
 			else {
-				int len;
+				gsize len;
 				
 				while (*p == '*' || g_ascii_isspace (*p))
 					p++;
@@ -531,7 +531,7 @@ load_file (const gchar *filename)
 void
 row_activated_cb (GtkTreeView       *tree_view,
                   GtkTreePath       *path,
-		  GtkTreeViewColumn *column)
+		  G_GNUC_UNUSED GtkTreeViewColumn *column)
 {
 	GtkTreeIter iter;
 	PangoStyle style;
@@ -573,17 +573,19 @@ selection_cb (GtkTreeSelection *selection,
 	      GtkTreeModel     *model)
 {
 	GtkTreeIter iter;
-	GValue value = {0, };
+	GValue *value;
 
 	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
 		return;
 
+	value = g_slice_new0(GValue);
 	gtk_tree_model_get_value (model, &iter,
 				  FILENAME_COLUMN,
-				  &value);
-	if (g_value_get_string (&value))
-		load_file (g_value_get_string (&value));
-	g_value_unset (&value);
+				  value);
+	if (g_value_get_string (value))
+		load_file (g_value_get_string (value));
+	g_value_unset (value);
+	g_slice_free(GValue, value);
 }
 
 static GtkWidget *

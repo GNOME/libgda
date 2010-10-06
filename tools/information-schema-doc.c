@@ -29,7 +29,7 @@
 #define OUT_FILE "i_s_doc.xml"
 
 int
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
         xmlDocPtr doc;
         xmlNodePtr node;

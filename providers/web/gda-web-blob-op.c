@@ -61,7 +61,8 @@ gda_web_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaWebBlobOp),
 			0,
-			(GInstanceInitFunc) gda_web_blob_op_init
+			(GInstanceInitFunc) gda_web_blob_op_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -73,7 +74,7 @@ gda_web_blob_op_get_type (void)
 
 static void
 gda_web_blob_op_init (GdaWebBlobOp *op,
-			   GdaWebBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaWebBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_WEB_BLOB_OP (op));
 
@@ -176,7 +177,7 @@ gda_web_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
  * Blob write request
  */
 static glong
-gda_web_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
+gda_web_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset)
 {
 	GdaWebBlobOp *bop;
 	GdaBinary *bin;

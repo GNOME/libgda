@@ -70,7 +70,7 @@ gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass *klass)
 }
 
 static void
-gda_vconnection_data_model_init (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelClass *klass)
+gda_vconnection_data_model_init (GdaVconnectionDataModel *cnc, G_GNUC_UNUSED GdaVconnectionDataModelClass *klass)
 {
 	cnc->priv = g_new (GdaVconnectionDataModelPrivate, 1);
 	cnc->priv->table_data_list = NULL;
@@ -114,7 +114,8 @@ gda_vconnection_data_model_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVconnectionDataModel),
 				0,
-				(GInstanceInitFunc) gda_vconnection_data_model_init
+				(GInstanceInitFunc) gda_vconnection_data_model_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);
@@ -130,8 +131,8 @@ gda_vconnection_data_model_get_type (void)
 static void
 gda_vconnection_data_model_set_property (GObject *object,
 					 guint param_id,
-					 const GValue *value,
-					 GParamSpec *pspec)
+					 G_GNUC_UNUSED const GValue *value,
+					 G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVconnectionDataModel *cnc;
 
@@ -147,8 +148,8 @@ gda_vconnection_data_model_set_property (GObject *object,
 static void
 gda_vconnection_data_model_get_property (GObject *object,
 					 guint param_id,
-					 GValue *value,
-					 GParamSpec *pspec)
+					 G_GNUC_UNUSED GValue *value,
+					 G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVconnectionDataModel *cnc;
 

@@ -61,7 +61,8 @@ gda_capi_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaCapiBlobOp),
 			0,
-			(GInstanceInitFunc) gda_capi_blob_op_init
+			(GInstanceInitFunc) gda_capi_blob_op_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -73,7 +74,7 @@ gda_capi_blob_op_get_type (void)
 
 static void
 gda_capi_blob_op_init (GdaCapiBlobOp *op,
-			   GdaCapiBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaCapiBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_CAPI_BLOB_OP (op));
 
@@ -176,7 +177,7 @@ gda_capi_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
  * Blob write request
  */
 static glong
-gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
+gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset)
 {
 	GdaCapiBlobOp *bop;
 	GdaBinary *bin;

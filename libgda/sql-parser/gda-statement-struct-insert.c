@@ -41,6 +41,10 @@ GdaSqlStatementContentsInfo insert_infos = {
 	gda_sql_statement_insert_serialize,
 
 	gda_sql_statement_insert_check_structure,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 
@@ -338,10 +342,10 @@ gda_sql_statement_insert_take_select (GdaSqlStatement *stmt, GdaSqlStatement *se
 }
 
 static gboolean
-gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	GdaSqlStatementInsert *insert = (GdaSqlStatementInsert *) stmt;
-	gint nb_values;
+	guint nb_values;
 	GSList *list;
 	if (!stmt) return TRUE;
 
@@ -358,15 +362,17 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 			return FALSE;
 		}
 		if (nb_values > 0) {
-			gint len;
+			guint len;
 			if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_SELECT) {
 				GdaSqlStatementSelect *select = (GdaSqlStatementSelect*) insert->select;
 				len = g_slist_length (select->expr_list);
 			}
 			else if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_COMPOUND) {
+				gint compound_len;
 				GdaSqlStatementCompound *compound = (GdaSqlStatementCompound*) insert->select;
-				len = _gda_sql_statement_compound_get_n_cols (compound, error);
-				if (len < 0)
+				compound_len = _gda_sql_statement_compound_get_n_cols (compound, error);
+				len = compound_len;
+				if (compound_len < 0)
 					return FALSE;
 			}
 			else

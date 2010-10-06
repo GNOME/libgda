@@ -507,7 +507,7 @@ _gda_postgres_reuseable_get_reserved_keywords_func (GdaProviderReuseable *rdata)
 }
 
 GdaSqlParser *
-_gda_postgres_reuseable_create_parser (GdaProviderReuseable *rdata)
+_gda_postgres_reuseable_create_parser (G_GNUC_UNUSED GdaProviderReuseable *rdata)
 {
 	return GDA_SQL_PARSER (g_object_new (GDA_TYPE_POSTGRES_PARSER, NULL));
 }

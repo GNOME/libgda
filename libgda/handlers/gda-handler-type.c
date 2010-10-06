@@ -65,7 +65,8 @@ gda_handler_type_get_type (void)
 			NULL,
 			sizeof (GdaHandlerType),
 			0,
-			(GInstanceInitFunc) gda_handler_type_init
+			(GInstanceInitFunc) gda_handler_type_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {
@@ -213,7 +214,7 @@ gda_handler_type_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 }
 
 static GValue *
-gda_handler_type_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
+gda_handler_type_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
 {
 	GdaHandlerType *hdl;
 	GValue *value = NULL;
@@ -240,7 +241,7 @@ gda_handler_type_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GT
 }
 
 static GValue *
-gda_handler_type_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
+gda_handler_type_get_value_from_str (GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
 {
 	GdaHandlerType *hdl;
 	GValue *value;

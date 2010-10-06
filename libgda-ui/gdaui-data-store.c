@@ -85,7 +85,8 @@ gdaui_data_store_get_type (void)
 			NULL,
 			sizeof (GdauiDataStore),
 			0,
-			(GInstanceInitFunc) gdaui_data_store_init
+			(GInstanceInitFunc) gdaui_data_store_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {
@@ -154,7 +155,7 @@ gdaui_data_store_init (GdauiDataStore *store)
 }
 
 static void
-row_inserted_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
+row_inserted_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 {
 	GtkTreePath *path;
 	GtkTreeIter iter;
@@ -169,7 +170,7 @@ row_inserted_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 }
 
 static void
-row_updated_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
+row_updated_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 {
 	GtkTreePath *path;
 	GtkTreeIter iter;
@@ -183,7 +184,7 @@ row_updated_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 }
 
 static void
-row_removed_cb (GdaDataProxy *proxy, gint row, GtkTreeModel *store)
+row_removed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *store)
 {
 	GtkTreePath *path;
 
@@ -247,7 +248,7 @@ static void
 gdaui_data_store_set_property (GObject *object,
 			       guint param_id,
 			       const GValue *value,
-			       GParamSpec *pspec)
+			       G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiDataStore *store;
 
@@ -297,7 +298,7 @@ static void
 gdaui_data_store_get_property (GObject *object,
 			       guint param_id,
 			       GValue *value,
-			       GParamSpec *pspec)
+			       G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiDataStore *store;
 
@@ -817,7 +818,7 @@ data_store_iter_children (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIt
 }
 
 static gboolean
-data_store_iter_has_child (GtkTreeModel *tree_model, GtkTreeIter *iter)
+data_store_iter_has_child (G_GNUC_UNUSED GtkTreeModel *tree_model, G_GNUC_UNUSED GtkTreeIter *iter)
 {
         return FALSE;
 }
@@ -859,7 +860,7 @@ data_store_iter_nth_child (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeI
 }
 
 static gboolean
-data_store_iter_parent (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *child)
+data_store_iter_parent (G_GNUC_UNUSED GtkTreeModel *tree_model, G_GNUC_UNUSED GtkTreeIter *iter, G_GNUC_UNUSED GtkTreeIter *child)
 {
         return FALSE;
 }

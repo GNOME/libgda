@@ -106,7 +106,7 @@ gda_tree_manager_class_init (GdaTreeManagerClass *klass)
 }
 
 static void
-gda_tree_manager_init (GdaTreeManager *manager, GdaTreeManagerClass *klass)
+gda_tree_manager_init (GdaTreeManager *manager, G_GNUC_UNUSED GdaTreeManagerClass *klass)
 {
 	g_return_if_fail (GDA_IS_TREE_MANAGER (manager));
 
@@ -181,7 +181,8 @@ gda_tree_manager_get_type (void)
                         NULL,
                         sizeof (GdaTreeManager),
                         0,
-                        (GInstanceInitFunc) gda_tree_manager_init
+                        (GInstanceInitFunc) gda_tree_manager_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);
@@ -196,7 +197,7 @@ static void
 gda_tree_manager_set_property (GObject *object,
 			       guint param_id,
 			       const GValue *value,
-			       GParamSpec *pspec)
+			       G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaTreeManager *manager;
 
@@ -217,7 +218,7 @@ static void
 gda_tree_manager_get_property (GObject *object,
 			       guint param_id,
 			       GValue *value,
-			       GParamSpec *pspec)
+			       G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaTreeManager *manager;
 	

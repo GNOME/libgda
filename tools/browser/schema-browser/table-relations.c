@@ -65,7 +65,7 @@ table_relations_class_init (TableRelationsClass *klass)
 
 
 static void
-table_relations_init (TableRelations *trels, TableRelationsClass *klass)
+table_relations_init (TableRelations *trels, G_GNUC_UNUSED TableRelationsClass *klass)
 {
 	trels->priv = g_new0 (TableRelationsPrivate, 1);
 	trels->priv->all_schemas = FALSE;
@@ -105,7 +105,8 @@ table_relations_get_type (void)
 			NULL,
 			sizeof (TableRelations),
 			0,
-			(GInstanceInitFunc) table_relations_init
+			(GInstanceInitFunc) table_relations_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "TableRelations", &relations, 0);
 	}
@@ -113,7 +114,7 @@ table_relations_get_type (void)
 }
 
 static void
-meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations *trels)
+meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations *trels)
 {
 	GdaMetaDbObject *dbo;
 	GValue *tname, *tschema;

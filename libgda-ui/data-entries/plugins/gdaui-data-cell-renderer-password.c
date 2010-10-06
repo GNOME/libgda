@@ -119,6 +119,7 @@ gdaui_data_cell_renderer_password_get_type (void)
 			sizeof (GdauiDataCellRendererPassword),
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_password_init,
+			0
 		};
 
 		cell_text_type =
@@ -232,7 +233,7 @@ gdaui_data_cell_renderer_password_finalize (GObject *object)
 static void
 gdaui_data_cell_renderer_password_get_property (GObject *object,
 						guint param_id,
-						GValue *value,
+						G_GNUC_UNUSED GValue *value,
 						GParamSpec *pspec)
 {
 	switch (param_id) {
@@ -439,7 +440,7 @@ gdaui_data_cell_renderer_password_editing_done (GtkCellEditable *entry,
 
 static gboolean
 gdaui_data_cell_renderer_password_focus_out_event (GtkWidget *entry,
-						   GdkEvent  *event,
+						   G_GNUC_UNUSED GdkEvent  *event,
 						   gpointer   data)
 {
 	gdaui_data_cell_renderer_password_editing_done (GTK_CELL_EDITABLE (entry), data);
@@ -450,12 +451,12 @@ gdaui_data_cell_renderer_password_focus_out_event (GtkWidget *entry,
 
 static GtkCellEditable *
 gdaui_data_cell_renderer_password_start_editing (GtkCellRenderer      *cell,
-						 GdkEvent             *event,
-						 GtkWidget            *widget,
+						 G_GNUC_UNUSED GdkEvent             *event,
+						 G_GNUC_UNUSED GtkWidget            *widget,
 						 const gchar          *path,
-						 GdkRectangle         *background_area,
-						 GdkRectangle         *cell_area,
-						 GtkCellRendererState  flags)
+						 G_GNUC_UNUSED GdkRectangle         *background_area,
+						 G_GNUC_UNUSED GdkRectangle         *cell_area,
+						 G_GNUC_UNUSED GtkCellRendererState  flags)
 {
 	GdauiDataCellRendererPassword *datacell;
 	GtkWidget *entry;

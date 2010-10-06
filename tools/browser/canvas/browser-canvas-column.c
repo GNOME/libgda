@@ -73,7 +73,8 @@ browser_canvas_column_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasColumn),
 			0,
-			(GInstanceInitFunc) browser_canvas_column_init
+			(GInstanceInitFunc) browser_canvas_column_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS_TEXT, "BrowserCanvasColumn", &info, 0);
@@ -143,7 +144,7 @@ static void
 browser_canvas_column_set_property (GObject *object,
 				    guint param_id,
 				    const GValue *value,
-				    GParamSpec *pspec)
+				    G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasColumn *cf = NULL;
 	GdaMetaTableColumn* column = NULL;
@@ -187,7 +188,7 @@ static void
 browser_canvas_column_get_property (GObject *object,
 				    guint param_id,
 				    GValue *value,
-				    GParamSpec *pspec)
+				    G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasColumn *cf;
 
@@ -293,8 +294,9 @@ browser_canvas_column_get_parent_item (BrowserCanvasColumn *column)
 }
 
 static void
-browser_canvas_column_drag_data_get (BrowserCanvasItem *citem, GdkDragContext *drag_context,
-				     GtkSelectionData *data, guint info, guint time)
+browser_canvas_column_drag_data_get (BrowserCanvasItem *citem, G_GNUC_UNUSED GdkDragContext *drag_context,
+				     GtkSelectionData *data, G_GNUC_UNUSED guint info,
+				     G_GNUC_UNUSED guint time)
 {
 	BrowserCanvasColumn *column;
 	BrowserCanvasTable *ctable;

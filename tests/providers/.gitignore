@@ -2,13 +2,6 @@ check_sqlite
 check_postgres
 check_firebird
 check_mdb
-check_freetds
-check_odbc
-check_msql
-check_sybase
 check_bdb
-check_xbase
 check_mysql
-check_ibmdb2
 check_oracle
-check_ldap

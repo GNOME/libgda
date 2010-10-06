@@ -228,7 +228,7 @@ gda_config_class_init (GdaConfigClass *klass)
 }
 
 static void
-gda_config_init (GdaConfig *conf, GdaConfigClass *klass)
+gda_config_init (GdaConfig *conf, G_GNUC_UNUSED GdaConfigClass *klass)
 {
 	g_return_if_fail (GDA_IS_CONFIG (conf));
 
@@ -497,7 +497,7 @@ gda_config_constructor (GType type,
 			sync_keyring = TRUE;
 #endif
 
-		gint i;
+		guint i;
 		gboolean user_file_set = FALSE, system_file_set = FALSE;
 
 		object = G_OBJECT_CLASS (parent_class)->constructor (type,
@@ -715,7 +715,8 @@ gda_config_get_type (void)
 			NULL, NULL,
 			sizeof (GdaConfig),
 			0,
-			(GInstanceInitFunc) gda_config_init
+			(GInstanceInitFunc) gda_config_init,
+			0
 		};
 		GDA_CONFIG_LOCK ();
 		if (type == 0)
@@ -730,7 +731,7 @@ static void
 gda_config_set_property (GObject *object,
 			 guint param_id,
 			 const GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaConfig *conf;
 
@@ -757,7 +758,7 @@ static void
 gda_config_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaConfig *conf;
 	
@@ -1719,8 +1720,8 @@ str_equal (const gchar *str1, const gchar *str2)
 }
 
 static void
-conf_file_changed (GFileMonitor *mon, GFile *file, GFile *other_file,
-		   GFileMonitorEvent event_type, gpointer data)
+conf_file_changed (G_GNUC_UNUSED GFileMonitor *mon, G_GNUC_UNUSED GFile *file,
+		   G_GNUC_UNUSED GFile *other_file, GFileMonitorEvent event_type, G_GNUC_UNUSED gpointer data)
 {
 	GSList *list, *current_dsn_list, *new_dsn_list;
 	g_assert (unique_instance);

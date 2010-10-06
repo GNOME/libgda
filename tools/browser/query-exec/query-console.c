@@ -175,7 +175,7 @@ query_console_page_init (BrowserPageIface *iface)
 }
 
 static void
-query_console_init (QueryConsole *tconsole, QueryConsoleClass *klass)
+query_console_init (QueryConsole *tconsole, G_GNUC_UNUSED QueryConsoleClass *klass)
 {
 	tconsole->priv = g_new0 (QueryConsolePrivate, 1);
 	tconsole->priv->parser = NULL;
@@ -235,7 +235,8 @@ query_console_get_type (void)
 			NULL,
 			sizeof (QueryConsole),
 			0,
-			(GInstanceInitFunc) query_console_init
+			(GInstanceInitFunc) query_console_init,
+			0
 		};
 
 		static GInterfaceInfo page_console = {
@@ -457,7 +458,7 @@ query_console_new (BrowserConnection *bcnc)
 }
 
 static void
-connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, QueryConsole *tconsole)
+connection_busy_cb (G_GNUC_UNUSED BrowserConnection *bcnc, gboolean is_busy, G_GNUC_UNUSED gchar *reason, QueryConsole *tconsole)
 {
 	gtk_widget_set_sensitive (tconsole->priv->exec_button, !is_busy);
 	gtk_widget_set_sensitive (tconsole->priv->indent_button, !is_busy);
@@ -470,7 +471,7 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Qu
 }
 
 static void
-history_changed_cb (QueryEditor *history, QueryConsole *tconsole)
+history_changed_cb (G_GNUC_UNUSED QueryEditor *history, QueryConsole *tconsole)
 {
 	gboolean act = FALSE;
 	QueryEditor *qe;
@@ -494,13 +495,13 @@ history_changed_cb (QueryEditor *history, QueryConsole *tconsole)
 }
 
 static void
-history_clear_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+history_clear_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
 {
 	query_editor_del_all_history_items (tconsole->priv->history);
 }
 
 static void
-history_copy_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+history_copy_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
 {
 	QueryEditorHistoryItem *qih;
 	QueryEditor *qe;
@@ -596,7 +597,7 @@ compute_params (QueryConsole *tconsole)
 }
 
 static void
-editor_changed_cb (QueryEditor *editor, QueryConsole *tconsole)
+editor_changed_cb (G_GNUC_UNUSED QueryEditor *editor, QueryConsole *tconsole)
 {
 	if (tconsole->priv->params_compute_id)
 		g_source_remove (tconsole->priv->params_compute_id);
@@ -604,7 +605,7 @@ editor_changed_cb (QueryEditor *editor, QueryConsole *tconsole)
 }
 
 static void
-editor_execute_request_cb (QueryEditor *editor, QueryConsole *tconsole)
+editor_execute_request_cb (G_GNUC_UNUSED QueryEditor *editor, QueryConsole *tconsole)
 {
 	gboolean sensitive;
 	g_object_get (tconsole->priv->exec_button, "sensitive", &sensitive, NULL);
@@ -622,14 +623,14 @@ sql_variables_clicked_cb (GtkToggleButton *button, QueryConsole *tconsole)
 }
 
 static void
-sql_clear_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+sql_clear_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
 {
 	query_editor_set_text (tconsole->priv->editor, NULL);
 	gtk_widget_grab_focus (GTK_WIDGET (tconsole->priv->editor));
 }
 
 static void
-sql_indent_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+sql_indent_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
 {
 	gchar *sql;
 	GdaBatch *batch;
@@ -664,7 +665,7 @@ sql_indent_clicked_cb (GtkButton *button, QueryConsole *tconsole)
 }
 
 static void
-sql_favorite_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
 {
 	BrowserFavorites *bfav;
 	BrowserFavoritesAttributes fav;
@@ -715,7 +716,8 @@ popup_container_position_func (PopupContainer *cont, gint *out_x, gint *out_y)
 }
 
 static void
-params_form_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif, QueryConsole *tconsole)
+params_form_changed_cb (GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param,
+			G_GNUC_UNUSED gboolean is_user_modif, QueryConsole *tconsole)
 {
 	/* if all params are valid => authorize the execute button */
 	GtkWidget *button;
@@ -728,7 +730,7 @@ params_form_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean is_user
 static gboolean query_exec_fetch_cb (QueryConsole *tconsole);
 
 static void
-sql_execute_clicked_cb (GtkButton *button, QueryConsole *tconsole)
+sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
 {
 	gchar *sql;
 	const gchar *remain;
@@ -1004,14 +1006,14 @@ query_console_set_text (QueryConsole *console, const gchar *text)
  * UI actions
  */
 static void
-query_execute_cb (GtkAction *action, QueryConsole *tconsole)
+query_execute_cb (G_GNUC_UNUSED GtkAction *action, QueryConsole *tconsole)
 {
 	sql_execute_clicked_cb (NULL, tconsole);
 }
 
 #ifdef HAVE_GTKSOURCEVIEW
 static void
-editor_undo_cb (GtkAction *action, QueryConsole *tconsole)
+editor_undo_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED QueryConsole *tconsole)
 {
 	TO_IMPLEMENT;
 }
@@ -1056,7 +1058,7 @@ query_console_page_get_actions_group (BrowserPage *page)
 }
 
 static const gchar *
-query_console_page_get_actions_ui (BrowserPage *page)
+query_console_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
 {
 	return ui_actions_console;
 }

@@ -51,7 +51,8 @@ gda_capi_pstmt_get_type (void)
 			NULL,
 			sizeof (GdaCapiPStmt),
 			0,
-			(GInstanceInitFunc) gda_capi_pstmt_init
+			(GInstanceInitFunc) gda_capi_pstmt_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);
@@ -73,7 +74,7 @@ gda_capi_pstmt_class_init (GdaCapiPStmtClass *klass)
 }
 
 static void
-gda_capi_pstmt_init (GdaCapiPStmt *pstmt, GdaCapiPStmtClass *klass)
+gda_capi_pstmt_init (GdaCapiPStmt *pstmt, G_GNUC_UNUSED GdaCapiPStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	

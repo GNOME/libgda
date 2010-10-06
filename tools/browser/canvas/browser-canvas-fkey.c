@@ -84,7 +84,8 @@ browser_canvas_fkey_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasFkey),
 			0,
-			(GInstanceInitFunc) browser_canvas_fkey_init
+			(GInstanceInitFunc) browser_canvas_fkey_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS_ITEM, "BrowserCanvasFkey", &info, 0);
@@ -133,13 +134,13 @@ browser_canvas_fkey_init (BrowserCanvasFkey *cc)
 }
 
 static void
-fk_table_item_weak_ref_lost (BrowserCanvasFkey *cc, BrowserCanvasTable *old_table_item)
+fk_table_item_weak_ref_lost (BrowserCanvasFkey *cc, G_GNUC_UNUSED BrowserCanvasTable *old_table_item)
 {
 	cc->priv->fk_table_item = NULL;
 }
 
 static void
-ref_pk_table_item_weak_ref_lost (BrowserCanvasFkey *cc, BrowserCanvasTable *old_table_item)
+ref_pk_table_item_weak_ref_lost (BrowserCanvasFkey *cc, G_GNUC_UNUSED BrowserCanvasTable *old_table_item)
 {
 	cc->priv->ref_pk_table_item = NULL;
 }
@@ -198,7 +199,7 @@ static void
 browser_canvas_fkey_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasFkey *cc;
 
@@ -222,7 +223,7 @@ static void
 browser_canvas_fkey_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasFkey *cc;
 
@@ -381,8 +382,8 @@ update_items (BrowserCanvasFkey *cc)
  * item is for a single FK constraint
  */
 static gboolean
-single_item_enter_notify_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item,
-				   GdkEventCrossing *event, BrowserCanvasFkey *cc)
+single_item_enter_notify_event_cb (G_GNUC_UNUSED GooCanvasItem *ci, G_GNUC_UNUSED GooCanvasItem *target_item,
+				   G_GNUC_UNUSED GdkEventCrossing *event, BrowserCanvasFkey *cc)
 {
 	gint i;
 
@@ -409,8 +410,8 @@ single_item_enter_notify_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item
 }
 
 static gboolean
-single_item_leave_notify_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item,
-				   GdkEventCrossing *event, BrowserCanvasFkey *cc)
+single_item_leave_notify_event_cb (G_GNUC_UNUSED GooCanvasItem *ci, G_GNUC_UNUSED GooCanvasItem *target_item,
+				   G_GNUC_UNUSED GdkEventCrossing *event, BrowserCanvasFkey *cc)
 {
 	gint i;
 
@@ -437,8 +438,8 @@ single_item_leave_notify_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item
 }
 
 static gboolean
-single_item_button_press_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item,
-				   GdkEventButton *event, BrowserCanvasFkey *cc)
+single_item_button_press_event_cb (G_GNUC_UNUSED GooCanvasItem *ci, G_GNUC_UNUSED GooCanvasItem *target_item,
+				   G_GNUC_UNUSED GdkEventButton *event, G_GNUC_UNUSED BrowserCanvasFkey *cc)
 {
 	return FALSE;
 	/*
@@ -459,7 +460,7 @@ single_item_button_press_event_cb (GooCanvasItem *ci, GooCanvasItem *target_item
 }
 
 static void
-table_item_moved_cb (GooCanvasItem *table, BrowserCanvasFkey *cc)
+table_item_moved_cb (G_GNUC_UNUSED GooCanvasItem *table, BrowserCanvasFkey *cc)
 {
 	update_items (cc);
 }

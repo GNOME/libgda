@@ -67,7 +67,8 @@ gda_handler_boolean_get_type (void)
 			NULL,
 			sizeof (GdaHandlerBoolean),
 			0,
-			(GInstanceInitFunc) gda_handler_boolean_init
+			(GInstanceInitFunc) gda_handler_boolean_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {
@@ -192,7 +193,7 @@ gda_handler_boolean_get_str_from_value (GdaDataHandler *iface, const GValue *val
 }
 
 static GValue *
-gda_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
+gda_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
 {
 	GdaHandlerBoolean *hdl;
 	GValue *value;
@@ -210,7 +211,7 @@ gda_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gchar *sql,
 }
 
 static GValue *
-gda_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
+gda_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
 {
 	GdaHandlerBoolean *hdl;
 	GValue *value = NULL;
@@ -240,7 +241,7 @@ gda_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str,
 
 
 static GValue *
-gda_handler_boolean_get_sane_init_value (GdaDataHandler *iface, GType type)
+gda_handler_boolean_get_sane_init_value (GdaDataHandler *iface, G_GNUC_UNUSED GType type)
 {
 	GdaHandlerBoolean *hdl;
 	GValue *value;

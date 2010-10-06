@@ -125,7 +125,8 @@ gda_data_model_array_get_type (void)
 			NULL,
 			sizeof (GdaDataModelArray),
 			0,
-			(GInstanceInitFunc) gda_data_model_array_init
+			(GInstanceInitFunc) gda_data_model_array_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {
@@ -173,7 +174,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 }
 
 static void
-gda_data_model_array_init (GdaDataModelArray *model, GdaDataModelArrayClass *klass)
+gda_data_model_array_init (GdaDataModelArray *model, G_GNUC_UNUSED GdaDataModelArrayClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
@@ -189,7 +190,7 @@ gda_data_model_array_init (GdaDataModelArray *model, GdaDataModelArrayClass *kla
 static void column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelArray *model);
 
 static void
-hash_free_column (gpointer key, GdaColumn *column, GdaDataModelArray *model)
+hash_free_column (G_GNUC_UNUSED gpointer key, GdaColumn *column, GdaDataModelArray *model)
 {
         g_signal_handlers_disconnect_by_func (G_OBJECT (column),
                                               G_CALLBACK (column_g_type_changed_cb), model);
@@ -381,8 +382,9 @@ GdaRow *
 gda_data_model_array_get_row (GdaDataModelArray *model, gint row, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
+	g_return_val_if_fail (row >= 0, NULL);
 
-	if (row >= model->priv->rows->len) {
+	if ((guint)row >= model->priv->rows->len) {
 		if (model->priv->rows->len > 0)
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 				     _("Row %d out of range (0-%d)"), row,
@@ -475,14 +477,14 @@ gda_data_model_array_describe_column (GdaDataModel *model, gint col)
 }
 
 static void
-column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelArray *model)
+column_g_type_changed_cb (GdaColumn *column, G_GNUC_UNUSED GType old, GType new, GdaDataModelArray *model)
 {
         /* emit a warning if there are GValues which are not compatible with the new type */
         gint i, nrows, col;
         const GValue *value;
         gchar *str;
         gint nb_warnings = 0;
-#define max_warnings 5
+	const gint max_warnings = 5;
 
         if ((new == G_TYPE_INVALID) ||
             (new == GDA_TYPE_NULL))
@@ -523,13 +525,15 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row, GErr
 	GdaRow *fields;
 	GdaDataModelArray *amodel = (GdaDataModelArray*) model;
 
+	g_return_val_if_fail(row >= 0, NULL);
+
 	if (amodel->priv->rows->len == 0) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
 			      "%s", _("No row in data model"));
 		return NULL;
 	}
 
-	if (row >= amodel->priv->rows->len) {
+	if ((guint)row >= amodel->priv->rows->len) {
 		if (amodel->priv->rows->len > 0)
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 				     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len - 1);
@@ -616,7 +620,7 @@ gda_data_model_array_set_value_at (GdaDataModel *model, gint col, gint row,
                 return FALSE;
         }
 
-	if (row > amodel->priv->rows->len) {
+	if ((guint)row > amodel->priv->rows->len) {
 		if (amodel->priv->rows->len > 0)
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
 				     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len - 1);
@@ -660,7 +664,7 @@ gda_data_model_array_set_values (GdaDataModel *model, gint row, GList *values, G
                 return FALSE;
         }
 
-        if (g_list_length (values) > gda_data_model_get_n_columns (model)) {
+        if (g_list_length (values) > (guint)gda_data_model_get_n_columns (model)) {
                 g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
                               "%s", _("Too many values in list"));
                 return FALSE;
@@ -699,7 +703,7 @@ gda_data_model_array_append_values (GdaDataModel *model, const GList *values, GE
                 return FALSE;
         }
 
-	if (g_list_length ((GList *) values) > amodel->priv->number_of_columns) {
+	if (g_list_length ((GList *) values) > (guint)amodel->priv->number_of_columns) {
                 g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
                               "%s", _("Too many values in list"));
                 return FALSE;

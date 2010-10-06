@@ -107,8 +107,8 @@ gda_xslt_extension_init (xsltTransformContextPtr ctxt, const xmlChar * URI)
 }
 
 void
-gda_xslt_extension_shutdown (xsltTransformContextPtr ctxt,
-			     const xmlChar * URI, void *data)
+gda_xslt_extension_shutdown (G_GNUC_UNUSED xsltTransformContextPtr ctxt,
+			     G_GNUC_UNUSED const xmlChar * URI, void *data)
 {
 	GdaXsltIntCont *p_data = (GdaXsltIntCont *) data;
 	if (p_data) {

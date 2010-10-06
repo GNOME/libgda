@@ -98,7 +98,8 @@ gda_data_comparator_get_type (void)
 			NULL,
 			sizeof (GdaDataComparator),
 			0,
-			(GInstanceInitFunc) gda_data_comparator_init
+			(GInstanceInitFunc) gda_data_comparator_init,
+			0
 		};
 
 		g_static_mutex_lock (&registering);
@@ -110,10 +111,10 @@ gda_data_comparator_get_type (void)
 }
 
 static gboolean
-diff_computed_accumulator (GSignalInvocationHint *ihint,
+diff_computed_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
 			   GValue *return_accu,
 			   const GValue *handler_return,
-			   gpointer data)
+			   G_GNUC_UNUSED gpointer data)
 {
         gboolean thisvalue;
 
@@ -124,7 +125,7 @@ diff_computed_accumulator (GSignalInvocationHint *ihint,
 }
 
 static gboolean
-m_diff_computed (GdaDataComparator *comparator, GdaDiff *diff)
+m_diff_computed (G_GNUC_UNUSED GdaDataComparator *comparator, G_GNUC_UNUSED GdaDiff *diff)
 {
         return FALSE; /* default is to allow differences computing to proceed (understand it as: FALSE => don't stop) */
 }
@@ -201,7 +202,7 @@ static void
 clean_diff (GdaDataComparator *comparator)
 {
 	if (comparator->priv->diffs) {
-		gint i;
+		gsize i;
 		for (i = 0; i < comparator->priv->diffs->len; i++) {
 			GdaDiff *diff = g_array_index (comparator->priv->diffs, GdaDiff *, i);
 			gda_diff_free (diff);
@@ -260,7 +261,7 @@ static void
 gda_data_comparator_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataComparator *comparator;
 	comparator = GDA_DATA_COMPARATOR (object);
@@ -302,7 +303,7 @@ static void
 gda_data_comparator_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataComparator *comparator;
 

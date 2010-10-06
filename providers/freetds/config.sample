@@ -1,7 +1,0 @@
-  <section path="/apps/libgda/Datasources/FreeTDS">
-    <entry name="Provider" type="string" value="FreeTDS"/>
-    <entry name="Username" type="string" value="sa"/>
-    <entry name="Password" type="string" value="********"/>
-    <entry name="DSN" type="string" value="DATABASE=master;TDS_HOST=sybase;TDS_QUERY=sybase;USER=sa;TDS_PORT=4100;TDS_MAJVER=4;TDS_MINVER=2;PASSWORD=********"/>
-    <entry name="Description" type="string" value="sybase ase 11.9.2 via freetds tds version 4.2"/>
-  </section>

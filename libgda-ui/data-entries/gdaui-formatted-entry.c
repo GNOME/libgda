@@ -76,6 +76,7 @@ gdaui_formatted_entry_get_type (void)
 			sizeof (GdauiFormattedEntry),
 			0,		/* n_preallocs */
 			(GInstanceInitFunc) gdaui_formatted_entry_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY, "GdauiFormattedEntry", &type_info, 0);
@@ -248,7 +249,7 @@ is_writable (GdauiFormattedEntry *fentry, gint pos, const gchar *ptr)
  * Returns: %TRUE if @wc can be used to replace @ptr
  */
 static gboolean
-is_allowed (GdauiFormattedEntry *fentry, const gchar *ptr, const gunichar wc, gunichar *out_wc)
+is_allowed (G_GNUC_UNUSED GdauiFormattedEntry *fentry, const gchar *ptr, const gunichar wc, gunichar *out_wc)
 {
 	gunichar fwc;
 
@@ -306,7 +307,7 @@ gdaui_formatted_entry_get_empty_text (GdauiEntry *entry)
 }
 
 static void
-gdaui_formatted_entry_assume_insert (GdauiEntry *entry, const gchar *text, gint text_length,
+gdaui_formatted_entry_assume_insert (GdauiEntry *entry, const gchar *text, G_GNUC_UNUSED gint text_length,
 				     gint *virt_pos, gint offset)
 {
 	GdauiFormattedEntry *fentry;

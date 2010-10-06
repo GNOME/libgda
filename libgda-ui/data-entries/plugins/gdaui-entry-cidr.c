@@ -80,7 +80,8 @@ gdaui_entry_cidr_get_type (void)
 			NULL,
 			sizeof (GdauiEntryCidr),
 			0,
-			(GInstanceInitFunc) gdaui_entry_cidr_init
+			(GInstanceInitFunc) gdaui_entry_cidr_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryCidr", &info, 0);
@@ -204,7 +205,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 /* makes sure the mask part of the widget is compatible with the ip part */
 static gboolean
-ip_focus_out_event_cb (GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *mgcidr)
+ip_focus_out_event_cb (G_GNUC_UNUSED GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *mgcidr)
 {
 	gint ip;
 
@@ -230,13 +231,13 @@ ip_focus_out_event_cb (GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *mg
 		}
 	}
 
-	return FALSE;
+	return gtk_widget_event (GTK_WIDGET (mgcidr), (GdkEvent*) event);
 }
 
 /* makes sure the ip part of the widget is truncated to the right number of bits corresponding to
  * the mask part */
 static gboolean
-mask_focus_out_event_cb (GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *mgcidr)
+mask_focus_out_event_cb (G_GNUC_UNUSED GtkEntry *entry, G_GNUC_UNUSED GdkEventFocus *event, GdauiEntryCidr *mgcidr)
 {
 	gint mask;
 
@@ -249,7 +250,7 @@ mask_focus_out_event_cb (GtkEntry *entry, GdkEventFocus *event, GdauiEntryCidr *
 
 static void popup_menu_item_activate_cb (GtkMenuItem *item, GdauiEntryCidr *mgcidr);
 static void
-mask_popup (GtkEntry *entry, GtkMenu *arg1, GdauiEntryCidr *mgcidr)
+mask_popup (G_GNUC_UNUSED GtkEntry *entry, GtkMenu *arg1, GdauiEntryCidr *mgcidr)
 {
 	GtkWidget *submenu, *item;
 	gint net;
@@ -375,7 +376,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 static void truncate_entries_to_mask_length (GdauiEntryCidr *mgcidr, gboolean target_mask, guint mask_nb_bits)
 {
-	gint i, j;
+	guint i, j;
 	gchar *val;
 	guint mask, maskiter;
 	gint oldval, newval;
@@ -594,7 +595,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }

@@ -37,7 +37,7 @@
 #include "marshallers/gdaui-custom-marshal.h"
 #include "gdaui-data-cell-renderer-util.h"
 
-#define MAX_ACCEPTED_STRING_LENGTH 500
+#define MAX_ACCEPTED_STRING_LENGTH 500U
 
 static void gdaui_data_cell_renderer_textual_init       (GdauiDataCellRendererTextual      *celltext);
 static void gdaui_data_cell_renderer_textual_class_init (GdauiDataCellRendererTextualClass *class);
@@ -137,6 +137,7 @@ gdaui_data_cell_renderer_textual_get_type (void)
 			sizeof (GdauiDataCellRendererTextual),
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_textual_init,
+			0
 		};
 
 		cell_text_type =
@@ -257,7 +258,7 @@ gdaui_data_cell_renderer_textual_finalize (GObject *object)
 static void
 gdaui_data_cell_renderer_textual_get_property (GObject *object,
 					       guint param_id,
-					       GValue *value,
+					       G_GNUC_UNUSED GValue *value,
 					       GParamSpec *pspec)
 {
 	switch (param_id) {
@@ -663,7 +664,7 @@ gdaui_data_cell_renderer_textual_editing_done (GtkCellEditable *entry,
 
 static gboolean
 gdaui_data_cell_renderer_textual_focus_out_event (GtkWidget *entry,
-						  GdkEvent  *event,
+						  G_GNUC_UNUSED GdkEvent  *event,
 						  gpointer   data)
 {
 	gdaui_data_cell_renderer_textual_editing_done (GTK_CELL_EDITABLE (entry), data);
@@ -674,12 +675,12 @@ gdaui_data_cell_renderer_textual_focus_out_event (GtkWidget *entry,
 
 static GtkCellEditable *
 gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
-						GdkEvent             *event,
-						GtkWidget            *widget,
+						G_GNUC_UNUSED GdkEvent             *event,
+						G_GNUC_UNUSED GtkWidget            *widget,
 						const gchar          *path,
-						GdkRectangle         *background_area,
-						GdkRectangle         *cell_area,
-						GtkCellRendererState  flags)
+						G_GNUC_UNUSED GdkRectangle         *background_area,
+						G_GNUC_UNUSED GdkRectangle         *cell_area,
+						G_GNUC_UNUSED GtkCellRendererState  flags)
 {
 	GdauiDataCellRendererTextual *datacell;
 	GtkWidget *entry;

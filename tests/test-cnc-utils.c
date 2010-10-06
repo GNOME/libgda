@@ -316,7 +316,8 @@ test_cnc_clean_connection (GdaConnection *cnc, GError **error)
 }
 
 gboolean
-test_cnc_setup_db_contents (GdaConnection *cnc, const gchar *data_file, GError **error)
+test_cnc_setup_db_contents (G_GNUC_UNUSED GdaConnection *cnc, G_GNUC_UNUSED const gchar *data_file,
+			    G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return FALSE;

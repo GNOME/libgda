@@ -101,9 +101,9 @@ data_model_errors_data_model_init (GdaDataModelIface *iface)
 
 static void
 data_model_errors_init (DataModelErrors *model,
-			DataModelErrorsClass *klass)
+			G_GNUC_UNUSED DataModelErrorsClass *klass)
 {
-	gint i;
+	gsize i;
 	g_return_if_fail (IS_DATA_MODEL_ERRORS (model));
 
 	model->priv = g_new0 (DataModelErrorsPrivate, 1);
@@ -115,7 +115,7 @@ data_model_errors_init (DataModelErrors *model,
 		gchar *str;
 		col = gda_column_new ();
 		gda_column_set_g_type (col, G_TYPE_STRING);
-		str = g_strdup_printf ("col%d", i);
+		str = g_strdup_printf ("col%" G_GSIZE_FORMAT, i);
 		gda_column_set_name (col, str);
 		gda_column_set_description (col, str);
 		g_object_set (G_OBJECT (col), "id", str, NULL);
@@ -226,7 +226,8 @@ data_model_errors_get_type (void)
 			NULL,
 			sizeof (DataModelErrors),
 			0,
-			(GInstanceInitFunc) data_model_errors_init
+			(GInstanceInitFunc) data_model_errors_init,
+			0
 		};
 		static const GInterfaceInfo data_model_info = {
                         (GInterfaceInitFunc) data_model_errors_data_model_init,
@@ -363,7 +364,7 @@ data_model_errors_get_value_at (GdaDataModel *model, gint col, gint row, GError 
 }
 
 static GdaValueAttribute
-data_model_errors_get_attributes_at (GdaDataModel *model, gint col, gint row)
+data_model_errors_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
 {
 	DataModelErrors *imodel;
 	GdaValueAttribute flags = 0;
@@ -417,7 +418,7 @@ data_model_errors_set_value_at (GdaDataModel *model, gint col, gint row, const G
 
 
 static gint
-data_model_errors_append_values (GdaDataModel *model, const GList *values, GError **error)
+data_model_errors_append_values (GdaDataModel *model, G_GNUC_UNUSED const GList *values, GError **error)
 {
 	DataModelErrors *imodel;
 	

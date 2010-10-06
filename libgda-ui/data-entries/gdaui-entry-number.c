@@ -103,7 +103,8 @@ gdaui_entry_number_get_type (void)
 			NULL,
 			sizeof (GdauiEntryNumber),
 			0,
-			(GInstanceInitFunc) gdaui_entry_number_init
+			(GInstanceInitFunc) gdaui_entry_number_init,
+			0
 		};
 		
 		static const GInterfaceInfo cell_editable_info = {
@@ -147,7 +148,7 @@ gdaui_entry_number_class_init (GdauiEntryNumberClass * klass)
 }
 
 static gboolean
-key_press_event_cb (GdauiEntryNumber *mgstr, GdkEventKey *key_event, gpointer data)
+key_press_event_cb (GdauiEntryNumber *mgstr, GdkEventKey *key_event, G_GNUC_UNUSED gpointer data)
 {
 	if (key_event->keyval == GDK_KEY_Escape)
 		mgstr->priv->editing_canceled = TRUE;
@@ -362,7 +363,7 @@ focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryNumber *mgstr)
 	g_assert (activate_cb);
 	((Callback2)activate_cb) (widget, mgstr);
 
-	return FALSE;
+	return gtk_widget_event (GTK_WIDGET (mgstr), (GdkEvent*) event);
 }
 
 static void
@@ -384,7 +385,7 @@ connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activ
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }
@@ -415,13 +416,13 @@ grab_focus (GdauiEntryWrapper *mgwrap)
  * GtkCellEditable interface
  */
 static void
-gtk_cell_editable_entry_editing_done_cb (GtkEntry *entry, GdauiEntryNumber *mgstr) 
+gtk_cell_editable_entry_editing_done_cb (G_GNUC_UNUSED GtkEntry *entry, GdauiEntryNumber *mgstr)
 {
 	gtk_cell_editable_editing_done (GTK_CELL_EDITABLE (mgstr));
 }
 
 static void
-gtk_cell_editable_entry_remove_widget_cb (GtkEntry *entry, GdauiEntryNumber *mgstr) 
+gtk_cell_editable_entry_remove_widget_cb (G_GNUC_UNUSED GtkEntry *entry, GdauiEntryNumber *mgstr)
 {
 	gtk_cell_editable_remove_widget (GTK_CELL_EDITABLE (mgstr));
 }

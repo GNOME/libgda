@@ -170,7 +170,8 @@ browser_connection_get_type (void)
 			NULL,
 			sizeof (BrowserConnection),
 			0,
-			(GInstanceInitFunc) browser_connection_init
+			(GInstanceInitFunc) browser_connection_init,
+			0
 		};
 
 		
@@ -279,8 +280,9 @@ browser_connection_init (BrowserConnection *bcnc)
 }
 
 static void
-transaction_status_changed_cb (GdaThreadWrapper *wrapper, gpointer instance, const gchar *signame,
-			       gint n_param_values, const GValue *param_values, gpointer gda_reserved,
+transaction_status_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper, G_GNUC_UNUSED gpointer instance,
+			       G_GNUC_UNUSED const gchar *signame, G_GNUC_UNUSED gint n_param_values,
+			       G_GNUC_UNUSED const GValue *param_values, G_GNUC_UNUSED gpointer gda_reserved,
 			       BrowserConnection *bcnc)
 {
 	g_signal_emit (bcnc, browser_connection_signals [TRANSACTION_STATUS_CHANGED], 0);
@@ -328,12 +330,12 @@ wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 }
 
 static void
-meta_changed_cb (GdaThreadWrapper *wrapper,
-		 GdaMetaStore *store,
-		 const gchar *signame,
-		 gint n_param_values,
-		 const GValue *param_values,
-		 gpointer gda_reserved,
+meta_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper,
+		 G_GNUC_UNUSED GdaMetaStore *store,
+		 G_GNUC_UNUSED const gchar *signame,
+		 G_GNUC_UNUSED gint n_param_values,
+		 G_GNUC_UNUSED const GValue *param_values,
+		 G_GNUC_UNUSED gpointer gda_reserved,
 		 BrowserConnection *bcnc)
 {
 	guint job_id;
@@ -362,7 +364,7 @@ static void
 browser_connection_set_property (GObject *object,
 				 guint param_id,
 				 const GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
         BrowserConnection *bcnc;
 
@@ -460,7 +462,7 @@ static void
 browser_connection_get_property (GObject *object,
 				 guint param_id,
 				 GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
         BrowserConnection *bcnc;
 
@@ -494,7 +496,7 @@ clear_dsn_info (BrowserConnection *bcnc)
 }
 
 static void
-fav_changed_cb (BrowserFavorites *bfav, BrowserConnection *bcnc)
+fav_changed_cb (G_GNUC_UNUSED BrowserFavorites *bfav, BrowserConnection *bcnc)
 {
 	g_signal_emit (bcnc, browser_connection_signals [FAV_CHANGED], 0);
 }

@@ -178,7 +178,7 @@ gda_tree_class_init (GdaTreeClass *klass)
 }
 
 static void
-gda_tree_init (GdaTree *tree, GdaTreeClass *klass)
+gda_tree_init (GdaTree *tree, G_GNUC_UNUSED GdaTreeClass *klass)
 {
 	g_return_if_fail (GDA_IS_TREE (tree));
 
@@ -247,7 +247,8 @@ gda_tree_get_type (void)
                         NULL,
                         sizeof (GdaTree),
                         0,
-                        (GInstanceInitFunc) gda_tree_init
+                        (GInstanceInitFunc) gda_tree_init,
+			0
                 };
 
                 g_static_mutex_lock (&registering);
@@ -261,8 +262,8 @@ gda_tree_get_type (void)
 static void
 gda_tree_set_property (GObject *object,
 			 guint param_id,
-			 const GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED const GValue *value,
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaTree *tree;
 
@@ -277,7 +278,7 @@ static void
 gda_tree_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 GParamSpec *pspec)
+			 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaTree *tree;
 	
@@ -600,7 +601,7 @@ gda_tree_get_node_path (GdaTree *tree, GdaTreeNode *node)
 	if (build_node_path (tree, node, array))
 		str = g_strjoinv (":", (gchar **) array->data);
 	
-	gint i;
+	gsize i;
 	for (i = 0; i < array->len; i++)
 		g_free (g_array_index (array, gchar *, i));
 	g_array_free (array, TRUE);
@@ -929,7 +930,7 @@ node_has_child_toggled_cb (GdaTreeNode *reporting, GdaTreeNode *node, GdaTree *t
 }
 
 static void
-node_deleted_cb (GdaTreeNode *reporting, const gchar *relative_path, GdaTree *tree)
+node_deleted_cb (G_GNUC_UNUSED GdaTreeNode *reporting, const gchar *relative_path, GdaTree *tree)
 {
 	g_signal_emit (tree, gda_tree_signals [NODE_DELETED], 0, relative_path);
 }

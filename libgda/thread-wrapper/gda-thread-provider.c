@@ -257,7 +257,7 @@ gda_thread_provider_class_init (GdaThreadProviderClass *klass)
 }
 
 static void
-gda_thread_provider_init (GdaThreadProvider *thread_prv, GdaThreadProviderClass *klass)
+gda_thread_provider_init (GdaThreadProvider *thread_prv, G_GNUC_UNUSED GdaThreadProviderClass *klass)
 {
 	thread_prv->priv = g_new0 (GdaThreadProviderPrivate, 1);
 	thread_prv->priv->prov_wrappers = g_hash_table_new_full (g_str_hash, g_str_equal,
@@ -279,7 +279,8 @@ _gda_thread_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaThreadProvider),
 			0,
-			(GInstanceInitFunc) gda_thread_provider_init
+			(GInstanceInitFunc) gda_thread_provider_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -309,7 +310,7 @@ check_cnc_closed (GdaConnection *cnc, ThreadConnectionData *cdata)
  * Get provider name request
  */
 static const gchar *
-gda_thread_provider_get_name (GdaServerProvider *provider)
+gda_thread_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return "ThreadWrapper";
 }
@@ -318,7 +319,7 @@ gda_thread_provider_get_name (GdaServerProvider *provider)
  * Get provider's version, no need to change this
  */
 static const gchar *
-gda_thread_provider_get_version (GdaServerProvider *provider)
+gda_thread_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -374,8 +375,9 @@ static void setup_signals (GdaConnection *cnc, ThreadConnectionData *cdata);
 
 static gboolean
 gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaQuarkList *params, GdaQuarkList *auth,
-				     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
+				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				     G_GNUC_UNUSED gpointer cb_data)
 {
 	GdaThreadWrapper *wr = NULL;
 	gboolean wr_created = FALSE;
@@ -528,9 +530,10 @@ _gda_thread_provider_handle_virtual_connection (GdaThreadProvider *provider, Gda
 }
 
 static void
-sub_cnc_error_cb (GdaThreadWrapper *wrapper, GdaConnection *sub_cnc, const gchar *signal,
-		  gint n_param_values, const GValue *param_values,
-		  gpointer gda_reserved, GdaConnection *wrapper_cnc)
+sub_cnc_error_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper, G_GNUC_UNUSED GdaConnection *sub_cnc,
+		  G_GNUC_UNUSED const gchar *signal,
+		  gint n_param_values, const GValue *param_values, G_GNUC_UNUSED gpointer gda_reserved,
+		  GdaConnection *wrapper_cnc)
 {
 	GdaConnectionEvent *ev;
 	g_assert (n_param_values == 1);
@@ -540,17 +543,19 @@ sub_cnc_error_cb (GdaThreadWrapper *wrapper, GdaConnection *sub_cnc, const gchar
 }
 
 static void
-sub_cnc_transaction_status_changed_cb (GdaThreadWrapper *wrapper, GdaConnection *sub_cnc, const gchar *signal,
-				       gint n_param_values, const GValue *param_values,
-				       gpointer gda_reserved, GdaConnection *wrapper_cnc)
+sub_cnc_transaction_status_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper, GdaConnection *sub_cnc,
+				       G_GNUC_UNUSED const gchar *signal, G_GNUC_UNUSED gint n_param_values,
+				       G_GNUC_UNUSED const GValue *param_values,
+				       G_GNUC_UNUSED gpointer gda_reserved, GdaConnection *wrapper_cnc)
 {
 	_gda_connection_force_transaction_status (wrapper_cnc, sub_cnc);
 }
 
 static void
-sub_cnc_closed_cb (GdaThreadWrapper *wrapper, GdaConnection *sub_cnc, const gchar *signal,
-		   gint n_param_values, const GValue *param_values,
-		   gpointer gda_reserved, GdaConnection *wrapper_cnc)
+sub_cnc_closed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper, G_GNUC_UNUSED GdaConnection *sub_cnc,
+		   G_GNUC_UNUSED const gchar *signal, G_GNUC_UNUSED gint n_param_values,
+		   G_GNUC_UNUSED const GValue *param_values, G_GNUC_UNUSED gpointer gda_reserved,
+		   GdaConnection *wrapper_cnc)
 {
 	ThreadConnectionData *cdata;
 	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (wrapper_cnc);
@@ -595,7 +600,7 @@ typedef struct {
 } CncProvData;
 
 static gpointer
-sub_thread_close_connection (CncProvData *data, GError **error)
+sub_thread_close_connection (CncProvData *data, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	gboolean retval;
@@ -637,7 +642,7 @@ gda_thread_provider_close_connection (GdaServerProvider *provider, GdaConnection
  */
 
 static const gchar *
-sub_thread_get_server_version (CncProvData *data, GError **error)
+sub_thread_get_server_version (CncProvData *data, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	const gchar *retval;
@@ -678,7 +683,7 @@ gda_thread_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
  * Returns the database name as a string, which should be stored in @cnc's associated ThreadConnectionData structure
  */
 static const gchar *
-sub_thread_get_database (CncProvData *data, GError **error)
+sub_thread_get_database (CncProvData *data, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	const gchar *retval;
@@ -733,7 +738,7 @@ typedef struct {
 } SupportsOperationData;
 
 static gpointer
-sub_thread_supports_operation (SupportsOperationData *data, GError **error)
+sub_thread_supports_operation (SupportsOperationData *data, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	gboolean retval;
@@ -746,7 +751,8 @@ sub_thread_supports_operation (SupportsOperationData *data, GError **error)
 
 static gboolean
 gda_thread_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
-					GdaServerOperationType type, GdaSet *options)
+					G_GNUC_UNUSED GdaServerOperationType type,
+					G_GNUC_UNUSED GdaSet *options)
 {
 	ThreadConnectionData *cdata;
 	SupportsOperationData wdata;
@@ -903,8 +909,9 @@ sub_thread_perform_operation (PerformOperationData *data, GError **error)
 
 static gboolean
 gda_thread_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				       GdaServerOperation *op, guint *task_id, 
-				       GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+				       GdaServerOperation *op, G_GNUC_UNUSED guint *task_id,
+				       GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data,
+				       GError **error)
 {
 	ThreadConnectionData *cdata;
 	PerformOperationData wdata;
@@ -1280,7 +1287,7 @@ typedef struct {
 } GetDataHandlerData;
 
 static GdaDataHandler *
-sub_thread_get_data_handler (GetDataHandlerData *data, GError **error)
+sub_thread_get_data_handler (GetDataHandlerData *data, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	GdaDataHandler *retval;
@@ -1330,7 +1337,7 @@ typedef struct {
 } GetDefaultDbmsTypeData;
 
 static const gchar *
-sub_thread_get_default_dbms_type (GetDefaultDbmsTypeData *data, GError **error)
+sub_thread_get_default_dbms_type (GetDefaultDbmsTypeData *data, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	const gchar *retval;
@@ -1374,7 +1381,7 @@ gda_thread_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
  */
 
 static GdaSqlParser *
-sub_thread_create_parser (CncProvData *data, GError **error)
+sub_thread_create_parser (CncProvData *data, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	GdaSqlParser *parser = NULL;
@@ -1450,7 +1457,7 @@ sub_thread_statement_to_sql (StmtToSqlData *data, GError **error)
 static gchar *
 gda_thread_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
 				      GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
-				      GSList **params_used, GError **error)
+				      GSList **params_used, G_GNUC_UNUSED GError **error)
 {
 	ThreadConnectionData *cdata;
 	StmtToSqlData wdata;
@@ -1672,7 +1679,8 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 }
 
 static gboolean
-gda_thread_provider_handle_async (GdaServerProvider *provider, GdaConnection *cnc, GError **error)
+gda_thread_provider_handle_async (GdaServerProvider *provider, GdaConnection *cnc,
+				  G_GNUC_UNUSED GError **error)
 {
 	ThreadConnectionData *cdata;
 	GObject *res;
@@ -2023,7 +2031,7 @@ typedef struct {
 } SqlIdentifierQuoteData;
 
 static gchar *
-sub_thread_identifier_quote (SqlIdentifierQuoteData *data, GError **error)
+sub_thread_identifier_quote (SqlIdentifierQuoteData *data, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	gchar *retval;
@@ -2065,7 +2073,7 @@ gda_thread_provider_identifier_quote (GdaServerProvider *provider, GdaConnection
 }
 
 static gpointer
-sub_thread_unref_connection (GdaConnection *cnc, GError **error)
+sub_thread_unref_connection (GdaConnection *cnc, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	g_object_unref (cnc);
@@ -2085,7 +2093,7 @@ gda_thread_free_cnc_data (ThreadConnectionData *cdata)
 		return;
 
 	/* disconnect signals handlers */
-	gint i;
+	gsize i;
 	for (i = 0; i < cdata->handlers_ids->len; i++) {
 		gulong hid = g_array_index (cdata->handlers_ids, gulong, i);
 		gda_thread_wrapper_disconnect (cdata->wrapper, hid);

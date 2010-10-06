@@ -60,7 +60,7 @@ sqlitesources = \
 	gda-symbols-util.h \
 	gda-symbols-util.c
 
-$(libgda_sqlite_la_OBJECTS): xml_embedded.h keywords_hash.c
+BUILT_SOURCES = xml_embedded.h keywords_hash.c
 
 libgda_sqlite_la_SOURCES = $(sqlitesources)
 libgda_sqlite_la_CFLAGS = -DPNAME=\""SQLite"\" -DCLASS_PREFIX=\""GdaSqlite"\" -DSEARCH_LIB_PATH=\""$(SQLITE_PATH)"\"
@@ -85,4 +85,4 @@ gdainclude_HEADERS=$(sqliteheaders)
 
 EXTRA_DIST = gen_emb_string.c mkkeywordhash.c keywords.list
 
-CLEANFILES = gen_emb_string$(EXEEXT_FOR_BUILD) xml_embedded.h mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c
+CLEANFILES = gen_emb_string$(EXEEXT_FOR_BUILD) mkkeywordhash$(EXEEXT_FOR_BUILD) $(BUILT_SOURCES)

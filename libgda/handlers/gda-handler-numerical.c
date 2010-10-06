@@ -68,7 +68,8 @@ gda_handler_numerical_get_type (void)
 			NULL,
 			sizeof (GdaHandlerNumerical),
 			0,
-			(GInstanceInitFunc) gda_handler_numerical_init
+			(GInstanceInitFunc) gda_handler_numerical_init,
+			0
 		};		
 
 		static const GInterfaceInfo data_entry_info = {

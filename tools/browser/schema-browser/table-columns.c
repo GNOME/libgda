@@ -68,7 +68,7 @@ table_columns_class_init (TableColumnsClass *klass)
 
 
 static void
-table_columns_init (TableColumns *tcolumns, TableColumnsClass *klass)
+table_columns_init (TableColumns *tcolumns, G_GNUC_UNUSED TableColumnsClass *klass)
 {
 	tcolumns->priv = g_new0 (TableColumnsPrivate, 1);
 	tcolumns->priv->idle_update_columns = 0;
@@ -113,7 +113,8 @@ table_columns_get_type (void)
 			NULL,
 			sizeof (TableColumns),
 			0,
-			(GInstanceInitFunc) table_columns_init
+			(GInstanceInitFunc) table_columns_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_VBOX, "TableColumns", &columns, 0);
 	}
@@ -147,7 +148,7 @@ static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event
 static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, TableColumns *tcolumns);
 
 static void
-meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns)
+meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns)
 {
 	GtkTextBuffer *tbuffer;
 	GtkTextIter start, end;
@@ -606,7 +607,8 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, TableColumns 
  * (e.g. when a window covering it got iconified).
  */
 static gboolean
-visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, TableColumns *tcolumns)
+visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility *event,
+			 TableColumns *tcolumns)
 {
 	gint wx, wy, bx, by;
 	
@@ -645,7 +647,7 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, TableColumns *
  * by the data attached to it.
  */
 static void
-follow_if_link (GtkWidget *text_view, GtkTextIter *iter, TableColumns *tcolumns)
+follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColumns *tcolumns)
 {
 	GSList *tags = NULL, *tagp = NULL;
 	

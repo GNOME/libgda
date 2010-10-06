@@ -115,6 +115,7 @@ gdaui_data_cell_renderer_pict_get_type (void)
 			sizeof (GdauiDataCellRendererPict),
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_pict_init,
+			0
 		};
 
 		cell_type = g_type_register_static (GTK_TYPE_CELL_RENDERER_PIXBUF, "GdauiDataCellRendererPict",
@@ -125,7 +126,7 @@ gdaui_data_cell_renderer_pict_get_type (void)
 }
 
 static void
-notify_property_cb (GtkCellRenderer *cell, GParamSpec *pspec, gpointer data)
+notify_property_cb (GtkCellRenderer *cell, GParamSpec *pspec, G_GNUC_UNUSED gpointer data)
 {
 	if (!strcmp (pspec->name, "stock-size")) {
 		GdauiDataCellRendererPict *pictcell;
@@ -439,12 +440,12 @@ pict_data_changed_cb (GdauiDataCellRendererPict *pictcell)
 
 static gboolean
 gdaui_data_cell_renderer_pict_activate  (GtkCellRenderer            *cell,
-					 GdkEvent                   *event,
+					 G_GNUC_UNUSED GdkEvent                   *event,
 					 GtkWidget                  *widget,
 					 const gchar                *path,
-					 GdkRectangle               *background_area,
-					 GdkRectangle               *cell_area,
-					 GtkCellRendererState        flags)
+					 G_GNUC_UNUSED GdkRectangle               *background_area,
+					 G_GNUC_UNUSED GdkRectangle               *cell_area,
+					 G_GNUC_UNUSED GtkCellRendererState        flags)
 {
 	GdauiDataCellRendererPict *pictcell;
 

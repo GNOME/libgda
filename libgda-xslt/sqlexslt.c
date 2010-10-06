@@ -82,7 +82,7 @@ gda_xslt_set_execution_context (xsltTransformContextPtr tcxt,
  * Returns:
  */
 GdaXsltExCont *
-gda_xslt_create_context_simple (GdaConnection *cnc, GError **error)
+gda_xslt_create_context_simple (GdaConnection *cnc, G_GNUC_UNUSED GError **error)
 {
 	GdaXsltExCont *local = NULL;
 

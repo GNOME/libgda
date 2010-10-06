@@ -81,7 +81,8 @@ gdaui_data_filter_get_type (void)
 			NULL,
 			sizeof (GdauiDataFilter),
 			0,
-			(GInstanceInitFunc) gdaui_data_filter_init
+			(GInstanceInitFunc) gdaui_data_filter_init,
+			0
 		};		
 
 		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiDataFilter", &filter, 0);
@@ -133,7 +134,7 @@ unset_wait_cursor (GtkWidget *w)
 }
 
 static void
-apply_filter_cb (GtkButton *button, GdauiDataFilter *filter)
+apply_filter_cb (G_GNUC_UNUSED GtkButton *button, GdauiDataFilter *filter)
 {
 	const gchar *expr;
 	gchar *err = NULL;
@@ -293,7 +294,7 @@ release_proxy (GdauiDataFilter *filter)
 }
 
 static void
-data_widget_proxy_changed_cb (GdauiDataProxy *data_widget, GdaDataProxy *proxy, GdauiDataFilter *filter)
+data_widget_proxy_changed_cb (GdauiDataProxy *data_widget, G_GNUC_UNUSED GdaDataProxy *proxy, GdauiDataFilter *filter)
 {
 	g_object_set (G_OBJECT (filter), "data-widget", data_widget, NULL);
 }

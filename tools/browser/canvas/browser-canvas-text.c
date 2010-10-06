@@ -88,7 +88,8 @@ browser_canvas_text_get_type (void)
 			NULL,
 			sizeof (BrowserCanvasText),
 			0,
-			(GInstanceInitFunc) browser_canvas_text_init
+			(GInstanceInitFunc) browser_canvas_text_init,
+			0
 		};		
 
 		type = g_type_register_static (TYPE_BROWSER_CANVAS_ITEM, "BrowserCanvasText", &info, 0);
@@ -225,7 +226,7 @@ static void
 browser_canvas_text_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasText *ct = NULL;
 	const gchar *cstr = NULL;
@@ -296,8 +297,8 @@ browser_canvas_text_set_property (GObject *object,
 static void 
 browser_canvas_text_get_property    (GObject *object,
 				    guint param_id,
-				    GValue *value,
-				    GParamSpec *pspec)
+				    G_GNUC_UNUSED GValue *value,
+				    G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvasText *ct;
 
@@ -370,23 +371,25 @@ create_items (BrowserCanvasText *ct)
 }
 
 static gboolean
-enter_notify_cb (GooCanvasItem *item, GooCanvasItem *target_item, GdkEventCrossing *event, BrowserCanvasText *ct)
+enter_notify_cb (G_GNUC_UNUSED GooCanvasItem *item, G_GNUC_UNUSED GooCanvasItem *target_item,
+		 G_GNUC_UNUSED GdkEventCrossing *event, BrowserCanvasText *ct)
 {
 	browser_canvas_text_set_highlight (ct, TRUE);
 	return FALSE;
 }
 
 static gboolean 
-leave_notify_cb (GooCanvasItem *item, GooCanvasItem *target_item, GdkEventCrossing *event, BrowserCanvasText *ct)
+leave_notify_cb (G_GNUC_UNUSED GooCanvasItem *item, G_GNUC_UNUSED GooCanvasItem *target_item,
+		 G_GNUC_UNUSED GdkEventCrossing *event, BrowserCanvasText *ct)
 {
 	browser_canvas_text_set_highlight (ct, FALSE); 
 	return FALSE;
 }
 
 static guint
-compute_step_value (current, end)
+compute_step_value (guint current, guint end)
 {
-#define STEP 15
+	const guint STEP = 15;
 	if (current < end)
 		return current + MIN (STEP, (end - current));
 	else if (current > end)

@@ -259,7 +259,7 @@ gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 }
 
 static void
-gda_capi_provider_init (GdaCapiProvider *capi_prv, GdaCapiProviderClass *klass)
+gda_capi_provider_init (GdaCapiProvider *capi_prv, G_GNUC_UNUSED GdaCapiProviderClass *klass)
 {
 	InternalStatementItem i;
 	GdaSqlParser *parser;
@@ -293,7 +293,8 @@ gda_capi_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaCapiProvider),
 			0,
-			(GInstanceInitFunc) gda_capi_provider_init
+			(GInstanceInitFunc) gda_capi_provider_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -309,7 +310,7 @@ gda_capi_provider_get_type (void)
  * Get provider name request
  */
 static const gchar *
-gda_capi_provider_get_name (GdaServerProvider *provider)
+gda_capi_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return CAPI_PROVIDER_NAME;
 }
@@ -318,7 +319,7 @@ gda_capi_provider_get_name (GdaServerProvider *provider)
  * Get provider's version, no need to change this
  */
 static const gchar *
-gda_capi_provider_get_version (GdaServerProvider *provider)
+gda_capi_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -336,8 +337,9 @@ gda_capi_provider_get_version (GdaServerProvider *provider)
  */
 static gboolean
 gda_capi_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaQuarkList *params, GdaQuarkList *auth,
-				   guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				   GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
+				   G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				   G_GNUC_UNUSED gpointer cb_data)
 {
 	g_return_val_if_fail (GDA_IS_CAPI_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -459,7 +461,7 @@ gda_capi_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
  */
 static gboolean
 gda_capi_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				      GdaServerOperationType type, GdaSet *options)
+				      GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -496,7 +498,8 @@ gda_capi_provider_supports_operation (GdaServerProvider *provider, GdaConnection
  */
 static GdaServerOperation *
 gda_capi_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				    GdaServerOperationType type, GdaSet *options, GError **error)
+				    GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options,
+				    GError **error)
 {
         gchar *file;
         GdaServerOperation *op;
@@ -596,8 +599,9 @@ gda_capi_provider_render_operation (GdaServerProvider *provider, GdaConnection *
  */
 static gboolean
 gda_capi_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaServerOperation *op, guint *task_id, 
-				     GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+				     GdaServerOperation *op, G_GNUC_UNUSED guint *task_id,
+				     GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data,
+				     GError **error)
 {
         GdaServerOperationType optype;
 
@@ -627,8 +631,9 @@ gda_capi_provider_perform_operation (GdaServerProvider *provider, GdaConnection 
  */
 static gboolean
 gda_capi_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-				     const gchar *name, GdaTransactionIsolation level,
-				     GError **error)
+				     G_GNUC_UNUSED const gchar *name,
+				     G_GNUC_UNUSED GdaTransactionIsolation level,
+				     G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -649,7 +654,7 @@ gda_capi_provider_begin_transaction (GdaServerProvider *provider, GdaConnection 
  */
 static gboolean
 gda_capi_provider_commit_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-				      const gchar *name, GError **error)
+				      G_GNUC_UNUSED const gchar *name, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -670,7 +675,7 @@ gda_capi_provider_commit_transaction (GdaServerProvider *provider, GdaConnection
  */
 static gboolean
 gda_capi_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-					const gchar *name, GError **error)
+					G_GNUC_UNUSED const gchar *name, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -691,7 +696,7 @@ gda_capi_provider_rollback_transaction (GdaServerProvider *provider, GdaConnecti
  */
 static gboolean
 gda_capi_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-				 const gchar *name, GError **error)
+				 G_GNUC_UNUSED const gchar *name, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -712,7 +717,7 @@ gda_capi_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc
  */
 static gboolean
 gda_capi_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-				      const gchar *name, GError **error)
+				      G_GNUC_UNUSED const gchar *name, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -733,7 +738,7 @@ gda_capi_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection
  */
 static gboolean
 gda_capi_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-				    const gchar *name, GError **error)
+				    G_GNUC_UNUSED const gchar *name, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -879,7 +884,7 @@ gda_capi_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnect
  * by the database. See the PostgreSQL provider implementation for an example.
  */
 static GdaSqlParser *
-gda_capi_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
+gda_capi_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc)
 {
 	TO_IMPLEMENT;
 	return NULL;
@@ -1163,7 +1168,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 
 
 		/* actual binding using the C API, for parameter at position @i */
-		const GValue *value = gda_holder_get_value (h);
+		/* const GValue *value = gda_holder_get_value (h); */
 		TO_IMPLEMENT;
 	}
 		
@@ -1259,7 +1264,7 @@ gda_capi_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_capi_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc, 
-				const GdaXaTransactionId *xid, GError **error)
+				const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -1281,7 +1286,7 @@ gda_capi_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_capi_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc, 
-			      const GdaXaTransactionId *xid, GError **error)
+			      const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -1302,7 +1307,7 @@ gda_capi_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_capi_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc, 
-				  const GdaXaTransactionId *xid, GError **error)
+				  const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -1324,7 +1329,7 @@ gda_capi_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_capi_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc, 
-				 const GdaXaTransactionId *xid, GError **error)
+				 const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -1345,7 +1350,7 @@ gda_capi_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_capi_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
-				   const GdaXaTransactionId *xid, GError **error)
+				   const GdaXaTransactionId *xid, G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 
@@ -1368,7 +1373,7 @@ gda_capi_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static GList *
 gda_capi_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
-				  GError **error)
+				  G_GNUC_UNUSED GError **error)
 {
 	CapiConnectionData *cdata;
 

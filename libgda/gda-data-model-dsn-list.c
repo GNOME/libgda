@@ -90,7 +90,7 @@ gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface)
 
 static void
 gda_data_model_dsn_list_init (GdaDataModelDsnList *model,
-			      GdaDataModelDsnListClass *klass)
+			      G_GNUC_UNUSED GdaDataModelDsnListClass *klass)
 {
 	GdaConfig *config;
 	GdaColumn *col;
@@ -195,20 +195,20 @@ gda_data_model_dsn_list_dispose (GObject *object)
 }
 
 static void 
-dsn_added_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
+dsn_added_cb (G_GNUC_UNUSED GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
 {
 	model->priv->nb_dsn++;
 	gda_data_model_row_inserted ((GdaDataModel *) model, gda_config_get_dsn_info_index (info->name));
 }
 
 static void
-dsn_to_be_removed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
+dsn_to_be_removed_cb (G_GNUC_UNUSED GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
 {
 	model->priv->row_to_remove = gda_config_get_dsn_info_index (info->name);
 }
 
 static void
-dsn_removed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
+dsn_removed_cb (G_GNUC_UNUSED GdaConfig *conf, G_GNUC_UNUSED GdaDsnInfo *info, GdaDataModelDsnList *model)
 {
 	model->priv->nb_dsn--;
 	gda_data_model_row_removed ((GdaDataModel *) model, model->priv->row_to_remove);
@@ -216,7 +216,7 @@ dsn_removed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
 }
 
 static void 
-dsn_changed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
+dsn_changed_cb (G_GNUC_UNUSED GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model)
 {
 	gda_data_model_row_updated ((GdaDataModel *) model, gda_config_get_dsn_info_index (info->name));
 }
@@ -242,7 +242,8 @@ gda_data_model_dsn_list_get_type (void)
 			NULL,
 			sizeof (GdaDataModelDsnList),
 			0,
-			(GInstanceInitFunc) gda_data_model_dsn_list_init
+			(GInstanceInitFunc) gda_data_model_dsn_list_init,
+			0
 		};
 		static const GInterfaceInfo data_model_info = {
                         (GInterfaceInitFunc) gda_data_model_dsn_list_data_model_init,
@@ -290,7 +291,7 @@ gda_data_model_dsn_list_describe_column (GdaDataModel *model, gint col)
 }
 
 static GdaDataModelAccessFlags
-gda_data_model_dsn_list_get_access_flags (GdaDataModel *model)
+gda_data_model_dsn_list_get_access_flags (G_GNUC_UNUSED GdaDataModel *model)
 {
 	return GDA_DATA_MODEL_ACCESS_RANDOM;
 }
@@ -364,7 +365,7 @@ gda_data_model_dsn_list_get_value_at (GdaDataModel *model, gint col, gint row, G
 }
 
 static GdaValueAttribute
-gda_data_model_dsn_list_get_attributes_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_dsn_list_get_attributes_at (G_GNUC_UNUSED GdaDataModel *model, G_GNUC_UNUSED gint col, G_GNUC_UNUSED gint row)
 {
 	return GDA_VALUE_ATTR_NO_MODIF;
 }

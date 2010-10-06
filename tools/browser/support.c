@@ -417,7 +417,7 @@ browser_get_connections_list (void)
 }
 
 static void
-connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *model)
+connection_added_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *model)
 {
 	GList *values;
 	GValue *value;
@@ -434,7 +434,7 @@ connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *
 }
 
 static void
-connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *model)
+connection_removed_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, GdaDataModel *model)
 {
 	gint i, nrows;
 	nrows = gda_data_model_get_n_rows (model);

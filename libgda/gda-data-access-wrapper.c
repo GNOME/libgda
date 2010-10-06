@@ -109,7 +109,8 @@ gda_data_access_wrapper_get_type (void)
 			NULL,
 			sizeof (GdaDataAccessWrapper),
 			0,
-			(GInstanceInitFunc) gda_data_access_wrapper_init
+			(GInstanceInitFunc) gda_data_access_wrapper_init,
+			0
 		};
 
 		static const GInterfaceInfo data_model_info = {
@@ -178,7 +179,7 @@ gda_data_access_wrapper_data_model_init (GdaDataModelIface *iface)
 }
 
 static void
-gda_data_access_wrapper_init (GdaDataAccessWrapper *model, GdaDataAccessWrapperClass *klass)
+gda_data_access_wrapper_init (GdaDataAccessWrapper *model, G_GNUC_UNUSED GdaDataAccessWrapperClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model));
 	model->priv = g_new0 (GdaDataAccessWrapperPrivate, 1);
@@ -191,19 +192,19 @@ gda_data_access_wrapper_init (GdaDataAccessWrapper *model, GdaDataAccessWrapperC
 }
 
 static void
-model_row_inserted_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
+model_row_inserted_cb (G_GNUC_UNUSED GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
 {
 	gda_data_model_row_inserted ((GdaDataModel*) model, row);
 }
 
 static void
-model_row_updated_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
+model_row_updated_cb (G_GNUC_UNUSED GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
 {
 	gda_data_model_row_updated ((GdaDataModel*) model, row);
 }
 
 static void
-model_row_removed_cb (GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
+model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *mod, gint row, GdaDataAccessWrapper *model)
 {
 	gda_data_model_row_removed ((GdaDataModel*) model, row);
 }
@@ -281,7 +282,7 @@ static void
 gda_data_access_wrapper_set_property (GObject *object,
 				      guint param_id,
 				      const GValue *value,
-				      GParamSpec *pspec)
+				      G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataAccessWrapper *model;
 
@@ -333,7 +334,7 @@ static void
 gda_data_access_wrapper_get_property (GObject *object,
 					guint param_id,
 					GValue *value,
-					GParamSpec *pspec)
+					G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaDataAccessWrapper *model;
 
@@ -618,7 +619,7 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *mod
 }
 
 static void
-iter_end_of_data_cb (GdaDataModelIter *iter, GdaDataAccessWrapper *model)
+iter_end_of_data_cb (G_GNUC_UNUSED GdaDataModelIter *iter, GdaDataAccessWrapper *model)
 {
 	g_assert (GDA_IS_DATA_ACCESS_WRAPPER (model));
 	model->priv->end_of_data = TRUE;

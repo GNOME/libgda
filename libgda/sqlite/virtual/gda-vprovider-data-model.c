@@ -96,7 +96,7 @@ gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
 }
 
 static void
-gda_vprovider_data_model_init (GdaVproviderDataModel *prov, GdaVproviderDataModelClass *klass)
+gda_vprovider_data_model_init (GdaVproviderDataModel *prov, G_GNUC_UNUSED GdaVproviderDataModelClass *klass)
 {
 	prov->priv = g_new (GdaVproviderDataModelPrivate, 1);
 }
@@ -132,7 +132,8 @@ gda_vprovider_data_model_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVproviderDataModel),
 				0,
-				(GInstanceInitFunc) gda_vprovider_data_model_init
+				(GInstanceInitFunc) gda_vprovider_data_model_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);
@@ -148,8 +149,8 @@ gda_vprovider_data_model_get_type (void)
 static void
 gda_vprovider_data_model_set_property (GObject *object,
 				       guint param_id,
-				       const GValue *value,
-				       GParamSpec *pspec)
+				       G_GNUC_UNUSED const GValue *value,
+				       G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVproviderDataModel *prov;
 
@@ -165,8 +166,8 @@ gda_vprovider_data_model_set_property (GObject *object,
 static void
 gda_vprovider_data_model_get_property (GObject *object,
 				       guint param_id,
-				       GValue *value,
-				       GParamSpec *pspec)
+				       G_GNUC_UNUSED GValue *value,
+				       G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVproviderDataModel *prov;
 
@@ -253,7 +254,7 @@ gda_vprovider_data_model_create_connection (GdaServerProvider *provider)
 static gboolean
 gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
 					  GdaQuarkList *params, GdaQuarkList *auth,
-					  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+					  G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data)
 {
 	GdaQuarkList *m_params;
 
@@ -296,7 +297,7 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 }
 
 static void
-cnc_close_foreach_func (GdaDataModel *model, const gchar *table_name, GdaVconnectionDataModel *cnc)
+cnc_close_foreach_func (G_GNUC_UNUSED GdaDataModel *model, const gchar *table_name, GdaVconnectionDataModel *cnc)
 {
 	/*g_print ("---- FOREACH: Removing virtual table '%s'\n", table_name);*/
 	if (! gda_vconnection_data_model_remove (cnc, table_name, NULL))
@@ -316,7 +317,7 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 }
 
 static const gchar *
-gda_vprovider_data_model_get_name (GdaServerProvider *provider)
+gda_vprovider_data_model_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return "Virtual";
 }
@@ -543,7 +544,7 @@ virtual_table_manage_real_data_model (VirtualTable *vtable)
 		if (vtable->td->columns) {
 			/* columns */
 			GList *list;
-			gint i, ncols;
+			guint i, ncols;
 			ncols = gda_data_model_get_n_columns (vtable->td->real_model);
 			g_assert (ncols == g_list_length (vtable->td->columns));
 			for (i = 0, list = vtable->td->columns;
@@ -697,7 +698,7 @@ virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
 }
 
 static int
-virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr, int argc, sqlite3_value **argv)
+virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, G_GNUC_UNUSED const char *idxStr, G_GNUC_UNUSED int argc, G_GNUC_UNUSED sqlite3_value **argv)
 {
 	VirtualCursor *cursor = (VirtualCursor*) pVtabCursor;
 
@@ -715,7 +716,7 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 }
 
 static int
-virtualBestIndex (sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo)
+virtualBestIndex (G_GNUC_UNUSED sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo)
 {
 	TRACE ();
 	
@@ -841,21 +842,21 @@ virtualBegin (sqlite3_vtab *tab)
 }
 
 static int
-virtualSync (sqlite3_vtab *tab)
+virtualSync (G_GNUC_UNUSED sqlite3_vtab *tab)
 {
 	TRACE ();
 	return SQLITE_OK;
 }
 
 static int
-virtualCommit (sqlite3_vtab *tab)
+virtualCommit (G_GNUC_UNUSED sqlite3_vtab *tab)
 {
 	TRACE ();
 	return SQLITE_OK;
 }
 
 static int
-virtualRollback (sqlite3_vtab *tab)
+virtualRollback (G_GNUC_UNUSED sqlite3_vtab *tab)
 {	
 	TRACE ();
 	return SQLITE_OK;

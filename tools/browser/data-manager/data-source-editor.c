@@ -64,7 +64,8 @@ data_source_editor_get_type (void)
 			NULL,
 			sizeof (DataSourceEditor),
 			0,
-			(GInstanceInitFunc) data_source_editor_init
+			(GInstanceInitFunc) data_source_editor_init,
+			0
 		};
 
 		
@@ -261,7 +262,7 @@ update_dependencies_display (DataSourceEditor *editor)
 							  "section", NULL);
 		gtk_text_buffer_insert (tbuffer, &start, "\n", -1);
 		if (export) {
-			gint i;
+			gsize i;
 			for (i = 0; i < export->len ; i++) {
 				gchar *tmp;
 				tmp = g_array_index (export, gchar *, i);
@@ -349,7 +350,7 @@ data_source_editor_display_source (DataSourceEditor *editor, DataSource *source)
 }
 
 static void
-attribute_changed_cb (GdaSet *set, GdaHolder *holder, DataSourceEditor *editor)
+attribute_changed_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *holder, DataSourceEditor *editor)
 {
 	const gchar *id, *str = NULL;
 	const GValue *cvalue;

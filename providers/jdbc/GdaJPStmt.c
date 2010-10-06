@@ -17,7 +17,7 @@ JniWrapperMethod *GdaJPStmt__setParameterValue = NULL;
 JNIEXPORT void
 JNICALL Java_GdaJPStmt_initIDs (JNIEnv *env, jclass klass)
 {
-	gint i;
+	gsize i;
 	typedef struct {
 		const gchar       *name;
 		const gchar       *sig;

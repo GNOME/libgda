@@ -33,7 +33,7 @@ gchar *outfile = NULL;
 static GOptionEntry entries[] = {
         { "no-password-ask", 'p', 0, G_OPTION_ARG_NONE, &ask_pass, "Don't ast for a password when it is empty", NULL },
         { "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "Output file", "output file"},
-        { NULL }
+        { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
 HtmlConfig *config;
@@ -336,7 +336,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 	xmlNodePtr table, tr, td, span;
 	GdaSqlParser *parser;
 	GString *string;
-	gint i;
+	gsize i;
 	GdaProviderInfo *pinfo;
 
 	pinfo = gda_config_get_provider_info (gda_server_provider_get_name (prov));

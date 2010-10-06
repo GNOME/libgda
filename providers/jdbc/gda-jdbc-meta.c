@@ -40,7 +40,7 @@
  * Meta initialization
  */
 void
-_gda_jdbc_provider_meta_init (GdaServerProvider *provider)
+_gda_jdbc_provider_meta_init (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 }
 
@@ -68,7 +68,7 @@ init_meta_obj (GdaConnection *cnc, JNIEnv *jenv, JdbcConnectionData *cdata, GErr
 }
 
 gboolean
-_gda_jdbc_meta__info (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_jdbc_meta__info (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 		      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	JdbcConnectionData *cdata;
@@ -124,25 +124,27 @@ _gda_jdbc_meta__info (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_jdbc_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc, 
-			GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__btypes (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__udt (GdaServerProvider *prov, GdaConnection *cnc, 
-		     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+		     G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+		     G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_udt (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_jdbc_meta_udt (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
 		    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-		    const GValue *udt_catalog, const GValue *udt_schema)
+		    G_GNUC_UNUSED const GValue *udt_catalog, G_GNUC_UNUSED const GValue *udt_schema)
 {
 	GdaDataModel *model = NULL;
 	gboolean retval = TRUE;
@@ -161,34 +163,38 @@ _gda_jdbc_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 gboolean
-_gda_jdbc_meta__udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			  G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			  G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;	
 }
 
 gboolean
-_gda_jdbc_meta_udt_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			 const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
+_gda_jdbc_meta_udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			 G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *udt_catalog,
+			 G_GNUC_UNUSED const GValue *udt_schema, G_GNUC_UNUSED const GValue *udt_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;	
 }
 
 gboolean
-_gda_jdbc_meta__enums (GdaServerProvider *prov, GdaConnection *cnc, 
-		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__enums (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+		       G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+		       G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;	
 }
 
 gboolean
-_gda_jdbc_meta_enums (GdaServerProvider *prov, GdaConnection *cnc, 
-		      GdaMetaStore *store, GdaMetaContext *context, GError **error,
-		      const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name)
+_gda_jdbc_meta_enums (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+		      G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+		      G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *udt_catalog,
+		      G_GNUC_UNUSED const GValue *udt_schema, G_GNUC_UNUSED const GValue *udt_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
@@ -196,88 +202,97 @@ _gda_jdbc_meta_enums (GdaServerProvider *prov, GdaConnection *cnc,
 
 
 gboolean
-_gda_jdbc_meta__domains (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__domains (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			 G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_domains (GdaServerProvider *prov, GdaConnection *cnc, 
-			GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			const GValue *domain_catalog, const GValue *domain_schema)
+_gda_jdbc_meta_domains (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *domain_catalog,
+			G_GNUC_UNUSED const GValue *domain_schema)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
-				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+				 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+				 G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_constraints_dom (GdaServerProvider *prov, GdaConnection *cnc, 
-				GdaMetaStore *store, GdaMetaContext *context, GError **error,
-				const GValue *domain_catalog, const GValue *domain_schema, 
-				const GValue *domain_name)
+_gda_jdbc_meta_constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+				G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+				G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *domain_catalog,
+				G_GNUC_UNUSED const GValue *domain_schema,
+				G_GNUC_UNUSED const GValue *domain_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__el_types (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__el_types (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			  G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			  G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_el_types (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			 const GValue *specific_name)
+_gda_jdbc_meta_el_types (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			 G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *specific_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__collations (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__collations (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			    G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			    G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_collations (GdaServerProvider *prov, GdaConnection *cnc, 
-			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			   const GValue *collation_catalog, const GValue *collation_schema, 
-			   const GValue *collation_name_n)
+_gda_jdbc_meta_collations (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			   G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			   G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *collation_catalog,
+			   G_GNUC_UNUSED const GValue *collation_schema,
+			   G_GNUC_UNUSED const GValue *collation_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
-				GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__character_sets (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+				G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+				G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_character_sets (GdaServerProvider *prov, GdaConnection *cnc, 
-			       GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			       const GValue *chset_catalog, const GValue *chset_schema, 
-			       const GValue *chset_name_n)
+_gda_jdbc_meta_character_sets (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			       G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			       G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *chset_catalog,
+			       G_GNUC_UNUSED const GValue *chset_schema,
+			       G_GNUC_UNUSED const GValue *chset_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
@@ -291,7 +306,7 @@ _gda_jdbc_meta__schemata (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_jdbc_meta_schemata (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_jdbc_meta_schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			 GdaMetaStore *store, GdaMetaContext *context, GError **error, 
 			 const GValue *catalog_name, const GValue *schema_name_n)
 {
@@ -371,7 +386,7 @@ _gda_jdbc_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_jdbc_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_jdbc_meta_tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			     const GValue *table_catalog, const GValue *table_schema, 
 			     const GValue *table_name_n)
@@ -487,7 +502,7 @@ _gda_jdbc_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_jdbc_meta_columns (GdaServerProvider *prov, GdaConnection *cnc, 
+_gda_jdbc_meta_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			const GValue *table_catalog, const GValue *table_schema, 
 			const GValue *table_name)
@@ -569,198 +584,220 @@ _gda_jdbc_meta_columns (GdaServerProvider *prov, GdaConnection *cnc,
 }
 
 gboolean
-_gda_jdbc_meta__view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			   GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__view_cols (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			   G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			   G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_view_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			  const GValue *view_catalog, const GValue *view_schema, 
-			  const GValue *view_name)
+_gda_jdbc_meta_view_cols (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			  G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			  G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *view_catalog,
+			  G_GNUC_UNUSED const GValue *view_schema, G_GNUC_UNUSED const GValue *view_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
-				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+				 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+				 G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_constraints_tab (GdaServerProvider *prov, GdaConnection *cnc, 
-				GdaMetaStore *store, GdaMetaContext *context, GError **error, 
-				const GValue *table_catalog, const GValue *table_schema, 
-				const GValue *table_name, const GValue *constraint_name_n)
+_gda_jdbc_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+				G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+				G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *table_catalog,
+				G_GNUC_UNUSED const GValue *table_schema,
+				G_GNUC_UNUSED const GValue *table_name,
+				G_GNUC_UNUSED const GValue *constraint_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
-				 GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+				 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+				 G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_constraints_ref (GdaServerProvider *prov, GdaConnection *cnc, 
-				GdaMetaStore *store, GdaMetaContext *context, GError **error,
-				const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, 
-				const GValue *constraint_name)
+_gda_jdbc_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+				G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+				G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *table_catalog,
+				G_GNUC_UNUSED const GValue *table_schema,
+				G_GNUC_UNUSED const GValue *table_name,
+				G_GNUC_UNUSED const GValue *constraint_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__key_columns (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			     G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			     G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_key_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			    const GValue *table_catalog, const GValue *table_schema, 
-			    const GValue *table_name, const GValue *constraint_name)
+_gda_jdbc_meta_key_columns (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			    G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			    G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *table_catalog,
+			    G_GNUC_UNUSED const GValue *table_schema, G_GNUC_UNUSED const GValue *table_name,
+			    G_GNUC_UNUSED const GValue *constraint_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			       GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__check_columns (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			       G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			       G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc, 
-			      GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			      const GValue *table_catalog, const GValue *table_schema, 
-			      const GValue *table_name, const GValue *constraint_name)
+_gda_jdbc_meta_check_columns (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			      G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			      G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *table_catalog,
+			      G_GNUC_UNUSED const GValue *table_schema,
+			      G_GNUC_UNUSED const GValue *table_name,
+			      G_GNUC_UNUSED const GValue *constraint_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__triggers (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			  G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			  G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			 const GValue *table_catalog, const GValue *table_schema, 
-			 const GValue *table_name)
+_gda_jdbc_meta_triggers (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			 G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *table_catalog,
+			 G_GNUC_UNUSED const GValue *table_schema,
+			 G_GNUC_UNUSED const GValue *table_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__routines (GdaServerProvider *prov, GdaConnection *cnc, 
-			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__routines (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			  G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			  G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_routines (GdaServerProvider *prov, GdaConnection *cnc, 
-			 GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			 const GValue *routine_catalog, const GValue *routine_schema, 
-			 const GValue *routine_name_n)
+_gda_jdbc_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			 G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *routine_catalog,
+			 G_GNUC_UNUSED const GValue *routine_schema,
+			 G_GNUC_UNUSED const GValue *routine_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__routine_col (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			     G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			     G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			    const GValue *rout_catalog, const GValue *rout_schema, 
-			    const GValue *rout_name)
+_gda_jdbc_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			    G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			    G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *rout_catalog,
+			    G_GNUC_UNUSED const GValue *rout_schema, G_GNUC_UNUSED const GValue *rout_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__routine_par (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			     G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			     G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			    const GValue *rout_catalog, const GValue *rout_schema, 
-			    const GValue *rout_name)
+_gda_jdbc_meta_routine_par (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			    G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			    G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *rout_catalog,
+			    G_GNUC_UNUSED const GValue *rout_schema, G_GNUC_UNUSED const GValue *rout_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
-			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			     G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			     G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_indexes_tab (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			    const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-			    const GValue *index_name_n)
+_gda_jdbc_meta_indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			    G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			    G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *table_catalog,
+			    G_GNUC_UNUSED const GValue *table_schema, G_GNUC_UNUSED const GValue *table_name,
+			    G_GNUC_UNUSED const GValue *index_name_n)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta__index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			    GdaMetaStore *store, GdaMetaContext *context, GError **error)
+_gda_jdbc_meta__index_cols (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			    G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			    G_GNUC_UNUSED GError **error)
 {
 	TO_IMPLEMENT;
 	return TRUE;
 }
 
 gboolean
-_gda_jdbc_meta_index_cols (GdaServerProvider *prov, GdaConnection *cnc, 
-			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
-			   const GValue *table_catalog, const GValue *table_schema,
-			   const GValue *table_name, const GValue *index_name)
+_gda_jdbc_meta_index_cols (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			   G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
+			   G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *table_catalog,
+			   G_GNUC_UNUSED const GValue *table_schema, G_GNUC_UNUSED const GValue *table_name,
+			   G_GNUC_UNUSED const GValue *index_name)
 {
 	TO_IMPLEMENT;
 	return TRUE;

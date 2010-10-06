@@ -220,7 +220,7 @@ html_add_link_to_node (HtmlConfig *config, const gchar *nodepath, const gchar *t
 }
 
 void
-html_add_to_toc (HtmlConfig *config, HtmlFile *file, const gchar *text, const gchar *link_to)
+html_add_to_toc (G_GNUC_UNUSED HtmlConfig *config, HtmlFile *file, const gchar *text, const gchar *link_to)
 {
 	xmlNodePtr li;
 
@@ -258,19 +258,19 @@ html_mark_path_error (HtmlConfig *config, const gchar *nodepath)
 }
 
 void
-html_mark_node_error (HtmlConfig *config, xmlNodePtr node)
+html_mark_node_error (G_GNUC_UNUSED HtmlConfig *config, xmlNodePtr node)
 {
 	xmlSetProp(node, BAD_CAST "class", BAD_CAST "error");
 }
 
 void
-html_mark_node_warning (HtmlConfig *config, xmlNodePtr node)
+html_mark_node_warning (G_GNUC_UNUSED HtmlConfig *config, xmlNodePtr node)
 {
 	xmlSetProp(node, BAD_CAST "class", BAD_CAST "warning");
 }
 
 void
-html_mark_node_notice (HtmlConfig *config, xmlNodePtr node)
+html_mark_node_notice (G_GNUC_UNUSED HtmlConfig *config, xmlNodePtr node)
 {
 	xmlSetProp(node, BAD_CAST "class", BAD_CAST "notice");
 }

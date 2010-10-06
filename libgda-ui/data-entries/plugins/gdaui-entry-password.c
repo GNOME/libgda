@@ -73,7 +73,8 @@ gdaui_entry_password_get_type (void)
 			NULL,
 			sizeof (GdauiEntryPassword),
 			0,
-			(GInstanceInitFunc) gdaui_entry_password_init
+			(GInstanceInitFunc) gdaui_entry_password_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryPassword", &info, 0);
@@ -298,7 +299,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }
@@ -318,7 +319,8 @@ signal_handlers_unblock (GdauiEntryPassword *mgstr)
 }
 
 static void
-entry_delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, GdauiEntryPassword *mgstr)
+entry_delete_text_cb (GtkEditable *editable, G_GNUC_UNUSED gint start_pos, G_GNUC_UNUSED gint end_pos,
+		      GdauiEntryPassword *mgstr)
 {
 	if (!mgstr->priv->needs_encoding) {
 		mgstr->priv->needs_encoding = TRUE;

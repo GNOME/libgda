@@ -6,10 +6,6 @@ if BDBSQL
 GDA_BDBSQL_SERVER=bdbsql
 endif
 
-if IBMDB2
-GDA_IBMDB2_SERVER=ibmdb2
-endif
-
 if FIREBIRD
 GDA_FIREBIRD_SERVER=firebird
 endif
@@ -22,36 +18,12 @@ if MYSQL
 GDA_MYSQL_SERVER=mysql
 endif
 
-if MSQL
-GDA_MSQL_SERVER=msql
-endif
-
-if ODBC
-GDA_ODBC_SERVER=odbc
-endif
-
 if ORACLE
 GDA_ORACLE_SERVER=oracle
 endif
 
 if POSTGRES
 GDA_POSTGRES_SERVER=postgres
-endif
-
-if SYBASE
-GDA_SYBASE_SERVER=sybase
-endif
-
-if FREETDS
-GDA_FREETDS_SERVER=freetds
-endif
-
-if XBASE
-GDA_XBASE_SERVER=xbase
-endif
-
-if LDAP
-GDA_LDAP_SERVER=ldap
 endif
 
 if JAVA
@@ -79,11 +51,5 @@ SUBDIRS = \
 	$(GDA_ORACLE_SERVER) \
 	$(GDA_WEB_SERVER) \
 	$(GDA_SQLCIPHER_SERVER)
-#	$(GDA_FREETDS_SERVER) \
-#	$(GDA_IBMDB2_SERVER) \
-#	$(GDA_FIREBIRD_SERVER) \
-#       $(GDA_MSQL_SERVER) \
-#	$(GDA_ODBC_SERVER) \
-#	$(GDA_SYBASE_SERVER) \
-#	$(GDA_XBASE_SERVER) \
-#	$(GDA_LDAP_SERVER) 
+#	$(GDA_FIREBIRD_SERVER) 
+

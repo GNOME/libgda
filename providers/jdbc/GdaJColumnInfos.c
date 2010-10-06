@@ -14,7 +14,7 @@ JniWrapperField *GdaJColumnInfos__col_type = NULL;
 JNIEXPORT void
 JNICALL Java_GdaJColumnInfos_initIDs (JNIEnv *env, jclass klass)
 {
-	gint i;
+	gsize i;
 	typedef struct {
 		const gchar       *name;
 		const gchar       *sig;

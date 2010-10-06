@@ -98,7 +98,8 @@ auth_dialog_get_type (void)
 			NULL,
 			sizeof (AuthDialog),
 			0,
-			(GInstanceInitFunc) auth_dialog_init
+			(GInstanceInitFunc) auth_dialog_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);
@@ -174,7 +175,7 @@ update_ad_auth (AuthData *ad)
   * Update the auth part
   */
 static void
-dsn_changed_cb (GdaConfig *config, GdaDsnInfo *info, AuthDialog *dialog)
+dsn_changed_cb (G_GNUC_UNUSED GdaConfig *config, GdaDsnInfo *info, AuthDialog *dialog)
 {
 	GSList *list;
 	if (!info || !info->name) /* should not happen */

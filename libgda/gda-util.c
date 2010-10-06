@@ -1610,11 +1610,11 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 		/* 
 		 * start of a statement => complete with SQL start of statement words 
 		 */
-		gint len;
-		gint i;
+		gsize len;
+		gsize i;
 		len = strlen (text);
 		for (i = 0; i < (sizeof (sql_start_words) / sizeof (gchar*)); i++) {
-			gint clen = strlen (sql_start_words[i]);
+			gsize clen = strlen (sql_start_words[i]);
 			if (!g_ascii_strncasecmp (sql_start_words[i], text, MIN (clen, len))) {
 				gchar *str;
 				str = g_strdup (sql_start_words[i]);
@@ -1766,11 +1766,11 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 	 * middle of a statement and no completion yet => complete with SQL statement words 
 	 */
 	{
-		gint len;
-		gint i;
+		gsize len;
+		gsize i;
 		len = strlen (text);
 		for (i = 0; i < (sizeof (sql_middle_words) / sizeof (gchar*)); i++) {
-			gint clen = strlen (sql_middle_words[i]);
+			gsize clen = strlen (sql_middle_words[i]);
 			if (!g_ascii_strncasecmp (sql_middle_words[i], text, MIN (clen, len))) {
 				gchar *str;
 				str = g_strdup (sql_middle_words[i]);
@@ -1784,7 +1784,7 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 	if (compl) {
 		if (compl->len >= 1) {
 			/* sort */
-			gint i;
+			gsize i;
 			g_array_sort (compl, cmp_func);
 
 			/* remove duplicates if any */
@@ -2212,7 +2212,7 @@ gda_rfc1738_encode (const gchar *string)
 {
 	gchar *ret, *wptr;
 	const gchar *rptr;
-	gint i;
+	gsize i;
 
 	if (!string)
 		return NULL;

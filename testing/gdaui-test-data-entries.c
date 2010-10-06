@@ -30,17 +30,17 @@ typedef struct {
 extern GHashTable *gdaui_plugins_hash;
 TestConfig mainconf;
 
-static gboolean delete_event( GtkWidget *widget,
-                              GdkEvent  *event,
-                              gpointer   data )
+static gboolean delete_event( G_GNUC_UNUSED GtkWidget *widget,
+                              G_GNUC_UNUSED GdkEvent  *event,
+                              G_GNUC_UNUSED gpointer   data )
 {
 	g_print ("Leaving test...\n");
 	
 	return FALSE;
 }
 
-static void destroy( GtkWidget *widget,
-                     gpointer   data )
+static void destroy( G_GNUC_UNUSED GtkWidget *widget,
+                     G_GNUC_UNUSED gpointer   data )
 {
 	gtk_main_quit ();
 }
@@ -49,12 +49,6 @@ static GtkWidget *build_menu (GtkWidget *mainwin, GtkWidget *top_nb);
 static void       fill_tested_models (void);
 static GtkWidget *build_test_for_plugin_struct (GdauiPlugin *plugin);
 static void       build_test_widget (TestWidgetData *tdata);
-
-static guint
-gtype_hash (gconstpointer key)
-{
-	return (guint) key;
-}
 
 static gboolean 
 gtype_equal (gconstpointer a, gconstpointer b)
@@ -67,7 +61,7 @@ get_handler (GType for_type)
 {
 	static GHashTable *hash = NULL;
 	if (!hash) {
-		hash = g_hash_table_new_full (gtype_hash, gtype_equal, 
+		hash = g_hash_table_new_full (g_direct_hash, gtype_equal, 
 					      NULL, (GDestroyNotify) g_object_unref);
 
 		g_hash_table_insert (hash, (gpointer) G_TYPE_UINT64, gda_handler_numerical_new ());
@@ -100,7 +94,7 @@ static void plugin_hash_foreach_func (const gchar *plugin_name, GdauiPlugin *plu
 gchar *test_type;
 static GOptionEntry entries[] = {
         { "test-type", 't', 0, G_OPTION_ARG_STRING, &test_type, "Test condition", "{basic,form,grid}"},
-        { NULL }
+        { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
 int 
@@ -309,7 +303,8 @@ build_menu (GtkWidget *mainwin, GtkWidget *top_nb)
 }
 
 static void
-reset_tests_widgets_hash_foreach_func (GtkWidget *vbox, TestWidgetData *tdata, gpointer data)
+reset_tests_widgets_hash_foreach_func (G_GNUC_UNUSED GtkWidget *vbox, TestWidgetData *tdata,
+				       G_GNUC_UNUSED gpointer data)
 {
 	if (tdata->test_widget) {
 		gtk_widget_destroy (tdata->test_widget);
@@ -472,7 +467,7 @@ static void
 create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 {
 	GtkWidget *wid, *nb, *label;
-	gint i;
+	gsize i;
 	GType type;
 	GdaDataHandler *dh;
 
@@ -486,7 +481,7 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 	g_object_set_data (G_OBJECT (table), "nb", nb);
 	g_object_set_data (G_OBJECT (table), "plugin", plugin);
 
-	if (plugin->nb_g_types > 0)
+	if (plugin->nb_g_types > 0) {
 		for (i = 0; i < plugin->nb_g_types; i++) {
 			type = plugin->valid_g_types[i];
 			dh = get_handler (type);
@@ -509,9 +504,11 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 						  G_CALLBACK (vbox_destroyed_cb), NULL);
 			}
 		}
-	else
-		for (i = 0; i < mainconf.nb_tested_gtypes; i++) {
-			type = mainconf.tested_gtypes [i];
+	}
+	else {
+		gint j;
+		for (j = 0; j < mainconf.nb_tested_gtypes; j++) {
+			type = mainconf.tested_gtypes [j];
 			dh = get_handler (type);
 			if (dh) {
 				TestWidgetData *tdata;
@@ -532,10 +529,11 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 						  G_CALLBACK (vbox_destroyed_cb), NULL);
 			}
 		}
+	}
 }
 
 static void
-vbox_destroyed_cb (GtkWidget *widget, gpointer data)
+vbox_destroyed_cb (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 {
 	g_hash_table_remove (mainconf.tests_hash, widget);
 }
@@ -545,7 +543,8 @@ static GtkWidget *build_form_test_for_gtype (GdaDataHandler *dh, GType type, con
 static GtkWidget *build_grid_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_name);
 
 static void
-plugin_nb_page_changed_cb (GtkNotebook *nb, GtkWidget *page, gint pageno, GtkWidget *table)
+plugin_nb_page_changed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint pageno,
+			   G_GNUC_UNUSED GtkWidget *table)
 {
 	GtkWidget *vbox;
 	TestWidgetData *tdata;
@@ -625,7 +624,8 @@ build_test_widget (TestWidgetData *tdata)
 }
 
 static void
-options_form_holder_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean user_modif, GtkWidget *table)
+options_form_holder_changed_cb (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param,
+				G_GNUC_UNUSED gboolean user_modif, GtkWidget *table)
 {
 	GtkWidget *nb;
 	GdauiPlugin *plugin;
@@ -844,7 +844,7 @@ editable_toggled_cb (GtkToggleButton *button, GtkWidget *entry)
 }
 
 void 
-entry_contents_modified (GtkWidget *entry, gpointer data)
+entry_contents_modified (GtkWidget *entry, G_GNUC_UNUSED gpointer data)
 {
 	guint attrs;
 	GtkLabel *label;
@@ -929,7 +929,7 @@ default_clicked_cb (GtkButton *button, GtkWidget *entry)
 }
 
 static GtkWidget *
-build_form_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_name)
+build_form_test_for_gtype (G_GNUC_UNUSED GdaDataHandler *dh, GType type, const gchar *plugin_name)
 {
 	GdaDataModel *model;
 	GtkWidget *wid;
@@ -962,7 +962,7 @@ build_form_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_n
 }
 
 static GtkWidget *
-build_grid_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_name)
+build_grid_test_for_gtype (G_GNUC_UNUSED GdaDataHandler *dh, GType type, const gchar *plugin_name)
 {
 	GdaDataModel *model;
 	GtkWidget *wid;

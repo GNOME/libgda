@@ -2,9 +2,15 @@ m4_define(major, 4)
 m4_define(minor, 99)
 m4_define(micro, 0)
 m4_define([gda_stable],
-	m4_if(m4_eval(minor % 2), [0], [yes], [no])) 
+	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
+AC_CONFIG_MACRO_DIR([m4])
 m4_include(m4/introspection.m4)
 m4_include(m4/mdbtools.m4)
+m4_include(m4/bdb.m4)
+m4_include(m4/mysql.m4)
+m4_include(m4/postgresql.m4)
+m4_include(m4/oracle.m4)
+m4_include(m4/java.m4)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
@@ -303,7 +309,6 @@ case "$host" in
 *-cygwin*)
     AC_MSG_RESULT([Win32 - cygwin])
     NO_UNDEFINED='-no-undefined'
-    SOPREFIX='cyg'
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
     LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
@@ -315,11 +320,10 @@ case "$host" in
     platform_win32=yes
     AC_DEFINE(USING_MINGW)
     NO_UNDEFINED='-no-undefined'
-    SOPREFIX='lib'
     LIBTOOL_EXPORT_OPTIONS=
     LIBTOOL_PROV_EXPORT_OPTIONS=
     LIBTOOL_UI_EXPORT_OPTIONS=
-    linklibext=".dll.a"
+    linklibext=".dll"
     AC_CHECK_TOOL(WINDRES, windres, windres)
     AC_SUBST(WINDRES)
     AC_CHECK_TOOL(DLLTOOL, dlltool, dlltool)
@@ -329,7 +333,6 @@ case "$host" in
     dnl Darwin based distributions (including Mac OS X)
     AC_MSG_RESULT([Mac OS X - carbon])
     platform_carbon=yes
-    SOPREFIX='lib'
     if test "$enable_binreloc" != "no"
     then
 	AC_DEFINE(ENABLE_BINRELOC)
@@ -347,12 +350,10 @@ case "$host" in
     LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
     AC_DEFINE(HAVE_CARBON)
     LIBGDA_LIBS="$LIBGDA_LIBS -framework Carbon"
-    dnl SO_SUFFIX=dylib
   ;;
 *)
     AC_MSG_RESULT([Unix])
     NO_UNDEFINED=''
-    SOPREFIX='lib'
     AM_BINRELOC
     LIBTOOL_EXPORT_OPTIONS=$EXPORT_SYM_REGEX
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
@@ -367,7 +368,6 @@ AC_SUBST(LIBTOOL_EXPORT_OPTIONS)
 AC_SUBST(LIBTOOL_PROV_EXPORT_OPTIONS)
 AC_SUBST(LIBTOOL_UI_EXPORT_OPTIONS)
 AC_SUBST(NO_UNDEFINED)
-AC_SUBST(SOPREFIX)
 
 dnl *******************************************************
 dnl Checks for GIO
@@ -402,14 +402,21 @@ AC_SUBST(LIBXSLT_LIBS)
 dnl ******************************
 dnl Checks for json-glib
 dnl ******************************
+have_json=no
+AC_ARG_ENABLE([json],
+	AS_HELP_STRING([--enable-json], [Enable support for JSON, disabled by default]),
+	[enable_json=yes],[enable_json=no])
 
-JSON_GLIB_MODULES="json-glib-1.0"
-PKG_CHECK_MODULES(JSON_GLIB, $JSON_GLIB_MODULES, have_json=yes, have_json=no)
-AM_CONDITIONAL(HAVE_JSON_GLIB, test x"$have_json" = "xyes")
-if test x"$have_json" = "xyes"
+if test "x$enable_json" = xyes
 then
-        JSON_GLIB_CFLAGS="$JSON_GLIB_CFLAGS -DHAVE_JSON_GLIB"
+    JSON_GLIB_MODULES="json-glib-1.0"
+    PKG_CHECK_MODULES(JSON_GLIB, $JSON_GLIB_MODULES,
+	AC_DEFINE(HAVE_JSON_GLIB, [], [Defined if JSON support is enabled])
+	have_json=yes,
+	AC_MSG_ERROR([JSON support requested but not found])
+    )
 fi
+AM_CONDITIONAL(HAVE_JSON_GLIB, [test "$have_json" = "yes"])
 AC_SUBST(JSON_GLIB_CFLAGS)
 AC_SUBST(JSON_GLIB_LIBS)
 
@@ -421,14 +428,21 @@ GOBJECT_INTROSPECTION_CHECK([0.6.5])
 dnl ******************************
 dnl Checks for libcrypto
 dnl ******************************
+AC_ARG_ENABLE([crypto],
+	AS_HELP_STRING([--disable-crypto], [Disable SqlCipher database provider (using the libcrypto library)]),
+	,
+	[enable_crypto=yes])
 
 LIBCRYPTO_MODULES="libcrypto"
-PKG_CHECK_MODULES(LIBCRYPTO, $LIBCRYPTO_MODULES, have_crypto=yes, have_crypto=no)
-AM_CONDITIONAL(HAVE_LIBCRYPTO, test x"$have_crypto" = "xyes")
-if test x"$have_crypto" = "xyes"
-then
-        LIBCRYPTO_CFLAGS="$LIBCRYPTO_CFLAGS -DHAVE_LIBCRYPTO"
-fi
+PKG_CHECK_MODULES(LIBCRYPTO, $LIBCRYPTO_MODULES,
+	AC_DEFINE(HAVE_LIBCRYPTO, [], [Defined if cryptographic support is enabled])
+	have_crypto=yes,
+	if test "$enable_crypto" = "yes"; then
+		AC_MSG_ERROR([libcrypto support requested but not found])
+	fi
+	have_crypto=no
+)
+AM_CONDITIONAL(HAVE_LIBCRYPTO, [test "$have_crypto" = "yes"])
 AC_SUBST(LIBCRYPTO_CFLAGS)
 AC_SUBST(LIBCRYPTO_LIBS)
 
@@ -475,637 +489,26 @@ dnl ******************************
 dnl Checks for providers
 dnl ******************************
 
-dnl Test for lib64 architectures
-dnl FIXME: should really check target
-case $host_cpu in
-x86_64* | sparc64* | s390x* | ppc64* | powerpc64* ) lib="lib64";;
-*) lib="lib";;
-esac
+AC_ARG_WITH(libdir-name,
+    AS_HELP_STRING([--with-libdir-name[=@<:@<dir. name>@:>@]],
+                   [Speficy the library name used to locate libraries, relative to the prefix of each install (for example lib64)]),
+                   [lib=$withval],
+		   [lib=""])
 
 dnl Test for Berkeley DB
-try_bdb=true
-AC_ARG_WITH(bdb,
-[  --with-bdb=<directory>	use bdb library in <directory>],[
-if test $withval = no
-then
-	try_bdb=false
-elif test $withval = yes
-then
-	dir="/usr /usr/local"
-else
-	dir=$withval
-fi
-])
-bdbdir=""
-if test $try_bdb = true
-then
-	if test $withval = yes
-	then
-		AC_CHECK_HEADER(db.h, bdb_ok=yes, bdb_ok=no, [])
-		if test $bdb_ok = yes ; then
-		        bdbdir=yes
-		   	BDB_LIB="libdb$linklibext"
-			BDB_LIBS="-ldb"
-		fi
-	else
-		AC_MSG_CHECKING(for Berkeley DB files)
-		for d in $dir
-		do
-			if test $platform_win32 = yes -a -f $d/include/db.h -a -f $d/bin/libdb51.dll
-			then
-				AC_MSG_RESULT(found Berkeley DB in $d)
-				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
-				bdbdir=$d
-				BDB_CFLAGS="-I${bdbdir}/include"
-				BDB_LIB="$d/bin/libdb51.dll"
-				BDB_LIBS="-L${bdbdir}/bin -ldb51"
-				break
-			fi
-
-			if test $platform_win32 = no -a -f $d/include/db.h -a -f $d/$lib/libdb$linklibext
-			then
-				AC_MSG_RESULT(found Berkeley DB in $d)
-				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
-				bdbdir=$d
-				BDB_CFLAGS="-I${bdbdir}/include"
-				BDB_LIB="$d/$lib/libdb$linklibext"
-				BDB_LIBS="-L${bdbdir}/${lib} -ldb"
-				break
-			fi
-			if test $platform_win32 = no -a -f $d/include/db.h -a -f $d/lib/libdb$linklibext
-			then
-				AC_MSG_RESULT(found Berkeley DB in $d)
-				AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
-				bdbdir=$d
-				BDB_CFLAGS="-I${bdbdir}/include"
-				BDB_LIB="$d/lib/libdb$linklibext"
-				BDB_LIBS="-L${bdbdir}/lib -ldb"
-				break
-			fi
-			dnl FIXME: check for db1 (non-sleepycat implementation)
-		done
-		if test x$bdbdir = x
-		then
-			AC_MSG_WARN(Berkeley DB backend not used)
-		fi
-	fi
-fi
-
-bdbsqldir=""
-AM_CONDITIONAL(BDB, test x$bdbdir != x)
-if test x$bdbdir != x; then
-	LIBGDA_BDB_INC="#include <libgda/gda-data-model-bdb.h>"
-	LIBGDA_BDB_TYPE="gda_data_model_bdb_get_type"
-
-	if test -f $bdbdir/include/dbsql.h
-	then
-		BDBSQL_CFLAGS="-I${bdbdir}/include"
-		BDBSQL_LIBS="-L${bdbdir}/lib -ldb_sql"
-		BDBSQL_PATH="${bdbdir}/lib"
-		AC_CHECK_LIB(db_sql, sqlite3_table_column_metadata,[bdbsql_api=1], [bdbsql_api=0], $BDBSQL_CFLAGS $BDBSQL_LIBS -pthread -ldl)
-
-		if test $bdbsql_api = 0
-		then
-			BDBSQL_CFLAGS=""
-			BDBSQL_LIBS=""
-			AC_MSG_WARN([Installed BDB Sql was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, BDB Sql provider not compiled])
-		else
-			bdbsqldir="$bdbdir"
-			AC_DEFINE(HAVE_BDBSQL, 1, [Have Berkeley DB SQL])
-		fi
-	fi
-fi
-AM_CONDITIONAL(BDBSQL, test x$bdbsqldir != x)
-AC_SUBST(LIBGDA_BDB_INC)
-AC_SUBST(LIBGDA_BDB_TYPE)
-
-dnl Test for ODBC
-try_odbc=true
-AC_ARG_WITH(odbc,
-[  --with-odbc=<directory>	use ODBC libraries in <directory>],[
-if test $withval = no
-then
-	try_odbc=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-odbcdir=""
-if test $try_odbc = true
-then
-	AC_MSG_CHECKING(for ODBC files)
-	for d in $dir /usr /usr/local
-	do
-		if test -f $d/$lib/libodbc$linklibext -a -f $d/include/sql.h
-		then
-			AC_MSG_RESULT(found ODBC in $d)
-			odbclib="-lodbc"
-			odbcdir=$d
-			break
-		fi
-		if test -f $d/$lib/libiodbc$linklibext -a -f $d/include/sql.h
-		then
-			AC_MSG_RESULT(found iODBC in $d)
-			odbclib="-liodbc"
-			odbcdir=$d
-			break
-		fi
-		if test -f $d/$lib/w32api/libodbc32.a -a -f $d/include/w32api/sql.h
-		then
-			AC_MSG_RESULT(found ODBC32 in $d)
-			odbclib="-lodbc32"
-			odbcdir=$d
-			break
-		fi
-	done
-	if test x$odbcdir = x
-	then
-		AC_MSG_WARN(ODBC backend not used)
-	else
-		AC_DEFINE(HAVE_ODBC, 1, [Have ODBC])
-		ODBC_CFLAGS="-I${odbcdir}/include"
-		ODBC_LIBS="-L${odbcdir}/lib ${odbclib}"
-	fi
-fi
-
-AM_CONDITIONAL(ODBC, test x$odbcdir != x)
+BDB_CHECK($lib)
 
 dnl Test for MySQL
-mysql_req=auto
-AC_ARG_WITH(mysql,
-[  --with-mysql=<directory>	use mysql backend in <directory>],[
-if test $withval = no
-then
-	mysql_req=none
-elif test $withval = yes
-then
-	mysql_req=none
-	if test $cross_compiling = yes
-	then
-		AC_MSG_WARN(Can't auto determine Mysql installation in cross-compiling environment)
-	else
-		AC_MSG_CHECKING(for MySQL files)
-		AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5)
-	fi
-else
-	AC_MSG_CHECKING(for MySQL files in $withval)
-	if test $cross_compiling = yes
-	then
-		mysql_req=$withval
-	else
-		AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5, [], $withval/bin)
-	fi
-fi
-])
-mysqldir=""
-
-if test $mysql_req = auto
-then
-	AC_MSG_CHECKING(for MySQL files)
-	AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5)
-fi
-
-if test x$MYSQL_CONFIG != x
-then
-	mysqldir=yes
-	AC_MSG_RESULT(found mysql)
-	AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
-	if test "x$MYSQL_CFLAGS" = "x"; then
-		MYSQL_CFLAGS=`$MYSQL_CONFIG --cflags`
-	fi
-	MYSQL_LIBS=`$MYSQL_CONFIG --libs`
-else
-	if test $cross_compiling = yes
-	then
-		if test $platform_win32 = yes -a -f $mysql_req/$lib/opt/libmysql.lib
-		then
-			mysqldir=$mysql_req
-
-			mysqllibdir_suffix=/opt
-			AC_MSG_RESULT(found mysql)
-			AC_DEFINE(HAVE_MYSQL, 1, [Have MySQL])
-			MYSQL_CFLAGS="-I${mysqldir}/include${mysqldir_suffix}"
-			MYSQL_LIBS="-L${mysqldir}/${lib}${mysqllibdir_suffix} -lmysql"
-		else
-			AC_MSG_WARN(MySQL backend not used)
-		fi
-	fi
-fi
-AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
-
-
-dnl Test for mSQL
-try_msql=true
-AC_ARG_WITH(msql,
-[  --with-mSQL=<directory>	use mSQL backend in <directory>],[
-if test $withval = no
-then
-	try_msql=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-msqldir=""
-if test $try_msql = true
-then
-	AC_MSG_CHECKING(for mSQL files)
-	for d in $dir /usr /usr/local /usr/local/msql /opt/msql /opt/packages/msql
-	do
-		if test -f $d/include/msql/msql.h
-		then
-			msqldir_suffix=/msql
-		else
-			msqldir_suffix=
-		fi
-		if test -f $d/$lib/msql/libmsql.a -o -f $d/$lib/msql/libmsql$linklibext
-		then
-			AC_MSG_RESULT(found mSQL in $d)
-			msqldir=$d
-			msqllibdir_suffix=/msql
-			break
-		fi
-		if test -f $d/$lib/libmsql.a -o -f $d/$lib/libmsql$linklibext
-		then
-			AC_MSG_RESULT(found mSQL in $d)
-			msqldir=$d
-			msqllibdir_suffix=
-			break
-		fi
-	done
-	if test x$msqldir = x
-	then
-		AC_MSG_WARN(mSQL backend not used)
-	else
-		AC_DEFINE(HAVE_MSQL, 1, [Have mSQL])
-		MSQL_CFLAGS="-I${msqldir}/include${msqldir_suffix}"
-		MSQL_LIBS="-L${msqldir}/lib${msqllibdir_suffix} -lmsql"
-                AC_MSG_CHECKING(for mSQL 3.x API)
-                AC_TRY_RUN([
-                  #include "${msqldir}/include${msqldir_suffix}/msql.h"
-                  int main() {
-                    int rc = INT64_TYPE;
-                    return (rc>0) ? 0 : -1;
-                  }
-                ], AC_DEFINE(HAVE_MSQL3, 1, [Have mSQL 3.x API]) AC_MSG_RESULT(found),
-                AC_MSG_RESULT(not found))
-	fi
-fi
-
-AM_CONDITIONAL(MSQL, test x$msqldir != x)
+MYSQL_CHECK($lib)
 
 dnl Test for PostgreSQL
-postgres_req=auto
-AC_ARG_WITH(postgres,
-[  --with-postgres=<directory>	use PostgreSQL backend in <directory>],[
-if test $withval = no
-then
-	postgres_req=none
-elif test $withval = yes
-then
-	postgres_req=none
-	if test $cross_compiling = yes
-	then
-		AC_MSG_WARN(Can't auto determine PostgreSQL installation in cross-compiling environment)
-	else
-		AC_MSG_CHECKING(for PostgreSQL files)
-		AC_PATH_PROG(POSTGRES_CONFIG, pg_config)
-	fi
-else
-	AC_MSG_CHECKING(for PostgreSQL files in $withval)
-	if test $cross_compiling = yes
-	then
-		postgres_req=$withval
-	else
-		AC_PATH_PROG(POSTGRES_CONFIG, pg_config, [], $withval/bin)
-	fi
-fi
-])
-postgresdir=""
-
-if test $postgres_req = auto
-then
-	AC_MSG_CHECKING(for PostgreSQL files)
-	AC_PATH_PROG(POSTGRES_CONFIG, pg_config)
-fi
-
-if test x$POSTGRES_CONFIG != x
-then
-	postgresdir=yes
-	AC_MSG_RESULT(found postgres)
-	AC_DEFINE(HAVE_POSTGRES, 1, [Have Postgres])
-	POSTGRES_CFLAGS=-I`$POSTGRES_CONFIG --includedir`
-	POSTGRES_LIBS="-L`$POSTGRES_CONFIG --libdir` -lpq"
-else
-	if test $cross_compiling = yes
-	then
-		if test $platform_win32 = yes -a -f $postgres_req/$lib/libpq.lib
-		then
-			postgresdir=$postgres_req
-			postgreslibdir_suffix=
-			AC_MSG_RESULT(found postgres)
-			AC_DEFINE(HAVE_POSTGRES, 1, [Have Postgres])
-			POSTGRES_CFLAGS="-I${postgresdir}/include${postgresdir_suffix}"
-			POSTGRES_LIBS="-L${postgresdir}/${lib}${postgreslibdir_suffix} -lpq"
-		else
-			AC_MSG_WARN(Postgres backend not used)
-		fi
-	fi
-fi
-AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
-
-dnl Test for freetds provider
-dnl
-try_freetds=true
-AC_ARG_WITH(tds,
-[  --with-tds=<directory>	use freetds library in <directory>],[
-if test $withval = no
-then
-	try_freetds=false
-elif test $withval = yes
-then
-	dir="/usr/local/freetds"
-else
-	dir=$withval
-fi
-])
-freetdsdir=""
-freetds_incdir=""
-freetdsvercheck=""
-if test $try_freetds = true
-then
-	AC_MSG_CHECKING(for freetds files)
-	for d in $dir /usr/local/freetds /usr /opt/freetds /opt/packages/freetds /opt/freetds-0.50
-	do
-		if test -f "$d/include/tds.h" -a -e "$d/$lib/libtds$linklibext" -a -f "$d/include/tdsver.h"
-		then
-			AC_MSG_RESULT(found freetds in $d)
-			freetdsdir="$d"
-			freetds_incdir="$d/include"
-			break
-		elif test -f "$d/include/freetds/tds.h" -a -e "$d/$lib/libtds$linklibext" -a -f "$d/include/freetds/tdsver.h"
-		then
-			AC_MSG_RESULT(found freetds in $d and includes in $d/include/freetds)
-			freetdsdir="$d"
-			freetds_incdir="$d/include/freetds"
-			break
-		fi
-	done
-	if test "x$freetdsdir" = "x"
-	then
-		AC_MSG_WARN(tds backend not used)
-	else
-		AC_MSG_CHECKING(for freetds version)
-		freetdsvercheck="`grep \"^#define \(VERSION_NO \|TDS_VERSION_NO \)\" $freetds_incdir/tdsver.h|sed 's|^.*".*v\(.*\)"|\1|'`"
-		if test "x$freetdsvercheck" = "x"
-		then
-			AC_MSG_WARN(freetds version check failed - backend not used)
-			freetdsdir=""
-			freetds_incdir=""
-		else
-			AC_MSG_RESULT($freetdsvercheck)
-			FREETDS_CFLAGS="-I${freetds_incdir}"
-			FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
-			AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
-
-			freetds_version_major="`echo $freetdsvercheck|sed 's:^\([[^.]]*\).*:\1:'`"
-			freetds_version_minor="`echo $freetdsvercheck|sed 's:^[[^.]]*\.\([[^.]]*\).*:\1:'`"
-
-			AC_DEFINE_UNQUOTED(FREETDS_VERSION_MAJOR, [$freetds_version_major])
-			AC_DEFINE_UNQUOTED(FREETDS_VERSION_MINOR, [$freetds_version_minor])
-		fi
-	fi
-fi
-
-AM_CONDITIONAL(FREETDS, test x$freetdsdir != x)
-
-dnl Test for IBM DB2
-try_ibmdb2=true
-AC_ARG_WITH(ibmdb2,
-[  --with-ibmdb2=<directory>	use IBM DB2 backend in <directory>],[
-if test $withval = no
-then
-	try_ibmdb2=false
-elif test $withval = yes
-then
-	if test -z "$DB2DIR"
-	then
-		dir="/usr/IBMdb2/V7.1"
-	else
-		dir="$DB2DIR"
-	fi
-else
-	dir=$withval
-fi
-])
-if test $try_ibmdb2 = true
-then
-	AC_MSG_CHECKING(for IBM DB2 files)
-	if test -f "$dir/include/sqlcli1.h"
-	then
-		if test -e "$dir/lib/libdb2.so"
-		then
-			ibmdb2dir="$dir"
-			ibmdb2libdir="lib"
-			break
-		fi
-		if test -e "$dir/lib32/libdb2.so"
-		then
-			ibmdb2dir="$dir"
-                        ibmdb2libdir="lib32"
-                        break
-		fi
-	else
-		for d in /usr/IBMdb2 /usr/local/IBMdb2 /opt/IBMdb2 /opt/packages/IBMdb2 /opt/ibm/db2
-		do
-			for v in V5.0 V.6.1 V7.1 V9.1
-			do
-				if test -f "$d/$v/include/sqlcli1.h" -a -e "$d/$v/lib/libdb2.so"
-				then
-					ibmdb2dir="$d/$v"
-					ibmdb2libdir="lib"
-					break
-				fi
-				if test -f "$d/$v/include/sqlcli1.h" -a -e "$d/$v/lib32/libdb2.so"
-                                then
-                                        ibmdb2dir="$d/$v"
-                                        ibmdb2libdir="lib32"
-                                        break
-                                fi
-			done
-		done
-	fi
-	if test x$ibmdb2dir = x
-	then
-		AC_MSG_WARN(IBM DB2 backend not used)
-	else
-		AC_MSG_RESULT(found IBM DB2 in $ibmdb2dir)
-		AC_DEFINE(HAVE_IBMDB2, 1, [Have IBM DB2])
-		IBMDB2_CFLAGS="-DIBMDB2_DIR=\\\"${ibmdb2dir}\\\" -I${ibmdb2dir}/include"
-		IBMDB2_LIBS="-L${ibmdb2dir}/${ibmdb2libdir} -Wl,-rpath,${ibmdb2dir}/${ibmdb2libdir} -ldb2"
-	fi
-fi
-
-AM_CONDITIONAL(IBMDB2, test x$ibmdb2dir != x)
-
-dnl Test for Sybase
-try_sybase=true
-dir=""
-AC_ARG_WITH(sybase,
-[  --with-sybase=<directory>	use Sybase backend in <directory>],[
-AC_MSG_CHECKING(for Sybase files)
-if test $withval = no
-then
-	try_sybase=false
-elif test $withval = yes
-then
-	dir="/opt2/sybase"
-else
-	dir=$withval
-fi
-])
-sybasedir=""
-if test $try_sybase = true
-then
-	AC_MSG_CHECKING(for Sybase files)
-	for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase
-	do
-		if test -f "$d/include/ctpublic.h"
-		then
-			AC_MSG_RESULT(found Sybase in $d)
-			sybasedir="$d"
-			break
-		fi
-		for v in 11.9.2 12.5 11.0.3.3
-		do
-			if test -f "$d-$v/include/ctpublic.h"
-			then
-				AC_MSG_RESULT(found Sybase in $d-$v)
-				sybasedir="$d-$v"
-				break
-			elif test -f "$d-$v/OCS/include/ctpublic.h"
-			then
-				AC_MSG_RESULT(found Sybase in $d-$v)
-				sybasedir="$d-$v/OCS"
-				break
-			fi
-		done
-	done
-	if test x$sybasedir = x
-	then
-		AC_MSG_WARN(Sybase backend not used)
-	else
-		SYBASE_DIR=${sybasedir}
-		SYBASE_CFLAGS="-I${sybasedir}/include"
-		SYBASE_LIBS="-lnsl -ldl -lm"
-		AC_MSG_CHECKING(for Sybase host system type)
-		AC_MSG_RESULT($host)
-		case "$host" in
-		*linux*) sybase_ctlibs="-L${sybasedir}/lib -lct -lcs -lsybtcl -lcomn -lintl"
-			sybase_blklibs="-L${sybasedir}/lib -lblk ${sybase_ctlibs}"
-			SYBASE_LIBS="${SYBASE_LIBS} ${sybase_blklibs}"
-			AC_CHECK_LIB(ct,tdsdump_on,[
-			AC_MSG_WARN(linking against freetds libct)
-			AC_DEFINE(HAVE_SYBASE, 1, [Have Sybase])
-			], AC_DEFINE(HAVE_SYBASE, 1, [Have Sybase]))
-			;;
-		*) AC_MSG_WARN(this host type is unsupported; sybase backend not used)
-			sybasedir=""
-			;;
-		esac
-	fi
-fi
-
-AM_CONDITIONAL(SYBASE, test x$sybasedir != x)
-
-dnl Link gda-sybase-srv against debugable libs
-AC_ARG_ENABLE(sybase-debug,
-    [  --enable-sybase-debug=[no/min/max]      no=none, min=debug msgs, max=min and link against sybase devlibs (which are static!).],,enable_sybase_debug=no)
-if test "x$sybasedir" != "x"
-then
-       AC_MSG_CHECKING(for Sybase debugging level)
-       if test "x$enable_sybase_debug" = "xmax"
-       then
-               AC_DEFINE(SYBASE_DEBUG, 1, [Enable Sybase debugging level])
-               if test -f $sybasedir/devlib/libct.a
-               then
-                       AC_MSG_RESULT(max)
-                       AC_MSG_WARN(erase passwords in bug-buddy debug output before sending bugreports)
-                       SYBASE_LIBS=${sybasedir}/devlib
-               else
-                       AC_MSG_RESULT(min)
-                       AC_MSG_WARN(no debug libraries found, using --enable-sybase-debug=min)
-                       enable_sybase_debug=min
-               fi
-       else
-               AC_MSG_RESULT($enable_sybase_debug)
-               if test "x$enable_sybase_debug" != "x"
-               then
-                       if test "x$enable_sybase_debug" != "xno"
-                       then
-                               AC_DEFINE(SYBASE_DEBUG)
-                       fi
-               fi
-       fi
-else
-       if test "x$enable_sybase_debug" != "xno"
-       then
-               AC_MSG_WARN(you applied sybase debugging options, but sybase has not been found or is unsupported, disabling debug options)
-       fi
-       enable_sybase_debug=no
-fi
+POSTGRES_CHECK($lib)
 
 dnl test for ORACLE
-try_oracle=true
-AC_ARG_WITH(oracle,
-[  --with-oracle=<directory>	use ORACLE backend in <directory>],[
-if test $withval = no
-then
-	try_oracle=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-if test $try_oracle = true
-then
-	AC_MSG_CHECKING(for ORACLE installation)
-	for d in $dir $ORACLE_HOME /opt/oracle /usr
-	do
-		if test -f $d/$lib/libclntsh.so
-		then
-			AC_MSG_RESULT(found ORACLE in $d)
-			oracledir=$d
-			oraclelibdir=$lib
-			break
-		else
-			if test -f $d/lib/libclntsh.so
-			then
-				AC_MSG_RESULT(found ORACLE in $d)
-				oracledir=$d
-				oraclelibdir="lib"
-				break
-			fi
-		fi
-	done
-	if test x$oracledir = x
-	then
-		AC_MSG_WARN(ORACLE backend not used)
-	else
-		AC_DEFINE(HAVE_ORACLE, 1, [Have ORACLE])
-		ORACLE_CFLAGS=" -I$oracledir/include -I$oracledir/include/oracle/client -I$oracledir/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$oracledir/network/public"
-		ORACLE_LIBS="-L$oracledir/$oraclelibdir -lm -ldl -lclntsh"
-	fi
-fi
+ORACLE_CHECK($lib)
 
-AM_CONDITIONAL(ORACLE, test x$oracledir != x)
+dnl Test for JAVA and JDBC
+JAVA_CHECK()
 
 dnl test for FireBird
 try_firebird=true
@@ -1155,86 +558,8 @@ fi
 
 AM_CONDITIONAL(FIREBIRD, test x$firebirddir != x)
 
-dnl Test for Xbase
-try_xbase=true
-AC_ARG_WITH(xbase,
-[  --with-xbase=<directory>     use Xbase files in <directory>],[
-if test $withval = no
-then
-	try_xbase=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-if test $try_xbase = true
-then
-	AC_MSG_CHECKING(for Xbase files)
-	xbasedir=""
-	for d in $dir /usr /usr/local /opt/xbase
-	do
-		if test -f $d/include/xbase/xbase.h
-		then
-			AC_MSG_RESULT(found Xbase in $d)
-			xbasedir=$d
-			break
-		fi
-	done
-	if test x$xbasedir = x
-	then
-		AC_MSG_WARN(Xbase backend not used)
-	else
-		XBASE_CFLAGS=-I${xbasedir}/include
-		XBASE_LIBS="-L${xbasedir}/lib -lxbase"
-		AC_DEFINE(HAVE_XBASE, 1, [Have Xbase])
-	fi
-fi
-
-AM_CONDITIONAL(XBASE, test x$xbasedir != x)
-
 dnl Test for MDB Tools (for MS Access files)
 MDBTOOLS_CHECK([$lib])
-
-dnl Test for LDAP
-try_ldap=true
-AC_ARG_WITH(ldap,
-[  --with-ldap=<directory>     use LDAP library in <directory>],[
-if test $withval = no
-then
-	try_ldap=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-if test $try_ldap = true
-then
-	AC_MSG_CHECKING(for LDAP files)
-	ldapdir=""
-	for d in $dir /usr /usr/local /opt/openldap
-	do
-		if test -f $d/include/ldap.h -a -f $d/include/lber.h
-		then
-			AC_MSG_RESULT(found LDAP in $d)
-			ldapdir=$d
-			break
-		fi
-	done
-	if test x$ldapdir = x
-	then
-		AC_MSG_WARN(LDAP backend not used)
-	else
-		LDAP_CFLAGS="-I${ldapdir}/include"
-		LDAP_LIBS="-L${ldapdir}/lib -lldap -llber"
-		AC_DEFINE(HAVE_LDAP, 1, [Have LDAP])
-	fi
-fi
-
-AM_CONDITIONAL(LDAP, test x$ldapdir != x)
 
 dnl test for system-installed SQLite
 dnl If no SQLite is found or if the SQLite found does not have the sqlite3_table_column_metadata()
@@ -1273,260 +598,6 @@ else
 	fi
 	AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
 fi
-
-dnl Test for JAVA and JDBC
-
-## RUN_JAVA(variable for the result, parameters)
-## ----------
-## runs the java interpreter ${JAVA_PROG} with specified parameters and
-## saves the output to the supplied variable. The exit value is ignored.
-AC_DEFUN([RUN_JAVA],
-[
-  acx_java_result=
-  if test -z "${JAVA_PROG}"; then
-    echo "$as_me:$LINENO: JAVA_PROG is not set, cannot run java $2" >&AS_MESSAGE_LOG_FD
-  else
-    echo "$as_me:$LINENO: running ${JAVA_PROG} $2" >&AS_MESSAGE_LOG_FD
-    acx_java_result=`${JAVA_PROG} $2 2>&AS_MESSAGE_LOG_FD`
-    echo "$as_me:$LINENO: output: '$acx_java_result'" >&AS_MESSAGE_LOG_FD
-  fi
-  $1=$acx_java_result
-])
-
-try_java=true
-AC_ARG_WITH(java,
-[  --with-java=<directory>     use JAVA library in <directory>],[
-if test $withval = no
-then
-	try_java=false
-elif test $withval = yes
-then
-	if test -z "${JAVA_HOME}" ; then
-	  JAVA_PATH=${PATH}
-	else
-  	  JAVA_PATH=${JAVA_HOME}:${JAVA_HOME}/bin:${PATH}
-	fi
-	JAVA_PATH=${JAVA_PATH}:/usr/java/bin:/usr/jdk/bin:/usr/lib/java/bin:/usr/lib/jdk/bin:/usr/local/java/bin:/usr/local/jdk/bin:/usr/local/lib/java/bin:/usr/local/lib/jdk/bin
-else
-	JAVA_PATH=$withval
-fi
-], [
-if test -z "${JAVA_HOME}" ; then
-	  JAVA_PATH=${PATH}
-	else
-  	  JAVA_PATH=${JAVA_HOME}:${JAVA_HOME}/bin:${PATH}
-	fi
-	JAVA_PATH=${JAVA_PATH}:/usr/java/bin:/usr/jdk/bin:/usr/lib/java/bin:/usr/lib/jdk/bin:/usr/local/java/bin:/usr/local/jdk/bin:/usr/local/lib/java/bin:/usr/local/lib/jdk/bin
-])
-
-save_CFLAGS="$CFLAGS"
-save_LIBS="$LIBS"
-save_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
-have_java=no
-if test $try_java = true
-then
-	## FIXME: we may want to check for jikes, kaffe and others...
-	AC_PATH_PROGS(JAVA_PROG,java,,${JAVA_PATH})
-	AC_PATH_PROGS(JAVAC,javac,,${JAVA_PATH})
-	AC_PATH_PROGS(JAVAH,javah,,${JAVA_PATH})
-	AC_PATH_PROGS(JAR,jar,,${JAVA_PATH})
-
-	have_all_java=yes
-	if test -z "$JAVA_PROG"; then have_all_java=no; fi
-	if test -z "$JAVAC"; then have_all_java=no; fi
-	if test -z "$JAVAH"; then have_all_java=no; fi
-	if test -z "$JAR"; then have_all_java=no; fi
-	if test ${have_all_java} = no; then
-		AC_MSG_WARN([one or more Java tools are missing (JRE is not sufficient)])
-    	   	try_java=false
-	fi
-fi
-
-if test $try_java = true
-then
-	AC_MSG_CHECKING([whether Java interpreter works])
-	try_java=false
-	acx_java_works=no
-	if test -n "${JAVA_PROG}" ; then
-	  RUN_JAVA(acx_jc_result,[-classpath . getsp -test])
-	  if test "${acx_jc_result}" = "Test1234OK"; then
-	    acx_java_works=yes
-	  fi
-	  acx_jc_result=
-	fi
-
-	if test ${acx_java_works} = yes; then
-	  AC_MSG_RESULT([yes])
-
-	  AC_MSG_CHECKING([java compiler version])
-	  JTYPE=`$JAVAC -version 2>&1 | grep -o Unrecognized`
-	  if test x$JTYPE = xUnrecognized; then
-	       # eclipse gjc?
-	       JVERSION=ECJ`$JAVAC -v 2>&1 | grep -o '[[0-9]].[[0-9]].[[0-9]] release' | sed -e 's/ release//'`
-	  else
-	       JTYPE=`$JAVAC -version 2>&1 | grep -o Eclipse`
-	       if test x$JTYPE = xEclipse; then
-	       	       JVERSION=ECJ`$JAVAC -v 2>&1 | grep -o '[[0-9]].[[0-9]].[[0-9]] release' | sed -e 's/ release//'`
-	       else
-		       # Sun's java compiler
-	       	       JVERSION=JRE`$JAVAC -version 2>&1 | sed -e "1s/javac //" -e "1q"`
-	       fi
-	  fi
-	  case "$JVERSION" in
-               JRE1.5.*)
-		try_java=true
-		JTYPE="Sun JRE 1.5"
-		JFLAGS="-Xlint:unchecked -Xlint:deprecation"
-		;;
-               JRE1.6.*)
-		try_java=true
-		JTYPE="Sun JRE 1.6"
-		JFLAGS="-Xlint:unchecked -Xlint:deprecation"
-		;;
-               JREgcj-4*)
-		try_java=true
-		JTYPE="GCJ"
-		JFLAGS=""
-		;;
-               ECJ*) try_java=no;;
-               *)
-	       ;;
-	  esac
-	  if test $try_java = true; then
-	     AC_MSG_RESULT([JAVA version used is $JTYPE ])
-
-	     AC_MSG_CHECKING([for Java environment])
-	     ## retrieve JAVA_HOME from Java itself if not set
-	     if test -z "${JAVA_HOME}" ; then
-	       RUN_JAVA(JAVA_HOME,[-classpath . getsp java.home])
-	     fi
-
-	     ## the availability of JAVA_HOME will tell us whether it's supported
-	     if test -z "${JAVA_HOME}" ; then
-	       if test x$acx_java_env_msg != xyes; then
-	         AC_MSG_RESULT([not found])
-	       fi
-	     else
-	       AC_MSG_RESULT([in ${JAVA_HOME}])
-
-	       case "${host_os}" in
-	         darwin*)
-	           JAVA_LIBS="-framework JavaVM"
-	           JAVA_LD_PATH=
-	           ;;
-	         *)
-	           RUN_JAVA(JAVA_LIBS, [-classpath . getsp -libs])
-	           JAVA_LIBS="${JAVA_LIBS} -ljvm"
-	           RUN_JAVA(JAVA_LD_PATH, [-classpath . getsp java.library.path])
-	           ;;
-	       esac
-	       ## note that we actually don't test JAVA_LIBS - we hope that the detection
-	       ## was correct. We should also test the functionality for javac.
-	     fi
-	  else
-	     AC_MSG_RESULT([SUN Java compiler Version >= 1.5 required, JDBC provider not compiled])
-	  fi
-	else
-	  AC_MSG_RESULT([no])
-	  AC_MSG_WARN([Java not found. Please install JDK 1.4 or later, make sure that the binaries are on the PATH and re-try. If that doesn't work, set JAVA_HOME correspondingly.])
-	  try_java=false
-	fi
-fi
-
-JNI_H=
-AC_ARG_WITH(jni,[  --with-jni=<directory>     use JNI headers in <directory>],[JNI_H=$withval])
-
-if test $try_java = true
-then
-	if test x$JNI_H = x
-	then
-	    AC_CHECK_FILE(${JAVA_HOME}/include/jni.h,
-	     [JNI_H="${JAVA_HOME}/include"],
-	     [AC_CHECK_FILE(${JAVA_HOME}/jni.h,
-	      [JNI_H="${JAVA_HOME}"],
-	      [AC_CHECK_FILE(${JAVA_HOME}/../include/jni.h,
-	       [JNI_H="${JAVA_HOME}/../include"],
-	       [AC_MSG_RESULT([jni headers not found. Please make sure you have a proper JDK installed.])
-	      ])
-	     ])
-	    ])
-	    if test x$JNI_H = x
-	    then
-	        try_java=false
-	    fi
-	fi
-fi
-
-if test $try_java = true
-then
-	JAVA_CFLAGS="-I${JNI_H}"
-	#: ${JAVA_CFLAGS=-D_REENTRANT}
-
-	# Sun's JDK needs jni_md.h in in addition to jni.h and unfortunately it's stored somewhere else ...
-	# this should be become more general at some point - so far we're checking linux and solaris only
-	# (well, those are presumably the only platforms supported by Sun's JDK and others don't need this
-	# at least as of now - 01/2004)
-	jac_found_md=no
-	for mddir in . linux solaris ppc irix alpha aix hp-ux genunix cygwin win32 freebsd; do
-	    AC_CHECK_FILE(${JNI_H}/$mddir/jni_md.h,[JAVA_CFLAGS="${JAVA_CFLAGS} -I${JNI_H}/$mddir" jac_found_md=yes])
-	    if test ${jac_found_md} = yes
-	    then
-	        break
-	    fi
-	done
-
-	LIBS="${LIBS} ${JAVA_LIBS}"
-	CFLAGS="${CFLAGS} ${JAVA_CFLAGS} ${JAVA_CFLAGS}"
-
-	AC_MSG_CHECKING([whether JNI programs can be compiled])
-	AC_LINK_IFELSE([
-	#include <jni.h>
-	int main(void) {
-	    jobject o;
-	    return 0;
-	}
-	      ],[AC_MSG_RESULT(yes)],
-	      [AC_MSG_ERROR([Cannot compile a simple JNI program. See config.log for details.])])
-
-	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${JAVA_LD_PATH}
-	export LD_LIBRARY_PATH
-
-	AC_MSG_CHECKING([whether JNI programs can be run])
-	AC_RUN_IFELSE([
-	#include <jni.h>
-	int main(void) {
-	    jobject o;
-	    return 0;
-	}
-	      ],[AC_MSG_RESULT(yes)],
-	      [AC_MSG_ERROR([Cannot run a simple JNI program - probably your jvm library is in non-standard location or JVM is unsupported. See config.log for details.])])
-
-	AC_MSG_CHECKING([JNI data types])
-	AC_RUN_IFELSE([AC_LANG_SOURCE([[
-	#include <jni.h>
-	int main(void) {
-	  return (sizeof(int)==sizeof(jint) && sizeof(long)==sizeof(long) && sizeof(jbyte)==sizeof(char) && sizeof(jshort)==sizeof(short) && sizeof(jfloat)==sizeof(float) && sizeof(jdouble)==sizeof(double))?0:1;
-}
-	      ]])],[AC_MSG_RESULT([ok])],[AC_MSG_ERROR([One or more JNI types differ from the corresponding native type. You may need to use non-standard compiler flags or a different compiler in order to fix this.])],[])
-
-	JAVA_CFLAGS="-I${JNI_H}"
-	for mddir in . linux solaris ppc irix alpha aix hp-ux genunix cygwin win32 freebsd; do
-	    if test -e ${JNI_H}/$mddir/jni_md.h
-	    then
-		JAVA_CFLAGS="${JAVA_CFLAGS} -I${JNI_H}/$mddir"
-		break
-	    fi
-	done
-
-	have_java=yes
-	AC_DEFINE(HAVE_JAVA, 1, [Have JAVA])
-	AC_SUBST(JAVA_LD_PATH)
-	AC_SUBST(JFLAGS)
-fi
-AM_CONDITIONAL(JAVA, test x$have_java = xyes)
-CFLAGS="$save_CFLAGS"
-LIBS="$save_LIBS"
-export LD_LIBRARY_PATH="$save_LD_LIBRARY_PATH"
 
 dnl ************************
 dnl Check for libsoup
@@ -1608,10 +679,6 @@ AM_CONDITIONAL(HISTORY_LIB, test ! "x$HISTORY_LIB" = "x")
 AC_SUBST(HISTORY_LIB)
 
 
-AC_SUBST(LIB_PREFIX)
-AC_SUBST(LIB_SONAME)
-AC_SUBST(LIB_SUFFIX)
-
 dnl
 dnl TERMIOS.H
 dnl
@@ -1627,42 +694,8 @@ AC_SUBST(LIBGDA_DTDDIR)
 dnl ******************************
 dnl Variables
 dnl ******************************
-AC_SUBST(BDB_LIB)
-AC_SUBST(BDB_LIBS)
-AC_SUBST(BDB_CFLAGS)
-AC_SUBST(BDBSQL_LIBS)
-AC_SUBST(BDBSQL_PATH)
-AC_SUBST(BDBSQL_CFLAGS)
-AC_SUBST(ODBC_LIBS)
-AC_SUBST(ODBC_CFLAGS)
-AC_SUBST(MYSQL_LIBS)
-AC_SUBST(MYSQL_CFLAGS)
-AC_SUBST(MSQL_LIBS)
-AC_SUBST(HAVE_MSQL3)
-AC_SUBST(MSQL_CFLAGS)
-AC_SUBST(POSTGRES_LIBS)
-AC_SUBST(POSTGRES_CFLAGS)
-AC_SUBST(PRIMEBASE_LIBS)
-AC_SUBST(PRIMEBASE_CFLAGS)
-AC_SUBST(FREETDS_LIBS)
-AC_SUBST(FREETDS_CFLAGS)
-AC_SUBST(IBMDB2_LIBS)
-AC_SUBST(IBMDB2_CFLAGS)
-AC_SUBST(SYBASE_DIR)
-AC_SUBST(SYBASE_LIBS)
-AC_SUBST(SYBASE_CFLAGS)
-AC_SUBST(LDAP_LIBS)
-AC_SUBST(LDAP_CFLAGS)
-AC_SUBST(ORACLE_LIBS)
-AC_SUBST(ORACLE_CFLAGS)
 AC_SUBST(FIREBIRD_LIBS)
 AC_SUBST(FIREBIRD_CFLAGS)
-AC_SUBST(CAMEL_LIBS)
-AC_SUBST(CAMEL_CFLAGS)
-AC_SUBST(XBASE_LIBS)
-AC_SUBST(XBASE_CFLAGS)
-AC_SUBST(JAVA_LIBS)
-AC_SUBST(JAVA_CFLAGS)
 
 dnl
 dnl Check if lib should be build with the debug mode
@@ -1821,23 +854,16 @@ echo "   Installation prefix = $prefix"
 echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
-echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"
-echo "      Berkeley DB SQL = `if test x$bdbsqldir = x; then echo no; else echo yes; fi`"
+echo "      Berkeley DB = $bdb_found"
+echo "      Berkeley DB SQL = $bdbsql_found"
 dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
-dnl echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
-dnl echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = $mdbtools_found"
-echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
-dnl echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
-dnl echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
-echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
-echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
+echo "      MySQL = $mysql_found"
+echo "      Oracle = $oracle_found"
+echo "      PostgreSQL = $postgres_found"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
-dnl echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
-dnl echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
-dnl echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
-echo "      JDBC = `if test x$have_java = xyes; then echo "yes (using $JTYPE)"; else echo no; fi`"
+echo "      JDBC = $java_found"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
 then

@@ -12,7 +12,7 @@ extern GdaSqlParser *demo_parser;
 static GtkWidget *window = NULL;
 
 static void
-salesrep_changed_cb (GdaHolder *holder, gpointer data)
+salesrep_changed_cb (GdaHolder *holder, G_GNUC_UNUSED gpointer data)
 {
 	gchar *str;
 	str = gda_value_stringify (gda_holder_get_value (holder));

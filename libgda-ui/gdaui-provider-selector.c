@@ -78,7 +78,7 @@ gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klass)
 
 static void
 gdaui_provider_selector_init (GdauiProviderSelector *selector,
-			      GdauiProviderSelectorClass *klass)
+			      G_GNUC_UNUSED GdauiProviderSelectorClass *klass)
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_SELECTOR (selector));
 
@@ -114,7 +114,8 @@ gdaui_provider_selector_get_type (void)
 			NULL,
 			sizeof (GdauiProviderSelector),
 			0,
-			(GInstanceInitFunc) gdaui_provider_selector_init
+			(GInstanceInitFunc) gdaui_provider_selector_init,
+			0
 		};
 		type = g_type_register_static (GDAUI_TYPE_COMBO, "GdauiProviderSelector", &info, 0);
 	}

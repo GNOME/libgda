@@ -19,7 +19,7 @@ JNICALL Java_GdaInputStream_initIDs (JNIEnv *env, jclass klass)
 }
 
 JNIEXPORT jintArray
-JNICALL Java_GdaInputStream_readData (JNIEnv *jenv, jobject obj,
+JNICALL Java_GdaInputStream_readData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 				      jlong gda_blob_pointer, jlong offset, jlong size)
 {
 	GdaBlob *blob = (GdaBlob*) gda_blob_pointer;
@@ -93,7 +93,7 @@ JNICALL Java_GdaInputStream_readData (JNIEnv *jenv, jobject obj,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_GdaInputStream_readByteData (JNIEnv *jenv, jobject obj,
+Java_GdaInputStream_readByteData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 				      jlong gda_blob_pointer, jlong offset, jlong size)
 {
 	GdaBlob *blob = (GdaBlob*) gda_blob_pointer;

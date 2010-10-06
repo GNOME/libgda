@@ -103,6 +103,7 @@ gdaui_entry_get_type (void)
 			sizeof (GdauiEntry),
 			0,		/* n_preallocs */
 			(GInstanceInitFunc) gdaui_entry_init,
+			0
 		};
 		
 		type = g_type_register_static (GTK_TYPE_ENTRY, "GdauiEntry", &type_info, 0);
@@ -508,7 +509,7 @@ gdaui_entry_set_width_chars (GdauiEntry *entry, gint max_width)
  */
 
 static void
-changed_cb (GtkEditable *editable, gpointer data)
+changed_cb (GtkEditable *editable, G_GNUC_UNUSED gpointer data)
 {
         GdauiEntry *entry = (GdauiEntry*) editable;
         if (entry->priv->internal_changes > 0)
@@ -516,7 +517,7 @@ changed_cb (GtkEditable *editable, gpointer data)
 }
 
 static void
-delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, gpointer data)
+delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, G_GNUC_UNUSED gpointer data)
 {
 	const gchar *otext = NULL;
 	gint len;
@@ -579,7 +580,8 @@ delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, gpointer da
 
 
 static void
-insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint *position, gpointer data)
+insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint *position,
+		G_GNUC_UNUSED gpointer data)
 {
 	const gchar *otext;
 	gint clen;

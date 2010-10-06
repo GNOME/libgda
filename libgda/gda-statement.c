@@ -108,7 +108,8 @@ gda_statement_get_type (void)
 			NULL,
 			sizeof (GdaStatement),
 			0,
-			(GInstanceInitFunc) gda_statement_init
+			(GInstanceInitFunc) gda_statement_init,
+			0
 		};
 		
 		g_static_mutex_lock (&registering);

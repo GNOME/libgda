@@ -87,7 +87,8 @@ browser_canvas_get_type (void)
 			NULL,
 			sizeof (BrowserCanvas),
 			0,
-			(GInstanceInitFunc) browser_canvas_init
+			(GInstanceInitFunc) browser_canvas_init,
+			0
 		};		
 
 		type = g_type_register_static (GTK_TYPE_SCROLLED_WINDOW, "BrowserCanvas", &info, 0);
@@ -186,7 +187,8 @@ idle_add_canvas_cb (BrowserCanvas *canvas)
 }
 
 static void
-drag_begin_cb (BrowserCanvas *canvas, GdkDragContext *drag_context, GooCanvas *gcanvas)
+drag_begin_cb (BrowserCanvas *canvas, G_GNUC_UNUSED GdkDragContext *drag_context,
+	       G_GNUC_UNUSED GooCanvas *gcanvas)
 {
 	BrowserCanvasItem *citem;
 
@@ -202,7 +204,7 @@ drag_begin_cb (BrowserCanvas *canvas, GdkDragContext *drag_context, GooCanvas *g
 static void
 drag_data_get_cb (BrowserCanvas *canvas, GdkDragContext *drag_context,
 		  GtkSelectionData *data, guint info,
-		  guint time, GooCanvas *gcanvas)
+		  guint time, G_GNUC_UNUSED GooCanvas *gcanvas)
 {
 	BrowserCanvasItem *citem;
 
@@ -215,9 +217,9 @@ drag_data_get_cb (BrowserCanvas *canvas, GdkDragContext *drag_context,
 }
 
 static void
-drag_data_received_cb (BrowserCanvas *canvas, GdkDragContext *context,
-		       gint x, gint y, GtkSelectionData *data,
-		       guint info, guint time, GooCanvas *gcanvas)
+drag_data_received_cb (G_GNUC_UNUSED BrowserCanvas *canvas, GdkDragContext *context,
+		       gint x, gint y, G_GNUC_UNUSED GtkSelectionData *data,
+		       G_GNUC_UNUSED guint info, guint time, GooCanvas *gcanvas)
 {
 	GooCanvasItem *item;
 	item = goo_canvas_get_item_at (gcanvas, x, y, TRUE);
@@ -231,7 +233,7 @@ drag_data_received_cb (BrowserCanvas *canvas, GdkDragContext *context,
 }
 
 static gboolean
-canvas_scroll_event_cb (GooCanvas *gcanvas, GdkEvent *event, BrowserCanvas *canvas)
+canvas_scroll_event_cb (G_GNUC_UNUSED GooCanvas *gcanvas, GdkEvent *event, BrowserCanvas *canvas)
 {
 	gboolean done = TRUE;
 	GdkEventScroll *ev = (GdkEventScroll *) event;
@@ -262,7 +264,7 @@ canvas_scroll_event_cb (GooCanvas *gcanvas, GdkEvent *event, BrowserCanvas *canv
 static GdkCursor *hand_cursor = NULL;
 
 static gboolean
-motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
+motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, G_GNUC_UNUSED GooCanvas *gcanvas)
 {
 	gboolean done = TRUE;
 
@@ -437,37 +439,37 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 }
 
 static void
-popup_layout_default_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+popup_layout_default_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
 	browser_canvas_perform_auto_layout (canvas, TRUE, BROWSER_CANVAS_LAYOUT_DEFAULT);
 }
 
 static void
-popup_layout_radial_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+popup_layout_radial_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
 	browser_canvas_perform_auto_layout (canvas, TRUE, BROWSER_CANVAS_LAYOUT_RADIAL);
 }
 
 static void
-popup_zoom_in_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+popup_zoom_in_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
 	browser_canvas_set_zoom_factor (canvas, browser_canvas_get_zoom_factor (canvas) + .05);
 }
 
 static void
-popup_zoom_out_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+popup_zoom_out_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
 	browser_canvas_set_zoom_factor (canvas, browser_canvas_get_zoom_factor (canvas) - .05);
 }
 
 static void
-popup_zoom_fit_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+popup_zoom_fit_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
 	browser_canvas_fit_zoom_factor (canvas);
 }
 
 static void
-popup_export_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+popup_export_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
 	GtkWidget *dlg;
 	gint result;
@@ -586,7 +588,7 @@ popup_export_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
 }
 
 static void
-popup_print_cb (GtkMenuItem *mitem, BrowserCanvas *canvas)
+popup_print_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
 	browser_canvas_print (canvas);
 }
@@ -671,8 +673,8 @@ browser_canvas_finalize (GObject *object)
 static void 
 browser_canvas_set_property (GObject *object,
 			   guint param_id,
-			   const GValue *value,
-			   GParamSpec *pspec)
+			   G_GNUC_UNUSED const GValue *value,
+			   G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvas *canvas;
 	
@@ -685,8 +687,8 @@ browser_canvas_set_property (GObject *object,
 static void
 browser_canvas_get_property (GObject *object,
 			   guint param_id,
-			   GValue *value,
-			   GParamSpec *pspec)
+			   G_GNUC_UNUSED GValue *value,
+			   G_GNUC_UNUSED GParamSpec *pspec)
 {
 	BrowserCanvas *canvas;
 	
@@ -1029,7 +1031,7 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 
 #ifdef HAVE_GRAPHVIZ
 static gdouble
-compute_animation_inc (float start, float stop, float current)
+compute_animation_inc (float start, float stop, G_GNUC_UNUSED float current)
 {
         gdouble inc;
 #ifndef PI
@@ -1199,7 +1201,7 @@ browser_canvas_item_toggle_select (BrowserCanvas *canvas, BrowserCanvasItem *ite
 }
 
 void
-browser_canvas_translate_item (BrowserCanvas *canvas, BrowserCanvasItem *item,
+browser_canvas_translate_item (G_GNUC_UNUSED BrowserCanvas *canvas, BrowserCanvasItem *item,
 			       gdouble dx, gdouble dy)
 {
 	browser_canvas_item_translate (item, dx, dy);

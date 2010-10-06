@@ -141,7 +141,8 @@ gdaui_tree_store_get_type (void)
 			NULL,
 			sizeof (GdauiTreeStore),
 			0,
-			(GInstanceInitFunc) gdaui_tree_store_init
+			(GInstanceInitFunc) gdaui_tree_store_init,
+			0
 		};		
 
 		static const GInterfaceInfo tree_model_info = {
@@ -293,7 +294,7 @@ gdaui_tree_store_dispose (GObject *object)
 
 	if (store->priv) {
 		if (store->priv->column_specs) {
-			gint i;
+			gsize i;
 			for (i = 0; i < store->priv->column_specs->len; i++) {
 				ColumnSpec *cs;
 				cs = g_array_index (store->priv->column_specs, ColumnSpec*, i);
@@ -329,7 +330,7 @@ static void
 gdaui_tree_store_set_property (GObject *object,
 			       guint param_id,
 			       const GValue *value,
-			       GParamSpec *pspec)
+			       G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiTreeStore *store;
 
@@ -364,7 +365,7 @@ static void
 gdaui_tree_store_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  GParamSpec *pspec)
+				  G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdauiTreeStore *store;
 
@@ -402,7 +403,7 @@ gdaui_tree_store_new (GdaTree *tree, guint n_columns, ...)
 {
 	GObject *obj;
 	va_list args;
-	gint i;
+	guint i;
 	GdauiTreeStore *store;
 
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);
@@ -449,7 +450,7 @@ GtkTreeModel *
 gdaui_tree_store_newv (GdaTree *tree, guint n_columns, GType *types, const gchar **attribute_names)
 {
 	GObject *obj;
-	gint i;
+	guint i;
 	GdauiTreeStore *store;
 
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);
@@ -861,7 +862,7 @@ tree_node_has_child_toggled_cb (GdaTree *tree, GdaTreeNode *node, GdauiTreeStore
 }
 
 static void
-tree_node_deleted_cb (GdaTree *tree, const gchar *node_path, GdauiTreeStore *store)
+tree_node_deleted_cb (G_GNUC_UNUSED GdaTree *tree, const gchar *node_path, GdauiTreeStore *store)
 {
 	GtkTreePath *path;
 

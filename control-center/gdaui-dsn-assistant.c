@@ -100,7 +100,7 @@ data_source_info_free (GdaDsnInfo *info)
  */
 
 static void
-assistant_cancelled_cb (GtkAssistant *assistant, gpointer data)
+assistant_cancelled_cb (GtkAssistant *assistant, G_GNUC_UNUSED gpointer data)
 {
 	g_return_if_fail (GDAUI_IS_DSN_ASSISTANT (assistant));
 	g_signal_emit_by_name (G_OBJECT (assistant), "finished", TRUE);
@@ -108,7 +108,7 @@ assistant_cancelled_cb (GtkAssistant *assistant, gpointer data)
 }
 
 static void
-assistant_applied_cb (GtkAssistant *assist, gpointer data)
+assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 {
 	gboolean allok = TRUE;
 	GString *cnc_string = NULL;
@@ -237,7 +237,7 @@ dsn_auth_changed_cb (GdauiProviderAuthEditor *auth, GdauiDsnAssistant *assistant
 }
 
 static void
-provider_changed_cb (GtkWidget *combo, GdauiDsnAssistant *assistant)
+provider_changed_cb (G_GNUC_UNUSED GtkWidget *combo, GdauiDsnAssistant *assistant)
 {
 	GdaServerOperation *op;
 	const gchar *provider;
@@ -395,7 +395,7 @@ forward_page_function (gint current_page, GdauiDsnAssistant *assistant)
 
 static void
 gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
-			     GdauiDsnAssistantClass *klass)
+			     G_GNUC_UNUSED GdauiDsnAssistantClass *klass)
 {
 	GtkWidget *label, *vbox, *table;
 	GtkAssistant *assist;
@@ -696,7 +696,8 @@ gdaui_dsn_assistant_get_type (void)
 			NULL,
 			sizeof (GdauiDsnAssistant),
 			0,
-			(GInstanceInitFunc) gdaui_dsn_assistant_init
+			(GInstanceInitFunc) gdaui_dsn_assistant_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_ASSISTANT, "GdauiDsnAssistant",
 					       &info, 0);

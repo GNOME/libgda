@@ -104,7 +104,7 @@ gda_xslt_holder_set_value (GdaHolder *param, xsltTransformContextPtr ctxt)
 int
 gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 		     xsltTransformContextPtr ctxt, xmlNodePtr node,
-		     xmlNodePtr inst, xsltStylePreCompPtr comp)
+		     xmlNodePtr inst, G_GNUC_UNUSED xsltStylePreCompPtr comp)
 {
 	xmlNode *cur_node = NULL;
 	xmlNode *query_node = NULL;
@@ -252,8 +252,8 @@ gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
 }
 
 xmlXPathObjectPtr
-gda_xslt_bk_fun_checkif (xmlChar * setname, xmlChar * sql_condition,
-			 GdaXsltExCont * exec, GdaXsltIntCont * pdata)
+gda_xslt_bk_fun_checkif (G_GNUC_UNUSED xmlChar * setname, G_GNUC_UNUSED xmlChar * sql_condition,
+			 G_GNUC_UNUSED GdaXsltExCont * exec, G_GNUC_UNUSED GdaXsltIntCont * pdata)
 {
 	return xmlXPathNewBoolean (1);
 }
@@ -263,7 +263,7 @@ gda_xslt_bk_fun_checkif (xmlChar * setname, xmlChar * sql_condition,
 /* utility functions */
 static void
 set_resultset_value (GdaXsltIntCont * pdata, const char *resultset_name,
-		     GObject * result, GError ** error)
+		     GObject * result, G_GNUC_UNUSED GError ** error)
 {
 #ifdef GDA_DEBUG_NO
 	g_print ("new resultset: name[%s]", resultset_name);
@@ -587,12 +587,6 @@ gtype_equal (gconstpointer a, gconstpointer b)
 	return (GType) a == (GType) b ? TRUE : FALSE;
 }
 
-static guint
-gtype_hash (gconstpointer key)
-{
-	return (guint) key;
-}
-
 static xmlChar *
 value_to_xmlchar (const GValue * value)
 {
@@ -609,7 +603,7 @@ value_to_xmlchar (const GValue * value)
 	if (!data_handlers) {
 		/* initialize the internal data handlers */
 		data_handlers =
-			g_hash_table_new_full (gtype_hash, gtype_equal,
+			g_hash_table_new_full (g_direct_hash, gtype_equal,
 					       NULL, (GDestroyNotify)
 					       g_object_unref);
 

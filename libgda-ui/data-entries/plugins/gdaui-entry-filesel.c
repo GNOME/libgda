@@ -64,7 +64,8 @@ gdaui_entry_filesel_get_type (void)
 			NULL,
 			sizeof (GdauiEntryFilesel),
 			0,
-			(GInstanceInitFunc) gdaui_entry_filesel_init
+			(GInstanceInitFunc) gdaui_entry_filesel_init,
+			0
 		};
 		
 		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryFilesel", &info, 0);
@@ -182,7 +183,7 @@ gdaui_entry_filesel_finalize (GObject   * object)
 }
 
 static void
-button_clicled_cb (GtkWidget *button, GdauiEntryFilesel *filesel)
+button_clicked_cb (G_GNUC_UNUSED GtkWidget *button, GdauiEntryFilesel *filesel)
 {
 	
 	GtkWidget *dlg;
@@ -235,7 +236,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, TRUE, 5);
 	gtk_widget_show (wid);
 	g_signal_connect (G_OBJECT (wid), "clicked",
-			  G_CALLBACK (button_clicled_cb), filesel);
+			  G_CALLBACK (button_clicked_cb), filesel);
 	
 	return hbox;
 }
@@ -314,7 +315,7 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 }
 
 static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
+can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
 {
 	return FALSE;
 }

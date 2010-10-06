@@ -1,7 +1,7 @@
 #include <libgda-ui/libgda-ui.h>
 #include "../tests/data-model-errors.h"
 
-static void destroy (GtkWidget *widget, gpointer data)
+static void destroy (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 {
 	gtk_main_quit ();
 }

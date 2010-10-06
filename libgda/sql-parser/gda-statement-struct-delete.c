@@ -40,6 +40,10 @@ GdaSqlStatementContentsInfo delete_infos = {
 	gda_sql_statement_delete_serialize,
 
 	gda_sql_statement_delete_check_structure,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
 	NULL
 };
 
@@ -152,7 +156,7 @@ gda_sql_statement_delete_take_condition (GdaSqlStatement *stmt, GdaSqlExpr *cond
 }
 
 static gboolean
-gda_sql_statement_delete_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+gda_sql_statement_delete_check_structure (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	GdaSqlStatementDelete *delete = (GdaSqlStatementDelete *) stmt;
 	if (!delete->table) {

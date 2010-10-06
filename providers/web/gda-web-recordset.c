@@ -62,7 +62,7 @@ static GObjectClass *parent_class = NULL;
  */
 static void
 gda_web_recordset_init (GdaWebRecordset *recset,
-			   GdaWebRecordsetClass *klass)
+			   G_GNUC_UNUSED GdaWebRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_WEB_RECORDSET (recset));
 	recset->priv = g_new0 (GdaWebRecordsetPrivate, 1);
@@ -137,7 +137,8 @@ gda_web_recordset_get_type (void)
 			NULL,
 			sizeof (GdaWebRecordset),
 			0,
-			(GInstanceInitFunc) gda_web_recordset_init
+			(GInstanceInitFunc) gda_web_recordset_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

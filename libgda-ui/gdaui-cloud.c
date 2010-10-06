@@ -104,7 +104,8 @@ gdaui_cloud_get_type (void)
 			NULL,
 			sizeof (GdauiCloud),
 			0,
-			(GInstanceInitFunc) gdaui_cloud_init
+			(GInstanceInitFunc) gdaui_cloud_init,
+			0
 		};
 
 		static const GInterfaceInfo selector_info = {
@@ -441,7 +442,7 @@ gdaui_cloud_dispose (GObject *object)
 }
 
 static void
-model_reset_cb (GdaDataModel *model, GdauiCloud *cloud)
+model_reset_cb (G_GNUC_UNUSED GdaDataModel *model, GdauiCloud *cloud)
 {
 	update_display (cloud);
 }
@@ -723,7 +724,7 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, GdauiCloud *c
  * (e.g. when a window covering it got iconified).
  */
 static gboolean
-visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, GdauiCloud *cloud)
+visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility *event, GdauiCloud *cloud)
 {
 	gint wx, wy, bx, by;
 
@@ -761,7 +762,7 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, GdauiCloud *cl
  * by the data attached to it.
  */
 static void
-follow_if_link (GtkWidget *text_view, GtkTextIter *iter, GdauiCloud *cloud)
+follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, GdauiCloud *cloud)
 {
 	GSList *tags = NULL, *tagp;
 	
@@ -1231,7 +1232,8 @@ cloud_selector_unselect_row (GdauiDataSelector *iface, gint row)
 }
 
 static void
-cloud_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible)
+cloud_selector_set_column_visible (G_GNUC_UNUSED GdauiDataSelector *iface, G_GNUC_UNUSED gint column,
+				   G_GNUC_UNUSED gboolean visible)
 {
 	/* nothing to do */
 }

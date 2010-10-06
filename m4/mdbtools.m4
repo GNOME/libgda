@@ -15,7 +15,7 @@ dnl DESCRIPTION
 dnl
 dnl   This macro tries to find the MDBTools libraries and header files
 dnl
-dnl   It defined two options:
+dnl   It defines two options:
 dnl   --with-mdb=yes/no/<directory>
 dnl   --with-mdb-libdir-name=<dir. name>
 dnl
@@ -25,7 +25,7 @@ dnl
 dnl   If the 1st option is "no" then the macro does not attempt at locating the
 dnl   mdbtools package
 dnl
-dnl   If the 1st option is a drectory name, then the macro tries to locate the mdbtools package
+dnl   If the 1st option is a directory name, then the macro tries to locate the mdbtools package
 dnl   in the specified directory.
 dnl
 dnl   If the macro has to try to locate the mdbtools package in one or more directories, it will
@@ -48,7 +48,6 @@ dnl    mdbtools_found=yes/no
 dnl
 dnl   and if the mdbtools package is found:
 dnl
-dnl    AC_DEFINE(HAVE_MDB, 1, [Have MDB])
 dnl    AM_CONDITIONAL(MDB, true)
 dnl    AC_DEFINE(MDB_WITH_WRITE_SUPPORT,[1],[define if mdb_open accepts MDB_WRITABLE])
 dnl    AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS,[1],[define if mdb_bind_column accepts four args])
@@ -67,9 +66,28 @@ m4_define([_MDBTOOLS_CHECK_INTERNAL],
     AC_BEFORE([AM_PROG_LIBTOOL],[$0])dnl setup libtool first
     AC_BEFORE([LT_INIT],[$0])dnl setup libtool first
 
-    m4_if([$1],[],[mdb_loclibdir=lib],[mdb_loclibdir=$1])
-    m4_if([$2],[],[mdb_glib_cflags=`$PKG_CONFIG --cflags glib-2.0`],[mdb_glib_cflags=$1])
-    m4_if([$3],[],[mdb_glib_libs=`$PKG_CONFIG --libs glib-2.0`],[mdb_glib_libs=$2])
+    mdb_loclibdir=$1
+    if test "x$mdb_loclibdir" = x
+    then
+        if test "x$platform_win32" = xyes
+	then
+	    mdb_loclibdir=bin
+	else
+	    mdb_loclibdir=lib
+	fi
+    fi
+
+    mdb_glib_cflags=$2
+    if test "x$mdb_glib_cflags" = x
+    then
+	mdb_glib_cflags=`$PKG_CONFIG --cflags glib-2.0`
+    fi
+
+    mdb_glib_libs=$3
+    if test "x$mdb_glib_libs" = x
+    then
+	mdb_glib_libs=`$PKG_CONFIG --libs glib-2.0`
+    fi
 
     # determine if MDBTools should be searched for
     # and use pkg-config if the "yes" option is used
@@ -138,7 +156,7 @@ int main() {
 		    then
 		        AC_MSG_RESULT([found])
 			MDB_CFLAGS=-I${mdbdir}/include
-	    		MDB_LIBS="-L${mdbdir}/lib -lmdb"
+	    		MDB_LIBS="-L${mdbdir}/$mdb_loclibdir -lmdb"
 		        break
   		    else
 		        AC_MSG_RESULT([not found])
@@ -152,10 +170,7 @@ int main() {
 	if test "x$MDB_LIBS" = x
 	then
 	    AC_MSG_NOTICE([MDB backend not used])
-	    AM_CONDITIONAL(MDB,[false])
 	else
-	    AC_DEFINE(HAVE_MDB,[1],[Have MDB])
-	    AM_CONDITIONAL(MDB,[true])
     	    mdbtools_found=yes
 
   	    save_CFLAGS="$CFLAGS"
@@ -199,6 +214,7 @@ int main() {
 	fi
     fi
 
+    AM_CONDITIONAL(MDB,[test "$mdbtools_found" = "yes"])
     AC_SUBST(MDB_LIBS)
     AC_SUBST(MDB_CFLAGS)
 ])

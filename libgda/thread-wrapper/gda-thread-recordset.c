@@ -61,7 +61,7 @@ static GObjectClass *parent_class = NULL;
  */
 static void
 gda_thread_recordset_init (GdaThreadRecordset *recset,
-			   GdaThreadRecordsetClass *klass)
+			   G_GNUC_UNUSED GdaThreadRecordsetClass *klass)
 {
 	g_return_if_fail (GDA_IS_THREAD_RECORDSET (recset));
 	recset->priv = g_new0 (GdaThreadRecordsetPrivate, 1);
@@ -139,7 +139,8 @@ _gda_thread_recordset_get_type (void)
 			NULL,
 			sizeof (GdaThreadRecordset),
 			0,
-			(GInstanceInitFunc) gda_thread_recordset_init
+			(GInstanceInitFunc) gda_thread_recordset_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -198,7 +199,7 @@ _gda_thread_recordset_new (GdaConnection *cnc, GdaThreadWrapper *wrapper, GdaDat
  * fetch nb rows
  */
 static gpointer
-sub_thread_fetch_nb_rows (GdaDataSelect *model, GError **error)
+sub_thread_fetch_nb_rows (GdaDataSelect *model, G_GNUC_UNUSED GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	gint retval;

@@ -76,7 +76,7 @@ gda_virtual_provider_class_init (GdaVirtualProviderClass *klass)
 }
 
 static void
-gda_virtual_provider_init (GdaVirtualProvider *vprov, GdaVirtualProviderClass *klass)
+gda_virtual_provider_init (GdaVirtualProvider *vprov, G_GNUC_UNUSED GdaVirtualProviderClass *klass)
 {
 	vprov->priv = g_new (GdaVirtualProviderPrivate, 1);
 }
@@ -120,7 +120,8 @@ gda_virtual_provider_get_type (void)
 				NULL, NULL,
 				sizeof (GdaVirtualProvider),
 				0,
-				(GInstanceInitFunc) gda_virtual_provider_init
+				(GInstanceInitFunc) gda_virtual_provider_init,
+				0
 			};
 			
 		g_static_mutex_lock (&registering);
@@ -136,8 +137,8 @@ gda_virtual_provider_get_type (void)
 static void
 gda_virtual_provider_set_property (GObject *object,
 				   guint param_id,
-				   const GValue *value,
-				   GParamSpec *pspec)
+				   G_GNUC_UNUSED const GValue *value,
+				   G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVirtualProvider *prov;
 
@@ -153,8 +154,8 @@ gda_virtual_provider_set_property (GObject *object,
 static void
 gda_virtual_provider_get_property (GObject *object,
 				 guint param_id,
-				 GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GValue *value,
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
         GdaVirtualProvider *prov;
 

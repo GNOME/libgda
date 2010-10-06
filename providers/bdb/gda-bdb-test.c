@@ -30,7 +30,8 @@ static void
 create_db (const gchar *filename)
 {
 	DB *dbp;
-	int ret, i;
+	gint ret;
+	gsize i;
 	
 	g_print ("Creating BDB database in '%s'\n", filename);
 	g_assert (db_create (&dbp, NULL, 0) == 0);
@@ -129,7 +130,7 @@ gda_stuff (gpointer filename)
 	gda_connection_close (cnc);
 }
 
-int main (int argc, char **argv)
+int main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	gda_init ();
 	create_db (DB_FILE);

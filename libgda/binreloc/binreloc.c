@@ -172,7 +172,12 @@ _br_find_exe (GbrInitError *error)
  * Returns a filename which must be freed, or NULL on error.
  */
 static char *
-_br_find_exe_for_symbol (const void *symbol, GbrInitError *error)
+_br_find_exe_for_symbol (
+#ifndef ENABLE_BINRELOC
+			 G_GNUC_UNUSED const void *symbol, GbrInitError *error)
+#else
+			 const void *symbol, GbrInitError *error)
+#endif
 {
 #ifndef ENABLE_BINRELOC
 	if (error)

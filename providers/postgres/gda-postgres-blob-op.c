@@ -62,7 +62,8 @@ gda_postgres_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaPostgresBlobOp),
 			0,
-			(GInstanceInitFunc) gda_postgres_blob_op_init
+			(GInstanceInitFunc) gda_postgres_blob_op_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -74,7 +75,7 @@ gda_postgres_blob_op_get_type (void)
 
 static void
 gda_postgres_blob_op_init (GdaPostgresBlobOp *op,
-			   GdaPostgresBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaPostgresBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_POSTGRES_BLOB_OP (op));
 

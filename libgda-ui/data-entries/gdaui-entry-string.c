@@ -25,7 +25,7 @@
 #include <libgda/gda-data-handler.h>
 #include "gdk/gdkkeysyms.h"
 
-#define MAX_ACCEPTED_STRING_LENGTH 500
+#define MAX_ACCEPTED_STRING_LENGTH 500U
 
 /* 
  * Main static functions 
@@ -113,7 +113,8 @@ gdaui_entry_string_get_type (void)
 			NULL,
 			sizeof (GdauiEntryString),
 			0,
-			(GInstanceInitFunc) gdaui_entry_string_init
+			(GInstanceInitFunc) gdaui_entry_string_init,
+			0
 		};
 		
 		static const GInterfaceInfo cell_editable_info = {
@@ -160,7 +161,7 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 }
 
 static gboolean
-key_press_event_cb (GdauiEntryString *mgstr, GdkEventKey *key_event, gpointer data)
+key_press_event_cb (GdauiEntryString *mgstr, GdkEventKey *key_event, G_GNUC_UNUSED gpointer data)
 {
 	if (key_event->keyval == GDK_KEY_Escape)
 		mgstr->priv->editing_canceled = TRUE;
@@ -480,7 +481,7 @@ focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryString *mgstr)
 	g_assert (activate_cb);
 	((Callback2)activate_cb) (widget, mgstr);
 
-	return FALSE;
+	return gtk_widget_event (GTK_WIDGET (mgstr), (GdkEvent*) event);
 }
 
 static void
@@ -555,13 +556,13 @@ grab_focus (GdauiEntryWrapper *mgwrap)
  * GtkCellEditable interface
  */
 static void
-gtk_cell_editable_entry_editing_done_cb (GtkEntry *entry, GdauiEntryString *mgstr) 
+gtk_cell_editable_entry_editing_done_cb (G_GNUC_UNUSED GtkEntry *entry, GdauiEntryString *mgstr)
 {
 	gtk_cell_editable_editing_done (GTK_CELL_EDITABLE (mgstr));
 }
 
 static void
-gtk_cell_editable_entry_remove_widget_cb (GtkEntry *entry, GdauiEntryString *mgstr) 
+gtk_cell_editable_entry_remove_widget_cb (G_GNUC_UNUSED GtkEntry *entry, GdauiEntryString *mgstr)
 {
 	gtk_cell_editable_remove_widget (GTK_CELL_EDITABLE (mgstr));
 }

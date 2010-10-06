@@ -69,7 +69,7 @@ gdaui_login_dialog_class_init (GdauiLoginDialogClass *klass)
 }
 
 static void
-login_changed_cb (GdauiLogin *login, gboolean valid, GdauiLoginDialog *dialog)
+login_changed_cb (GdauiLogin *login, G_GNUC_UNUSED gboolean valid, GdauiLoginDialog *dialog)
 {
 	gchar *str;
 	const GdaDsnInfo *cinfo;
@@ -94,7 +94,7 @@ login_changed_cb (GdauiLogin *login, gboolean valid, GdauiLoginDialog *dialog)
 }
 
 static void
-gdaui_login_dialog_init (GdauiLoginDialog *dialog, GdauiLoginDialogClass *klass)
+gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialogClass *klass)
 {
 	GtkWidget *hbox, *vbox, *image, *label;
 	GtkWidget *nb;
@@ -170,7 +170,7 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, GdauiLoginDialogClass *klass)
 static void
 gdaui_login_dialog_set_property (GObject *object,
 				    guint param_id,
-				    const GValue *value,
+				    G_GNUC_UNUSED const GValue *value,
 				    GParamSpec *pspec)
 {
 	GdauiLoginDialog *dialog = (GdauiLoginDialog *) object;
@@ -187,7 +187,7 @@ gdaui_login_dialog_set_property (GObject *object,
 static void
 gdaui_login_dialog_get_property (GObject *object,
 				    guint param_id,
-				    GValue *value,
+				    G_GNUC_UNUSED GValue *value,
 				    GParamSpec *pspec)
 {
 	GdauiLoginDialog *dialog = (GdauiLoginDialog *) object;
@@ -230,7 +230,8 @@ gdaui_login_dialog_get_type (void)
 			NULL,
 			sizeof (GdauiLoginDialog),
 			0,
-			(GInstanceInitFunc) gdaui_login_dialog_init
+			(GInstanceInitFunc) gdaui_login_dialog_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_DIALOG, "GdauiLoginDialog", &info, 0);
 	}

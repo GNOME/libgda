@@ -97,7 +97,7 @@ gdaui_provider_auth_editor_class_init (GdauiProviderAuthEditorClass *klass)
 }
 
 static void
-auth_form_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modif,
+auth_form_changed (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param, gboolean is_user_modif,
 		   GdauiProviderAuthEditor *auth)
 {
 	if (! is_user_modif)
@@ -107,7 +107,8 @@ auth_form_changed (GdauiBasicForm *form, GdaHolder *param, gboolean is_user_modi
 }
 
 static void
-gdaui_provider_auth_editor_init (GdauiProviderAuthEditor *auth, GdauiProviderAuthEditorClass *klass)
+gdaui_provider_auth_editor_init (GdauiProviderAuthEditor *auth,
+				 G_GNUC_UNUSED GdauiProviderAuthEditorClass *klass)
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_AUTH_EDITOR (auth));
 
@@ -146,7 +147,7 @@ static void
 gdaui_provider_auth_editor_set_property (GObject *object,
                                             guint param_id,
                                             const GValue *value,
-                                            GParamSpec *pauth)
+                                            G_GNUC_UNUSED GParamSpec *pauth)
 {
 	GdauiProviderAuthEditor *auth;
 	auth = GDAUI_PROVIDER_AUTH_EDITOR (object);
@@ -162,7 +163,7 @@ static void
 gdaui_provider_auth_editor_get_property (GObject *object,
                                             guint param_id,
                                             GValue *value,
-                                            GParamSpec *pauth)
+                                            G_GNUC_UNUSED GParamSpec *pauth)
 {
 	GdauiProviderAuthEditor *auth;
 	auth = GDAUI_PROVIDER_AUTH_EDITOR (object);
@@ -189,7 +190,8 @@ _gdaui_provider_auth_editor_get_type (void)
 			NULL,
 			sizeof (GdauiProviderAuthEditor),
 			0,
-			(GInstanceInitFunc) gdaui_provider_auth_editor_init
+			(GInstanceInitFunc) gdaui_provider_auth_editor_init,
+			0
 		};
 		type = g_type_from_name ("GdauiProviderAuthEditor");
 		if (type == 0)

@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<data-set-spec>
-  <parameters>
-    <parameter id="FILENAME" _name="File Name" _descr="Full path to the file containing the database" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="DIRECTORY" _name="Directory" _descr="Directory containing the xBase files" gdatype="gchararray"/>
-  </parameters>
-</data-set-spec>

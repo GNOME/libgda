@@ -272,7 +272,7 @@ cc_gray_bar_class_init (CcGrayBarClass *klass)
 }
 
 static void
-cc_gray_bar_init (CcGrayBar *bar, CcGrayBarClass *klass)
+cc_gray_bar_init (CcGrayBar *bar, G_GNUC_UNUSED CcGrayBarClass *klass)
 {
 	gtk_widget_set_has_window (GTK_WIDGET (bar), TRUE);
 
@@ -379,7 +379,8 @@ cc_gray_bar_get_type (void)
 			NULL,
 			sizeof (CcGrayBar),
 			0,
-			(GInstanceInitFunc) cc_gray_bar_init
+			(GInstanceInitFunc) cc_gray_bar_init,
+			0
 		};
 		type = g_type_register_static (GTK_TYPE_BIN, "CcGrayBar", &info, 0);
 	}

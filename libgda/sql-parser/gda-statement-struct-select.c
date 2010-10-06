@@ -37,7 +37,11 @@ GdaSqlStatementContentsInfo select_infos = {
 	_gda_sql_statement_select_serialize,
 
 	gda_sql_statement_select_check_structure,
-	gda_sql_statement_select_check_validity
+	gda_sql_statement_select_check_validity,
+	NULL,
+	NULL,
+	NULL,
+	NULL
 };
 
 GdaSqlStatementContentsInfo *
@@ -392,7 +396,7 @@ gda_sql_statement_select_take_limits (GdaSqlStatement *stmt, GdaSqlExpr *count, 
 }
 
 static gboolean
-gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
 	if (!select->expr_list) {
@@ -422,7 +426,7 @@ gda_sql_statement_select_check_structure (GdaSqlAnyPart *stmt, gpointer data, GE
 }
 
 static gboolean
-gda_sql_statement_select_check_validity (GdaSqlAnyPart *stmt, gpointer data, GError **error)
+gda_sql_statement_select_check_validity (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpointer data, GError **error)
 {
 	GdaSqlStatementSelect *select = (GdaSqlStatementSelect *) stmt;
 	gboolean retval = TRUE;

@@ -100,20 +100,21 @@ browser_canvas_print (BrowserCanvas *canvas)
 }
 
 static void
-print_begin (GtkPrintOperation *operation, GtkPrintContext *context, PrintPageData *pdata)
+print_begin (GtkPrintOperation *operation, G_GNUC_UNUSED GtkPrintContext *context, PrintPageData *pdata)
 {
 	gtk_print_operation_set_n_pages (operation, pdata->h_npages * pdata->v_npages);
 	gtk_print_operation_set_default_page_setup (operation, pdata->page_setup);
 }
 
 static void
-print_end (GtkPrintOperation *operation, GtkPrintContext *context, PrintPageData *pdata)
+print_end (G_GNUC_UNUSED GtkPrintOperation *operation, G_GNUC_UNUSED GtkPrintContext *context,
+	   G_GNUC_UNUSED PrintPageData *pdata)
 {
 	
 }
 
 static void
-print_draw_page (GtkPrintOperation *operation, GtkPrintContext *context, gint page_nr, PrintPageData *pdata)
+print_draw_page (G_GNUC_UNUSED GtkPrintOperation *operation, GtkPrintContext *context, gint page_nr, PrintPageData *pdata)
 {
 	cairo_t *cr;
 	GooCanvasBounds bounds, canvas_bounds;
@@ -218,7 +219,7 @@ static void print_zoom_value_changed_cb (GtkSpinButton *entry, PrintCustomData *
 static void print_page_numbers_toggled_cb (GtkToggleButton *toggle, PrintCustomData *cdata);
 
 static GObject *
-print_create_custom_widget_cb (GtkPrintOperation *operation, PrintPageData *pdata)
+print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, PrintPageData *pdata)
 {
 	GtkWidget *vbox, *bbox, *button, *label, *hbox, *table, *entry;
 	PrintCustomData *cdata;

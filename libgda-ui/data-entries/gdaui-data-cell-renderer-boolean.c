@@ -110,6 +110,7 @@ gdaui_data_cell_renderer_boolean_get_type (void)
 			sizeof (GdauiDataCellRendererBoolean),
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gdaui_data_cell_renderer_boolean_init,
+			0
 		};
 
 		cell_type =

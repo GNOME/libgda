@@ -63,7 +63,8 @@ gda_jdbc_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaJdbcBlobOp),
 			0,
-			(GInstanceInitFunc) gda_jdbc_blob_op_init
+			(GInstanceInitFunc) gda_jdbc_blob_op_init,
+			0
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -75,7 +76,7 @@ gda_jdbc_blob_op_get_type (void)
 
 static void
 gda_jdbc_blob_op_init (GdaJdbcBlobOp *op,
-			   GdaJdbcBlobOpClass *klass)
+			   G_GNUC_UNUSED GdaJdbcBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_JDBC_BLOB_OP (op));
 
