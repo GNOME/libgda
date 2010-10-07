@@ -148,11 +148,11 @@ gda_handler_bin_dispose (GObject   * object)
 }
 
 /**
- * gda_handler_bin_new
+ * gda_handler_bin_new:
  *
  * Creates a data handler for binary values
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_bin_new (void)

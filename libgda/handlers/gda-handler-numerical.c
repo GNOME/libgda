@@ -160,11 +160,11 @@ gda_handler_numerical_dispose (GObject *object)
 }
 
 /**
- * gda_handler_numerical_new
+ * gda_handler_numerical_new:
  *
  * Creates a data handler for numerical values
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_numerical_new (void)

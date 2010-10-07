@@ -1052,7 +1052,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 }
 
 /**
- * gda_server_operation_get_node_info:
+ * gda_server_operation_get_node_info: (skip):
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/") as a format string, similar to g_strdup_printf()'s argument
  * @...: the arguments to insert into the format string
@@ -1060,7 +1060,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
  * Get information about the node identified by @path. The returned #GdaServerOperationNode structure can be 
  * copied but not modified; it may change or cease to exist if @op changes
  *
- * Returns: (transfer none): a #GdaServerOperationNode structure, or %NULL if the node was not found
+ * Returns: (transfer none) (allow-none): a #GdaServerOperationNode structure, or %NULL if the node was not found
  */
 GdaServerOperationNode *
 gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_format, ...)
@@ -1293,7 +1293,7 @@ gda_server_operation_string_to_op_type (const gchar *str)
 static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent);
 
 /**
- * gda_server_operation_save_data_to_xml:
+ * gda_server_operation_save_data_to_xml: (skip):
  * @op: a #GdaServerOperation object
  * @error: (allow-none): a place to store errors or %NULL
  * 

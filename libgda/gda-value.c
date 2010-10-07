@@ -542,6 +542,11 @@ gda_geometricpoint_get_type (void)
 	return type;
 }
 
+/**
+ * gda_geometricpoint_copy:
+ *
+ * Returns: (transfer full):
+ */
 gpointer 
 gda_geometricpoint_copy (gpointer boxed)
 {
@@ -926,6 +931,11 @@ gda_time_get_type(void)
 	return type;
 }
 
+/**
+ * gda_time_copy:
+ *
+ * Returns: (transfer full):
+ */
 gpointer
 gda_time_copy (gpointer boxed)
 {
@@ -1059,6 +1069,11 @@ gda_timestamp_get_type (void)
 	return type;
 }
 
+/**
+ * gda_timestamp_copy:
+ *
+ * Returns: (transfer full):
+ */
 gpointer 
 gda_timestamp_copy (gpointer boxed)
 {
@@ -2425,7 +2440,7 @@ to_string (const GValue *value)
 
 
 /**
- * gda_value_to_xml:
+ * gda_value_to_xml: (skip):
  * @value: a #GValue.
  *
  * Serializes the given #GValue to an XML node string.

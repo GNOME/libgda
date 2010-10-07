@@ -52,7 +52,7 @@ GQuark gda_easy_error_quark (void)
  * If @db_name is left %NULL, then the name of the database to create will have to be set in the
  * returned #GdaServerOperation using gda_server_operation_set_value_at().
  *
- * Returns: new #GdaServerOperation object, or %NULL if the provider does not support database
+ * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
  * creation
  */
 GdaServerOperation *
@@ -121,7 +121,7 @@ gda_perform_create_database (const gchar *provider, GdaServerOperation *op, GErr
  * If @db_name is left %NULL, then the name of the database to drop will have to be set in the
  * returned #GdaServerOperation using gda_server_operation_set_value_at().
  *
- * Returns: new #GdaServerOperation object, or %NULL if the provider does not support database
+ * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
  * destruction
  */
 GdaServerOperation *
@@ -185,7 +185,7 @@ gda_perform_drop_database (const gchar *provider, GdaServerOperation *op, GError
  * 
  * Execute a SQL SELECT command over an opened connection.
  *
- * Returns: a new #GdaDataModel if successful, NULL otherwise
+ * Returns: (transfer full) (allow-none): a new #GdaDataModel if successful, NULL otherwise
  */
 GdaDataModel *          
 gda_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error)
@@ -278,7 +278,7 @@ gda_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **e
  * or #gda_server_operation_perform_operation
  * in order to execute the operation.
  * 
- * Returns: a #GdaServerOperation if no errors; NULL and set @error otherwise
+ * Returns: (transfer full) (allow-none): a #GdaServerOperation if no errors; NULL and set @error otherwise
  */
 GdaServerOperation*
 gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **error, ...)
@@ -469,7 +469,7 @@ gda_perform_create_table (GdaServerOperation *op, GError **error)
  * This is just a convenient function to create a #GdaServerOperation to drop a 
  * table in an opened connection.
  *
- * Returns: a new #GdaServerOperation or NULL if couldn't create the opereration.
+ * Returns: (transfer full) (allow-none): a new #GdaServerOperation or NULL if couldn't create the opereration.
  */
 GdaServerOperation*
 gda_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
@@ -1051,7 +1051,7 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 }
 
 /**
- * gda_parse_sql_string
+ * gda_parse_sql_string:
  * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @sql: an SQL command to parse, not %NULL
  * @params: (out) (allow-none) (transfer full): a place to store a new #GdaSet, for parameters used in SQL command, or %NULL
@@ -1059,7 +1059,7 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
  *
  * This function helps to parse a SQL witch use paramenters and store them at @params.
  *
- * Returns: a #GdaStatement representing the SQL command, or %NULL if an error occurred
+ * Returns: (transfer full) (allow-none): a #GdaStatement representing the SQL command, or %NULL if an error occurred
  *
  * Since: 4.2
  */

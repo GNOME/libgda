@@ -205,7 +205,7 @@ _gda_statement_get_internal_struct (GdaStatement *stmt)
  * 
  * Copy constructor
  *
- * Returns: a the new copy of @orig
+ * Returns: (transfer full): a the new copy of @orig
  */
 GdaStatement *
 gda_statement_copy (GdaStatement *orig)

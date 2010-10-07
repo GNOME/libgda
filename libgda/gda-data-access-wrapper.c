@@ -358,7 +358,7 @@ gda_data_access_wrapper_get_property (GObject *object,
  * Creates a new #GdaDataModel object which buffers the rows of @model. This object is useful
  * only if @model can only be accessed using cursor based method.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_access_wrapper_new (GdaDataModel *model)

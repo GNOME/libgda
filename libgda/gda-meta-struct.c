@@ -1608,7 +1608,7 @@ gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, co
 }
 
 /**
- * gda_meta_struct_get_table_column
+ * gda_meta_struct_get_table_column: (skip):
  * @mstruct: a #GdaMetaStruct object
  * @table: the #GdaMetaTable structure to find the column for
  * @col_name: the name of the column to find (as a G_TYPE_STRING GValue)
@@ -2342,8 +2342,8 @@ gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attr
 /**
  * gda_meta_table_column_foreach_attribute:
  * @tcol: a #GdaMetaTableColumn
- * @func: a #GdaAttributesManagerFunc function
- * @data: user data to be passed as last argument of @func each time it is called
+ * @func: (scope call): a #GdaAttributesManagerFunc function
+ * @data: (closure): user data to be passed as last argument of @func each time it is called
  *
  * Calls @func for each attribute set to tcol
  */

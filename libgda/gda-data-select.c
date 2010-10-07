@@ -788,7 +788,7 @@ gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
  *
  * Get the #GdaRow object stored within @model at row @rownum (without taking care of removed rows)
  *
- * Returns: (tranfer none): the requested #GdaRow, or %NULL if not found
+ * Returns: (transfer none): the requested #GdaRow, or %NULL if not found
  */
 GdaRow *
 gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
@@ -811,7 +811,7 @@ gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
  * Get a pointer to the #GdaConnection object which was used when @model was created
  * (and which may be used internally by @model).
  *
- * Returns: (tranfer none): a pointer to the #GdaConnection, or %NULL
+ * Returns: (transfer none): a pointer to the #GdaConnection, or %NULL
  */
 GdaConnection *
 gda_data_select_get_connection (GdaDataSelect *model)

@@ -36,7 +36,7 @@ struct _GdaMutex {
 };
 
 /**
- * gda_mutex_new:
+ * gda_mutex_new: (skip):
  *
  * Creates a new #GdaMutex.
  *

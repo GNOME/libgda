@@ -777,7 +777,7 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 }
 
 /**
- * gda_thread_wrapper_fetch_result
+ * gda_thread_wrapper_fetch_result:
  * @wrapper: a #GdaThreadWrapper object
  * @may_lock: TRUE if this funct must lock the caller untill a result is available
  * @exp_id: ID of the job for which a result is expected
@@ -786,7 +786,7 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
  * Use this method to check if the execution of a function is finished. The function's execution must have
  * been requested using gda_thread_wrapper_execute().
  *
- * Returns: the pointer returned by the execution, or %NULL if no result is available
+ * Returns: (transfer none) (allow-none): the pointer returned by the execution, or %NULL if no result is available
  *
  * Since: 4.2
  */
@@ -993,7 +993,7 @@ worker_thread_closure_marshal_anythread (GClosure *closure,
 }
 
 /**
- * gda_thread_wrapper_connect_raw
+ * gda_thread_wrapper_connect_raw:
  * @wrapper: a #GdaThreadWrapper object
  * @instance: the instance to connect to
  * @sig_name: a string of the form "signal-name::detail"
@@ -1006,8 +1006,8 @@ worker_thread_closure_marshal_anythread (GClosure *closure,
  *    been emitted when a job created for the calling thread is being executed, and to %FALSE
  *    if @callback has to be called whenever the @sig_name signal is emitted by @instance. Note that
  *    this argument is not taken into account if @private_thread is set to %FALSE.
- * @callback: a #GdaThreadWrapperCallback function
- * @data: data to pass to @callback's calls
+ * @callback: (scope call): a #GdaThreadWrapperCallback function
+ * @data: (closure): data to pass to @callback's calls
  *
  * Connects a callback function to a signal for a particular object. The difference with g_signal_connect() and
  * similar functions are:

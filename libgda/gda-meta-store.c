@@ -830,7 +830,7 @@ gda_meta_store_set_identifiers_style (GdaMetaStore *store, GdaSqlIdentifierStyle
 /**
  * gda_meta_store_set_reserved_keywords_func:
  * @store: a #GdaMetaStore object
- * @func: (allow-none): a #GdaSqlReservedKeywordsFunc function, or %NULL
+ * @func: (allow-none) (scope call): a #GdaSqlReservedKeywordsFunc function, or %NULL
  *
  * Specifies a function which @store will use to determine if a keyword is an SQL reserved
  * keyword or not.
@@ -3241,7 +3241,7 @@ gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table
  * are respected: if table B has a foreign key on table A, then table A will be listed before table B in the returned
  * list.
  *
- * Returns: (transfer container) (element type gchar*): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
+ * Returns: (transfer container) (element-type utf8): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
  */
 GSList *
 gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
@@ -3281,7 +3281,7 @@ gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
  * are respected: if table B has a foreign key on table A, then table A will be listed before table B in the returned
  * list.
  *
- * Returns: (transfer container) (element type gchar*): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
+ * Returns: (transfer container) (element-type utf8): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
  */
 GSList *
 gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table_name)

@@ -169,7 +169,7 @@ gda_batch_new (void)
  * 
  * Copy constructor
  *
- * Returns: a the new copy of @orig
+ * Returns: (transfer full): a the new copy of @orig
  */
 GdaBatch *
 gda_batch_copy (GdaBatch *orig)
@@ -387,7 +387,7 @@ gda_batch_get_statements (GdaBatch *batch)
 /**
  * gda_batch_get_parameters:
  * @batch: a #GdaBatch object
- * @out_params: (out) (tranfer full) (allow-none): a place to store a new #GdaSet object, or %NULL
+ * @out_params: (out) (transfer full) (allow-none): a place to store a new #GdaSet object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get a new #GdaSet object which groups all the execution parameters

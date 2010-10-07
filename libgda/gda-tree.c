@@ -637,7 +637,7 @@ build_node_path (GdaTree *tree, GdaTreeNode *node, GArray *array)
 }
 
 /**
- * gda_tree_get_node
+ * gda_tree_get_node:
  * @tree: a #GdaTree object
  * @tree_path: full path to the required nodes (if @use_names is %TRUE, then it must start with '/')
  * @use_names: if %TRUE, then @tree_path will be interpreted as a unix style path, and if %FALSE,
@@ -645,7 +645,7 @@ build_node_path (GdaTree *tree, GdaTreeNode *node, GArray *array)
  *
  * Locates a #GdaTreeNode using the @tree_path path.
  *
- * Returns: (transfer none): the requested #GdaTreeNode pointer, or %NULL if not found
+ * Returns: (transfer none) (allow-none): the requested #GdaTreeNode pointer, or %NULL if not found
  *
  * Since: 4.2
  */

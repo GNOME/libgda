@@ -145,11 +145,11 @@ gda_handler_type_dispose (GObject   * object)
 }
 
 /**
- * gda_handler_type_new
+ * gda_handler_type_new:
  *
  * Creates a data handler for Gda types
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_type_new (void)

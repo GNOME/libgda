@@ -566,6 +566,12 @@ gda_server_provider_test_schema_model (GdaDataModel *model, GdaConnectionSchema 
 	return TRUE;
 }
 
+/**
+ * gda_server_provider_handler_find:
+ *
+ * Returns: (transfer none):
+ *
+ */
 GdaDataHandler *
 gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc, 
 				  GType g_type, const gchar *dbms_type)

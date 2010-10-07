@@ -303,7 +303,7 @@ _gda_tree_manager_update_children (GdaTreeManager *manager, GdaTreeNode *node, c
 
 /**
  * gda_tree_manager_new_with_func:
- * @update_func: the function to call when the manager object is requested to create or update its list of
+ * @update_func: (scope call): the function to call when the manager object is requested to create or update its list of
  * #GdaTreeNode nodes
  *
  * Use this method to create a new #GdaTreeManager if it's more convenient than subclassing; all is needed
@@ -439,7 +439,7 @@ gda_tree_manager_get_managers (GdaTreeManager *manager)
 /**
  * gda_tree_manager_set_node_create_func:
  * @manager: a #GdaTreeManager tree manager object
- * @func: (allow-none): a #GdaTreeManagerNodeFunc function pointer, or %NULL
+ * @func: (allow-none) (scope call): a #GdaTreeManagerNodeFunc function pointer, or %NULL
  *
  * Sets the function to be called when a new node is being created by @manager. If @func is %NULL
  * then each created node will be a #GdaTreeNode object.
@@ -457,12 +457,12 @@ gda_tree_manager_set_node_create_func (GdaTreeManager *manager, GdaTreeManagerNo
 }
 
 /**
- * gda_tree_manager_get_node_create_func:
+ * gda_tree_manager_get_node_create_func: (skip):
  * @manager: a #GdaTreeManager tree manager object
  *
  * Get the function used by @manager when creating new #GdaTreeNode nodes
  *
- * Returns: (transfer none): the #GdaTreeManagerNodeFunc function, or %NULL if the default function is used
+ * Returns: the #GdaTreeManagerNodeFunc function, or %NULL if the default function is used
  *
  * Since: 4.2
  */

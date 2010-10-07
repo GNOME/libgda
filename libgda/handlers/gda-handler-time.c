@@ -195,11 +195,11 @@ gda_handler_time_dispose (GObject *object)
 }
 
 /**
- * gda_handler_time_new
+ * gda_handler_time_new:
  *
  * Creates a data handler for time values
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_time_new (void)
@@ -213,12 +213,12 @@ gda_handler_time_new (void)
 }
 
 /**
- * gda_handler_time_new_no_locale
+ * gda_handler_time_new_no_locale:
  *
  * Creates a data handler for time values, but using the default C locale
  * instead of the current user locale.
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_time_new_no_locale (void)

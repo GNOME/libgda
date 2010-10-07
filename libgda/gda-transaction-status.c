@@ -151,6 +151,10 @@ gda_transaction_status_new (const gchar *name)
 	return tstatus;
 }
 
+/**
+ * gda_transaction_status_add_event_svp: (skip):
+ *
+ */
 GdaTransactionStatusEvent *
 gda_transaction_status_add_event_svp (GdaTransactionStatus *tstatus, const gchar *svp_name)
 {
@@ -168,6 +172,10 @@ gda_transaction_status_add_event_svp (GdaTransactionStatus *tstatus, const gchar
 	return ev;
 }
 
+/**
+ * gda_transaction_status_add_event_sql: (skip):
+ *
+ */
 GdaTransactionStatusEvent *
 gda_transaction_status_add_event_sql (GdaTransactionStatus *tstatus, const gchar *sql, GdaConnectionEvent *conn_event)
 {
@@ -189,6 +197,10 @@ gda_transaction_status_add_event_sql (GdaTransactionStatus *tstatus, const gchar
 	return ev;
 }
 
+/**
+ * gda_transaction_status_add_event_sub: (skip)
+ *
+ */
 GdaTransactionStatusEvent *
 gda_transaction_status_add_event_sub (GdaTransactionStatus *tstatus, GdaTransactionStatus *sub_trans)
 {
@@ -231,6 +243,11 @@ gda_transaction_status_free_events (GdaTransactionStatus *tstatus, GdaTransactio
 	tstatus->events = g_list_delete_link (tstatus->events, node);
 }
 
+/**
+ * gda_transaction_status_find:
+ *
+ * Returns: (transfer full) (allow-none):
+ */
 GdaTransactionStatus *
 gda_transaction_status_find (GdaTransactionStatus *tstatus, const gchar *str, GdaTransactionStatusEvent **destev)
 {
@@ -274,9 +291,13 @@ gda_transaction_status_find (GdaTransactionStatus *tstatus, const gchar *str, Gd
 	return trans;
 }
 
-/*
+/**
+ * gda_transaction_status_find_current:
+ *
  * Find a pointer to the "current" _unnamed_ transaction, which is the last
  * transaction if there are several nested transactions
+ *
+ * Returns: (transfer full) (allow-none):
  */
 GdaTransactionStatus *
 gda_transaction_status_find_current (GdaTransactionStatus *tstatus, GdaTransactionStatusEvent **destev, gboolean unnamed_only)

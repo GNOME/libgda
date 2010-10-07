@@ -344,14 +344,13 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
 /**
  * gda_sql_builder_get_sql_statement:
  * @builder: a #GdaSqlBuilder object
- * @copy_it: set to %TRUE to be able to reuse @builder
  *
  * Creates a new #GdaSqlStatement structure from @builder's contents.
  *
  * The returned pointer belongs to @builder's internal representation.
  * Use gda_sql_statement_copy() if you need to keep it.
  *
- * Returns: (transfer none): a #GdaSqlStatement pointer
+ * Returns: (transfer none) (allow-none): a #GdaSqlStatement pointer
  *
  * Since: 4.2
  */
@@ -948,7 +947,7 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string)
  * gda_sql_builder_add_field_id:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @table_name: (allow-null): a table name, or %NULL
+ * @table_name: (allow-none): a table name, or %NULL
  *
  * Defines an expression representing a field in @builder,
  * which may be reused to build other parts of a statement,
@@ -1622,7 +1621,7 @@ gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id
 /**
  * gda_sql_builder_add_function:
  * @builder: a #GdaSqlBuilder object
- * @function_id: the ID of the functions's name
+ * @func_name: the functions's name
  * @...: a list, terminated with %0, of each function's argument's ID
  *
  * Builds a new expression which reprenents a function applied to some arguments
@@ -1667,7 +1666,7 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
 /**
  * gda_sql_builder_add_function_v:
  * @builder: a #GdaSqlBuilder object
- * @function_id: the ID of the functions's name
+ * @func_name: the functions's name
  * @args: (array length=args_size): an array of IDs representing the function's arguments
  * @args_size: @args's size
  *
@@ -1711,7 +1710,6 @@ gda_sql_builder_add_function_v (GdaSqlBuilder *builder, const gchar *func_name,
  * gda_sql_builder_add_sub_select:
  * @builder: a #GdaSqlBuilder object
  * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT. This will be copied.
- * @steal: if %TRUE, then @sqlst will be "stolen" by @b and should not be used anymore
  *
  * Adds an expression which is a subselect.
  *

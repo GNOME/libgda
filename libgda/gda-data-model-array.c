@@ -271,7 +271,7 @@ gda_data_model_array_get_property (GObject *object, guint prop_id, GValue *value
  * Creates a new #GdaDataModel object without initializing the column
  * types. Using gda_data_model_array_new_with_g_types() is usually better.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_array_new (gint cols)
@@ -290,7 +290,7 @@ gda_data_model_array_new (gint cols)
  * Creates a new #GdaDataModel object with the column types as
  * specified.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_array_new_with_g_types (gint cols, ...)
@@ -323,7 +323,7 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
  *
  * Makes a copy of @src into a new #GdaDataModelArray object
  *
- * Returns: a new data model, or %NULL if an error occurred
+ * Returns: (transfer full) (allow-none): a new data model, or %NULL if an error occurred
  */
 GdaDataModelArray *
 gda_data_model_array_copy_model (GdaDataModel *src, GError **error)

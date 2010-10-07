@@ -252,10 +252,10 @@ gda_quark_list_remove (GdaQuarkList *qlist, const gchar *name)
 }
 
 /**
- * gda_quark_list_foreach
+ * gda_quark_list_foreach:
  * @qlist: a #GdaQuarkList structure.
- * @func: the function to call for each key/value pair
- * @user_data: user data to pass to the function
+ * @func: (scope call): the function to call for each key/value pair
+ * @user_data: (closure): user data to pass to the function
  *
  * Calls the given function for each of the key/value pairs in @qlist. The function is passed the key and value 
  * of each pair, and the given user_data parameter. @qlist may not be modified while iterating over it.

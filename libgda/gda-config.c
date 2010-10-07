@@ -1089,7 +1089,7 @@ gda_config_dsn_needs_authentication (const gchar *dsn_name)
  *  <listitem><para>Username if it exists</para></listitem>
  * </itemizedlist>
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  */
 GdaDataModel *
 gda_config_list_dsn (void)
@@ -1311,7 +1311,7 @@ gda_config_get_provider (const gchar *provider_name, GError **error)
  *  <listitem><para>File name of the plugin</para></listitem>
  * </itemizedlist>
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  */
 GdaDataModel *
 gda_config_list_providers (void)

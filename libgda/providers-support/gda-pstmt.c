@@ -213,7 +213,7 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
 }
 
 /**
- * gda_pstmt_get_gda_statement
+ * gda_pstmt_get_gda_statement:
  * @pstmt: a #GdaPStmt object
  *
  * Get a pointer to the #GdaStatement which led to the creation of this prepared statement.

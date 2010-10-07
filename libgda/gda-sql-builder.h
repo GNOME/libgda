@@ -117,7 +117,7 @@ void              gda_sql_builder_select_order_by (GdaSqlBuilder *builder, GdaSq
 void              gda_sql_builder_select_set_distinct (GdaSqlBuilder *builder,
 						       gboolean distinct, GdaSqlBuilderId expr_id);
 void              gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
-						    GdaSqlBuilderId limit_count_expr_id, GdaSqlBuilderId limit_offest_expr_id);
+						    GdaSqlBuilderId limit_count_expr_id, GdaSqlBuilderId limit_offset_expr_id);
 
 void              gda_sql_builder_select_set_having (GdaSqlBuilder *builder, GdaSqlBuilderId cond_id);
 void              gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id);

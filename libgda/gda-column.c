@@ -268,7 +268,7 @@ gda_column_new (void)
  * 	 
  * Creates a new #GdaColumn object from an existing one.
  *
- * Returns: a newly allocated #GdaColumn with a copy of the data 	 
+ * Returns: (transfer full): a newly allocated #GdaColumn with a copy of the data 	 
  * in @column. 	 
  */ 	 
 GdaColumn * 	 

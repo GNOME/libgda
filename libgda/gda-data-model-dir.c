@@ -660,7 +660,7 @@ gda_data_model_dir_get_property (GObject *object,
  *
  * Creates a new #GdaDataModel object to list all the files starting from @basedir
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  */
 GdaDataModel *
 gda_data_model_dir_new (const gchar *basedir)

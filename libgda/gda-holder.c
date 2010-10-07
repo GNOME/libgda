@@ -343,7 +343,7 @@ gda_holder_new (GType type)
  * Note1: if @orig is set with a static value (see gda_holder_take_static_value()) 
  * its copy will have a fresh new allocated GValue, so that user should free it when done.
  *
- * Returns: a new #GdaHolder object
+ * Returns: (transfer full): a new #GdaHolder object
  */
 GdaHolder *
 gda_holder_copy (GdaHolder *orig)
@@ -677,7 +677,7 @@ gda_holder_get_property (GObject *object,
  * 
  * Get @holder's type
  *
- * Returns: (tranfer none): the data type
+ * Returns: (transfer none): the data type
  */
 GType
 gda_holder_get_g_type (GdaHolder *holder)

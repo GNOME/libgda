@@ -143,7 +143,7 @@ guint                      gda_server_operation_get_sequence_max_size   (GdaServ
 guint                      gda_server_operation_get_sequence_min_size   (GdaServerOperation *op, const gchar *path);
 gchar                    **gda_server_operation_get_sequence_item_names (GdaServerOperation *op, const gchar *path); 
 
-guint                      gda_server_operation_add_item_to_sequence    (GdaServerOperation *op, const gchar *path);
+guint                      gda_server_operation_add_item_to_sequence    (GdaServerOperation *op, const gchar *seq_path);
 gboolean                   gda_server_operation_del_item_from_sequence  (GdaServerOperation *op, const gchar *item_path);
 
 gboolean                   gda_server_operation_is_valid                (GdaServerOperation *op, const gchar *xml_file, GError **error);

@@ -744,13 +744,13 @@ gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid)
 }
 
 /**
- * gda_xa_transaction_string_to_id:
+ * gda_xa_transaction_string_to_id: (skip):
  * @str: a string representation of a #GdaXaTransactionId, in the "gtrid,bqual,formatID" format
  *
  * Creates a new #GdaXaTransactionId structure from its string representation, it's the opposite
  * of gda_xa_transaction_id_to_string().
  *
- * Returns: (transfer full): a new #GdaXaTransactionId structure, or %NULL in @str has a wrong format
+ * Returns: a new #GdaXaTransactionId structure, or %NULL in @str has a wrong format
  *
  * Free-function: g_free
  */

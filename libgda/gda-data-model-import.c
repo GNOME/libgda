@@ -689,7 +689,7 @@ gda_data_model_import_get_property (GObject *object,
  *   <listitem><para>Other formats: no option</para></listitem>
  * </itemizedlist>
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_import_new_file   (const gchar *filename, gboolean random_access, GdaSet *options)
@@ -717,7 +717,7 @@ gda_data_model_import_new_file   (const gchar *filename, gboolean random_access,
  * Important note: the @data string is not copied for memory efficiency reasons and should not
  * therefore be altered in any way as long as the returned data model exists.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_import_new_mem (const gchar *data, gboolean random_access, GdaSet *options)
@@ -739,7 +739,7 @@ gda_data_model_import_new_mem (const gchar *data, gboolean random_access, GdaSet
  * Creates a new #GdaDataModel and loads the data in @node. The resulting data model
  * can be accessed in a random way.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_import_new_xml_node (xmlNodePtr node)

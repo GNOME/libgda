@@ -1573,7 +1573,7 @@ cmp_func (gconstpointer a, gconstpointer b)
 }
 
 /**
- * gda_completion_list_get
+ * gda_completion_list_get:
  * @cnc: a #GdaConnection object
  * @sql: a partial SQL statement which is the context of the completion proposal
  * @start: starting position within @sql of the "token" to complete (starts at 0)
@@ -1583,7 +1583,7 @@ cmp_func (gconstpointer a, gconstpointer b)
  * If no completion is available, then the returned array contains just one NULL entry, and
  * if it was not possible to try to compute a completions list, then %NULL is returned.
  *
- * Returns: a new array of strings, or %NULL (use g_strfreev() to free the returned array)
+ * Returns: (transfer full) (array zero-terminated=1) (allow-none): a new array of strings, or %NULL (use g_strfreev() to free the returned array)
  */
 gchar **
 gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint end)
@@ -1836,7 +1836,7 @@ concat_ident (const char *prefix, const gchar *ident)
 }
 
 /**
- * gda_sql_identifier_split
+ * gda_sql_identifier_split:
  * @id: an SQL identifier
  * 
  * Splits @id into an array of it sub parts. @id's format has to be "&lt;part&gt;[.&lt;part&gt;[...]]" where
@@ -1845,7 +1845,7 @@ concat_ident (const char *prefix, const gchar *ident)
  *
  * For example the <![CDATA["test.\"ATable\""]]> string will result in the array: <![CDATA[{"test", "\"ATable\"", NULL}]]>
  *
- * Returns: a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)
+ * Returns: (transfer full) (array zero-terminated=1) (allow-none): a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)
  */
 gchar **
 gda_sql_identifier_split (const gchar *id)

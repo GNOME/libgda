@@ -759,7 +759,7 @@ static void proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy);
  *
  * Creates a new proxy for @model
  *
- * Returns: a new #GdaDataProxy object
+ * Returns: (transfer full): a new #GdaDataProxy object
  */
 GObject *
 gda_data_proxy_new (GdaDataModel *model)

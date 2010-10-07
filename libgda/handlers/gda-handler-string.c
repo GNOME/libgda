@@ -156,11 +156,11 @@ gda_handler_string_dispose (GObject   * object)
 }
 
 /**
- * gda_handler_string_new
+ * gda_handler_string_new:
  *
  * Creates a data handler for strings
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_string_new (void)
@@ -173,14 +173,14 @@ gda_handler_string_new (void)
 }
 
 /**
- * gda_handler_string_new_with_provider
+ * gda_handler_string_new_with_provider:
  * @prov: a #GdaServerProvider object
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  *
  * Creates a data handler for strings, which will use some specific methods implemented
  * by the @prov object (possibly also @cnc).
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_string_new_with_provider (GdaServerProvider *prov, GdaConnection *cnc)

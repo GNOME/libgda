@@ -91,7 +91,7 @@ objattrs_unref (ObjAttrs *attrs)
 }
 
 /**
- * gda_attributes_manager_new:
+ * gda_attributes_manager_new: (skip):
  * @for_objects: set to TRUE if attributes will be set on objects.
  * @signal_func: a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
  * @signal_data: user data passed as last argument of @signal_func when it is called
@@ -408,8 +408,8 @@ static void foreach_foreach_func (AttName *attname, const GValue *value, FData *
  * gda_attributes_manager_foreach:
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources for which all the attributes used
- * @func: a #GdaAttributesManagerFunc function
- * @data: user data to be passed as last argument of @func each time it is called
+ * @func: (scope call): a #GdaAttributesManagerFunc function
+ * @data: (closure): user data to be passed as last argument of @func each time it is called
  *
  * Calls @func for every attribute set to @ptr.
  */
