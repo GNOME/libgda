@@ -113,7 +113,6 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 					      GTK_STOCK_REVERT_TO_SAVED, REVERT_BUTTON,
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 					      NULL);
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), TEST_BUTTON, pinfo ? TRUE : FALSE);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), BROWSE_BUTTON, pinfo ? TRUE : FALSE);

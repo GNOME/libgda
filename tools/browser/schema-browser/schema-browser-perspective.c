@@ -167,7 +167,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 				  browser_make_tab_label_with_stock (_("Index"), GTK_STOCK_ABOUT, FALSE,
 								     NULL));
 	gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (nb), wid, TRUE);
-	gtk_notebook_set_group (GTK_NOTEBOOK (nb), bcnc);
+	gtk_notebook_set_group_name (GTK_NOTEBOOK (nb), "schema-browser");
 
 	gtk_notebook_set_menu_label (GTK_NOTEBOOK (nb), wid,
 				     browser_make_tab_label_with_stock (_("Index"), GTK_STOCK_ABOUT, FALSE,

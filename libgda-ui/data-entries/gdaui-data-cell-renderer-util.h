@@ -22,6 +22,6 @@
 
 #include <gtk/gtk.h>
 
-void gdaui_data_cell_renderer_draw_invalid_area (GdkWindow *window, GdkRectangle *cell_area);
+void gdaui_data_cell_renderer_draw_invalid_area (cairo_t *cr, const GdkRectangle *cell_area);
 
 #endif

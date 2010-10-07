@@ -1505,7 +1505,7 @@ filter_position_func (GtkWidget *widget,
 	GdkRectangle monitor;
 
 	window = gtk_widget_get_window (widget);
-	screen = gdk_drawable_get_screen (window);
+	screen = gdk_window_get_screen (window);
 
 	monitor_num = gdk_screen_get_monitor_at_window (screen, window);
 	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
@@ -1513,9 +1513,8 @@ filter_position_func (GtkWidget *widget,
 	gtk_widget_realize (search_dialog);
 
 	gdk_window_get_origin (window, &tree_x, &tree_y);
-	gdk_drawable_get_size (window,
-			       &tree_width,
-			       &tree_height);
+	tree_width = gdk_window_get_width (window);
+	tree_height = gdk_window_get_height (window);
 	gtk_widget_size_request (search_dialog, &requisition);
 
 	if (tree_x + tree_width > gdk_screen_get_width (screen))

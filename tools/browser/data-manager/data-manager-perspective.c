@@ -193,7 +193,7 @@ data_manager_perspective_new (BrowserWindow *bwin)
         gtk_notebook_append_page (GTK_NOTEBOOK (nb), page, tlabel);
 
         gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (nb), page, TRUE);
-        gtk_notebook_set_group (GTK_NOTEBOOK (nb), bcnc + 0x02); /* add 0x01 to differentiate it from SchemaBrowser */
+        gtk_notebook_set_group_name (GTK_NOTEBOOK (nb), "data-manager");
         gtk_notebook_set_tab_detachable (GTK_NOTEBOOK (perspective->priv->notebook), page,
                                          TRUE);
 

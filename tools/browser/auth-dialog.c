@@ -278,8 +278,7 @@ auth_dialog_new (GtkWindow *parent)
 	return (AuthDialog*) g_object_new (AUTH_TYPE_DIALOG, "title", _("Authentication"),
 					   "transient-for", parent,
 					   "resizable", FALSE,
-					   "border-width", 10, 
-					   "has-separator", FALSE, NULL);
+					   "border-width", 10, NULL);
 }
 
 /*

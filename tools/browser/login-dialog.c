@@ -188,8 +188,7 @@ login_dialog_new (GtkWindow *parent)
 {
 	return (LoginDialog*) g_object_new (LOGIN_TYPE_DIALOG, "title", _("Connection opening"),
 					    "transient-for", parent,
-					    "resizable", FALSE,
-					    "has-separator", FALSE, NULL);
+					    "resizable", FALSE, NULL);
 }
 
 /**

@@ -26,9 +26,8 @@ static void     widget_embedder_size_allocate (GtkWidget       *widget,
                                                GtkAllocation   *allocation);
 static gboolean widget_embedder_damage        (GtkWidget       *widget,
                                                GdkEventExpose  *event);
-static gboolean widget_embedder_expose        (GtkWidget       *widget,
-                                               GdkEventExpose  *offscreen);
-
+static gboolean widget_embedder_draw          (GtkWidget       *widget,
+					       cairo_t         *cr);
 static void     widget_embedder_add           (GtkContainer    *container,
                                                GtkWidget       *child);
 static void     widget_embedder_remove        (GtkContainer    *container,
@@ -73,7 +72,7 @@ widget_embedder_class_init (WidgetEmbedderClass *klass)
 	widget_class->unrealize = widget_embedder_unrealize;
 	widget_class->size_request = widget_embedder_size_request;
 	widget_class->size_allocate = widget_embedder_size_allocate;
-	widget_class->expose_event = widget_embedder_expose;
+	widget_class->draw = widget_embedder_draw;
 
 	g_signal_override_class_closure (g_signal_lookup ("damage-event", GTK_TYPE_WIDGET),
 					 WIDGET_EMBEDDER_TYPE,
@@ -172,10 +171,9 @@ widget_embedder_realize (GtkWidget *widget)
 		| GDK_LEAVE_NOTIFY_MASK;
 
 	attributes.visual = gtk_widget_get_visual (widget);
-	attributes.colormap = gtk_widget_get_colormap (widget);
 	attributes.wclass = GDK_INPUT_OUTPUT;
 
-	attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+	attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
 
 	GdkWindow *win;
 	win = gdk_window_new (gtk_widget_get_parent_window (widget),
@@ -361,57 +359,43 @@ widget_embedder_damage (GtkWidget      *widget,
 }
 
 static gboolean
-widget_embedder_expose (GtkWidget      *widget,
-                        GdkEventExpose *event)
+widget_embedder_draw (GtkWidget *widget, cairo_t *cr)
 {
 	WidgetEmbedder *bin = WIDGET_EMBEDDER (widget);
-	gint width, height;
+	GdkWindow *window;
 
-	if (gtk_widget_is_drawable (widget)) {
-		GdkWindow *win;
-		win = gtk_widget_get_window (widget);
-		if (event->window == win) {
-			GdkPixmap *pixmap;
-			cairo_t *cr;
+	window = gtk_widget_get_window (widget);
+	if (gtk_cairo_should_draw_window (cr, window)) {
+		cairo_surface_t *surface;
+		GtkAllocation child_area;
+		
+		if (bin->child && gtk_widget_get_visible (bin->child)) {
+			surface = gdk_offscreen_window_get_surface (bin->offscreen_window);
+			gtk_widget_get_allocation (bin->child, &child_area);
+			cairo_set_source_surface (cr, surface, 0, 0);
+			cairo_paint (cr);
 
-			if (bin->child && gtk_widget_get_visible (bin->child)) {
-				GtkAllocation child_area;
-				pixmap = gdk_offscreen_window_get_pixmap (bin->offscreen_window);
-
-				gtk_widget_get_allocation (bin->child, &child_area);
-				cr = gdk_cairo_create (win);
-				
-				/* clip */
-				gdk_drawable_get_size (pixmap, &width, &height);
-				cairo_rectangle (cr, 0, 0, width, height);
-				cairo_clip (cr);
-
-				/* paint */
-				gdk_cairo_set_source_pixmap (cr, pixmap, 0, 0);
-				cairo_paint (cr);
-
-				if (! bin->valid) {
-					cairo_set_source_rgba (cr, .8, .1, .1, .2);
-					cairo_rectangle (cr, child_area.x, child_area.y,
-							 child_area.width, child_area.height);
-					cairo_fill (cr);
-				}
-				cairo_destroy (cr);
+			if (! bin->valid) {
+				cairo_set_source_rgba (cr, .8, .1, .1, .2);
+				cairo_rectangle (cr, child_area.x, child_area.y,
+						 child_area.width, child_area.height);
+				cairo_fill (cr);
 			}
 		}
-		else if (event->window == bin->offscreen_window) {
-			gtk_paint_flat_box (gtk_widget_get_style (widget), event->window,
-					    GTK_STATE_NORMAL, GTK_SHADOW_NONE,
-					    &event->area, widget, "blah",
-					    0, 0, -1, -1);
-			
-			if (bin->child)
-				gtk_container_propagate_expose (GTK_CONTAINER (widget),
-								bin->child,
-								event);
-		}
 	}
+	if (gtk_cairo_should_draw_window (cr, bin->offscreen_window)) {
+		gtk_paint_flat_box (gtk_widget_get_style (widget), cr,
+				    GTK_STATE_NORMAL, GTK_SHADOW_NONE,
+				    widget, "blah",
+				    0, 0,
+				    gdk_window_get_width (bin->offscreen_window),
+				    gdk_window_get_height (bin->offscreen_window));
 
+		if (bin->child)
+			gtk_container_propagate_draw (GTK_CONTAINER (widget),
+						      bin->child,
+						      cr);
+	}
 	return FALSE;
 }
 

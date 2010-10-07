@@ -42,8 +42,8 @@ static void cc_gray_bar_allocate     (GtkWidget           *widget,
 				      GtkAllocation       *allocation);
 static void cc_gray_bar_paint        (GtkWidget           *widget,
 				      GdkRectangle        *area);
-static gint cc_gray_bar_expose       (GtkWidget           *widget,
-				      GdkEventExpose      *event);
+static gboolean cc_gray_bar_draw     (GtkWidget           *widget,
+				      cairo_t             *cr);
 static void cc_gray_bar_style_set    (GtkWidget           *w,
 				      GtkStyle            *previous_style);
 static void cc_gray_bar_set_property (GObject *object,
@@ -88,7 +88,6 @@ cc_gray_bar_realize (GtkWidget *widget)
 	attributes.window_type = GDK_WINDOW_CHILD;
 	attributes.wclass = GDK_INPUT_OUTPUT;
 	attributes.visual = gtk_widget_get_visual (widget);
-	attributes.colormap = gtk_widget_get_colormap (widget);
 	attributes.event_mask = gtk_widget_get_events (widget)
 		| GDK_BUTTON_MOTION_MASK
 		| GDK_BUTTON_PRESS_MASK
@@ -97,7 +96,7 @@ cc_gray_bar_realize (GtkWidget *widget)
 		| GDK_ENTER_NOTIFY_MASK
 		| GDK_LEAVE_NOTIFY_MASK;
 
-	attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+	attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
 
 	GdkWindow *win;
 	win = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
@@ -187,49 +186,28 @@ cc_gray_bar_style_set (GtkWidget *w, GtkStyle *previous_style)
 	GTK_WIDGET_CLASS (parent_class)->style_set (w, previous_style);
 }
 
-static void
-cc_gray_bar_paint (GtkWidget *widget, GdkRectangle *area)
+static gboolean
+cc_gray_bar_draw (GtkWidget *widget, cairo_t *cr)
 {
 	gboolean paintable;
 
 	paintable = gtk_widget_get_app_paintable (widget);
 	if (!paintable) {
 		GtkStyle *style;
-		GdkWindow *win;
 		GtkAllocation alloc;
 		GtkStateType state;
 
 		style = gtk_widget_get_style (widget);
 		state = gtk_widget_get_state (widget);
-		win = gtk_widget_get_window (widget);
 		gtk_widget_get_allocation (widget, &alloc);
-		gtk_paint_flat_box (style, win,
+		gtk_paint_flat_box (style, cr,
 				    state, GTK_SHADOW_NONE,
-				    area, widget, "gnomedbgraybar",
+				    widget, "gnomedbgraybar",
 				    1, 1,
 				    alloc.width - 2,
 				    alloc.height - 2);
 	}
-}
-
-static gboolean
-cc_gray_bar_expose (GtkWidget *widget, GdkEventExpose *event)
-{
-	gboolean drawable;
-	g_return_val_if_fail (widget != NULL, FALSE);
-	g_return_val_if_fail (CC_IS_GRAY_BAR (widget), FALSE);
-	g_return_val_if_fail (event != NULL, FALSE);
-
-	if (event->count > 0)
-		return FALSE;
-	drawable = gtk_widget_is_drawable (widget);
-	if (drawable) {
-		cc_gray_bar_paint (widget, &event->area);
-
-		(* GTK_WIDGET_CLASS (parent_class)->expose_event) (widget, event);
-	}
-
-	return FALSE;
+	return (* GTK_WIDGET_CLASS (parent_class)->draw) (widget, cr);
 }
 
 static void
@@ -256,7 +234,7 @@ cc_gray_bar_class_init (CcGrayBarClass *klass)
 	widget_class->realize       = cc_gray_bar_realize;
 	widget_class->size_request  = cc_gray_bar_size_request;
 	widget_class->size_allocate = cc_gray_bar_allocate;
-	widget_class->expose_event  = cc_gray_bar_expose;
+	widget_class->draw          = cc_gray_bar_draw;
 	widget_class->show_all      = cc_gray_bar_show_all;
 
 	/* add class properties */

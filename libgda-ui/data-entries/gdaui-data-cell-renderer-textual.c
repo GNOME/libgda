@@ -54,25 +54,24 @@ static void gdaui_data_cell_renderer_textual_set_property  (GObject *object,
 							    GParamSpec *pspec);
 static void gdaui_data_cell_renderer_textual_get_size   (GtkCellRenderer          *cell,
 							 GtkWidget                *widget,
-							 GdkRectangle             *cell_area,
+							 const GdkRectangle       *cell_area,
 							 gint                     *x_offset,
 							 gint                     *y_offset,
 							 gint                     *width,
 							 gint                     *height);
 static void gdaui_data_cell_renderer_textual_render     (GtkCellRenderer          *cell,
-							 GdkWindow                *window,
+							 cairo_t                  *cr,
 							 GtkWidget                *widget,
-							 GdkRectangle             *background_area,
-							 GdkRectangle             *cell_area,
-							 GdkRectangle             *expose_area,
+							 const GdkRectangle       *background_area,
+							 const GdkRectangle       *cell_area,
 							 GtkCellRendererState      flags);
 
 static GtkCellEditable *gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 									GdkEvent             *event,
 									GtkWidget            *widget,
 									const gchar          *path,
-									GdkRectangle         *background_area,
-									GdkRectangle         *cell_area,
+									const GdkRectangle   *background_area,
+									const GdkRectangle   *cell_area,
 									GtkCellRendererState  flags);
 
 enum {
@@ -587,7 +586,7 @@ gdaui_data_cell_renderer_textual_new (GdaDataHandler *dh, GType type, const gcha
 static void
 gdaui_data_cell_renderer_textual_get_size (GtkCellRenderer *cell,
 					   GtkWidget       *widget,
-					   GdkRectangle    *cell_area,
+					   const GdkRectangle *cell_area,
 					   gint            *x_offset,
 					   gint            *y_offset,
 					   gint            *width,
@@ -599,17 +598,16 @@ gdaui_data_cell_renderer_textual_get_size (GtkCellRenderer *cell,
 
 static void
 gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
-					 GdkWindow            *window,
+					 cairo_t              *cr,
 					 GtkWidget            *widget,
-					 GdkRectangle         *background_area,
-					 GdkRectangle         *cell_area,
-					 GdkRectangle         *expose_area,
+					 const GdkRectangle   *background_area,
+					 const GdkRectangle   *cell_area,
 					 GtkCellRendererState  flags)
 
 {
 	GdauiDataCellRendererTextual *datacell = (GdauiDataCellRendererTextual*) cell;
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
-	(text_class->render) (cell, window, widget, background_area, cell_area, expose_area, flags);
+	(text_class->render) (cell, cr, widget, background_area, cell_area, flags);
 
 	if (datacell->priv->to_be_deleted) {
 		GtkStyle *style;
@@ -619,8 +617,7 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 		g_object_get ((GObject*) cell, "xpad", &xpad, NULL);
 
 		gtk_paint_hline (style,
-				 window, GTK_STATE_SELECTED,
-				 cell_area,
+				 cr, GTK_STATE_SELECTED,
 				 widget,
 				 "hline",
 				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
@@ -628,7 +625,7 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 		g_object_unref (style);
 	}
 	if (datacell->priv->invalid)
-		gdaui_data_cell_renderer_draw_invalid_area (window, cell_area);
+		gdaui_data_cell_renderer_draw_invalid_area (cr, cell_area);
 }
 
 static void
@@ -678,8 +675,8 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 						G_GNUC_UNUSED GdkEvent             *event,
 						G_GNUC_UNUSED GtkWidget            *widget,
 						const gchar          *path,
-						G_GNUC_UNUSED GdkRectangle         *background_area,
-						G_GNUC_UNUSED GdkRectangle         *cell_area,
+						G_GNUC_UNUSED const GdkRectangle *background_area,
+						G_GNUC_UNUSED const GdkRectangle *cell_area,
 						G_GNUC_UNUSED GtkCellRendererState  flags)
 {
 	GdauiDataCellRendererTextual *datacell;

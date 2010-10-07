@@ -142,54 +142,30 @@ GdkColor **_gdaui_utility_entry_build_info_colors_array ()
 	/* Green color */
 	color = g_new0 (GdkColor, 1);
 	gdk_color_parse (GDAUI_COLOR_NORMAL_NULL, color);
-	if (!gdk_colormap_alloc_color (gtk_widget_get_default_colormap (), color, FALSE, TRUE)) {
-		g_free (color);
-		color = NULL;
-	}
 	colors[0] = color;
 	
 	color = g_new0 (GdkColor, 1);
 	gdk_color_parse (GDAUI_COLOR_PRELIGHT_NULL, color);
-	if (!gdk_colormap_alloc_color (gtk_widget_get_default_colormap (), color, FALSE, TRUE)) {
-		g_free (color);
-		color = NULL;
-	}
 	colors[1] = color;
 	
 	
 	/* Blue color */
 	color = g_new0 (GdkColor, 1);
 	gdk_color_parse (GDAUI_COLOR_NORMAL_DEFAULT, color);
-	if (!gdk_colormap_alloc_color (gtk_widget_get_default_colormap (), color, FALSE, TRUE)) {
-		g_free (color);
-		color = NULL;
-	}
 	colors[2] = color;
 	
 	color = g_new0 (GdkColor, 1);
 	gdk_color_parse (GDAUI_COLOR_PRELIGHT_DEFAULT, color);
-	if (!gdk_colormap_alloc_color (gtk_widget_get_default_colormap (), color, FALSE, TRUE)) {
-		g_free (color);
-		color = NULL;
-	}
 	colors[3] = color;
 	
 	
 	/* Red color */
 	color = g_new0 (GdkColor, 1);
 	gdk_color_parse (GDAUI_COLOR_NORMAL_INVALID, color);
-	if (!gdk_colormap_alloc_color (gtk_widget_get_default_colormap (), color, FALSE, TRUE)) {
-		g_free (color);
-		color = NULL;
-	}
 	colors[4] = color;
 	
 	color = g_new0 (GdkColor, 1);
 	gdk_color_parse (GDAUI_COLOR_PRELIGHT_INVALID, color);
-	if (!gdk_colormap_alloc_color (gtk_widget_get_default_colormap (), color, FALSE, TRUE)) {
-		g_free (color);
-		color = NULL;
-	}
 	colors[5] = color;
 
 	return colors;
