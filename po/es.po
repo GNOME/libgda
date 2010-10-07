@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
 "POT-Creation-Date: 2010-09-26 11:21+0000\n"
-"PO-Revision-Date: 2010-10-07 11:47+0200\n"
+"PO-Revision-Date: 2010-10-07 14:08+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -232,7 +232,7 @@ msgstr ""
 
 #: ../control-center/gdaui-dsn-assistant.c:437
 msgid "Add a new data source..."
-msgstr "Agregar una nueva fuente de datos..."
+msgstr "Añadir una fuente de datos nueva …"
 
 #: ../control-center/gdaui-dsn-assistant.c:455
 msgid ""
@@ -4142,7 +4142,7 @@ msgstr "Error: %s"
 #: ../libgda-ui/gdaui-init.c:492
 #, c-format
 msgid "Loading file %s...\n"
-msgstr "Cargando archivo %s...\n"
+msgstr "Cargando archivo %s…\n"
 
 #: ../libgda-ui/gdaui-init.c:495
 #, c-format
@@ -4161,7 +4161,7 @@ msgstr "Especificar conexión:"
 #. Create the DSN add button
 #: ../libgda-ui/gdaui-login.c:191
 msgid "Data sources..."
-msgstr "Fuentes de datos..."
+msgstr "Fuentes de datos…"
 
 #: ../libgda-ui/gdaui-login.c:420
 msgid "Could not execute the Database access control center"
@@ -5806,7 +5806,7 @@ msgstr "Unión"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:199
 msgid "tbl_name[,tbl_name]...: only with MERGE engine"
-msgstr "nombre_tbl[,nombre_tbl]...: sólo con el motor MEZCLAR"
+msgstr "nombre_tbl[,nombre_tbl]…: sólo con el motor MEZCLAR"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:1
@@ -6660,18 +6660,16 @@ msgid "could not determine the indexed columns for index"
 msgstr "no se pudieron determinar las columnas indexadas para el índice"
 
 #: ../providers/sqlcipher/libmain.c:72
-#, fuzzy
 #| msgid "Provider for SQLite databases"
 msgid "Provider for SQLCipher"
-msgstr "Proveedor para bases de datos SQLite"
+msgstr "Proveedor para SQLCipher"
 
 #. DSN parameters
 #: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:10
-#, fuzzy
 #| msgid "Encrypt password"
 msgid "Encryption passphrase"
-msgstr "Cifrar contraseña"
+msgstr "Cifrado de la contraseña"
 
 #. DSN parameters
 #: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:2
@@ -7003,7 +7001,7 @@ msgid ""
 "to this connection (favorites, descriptions, ...)"
 msgstr ""
 "Archivo usado para almacenar cualquier información\n"
-"asociada a esta conexión (favoritos, descripciones, ...)"
+"asociada a esta conexión (favoritos, descripciones, …)"
 
 #: ../tools/browser/browser-connections-list.c:326
 msgid "Opened connections"
@@ -7155,7 +7153,7 @@ msgstr "Error al deshacer la transacción: %s"
 
 #: ../tools/browser/browser-window.c:998
 msgid "Hit the Escape key to leave the fullscreen mode"
-msgstr ""
+msgstr "Pulsar la tecla Escape para salir del modo a pantalla completa"
 
 #: ../tools/browser/browser-window.c:1144
 #, c-format
@@ -7333,7 +7331,7 @@ msgid ""
 "favorites..."
 msgstr ""
 "Obteniendo\n"
-"favoritos..."
+"favoritos…"
 
 #: ../tools/browser/mgr-favorites.c:559
 msgid ""
@@ -7359,7 +7357,7 @@ msgstr "No se puede abrir el archivo de ayuda"
 
 #: ../tools/browser/support.c:242
 msgid "Help is being loaded, please wait..."
-msgstr ""
+msgstr "Se está cargando la ayuda, espere…"
 
 #: ../tools/browser/support.c:289
 msgid "Close tab"
@@ -7411,20 +7409,18 @@ msgid "Add referenced tables"
 msgstr "Añadir tablas referenciadas"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:307
-#, fuzzy
 #| msgid "Tables referencing this one"
 msgid "Add tables referencing this table"
-msgstr "Tablas que referencian a esta"
+msgstr "Añadir tablas referenciando esta tabla"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:505
 msgid "Add table"
 msgstr "Añadir tabla"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:525
-#, fuzzy
 #| msgid "Select a file to save the image to"
 msgid "Select tables to add to diagram"
-msgstr "Seleccionar un archivo donde guardar la imagen"
+msgstr "Seleccionar tablas para añadir al diagrama"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:82
 msgid "Page size and zoom"
@@ -7646,13 +7642,11 @@ msgid "Variables' values:"
 msgstr "Valores de las variables:"
 
 #: ../tools/browser/data-manager/data-console.c:384
-#, fuzzy
 #| msgid "Test"
 msgid "Reset"
-msgstr "Prueba"
+msgstr "Restablecer"
 
 #: ../tools/browser/data-manager/data-console.c:385
-#, fuzzy
 #| msgid ""
 #| "Clear the editor's\n"
 #| "contents"
@@ -7660,14 +7654,13 @@ msgid ""
 "Reset the editor's\n"
 "contents"
 msgstr ""
-"Limpiar el contenido\n"
+"Restablecer el contenido\n"
 "del editor"
 
 #: ../tools/browser/data-manager/data-console.c:392
-#, fuzzy
 #| msgid "Add a new data source..."
 msgid "Add a new data source"
-msgstr "Agregar una nueva fuente de datos..."
+msgstr "Añadir una fuente de datos nueva"
 
 #: ../tools/browser/data-manager/data-console.c:398
 #: ../tools/browser/query-exec/query-console.c:362
@@ -7737,32 +7730,33 @@ msgid "Save"
 msgstr "Guardar"
 
 #: ../tools/browser/data-manager/data-console.c:724
-#, fuzzy, c-format
+#, c-format
 #| msgid "Sources"
 msgid "source%d"
-msgstr "Fuentes"
+msgstr "fuente %d"
 
 #: ../tools/browser/data-manager/data-console.c:767
-#, fuzzy
 #| msgid "Data source name"
 msgid "Data source from query"
-msgstr "Nombre de la fuente de datos"
+msgstr "Fuente de datos desde consulta"
 
 #: ../tools/browser/data-manager/data-console.c:805
-#, fuzzy, c-format
+#, c-format
 #| msgid "Invalid schema name"
 msgid "In schema %s"
-msgstr "El nombre del esquema no es válido"
+msgstr "En el esquema %s"
 
 #: ../tools/browser/data-manager/data-console.c:815
 #, c-format
 msgid "For table: %s"
-msgstr ""
+msgstr "Para la tabla: %s"
 
 #: ../tools/browser/data-manager/data-console.c:892
 msgid ""
 "Switching to execution mode. Hit the Escape key to return to the compose mode"
 msgstr ""
+"Cambiando al modo de ejecución. Pulsar la tecla Escape para volver al modo "
+"de edición."
 
 #: ../tools/browser/data-manager/data-console.c:898
 msgid "_Toggle mode"
@@ -7894,80 +7888,81 @@ msgid ""
 "Data source's ID\n"
 "(as referenced by other data sources)"
 msgstr ""
+"ID de la fuente de datos\n"
+"(tal y como lo referencian otras fuentes de datos)"
 
 #: ../tools/browser/data-manager/data-source-editor.c:131
-#, fuzzy
 #| msgid "Database's description"
 msgid "Data source's description"
-msgstr "Descripción de la base de datos"
+msgstr "Descripción de la fuente de datos"
 
 #: ../tools/browser/data-manager/data-source-editor.c:135
 msgid ""
 "Table to display data from, leave empty\n"
 "to specify a SELECT statement instead"
 msgstr ""
+"Tabla de la que mostrar los datos, dejarlo vacío\n"
+"para especificar una declaración SELECT en su lugar"
 
 #: ../tools/browser/data-manager/data-source-editor.c:139
 msgid ""
 "SELECT\n"
 "SQL"
 msgstr ""
+"SELECT\n"
+"SQL"
 
 #: ../tools/browser/data-manager/data-source-editor.c:140
 msgid ""
 "Actual SQL executed\n"
 "to select data"
 msgstr ""
+"Actual código SQL ejecutado\n"
+"para seleccionar los datos"
 
 #: ../tools/browser/data-manager/data-source-editor.c:150
-#, fuzzy
 #| msgid "References"
 msgid "Dependencies:"
-msgstr "Referencias"
+msgstr "Dependencias:"
 
 #: ../tools/browser/data-manager/data-source-editor.c:243
-#, fuzzy
 #| msgid "Require SSL"
 msgid "Requires:"
-msgstr "Requiere SSL"
+msgstr "Requiere:"
 
 #: ../tools/browser/data-manager/data-source-editor.c:260
 msgid "Exports:"
-msgstr ""
+msgstr "Exportaciones:"
 
 #: ../tools/browser/data-manager/data-widget.c:246
 msgid "Link to other data"
-msgstr ""
+msgstr "Enlazar otros datos"
 
 #: ../tools/browser/data-manager/data-widget.c:342
-#, fuzzy, c-format
+#, c-format
 #| msgid "Error creating database: %s"
 msgid "Error adding new data source: %s"
-msgstr "Error al crear la base de datos: %s"
+msgstr "Error al crear la fuente de datos nueva: %s"
 
 #: ../tools/browser/data-manager/data-widget.c:387
-#, fuzzy
 #| msgid "Use data source:"
 msgid "Remove data source"
-msgstr "Usar fuente de datos:"
+msgstr "Quitar fuente de datos"
 
 #: ../tools/browser/data-manager/data-widget.c:393
-#, fuzzy
 #| msgid "Data Source Properties"
 msgid "Show data source's properties"
-msgstr "Propiedades de la fuente de datos"
+msgstr "Mostrar las propiedades de la fuente de datos"
 
 #: ../tools/browser/data-manager/data-widget.c:531
-#, fuzzy
 #| msgid "Add referenced tables"
 msgid "Obtain referenced data in table "
-msgstr "Añadir tablas referenciadas"
+msgstr "Obtener los datos referenciados en la tabla "
 
 #: ../tools/browser/data-manager/data-widget.c:548
-#, fuzzy
 #| msgid "Tables referencing this one"
 msgid "List referencing data in "
-msgstr "Tablas que referencian a esta"
+msgstr "Lista referenciando datos en "
 
 #: ../tools/browser/data-manager/data-widget.c:614
 msgid "No data source defined"
@@ -7978,16 +7973,14 @@ msgid "Error: no detail"
 msgstr "Error: sin detalles"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:153
-#, fuzzy
 #| msgid "Data Sources"
 msgid "Data sources:"
-msgstr "Fuentes de datos"
+msgstr "Fuentes de datos:"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:204
-#, fuzzy
 #| msgid "Data Source Properties"
 msgid "Selected data source's properties:"
-msgstr "Propiedades de la fuente de datos"
+msgstr "Propiedades de la fuente de datos seleccionada:"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:171
 #, c-format
@@ -8856,7 +8849,7 @@ msgstr "Crear (o modificar) un DSN"
 #: ../tools/gda-sql.c:2158
 #, c-format
 msgid "%s DSN_NAME [DSN_NAME...]"
-msgstr "NOMBRE_DEL_DSN [NOMBRE_DEL_DSN...] %s"
+msgstr "NOMBRE_DEL_DSN [NOMBRE_DEL_DSN…] %s"
 
 #: ../tools/gda-sql.c:2159
 msgid "Remove a DSN"
