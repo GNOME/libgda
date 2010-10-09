@@ -1,3 +1,7 @@
+libgda 4.0.12, 2010-10-09
+
+ - bug fixes
+
 libgda 4.0.11, 2010-08-27
 
  - Small corrections: mainly in the SQLite and MySQL providers, and connection locking.
