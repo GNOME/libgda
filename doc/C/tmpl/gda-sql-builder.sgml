@@ -369,7 +369,7 @@ guint id_cond_and = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_c
 
 @builder: 
 @limit_count_expr_id: 
-@limit_offest_expr_id: 
+@limit_offset_expr_id: 
 
 
 <!-- ##### FUNCTION gda_sql_builder_select_set_having ##### -->
