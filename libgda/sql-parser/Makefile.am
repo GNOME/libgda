@@ -13,10 +13,10 @@ gen_def$(EXEEXT_FOR_BUILD): gen_def.c
 	 $(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) -DSRCDIR=\"$(srcdir)\" $(srcdir)/gen_def.c
 
 parser.c parser.h: parser.y lemon$(EXEEXT_FOR_BUILD)
-	- ./lemon$(EXEEXT_FOR_BUILD) -q -d $(srcdir)/parser.y $(srcdir)/lempar.c
+	- ./lemon$(EXEEXT_FOR_BUILD) -d -T$(srcdir)/lempar.c $(srcdir)/parser.y
 
 delimiter.c delimiter.h: delimiter.y lemon$(EXEEXT_FOR_BUILD)
-	./lemon$(EXEEXT_FOR_BUILD) -q -d $(srcdir)/delimiter.y $(srcdir)/lempar.c
+	./lemon$(EXEEXT_FOR_BUILD) -q -d -T$(srcdir)/lempar.c $(srcdir)/delimiter.y
 
 token_types.h: gen_def$(EXEEXT_FOR_BUILD) delimiter.h parser.h
 	./gen_def$(EXEEXT_FOR_BUILD) > token_types.h
