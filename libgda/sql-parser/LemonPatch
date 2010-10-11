@@ -1,12 +1,15 @@
---- lemon.c.3.7.3	2010-10-10 17:27:59.000000000 +0200
-+++ lemon.c	2010-10-10 22:14:05.000000000 +0200
-@@ -1404,11 +1404,13 @@
-   static int quiet = 0;
-   static int statistics = 0;
-   static int mhflag = 0;
-+  static int local_out_dir = 0;
-   static int nolinenosflag = 0;
-   static int noResort = 0;
+--- lemon.c.3.7.3	2010-10-10 23:22:50.000000000 +0200
++++ lemon.c	2010-10-10 23:25:13.000000000 +0200
+@@ -1394,6 +1394,8 @@
+   strcpy(user_templatename, z);
+ }
+ 
++int local_out_dir = 0;
++
+ /* The main program.  Parse the command line and do it... */
+ int main(int argc, char **argv)
+ {
+@@ -1409,6 +1411,7 @@
    static struct s_options options[] = {
      {OPT_FLAG, "b", (char*)&basisflag, "Print only the basis in report."},
      {OPT_FLAG, "c", (char*)&compress, "Don't compress the action table."},
@@ -14,7 +17,7 @@
      {OPT_FSTR, "D", (char*)handle_D_option, "Define an %ifdef macro."},
      {OPT_FSTR, "T", (char*)handle_T_option, "Specify a template file."},
      {OPT_FLAG, "g", (char*)&rpflag, "Print grammar without actions."},
-@@ -1427,7 +1429,7 @@
+@@ -1427,7 +1430,7 @@
    int exitcode;
    struct lemon lem;
  
@@ -23,21 +26,32 @@
  
    OptInit(argv,options,stderr);
    if( version ){
-@@ -1447,6 +1449,17 @@
-   State_init();
-   lem.argv0 = argv[0];
-   lem.filename = OptArg(0);
+@@ -2724,13 +2727,26 @@
+ {
+   char *name;
+   char *cp;
++  char *filename;
++
++  filename = lemp->filename;
 +  if (local_out_dir) {
 +    char *ptr;
 +#ifdef __WIN32__
-+    for (ptr = lem.filename + strlen (lem.filename) - 1; (ptr > lem.filename) && (*ptr != '\\'); ptr--);
++    for (ptr = lemp->filename + strlen (lemp->filename) - 1; (ptr > lemp->filename) && (*ptr != '\\'); ptr--);
 +#else
-+    for (ptr = lem.filename + strlen (lem.filename) - 1; (ptr > lem.filename) && (*ptr != '/'); ptr--);
++    for (ptr = lemp->filename + strlen (lemp->filename) - 1; (ptr > lemp->filename) && (*ptr != '/'); ptr--);
 +#endif
-+    if (ptr > lem.filename)
-+     lem.filename = ptr + 1;
++    if (ptr > lemp->filename)
++     filename = ptr + 1;
 +  }
-+
-   lem.basisflag = basisflag;
-   lem.nolinenosflag = nolinenosflag;
-   Symbol_new("$");
+ 
+-  name = (char*)malloc( lemonStrlen(lemp->filename) + lemonStrlen(suffix) + 5 );
++  name = (char*)malloc( lemonStrlen(filename) + lemonStrlen(suffix) + 5 );
+   if( name==0 ){
+     fprintf(stderr,"Can't allocate space for a filename.\n");
+     exit(1);
+   }
+-  strcpy(name,lemp->filename);
++  strcpy(name,filename);
+   cp = strrchr(name,'.');
+   if( cp ) *cp = 0;
+   strcat(name,suffix);

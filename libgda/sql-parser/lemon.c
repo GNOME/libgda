@@ -1394,6 +1394,8 @@ static void handle_T_option(char *z){
   strcpy(user_templatename, z);
 }
 
+int local_out_dir = 0;
+
 /* The main program.  Parse the command line and do it... */
 int main(int argc, char **argv)
 {
@@ -1404,7 +1406,6 @@ int main(int argc, char **argv)
   static int quiet = 0;
   static int statistics = 0;
   static int mhflag = 0;
-  static int local_out_dir = 0;
   static int nolinenosflag = 0;
   static int noResort = 0;
   static struct s_options options[] = {
@@ -1449,17 +1450,6 @@ int main(int argc, char **argv)
   State_init();
   lem.argv0 = argv[0];
   lem.filename = OptArg(0);
-  if (local_out_dir) {
-    char *ptr;
-#ifdef __WIN32__
-    for (ptr = lem.filename + strlen (lem.filename) - 1; (ptr > lem.filename) && (*ptr != '\\'); ptr--);
-#else
-    for (ptr = lem.filename + strlen (lem.filename) - 1; (ptr > lem.filename) && (*ptr != '/'); ptr--);
-#endif
-    if (ptr > lem.filename)
-     lem.filename = ptr + 1;
-  }
-
   lem.basisflag = basisflag;
   lem.nolinenosflag = nolinenosflag;
   Symbol_new("$");
@@ -2737,13 +2727,26 @@ PRIVATE char *file_makename(struct lemon *lemp, const char *suffix)
 {
   char *name;
   char *cp;
+  char *filename;
 
-  name = (char*)malloc( lemonStrlen(lemp->filename) + lemonStrlen(suffix) + 5 );
+  filename = lemp->filename;
+  if (local_out_dir) {
+    char *ptr;
+#ifdef __WIN32__
+    for (ptr = lemp->filename + strlen (lemp->filename) - 1; (ptr > lemp->filename) && (*ptr != '\\'); ptr--);
+#else
+    for (ptr = lemp->filename + strlen (lemp->filename) - 1; (ptr > lemp->filename) && (*ptr != '/'); ptr--);
+#endif
+    if (ptr > lemp->filename)
+     filename = ptr + 1;
+  }
+
+  name = (char*)malloc( lemonStrlen(filename) + lemonStrlen(suffix) + 5 );
   if( name==0 ){
     fprintf(stderr,"Can't allocate space for a filename.\n");
     exit(1);
   }
-  strcpy(name,lemp->filename);
+  strcpy(name,filename);
   cp = strrchr(name,'.');
   if( cp ) *cp = 0;
   strcat(name,suffix);
