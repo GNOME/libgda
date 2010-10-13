@@ -1109,6 +1109,8 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			expr->param_spec = pspec;
 			ust->expr_list = g_slist_append (ust->expr_list, expr);
 		}
+
+		g_free (str);
 	}
 	g_hash_table_destroy (fields_hash);
 

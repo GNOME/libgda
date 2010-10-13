@@ -101,6 +101,7 @@ main (int argc,char** argv)
 		rewind (file);
 		if (fsize + buffer_index >= maxlen) {
 			fprintf (stderr, "Max buffer size reached\nIncrease MAXSIZE constant and re-run\n");
+			fclose (file);
 			return 1;
 		}
 		
@@ -108,6 +109,7 @@ main (int argc,char** argv)
 		n_read = fread (buffer + buffer_index, 1, fsize, file);
 		if (n_read != fsize) {
 			fprintf (stderr, "Reading error");
+			fclose (file);
 			return 1;
 		}
 

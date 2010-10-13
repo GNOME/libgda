@@ -108,6 +108,7 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data)
 	}
 	if (expected_changes) {
 		/* expected more changes */
+		el = expected_changes;
 		gchar *estr = (gchar *) el->data;
 		g_print ("Received no change but EXPECTED GdaMetaStoreChange: %s", estr);
 		exit (EXIT_FAILURE);

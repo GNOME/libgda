@@ -1200,6 +1200,7 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 		}
 	}
 
+	g_free (real_auth_string);
 	g_free (real_cnc);
 	g_free (user);
 	g_free (pass);
