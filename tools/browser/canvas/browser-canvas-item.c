@@ -194,7 +194,7 @@ static void
 browser_canvas_item_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	BrowserCanvasItem *citem = NULL;
 	const gchar *str = NULL;
@@ -216,6 +216,9 @@ browser_canvas_item_set_property (GObject *object,
 		}
 		if (str)
 			citem->priv->tooltip_text = g_strdup (str);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
 }

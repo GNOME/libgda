@@ -170,7 +170,7 @@ static void
 gda_tree_mgr_tables_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         GdaTreeMgrTables *mgr;
 
@@ -185,6 +185,9 @@ gda_tree_mgr_tables_set_property (GObject *object,
 		case PROP_SCHEMA:
 			mgr->priv->schema = g_value_dup_string (value);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
                 }
         }
 }
@@ -193,7 +196,7 @@ static void
 gda_tree_mgr_tables_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         GdaTreeMgrTables *mgr;
 
@@ -205,6 +208,9 @@ gda_tree_mgr_tables_get_property (GObject *object,
 			break;
 		case PROP_SCHEMA:
 			g_value_set_string (value, mgr->priv->schema);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }

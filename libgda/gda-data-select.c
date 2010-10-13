@@ -621,7 +621,7 @@ static void
 gda_data_select_set_property (GObject *object,
 			 guint param_id,
 			 const GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 	if (model->priv) {
@@ -701,6 +701,7 @@ gda_data_select_set_property (GObject *object,
 			model->priv->sh->reset_with_ext_params_change = g_value_get_boolean (value);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -710,7 +711,7 @@ static void
 gda_data_select_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 	if (model->priv) {
@@ -752,6 +753,7 @@ gda_data_select_get_property (GObject *object,
 			g_value_set_boolean (value, model->priv->sh->reset_with_ext_params_change);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

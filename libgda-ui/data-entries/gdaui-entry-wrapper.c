@@ -285,7 +285,7 @@ static void
 gdaui_entry_wrapper_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	GdauiEntryWrapper *mgwrap = GDAUI_ENTRY_WRAPPER (object);
 	if (mgwrap->priv) {
@@ -310,6 +310,9 @@ gdaui_entry_wrapper_set_property (GObject *object,
 					gda_value_free (sane_value);
 			}
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 		}
 	}
@@ -319,13 +322,16 @@ static void
 gdaui_entry_wrapper_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	GdauiEntryWrapper *mgwrap = GDAUI_ENTRY_WRAPPER (object);
 	if (mgwrap->priv) {
 		switch (param_id) {
 		case PROP_SET_DEFAULT_IF_INVALID:
 			g_value_set_boolean (value, mgwrap->priv->set_default_if_invalid);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

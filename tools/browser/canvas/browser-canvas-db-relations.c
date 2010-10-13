@@ -156,7 +156,7 @@ static void
 browser_canvas_db_relations_set_property (GObject *object,
 					  guint param_id,
 					  const GValue *value,
-					  G_GNUC_UNUSED GParamSpec *pspec)
+					  GParamSpec *pspec)
 {
 	BrowserCanvasDbRelations *canvas;
 
@@ -178,6 +178,9 @@ browser_canvas_db_relations_set_property (GObject *object,
 				objects_cloud_set_meta_struct (canvas->priv->cloud, canvas->priv->mstruct);
 			break;
 		}
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -186,7 +189,7 @@ static void
 browser_canvas_db_relations_get_property (GObject *object,
 					  guint param_id,
 					  GValue *value,
-					  G_GNUC_UNUSED GParamSpec *pspec)
+					  GParamSpec *pspec)
 {
 	BrowserCanvasDbRelations *canvas;
 
@@ -195,6 +198,9 @@ browser_canvas_db_relations_get_property (GObject *object,
                 switch (param_id) {
 		case PROP_META_STRUCT:
 			g_value_set_object (value, canvas->priv->mstruct);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

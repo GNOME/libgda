@@ -197,7 +197,7 @@ static void
 gda_tree_manager_set_property (GObject *object,
 			       guint param_id,
 			       const GValue *value,
-			       G_GNUC_UNUSED GParamSpec *pspec)
+			       GParamSpec *pspec)
 {
 	GdaTreeManager *manager;
 
@@ -210,6 +210,9 @@ gda_tree_manager_set_property (GObject *object,
 		case PROP_FUNC:
 			manager->priv->update_func = g_value_get_pointer (value);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}	
 	}
 }
@@ -218,7 +221,7 @@ static void
 gda_tree_manager_get_property (GObject *object,
 			       guint param_id,
 			       GValue *value,
-			       G_GNUC_UNUSED GParamSpec *pspec)
+			       GParamSpec *pspec)
 {
 	GdaTreeManager *manager;
 	
@@ -230,6 +233,9 @@ gda_tree_manager_get_property (GObject *object,
 			break;
 		case PROP_FUNC:
 			g_value_set_pointer (value, manager->priv->update_func);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}	

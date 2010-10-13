@@ -141,7 +141,7 @@ static void
 gda_tree_mgr_label_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         GdaTreeMgrLabel *mgr;
 
@@ -151,6 +151,9 @@ gda_tree_mgr_label_set_property (GObject *object,
 		case PROP_LABEL:
 			mgr->priv->label = g_value_dup_string (value);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
                 }
         }
 }
@@ -159,7 +162,7 @@ static void
 gda_tree_mgr_label_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         GdaTreeMgrLabel *mgr;
 
@@ -168,6 +171,9 @@ gda_tree_mgr_label_get_property (GObject *object,
                 switch (param_id) {
 		case PROP_LABEL:
 			g_value_set_string (value, mgr->priv->label);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }

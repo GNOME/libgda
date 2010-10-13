@@ -150,7 +150,7 @@ static void
 gda_vprovider_data_model_set_property (GObject *object,
 				       guint param_id,
 				       G_GNUC_UNUSED const GValue *value,
-				       G_GNUC_UNUSED GParamSpec *pspec)
+				       GParamSpec *pspec)
 {
         GdaVproviderDataModel *prov;
 
@@ -158,6 +158,7 @@ gda_vprovider_data_model_set_property (GObject *object,
         if (prov->priv) {
                 switch (param_id) {
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }
@@ -167,7 +168,7 @@ static void
 gda_vprovider_data_model_get_property (GObject *object,
 				       guint param_id,
 				       G_GNUC_UNUSED GValue *value,
-				       G_GNUC_UNUSED GParamSpec *pspec)
+				       GParamSpec *pspec)
 {
         GdaVproviderDataModel *prov;
 
@@ -175,6 +176,7 @@ gda_vprovider_data_model_get_property (GObject *object,
         if (prov->priv) {
 		switch (param_id) {
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
         }

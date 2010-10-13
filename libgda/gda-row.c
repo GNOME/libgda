@@ -124,7 +124,7 @@ static void
 gda_row_set_property (GObject *object,
 		      guint param_id,
 		      const GValue *value,
-		      G_GNUC_UNUSED GParamSpec *pspec)
+		      GParamSpec *pspec)
 {
         GdaRow *row;
 
@@ -138,7 +138,7 @@ gda_row_set_property (GObject *object,
 			row->priv->fields = g_new0 (GValue, row->priv->nfields);			
 			break;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }
@@ -148,7 +148,7 @@ static void
 gda_row_get_property (GObject *object,
 		      guint param_id,
 		      GValue *value,
-		      G_GNUC_UNUSED GParamSpec *pspec)
+		      GParamSpec *pspec)
 {
         GdaRow *row;
 
@@ -159,7 +159,7 @@ gda_row_get_property (GObject *object,
 			g_value_set_int (value, row->priv->nfields);
 			break;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }

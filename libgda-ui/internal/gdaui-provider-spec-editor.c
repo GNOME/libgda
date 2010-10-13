@@ -284,7 +284,7 @@ static void
 gdaui_provider_spec_editor_set_property (GObject *object,
                                             guint param_id,
                                             const GValue *value,
-                                            G_GNUC_UNUSED GParamSpec *pspec)
+                                            GParamSpec *pspec)
 {
 	GdauiProviderSpecEditor *spec;
 	spec = GDAUI_PROVIDER_SPEC_EDITOR (object);
@@ -294,6 +294,9 @@ gdaui_provider_spec_editor_set_property (GObject *object,
 		_gdaui_provider_spec_editor_set_provider (spec,
 		                                g_value_get_string (value));
 		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -301,7 +304,7 @@ static void
 gdaui_provider_spec_editor_get_property (GObject *object,
                                             guint param_id,
                                             GValue *value,
-                                            G_GNUC_UNUSED GParamSpec *pspec)
+                                            GParamSpec *pspec)
 {
 	GdauiProviderSpecEditor *spec;
 	spec = GDAUI_PROVIDER_SPEC_EDITOR (object);
@@ -309,6 +312,9 @@ gdaui_provider_spec_editor_get_property (GObject *object,
 	switch (param_id) {
 	case PROP_PROVIDER:
 		g_value_set_string (value, spec->priv->provider);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
 }

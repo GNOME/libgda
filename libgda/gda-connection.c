@@ -792,7 +792,7 @@ static void
 gda_connection_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaConnection *cnc;
 
@@ -826,6 +826,9 @@ gda_connection_get_property (GObject *object,
 			break;
 		case PROP_EVENTS_HISTORY_SIZE:
 			g_value_set_int (value, cnc->priv->events_array_size);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }	

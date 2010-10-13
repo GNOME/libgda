@@ -221,7 +221,7 @@ static void
 gda_meta_struct_set_property (GObject *object,
 			      guint param_id,
 			      const GValue *value,
-			      G_GNUC_UNUSED GParamSpec *pspec)
+			      GParamSpec *pspec)
 {
         GdaMetaStruct *mstruct;
 
@@ -242,6 +242,7 @@ gda_meta_struct_set_property (GObject *object,
 			mstruct->priv->features = g_value_get_uint (value);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -251,7 +252,7 @@ static void
 gda_meta_struct_get_property (GObject *object,
 			      guint param_id,
 			      GValue *value,
-			      G_GNUC_UNUSED GParamSpec *pspec)
+			      GParamSpec *pspec)
 {
         GdaMetaStruct *mstruct;
         mstruct = GDA_META_STRUCT (object);
@@ -265,6 +266,7 @@ gda_meta_struct_get_property (GObject *object,
 			g_value_set_uint (value, mstruct->priv->features);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

@@ -478,7 +478,7 @@ static void
 gda_data_model_import_set_property (GObject *object,
 				    guint param_id,
 				    const GValue *value,
-				    G_GNUC_UNUSED GParamSpec *pspec)
+				    GParamSpec *pspec)
 {
 	GdaDataModelImport *model;
 	const gchar *string;
@@ -578,7 +578,7 @@ gda_data_model_import_set_property (GObject *object,
 			}
 			return;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -638,7 +638,7 @@ static void
 gda_data_model_import_get_property (GObject *object,
 				    guint param_id,
 				    GValue *value,
-				    G_GNUC_UNUSED GParamSpec *pspec)
+				    GParamSpec *pspec)
 {
 	GdaDataModelImport *model;
 
@@ -661,7 +661,7 @@ gda_data_model_import_get_property (GObject *object,
 				g_value_set_string (value, model->priv->src.string);
 			break;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

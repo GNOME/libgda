@@ -409,7 +409,7 @@ static void
 gda_data_model_iter_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	GdaDataModelIter *iter;
 
@@ -534,6 +534,9 @@ gda_data_model_iter_set_property (GObject *object,
 		case PROP_UPDATE_MODEL:
 			iter->priv->keep_param_changes = ! g_value_get_boolean (value);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -542,7 +545,7 @@ static void
 gda_data_model_iter_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	GdaDataModelIter *iter = GDA_DATA_MODEL_ITER (object);
 	
@@ -558,7 +561,10 @@ gda_data_model_iter_get_property (GObject *object,
 		case PROP_UPDATE_MODEL:
 			g_value_set_boolean (value, ! iter->priv->keep_param_changes);
 			break;
-		}	
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
+		}
 	}
 }
 

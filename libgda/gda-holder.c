@@ -557,7 +557,7 @@ static void
 gda_holder_set_property (GObject *object,
 			 guint param_id,
 			 const GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaHolder *holder;
 
@@ -616,6 +616,9 @@ gda_holder_set_property (GObject *object,
 		case PROP_SOURCE_COLUMN:
 			holder->priv->source_col = g_value_get_int (value);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -624,7 +627,7 @@ static void
 gda_holder_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaHolder *holder;
 	const GValue *cvalue;
@@ -667,6 +670,9 @@ gda_holder_get_property (GObject *object,
 		case PROP_SOURCE_COLUMN:
 			g_value_set_int (value, holder->priv->source_col);
 			break;	
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }

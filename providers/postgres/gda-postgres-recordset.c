@@ -179,7 +179,7 @@ static void
 gda_postgres_recordset_set_property (GObject *object,
 				     guint param_id,
 				     const GValue *value,
-				     G_GNUC_UNUSED GParamSpec *pspec)
+				     GParamSpec *pspec)
 {
         GdaPostgresRecordset *model = (GdaPostgresRecordset *) object;
         if (model->priv) {
@@ -187,8 +187,9 @@ gda_postgres_recordset_set_property (GObject *object,
                 case PROP_CHUNCK_SIZE:
                         model->priv->chunk_size = g_value_get_int (value);
                         break;
-                default:
-                        break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
                 }
         }
 }
@@ -197,7 +198,7 @@ static void
 gda_postgres_recordset_get_property (GObject *object,
 				     guint param_id,
 				     GValue *value,
-				     G_GNUC_UNUSED GParamSpec *pspec)
+				     GParamSpec *pspec)
 {
         GdaPostgresRecordset *model = (GdaPostgresRecordset *) object;
         if (model->priv) {
@@ -208,8 +209,9 @@ gda_postgres_recordset_get_property (GObject *object,
                 case PROP_CHUNCKS_READ:
                         g_value_set_int (value, model->priv->chunks_read);
                         break;
-                default:
-                        break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
                 }
         }
 }

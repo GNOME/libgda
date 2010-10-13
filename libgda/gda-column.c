@@ -207,7 +207,7 @@ static void
 gda_column_set_property (GObject *object,
                                    guint param_id,
                                    const GValue *value,
-                                   G_GNUC_UNUSED GParamSpec *pspec)
+                                   GParamSpec *pspec)
 {
         GdaColumn *col;
 
@@ -222,7 +222,8 @@ gda_column_set_property (GObject *object,
 				col->priv->id = NULL;
 			break;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -231,7 +232,7 @@ static void
 gda_column_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaColumn *col;
 
@@ -242,7 +243,8 @@ gda_column_get_property (GObject *object,
 			g_value_set_string (value, col->priv->id);
 			break;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }

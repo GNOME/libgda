@@ -267,7 +267,7 @@ static void
 gda_ddl_creator_set_property (GObject *object,
 			      guint param_id,
 			      const GValue *value,
-			      G_GNUC_UNUSED GParamSpec *pspec)
+			      GParamSpec *pspec)
 {
 	GdaDDLCreator *creator;
 	
@@ -312,6 +312,9 @@ gda_ddl_creator_set_property (GObject *object,
 								  FALSE, FALSE);
 			}
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -320,7 +323,7 @@ static void
 gda_ddl_creator_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaDDLCreator *creator;
 	creator = GDA_DDL_CREATOR (object);
@@ -341,6 +344,9 @@ gda_ddl_creator_get_property (GObject *object,
 				g_value_set_string (value, g_value_get_string (creator->priv->schema));
 			else
 				g_value_set_string (value, NULL);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

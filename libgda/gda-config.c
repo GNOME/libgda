@@ -731,7 +731,7 @@ static void
 gda_config_set_property (GObject *object,
 			 guint param_id,
 			 const GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaConfig *conf;
 
@@ -750,6 +750,9 @@ gda_config_set_property (GObject *object,
 			if (g_value_get_string (value))
 				conf->priv->system_file = g_strdup (g_value_get_string (value));
                         break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}	
 	}
 }
@@ -758,7 +761,7 @@ static void
 gda_config_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaConfig *conf;
 	
@@ -770,6 +773,9 @@ gda_config_get_property (GObject *object,
 			break;
 		case PROP_SYSTEM_FILE:
 			g_value_set_string (value, conf->priv->system_file);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}	

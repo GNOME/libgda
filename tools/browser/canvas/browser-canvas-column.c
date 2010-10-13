@@ -144,7 +144,7 @@ static void
 browser_canvas_column_set_property (GObject *object,
 				    guint param_id,
 				    const GValue *value,
-				    G_GNUC_UNUSED GParamSpec *pspec)
+				    GParamSpec *pspec)
 {
 	BrowserCanvasColumn *cf = NULL;
 	GdaMetaTableColumn* column = NULL;
@@ -181,6 +181,9 @@ browser_canvas_column_set_property (GObject *object,
 			g_object_set (object, "tip-text", NULL, NULL);
 		g_string_free (string, TRUE);
 		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -188,7 +191,7 @@ static void
 browser_canvas_column_get_property (GObject *object,
 				    guint param_id,
 				    GValue *value,
-				    G_GNUC_UNUSED GParamSpec *pspec)
+				    GParamSpec *pspec)
 {
 	BrowserCanvasColumn *cf;
 
@@ -200,6 +203,9 @@ browser_canvas_column_get_property (GObject *object,
 		break;
 	case PROP_COLUMN:
 		g_value_set_pointer (value, cf->priv->column);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
 }

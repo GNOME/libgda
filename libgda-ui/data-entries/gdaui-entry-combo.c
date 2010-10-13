@@ -379,7 +379,7 @@ static void
 gdaui_entry_combo_set_property (GObject *object,
 				guint param_id,
 				const GValue *value,
-				G_GNUC_UNUSED GParamSpec *pspec)
+				GParamSpec *pspec)
 {
 	GdauiEntryCombo *combo = GDAUI_ENTRY_COMBO (object);
 	if (combo->priv) {
@@ -395,6 +395,9 @@ gdaui_entry_combo_set_property (GObject *object,
 					choose_auto_default_value (combo);
 			}
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -403,13 +406,16 @@ static void
 gdaui_entry_combo_get_property (GObject *object,
 				guint param_id,
 				GValue *value,
-				G_GNUC_UNUSED GParamSpec *pspec)
+				GParamSpec *pspec)
 {
 	GdauiEntryCombo *combo = GDAUI_ENTRY_COMBO (object);
 	if (combo->priv) {
 		switch (param_id) {
 		case PROP_SET_DEFAULT_IF_INVALID:
 			g_value_set_boolean (value, combo->priv->set_default_if_invalid);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

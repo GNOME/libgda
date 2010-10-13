@@ -142,7 +142,7 @@ static void
 mgr_favorites_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         MgrFavorites *mgr;
 
@@ -155,6 +155,9 @@ mgr_favorites_set_property (GObject *object,
 				g_object_ref (mgr->priv->bcnc);
 			
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
                 }
         }
 }
@@ -163,7 +166,7 @@ static void
 mgr_favorites_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         MgrFavorites *mgr;
 
@@ -172,6 +175,9 @@ mgr_favorites_get_property (GObject *object,
                 switch (param_id) {
 		case PROP_BROWSER_CNC:
 			g_value_set_object (value, mgr->priv->bcnc);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }

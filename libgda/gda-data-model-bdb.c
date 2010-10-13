@@ -325,7 +325,7 @@ static void
 gda_data_model_bdb_set_property (GObject *object,
 				 guint param_id,
 				 const GValue *value,
-				 G_GNUC_UNUSED GParamSpec *pspec)
+				 GParamSpec *pspec)
 {
         GdaDataModelBdb *model;
         const gchar *string;
@@ -351,6 +351,9 @@ gda_data_model_bdb_set_property (GObject *object,
 			if (string) 
 				model->priv->db_name = g_strdup (string);
 			model->priv->db_name_set = TRUE;
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -441,7 +444,7 @@ static void
 gda_data_model_bdb_get_property (GObject *object,
                                     guint param_id,
                                     GValue *value,
-                                    G_GNUC_UNUSED GParamSpec *pspec)
+                                    GParamSpec *pspec)
 {
         GdaDataModelBdb *model;
 
@@ -453,6 +456,9 @@ gda_data_model_bdb_get_property (GObject *object,
 			break;
                 case PROP_DB_NAME:
 			g_value_set_string (value, model->priv->db_name);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

@@ -221,7 +221,7 @@ static void
 gda_sql_builder_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaSqlBuilder *builder;
 	GdaSqlStatementType stmt_type;
@@ -243,6 +243,9 @@ gda_sql_builder_set_property (GObject *object,
 			if (stmt_type == GDA_SQL_STATEMENT_COMPOUND)
 				gda_sql_builder_compound_set_type (builder, GDA_SQL_STATEMENT_COMPOUND_UNION);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -251,13 +254,16 @@ static void
 gda_sql_builder_get_property (GObject *object,
 			     guint param_id,
 			     G_GNUC_UNUSED GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaSqlBuilder *builder;
 	builder = GDA_SQL_BUILDER (object);
 
 	if (builder->priv) {
 		switch (param_id) {
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }

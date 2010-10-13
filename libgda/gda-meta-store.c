@@ -734,7 +734,7 @@ static void
 gda_meta_store_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaMetaStore *store;
 	const gchar *cnc_string;
@@ -779,6 +779,9 @@ gda_meta_store_set_property (GObject *object,
 			else
 				store->priv->schema = NULL;
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -787,7 +790,7 @@ static void
 gda_meta_store_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaMetaStore *store;
 	store = GDA_META_STORE (object);
@@ -805,6 +808,9 @@ gda_meta_store_get_property (GObject *object,
 			break;
 		case PROP_SCHEMA:
 			g_value_set_string (value, store->priv->schema);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

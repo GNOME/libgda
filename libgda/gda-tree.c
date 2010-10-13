@@ -263,13 +263,16 @@ static void
 gda_tree_set_property (GObject *object,
 			 guint param_id,
 			 G_GNUC_UNUSED const GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaTree *tree;
 
         tree = GDA_TREE (object);
         if (tree->priv) {
                 switch (param_id) {
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}	
 	}
 }
@@ -278,7 +281,7 @@ static void
 gda_tree_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaTree *tree;
 	
@@ -297,6 +300,9 @@ gda_tree_get_property (GObject *object,
 			g_value_set_boolean (value, is_list);
 			break;
 		}
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}	
 }

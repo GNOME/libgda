@@ -226,7 +226,7 @@ static void
 browser_canvas_text_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	BrowserCanvasText *ct = NULL;
 	const gchar *cstr = NULL;
@@ -291,6 +291,9 @@ browser_canvas_text_set_property (GObject *object,
 		ct->priv->bold = bool;
 		adjust_text_pango_attributes (ct);
 		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -298,7 +301,7 @@ static void
 browser_canvas_text_get_property    (GObject *object,
 				    guint param_id,
 				    G_GNUC_UNUSED GValue *value,
-				    G_GNUC_UNUSED GParamSpec *pspec)
+				    GParamSpec *pspec)
 {
 	BrowserCanvasText *ct;
 
@@ -306,7 +309,7 @@ browser_canvas_text_get_property    (GObject *object,
 
 	switch (param_id) {
 	default:
-		g_warning ("No such property!");
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
 }

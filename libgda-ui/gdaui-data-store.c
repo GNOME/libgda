@@ -248,7 +248,7 @@ static void
 gdaui_data_store_set_property (GObject *object,
 			       guint param_id,
 			       const GValue *value,
-			       G_GNUC_UNUSED GParamSpec *pspec)
+			       GParamSpec *pspec)
 {
 	GdauiDataStore *store;
 
@@ -290,6 +290,9 @@ gdaui_data_store_set_property (GObject *object,
 				      g_value_get_boolean (value), NULL);
 			store->priv->stamp = g_random_int ();
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -298,7 +301,7 @@ static void
 gdaui_data_store_get_property (GObject *object,
 			       guint param_id,
 			       GValue *value,
-			       G_GNUC_UNUSED GParamSpec *pspec)
+			       GParamSpec *pspec)
 {
 	GdauiDataStore *store;
 
@@ -320,6 +323,9 @@ gdaui_data_store_get_property (GObject *object,
 			g_value_set_boolean (value, prop);
 			break;
 		}
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }

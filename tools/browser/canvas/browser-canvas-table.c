@@ -200,7 +200,7 @@ static void
 browser_canvas_table_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
 	BrowserCanvasTable *ce = NULL;
 
@@ -230,6 +230,9 @@ browser_canvas_table_set_property (GObject *object,
 	case PROP_MENU_FUNC:
 		ce->priv->popup_menu_func = (GtkWidget *(*) (BrowserCanvasTable *ce)) g_value_get_pointer (value);
 		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -237,7 +240,7 @@ static void
 browser_canvas_table_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
 	BrowserCanvasTable *ce = NULL;
 
@@ -249,6 +252,9 @@ browser_canvas_table_get_property (GObject *object,
 		break;
 	case PROP_TABLE:
 		g_value_set_pointer (value, ce->priv->table);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
 }
