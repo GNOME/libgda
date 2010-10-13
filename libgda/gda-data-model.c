@@ -1155,7 +1155,8 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 							g_string_append_c (retstring, quote);
 						}
 						g_string_append_c (retstring, '\n');
-						g_free (rcols);
+						if (!cols)
+							g_free (rcols);
 					}
 				}
 				else

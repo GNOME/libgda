@@ -229,8 +229,10 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 #endif
 	}
 
-	if (!prefix || !*prefix)
+	if (!prefix || !*prefix) {
+		g_free (prefix);
 		return NULL;
+	}
        
 	/* filename part */
 	size = 10;

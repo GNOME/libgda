@@ -96,7 +96,7 @@ main (int argc, char *argv[])
 static int
 sqlxslt_process_xslt_file_ext (GdaXsltExCont *sql_ctx, const char *inputFile, 
 			       const char *xslFileName, const char *outputFileName) {
-	int ret;
+	int ret = 0;
 	xmlDocPtr doc,res;
 	xsltStylesheetPtr xsltdoc;
 	xsltTransformContextPtr ctxt;
