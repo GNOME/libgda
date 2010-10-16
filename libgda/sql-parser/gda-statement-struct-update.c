@@ -195,7 +195,7 @@ gda_sql_statement_update_serialize (gpointer stmt)
  *
  * Sets the name of the table to delete from in @stmt.
  *
- * @value's responsibility is transferred to
+ * @value's ownership is transferred to
  * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
@@ -213,7 +213,7 @@ gda_sql_statement_update_take_table_name (GdaSqlStatement *stmt, GValue *value)
  * @stmt: a #GdaSqlStatement pointer
  * @value: name of the resolution conflict algorithm, as a G_TYPE_STRING #GValue
  *
- * Sets the name of the resolution conflict algorithm used by @stmt. @value's responsibility is transferred to
+ * Sets the name of the resolution conflict algorithm used by @stmt. @value's ownership is transferred to
  * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
@@ -234,7 +234,7 @@ gda_sql_statement_update_take_on_conflict (GdaSqlStatement *stmt, GValue *value)
  *
  * Sets the WHERE clause of @stmt
  *
- * @expr's responsibility is transferred to
+ * @expr's ownership is transferred to
  * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void 

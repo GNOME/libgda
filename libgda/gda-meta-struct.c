@@ -2242,7 +2242,7 @@ copyerror:
  * @error: (allow-none): a place to store errors, or %NULL
  *
  * Adds @dbo to the database objects known to @mstruct. In any case (whether an error occured or not)
- * @dbo's responsibility is then transferred to @smtruct and should
+ * @dbo's ownership is then transferred to @smtruct and should
  * not be used after calling this function (it may have been destroyed). If you need a pointer to the #GdaMetaDbObject
  * for a database object, use gda_meta_struct_get_db_object().
  *

@@ -253,7 +253,7 @@ gda_sql_statement_trans_serialize (gpointer stmt)
  *
  * Sets the name of the transaction
  *
- * @value's responsibility is transferred to
+ * @value's ownership is transferred to
  * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
@@ -278,7 +278,7 @@ gda_sql_statement_trans_take_name (GdaSqlStatement *stmt, GValue *value)
  *
  * Sets the model of the transaction
  *
- * @value's responsibility is transferred to
+ * @value's ownership is transferred to
  * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
