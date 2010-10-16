@@ -1361,8 +1361,8 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
  * @join_id: the ID of the join to modify (not %0)
  * @field_name: the name of the field to use in the join condition (not %NULL)
  *
- * Alter a joins in a SELECT statement to make its condition on the field which name
- * is @field_name
+ * Alter a join in a SELECT statement to make its condition use equal field 
+ * values in the fields named @field_name in both tables, via the USING keyword.
  *
  * Returns: the ID of the new join, or %0 if there was an error
  *
