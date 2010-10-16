@@ -1036,7 +1036,7 @@ gda_sql_builder_add_param (GdaSqlBuilder *builder, const gchar *param_name, GTyp
  * @op2: the ID of the 2nd argument (may be %0 if @op needs only one operand)
  * @op3: the ID of the 3rd argument (may be %0 if @op needs only one or two operand)
  *
- * Builds a new expression which reprenents a condition (or operation).
+ * Builds a new expression which represents a condition (or operation).
  *
  * Returns: the ID of the new expression, or %0 if there was an error
  *
@@ -1079,7 +1079,7 @@ gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op, GdaSqlB
  * @op_ids: (array length=op_ids_size): an array of ID for the arguments (not %0)
  * @op_ids_size: size of @ops_ids
  *
- * Builds a new expression which reprenents a condition (or operation).
+ * Builds a new expression which represents a condition (or operation).
  *
  * As a side case, if @ops_ids_size is 1,
  * then @op is ignored, and the returned ID represents @op_ids[0] (this avoids any problem for example
@@ -1630,7 +1630,7 @@ gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id
  * @func_name: the functions's name
  * @...: a list, terminated with %0, of each function's argument's ID
  *
- * Builds a new expression which reprenents a function applied to some arguments
+ * Builds a new expression which represents a function applied to some arguments
  *
  * Returns: the ID of the new expression, or %0 if there was an error
  *
