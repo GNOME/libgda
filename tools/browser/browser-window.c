@@ -1086,7 +1086,6 @@ window_state_event (GtkWidget *widget, GdkEventWindowState *event)
 		else
 			gtk_widget_show (wid);
 		
-		gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (bwin->priv->statusbar), !fullscreen);
 		g_signal_emit (G_OBJECT (bwin), browser_window_signals[FULLSCREEN_CHANGED], 0, fullscreen);
         }
 	return FALSE;
