@@ -3444,7 +3444,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
  * method allows the user to add, set or remove attributes specific to their usage.
  * 
  * This method allows to get the value of a attribute stored in @store. The returned attribute value is 
- * placed at @att_value, the caller is responsible to free that string. 
+ * placed at @att_value, the caller is responsible for free that string. 
  *
  * If there is no attribute named @att_name then @att_value is set to %NULL
  * and @error will contain the GDA_META_STORE_ATTRIBUTE_NOT_FOUND_ERROR error code, and FALSE is returned.

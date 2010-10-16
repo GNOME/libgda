@@ -227,7 +227,7 @@ gda_sql_statement_insert_serialize (gpointer stmt)
  * @value: name of the table to insert into, as a G_TYPE_STRING #GValue
  *
  * Sets the name of the table to insert into in @stmt. @value's responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_insert_take_table_name (GdaSqlStatement *stmt, GValue *value)
@@ -245,7 +245,7 @@ gda_sql_statement_insert_take_table_name (GdaSqlStatement *stmt, GValue *value)
  * @value: name of the resolution conflict algorithm, as a G_TYPE_STRING #GValue
  *
  * Sets the name of the resolution conflict algorithm used by @stmt. @value's responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_insert_take_on_conflict (GdaSqlStatement *stmt, GValue *value)
@@ -265,7 +265,7 @@ gda_sql_statement_insert_take_on_conflict (GdaSqlStatement *stmt, GValue *value)
  *
  * Sets the list of fields for which values will be specified in @stmt. @list's 
  * responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_insert_take_fields_list (GdaSqlStatement *stmt, GSList *list)
@@ -285,7 +285,7 @@ gda_sql_statement_insert_take_fields_list (GdaSqlStatement *stmt, GSList *list)
  *
  * Sets a list of values to be inserted by @stmt. @list's 
  * responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList *list)
@@ -305,7 +305,7 @@ gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList *list
  *
  * Sets a list of list of values to be inserted by @stmt. @list's 
  * responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_insert_take_extra_values_list (GdaSqlStatement *stmt, GSList *list)
@@ -327,7 +327,7 @@ gda_sql_statement_insert_take_extra_values_list (GdaSqlStatement *stmt, GSList *
  *
  * Specifies a SELECT statement, the values inserted will be the result set of @select. @select's 
  * responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_insert_take_select (GdaSqlStatement *stmt, GdaSqlStatement *select)

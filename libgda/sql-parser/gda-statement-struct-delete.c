@@ -127,7 +127,7 @@ gda_sql_statement_delete_serialize (gpointer stmt)
  * @value: a table name as a G_TYPE_STRING #GValue 
  *
  * Sets the name of the table to delete from in @stmt. @value's responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_delete_take_table_name (GdaSqlStatement *stmt, GValue *value)
@@ -145,7 +145,7 @@ gda_sql_statement_delete_take_table_name (GdaSqlStatement *stmt, GValue *value)
  * @cond: the WHERE condition of the DELETE statement, as a #GdaSqlExpr 
  *
  * Sets the WHERE condition of @stmt. @cond's responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void 
 gda_sql_statement_delete_take_condition (GdaSqlStatement *stmt, GdaSqlExpr *cond)
