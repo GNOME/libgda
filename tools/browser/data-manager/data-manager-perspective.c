@@ -131,11 +131,11 @@ data_manager_perspective_init (DataManagerPerspective *perspective)
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
                                       const gchar *selection, DataManagerPerspective *perspective);
-static void nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+static void nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
                                DataManagerPerspective *perspective);
-static void nb_page_removed_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+static void nb_page_removed_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
 				DataManagerPerspective *perspective);
-static void nb_page_added_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+static void nb_page_added_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
 			      DataManagerPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 
@@ -296,7 +296,7 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, BrowserF
 }
 
 static void
-nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkNotebookPage *page, gint page_num,
+nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint page_num,
                    DataManagerPerspective *perspective)
 {
         GtkWidget *page_contents;
@@ -316,7 +316,7 @@ nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkNotebookPage *page, gint pa
 }
 
 static void
-nb_page_removed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkNotebookPage *page, G_GNUC_UNUSED gint page_num,
+nb_page_removed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, G_GNUC_UNUSED gint page_num,
                     DataManagerPerspective *perspective)
 {
         if (gtk_notebook_get_n_pages (nb) == 0) {
@@ -328,7 +328,7 @@ nb_page_removed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkNotebookPage *page, G_GNUC
 }
 
 static void
-nb_page_added_cb (G_GNUC_UNUSED GtkNotebook *nb, G_GNUC_UNUSED GtkNotebookPage *page,
+nb_page_added_cb (G_GNUC_UNUSED GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page,
 		  G_GNUC_UNUSED gint page_num, DataManagerPerspective *perspective)
 {
 	adapt_notebook_for_fullscreen (perspective);

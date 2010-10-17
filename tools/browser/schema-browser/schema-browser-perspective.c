@@ -122,7 +122,7 @@ static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFav
 				      const gchar *selection, SchemaBrowserPerspective *bpers);
 static void objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_type,
 						const gchar *selection, SchemaBrowserPerspective *bpers);
-static void nb_switch_page_cb (GtkNotebook *nb, GtkNotebookPage *page, gint page_num,
+static void nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
 			       SchemaBrowserPerspective *perspective); 
 /**
  * schema_browser_perspective_new
@@ -182,7 +182,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 }
 
 static void
-nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkNotebookPage *page, gint page_num,
+nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint page_num,
 		   SchemaBrowserPerspective *perspective)
 {
 	GtkWidget *page_contents;

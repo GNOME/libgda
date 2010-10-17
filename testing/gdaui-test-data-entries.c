@@ -461,7 +461,7 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 
 	return table;
 }
-static void plugin_nb_page_changed_cb (GtkNotebook *nb, GtkNotebookPage *page, gint pageno, GtkWidget *table);
+static void plugin_nb_page_changed_cb (GtkNotebook *nb, GtkWidget *page, gint pageno, GtkWidget *table);
 static void vbox_destroyed_cb (GtkWidget *widget, gpointer data);
 static void
 create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
@@ -543,7 +543,7 @@ static GtkWidget *build_form_test_for_gtype (GdaDataHandler *dh, GType type, con
 static GtkWidget *build_grid_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_name);
 
 static void
-plugin_nb_page_changed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkNotebookPage *page, gint pageno,
+plugin_nb_page_changed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint pageno, 
 			   G_GNUC_UNUSED GtkWidget *table)
 {
 	GtkWidget *vbox;
