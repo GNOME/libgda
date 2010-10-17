@@ -210,7 +210,7 @@ introspection_sources = \
 Gdaui-4_0.gir: $(lib_LTLIBRARIES)
 Gdaui_4_0_gir_INCLUDES = Gtk-2.0 Gda-4.0
 Gdaui_4_0_gir_CFLAGS = $(AM_CPPFLAGS)
-Gdaui_4_0_gir_LIBS = $(lib_LTLIBRARIES)
+Gdaui_4_0_gir_LIBS = $(lib_LTLIBRARIES) ../libgda/libgda-4.0.la
 Gdaui_4_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
 INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/libgda
 INTROSPECTION_GIRS += Gdaui-4.0.gir
