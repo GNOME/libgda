@@ -710,8 +710,8 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 /**
  * gda_statement_to_sql_extended:
  * @stmt: a #GdaStatement object
- * @cnc: a #GdaConnection object, or %NULL
- * @params: parameters contained in a single #GdaSet object
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @params: (allow-none): parameters contained in a single #GdaSet object, or %NULL
  * @flags: a set of flags to control the rendering
  * @params_used: (element-type GdaHolder) (out) (transfer container) (allow-none):a place to store the list of actual #GdaHolder objects in @params used to do the rendering, or %NULL
  * @error: a place to store errors, or %NULL
@@ -722,7 +722,7 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
  * it may include some SQL tweaks and/or proprietary extensions specific to the database engine used by @cnc):
  * in this case the result is similar to calling gda_connection_statement_to_sql().
  *
- * Returns: a new string if no error occurred
+ * Returns: (transfer full): a new string if no error occurred
  */
 gchar *
 gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *params,
