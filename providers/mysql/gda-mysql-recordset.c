@@ -296,8 +296,8 @@ gda_mysql_recordset_get_type (void)
 }
 
 static GType
-_gda_mysql_type_to_gda (MysqlConnectionData    *cdata,
-			enum enum_field_types   mysql_type)
+_gda_mysql_type_to_gda (MysqlConnectionData *cdata,
+			enum enum_field_types  mysql_type, unsigned int charsetnr)
 {
 	GType gtype = 0;
 	switch (mysql_type) {
@@ -319,10 +319,6 @@ _gda_mysql_type_to_gda (MysqlConnectionData    *cdata,
 	case MYSQL_TYPE_DOUBLE:
 		gtype = G_TYPE_DOUBLE;
 		break;
-	case MYSQL_TYPE_BIT:
-	case MYSQL_TYPE_BLOB:
-		gtype = GDA_TYPE_BLOB;
-		break;
 	case MYSQL_TYPE_TIMESTAMP:
 	case MYSQL_TYPE_DATETIME:
 		gtype = GDA_TYPE_TIMESTAMP;
@@ -341,8 +337,14 @@ _gda_mysql_type_to_gda (MysqlConnectionData    *cdata,
 	case MYSQL_TYPE_SET:
 	case MYSQL_TYPE_ENUM:
 	case MYSQL_TYPE_GEOMETRY:
+	case MYSQL_TYPE_BIT:
+	case MYSQL_TYPE_BLOB:
 	default:
-		gtype = G_TYPE_STRING;
+		if (charsetnr == 63)
+			gtype = GDA_TYPE_BLOB;
+		else
+			gtype = G_TYPE_STRING;
+		break;
 	}
 
 	/* g_print ("%s: ", __func__); */
@@ -464,7 +466,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		
 		GType gtype = _GDA_PSTMT(ps)->types[i];
 		if (gtype == 0) {
-			gtype = _gda_mysql_type_to_gda (cdata, field->type);
+			gtype = _gda_mysql_type_to_gda (cdata, field->type, field->charsetnr);
 			_GDA_PSTMT(ps)->types[i] = gtype;
 		}
 		gda_column_set_g_type (column, gtype);
