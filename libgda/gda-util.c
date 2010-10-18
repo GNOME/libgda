@@ -1956,7 +1956,7 @@ static char rfc1738_reserved_chars[] =
  * <constant>&quot;%%ab&quot;</constant> where
  * <constant>ab</constant> is the hexadecimal number corresponding to the character.
  *
- * Returns: a new string
+ * Returns: (transfer full): a new string
  */
 gchar *
 gda_rfc1738_encode (const gchar *string)
@@ -2019,7 +2019,7 @@ gda_rfc1738_encode (const gchar *string)
 
 /**
  * gda_rfc1738_decode
- * @string: a string to encode 
+ * @string: a string to decode
  *
  * Decodes @string using the RFC 1738 recommendations: the
  * <constant>&lt;&gt;&quot;#%{}|\^~[]&apos;`;/?:@=&amp;</constant> and space characters are replaced by 
@@ -2216,40 +2216,50 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 	if (*out_cnc_params) {
 		gchar *pos;
 
-		pos = g_strrstr (*out_cnc_params, "USERNAME=");
-		if (pos) {
-			for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
-			if (ptr != pos + 9)
-				*out_username = g_strndup (pos + 9, ptr - (pos + 9));
-
-			if (*ptr)
-				g_memmove (pos, ptr + 1, strlen (ptr));
-			else
-				*pos = 0;
-			gchar *tmp;
-			gint len;
-			tmp = *out_cnc_params;
-			len = strlen (tmp) - 1;
-			if (tmp [len] == ';')
-				tmp [len] = 0;
+		pos = strstr (*out_cnc_params, "USERNAME=");
+		while (pos) {
+			if (((pos > *out_cnc_params) && (*(pos-1) == ';')) ||
+			    (pos  == *out_cnc_params)) {
+				for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
+				if (ptr != pos + 9)
+					*out_username = g_strndup (pos + 9, ptr - (pos + 9));
+				
+				if (*ptr)
+					g_memmove (pos, ptr + 1, strlen (ptr));
+				else
+					*pos = 0;
+				gchar *tmp;
+				gint len;
+				tmp = *out_cnc_params;
+				len = strlen (tmp) - 1;
+				if (tmp [len] == ';')
+					tmp [len] = 0;
+				break;
+			}
+			pos = strstr (pos + 9, "USERNAME=");
 		}
 
-		pos = g_strrstr (*out_cnc_params, "PASSWORD=");
-		if (pos) {
-			for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
-			if (ptr != pos + 9)
-				*out_password = g_strndup (pos + 9, ptr - (pos + 9));
-
-			if (*ptr)
-				g_memmove (pos, ptr + 1, strlen (ptr));
-			else
-				*pos = 0;
-			gchar *tmp;
-			gint len;
-			tmp = *out_cnc_params;
-			len = strlen (tmp) - 1;
-			if (tmp [len] == ';')
-				tmp [len] = 0;
+		pos = strstr (*out_cnc_params, "PASSWORD=");
+		while (pos) {
+			if (((pos > *out_cnc_params) && (*(pos-1) == ';')) ||
+			    (pos  == *out_cnc_params)) {
+				for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
+				if (ptr != pos + 9)
+					*out_password = g_strndup (pos + 9, ptr - (pos + 9));
+				
+				if (*ptr)
+					g_memmove (pos, ptr + 1, strlen (ptr));
+				else
+					*pos = 0;
+				gchar *tmp;
+				gint len;
+				tmp = *out_cnc_params;
+				len = strlen (tmp) - 1;
+				if (tmp [len] == ';')
+					tmp [len] = 0;
+				break;
+			}
+			pos = strstr (pos +  9, "PASSWORD=");
 		}
 	}
 
