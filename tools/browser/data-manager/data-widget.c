@@ -60,6 +60,7 @@ typedef struct {
 
 static DataPart *data_part_find (DataWidget *dwid, DataSource *source);
 static void data_part_free (DataPart *part, GSList *all_parts);
+static void data_part_show_error (DataPart *part, GError *error);
 
 struct _DataWidgetPrivate {
 	DataSourceManager *mgr;
@@ -73,7 +74,7 @@ struct _DataWidgetPrivate {
 static void data_widget_class_init (DataWidgetClass *klass);
 static void data_widget_init       (DataWidget *dwid, DataWidgetClass *klass);
 static void data_widget_dispose    (GObject *object);
-static void compute_sources_dependencies (DataPart *part);
+static gboolean compute_sources_dependencies (DataPart *part, GError **error);
 static void mgr_list_changed_cb (DataSourceManager *mgr, DataWidget *dwid);
 
 static GObjectClass *parent_class = NULL;
@@ -633,8 +634,12 @@ update_layout (DataWidget *dwid)
 			g_object_unref ((GObject*) part->top);
 			newparts_list = g_slist_prepend (newparts_list, part);
 			if (!reused) {
-				compute_sources_dependencies (part);
-				data_source_execute (source, NULL);
+				if (compute_sources_dependencies (part, &lerror))
+					data_source_execute (source, NULL);
+				else {
+					data_part_show_error (part, lerror);
+					g_clear_error (&lerror);
+				}
 			}
 		}
 		else {
@@ -653,8 +658,12 @@ update_layout (DataWidget *dwid)
 				g_object_unref ((GObject*) part->top);
 				newparts_list = g_slist_prepend (newparts_list, part);
 				if (!reused) {
-					compute_sources_dependencies (part);
-					data_source_execute (source, NULL);
+					if (compute_sources_dependencies (part, &lerror))
+						data_source_execute (source, NULL);
+					else {
+						data_part_show_error (part, lerror);
+						g_clear_error (&lerror);
+					}
 				}
 			}
 			g_slist_free (paned_list);
@@ -680,8 +689,12 @@ update_layout (DataWidget *dwid)
 				g_object_unref ((GObject*) part->top);
 				newparts_list = g_slist_prepend (newparts_list, part);
 				if (!reused) {
-					compute_sources_dependencies (part);
-					data_source_execute (source, NULL);
+					if (compute_sources_dependencies (part, &lerror))
+						data_source_execute (source, NULL);
+					else {
+						data_part_show_error (part, lerror);
+						g_clear_error (&lerror);
+					}
 				}
 			}
 			else {
@@ -699,8 +712,12 @@ update_layout (DataWidget *dwid)
 					g_object_unref ((GObject*) part->top);
 					newparts_list = g_slist_prepend (newparts_list, part);
 					if (!reused) {
-						compute_sources_dependencies (part);
-						data_source_execute (source, NULL);
+						if (compute_sources_dependencies (part, &lerror))
+							data_source_execute (source, NULL);
+						else {
+							data_part_show_error (part, lerror);
+							g_clear_error (&lerror);
+						}
 					}
 				}
 				g_slist_free (paned_list);
@@ -811,6 +828,25 @@ data_part_find (DataWidget *dwid, DataSource *source)
 	return NULL;
 }
 
+static void
+data_part_show_error (DataPart *part, GError *error)
+{
+	gchar *tmp;
+	g_assert (part);
+	tmp = g_markup_printf_escaped ("\n<b>Error:\n</b>%s",
+				       error && error->message ? error->message : _("no detail"));
+	if (! part->error_widget) {
+		part->error_widget = gtk_label_new ("");
+		gtk_misc_set_alignment (GTK_MISC (part->error_widget), 0., 0.);
+		part->error_widget_page = gtk_notebook_append_page (part->nb, part->error_widget,
+								    NULL);
+		gtk_widget_show (part->error_widget);
+	}
+	gtk_label_set_markup (GTK_LABEL (part->error_widget), tmp);
+	g_free (tmp);
+	gtk_notebook_set_current_page (part->nb, part->error_widget_page);
+}
+
 static gboolean
 source_exec_started_cb_timeout (DataPart *part)
 {
@@ -845,19 +881,7 @@ source_exec_finished_cb (G_GNUC_UNUSED DataSource *source, GError *error, DataPa
 	g_print ("==== Execution of source [%s] finished\n", data_source_get_title (part->source));
 #endif
 	if (error) {
-		gchar *tmp;
-		tmp = g_markup_printf_escaped ("\n<b>Error:\n</b>%s",
-					       error->message ? error->message : _("Error: no detail"));
-		if (! part->error_widget) {
-			part->error_widget = gtk_label_new ("");
-			gtk_misc_set_alignment (GTK_MISC (part->error_widget), 0., 0.);
-			part->error_widget_page = gtk_notebook_append_page (part->nb, part->error_widget,
-									    NULL);
-			gtk_widget_show (part->error_widget);
-		}
-		gtk_label_set_markup (GTK_LABEL (part->error_widget), tmp);
-		g_free (tmp);
-		gtk_notebook_set_current_page (part->nb, part->error_widget_page);
+		data_part_show_error (part, error);
 		return;
 	}
 	
@@ -926,7 +950,12 @@ source_exec_finished_cb (G_GNUC_UNUSED DataSource *source, GError *error, DataPa
 		}
 	}
 	gtk_notebook_set_current_page (part->nb, part->data_widget_page);
-	compute_sources_dependencies (part);
+
+	GError *lerror = NULL;
+	if (! compute_sources_dependencies (part, &lerror)) {
+		data_part_show_error (part, lerror);
+		g_clear_error (&lerror);
+	}
 }
 
 static void
@@ -951,13 +980,15 @@ data_part_selection_changed_cb (G_GNUC_UNUSED GdauiDataSelector *gdauidataselect
 	}
 }
 
-static void
-compute_sources_dependencies (DataPart *part)
+static gboolean
+compute_sources_dependencies (DataPart *part, GError **error)
 {
 	GdaSet *import;
+	gboolean retval = TRUE;
+
 	import = data_source_get_import (part->source);
 	if (!import)
-		return;
+		return TRUE;
 
 	GSList *holders;
 	for (holders = import->holders; holders; holders = holders->next) {
@@ -980,10 +1011,25 @@ compute_sources_dependencies (DataPart *part)
 			if (holder2) {
 				GError *lerror = NULL;
 				if (! gda_holder_set_bind (holder, holder2, &lerror)) {
-					TO_IMPLEMENT;
-					g_print ("Error: %s\n", lerror && lerror->message ? 
-						 lerror->message : "???");
-					g_clear_error (&lerror);
+					if (retval) {
+						if (lerror &&
+						    (lerror->domain == GDA_HOLDER_ERROR) &&
+						    (lerror->code == GDA_HOLDER_VALUE_TYPE_ERROR)) {
+							g_set_error (error, GDA_HOLDER_ERROR,
+								     GDA_HOLDER_VALUE_TYPE_ERROR,
+								     _("Can't bind parameter '%s' of type '%s' "
+								       "to a parameter of type '%s'"),
+								     gda_holder_get_id (holder),
+								     gda_g_type_to_string (gda_holder_get_g_type (holder)),
+								     gda_g_type_to_string (gda_holder_get_g_type (holder2)));
+							g_clear_error (&lerror);
+						}
+						else
+							g_propagate_error (error, lerror);
+						retval = FALSE;
+					}
+					else
+						g_clear_error (&lerror);
 				}
 #ifdef GDA_DEBUG_NO
 				g_print ("[%s.][%s] bound to [%s].[%s]\n",
@@ -999,6 +1045,8 @@ compute_sources_dependencies (DataPart *part)
 			}
 		}
 	}
+
+	return retval;
 }
 
 /**
