@@ -29,22 +29,40 @@ For each provider, the environment variables to set are:
   values in that variable, so it's useless to repeat them there.
 
 - The <provider_name>_USER and <provider_name>_PASS variables (which are optional) respectively 
-  enable a username and a password to be specified
+  enable a username and a password to be specified. The username and password can also be set as part
+  of the <provider_name>_CNC_PARAMS string as "USERNAME=<username>;PASSWORD=<pass>"
 
 If the database was created during the test, then it will also be destroyed at the end of the
 test.
+
+The list of parameter which can be specified to create a database, which depends on the database provider,
+can be obtained using the 'gda-list-server-op' tool, for example for PostgreSQL (removed extra info for
+clarity):
+$ gda-list-server-op -t -o CREATE_DB -p PostgreSQL | grep SERVER_CNX_P/
+|-- [id=/SERVER_CNX_P/USE_SSL] [name=Require SSL] [descr=Whether to require SSL or not when connecting]
+|-- [id=/SERVER_CNX_P/ADM_PASSWORD] [name=Administrator password]
+|-- [id=/SERVER_CNX_P/ADM_LOGIN] [name=Administrator login] [descr=Login name (which has the rights to create databases)]
+|-- [id=/SERVER_CNX_P/OPTIONS] [name=Options] [descr=Extra connection options]
+|-- [id=/SERVER_CNX_P/PORT] [name=Port] [descr=Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty)]
+|-- [id=/SERVER_CNX_P/HOST] [name=Database server] [descr=Host on which the database server is running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this field empty)]
+
+
 
 EXAMPLES
 --------
 
 Here are some examples of the environment variables for the various providers:
 
-MYSQL_DBCREATE_PARAMS "HOST=localhost"
-POSTGRESQL_DBCREATE_PARAMS "HOST=localhost;PORT=5432"
-SQLITE_DBCREATE_PARAMS "DB_DIR=."
-BERKELEY_DB_CNC_PARAMS "DB_NAME=gda_check_bdb.db"
+export MYSQL_DBCREATE_PARAMS="HOST=localhost"
+
+export POSTGRESQL_DBCREATE_PARAMS="HOST=gdatester;PORT=5432;ADM_LOGIN=gdauser;ADM_PASSWORD=GdaUser"
+export POSTGRESQL_CNC_PARAMS="HOST=gdatester;PORT=5432;USERNAME=gdauser;PASSWORD=GdaUser"
+
+export SQLITE_DBCREATE_PARAMS="DB_DIR=."
+
+export BERKELEY_DB_CNC_PARAMS="DB_NAME=gda_check_bdb.db"
 
 The MDB provider does not allow database creation, so use the gda_check_db.mdb file in this directory
-MSACCESS_CNC_PARAMS "DB_DIR=/home/me/libgda/tests/providers;DB_NAME=gda_check_db"
+export MSACCESS_CNC_PARAMS="DB_DIR=/home/me/libgda/tests/providers;DB_NAME=gda_check_db"
 
-ORACLE_CNC_PARAMS TNSNAME=//127.0.0.1
+export ORACLE_CNC_PARAMS="TNSNAME=//127.0.0.1"
