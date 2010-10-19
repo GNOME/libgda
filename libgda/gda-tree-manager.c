@@ -412,6 +412,9 @@ gda_tree_manager_create_node (GdaTreeManager *manager, GdaTreeNode *parent, cons
  * of a #GdaTree. Note that a single #GdaTreeManager can be used by several #GdaTree objects
  * or several times in the same #GdaTree's structure.
  *
+ * Please note that it's possible for @mgr and @sub to be the same object, but beware of the possible
+ * infinite recursive behaviour in this case (depending on the actual implementation of the #GdaTreeManager)
+ *
  * Since: 4.2
  */
 void
@@ -419,7 +422,6 @@ gda_tree_manager_add_manager (GdaTreeManager *manager, GdaTreeManager *sub)
 {
 	g_return_if_fail (GDA_IS_TREE_MANAGER (manager));
 	g_return_if_fail (GDA_IS_TREE_MANAGER (sub));
-	g_return_if_fail (manager != sub);
 
 	manager->priv->sub_managers = g_slist_append (manager->priv->sub_managers, sub);
 	g_object_ref (sub);

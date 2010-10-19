@@ -291,7 +291,7 @@ gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,
  * gda_attributes_manager_get:
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
- * @att_name: an attribute's name, as a *static* string
+ * @att_name: an attribute's name
  *
  * Retrieves the value of an attribute previously set using gda_attributes_manager_set().
  *

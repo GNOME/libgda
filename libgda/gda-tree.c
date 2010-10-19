@@ -170,6 +170,10 @@ gda_tree_class_init (GdaTreeClass *klass)
         object_class->set_property = gda_tree_set_property;
         object_class->get_property = gda_tree_get_property;
 
+	/**
+	 * GdaTree:is-list:
+	 * Tells if the GdaTree is a list or a tree.
+	 */
 	g_object_class_install_property (object_class, PROP_IS_LIST,
                                          g_param_spec_boolean ("is-list", _("Tells if the GdaTree is a list or a tree"), NULL,
 							       FALSE, G_PARAM_READABLE));
