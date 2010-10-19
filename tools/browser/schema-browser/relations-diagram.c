@@ -27,7 +27,7 @@
 #include "../cc-gray-bar.h"
 #include "../canvas/browser-canvas-db-relations.h"
 #include <gdk/gdkkeysyms.h>
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 #include "../browser-page.h"
 #include "../browser-perspective.h"
 #include "../browser-window.h"

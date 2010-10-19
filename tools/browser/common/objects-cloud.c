@@ -31,7 +31,7 @@
 #include "../cc-gray-bar.h"
 #include "marshal.h"
 #include <gdk/gdkkeysyms.h>
-#include "popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 
 struct _ObjectsCloudPrivate {
 	gboolean             show_schemas;

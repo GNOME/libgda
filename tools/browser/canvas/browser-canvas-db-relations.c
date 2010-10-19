@@ -28,7 +28,7 @@
 #include "browser-canvas-column.h"
 #include "browser-canvas-fkey.h"
 #include "../common/objects-cloud.h"
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 
 static void browser_canvas_db_relations_class_init (BrowserCanvasDbRelationsClass *class);
 static void browser_canvas_db_relations_init       (BrowserCanvasDbRelations *canvas);

@@ -33,7 +33,7 @@
 #include "../cc-gray-bar.h"
 #include "../browser-favorites.h"
 #include <gdk/gdkkeysyms.h>
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 
 #ifdef HAVE_GTKSOURCEVIEW
   #ifdef GTK_DISABLE_SINGLE_INCLUDES

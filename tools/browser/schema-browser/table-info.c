@@ -38,7 +38,7 @@
 #include "../data-manager/data-manager-perspective.h"
 #include <libgda-ui/gdaui-enums.h>
 #include <libgda-ui/gdaui-basic-form.h>
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 #include <libgda/gda-data-model-extra.h>
 
 struct _TableInfoPrivate {

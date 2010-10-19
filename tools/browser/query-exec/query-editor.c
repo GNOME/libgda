@@ -39,7 +39,7 @@
 #include <binreloc/gda-binreloc.h>
 #include "../browser-connection.h"
 #include "../browser-window.h"
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 #include "../support.h"
 
 #define QUERY_EDITOR_LANGUAGE_SQL "gda-sql"
