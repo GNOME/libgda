@@ -1645,7 +1645,7 @@ browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,
 	GdaSqlBuilder *builder;
 	GdaSet *params;
 	GdaSqlBuilderId op_ids[4];
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 	const GValue *cvalue;
 	GdaMetaDbObject *dbo = (GdaMetaDbObject *) table;
 
