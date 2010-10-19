@@ -244,7 +244,7 @@ _br_find_exe_for_symbol (const void *symbol, GbrInitError *error)
 		 * then transform that into a pointer. */
 		if (address_string_len < len + 3) {
 			address_string_len = len + 3;
-			address_string = (char *) g_try_realloc (address_string, address_string_len);
+			address_string = (char *) g_realloc (address_string, address_string_len);
 		}
 
 		memcpy (address_string, "0x", 2);
