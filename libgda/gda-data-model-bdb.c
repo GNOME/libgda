@@ -21,9 +21,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifdef USING_MINGW
-#define _NO_OLDNAMES
-#endif
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>
