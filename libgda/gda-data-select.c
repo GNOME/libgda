@@ -1728,7 +1728,8 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			GType *types = NULL;
 			if (imodel->prep_stmt && imodel->prep_stmt->types) {
 				types = g_new (GType, imodel->prep_stmt->ncols + 1);
-				memcpy (types, imodel->prep_stmt->types, sizeof (GType) * imodel->prep_stmt->ncols);
+				memcpy (types, imodel->prep_stmt->types, /* Flawfinder: ignore */
+					sizeof (GType) * imodel->prep_stmt->ncols);
 				types [imodel->prep_stmt->ncols] = G_TYPE_NONE;
 			}
 			tmpmodel = gda_connection_statement_execute_select_full (imodel->priv->cnc,
@@ -3359,7 +3360,8 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	GType *types = NULL;
 	if (model->prep_stmt->types) {
 		types = g_new (GType, model->prep_stmt->ncols + 1);
-		memcpy (types, model->prep_stmt->types, sizeof (GType) * model->prep_stmt->ncols);
+		memcpy (types, model->prep_stmt->types, /* Flawfinder: ignore */
+			sizeof (GType) * model->prep_stmt->ncols);
 		types [model->prep_stmt->ncols] = G_TYPE_NONE;
 	}
 	new_model = (GdaDataSelect*) gda_connection_statement_execute_select_full (model->priv->cnc, select, 
@@ -3395,9 +3397,9 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	g_type_query (G_OBJECT_TYPE (model), &tq);
 	size = tq.instance_size - offset;
 	copy = g_malloc (size);
-	memcpy (copy, (gint8*) new_model + offset, size);
-	memcpy ((gint8*) new_model + offset, (gint8*) model + offset, size);
-	memcpy ((gint8*) model + offset, copy, size);
+	memcpy (copy, (gint8*) new_model + offset, size); /* Flawfinder: ignore */
+	memcpy ((gint8*) new_model + offset, (gint8*) model + offset, size); /* Flawfinder: ignore */
+	memcpy ((gint8*) model + offset, copy, size); /* Flawfinder: ignore */
 		
 	/* we need to keep some data from the old model */
 	GdaDataSelectInternals *mi;

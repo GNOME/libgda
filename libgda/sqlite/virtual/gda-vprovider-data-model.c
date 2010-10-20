@@ -399,7 +399,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			if (error && error->message) {
 				int len = strlen (error->message) + 1;
 				*pzErr = SQLITE3_CALL (sqlite3_malloc) (sizeof (gchar) * len);
-				memcpy (*pzErr, error->message, len);
+				memcpy (*pzErr, error->message, len); /* Flawfinder: ignore */
 			}
 			else 
 				*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Could not compute virtual table's columns"));

@@ -149,8 +149,9 @@ gda_xa_transaction_set_property (GObject *object,
 				gchar *dtmp;
 				dtmp = g_strdup_printf ("gda_global_transaction_%p", xa_trans);
 				len = strlen (dtmp);
+				g_assert (len <= 64);
 				xa_trans->priv->xid.gtrid_length = len;
-				memcpy (xa_trans->priv->xid.data, dtmp, len);
+				memcpy (xa_trans->priv->xid.data, dtmp, len); /* Flawfinder: ignore */
 				g_free (dtmp);
 			}
 			else {
@@ -159,7 +160,7 @@ gda_xa_transaction_set_property (GObject *object,
 					g_warning (_("Global transaction ID can not have more than 64 bytes"));
 				else {
 					xa_trans->priv->xid.gtrid_length = len;
-					memcpy (xa_trans->priv->xid.data, tmp, len);
+					memcpy (xa_trans->priv->xid.data, tmp, len); /* Flawfinder: ignore */
 				}
 			}
                         break;
@@ -188,8 +189,9 @@ gda_xa_transaction_get_property (GObject *object,
                 case PROP_TRANSACT_ID: {
 			gchar *tmp;
 
-			tmp = g_new0 (gchar, xa_trans->priv->xid.gtrid_length + 1);
-			memcpy (tmp, xa_trans->priv->xid.data, xa_trans->priv->xid.gtrid_length);
+			tmp = g_new (gchar, xa_trans->priv->xid.gtrid_length + 1);
+			memcpy (tmp, xa_trans->priv->xid.data, xa_trans->priv->xid.gtrid_length); /* Flawfinder: ignore */
+			tmp [xa_trans->priv->xid.gtrid_length] = 0;
 			g_value_take_string (value, tmp);
                         break;
 		}
@@ -279,6 +281,12 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 	g_return_val_if_fail (GDA_IS_XA_TRANSACTION (xa_trans), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (branch && *branch, FALSE);
+	if (strlen (branch) >= 64) {
+		g_set_error (error, GDA_XA_TRANSACTION_ERROR,
+			     GDA_XA_TRANSACTION_CONNECTION_BRANCH_LENGTH_ERROR,
+			     "%s", _("Connection branch cannot exceed 63 bytes"));
+		return FALSE;
+	}
 
 	const GdaBinary *ebranch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 	if (ebranch) {
@@ -374,7 +382,6 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 		cnc = GDA_CONNECTION (list->data);
 		prov = gda_connection_get_provider (cnc);
 		if (cnc != xa_trans->priv->non_xa_cnc) {
-		       
 			if (!PROV_CLASS (prov)->xa_funcs->xa_start) {
 				g_warning (_("Provider error: %s method not implemented for provider %s"),
 					   "xa_start()", gda_server_provider_get_name (prov));
@@ -383,7 +390,7 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 			else {
 				const GdaBinary *branch;
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
+				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 					branch->data, branch->binary_length);
 				if (!PROV_CLASS (prov)->xa_funcs->xa_start (prov, cnc, &(xa_trans->priv->xid), error))
 					break;
@@ -412,7 +419,7 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 				else {
 					const GdaBinary *branch;
 					branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-					memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
+					memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 						branch->data, branch->binary_length);
 					PROV_CLASS (prov)->xa_funcs->xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 				}
@@ -470,7 +477,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 		prov = gda_connection_get_provider (cnc);
 
 		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
+		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 			branch->data, branch->binary_length);
 
 		if (PROV_CLASS (prov)->xa_funcs->xa_end && 
@@ -504,7 +511,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 				cnc = GDA_CONNECTION (list->data);
 				prov = gda_connection_get_provider (cnc);
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
+				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 					branch->data, branch->binary_length);
 
 				if (PROV_CLASS (prov)->xa_funcs->xa_rollback)
@@ -534,7 +541,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 				cnc = GDA_CONNECTION (list->data);
 				prov = gda_connection_get_provider (cnc);
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
+				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 					branch->data, branch->binary_length);
 
 				if (PROV_CLASS (prov)->xa_funcs->xa_rollback)
@@ -558,7 +565,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 		cnc = GDA_CONNECTION (list->data);
 		prov = gda_connection_get_provider (cnc);
 		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
+		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 			branch->data, branch->binary_length);
 		if (!PROV_CLASS (prov)->xa_funcs->xa_commit (prov, cnc, &(xa_trans->priv->xid), error) &&
 		    cnc_to_recover)
@@ -595,8 +602,8 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
 		else {
 			const GdaBinary *branch;
 			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
-			branch->data, branch->binary_length);
+			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+				branch->data, branch->binary_length);
 			if (!PROV_CLASS (prov)->xa_funcs->xa_rollback) 
 				g_warning (_("Provider error: %s method not implemented for provider %s"),
 					   "xa_prepare()", gda_server_provider_get_name (prov));
@@ -655,7 +662,7 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 					continue;
 
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length,
+				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 					branch->data, branch->binary_length);
 				for (xlist = recov_xid_list; xlist; xlist = xlist->next) {
 					GdaXaTransactionId *xid = (GdaXaTransactionId*) xlist->data;
@@ -722,7 +729,7 @@ gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid)
 			index++;
 		}
 		else 
-			index += sprintf (str+index, "%%%02x", xid->data[i]);
+			index += sprintf (str+index, "%%%02x", xid->data[i]); /* Flawfinder: ignore */
 	}
 
 	/* branch qualifier */
@@ -733,12 +740,12 @@ gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid)
 			index++;
 		}
 		else 
-			index += sprintf (str+index, "%%%02x", xid->data[xid->gtrid_length + i]);
+			index += sprintf (str+index, "%%%02x", xid->data[xid->gtrid_length + i]); /* Flawfinder: ignore */
 	}
 
 	/* Format ID */
 	str [index++] = ',';
-	sprintf (str, "%d", xid->format);
+	sprintf (str, "%d", xid->format); /* Flawfinder: ignore */
 
 	return str;
 }
@@ -767,6 +774,9 @@ gda_xa_transaction_string_to_id (const gchar *str)
 
 	/* global transaction ID */
 	for (ptr = str; *ptr && (*ptr != ','); ptr++, index++) {
+		if (index >= 64)
+			goto onerror;
+
 		if (*ptr == '%') {
 			ptr++;
 			if (*ptr && (((*ptr >= 'a') && (*ptr <= 'f')) ||
@@ -792,8 +802,7 @@ gda_xa_transaction_string_to_id (const gchar *str)
 		else if (g_ascii_isalnum (*ptr))
 			xid->data [index] = *ptr;
 		else
-			goto onerror;
-			 
+			goto onerror;			 
 	}
 	xid->gtrid_length = index;
 
@@ -801,6 +810,9 @@ gda_xa_transaction_string_to_id (const gchar *str)
 	if (*ptr != ',') 
 		goto onerror;
 	for (ptr++; *ptr && (*ptr != ','); ptr++, index++) {
+		if (index >= 128)
+			goto onerror;
+
 		if (*ptr == '%') {
 			ptr++;
 			if (*ptr && (((*ptr >= 'a') && (*ptr <= 'f')) ||
@@ -827,7 +839,6 @@ gda_xa_transaction_string_to_id (const gchar *str)
 			xid->data [index] = *ptr;
 		else
 			goto onerror;
-			 
 	}
 	xid->bqual_length = index - xid->gtrid_length;
 
@@ -835,7 +846,11 @@ gda_xa_transaction_string_to_id (const gchar *str)
 	if (*ptr != ',') 
 		goto onerror;
 	ptr++;
-	xid->format = atoi (ptr);
+	gint tmp = atoi (ptr); /* Flawfinder: ignore */
+	if ((tmp < 0) || (tmp >= G_MAXUINT32))
+		goto onerror;
+
+	xid->format = tmp;
 	
 	return xid;
 

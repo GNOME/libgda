@@ -1,6 +1,6 @@
 /* gda-handler-time.c
  *
- * Copyright (C) 2003 - 2009 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -284,9 +284,10 @@ handler_compute_locale (GdaHandlerTime *hdl)
 	if (*ptr) {
 		hdl->priv->str_locale->separator = *ptr;
 		*ptr = 0;
-		nums[0] = atoi (numstart);
+		nums[0] = atoi (numstart); /* Flawfinder: ignore */
 	}
-	else error = TRUE;
+	else
+		error = TRUE;
 
 	/* 2nd number */
 	if (!error) {
@@ -296,9 +297,10 @@ handler_compute_locale (GdaHandlerTime *hdl)
 			ptr++;
 		if (*ptr) {
 			*ptr = 0;
-			nums[1] = atoi (numstart);
+			nums[1] = atoi (numstart); /* Flawfinder: ignore */
 		}
-		else error = TRUE;
+		else
+			error = TRUE;
 	}
 
 	/* 3rd number */
@@ -308,7 +310,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
 		while (*ptr && g_ascii_isdigit (*ptr))
 			ptr++;
 		*ptr = 0;
-		nums[2] = atoi (numstart);
+		nums[2] = atoi (numstart); /* Flawfinder: ignore */
 	}
 	
 	/* computations */
@@ -821,13 +823,28 @@ make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, const gchar *value
 	return retval;
 }
 
+static gboolean
+get_uint_from_string (const gchar *str, guint16 *out_int)
+{
+	long int li;
+	char *endptr = NULL;
+	li = strtol (str, &endptr, 10);
+	if (!*endptr && (li >= 0) && (li < G_MAXUINT16)) {
+		*out_int = (guint16) li;
+		return TRUE;
+	}
+	else {
+		*out_int = 0;
+		return FALSE;
+	}
+}
 
 /* Makes a GDate from a string like "24-12-2003" */
 static gboolean
 make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *locale)
 {
 	gboolean retval = TRUE;
-	gushort nums[3];
+	guint16 nums[3];
 	gboolean error = FALSE;
 	gchar *ptr, *numstart, *tofree;
 	gint i;
@@ -846,9 +863,11 @@ make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value, L
 		ptr++;
 	if ((ptr != numstart) && *ptr) {
 		*ptr = 0;
-		nums[0] = atoi (numstart);
+		if (! get_uint_from_string (numstart, &(nums[0])))
+			error = TRUE;
 	}
-	else error = TRUE;
+	else
+		error = TRUE;
 
 	/* 2nd number */
 	if (!error) {
@@ -858,9 +877,11 @@ make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value, L
 			ptr++;
 		if ((ptr != numstart) && *ptr) {
 			*ptr = 0;
-			nums[1] = atoi (numstart);
+			if (! get_uint_from_string (numstart, &(nums[1])))
+				error = TRUE;
 		}
-		else error = TRUE;
+		else
+			error = TRUE;
 	}
 
 	/* 3rd number */
@@ -870,9 +891,17 @@ make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value, L
 		while (*ptr && g_ascii_isdigit (*ptr))
 			ptr++;
 		*ptr = 0;
-		if (ptr != numstart)
-			nums[2] = atoi (numstart);
+		if (ptr != numstart) {
+			if (! get_uint_from_string (numstart, &(nums[2])))
+				error = TRUE;
+		}
 		else
+			error = TRUE;
+	}
+
+	if (!error) {
+		ptr++;
+		if (*ptr)
 			error = TRUE;
 	}
 
@@ -880,13 +909,13 @@ make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value, L
 		for (i=0; i<3; i++) {
 			switch (locale->dmy_order[i]) {
 			case G_DATE_DAY:
-				if (g_date_valid_day (nums[i]))
+				if ((nums[i] <= G_MAXUINT8) && g_date_valid_day ((GDateDay) nums[i]))
 					g_date_set_day (date, nums[i]);
 				else
 					retval = FALSE;
 				break;
 			case G_DATE_MONTH:
-				if (g_date_valid_month (nums[i]))
+				if ((nums[i] <= 12) && g_date_valid_month ((GDateMonth) nums[i]))
 					g_date_set_month (date, nums[i]);
 				else
 					retval = FALSE;

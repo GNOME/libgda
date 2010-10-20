@@ -142,7 +142,7 @@ main (int argc, char *argv[])
 		}
 	}
 	
-	g_print ("Main THREAD is %p\n", g_thread_self ());
+	/*g_print ("Main THREAD is %p\n", g_thread_self ());*/
 	if (have_loop)
 		/* application loop */
 		gtk_main ();

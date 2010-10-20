@@ -380,7 +380,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	if (debug_level == -1) {
 		const gchar *str;
 		debug_level = 0;
-		str = getenv ("GDA_CONNECTION_EVENTS_SHOW");
+		str = getenv ("GDA_CONNECTION_EVENTS_SHOW"); /* Flawfinder: ignore */
 		if (str) {
 			gchar **array;
 			guint i;
@@ -853,12 +853,13 @@ cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, 
 	task->model_usage = model_usage;
 	if (col_types) {
 		gint i;
-		for (i = 0; ; i++) {
+		for (i = 0; i < 32768; i++) {
 			if (col_types [i] == G_TYPE_NONE)
 				break;
 		}
-		task->col_types = g_new (GType, i+1);
-		memcpy (task->col_types, col_types, (i+1) * sizeof (GType));
+		i++;
+		task->col_types = g_new (GType, i);
+		memcpy (task->col_types, col_types, i * sizeof (GType)); /* Flawfinder: ignore */
 	}
 	if (params)
 		task->params = gda_set_copy (params);
@@ -1286,7 +1287,7 @@ gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gbool
 	gint fd;
 
 	if (!directory)
-		directory = g_get_tmp_dir();
+		directory = g_get_tmp_dir(); /* Flawfinder: ignore */
 	else
 		g_return_val_if_fail (*directory, NULL);
 	g_return_val_if_fail (filename && *filename, NULL);
@@ -1898,7 +1899,7 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 
 	/* build the message string */
 	va_start (args, str);
-	vsprintf (sz, str, args);
+	g_vsnprintf (sz, 2048, str, args);
 	va_end (args);
 	
 	error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -4108,6 +4109,8 @@ suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext 
 
 	GdaMetaContext *templ_context;
 	GdaMetaContext loc_suggest;
+	gchar *column_names[MAX_CONTEXT_SIZE];
+	GValue *column_values[MAX_CONTEXT_SIZE];
 
 	/* if there is no context with the same table name in the templates, then exit right now */
 	templ_context = g_hash_table_lookup (data->context_templates_hash, suggest->table_name);
@@ -4116,9 +4119,6 @@ suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext 
 	
 	if (templ_context->size > 0) {
 		/* setup @loc_suggest */
-
-		gchar *column_names[MAX_CONTEXT_SIZE];
-		GValue *column_values[MAX_CONTEXT_SIZE];
 		gint i, j;
 
 		if (suggest->size > MAX_CONTEXT_SIZE) {
@@ -4130,8 +4130,8 @@ suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext 
 		loc_suggest.table_name = suggest->table_name;
 		loc_suggest.column_names = column_names;
 		loc_suggest.column_values = column_values;
-		memcpy (loc_suggest.column_names, suggest->column_names, sizeof (gchar *) * suggest->size);
-		memcpy (loc_suggest.column_values, suggest->column_values, sizeof (GValue *) * suggest->size);	
+		memcpy (loc_suggest.column_names, suggest->column_names, sizeof (gchar *) * suggest->size); /* Flawfinder: ignore */
+		memcpy (loc_suggest.column_values, suggest->column_values, sizeof (GValue *) * suggest->size); /* Flawfinder: ignore */
 		
 		/* check that any @suggest's columns which is in @templ_context's has the same values */
 		for (j = 0; j < suggest->size; j++) {

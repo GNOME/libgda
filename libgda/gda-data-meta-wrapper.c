@@ -338,7 +338,8 @@ gda_data_meta_wrapper_get_property (GObject *object,
  * Returns: a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
-_gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reusable, gint *cols, gint size, GdaSqlIdentifierStyle mode,
+_gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reusable, gint *cols,
+			    gint size, GdaSqlIdentifierStyle mode,
 			    GdaSqlReservedKeywordsFunc reserved_keyword_func)
 {
 	GdaDataMetaWrapper *retmodel;
@@ -348,8 +349,8 @@ _gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reusable, gint *cols, 
 	retmodel = g_object_new (GDA_TYPE_DATA_META_WRAPPER,
 				 "model", model, NULL);
 			      
-	retmodel->priv->cols_to_wrap = g_new0 (gint, size);
-	memcpy (retmodel->priv->cols_to_wrap, cols, sizeof (gint) * size);
+	retmodel->priv->cols_to_wrap = g_new (gint, size);
+	memcpy (retmodel->priv->cols_to_wrap, cols, sizeof (gint) * size); /* Flawfinder: ignore */
 	retmodel->priv->cols_to_wrap_size = size;
 	retmodel->priv->mode = mode;
 	retmodel->priv->reserved_keyword_func = reserved_keyword_func;

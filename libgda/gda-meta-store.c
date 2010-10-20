@@ -2045,7 +2045,7 @@ update_schema_version (GdaMetaStore *store, G_GNUC_UNUSED const gchar *version, 
 
 
 	/* update version */
-	store->priv->version = atoi (CURRENT_SCHEMA_VERSION);
+	store->priv->version = atoi (CURRENT_SCHEMA_VERSION); /* Flawfinder: ignore */
 	return TRUE;
 }
 
@@ -2162,8 +2162,10 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 			g_object_unref (model);
 			return FALSE;
 		}
-		store->priv->version = atoi (g_value_get_string (version));
-		if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) {
+		store->priv->version = atoi (g_value_get_string (version)); /* Flawfinder: ignore */
+		if (store->priv->version < 1)
+			store->priv->version = 1;
+		if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) { /* Flawfinder: ignore */
 			switch (store->priv->version) {
 			case 1:
 				migrate_schema_from_v1_to_v2 (store, error);
@@ -2177,7 +2179,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 				break;
 			}
 			
-			if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) {
+			if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) { /* Flawfinder: ignore */
 				/* it's an error */
 				g_object_unref (model);
 				return FALSE;

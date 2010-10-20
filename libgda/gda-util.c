@@ -590,7 +590,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 			if (model) {
 				gint fno;
 				
-				fno = atoi (ptr2);
+				fno = atoi (ptr2); /* Flawfinder: ignore */
 				if ((fno < 0) ||
 				    (fno >= gda_data_model_get_n_columns (model))) 
 					g_warning (_("Field number %d not found in source named '%s'"), fno, ptr1); 
@@ -1600,8 +1600,8 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 
 	/* init */
 	compl = g_array_new (TRUE, TRUE, sizeof (gchar *));
-	text = g_new0 (gchar, end - start + 2);
-	memcpy (text, sql + start, end - start + 1);
+	text = g_new (gchar, end - start + 2);
+	memcpy (text, sql + start, end - start + 1); /* Flawfinder: ignore */
 	text [end - start + 1] = 0;
 
 	if (start == 0) {
@@ -1824,12 +1824,12 @@ concat_ident (const char *prefix, const gchar *ident)
 
 	str = malloc (sizeof (char) * (plen + tlen + 1));
 	if (prefix) {
-		strcpy (str, prefix);
+		strcpy (str, prefix); /* Flawfinder: ignore */
 		str [plen - 1] = '.';
-		strcpy (str + plen, ident);
+		strcpy (str + plen, ident); /* Flawfinder: ignore */
 	}
 	else
-		strcpy (str, ident);
+		strcpy (str, ident); /* Flawfinder: ignore */
 	return str;
 }
 
@@ -2253,7 +2253,7 @@ gda_rfc1738_encode (const gchar *string)
 		}
 
 		if (enc) {
-			sprintf (wptr, "%%%02x", (unsigned char) *rptr);
+			sprintf (wptr, "%%%02x", (unsigned char) *rptr); /* Flawfinder: ignore */
 			wptr += 3;
 		}
 		else {
@@ -2533,20 +2533,26 @@ gda_parse_iso8601_date (GDate *gdate, const gchar *value)
 	GDateYear year;
 	GDateMonth month;
 	GDateDay day;
+	gint tmp;
 
-	year = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	year = tmp > 0 ? tmp : 0;
 	value += 5;
-	month = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	month = tmp > 0 ? (tmp <= G_DATE_DECEMBER ? tmp : G_DATE_BAD_MONTH) : G_DATE_BAD_MONTH;
 	value += 3;
-	day = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	day = tmp > 0 ? (tmp <= G_MAXUINT8 ? tmp : G_DATE_BAD_DAY) : G_DATE_BAD_DAY;
 	
 	g_date_clear (gdate, 1);
 	if (g_date_valid_dmy (day, month, year)) {
 		g_date_set_dmy (gdate, day, month, year);
 		return TRUE;
 	}
-	else
+	else {
+		memset (gdate, 0, sizeof (GDate));
 		return FALSE;
+	}
 }
 
 /**
@@ -2563,11 +2569,24 @@ gda_parse_iso8601_date (GDate *gdate, const gchar *value)
 gboolean
 gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 {
-	timegda->hour = atoi (value);
+	gint tmp;
+
+	memset (timegda, 0, sizeof (GdaTime));
+
+	tmp = atoi (value); /* Flawfinder: ignore */
+	if ((tmp < 0) || (tmp > 24))
+		return FALSE;
+	timegda->hour = tmp;
 	value += 3;
-	timegda->minute = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	if ((tmp < 0) || (tmp > 60))
+		return FALSE;
+	timegda->minute = tmp;
 	value += 3;
-	timegda->second = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	if ((tmp < 0) || (tmp > 60))
+		return FALSE;
+	timegda->second = tmp;
 	value += 2;
 	if (*value != '.') {
 		timegda->fraction = 0;
@@ -2576,8 +2595,11 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 		gint64 fraction;
 
 		value++;
-		fraction = atol (value);
-		while (*value && *value != '+') {
+		fraction = atol (value); /* Flawfinder: ignore */
+		if (fraction < 0)
+			return FALSE;
+
+		while (*value && (*value != '+') && (*value != '-')) {
 			value++;
 			ndigits++;
 		}
@@ -2590,10 +2612,12 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 		timegda->fraction = fraction;
 	}
 
-	if (*value)
-		timegda->timezone = atol (value) * 60 * 60;
-	else
-		timegda->timezone = 0;
+	if (*value) {
+		tmp = atol (value); /* Flawfinder: ignore */
+		if ((tmp < 0) || (tmp >= 24))
+			return FALSE;
+		timegda->timezone = tmp * 60 * 60;
+	}
 
 	return TRUE;
 }
@@ -2612,17 +2636,47 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 gboolean
 gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 {
-	timestamp->year = atoi (value);
+	GDateYear year;
+	GDateMonth month;
+	GDateDay day;
+	gint tmp;
+
+	memset (timestamp, 0, sizeof (GdaTimestamp));
+
+	/* date part */
+	tmp = atoi (value); /* Flawfinder: ignore */
+	year = tmp > 0 ? tmp : 0;
 	value += 5;
-	timestamp->month = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	month = tmp > 0 ? (tmp <= G_DATE_DECEMBER ? tmp : G_DATE_BAD_MONTH) : G_DATE_BAD_MONTH;
 	value += 3;
-	timestamp->day = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	day = tmp > 0 ? (tmp <= G_MAXUINT8 ? tmp : G_DATE_BAD_DAY) : G_DATE_BAD_DAY;
 	value += 3;
-	timestamp->hour = atoi (value);
+	
+	if (g_date_valid_dmy (day, month, year)) {
+		timestamp->year = year;
+		timestamp->month = month;
+		timestamp->day = day;
+	}
+	else
+		return FALSE;
+
+	/* time part */
+	tmp = atoi (value); /* Flawfinder: ignore */
+	if ((tmp < 0) || (tmp > 24))
+		return FALSE;
+	timestamp->hour = tmp;
 	value += 3;
-	timestamp->minute = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	if ((tmp < 0) || (tmp > 60))
+		return FALSE;
+	timestamp->minute = tmp;
 	value += 3;
-	timestamp->second = atoi (value);
+	tmp = atoi (value); /* Flawfinder: ignore */
+	if ((tmp < 0) || (tmp > 60))
+		return FALSE;
+	timestamp->second = tmp;
 	value += 2;
 	if (*value != '.') {
 		timestamp->fraction = 0;
@@ -2631,8 +2685,11 @@ gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 		gint64 fraction;
 
 		value++;
-		fraction = atol (value);
-		while (*value && *value != '+') {
+		fraction = atol (value); /* Flawfinder: ignore */
+		if (fraction < 0)
+			return FALSE;
+
+		while (*value && (*value != '+') && (*value != '-')) {
 			value++;
 			ndigits++;
 		}
@@ -2645,10 +2702,12 @@ gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 		timestamp->fraction = fraction;
 	}
 
-	if (*value)
-		timestamp->timezone = atol (value) * 60 * 60;
-	else
-		timestamp->timezone = 0;
+	if (*value) {
+		tmp = atol (value); /* Flawfinder: ignore */
+		if ((tmp < 0) || (tmp >= 24))
+			return FALSE;
+		timestamp->timezone = tmp * 60 * 60;
+	}
 
 	return TRUE;
 }

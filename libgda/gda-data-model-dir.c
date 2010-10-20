@@ -504,7 +504,7 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 	length = g_value_get_uint (row->size_value);
 	if (length == 0)
 		goto md5end;
-	fd = open (complete_filename, O_RDONLY);
+	fd = open (complete_filename, O_RDONLY); /* Flawfinder: ignore */
 	if (fd < 0)
 		goto md5end;
 #ifndef G_OS_WIN32
@@ -529,7 +529,7 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 
 	/* MD5 computation */
 	MD5_CTX context;
-	unsigned char digest[16];
+	unsigned char digest[16]; /* Flawfinder: ignore */
 	GString *md5str;
 	gint i;
 

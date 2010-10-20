@@ -47,7 +47,8 @@ extern GQuark gda_xa_transaction_error_quark (void);
 typedef enum
 {
         GDA_XA_TRANSACTION_ALREADY_REGISTERED_ERROR,
-	GDA_XA_TRANSACTION_DTP_NOT_SUPPORTED_ERROR
+	GDA_XA_TRANSACTION_DTP_NOT_SUPPORTED_ERROR,
+	GDA_XA_TRANSACTION_CONNECTION_BRANCH_LENGTH_ERROR
 } GdaXaTransactionError;
 
 struct _GdaXaTransaction {
@@ -58,6 +59,7 @@ struct _GdaXaTransaction {
 struct _GdaXaTransactionClass {
 	GObjectClass             parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);

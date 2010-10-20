@@ -86,7 +86,7 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
 	*/
 
 #ifdef G_OS_WIN32
-	wchar_t path[MAX_PATH];
+	wchar_t path[MAX_PATH]; /* Flawfinder: ignore */
 	gchar* p;
 #endif
 
@@ -197,7 +197,7 @@ gda_gbr_get_file_path (GdaPrefixDir where, ...)
     #define MAXLEN 500
 		ProcessSerialNumber myProcess;
 		FSRef bundleLocation;
-		unsigned char bundlePath[MAXLEN];
+		unsigned char bundlePath[MAXLEN]; /* Flawfinder: ignore */
 		
 		if ((GetCurrentProcess (&myProcess) == noErr) &&
 		    (GetProcessBundleLocation (&myProcess, &bundleLocation) == noErr) &&

@@ -72,7 +72,7 @@ _br_find_exe (GbrInitError *error)
 	while (1) {
 		int i;
 
-		size = readlink (path2, path, buf_size - 1);
+		size = readlink (path2, path, buf_size - 1); /* Flawfinder: ignore */
 		if (size == -1) {
 			/* Error. */
 			g_free (path2);
@@ -116,7 +116,7 @@ _br_find_exe (GbrInitError *error)
 		return NULL;
 	}
 
-	f = fopen ("/proc/self/maps", "r");
+	f = fopen ("/proc/self/maps", "r"); /* Flawfinder: ignore */
 	if (f == NULL) {
 		g_free (line);
 		if (error)
@@ -187,12 +187,12 @@ _br_find_exe_for_symbol (
 	#define SIZE PATH_MAX + 100
 	FILE *f;
 	size_t address_string_len;
-	char *address_string, line[SIZE], *found;
+	char *address_string, line[SIZE], *found; /* Flawfinder: ignore */
 
 	if (symbol == NULL)
 		return (char *) NULL;
 
-	f = fopen ("/proc/self/maps", "r");
+	f = fopen ("/proc/self/maps", "r"); /* Flawfinder: ignore */
 	if (f == NULL)
 		return (char *) NULL;
 
@@ -252,13 +252,13 @@ _br_find_exe_for_symbol (
 			address_string = (char *) g_realloc (address_string, address_string_len);
 		}
 
-		memcpy (address_string, "0x", 2);
-		memcpy (address_string + 2, start_addr, len);
+		memcpy (address_string, "0x", 2); /* Flawfinder: ignore */
+		memcpy (address_string + 2, start_addr, len); /* Flawfinder: ignore */
 		address_string[2 + len] = '\0';
 		sscanf (address_string, "%p", &start_addr_p);
 
-		memcpy (address_string, "0x", 2);
-		memcpy (address_string + 2, end_addr, len);
+		memcpy (address_string, "0x", 2); /* Flawfinder: ignore */
+		memcpy (address_string + 2, end_addr, len); /* Flawfinder: ignore */
 		address_string[2 + len] = '\0';
 		sscanf (address_string, "%p", &end_addr_p);
 

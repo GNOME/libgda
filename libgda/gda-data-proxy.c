@@ -2883,7 +2883,7 @@ sql_where_foreach (GdaSqlAnyPart *part, GdaDataProxy *proxy, G_GNUC_UNUSED GErro
 				if (!*ptr) {
 					/* column name is "_<number>", use column: <number> - 1 */
 					gint colnum;
-					colnum = atoi (cstr+1) - 1;
+					colnum = atoi (cstr+1) - 1; /* Flawfinder: ignore */
 					if (colnum >= 0) {
 						GdaColumn *col = gda_data_model_describe_column ((GdaDataModel*) proxy,
 												 colnum);

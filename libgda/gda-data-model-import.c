@@ -500,7 +500,7 @@ gda_data_model_import_set_property (GObject *object,
 			model->priv->src.mapped.filename = g_strdup (g_value_get_string (value));
 
 			/* file opening */
-			model->priv->src.mapped.fd = open (model->priv->src.mapped.filename, O_RDONLY);
+			model->priv->src.mapped.fd = open (model->priv->src.mapped.filename, O_RDONLY); /* Flawfinder: ignore */
 			if (model->priv->src.mapped.fd < 0) {
 				/* error */
 				add_error (model, strerror(errno));
@@ -1170,12 +1170,16 @@ init_xml_import (GdaDataModelImport *model)
 			}
 			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"size");
 			if (str) {
-				spec->size = atoi (str);
+				spec->size = atoi (str); /* Flawfinder: ignore */
+				if (spec->size < 0)
+					spec->size = 0;
 				xmlFree (str);
 			}
 			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"scale");
 			if (str) {
-				spec->scale = atoi (str);
+				spec->scale = atoi (str); /* Flawfinder: ignore */
+				if (spec->scale < 0)
+					spec->scale = 0;
 				xmlFree (str);
 			}
 			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"pkey");
@@ -1488,12 +1492,16 @@ init_node_import (GdaDataModelImport *model)
 			}
 			str = (gchar*)xmlGetProp (cur, (xmlChar*)"size");
 			if (str) {
-				spec->size = atoi (str);
+				spec->size = atoi (str); /* Flawfinder: ignore */
+				if (spec->size < 0)
+					spec->size = 0;
 				xmlFree (str);
 			}
 			str = (gchar*)xmlGetProp (cur, (xmlChar*)"scale");
 			if (str) {
-				spec->scale = atoi (str);
+				spec->scale = atoi (str); /* Flawfinder: ignore */
+				if (spec->scale < 0)
+					spec->scale = 0;
 				xmlFree (str);
 			}
 			str = (gchar*)xmlGetProp (cur, (xmlChar*)"pkey");

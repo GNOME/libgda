@@ -548,7 +548,7 @@ real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_n
 		if (use_names)
 			node = gda_tree_node_get_child_name (parent, (gchar *) seglist->data);
 		else
-			node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data));
+			node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data)); /* Flawfinder: ignore */
 		if (!node && tree->priv->update_on_searching) {
 			/* update level if necessary */
 			mgrlist = _gda_tree_node_get_managers_for_children (parent);
@@ -562,7 +562,7 @@ real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_n
 			if (use_names)
 				node = gda_tree_node_get_child_name (parent, (gchar *) seglist->data);
 			else
-				node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data));
+				node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data)); /* Flawfinder: ignore */
 		}
 		if (!node) 
 			return NULL;

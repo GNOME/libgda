@@ -373,7 +373,7 @@ gda_data_model_bdb_set_property (GObject *object,
 		}
 		
 		model->priv->dbp = dbp;
-		ret = dbp->open (dbp,
+		ret = dbp->open (dbp, /* Flawfinder: ignore */
 #if BDB_VERSION >= 40124 
 				 NULL,
 #endif

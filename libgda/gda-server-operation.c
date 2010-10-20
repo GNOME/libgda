@@ -896,13 +896,17 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 			
 			prop = xmlGetProp(node, (xmlChar*)"minitems");
 			if (prop) {
-				opnode->d.seq.min_items = atoi ((gchar*)prop);
+				opnode->d.seq.min_items = atoi ((gchar*)prop); /* Flawfinder: ignore */
+				if (opnode->d.seq.min_items < 0)
+					opnode->d.seq.min_items = 0;
 				xmlFree (prop);
 			}
 
 			prop = xmlGetProp(node, (xmlChar*)"maxitems");
 			if (prop) {
-				opnode->d.seq.max_items = atoi ((gchar*)prop);
+				opnode->d.seq.max_items = atoi ((gchar*)prop); /* Flawfinder: ignore */
+				if (opnode->d.seq.max_items < opnode->d.seq.min_items)
+					opnode->d.seq.max_items = opnode->d.seq.min_items;
 				xmlFree (prop);
 			}
 

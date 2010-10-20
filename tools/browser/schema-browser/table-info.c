@@ -531,7 +531,7 @@ static void statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
 						   GTK_MESSAGE_INFO,
 						   "DataInsertQuery",
-						   _("Data successfully inserted"));
+						   "%s", _("Data successfully inserted"));
 }
 
 static void

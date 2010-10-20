@@ -527,7 +527,7 @@ gda_config_constructor (GType type,
 
 			if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
 				gchar *old_path;
-				old_path = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
+				old_path = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL); /* Flawfinder: ignore */
 				if (g_file_test (old_path, G_FILE_TEST_EXISTS)) {
 					/* using $HOME/.libgda because it exists */
 					g_free (confdir);
@@ -616,7 +616,7 @@ gda_config_constructor (GType type,
 		unique_instance->priv->system_config_allowed = FALSE;
 		if (unique_instance->priv->system_file) {
 			FILE *file;
-                        file = fopen (unique_instance->priv->system_file, "a");
+                        file = fopen (unique_instance->priv->system_file, "a");  /* Flawfinder: ignore */
                         if (file) {
                                 unique_instance->priv->system_config_allowed = TRUE;
                                 fclose (file);

@@ -352,8 +352,8 @@ gda_data_comparator_set_key_columns (GdaDataComparator *comp, const gint *col_nu
 	comp->priv->key_columns = NULL;
 	if (nb_cols > 0) {
 		comp->priv->nb_key_columns = nb_cols;
-		comp->priv->key_columns = g_new0 (gint, nb_cols);
-		memcpy (comp->priv->key_columns, col_numbers, sizeof (gint) * nb_cols);
+		comp->priv->key_columns = g_new (gint, nb_cols);
+		memcpy (comp->priv->key_columns, col_numbers, sizeof (gint) * nb_cols); /* Flawfinder: ignore */
 	}
 }
 

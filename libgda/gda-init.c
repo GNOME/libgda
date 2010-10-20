@@ -80,7 +80,7 @@ gda_init (void)
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
 	/* Threading support if possible */
-	if (!getenv ("LIBGDA_NO_THREADS")) {
+	if (!getenv ("LIBGDA_NO_THREADS")) { /* Flawfinder: ignore */
 #ifdef G_THREADS_ENABLED
 #ifndef G_THREADS_IMPL_NONE
 		if (! g_thread_supported ())
