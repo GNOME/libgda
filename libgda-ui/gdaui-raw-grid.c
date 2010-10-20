@@ -1904,14 +1904,14 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (label);
 
-	types = gtk_combo_box_new_text ();
+	types = gtk_combo_box_text_new ();
 	gtk_table_attach_defaults (GTK_TABLE (table), types, 1, 2, 0, 1);
 	gtk_widget_show (label);
 	g_object_set_data (G_OBJECT (dialog), "types", types);
 
-	gtk_combo_box_append_text (GTK_COMBO_BOX (types), _("Tab-delimited"));
-	gtk_combo_box_append_text (GTK_COMBO_BOX (types), _("Comma-delimited"));
-	gtk_combo_box_append_text (GTK_COMBO_BOX (types), _("XML"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (types), _("Tab-delimited"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (types), _("Comma-delimited"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (types), _("XML"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (types), grid->priv->export_type);
 
 	g_signal_connect (types, "changed",

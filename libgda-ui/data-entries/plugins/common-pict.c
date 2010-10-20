@@ -426,7 +426,7 @@ add_if_writable (GdkPixbufFormat *data, PictFormat *format)
 
 		str= g_strdup_printf ("%s (%s)", gdk_pixbuf_format_get_name (data),
 				      gdk_pixbuf_format_get_description (data));
-		gtk_combo_box_append_text (format->combo, str);
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (format->combo), str);
 		g_free (str);
 		format->formats = g_slist_append (format->formats, g_strdup (gdk_pixbuf_format_get_name (data)));
 	}
@@ -447,7 +447,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 
 	label = gtk_label_new (_("Format image as:"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	combo = gtk_combo_box_new_text ();
+	combo = gtk_combo_box_text_new ();
 	gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);
 
@@ -457,7 +457,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 	g_slist_foreach (formats, (GFunc) add_if_writable, &pictformat);
 	g_slist_free (formats);
 
-	gtk_combo_box_prepend_text (GTK_COMBO_BOX (combo), _("Current format"));
+	gtk_combo_box_text_prepend_text (GTK_COMBO_BOX_TEXT (combo), _("Current format"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
 
 	dlg = gtk_file_chooser_dialog_new (_("Select a file to save the image to"), 
