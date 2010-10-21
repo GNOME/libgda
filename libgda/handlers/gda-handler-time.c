@@ -20,6 +20,7 @@
 
 #include "gda-handler-time.h"
 #include <string.h>
+#include <ctype.h>
 #include <glib/gi18n-lib.h>
 
 static void gda_handler_time_class_init (GdaHandlerTimeClass *class);
@@ -263,6 +264,41 @@ gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec
 	dh->priv->sql_locale->separator = separator;
 }
 
+/**
+ * gda_handler_time_set_str_spec
+ * @dh: a #GdaHandlerTime object
+ * @first: what comes first in the date representation
+ * @sec: what comes second in the date representation
+ * @third: what comes third in the date representation
+ * @separator: separator character used between year, month and day
+ * @twodigits_years: TRUE if year part of date must be rendered on 2 digits
+ *
+ * Specifies the human readable output style of the @dh data handler.
+ * The general format is "FIRSTsSECsTHIRD"
+ * where FIRST, SEC and THIRD are specified by @first, @sec and @trird and 's' is the separator,
+ * specified by @separator.
+ *
+ * The default implementation depends on the current locale, except if @dh was created
+ * using gda_handler_time_new_no_locale().
+ *
+ * Since: 4.2.1
+ */
+void
+gda_handler_time_set_str_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec,
+				GDateDMY third, gchar separator, gboolean twodigits_years)
+{
+	g_return_if_fail (GDA_IS_HANDLER_TIME (dh));
+	g_return_if_fail (dh->priv);
+	g_return_if_fail (first != sec);
+	g_return_if_fail (sec != third);
+	g_return_if_fail (first != third);
+
+	dh->priv->str_locale->dmy_order[0] = first;
+	dh->priv->str_locale->dmy_order[1] = sec;
+	dh->priv->str_locale->dmy_order[2] = third;
+	dh->priv->str_locale->twodigit_years = twodigits_years;
+	dh->priv->str_locale->separator = separator;
+}
 
 static void
 handler_compute_locale (GdaHandlerTime *hdl)
@@ -744,7 +780,8 @@ gda_handler_time_get_value_from_str (GdaDataHandler *iface, const gchar *sql, GT
 
 static gboolean make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, 
 				const gchar *value, LocaleSetting *locale);
-static gboolean make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *locale);
+static gboolean make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value,
+			   LocaleSetting *locale, const gchar **out_endptr);
 static gboolean make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value);
 static GValue *
 gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql, 
@@ -762,7 +799,7 @@ gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql,
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (type == G_TYPE_DATE) {
-		if (make_date (hdl, &date, sql, locale)) {
+		if (make_date (hdl, &date, sql, locale, NULL)) {
 			value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE);
 			g_value_set_boxed (value, (gconstpointer) &date);
 		}
@@ -793,30 +830,29 @@ static gboolean
 make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, const gchar *value, LocaleSetting *locale)
 {
 	gboolean retval;
-	gchar *str, *ptr;
+	const gchar *end_ptr;
 	GDate vdate;
 	GdaTime vtime;
-	char *buff;
+	memset (&vtime, 0, sizeof (GdaTime));
+	vtime.timezone = GDA_TIMEZONE_INVALID;
 
-	str = g_strdup (value);
-	ptr = strtok_r (str, " ", &buff);
-	retval = make_date (hdl, &vdate, ptr, locale);
+	retval = make_date (hdl, &vdate, value, locale, &end_ptr);
+	timestamp->day = vdate.day;
+	timestamp->month = vdate.month;
+	timestamp->year = vdate.year;
+
 	if (retval) {
-		ptr = strtok_r (NULL, " ", &buff);
-		retval = make_time (hdl, &vtime, ptr);
-		if (retval) {
-			timestamp->day = vdate.day;
-			timestamp->month = vdate.month;
-			timestamp->year = vdate.year;
-
-			timestamp->hour = vtime.hour;
-			timestamp->minute = vtime.minute;
-			timestamp->second = vtime.second;
-			timestamp->fraction = vtime.fraction;
-			timestamp->timezone = vtime.timezone;
-		}
+		if (*end_ptr != ' ')
+			retval = FALSE;
+		else
+			retval = make_time (hdl, &vtime, end_ptr + 1);
 	}
-	g_free (str);
+
+	timestamp->hour = vtime.hour;
+	timestamp->minute = vtime.minute;
+	timestamp->second = vtime.second;
+	timestamp->fraction = vtime.fraction;
+	timestamp->timezone = vtime.timezone;
 
 	/*g_print ("Value #%s# => %d\n", value, retval);*/
 
@@ -829,7 +865,7 @@ get_uint_from_string (const gchar *str, guint16 *out_int)
 	long int li;
 	char *endptr = NULL;
 	li = strtol (str, &endptr, 10);
-	if (!*endptr && (li >= 0) && (li < G_MAXUINT16)) {
+	if (!*endptr && (li >= 0) && (li <= G_MAXUINT16)) {
 		*out_int = (guint16) li;
 		return TRUE;
 	}
@@ -839,15 +875,23 @@ get_uint_from_string (const gchar *str, guint16 *out_int)
 	}
 }
 
-/* Makes a GDate from a string like "24-12-2003" */
+/* Makes a GDate from a string like "24-12-2003"
+ * If @out_endptr is %NULL, then all the @value has to be consumed and there must not
+ * be any character left. If it's not %NULL, then it will point on the first unused character
+ * of @value.
+ */
 static gboolean
-make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *locale)
+make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value,
+	   LocaleSetting *locale, const gchar **out_endptr)
 {
 	gboolean retval = TRUE;
 	guint16 nums[3];
 	gboolean error = FALSE;
 	gchar *ptr, *numstart, *tofree;
 	gint i;
+
+	if (out_endptr)
+		*out_endptr = NULL;
 
 	if (!value)
 		return FALSE;
@@ -871,40 +915,51 @@ make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value, L
 
 	/* 2nd number */
 	if (!error) {
-		ptr++;
-		numstart = ptr;
-		while (*ptr && g_ascii_isdigit (*ptr))
+		if (value [ptr-tofree] != locale->separator)
+			error = TRUE;
+		else {
 			ptr++;
-		if ((ptr != numstart) && *ptr) {
-			*ptr = 0;
-			if (! get_uint_from_string (numstart, &(nums[1])))
+			numstart = ptr;
+			while (*ptr && g_ascii_isdigit (*ptr))
+				ptr++;
+			if ((ptr != numstart) && *ptr) {
+				*ptr = 0;
+				if (! get_uint_from_string (numstart, &(nums[1])))
+					error = TRUE;
+			}
+			else
 				error = TRUE;
 		}
-		else
-			error = TRUE;
 	}
 
 	/* 3rd number */
 	if (!error) {
-		ptr++;
-		numstart = ptr;
-		while (*ptr && g_ascii_isdigit (*ptr))
+		if (value [ptr-tofree] != locale->separator)
+			error = TRUE;
+		else {
 			ptr++;
-		*ptr = 0;
-		if (ptr != numstart) {
-			if (! get_uint_from_string (numstart, &(nums[2])))
+			numstart = ptr;
+			while (*ptr && g_ascii_isdigit (*ptr))
+				ptr++;
+			*ptr = 0;
+			if (ptr != numstart) {
+				if (! get_uint_from_string (numstart, &(nums[2])))
+					error = TRUE;
+			}
+			else
 				error = TRUE;
 		}
-		else
-			error = TRUE;
 	}
 
+	/* test if there are some characters left */
 	if (!error) {
-		ptr++;
-		if (*ptr)
+		if (out_endptr)
+			*out_endptr = value + (ptr-tofree);
+		else if (value [ptr-tofree])
 			error = TRUE;
 	}
 
+	/* analyse what's parsed */
 	if (!error) {
 		for (i=0; i<3; i++) {
 			switch (locale->dmy_order[i]) {
@@ -957,101 +1012,95 @@ make_time (G_GNUC_UNUSED GdaHandlerTime *hdl, GdaTime *timegda, const gchar *val
 {
 	const gchar *ptr;
 
+	memset (timegda, 0, sizeof (GdaTime));
+	timegda->timezone = GDA_TIMEZONE_INVALID;
+
 	if (!value)
 		return FALSE;
 
 	/* hour */
-	timegda->fraction = 0;
-	timegda->timezone = GDA_TIMEZONE_INVALID;
 	ptr = value;
-	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9')) {
-		timegda->hour = (*ptr - '0') * 10 + *(ptr+1) - '0';
-		ptr += 2;
-	}
-	else if ((*ptr >= '0') && (*ptr <= '9') && (ptr[1] == ':')) {
-		timegda->hour = *ptr - '0';
+	if (!isdigit (*ptr))
+		return FALSE;
+
+	timegda->hour = *ptr - '0';
+	ptr++;
+	if (isdigit (*ptr)) {
+		timegda->hour = timegda->hour * 10 + (*ptr - '0');
 		ptr++;
 	}
-	else if (*ptr == ':')
-		timegda->hour = 0;
-	else
+	if (timegda->hour >= 24)
+		return FALSE;
+
+	if (*ptr == ':')
+		ptr++;
+	else if (!isdigit (*ptr))
 		return FALSE;
 
 	/* minute */
-	if (! *ptr)
+	timegda->minute = *ptr - '0';
+	ptr++;
+	if (isdigit (*ptr)) {
+		timegda->minute = timegda->minute * 10 + (*ptr - '0');
+		ptr++;
+	}
+	if (timegda->minute >= 60)
 		return FALSE;
 	if (*ptr == ':')
 		ptr++;
-	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9')) {
-		timegda->minute = (*ptr - '0') * 10 + *(ptr+1) - '0';
-		ptr += 2;
-	}
-	else if ((*ptr >= '0') && (*ptr <= '9') && (ptr[1] == ':')) {
-		timegda->minute = *ptr - '0';
-		ptr++;
-	}
-	else if (*ptr == ':')
-		timegda->minute = 0;
-	else
+	else if (!isdigit (*ptr))
 		return FALSE;
 
 	/* second */
-	timegda->second = 0;
-	if (! *ptr) {
-		if ((timegda->hour > 24) || (timegda->minute > 60))
-			return FALSE;
-		else
-			return TRUE;
-	}
-	if (*ptr == ':')
-		ptr++;
-	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9')) {
-		timegda->second = (*ptr - '0') * 10 + *(ptr+1) - '0';
-		ptr += 2;
-	}
-	else if ((*ptr >= '0') && (*ptr <= '9')) {
-		timegda->second = *ptr - '0';
+	timegda->second = *ptr - '0';
+	ptr++;
+	if (isdigit (*ptr)) {
+		timegda->second = timegda->second * 10 + (*ptr - '0');
 		ptr++;
 	}
-	else if (*ptr == ':')
-		timegda->second = 0;
-	
-	/* extra */
-	if (! *ptr) {
-		if ((timegda->hour > 24) || (timegda->minute > 60) || 
-		    (timegda->second > 60))
-			return FALSE;
-		else
-			return TRUE;
-	}
-
-	if (*ptr == '.') {
-		ptr ++;
-		while (*ptr && (*ptr >= '0') && (*ptr <= '9')) {
-			timegda->fraction = timegda->fraction * 10 + *ptr - '0';
-			ptr++;
-		}
-	}
-
-	if ((*ptr == '+') || (*ptr == '-')) {
-		glong sign = (*ptr == '+') ? 1 : -1;
-		ptr ++;
-		timegda->timezone = 0;
-		while (*ptr && (*ptr >= '0') && (*ptr <= '9')) {
-			timegda->timezone = timegda->timezone * 10 + sign * ((*ptr) - '0');
-			ptr++;
-		}
-		timegda->timezone *= 3600;
-	}
-	
-	/* checks */
-	if ((timegda->hour > 24) || (timegda->minute > 60) || (timegda->second > 60))
+	if (timegda->second >= 60)
 		return FALSE;
-	else
-		return TRUE;
+
+	/* fraction */
+	if (*ptr && (*ptr != '.') && (*ptr != '+') && (*ptr != '-'))
+		return FALSE;
+	if (*ptr == '.') {
+		ptr++;
+		if (!isdigit (*ptr))
+			return FALSE;
+		while (isdigit (*ptr)) {
+			unsigned long long lu;
+			lu = timegda->fraction * 10 + (*ptr - '0');
+			if (lu < G_MAXULONG)
+				timegda->fraction = lu;
+			else
+				return FALSE;
+			ptr++;
+		}
+	}
+	
+	/* timezone */
+	if ((*ptr == '-') || (*ptr == '+')) {
+		gint sign = (*ptr == '+') ? 1 : -1;
+		ptr++;
+		if (!isdigit (*ptr))
+			return FALSE;
+		timegda->timezone = sign * (*ptr - '0');
+		ptr++;
+		if (isdigit (*ptr)) {
+			timegda->timezone = timegda->minute * 10 + sign * (*ptr - '0');
+			ptr++;
+		}
+		if (*ptr)
+			return FALSE;
+		if ((timegda->timezone >= -24) && (timegda->timezone <= 24))
+			timegda->timezone *= 60*60;
+		else {
+			timegda->timezone = 0;
+			return FALSE;
+		}
+	}
+	return TRUE;
 }
 
 

@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
@@ -2516,6 +2517,56 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 	gda_rfc1738_decode (*out_password);
 }
 
+static gboolean
+_parse_iso8601_date (GDate *gdate, const gchar *value, char **out_endptr)
+{
+	GDateYear year;
+	GDateMonth month;
+	GDateDay day;
+	unsigned long int tmp;
+	char *endptr;
+
+	g_date_clear (gdate, 1);
+
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	if (tmp <= G_MAXUINT16)
+		year = tmp;
+	else
+		return FALSE;
+	if (*endptr != '-')
+		return FALSE;
+
+	value = endptr + 1;
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	month = tmp > 0 ? (tmp <= G_DATE_DECEMBER ? tmp : G_DATE_BAD_MONTH) : G_DATE_BAD_MONTH;
+	if (month == G_DATE_BAD_MONTH)
+		return FALSE;
+	if (*endptr != '-')
+		return FALSE;
+
+	value = endptr + 1;
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	day = tmp > 0 ? (tmp <= G_MAXUINT8 ? tmp : G_DATE_BAD_DAY) : G_DATE_BAD_DAY;
+	if (day == G_DATE_BAD_DAY)
+		return FALSE;
+
+	if (g_date_valid_dmy (day, month, year)) {
+		g_date_set_dmy (gdate, day, month, year);
+		*out_endptr = endptr;
+		return TRUE;
+	}
+	else {
+		memset (gdate, 0, sizeof (GDate));
+		return FALSE;
+	}
+}
+
 /**
  * gda_parse_iso8601_date
  * @gdate: a pointer to a #GDate structure which will be filled
@@ -2523,36 +2574,94 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
  *
  * Extracts date parts from @value, and sets @gdate's contents
  *
- * Accepted date format is "YYYY-MM-DD".
+ * Accepted date format is "YYYY-MM-DD" (more or less than 4 digits for years and
+ * less than 2 digits for month and day are accepted). Years must be in the 1-65535 range,
+ * a limitation imposed by #GDate.
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_parse_iso8601_date (GDate *gdate, const gchar *value)
 {
-	GDateYear year;
-	GDateMonth month;
-	GDateDay day;
-	gint tmp;
+	g_return_val_if_fail (gdate, FALSE);
 
-	tmp = atoi (value); /* Flawfinder: ignore */
-	year = tmp > 0 ? tmp : 0;
-	value += 5;
-	tmp = atoi (value); /* Flawfinder: ignore */
-	month = tmp > 0 ? (tmp <= G_DATE_DECEMBER ? tmp : G_DATE_BAD_MONTH) : G_DATE_BAD_MONTH;
-	value += 3;
-	tmp = atoi (value); /* Flawfinder: ignore */
-	day = tmp > 0 ? (tmp <= G_MAXUINT8 ? tmp : G_DATE_BAD_DAY) : G_DATE_BAD_DAY;
-	
-	g_date_clear (gdate, 1);
-	if (g_date_valid_dmy (day, month, year)) {
-		g_date_set_dmy (gdate, day, month, year);
-		return TRUE;
-	}
-	else {
-		memset (gdate, 0, sizeof (GDate));
+	char *endptr;
+	if (!value)
 		return FALSE;
+
+	if (! _parse_iso8601_date (gdate, value, &endptr))
+		return FALSE;
+	if (*endptr)
+		return FALSE;
+	return TRUE;
+}
+
+static gboolean
+_parse_iso8601_time (GdaTime *timegda, const gchar *value, char **out_endptr)
+{
+	unsigned long int tmp;
+	char *endptr;
+
+	memset (timegda, 0, sizeof (GdaTime));
+	timegda->timezone = GDA_TIMEZONE_INVALID;
+
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	if (tmp <= 23)
+		timegda->hour = tmp;
+	else
+		return FALSE;
+	if (*endptr != ':')
+		return FALSE;
+	
+	value = endptr + 1;
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	if (tmp < 60)
+		timegda->minute = tmp;
+	else
+		return FALSE;
+	if (*endptr != ':')
+		return FALSE;
+
+	value = endptr + 1;
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	if (tmp < 60)
+		timegda->second = tmp;
+	else
+		return FALSE;
+
+	if (*endptr && (*endptr != '.') && (*endptr != '+') && (*endptr != '-')) {
+		*out_endptr = endptr;
+		return TRUE; /* end of the parsing */
 	}
+
+	if (*endptr == '.') {
+		value = endptr + 1;
+		if (! isdigit (*value))
+			return FALSE;
+		tmp = strtoul (value, &endptr, 10);
+		if (tmp < G_MAXULONG)
+			timegda->fraction = tmp;
+		else
+			return FALSE;
+	}
+	if ((*endptr == '+') || (*endptr == '-')) {
+		long int stmp;
+		value = endptr;
+		stmp = strtol (value, &endptr, 10);
+		if ((stmp >= -24) && (stmp <= 24))
+			timegda->timezone = stmp * 60 * 60;
+		else
+			return FALSE;
+	}
+
+	*out_endptr = endptr;
+	return TRUE;
 }
 
 /**
@@ -2569,56 +2678,16 @@ gda_parse_iso8601_date (GDate *gdate, const gchar *value)
 gboolean
 gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 {
-	gint tmp;
+	g_return_val_if_fail (timegda, FALSE);
 
-	memset (timegda, 0, sizeof (GdaTime));
-
-	tmp = atoi (value); /* Flawfinder: ignore */
-	if ((tmp < 0) || (tmp > 24))
+	char *endptr;
+	if (!value)
 		return FALSE;
-	timegda->hour = tmp;
-	value += 3;
-	tmp = atoi (value); /* Flawfinder: ignore */
-	if ((tmp < 0) || (tmp > 60))
+
+	if (! _parse_iso8601_time (timegda, value, &endptr))
 		return FALSE;
-	timegda->minute = tmp;
-	value += 3;
-	tmp = atoi (value); /* Flawfinder: ignore */
-	if ((tmp < 0) || (tmp > 60))
+	if (*endptr)
 		return FALSE;
-	timegda->second = tmp;
-	value += 2;
-	if (*value != '.') {
-		timegda->fraction = 0;
-	} else {
-		gint ndigits = 0;
-		gint64 fraction;
-
-		value++;
-		fraction = atol (value); /* Flawfinder: ignore */
-		if (fraction < 0)
-			return FALSE;
-
-		while (*value && (*value != '+') && (*value != '-')) {
-			value++;
-			ndigits++;
-		}
-
-		while (fraction > 0 && ndigits > 3) {
-			fraction /= 10;
-			ndigits--;
-		}
-		
-		timegda->fraction = fraction;
-	}
-
-	if (*value) {
-		tmp = atol (value); /* Flawfinder: ignore */
-		if ((tmp < 0) || (tmp >= 24))
-			return FALSE;
-		timegda->timezone = tmp * 60 * 60;
-	}
-
 	return TRUE;
 }
 
@@ -2636,78 +2705,51 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 gboolean
 gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 {
-	GDateYear year;
-	GDateMonth month;
-	GDateDay day;
-	gint tmp;
+	g_return_val_if_fail (timestamp, FALSE);
+
+	gboolean retval = TRUE;
+	char *endptr;
+	GDate gdate;
+	GdaTime timegda;
 
 	memset (timestamp, 0, sizeof (GdaTimestamp));
+	memset (&timegda, 0, sizeof (GdaTime));
+	timegda.timezone = GDA_TIMEZONE_INVALID;
+
+	if (!value)
+		return FALSE;
 
 	/* date part */
-	tmp = atoi (value); /* Flawfinder: ignore */
-	year = tmp > 0 ? tmp : 0;
-	value += 5;
-	tmp = atoi (value); /* Flawfinder: ignore */
-	month = tmp > 0 ? (tmp <= G_DATE_DECEMBER ? tmp : G_DATE_BAD_MONTH) : G_DATE_BAD_MONTH;
-	value += 3;
-	tmp = atoi (value); /* Flawfinder: ignore */
-	day = tmp > 0 ? (tmp <= G_MAXUINT8 ? tmp : G_DATE_BAD_DAY) : G_DATE_BAD_DAY;
-	value += 3;
-	
-	if (g_date_valid_dmy (day, month, year)) {
-		timestamp->year = year;
-		timestamp->month = month;
-		timestamp->day = day;
+	if (! _parse_iso8601_date (&gdate, value, &endptr)) {
+		retval = FALSE;
+		goto out;
 	}
-	else
-		return FALSE;
+	timestamp->year = g_date_get_year (&gdate);
+	timestamp->month = g_date_get_month (&gdate);
+	timestamp->day = g_date_get_day (&gdate);
+
+	/* separator */
+	if (!*endptr)
+		goto out;
+
+	if (*endptr != ' ') {
+		retval = FALSE;
+		goto out;
+	}
+	value = endptr + 1;
+	if (!*value)
+		goto out;
 
 	/* time part */
-	tmp = atoi (value); /* Flawfinder: ignore */
-	if ((tmp < 0) || (tmp > 24))
-		return FALSE;
-	timestamp->hour = tmp;
-	value += 3;
-	tmp = atoi (value); /* Flawfinder: ignore */
-	if ((tmp < 0) || (tmp > 60))
-		return FALSE;
-	timestamp->minute = tmp;
-	value += 3;
-	tmp = atoi (value); /* Flawfinder: ignore */
-	if ((tmp < 0) || (tmp > 60))
-		return FALSE;
-	timestamp->second = tmp;
-	value += 2;
-	if (*value != '.') {
-		timestamp->fraction = 0;
-	} else {
-		gint ndigits = 0;
-		gint64 fraction;
+	if (! _parse_iso8601_time (&timegda, value, &endptr) ||
+	    *endptr) 
+		retval = FALSE;
+ out:
+	timestamp->hour = timegda.hour;
+	timestamp->minute = timegda.minute;
+	timestamp->second = timegda.second;
+	timestamp->fraction = timegda.fraction;
+	timestamp->timezone = timegda.timezone;
 
-		value++;
-		fraction = atol (value); /* Flawfinder: ignore */
-		if (fraction < 0)
-			return FALSE;
-
-		while (*value && (*value != '+') && (*value != '-')) {
-			value++;
-			ndigits++;
-		}
-
-		while (fraction > 0 && ndigits > 3) {
-			fraction /= 10;
-			ndigits--;
-		}
-		
-		timestamp->fraction = fraction;
-	}
-
-	if (*value) {
-		tmp = atol (value); /* Flawfinder: ignore */
-		if ((tmp < 0) || (tmp >= 24))
-			return FALSE;
-		timestamp->timezone = tmp * 60 * 60;
-	}
-
-	return TRUE;
+	return retval;
 }
