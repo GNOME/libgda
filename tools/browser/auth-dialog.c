@@ -136,7 +136,7 @@ auth_contents_changed_cb (GdauiAuth *auth, gboolean is_valid, AuthDialog *dialog
 static void
 update_ad_auth (AuthData *ad)
 {
-	if (ad->cncinfo.auth_string) {
+	if (ad->auth_widget && ad->cncinfo.auth_string) {
 		/* split array in a list of named parameters, and for each parameter value, 
 		 * set the correcponding parameter in @dset */
 		GdaSet *dset;

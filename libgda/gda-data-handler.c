@@ -1,6 +1,6 @@
 /* gda-data-handler.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2010 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -66,7 +66,7 @@ gda_data_handler_iface_init (G_GNUC_UNUSED gpointer g_class)
 }
 
 /**
- * gda_data_handler_get_sql_from_value
+ * gda_data_handler_get_sql_from_value:
  * @dh: an object which implements the #GdaDataHandler interface
  * @value: the value to be converted to a string
  *
@@ -78,7 +78,7 @@ gda_data_handler_iface_init (G_GNUC_UNUSED gpointer g_class)
  *
  * If the value is NULL or is of type GDA_TYPE_NULL, the returned string is "NULL".
  *
- * Returns: the new string, or %NULL if an error occurred
+ * Returns: (transfer full): the new string, or %NULL if an error occurred
  */
 gchar *
 gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
@@ -96,7 +96,7 @@ gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
 }
 
 /**
- * gda_data_handler_get_str_from_value
+ * gda_data_handler_get_str_from_value:
  * @dh: an object which implements the #GdaDataHandler interface
  * @value: the value to be converted to a string
  *
@@ -104,7 +104,7 @@ gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
  * (in the user's locale, specially for the dates). If the value is 
  * NULL or is of type GDA_TYPE_NULL, the returned string is a copy of "" (empty string).
  *
- * Returns: the new string, or %NULL if an error occurred
+ * Returns: (transfer full): the new string, or %NULL if an error occurred
  */
 gchar *
 gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
@@ -122,7 +122,7 @@ gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
 }
 
 /**
- * gda_data_handler_get_value_from_sql
+ * gda_data_handler_get_value_from_sql:
  * @dh: an object which implements the #GdaDataHandler interface
  * @sql: an SQL string
  * @type: a GType
@@ -131,11 +131,11 @@ gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
  * the opposite of the function gda_data_handler_get_sql_from_value(). The type argument
  * is used to determine the real data type requested for the returned value.
  *
- * If the sql string is NULL, then the returned GValue is of type GDA_TYPE_NULL;
- * if the sql string does not correspond to a valid SQL string for the requested type, then
- * the "NULL" string is returned.
+ * If the @sql string is %NULL, then the returned GValue is of type GDA_TYPE_NULL;
+ * if the @sql string does not correspond to a valid SQL string for the requested type, then
+ * the %NULL is returned.
  *
- * Returns: the new GValue or NULL on error
+ * Returns: (transfer full): the new #GValue or %NULL on error
  */
 GValue *
 gda_data_handler_get_value_from_sql (GdaDataHandler *dh, const gchar *sql, GType type)
@@ -154,20 +154,20 @@ gda_data_handler_get_value_from_sql (GdaDataHandler *dh, const gchar *sql, GType
 
 
 /**
- * gda_data_handler_get_value_from_str
+ * gda_data_handler_get_value_from_str:
  * @dh: an object which implements the #GdaDataHandler interface
  * @str: a string
  * @type: a GType
  *
- * Creates a new GValue which represents the STR value given as argument. This is
+ * Creates a new GValue which represents the @str value given as argument. This is
  * the opposite of the function gda_data_handler_get_str_from_value(). The type argument
  * is used to determine the real data type requested for the returned value.
  *
- * If the str string is NULL, then the returned GValue is of type GDA_TYPE_NULL;
- * if the str string does not correspond to a valid STR string for the requested type, then
- * NULL is returned.
+ * If the @str string is %NULL, then the returned GValue is of type GDA_TYPE_NULL;
+ * if the @str string does not correspond to a valid string for the requested type, then
+ * %NULL is returned.
  *
- * Returns: the new GValue or NULL on error
+ * Returns: (transfer full): the new #GValue or %NULL on error
  */
 GValue *
 gda_data_handler_get_value_from_str (GdaDataHandler *dh, const gchar *str, GType type)
@@ -192,14 +192,14 @@ gda_data_handler_get_value_from_str (GdaDataHandler *dh, const gchar *str, GType
 
 
 /**
- * gda_data_handler_get_sane_init_value
+ * gda_data_handler_get_sane_init_value:
  * @dh: an object which implements the #GdaDataHandler interface
- * @type: a GTYpe
+ * @type: a #GType
  *
  * Creates a new GValue which holds a sane initial value to be used if no value is specifically
  * provided. For example for a simple string, this would return a new value containing the "" string.
  *
- * Returns: the new GValue, or %NULL if no such value can be created.
+ * Returns: (transfer full): the new #GValue, or %NULL if no such value can be created.
  */
 GValue *
 gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
@@ -214,13 +214,13 @@ gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
 }
 
 /**
- * gda_data_handler_accepts_g_type
+ * gda_data_handler_accepts_g_type:
  * @dh: an object which implements the #GdaDataHandler interface
  * @type: a #GType
  *
  * Checks wether the GdaDataHandler is able to handle the gda type given as argument.
  *
- * Returns: TRUE if the gda type can be handled
+ * Returns: %TRUE if the gda type can be handled
  */
 gboolean
 gda_data_handler_accepts_g_type (GdaDataHandler *dh, GType type)
@@ -234,12 +234,12 @@ gda_data_handler_accepts_g_type (GdaDataHandler *dh, GType type)
 }
 
 /**
- * gda_data_handler_get_descr
+ * gda_data_handler_get_descr:
  * @dh: an object which implements the #GdaDataHandler interface
  *
  * Get a short description of the GdaDataHandler
  *
- * Returns: the description
+ * Returns: (transfer none): the description
  */
 const gchar *
 gda_data_handler_get_descr (GdaDataHandler *dh)

@@ -641,7 +641,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
  *
  * Note: the same limitations and usage instructions apply as for gda_data_model_get_value_at().
  *
- * Upon errors FALSE will be returned and @error will be assigned a
+ * Upon errors %NULL will be returned and @error will be assigned a
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: a #GValue containing the value stored in the given
@@ -1155,6 +1155,8 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 							g_string_append_c (retstring, quote);
 						}
 						g_string_append_c (retstring, '\n');
+						if (!cols)
+							g_free (rcols);
 					}
 				}
 				else
@@ -1480,9 +1482,13 @@ find_column_from_id (GdaDataModel *model, const gchar *colid, gint *pos)
 
 	/* if no column has been found, assumr @colid is like "_%d" where %d is a column number */
 	if (!column && (*colid == '_')) {
-		column = gda_data_model_describe_column (model, atoi (colid + 1));
-		if (column)
-			*pos = atoi (colid + 1);
+		gint i;
+		i = atoi (colid + 1); /* Flawfinder: ignore */
+		if (i >= 0) {
+			column = gda_data_model_describe_column (model, i);
+			if (column)
+				*pos = i;
+		}
 	}
 
 	return column;
@@ -2008,13 +2014,13 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 	if (!to_stream)
 		to_stream = stdout;
 
-	if (getenv ("GDA_DATA_MODEL_DUMP_ATTRIBUTES")) 
+	if (getenv ("GDA_DATA_MODEL_DUMP_ATTRIBUTES")) /* Flawfinder: ignore */
 		dump_attrs = TRUE;
-	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS"))
+	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS")) /* Flawfinder: ignore */
 		dump_rows = TRUE;
-	if (getenv ("GDA_DATA_MODEL_DUMP_TITLE")) 
+	if (getenv ("GDA_DATA_MODEL_DUMP_TITLE")) /* Flawfinder: ignore */
 		dump_title = TRUE;
-	if (getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY")) 
+	if (getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY")) /* Flawfinder: ignore */
 		null_as_empty = TRUE;
 
 	str = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, &error);
@@ -2066,11 +2072,11 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS"))
+	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS")) /* Flawfinder: ignore */
 		dump_rows = TRUE;
-	if (getenv ("GDA_DATA_MODEL_DUMP_TITLE")) 
+	if (getenv ("GDA_DATA_MODEL_DUMP_TITLE")) /* Flawfinder: ignore */
 		dump_title = TRUE;
-	if (getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY")) 
+	if (getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY")) /* Flawfinder: ignore */
 		null_as_empty = TRUE;
 
 	return real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, NULL);

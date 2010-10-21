@@ -380,7 +380,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	if (debug_level == -1) {
 		const gchar *str;
 		debug_level = 0;
-		str = getenv ("GDA_CONNECTION_EVENTS_SHOW");
+		str = getenv ("GDA_CONNECTION_EVENTS_SHOW"); /* Flawfinder: ignore */
 		if (str) {
 			gchar **array;
 			guint i;
@@ -792,7 +792,7 @@ static void
 gda_connection_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaConnection *cnc;
 
@@ -827,6 +827,9 @@ gda_connection_get_property (GObject *object,
 		case PROP_EVENTS_HISTORY_SIZE:
 			g_value_set_int (value, cnc->priv->events_array_size);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
                 }
         }	
 }
@@ -850,12 +853,13 @@ cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, 
 	task->model_usage = model_usage;
 	if (col_types) {
 		gint i;
-		for (i = 0; ; i++) {
+		for (i = 0; i < 32768; i++) {
 			if (col_types [i] == G_TYPE_NONE)
 				break;
 		}
-		task->col_types = g_new (GType, i+1);
-		memcpy (task->col_types, col_types, (i+1) * sizeof (GType));
+		i++;
+		task->col_types = g_new (GType, i);
+		memcpy (task->col_types, col_types, i * sizeof (GType)); /* Flawfinder: ignore */
 	}
 	if (params)
 		task->params = gda_set_copy (params);
@@ -945,7 +949,7 @@ _gda_connection_get_internal_thread_provider (void)
  * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
  * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
- * Returns: a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
+ * Returns: (transfer full) (allow-none): a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
  */
 GdaConnection *
 gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string, 
@@ -1099,7 +1103,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
  * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
- * Returns: a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
+ * Returns: (transfer full) (allow-none): a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
  */
 GdaConnection *
 gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_string, const gchar *auth_string,
@@ -1200,6 +1204,7 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 		}
 	}
 
+	g_free (real_auth_string);
 	g_free (real_cnc);
 	g_free (user);
 	g_free (pass);
@@ -1264,8 +1269,7 @@ sqlite_connection_closed_cb (GdaConnection *cnc, G_GNUC_UNUSED gpointer data)
 
 /**
  * gda_connection_open_sqlite:
- * @cnc_string: a connection string
- * @directory: the directory the database file will be in, or %NULL for the default TMP directory
+ * @directory: (allow-none): the directory the database file will be in, or %NULL for the default TMP directory
  * @filename: the database file name
  * @auto_unlink: if %TRUE, then the database file will be removed afterwards
  *
@@ -1273,7 +1277,7 @@ sqlite_connection_closed_cb (GdaConnection *cnc, G_GNUC_UNUSED gpointer data)
  * to be used by database providers which need a temporary database to store
  * some information.
  *
- * Returns: a new #GdaConnection, or %NULL if an error occurred
+ * Returns: (transfer full) (allow-none): a new #GdaConnection, or %NULL if an error occurred
  */
 GdaConnection *
 gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gboolean auto_unlink)
@@ -1283,7 +1287,7 @@ gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gbool
 	gint fd;
 
 	if (!directory)
-		directory = g_get_tmp_dir();
+		directory = g_get_tmp_dir(); /* Flawfinder: ignore */
 	else
 		g_return_val_if_fail (*directory, NULL);
 	g_return_val_if_fail (filename && *filename, NULL);
@@ -1739,7 +1743,7 @@ gda_connection_get_authentication (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_point_available_event
+ * gda_connection_point_available_event:
  * @cnc: a #GdaConnection object
  * @type: a #GdaConnectionEventType
  *
@@ -1748,7 +1752,7 @@ gda_connection_get_authentication (GdaConnection *cnc)
  * for gda_connection_event_new() which improves performances by reusing as much as possible
  * #GdaConnectionEvent objects. Newly written database providers should use this method.
  *
- * Returns: (transfer full): a pointer to the next available connection event, or %NULL if event should
+ * Returns: (transfer full) (allow-none): a pointer to the next available connection event, or %NULL if event should
  * be ignored
  *
  * Since: 4.2
@@ -1895,7 +1899,7 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 
 	/* build the message string */
 	va_start (args, str);
-	vsprintf (sz, str, args);
+	g_vsnprintf (sz, 2048, str, args);
 	va_end (args);
 	
 	error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -1945,7 +1949,7 @@ gda_connection_clear_events_list (GdaConnection *cnc)
  * to perform the type type of action. It is a wrapper around the gda_server_provider_create_operation()
  * method.
  *
- * Returns: a new #GdaServerOperation object, or %NULL in the connection's provider does not support the @type type
+ * Returns: (transfer full) (allow-none): a new #GdaServerOperation object, or %NULL in the connection's provider does not support the @type type
  * of operation or if an error occurred
  */
 GdaServerOperation*
@@ -1993,7 +1997,7 @@ gda_connection_perform_operation (GdaConnection *cnc, GdaServerOperation *op, GE
  * then %NULL is returned, and a general SQL parser can be obtained
  * using gda_sql_parser_new().
  *
- * Returns: a new #GdaSqlParser object, or %NULL
+ * Returns: (transfer full) (allow-none): a new #GdaSqlParser object, or %NULL
  */
 GdaSqlParser *
 gda_connection_create_parser (GdaConnection *cnc)
@@ -2051,7 +2055,7 @@ change_events_array_max_size (GdaConnection *cnc, gint size)
  * the list of #GObject created by the correct execution of the previous statements. If a transaction is required,
  * then it should be started before calling this method.
  *
- * Returns: (element-type GObject): a new list of #GObject objects
+ * Returns: (transfer full) (element-type GObject): a new list of #GObject objects
  */
 GSList *
 gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *params,
@@ -2446,7 +2450,7 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
  * would have if the statement had been
  * executed synchronously.
  *
- * Returns: a #GObject, or %NULL if an error occurred
+ * Returns: (transfer full) (allow-none): a #GObject, or %NULL if an error occurred
  *
  * Since: 4.2
  */
@@ -2685,7 +2689,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * Also see the <link linkend="limitations">provider's limitations</link>, and the
  * <link linkend="data-select">Advanced GdaDataSelect usage</link> sections.
  *
- * Returns: a #GObject, or %NULL if an error occurred 
+ * Returns: (transfer full) (allow-none): a #GObject, or %NULL if an error occurred 
  */
 GObject *
 gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
@@ -2793,7 +2797,7 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
  * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
- * Returns: a #GdaDataModel containing the data returned by the
+ * Returns: (transfer full) (allow-none): a #GdaDataModel containing the data returned by the
  * data source, or %NULL if an error occurred
  */
 GdaDataModel *
@@ -2840,7 +2844,7 @@ gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
  * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
- * Returns: a #GdaDataModel containing the data returned by the
+ * Returns: (transfer full) (allow-none): a #GdaDataModel containing the data returned by the
  * data source, or %NULL if an error occurred
  */
 GdaDataModel *
@@ -2918,7 +2922,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
  * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
- * Returns: a #GdaDataModel containing the data returned by the
+ * Returns: (transfer full) (allow-none): a #GdaDataModel containing the data returned by the
  * data source, or %NULL if an error occurred
  */
 GdaDataModel *
@@ -4105,6 +4109,8 @@ suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext 
 
 	GdaMetaContext *templ_context;
 	GdaMetaContext loc_suggest;
+	gchar *column_names[MAX_CONTEXT_SIZE];
+	GValue *column_values[MAX_CONTEXT_SIZE];
 
 	/* if there is no context with the same table name in the templates, then exit right now */
 	templ_context = g_hash_table_lookup (data->context_templates_hash, suggest->table_name);
@@ -4113,9 +4119,6 @@ suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext 
 	
 	if (templ_context->size > 0) {
 		/* setup @loc_suggest */
-
-		gchar *column_names[MAX_CONTEXT_SIZE];
-		GValue *column_values[MAX_CONTEXT_SIZE];
 		gint i, j;
 
 		if (suggest->size > MAX_CONTEXT_SIZE) {
@@ -4127,8 +4130,8 @@ suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext 
 		loc_suggest.table_name = suggest->table_name;
 		loc_suggest.column_names = column_names;
 		loc_suggest.column_values = column_values;
-		memcpy (loc_suggest.column_names, suggest->column_names, sizeof (gchar *) * suggest->size);
-		memcpy (loc_suggest.column_values, suggest->column_values, sizeof (GValue *) * suggest->size);	
+		memcpy (loc_suggest.column_names, suggest->column_names, sizeof (gchar *) * suggest->size); /* Flawfinder: ignore */
+		memcpy (loc_suggest.column_values, suggest->column_values, sizeof (GValue *) * suggest->size); /* Flawfinder: ignore */
 		
 		/* check that any @suggest's columns which is in @templ_context's has the same values */
 		for (j = 0; j < suggest->size; j++) {
@@ -4648,7 +4651,7 @@ prepare_meta_statements_hash (void)
  * meta data section about SQL identifiers</link> for more information, and the documentation about the
  * gda_sql_identifier_quote() function which will be most useful.
  * 
- * Returns: a #GdaDataModel containing the data required. The caller is responsible
+ * Returns: (transfer full): a #GdaDataModel containing the data required. The caller is responsible
  * for freeing the returned model using g_object_unref().
  */
 GdaDataModel *
@@ -4701,7 +4704,7 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
  *
  * see #gda_connection_get_meta_store_data
  * 
- * Returns: a #GdaDataModel containing the data required. The caller is responsible
+ * Returns: (transfer full): a #GdaDataModel containing the data required. The caller is responsible
  * for freeing the returned model using g_object_unref().
  */
 GdaDataModel *
@@ -4842,8 +4845,8 @@ gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
 /**
  * gda_connection_internal_transaction_started: (skip)
  * @cnc: a #GdaConnection
- * @parent_trans: (allow-null): name of the parent transaction, or %NULL
- * @trans_name: (allow-null): transaction's name, or %NULL
+ * @parent_trans: name of the parent transaction, or %NULL
+ * @trans_name: transaction's name, or %NULL
  * @isol_level: isolation level.
  *
  * Internal functions to be called by database providers when a transaction has been started
@@ -4892,7 +4895,7 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
 /**
  * gda_connection_internal_transaction_rolledback: (skip)
  * @cnc: a #GdaConnection
- * @trans_name: (allow-null): transaction's name, or %NULL
+ * @trans_name: transaction's name, or %NULL
  *
  * Internal functions to be called by database providers when a transaction has been rolled
  * back to keep track of the transaction status of the connection
@@ -4945,7 +4948,7 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
 /**
  * gda_connection_internal_transaction_committed: (skip)
  * @cnc: a #GdaConnection
- * @trans_name: (allow-null): transaction's name, or %NULL
+ * @trans_name: transaction's name, or %NULL
  *
  * Internal functions to be called by database providers when a transaction has been committed
  * to keep track of the transaction status of the connection
@@ -4998,8 +5001,8 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 /**
  * gda_connection_internal_savepoint_added: (skip)
  * @cnc: a #GdaConnection
- * @parent_trans: (allow-null): name of the parent transaction, or %NULL
- * @svp_name: (allow-null): savepoint's name, or %NULL
+ * @parent_trans: name of the parent transaction, or %NULL
+ * @svp_name: savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been added
  * to keep track of the transaction status of the connection
@@ -5042,7 +5045,7 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
 /**
  * gda_connection_internal_savepoint_rolledback: (skip)
  * @cnc: a #GdaConnection
- * @svp_name: (allow-null): savepoint's name, or %NULL
+ * @svp_name: savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been rolled back
  * to keep track of the transaction status of the connection
@@ -5086,7 +5089,7 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
 /**
  * gda_connection_internal_savepoint_removed: (skip)
  * @cnc: a #GdaConnection
- * @svp_name: (allow-null): savepoint's name, or %NULL
+ * @svp_name: savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been removed
  * to keep track of the transaction status of the connection
@@ -5131,7 +5134,7 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
  * gda_connection_internal_statement_executed: (skip)
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement which has been executed
- * @params: (allow-null): execution's parameters
+ * @params: execution's parameters
  * @error: a #GdaConnectionEvent if the execution failed, or %NULL
  *
  * Internal functions to be called by database providers when a statement has been executed
@@ -5434,7 +5437,7 @@ gda_connection_internal_get_provider_data (GdaConnection *cnc)
  *
  * Get or initializes the #GdaMetaStore associated to @cnc
  *
- * Returns: a #GdaMetaStore object
+ * Returns: (transfer full): a #GdaMetaStore object
  */
 GdaMetaStore *
 gda_connection_get_meta_store (GdaConnection *cnc)

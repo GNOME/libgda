@@ -73,7 +73,7 @@ set_from_string (GValue *value, const gchar *as_string)
 		}
 		else {
 			gint i;
-			i = atoi (as_string);
+			i = atoi (as_string); /* Flawfinder: ignore */
 			g_value_set_boolean (value, i ? TRUE : FALSE);
 			retval = TRUE;
 		}
@@ -542,6 +542,11 @@ gda_geometricpoint_get_type (void)
 	return type;
 }
 
+/**
+ * gda_geometricpoint_copy:
+ *
+ * Returns: (transfer full):
+ */
 gpointer 
 gda_geometricpoint_copy (gpointer boxed)
 {
@@ -591,8 +596,13 @@ numeric_to_int (const GValue *src, GValue *dest)
 			  GDA_VALUE_HOLDS_NUMERIC (src));
 
 	numeric = gda_value_get_numeric (src);
-	if (numeric)
-		g_value_set_int (dest, atol (numeric->number));
+	if (numeric) {
+		glong tmp;
+		tmp = atol (numeric->number); /* Flawfinder: ignore */
+		if ((tmp < G_MININT) || (tmp > G_MAXINT))
+			g_warning ("Integer overflow for value %ld", tmp);
+		g_value_set_int (dest, tmp);
+	}
 	else
 		g_value_set_int (dest, 0);
 }
@@ -606,8 +616,13 @@ numeric_to_uint (const GValue *src, GValue *dest)
 			  GDA_VALUE_HOLDS_NUMERIC (src));
 
 	numeric = gda_value_get_numeric (src);
-	if (numeric)
-		g_value_set_uint (dest, atol (numeric->number));
+	if (numeric) {
+		glong tmp;
+		tmp = atol (numeric->number); /* Flawfinder: ignore */
+		if ((tmp < 0) || (tmp > G_MAXUINT))
+			g_warning ("Unsigned integer overflow for value %ld", tmp);
+		g_value_set_uint (dest, tmp);
+	}
 	else
 		g_value_set_uint (dest, 0);
 }
@@ -622,7 +637,7 @@ numeric_to_boolean (const GValue *src, GValue *dest)
 
 	numeric = gda_value_get_numeric (src);
 	if (numeric)
-		g_value_set_boolean (dest, atoi (numeric->number));
+		g_value_set_boolean (dest, atoi (numeric->number)); /* Flawfinder: ignore */
 	else
 		g_value_set_boolean (dest, 0);
 }
@@ -835,6 +850,11 @@ gda_time_get_type(void)
 	return type;
 }
 
+/**
+ * gda_time_copy:
+ *
+ * Returns: (transfer full):
+ */
 gpointer
 gda_time_copy (gpointer boxed)
 {
@@ -890,37 +910,14 @@ static void
 string_to_timestamp (const GValue *src, GValue *dest)
 {
 	/* FIXME: add more checks*/
-	GdaTimestamp *timestamp;
-	const gchar *as_string;
+	GdaTimestamp timestamp;
 	
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_TIMESTAMP (dest));
-	
-	timestamp = g_new0 (GdaTimestamp, 1);
-	
-	as_string = g_value_get_string (src);
-	
-	timestamp->year = atoi (as_string);
-	as_string += 5;
-	timestamp->month = atoi (as_string);
-	as_string += 3;
-	timestamp->day = atoi (as_string);
-	as_string += 3;
-	timestamp->hour = atoi (as_string);
-	as_string += 3;
-	timestamp->minute = atoi (as_string);
-	as_string += 3;
-	timestamp->second = atoi (as_string);
-	if (strlen(as_string)>=3) {
-		as_string += 3;
-		timestamp->fraction = atol (as_string) * 10; /* I have only hundredths of second */
-		if (strlen(as_string)>=3) {
-			as_string += 3;
-			timestamp->timezone = atol (as_string) * 60 * 60;
-		}
-	}
-	gda_value_set_timestamp (dest, timestamp);
-	g_free (timestamp);
+
+	if (! gda_parse_iso8601_timestamp (&timestamp, g_value_get_string (src)))
+		g_warning ("Can't convert '%s' to a timestamp", g_value_get_string (src));
+	gda_value_set_timestamp (dest, &timestamp);
 }
 
 static void 
@@ -968,6 +965,11 @@ gda_timestamp_get_type (void)
 	return type;
 }
 
+/**
+ * gda_timestamp_copy:
+ *
+ * Returns: (transfer full):
+ */
 gpointer 
 gda_timestamp_copy (gpointer boxed)
 {
@@ -1101,7 +1103,7 @@ gda_value_new_blob (const guchar *val, glong size)
 	blob = g_new0 (GdaBlob, 1);
 	bin = (GdaBinary*)(blob);
 	bin->data = g_new (guchar, size);
-        memcpy ((gpointer) bin->data, (gpointer) val, size);
+        memcpy ((gpointer) bin->data, (gpointer) val, size); /* Flawfinder: ignore */
         bin->binary_length = size;
 	blob->op = NULL;
 
@@ -2255,7 +2257,7 @@ to_string (const GValue *value)
 
 
 /**
- * gda_value_to_xml:
+ * gda_value_to_xml: (skip):
  * @value: a #GValue.
  *
  * Serializes the given #GValue to an XML node string.

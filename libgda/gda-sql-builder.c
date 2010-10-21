@@ -221,7 +221,7 @@ static void
 gda_sql_builder_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaSqlBuilder *builder;
 	GdaSqlStatementType stmt_type;
@@ -243,6 +243,9 @@ gda_sql_builder_set_property (GObject *object,
 			if (stmt_type == GDA_SQL_STATEMENT_COMPOUND)
 				gda_sql_builder_compound_set_type (builder, GDA_SQL_STATEMENT_COMPOUND_UNION);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -251,13 +254,16 @@ static void
 gda_sql_builder_get_property (GObject *object,
 			     guint param_id,
 			     G_GNUC_UNUSED GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaSqlBuilder *builder;
 	builder = GDA_SQL_BUILDER (object);
 
 	if (builder->priv) {
 		switch (param_id) {
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -344,14 +350,13 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
 /**
  * gda_sql_builder_get_sql_statement:
  * @builder: a #GdaSqlBuilder object
- * @copy_it: set to %TRUE to be able to reuse @builder
  *
  * Creates a new #GdaSqlStatement structure from @builder's contents.
  *
  * The returned pointer belongs to @builder's internal representation.
  * Use gda_sql_statement_copy() if you need to keep it.
  *
- * Returns: (transfer none): a #GdaSqlStatement pointer
+ * Returns: (transfer none) (allow-none): a #GdaSqlStatement pointer
  *
  * Since: 4.2
  */
@@ -948,7 +953,7 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string)
  * gda_sql_builder_add_field_id:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @table_name: (allow-null): a table name, or %NULL
+ * @table_name: (allow-none): a table name, or %NULL
  *
  * Defines an expression representing a field in @builder,
  * which may be reused to build other parts of a statement,
@@ -1031,7 +1036,7 @@ gda_sql_builder_add_param (GdaSqlBuilder *builder, const gchar *param_name, GTyp
  * @op2: the ID of the 2nd argument (may be %0 if @op needs only one operand)
  * @op3: the ID of the 3rd argument (may be %0 if @op needs only one or two operand)
  *
- * Builds a new expression which reprenents a condition (or operation).
+ * Builds a new expression which represents a condition (or operation).
  *
  * Returns: the ID of the new expression, or %0 if there was an error
  *
@@ -1074,7 +1079,7 @@ gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op, GdaSqlB
  * @op_ids: (array length=op_ids_size): an array of ID for the arguments (not %0)
  * @op_ids_size: size of @ops_ids
  *
- * Builds a new expression which reprenents a condition (or operation).
+ * Builds a new expression which represents a condition (or operation).
  *
  * As a side case, if @ops_ids_size is 1,
  * then @op is ignored, and the returned ID represents @op_ids[0] (this avoids any problem for example
@@ -1356,8 +1361,8 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
  * @join_id: the ID of the join to modify (not %0)
  * @field_name: the name of the field to use in the join condition (not %NULL)
  *
- * Alter a joins in a SELECT statement to make its condition on the field which name
- * is @field_name
+ * Alter a join in a SELECT statement to make its condition use equal field 
+ * values in the fields named @field_name in both tables, via the USING keyword.
  *
  * Returns: the ID of the new join, or %0 if there was an error
  *
@@ -1622,10 +1627,10 @@ gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id
 /**
  * gda_sql_builder_add_function:
  * @builder: a #GdaSqlBuilder object
- * @function_id: the ID of the functions's name
+ * @func_name: the functions's name
  * @...: a list, terminated with %0, of each function's argument's ID
  *
- * Builds a new expression which reprenents a function applied to some arguments
+ * Builds a new expression which represents a function applied to some arguments
  *
  * Returns: the ID of the new expression, or %0 if there was an error
  *
@@ -1667,7 +1672,7 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
 /**
  * gda_sql_builder_add_function_v:
  * @builder: a #GdaSqlBuilder object
- * @function_id: the ID of the functions's name
+ * @func_name: the functions's name
  * @args: (array length=args_size): an array of IDs representing the function's arguments
  * @args_size: @args's size
  *
@@ -1711,7 +1716,6 @@ gda_sql_builder_add_function_v (GdaSqlBuilder *builder, const gchar *func_name,
  * gda_sql_builder_add_sub_select:
  * @builder: a #GdaSqlBuilder object
  * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT. This will be copied.
- * @steal: if %TRUE, then @sqlst will be "stolen" by @b and should not be used anymore
  *
  * Adds an expression which is a subselect.
  *

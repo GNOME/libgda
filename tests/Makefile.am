@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libgda-test-5.0.la
 TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split
-check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split
+check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers
 
 
 SUBDIRS = providers parser value-holders meta-store data-models multi-threading
@@ -75,10 +75,10 @@ test_connection_string_split_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(LIBGDA_LIBS)
 
-test_connection_string_split_SOURCES = \
-        test-connection-string-split.c
+test_input_parsers_SOURCES = \
+        test-input-parsers.c
 
-test_connection_string_split_LDADD = \
+test_input_parsers_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(LIBGDA_LIBS)
 

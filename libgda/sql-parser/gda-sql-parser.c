@@ -429,7 +429,7 @@ gda_sql_parser_get_property (GObject *object,
  * To include variables in the @sql string, see the
  * <link linkend="GdaSqlParser.description">GdaSqlParser's object description</link>.
  *
- * Returns: a new #GdaStatement object, or %NULL if an error occurred
+ * Returns: (transfer full) (allow-none): a new #GdaStatement object, or %NULL if an error occurred
  */
 GdaStatement *
 gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar **remain, GError **error)
@@ -666,7 +666,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
  * To include variables in the @sql string, see the
  * <link linkend="GdaSqlParser.description">GdaSqlParser's object description</link>.
  *
- * Returns: a new #GdaBatch object, or %NULL if an error occurred
+ * Returns: (transfer full) (allow-none): a new #GdaBatch object, or %NULL if an error occurred
  */
 GdaBatch *
 gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, const gchar **remain,
@@ -752,7 +752,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
  *
  * if @sql is %NULL, then the returned #GdaBatch object will contain no statement.
  *
- * Returns: a new #GdaBatch object, or %NULL if an error occurred
+ * Returns: (transfer full) (allow-none): a new #GdaBatch object, or %NULL if an error occurred
  */
 GdaBatch *
 gda_sql_parser_parse_file_as_batch (GdaSqlParser *parser, const gchar *filename, GError **error)

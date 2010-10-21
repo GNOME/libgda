@@ -338,7 +338,7 @@ static void
 gda_tree_node_set_property (GObject *object,
 			    guint param_id,
 			    const GValue *value,
-			    G_GNUC_UNUSED GParamSpec *pspec)
+			    GParamSpec *pspec)
 {
 	GdaTreeNode *tnode;
 
@@ -348,6 +348,9 @@ gda_tree_node_set_property (GObject *object,
 		case PROP_NAME:
 			gda_attributes_manager_set (gda_tree_node_attributes_manager, tnode, GDA_ATTRIBUTE_NAME, value);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}	
 	}
 }
@@ -356,7 +359,7 @@ static void
 gda_tree_node_get_property (GObject *object,
 			    guint param_id,
 			    GValue *value,
-			    G_GNUC_UNUSED GParamSpec *pspec)
+			    GParamSpec *pspec)
 {
 	GdaTreeNode *tnode;
 	
@@ -369,6 +372,9 @@ gda_tree_node_get_property (GObject *object,
 			g_value_set_string (value, cvalue ? g_value_get_string (cvalue): NULL);
 			break;
 		}
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}	
 }
@@ -721,7 +727,8 @@ gda_tree_node_get_node_attribute (GdaTreeNode *node, const gchar *attribute)
  * @value: a #GValue, or %NULL
  * @destroy: a function to be called when @attribute is not needed anymore, or %NULL
  *
- * Set the value associated to a named attribute. The @attribute string is 'stolen' by this method, and
+ * Set the value associated to a named attribute. The @attribute string is used AS IT IS by this method (eg.
+ * no copy of it is made), and
  * the memory it uses will be freed using the @destroy function when no longer needed (if @destroy is %NULL,
  * then the string will not be freed at all).
  *

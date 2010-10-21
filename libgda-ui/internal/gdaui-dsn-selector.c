@@ -109,7 +109,7 @@ static void
 gdaui_dsn_selector_set_property (GObject *object,
 				 guint param_id,
 				 const GValue *value,
-				 G_GNUC_UNUSED GParamSpec *pspec)
+				 GParamSpec *pspec)
 {
 	GdauiDsnSelector *selector;
 	GSList *list;
@@ -122,6 +122,9 @@ gdaui_dsn_selector_set_property (GObject *object,
 		_gdaui_combo_set_selected_ext (GDAUI_COMBO (selector), list, cols_index);
 		g_slist_free (list);
 		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -129,7 +132,7 @@ static void
 gdaui_dsn_selector_get_property (GObject *object,
 				 guint param_id,
 				 GValue *value,
-				 G_GNUC_UNUSED GParamSpec *pspec)
+				 GParamSpec *pspec)
 {
 	GdauiDsnSelector *selector;
 	GSList *list;
@@ -145,6 +148,9 @@ gdaui_dsn_selector_get_property (GObject *object,
 		}
 		else
 			g_value_set_string (value, NULL);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
 }

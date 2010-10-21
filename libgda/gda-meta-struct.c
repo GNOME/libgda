@@ -221,7 +221,7 @@ static void
 gda_meta_struct_set_property (GObject *object,
 			      guint param_id,
 			      const GValue *value,
-			      G_GNUC_UNUSED GParamSpec *pspec)
+			      GParamSpec *pspec)
 {
         GdaMetaStruct *mstruct;
 
@@ -242,6 +242,7 @@ gda_meta_struct_set_property (GObject *object,
 			mstruct->priv->features = g_value_get_uint (value);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -251,7 +252,7 @@ static void
 gda_meta_struct_get_property (GObject *object,
 			      guint param_id,
 			      GValue *value,
-			      G_GNUC_UNUSED GParamSpec *pspec)
+			      GParamSpec *pspec)
 {
         GdaMetaStruct *mstruct;
         mstruct = GDA_META_STRUCT (object);
@@ -265,6 +266,7 @@ gda_meta_struct_get_property (GObject *object,
 			g_value_set_uint (value, mstruct->priv->features);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -1608,7 +1610,7 @@ gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, co
 }
 
 /**
- * gda_meta_struct_get_table_column
+ * gda_meta_struct_get_table_column: (skip):
  * @mstruct: a #GdaMetaStruct object
  * @table: the #GdaMetaTable structure to find the column for
  * @col_name: the name of the column to find (as a G_TYPE_STRING GValue)
@@ -2240,7 +2242,7 @@ copyerror:
  * @error: (allow-none): a place to store errors, or %NULL
  *
  * Adds @dbo to the database objects known to @mstruct. In any case (whether an error occured or not)
- * @dbo's responsibility is then transferred to @smtruct and should
+ * @dbo's ownership is then transferred to @smtruct and should
  * not be used after calling this function (it may have been destroyed). If you need a pointer to the #GdaMetaDbObject
  * for a database object, use gda_meta_struct_get_db_object().
  *
@@ -2342,8 +2344,8 @@ gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attr
 /**
  * gda_meta_table_column_foreach_attribute:
  * @tcol: a #GdaMetaTableColumn
- * @func: a #GdaAttributesManagerFunc function
- * @data: user data to be passed as last argument of @func each time it is called
+ * @func: (scope call): a #GdaAttributesManagerFunc function
+ * @data: (closure): user data to be passed as last argument of @func each time it is called
  *
  * Calls @func for each attribute set to tcol
  */

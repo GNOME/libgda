@@ -20,9 +20,6 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef USING_MINGW
-#define _NO_OLDNAMES
-#endif
 #include <stdlib.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>

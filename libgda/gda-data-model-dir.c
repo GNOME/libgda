@@ -297,7 +297,7 @@ static void
 gda_data_model_dir_set_property (GObject *object,
 				 guint param_id,
 				 const GValue *value,
-				 G_GNUC_UNUSED GParamSpec *pspec)
+				 GParamSpec *pspec)
 {
         GdaDataModelDir *model;
         const gchar *string;
@@ -313,6 +313,9 @@ gda_data_model_dir_set_property (GObject *object,
 			string = g_value_get_string (value);
 			if (string) 
 				model->priv->basedir = g_strdup (string);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 
@@ -501,7 +504,7 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 	length = g_value_get_uint (row->size_value);
 	if (length == 0)
 		goto md5end;
-	fd = open (complete_filename, O_RDONLY);
+	fd = open (complete_filename, O_RDONLY); /* Flawfinder: ignore */
 	if (fd < 0)
 		goto md5end;
 #ifndef G_OS_WIN32
@@ -526,7 +529,7 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 
 	/* MD5 computation */
 	MD5_CTX context;
-	unsigned char digest[16];
+	unsigned char digest[16]; /* Flawfinder: ignore */
 	GString *md5str;
 	gint i;
 
@@ -640,7 +643,7 @@ static void
 gda_data_model_dir_get_property (GObject *object,
 				 guint param_id,
 				 GValue *value,
-				 G_GNUC_UNUSED GParamSpec *pspec)
+				 GParamSpec *pspec)
 {
 	GdaDataModelDir *model;
 
@@ -649,6 +652,9 @@ gda_data_model_dir_get_property (GObject *object,
 		switch (param_id) {
 		case PROP_BASEDIR:
 			g_value_set_string (value, model->priv->basedir);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -660,7 +666,7 @@ gda_data_model_dir_get_property (GObject *object,
  *
  * Creates a new #GdaDataModel object to list all the files starting from @basedir
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  */
 GdaDataModel *
 gda_data_model_dir_new (const gchar *basedir)

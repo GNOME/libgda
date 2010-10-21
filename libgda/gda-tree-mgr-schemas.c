@@ -147,7 +147,7 @@ static void
 gda_tree_mgr_schemas_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         GdaTreeMgrSchemas *mgr;
 
@@ -159,6 +159,9 @@ gda_tree_mgr_schemas_set_property (GObject *object,
 			if (mgr->priv->cnc)
 				g_object_ref (mgr->priv->cnc);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
                 }
         }
 }
@@ -167,7 +170,7 @@ static void
 gda_tree_mgr_schemas_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         GdaTreeMgrSchemas *mgr;
 
@@ -176,6 +179,9 @@ gda_tree_mgr_schemas_get_property (GObject *object,
                 switch (param_id) {
 		case PROP_CNC:
 			g_value_set_object (value, mgr->priv->cnc);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }

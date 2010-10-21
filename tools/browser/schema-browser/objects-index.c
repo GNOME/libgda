@@ -31,7 +31,7 @@
 #include "../cc-gray-bar.h"
 #include "marshal.h"
 #include <gdk/gdkkeysyms.h>
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 #include "../common/objects-cloud.h"
 
 struct _ObjectsIndexPrivate {

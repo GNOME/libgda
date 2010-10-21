@@ -282,7 +282,7 @@ static void
 gda_data_access_wrapper_set_property (GObject *object,
 				      guint param_id,
 				      const GValue *value,
-				      G_GNUC_UNUSED GParamSpec *pspec)
+				      GParamSpec *pspec)
 {
 	GdaDataAccessWrapper *model;
 
@@ -324,7 +324,7 @@ gda_data_access_wrapper_set_property (GObject *object,
 			break;
 		}
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -334,7 +334,7 @@ static void
 gda_data_access_wrapper_get_property (GObject *object,
 					guint param_id,
 					GValue *value,
-					G_GNUC_UNUSED GParamSpec *pspec)
+					GParamSpec *pspec)
 {
 	GdaDataAccessWrapper *model;
 
@@ -345,7 +345,7 @@ gda_data_access_wrapper_get_property (GObject *object,
 			g_value_set_object (value, G_OBJECT (model->priv->model));
 			break;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -358,7 +358,7 @@ gda_data_access_wrapper_get_property (GObject *object,
  * Creates a new #GdaDataModel object which buffers the rows of @model. This object is useful
  * only if @model can only be accessed using cursor based method.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_access_wrapper_new (GdaDataModel *model)

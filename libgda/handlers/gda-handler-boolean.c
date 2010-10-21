@@ -146,11 +146,11 @@ gda_handler_boolean_dispose (GObject *object)
 }
 
 /**
- * gda_handler_boolean_new
+ * gda_handler_boolean_new:
  *
  * Creates a data handler for booleans
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_boolean_new (void)

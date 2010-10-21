@@ -997,7 +997,7 @@ window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 		gtk_window_fullscreen (GTK_WINDOW (bwin));
 		browser_window_show_notice_printf (bwin, GTK_MESSAGE_INFO,
 						   "fullscreen-esc",
-						   _("Hit the Escape key to leave the fullscreen mode"));
+						   "%s", _("Hit the Escape key to leave the fullscreen mode"));
 		gtk_widget_hide (bwin->priv->toolbar);
 		gtk_widget_hide (bwin->priv->menubar);
 		bwin->priv->toolbar_shown = FALSE;

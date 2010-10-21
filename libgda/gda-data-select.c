@@ -621,7 +621,7 @@ static void
 gda_data_select_set_property (GObject *object,
 			 guint param_id,
 			 const GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 	if (model->priv) {
@@ -701,6 +701,7 @@ gda_data_select_set_property (GObject *object,
 			model->priv->sh->reset_with_ext_params_change = g_value_get_boolean (value);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -710,7 +711,7 @@ static void
 gda_data_select_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 	if (model->priv) {
@@ -752,6 +753,7 @@ gda_data_select_get_property (GObject *object,
 			g_value_set_boolean (value, model->priv->sh->reset_with_ext_params_change);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -788,7 +790,7 @@ gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
  *
  * Get the #GdaRow object stored within @model at row @rownum (without taking care of removed rows)
  *
- * Returns: (tranfer none): the requested #GdaRow, or %NULL if not found
+ * Returns: (transfer none): the requested #GdaRow, or %NULL if not found
  */
 GdaRow *
 gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
@@ -811,7 +813,7 @@ gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
  * Get a pointer to the #GdaConnection object which was used when @model was created
  * (and which may be used internally by @model).
  *
- * Returns: (tranfer none): a pointer to the #GdaConnection, or %NULL
+ * Returns: (transfer none): a pointer to the #GdaConnection, or %NULL
  */
 GdaConnection *
 gda_data_select_get_connection (GdaDataSelect *model)
@@ -1726,7 +1728,8 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			GType *types = NULL;
 			if (imodel->prep_stmt && imodel->prep_stmt->types) {
 				types = g_new (GType, imodel->prep_stmt->ncols + 1);
-				memcpy (types, imodel->prep_stmt->types, sizeof (GType) * imodel->prep_stmt->ncols);
+				memcpy (types, imodel->prep_stmt->types, /* Flawfinder: ignore */
+					sizeof (GType) * imodel->prep_stmt->ncols);
 				types [imodel->prep_stmt->ncols] = G_TYPE_NONE;
 			}
 			tmpmodel = gda_connection_statement_execute_select_full (imodel->priv->cnc,
@@ -3357,7 +3360,8 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	GType *types = NULL;
 	if (model->prep_stmt->types) {
 		types = g_new (GType, model->prep_stmt->ncols + 1);
-		memcpy (types, model->prep_stmt->types, sizeof (GType) * model->prep_stmt->ncols);
+		memcpy (types, model->prep_stmt->types, /* Flawfinder: ignore */
+			sizeof (GType) * model->prep_stmt->ncols);
 		types [model->prep_stmt->ncols] = G_TYPE_NONE;
 	}
 	new_model = (GdaDataSelect*) gda_connection_statement_execute_select_full (model->priv->cnc, select, 
@@ -3393,9 +3397,9 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	g_type_query (G_OBJECT_TYPE (model), &tq);
 	size = tq.instance_size - offset;
 	copy = g_malloc (size);
-	memcpy (copy, (gint8*) new_model + offset, size);
-	memcpy ((gint8*) new_model + offset, (gint8*) model + offset, size);
-	memcpy ((gint8*) model + offset, copy, size);
+	memcpy (copy, (gint8*) new_model + offset, size); /* Flawfinder: ignore */
+	memcpy ((gint8*) new_model + offset, (gint8*) model + offset, size); /* Flawfinder: ignore */
+	memcpy ((gint8*) model + offset, copy, size); /* Flawfinder: ignore */
 		
 	/* we need to keep some data from the old model */
 	GdaDataSelectInternals *mi;

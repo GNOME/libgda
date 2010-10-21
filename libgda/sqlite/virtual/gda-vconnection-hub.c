@@ -148,7 +148,7 @@ static void
 gda_vconnection_hub_set_property (GObject *object,
 					 guint param_id,
 					 G_GNUC_UNUSED const GValue *value,
-					 G_GNUC_UNUSED GParamSpec *pspec)
+					 GParamSpec *pspec)
 {
         GdaVconnectionHub *cnc;
 
@@ -156,6 +156,7 @@ gda_vconnection_hub_set_property (GObject *object,
         if (cnc->priv) {
                 switch (param_id) {
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }
@@ -165,7 +166,7 @@ static void
 gda_vconnection_hub_get_property (GObject *object,
 					 guint param_id,
 					 G_GNUC_UNUSED GValue *value,
-					 G_GNUC_UNUSED GParamSpec *pspec)
+					 GParamSpec *pspec)
 {
         GdaVconnectionHub *cnc;
 
@@ -173,6 +174,7 @@ gda_vconnection_hub_get_property (GObject *object,
         if (cnc->priv) {
 		switch (param_id) {
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
         }

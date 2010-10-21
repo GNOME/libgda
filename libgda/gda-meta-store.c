@@ -734,7 +734,7 @@ static void
 gda_meta_store_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaMetaStore *store;
 	const gchar *cnc_string;
@@ -779,6 +779,9 @@ gda_meta_store_set_property (GObject *object,
 			else
 				store->priv->schema = NULL;
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -787,7 +790,7 @@ static void
 gda_meta_store_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaMetaStore *store;
 	store = GDA_META_STORE (object);
@@ -805,6 +808,9 @@ gda_meta_store_get_property (GObject *object,
 			break;
 		case PROP_SCHEMA:
 			g_value_set_string (value, store->priv->schema);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -830,7 +836,7 @@ gda_meta_store_set_identifiers_style (GdaMetaStore *store, GdaSqlIdentifierStyle
 /**
  * gda_meta_store_set_reserved_keywords_func:
  * @store: a #GdaMetaStore object
- * @func: (allow-none): a #GdaSqlReservedKeywordsFunc function, or %NULL
+ * @func: (allow-none) (scope call): a #GdaSqlReservedKeywordsFunc function, or %NULL
  *
  * Specifies a function which @store will use to determine if a keyword is an SQL reserved
  * keyword or not.
@@ -2039,7 +2045,7 @@ update_schema_version (GdaMetaStore *store, G_GNUC_UNUSED const gchar *version, 
 
 
 	/* update version */
-	store->priv->version = atoi (CURRENT_SCHEMA_VERSION);
+	store->priv->version = atoi (CURRENT_SCHEMA_VERSION); /* Flawfinder: ignore */
 	return TRUE;
 }
 
@@ -2156,8 +2162,10 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 			g_object_unref (model);
 			return FALSE;
 		}
-		store->priv->version = atoi (g_value_get_string (version));
-		if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) {
+		store->priv->version = atoi (g_value_get_string (version)); /* Flawfinder: ignore */
+		if (store->priv->version < 1)
+			store->priv->version = 1;
+		if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) { /* Flawfinder: ignore */
 			switch (store->priv->version) {
 			case 1:
 				migrate_schema_from_v1_to_v2 (store, error);
@@ -2171,7 +2179,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 				break;
 			}
 			
-			if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) {
+			if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) { /* Flawfinder: ignore */
 				/* it's an error */
 				g_object_unref (model);
 				return FALSE;
@@ -3241,7 +3249,7 @@ gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table
  * are respected: if table B has a foreign key on table A, then table A will be listed before table B in the returned
  * list.
  *
- * Returns: (transfer container) (element type gchar*): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
+ * Returns: (transfer container) (element-type utf8): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
  */
 GSList *
 gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
@@ -3281,7 +3289,7 @@ gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
  * are respected: if table B has a foreign key on table A, then table A will be listed before table B in the returned
  * list.
  *
- * Returns: (transfer container) (element type gchar*): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
+ * Returns: (transfer container) (element-type utf8): a new list of tables names (as gchar*), the list must be freed when no longer needed, but the strings present in the list must not be modified.
  */
 GSList *
 gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table_name)
@@ -3438,7 +3446,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
  * method allows the user to add, set or remove attributes specific to their usage.
  * 
  * This method allows to get the value of a attribute stored in @store. The returned attribute value is 
- * placed at @att_value, the caller is responsible to free that string. 
+ * placed at @att_value, the caller is responsible for free that string. 
  *
  * If there is no attribute named @att_name then @att_value is set to %NULL
  * and @error will contain the GDA_META_STORE_ATTRIBUTE_NOT_FOUND_ERROR error code, and FALSE is returned.

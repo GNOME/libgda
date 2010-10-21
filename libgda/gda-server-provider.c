@@ -222,14 +222,15 @@ static void
 gda_server_provider_set_property (GObject *object,
 				  guint param_id,
 				  G_GNUC_UNUSED const GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec) {
+				  GParamSpec *pspec) {
         GdaServerProvider *prov;
 
         prov = GDA_SERVER_PROVIDER (object);
         if (prov->priv) {
                 switch (param_id) {
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -238,14 +239,15 @@ static void
 gda_server_provider_get_property (GObject *object,
 				  guint param_id,
 				  G_GNUC_UNUSED GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec) {
+				  GParamSpec *pspec) {
         GdaServerProvider *prov;
 
         prov = GDA_SERVER_PROVIDER (object);
         if (prov->priv) {
                 switch (param_id) {
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -452,7 +454,7 @@ static OpReq op_req_CREATE_USER [] = {
  *  <listitem>named values which may change the contents of the GdaServerOperation, see <link linkend="gda-server-op-information-std">this section</link> for more information</listitem>
  * </itemizedlist>
  *
- * Returns: (transfer full): a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred
+ * Returns: (transfer full) (allow-none): a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred
  */
 GdaServerOperation *
 gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -560,7 +562,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
  * This function's purpose is mainly informative to get the actual SQL code which would be executed to perform
  * the operation; to actually perform the operation, use gda_server_provider_perform_operation().
  *
- * Returns: (transfer full): a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
+ * Returns: (transfer full) (allow-none): a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
  */
 gchar *
 gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -735,7 +737,7 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
 /**
  * gda_server_provider_get_default_dbms_type:
  * @provider: a server provider.
- * @cnc:(allow-none):  a #GdaConnection object or %NULL
+ * @cnc: (allow-none):  a #GdaConnection object or %NULL
  * @type: a #GType value type
  *
  * Get the name of the most common data type which has @type type.
@@ -744,7 +746,7 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
  * there is no DBMS data type which could contain data of the @g_type type (for example %NULL may be
  * returned if a DBMS has integers only up to 4 bytes and a G_TYPE_INT64 is requested).
  *
- * Returns: (transfer none): the name of the DBMS type, or %NULL
+ * Returns: (transfer none) (allow-none): the name of the DBMS type, or %NULL
  */
 const gchar *
 gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, GType type)

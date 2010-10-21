@@ -27,7 +27,7 @@
 #include "../cc-gray-bar.h"
 #include "../canvas/browser-canvas-db-relations.h"
 #include <gdk/gdkkeysyms.h>
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 #include "../browser-page.h"
 #include "../browser-perspective.h"
 #include "../browser-window.h"
@@ -169,11 +169,14 @@ static void
 relations_diagram_set_property (GObject *object,
 				guint param_id,
 				G_GNUC_UNUSED const GValue *value,
-				G_GNUC_UNUSED GParamSpec *pspec)
+				GParamSpec *pspec)
 {
 	RelationsDiagram *diagram;
 	diagram = RELATIONS_DIAGRAM (object);
 	switch (param_id) {
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 	}
 }
 
@@ -181,11 +184,14 @@ static void
 relations_diagram_get_property (GObject *object,
 				guint param_id,
 				G_GNUC_UNUSED GValue *value,
-				G_GNUC_UNUSED GParamSpec *pspec)
+				GParamSpec *pspec)
 {
 	RelationsDiagram *diagram;
 	diagram = RELATIONS_DIAGRAM (object);
 	switch (param_id) {
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 	}
 }
 

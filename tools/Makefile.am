@@ -67,7 +67,9 @@ gda-sql-res.o: gda-sql-res.rc
 	$(WINDRES) $^ -o $@
 
 gda_list_server_op_5_0_SOURCES = \
-        gda-list-server-op.c
+        gda-list-server-op.c \
+	gda-tree-mgr-xml.c \
+	gda-tree-mgr-xml.h
 
 gda_list_server_op_5_0_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \

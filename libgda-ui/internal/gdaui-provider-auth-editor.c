@@ -45,11 +45,11 @@ static void gdaui_provider_auth_editor_finalize   (GObject *object);
 static void gdaui_provider_auth_editor_set_property (GObject *object,
 							guint param_id,
 							const GValue *value,
-							GParamSpec *pauth);
+							GParamSpec *pspec);
 static void gdaui_provider_auth_editor_get_property (GObject *object,
 							guint param_id,
 							GValue *value,
-							GParamSpec *pauth);
+							GParamSpec *pspec);
 
 enum {
 	PROP_0,
@@ -147,7 +147,7 @@ static void
 gdaui_provider_auth_editor_set_property (GObject *object,
                                             guint param_id,
                                             const GValue *value,
-                                            G_GNUC_UNUSED GParamSpec *pauth)
+                                            GParamSpec *pspec)
 {
 	GdauiProviderAuthEditor *auth;
 	auth = GDAUI_PROVIDER_AUTH_EDITOR (object);
@@ -156,6 +156,9 @@ gdaui_provider_auth_editor_set_property (GObject *object,
 	case PROP_PROVIDER:
 		_gdaui_provider_auth_editor_set_provider (auth, g_value_get_string (value));
 		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -163,7 +166,7 @@ static void
 gdaui_provider_auth_editor_get_property (GObject *object,
                                             guint param_id,
                                             GValue *value,
-                                            G_GNUC_UNUSED GParamSpec *pauth)
+                                            GParamSpec *pspec)
 {
 	GdauiProviderAuthEditor *auth;
 	auth = GDAUI_PROVIDER_AUTH_EDITOR (object);
@@ -171,6 +174,9 @@ gdaui_provider_auth_editor_get_property (GObject *object,
 	switch (param_id) {
 	case PROP_PROVIDER:
 		g_value_set_string (value, auth->priv->provider);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
 }

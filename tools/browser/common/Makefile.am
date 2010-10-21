@@ -4,7 +4,6 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
-	-DPRIV_OBJ_PREFIX="\"BROWSER\"" \
 	$(LIBGDA_CFLAGS) \
 	$(GTK_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS)
@@ -19,8 +18,6 @@ libcommon_la_SOURCES = \
 	marshal.h \
 	objects-cloud.c \
 	objects-cloud.h \
-	popup-container.c \
-	popup-container.h \
 	gdaui-data-import.c \
 	gdaui-data-import.h \
 	gdaui-entry-import.c \

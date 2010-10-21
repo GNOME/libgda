@@ -41,7 +41,7 @@ enum {
 	DATA_STORE_COL_MODEL_POINTER = -3, /* pointer to the GdaDataModel */
 	DATA_STORE_COL_MODEL_ROW = -4, /* row number in the GdaDataModel, or -1 for new rows */
 	DATA_STORE_COL_MODIFIED = -5, /* TRUE if row has been modified */
-	DATA_STORE_COL_TO_DELETE = -6, /* TRUE if row is marked to be deleted */
+	DATA_STORE_COL_TO_DELETE = -6 /* TRUE if row is marked to be deleted */
 };
 
 /* struct for the object's data */
@@ -63,7 +63,7 @@ GType           gdaui_data_store_get_type             (void) G_GNUC_CONST;
 GtkTreeModel   *gdaui_data_store_new                  (GdaDataModel *model);
 
 GdaDataProxy   *gdaui_data_store_get_proxy            (GdauiDataStore *store);
-gint            gdaui_data_store_get_row_from_iter    (GdauiDataStore *store, GtkTreeIter *iter);       
+gint            gdaui_data_store_get_row_from_iter    (GdauiDataStore *store, GtkTreeIter *iter);
 gboolean        gdaui_data_store_get_iter_from_values (GdauiDataStore *store, GtkTreeIter *iter,
 						       GSList *values, gint *cols_index);
 

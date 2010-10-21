@@ -116,8 +116,8 @@ gda_sql_statement_unknown_serialize (gpointer stmt)
  * Sets @stmt's list of expressions
  *
  * @expressions's 
- * responsibility is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * ownership is transferred to
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_unknown_take_expressions (GdaSqlStatement *stmt, GSList *expressions)

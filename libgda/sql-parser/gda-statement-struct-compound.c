@@ -145,7 +145,7 @@ _gda_sql_statement_compound_serialize (gpointer stmt)
  * @s: a #GdaSqlStatement pointer
  *
  * Adds the @s sub-statement to the @stmt compound statement. @s's reference is transferred to
- * @stmt (which means @stmt is then responsible to freeing it when no longer needed).
+ * @stmt (which means @stmt is then responsible for freeing it when no longer needed).
  */
 void
 gda_sql_statement_compound_take_stmt (GdaSqlStatement *stmt, GdaSqlStatement *s)

@@ -160,11 +160,11 @@ gda_handler_numerical_dispose (GObject *object)
 }
 
 /**
- * gda_handler_numerical_new
+ * gda_handler_numerical_new:
  *
  * Creates a data handler for numerical values
  *
- * Returns: the new object
+ * Returns: (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_numerical_new (void)
@@ -228,22 +228,34 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 {
 	GdaHandlerNumerical *hdl;
 	GValue *value = NULL;
+	long long int llint;
+	char *endptr = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), NULL);
 	hdl = GDA_HANDLER_NUMERICAL (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
+	llint = strtoll (str, &endptr, 10);
+
 	if (type == G_TYPE_INT64) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_INT64);
-		g_value_set_int64 (value, atoll (str));
+		if (!*endptr && (llint >= G_MININT64) && (llint <= G_MAXINT64)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_INT64);
+			g_value_set_int64 (value, (gint64) llint);
+		}
 	}
 	else if (type == G_TYPE_DOUBLE) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_DOUBLE);
-		g_value_set_double (value, atof (str));
+		gdouble dble;
+		dble = g_strtod (str, &endptr);
+		if (!*endptr) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_DOUBLE);
+			g_value_set_double (value, dble);
+		}
 	}
 	else if (type == G_TYPE_INT) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_INT);
-		g_value_set_int (value, atoi (str));
+		if (!*endptr && (llint >= G_MININT) && (llint <= G_MAXINT)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_INT);
+			g_value_set_int (value, (gint) llint);
+		}
 	}
 	else if (type == GDA_TYPE_NUMERIC) {
 		GdaNumeric numeric;
@@ -278,40 +290,76 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 		}
 	}
 	else if (type == G_TYPE_FLOAT) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_FLOAT);
-		g_value_set_float (value, atof (str));
+		gfloat flt;
+		flt = strtof (str, &endptr);
+		if (!*endptr) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_FLOAT);
+			g_value_set_float (value, flt);
+		}
 	}
 	else if (type == GDA_TYPE_SHORT) {
-		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_SHORT);
-		gda_value_set_short (value, atoi (str));
+		if (!*endptr && (llint >= G_MINSHORT) && (llint <= G_MAXSHORT)) {
+			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_SHORT);
+			gda_value_set_short (value, (gshort) llint);
+		}
 	}
 	else if (type == G_TYPE_CHAR) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_CHAR);
-		g_value_set_char (value, atoi (str));
+		if (!*endptr && (llint >= G_MININT8) && (llint <= G_MAXINT8)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_CHAR);
+			g_value_set_char (value, (gchar) llint);
+		}
 	}
 	else if (type == G_TYPE_UINT64) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT64);
-		g_value_set_uint64 (value, strtoull (str, NULL, 10));
+		if (!*endptr && (llint >= 0) && (llint <= G_MAXUINT64)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT64);
+			g_value_set_uint64 (value, (guint64) llint);
+		}
+		else {
+			unsigned long long int lluint;
+			lluint = strtoull (str, &endptr, 10);
+			if (!*endptr && (lluint <= G_MAXUINT64)) {
+				value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT64);
+				g_value_set_uint64 (value, (guint64) lluint);
+			}
+		}
 	}
 	else if (type == GDA_TYPE_USHORT) {
-		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_USHORT);
-		gda_value_set_ushort (value, atoi (str));
+		if (!*endptr && (llint >= 0) && (llint <= G_MAXUSHORT)) {
+			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_USHORT);
+			gda_value_set_ushort (value, (gushort) llint);
+		}
 	}
 	else if (type == G_TYPE_UCHAR) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_UCHAR);
-		g_value_set_uchar (value, atoi (str));
+		if (!*endptr && (llint >= 0) && (llint <= G_MAXUINT8)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_UCHAR);
+			g_value_set_uchar (value, (guchar) llint);
+		}
 	}
 	else if (type == G_TYPE_UINT) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT);
-		g_value_set_uint (value, strtoul (str, NULL, 10));
+		if (!*endptr && (llint >= 0) && (llint <= G_MAXUINT)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT);
+			g_value_set_uint (value, (guint) llint);
+		}
 	}
 	else if (type == G_TYPE_ULONG) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
-		g_value_set_ulong (value, strtoul (str, NULL, 10));
+		if (!*endptr && (llint >= 0) && (llint <= G_MAXULONG)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
+			g_value_set_ulong (value, (gulong) llint);
+		}
+		else {
+			unsigned long long int lluint;
+			lluint = strtoull (str, &endptr, 10);
+			if (!*endptr && (lluint <= G_MAXULONG)) {
+				value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
+				g_value_set_ulong (value, (gulong) lluint);
+			}
+		}
 	}
 	else if (type == G_TYPE_LONG) {
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_LONG);
-		g_value_set_long (value, strtol (str, NULL, 10));
+		if (!*endptr && (llint >= G_MINLONG) && (llint <= G_MAXLONG)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_LONG);
+			g_value_set_long (value, (glong) llint);
+		}
 	}
 	else
 		g_assert_not_reached ();

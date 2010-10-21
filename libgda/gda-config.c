@@ -527,7 +527,7 @@ gda_config_constructor (GType type,
 
 			if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
 				gchar *old_path;
-				old_path = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
+				old_path = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL); /* Flawfinder: ignore */
 				if (g_file_test (old_path, G_FILE_TEST_EXISTS)) {
 					/* using $HOME/.libgda because it exists */
 					g_free (confdir);
@@ -616,7 +616,7 @@ gda_config_constructor (GType type,
 		unique_instance->priv->system_config_allowed = FALSE;
 		if (unique_instance->priv->system_file) {
 			FILE *file;
-                        file = fopen (unique_instance->priv->system_file, "a");
+                        file = fopen (unique_instance->priv->system_file, "a");  /* Flawfinder: ignore */
                         if (file) {
                                 unique_instance->priv->system_config_allowed = TRUE;
                                 fclose (file);
@@ -731,7 +731,7 @@ static void
 gda_config_set_property (GObject *object,
 			 guint param_id,
 			 const GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaConfig *conf;
 
@@ -750,6 +750,9 @@ gda_config_set_property (GObject *object,
 			if (g_value_get_string (value))
 				conf->priv->system_file = g_strdup (g_value_get_string (value));
                         break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}	
 	}
 }
@@ -758,7 +761,7 @@ static void
 gda_config_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaConfig *conf;
 	
@@ -770,6 +773,9 @@ gda_config_get_property (GObject *object,
 			break;
 		case PROP_SYSTEM_FILE:
 			g_value_set_string (value, conf->priv->system_file);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}	
@@ -1089,7 +1095,7 @@ gda_config_dsn_needs_authentication (const gchar *dsn_name)
  *  <listitem><para>Username if it exists</para></listitem>
  * </itemizedlist>
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  */
 GdaDataModel *
 gda_config_list_dsn (void)
@@ -1311,7 +1317,7 @@ gda_config_get_provider (const gchar *provider_name, GError **error)
  *  <listitem><para>File name of the plugin</para></listitem>
  * </itemizedlist>
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  */
 GdaDataModel *
 gda_config_list_providers (void)

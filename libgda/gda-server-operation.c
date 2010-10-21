@@ -526,7 +526,7 @@ static void
 gda_server_operation_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
 	GdaServerOperation *op;
 
@@ -602,7 +602,8 @@ gda_server_operation_set_property (GObject *object,
 			break;
 		}
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 
@@ -623,7 +624,7 @@ static void
 gda_server_operation_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
 	GdaServerOperation *op;
 
@@ -638,6 +639,9 @@ gda_server_operation_get_property (GObject *object,
 			break;
 		case PROP_OP_TYPE:
 			g_value_set_int (value, op->priv->op_type);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -892,13 +896,17 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 			
 			prop = xmlGetProp(node, (xmlChar*)"minitems");
 			if (prop) {
-				opnode->d.seq.min_items = atoi ((gchar*)prop);
+				opnode->d.seq.min_items = atoi ((gchar*)prop); /* Flawfinder: ignore */
+				if (opnode->d.seq.min_items < 0)
+					opnode->d.seq.min_items = 0;
 				xmlFree (prop);
 			}
 
 			prop = xmlGetProp(node, (xmlChar*)"maxitems");
 			if (prop) {
-				opnode->d.seq.max_items = atoi ((gchar*)prop);
+				opnode->d.seq.max_items = atoi ((gchar*)prop); /* Flawfinder: ignore */
+				if (opnode->d.seq.max_items < opnode->d.seq.min_items)
+					opnode->d.seq.max_items = opnode->d.seq.min_items;
 				xmlFree (prop);
 			}
 
@@ -1052,7 +1060,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 }
 
 /**
- * gda_server_operation_get_node_info:
+ * gda_server_operation_get_node_info: (skip):
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/") as a format string, similar to g_strdup_printf()'s argument
  * @...: the arguments to insert into the format string
@@ -1060,7 +1068,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
  * Get information about the node identified by @path. The returned #GdaServerOperationNode structure can be 
  * copied but not modified; it may change or cease to exist if @op changes
  *
- * Returns: (transfer none): a #GdaServerOperationNode structure, or %NULL if the node was not found
+ * Returns: (transfer none) (allow-none): a #GdaServerOperationNode structure, or %NULL if the node was not found
  */
 GdaServerOperationNode *
 gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_format, ...)
@@ -1293,7 +1301,7 @@ gda_server_operation_string_to_op_type (const gchar *str)
 static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent);
 
 /**
- * gda_server_operation_save_data_to_xml:
+ * gda_server_operation_save_data_to_xml: (skip):
  * @op: a #GdaServerOperation object
  * @error: (allow-none): a place to store errors or %NULL
  * 

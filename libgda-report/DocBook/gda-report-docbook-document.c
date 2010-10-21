@@ -164,7 +164,7 @@ static void
 gda_report_docbook_document_set_property (GObject *object,
 				guint param_id,
 				const GValue *value,
-				G_GNUC_UNUSED GParamSpec *pspec)
+				GParamSpec *pspec)
 {
         GdaReportDocbookDocument *doc;
 
@@ -204,6 +204,7 @@ gda_report_docbook_document_set_property (GObject *object,
 				doc->priv->fop_path = g_strdup (g_value_get_string (value));
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }
@@ -213,7 +214,7 @@ static void
 gda_report_docbook_document_get_property (GObject *object,
 				guint param_id,
 				GValue *value,
-				G_GNUC_UNUSED GParamSpec *pspec)
+				GParamSpec *pspec)
 {
         GdaReportDocbookDocument *doc;
 
@@ -233,6 +234,7 @@ gda_report_docbook_document_get_property (GObject *object,
 			g_value_set_string (value, doc->priv->fop_path);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
         }

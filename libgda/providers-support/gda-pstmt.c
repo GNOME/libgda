@@ -200,7 +200,7 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
 	dest->types = NULL;
 	if (src->types) {
 		dest->types = g_new (GType, dest->ncols);
-		memcpy (dest->types, src->types, sizeof (GType) * dest->ncols);
+		memcpy (dest->types, src->types, sizeof (GType) * dest->ncols); /* Flawfinder: ignore */
 	}
 	if (src->tmpl_columns) {
 		GSList *list;
@@ -213,7 +213,7 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
 }
 
 /**
- * gda_pstmt_get_gda_statement
+ * gda_pstmt_get_gda_statement:
  * @pstmt: a #GdaPStmt object
  *
  * Get a pointer to the #GdaStatement which led to the creation of this prepared statement.

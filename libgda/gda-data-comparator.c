@@ -261,7 +261,7 @@ static void
 gda_data_comparator_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	GdaDataComparator *comparator;
 	comparator = GDA_DATA_COMPARATOR (object);
@@ -295,6 +295,9 @@ gda_data_comparator_set_property (GObject *object,
 			if (model)
 				g_object_ref (model);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -303,7 +306,7 @@ static void
 gda_data_comparator_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	GdaDataComparator *comparator;
 
@@ -315,6 +318,9 @@ gda_data_comparator_get_property (GObject *object,
 			break;
 		case PROP_NEW_MODEL:
 			g_value_set_object (value, comparator->priv->new_model);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -346,8 +352,8 @@ gda_data_comparator_set_key_columns (GdaDataComparator *comp, const gint *col_nu
 	comp->priv->key_columns = NULL;
 	if (nb_cols > 0) {
 		comp->priv->nb_key_columns = nb_cols;
-		comp->priv->key_columns = g_new0 (gint, nb_cols);
-		memcpy (comp->priv->key_columns, col_numbers, sizeof (gint) * nb_cols);
+		comp->priv->key_columns = g_new (gint, nb_cols);
+		memcpy (comp->priv->key_columns, col_numbers, sizeof (gint) * nb_cols); /* Flawfinder: ignore */
 	}
 }
 

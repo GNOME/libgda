@@ -330,7 +330,7 @@ static void
 gdaui_tree_store_set_property (GObject *object,
 			       guint param_id,
 			       const GValue *value,
-			       G_GNUC_UNUSED GParamSpec *pspec)
+			       GParamSpec *pspec)
 {
 	GdauiTreeStore *store;
 
@@ -357,6 +357,9 @@ gdaui_tree_store_set_property (GObject *object,
 			/* connect to row changes */
 			store->priv->stamp = g_random_int_range (1, G_MAXINT);
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -365,7 +368,7 @@ static void
 gdaui_tree_store_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	GdauiTreeStore *store;
 
@@ -374,6 +377,9 @@ gdaui_tree_store_get_property (GObject *object,
 		switch (param_id) {
 		case PROP_TREE:
 			g_value_set_pointer (value, store->priv->tree);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

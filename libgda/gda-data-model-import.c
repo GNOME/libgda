@@ -478,7 +478,7 @@ static void
 gda_data_model_import_set_property (GObject *object,
 				    guint param_id,
 				    const GValue *value,
-				    G_GNUC_UNUSED GParamSpec *pspec)
+				    GParamSpec *pspec)
 {
 	GdaDataModelImport *model;
 	const gchar *string;
@@ -500,7 +500,7 @@ gda_data_model_import_set_property (GObject *object,
 			model->priv->src.mapped.filename = g_strdup (g_value_get_string (value));
 
 			/* file opening */
-			model->priv->src.mapped.fd = open (model->priv->src.mapped.filename, O_RDONLY);
+			model->priv->src.mapped.fd = open (model->priv->src.mapped.filename, O_RDONLY); /* Flawfinder: ignore */
 			if (model->priv->src.mapped.fd < 0) {
 				/* error */
 				add_error (model, strerror(errno));
@@ -578,7 +578,7 @@ gda_data_model_import_set_property (GObject *object,
 			}
 			return;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -638,7 +638,7 @@ static void
 gda_data_model_import_get_property (GObject *object,
 				    guint param_id,
 				    GValue *value,
-				    G_GNUC_UNUSED GParamSpec *pspec)
+				    GParamSpec *pspec)
 {
 	GdaDataModelImport *model;
 
@@ -661,7 +661,7 @@ gda_data_model_import_get_property (GObject *object,
 				g_value_set_string (value, model->priv->src.string);
 			break;
 		default:
-			g_assert_not_reached ();
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}
@@ -689,7 +689,7 @@ gda_data_model_import_get_property (GObject *object,
  *   <listitem><para>Other formats: no option</para></listitem>
  * </itemizedlist>
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_import_new_file   (const gchar *filename, gboolean random_access, GdaSet *options)
@@ -717,7 +717,7 @@ gda_data_model_import_new_file   (const gchar *filename, gboolean random_access,
  * Important note: the @data string is not copied for memory efficiency reasons and should not
  * therefore be altered in any way as long as the returned data model exists.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_import_new_mem (const gchar *data, gboolean random_access, GdaSet *options)
@@ -739,7 +739,7 @@ gda_data_model_import_new_mem (const gchar *data, gboolean random_access, GdaSet
  * Creates a new #GdaDataModel and loads the data in @node. The resulting data model
  * can be accessed in a random way.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_import_new_xml_node (xmlNodePtr node)
@@ -1170,12 +1170,16 @@ init_xml_import (GdaDataModelImport *model)
 			}
 			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"size");
 			if (str) {
-				spec->size = atoi (str);
+				spec->size = atoi (str); /* Flawfinder: ignore */
+				if (spec->size < 0)
+					spec->size = 0;
 				xmlFree (str);
 			}
 			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"scale");
 			if (str) {
-				spec->scale = atoi (str);
+				spec->scale = atoi (str); /* Flawfinder: ignore */
+				if (spec->scale < 0)
+					spec->scale = 0;
 				xmlFree (str);
 			}
 			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"pkey");
@@ -1488,12 +1492,16 @@ init_node_import (GdaDataModelImport *model)
 			}
 			str = (gchar*)xmlGetProp (cur, (xmlChar*)"size");
 			if (str) {
-				spec->size = atoi (str);
+				spec->size = atoi (str); /* Flawfinder: ignore */
+				if (spec->size < 0)
+					spec->size = 0;
 				xmlFree (str);
 			}
 			str = (gchar*)xmlGetProp (cur, (xmlChar*)"scale");
 			if (str) {
-				spec->scale = atoi (str);
+				spec->scale = atoi (str); /* Flawfinder: ignore */
+				if (spec->scale < 0)
+					spec->scale = 0;
 				xmlFree (str);
 			}
 			str = (gchar*)xmlGetProp (cur, (xmlChar*)"pkey");

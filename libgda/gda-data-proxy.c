@@ -759,7 +759,7 @@ static void proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy);
  *
  * Creates a new proxy for @model
  *
- * Returns: a new #GdaDataProxy object
+ * Returns: (transfer full): a new #GdaDataProxy object
  */
 GObject *
 gda_data_proxy_new (GdaDataModel *model)
@@ -894,7 +894,7 @@ static void
 gda_data_proxy_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaDataProxy *proxy;
 
@@ -982,6 +982,9 @@ gda_data_proxy_set_property (GObject *object,
 				proxy->priv->chunk = NULL;
 			}
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 		gda_mutex_unlock (proxy->priv->mutex);
 	}
@@ -991,7 +994,7 @@ static void
 gda_data_proxy_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
-			     G_GNUC_UNUSED GParamSpec *pspec)
+			     GParamSpec *pspec)
 {
 	GdaDataProxy *proxy;
 
@@ -1007,6 +1010,9 @@ gda_data_proxy_get_property (GObject *object,
 			break;
 		case PROP_SAMPLE_SIZE:
 			g_value_set_int (value, proxy->priv->sample_size);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 		gda_mutex_unlock (proxy->priv->mutex);
@@ -2877,7 +2883,7 @@ sql_where_foreach (GdaSqlAnyPart *part, GdaDataProxy *proxy, G_GNUC_UNUSED GErro
 				if (!*ptr) {
 					/* column name is "_<number>", use column: <number> - 1 */
 					gint colnum;
-					colnum = atoi (cstr+1) - 1;
+					colnum = atoi (cstr+1) - 1; /* Flawfinder: ignore */
 					if (colnum >= 0) {
 						GdaColumn *col = gda_data_model_describe_column ((GdaDataModel*) proxy,
 												 colnum);

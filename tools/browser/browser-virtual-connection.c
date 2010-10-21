@@ -183,7 +183,7 @@ static void
 browser_virtual_connection_set_property (GObject *object,
 					 guint param_id,
 					 const GValue *value,
-					 G_GNUC_UNUSED GParamSpec *pspec)
+					 GParamSpec *pspec)
 {
         BrowserVirtualConnection *bcnc;
 
@@ -205,6 +205,9 @@ browser_virtual_connection_set_property (GObject *object,
 			}
 
 			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}
 }
@@ -213,7 +216,7 @@ static void
 browser_virtual_connection_get_property (GObject *object,
 					 guint param_id,
 					 GValue *value,
-					 G_GNUC_UNUSED GParamSpec *pspec)
+					 GParamSpec *pspec)
 {
         BrowserVirtualConnection *bcnc;
 
@@ -222,6 +225,9 @@ browser_virtual_connection_get_property (GObject *object,
                 switch (param_id) {
                 case PROP_SPECS:
 			g_value_set_pointer (value, bcnc->priv->specs);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
 	}

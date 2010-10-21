@@ -165,7 +165,7 @@ static void
 gda_report_engine_set_property (GObject *object,
 				guint param_id,
 				const GValue *value,
-				G_GNUC_UNUSED GParamSpec *pspec)
+				GParamSpec *pspec)
 {
         GdaReportEngine *eng;
 
@@ -211,6 +211,7 @@ gda_report_engine_set_property (GObject *object,
 			break;
 		}
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }
@@ -220,7 +221,7 @@ static void
 gda_report_engine_get_property (GObject *object,
 				guint param_id,
 				GValue *value,
-				G_GNUC_UNUSED GParamSpec *pspec)
+				GParamSpec *pspec)
 {
         GdaReportEngine *eng;
 
@@ -231,6 +232,7 @@ gda_report_engine_get_property (GObject *object,
 			g_value_set_pointer (value, eng->priv->spec);
 			break;
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
         }

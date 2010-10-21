@@ -167,7 +167,7 @@ static void
 gda_tree_mgr_select_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
         GdaTreeMgrSelect *mgr;
 
@@ -198,6 +198,9 @@ gda_tree_mgr_select_set_property (GObject *object,
 			mgr->priv->params = (GdaSet*) g_value_get_object (value);
 			if (mgr->priv->params)
 				g_object_ref (mgr->priv->params);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }
@@ -235,7 +238,7 @@ static void
 gda_tree_mgr_select_get_property (GObject *object,
 				   guint param_id,
 				   GValue *value,
-				   G_GNUC_UNUSED GParamSpec *pspec)
+				   GParamSpec *pspec)
 {
         GdaTreeMgrSelect *mgr;
 
@@ -250,6 +253,9 @@ gda_tree_mgr_select_get_property (GObject *object,
 			break;
 		case PROP_PARAMS:
 			g_value_set_object (value, mgr->priv->params);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }

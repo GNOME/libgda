@@ -150,7 +150,7 @@ static void
 gda_vprovider_data_model_set_property (GObject *object,
 				       guint param_id,
 				       G_GNUC_UNUSED const GValue *value,
-				       G_GNUC_UNUSED GParamSpec *pspec)
+				       GParamSpec *pspec)
 {
         GdaVproviderDataModel *prov;
 
@@ -158,6 +158,7 @@ gda_vprovider_data_model_set_property (GObject *object,
         if (prov->priv) {
                 switch (param_id) {
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
                 }
         }
@@ -167,7 +168,7 @@ static void
 gda_vprovider_data_model_get_property (GObject *object,
 				       guint param_id,
 				       G_GNUC_UNUSED GValue *value,
-				       G_GNUC_UNUSED GParamSpec *pspec)
+				       GParamSpec *pspec)
 {
         GdaVproviderDataModel *prov;
 
@@ -175,6 +176,7 @@ gda_vprovider_data_model_get_property (GObject *object,
         if (prov->priv) {
 		switch (param_id) {
 		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
         }
@@ -397,7 +399,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			if (error && error->message) {
 				int len = strlen (error->message) + 1;
 				*pzErr = SQLITE3_CALL (sqlite3_malloc) (sizeof (gchar) * len);
-				memcpy (*pzErr, error->message, len);
+				memcpy (*pzErr, error->message, len); /* Flawfinder: ignore */
 			}
 			else 
 				*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Could not compute virtual table's columns"));
@@ -583,7 +585,7 @@ virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
 	cursor = g_new0 (VirtualCursor, 1);
 	cursor->iter = gda_data_model_create_iter (vtable->wrapper);
 	cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
-	*ppCursor = &(cursor->base);
+	*ppCursor = (sqlite3_vtab_cursor*) cursor;
 	return SQLITE_OK;
 }
 

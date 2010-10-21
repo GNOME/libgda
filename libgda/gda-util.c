@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
@@ -590,7 +591,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 			if (model) {
 				gint fno;
 				
-				fno = atoi (ptr2);
+				fno = atoi (ptr2); /* Flawfinder: ignore */
 				if ((fno < 0) ||
 				    (fno >= gda_data_model_get_n_columns (model))) 
 					g_warning (_("Field number %d not found in source named '%s'"), fno, ptr1); 
@@ -1071,8 +1072,6 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			continue;
 		g_hash_table_insert (fields_hash, selfield->field_name, GINT_TO_POINTER (1));
 
-		gchar *str;
-		str = gda_sql_identifier_quote (selfield->field_name, cnc, NULL, FALSE, FALSE);
 		if (insert_stmt) {
 			GdaSqlField *field;
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ist));
@@ -1573,7 +1572,7 @@ cmp_func (gconstpointer a, gconstpointer b)
 }
 
 /**
- * gda_completion_list_get
+ * gda_completion_list_get:
  * @cnc: a #GdaConnection object
  * @sql: a partial SQL statement which is the context of the completion proposal
  * @start: starting position within @sql of the "token" to complete (starts at 0)
@@ -1583,7 +1582,7 @@ cmp_func (gconstpointer a, gconstpointer b)
  * If no completion is available, then the returned array contains just one NULL entry, and
  * if it was not possible to try to compute a completions list, then %NULL is returned.
  *
- * Returns: a new array of strings, or %NULL (use g_strfreev() to free the returned array)
+ * Returns: (transfer full) (array zero-terminated=1) (allow-none): a new array of strings, or %NULL (use g_strfreev() to free the returned array)
  */
 gchar **
 gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint end)
@@ -1602,8 +1601,8 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 
 	/* init */
 	compl = g_array_new (TRUE, TRUE, sizeof (gchar *));
-	text = g_new0 (gchar, end - start + 2);
-	memcpy (text, sql + start, end - start + 1);
+	text = g_new (gchar, end - start + 2);
+	memcpy (text, sql + start, end - start + 1); /* Flawfinder: ignore */
 	text [end - start + 1] = 0;
 
 	if (start == 0) {
@@ -1826,17 +1825,17 @@ concat_ident (const char *prefix, const gchar *ident)
 
 	str = malloc (sizeof (char) * (plen + tlen + 1));
 	if (prefix) {
-		strcpy (str, prefix);
+		strcpy (str, prefix); /* Flawfinder: ignore */
 		str [plen - 1] = '.';
-		strcpy (str + plen, ident);
+		strcpy (str + plen, ident); /* Flawfinder: ignore */
 	}
 	else
-		strcpy (str, ident);
+		strcpy (str, ident); /* Flawfinder: ignore */
 	return str;
 }
 
 /**
- * gda_sql_identifier_split
+ * gda_sql_identifier_split:
  * @id: an SQL identifier
  * 
  * Splits @id into an array of it sub parts. @id's format has to be "&lt;part&gt;[.&lt;part&gt;[...]]" where
@@ -1845,7 +1844,7 @@ concat_ident (const char *prefix, const gchar *ident)
  *
  * For example the <![CDATA["test.\"ATable\""]]> string will result in the array: <![CDATA[{"test", "\"ATable\"", NULL}]]>
  *
- * Returns: a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)
+ * Returns: (transfer full) (array zero-terminated=1) (allow-none): a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)
  */
 gchar **
 gda_sql_identifier_split (const gchar *id)
@@ -2205,7 +2204,7 @@ static char rfc1738_reserved_chars[] =
  * <constant>&quot;%%ab&quot;</constant> where
  * <constant>ab</constant> is the hexadecimal number corresponding to the character.
  *
- * Returns: a new string
+ * Returns: (transfer full): a new string
  */
 gchar *
 gda_rfc1738_encode (const gchar *string)
@@ -2255,7 +2254,7 @@ gda_rfc1738_encode (const gchar *string)
 		}
 
 		if (enc) {
-			sprintf (wptr, "%%%02x", (unsigned char) *rptr);
+			sprintf (wptr, "%%%02x", (unsigned char) *rptr); /* Flawfinder: ignore */
 			wptr += 3;
 		}
 		else {
@@ -2268,7 +2267,7 @@ gda_rfc1738_encode (const gchar *string)
 
 /**
  * gda_rfc1738_decode
- * @string: a string to encode 
+ * @string: a string to decode
  *
  * Decodes @string using the RFC 1738 recommendations: the
  * <constant>&lt;&gt;&quot;#%{}|\^~[]&apos;`;/?:@=&amp;</constant> and space characters are replaced by 
@@ -2465,40 +2464,50 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 	if (*out_cnc_params) {
 		gchar *pos;
 
-		pos = g_strrstr (*out_cnc_params, "USERNAME=");
-		if (pos) {
-			for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
-			if (ptr != pos + 9)
-				*out_username = g_strndup (pos + 9, ptr - (pos + 9));
-
-			if (*ptr)
-				g_memmove (pos, ptr + 1, strlen (ptr));
-			else
-				*pos = 0;
-			gchar *tmp;
-			gint len;
-			tmp = *out_cnc_params;
-			len = strlen (tmp) - 1;
-			if (tmp [len] == ';')
-				tmp [len] = 0;
+		pos = strstr (*out_cnc_params, "USERNAME=");
+		while (pos) {
+			if (((pos > *out_cnc_params) && (*(pos-1) == ';')) ||
+			    (pos  == *out_cnc_params)) {
+				for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
+				if (ptr != pos + 9)
+					*out_username = g_strndup (pos + 9, ptr - (pos + 9));
+				
+				if (*ptr)
+					g_memmove (pos, ptr + 1, strlen (ptr));
+				else
+					*pos = 0;
+				gchar *tmp;
+				gint len;
+				tmp = *out_cnc_params;
+				len = strlen (tmp) - 1;
+				if (tmp [len] == ';')
+					tmp [len] = 0;
+				break;
+			}
+			pos = strstr (pos + 9, "USERNAME=");
 		}
 
-		pos = g_strrstr (*out_cnc_params, "PASSWORD=");
-		if (pos) {
-			for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
-			if (ptr != pos + 9)
-				*out_password = g_strndup (pos + 9, ptr - (pos + 9));
-
-			if (*ptr)
-				g_memmove (pos, ptr + 1, strlen (ptr));
-			else
-				*pos = 0;
-			gchar *tmp;
-			gint len;
-			tmp = *out_cnc_params;
-			len = strlen (tmp) - 1;
-			if (tmp [len] == ';')
-				tmp [len] = 0;
+		pos = strstr (*out_cnc_params, "PASSWORD=");
+		while (pos) {
+			if (((pos > *out_cnc_params) && (*(pos-1) == ';')) ||
+			    (pos  == *out_cnc_params)) {
+				for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
+				if (ptr != pos + 9)
+					*out_password = g_strndup (pos + 9, ptr - (pos + 9));
+				
+				if (*ptr)
+					g_memmove (pos, ptr + 1, strlen (ptr));
+				else
+					*pos = 0;
+				gchar *tmp;
+				gint len;
+				tmp = *out_cnc_params;
+				len = strlen (tmp) - 1;
+				if (tmp [len] == ';')
+					tmp [len] = 0;
+				break;
+			}
+			pos = strstr (pos +  9, "PASSWORD=");
 		}
 	}
 
@@ -2508,6 +2517,56 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 	gda_rfc1738_decode (*out_password);
 }
 
+static gboolean
+_parse_iso8601_date (GDate *gdate, const gchar *value, char **out_endptr)
+{
+	GDateYear year;
+	GDateMonth month;
+	GDateDay day;
+	unsigned long int tmp;
+	char *endptr;
+
+	g_date_clear (gdate, 1);
+
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	if (tmp <= G_MAXUINT16)
+		year = tmp;
+	else
+		return FALSE;
+	if (*endptr != '-')
+		return FALSE;
+
+	value = endptr + 1;
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	month = tmp > 0 ? (tmp <= G_DATE_DECEMBER ? tmp : G_DATE_BAD_MONTH) : G_DATE_BAD_MONTH;
+	if (month == G_DATE_BAD_MONTH)
+		return FALSE;
+	if (*endptr != '-')
+		return FALSE;
+
+	value = endptr + 1;
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	day = tmp > 0 ? (tmp <= G_MAXUINT8 ? tmp : G_DATE_BAD_DAY) : G_DATE_BAD_DAY;
+	if (day == G_DATE_BAD_DAY)
+		return FALSE;
+
+	if (g_date_valid_dmy (day, month, year)) {
+		g_date_set_dmy (gdate, day, month, year);
+		*out_endptr = endptr;
+		return TRUE;
+	}
+	else {
+		memset (gdate, 0, sizeof (GDate));
+		return FALSE;
+	}
+}
+
 /**
  * gda_parse_iso8601_date
  * @gdate: a pointer to a #GDate structure which will be filled
@@ -2515,30 +2574,94 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
  *
  * Extracts date parts from @value, and sets @gdate's contents
  *
- * Accepted date format is "YYYY-MM-DD".
+ * Accepted date format is "YYYY-MM-DD" (more or less than 4 digits for years and
+ * less than 2 digits for month and day are accepted). Years must be in the 1-65535 range,
+ * a limitation imposed by #GDate.
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_parse_iso8601_date (GDate *gdate, const gchar *value)
 {
-	GDateYear year;
-	GDateMonth month;
-	GDateDay day;
+	g_return_val_if_fail (gdate, FALSE);
 
-	year = atoi (value);
-	value += 5;
-	month = atoi (value);
-	value += 3;
-	day = atoi (value);
-	
-	g_date_clear (gdate, 1);
-	if (g_date_valid_dmy (day, month, year)) {
-		g_date_set_dmy (gdate, day, month, year);
-		return TRUE;
-	}
+	char *endptr;
+	if (!value)
+		return FALSE;
+
+	if (! _parse_iso8601_date (gdate, value, &endptr))
+		return FALSE;
+	if (*endptr)
+		return FALSE;
+	return TRUE;
+}
+
+static gboolean
+_parse_iso8601_time (GdaTime *timegda, const gchar *value, char **out_endptr)
+{
+	unsigned long int tmp;
+	char *endptr;
+
+	memset (timegda, 0, sizeof (GdaTime));
+	timegda->timezone = GDA_TIMEZONE_INVALID;
+
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	if (tmp <= 23)
+		timegda->hour = tmp;
 	else
 		return FALSE;
+	if (*endptr != ':')
+		return FALSE;
+	
+	value = endptr + 1;
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	if (tmp < 60)
+		timegda->minute = tmp;
+	else
+		return FALSE;
+	if (*endptr != ':')
+		return FALSE;
+
+	value = endptr + 1;
+	if (! isdigit (*value))
+		return FALSE;
+	tmp = strtoul (value, &endptr, 10);
+	if (tmp < 60)
+		timegda->second = tmp;
+	else
+		return FALSE;
+
+	if (*endptr && (*endptr != '.') && (*endptr != '+') && (*endptr != '-')) {
+		*out_endptr = endptr;
+		return TRUE; /* end of the parsing */
+	}
+
+	if (*endptr == '.') {
+		value = endptr + 1;
+		if (! isdigit (*value))
+			return FALSE;
+		tmp = strtoul (value, &endptr, 10);
+		if (tmp < G_MAXULONG)
+			timegda->fraction = tmp;
+		else
+			return FALSE;
+	}
+	if ((*endptr == '+') || (*endptr == '-')) {
+		long int stmp;
+		value = endptr;
+		stmp = strtol (value, &endptr, 10);
+		if ((stmp >= -24) && (stmp <= 24))
+			timegda->timezone = stmp * 60 * 60;
+		else
+			return FALSE;
+	}
+
+	*out_endptr = endptr;
+	return TRUE;
 }
 
 /**
@@ -2555,38 +2678,16 @@ gda_parse_iso8601_date (GDate *gdate, const gchar *value)
 gboolean
 gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 {
-	timegda->hour = atoi (value);
-	value += 3;
-	timegda->minute = atoi (value);
-	value += 3;
-	timegda->second = atoi (value);
-	value += 2;
-	if (*value != '.') {
-		timegda->fraction = 0;
-	} else {
-		gint ndigits = 0;
-		gint64 fraction;
+	g_return_val_if_fail (timegda, FALSE);
 
-		value++;
-		fraction = atol (value);
-		while (*value && *value != '+') {
-			value++;
-			ndigits++;
-		}
+	char *endptr;
+	if (!value)
+		return FALSE;
 
-		while (fraction > 0 && ndigits > 3) {
-			fraction /= 10;
-			ndigits--;
-		}
-		
-		timegda->fraction = fraction;
-	}
-
-	if (*value)
-		timegda->timezone = atol (value) * 60 * 60;
-	else
-		timegda->timezone = 0;
-
+	if (! _parse_iso8601_time (timegda, value, &endptr))
+		return FALSE;
+	if (*endptr)
+		return FALSE;
 	return TRUE;
 }
 
@@ -2604,43 +2705,51 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 gboolean
 gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 {
-	timestamp->year = atoi (value);
-	value += 5;
-	timestamp->month = atoi (value);
-	value += 3;
-	timestamp->day = atoi (value);
-	value += 3;
-	timestamp->hour = atoi (value);
-	value += 3;
-	timestamp->minute = atoi (value);
-	value += 3;
-	timestamp->second = atoi (value);
-	value += 2;
-	if (*value != '.') {
-		timestamp->fraction = 0;
-	} else {
-		gint ndigits = 0;
-		gint64 fraction;
+	g_return_val_if_fail (timestamp, FALSE);
 
-		value++;
-		fraction = atol (value);
-		while (*value && *value != '+') {
-			value++;
-			ndigits++;
-		}
+	gboolean retval = TRUE;
+	char *endptr;
+	GDate gdate;
+	GdaTime timegda;
 
-		while (fraction > 0 && ndigits > 3) {
-			fraction /= 10;
-			ndigits--;
-		}
-		
-		timestamp->fraction = fraction;
+	memset (timestamp, 0, sizeof (GdaTimestamp));
+	memset (&timegda, 0, sizeof (GdaTime));
+	timegda.timezone = GDA_TIMEZONE_INVALID;
+
+	if (!value)
+		return FALSE;
+
+	/* date part */
+	if (! _parse_iso8601_date (&gdate, value, &endptr)) {
+		retval = FALSE;
+		goto out;
 	}
+	timestamp->year = g_date_get_year (&gdate);
+	timestamp->month = g_date_get_month (&gdate);
+	timestamp->day = g_date_get_day (&gdate);
 
-	if (*value)
-		timestamp->timezone = atol (value) * 60 * 60;
-	else
-		timestamp->timezone = 0;
+	/* separator */
+	if (!*endptr)
+		goto out;
 
-	return TRUE;
+	if (*endptr != ' ') {
+		retval = FALSE;
+		goto out;
+	}
+	value = endptr + 1;
+	if (!*value)
+		goto out;
+
+	/* time part */
+	if (! _parse_iso8601_time (&timegda, value, &endptr) ||
+	    *endptr) 
+		retval = FALSE;
+ out:
+	timestamp->hour = timegda.hour;
+	timestamp->minute = timegda.minute;
+	timestamp->second = timegda.second;
+	timestamp->fraction = timegda.fraction;
+	timestamp->timezone = timegda.timezone;
+
+	return retval;
 }

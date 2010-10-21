@@ -32,7 +32,7 @@
 #include "../browser-stock-icons.h"
 #include "query-editor.h"
 #include "query-result.h"
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
 

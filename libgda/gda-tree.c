@@ -170,6 +170,10 @@ gda_tree_class_init (GdaTreeClass *klass)
         object_class->set_property = gda_tree_set_property;
         object_class->get_property = gda_tree_get_property;
 
+	/**
+	 * GdaTree:is-list:
+	 * Tells if the GdaTree is a list or a tree.
+	 */
 	g_object_class_install_property (object_class, PROP_IS_LIST,
                                          g_param_spec_boolean ("is-list", _("Tells if the GdaTree is a list or a tree"), NULL,
 							       FALSE, G_PARAM_READABLE));
@@ -263,13 +267,16 @@ static void
 gda_tree_set_property (GObject *object,
 			 guint param_id,
 			 G_GNUC_UNUSED const GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaTree *tree;
 
         tree = GDA_TREE (object);
         if (tree->priv) {
                 switch (param_id) {
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}	
 	}
 }
@@ -278,7 +285,7 @@ static void
 gda_tree_get_property (GObject *object,
 			 guint param_id,
 			 GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	GdaTree *tree;
 	
@@ -297,6 +304,9 @@ gda_tree_get_property (GObject *object,
 			g_value_set_boolean (value, is_list);
 			break;
 		}
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
 		}
 	}	
 }
@@ -538,7 +548,7 @@ real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_n
 		if (use_names)
 			node = gda_tree_node_get_child_name (parent, (gchar *) seglist->data);
 		else
-			node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data));
+			node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data)); /* Flawfinder: ignore */
 		if (!node && tree->priv->update_on_searching) {
 			/* update level if necessary */
 			mgrlist = _gda_tree_node_get_managers_for_children (parent);
@@ -552,7 +562,7 @@ real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_n
 			if (use_names)
 				node = gda_tree_node_get_child_name (parent, (gchar *) seglist->data);
 			else
-				node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data));
+				node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data)); /* Flawfinder: ignore */
 		}
 		if (!node) 
 			return NULL;
@@ -637,7 +647,7 @@ build_node_path (GdaTree *tree, GdaTreeNode *node, GArray *array)
 }
 
 /**
- * gda_tree_get_node
+ * gda_tree_get_node:
  * @tree: a #GdaTree object
  * @tree_path: full path to the required nodes (if @use_names is %TRUE, then it must start with '/')
  * @use_names: if %TRUE, then @tree_path will be interpreted as a unix style path, and if %FALSE,
@@ -645,7 +655,7 @@ build_node_path (GdaTree *tree, GdaTreeNode *node, GArray *array)
  *
  * Locates a #GdaTreeNode using the @tree_path path.
  *
- * Returns: (transfer none): the requested #GdaTreeNode pointer, or %NULL if not found
+ * Returns: (transfer none) (allow-none): the requested #GdaTreeNode pointer, or %NULL if not found
  *
  * Since: 4.2
  */

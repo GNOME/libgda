@@ -727,7 +727,6 @@ create_text_label_for_sentry (SingleEntry *sentry, gchar **out_title)
 
 	}
 	else {
-		gchar *label;
 		GSList *params;
 		gchar *title = NULL;
 

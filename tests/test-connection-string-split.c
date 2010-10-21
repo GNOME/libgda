@@ -1,54 +1,98 @@
 #include <libgda/libgda.h>
 #include <string.h>
+
+typedef struct {
+	gchar *in_string;
+	gchar *exp_provider;
+	gchar *exp_cnc_params;
+	gchar *exp_user;
+	gchar *exp_pass;
+} ATest;
+
+ATest the_tests[] = {
+	{"PostgreSQL://meme:pass@DB_NAME=mydb;HOST=server",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://meme@DB_NAME=mydb;HOST=server;PASSWORD=pass",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://meme@DB_NAME=mydb;PASSWORD=pass;HOST=server",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://meme@PASSWORD=pass;DB_NAME=mydb;HOST=server",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://DB_NAME=mydb;HOST=server;USERNAME=meme;PASSWORD=pass",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://DB_NAME=mydb;HOST=server;PASSWORD=pass;USERNAME=meme",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://DB_NAME=mydb;USERNAME=meme;PASSWORD=pass;HOST=server",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://PASSWORD=pass;USERNAME=meme;DB_NAME=mydb;HOST=server",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://:pass@USERNAME=meme;DB_NAME=mydb;HOST=server",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PostgreSQL://:pass@DB_NAME=mydb;HOST=server;USERNAME=meme",
+	 "PostgreSQL", "DB_NAME=mydb;HOST=server",
+	 "meme", "pass"},
+	{"PORT=5432;ADM_LOGIN=gdauser;HOST=gdatester;ADM_PASSWORD=GdaUser;DB_NAME=testcheckdb",
+	 NULL,
+	 "PORT=5432;ADM_LOGIN=gdauser;HOST=gdatester;ADM_PASSWORD=GdaUser;DB_NAME=testcheckdb",
+	 NULL, NULL},
+	{"PORT=5432;ADM_LOGIN=gdauser;HOST=gdatester;ADM_PASSWORD=GdaUser;DB_NAME=testcheckdb;USERNAME=meme;PASSWORD=pass",
+	 NULL,
+	 "PORT=5432;ADM_LOGIN=gdauser;HOST=gdatester;ADM_PASSWORD=GdaUser;DB_NAME=testcheckdb",
+	 "meme", "pass"},
+	{"PORT=5432;ADM_LOGIN=gdauser;HOST=gdatester;USERNAME=meme;PASSWORD=pass;ADM_PASSWORD=GdaUser;DB_NAME=testcheckdb",
+	 NULL,
+	 "PORT=5432;ADM_LOGIN=gdauser;HOST=gdatester;ADM_PASSWORD=GdaUser;DB_NAME=testcheckdb",
+	 "meme", "pass"}
+};
+
 int
 main (int argc, char *argv[])
 {
 	g_type_init();
 	gda_init ();
 
-	gchar *str[] = {
-	"PostgreSQL://meme:pass@DB_NAME=mydb;HOST=server",
-	"PostgreSQL://meme@DB_NAME=mydb;HOST=server;PASSWORD=pass",
-	"PostgreSQL://meme@DB_NAME=mydb;PASSWORD=pass;HOST=server",
-	"PostgreSQL://meme@PASSWORD=pass;DB_NAME=mydb;HOST=server",
-	"PostgreSQL://DB_NAME=mydb;HOST=server;USERNAME=meme;PASSWORD=pass",
-	"PostgreSQL://DB_NAME=mydb;HOST=server;PASSWORD=pass;USERNAME=meme",
-        "PostgreSQL://DB_NAME=mydb;USERNAME=meme;PASSWORD=pass;HOST=server",
-        "PostgreSQL://PASSWORD=pass;USERNAME=meme;DB_NAME=mydb;HOST=server",
-        "PostgreSQL://:pass@USERNAME=meme;DB_NAME=mydb;HOST=server",
-        "PostgreSQL://:pass@DB_NAME=mydb;HOST=server;USERNAME=meme",
-	NULL};
-
 	gint i;
-	for (i = 0; ;i++) {
-		if (!str[i])
-			break;
+	for (i = 0; i < sizeof (the_tests) / sizeof (ATest); i++) {
+		ATest test = the_tests[i];
 		gchar *cnc_params, *prov, *user, *pass;
-		gda_connection_string_split (str[i], &cnc_params, &prov, &user, &pass);
+		gda_connection_string_split (test.in_string, &cnc_params, &prov, &user, &pass);
 		g_print ("[%s]\n  cnc_params=[%s]\n  prov      =[%s]\n  user      =[%s]\n  pass      =[%s]\n",
-			str[i], cnc_params, prov, user, pass);
-		if (strcmp (cnc_params, "DB_NAME=mydb;HOST=server")) {
+			test.in_string, cnc_params, prov, user, pass);
+		if (g_strcmp0 (cnc_params, test.exp_cnc_params)) {
 			g_print ("Wrong cnc_params result\n");
-			return 1;
+			goto onerror;
 		}
-		if (strcmp (prov, "PostgreSQL")) {
+		if (g_strcmp0 (prov, test.exp_provider)) {
 			g_print ("Wrong provider result\n");
-			return 1;
+			goto onerror;
 		}
-		if (strcmp (user, "meme")) {
+		if (g_strcmp0 (user, test.exp_user)) {
 			g_print ("Wrong username result\n");
-			return 1;
+			goto onerror;
 		}
-		if (strcmp (pass, "pass")) {
+		if (g_strcmp0 (pass, test.exp_pass)) {
 			g_print ("Wrong password result\n");
-			return 1;
+			goto onerror;
 		}
 		g_free (cnc_params);
 		g_free (prov);
 		g_free (user);
 		g_free (pass);
+
 	}
 
 	return 0;
+ onerror:
+	g_print ("Error, aborting\n");
+	return 1;
 }
 

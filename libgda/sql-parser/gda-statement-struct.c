@@ -1172,10 +1172,10 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 }
 
 /**
- * gda_sql_any_part_foreach
+ * gda_sql_any_part_foreach:
  * @node: the stat node
- * @func: function to call for each sub node
- * @data: data to pass to @func each time it is called
+ * @func: (scope call): function to call for each sub node
+ * @data: (closure): data to pass to @func each time it is called
  * @error: a place to store errors, or %NULL (is also passed to @func)
  *
  * Calls a function for each element of a #GdaSqlAnyPart node

@@ -5,16 +5,19 @@
 #include <libgda/libgda.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include <glib/gi18n-lib.h>
+#include "gda-tree-mgr-xml.h"
 
 gchar *prov = NULL;
 gchar *op = NULL;
 gboolean list_ops = FALSE;
+gboolean out_tree = FALSE;
 GdaServerProvider *prov_obj = NULL;
 
 static GOptionEntry entries[] = {
         { "provider", 'p', 0, G_OPTION_ARG_STRING, &prov, "Provider name", "provider"},
         { "op", 'o', 0, G_OPTION_ARG_STRING, &op, "Operation", "operation name"},
         { "list-ops", 'l', 0, G_OPTION_ARG_NONE, &list_ops, "List existing operations", NULL },
+        { "tree", 't', 0, G_OPTION_ARG_NONE, &out_tree, "Output results as a tree (default is as XML)", NULL },
         { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
@@ -75,12 +78,27 @@ main (int argc, char **argv) {
 		g_print (_("Description for type: %s\n"), gda_server_operation_op_type_to_string (type));
 		doc = merge_specs (xml_dir, type, &op_supported, &error);
 		if (doc) {
-			xmlChar *buf;
-			gint len;
-			xmlKeepBlanksDefault (0);
-			xmlDocDumpFormatMemory (doc, &buf, &len, 1);
-			g_print ("%s\n", buf);
-			xmlFree (buf);
+			if (out_tree) {
+				GdaTree *tree;
+				GdaTreeManager *mgr;
+
+				tree = gda_tree_new ();
+				mgr = gda_tree_mgr_xml_new (xmlDocGetRootElement (doc), "prov_name|id|name|gdatype|node_type|descr");
+				gda_tree_add_manager (tree,  mgr);
+				gda_tree_manager_add_manager (mgr, mgr);
+				g_object_unref (mgr);
+				gda_tree_update_all (tree, NULL);
+				gda_tree_dump (tree, NULL, NULL);
+				g_object_unref (tree);
+			}
+			else {
+				xmlChar *buf;
+				gint len;
+				xmlKeepBlanksDefault (0);
+				xmlDocDumpFormatMemory (doc, &buf, &len, 1);
+				g_print ("%s\n", buf);
+				xmlFree (buf);
+			}
 			xmlFreeDoc (doc);
 		}
 		else {
@@ -190,7 +208,6 @@ make_paths (xmlNodePtr node, const gchar *parent_path, GSList *exist_list)
 		xmlNodePtr child;
 		for (child = node->children; child; child = child->next) 
 			retlist = make_paths (child, pstr, retlist);
-
 
 		xmlFree (id);
 	}
@@ -330,8 +347,12 @@ merge_specs (const gchar *xml_dir, GdaServerOperationType type, gboolean *op_sup
 			provider_end = g_strrstr (provider, suffix);
 			*provider_end = 0;
 			
-			if (lcprov && strcmp (lcprov, provider))
-				continue;
+			if (lcprov && strcmp (lcprov, provider)) {
+				/* handle the name mismatch between the provider named "PostgreSQL" and
+				 * the file names which start with "postgres" */
+				if (strcmp (provider, "postgres") || strcmp (lcprov, "postgresql"))
+					continue;
+			}
 
 			*op_supported = TRUE;
 			pdoc = xmlParseFile (cfile);

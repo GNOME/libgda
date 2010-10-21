@@ -38,7 +38,7 @@
 #include "../data-manager/data-manager-perspective.h"
 #include <libgda-ui/gdaui-enums.h>
 #include <libgda-ui/gdaui-basic-form.h>
-#include "../common/popup-container.h"
+#include <libgda-ui/internal/popup-container.h>
 #include <libgda/gda-data-model-extra.h>
 
 struct _TableInfoPrivate {
@@ -179,11 +179,14 @@ static void
 table_info_set_property (GObject *object,
 			 guint param_id,
 			 G_GNUC_UNUSED const GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	TableInfo *tinfo;
 	tinfo = TABLE_INFO (object);
 	switch (param_id) {
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -191,11 +194,14 @@ static void
 table_info_get_property (GObject *object,
 			 guint param_id,
 			 G_GNUC_UNUSED GValue *value,
-			 G_GNUC_UNUSED GParamSpec *pspec)
+			 GParamSpec *pspec)
 {
 	TableInfo *tinfo;
 	tinfo = TABLE_INFO (object);
 	switch (param_id) {
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -520,7 +526,7 @@ static void statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
 						   GTK_MESSAGE_INFO,
 						   "DataInsertQuery",
-						   _("Data successfully inserted"));
+						   "%s", _("Data successfully inserted"));
 }
 
 static void

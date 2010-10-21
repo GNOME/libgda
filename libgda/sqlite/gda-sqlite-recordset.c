@@ -419,8 +419,8 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					bin->binary_length = SQLITE3_CALL (sqlite3_column_bytes) (ps->sqlite_stmt, real_col);
 					if (bin->binary_length > 0) {
 						bin->data = g_new (guchar, bin->binary_length);
-						memcpy (bin->data, SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt,
-											real_col),
+						memcpy (bin->data, SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt, /* Flawfinder: ignore */
+												       real_col),
 							bin->binary_length);
 					}
 					else

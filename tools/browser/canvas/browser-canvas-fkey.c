@@ -199,7 +199,7 @@ static void
 browser_canvas_fkey_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	BrowserCanvasFkey *cc;
 
@@ -216,6 +216,9 @@ browser_canvas_fkey_set_property (GObject *object,
 			create_items (cc);
 		}
 		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -223,7 +226,7 @@ static void
 browser_canvas_fkey_get_property (GObject *object,
 				  guint param_id,
 				  GValue *value,
-				  G_GNUC_UNUSED GParamSpec *pspec)
+				  GParamSpec *pspec)
 {
 	BrowserCanvasFkey *cc;
 
@@ -234,7 +237,7 @@ browser_canvas_fkey_get_property (GObject *object,
 		g_value_set_object (value, cc->priv->mstruct);
 		break;
 	default:
-		g_warning ("No such property!");
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
 }
