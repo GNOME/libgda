@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: libgda master fr\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-10-21 18:23+0000\n"
+"POT-Creation-Date: 2010-10-26 19:00+0000\n"
 "PO-Revision-Date: 2010-10-15 21:45+0200\n"
 "Last-Translator: Laurent Coudeur <laurentc@iol.ie>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -112,8 +112,8 @@ msgstr "Impossible de lancer le programme de navigation"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:283
-#: ../libgda/gda-connection.c:1536 ../libgda/gda-data-model.c:2038
-#: ../libgda/gda-data-model.c:2046 ../libgda/gda-data-model-dir.c:386
+#: ../libgda/gda-connection.c:1536 ../libgda/gda-data-model.c:2044
+#: ../libgda/gda-data-model.c:2052 ../libgda/gda-data-model-dir.c:386
 #: ../libgda/gda-data-model-import.c:1583
 #: ../libgda/gda-data-model-import.c:1866
 #: ../libgda/gda-data-model-import.c:1939 ../libgda/gda-data-select.c:370
@@ -711,7 +711,7 @@ msgstr "Impossible d'obtenir le verrou de connexion"
 #: ../libgda/gda-connection.c:2388 ../libgda/gda-connection.c:2604
 #: ../libgda/gda-connection.c:2875 ../libgda/gda-connection.c:2945
 #: ../libgda/gda-connection.c:3015
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:220
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:222
 #: ../libgda/thread-wrapper/gda-thread-provider.c:1626
 #, c-format
 msgid "Connection is closed"
@@ -765,7 +765,7 @@ msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Suivi d'état de transaction de connexion : aucune transaction pour %s"
 
 #: ../libgda/gda-connection.c:5429
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:236
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:239
 msgid "Internal error: invalid provider handle"
 msgstr "Erreur interne : identificateur de fournisseur non valide"
 
@@ -775,7 +775,7 @@ msgstr "Erreur interne : identificateur de fournisseur non valide"
 #: ../libgda/gda-data-model-bdb.c:789 ../libgda/gda-data-model-dir.c:784
 #: ../libgda/gda-data-model-dir.c:883 ../libgda/gda-data-model-dir.c:925
 #: ../libgda/gda-data-model-dsn-list.c:312 ../libgda/gda-data-model-iter.c:296
-#: ../libgda/gda-data-model-iter.c:1025 ../libgda/gda-data-proxy.c:3508
+#: ../libgda/gda-data-model-iter.c:1025 ../libgda/gda-data-proxy.c:3536
 #: ../libgda/gda-data-select.c:1201 ../libgda/gda-data-select.c:1697
 #: ../libgda/gda-data-select.c:2593 ../libgda/gda-data-select.c:2660
 #: ../libgda-ui/gdaui-combo.c:790
@@ -831,8 +831,8 @@ msgstr "Indique si le modèle de données peut être modifié"
 #: ../libgda/gda-data-model-array.c:390 ../libgda/gda-data-model-array.c:539
 #: ../libgda/gda-data-model-array.c:626 ../libgda/gda-data-model-dir.c:795
 #: ../libgda/gda-data-model-dir.c:968 ../libgda/gda-data-model-dir.c:1323
-#: ../libgda/gda-data-model-dsn-list.c:320 ../libgda/gda-data-proxy.c:3457
-#: ../libgda/gda-data-proxy.c:3495 ../libgda/gda-data-select.c:1653
+#: ../libgda/gda-data-model-dsn-list.c:320 ../libgda/gda-data-proxy.c:3485
+#: ../libgda/gda-data-proxy.c:3523 ../libgda/gda-data-select.c:1653
 #: ../libgda/gda-data-select.c:1707
 #, c-format
 msgid "Row %d out of range (0-%d)"
@@ -841,8 +841,8 @@ msgstr "Ligne %d en dehors de la limite (0 - %d)"
 #: ../libgda/gda-data-model-array.c:394 ../libgda/gda-data-model-array.c:542
 #: ../libgda/gda-data-model-array.c:629 ../libgda/gda-data-model-dir.c:798
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1326
-#: ../libgda/gda-data-model-dsn-list.c:323 ../libgda/gda-data-proxy.c:3460
-#: ../libgda/gda-data-proxy.c:3498 ../libgda/gda-data-select.c:1656
+#: ../libgda/gda-data-model-dsn-list.c:323 ../libgda/gda-data-proxy.c:3488
+#: ../libgda/gda-data-proxy.c:3526 ../libgda/gda-data-select.c:1656
 #: ../libgda/gda-data-select.c:1710
 #, c-format
 msgid "Row %d not found (empty data model)"
@@ -924,72 +924,72 @@ msgstr ""
 msgid "Data model does not support setting values"
 msgstr "Le modèle de données ne gère pas la configuration de valeurs"
 
-#: ../libgda/gda-data-model.c:827 ../libgda/gda-data-model.c:861
+#: ../libgda/gda-data-model.c:833 ../libgda/gda-data-model.c:867
 msgid "Data model does not support row append"
 msgstr "Le modèle de données ne gère pas l'ajout de lignes"
 
-#: ../libgda/gda-data-model.c:852
+#: ../libgda/gda-data-model.c:858
 msgid "Model does not allow row insertion"
 msgstr "Le modèle ne permet pas l'insertion de lignes"
 
-#: ../libgda/gda-data-model.c:887
+#: ../libgda/gda-data-model.c:893
 msgid "Model does not allow row deletion"
 msgstr "Le modèle ne permet pas la suppression de lignes"
 
-#: ../libgda/gda-data-model.c:896
+#: ../libgda/gda-data-model.c:902
 msgid "Data model does not support row removal"
 msgstr "Le modèle de données ne gère pas la suppression de lignes"
 
-#: ../libgda/gda-data-model.c:1039 ../libgda/gda-data-model.c:1080
-#: ../libgda/gda-data-model.c:1094
+#: ../libgda/gda-data-model.c:1045 ../libgda/gda-data-model.c:1086
+#: ../libgda/gda-data-model.c:1100
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "Le paramètre « %s » doit être une valeur de chaîne, ignoré."
 
-#: ../libgda/gda-data-model.c:1103 ../libgda/gda-data-model.c:1113
-#: ../libgda/gda-data-model.c:1123 ../libgda/gda-data-model.c:1163
-#: ../libgda/gda-data-model.c:1256
+#: ../libgda/gda-data-model.c:1109 ../libgda/gda-data-model.c:1119
+#: ../libgda/gda-data-model.c:1129 ../libgda/gda-data-model.c:1169
+#: ../libgda/gda-data-model.c:1262
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "Le paramètre « %s » doit être une valeur booléenne, ignoré."
 
-#: ../libgda/gda-data-model.c:1264
+#: ../libgda/gda-data-model.c:1270
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Le fichier « %s » existe déjà"
 
-#: ../libgda/gda-data-model.c:1404
+#: ../libgda/gda-data-model.c:1410
 msgid "Exported Data"
 msgstr "Données exportées"
 
-#: ../libgda/gda-data-model.c:1525
+#: ../libgda/gda-data-model.c:1531
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "La balise attendue était <gda_value> ou <gda_array_value>, au lieu de <%s>. "
 "La valeur est ignorée."
 
-#: ../libgda/gda-data-model.c:1556
+#: ../libgda/gda-data-model.c:1562
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "Impossible de récupérer le type de donnée de la colonne (le type est "
 "« UNKNOWN » ou n'est pas spécifié)"
 
-#: ../libgda/gda-data-model.c:1642
+#: ../libgda/gda-data-model.c:1648
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "La balise <gda_array_data> était attendue, au lieu de <%s>"
 
-#: ../libgda/gda-data-model.c:1705
+#: ../libgda/gda-data-model.c:1711
 msgid "Could not get an iterator for source data model"
 msgstr "Impossible d'obtenir un itérateur pour le modèle de données source"
 
-#: ../libgda/gda-data-model.c:1722
+#: ../libgda/gda-data-model.c:1728
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Colonne inexistante dans le modèle de données source : %d"
 
-#: ../libgda/gda-data-model.c:1736
+#: ../libgda/gda-data-model.c:1742
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
@@ -998,7 +998,7 @@ msgstr ""
 "La colonne destination %d ne peut pas être nulle, mais elle n'a pas de "
 "correspondance dans le modèle de données source"
 
-#: ../libgda/gda-data-model.c:1746
+#: ../libgda/gda-data-model.c:1752
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -1007,28 +1007,33 @@ msgstr ""
 "La colonne destination %d a un type gda (%s), incompatible avec le type de "
 "la colonne source %d (%s)"
 
-#: ../libgda/gda-data-model.c:1843
+#: ../libgda/gda-data-model.c:1849
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Impossible de transformer « %s » du type GDA %s au type GDA %s"
 
-#: ../libgda/gda-data-model.c:2037
+#: ../libgda/gda-data-model.c:2043
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "Impossible d'afficher les attributs du modèle de données : %s"
 
-#: ../libgda/gda-data-model.c:2045
+#: ../libgda/gda-data-model.c:2051
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "Impossible d'afficher le contenu du modèle de données : %s"
 
-#: ../libgda/gda-data-model.c:2293
+#: ../libgda/gda-data-model.c:2299
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr ""
 "Le modèle de données ne gère pas le déplacement du curseur vers l'arrière ; "
 "données non affichées."
 
-#: ../libgda/gda-data-model.c:2412
+#: ../libgda/gda-data-model.c:2419
+#, c-format
+msgid "(error getting data)\n"
+msgstr "(erreur de récupération de données)\n"
+
+#: ../libgda/gda-data-model.c:2421
 #, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
@@ -1238,7 +1243,7 @@ msgstr "GdaDataModel a rejeté le changement de valeur"
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr "GdaDataProxy ne gère pas les modèles de données à accès non-aléatoire"
 
-#: ../libgda/gda-data-proxy.c:1550 ../libgda/gda-data-proxy.c:3913
+#: ../libgda/gda-data-proxy.c:1550 ../libgda/gda-data-proxy.c:3941
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
@@ -1281,24 +1286,24 @@ msgstr "Erreur dans l'expression de filtre"
 msgid "Incorrect filter expression"
 msgstr "Expression de filtre incorrecte"
 
-#: ../libgda/gda-data-proxy.c:3668
+#: ../libgda/gda-data-proxy.c:3696
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
 "La première ligne est une ligne vide ajoutée artificiellement et ne peut pas "
 "être modifiée"
 
-#: ../libgda/gda-data-proxy.c:3690
+#: ../libgda/gda-data-proxy.c:3718
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Type de valeur incorrect : type « %s » attendu, mais « %s » fourni"
 
-#: ../libgda/gda-data-proxy.c:3776
+#: ../libgda/gda-data-proxy.c:3804
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Tentative de modification d'une colonne en lecture seule : %d"
 
-#: ../libgda/gda-data-proxy.c:3813
+#: ../libgda/gda-data-proxy.c:3841
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Le type de la valeur est %s au lieu de %s"
@@ -2736,7 +2741,7 @@ msgid "Can't find libsqlite3."
 msgstr "Impossible de trouver libsqlite3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:634
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:267
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:215
 #: ../libgda/thread-wrapper/gda-thread-provider.c:391
 #: ../providers/bdb/gda-bdb-provider.c:154
 #: ../providers/jdbc/gda-jdbc-provider.c:356
@@ -2975,18 +2980,21 @@ msgid "Unable to open BLOB"
 msgstr "Impossible d'ouvrir le blob"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:483
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:727
 #: ../providers/postgres/gda-postgres-recordset.c:624
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr "Date « %s » non valide (le format doit être AAAA-MM-JJ)"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:497
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:743
 #: ../providers/postgres/gda-postgres-recordset.c:635
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Heure « %s » non valide (le format doit être HH:MM:SS[.ms])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:511
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:759
 #: ../providers/postgres/gda-postgres-recordset.c:679
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
@@ -3007,16 +3015,32 @@ msgstr "Impossible de trouver la ligne %d"
 msgid "Table to remove not found"
 msgstr "Impossible de trouver la table à supprimer"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:211
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:213
 msgid "Namespace must be specified"
 msgstr "L'espace de nom doit être spécifié"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:261
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:263
 msgid "Connection was not represented in hub"
 msgstr "La connexion n'est pas représentée dans le hub"
 
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:423
+#, c-format
+msgid "Unable to get information about table '%s'"
+msgstr "Impossible de trouver des informations à propos de la table « %s »"
+
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:654
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:670
+msgid "Integer value is out of bounds"
+msgstr "La valeur entière est hors limites"
+
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:710
+#, c-format
+msgid "Blob constraints are not handled in virtual table condition"
+msgstr "Les contraintes de blob ne sont pas gérées dans la condition "
+"de table virtuelle"
+
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:154
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:191
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:194
 msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
@@ -3024,33 +3048,33 @@ msgstr ""
 "Erreur interne : le fournisseur virtuel n'implémente pas la méthode "
 "virtuelle create_operation()"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:387
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:322
 msgid "Data model must have at least one column"
 msgstr "Le modèle de données doit avoir au moins une colonne"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:405
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:339
 msgid "Could not compute virtual table's columns"
 msgstr "Impossible de calculer les colonnes de la table virtuelle"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:430
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:364
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr ""
 "Impossible d'obtenir la description du modèle de données pour la colonne %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:444
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:378
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
 msgstr ""
 "Impossible d'obtenir le type de colonne du modèle de données ou le type pour "
 "la colonne %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:492
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:425
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "Impossible de déclarer la table virtuelle (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:652
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:540
 msgid "Column not found"
 msgstr "Colonne introuvable"
 
@@ -3899,7 +3923,8 @@ msgstr "Langage de programmation"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in.h:8
 msgid "break lines anywhere the cursor can appear"
-msgstr "Sauts de ligne à n'importe quel endroit où le curseur peut être affiché"
+msgstr ""
+"Sauts de ligne à n'importe quel endroit où le curseur peut être affiché"
 
 #: ../libgda-ui/data/server_operation.glade.h:1
 #: ../tools/browser/schema-browser/table-info.c:385
@@ -4111,8 +4136,8 @@ msgstr ""
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr ""
-"Type de colonne incorrect pour l'étiquette : une chaîne était attendue, "
-"mais un « %s » a été obtenu"
+"Type de colonne incorrect pour l'étiquette : une chaîne était attendue, mais "
+"un « %s » a été obtenu"
 
 #: ../libgda-ui/gdaui-cloud.c:1075 ../tools/browser/common/objects-cloud.c:458
 msgid "Find:"
@@ -8001,7 +8026,9 @@ msgstr "Aucune source de données définie"
 #: ../tools/browser/data-manager/data-widget.c:1020
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
-msgstr "Impossible de lier un paramètre « %s » de type « %s » à un paramètre de type « %s »"
+msgstr ""
+"Impossible de lier un paramètre « %s » de type « %s » à un paramètre de type « %"
+"s »"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:153
 msgid "Data sources:"
