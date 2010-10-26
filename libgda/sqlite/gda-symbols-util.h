@@ -104,6 +104,8 @@ typedef struct {
 	const void * (*sqlite3_value_blob)(sqlite3_value*);
 	int  (*sqlite3_value_bytes)(sqlite3_value*);
 	int  (*sqlite3_value_int)(sqlite3_value*);
+	double (*sqlite3_value_double)(sqlite3_value*);
+	sqlite3_int64 (*sqlite3_value_int64)(sqlite3_value*);
 	const unsigned char * (*sqlite3_value_text)(sqlite3_value*);
 	int  (*sqlite3_value_type)(sqlite3_value*);
 

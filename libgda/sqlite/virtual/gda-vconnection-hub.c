@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 2007 - 2008 The GNOME Foundation.
+ * Copyright (C) 2007 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -28,6 +28,8 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-data-select.h>
+#include <gda-sql-builder.h>
+#include "../gda-sqlite.h"
 
 typedef struct {
 	GdaVconnectionHub *hub;
@@ -345,72 +347,499 @@ static void meta_changed_cb (GdaMetaStore *store, GSList *changes, HubConnection
 
 typedef struct {
 	GdaVconnectionDataModelSpec spec;
-	GValue *table_name;
+	GValue        *table_name;
 	HubConnection *hc;
+
+	GError        *cols_error;
+	gint           ncols;
+	gchar        **col_names; /* free using g_strfreev */
+	GType         *col_gtypes;/* free using g_free */
+	gchar        **col_dtypes;/* free using g_strfreev */
+
+	GHashTable    *filters_hash; /* key = string; value = a ComputedFilter pointer */
 } LocalSpec;
 
 static void local_spec_free (LocalSpec *spec)
 {
 	gda_value_free (spec->table_name);
+	if (spec->col_names)
+		g_strfreev (spec->col_names);
+	if (spec->col_gtypes)
+		g_free (spec->col_gtypes);
+	if (spec->col_dtypes)
+		g_strfreev (spec->col_dtypes);
+	g_clear_error (&(spec->cols_error));
+	if (spec->filters_hash)
+		g_hash_table_destroy (spec->filters_hash);
 	g_free (spec);
+}
+
+static void
+compute_column_specs (GdaVconnectionDataModelSpec *spec)
+{
+	LocalSpec *lspec = (LocalSpec *) spec;
+	gint i, nrows;
+	GdaDataModel *model;
+
+	if (lspec->col_names)
+		return;
+
+	model = gda_connection_get_meta_store_data (lspec->hc->cnc, 
+						    GDA_CONNECTION_META_FIELDS, NULL, 1, "name", lspec->table_name);
+	if (!model)
+		return;
+
+	nrows = gda_data_model_get_n_rows (model);
+	lspec->col_names = g_new0 (gchar *, nrows+1);
+	lspec->col_gtypes = g_new0 (GType, nrows);
+	lspec->col_dtypes = g_new0 (gchar *, nrows+1);
+
+	for (i = 0; i < nrows; i++) {
+		const GValue *v0, *v1, *v2;
+
+		v0 = gda_data_model_get_value_at (model, 0, i, NULL);
+		v1 = gda_data_model_get_value_at (model, 1, i, NULL);
+		v2 = gda_data_model_get_value_at (model, 2, i, NULL);
+
+		if (!v0 || !v1 || !v2) {
+			break;
+		}
+
+		lspec->col_names[i] = g_value_dup_string (v0);
+		lspec->col_gtypes[i] = gda_g_type_from_string (g_value_get_string (v2));
+		lspec->col_dtypes[i] = g_value_dup_string (v1);
+	}
+	g_object_unref (model);
+
+	if (i != nrows) {
+		/* there has been an error */
+		g_strfreev (lspec->col_names);
+		lspec->col_names = NULL;
+		g_free (lspec->col_gtypes);
+		lspec->col_gtypes = NULL;
+		g_strfreev (lspec->col_dtypes);
+		lspec->col_dtypes = NULL;
+		g_set_error (&(lspec->cols_error), GDA_META_STORE_ERROR, GDA_META_STORE_INTERNAL_ERROR,
+			     _("Unable to get information about table '%s'"),
+			     g_value_get_string (lspec->table_name));
+	}
+	else
+		lspec->ncols = nrows;
 }
 
 static GList *
 dict_table_create_columns_func (GdaVconnectionDataModelSpec *spec, GError **error)
 {
 	LocalSpec *lspec = (LocalSpec *) spec;
-	gint i, nrows;
 	GList *columns = NULL;
-	GdaDataModel *model;
+	gint i;
 
-	model = gda_connection_get_meta_store_data (lspec->hc->cnc, 
-						    GDA_CONNECTION_META_FIELDS, NULL, 1, "name", lspec->table_name);
-	if (!model)
+	compute_column_specs (spec);
+	if (lspec->cols_error) {
+		if (error)
+			*error = g_error_copy (lspec->cols_error);
 		return NULL;
-	nrows = gda_data_model_get_n_rows (model);
-	for (i = 0; i < nrows; i++) {
+	}
+
+	for (i = 0; i < lspec->ncols; i++) {
 		GdaColumn *col;
-		const GValue *v0, *v1, *v2;
-
-		v0 = gda_data_model_get_value_at (model, 0, i, error);
-		v1 = gda_data_model_get_value_at (model, 1, i, error);
-		v2 = gda_data_model_get_value_at (model, 2, i, error);
-
-		if (!v0 || !v1 || !v2) {
-			if (columns) {
-				g_list_foreach (columns, (GFunc) g_object_unref, NULL);
-				g_list_free (columns);
-				columns = NULL;
-			}
-			break;
-		}
 
 		col = gda_column_new ();
-		gda_column_set_name (col, g_value_get_string (v0));
-		gda_column_set_g_type (col, gda_g_type_from_string (g_value_get_string (v2)));
-		gda_column_set_dbms_type (col, g_value_get_string (v1));
+		gda_column_set_name (col, lspec->col_names[i]);
+		gda_column_set_g_type (col, lspec->col_gtypes[i]);
+		gda_column_set_dbms_type (col, lspec->col_dtypes[i]);
 		columns = g_list_prepend (columns, col);
 	}
-	g_object_unref (model);
 
 	return g_list_reverse (columns);
 }
 
+static gchar *
+make_string_for_sqlite3_index_info (sqlite3_index_info *info)
+{
+	GString *string;
+	gint i;
+
+	string = g_string_new ("");
+	for (i = 0; i < info->nConstraint; i++) {
+		const struct sqlite3_index_constraint *cons;
+		cons = &(info->aConstraint [i]);
+		if (! cons->usable)
+			continue;
+		g_string_append_printf (string, "|%d,%d", cons->iColumn, cons->op);
+	}
+	g_string_append_c (string, '/');
+	for (i = 0; i < info->nOrderBy; i++) {
+		struct sqlite3_index_orderby *order;
+		order = &(info->aOrderBy[i]);
+		g_string_append_printf (string, "|%d,%d", order->iColumn, order->desc ? 1 : 0);
+	}
+	return g_string_free (string, FALSE);
+}
+
+typedef struct {
+	GdaStatement *stmt;
+	int orderByConsumed;
+	struct sqlite3_index_constraint_usage *out_const;
+} ComputedFilter;
+
+static void
+computed_filter_free (ComputedFilter *filter)
+{
+	g_object_unref (filter->stmt);
+	g_free (filter->out_const);
+	g_free (filter);
+}
+
+static void
+dict_table_create_filter (GdaVconnectionDataModelSpec *spec, sqlite3_index_info *info)
+{
+	LocalSpec *lspec = (LocalSpec *) spec;
+	GdaSqlBuilder *b;
+	gint i;
+	gchar *hash;
+
+	compute_column_specs (spec);
+	if (lspec->cols_error)
+		return;
+
+	hash = make_string_for_sqlite3_index_info (info);
+	if (lspec->filters_hash) {
+		ComputedFilter *filter;
+		filter = g_hash_table_lookup (lspec->filters_hash, hash);
+		if (filter) {
+			info->idxStr = (char*) filter->stmt;
+			info->needToFreeIdxStr = FALSE;
+			info->orderByConsumed = filter->orderByConsumed;
+			memcpy (info->aConstraintUsage,
+				filter->out_const,
+				sizeof (struct sqlite3_index_constraint_usage) * info->nConstraint);
+			/*g_print ("Reusing filter %p, hash=[%s]\n", filter, hash);*/
+			g_free (hash);
+			return;
+		}
+	}
+
+	/* SELECT core */
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	for (i = 0; i < lspec->ncols; i++)
+		gda_sql_builder_select_add_field (b, lspec->col_names[i], NULL, NULL);
+	gda_sql_builder_select_add_target_id (b,
+					      gda_sql_builder_add_id (b, g_value_get_string (lspec->table_name)),
+					      NULL);
+
+	/* WHERE part */
+	gint argpos;
+	GdaSqlBuilderId *op_ids;
+	op_ids = g_new (GdaSqlBuilderId, info->nConstraint);
+	for (i = 0, argpos = 0; i < info->nConstraint; i++) {
+		const struct sqlite3_index_constraint *cons;
+		cons = &(info->aConstraint [i]);
+		if (! cons->usable)
+			continue;
+		if (cons->iColumn >= lspec->ncols) {
+			g_warning ("Internal error: column known by SQLite's virtual table %d is not known for "
+				   "table '%s', which has %d column(s)", cons->iColumn,
+				   g_value_get_string (lspec->table_name), lspec->ncols);
+			continue;
+		}
+
+		GdaSqlBuilderId fid, pid, eid;
+		gchar *pname;
+
+		if (lspec->col_gtypes[cons->iColumn] == GDA_TYPE_BLOB) /* ignore BLOBs */
+			continue;
+
+		fid = gda_sql_builder_add_id (b, lspec->col_names[cons->iColumn]);
+		pname = g_strdup_printf ("param%d", argpos);
+		pid = gda_sql_builder_add_param (b, pname, lspec->col_gtypes[cons->iColumn], TRUE);
+		g_free (pname);
+		eid = gda_sql_builder_add_cond (b, cons->op, fid, pid, 0);
+		op_ids[argpos] = eid;
+
+		/* update info->aConstraintUsage */
+		info->aConstraintUsage [i].argvIndex = argpos+1;
+		info->aConstraintUsage [i].omit = 1;
+		argpos++;
+	}
+	if (argpos > 0) {
+		GdaSqlBuilderId whid;
+		whid = gda_sql_builder_add_cond_v (b, GDA_SQL_OPERATOR_TYPE_AND, op_ids, argpos);
+		gda_sql_builder_set_where (b, whid);
+	}
+	g_free (op_ids);
+	
+	/* ORDER BY part */
+	info->orderByConsumed = TRUE;
+	for (i = 0; i < info->nOrderBy; i++) {
+		struct sqlite3_index_orderby *ao;
+		GdaSqlBuilderId fid;
+		ao = &(info->aOrderBy [i]);
+		if (ao->iColumn >= lspec->ncols) {
+			g_warning ("Internal error: column known by SQLite's virtual table %d is not known for "
+				   "table '%s', which has %d column(s)", ao->iColumn,
+				   g_value_get_string (lspec->table_name), lspec->ncols);
+			info->orderByConsumed = FALSE;
+			continue;
+		}
+		fid = gda_sql_builder_add_id (b, lspec->col_names[ao->iColumn]);
+		gda_sql_builder_select_order_by (b, fid, ao->desc ? FALSE : TRUE, NULL);
+	}
+
+	GdaStatement *stmt;
+	stmt = gda_sql_builder_get_statement (b, NULL);
+	g_object_unref (b);
+	if (stmt) {
+		ComputedFilter *filter;
+
+		filter = g_new0 (ComputedFilter, 1);
+		filter->stmt = stmt;
+		filter->orderByConsumed = info->orderByConsumed;
+		filter->out_const = g_new (struct sqlite3_index_constraint_usage,  info->nConstraint);
+		memcpy (filter->out_const,
+			info->aConstraintUsage,
+			sizeof (struct sqlite3_index_constraint_usage) * info->nConstraint);
+
+		gchar *sql;
+		sql = gda_statement_to_sql (stmt, NULL, NULL);
+		/*g_print ("Filter %p for [%s] hash=[%s]\n", filter, sql, hash);*/
+		g_free (sql);
+
+		if (! lspec->filters_hash)
+			lspec->filters_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
+								     g_free,
+								     (GDestroyNotify) computed_filter_free);
+		
+		g_hash_table_insert (lspec->filters_hash, hash, filter);
+		info->idxStr = (char*) filter->stmt;
+		/*g_print ("There are now %d statements in store...\n", g_hash_table_size (lspec->filters_hash));*/
+	}
+	else {
+		for (i = 0, argpos = 0; i < info->nConstraint; i++) {
+			info->aConstraintUsage[i].argvIndex = 0;
+			info->aConstraintUsage[i].omit = 0;
+		}
+		info->idxStr = NULL;
+		info->orderByConsumed = 0;
+		g_free (hash);
+	}
+}
+
+
+/*
+ * Takes as input #GValue created when calling spec->create_filtered_model_func()
+ * and creates a GValue with the correct requested type
+ */
+static GValue *
+create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
+{
+	GValue *value;
+	gboolean allok = TRUE;
+	value = g_new0 (GValue, 1);
+
+	if (type != GDA_TYPE_NULL)
+		g_value_init (value, type);
+
+	if (type == GDA_TYPE_NULL)
+		;
+	else if (type == G_TYPE_INT) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_INT64)
+			allok = FALSE;
+		else {
+			gint64 i;
+			i = g_value_get_int64 (svalue);
+			if ((i > G_MAXINT) || (i < G_MININT)) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     "%s", _("Integer value is out of bounds"));
+				allok = FALSE;
+			}
+			else
+				g_value_set_int (value, (gint) i);
+		}
+	}
+	else if (type == G_TYPE_UINT) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_INT64)
+			allok = FALSE;
+		else {
+			gint64 i;
+			i = g_value_get_int64 (svalue);
+			if ((i < 0) || (i > G_MAXUINT)) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     "%s", _("Integer value is out of bounds"));
+				allok = FALSE;
+			}
+			else
+				g_value_set_uint (value, (guint) i);
+		}
+	}
+	else if (type == G_TYPE_INT64) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_INT64)
+			allok = FALSE;
+		else
+			g_value_set_int64 (value, g_value_get_int64 (svalue));
+	}
+	else if (type == G_TYPE_UINT64) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_INT64)
+			allok = FALSE;
+		else
+			g_value_set_uint64 (value, (guint64) g_value_get_int64 (svalue));
+	}
+	else if (type == G_TYPE_DOUBLE) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_DOUBLE)
+			allok = FALSE;
+		else
+			g_value_set_double (value, g_value_get_double (svalue));
+	}
+	else if (type == G_TYPE_STRING) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_STRING)
+			allok = FALSE;
+		else
+			g_value_set_string (value, g_value_get_string (svalue));
+	}
+	else if (type == GDA_TYPE_BINARY) {
+		if (G_VALUE_TYPE (svalue) != GDA_TYPE_BINARY)
+			allok = FALSE;
+		else
+			gda_value_set_binary (value, gda_value_get_binary (svalue));
+	}
+	else if (type == GDA_TYPE_BLOB) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_DATA_ERROR,
+			     _("Blob constraints are not handled in virtual table condition"));
+		allok = FALSE;
+	}
+	else if (type == G_TYPE_BOOLEAN) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_INT64)
+			allok = FALSE;
+		else
+			g_value_set_boolean (value, g_value_get_int64 (svalue) == 0 ? FALSE : TRUE);
+	}
+	else if (type == G_TYPE_DATE) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_STRING)
+			allok = FALSE;
+		else {
+			GDate date;
+			if (!gda_parse_iso8601_date (&date, g_value_get_string (svalue))) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     _("Invalid date '%s' (date format should be YYYY-MM-DD)"),
+					     g_value_get_string (svalue));
+				allok = FALSE;
+			}
+			else
+				g_value_set_boxed (value, &date);
+		}
+	}
+	else if (type == GDA_TYPE_TIME) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_STRING)
+			allok = FALSE;
+		else {
+			GdaTime timegda;
+			if (!gda_parse_iso8601_time (&timegda, g_value_get_string (svalue))) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"),
+					     g_value_get_string (svalue));
+				allok = FALSE;
+			}
+			else
+				gda_value_set_time (value, &timegda);
+		}
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		if (G_VALUE_TYPE (svalue) != G_TYPE_STRING)
+			allok = FALSE;
+		else {
+			GdaTimestamp timestamp;
+			if (!gda_parse_iso8601_timestamp (&timestamp, g_value_get_string (svalue))) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"),
+					     g_value_get_string (svalue));
+				allok = FALSE;
+			}
+			else
+				gda_value_set_timestamp (value, &timestamp);
+		}
+	}
+	else
+		g_error ("Unhandled GDA type %s in SQLite recordset",
+			 gda_g_type_to_string (type));
+
+	if (! allok) {
+		g_free (value);
+		return NULL;
+	}
+	else
+		return value;
+}
+
 static GdaDataModel *
-dict_table_create_model_func (GdaVconnectionDataModelSpec *spec)
+dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, int idxNum, const char *idxStr,
+			      int argc, GValue **argv)
 {
 	GdaDataModel *model;
-	GdaStatement *stmt;
-	gchar *tmp;
+	GdaStatement *stmt = NULL;
+	GdaSet *params = NULL;
 	LocalSpec *lspec = (LocalSpec *) spec;
-	
-	tmp = g_strdup_printf ("SELECT * FROM %s", g_value_get_string (lspec->table_name));
-	stmt = gda_sql_parser_parse_string (internal_parser, tmp, NULL, NULL);
-	g_free (tmp);
-	model = gda_connection_statement_execute_select (lspec->hc->cnc, stmt, NULL, NULL);
+
+	if (idxStr) {
+		gint i;
+		GSList *list;
+		stmt = GDA_STATEMENT (idxStr);
+		if (! gda_statement_get_parameters (stmt, &params, NULL))
+			return NULL;
+		if (argc > 0) {
+			g_assert (params && (argc == g_slist_length (params->holders)));
+			for (i = 0, list = params->holders; i < argc; i++, list = list->next) {
+				GdaHolder *holder = GDA_HOLDER (list->data);
+				GValue *value;
+				value = create_value_from_sqlite3_gvalue (gda_holder_get_g_type (holder),
+									  argv [i], NULL);
+				if (value)
+					g_assert (gda_holder_take_value (holder, value, NULL));
+				else {
+					g_object_ref (params);
+					return NULL;
+				}
+			}
+		}
+		g_object_ref (stmt);
+	}
+	else {
+		GdaSqlBuilder *b;
+		b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+		if (lspec->ncols > 0) {
+			gint i;
+			for (i = 0; i < lspec->ncols; i++)
+				gda_sql_builder_select_add_field (b, lspec->col_names[i], NULL, NULL);
+		}
+		else
+			gda_sql_builder_add_field_value_id (b,
+							    gda_sql_builder_add_id (b, "*"), 0);
+		gda_sql_builder_select_add_target_id (b,
+						      gda_sql_builder_add_id (b, g_value_get_string (lspec->table_name)),
+						      NULL);
+		stmt = gda_sql_builder_get_statement (b, NULL);
+		g_object_unref (b);
+		g_assert (stmt);
+	}
+	GError *lerror = NULL;
+	model = gda_connection_statement_execute_select_full (lspec->hc->cnc, stmt, params,
+							      GDA_STATEMENT_MODEL_CURSOR_FORWARD, NULL,
+							      &lerror);
 	g_object_unref (stmt);
+	if (params)
+		g_object_unref (params);
 	if (model) 
 		gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL);
+	else {
+		gda_log_message ("Virtual table: data model error: %s",
+			       lerror && lerror->message ? lerror->message : "no detail");
+		g_clear_error (&lerror);
+	}
 
 	return model;
 }
@@ -547,7 +976,9 @@ table_add (HubConnection *hc, const GValue *table_name, GError **error)
 	lspec = g_new0 (LocalSpec, 1);
 	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->data_model = NULL;
 	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_columns_func = (GdaVconnectionDataModelCreateColumnsFunc) dict_table_create_columns_func;
-	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_model_func = (GdaVconnectionDataModelCreateModelFunc) dict_table_create_model_func;
+	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_model_func = NULL;
+	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_filter_func = (GdaVconnectionDataModelParseFilterFunc) dict_table_create_filter;
+	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_filtered_model_func = (GdaVconnectionDataModelCreateFModelFunc) dict_table_create_model_func;
 	lspec->table_name = gda_value_copy (table_name);
 	lspec->hc = hc;
 	tmp = get_complete_table_name (hc, lspec->table_name);

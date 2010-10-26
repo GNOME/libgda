@@ -267,6 +267,10 @@ load_symbols (GModule *module)
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_value_int", (gpointer*) &(s3r->sqlite3_value_int)))
 		goto onerror;
+	if (! g_module_symbol (module, "sqlite3_value_int64", (gpointer*) &(s3r->sqlite3_value_int64)))
+		goto onerror;
+	if (! g_module_symbol (module, "sqlite3_value_double", (gpointer*) &(s3r->sqlite3_value_double)))
+		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_value_text", (gpointer*) &(s3r->sqlite3_value_text)))
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_value_type", (gpointer*) &(s3r->sqlite3_value_type)))

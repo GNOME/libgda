@@ -1,6 +1,7 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
+	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS)
 
@@ -8,7 +9,7 @@ bin_PROGRAMS = gda-test-connection-4.0
 if HAVE_UI
 UI_PROGS=gdaui-test-data-entries gdaui-test-widget-entry gdaui-test-errors
 endif
-noinst_PROGRAMS = gda-test-blob gda-provider-status $(UI_PROGS)
+noinst_PROGRAMS = gda-test-blob gda-provider-status virtual-test virtual-test-2 $(UI_PROGS)
 
 gda_test_connection_4_0_SOURCES = \
         gda-test-connection.c
@@ -32,6 +33,20 @@ gda_provider_status_SOURCES = \
         gda-provider-status.c
 
 gda_provider_status_LDADD = \
+        $(top_builddir)/libgda/libgda-4.0.la \
+        $(LIBGDA_LIBS)
+
+virtual_test_SOURCES = \
+	virtual-test.c
+
+virtual_test_LDADD = \
+        $(top_builddir)/libgda/libgda-4.0.la \
+        $(LIBGDA_LIBS)
+
+virtual_test_2_SOURCES = \
+	virtual-test-2.c
+
+virtual_test_2_LDADD = \
         $(top_builddir)/libgda/libgda-4.0.la \
         $(LIBGDA_LIBS)
 

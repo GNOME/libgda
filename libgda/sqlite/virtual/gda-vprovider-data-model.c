@@ -29,32 +29,20 @@
 #include <sqlite3.h>
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-iter.h>
-#include <libgda/gda-data-access-wrapper.h>
 #include <libgda/gda-blob-op.h>
 #include "../gda-sqlite.h"
 #include <sql-parser/gda-statement-struct-util.h>
+
+#define GDA_DEBUG_VIRTUAL
+#undef GDA_DEBUG_VIRTUAL
 
 struct _GdaVproviderDataModelPrivate {
 	int foo;
 };
 
-/* properties */
-enum
-{
-        PROP_0,
-};
-
 static void gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass);
 static void gda_vprovider_data_model_init       (GdaVproviderDataModel *prov, GdaVproviderDataModelClass *klass);
 static void gda_vprovider_data_model_finalize   (GObject *object);
-static void gda_vprovider_data_model_set_property (GObject *object,
-					       guint param_id,
-					       const GValue *value,
-					       GParamSpec *pspec);
-static void gda_vprovider_data_model_get_property (GObject *object,
-					       guint param_id,
-					       GValue *value,
-					       GParamSpec *pspec);
 static GObjectClass  *parent_class = NULL;
 
 static GdaConnection *gda_vprovider_data_model_create_connection (GdaServerProvider *provider);
@@ -89,10 +77,6 @@ gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
         server_class->create_operation = NULL;
         server_class->render_operation = NULL;
         server_class->perform_operation = NULL;
-
-	/* Properties */
-        object_class->set_property = gda_vprovider_data_model_set_property;
-        object_class->get_property = gda_vprovider_data_model_get_property;
 }
 
 static void
@@ -146,43 +130,6 @@ gda_vprovider_data_model_get_type (void)
 	return type;
 }
 
-static void
-gda_vprovider_data_model_set_property (GObject *object,
-				       guint param_id,
-				       G_GNUC_UNUSED const GValue *value,
-				       GParamSpec *pspec)
-{
-        GdaVproviderDataModel *prov;
-
-        prov = GDA_VPROVIDER_DATA_MODEL (object);
-        if (prov->priv) {
-                switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }
-}
-
-static void
-gda_vprovider_data_model_get_property (GObject *object,
-				       guint param_id,
-				       G_GNUC_UNUSED GValue *value,
-				       GParamSpec *pspec)
-{
-        GdaVproviderDataModel *prov;
-
-        prov = GDA_VPROVIDER_DATA_MODEL (object);
-        if (prov->priv) {
-		switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
-        }
-}
-
-
 /**
  * gda_vprovider_data_model_new
  *
@@ -218,6 +165,7 @@ static int virtualBegin (sqlite3_vtab *tab);
 static int virtualSync (sqlite3_vtab *tab);
 static int virtualCommit (sqlite3_vtab *tab);
 static int virtualRollback (sqlite3_vtab *tab);
+static int virtualRename (sqlite3_vtab *pVtab, const char *zNew);
 
 static sqlite3_module Module = {
 	0,                         /* iVersion */
@@ -239,7 +187,7 @@ static sqlite3_module Module = {
 	virtualCommit,                /* xCommit - commit transaction */
 	virtualRollback,              /* xRollback - rollback transaction */
 	NULL,                         /* xFindFunction - function overloading */
-	NULL                          /* Rename - Notification that the table will be given a new name */
+	virtualRename                 /* Rename - Notification that the table will be given a new name */
 };
 
 static GdaConnection *
@@ -325,36 +273,34 @@ gda_vprovider_data_model_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 }
 
 /* module implementation */
-#define TRACE() g_print ("== %s()\n", __FUNCTION__)
-#undef TRACE
-#define TRACE()
+#ifdef GDA_DEBUG_VIRTUAL
+  #define TRACE(table) g_print ("== %s (table=>%p)\n", __FUNCTION__, (table))
+#else
+  #define TRACE(table)
+#endif
 
 typedef struct {
 	sqlite3_vtab                 base;
 	GdaVconnectionDataModel     *cnc;
-	GdaDataModel                *wrapper;
 	GdaVConnectionTableData     *td;
 } VirtualTable;
 
 typedef struct {
-	sqlite3_vtab_cursor      base;
+	sqlite3_vtab_cursor      base; /* base.pVtab is a pointer to the sqlite3_vtab virtual table */
 	GdaDataModelIter        *iter;
 	gint                     ncols;
 } VirtualCursor;
-
-static void virtual_table_manage_real_data_model (VirtualTable *vtable);
 
 static int
 virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlite3_vtab **ppVtab, char **pzErr)
 {
 	GdaVconnectionDataModel *cnc = GDA_VCONNECTION_DATA_MODEL (pAux);
-	GdaDataModel *wrapper = NULL;
 	GString *sql;
 	gint i, ncols;
 	gchar *spec_name, *tmp;
 	GdaVConnectionTableData *td;
 
-	TRACE ();
+	TRACE (NULL);
 
 	/* find Spec */
 	g_assert (argc == 4);
@@ -371,21 +317,9 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 
 	/* preparations */
 	if (td->spec->data_model) {
-		if (gda_data_model_get_access_flags (td->spec->data_model) & GDA_DATA_MODEL_ACCESS_RANDOM) {
-			wrapper = td->spec->data_model;
-			g_object_ref (wrapper);
-		}
-		else {
-			/* no random access => use a wrapper */
-			GdaDataModel *wrapper;
-			wrapper = gda_data_access_wrapper_new (td->spec->data_model);
-			g_assert (wrapper);
-		}
-
-		ncols = gda_data_model_get_n_columns (wrapper);
+		ncols = gda_data_model_get_n_columns (td->spec->data_model);
 		if (ncols <= 0) {
 			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Data model must have at least one column"));
-			g_object_unref (wrapper);
 			return SQLITE_ERROR;
 		}
 		td->real_model = td->spec->data_model;
@@ -425,7 +359,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		if (td->columns)
 			column = g_list_nth_data (td->columns, i);
 		else
-			column = gda_data_model_describe_column (wrapper, i);
+			column = gda_data_model_describe_column (td->spec->data_model, i);
 		if (!column) {
 			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't get data model description for column %d"), i);
 			g_string_free (sql, TRUE);
@@ -484,7 +418,6 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	VirtualTable *vtable;
 	vtable = g_new0 (VirtualTable, 1);
 	vtable->cnc = cnc;
-	vtable->wrapper = wrapper;
 	vtable->td = td;
 	*ppVtab = &(vtable->base);
 
@@ -505,7 +438,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 static int
 virtualConnect (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlite3_vtab **ppVtab, char **pzErr)
 {
-	TRACE ();
+	TRACE (NULL);
 
 	return virtualCreate (db, pAux, argc, argv, ppVtab, pzErr);
 }
@@ -515,10 +448,8 @@ virtualDisconnect (sqlite3_vtab *pVtab)
 {
 	VirtualTable *vtable = (VirtualTable *) pVtab;
 
-	TRACE ();
+	TRACE (pVtab);
 
-	if (vtable->wrapper)
-		g_object_unref (vtable->wrapper);
 	g_free (vtable);
 	return SQLITE_OK;
 }
@@ -526,66 +457,22 @@ virtualDisconnect (sqlite3_vtab *pVtab)
 static int
 virtualDestroy (sqlite3_vtab *pVtab)
 {
-	TRACE ();
+	TRACE (pVtab);
 
 	return virtualDisconnect (pVtab);
-}
-
-static void
-virtual_table_manage_real_data_model (VirtualTable *vtable)
-{
-	if (vtable->td->spec->create_model_func) {
-		if (vtable->td->real_model)
-			g_object_unref (vtable->td->real_model);
-		if (vtable->wrapper)
-			g_object_unref (vtable->wrapper);
-
-		vtable->td->real_model = vtable->td->spec->create_model_func (vtable->td->spec);
-		if (! vtable->td->columns && vtable->td->spec->create_columns_func)
-			vtable->td->columns = vtable->td->spec->create_columns_func (vtable->td->spec, NULL);
-		if (vtable->td->columns) {
-			/* columns */
-			GList *list;
-			guint i, ncols;
-			ncols = gda_data_model_get_n_columns (vtable->td->real_model);
-			g_assert (ncols == g_list_length (vtable->td->columns));
-			for (i = 0, list = vtable->td->columns;
-			     i < ncols;
-			     i++, list = list->next) {
-				GdaColumn *mcol = gda_data_model_describe_column (vtable->td->real_model, i);
-				GdaColumn *ccol = (GdaColumn*) list->data;
-				if (gda_column_get_g_type (mcol) == GDA_TYPE_NULL)
-					gda_column_set_g_type (mcol, gda_column_get_g_type (ccol));
-			}
-		}
-
-		/*g_print ("Created real model %p for table %s\n", vtable->td->real_model, vtable->td->table_name);*/
-		
-		if (gda_data_model_get_access_flags (vtable->td->real_model) & GDA_DATA_MODEL_ACCESS_RANDOM) {
-			vtable->wrapper = vtable->td->real_model;
-			g_object_ref (vtable->wrapper);
-		}
-		else {
-			/* no random access => use a wrapper */
-			vtable->wrapper = gda_data_access_wrapper_new (vtable->td->real_model);
-		}
-	}
 }
 
 static int
 virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
 {
 	VirtualCursor *cursor;
-	VirtualTable *vtable = (VirtualTable*) pVTab;
 
-	TRACE ();
+	TRACE (pVTab);
 
-	virtual_table_manage_real_data_model (vtable);
-
+	/* create empty cursor */
 	cursor = g_new0 (VirtualCursor, 1);
-	cursor->iter = gda_data_model_create_iter (vtable->wrapper);
-	cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
 	*ppCursor = (sqlite3_vtab_cursor*) cursor;
+
 	return SQLITE_OK;
 }
 
@@ -594,9 +481,10 @@ virtualClose (sqlite3_vtab_cursor *cur)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
 
-	TRACE ();
+	TRACE (cur->pVtab);
 
-	g_object_unref (cursor->iter);
+	if (cursor->iter)
+		g_object_unref (cursor->iter);
 	/* FIXME: destroy table->spec->model and table->wrapper */
 	g_free (cur);
 	return SQLITE_OK;
@@ -607,7 +495,7 @@ virtualEof (sqlite3_vtab_cursor *cur)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
 
-	TRACE ();
+	TRACE (cur->pVtab);
 
 	if (gda_data_model_iter_is_valid (cursor->iter))
 		return FALSE;
@@ -621,7 +509,7 @@ virtualNext (sqlite3_vtab_cursor *cur)
 	VirtualCursor *cursor = (VirtualCursor*) cur;
 	/*VirtualTable *vtable = (VirtualTable*) cur->pVtab;*/
 
-	TRACE ();
+	TRACE (cur->pVtab);
 
 	if (!gda_data_model_iter_move_next (cursor->iter)) {
 		if (gda_data_model_iter_is_valid (cursor->iter))
@@ -637,7 +525,7 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
 
-	TRACE ();
+	TRACE (cur->pVtab);
 
 	GdaHolder *param;
 	
@@ -693,36 +581,291 @@ virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
 
-	TRACE ();
+	TRACE (cur->pVtab);
 
 	*pRowid = gda_data_model_iter_get_row (cursor->iter);
 	return SQLITE_OK;
 }
 
-static int
-virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, G_GNUC_UNUSED const char *idxStr, G_GNUC_UNUSED int argc, G_GNUC_UNUSED sqlite3_value **argv)
+/* NEVER returns %NULL */
+static GValue *
+create_value_from_sqlite3_value_notype (sqlite3_value *svalue)
 {
-	VirtualCursor *cursor = (VirtualCursor*) pVtabCursor;
+	GValue *value;
+	value = g_new0 (GValue, 1);
 
-	TRACE ();
-
-	switch (idxNum) {
-	case 0: /* no filtering at all */
-		gda_data_model_iter_move_next (cursor->iter);
-		break; 
-	default:
-		TO_IMPLEMENT;
+	switch (SQLITE3_CALL (sqlite3_value_type) (svalue)) {
+	case SQLITE_INTEGER:
+		g_value_init (value, G_TYPE_INT64);
+		g_value_set_int64 (value, SQLITE3_CALL (sqlite3_value_int64) (svalue));
+		break;
+	case SQLITE_FLOAT:
+		g_value_init (value, G_TYPE_DOUBLE);
+		g_value_set_double (value, SQLITE3_CALL (sqlite3_value_double) (svalue));
+		break;
+	case SQLITE_BLOB: {
+		GdaBinary *bin;
+		g_value_init (value, GDA_TYPE_BINARY);
+		bin = g_new0 (GdaBinary, 1);
+		bin->binary_length = SQLITE3_CALL (sqlite3_value_bytes) (svalue);
+		if (bin->binary_length > 0) {
+			bin->data = g_new (guchar, bin->binary_length);
+			memcpy (bin->data, SQLITE3_CALL (sqlite3_value_blob) (svalue),
+				bin->binary_length);
+		}
+		else
+			bin->binary_length = 0;
+		gda_value_take_binary (value, bin);
 		break;
 	}
-	return SQLITE_OK;
+	case SQLITE_NULL:
+		break;
+	case SQLITE3_TEXT:
+	default:
+		g_value_init (value, G_TYPE_STRING);
+		g_value_set_string (value, (gchar *) SQLITE3_CALL (sqlite3_value_text) (svalue));
+		break;
+	}
+	return value;
+}
+
+/*
+ * Returns: a new array of @argc values, and %NULL if @argc = 0
+ */
+static GValue **
+create_gvalues_array_from_sqlite3_array (int argc, sqlite3_value **argv)
+{
+	GValue **array;
+	gint i;
+	if (argc == 0)
+		return NULL;
+	array = g_new (GValue *, argc);
+	for (i = 0; i < argc; i++)
+		array[i] = create_value_from_sqlite3_value_notype (argv[i]);
+	return array;
+}
+
+static void
+virtual_table_manage_real_data_model (VirtualTable *vtable, int idxNum, const char *idxStr,
+				      int argc, sqlite3_value **argv)
+{
+	if (!vtable->td->spec->create_filtered_model_func && !vtable->td->spec->create_model_func)
+		return;
+
+	if (vtable->td->real_model) {
+		g_object_unref (vtable->td->real_model);
+		vtable->td->real_model = NULL;
+	}
+
+	/* actual data model creation */
+	if (vtable->td->spec->create_filtered_model_func) {
+		GValue **gargv;
+		gargv = create_gvalues_array_from_sqlite3_array (argc, argv);
+		vtable->td->real_model = vtable->td->spec->create_filtered_model_func (vtable->td->spec,
+										       idxNum, idxStr,
+										       argc, gargv);
+		if (gargv) {
+			gint i;
+			for (i = 0; i < argc; i++)
+				gda_value_free (gargv[i]);
+			g_free (gargv);
+		}
+	}
+	else if (vtable->td->spec->create_model_func)
+		vtable->td->real_model = vtable->td->spec->create_model_func (vtable->td->spec);
+	if (! vtable->td->real_model)
+		return;
+	
+	/* columns if not yet created */
+	if (! vtable->td->columns && vtable->td->spec->create_columns_func)
+		vtable->td->columns = vtable->td->spec->create_columns_func (vtable->td->spec, NULL);
+
+	if (vtable->td->columns) {
+		/* columns */
+		GList *list;
+		guint i, ncols;
+		ncols = gda_data_model_get_n_columns (vtable->td->real_model);
+		g_assert (ncols == g_list_length (vtable->td->columns));
+		for (i = 0, list = vtable->td->columns;
+		     i < ncols;
+		     i++, list = list->next) {
+			GdaColumn *mcol = gda_data_model_describe_column (vtable->td->real_model, i);
+			GdaColumn *ccol = (GdaColumn*) list->data;
+			if (gda_column_get_g_type (mcol) == GDA_TYPE_NULL)
+				gda_column_set_g_type (mcol, gda_column_get_g_type (ccol));
+		}
+	}
+
+	/*g_print ("Created real model %p for table %s\n", vtable->td->real_model, vtable->td->table_name);*/
 }
 
 static int
-virtualBestIndex (G_GNUC_UNUSED sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo)
+virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr, int argc, sqlite3_value **argv)
 {
-	TRACE ();
-	
-	pIdxInfo->idxNum = 0;
+	VirtualCursor *cursor = (VirtualCursor*) pVtabCursor;
+	VirtualTable *vtable = (VirtualTable*) pVtabCursor->pVtab;
+
+	TRACE (pVtabCursor->pVtab);
+
+	virtual_table_manage_real_data_model (vtable, idxNum, idxStr, argc, argv);
+	if (! vtable->td->real_model)
+		return SQLITE_ERROR;
+
+	/* initialize cursor */
+	if (GDA_IS_DATA_PROXY (vtable->td->real_model)) {
+		cursor->iter = g_object_new (GDA_TYPE_DATA_MODEL_ITER,
+					     "data-model", vtable->td->real_model, NULL);
+		cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
+	}
+	else {
+		cursor->iter = gda_data_model_create_iter (vtable->td->real_model);
+		cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
+	}
+
+	gda_data_model_iter_move_next (cursor->iter);
+	return SQLITE_OK;
+}
+
+#ifdef GDA_DEBUG_VIRTUAL
+
+static void
+index_info_dump (sqlite3_index_info *pIdxInfo, gboolean dump_out)
+{
+	int nc;
+	if (dump_out) {
+		g_print ("Dump of OUT sqlite3_index_info [%p]\n", pIdxInfo);
+		for (nc = 0; nc < pIdxInfo->nConstraint; nc++) {
+			struct sqlite3_index_constraint_usage *cons;
+			cons = &(pIdxInfo->aConstraintUsage[nc]);
+			g_print ("sqlite3_index_constraint_usage[%d]\n", nc);
+			g_print ("   argvIndex=%d\n", cons->argvIndex);
+			g_print ("   omit=%d\n", cons->omit);
+		}
+		g_print ("idxNum=%d\n", pIdxInfo->idxNum);
+		g_print ("orderByConsumed=%d\n", pIdxInfo->orderByConsumed);
+	}
+	else {
+		g_print ("Dump of IN sqlite3_index_info [%p]\n", pIdxInfo);
+		for (nc = 0; nc < pIdxInfo->nConstraint; nc++) {
+			struct sqlite3_index_constraint *cons;
+			cons = &(pIdxInfo->aConstraint[nc]);
+			g_print ("sqlite3_index_constraint[%d]\n", nc);
+			g_print ("   iColumn=%d\n", cons->iColumn);
+			g_print ("   op=%d\n", cons->op);
+			g_print ("   usable=%d\n", cons->usable);
+			g_print ("   iTermOffset=%d\n", cons->iTermOffset);
+		}
+		
+		for (nc = 0; nc < pIdxInfo->nOrderBy; nc++) {
+			struct sqlite3_index_orderby *cons;
+			cons = &(pIdxInfo->aOrderBy[nc]);
+			g_print ("sqlite3_index_orderby[%d]\n", nc);
+			g_print ("   iColumn=%d\n", cons->iColumn);
+			g_print ("   desc=%d\n", cons->desc);
+		}
+	}
+}
+#endif
+
+static void
+map_sqlite3_info_to_gda_filter (sqlite3_index_info *info, GdaVconnectionDataModelFilter *filter)
+{
+	gint i;
+	memset (filter, 0, sizeof (GdaVconnectionDataModelFilter));
+	filter->nConstraint = info->nConstraint;
+	if (info->nConstraint > 0) {
+		filter->aConstraint = g_new (struct GdaVirtualConstraint, filter->nConstraint);
+		filter->aConstraintUsage = g_new (struct GdaVirtualConstraintUsage, filter->nConstraint);
+		for (i = 0; i < info->nConstraint; i++) {
+			filter->aConstraint[i].iColumn = info->aConstraint[i].iColumn;
+			switch (info->aConstraint[i].op) {
+			case SQLITE_INDEX_CONSTRAINT_EQ:
+				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_EQ;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_GT:
+				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_GT;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_LE:
+				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_LEQ;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_LT:
+				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_LT;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_GE:
+				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_GEQ;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_MATCH:
+				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_REGEXP;
+				break;
+			default:
+				g_assert_not_reached ();
+			}
+
+			filter->aConstraintUsage[i].argvIndex = 0;
+			filter->aConstraintUsage[i].omit = FALSE;
+		}
+	}
+	filter->nOrderBy = info->nOrderBy;
+	if (filter->nOrderBy > 0) {
+		filter->aOrderBy = g_new (struct GdaVirtualOrderby, filter->nOrderBy);
+		for (i = 0; i < info->nOrderBy; i++) {
+			filter->aOrderBy[i].iColumn = info->aOrderBy[i].iColumn;
+			filter->aOrderBy[i].desc = info->aOrderBy[i].desc ? TRUE : FALSE;
+		}
+	}
+	filter->idxNum = 0;
+	filter->idxPointer = NULL;
+	filter->orderByConsumed = FALSE;
+	filter->estimatedCost = info->estimatedCost;
+}
+
+/*
+ * Also frees @filter's dynamically allocated parts
+ */
+static void
+map_consume_gda_filter_to_sqlite3_info (GdaVconnectionDataModelFilter *filter, sqlite3_index_info *info)
+{
+	gint i;
+	g_assert (filter->nConstraint == info->nConstraint);
+	if (info->nConstraint > 0) {
+		for (i = 0; i < info->nConstraint; i++) {
+			info->aConstraintUsage[i].argvIndex = filter->aConstraintUsage[i].argvIndex;
+			info->aConstraintUsage[i].omit = filter->aConstraintUsage[i].omit ? 1 : 0;
+		}
+		g_free (filter->aConstraint);
+		g_free (filter->aConstraintUsage);
+
+	}
+	if (filter->nOrderBy > 0)
+		g_free (filter->aOrderBy);
+	info->idxNum = filter->idxNum;
+	info->idxStr = (char*) filter->idxPointer;
+	info->needToFreeIdxStr = 0;
+	info->orderByConsumed = filter->orderByConsumed ? 1 : 0;
+	info->estimatedCost = filter->estimatedCost;
+}
+
+static int
+virtualBestIndex (sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo)
+{
+	VirtualTable *vtable = (VirtualTable *) tab;
+
+	TRACE (tab);
+#ifdef GDA_DEBUG_VIRTUAL
+	index_info_dump (pIdxInfo, FALSE);
+#endif
+
+	if (vtable->td->spec->create_filter_func) {
+		GdaVconnectionDataModelFilter filter;
+		map_sqlite3_info_to_gda_filter (pIdxInfo, &filter);
+		vtable->td->spec->create_filter_func (vtable->td->spec, &filter);
+		map_consume_gda_filter_to_sqlite3_info (&filter, pIdxInfo);
+#ifdef GDA_DEBUG_VIRTUAL
+		index_info_dump (pIdxInfo, TRUE);
+#endif
+	}
+
+
 	return SQLITE_OK;
 }
 
@@ -743,7 +886,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 	VirtualTable *vtable = (VirtualTable *) tab;
 	const gchar *api_misuse_error = NULL;
 
-	TRACE ();
+	TRACE (tab);
 
 	/* REM: when using the values of apData[], the limit is
 	 * (nData -1 ) and not nData because the last column of the corresponding CREATE TABLE ...
@@ -754,7 +897,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 		/* DELETE */
 		if (SQLITE3_CALL (sqlite3_value_type) (apData[0]) == SQLITE_INTEGER) {
 			gint rowid = SQLITE3_CALL (sqlite3_value_int) (apData [0]);
-			return gda_data_model_remove_row (vtable->wrapper, rowid, NULL) ? SQLITE_OK : SQLITE_READONLY;
+			return gda_data_model_remove_row (vtable->td->real_model, rowid, NULL) ? SQLITE_OK : SQLITE_READONLY;
 		}
 		else {
 			api_misuse_error = "argc==1 and argv[0] is not an integer";
@@ -774,7 +917,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 		for (i = 2; i < (nData - 1); i++) {
 			GType type;
 			GValue *value;
-			type = gda_column_get_g_type (gda_data_model_describe_column (vtable->wrapper, i - 2));
+			type = gda_column_get_g_type (gda_data_model_describe_column (vtable->td->real_model, i - 2));
 			if ((type != GDA_TYPE_NULL) && SQLITE3_CALL (sqlite3_value_text) (apData [i]))
 				value = gda_value_new_from_string ((const gchar*) SQLITE3_CALL (sqlite3_value_text) (apData [i]), type);
 			else
@@ -785,7 +928,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 		}
 		values = g_list_reverse (values);
 
-		newrow = gda_data_model_append_values (vtable->wrapper, values, NULL);
+		newrow = gda_data_model_append_values (vtable->td->real_model, values, NULL);
 		g_list_foreach (values, (GFunc) gda_value_free, NULL);
 		g_list_free (values);
 		if (newrow < 0)
@@ -809,9 +952,9 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			GError *error = NULL;
 
 			/*g_print ("%d => %s\n", i, SQLITE3_CALL (sqlite3_value_text) (apData [i]));*/
-			type = gda_column_get_g_type (gda_data_model_describe_column (vtable->wrapper, i - 2));
+			type = gda_column_get_g_type (gda_data_model_describe_column (vtable->td->real_model, i - 2));
 			value = gda_value_new_from_string ((const gchar*) SQLITE3_CALL (sqlite3_value_text) (apData [i]), type);
-			res = gda_data_model_set_value_at (vtable->wrapper, i - 2, rowid, value, &error);
+			res = gda_data_model_set_value_at (vtable->td->real_model, i - 2, rowid, value, &error);
 			gda_value_free (value);
 			if (!res) {
 				g_print ("Error: %s\n", error && error->message ? error->message : "???");
@@ -836,30 +979,39 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 static int
 virtualBegin (sqlite3_vtab *tab)
 {
-	TRACE ();
-
-	virtual_table_manage_real_data_model ((VirtualTable *) tab);
-
+	TRACE (tab);
+	/* no documentation currently available, don't do anything */
 	return SQLITE_OK;
 }
 
 static int
 virtualSync (G_GNUC_UNUSED sqlite3_vtab *tab)
 {
-	TRACE ();
+	TRACE (tab);
+	/* no documentation currently available, don't do anything */
 	return SQLITE_OK;
 }
 
 static int
 virtualCommit (G_GNUC_UNUSED sqlite3_vtab *tab)
 {
-	TRACE ();
+	TRACE (tab);
+	/* no documentation currently available, don't do anything */
 	return SQLITE_OK;
 }
 
 static int
 virtualRollback (G_GNUC_UNUSED sqlite3_vtab *tab)
 {	
-	TRACE ();
+	TRACE (tab);
+	/* no documentation currently available, don't do anything */
+	return SQLITE_OK;
+}
+
+static int
+virtualRename(sqlite3_vtab *pVtab, const char *zNew)
+{
+	TRACE (pVtab);
+	/* not yet analysed and implemented */
 	return SQLITE_OK;
 }

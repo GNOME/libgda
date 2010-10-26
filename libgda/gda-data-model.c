@@ -784,6 +784,12 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * gda_data_model_iter_move_next() (and gda_data_model_iter_move_prev() if
  * supported).
  *
+ * Note: for the #GdaDataProxy data model (which proxies any #GdaDataModel for modifications and
+ * has twice the number of columns of the proxied data model), this method will create an iterator
+ * in which only the columns of the proxied data model appear. If you need to have a #GdaDataModelIter
+ * in which all the proxy's columns appear, create it using:
+ * <programlisting><![CDATA[iter = g_object_new (GDA_TYPE_DATA_MODEL_ITER, "data-model", proxy, NULL);]]></programlisting>
+ *
  * Returns: (transfer full): a #GdaDataModelIter object, or %NULL if an error occurred
  */
 GdaDataModelIter *

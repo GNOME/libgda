@@ -62,7 +62,7 @@ This is a base virtual class for all virtual connection implementations
 
 </para>
 
-@cnc: 
+@vcnc: 
 @Returns: 
 
 

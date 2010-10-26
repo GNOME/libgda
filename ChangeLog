@@ -1,16 +1,2 @@
-2010-10-16  Murray Cumming  <murrayc@murrayc-x61>
-
-	reviewed by: <delete if not using a buddy>
-
-	* libgda/gda-meta-store.c:
-	* libgda/sql-parser/gda-statement-struct-compound.c:
-	* libgda/sql-parser/gda-statement-struct-delete.c:
-	* libgda/sql-parser/gda-statement-struct-insert.c:
-	* libgda/sql-parser/gda-statement-struct-pspec.c:
-	* libgda/sql-parser/gda-statement-struct-select.c:
-	* libgda/sql-parser/gda-statement-struct-trans.c:
-	* libgda/sql-parser/gda-statement-struct-unknown.c:
-	* libgda/sql-parser/gda-statement-struct-update.c:
-
 The ChangeLog is auto-generated when releasing. If you
 are seeing this, use 'git log' for a detailed list of changes.

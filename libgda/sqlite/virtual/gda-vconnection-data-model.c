@@ -233,7 +233,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
 	g_return_val_if_fail (spec, FALSE);
-	g_return_val_if_fail (spec->data_model || (spec->create_columns_func && spec->create_model_func), FALSE);
+	g_return_val_if_fail (spec->data_model || (spec->create_columns_func && (spec->create_model_func || spec->create_filtered_model_func)), FALSE);
 	if (spec->data_model)
 		g_return_val_if_fail (GDA_IS_DATA_MODEL (spec->data_model), FALSE);
 
