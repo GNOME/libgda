@@ -34,6 +34,7 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-column.h>
+#include <libgda/gda-data-model-iter.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
@@ -331,6 +332,11 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  *
  * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
  *
+ * Warning: this function uses a #GdaDataModelIter iterator, and if @model does not offer a random access
+ * (check using gda_data_model_get_access_flags()), the iterator will be the same as normally used
+ * to access data in @model previously to calling this method, and this iterator will be moved (point to
+ * another row).
+ *
  * Returns: TRUE if no error occurred
  */
 gboolean
@@ -340,13 +346,14 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 					 gboolean use_col_ids)
 {
 	gboolean retval = TRUE;
-	gint nrows, i;
 	gint *rcols, rnb_cols;
 	gchar **col_ids = NULL;
 	xmlNodePtr data = NULL;
+	GdaDataModelIter *iter;
 
 	/* compute columns if not provided */
 	if (!cols) {
+		gint i;
 		rnb_cols = gda_data_model_get_n_columns (model);
 		rcols = g_new (gint, rnb_cols);
 		for (i = 0; i < rnb_cols; i++)
@@ -377,23 +384,34 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 	}
 
 	/* add the model data to the XML output */
-	if (!rows)
-		nrows = gda_data_model_get_n_rows (model);
-	else
-		nrows = nb_rows;
-	if (nrows > 0) {
+	iter = gda_data_model_create_iter (model);
+	if (iter && (gda_data_model_iter_get_row (iter) == -1) && ! gda_data_model_iter_move_next (iter)) {
+		g_object_unref (iter);
+		iter = NULL;
+	}
+	if (iter) {
 		xmlNodePtr row;
-		gint r, c;
-
+		
 		data = xmlNewChild (parent, NULL, (xmlChar*)"gda_array_data", NULL);
-		for (r = 0; (r < nrows) && retval; r++) {
+		for (; retval && gda_data_model_iter_is_valid (iter); gda_data_model_iter_move_next (iter)) {
+			gint c;
+			if (rows) {
+				gint r;
+				for (r = 0; r < nb_rows; r++) { 
+					if (gda_data_model_iter_get_row (iter) == rows[r])
+						break;
+				}
+				if (r == nb_rows)
+					continue;
+			}
+
 			row = xmlNewChild (data, NULL,  (xmlChar*)"gda_array_row", NULL);
 			for (c = 0; c < rnb_cols; c++) {
 				GValue *value;
 				gchar *str = NULL;
 				xmlNodePtr field = NULL;
 
-				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], rows ? rows [r] : r, NULL);
+				value = (GValue*) gda_data_model_iter_get_value_at (iter, rcols[c]);
 				if (!value) {
 					retval = FALSE;
 					break;
@@ -436,10 +454,11 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 				g_free (str);
 			}
 		}
+		g_object_unref (iter);
 	}
 
-	if(!cols)
-		g_free(rcols);
+	if (!cols)
+		g_free (rcols);
 
 	if (use_col_ids) {
 		gint c;
