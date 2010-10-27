@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2006 - 2009 The GNOME Foundation.
+ * Copyright (C) 2006 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -47,6 +47,7 @@ struct _GdaDataModelImport {
 struct _GdaDataModelImportClass {
 	GObjectClass               parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
