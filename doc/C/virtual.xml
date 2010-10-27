@@ -32,6 +32,8 @@ cnc = gda_virtual_connection_open (provider, NULL);
       <listitem><para><filename class="directory">samples/Virtual</filename></para></listitem>
       <listitem><para><filename class="directory">samples/DirDataModel</filename></para></listitem>
       <listitem><para><filename class="directory">samples/F-Spot</filename></para></listitem>
+      <listitem><para><filename class="directory">testing/virtual-test.c</filename></para></listitem>
+      <listitem><para><filename class="directory">testing/virtual-test-2.c</filename></para></listitem>
     </itemizedlist>
   </para>
   &libgda-virtual-notice;

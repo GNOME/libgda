@@ -1,6 +1,5 @@
 /* 
- * GDA common library
- * Copyright (C) 2007 - 2008 The GNOME Foundation.
+ * Copyright (C) 2007 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -129,7 +128,8 @@ gda_virtual_connection_get_type (void)
  * @virtual_provider: a #GdaVirtualProvider object
  * @error: a place to store errors, or %NULL
  *
- * Creates and opens a new virtual connection using the @virtual_provider provider
+ * Creates and opens a new virtual connection using the @virtual_provider provider. The returned value
+ * is a new #GdaVirtualConnection which needs to be used to actually add some contents to the virtual connection.
  *
  * Returns: a new #GdaConnection object, or %NULL if an error occurred
  */
@@ -165,6 +165,9 @@ gda_virtual_connection_open (GdaVirtualProvider *virtual_provider, GError **erro
  * contains the %GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flag, then the returned connection will be
  * a thread wrapped connection, and the actual (wrapped) virtual connection can be obtained through
  * the "gda-virtual-connection" user property (use g_object_get_data() to get it).
+ *
+ * The returned value is a new #GdaVirtualConnection which needs to be used to actually add some
+ * contents to the virtual connection.
  *
  * Returns: a new #GdaConnection object, or %NULL if an error occurred
  */

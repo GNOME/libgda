@@ -69,6 +69,11 @@ depend on the format of the imported data listed here:
 
 </para>
 
+<!-- ##### ARG GdaDataModelImport:strict ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaDataModelImport:xml-node ##### -->
 <para>
 
@@ -80,10 +85,6 @@ depend on the format of the imported data listed here:
 </para>
 
 @parent_class: 
-@_gda_reserved1: 
-@_gda_reserved2: 
-@_gda_reserved3: 
-@_gda_reserved4: 
 
 <!-- ##### STRUCT GdaDataModelImportPrivate ##### -->
 <para>

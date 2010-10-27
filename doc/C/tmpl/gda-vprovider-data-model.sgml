@@ -6,14 +6,14 @@ Virtual provider for connections based on a list of GdaDataModel
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-This provider is used to create virtual connections in which each #GdaDataModel data models can be
-added as tables in the connection. Using gda_server_provider_create_connection() will generate a
-#GdaVconnectionDataModel connection object.
+  This provider is used to create virtual connections in which each #GdaDataModel data model can be
+  added as a table in the connection. Using gda_virtual_connection_open() with this provider as argument
+  will generate a #GdaVconnectionDataModel connection object, from which data models can be added.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  See also the <link linkend="VirtualIntro">introduction to virtual connections</link>.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->

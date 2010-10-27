@@ -1483,7 +1483,7 @@ gda_set_get_nth_holder (GdaSet *set, gint pos)
 		for (list = set->holders; list; list = list->next)
 			g_array_append_val (set->priv->holders_array, list->data);
 	}
-	if ((guint)pos > set->priv->holders_array->len)
+	if ((guint)pos >= set->priv->holders_array->len)
 		return NULL;
 	else
 		return g_array_index (set->priv->holders_array, GdaHolder*, pos);

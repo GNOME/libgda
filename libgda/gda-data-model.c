@@ -784,6 +784,12 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * gda_data_model_iter_move_next() (and gda_data_model_iter_move_prev() if
  * supported).
  *
+ * Note: for the #GdaDataProxy data model (which proxies any #GdaDataModel for modifications and
+ * has twice the number of columns of the proxied data model), this method will create an iterator
+ * in which only the columns of the proxied data model appear. If you need to have a #GdaDataModelIter
+ * in which all the proxy's columns appear, create it using:
+ * <programlisting><![CDATA[iter = g_object_new (GDA_TYPE_DATA_MODEL_ITER, "data-model", proxy, NULL);]]></programlisting>
+ *
  * Returns: (transfer full): a #GdaDataModelIter object, or %NULL if an error occurred
  */
 GdaDataModelIter *
@@ -1007,6 +1013,11 @@ static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, g
  * gda_data_model_export_to_file() documentation for more information about the @options argument (except for the
  * "OVERWRITE" option).
  *
+ * Warning: this function uses a #GdaDataModelIter iterator, and if @model does not offer a random access
+ * (check using gda_data_model_get_access_flags()), the iterator will be the same as normally used
+ * to access data in @model previously to calling this method, and this iterator will be moved (point to
+ * another row).
+ *
  * Returns: a new string.
  */
 gchar *
@@ -1223,7 +1234,12 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  *   <listitem><para>"INVALID_AS_NULL": a boolean value which, if set to %TRUE, considers any invalid data (for example for the date related values) as NULL</para></listitem>
  * </itemizedlist>
  *
- * Upon errors FALSE will be returned and @error will be assigned a
+ * Warning: this function uses a #GdaDataModelIter iterator, and if @model does not offer a random access
+ * (check using gda_data_model_get_access_flags()), the iterator will be the same as normally used
+ * to access data in @model previously to calling this method, and this iterator will be moved (point to
+ * another row).
+ *
+ * Upon errors %FALSE will be returned and @error will be assigned a
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: TRUE if no error occurred
@@ -1231,8 +1247,8 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 gboolean
 gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format, 
 			       const gchar *file,
-			       const gint *cols, G_GNUC_UNUSED gint nb_cols,
-			       const gint *rows, G_GNUC_UNUSED gint nb_rows,
+			       const gint *cols, gint nb_cols,
+			       const gint *rows, gint nb_rows,
 			       GdaSet *options, GError **error)
 {
 	gchar *body;
@@ -1242,7 +1258,7 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 	g_return_val_if_fail (!options || GDA_IS_SET (options), FALSE);
 	g_return_val_if_fail (file, FALSE);
 
-	body = gda_data_model_export_to_string (model, format, cols, nb_cols, rows, nb_cols, options);
+	body = gda_data_model_export_to_string (model, format, cols, nb_cols, rows, nb_rows, options);
 	if (options) {
 		GdaHolder *holder;
 		
@@ -1275,31 +1291,50 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 }
 
 static gchar *
-export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, const gint *rows, gint nb_rows, 
-			  gchar sep, gchar quote, gboolean field_quotes, gboolean null_as_empty, gboolean invalid_as_null)
+export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols,
+			  const gint *rows, gint nb_rows, 
+			  gchar sep, gchar quote, gboolean field_quotes,
+			  gboolean null_as_empty, gboolean invalid_as_null)
 {
 	GString *str;
-	gchar *retval;
-	gint c, nbrows, r;
+	gint c;
+	GdaDataModelIter *iter;
+	gboolean addnl = FALSE;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	str = g_string_new ("");
-	if (!rows)
-		nbrows = gda_data_model_get_n_rows (model);
-	else
-		nbrows = nb_rows;
+	iter = gda_data_model_create_iter (model);
+	if (!iter)
+		return g_string_free (str, FALSE);
 
-	for (r = 0; r < nbrows; r++) {
-		if (r > 0)
+	if ((gda_data_model_iter_get_row (iter) == -1) && ! gda_data_model_iter_move_next (iter)) {
+		g_object_unref (iter);
+		return g_string_free (str, FALSE);
+	}
+
+	for (; gda_data_model_iter_is_valid (iter); gda_data_model_iter_move_next (iter)) {
+		if (rows) {
+			gint r;
+			for (r = 0; r < nb_rows; r++) { 
+				if (gda_data_model_iter_get_row (iter) == rows[r])
+					break;
+			}
+			if (r == nb_rows)
+				continue;
+		}
+		
+		if (addnl)
 			str = g_string_append_c (str, '\n');
+		else
+			addnl = TRUE;
 
 		for (c = 0; c < nb_cols; c++) {
 			GValue *value;
 			gchar *txt;
 
-			value = (GValue *) gda_data_model_get_value_at (model, cols[c], rows ? rows[r] : r, NULL);
-			if (invalid_as_null) {
+			value = (GValue*) gda_data_model_iter_get_value_at (iter, cols[c]);
+			if (value && invalid_as_null) {
 				if ((G_VALUE_TYPE (value) == G_TYPE_DATE)) {
 					GDate *date = (GDate*) g_value_get_boxed (value);
 					if (!g_date_valid (date))
@@ -1351,10 +1386,8 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, c
 		}
 	}
 
-	retval = str->str;
-	g_string_free (str, FALSE);
-
-	return retval;
+	g_object_unref (iter);
+	return g_string_free (str, FALSE);
 }
 
 static void

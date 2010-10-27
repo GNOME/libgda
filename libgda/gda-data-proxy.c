@@ -3338,12 +3338,40 @@ static void create_columns (GdaDataProxy *proxy)
 	for (; i < 2 * proxy->priv->model_nb_cols; i++) {
 		GdaColumn *orig;
 		const gchar *cname;
-		gchar *newname;
+		gchar *newname, *id;
 		gint k;
 		
 		orig = gda_data_model_describe_column (proxy->priv->model, 
 						       i -  proxy->priv->model_nb_cols);
 		proxy->priv->columns[i] = gda_column_copy (orig);
+		g_object_get ((GObject*) proxy->priv->columns[i], "id", &id, NULL);
+		if (id) {
+			gchar *newid;
+			newid = g_strdup_printf ("pre%s", id);
+			g_object_set ((GObject*) proxy->priv->columns[i], "id", newid, NULL);
+
+			/* make sure there is no duplicate ID */
+			for (k = 0; ; k++) {
+				gint j;
+				for (j = 0; j < i; j++) {
+					gchar *id2;
+					g_object_get ((GObject*) proxy->priv->columns[j], "id", &id2, NULL);
+					if (id2 && *id2 && !strcmp (id2, newid)) {
+						g_free (id2);
+						break;
+					}
+				}
+				if (j == i)
+					break;
+
+				g_free (newid);
+				newid = g_strdup_printf ("pre%s_%d", id, k);
+				g_object_set ((GObject*) proxy->priv->columns[i], "id", newid, NULL);
+			}
+			g_free (newid);
+			g_free (id);
+		}
+
 		cname =  gda_column_get_name (orig);
 		if (cname && *cname) 
 			newname = g_strdup_printf ("pre%s", cname);
