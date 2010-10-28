@@ -711,6 +711,8 @@ gda_holder_get_id (GdaHolder *holder)
  *
  * If @holder is set to NULL, then the returned value is a #GDA_TYPE_NULL GValue.
  *
+ * If @holder is invalid, then the returned value is %NULL.
+ *
  * Returns: the value, or %NULL
  */
 const GValue *
@@ -719,22 +721,26 @@ gda_holder_get_value (GdaHolder *holder)
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 	g_return_val_if_fail (holder->priv, NULL);
 
-	if (!holder->priv->full_bind) {
-		/* return default value if possible */
-		if (holder->priv->default_forced) {
-			g_assert (holder->priv->default_value);
-			if (G_VALUE_TYPE (holder->priv->default_value) == holder->priv->g_type) 
-				return holder->priv->default_value;
-			else
-				return NULL;
-		}
-
-		if (!holder->priv->value)
-			holder->priv->value = gda_value_new_null ();
-		return holder->priv->value;
-	}
-	else 
+	if (holder->priv->full_bind)
 		return gda_holder_get_value (holder->priv->full_bind);
+	else {
+		if (holder->priv->valid) {
+			/* return default value if possible */
+			if (holder->priv->default_forced) {
+				g_assert (holder->priv->default_value);
+				if (G_VALUE_TYPE (holder->priv->default_value) == holder->priv->g_type) 
+					return holder->priv->default_value;
+				else
+					return NULL;
+			}
+			
+			if (!holder->priv->value)
+				holder->priv->value = gda_value_new_null ();
+			return holder->priv->value;
+		}
+		else
+			return NULL;
+	}
 }
 
 /**
@@ -1220,7 +1226,6 @@ gda_holder_force_invalid (GdaHolder *holder)
 
 	holder->priv->invalid_forced = TRUE;
 	holder->priv->valid = FALSE;
-	
 	if (holder->priv->value) {
 		if (holder->priv->is_freeable)
 			gda_value_free (holder->priv->value);
