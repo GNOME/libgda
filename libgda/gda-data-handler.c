@@ -76,7 +76,8 @@ gda_data_handler_iface_init (G_GNUC_UNUSED gpointer g_class)
  * to use variables in statements instead of value literals, see
  * the <link linkend="GdaSqlParser.description">GdaSqlParser</link> for more information.
  *
- * If the value is NULL or is of type GDA_TYPE_NULL, the returned string is "NULL".
+ * If the value is NULL or is of type GDA_TYPE_NULL,
+ * or is a G_TYPE_STRING and g_value_get_string() returns %NULL, the returned string is "NULL".
  *
  * Returns: (transfer full): the new string, or %NULL if an error occurred
  */
