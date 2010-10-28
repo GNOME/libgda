@@ -225,7 +225,7 @@ gda_handler_string_get_sql_from_value (GdaDataHandler *iface, const GValue *valu
 		g_free (str);
 	}
 	else
-		retval = g_strdup ("''");
+		retval = g_strdup ("NULL");
 
 	return retval;
 }
