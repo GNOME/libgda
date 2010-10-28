@@ -1826,17 +1826,26 @@ add_error_too_few_values (GdaDataModelImport *model)
 
 	switch (model->priv->format){
 	case FORMAT_CSV:
-		str = g_strdup_printf (_("Row at line %d does not have enough values, "
-					 "completed with NULL values"),
-				       model->priv->extract.csv.text_line > 1 ?
-				       model->priv->extract.csv.text_line - 1 :
-				       model->priv->extract.csv.text_line);
+		if (model->priv->strict)
+			str = g_strdup_printf (_("Row at line %d does not have enough values"),
+					       model->priv->extract.csv.text_line > 1 ?
+					       model->priv->extract.csv.text_line - 1 :
+					       model->priv->extract.csv.text_line);
+		else
+			str = g_strdup_printf (_("Row at line %d does not have enough values, "
+						 "completed with NULL values"),
+					       model->priv->extract.csv.text_line > 1 ?
+					       model->priv->extract.csv.text_line - 1 :
+					       model->priv->extract.csv.text_line);
 		add_error (model, str);
 		g_free (str);
 		break;
 	default:
-		add_error (model, ("Row does not have enough values, "
-				    "completed with NULL values"));
+		if (model->priv->strict)
+			add_error (model, ("Row does not have enough values"));
+		else
+			add_error (model, ("Row does not have enough values, "
+					   "completed with NULL values"));
 		break;
 	}
 }
