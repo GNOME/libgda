@@ -227,7 +227,7 @@ test3 (GError **error)
 		return FALSE;
 	}
 	cvalue = gda_holder_get_value (h);
-	if (!gda_value_is_null (cvalue)) {
+	if (cvalue) {
 		g_set_error (error, 0, 0, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
