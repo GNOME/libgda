@@ -33,6 +33,7 @@
 #include <winsock.h>
 #endif
 #include <mysql.h>
+#include <mysqld_error.h>
 #include <gda-mysql-reuseable.h>
 
 /*
