@@ -1819,9 +1819,11 @@ gda_mysql_provider_statement_prepare (GdaServerProvider  *provider,
 static GdaMysqlPStmt *
 prepare_stmt_simple (MysqlConnectionData  *cdata,
 		     const gchar          *sql,
-		     GError              **error)
+		     GError              **error,
+		     gboolean *out_protocol_error)
 {
 	GdaMysqlPStmt *ps = NULL;
+	*out_protocol_error = FALSE;
 	g_return_val_if_fail (sql != NULL, NULL);
 
 	MYSQL_STMT *mysql_stmt = mysql_stmt_init (cdata->mysql);
@@ -1839,6 +1841,8 @@ prepare_stmt_simple (MysqlConnectionData  *cdata,
 	
 	if (mysql_stmt_prepare (mysql_stmt, sql, strlen (sql))) {
 		_gda_mysql_make_error (cdata->cnc, NULL, mysql_stmt, error);
+		if (mysql_stmt_errno (mysql_stmt) == ER_UNSUPPORTED_PS)
+			*out_protocol_error = TRUE;
 		mysql_stmt_close (mysql_stmt);
 		ps = NULL;
 	}
@@ -2098,12 +2102,50 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			 */
 			gchar *sql = gda_mysql_provider_statement_to_sql (provider, cnc, stmt, 
 									  params, 0, NULL, error);
+			gboolean proto_error;
 			if (!sql)
 				return NULL;
-			ps = prepare_stmt_simple (cdata, sql, error);
+			ps = prepare_stmt_simple (cdata, sql, error, &proto_error);
+			if (!ps) {
+				if (proto_error) {
+					/* MySQL's "command is not supported in the prepared
+					 * statement protocol yet" error
+					 * => try to execute the SQL using mysql_real_query() */
+					GdaConnectionEvent *event;
+					if (mysql_real_query (cdata->mysql, sql, strlen (sql))) {
+						event = _gda_mysql_make_error (cnc, cdata->mysql, NULL, error);
+						gda_connection_add_event (cnc, event);
+						g_free (sql);
+						return NULL;
+					}
+
+					g_free (sql);
+					my_ulonglong affected_rows;
+					/* Create a #GdaSet containing "IMPACTED_ROWS" */
+					/* Create GdaConnectionEvent notice with the type of command and impacted rows */
+					affected_rows = mysql_affected_rows (cdata->mysql);
+					if (affected_rows == (my_ulonglong)~0) {
+						TO_IMPLEMENT;
+						return (GObject *) gda_data_model_array_new (0);
+					}
+					else {
+						gchar *str;
+						event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
+						str = g_strdup_printf ("%llu", affected_rows);
+						gda_connection_event_set_description (event, str);
+						g_free (str);
+						
+						gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
+						return (GObject *) gda_set_new_inline
+							(1, "IMPACTED_ROWS", G_TYPE_INT, (int) affected_rows);
+					}
+				}
+				else {
+					g_free (sql);
+					return NULL;
+				}
+			}
 			g_free (sql);
-			if (!ps)
-				return NULL;
 		}
 		else {
 			ps = (GdaMysqlPStmt *) gda_connection_get_prepared_statement (cnc, stmt);
@@ -2479,11 +2521,13 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	}
 	else {
 		/* execute prepared statement using C API depending on its kind */
-		if (!g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SELECT", 6) ||
+		my_ulonglong affected_rows;
+		affected_rows = mysql_stmt_affected_rows (ps->mysql_stmt);
+		if ((affected_rows == (my_ulonglong)~0) ||
+		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SELECT", 6) ||
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SHOW", 4) ||
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DESCRIBE", 8) ||
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXPLAIN", 7)) {
-			
 			if (mysql_stmt_store_result (ps->mysql_stmt)) {
 				_gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, error);
 			}
@@ -2500,27 +2544,20 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 		}
 		else {
-			my_ulonglong affected_rows = (my_ulonglong)~0;
 
 			/* Create a #GdaSet containing "IMPACTED_ROWS" */
 			/* Create GdaConnectionEvent notice with the type of command and impacted rows */
-			affected_rows = mysql_stmt_affected_rows (ps->mysql_stmt);
-			if (affected_rows >= 0) {
-				GdaConnectionEvent *event;
-                                gchar *str;
-                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
-                                str = g_strdup_printf ("%llu", affected_rows);
-                                gda_connection_event_set_description (event, str);
-                                g_free (str);
-
-                                return_value = (GObject *) gda_set_new_inline
-                                        (1, "IMPACTED_ROWS", G_TYPE_INT, (int) affected_rows);
-
-				gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
-			}
-			else {
-				return_value = (GObject *) gda_data_model_array_new (0);
-			}
+			GdaConnectionEvent *event;
+			gchar *str;
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
+			str = g_strdup_printf ("%llu", affected_rows);
+			gda_connection_event_set_description (event, str);
+			g_free (str);
+			
+			return_value = (GObject *) gda_set_new_inline
+				(1, "IMPACTED_ROWS", G_TYPE_INT, (int) affected_rows);
+			
+			gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
 
 			if (last_inserted_row) {
 				my_ulonglong last_row;
