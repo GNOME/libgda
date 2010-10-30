@@ -824,6 +824,32 @@ gda_data_select_get_connection (GdaDataSelect *model)
 	return model->priv->cnc;
 }
 
+/**
+ * gda_data_select_set_columns
+ * @model: a #GdaDataSelect data model
+ * @columns: (transfer full): a lis of #GdaColumn objects
+ *
+ * Makes @columns the list of columns for @model. Both the list and each #GdaColumn object in the
+ * list are 'stolen' by @model (ie. when this function returns the caller should not use anymore
+ * the list or each column object in it). This method should not be used directly, it is used by
+ * database provider's implementations.
+ *
+ * Since: 4.2.1
+ */
+void
+gda_data_select_set_columns (GdaDataSelect *model, GSList *columns)
+{
+	g_return_if_fail (GDA_IS_DATA_SELECT (model));
+	g_return_if_fail (model->priv);
+
+	if (model->priv->sh->columns) {
+		g_slist_foreach (model->priv->sh->columns, (GFunc) g_object_unref, NULL);
+		g_slist_free (model->priv->sh->columns);
+		model->priv->sh->columns = NULL;
+	}
+	model->priv->sh->columns = columns;
+}
+
 /*
  * Add the +/-<col num> holders to model->priv->sh->modif_internals->modif_set
  */
@@ -1576,7 +1602,7 @@ gda_data_select_get_n_columns (GdaDataModel *model)
 	if (imodel->prep_stmt)
 		return imodel->prep_stmt->ncols;
 	else
-		return 0;
+		return g_slist_length (imodel->priv->sh->columns);
 }
 
 static GdaColumn *

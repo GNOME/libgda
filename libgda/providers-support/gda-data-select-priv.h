@@ -38,7 +38,7 @@ GType          gda_data_select_get_type                     (void) G_GNUC_CONST;
 void           gda_data_select_take_row                     (GdaDataSelect *model, GdaRow *row, gint rownum);
 GdaRow        *gda_data_select_get_stored_row               (GdaDataSelect *model, gint rownum);
 GdaConnection *gda_data_select_get_connection               (GdaDataSelect *model);
-
+void           gda_data_select_set_columns                  (GdaDataSelect *model, GSList *columns);
 
 /* internal API */
 void           _gda_data_select_share_private_data (GdaDataSelect *master, GdaDataSelect *slave);
