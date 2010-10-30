@@ -2125,8 +2125,18 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 					/* Create GdaConnectionEvent notice with the type of command and impacted rows */
 					affected_rows = mysql_affected_rows (cdata->mysql);
 					if (affected_rows == (my_ulonglong)~0) {
-						TO_IMPLEMENT;
-						return (GObject *) gda_data_model_array_new (0);
+						GdaDataModelAccessFlags flags;
+						
+						if (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS)
+							flags = GDA_DATA_MODEL_ACCESS_RANDOM;
+						else
+							flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
+						gda_connection_internal_statement_executed (cnc, stmt,
+											    NULL, NULL); /* required: help @cnc keep some stats */
+
+						return (GObject *) gda_mysql_recordset_new_direct (cnc,
+												   flags,
+												   col_types);
 					}
 					else {
 						gchar *str;
@@ -2527,6 +2537,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SELECT", 6) ||
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SHOW", 4) ||
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DESCRIBE", 8) ||
+		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXECUTE", 7) ||
 		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXPLAIN", 7)) {
 			if (mysql_stmt_store_result (ps->mysql_stmt)) {
 				_gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, error);

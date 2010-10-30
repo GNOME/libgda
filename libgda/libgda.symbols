@@ -310,6 +310,7 @@
 	gda_data_select_get_stored_row
 	gda_data_select_get_type
 	gda_data_select_rerun
+	gda_data_select_set_columns
 	gda_data_select_set_modification_statement
 	gda_data_select_set_modification_statement_sql
 	gda_data_select_set_row_selection_condition

@@ -1397,6 +1397,7 @@ GdaDataSelectClass
 gda_data_select_take_row
 gda_data_select_get_stored_row
 gda_data_select_get_connection
+gda_data_select_set_columns
 <SUBSECTION>
 gda_column_set_name
 gda_column_set_description

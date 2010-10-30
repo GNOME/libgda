@@ -1,5 +1,5 @@
 /* GDA Mysql provider
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
@@ -26,6 +26,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-connection-private.h>
+#include <libgda/providers-support/gda-data-select-priv.h>
 #include "gda-mysql.h"
 #include "gda-mysql-recordset.h"
 #include "gda-mysql-provider.h"
@@ -78,13 +79,16 @@ gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
 
 struct _GdaMysqlRecordsetPrivate {
 	GdaConnection  *cnc;
-	/* TO_ADD: specific information */
 	
 	MYSQL_STMT     *mysql_stmt;
 
 	gint            chunk_size;    /* Number of rows to fetch at a time when iterating forward/backward. */
 	gint            chunks_read;   /* Number of times that we've iterated forward/backward. */
 	GdaRow         *tmp_row;       /* Used in cursor mode to store a reference to the latest #GdaRow. */
+
+	/* if no prepared statement available */
+	gint          ncols;
+        GType        *types;
 };
 static GObjectClass *parent_class = NULL;
 
@@ -100,9 +104,11 @@ gda_mysql_recordset_init (GdaMysqlRecordset       *recset,
 	recset->priv->cnc = NULL;
 
 	/* initialize specific information */
-	// TO_IMPLEMENT;
 	recset->priv->chunk_size = 1;
 	recset->priv->chunks_read = 0;
+
+	recset->priv->ncols = 0;
+	recset->priv->types = NULL;
 }
 
 
@@ -254,9 +260,9 @@ gda_mysql_recordset_dispose (GObject  *object)
 			g_object_unref (G_OBJECT(recset->priv->tmp_row));
 			recset->priv->tmp_row = NULL;
 		}
+		if (recset->priv->types)
+			g_free (recset->priv->types);
 
-		/* free specific information */
-		// TO_IMPLEMENT;
 		g_free (recset->priv);
 		recset->priv = NULL;
 	}
@@ -376,6 +382,133 @@ _gda_mysql_type_to_gda (MysqlConnectionData *cdata,
 	/* g_print ("\n"); */
 
 	return gtype;
+}
+
+GdaDataModel *
+gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flags, 
+				GType *col_types)
+{
+	GdaMysqlRecordset *model;
+        MysqlConnectionData *cdata;
+        gint i;
+	GdaDataModelAccessFlags rflags;
+	GSList *columns = NULL;
+
+        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return NULL;
+
+	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
+	if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
+		rflags = GDA_DATA_MODEL_ACCESS_RANDOM;
+	else
+		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
+
+	/* create data model */
+        model = g_object_new (GDA_TYPE_MYSQL_RECORDSET,
+			      "connection", cnc,
+			      "model-usage", rflags,
+			      NULL);
+        model->priv->cnc = cnc;
+	g_object_ref (G_OBJECT(cnc));
+
+	/* columns & types */	
+	model->priv->ncols = mysql_field_count (cdata->mysql);
+	model->priv->types = g_new0 (GType, model->priv->ncols);
+	
+	/* create columns */
+	for (i = 0; i < model->priv->ncols; i++)
+		columns = g_slist_prepend (columns, gda_column_new ());
+	columns = g_slist_reverse (columns);
+
+	if (col_types) {
+		for (i = 0; ; i++) {
+			if (col_types [i] > 0) {
+				if (col_types [i] == G_TYPE_NONE)
+					break;
+				if (i >= model->priv->ncols) {
+					g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
+						   model->priv->ncols - 1);
+					break;
+				}
+				else
+					model->priv->types [i] = col_types [i];
+			}
+		}
+	}
+
+	/* fill bind result */
+	MYSQL_RES *mysql_res = mysql_store_result (cdata->mysql);
+	MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
+	GSList *list;
+
+	((GdaDataSelect *) model)->advertized_nrows = mysql_affected_rows (cdata->mysql);
+	for (i=0, list = columns; 
+	     i < model->priv->ncols; 
+	     i++, list = list->next) {
+		GdaColumn *column = GDA_COLUMN (list->data);
+		
+		/* use C API to set columns' information using gda_column_set_*() */
+		MYSQL_FIELD *field = &mysql_fields[i];
+		
+		GType gtype = model->priv->types [i];
+		if (gtype == 0) {
+			gtype = _gda_mysql_type_to_gda (cdata, field->type, field->charsetnr);
+			model->priv->types [i] = gtype;
+		}
+		gda_column_set_g_type (column, gtype);
+		gda_column_set_name (column, field->name);
+		gda_column_set_description (column, field->name);
+	}
+	gda_data_select_set_columns (GDA_DATA_SELECT (model), columns);
+
+	/* load ALL data */
+	MYSQL_ROW mysql_row;
+	gint rownum;
+	GdaServerProvider *prov;
+	prov = gda_connection_get_provider (cnc);
+	for (mysql_row = mysql_fetch_row (mysql_res), rownum = 0;
+	     mysql_row;
+	     mysql_row = mysql_fetch_row (mysql_res), rownum++) {
+		GdaRow *row = gda_row_new (model->priv->ncols);
+		gint col;
+		for (col = 0; col < model->priv->ncols; col++) {
+			gint i = col;
+		
+			GValue *value = gda_row_get_value (row, i);
+			GType type = model->priv->types[i];
+			char *data = mysql_row[i];
+
+			if (!data || (type == GDA_TYPE_NULL))
+				continue;
+
+			gda_value_reset_with_type (value, type);
+			if (type == G_TYPE_STRING)
+				g_value_set_string (value, data);
+			else {
+				GdaDataHandler *dh;
+				gboolean valueset = FALSE;
+				dh = gda_server_provider_get_data_handler_g_type (prov, cnc, type);
+				if (dh) {
+					GValue *tmpvalue;
+					tmpvalue = gda_data_handler_get_value_from_str (dh, data, type);
+					if (tmpvalue) {
+						*value = *tmpvalue;
+						g_free (tmpvalue);
+						valueset = TRUE;
+					}
+				}
+				if (!valueset)
+					gda_row_invalidate_value (row, value);
+			}
+		}
+		gda_data_select_take_row ((GdaDataSelect*) model, row, rownum);
+	}
+	mysql_free_result (mysql_res);
+
+        return GDA_DATA_MODEL (model);
 }
 
 
@@ -545,9 +678,6 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
         model->priv->cnc = cnc;
 	g_object_ref (G_OBJECT(cnc));
 
-	/* post init specific code */
-	// TO_IMPLEMENT;
-	
 	model->priv->mysql_stmt = ps->mysql_stmt;
 
 	((GdaDataSelect *) model)->advertized_nrows = mysql_stmt_affected_rows (ps->mysql_stmt);

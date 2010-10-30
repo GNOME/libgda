@@ -80,6 +80,15 @@ Base class for all the data models returned by DBMS providers when a SELECT stat
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_select_set_columns ##### -->
+<para>
+
+</para>
+
+@model: 
+@columns: 
+
+
 <!-- ##### FUNCTION gda_column_set_name ##### -->
 <para>
 

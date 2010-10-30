@@ -1,8 +1,9 @@
 /* GDA Mysql provider
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -48,25 +49,16 @@ struct _GdaMysqlRecordsetClass {
 	GdaDataSelectClass         parent_class;
 };
 
-GType
-gda_mysql_recordset_get_type  (void) G_GNUC_CONST;
-GdaDataModel *
-gda_mysql_recordset_new       (GdaConnection            *cnc,
-			       GdaMysqlPStmt            *ps,
-			       GdaSet                   *exec_params,
-			       GdaDataModelAccessFlags   flags, 
-			       GType                    *col_types);
+GType gda_mysql_recordset_get_type  (void) G_GNUC_CONST;
+GdaDataModel *gda_mysql_recordset_new       (GdaConnection *cnc, GdaMysqlPStmt *ps,
+					     GdaSet *exec_params, GdaDataModelAccessFlags flags, 
+					     GType *col_types);
+GdaDataModel *gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flags, 
+					      GType *col_types);
 
-
-gint
-gda_mysql_recordset_get_chunk_size (GdaMysqlRecordset  *recset);
-
-void
-gda_mysql_recordset_set_chunk_size (GdaMysqlRecordset  *recset,
-				    gint                chunk_size);
-
-gint
-gda_mysql_recordset_get_chunks_read (GdaMysqlRecordset  *recset);
+gint gda_mysql_recordset_get_chunk_size (GdaMysqlRecordset  *recset);
+void gda_mysql_recordset_set_chunk_size (GdaMysqlRecordset  *recset, gint chunk_size);
+gint gda_mysql_recordset_get_chunks_read (GdaMysqlRecordset  *recset);
 
 G_END_DECLS
 
