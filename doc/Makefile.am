@@ -1,3 +1,3 @@
 SUBDIRS = C 
 
-DOC_LINGUAS = es gl
+DOC_LINGUAS = el es gl
