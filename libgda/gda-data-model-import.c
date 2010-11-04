@@ -572,18 +572,59 @@ gda_data_model_import_set_property (GObject *object,
 					return;
 				}
 #else
-				HANDLE view = CreateFileMapping((HANDLE)model->priv->src.mapped.fd, 
+				HANDLE hFile = CreateFile (model->priv->src.mapped.filename,
+				                           GENERIC_READ,
+										   FILE_SHARE_READ,
+										   NULL,
+										   OPEN_EXISTING,
+										   FILE_ATTRIBUTE_NORMAL,
+										   NULL);
+				if (!hFile) {
+						LPVOID lpMsgBuf;
+						DWORD dw = GetLastError();
+						FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
+									   FORMAT_MESSAGE_FROM_SYSTEM |
+									   FORMAT_MESSAGE_IGNORE_INSERTS,
+									   NULL,
+									   dw,
+									   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+									   (LPTSTR) &lpMsgBuf,
+									   0, NULL);
+						add_error (model, (gchar *)lpMsgBuf);
+						return;
+				}
+				HANDLE view = CreateFileMapping(hFile, 
 								NULL, PAGE_READONLY|SEC_COMMIT, 0,0 , NULL);
 				if (!view) {
 					/* error */
-					add_error (model, sys_errlist [errno]);
+					LPVOID lpMsgBuf;
+					DWORD dw = GetLastError();
+					FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
+					               FORMAT_MESSAGE_FROM_SYSTEM |
+								   FORMAT_MESSAGE_IGNORE_INSERTS,
+								   NULL,
+								   dw,
+								   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+								   (LPTSTR) &lpMsgBuf,
+								   0, NULL);
+					add_error (model, (gchar *)lpMsgBuf);
 					return;
 				}
 				model->priv->src.mapped.start = MapViewOfFile(view, FILE_MAP_READ, 0, 0, 
 									      model->priv->src.mapped.length);
 				if (!model->priv->src.mapped.start) {
 					/* error */
-					add_error (model, sys_errlist [errno]);
+					LPVOID lpMsgBuf;
+					DWORD dw = GetLastError();
+					FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
+					               FORMAT_MESSAGE_FROM_SYSTEM |
+								   FORMAT_MESSAGE_IGNORE_INSERTS,
+								   NULL,
+								   dw,
+								   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+								   (LPTSTR) &lpMsgBuf,
+								   0, NULL);
+					add_error (model, (gchar *)lpMsgBuf);
 					return;
 				}
 #endif
@@ -633,8 +674,8 @@ gda_data_model_import_set_property (GObject *object,
 
 	/* here we now have a valid data to analyze, try to determine the real kind of data 
 	 * (CVS text of XML) */
-	if (model->priv->format != FORMAT_XML_NODE) {
-		g_assert (model->priv->data_start);
+	if (model->priv->format != FORMAT_XML_NODE
+	    && model->priv->data_start) {
 		if (!strncmp (model->priv->data_start, "<?xml", 5)) 
 			model->priv->format = FORMAT_XML_DATA;
 		else 
