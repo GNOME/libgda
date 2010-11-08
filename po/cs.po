@@ -11,15 +11,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-31 12:44+0100\n"
-"PO-Revision-Date: 2010-10-29 11:09+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=libgda&component=general\n"
+"POT-Creation-Date: 2010-11-04 20:08+0000\n"
+"PO-Revision-Date: 2010-10-31 13:19+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Poedit-Language: Czech\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -106,11 +107,11 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../control-center/dsn-properties-dialog.c:283
 #: ../libgda/gda-connection.c:1536 ../libgda/gda-data-model.c:2071
 #: ../libgda/gda-data-model.c:2079 ../libgda/gda-data-model-dir.c:386
-#: ../libgda/gda-data-model-import.c:1639
-#: ../libgda/gda-data-model-import.c:1936
-#: ../libgda/gda-data-model-import.c:2014 ../libgda/gda-data-select.c:370
-#: ../libgda/gda-data-select.c:2037 ../libgda/gda-data-select.c:2046
-#: ../libgda/gda-data-select.c:2056 ../libgda/gda-data-select.c:3454
+#: ../libgda/gda-data-model-import.c:1680
+#: ../libgda/gda-data-model-import.c:1977
+#: ../libgda/gda-data-model-import.c:2055 ../libgda/gda-data-select.c:370
+#: ../libgda/gda-data-select.c:2063 ../libgda/gda-data-select.c:2072
+#: ../libgda/gda-data-select.c:2082 ../libgda/gda-data-select.c:3480
 #: ../libgda/gda-holder.c:490 ../libgda/gda-holder.c:1721
 #: ../libgda/gda-server-operation.c:616 ../libgda/gda-server-operation.c:1014
 #: ../libgda/gda-set.c:561 ../libgda/gda-tree-mgr-select.c:189
@@ -747,8 +748,8 @@ msgstr "Interní chyba: neplatný ovladač poskytovatele"
 #: ../libgda/gda-data-model-dir.c:883 ../libgda/gda-data-model-dir.c:925
 #: ../libgda/gda-data-model-dsn-list.c:312 ../libgda/gda-data-model-iter.c:296
 #: ../libgda/gda-data-model-iter.c:1025 ../libgda/gda-data-proxy.c:3536
-#: ../libgda/gda-data-select.c:1201 ../libgda/gda-data-select.c:1697
-#: ../libgda/gda-data-select.c:2593 ../libgda/gda-data-select.c:2660
+#: ../libgda/gda-data-select.c:1227 ../libgda/gda-data-select.c:1723
+#: ../libgda/gda-data-select.c:2619 ../libgda/gda-data-select.c:2686
 #: ../libgda-ui/gdaui-combo.c:790
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -803,8 +804,8 @@ msgstr "Zda může být datový model upravován"
 #: ../libgda/gda-data-model-array.c:626 ../libgda/gda-data-model-dir.c:795
 #: ../libgda/gda-data-model-dir.c:968 ../libgda/gda-data-model-dir.c:1323
 #: ../libgda/gda-data-model-dsn-list.c:320 ../libgda/gda-data-proxy.c:3485
-#: ../libgda/gda-data-proxy.c:3523 ../libgda/gda-data-select.c:1653
-#: ../libgda/gda-data-select.c:1707
+#: ../libgda/gda-data-proxy.c:3523 ../libgda/gda-data-select.c:1679
+#: ../libgda/gda-data-select.c:1733
 #, c-format
 msgid "Row %d out of range (0-%d)"
 msgstr "Řádek %d je mimo rozsah (0 - %d)"
@@ -813,8 +814,8 @@ msgstr "Řádek %d je mimo rozsah (0 - %d)"
 #: ../libgda/gda-data-model-array.c:629 ../libgda/gda-data-model-dir.c:798
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1326
 #: ../libgda/gda-data-model-dsn-list.c:323 ../libgda/gda-data-proxy.c:3488
-#: ../libgda/gda-data-proxy.c:3526 ../libgda/gda-data-select.c:1656
-#: ../libgda/gda-data-select.c:1710
+#: ../libgda/gda-data-proxy.c:3526 ../libgda/gda-data-select.c:1682
+#: ../libgda/gda-data-select.c:1736
 #, c-format
 msgid "Row %d not found (empty data model)"
 msgstr "Řádek %d nebyl nalezen (prázdný datový model)"
@@ -970,8 +971,8 @@ msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
 msgstr ""
-"Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce "
-"%d (%s)"
+"Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce %"
+"d (%s)"
 
 #: ../libgda/gda-data-model.c:1876
 #, c-format
@@ -1091,21 +1092,21 @@ msgstr "Volba „%s“ musí obsahovat řetězcovou hodnotu, ignorováno."
 msgid "The '%s' option must hold a boolean value, ignored."
 msgstr "Volba „%s“ musí obsahovat pravdivostní hodnotu, ignorováno."
 
-#: ../libgda/gda-data-model-import.c:618
+#: ../libgda/gda-data-model-import.c:659
 msgid "\"options\" property is not a GdaSet object"
 msgstr "Vlastnost „options“ není objekt GdaSet"
 
-#: ../libgda/gda-data-model-import.c:892
+#: ../libgda/gda-data-model-import.c:933
 #, c-format
 msgid "The '%s' option must hold a GType value, ignored."
 msgstr "Volba „%s“ musí obsahovat hodnotu GType, ignorováno."
 
-#: ../libgda/gda-data-model-import.c:958
+#: ../libgda/gda-data-model-import.c:999
 #, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "Převod znaků na řádku %d, chyba: %s"
 
-#: ../libgda/gda-data-model-import.c:961
+#: ../libgda/gda-data-model-import.c:1002
 #: ../libgda/sqlite/gda-sqlite-provider.c:779
 #: ../providers/bdb/gda-bdb-provider.c:209
 #: ../tools/browser/common/gdaui-data-import.c:178
@@ -1113,93 +1114,93 @@ msgstr "Převod znaků na řádku %d, chyba: %s"
 msgid "no detail"
 msgstr "bez upřesnění"
 
-#: ../libgda/gda-data-model-import.c:999
+#: ../libgda/gda-data-model-import.c:1040
 #, c-format
 msgid "Could not convert string '%s' to a '%s' value"
 msgstr "Nelze převést řetězec „%s“ na hodnotu „%s“"
 
-#: ../libgda/gda-data-model-import.c:1055
+#: ../libgda/gda-data-model-import.c:1096
 #, c-format
 msgid "Error while parsing CSV file: %s"
 msgstr "Chyba při zpracování souboru CSV: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1158
+#: ../libgda/gda-data-model-import.c:1199
 msgid "Failed to read node in XML file"
 msgstr "Selhalo čtení uzlu v souboru XML"
 
-#: ../libgda/gda-data-model-import.c:1177
+#: ../libgda/gda-data-model-import.c:1218
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "V souboru XML očekáván uzel  <gda_array>, obdržen <%s>"
 
-#: ../libgda/gda-data-model-import.c:1221
-#: ../libgda/gda-data-model-import.c:1544
+#: ../libgda/gda-data-model-import.c:1262
+#: ../libgda/gda-data-model-import.c:1585
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "V <gda_array_field> není zadán žádný atribut „gdatype“"
 
-#: ../libgda/gda-data-model-import.c:1272
+#: ../libgda/gda-data-model-import.c:1313
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Očekáván <gda_array_field> v <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1306
+#: ../libgda/gda-data-model-import.c:1347
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "Očekáváno <gda_array_data> v <gda_array>, obdrženo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1308
+#: ../libgda/gda-data-model-import.c:1349
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Očekáván <gda_array_data> v <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1320
+#: ../libgda/gda-data-model-import.c:1361
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "Nelze číst obsah uzlu <gda_array_data>"
 
-#: ../libgda/gda-data-model-import.c:1369
+#: ../libgda/gda-data-model-import.c:1410
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr "Očekáváno <gda_array_row> v <gda_array_data>, obdrženo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1393
+#: ../libgda/gda-data-model-import.c:1434
 msgid "Row has too many values (which are ignored)"
 msgstr "Řádek má příliš mnoho hodnot (které jsou ignorovány)"
 
-#: ../libgda/gda-data-model-import.c:1440
+#: ../libgda/gda-data-model-import.c:1481
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "Nelze převést „%s“ na hodnotu typu %s"
 
-#: ../libgda/gda-data-model-import.c:1513
+#: ../libgda/gda-data-model-import.c:1554
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Očekáván uzel <gda_array>, ale obdržen <%s>"
 
-#: ../libgda/gda-data-model-import.c:1595
+#: ../libgda/gda-data-model-import.c:1636
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "V <gda_array> není zadán žádný <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1773
+#: ../libgda/gda-data-model-import.c:1814
 msgid "Data model does not support random access"
 msgstr "Datový model nepodporuje náhodný přístup"
 
-#: ../libgda/gda-data-model-import.c:1830
+#: ../libgda/gda-data-model-import.c:1871
 #, c-format
 msgid "Row at line %d does not have enough values"
 msgstr "Řádek na řádce %d nemá dostatek hodnot"
 
-#: ../libgda/gda-data-model-import.c:1835
+#: ../libgda/gda-data-model-import.c:1876
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr ""
 "Řádek na řádce %d nemá dostatek hodnot, dokončí se prázdnými hodnotami NULL"
 
-#: ../libgda/gda-data-model-import.c:1860
+#: ../libgda/gda-data-model-import.c:1901
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "Řádek na řádce %d nemá dostatek hodnot (takže je tímto ignorován)"
 
-#: ../libgda/gda-data-model-import.c:1935
-#: ../libgda/gda-data-model-import.c:2013
+#: ../libgda/gda-data-model-import.c:1976
+#: ../libgda/gda-data-model-import.c:2054
 #, c-format
 msgid "Could not set iterator's value: %s"
 msgstr "Nelze nastavit hodnotu iterátoru: %s"
@@ -1247,7 +1248,7 @@ msgstr "Nelze vytvořit virtuální připojení"
 msgid "Error in filter expression"
 msgstr "Chyba ve výrazu filtru"
 
-#: ../libgda/gda-data-proxy.c:3112 ../libgda/gda-data-select.c:1449
+#: ../libgda/gda-data-proxy.c:3112 ../libgda/gda-data-select.c:1475
 msgid "Incorrect filter expression"
 msgstr "Chybný výraz filtru"
 
@@ -1276,170 +1277,170 @@ msgstr "Typ hodnoty neodpovídá typu %s namísto typu %s"
 msgid "Could not re-run SELECT statement: %s"
 msgstr "Nelze opětovně spustit příkaz SELECT: %s"
 
-#: ../libgda/gda-data-select.c:957
+#: ../libgda/gda-data-select.c:983
 msgid "Incorrect SQL expression"
 msgstr "Nesprávný výraz SQL"
 
-#: ../libgda/gda-data-select.c:982
+#: ../libgda/gda-data-select.c:1008
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
 msgstr "Interní chyba: vlastnost „prepared-stmt“ nebyla nastavena"
 
-#: ../libgda/gda-data-select.c:989
+#: ../libgda/gda-data-select.c:1015
 msgid "Can't get the prepared statement's actual statement"
 msgstr "Nelze získat aktuální příkaz předpřipraveného příkazu"
 
-#: ../libgda/gda-data-select.c:995
+#: ../libgda/gda-data-select.c:1021
 msgid "Unsupported type of SELECT statement"
 msgstr "Nepodporovaný typ příkazu SELECT"
 
-#: ../libgda/gda-data-select.c:1064
+#: ../libgda/gda-data-select.c:1090
 msgid "INSERT statement must contain values to insert"
 msgstr "Příkaz INSERT musí obsahovat hodnoty, které se mají vložit"
 
-#: ../libgda/gda-data-select.c:1070
+#: ../libgda/gda-data-select.c:1096
 msgid "INSERT statement must insert only one row"
 msgstr "Příkaz INSERT musí vkládat jen jeden řádek"
 
-#: ../libgda/gda-data-select.c:1097
+#: ../libgda/gda-data-select.c:1123
 msgid "DELETE statement must have a WHERE part"
 msgstr "Příkaz DELETE musí mít část WHERE"
 
-#: ../libgda/gda-data-select.c:1137
+#: ../libgda/gda-data-select.c:1163
 msgid "UPDATE statement must have a WHERE part"
 msgstr "Příkaz UPDATE musí obsahovat část WHERE"
 
-#: ../libgda/gda-data-select.c:1191
+#: ../libgda/gda-data-select.c:1217
 #, c-format
 msgid "Modification statement uses an unknown '%s' parameter"
 msgstr "Příkaz pro úpravu používá neznámý parametr „%s“"
 
-#: ../libgda/gda-data-select.c:1213
+#: ../libgda/gda-data-select.c:1239
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr "Parametr „%s“ příkazu pro úpravu je %s, zatímco by měl být %s"
 
-#: ../libgda/gda-data-select.c:1250
+#: ../libgda/gda-data-select.c:1276
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
 msgstr ""
 "Příkazem pro úpravu musí být jeden z příkazů INSERT, UPDATE nebo DELETE"
 
-#: ../libgda/gda-data-select.c:1298 ../libgda/gda-data-select.c:1504
-#: ../libgda/gda-data-select.c:3327
+#: ../libgda/gda-data-select.c:1324 ../libgda/gda-data-select.c:1530
+#: ../libgda/gda-data-select.c:3353
 msgid "No connection to use"
 msgstr "Žádné připojení k použití"
 
-#: ../libgda/gda-data-select.c:1344
+#: ../libgda/gda-data-select.c:1370
 msgid "Invalid unique row condition (only equal operators are allowed)"
 msgstr ""
 "Neplatná podmínka řádku pro jedinečnost (jsou povoleny pouze srovnávací "
 "operátory)"
 
-#: ../libgda/gda-data-select.c:1376 ../libgda/gda-data-select.c:1431
+#: ../libgda/gda-data-select.c:1402 ../libgda/gda-data-select.c:1457
 msgid "Unique row condition has already been specified"
 msgstr "Podmínka pro jedinečnost řádku již byla určena"
 
-#: ../libgda/gda-data-select.c:1513 ../libgda/gda-data-select.c:1524
+#: ../libgda/gda-data-select.c:1539 ../libgda/gda-data-select.c:1550
 msgid "No table to select from in SELECT statement"
 msgstr "V příkazu SELECT není žádná tabulka, ze které se má vybírat"
 
-#: ../libgda/gda-data-select.c:1518
+#: ../libgda/gda-data-select.c:1544
 msgid "SELECT statement uses more than one table to select from"
 msgstr "Příkaz SELECT používá více než jednu tabulku, ze které se má vybírat"
 
-#: ../libgda/gda-data-select.c:1690 ../libgda/gda-data-select.c:2410
-#: ../libgda/gda-data-select.c:2580 ../libgda/gda-data-select.c:2732
-#: ../libgda/gda-data-select.c:2820 ../libgda/gda-data-select.c:3015
+#: ../libgda/gda-data-select.c:1716 ../libgda/gda-data-select.c:2436
+#: ../libgda/gda-data-select.c:2606 ../libgda/gda-data-select.c:2758
+#: ../libgda/gda-data-select.c:2846 ../libgda/gda-data-select.c:3041
 msgid "Data model does only support random access"
 msgstr "Datový model podporuje pouze náhodný přístup"
 
-#: ../libgda/gda-data-select.c:1725
+#: ../libgda/gda-data-select.c:1751
 msgid "Unable to retrieve data after modifications"
 msgstr "Nelze získat data po změně"
 
-#: ../libgda/gda-data-select.c:1745 ../libgda/gda-data-select.c:1753
-#: ../libgda/gda-data-select.c:1775
+#: ../libgda/gda-data-select.c:1771 ../libgda/gda-data-select.c:1779
+#: ../libgda/gda-data-select.c:1801
 msgid ""
 "Unable to retrieve data after modifications, no further modification will be "
 "allowed"
 msgstr "Nelze získat data po změně, nebude umožněna žádná další úprava"
 
-#: ../libgda/gda-data-select.c:1810
+#: ../libgda/gda-data-select.c:1836
 #, c-format
 msgid "Unable to get value for row %d and column %d"
 msgstr "Nelze získat hodnotu pro řádek %d a sloupec %d"
 
-#: ../libgda/gda-data-select.c:2036 ../libgda/gda-data-select.c:2045
-#: ../libgda/gda-data-select.c:2055
+#: ../libgda/gda-data-select.c:2062 ../libgda/gda-data-select.c:2071
+#: ../libgda/gda-data-select.c:2081
 #, c-format
 msgid "Could not change iter's value for column %d: %s"
 msgstr "Nelze změnit hodnotu iterátoru pro sloupec %d: %s"
 
-#: ../libgda/gda-data-select.c:2050
+#: ../libgda/gda-data-select.c:2076
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
 "Povolena prázdná hodnota (NULL) objektu GdaHolder pro iterátor, který se má "
 "aktualizovat"
 
-#: ../libgda/gda-data-select.c:2130 ../libgda/gda-data-select.c:2223
+#: ../libgda/gda-data-select.c:2156 ../libgda/gda-data-select.c:2249
 msgid "Some columns can't be modified"
 msgstr "Některé sloupce nelze měnit"
 
-#: ../libgda/gda-data-select.c:2277
+#: ../libgda/gda-data-select.c:2303
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr "Interní chyba: nelze získat aktuální příkaz předpřipraveného příkazu"
 
-#: ../libgda/gda-data-select.c:2317
+#: ../libgda/gda-data-select.c:2343
 msgid "Unable to identify a way to fetch a single row"
 msgstr "Nelze zjistit způsob, jak získat jeden řádek"
 
-#: ../libgda/gda-data-select.c:2324
+#: ../libgda/gda-data-select.c:2350
 msgid "Can only operate on non compound SELECT statements"
 msgstr "Může pracovat jen na nesložených příkazech SELECT"
 
-#: ../libgda/gda-data-select.c:2405 ../libgda/gda-data-select.c:2575
-#: ../libgda/gda-data-select.c:2646 ../libgda/gda-data-select.c:2727
-#: ../libgda/gda-data-select.c:2815 ../libgda/gda-data-select.c:3010
+#: ../libgda/gda-data-select.c:2431 ../libgda/gda-data-select.c:2601
+#: ../libgda/gda-data-select.c:2672 ../libgda/gda-data-select.c:2753
+#: ../libgda/gda-data-select.c:2841 ../libgda/gda-data-select.c:3036
 msgid "Modifications are not allowed anymore"
 msgstr "Úpravy nejsou nadále umožněny"
 
-#: ../libgda/gda-data-select.c:2415 ../libgda/gda-data-select.c:2585
-#: ../libgda/gda-data-select.c:2651 ../libgda/gda-data-select.c:2737
+#: ../libgda/gda-data-select.c:2441 ../libgda/gda-data-select.c:2611
+#: ../libgda/gda-data-select.c:2677 ../libgda/gda-data-select.c:2763
 msgid "No UPDATE statement provided"
 msgstr "Není poskytován žádný příkaz UPDATE"
 
-#: ../libgda/gda-data-select.c:2455
+#: ../libgda/gda-data-select.c:2481
 msgid "Could not get iterator's value"
 msgstr "Nelze získat hodnotu iterátoru"
 
-#: ../libgda/gda-data-select.c:2612 ../libgda/gda-data-select.c:2679
+#: ../libgda/gda-data-select.c:2638 ../libgda/gda-data-select.c:2705
 #, c-format
 msgid "Column %d can't be modified"
 msgstr "Sloupec %d nelze měnit"
 
-#: ../libgda/gda-data-select.c:2745
+#: ../libgda/gda-data-select.c:2771
 #, c-format
 msgid "Too many values (%d as maximum)"
 msgstr "Příliš mnoho hodnot (%d je maximum)"
 
-#: ../libgda/gda-data-select.c:2825
+#: ../libgda/gda-data-select.c:2851
 msgid "No INSERT statement provided"
 msgstr "Není poskytován žádný příkaz INSERT"
 
-#: ../libgda/gda-data-select.c:2830
+#: ../libgda/gda-data-select.c:2856
 msgid "Cannot add a row because the number of rows in unknown"
 msgstr "Nelze přidat řádek, protože není znám počet řádků"
 
-#: ../libgda/gda-data-select.c:2859
+#: ../libgda/gda-data-select.c:2885
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:391
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:400
 msgid "Missing values to insert in INSERT statement"
 msgstr "Schází hodnoty, které se mají vložit příkazem INSERT"
 
-#: ../libgda/gda-data-select.c:3020
+#: ../libgda/gda-data-select.c:3046
 msgid "No DELETE statement provided"
 msgstr "Není poskytován žádný příkaz DELETE"
 
-#: ../libgda/gda-data-select.c:3452
+#: ../libgda/gda-data-select.c:3478
 #, c-format
 msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
@@ -2389,7 +2390,7 @@ msgstr "Schází parametr „%s“"
 
 #: ../libgda/gda-statement.c:1244 ../libgda/sqlite/gda-sqlite-provider.c:2601
 #: ../providers/jdbc/gda-jdbc-provider.c:1352
-#: ../providers/mysql/gda-mysql-provider.c:2230
+#: ../providers/mysql/gda-mysql-provider.c:2240
 #: ../providers/postgres/gda-postgres-provider.c:1954
 #: ../providers/web/gda-web-provider.c:1512
 #, c-format
@@ -2528,7 +2529,7 @@ msgstr "Nelze přepsat příkaz UPDATE, aby obsluhoval výchozí hodnoty"
 #: ../libgda/gda-util.c:1336 ../libgda/gda-util.c:1393
 #: ../libgda/gda-util.c:1433 ../libgda/sqlite/gda-sqlite-provider.c:2582
 #: ../providers/jdbc/gda-jdbc-provider.c:1323
-#: ../providers/mysql/gda-mysql-provider.c:2210
+#: ../providers/mysql/gda-mysql-provider.c:2220
 #: ../providers/postgres/gda-postgres-provider.c:1936
 #: ../providers/web/gda-web-provider.c:1492
 #, c-format
@@ -2540,9 +2541,8 @@ msgid "Global transaction ID can not have more than 64 bytes"
 msgstr "ID globální transakce nemůže mít více než 64 bajtů"
 
 #: ../libgda/gda-xa-transaction.c:287
-#, fuzzy
 msgid "Connection branch cannot exceed 63 bytes"
-msgstr "Připojení se nenachází v hubu"
+msgstr "Připojovací větev nesmí přesáhnout 63 bajtů"
 
 #: ../libgda/gda-xa-transaction.c:304
 msgid "Connection already registered with another GdaXaTransaction object"
@@ -2775,8 +2775,8 @@ msgstr ""
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
-"Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho "
-"(%d) řádků"
+"Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho (%"
+"d) řádků"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2314
 msgid "Prepared statement has no associated GdaStatement"
@@ -2824,8 +2824,8 @@ msgstr "Prázdný příkaz"
 #: ../libgda/sqlite/gda-sqlite-provider.c:2567
 #: ../providers/jdbc/gda-jdbc-provider.c:1305
 #: ../providers/jdbc/gda-jdbc-provider.c:1308
-#: ../providers/mysql/gda-mysql-provider.c:2192
-#: ../providers/mysql/gda-mysql-provider.c:2195
+#: ../providers/mysql/gda-mysql-provider.c:2202
+#: ../providers/mysql/gda-mysql-provider.c:2205
 #: ../providers/postgres/gda-postgres-provider.c:1918
 #: ../providers/postgres/gda-postgres-provider.c:1921
 #: ../providers/web/gda-web-provider.c:1474
@@ -2836,19 +2836,19 @@ msgstr "K provedení dotazu schází parametr(y)"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2626
 #: ../providers/jdbc/gda-jdbc-provider.c:1387
-#: ../providers/mysql/gda-mysql-provider.c:2256
+#: ../providers/mysql/gda-mysql-provider.c:2266
 #: ../providers/postgres/gda-postgres-provider.c:1979
 #: ../providers/web/gda-web-provider.c:1541
 msgid "Can't rewrite statement handle default values"
 msgstr "Nelze přepsat příkaz, aby obsluhoval výchozí hodnoty"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2690
-#: ../providers/mysql/gda-mysql-provider.c:2388
+#: ../providers/mysql/gda-mysql-provider.c:2398
 msgid "Can't get BLOB's length"
 msgstr "Nelze zjistit délku rozsáhlého binárního objektu (BLOB)"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2692
-#: ../providers/mysql/gda-mysql-provider.c:2390
+#: ../providers/mysql/gda-mysql-provider.c:2400
 msgid "BLOB is too big"
 msgstr "Rozsáhlý binární objekt (BLOB) je příliš velký"
 
@@ -2876,7 +2876,8 @@ msgstr "Funkce vyžaduje dva parametry"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:235
 #: ../providers/jdbc/gda-jdbc-recordset.c:279
-#: ../providers/mysql/gda-mysql-recordset.c:429
+#: ../providers/mysql/gda-mysql-recordset.c:432
+#: ../providers/mysql/gda-mysql-recordset.c:562
 #: ../providers/postgres/gda-postgres-recordset.c:280
 #: ../providers/web/gda-web-recordset.c:218
 #, c-format
@@ -4960,8 +4961,8 @@ msgid ""
 "at the end)."
 msgstr ""
 "Formát připojovacího řetězce byl změněn: nahraďte FILENAME (název souboru) "
-"za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez "
-"„%s“ na konci)."
+"za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez „%"
+"s“ na konci)."
 
 #: ../providers/mdb/gda-mdb-provider.c:307
 #, c-format
@@ -5037,11 +5038,11 @@ msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "V předpřipraveném příkazu není dovolen nepojmenovaný parametr příkazu."
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2382
+#: ../providers/mysql/gda-mysql-provider.c:2392
 msgid "Can't read whole BLOB into memory"
 msgstr "Nelze načíst celý rozsáhlý binární objekt (BLOB) do paměti"
 
-#: ../providers/mysql/gda-mysql-provider.c:2472
+#: ../providers/mysql/gda-mysql-provider.c:2482
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -5049,7 +5050,7 @@ msgstr ""
 "Nelze použít CURSOR. K tomu je vyžadována Mysql ve verzi minimálně 5.0. "
 "Místo toho se použije náhodný přístup."
 
-#: ../providers/mysql/gda-mysql-recordset.c:135
+#: ../providers/mysql/gda-mysql-recordset.c:141
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size "
 "ignored."
@@ -5057,46 +5058,46 @@ msgstr ""
 "Nelze použít CURSOR. K tomu je vyžadována Mysql ve verzi minimálně 5.0. "
 "Velikost dat se ignoruje."
 
-#: ../providers/mysql/gda-mysql-recordset.c:224
+#: ../providers/mysql/gda-mysql-recordset.c:230
 #: ../providers/postgres/gda-postgres-recordset.c:137
 msgid "Number of rows fetched at a time"
 msgstr "Počet řádků přečtených najednou"
 
-#: ../providers/mysql/gda-mysql-recordset.c:232
+#: ../providers/mysql/gda-mysql-recordset.c:238
 msgid "Number of row chunks read since the object creation"
 msgstr "Počet bloků řádků přečtených od vytvoření objektu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:517
-#: ../providers/mysql/gda-mysql-recordset.c:814
-#: ../providers/mysql/gda-mysql-recordset.c:827
-#: ../providers/mysql/gda-mysql-recordset.c:840
-#: ../providers/mysql/gda-mysql-recordset.c:859
+#: ../providers/mysql/gda-mysql-recordset.c:650
+#: ../providers/mysql/gda-mysql-recordset.c:944
+#: ../providers/mysql/gda-mysql-recordset.c:957
+#: ../providers/mysql/gda-mysql-recordset.c:970
+#: ../providers/mysql/gda-mysql-recordset.c:989
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Neplatný datový typ navázaný na sloupec. %d\n"
 
-#: ../providers/mysql/gda-mysql-recordset.c:668
+#: ../providers/mysql/gda-mysql-recordset.c:798
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr "Typ %s není mapován pro hodnotu %d"
 
-#: ../providers/mysql/gda-mysql-recordset.c:685
+#: ../providers/mysql/gda-mysql-recordset.c:815
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr "Typ %s není mapován pro hodnotu %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:731
+#: ../providers/mysql/gda-mysql-recordset.c:861
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Typ %s není mapován pro hodnotu %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:747
-#: ../providers/mysql/gda-mysql-recordset.c:761
+#: ../providers/mysql/gda-mysql-recordset.c:877
+#: ../providers/mysql/gda-mysql-recordset.c:891
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "Typ %s není mapován pro hodnotu %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:849
+#: ../providers/mysql/gda-mysql-recordset.c:979
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Typ %s není mapován pro hodnotu %s"
@@ -8583,11 +8584,11 @@ msgstr "Pro „%s“ není žádné heslo"
 #: ../tools/gda-sql.c:1438
 #, c-format
 msgid ""
-"All the meta data associated to the '%s' connection will be stored in the "
-"'%s' file\n"
+"All the meta data associated to the '%s' connection will be stored in the '%"
+"s' file\n"
 msgstr ""
-"Všechna metadata vztahující se k připojení „%s“ budou uložena v souboru "
-"„%s“\n"
+"Všechna metadata vztahující se k připojení „%s“ budou uložena v souboru „%"
+"s“\n"
 
 #: ../tools/gda-sql.c:1466
 #, c-format
@@ -9274,5 +9275,3 @@ msgstr "Objekty"
 msgid "Triggers"
 msgstr "Triggery"
 
-#~ msgid "Error: no detail"
-#~ msgstr "Chyba: bez upřesnění"
