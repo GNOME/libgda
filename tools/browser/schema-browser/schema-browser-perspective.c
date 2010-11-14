@@ -320,8 +320,8 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
 
 static GtkActionEntry ui_actions[] = {
 #ifdef HAVE_GOOCANVAS
-        { "Schema", NULL, "_Schema", NULL, "Schema", NULL },
-        { "NewDiagram", GTK_STOCK_ADD, "_New Diagram", NULL, "Create a new diagram",
+        { "Schema", NULL, N_("_Schema"), NULL, N_("Schema"), NULL },
+        { "NewDiagram", GTK_STOCK_ADD, N_("_New Diagram"), NULL, N_("Create a new diagram"),
           G_CALLBACK (action_create_diagram_cb)},
 #endif
 };

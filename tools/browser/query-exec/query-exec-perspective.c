@@ -388,7 +388,7 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
 };
 
 static GtkActionEntry ui_actions[] = {
-        { "QueryExecMenu", NULL, N_("_Query"), NULL, "QueryExecMenu", NULL },
+        { "QueryExecMenu", NULL, N_("_Query"), NULL, N_("Query"), NULL },
         { "QueryExecItem1", STOCK_CONSOLE, N_("_New editor"), "<control>T", N_("Open a new query editor"),
           G_CALLBACK (query_exec_add_cb)},
 };
