@@ -11,16 +11,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&component=general\n"
-"POT-Creation-Date: 2010-11-04 20:08+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-11-14 14:16+0100\n"
 "PO-Revision-Date: 2010-10-31 13:19+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Poedit-Language: Czech\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -971,8 +970,8 @@ msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
 msgstr ""
-"Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce %"
-"d (%s)"
+"Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce "
+"%d (%s)"
 
 #: ../libgda/gda-data-model.c:1876
 #, c-format
@@ -2144,6 +2143,7 @@ msgstr "Jmenný prostor"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 #: ../tools/browser/data-manager/data-source-editor.c:135
+#: ../tools/browser/schema-browser/table-info.c:950
 msgid "Table"
 msgstr "Tabulka"
 
@@ -2708,12 +2708,12 @@ msgstr "Nelze nastavit volbu SQLite empty_result_callbacks: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:993
 #: ../libgda/sqlite/gda-sqlite-provider.c:1033
-#: ../libgda-ui/data-entries/plugins/libmain.c:85
-#: ../libgda-ui/data-entries/plugins/libmain.c:123
-#: ../libgda-ui/data-entries/plugins/libmain.c:151
-#: ../libgda-ui/data-entries/plugins/libmain.c:158
-#: ../libgda-ui/data-entries/plugins/libmain.c:233
-#: ../libgda-ui/data-entries/plugins/libmain.c:257
+#: ../libgda-ui/data-entries/plugins/libmain.c:87
+#: ../libgda-ui/data-entries/plugins/libmain.c:125
+#: ../libgda-ui/data-entries/plugins/libmain.c:153
+#: ../libgda-ui/data-entries/plugins/libmain.c:160
+#: ../libgda-ui/data-entries/plugins/libmain.c:250
+#: ../libgda-ui/data-entries/plugins/libmain.c:274
 #: ../providers/mysql/gda-mysql-provider.c:847
 #: ../providers/mysql/gda-mysql-provider.c:888
 #: ../providers/postgres/gda-postgres-provider.c:739
@@ -2775,8 +2775,8 @@ msgstr ""
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
-"Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho (%"
-"d) řádků"
+"Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho "
+"(%d) řádků"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2314
 msgid "Prepared statement has no associated GdaStatement"
@@ -4961,8 +4961,8 @@ msgid ""
 "at the end)."
 msgstr ""
 "Formát připojovacího řetězce byl změněn: nahraďte FILENAME (název souboru) "
-"za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez „%"
-"s“ na konci)."
+"za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez "
+"„%s“ na konci)."
 
 #: ../providers/mdb/gda-mdb-provider.c:307
 #, c-format
@@ -7009,6 +7009,26 @@ msgstr "_Celá obrazovka"
 msgid "Use the whole screen"
 msgstr "Použít celou obrazovku"
 
+#: ../tools/browser/browser-window.c:276
+#, fuzzy
+msgid "_Connection"
+msgstr "Připojení"
+
+#: ../tools/browser/browser-window.c:276
+#, fuzzy
+msgid "Connection"
+msgstr "Připojení"
+
+#: ../tools/browser/browser-window.c:277
+#, fuzzy
+msgid "_Connect"
+msgstr "Připojit"
+
+#: ../tools/browser/browser-window.c:277
+#, fuzzy
+msgid "Open a connection"
+msgstr "Otevřít nové připojení"
+
 #: ../tools/browser/browser-window.c:278
 msgid "_Bind connection"
 msgstr "S_vázat připojení"
@@ -7022,6 +7042,146 @@ msgstr ""
 "Použijte připojení k vytvoření\n"
 "nového svazku připojení na přístup\n"
 "k datům z více databází naráz"
+
+#: ../tools/browser/browser-window.c:281
+#, fuzzy
+msgid "_Properties"
+msgstr "Vlastnosti"
+
+#: ../tools/browser/browser-window.c:281
+#, fuzzy
+msgid "Connection properties"
+msgstr "Vlastnosti připojení"
+
+#: ../tools/browser/browser-window.c:282
+#, fuzzy
+msgid "_Connections list"
+msgstr "Připojení"
+
+#: ../tools/browser/browser-window.c:282
+#, fuzzy
+msgid "Connections list"
+msgstr "Připojení"
+
+#: ../tools/browser/browser-window.c:283
+msgid "_Fetch meta data"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:283
+msgid "Fetch meta data"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:284
+#, fuzzy
+msgid "_Close connection"
+msgstr "Uzavřít připojení"
+
+#: ../tools/browser/browser-window.c:284
+#, fuzzy
+msgid "Close this connection"
+msgstr "Zavřít připojení"
+
+#: ../tools/browser/browser-window.c:285
+#, fuzzy
+msgid "_Quit"
+msgstr "Ukončit"
+
+#: ../tools/browser/browser-window.c:285 ../tools/gda-sql.c:2232
+msgid "Quit"
+msgstr "Ukončit"
+
+#: ../tools/browser/browser-window.c:286
+#, fuzzy
+msgid "_Edit"
+msgstr "Upravitelné"
+
+#: ../tools/browser/browser-window.c:286
+#, fuzzy
+msgid "Edit"
+msgstr "Upravitelné"
+
+#: ../tools/browser/browser-window.c:287
+#, fuzzy
+msgid "_Display"
+msgstr "Data, která se mají zobrazit"
+
+#: ../tools/browser/browser-window.c:287
+#, fuzzy
+msgid "Display"
+msgstr "Data, která se mají zobrazit"
+
+#: ../tools/browser/browser-window.c:288
+msgid "_Perspective"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:288
+msgid "Perspective"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:289
+#, fuzzy
+msgid "_Window"
+msgstr "Windows CP866"
+
+#: ../tools/browser/browser-window.c:289
+#, fuzzy
+msgid "Window"
+msgstr "Windows CP866"
+
+#: ../tools/browser/browser-window.c:290
+#, fuzzy
+msgid "_New window"
+msgstr "_Nový editor"
+
+#: ../tools/browser/browser-window.c:290
+#, fuzzy
+msgid "Open a new window for current connection"
+msgstr "Otevřít nové připojení"
+
+#: ../tools/browser/browser-window.c:291
+#, fuzzy
+msgid "New window for _connection"
+msgstr "Nové virtuální připojení"
+
+#: ../tools/browser/browser-window.c:291
+#, fuzzy
+msgid "Open a new window for a connection"
+msgstr "Otevřít nové připojení"
+
+#: ../tools/browser/browser-window.c:292
+#, fuzzy
+msgid "_Close"
+msgstr "Zavřít kartu"
+
+#: ../tools/browser/browser-window.c:292
+msgid "Close this window"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:293
+#, fuzzy
+msgid "_Help"
+msgstr "Nápověda"
+
+#: ../tools/browser/browser-window.c:293
+#: ../tools/browser/data-manager/data-console.c:419 ../tools/html-doc.c:95
+msgid "Help"
+msgstr "Nápověda"
+
+#: ../tools/browser/browser-window.c:294
+msgid "_About"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:294
+msgid "About"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:296
+msgid "_Manual"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:296
+msgid "Manual"
+msgstr ""
 
 #: ../tools/browser/browser-window.c:298
 msgid "Begin a new transaction"
@@ -7622,10 +7782,6 @@ msgstr ""
 "Zobrazit specifikaci\n"
 "jako XML (pokročilé)"
 
-#: ../tools/browser/data-manager/data-console.c:419 ../tools/html-doc.c:95
-msgid "Help"
-msgstr "Nápověda"
-
 #: ../tools/browser/data-manager/data-console.c:432
 msgid "BBB:"
 msgstr "BBB:"
@@ -7737,6 +7893,26 @@ msgstr "_Zobrazit oblíbené"
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:318
 msgid "Show or hide favorites"
 msgstr "Zobrazit nebo skrýt oblíbené"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:412
+#, fuzzy
+msgid "_Manager"
+msgstr "Správce dat"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:412
+#, fuzzy
+msgid "Manager"
+msgstr "Správce dat"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:413
+#, fuzzy
+msgid "_New data manager"
+msgstr "Správce dat „%s“"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:413
+#, fuzzy
+msgid "New data manager"
+msgstr "Správce dat „%s“"
 
 #. Translators: Do not translate "table" nor "query"
 #: ../tools/browser/data-manager/data-source.c:402
@@ -8102,6 +8278,11 @@ msgstr[2] "před %lu dny\n"
 msgid "_Query"
 msgstr "_Dotaz"
 
+#: ../tools/browser/query-exec/query-exec-perspective.c:391
+#, fuzzy
+msgid "Query"
+msgstr "_Dotaz"
+
 #: ../tools/browser/query-exec/query-exec-perspective.c:392
 msgid "_New editor"
 msgstr "_Nový editor"
@@ -8205,6 +8386,26 @@ msgstr "_Obsah"
 msgid "View contents"
 msgstr "Zobrazit obsah"
 
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:323
+#, fuzzy
+msgid "_Schema"
+msgstr "Schéma"
+
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:323
+#: ../tools/command-exec.c:652
+msgid "Schema"
+msgstr "Schéma"
+
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:324
+#, fuzzy
+msgid "_New Diagram"
+msgstr "Diagram"
+
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:324
+#, fuzzy
+msgid "Create a new diagram"
+msgstr "Vytvořit novou databázi:"
+
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:417
 msgid "Could not load diagram"
 msgstr "Nelze načíst diagram"
@@ -8281,6 +8482,11 @@ msgstr "Výchozí hodnota: automaticky zvyšovaná hodnota"
 #: ../tools/browser/schema-browser/table-info.c:920
 msgid "Values to insert into table"
 msgstr "Hodnoty, které se mají vložit do tabulky"
+
+#: ../tools/browser/schema-browser/table-info.c:950
+#, fuzzy
+msgid "_Table"
+msgstr "Tabulka"
 
 #: ../tools/browser/schema-browser/table-info.c:951
 msgid "Add to _Favorites"
@@ -8375,10 +8581,6 @@ msgstr "Seznam schémat"
 #: ../tools/command-exec.c:573 ../tools/command-exec.c:698
 msgid "No object found"
 msgstr "Nebyl nalezen žádný objekt"
-
-#: ../tools/command-exec.c:652
-msgid "Schema"
-msgstr "Schéma"
 
 #: ../tools/command-exec.c:727 ../tools/web-server.c:926
 msgid "Column"
@@ -8584,11 +8786,11 @@ msgstr "Pro „%s“ není žádné heslo"
 #: ../tools/gda-sql.c:1438
 #, c-format
 msgid ""
-"All the meta data associated to the '%s' connection will be stored in the '%"
-"s' file\n"
+"All the meta data associated to the '%s' connection will be stored in the "
+"'%s' file\n"
 msgstr ""
-"Všechna metadata vztahující se k připojení „%s“ budou uložena v souboru „%"
-"s“\n"
+"Všechna metadata vztahující se k připojení „%s“ budou uložena v souboru "
+"„%s“\n"
 
 #: ../tools/gda-sql.c:1466
 #, c-format
@@ -8809,10 +9011,6 @@ msgstr "Poslat výstup na standardní výstup"
 #: ../tools/gda-sql.c:2220
 msgid "Send output to output stream"
 msgstr "Poslat výstup do výstupního proudu"
-
-#: ../tools/gda-sql.c:2232
-msgid "Quit"
-msgstr "Ukončit"
 
 #: ../tools/gda-sql.c:2243
 #, c-format
@@ -9274,4 +9472,3 @@ msgstr "Objekty"
 #: ../tools/web-server.c:1884
 msgid "Triggers"
 msgstr "Triggery"
-
