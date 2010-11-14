@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-29 23:35+0100\n"
+"POT-Creation-Date: 2010-11-14 14:16+0100\n"
 "PO-Revision-Date: 2004-11-15 20:54+0100\n"
 "Last-Translator: Josep Puigdemont <josep@imatge-sintetica.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
@@ -102,11 +102,11 @@ msgstr "No s'ha pogut recollir una columna"
 #: ../control-center/dsn-properties-dialog.c:283
 #: ../libgda/gda-connection.c:1536 ../libgda/gda-data-model.c:2071
 #: ../libgda/gda-data-model.c:2079 ../libgda/gda-data-model-dir.c:386
-#: ../libgda/gda-data-model-import.c:1639
-#: ../libgda/gda-data-model-import.c:1936
-#: ../libgda/gda-data-model-import.c:2014 ../libgda/gda-data-select.c:370
-#: ../libgda/gda-data-select.c:2037 ../libgda/gda-data-select.c:2046
-#: ../libgda/gda-data-select.c:2056 ../libgda/gda-data-select.c:3454
+#: ../libgda/gda-data-model-import.c:1680
+#: ../libgda/gda-data-model-import.c:1977
+#: ../libgda/gda-data-model-import.c:2055 ../libgda/gda-data-select.c:370
+#: ../libgda/gda-data-select.c:2063 ../libgda/gda-data-select.c:2072
+#: ../libgda/gda-data-select.c:2082 ../libgda/gda-data-select.c:3480
 #: ../libgda/gda-holder.c:490 ../libgda/gda-holder.c:1721
 #: ../libgda/gda-server-operation.c:616 ../libgda/gda-server-operation.c:1014
 #: ../libgda/gda-set.c:561 ../libgda/gda-tree-mgr-select.c:189
@@ -731,8 +731,8 @@ msgstr ""
 #: ../libgda/gda-data-model-dir.c:883 ../libgda/gda-data-model-dir.c:925
 #: ../libgda/gda-data-model-dsn-list.c:312 ../libgda/gda-data-model-iter.c:296
 #: ../libgda/gda-data-model-iter.c:1025 ../libgda/gda-data-proxy.c:3536
-#: ../libgda/gda-data-select.c:1201 ../libgda/gda-data-select.c:1697
-#: ../libgda/gda-data-select.c:2593 ../libgda/gda-data-select.c:2660
+#: ../libgda/gda-data-select.c:1227 ../libgda/gda-data-select.c:1723
+#: ../libgda/gda-data-select.c:2619 ../libgda/gda-data-select.c:2686
 #: ../libgda-ui/gdaui-combo.c:790
 #, fuzzy, c-format
 msgid "Column %d out of range (0-%d)"
@@ -792,8 +792,8 @@ msgstr ""
 #: ../libgda/gda-data-model-array.c:626 ../libgda/gda-data-model-dir.c:795
 #: ../libgda/gda-data-model-dir.c:968 ../libgda/gda-data-model-dir.c:1323
 #: ../libgda/gda-data-model-dsn-list.c:320 ../libgda/gda-data-proxy.c:3485
-#: ../libgda/gda-data-proxy.c:3523 ../libgda/gda-data-select.c:1653
-#: ../libgda/gda-data-select.c:1707
+#: ../libgda/gda-data-proxy.c:3523 ../libgda/gda-data-select.c:1679
+#: ../libgda/gda-data-select.c:1733
 #, fuzzy, c-format
 msgid "Row %d out of range (0-%d)"
 msgstr "El número de fila està fora del rang"
@@ -802,8 +802,8 @@ msgstr "El número de fila està fora del rang"
 #: ../libgda/gda-data-model-array.c:629 ../libgda/gda-data-model-dir.c:798
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1326
 #: ../libgda/gda-data-model-dsn-list.c:323 ../libgda/gda-data-proxy.c:3488
-#: ../libgda/gda-data-proxy.c:3526 ../libgda/gda-data-select.c:1656
-#: ../libgda/gda-data-select.c:1710
+#: ../libgda/gda-data-proxy.c:3526 ../libgda/gda-data-select.c:1682
+#: ../libgda/gda-data-select.c:1736
 #, fuzzy, c-format
 msgid "Row %d not found (empty data model)"
 msgstr "No s'ha trobat la taula %s"
@@ -1083,21 +1083,21 @@ msgstr ""
 msgid "The '%s' option must hold a boolean value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:618
+#: ../libgda/gda-data-model-import.c:659
 msgid "\"options\" property is not a GdaSet object"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:892
+#: ../libgda/gda-data-model-import.c:933
 #, c-format
 msgid "The '%s' option must hold a GType value, ignored."
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:958
+#: ../libgda/gda-data-model-import.c:999
 #, fuzzy, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "ha fallat la conversió de dades pel tipus %d"
 
-#: ../libgda/gda-data-model-import.c:961
+#: ../libgda/gda-data-model-import.c:1002
 #: ../libgda/sqlite/gda-sqlite-provider.c:779
 #: ../providers/bdb/gda-bdb-provider.c:209
 #: ../tools/browser/common/gdaui-data-import.c:178
@@ -1105,93 +1105,93 @@ msgstr "ha fallat la conversió de dades pel tipus %d"
 msgid "no detail"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:999
+#: ../libgda/gda-data-model-import.c:1040
 #, fuzzy, c-format
 msgid "Could not convert string '%s' to a '%s' value"
 msgstr "No s'ha pogut recuperar el valor de la columna"
 
-#: ../libgda/gda-data-model-import.c:1055
+#: ../libgda/gda-data-model-import.c:1096
 #, fuzzy, c-format
 msgid "Error while parsing CSV file: %s"
 msgstr "S'ha produït un error en llegir %s: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1158
+#: ../libgda/gda-data-model-import.c:1199
 msgid "Failed to read node in XML file"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1177
+#: ../libgda/gda-data-model-import.c:1218
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1221
-#: ../libgda/gda-data-model-import.c:1544
+#: ../libgda/gda-data-model-import.c:1262
+#: ../libgda/gda-data-model-import.c:1585
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1272
+#: ../libgda/gda-data-model-import.c:1313
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1306
+#: ../libgda/gda-data-model-import.c:1347
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1308
+#: ../libgda/gda-data-model-import.c:1349
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1320
+#: ../libgda/gda-data-model-import.c:1361
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1369
+#: ../libgda/gda-data-model-import.c:1410
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1393
+#: ../libgda/gda-data-model-import.c:1434
 msgid "Row has too many values (which are ignored)"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1440
+#: ../libgda/gda-data-model-import.c:1481
 #, fuzzy, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "ha fallat la conversió de dades pel tipus %d"
 
-#: ../libgda/gda-data-model-import.c:1513
+#: ../libgda/gda-data-model-import.c:1554
 #, fuzzy, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "El node <data> està duplicat a la taula %s"
 
-#: ../libgda/gda-data-model-import.c:1595
+#: ../libgda/gda-data-model-import.c:1636
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1773
+#: ../libgda/gda-data-model-import.c:1814
 #, fuzzy
 msgid "Data model does not support random access"
 msgstr "No es pot actualitzar el model de dades %p"
 
-#: ../libgda/gda-data-model-import.c:1830
+#: ../libgda/gda-data-model-import.c:1871
 #, c-format
 msgid "Row at line %d does not have enough values"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1835
+#: ../libgda/gda-data-model-import.c:1876
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1860
+#: ../libgda/gda-data-model-import.c:1901
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1935
-#: ../libgda/gda-data-model-import.c:2013
+#: ../libgda/gda-data-model-import.c:1976
+#: ../libgda/gda-data-model-import.c:2054
 #, fuzzy, c-format
 msgid "Could not set iterator's value: %s"
 msgstr "No s'ha pogut obtindre el tipus de dades del paràmetre"
@@ -1234,7 +1234,7 @@ msgstr "No s'ha pogut crear el fitxer %s"
 msgid "Error in filter expression"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:3112 ../libgda/gda-data-select.c:1449
+#: ../libgda/gda-data-proxy.c:3112 ../libgda/gda-data-select.c:1475
 msgid "Incorrect filter expression"
 msgstr ""
 
@@ -1263,174 +1263,174 @@ msgstr ""
 msgid "Could not re-run SELECT statement: %s"
 msgstr "No s'ha pogut preparar la sentència d'Oracle"
 
-#: ../libgda/gda-data-select.c:957
+#: ../libgda/gda-data-select.c:983
 msgid "Incorrect SQL expression"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:982
+#: ../libgda/gda-data-select.c:1008
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:989
+#: ../libgda/gda-data-select.c:1015
 #, fuzzy
 msgid "Can't get the prepared statement's actual statement"
 msgstr "No s'ha pogut preparar la sentència d'Oracle"
 
-#: ../libgda/gda-data-select.c:995
+#: ../libgda/gda-data-select.c:1021
 #, fuzzy
 msgid "Unsupported type of SELECT statement"
 msgstr "No s'ha pogut preparar la sentència d'Oracle"
 
-#: ../libgda/gda-data-select.c:1064
+#: ../libgda/gda-data-select.c:1090
 msgid "INSERT statement must contain values to insert"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1070
+#: ../libgda/gda-data-select.c:1096
 msgid "INSERT statement must insert only one row"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1097
+#: ../libgda/gda-data-select.c:1123
 msgid "DELETE statement must have a WHERE part"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1137
+#: ../libgda/gda-data-select.c:1163
 #, fuzzy
 msgid "UPDATE statement must have a WHERE part"
 msgstr "El model no té valors no únics per actualitzar."
 
-#: ../libgda/gda-data-select.c:1191
+#: ../libgda/gda-data-select.c:1217
 #, c-format
 msgid "Modification statement uses an unknown '%s' parameter"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1213
+#: ../libgda/gda-data-select.c:1239
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1250
+#: ../libgda/gda-data-select.c:1276
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1298 ../libgda/gda-data-select.c:1504
-#: ../libgda/gda-data-select.c:3327
+#: ../libgda/gda-data-select.c:1324 ../libgda/gda-data-select.c:1530
+#: ../libgda/gda-data-select.c:3353
 #, fuzzy
 msgid "No connection to use"
 msgstr "No s'ha especificat cap base de dades"
 
-#: ../libgda/gda-data-select.c:1344
+#: ../libgda/gda-data-select.c:1370
 msgid "Invalid unique row condition (only equal operators are allowed)"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1376 ../libgda/gda-data-select.c:1431
+#: ../libgda/gda-data-select.c:1402 ../libgda/gda-data-select.c:1457
 #, fuzzy
 msgid "Unique row condition has already been specified"
 msgstr "La taula %s ja existeix"
 
-#: ../libgda/gda-data-select.c:1513 ../libgda/gda-data-select.c:1524
+#: ../libgda/gda-data-select.c:1539 ../libgda/gda-data-select.c:1550
 #, fuzzy
 msgid "No table to select from in SELECT statement"
 msgstr "No s'ha pogut preparar la sentència d'Oracle"
 
-#: ../libgda/gda-data-select.c:1518
+#: ../libgda/gda-data-select.c:1544
 msgid "SELECT statement uses more than one table to select from"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1690 ../libgda/gda-data-select.c:2410
-#: ../libgda/gda-data-select.c:2580 ../libgda/gda-data-select.c:2732
-#: ../libgda/gda-data-select.c:2820 ../libgda/gda-data-select.c:3015
+#: ../libgda/gda-data-select.c:1716 ../libgda/gda-data-select.c:2436
+#: ../libgda/gda-data-select.c:2606 ../libgda/gda-data-select.c:2758
+#: ../libgda/gda-data-select.c:2846 ../libgda/gda-data-select.c:3041
 #, fuzzy
 msgid "Data model does only support random access"
 msgstr "No es pot actualitzar el model de dades %p"
 
-#: ../libgda/gda-data-select.c:1725
+#: ../libgda/gda-data-select.c:1751
 msgid "Unable to retrieve data after modifications"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1745 ../libgda/gda-data-select.c:1753
-#: ../libgda/gda-data-select.c:1775
+#: ../libgda/gda-data-select.c:1771 ../libgda/gda-data-select.c:1779
+#: ../libgda/gda-data-select.c:1801
 msgid ""
 "Unable to retrieve data after modifications, no further modification will be "
 "allowed"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1810
+#: ../libgda/gda-data-select.c:1836
 #, fuzzy, c-format
 msgid "Unable to get value for row %d and column %d"
 msgstr "No s'ha pogut obtindre el nom de la columna d'Oracle"
 
-#: ../libgda/gda-data-select.c:2036 ../libgda/gda-data-select.c:2045
-#: ../libgda/gda-data-select.c:2055
+#: ../libgda/gda-data-select.c:2062 ../libgda/gda-data-select.c:2071
+#: ../libgda/gda-data-select.c:2081
 #, fuzzy, c-format
 msgid "Could not change iter's value for column %d: %s"
 msgstr "No s'ha pogut obtindre el tipus de dades del paràmetre"
 
-#: ../libgda/gda-data-select.c:2050
+#: ../libgda/gda-data-select.c:2076
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2130 ../libgda/gda-data-select.c:2223
+#: ../libgda/gda-data-select.c:2156 ../libgda/gda-data-select.c:2249
 msgid "Some columns can't be modified"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2277
+#: ../libgda/gda-data-select.c:2303
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2317
+#: ../libgda/gda-data-select.c:2343
 msgid "Unable to identify a way to fetch a single row"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2324
+#: ../libgda/gda-data-select.c:2350
 #, fuzzy
 msgid "Can only operate on non compound SELECT statements"
 msgstr "No s'ha pogut preparar la sentència d'Oracle"
 
-#: ../libgda/gda-data-select.c:2405 ../libgda/gda-data-select.c:2575
-#: ../libgda/gda-data-select.c:2646 ../libgda/gda-data-select.c:2727
-#: ../libgda/gda-data-select.c:2815 ../libgda/gda-data-select.c:3010
+#: ../libgda/gda-data-select.c:2431 ../libgda/gda-data-select.c:2601
+#: ../libgda/gda-data-select.c:2672 ../libgda/gda-data-select.c:2753
+#: ../libgda/gda-data-select.c:2841 ../libgda/gda-data-select.c:3036
 msgid "Modifications are not allowed anymore"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2415 ../libgda/gda-data-select.c:2585
-#: ../libgda/gda-data-select.c:2651 ../libgda/gda-data-select.c:2737
+#: ../libgda/gda-data-select.c:2441 ../libgda/gda-data-select.c:2611
+#: ../libgda/gda-data-select.c:2677 ../libgda/gda-data-select.c:2763
 msgid "No UPDATE statement provided"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2455
+#: ../libgda/gda-data-select.c:2481
 #, fuzzy
 msgid "Could not get iterator's value"
 msgstr "No s'ha pogut recuperar el valor de la columna"
 
-#: ../libgda/gda-data-select.c:2612 ../libgda/gda-data-select.c:2679
+#: ../libgda/gda-data-select.c:2638 ../libgda/gda-data-select.c:2705
 #, fuzzy, c-format
 msgid "Column %d can't be modified"
 msgstr "Columna fora de rang"
 
-#: ../libgda/gda-data-select.c:2745
+#: ../libgda/gda-data-select.c:2771
 #, c-format
 msgid "Too many values (%d as maximum)"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2825
+#: ../libgda/gda-data-select.c:2851
 msgid "No INSERT statement provided"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2830
+#: ../libgda/gda-data-select.c:2856
 msgid "Cannot add a row because the number of rows in unknown"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2859
+#: ../libgda/gda-data-select.c:2885
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:391
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:400
 msgid "Missing values to insert in INSERT statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:3020
+#: ../libgda/gda-data-select.c:3046
 msgid "No DELETE statement provided"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:3452
+#: ../libgda/gda-data-select.c:3478
 #, c-format
 msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
@@ -2110,6 +2110,7 @@ msgstr "Espai de noms"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 #: ../tools/browser/data-manager/data-source-editor.c:135
+#: ../tools/browser/schema-browser/table-info.c:950
 msgid "Table"
 msgstr "Taula"
 
@@ -2360,7 +2361,7 @@ msgstr ""
 
 #: ../libgda/gda-statement.c:1244 ../libgda/sqlite/gda-sqlite-provider.c:2601
 #: ../providers/jdbc/gda-jdbc-provider.c:1352
-#: ../providers/mysql/gda-mysql-provider.c:2230
+#: ../providers/mysql/gda-mysql-provider.c:2240
 #: ../providers/postgres/gda-postgres-provider.c:1954
 #: ../providers/web/gda-web-provider.c:1512
 #, c-format
@@ -2502,7 +2503,7 @@ msgstr ""
 #: ../libgda/gda-util.c:1336 ../libgda/gda-util.c:1393
 #: ../libgda/gda-util.c:1433 ../libgda/sqlite/gda-sqlite-provider.c:2582
 #: ../providers/jdbc/gda-jdbc-provider.c:1323
-#: ../providers/mysql/gda-mysql-provider.c:2210
+#: ../providers/mysql/gda-mysql-provider.c:2220
 #: ../providers/postgres/gda-postgres-provider.c:1936
 #: ../providers/web/gda-web-provider.c:1492
 #, c-format
@@ -2680,12 +2681,12 @@ msgstr "No s'ha pogt definir l'opció empty_result_callbacks de SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:993
 #: ../libgda/sqlite/gda-sqlite-provider.c:1033
-#: ../libgda-ui/data-entries/plugins/libmain.c:85
-#: ../libgda-ui/data-entries/plugins/libmain.c:123
-#: ../libgda-ui/data-entries/plugins/libmain.c:151
-#: ../libgda-ui/data-entries/plugins/libmain.c:158
-#: ../libgda-ui/data-entries/plugins/libmain.c:233
-#: ../libgda-ui/data-entries/plugins/libmain.c:257
+#: ../libgda-ui/data-entries/plugins/libmain.c:87
+#: ../libgda-ui/data-entries/plugins/libmain.c:125
+#: ../libgda-ui/data-entries/plugins/libmain.c:153
+#: ../libgda-ui/data-entries/plugins/libmain.c:160
+#: ../libgda-ui/data-entries/plugins/libmain.c:250
+#: ../libgda-ui/data-entries/plugins/libmain.c:274
 #: ../providers/mysql/gda-mysql-provider.c:847
 #: ../providers/mysql/gda-mysql-provider.c:888
 #: ../providers/postgres/gda-postgres-provider.c:739
@@ -2792,8 +2793,8 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-provider.c:2567
 #: ../providers/jdbc/gda-jdbc-provider.c:1305
 #: ../providers/jdbc/gda-jdbc-provider.c:1308
-#: ../providers/mysql/gda-mysql-provider.c:2192
-#: ../providers/mysql/gda-mysql-provider.c:2195
+#: ../providers/mysql/gda-mysql-provider.c:2202
+#: ../providers/mysql/gda-mysql-provider.c:2205
 #: ../providers/postgres/gda-postgres-provider.c:1918
 #: ../providers/postgres/gda-postgres-provider.c:1921
 #: ../providers/web/gda-web-provider.c:1474
@@ -2804,19 +2805,19 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2626
 #: ../providers/jdbc/gda-jdbc-provider.c:1387
-#: ../providers/mysql/gda-mysql-provider.c:2256
+#: ../providers/mysql/gda-mysql-provider.c:2266
 #: ../providers/postgres/gda-postgres-provider.c:1979
 #: ../providers/web/gda-web-provider.c:1541
 msgid "Can't rewrite statement handle default values"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2690
-#: ../providers/mysql/gda-mysql-provider.c:2388
+#: ../providers/mysql/gda-mysql-provider.c:2398
 msgid "Can't get BLOB's length"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2692
-#: ../providers/mysql/gda-mysql-provider.c:2390
+#: ../providers/mysql/gda-mysql-provider.c:2400
 msgid "BLOB is too big"
 msgstr ""
 
@@ -2845,7 +2846,8 @@ msgstr "El número de fila està fora del rang"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:235
 #: ../providers/jdbc/gda-jdbc-recordset.c:279
-#: ../providers/mysql/gda-mysql-recordset.c:429
+#: ../providers/mysql/gda-mysql-recordset.c:432
+#: ../providers/mysql/gda-mysql-recordset.c:562
 #: ../providers/postgres/gda-postgres-recordset.c:280
 #: ../providers/web/gda-web-recordset.c:218
 #, fuzzy, c-format
@@ -5033,62 +5035,62 @@ msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr ""
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2382
+#: ../providers/mysql/gda-mysql-provider.c:2392
 msgid "Can't read whole BLOB into memory"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-provider.c:2472
+#: ../providers/mysql/gda-mysql-provider.c:2482
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:135
+#: ../providers/mysql/gda-mysql-recordset.c:141
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size "
 "ignored."
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:224
+#: ../providers/mysql/gda-mysql-recordset.c:230
 #: ../providers/postgres/gda-postgres-recordset.c:137
 msgid "Number of rows fetched at a time"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:232
+#: ../providers/mysql/gda-mysql-recordset.c:238
 msgid "Number of row chunks read since the object creation"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:517
-#: ../providers/mysql/gda-mysql-recordset.c:814
-#: ../providers/mysql/gda-mysql-recordset.c:827
-#: ../providers/mysql/gda-mysql-recordset.c:840
-#: ../providers/mysql/gda-mysql-recordset.c:859
+#: ../providers/mysql/gda-mysql-recordset.c:650
+#: ../providers/mysql/gda-mysql-recordset.c:944
+#: ../providers/mysql/gda-mysql-recordset.c:957
+#: ../providers/mysql/gda-mysql-recordset.c:970
+#: ../providers/mysql/gda-mysql-recordset.c:989
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:668
+#: ../providers/mysql/gda-mysql-recordset.c:798
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:685
+#: ../providers/mysql/gda-mysql-recordset.c:815
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:731
+#: ../providers/mysql/gda-mysql-recordset.c:861
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:747
-#: ../providers/mysql/gda-mysql-recordset.c:761
+#: ../providers/mysql/gda-mysql-recordset.c:877
+#: ../providers/mysql/gda-mysql-recordset.c:891
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:849
+#: ../providers/mysql/gda-mysql-recordset.c:979
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr ""
@@ -7052,6 +7054,26 @@ msgstr ""
 msgid "Use the whole screen"
 msgstr ""
 
+#: ../tools/browser/browser-window.c:276
+#, fuzzy
+msgid "_Connection"
+msgstr "Cadena de connexió"
+
+#: ../tools/browser/browser-window.c:276
+#, fuzzy
+msgid "Connection"
+msgstr "Cadena de connexió"
+
+#: ../tools/browser/browser-window.c:277
+#, fuzzy
+msgid "_Connect"
+msgstr "Cadena de connexió"
+
+#: ../tools/browser/browser-window.c:277
+#, fuzzy
+msgid "Open a connection"
+msgstr "La localització que es farà servir en la connexió"
+
 #: ../tools/browser/browser-window.c:278
 #, fuzzy
 msgid "_Bind connection"
@@ -7062,6 +7084,140 @@ msgid ""
 "Use connection to create\n"
 "a new binding connection to access data\n"
 "from multiple databases at once"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:281
+#, fuzzy
+msgid "_Properties"
+msgstr "Procediments"
+
+#: ../tools/browser/browser-window.c:281
+#, fuzzy
+msgid "Connection properties"
+msgstr "Localització definida a '%s'."
+
+#: ../tools/browser/browser-window.c:282
+#, fuzzy
+msgid "_Connections list"
+msgstr "Cadena de connexió"
+
+#: ../tools/browser/browser-window.c:282
+#, fuzzy
+msgid "Connections list"
+msgstr "Cadena de connexió"
+
+#: ../tools/browser/browser-window.c:283
+msgid "_Fetch meta data"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:283
+msgid "Fetch meta data"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:284
+#, fuzzy
+msgid "_Close connection"
+msgstr "Fes servir una connexió segura"
+
+#: ../tools/browser/browser-window.c:284
+#, fuzzy
+msgid "Close this connection"
+msgstr "Fes servir una connexió segura"
+
+#: ../tools/browser/browser-window.c:285
+msgid "_Quit"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:285 ../tools/gda-sql.c:2232
+msgid "Quit"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:286
+#, fuzzy
+msgid "_Edit"
+msgstr "Taula"
+
+#: ../tools/browser/browser-window.c:286
+#, fuzzy
+msgid "Edit"
+msgstr "Taula"
+
+#: ../tools/browser/browser-window.c:287
+#, fuzzy
+msgid "_Display"
+msgstr "Tipus de dada"
+
+#: ../tools/browser/browser-window.c:287
+#, fuzzy
+msgid "Display"
+msgstr "Tipus de dada"
+
+#: ../tools/browser/browser-window.c:288
+msgid "_Perspective"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:288
+msgid "Perspective"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:289
+msgid "_Window"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:289
+msgid "Window"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:290
+msgid "_New window"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:290
+#, fuzzy
+msgid "Open a new window for current connection"
+msgstr "La localització que es farà servir en la connexió"
+
+#: ../tools/browser/browser-window.c:291
+#, fuzzy
+msgid "New window for _connection"
+msgstr "La localització que es farà servir en la connexió"
+
+#: ../tools/browser/browser-window.c:291
+#, fuzzy
+msgid "Open a new window for a connection"
+msgstr "La localització que es farà servir en la connexió"
+
+#: ../tools/browser/browser-window.c:292
+msgid "_Close"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:292
+msgid "Close this window"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:293
+msgid "_Help"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:293
+#: ../tools/browser/data-manager/data-console.c:419 ../tools/html-doc.c:95
+msgid "Help"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:294
+msgid "_About"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:294
+msgid "About"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:296
+msgid "_Manual"
+msgstr ""
+
+#: ../tools/browser/browser-window.c:296
+msgid "Manual"
 msgstr ""
 
 #: ../tools/browser/browser-window.c:298
@@ -7659,10 +7815,6 @@ msgid ""
 "as XML (advanced)"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:419 ../tools/html-doc.c:95
-msgid "Help"
-msgstr ""
-
 #: ../tools/browser/data-manager/data-console.c:432
 msgid "BBB:"
 msgstr ""
@@ -7781,6 +7933,26 @@ msgstr ""
 #, fuzzy
 msgid "Show or hide favorites"
 msgstr "No s'ha pogut carregar el fitxer a %s"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:412
+#, fuzzy
+msgid "_Manager"
+msgstr "Nom de la base de dades"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:412
+#, fuzzy
+msgid "Manager"
+msgstr "Nom de la base de dades"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:413
+#, fuzzy
+msgid "_New data manager"
+msgstr "Nom de la base de dades"
+
+#: ../tools/browser/data-manager/data-manager-perspective.c:413
+#, fuzzy
+msgid "New data manager"
+msgstr "Nom de la base de dades"
 
 #. Translators: Do not translate "table" nor "query"
 #: ../tools/browser/data-manager/data-source.c:402
@@ -8132,6 +8304,10 @@ msgstr[1] ""
 msgid "_Query"
 msgstr ""
 
+#: ../tools/browser/query-exec/query-exec-perspective.c:391
+msgid "Query"
+msgstr ""
+
 #: ../tools/browser/query-exec/query-exec-perspective.c:392
 msgid "_New editor"
 msgstr ""
@@ -8244,6 +8420,25 @@ msgstr "Comentaris"
 msgid "View contents"
 msgstr "Nom del camp"
 
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:323
+msgid "_Schema"
+msgstr ""
+
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:323
+#: ../tools/command-exec.c:652
+msgid "Schema"
+msgstr ""
+
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:324
+#, fuzzy
+msgid "_New Diagram"
+msgstr "Nom"
+
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:324
+#, fuzzy
+msgid "Create a new diagram"
+msgstr "Ubicació"
+
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:417
 #, fuzzy
 msgid "Could not load diagram"
@@ -8323,6 +8518,11 @@ msgstr ""
 #: ../tools/browser/schema-browser/table-info.c:920
 msgid "Values to insert into table"
 msgstr ""
+
+#: ../tools/browser/schema-browser/table-info.c:950
+#, fuzzy
+msgid "_Table"
+msgstr "Taula"
 
 #: ../tools/browser/schema-browser/table-info.c:951
 msgid "Add to _Favorites"
@@ -8421,10 +8621,6 @@ msgstr ""
 
 #: ../tools/command-exec.c:573 ../tools/command-exec.c:698
 msgid "No object found"
-msgstr ""
-
-#: ../tools/command-exec.c:652
-msgid "Schema"
 msgstr ""
 
 #: ../tools/command-exec.c:727 ../tools/web-server.c:926
@@ -8847,10 +9043,6 @@ msgstr ""
 
 #: ../tools/gda-sql.c:2220
 msgid "Send output to output stream"
-msgstr ""
-
-#: ../tools/gda-sql.c:2232
-msgid "Quit"
 msgstr ""
 
 #: ../tools/gda-sql.c:2243
