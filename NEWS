@@ -1,3 +1,31 @@
+libgda 4.2.1, 2010-11-14
+
+ - code cleanups and compilation warnings removal (thanks to David King and Murray Cumming),
+   used the FlawFinder and cppcheck tools
+ - more annotations for GObject Introspection (thanks to Jonh Wendell)
+ - removed old database providers' code
+ - build system improvements:
+   	 - use better build of generated source code
+   	 - better detection of external dependencies in configure script using specfic M4 files
+	 - updated Lemon parser generator from SQLite
+ - GdaBrowser improvements: error reporting in data manager perspective, authentification dialog
+ - documentation corrections
+ - updated SQLCipher to version 1.1.8
+ - optimized virtual tables usage
+ - improved GdaDataModel import and export
+ - MySQL provider: support for statements where the prepared statement API does not work
+ - bug fixes: #630655, #630953, #617550, #633247, #634737 and other minor ones
+ - translations:
+	- id (Andika Triwidada)
+	- cs (Marek Černocký, Petr Kovar)
+	- es (Jorge González)
+	- eu (Inaki Larranaga Murgoitio)
+	- sl (Matej Urbančič)
+	- fr (Bruno Brouard)
+	- da (Joe Hansen)
+	- ca@valencia (Carles Ferrando)
+	- el (Vasilis Tsivikis)
+
 libgda 4.2.0, 2010-09-26
 
  - misc corrections
