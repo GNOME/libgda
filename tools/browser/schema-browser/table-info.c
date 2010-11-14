@@ -934,7 +934,7 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 
 
 static GtkActionEntry ui_actions[] = {
-	{ "Table", NULL, "_Table", NULL, "Table", NULL },
+	{ "Table", NULL, N_("_Table"), NULL, N_("Table"), NULL },
 	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("Add to _Favorites"), NULL, N_("Add table to favorites"),
 	  G_CALLBACK (action_add_to_fav_cb)},
 	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View table's contents"),

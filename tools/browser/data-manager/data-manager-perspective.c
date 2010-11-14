@@ -409,8 +409,8 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
 };
 
 static GtkActionEntry ui_actions[] = {
-        { "DataManagerMenu", NULL, "_Manager", NULL, "ManagerMenu", NULL },
-        { "NewDataManager", GTK_STOCK_NEW, "_New data manager", "<control>T", "New data manager",
+        { "DataManagerMenu", NULL, N_("_Manager"), NULL, N_("Manager"), NULL },
+        { "NewDataManager", GTK_STOCK_NEW, N_("_New data manager"), "<control>T", N_("New data manager"),
           G_CALLBACK (manager_new_cb)},
 };
 
