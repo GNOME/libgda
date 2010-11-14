@@ -1788,12 +1788,17 @@ g_object_unref (eng);
 
   <part id="part_index">
     <title>Appendix</title>
-    &fdl-appendix;
     <index id="index_main">
       <title>Index</title>
     </index>
     <index id="index-4-2" role="4.2">
       <title>Index of new symbols in 4.2</title>
+    </index>
+    <index id="index-4-2-1" role="4.2.1">
+      <title>Index of new symbols in 4.2.1</title>
+    </index>
+    <index id="index-4-2-2" role="4.2.2">
+      <title>Index of new symbols in 4.2.2</title>
     </index>
     <index id="index-deprecated" role="deprecated">
       <title>Index of deprecated symbols</title>

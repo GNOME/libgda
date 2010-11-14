@@ -17,7 +17,7 @@
 cross_path=/local/Win32/gtk
 depend_path=/local/Win32
 prefix=/local/Win32/Libgda
-version=4.2.1
+version=4.2.2
 
 
 
