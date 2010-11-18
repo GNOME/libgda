@@ -131,8 +131,20 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 		}
 		
 		plugin_struct = g_hash_table_lookup (gdaui_plugins_hash, plugin);
-		if (plugin_struct && plugin_struct->entry_create_func) 
-			entry = (plugin_struct->entry_create_func) (dh, type, options);
+		if (plugin_struct && plugin_struct->entry_create_func) { 
+			gboolean allok = TRUE;
+			if (plugin_struct->nb_g_types > 0) {
+				gint i;
+				for (i = 0; i < plugin_struct->nb_g_types; i++) {
+					if (plugin_struct->valid_g_types[i] == type)
+						break;
+				}
+				if (i == plugin_struct->nb_g_types)
+					allok = FALSE;
+			}
+			if (allok)
+				entry = (plugin_struct->entry_create_func) (dh, type, options);
+		}
 		g_free (plugin);
 	}
 
