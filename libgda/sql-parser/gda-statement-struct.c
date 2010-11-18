@@ -707,7 +707,7 @@ gda_sql_table_check_validity (GdaSqlTable *table, GdaSqlStatementCheckValidityDa
 	}
 
 	dbo = find_table_or_view ((GdaSqlAnyPart*) table, data, table->table_name, error);
-	if (dbo && ((dbo->obj_type != GDA_META_DB_TABLE) ||
+	if (dbo && ((dbo->obj_type != GDA_META_DB_TABLE) &&
 		    (dbo->obj_type != GDA_META_DB_VIEW))) {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
 			     _("Table '%s' not found"), table->table_name);
