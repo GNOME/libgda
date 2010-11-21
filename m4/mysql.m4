@@ -157,7 +157,7 @@ int main() {
 	        for d in $mysql_test_dir
 	        do
 	            AC_MSG_NOTICE([checking for mysql_config tool in $d])
-                    AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5,,[$d])
+                    AC_PATH_PROGS(MYSQL_CONFIG, mysql_config mysql_config5,,[$d/bin])
 		    if test "x$MYSQL_CONFIG" != x
 		    then
 	    	        pkgmysql=yes
