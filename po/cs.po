@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-14 14:16+0100\n"
-"PO-Revision-Date: 2010-10-31 13:19+0100\n"
+"POT-Creation-Date: 2010-11-21 22:31+0100\n"
+"PO-Revision-Date: 2010-11-17 03:34+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -130,7 +130,7 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:400
 #: ../libgda-ui/data-entries/plugins/common-pict.c:509
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:168
-#: ../libgda-ui/gdaui-init.c:496 ../libgda-ui/gdaui-login.c:422
+#: ../libgda-ui/gdaui-init.c:508 ../libgda-ui/gdaui-login.c:422
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -2708,12 +2708,12 @@ msgstr "Nelze nastavit volbu SQLite empty_result_callbacks: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:993
 #: ../libgda/sqlite/gda-sqlite-provider.c:1033
-#: ../libgda-ui/data-entries/plugins/libmain.c:87
-#: ../libgda-ui/data-entries/plugins/libmain.c:125
-#: ../libgda-ui/data-entries/plugins/libmain.c:153
-#: ../libgda-ui/data-entries/plugins/libmain.c:160
-#: ../libgda-ui/data-entries/plugins/libmain.c:250
-#: ../libgda-ui/data-entries/plugins/libmain.c:274
+#: ../libgda-ui/data-entries/plugins/libmain.c:85
+#: ../libgda-ui/data-entries/plugins/libmain.c:123
+#: ../libgda-ui/data-entries/plugins/libmain.c:151
+#: ../libgda-ui/data-entries/plugins/libmain.c:158
+#: ../libgda-ui/data-entries/plugins/libmain.c:233
+#: ../libgda-ui/data-entries/plugins/libmain.c:257
 #: ../providers/mysql/gda-mysql-provider.c:847
 #: ../providers/mysql/gda-mysql-provider.c:888
 #: ../providers/postgres/gda-postgres-provider.c:739
@@ -4074,12 +4074,12 @@ msgstr "Vymazat filtr"
 msgid "Attempt to initialize an already initialized library"
 msgstr "Pokus o inicializaci již inicializované knihovny"
 
-#: ../libgda-ui/gdaui-init.c:465
+#: ../libgda-ui/gdaui-init.c:477
 msgid "Could not open plugins directory, no plugin loaded."
 msgstr ""
 "Nelze otevřít složku se zásuvnými moduly, žádný zásuvný modul nebude načten."
 
-#: ../libgda-ui/gdaui-init.c:485
+#: ../libgda-ui/gdaui-init.c:497
 #: ../tools/browser/data-manager/data-widget.c:609
 #: ../tools/browser/data-manager/data-widget.c:614
 #: ../tools/browser/data-manager/data-widget.c:616
@@ -4089,12 +4089,12 @@ msgstr ""
 msgid "Error: %s"
 msgstr "Chyba: %s"
 
-#: ../libgda-ui/gdaui-init.c:492
+#: ../libgda-ui/gdaui-init.c:504
 #, c-format
 msgid "Loading file %s...\n"
 msgstr "Načítá se soubor %s…\n"
 
-#: ../libgda-ui/gdaui-init.c:495
+#: ../libgda-ui/gdaui-init.c:507
 #, c-format
 msgid "Plugins load warning: %s"
 msgstr "Varování načítání zásuvných modulů: %s"
@@ -7010,24 +7010,20 @@ msgid "Use the whole screen"
 msgstr "Použít celou obrazovku"
 
 #: ../tools/browser/browser-window.c:276
-#, fuzzy
 msgid "_Connection"
-msgstr "Připojení"
+msgstr "_Připojení"
 
 #: ../tools/browser/browser-window.c:276
-#, fuzzy
 msgid "Connection"
 msgstr "Připojení"
 
 #: ../tools/browser/browser-window.c:277
-#, fuzzy
 msgid "_Connect"
-msgstr "Připojit"
+msgstr "_Připojit"
 
 #: ../tools/browser/browser-window.c:277
-#, fuzzy
 msgid "Open a connection"
-msgstr "Otevřít nové připojení"
+msgstr "Otevřít připojení"
 
 #: ../tools/browser/browser-window.c:278
 msgid "_Bind connection"
@@ -7044,123 +7040,104 @@ msgstr ""
 "k datům z více databází naráz"
 
 #: ../tools/browser/browser-window.c:281
-#, fuzzy
 msgid "_Properties"
-msgstr "Vlastnosti"
+msgstr "_Vlastnosti"
 
 #: ../tools/browser/browser-window.c:281
-#, fuzzy
 msgid "Connection properties"
 msgstr "Vlastnosti připojení"
 
 #: ../tools/browser/browser-window.c:282
-#, fuzzy
 msgid "_Connections list"
-msgstr "Připojení"
+msgstr "_Seznam připojení"
 
 #: ../tools/browser/browser-window.c:282
-#, fuzzy
 msgid "Connections list"
-msgstr "Připojení"
+msgstr "Seznam připojení"
 
 #: ../tools/browser/browser-window.c:283
 msgid "_Fetch meta data"
-msgstr ""
+msgstr "Získa_t metadata"
 
 #: ../tools/browser/browser-window.c:283
 msgid "Fetch meta data"
-msgstr ""
+msgstr "Získat metadata"
 
 #: ../tools/browser/browser-window.c:284
-#, fuzzy
 msgid "_Close connection"
-msgstr "Uzavřít připojení"
+msgstr "U_zavřít připojení"
 
 #: ../tools/browser/browser-window.c:284
-#, fuzzy
 msgid "Close this connection"
-msgstr "Zavřít připojení"
+msgstr "Uzavřít toto připojení"
 
 #: ../tools/browser/browser-window.c:285
-#, fuzzy
 msgid "_Quit"
-msgstr "Ukončit"
+msgstr "U_končit"
 
 #: ../tools/browser/browser-window.c:285 ../tools/gda-sql.c:2232
 msgid "Quit"
 msgstr "Ukončit"
 
 #: ../tools/browser/browser-window.c:286
-#, fuzzy
 msgid "_Edit"
-msgstr "Upravitelné"
+msgstr "_Upravit"
 
 #: ../tools/browser/browser-window.c:286
-#, fuzzy
 msgid "Edit"
-msgstr "Upravitelné"
+msgstr "Upravit"
 
 #: ../tools/browser/browser-window.c:287
-#, fuzzy
 msgid "_Display"
-msgstr "Data, která se mají zobrazit"
+msgstr "_Zobrazit"
 
 #: ../tools/browser/browser-window.c:287
-#, fuzzy
 msgid "Display"
-msgstr "Data, která se mají zobrazit"
+msgstr "Zobrazit"
 
 #: ../tools/browser/browser-window.c:288
 msgid "_Perspective"
-msgstr ""
+msgstr "_Pohled"
 
 #: ../tools/browser/browser-window.c:288
 msgid "Perspective"
-msgstr ""
+msgstr "Pohled"
 
 #: ../tools/browser/browser-window.c:289
-#, fuzzy
 msgid "_Window"
-msgstr "Windows CP866"
+msgstr "_Okno"
 
 #: ../tools/browser/browser-window.c:289
-#, fuzzy
 msgid "Window"
-msgstr "Windows CP866"
+msgstr "Okno"
 
 #: ../tools/browser/browser-window.c:290
-#, fuzzy
 msgid "_New window"
-msgstr "_Nový editor"
+msgstr "_Nové okno"
 
 #: ../tools/browser/browser-window.c:290
-#, fuzzy
 msgid "Open a new window for current connection"
-msgstr "Otevřít nové připojení"
+msgstr "Otevřít nové okno pro současné připojení"
 
 #: ../tools/browser/browser-window.c:291
-#, fuzzy
 msgid "New window for _connection"
-msgstr "Nové virtuální připojení"
+msgstr "Nové okno pro _připojení"
 
 #: ../tools/browser/browser-window.c:291
-#, fuzzy
 msgid "Open a new window for a connection"
-msgstr "Otevřít nové připojení"
+msgstr "Otevřít nové okno pro připojení"
 
 #: ../tools/browser/browser-window.c:292
-#, fuzzy
 msgid "_Close"
-msgstr "Zavřít kartu"
+msgstr "_Zavřít"
 
 #: ../tools/browser/browser-window.c:292
 msgid "Close this window"
-msgstr ""
+msgstr "Zavřít toto okno"
 
 #: ../tools/browser/browser-window.c:293
-#, fuzzy
 msgid "_Help"
-msgstr "Nápověda"
+msgstr "_Nápověda"
 
 #: ../tools/browser/browser-window.c:293
 #: ../tools/browser/data-manager/data-console.c:419 ../tools/html-doc.c:95
@@ -7169,19 +7146,19 @@ msgstr "Nápověda"
 
 #: ../tools/browser/browser-window.c:294
 msgid "_About"
-msgstr ""
+msgstr "O _aplikaci"
 
 #: ../tools/browser/browser-window.c:294
 msgid "About"
-msgstr ""
+msgstr "O aplikaci"
 
 #: ../tools/browser/browser-window.c:296
 msgid "_Manual"
-msgstr ""
+msgstr "_Příručka"
 
 #: ../tools/browser/browser-window.c:296
 msgid "Manual"
-msgstr ""
+msgstr "Příručka"
 
 #: ../tools/browser/browser-window.c:298
 msgid "Begin a new transaction"
@@ -7895,24 +7872,20 @@ msgid "Show or hide favorites"
 msgstr "Zobrazit nebo skrýt oblíbené"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:412
-#, fuzzy
 msgid "_Manager"
-msgstr "Správce dat"
+msgstr "Sp_rávce"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:412
-#, fuzzy
 msgid "Manager"
-msgstr "Správce dat"
+msgstr "Správce"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:413
-#, fuzzy
 msgid "_New data manager"
-msgstr "Správce dat „%s“"
+msgstr "_Nový správce dat"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:413
-#, fuzzy
 msgid "New data manager"
-msgstr "Správce dat „%s“"
+msgstr "Nový správce dat"
 
 #. Translators: Do not translate "table" nor "query"
 #: ../tools/browser/data-manager/data-source.c:402
@@ -8279,9 +8252,8 @@ msgid "_Query"
 msgstr "_Dotaz"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:391
-#, fuzzy
 msgid "Query"
-msgstr "_Dotaz"
+msgstr "Dotaz"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:392
 msgid "_New editor"
@@ -8387,9 +8359,8 @@ msgid "View contents"
 msgstr "Zobrazit obsah"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:323
-#, fuzzy
 msgid "_Schema"
-msgstr "Schéma"
+msgstr "_Schéma"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:323
 #: ../tools/command-exec.c:652
@@ -8397,14 +8368,12 @@ msgid "Schema"
 msgstr "Schéma"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:324
-#, fuzzy
 msgid "_New Diagram"
-msgstr "Diagram"
+msgstr "_Nový diagram"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:324
-#, fuzzy
 msgid "Create a new diagram"
-msgstr "Vytvořit novou databázi:"
+msgstr "Vytvořit nový diagram"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:417
 msgid "Could not load diagram"
@@ -8484,9 +8453,8 @@ msgid "Values to insert into table"
 msgstr "Hodnoty, které se mají vložit do tabulky"
 
 #: ../tools/browser/schema-browser/table-info.c:950
-#, fuzzy
 msgid "_Table"
-msgstr "Tabulka"
+msgstr "_Tabulka"
 
 #: ../tools/browser/schema-browser/table-info.c:951
 msgid "Add to _Favorites"
