@@ -430,19 +430,23 @@ dnl Checks for libcrypto
 dnl ******************************
 AC_ARG_ENABLE([crypto],
 	AS_HELP_STRING([--disable-crypto], [Disable SqlCipher database provider (using the libcrypto library)]),
-	,
-	[enable_crypto=yes])
+	[enable_crypto=no],[enable_crypto=yes])
 
-LIBCRYPTO_MODULES="libcrypto"
-PKG_CHECK_MODULES(LIBCRYPTO, $LIBCRYPTO_MODULES,
-	AC_DEFINE(HAVE_LIBCRYPTO, [], [Defined if cryptographic support is enabled])
-	have_crypto=yes,
-	if test "$enable_crypto" = "yes"; then
-		AC_MSG_ERROR([libcrypto support requested but not found])
-	fi
-	have_crypto=no
-)
-AM_CONDITIONAL(HAVE_LIBCRYPTO, [test "$have_crypto" = "yes"])
+if test "x$enable_crypto" = xyes
+then
+        LIBCRYPTO_MODULES="libcrypto"
+	PKG_CHECK_MODULES(LIBCRYPTO, $LIBCRYPTO_MODULES,
+	        if test "$enable_crypto" = "yes"
+	        then
+		        AC_DEFINE(HAVE_LIBCRYPTO, [], [Defined if cryptographic support is enabled])
+	        fi,
+	        if test "$enable_crypto" = "yes"
+	        then
+			AC_MSG_ERROR([libcrypto support requested but not found])
+	        fi)
+fi
+
+AM_CONDITIONAL(HAVE_LIBCRYPTO, [test "$enable_crypto" = "yes"])
 AC_SUBST(LIBCRYPTO_CFLAGS)
 AC_SUBST(LIBCRYPTO_LIBS)
 
@@ -863,7 +867,7 @@ echo "      MySQL = $mysql_found"
 echo "      Oracle = $oracle_found"
 echo "      PostgreSQL = $postgres_found"
 echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
-echo "      SQLCipher = `if test x$have_crypto != xyes; then echo no; else echo yes; fi`"
+echo "      SQLCipher = `if test x$enable_crypto != xyes; then echo no; else echo yes; fi`"
 echo "      JDBC = $java_found"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
