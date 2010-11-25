@@ -383,6 +383,26 @@ An opened connection
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_connection_define_ui_plugins_for_batch ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@batch: 
+@params: 
+
+
+<!-- ##### FUNCTION browser_connection_define_ui_plugins_for_stmt ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@stmt: 
+@params: 
+
+
 <!-- ##### FUNCTION browser_connection_keep_variables ##### -->
 <para>
 

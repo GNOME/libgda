@@ -25,6 +25,7 @@
 #include "marshal.h"
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-sql-builder.h>
+#include <libgda-ui/gdaui-enums.h>
 
 #include "browser-connection-priv.h"
 
@@ -1703,6 +1704,308 @@ browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,
 	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
 
 	return retval;
+}
+
+/**
+ * browser_connection_define_ui_plugins_for_batch
+ * @bcnc: a #BrowserConnection object
+ * @batch: a #GdaBatch
+ * @params: a #GdaSet (usually created with gda_batch_get_parameters())
+ *
+ * Calls browser_connection_define_ui_plugins_for_stmt() for each statement in @batch
+ */
+void
+browser_connection_define_ui_plugins_for_batch (BrowserConnection *bcnc, GdaBatch *batch, GdaSet *params)
+{
+	g_return_if_fail (BROWSER_IS_CONNECTION (bcnc));
+	g_return_if_fail (GDA_IS_BATCH (batch));
+	if (!params)
+		return;
+	g_return_if_fail (GDA_IS_SET (params));
+
+	const GSList *list;
+	for (list = gda_batch_get_statements (batch); list; list = list->next)
+		browser_connection_define_ui_plugins_for_stmt (bcnc, GDA_STATEMENT (list->data), params);
+}
+
+/* remark: the current ABI leaves no room to add a
+ * validity check to the GdaSqlExpr structure, and the following test
+ * should be done in gda_sql_expr_check_validity() once the GdaSqlExpr
+ * has the capacity to hold the information (ie. when ABI is broken)
+ *
+ * The code here is a modification from the gda_sql_select_field_check_validity()
+ * adapted for the GdaSqlExpr.
+ */
+static gboolean
+_gda_sql_expr_check_validity (GdaSqlExpr *expr, GdaMetaStruct *mstruct,
+			      GdaMetaDbObject **out_validity_meta_object,
+			      GdaMetaTableColumn **out_validity_meta_table_column, GError **error)
+{
+	GdaMetaDbObject *dbo = NULL;
+	const gchar *field_name;
+
+	*out_validity_meta_object = NULL;
+	*out_validity_meta_table_column = NULL;
+
+	if (! expr->value || (G_VALUE_TYPE (expr->value) != G_TYPE_STRING))
+		return TRUE;
+	field_name = g_value_get_string (expr->value);
+
+	
+	GdaSqlAnyPart *any;
+	GdaMetaTableColumn *tcol = NULL;
+	GValue value;
+
+	memset (&value, 0, sizeof (GValue));
+	for (any = GDA_SQL_ANY_PART(expr)->parent;
+	     any && (any->type != GDA_SQL_ANY_STMT_SELECT) && (any->type != GDA_SQL_ANY_STMT_DELETE) &&
+		     (any->type != GDA_SQL_ANY_STMT_UPDATE);
+	     any = any->parent);
+	if (!any) {
+		/* not in a structure which can be analysed */
+		return TRUE;
+	}
+
+	switch (any->type) {
+	case GDA_SQL_ANY_STMT_SELECT: {
+		/* go through all the SELECT's targets to see if
+		 * there is a table with the corresponding field */
+		GSList *targets;
+		if (((GdaSqlStatementSelect *)any)->from) {
+			for (targets = ((GdaSqlStatementSelect *)any)->from->targets;
+			     targets;
+			     targets = targets->next) {
+				GdaSqlSelectTarget *target = (GdaSqlSelectTarget *) targets->data;
+				if (!target->validity_meta_object /*&&
+				     * commented out in the current context because
+				     * browser_connection_check_sql_statement_validify() has already been 
+				     * called, will need to be re-added when movind to the
+				     * gda-statement-struct.c file.
+				     *
+				     * !gda_sql_select_target_check_validity (target, data, error)*/)
+					return FALSE;
+				
+				g_value_set_string (g_value_init (&value, G_TYPE_STRING), field_name);
+				tcol = gda_meta_struct_get_table_column (mstruct,
+									 GDA_META_TABLE (target->validity_meta_object),
+									 &value);
+				g_value_unset (&value);
+				if (tcol) {
+					/* found a candidate */
+					if (dbo) {
+						g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+							     _("Could not identify table for field '%s'"), field_name);
+						return FALSE;
+					}
+					dbo = target->validity_meta_object;
+				}
+			}
+		}
+		break;
+	}
+	case GDA_SQL_ANY_STMT_UPDATE: {
+		GdaSqlTable *table;
+		table = ((GdaSqlStatementUpdate *)any)->table;
+		if (!table || !table->validity_meta_object /* ||
+		    * commented out in the current context because
+		    * browser_connection_check_sql_statement_validify() has already been 
+		    * called, will need to be re-added when movind to the
+		    * gda-statement-struct.c file.
+		    *
+		    * !gda_sql_select_target_check_validity (target, data, error)*/)
+			return FALSE;
+		dbo = table->validity_meta_object;
+		g_value_set_string (g_value_init (&value, G_TYPE_STRING), field_name);
+		tcol = gda_meta_struct_get_table_column (mstruct,
+							 GDA_META_TABLE (table->validity_meta_object),
+							 &value);
+		g_value_unset (&value);
+		break;
+	}
+	case GDA_SQL_ANY_STMT_DELETE: {
+		GdaSqlTable *table;
+		table = ((GdaSqlStatementDelete *)any)->table;
+		if (!table || !table->validity_meta_object /* ||
+		    * commented out in the current context because
+		    * browser_connection_check_sql_statement_validify() has already been 
+		    * called, will need to be re-added when movind to the
+		    * gda-statement-struct.c file.
+		    *
+		    * !gda_sql_select_target_check_validity (target, data, error)*/)
+			return FALSE;
+		dbo = table->validity_meta_object;
+		g_value_set_string (g_value_init (&value, G_TYPE_STRING), field_name);
+		tcol = gda_meta_struct_get_table_column (mstruct,
+							 GDA_META_TABLE (table->validity_meta_object),
+							 &value);
+		g_value_unset (&value);
+		break;
+	}
+	default:
+		g_assert_not_reached ();
+		break;
+	}
+
+	if (!dbo) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+			     _("Could not identify table for field '%s'"), field_name);
+		return FALSE;
+	}
+	*out_validity_meta_object = dbo;
+	*out_validity_meta_table_column = tcol;
+	return TRUE;
+}
+
+typedef struct {
+	BrowserConnection *bcnc;
+	GdaSet *params;
+} ParamsData;
+
+/*
+ *
+ * In this function we try to find for which table's column a parameter is and use
+ * preferences to set the GdaHolder's plugin attribute
+ */
+static gboolean
+foreach_ui_plugins_for_params (GdaSqlAnyPart *part, ParamsData *data, GError **error)
+{
+	if (part->type != GDA_SQL_ANY_EXPR)
+		return TRUE;
+	GdaSqlExpr *expr = (GdaSqlExpr*) part;
+	if (!expr->param_spec)
+		return TRUE;
+
+	GdaHolder *holder;
+	holder = gda_set_get_holder (data->params, expr->param_spec->name);
+	if (! holder)
+		return TRUE;
+
+	GdaSqlAnyPart *uppart;
+	gchar *plugin = NULL;
+	uppart = part->parent;
+	if (!uppart)
+		return TRUE;
+	else if (uppart->type == GDA_SQL_ANY_SQL_OPERATION) {
+		GdaSqlOperation *op = (GdaSqlOperation*) uppart;
+		/* look into condition */
+		GSList *list;
+		for (list = op->operands; list; list = list->next) {
+			GdaSqlExpr *oexpr = (GdaSqlExpr*) list->data;
+			if (oexpr == expr)
+				continue;
+			
+			GdaMetaDbObject    *validity_meta_object;
+			GdaMetaTableColumn *validity_meta_table_column;
+			if (_gda_sql_expr_check_validity (oexpr,
+							  browser_connection_get_meta_struct (data->bcnc),
+							  &validity_meta_object,
+							  &validity_meta_table_column, NULL)) {
+				plugin = browser_connection_get_table_column_attribute (data->bcnc,
+											GDA_META_TABLE (validity_meta_object),
+											validity_meta_table_column,
+											BROWSER_CONNECTION_COLUMN_PLUGIN, NULL);
+				break;
+			}
+		}
+	}
+	else if (uppart->type == GDA_SQL_ANY_STMT_UPDATE) {
+		GdaSqlStatementUpdate *upd = (GdaSqlStatementUpdate*) uppart;
+		GdaSqlField *field;
+		field = g_slist_nth_data (upd->fields_list, g_slist_index (upd->expr_list, expr));
+		if (field)
+			plugin = browser_connection_get_table_column_attribute (data->bcnc,
+										GDA_META_TABLE (upd->table->validity_meta_object),
+										field->validity_meta_table_column,
+										BROWSER_CONNECTION_COLUMN_PLUGIN, NULL);
+	}
+	else if (uppart->type == GDA_SQL_ANY_STMT_INSERT) {
+		GdaSqlStatementInsert *ins = (GdaSqlStatementInsert*) uppart;
+		GdaSqlField *field;
+		gint expr_index = -1;
+		GSList *slist;
+		GdaMetaTableColumn *column = NULL;
+		for (slist = ins->values_list; slist; slist = slist->next) {
+			expr_index = g_slist_index ((GSList*) slist->data, expr);
+			if (expr_index >= 0)
+				break;
+		}
+		if (expr_index >= 0) {
+			field = g_slist_nth_data (ins->fields_list, expr_index);
+			if (field)
+				column = field->validity_meta_table_column;
+			else {
+				/* no field specified => take the table's fields */
+				GdaMetaTable *mtable = GDA_META_TABLE (ins->table->validity_meta_object);
+				column = g_slist_nth_data (mtable->columns, expr_index);
+			}
+		}
+		if (column)
+			plugin = browser_connection_get_table_column_attribute (data->bcnc,
+										GDA_META_TABLE (ins->table->validity_meta_object),
+										column,
+										BROWSER_CONNECTION_COLUMN_PLUGIN, NULL);
+	}
+
+	if (plugin) {
+		/*g_print ("Using plugin [%s]\n", plugin);*/
+		GValue *value;
+		g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), plugin);
+		gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+		gda_value_free (value);
+	}
+
+	return TRUE;
+}
+
+/**
+ * browser_connection_define_ui_plugins_for_stmt
+ * @bcnc: a #BrowserConnection object
+ * @stmt: a #GdaStatement
+ * @params: a #GdaSet (usually created with gda_statement_get_parameters())
+ *
+ * Analyses @stmt and assign plugins to each #GdaHolder in @params according to the preferences stored
+ * for each table's field, defined at some point using browser_connection_set_table_column_attribute().
+ */
+void
+browser_connection_define_ui_plugins_for_stmt (BrowserConnection *bcnc, GdaStatement *stmt, GdaSet *params)
+{
+	g_return_if_fail (BROWSER_IS_CONNECTION (bcnc));
+	g_return_if_fail (GDA_IS_STATEMENT (stmt));
+	if (!params)
+		return;
+	g_return_if_fail (GDA_IS_SET (params));
+	
+	GdaSqlStatement *sqlst;
+	GdaSqlAnyPart *rootpart;
+	g_object_get ((GObject*) stmt, "structure", &sqlst, NULL);
+	g_return_if_fail (sqlst);
+	switch (sqlst->stmt_type) {
+	case GDA_SQL_STATEMENT_INSERT:
+	case GDA_SQL_STATEMENT_UPDATE:
+	case GDA_SQL_STATEMENT_DELETE:
+	case GDA_SQL_STATEMENT_SELECT:
+	case GDA_SQL_STATEMENT_COMPOUND:
+		rootpart = (GdaSqlAnyPart*) sqlst->contents;
+		break;
+	default:
+		rootpart = NULL;
+		break;
+	}
+	GError *lerror = NULL;
+	if (!rootpart || !browser_connection_check_sql_statement_validify (bcnc, sqlst, &lerror)) {
+		/*g_print ("ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");*/
+		g_clear_error (&lerror);
+		gda_sql_statement_free (sqlst);
+		return;
+	}
+	
+	ParamsData data;
+	data.params = params;
+	data.bcnc = bcnc;
+	gda_sql_any_part_foreach (rootpart, (GdaSqlForeachFunc) foreach_ui_plugins_for_params,
+				  &data, NULL);
+	
+	gda_sql_statement_free (sqlst);
 }
 
 /**

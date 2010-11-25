@@ -529,6 +529,7 @@ history_copy_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole
 	g_string_free (string, TRUE);
 }
 
+
 static gboolean
 compute_params (QueryConsole *tconsole)
 {
@@ -558,6 +559,9 @@ compute_params (QueryConsole *tconsole)
 
 		if (gda_batch_get_parameters (batch, &(tconsole->priv->params), &error)) {
 			if (tconsole->priv->params) {
+				browser_connection_define_ui_plugins_for_batch (tconsole->priv->bcnc,
+										batch,
+										tconsole->priv->params);
 				show_variables = TRUE;
 				tconsole->priv->params_form = gdaui_basic_form_new (tconsole->priv->params);
 				g_object_set ((GObject*) tconsole->priv->params_form,
