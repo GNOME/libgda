@@ -146,6 +146,11 @@ gchar               *browser_connection_get_table_column_attribute (BrowserConne
 								    const gchar *attr_name,
 								    GError **error);
 
+void                 browser_connection_define_ui_plugins_for_batch(BrowserConnection *bcnc,
+								    GdaBatch *batch, GdaSet *params);
+void                 browser_connection_define_ui_plugins_for_stmt (BrowserConnection *bcnc,
+								    GdaStatement *stmt, GdaSet *params);
+
 /*
  * Variables used at various places and for which a copy of the last recent value
  * is stored in the BrowserConnection object
