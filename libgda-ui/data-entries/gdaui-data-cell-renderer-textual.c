@@ -37,7 +37,7 @@
 #include "marshallers/gdaui-custom-marshal.h"
 #include "gdaui-data-cell-renderer-util.h"
 
-#define MAX_ACCEPTED_STRING_LENGTH 500U
+#define MAX_ACCEPTED_STRING_LENGTH 32500U
 
 static void gdaui_data_cell_renderer_textual_init       (GdauiDataCellRendererTextual      *celltext);
 static void gdaui_data_cell_renderer_textual_class_init (GdauiDataCellRendererTextualClass *class);
@@ -405,7 +405,8 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 	static gint too_long_msg_len;
 
 	if (!too_long_msg) {
-		too_long_msg = _("<string cut because too long>");
+		too_long_msg = g_strconcat ("<b><i>&lt;", _("string truncated because too long"),
+					    "&gt;</i></b>", NULL);
 		too_long_msg_len = strlen (too_long_msg);
 	}
 
@@ -456,10 +457,18 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 
 				if (datacell->priv->dh) {
 					str = gda_data_handler_get_str_from_value (datacell->priv->dh, gval);
-					if (str && (strlen (str) > MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len)) {
-						memmove (str + too_long_msg_len, str, MAX_ACCEPTED_STRING_LENGTH);
-						memcpy (str, too_long_msg, too_long_msg_len);
-						str [MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len + 1] = 0;
+					gboolean use_markup = FALSE;
+					if (str) {
+						gint length;
+						length = strlen (str);
+						if (length > MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len) {
+							gchar *tmp;
+							tmp = g_markup_escape_text (str, MAX_ACCEPTED_STRING_LENGTH +
+										    too_long_msg_len);
+							g_free (str);
+							str = g_strconcat (tmp, too_long_msg, NULL);
+							use_markup = TRUE;
+						}
 					}
 
 					if (datacell->priv->options) {
@@ -483,7 +492,12 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 						}
 					}
 
-					g_object_set (G_OBJECT (object), "text", str, "xalign", xalign, NULL);
+					if (use_markup)
+						g_object_set (G_OBJECT (object), "markup",
+							      str, "xalign", xalign, NULL);
+					else
+						g_object_set (G_OBJECT (object), "text",
+							      str, "xalign", xalign, NULL);
 					g_free (str);
 				}
 				else
