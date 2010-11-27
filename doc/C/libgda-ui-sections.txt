@@ -326,3 +326,19 @@ GDAUI_IS_DATA_SELECTOR
 GDAUI_TYPE_DATA_SELECTOR
 gdaui_data_selector_get_type
 </SECTION>
+
+<SECTION>
+<FILE>gdaui-rt-editor</FILE>
+<TITLE>GdauiRtEditor</TITLE>
+GdauiRtEditor
+gdaui_rt_editor_new
+gdaui_rt_editor_get_contents
+gdaui_rt_editor_set_contents
+gdaui_rt_editor_set_editable
+<SUBSECTION Standard>
+GDAUI_RT_EDITOR
+GDAUI_RT_EDITOR_CLASS
+GDAUI_IS_RT_EDITOR
+GDAUI_TYPE_RT_EDITOR
+gdaui_rt_editor_get_type
+</SECTION>
