@@ -259,7 +259,7 @@ AC_ARG_WITH(unique,
 
 if test "$with_unique" = "auto" -o "$with_unique" = "yes"
 then
-	PKG_CHECK_MODULES(UNIQUE, "unique-1.0", [
+	PKG_CHECK_MODULES(UNIQUE, "unique-3.0", [
 		AC_DEFINE(HAVE_UNIQUE, [1], [LibUnique support enabled])
 		have_unique=yes], [
 		if test "$with_unique" = "yes"
