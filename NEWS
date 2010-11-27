@@ -1,3 +1,14 @@
+libgda 4.2.2, 2010-11-27
+
+ - GdaBrowser: better take user preferences into account
+ - new GdauiRtEditor widget and plugin
+ - bug fixes: bug #635377, #635419 and misc.
+ - translations:
+	- sl (Matej Urbančič)
+	- es (Julio Borja Barra)
+	- cz (Marek Cernocky)
+	- de (Mario Blättermann)
+
 libgda 4.2.1, 2010-11-14
 
  - code cleanups and compilation warnings removal (thanks to David King and Murray Cumming),
