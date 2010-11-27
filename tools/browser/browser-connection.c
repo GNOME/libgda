@@ -2006,6 +2006,8 @@ browser_connection_define_ui_plugins_for_stmt (BrowserConnection *bcnc, GdaState
 				  &data, NULL);
 	
 	gda_sql_statement_free (sqlst);
+
+	/* REM: we also need to handle FK tables to propose a drop down list of possible values */
 }
 
 /**
