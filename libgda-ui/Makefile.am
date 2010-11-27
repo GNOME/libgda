@@ -35,6 +35,7 @@ ui_headers = \
 	gdaui-provider-selector.h \
 	gdaui-raw-form.h \
 	gdaui-raw-grid.h \
+	gdaui-rt-editor.h \
 	gdaui-server-operation.h \
 	gdaui-tree-store.h \
 	gdaui-plugin.h
@@ -56,6 +57,8 @@ ui_sources = \
 	gdaui-provider-selector.c \
 	gdaui-raw-form.c \
 	gdaui-raw-grid.c \
+	bullet.h \
+	gdaui-rt-editor.c \
 	gdaui-server-operation.c \
 	gdaui-set.h \
 	gdaui-set.c \

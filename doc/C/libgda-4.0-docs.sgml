@@ -152,6 +152,7 @@
 <!ENTITY libgdaui-GdauiTreeStore SYSTEM "xml/gdaui-tree-store.xml">
 <!ENTITY libgdaui-GdauiCloud SYSTEM "xml/gdaui-cloud.xml">
 <!ENTITY libgdaui-GdauiDataSelector SYSTEM "xml/gdaui-data-selector.xml">
+<!ENTITY libgdaui-GdauiRtEditor SYSTEM "xml/gdaui-rt-editor.xml">
 ]>
 
 <book id="index">
@@ -1277,6 +1278,7 @@ g_object_unref (store);
       &libgdaui-GdauiRawGrid;
       &libgdaui-GdauiCombo;
       &libgdaui-GdauiCloud;
+      &libgdaui-GdauiRtEditor;
 
       &libgdaui-gdaui-plugins;
 

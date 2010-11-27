@@ -1,5 +1,5 @@
 /* libmain.c
- * Copyright (C) 2006 - 2009 The GNOME Foundation
+ * Copyright (C) 2006 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gdaui.org>
@@ -30,6 +30,7 @@
 #include "gdaui-entry-cidr.h"
 #include "gdaui-entry-text.h"
 #include "gdaui-entry-pict.h"
+#include "gdaui-entry-rt.h"
 #include "gdaui-data-cell-renderer-pict.h"
 
 #ifdef HAVE_LIBGCRYPT
@@ -52,6 +53,7 @@
 static GdauiDataEntry *plugin_entry_filesel_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_cidr_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_text_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *plugin_entry_rt_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_pict_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GtkCellRenderer  *plugin_cell_renderer_pict_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 
@@ -213,6 +215,21 @@ plugin_init (GError **error)
 	g_free (file);
 #endif
 
+	/* TEXT */
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "rtext";
+	plugin->plugin_descr = "Rich text editor entry";
+	plugin->plugin_file = NULL; /* always leave NULL */
+	plugin->nb_g_types = 3;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = G_TYPE_STRING;
+	plugin->valid_g_types [1] = GDA_TYPE_BLOB;
+	plugin->valid_g_types [2] = GDA_TYPE_BINARY;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = plugin_entry_rt_create_func;
+	plugin->cell_create_func = NULL;
+	retlist = g_slist_append (retlist, plugin);
+
 	/* Picture - binary */
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "picture";
@@ -281,6 +298,12 @@ static GdauiDataEntry *
 plugin_entry_text_create_func (GdaDataHandler *handler, GType type, const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_text_new (handler, type, options);
+}
+
+static GdauiDataEntry *
+plugin_entry_rt_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_rt_new (handler, type, options);
 }
 
 static GdauiDataEntry *

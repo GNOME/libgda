@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -44,6 +44,7 @@
 #include <libgda-ui/gdaui-tree-store.h>
 #include <libgda-ui/gdaui-cloud.h>
 #include <libgda-ui/gdaui-data-selector.h>
+#include <libgda-ui/gdaui-rt-editor.h>
 
 G_BEGIN_DECLS
 

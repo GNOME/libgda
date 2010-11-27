@@ -29,4 +29,7 @@
   <link linkend="GdauiServerOperation">
     <inlinegraphic fileref="vi-server-op.png" format="PNG"></inlinegraphic>
   </link>
+  <link linkend="GdauiRtEditor">
+    <inlinegraphic fileref="vi-rte.png" format="PNG"></inlinegraphic>
+  </link>
 </para>

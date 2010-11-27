@@ -30,6 +30,7 @@ plugins_headers = \
 	gdaui-entry-cidr.h \
 	gdaui-entry-text.h \
 	gdaui-entry-pict.h \
+	gdaui-entry-rt.h \
 	$(gcrypt_headers)
 
 libgda_ui_plugins_la_SOURCES = \
@@ -45,6 +46,7 @@ libgda_ui_plugins_la_SOURCES = \
 	gdaui-entry-cidr.c \
 	gdaui-entry-text.c \
 	gdaui-entry-pict.c \
+	gdaui-entry-rt.c \
 	$(gcrypt_sources)
 
 libgda_ui_plugins_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
