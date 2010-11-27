@@ -20,8 +20,12 @@
 #include "widget-embedder.h"
 static void     widget_embedder_realize       (GtkWidget       *widget);
 static void     widget_embedder_unrealize     (GtkWidget       *widget);
-static void     widget_embedder_size_request  (GtkWidget       *widget,
-                                               GtkRequisition  *requisition);
+static void     widget_embedder_get_preferred_width  (GtkWidget *widget,
+						      gint      *minimum,
+						      gint      *natural);
+static void     widget_embedder_get_preferred_height (GtkWidget *widget,
+						      gint      *minimum,
+						      gint      *natural);
 static void     widget_embedder_size_allocate (GtkWidget       *widget,
                                                GtkAllocation   *allocation);
 static gboolean widget_embedder_damage        (GtkWidget       *widget,
@@ -70,7 +74,8 @@ widget_embedder_class_init (WidgetEmbedderClass *klass)
 
 	widget_class->realize = widget_embedder_realize;
 	widget_class->unrealize = widget_embedder_unrealize;
-	widget_class->size_request = widget_embedder_size_request;
+	widget_class->get_preferred_width = widget_embedder_get_preferred_width;
+	widget_class->get_preferred_height = widget_embedder_get_preferred_height;
 	widget_class->size_allocate = widget_embedder_size_allocate;
 	widget_class->draw = widget_embedder_draw;
 
@@ -295,12 +300,32 @@ widget_embedder_size_request (GtkWidget      *widget,
 	child_requisition.height = 0;
 
 	if (bin->child && gtk_widget_get_visible (bin->child))
-		gtk_widget_size_request (bin->child, &child_requisition);
+		gtk_widget_get_preferred_size (bin->child, &child_requisition, NULL);
 
 	guint border_width;
 	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 	requisition->width = border_width * 2 + child_requisition.width;
 	requisition->height = border_width * 2 + child_requisition.height;
+}
+
+static void
+widget_embedder_get_preferred_width (GtkWidget *widget,
+				     gint      *minimum,
+				     gint      *natural)
+{
+	GtkRequisition requisition;
+	widget_embedder_size_request (widget, &requisition);
+	*minimum = *natural = requisition.width;
+}
+
+static void
+widget_embedder_get_preferred_height (GtkWidget *widget,
+				      gint      *minimum,
+				      gint      *natural)
+{
+	GtkRequisition requisition;
+	widget_embedder_size_request (widget, &requisition);
+	*minimum = *natural = requisition.height;
 }
 
 static void

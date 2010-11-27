@@ -36,8 +36,12 @@ static void cc_gray_bar_class_init   (CcGrayBarClass *klass);
 static void cc_gray_bar_init         (CcGrayBar      *bar,
 				      CcGrayBarClass *klass);
 static void cc_gray_bar_realize      (GtkWidget           *widget);
-static void cc_gray_bar_size_request (GtkWidget           *widget,
-				      GtkRequisition      *requisition);
+static void cc_gray_bar_get_preferred_width  (GtkWidget *widget,
+					      gint      *minimum,
+					      gint      *natural);
+static void cc_gray_bar_get_preferred_height (GtkWidget *widget,
+					      gint      *minimum,
+					      gint      *natural);
 static void cc_gray_bar_allocate     (GtkWidget           *widget,
 				      GtkAllocation       *allocation);
 static void cc_gray_bar_paint        (GtkWidget           *widget,
@@ -127,12 +131,32 @@ cc_gray_bar_size_request (GtkWidget *widget, GtkRequisition *requisition)
 	if (child)
 		g_object_get ((GObject*) child, "visible", &visible, NULL);
 	if (visible) {
-		gtk_widget_size_request (child, &child_requisition);
-
+		gtk_widget_get_preferred_size (child, &child_requisition, NULL);
 		requisition->width += child_requisition.width;
 		requisition->height += child_requisition.height;
 	}
 }
+
+static void
+cc_gray_bar_get_preferred_width (GtkWidget *widget,
+				 gint      *minimum,
+				 gint      *natural)
+{
+	GtkRequisition requisition;
+	cc_gray_bar_size_request (widget, &requisition);
+	*minimum = *natural = requisition.width;
+}
+
+static void
+cc_gray_bar_get_preferred_height (GtkWidget *widget,
+				  gint      *minimum,
+				  gint      *natural)
+{
+	GtkRequisition requisition;
+	cc_gray_bar_size_request (widget, &requisition);
+	*minimum = *natural = requisition.height;
+}
+
 
 static void
 cc_gray_bar_allocate (GtkWidget *widget, GtkAllocation *allocation)
@@ -232,7 +256,8 @@ cc_gray_bar_class_init (CcGrayBarClass *klass)
 	object_class->finalize      = cc_gray_bar_finalize;
 	widget_class->style_set     = cc_gray_bar_style_set;
 	widget_class->realize       = cc_gray_bar_realize;
-	widget_class->size_request  = cc_gray_bar_size_request;
+	widget_class->get_preferred_width = cc_gray_bar_get_preferred_width;
+	widget_class->get_preferred_height = cc_gray_bar_get_preferred_height;
 	widget_class->size_allocate = cc_gray_bar_allocate;
 	widget_class->draw          = cc_gray_bar_draw;
 	widget_class->show_all      = cc_gray_bar_show_all;
