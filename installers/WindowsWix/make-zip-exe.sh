@@ -219,7 +219,7 @@ add_files_to_zip $archive_dev $prefix include/libgda-4.0/libgda/sql-parser $file
 files=(gda-vconnection-data-model.h gda-vconnection-hub.h gda-virtual-connection.h gda-virtual-provider.h gda-vprovider-data-model.h gda-vprovider-hub.h libgda-virtual.h)
 add_files_to_zip $archive_dev $prefix include/libgda-4.0/libgda/virtual $files
 
-files=(gdaui-basic-form.h gdaui-data-entry.h gdaui-data-selector.h gdaui-enums.h gdaui-login.h gdaui-raw-grid.h gdaui-cloud.h gdaui-data-filter.h gdaui-data-store.h gdaui-enum-types.h gdaui-plugin.h gdaui-server-operation.h gdaui-combo.h gdaui-data-proxy.h gdaui-decl.h gdaui-form.h gdaui-provider-selector.h gdaui-tree-store.h gdaui-data-cell-renderer-util.h gdaui-data-proxy-info.h gdaui-easy.h gdaui-grid.h gdaui-raw-form.h libgda-ui.h)
+files=(gdaui-basic-form.h gdaui-data-entry.h gdaui-data-selector.h gdaui-enums.h gdaui-login.h gdaui-raw-grid.h gdaui-cloud.h gdaui-data-filter.h gdaui-data-store.h gdaui-enum-types.h gdaui-plugin.h gdaui-server-operation.h gdaui-combo.h gdaui-data-proxy.h gdaui-decl.h gdaui-form.h gdaui-provider-selector.h gdaui-tree-store.h gdaui-data-cell-renderer-util.h gdaui-data-proxy-info.h gdaui-easy.h gdaui-grid.h gdaui-raw-form.h gdaui-rt-editor.h libgda-ui.h)
 add_files_to_zip $archive_dev $prefix include/libgda-4.0/libgda-ui $files
 
 #
