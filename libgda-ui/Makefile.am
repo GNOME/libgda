@@ -58,6 +58,7 @@ ui_sources = \
 	gdaui-raw-form.c \
 	gdaui-raw-grid.c \
 	bullet.h \
+	bulleth.h \
 	gdaui-rt-editor.c \
 	gdaui-server-operation.c \
 	gdaui-set.h \
