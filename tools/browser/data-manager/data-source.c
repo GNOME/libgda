@@ -1368,6 +1368,9 @@ compute_import_params (DataSource *source)
 #endif
 		}
 
+		browser_connection_define_ui_plugins_for_stmt (source->priv->bcnc, source->priv->stmt,
+							       source->priv->params);
+
 		g_signal_connect (source->priv->params, "holder-changed",
 				  G_CALLBACK (params_changed_cb), source);
 	}
