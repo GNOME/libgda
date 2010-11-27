@@ -1439,7 +1439,7 @@ markup_tag_match (MarkupTag tag1, gint tagline1, MarkupTag tag2, gint tagline2)
 	}
 
 	if (retval) {
-		if (tag1 != MARKUP_PICTURE_S)
+		if ((tag1 != MARKUP_PICTURE_S) && (tag1 != MARKUP_VERBATIM))
 			retval = (tagline1 == tagline2) ? TRUE : FALSE;
 	}
 	return retval;

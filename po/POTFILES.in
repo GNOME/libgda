@@ -122,6 +122,7 @@ libgda-ui/gdaui-init.c
 libgda-ui/gdaui-login.c
 libgda-ui/gdaui-raw-form.c
 libgda-ui/gdaui-raw-grid.c
+libgda-ui/gdaui-rt-editor.c
 libgda-ui/gdaui-server-operation.c
 libgda-ui/gdaui-tree-store.c
 providers/bdb/bdb_specs_dsn.xml.in
