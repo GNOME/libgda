@@ -86,8 +86,8 @@ gdaui_test_rt_editor_SOURCES = \
         gdaui-test-rt-editor.c
 
 gdaui_test_rt_editor_LDADD = \
-        $(top_builddir)/libgda/libgda-4.0.la \
-        $(top_builddir)/libgda-ui/libgda-ui-4.0.la \
+        $(top_builddir)/libgda/libgda-5.0.la \
+        $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
         $(LIBGDA_LIBS) \
 	$(GTK_LIBS)
 
