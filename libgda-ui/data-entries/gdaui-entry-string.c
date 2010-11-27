@@ -25,8 +25,6 @@
 #include <libgda/gda-data-handler.h>
 #include "gdk/gdkkeysyms.h"
 
-#define MAX_ACCEPTED_STRING_LENGTH 500U
-
 /* 
  * Main static functions 
  */
@@ -386,8 +384,6 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 	PangoLayout *layout;
 	gchar *text;
-	static gchar *too_long_msg = NULL;
-	static gint too_long_msg_len;
 	
 	g_return_if_fail (GDAUI_IS_ENTRY_STRING (mgwrap));
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
@@ -396,17 +392,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 
 	/* do we need to go into multi line mode ? */
-	if (!too_long_msg) {
-		too_long_msg = _("<string cut because too long>");
-		too_long_msg_len = strlen (too_long_msg);
-	}
 	text = gda_data_handler_get_str_from_value (dh, value);
-	if (text && (strlen (text) > MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len)) {
-		memmove (text + too_long_msg_len, text, MAX_ACCEPTED_STRING_LENGTH);
-		memcpy (text, too_long_msg, too_long_msg_len);
-		text [MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len + 1] = 0;
-	}
-
 	layout = gtk_widget_create_pango_layout (GTK_WIDGET (mgwrap), text);
 	if (pango_layout_get_line_count (layout) > 1) 
 		g_object_set (G_OBJECT (mgwrap), "multiline", TRUE, NULL);
