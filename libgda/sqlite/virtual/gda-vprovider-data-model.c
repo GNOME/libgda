@@ -583,7 +583,7 @@ virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
 	cursor = g_new0 (VirtualCursor, 1);
 	cursor->iter = gda_data_model_create_iter (vtable->wrapper);
 	cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
-	*ppCursor = &(cursor->base);
+	*ppCursor = (sqlite3_vtab_cursor*) cursor;
 	return SQLITE_OK;
 }
 

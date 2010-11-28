@@ -1053,8 +1053,6 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			continue;
 		g_hash_table_insert (fields_hash, selfield->field_name, GINT_TO_POINTER (1));
 
-		gchar *str;
-		str = gda_sql_identifier_quote (selfield->field_name, cnc, NULL, FALSE, FALSE);
 		if (insert_stmt) {
 			GdaSqlField *field;
 			field = gda_sql_field_new (GDA_SQL_ANY_PART (ist));
@@ -1092,8 +1090,6 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			expr->param_spec = pspec;
 			ust->expr_list = g_slist_append (ust->expr_list, expr);
 		}
-
-		g_free (str);
 	}
 	g_hash_table_destroy (fields_hash);
 

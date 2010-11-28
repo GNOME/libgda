@@ -206,7 +206,7 @@ create_uni_expr (GdaSqlOperatorType op, GdaSqlExpr *expr) {
 
 static GdaSqlStatement *
 compose_multiple_compounds (GdaSqlStatementCompoundType ctype, GdaSqlStatement *left, GdaSqlStatement *right) {
-	GdaSqlStatement *ret;
+	GdaSqlStatement *ret = NULL;
 	GdaSqlStatementCompound *lc = (GdaSqlStatementCompound*) left->contents;
 	if (lc->compound_type == ctype) {
 		GdaSqlStatementCompound *rc = (GdaSqlStatementCompound*) right->contents;

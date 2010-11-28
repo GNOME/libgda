@@ -112,7 +112,7 @@ GdaDataHandler *
 gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaConnection *cnc,
 					      GType type, const gchar *dbms_type)
 {
-	GdaDataHandler *dh;
+	GdaDataHandler *dh = NULL;
 	if ((type == G_TYPE_INT64) ||
 	    (type == G_TYPE_UINT64) ||
 	    (type == G_TYPE_DOUBLE) ||

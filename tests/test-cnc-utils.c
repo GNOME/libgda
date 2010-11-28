@@ -328,7 +328,7 @@ test_cnc_setup_db_contents (GdaConnection *cnc, const gchar *data_file, GError *
 gboolean
 test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gchar *full_file, GError **error)
 {
-	GdaStatement *stmt;
+	GdaStatement *stmt = NULL;
 	GdaSet *params = NULL;
 	GdaDataModel *import;
 	gint nrows, ncols, i;
