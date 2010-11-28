@@ -1052,6 +1052,8 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		if (g_hash_table_lookup (fields_hash, selfield->field_name))
 			continue;
 		g_hash_table_insert (fields_hash, selfield->field_name, GINT_TO_POINTER (1));
+		gchar *str;
+		str = gda_sql_identifier_quote (selfield->field_name, cnc, NULL, FALSE, FALSE);
 
 		if (insert_stmt) {
 			GdaSqlField *field;
