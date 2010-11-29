@@ -1184,7 +1184,7 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 			dh = gda_handler_time_new ();
 			/* SQLite format is 'YYYY-MM-DD HH:MM:SS.SSS' */
 			gda_handler_time_set_sql_spec (GDA_HANDLER_TIME (dh), G_DATE_YEAR, G_DATE_MONTH,
-						       G_DATE_DAY, ' ', FALSE);
+						       G_DATE_DAY, '-', FALSE);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
