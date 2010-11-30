@@ -19,6 +19,12 @@
  */
 
 #include "gda-data-handler.h"
+#include "handlers/gda-handler-bin.h"
+#include "handlers/gda-handler-boolean.h"
+#include "handlers/gda-handler-numerical.h"
+#include "handlers/gda-handler-string.h"
+#include "handlers/gda-handler-time.h"
+#include "handlers/gda-handler-type.h"
 
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
 static void gda_data_handler_iface_init (gpointer g_class);
@@ -251,4 +257,68 @@ gda_data_handler_get_descr (GdaDataHandler *dh)
 		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_descr) (dh);
 	
 	return NULL;
+}
+
+static guint
+gtype_hash (gconstpointer key)
+{
+        return GPOINTER_TO_UINT (key);
+}
+
+static gboolean
+gtype_equal (gconstpointer a, gconstpointer b)
+{
+        return (GType) a == (GType) b ? TRUE : FALSE;
+}
+
+/**
+ * gda_data_handler_get_default_handler:
+ * @for_type: a #GType type
+ *
+ * Obtain a pointer to a #GdaDataHandler which can manage #GValue values of type @for_type. The returned
+ * data handler will be adapted to use the current locale information (for example dates will be formatted
+ * taking into account the locale).
+ *
+ * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
+ *
+ * Returns: (transfer none): a #GdaDataHandler which must not be modified or destroyed.
+ */
+GdaDataHandler *
+gda_data_handler_get_default_handler (GType for_type)
+{
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GHashTable *hash = NULL;
+	GdaDataHandler *dh;
+
+	g_static_mutex_lock (&mutex);
+	if (!hash) {
+		hash = g_hash_table_new_full (gtype_hash, gtype_equal,
+					      NULL, (GDestroyNotify) g_object_unref);
+
+                g_hash_table_insert (hash, (gpointer) G_TYPE_INT64, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_UINT64, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_BINARY, gda_handler_bin_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_BLOB, gda_handler_bin_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_BOOLEAN, gda_handler_boolean_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_DATE, gda_handler_time_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_DOUBLE, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_INT, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_NUMERIC, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_FLOAT, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_SHORT, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_USHORT, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_STRING, gda_handler_string_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIME, gda_handler_time_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_UCHAR, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_LONG, gda_handler_numerical_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_GTYPE, gda_handler_type_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());
+	}
+	g_static_mutex_unlock (&mutex);
+
+	dh = g_hash_table_lookup (hash, (gpointer) for_type);
+	return dh;
 }

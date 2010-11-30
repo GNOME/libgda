@@ -18,17 +18,10 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include <libgda/gda-easy.h>
-#include <libgda/gda-server-provider.h>
-#include <libgda/gda-config.h>
-#include <libgda/gda-set.h>
-#include <sql-parser/gda-sql-parser.h>
-#include <sql-parser/gda-sql-statement.h>
-#include <libgda/gda-holder.h>
-#include <libgda/gda-util.h>
-
-static GStaticMutex parser_mutex = G_STATIC_MUTEX_INIT;
-static GdaSqlParser *internal_parser = NULL;
+#include "gda-easy.h"
+#include "gda-server-operation.h"
+#include "gda-server-provider.h"
+#include "gda-data-handler.h"
 
 /* module error */
 GQuark gda_easy_error_quark (void)
@@ -47,65 +40,39 @@ GQuark gda_easy_error_quark (void)
  *
  * Creates a new #GdaServerOperation object which contains the specifications required
  * to create a database. Once these specifications provided, use 
- * gda_perform_create_database() to perform the database creation.
+ * gda_server_operation_perform_create_database() to perform the database creation.
  *
  * If @db_name is left %NULL, then the name of the database to create will have to be set in the
  * returned #GdaServerOperation using gda_server_operation_set_value_at().
  *
  * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
  * creation
+ *
+ * Deprecated: 4.2.3: Use gda_server_operation_prepare_create_database() instead.
  */
 GdaServerOperation *
 gda_prepare_create_database (const gchar *provider, const gchar *db_name, GError **error)
 {
-	GdaServerProvider *prov;
-
-	g_return_val_if_fail (provider && *provider, NULL);
-
-	prov = gda_config_get_provider (provider, error);
-	if (prov) {
-		GdaServerOperation *op;
-		op = gda_server_provider_create_operation (prov, NULL, GDA_SERVER_OPERATION_CREATE_DB, 
-							   NULL, error);
-		if (op) {
-			g_object_set_data_full (G_OBJECT (op), "_gda_provider_obj", g_object_ref (prov), g_object_unref);
-			if (db_name)
-				gda_server_operation_set_value_at (op, db_name, NULL, "/DB_DEF_P/DB_NAME");
-		}
-		return op;
-	}
-	else
-		return NULL;
+	return gda_server_operation_prepare_create_database(provider, db_name, error);
 }
 
 /**
  * gda_perform_create_database:
- * @provider: the database provider to use, or %NULL if @op has been created using gda_prepare_create_database()
+ * @provider: the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_create_database()
  * @op: a #GdaServerOperation object obtained using gda_prepare_create_database()
  * @error: a place to store en error, or %NULL
  *
  * Creates a new database using the specifications in @op. @op can be obtained using
  * gda_server_provider_create_operation(), or gda_prepare_create_database().
  *
- * Returns: TRUE if no error occurred and the database has been created
+ * Returns: TRUE if no error occurred and the database has been created, FALSE otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_server_operation_perform_create_database() instead.
  */
 gboolean
 gda_perform_create_database (const gchar *provider, GdaServerOperation *op, GError **error)
 {
-	GdaServerProvider *prov;
-
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	if (provider)
-		prov = gda_config_get_provider (provider, error);
-	else
-		prov = g_object_get_data (G_OBJECT (op), "_gda_provider_obj");
-	if (prov) 
-		return gda_server_provider_perform_operation (prov, NULL, op, error);
-	else {
-		g_warning ("Could not find operation's associated provider, "
-			   "did you use gda_prepare_create_database() ?");
-		return FALSE;
-	}
+	return gda_server_operation_perform_create_database(op, provider, error);
 }
 
 /**
@@ -123,58 +90,32 @@ gda_perform_create_database (const gchar *provider, GdaServerOperation *op, GErr
  *
  * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
  * destruction
+ *
+ * Deprecated: 4.2.3: Use gda_server_operation_prepare_drop_database() instead.
  */
 GdaServerOperation *
 gda_prepare_drop_database (const gchar *provider, const gchar *db_name, GError **error)
 {
-	GdaServerProvider *prov;
-	
-	g_return_val_if_fail (provider && *provider, NULL);
-
-	prov = gda_config_get_provider (provider, error);
-	if (prov) {
-		GdaServerOperation *op;
-		op = gda_server_provider_create_operation (prov, NULL, GDA_SERVER_OPERATION_DROP_DB, 
-							   NULL, error);
-		if (op) {
-			g_object_set_data_full (G_OBJECT (op), "_gda_provider_obj", g_object_ref (prov), g_object_unref);
-			if (db_name)
-				gda_server_operation_set_value_at (op, db_name, NULL, "/DB_DESC_P/DB_NAME");
-		}
-		return op;
-	}
-	else
-		return NULL;
+	return gda_server_operation_prepare_drop_database(provider, db_name, error);
 }
 
 /**
  * gda_perform_drop_database:
- * @provider: the database provider to use, or %NULL if @op has been created using gda_prepare_drop_database()
- * @op: a #GdaServerOperation object obtained using gda_prepare_drop_database()
+ * @provider: the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_drop_database()
+ * @op: a #GdaServerOperation object obtained using gda_server_operation_prepare_drop_database()
  * @error: a place to store en error, or %NULL
  *
  * Destroys an existing database using the specifications in @op.  @op can be obtained using
- * gda_server_provider_create_operation(), or gda_prepare_drop_database().
+ * gda_server_provider_create_operation(), or gda_server_operation_prepare_drop_database().
  *
- * Returns: TRUE if no error occurred and the database has been destroyed
+ * Returns: TRUE if no error occurred and the database has been destroyed, FALSE otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_server_operation_perform_drop_database() instead.
  */
 gboolean
 gda_perform_drop_database (const gchar *provider, GdaServerOperation *op, GError **error)
 {
-	GdaServerProvider *prov;
-
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	if (provider)
-		prov = gda_config_get_provider (provider, error);
-	else
-		prov = g_object_get_data (G_OBJECT (op), "_gda_provider_obj");
-	if (prov) 
-		return gda_server_provider_perform_operation (prov, NULL, op, error);
-	else {
-		g_warning ("Could not find operation's associated provider, "
-			   "did you use gda_prepare_drop_database() ?"); 
-		return FALSE;
-	}
+	return gda_server_operation_perform_drop_database(op, provider, error);
 }
 
 /**
@@ -186,35 +127,17 @@ gda_perform_drop_database (const gchar *provider, GdaServerOperation *op, GError
  * Execute a SQL SELECT command over an opened connection.
  *
  * Returns: (transfer full) (allow-none): a new #GdaDataModel if successful, NULL otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_connection_execute_select_command() instead.
  */
 GdaDataModel *          
 gda_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error)
 {
-	GdaStatement *stmt;
-	GdaDataModel *model;
-    
-	g_return_val_if_fail (sql != NULL 
-			      || GDA_IS_CONNECTION (cnc) 
-			      || !gda_connection_is_opened (cnc)
-			      || g_str_has_prefix (sql, "SELECT"),
-			      NULL);
-    
-	g_static_mutex_lock (&parser_mutex);
-	if (!internal_parser)
-		internal_parser = gda_sql_parser_new ();
-	g_static_mutex_unlock (&parser_mutex);
-
-	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, error);
-	if (!stmt) 
-		return NULL;
-	model = gda_connection_statement_execute_select (cnc, stmt, NULL, error);
-	g_object_unref (stmt);
-
-	return model;
+	return gda_connection_execute_select_command(cnc, sql, error);
 }
 
 /**
- * gda_execute_sql_command:
+ * gda_execute_non_select_command:
  * @cnc: an opened connection
  * @sql: a query statement must begin with "SELECT"
  * @error: a place to store errors, or %NULL
@@ -222,29 +145,13 @@ gda_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error
  * This is a convenience function to execute a SQL command over the opened connection.
  *
  * Returns: the number of rows affected or -1.
+ *
+ * Deprecated: 4.2.3: Use gda_connection_execute_non_select_command() instead.
  */
 gint
 gda_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **error)
 {
-	GdaStatement *stmt;
-	gint retval;
-
-	g_return_val_if_fail (sql != NULL 
-			      || GDA_IS_CONNECTION (cnc) 
-			      || !gda_connection_is_opened (cnc), -1);
-    
-	g_static_mutex_lock (&parser_mutex);
-	if (!internal_parser)
-		internal_parser = gda_sql_parser_new ();
-	g_static_mutex_unlock (&parser_mutex);
-
-	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, error);
-	if (!stmt) 
-		return -1;
-    
-	retval = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, error);
-	g_object_unref (stmt);
-	return retval;
+	return gda_connection_execute_non_select_command(cnc, sql, error);
 }
 
 /**
@@ -279,7 +186,10 @@ gda_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **e
  * in order to execute the operation.
  * 
  * Returns: (transfer full) (allow-none): a #GdaServerOperation if no errors; NULL and set @error otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_server_operation_prepare_create_table() instead.
  */
+G_GNUC_NULL_TERMINATED
 GdaServerOperation*
 gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **error, ...)
 {
@@ -437,27 +347,17 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
  * @error: a place to store errors, or %NULL
  * 
  * Performs a prepared #GdaServerOperation to create a table. This could perform
- * an operation created by #gda_prepare_create_table or any other using the
+ * an operation created by gda_server_operation_prepare_create_table() or any other using the
  * the #GdaServerOperation API.
  *
  * Returns: TRUE if the table was created; FALSE and set @error otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_server_operation_perform_create_table() instead.
  */
 gboolean
 gda_perform_create_table (GdaServerOperation *op, GError **error)
 {
-	GdaConnection *cnc;
-	
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);	
-	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_CREATE_TABLE, FALSE);
-	
-	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
-	if (cnc) 
-		return gda_server_provider_perform_operation (gda_connection_get_provider (cnc), cnc, op, error);
-	else {
-		g_warning ("Could not find operation's associated connection, "
-			   "did you use gda_prepare_create_table() ?"); 
-		return FALSE;
-	}
+	return gda_server_operation_perform_create_table(op, error);
 }
 
 /**
@@ -470,33 +370,13 @@ gda_perform_create_table (GdaServerOperation *op, GError **error)
  * table in an opened connection.
  *
  * Returns: (transfer full) (allow-none): a new #GdaServerOperation or NULL if couldn't create the opereration.
+ *
+ * Deprecated: 4.2.3: Use gda_server_operation_prepare_drop_table() instead.
  */
 GdaServerOperation*
 gda_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
 {
-	GdaServerOperation *op;
-	GdaServerProvider *server;
-
-	server = gda_connection_get_provider (cnc);
-	
-	op = gda_server_provider_create_operation (server, cnc, 
-						   GDA_SERVER_OPERATION_DROP_TABLE, NULL, error);
-	
-	if (GDA_IS_SERVER_OPERATION (op)) {
-		g_return_val_if_fail (table_name != NULL 
-				      || GDA_IS_CONNECTION (cnc) 
-				      || !gda_connection_is_opened (cnc), NULL);
-		
-		if (gda_server_operation_set_value_at (op, table_name, 
-						       error, "/TABLE_DESC_P/TABLE_NAME")) {
-			g_object_set_data_full (G_OBJECT (op), "_gda_connection", g_object_ref (cnc), g_object_unref);
-			return op;
-		}
-		else 
-			return NULL;
-	}
-	else
-		return NULL;
+	gda_connection_prepare_drop_table(cnc, table_name, error);
 }
 
 /**
@@ -506,36 +386,14 @@ gda_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **er
  * 
  * This is just a convenient function to perform a drop a table operation.
  *
- * Returns: TRUE if the table was dropped
+ * Returns: TRUE if the table was dropped, FALSE otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_server_operation_perform_drop_table() instead.
  */
 gboolean
 gda_perform_drop_table (GdaServerOperation *op, GError **error)
 {
-	GdaConnection *cnc;
-	
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);	
-	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_DROP_TABLE, FALSE);
-	
-	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
-	if (cnc) 
-		return gda_server_provider_perform_operation (gda_connection_get_provider (cnc), cnc, op, error);
-	else {
-		g_warning ("Could not find operation's associated connection, "
-			   "did you use gda_prepare_drop_table() ?"); 
-		return FALSE;
-	}
-}
-
-static guint
-gtype_hash (gconstpointer key)
-{
-        return GPOINTER_TO_UINT (key);
-}
-
-static gboolean 
-gtype_equal (gconstpointer a, gconstpointer b)
-{
-        return (GType) a == (GType) b ? TRUE : FALSE;
+	return gda_server_operation_perform_drop_table(op, error);
 }
 
 /**
@@ -549,45 +407,13 @@ gtype_equal (gconstpointer a, gconstpointer b)
  * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
  *
  * Returns: (transfer none): a #GdaDataHandler which must not be modified or destroyed.
+ *
+ * Deprecated: 4.2.3: Use gda_data_handler_get_default_handler() instead.
  */
 GdaDataHandler *
 gda_get_default_handler (GType for_type)
 {
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
-	static GHashTable *hash = NULL;
-	GdaDataHandler *dh;
-
-	g_static_mutex_lock (&mutex);
-	if (!hash) {
-		hash = g_hash_table_new_full (gtype_hash, gtype_equal,
-					      NULL, (GDestroyNotify) g_object_unref);
-
-                g_hash_table_insert (hash, (gpointer) G_TYPE_INT64, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_UINT64, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_BINARY, gda_handler_bin_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_BLOB, gda_handler_bin_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_BOOLEAN, gda_handler_boolean_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_DATE, gda_handler_time_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_DOUBLE, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_INT, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_NUMERIC, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_FLOAT, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_SHORT, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_USHORT, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_STRING, gda_handler_string_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIME, gda_handler_time_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_UCHAR, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_LONG, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_GTYPE, gda_handler_type_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());
-	}
-	g_static_mutex_unlock (&mutex);
-	
-	dh = g_hash_table_lookup (hash, (gpointer) for_type);
-	return dh;
+	return gda_data_handler_get_default_handler(for_type);
 }
 
 /**
@@ -604,8 +430,11 @@ gda_get_default_handler (GType for_type)
  *
  * The equivalent SQL command is: INSERT INTO &lt;table&gt; (&lt;column_name&gt; [,...]) VALUES (&lt;column_name&gt; = &lt;new_value&gt; [,...]).
  * 
- * Returns: TRUE if no error occurred
+ * Returns: TRUE if no error occurred, FALSE otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_connection_insert_row_into_table() instead.
  */
+G_GNUC_NULL_TERMINATED
 gboolean
 gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **error, ...)
 {
@@ -635,7 +464,7 @@ gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **erro
 
 	clist = g_slist_reverse (clist);
 	vlist = g_slist_reverse (vlist);
-	retval = gda_insert_row_into_table_v (cnc, table, clist, vlist, error);
+	retval = gda_connection_insert_row_into_table_v (cnc, table, clist, vlist, error);
 	g_slist_free (clist);
 	g_slist_free (vlist);
 
@@ -657,98 +486,16 @@ gda_insert_row_into_table (GdaConnection *cnc, const gchar *table, GError **erro
  *
  * The equivalent SQL command is: INSERT INTO &lt;table&gt; (&lt;column_name&gt; [,...]) VALUES (&lt;column_name&gt; = &lt;new_value&gt; [,...]).
  * 
- * Returns: TRUE if no error occurred
+ * Returns: TRUE if no error occurred, FALSE otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_connection_insert_row_into_table_v() instead.
  */
 gboolean
 gda_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
 			     GSList *col_names, GSList *values,
 			     GError **error)
 {
-	gboolean retval;
-	GSList *fields = NULL;
-	GSList *expr_values = NULL;
-	GdaSqlStatement *sql_stm;
-	GdaSqlStatementInsert *ssi;
-	GdaStatement *insert;
-	gint i;
-
-	GSList *holders = NULL;
-	GSList *l1, *l2;
-	
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (table && *table, FALSE);
-	g_return_val_if_fail (col_names, FALSE);
-	g_return_val_if_fail (g_slist_length (col_names) == g_slist_length (values), FALSE);
-	
-	/* Construct insert query and list of GdaHolders */
-	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
-	ssi = (GdaSqlStatementInsert*) sql_stm->contents;
-	g_assert (GDA_SQL_ANY_PART (ssi)->type == GDA_SQL_ANY_STMT_INSERT);
-
-	ssi->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssi));
-	ssi->table->table_name = gda_sql_identifier_quote (table, cnc, NULL, FALSE, FALSE);
-
-	i = 0;
-	for (l1 = col_names, l2 = values;
-	     l1;
-	     l1 = l1->next, l2 = l2->next) {
-		GdaSqlField *field;
-		GdaSqlExpr *expr;
-		GValue *value = (GValue *) l2->data;
-		const gchar *col_name = (const gchar*) l1->data; 
-		
-		/* field */
-		field = gda_sql_field_new (GDA_SQL_ANY_PART (ssi));
-		field->field_name = gda_sql_identifier_quote (col_name, cnc, NULL, FALSE, FALSE);
-		fields = g_slist_prepend (fields, field);
-
-		/* value */
-		expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ssi));
-		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
-			/* create a GdaSqlExpr with a parameter */
-			GdaSqlParamSpec *param;
-			param = g_new0 (GdaSqlParamSpec, 1);
-			param->name = g_strdup_printf ("+%d", i);
-			param->g_type = G_VALUE_TYPE (value);
-			param->is_param = TRUE;
-			expr->param_spec = param;
-
-			GdaHolder *holder;
-			holder = (GdaHolder*)  g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (value),
-							     "id", param->name, NULL);
-			g_assert (gda_holder_set_value (holder, value, NULL));
-			holders = g_slist_prepend (holders, holder);
-		}
-		else {
-			/* create a NULL GdaSqlExpr => nothing to do */
-		}
-		expr_values = g_slist_prepend (expr_values, expr);
-		
-		i++;
-	}
-	
-	ssi->fields_list = g_slist_reverse (fields);
-	ssi->values_list = g_slist_prepend (NULL, g_slist_reverse (expr_values));
-	
-	insert = gda_statement_new ();
-	g_object_set (G_OBJECT (insert), "structure", sql_stm, NULL);
-	gda_sql_statement_free (sql_stm);
-
-	/* execute statement */
-	GdaSet *set = NULL;
-	if (holders) {
-		set = gda_set_new (holders);
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
-	}
-
-	retval = (gda_connection_statement_execute_non_select (cnc, insert, set, NULL, error) == -1) ? FALSE : TRUE;
-
-	if (set)
-		g_object_unref (set);
-	g_object_unref (insert);
-
-	return retval;	
+	return gda_connection_insert_row_into_table_v(cnc, table, col_names, values, error);
 }
 
 
@@ -768,8 +515,11 @@ gda_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
  *
  * The equivalent SQL command is: UPDATE &lt;table&gt; SET &lt;column_name&gt; = &lt;new_value&gt; [,...] WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
  *
- * Returns: TRUE if no error occurred
+ * Returns: TRUE if no error occurred, FALSE otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_connection_update_row_in_table() instead.
  */
+G_GNUC_NULL_TERMINATED
 gboolean
 gda_update_row_in_table (GdaConnection *cnc, const gchar *table, 
 			 const gchar *condition_column_name, 
@@ -801,7 +551,7 @@ gda_update_row_in_table (GdaConnection *cnc, const gchar *table,
 
 	clist = g_slist_reverse (clist);
 	vlist = g_slist_reverse (vlist);
-	retval = gda_update_row_in_table_v (cnc, table, condition_column_name, condition_value, clist, vlist, error);
+	retval = gda_connection_update_row_in_table_v (cnc, table, condition_column_name, condition_value, clist, vlist, error);
 	g_slist_free (clist);
 	g_slist_free (vlist);
 
@@ -826,6 +576,8 @@ gda_update_row_in_table (GdaConnection *cnc, const gchar *table,
  * The equivalent SQL command is: UPDATE &lt;table&gt; SET &lt;column_name&gt; = &lt;new_value&gt; [,...] WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
  *
  * Returns: TRUE if no error occurred
+ *
+ * Deprecated: 4.2.3: Use gda_connection_update_row_in_table_v() instead.
  */
 gboolean
 gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table, 
@@ -834,126 +586,8 @@ gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
 			   GSList *col_names, GSList *values,
 			   GError **error)
 {
-	gboolean retval;
-	GSList *fields = NULL;
-	GSList *expr_values = NULL;
-	GdaSqlStatement *sql_stm;
-	GdaSqlStatementUpdate *ssu;
-	GdaStatement *update;
-	gint i;
-
-	GSList *holders = NULL;
-	GSList *l1, *l2;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (table && *table, FALSE);
-	g_return_val_if_fail (col_names, FALSE);
-	g_return_val_if_fail (g_slist_length (col_names) == g_slist_length (values), FALSE);
-	
-	/* Construct update query and list of GdaHolders */
-	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
-	ssu = (GdaSqlStatementUpdate*) sql_stm->contents;
-	g_assert (GDA_SQL_ANY_PART (ssu)->type == GDA_SQL_ANY_STMT_UPDATE);
-
-	ssu->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssu));
-	ssu->table->table_name = gda_sql_identifier_quote (table, cnc, NULL, FALSE, FALSE);
-
-	if (condition_column_name) {
-		GdaSqlExpr *where, *op;
-		where = gda_sql_expr_new (GDA_SQL_ANY_PART (ssu));
-		ssu->cond = where;
-
-		where->cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
-		where->cond->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
-
-		op = gda_sql_expr_new (GDA_SQL_ANY_PART (where->cond));
-		where->cond->operands = g_slist_prepend (NULL, op);
-		op->value = gda_value_new (G_TYPE_STRING);
-		g_value_take_string (op->value, gda_sql_identifier_quote (condition_column_name, cnc, NULL,
-									  FALSE, FALSE));
-
-		op = gda_sql_expr_new (GDA_SQL_ANY_PART (where->cond));
-		where->cond->operands = g_slist_append (where->cond->operands, op);
-		if (condition_value) {
-			GdaSqlParamSpec *param;
-			param = g_new0 (GdaSqlParamSpec, 1);
-			param->name = g_strdup ("cond");
-			param->g_type = G_VALUE_TYPE (condition_value);
-			param->is_param = TRUE;
-			op->param_spec = param;
-
-			GdaHolder *holder;
-			holder = (GdaHolder*)  g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (condition_value),
-							     "id", param->name, NULL);
-			g_assert (gda_holder_set_value (holder, condition_value, NULL));
-			holders = g_slist_prepend (holders, holder);
-		}
-		else {
-			/* nothing to do: NULL */
-		}
-	}
-
-	i = 0;
-	for (l1 = col_names, l2 = values;
-	     l1;
-	     l1 = l1->next, l2 = l2->next) {
-		GValue *value = (GValue *) l2->data;
-		const gchar *col_name = (const gchar*) l1->data;
-		GdaSqlField *field;
-		GdaSqlExpr *expr;
-		
-		/* field */
-		field = gda_sql_field_new (GDA_SQL_ANY_PART (ssu));
-		field->field_name = gda_sql_identifier_quote (col_name, cnc, NULL, FALSE, FALSE);
-		fields = g_slist_prepend (fields, field);
-
-		/* value */
-		expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ssu));
-		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
-			/* create a GdaSqlExpr with a parameter */
-			GdaSqlParamSpec *param;
-			param = g_new0 (GdaSqlParamSpec, 1);
-			param->name = g_strdup_printf ("+%d", i);
-			param->g_type = G_VALUE_TYPE (value);
-			param->is_param = TRUE;
-			expr->param_spec = param;
-
-			GdaHolder *holder;
-			holder = (GdaHolder*)  g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (value),
-							     "id", param->name, NULL);
-			g_assert (gda_holder_set_value (holder, value, NULL));
-			holders = g_slist_prepend (holders, holder);
-		}
-		else {
-			/* create a NULL GdaSqlExpr => nothing to do */
-		}
-		expr_values = g_slist_prepend (expr_values, expr);
-		
-		i++;
-	}
-
-	ssu->fields_list = g_slist_reverse (fields);
-	ssu->expr_list = g_slist_reverse (expr_values);
-	
-	update = gda_statement_new ();
-	g_object_set (G_OBJECT (update), "structure", sql_stm, NULL);
-	gda_sql_statement_free (sql_stm);
-
-	/* execute statement */
-	GdaSet *set = NULL;
-	if (holders) {
-		set = gda_set_new (holders);
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
-	}
-
-	retval = (gda_connection_statement_execute_non_select (cnc, update, set, NULL, error) == -1) ? FALSE : TRUE;
-
-	if (set)
-		g_object_unref (set);
-	g_object_unref (update);
-
-	return retval;
+	gda_connection_update_row_in_table_v(cnc, table, condition_column_name, condition_value,
+					     col_names, values, error);
 }
 
 /**
@@ -969,85 +603,16 @@ gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
  *
  * The equivalent SQL command is: DELETE FROM &lt;table&gt; WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
  *
- * Returns: TRUE if no error occurred
+ * Returns: TRUE if no error occurred, FALSE otherwise
+ *
+ * Deprecated: 4.2.3: Use gda_connection_delete_row_from_table() instead.
  */
 gboolean
 gda_delete_row_from_table (GdaConnection *cnc, const gchar *table, 
 			   const gchar *condition_column_name, 
 			   GValue *condition_value, GError **error)
 {
-	gboolean retval;
-	GdaSqlStatement *sql_stm;
-	GdaSqlStatementDelete *ssd;
-	GdaStatement *delete;
-
-	GSList *holders = NULL;
-	
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (table && *table, FALSE);
-	
-	/* Construct delete query and list of GdaHolders */
-	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
-	ssd = (GdaSqlStatementDelete*) sql_stm->contents;
-	g_assert (GDA_SQL_ANY_PART (ssd)->type == GDA_SQL_ANY_STMT_DELETE);
-
-	ssd->table = gda_sql_table_new (GDA_SQL_ANY_PART (ssd));
-	ssd->table->table_name = gda_sql_identifier_quote (table, cnc, NULL, FALSE, FALSE);
-
-	if (condition_column_name) {
-		GdaSqlExpr *where, *op;
-		where = gda_sql_expr_new (GDA_SQL_ANY_PART (ssd));
-		ssd->cond = where;
-
-		where->cond = gda_sql_operation_new (GDA_SQL_ANY_PART (where));
-		where->cond->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
-
-		op = gda_sql_expr_new (GDA_SQL_ANY_PART (where->cond));
-		where->cond->operands = g_slist_prepend (NULL, op);
-		op->value = gda_value_new (G_TYPE_STRING);
-		g_value_take_string (op->value, gda_sql_identifier_quote (condition_column_name, cnc, NULL,
-									  FALSE, FALSE));
-
-		op = gda_sql_expr_new (GDA_SQL_ANY_PART (where->cond));
-		where->cond->operands = g_slist_append (where->cond->operands, op);
-		if (condition_value) {
-			GdaSqlParamSpec *param;
-			param = g_new0 (GdaSqlParamSpec, 1);
-			param->name = g_strdup ("cond");
-			param->g_type = G_VALUE_TYPE (condition_value);
-			param->is_param = TRUE;
-			op->param_spec = param;
-
-			GdaHolder *holder;
-			holder = (GdaHolder*)  g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (condition_value),
-							     "id", param->name, NULL);
-			g_assert (gda_holder_set_value (holder, condition_value, NULL));
-			holders = g_slist_prepend (holders, holder);
-		}
-		else {
-			/* nothing to do: NULL */
-		}
-	}
-
-	delete = gda_statement_new ();
-	g_object_set (G_OBJECT (delete), "structure", sql_stm, NULL);
-	gda_sql_statement_free (sql_stm);
-
-	/* execute statement */
-	GdaSet *set = NULL;
-	if (holders) {
-		set = gda_set_new (holders);
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
-	}
-
-	retval = (gda_connection_statement_execute_non_select (cnc, delete, set, NULL, error) == -1) ? FALSE : TRUE;
-
-	if (set)
-		g_object_unref (set);
-	g_object_unref (delete);
-
-	return retval;
+	gda_connection_delete_row_from_table(cnc, table, condition_column_name, condition_value, error);
 }
 
 /**
@@ -1062,32 +627,11 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
  * Returns: (transfer full) (allow-none): a #GdaStatement representing the SQL command, or %NULL if an error occurred
  *
  * Since: 4.2
+ *
+ * Deprecated: 4.2.3: Use gda_connection_parse_sql_string() instead.
  */
 GdaStatement*
 gda_parse_sql_string (GdaConnection *cnc, const gchar *sql, GdaSet **params, GError **error)
 {
-	GdaStatement *stmt;
-	GdaSqlParser *parser = NULL;
-
-	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (sql, NULL);
-
-	if (params)
-		*params = NULL;
-	if (cnc)
-		parser = gda_connection_create_parser (cnc);
-	if (!parser)
-		parser = gda_sql_parser_new ();
-
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, error);
-	g_object_unref (parser);
-	if (! stmt)
-		return NULL;
-
-	if (params && !gda_statement_get_parameters (stmt, params, error)) {
-		g_object_unref (stmt);
-		return NULL;
-	}
-	
-	return stmt;
+	gda_connection_parse_sql_string(cnc, sql, params, error);
 }

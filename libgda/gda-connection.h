@@ -59,6 +59,7 @@ typedef enum {
 	GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR,
 	GDA_CONNECTION_CLOSED_ERROR
 } GdaConnectionError;
+
 #define GDA_CONNECTION_NONEXIST_DSN_ERROR GDA_CONNECTION_DSN_NOT_FOUND_ERROR
 
 struct _GdaConnection {
@@ -267,6 +268,35 @@ gboolean             gda_connection_perform_operation    (GdaConnection *cnc, Gd
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
 const gchar         *gda_connection_get_authentication   (GdaConnection *cnc);
+
+GdaStatement        *gda_connection_parse_sql_string     (GdaConnection *cnc, const gchar *sql, GdaSet **params,
+                    GError **error);
+
+/*
+ * Quick commands execution
+ */
+GdaDataModel*       gda_connection_execute_select_command        (GdaConnection *cnc, const gchar *sql, GError **error);
+gint                gda_connection_execute_non_select_command    (GdaConnection *cnc, const gchar *sql, GError **error);
+
+/*
+ * Data in tables manipulation
+ */
+gboolean            gda_connection_insert_row_into_table        (GdaConnection *cnc, const gchar *table, GError **error, ...);
+gboolean            gda_connection_insert_row_into_table_v      (GdaConnection *cnc, const gchar *table,
+						      GSList *col_names, GSList *values,
+						      GError **error);
+
+gboolean            gda_connection_update_row_in_table          (GdaConnection *cnc, const gchar *table,
+						      const gchar *condition_column_name,
+						      GValue *condition_value, GError **error, ...);
+gboolean            gda_connection_update_row_in_table_v        (GdaConnection *cnc, const gchar *table,
+						      const gchar *condition_column_name,
+						      GValue *condition_value,
+						      GSList *col_names, GSList *values,
+						      GError **error);
+gboolean            gda_connection_delete_row_from_table        (GdaConnection *cnc, const gchar *table,
+						      const gchar *condition_column_name,
+						      GValue *condition_value, GError **error);
 
 const GList         *gda_connection_get_events           (GdaConnection *cnc);
 

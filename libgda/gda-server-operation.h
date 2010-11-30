@@ -66,6 +66,27 @@ typedef enum {
 	GDA_SERVER_OPERATION_LAST
 } GdaServerOperationType;
 
+/* error reporting */
+extern GQuark gda_server_operation_error_quark (void);
+#define GDA_SERVER_OPERATION_ERROR gda_server_operation_error_quark ()
+
+typedef enum {
+	GDA_SERVER_OPERATION_OBJECT_NAME_ERROR,
+	GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR
+} GdaServerOperationError;
+
+typedef enum
+{
+	GDA_SERVER_OPERATION_CREATE_TABLE_NOTHING_FLAG   = 1 << 0,
+	GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_FLAG      = 1 << 1,
+	GDA_SERVER_OPERATION_CREATE_TABLE_NOT_NULL_FLAG  = 1 << 2,
+	GDA_SERVER_OPERATION_CREATE_TABLE_UNIQUE_FLAG    = 1 << 3,
+	GDA_SERVER_OPERATION_CREATE_TABLE_AUTOINC_FLAG   = 1 << 4,
+	GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG      = 1 << 5,
+	/* Flags combinations */
+	GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_AUTOINC_FLAG = GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_FLAG | GDA_SERVER_OPERATION_CREATE_TABLE_AUTOINC_FLAG
+} GdaServerOperationCreateTableFlag;
+
 typedef enum {
 	GDA_SERVER_OPERATION_NODE_PARAMLIST,
 	GDA_SERVER_OPERATION_NODE_DATA_MODEL,
@@ -147,6 +168,22 @@ guint                      gda_server_operation_add_item_to_sequence    (GdaServ
 gboolean                   gda_server_operation_del_item_from_sequence  (GdaServerOperation *op, const gchar *item_path);
 
 gboolean                   gda_server_operation_is_valid                (GdaServerOperation *op, const gchar *xml_file, GError **error);
+
+/*
+ * Database creation and destruction
+ */
+GdaServerOperation *gda_server_operation_prepare_create_database       (const gchar *provider, const gchar *db_name, GError **error);
+gboolean            gda_server_operation_perform_create_database       (GdaServerOperation *op, const gchar *provider, GError **error);
+GdaServerOperation *gda_server_operation_prepare_drop_database         (const gchar *provider, const gchar *db_name, GError **error);
+gboolean            gda_server_operation_perform_drop_database         (GdaServerOperation *op, const gchar *provider, GError **error);
+
+/*
+ * Tables creation and destruction
+ */
+GdaServerOperation *gda_server_operation_prepare_create_table	      (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
+gboolean            gda_server_operaton_perform_create_table          (GdaServerOperation *op, GError **error);
+GdaServerOperation *gda_server_operation_prepare_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
+gboolean            gda_server_operation_perform_drop_table            (GdaServerOperation *op, GError **error);
 
 G_END_DECLS
 

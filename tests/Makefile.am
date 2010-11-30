@@ -24,7 +24,7 @@ libgda_test_4_0_la_SOURCES = \
 	data-model-errors.h \
 	data-model-errors.c
 
-libgda_test_4_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
+libgda_test_4_0_la_LDFLAGS = $(NO_UNDEFINED)
 
 libgda_test_4_0_la_LIBADD = \
 	$(LIBGDA_LIBS) \

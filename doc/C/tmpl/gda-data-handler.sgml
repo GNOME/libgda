@@ -16,7 +16,7 @@ Interface which provides data handling (conversions) capabilities
 </para>
 <para>
   For each data type, a corresponding #GdaDataHandler object can be requested using the
-  <link linkend="gda-get-default-handler">gda_get_default_handler()</link> function. However, when working
+  <link linkend="gda-data-handler-get-default-handler">gda_data_handler_get_default_handler()</link> function. However, when working
   with a specific database provider, it's better to use a #GdaDataHandler which may be specific to the
   database provider which will correctly handle each database specifics using
   <link linkend="gda-server-provider-get-data-handler-g-type">gda_server_provider_get_data_handler_g_type()</link> or

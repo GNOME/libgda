@@ -340,7 +340,7 @@ params_to_string (GdauiProviderAuthEditor *auth)
 				GType dtype;
 
 				dtype = gda_holder_get_g_type (param);
-				dh = gda_get_default_handler (dtype);
+				dh = gda_data_handler_get_default_handler (dtype);
 				str = gda_data_handler_get_str_from_value (dh, value);
 			}
 			if (str && *str) {

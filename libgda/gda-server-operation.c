@@ -28,6 +28,7 @@
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-config.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-data-model-import.h>
 #include <libgda/gda-data-model-array.h>
@@ -254,6 +255,15 @@ gda_server_operation_dispose (GObject *object)
 
 	/* chain to parent class */
 	parent_class->dispose (object);
+}
+
+/* module error */
+GQuark gda_server_operation_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_server_operation_error");
+        return quark;
 }
 
 GType
@@ -2366,4 +2376,422 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 	}
 
 	return valid;
+}
+
+/**
+ * gda_server_operation_prepare_create_database:
+ * @provider: the database provider to use
+ * @db_name: the name of the database to create, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates a new #GdaServerOperation object which contains the specifications required
+ * to create a database. Once these specifications provided, use
+ * gda_server_operation_perform_create_database() to perform the database creation.
+ *
+ * If @db_name is left %NULL, then the name of the database to create will have to be set in the
+ * returned #GdaServerOperation using gda_server_operation_set_value_at().
+ *
+ * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
+ * creation
+ */
+GdaServerOperation *
+gda_server_operation_prepare_create_database (const gchar *provider, const gchar *db_name, GError **error)
+{
+	GdaServerProvider *prov;
+
+	g_return_val_if_fail (provider && *provider, NULL);
+
+	prov = gda_config_get_provider (provider, error);
+	if (prov) {
+		GdaServerOperation *op;
+		op = gda_server_provider_create_operation (prov, NULL, GDA_SERVER_OPERATION_CREATE_DB,
+							   NULL, error);
+		if (op) {
+			g_object_set_data_full (G_OBJECT (op), "_gda_provider_obj", g_object_ref (prov), g_object_unref);
+			if (db_name)
+				gda_server_operation_set_value_at (op, db_name, NULL, "/DB_DEF_P/DB_NAME");
+		}
+		return op;
+	}
+	else
+		return NULL;
+}
+
+/**
+ * gda_server_operation_perform_create_database:
+ * @provider: the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_create_database()
+ * @op: a #GdaServerOperation object obtained using gda_server_operation_prepare_create_database()
+ * @error: a place to store en error, or %NULL
+ *
+ * Creates a new database using the specifications in @op. @op can be obtained using
+ * gda_server_provider_create_operation(), or gda_server_operation_prepare_create_database().
+ *
+ * Returns: TRUE if no error occurred and the database has been created, FALSE otherwise
+ */
+gboolean
+gda_server_operation_perform_create_database (GdaServerOperation *op, const gchar *provider, GError **error)
+{
+	GdaServerProvider *prov;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	if (provider)
+		prov = gda_config_get_provider (provider, error);
+	else
+		prov = g_object_get_data (G_OBJECT (op), "_gda_provider_obj");
+	if (prov)
+		return gda_server_provider_perform_operation (prov, NULL, op, error);
+	else {
+		g_warning ("Could not find operation's associated provider, "
+			   "did you use gda_server_operation_prepare_create_database() ?");
+		return FALSE;
+	}
+}
+
+/**
+ * gda_server_operation_prepare_drop_database:
+ * @provider: the database provider to use
+ * @db_name: the name of the database to drop, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates a new #GdaServerOperation object which contains the specifications required
+ * to drop a database. Once these specifications provided, use
+ * gda_server_operation_perform_drop_database() to perform the database creation.
+ *
+ * If @db_name is left %NULL, then the name of the database to drop will have to be set in the
+ * returned #GdaServerOperation using gda_server_operation_set_value_at().
+ *
+ * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
+ * destruction
+ */
+GdaServerOperation *
+gda_server_operation_prepare_drop_database (const gchar *provider, const gchar *db_name, GError **error)
+{
+	GdaServerProvider *prov;
+
+	g_return_val_if_fail (provider && *provider, NULL);
+
+	prov = gda_config_get_provider (provider, error);
+	if (prov) {
+		GdaServerOperation *op;
+		op = gda_server_provider_create_operation (prov, NULL, GDA_SERVER_OPERATION_DROP_DB,
+							   NULL, error);
+		if (op) {
+			g_object_set_data_full (G_OBJECT (op), "_gda_provider_obj", g_object_ref (prov), g_object_unref);
+			if (db_name)
+				gda_server_operation_set_value_at (op, db_name, NULL, "/DB_DESC_P/DB_NAME");
+		}
+		return op;
+	}
+	else
+		return NULL;
+}
+
+/**
+ * gda_server_operation_perform_drop_database:
+ * @provider: the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_drop_database()
+ * @op: a #GdaServerOperation object obtained using gda_prepare_drop_database()
+ * @error: a place to store en error, or %NULL
+ *
+ * Destroys an existing database using the specifications in @op. @op can be obtained using
+ * gda_server_provider_create_operation(), or gda_server_operation_prepare_drop_database().
+ *
+ * Returns: TRUE if no error occurred and the database has been destroyed
+ */
+gboolean
+gda_server_operation_perform_drop_database (GdaServerOperation *op, const gchar *provider, GError **error)
+{
+	GdaServerProvider *prov;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	if (provider)
+		prov = gda_config_get_provider (provider, error);
+	else
+		prov = g_object_get_data (G_OBJECT (op), "_gda_provider_obj");
+	if (prov)
+		return gda_server_provider_perform_operation (prov, NULL, op, error);
+	else {
+		g_warning ("Could not find operation's associated provider, "
+			   "did you use gda_server_operation_prepare_drop_database() ?");
+		return FALSE;
+	}
+}
+
+/**
+ * gda_server_operation_prepare_create_table:
+ * @cnc: an opened connection
+ * @table_name: name of the table to create
+ * @error: a place to store errors, or %NULL
+ * @...: group of three arguments for column's name, column's #GType
+ * and a #GdaEasyCreateTableFlag flag, finished with %NULL
+ *
+ * Add more arguments if the flag needs them:
+ *
+ * GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG:
+ * <itemizedlist>
+ *   <listitem><para>string with the table's name referenced</para></listitem>
+ *   <listitem><para>an integer with the number pairs "local_field", "referenced_field"
+ *   used in the reference</para></listitem>
+ *   <listitem><para>Pairs of "local_field", "referenced_field" to use, must match
+ *    the number specified above.</para></listitem>
+ *   <listitem><para>a string with the action for ON DELETE; can be: "RESTRICT", "CASCADE",
+ *    "NO ACTION", "SET NULL" and "SET DEFAULT". Example: "ON UPDATE CASCADE".</para></listitem>
+ *   <listitem><para>a string with the action for ON UPDATE (see above).</para></listitem>
+ * </itemizedlist>
+ *
+ * Create a #GdaServerOperation object using an opened connection, taking three
+ * arguments, a column's name the column's GType and #GdaEasyCreateTableFlag
+ * flag, you need to finish the list using %NULL.
+ *
+ * You'll be able to modify the #GdaServerOperation object to add custom options * to the operation. When finished call #gda_server_operation_perform_create_table
+ * or #gda_server_provider_perform_operation
+ * in order to execute the operation.
+ *
+ * Returns: (transfer full) (allow-none): a #GdaServerOperation if no errors; NULL and set @error otherwise
+ */
+G_GNUC_NULL_TERMINATED
+GdaServerOperation*
+gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **error, ...)
+{
+	GdaServerOperation *op;
+	GdaServerProvider *server;
+
+	g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);
+
+	server = gda_connection_get_provider (cnc);
+
+	if (!table_name) {
+		g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_OBJECT_NAME_ERROR,
+			     "%s", _("Unspecified table name"));
+		return NULL;
+	}
+
+	if (gda_server_provider_supports_operation (server, cnc, GDA_SERVER_OPERATION_CREATE_TABLE, NULL)) {
+		va_list  args;
+		gchar   *arg;
+		GType    type;
+		gchar   *dbms_type;
+		GdaServerOperationCreateTableFlag flag;
+		gint i;
+		gint refs;
+
+		op = gda_server_provider_create_operation (server, cnc,
+							   GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
+		if (!GDA_IS_SERVER_OPERATION(op))
+			return NULL;
+		if(!gda_server_operation_set_value_at (op, table_name, error, "/TABLE_DEF_P/TABLE_NAME")) {
+			g_object_unref (op);
+			return NULL;
+		}
+
+		va_start (args, error);
+		type = 0;
+		arg = NULL;
+		i = 0;
+		refs = -1;
+
+		while ((arg = va_arg (args, gchar*))) {
+			/* First argument for Column's name */
+			if(!gda_server_operation_set_value_at (op, arg, error, "/FIELDS_A/@COLUMN_NAME/%d", i)){
+				g_object_unref (op);
+				return NULL;
+			}
+
+			/* Second to Define column's type */
+			type = va_arg (args, GType);
+			if (type == 0) {
+				g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+					     "%s", _("Invalid type"));
+				g_object_unref (op);
+				return NULL;
+			}
+			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server,
+											 cnc, type);
+			if (!gda_server_operation_set_value_at (op, dbms_type, error, "/FIELDS_A/@COLUMN_TYPE/%d", i)){
+				g_object_unref (op);
+				return NULL;
+			}
+
+			/* Third for column's flags */
+			flag = va_arg (args, GdaServerOperationCreateTableFlag);
+			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_FLAG)
+				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_PKEY/%d", i)){
+					g_object_unref (op);
+					return NULL;
+				}
+			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_NOT_NULL_FLAG)
+				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_NNUL/%d", i)){
+					g_object_unref (op);
+					return NULL;
+				}
+			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_AUTOINC_FLAG)
+				if (!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i)){
+					g_object_unref (op);
+					return NULL;
+				}
+			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_UNIQUE_FLAG)
+				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_UNIQUE/%d", i)){
+					g_object_unref (op);
+					return NULL;
+				}
+			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG) {
+				gint j;
+				gint fields;
+				gchar *fkey_table;
+				gchar *fkey_ondelete;
+				gchar *fkey_onupdate;
+
+				refs++;
+
+				fkey_table = va_arg (args, gchar*);
+				if (!gda_server_operation_set_value_at (op, fkey_table, error,
+								   "/FKEY_S/%d/FKEY_REF_TABLE", refs)){
+					g_object_unref (op);
+					return NULL;
+				}
+
+				fields = va_arg (args, gint);
+
+				for (j = 0; j < fields; j++) {
+					gchar *field, *rfield;
+
+					field = va_arg (args, gchar*);
+					if(!gda_server_operation_set_value_at (op, field, error,
+									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", refs, j)){
+						g_object_unref (op);
+						return NULL;
+					}
+
+					rfield = va_arg (args, gchar*);
+					if(!gda_server_operation_set_value_at (op, rfield, error,
+									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", refs, j)){
+						g_object_unref (op);
+						return NULL;
+					}
+				}
+
+				fkey_ondelete = va_arg (args, gchar*);
+				if (!gda_server_operation_set_value_at (op, fkey_ondelete, error,
+								   "/FKEY_S/%d/FKEY_ONDELETE", refs)){
+					g_object_unref (op);
+					return NULL;
+				}
+				fkey_onupdate = va_arg (args, gchar*);
+				if(!gda_server_operation_set_value_at (op, fkey_onupdate, error,
+								   "/FKEY_S/%d/FKEY_ONUPDATE", refs)){
+					g_object_unref (op);
+					return NULL;
+				}
+			}
+
+			i++;
+		}
+
+		va_end (args);
+
+		g_object_set_data_full (G_OBJECT (op), "_gda_connection", g_object_ref (cnc), g_object_unref);
+
+		return op;
+	}
+	else {
+		g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_OBJECT_NAME_ERROR,
+			     "%s", _("CREATE TABLE operation is not supported by the database server"));
+		return NULL;
+	}
+}
+
+
+/**
+ * gda_server_operation_perform_create_table:
+ * @op: a valid #GdaServerOperation
+ * @error: a place to store errors, or %NULL
+ *
+ * Performs a prepared #GdaServerOperation to create a table. This could perform
+ * an operation created by #gda_server_operation_prepare_create_table or any other using the
+ * the #GdaServerOperation API.
+ *
+ * Returns: TRUE if the table was created; FALSE and set @error otherwise
+ */
+gboolean
+gda_server_operation_perform_create_table (GdaServerOperation *op, GError **error)
+{
+	GdaConnection *cnc;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_CREATE_TABLE, FALSE);
+
+	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
+	if (cnc)
+		return gda_server_provider_perform_operation (gda_connection_get_provider (cnc), cnc, op, error);
+	else {
+		g_warning ("Could not find operation's associated connection, "
+			   "did you use gda_connection_prepare_create_table() ?");
+		return FALSE;
+	}
+}
+
+/**
+ * gda_server_operation_prepare_drop_table:
+ * @cnc: an opened connection
+ * @table_name: name of the table to drop
+ * @error: a place to store errors, or %NULL
+ *
+ * This is just a convenient function to create a #GdaServerOperation to drop a
+ * table in an opened connection.
+ *
+ * Returns: (transfer full) (allow-none): a new #GdaServerOperation or %NULL if couldn't create the opereration.
+ */
+GdaServerOperation*
+gda_connection_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
+{
+	GdaServerOperation *op;
+	GdaServerProvider *server;
+
+	server = gda_connection_get_provider (cnc);
+
+	op = gda_server_provider_create_operation (server, cnc,
+						   GDA_SERVER_OPERATION_DROP_TABLE, NULL, error);
+
+	if (GDA_IS_SERVER_OPERATION (op)) {
+		g_return_val_if_fail (table_name != NULL
+				      || GDA_IS_CONNECTION (cnc)
+				      || !gda_connection_is_opened (cnc), NULL);
+
+		if (gda_server_operation_set_value_at (op, table_name,
+						       error, "/TABLE_DESC_P/TABLE_NAME")) {
+			g_object_set_data_full (G_OBJECT (op), "_gda_connection", g_object_ref (cnc), g_object_unref);
+			return op;
+		}
+		else
+			return NULL;
+	}
+	else
+		return NULL;
+}
+
+
+/**
+ * gda_server_operation_perform_drop_table:
+ * @op: a #GdaServerOperation object
+ * @error: a place to store errors, or %NULL
+ *
+ * This is just a convenient function to perform a drop a table operation.
+ *
+ * Returns: TRUE if the table was dropped
+ */
+gboolean
+gda_server_operation_perform_drop_table (GdaServerOperation *op, GError **error)
+{
+	GdaConnection *cnc;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_DROP_TABLE, FALSE);
+
+	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
+	if (cnc)
+		return gda_server_provider_perform_operation (gda_connection_get_provider (cnc), cnc, op, error);
+	else {
+		g_warning ("Could not find operation's associated connection, "
+			   "did you use gda_server_operation_prepare_drop_table() ?");
+		return FALSE;
+	}
 }
