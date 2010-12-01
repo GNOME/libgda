@@ -3022,7 +3022,7 @@ scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **a
 	}
 	bin->binary_length = SQLITE3_CALL (sqlite3_value_bytes) (argv [0]);
 	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
-	dh = gda_get_default_handler (GDA_TYPE_BINARY);
+	dh = gda_data_handler_get_default_handler (GDA_TYPE_BINARY);
 	str = gda_data_handler_get_str_from_value (dh, value);
 
 	bin->data = NULL;
@@ -3054,7 +3054,7 @@ scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **
 	}
 	bin->binary_length = SQLITE3_CALL (sqlite3_value_bytes) (argv [0]);
 	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
-	dh = gda_get_default_handler (GDA_TYPE_BINARY);
+	dh = gda_data_handler_get_default_handler (GDA_TYPE_BINARY);
 	str = gda_data_handler_get_str_from_value (dh, value);
 
 	bin->data = NULL;

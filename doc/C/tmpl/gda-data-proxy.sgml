@@ -130,18 +130,12 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 
 </para>
 
-@:
-
 @gdadataproxy: the object which received the signal.
 
 <!-- ##### SIGNAL GdaDataProxy::row-changes-applied ##### -->
 <para>
 
 </para>
-
-@: 
-@: 
-@:
 
 @gdadataproxy: the object which received the signal.
 @arg1: 
@@ -152,10 +146,6 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 
 </para>
 
-@: 
-@: 
-@:
-
 @gdadataproxy: the object which received the signal.
 @arg1: 
 @arg2: 
@@ -164,10 +154,6 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 <para>
 
 </para>
-
-@: 
-@: 
-@:
 
 @gdadataproxy: the object which received the signal.
 @arg1: 
@@ -178,9 +164,6 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 
 </para>
 
-@: 
-@:
-
 @gdadataproxy: the object which received the signal.
 @arg1: 
 
@@ -188,10 +171,6 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 <para>
 
 </para>
-
-@: 
-@: 
-@:
 
 @Returns: 
 @Param2: 

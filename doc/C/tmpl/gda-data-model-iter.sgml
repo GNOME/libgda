@@ -70,17 +70,12 @@ Data model iterator
 
 </para>
 
-@:
-
 @gdadatamodeliter: the object which received the signal.
 
 <!-- ##### SIGNAL GdaDataModelIter::row-changed ##### -->
 <para>
 
 </para>
-
-@: 
-@:
 
 @gdadatamodeliter: the object which received the signal.
 @arg1: 

@@ -134,7 +134,7 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 			GSList *dsn_params;
 			GError *error = NULL;
 
-			allok = gda_perform_create_database (NULL, assistant->priv->create_db_op, &error);
+			allok = gda_server_operation_perform_create_database (assistant->priv->create_db_op, NULL, &error);
 			if (!allok) {
 				gchar *str;
 				str = g_strdup_printf (_("Error creating database: %s"), 
@@ -213,7 +213,7 @@ get_specs_database_creation (GdauiDsnAssistant *assistant)
 {
 	if (! assistant->priv->create_db_op) 
 		assistant->priv->create_db_op = 
-			gda_prepare_create_database (gdaui_provider_selector_get_provider (
+			gda_server_operation_prepare_create_database (gdaui_provider_selector_get_provider (
 						     GDAUI_PROVIDER_SELECTOR (assistant->priv->general_provider)),
 						     NULL, NULL);
 

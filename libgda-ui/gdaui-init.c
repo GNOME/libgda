@@ -115,7 +115,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 	if (type == G_TYPE_INVALID)
 		return (GdauiDataEntry *) gdaui_entry_none_new (GDA_TYPE_NULL);
 
-	dh = gda_get_default_handler (type);
+	dh = gda_data_handler_get_default_handler (type);
 
 	if (plugin_name && *plugin_name) {
 		GdauiPlugin *plugin_struct;
@@ -212,7 +212,7 @@ _gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
 	if (!gdaui_plugins_hash) 
 		gdaui_plugins_hash = init_plugins_hash ();
 
-	dh = gda_get_default_handler (type);
+	dh = gda_data_handler_get_default_handler (type);
 	
 	if (plugin_name && *plugin_name) {
 		GdauiPlugin *plugin_struct;

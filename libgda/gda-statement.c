@@ -694,7 +694,7 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 		if (context->provider)
 			dh = gda_server_provider_get_data_handler_g_type (context->provider, context->cnc, G_VALUE_TYPE (value));
 		else  			
-			dh = gda_get_default_handler (G_VALUE_TYPE (value));
+			dh = gda_data_handler_get_default_handler (G_VALUE_TYPE (value));
 
 		if (!dh) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,

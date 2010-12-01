@@ -796,7 +796,7 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 		g_string_append (string, " PASSWORD ");
 		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 		if (!dh)
-			dh = gda_get_default_handler (G_TYPE_STRING);
+			dh = gda_data_handler_get_default_handler (G_TYPE_STRING);
 
 		tmp = gda_data_handler_get_sql_from_value (dh, value);
 		g_string_append (string, tmp);
@@ -945,7 +945,7 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 			}
 			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, GDA_TYPE_TIMESTAMP);
 			if (!dh)
-				dh = gda_get_default_handler (GDA_TYPE_TIMESTAMP);
+				dh = gda_data_handler_get_default_handler (GDA_TYPE_TIMESTAMP);
 			
 			g_string_append (string, " VALID UNTIL ");
 			tmp = gda_data_handler_get_sql_from_value (dh, value);
