@@ -110,6 +110,11 @@ ALTER GROUP mygroup ADD USER ##name::gchararray;
 Internal usage only.
 </para>
 
+<!-- ##### ARG GdaSqlParser:debug ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaSqlParser:line-error ##### -->
 <para>
 Internal usage only.

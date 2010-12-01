@@ -67,12 +67,16 @@ A connection to a database
 
 </para>
 
+@:
+
 @gdaconnection: the object which received the signal.
 
 <!-- ##### SIGNAL GdaConnection::conn-opened ##### -->
 <para>
 
 </para>
+
+@:
 
 @gdaconnection: the object which received the signal.
 
@@ -81,12 +85,16 @@ A connection to a database
 
 </para>
 
+@:
+
 @gdaconnection: the object which received the signal.
 
 <!-- ##### SIGNAL GdaConnection::dsn-changed ##### -->
 <para>
 
 </para>
+
+@:
 
 @gdaconnection: the object which received the signal.
 
@@ -95,6 +103,9 @@ A connection to a database
 
 </para>
 
+@: 
+@:
+
 @gdaconnection: the object which received the signal.
 @arg1: 
 
@@ -102,6 +113,8 @@ A connection to a database
 <para>
 
 </para>
+
+@:
 
 @gdaconnection: the object which received the signal.
 
@@ -686,6 +699,107 @@ A connection to a database
 @cnc: 
 @meta_type: 
 @filters: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_parse_sql_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@sql: 
+@params: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_execute_select_command ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@sql: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_execute_non_select_command ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@sql: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_insert_row_into_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table: 
+@error: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_insert_row_into_table_v ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table: 
+@col_names: 
+@values: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_update_row_in_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table: 
+@condition_column_name: 
+@condition_value: 
+@error: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_update_row_in_table_v ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table: 
+@condition_column_name: 
+@condition_value: 
+@col_names: 
+@values: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_delete_row_from_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table: 
+@condition_column_name: 
+@condition_value: 
 @error: 
 @Returns: 
 

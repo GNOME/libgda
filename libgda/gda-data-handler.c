@@ -282,6 +282,8 @@ gtype_equal (gconstpointer a, gconstpointer b)
  * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
  *
  * Returns: (transfer none): a #GdaDataHandler which must not be modified or destroyed.
+ *
+ * Since: 4.2.3
  */
 GdaDataHandler *
 gda_data_handler_get_default_handler (GType for_type)

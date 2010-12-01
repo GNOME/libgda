@@ -32,6 +32,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
+@: 
+@: 
+@:
+
 @gdacolumn: the object which received the signal.
 @arg1: 
 @arg2: 
@@ -40,6 +44,9 @@ Management of #GdaDataModel column attributes
 <para>
 
 </para>
+
+@: 
+@:
 
 @gdacolumn: the object which received the signal.
 @arg1: 

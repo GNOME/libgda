@@ -357,7 +357,7 @@ gda_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **
 gboolean
 gda_perform_create_table (GdaServerOperation *op, GError **error)
 {
-	return gda_server_operation_perform_create_table(op, error);
+	return gda_server_operation_perform_create_table (op, error);
 }
 
 /**
@@ -376,7 +376,7 @@ gda_perform_create_table (GdaServerOperation *op, GError **error)
 GdaServerOperation*
 gda_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
 {
-	gda_connection_prepare_drop_table(cnc, table_name, error);
+	return gda_server_operation_prepare_drop_table (cnc, table_name, error);
 }
 
 /**
@@ -586,8 +586,8 @@ gda_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
 			   GSList *col_names, GSList *values,
 			   GError **error)
 {
-	gda_connection_update_row_in_table_v(cnc, table, condition_column_name, condition_value,
-					     col_names, values, error);
+	return gda_connection_update_row_in_table_v (cnc, table, condition_column_name, condition_value,
+						     col_names, values, error);
 }
 
 /**
@@ -612,7 +612,7 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 			   const gchar *condition_column_name, 
 			   GValue *condition_value, GError **error)
 {
-	gda_connection_delete_row_from_table(cnc, table, condition_column_name, condition_value, error);
+	return gda_connection_delete_row_from_table (cnc, table, condition_column_name, condition_value, error);
 }
 
 /**
@@ -633,5 +633,5 @@ gda_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 GdaStatement*
 gda_parse_sql_string (GdaConnection *cnc, const gchar *sql, GdaSet **params, GError **error)
 {
-	gda_connection_parse_sql_string(cnc, sql, params, error);
+	return gda_connection_parse_sql_string (cnc, sql, params, error);
 }

@@ -102,6 +102,7 @@
 	gda_connection_create_parser
 	gda_connection_delete_savepoint
 	gda_connection_del_prepared_statement
+	gda_connection_delete_row_from_table
 	gda_connection_error_get_type
 	gda_connection_error_quark
 	gda_connection_event_code_get_type
@@ -120,6 +121,8 @@
 	gda_connection_event_set_source
 	gda_connection_event_set_sqlstate
 	gda_connection_event_type_get_type
+	gda_connection_execute_non_select_command
+	gda_connection_execute_select_command
 	gda_connection_feature_get_type
 	gda_connection_get_authentication
 	gda_connection_get_cnc_string
@@ -134,6 +137,8 @@
 	gda_connection_get_provider_name
 	gda_connection_get_transaction_status
 	gda_connection_get_type
+	gda_connection_insert_row_into_table
+	gda_connection_insert_row_into_table_v
 	gda_connection_internal_change_transaction_state
 	gda_connection_internal_get_provider_data
 	gda_connection_internal_reset_transaction_status
@@ -152,6 +157,7 @@
 	gda_connection_open_from_string
 	gda_connection_open_sqlite
 	gda_connection_options_get_type
+	gda_connection_parse_sql_string
 	gda_connection_perform_operation
 	gda_connection_point_available_event
 	gda_connection_quote_sql_identifier
@@ -169,6 +175,8 @@
 	gda_connection_string_split
 	gda_connection_supports_feature
 	gda_connection_update_meta_store
+	gda_connection_update_row_in_table
+	gda_connection_update_row_in_table_v
 	gda_connection_value_to_sql_string
 	gda_data_access_wrapper_get_type
 	gda_data_access_wrapper_new
@@ -181,6 +189,7 @@
 	gda_data_comparator_new
 	gda_data_comparator_set_key_columns
 	gda_data_handler_accepts_g_type
+	gda_data_handler_get_default_handler
 	gda_data_handler_get_descr
 	gda_data_handler_get_sane_init_value
 	gda_data_handler_get_sql_from_value
@@ -500,6 +509,7 @@
 	gda_server_op_dtd
 	gda_server_operation_add_item_to_sequence
 	gda_server_operation_del_item_from_sequence
+	gda_server_operation_error_quark
 	gda_server_operation_get_node_info
 	gda_server_operation_get_node_parent
 	gda_server_operation_get_node_path_portion
@@ -520,6 +530,14 @@
 	gda_server_operation_node_status_get_type
 	gda_server_operation_node_type_get_type
 	gda_server_operation_op_type_to_string
+	gda_server_operation_perform_create_database
+	gda_server_operation_perform_create_table
+	gda_server_operation_perform_drop_database
+	gda_server_operation_perform_drop_table
+	gda_server_operation_prepare_create_database
+	gda_server_operation_prepare_create_table
+	gda_server_operation_prepare_drop_database
+	gda_server_operation_prepare_drop_table
 	gda_server_operation_save_data_to_xml
 	gda_server_operation_set_value_at
 	gda_server_operation_string_to_op_type
