@@ -111,3 +111,12 @@ Interface which provides data handling (conversions) capabilities
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_handler_get_default_handler ##### -->
+<para>
+
+</para>
+
+@for_type: 
+@Returns: 
+
+

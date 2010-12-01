@@ -1760,6 +1760,8 @@ gda_connection_get_authentication (GdaConnection *cnc)
  * The equivalent SQL command is: INSERT INTO &lt;table&gt; (&lt;column_name&gt; [,...]) VALUES (&lt;column_name&gt; = &lt;new_value&gt; [,...]).
  *
  * Returns: TRUE if no error occurred
+ *
+ * Since: 4.2.3
  */
 G_GNUC_NULL_TERMINATED
 gboolean
@@ -1814,11 +1816,13 @@ gda_connection_insert_row_into_table (GdaConnection *cnc, const gchar *table, GE
  * The equivalent SQL command is: INSERT INTO &lt;table&gt; (&lt;column_name&gt; [,...]) VALUES (&lt;column_name&gt; = &lt;new_value&gt; [,...]).
  *
  * Returns: TRUE if no error occurred, FALSE otherwise
+ *
+ * Since: 4.2.3
  */
 gboolean
 gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
-			     GSList *col_names, GSList *values,
-			     GError **error)
+					GSList *col_names, GSList *values,
+					GError **error)
 {
 	gboolean retval;
 	GSList *fields = NULL;
@@ -1924,12 +1928,14 @@ gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
  * The equivalent SQL command is: UPDATE &lt;table&gt; SET &lt;column_name&gt; = &lt;new_value&gt; [,...] WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
  *
  * Returns: TRUE if no error occurred, FALSE otherwise
+ *
+ * Since: 4.2.3
  */
 G_GNUC_NULL_TERMINATED
 gboolean
 gda_connection_update_row_in_table (GdaConnection *cnc, const gchar *table,
-			 const gchar *condition_column_name,
-			 GValue *condition_value, GError **error, ...)
+				    const gchar *condition_column_name,
+				    GValue *condition_value, GError **error, ...)
 {
 	GSList *clist = NULL;
 	GSList *vlist = NULL;
@@ -1982,13 +1988,15 @@ gda_connection_update_row_in_table (GdaConnection *cnc, const gchar *table,
  * The equivalent SQL command is: UPDATE &lt;table&gt; SET &lt;column_name&gt; = &lt;new_value&gt; [,...] WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
  *
  * Returns: TRUE if no error occurred, FALSE otherwise
+ *
+ * Since: 4.2.3
  */
 gboolean
 gda_connection_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
-			   const gchar *condition_column_name,
-			   GValue *condition_value,
-			   GSList *col_names, GSList *values,
-			   GError **error)
+				      const gchar *condition_column_name,
+				      GValue *condition_value,
+				      GSList *col_names, GSList *values,
+				      GError **error)
 {
 	gboolean retval;
 	GSList *fields = NULL;
@@ -2126,11 +2134,13 @@ gda_connection_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
  * The equivalent SQL command is: DELETE FROM &lt;table&gt; WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
  *
  * Returns: TRUE if no error occurred, FALSE otherwise
+ *
+ * Since: 4.2.3
  */
 gboolean
 gda_connection_delete_row_from_table (GdaConnection *cnc, const gchar *table,
-			   const gchar *condition_column_name,
-			   GValue *condition_value, GError **error)
+				      const gchar *condition_column_name,
+				      GValue *condition_value, GError **error)
 {
 	gboolean retval;
 	GdaSqlStatement *sql_stm;
@@ -2217,7 +2227,7 @@ gda_connection_delete_row_from_table (GdaConnection *cnc, const gchar *table,
  *
  * Returns: (transfer full) (allow-none): a #GdaStatement representing the SQL command, or %NULL if an error occurred
  *
- * Since: 4.2
+ * Since: 4.2.3
  */
 GdaStatement*
 gda_connection_parse_sql_string (GdaConnection *cnc, const gchar *sql, GdaSet **params, GError **error)
@@ -3140,6 +3150,8 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  * Execute a SQL SELECT command over an opened connection.
  *
  * Returns: (transfer full) (allow-none): a new #GdaDataModel if successful, %NULL otherwise
+ *
+ * Since: 4.2.3
  */
 GdaDataModel *
 gda_connection_execute_select_command (GdaConnection *cnc, const gchar *sql, GError **error)
@@ -3176,6 +3188,8 @@ gda_connection_execute_select_command (GdaConnection *cnc, const gchar *sql, GEr
  * This is a convenience function to execute a SQL command over the opened connection.
  *
  * Returns: the number of rows affected or -1
+ *
+ * Since: 4.2.3
  */
 gint
 gda_connection_execute_non_select_command (GdaConnection *cnc, const gchar *sql, GError **error)

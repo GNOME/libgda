@@ -35,6 +35,9 @@ a #GdaSqlParser object.
 
 </para>
 
+@: 
+@:
+
 @gdabatch: the object which received the signal.
 @arg1: 
 

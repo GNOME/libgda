@@ -258,7 +258,8 @@ gda_server_operation_dispose (GObject *object)
 }
 
 /* module error */
-GQuark gda_server_operation_error_quark (void)
+GQuark
+gda_server_operation_error_quark (void)
 {
         static GQuark quark;
         if (!quark)
@@ -2393,6 +2394,8 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
  *
  * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
  * creation
+ *
+ * Since: 4.2.3
  */
 GdaServerOperation *
 gda_server_operation_prepare_create_database (const gchar *provider, const gchar *db_name, GError **error)
@@ -2427,6 +2430,8 @@ gda_server_operation_prepare_create_database (const gchar *provider, const gchar
  * gda_server_provider_create_operation(), or gda_server_operation_prepare_create_database().
  *
  * Returns: TRUE if no error occurred and the database has been created, FALSE otherwise
+ *
+ * Since: 4.2.3
  */
 gboolean
 gda_server_operation_perform_create_database (GdaServerOperation *op, const gchar *provider, GError **error)
@@ -2462,6 +2467,8 @@ gda_server_operation_perform_create_database (GdaServerOperation *op, const gcha
  *
  * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
  * destruction
+ *
+ * Since: 4.2.3
  */
 GdaServerOperation *
 gda_server_operation_prepare_drop_database (const gchar *provider, const gchar *db_name, GError **error)
@@ -2496,6 +2503,8 @@ gda_server_operation_prepare_drop_database (const gchar *provider, const gchar *
  * gda_server_provider_create_operation(), or gda_server_operation_prepare_drop_database().
  *
  * Returns: TRUE if no error occurred and the database has been destroyed
+ *
+ * Since: 4.2.3
  */
 gboolean
 gda_server_operation_perform_drop_database (GdaServerOperation *op, const gchar *provider, GError **error)
@@ -2547,6 +2556,8 @@ gda_server_operation_perform_drop_database (GdaServerOperation *op, const gchar 
  * in order to execute the operation.
  *
  * Returns: (transfer full) (allow-none): a #GdaServerOperation if no errors; NULL and set @error otherwise
+ *
+ * Since: 4.2.3
  */
 G_GNUC_NULL_TERMINATED
 GdaServerOperation*
@@ -2710,6 +2721,8 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
  * the #GdaServerOperation API.
  *
  * Returns: TRUE if the table was created; FALSE and set @error otherwise
+ *
+ * Since: 4.2.3
  */
 gboolean
 gda_server_operation_perform_create_table (GdaServerOperation *op, GError **error)
@@ -2739,9 +2752,11 @@ gda_server_operation_perform_create_table (GdaServerOperation *op, GError **erro
  * table in an opened connection.
  *
  * Returns: (transfer full) (allow-none): a new #GdaServerOperation or %NULL if couldn't create the opereration.
+ *
+ * Since: 4.2.3
  */
 GdaServerOperation*
-gda_connection_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
+gda_server_operation_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
 {
 	GdaServerOperation *op;
 	GdaServerProvider *server;
@@ -2777,6 +2792,8 @@ gda_connection_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, 
  * This is just a convenient function to perform a drop a table operation.
  *
  * Returns: TRUE if the table was dropped
+ *
+ * Since: 4.2.3
  */
 gboolean
 gda_server_operation_perform_drop_table (GdaServerOperation *op, GError **error)

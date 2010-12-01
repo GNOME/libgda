@@ -205,3 +205,111 @@ Handles any DDL query in an abstract way
 @Returns: 
 
 
+<!-- ##### ENUM GdaServerOperationError ##### -->
+<para>
+
+</para>
+
+@GDA_SERVER_OPERATION_OBJECT_NAME_ERROR: 
+@GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR: 
+
+<!-- ##### ENUM GdaServerOperationCreateTableFlag ##### -->
+<para>
+
+</para>
+
+@GDA_SERVER_OPERATION_CREATE_TABLE_NOTHING_FLAG: 
+@GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_FLAG: 
+@GDA_SERVER_OPERATION_CREATE_TABLE_NOT_NULL_FLAG: 
+@GDA_SERVER_OPERATION_CREATE_TABLE_UNIQUE_FLAG: 
+@GDA_SERVER_OPERATION_CREATE_TABLE_AUTOINC_FLAG: 
+@GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG: 
+@GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_AUTOINC_FLAG: 
+
+<!-- ##### FUNCTION gda_server_operation_prepare_create_database ##### -->
+<para>
+
+</para>
+
+@provider: 
+@db_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_perform_create_database ##### -->
+<para>
+
+</para>
+
+@op: 
+@provider: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_prepare_drop_database ##### -->
+<para>
+
+</para>
+
+@provider: 
+@db_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_perform_drop_database ##### -->
+<para>
+
+</para>
+
+@op: 
+@provider: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_prepare_create_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table_name: 
+@error: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_perform_create_table ##### -->
+<para>
+
+</para>
+
+@op: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_prepare_drop_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_perform_drop_table ##### -->
+<para>
+
+</para>
+
+@op: 
+@error: 
+@Returns: 
+
+
