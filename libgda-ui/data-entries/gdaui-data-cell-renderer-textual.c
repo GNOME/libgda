@@ -454,7 +454,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 					datacell->priv->value = gda_value_copy (gval);
 
 				if (!datacell->priv->dh && (datacell->priv->type != G_TYPE_INVALID))
-					datacell->priv->dh = g_object_ref (gda_data_handler_get_default_handler (datacell->priv->type));
+					datacell->priv->dh = g_object_ref (gda_data_handler_get_default (datacell->priv->type));
 
 				if (datacell->priv->dh) {
 					str = gda_data_handler_get_str_from_value (datacell->priv->dh, gval);

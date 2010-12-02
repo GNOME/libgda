@@ -65,7 +65,7 @@ GValue        *gda_data_handler_get_sane_init_value    (GdaDataHandler *dh, GTyp
 /* information about the data handler itself */
 gboolean       gda_data_handler_accepts_g_type         (GdaDataHandler *dh, GType type);
 const gchar   *gda_data_handler_get_descr              (GdaDataHandler *dh);
-GdaDataHandler     *gda_data_handler_get_default_handler           (GType for_type);
+GdaDataHandler *gda_data_handler_get_default           (GType for_type);
 
 G_END_DECLS
 

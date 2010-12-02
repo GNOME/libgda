@@ -438,7 +438,7 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 				if (cvalue && (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)) {
 					gchar *str;
 					gint len;
-					dh = gda_data_handler_get_default_handler (G_VALUE_TYPE (cvalue));
+					dh = gda_data_handler_get_default (G_VALUE_TYPE (cvalue));
 					str = gda_data_handler_get_str_from_value (dh, cvalue);
 					len = strlen (str);
 					g_free (str);
@@ -457,7 +457,7 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 
 			column = gda_data_model_describe_column (model, index);
 			type = gda_column_get_g_type (column);
-			dh = gda_data_handler_get_default_handler (type);
+			dh = gda_data_handler_get_default (type);
 			
 			renderer = gtk_cell_renderer_text_new ();
 			g_object_set_data (G_OBJECT (renderer), "data-handler", dh);
@@ -802,7 +802,7 @@ combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboole
 			if (cvalue && (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)) {
 				gchar *str;
 				gint len;
-				dh = gda_data_handler_get_default_handler (G_VALUE_TYPE (cvalue));
+				dh = gda_data_handler_get_default (G_VALUE_TYPE (cvalue));
 				str = gda_data_handler_get_str_from_value (dh, cvalue);
 				len = strlen (str);
 				g_free (str);
@@ -819,7 +819,7 @@ combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboole
 
 	mcolumn = gda_data_model_describe_column (combo->priv->model, column);
 	type = gda_column_get_g_type (mcolumn);
-	dh = gda_data_handler_get_default_handler (type);
+	dh = gda_data_handler_get_default (type);
 	
 	renderer = gtk_cell_renderer_text_new ();
 	g_object_set_data (G_OBJECT (renderer), "data-handler", dh);

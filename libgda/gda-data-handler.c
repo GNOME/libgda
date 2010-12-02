@@ -272,7 +272,7 @@ gtype_equal (gconstpointer a, gconstpointer b)
 }
 
 /**
- * gda_data_handler_get_default_handler:
+ * gda_data_handler_get_default:
  * @for_type: a #GType type
  *
  * Obtain a pointer to a #GdaDataHandler which can manage #GValue values of type @for_type. The returned
@@ -286,7 +286,7 @@ gtype_equal (gconstpointer a, gconstpointer b)
  * Since: 4.2.3
  */
 GdaDataHandler *
-gda_data_handler_get_default_handler (GType for_type)
+gda_data_handler_get_default (GType for_type)
 {
 	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 	static GHashTable *hash = NULL;

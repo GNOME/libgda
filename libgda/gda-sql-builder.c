@@ -814,7 +814,7 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
 	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 		GType type = G_VALUE_TYPE (value);
 		if (!dh)
-			dh = gda_data_handler_get_default_handler (type);
+			dh = gda_data_handler_get_default (type);
 		else {
 			if (! gda_data_handler_accepts_g_type (dh, type)) {
 				g_warning (_("Unhandled data type '%s'"), g_type_name (type));

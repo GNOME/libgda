@@ -408,12 +408,12 @@ gda_perform_drop_table (GdaServerOperation *op, GError **error)
  *
  * Returns: (transfer none): a #GdaDataHandler which must not be modified or destroyed.
  *
- * Deprecated: 4.2.3: Use gda_data_handler_get_default_handler() instead.
+ * Deprecated: 4.2.3: Use gda_data_handler_get_default() instead.
  */
 GdaDataHandler *
 gda_get_default_handler (GType for_type)
 {
-	return gda_data_handler_get_default_handler(for_type);
+	return gda_data_handler_get_default(for_type);
 }
 
 /**

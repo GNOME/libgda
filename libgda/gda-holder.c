@@ -776,7 +776,7 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
                 return NULL;
         else {
                 if (!dh)
-			dh = gda_data_handler_get_default_handler (holder->priv->g_type);
+			dh = gda_data_handler_get_default (holder->priv->g_type);
 		if (dh)
                         return gda_data_handler_get_str_from_value (dh, current_val);
                 else
@@ -851,7 +851,7 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
 		GValue *gdaval = NULL;
 
 		if (!dh)
-			dh = gda_data_handler_get_default_handler (holder->priv->g_type);
+			dh = gda_data_handler_get_default (holder->priv->g_type);
 		if (dh)
 			gdaval = gda_data_handler_get_value_from_str (dh, value, holder->priv->g_type);
 
