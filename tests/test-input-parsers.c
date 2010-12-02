@@ -311,7 +311,7 @@ test_time_handler (void)
 {
 	GdaDataHandler *dh;
 	gint i, j;
-	dh = gda_data_handler_get_default_handler (GDA_TYPE_TIME);
+	dh = gda_data_handler_get_default (GDA_TYPE_TIME);
 	g_assert (dh);
 
 	for (i = 0; i < sizeof (timedata) / sizeof (TestTime); i++) {

@@ -189,7 +189,7 @@
 	gda_data_comparator_new
 	gda_data_comparator_set_key_columns
 	gda_data_handler_accepts_g_type
-	gda_data_handler_get_default_handler
+	gda_data_handler_get_default
 	gda_data_handler_get_descr
 	gda_data_handler_get_sane_init_value
 	gda_data_handler_get_sql_from_value

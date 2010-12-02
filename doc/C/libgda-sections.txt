@@ -829,7 +829,7 @@ gda_data_handler_get_sane_init_value
 gda_data_handler_accepts_g_type
 gda_data_handler_get_descr
 <SUBECTION>
-gda_data_handler_get_default_handler
+gda_data_handler_get_default
 <SUBSECTION Standard>
 GDA_DATA_HANDLER
 GDA_DATA_HANDLER_GET_IFACE
