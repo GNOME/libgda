@@ -485,7 +485,7 @@ load_file (const gchar *filename)
 					p++;
 				
 				len = strlen (p);
-				while (g_ascii_isspace (*(p + len - 1)))
+				while ((len > 0) && g_ascii_isspace (*(p + len - 1)))
 					len--;
 				
 				if (len > 0) {
