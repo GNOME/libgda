@@ -44,6 +44,32 @@ typedef struct _GdaSqlSelectOrder GdaSqlSelectOrder;
 /*
  * Any Expression
  */
+/**
+ * GdaSqlExpr:
+ * @any: inheritance structure
+ * @value: a #GValue, or %NULL. Please see specific note about this field. 
+ * @param_spec: a #GdaSqlParamSpec, or %NULL if this is not a variable
+ * @func: not %NULL if expression is a function or aggregate
+ * @cond: not %NULL if expression is a condition or an operation
+ * @select: not %NULL if expression is a sub select statement (#GdaSqlStatementSelect or #GdaSqlStatementCompound)
+ * @case_s: not %NULL if expression is a CASE WHEN ... expression
+ * @cast_as: not %NULL if expression must be cast to another data type
+ * @value_is_ident: Please see specific note about the @value field
+ *
+ * This structure contains any expression, either as a value (the @value part is set),
+ * a variable (the @param_spec is set), or as other types of expressions.
+ *
+ * Note 1 about the @value field: if the expression represents a string value in the SQL statement,
+ * the string itself must be represented as it would be in the actual SQL, ie. it should be
+ * escaped (accordingly to the escaping rules of the database which will use the SQL). For 
+ * example a string representing the <userinput>'joe'</userinput> value should be
+ * <userinput>"'joe'"</userinput> and not <userinput>"joe"</userinput>.
+ *
+ * Note 2 about the @value field: if the expression represents an SQL identifier (such as a table
+ * or field name), then the @value_is_ident should be set to %0x01, and @value should be a string
+ * which may contain double quotes around SQL identifiers which also are reserved keywords or which
+ * are case sensitive.
+ */
 struct _GdaSqlExpr {
 	GdaSqlAnyPart    any;
 	GValue          *value;
