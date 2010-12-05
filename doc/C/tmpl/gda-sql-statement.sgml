@@ -6,6 +6,10 @@ Structure which decomposes an SQL statement
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+  Please note that it is not advised to build #GdaSqlStatement structures directly, but rather
+  it is recommended to use the #GdaSqlBuilder object and its associated API.
+</para>
+<para>
 Every SQL statement can be decomposed in a #GdaSqlStatement structure. This is not a #GObject, but rather just a C structure
 which can be manipulated directly. The structure is a tree composed of several key structures which are show in the following diagram
 (even though it does not show, all structures "inherit" the #GdaSqlAnyPart structure which holds some basic information).
@@ -28,7 +32,8 @@ which can be manipulated directly. The structure is a tree composed of several k
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  The #GdaSqlBuilder object which features some easy to use API to build #GdaSqlStatement structures
+  or #GdaStatement objects without having to worry about the details of #GdaSqlStatement's contents.
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->
