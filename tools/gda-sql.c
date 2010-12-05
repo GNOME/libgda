@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <glib/gstdio.h>
 #include "tools-input.h"
+#include "config-info.h"
 #include "command-exec.h"
 #include <unistd.h>
 #ifdef HAVE_TERMIOS_H
@@ -138,8 +139,6 @@ static void     output_string (const gchar *str);
 static ConnectionSetting *open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_string,
 					   GError **error);
 static void connection_settings_free (ConnectionSetting *cs);
-static GdaDataModel *list_all_dsn (void);
-static GdaDataModel *list_all_providers (void);
 
 static gboolean treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok);
 static const char *prompt_func (void);
@@ -161,6 +160,7 @@ main (int argc, char *argv[])
 	GError *error = NULL;
 	MainData *data;
 	int exit_status = EXIT_SUCCESS;
+	gboolean show_welcome = TRUE;
 	prompt = g_string_new ("");
 
 	context = g_option_context_new (_("[DSN|connection string]..."));        
@@ -197,13 +197,20 @@ main (int argc, char *argv[])
 
 	/* treat here lists of providers and defined DSN */
 	if (list_providers) {
-		GdaDataModel *model = list_all_providers ();
-		output_data_model (model);
-		g_object_unref (model);
-		goto cleanup;
+		if (argc == 2) {
+			single_command = g_strdup_printf (".lp %s", argv[1]);
+			argc = 1;
+			show_welcome = FALSE;
+		}
+		else {
+			GdaDataModel *model = config_info_list_all_providers ();
+			output_data_model (model);
+			g_object_unref (model);
+			goto cleanup;
+		}
 	}
 	if (list_configs) {
-		GdaDataModel *model = list_all_dsn ();
+		GdaDataModel *model = config_info_list_all_dsn ();
 		output_data_model (model);
 		g_object_unref (model);
 		goto cleanup;
@@ -225,7 +232,7 @@ main (int argc, char *argv[])
 	}
 
 	/* welcome message */
-	if (!data->output_stream) {
+	if (show_welcome && !data->output_stream) {
 #ifdef G_OS_WIN32
 		HANDLE wHnd;
 		SMALL_RECT windowSize = {0, 0, 139, 49};
@@ -1827,61 +1834,6 @@ output_string (const gchar *str)
 	}
 }
 
-/*
- * Lists all the sections in the config files (local to the user and global) in the index page
- */
-static GdaDataModel *
-list_all_dsn (void)
-{
-	return gda_config_list_dsn ();
-}
-
-/*
- * make a list of all the providers in the index page
- */
-static GdaDataModel *
-list_all_providers (void)
-{
-	GdaDataModel *prov_list, *model;
-	gint i, nrows;
-
-	prov_list = gda_config_list_providers ();
-	
-	model = gda_data_model_array_new_with_g_types (2,
-						       G_TYPE_STRING,
-						       G_TYPE_STRING);
-	gda_data_model_set_column_title (model, 0, _("Provider"));
-	gda_data_model_set_column_title (model, 1, _("Description"));
-	g_object_set_data (G_OBJECT (model), "name", _("Installed providers list"));
-	
-	nrows = gda_data_model_get_n_rows (prov_list);
-	for (i =0; i < nrows; i++) {
-		const GValue *value;
-		GList *list = NULL;
-		value = gda_data_model_get_value_at (prov_list, 0, i, NULL);
-		if (!value)
-			goto onerror;
-		list = g_list_append (list, gda_value_copy (value));
-		value = gda_data_model_get_value_at (prov_list, 1, i, NULL);
-		if (!value)
-			goto onerror;
-		list = g_list_append (list, gda_value_copy (value));
-		
-		if (gda_data_model_append_values (model, list, NULL) == -1)
-			goto onerror;
-		
-		g_list_foreach (list, (GFunc) gda_value_free, NULL);
-		g_list_free (list);
-	}
-	g_object_unref (prov_list);
-	return model;
- onerror:
-	g_warning ("Could not obtain the list of database providers");
-	g_object_unref (prov_list);
-	g_object_unref (model);
-	return NULL;
-}
-
 static gchar **args_as_string_func (const gchar *str);
 static gchar **args_as_string_set (const gchar *str);
 
@@ -2811,107 +2763,27 @@ extra_command_remove_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 	return res;	
 }
 
+/*
+ * @console, @cnc and @data are unused here
+ */
 static GdaInternalCommandResult *
 extra_command_list_providers (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
 			      const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
-	GdaDataModel *prov_list, *model = NULL;
-	gint i, nrows;
-	GList *list = NULL;
+	GdaDataModel *model;
 
-	prov_list = gda_config_list_providers ();
-	nrows = gda_data_model_get_n_rows (prov_list);
-
-	if (args[0]) {
-		/* details about a provider */
-		for (i = 0; i < nrows; i++) {
-			const GValue *value;
-			value = gda_data_model_get_value_at (prov_list, 0, i, error);
-			if (!value)
-				goto onerror;
-
-			if (!strcmp (g_value_get_string (value), args[0])) {
-				gint j;
-				model = gda_data_model_array_new_with_g_types (2,
-									       G_TYPE_STRING,
-									       G_TYPE_STRING);
-				gda_data_model_set_column_title (model, 0, _("Attribute"));
-				gda_data_model_set_column_title (model, 1, _("Value"));
-				g_object_set_data_full (G_OBJECT (model), "name", 
-							g_strdup_printf (_("Provider '%s' description"), args[0]),
-							g_free);
-				
-				for (j = 0; j < 5; j++) {
-					GValue *tmpvalue;
-					if (gda_data_model_append_row (model, error) == -1) 
-						goto onerror;
-					
-					g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)),
-							    gda_data_model_get_column_title (prov_list, j));
-					if (! gda_data_model_set_value_at (model, 0, j, tmpvalue, error))
-						goto onerror;
-					gda_value_free (tmpvalue);
-									 
-					value = gda_data_model_get_value_at (prov_list, j, i, error);
-					if (!value ||
-					    ! gda_data_model_set_value_at (model, 1, j, value, error))
-						goto onerror;
-				}
-				res = g_new0 (GdaInternalCommandResult, 1);
-				res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-				res->u.model = model;
-				g_object_unref (prov_list);
-				return res;
-			}
-		}
-		g_object_unref (prov_list);
-		g_set_error (error, 0, 0,
-			     _("Could not find any provider named '%s'"), args[0]);
-		return NULL;
-	}
-	else {
-		model = gda_data_model_array_new_with_g_types (2,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING);
-		gda_data_model_set_column_title (model, 0, _("Provider"));
-		gda_data_model_set_column_title (model, 1, _("Description"));
-		g_object_set_data (G_OBJECT (model), "name", _("Installed providers list"));
+	if (args[0])
+		model = config_info_detail_provider (args[0], error);
+	else
+		model = config_info_list_all_providers ();
 		
-		for (i =0; i < nrows; i++) {
-			const GValue *value;
-			list = NULL;
-			value = gda_data_model_get_value_at (prov_list, 0, i, error);
-			if (!value)
-				goto onerror;
-			list = g_list_append (list, gda_value_copy (value));
-			value = gda_data_model_get_value_at (prov_list, 1, i, error);
-			if (!value)
-				goto onerror;
-			list = g_list_append (list, gda_value_copy (value));
-			
-			if (gda_data_model_append_values (model, list, error) == -1)
-				goto onerror;
-			
-			g_list_foreach (list, (GFunc) gda_value_free, NULL);
-			g_list_free (list);
-		}
-		
+	if (model) {
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
 		res->u.model = model;
-		g_object_unref (prov_list);
-		
 		return res;
 	}
-
- onerror:
-	if (list) {
-		g_list_foreach (list, (GFunc) gda_value_free, NULL);
-		g_list_free (list);
-	}
-	g_object_unref (prov_list);
-	g_object_unref (model);
 	return NULL;
 }
 

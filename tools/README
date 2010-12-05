@@ -1,0 +1,28 @@
+gda-sql-4.0
+-----------
+Console program to open connections to databases and execute SQL commands.
+
+
+gda-list-config-4.0
+-------------------
+Gives a list of installed database providers (along with all the parameters
+they each accept when opening a connection, and a list of the configured DSN
+(data source name).
+
+
+gda-list-server-op-4.0:
+-----------------------
+Gives a list of named parameters expected, for each database provider and for
+each type of server operation.
+
+
+information-schema-doc
+----------------------
+Generates the i_s_doc.xml file from the libgda/information-schema.xml file
+to be included in the documentation, in $topsrcdir/doc/C/.
+
+
+information-schema-types
+------------------------
+Generates the gda-meta-column-types.h file from the libgda/information-schema.xml file
+to be used by database providers, must be moved to $topsrcdir/libgda/providers-support/.
