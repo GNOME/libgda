@@ -8,7 +8,8 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	$(GTK_CFLAGS) \
 	$(GOOCANVAS_CFLAGS) \
-	$(GRAPHVIZ_CFLAGS)
+	$(GRAPHVIZ_CFLAGS) \
+	$(MAC_INTEGRATION_CFLAGS)
 
 libcanvas_la_SOURCES = \
 	browser-canvas.c \
@@ -37,4 +38,5 @@ libcanvas_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(GTK_LIBS) \
 	$(GOOCANVAS_LIBS) \
-	$(GRAPHVIZ_LIBS)
+	$(GRAPHVIZ_LIBS) \
+	$(MAC_INTEGRATION_LIBS)
