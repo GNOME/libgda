@@ -1,6 +1,6 @@
 //
 // Copyright (c) 2008 why the lucky stiff
-// 
+// Copyright (c) 2010 Andrew McElroy
 // Permission is hereby granted, free of charge, to any person
 // obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without restriction,
@@ -23,33 +23,40 @@
 // SOFTWARE.
 //
 var allStretch;
+var helpPages;
+var chapPages;
 var defaultPage;
+var toot = window.location.search.substr(1)
 
 //the main function, call to the effect object
+function dumpAlert(obj) {
+    props = [];
+    for ( var i in obj ) {
+        props.push( "" + i + ": " + obj[i] );
+    }
+    alert( props );
+}
 window.onload = function() {
 	$.ajax({url: "/~irb?cmd=!INIT!IRB!", type: "GET", 
 		complete: (function(r) {
 				var xmlDoc=r.responseXML.documentElement;
-				
 				var cid = xmlDoc.getElementsByTagName("cid")[0].childNodes[0].nodeValue;
-				window.irb.options.gdaid = cid;
-				
+				window.irb.options.gdaid = cid;				
 				var pt = xmlDoc.getElementsByTagName("prompt")[0].childNodes[0].nodeValue;
 				var trimmed = pt.replace(/^\s+|\s+$/g, '') ;
 				window.irb.options.ps = "\033[1;31m" + trimmed + "\033[m";
 				window.irb.prompt();
 			}), type:"xml"});
 
-    window.irb = new MouseApp.Irb('#irb', {
+	window.irb = new MouseApp.Irb('#irb', {
         rows: 25,
-	columns: 115,
         name: 'IRB',
         greeting: "Use .? to get help\n",
-        ps: "",
+        ps: '',
         user: 'guest',
         host: 'tryruby',
+        // original: irbUrl: '/irb',
         irbUrl: '/~irb',
-	gdaid: 'none',
         init: function () {
         },
     });
