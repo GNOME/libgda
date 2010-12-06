@@ -648,7 +648,7 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	redraw_rect.width = visible_rect.width;
 	redraw_rect.height = visible_rect.height;
 	
-	cairo_t *cr = gdk_cairo_create (GDK_DRAWABLE (win));
+	cairo_t *cr = gdk_cairo_create (win);
 	GdkRectangle rect;
 	margin = gtk_text_view_get_left_margin (tv);
 	rect.x = redraw_rect.x + MAX (0, margin - 1);
