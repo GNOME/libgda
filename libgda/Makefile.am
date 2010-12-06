@@ -92,9 +92,11 @@ gda_headers = \
 	gda-value.h \
 	gda-xa-transaction.h
 
+gda_built_sources= \
+	$(builddir)/libgda.h
+
 gda_sources= \
 	gda-batch.c \
-	libgda.h \
 	gda-blob-op.c \
 	gda-column.c \
 	gda-config.c \
@@ -168,6 +170,7 @@ libgda_sources =  \
 	global.h \
 	md5.h \
 	md5c.c \
+	$(gda_built_sources) \
 	$(gda_sources)
 
 gda-enum-types.h: s-enum-types-h
