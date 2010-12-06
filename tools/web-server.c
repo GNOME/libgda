@@ -566,6 +566,10 @@ get_auth (WebServer *server, SoupMessage *msg, GHashTable *query)
 
 	hdoc = html_doc_new (_("Authentication required"));
 	xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST _("Authentication required"));
+	xmlNewChild (xmlNewChild (hdoc->content, NULL, BAD_CAST "p", NULL),
+		     NULL, BAD_CAST "small", BAD_CAST _("Enter authentification token as set "
+							"from console, or leave empty if "
+							"none required"));
 	soup_message_headers_replace (msg->response_headers,
 				      "Content-Type", "text/html");
 

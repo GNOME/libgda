@@ -91,10 +91,6 @@ html_doc_to_string (HtmlDoc *hdoc, gsize *out_size)
 	a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST _("Console"));
 	xmlSetProp (a, BAD_CAST "href", BAD_CAST "/~console");
 
-	li = xmlNewChild (node, NULL, BAD_CAST "li", NULL);
-	a = xmlNewChild (li, NULL, BAD_CAST "a", BAD_CAST _("Help"));
-	xmlSetProp (a, BAD_CAST "href", BAD_CAST "/~help");
-
 	xmlDocDumpFormatMemory (hdoc->doc, &retval, &size, 1);
 	if (out_size)
 		*out_size = (gsize) size;
