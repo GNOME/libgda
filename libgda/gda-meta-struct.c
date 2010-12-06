@@ -2213,7 +2213,10 @@ determine_db_object_from_missing_type (GdaMetaStruct *mstruct,
 		g_object_unref (model);
 		return TRUE;
 	}
-	if (model) g_object_unref (model);
+	if (model) {
+		g_object_unref (model);
+		model = NULL;
+	}
 	
 copyerror:
 	if (model)
