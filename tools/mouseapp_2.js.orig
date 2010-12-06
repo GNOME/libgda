@@ -597,10 +597,7 @@ $.extend(MouseApp.Terminal.prototype, MouseApp.Window.prototype, {
             ps = this.options.ps; pt = true;
         }
         this.write(ps, pt);
-	if (ps!="") {
-            this.putc(1, 0);
-	}
-        //this.putc(1, 0);
+        this.putc(1, 0);
         this.typingOn();
     },
 
