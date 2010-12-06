@@ -30,6 +30,7 @@
 #include "login-dialog.h"
 #include "auth-dialog.h"
 #include "browser-stock-icons.h"
+#include "../config-info.h"
 
 /* Perspectives' factories */
 #include "schema-browser/perspective-main.h"
@@ -52,10 +53,14 @@ main_browser_core_init_factories (void)
 
 /* options */
 gchar *perspective = NULL;
+gboolean list_configs = FALSE;
+gboolean list_providers = FALSE;
 
 static GOptionEntry entries[] = {
         { "perspective", 'p', 0, G_OPTION_ARG_STRING, &perspective, "Perspective", "default perspective "
 	  "to use when opening windows"},
+        { "list-dsn", 'l', 0, G_OPTION_ARG_NONE, &list_configs, "List configured data sources and exit", NULL },
+        { "list-providers", 'L', 0, G_OPTION_ARG_NONE, &list_providers, "List installed database providers and exit", NULL },
 	{ NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
@@ -77,6 +82,38 @@ main (int argc, char *argv[])
                 return EXIT_FAILURE;
         }
         g_option_context_free (context);
+
+	/* treat here lists of providers and defined DSN */
+	if (list_providers) {
+		gda_init ();
+		GdaDataModel *model;
+		if (argc == 2)
+			model = config_info_detail_provider (argv[1], &error);
+		else
+			model = config_info_list_all_providers ();
+
+		if (model) {
+			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
+			g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+			gda_data_model_dump (model, NULL);
+			g_object_unref (model);
+		}
+		else {
+			g_print (_("Error: %s\n"), 
+				 error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+		return 0;
+	}
+	if (list_configs) {
+		gda_init ();
+		GdaDataModel *model = config_info_list_all_dsn ();
+		g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
+		g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+		gda_data_model_dump (model, NULL);
+		g_object_unref (model);
+		return 0;
+	}
 
 	gdaui_init ();
 	gtk_init (&argc, &argv);

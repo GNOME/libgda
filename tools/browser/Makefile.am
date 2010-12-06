@@ -31,6 +31,7 @@ marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_marshal > $@
 
 libbrowser_la_SOURCES=\
+	../config-info.c \
 	cc-gray-bar.c \
 	cc-gray-bar.h \
 	marshal.c \

@@ -28,6 +28,8 @@ gda_list_config_5_0_LDADD = \
         $(LIBGDA_LIBS)
 
 gda_sql_5_0_SOURCES = \
+	config-info.h \
+	config-info.c \
         gda-sql.c \
 	gda-sql.h \
 	gda-threader.h \

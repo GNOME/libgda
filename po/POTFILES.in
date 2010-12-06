@@ -288,6 +288,7 @@ tools/browser/schema-browser/table-columns.c
 tools/browser/schema-browser/table-info.c
 tools/browser/schema-browser/table-preferences.c
 tools/command-exec.c
+tools/config-info.c
 tools/gda-list-config.c
 tools/gda-list-server-op.c
 tools/gda-sql.c
