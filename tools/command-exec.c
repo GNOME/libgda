@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+ * Copyright (C) 2007 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -870,7 +870,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 						"fk_constraint_name = ##cname::string "
 						"ORDER BY ordinal_position";
 					
-					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, error, 
+					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, NULL, 
 								       "tc", catalog, "ts", schema, "tname", name, "cname", cvalue, 
 								       NULL);
 					if (cols) {

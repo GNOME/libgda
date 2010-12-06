@@ -83,7 +83,6 @@ $.extend(MouseApp.Irb.prototype, MouseApp.Terminal.prototype, {
 		    nbrows.css("margin","0");
 
 		    irbdiv.append(table);
-		    table.resizable({"autoHide":true});
 		    table.dblclick(function() {table.hide(); folded.show();});
 		    
 		    irbdiv.append(folded);
@@ -131,17 +130,22 @@ $.extend(MouseApp.Irb.prototype, MouseApp.Terminal.prototype, {
             } else {
                 var term = this;
                 this.fireOffCmd(cmd, (function(r) {
-					var xmlDoc=r.responseXML.documentElement;
-					var txt;
-					if (xmlDoc.getElementsByTagName("cmde")[0].childNodes[0]) {
-						// it appears Firefox and some others split long text nodes into several
-						// smaller chunks of 4kb, so we need to get all of them.
-						txt="";
-						for (i = 0; i < xmlDoc.getElementsByTagName("cmde")[0].childNodes.length; i++)
-							txt += xmlDoc.getElementsByTagName("cmde")[0].childNodes[i].nodeValue
+					if (r.responseXML) {
+						var xmlDoc=r.responseXML.documentElement;
+						var txt;
+						if (xmlDoc.getElementsByTagName("cmde")[0].childNodes[0]) {
+							// it appears Firefox and some others split long text nodes into several
+							// smaller chunks of 4kb, so we need to get all of them.
+							txt="";
+							for (i = 0; i < xmlDoc.getElementsByTagName("cmde")[0].childNodes.length; i++)
+								txt += xmlDoc.getElementsByTagName("cmde")[0].childNodes[i].nodeValue
+									}
+						var pt = xmlDoc.getElementsByTagName("prompt")[0].childNodes[0].nodeValue;
+						term.reply(txt ? txt: '', pt ? pt : null);
 					}
-					var pt = xmlDoc.getElementsByTagName("prompt")[0].childNodes[0].nodeValue;
-					term.reply(txt ? txt: '', pt ? pt : null);
+					else {
+						term.reply('Server error', null);
+					}
 				}));
             }
         } else {
