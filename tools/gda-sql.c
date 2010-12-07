@@ -1688,8 +1688,14 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 	OutputFormat of;
 
 	if (!env_set) {
-		g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
-		g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+		if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
+			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
+		if (! getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY"))
+			g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+		if (! main_data->output_stream || isatty (main_data->output_stream)) {
+			if (! getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE"))
+				g_setenv ("GDA_DATA_MODEL_DUMP_TRUNCATE", "-1", TRUE);
+		}
 		env_set = TRUE;
 	}
 	
