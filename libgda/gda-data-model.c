@@ -39,6 +39,7 @@
 #include <string.h>
 #ifdef HAVE_LOCALE_H
 #ifndef G_OS_WIN32
+#include <sys/ioctl.h>
 #include <langinfo.h>
 #endif
 #include <locale.h>
@@ -2016,7 +2017,7 @@ gda_data_model_import_from_file (GdaDataModel *model,
 
 static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, 
 						  gboolean dump_rows, gboolean dump_title, gboolean null_as_empty,
-						  GError **error);
+						  gint max_width, GError **error);
 
 /**
  * gda_data_model_dump:
@@ -2029,8 +2030,9 @@ static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean 
  * <itemizedlist>
  *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first column of the output will contain row numbers</para></listitem>
  *   <listitem><para>GDA_DATA_MODEL_DUMP_ATTRIBUTES: if set, also dump the data model's columns' types and value's attributes</para></listitem>
-*   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
-*   <listitem><para>GDA_DATA_MODEL_DUMP_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_TRUNCATE: if set to a numeric value, truncates the output to the width specified by the value. If the value is -1 then the actual terminal size (if it can be determined) is used</para></listitem>
  * </itemizedlist>
  */
 void
@@ -2041,7 +2043,9 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 	gboolean dump_rows = FALSE;
 	gboolean dump_title = FALSE;
 	gboolean null_as_empty = FALSE;
+	gint max_width = 0; /* no truncate */
 	GError *error = NULL;
+	const gchar *cstr;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	if (!to_stream)
@@ -2055,13 +2059,26 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 		dump_title = TRUE;
 	if (getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY")) /* Flawfinder: ignore */
 		null_as_empty = TRUE;
+	cstr = getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE");
+	if (cstr) {
+		max_width = atoi (cstr);
+#ifdef TIOCGWINSZ
+		if (max_width < 0) {
+			struct winsize window_size;
+			if (ioctl (0,TIOCGWINSZ, &window_size) == 0)
+				max_width = (int) window_size.ws_col;
+		}
+#endif
+		if (max_width < 0)
+			max_width = 0;
+	}
 
-	str = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, &error);
+	str = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width, &error);
 	if (str) {
 		g_fprintf (to_stream, "%s", str);
 		g_free (str);
 		if (dump_attrs) {
-			str = real_gda_data_model_dump_as_string (model, TRUE, dump_rows, dump_title, null_as_empty, &error);
+			str = real_gda_data_model_dump_as_string (model, TRUE, dump_rows, dump_title, null_as_empty, max_width, &error);
 			if (str) {
 				g_fprintf (to_stream, "%s", str);
 				g_free (str);
@@ -2093,6 +2110,7 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
  *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first column of the output will contain row numbers</para></listitem>
 *   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
 *   <listitem><para>GDA_DATA_MODEL_DUMP_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
+*   <listitem><para>GDA_DATA_MODEL_DUMP_TRUNCATE: if set to a numeric value, truncates the output to the width specified by the value. If the value is -1 then the actual terminal size (if it can be determined) is used</para></listitem>
  * </itemizedlist>
  * Returns: a new string.
  */
@@ -2102,6 +2120,8 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	gboolean dump_rows = FALSE;
 	gboolean dump_title = FALSE;
 	gboolean null_as_empty = FALSE;
+	gint max_width = 0; /* no truncate */
+	const gchar *cstr;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
@@ -2111,8 +2131,20 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 		dump_title = TRUE;
 	if (getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY")) /* Flawfinder: ignore */
 		null_as_empty = TRUE;
-
-	return real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, NULL);
+	cstr = getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE");
+	if (cstr) {
+		max_width = atoi (cstr);
+#ifdef TIOCGWINSZ
+		if (max_width < 0) {
+			struct winsize window_size;
+			if (ioctl (0,TIOCGWINSZ, &window_size) == 0)
+				max_width = (int) window_size.ws_col;
+		}
+#endif
+		if (max_width < 0)
+			max_width = 0;
+	}
+	return real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width, NULL);
 }
 
 static void
@@ -2139,7 +2171,8 @@ string_get_dimensions (const gchar *string, gint *width, gint *rows)
 
 static gchar *
 real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, 
-				    gboolean dump_rows, gboolean dump_title, gboolean null_as_empty, GError **error)
+				    gboolean dump_rows, gboolean dump_title, gboolean null_as_empty,
+				    gint max_width, GError **error)
 {
 #define ERROR_STRING "####"
 #define MULTI_LINE_NO_SEPARATOR
@@ -2453,6 +2486,30 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	if (allok) {
 		str = string->str;
 		g_string_free (string, FALSE);
+		if (max_width > 0) {
+			/* truncate all lines */
+			gchar *ptr;
+			gint len; /* number of characters since start of line */
+			for (ptr = str, len=0;
+			     *ptr;
+			     ptr = g_utf8_next_char (ptr), len++) {
+				if (*ptr == '\n')
+					len = 0;
+				else if (len >= max_width) {
+					gchar *sptr;
+					*ptr = '\n';
+					ptr++;
+					sptr = ptr;
+					for (; *ptr && (*ptr != '\n'); ptr++) ;
+					if (*ptr == '\n')
+						ptr++;
+					if (ptr > sptr)
+						g_memmove (sptr, ptr, strlen (ptr) + 1);
+					len = 0;
+					ptr = sptr;
+				}
+			}
+		}
 	}
 	else {
 		str = NULL;
