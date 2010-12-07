@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <unistd.h>
 #include <glib/gi18n-lib.h>
 #include <glib/gprintf.h>
 #include <string.h>
@@ -93,8 +94,14 @@ main (int argc, char *argv[])
 			model = config_info_list_all_providers ();
 
 		if (model) {
-			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
-			g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+			if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
+				g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
+			if (! getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY"))
+				g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+			if (isatty (fileno (stdout))) {
+				if (! getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE"))
+					g_setenv ("GDA_DATA_MODEL_DUMP_TRUNCATE", "-1", TRUE);
+			}
 			gda_data_model_dump (model, NULL);
 			g_object_unref (model);
 		}
@@ -108,8 +115,14 @@ main (int argc, char *argv[])
 	if (list_configs) {
 		gda_init ();
 		GdaDataModel *model = config_info_list_all_dsn ();
-		g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
-		g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+		if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
+			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
+		if (! getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY"))
+			g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+		if (isatty (fileno (stdout))) {
+			if (! getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE"))
+				g_setenv ("GDA_DATA_MODEL_DUMP_TRUNCATE", "-1", TRUE);
+		}
 		gda_data_model_dump (model, NULL);
 		g_object_unref (model);
 		return 0;
