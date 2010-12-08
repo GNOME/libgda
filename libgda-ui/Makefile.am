@@ -127,7 +127,7 @@ libgda-ui.def: libgda-ui.symbols
 	(echo -e EXPORTS; $(CPP) -P - <$(srcdir)/libgda-ui.symbols | sed -e '/^$$/d' -e 's/^/ /' -e 's/G_GNUC_[^ ]*//g' | sort) > libgda-ui.def.tmp && mv libgda-ui.def.tmp libgda-ui.def
 
 libgda-ui-$(GDA_ABI_VERSION).lib: libgda-ui.def
-	$(DLLTOOL) --dllname libgda-ui-$(GDA_ABI_VERSION)-$(GDA_CURRENT).dll --def libgda-ui.def --output-lib libgda-ui-$(GDA_ABI_VERSION).lib
+	$(DLLTOOL) --dllname libgda-ui-$(GDA_ABI_VERSION)-$(GDA_ABI_MAJOR_VERSION).dll --def libgda-ui.def --output-lib libgda-ui-$(GDA_ABI_VERSION).lib
 
 install-data-local: install-def-files
 uninstall-local: uninstall-def-files
