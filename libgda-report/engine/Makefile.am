@@ -7,7 +7,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
-	$(LIBGDA_CFLAGS)
+	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 gda_report_headers = \
 	gda-report-engine.h

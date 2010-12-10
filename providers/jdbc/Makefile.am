@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) $(JAVA_CFLAGS) \
+	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(JAVA_CFLAGS) \
 	-DJVM_PATH=\""$(JAVA_LD_PATH)"\" \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 

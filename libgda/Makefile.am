@@ -17,6 +17,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-DABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
 	$(BDB_CFLAGS) \
 	-DBDB_LIB=\""$(BDB_LIB)"\" \
 	$(GIO_CFLAGS) $(GNOME_KEYRING_CFLAGS)

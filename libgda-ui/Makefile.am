@@ -13,6 +13,7 @@ AM_CPPFLAGS = \
 	-DPLUGINSDIR=\""$(top_builddir)/libgda-ui/plugins/.libs"\" \
 	-DGDA_ABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
 	$(GTK_CFLAGS) \
 	$(GIO_CFLAGS)
 

@@ -8,7 +8,8 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
-	$(LIBGDA_CFLAGS) 
+	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 gda_report_headers = \
 	gda-report-rml-document.h

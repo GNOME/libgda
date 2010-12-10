@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) #$(FIREBIRD_CFLAGS) 
+	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) #$(FIREBIRD_CFLAGS) 
 
 # parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)

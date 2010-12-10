@@ -7,7 +7,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) 
+	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_CFLAGS)
 
 libgda_models_la_SOURCES = \
 	gda-models-provider.c \

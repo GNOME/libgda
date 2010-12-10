@@ -17,6 +17,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/libgda/sqlite \
         -I$(top_builddir) \
         $(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
         $(GTK_CFLAGS) \
         $(GTKSOURCEVIEW_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS) \

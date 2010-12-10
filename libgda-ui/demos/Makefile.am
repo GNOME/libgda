@@ -38,6 +38,7 @@ AM_CPPFLAGS = \
         -I$(top_builddir) \
 	-I$(top_builddir)/libgda \
         $(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
         $(GTK_CFLAGS) \
         -DPREFIX=\""$(prefix)"\" \
         -DSYSCONFDIR=\""$(sysconfdir)"\" \

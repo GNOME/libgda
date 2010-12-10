@@ -741,6 +741,11 @@ AC_ARG_ENABLE(default-binary,
 
 AM_CONDITIONAL(DEFAULT_BINARY, test "x$enable_default_binary" = xyes)
 
+DK_ARG_ENABLE_WARNINGS([LIBGDA_WFLAGS],
+	[-Wall],
+	[-Wall -Wextra],
+	[PANGO G GDK GDK_PIXBUF GTK])
+
 AC_SUBST(LIBGDA_CFLAGS)
 AC_SUBST(LIBGDA_LIBS)
 

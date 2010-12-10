@@ -6,6 +6,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(top_srcdir)/libgda -I$(srcdir)/.. \
         -I$(top_builddir) -I$(top_builddir)/libgda-ui \
         $(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
         $(GTK_CFLAGS) \
 	$(GIO_CFLAGS) \
         -DPREFIX=\""$(prefix)"\" \

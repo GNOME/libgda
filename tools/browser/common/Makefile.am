@@ -5,6 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
 	$(GTK_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS)
 

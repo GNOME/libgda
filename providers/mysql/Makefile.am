@@ -9,7 +9,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/providers/reuseable/mysql \
-	$(LIBGDA_CFLAGS) $(MYSQL_CFLAGS) 
+	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(MYSQL_CFLAGS) 
 
 libgda_mysql_la_SOURCES = \
 	gda-mysql-blob-op.c \
