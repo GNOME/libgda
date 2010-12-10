@@ -4,7 +4,8 @@ AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(srcdir)/.. \
 	-I$(top_srcdir)/libgda/sqlite \
         -I$(top_builddir) \
-        $(LIBGDA_CFLAGS) 
+        $(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 libgda_threadwrapper_headers = \
 	gda-thread-wrapper.h

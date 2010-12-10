@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/providers/reuseable/postgres \
-	$(LIBGDA_CFLAGS) $(POSTGRES_CFLAGS) 
+	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(POSTGRES_CFLAGS) 
 
 libgda_postgres_la_SOURCES = \
 	gda-postgres-blob-op.c \

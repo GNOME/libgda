@@ -9,7 +9,8 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/libgda \
         -I$(top_srcdir)/libgda/sqlite \
         -I$(top_builddir) \
-        $(LIBGDA_CFLAGS)
+        $(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 libreuseable_la_SOURCES = \
 	gda-provider-reuseable.h \

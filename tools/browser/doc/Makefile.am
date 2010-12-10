@@ -34,6 +34,7 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/tools/browser \
         $(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
         $(GTK_CFLAGS) \
 	$(GTKSOURCEVIEW_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"

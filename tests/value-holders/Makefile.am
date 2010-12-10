@@ -3,6 +3,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
 	$(JSON_GLIB_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 

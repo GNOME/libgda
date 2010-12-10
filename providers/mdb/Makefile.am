@@ -7,6 +7,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
 	$(MDB_CFLAGS) \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-4.0"\"
 

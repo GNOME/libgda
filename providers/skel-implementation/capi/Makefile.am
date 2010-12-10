@@ -9,7 +9,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) #$(CAPI_CFLAGS) 
+	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) #$(CAPI_CFLAGS) 
 
 # SQL keywords HASH generation
 keyword_files=keywords.list

@@ -7,7 +7,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir) \
         -I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
-        $(LIBGDA_CFLAGS) $(LIBXSLT_CFLAGS)
+        $(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(LIBXSLT_CFLAGS)
 
 gda_xslt_headers = \
         libgda-xslt.h

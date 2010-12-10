@@ -10,6 +10,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir) \
         -I$(top_srcdir)/libgda \
         $(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
 	-DCHECK_FILES=\""$(top_srcdir)"\" \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 

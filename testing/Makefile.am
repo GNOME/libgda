@@ -3,7 +3,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS)
+	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 bin_PROGRAMS = gda-test-connection-4.0
 if HAVE_UI

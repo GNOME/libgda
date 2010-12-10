@@ -4,7 +4,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) 
+	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 psupport_headers = \
 	gda-data-select-priv.h \

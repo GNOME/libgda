@@ -9,6 +9,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS) \
 	$(ORACLE_CFLAGS) 
 
 keyword_files=keywords_8.list keywords_9.list

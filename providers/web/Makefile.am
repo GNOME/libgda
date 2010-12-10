@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) $(LIBSOUP_CFLAGS) 
+	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(LIBSOUP_CFLAGS) 
 
 libgda_web_la_SOURCES = \
 	gda-web-blob-op.c \

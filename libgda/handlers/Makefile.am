@@ -3,7 +3,8 @@ noinst_LTLIBRARIES = libgda_handlers-4.0.la
 AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(srcdir)/.. \
         -I$(top_builddir) \
-        $(LIBGDA_CFLAGS) 
+        $(LIBGDA_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 libgda_handlers_headers = \
 	gda-handler-bin.h \
