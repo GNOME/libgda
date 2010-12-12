@@ -48,8 +48,56 @@ xmlDtdPtr       gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
 xmlDtdPtr       gda_server_op_dtd = NULL;
 
+static gboolean numeric_locale_dyn = FALSE;
 gchar          *gda_numeric_locale = "";
+static gboolean lang_locale_dyn = FALSE;
 gchar          *gda_lang_locale = "";
+
+/**
+ * gda_locale_changed
+ *
+ * Call this function whenever the setlocale() function has been called
+ * to change the current locale; this function is first called by gda_init() so you
+ * don't need to call it if you have set the locale before calling gda_init().
+ *
+ * Failing to call this function after having changed the current locale may result
+ * in Libgda reverting to the previous set locale.
+ *
+ * Since: 4.2.3
+ */
+void
+gda_locale_changed (void)
+{
+	/* free previous setting */
+	if (numeric_locale_dyn)
+		g_free (gda_numeric_locale);
+	if (lang_locale_dyn)
+		g_free (gda_lang_locale);
+
+	/* net new settings */
+	gda_numeric_locale = setlocale (LC_NUMERIC, NULL);
+	if (gda_numeric_locale) {
+		numeric_locale_dyn = TRUE;
+		gda_numeric_locale = g_strdup (gda_numeric_locale);
+	}
+	else {
+		numeric_locale_dyn = FALSE;
+		gda_numeric_locale = "";
+	}
+#ifdef HAVE_LC_MESSAGES
+        gda_lang_locale = setlocale (LC_MESSAGES, NULL);
+#else
+        gda_lang_locale = setlocale (LC_CTYPE, NULL);
+#endif
+	if (gda_lang_locale) {
+		lang_locale_dyn = TRUE;
+		gda_lang_locale = g_strdup (gda_lang_locale);
+	}
+	else {
+		lang_locale_dyn = FALSE;
+		gda_lang_locale = "";
+	}
+}
 
 /**
  * gda_init
@@ -57,6 +105,9 @@ gchar          *gda_lang_locale = "";
  * Initializes the GDA library, must be called prior to any Libgda usage. Note that unless the
  * LIBGDA_NO_THREADS environment variable is set (to any value), the GLib thread system will
  * be initialized as well if not yet initialized.
+ *
+ * Please note that if you call setlocale() to modify the current locale, you should also
+ * call gda_locale_changed() before using Libgda again.
  */
 void
 gda_init (void)
@@ -119,20 +170,7 @@ gda_init (void)
 	g_assert (type);
 
 	/* acquire locale */
-	gda_numeric_locale = setlocale (LC_NUMERIC, NULL);
-	if (gda_numeric_locale)
-		gda_numeric_locale = g_strdup (gda_numeric_locale);
-	else
-		gda_numeric_locale = g_strdup ("");
-#ifdef HAVE_LC_MESSAGES
-        gda_lang_locale = setlocale (LC_MESSAGES, NULL);
-#else
-        gda_lang_locale = setlocale (LC_CTYPE, NULL);
-#endif
-	if (gda_lang_locale)
-		gda_lang_locale = g_strdup (gda_lang_locale);
-	else
-		gda_lang_locale = g_strdup ("");
+	gda_locale_changed ();
 
 	/* binreloc */
 	gda_gbr_init ();
