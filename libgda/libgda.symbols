@@ -380,6 +380,7 @@
 	gda_insert_row_into_table
 	gda_insert_row_into_table_v
 	gda_lang_locale
+	gda_locale_changed
 	gda_lockable_get_type
 	gda_lockable_lock
 	gda_lockable_trylock

@@ -377,6 +377,7 @@ gda_data_model_iter_get_type
 <FILE>libgda</FILE>
 <TITLE>Libgda Initialization</TITLE>
 gda_init
+gda_locale_changed
 gda_get_application_exec_path
 <SUBSECTION Standard>
 </SECTION>

@@ -34,6 +34,7 @@
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
+extern gchar *gda_numeric_locale;
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
@@ -799,10 +800,9 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 			}
 			else if (type == G_TYPE_DOUBLE) {
 				if (length > 0) {
-					char *current_locale;
-					current_locale = setlocale (LC_NUMERIC, "C");
+					setlocale (LC_NUMERIC, "C");
 					g_value_set_double (value, atof (strvalue));
-					setlocale (LC_NUMERIC, current_locale);
+					setlocale (LC_NUMERIC, gda_numeric_locale);
 				}
 				else {
 					/* error: wrong column type */
