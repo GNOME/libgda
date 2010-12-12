@@ -28,6 +28,14 @@ Library initialization
 @void: 
 
 
+<!-- ##### FUNCTION gda_locale_changed ##### -->
+<para>
+
+</para>
+
+@void: 
+
+
 <!-- ##### FUNCTION gda_get_application_exec_path ##### -->
 <para>
 
