@@ -84,7 +84,7 @@ input_from_console (const gchar *prompt)
 gchar *
 input_from_stream  (FILE *stream)
 {
-	#define LINE_SIZE 1024
+	#define LINE_SIZE 65535
 	gchar line [LINE_SIZE];
 	gchar *result;
 	
