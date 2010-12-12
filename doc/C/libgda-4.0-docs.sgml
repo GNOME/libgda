@@ -592,6 +592,10 @@
 		for NULL values, instead of the "NULL" string</para>
 	    </listitem>
 	    <listitem>
+              <para>GDA_DATA_MODEL_DUMP_TRUNCATE: if set to a numeric value, then 
+		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will truncates the output to the width specified by the value. If the value is -1 then the actual terminal size (if it can be determined) is used</para>
+	    </listitem>
+	    <listitem>
               <para>GDA_DATA_MODEL_DUMP_ATTRIBUTES: if set, then 
 		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will also include a description of
 	      the data model's attributes</para>
