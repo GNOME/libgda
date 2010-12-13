@@ -37,7 +37,7 @@
 #include "marshallers/gdaui-custom-marshal.h"
 #include "gdaui-data-cell-renderer-util.h"
 
-#define MAX_ACCEPTED_STRING_LENGTH 32500U
+#define MAX_ACCEPTED_STRING_LENGTH 800U
 
 static void gdaui_data_cell_renderer_textual_init       (GdauiDataCellRendererTextual      *celltext);
 static void gdaui_data_cell_renderer_textual_class_init (GdauiDataCellRendererTextualClass *class);
@@ -460,13 +460,16 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 					gboolean use_markup = FALSE;
 					if (str) {
 						gint length;
-						length = strlen (str);
+						length = g_utf8_strlen (str, -1);
 						if (length > MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len) {
 							gchar *tmp;
-							tmp = g_markup_escape_text (str, MAX_ACCEPTED_STRING_LENGTH +
-										    too_long_msg_len);
+							tmp = g_utf8_offset_to_pointer (str,
+											MAX_ACCEPTED_STRING_LENGTH);
+							*tmp = 0;
+							tmp = g_markup_escape_text (str, -1);
 							g_free (str);
 							str = g_strconcat (tmp, too_long_msg, NULL);
+							g_free (tmp);
 							use_markup = TRUE;
 						}
 					}
