@@ -24,6 +24,10 @@
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include "bullet.h"
 #include "bulleth.h"
+#define MAX_BULLETS 2
+//gchar * bullet_strings[] = {"•", "◦"};
+
+GdkPixbuf *bullet_pix[MAX_BULLETS] = {NULL};
 
 static void gdaui_rt_editor_class_init (GdauiRtEditorClass *klass);
 static void gdaui_rt_editor_init (GdauiRtEditor *wid);
@@ -53,7 +57,6 @@ enum {
 	TEXT_TAG_TITLE2,
 	TEXT_TAG_LIST1,
 	TEXT_TAG_LIST2,
-	TEXT_TAG_BULLET,
 
 	TEXT_TAG_LAST
 };
@@ -121,15 +124,12 @@ enum {
 };
 
 /* global pixbufs */
-static GdkPixbuf *bullet_pix = NULL;
-static GdkPixbuf *bulleth_pix = NULL;
-
 static gint spaces_since_start_of_line (GtkTextIter *iter);
 static gchar *real_gdaui_rt_editor_get_contents (GdauiRtEditor *editor);
 
+static GtkTextTag *iter_begins_list (GdauiRtEditor *rte, GtkTextIter *iter, gint *out_list_level);
 static void mark_set_cb (GtkTextBuffer *textbuffer, GtkTextIter *location,
 			 GtkTextMark *mark, GdauiRtEditor *rte);
-static void delete_range_cb (GtkTextBuffer *textbuffer, GtkTextIter *start, GtkTextIter *end, GdauiRtEditor *rte);
 static void insert_text_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, gint len, GdauiRtEditor *rte);
 static void insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, gint len, GdauiRtEditor *rte);
 static void text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte);
@@ -306,8 +306,6 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 			  G_CALLBACK (insert_text_cb), rte);
 	g_signal_connect_after (rte->priv->textbuffer, "insert-text",
 				G_CALLBACK (insert_text_after_cb), rte);
-	g_signal_connect (rte->priv->textbuffer, "delete-range",
-			  G_CALLBACK (delete_range_cb), rte);
 	g_signal_connect (rte->priv->textview, "populate-popup",
 			  G_CALLBACK (populate_popup_cb), rte);
 
@@ -317,17 +315,15 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 	memset (rte->priv->tags, 0, sizeof (rte->priv->tags));
 
 	rte->priv->tags[TEXT_TAG_LIST1].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+									  "indent", -5,
 									  "left_margin", 15,
 									  /*"background", "#cbbcbc",*/
 									  NULL);
 	rte->priv->tags[TEXT_TAG_LIST2].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
-									  "left_margin", 30,
+									  "indent", -10,
+									  "left_margin", 25,
 									  /*"background", "#dcbcbc",*/
 									  NULL);
-	rte->priv->tags[TEXT_TAG_BULLET].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
-									   "indent", -10,
-									   /*"background", "#cbbcbc",*/
-									   NULL);
 	rte->priv->tags[TEXT_TAG_ITALIC].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
 									   "style", PANGO_STYLE_ITALIC, NULL);
 	rte->priv->tags[TEXT_TAG_ITALIC].action_name = "/ToolBar/ActionItalic";
@@ -487,6 +483,24 @@ gdaui_rt_editor_get_property (GObject *object,
         }
 }
 
+static GtkTextTag *
+iter_begins_list (GdauiRtEditor *rte, GtkTextIter *iter, gint *out_list_level)
+{
+	gint idx = -1;
+	GtkTextTag *tag = NULL;
+	if (gtk_text_iter_has_tag (iter, rte->priv->tags[TEXT_TAG_LIST1].tag)) {
+		tag = rte->priv->tags[TEXT_TAG_LIST1].tag;
+		idx = 0;
+	}
+	else if (gtk_text_iter_has_tag (iter, rte->priv->tags[TEXT_TAG_LIST2].tag)) {
+		tag = rte->priv->tags[TEXT_TAG_LIST2].tag;
+		idx = 1;
+	}
+	if (out_list_level)
+		*out_list_level = idx;
+	return tag;
+}
+
 /* tags management */
 static void
 apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
@@ -504,21 +518,25 @@ apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
 			if (reverse)
 				gtk_text_buffer_remove_tag (rte->priv->textbuffer, tag, &start, &end);
 			else {
-				/* don't apply tag if there is a LIST tag */
-				gboolean doapply = TRUE;
+				gtk_text_buffer_apply_tag (rte->priv->textbuffer, tag, &start, &end);
+				/* if there are LIST tags, then remove the applied tag */
 				GtkTextIter iter;
 				for (iter = start; gtk_text_iter_compare (&iter, &end) < 0; ) {
-					if (gtk_text_iter_has_tag (&iter, rte->priv->tags[TEXT_TAG_BULLET].tag) ||
-					    gtk_text_iter_has_tag (&iter, rte->priv->tags[TEXT_TAG_LIST1].tag) ||
-					    gtk_text_iter_has_tag (&iter, rte->priv->tags[TEXT_TAG_LIST2].tag)) {
-						doapply = FALSE;
-						break;
+					GtkTextTag *ltag;
+					gint idx;
+					ltag = iter_begins_list (rte, &iter, &idx);
+					if (ltag) {
+						GtkTextIter liter;
+						liter = iter;
+						gtk_text_iter_forward_to_tag_toggle (&liter, ltag);
+						gtk_text_iter_backward_char (&iter);
+						gtk_text_buffer_remove_tag (rte->priv->textbuffer,
+									    tag, &iter, &liter);
+						gtk_text_iter_forward_char (&iter);
 					}
 					if (! gtk_text_iter_forward_char (&iter))
 						break;
 				}
-				if (doapply)
-					gtk_text_buffer_apply_tag (rte->priv->textbuffer, tag, &start, &end);
 			}
 		}
 		else {
@@ -530,8 +548,7 @@ apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
 				if (tags) {
 					for (list = tags; list; list = list->next) {
 						GtkTextTag *tag = (GtkTextTag *) list->data;
-						if ((tag != rte->priv->tags[TEXT_TAG_BULLET].tag) &&
-						    (tag != rte->priv->tags[TEXT_TAG_LIST1].tag) &&
+						if ((tag != rte->priv->tags[TEXT_TAG_LIST1].tag) &&
 						    (tag != rte->priv->tags[TEXT_TAG_LIST2].tag))
 							gtk_text_buffer_remove_tag (rte->priv->textbuffer,
 										    tag, &start, &end);
@@ -685,17 +702,25 @@ mark_set_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, GtkTextMark *mark
 static void
 insert_text_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, gint len, GdauiRtEditor *rte)
 {
+	/* if inserting is before a bullet, then insert right after */
+	GtkTextTag *tag;
+	tag = iter_begins_list (rte, location, NULL);
+	if (tag) {
+		gtk_text_iter_forward_char (location);
+		gtk_text_buffer_place_cursor (textbuffer, location);
+	}
 	rte->priv->insert_offset = gtk_text_iter_get_offset (location);
 }
 
 static void
 insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, gint len, GdauiRtEditor *rte)
 {
-	GtkTextIter start, end, sol;
+	GtkTextIter start, end;
 
 	if ((rte->priv->insert_offset < 0) || rte->priv->show_markup)
 		return;
 
+	/* apply selected tag in toolbar if any */
 	gtk_text_buffer_get_iter_at_offset (textbuffer, &start, rte->priv->insert_offset);
 	end = *location;
 	if (gtk_text_iter_backward_chars (&end, g_utf8_strlen (text, -1))) {
@@ -713,104 +738,24 @@ insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *t
 	}
 	rte->priv->insert_offset = -1;
 
-	/* check if the start of the line has a list tag */
-	sol = end;
-	gtk_text_iter_set_line_offset (&sol, 0);
-	if (gtk_text_iter_has_tag (&sol, rte->priv->tags [TEXT_TAG_LIST1].tag))
-		gtk_text_buffer_apply_tag (rte->priv->textbuffer,
-					   rte->priv->tags[TEXT_TAG_LIST1].tag, location, &end);
-	else if (gtk_text_iter_has_tag (&sol, rte->priv->tags [TEXT_TAG_LIST2].tag))
-		gtk_text_buffer_apply_tag (rte->priv->textbuffer,
-					   rte->priv->tags[TEXT_TAG_LIST2].tag, location, &end);
-
-	if (*text == '\n') {
+	/* add new bullet if already in list */
+	if ((*text == '\n') && gtk_text_iter_forward_char (&end)) {
 		/* check if we are at a bullet to add another bullet to make a list */
-		if (! gtk_text_iter_ends_tag (&start, rte->priv->tags [TEXT_TAG_BULLET].tag)) {
-			gint line;
-			line = gtk_text_iter_get_line (&start);
-			for (; gtk_text_iter_backward_char (&start) &&
-			      (gtk_text_iter_get_line (&start) == line); ) {
-				if (gtk_text_iter_begins_tag (&start, rte->priv->tags [TEXT_TAG_BULLET].tag)) {
-					gtk_text_iter_forward_char (&end);
-					if (gtk_text_iter_has_tag (&start, rte->priv->tags [TEXT_TAG_LIST1].tag))
-						gtk_text_buffer_insert (textbuffer, &end, "- ", -1);
-					else if (gtk_text_iter_has_tag (&start, rte->priv->tags [TEXT_TAG_LIST2].tag))
-						gtk_text_buffer_insert (textbuffer, &end, " - ", -1);
-					break;
-				}
+		gint line;
+		line = gtk_text_iter_get_line (&start);
+		for (; gtk_text_iter_backward_char (&start) &&
+			     (gtk_text_iter_get_line (&start) == line); ) {
+			if (gtk_text_iter_begins_tag (&start,
+						      rte->priv->tags [TEXT_TAG_LIST1].tag)) {
+				gtk_text_buffer_insert (textbuffer, &end, "- ", -1);
+				break;
+			}
+			else if (gtk_text_iter_begins_tag (&start,
+							   rte->priv->tags [TEXT_TAG_LIST2].tag)) {
+				gtk_text_buffer_insert (textbuffer, &end, " - ", -1);
+				break;
 			}
 		}
-	}
-}
-
-static void
-delete_range_cb (GtkTextBuffer *textbuffer, GtkTextIter *start, GtkTextIter *end, GdauiRtEditor *rte)
-{
-	GtkTextIter prev;
-
-	/* check if there is a start or end TEXT_TAG_BULLET in the deleted range */
-	prev = *start;
-	do {
-		if (gtk_text_iter_has_tag (&prev, rte->priv->tags[TEXT_TAG_BULLET].tag)) {
-			GtkTextIter iter;
-			iter = prev;
-			if (! gtk_text_iter_begins_tag (&prev, rte->priv->tags[TEXT_TAG_BULLET].tag)) {
-				/* find start of tag */
-				for (; gtk_text_iter_backward_char (&iter); ) {
-					if (gtk_text_iter_begins_tag (&iter,
-								      rte->priv->tags[TEXT_TAG_BULLET].tag)) {
-						if (gtk_text_iter_compare (&iter, start) < 0)
-							*start = iter;
-						break;
-					}
-				}
-			}
-
-			/* find end of tag */
-			for (; gtk_text_iter_forward_char (&prev); ) {
-				if (gtk_text_iter_ends_tag (&prev,
-							    rte->priv->tags[TEXT_TAG_BULLET].tag)) {
-					if (gtk_text_iter_compare (&prev, end) > 0)
-						*end = prev;
-					break;
-				}
-			}
-			gtk_text_buffer_remove_tag (rte->priv->textbuffer,
-						    rte->priv->tags[TEXT_TAG_BULLET].tag,
-						    &iter, &prev);
-		}
-	}
-	while (gtk_text_iter_forward_char (&prev) && (gtk_text_iter_compare (&prev, end) <= 0));
-
-	/* check if TEXT_TAG_LIST1 left opened in range */
-	if (gtk_text_iter_has_tag (end, rte->priv->tags[TEXT_TAG_LIST1].tag)) {
-		GtkTextIter iter;
-		iter = *start;
-		if (gtk_text_iter_backward_char (&iter) &&
-		    ! gtk_text_iter_has_tag (&iter, rte->priv->tags[TEXT_TAG_LIST1].tag)) {
-			    for (iter = *end; gtk_text_iter_forward_char (&iter); ) {
-				    if (gtk_text_iter_ends_tag (&iter, rte->priv->tags[TEXT_TAG_LIST1].tag))
-					    break;
-			    }
-			    gtk_text_buffer_remove_tag (rte->priv->textbuffer,
-							rte->priv->tags[TEXT_TAG_LIST1].tag,
-							start, &iter);
-		    }
-	}
-	/* check if TEXT_TAG_LIST2 left opened in range */
-	if (gtk_text_iter_has_tag (end, rte->priv->tags[TEXT_TAG_LIST2].tag)) {
-		GtkTextIter iter;
-		iter = *start;
-		if (gtk_text_iter_backward_char (&iter) &&
-		    ! gtk_text_iter_has_tag (&iter, rte->priv->tags[TEXT_TAG_LIST2].tag)) {
-			    for (iter = *end; gtk_text_iter_forward_char (&iter); ) {
-				    if (gtk_text_iter_ends_tag (&iter, rte->priv->tags[TEXT_TAG_LIST2].tag))
-					    break;
-			    }
-			    gtk_text_buffer_remove_tag (rte->priv->textbuffer,
-							rte->priv->tags[TEXT_TAG_LIST2].tag,
-							start, &iter);
-		    }
 	}
 }
 
@@ -823,6 +768,38 @@ show_markup_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rt
 }
 
 static void
+bigger_font_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rte)
+{
+	PangoContext *pcontext;
+	PangoFontDescription *fd, *nfd;
+	pcontext = gtk_widget_get_pango_context (GTK_WIDGET (rte->priv->textview));
+	fd = pango_context_get_font_description (pcontext);
+	nfd = pango_font_description_copy_static (fd);
+	pango_font_description_set_size (nfd, pango_font_description_get_size (fd) * 1.2);
+	gtk_widget_modify_font (GTK_WIDGET (rte->priv->textview), nfd);
+	pango_font_description_free (nfd);
+}
+
+static void
+smaller_font_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rte)
+{
+	PangoContext *pcontext;
+	PangoFontDescription *fd, *nfd;
+	pcontext = gtk_widget_get_pango_context (GTK_WIDGET (rte->priv->textview));
+	fd = pango_context_get_font_description (pcontext);
+	nfd = pango_font_description_copy_static (fd);
+	pango_font_description_set_size (nfd, pango_font_description_get_size (fd) / 1.2);
+	gtk_widget_modify_font (GTK_WIDGET (rte->priv->textview), nfd);
+	pango_font_description_free (nfd);
+}
+
+static void
+reset_font_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rte)
+{
+	gtk_widget_modify_font (GTK_WIDGET (rte->priv->textview), NULL);
+}
+
+static void
 populate_popup_cb (GtkTextView *entry, GtkMenu *menu, GdauiRtEditor *rte)
 {
 	GtkWidget *item;
@@ -830,7 +807,25 @@ populate_popup_cb (GtkTextView *entry, GtkMenu *menu, GdauiRtEditor *rte)
 	item = gtk_separator_menu_item_new ();
         gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
         gtk_widget_show (item);
-	
+
+	item = gtk_menu_item_new_with_label (_("Reset font size"));
+        gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
+        g_signal_connect (G_OBJECT (item), "activate",
+                          G_CALLBACK (reset_font_item_activate_cb), rte);
+        gtk_widget_show (item);
+
+	item = gtk_menu_item_new_with_label (_("Decrease font size (zoom out)"));
+        gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
+        g_signal_connect (G_OBJECT (item), "activate",
+                          G_CALLBACK (smaller_font_item_activate_cb), rte);
+        gtk_widget_show (item);
+
+	item = gtk_menu_item_new_with_label (_("Increase font size (zoom in)"));
+        gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
+        g_signal_connect (G_OBJECT (item), "activate",
+                          G_CALLBACK (bigger_font_item_activate_cb), rte);
+        gtk_widget_show (item);
+
 	item = gtk_check_menu_item_new_with_label (_("Show source markup"));
         gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), rte->priv->show_markup);
@@ -889,7 +884,6 @@ apply_markup (GdauiRtEditor *rte, GtkTextBuffer *textbuffer, TextTag *current, G
 	gtk_text_buffer_get_iter_at_mark (textbuffer, &start, mark_start);
 	gtk_text_buffer_get_iter_at_mark (textbuffer, &end, mark_end);
 
-
 	/* apply markup */
 	GtkTextIter astart;
 	gtk_text_buffer_get_iter_at_mark (textbuffer, &astart, current->m_start);
@@ -935,12 +929,6 @@ apply_markup (GdauiRtEditor *rte, GtkTextBuffer *textbuffer, TextTag *current, G
 					   &astart, &end);
 		break;
 	case MARKUP_LIST_S: {
-		if (! bullet_pix)
-			bullet_pix = gdk_pixbuf_new_from_inline (-1, bullet_pixdata,
-								 FALSE, NULL);
-		if (! bulleth_pix)
-			bulleth_pix = gdk_pixbuf_new_from_inline (-1, bulleth_pixdata,
-								  FALSE, NULL);
 		GtkTextIter ps, pe;
 		gtk_text_buffer_get_iter_at_mark (textbuffer, &ps, current->m_start);
 		ssol = spaces_since_start_of_line (&ps);
@@ -950,34 +938,41 @@ apply_markup (GdauiRtEditor *rte, GtkTextBuffer *textbuffer, TextTag *current, G
 			if (gtk_text_iter_backward_chars (&diter, ssol))
 				gtk_text_buffer_delete (textbuffer, &diter, &ps);
 		}
+
+		GtkTextTag *tag;
+		gint bindex = 0;
+		gtk_text_buffer_get_iter_at_mark (textbuffer, &ps, current->m_end);
+		if (ssol > 0) {
+			bindex = 1;
+			tag = rte->priv->tags[TEXT_TAG_LIST2].tag;
+		}
+		else
+			tag = rte->priv->tags[TEXT_TAG_LIST1].tag;
+
+		if (! bullet_pix[0]) {
+			bullet_pix[0] = gdk_pixbuf_new_from_inline (-1, bullet_pixdata,
+								    FALSE, NULL);
+			bullet_pix[1] = gdk_pixbuf_new_from_inline (-1, bulleth_pixdata,
+								    FALSE, NULL);
+		}
+		gtk_text_buffer_insert_pixbuf (textbuffer, &ps, bullet_pix[bindex]);
 		gtk_text_buffer_get_iter_at_mark (textbuffer, &ps, current->m_end);
 		pe = ps;
-		if (ssol > 0)
-			gtk_text_buffer_insert_pixbuf (textbuffer, &pe, bulleth_pix);
-		else
-			gtk_text_buffer_insert_pixbuf (textbuffer, &pe, bullet_pix);
-		gtk_text_buffer_insert (textbuffer, &pe, " ", -1);
-					
-		gtk_text_buffer_get_iter_at_mark (textbuffer, &ps, current->m_start);
-		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_BULLET].tag,
-					   &ps, &pe);					
-		gtk_text_buffer_get_iter_at_mark (textbuffer, &astart, current->m_start);
-		if (! gtk_text_iter_ends_line (&ps))
-			for (; gtk_text_iter_forward_char (&ps); ) {
-				if (gtk_text_iter_ends_line (&ps))
-					break;
-			}
-		else
-			gtk_text_iter_forward_char (&ps);
-		if (ssol > 0)
-			gtk_text_buffer_apply_tag (textbuffer,
-						   rte->priv->tags[TEXT_TAG_LIST2].tag,
-						   &astart, &ps);
-		else
-			gtk_text_buffer_apply_tag (textbuffer,
-						   rte->priv->tags[TEXT_TAG_LIST1].tag,
-						   &astart, &ps);
+		gtk_text_iter_forward_char (&pe);
+		gtk_text_buffer_apply_tag (rte->priv->textbuffer, tag, &ps, &pe);
+
+		/* remove all other tags */
+		gint i;
+		gtk_text_iter_set_line_index (&ps, 0);
+		gtk_text_iter_backward_char (&ps); /* to catch the previous line's '\n' */
+		for (i = 0; i < TEXT_TAG_LAST; i++) {
+			if (rte->priv->tags[i].tag == tag)
+				continue;
+			else
+				gtk_text_buffer_remove_tag (rte->priv->textbuffer,
+							    rte->priv->tags[i].tag, &ps, &pe);
+		}
+
 		break;
 	}
 	case MARKUP_PICTURE_S: {
@@ -1037,9 +1032,6 @@ text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte)
 
 	g_signal_handlers_block_by_func (textbuffer,
 					 G_CALLBACK (text_buffer_changed_cb), rte);
-	g_signal_handlers_block_by_func (textbuffer,
-					 G_CALLBACK (delete_range_cb), rte);
-
 	
 	for (mt = get_token (&start, &ssol, &end, current, rte);
 	     mt != MARKUP_EOF;
@@ -1115,8 +1107,6 @@ text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte)
 		queue = g_slist_delete_link (queue, queue);
 	}
 
-	g_signal_handlers_unblock_by_func (textbuffer,
-					   G_CALLBACK (delete_range_cb), rte);
 	g_signal_handlers_unblock_by_func (textbuffer,
 					   G_CALLBACK (text_buffer_changed_cb), rte);
 
@@ -1542,8 +1532,6 @@ serialize_tag (GtkTextTag *tag, gboolean starting, GdauiRtEditor *editor)
 		else
 			return " ==";
 	}
-	else if (tag == editor->priv->tags[TEXT_TAG_BULLET].tag)
-		return "";
 	else if (tag == editor->priv->tags[TEXT_TAG_LIST1].tag) {
 		if (starting)
 			return "- ";
@@ -1655,7 +1643,8 @@ serialize_text (GtkTextBuffer *buffer, SerializationContext *context, GdauiRtEdi
 					g_string_append (context->text_str, tmp_text);
 					g_free (tmp_text);
 
-					if ((pixbuf != bullet_pix) && (pixbuf != bulleth_pix)) {
+					if ((pixbuf != bullet_pix[0]) &&
+					    (pixbuf != bullet_pix[1])) {
 						GdkPixdata pixdata;
 						guint8 *tmp;
 						guint len;
@@ -1694,7 +1683,9 @@ serialize_text (GtkTextBuffer *buffer, SerializationContext *context, GdauiRtEdi
 			iter = context->end;
 
 		/* Append the text, except if there is the TEXT_TAG_BULLET tag */
-		if (! gtk_text_iter_has_tag (&old_iter, editor->priv->tags[TEXT_TAG_BULLET].tag)) {
+		GtkTextTag *ltag;
+		ltag = iter_begins_list (editor, &old_iter, NULL);
+		if (! ltag) {
 			gint i;
 			gchar *tmp_text;
 			tmp_text = gtk_text_iter_get_slice (&old_iter, &iter);
