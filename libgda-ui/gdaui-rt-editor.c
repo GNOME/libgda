@@ -28,6 +28,7 @@
 //gchar * bullet_strings[] = {"•", "◦"};
 
 GdkPixbuf *bullet_pix[MAX_BULLETS] = {NULL};
+gchar     *lists_tokens[MAX_BULLETS] = {"- ", " - "};
 
 static void gdaui_rt_editor_class_init (GdauiRtEditorClass *klass);
 static void gdaui_rt_editor_init (GdauiRtEditor *wid);
@@ -80,6 +81,8 @@ struct _GdauiRtEditorPriv
 	gboolean        enable_changed_signal;
 	gboolean        no_background;
 	gint            insert_offset;
+
+	gboolean        contents_setting; /* TRUE if whole contents is being changed */
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -298,6 +301,7 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 	rte->priv->insert_offset = -1;
 	rte->priv->textview = GTK_TEXT_VIEW (textview);
 	rte->priv->textbuffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
+	rte->priv->contents_setting = FALSE;
 	g_signal_connect (rte->priv->textbuffer, "changed",
 			  G_CALLBACK (text_buffer_changed_cb), rte);
 	g_signal_connect (rte->priv->textbuffer, "mark-set",
@@ -719,6 +723,8 @@ insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *t
 
 	if ((rte->priv->insert_offset < 0) || rte->priv->show_markup)
 		return;
+	if (rte->priv->contents_setting)
+		return;
 
 	/* apply selected tag in toolbar if any */
 	gtk_text_buffer_get_iter_at_offset (textbuffer, &start, rte->priv->insert_offset);
@@ -739,22 +745,19 @@ insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *t
 	rte->priv->insert_offset = -1;
 
 	/* add new bullet if already in list */
-	if ((*text == '\n') && gtk_text_iter_forward_char (&end)) {
-		/* check if we are at a bullet to add another bullet to make a list */
-		gint line;
-		line = gtk_text_iter_get_line (&start);
-		for (; gtk_text_iter_backward_char (&start) &&
-			     (gtk_text_iter_get_line (&start) == line); ) {
-			if (gtk_text_iter_begins_tag (&start,
-						      rte->priv->tags [TEXT_TAG_LIST1].tag)) {
-				gtk_text_buffer_insert (textbuffer, &end, "- ", -1);
-				break;
-			}
-			else if (gtk_text_iter_begins_tag (&start,
-							   rte->priv->tags [TEXT_TAG_LIST2].tag)) {
-				gtk_text_buffer_insert (textbuffer, &end, " - ", -1);
-				break;
-			}
+	if (*text == '\n') {
+		gchar *text_to_insert = NULL;
+		GtkTextTag *tag;
+		gint index;
+		gtk_text_iter_set_line_offset (&start, 0);
+		tag = iter_begins_list (rte, &start, &index);
+		if (tag)
+			text_to_insert = lists_tokens [index];
+
+		if (text_to_insert) {
+			if (! gtk_text_iter_forward_char (&end))
+				gtk_text_buffer_get_end_iter (textbuffer, &end);
+			gtk_text_buffer_insert (textbuffer, &end, text_to_insert, -1);
 		}
 	}
 }
@@ -1534,13 +1537,13 @@ serialize_tag (GtkTextTag *tag, gboolean starting, GdauiRtEditor *editor)
 	}
 	else if (tag == editor->priv->tags[TEXT_TAG_LIST1].tag) {
 		if (starting)
-			return "- ";
+			return lists_tokens [0];
 		else
 			return "";
 	}
 	else if (tag == editor->priv->tags[TEXT_TAG_LIST2].tag) {
 		if (starting)
-			return " - ";
+			return lists_tokens [1];
 		else
 			return "";
 	}
@@ -1812,7 +1815,9 @@ gdaui_rt_editor_set_contents (GdauiRtEditor *editor, const gchar *markup, gint l
 {
 	g_return_if_fail (GDAUI_IS_RT_EDITOR (editor));
 
+	editor->priv->contents_setting = TRUE;
 	gtk_text_buffer_set_text (editor->priv->textbuffer, markup, length);
+	editor->priv->contents_setting = FALSE;
 }
 
 /**
