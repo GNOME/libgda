@@ -723,6 +723,8 @@ insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *t
 
 	if ((rte->priv->insert_offset < 0) || rte->priv->show_markup)
 		return;
+
+	/* disable any extra modification while text is being set using gdaui_rt_editor_set_contents() */
 	if (rte->priv->contents_setting)
 		return;
 
@@ -744,12 +746,12 @@ insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *t
 	}
 	rte->priv->insert_offset = -1;
 
+	gtk_text_iter_set_line_offset (&start, 0);
 	/* add new bullet if already in list */
 	if (*text == '\n') {
 		gchar *text_to_insert = NULL;
 		GtkTextTag *tag;
 		gint index;
-		gtk_text_iter_set_line_offset (&start, 0);
 		tag = iter_begins_list (rte, &start, &index);
 		if (tag)
 			text_to_insert = lists_tokens [index];
@@ -759,6 +761,17 @@ insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *t
 				gtk_text_buffer_get_end_iter (textbuffer, &end);
 			gtk_text_buffer_insert (textbuffer, &end, text_to_insert, -1);
 		}
+	}
+	else {
+		GtkTextTag *tag = NULL;
+		end = *location;
+		
+		if (gtk_text_iter_begins_tag (&start, rte->priv->tags[TEXT_TAG_TITLE1].tag))
+			tag = rte->priv->tags[TEXT_TAG_TITLE1].tag;
+		else if (gtk_text_iter_begins_tag (&start, rte->priv->tags[TEXT_TAG_TITLE2].tag))
+			tag = rte->priv->tags[TEXT_TAG_TITLE2].tag;
+		if (tag)
+			gtk_text_buffer_apply_tag (rte->priv->textbuffer, tag, &start, &end);
 	}
 }
 
