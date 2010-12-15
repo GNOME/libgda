@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-12-07 20:11+0000\n"
-"PO-Revision-Date: 2010-12-11 16:21+0100\n"
+"POT-Creation-Date: 2010-12-15 19:45+0000\n"
+"PO-Revision-Date: 2010-12-15 22:25+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -134,7 +134,7 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:509
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:168
 #: ../libgda-ui/gdaui-init.c:508 ../libgda-ui/gdaui-login.c:422
-#: ../libgda-ui/gdaui-rt-editor.c:645
+#: ../libgda-ui/gdaui-rt-editor.c:666
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -1559,15 +1559,15 @@ msgstr ""
 "No se puede cambiar el GdaHolder para que coincida con el cambio de valor en "
 "el GdaHolder vinculado: %s"
 
-#: ../libgda/gda-init.c:73
+#: ../libgda/gda-init.c:124
 msgid "Ignoring attempt to re-initialize GDA library."
 msgstr "Ignorando intento de reinicializar la biblioteca GDA."
 
-#: ../libgda/gda-init.c:95
+#: ../libgda/gda-init.c:146
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda necesita GModule. Terminando…"
 
-#: ../libgda/gda-init.c:155 ../libgda/gda-init.c:176
+#: ../libgda/gda-init.c:193 ../libgda/gda-init.c:214
 #, c-format
 msgid ""
 "Could not parse '%s': XML data import validation will not be performed (some "
@@ -1576,7 +1576,7 @@ msgstr ""
 "No se pudo analizar «%s»: la validación de la importación de datos XML no se "
 "realizará (podrían ocurrir errores extraños)"
 
-#: ../libgda/gda-init.c:197
+#: ../libgda/gda-init.c:235
 #, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for server operations will "
@@ -2947,9 +2947,9 @@ msgstr "La función requiere dos argumento"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:235
 #: ../providers/jdbc/gda-jdbc-recordset.c:279
-#: ../providers/mysql/gda-mysql-recordset.c:432
-#: ../providers/mysql/gda-mysql-recordset.c:562
-#: ../providers/postgres/gda-postgres-recordset.c:280
+#: ../providers/mysql/gda-mysql-recordset.c:433
+#: ../providers/mysql/gda-mysql-recordset.c:563
+#: ../providers/postgres/gda-postgres-recordset.c:281
 #: ../providers/web/gda-web-recordset.c:218
 #, c-format
 msgid "Column %d out of range (0-%d), ignoring its specified type"
@@ -2966,21 +2966,21 @@ msgstr "No se puede abrir el BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:483
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:727
-#: ../providers/postgres/gda-postgres-recordset.c:624
+#: ../providers/postgres/gda-postgres-recordset.c:625
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr "Fecha «%s» no válida (el formato debe ser AAAA-MM-DD)"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:497
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:743
-#: ../providers/postgres/gda-postgres-recordset.c:635
+#: ../providers/postgres/gda-postgres-recordset.c:636
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Hora «%s» no válida (el formato debe ser HH:MM:SS[.ms])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:511
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:759
-#: ../providers/postgres/gda-postgres-recordset.c:679
+#: ../providers/postgres/gda-postgres-recordset.c:678
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
@@ -3025,6 +3025,8 @@ msgstr "El valor entero es demasiado grande"
 #, c-format
 msgid "Blob constraints are not handled in virtual table condition"
 msgstr ""
+"Las restricciones «blob» no están gestionadas en la condición de la tabla "
+"virtual"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:154
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:194
@@ -3428,7 +3430,7 @@ msgstr "Seleccionar archivo para cargar"
 
 #: ../libgda-ui/data-entries/common-bin.c:77
 #: ../libgda-ui/data-entries/plugins/common-pict.c:398
-#: ../libgda-ui/gdaui-rt-editor.c:643
+#: ../libgda-ui/gdaui-rt-editor.c:664
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3561,7 +3563,7 @@ msgstr ""
 "diferentes, al menos %s y %s, lo que significa que el modelo de datos tiene "
 "algunas incoherencias"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:505
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:508
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
 msgid "<non-printable>"
 msgstr "<no imprimible>"
@@ -3710,7 +3712,7 @@ msgid "_Save image"
 msgstr "_Guardar imagen"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:339
-#: ../libgda-ui/gdaui-rt-editor.c:605
+#: ../libgda-ui/gdaui-rt-editor.c:626
 msgid "Select image to load"
 msgstr "Seleccionar la imagen que cargar"
 
@@ -4378,7 +4380,7 @@ msgstr ""
 msgid "If you choose yes, the contents will be lost."
 msgstr "Si elige sí, se perderá todo el contenido."
 
-#: ../libgda-ui/gdaui-rt-editor.c:84
+#: ../libgda-ui/gdaui-rt-editor.c:90
 msgid ""
 "\"\"\"= Title level 1 =\n"
 "== Title level 2 ==\n"
@@ -4405,81 +4407,93 @@ msgid ""
 "Raw areas are enclosed inside three doublequotes and no markup is interpreted"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:153
+#: ../libgda-ui/gdaui-rt-editor.c:156
 msgid "_Bold"
-msgstr ""
+msgstr "_Negrita"
 
-#: ../libgda-ui/gdaui-rt-editor.c:153
+#: ../libgda-ui/gdaui-rt-editor.c:156
 msgid "Bold text"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:154
+#: ../libgda-ui/gdaui-rt-editor.c:157
 msgid "_Italic"
-msgstr ""
+msgstr "_Cursiva"
 
-#: ../libgda-ui/gdaui-rt-editor.c:154
+#: ../libgda-ui/gdaui-rt-editor.c:157
 msgid "Italic text"
 msgstr "Texto en cursiva"
 
-#: ../libgda-ui/gdaui-rt-editor.c:155
+#: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "_Underline"
-msgstr ""
+msgstr "S_ubrayado"
 
-#: ../libgda-ui/gdaui-rt-editor.c:155
+#: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "Underline text"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:156
+#: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "_Strike through"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:156
+#: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "Strike through text"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:157
+#: ../libgda-ui/gdaui-rt-editor.c:160
 #, fuzzy
 #| msgid "XML syntax help"
 msgid "_Syntax help"
 msgstr "Ayuda de sintaxis XML"
 
-#: ../libgda-ui/gdaui-rt-editor.c:157
+#: ../libgda-ui/gdaui-rt-editor.c:160
 #, fuzzy
 #| msgid "XML syntax help"
 msgid "Show syntax help"
 msgstr "Ayuda de sintaxis XML"
 
-#: ../libgda-ui/gdaui-rt-editor.c:162
+#: ../libgda-ui/gdaui-rt-editor.c:165
 msgid "_Add image"
 msgstr "_Añadir imagen"
 
-#: ../libgda-ui/gdaui-rt-editor.c:162
+#: ../libgda-ui/gdaui-rt-editor.c:165
 msgid "Insert image"
 msgstr "Insertar imagen"
 
-#: ../libgda-ui/gdaui-rt-editor.c:163
+#: ../libgda-ui/gdaui-rt-editor.c:166
 msgid "_Reset"
 msgstr "_Restablecer"
 
-#: ../libgda-ui/gdaui-rt-editor.c:163
+#: ../libgda-ui/gdaui-rt-editor.c:166
 #, fuzzy
 #| msgid "Reset to original value"
 msgid "Reset to normal text"
 msgstr "Restablecer al valor original"
 
-#: ../libgda-ui/gdaui-rt-editor.c:238
+#: ../libgda-ui/gdaui-rt-editor.c:241
 msgid "Don't display a specific background for the text"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:248
+#: ../libgda-ui/gdaui-rt-editor.c:251
 msgid "Display raw markup text instead of formatted text"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:259
+#: ../libgda-ui/gdaui-rt-editor.c:262
 msgid "The buffer which is displayed"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:834
+#: ../libgda-ui/gdaui-rt-editor.c:827
+msgid "Reset font size"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:833
+msgid "Decrease font size (zoom out)"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:839
+msgid "Increase font size (zoom in)"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:845
 msgid "Show source markup"
 msgstr ""
 
@@ -5262,7 +5276,7 @@ msgstr ""
 "No se puede usar CURSOR. Se requiere al menos la versión 5.0 de MySQL. "
 "Usando acceso aleatorio de todas formas."
 
-#: ../providers/mysql/gda-mysql-recordset.c:141
+#: ../providers/mysql/gda-mysql-recordset.c:142
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size "
 "ignored."
@@ -5270,16 +5284,16 @@ msgstr ""
 "No se puede usar CURSOR. Se requiere al menos la versión 5.0 de MySQL. Se "
 "ignora el tamaño de los trozos."
 
-#: ../providers/mysql/gda-mysql-recordset.c:230
-#: ../providers/postgres/gda-postgres-recordset.c:137
+#: ../providers/mysql/gda-mysql-recordset.c:231
+#: ../providers/postgres/gda-postgres-recordset.c:138
 msgid "Number of rows fetched at a time"
 msgstr "Número de filas obtenidas cada vez"
 
-#: ../providers/mysql/gda-mysql-recordset.c:238
+#: ../providers/mysql/gda-mysql-recordset.c:239
 msgid "Number of row chunks read since the object creation"
 msgstr "Número de trozos de la fila leídos desde la creación el objeto"
 
-#: ../providers/mysql/gda-mysql-recordset.c:650
+#: ../providers/mysql/gda-mysql-recordset.c:651
 #: ../providers/mysql/gda-mysql-recordset.c:944
 #: ../providers/mysql/gda-mysql-recordset.c:957
 #: ../providers/mysql/gda-mysql-recordset.c:970
@@ -5288,23 +5302,23 @@ msgstr "Número de trozos de la fila leídos desde la creación el objeto"
 msgid "Invalid column bind data type. %d\n"
 msgstr "Tipo de datos de vinculación de la columna no válido. %d\n"
 
-#: ../providers/mysql/gda-mysql-recordset.c:798
+#: ../providers/mysql/gda-mysql-recordset.c:799
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr "El tipo %s no está mapeado para el valor %d"
 
-#: ../providers/mysql/gda-mysql-recordset.c:815
+#: ../providers/mysql/gda-mysql-recordset.c:816
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr "El tipo %s no está mapeado para el valor %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:861
+#: ../providers/mysql/gda-mysql-recordset.c:862
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "El tipo %s no está mapeado para el valor %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:877
-#: ../providers/mysql/gda-mysql-recordset.c:891
+#: ../providers/mysql/gda-mysql-recordset.c:878
+#: ../providers/mysql/gda-mysql-recordset.c:892
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "El tipo %s no está mapeado para el valor %f"
@@ -6134,8 +6148,8 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:1130
 #: ../providers/postgres/gda-postgres-provider.c:1180
 #: ../providers/postgres/gda-postgres-provider.c:1230
-#: ../providers/postgres/gda-postgres-recordset.c:434
-#: ../providers/postgres/gda-postgres-recordset.c:462
+#: ../providers/postgres/gda-postgres-recordset.c:435
+#: ../providers/postgres/gda-postgres-recordset.c:463
 msgid "Internal error"
 msgstr "Error interno"
 
@@ -6157,7 +6171,7 @@ msgstr "No se pude iniciar la transacción"
 msgid "Could not set the XA transaction ID parameter"
 msgstr "No se pudo establecer la el parámetro ID de la transacción XA"
 
-#: ../providers/postgres/gda-postgres-recordset.c:142
+#: ../providers/postgres/gda-postgres-recordset.c:143
 msgid "Number of rows chunks read since the object creation"
 msgstr "Número de trozos de la fila leídos desde la creación el objeto"
 
@@ -7247,12 +7261,10 @@ msgid "Connection"
 msgstr "Conexión"
 
 #: ../tools/browser/browser-window.c:277
-#| msgid "Connect"
 msgid "_Connect"
 msgstr "_Conectar"
 
 #: ../tools/browser/browser-window.c:277
-#| msgid "Open a new connection"
 msgid "Open a connection"
 msgstr "Abrir una conexión"
 
@@ -7272,10 +7284,8 @@ msgstr ""
 "bases de datos a la vez"
 
 #: ../tools/browser/browser-window.c:281
-#, fuzzy
-#| msgid "Properties"
 msgid "_Properties"
-msgstr "Propiedades"
+msgstr "_Propiedades"
 
 #: ../tools/browser/browser-window.c:281
 #, fuzzy
@@ -7284,24 +7294,20 @@ msgid "Connection properties"
 msgstr "Propiedades de la conexión"
 
 #: ../tools/browser/browser-window.c:282
-#, fuzzy
-#| msgid "Connections"
 msgid "_Connections list"
-msgstr "Conexiones"
+msgstr "_Lista de conexiones"
 
 #: ../tools/browser/browser-window.c:282
-#, fuzzy
-#| msgid "Connections"
 msgid "Connections list"
-msgstr "Conexiones"
+msgstr "Lista de conexiones"
 
 #: ../tools/browser/browser-window.c:283
 msgid "_Fetch meta data"
-msgstr ""
+msgstr "Extraer _metadatos"
 
 #: ../tools/browser/browser-window.c:283
 msgid "Fetch meta data"
-msgstr ""
+msgstr "Extraer metadatos"
 
 #: ../tools/browser/browser-window.c:284
 #, fuzzy
@@ -7340,16 +7346,12 @@ msgid "Display"
 msgstr "Mostrar"
 
 #: ../tools/browser/browser-window.c:288
-#, fuzzy
-#| msgid "Properties"
 msgid "_Perspective"
-msgstr "Propiedades"
+msgstr "_Perspectiva"
 
 #: ../tools/browser/browser-window.c:288
-#, fuzzy
-#| msgid "Properties"
 msgid "Perspective"
-msgstr "Propiedades"
+msgstr "Perspectiva"
 
 #: ../tools/browser/browser-window.c:289
 msgid "_Window"
@@ -7374,10 +7376,8 @@ msgid "New window for _connection"
 msgstr "Conexión virtual nueva"
 
 #: ../tools/browser/browser-window.c:291
-#, fuzzy
-#| msgid "Open a new connection"
 msgid "Open a new window for a connection"
-msgstr "Abrir una conexión nueva"
+msgstr "Abrir una ventana nueva para una conexión"
 
 #: ../tools/browser/browser-window.c:292
 msgid "_Close"
@@ -7398,19 +7398,19 @@ msgstr "Ayuda"
 
 #: ../tools/browser/browser-window.c:294
 msgid "_About"
-msgstr ""
+msgstr "Acerca _de"
 
 #: ../tools/browser/browser-window.c:294
 msgid "About"
-msgstr ""
+msgstr "Acerca de"
 
 #: ../tools/browser/browser-window.c:296
 msgid "_Manual"
-msgstr ""
+msgstr "_Manual"
 
 #: ../tools/browser/browser-window.c:296
 msgid "Manual"
-msgstr ""
+msgstr "Manual"
 
 #: ../tools/browser/browser-window.c:298
 msgid "Begin a new transaction"
@@ -7720,23 +7720,23 @@ msgstr ""
 msgid "Type: %s"
 msgstr "Tipo: %s"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:306
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:376
 msgid "Remove"
 msgstr "Quitar"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:310
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:380
 msgid "Add referenced tables"
 msgstr "Añadir tablas referenciadas"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:314
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:384
 msgid "Add tables referencing this table"
 msgstr "Añadir tablas que referencien a esta"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:512
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:582
 msgid "Add table"
 msgstr "Añadir tabla"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:532
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:602
 msgid "Select tables to add to diagram"
 msgstr "Seleccionar tablas para añadir a la imagen"
 
@@ -8130,16 +8130,12 @@ msgid "Manager"
 msgstr "Administrador"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:413
-#, fuzzy
-#| msgid "'%s' data manager"
 msgid "_New data manager"
-msgstr "Gestor de datos de «%s»"
+msgstr "_Gestor de datos nuevo"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:413
-#, fuzzy
-#| msgid "'%s' data manager"
 msgid "New data manager"
-msgstr "Gestor de datos de «%s»"
+msgstr "Gestor de datos nuevo"
 
 #. Translators: Do not translate "table" nor "query"
 #: ../tools/browser/data-manager/data-source.c:402
@@ -8230,6 +8226,8 @@ msgid ""
 "SELECT\n"
 "SQL"
 msgstr ""
+"SELECT\n"
+"SQL"
 
 #: ../tools/browser/data-manager/data-source-editor.c:141
 msgid ""
