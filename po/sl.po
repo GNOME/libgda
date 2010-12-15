@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-12-11 15:30+0000\n"
-"PO-Revision-Date: 2010-12-11 19:54+0100\n"
+"POT-Creation-Date: 2010-12-13 21:11+0000\n"
+"PO-Revision-Date: 2010-12-14 08:07+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
@@ -134,7 +134,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda-ui/gdaui-data-filter.c:168
 #: ../libgda-ui/gdaui-init.c:508
 #: ../libgda-ui/gdaui-login.c:422
-#: ../libgda-ui/gdaui-rt-editor.c:645
+#: ../libgda-ui/gdaui-rt-editor.c:662
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -1545,21 +1545,21 @@ msgstr "Ni mogoče povezati ročnikov različnih vrst"
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr "Ni mogoče spremeniti predmeta GdaHolder v vrednost skladno z vezanim predmetom GdaHolder: %s"
 
-#: ../libgda/gda-init.c:73
+#: ../libgda/gda-init.c:124
 msgid "Ignoring attempt to re-initialize GDA library."
 msgstr "Prezrt je poskus ponovnega začenjanja GDA knjižnice."
 
-#: ../libgda/gda-init.c:95
+#: ../libgda/gda-init.c:146
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda zahteva GModule. Zaustavljanje ..."
 
-#: ../libgda/gda-init.c:155
-#: ../libgda/gda-init.c:176
+#: ../libgda/gda-init.c:193
+#: ../libgda/gda-init.c:214
 #, c-format
 msgid "Could not parse '%s': XML data import validation will not be performed (some weird errors may occur)"
 msgstr "Ni mogoče razčleniti '%s': Preverjanje veljavnosti podatkov XML ne bo izvedena (pojavi jo se lahko nenavadne napake)"
 
-#: ../libgda/gda-init.c:197
+#: ../libgda/gda-init.c:235
 #, c-format
 msgid "Could not parse '%s': Validation for XML files for server operations will not be performed (some weird errors may occur)"
 msgstr "Ni mogoče razčleniti '%s': preverjanje veljavnosti za datoteke XML za strežniška opravila ne bo izvedeno (lahko se pojavijo nenavadne napake)"
@@ -2878,9 +2878,9 @@ msgstr "Funkcija zahteva dva argumenta"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:235
 #: ../providers/jdbc/gda-jdbc-recordset.c:279
-#: ../providers/mysql/gda-mysql-recordset.c:432
-#: ../providers/mysql/gda-mysql-recordset.c:562
-#: ../providers/postgres/gda-postgres-recordset.c:280
+#: ../providers/mysql/gda-mysql-recordset.c:433
+#: ../providers/mysql/gda-mysql-recordset.c:563
+#: ../providers/postgres/gda-postgres-recordset.c:281
 #: ../providers/web/gda-web-recordset.c:218
 #, c-format
 msgid "Column %d out of range (0-%d), ignoring its specified type"
@@ -2897,21 +2897,21 @@ msgstr "Ni mogoče odpreti predmeta BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:483
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:727
-#: ../providers/postgres/gda-postgres-recordset.c:624
+#: ../providers/postgres/gda-postgres-recordset.c:625
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr "Neveljaven zapis datuma '%s' (zapis mora biti v obliki YYYY-MM-DD)"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:497
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:743
-#: ../providers/postgres/gda-postgres-recordset.c:635
+#: ../providers/postgres/gda-postgres-recordset.c:636
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Neveljaven zapis časa '%s' (zapis mora biti v obliki HH:MM:SS[.ms])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:511
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:759
-#: ../providers/postgres/gda-postgres-recordset.c:679
+#: ../providers/postgres/gda-postgres-recordset.c:678
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr "Neveljaven zapis časovnega žiga '%s' (zapis mora biti v obliki YYYY-MM-DD HH:MM:SS[.ms])"
@@ -3324,7 +3324,7 @@ msgstr "Izberite datoteko za nalaganje"
 
 #: ../libgda-ui/data-entries/common-bin.c:77
 #: ../libgda-ui/data-entries/plugins/common-pict.c:398
-#: ../libgda-ui/gdaui-rt-editor.c:643
+#: ../libgda-ui/gdaui-rt-editor.c:660
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3451,7 +3451,7 @@ msgstr "Izrisovalnik celic podatkov določenih za vrsto (%s) se ločijo od dejan
 msgid "Data cell renderer asked to display values of different data types, at least %s and %s, which means the data model has some incoherencies"
 msgstr "Izrisovalnik celic podatkov izrisuje vrednosti različnih vrst podatkov, vsaj %s in %s, kar pomeni, da podatkovni model ni skladno postavljen"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:505
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:508
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
 msgid "<non-printable>"
 msgstr "<ne-tiskljivo>"
@@ -3592,7 +3592,7 @@ msgid "_Save image"
 msgstr "_Shrani sliko"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:339
-#: ../libgda-ui/gdaui-rt-editor.c:605
+#: ../libgda-ui/gdaui-rt-editor.c:622
 msgid "Select image to load"
 msgstr "Izbor slike za nalaganje"
 
@@ -4242,7 +4242,7 @@ msgstr ""
 msgid "If you choose yes, the contents will be lost."
 msgstr "V koliko odgovorite z da, bo vsebina izgubljena."
 
-#: ../libgda-ui/gdaui-rt-editor.c:84
+#: ../libgda-ui/gdaui-rt-editor.c:87
 msgid ""
 "\"\"\"= Title level 1 =\n"
 "== Title level 2 ==\n"
@@ -4360,7 +4360,19 @@ msgstr "Prikaži surovo obliko besedila namesto oblikovanega"
 msgid "The buffer which is displayed"
 msgstr "Medpomnilnik, ki je prikazan"
 
-#: ../libgda-ui/gdaui-rt-editor.c:834
+#: ../libgda-ui/gdaui-rt-editor.c:811
+msgid "Reset font size"
+msgstr "Počisti velikost pisave"
+
+#: ../libgda-ui/gdaui-rt-editor.c:817
+msgid "Decrease font size (zoom out)"
+msgstr "Zmanjšaj velikost pisave (oddalji)"
+
+#: ../libgda-ui/gdaui-rt-editor.c:823
+msgid "Increase font size (zoom in)"
+msgstr "Povečaj velikost pisave (približaj)"
+
+#: ../libgda-ui/gdaui-rt-editor.c:829
 msgid "Show source markup"
 msgstr "Prikaži izvorno oblikovanje"
 
@@ -5126,20 +5138,20 @@ msgstr "Ni mogoče prebrati celotnega BLOB v pomnilnik"
 msgid "Could not use CURSOR. Mysql version 5.0 at least is required. Using random access anyway."
 msgstr "Ni mogoče uporabiti izjave CURSOR. Zahtevan je vsaj MySQL različice 5.0. Vseeno bo uporabljen naključni dostop."
 
-#: ../providers/mysql/gda-mysql-recordset.c:141
+#: ../providers/mysql/gda-mysql-recordset.c:142
 msgid "Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size ignored."
 msgstr "Ni mogoče uporabiti izjave CURSOR. Zahtevan je vsaj MySQL različice 5.0. Velikost delov bo prezrta."
 
-#: ../providers/mysql/gda-mysql-recordset.c:230
-#: ../providers/postgres/gda-postgres-recordset.c:137
+#: ../providers/mysql/gda-mysql-recordset.c:231
+#: ../providers/postgres/gda-postgres-recordset.c:138
 msgid "Number of rows fetched at a time"
 msgstr "Število sočasno pridobljenih vrstic"
 
-#: ../providers/mysql/gda-mysql-recordset.c:238
+#: ../providers/mysql/gda-mysql-recordset.c:239
 msgid "Number of row chunks read since the object creation"
 msgstr "Število delov vrstice, ki so bili prebrani od ustvarjanja predmeta"
 
-#: ../providers/mysql/gda-mysql-recordset.c:650
+#: ../providers/mysql/gda-mysql-recordset.c:651
 #: ../providers/mysql/gda-mysql-recordset.c:944
 #: ../providers/mysql/gda-mysql-recordset.c:957
 #: ../providers/mysql/gda-mysql-recordset.c:970
@@ -5148,23 +5160,23 @@ msgstr "Število delov vrstice, ki so bili prebrani od ustvarjanja predmeta"
 msgid "Invalid column bind data type. %d\n"
 msgstr "Neveljavna vrsta povezave podatkov. %d\n"
 
-#: ../providers/mysql/gda-mysql-recordset.c:798
+#: ../providers/mysql/gda-mysql-recordset.c:799
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr "Vrsta %s ni preslikana za vrednost %d"
 
-#: ../providers/mysql/gda-mysql-recordset.c:815
+#: ../providers/mysql/gda-mysql-recordset.c:816
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr "Vrsta %s ni preslikana za vrednost %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:861
+#: ../providers/mysql/gda-mysql-recordset.c:862
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Vrsta %s ni preslikana za vrednost %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:877
-#: ../providers/mysql/gda-mysql-recordset.c:891
+#: ../providers/mysql/gda-mysql-recordset.c:878
+#: ../providers/mysql/gda-mysql-recordset.c:892
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "Vrsta %s ni preslikana za vrednost %f"
@@ -5976,8 +5988,8 @@ msgstr "Prenosi niso podprti na ponavljajoči se ločeni ravni"
 #: ../providers/postgres/gda-postgres-provider.c:1130
 #: ../providers/postgres/gda-postgres-provider.c:1180
 #: ../providers/postgres/gda-postgres-provider.c:1230
-#: ../providers/postgres/gda-postgres-recordset.c:434
-#: ../providers/postgres/gda-postgres-recordset.c:462
+#: ../providers/postgres/gda-postgres-recordset.c:435
+#: ../providers/postgres/gda-postgres-recordset.c:463
 msgid "Internal error"
 msgstr "Notranja napaka"
 
@@ -5999,7 +6011,7 @@ msgstr "Ni mogoče začeti transakcije"
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Ni mogoče določiti parametra ID prenosa XA"
 
-#: ../providers/postgres/gda-postgres-recordset.c:142
+#: ../providers/postgres/gda-postgres-recordset.c:143
 msgid "Number of rows chunks read since the object creation"
 msgstr "Število delov vrstic, ki so bili prebrani od ustvarjanja predmeta"
 
@@ -9496,62 +9508,90 @@ msgstr "Sprožilniki"
 
 #~ msgid "Error: no detail"
 #~ msgstr "Napaka: ni podrobnosti"
+
 #~ msgid "Parameter '%s' does not correspond to a table's column"
 #~ msgstr "Parameter '%s' ni v skladu s stolpcem preglednice"
+
 #~ msgid "Add data source"
 #~ msgstr "Dodaj podatkovni vir"
+
 #~ msgid "Cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
+
 #~ msgid "The cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
+
 #~ msgid "Cgrid gtype"
 #~ msgstr "Cgrid gtype"
+
 #~ msgid "The cgrid gtype"
 #~ msgstr "Vrsta grid gtype"
+
 #~ msgid "Cgrid options"
 #~ msgstr "Možnosti Cgrid"
+
 #~ msgid "The cgrid options"
 #~ msgstr "možnosti cgrid"
+
 #~ msgid "Cgrid is editable"
 #~ msgstr "Cgrid je mogoče urejati"
+
 #~ msgid "Cgrid editable"
 #~ msgstr "Uredljiv Cgrid"
+
 #~ msgid "Cgrid is to be deleted"
 #~ msgstr "Cgrid bo izbrisan"
+
 #~ msgid "Cgrid to be deleted"
 #~ msgstr "Cgrid pripravljen za brisanje"
+
 #~ msgid "Cgrid value"
 #~ msgstr "Vrednost Cgrid"
+
 #~ msgid "Cgrid value attributes"
 #~ msgstr "Atributi vrednosti Cgrid"
+
 #~ msgid "Cgrid text column"
 #~ msgstr "Cgrid stolpec besedila"
+
 #~ msgid "A column in the data source model to get the string from."
 #~ msgstr "Stolpec podatkovnega vira, iz katerega naj bodo pridobljeni nizi"
+
 #~ msgid "Cgrid grid height"
 #~ msgstr "Višina Cgrid mreže"
+
 #~ msgid "Cgrid height's."
 #~ msgstr "Cgrid višina"
+
 #~ msgid "Cgrid has its headers visible"
 #~ msgstr "Cgrid ima glave vidne"
+
 #~ msgid "Cgrid headers visible"
 #~ msgstr "Vidne glave Cgrid"
+
 #~ msgid "Unsaved diagram"
 #~ msgstr "Neshranjen diagram"
+
 #~ msgid "_Favorite"
 #~ msgstr "_Priljubljeno"
+
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
+
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
+
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
+
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
+
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokumenta ni mogoče uspešno razčleniti\n"
+
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
+
 #~ msgid "Tables:"
 #~ msgstr "Preglednice:"
-
