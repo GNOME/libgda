@@ -152,6 +152,11 @@ browser_canvas_db_relations_dispose (GObject *object)
 	parent_class->dispose (object);
 }
 
+typedef struct {
+	GdaMetaTable   *table;
+	GooCanvasBounds bounds;
+} PresentTable;
+
 static void
 browser_canvas_db_relations_set_property (GObject *object,
 					  guint param_id,
@@ -159,23 +164,88 @@ browser_canvas_db_relations_set_property (GObject *object,
 					  GParamSpec *pspec)
 {
 	BrowserCanvasDbRelations *canvas;
+	BrowserCanvas *b_canvas;
 
         canvas = BROWSER_CANVAS_DB_RELATIONS (object);
+	b_canvas = BROWSER_CANVAS (object);
         if (canvas->priv) {
                 switch (param_id) {
 		case PROP_META_STRUCT: {
+			GSList *present_tables = NULL;
 			GdaMetaStruct *mstruct = g_value_get_object (value);
+			GdaMetaStruct *old_mstruct;
+			if (canvas->priv->mstruct == mstruct)
+				break;
 			if (mstruct)
 				g_object_ref (mstruct);
-
+			
 			if (canvas->priv->mstruct) {
-				clean_canvas_items (BROWSER_CANVAS (canvas));
-				g_object_unref (canvas->priv->mstruct);
-				canvas->priv->mstruct = NULL;
+				GSList *list;
+				for (list = b_canvas->priv->items; list; list = list->next) {
+					BrowserCanvasItem *item;
+					GdaMetaTable *mtable;
+					item = BROWSER_CANVAS_ITEM (list->data);
+					mtable = g_hash_table_lookup (canvas->priv->hash_tables,
+								      item);
+					if (! mtable)
+						continue;
+					
+					PresentTable *pt;
+					pt = g_new (PresentTable, 1);
+					present_tables = g_slist_prepend (present_tables, pt);
+					pt->table = mtable;
+					goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (item),
+								    &(pt->bounds));
+				}
 			}
+			old_mstruct = canvas->priv->mstruct;
+			clean_canvas_items (BROWSER_CANVAS (canvas));
 			canvas->priv->mstruct = mstruct;
+			if (present_tables) {
+				GSList *list;
+				for (list = present_tables; list; list = list->next) {
+					PresentTable *pt = (PresentTable*) list->data;
+					GdaMetaDbObject *dbo = (GdaMetaDbObject*) pt->table;
+					GValue *v1 = NULL, *v2 = NULL, *v3 = NULL;
+					BrowserCanvasTable *ctable;
+					GooCanvasBounds bounds;
+										
+					if (dbo->obj_catalog)
+						g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)),
+								    dbo->obj_catalog);
+					if (dbo->obj_schema)
+						g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)),
+								    dbo->obj_schema);
+					if (dbo->obj_name)
+						g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)),
+								    dbo->obj_name);
+					
+					ctable = browser_canvas_db_relations_add_table (canvas, v1, v2,
+											v3);
+					if (v1) gda_value_free (v1);
+					if (v3) gda_value_free (v2);
+					if (v2) gda_value_free (v3);
+					
+					if (ctable) {
+						goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ctable),
+									    &bounds);
+						browser_canvas_translate_item (BROWSER_CANVAS (canvas),
+									       (BrowserCanvasItem*) ctable,
+									       pt->bounds.x1 - bounds.x1,
+									       pt->bounds.y1 - bounds.y1);
+					}
+					g_free (pt);
+				}
+				g_slist_free (present_tables);
+				g_object_set (G_OBJECT (b_canvas->priv->goocanvas),
+					      "automatic-bounds", TRUE, NULL);
+			}
+			if (old_mstruct)
+				g_object_unref (old_mstruct);
+
 			if (canvas->priv->cloud)
-				objects_cloud_set_meta_struct (canvas->priv->cloud, canvas->priv->mstruct);
+				objects_cloud_set_meta_struct (canvas->priv->cloud,
+							       canvas->priv->mstruct);
 			break;
 		}
 		default:
@@ -592,7 +662,7 @@ browser_canvas_db_relations_get_table_item  (BrowserCanvasDbRelations *canvas, G
  *
  * Add a table to @canvas.
  *
- * Returns: the corresponding canvas item, or %NULL if the table was not found.
+ * Returns: (transfer none): the corresponding canvas item, or %NULL if the table was not found.
  */
 BrowserCanvasTable *
 browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas, 
@@ -673,7 +743,7 @@ browser_canvas_db_relations_add_table  (BrowserCanvasDbRelations *canvas,
 		return BROWSER_CANVAS_TABLE (table_item);
 	}
 	else {
-		g_print ("ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+		g_print ("WARNING: %s\n", lerror && lerror->message ? lerror->message : "No detail");
 		g_clear_error (&lerror);
 		return NULL;
 	}
