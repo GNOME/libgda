@@ -263,6 +263,29 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 					gtk_text_buffer_insert (tbuffer, &current, " ", -1);
 					gtk_text_buffer_insert (tbuffer, &current,
 								fk->ref_pk_names_array [i], -1);
+
+					if (fdbo->obj_type == GDA_META_DB_TABLE) {
+						GdaMetaTableColumn *fkcol, *refcol;
+						fkcol = g_slist_nth_data (mtable->columns,
+									  fk->fk_cols_array[i] - 1);
+						refcol = g_slist_nth_data (GDA_META_TABLE (fdbo)->columns,
+									   fk->ref_pk_cols_array[i] - 1);
+						if (fkcol && refcol &&
+						    (fkcol->gtype != refcol->gtype)) {
+							/* incompatible FK types */
+							gchar *text;
+							text = g_strdup_printf (_("incompatible types: '%s' for the foreign key and '%s' for the referenced primary key"),
+										fkcol->column_type,
+										refcol->column_type);
+							gtk_text_buffer_insert (tbuffer, &current, " ", -1);
+							gtk_text_buffer_insert_with_tags_by_name (tbuffer,
+												  &current, 
+												  text,
+												  -1,
+												  "warning", NULL);
+							g_free (text);
+						}
+					}
 				}
 				
 				gtk_text_buffer_insert (tbuffer, &current, "\n\n", -1);
@@ -523,13 +546,12 @@ table_columns_new (TableInfo *tinfo)
         gtk_text_buffer_set_text (tcolumns->priv->constraints, "aa", -1);
         gtk_widget_show_all (vbox);
 
-        gtk_text_buffer_create_tag (tcolumns->priv->constraints, "header",
-                                    "weight", PANGO_WEIGHT_BOLD,
-                                    "foreground", "red", NULL);
-
         gtk_text_buffer_create_tag (tcolumns->priv->constraints, "section",
                                     "weight", PANGO_WEIGHT_BOLD,
                                     "foreground", "blue", NULL);
+
+        gtk_text_buffer_create_tag (tcolumns->priv->constraints, "warning",
+                                    "foreground", "red", NULL);
 
 	g_signal_connect (textview, "key-press-event", 
 			  G_CALLBACK (key_press_event), tcolumns);
