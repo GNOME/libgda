@@ -608,14 +608,23 @@ fk_bind_select_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 			break;
 		}
 		else {
+			gboolean bound;
+			bound = gda_holder_set_source_model (h, model, i, NULL);
 #ifdef GDA_DEBUG_NO
-			if (gda_holder_set_source_model (h, model, i, NULL))
+			if (bound)
 				g_print ("Bound holder [%s] to column %d for model %p\n", gda_holder_get_id (h), i, model);
 			else
 				g_print ("Could not bind holder [%s] to column %d\n", gda_holder_get_id (h), i);
-#else
-			gda_holder_set_source_model (h, model, i, NULL);
 #endif
+			if (!bound) {
+				/* There was an error => unbind all the parameters */
+				for (i = 0; i < fkdata->cols_nb; i++) {
+					h = g_hash_table_lookup (fkdata->chash,
+								 GINT_TO_POINTER (fkdata->fk_cols_array [i] - 1));
+					gda_holder_set_source_model (h, NULL, 0, NULL);
+				}
+				break;
+			}
 		}
 	}
 	fkdata->model = g_object_ref (out_result);
