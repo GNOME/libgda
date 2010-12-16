@@ -1012,7 +1012,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			GDA_SQL_ANY_PART (ust->cond)->parent = GDA_SQL_ANY_PART (ust);
 	}
         
-	if (delete_stmt) {
+	if (retval && delete_stmt) {
 		sql_dst = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
 		dst = (GdaSqlStatementDelete*) sql_dst->contents;
 		g_assert (GDA_SQL_ANY_PART (dst)->type == GDA_SQL_ANY_STMT_DELETE);
@@ -1034,6 +1034,8 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			GDA_SQL_ANY_PART (dst->cond)->parent = GDA_SQL_ANY_PART (dst);
 	}
 	g_free (tmp);
+	if (!retval)
+		goto cleanup;
 
 	GSList *expr_list;
 	gint colindex;
