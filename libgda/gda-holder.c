@@ -1430,13 +1430,16 @@ gda_holder_get_not_null (GdaHolder *holder)
 /**
  * gda_holder_set_source_model:
  * @holder: a #GdaHolder object
- * @model: a #GdaDataModel object or NULL
+ * @model: a #GdaDataModel object or %NULL
  * @col: the reference column in @model
  * @error: location to store error, or %NULL
  *
  * Sets an hint that @holder's values should be restricted among the values
  * contained in the @col column of the @model data model. Note that this is just a hint,
  * meaning this policy is not enforced by @holder's implementation.
+ *
+ * If @model is %NULL, then the effect is to cancel ant previous call to gda_holder_set_source_model()
+ * where @model was not %NULL.
  *
  * Returns: TRUE if no error occurred
  */
@@ -1446,27 +1449,45 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
+	if (model)
+		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
 	/* No check is done on the validity of @col or even its existance */
 	/* Note: for internal implementation if @col<0, then it's ignored */
 
-	if (holder->priv->source_model == model) {
-		if (col >= 0)
-			holder->priv->source_col = col;
+	if (model && (col >= 0)) {
+		GType htype, ctype;
+		GdaColumn *gcol;
+		htype = gda_holder_get_g_type (holder);
+		gcol = gda_data_model_describe_column (model, col);
+		if (gcol) {
+			ctype = gda_column_get_g_type (gcol);
+			if ((htype != GDA_TYPE_NULL) && (ctype != GDA_TYPE_NULL) &&
+			    (htype != ctype)) {
+				g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
+					     _("GdaHolder has a gda type (%s) incompatible with "
+                                               "source column %d type (%s)"),
+                                             gda_g_type_to_string (htype),
+                                             col, gda_g_type_to_string (ctype));
+				return FALSE;
+			}
+		}
 	}
-	else {
+
+	if (col >= 0)
+		holder->priv->source_col = col;
+
+	if (holder->priv->source_model != model) {
 		if (holder->priv->source_model) {
 			g_object_unref (holder->priv->source_model);
 			holder->priv->source_model = NULL;
 		}
 		
-		if (col >= 0)
-			holder->priv->source_col = col;
-		
-		if (model) {
-			holder->priv->source_model = model;
+		holder->priv->source_model = model;
+		if (model)
 			g_object_ref (model);
-		}
+		else
+			holder->priv->source_col = 0;
 	}
 
 #ifdef GDA_DEBUG_signal
