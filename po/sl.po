@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2010-12-13 21:11+0000\n"
-"PO-Revision-Date: 2010-12-14 08:07+0100\n"
+"POT-Creation-Date: 2010-12-16 18:38+0000\n"
+"PO-Revision-Date: 2010-12-17 20:17+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
@@ -110,7 +110,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda/gda-data-select.c:2082
 #: ../libgda/gda-data-select.c:3480
 #: ../libgda/gda-holder.c:490
-#: ../libgda/gda-holder.c:1721
+#: ../libgda/gda-holder.c:1742
 #: ../libgda/gda-server-operation.c:627
 #: ../libgda/gda-server-operation.c:1025
 #: ../libgda/gda-set.c:561
@@ -134,7 +134,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda-ui/gdaui-data-filter.c:168
 #: ../libgda-ui/gdaui-init.c:508
 #: ../libgda-ui/gdaui-login.c:422
-#: ../libgda-ui/gdaui-rt-editor.c:662
+#: ../libgda-ui/gdaui-rt-editor.c:666
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -192,7 +192,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/schema-browser/table-info.c:476
 #: ../tools/browser/schema-browser/table-info.c:529
 #: ../tools/browser/schema-browser/table-info.c:556
-#: ../tools/browser/schema-browser/table-info.c:850
+#: ../tools/browser/schema-browser/table-info.c:859
 #: ../tools/browser/schema-browser/table-preferences.c:700
 #: ../tools/browser/schema-browser/table-preferences.c:773
 #: ../tools/gda-list-server-op.c:50
@@ -1530,17 +1530,22 @@ msgstr "(%s): napačna vrednost vrste držala; pričakovana je vrsta '%s' ob vrs
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr "(%s): napačna vrsta vrednosti: pričakovana je '%s', pridobljena pa je vrsta vrednosti '%s'"
 
+#: ../libgda/gda-holder.c:1478
+#, c-format
+msgid "GdaHolder has a gda type (%s) incompatible with source column %d type (%s)"
+msgstr "Predmet GdaHolder je vrste gda (%s) in je neskladen z izvornim stolpcem vrste %d (%s)"
+
 #. break holder's binding because type differ
-#: ../libgda/gda-holder.c:1535
+#: ../libgda/gda-holder.c:1556
 #, c-format
 msgid "Cannot bind holders if their type is not the same, breaking existing bind where '%s' was bound to '%s'"
 msgstr "Ni mogoče povezati ročnikov različnih vrst, zato bo prekinjana povezava '%s' z '%s'"
 
-#: ../libgda/gda-holder.c:1580
+#: ../libgda/gda-holder.c:1601
 msgid "Cannot bind holders if their type is not the same"
 msgstr "Ni mogoče povezati ročnikov različnih vrst"
 
-#: ../libgda/gda-holder.c:1720
+#: ../libgda/gda-holder.c:1741
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr "Ni mogoče spremeniti predmeta GdaHolder v vrednost skladno z vezanim predmetom GdaHolder: %s"
@@ -2144,7 +2149,7 @@ msgstr "Imenski prostor"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 #: ../tools/browser/data-manager/data-source-editor.c:135
-#: ../tools/browser/schema-browser/table-info.c:950
+#: ../tools/browser/schema-browser/table-info.c:959
 msgid "Table"
 msgstr "Preglednica"
 
@@ -2531,22 +2536,22 @@ msgstr "Preglednica nima določenega osnovnega ključa"
 msgid "Table's primary key is not selected"
 msgstr "Preglednica nima izbranega osnovnega ključa"
 
-#: ../libgda/gda-util.c:1140
+#: ../libgda/gda-util.c:1142
 msgid "Could not compute any field to insert into"
 msgstr "Ni mogoče izračunati polja za vstavljanje"
 
-#: ../libgda/gda-util.c:1203
+#: ../libgda/gda-util.c:1205
 msgid "Missing table name in UPDATE statement"
 msgstr "Manjka ime preglednice v izjavi UPDATE"
 
-#: ../libgda/gda-util.c:1284
+#: ../libgda/gda-util.c:1286
 #, c-format
 msgid "Can't rewrite UPDATE statement to handle default values"
 msgstr "Ni mogoče prepisati privzete vrednosti ročnika stavka UPDATE"
 
-#: ../libgda/gda-util.c:1336
-#: ../libgda/gda-util.c:1393
-#: ../libgda/gda-util.c:1433
+#: ../libgda/gda-util.c:1338
+#: ../libgda/gda-util.c:1395
+#: ../libgda/gda-util.c:1435
 #: ../libgda/sqlite/gda-sqlite-provider.c:2582
 #: ../providers/jdbc/gda-jdbc-provider.c:1323
 #: ../providers/mysql/gda-mysql-provider.c:2220
@@ -3324,7 +3329,7 @@ msgstr "Izberite datoteko za nalaganje"
 
 #: ../libgda-ui/data-entries/common-bin.c:77
 #: ../libgda-ui/data-entries/plugins/common-pict.c:398
-#: ../libgda-ui/gdaui-rt-editor.c:660
+#: ../libgda-ui/gdaui-rt-editor.c:664
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3592,7 +3597,7 @@ msgid "_Save image"
 msgstr "_Shrani sliko"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:339
-#: ../libgda-ui/gdaui-rt-editor.c:622
+#: ../libgda-ui/gdaui-rt-editor.c:626
 msgid "Select image to load"
 msgstr "Izbor slike za nalaganje"
 
@@ -4242,7 +4247,7 @@ msgstr ""
 msgid "If you choose yes, the contents will be lost."
 msgstr "V koliko odgovorite z da, bo vsebina izgubljena."
 
-#: ../libgda-ui/gdaui-rt-editor.c:87
+#: ../libgda-ui/gdaui-rt-editor.c:90
 msgid ""
 "\"\"\"= Title level 1 =\n"
 "== Title level 2 ==\n"
@@ -4292,87 +4297,87 @@ msgstr ""
 "\n"
 "Območja brez oblikovanja so zajeta znotraj treh dvojnih narekovajev, kar onemogoči izris oblikvanja"
 
-#: ../libgda-ui/gdaui-rt-editor.c:153
+#: ../libgda-ui/gdaui-rt-editor.c:156
 msgid "_Bold"
 msgstr "_Krepko"
 
-#: ../libgda-ui/gdaui-rt-editor.c:153
+#: ../libgda-ui/gdaui-rt-editor.c:156
 msgid "Bold text"
 msgstr "Krepko besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:154
+#: ../libgda-ui/gdaui-rt-editor.c:157
 msgid "_Italic"
 msgstr "_Ležeče"
 
-#: ../libgda-ui/gdaui-rt-editor.c:154
+#: ../libgda-ui/gdaui-rt-editor.c:157
 msgid "Italic text"
 msgstr "Ležeče besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:155
+#: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "_Underline"
 msgstr "_Podčrtano"
 
-#: ../libgda-ui/gdaui-rt-editor.c:155
+#: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "Underline text"
 msgstr "Podčrtano besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:156
+#: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "_Strike through"
 msgstr "Pre_črtano"
 
-#: ../libgda-ui/gdaui-rt-editor.c:156
+#: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "Strike through text"
 msgstr "Prečrtano besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:157
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "_Syntax help"
 msgstr "Pomo_č o skladnji"
 
-#: ../libgda-ui/gdaui-rt-editor.c:157
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "Show syntax help"
 msgstr "Pokaži pomoč o skladnji"
 
-#: ../libgda-ui/gdaui-rt-editor.c:162
+#: ../libgda-ui/gdaui-rt-editor.c:165
 msgid "_Add image"
 msgstr "_Dodaj sliko"
 
-#: ../libgda-ui/gdaui-rt-editor.c:162
+#: ../libgda-ui/gdaui-rt-editor.c:165
 msgid "Insert image"
 msgstr "_Vstavi sliko"
 
-#: ../libgda-ui/gdaui-rt-editor.c:163
+#: ../libgda-ui/gdaui-rt-editor.c:166
 msgid "_Reset"
 msgstr "_Ponastavi"
 
-#: ../libgda-ui/gdaui-rt-editor.c:163
+#: ../libgda-ui/gdaui-rt-editor.c:166
 msgid "Reset to normal text"
 msgstr "Ponastavi besedilo na izvorno obliko"
 
-#: ../libgda-ui/gdaui-rt-editor.c:238
+#: ../libgda-ui/gdaui-rt-editor.c:241
 msgid "Don't display a specific background for the text"
 msgstr "Ne prikaži oblikovanja ozadja besedila"
 
-#: ../libgda-ui/gdaui-rt-editor.c:248
+#: ../libgda-ui/gdaui-rt-editor.c:251
 msgid "Display raw markup text instead of formatted text"
 msgstr "Prikaži surovo obliko besedila namesto oblikovanega"
 
-#: ../libgda-ui/gdaui-rt-editor.c:259
+#: ../libgda-ui/gdaui-rt-editor.c:262
 msgid "The buffer which is displayed"
 msgstr "Medpomnilnik, ki je prikazan"
 
-#: ../libgda-ui/gdaui-rt-editor.c:811
+#: ../libgda-ui/gdaui-rt-editor.c:827
 msgid "Reset font size"
 msgstr "Počisti velikost pisave"
 
-#: ../libgda-ui/gdaui-rt-editor.c:817
+#: ../libgda-ui/gdaui-rt-editor.c:833
 msgid "Decrease font size (zoom out)"
 msgstr "Zmanjšaj velikost pisave (oddalji)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:823
+#: ../libgda-ui/gdaui-rt-editor.c:839
 msgid "Increase font size (zoom in)"
 msgstr "Povečaj velikost pisave (približaj)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:829
+#: ../libgda-ui/gdaui-rt-editor.c:845
 msgid "Show source markup"
 msgstr "Prikaži izvorno oblikovanje"
 
@@ -7491,23 +7496,23 @@ msgstr ""
 msgid "Type: %s"
 msgstr "Vrsta: %s"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:306
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:376
 msgid "Remove"
 msgstr "Odstrani"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:310
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:380
 msgid "Add referenced tables"
 msgstr "Dodaj sklicno preglednico"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:314
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:384
 msgid "Add tables referencing this table"
 msgstr "Dodaj preglednice s sklici na to preglednico"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:512
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:582
 msgid "Add table"
 msgstr "Dodaj preglednico"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:532
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:602
 msgid "Select tables to add to diagram"
 msgstr "Izbor preglednic za dodajanje na diagram"
 
@@ -8173,7 +8178,7 @@ msgid "Invalid variable's contents"
 msgstr "Neveljavna vsebina spremenljivke"
 
 #: ../tools/browser/query-exec/query-console.c:774
-#: ../tools/browser/schema-browser/table-info.c:921
+#: ../tools/browser/schema-browser/table-info.c:930
 msgid "assign values to the following variables"
 msgstr "dodeli vrednosti naslednjim spremenljivkam"
 
@@ -8376,7 +8381,7 @@ msgid "Missing table attribute in favorite's contents"
 msgstr "Manjka atribut preglednice v vsebini priljubljenih"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:520
-#: ../tools/browser/schema-browser/table-info.c:953
+#: ../tools/browser/schema-browser/table-info.c:962
 msgid "_Contents"
 msgstr "_Vsebina"
 
@@ -8409,19 +8414,24 @@ msgstr "Ni mogoče naložiti diagrama"
 msgid "Foreign key on "
 msgstr "Tuje tipke omogočene"
 
-#: ../tools/browser/schema-browser/table-columns.c:304
+#: ../tools/browser/schema-browser/table-columns.c:277
+#, c-format
+msgid "incompatible types: '%s' for the foreign key and '%s' for the referenced primary key"
+msgstr "nezdružljive vrste: '%s' za tuj ključ in '%s' za sklicni osnovni ključ"
+
+#: ../tools/browser/schema-browser/table-columns.c:327
 msgid "Unique constraint"
 msgstr "Enoznačna omejitev"
 
-#: ../tools/browser/schema-browser/table-columns.c:335
+#: ../tools/browser/schema-browser/table-columns.c:358
 msgid "Tables referencing this one"
 msgstr "Sklicna preglednica za to preglednico"
 
-#: ../tools/browser/schema-browser/table-columns.c:449
+#: ../tools/browser/schema-browser/table-columns.c:472
 msgid "Column Name"
 msgstr "Ime stolpca"
 
-#: ../tools/browser/schema-browser/table-columns.c:504
+#: ../tools/browser/schema-browser/table-columns.c:527
 msgid "Constraints and integrity rules"
 msgstr "Omejitve in celostna pravila"
 
@@ -8447,15 +8457,15 @@ msgstr "Možnosti"
 msgid "Data successfully inserted"
 msgstr "Podatki so uspešno vstavljeni"
 
-#: ../tools/browser/schema-browser/table-info.c:673
+#: ../tools/browser/schema-browser/table-info.c:682
 msgid "Meta data not yet available"
 msgstr "Metapodatki niso na voljo"
 
-#: ../tools/browser/schema-browser/table-info.c:690
+#: ../tools/browser/schema-browser/table-info.c:699
 msgid "Can't find information about table"
 msgstr "Ni mogoče najti podrobnosti preglednice"
 
-#: ../tools/browser/schema-browser/table-info.c:726
+#: ../tools/browser/schema-browser/table-info.c:735
 #, c-format
 msgid ""
 "Internal error while building INSERT statement:\n"
@@ -8464,41 +8474,41 @@ msgstr ""
 "Notranja napaka med izgradnjo stavka INSERT:\n"
 "%s"
 
-#: ../tools/browser/schema-browser/table-info.c:772
+#: ../tools/browser/schema-browser/table-info.c:781
 #, c-format
 msgid "Default value: '%s'"
 msgstr "Privzeta vrednost: '%s'"
 
-#: ../tools/browser/schema-browser/table-info.c:782
+#: ../tools/browser/schema-browser/table-info.c:791
 msgid "Default value: auto incremented value"
 msgstr "Privzeta vrednost: samodejno povečana vrednost"
 
-#: ../tools/browser/schema-browser/table-info.c:896
-#: ../tools/browser/schema-browser/table-info.c:920
+#: ../tools/browser/schema-browser/table-info.c:905
+#: ../tools/browser/schema-browser/table-info.c:929
 msgid "Values to insert into table"
 msgstr "Vrednosti, ki naj se vstavijo v preglednico"
 
-#: ../tools/browser/schema-browser/table-info.c:950
+#: ../tools/browser/schema-browser/table-info.c:959
 msgid "_Table"
 msgstr "_Preglednica"
 
-#: ../tools/browser/schema-browser/table-info.c:951
+#: ../tools/browser/schema-browser/table-info.c:960
 msgid "Add to _Favorites"
 msgstr "Dodaj med _priljubljene"
 
-#: ../tools/browser/schema-browser/table-info.c:951
+#: ../tools/browser/schema-browser/table-info.c:960
 msgid "Add table to favorites"
 msgstr "Dodaj preglednico med priljubljene"
 
-#: ../tools/browser/schema-browser/table-info.c:953
+#: ../tools/browser/schema-browser/table-info.c:962
 msgid "View table's contents"
 msgstr "Pregled vsebine preglednice"
 
-#: ../tools/browser/schema-browser/table-info.c:955
+#: ../tools/browser/schema-browser/table-info.c:964
 msgid "_Insert data"
 msgstr "_Vstavi podatke"
 
-#: ../tools/browser/schema-browser/table-info.c:955
+#: ../tools/browser/schema-browser/table-info.c:964
 msgid "Insert data into table"
 msgstr "Vstavi podatke v preglednico"
 
@@ -9508,90 +9518,62 @@ msgstr "Sprožilniki"
 
 #~ msgid "Error: no detail"
 #~ msgstr "Napaka: ni podrobnosti"
-
 #~ msgid "Parameter '%s' does not correspond to a table's column"
 #~ msgstr "Parameter '%s' ni v skladu s stolpcem preglednice"
-
 #~ msgid "Add data source"
 #~ msgstr "Dodaj podatkovni vir"
-
 #~ msgid "Cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
-
 #~ msgid "The cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
-
 #~ msgid "Cgrid gtype"
 #~ msgstr "Cgrid gtype"
-
 #~ msgid "The cgrid gtype"
 #~ msgstr "Vrsta grid gtype"
-
 #~ msgid "Cgrid options"
 #~ msgstr "Možnosti Cgrid"
-
 #~ msgid "The cgrid options"
 #~ msgstr "možnosti cgrid"
-
 #~ msgid "Cgrid is editable"
 #~ msgstr "Cgrid je mogoče urejati"
-
 #~ msgid "Cgrid editable"
 #~ msgstr "Uredljiv Cgrid"
-
 #~ msgid "Cgrid is to be deleted"
 #~ msgstr "Cgrid bo izbrisan"
-
 #~ msgid "Cgrid to be deleted"
 #~ msgstr "Cgrid pripravljen za brisanje"
-
 #~ msgid "Cgrid value"
 #~ msgstr "Vrednost Cgrid"
-
 #~ msgid "Cgrid value attributes"
 #~ msgstr "Atributi vrednosti Cgrid"
-
 #~ msgid "Cgrid text column"
 #~ msgstr "Cgrid stolpec besedila"
-
 #~ msgid "A column in the data source model to get the string from."
 #~ msgstr "Stolpec podatkovnega vira, iz katerega naj bodo pridobljeni nizi"
-
 #~ msgid "Cgrid grid height"
 #~ msgstr "Višina Cgrid mreže"
-
 #~ msgid "Cgrid height's."
 #~ msgstr "Cgrid višina"
-
 #~ msgid "Cgrid has its headers visible"
 #~ msgstr "Cgrid ima glave vidne"
-
 #~ msgid "Cgrid headers visible"
 #~ msgstr "Vidne glave Cgrid"
-
 #~ msgid "Unsaved diagram"
 #~ msgstr "Neshranjen diagram"
-
 #~ msgid "_Favorite"
 #~ msgstr "_Priljubljeno"
-
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
-
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
-
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
-
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
-
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokumenta ni mogoče uspešno razčleniti\n"
-
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
-
 #~ msgid "Tables:"
 #~ msgstr "Preglednice:"
+
