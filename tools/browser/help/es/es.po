@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the libgda package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Jorge González <jorgegonz@svn.gnome.org>, 2010.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2010-04-29 12:55+0000\n"
-"PO-Revision-Date: 2010-05-13 23:56+0200\n"
-"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"POT-Creation-Date: 2010-09-07 19:25+0000\n"
+"PO-Revision-Date: 2010-12-17 13:27+0100\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +23,9 @@ msgid ""
 "licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 Unported "
 "License</link>."
 msgstr ""
+"Este trabajo está licenciado bajo una <link href=\"http://creativecommons."
+"org/licenses/by-sa/3.0/\">Licencia Creative Commons atribución - compartir "
+"igual 3.0 sin soporte</link>."
 
 #: C/legal.xml:6(p)
 msgid ""
@@ -30,8 +34,8 @@ msgid ""
 "terms of your choosing, without restriction."
 msgstr ""
 
-#: C/variables.page:5(title) C/transactions.page:5(title)
-#: C/schema-browser-perspective.page:5(title)
+#: C/variables.page:5(title) C/table-insert-data.page:5(title)
+#: C/transactions.page:5(title) C/schema-browser-perspective.page:5(title)
 #: C/query-execution-perspective.page:5(title) C/general-ui.page:5(title)
 #: C/features.page:5(title) C/diagram.page:5(title)
 #: C/data-manager-xml-syntax.page:5(title)
@@ -99,6 +103,91 @@ msgstr ""
 "##id::int::NULL\n"
 "##sales@3::date::NULL\n"
 "##customers@id::int"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/table-insert-data.page:20(None)
+#| msgid ""
+#| "@@image: 'figures/trans-commit.png'; md5=27f45d32501cc05bd6f6b16263283e9a"
+msgid ""
+"@@image: 'figures/table-insert-data.png'; "
+"md5=308807b8443d5ab26c8704a6e01aa1ab"
+msgstr ""
+"@@image: 'figures/table-insert-data.png'; "
+"md5=308807b8443d5ab26c8704a6e01aa1ab"
+
+#: C/table-insert-data.page:8(title)
+msgid "Inserting data in a table"
+msgstr "Insertar datos en una tabla"
+
+#: C/table-insert-data.page:9(p)
+msgid ""
+"From the <link xref=\"schema-browser-perspective\">schema browser "
+"perspective</link>, when a table's properties is displayed in a tab, use the "
+"<guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu to have a popup "
+"appear containing a data entry for each column of the table to insert data "
+"into."
+msgstr ""
+
+#: C/table-insert-data.page:14(p)
+msgid "A popup similar to the following will appear:"
+msgstr "Aparecerá una ventana emergente similar a esta:"
+
+#: C/table-insert-data.page:18(title)
+msgid "Popup to insert data into table"
+msgstr "Ventana emergente para insertar datos en una tabla"
+
+#: C/table-insert-data.page:19(desc)
+msgid "A popup to insert data in a table"
+msgstr "Una ventana emergente para insertar datos en una tabla"
+
+#: C/table-insert-data.page:22(p)
+msgid "The noticeable points here are:"
+msgstr ""
+
+#: C/table-insert-data.page:26(p)
+msgid ""
+"There is one data entry per column in the table, with the exception (not "
+"shown in this figure) of multiple foreign key fields for which a single drop "
+"down choice widget is shown;"
+msgstr ""
+
+#: C/table-insert-data.page:28(p)
+msgid ""
+"Each data entry has a small button on the right giving information about the "
+"corresponding data entry, and allowing you to reset the data entry's value "
+"to the value it had before any modification done, to set it to NULL or to "
+"set it to a default value. The button's color has the following "
+"signification:"
+msgstr ""
+
+#: C/table-insert-data.page:33(p)
+msgid "Red: means the current value in the data entry is invalid"
+msgstr ""
+
+#: C/table-insert-data.page:34(p)
+msgid ""
+"Blue: means the current value in the data entry is unused and the column's "
+"default value will be used instead (usefull for example for auto incremented "
+"columns)"
+msgstr ""
+
+#: C/table-insert-data.page:36(p)
+msgid "Green: means the current value in the data entry is NULL"
+msgstr "Verde: significa que el valor actual de la entrada de datos es NULL"
+
+#: C/table-insert-data.page:37(p)
+msgid ""
+"Same color as the rest of the UI: means none of the above situations apply"
+msgstr ""
+
+#: C/table-insert-data.page:40(p)
+msgid ""
+"Columns which are foreign keys to other tables are presented as a drop down "
+"combo box where you can only choose among the values in the referenced table "
+"(hint: to have that values list refresned you should close the popup dialog "
+"and reopen it);"
+msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -394,7 +483,7 @@ msgstr ""
 
 #: C/query-execution-perspective.page:93(title)
 msgid "Execution results"
-msgstr ""
+msgstr "Resultados de la ejecución"
 
 #: C/query-execution-perspective.page:94(p)
 msgid ""
@@ -414,7 +503,7 @@ msgstr "malerba@gnome-db.org"
 
 #: C/index.page:11(title)
 msgid "Gda Browser Help"
-msgstr ""
+msgstr "Visor de ayuda de Gda"
 
 #: C/index.page:12(p)
 msgid ""
@@ -446,19 +535,19 @@ msgstr ""
 
 #: C/index.page:28(title)
 msgid "Presentation"
-msgstr ""
+msgstr "Presentación"
 
 #: C/index.page:31(title)
 msgid "Perspectives"
-msgstr ""
+msgstr "Perspectivas"
 
 #: C/index.page:35(title)
 msgid "Connections management"
-msgstr ""
+msgstr "Administración de conexiones"
 
 #: C/general-ui.page:8(title)
 msgid "General interface organization"
-msgstr ""
+msgstr "Organización general de la interfaz"
 
 #: C/general-ui.page:9(p)
 msgid ""
@@ -471,7 +560,7 @@ msgstr ""
 
 #: C/general-ui.page:16(title)
 msgid "A connection window"
-msgstr ""
+msgstr "Una ventana de conexión"
 
 #: C/general-ui.page:17(desc)
 msgid ""
@@ -514,7 +603,7 @@ msgstr ""
 
 #: C/features.page:8(title)
 msgid "Features"
-msgstr ""
+msgstr "Características"
 
 #: C/features.page:9(p)
 msgid "<app>gda-browser</app>'s current features are:"
@@ -548,7 +637,7 @@ msgstr ""
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/diagram.page:15(None)
 msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
-msgstr ""
+msgstr "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
 
 #: C/diagram.page:7(title)
 msgid "Diagrams"
@@ -638,7 +727,7 @@ msgstr ""
 
 #: C/data-manager-xml-syntax.page:24(title)
 #: C/data-manager-xml-syntax.page:73(title)
-#: C/data-manager-xml-syntax.page:132(title)
+#: C/data-manager-xml-syntax.page:154(title)
 msgid "Exported variables"
 msgstr "Variables exportadas"
 
@@ -669,7 +758,7 @@ msgid ""
 "using <link xref=\"variables-syntax\">variables</link> in the SELECT's SQL."
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:54(p) C/data-manager-xml-syntax.page:110(p)
+#: C/data-manager-xml-syntax.page:54(p) C/data-manager-xml-syntax.page:130(p)
 msgid "For example the previous XML specification defines two data sources:"
 msgstr ""
 
@@ -704,7 +793,7 @@ msgid ""
 "type is the same as the column's type):"
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:79(p) C/data-manager-xml-syntax.page:139(p)
+#: C/data-manager-xml-syntax.page:79(p) C/data-manager-xml-syntax.page:161(p)
 msgid ""
 "<code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the "
 "column's position starts at 1"
@@ -717,7 +806,7 @@ msgstr ""
 
 #: C/data-manager-xml-syntax.page:88(title)
 msgid "The <code>&lt;table&gt;</code> tag"
-msgstr ""
+msgstr "La etiqueta <code>&lt;table&gt;</code>"
 
 #: C/data-manager-xml-syntax.page:89(p)
 msgid ""
@@ -731,68 +820,107 @@ msgstr ""
 
 #: C/data-manager-xml-syntax.page:95(p)
 msgid ""
-"can contain a <code>&lt;depend&gt;</code> node which defines a dependency on "
+"can have a \"id\" attribute corresponding to the data source's ID. If not "
+"present, and ID will be assigned automatically."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:97(p)
+msgid ""
+"can contain a <code>&lt;depend&gt;</code> tag which defines a dependency on "
 "another data source with the \"foreign_key_table\" attribute defining the "
 "name of the table to which there are foreign keys used to determine the "
 "dependency, and the \"id\" attribute can specify a data source ID if "
 "different than the aforementioned table"
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:114(p)
+#: C/data-manager-xml-syntax.page:103(p)
+msgid ""
+"The <code>&lt;depend&gt;</code> tag, which, for a data source from a table, "
+"defines a dependency to another data source from a table:"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:108(p)
+msgid ""
+"requires the \"foreign_key_table\" attribute defining the name of the table "
+"to which there are foreign keys used to determine the dependency"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:110(p)
+msgid ""
+"can have a \"id\" attribute corresponding to the ID of the referenced data "
+"source. If not provided, then the dependency may fail if there is no data "
+"source which ID is the\"foreign_key_table\" attribute."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:113(p)
+msgid ""
+"can contain one or more <code>&lt;column&gt;</code> tag which contents "
+"define the columns to identify the foreign key to use; this is necessary if "
+"there are multiple foreign keys, and can be omitted if there is only one "
+"possible koreign key. The listed columns are the one from the table where "
+"the foreign key exists."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:134(p)
 msgid ""
 "the <code>customers</code> data source which selects all the contents of the "
 "<em>customers</em> table."
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:116(p)
+#: C/data-manager-xml-syntax.page:136(p)
 msgid ""
 "the <code>orders</code> data source which selects among contents of the "
 "<code>orders</code> table, the rows which correspond to a row in the "
-"<code>customers</code> table (assuming here that the <code>orders</code> "
-"references the <code>customers</code> table in some way)."
+"<code>customers</code> table using the foreign key on table orders which "
+"involves the \"orders.customer_id\" column and the primary key of the "
+"customers table. The \"id\" attribute of the <code>&lt;depend&gt;</code> tag "
+"is necessary here to identify referenced the data source."
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:121(p)
+#: C/data-manager-xml-syntax.page:143(p)
 msgid "Note in this example that:"
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:125(p)
+#: C/data-manager-xml-syntax.page:147(p)
 msgid ""
 "you don't have to specify the fields involved in the foreign key linking the "
 "<code>orders</code> and <code>customers</code> tables"
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:127(p)
+#: C/data-manager-xml-syntax.page:149(p)
 msgid ""
 "the data sources IDs have been assigned the names of the selected tables as "
 "no \"id\" attribute has been specified for the <code>&lt;table&gt;</code> "
 "tags."
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:133(p)
+#: C/data-manager-xml-syntax.page:155(p)
 msgid ""
 "Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
 "following variable for each table's column (the variable's type is the same "
 "as the column's type):"
 msgstr ""
 
-#: C/data-manager-xml-syntax.page:138(code)
+#: C/data-manager-xml-syntax.page:160(code)
 #, no-wrap
 msgid "&lt;data source ID&gt;@&lt;column name&gt;"
-msgstr ""
+msgstr "&lt;data source ID&gt;@&lt;column name&gt;"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:27(None)
+#| msgid ""
+#| "@@image: 'figures/data-man-persp.png'; "
+#| "md5=a0469e170ca29937cd898aae8af6620c"
 msgid ""
-"@@image: 'figures/data-man-persp.png'; md5=a0469e170ca29937cd898aae8af6620c"
+"@@image: 'figures/data-man-persp.png'; md5=b4e0678527c03093031dcb3805bb2841"
 msgstr ""
-"@@image: 'figures/data-man-persp.png'; md5=a0469e170ca29937cd898aae8af6620c"
+"@@image: 'figures/data-man-persp.png'; md5=b4e0678527c03093031dcb3805bb2841"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:53(None)
-#: C/data-manager-perspective.page:80(None)
+#: C/data-manager-perspective.page:84(None)
 msgid ""
 "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 msgstr ""
@@ -801,16 +929,19 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:60(None)
+#| msgid ""
+#| "@@image: 'figures/data-man-xmlcompose.png'; "
+#| "md5=47629c29ef2c7d336e4401e66ba849e0"
 msgid ""
 "@@image: 'figures/data-man-xmlcompose.png'; "
-"md5=47629c29ef2c7d336e4401e66ba849e0"
+"md5=8a96e29b3290b6df09f842c5ed7ce8c3"
 msgstr ""
 "@@image: 'figures/data-man-xmlcompose.png'; "
-"md5=47629c29ef2c7d336e4401e66ba849e0"
+"md5=8a96e29b3290b6df09f842c5ed7ce8c3"
 
 #: C/data-manager-perspective.page:8(title)
 msgid "The data manager perspective"
-msgstr ""
+msgstr "La perspectiva del administrador de datos"
 
 #: C/data-manager-perspective.page:9(p)
 msgid ""
@@ -837,7 +968,7 @@ msgstr ""
 
 #: C/data-manager-perspective.page:25(title)
 msgid "Data manager perspective"
-msgstr ""
+msgstr "Perspectiva del administrador de datos"
 
 #: C/data-manager-perspective.page:26(desc)
 msgid "The data manager perspective, with two data sources"
@@ -890,10 +1021,19 @@ msgid "Editing data sources in the data manager perspective"
 msgstr ""
 
 #: C/data-manager-perspective.page:67(p)
-msgid "<gui>Clear</gui>: clears the XML editor"
+msgid ""
+"<gui>Reset</gui>: resets the XML editor to a default XML template, only "
+"available when the XML view is currently displayed"
 msgstr ""
 
-#: C/data-manager-perspective.page:68(p)
+#: C/data-manager-perspective.page:69(p)
+msgid ""
+"<gui>Add</gui>: displays a popup menu with an entry per table to quickly add "
+"the whole contents of a table as a data source, only available when the UI "
+"editor is currently displayed"
+msgstr ""
+
+#: C/data-manager-perspective.page:72(p)
 msgid ""
 "<gui>Variables</gui>: shows/hide the <link xref=\"variables-syntax"
 "\">variables</link> panel where you can give values to the variables present "
@@ -901,37 +1041,37 @@ msgid ""
 "shown when a variable is detected in the SQL code."
 msgstr ""
 
-#: C/data-manager-perspective.page:71(p)
+#: C/data-manager-perspective.page:75(p)
 msgid "<gui>Execute</gui>: executes the defined data sources"
 msgstr ""
 
-#: C/data-manager-perspective.page:72(p)
+#: C/data-manager-perspective.page:76(p)
 msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
 msgstr ""
 
-#: C/data-manager-perspective.page:73(p)
+#: C/data-manager-perspective.page:77(p)
 msgid "<gui>Help</gui>: shows some help"
 msgstr ""
 
-#: C/data-manager-perspective.page:77(title)
+#: C/data-manager-perspective.page:81(title)
 msgid "Executing defined data sources"
 msgstr ""
 
-#: C/data-manager-perspective.page:78(p)
+#: C/data-manager-perspective.page:82(p)
 msgid ""
 "To execute a defined set of data sources, simply switch to execute mode "
 "using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-"
 "mode.png\"/> toolbar button or the <gui>Execute</gui> button."
 msgstr ""
 
-#: C/data-manager-perspective.page:83(p)
+#: C/data-manager-perspective.page:87(p)
 msgid ""
 "The layout of tabular views for each data source is automatically generated "
 "in columns using the following rule: if a data source B depends on a data "
 "source A, then its tabular view is displayed on the right of the one for A."
 msgstr ""
 
-#: C/data-manager-perspective.page:88(p)
+#: C/data-manager-perspective.page:92(p)
 msgid ""
 "Also if you change the selected row of tabular view of a data source A, then "
 "the tabular views of all the data sources depending on A will also have "
