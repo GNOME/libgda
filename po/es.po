@@ -4,8 +4,8 @@
 #
 # CAMBIAR: mantenedor -> manejador
 # JulioBorjaBarra <juboba@gmail.com>, 2010.
-# Jorge González <jorgegonz@svn.gnome.org>, 200, 2010.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2010.
+# Jorge González <jorgegonz@svn.gnome.org>, 200, 2010.
 #
 #: ../libgda/gda-connection.c:375
 msgid ""
@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2010-12-15 21:26+0000\n"
-"PO-Revision-Date: 2010-12-16 10:43+0100\n"
-"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
+"POT-Creation-Date: 2010-12-18 09:25+0000\n"
+"PO-Revision-Date: 2010-12-18 14:55+0100\n"
+"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,7 +114,7 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../libgda/gda-data-model-import.c:2055 ../libgda/gda-data-select.c:370
 #: ../libgda/gda-data-select.c:2063 ../libgda/gda-data-select.c:2072
 #: ../libgda/gda-data-select.c:2082 ../libgda/gda-data-select.c:3480
-#: ../libgda/gda-holder.c:490 ../libgda/gda-holder.c:1721
+#: ../libgda/gda-holder.c:490 ../libgda/gda-holder.c:1742
 #: ../libgda/gda-server-operation.c:627 ../libgda/gda-server-operation.c:1025
 #: ../libgda/gda-set.c:561 ../libgda/gda-tree-mgr-select.c:189
 #: ../libgda/gda-tree-mgr-select.c:224
@@ -185,7 +185,7 @@ msgstr "No se pudo ejecutar el programa del examinador"
 #: ../tools/browser/schema-browser/table-info.c:476
 #: ../tools/browser/schema-browser/table-info.c:529
 #: ../tools/browser/schema-browser/table-info.c:556
-#: ../tools/browser/schema-browser/table-info.c:850
+#: ../tools/browser/schema-browser/table-info.c:859
 #: ../tools/browser/schema-browser/table-preferences.c:700
 #: ../tools/browser/schema-browser/table-preferences.c:773
 #: ../tools/gda-list-server-op.c:50 ../tools/gda-list-server-op.c:108
@@ -1016,7 +1016,6 @@ msgstr ""
 
 #: ../libgda/gda-data-model.c:2479
 #, c-format
-#| msgid "Error creating database: %s"
 msgid "(error getting data)\n"
 msgstr "(error al obtener los datos)\n"
 
@@ -1207,7 +1206,6 @@ msgstr "El modelo de datos no soporta acceso aleatorio"
 
 #: ../libgda/gda-data-model-import.c:1871
 #, c-format
-#| msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgid "Row at line %d does not have enough values"
 msgstr "La fila en la línea %d no tiene suficientes valores"
 
@@ -1252,9 +1250,9 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
-"o «fila eliminada». Esto es un error de la implementación de %s (informe del "
-"error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila "
+"actualizada» o «fila eliminada». Esto es un error de la implementación de %s "
+"(informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2098
 #, c-format
@@ -1264,9 +1262,9 @@ msgid ""
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
-"o «fila eliminada». Esto puede ser un error de la implementación de %s "
-"(informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila "
+"actualizada» o «fila eliminada». Esto puede ser un error de la "
+"implementación de %s (informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2944 ../tools/gda-sql.c:3139
 msgid "Could not create virtual connection"
@@ -1346,8 +1344,8 @@ msgstr "La modificación de la declaración usa un parámetro «%s» desconocido
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"La modificación del parámetro «%s» de la declaración es %s cuando debería ser "
-"%s"
+"La modificación del parámetro «%s» de la declaración es %s cuando debería "
+"ser %s"
 
 #: ../libgda/gda-data-select.c:1276
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1537,8 +1535,19 @@ msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr ""
 "(%s): Tipo de parámetro erróneo: se esperaba el tipo «%s» y se obtuvo «%s»"
 
+#: ../libgda/gda-holder.c:1478
+#, c-format
+#| msgid ""
+#| "Destination column %d has a gda type (%s) incompatible with source column "
+#| "%d type (%s)"
+msgid ""
+"GdaHolder has a gda type (%s) incompatible with source column %d type (%s)"
+msgstr ""
+"El GdaHolder tiene un tipo gda (%s) incompatible con el tipo de la columna "
+"de origen %d (tipo %s)"
+
 #. break holder's binding because type differ
-#: ../libgda/gda-holder.c:1535
+#: ../libgda/gda-holder.c:1556
 #, c-format
 msgid ""
 "Cannot bind holders if their type is not the same, breaking existing bind "
@@ -1547,11 +1556,11 @@ msgstr ""
 "No se pueden vincular los mantenedores si su tipo no es el mismo, rompiendo "
 "el vínculo existente donde «%s» estaba vinculado a «%s»"
 
-#: ../libgda/gda-holder.c:1580
+#: ../libgda/gda-holder.c:1601
 msgid "Cannot bind holders if their type is not the same"
 msgstr "No se pueden vincular los mantenedores si su tipo no es el mismo"
 
-#: ../libgda/gda-holder.c:1720
+#: ../libgda/gda-holder.c:1741
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
@@ -1623,14 +1632,15 @@ msgstr "Falta la definición de la vista en el nodo <view>"
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
-"La definición de la vista contiene más de una declaración (para la vista «%s»)"
+"La definición de la vista contiene más de una declaración (para la vista "
+"«%s»)"
 
 #: ../libgda/gda-meta-store.c:1301
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
-"La definición de la vista no es una declaración de selección (para la vista «%"
-"s»)"
+"La definición de la vista no es una declaración de selección (para la vista "
+"«%s»)"
 
 #. FIXME
 #: ../libgda/gda-meta-store.c:1328 ../libgda/gda-meta-struct-io.c:176
@@ -1978,8 +1988,8 @@ msgstr "El proveedor %s creó un GdaServerOperation sin un nodo para «%s»"
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
-"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%"
-"s»"
+"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para "
+"«%s»"
 
 #: ../libgda/gda-server-provider.c:938 ../libgda/gda-server-provider.c:972
 #, c-format
@@ -2195,7 +2205,7 @@ msgstr "Espacio de nombres"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 #: ../tools/browser/data-manager/data-source-editor.c:135
-#: ../tools/browser/schema-browser/table-info.c:950
+#: ../tools/browser/schema-browser/table-info.c:959
 msgid "Table"
 msgstr "Tabla"
 
@@ -2319,8 +2329,8 @@ msgstr ""
 #, c-format
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr ""
-"El modelo de datos para el esquema tiene un tipo gda erróneo: «%s» en vez de «%"
-"s»"
+"El modelo de datos para el esquema tiene un tipo gda erróneo: «%s» en vez de "
+"«%s»"
 
 #: ../libgda/gda-set.c:552 ../libgda/gda-set.c:653
 #, c-format
@@ -2440,7 +2450,8 @@ msgstr "No existe un manejador de datos para el tipo «%s»"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
+"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo "
+"«%s»"
 
 #: ../libgda/gda-statement.c:1232
 #, c-format
@@ -2573,23 +2584,23 @@ msgstr "La tabla no tiene ninguna clave primaria"
 msgid "Table's primary key is not selected"
 msgstr "No se seleccionó la clave primaria de la tabla"
 
-#: ../libgda/gda-util.c:1140
+#: ../libgda/gda-util.c:1142
 msgid "Could not compute any field to insert into"
 msgstr "No se pudo computar ningún campo en el que introducir"
 
-#: ../libgda/gda-util.c:1203
+#: ../libgda/gda-util.c:1205
 msgid "Missing table name in UPDATE statement"
 msgstr "Falta el nombre de la tabla en la declaración UPDATE"
 
-#: ../libgda/gda-util.c:1284
+#: ../libgda/gda-util.c:1286
 #, c-format
 msgid "Can't rewrite UPDATE statement to handle default values"
 msgstr ""
 "No se puede escribir la declaración UPDATE para gestionar los valores "
 "predeterminados"
 
-#: ../libgda/gda-util.c:1336 ../libgda/gda-util.c:1393
-#: ../libgda/gda-util.c:1433 ../libgda/sqlite/gda-sqlite-provider.c:2582
+#: ../libgda/gda-util.c:1338 ../libgda/gda-util.c:1395
+#: ../libgda/gda-util.c:1435 ../libgda/sqlite/gda-sqlite-provider.c:2582
 #: ../providers/jdbc/gda-jdbc-provider.c:1323
 #: ../providers/mysql/gda-mysql-provider.c:2220
 #: ../providers/postgres/gda-postgres-provider.c:1936
@@ -2603,7 +2614,6 @@ msgid "Global transaction ID can not have more than 64 bytes"
 msgstr "El ID de transacción global no puede tener más de 64 bytes"
 
 #: ../libgda/gda-xa-transaction.c:287
-#| msgid "Connection was not represented in hub"
 msgid "Connection branch cannot exceed 63 bytes"
 msgstr "La rama de conexión no puede exceder los 63 bytes"
 
@@ -2713,7 +2723,6 @@ msgstr "El parámetro «%s» no está presente en la declaración"
 #: ../libgda/sqlite/gda-sqlite-provider.c:183
 #: ../libgda/sqlite/gda-sqlite-provider.c:199
 #, c-format
-#| msgid "No value set for parameter '%s'"
 msgid "No column name to associate to parameter '%s'"
 msgstr "No existe el nombre de la columna para asociar con el parámetro «%s»"
 
@@ -3006,13 +3015,11 @@ msgstr "La conexión no estaba representada en el concentrador"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:423
 #, c-format
-#| msgid "Can't find information about table"
 msgid "Unable to get information about table '%s'"
 msgstr "No se pudo obtener la información acerca de la tabla «%s»"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:654
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:670
-#| msgid "Integer value is too big"
 msgid "Integer value is out of bounds"
 msgstr "El valor entero está fuera de los límites"
 
@@ -3170,8 +3177,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1143
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de campos "
-"que unir"
+"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de "
+"campos que unir"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1152
 msgid "Empty FROM clause"
@@ -3382,7 +3389,8 @@ msgstr "No se especificó una expresión"
 #: ../libgda-report/engine/gda-report-engine.c:910
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr "No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
+msgstr ""
+"No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1048
 #, c-format
@@ -3531,7 +3539,6 @@ msgid "The information and status changer can be activated"
 msgstr "El cambiador de información y estado puede ser activado"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:409
-#| msgid "<string cut because too long>"
 msgid "string truncated because too long"
 msgstr "cadena cortada porque es demasiado larga"
 
@@ -3578,8 +3585,9 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a establecer "
-"usando la propiedad «manejador») espere algún comportamiento no deseado"
+"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a "
+"establecer usando la propiedad «manejador») espere algún comportamiento no "
+"deseado"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:408
 msgid "Value is NULL"
@@ -4398,6 +4406,30 @@ msgid ""
 "\n"
 "Raw areas are enclosed inside three doublequotes and no markup is interpreted"
 msgstr ""
+"\"\"\"= Título de nivel 1 =\n"
+"== Título de nivel 2 ==\n"
+"\"\"\"= Título de nivel 1 =\n"
+"== Título de nivel 2 ==\n"
+"\n"
+"\"\"\"Para embellecer existe **negrita**\n"
+"e //cursiva//.\n"
+"También existe __subrayado__, --tachado--\n"
+"y ``monoespaciado``.\n"
+"\"\"\"\n"
+"Para embellecer existe **negrita**\n"
+"e //cursiva//.\n"
+"También existe __subrayado__, --tachado--\n"
+"y ``monoespaciado``.\n"
+"\n"
+"\"\"\"- Esto es una lista de elementos\n"
+"- Simplemente use guiones\n"
+" - Y espaciado inicial para el sangrado\n"
+"\"\"\"- Esto es una lista de elementos\n"
+"- Simplemente use guiones\n"
+" - Y espaciado inicial para el sangrado\n"
+"\n"
+"Las áreas en bruto se delimitan dentro de comillas dobles y no se interpreta "
+"ningún marcado"
 
 #: ../libgda-ui/gdaui-rt-editor.c:156
 msgid "_Bold"
@@ -4405,7 +4437,7 @@ msgstr "_Negrita"
 
 #: ../libgda-ui/gdaui-rt-editor.c:156
 msgid "Bold text"
-msgstr ""
+msgstr "Negrita"
 
 #: ../libgda-ui/gdaui-rt-editor.c:157
 msgid "_Italic"
@@ -4421,23 +4453,21 @@ msgstr "S_ubrayado"
 
 #: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "Underline text"
-msgstr ""
+msgstr "Subrayar"
 
 #: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "_Strike through"
-msgstr ""
+msgstr "_Tachar"
 
 #: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "Strike through text"
-msgstr ""
+msgstr "Tachar el texto"
 
 #: ../libgda-ui/gdaui-rt-editor.c:160
-#| msgid "XML syntax help"
 msgid "_Syntax help"
 msgstr "Ayuda de _sintaxis"
 
 #: ../libgda-ui/gdaui-rt-editor.c:160
-#| msgid "XML syntax help"
 msgid "Show syntax help"
 msgstr "Mostrar la ayuda de sintaxis"
 
@@ -4454,21 +4484,21 @@ msgid "_Reset"
 msgstr "_Restablecer"
 
 #: ../libgda-ui/gdaui-rt-editor.c:166
-#| msgid "Reset to original value"
 msgid "Reset to normal text"
 msgstr "Restablecer al texto normal"
 
 #: ../libgda-ui/gdaui-rt-editor.c:241
 msgid "Don't display a specific background for the text"
-msgstr ""
+msgstr "No mostrar un fondo específico para el texto"
 
 #: ../libgda-ui/gdaui-rt-editor.c:251
 msgid "Display raw markup text instead of formatted text"
 msgstr ""
+"Mostrar un marcado en bruto para el texto en lugar del texto formateado"
 
 #: ../libgda-ui/gdaui-rt-editor.c:262
 msgid "The buffer which is displayed"
-msgstr ""
+msgstr "El búfer que se está mostrando"
 
 #: ../libgda-ui/gdaui-rt-editor.c:827
 msgid "Reset font size"
@@ -4476,15 +4506,15 @@ msgstr "Restablecer el tamaño de la tipografía"
 
 #: ../libgda-ui/gdaui-rt-editor.c:833
 msgid "Decrease font size (zoom out)"
-msgstr ""
+msgstr "Reducir tamaño de tipografía"
 
 #: ../libgda-ui/gdaui-rt-editor.c:839
 msgid "Increase font size (zoom in)"
-msgstr ""
+msgstr "Aumentar tamaño de tipografía"
 
 #: ../libgda-ui/gdaui-rt-editor.c:845
 msgid "Show source markup"
-msgstr ""
+msgstr "Mostrar el origen del marcado"
 
 #: ../libgda-ui/gdaui-server-operation.c:197
 msgid "The specification of the operation to implement"
@@ -5236,8 +5266,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando %"
-"s. Habrá problemas con los caracteres que no sean UTF-8."
+"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando "
+"%s. Habrá problemas con los caracteres que no sean UTF-8."
 
 #: ../providers/mysql/gda-mysql-provider.c:588
 msgid "The connection string must contain the DB_NAME values"
@@ -7277,7 +7307,6 @@ msgid "_Properties"
 msgstr "_Propiedades"
 
 #: ../tools/browser/browser-window.c:281
-#| msgid "Connection's properties"
 msgid "Connection properties"
 msgstr "Propiedades de la conexión"
 
@@ -7298,12 +7327,10 @@ msgid "Fetch meta data"
 msgstr "Extraer metadatos"
 
 #: ../tools/browser/browser-window.c:284
-#| msgid "Close connection"
 msgid "_Close connection"
 msgstr "_Cerrar la conexión"
 
 #: ../tools/browser/browser-window.c:284
-#| msgid "Close a connection"
 msgid "Close this connection"
 msgstr "Cerrar esta conexión"
 
@@ -7356,7 +7383,6 @@ msgid "Open a new window for current connection"
 msgstr "Abrir una ventana nueva para la conexión actual"
 
 #: ../tools/browser/browser-window.c:291
-#| msgid "New virtual connection"
 msgid "New window for _connection"
 msgstr "Ventana nueva para la cone_xión"
 
@@ -7485,7 +7511,8 @@ msgid ""
 "'%s' shortcut"
 msgstr ""
 "La perspectiva actual ha cambiado a la perspectiva «%s», puede volver a la "
-"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo «%s»"
+"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo "
+"«%s»"
 
 #: ../tools/browser/connection-binding-properties.c:143
 msgid "New virtual connection"
@@ -8194,6 +8221,8 @@ msgid ""
 "Data source's ID\n"
 "(as referenced by other data sources)"
 msgstr ""
+"ID de la fuente de datos\n"
+"(tal y como lo referencian otras fuentes de datos)"
 
 #: ../tools/browser/data-manager/data-source-editor.c:132
 msgid "Data source's description"
@@ -8204,6 +8233,8 @@ msgid ""
 "Table to display data from, leave empty\n"
 "to specify a SELECT statement instead"
 msgstr ""
+"Tabla de la que mostrar los datos, dejarlo vacío\n"
+"para especificar una declaración SELECT en su lugar"
 
 #: ../tools/browser/data-manager/data-source-editor.c:140
 msgid ""
@@ -8218,6 +8249,8 @@ msgid ""
 "Actual SQL executed\n"
 "to select data"
 msgstr ""
+"SQL actualmente ejecutada\n"
+"para seleccionar datos"
 
 #: ../tools/browser/data-manager/data-source-editor.c:151
 msgid "Dependencies:"
@@ -8262,10 +8295,10 @@ msgstr "No se definió un origen de datos"
 
 #: ../tools/browser/data-manager/data-widget.c:1020
 #, c-format
-#| msgid "Cannot cast parameter from type '%s' to type '%s'"
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo «%s»"
+"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo "
+"«%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:153
 msgid "Data sources:"
@@ -8377,7 +8410,7 @@ msgid "Invalid variable's contents"
 msgstr "Contenido de la variable no válido"
 
 #: ../tools/browser/query-exec/query-console.c:774
-#: ../tools/browser/schema-browser/table-info.c:921
+#: ../tools/browser/schema-browser/table-info.c:930
 msgid "assign values to the following variables"
 msgstr "asignar valores a las siguientes variables"
 
@@ -8579,7 +8612,7 @@ msgid "Missing table attribute in favorite's contents"
 msgstr "Falta un atributo de la tabla en el contenido de los favoritos"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:520
-#: ../tools/browser/schema-browser/table-info.c:953
+#: ../tools/browser/schema-browser/table-info.c:962
 msgid "_Contents"
 msgstr "Índ_ice"
 
@@ -8612,19 +8645,28 @@ msgstr "No se pudo cargar el diagrama"
 msgid "Foreign key on "
 msgstr "Clave externa en "
 
-#: ../tools/browser/schema-browser/table-columns.c:304
+#: ../tools/browser/schema-browser/table-columns.c:277
+#, c-format
+msgid ""
+"incompatible types: '%s' for the foreign key and '%s' for the referenced "
+"primary key"
+msgstr ""
+"tipos incompatibles: «%s» para la clave externa y «%s» para la clave "
+"primaria referenciada"
+
+#: ../tools/browser/schema-browser/table-columns.c:327
 msgid "Unique constraint"
 msgstr "Restricción única"
 
-#: ../tools/browser/schema-browser/table-columns.c:335
+#: ../tools/browser/schema-browser/table-columns.c:358
 msgid "Tables referencing this one"
 msgstr "Tablas que referencian a esta"
 
-#: ../tools/browser/schema-browser/table-columns.c:449
+#: ../tools/browser/schema-browser/table-columns.c:472
 msgid "Column Name"
 msgstr "Nombre de columna"
 
-#: ../tools/browser/schema-browser/table-columns.c:504
+#: ../tools/browser/schema-browser/table-columns.c:527
 msgid "Constraints and integrity rules"
 msgstr "Reglas de restricciones e integridad"
 
@@ -8650,15 +8692,15 @@ msgstr "Preferencias"
 msgid "Data successfully inserted"
 msgstr "Datos introducidos correctamente"
 
-#: ../tools/browser/schema-browser/table-info.c:673
+#: ../tools/browser/schema-browser/table-info.c:682
 msgid "Meta data not yet available"
 msgstr "Los metadatos aún no están disponibles"
 
-#: ../tools/browser/schema-browser/table-info.c:690
+#: ../tools/browser/schema-browser/table-info.c:699
 msgid "Can't find information about table"
 msgstr "No se puede encontrar información acerca de la tabla"
 
-#: ../tools/browser/schema-browser/table-info.c:726
+#: ../tools/browser/schema-browser/table-info.c:735
 #, c-format
 msgid ""
 "Internal error while building INSERT statement:\n"
@@ -8667,41 +8709,41 @@ msgstr ""
 "Error interno al construir la declaración INSERT:\n"
 "%s"
 
-#: ../tools/browser/schema-browser/table-info.c:772
+#: ../tools/browser/schema-browser/table-info.c:781
 #, c-format
 msgid "Default value: '%s'"
 msgstr "Valor predeterminado: «%s»"
 
-#: ../tools/browser/schema-browser/table-info.c:782
+#: ../tools/browser/schema-browser/table-info.c:791
 msgid "Default value: auto incremented value"
 msgstr "Valor predeterminado: valor autoincrementado"
 
-#: ../tools/browser/schema-browser/table-info.c:896
-#: ../tools/browser/schema-browser/table-info.c:920
+#: ../tools/browser/schema-browser/table-info.c:905
+#: ../tools/browser/schema-browser/table-info.c:929
 msgid "Values to insert into table"
 msgstr "Valores para insertar en la tabla"
 
-#: ../tools/browser/schema-browser/table-info.c:950
+#: ../tools/browser/schema-browser/table-info.c:959
 msgid "_Table"
 msgstr "_Tabla"
 
-#: ../tools/browser/schema-browser/table-info.c:951
+#: ../tools/browser/schema-browser/table-info.c:960
 msgid "Add to _Favorites"
 msgstr "Añadir a _favoritos"
 
-#: ../tools/browser/schema-browser/table-info.c:951
+#: ../tools/browser/schema-browser/table-info.c:960
 msgid "Add table to favorites"
 msgstr "Añadir tabla a los favoritos"
 
-#: ../tools/browser/schema-browser/table-info.c:953
+#: ../tools/browser/schema-browser/table-info.c:962
 msgid "View table's contents"
 msgstr "Ver contenido de la tabla"
 
-#: ../tools/browser/schema-browser/table-info.c:955
+#: ../tools/browser/schema-browser/table-info.c:964
 msgid "_Insert data"
 msgstr "_Insertar datos"
 
-#: ../tools/browser/schema-browser/table-info.c:955
+#: ../tools/browser/schema-browser/table-info.c:964
 msgid "Insert data into table"
 msgstr "Insertar datos en la tabla"
 
@@ -8997,8 +9039,8 @@ msgstr "Sin contraseña para «%s»"
 #: ../tools/gda-sql.c:1445
 #, c-format
 msgid ""
-"All the meta data associated to the '%s' connection will be stored in the '%"
-"s' file\n"
+"All the meta data associated to the '%s' connection will be stored in the "
+"'%s' file\n"
 msgstr ""
 "Todos los metadatos asociados con la conexión «%s» se almacenarán en el "
 "archivo «%s»\n"
@@ -9014,8 +9056,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
-"Obteniendo la información de esquema para la conexión «%s», esto puede llevar "
-"algún tiempo… "
+"Obteniendo la información de esquema para la conexión «%s», esto puede "
+"llevar algún tiempo… "
 
 #: ../tools/gda-sql.c:1488 ../tools/gda-sql.c:1625 ../tools/gda-sql.c:2934
 #, c-format
@@ -9572,6 +9614,8 @@ msgid ""
 "Enter authentification token as set from console, or leave empty if none "
 "required"
 msgstr ""
+"Introducir el token de autenticación como un conjunto de consola o dejarlo "
+"vacío si no se requiere ninguno"
 
 #: ../tools/web-server.c:636
 msgid "Token:"
@@ -9749,9 +9793,9 @@ msgstr "Disparadores"
 #~ msgstr "Conectar con otra fuente de datos definidos (DSN, vea \\l)"
 
 #~ msgid ""
-#~ "<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
-#~ "data source definitions.\n"
+#~ "<small>The XML tree's root node must be a <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one "
+#~ "or more data source definitions.\n"
 #~ "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;"
 #~ "query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
 #~ "tt></span> nodes, both accepting the following optional attributes:\n"
@@ -9778,15 +9822,15 @@ msgstr "Disparadores"
 #~ "   the aforementioned table.\n"
 #~ "</small>"
 #~ msgstr ""
-#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
+#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
 #~ "definiciones de fuentes de datos.\n"
-#~ "Cada fuente de datos está definida por nodos <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;query&gt;</tt></span> o <span foreground=\"#4e9a06\"><tt>&lt;"
-#~ "table&gt;</tt></span>, ambos aceptan los siguientes atributos "
-#~ "opcionales:\n"
-#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena de "
-#~ "ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
+#~ "Cada fuente de datos está definida por nodos <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;query&gt;</tt></span> o <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;table&gt;</tt></span>, ambos aceptan los siguientes "
+#~ "atributos opcionales:\n"
+#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena "
+#~ "de ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
 #~ " - <span foreground=\"#4e9a06\">«title»</span> para especificar un "
 #~ "título.\n"
 #~ "\n"
