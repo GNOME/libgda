@@ -1052,10 +1052,11 @@ text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte)
 	for (mt = get_token (&start, &ssol, &end, current, rte);
 	     mt != MARKUP_EOF;
 	     mt = get_token (&start, &ssol, &end, current, rte)) {
+		/*
 		gchar *text= gtk_text_iter_get_text (&start, &end);
-		/*g_print ("Token %d [%s] with SSOL %d\n", mt, text, ssol);*/
+		g_print ("Token %d [%s] with SSOL %d\n", mt, text, ssol);
 		g_free (text);
-
+		*/
 		if (mt == MARKUP_NONE) {
 			start = end;
 			continue;
