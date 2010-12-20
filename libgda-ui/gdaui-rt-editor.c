@@ -564,6 +564,10 @@ apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
 			}
 		}
 	}
+
+	if (rte->priv->enable_changed_signal)
+		g_signal_emit (rte, gdaui_rt_editor_signals[CHANGED], 0, NULL);
+
 }
 
 static void
