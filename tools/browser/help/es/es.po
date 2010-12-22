@@ -8,31 +8,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2010-09-07 19:25+0000\n"
-"PO-Revision-Date: 2010-12-17 13:27+0100\n"
+"POT-Creation-Date: 2010-12-18 09:30+0000\n"
+"PO-Revision-Date: 2010-12-20 16:14+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: C/legal.xml:3(p)
-msgid ""
-"This work is licensed under a <link href=\"http://creativecommons.org/"
-"licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 Unported "
-"License</link>."
-msgstr ""
-"Este trabajo está licenciado bajo una <link href=\"http://creativecommons."
-"org/licenses/by-sa/3.0/\">Licencia Creative Commons atribución - compartir "
-"igual 3.0 sin soporte</link>."
-
-#: C/legal.xml:6(p)
-msgid ""
-"As a special exception, the copyright holders give you permission to copy, "
-"modify, and distribute the example code contained in this document under the "
-"terms of your choosing, without restriction."
-msgstr ""
 
 #: C/variables.page:5(title) C/table-insert-data.page:5(title)
 #: C/transactions.page:5(title) C/schema-browser-perspective.page:5(title)
@@ -107,8 +90,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/table-insert-data.page:20(None)
-#| msgid ""
-#| "@@image: 'figures/trans-commit.png'; md5=27f45d32501cc05bd6f6b16263283e9a"
 msgid ""
 "@@image: 'figures/table-insert-data.png'; "
 "md5=308807b8443d5ab26c8704a6e01aa1ab"
@@ -164,6 +145,7 @@ msgstr ""
 #: C/table-insert-data.page:33(p)
 msgid "Red: means the current value in the data entry is invalid"
 msgstr ""
+"Rojo: significa que el valor actual de la entrada de datos no es válido"
 
 #: C/table-insert-data.page:34(p)
 msgid ""
@@ -171,6 +153,9 @@ msgid ""
 "default value will be used instead (usefull for example for auto incremented "
 "columns)"
 msgstr ""
+"Rojo: significa que el valor actual de la entrada de datos no se usa y que "
+"se usará el valor predeterminado de la columna en su lugar (útil, por "
+"ejemplo, para columnas auto-incrementadas)"
 
 #: C/table-insert-data.page:36(p)
 msgid "Green: means the current value in the data entry is NULL"
@@ -180,6 +165,8 @@ msgstr "Verde: significa que el valor actual de la entrada de datos es NULL"
 msgid ""
 "Same color as the rest of the UI: means none of the above situations apply"
 msgstr ""
+"Mismo color que el resto del IGU: significa que no se aplica ninguna de las "
+"situaciones anteriores"
 
 #: C/table-insert-data.page:40(p)
 msgid ""
@@ -228,6 +215,8 @@ msgid ""
 "use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin."
 "png\"/> toolbar button to start a transaction"
 msgstr ""
+"use el botón <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
+"begin.png\"/> de la barra de herramientas para iniciar una transacción"
 
 #: C/transactions.page:16(p)
 msgid ""
@@ -345,7 +334,7 @@ msgstr ""
 
 #: C/query-execution-perspective.page:19(title)
 msgid "Query exec perspective"
-msgstr ""
+msgstr "Perspectiva de ejecución de la consulta"
 
 #: C/query-execution-perspective.page:20(desc)
 msgid "The query exec perspective with one SELECT statement executed"
@@ -399,21 +388,26 @@ msgstr ""
 msgid ""
 "<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
 msgstr ""
+"<keyseq><key>Ctrl</key><key>Espacio</key></keyseq> para obtener una lista de "
+"finalización"
 
 #: C/query-execution-perspective.page:51(p)
 msgid ""
 "<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code"
 msgstr ""
+"<keyseq><key>Ctrl</key><key>Intro</key></keyseq> para ejecutar el código SQL"
 
 #: C/query-execution-perspective.page:52(p)
 msgid "<keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>l</key></keyseq> para limpiar el editor"
 
 #: C/query-execution-perspective.page:53(p)
 msgid ""
 "<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</"
 "key><key>Down</key></keyseq> to navigate through the editor's history"
 msgstr ""
+"<keyseq><key>Ctrl</key><key>Arriba</key></keyseq> y <keyseq><key>Ctrl</"
+"key><key>Abajo</key></keyseq> para navegar por el histórico del editor"
 
 #: C/query-execution-perspective.page:59(title)
 msgid "Command buttons"
@@ -491,6 +485,23 @@ msgid ""
 "selected execution history item, as a table for SELECT statement, giving "
 "information for other types of statement, or giving the execution error "
 "notice if the execution failed."
+msgstr ""
+
+#: C/legal.xml:3(p)
+msgid ""
+"This work is licensed under a <link href=\"http://creativecommons.org/"
+"licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 Unported "
+"License</link>."
+msgstr ""
+"Este trabajo está licenciado bajo una <link href=\"http://creativecommons."
+"org/licenses/by-sa/3.0/\">Licencia Creative Commons atribución - compartir "
+"igual 3.0 sin soporte</link>."
+
+#: C/legal.xml:6(p)
+msgid ""
+"As a special exception, the copyright holders give you permission to copy, "
+"modify, and distribute the example code contained in this document under the "
+"terms of your choosing, without restriction."
 msgstr ""
 
 #: C/index.page:6(name)
@@ -909,9 +920,6 @@ msgstr "&lt;data source ID&gt;@&lt;column name&gt;"
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:27(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-persp.png'; "
-#| "md5=a0469e170ca29937cd898aae8af6620c"
 msgid ""
 "@@image: 'figures/data-man-persp.png'; md5=b4e0678527c03093031dcb3805bb2841"
 msgstr ""
@@ -929,9 +937,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:60(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-xmlcompose.png'; "
-#| "md5=47629c29ef2c7d336e4401e66ba849e0"
 msgid ""
 "@@image: 'figures/data-man-xmlcompose.png'; "
 "md5=8a96e29b3290b6df09f842c5ed7ce8c3"
@@ -1051,7 +1056,7 @@ msgstr ""
 
 #: C/data-manager-perspective.page:77(p)
 msgid "<gui>Help</gui>: shows some help"
-msgstr ""
+msgstr "<gui>Ayuda</gui>: muestra alguna ayuda"
 
 #: C/data-manager-perspective.page:81(title)
 msgid "Executing defined data sources"
