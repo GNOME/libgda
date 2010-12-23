@@ -380,32 +380,41 @@ radio_button_use_dsn_toggled_cb (GtkToggleButton *button, GdauiLogin *login)
 static void
 run_cc_cb (G_GNUC_UNUSED GtkButton *button, GdauiLogin *login)
 {
-	char *argv[2];
+	GAppInfo *appinfo;
+	GdkAppLaunchContext *context;
+	GdkScreen *screen;
 	gboolean sresult;
 	GError *lerror = NULL;
+	gchar *cmd;
 	
 #ifdef G_OS_WIN32
 #define EXENAME "gda-control-center-" GDA_ABI_VERSION ".exe"
 #else
 #define EXENAME "gda-control-center-" GDA_ABI_VERSION
 #endif
-	/* run gnome-database-properties dictig tool */
-	argv[0] = gda_gbr_get_file_path (GDA_BIN_DIR, (char *) EXENAME, NULL);
-	argv[1] = NULL;
-        
-	sresult = gdk_spawn_on_screen (gtk_widget_get_screen (GTK_WIDGET (login)),
-				       NULL, argv, NULL, 0,
-				       NULL, NULL, NULL, &lerror);
-	if (!sresult && lerror && (lerror->domain == G_SPAWN_ERROR) && (lerror->code == G_SPAWN_ERROR_NOENT)) {
-		g_error_free (lerror);
-		lerror = NULL;
-		g_free (argv [0]);
-		argv[0] = g_strdup ((char *) EXENAME);
-		sresult = gdk_spawn_on_screen (gtk_widget_get_screen (GTK_WIDGET (login)),
-					       NULL, argv, NULL, G_SPAWN_SEARCH_PATH,
-					       NULL, NULL, NULL, &lerror);
+	/* run gnome-database-properties tool */
+	cmd = gda_gbr_get_file_path (GDA_BIN_DIR, (char *) EXENAME, NULL);
+	appinfo = g_app_info_create_from_commandline (cmd,
+						      "Gda Control center",
+						      G_APP_INFO_CREATE_NONE,
+						      NULL);
+	g_free (cmd);
+
+	screen = gtk_widget_get_screen (GTK_WIDGET (login));
+	context = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
+	gdk_app_launch_context_set_screen (context, screen);
+	sresult = g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (context), NULL);
+	if (! sresult) {
+		g_object_unref (appinfo);
+		appinfo = g_app_info_create_from_commandline (EXENAME,
+							      "Gda Control center",
+							      G_APP_INFO_CREATE_NONE,
+							      NULL);
+		sresult = g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (context), &lerror);
 	}
-	g_free (argv [0]);
+	g_object_unref (context);
+	g_object_unref (appinfo);
+
 	if (!sresult) {
 		GtkWidget *msgdialog;
 		GtkWidget *toplevel = gtk_widget_get_toplevel (GTK_WIDGET (login));

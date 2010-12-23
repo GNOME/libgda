@@ -2,6 +2,9 @@
 #include <libgda-ui/libgda-ui.h>
 #include <libgda-ui/gdaui-plugin.h>
 #include <gtk/gtk.h>
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 typedef enum {
 	TESTED_BASIC,
@@ -104,8 +107,10 @@ main (int argc, char **argv)
 	GOptionContext *context;
 	GError *error = NULL;
 
+#ifdef HAVE_LOCALE_H
 	/* Initialize i18n support */
-	gtk_set_locale ();
+	setlocale (LC_ALL,"");
+#endif
 
 	/* command line parsing */
         context = g_option_context_new ("Gdaui entry widgets and cell renderers testing");
