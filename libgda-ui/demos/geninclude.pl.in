@@ -92,7 +92,7 @@ if (defined @parents) {
 	}
 
 	print ",\n";
-	print qq (  { NULL } );
+	print qq (  { NULL, NULL, NULL, NULL } );
 	print "\n};\n";
     }   
 }
@@ -157,7 +157,7 @@ foreach $href (@demos) {
 }
 
 print ",\n";
-print qq (  { NULL } );
+print qq (  { NULL, NULL, NULL, NULL } );
 print "\n};\n";
 
 exit 0;

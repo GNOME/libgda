@@ -4,7 +4,7 @@ lib_LTLIBRARIES = libgda-ui-4.0.la
 
 SUBDIRS = marshallers data-entries internal data . data-entries/plugins demos
 
-AM_CPPFLAGS = \
+GLOBAL_CFLAGS = \
 	-I$(top_builddir)/ui \
 	-I$(top_srcdir)/ui \
 	-I$(top_builddir) \
@@ -13,9 +13,12 @@ AM_CPPFLAGS = \
 	-DPLUGINSDIR=\""$(top_builddir)/libgda-ui/plugins/.libs"\" \
 	-DGDA_ABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
 	$(GTK_CFLAGS) \
 	$(GIO_CFLAGS)
+
+AM_CPPFLAGS = \
+	$(GLOBAL_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 ui_headers = \
 	gdaui-basic-form.h \
@@ -214,7 +217,7 @@ introspection_sources = \
 
 Gdaui-4_0.gir: $(lib_LTLIBRARIES)
 Gdaui_4_0_gir_INCLUDES = Gtk-2.0 Gda-4.0
-Gdaui_4_0_gir_CFLAGS = $(AM_CPPFLAGS)
+Gdaui_4_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
 Gdaui_4_0_gir_LIBS = $(lib_LTLIBRARIES) ../libgda/libgda-4.0.la
 Gdaui_4_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
 INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/libgda

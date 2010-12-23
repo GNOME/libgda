@@ -846,11 +846,12 @@ gda_xa_transaction_string_to_id (const gchar *str)
 	if (*ptr != ',') 
 		goto onerror;
 	ptr++;
-	gint tmp = atoi (ptr); /* Flawfinder: ignore */
-	if ((tmp < 0) || (tmp >= G_MAXUINT32))
+	gchar *endptr;
+	gint64 tmp = g_ascii_strtoll (ptr, &endptr, 10);
+	if (*endptr || (tmp < 0) || (tmp >= G_MAXUINT32))
 		goto onerror;
 
-	xid->format = tmp;
+	xid->format = (guint32) tmp;
 	
 	return xid;
 

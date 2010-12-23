@@ -10,17 +10,20 @@ GDA_BDB_S=gda-data-model-bdb.c
 DEF_FLAGS=-DHAVE_BDB
 endif
 
-AM_CPPFLAGS = \
+GLOBAL_CFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
 	-DABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
 	$(BDB_CFLAGS) \
 	-DBDB_LIB=\""$(BDB_LIB)"\" \
 	$(GIO_CFLAGS) $(GNOME_KEYRING_CFLAGS)
+
+AM_CPPFLAGS = \
+	$(GLOBAL_CFLAGS) \
+	$(LIBGDA_WFLAGS)
 
 _gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -350,7 +353,8 @@ introspection_sources = $(gda_sources) \
 	$(handlers)
 Gda-4_0.gir: $(lib_LTLIBRARIES)
 Gda_4_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
-Gda_4_0_gir_CFLAGS = $(AM_CPPFLAGS)
+Gda_4_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
+
 Gda_4_0_gir_LIBS = $(lib_LTLIBRARIES)
 Gda_4_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
 INTROSPECTION_GIRS += Gda-4.0.gir
