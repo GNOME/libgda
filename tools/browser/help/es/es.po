@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2010-12-18 09:30+0000\n"
-"PO-Revision-Date: 2010-12-20 16:14+0100\n"
+"POT-Creation-Date: 2010-12-22 18:46+0000\n"
+"PO-Revision-Date: 2010-12-28 21:07+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -224,6 +224,9 @@ msgid ""
 "png\"/> toolbar button to commit the current transaction (apply all the "
 "changes)"
 msgstr ""
+"use el botón <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
+"commit.png\"/> de la barra de herramientas para efectuar la transacción "
+"actual (aplicar todos los cambios)"
 
 #: C/transactions.page:18(p)
 msgid ""
@@ -231,6 +234,9 @@ msgid ""
 "rollback.png\"/> toolbar button to abort the current transaction (forget all "
 "the changes)"
 msgstr ""
+"use el botón <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
+"rollback.png\"/> de la barra de herramientas para abortar la transacción "
+"actual (olvidar todos los cambios)"
 
 #: C/transactions.page:22(p)
 msgid ""
@@ -249,7 +255,7 @@ msgstr "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
 
 #: C/schema-browser-perspective.page:8(title)
 msgid "The schema browser perspective"
-msgstr ""
+msgstr "La perspectiva del visor de esquemas"
 
 #: C/schema-browser-perspective.page:9(p)
 msgid ""
@@ -355,19 +361,19 @@ msgstr ""
 
 #: C/query-execution-perspective.page:34(p)
 msgid "an SQL area in the top left part"
-msgstr ""
+msgstr "un área SQL en la parte superior izquierda"
 
 #: C/query-execution-perspective.page:35(p)
 msgid "command buttons in the top right part"
-msgstr ""
+msgstr "botones de comandos en la parte superior derecha"
 
 #: C/query-execution-perspective.page:36(p)
 msgid "execution history in the lower left part"
-msgstr ""
+msgstr "histórico de ejecución en la parte inferior izquierda"
 
 #: C/query-execution-perspective.page:37(p)
 msgid "execution results in the lower right part"
-msgstr ""
+msgstr "resultados de ejecución en la parte inferior derecha"
 
 #: C/query-execution-perspective.page:41(title)
 msgid "SQL area"
@@ -382,7 +388,7 @@ msgstr ""
 
 #: C/query-execution-perspective.page:46(p)
 msgid "The keyboard shortcuts in the SQL editor are:"
-msgstr ""
+msgstr "Los atajos de teclado en el editor SQL son:"
 
 #: C/query-execution-perspective.page:50(p)
 msgid ""
@@ -411,7 +417,7 @@ msgstr ""
 
 #: C/query-execution-perspective.page:59(title)
 msgid "Command buttons"
-msgstr ""
+msgstr "Botones de comandos"
 
 #: C/query-execution-perspective.page:60(p)
 #: C/data-manager-perspective.page:63(p)
@@ -503,6 +509,9 @@ msgid ""
 "modify, and distribute the example code contained in this document under the "
 "terms of your choosing, without restriction."
 msgstr ""
+"Como excepción especial, los poseedores de los derechos de autor le dan "
+"permiso para copiar, modificar y distribuir el ejemplo de código contenido "
+"en este documento bajo los términos que usted elija, sin restricción."
 
 #: C/index.page:6(name)
 msgid "Vivien Malerba"
@@ -618,21 +627,23 @@ msgstr "Características"
 
 #: C/features.page:9(p)
 msgid "<app>gda-browser</app>'s current features are:"
-msgstr ""
+msgstr "Las características actuales de <app>gda-browser</app> son:"
 
 #: C/features.page:13(p)
 msgid "multiple simultaneous connections can be opened at once"
-msgstr ""
+msgstr "se pueden abrir varias conexiones simultáneas a la vez"
 
 #: C/features.page:14(p)
 msgid ""
 "multi threaded: each connection is handled in it own thread, meaning that no "
 "single connection can lock the application"
 msgstr ""
+"multi-hilo: cada conexión se gestiona con un hilo propio, lo que significa "
+"que una sola conexión no puede bloquear la aplicación"
 
 #: C/features.page:16(p)
 msgid "several windows can be opened for a single connection"
-msgstr ""
+msgstr "se pueden abrir varias ventanas para una sola conexión"
 
 #: C/features.page:17(p)
 msgid "full screen mode accessible to maximize the screen space usage"
@@ -694,11 +705,11 @@ msgstr ""
 
 #: C/diagram.page:27(p)
 msgid "printing, through the contextual menu"
-msgstr ""
+msgstr "imprimir, a través del menú contextual"
 
 #: C/diagram.page:28(p)
 msgid "exporting as PNG or SVG images, through the contextual menu"
-msgstr ""
+msgstr "exportar como imágenes PNG o SVG, a través del menú contextual"
 
 #: C/diagram.page:29(p)
 msgid "adding items, through the contextual menu"
@@ -760,7 +771,7 @@ msgstr ""
 
 #: C/data-manager-xml-syntax.page:37(title)
 msgid "The <code>&lt;query&gt;</code> tag"
-msgstr ""
+msgstr "La etiqueta <code>&lt;query&gt;</code>"
 
 #: C/data-manager-xml-syntax.page:38(p)
 msgid ""
@@ -890,7 +901,7 @@ msgstr ""
 
 #: C/data-manager-xml-syntax.page:143(p)
 msgid "Note in this example that:"
-msgstr ""
+msgstr "Vea en este ejemplo que:"
 
 #: C/data-manager-xml-syntax.page:147(p)
 msgid ""
@@ -1052,7 +1063,7 @@ msgstr ""
 
 #: C/data-manager-perspective.page:76(p)
 msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
-msgstr ""
+msgstr "<gui>Ver XML</gui>: alterna entre el editor XML y el editor del IU"
 
 #: C/data-manager-perspective.page:77(p)
 msgid "<gui>Help</gui>: shows some help"
@@ -1060,7 +1071,7 @@ msgstr "<gui>Ayuda</gui>: muestra alguna ayuda"
 
 #: C/data-manager-perspective.page:81(title)
 msgid "Executing defined data sources"
-msgstr ""
+msgstr "Ejecutar orígenes de datos definidos"
 
 #: C/data-manager-perspective.page:82(p)
 msgid ""
@@ -1086,4 +1097,6 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/index.page:0(None)
 msgid "translator-credits"
-msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2010"
+msgstr ""
+"Daniel Mustieles <daniel.mustieles@gmail.com>, 2010\n"
+"Jorge González <jorgegonz@svn.gnome.org>, 2010"
