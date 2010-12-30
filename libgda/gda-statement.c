@@ -1416,8 +1416,11 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		if (!str) goto err;
 	}
 	else if (expr->cond) {
-		str = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
-		if (!str) goto err;
+		gchar *tmp;
+		tmp = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
+		if (!tmp) goto err;
+		str = g_strconcat ("(", tmp, ")", NULL);
+		g_free (tmp);
 	}
 	else if (expr->select) {
 		gchar *str1;
@@ -1426,7 +1429,7 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 
 		if (! GDA_SQL_ANY_PART (expr)->parent ||
 		    (GDA_SQL_ANY_PART (expr)->parent->type != GDA_SQL_ANY_SQL_FUNCTION)) {
-			str = g_strdup_printf ("(%s)", str1);
+			str = g_strconcat ("(", str1, ")", NULL);
 			g_free (str1);
 		}
 		else
