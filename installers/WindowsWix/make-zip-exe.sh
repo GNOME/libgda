@@ -183,7 +183,7 @@ add_files_to_zip $archive $cross_path bin $files
 files=(gdaui-demo-4.0.exe)
 add_files_to_zip $archive_dev $prefix bin $files
 
-files=(libgda-bdb.dll libgda-mdb.dll libgda-mysql.dll libgda-postgres.dll libgda-sqlite.dll libgda-web.dll)
+files=(libgda-bdb.dll libgda-mdb.dll libgda-mysql.dll libgda-postgres.dll libgda-sqlite.dll libgda-web.dll libgda-oracle.dll)
 add_files_to_zip $archive $prefix lib/libgda-4.0/providers $files
 
 files=(gdaui-entry-filesel-spec.xml gdaui-entry-password.xml gdaui-entry-pict-spec.xml gdaui-entry-pict-spec_string.xml libgda-ui-plugins.dll)

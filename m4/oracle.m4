@@ -96,7 +96,12 @@ m4_define([_ORACLE_CHECK_INTERNAL],
     then
 	if test "x$linklibext" = x
 	then
-	    oracle_libext=".so"
+	    if test $platform_win32 = yes
+	    then
+	        oracle_libext=".dll"
+	    else
+	        oracle_libext=".so"
+            fi
 	else
 	    oracle_libext="$linklibext"
 	fi
@@ -105,12 +110,25 @@ m4_define([_ORACLE_CHECK_INTERNAL],
 	do
 	    oracledir=""
 	    AC_MSG_CHECKING([for Oracle files in $d])
-	    if test -f $d/$oracle_loclibdir/libclntsh$oracle_libext
+	    if test $platform_win32 = yes
+	    then
+	        orafname="oci$oracle_libext"
+	    else
+	        orafname="libclntsh$oracle_libext"
+	    fi
+
+	    if test -f $d/$oracle_loclibdir/$orafname
 	    then
   	        save_CFLAGS="$CFLAGS"
-	        CFLAGS="$CFLAGS -I$d/include -I$d/include/oracle/client -I$d/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$d/network/public"
   	        save_LIBS="$LIBS"
-	        LIBS="$LIBS -L$d/$oracle_loclibdir -lm -ldl -lclntsh"
+	        if test $platform_win32 = yes
+		then
+		    CFLAGS="$CFLAGS -I$d/include"
+	            LIBS="$LIBS -L$d/$oracle_loclibdir -lm -loci"
+		else
+	            CFLAGS="$CFLAGS -I$d/include -I$d/include/oracle/client -I$d/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$d/network/public"
+	            LIBS="$LIBS -L$d/$oracle_loclibdir -lm -ldl -lclntsh"
+		fi
    	        AC_LINK_IFELSE([[
 #include <oci.h>
 int main() {
@@ -126,8 +144,14 @@ int main() {
 	    if test x$oracledir != x
 	    then
 		AC_MSG_RESULT([found])
-		ORACLE_CFLAGS="-I${oracledir}/include -I${oracledir}/include/oracle/client -I${oracledir}/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I${oracledir}/network/public"
-	    	ORACLE_LIBS="-L${oracledir}/$oracle_loclibdir -lm -ldl -lclntsh"
+	        if test $platform_win32 = yes
+		then
+		    ORACLE_CFLAGS="-I${oracledir}/include"
+	    	    ORACLE_LIBS="-L${oracledir}/$oracle_loclibdir -lm -loci"
+		else
+		    ORACLE_CFLAGS="-I${oracledir}/include -I${oracledir}/include/oracle/client -I${oracledir}/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I${oracledir}/network/public"
+	    	    ORACLE_LIBS="-L${oracledir}/$oracle_loclibdir -lm -ldl -lclntsh"
+		fi
 		break
   	    else
 	        AC_MSG_RESULT([not found])
