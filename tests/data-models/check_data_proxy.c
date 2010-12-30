@@ -719,7 +719,7 @@ do_test_common_read (GdaDataModel *proxy)
 
 
 	filter = gda_data_proxy_get_filter_expr (GDA_DATA_PROXY (proxy));
-	if (!filter || strcmp (filter, "countrycode = 'BFA'")) {
+	if (!filter || strcmp (filter, "(countrycode = 'BFA')")) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("ERROR: Filter should be '%s' and is '%s'\n", "countrycode = 'BFA'", filter);
 #endif
