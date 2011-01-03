@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the libgda package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Jorge González <jorgegonz@svn.gnome.org>, 2010.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2010-12-22 18:46+0000\n"
-"PO-Revision-Date: 2010-12-28 21:07+0100\n"
+"POT-Creation-Date: 2010-12-29 09:43+0000\n"
+"PO-Revision-Date: 2011-01-03 15:46+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,8 @@ msgid ""
 "Variables can be used in any SQL code, and are defined using the following "
 "syntax:"
 msgstr ""
+"Las variables se pueden usar en cualquier código SQL, y se definen usando la "
+"siguiente sintaxis:"
 
 #: C/variables.page:21(p)
 msgid "Notes:"
@@ -53,6 +55,9 @@ msgid ""
 "the <em>variable name</em> can contain any SQL identifier character or among "
 "the <code>+-.|@?</code>characters (no space allowed)"
 msgstr ""
+"el <em>nombre de la variable</em> puede contener cualquier carácter "
+"identificador de SQL o entre los caracteres <code>+-.|@?</code> (no se "
+"permiten espacios)"
 
 #: C/variables.page:27(p)
 msgid ""
@@ -61,12 +66,18 @@ msgid ""
 "<code>timestamp</code>, <code>guint</code>, <code>blob</code> and "
 "<code>binary</code>"
 msgstr ""
+"el <em>tipo de variable</em> puede ser: <code>string</code>, <code>boolean</"
+"code>, <code>int</code>, <code>date</code>, <code>time</code>, "
+"<code>timestamp</code>, <code>guint</code>, <code>blob</code> y "
+"<code>binary</code>"
 
 #: C/variables.page:30(p)
 msgid ""
 "the <code>::NULL</code> can be appended to specify that the variable may "
 "take the special <code>NULL</code> value."
 msgstr ""
+"se puede añadir <code>::NULL</code> para especificar que la variable puede "
+"tener el valor especial <code>NULL</code>."
 
 #: C/variables.page:33(p)
 msgid "Examples:"
@@ -246,6 +257,12 @@ msgid ""
 "a <link xref=\"query-execution-perspective\">query execution perspective</"
 "link>, clear the history item relating to the data set)."
 msgstr ""
+"Una transacción se puede iniciar automáticamente cuando se ejecuta una "
+"sentencia SELECT que implica objetos binarios (BLOB), y se puede bloquear la "
+"transacción mientras el conjunto de datos resultante se mantiene en la "
+"memoria (para deshacerse de un conjunto de datos en una <link xref=\"query-"
+"execution-perspective\">perspectiva de ejecución de la consulta</link>, "
+"limpie el elemento del histórico relativo al conjunto de datos)."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -288,7 +305,7 @@ msgstr ""
 
 #: C/schema-browser-perspective.page:29(p)
 msgid "The right pane is composed of several types of tabs:"
-msgstr ""
+msgstr "El panel derecho se compone de distintos tipos de solapas:"
 
 #: C/schema-browser-perspective.page:33(p)
 msgid ""
@@ -296,6 +313,9 @@ msgid ""
 "where the tables with the more relations to other tables being displayed in "
 "a larger font; this tab is always present"
 msgstr ""
+"una solapa que lista todas las tablas y vistas de la base de datos, en una "
+"vista de <em>nube</em> donde las tablas con más relaciones que otras se "
+"muestran con una tipografía más grande; está solapa está siempre presente"
 
 #: C/schema-browser-perspective.page:36(p)
 msgid ""
@@ -311,6 +331,9 @@ msgid ""
 "tables can be represented, where they are linked using their relations (as "
 "foreign key constraints)"
 msgstr ""
+"cero o más <link xref=\"diagram\">diagramas</link> en los que se puede "
+"representar cualquier número de tablas, y donde están enlazadas usando sus "
+"relaciones (como restricciones de clave ajena)"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -345,6 +368,7 @@ msgstr "Perspectiva de ejecución de la consulta"
 #: C/query-execution-perspective.page:20(desc)
 msgid "The query exec perspective with one SELECT statement executed"
 msgstr ""
+"La perspectiva de ejecución de la consulta con una sentencia SELECT ejecutada"
 
 #: C/query-execution-perspective.page:24(p)
 msgid ""
@@ -429,6 +453,8 @@ msgid ""
 "<gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</"
 "key><key>l</key></keyseq> shortcut)"
 msgstr ""
+"<gui>Limipiar</gui>: limpia el editor (similar al atajo <keyseq><key>Ctrl</"
+"key><key>l</key></keyseq>)"
 
 #: C/query-execution-perspective.page:65(p)
 msgid ""
@@ -451,10 +477,12 @@ msgid ""
 "<gui>Indent</gui>: re-indents the SQL code (warning: this removes any "
 "comments)"
 msgstr ""
+"<gui>Sangrar</gui>: reindenta el código SQL (aviso: esto quita cualquier "
+"comentario)"
 
 #: C/query-execution-perspective.page:72(p)
 msgid "<gui>Favorites</gui>: adds the current SQL code to the favorites"
-msgstr ""
+msgstr "<gui>Favoritos</gui>: añade el código SQL actual a los favoritos"
 
 #: C/query-execution-perspective.page:77(title)
 msgid "Execution history"
@@ -474,6 +502,9 @@ msgid ""
 "code to the SQL editor, and the <gui>Clear</gui> button removes all the "
 "history items."
 msgstr ""
+"El botón <gui>Copiar</gui> copia el elemento de código SQL del histórico "
+"seleccionado actualmente al editor SQL, y el botón <gui>Limpiar</gui> quita "
+"todos los elementos del histórico."
 
 #: C/query-execution-perspective.page:87(p)
 msgid ""
@@ -532,6 +563,10 @@ msgid ""
 "commands interactively, and in a broader way manage the data contained in "
 "the databases."
 msgstr ""
+"<app>gda-browser</app> es una herramienta para administradores de bases de "
+"datos: pueden analizar esquemas de bases de datos para entender cómo se "
+"organizan los datos, ejecutar comandos SQL interactivamente y, de manera más "
+"amplia, administrar los datos contenidos en las bases de datos."
 
 #: C/index.page:16(p)
 msgid ""
@@ -820,6 +855,8 @@ msgid ""
 "<code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the "
 "column's position starts at 1"
 msgstr ""
+"<code>&lt;data source ID&gt;@&lt;column position&gt;</code> donde la "
+"posición de la columna empieza en 1"
 
 #: C/data-manager-xml-syntax.page:81(code)
 #, no-wrap
