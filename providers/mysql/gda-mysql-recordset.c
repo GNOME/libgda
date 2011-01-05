@@ -31,11 +31,10 @@
 #include "gda-mysql-recordset.h"
 #include "gda-mysql-provider.h"
 #include "gda-mysql-util.h"
-
+#include <libgda/libgda-global-variables.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
-extern gchar *gda_numeric_locale;
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 

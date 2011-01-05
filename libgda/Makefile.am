@@ -94,7 +94,8 @@ gda_headers = \
 	gda-tree-mgr-select.h \
 	gda-util.h \
 	gda-value.h \
-	gda-xa-transaction.h
+	gda-xa-transaction.h \
+	libgda-global-variables.h
 
 gda_built_sources= \
 	$(builddir)/libgda.h
