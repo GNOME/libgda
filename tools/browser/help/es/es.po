@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2010-12-29 09:43+0000\n"
-"PO-Revision-Date: 2011-01-03 15:46+0100\n"
+"POT-Creation-Date: 2011-01-03 19:40+0000\n"
+"PO-Revision-Date: 2011-01-04 18:08+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,11 @@ msgid ""
 "benefits are faster execution times (as the SQL code is parsed only once) "
 "and a protection against SQL injection vulnerabilities."
 msgstr ""
+"Las variables (algunas veces denominadas <em>contenedores</em>) son lugares "
+"del código SQL que se reemplazan con valores actuales cuando se ejecuta el "
+"código SQL. Los beneficios son una ejecución más rápida (ya que el código se "
+"analiza una sola vez) y protección frente a vulnerabilidades de inyección de "
+"código SQL."
 
 #: C/variables.page:16(p)
 msgid ""
@@ -220,6 +225,8 @@ msgid ""
 "Transactions can be started, committed or rolled back on a per connection "
 "basis:"
 msgstr ""
+"Las transacciones se pueden iniciar, efectuar o revertir basándose en una "
+"conexión:"
 
 #: C/transactions.page:14(p)
 msgid ""
@@ -287,14 +294,17 @@ msgid ""
 "The perspective is divided in two horizontal panes: the left pane for the "
 "user defined favorites, and the right pane being the action area."
 msgstr ""
+"La perspectiva se divide en dos paneles horizontales: el panel de la "
+"izquierda para los favoritos definidos por el usuario, y el panel de la "
+"derecha que es el área de acción."
 
 #: C/schema-browser-perspective.page:19(title)
 msgid "Schema browser perspective's default view"
-msgstr ""
+msgstr "Vista predeterminada de la perspectiva del visor de esquemas"
 
 #: C/schema-browser-perspective.page:20(desc)
 msgid "The default Schema browser perspective"
-msgstr ""
+msgstr "La perspectiva predeterminada del visor de esquemas"
 
 #: C/schema-browser-perspective.page:24(p)
 msgid ""
@@ -324,6 +334,11 @@ msgid ""
 "constraints), a <link xref=\"diagram\">diagram</link> showing the related "
 "tables, and an area to define display preferences for each column's data"
 msgstr ""
+"cero o más solapas que representan las propiedades de una tabla o una vista: "
+"la lista de columnas, la lista de restricciones (claves primarias o ajenas y "
+"restricciones de unicidad), un <link xref=\"diagram\">diagrama</link> que "
+"muestra las tablas relacionadas y un área para definir preferencias de "
+"visualización para los datos de cada columna"
 
 #: C/schema-browser-perspective.page:39(p)
 msgid ""
@@ -360,6 +375,9 @@ msgid ""
 "The perspective is divided in two horizontal panes: the left pane for the "
 "user defined favorite statements, and the right pane being the action area."
 msgstr ""
+"La perspectiva se divide en dos paneles horizontales: el panel de la "
+"izquierda para las declaraciones favoritas del usuario, y el panel de la "
+"derecha que es el área de acción."
 
 #: C/query-execution-perspective.page:19(title)
 msgid "Query exec perspective"
@@ -409,6 +427,9 @@ msgid ""
 "database, with the exception of <link xref=\"variables-syntax\">variables</"
 "link> (which must have a specific syntax)."
 msgstr ""
+"El área SQL es un editor de SQL. El código SQL puede ser cualquiera que la "
+"base de datos entienda, con la excepción de las <link xref=\"variables-syntax"
+"\">variables</link> (que deben tener una sintaxis específica)."
 
 #: C/query-execution-perspective.page:46(p)
 msgid "The keyboard shortcuts in the SQL editor are:"
@@ -446,7 +467,7 @@ msgstr "Botones de comandos"
 #: C/query-execution-perspective.page:60(p)
 #: C/data-manager-perspective.page:63(p)
 msgid "The commands available through the command buttons are:"
-msgstr ""
+msgstr "Los comandos disponibles a través de los botones de comandos son:"
 
 #: C/query-execution-perspective.page:64(p)
 msgid ""
@@ -463,6 +484,10 @@ msgid ""
 "in the SQL code. The panel is automatically shown when a variable is "
 "detected in the SQL code"
 msgstr ""
+"<gui>Variables</gui>: muestra u oculta el panel de <link xref=\\\"variables-"
+"syntax\\\">variables</link> donde puede dar valores a las variables "
+"presentes en el código SQL. El panel se muestra automáticamente cuando se "
+"detecta una variable en el código SQL."
 
 #: C/query-execution-perspective.page:68(p)
 msgid ""
@@ -471,6 +496,10 @@ msgid ""
 "variables to be given values. This is similar to the <keyseq><key>Ctrl</"
 "key><key>ENTER</key></keyseq> shortcut"
 msgstr ""
+"<gui>Execute</gui>: ejecuta el código SQL. Si el código SQL contiene algunas "
+"variables que no se han establecido, aparecerá primero una ventana emergente "
+"pidiendo que se asigne un valor a esas variables. Esto es similar al atajo "
+"<keyseq><key>Ctrl</key><key>Intro</key></keyseq>."
 
 #: C/query-execution-perspective.page:71(p)
 msgid ""
@@ -574,6 +603,9 @@ msgid ""
 "work on multiple databases at once (it is also possible to execute commands "
 "on several connections at the same time)."
 msgstr ""
+"Se pueden abrir varias conexiones a bases de datos a la vez, permitiendo al "
+"usuario trabajar con varias bases de datos al mismo tiempo (también es "
+"posible ejecutar comandos en varias conexiones al mismo tiempo)."
 
 #: C/index.page:19(p)
 msgid ""
@@ -587,6 +619,15 @@ msgid ""
 "sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at "
 "the moment)."
 msgstr ""
+"Ya que <app>gda-browser</app> usa la biblioteca <app>libgda</app> puede "
+"abrir conexiones a bases de datos cuyo controlador (proveedor) exista en "
+"<app>libgda</app> (por el momento, <link href=\"http://www.oracle.com"
+"\">Oracle</link>, <link href=\"http://www.mysql.org\">MySQL</link>, <link "
+"href=\"http://www.postgresql.org/\">PostgreSQL</link>, <link href=\"http://"
+"www.sqlite.org\">SQLite</link>, MS Access (a través de la biblioteca <link "
+"href=\"http://sourceforge.net/projects/mdbtools/\">MDBTools</link>) y <link "
+"href=\"http://java.sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> "
+"están soportadas)."
 
 #: C/index.page:28(title)
 msgid "Presentation"
@@ -612,6 +653,11 @@ msgid ""
 "<guiseq><gui>Window</gui><gui>New window</gui></guiseq> menu or the "
 "<keyseq><key>Ctrl</key><key>N</key></keyseq> shortcut)."
 msgstr ""
+"<app>gda-browser</app> se compone de una o más ventanas de nivel superior, "
+"siendo cada ventana relativa a una única conexión (cuyo nombre aparece en el "
+"título). Para cualquier conexión dada se pueden abrir varias ventanas (use "
+"el menú <guiseq><gui>Ventana</gui><gui>Ventana nueva</gui></guiseq> o el "
+"atajo <keyseq><key>Ctrl</key><key>N</key></keyseq>)."
 
 #: C/general-ui.page:16(title)
 msgid "A connection window"
@@ -633,6 +679,8 @@ msgid ""
 "the <link xref=\"schema-browser-perspective\">Schema browser perspective</"
 "link> to help understand the database's layout"
 msgstr ""
+"la <link xref=\"schema-browser-perspective\">perspectiva del visor de "
+"esquemas</link> para ayudarle a entender la distribución de la base de datos"
 
 #: C/general-ui.page:27(p)
 msgid ""
@@ -712,7 +760,7 @@ msgstr "Diagrama"
 
 #: C/diagram.page:14(desc)
 msgid "Diagram showing some tables and their relations"
-msgstr ""
+msgstr "Diagrama que muestra algunas tablas y sus relaciones"
 
 #: C/diagram.page:17(p)
 msgid ""
