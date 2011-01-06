@@ -77,6 +77,7 @@ libgda/thread-wrapper/gda-thread-provider.c
 libgda/thread-wrapper/gda-thread-wrapper.c
 libgda-report/DocBook/gda-report-docbook-document.c
 libgda-report/engine/gda-report-engine.c
+libgda-report/engine/rt-parser.c
 libgda-report/gda-report-document.c
 libgda-report/RML/gda-report-rml-document.c
 libgda-ui/data-entries/common-bin.c

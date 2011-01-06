@@ -1588,7 +1588,11 @@ Description for type: DROP_COLUMN
       <title>Introduction</title>
       <para>
 	&LIBGDA;'s report feature has been reworked and is only offers it <link linkend="GdaReportEngine">report engine object</link>, 
-	a low level general usage engine to generate reports in the XML format.
+	a low level general usage engine to generate reports in the XML format. More specifically it converts
+	an XML tree containing special tags into another XML tree where all the specific tags have been
+	expanded/replaced with database contents. For more information about the special tags taken
+	into account, please refer to the <link linkend="GdaReportEngine">GdaReportEngine</link>'s
+	documentation.
       </para>
       <para>
 	Working on any XML file allows the report engine to work with all the existing post-processors which will actually
@@ -1599,7 +1603,7 @@ Description for type: DROP_COLUMN
 	      (see <ulink url="http://wiki.docbook.org/topic/DocBookXsltPublishingModelDiagram">this docbook Wiki page</ulink>)
 	  </para></listitem>
 	  <listitem><para>RML files (Report Markup Language), see <ulink url="http://www.reportlab.org/">ReportLab</ulink> or
-	      <ulink url="http://en.openreport.org/index.py/static/page/trml2pdf">OpenReport</ulink>) can be converted to HTML or PDF)
+	      <ulink url="http://oreports.com">OpenReports</ulink> can be converted to HTML or PDF.
 	  </para></listitem>
 	  <listitem><para>some other XML dialects can also be used such as 
 	      <ulink url="http://sourceforge.net/projects/rlib/">RLib</ulink>, 

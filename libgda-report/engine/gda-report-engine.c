@@ -39,6 +39,8 @@
 #include <libgda/handlers/gda-handler-time.h>
 #include <libgda/handlers/gda-handler-type.h>
 
+#include "rt-parser.h"
+
 struct _GdaReportEnginePrivate {
 	xmlDocPtr     doc; /* may be %NULL */
 	xmlNodePtr    spec;
@@ -444,7 +446,7 @@ static gboolean command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node,
 static GdaStatement *rewrite_statement (GdaReportEngine *engine, RunContext *context, GdaStatement *stmt, GError **error);
 static gboolean assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *plist, GError **error);
 static GValue *evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *expr, GError **error);
-static xmlNodePtr value_to_node (GdaReportEngine *engine, RunContext *context, const GValue *value);
+static xmlNodePtr value_to_node (GdaReportEngine *engine, RunContext *context, const GValue *value, GdaSet *options);
 
 /*
  * Function to be called when a "gda_report_..." node is found
@@ -804,6 +806,7 @@ run_context_pop (G_GNUC_UNUSED GdaReportEngine *engine, RunContext *context)
  *
  * uses node's contents: no
  * requested attributes: param_name
+ * optional attributes: converter => use "richtext::docbook"
  */
 static gboolean
 command_gda_report_param_value (GdaReportEngine *engine, xmlNodePtr node, GSList **created_nodes,
@@ -824,9 +827,18 @@ command_gda_report_param_value (GdaReportEngine *engine, xmlNodePtr node, GSList
 			/* Add a text node */
 			const GValue *value;
 			xmlNodePtr child;
+			GdaSet *options = NULL;
+			xmlChar *cprop;
 
+			cprop = xmlGetProp (node, BAD_CAST "converter");
+			if (cprop) {
+				options = gda_set_new_inline (1, "converter", G_TYPE_STRING, (gchar*) cprop);
+				xmlFree (cprop);
+			}
 			value = gda_holder_get_value (param);
-			child = value_to_node (engine, context, value);
+			child = value_to_node (engine, context, value, options);
+			if (options)
+				g_object_unref (options);
 			*created_nodes = g_slist_prepend (NULL, child);
 		}
 		xmlFree (prop);
@@ -858,7 +870,7 @@ command_gda_report_eval_expr (GdaReportEngine *engine, xmlNodePtr node, GSList *
 				     (const gchar *) xmlNodeGetContent (node), error);
 	if (!value)
 		return FALSE;
-	child = value_to_node (engine, context, value);
+	child = value_to_node (engine, context, value, NULL);
 	*created_nodes = g_slist_prepend (NULL, child);
 
 	return TRUE;
@@ -1166,9 +1178,12 @@ gtype_equal (gconstpointer a, gconstpointer b)
  * Converts @value to a string
  */
 static xmlNodePtr
-value_to_node (G_GNUC_UNUSED GdaReportEngine *engine, G_GNUC_UNUSED RunContext *context, const GValue *value)
+value_to_node (G_GNUC_UNUSED GdaReportEngine *engine, G_GNUC_UNUSED RunContext *context, const GValue *value, GdaSet *options)
 {
-	xmlNodePtr retnode;
+	xmlNodePtr retnode = NULL;
+	GdaHolder *converter = NULL;
+	if (options)
+		converter = gda_set_get_holder (options, "converter");
 
 	if (!value || gda_value_is_null (value))
 		retnode = xmlNewText (BAD_CAST "");
@@ -1207,13 +1222,31 @@ value_to_node (G_GNUC_UNUSED GdaReportEngine *engine, G_GNUC_UNUSED RunContext *
 			g_hash_table_insert (data_handlers, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());
 		}
 
+		gboolean converted = FALSE;
+
 		dh = g_hash_table_lookup (data_handlers, (gpointer) G_VALUE_TYPE (value));
 		if (dh) 
 			str = gda_data_handler_get_str_from_value (dh, value);
 		else
 			str = gda_value_stringify (value);
-			
-		retnode = xmlNewText (BAD_CAST (str ? str : ""));
+		if (converter) {
+			const GValue *cvalue;
+			cvalue = gda_holder_get_value (converter);
+			if ((G_VALUE_TYPE (cvalue) == G_TYPE_STRING) && g_value_get_string (cvalue)) {
+				gchar **array;
+				array = g_strsplit (g_value_get_string (cvalue), "::", 0);
+				if (array[0] && !strcmp (array[0], "richtext")) {
+					if (array[1] && !strcmp (array[1], "docbook")) {
+						retnode = xmlNewNode (NULL, BAD_CAST "para");
+						parse_rich_text_to_docbook (retnode, str);
+						converted = TRUE;
+					}
+				}
+			}
+		}
+		if (!converted)
+			retnode = xmlNewText (BAD_CAST (str ? str : ""));
+
 		g_free (str);
 	}
 
