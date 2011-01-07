@@ -52,16 +52,33 @@ main_browser_core_init_factories (void)
 	return factories;
 }
 
+static void
+output_data_model (GdaDataModel *model)
+{
+	if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
+		g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
+	if (! getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY"))
+		g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
+	if (isatty (fileno (stdout))) {
+		if (! getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE"))
+			g_setenv ("GDA_DATA_MODEL_DUMP_TRUNCATE", "-1", TRUE);
+	}
+	gda_data_model_dump (model, NULL);	
+}
+
+
 /* options */
 gchar *perspective = NULL;
 gboolean list_configs = FALSE;
 gboolean list_providers = FALSE;
+gboolean list_data_files = FALSE;
 
 static GOptionEntry entries[] = {
         { "perspective", 'p', 0, G_OPTION_ARG_STRING, &perspective, "Perspective", "default perspective "
 	  "to use when opening windows"},
         { "list-dsn", 'l', 0, G_OPTION_ARG_NONE, &list_configs, "List configured data sources and exit", NULL },
         { "list-providers", 'L', 0, G_OPTION_ARG_NONE, &list_providers, "List installed database providers and exit", NULL },
+        { "data-files-list", 0, 0, G_OPTION_ARG_NONE, &list_data_files, "List files used to hold information related to each connection", NULL },
 	{ NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
@@ -94,15 +111,7 @@ main (int argc, char *argv[])
 			model = config_info_list_all_providers ();
 
 		if (model) {
-			if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
-				g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
-			if (! getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY"))
-				g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
-			if (isatty (fileno (stdout))) {
-				if (! getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE"))
-					g_setenv ("GDA_DATA_MODEL_DUMP_TRUNCATE", "-1", TRUE);
-			}
-			gda_data_model_dump (model, NULL);
+			output_data_model (model);
 			g_object_unref (model);
 		}
 		else {
@@ -115,16 +124,26 @@ main (int argc, char *argv[])
 	if (list_configs) {
 		gda_init ();
 		GdaDataModel *model = config_info_list_all_dsn ();
-		if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
-			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
-		if (! getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY"))
-			g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
-		if (isatty (fileno (stdout))) {
-			if (! getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE"))
-				g_setenv ("GDA_DATA_MODEL_DUMP_TRUNCATE", "-1", TRUE);
-		}
-		gda_data_model_dump (model, NULL);
+		output_data_model (model);
 		g_object_unref (model);
+		return 0;
+	}
+	if (list_data_files) {
+		gchar *confdir;
+		GdaDataModel *model;
+
+		gda_init ();
+		confdir = config_info_compute_dict_directory ();
+		g_print (_("All files are in the directory: %s\n"), confdir);
+		g_free (confdir);
+		model = config_info_list_data_files (&error);
+		if (model) {
+			output_data_model (model);
+			g_object_unref (model);
+		}
+		else
+			g_print (_("Can't get the list of files used to store information about each connection: %s\n"),
+				 error->message);	
 		return 0;
 	}
 

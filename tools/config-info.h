@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2010 The GNOME Foundation.
+ * Copyright (C) 2010 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -24,8 +24,13 @@
 
 #include <libgda/libgda.h>
 
+gchar        *config_info_compute_dict_directory (void);
+gchar        *config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string);
+void          config_info_update_meta_store_properties (GdaMetaStore *mstore, GdaConnection *rel_cnc);
+
 GdaDataModel *config_info_list_all_dsn (void);
 GdaDataModel *config_info_list_all_providers (void);
 GdaDataModel *config_info_detail_provider (const gchar *provider, GError **error);
+GdaDataModel *config_info_list_data_files (GError **error);
 
 #endif
