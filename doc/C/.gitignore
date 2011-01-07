@@ -27,5 +27,6 @@ pdf-build.stamp
 libgda-4.0-undeclared.txt
 libgda-4.0-unused.sgml
 version.xml
+builddate.xml
 *.bak
 libgda-4.0-sections.txt
