@@ -14,6 +14,7 @@ gda-sql - an SQL console based on Libgda
 [\-L] [\-\-list\-providers]
 [\-s] [\-\-http\-port \fI<port>\fP]
 [\-t] [\-\-http\-token \fI<token phrase>\fP]
+[\-\-data\-files\-list]
 [connection's spec] [connection's spec...]
 
 .SH DESCRIPTION
@@ -67,11 +68,14 @@ Starts the embedded HTTP server on port \fI<port>\fP
 .B \-t, \-\-http\-token \fI<token phrase>\fP
 Requires HTTP clients to authenticate by providing the \fI<token phrase>\fP
 (empty phrase by default)
-
+.TP 8
+.B \-\-data\-files\-list
+Lists all the files used to hold information related to each connection (ie.
+information gathered by the tool about the connection such as meta data, defined statements,...)
 
 
 .SH ENVIRONMENT
-gda-sql respects a number of environment variables.
+gda-sql can be configured through some environment variables:
 .PP
 .TP 8
 .B GDA_SQL_CNC
@@ -95,6 +99,22 @@ to define a PDF viewer.
 .B GDA_SQL_HISTFILE
 to define the history file name to use (by default .gdasql_history), set to NO_HISTORY
 to disable history logging.
+.TP 8
+.B GDA_DATA_MODEL_DUMP_ROW_NUMBERS
+if set, the first column of the output will contain row numbers
+.TP 8
+.B GDA_DATA_MODEL_DUMP_ATTRIBUTES
+if set, also dump the data model's columns' types and value's attributes
+.TP 8
+.B GDA_DATA_MODEL_DUMP_TITLE
+if set, also dump the data model's title
+.TP 8
+.B GDA_DATA_MODEL_NULL_AS_EMPTY
+if set, replace the 'NULL' string with an empty string for NULL values
+.TP 8
+.B GDA_DATA_MODEL_DUMP_TRUNCATE
+if set to a numeric value, truncates the output to the width specified by the value.
+If the value is -1 then the actual terminal size (if it can be determined) is used
 
 .TP 0
 gda-sql can be compiled with support for binary relocatibility.
@@ -107,7 +127,8 @@ gda-sql stores data source definitions (DSN) in Libgda defined files
 ($HOME/.local/share/libgda and @gdasysconfdir@/libgda-@GDA_ABI_VERSION@/config
 where ${prefix} is typically /usr).
 
-For each connection defined by a DSN, the meta data is stored in a
+For each connection defined by a DSN, all the information regarding the connection
+(such as the meta data) is stored in a
 $HOME/.local/share/libgda/gda-sql-<DSN>.db file.
 
 
@@ -139,7 +160,7 @@ and if a username or a password is required but not specified, it will ba asked 
 \fB.c <CNC_NAME> <DSN_NAME>\fP opens a connection internally known as \fI<CNC_NAME>\fP,
 using the specified DSN.
 
-\fB.c <CNC_NAME> <CNC_DEFINITION>] \fP opens a connection internally known as \fI<CNC_NAME>\fP,
+\fB.c <CNC_NAME> <CNC_DEFINITION> \fP opens a connection internally known as \fI<CNC_NAME>\fP,
 using a connection specified by \fI<CNC_DEFINITION>\fP which is similar to the \fI<DSN_DEFINITION>\fP parameter
 of the \fB.lc\fP command.
 
