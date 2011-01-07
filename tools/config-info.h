@@ -32,5 +32,6 @@ GdaDataModel *config_info_list_all_dsn (void);
 GdaDataModel *config_info_list_all_providers (void);
 GdaDataModel *config_info_detail_provider (const gchar *provider, GError **error);
 GdaDataModel *config_info_list_data_files (GError **error);
+gchar        *config_info_purge_data_files (const gchar *criteria, GError **error);
 
 #endif
