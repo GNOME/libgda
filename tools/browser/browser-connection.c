@@ -26,11 +26,9 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-sql-builder.h>
 #include <libgda-ui/gdaui-enums.h>
+#include "../config-info.h"
 
 #include "browser-connection-priv.h"
-
-/* code inclusion */
-#include "../dict-file-name.c"
 
 #define CHECK_RESULTS_SHORT_TIMER 200
 #define CHECK_RESULTS_LONG_TIMER 2
@@ -396,8 +394,8 @@ browser_connection_set_property (GObject *object,
 			g_object_get (G_OBJECT (bcnc->priv->cnc),
 				      "dsn", &cnc_info,
 				      "cnc-string", &cnc_string, NULL);
-			dict_file_name = compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
-								 cnc_string);
+			dict_file_name = config_info_compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
+									     cnc_string);
 			g_free (cnc_string);
 			if (dict_file_name) {
 				if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
@@ -409,6 +407,8 @@ browser_connection_set_property (GObject *object,
 				if (store)
 					update_store = TRUE;
 			}
+			config_info_update_meta_store_properties (store, bcnc->priv->cnc);
+
 			bcnc->priv->dict_file_name = dict_file_name;
 			g_object_set (G_OBJECT (bcnc->priv->cnc), "meta-store", store, NULL);
 			if (update_store) {

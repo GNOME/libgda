@@ -106,7 +106,6 @@ webdata_DATA = \
 	irb.css
 
 EXTRA_DIST = \
-	dict-file-name.c \
 	gda-sql-res.rc \
 	gda-sql.ico \
 	$(webdata_DATA)

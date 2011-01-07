@@ -1,5 +1,5 @@
 /* GDA - SQL console
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Vivien Malerba <malerba@gnome-db.org>
@@ -57,9 +57,6 @@ typedef void (*sighandler_t)(int);
 #include "web-server.h"
 #endif
 
-/* code inclusion */
-#include "dict-file-name.c"
-
 /* options */
 gboolean show_version = FALSE;
 
@@ -69,6 +66,8 @@ gboolean interactive = FALSE;
 
 gboolean list_configs = FALSE;
 gboolean list_providers = FALSE;
+
+gboolean list_data_files = FALSE;
 
 gchar *outfile = NULL;
 gboolean has_threads;
@@ -90,6 +89,7 @@ static GOptionEntry entries[] = {
 	{ "http-port", 's', 0, G_OPTION_ARG_INT, &http_port, "Run embedded HTTP server on specified port", "port" },
 	{ "http-token", 't', 0, G_OPTION_ARG_STRING, &auth_token, "Authentication token (required to authenticate clients)", "token phrase" },
 #endif
+        { "data-files-list", 0, 0, G_OPTION_ARG_NONE, &list_data_files, "List files used to hold information related to each connection", NULL },
         { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
@@ -213,6 +213,23 @@ main (int argc, char *argv[])
 		GdaDataModel *model = config_info_list_all_dsn ();
 		output_data_model (model);
 		g_object_unref (model);
+		goto cleanup;
+	}
+	if (list_data_files) {
+		gchar *confdir;
+		GdaDataModel *model;
+
+		confdir = config_info_compute_dict_directory ();
+		g_print (_("All files are in the directory: %s\n"), confdir);
+		g_free (confdir);
+		model = config_info_list_data_files (&error);
+		if (model) {
+			output_data_model (model);
+			g_object_unref (model);
+		}
+		else
+			g_print (_("Can't get the list of files used to store information about each connection: %s\n"),
+				 error->message);	
 		goto cleanup;
 	}
 
@@ -1412,7 +1429,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		gchar *cnc_string;
 		g_object_get (G_OBJECT (newcnc),
 			      "cnc-string", &cnc_string, NULL);
-		dict_file_name = compute_dict_file_name (info, cnc_string);
+		dict_file_name = config_info_compute_dict_file_name (info, cnc_string);
 		g_free (cnc_string);
 
 		cs = g_new0 (ConnectionSetting, 1);
@@ -1442,7 +1459,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 			if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
 				update_store = TRUE;
 			store = gda_meta_store_new_with_file (dict_file_name);
-			g_print (_("All the meta data associated to the '%s' connection will be stored "
+			g_print (_("All the information related to the '%s' connection will be stored "
 				   "in the '%s' file\n"),
 				 cs->name, dict_file_name);
 		}
@@ -1451,6 +1468,8 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 			if (store)
 				update_store = TRUE;
 		}
+
+		config_info_update_meta_store_properties (store, newcnc);
 
 		g_object_set (G_OBJECT (cs->cnc), "meta-store", store, NULL);
 		if (update_store) {
@@ -1692,7 +1711,7 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
 		if (! getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY"))
 			g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
-		if (! main_data->output_stream || isatty (main_data->output_stream)) {
+		if (! main_data->output_stream || isatty (fileno (main_data->output_stream))) {
 			if (! getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE"))
 				g_setenv ("GDA_DATA_MODEL_DUMP_TRUNCATE", "-1", TRUE);
 		}
