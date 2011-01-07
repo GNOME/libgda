@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2010 The GNOME Foundation.
+ * Copyright (C) 2010 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -21,6 +21,7 @@
 
 #include "config-info.h"
 #include <glib/gi18n-lib.h>
+#include <glib/gstdio.h>
 
 GdaDataModel *
 config_info_list_all_dsn (void)
@@ -180,6 +181,22 @@ config_info_list_data_files (GError **error)
 			gda_data_model_set_value_at (model, 1, row, value, NULL);
 			gda_value_free (value);
 		}
+		else {
+			gchar *ptr;
+			gint i;
+			for (i = 0, ptr = dsn; *ptr; ptr++, i++) {
+				if (((*ptr < 'a') && (*ptr > 'z')) &&
+				    ((*ptr < '0') && (*ptr > '9')))
+					break;
+			}
+			if (*ptr || (i != 40)) {
+				/* this used to be a DSN which has been removed */
+				g_value_take_string ((value = gda_value_new (G_TYPE_STRING)),
+						     g_strdup_printf (_("(%s)"), dsn));
+				gda_data_model_set_value_at (model, 1, row, value, NULL);
+				gda_value_free (value);
+			}
+		}
 
 		/* Open the file */
 		GdaMetaStore *store;
@@ -213,9 +230,143 @@ config_info_list_data_files (GError **error)
 	return model;
 }
 
+typedef enum {
+	PURGE_ALL,
+	PURGE_NON_DSN,
+	PURGE_NON_EXIST_DSN,
+	
+	PURGE_LIST_ONLY,
 
+	PURGE_UNKNOWN
+} PurgeCriteria;
 
+static PurgeCriteria
+parse_criteria (const gchar *criteria)
+{
+	if (!g_ascii_strcasecmp (criteria, "all"))
+		return PURGE_ALL;
+	else if (!g_ascii_strcasecmp (criteria, "non-dsn"))
+		return PURGE_NON_DSN;
+	else if (!g_ascii_strcasecmp (criteria, "non-exist-dsn"))
+		return PURGE_NON_EXIST_DSN;
+	else if (!g_ascii_strcasecmp (criteria, "list-only"))
+		return PURGE_LIST_ONLY;
+	else
+		return PURGE_UNKNOWN;
+}
 
+gchar *
+config_info_purge_data_files (const gchar *criteria, GError **error)
+{
+	PurgeCriteria cri = PURGE_UNKNOWN;
+	GString *string = NULL;
+	gchar **array;
+	gint i;
+	gboolean list_only = FALSE;
+
+	array = g_strsplit_set (criteria, ",:", 0);
+	for (i = 0; array[i]; i++) {
+		PurgeCriteria tmpcri;
+		tmpcri = parse_criteria (array[i]);
+		if (tmpcri == PURGE_LIST_ONLY)
+			list_only = TRUE;
+		else if (tmpcri != PURGE_UNKNOWN)
+			cri = tmpcri;
+	}
+	g_strfreev (array);
+	if (cri == PURGE_UNKNOWN) {
+		g_set_error (error, 0, 0, "Unknown criteria '%s'", criteria);
+		return NULL;
+	}
+
+	const gchar *name;
+	gchar *confdir;
+	GDir *dir;
+	GString *errstring = NULL;
+
+	/* open directory */
+	confdir = config_info_compute_dict_directory ();
+	dir = g_dir_open (confdir, 0, error);
+	if (!dir) {
+		g_free (confdir);
+		return NULL;
+	}
+	while ((name = g_dir_read_name (dir))) {
+		gchar *copy, *dsn, *fname;
+		gboolean to_remove = FALSE;
+		
+		if (! g_str_has_suffix (name, ".db"))
+			continue;
+		if (! g_str_has_prefix (name, "gda-sql-"))
+			continue;
+
+		fname = g_build_filename (confdir, name, NULL);
+		copy = g_strdup (name);
+
+		dsn = copy + 8;
+		dsn [strlen (dsn) - 3] = 0;
+
+		if (cri == PURGE_ALL)
+			to_remove = TRUE;
+		else if ((cri == PURGE_NON_DSN) || (cri == PURGE_NON_EXIST_DSN)) {
+			GdaDsnInfo *dsninfo;
+			dsninfo = gda_config_get_dsn_info (dsn);
+			if (! dsninfo) {
+				to_remove = TRUE;
+				if (cri == PURGE_NON_DSN) {
+					gchar *ptr;
+					gint i;
+					for (i = 0, ptr = dsn; *ptr; ptr++, i++) {
+						if (((*ptr < 'a') && (*ptr > 'z')) &&
+						    ((*ptr < '0') && (*ptr > '9')))
+							break;
+					}
+					if (*ptr || (i != 40))
+						/* this used to be a DSN which has been removed */
+						to_remove = FALSE;
+				}
+			}
+		}		
+		
+		if (to_remove) {
+			if ((! list_only) && g_unlink (fname)) {
+				if (! errstring)
+					errstring = g_string_new ("");
+
+				g_string_append_c (errstring, '\n');
+				g_string_append (errstring, _("Failed to remove: "));
+				g_string_append (errstring, fname);
+			}
+			else {
+				if (! string)
+					string = g_string_new (fname);
+				else {
+					g_string_append_c (string, '\n');
+					g_string_append (string, fname);
+				}
+			}
+		}
+		
+		g_free (copy);
+		g_free (fname);
+	}
+	g_free (confdir);
+	g_dir_close (dir);
+
+	if (errstring) {
+		g_set_error (error, 0, 0, "%s", errstring->str);
+		g_string_free (errstring, TRUE);
+	}
+
+	if (string)
+		return g_string_free (string, FALSE);
+	else {
+		if (!errstring)
+			return g_strdup_printf (_("No file to purge!"));
+		else
+			return NULL;
+	}
+}
 
 
 gchar *

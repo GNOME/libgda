@@ -15,6 +15,7 @@ gda-sql - an SQL console based on Libgda
 [\-s] [\-\-http\-port \fI<port>\fP]
 [\-t] [\-\-http\-token \fI<token phrase>\fP]
 [\-\-data\-files\-list]
+[\-\-data\-files\-purge \fI<criteria>\fP]
 [connection's spec] [connection's spec...]
 
 .SH DESCRIPTION
@@ -72,7 +73,22 @@ Requires HTTP clients to authenticate by providing the \fI<token phrase>\fP
 .B \-\-data\-files\-list
 Lists all the files used to hold information related to each connection (ie.
 information gathered by the tool about the connection such as meta data, defined statements,...)
+.TP 8
+.B \-\-data\-files\-purge \fI<criteria>\fP
+Removes file used to hold information related to each connection for the criteria passed as argument
+(note that adding \fB"list-only"\fP to the criteria, either before or after it using a comma, will
+not actually remove the file):
 
+\fB"non-dsn"\fP: remove all the files which do not correspond to a DSN (data source name). These are the
+files created when a connection is specified using connection parameters instead of using a DSN
+
+\fB"non-exist-dsn"\fP: same as \fB"non-dsn"\fP except it also removes the files which were for DSN which
+don't exist anymore
+
+\fB"all"\fP: remove all the files, for a complete cleanup
+
+For example: \fB\-\-data\-files\-purge all,list-only\fP lists all the files (which would be removed
+if the command was \fB\-\-data\-files\-purge all\fP).
 
 .SH ENVIRONMENT
 gda-sql can be configured through some environment variables:

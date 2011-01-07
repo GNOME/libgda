@@ -68,6 +68,7 @@ gboolean list_configs = FALSE;
 gboolean list_providers = FALSE;
 
 gboolean list_data_files = FALSE;
+gchar *purge_data_files = NULL;
 
 gchar *outfile = NULL;
 gboolean has_threads;
@@ -90,6 +91,7 @@ static GOptionEntry entries[] = {
 	{ "http-token", 't', 0, G_OPTION_ARG_STRING, &auth_token, "Authentication token (required to authenticate clients)", "token phrase" },
 #endif
         { "data-files-list", 0, 0, G_OPTION_ARG_NONE, &list_data_files, "List files used to hold information related to each connection", NULL },
+        { "data-files-purge", 0, 0, G_OPTION_ARG_STRING, &purge_data_files, "Remove some files used to hold information related to each connection", "criteria"},
         { NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
@@ -229,6 +231,18 @@ main (int argc, char *argv[])
 		}
 		else
 			g_print (_("Can't get the list of files used to store information about each connection: %s\n"),
+				 error->message);	
+		goto cleanup;
+	}
+	if (purge_data_files) {
+		gchar *tmp;
+		tmp = config_info_purge_data_files (purge_data_files, &error);
+		if (tmp) {
+			output_string (tmp);
+			g_free (tmp);
+		}
+		if (error)
+			g_print (_("Error while purging files used to store information about each connection: %s\n"),
 				 error->message);	
 		goto cleanup;
 	}

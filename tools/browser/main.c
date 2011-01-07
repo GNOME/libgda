@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -72,6 +72,7 @@ gchar *perspective = NULL;
 gboolean list_configs = FALSE;
 gboolean list_providers = FALSE;
 gboolean list_data_files = FALSE;
+gchar *purge_data_files = NULL;
 
 static GOptionEntry entries[] = {
         { "perspective", 'p', 0, G_OPTION_ARG_STRING, &perspective, "Perspective", "default perspective "
@@ -79,6 +80,7 @@ static GOptionEntry entries[] = {
         { "list-dsn", 'l', 0, G_OPTION_ARG_NONE, &list_configs, "List configured data sources and exit", NULL },
         { "list-providers", 'L', 0, G_OPTION_ARG_NONE, &list_providers, "List installed database providers and exit", NULL },
         { "data-files-list", 0, 0, G_OPTION_ARG_NONE, &list_data_files, "List files used to hold information related to each connection", NULL },
+        { "data-files-purge", 0, 0, G_OPTION_ARG_STRING, &purge_data_files, "Remove some files used to hold information related to each connection", "criteria"},
 	{ NULL, 0, 0, 0, NULL, NULL, NULL }
 };
 
@@ -143,6 +145,20 @@ main (int argc, char *argv[])
 		}
 		else
 			g_print (_("Can't get the list of files used to store information about each connection: %s\n"),
+				 error->message);	
+		return 0;
+	}
+	if (purge_data_files) {
+		gchar *tmp;
+
+		gda_init ();
+		tmp = config_info_purge_data_files (purge_data_files, &error);
+		if (tmp) {
+			g_print ("%s\n", tmp);
+			g_free (tmp);
+		}
+		if (error)
+			g_print (_("Error while purging files used to store information about each connection: %s\n"),
 				 error->message);	
 		return 0;
 	}
