@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-01-03 19:40+0000\n"
-"PO-Revision-Date: 2011-01-04 18:08+0100\n"
+"POT-Creation-Date: 2011-01-06 09:51+0000\n"
+"PO-Revision-Date: 2011-01-07 17:03+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -140,7 +140,7 @@ msgstr "Una ventana emergente para insertar datos en una tabla"
 
 #: C/table-insert-data.page:22(p)
 msgid "The noticeable points here are:"
-msgstr ""
+msgstr "Los puntos importantes están aquí:"
 
 #: C/table-insert-data.page:26(p)
 msgid ""
@@ -687,6 +687,8 @@ msgid ""
 "the <link xref=\"query-execution-perspective\">Query execution perspective</"
 "link> to execute any SQL command"
 msgstr ""
+"la <link xref=\"query-execution-perspective\">perspectiva de ejecución de "
+"una consulta</link> para ejecutar cualquier comando SQL"
 
 #: C/general-ui.page:28(p)
 msgid ""
@@ -775,6 +777,9 @@ msgid ""
 "(right click on the canvas); a zoom to fit the canvas is also available in "
 "the contextual menu"
 msgstr ""
+"ampliar y reducir usando la rueda del ratón, o a través del menú contextual "
+"(pulse con el botón derecho sobre el canvas); también está disponible una "
+"ampliación hasta ajustar a la ventana en el menú contextual"
 
 #: C/diagram.page:24(p)
 msgid ""
@@ -796,15 +801,15 @@ msgstr "exportar como imágenes PNG o SVG, a través del menú contextual"
 
 #: C/diagram.page:29(p)
 msgid "adding items, through the contextual menu"
-msgstr ""
+msgstr "añadir elementos, a través del menú contextual"
 
 #: C/diagram.page:30(p)
 msgid "removing items, through the items's contextual menu"
-msgstr ""
+msgstr "quitar elementos, a través del menú contextual del elemento"
 
 #: C/data-manager-xml-syntax.page:7(title)
 msgid "The data manager's XML syntax"
-msgstr ""
+msgstr "La sintaxis XML del administrador de datos"
 
 #: C/data-manager-xml-syntax.page:8(p)
 msgid ""
@@ -866,6 +871,7 @@ msgstr ""
 #: C/data-manager-xml-syntax.page:54(p) C/data-manager-xml-syntax.page:130(p)
 msgid "For example the previous XML specification defines two data sources:"
 msgstr ""
+"Por ejemplo, la especificación XML anterior define dos orígenes de datos:"
 
 #: C/data-manager-xml-syntax.page:58(p)
 msgid ""
@@ -909,7 +915,7 @@ msgstr ""
 #: C/data-manager-xml-syntax.page:81(code)
 #, no-wrap
 msgid "&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is a table column"
-msgstr ""
+msgstr "&lt;data source ID&gt;@&lt;column name&gt; si la columna del conjunto de datos es una columna de la tabla"
 
 #: C/data-manager-xml-syntax.page:88(title)
 msgid "The <code>&lt;table&gt;</code> tag"
@@ -923,7 +929,7 @@ msgstr ""
 
 #: C/data-manager-xml-syntax.page:94(p)
 msgid "requires the \"name\" attribute which represents the table name."
-msgstr ""
+msgstr "requiere el atributo «nombre» que representa el nombre de la tabla."
 
 #: C/data-manager-xml-syntax.page:95(p)
 msgid ""
@@ -1007,6 +1013,9 @@ msgid ""
 "following variable for each table's column (the variable's type is the same "
 "as the column's type):"
 msgstr ""
+"Cada origen de datos definido por una etiqueta <code>&lt;query&gt;</code> "
+"exporta la siguiente variable para cada columna de la tabla (el tipo de la "
+"variable es el mismo que el de la columna):"
 
 #: C/data-manager-xml-syntax.page:160(code)
 #, no-wrap
@@ -1058,6 +1067,10 @@ msgid ""
 "or more <em>data sources</em> (which selects data in the database) which, "
 "when executed, result in a data set displayed in a tabular view."
 msgstr ""
+"El flujo de trabajo en esta perspectiva  se organiza en torno a la "
+"definición de uno o más <em>orígenes de datos</em> (que seleccionan datos en "
+"la base de datos) y que, cuando se ejecutan, el resultado es un conjunto de "
+"datos mostrados en una vista de tabular."
 
 #: C/data-manager-perspective.page:19(p)
 msgid ""
@@ -1066,6 +1079,10 @@ msgid ""
 "area, where each data source is executed and the results presented in a "
 "tabular view."
 msgstr ""
+"La perspectiva se divide en dos paneles horizontales: el panel de la "
+"izquierda, para mantener las definiciones de los orígenes de datos favoritas "
+"y el panel de la derecha, que es el área de acción, donde se ejecuta cada "
+"origen de datos y se presentan los resultados en una vista tabular."
 
 #: C/data-manager-perspective.page:25(title)
 msgid "Data manager perspective"
@@ -1073,7 +1090,7 @@ msgstr "Perspectiva del administrador de datos"
 
 #: C/data-manager-perspective.page:26(desc)
 msgid "The data manager perspective, with two data sources"
-msgstr ""
+msgstr "La perspectiva del administrador de datos, con dos orígenes de datos"
 
 #: C/data-manager-perspective.page:29(p)
 msgid ""
@@ -1112,6 +1129,11 @@ msgid ""
 "man-mode.png\"/> toolbar button) at the moment data sources can only be "
 "defined using an <link xref=\"data-manager-xml-syntax\">XML syntax</link>."
 msgstr ""
+"La siguiente figura muestra el modo de edición de los orígenes de datos "
+"(cambie al modo de edición usando el <media type=\"image\" mime=\"image/png"
+"\" src=\"figures/data-man-mode.png\"/> botón de la barra de herramientas). "
+"Por el momento, sólo se pueden definir orígenes de datos usando una <link "
+"xref=\"data-manager-xml-syntax\">sintaxis XML</link>."
 
 #: C/data-manager-perspective.page:58(title)
 msgid "Data sources edition"
@@ -1126,6 +1148,8 @@ msgid ""
 "<gui>Reset</gui>: resets the XML editor to a default XML template, only "
 "available when the XML view is currently displayed"
 msgstr ""
+"<gui>Restablecer</gui>: restablece el editor XML a una plantilla XML "
+"predeterminada, sólo disponible cuando la vista XML se muestra actualmente"
 
 #: C/data-manager-perspective.page:69(p)
 msgid ""
@@ -1133,6 +1157,10 @@ msgid ""
 "the whole contents of a table as a data source, only available when the UI "
 "editor is currently displayed"
 msgstr ""
+"<gui>Añadir</gui>: muestra un menú emergente con una entrada por cada tabla, "
+"para añadir rápidamente la totalidad de los contenidos de una tabla como un "
+"origen de datos, sólo disponible cuando el editor de la IU se muestra "
+"actualmente"
 
 #: C/data-manager-perspective.page:72(p)
 msgid ""
@@ -1141,10 +1169,14 @@ msgid ""
 "in the SQL code of any data source's definition. The panel is automatically "
 "shown when a variable is detected in the SQL code."
 msgstr ""
+"<gui>Variables</gui>: muestra u oculta el panel <link xref=\"variables-syntax"
+"\">variables</link> donde puede asignar valores a las variables presentes en "
+"el código SQL de cualquier definición de orígenes de datos. El panel se "
+"muestra automáticamente cuando se detecta una variable en el código SQL."
 
 #: C/data-manager-perspective.page:75(p)
 msgid "<gui>Execute</gui>: executes the defined data sources"
-msgstr ""
+msgstr "<gui>Ejecutar</gui>: ejecuta los orígenes de datos definidos"
 
 #: C/data-manager-perspective.page:76(p)
 msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
@@ -1164,6 +1196,10 @@ msgid ""
 "using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-"
 "mode.png\"/> toolbar button or the <gui>Execute</gui> button."
 msgstr ""
+"Para ejecutar un conjunto de orígenes de datos definidos, simplemente cambie "
+"al modo de ejecución usando el <media type=\"image\" mime=\"image/png\" src="
+"\"figures/data-man-mode.png\"/> botón de la barra de herramientas o el botón "
+"<gui>Ejecutar</gui>."
 
 #: C/data-manager-perspective.page:87(p)
 msgid ""
