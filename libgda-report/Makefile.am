@@ -33,7 +33,7 @@ libgda-report.def: libgda-report.symbols
 	(echo -e EXPORTS; $(CPP) -P - <$(srcdir)/libgda-report.symbols | sed -e '/^$$/d' -e 's/^/ /' -e 's/G_GNUC_[^ ]*//g' | sort) > libgda-report.def.tmp && mv libgda-report.def.tmp libgda-report.def
 
 libgda-report-$(GDA_ABI_VERSION).lib: libgda-report.def
-	$(DLLTOOL) --dllname libgda-report-$(GDA_ABI_VERSION)-$(GDA_CURRENT).dll --def libgda-report.def --output-lib libgda-report-$(GDA_ABI_VERSION).lib
+	$(DLLTOOL) --dllname libgda-report-$(GDA_ABI_VERSION)-$(GDA_ABI_MAJOR_VERSION).dll --def libgda-report.def --output-lib libgda-report-$(GDA_ABI_VERSION).lib
 
 install-data-local: install-def-files
 uninstall-local: uninstall-def-files
