@@ -82,7 +82,8 @@ gda_headers = \
 	gda-util.h \
 	gda-value.h \
 	gda-xa-transaction.h \
-	libgda.h 
+	libgda.h \
+	libgda-global-variables.h
 
 gda_sources= \
 	gda-batch.c \
