@@ -96,7 +96,15 @@ Low level report generator based on XML
           <entry>&lt;gda_report_param_value&gt;</entry>
           <entry>Replace the node with the value of a parameter. The parameter can either by defined globally
 	  (and declared to the GdaReportEngine), or defined as part of a section</entry>
-          <entry>"param_name" specifies the name of the parameter</entry>
+          <entry>
+	    <itemizedlist>
+	      <listitem><para>"param_name" specifies the name of the parameter</para></listitem>
+	      <listitem><para>"converter" optionnally specifies a conversion to apply to the parameter's
+		  contents (for now only "richtext::docbook" to convert text
+		  in <ulink url="http://txt2tags.org/">rich text format</ulink> to
+		  the DocBook syntax)</para></listitem>
+	    </itemizedlist>
+	  </entry>
           <entry></entry>
         </row>
         <row>

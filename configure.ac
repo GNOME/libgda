@@ -198,6 +198,10 @@ AS_HELP_STRING([--with-graphviz], [Enable using Graphviz]),
 
 if test x"$have_ui" = "xyes"
 then
+	PKG_CHECK_MODULES(GDKPIXBUF, "gdk-pixbuf-2.0", [
+			AC_DEFINE(HAVE_GDKPIXBUF, [1], [Gdkpixbuf support enabled])
+			have_gdkpixbuf=yes], [have_gdkpixbuf=no])
+
 	if test "$with_sourceview" = "auto" -o "$with_sourceview" = "yes"
 	then
 		PKG_CHECK_MODULES(GTKSOURCEVIEW, "gtksourceview-3.0", [
@@ -234,6 +238,10 @@ then
 			have_graphviz=no])
 	fi
 fi
+
+AM_CONDITIONAL(HAVE_GDKPIXBUF, test x"$have_gdkpixbuf" = "xyes")
+AC_SUBST(GDKPIXBUF_CFLAGS)
+AC_SUBST(GDKPIXBUF_LIBS)
 
 AM_CONDITIONAL(HAVE_GTKSOURCEVIEW, test x"$have_sourceview" = "xyes")
 AC_SUBST(GTKSOURCEVIEW_CFLAGS)
