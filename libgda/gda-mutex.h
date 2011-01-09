@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 The GNOME Foundation.
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -34,6 +34,12 @@ void        gda_mutex_lock      (GdaMutex *mutex);
 gboolean    gda_mutex_trylock   (GdaMutex *mutex);
 void        gda_mutex_unlock    (GdaMutex *mutex);
 void        gda_mutex_free      (GdaMutex *mutex);
+
+#ifdef GDA_DEBUG_MUTEX
+#include <stdio.h>
+void        gda_mutex_debug      (GdaMutex *mutex, gboolean debug);
+void        gda_mutex_dump_usage (GdaMutex *mutex, FILE *stream);
+#endif
 
 G_END_DECLS
 

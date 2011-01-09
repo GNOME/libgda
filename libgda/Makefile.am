@@ -223,7 +223,8 @@ libgda_5_0_la_SOURCES = \
 
 libgda_5_0_la_LDFLAGS = \
 	-version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) \
-	-export-dynamic $(NO_UNDEFINED) $(LIBTOOL_EXPORT_OPTIONS)
+	-export-dynamic $(NO_UNDEFINED) $(LIBTOOL_EXPORT_OPTIONS) \
+	$(GDA_DEBUG_LDFLAGS)
 
 libgda_5_0_la_LIBADD = \
 	sql-parser/libgda_sql_parser-5.0.la \
