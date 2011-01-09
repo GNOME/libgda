@@ -716,6 +716,7 @@ AC_SUBST(FIREBIRD_CFLAGS)
 dnl
 dnl Check if lib should be build with the debug mode
 dnl
+gda_debug_flags=""
 AC_ARG_ENABLE(debug,
 	AS_HELP_STRING([--enable-debug], [Enable debug mode [default=no]]),
         [use_debug=$enableval], [use_debug="no"])
@@ -725,6 +726,19 @@ then
 	AC_DEFINE(GDA_DEBUG)
 	GDA_DEBUG_FLAGS=-DGDA_DEBUG
 	AC_SUBST(GDA_DEBUG_FLAGS)
+fi
+
+AC_ARG_ENABLE(mutex-debug,
+	AS_HELP_STRING([--enable-mutex-debug], [Enable debug mode for GdaMutex [default=no]]),
+        [use_debug=$enableval], [use_debug="no"])
+
+if test "x$use_debug" = "xyes"
+then
+	AC_DEFINE(GDA_DEBUG_MUTEX)
+	GDA_DEBUG_FLAGS="$GDA_DEBUG_FLAGS -DGDA_DEBUG_MUTEX"
+	GDA_DEBUG_LDFLAGS=-rdynamic
+	AC_SUBST(GDA_DEBUG_FLAGS)
+	AC_SUBST(GDA_DEBUG_LDFLAGS)
 fi
 
 dnl Disable rebuild of glib-mkenum -generated source code:
