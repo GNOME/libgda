@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -5020,9 +5020,10 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 						 gda_connection_get_provider (cnc),
 						 gda_connection_get_provider_name (cnc));
 					*/
-					if (error && *error)
+					/*if (error && *error)
 						g_warning ("%s (Provider %s)\n", (*error)->message,
 							   gda_connection_get_provider_name (cnc));
+					*/
 
 					WARN_META_UPDATE_FAILURE (FALSE, rmeta [i].func_name);
 					goto onerror;
