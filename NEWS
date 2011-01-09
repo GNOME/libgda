@@ -1,3 +1,22 @@
+libgda 4.2.3, 2011-01-09
+
+ - Correction to the expression rendering in SQL (very important!)
+ - SQLite: fixed date and related formats when rendering as SQL
+ - MySQL: fixed error code ignored and not available via gda_connection_event_get_code()
+ - Move convenience functions to appropriate classes
+ - documentation updates
+ - GdaSql and GdaBrowser: better information about configuration and added possibility to
+   clean data files and truncate data output to available width
+ - build system: Enable compiler warnings by default, detect Oracle on Windows
+ - Initial support for rich text rendering in reports
+ - misc. improvements
+ - bugs fixed: #636439, #636608, #637010, crash in gdaui-demo, build system, misc
+ - translations:
+	- sl (Matej Urbančič)
+	- es (Daniel Mustieles, Jorge González)
+	- de (Christian Kirbach, Mario Blättermann)
+	- cs (Petr Kovar)
+
 libgda 4.2.2, 2010-11-27
 
  - GdaBrowser: better take user preferences into account
