@@ -1,6 +1,6 @@
 /* gda-meta-store.c
  *
- * Copyright (C) 2008 - 2010 Vivien Malerba
+ * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -3587,6 +3587,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
  onerror:
 	if (started_transaction)
 		gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+	gda_mutex_unlock (store->priv->mutex);
 	return FALSE;
 }
 
@@ -3842,7 +3843,6 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 		g_object_unref (pstore);
 	if (mstruct)
 		g_object_unref (mstruct);
-
 	
 	return FALSE;
 }
