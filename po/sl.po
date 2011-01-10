@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the libgda package.
 #
 # Andraž Tori <andraz.tori1@guest.arnes.si>, 2000.
-# Matej Urbančič <mateju@svn.gnome.org>, 2006 - 2010.
+# Matej Urbančič <mateju@svn.gnome.org>, 2006 - 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2011-01-09 18:57+0000\n"
-"PO-Revision-Date: 2011-01-09 20:35+0100\n"
+"POT-Creation-Date: 2011-01-10 19:00+0000\n"
+"PO-Revision-Date: 2011-01-10 20:07+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -2873,14 +2873,14 @@ msgstr "Neupravljana vrsta podatkov '%s'"
 msgid "Could not start transaction to create BLOB"
 msgstr "Ni mogoče začeti prenosa za ustvarjanje predmeta BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2992
-#: ../libgda/sqlite/gda-sqlite-provider.c:3013
-#: ../libgda/sqlite/gda-sqlite-provider.c:3079
+#: ../libgda/sqlite/gda-sqlite-provider.c:2995
+#: ../libgda/sqlite/gda-sqlite-provider.c:3016
+#: ../libgda/sqlite/gda-sqlite-provider.c:3082
 msgid "Function requires one argument"
 msgstr "Funkcija zahteva en argument"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3045
-#: ../libgda/sqlite/gda-sqlite-provider.c:3111
+#: ../libgda/sqlite/gda-sqlite-provider.c:3048
+#: ../libgda/sqlite/gda-sqlite-provider.c:3114
 msgid "Function requires two arguments"
 msgstr "Funkcija zahteva dva argumenta"
 
@@ -7385,21 +7385,21 @@ msgstr "Napaka: %s\n"
 
 #: ../tools/browser/main.c:139
 #: ../tools/gda-sql.c:225
-#, fuzzy, c-format
+#, c-format
 msgid "All files are in the directory: %s\n"
-msgstr "Označi vse datoteke v mapi"
+msgstr "Vse datoteke so v mapi: %s\n"
 
 #: ../tools/browser/main.c:147
 #: ../tools/gda-sql.c:233
 #, c-format
 msgid "Can't get the list of files used to store information about each connection: %s\n"
-msgstr ""
+msgstr "Ni mogoče pridobiti seznama datotek s shranjenimi podatki posameznih povezav: %s\n"
 
 #: ../tools/browser/main.c:161
 #: ../tools/gda-sql.c:245
-#, fuzzy, c-format
+#, c-format
 msgid "Error while purging files used to store information about each connection: %s\n"
-msgstr "Napaka med pridobivanjem metapodatkov preko povezave: %s"
+msgstr "Napaka med opravilom počiščenja datotek s podatki posameznih povezav: %s\n"
 
 #: ../tools/browser/mgr-favorites.c:226
 msgid "Multiple statements"
@@ -8688,16 +8688,13 @@ msgid "(%s)"
 msgstr "(%s)"
 
 #: ../tools/config-info.c:337
-#, fuzzy
 msgid "Failed to remove: "
-msgstr ""
-"Ni mogoče odstraniti '%s':\n"
-"%s"
+msgstr "Odstranjevanje je spodletelo:"
 
 #: ../tools/config-info.c:365
-#, fuzzy, c-format
+#, c-format
 msgid "No file to purge!"
-msgstr "Ni izbrane datoteke za tiskanje!"
+msgstr "Ni izbrane datoteke za počiščenje!"
 
 #: ../tools/gda-list-server-op.c:32
 msgid "Gda server operations list"
@@ -8862,9 +8859,9 @@ msgid "No password for '%s'"
 msgstr "Ni gesla za '%s'"
 
 #: ../tools/gda-sql.c:1476
-#, fuzzy, c-format
+#, c-format
 msgid "All the information related to the '%s' connection will be stored in the '%s' file\n"
-msgstr "Vsi metapodatki povezani s povezavo '%s', bodo shranjeni v datoteki '%s'\n"
+msgstr "Vsi podatki povezani s povezavo '%s', bodo shranjeni v datoteki '%s'.\n"
 
 #: ../tools/gda-sql.c:1506
 #, c-format
