@@ -38,6 +38,7 @@
 #include <libgda-ui/libgda-ui.h>
 #include "data-source-manager.h"
 #include <gdk/gdkkeysyms.h>
+#include "analyser.h"
 
 #define MAIN_PAGE_EDITORS 0
 #define MAIN_PAGE_DATA 1
@@ -84,6 +85,7 @@ struct _DataConsolePrivate {
 	GtkWidget *add_source_button;
 	GtkWidget *add_source_menu;
 	gpointer   add_source_menu_index; /* used to know if @add_source_menu needs to be rebuilt */
+	GSList    *customized_menu_items_list; /* list of GtkMenuItem in @add_source_menu */
 };
 
 static void data_console_class_init (DataConsoleClass *klass);
@@ -186,6 +188,8 @@ data_console_dispose (GObject *object)
 	if (dconsole->priv) {
 		if (dconsole->priv->add_source_menu)
 			gtk_widget_destroy (dconsole->priv->add_source_menu);
+		if (dconsole->priv->customized_menu_items_list)
+			g_slist_free (dconsole->priv->customized_menu_items_list);
 		if (dconsole->priv->params_form)
 			gtk_widget_destroy (dconsole->priv->params_form);
 		if (dconsole->priv->popup_container)
@@ -749,7 +753,18 @@ static void
 add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 {
 	GdaMetaStruct *mstruct;
+	DataSource *current_source;
+
 	mstruct = browser_connection_get_meta_struct (dconsole->priv->bcnc);
+	current_source = ui_spec_editor_get_selected_source (UI_SPEC_EDITOR (dconsole->priv->ui_sped));
+
+	/* remove customization, if any */
+	if (dconsole->priv->customized_menu_items_list) {
+		g_slist_foreach (dconsole->priv->customized_menu_items_list,
+				 (GFunc) gtk_widget_destroy, NULL);
+		g_slist_free (dconsole->priv->customized_menu_items_list);
+		dconsole->priv->customized_menu_items_list = NULL;
+	}
 
 	if (dconsole->priv->add_source_menu &&
 	    (dconsole->priv->add_source_menu_index != (gpointer) mstruct)) {
@@ -758,6 +773,11 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 		dconsole->priv->add_source_menu_index = NULL;
 	}
 	if (dconsole->priv->add_source_menu) {
+		if (current_source)
+			dconsole->priv->customized_menu_items_list =
+				data_manager_add_proposals_to_menu (dconsole->priv->add_source_menu,
+								    dconsole->priv->mgr,
+								    current_source, GTK_WIDGET (dconsole));
 		gtk_menu_popup (GTK_MENU (dconsole->priv->add_source_menu), NULL, NULL,
 			NULL, NULL, 0,
 			gtk_get_current_event_time ());
@@ -828,6 +848,13 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 	}
 	dconsole->priv->add_source_menu_index = (gpointer) mstruct;
 	dconsole->priv->add_source_menu = menu;
+
+	if (current_source)
+		dconsole->priv->customized_menu_items_list =
+			data_manager_add_proposals_to_menu (dconsole->priv->add_source_menu,
+							    dconsole->priv->mgr,
+							    current_source, GTK_WIDGET (dconsole));
+
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 			NULL, NULL, 0,
 			gtk_get_current_event_time ());

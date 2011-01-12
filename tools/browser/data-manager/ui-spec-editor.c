@@ -490,3 +490,29 @@ ui_spec_editor_select_source (UiSpecEditor *editor, DataSource *source)
 		}
 	}
 }
+
+/**
+ * ui_spec_editor_get_selected_source
+ * @sped: a #UiSpecEditor widget
+ *
+ * Get the currently selected data source for edition
+ *
+ * Returns: (transfer none): the #DataSource, or %NULL
+ */
+DataSource *
+ui_spec_editor_get_selected_source (UiSpecEditor *sped)
+{
+	g_return_val_if_fail (IS_UI_SPEC_EDITOR (sped), NULL);
+	GtkTreeModel *model;
+	GtkTreeSelection *select;
+	GtkTreeIter iter;
+
+	select = gtk_tree_view_get_selection (sped->priv->sources_tree);
+	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
+		DataSource *source;
+		gtk_tree_model_get (model, &iter, COLUMN_DATA_SOURCE, &source, -1);
+		return source;
+	}
+	else
+		return NULL;
+}
