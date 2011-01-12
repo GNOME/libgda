@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Vivien Malerba
+ * Copyright (C) 2010 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -143,9 +143,10 @@ data_source_editor_init (DataSourceEditor *editor)
         gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
         gda_value_free (value);
 
+#define SPACING 3
 	GtkWidget *hbox, *label, *sw, *text;
 	GtkSizeGroup *sg;
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_hbox_new (FALSE, SPACING);
 	gtk_paned_add2 (GTK_PANED (vpaned), hbox);
 
 	label = gtk_label_new (_("Dependencies:"));

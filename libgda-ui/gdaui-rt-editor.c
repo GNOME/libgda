@@ -616,13 +616,13 @@ underline_cb (GtkToggleAction *action, GdauiRtEditor *rte)
 }
 
 static void
-reset_all_cb (GtkAction *action, GdauiRtEditor *rte)
+reset_all_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
 {
 	apply_tag (rte, FALSE, NULL);
 }
 
 static void
-add_image_cb (GtkAction *action, GdauiRtEditor *rte)
+add_image_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
 {
 	GtkWidget *dlg;
         GtkFileFilter *filter;
@@ -708,7 +708,7 @@ mark_set_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, GtkTextMark *mark
 }
 
 static void
-insert_text_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, gint len, GdauiRtEditor *rte)
+insert_text_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, G_GNUC_UNUSED gchar *text, G_GNUC_UNUSED gint len, GdauiRtEditor *rte)
 {
 	/* if inserting is before a bullet, then insert right after */
 	GtkTextTag *tag;
@@ -721,7 +721,7 @@ insert_text_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, g
 }
 
 static void
-insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, gint len, GdauiRtEditor *rte)
+insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, G_GNUC_UNUSED gint len, GdauiRtEditor *rte)
 {
 	GtkTextIter start, end;
 
@@ -788,7 +788,8 @@ show_markup_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rt
 }
 
 static void
-bigger_font_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rte)
+bigger_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
+			      GdauiRtEditor *rte)
 {
 	PangoContext *pcontext;
 	PangoFontDescription *fd, *nfd;
@@ -801,7 +802,8 @@ bigger_font_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rt
 }
 
 static void
-smaller_font_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rte)
+smaller_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
+			       GdauiRtEditor *rte)
 {
 	PangoContext *pcontext;
 	PangoFontDescription *fd, *nfd;
@@ -814,13 +816,14 @@ smaller_font_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *r
 }
 
 static void
-reset_font_item_activate_cb (GtkCheckMenuItem *checkmenuitem, GdauiRtEditor *rte)
+reset_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
+			     GdauiRtEditor *rte)
 {
 	gtk_widget_modify_font (GTK_WIDGET (rte->priv->textview), NULL);
 }
 
 static void
-populate_popup_cb (GtkTextView *entry, GtkMenu *menu, GdauiRtEditor *rte)
+populate_popup_cb (G_GNUC_UNUSED GtkTextView *entry, GtkMenu *menu, GdauiRtEditor *rte)
 {
 	GtkWidget *item;
 
@@ -1611,7 +1614,8 @@ remove_newlines_from_base64 (gchar *base64)
 }
 
 static void
-serialize_text (GtkTextBuffer *buffer, SerializationContext *context, GdauiRtEditor *editor)
+serialize_text (G_GNUC_UNUSED GtkTextBuffer *buffer, SerializationContext *context,
+		GdauiRtEditor *editor)
 {
 	GtkTextIter iter, old_iter;
 	GList *opened_tags = NULL; /* 1st element of the list is the last opened tag (ie. the one
@@ -1785,7 +1789,7 @@ serialize_text (GtkTextBuffer *buffer, SerializationContext *context, GdauiRtEdi
  * serialize_as_txt2tag:
  */
 static guint8 *
-serialize_as_txt2tag (GtkTextBuffer     *register_buffer,
+serialize_as_txt2tag (G_GNUC_UNUSED  GtkTextBuffer *register_buffer,
 		      GtkTextBuffer     *content_buffer,
 		      const GtkTextIter *start,
 		      const GtkTextIter *end,

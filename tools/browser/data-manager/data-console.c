@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -766,7 +766,7 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 
 	GtkWidget *menu, *mitem, *submenu = NULL;
 	menu = gtk_menu_new ();
-	mitem = gtk_menu_item_new_with_label (_("Data source from query"));
+	mitem = gtk_menu_item_new_with_label (_("Data source from SQL"));
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (add_source_mitem_activated_cb), dconsole);
 	gtk_widget_show (mitem);
