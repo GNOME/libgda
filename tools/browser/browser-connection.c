@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -1867,7 +1867,7 @@ typedef struct {
  * preferences to set the GdaHolder's plugin attribute
  */
 static gboolean
-foreach_ui_plugins_for_params (GdaSqlAnyPart *part, ParamsData *data, GError **error)
+foreach_ui_plugins_for_params (GdaSqlAnyPart *part, ParamsData *data, G_GNUC_UNUSED GError **error)
 {
 	if (part->type != GDA_SQL_ANY_EXPR)
 		return TRUE;

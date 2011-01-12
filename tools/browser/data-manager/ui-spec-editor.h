@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The GNOME Foundation.
+ * Copyright (C) 2010 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -52,6 +52,7 @@ struct _UiSpecEditorClass {
 GType          ui_spec_editor_get_type      (void) G_GNUC_CONST;
 GtkWidget     *ui_spec_editor_new           (DataSourceManager *mgr);
 void           ui_spec_editor_select_source (UiSpecEditor *editor, DataSource *source);
+DataSource    *ui_spec_editor_get_selected_source (UiSpecEditor *editor);
 
 G_END_DECLS
 

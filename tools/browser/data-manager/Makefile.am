@@ -17,6 +17,8 @@ marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_dm_marshal > $@
 
 libperspective_la_SOURCES = \
+	analyser.c \
+	analyser.h \
 	marshal.c \
 	marshal.h \
 	data-console.h \

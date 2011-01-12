@@ -29,6 +29,7 @@
 #include "../browser-window.h"
 #include "../support.h"
 #include "data-source-editor.h"
+#include "analyser.h"
 
 /*
  * The DataPart structure represents the execution of a single DataSource 
@@ -319,40 +320,6 @@ remove_data_source_mitem_activated_cb (G_GNUC_UNUSED GtkMenuItem *mitem, DataPar
 }
 
 static void
-add_data_source_mitem_activated_cb (GtkMenuItem *mitem, DataPart *part)
-{
-	DataSource *source;
-	GError *lerror = NULL;
-	xmlNodePtr sourcespec;
-	BrowserConnection *bcnc;
-
-	bcnc = data_source_manager_get_browser_cnc (part->dwid->priv->mgr);
-	sourcespec = (xmlNodePtr) g_object_get_data ((GObject*) mitem, "xml");
-	source = data_source_new_from_xml_node (bcnc, sourcespec, &lerror);
-	if (source) {
-		data_source_manager_add_source (part->dwid->priv->mgr, source);
-		g_object_unref (source);
-	}
-	else {
-		BrowserWindow *bwin;
-		bwin = BROWSER_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (part->dwid)));
-		browser_window_show_notice_printf (bwin, GTK_MESSAGE_ERROR, "data-widget-add-new-source",
-						   _("Error adding new data source: %s"),
-						   lerror && lerror->message ? lerror->message :
-						   _("No detail"));
-		g_clear_error (&lerror);
-	}
-
-#ifdef GDA_DEBUG_NO
-	xmlBufferPtr buffer;
-	buffer = xmlBufferCreate ();
-	xmlNodeDump (buffer, NULL, sourcespec, 0, 1);
-	g_print ("Source to ADD: [%s]\n", (gchar *) xmlBufferContent (buffer));
-	xmlBufferFree (buffer);
-#endif
-}
-
-static void
 data_source_props_activated_cb (GtkCheckMenuItem *mitem, DataPart *part)
 {
 	if (gtk_check_menu_item_get_active (mitem)) {
@@ -372,14 +339,12 @@ data_source_props_activated_cb (GtkCheckMenuItem *mitem, DataPart *part)
 		gtk_notebook_set_current_page (part->nb, part->edit_widget_previous_page);
 }
 
-static gchar *compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean reverse,
-				     DataPart *part, xmlNodePtr *out_sourcespec);
 static void
 data_source_menu_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataPart *part)
 {
 	if (! part->menu) {
 		GtkWidget *menu, *mitem;
-		gboolean add_separator = TRUE;
+		GSList *added_list;
 		menu = gtk_menu_new ();
 		part->menu = menu;
 
@@ -395,213 +360,15 @@ data_source_menu_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataPart *part)
 		gtk_widget_show (mitem);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 
-		GdaStatement *stmt;
-		stmt = data_source_get_statement (part->source);
-		if (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) {
-			GSList *fields = NULL, *flist;
-			GdaSqlStatement *sql_statement;
-			BrowserConnection *bcnc;
-			GHashTable *hash; /* key = a menu string, value= 0x1 */
-
-			g_object_get (G_OBJECT (stmt), "structure", &sql_statement, NULL);
-
-			bcnc = data_source_manager_get_browser_cnc (part->dwid->priv->mgr);
-			if (browser_connection_check_sql_statement_validify (bcnc, sql_statement, NULL))
-				fields = ((GdaSqlStatementSelect *) sql_statement->contents)->expr_list;
-
-			hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-			for (flist = fields; flist; flist = flist->next) {
-				GdaSqlSelectField *select_field = (GdaSqlSelectField*) flist->data;
-				if (!select_field->validity_meta_table_column)
-					continue;
-				GdaMetaDbObject *dbo;
-				GdaMetaTableColumn *field;
-				dbo = select_field->validity_meta_object;
-				field = select_field->validity_meta_table_column;
-				if (dbo->obj_type == GDA_META_DB_TABLE) {
-					GdaMetaTable *mtable;
-					mtable = GDA_META_TABLE (dbo);
-
-					GSList *fklist;
-					for (fklist = mtable->reverse_fk_list; fklist; fklist = fklist->next) {
-						GdaMetaTableForeignKey *fkey;
-						fkey = (GdaMetaTableForeignKey *) fklist->data;
-						gchar *tmp;
-						xmlNodePtr sourcespec = NULL;
-						if (fkey->meta_table->obj_type != GDA_META_DB_TABLE)
-							continue;
-						tmp = compute_fk_dependency (fkey, fields, FALSE,
-									     part, &sourcespec);
-						if (!tmp)
-							continue;
-						if (g_hash_table_lookup (hash, tmp)) {
-							g_free (tmp);
-							continue;
-						}
-
-						if (add_separator) {
-							mitem = gtk_separator_menu_item_new ();
-							gtk_widget_show (mitem);
-							gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
-							add_separator = FALSE;
-						}
-
-						mitem = gtk_menu_item_new_with_label (tmp);
-						g_object_set_data_full ((GObject*) mitem, "xml", sourcespec,
-									(GDestroyNotify) xmlFreeNode);
-						g_signal_connect (mitem, "activate",
-								  G_CALLBACK (add_data_source_mitem_activated_cb),
-								  part);
-						gtk_widget_show (mitem);
-						gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
-						g_hash_table_insert (hash, tmp, (gpointer) 0x1);
-					}
-					for (fklist = mtable->fk_list; fklist; fklist = fklist->next) {
-						GdaMetaTableForeignKey *fkey;
-						fkey = (GdaMetaTableForeignKey *) fklist->data;
-						gchar *tmp;
-						xmlNodePtr sourcespec = NULL;
-						if (fkey->depend_on->obj_type != GDA_META_DB_TABLE)
-							continue;
-						tmp = compute_fk_dependency (fkey, fields, TRUE,
-									     part, &sourcespec);
-						if (!tmp)
-							continue;
-						if (g_hash_table_lookup (hash, tmp)) {
-							g_free (tmp);
-							continue;
-						}
-
-						if (add_separator) {
-							mitem = gtk_separator_menu_item_new ();
-							gtk_widget_show (mitem);
-							gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
-							add_separator = FALSE;
-						}
-
-						mitem = gtk_menu_item_new_with_label (tmp);
-						g_object_set_data_full ((GObject*) mitem, "xml", sourcespec,
-									(GDestroyNotify) xmlFreeNode);
-						g_signal_connect (mitem, "activate",
-								  G_CALLBACK (add_data_source_mitem_activated_cb),
-								  part);
-						gtk_widget_show (mitem);
-						gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
-						g_hash_table_insert (hash, tmp, (gpointer) 0x1);
-					}
-				}
-			}
-			g_hash_table_destroy (hash);
-			gda_sql_statement_free (sql_statement);
-		}
+		added_list = data_manager_add_proposals_to_menu (menu, part->dwid->priv->mgr,
+								 part->source, GTK_WIDGET (part->dwid));
+		if (added_list)
+			g_slist_free (added_list);
 	}
+
 	gtk_menu_popup (GTK_MENU (part->menu), NULL, NULL,
                         NULL, NULL, 0,
                         gtk_get_current_event_time ());
-}
-
-/*
- * Returns: a new list of #GdaSqlSelectField (which are already listed in @selfields), or %NULL
- */
-static gchar *
-compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean reverse,
-		       DataPart *part, xmlNodePtr *out_sourcespec)
-{
-	GString *string = NULL;
-	gint i;
-	gint *index_array;
-	GdaMetaTable *table;
-
-	*out_sourcespec = NULL;
-
-	if (reverse) {
-		table = GDA_META_TABLE (fkey->meta_table);
-		index_array = fkey->fk_cols_array;
-	}
-	else {
-		table = GDA_META_TABLE (fkey->depend_on);
-		index_array = fkey->ref_pk_cols_array;
-	}
-	for (i = 0; i < fkey->cols_nb; i++) {
-		gint pos;
-		GdaMetaTableColumn *col;
-		pos = index_array[i] - 1;
-		col = g_slist_nth_data (table->columns, pos);
-
-		/* make sure @col is among @selfields */
-		GSList *flist;
-		gboolean found = FALSE;
-		for (flist = selfields; flist; flist = flist->next) {
-			GdaSqlSelectField *select_field = (GdaSqlSelectField*) flist->data;
-			if (!select_field->validity_meta_object ||
-			    !select_field->validity_meta_table_column)
-				continue;
-			GdaMetaTableColumn *field;
-			field = select_field->validity_meta_table_column;
-			if (field == col) {
-				found = TRUE;
-				if (reverse) {
-					if (!string) {
-						string = g_string_new (_("Obtain referenced data in table "));
-						g_string_append_printf (string, "%s from ",
-									fkey->depend_on->obj_short_name);
-					}
-					else
-						g_string_append (string, ", ");
-					g_string_append_printf (string, "column n.%d (",
-								g_slist_position (selfields, flist) + 1);
-					if (select_field->as)
-						g_string_append (string, select_field->as);
-					else
-						g_string_append (string,
-								 select_field->validity_meta_table_column->column_name);
-					g_string_append_c (string, ')');
-				}
-				else {
-					if (!string) {
-						string = g_string_new (_("List referencing data in "));
-						g_string_append_printf (string, "%s.",
-									fkey->meta_table->obj_short_name);
-					}
-					else
-						g_string_append (string, ", ");
-					g_string_append (string, fkey->fk_names_array [i]);
-				}
-				break;
-			}
-		}
-
-		if (! found) {
-			if (string) {
-				g_string_free (string, TRUE);
-				string = NULL;
-			}
-			break;
-		}
-	}
-
-	if (string) {
-		xmlNodePtr node, snode;
-		node = xmlNewNode (NULL, BAD_CAST "table");
-		xmlSetProp (node, BAD_CAST "name",
- 			    BAD_CAST (reverse ? GDA_META_DB_OBJECT (fkey->depend_on)->obj_short_name : 
-				      GDA_META_DB_OBJECT (fkey->meta_table)->obj_short_name));
-
-		snode = xmlNewChild (node, NULL, BAD_CAST "depend", NULL);
-		xmlSetProp (snode, BAD_CAST "foreign_key_table",
-			    BAD_CAST GDA_META_DB_OBJECT (table)->obj_short_name);
-
-		xmlSetProp (snode, BAD_CAST "id", BAD_CAST data_source_get_id (part->source));
-
-		gint i;
-		for (i = 0; i < fkey->cols_nb; i++)
-			xmlNewChild (snode, NULL, BAD_CAST "column", BAD_CAST (fkey->fk_names_array[i]));
-
-		*out_sourcespec = node;
-		return g_string_free (string, FALSE);
-	}
-	else
-		return NULL;
 }
 
 static void
