@@ -1,5 +1,5 @@
-/* GNOME DB library
- * Copyright (C) 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2010 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -379,6 +379,7 @@ data_source_menu_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataPart *part)
 {
 	if (! part->menu) {
 		GtkWidget *menu, *mitem;
+		gboolean add_separator = TRUE;
 		menu = gtk_menu_new ();
 		part->menu = menu;
 
@@ -438,6 +439,13 @@ data_source_menu_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataPart *part)
 							continue;
 						}
 
+						if (add_separator) {
+							mitem = gtk_separator_menu_item_new ();
+							gtk_widget_show (mitem);
+							gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+							add_separator = FALSE;
+						}
+
 						mitem = gtk_menu_item_new_with_label (tmp);
 						g_object_set_data_full ((GObject*) mitem, "xml", sourcespec,
 									(GDestroyNotify) xmlFreeNode);
@@ -463,6 +471,14 @@ data_source_menu_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataPart *part)
 							g_free (tmp);
 							continue;
 						}
+
+						if (add_separator) {
+							mitem = gtk_separator_menu_item_new ();
+							gtk_widget_show (mitem);
+							gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+							add_separator = FALSE;
+						}
+
 						mitem = gtk_menu_item_new_with_label (tmp);
 						g_object_set_data_full ((GObject*) mitem, "xml", sourcespec,
 									(GDestroyNotify) xmlFreeNode);
