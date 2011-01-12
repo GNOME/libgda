@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The GNOME Foundation.
+ * Copyright (C) 2010 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -83,7 +83,7 @@ cell_text_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column, GtkCellRender
 	else
 		g_string_append_c (mark, '-');
 	str = data_source_get_title (source);
-        if (str) {
+        if (str && *str) {
 		if (!id || strcmp ((gchar*) id, (gchar*) str)) {
 			gchar *tmp;
 			tmp = g_markup_escape_text ((gchar*) str, -1);
