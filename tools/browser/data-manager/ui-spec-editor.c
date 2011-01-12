@@ -27,6 +27,7 @@
 #include <libgda/libgda.h>
 #include "../support.h"
 #include "data-source-editor.h"
+#include <gdk/gdkkeysyms.h>
 
 enum
 {
@@ -39,6 +40,7 @@ struct _UiSpecEditorPrivate {
 	GtkListStore *sources_model;
 	GtkWidget *sources_tree;
 	DataSourceEditor *propsedit;
+	GtkWidget *popup_menu;
 
 	/* warnings */
 	GtkWidget  *info;
@@ -129,6 +131,96 @@ data_source_selection_changed_cb (GtkTreeSelection *sel, UiSpecEditor *uied)
 				    COLUMN_DATA_SOURCE, &source, -1);
 		data_source_editor_display_source (uied->priv->propsedit, source);
 	}
+	else
+		data_source_editor_display_source (uied->priv->propsedit, NULL);
+}
+
+static void
+popup_func_delete_cb (G_GNUC_UNUSED GtkMenuItem *mitem, UiSpecEditor *uied)
+{
+	GtkTreeModel *model;
+	GtkTreeSelection *select;
+	GtkTreeIter iter;
+	
+	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (uied->priv->sources_tree));
+	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
+		DataSource *source;
+		gtk_tree_model_get (model, &iter, COLUMN_DATA_SOURCE, &source, -1);
+		g_assert (source);
+		data_source_manager_remove_source (uied->priv->mgr, source);
+	}
+}
+
+static void
+do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, UiSpecEditor *uied)
+{
+        int button, event_time;
+
+        if (! uied->priv->popup_menu) {
+                GtkWidget *menu, *mitem;
+
+                menu = gtk_menu_new ();
+                g_signal_connect (menu, "deactivate",
+                                  G_CALLBACK (gtk_widget_hide), NULL);
+
+                mitem = gtk_image_menu_item_new_with_label (_("Remove"));
+                gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+                gtk_widget_show (mitem);
+                g_signal_connect (mitem, "activate",
+				  G_CALLBACK (popup_func_delete_cb), uied);
+
+                uied->priv->popup_menu = menu;
+        }
+
+        if (event) {
+                button = event->button;
+                event_time = event->time;
+        }
+        else {
+                button = 0;
+                event_time = gtk_get_current_event_time ();
+        }
+
+        gtk_menu_popup (GTK_MENU (uied->priv->popup_menu), NULL, NULL, NULL, NULL,
+                        button, event_time);
+}
+
+static gboolean
+popup_menu_cb (GtkWidget *widget, UiSpecEditor *uied)
+{
+        do_popup_menu (widget, NULL, uied);
+        return TRUE;
+}
+
+static gboolean
+button_press_event_cb (GtkTreeView *treeview, GdkEventButton *event, UiSpecEditor *uied)
+{
+        if (event->button == 3 && event->type == GDK_BUTTON_PRESS) {
+                do_popup_menu ((GtkWidget*) treeview, event, uied);
+                return TRUE;
+        }
+
+        return FALSE;
+}
+
+static gboolean
+key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, UiSpecEditor *sped)
+{
+        if (event->keyval == GDK_Delete) {
+		GtkTreeModel *model;
+                GtkTreeSelection *select;
+                GtkTreeIter iter;
+
+                select = gtk_tree_view_get_selection (treeview);
+                if (gtk_tree_selection_get_selected (select, &model, &iter)) {
+			DataSource *source;
+			gtk_tree_model_get (model, &iter, COLUMN_DATA_SOURCE, &source, -1);
+			g_assert (source);
+			data_source_manager_remove_source (sped->priv->mgr, source);
+		}
+		return TRUE;
+	}
+	return FALSE; /* not handled */
 }
 
 static void
@@ -163,7 +255,7 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 	sped->priv->sources_model = gtk_list_store_new (NUM_COLUMNS,
 							G_TYPE_POINTER);
 
-	sped->priv->sources_tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (sped->priv->sources_model));
+	sped->priv->sources_tree = browser_make_tree_view (GTK_TREE_MODEL (sped->priv->sources_model));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (sped->priv->sources_tree), FALSE);
 	gtk_widget_set_size_request (sped->priv->sources_tree, 170, -1);
 
@@ -181,6 +273,13 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 
         gtk_tree_view_append_column (GTK_TREE_VIEW (sped->priv->sources_tree), column);
 	
+	g_signal_connect (G_OBJECT (sped->priv->sources_tree), "key-press-event",
+                          G_CALLBACK (key_press_event_cb), sped);
+	g_signal_connect (G_OBJECT (sped->priv->sources_tree), "popup-menu",
+                          G_CALLBACK (popup_menu_cb), sped);
+	g_signal_connect (G_OBJECT (sped->priv->sources_tree), "button-press-event",
+                          G_CALLBACK (button_press_event_cb), sped);
+
 	GtkTreeSelection *sel;
 	sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (sped->priv->sources_tree));
 	g_signal_connect (sel, "changed",
@@ -248,6 +347,8 @@ ui_spec_editor_dispose (GObject *object)
 	if (sped->priv) {
 		if (sped->priv->mgr)
 			g_object_unref (sped->priv->mgr);
+		if (sped->priv->popup_menu)
+                        gtk_widget_destroy (sped->priv->popup_menu);
 
 		g_free (sped->priv);
 		sped->priv = NULL;
@@ -286,7 +387,10 @@ mgr_changed_cb (DataSourceManager *mgr, UiSpecEditor *sped)
 	}
 
 	/* reset selected source */
-	data_source_editor_display_source (sped->priv->propsedit, current_source);
+	if (! g_slist_find ((GSList*) data_source_manager_get_sources (sped->priv->mgr),
+			    current_source))
+		current_source = NULL;
+	data_source_editor_display_source (sped->priv->propsedit, NULL);
 	if (current_path) {
 		gtk_tree_selection_select_path (sel, current_path);
 		gtk_tree_path_free (current_path);

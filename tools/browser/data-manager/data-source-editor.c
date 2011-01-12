@@ -138,7 +138,8 @@ data_source_editor_init (DataSourceEditor *editor)
 
 	holder = gda_set_get_holder (editor->priv->attributes, "sql");
 	g_object_set ((GObject*) holder, "name", _("SELECT\nSQL"),
-		      "description", _("Actual SQL executed\nto select data"), NULL);
+		      "description", _("Actual SQL executed\nto select data\n"
+				       "Can't be changed if a table name is set"), NULL);
 	value = gda_value_new_from_string ("text:PROG_LANG=gda-sql", G_TYPE_STRING);
         gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
         gda_value_free (value);
