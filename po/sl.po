@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2011-01-10 19:00+0000\n"
-"PO-Revision-Date: 2011-01-10 20:07+0100\n"
+"POT-Creation-Date: 2011-01-15 16:02+0000\n"
+"PO-Revision-Date: 2011-01-15 20:07+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -170,12 +170,12 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/main.c:181
 #: ../tools/browser/main.c:195
 #: ../tools/browser/main.c:221
-#: ../tools/browser/data-manager/data-console.c:560
+#: ../tools/browser/data-manager/analyser.c:284
+#: ../tools/browser/data-manager/data-console.c:564
 #: ../tools/browser/data-manager/data-favorite-selector.c:202
 #: ../tools/browser/data-manager/data-favorite-selector.c:260
 #: ../tools/browser/data-manager/data-favorite-selector.c:628
-#: ../tools/browser/data-manager/data-widget.c:346
-#: ../tools/browser/data-manager/data-widget.c:614
+#: ../tools/browser/data-manager/data-widget.c:397
 #: ../tools/browser/query-exec/query-console.c:689
 #: ../tools/browser/query-exec/query-console.c:829
 #: ../tools/browser/query-exec/query-console.c:874
@@ -1150,7 +1150,7 @@ msgstr "Znakovna pretvorba v vrstici %d; vrnjena napaka: %s"
 #: ../libgda/sqlite/gda-sqlite-provider.c:779
 #: ../providers/bdb/gda-bdb-provider.c:209
 #: ../tools/browser/common/gdaui-data-import.c:178
-#: ../tools/browser/data-manager/data-widget.c:837
+#: ../tools/browser/data-manager/data-widget.c:620
 msgid "no detail"
 msgstr "brez podrobnosti"
 
@@ -4060,9 +4060,9 @@ msgid "Could not open plugins directory, no plugin loaded."
 msgstr "Ni mogoče odpreti mape vstavkov, zato vstavki ne bodo naloženi."
 
 #: ../libgda-ui/gdaui-init.c:497
-#: ../tools/browser/data-manager/data-widget.c:609
-#: ../tools/browser/data-manager/data-widget.c:614
-#: ../tools/browser/data-manager/data-widget.c:616
+#: ../tools/browser/data-manager/data-widget.c:392
+#: ../tools/browser/data-manager/data-widget.c:397
+#: ../tools/browser/data-manager/data-widget.c:399
 #: ../tools/browser/data-manager/xml-spec-editor.c:236
 #: ../tools/browser/query-exec/query-result.c:258
 #: ../tools/web-server.c:2023
@@ -4373,19 +4373,19 @@ msgstr "Prikaži surovo obliko besedila namesto oblikovanega"
 msgid "The buffer which is displayed"
 msgstr "Medpomnilnik, ki je prikazan"
 
-#: ../libgda-ui/gdaui-rt-editor.c:831
+#: ../libgda-ui/gdaui-rt-editor.c:834
 msgid "Reset font size"
 msgstr "Počisti velikost pisave"
 
-#: ../libgda-ui/gdaui-rt-editor.c:837
+#: ../libgda-ui/gdaui-rt-editor.c:840
 msgid "Decrease font size (zoom out)"
 msgstr "Zmanjšaj velikost pisave (oddalji)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:843
+#: ../libgda-ui/gdaui-rt-editor.c:846
 msgid "Increase font size (zoom in)"
 msgstr "Povečaj velikost pisave (približaj)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:849
+#: ../libgda-ui/gdaui-rt-editor.c:852
 msgid "Show source markup"
 msgstr "Prikaži izvorno oblikovanje"
 
@@ -4399,7 +4399,7 @@ msgstr "Zahtevaj skrivanje glave odseka, kadar je na voljo le ena glava."
 
 #. last row is for new entries
 #: ../libgda-ui/gdaui-server-operation.c:597
-#: ../tools/browser/data-manager/data-console.c:392
+#: ../tools/browser/data-manager/data-console.c:396
 msgid "Add"
 msgstr "Dodaj"
 
@@ -7184,7 +7184,7 @@ msgid "_Help"
 msgstr "_Pomoč"
 
 #: ../tools/browser/browser-window.c:293
-#: ../tools/browser/data-manager/data-console.c:419
+#: ../tools/browser/data-manager/data-console.c:423
 msgid "Help"
 msgstr "Pomoč"
 
@@ -7523,6 +7523,7 @@ msgid "Type: %s"
 msgstr "Vrsta: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:376
+#: ../tools/browser/data-manager/ui-spec-editor.c:166
 msgid "Remove"
 msgstr "Odstrani"
 
@@ -7754,27 +7755,40 @@ msgstr "Brez"
 msgid "Toggle between grid and form presentations"
 msgstr "Preklop med mrežnimi in oblikovnimi predstavitvami"
 
-#: ../tools/browser/data-manager/data-console.c:297
+#: ../tools/browser/data-manager/analyser.c:198
+msgid "Obtain referenced data in table "
+msgstr "Pridobi sklicne podatke v razpredelnici"
+
+#: ../tools/browser/data-manager/analyser.c:215
+msgid "List referencing data in "
+msgstr "Sklicni seznam podatkov v"
+
+#: ../tools/browser/data-manager/analyser.c:282
+#, c-format
+msgid "Error adding new data source: %s"
+msgstr "Napaka med dodajanjem novega podatkovnega vira: %s"
+
+#: ../tools/browser/data-manager/data-console.c:301
 msgid "Data Manager"
 msgstr "Upravljalnik podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:297
-#: ../tools/browser/data-manager/data-console.c:516
+#: ../tools/browser/data-manager/data-console.c:301
+#: ../tools/browser/data-manager/data-console.c:520
 #: ../tools/browser/schema-browser/relations-diagram.c:328
 #: ../tools/browser/schema-browser/relations-diagram.c:476
 msgid "Unsaved"
 msgstr "Neshranjeno"
 
-#: ../tools/browser/data-manager/data-console.c:328
+#: ../tools/browser/data-manager/data-console.c:332
 #: ../tools/browser/query-exec/query-console.c:331
 msgid "Variables' values:"
 msgstr "Vrednosti spremenljivke:"
 
-#: ../tools/browser/data-manager/data-console.c:385
+#: ../tools/browser/data-manager/data-console.c:389
 msgid "Reset"
 msgstr "Počisti"
 
-#: ../tools/browser/data-manager/data-console.c:386
+#: ../tools/browser/data-manager/data-console.c:390
 msgid ""
 "Reset the editor's\n"
 "contents"
@@ -7782,25 +7796,25 @@ msgstr ""
 "Počisti vsebino\n"
 "urejevalnika"
 
-#: ../tools/browser/data-manager/data-console.c:393
+#: ../tools/browser/data-manager/data-console.c:397
 msgid "Add a new data source"
 msgstr "Dodaj nov podatkovni vir"
 
-#: ../tools/browser/data-manager/data-console.c:399
+#: ../tools/browser/data-manager/data-console.c:403
 #: ../tools/browser/query-exec/query-console.c:363
 msgid "Variables"
 msgstr "Spremenljivke"
 
-#: ../tools/browser/data-manager/data-console.c:399
+#: ../tools/browser/data-manager/data-console.c:403
 msgid "Show variables needed"
 msgstr "Pokaži zahtevane spremenljivke"
 
-#: ../tools/browser/data-manager/data-console.c:405
+#: ../tools/browser/data-manager/data-console.c:409
 #: ../tools/browser/query-exec/query-console.c:369
 msgid "Execute"
 msgstr "Izvedi"
 
-#: ../tools/browser/data-manager/data-console.c:405
+#: ../tools/browser/data-manager/data-console.c:409
 msgid ""
 "Execute specified\n"
 "data manager"
@@ -7808,11 +7822,11 @@ msgstr ""
 "Izvedi določen\n"
 "upravljalnik podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:411
+#: ../tools/browser/data-manager/data-console.c:415
 msgid "View XML"
 msgstr "Pogled XML"
 
-#: ../tools/browser/data-manager/data-console.c:411
+#: ../tools/browser/data-manager/data-console.c:415
 msgid ""
 "View specifications\n"
 "as XML (advanced)"
@@ -7820,63 +7834,63 @@ msgstr ""
 "Pogled določil\n"
 "kot XML (napredno)"
 
-#: ../tools/browser/data-manager/data-console.c:432
+#: ../tools/browser/data-manager/data-console.c:436
 msgid "BBB:"
 msgstr "BBB:"
 
-#: ../tools/browser/data-manager/data-console.c:504
+#: ../tools/browser/data-manager/data-console.c:508
 #, c-format
 msgid "'%s' data manager"
 msgstr "Upravljalnik podatkov '%s' "
 
-#: ../tools/browser/data-manager/data-console.c:505
-#: ../tools/browser/data-manager/data-console.c:516
-#: ../tools/browser/data-manager/data-console.c:549
-#: ../tools/browser/data-manager/data-console.c:944
+#: ../tools/browser/data-manager/data-console.c:509
+#: ../tools/browser/data-manager/data-console.c:520
+#: ../tools/browser/data-manager/data-console.c:553
+#: ../tools/browser/data-manager/data-console.c:971
 msgid "Data manager"
 msgstr "Upravljalnik podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:559
+#: ../tools/browser/data-manager/data-console.c:563
 msgid "Could not save data manager"
 msgstr "Ni mogoče shraniti upravljalnika podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:585
+#: ../tools/browser/data-manager/data-console.c:589
 msgid "Data manager's name"
 msgstr "Ime upravljalnika podatkov"
 
-#: ../tools/browser/data-manager/data-console.c:605
+#: ../tools/browser/data-manager/data-console.c:609
 #: ../tools/browser/schema-browser/relations-diagram.c:287
 msgid "Save"
 msgstr "Shrani"
 
-#: ../tools/browser/data-manager/data-console.c:726
+#: ../tools/browser/data-manager/data-console.c:730
 #, c-format
 msgid "source%d"
 msgstr "vir%d"
 
-#: ../tools/browser/data-manager/data-console.c:769
-msgid "Data source from query"
-msgstr "Podatkovni vir poizvedbe"
+#: ../tools/browser/data-manager/data-console.c:789
+msgid "Data source from SQL"
+msgstr "Podatkovni viri iz SQL"
 
-#: ../tools/browser/data-manager/data-console.c:807
+#: ../tools/browser/data-manager/data-console.c:827
 #, c-format
 msgid "In schema %s"
 msgstr "V shemi %s"
 
-#: ../tools/browser/data-manager/data-console.c:817
+#: ../tools/browser/data-manager/data-console.c:837
 #, c-format
 msgid "For table: %s"
 msgstr "Za razpredelnico: %s"
 
-#: ../tools/browser/data-manager/data-console.c:894
+#: ../tools/browser/data-manager/data-console.c:921
 msgid "Switching to execution mode. Hit the Escape key to return to the compose mode"
 msgstr "Preklapljanje načina izvajanja. Pritisnite tipko Esc za vrnitev v način izgradnje"
 
-#: ../tools/browser/data-manager/data-console.c:900
+#: ../tools/browser/data-manager/data-console.c:927
 msgid "_Toggle mode"
 msgstr "_Preklopni način"
 
-#: ../tools/browser/data-manager/data-console.c:900
+#: ../tools/browser/data-manager/data-console.c:927
 msgid "Switch between compose and execute modes"
 msgstr "Preklop med načinom sestavljanja in izvajanja"
 
@@ -8044,62 +8058,51 @@ msgstr ""
 #: ../tools/browser/data-manager/data-source-editor.c:141
 msgid ""
 "Actual SQL executed\n"
-"to select data"
+"to select data\n"
+"Can't be changed if a table name is set"
 msgstr ""
 "Izvedeni ukaz SQL\n"
-"za izbor podatkov"
+"za izbor podatkov\n"
+"Vrednosti ni mogoče spreminjati, če je določeno ime tabele."
 
-#: ../tools/browser/data-manager/data-source-editor.c:151
+#: ../tools/browser/data-manager/data-source-editor.c:153
 msgid "Dependencies:"
 msgstr "Odvisnosti:"
 
-#: ../tools/browser/data-manager/data-source-editor.c:244
+#: ../tools/browser/data-manager/data-source-editor.c:246
 msgid "Requires:"
 msgstr "Zahteva:"
 
-#: ../tools/browser/data-manager/data-source-editor.c:261
+#: ../tools/browser/data-manager/data-source-editor.c:263
 msgid "Exports:"
 msgstr "Izvozi:"
 
-#: ../tools/browser/data-manager/data-widget.c:248
+#: ../tools/browser/data-manager/data-widget.c:249
 msgid "Link to other data"
 msgstr "Poveži z drugimi podatki"
 
-#: ../tools/browser/data-manager/data-widget.c:344
-#, c-format
-msgid "Error adding new data source: %s"
-msgstr "Napaka med dodajanjem novega podatkovnega vira: %s"
-
-#: ../tools/browser/data-manager/data-widget.c:389
+#: ../tools/browser/data-manager/data-widget.c:355
 msgid "Remove data source"
 msgstr "Odstrani podatkovni vir"
 
-#: ../tools/browser/data-manager/data-widget.c:395
+#: ../tools/browser/data-manager/data-widget.c:361
 msgid "Show data source's properties"
 msgstr "Pokaži lastnosti podatkovnega vira"
 
-#: ../tools/browser/data-manager/data-widget.c:533
-msgid "Obtain referenced data in table "
-msgstr "Pridobi sklicne podatke v razpredelnici"
-
-#: ../tools/browser/data-manager/data-widget.c:550
-msgid "List referencing data in "
-msgstr "Sklicni seznam podatkov v"
-
-#: ../tools/browser/data-manager/data-widget.c:616
+#: ../tools/browser/data-manager/data-widget.c:399
 msgid "No data source defined"
 msgstr "Ni določenega podatkovnega vira"
 
-#: ../tools/browser/data-manager/data-widget.c:1020
+#: ../tools/browser/data-manager/data-widget.c:803
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr "Ni mogoče povezati parametra '%s' vrste '%s' na parameter vrste '%s'"
 
-#: ../tools/browser/data-manager/ui-spec-editor.c:153
+#: ../tools/browser/data-manager/ui-spec-editor.c:245
 msgid "Data sources:"
 msgstr "Podatkovni viri:"
 
-#: ../tools/browser/data-manager/ui-spec-editor.c:204
+#: ../tools/browser/data-manager/ui-spec-editor.c:303
 msgid "Selected data source's properties:"
 msgstr "Lastnosti izbranega podatkovnega vira:"
 
