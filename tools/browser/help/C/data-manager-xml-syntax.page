@@ -112,7 +112,7 @@
     attribute.</p></item>
     <item><p>can contain one or more <code>&lt;column&gt;</code> tag which contents define the columns
     to identify the foreign key to use; this is necessary if there are multiple foreign keys,
-    and can be omitted if there is only one possible koreign key. The listed columns are the one
+    and can be omitted if there is only one possible foreign key. The listed columns are the one
     from the table where the foreign key exists.</p></item>
   </list>
 
