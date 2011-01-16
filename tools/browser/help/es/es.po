@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-01-06 09:51+0000\n"
-"PO-Revision-Date: 2011-01-07 17:03+0100\n"
+"POT-Creation-Date: 2011-01-15 16:02+0000\n"
+"PO-Revision-Date: 2011-01-16 12:37+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -148,6 +148,9 @@ msgid ""
 "shown in this figure) of multiple foreign key fields for which a single drop "
 "down choice widget is shown;"
 msgstr ""
+"Hay una entrada de datos por cada columna en la tabla, con la excepción (no "
+"mostrada en esta figura) de varios campos de clave externa para los que se "
+"muestra un único widget desplegable;"
 
 #: C/table-insert-data.page:28(p)
 msgid ""
@@ -335,8 +338,8 @@ msgid ""
 "tables, and an area to define display preferences for each column's data"
 msgstr ""
 "cero o más solapas que representan las propiedades de una tabla o una vista: "
-"la lista de columnas, la lista de restricciones (claves primarias o ajenas y "
-"restricciones de unicidad), un <link xref=\"diagram\">diagrama</link> que "
+"la lista de columnas, la lista de restricciones (claves primarias o externas "
+"y restricciones de unicidad), un <link xref=\"diagram\">diagrama</link> que "
 "muestra las tablas relacionadas y un área para definir preferencias de "
 "visualización para los datos de cada columna"
 
@@ -348,7 +351,7 @@ msgid ""
 msgstr ""
 "cero o más <link xref=\"diagram\">diagramas</link> en los que se puede "
 "representar cualquier número de tablas, y donde están enlazadas usando sus "
-"relaciones (como restricciones de clave ajena)"
+"relaciones (como restricciones de clave externa)"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -524,6 +527,11 @@ msgid ""
 "executed (11 minutes in the figure above). Selecting an history item "
 "displays the corresponding result in the execution results part."
 msgstr ""
+"La parte del histórico de ejecución contiene una lista de las sentencias "
+"ejecutadas, ordenadas por fecha de ejecución con una indicación de cuándo se "
+"ejecutó la sentencia (11 minutes en la figura anterior. Al seleccionar un "
+"elemento del histórico se muestra el resultado correspondiente en la parte "
+"de resultados."
 
 #: C/query-execution-perspective.page:83(p)
 msgid ""
@@ -667,6 +675,8 @@ msgstr "Una ventana de conexión"
 msgid ""
 "Window opened for the 'c1' connection (and the Schema browser perspective)"
 msgstr ""
+"Ventana abierta para la conexión «c1» (y la perspectiva del visor de "
+"esquemas)"
 
 #: C/general-ui.page:21(p)
 msgid ""
@@ -695,6 +705,8 @@ msgid ""
 "the <link xref=\"data-manager-perspective\">Data manager perspective</link> "
 "to navigate through the database's contents"
 msgstr ""
+"la <link xref=\"data-manager-perspective\">perspectiva del gestor de datos</"
+"link> para navegar a través de los contenidos de la base de datos"
 
 #: C/general-ui.page:30(p)
 msgid ""
@@ -733,6 +745,8 @@ msgstr "se pueden abrir varias ventanas para una sola conexión"
 #: C/features.page:17(p)
 msgid "full screen mode accessible to maximize the screen space usage"
 msgstr ""
+"modo pantalla completa accesible para maximizar el uso del espacio de la "
+"pantalla"
 
 #: C/features.page:18(p)
 msgid ""
@@ -755,6 +769,9 @@ msgid ""
 "Diagrams are present throughout the <app>gda-browser</app>, and are made of "
 "a canvas on which graphical items are displayed (like tables for example)."
 msgstr ""
+"Los diagramas se presentan a mediante <app>gda-browser</app>, y constan de "
+"una ventana en la que se muestran elementos gráficos (igual que, por "
+"ejemplo, las tablas)."
 
 #: C/diagram.page:13(title)
 msgid "Diagram"
@@ -818,6 +835,10 @@ msgid ""
 "defined by <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> nodes, "
 "both accepting the following optional attributes:"
 msgstr ""
+"La raíz del árbol XML debe ser una etiqueta<code>&lt;data&gt;</code>, que "
+"permite contener una o más definiciones de fuentes de datos. Cada fuente de "
+"datos se define por nodos <code>&lt;query&gt;</code> o <code>&lt;table&gt;</"
+"code>, y ambos aceptan los siguientes atributos opcionales:"
 
 #: C/data-manager-xml-syntax.page:15(p)
 msgid ""
@@ -867,6 +888,10 @@ msgid ""
 "as the contents of the tag. Linkage to other data sources can be achieved "
 "using <link xref=\"variables-syntax\">variables</link> in the SELECT's SQL."
 msgstr ""
+"Use la etiqueta <code>&lt;query&gt;</code> para especificar una sentencia "
+"SQL SELECT, así como los contenidos de la etiqueta. Puede enlazar otras "
+"fuentes de datos usando <link xref=\"variables-syntax\">variables</link> en "
+"el SELECT de SQL."
 
 #: C/data-manager-xml-syntax.page:54(p) C/data-manager-xml-syntax.page:130(p)
 msgid "For example the previous XML specification defines two data sources:"
@@ -896,6 +921,9 @@ msgid ""
 "where you can select a customer, and one which displays all the attributes "
 "for the selected customer."
 msgstr ""
+"Ejecutar esta especificación de fuentes de datos creará dos vistas "
+"tabulares: una donde puede seleccionar un cliente, y otra que muestra todos "
+"los atributos del cliente seleccionado."
 
 #: C/data-manager-xml-syntax.page:74(p)
 msgid ""
@@ -903,6 +931,9 @@ msgid ""
 "following variable for each column of the resulting data set (the variable's "
 "type is the same as the column's type):"
 msgstr ""
+"Cada fuente de datos definida por una etiqueta <code>&lt;query&gt;</code> "
+"exporta la siguiente variable para cada columna del conjunto de datos "
+"resultante (el tipo de la variable es el mismo que el de la columna):"
 
 #: C/data-manager-xml-syntax.page:79(p) C/data-manager-xml-syntax.page:161(p)
 msgid ""
@@ -957,6 +988,8 @@ msgid ""
 "requires the \"foreign_key_table\" attribute defining the name of the table "
 "to which there are foreign keys used to determine the dependency"
 msgstr ""
+"requiere el atributo «foreign_key_table» que define el nombre de la tabla de "
+"la que son claves externa para determinar la dependencia"
 
 #: C/data-manager-xml-syntax.page:110(p)
 msgid ""
@@ -966,13 +999,24 @@ msgid ""
 msgstr ""
 
 #: C/data-manager-xml-syntax.page:113(p)
+#| msgid ""
+#| "can contain one or more <code>&lt;column&gt;</code> tag which contents "
+#| "define the columns to identify the foreign key to use; this is necessary "
+#| "if there are multiple foreign keys, and can be omitted if there is only "
+#| "one possible koreign key. The listed columns are the one from the table "
+#| "where the foreign key exists."
 msgid ""
 "can contain one or more <code>&lt;column&gt;</code> tag which contents "
 "define the columns to identify the foreign key to use; this is necessary if "
 "there are multiple foreign keys, and can be omitted if there is only one "
-"possible koreign key. The listed columns are the one from the table where "
+"possible foreign key. The listed columns are the one from the table where "
 "the foreign key exists."
 msgstr ""
+"puede contener una o más etiquetas <code>&lt;column&gt;</code> cuyo "
+"contenido define las columnas para identificar la clave externa que usar; "
+"esto es necesario si hay varias claves externas, y se puede omitir si sólo "
+"hay una clave externa posible. Las columnas listadas son las de la tabla "
+"donde existe la clave externa. "
 
 #: C/data-manager-xml-syntax.page:134(p)
 msgid ""
@@ -999,6 +1043,8 @@ msgid ""
 "you don't have to specify the fields involved in the foreign key linking the "
 "<code>orders</code> and <code>customers</code> tables"
 msgstr ""
+"no tiene que especificar los cmapos involucrados en la clave externa que une "
+"las tablas <code>orders</code> y <code>customers</code>"
 
 #: C/data-manager-xml-syntax.page:149(p)
 msgid ""
@@ -1060,6 +1106,10 @@ msgid ""
 "Manager</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>D</key></"
 "keyseq> shortcut."
 msgstr ""
+"Use la perspectiva del gestor de datos para navegar a través de los datos de "
+"la base de datos. Para cambiar esta perspectiva, use el menú "
+"<guiseq><gui>Perspectiva</gui><gui>Gestor de datos</gui></guiseq> o el atajo "
+"<keyseq><key>Ctrl</key><key>D</key></keyseq>."
 
 #: C/data-manager-perspective.page:14(p)
 msgid ""
@@ -1101,6 +1151,12 @@ msgid ""
 "The two data sources have been executed and the result is composed of two "
 "tabular views side by side."
 msgstr ""
+"En la siguiente figura, hay dos fuentes de datos: una para la tabla "
+"«clientes» y otra para la tabla «pedidos» (que lista los pedidos de un "
+"cliente), la fuente de datos más adelante en función de la anterior, ya que "
+"es una clave externa de la tabla «pedidos» que hace referencia a la tabla "
+"«clientes». Las dos fuentes de datos se han ejecutado y el resultado se "
+"compone de dos vistas tabulares."
 
 #: C/data-manager-perspective.page:36(p)
 msgid ""
@@ -1121,6 +1177,10 @@ msgid ""
 "executed the <code>SELECT * FROM mytable</code> statement in the <link xref="
 "\"query-execution-perspective\"/>."
 msgstr ""
+"La fuente de datos más sencilla es la que representa todos los datos de una "
+"tabla, mostrados cuando se ejecuta como una sola vista tabular, como si "
+"alguien ejecutara la sentencia <code>SELECT * FROM mitabla</code> en la "
+"<link xref=\"query-execution-perspective\"/>."
 
 #: C/data-manager-perspective.page:51(p)
 msgid ""
@@ -1141,7 +1201,7 @@ msgstr "Editar las fuentes de datos"
 
 #: C/data-manager-perspective.page:59(desc)
 msgid "Editing data sources in the data manager perspective"
-msgstr ""
+msgstr "Editar fuentes de datos en la perspectiva del gestor de datos"
 
 #: C/data-manager-perspective.page:67(p)
 msgid ""
@@ -1207,6 +1267,10 @@ msgid ""
 "in columns using the following rule: if a data source B depends on a data "
 "source A, then its tabular view is displayed on the right of the one for A."
 msgstr ""
+"La disposición de las vistas tabulares para cada fuente de datos se genera "
+"automáticamente en columnas usando la siguiente regla: si una fuente de "
+"datos B depende de otra A, su vista tabular se muestra a la derecha de la de "
+"A."
 
 #: C/data-manager-perspective.page:92(p)
 msgid ""
