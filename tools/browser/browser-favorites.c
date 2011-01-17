@@ -212,6 +212,8 @@ favorite_type_to_string (BrowserFavoritesType type)
 		return "QUERY";
 	case BROWSER_FAVORITES_DATA_MANAGERS:
 		return "DATAMAN";
+	case BROWSER_FAVORITES_ACTIONS:
+		return "ACTION";
 	default:
 		g_warning ("Unknown type of favorite");
 	}
@@ -232,6 +234,8 @@ favorite_string_to_type (const gchar *str)
 	}
 	else if (*str == 'Q')
 		return BROWSER_FAVORITES_QUERIES;
+	else if (*str == 'A')
+		return BROWSER_FAVORITES_ACTIONS;
 	else
 		g_warning ("Unknown type '%s' of favorite", str);
 	return 0;
@@ -485,6 +489,12 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
 
 /**
  * browser_favorites_add
+ * @bfav: a #BrowserFavorites object
+ * @session_id: session ID (0)
+ * @fav: a pointer to a #BrowserFavoritesAttributes structure
+ * @order_key: ordering key or -1 for none
+ * @pos: position (ignored if @order_key < 0)
+ * @error: a place to store errors, or %NULL
  *
  * Add a new favorite, or replace an existing one.
  * NOTE:
@@ -924,10 +934,10 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 
 
 /**
- * browser_favorites_delete_favorite
+ * browser_favorites_delete
  * @bfav: a #BrowserFavorites
  * @session_id: 0 for now
- * @fav: a pointer to a #BrowserFavoritesAttributes definting which favorite to delete
+ * @fav: a pointer to a #BrowserFavoritesAttributes definning which favorite to delete
  * @error: a place to store errors, or %NULL
  *
  * Delete a favorite
