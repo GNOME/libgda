@@ -386,33 +386,33 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 
-	button = browser_make_small_button (FALSE, _("Reset"), GTK_STOCK_CLEAR,
+	button = browser_make_small_button (FALSE, FALSE, _("Reset"), GTK_STOCK_CLEAR,
 					    _("Reset the editor's\ncontents"));
 	dconsole->priv->clear_xml_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (editor_clear_clicked_cb), dconsole);
 
-	button = browser_make_small_button (FALSE, _("Add"), GTK_STOCK_ADD,
+	button = browser_make_small_button (FALSE, TRUE, _("Add"), GTK_STOCK_ADD,
 					    _("Add a new data source"));
 	dconsole->priv->add_source_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (add_source_clicked_cb), dconsole);
 
-	button = browser_make_small_button (TRUE, _("Variables"), NULL, _("Show variables needed"));
+	button = browser_make_small_button (TRUE, FALSE, _("Variables"), NULL, _("Show variables needed"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	dconsole->priv->params_toggle = GTK_TOGGLE_BUTTON (button);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (variables_clicked_cb), dconsole);
 
-	button = browser_make_small_button (FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute specified\n"
+	button = browser_make_small_button (FALSE, FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute specified\n"
 										      "data manager"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (execute_clicked_cb), dconsole);
 
-	button = browser_make_small_button (TRUE, _("View XML"), NULL, _("View specifications\n"
+	button = browser_make_small_button (TRUE, FALSE, _("View XML"), NULL, _("View specifications\n"
 									 "as XML (advanced)"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	spec_editor_toggled_cb (GTK_TOGGLE_BUTTON (button), dconsole);
@@ -420,7 +420,7 @@ data_console_new (BrowserConnection *bcnc)
 			  G_CALLBACK (spec_editor_toggled_cb), dconsole);
 
 #ifdef HAVE_GDU
-	button = browser_make_small_button (FALSE, _("Help"), GTK_STOCK_HELP, _("Help"));
+	button = browser_make_small_button (FALSE, FALSE, _("Help"), GTK_STOCK_HELP, _("Help"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (help_clicked_cb), dconsole);
@@ -779,8 +779,8 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 								    dconsole->priv->mgr,
 								    current_source, GTK_WIDGET (dconsole));
 		gtk_menu_popup (GTK_MENU (dconsole->priv->add_source_menu), NULL, NULL,
-			NULL, NULL, 0,
-			gtk_get_current_event_time ());
+				NULL, NULL, 0,
+				gtk_get_current_event_time ());
 		return;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -168,33 +168,38 @@ query_favorite_selector_get_type (void)
 	return type;
 }
 
+static void
+favorite_delete_selected (QueryFavoriteSelector *tsel)
+{
+	GtkTreeModel *model;
+	GtkTreeSelection *select;
+	GtkTreeIter iter;
+	
+	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (tsel->priv->treeview));
+	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
+		BrowserFavorites *bfav;
+		BrowserFavoritesAttributes fav;
+		GError *lerror = NULL;
+		
+		memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+		gtk_tree_model_get (model, &iter,
+				    COLUMN_ID, &(fav.id), -1);
+		bfav = browser_connection_get_favorites (tsel->priv->bcnc);
+		if (!browser_favorites_delete (bfav, 0, &fav, NULL)) {
+			browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)tsel),
+					    _("Could not remove favorite: %s"),
+					    lerror && lerror->message ? lerror->message : _("No detail"));
+			if (lerror)
+				g_error_free (lerror);
+		}
+	}
+}
+
 static gboolean
 key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, QueryFavoriteSelector *tsel)
 {
 	if (event->keyval == GDK_Delete) {
-		GtkTreeModel *model;
-		GtkTreeSelection *select;
-		GtkTreeIter iter;
-		
-		select = gtk_tree_view_get_selection (treeview);
-		if (gtk_tree_selection_get_selected (select, &model, &iter)) {
-			BrowserFavorites *bfav;
-			BrowserFavoritesAttributes fav;
-			GError *lerror = NULL;
-
-			memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
-			gtk_tree_model_get (model, &iter,
-					    COLUMN_ID, &(fav.id), -1);
-			bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-			if (!browser_favorites_delete (bfav, 0, &fav, NULL)) {
-				browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)tsel),
-						    _("Could not remove favorite: %s"),
-						    lerror && lerror->message ? lerror->message : _("No detail"));
-				if (lerror)
-					g_error_free (lerror);
-			}
-		}
-		
+		favorite_delete_selected (tsel);
 		return TRUE;
 	}
 	return FALSE; /* not handled */
@@ -350,6 +355,12 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 }
 
 static void
+delete_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
+{
+	favorite_delete_selected (tsel);
+}
+
+static void
 do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, QueryFavoriteSelector *tsel)
 {
 	int button, event_time;
@@ -366,6 +377,12 @@ do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, QueryFavo
 		gtk_widget_show (mitem);
 		g_signal_connect (mitem, "activate",
 				  G_CALLBACK (properties_activated_cb), tsel);
+
+		mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_DELETE, NULL);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+		gtk_widget_show (mitem);
+		g_signal_connect (mitem, "activate",
+				  G_CALLBACK (delete_activated_cb), tsel);
 
 		tsel->priv->popup_menu = menu;
 	}

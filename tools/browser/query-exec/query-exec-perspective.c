@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -224,7 +224,7 @@ query_exec_perspective_new (BrowserWindow *bwin)
 }
 
 static void
-fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gint fav_id,
+fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id,
 			  G_GNUC_UNUSED BrowserFavoritesType fav_type, const gchar *selection,
 			  QueryExecPerspective *perspective)
 {
@@ -236,7 +236,7 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gint fa
 	if (!page)
 		return;
 	if (IS_QUERY_CONSOLE (page)) {
-		query_console_set_text (QUERY_CONSOLE (page), selection);
+		query_console_set_text (QUERY_CONSOLE (page), selection, fav_id);
 		gtk_widget_grab_focus (page);
 	}
 	else {

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Vivien Malerba <malerba@gnome-db.org>
@@ -47,8 +47,9 @@ GtkWidget*         browser_make_tab_label_with_pixbuf (const gchar *label,
 						       GdkPixbuf *pixbuf, gboolean with_close,
 						       GtkWidget **out_close_button);
 
-GtkWidget          *browser_make_small_button (gboolean is_toggle,
-					       const gchar *label, const gchar *stock_id, const gchar *tooltip);
+GtkWidget          *browser_make_small_button (gboolean is_toggle, gboolean with_arrow,
+					       const gchar *label, const gchar *stock_id,
+					       const gchar *tooltip);
 GtkWidget          *browser_make_tree_view (GtkTreeModel *model);
 
 /*
