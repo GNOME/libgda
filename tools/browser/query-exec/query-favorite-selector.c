@@ -45,6 +45,7 @@ struct _QueryFavoriteSelectorPrivate {
 	GtkWidget *popup_menu;
 	GtkWidget *popup_properties;
 	GtkWidget *properties_name;
+	GtkWidget *properties_action;
 	GtkWidget *properties_text;
 	gint       properties_id;
 	gint       properties_position;
@@ -192,11 +193,24 @@ favorite_delete_selected (QueryFavoriteSelector *tsel)
 			if (lerror)
 				g_error_free (lerror);
 		}
+		else {
+			/* remove any associated action */
+			gint id;
+			gchar *tmp;
+			tmp = g_strdup_printf ("QUERY%d", fav.id);
+			id = browser_favorites_find (bfav, 0, tmp, &fav, NULL);
+			if (id >= 0) {
+				browser_favorites_delete (bfav, 0, &fav, NULL);
+				/*g_print ("ACTION_DELETED %d: %s\n", fav.id, tmp);*/
+			}
+			g_free (tmp);
+		}
 	}
 }
 
 static gboolean
-key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, QueryFavoriteSelector *tsel)
+key_press_event_cb (G_GNUC_UNUSED GtkTreeView *treeview, GdkEventKey *event,
+		    QueryFavoriteSelector *tsel)
 {
 	if (event->keyval == GDK_KEY_Delete) {
 		favorite_delete_selected (tsel);
@@ -234,6 +248,9 @@ prop_save_timeout (QueryFavoriteSelector *tsel)
 	BrowserFavorites *bfav;
 	BrowserFavoritesAttributes fav;
 	GError *error = NULL;
+	gboolean allok, actiondel = TRUE;
+
+	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
 
 	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
 	fav.id = tsel->priv->properties_id;
@@ -242,16 +259,56 @@ prop_save_timeout (QueryFavoriteSelector *tsel)
 	fav.descr = NULL;
 	fav.contents = query_editor_get_all_text (QUERY_EDITOR (tsel->priv->properties_text));
 
-	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, tsel->priv->properties_position, &error)) {
+	allok = browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES,
+				       tsel->priv->properties_position, &error);
+	if (! allok) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));
 		if (error)
 			g_error_free (error);
 	}
-
 	g_free (fav.contents);
+
+	if (allok && (fav.id >= 0)) {
+		const gchar *action;
+		gint qid = fav.id;
+		action = gtk_entry_get_text (GTK_ENTRY (tsel->priv->properties_action));
+		if (action && *action) {
+			fav.id = -1;
+			fav.type = BROWSER_FAVORITES_ACTIONS;
+			fav.name = (gchar*) action;
+			fav.descr = NULL;
+			fav.contents = g_strdup_printf ("QUERY%d", qid);
+			allok = browser_favorites_add (bfav, 0, &fav, -1,
+						       tsel->priv->properties_position, &error);
+			if (! allok) {
+				browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
+						    _("Could not add action: %s"),
+						    error && error->message ? error->message : _("No detail"));
+				if (error)
+					g_error_free (error);
+			}
+			else
+				actiondel = FALSE;
+			/*g_print ("ACTION_ADDED %d: %s\n", fav.id, fav.contents);*/
+			g_free (fav.contents);
+		}
+	}
+
+	if (actiondel && (tsel->priv->properties_id >= 0)) {
+		/* remove action */
+		gint id;
+		gchar *tmp;
+		tmp = g_strdup_printf ("QUERY%d", tsel->priv->properties_id);
+		id = browser_favorites_find (bfav, 0, tmp, &fav, NULL);
+		if (id >= 0) {
+			browser_favorites_delete (bfav, 0, &fav, NULL);
+			/*g_print ("ACTION_DELETED %d: %s\n", fav.id, tmp);*/
+		}
+		g_free (tmp);
+	}
+
 	tsel->priv->prop_save_timeout = 0;
 	return FALSE; /* remove timeout */
 }
@@ -270,6 +327,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 	if (! tsel->priv->popup_properties) {
 		GtkWidget *pcont, *vbox, *hbox, *label, *entry, *text, *table;
 		gchar *str;
+		gfloat align;
 		
 		pcont = popup_container_new (GTK_WIDGET (mitem));
 		vbox = gtk_vbox_new (FALSE, 0);
@@ -279,7 +337,8 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		str = g_strdup_printf ("<b>%s:</b>", _("Favorite's properties"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
+		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		
 		hbox = gtk_hbox_new (FALSE, 0); /* HIG */
@@ -287,14 +346,15 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		label = gtk_label_new ("      ");
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 		
-		table = gtk_table_new (2, 2, FALSE);
+		table = gtk_table_new (3, 2, FALSE);
 		gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
 		
 		label = gtk_label_new ("");
 		str = g_strdup_printf ("<b>%s:</b>", _("Name"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
+		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
 		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 		
 		label = gtk_label_new ("");
@@ -303,6 +363,14 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		g_free (str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
 		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+
+		label = gtk_label_new ("");
+		str = g_strdup_printf ("<b>%s:</b>", _("Action name"));
+		gtk_label_set_markup (GTK_LABEL (label), str);
+		g_free (str);
+		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
+		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
+		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
 		
 		entry = gtk_entry_new ();
 		gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0);
@@ -316,6 +384,12 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		gtk_table_attach_defaults (GTK_TABLE (table), text, 1, 2, 1, 2);
 		tsel->priv->properties_text = text;
 		g_signal_connect (text, "changed",
+				  G_CALLBACK (property_changed_cb), tsel);
+
+		entry = gtk_entry_new ();
+		gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0);
+		tsel->priv->properties_action = entry;
+		g_signal_connect (entry, "changed",
 				  G_CALLBACK (property_changed_cb), tsel);
 
 		tsel->priv->popup_properties = pcont;
@@ -350,12 +424,34 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 						   G_CALLBACK (property_changed_cb), tsel);
 		g_free (contents);
 
+		/* action, if any */
+		g_signal_handlers_block_by_func (tsel->priv->properties_action,
+						 G_CALLBACK (property_changed_cb), tsel);
+		gtk_entry_set_text (GTK_ENTRY (tsel->priv->properties_action), "");
+		if (tsel->priv->properties_id >= 0) {
+			gint id;
+			gchar *tmp;
+			BrowserFavorites *bfav;
+			BrowserFavoritesAttributes fav;
+			bfav = browser_connection_get_favorites (tsel->priv->bcnc);
+			tmp = g_strdup_printf ("QUERY%d", tsel->priv->properties_id);
+			id = browser_favorites_find (bfav, 0, tmp, &fav, NULL);
+			if (id >= 0) {
+				gtk_entry_set_text (GTK_ENTRY (tsel->priv->properties_action), fav.name);
+				/*g_print ("ACTION_USED %d: %s\n", fav.id, tmp);*/
+			}
+			g_free (tmp);
+		}
+		g_signal_handlers_unblock_by_func (tsel->priv->properties_action,
+						   G_CALLBACK (property_changed_cb), tsel);
+
+
 		gtk_widget_show (tsel->priv->popup_properties);
 	}
 }
 
 static void
-delete_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
+delete_activated_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 {
 	favorite_delete_selected (tsel);
 }
