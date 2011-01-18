@@ -109,7 +109,6 @@ data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 	gtk_box_pack_start (GTK_BOX (dwid), dwid->priv->top_nb, TRUE, TRUE, 0);
 
 	/* error page */
-#if GTK_CHECK_VERSION (2,18,0)
 	GtkWidget *info;
 	info = gtk_info_bar_new ();
 	gtk_notebook_append_page (GTK_NOTEBOOK (dwid->priv->top_nb), info, NULL);
@@ -118,10 +117,6 @@ data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 	gtk_label_set_ellipsize (GTK_LABEL (dwid->priv->info_label), PANGO_ELLIPSIZE_END);
 	gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (info))),
 			   dwid->priv->info_label);
-#else
-	dwid->priv->info_label = gtk_label_new ("");
-	gtk_notebook_append_page (GTK_NOTEBOOK (dwid->priv->top_nb), dwid->priv->info_label, NULL);
-#endif
 
 	/* contents page */
 	GtkWidget *vbox;

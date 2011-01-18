@@ -1,6 +1,6 @@
 /* browser-canvas-db-relations.c
  *
- * Copyright (C) 2002 - 2010 Vivien Malerba
+ * Copyright (C) 2002 - 2011 Vivien Malerba
  * Copyright (C) 2002 Fernando Martins
  *
  * This program is free software; you can redistribute it and/or
@@ -612,11 +612,7 @@ popup_add_table_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasDbRelations *
 		g_object_set_data (G_OBJECT (dbrels->priv->add_dialog), "__canvas", dbrels);
 
 		vbox = gtk_vbox_new (FALSE, 0);
-#if GTK_CHECK_VERSION(2,18,0)
 		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dbrels->priv->add_dialog));
-#else
-		dcontents = GTK_DIALOG (dbrels->priv->add_dialog)->vbox;
-#endif
 		gtk_container_add (GTK_CONTAINER (dcontents), vbox);
 		
 		cloud = objects_cloud_new (dbrels->priv->mstruct, OBJECTS_CLOUD_TYPE_TABLE);
