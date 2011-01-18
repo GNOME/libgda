@@ -2017,6 +2017,7 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 					   GTK_STOCK_OK,
 					   GTK_RESPONSE_ACCEPT,
 					   NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_ACCEPT);
 	if (header && *header) {
 		GtkWidget *label;
 		gchar *str;

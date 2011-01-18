@@ -507,7 +507,7 @@ ui_spec_editor_get_selected_source (UiSpecEditor *sped)
 	GtkTreeSelection *select;
 	GtkTreeIter iter;
 
-	select = gtk_tree_view_get_selection (sped->priv->sources_tree);
+	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (sped->priv->sources_tree));
 	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
 		DataSource *source;
 		gtk_tree_model_get (model, &iter, COLUMN_DATA_SOURCE, &source, -1);
