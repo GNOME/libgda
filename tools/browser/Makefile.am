@@ -151,6 +151,7 @@ icons_DATA= \
 	gda-browser-reference.png \
 	gda-browser-diagram.png \
 	gda-browser-query.png \
+	gda-browser-action.png \
 	gda-browser-form.png \
 	gda-browser-grid.png \
 	gda-browser-menu-ind.png

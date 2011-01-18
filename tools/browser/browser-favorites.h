@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -101,6 +101,20 @@ gint                browser_favorites_find         (BrowserFavorites *bfav, guin
 						    BrowserFavoritesAttributes *out_fav, GError **error);
 gboolean            browser_favorites_get          (BrowserFavorites *bfav, gint fav_id,
 						    BrowserFavoritesAttributes *out_fav, GError **error);
+
+typedef struct {
+	gint                  id;
+	gchar                *name;
+	GdaStatement         *stmt;
+	GdaSet               *params;
+	gint                  nb_bound; /* number of GdaHolders in @params which are bound 
+					 * to another GdaHolder */
+} BrowserFavoriteAction;
+
+GSList             *browser_favorites_get_actions  (BrowserFavorites *bfav, BrowserConnection *bcnc, GdaSet *set);
+void                browser_favorites_free_action  (BrowserFavoriteAction *action);
+void                browser_favorites_free_actions_list (GSList *actions_list);
+
 G_END_DECLS
 
 #endif

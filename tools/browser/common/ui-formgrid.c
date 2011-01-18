@@ -1,6 +1,6 @@
 /* ui-formgrid.c
  *
- * Copyright (C) 2010 Vivien Malerba
+ * Copyright (C) 2010 - 2011 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -26,18 +26,21 @@
 #include <libgda-ui/gdaui-raw-form.h>
 #include <libgda-ui/gdaui-data-selector.h>
 #include "../support.h"
+#include "../browser-window.h"
 
 static void ui_formgrid_class_init (UiFormGridClass * class);
 static void ui_formgrid_init (UiFormGrid *wid);
+static void ui_formgrid_dispose (GObject *object);
 
 static void ui_formgrid_set_property (GObject *object,
-					    guint param_id,
-					    const GValue *value,
-					    GParamSpec *pspec);
+				      guint param_id,
+				      const GValue *value,
+				      GParamSpec *pspec);
 static void ui_formgrid_get_property (GObject *object,
-					    guint param_id,
-					    GValue *value,
-					    GParamSpec *pspec);
+				      guint param_id,
+				      GValue *value,
+				      GParamSpec *pspec);
+static BrowserConnection *get_browser_connection (UiFormGrid *formgrid);
 
 struct _UiFormGridPriv
 {
@@ -47,6 +50,8 @@ struct _UiFormGridPriv
 	GtkWidget   *raw_grid;
 	GtkWidget   *info;
 	GdauiDataProxyInfoFlag flags;
+	
+	BrowserConnection *bcnc;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -88,9 +93,10 @@ ui_formgrid_get_type (void)
 static void
 ui_formgrid_class_init (UiFormGridClass *class)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	
 	parent_class = g_type_class_peek_parent (class);
+	object_class->dispose = ui_formgrid_dispose;
 
 	/* Properties */
         object_class->set_property = ui_formgrid_set_property;
@@ -109,7 +115,26 @@ ui_formgrid_class_init (UiFormGridClass *class)
 							      G_PARAM_READABLE));
 }
 
+static void
+ui_formgrid_dispose (GObject *object)
+{
+        UiFormGrid *formgrid;
+
+        formgrid = UI_FORMGRID (object);
+        if (formgrid->priv) {
+                if (formgrid->priv->bcnc)
+                        g_object_unref (formgrid->priv->bcnc);
+
+                g_free (formgrid->priv);
+                formgrid->priv = NULL;
+        }
+
+        /* parent class */
+        parent_class->dispose (object);
+}
+
 static void form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid);
+static void raw_grid_populate_popup_cb (GdauiRawGrid *gdauirawgrid, GtkMenu *menu, UiFormGrid *formgrid);
 
 static void
 ui_formgrid_init (UiFormGrid *formgrid)
@@ -121,6 +146,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv->raw_grid = NULL;
 	formgrid->priv->info = NULL;
 	formgrid->priv->flags = GDAUI_DATA_PROXY_INFO_CURRENT_ROW;
+	formgrid->priv->bcnc = NULL;
 
 	/* notebook */
 	formgrid->priv->nb = gtk_notebook_new ();
@@ -140,6 +166,8 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_grid), -1, FALSE);
 	gtk_container_add (GTK_CONTAINER (sw), formgrid->priv->raw_grid);
 	gtk_widget_show (formgrid->priv->raw_grid);
+	g_signal_connect (formgrid->priv->raw_grid, "populate-popup",
+			  G_CALLBACK (raw_grid_populate_popup_cb), formgrid);
 
 	/* form on the 2nd page of the notebook */
 	formgrid->priv->sw = gtk_scrolled_window_new (NULL, NULL);
@@ -191,8 +219,8 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 			      "flags", formgrid->priv->flags | GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 			      GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS
 			      /*GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
-			      GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
-			      GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS*/, NULL);
+				GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
+				GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS*/, NULL);
 
 		GdkPixbuf *pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_FORM);
 		gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
@@ -209,8 +237,8 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 			      "flags", formgrid->priv->flags | GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 			      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS
 			      /*GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
-			      GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
-			      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS*/, NULL);
+				GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
+				GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS*/, NULL);
 
 		GdkPixbuf *pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_GRID);
 		gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
@@ -221,6 +249,175 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 	}
 
 	gda_data_model_iter_move_to_row (iter, row >= 0 ? row : 0);
+}
+
+static BrowserConnection *
+get_browser_connection (UiFormGrid *formgrid)
+{
+	if (formgrid->priv->bcnc)
+		return formgrid->priv->bcnc;
+	else {
+		GtkWidget *toplevel;
+		
+		toplevel = gtk_widget_get_toplevel (GTK_WIDGET (formgrid));
+		if (BROWSER_IS_WINDOW (toplevel))
+			return browser_window_get_connection (BROWSER_WINDOW (toplevel));
+	}
+	return NULL;
+}
+
+
+static void execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid);
+
+static void
+raw_grid_populate_popup_cb (GdauiRawGrid *gdauirawgrid, GtkMenu *menu, UiFormGrid *formgrid)
+{
+	/* add actions to execute to menu */
+	GdaDataModelIter *iter;
+	GSList *actions_list, *list;
+	BrowserConnection *bcnc = NULL;
+
+	bcnc = get_browser_connection (formgrid);
+	if (!bcnc)
+		return;
+	
+	iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_grid));
+	actions_list = browser_favorites_get_actions (browser_connection_get_favorites (bcnc),
+						      bcnc, GDA_SET (iter));
+	if (! actions_list)
+		return;
+
+	GtkWidget *mitem, *submenu;
+	mitem = gtk_menu_item_new_with_label (_("Execute action"));
+	gtk_widget_show (mitem);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
+
+	submenu = gtk_menu_new ();
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+	for (list = actions_list; list; list = list->next) {
+		BrowserFavoriteAction *act = (BrowserFavoriteAction*) list->data;
+		mitem = gtk_menu_item_new_with_label (act->name);
+		gtk_widget_show (mitem);
+		gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
+		g_object_set_data_full (G_OBJECT (mitem), "action", act,
+					(GDestroyNotify) browser_favorites_free_action);
+		g_signal_connect (mitem, "activate",
+				  G_CALLBACK (execute_action_mitem_cb), formgrid);
+	}
+
+	g_slist_free (actions_list);
+}
+
+static void
+statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
+		       G_GNUC_UNUSED guint exec_id,
+		       GObject *out_result,
+		       G_GNUC_UNUSED GdaSet *out_last_inserted_row, GError *error,
+		       UiFormGrid *formgrid)
+{
+	GtkWidget *toplevel;
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (formgrid));
+        if (error)
+                browser_show_error (GTK_WINDOW (toplevel),
+                                    _("Error executing query:\n%s"),
+                                    error->message ?
+                                    error->message : _("No detail"));
+	else if (out_result && GDA_IS_DATA_MODEL (out_result)) {
+		GtkWidget *dialog, *toplevel, *label, *fg;
+		GtkWidget *dcontents;
+		
+		gchar *tmp;
+		toplevel = gtk_widget_get_toplevel (GTK_WIDGET (formgrid));
+		dialog = gtk_dialog_new_with_buttons (_("Action executed"),
+						      GTK_WINDOW (toplevel),
+						      GTK_DIALOG_NO_SEPARATOR,
+						      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE, NULL);
+#if GTK_CHECK_VERSION(2,18,0)
+		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+#else
+		dcontents = GTK_DIALOG (dialog)->vbox;
+#endif
+		gtk_box_set_spacing (GTK_BOX (dcontents), 5);
+		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE, TRUE);
+		
+		tmp = g_strdup_printf ("<b>%s</b>", _("Action executed"));
+		label = gtk_label_new ("");
+		gtk_label_set_markup (GTK_LABEL (label), tmp);
+		g_free (tmp);
+		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
+		
+		fg = ui_formgrid_new (GDA_DATA_MODEL (out_result),
+				      GDAUI_DATA_PROXY_INFO_CURRENT_ROW);
+		ui_formgrid_set_connection (UI_FORMGRID (fg), get_browser_connection (formgrid));
+
+		if (GDA_IS_DATA_SELECT (out_result)) {
+			GdaStatement *stmt;
+			g_object_get (G_OBJECT (out_result), "select-stmt", &stmt, NULL);
+			if (stmt) {
+				ui_formgrid_handle_user_prefs (UI_FORMGRID (fg), NULL, stmt);
+				g_object_unref (stmt);
+			}
+		}
+		gtk_box_pack_start (GTK_BOX (dcontents), fg, TRUE, TRUE, 0);
+		
+		gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 600);
+		gtk_widget_show_all (dialog);
+		
+		g_signal_connect (dialog, "response",
+				  G_CALLBACK (gtk_widget_destroy), NULL);
+		g_signal_connect (dialog, "close",
+				  G_CALLBACK (gtk_widget_destroy), NULL);
+	}
+        else if (BROWSER_IS_WINDOW (toplevel)) {
+		browser_window_show_notice_printf (BROWSER_WINDOW (toplevel),
+						   GTK_MESSAGE_INFO,
+						   "ActionExecution",
+						   "%s", _("Action successfully executed"));
+	}
+	else
+		browser_show_message (GTK_WINDOW (toplevel),
+				      "%s", _("Action successfully executed"));
+}
+
+static void
+execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
+{
+	BrowserFavoriteAction *act;
+	GtkWidget *dlg;
+	gchar *tmp;
+	gint response;
+	GtkWidget *toplevel;
+
+	act = (BrowserFavoriteAction*) g_object_get_data (G_OBJECT (menuitem), "action");
+	toplevel = gtk_widget_get_toplevel ((GtkWidget*) formgrid);
+	tmp = g_strdup_printf (_("Set or confirm the parameters to execute\n"
+				 "action '%s'"), act->name);
+	dlg = gdaui_basic_form_new_in_dialog (act->params,
+					      (GtkWindow*) toplevel,
+					      _("Execution of action"), tmp);
+	g_free (tmp);
+	response = gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	if (response == GTK_RESPONSE_ACCEPT) {
+                GError *lerror = NULL;
+		BrowserConnection *bcnc;
+		
+		bcnc = get_browser_connection (formgrid);
+		g_assert (bcnc);
+		
+                if (! browser_connection_execute_statement_cb (bcnc,
+                                                               act->stmt, act->params,
+                                                               GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+                                                               FALSE,
+                                                               (BrowserConnectionExecuteCallback) statement_executed_cb,
+                                                               formgrid, &lerror)) {
+                        browser_show_error (GTK_WINDOW (toplevel),
+                                            _("Error executing query: %s"),
+                                            lerror && lerror->message ? lerror->message : _("No detail"));
+                        g_clear_error (&lerror);
+                }
+	}
 }
 
 /**
@@ -261,7 +458,7 @@ ui_formgrid_new (GdaDataModel *model, GdauiDataProxyInfoFlag flags)
 /**
  * ui_formgrid_handle_user_prefs
  * @formgrid: a #UiFormGrid widget
- * @bcnc: a #BrowserConnection
+ * @bcnc: a #BrowserConnection, or %NULL to let @formgrid determine it itself
  * @stmt: the #GdaStatement which has been executed to produce the #GdaDataModel displayed in @formgrid
  *
  * Takes into account the UI preferences of the user
@@ -272,8 +469,11 @@ ui_formgrid_handle_user_prefs (UiFormGrid *formgrid, BrowserConnection *bcnc, Gd
 	g_return_if_fail (UI_IS_FORMGRID (formgrid));
 	if (bcnc)
 		g_return_if_fail (BROWSER_IS_CONNECTION (bcnc));
-	else
-		return;
+	else {
+		bcnc = get_browser_connection (formgrid);
+		if (!bcnc)
+			return;
+	}
 	if (stmt)
 		g_return_if_fail (GDA_IS_STATEMENT (stmt));
 	else
@@ -329,9 +529,9 @@ ui_formgrid_handle_user_prefs (UiFormGrid *formgrid, BrowserConnection *bcnc, Gd
 
 static void
 ui_formgrid_set_property (GObject *object,
-				guint param_id,
-				G_GNUC_UNUSED const GValue *value,
-				GParamSpec *pspec)
+			  guint param_id,
+			  G_GNUC_UNUSED const GValue *value,
+			  GParamSpec *pspec)
 {
 	UiFormGrid *formgrid;
 	
@@ -347,9 +547,9 @@ ui_formgrid_set_property (GObject *object,
 
 static void
 ui_formgrid_get_property (GObject *object,
-				guint param_id,
-				GValue *value,
-				GParamSpec *pspec)
+			  guint param_id,
+			  GValue *value,
+			  GParamSpec *pspec)
 {
 	UiFormGrid *formgrid;
 
@@ -420,9 +620,9 @@ ui_formgrid_get_grid_data_set (UiFormGrid *formgrid)
 /**
  * ui_formgrid_set_sample_size
  * @formgrid: a #UiFormGrid widget
- * @sample_size:
+ * @sample_size: the sample size
  *
- *
+ * Set the size of the sample displayed in @formgrid, see gdaui_raw_grid_set_sample_size()
  */
 void
 ui_formgrid_set_sample_size (UiFormGrid *formgrid, gint sample_size)
@@ -435,6 +635,9 @@ ui_formgrid_set_sample_size (UiFormGrid *formgrid, gint sample_size)
 
 /**
  * ui_formgrid_get_grid_widget
+ * @formgrid: a #UiFormGrid widget
+ *
+ * Returns: the #GdauiRawGrid embedded in @formgrid
  */
 GdauiRawGrid *
 ui_formgrid_get_grid_widget (UiFormGrid *formgrid)
@@ -443,4 +646,25 @@ ui_formgrid_get_grid_widget (UiFormGrid *formgrid)
 	g_return_val_if_fail (formgrid->priv, NULL);
 
 	return GDAUI_RAW_GRID (formgrid->priv->raw_grid);
+}
+
+/**
+ * ui_formgrid_set_connection
+ * @formgrid: a #UiFormGrid widget
+ * @bcnc: a #BrowserConnection, or %NULL
+ *
+ * Tells @formgrid to use @bcnc as connection when actions have to be executed
+ */
+void
+ui_formgrid_set_connection (UiFormGrid *formgrid, BrowserConnection *bcnc)
+{
+	g_return_if_fail (UI_IS_FORMGRID (formgrid));
+	g_return_if_fail (!bcnc || BROWSER_IS_CONNECTION (bcnc));
+
+	if (formgrid->priv->bcnc) {
+		g_object_unref (formgrid->priv->bcnc);
+		formgrid->priv->bcnc = NULL;
+	}
+	if (bcnc)
+		formgrid->priv->bcnc = g_object_ref (bcnc);
 }
