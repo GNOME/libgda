@@ -206,7 +206,7 @@ button_press_event_cb (GtkTreeView *treeview, GdkEventButton *event, UiSpecEdito
 static gboolean
 key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, UiSpecEditor *sped)
 {
-        if (event->keyval == GDK_Delete) {
+        if (event->keyval == GDK_KEY_Delete) {
 		GtkTreeModel *model;
                 GtkTreeSelection *select;
                 GtkTreeIter iter;
