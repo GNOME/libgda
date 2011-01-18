@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -122,6 +122,9 @@ struct _QueryConsolePrivate {
 
 	ExecutionBatch *current_exec;
 	guint current_exec_id; /* timout ID to fetch execution results */
+
+	gint fav_id;
+	GtkWidget *favorites_menu;
 };
 
 static void query_console_class_init (QueryConsoleClass *klass);
@@ -183,6 +186,7 @@ query_console_init (QueryConsole *tconsole, G_GNUC_UNUSED QueryConsoleClass *kla
 	tconsole->priv->params = NULL;
 	tconsole->priv->params_popup = NULL;
 	tconsole->priv->agroup = NULL;
+	tconsole->priv->fav_id = -1;
 }
 static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
 				gchar *reason, QueryConsole *tconsole);
@@ -212,6 +216,8 @@ query_console_dispose (GObject *object)
 			gtk_widget_destroy (tconsole->priv->params_popup);
 		if (tconsole->priv->agroup)
 			g_object_unref (tconsole->priv->agroup);
+		if (tconsole->priv->favorites_menu)
+			gtk_widget_destroy (tconsole->priv->favorites_menu);
 
 		g_free (tconsole->priv);
 		tconsole->priv = NULL;
@@ -355,32 +361,36 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 
-	button = browser_make_small_button (FALSE, _("Clear"), GTK_STOCK_CLEAR, _("Clear the editor's\ncontents"));
+	button = browser_make_small_button (FALSE, FALSE, _("Clear"),
+					    GTK_STOCK_CLEAR, _("Clear the editor's\ncontents"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_clear_clicked_cb), tconsole);
 
-	button = browser_make_small_button (TRUE, _("Variables"), NULL, _("Show variables needed\nto execute SQL"));
+	button = browser_make_small_button (TRUE, FALSE, _("Variables"), NULL,
+					    _("Show variables needed\nto execute SQL"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	tconsole->priv->params_toggle = GTK_TOGGLE_BUTTON (button);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (sql_variables_clicked_cb), tconsole);
 
-	button = browser_make_small_button (FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute SQL in editor"));
+	button = browser_make_small_button (FALSE, FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute SQL in editor"));
 	tconsole->priv->exec_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_execute_clicked_cb), tconsole);
 	
-	button = browser_make_small_button (FALSE, _("Indent"), GTK_STOCK_INDENT, _("Indent SQL in editor\n"
-									    "and make the code more readable\n"
-									    "(removes comments)"));
+	button = browser_make_small_button (FALSE, FALSE, _("Indent"),
+					    GTK_STOCK_INDENT, _("Indent SQL in editor\n"
+								"and make the code more readable\n"
+								"(removes comments)"));
 	tconsole->priv->indent_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_indent_clicked_cb), tconsole);
 
-	button = browser_make_small_button (FALSE, _("Favorite"), STOCK_ADD_BOOKMARK, _("Add SQL to favorite"));
+	button = browser_make_small_button (FALSE, TRUE, _("Favorite"),
+					    STOCK_ADD_BOOKMARK, _("Add SQL to favorite"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_favorite_clicked_cb), tconsole);
@@ -412,14 +422,16 @@ query_console_new (BrowserConnection *bcnc)
 	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 
-	button = browser_make_small_button (FALSE, _("Copy"), GTK_STOCK_COPY, _("Copy selected history\nto editor"));
+	button = browser_make_small_button (FALSE, FALSE, _("Copy"), GTK_STOCK_COPY,
+					    _("Copy selected history\nto editor"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (history_copy_clicked_cb), tconsole);
 	tconsole->priv->history_copy_button = button;
 	gtk_widget_set_sensitive (button, FALSE);
 
-	button = browser_make_small_button (FALSE, _("Clear"), GTK_STOCK_CLEAR, _("Clear history"));
+	button = browser_make_small_button (FALSE, FALSE, _("Clear"),
+					    GTK_STOCK_CLEAR, _("Clear history"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (history_clear_clicked_cb), tconsole);
@@ -526,6 +538,7 @@ history_copy_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole
         }
 
 	query_editor_set_text (tconsole->priv->editor, string->str);
+	tconsole->priv->fav_id = -1;
 	g_string_free (string, TRUE);
 }
 
@@ -630,6 +643,7 @@ static void
 sql_clear_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
 {
 	query_editor_set_text (tconsole->priv->editor, NULL);
+	tconsole->priv->fav_id = -1;
 	gtk_widget_grab_focus (GTK_WIDGET (tconsole->priv->editor));
 }
 
@@ -668,18 +682,144 @@ sql_indent_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
 	}
 }
 
+static void sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsole *tconsole);
+static void sql_favorite_modify_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsole *tconsole);
+
 static void
 sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsole *tconsole)
+{
+	GtkWidget *menu, *mitem;
+	BrowserFavorites *bfav;
+
+	if (tconsole->priv->favorites_menu)
+		gtk_widget_destroy (tconsole->priv->favorites_menu);
+
+	menu = gtk_menu_new ();
+	tconsole->priv->favorites_menu = menu;
+	mitem = gtk_menu_item_new_with_label (_("New favorite"));
+	g_signal_connect (mitem, "activate",
+			  G_CALLBACK (sql_favorite_new_mitem_cb), tconsole);
+	gtk_widget_show (mitem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+
+	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
+	if (tconsole->priv->fav_id >= 0) {
+		BrowserFavoritesAttributes fav;
+		if (browser_favorites_get (bfav, tconsole->priv->fav_id, &fav, NULL)) {
+			gchar *str;
+			str = g_strdup_printf (_("Modify favorite '%s'"), fav.name);
+			mitem = gtk_menu_item_new_with_label (str);
+			g_free (str);
+			g_signal_connect (mitem, "activate",
+					  G_CALLBACK (sql_favorite_modify_mitem_cb), tconsole);
+			g_object_set_data_full (G_OBJECT (mitem), "favname",
+						g_strdup (fav.name), g_free);
+			g_object_set_data (G_OBJECT (mitem), "favid",
+					   GINT_TO_POINTER (tconsole->priv->fav_id));
+			gtk_widget_show (mitem);
+			gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+			browser_favorites_reset_attributes (&fav);
+		}
+	}
+
+	GSList *allfav;
+	allfav = browser_favorites_list (bfav, 0, BROWSER_FAVORITES_QUERIES, ORDER_KEY_QUERIES, NULL);
+	if (allfav) {
+		GtkWidget *submenu;
+		GSList *list;
+
+		mitem = gtk_menu_item_new_with_label (_("Modify a favorite"));
+		gtk_widget_show (mitem);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+
+		submenu = gtk_menu_new ();
+		gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+		for (list = allfav; list; list = list->next) {
+			BrowserFavoritesAttributes *fav;
+			fav = (BrowserFavoritesAttributes*) list->data;
+			if (fav->id == tconsole->priv->fav_id)
+				continue;
+			gchar *str;
+			str = g_strdup_printf (_("Modify favorite '%s'"), fav->name);
+			mitem = gtk_menu_item_new_with_label (str);
+			g_free (str);
+			g_signal_connect (mitem, "activate",
+					  G_CALLBACK (sql_favorite_modify_mitem_cb), tconsole);
+			g_object_set_data_full (G_OBJECT (mitem), "favname",
+						g_strdup (fav->name), g_free);
+			g_object_set_data (G_OBJECT (mitem), "favid",
+					   GINT_TO_POINTER (fav->id));
+			gtk_widget_show (mitem);
+			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
+		}
+		browser_favorites_free_list (allfav);
+	}
+
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
+			NULL, NULL, 0,
+			gtk_get_current_event_time ());
+}
+
+static void
+sql_favorite_new_mitem_cb (GtkMenuItem *mitem, QueryConsole *tconsole)
+{
+	BrowserFavorites *bfav;
+	BrowserFavoritesAttributes fav;
+	GError *error = NULL;
+
+	GdaSet *set;
+	GtkWidget *dlg;
+	gint response;
+	const GValue *cvalue;
+	set = gda_set_new_inline (1, _("Favorite's name"),
+				  G_TYPE_STRING, _("Unnamed query"));
+	dlg = gdaui_basic_form_new_in_dialog (set,
+					      (GtkWindow*) gtk_widget_get_toplevel (GTK_WIDGET (tconsole)),
+					      _("Name of the favorite to create"),
+					      _("Enter the name of the favorite to create"));
+	response = gtk_dialog_run (GTK_DIALOG (dlg));
+	if (response == GTK_RESPONSE_REJECT) {
+		g_object_unref (set);
+		gtk_widget_destroy (dlg);
+		return;
+	}
+
+	memset (&fav, 0, sizeof (fav));
+	fav.id = -1;
+	fav.type = BROWSER_FAVORITES_QUERIES;
+	fav.contents = query_editor_get_all_text (tconsole->priv->editor);
+	cvalue = gda_set_get_holder_value (set, _("Favorite's name"));
+	fav.name = (gchar*) g_value_get_string (cvalue);
+
+	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
+
+	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
+		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tconsole),
+                                    _("Could not add favorite: %s"),
+                                    error && error->message ? error->message : _("No detail"));
+                if (error)
+                        g_error_free (error);
+	}
+	else
+		tconsole->priv->fav_id = fav.id;
+	g_free (fav.contents);
+
+	g_object_unref (set);
+	gtk_widget_destroy (dlg);
+}
+
+static void
+sql_favorite_modify_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsole *tconsole)
 {
 	BrowserFavorites *bfav;
 	BrowserFavoritesAttributes fav;
 	GError *error = NULL;
 
 	memset (&fav, 0, sizeof (fav));
-	fav.id = -1;
+	fav.id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (mitem), "favid"));
 	fav.type = BROWSER_FAVORITES_QUERIES;
 	fav.contents = query_editor_get_all_text (tconsole->priv->editor);
-	fav.name = _("Unnamed query");
+	fav.name = g_object_get_data (G_OBJECT (mitem), "favname");
 
 	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
 
@@ -996,13 +1136,15 @@ query_exec_fetch_cb (QueryConsole *tconsole)
  * query_console_set_text
  * @console: a #QueryConsole
  * @text: the new text
+ * @fav_id: the favorite ID or -1 if not a favorite.
  *
  * Replaces the edited SQL with @text in @console
  */
 void
-query_console_set_text (QueryConsole *console, const gchar *text)
+query_console_set_text (QueryConsole *console, const gchar *text, gint fav_id)
 {
 	g_return_if_fail (IS_QUERY_CONSOLE (console));
+	console->priv->fav_id = fav_id;
 	query_editor_set_text (console->priv->editor, text);
 }
 

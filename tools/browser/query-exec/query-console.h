@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -50,7 +50,7 @@ struct _QueryConsoleClass {
 GType                    query_console_get_type (void) G_GNUC_CONST;
 
 GtkWidget               *query_console_new      (BrowserConnection *bcnc);
-void                     query_console_set_text (QueryConsole *console, const gchar *text);
+void                     query_console_set_text (QueryConsole *console, const gchar *text, gint fav_id);
 
 G_END_DECLS
 

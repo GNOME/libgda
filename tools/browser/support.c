@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -461,7 +461,8 @@ connection_removed_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-browser_make_small_button (gboolean is_toggle, const gchar *label, const gchar *stock_id, const gchar *tooltip)
+browser_make_small_button (gboolean is_toggle, gboolean with_arrow,
+			   const gchar *label, const gchar *stock_id, const gchar *tooltip)
 {
 	GtkWidget *button, *hbox = NULL;
 
@@ -469,7 +470,7 @@ browser_make_small_button (gboolean is_toggle, const gchar *label, const gchar *
 		button = gtk_toggle_button_new ();
 	else
 		button = gtk_button_new ();
-	if (label && stock_id) {
+	if ((label && stock_id) || with_arrow) {
 		hbox = gtk_hbox_new (FALSE, 0);
 		gtk_container_add (GTK_CONTAINER (button), hbox);
 		gtk_widget_show (hbox);
@@ -493,6 +494,13 @@ browser_make_small_button (gboolean is_toggle, const gchar *label, const gchar *
 		else
 			gtk_container_add (GTK_CONTAINER (button), wid);
 		gtk_widget_show (wid);
+	}
+	if (with_arrow) {
+		GtkWidget *arrow;
+		arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
+		gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, TRUE, 0);
+		gtk_misc_set_alignment (GTK_MISC (arrow), 1, .5);
+		gtk_widget_show (arrow);
 	}
 
 	if (tooltip)
