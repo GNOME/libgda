@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2011-01-15 16:02+0000\n"
-"PO-Revision-Date: 2011-01-15 20:07+0100\n"
+"POT-Creation-Date: 2011-01-18 19:54+0000\n"
+"PO-Revision-Date: 2011-01-18 22:06+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -170,20 +170,24 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/main.c:181
 #: ../tools/browser/main.c:195
 #: ../tools/browser/main.c:221
+#: ../tools/browser/common/ui-formgrid.c:324
+#: ../tools/browser/common/ui-formgrid.c:417
 #: ../tools/browser/data-manager/analyser.c:284
 #: ../tools/browser/data-manager/data-console.c:564
 #: ../tools/browser/data-manager/data-favorite-selector.c:202
 #: ../tools/browser/data-manager/data-favorite-selector.c:260
 #: ../tools/browser/data-manager/data-favorite-selector.c:628
 #: ../tools/browser/data-manager/data-widget.c:397
-#: ../tools/browser/query-exec/query-console.c:689
+#: ../tools/browser/query-exec/query-console.c:799
 #: ../tools/browser/query-exec/query-console.c:829
-#: ../tools/browser/query-exec/query-console.c:874
-#: ../tools/browser/query-exec/query-console.c:928
-#: ../tools/browser/query-exec/query-console.c:979
+#: ../tools/browser/query-exec/query-console.c:969
+#: ../tools/browser/query-exec/query-console.c:1014
+#: ../tools/browser/query-exec/query-console.c:1068
+#: ../tools/browser/query-exec/query-console.c:1119
 #: ../tools/browser/query-exec/query-favorite-selector.c:192
-#: ../tools/browser/query-exec/query-favorite-selector.c:244
-#: ../tools/browser/query-exec/query-favorite-selector.c:599
+#: ../tools/browser/query-exec/query-favorite-selector.c:267
+#: ../tools/browser/query-exec/query-favorite-selector.c:288
+#: ../tools/browser/query-exec/query-favorite-selector.c:716
 #: ../tools/browser/query-exec/query-result.c:260
 #: ../tools/browser/query-exec/query-result.c:434
 #: ../tools/browser/schema-browser/favorite-selector.c:171
@@ -2243,7 +2247,7 @@ msgstr "Pogled"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:3
 #: ../tools/browser/data-manager/data-favorite-selector.c:305
-#: ../tools/browser/query-exec/query-favorite-selector.c:289
+#: ../tools/browser/query-exec/query-favorite-selector.c:353
 #: ../tools/command-exec.c:653
 #: ../tools/gda-sql.c:3005
 #: ../tools/gda-sql.c:3934
@@ -3984,19 +3988,19 @@ msgstr "Ni mogoče najti podatkovnega vnosa za GdaHolder"
 msgid "Values to be filled"
 msgstr "Zahtevane vrednosti"
 
-#: ../libgda-ui/gdaui-basic-form.c:2093
+#: ../libgda-ui/gdaui-basic-form.c:2094
 #: ../libgda-ui/gdaui-raw-grid.c:2442
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "'%s' dokument ni uspešno razčlenjen"
 
-#: ../libgda-ui/gdaui-basic-form.c:2103
+#: ../libgda-ui/gdaui-basic-form.c:2104
 #: ../libgda-ui/gdaui-raw-grid.c:2452
 #, c-format
 msgid "'%s' DTD not parsed successfully. XML data layout validation will not be performed (some errors may occur)"
 msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda podatkov XML ne bo izvedeno (lahko se pojavijo napake)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2235
+#: ../libgda-ui/gdaui-basic-form.c:2236
 msgid "size group was not taken into account using gdaui_basic_form_add_to_size_group()"
 msgstr "velikost skupine ni vzeta v račun ob uporabi skupine gdaui_basic_form_add_to_size_group()"
 
@@ -6927,16 +6931,16 @@ msgstr "Ni mogoče začeti slovarja za shranjevanje možnosti razpredelnice"
 #: ../tools/browser/browser-connection.c:1498
 #: ../tools/browser/browser-connection.c:1504
 #: ../tools/browser/browser-connection.c:1640
-#: ../tools/browser/browser-favorites.c:524
-#: ../tools/browser/browser-favorites.c:530
-#: ../tools/browser/browser-favorites.c:959
-#: ../tools/browser/browser-favorites.c:966
+#: ../tools/browser/browser-favorites.c:535
+#: ../tools/browser/browser-favorites.c:541
+#: ../tools/browser/browser-favorites.c:970
+#: ../tools/browser/browser-favorites.c:977
 msgid "Can't initialize transaction to access favorites"
 msgstr "Ni mogoče začeti prenosa za dostop do priljubljenih"
 
 #: ../tools/browser/browser-connection.c:1585
-#: ../tools/browser/browser-favorites.c:703
-#: ../tools/browser/browser-favorites.c:1017
+#: ../tools/browser/browser-favorites.c:714
+#: ../tools/browser/browser-favorites.c:1028
 msgid "Can't commit transaction to access favorites"
 msgstr "Ni mogoče uveljaviti prenosa za dostop do priljubljenih"
 
@@ -7004,8 +7008,8 @@ msgstr "Povezava"
 msgid "Open a new connection"
 msgstr "Odpri nova povezavo"
 
-#: ../tools/browser/browser-favorites.c:182
-#: ../tools/browser/browser-favorites.c:191
+#: ../tools/browser/browser-favorites.c:183
+#: ../tools/browser/browser-favorites.c:192
 msgid "Can't initialize dictionary to store favorites"
 msgstr "Ni mogoče začeti slovarja za shranjevanje priljubljenih poizvedb"
 
@@ -7453,7 +7457,7 @@ msgstr "DELETE SAVEPOINT izjava"
 msgid "Unknown statement"
 msgstr "Neznana izjava"
 
-#: ../tools/browser/mgr-favorites.c:554
+#: ../tools/browser/mgr-favorites.c:577
 msgid ""
 "Getting\n"
 "favorites..."
@@ -7461,7 +7465,7 @@ msgstr ""
 "Dobivanje\n"
 "priljubljenih"
 
-#: ../tools/browser/mgr-favorites.c:566
+#: ../tools/browser/mgr-favorites.c:589
 msgid ""
 "No favorite:\n"
 "drag item to\n"
@@ -7471,23 +7475,27 @@ msgstr ""
 "potegni predmet na\n"
 "določi predmet"
 
-#: ../tools/browser/support.c:206
+#: ../tools/browser/support.c:195
+msgid "Information:"
+msgstr "Podrobnosti:"
+
+#: ../tools/browser/support.c:248
 msgid "Unable to display help. Please make sure the documentation package is installed."
 msgstr "Ni mogoče pokazati pomoči. Prepričajte se, da je paket dokumentacije nameščen."
 
-#: ../tools/browser/support.c:232
+#: ../tools/browser/support.c:274
 msgid "Unable to open help file"
 msgstr "Ni mogoče odpreti datoteke pomoči"
 
-#: ../tools/browser/support.c:242
+#: ../tools/browser/support.c:284
 msgid "Help is being loaded, please wait..."
 msgstr "Dokumenti pomoči se nalagajo, počakajte ..."
 
-#: ../tools/browser/support.c:289
+#: ../tools/browser/support.c:331
 msgid "Close tab"
 msgstr "Zapri zavihek"
 
-#: ../tools/browser/support.h:96
+#: ../tools/browser/support.h:99
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -7751,9 +7759,55 @@ msgstr[3] "%d razpredelnice v shemi '%s':"
 msgid "None"
 msgstr "Brez"
 
-#: ../tools/browser/common/ui-formgrid.c:170
+#: ../tools/browser/common/ui-formgrid.c:198
 msgid "Toggle between grid and form presentations"
 msgstr "Preklop med mrežnimi in oblikovnimi predstavitvami"
+
+#: ../tools/browser/common/ui-formgrid.c:291
+msgid "Execute action"
+msgstr "Izvedi dejanje"
+
+#: ../tools/browser/common/ui-formgrid.c:322
+#: ../tools/browser/query-exec/query-console.c:1066
+#: ../tools/browser/query-exec/query-console.c:1117
+#: ../tools/browser/schema-browser/table-info.c:527
+#, c-format
+msgid ""
+"Error executing query:\n"
+"%s"
+msgstr ""
+"Napaka izvajanja poizvedbe:\n"
+"%s"
+
+#: ../tools/browser/common/ui-formgrid.c:331
+#: ../tools/browser/common/ui-formgrid.c:343
+msgid "Action executed"
+msgstr "Dejanje je izvedeno"
+
+#: ../tools/browser/common/ui-formgrid.c:376
+#: ../tools/browser/common/ui-formgrid.c:380
+msgid "Action successfully executed"
+msgstr "Dejanje je bilo uspešno izvedeno"
+
+#: ../tools/browser/common/ui-formgrid.c:394
+#, c-format
+msgid ""
+"Set or confirm the parameters to execute\n"
+"action '%s'"
+msgstr ""
+"Določitev in potrditev parametrov za izvedbo\n"
+"dejanja '%s'"
+
+#: ../tools/browser/common/ui-formgrid.c:398
+msgid "Execution of action"
+msgstr "Izvajanje dejanja"
+
+#: ../tools/browser/common/ui-formgrid.c:416
+#: ../tools/browser/query-exec/query-console.c:1013
+#: ../tools/browser/schema-browser/table-info.c:555
+#, c-format
+msgid "Error executing query: %s"
+msgstr "Napaka izvajanja poizvedbe: %s"
 
 #: ../tools/browser/data-manager/analyser.c:198
 msgid "Obtain referenced data in table "
@@ -7780,7 +7834,7 @@ msgid "Unsaved"
 msgstr "Neshranjeno"
 
 #: ../tools/browser/data-manager/data-console.c:332
-#: ../tools/browser/query-exec/query-console.c:331
+#: ../tools/browser/query-exec/query-console.c:337
 msgid "Variables' values:"
 msgstr "Vrednosti spremenljivke:"
 
@@ -7801,7 +7855,7 @@ msgid "Add a new data source"
 msgstr "Dodaj nov podatkovni vir"
 
 #: ../tools/browser/data-manager/data-console.c:403
-#: ../tools/browser/query-exec/query-console.c:363
+#: ../tools/browser/query-exec/query-console.c:370
 msgid "Variables"
 msgstr "Spremenljivke"
 
@@ -7810,7 +7864,7 @@ msgid "Show variables needed"
 msgstr "Pokaži zahtevane spremenljivke"
 
 #: ../tools/browser/data-manager/data-console.c:409
-#: ../tools/browser/query-exec/query-console.c:369
+#: ../tools/browser/query-exec/query-console.c:377
 msgid "Execute"
 msgstr "Izvedi"
 
@@ -7903,9 +7957,10 @@ msgstr "Ni mogoče odstraniti priljubljenega: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:627
-#: ../tools/browser/query-exec/query-console.c:688
-#: ../tools/browser/query-exec/query-favorite-selector.c:243
-#: ../tools/browser/query-exec/query-favorite-selector.c:598
+#: ../tools/browser/query-exec/query-console.c:798
+#: ../tools/browser/query-exec/query-console.c:828
+#: ../tools/browser/query-exec/query-favorite-selector.c:266
+#: ../tools/browser/query-exec/query-favorite-selector.c:715
 #: ../tools/browser/schema-browser/favorite-selector.c:357
 #: ../tools/browser/schema-browser/table-info.c:475
 #, c-format
@@ -7913,7 +7968,7 @@ msgid "Could not add favorite: %s"
 msgstr "Ni mogoče dodati med priljubljeno: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:290
-#: ../tools/browser/query-exec/query-favorite-selector.c:274
+#: ../tools/browser/query-exec/query-favorite-selector.c:337
 msgid "Favorite's properties"
 msgstr "Lastnosti priljubljenega"
 
@@ -7922,7 +7977,7 @@ msgid "Specifications"
 msgstr "Določila"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:483
-#: ../tools/browser/query-exec/query-favorite-selector.c:447
+#: ../tools/browser/query-exec/query-favorite-selector.c:564
 #: ../tools/browser/schema-browser/favorite-selector.c:247
 msgid "Favorites"
 msgstr "Priljubljeno"
@@ -8117,21 +8172,21 @@ msgid "Expecting <%s> root node"
 msgstr "Pričakovano je <%s> korensko vozlišče"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:321
-#: ../tools/browser/query-exec/query-console.c:310
+#: ../tools/browser/query-exec/query-console.c:316
 msgid "SQL code to execute:"
 msgstr "Koda SQL ia izvedbo:"
 
-#: ../tools/browser/query-exec/query-console.c:284
-#: ../tools/browser/query-exec/query-console.c:1084
+#: ../tools/browser/query-exec/query-console.c:290
+#: ../tools/browser/query-exec/query-console.c:1226
 msgid "Query editor"
 msgstr "Urejevalnik poizvedb"
 
-#: ../tools/browser/query-exec/query-console.c:358
-#: ../tools/browser/query-exec/query-console.c:422
+#: ../tools/browser/query-exec/query-console.c:364
+#: ../tools/browser/query-exec/query-console.c:433
 msgid "Clear"
 msgstr "Počisti"
 
-#: ../tools/browser/query-exec/query-console.c:358
+#: ../tools/browser/query-exec/query-console.c:365
 msgid ""
 "Clear the editor's\n"
 "contents"
@@ -8139,7 +8194,7 @@ msgstr ""
 "Počisti vsebino\n"
 "urejevalnika"
 
-#: ../tools/browser/query-exec/query-console.c:363
+#: ../tools/browser/query-exec/query-console.c:371
 msgid ""
 "Show variables needed\n"
 "to execute SQL"
@@ -8147,15 +8202,15 @@ msgstr ""
 "Pokaži spremenljivke zahtevane\n"
 "za izvajanje SQL"
 
-#: ../tools/browser/query-exec/query-console.c:369
+#: ../tools/browser/query-exec/query-console.c:377
 msgid "Execute SQL in editor"
 msgstr "Izvedi SQL v urejevalniku"
 
-#: ../tools/browser/query-exec/query-console.c:375
+#: ../tools/browser/query-exec/query-console.c:383
 msgid "Indent"
 msgstr "Zamakni"
 
-#: ../tools/browser/query-exec/query-console.c:375
+#: ../tools/browser/query-exec/query-console.c:384
 msgid ""
 "Indent SQL in editor\n"
 "and make the code more readable\n"
@@ -8165,23 +8220,23 @@ msgstr ""
 "in tako naredi kodo bolj pregledno\n"
 "(odstranjene bodo opombe)"
 
-#: ../tools/browser/query-exec/query-console.c:383
+#: ../tools/browser/query-exec/query-console.c:392
 msgid "Favorite"
 msgstr "Priljubljeno"
 
-#: ../tools/browser/query-exec/query-console.c:383
+#: ../tools/browser/query-exec/query-console.c:393
 msgid "Add SQL to favorite"
 msgstr "Dodaj SQL med priljubljeno"
 
-#: ../tools/browser/query-exec/query-console.c:397
+#: ../tools/browser/query-exec/query-console.c:407
 msgid "Execution history:"
 msgstr "Zgodovina izvedbe:"
 
-#: ../tools/browser/query-exec/query-console.c:415
+#: ../tools/browser/query-exec/query-console.c:425
 msgid "Copy"
 msgstr "Kopiraj"
 
-#: ../tools/browser/query-exec/query-console.c:415
+#: ../tools/browser/query-exec/query-console.c:426
 msgid ""
 "Copy selected history\n"
 "to editor"
@@ -8189,59 +8244,69 @@ msgstr ""
 "Kopiraj izbrano zgodovino\n"
 "v urejevalnik"
 
-#: ../tools/browser/query-exec/query-console.c:422
+#: ../tools/browser/query-exec/query-console.c:434
 msgid "Clear history"
 msgstr "Počisti zgodovino"
 
-#: ../tools/browser/query-exec/query-console.c:434
+#: ../tools/browser/query-exec/query-console.c:446
 msgid "Execution Results:"
 msgstr "Rezultati izvedbe:"
 
-#: ../tools/browser/query-exec/query-console.c:682
-#: ../tools/browser/query-exec/query-favorite-selector.c:584
+#: ../tools/browser/query-exec/query-console.c:699
+msgid "New favorite"
+msgstr "Nov priljubljen predmet"
+
+#: ../tools/browser/query-exec/query-console.c:710
+#: ../tools/browser/query-exec/query-console.c:743
+#, c-format
+msgid "Modify favorite '%s'"
+msgstr "Spremeni priljubljen predmet '%s'"
+
+#: ../tools/browser/query-exec/query-console.c:731
+msgid "Modify a favorite"
+msgstr "Spremeni priljubljen predmet"
+
+#: ../tools/browser/query-exec/query-console.c:774
+#: ../tools/browser/query-exec/query-console.c:791
+msgid "Favorite's name"
+msgstr "Ime priljubljenega predmeta:"
+
+#: ../tools/browser/query-exec/query-console.c:775
+#: ../tools/browser/query-exec/query-favorite-selector.c:701
 msgid "Unnamed query"
 msgstr "Neimenovana poizvedba"
 
-#: ../tools/browser/query-exec/query-console.c:773
+#: ../tools/browser/query-exec/query-console.c:778
+msgid "Name of the favorite to create"
+msgstr "Ime novega priljubljenega predmeta"
+
+#: ../tools/browser/query-exec/query-console.c:779
+msgid "Enter the name of the favorite to create"
+msgstr "Vnos imena novega priljubljenega  predmeta"
+
+#: ../tools/browser/query-exec/query-console.c:913
 msgid "Invalid variable's contents"
 msgstr "Neveljavna vsebina spremenljivke"
 
-#: ../tools/browser/query-exec/query-console.c:774
+#: ../tools/browser/query-exec/query-console.c:914
 #: ../tools/browser/schema-browser/table-info.c:930
 msgid "assign values to the following variables"
 msgstr "dodeli vrednosti naslednjim spremenljivkam"
 
-#: ../tools/browser/query-exec/query-console.c:828
+#: ../tools/browser/query-exec/query-console.c:968
 #, c-format
 msgid "Error while parsing code: %s"
 msgstr "Napaka med razčlenjevanjem kode: %s"
 
-#: ../tools/browser/query-exec/query-console.c:840
+#: ../tools/browser/query-exec/query-console.c:980
 msgid "A query is already being executed, to execute another query, open a new connection."
 msgstr "Poizvedba je že izvedena. Za izvedbo druge poizvedbe, odprite novo povezavo."
 
-#: ../tools/browser/query-exec/query-console.c:873
-#: ../tools/browser/schema-browser/table-info.c:555
-#, c-format
-msgid "Error executing query: %s"
-msgstr "Napaka izvajanja poizvedbe: %s"
-
-#: ../tools/browser/query-exec/query-console.c:926
-#: ../tools/browser/query-exec/query-console.c:977
-#: ../tools/browser/schema-browser/table-info.c:527
-#, c-format
-msgid ""
-"Error executing query:\n"
-"%s"
-msgstr ""
-"Napaka izvajanja poizvedbe:\n"
-"%s"
-
-#: ../tools/browser/query-exec/query-console.c:937
+#: ../tools/browser/query-exec/query-console.c:1077
 msgid "Statement executed"
 msgstr "Izjava je izvedena"
 
-#: ../tools/browser/query-exec/query-console.c:946
+#: ../tools/browser/query-exec/query-console.c:1086
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -8256,19 +8321,19 @@ msgstr ""
 "so blobi dostopni. Počistiti je treba zgodovino pred\n"
 "končanjem prenosa."
 
-#: ../tools/browser/query-exec/query-console.c:1034
+#: ../tools/browser/query-exec/query-console.c:1176
 msgid "_Execute"
 msgstr "_Izvedi"
 
-#: ../tools/browser/query-exec/query-console.c:1034
+#: ../tools/browser/query-exec/query-console.c:1176
 msgid "Execute query"
 msgstr "Izvedi poizvedbo"
 
-#: ../tools/browser/query-exec/query-console.c:1037
+#: ../tools/browser/query-exec/query-console.c:1179
 msgid "_Undo"
 msgstr "_Razveljavi"
 
-#: ../tools/browser/query-exec/query-console.c:1037
+#: ../tools/browser/query-exec/query-console.c:1179
 msgid "Undo last change"
 msgstr "Razveljavi zadnjo spremembo"
 
@@ -8323,9 +8388,26 @@ msgstr "_Nov urejevalnik"
 msgid "Open a new query editor"
 msgstr "Odpri nov urejevalnik poizvedbe"
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:296
+#: ../tools/browser/query-exec/query-favorite-selector.c:287
+#, c-format
+msgid "Could not add action: %s"
+msgstr "Ni mogoče dodati dejanja: %s"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:361
 msgid "SQL Code"
 msgstr "SQL koda"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:368
+msgid "Is action"
+msgstr "Je dejanje"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:371
+msgid ""
+"Check this option to make this favorite an action\n"
+"which can be proposed for execution from grids\n"
+"containing data. The parameters required to execute\n"
+"the query will be defined from the row selected in the grid"
+msgstr ""
 
 #: ../tools/browser/query-exec/query-result.c:209
 msgid "Statement:"
