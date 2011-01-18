@@ -471,13 +471,13 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 					g_value_set_object (av, pixbuf);
 					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
 					gda_value_free (av);
-
-					/* summary */
-					g_value_take_string ((av = gda_value_new (G_TYPE_STRING)),
-							     create_summary_for_statement (bcnc, fav->contents));
-					gda_tree_node_set_node_attribute (snode, "summary", av, NULL);
-					gda_value_free (av);
 				}
+
+				/* summary */
+				g_value_take_string ((av = gda_value_new (G_TYPE_STRING)),
+						     create_summary_for_statement (bcnc, fav->contents));
+				gda_tree_node_set_node_attribute (snode, "summary", av, NULL);
+				gda_value_free (av);
 
 				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
 						    fav->contents);
