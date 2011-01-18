@@ -36,6 +36,7 @@ G_BEGIN_DECLS
 BrowserConnection *browser_connection_open (GError **error);
 gboolean           browser_connection_close (GtkWindow *parent, BrowserConnection *bcnc);
 void               browser_show_error (GtkWindow *parent, const gchar *format, ...);
+void               browser_show_message (GtkWindow *parent, const gchar *format, ...);
 #ifdef HAVE_GDU
 void               browser_show_help (GtkWindow *parent, const gchar *topic);
 #endif
@@ -72,6 +73,7 @@ typedef enum {
 	BROWSER_ICON_REFERENCE,
 	BROWSER_ICON_DIAGRAM,
 	BROWSER_ICON_QUERY,
+	BROWSER_ICON_ACTION,
 	
 	BROWSER_ICON_GRID,
 	BROWSER_ICON_FORM,

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -101,6 +101,8 @@ gboolean            browser_connection_check_sql_statement_validify (BrowserConn
  *
  * Callback function called by browser_connection_execute_statement_cb(). If you need to keep
  * some of the arguments for a later usage, you need to ref/copy them.
+ *
+ * None of the passed arguments must not be modified
  */
 typedef void (*BrowserConnectionExecuteCallback) (BrowserConnection *bcnc,
 						  guint exec_id,

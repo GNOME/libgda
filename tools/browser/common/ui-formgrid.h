@@ -1,6 +1,6 @@
 /* ui-formgrid.h
  *
- * Copyright (C) 2010 Vivien Malerba
+ * Copyright (C) 2010 - 2011 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -67,6 +67,8 @@ GdaDataModelIter *ui_formgrid_get_form_data_set   (UiFormGrid *formgrid);
 GdaDataModelIter *ui_formgrid_get_grid_data_set   (UiFormGrid *formgrid);
 void              ui_formgrid_set_sample_size     (UiFormGrid *formgrid, gint sample_size);
 GdauiRawGrid     *ui_formgrid_get_grid_widget     (UiFormGrid *formgrid);
+
+void              ui_formgrid_set_connection      (UiFormGrid *formgrid, BrowserConnection *bcnc);
 
 G_END_DECLS
 

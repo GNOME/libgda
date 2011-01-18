@@ -463,15 +463,38 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 									  MGR_FAVORITES_POSITION_ATT_NAME,
 									  av, NULL);
 					gda_value_free (av);
-
-					/* icon */
-					GdkPixbuf *pixbuf;
-					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_QUERY);
-					av = gda_value_new (G_TYPE_OBJECT);
-					g_value_set_object (av, pixbuf);
-					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
-					gda_value_free (av);
 				}
+
+				/* is action */
+				gboolean is_action = FALSE;
+				GSList *favlist;
+				GdkPixbuf *pixbuf;
+				favlist = browser_favorites_list (browser_connection_get_favorites (bcnc),
+								  0, BROWSER_FAVORITES_ACTIONS,
+								  -1, NULL);
+				if (favlist) {
+					gchar *tmp;
+					tmp = g_strdup_printf ("QUERY%d", fav->id);
+					GSList *list;
+					for (list = favlist; list; list = list->next) {
+						BrowserFavoritesAttributes *afav;
+						afav = (BrowserFavoritesAttributes*) list->data;
+						if (!strcmp (afav->contents, tmp)) {
+							is_action = TRUE;
+							break;
+						}
+					}
+					g_free (tmp);
+					browser_favorites_free_list (favlist);
+				}
+				if (is_action)
+					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_ACTION);
+				else
+					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_QUERY);
+				av = gda_value_new (G_TYPE_OBJECT);
+				g_value_set_object (av, pixbuf);
+				gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
+				gda_value_free (av);
 
 				/* summary */
 				g_value_take_string ((av = gda_value_new (G_TYPE_STRING)),

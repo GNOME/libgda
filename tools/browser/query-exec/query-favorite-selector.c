@@ -271,13 +271,13 @@ prop_save_timeout (QueryFavoriteSelector *tsel)
 	g_free (fav.contents);
 
 	if (allok && (fav.id >= 0)) {
-		const gchar *action;
+		gboolean is_action;
 		gint qid = fav.id;
-		action = gtk_entry_get_text (GTK_ENTRY (tsel->priv->properties_action));
-		if (action && *action) {
+		is_action = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (tsel->priv->properties_action));
+		if (is_action) {
 			fav.id = -1;
 			fav.type = BROWSER_FAVORITES_ACTIONS;
-			fav.name = (gchar*) action;
+			fav.name = (gchar*) gtk_entry_get_text (GTK_ENTRY (tsel->priv->properties_name));
 			fav.descr = NULL;
 			fav.contents = g_strdup_printf ("QUERY%d", qid);
 			allok = browser_favorites_add (bfav, 0, &fav, -1,
@@ -365,9 +365,13 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
 
 		label = gtk_label_new ("");
-		str = g_strdup_printf ("<b>%s:</b>", _("Action name"));
+		str = g_strdup_printf ("<b>%s:</b>", _("Is action"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
+		gtk_widget_set_tooltip_text (label, _("Check this option to make this favorite an action\n"
+						      "which can be proposed for execution from grids\n"
+						      "containing data. The parameters required to execute\n"
+						      "the query will be defined from the row selected in the grid"));
 		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
 		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
@@ -386,10 +390,10 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		g_signal_connect (text, "changed",
 				  G_CALLBACK (property_changed_cb), tsel);
 
-		entry = gtk_entry_new ();
+		entry = gtk_check_button_new ();
 		gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0);
 		tsel->priv->properties_action = entry;
-		g_signal_connect (entry, "changed",
+		g_signal_connect (entry, "toggled",
 				  G_CALLBACK (property_changed_cb), tsel);
 
 		tsel->priv->popup_properties = pcont;
@@ -427,7 +431,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		/* action, if any */
 		g_signal_handlers_block_by_func (tsel->priv->properties_action,
 						 G_CALLBACK (property_changed_cb), tsel);
-		gtk_entry_set_text (GTK_ENTRY (tsel->priv->properties_action), "");
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tsel->priv->properties_action), FALSE);
 		if (tsel->priv->properties_id >= 0) {
 			gint id;
 			gchar *tmp;
@@ -437,14 +441,14 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 			tmp = g_strdup_printf ("QUERY%d", tsel->priv->properties_id);
 			id = browser_favorites_find (bfav, 0, tmp, &fav, NULL);
 			if (id >= 0) {
-				gtk_entry_set_text (GTK_ENTRY (tsel->priv->properties_action), fav.name);
+				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tsel->priv->properties_action),
+							      TRUE);
 				/*g_print ("ACTION_USED %d: %s\n", fav.id, tmp);*/
 			}
 			g_free (tmp);
 		}
 		g_signal_handlers_unblock_by_func (tsel->priv->properties_action,
 						   G_CALLBACK (property_changed_cb), tsel);
-
 
 		gtk_widget_show (tsel->priv->popup_properties);
 	}
