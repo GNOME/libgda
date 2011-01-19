@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -301,7 +301,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 							"schema", schema_v,
 							"tname", name_v, NULL);
 			if (!model) {
-				g_warning ("Could not compute table's UNIQUE constraints for %s.%s.%s",
+				g_warning (_("Could not compute table's UNIQUE constraints for %s.%s.%s"),
 					   g_value_get_string (catalog_v), 
 					   g_value_get_string (schema_v), 
 					   g_value_get_string (name_v));
@@ -483,25 +483,29 @@ table_columns_new (TableInfo *tinfo)
 
 	/* Colum: Type */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Type", renderer,
+	/* To translators: "Type" is the data type of a table's column */
+	column = gtk_tree_view_column_new_with_attributes (_("Type"), renderer,
 							   "text", COLUMN_TYPE, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
 	/* Colum: Nullok */
 	renderer = gtk_cell_renderer_toggle_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Not NULL?", renderer,
+	/* To translators: "Not NULL?" is a table's column's attribute */
+	column = gtk_tree_view_column_new_with_attributes (_("Not NULL?"), renderer,
 							   "active", COLUMN_NOTNULL, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
 	/* Colum: Default */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Default value", renderer,
+	/* To translators: "Default value" is a table's column's attribute */
+	column = gtk_tree_view_column_new_with_attributes (_("Default value"), renderer,
 							   "text", COLUMN_DEFAULT, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
 	/* Colum: Details */
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes ("Details", renderer,
+	/* To translators: "Details" is a table's column's attribute */
+	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
 							   "text", COLUMN_DETAILS, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 

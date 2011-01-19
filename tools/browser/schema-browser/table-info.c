@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -336,7 +336,8 @@ table_info_new (BrowserConnection *bcnc,
         GtkWidget *label;
 	gchar *str, *tmp;
 
-	tmp = g_strdup_printf ("In schema '%s'", schema);
+	/* To translators: "In schema" refers to the database schema an object is in */
+	tmp = g_strdup_printf (_("In schema '%s'"), schema);
 	str = g_strdup_printf ("<b>%s</b>\n%s", table, tmp);
 	g_free (tmp);
 	label = cc_gray_bar_new (str);

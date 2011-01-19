@@ -11,16 +11,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&component=general\n"
-"POT-Creation-Date: 2011-01-16 11:53+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-19 15:31+0100\n"
 "PO-Revision-Date: 2011-01-16 20:38+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. title
@@ -159,29 +158,33 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/browser-window.c:1459 ../tools/browser/login-dialog.c:240
 #: ../tools/browser/main.c:121 ../tools/browser/main.c:181
 #: ../tools/browser/main.c:195 ../tools/browser/main.c:221
+#: ../tools/browser/common/ui-formgrid.c:324
+#: ../tools/browser/common/ui-formgrid.c:417
 #: ../tools/browser/data-manager/analyser.c:284
 #: ../tools/browser/data-manager/data-console.c:564
 #: ../tools/browser/data-manager/data-favorite-selector.c:202
 #: ../tools/browser/data-manager/data-favorite-selector.c:260
 #: ../tools/browser/data-manager/data-favorite-selector.c:628
 #: ../tools/browser/data-manager/data-widget.c:397
-#: ../tools/browser/query-exec/query-console.c:689
+#: ../tools/browser/query-exec/query-console.c:799
 #: ../tools/browser/query-exec/query-console.c:829
-#: ../tools/browser/query-exec/query-console.c:874
-#: ../tools/browser/query-exec/query-console.c:928
-#: ../tools/browser/query-exec/query-console.c:979
+#: ../tools/browser/query-exec/query-console.c:969
+#: ../tools/browser/query-exec/query-console.c:1014
+#: ../tools/browser/query-exec/query-console.c:1068
+#: ../tools/browser/query-exec/query-console.c:1119
 #: ../tools/browser/query-exec/query-favorite-selector.c:192
-#: ../tools/browser/query-exec/query-favorite-selector.c:244
-#: ../tools/browser/query-exec/query-favorite-selector.c:599
+#: ../tools/browser/query-exec/query-favorite-selector.c:267
+#: ../tools/browser/query-exec/query-favorite-selector.c:288
+#: ../tools/browser/query-exec/query-favorite-selector.c:716
 #: ../tools/browser/query-exec/query-result.c:260
 #: ../tools/browser/query-exec/query-result.c:434
 #: ../tools/browser/schema-browser/favorite-selector.c:171
 #: ../tools/browser/schema-browser/favorite-selector.c:358
 #: ../tools/browser/schema-browser/relations-diagram.c:242
-#: ../tools/browser/schema-browser/table-info.c:476
-#: ../tools/browser/schema-browser/table-info.c:529
-#: ../tools/browser/schema-browser/table-info.c:556
-#: ../tools/browser/schema-browser/table-info.c:859
+#: ../tools/browser/schema-browser/table-info.c:477
+#: ../tools/browser/schema-browser/table-info.c:530
+#: ../tools/browser/schema-browser/table-info.c:557
+#: ../tools/browser/schema-browser/table-info.c:860
 #: ../tools/browser/schema-browser/table-preferences.c:700
 #: ../tools/browser/schema-browser/table-preferences.c:773
 #: ../tools/gda-list-server-op.c:50 ../tools/gda-list-server-op.c:108
@@ -970,8 +973,8 @@ msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
 msgstr ""
-"Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce %"
-"d (%s)"
+"Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce "
+"%d (%s)"
 
 #: ../libgda/gda-data-model.c:1877
 #, c-format
@@ -2093,6 +2096,7 @@ msgid "References"
 msgstr "Odkazy"
 
 #. list of fields
+#. To translators: "Default value" is a table's column's attribute
 #: ../libgda/gda-server-provider-extra.c:339
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:21
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:10
@@ -2103,6 +2107,7 @@ msgstr "Odkazy"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:21
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
+#: ../tools/browser/schema-browser/table-columns.c:501
 msgid "Default value"
 msgstr "Výchozí hodnota"
 
@@ -2151,7 +2156,7 @@ msgstr "Jmenný prostor"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 #: ../tools/browser/data-manager/data-source-editor.c:135
-#: ../tools/browser/schema-browser/table-info.c:959
+#: ../tools/browser/schema-browser/table-info.c:960
 msgid "Table"
 msgstr "Tabulka"
 
@@ -2181,12 +2186,14 @@ msgstr "Typy argumentů"
 msgid "Trigger"
 msgstr "Trigger"
 
+#. To translators: "Type" is the data type of a table's column
 #: ../libgda/gda-server-provider-extra.c:391
 #: ../libgda/gda-server-provider-extra.c:411
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
+#: ../tools/browser/schema-browser/table-columns.c:487
 #: ../tools/command-exec.c:654 ../tools/command-exec.c:728
 #: ../tools/web-server.c:931
 msgid "Type"
@@ -2241,7 +2248,7 @@ msgstr "Pohled"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:3
 #: ../tools/browser/data-manager/data-favorite-selector.c:305
-#: ../tools/browser/query-exec/query-favorite-selector.c:289
+#: ../tools/browser/query-exec/query-favorite-selector.c:353
 #: ../tools/command-exec.c:653 ../tools/gda-sql.c:3005 ../tools/gda-sql.c:3934
 msgid "Name"
 msgstr "Název"
@@ -2783,8 +2790,8 @@ msgstr ""
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
-"Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho (%"
-"d) řádků"
+"Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho "
+"(%d) řádků"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2314
 msgid "Prepared statement has no associated GdaStatement"
@@ -3833,7 +3840,7 @@ msgid "break lines anywhere the cursor can appear"
 msgstr "zalamovat řádky kdekoliv se nachází kurzor"
 
 #: ../libgda-ui/data/server_operation.glade.h:1
-#: ../tools/browser/schema-browser/table-info.c:385
+#: ../tools/browser/schema-browser/table-info.c:386
 msgid "Columns"
 msgstr "Sloupce"
 
@@ -4014,12 +4021,12 @@ msgstr "Nelze najít datový záznam pro GdaHolder"
 msgid "Values to be filled"
 msgstr "Hodnoty, které se mají vyplnit"
 
-#: ../libgda-ui/gdaui-basic-form.c:2093 ../libgda-ui/gdaui-raw-grid.c:2442
+#: ../libgda-ui/gdaui-basic-form.c:2094 ../libgda-ui/gdaui-raw-grid.c:2442
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "Dokument „%s“ nebyl úspěšně zpracován"
 
-#: ../libgda-ui/gdaui-basic-form.c:2103 ../libgda-ui/gdaui-raw-grid.c:2452
+#: ../libgda-ui/gdaui-basic-form.c:2104 ../libgda-ui/gdaui-raw-grid.c:2452
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -4028,7 +4035,7 @@ msgstr ""
 "Analýza DTD „%s“ nebyla úspěšná. Ověření správnosti rozvržení dat XML nebude "
 "provedeno (mohou se vyskytnout nějaké chyby)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2235
+#: ../libgda-ui/gdaui-basic-form.c:2236
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4207,7 +4214,9 @@ msgstr ""
 msgid "File name"
 msgstr "Název souboru"
 
+#. To translators: "Details" is a table's column's attribute
 #: ../libgda-ui/gdaui-raw-grid.c:1913
+#: ../tools/browser/schema-browser/table-columns.c:508
 msgid "Details"
 msgstr "Podrobnosti"
 
@@ -5111,8 +5120,8 @@ msgid ""
 "at the end)."
 msgstr ""
 "Formát připojovacího řetězce byl změněn: nahraďte FILENAME (název souboru) "
-"za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez „%"
-"s“ na konci)."
+"za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez "
+"„%s“ na konci)."
 
 #: ../providers/mdb/gda-mdb-provider.c:307
 #, c-format
@@ -7036,16 +7045,16 @@ msgstr "Nelze inicializovat slovník pro uchování předvoleb tabulek"
 #: ../tools/browser/browser-connection.c:1498
 #: ../tools/browser/browser-connection.c:1504
 #: ../tools/browser/browser-connection.c:1640
-#: ../tools/browser/browser-favorites.c:524
-#: ../tools/browser/browser-favorites.c:530
-#: ../tools/browser/browser-favorites.c:959
-#: ../tools/browser/browser-favorites.c:966
+#: ../tools/browser/browser-favorites.c:535
+#: ../tools/browser/browser-favorites.c:541
+#: ../tools/browser/browser-favorites.c:970
+#: ../tools/browser/browser-favorites.c:977
 msgid "Can't initialize transaction to access favorites"
 msgstr "Nelez inicializovat transakci pro přístup k oblíbeným"
 
 #: ../tools/browser/browser-connection.c:1585
-#: ../tools/browser/browser-favorites.c:703
-#: ../tools/browser/browser-favorites.c:1017
+#: ../tools/browser/browser-favorites.c:714
+#: ../tools/browser/browser-favorites.c:1028
 msgid "Can't commit transaction to access favorites"
 msgstr "Nelze schválit transakci pro přístup k oblíbeným"
 
@@ -7111,8 +7120,8 @@ msgstr "Připojit"
 msgid "Open a new connection"
 msgstr "Otevřít nové připojení"
 
-#: ../tools/browser/browser-favorites.c:182
-#: ../tools/browser/browser-favorites.c:191
+#: ../tools/browser/browser-favorites.c:183
+#: ../tools/browser/browser-favorites.c:192
 msgid "Can't initialize dictionary to store favorites"
 msgstr "Nelze inicializovat slovník pro uložení oblíbených"
 
@@ -7508,8 +7517,8 @@ msgstr ""
 #: ../tools/browser/main.c:161 ../tools/gda-sql.c:245
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: %"
-"s\n"
+"Error while purging files used to store information about each connection: "
+"%s\n"
 msgstr ""
 "Chyba při čištění souborů použitých k uchování informací o každém připojení: "
 "%s\n"
@@ -7566,7 +7575,7 @@ msgstr "Příkaz DELETE SAVEPOINT"
 msgid "Unknown statement"
 msgstr "Neznámý příkaz"
 
-#: ../tools/browser/mgr-favorites.c:554
+#: ../tools/browser/mgr-favorites.c:577
 msgid ""
 "Getting\n"
 "favorites..."
@@ -7574,7 +7583,7 @@ msgstr ""
 "Získávají se\n"
 "oblíbené…"
 
-#: ../tools/browser/mgr-favorites.c:566
+#: ../tools/browser/mgr-favorites.c:589
 msgid ""
 "No favorite:\n"
 "drag item to\n"
@@ -7584,7 +7593,12 @@ msgstr ""
 "novou vytvoříte\n"
 "přetažením položky"
 
-#: ../tools/browser/support.c:206
+#: ../tools/browser/support.c:195
+#, fuzzy
+msgid "Information:"
+msgstr "Informace"
+
+#: ../tools/browser/support.c:248
 msgid ""
 "Unable to display help. Please make sure the documentation package is "
 "installed."
@@ -7592,19 +7606,19 @@ msgstr ""
 "Nelze zobrazit nápovědu. Ujistěte se prosím, že je nainstalován balíček s "
 "dokumentací."
 
-#: ../tools/browser/support.c:232
+#: ../tools/browser/support.c:274
 msgid "Unable to open help file"
 msgstr "Nelze otevřít soubor s nápovědou"
 
-#: ../tools/browser/support.c:242
+#: ../tools/browser/support.c:284
 msgid "Help is being loaded, please wait..."
 msgstr "Nápověda se načítá, čekejte prosím…"
 
-#: ../tools/browser/support.c:289
+#: ../tools/browser/support.c:331
 msgid "Close tab"
 msgstr "Zavřít kartu"
 
-#: ../tools/browser/support.h:96
+#: ../tools/browser/support.h:99
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -7868,9 +7882,57 @@ msgstr[2] "%d tabulek ve schématu „%s“:"
 msgid "None"
 msgstr "Žádné"
 
-#: ../tools/browser/common/ui-formgrid.c:170
+#: ../tools/browser/common/ui-formgrid.c:198
 msgid "Toggle between grid and form presentations"
 msgstr "Přepíná mezi zobrazením v podobě mřížky a formuláře"
+
+#: ../tools/browser/common/ui-formgrid.c:291
+#, fuzzy
+msgid "Execute action"
+msgstr "Při akci mazání"
+
+#: ../tools/browser/common/ui-formgrid.c:322
+#: ../tools/browser/query-exec/query-console.c:1066
+#: ../tools/browser/query-exec/query-console.c:1117
+#: ../tools/browser/schema-browser/table-info.c:528
+#, c-format
+msgid ""
+"Error executing query:\n"
+"%s"
+msgstr ""
+"Chyba při provádění dotazu:\n"
+"%s"
+
+#: ../tools/browser/common/ui-formgrid.c:331
+#: ../tools/browser/common/ui-formgrid.c:343
+#, fuzzy
+msgid "Action executed"
+msgstr "Příkaz proveden"
+
+#: ../tools/browser/common/ui-formgrid.c:376
+#: ../tools/browser/common/ui-formgrid.c:380
+#, fuzzy
+msgid "Action successfully executed"
+msgstr "Připojení úspěšně otevřeno!"
+
+#: ../tools/browser/common/ui-formgrid.c:394
+#, c-format
+msgid ""
+"Set or confirm the parameters to execute\n"
+"action '%s'"
+msgstr ""
+
+#: ../tools/browser/common/ui-formgrid.c:398
+#, fuzzy
+msgid "Execution of action"
+msgstr "Doplňující volby připojení"
+
+#: ../tools/browser/common/ui-formgrid.c:416
+#: ../tools/browser/query-exec/query-console.c:1013
+#: ../tools/browser/schema-browser/table-info.c:556
+#, c-format
+msgid "Error executing query: %s"
+msgstr "Chyba při provádění dotazu: %s"
 
 #: ../tools/browser/data-manager/analyser.c:198
 msgid "Obtain referenced data in table "
@@ -7897,7 +7959,7 @@ msgid "Unsaved"
 msgstr "Neuloženo"
 
 #: ../tools/browser/data-manager/data-console.c:332
-#: ../tools/browser/query-exec/query-console.c:331
+#: ../tools/browser/query-exec/query-console.c:337
 msgid "Variables' values:"
 msgstr "Hodnoty proměnných:"
 
@@ -7918,7 +7980,7 @@ msgid "Add a new data source"
 msgstr "Přidat nový zdroj dat"
 
 #: ../tools/browser/data-manager/data-console.c:403
-#: ../tools/browser/query-exec/query-console.c:363
+#: ../tools/browser/query-exec/query-console.c:370
 msgid "Variables"
 msgstr "Proměnné"
 
@@ -7927,7 +7989,7 @@ msgid "Show variables needed"
 msgstr "Zobrazit potřebné proměnné"
 
 #: ../tools/browser/data-manager/data-console.c:409
-#: ../tools/browser/query-exec/query-console.c:369
+#: ../tools/browser/query-exec/query-console.c:377
 msgid "Execute"
 msgstr "Spustit"
 
@@ -8023,17 +8085,18 @@ msgstr "Nelze odstranit oblíbenou: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:627
-#: ../tools/browser/query-exec/query-console.c:688
-#: ../tools/browser/query-exec/query-favorite-selector.c:243
-#: ../tools/browser/query-exec/query-favorite-selector.c:598
+#: ../tools/browser/query-exec/query-console.c:798
+#: ../tools/browser/query-exec/query-console.c:828
+#: ../tools/browser/query-exec/query-favorite-selector.c:266
+#: ../tools/browser/query-exec/query-favorite-selector.c:715
 #: ../tools/browser/schema-browser/favorite-selector.c:357
-#: ../tools/browser/schema-browser/table-info.c:475
+#: ../tools/browser/schema-browser/table-info.c:476
 #, c-format
 msgid "Could not add favorite: %s"
 msgstr "Nelze přidat oblíbenou: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:290
-#: ../tools/browser/query-exec/query-favorite-selector.c:274
+#: ../tools/browser/query-exec/query-favorite-selector.c:337
 msgid "Favorite's properties"
 msgstr "Vlastnosti oblíbené"
 
@@ -8042,7 +8105,7 @@ msgid "Specifications"
 msgstr "Specifikace"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:483
-#: ../tools/browser/query-exec/query-favorite-selector.c:447
+#: ../tools/browser/query-exec/query-favorite-selector.c:564
 #: ../tools/browser/schema-browser/favorite-selector.c:247
 msgid "Favorites"
 msgstr "Oblíbené"
@@ -8237,27 +8300,27 @@ msgid "Expecting <%s> root node"
 msgstr "Očekáván kořenový uzel <%s>"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:321
-#: ../tools/browser/query-exec/query-console.c:310
+#: ../tools/browser/query-exec/query-console.c:316
 msgid "SQL code to execute:"
 msgstr "Kód SQL ke spuštění:"
 
-#: ../tools/browser/query-exec/query-console.c:284
-#: ../tools/browser/query-exec/query-console.c:1084
+#: ../tools/browser/query-exec/query-console.c:290
+#: ../tools/browser/query-exec/query-console.c:1226
 msgid "Query editor"
 msgstr "Editor dotazu"
 
-#: ../tools/browser/query-exec/query-console.c:358
-#: ../tools/browser/query-exec/query-console.c:422
+#: ../tools/browser/query-exec/query-console.c:364
+#: ../tools/browser/query-exec/query-console.c:433
 msgid "Clear"
 msgstr "Vymazat"
 
-#: ../tools/browser/query-exec/query-console.c:358
+#: ../tools/browser/query-exec/query-console.c:365
 msgid ""
 "Clear the editor's\n"
 "contents"
 msgstr "Vymazat obsah editoru"
 
-#: ../tools/browser/query-exec/query-console.c:363
+#: ../tools/browser/query-exec/query-console.c:371
 msgid ""
 "Show variables needed\n"
 "to execute SQL"
@@ -8265,15 +8328,15 @@ msgstr ""
 "Zobrazit proměnné\n"
 "potřebné k provedení SQL"
 
-#: ../tools/browser/query-exec/query-console.c:369
+#: ../tools/browser/query-exec/query-console.c:377
 msgid "Execute SQL in editor"
 msgstr "Provést SQL v editoru"
 
-#: ../tools/browser/query-exec/query-console.c:375
+#: ../tools/browser/query-exec/query-console.c:383
 msgid "Indent"
 msgstr "Odsazení"
 
-#: ../tools/browser/query-exec/query-console.c:375
+#: ../tools/browser/query-exec/query-console.c:384
 msgid ""
 "Indent SQL in editor\n"
 "and make the code more readable\n"
@@ -8283,23 +8346,23 @@ msgstr ""
 "a udělat kód čitelnějším\n"
 "(odstraní komentáře)"
 
-#: ../tools/browser/query-exec/query-console.c:383
+#: ../tools/browser/query-exec/query-console.c:392
 msgid "Favorite"
 msgstr "Oblíbené"
 
-#: ../tools/browser/query-exec/query-console.c:383
+#: ../tools/browser/query-exec/query-console.c:393
 msgid "Add SQL to favorite"
 msgstr "Přidat SQL do oblíbených"
 
-#: ../tools/browser/query-exec/query-console.c:397
+#: ../tools/browser/query-exec/query-console.c:407
 msgid "Execution history:"
 msgstr "Historie provádění:"
 
-#: ../tools/browser/query-exec/query-console.c:415
+#: ../tools/browser/query-exec/query-console.c:425
 msgid "Copy"
 msgstr "Kopírovat"
 
-#: ../tools/browser/query-exec/query-console.c:415
+#: ../tools/browser/query-exec/query-console.c:426
 msgid ""
 "Copy selected history\n"
 "to editor"
@@ -8307,34 +8370,66 @@ msgstr ""
 "Zkopírovat vybranou historii\n"
 "do editoru"
 
-#: ../tools/browser/query-exec/query-console.c:422
+#: ../tools/browser/query-exec/query-console.c:434
 msgid "Clear history"
 msgstr "Vymazat historii"
 
-#: ../tools/browser/query-exec/query-console.c:434
+#: ../tools/browser/query-exec/query-console.c:446
 msgid "Execution Results:"
 msgstr "Výsledky zpracování:"
 
-#: ../tools/browser/query-exec/query-console.c:682
-#: ../tools/browser/query-exec/query-favorite-selector.c:584
+#: ../tools/browser/query-exec/query-console.c:699
+#, fuzzy
+msgid "New favorite"
+msgstr "_Zobrazit oblíbené"
+
+#: ../tools/browser/query-exec/query-console.c:710
+#: ../tools/browser/query-exec/query-console.c:743
+#, fuzzy, c-format
+msgid "Modify favorite '%s'"
+msgstr "_Zobrazit oblíbené"
+
+#: ../tools/browser/query-exec/query-console.c:731
+#, fuzzy
+msgid "Modify a favorite"
+msgstr "_Zobrazit oblíbené"
+
+#: ../tools/browser/query-exec/query-console.c:774
+#: ../tools/browser/query-exec/query-console.c:791
+#, fuzzy
+msgid "Favorite's name"
+msgstr "Oblíbené"
+
+#: ../tools/browser/query-exec/query-console.c:775
+#: ../tools/browser/query-exec/query-favorite-selector.c:701
 msgid "Unnamed query"
 msgstr "Nepojmenovaný dotaz"
 
-#: ../tools/browser/query-exec/query-console.c:773
+#: ../tools/browser/query-exec/query-console.c:778
+#, fuzzy
+msgid "Name of the favorite to create"
+msgstr "Název databáze, která se má vytvořit"
+
+#: ../tools/browser/query-exec/query-console.c:779
+#, fuzzy
+msgid "Enter the name of the favorite to create"
+msgstr "Název databáze, která se má vytvořit"
+
+#: ../tools/browser/query-exec/query-console.c:913
 msgid "Invalid variable's contents"
 msgstr "Neplatný obsah proměnných"
 
-#: ../tools/browser/query-exec/query-console.c:774
-#: ../tools/browser/schema-browser/table-info.c:930
+#: ../tools/browser/query-exec/query-console.c:914
+#: ../tools/browser/schema-browser/table-info.c:931
 msgid "assign values to the following variables"
 msgstr "přiřaďte hodnoty následujícím proměnným"
 
-#: ../tools/browser/query-exec/query-console.c:828
+#: ../tools/browser/query-exec/query-console.c:968
 #, c-format
 msgid "Error while parsing code: %s"
 msgstr "Chyba při zpracování kódu: %s"
 
-#: ../tools/browser/query-exec/query-console.c:840
+#: ../tools/browser/query-exec/query-console.c:980
 msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
@@ -8342,28 +8437,11 @@ msgstr ""
 "Dotaz je již prováděn, pokud chcete provést jiný dotaz, otevřete nové "
 "připojení."
 
-#: ../tools/browser/query-exec/query-console.c:873
-#: ../tools/browser/schema-browser/table-info.c:555
-#, c-format
-msgid "Error executing query: %s"
-msgstr "Chyba při provádění dotazu: %s"
-
-#: ../tools/browser/query-exec/query-console.c:926
-#: ../tools/browser/query-exec/query-console.c:977
-#: ../tools/browser/schema-browser/table-info.c:527
-#, c-format
-msgid ""
-"Error executing query:\n"
-"%s"
-msgstr ""
-"Chyba při provádění dotazu:\n"
-"%s"
-
-#: ../tools/browser/query-exec/query-console.c:937
+#: ../tools/browser/query-exec/query-console.c:1077
 msgid "Statement executed"
 msgstr "Příkaz proveden"
 
-#: ../tools/browser/query-exec/query-console.c:946
+#: ../tools/browser/query-exec/query-console.c:1086
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -8378,19 +8456,19 @@ msgstr ""
 "dokud se k binárním datům přistupuje; před zavřením\n"
 "transakce vymažte odpovídající položku historie)."
 
-#: ../tools/browser/query-exec/query-console.c:1034
+#: ../tools/browser/query-exec/query-console.c:1176
 msgid "_Execute"
 msgstr "_Provést"
 
-#: ../tools/browser/query-exec/query-console.c:1034
+#: ../tools/browser/query-exec/query-console.c:1176
 msgid "Execute query"
 msgstr "Provést dotaz"
 
-#: ../tools/browser/query-exec/query-console.c:1037
+#: ../tools/browser/query-exec/query-console.c:1179
 msgid "_Undo"
 msgstr "_Zpět"
 
-#: ../tools/browser/query-exec/query-console.c:1037
+#: ../tools/browser/query-exec/query-console.c:1179
 msgid "Undo last change"
 msgstr "Vrátit zpět poslední změnu"
 
@@ -8444,9 +8522,27 @@ msgstr "_Nový editor"
 msgid "Open a new query editor"
 msgstr "Otevřít nový editor dotazů"
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:296
+#: ../tools/browser/query-exec/query-favorite-selector.c:287
+#, fuzzy, c-format
+msgid "Could not add action: %s"
+msgstr "Nelze přidat oblíbenou: %s"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:361
 msgid "SQL Code"
 msgstr "Kód SQL"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:368
+#, fuzzy
+msgid "Is action"
+msgstr "Žádná akce"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:371
+msgid ""
+"Check this option to make this favorite an action\n"
+"which can be proposed for execution from grids\n"
+"containing data. The parameters required to execute\n"
+"the query will be defined from the row selected in the grid"
+msgstr ""
 
 #: ../tools/browser/query-exec/query-result.c:209
 msgid "Statement:"
@@ -8531,7 +8627,7 @@ msgid "Missing table attribute in favorite's contents"
 msgstr "Schází atribut tabulky v obsahu oblíbených"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:520
-#: ../tools/browser/schema-browser/table-info.c:962
+#: ../tools/browser/schema-browser/table-info.c:963
 msgid "_Contents"
 msgstr "_Obsah"
 
@@ -8572,6 +8668,11 @@ msgid ""
 msgstr ""
 "nekompatibilní typy: „%s“ pro cizí klíč a „%s“ pro odkazovaný primární klíč"
 
+#: ../tools/browser/schema-browser/table-columns.c:304
+#, fuzzy, c-format
+msgid "Could not compute table's UNIQUE constraints for %s.%s.%s"
+msgstr "Nelze vypočítat sloupce virtuální tabulky"
+
 #: ../tools/browser/schema-browser/table-columns.c:327
 msgid "Unique constraint"
 msgstr "Omezení na jedinečnost"
@@ -8584,11 +8685,23 @@ msgstr "Tabulky odkazující na toto"
 msgid "Column Name"
 msgstr "Název sloupce"
 
-#: ../tools/browser/schema-browser/table-columns.c:527
+#. To translators: "Not NULL?" is a table's column's attribute
+#: ../tools/browser/schema-browser/table-columns.c:494
+#, fuzzy
+msgid "Not NULL?"
+msgstr "Neprázdné"
+
+#: ../tools/browser/schema-browser/table-columns.c:531
 msgid "Constraints and integrity rules"
 msgstr "Pravidla omezení a integrity"
 
-#: ../tools/browser/schema-browser/table-info.c:364
+#. To translators: "In schema" refers to the database schema an object is in
+#: ../tools/browser/schema-browser/table-info.c:340
+#, fuzzy, c-format
+msgid "In schema '%s'"
+msgstr "Ve schématu %s"
+
+#: ../tools/browser/schema-browser/table-info.c:365
 msgid ""
 "Table not found. If you think this is an error,\n"
 "please refresh the meta data from the database\n"
@@ -8598,27 +8711,27 @@ msgstr ""
 "jedná o chybu, občerstvěte metadata z databáze\n"
 "(nabídka Připojení/Získat metadata)."
 
-#: ../tools/browser/schema-browser/table-info.c:395
+#: ../tools/browser/schema-browser/table-info.c:396
 msgid "Relations"
 msgstr "Relace"
 
-#: ../tools/browser/schema-browser/table-info.c:405
+#: ../tools/browser/schema-browser/table-info.c:406
 msgid "Preferences"
 msgstr "Předvolby"
 
-#: ../tools/browser/schema-browser/table-info.c:534
+#: ../tools/browser/schema-browser/table-info.c:535
 msgid "Data successfully inserted"
 msgstr "Data úspěšně vložena"
 
-#: ../tools/browser/schema-browser/table-info.c:682
+#: ../tools/browser/schema-browser/table-info.c:683
 msgid "Meta data not yet available"
 msgstr "Metadata zatím nejsou dostupná"
 
-#: ../tools/browser/schema-browser/table-info.c:699
+#: ../tools/browser/schema-browser/table-info.c:700
 msgid "Can't find information about table"
 msgstr "Nelze nalézt informace o tabulce"
 
-#: ../tools/browser/schema-browser/table-info.c:735
+#: ../tools/browser/schema-browser/table-info.c:736
 #, c-format
 msgid ""
 "Internal error while building INSERT statement:\n"
@@ -8627,41 +8740,41 @@ msgstr ""
 "Interní chyba během sestavování příkazu INSERT:\n"
 "%s"
 
-#: ../tools/browser/schema-browser/table-info.c:781
+#: ../tools/browser/schema-browser/table-info.c:782
 #, c-format
 msgid "Default value: '%s'"
 msgstr "Výchozí hodnota: „%s“"
 
-#: ../tools/browser/schema-browser/table-info.c:791
+#: ../tools/browser/schema-browser/table-info.c:792
 msgid "Default value: auto incremented value"
 msgstr "Výchozí hodnota: automaticky zvyšovaná hodnota"
 
-#: ../tools/browser/schema-browser/table-info.c:905
-#: ../tools/browser/schema-browser/table-info.c:929
+#: ../tools/browser/schema-browser/table-info.c:906
+#: ../tools/browser/schema-browser/table-info.c:930
 msgid "Values to insert into table"
 msgstr "Hodnoty, které se mají vložit do tabulky"
 
-#: ../tools/browser/schema-browser/table-info.c:959
+#: ../tools/browser/schema-browser/table-info.c:960
 msgid "_Table"
 msgstr "_Tabulka"
 
-#: ../tools/browser/schema-browser/table-info.c:960
+#: ../tools/browser/schema-browser/table-info.c:961
 msgid "Add to _Favorites"
 msgstr "Přidat do o_blíbených"
 
-#: ../tools/browser/schema-browser/table-info.c:960
+#: ../tools/browser/schema-browser/table-info.c:961
 msgid "Add table to favorites"
 msgstr "Přidat tabulku do oblíbených"
 
-#: ../tools/browser/schema-browser/table-info.c:962
+#: ../tools/browser/schema-browser/table-info.c:963
 msgid "View table's contents"
 msgstr "Zobrazit obsah tabulky"
 
-#: ../tools/browser/schema-browser/table-info.c:964
+#: ../tools/browser/schema-browser/table-info.c:965
 msgid "_Insert data"
 msgstr "Vlož_it data"
 
-#: ../tools/browser/schema-browser/table-info.c:964
+#: ../tools/browser/schema-browser/table-info.c:965
 msgid "Insert data into table"
 msgstr "Vložit data do tabulky"
 
@@ -8974,11 +9087,11 @@ msgstr "Pro „%s“ není žádné heslo"
 #: ../tools/gda-sql.c:1476
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the '%"
-"s' file\n"
+"All the information related to the '%s' connection will be stored in the "
+"'%s' file\n"
 msgstr ""
-"Všechny informace vztahující se k připojení „%s“ budou uloženy v souboru „%"
-"s“\n"
+"Všechny informace vztahující se k připojení „%s“ budou uloženy v souboru "
+"„%s“\n"
 
 #: ../tools/gda-sql.c:1506
 #, c-format

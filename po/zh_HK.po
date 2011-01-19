@@ -4,12 +4,12 @@
 # Walter Cheuk <wwycheuk@netvigator.com>, 2006.
 # Walter Cheuk <wwycheuk@gmail.com>, 2006, 2007.
 #
-#: ../libgda/gda-connection.c:372
+#: ../libgda/gda-connection.c:375
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2 1.9.102\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-14 14:16+0100\n"
+"POT-Creation-Date: 2011-01-19 15:31+0100\n"
 "PO-Revision-Date: 2007-06-11 20:48+0800\n"
 "Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: Chinese (Hong Kong) <community@linuxhall.org>\n"
@@ -101,15 +101,15 @@ msgstr "無法取得橫列"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:283
-#: ../libgda/gda-connection.c:1536 ../libgda/gda-data-model.c:2071
-#: ../libgda/gda-data-model.c:2079 ../libgda/gda-data-model-dir.c:386
+#: ../libgda/gda-connection.c:1539 ../libgda/gda-data-model.c:2088
+#: ../libgda/gda-data-model.c:2096 ../libgda/gda-data-model-dir.c:386
 #: ../libgda/gda-data-model-import.c:1680
 #: ../libgda/gda-data-model-import.c:1977
 #: ../libgda/gda-data-model-import.c:2055 ../libgda/gda-data-select.c:370
 #: ../libgda/gda-data-select.c:2063 ../libgda/gda-data-select.c:2072
 #: ../libgda/gda-data-select.c:2082 ../libgda/gda-data-select.c:3480
-#: ../libgda/gda-holder.c:490 ../libgda/gda-holder.c:1721
-#: ../libgda/gda-server-operation.c:616 ../libgda/gda-server-operation.c:1014
+#: ../libgda/gda-holder.c:490 ../libgda/gda-holder.c:1742
+#: ../libgda/gda-server-operation.c:627 ../libgda/gda-server-operation.c:1025
 #: ../libgda/gda-set.c:561 ../libgda/gda-tree-mgr-select.c:189
 #: ../libgda/gda-tree-mgr-select.c:224
 #: ../libgda/sqlite/gda-sqlite-provider.c:2199
@@ -127,7 +127,8 @@ msgstr "無法取得橫列"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:400
 #: ../libgda-ui/data-entries/plugins/common-pict.c:509
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:168
-#: ../libgda-ui/gdaui-init.c:496 ../libgda-ui/gdaui-login.c:422
+#: ../libgda-ui/gdaui-init.c:508 ../libgda-ui/gdaui-login.c:422
+#: ../libgda-ui/gdaui-rt-editor.c:670
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -143,49 +144,53 @@ msgstr "無法取得橫列"
 #: ../providers/postgres/gda-postgres-util.c:108
 #: ../providers/postgres/gda-postgres-util.c:111
 #: ../tools/browser/auth-dialog.c:679 ../tools/browser/auth-dialog.c:682
-#: ../tools/browser/browser-connection.c:358
-#: ../tools/browser/browser-connection.c:424
-#: ../tools/browser/browser-connection.c:444
-#: ../tools/browser/browser-connection.c:634
-#: ../tools/browser/browser-connection.c:654
-#: ../tools/browser/browser-connection.c:862
+#: ../tools/browser/browser-connection.c:357
+#: ../tools/browser/browser-connection.c:425
+#: ../tools/browser/browser-connection.c:445
+#: ../tools/browser/browser-connection.c:635
+#: ../tools/browser/browser-connection.c:655
+#: ../tools/browser/browser-connection.c:863
 #: ../tools/browser/browser-window.c:888 ../tools/browser/browser-window.c:902
 #: ../tools/browser/browser-window.c:916
 #: ../tools/browser/browser-window.c:1147
 #: ../tools/browser/browser-window.c:1188
 #: ../tools/browser/browser-window.c:1459 ../tools/browser/login-dialog.c:240
-#: ../tools/browser/main.c:96 ../tools/browser/main.c:110
-#: ../tools/browser/main.c:136
-#: ../tools/browser/data-manager/data-console.c:560
+#: ../tools/browser/main.c:121 ../tools/browser/main.c:181
+#: ../tools/browser/main.c:195 ../tools/browser/main.c:221
+#: ../tools/browser/common/ui-formgrid.c:324
+#: ../tools/browser/common/ui-formgrid.c:417
+#: ../tools/browser/data-manager/analyser.c:284
+#: ../tools/browser/data-manager/data-console.c:564
 #: ../tools/browser/data-manager/data-favorite-selector.c:202
 #: ../tools/browser/data-manager/data-favorite-selector.c:260
 #: ../tools/browser/data-manager/data-favorite-selector.c:628
-#: ../tools/browser/data-manager/data-widget.c:346
-#: ../tools/browser/data-manager/data-widget.c:614
-#: ../tools/browser/query-exec/query-console.c:685
-#: ../tools/browser/query-exec/query-console.c:825
-#: ../tools/browser/query-exec/query-console.c:870
-#: ../tools/browser/query-exec/query-console.c:924
-#: ../tools/browser/query-exec/query-console.c:975
+#: ../tools/browser/data-manager/data-widget.c:397
+#: ../tools/browser/query-exec/query-console.c:799
+#: ../tools/browser/query-exec/query-console.c:829
+#: ../tools/browser/query-exec/query-console.c:969
+#: ../tools/browser/query-exec/query-console.c:1014
+#: ../tools/browser/query-exec/query-console.c:1068
+#: ../tools/browser/query-exec/query-console.c:1119
 #: ../tools/browser/query-exec/query-favorite-selector.c:192
-#: ../tools/browser/query-exec/query-favorite-selector.c:244
-#: ../tools/browser/query-exec/query-favorite-selector.c:599
+#: ../tools/browser/query-exec/query-favorite-selector.c:267
+#: ../tools/browser/query-exec/query-favorite-selector.c:288
+#: ../tools/browser/query-exec/query-favorite-selector.c:716
 #: ../tools/browser/query-exec/query-result.c:260
 #: ../tools/browser/query-exec/query-result.c:434
 #: ../tools/browser/schema-browser/favorite-selector.c:171
 #: ../tools/browser/schema-browser/favorite-selector.c:358
 #: ../tools/browser/schema-browser/relations-diagram.c:242
-#: ../tools/browser/schema-browser/table-info.c:476
-#: ../tools/browser/schema-browser/table-info.c:529
-#: ../tools/browser/schema-browser/table-info.c:556
-#: ../tools/browser/schema-browser/table-info.c:850
+#: ../tools/browser/schema-browser/table-info.c:477
+#: ../tools/browser/schema-browser/table-info.c:530
+#: ../tools/browser/schema-browser/table-info.c:557
+#: ../tools/browser/schema-browser/table-info.c:860
 #: ../tools/browser/schema-browser/table-preferences.c:700
 #: ../tools/browser/schema-browser/table-preferences.c:773
 #: ../tools/gda-list-server-op.c:50 ../tools/gda-list-server-op.c:108
-#: ../tools/gda-sql.c:269 ../tools/gda-sql.c:286 ../tools/gda-sql.c:425
-#: ../tools/gda-sql.c:1467 ../tools/gda-sql.c:1482 ../tools/gda-sql.c:1619
-#: ../tools/gda-sql.c:3057 ../tools/tools-input.c:130
-#: ../tools/web-server.c:2020
+#: ../tools/gda-sql.c:307 ../tools/gda-sql.c:324 ../tools/gda-sql.c:463
+#: ../tools/gda-sql.c:1507 ../tools/gda-sql.c:1522 ../tools/gda-sql.c:1659
+#: ../tools/gda-sql.c:2968 ../tools/tools-input.c:130
+#: ../tools/web-server.c:2024
 msgid "No detail"
 msgstr "不顯示詳情"
 
@@ -466,8 +471,8 @@ msgstr "不知名的 GType『%s』"
 msgid "Provider '%s' not found"
 msgstr "提供者的資訊"
 
-#: ../libgda/gda-config.c:1259 ../libgda/gda-connection.c:1023
-#: ../libgda/gda-connection.c:1180
+#: ../libgda/gda-config.c:1259 ../libgda/gda-connection.c:1026
+#: ../libgda/gda-connection.c:1183
 #, fuzzy, c-format
 msgid "No provider '%s' installed"
 msgstr "未指定提供者"
@@ -483,8 +488,8 @@ msgid "Can't instantiate provider '%s'"
 msgstr "找不到目標『%s』"
 
 #: ../libgda/gda-config.c:1341 ../libgda/gda-data-model-dsn-list.c:111
-#: ../libgda/gda-data-model-dsn-list.c:112 ../tools/gda-sql.c:1853
-#: ../tools/gda-sql.c:2702 ../tools/gda-sql.c:2877 ../tools/gda-sql.c:3095
+#: ../libgda/gda-data-model-dsn-list.c:112 ../tools/config-info.c:43
+#: ../tools/config-info.c:153 ../tools/gda-sql.c:2693 ../tools/gda-sql.c:3006
 msgid "Provider"
 msgstr "提供者"
 
@@ -493,7 +498,7 @@ msgstr "提供者"
 #: ../libgda/gda-server-provider-extra.c:382
 #: ../libgda/gda-server-provider-extra.c:405
 #: ../tools/browser/data-manager/data-source-editor.c:131
-#: ../tools/gda-sql.c:1854 ../tools/gda-sql.c:2701 ../tools/gda-sql.c:2878
+#: ../tools/config-info.c:44 ../tools/gda-sql.c:2692
 msgid "Description"
 msgstr "說明"
 
@@ -513,7 +518,7 @@ msgid "List of installed providers"
 msgstr "已安裝的提供者"
 
 #: ../libgda/gda-config.c:1510 ../libgda/gda-data-model-dsn-list.c:131
-#: ../libgda/gda-data-model-dsn-list.c:132 ../tools/gda-sql.c:3097
+#: ../libgda/gda-data-model-dsn-list.c:132 ../tools/gda-sql.c:3008
 msgid "Username"
 msgstr "使用者名稱"
 
@@ -537,24 +542,24 @@ msgstr ""
 "載入字典（dictionary）檔案『%s』時發生錯誤：\n"
 "%s\n"
 
-#: ../libgda/gda-connection.c:306
+#: ../libgda/gda-connection.c:309
 msgid "DSN to use"
 msgstr "要使用的 DSN"
 
-#: ../libgda/gda-connection.c:309
+#: ../libgda/gda-connection.c:312
 msgid "Connection string to use"
 msgstr "要使用的連線字串"
 
-#: ../libgda/gda-connection.c:312
+#: ../libgda/gda-connection.c:315
 msgid "Provider to use"
 msgstr "要使用的提供者"
 
-#: ../libgda/gda-connection.c:317
+#: ../libgda/gda-connection.c:320
 #, fuzzy
 msgid "Authentication string to use"
 msgstr "要使用的連線字串"
 
-#: ../libgda/gda-connection.c:321 ../libgda/gda-server-provider-extra.c:414
+#: ../libgda/gda-connection.c:324 ../libgda/gda-server-provider-extra.c:414
 #: ../libgda-ui/data/server_operation.glade.h:5
 #: ../libgda-ui/gdaui-server-operation.c:793
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:55
@@ -564,122 +569,122 @@ msgid "Options"
 msgstr "選項"
 
 #. To translators: Don't translate "GdaMetaStore", it's a class name
-#: ../libgda/gda-connection.c:326
+#: ../libgda/gda-connection.c:329
 #, fuzzy
 msgid "GdaMetaStore used by the connection"
 msgstr "用於連線的 SQL 方言"
 
-#: ../libgda/gda-connection.c:332
+#: ../libgda/gda-connection.c:335
 msgid ""
 "Unique GThread from which the connection will be available.This should only "
 "be modified by the database providers' implementation"
 msgstr ""
 
-#: ../libgda/gda-connection.c:343
+#: ../libgda/gda-connection.c:346
 msgid ""
 "Tells if the connection acts as a thread wrapper around another connection, "
 "making it completely thread safe"
 msgstr ""
 
-#: ../libgda/gda-connection.c:358
+#: ../libgda/gda-connection.c:361
 msgid ""
 "Make the connection set up a monitoring function in the mainloop to monitor "
 "the wrapped connection"
 msgstr ""
 
-#: ../libgda/gda-connection.c:648 ../libgda/gda-connection.c:676
-#: ../libgda/gda-connection.c:690 ../libgda/gda-connection.c:705
+#: ../libgda/gda-connection.c:651 ../libgda/gda-connection.c:679
+#: ../libgda/gda-connection.c:693 ../libgda/gda-connection.c:708
 #, c-format
 msgid "Could not set the '%s' property when the connection is opened"
 msgstr ""
 
-#: ../libgda/gda-connection.c:656
+#: ../libgda/gda-connection.c:659
 #, fuzzy, c-format
 msgid "No DSN named '%s' defined"
 msgstr "找不到名為『%s』的參數來源"
 
-#: ../libgda/gda-connection.c:726
+#: ../libgda/gda-connection.c:729
 #, c-format
 msgid "Can't set the '%s' property once the connection is opened"
 msgstr ""
 
-#: ../libgda/gda-connection.c:968 ../libgda/gda-connection.c:1121
+#: ../libgda/gda-connection.c:971 ../libgda/gda-connection.c:1124
 #: ../libgda/thread-wrapper/gda-thread-provider.c:430
 #: ../libgda/thread-wrapper/gda-thread-provider.c:515
 msgid "Multi threading is not supported or enabled"
 msgstr ""
 
-#: ../libgda/gda-connection.c:977
+#: ../libgda/gda-connection.c:980
 #, fuzzy, c-format
 msgid "Malformed data source specification '%s'"
 msgstr "『%s』函數有多於一種回傳類型"
 
-#: ../libgda/gda-connection.c:985 ../libgda/gda-connection.c:1368
-#: ../libgda/gda-connection.c:1370
+#: ../libgda/gda-connection.c:988 ../libgda/gda-connection.c:1371
+#: ../libgda/gda-connection.c:1373
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "在設定中找不到資料來源 %s"
 
-#: ../libgda/gda-connection.c:1051
+#: ../libgda/gda-connection.c:1054
 msgid "Datasource configuration error: no provider specified"
 msgstr "資料來源設定錯誤：未有指定提供者"
 
-#: ../libgda/gda-connection.c:1131 ../tools/browser/auth-dialog.c:418
-#: ../tools/browser/auth-dialog.c:454 ../tools/gda-sql.c:1311
+#: ../libgda/gda-connection.c:1134 ../tools/browser/auth-dialog.c:418
+#: ../tools/browser/auth-dialog.c:454 ../tools/gda-sql.c:1349
 #, fuzzy, c-format
 msgid "Malformed connection string '%s'"
 msgstr "ODBC 連線字串"
 
-#: ../libgda/gda-connection.c:1137 ../libgda/gda-connection.c:1392
+#: ../libgda/gda-connection.c:1140 ../libgda/gda-connection.c:1395
 msgid "No provider specified"
 msgstr "未指定提供者"
 
-#: ../libgda/gda-connection.c:1380 ../libgda/gda-connection.c:1382
+#: ../libgda/gda-connection.c:1383 ../libgda/gda-connection.c:1385
 msgid "No DSN or connection string specified"
 msgstr "未指定 DSN 或連線字串"
 
-#: ../libgda/gda-connection.c:1412
+#: ../libgda/gda-connection.c:1415
 #, fuzzy
 msgid "Provider does not allow usage from this thread"
 msgstr "模型 %s (名稱=%s): 已插入 %d 列！"
 
-#: ../libgda/gda-connection.c:1426
+#: ../libgda/gda-connection.c:1429
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr ""
 
-#: ../libgda/gda-connection.c:1535
+#: ../libgda/gda-connection.c:1538
 #, fuzzy, c-format
 msgid "Error while maintaining the meta data up to date: %s"
 msgstr "讀取 %s 時發生錯誤：%s"
 
-#: ../libgda/gda-connection.c:2186
+#: ../libgda/gda-connection.c:2702
 #, fuzzy
 msgid "Provider does not support statement preparation"
 msgstr "提供者不支援『%s()』方法"
 
-#: ../libgda/gda-connection.c:2381 ../libgda/gda-connection.c:2467
-#: ../libgda/gda-connection.c:2537 ../libgda/gda-meta-store.c:660
+#: ../libgda/gda-connection.c:2897 ../libgda/gda-connection.c:2983
+#: ../libgda/gda-connection.c:3053 ../libgda/gda-meta-store.c:660
 #, fuzzy, c-format
 msgid "Can't obtain connection lock"
 msgstr "無法開啟連線。"
 
-#: ../libgda/gda-connection.c:2388 ../libgda/gda-connection.c:2604
-#: ../libgda/gda-connection.c:2875 ../libgda/gda-connection.c:2945
-#: ../libgda/gda-connection.c:3015
+#: ../libgda/gda-connection.c:2904 ../libgda/gda-connection.c:3120
+#: ../libgda/gda-connection.c:3465 ../libgda/gda-connection.c:3535
+#: ../libgda/gda-connection.c:3605
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:222
 #: ../libgda/thread-wrapper/gda-thread-provider.c:1626
 #, c-format
 msgid "Connection is closed"
 msgstr "連線已關閉"
 
-#: ../libgda/gda-connection.c:2482 ../libgda/gda-connection.c:2572
+#: ../libgda/gda-connection.c:2998 ../libgda/gda-connection.c:3088
 #, fuzzy, c-format
 msgid "Can't find task %u"
 msgstr "找不到『%s』欄位"
 
-#: ../libgda/gda-connection.c:2560 ../libgda/sqlite/gda-sqlite-provider.c:1097
+#: ../libgda/gda-connection.c:3076 ../libgda/sqlite/gda-sqlite-provider.c:1097
 #: ../libgda/thread-wrapper/gda-thread-provider.c:924
 #: ../providers/jdbc/gda-jdbc-provider.c:580
 #: ../providers/mysql/gda-mysql-provider.c:963
@@ -689,42 +694,42 @@ msgstr "找不到『%s』欄位"
 msgid "Provider does not support asynchronous server operation"
 msgstr "提供者不支援『%s()』方法"
 
-#: ../libgda/gda-connection.c:2746 ../libgda/gda-connection.c:2761
+#: ../libgda/gda-connection.c:3336 ../libgda/gda-connection.c:3351
 msgid "Statement is a selection statement"
 msgstr ""
 
-#: ../libgda/gda-connection.c:2819 ../libgda/gda-connection.c:2895
-#: ../libgda/gda-connection.c:2965
+#: ../libgda/gda-connection.c:3409 ../libgda/gda-connection.c:3485
+#: ../libgda/gda-connection.c:3555
 #, fuzzy
 msgid "Statement is not a selection statement"
 msgstr "%s 查詢不是選取查詢"
 
-#: ../libgda/gda-connection.c:3424
+#: ../libgda/gda-connection.c:4014
 #, fuzzy
 msgid "Invalid argument"
 msgstr "『%s』參數無效"
 
-#: ../libgda/gda-connection.c:3433
+#: ../libgda/gda-connection.c:4023
 #, fuzzy, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "參數不足"
 
-#: ../libgda/gda-connection.c:4187
+#: ../libgda/gda-connection.c:4777
 msgid "Meta update error"
 msgstr ""
 
-#: ../libgda/gda-connection.c:4750
+#: ../libgda/gda-connection.c:5341
 msgid "Wrong filter arguments"
 msgstr ""
 
-#: ../libgda/gda-connection.c:4938 ../libgda/gda-connection.c:4991
-#: ../libgda/gda-connection.c:5035 ../libgda/gda-connection.c:5079
-#: ../libgda/gda-connection.c:5123
+#: ../libgda/gda-connection.c:5529 ../libgda/gda-connection.c:5582
+#: ../libgda/gda-connection.c:5626 ../libgda/gda-connection.c:5670
+#: ../libgda/gda-connection.c:5714
 #, fuzzy, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "連線異動狀態追蹤：沒有 COMMIT 的異動"
 
-#: ../libgda/gda-connection.c:5429
+#: ../libgda/gda-connection.c:6020
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:239
 #, fuzzy
 msgid "Internal error: invalid provider handle"
@@ -871,139 +876,139 @@ msgstr "預期有 <gda_array> 節點，但收到的是 <%s>"
 msgid "Key modification is not supported"
 msgstr "條件未啟用"
 
-#: ../libgda/gda-data-model.c:621
+#: ../libgda/gda-data-model.c:622
 #, fuzzy
 msgid "Data model does not support getting individual value"
 msgstr "模型不支援隨機存取，不顯示資料\n"
 
-#: ../libgda/gda-data-model.c:664 ../libgda/gda-data-model.c:674
+#: ../libgda/gda-data-model.c:665 ../libgda/gda-data-model.c:675
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:671
+#: ../libgda/gda-data-model.c:672
 msgid "Data model returned invalid NULL value"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:731
+#: ../libgda/gda-data-model.c:732
 #, fuzzy
 msgid "Data model does not support setting individual value"
 msgstr "模型不支援隨機存取，不顯示資料\n"
 
-#: ../libgda/gda-data-model.c:764
+#: ../libgda/gda-data-model.c:765
 #, fuzzy
 msgid "Data model does not support setting values"
 msgstr "模型不支援隨機存取，不顯示資料\n"
 
-#: ../libgda/gda-data-model.c:833 ../libgda/gda-data-model.c:867
+#: ../libgda/gda-data-model.c:834 ../libgda/gda-data-model.c:868
 #, fuzzy
 msgid "Data model does not support row append"
 msgstr "模型不支援隨機存取，不顯示資料\n"
 
-#: ../libgda/gda-data-model.c:858
+#: ../libgda/gda-data-model.c:859
 #, fuzzy
 msgid "Model does not allow row insertion"
 msgstr "模型 %s (名稱=%s): 已插入 %d 列！"
 
-#: ../libgda/gda-data-model.c:893
+#: ../libgda/gda-data-model.c:894
 msgid "Model does not allow row deletion"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:902
+#: ../libgda/gda-data-model.c:903
 #, fuzzy
 msgid "Data model does not support row removal"
 msgstr "模型不支援隨機存取，不顯示資料\n"
 
-#: ../libgda/gda-data-model.c:1050 ../libgda/gda-data-model.c:1091
-#: ../libgda/gda-data-model.c:1105
+#: ../libgda/gda-data-model.c:1051 ../libgda/gda-data-model.c:1092
+#: ../libgda/gda-data-model.c:1106
 #, fuzzy, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "『名稱 (NAME)』參數必須有有效字串值，已忽略。"
 
-#: ../libgda/gda-data-model.c:1114 ../libgda/gda-data-model.c:1124
-#: ../libgda/gda-data-model.c:1134 ../libgda/gda-data-model.c:1174
-#: ../libgda/gda-data-model.c:1272
+#: ../libgda/gda-data-model.c:1115 ../libgda/gda-data-model.c:1125
+#: ../libgda/gda-data-model.c:1135 ../libgda/gda-data-model.c:1175
+#: ../libgda/gda-data-model.c:1273
 #, fuzzy, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "『覆寫 (OVERWRITE)』參數必須有有效 boolean 值，已忽略。"
 
-#: ../libgda/gda-data-model.c:1280
+#: ../libgda/gda-data-model.c:1281
 #, c-format
 msgid "File '%s' already exists"
 msgstr "已有『%s』檔案"
 
-#: ../libgda/gda-data-model.c:1437
+#: ../libgda/gda-data-model.c:1438
 msgid "Exported Data"
 msgstr "匯出的資料"
 
-#: ../libgda/gda-data-model.c:1558
+#: ../libgda/gda-data-model.c:1559
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "預期的標記是 <gda_value> 或 <gda_array_value>，但收到的是 <%s>，將會忽略"
 
-#: ../libgda/gda-data-model.c:1589
+#: ../libgda/gda-data-model.c:1590
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr "無法取得直行的資料類型（類型是「未知」或未指定）"
 
-#: ../libgda/gda-data-model.c:1675
+#: ../libgda/gda-data-model.c:1676
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "預期的標記是 <gda_array_data> ，但收到的是 <%s>"
 
-#: ../libgda/gda-data-model.c:1738
+#: ../libgda/gda-data-model.c:1739
 msgid "Could not get an iterator for source data model"
 msgstr "無法取得來源資料模型的 iterator"
 
-#: ../libgda/gda-data-model.c:1755
+#: ../libgda/gda-data-model.c:1756
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "來源資料模型的直行不一致：%d"
 
-#: ../libgda/gda-data-model.c:1769
+#: ../libgda/gda-data-model.c:1770
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
 "data model"
 msgstr ""
 
-#: ../libgda/gda-data-model.c:1779
+#: ../libgda/gda-data-model.c:1780
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
 msgstr "目的直行 %d 的 gda 類型 (%s) 和來源直行 %d 的類型 (%s) 不兼容"
 
-#: ../libgda/gda-data-model.c:1876
+#: ../libgda/gda-data-model.c:1877
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "無法將『%s』由 GDA 類型 %s 轉換為 GDA 類型 %s"
 
-#: ../libgda/gda-data-model.c:2070
+#: ../libgda/gda-data-model.c:2087
 #, fuzzy, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr ""
 "無法將圖表寫入『%s』(%s)\n"
 "\n"
 
-#: ../libgda/gda-data-model.c:2078
+#: ../libgda/gda-data-model.c:2095
 #, fuzzy, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr ""
 "無法將圖表寫入『%s』(%s)\n"
 "\n"
 
-#: ../libgda/gda-data-model.c:2326
+#: ../libgda/gda-data-model.c:2359
 #, fuzzy
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr "模型不支援隨機存取，不顯示資料\n"
 
-#: ../libgda/gda-data-model.c:2446
+#: ../libgda/gda-data-model.c:2479
 #, fuzzy, c-format
 msgid "(error getting data)\n"
 msgstr "讀取 %s 時發生錯誤：%s"
 
-#: ../libgda/gda-data-model.c:2448
+#: ../libgda/gda-data-model.c:2481
 #, c-format
 msgid "(%d row)\n"
 msgid_plural "(%d rows)\n"
@@ -1070,14 +1075,15 @@ msgid "Cannot remove file '%s'"
 msgstr "無法載入『%s』檔案"
 
 #: ../libgda/gda-data-model-dsn-list.c:105
-#: ../libgda/gda-data-model-dsn-list.c:106 ../tools/gda-sql.c:2700
+#: ../libgda/gda-data-model-dsn-list.c:106 ../tools/config-info.c:151
+#: ../tools/gda-sql.c:2691
 msgid "DSN"
 msgstr ""
 
 #. To translators: a "Connection string" is a semi-colon delimited list of key=value pairs which
 #. * define the parameters for a connection, such as "DB_NAME=thedb;HOSTNAME=moon
 #: ../libgda/gda-data-model-dsn-list.c:125
-#: ../libgda/gda-data-model-dsn-list.c:126
+#: ../libgda/gda-data-model-dsn-list.c:126 ../tools/config-info.c:154
 msgid "Connection string"
 msgstr "連線字串"
 
@@ -1119,7 +1125,7 @@ msgstr "第 %d 行的字符轉換失敗，錯誤：%s"
 #: ../libgda/sqlite/gda-sqlite-provider.c:779
 #: ../providers/bdb/gda-bdb-provider.c:209
 #: ../tools/browser/common/gdaui-data-import.c:178
-#: ../tools/browser/data-manager/data-widget.c:837
+#: ../tools/browser/data-manager/data-widget.c:620
 msgid "no detail"
 msgstr "不顯示詳情"
 
@@ -1245,7 +1251,7 @@ msgid ""
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:2944 ../tools/gda-sql.c:3261
+#: ../libgda/gda-data-proxy.c:2944 ../tools/gda-sql.c:3172
 #, fuzzy
 msgid "Could not create virtual connection"
 msgstr "無法建立檔案 %s"
@@ -1465,17 +1471,17 @@ msgid ""
 "will be wrong: %s"
 msgstr ""
 
-#: ../libgda/gda-easy.c:295
+#: ../libgda/gda-easy.c:205 ../libgda/gda-server-operation.c:2575
 #, fuzzy
 msgid "Unspecified table name"
 msgstr "新表格名稱"
 
-#: ../libgda/gda-easy.c:334
+#: ../libgda/gda-easy.c:244 ../libgda/gda-server-operation.c:2614
 #, fuzzy
 msgid "Invalid type"
 msgstr "節點無效"
 
-#: ../libgda/gda-easy.c:429
+#: ../libgda/gda-easy.c:339 ../libgda/gda-server-operation.c:2708
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr ""
 
@@ -1514,40 +1520,46 @@ msgstr ""
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr ""
 
+#: ../libgda/gda-holder.c:1478
+#, fuzzy, c-format
+msgid ""
+"GdaHolder has a gda type (%s) incompatible with source column %d type (%s)"
+msgstr "目的直行 %d 的 gda 類型 (%s) 和來源直行 %d 的類型 (%s) 不兼容"
+
 #. break holder's binding because type differ
-#: ../libgda/gda-holder.c:1535
+#: ../libgda/gda-holder.c:1556
 #, c-format
 msgid ""
 "Cannot bind holders if their type is not the same, breaking existing bind "
 "where '%s' was bound to '%s'"
 msgstr ""
 
-#: ../libgda/gda-holder.c:1580
+#: ../libgda/gda-holder.c:1601
 msgid "Cannot bind holders if their type is not the same"
 msgstr ""
 
-#: ../libgda/gda-holder.c:1720
+#: ../libgda/gda-holder.c:1741
 #, fuzzy, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr "無法設定『%s』參數至『%s』值"
 
-#: ../libgda/gda-init.c:73
+#: ../libgda/gda-init.c:124
 #, fuzzy
 msgid "Ignoring attempt to re-initialize GDA library."
 msgstr "試圖重新初始化 GDA 函式庫。已忽略。"
 
-#: ../libgda/gda-init.c:95
+#: ../libgda/gda-init.c:146
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda 需要 GModule 。正在結束..."
 
-#: ../libgda/gda-init.c:155 ../libgda/gda-init.c:176
+#: ../libgda/gda-init.c:193 ../libgda/gda-init.c:214
 #, c-format
 msgid ""
 "Could not parse '%s': XML data import validation will not be performed (some "
 "weird errors may occur)"
 msgstr ""
 
-#: ../libgda/gda-init.c:197
+#: ../libgda/gda-init.c:235
 #, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for server operations will "
@@ -1646,7 +1658,7 @@ msgstr "無法開始 Oracle 工作階段"
 msgid "Unknown internal schema's version: '%s'"
 msgstr "無法開始 Oracle 工作階段"
 
-#: ../libgda/gda-meta-store.c:2317 ../tools/gda-sql.c:967
+#: ../libgda/gda-meta-store.c:2317 ../tools/gda-sql.c:1005
 #, fuzzy
 msgid "More than one SQL statement"
 msgstr "『%s』中有多於一個要解析的欄位"
@@ -1714,21 +1726,21 @@ msgid ""
 "to GdaMetaStore attributes problems"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3677
+#: ../libgda/gda-meta-store.c:3678
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3691
+#: ../libgda/gda-meta-store.c:3692
 msgid "Missing custom database object name"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3696
+#: ../libgda/gda-meta-store.c:3697
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
 msgstr ""
 
-#: ../libgda/gda-meta-store.c:3794
+#: ../libgda/gda-meta-store.c:3795
 #, fuzzy
 msgid "Another object with the same name already exists"
 msgstr "已有『%s』檔案"
@@ -1810,11 +1822,11 @@ msgid ""
 "referencing table %s.%s.%s"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:2261
+#: ../libgda/gda-meta-struct.c:2264
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr ""
 
-#: ../libgda/gda-meta-struct.c:2286
+#: ../libgda/gda-meta-struct.c:2289
 #, fuzzy, c-format
 msgid "Database object '%s' already exists"
 msgstr "已有『%s』檔案"
@@ -1856,22 +1868,22 @@ msgstr "欄位名稱『%s』無效"
 msgid "Missing foreign key's column name for table '%s'"
 msgstr "缺少『%s』所需的屬性"
 
-#: ../libgda/gda-server-operation.c:588
+#: ../libgda/gda-server-operation.c:599
 #, c-format
 msgid "GdaServerOperation: could not find file '%s'"
 msgstr "GdaServerOperation：找不到『%s』檔案"
 
-#: ../libgda/gda-server-operation.c:599
+#: ../libgda/gda-server-operation.c:610
 #, c-format
 msgid "GdaServerOperation: could not load file '%s'"
 msgstr "GdaServerOperation：無法載入『%s』檔案"
 
-#: ../libgda/gda-server-operation.c:615 ../libgda/gda-server-operation.c:1013
+#: ../libgda/gda-server-operation.c:626 ../libgda/gda-server-operation.c:1024
 #, fuzzy, c-format
 msgid "Could not load XML specifications: %s"
 msgstr "無法開啟 %s 檔案"
 
-#: ../libgda/gda-server-operation.c:685
+#: ../libgda/gda-server-operation.c:696
 #, c-format
 msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
@@ -1880,7 +1892,7 @@ msgstr ""
 "GdaServerOperation：『%s』檔案不符合 DTD：\n"
 "%s"
 
-#: ../libgda/gda-server-operation.c:688
+#: ../libgda/gda-server-operation.c:699
 #, fuzzy, c-format
 msgid ""
 "GdaServerOperation specification does not conform to DTD:\n"
@@ -1889,37 +1901,37 @@ msgstr ""
 "GdaServerOperation：『%s』檔案不符合 DTD：\n"
 "%s"
 
-#: ../libgda/gda-server-operation.c:695
+#: ../libgda/gda-server-operation.c:706
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
 msgstr "GdaServerOperation：『%s』檔案不符合 DTD"
 
-#: ../libgda/gda-server-operation.c:698
+#: ../libgda/gda-server-operation.c:709
 #, fuzzy
 msgid "GdaServerOperation specification does not conform to DTD\n"
 msgstr "GdaServerOperation：『%s』檔案不符合 DTD"
 
-#: ../libgda/gda-server-operation.c:1242
+#: ../libgda/gda-server-operation.c:1253
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://bugzilla."
 "gnome.org/ for the \"libgda\" product"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1476 ../libgda/gda-server-operation.c:1490
+#: ../libgda/gda-server-operation.c:1487 ../libgda/gda-server-operation.c:1501
 #, fuzzy, c-format
 msgid "Expected tag <%s>, got <%s>"
 msgstr "預期的標記是 <op_data> ，但收到的是 <%s>"
 
-#: ../libgda/gda-server-operation.c:1521 ../libgda/gda-server-operation.c:2207
+#: ../libgda/gda-server-operation.c:1532 ../libgda/gda-server-operation.c:2218
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1578
+#: ../libgda/gda-server-operation.c:1589
 msgid "Missing attribute named 'path'"
 msgstr "缺少名為『路徑』的屬性"
 
-#: ../libgda/gda-server-operation.c:2336
+#: ../libgda/gda-server-operation.c:2347
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "缺少『%s』所需的屬性"
@@ -2087,6 +2099,7 @@ msgid "References"
 msgstr "參考"
 
 #. list of fields
+#. To translators: "Default value" is a table's column's attribute
 #: ../libgda/gda-server-provider-extra.c:339
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:21
 #: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:10
@@ -2097,6 +2110,7 @@ msgstr "參考"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:21
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
+#: ../tools/browser/schema-browser/table-columns.c:501
 msgid "Default value"
 msgstr "預設值"
 
@@ -2145,7 +2159,7 @@ msgstr "名稱空間"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 #: ../tools/browser/data-manager/data-source-editor.c:135
-#: ../tools/browser/schema-browser/table-info.c:950
+#: ../tools/browser/schema-browser/table-info.c:960
 msgid "Table"
 msgstr "表格"
 
@@ -2175,14 +2189,16 @@ msgstr "引數類型"
 msgid "Trigger"
 msgstr "觸發器 (Trigger)"
 
+#. To translators: "Type" is the data type of a table's column
 #: ../libgda/gda-server-provider-extra.c:391
 #: ../libgda/gda-server-provider-extra.c:411
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
+#: ../tools/browser/schema-browser/table-columns.c:487
 #: ../tools/command-exec.c:654 ../tools/command-exec.c:728
-#: ../tools/web-server.c:927
+#: ../tools/web-server.c:931
 msgid "Type"
 msgstr "類型"
 
@@ -2235,8 +2251,8 @@ msgstr "檢視"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:3
 #: ../tools/browser/data-manager/data-favorite-selector.c:305
-#: ../tools/browser/query-exec/query-favorite-selector.c:289
-#: ../tools/command-exec.c:653 ../tools/gda-sql.c:3094 ../tools/gda-sql.c:4023
+#: ../tools/browser/query-exec/query-favorite-selector.c:353
+#: ../tools/command-exec.c:653 ../tools/gda-sql.c:3005 ../tools/gda-sql.c:3934
 msgid "Name"
 msgstr "名稱"
 
@@ -2305,60 +2321,60 @@ msgid ""
 "replaces"
 msgstr ""
 
-#: ../libgda/gda-sql-builder.c:293 ../libgda/gda-sql-builder.c:1397
+#: ../libgda/gda-sql-builder.c:292 ../libgda/gda-sql-builder.c:1396
 #, fuzzy, c-format
 msgid "Unknown part ID %u"
 msgstr "不知名錯誤"
 
-#: ../libgda/gda-sql-builder.c:297
+#: ../libgda/gda-sql-builder.c:296
 #, fuzzy
 msgid "Unknown part type"
 msgstr "不知名錯誤"
 
-#: ../libgda/gda-sql-builder.c:341
+#: ../libgda/gda-sql-builder.c:340
 #, c-format
 msgid "SqlBuilder is empty"
 msgstr ""
 
-#: ../libgda/gda-sql-builder.c:416 ../libgda/gda-sql-builder.c:473
-#: ../libgda/gda-sql-builder.c:502 ../libgda/gda-sql-builder.c:623
-#: ../libgda/gda-sql-builder.c:665 ../libgda/gda-sql-builder.c:727
-#: ../libgda/gda-sql-builder.c:787 ../libgda/gda-sql-builder.c:1159
-#: ../libgda/gda-sql-builder.c:1243 ../libgda/gda-sql-builder.c:1288
-#: ../libgda/gda-sql-builder.c:1379 ../libgda/gda-sql-builder.c:1430
-#: ../libgda/gda-sql-builder.c:1472 ../libgda/gda-sql-builder.c:1519
-#: ../libgda/gda-sql-builder.c:1569 ../libgda/gda-sql-builder.c:1605
-#: ../libgda/gda-sql-builder.c:1770 ../libgda/gda-sql-builder.c:1796
+#: ../libgda/gda-sql-builder.c:415 ../libgda/gda-sql-builder.c:472
+#: ../libgda/gda-sql-builder.c:501 ../libgda/gda-sql-builder.c:622
+#: ../libgda/gda-sql-builder.c:664 ../libgda/gda-sql-builder.c:726
+#: ../libgda/gda-sql-builder.c:786 ../libgda/gda-sql-builder.c:1158
+#: ../libgda/gda-sql-builder.c:1242 ../libgda/gda-sql-builder.c:1287
+#: ../libgda/gda-sql-builder.c:1378 ../libgda/gda-sql-builder.c:1429
+#: ../libgda/gda-sql-builder.c:1471 ../libgda/gda-sql-builder.c:1518
+#: ../libgda/gda-sql-builder.c:1568 ../libgda/gda-sql-builder.c:1604
+#: ../libgda/gda-sql-builder.c:1769 ../libgda/gda-sql-builder.c:1795
 #, fuzzy
 msgid "Wrong statement type"
 msgstr "節點無效"
 
-#: ../libgda/gda-sql-builder.c:594
+#: ../libgda/gda-sql-builder.c:593
 #, fuzzy, c-format
 msgid "Could not convert value to type '%s', value not defined"
 msgstr "無法將『%s』轉換成 %s 類型的值"
 
-#: ../libgda/gda-sql-builder.c:718
+#: ../libgda/gda-sql-builder.c:717
 #, fuzzy
 msgid "Wrong field format"
 msgstr "查詢類型錯誤"
 
-#: ../libgda/gda-sql-builder.c:821 ../libgda/gda-sql-builder.c:826
+#: ../libgda/gda-sql-builder.c:820 ../libgda/gda-sql-builder.c:825
 #, fuzzy, c-format
 msgid "Unhandled data type '%s'"
 msgstr "不知名資料類型『%s』"
 
-#: ../libgda/gda-sql-builder.c:842
+#: ../libgda/gda-sql-builder.c:841
 #, fuzzy, c-format
 msgid "Could not convert value to type '%s'"
 msgstr "無法將『%s』轉換成 %s 類型的值"
 
-#: ../libgda/gda-sql-builder.c:1310
+#: ../libgda/gda-sql-builder.c:1309
 #, fuzzy, c-format
 msgid "Unknown left part target ID %u"
 msgstr "不知名錯誤"
 
-#: ../libgda/gda-sql-builder.c:1315
+#: ../libgda/gda-sql-builder.c:1314
 #, fuzzy, c-format
 msgid "Unknown right part target ID %u"
 msgstr "不知名錯誤"
@@ -2407,25 +2423,25 @@ msgstr "參數名稱"
 msgid "Unnamed parameter"
 msgstr "『%s』參數無效"
 
-#: ../libgda/gda-statement.c:1508
+#: ../libgda/gda-statement.c:1511
 #, fuzzy
 msgid "Malformed table name"
 msgstr "資料來源的詳細參數"
 
-#: ../libgda/gda-statement.c:1957
+#: ../libgda/gda-statement.c:1960
 msgid "Join is not in a FROM statement"
 msgstr ""
 
-#: ../libgda/gda-statement.c:1964
+#: ../libgda/gda-statement.c:1967
 #, fuzzy
 msgid "Could not find target the join is for"
 msgstr "無法取得直行清單"
 
 #: ../libgda/gda-tree-mgr-columns.c:271 ../libgda/gda-tree-mgr-schemas.c:225
 #: ../libgda/gda-tree-mgr-select.c:302 ../libgda/gda-tree-mgr-tables.c:256
-#: ../libgda-report/engine/gda-report-engine.c:589
-#: ../libgda-report/engine/gda-report-engine.c:616 ../tools/gda-sql.c:762
-#: ../tools/gda-sql.c:947
+#: ../libgda-report/engine/gda-report-engine.c:591
+#: ../libgda-report/engine/gda-report-engine.c:618 ../tools/gda-sql.c:800
+#: ../tools/gda-sql.c:985
 #, fuzzy, c-format
 msgid "No connection specified"
 msgstr "未指定 DSN 或連線字串"
@@ -2522,23 +2538,23 @@ msgstr "要修改的目標表格未有定義主鍵"
 msgid "Table's primary key is not selected"
 msgstr ""
 
-#: ../libgda/gda-util.c:1140
+#: ../libgda/gda-util.c:1142
 #, fuzzy
 msgid "Could not compute any field to insert into"
 msgstr "無法開啟 %s 檔案"
 
-#: ../libgda/gda-util.c:1203
+#: ../libgda/gda-util.c:1205
 #, fuzzy
 msgid "Missing table name in UPDATE statement"
 msgstr "缺乏 UPDATE 目標實體"
 
-#: ../libgda/gda-util.c:1284
+#: ../libgda/gda-util.c:1286
 #, c-format
 msgid "Can't rewrite UPDATE statement to handle default values"
 msgstr ""
 
-#: ../libgda/gda-util.c:1336 ../libgda/gda-util.c:1393
-#: ../libgda/gda-util.c:1433 ../libgda/sqlite/gda-sqlite-provider.c:2582
+#: ../libgda/gda-util.c:1338 ../libgda/gda-util.c:1395
+#: ../libgda/gda-util.c:1435 ../libgda/sqlite/gda-sqlite-provider.c:2582
 #: ../providers/jdbc/gda-jdbc-provider.c:1323
 #: ../providers/mysql/gda-mysql-provider.c:2220
 #: ../providers/postgres/gda-postgres-provider.c:1936
@@ -2870,15 +2886,15 @@ msgstr "不知名資料類型『%s』"
 msgid "Could not start transaction to create BLOB"
 msgstr "無法設定 Oracle 異動名稱"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2992
-#: ../libgda/sqlite/gda-sqlite-provider.c:3013
-#: ../libgda/sqlite/gda-sqlite-provider.c:3079
+#: ../libgda/sqlite/gda-sqlite-provider.c:2995
+#: ../libgda/sqlite/gda-sqlite-provider.c:3016
+#: ../libgda/sqlite/gda-sqlite-provider.c:3082
 #, fuzzy
 msgid "Function requires one argument"
 msgstr "條件運算子必須有至少一個引數"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3045
-#: ../libgda/sqlite/gda-sqlite-provider.c:3111
+#: ../libgda/sqlite/gda-sqlite-provider.c:3048
+#: ../libgda/sqlite/gda-sqlite-provider.c:3114
 #, fuzzy
 msgid "Function requires two arguments"
 msgstr "條件運算子必須有至少一個引數"
@@ -2887,7 +2903,7 @@ msgstr "條件運算子必須有至少一個引數"
 #: ../providers/jdbc/gda-jdbc-recordset.c:279
 #: ../providers/mysql/gda-mysql-recordset.c:432
 #: ../providers/mysql/gda-mysql-recordset.c:562
-#: ../providers/postgres/gda-postgres-recordset.c:280
+#: ../providers/postgres/gda-postgres-recordset.c:281
 #: ../providers/web/gda-web-recordset.c:218
 #, fuzzy, c-format
 msgid "Column %d out of range (0-%d), ignoring its specified type"
@@ -2905,21 +2921,21 @@ msgstr "無法關閉 blob。"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:483
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:727
-#: ../providers/postgres/gda-postgres-recordset.c:624
+#: ../providers/postgres/gda-postgres-recordset.c:625
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:497
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:743
-#: ../providers/postgres/gda-postgres-recordset.c:635
+#: ../providers/postgres/gda-postgres-recordset.c:636
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:511
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:759
-#: ../providers/postgres/gda-postgres-recordset.c:679
+#: ../providers/postgres/gda-postgres-recordset.c:678
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
@@ -3052,6 +3068,8 @@ msgstr "找不到 %s 表格"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:779
 #: ../libgda/sql-parser/gda-statement-struct.c:794
+#: ../tools/browser/browser-connection.c:1797
+#: ../tools/browser/browser-connection.c:1851
 #, fuzzy, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "無法取得 Oracle 參數"
@@ -3261,73 +3279,77 @@ msgstr ""
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
 msgstr ""
 
-#: ../libgda-report/engine/gda-report-engine.c:311
+#: ../libgda-report/engine/gda-report-engine.c:313
 #, fuzzy, c-format
 msgid "Object type '%s' cannot be declared in this context"
 msgstr "資料類型『%s』無法轉換成已知類型"
 
-#: ../libgda-report/engine/gda-report-engine.c:319
+#: ../libgda-report/engine/gda-report-engine.c:321
 #, c-format
 msgid "An object with the '%s' name has already been declared"
 msgstr ""
 
-#: ../libgda-report/engine/gda-report-engine.c:354
+#: ../libgda-report/engine/gda-report-engine.c:356
 #, fuzzy, c-format
 msgid "Object type '%s' cannot be requested in this context"
 msgstr "資料類型『%s』無法轉換成已知類型"
 
-#: ../libgda-report/engine/gda-report-engine.c:573
+#: ../libgda-report/engine/gda-report-engine.c:575
 #, fuzzy, c-format
 msgid "Unknown query '%s'"
 msgstr "不知名的 GType『%s』"
 
-#: ../libgda-report/engine/gda-report-engine.c:584
-#: ../libgda-report/engine/gda-report-engine.c:611 ../tools/gda-sql.c:2989
-#: ../tools/gda-sql.c:3071 ../tools/gda-sql.c:3172 ../tools/gda-sql.c:3249
+#: ../libgda-report/engine/gda-report-engine.c:586
+#: ../libgda-report/engine/gda-report-engine.c:613 ../tools/gda-sql.c:2900
+#: ../tools/gda-sql.c:2982 ../tools/gda-sql.c:3083 ../tools/gda-sql.c:3160
 #, fuzzy, c-format
 msgid "No connection named '%s' found"
 msgstr "沒有連線關連至此字典（dictionary）！"
 
-#: ../libgda-report/engine/gda-report-engine.c:656
+#: ../libgda-report/engine/gda-report-engine.c:658
 msgid "Query is not specified (not named and not defined)"
 msgstr ""
 
-#: ../libgda-report/engine/gda-report-engine.c:820
-#: ../libgda-report/engine/gda-report-engine.c:962
-#: ../libgda-report/engine/gda-report-engine.c:1019
+#: ../libgda-report/engine/gda-report-engine.c:823
+#: ../libgda-report/engine/gda-report-engine.c:974
+#: ../libgda-report/engine/gda-report-engine.c:1031
 #, fuzzy, c-format
 msgid "Unknown parameter '%s'"
 msgstr "不知名資料類型『%s』"
 
-#: ../libgda-report/engine/gda-report-engine.c:837
+#: ../libgda-report/engine/gda-report-engine.c:849
 #, fuzzy
 msgid "Parameter name not specified"
 msgstr "參數名稱"
 
-#: ../libgda-report/engine/gda-report-engine.c:887
+#: ../libgda-report/engine/gda-report-engine.c:899
 #, fuzzy
 msgid "No expression specified"
 msgstr "INSERT 表示式是目標欄位"
 
-#: ../libgda-report/engine/gda-report-engine.c:910
+#: ../libgda-report/engine/gda-report-engine.c:922
 #, fuzzy, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
 msgstr "無法將『%s』由 GDA 類型 %s 轉換為 GDA 類型 %s"
 
-#: ../libgda-report/engine/gda-report-engine.c:1048
+#: ../libgda-report/engine/gda-report-engine.c:1060
 #, fuzzy, c-format
 msgid "Cannot cast parameter from type '%s' to type '%s'"
 msgstr "無法加入類型為 %s，值為『%s』的參數"
 
-#: ../libgda-report/engine/gda-report-engine.c:1141
+#: ../libgda-report/engine/gda-report-engine.c:1153
 #, c-format
 msgid "Expression '%s' should return exactly one value"
 msgstr ""
 
-#: ../libgda-report/engine/gda-report-engine.c:1178
+#: ../libgda-report/engine/gda-report-engine.c:1193
 #, fuzzy
 msgid "Binary data"
 msgstr "Binary 處理常式"
+
+#: ../libgda-report/engine/rt-parser.c:1208
+msgid "link"
+msgstr ""
 
 #: ../libgda-report/gda-report-document.c:257
 #, fuzzy
@@ -3357,6 +3379,7 @@ msgstr "選取（聯集 [union]）"
 
 #: ../libgda-ui/data-entries/common-bin.c:77
 #: ../libgda-ui/data-entries/plugins/common-pict.c:398
+#: ../libgda-ui/gdaui-rt-editor.c:668
 #, fuzzy, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3416,8 +3439,8 @@ msgstr "不知名的 GType『%s』"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:719 ../libgda-ui/gdaui-basic-form.c:754
-#: ../libgda-ui/gdaui-raw-grid.c:741 ../tools/gda-sql.c:2662
-#: ../tools/gda-sql.c:2840 ../tools/gda-sql.c:4024
+#: ../libgda-ui/gdaui-raw-grid.c:741 ../tools/config-info.c:97
+#: ../tools/gda-sql.c:2653 ../tools/gda-sql.c:3935
 #, fuzzy
 msgid "Value"
 msgstr "比例"
@@ -3466,11 +3489,10 @@ msgid "The information and status changer can be activated"
 msgstr ""
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:409
-#: ../libgda-ui/data-entries/gdaui-entry-string.c:400
-msgid "<string cut because too long>"
+msgid "string truncated because too long"
 msgstr ""
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:434
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:435
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:274
 #, c-format
 msgid ""
@@ -3478,7 +3500,7 @@ msgid ""
 "display type (%s)"
 msgstr ""
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:441
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:442
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:280
 #, c-format
 msgid ""
@@ -3486,7 +3508,7 @@ msgid ""
 "%s and %s, which means the data model has some incoherencies"
 msgstr ""
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:491
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:508
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
 msgid "<non-printable>"
 msgstr ""
@@ -3629,6 +3651,7 @@ msgid "_Save image"
 msgstr ""
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:339
+#: ../libgda-ui/gdaui-rt-editor.c:630
 msgid "Select image to load"
 msgstr ""
 
@@ -3839,7 +3862,7 @@ msgid "break lines anywhere the cursor can appear"
 msgstr ""
 
 #: ../libgda-ui/data/server_operation.glade.h:1
-#: ../tools/browser/schema-browser/table-info.c:385
+#: ../tools/browser/schema-browser/table-info.c:386
 #, fuzzy
 msgid "Columns"
 msgstr "備註"
@@ -3854,10 +3877,10 @@ msgstr "沒有限制"
 msgid "Foreign keys"
 msgstr "外鍵 (Foreign key)"
 
-#: ../libgda-ui/data/server_operation.glade.h:4 ../tools/gda-sql.c:1999
-#: ../tools/gda-sql.c:2098 ../tools/gda-sql.c:2110 ../tools/gda-sql.c:2122
-#: ../tools/gda-sql.c:2230 ../tools/gda-sql.c:2242 ../tools/gda-sql.c:2254
-#: ../tools/gda-sql.c:2448
+#: ../libgda-ui/data/server_operation.glade.h:4 ../tools/gda-sql.c:1990
+#: ../tools/gda-sql.c:2089 ../tools/gda-sql.c:2101 ../tools/gda-sql.c:2113
+#: ../tools/gda-sql.c:2221 ../tools/gda-sql.c:2233 ../tools/gda-sql.c:2245
+#: ../tools/gda-sql.c:2439
 msgid "General"
 msgstr ""
 
@@ -4011,19 +4034,19 @@ msgstr "找不到聚合（aggregate）『%s』的資料類型"
 msgid "Values to be filled"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:2093 ../libgda-ui/gdaui-raw-grid.c:2442
+#: ../libgda-ui/gdaui-basic-form.c:2094 ../libgda-ui/gdaui-raw-grid.c:2442
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:2103 ../libgda-ui/gdaui-raw-grid.c:2452
+#: ../libgda-ui/gdaui-basic-form.c:2104 ../libgda-ui/gdaui-raw-grid.c:2452
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
 "performed (some errors may occur)"
 msgstr ""
 
-#: ../libgda-ui/gdaui-basic-form.c:2235
+#: ../libgda-ui/gdaui-basic-form.c:2236
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4089,26 +4112,26 @@ msgstr ""
 msgid "Attempt to initialize an already initialized library"
 msgstr "試圖重新初始化 GDA 函式庫。已忽略。"
 
-#: ../libgda-ui/gdaui-init.c:465
+#: ../libgda-ui/gdaui-init.c:477
 msgid "Could not open plugins directory, no plugin loaded."
 msgstr ""
 
-#: ../libgda-ui/gdaui-init.c:485
-#: ../tools/browser/data-manager/data-widget.c:609
-#: ../tools/browser/data-manager/data-widget.c:614
-#: ../tools/browser/data-manager/data-widget.c:616
+#: ../libgda-ui/gdaui-init.c:497
+#: ../tools/browser/data-manager/data-widget.c:392
+#: ../tools/browser/data-manager/data-widget.c:397
+#: ../tools/browser/data-manager/data-widget.c:399
 #: ../tools/browser/data-manager/xml-spec-editor.c:236
-#: ../tools/browser/query-exec/query-result.c:258 ../tools/web-server.c:2019
+#: ../tools/browser/query-exec/query-result.c:258 ../tools/web-server.c:2023
 #, c-format
 msgid "Error: %s"
 msgstr "錯誤：%s"
 
-#: ../libgda-ui/gdaui-init.c:492
+#: ../libgda-ui/gdaui-init.c:504
 #, c-format
 msgid "Loading file %s...\n"
 msgstr ""
 
-#: ../libgda-ui/gdaui-init.c:495
+#: ../libgda-ui/gdaui-init.c:507
 #, c-format
 msgid "Plugins load warning: %s"
 msgstr ""
@@ -4207,12 +4230,14 @@ msgid ""
 "been made and have not been committed."
 msgstr ""
 
-#: ../libgda-ui/gdaui-raw-grid.c:1894
+#: ../libgda-ui/gdaui-raw-grid.c:1894 ../tools/config-info.c:150
 #, fuzzy
 msgid "File name"
 msgstr "檔案名稱"
 
+#. To translators: "Details" is a table's column's attribute
 #: ../libgda-ui/gdaui-raw-grid.c:1913
+#: ../tools/browser/schema-browser/table-columns.c:508
 #, fuzzy
 msgid "Details"
 msgstr "不顯示詳情"
@@ -4297,6 +4322,119 @@ msgstr "已有『%s』檔案"
 msgid "If you choose yes, the contents will be lost."
 msgstr ""
 
+#: ../libgda-ui/gdaui-rt-editor.c:90
+msgid ""
+"\"\"\"= Title level 1 =\n"
+"== Title level 2 ==\n"
+"\"\"\"= Title level 1 =\n"
+"== Title level 2 ==\n"
+"\n"
+"\"\"\"For beautifiers we have **bold**\n"
+"and //italic//.\n"
+"There is also __underline__, --strike--\n"
+"and ``monospaced``.\n"
+"\"\"\"\n"
+"For beautifiers we have **bold**\n"
+"and //italic//.\n"
+"There is also __underline__, --strike--\n"
+"and ``monospaced``.\n"
+"\n"
+"\"\"\"- This is a list of items\n"
+"- Just use hyphens\n"
+" - And starting space for indenting\n"
+"\"\"\"- This is a list of items\n"
+"- Just use hyphens\n"
+" - And starting space for indenting\n"
+"\n"
+"Raw areas are enclosed inside three doublequotes and no markup is interpreted"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:156
+msgid "_Bold"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:156
+msgid "Bold text"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:157
+msgid "_Italic"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:157
+msgid "Italic text"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:158
+msgid "_Underline"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:158
+msgid "Underline text"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:159
+msgid "_Strike through"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:159
+msgid "Strike through text"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:160
+msgid "_Syntax help"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:160
+msgid "Show syntax help"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:165
+#, fuzzy
+msgid "_Add image"
+msgstr "表格上"
+
+#: ../libgda-ui/gdaui-rt-editor.c:165
+#, fuzzy
+msgid "Insert image"
+msgstr "插入方法"
+
+#: ../libgda-ui/gdaui-rt-editor.c:166
+msgid "_Reset"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:166
+msgid "Reset to normal text"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:241
+msgid "Don't display a specific background for the text"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:251
+msgid "Display raw markup text instead of formatted text"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:262
+msgid "The buffer which is displayed"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:834
+msgid "Reset font size"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:840
+msgid "Decrease font size (zoom out)"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:846
+msgid "Increase font size (zoom in)"
+msgstr ""
+
+#: ../libgda-ui/gdaui-rt-editor.c:852
+msgid "Show source markup"
+msgstr ""
+
 #: ../libgda-ui/gdaui-server-operation.c:197
 msgid "The specification of the operation to implement"
 msgstr ""
@@ -4307,7 +4445,7 @@ msgstr ""
 
 #. last row is for new entries
 #: ../libgda-ui/gdaui-server-operation.c:597
-#: ../tools/browser/data-manager/data-console.c:392
+#: ../tools/browser/data-manager/data-console.c:396
 msgid "Add"
 msgstr ""
 
@@ -4491,7 +4629,7 @@ msgstr "直行的說明"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:19
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
-#: ../tools/command-exec.c:730 ../tools/web-server.c:929
+#: ../tools/command-exec.c:730 ../tools/web-server.c:933
 msgid "Default"
 msgstr "預設"
 
@@ -4673,7 +4811,7 @@ msgstr "排列類型"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
 #: ../tools/command-exec.c:593 ../tools/command-exec.c:596
-#: ../tools/web-server.c:899 ../tools/web-server.c:902
+#: ../tools/web-server.c:903 ../tools/web-server.c:906
 msgid "Auto increment"
 msgstr "自動增加"
 
@@ -5095,7 +5233,7 @@ msgid ""
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-recordset.c:230
-#: ../providers/postgres/gda-postgres-recordset.c:137
+#: ../providers/postgres/gda-postgres-recordset.c:138
 msgid "Number of rows fetched at a time"
 msgstr ""
 
@@ -5104,10 +5242,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-recordset.c:650
-#: ../providers/mysql/gda-mysql-recordset.c:944
-#: ../providers/mysql/gda-mysql-recordset.c:957
-#: ../providers/mysql/gda-mysql-recordset.c:970
-#: ../providers/mysql/gda-mysql-recordset.c:989
+#: ../providers/mysql/gda-mysql-recordset.c:943
+#: ../providers/mysql/gda-mysql-recordset.c:956
+#: ../providers/mysql/gda-mysql-recordset.c:969
+#: ../providers/mysql/gda-mysql-recordset.c:988
 #, fuzzy, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "找不到資料類型 %s"
@@ -5133,7 +5271,7 @@ msgstr ""
 msgid "Type %s not mapped for value %f"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-recordset.c:979
+#: ../providers/mysql/gda-mysql-recordset.c:978
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr ""
@@ -5954,8 +6092,8 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:1130
 #: ../providers/postgres/gda-postgres-provider.c:1180
 #: ../providers/postgres/gda-postgres-provider.c:1230
-#: ../providers/postgres/gda-postgres-recordset.c:434
-#: ../providers/postgres/gda-postgres-recordset.c:462
+#: ../providers/postgres/gda-postgres-recordset.c:435
+#: ../providers/postgres/gda-postgres-recordset.c:463
 #, fuzzy
 msgid "Internal error"
 msgstr "內部時間"
@@ -5980,7 +6118,7 @@ msgstr "無法開始異動（transaction）"
 msgid "Could not set the XA transaction ID parameter"
 msgstr "無法設定 Oracle 異動名稱"
 
-#: ../providers/postgres/gda-postgres-recordset.c:142
+#: ../providers/postgres/gda-postgres-recordset.c:143
 msgid "Number of rows chunks read since the object creation"
 msgstr ""
 
@@ -6893,65 +7031,65 @@ msgid ""
 "%s"
 msgstr "無法開啟連線。"
 
-#: ../tools/browser/browser-connection.c:263
+#: ../tools/browser/browser-connection.c:262
 #, c-format
 msgid "c%u"
 msgstr ""
 
-#: ../tools/browser/browser-connection.c:355
-#: ../tools/browser/browser-connection.c:441
+#: ../tools/browser/browser-connection.c:354
+#: ../tools/browser/browser-connection.c:442
 msgid "Analysing database schema"
 msgstr ""
 
-#: ../tools/browser/browser-connection.c:357
-#: ../tools/browser/browser-connection.c:423
-#: ../tools/browser/browser-connection.c:443
-#: ../tools/browser/browser-connection.c:861
+#: ../tools/browser/browser-connection.c:356
+#: ../tools/browser/browser-connection.c:424
+#: ../tools/browser/browser-connection.c:444
+#: ../tools/browser/browser-connection.c:862
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr ""
 
-#: ../tools/browser/browser-connection.c:421
-#: ../tools/browser/browser-connection.c:859
+#: ../tools/browser/browser-connection.c:422
+#: ../tools/browser/browser-connection.c:860
 #, fuzzy
 msgid "Getting database schema information"
 msgstr "正在從 DBMS 伺服器取得元資料（meta-data）。這可能會花上一點時間...\n"
 
-#: ../tools/browser/browser-connection.c:633
-#: ../tools/browser/browser-connection.c:653
+#: ../tools/browser/browser-connection.c:634
+#: ../tools/browser/browser-connection.c:654
 #, fuzzy, c-format
 msgid "Error while analysing database schema: %s"
 msgstr "讀取 %s 時發生錯誤：%s"
 
-#: ../tools/browser/browser-connection.c:1115
-#: ../tools/browser/browser-connection.c:1165
+#: ../tools/browser/browser-connection.c:1116
+#: ../tools/browser/browser-connection.c:1166
 msgid "Executing a query"
 msgstr ""
 
-#: ../tools/browser/browser-connection.c:1445
+#: ../tools/browser/browser-connection.c:1446
 #, fuzzy, c-format
 msgid "Connection not yet opened"
 msgstr "連線未開啟！"
 
-#: ../tools/browser/browser-connection.c:1451
+#: ../tools/browser/browser-connection.c:1452
 #, fuzzy
 msgid "Can't initialize dictionary to store table preferences"
 msgstr "無法將字典（dictionary）寫入至 %s 檔案：%s\n"
 
-#: ../tools/browser/browser-connection.c:1497
-#: ../tools/browser/browser-connection.c:1503
-#: ../tools/browser/browser-connection.c:1639
-#: ../tools/browser/browser-favorites.c:524
-#: ../tools/browser/browser-favorites.c:530
-#: ../tools/browser/browser-favorites.c:959
-#: ../tools/browser/browser-favorites.c:966
+#: ../tools/browser/browser-connection.c:1498
+#: ../tools/browser/browser-connection.c:1504
+#: ../tools/browser/browser-connection.c:1640
+#: ../tools/browser/browser-favorites.c:535
+#: ../tools/browser/browser-favorites.c:541
+#: ../tools/browser/browser-favorites.c:970
+#: ../tools/browser/browser-favorites.c:977
 #, fuzzy
 msgid "Can't initialize transaction to access favorites"
 msgstr "無法將字典（dictionary）寫入至 %s 檔案：%s\n"
 
-#: ../tools/browser/browser-connection.c:1584
-#: ../tools/browser/browser-favorites.c:703
-#: ../tools/browser/browser-favorites.c:1017
+#: ../tools/browser/browser-connection.c:1585
+#: ../tools/browser/browser-favorites.c:714
+#: ../tools/browser/browser-favorites.c:1028
 msgid "Can't commit transaction to access favorites"
 msgstr ""
 
@@ -6990,12 +7128,12 @@ msgstr ""
 msgid "Opened connections"
 msgstr "無法開啟連線。"
 
-#: ../tools/browser/browser-connections-list.c:355 ../tools/gda-sql.c:3098
+#: ../tools/browser/browser-connections-list.c:355 ../tools/gda-sql.c:3009
 #, fuzzy
 msgid "List of opened connections"
 msgstr "無法開啟連線。"
 
-#: ../tools/browser/browser-connections-list.c:364 ../tools/web-server.c:708
+#: ../tools/browser/browser-connections-list.c:364 ../tools/web-server.c:712
 #, fuzzy
 msgid "Connections"
 msgstr "連線字串"
@@ -7025,8 +7163,8 @@ msgstr "連線字串"
 msgid "Open a new connection"
 msgstr "無法開啟連線。"
 
-#: ../tools/browser/browser-favorites.c:182
-#: ../tools/browser/browser-favorites.c:191
+#: ../tools/browser/browser-favorites.c:183
+#: ../tools/browser/browser-favorites.c:192
 #, fuzzy
 msgid "Can't initialize dictionary to store favorites"
 msgstr "無法將字典（dictionary）寫入至 %s 檔案：%s\n"
@@ -7152,7 +7290,7 @@ msgstr "無法開啟連線。"
 msgid "_Quit"
 msgstr ""
 
-#: ../tools/browser/browser-window.c:285 ../tools/gda-sql.c:2232
+#: ../tools/browser/browser-window.c:285 ../tools/gda-sql.c:2223
 msgid "Quit"
 msgstr ""
 
@@ -7225,7 +7363,7 @@ msgid "_Help"
 msgstr ""
 
 #: ../tools/browser/browser-window.c:293
-#: ../tools/browser/data-manager/data-console.c:419 ../tools/html-doc.c:95
+#: ../tools/browser/data-manager/data-console.c:423
 msgid "Help"
 msgstr ""
 
@@ -7420,10 +7558,34 @@ msgstr ""
 msgid "Cancelled by the user"
 msgstr ""
 
-#: ../tools/browser/main.c:72 ../tools/gda-sql.c:166
+#: ../tools/browser/main.c:97 ../tools/gda-sql.c:168
 #, fuzzy
 msgid "[DSN|connection string]..."
 msgstr "ODBC 連線字串"
+
+#: ../tools/browser/main.c:120 ../tools/gda-list-server-op.c:108
+#, fuzzy, c-format
+msgid "Error: %s\n"
+msgstr "錯誤：%s"
+
+#: ../tools/browser/main.c:139 ../tools/gda-sql.c:225
+#, fuzzy, c-format
+msgid "All files are in the directory: %s\n"
+msgstr "無法從 %s 取得檔案"
+
+#: ../tools/browser/main.c:147 ../tools/gda-sql.c:233
+#, c-format
+msgid ""
+"Can't get the list of files used to store information about each connection: "
+"%s\n"
+msgstr ""
+
+#: ../tools/browser/main.c:161 ../tools/gda-sql.c:245
+#, c-format
+msgid ""
+"Error while purging files used to store information about each connection: "
+"%s\n"
+msgstr ""
 
 #: ../tools/browser/mgr-favorites.c:226
 #, fuzzy
@@ -7483,39 +7645,44 @@ msgstr ""
 msgid "Unknown statement"
 msgstr "節點無效"
 
-#: ../tools/browser/mgr-favorites.c:554
+#: ../tools/browser/mgr-favorites.c:577
 msgid ""
 "Getting\n"
 "favorites..."
 msgstr ""
 
-#: ../tools/browser/mgr-favorites.c:566
+#: ../tools/browser/mgr-favorites.c:589
 msgid ""
 "No favorite:\n"
 "drag item to\n"
 "define one"
 msgstr ""
 
-#: ../tools/browser/support.c:206
+#: ../tools/browser/support.c:195
+#, fuzzy
+msgid "Information:"
+msgstr "## 資訊：\n"
+
+#: ../tools/browser/support.c:248
 msgid ""
 "Unable to display help. Please make sure the documentation package is "
 "installed."
 msgstr ""
 
-#: ../tools/browser/support.c:232
+#: ../tools/browser/support.c:274
 #, fuzzy
 msgid "Unable to open help file"
 msgstr "無法關閉 blob。"
 
-#: ../tools/browser/support.c:242
+#: ../tools/browser/support.c:284
 msgid "Help is being loaded, please wait..."
 msgstr ""
 
-#: ../tools/browser/support.c:289
+#: ../tools/browser/support.c:331
 msgid "Close tab"
 msgstr ""
 
-#: ../tools/browser/support.h:96
+#: ../tools/browser/support.h:99
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -7538,26 +7705,27 @@ msgstr ""
 msgid "Type: %s"
 msgstr "類型"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:306
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:376
+#: ../tools/browser/data-manager/ui-spec-editor.c:166
 msgid "Remove"
 msgstr ""
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:310
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:380
 #, fuzzy
 msgid "Add referenced tables"
 msgstr "被參考表格"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:314
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:384
 #, fuzzy
 msgid "Add tables referencing this table"
 msgstr "被參考表格"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:512
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:582
 #, fuzzy
 msgid "Add table"
 msgstr "表格上"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:532
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:602
 #, fuzzy
 msgid "Select tables to add to diagram"
 msgstr "選取（聯集 [union]）"
@@ -7770,143 +7938,203 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. no connection at all or not authenticated
-#: ../tools/browser/common/objects-cloud.c:267 ../tools/web-server.c:713
+#: ../tools/browser/common/objects-cloud.c:267 ../tools/web-server.c:717
 #, fuzzy
 msgid "None"
 msgstr "沒有"
 
-#: ../tools/browser/common/ui-formgrid.c:170
+#: ../tools/browser/common/ui-formgrid.c:198
 msgid "Toggle between grid and form presentations"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:297
+#: ../tools/browser/common/ui-formgrid.c:291
+#, fuzzy
+msgid "Execute action"
+msgstr "於刪除動作"
+
+#: ../tools/browser/common/ui-formgrid.c:322
+#: ../tools/browser/query-exec/query-console.c:1066
+#: ../tools/browser/query-exec/query-console.c:1117
+#: ../tools/browser/schema-browser/table-info.c:528
+#, fuzzy, c-format
+msgid ""
+"Error executing query:\n"
+"%s"
+msgstr "解析查詢 (%s) 時發生錯誤"
+
+#: ../tools/browser/common/ui-formgrid.c:331
+#: ../tools/browser/common/ui-formgrid.c:343
+#, fuzzy
+msgid "Action executed"
+msgstr "敘述已預備好。"
+
+#: ../tools/browser/common/ui-formgrid.c:376
+#: ../tools/browser/common/ui-formgrid.c:380
+#, fuzzy
+msgid "Action successfully executed"
+msgstr "連線成功開啟！\n"
+
+#: ../tools/browser/common/ui-formgrid.c:394
+#, c-format
+msgid ""
+"Set or confirm the parameters to execute\n"
+"action '%s'"
+msgstr ""
+
+#: ../tools/browser/common/ui-formgrid.c:398
+#, fuzzy
+msgid "Execution of action"
+msgstr "額外連線選項"
+
+#: ../tools/browser/common/ui-formgrid.c:416
+#: ../tools/browser/query-exec/query-console.c:1013
+#: ../tools/browser/schema-browser/table-info.c:556
+#, fuzzy, c-format
+msgid "Error executing query: %s"
+msgstr "解析查詢 (%s) 時發生錯誤"
+
+#: ../tools/browser/data-manager/analyser.c:198
+#, fuzzy
+msgid "Obtain referenced data in table "
+msgstr "被參考表格"
+
+#: ../tools/browser/data-manager/analyser.c:215
+msgid "List referencing data in "
+msgstr ""
+
+#: ../tools/browser/data-manager/analyser.c:282
+#, fuzzy, c-format
+msgid "Error adding new data source: %s"
+msgstr "讀取 %s 時發生錯誤：%s"
+
+#: ../tools/browser/data-manager/data-console.c:301
 #, fuzzy
 msgid "Data Manager"
 msgstr "資料庫名稱"
 
-#: ../tools/browser/data-manager/data-console.c:297
-#: ../tools/browser/data-manager/data-console.c:516
+#: ../tools/browser/data-manager/data-console.c:301
+#: ../tools/browser/data-manager/data-console.c:520
 #: ../tools/browser/schema-browser/relations-diagram.c:328
 #: ../tools/browser/schema-browser/relations-diagram.c:476
 #, fuzzy
 msgid "Unsaved"
 msgstr "『%s』參數無效"
 
-#: ../tools/browser/data-manager/data-console.c:328
-#: ../tools/browser/query-exec/query-console.c:331
+#: ../tools/browser/data-manager/data-console.c:332
+#: ../tools/browser/query-exec/query-console.c:337
 msgid "Variables' values:"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:385
+#: ../tools/browser/data-manager/data-console.c:389
 msgid "Reset"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:386
+#: ../tools/browser/data-manager/data-console.c:390
 msgid ""
 "Reset the editor's\n"
 "contents"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:393
+#: ../tools/browser/data-manager/data-console.c:397
 #, fuzzy
 msgid "Add a new data source"
 msgstr "無法描述 Oracle 表格"
 
-#: ../tools/browser/data-manager/data-console.c:399
-#: ../tools/browser/query-exec/query-console.c:363
+#: ../tools/browser/data-manager/data-console.c:403
+#: ../tools/browser/query-exec/query-console.c:370
 #, fuzzy
 msgid "Variables"
 msgstr "比例"
 
-#: ../tools/browser/data-manager/data-console.c:399
+#: ../tools/browser/data-manager/data-console.c:403
 msgid "Show variables needed"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:405
-#: ../tools/browser/query-exec/query-console.c:369
+#: ../tools/browser/data-manager/data-console.c:409
+#: ../tools/browser/query-exec/query-console.c:377
 msgid "Execute"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:405
+#: ../tools/browser/data-manager/data-console.c:409
 msgid ""
 "Execute specified\n"
 "data manager"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:411
+#: ../tools/browser/data-manager/data-console.c:415
 #, fuzzy
 msgid "View XML"
 msgstr "檢視"
 
-#: ../tools/browser/data-manager/data-console.c:411
+#: ../tools/browser/data-manager/data-console.c:415
 msgid ""
 "View specifications\n"
 "as XML (advanced)"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:432
+#: ../tools/browser/data-manager/data-console.c:436
 msgid "BBB:"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:504
+#: ../tools/browser/data-manager/data-console.c:508
 #, c-format
 msgid "'%s' data manager"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:505
-#: ../tools/browser/data-manager/data-console.c:516
-#: ../tools/browser/data-manager/data-console.c:549
-#: ../tools/browser/data-manager/data-console.c:944
+#: ../tools/browser/data-manager/data-console.c:509
+#: ../tools/browser/data-manager/data-console.c:520
+#: ../tools/browser/data-manager/data-console.c:553
+#: ../tools/browser/data-manager/data-console.c:971
 #, fuzzy
 msgid "Data manager"
 msgstr "資料庫名稱"
 
-#: ../tools/browser/data-manager/data-console.c:559
+#: ../tools/browser/data-manager/data-console.c:563
 #, fuzzy
 msgid "Could not save data manager"
 msgstr "無法儲存 %s 檔案"
 
-#: ../tools/browser/data-manager/data-console.c:585
+#: ../tools/browser/data-manager/data-console.c:589
 #, fuzzy
 msgid "Data manager's name"
 msgstr "資料庫名稱"
 
-#: ../tools/browser/data-manager/data-console.c:605
+#: ../tools/browser/data-manager/data-console.c:609
 #: ../tools/browser/schema-browser/relations-diagram.c:287
 #, fuzzy
 msgid "Save"
 msgstr "比例"
 
-#: ../tools/browser/data-manager/data-console.c:726
+#: ../tools/browser/data-manager/data-console.c:730
 #, fuzzy, c-format
 msgid "source%d"
 msgstr "資料來源"
 
-#: ../tools/browser/data-manager/data-console.c:769
+#: ../tools/browser/data-manager/data-console.c:789
 #, fuzzy
-msgid "Data source from query"
+msgid "Data source from SQL"
 msgstr "資料來源"
 
-#: ../tools/browser/data-manager/data-console.c:807
+#: ../tools/browser/data-manager/data-console.c:827
 #, c-format
 msgid "In schema %s"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:817
+#: ../tools/browser/data-manager/data-console.c:837
 #, c-format
 msgid "For table: %s"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:894
+#: ../tools/browser/data-manager/data-console.c:921
 msgid ""
 "Switching to execution mode. Hit the Escape key to return to the compose mode"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:900
+#: ../tools/browser/data-manager/data-console.c:927
 msgid "_Toggle mode"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-console.c:900
+#: ../tools/browser/data-manager/data-console.c:927
 msgid "Switch between compose and execute modes"
 msgstr ""
 
@@ -7919,17 +8147,18 @@ msgstr "無法儲存 %s 檔案"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:627
-#: ../tools/browser/query-exec/query-console.c:684
-#: ../tools/browser/query-exec/query-favorite-selector.c:243
-#: ../tools/browser/query-exec/query-favorite-selector.c:598
+#: ../tools/browser/query-exec/query-console.c:798
+#: ../tools/browser/query-exec/query-console.c:828
+#: ../tools/browser/query-exec/query-favorite-selector.c:266
+#: ../tools/browser/query-exec/query-favorite-selector.c:715
 #: ../tools/browser/schema-browser/favorite-selector.c:357
-#: ../tools/browser/schema-browser/table-info.c:475
+#: ../tools/browser/schema-browser/table-info.c:476
 #, fuzzy, c-format
 msgid "Could not add favorite: %s"
 msgstr "無法開啟 %s 檔案"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:290
-#: ../tools/browser/query-exec/query-favorite-selector.c:274
+#: ../tools/browser/query-exec/query-favorite-selector.c:337
 #, fuzzy
 msgid "Favorite's properties"
 msgstr "'%s' 的參數不足"
@@ -7940,7 +8169,7 @@ msgid "Specifications"
 msgstr "連線已關閉"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:483
-#: ../tools/browser/query-exec/query-favorite-selector.c:447
+#: ../tools/browser/query-exec/query-favorite-selector.c:564
 #: ../tools/browser/schema-browser/favorite-selector.c:247
 msgid "Favorites"
 msgstr ""
@@ -8077,66 +8306,53 @@ msgstr ""
 #: ../tools/browser/data-manager/data-source-editor.c:141
 msgid ""
 "Actual SQL executed\n"
-"to select data"
+"to select data\n"
+"Can't be changed if a table name is set"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-source-editor.c:151
+#: ../tools/browser/data-manager/data-source-editor.c:153
 msgid "Dependencies:"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-source-editor.c:244
+#: ../tools/browser/data-manager/data-source-editor.c:246
 #, fuzzy
 msgid "Requires:"
 msgstr "需要 SSL"
 
-#: ../tools/browser/data-manager/data-source-editor.c:261
+#: ../tools/browser/data-manager/data-source-editor.c:263
 msgid "Exports:"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-widget.c:248
+#: ../tools/browser/data-manager/data-widget.c:249
 msgid "Link to other data"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-widget.c:344
-#, fuzzy, c-format
-msgid "Error adding new data source: %s"
-msgstr "讀取 %s 時發生錯誤：%s"
-
-#: ../tools/browser/data-manager/data-widget.c:389
+#: ../tools/browser/data-manager/data-widget.c:355
 #, fuzzy
 msgid "Remove data source"
 msgstr "資料來源"
 
-#: ../tools/browser/data-manager/data-widget.c:395
+#: ../tools/browser/data-manager/data-widget.c:361
 #, fuzzy
 msgid "Show data source's properties"
 msgstr "資料來源"
 
-#: ../tools/browser/data-manager/data-widget.c:533
-#, fuzzy
-msgid "Obtain referenced data in table "
-msgstr "被參考表格"
-
-#: ../tools/browser/data-manager/data-widget.c:550
-msgid "List referencing data in "
-msgstr ""
-
-#: ../tools/browser/data-manager/data-widget.c:616
+#: ../tools/browser/data-manager/data-widget.c:399
 #, fuzzy
 msgid "No data source defined"
 msgstr "定義"
 
-#: ../tools/browser/data-manager/data-widget.c:1020
+#: ../tools/browser/data-manager/data-widget.c:803
 #, fuzzy, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr "無法加入類型為 %s，值為『%s』的參數"
 
-#: ../tools/browser/data-manager/ui-spec-editor.c:153
+#: ../tools/browser/data-manager/ui-spec-editor.c:245
 #, fuzzy
 msgid "Data sources:"
 msgstr "資料來源"
 
-#: ../tools/browser/data-manager/ui-spec-editor.c:204
+#: ../tools/browser/data-manager/ui-spec-editor.c:303
 #, fuzzy
 msgid "Selected data source's properties:"
 msgstr "資料來源"
@@ -8152,129 +8368,146 @@ msgid "Expecting <%s> root node"
 msgstr "預期的標記是 <op_data> ，但收到的是 <%s>"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:321
-#: ../tools/browser/query-exec/query-console.c:310
+#: ../tools/browser/query-exec/query-console.c:316
 msgid "SQL code to execute:"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:284
-#: ../tools/browser/query-exec/query-console.c:1080
+#: ../tools/browser/query-exec/query-console.c:290
+#: ../tools/browser/query-exec/query-console.c:1226
 #, fuzzy
 msgid "Query editor"
 msgstr "查詢名稱"
 
-#: ../tools/browser/query-exec/query-console.c:358
-#: ../tools/browser/query-exec/query-console.c:422
+#: ../tools/browser/query-exec/query-console.c:364
+#: ../tools/browser/query-exec/query-console.c:433
 msgid "Clear"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:358
+#: ../tools/browser/query-exec/query-console.c:365
 #, fuzzy
 msgid ""
 "Clear the editor's\n"
 "contents"
 msgstr "無法開啟連線。"
 
-#: ../tools/browser/query-exec/query-console.c:363
+#: ../tools/browser/query-exec/query-console.c:371
 msgid ""
 "Show variables needed\n"
 "to execute SQL"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:369
+#: ../tools/browser/query-exec/query-console.c:377
 msgid "Execute SQL in editor"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:375
+#: ../tools/browser/query-exec/query-console.c:383
 #, fuzzy
 msgid "Indent"
 msgstr "索引"
 
-#: ../tools/browser/query-exec/query-console.c:375
+#: ../tools/browser/query-exec/query-console.c:384
 msgid ""
 "Indent SQL in editor\n"
 "and make the code more readable\n"
 "(removes comments)"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:383
+#: ../tools/browser/query-exec/query-console.c:392
 msgid "Favorite"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:383
+#: ../tools/browser/query-exec/query-console.c:393
 msgid "Add SQL to favorite"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:397
+#: ../tools/browser/query-exec/query-console.c:407
 msgid "Execution history:"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:415
+#: ../tools/browser/query-exec/query-console.c:425
 #, fuzzy
 msgid "Copy"
 msgstr "已複製"
 
-#: ../tools/browser/query-exec/query-console.c:415
+#: ../tools/browser/query-exec/query-console.c:426
 msgid ""
 "Copy selected history\n"
 "to editor"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:422
+#: ../tools/browser/query-exec/query-console.c:434
 msgid "Clear history"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:434
+#: ../tools/browser/query-exec/query-console.c:446
 msgid "Execution Results:"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:678
-#: ../tools/browser/query-exec/query-favorite-selector.c:584
+#: ../tools/browser/query-exec/query-console.c:699
+#, fuzzy
+msgid "New favorite"
+msgstr "新名稱"
+
+#: ../tools/browser/query-exec/query-console.c:710
+#: ../tools/browser/query-exec/query-console.c:743
+#, fuzzy, c-format
+msgid "Modify favorite '%s'"
+msgstr "無法開啟 %s 檔案"
+
+#: ../tools/browser/query-exec/query-console.c:731
+#, fuzzy
+msgid "Modify a favorite"
+msgstr "無法開啟 %s 檔案"
+
+#: ../tools/browser/query-exec/query-console.c:774
+#: ../tools/browser/query-exec/query-console.c:791
+#, fuzzy
+msgid "Favorite's name"
+msgstr "表格的名稱"
+
+#: ../tools/browser/query-exec/query-console.c:775
+#: ../tools/browser/query-exec/query-favorite-selector.c:701
 #, fuzzy
 msgid "Unnamed query"
 msgstr "未命名的查詢"
 
-#: ../tools/browser/query-exec/query-console.c:769
+#: ../tools/browser/query-exec/query-console.c:778
+#, fuzzy
+msgid "Name of the favorite to create"
+msgstr "要建立的資料庫的名稱"
+
+#: ../tools/browser/query-exec/query-console.c:779
+#, fuzzy
+msgid "Enter the name of the favorite to create"
+msgstr "要建立的資料庫的名稱"
+
+#: ../tools/browser/query-exec/query-console.c:913
 #, fuzzy
 msgid "Invalid variable's contents"
 msgstr "Oracle 識別號無效"
 
-#: ../tools/browser/query-exec/query-console.c:770
-#: ../tools/browser/schema-browser/table-info.c:921
+#: ../tools/browser/query-exec/query-console.c:914
+#: ../tools/browser/schema-browser/table-info.c:931
 msgid "assign values to the following variables"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:824
+#: ../tools/browser/query-exec/query-console.c:968
 #, fuzzy, c-format
 msgid "Error while parsing code: %s"
 msgstr "讀取 %s 時發生錯誤：%s"
 
-#: ../tools/browser/query-exec/query-console.c:836
+#: ../tools/browser/query-exec/query-console.c:980
 msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:869
-#: ../tools/browser/schema-browser/table-info.c:555
-#, fuzzy, c-format
-msgid "Error executing query: %s"
-msgstr "解析查詢 (%s) 時發生錯誤"
-
-#: ../tools/browser/query-exec/query-console.c:922
-#: ../tools/browser/query-exec/query-console.c:973
-#: ../tools/browser/schema-browser/table-info.c:527
-#, fuzzy, c-format
-msgid ""
-"Error executing query:\n"
-"%s"
-msgstr "解析查詢 (%s) 時發生錯誤"
-
-#: ../tools/browser/query-exec/query-console.c:933
+#: ../tools/browser/query-exec/query-console.c:1077
 #, fuzzy
 msgid "Statement executed"
 msgstr "敘述已預備好。"
 
-#: ../tools/browser/query-exec/query-console.c:942
+#: ../tools/browser/query-exec/query-console.c:1086
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -8284,20 +8517,20 @@ msgid ""
 "closing the transaction)."
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:1030
+#: ../tools/browser/query-exec/query-console.c:1176
 msgid "_Execute"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:1030
+#: ../tools/browser/query-exec/query-console.c:1176
 #, fuzzy
 msgid "Execute query"
 msgstr "查詢沒有內容"
 
-#: ../tools/browser/query-exec/query-console.c:1033
+#: ../tools/browser/query-exec/query-console.c:1179
 msgid "_Undo"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-console.c:1033
+#: ../tools/browser/query-exec/query-console.c:1179
 msgid "Undo last change"
 msgstr ""
 
@@ -8348,10 +8581,28 @@ msgstr ""
 msgid "Open a new query editor"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:296
+#: ../tools/browser/query-exec/query-favorite-selector.c:287
+#, fuzzy, c-format
+msgid "Could not add action: %s"
+msgstr "無法開啟 %s 檔案"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:361
 #, fuzzy
 msgid "SQL Code"
 msgstr "SQL 文字"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:368
+#, fuzzy
+msgid "Is action"
+msgstr "沒有動作"
+
+#: ../tools/browser/query-exec/query-favorite-selector.c:371
+msgid ""
+"Check this option to make this favorite an action\n"
+"which can be proposed for execution from grids\n"
+"containing data. The parameters required to execute\n"
+"the query will be defined from the row selected in the grid"
+msgstr ""
 
 #: ../tools/browser/query-exec/query-result.c:209
 #, fuzzy
@@ -8444,7 +8695,7 @@ msgid "Missing table attribute in favorite's contents"
 msgstr "缺乏 INSERT 目標實體"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:520
-#: ../tools/browser/schema-browser/table-info.c:953
+#: ../tools/browser/schema-browser/table-info.c:963
 #, fuzzy
 msgid "_Contents"
 msgstr "備註"
@@ -8483,103 +8734,127 @@ msgstr "無法開啟 %s 檔案"
 msgid "Foreign key on "
 msgstr "外鍵 (Foreign key)"
 
+#: ../tools/browser/schema-browser/table-columns.c:277
+#, c-format
+msgid ""
+"incompatible types: '%s' for the foreign key and '%s' for the referenced "
+"primary key"
+msgstr ""
+
 #: ../tools/browser/schema-browser/table-columns.c:304
+#, fuzzy, c-format
+msgid "Could not compute table's UNIQUE constraints for %s.%s.%s"
+msgstr "無法建立檔案 %s"
+
+#: ../tools/browser/schema-browser/table-columns.c:327
 #, fuzzy
 msgid "Unique constraint"
 msgstr "檢查限制"
 
-#: ../tools/browser/schema-browser/table-columns.c:335
+#: ../tools/browser/schema-browser/table-columns.c:358
 #, fuzzy
 msgid "Tables referencing this one"
 msgstr "表格的說明"
 
-#: ../tools/browser/schema-browser/table-columns.c:449
+#: ../tools/browser/schema-browser/table-columns.c:472
 #, fuzzy
 msgid "Column Name"
 msgstr "沒有名稱"
 
-#: ../tools/browser/schema-browser/table-columns.c:504
+#. To translators: "Not NULL?" is a table's column's attribute
+#: ../tools/browser/schema-browser/table-columns.c:494
+#, fuzzy
+msgid "Not NULL?"
+msgstr "非 NULL"
+
+#: ../tools/browser/schema-browser/table-columns.c:531
 msgid "Constraints and integrity rules"
 msgstr ""
 
-#: ../tools/browser/schema-browser/table-info.c:364
+#. To translators: "In schema" refers to the database schema an object is in
+#: ../tools/browser/schema-browser/table-info.c:340
+#, fuzzy, c-format
+msgid "In schema '%s'"
+msgstr "空欄位名稱無效"
+
+#: ../tools/browser/schema-browser/table-info.c:365
 msgid ""
 "Table not found. If you think this is an error,\n"
 "please refresh the meta data from the database\n"
 "(menu Connection/Fetch meta data)."
 msgstr ""
 
-#: ../tools/browser/schema-browser/table-info.c:395
+#: ../tools/browser/schema-browser/table-info.c:396
 #, fuzzy
 msgid "Relations"
 msgstr "理序 (Collation)"
 
-#: ../tools/browser/schema-browser/table-info.c:405
+#: ../tools/browser/schema-browser/table-info.c:406
 #, fuzzy
 msgid "Preferences"
 msgstr "參考"
 
-#: ../tools/browser/schema-browser/table-info.c:534
+#: ../tools/browser/schema-browser/table-info.c:535
 #, fuzzy
 msgid "Data successfully inserted"
 msgstr "連線成功開啟！\n"
 
-#: ../tools/browser/schema-browser/table-info.c:673
+#: ../tools/browser/schema-browser/table-info.c:683
 #, fuzzy
 msgid "Meta data not yet available"
 msgstr "無法提供"
 
-#: ../tools/browser/schema-browser/table-info.c:690
+#: ../tools/browser/schema-browser/table-info.c:700
 msgid "Can't find information about table"
 msgstr ""
 
-#: ../tools/browser/schema-browser/table-info.c:726
+#: ../tools/browser/schema-browser/table-info.c:736
 #, c-format
 msgid ""
 "Internal error while building INSERT statement:\n"
 "%s"
 msgstr ""
 
-#: ../tools/browser/schema-browser/table-info.c:772
+#: ../tools/browser/schema-browser/table-info.c:782
 #, fuzzy, c-format
 msgid "Default value: '%s'"
 msgstr "預設值"
 
-#: ../tools/browser/schema-browser/table-info.c:782
+#: ../tools/browser/schema-browser/table-info.c:792
 #, fuzzy
 msgid "Default value: auto incremented value"
 msgstr "自動增加數值"
 
-#: ../tools/browser/schema-browser/table-info.c:896
-#: ../tools/browser/schema-browser/table-info.c:920
+#: ../tools/browser/schema-browser/table-info.c:906
+#: ../tools/browser/schema-browser/table-info.c:930
 #, fuzzy
 msgid "Values to insert into table"
 msgstr "參數名稱"
 
-#: ../tools/browser/schema-browser/table-info.c:950
+#: ../tools/browser/schema-browser/table-info.c:960
 #, fuzzy
 msgid "_Table"
 msgstr "表格"
 
-#: ../tools/browser/schema-browser/table-info.c:951
+#: ../tools/browser/schema-browser/table-info.c:961
 msgid "Add to _Favorites"
 msgstr ""
 
-#: ../tools/browser/schema-browser/table-info.c:951
+#: ../tools/browser/schema-browser/table-info.c:961
 msgid "Add table to favorites"
 msgstr ""
 
-#: ../tools/browser/schema-browser/table-info.c:953
+#: ../tools/browser/schema-browser/table-info.c:963
 #, fuzzy
 msgid "View table's contents"
 msgstr "Oracle 識別號無效"
 
-#: ../tools/browser/schema-browser/table-info.c:955
+#: ../tools/browser/schema-browser/table-info.c:965
 #, fuzzy
 msgid "_Insert data"
 msgstr "插入方法"
 
-#: ../tools/browser/schema-browser/table-info.c:955
+#: ../tools/browser/schema-browser/table-info.c:965
 msgid "Insert data into table"
 msgstr ""
 
@@ -8636,8 +8911,8 @@ msgstr "不支援"
 
 #: ../tools/command-exec.c:351 ../tools/command-exec.c:388
 #: ../tools/command-exec.c:432 ../tools/command-exec.c:475
-#: ../tools/command-exec.c:608 ../tools/gda-sql.c:3000 ../tools/gda-sql.c:4136
-#: ../tools/gda-sql.c:4226 ../tools/gda-sql.c:4451 ../tools/gda-sql.c:4552
+#: ../tools/command-exec.c:608 ../tools/gda-sql.c:2911 ../tools/gda-sql.c:4047
+#: ../tools/gda-sql.c:4137 ../tools/gda-sql.c:4362 ../tools/gda-sql.c:4463
 #, fuzzy
 msgid "No current connection"
 msgstr "無法開啟連線。"
@@ -8661,17 +8936,17 @@ msgstr "測試清單"
 msgid "No object found"
 msgstr ""
 
-#: ../tools/command-exec.c:727 ../tools/web-server.c:926
+#: ../tools/command-exec.c:727 ../tools/web-server.c:930
 #, fuzzy
 msgid "Column"
 msgstr "備註"
 
-#: ../tools/command-exec.c:729 ../tools/web-server.c:928
+#: ../tools/command-exec.c:729 ../tools/web-server.c:932
 #, fuzzy
 msgid "Nullable"
 msgstr "表格"
 
-#: ../tools/command-exec.c:731 ../tools/web-server.c:930
+#: ../tools/command-exec.c:731 ../tools/web-server.c:934
 msgid "Extra"
 msgstr ""
 
@@ -8685,12 +8960,12 @@ msgstr ""
 msgid "List of columns for table '%s'"
 msgstr ""
 
-#: ../tools/command-exec.c:750 ../tools/web-server.c:941
+#: ../tools/command-exec.c:750 ../tools/web-server.c:945
 #, fuzzy
 msgid "yes"
 msgstr "有"
 
-#: ../tools/command-exec.c:750 ../tools/web-server.c:941
+#: ../tools/command-exec.c:750 ../tools/web-server.c:945
 msgid "no"
 msgstr ""
 
@@ -8698,6 +8973,45 @@ msgstr ""
 #, fuzzy, c-format
 msgid "View definition: %s"
 msgstr "定義"
+
+#: ../tools/config-info.c:45
+#, fuzzy
+msgid "Installed providers list"
+msgstr "已安裝的提供者"
+
+#: ../tools/config-info.c:96 ../tools/gda-sql.c:2652
+#, fuzzy
+msgid "Attribute"
+msgstr "額外屬性"
+
+#: ../tools/config-info.c:99
+#, fuzzy, c-format
+msgid "Provider '%s' description"
+msgstr "『%s』提供者詳情"
+
+#: ../tools/config-info.c:124
+#, fuzzy, c-format
+msgid "Could not find any provider named '%s'"
+msgstr "找不到名為『%s』的參數來源"
+
+#: ../tools/config-info.c:152
+msgid "Last used"
+msgstr ""
+
+#: ../tools/config-info.c:195
+#, c-format
+msgid "(%s)"
+msgstr ""
+
+#: ../tools/config-info.c:337
+#, fuzzy
+msgid "Failed to remove: "
+msgstr "要重新命名的表格"
+
+#: ../tools/config-info.c:365
+#, fuzzy, c-format
+msgid "No file to purge!"
+msgstr "未有傳回欄位"
 
 #: ../tools/gda-list-server-op.c:32
 msgid "Gda server operations list"
@@ -8733,27 +9047,22 @@ msgstr "說明：%s\n"
 msgid "Operation not supported\n"
 msgstr "不支援"
 
-#: ../tools/gda-list-server-op.c:108
-#, fuzzy, c-format
-msgid "Error: %s\n"
-msgstr "錯誤：%s"
-
 #: ../tools/gda-list-server-op.c:361
 #, fuzzy, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "無法載入『%s』檔案"
 
-#: ../tools/gda-sql.c:176
+#: ../tools/gda-sql.c:178
 #, fuzzy, c-format
 msgid "GDA SQL console version "
 msgstr "TDS 協定次版本"
 
-#: ../tools/gda-sql.c:238
+#: ../tools/gda-sql.c:276
 #, c-format
 msgid "Welcome to the GDA SQL console, version "
 msgstr ""
 
-#: ../tools/gda-sql.c:240
+#: ../tools/gda-sql.c:278
 #, c-format
 msgid ""
 "Type: .copyright to show usage and distribution terms\n"
@@ -8764,652 +9073,632 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:264
+#: ../tools/gda-sql.c:302
 #, fuzzy, c-format
 msgid "Opening connection '%s' for: %s\n"
 msgstr "無法開啟連線。"
 
-#: ../tools/gda-sql.c:268
+#: ../tools/gda-sql.c:306
 #, fuzzy, c-format
 msgid "Can't open connection %d: %s\n"
 msgstr "無法開啟連線。"
 
-#: ../tools/gda-sql.c:280
+#: ../tools/gda-sql.c:318
 #, c-format
 msgid "Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:285
+#: ../tools/gda-sql.c:323
 #, fuzzy, c-format
 msgid "Can't open connection defined by GDA_SQL_CNC: %s\n"
 msgstr "無法開啟連線至 DSN %s: %s\n"
 
-#: ../tools/gda-sql.c:300
+#: ../tools/gda-sql.c:338
 #, c-format
 msgid "Can't run HTTP server on port %d\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:767
+#: ../tools/gda-sql.c:805
 #, fuzzy
 msgid "Connection closed"
 msgstr "連線已關閉"
 
-#: ../tools/gda-sql.c:780
+#: ../tools/gda-sql.c:818
 #, fuzzy
 msgid "Invalid unnamed command"
 msgstr "Xbase 識別號無效"
 
-#: ../tools/gda-sql.c:891
+#: ../tools/gda-sql.c:929
 msgid "Unknown internal command"
 msgstr ""
 
-#: ../tools/gda-sql.c:897
+#: ../tools/gda-sql.c:935
 msgid "Internal command not correctly defined"
 msgstr ""
 
-#: ../tools/gda-sql.c:903
+#: ../tools/gda-sql.c:941
 msgid "Incomplete internal command"
 msgstr ""
 
-#: ../tools/gda-sql.c:1013
+#: ../tools/gda-sql.c:1051
 #, fuzzy, c-format
 msgid "Could not interpret the '%s' parameter's value"
 msgstr "無法取得 Oracle 參數識別號"
 
-#: ../tools/gda-sql.c:1030
+#: ../tools/gda-sql.c:1068
 #, c-format
 msgid "No internal parameter named '%s' required by query"
 msgstr ""
 
-#: ../tools/gda-sql.c:1149
+#: ../tools/gda-sql.c:1187
 #, fuzzy, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "無法開啟指定連線: %s\n"
 
-#: ../tools/gda-sql.c:1162
+#: ../tools/gda-sql.c:1200
 #, fuzzy, c-format
 msgid "Can't open pipe '%s': %s\n"
 msgstr "無法載入『%s』檔案"
 
-#: ../tools/gda-sql.c:1201
+#: ../tools/gda-sql.c:1239
 #, fuzzy, c-format
 msgid "Can't open file '%s' for reading: %s\n"
 msgstr "無法開啟指定連線: %s\n"
 
-#: ../tools/gda-sql.c:1268 ../tools/gda-sql.c:3242
+#: ../tools/gda-sql.c:1306 ../tools/gda-sql.c:3153
 #, fuzzy, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "連線已關閉"
 
-#: ../tools/gda-sql.c:1334
+#: ../tools/gda-sql.c:1372
 #, fuzzy, c-format
 msgid "\tUsername for '%s': "
 msgstr "要使用的使用者名稱"
 
-#: ../tools/gda-sql.c:1341
+#: ../tools/gda-sql.c:1379
 #, fuzzy, c-format
 msgid "No username for '%s'"
 msgstr "『%s』的限制"
 
-#: ../tools/gda-sql.c:1356
+#: ../tools/gda-sql.c:1394
 #, fuzzy, c-format
 msgid "\tPassword for '%s': "
 msgstr "要使用的密碼"
 
-#: ../tools/gda-sql.c:1365
+#: ../tools/gda-sql.c:1403
 #, fuzzy, c-format
 msgid "No password for '%s'"
 msgstr "要使用的密碼"
 
-#: ../tools/gda-sql.c:1438
+#: ../tools/gda-sql.c:1476
 #, c-format
 msgid ""
-"All the meta data associated to the '%s' connection will be stored in the "
+"All the information related to the '%s' connection will be stored in the "
 "'%s' file\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:1466
+#: ../tools/gda-sql.c:1506
 #, c-format
 msgid "Error getting meta data in background: %s\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:1474 ../tools/gda-sql.c:1611
+#: ../tools/gda-sql.c:1514 ../tools/gda-sql.c:1651
 #, fuzzy, c-format
 msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr "正在從 DBMS 伺服器取得元資料（meta-data）。這可能會花上一點時間...\n"
 
-#: ../tools/gda-sql.c:1481 ../tools/gda-sql.c:1618 ../tools/gda-sql.c:3056
+#: ../tools/gda-sql.c:1521 ../tools/gda-sql.c:1658 ../tools/gda-sql.c:2967
 #, fuzzy, c-format
 msgid "error: %s\n"
 msgstr "錯誤：%s"
 
-#: ../tools/gda-sql.c:1488 ../tools/gda-sql.c:1625 ../tools/gda-sql.c:3063
+#: ../tools/gda-sql.c:1528 ../tools/gda-sql.c:1665 ../tools/gda-sql.c:2974
 #, c-format
 msgid "Done.\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:1753
+#: ../tools/gda-sql.c:1799
 #, c-format
 msgid "(%d row)"
 msgid_plural "(%d rows)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../tools/gda-sql.c:1855 ../tools/gda-sql.c:2879
-#, fuzzy
-msgid "Installed providers list"
-msgstr "已安裝的提供者"
-
-#: ../tools/gda-sql.c:2000 ../tools/gda-sql.c:2195 ../tools/gda-sql.c:2267
-#: ../tools/gda-sql.c:2279
+#: ../tools/gda-sql.c:1991 ../tools/gda-sql.c:2186 ../tools/gda-sql.c:2258
+#: ../tools/gda-sql.c:2270
 #, c-format
 msgid "%s [FILE]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2001
+#: ../tools/gda-sql.c:1992
 msgid "Show commands history, or save it to file"
 msgstr ""
 
-#: ../tools/gda-sql.c:2011 ../tools/gda-sql.c:2023 ../tools/gda-sql.c:2035
-#: ../tools/gda-sql.c:2047 ../tools/gda-sql.c:2059 ../tools/gda-sql.c:2071
-#: ../tools/gda-sql.c:2084
+#: ../tools/gda-sql.c:2002 ../tools/gda-sql.c:2014 ../tools/gda-sql.c:2026
+#: ../tools/gda-sql.c:2038 ../tools/gda-sql.c:2050 ../tools/gda-sql.c:2062
+#: ../tools/gda-sql.c:2075
 #, fuzzy
 msgid "Information"
 msgstr "## 資訊：\n"
 
-#: ../tools/gda-sql.c:2012
+#: ../tools/gda-sql.c:2003
 #, c-format
 msgid "%s [META DATA TYPE]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2013
+#: ../tools/gda-sql.c:2004
 msgid ""
 "Force reading the database meta data (or part of the meta data, ex:\"tables"
 "\")"
 msgstr ""
 
-#: ../tools/gda-sql.c:2024
+#: ../tools/gda-sql.c:2015
 #, c-format
 msgid "%s [TABLE]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2025
+#: ../tools/gda-sql.c:2016
 msgid "List all tables (or named table)"
 msgstr ""
 
-#: ../tools/gda-sql.c:2036
+#: ../tools/gda-sql.c:2027
 #, c-format
 msgid "%s [VIEW]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2037
+#: ../tools/gda-sql.c:2028
 msgid "List all views (or named view)"
 msgstr ""
 
-#: ../tools/gda-sql.c:2048
+#: ../tools/gda-sql.c:2039
 #, c-format
 msgid "%s [SCHEMA]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2049
+#: ../tools/gda-sql.c:2040
 msgid "List all schemas (or named schema)"
 msgstr ""
 
-#: ../tools/gda-sql.c:2060
+#: ../tools/gda-sql.c:2051
 #, c-format
 msgid "%s [OBJ_NAME|SCHEMA.*]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2061
+#: ../tools/gda-sql.c:2052
 msgid "Describe object or full list of objects"
 msgstr ""
 
-#: ../tools/gda-sql.c:2072
+#: ../tools/gda-sql.c:2063
 #, c-format
 msgid "%s [TABLE1 [TABLE2...]]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2073
+#: ../tools/gda-sql.c:2064
 msgid "Create a graph of all or the listed tables"
 msgstr ""
 
-#: ../tools/gda-sql.c:2085
+#: ../tools/gda-sql.c:2076
 #, fuzzy, c-format
 msgid "%s [port [authentication token]]"
 msgstr "核證方法"
 
-#: ../tools/gda-sql.c:2086
+#: ../tools/gda-sql.c:2077
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
 msgstr ""
 
-#: ../tools/gda-sql.c:2099
+#: ../tools/gda-sql.c:2090
 #, c-format
 msgid "%s [CNC_NAME [DSN|CONNECTION STRING]]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2100
+#: ../tools/gda-sql.c:2091
 #, fuzzy
 msgid "Opens a new connection or lists opened connections"
 msgstr "無法開啟連線。"
 
-#: ../tools/gda-sql.c:2111
+#: ../tools/gda-sql.c:2102
 #, c-format
 msgid "%s [CNC_NAME]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2112
+#: ../tools/gda-sql.c:2103
 #, fuzzy
 msgid "Close a connection"
 msgstr "無法開啟連線。"
 
-#: ../tools/gda-sql.c:2123
+#: ../tools/gda-sql.c:2114
 #, c-format
 msgid "%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2124
+#: ../tools/gda-sql.c:2115
 msgid "Bind several connections together into the CNC_NAME virtual connection"
 msgstr ""
 
-#: ../tools/gda-sql.c:2134 ../tools/gda-sql.c:2146 ../tools/gda-sql.c:2158
-#: ../tools/gda-sql.c:2170
+#: ../tools/gda-sql.c:2125 ../tools/gda-sql.c:2137 ../tools/gda-sql.c:2149
+#: ../tools/gda-sql.c:2161
 #, fuzzy
 msgid "DSN (data sources) management"
 msgstr "資料來源的參數："
 
-#: ../tools/gda-sql.c:2135
+#: ../tools/gda-sql.c:2126
 #, c-format
 msgid "%s [DSN]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2136
+#: ../tools/gda-sql.c:2127
 msgid "List all DSN (or named DSN's attributes)"
 msgstr ""
 
-#: ../tools/gda-sql.c:2147
+#: ../tools/gda-sql.c:2138
 #, c-format
 msgid "%s DSN_NAME DSN_DEFINITION [DESCRIPTION]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2148
+#: ../tools/gda-sql.c:2139
 msgid "Create (or modify) a DSN"
 msgstr ""
 
-#: ../tools/gda-sql.c:2159
+#: ../tools/gda-sql.c:2150
 #, c-format
 msgid "%s DSN_NAME [DSN_NAME...]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2160
+#: ../tools/gda-sql.c:2151
 msgid "Remove a DSN"
 msgstr ""
 
-#: ../tools/gda-sql.c:2171
+#: ../tools/gda-sql.c:2162
 #, c-format
 msgid "%s [PROVIDER]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2172
+#: ../tools/gda-sql.c:2163
 #, fuzzy
 msgid "List all installed database providers (or named one's attributes)"
 msgstr "已安裝的提供者"
 
-#: ../tools/gda-sql.c:2182 ../tools/gda-sql.c:2194 ../tools/gda-sql.c:2206
-#: ../tools/gda-sql.c:2218
+#: ../tools/gda-sql.c:2173 ../tools/gda-sql.c:2185 ../tools/gda-sql.c:2197
+#: ../tools/gda-sql.c:2209
 msgid "Input/Output"
 msgstr ""
 
-#: ../tools/gda-sql.c:2183 ../tools/gda-sql.c:2315
+#: ../tools/gda-sql.c:2174 ../tools/gda-sql.c:2306
 #, c-format
 msgid "%s FILE"
 msgstr ""
 
-#: ../tools/gda-sql.c:2184
+#: ../tools/gda-sql.c:2175
 msgid "Execute commands from file"
 msgstr ""
 
-#: ../tools/gda-sql.c:2196
+#: ../tools/gda-sql.c:2187
 msgid "Send output to a file or |pipe"
 msgstr ""
 
-#: ../tools/gda-sql.c:2207 ../tools/gda-sql.c:2219
+#: ../tools/gda-sql.c:2198 ../tools/gda-sql.c:2210
 #, c-format
 msgid "%s [TEXT]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2208
+#: ../tools/gda-sql.c:2199
 msgid "Send output to stdout"
 msgstr ""
 
-#: ../tools/gda-sql.c:2220
+#: ../tools/gda-sql.c:2211
 msgid "Send output to output stream"
 msgstr ""
 
-#: ../tools/gda-sql.c:2243
+#: ../tools/gda-sql.c:2234
 #, c-format
 msgid "%s [DIR]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2244
+#: ../tools/gda-sql.c:2235
 msgid "Change the current working directory"
 msgstr ""
 
-#: ../tools/gda-sql.c:2256
+#: ../tools/gda-sql.c:2247
 msgid "Show usage and distribution terms"
 msgstr ""
 
-#: ../tools/gda-sql.c:2266 ../tools/gda-sql.c:2278 ../tools/gda-sql.c:2290
-#: ../tools/gda-sql.c:2302 ../tools/gda-sql.c:2314 ../tools/gda-sql.c:2326
-#: ../tools/gda-sql.c:2338 ../tools/gda-sql.c:2350 ../tools/gda-sql.c:2362
-#: ../tools/gda-sql.c:2374 ../tools/gda-sql.c:2386 ../tools/gda-sql.c:2423
-#: ../tools/gda-sql.c:2435
+#: ../tools/gda-sql.c:2257 ../tools/gda-sql.c:2269 ../tools/gda-sql.c:2281
+#: ../tools/gda-sql.c:2293 ../tools/gda-sql.c:2305 ../tools/gda-sql.c:2317
+#: ../tools/gda-sql.c:2329 ../tools/gda-sql.c:2341 ../tools/gda-sql.c:2353
+#: ../tools/gda-sql.c:2365 ../tools/gda-sql.c:2377 ../tools/gda-sql.c:2414
+#: ../tools/gda-sql.c:2426
 #, fuzzy
 msgid "Query buffer"
 msgstr "查詢名稱"
 
-#: ../tools/gda-sql.c:2268
+#: ../tools/gda-sql.c:2259
 msgid "Edit the query buffer (or file) with external editor"
 msgstr ""
 
-#: ../tools/gda-sql.c:2280
+#: ../tools/gda-sql.c:2271
 msgid "Reset the query buffer (fill buffer with contents of file)"
 msgstr ""
 
-#: ../tools/gda-sql.c:2292
+#: ../tools/gda-sql.c:2283
 msgid "Show the contents of the query buffer"
 msgstr ""
 
-#: ../tools/gda-sql.c:2303
+#: ../tools/gda-sql.c:2294
 #, c-format
 msgid "%s [QUERY_BUFFER_NAME]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2304
+#: ../tools/gda-sql.c:2295
 msgid "Execute contents of query buffer, or named query buffer"
 msgstr ""
 
-#: ../tools/gda-sql.c:2316
+#: ../tools/gda-sql.c:2307
 msgid "Write query buffer to file"
 msgstr ""
 
-#: ../tools/gda-sql.c:2327 ../tools/gda-sql.c:2339 ../tools/gda-sql.c:2351
+#: ../tools/gda-sql.c:2318 ../tools/gda-sql.c:2330 ../tools/gda-sql.c:2342
 #, c-format
 msgid "%s QUERY_BUFFER_NAME"
 msgstr ""
 
-#: ../tools/gda-sql.c:2328
+#: ../tools/gda-sql.c:2319
 msgid "Save query buffer to dictionary"
 msgstr ""
 
-#: ../tools/gda-sql.c:2340
+#: ../tools/gda-sql.c:2331
 msgid "Load query buffer from dictionary"
 msgstr ""
 
-#: ../tools/gda-sql.c:2352
+#: ../tools/gda-sql.c:2343
 msgid "Delete query buffer from dictionary"
 msgstr ""
 
-#: ../tools/gda-sql.c:2363
+#: ../tools/gda-sql.c:2354
 #, c-format
 msgid "%s"
 msgstr ""
 
-#: ../tools/gda-sql.c:2364
+#: ../tools/gda-sql.c:2355
 msgid "List all saved query buffers in dictionary"
 msgstr ""
 
-#: ../tools/gda-sql.c:2375
+#: ../tools/gda-sql.c:2366
 #, c-format
 msgid "%s [NAME [VALUE|_null_]]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2376
+#: ../tools/gda-sql.c:2367
 msgid "Set or show internal parameter, or list all if no parameters"
 msgstr ""
 
-#: ../tools/gda-sql.c:2387
+#: ../tools/gda-sql.c:2378
 #, c-format
 msgid "%s [NAME]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2388
+#: ../tools/gda-sql.c:2379
 #, fuzzy
 msgid "Unset (delete) internal named parameter (or all parameters)"
 msgstr "無法取得 Oracle 參數"
 
-#: ../tools/gda-sql.c:2398
+#: ../tools/gda-sql.c:2389
 msgid "Formatting"
 msgstr ""
 
-#: ../tools/gda-sql.c:2400
+#: ../tools/gda-sql.c:2391
 msgid "Set output format"
 msgstr ""
 
-#: ../tools/gda-sql.c:2424
+#: ../tools/gda-sql.c:2415
 #, c-format
 msgid "%s [NAME|TABLE COLUMN ROW_CONDITION] FILE"
 msgstr ""
 
-#: ../tools/gda-sql.c:2425
+#: ../tools/gda-sql.c:2416
 msgid "Export internal parameter or table's value to the FILE file"
 msgstr ""
 
-#: ../tools/gda-sql.c:2436
+#: ../tools/gda-sql.c:2427
 #, c-format
 msgid "%s NAME [FILE|TABLE COLUMN ROW_CONDITION]"
 msgstr ""
 
-#: ../tools/gda-sql.c:2437
+#: ../tools/gda-sql.c:2428
 msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing "
 "table's value"
 msgstr ""
 
-#: ../tools/gda-sql.c:2450
+#: ../tools/gda-sql.c:2441
 msgid "List all available commands"
 msgstr ""
 
-#: ../tools/gda-sql.c:2515
+#: ../tools/gda-sql.c:2506
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
 msgstr ""
 
-#: ../tools/gda-sql.c:2661 ../tools/gda-sql.c:2839
-#, fuzzy
-msgid "Attribute"
-msgstr "額外屬性"
-
-#: ../tools/gda-sql.c:2664
+#: ../tools/gda-sql.c:2655
 #, fuzzy, c-format
 msgid "DSN '%s' description"
 msgstr "說明"
 
-#: ../tools/gda-sql.c:2692
+#: ../tools/gda-sql.c:2683
 #, fuzzy, c-format
 msgid "Could not find any DSN named '%s'"
 msgstr "找不到名為『%s』的參數來源"
 
-#: ../tools/gda-sql.c:2703
+#: ../tools/gda-sql.c:2694
 msgid "DSN list"
 msgstr ""
 
-#: ../tools/gda-sql.c:2756 ../tools/gda-sql.c:4575
+#: ../tools/gda-sql.c:2747 ../tools/gda-sql.c:4486
 #, fuzzy
 msgid "Missing arguments"
 msgstr "'%s' 的參數不足"
 
-#: ../tools/gda-sql.c:2777
+#: ../tools/gda-sql.c:2768
 #, fuzzy
 msgid "Missing provider name"
 msgstr "參數不足"
 
-#: ../tools/gda-sql.c:2801
+#: ../tools/gda-sql.c:2792
 #, fuzzy
 msgid "Missing DSN name"
 msgstr "參數不足"
 
-#: ../tools/gda-sql.c:2842
-#, fuzzy, c-format
-msgid "Provider '%s' description"
-msgstr "『%s』提供者詳情"
-
-#: ../tools/gda-sql.c:2870
-#, fuzzy, c-format
-msgid "Could not find any provider named '%s'"
-msgstr "找不到名為『%s』的參數來源"
-
-#: ../tools/gda-sql.c:2946 ../tools/gda-sql.c:3237
+#: ../tools/gda-sql.c:2857 ../tools/gda-sql.c:3148
 #, fuzzy, c-format
 msgid "A connection named '%s' already exists"
 msgstr "已有『%s』檔案"
 
-#: ../tools/gda-sql.c:3050
+#: ../tools/gda-sql.c:2961
 #, fuzzy, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr "正在從 DBMS 伺服器取得元資料（meta-data）。這可能會花上一點時間...\n"
 
-#: ../tools/gda-sql.c:3085
+#: ../tools/gda-sql.c:2996
 #, fuzzy
 msgid "No opened connection"
 msgstr "無法開啟連線。"
 
-#: ../tools/gda-sql.c:3096
+#: ../tools/gda-sql.c:3007
 #, fuzzy
 msgid "DSN or connection string"
 msgstr "ODBC 連線字串"
 
-#: ../tools/gda-sql.c:3188
+#: ../tools/gda-sql.c:3099
 #, fuzzy
 msgid "No connection currently opened"
 msgstr "未指定 DSN 或連線字串"
 
-#: ../tools/gda-sql.c:3229
+#: ../tools/gda-sql.c:3140
 #, fuzzy
 msgid "Missing required connection names"
 msgstr "缺少『%s』所需的屬性"
 
 #. add existing connections to virtual connection
-#: ../tools/gda-sql.c:3266
+#: ../tools/gda-sql.c:3177
 #, fuzzy
 msgid "Bound connections are as:"
 msgstr "選項（連線共享）"
 
-#: ../tools/gda-sql.c:3370
+#: ../tools/gda-sql.c:3281
 #, fuzzy, c-format
 msgid "Could not get home directory: %s"
 msgstr "無法從 %s 取得檔案"
 
-#: ../tools/gda-sql.c:3396
+#: ../tools/gda-sql.c:3307
 #, fuzzy, c-format
 msgid "Working directory is now: %s"
 msgstr "建立 %s 目錄時發生錯誤"
 
-#: ../tools/gda-sql.c:3400
+#: ../tools/gda-sql.c:3311
 #, fuzzy, c-format
 msgid "Could not change working directory to '%s': %s"
 msgstr ""
 "無法將圖表寫入『%s』(%s)\n"
 "\n"
 
-#: ../tools/gda-sql.c:3427 ../tools/gda-sql.c:3530 ../tools/gda-sql.c:3573
-#: ../tools/gda-sql.c:3602 ../tools/gda-sql.c:3643 ../tools/gda-sql.c:3694
-#: ../tools/gda-sql.c:3747 ../tools/gda-sql.c:3838 ../tools/gda-sql.c:3910
+#: ../tools/gda-sql.c:3338 ../tools/gda-sql.c:3441 ../tools/gda-sql.c:3484
+#: ../tools/gda-sql.c:3513 ../tools/gda-sql.c:3554 ../tools/gda-sql.c:3605
+#: ../tools/gda-sql.c:3658 ../tools/gda-sql.c:3749 ../tools/gda-sql.c:3821
 #, fuzzy
 msgid "No connection opened"
 msgstr "未指定 DSN 或連線字串"
 
-#: ../tools/gda-sql.c:3445
+#: ../tools/gda-sql.c:3356
 #, fuzzy, c-format
 msgid "Could not write to temporary file '%s': %s"
 msgstr ""
 "無法將圖表寫入『%s』(%s)\n"
 "\n"
 
-#: ../tools/gda-sql.c:3481
+#: ../tools/gda-sql.c:3392
 #, fuzzy, c-format
 msgid "could not start editor '%s'"
 msgstr "無法解析 SQL 字串『%s』"
 
-#: ../tools/gda-sql.c:3486
+#: ../tools/gda-sql.c:3397
 #, fuzzy, c-format
 msgid "Could not start /bin/sh"
 msgstr "無法儲存 %s 檔案"
 
-#: ../tools/gda-sql.c:3651
+#: ../tools/gda-sql.c:3562
 #, fuzzy
 msgid "Missing FILE to write to"
 msgstr "缺乏 INSERT 目標實體"
 
-#: ../tools/gda-sql.c:3703 ../tools/gda-sql.c:3769 ../tools/gda-sql.c:3851
-#: ../tools/gda-sql.c:3923
+#: ../tools/gda-sql.c:3614 ../tools/gda-sql.c:3680 ../tools/gda-sql.c:3762
+#: ../tools/gda-sql.c:3834
 #, fuzzy
 msgid "Can't initialize dictionary to store query buffers"
 msgstr "無法將字典（dictionary）寫入至 %s 檔案：%s\n"
 
-#: ../tools/gda-sql.c:3722
+#: ../tools/gda-sql.c:3633
 #, fuzzy
 msgid "Query buffer name"
 msgstr "查詢名稱"
 
-#: ../tools/gda-sql.c:3723
+#: ../tools/gda-sql.c:3634
 msgid "SQL"
 msgstr "SQL"
 
-#: ../tools/gda-sql.c:3760 ../tools/gda-sql.c:3889 ../tools/gda-sql.c:3950
+#: ../tools/gda-sql.c:3671 ../tools/gda-sql.c:3800 ../tools/gda-sql.c:3861
 #, fuzzy
 msgid "Missing query buffer name"
 msgstr "參數不足"
 
-#: ../tools/gda-sql.c:3817
+#: ../tools/gda-sql.c:3728
 msgid "Query buffer is empty"
 msgstr ""
 
-#: ../tools/gda-sql.c:3884
+#: ../tools/gda-sql.c:3795
 #, fuzzy, c-format
 msgid "Could not find query buffer named '%s'"
 msgstr "找不到名為『%s』的參數來源"
 
-#: ../tools/gda-sql.c:4014 ../tools/gda-sql.c:4264 ../tools/gda-sql.c:4342
+#: ../tools/gda-sql.c:3925 ../tools/gda-sql.c:4175 ../tools/gda-sql.c:4253
 #, fuzzy, c-format
 msgid "No parameter named '%s' defined"
 msgstr "找不到名為『%s』的參數來源"
 
-#: ../tools/gda-sql.c:4025
+#: ../tools/gda-sql.c:3936
 #, fuzzy
 msgid "List of defined parameters"
 msgstr "參數不足"
 
-#: ../tools/gda-sql.c:4081 ../tools/gda-sql.c:4603
+#: ../tools/gda-sql.c:3992 ../tools/gda-sql.c:4514
 msgid "Wrong row condition"
 msgstr ""
 
-#: ../tools/gda-sql.c:4109
+#: ../tools/gda-sql.c:4020
 msgid "No unique row identified"
 msgstr ""
 
-#: ../tools/gda-sql.c:4150 ../tools/gda-sql.c:4242 ../tools/gda-sql.c:4566
+#: ../tools/gda-sql.c:4061 ../tools/gda-sql.c:4153 ../tools/gda-sql.c:4477
 #, fuzzy, c-format
 msgid "Too many arguments"
 msgstr "清單中有太多值"
 
-#: ../tools/gda-sql.c:4198 ../tools/gda-sql.c:4270
+#: ../tools/gda-sql.c:4109 ../tools/gda-sql.c:4181
 #, fuzzy
 msgid "Wrong number of arguments"
 msgstr "橫列數超出範圍"
 
-#: ../tools/gda-sql.c:4282 ../tools/gda-sql.c:4296
+#: ../tools/gda-sql.c:4193 ../tools/gda-sql.c:4207
 #, fuzzy
 msgid "Could not write file"
 msgstr "無法建立檔案 %s"
 
-#: ../tools/gda-sql.c:4421
+#: ../tools/gda-sql.c:4332
 #, fuzzy, c-format
 msgid "Graph written to '%s'\n"
 msgstr "圖表已寫入至『%s』\n"
 
-#: ../tools/gda-sql.c:4424
+#: ../tools/gda-sql.c:4335
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -9419,25 +9708,25 @@ msgid ""
 "to view the graph\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:4495
+#: ../tools/gda-sql.c:4406
 msgid "HTTPD server stopped"
 msgstr ""
 
-#: ../tools/gda-sql.c:4514
+#: ../tools/gda-sql.c:4425
 #, fuzzy
 msgid "Could not start HTTPD server"
 msgstr "無法儲存 %s 檔案"
 
-#: ../tools/gda-sql.c:4518
+#: ../tools/gda-sql.c:4429
 msgid "HTTPD server started"
 msgstr ""
 
-#: ../tools/gda-sql.c:4523
+#: ../tools/gda-sql.c:4434
 #, fuzzy
 msgid "Invalid port specification"
 msgstr "『%s』函數有多於一種回傳類型"
 
-#: ../tools/gda-sql.c:4737
+#: ../tools/gda-sql.c:4648
 #, c-format
 msgid "Command is incomplete"
 msgstr ""
@@ -9460,114 +9749,120 @@ msgstr "無法儲存 %s 檔案"
 msgid "Authentication required"
 msgstr "核證方法"
 
-#: ../tools/web-server.c:632
+#: ../tools/web-server.c:570
+msgid ""
+"Enter authentification token as set from console, or leave empty if none "
+"required"
+msgstr ""
+
+#: ../tools/web-server.c:636
 msgid "Token:"
 msgstr ""
 
-#: ../tools/web-server.c:773
+#: ../tools/web-server.c:777
 msgid "SQL console:"
 msgstr ""
 
-#: ../tools/web-server.c:853 ../tools/web-server.c:1874
+#: ../tools/web-server.c:857 ../tools/web-server.c:1878
 #, fuzzy
 msgid "Tables"
 msgstr "表格"
 
-#: ../tools/web-server.c:853
+#: ../tools/web-server.c:857
 #, c-format
 msgid "Tables in the '%s' schema"
 msgstr ""
 
-#: ../tools/web-server.c:859 ../tools/web-server.c:1879
+#: ../tools/web-server.c:863 ../tools/web-server.c:1883
 msgid "Views"
 msgstr "檢視"
 
-#: ../tools/web-server.c:859
+#: ../tools/web-server.c:863
 #, c-format
 msgid "Views in the '%s' schema"
 msgstr ""
 
-#: ../tools/web-server.c:918
+#: ../tools/web-server.c:922
 #, c-format
 msgid "Columns for the '%s' table:"
 msgstr ""
 
-#: ../tools/web-server.c:964
+#: ../tools/web-server.c:968
 #, fuzzy
 msgid "Primary key:"
 msgstr "主鍵"
 
-#: ../tools/web-server.c:1069
+#: ../tools/web-server.c:1073
 #, fuzzy
 msgid "Relations:"
 msgstr "理序 (Collation)"
 
-#: ../tools/web-server.c:1086
+#: ../tools/web-server.c:1090
 #, fuzzy
 msgid "Foreign keys:"
 msgstr "外鍵 (Foreign key)"
 
-#: ../tools/web-server.c:1098
+#: ../tools/web-server.c:1102
 #, c-format
 msgid "To '%s':"
 msgstr ""
 
-#: ../tools/web-server.c:1273
+#: ../tools/web-server.c:1277
 #, fuzzy
 msgid "View definition:"
 msgstr "定義"
 
-#: ../tools/web-server.c:1348
+#: ../tools/web-server.c:1352
 #, c-format
 msgid "Trigger '%s' for the '%s.%s' table:"
 msgstr ""
 
-#: ../tools/web-server.c:1368
+#: ../tools/web-server.c:1372
 #, c-format
 msgid "Trigger fired for: %s"
 msgstr ""
 
-#: ../tools/web-server.c:1372
+#: ../tools/web-server.c:1376
 #, c-format
 msgid "Time at which the trigger is fired: %s"
 msgstr ""
 
-#: ../tools/web-server.c:1376
+#: ../tools/web-server.c:1380
 #, fuzzy
 msgid "Action:"
 msgstr "動作"
 
-#: ../tools/web-server.c:1606
+#: ../tools/web-server.c:1610
 #, fuzzy
 msgid "Triggers:"
 msgstr "觸發器 (Triggers)"
 
-#: ../tools/web-server.c:1638 ../tools/web-server.c:1732
+#: ../tools/web-server.c:1642 ../tools/web-server.c:1736
 #, c-format
 msgid "For the '%s.%s' table:"
 msgstr ""
 
-#: ../tools/web-server.c:1704
+#: ../tools/web-server.c:1708
 #, c-format
 msgid "Triggers in the '%s' schema:"
 msgstr ""
 
-#: ../tools/web-server.c:1858
+#: ../tools/web-server.c:1862
 #, fuzzy, c-format
 msgid "Database information for '%s'"
 msgstr "資料來源的資訊"
 
-#: ../tools/web-server.c:1863
+#: ../tools/web-server.c:1867
 #, fuzzy
 msgid "Database information"
 msgstr "資料來源的資訊"
 
-#: ../tools/web-server.c:1872
+#: ../tools/web-server.c:1876
 #, fuzzy
 msgid "Objects"
 msgstr "OLE 物件"
 
-#: ../tools/web-server.c:1884
+#: ../tools/web-server.c:1888
 msgid "Triggers"
 msgstr "觸發器 (Triggers)"
 
@@ -11072,9 +11367,6 @@ msgstr "觸發器 (Triggers)"
 
 #~ msgid "Fields for '%s'"
 #~ msgstr "『%s』的欄位"
-
-#~ msgid "No field returned"
-#~ msgstr "未有傳回欄位"
 
 #~ msgid "Nothing to return"
 #~ msgstr "沒有東西要傳回"
