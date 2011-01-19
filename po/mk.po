@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-19 15:31+0100\n"
+"POT-Creation-Date: 2011-01-19 15:34+0100\n"
 "PO-Revision-Date: 2003-06-15 09:47+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <mk@li.org>\n"
@@ -7895,6 +7895,8 @@ msgstr ""
 #: ../tools/browser/data-manager/data-console.c:520
 #: ../tools/browser/data-manager/data-console.c:553
 #: ../tools/browser/data-manager/data-console.c:971
+#: ../tools/browser/schema-browser/relations-diagram.c:511
+#: ../tools/browser/schema-browser/table-info.c:493
 #, fuzzy
 msgid "Data manager"
 msgstr "База на податоци"

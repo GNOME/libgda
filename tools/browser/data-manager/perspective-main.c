@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -29,7 +29,7 @@ static BrowserPerspectiveFactory bfact;
 BrowserPerspectiveFactory *
 data_manager_perspective_get_factory (void)
 {
-	bfact.perspective_name = "Data manager";
+	bfact.perspective_name = _("Data manager");
 	bfact.menu_shortcut ="<control>D";
 	bfact.perspective_create = data_manager_perspective_new;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -29,7 +29,7 @@ static BrowserPerspectiveFactory bfact;
 BrowserPerspectiveFactory *
 query_exec_perspective_get_factory (void)
 {
-	bfact.perspective_name = "Query execution (SQL)";
+	bfact.perspective_name = _("Query execution (SQL)");
 	bfact.menu_shortcut = "<control>S";
 	bfact.perspective_create = query_exec_perspective_new;
 

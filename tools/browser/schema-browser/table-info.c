@@ -485,7 +485,7 @@ action_view_contents_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 	BrowserWindow *bwin;
 	BrowserPerspective *pers;
 	bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
-	pers = browser_window_change_perspective (bwin, "Data manager");
+	pers = browser_window_change_perspective (bwin, _("Data manager"));
 
 	xmlDocPtr doc;
 	xmlNodePtr node, topnode;
