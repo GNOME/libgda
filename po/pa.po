@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.release-1-0-branch VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-19 15:31+0100\n"
+"POT-Creation-Date: 2011-01-19 15:34+0100\n"
 "PO-Revision-Date: 2004-06-14 22:25+0530\n"
 "Last-Translator: Amanpreet Singh Alam <amanlinux@netscape.net>\n"
 "Language-Team: Punjabi <punlinux-i18n@lists.sourceforge.>\n"
@@ -7910,6 +7910,8 @@ msgstr ""
 #: ../tools/browser/data-manager/data-console.c:520
 #: ../tools/browser/data-manager/data-console.c:553
 #: ../tools/browser/data-manager/data-console.c:971
+#: ../tools/browser/schema-browser/relations-diagram.c:511
+#: ../tools/browser/schema-browser/table-info.c:493
 #, fuzzy
 msgid "Data manager"
 msgstr "ਡਾਟਾਬੇਸ"

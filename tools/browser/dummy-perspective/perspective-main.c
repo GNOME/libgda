@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -29,7 +29,7 @@ static BrowserPerspectiveFactory bfact;
 BrowserPerspectiveFactory *
 dummy_perspective_get_factory (void)
 {
-	bfact.perspective_name = "Dummy Perspective";
+	bfact.perspective_name = _("Dummy Perspective");
 	bfact.menu_shortcut = NULL;
 	bfact.perspective_create = dummy_perspective_new;
 

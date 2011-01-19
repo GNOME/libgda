@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-19 15:31+0100\n"
+"POT-Creation-Date: 2011-01-19 15:34+0100\n"
 "PO-Revision-Date: 2010-12-27 19:28+0100\n"
 "Last-Translator: Christian Kirbach <Christian.Kirbach@googlemail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
@@ -8153,6 +8153,8 @@ msgstr "Datenverwaltung »%s«"
 #: ../tools/browser/data-manager/data-console.c:520
 #: ../tools/browser/data-manager/data-console.c:553
 #: ../tools/browser/data-manager/data-console.c:971
+#: ../tools/browser/schema-browser/relations-diagram.c:511
+#: ../tools/browser/schema-browser/table-info.c:493
 msgid "Data manager"
 msgstr "Datenverwaltung"
 

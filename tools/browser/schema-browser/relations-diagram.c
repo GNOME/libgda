@@ -508,7 +508,7 @@ action_view_contents_cb  (G_GNUC_UNUSED GtkAction *action, RelationsDiagram *dia
 		BrowserWindow *bwin;
 		BrowserPerspective *pers;
 		bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) diagram);
-		pers = browser_window_change_perspective (bwin, "Data manager");
+		pers = browser_window_change_perspective (bwin, _("Data manager"));
 
 		data_manager_perspective_new_tab (DATA_MANAGER_PERSPECTIVE (pers), str);
 		g_free (str);

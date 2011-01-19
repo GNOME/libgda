@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Arabic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-19 15:31+0100\n"
+"POT-Creation-Date: 2011-01-19 15:34+0100\n"
 "PO-Revision-Date: 2007-04-14 18:49+0100\n"
 "Last-Translator: Djihed Afifi <djihed@gmail.com>\n"
 "Language-Team: Arabeyes <doc@arabeyes.org>\n"
@@ -8263,6 +8263,8 @@ msgstr ""
 #: ../tools/browser/data-manager/data-console.c:520
 #: ../tools/browser/data-manager/data-console.c:553
 #: ../tools/browser/data-manager/data-console.c:971
+#: ../tools/browser/schema-browser/relations-diagram.c:511
+#: ../tools/browser/schema-browser/table-info.c:493
 #, fuzzy
 msgid "Data manager"
 msgstr "قاعدة بيانات"
