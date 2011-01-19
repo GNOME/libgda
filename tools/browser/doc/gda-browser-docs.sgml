@@ -12,8 +12,13 @@
 <!ENTITY BrowserPage SYSTEM "xml/browser-page.xml">
 <!ENTITY BrowserPerspective SYSTEM "xml/browser-perspective.xml">
 <!ENTITY DataManagerPerspective SYSTEM "xml/data-manager-perspective.xml">
+<!ENTITY SchemaBrowserPerspective SYSTEM "xml/schema-browser-perspective.xml">
+<!ENTITY QueryExecPerspective SYSTEM "xml/query-exec-perspective.xml">
 <!ENTITY CCGrayBar SYSTEM "xml/cc-gray-bar.xml">
 <!ENTITY PopupContainer SYSTEM "xml/popup-container.xml">
+<!ENTITY UIFomrGrid SYSTEM "xml/ui-formgrid.xml">
+<!ENTITY MgrFavorites SYSTEM "xml/mgr-favorites.xml">
+<!ENTITY Support SYSTEM "xml/support.xml">
 ]>
 
 <book id="index">
@@ -30,14 +35,16 @@
         </contrib>
       </author>
     </authorgroup>
-    <date>August 2009</date>
+    <date>Jan. 2011</date>
     <copyright>
-      <year>2009</year>
+      <year>2009 - 2011</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
       <para>
-	Abstract blah.
+	Documentation to help improve and extend the GdaBrowser tool. All the objects and
+	widgets used by GdaBrowser are not included in this documentation, in order to
+	make it easier to understand; if you need them, go and look in the code.
       </para>
     </abstract>
     <legalnotice id="legalnotice">
@@ -91,7 +98,21 @@
     <chapter id="code_orga">
       <title>Code organization</title>
       <para>
-	TODO.
+	GdaBrowser's code is organized as follows,
+	assuming <filename class="directory">$(top_srcdir)</filename> is Libgda's
+	top source directory:
+	<itemizedlist>
+	  <listitem><para>All the code is in
+	      <filename class="directory">$(top_srcdir)/tools/browser</filename></para></listitem>
+	  <listitem><para>Some objects and functions are shared with LibgdaUi's own code which
+	      is located in <filename class="directory">$(top_srcdir)/libgda-ui/internal</filename></para></listitem>
+	  <listitem><para>All the main objects' code is in <filename class="directory">$(top_srcdir)/tools/browser</filename></para></listitem>
+	  <listitem><para>the <filename class="directory">$(top_srcdir)/tools/browser/common</filename> directory holds some objects and widgets which are used throught GdaBrowser's code</para></listitem>
+	  <listitem><para>the <filename class="directory">$(top_srcdir)/tools/browser/data</filename> directory contains all the small icons used inside GdaBrowser (at various sizes), while some more application oriented icons are in <filename class="directory">$(top_srcdir)/tools/browser</filename> </para></listitem>
+	  <listitem><para>the help files are stored in the <filename class="directory">$(top_srcdir)/tools/browser/help</filename> directory (each sub directory corresponds to a translation, except for the <filename class="directory">C</filename> which is the english and reference one)</para></listitem>
+	  <listitem>Each perspective's code is in the <filename class="directory">$(top_srcdir)/tools/browser/&lt;perspective name&gt;</filename> directory, with the <filename class="directory">$(top_srcdir)/tools/browser/dummy-perspective</filename> an example to implement a new perspective<para></para></listitem>
+	  <listitem><para>The <filename class="directory">$(top_srcdir)/tools/browser/canvas</filename> directory contains widgets to do some drawings, compiled only if the GooCanvas library has been detected at configure time.</para></listitem>
+	</itemizedlist>
       </para>
     </chapter>
   </part>  
@@ -108,6 +129,7 @@
       &BrowserCore;
       &BrowserConnection;
       &BrowserFavorites;
+      &Support;
     </chapter>
 
     <chapter id="windows">
@@ -139,6 +161,7 @@
 	This section is a reference to all the extra widgets used in the Gda browser,
 	which can be used in any extension.
       </para>
+      &UIFomrGrid;
       &CCGrayBar;
       &PopupContainer;
     </chapter>
@@ -149,7 +172,10 @@
 	This section is a reference to some of the existing perspectives and the associated
 	widgets.
       </para>
+      &MgrFavorites;
+      &SchemaBrowserPerspective;
       &DataManagerPerspective;
+      &QueryExecPerspective;
     </chapter>
   </part>
 

@@ -1,3 +1,15 @@
+#include <browser-core.h>
+#include <browser-connection.h>
+#include <browser-favorites.h>
+#include <browser-window.h>
+#include <browser-page.h>
+#include <cc-gray-bar.h>
+#include <libgda-ui/internal/popup-container.h>
+#include <data-manager/data-manager-perspective.h>
+#include <schema-browser/schema-browser-perspective.h>
+#include <query-exec/query-exec-perspective.h>
+#include <common/ui-formgrid.h>
+#include <mgr-favorites.h>
 browser_core_get_type
 browser_connection_get_type
 browser_favorites_get_type
@@ -7,3 +19,7 @@ browser_page_get_type
 cc_gray_bar_get_type
 popup_container_get_type
 data_manager_perspective_get_type
+schema_browser_perspective_get_type
+query_exec_perspective_get_type
+ui_formgrid_get_type
+mgr_favorites_get_type
