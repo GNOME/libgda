@@ -22,7 +22,7 @@ HFILE_GLOB=
 CFILE_GLOB=
 
 # Header files to ignore when scanning
-IGNORE_HFILES= marshal.h canvas dummy-perspective schema-browser query-exec
+IGNORE_HFILES= marshal.h canvas dummy-perspective
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
@@ -33,13 +33,23 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 	-I$(top_srcdir)/libgda-report \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/tools/browser \
+	-I$(top_srcdir)/tools/browser/common \
         $(LIBGDA_CFLAGS) \
 	$(LIBGDA_WFLAGS) \
         $(GTK_CFLAGS) \
 	$(GTKSOURCEVIEW_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
 
-GTKDOC_LIBS = $(top_builddir)/tools/browser/data-manager/libperspective.la \
+ADDLIBS=
+if HAVE_GOOCANVAS
+ADDLIBS+=$(top_builddir)/tools/browser/canvas/libcanvas.la
+endif
+
+GTKDOC_LIBS = \
+	$(top_builddir)/tools/browser/data-manager/libperspective.la \
+	$(top_builddir)/tools/browser/schema-browser/libperspective.la \
+	$(ADDLIBS) \
+	$(top_builddir)/tools/browser/query-exec/libperspective.la \
 	$(top_builddir)/tools/browser/libbrowser.la \
 	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
 	$(top_builddir)/tools/browser/common/libcommon.la \

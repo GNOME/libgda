@@ -160,3 +160,41 @@ Favorites management
 @Returns: 
 
 
+<!-- ##### STRUCT BrowserFavoriteAction ##### -->
+<para>
+
+</para>
+
+@id: 
+@name: 
+@stmt: 
+@params: 
+@nb_bound: 
+
+<!-- ##### FUNCTION browser_favorites_get_actions ##### -->
+<para>
+
+</para>
+
+@bfav: 
+@bcnc: 
+@set: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_favorites_free_action ##### -->
+<para>
+
+</para>
+
+@action: 
+
+
+<!-- ##### FUNCTION browser_favorites_free_actions_list ##### -->
+<para>
+
+</para>
+
+@actions_list: 
+
+

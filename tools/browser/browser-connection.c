@@ -241,7 +241,7 @@ browser_connection_class_init (BrowserConnectionClass *klass)
 	g_object_class_install_property (object_class, PROP_GDA_CNC,
                                          g_param_spec_object ("gda-connection", NULL, "Connection to use",
                                                               GDA_TYPE_CONNECTION,
-                                                              G_PARAM_READABLE | G_PARAM_WRITABLE |
+                                                              G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 
 	object_class->dispose = browser_connection_dispose;

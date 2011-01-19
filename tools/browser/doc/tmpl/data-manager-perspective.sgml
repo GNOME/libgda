@@ -1,8 +1,8 @@
 <!-- ##### SECTION Title ##### -->
-data-manager-perspective
+Data Manager perspective
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Perspective to manipulate data contained in the database
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

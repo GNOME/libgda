@@ -7,7 +7,9 @@ An opened connection
 <!-- ##### SECTION Long_Description ##### -->
 <para>
   The #BrowserConnection object wraps a #GdaConnection with some
-  additionnal features.
+  additionnal features. The wrapped #GdaConnection is only accessible from within
+  the #BrowserConnection object, so to use a connection, you have to use the
+  #BrowserConnection's methods.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
