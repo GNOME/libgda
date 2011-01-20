@@ -11,16 +11,27 @@
   to this perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)</gui></guiseq>
   menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> shortcut.
 </p>
-<p>
-  The perspective is divided in two horizontal panes: the left pane for the user defined favorite statements,
-  and the right pane being the action area.
-</p>
 <figure>
   <title>Query exec perspective</title>
   <desc>The query exec perspective with one SELECT statement executed</desc>
   <media type="image" mime="image/png" src="figures/query-exec-persp.png"/>
 </figure>
 
+<p>
+  The perspective is divided in two horizontal panes: the left pane for the user defined favorite statements,
+  and the right pane being the action area.
+</p>
+<p>
+  In the figure above, there are two favorites: a SELECT
+  statement (named "List customers") and an INSERT statement (named "New customer ...").
+  The INSERT statement needs one "name" parameter, whereas the SELECT statement does not require
+  any parameter to be executed.
+</p>
+<p>
+  The icon difference between the two illustrates the fact that the INSERT favorite is also
+  marked to be an <link xref="actions">action</link>: it will be proposed as an action to
+  be executed when the contextual menu is brought up in any grid representation of a resultset.
+</p>
 <p>
   The left
   part of the perspective lists the favorite statements which have been user defined. Activating a

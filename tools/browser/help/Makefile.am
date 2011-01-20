@@ -4,6 +4,10 @@ DOC_ID = gda-browser
 
 DOC_INCLUDES = legal.xml
 DOC_FIGURES = \
+	figures/action-1.png \
+	figures/action-2.png \
+	figures/action-3.png \
+	figures/action-4.png \
 	figures/cnc_open.png \
 	figures/data-man-mode.png \
 	figures/data-man-persp.png \
@@ -17,6 +21,7 @@ DOC_FIGURES = \
 	figures/table-insert-data.png
 
 DOC_PAGES = \
+	actions.page \
 	data-manager-perspective.page \
 	data-manager-xml-syntax.page \
 	diagram.page \
