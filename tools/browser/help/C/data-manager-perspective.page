@@ -50,14 +50,23 @@
   </p>
   <p>
     The following figure shows the data sources editing mode (switch to editing mode using the
-    <media type="image" mime="image/png" src="figures/data-man-mode.png"/> toolbar button)
-    at the moment data sources can only be
-    defined using an <link xref="data-manager-xml-syntax">XML syntax</link>.
+    <media type="image" mime="image/png" src="figures/data-man-mode.png"/> toolbar button).
+  </p>
+  <p>
+    Data sources can be defined using an <link xref="data-manager-xml-syntax">XML syntax</link>, or
+    using the <link xref="data-manager-source-editor">default interface</link>.
   </p>
   <figure>
     <title>Data sources edition</title>
-    <desc>Editing data sources in the data manager perspective</desc>
+    <desc>Editing data sources in the data manager perspective, from the XML syntax</desc>
     <media type="image" mime="image/png" src="figures/data-man-xmlcompose.png"/>
+  </figure>
+  <figure>
+    <title>Data sources edition</title>
+    <desc>Editing data sources in the data manager perspective, using the default interface:
+      two data sources are defined, which list the contents of the "customers" and "orders"
+      tables. The setup is the same as the figure above showing the XML syntax</desc>
+    <media type="image" mime="image/png" src="figures/data-man-uicompose.png"/>
   </figure>
 
   <p>
@@ -66,9 +75,9 @@
   <list>
     <item><p><gui>Reset</gui>: resets the XML editor to a default XML template, only available when the XML
     view is currently displayed</p></item>
-    <item><p><gui>Add</gui>: displays a popup menu with an entry per table to quickly add
-    the whole contents of a table as a data source, only available when the UI
-    editor is currently displayed</p></item>
+    <item><p><gui>Add</gui>: displays a popup menu with shortcuts to quickly define new data sources
+	as whole table contents (also analyses the database schema to propose relevant choices),
+	only available when the XML edition mode is not selected</p></item>
     <item><p><gui>Variables</gui>: shows/hide the <link xref="variables-syntax">variables</link> panel where you can give values to the variables
     present in the SQL code of any data source's definition. The panel is automatically shown when a variable is detected in 
     the SQL code.</p></item>
