@@ -1,0 +1,44 @@
+<!-- ##### SECTION Title ##### -->
+Query Exec perspective
+
+<!-- ##### SECTION Short_Description ##### -->
+Perspective to execute SQL commands
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### SECTION Image ##### -->
+
+
+<!-- ##### MACRO QUERY_EXEC_PERSPECTIVE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO IS_QUERY_EXEC_PERSPECTIVE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT QueryExecPerspective ##### -->
+<para>
+
+</para>
+
+
