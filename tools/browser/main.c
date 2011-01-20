@@ -33,6 +33,10 @@
 #include "browser-stock-icons.h"
 #include "../config-info.h"
 
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
+
 /* Perspectives' factories */
 #include "schema-browser/perspective-main.h"
 #include "query-exec/perspective-main.h"
@@ -106,6 +110,7 @@ main (int argc, char *argv[])
 	/* treat here lists of providers and defined DSN */
 	if (list_providers) {
 		gda_init ();
+		setlocale (LC_ALL, "");
 		GdaDataModel *model;
 		if (argc == 2)
 			model = config_info_detail_provider (argv[1], &error);
@@ -125,6 +130,7 @@ main (int argc, char *argv[])
 	}
 	if (list_configs) {
 		gda_init ();
+		setlocale (LC_ALL, "");
 		GdaDataModel *model = config_info_list_all_dsn ();
 		output_data_model (model);
 		g_object_unref (model);
@@ -135,6 +141,7 @@ main (int argc, char *argv[])
 		GdaDataModel *model;
 
 		gda_init ();
+		setlocale (LC_ALL, "");
 		confdir = config_info_compute_dict_directory ();
 		g_print (_("All files are in the directory: %s\n"), confdir);
 		g_free (confdir);
@@ -152,6 +159,7 @@ main (int argc, char *argv[])
 		gchar *tmp;
 
 		gda_init ();
+		setlocale (LC_ALL, "");
 		tmp = config_info_purge_data_files (purge_data_files, &error);
 		if (tmp) {
 			g_print ("%s\n", tmp);
