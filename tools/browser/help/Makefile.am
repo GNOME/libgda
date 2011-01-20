@@ -12,6 +12,7 @@ DOC_FIGURES = \
 	figures/data-man-mode.png \
 	figures/data-man-persp.png \
 	figures/data-man-xmlcompose.png \
+	figures/data-man-uicompose.png \
 	figures/diagram.png \
 	figures/mainwin.png \
 	figures/query-exec-persp.png \
@@ -24,6 +25,7 @@ DOC_PAGES = \
 	actions.page \
 	data-manager-perspective.page \
 	data-manager-xml-syntax.page \
+	data-manager-source-editor.page \
 	diagram.page \
 	features.page \
 	general-ui.page \
