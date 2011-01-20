@@ -76,56 +76,149 @@ config_info_list_all_providers (void)
 GdaDataModel *
 config_info_detail_provider (const gchar *provider, GError **error)
 {
-	GdaDataModel *prov_list, *model = NULL;
-	gint i, nrows;
+	GdaProviderInfo *pinfo;
+	pinfo = gda_config_get_provider_info (provider);
+	if (! pinfo)
+		return NULL;
 
-	prov_list = gda_config_list_providers ();
-	nrows = gda_data_model_get_n_rows (prov_list);
+	GdaDataModel *model;
+	GValue *tmpvalue = NULL;
+	gint row;
 
-	for (i = 0; i < nrows; i++) {
-		const GValue *value;
-		value = gda_data_model_get_value_at (prov_list, 0, i, error);
-		if (!value)
-			goto onerror;
-		
-		if (!strcmp (g_value_get_string (value), provider)) {
-			gint j;
-			model = gda_data_model_array_new_with_g_types (2,
-								       G_TYPE_STRING,
-								       G_TYPE_STRING);
-			gda_data_model_set_column_title (model, 0, _("Attribute"));
-			gda_data_model_set_column_title (model, 1, _("Value"));
-			g_object_set_data_full (G_OBJECT (model), "name", 
-						g_strdup_printf (_("Provider '%s' description"), provider),
-						g_free);
-			
-			for (j = 0; j < 5; j++) {
-				GValue *tmpvalue;
-				if (gda_data_model_append_row (model, error) == -1) 
-					goto onerror;
-				
-				g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)),
-						    gda_data_model_get_column_title (prov_list, j));
-				if (! gda_data_model_set_value_at (model, 0, j, tmpvalue, error))
-					goto onerror;
-				gda_value_free (tmpvalue);
-				
-				value = gda_data_model_get_value_at (prov_list, j, i, error);
-				if (!value ||
-				    ! gda_data_model_set_value_at (model, 1, j, value, error))
-					goto onerror;
+	/* define data model */
+	model = gda_data_model_array_new_with_g_types (2,
+						       G_TYPE_STRING,
+						       G_TYPE_STRING);
+	gda_data_model_set_column_title (model, 0, _("Attribute"));
+	gda_data_model_set_column_title (model, 1, _("Value"));
+	g_object_set_data_full (G_OBJECT (model), "name", 
+				g_strdup_printf (_("Provider '%s' description"), provider),
+				g_free);
+	/* Provider name */
+	row = 0;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("Provider"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), pinfo->id);
+	if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	/* Provider's description */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("Description"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), pinfo->description);
+	if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	/* DSN parameters */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("DSN parameters"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	if (pinfo->dsn_params) {
+		GSList *list;
+		GString *string = NULL;
+		for (list = pinfo->dsn_params->holders; list; list = list->next) {
+			GdaHolder *holder = GDA_HOLDER (list->data);
+			if (string) {
+				g_string_append (string, ",\n");
+				g_string_append (string, gda_holder_get_id (holder));
 			}
-			g_object_unref (prov_list);
-			return model;
+			else
+				string = g_string_new (gda_holder_get_id (holder));
+
+			gchar *str;
+			GType type;
+			g_object_get (holder, "description", &str, "g-type", &type, NULL);
+			if (str) {
+				g_string_append_printf (string, ": %s", str); 
+				g_free (str);
+			}
+			g_string_append_printf (string, " (%s)", gda_g_type_to_string (type));
+		}
+		if (string) {
+			g_value_take_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), string->str);
+			g_string_free (string, FALSE);
+			if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+				goto onerror;
+			gda_value_free (tmpvalue);
 		}
 	}
-	g_object_unref (prov_list);
-	g_set_error (error, 0, 0,
-		     _("Could not find any provider named '%s'"), provider);
+
+	/* Provider's authentication */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("Authentication"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	if (pinfo->auth_params) {
+		GSList *list;
+		GString *string = NULL;
+		for (list = pinfo->auth_params->holders; list; list = list->next) {
+			GdaHolder *holder = GDA_HOLDER (list->data);
+			if (string) {
+				g_string_append (string, ",\n");
+				g_string_append (string, gda_holder_get_id (holder));
+			}
+			else
+				string = g_string_new (gda_holder_get_id (holder));
+
+			gchar *str;
+			GType type;
+			g_object_get (holder, "description", &str, "g-type", &type, NULL);
+			if (str) {
+				g_string_append_printf (string, ": %s", str); 
+				g_free (str);
+			}
+			g_string_append_printf (string, " (%s)", gda_g_type_to_string (type)); 
+		}
+		if (string) {
+			g_value_take_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), string->str);
+			g_string_free (string, FALSE);
+			if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+				goto onerror;
+			gda_value_free (tmpvalue);
+		}
+	}
+
+	/* Provider's DLL file */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("File"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), pinfo->location);
+	if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
 	return model;
-	
  onerror:
-	g_object_unref (prov_list);
+	if (tmpvalue)
+		gda_value_free (tmpvalue);
+	g_object_unref (model);
 	return NULL;
 }
 
