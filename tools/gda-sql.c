@@ -39,6 +39,9 @@
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-meta-struct.h>
 #include <libgda/gda-blob-op.h>
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 #ifndef G_OS_WIN32
 #include <signal.h>
@@ -180,6 +183,7 @@ main (int argc, char *argv[])
 	}
 
 	g_setenv ("GDA_CONFIG_SYNCHRONOUS", "1", TRUE);
+	setlocale (LC_ALL, "");
         gda_init ();
 
 	has_threads = g_thread_supported ();
