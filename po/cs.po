@@ -11,15 +11,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-19 15:34+0100\n"
-"PO-Revision-Date: 2011-01-16 20:38+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=libgda&component=general\n"
+"POT-Creation-Date: 2011-01-19 20:29+0000\n"
+"PO-Revision-Date: 2011-01-20 15:47+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. title
@@ -973,8 +974,8 @@ msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
 msgstr ""
-"Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce "
-"%d (%s)"
+"Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce %"
+"d (%s)"
 
 #: ../libgda/gda-data-model.c:1877
 #, c-format
@@ -2790,8 +2791,8 @@ msgstr ""
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
-"Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho "
-"(%d) řádků"
+"Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho (%"
+"d) řádků"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2314
 msgid "Prepared statement has no associated GdaStatement"
@@ -5120,8 +5121,8 @@ msgid ""
 "at the end)."
 msgstr ""
 "Formát připojovacího řetězce byl změněn: nahraďte FILENAME (název souboru) "
-"za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez "
-"„%s“ na konci)."
+"za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez „%"
+"s“ na konci)."
 
 #: ../providers/mdb/gda-mdb-provider.c:307
 #, c-format
@@ -7517,8 +7518,8 @@ msgstr ""
 #: ../tools/browser/main.c:161 ../tools/gda-sql.c:245
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: "
-"%s\n"
+"Error while purging files used to store information about each connection: %"
+"s\n"
 msgstr ""
 "Chyba při čištění souborů použitých k uchování informací o každém připojení: "
 "%s\n"
@@ -7594,9 +7595,8 @@ msgstr ""
 "přetažením položky"
 
 #: ../tools/browser/support.c:195
-#, fuzzy
 msgid "Information:"
-msgstr "Informace"
+msgstr "Informace:"
 
 #: ../tools/browser/support.c:248
 msgid ""
@@ -7887,9 +7887,8 @@ msgid "Toggle between grid and form presentations"
 msgstr "Přepíná mezi zobrazením v podobě mřížky a formuláře"
 
 #: ../tools/browser/common/ui-formgrid.c:291
-#, fuzzy
 msgid "Execute action"
-msgstr "Při akci mazání"
+msgstr "Provést akci"
 
 #: ../tools/browser/common/ui-formgrid.c:322
 #: ../tools/browser/query-exec/query-console.c:1066
@@ -7905,15 +7904,13 @@ msgstr ""
 
 #: ../tools/browser/common/ui-formgrid.c:331
 #: ../tools/browser/common/ui-formgrid.c:343
-#, fuzzy
 msgid "Action executed"
-msgstr "Příkaz proveden"
+msgstr "Akce provedena"
 
 #: ../tools/browser/common/ui-formgrid.c:376
 #: ../tools/browser/common/ui-formgrid.c:380
-#, fuzzy
 msgid "Action successfully executed"
-msgstr "Připojení úspěšně otevřeno!"
+msgstr "Akce úspěšně provedena"
 
 #: ../tools/browser/common/ui-formgrid.c:394
 #, c-format
@@ -7921,11 +7918,12 @@ msgid ""
 "Set or confirm the parameters to execute\n"
 "action '%s'"
 msgstr ""
+"Nastavte nebo potvrďte parametry pro spuštění\n"
+"akce „%s“"
 
 #: ../tools/browser/common/ui-formgrid.c:398
-#, fuzzy
 msgid "Execution of action"
-msgstr "Doplňující volby připojení"
+msgstr "Provádění akce"
 
 #: ../tools/browser/common/ui-formgrid.c:416
 #: ../tools/browser/query-exec/query-console.c:1013
@@ -8381,26 +8379,23 @@ msgid "Execution Results:"
 msgstr "Výsledky zpracování:"
 
 #: ../tools/browser/query-exec/query-console.c:699
-#, fuzzy
 msgid "New favorite"
-msgstr "_Zobrazit oblíbené"
+msgstr "Nový oblíbený"
 
 #: ../tools/browser/query-exec/query-console.c:710
 #: ../tools/browser/query-exec/query-console.c:743
-#, fuzzy, c-format
+#, c-format
 msgid "Modify favorite '%s'"
-msgstr "_Zobrazit oblíbené"
+msgstr "Upravit oblíbený „%s“"
 
 #: ../tools/browser/query-exec/query-console.c:731
-#, fuzzy
 msgid "Modify a favorite"
-msgstr "_Zobrazit oblíbené"
+msgstr "Upravit oblíbené"
 
 #: ../tools/browser/query-exec/query-console.c:774
 #: ../tools/browser/query-exec/query-console.c:791
-#, fuzzy
 msgid "Favorite's name"
-msgstr "Oblíbené"
+msgstr "Název oblíbeného"
 
 #: ../tools/browser/query-exec/query-console.c:775
 #: ../tools/browser/query-exec/query-favorite-selector.c:701
@@ -8408,14 +8403,12 @@ msgid "Unnamed query"
 msgstr "Nepojmenovaný dotaz"
 
 #: ../tools/browser/query-exec/query-console.c:778
-#, fuzzy
 msgid "Name of the favorite to create"
-msgstr "Název databáze, která se má vytvořit"
+msgstr "Název vytvářeného oblíbeného"
 
 #: ../tools/browser/query-exec/query-console.c:779
-#, fuzzy
 msgid "Enter the name of the favorite to create"
-msgstr "Název databáze, která se má vytvořit"
+msgstr "Zadejte název oblíbeného, který se má vytvořit"
 
 #: ../tools/browser/query-exec/query-console.c:913
 msgid "Invalid variable's contents"
@@ -8525,18 +8518,17 @@ msgid "Open a new query editor"
 msgstr "Otevřít nový editor dotazů"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:287
-#, fuzzy, c-format
+#, c-format
 msgid "Could not add action: %s"
-msgstr "Nelze přidat oblíbenou: %s"
+msgstr "Nelze přidat akci: %s"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:361
 msgid "SQL Code"
 msgstr "Kód SQL"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:368
-#, fuzzy
 msgid "Is action"
-msgstr "Žádná akce"
+msgstr "Jde o akci"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:371
 msgid ""
@@ -8545,6 +8537,10 @@ msgid ""
 "containing data. The parameters required to execute\n"
 "the query will be defined from the row selected in the grid"
 msgstr ""
+"Zaškrtněte tuto volbu, aby se tento oblíbený dotaz stal akcí,\n"
+"která může být doporučována k provádění z mřížky\n"
+"obsahující data. Parametry požadované k provedení dotazu\n"
+"budou definovány z vybraného řádku v mřížce."
 
 #: ../tools/browser/query-exec/query-result.c:209
 msgid "Statement:"
@@ -8671,9 +8667,9 @@ msgstr ""
 "nekompatibilní typy: „%s“ pro cizí klíč a „%s“ pro odkazovaný primární klíč"
 
 #: ../tools/browser/schema-browser/table-columns.c:304
-#, fuzzy, c-format
+#, c-format
 msgid "Could not compute table's UNIQUE constraints for %s.%s.%s"
-msgstr "Nelze vypočítat sloupce virtuální tabulky"
+msgstr "Nelze vypočítat omezení na JEDINEČNOST pro tabulku %s.%s.%s"
 
 #: ../tools/browser/schema-browser/table-columns.c:327
 msgid "Unique constraint"
@@ -8689,9 +8685,8 @@ msgstr "Název sloupce"
 
 #. To translators: "Not NULL?" is a table's column's attribute
 #: ../tools/browser/schema-browser/table-columns.c:494
-#, fuzzy
 msgid "Not NULL?"
-msgstr "Neprázdné"
+msgstr "Neprázdné?"
 
 #: ../tools/browser/schema-browser/table-columns.c:531
 msgid "Constraints and integrity rules"
@@ -8699,9 +8694,9 @@ msgstr "Pravidla omezení a integrity"
 
 #. To translators: "In schema" refers to the database schema an object is in
 #: ../tools/browser/schema-browser/table-info.c:340
-#, fuzzy, c-format
+#, c-format
 msgid "In schema '%s'"
-msgstr "Ve schématu %s"
+msgstr "Ve schématu „%s“"
 
 #: ../tools/browser/schema-browser/table-info.c:365
 msgid ""
@@ -9089,11 +9084,11 @@ msgstr "Pro „%s“ není žádné heslo"
 #: ../tools/gda-sql.c:1476
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the "
-"'%s' file\n"
+"All the information related to the '%s' connection will be stored in the '%"
+"s' file\n"
 msgstr ""
-"Všechny informace vztahující se k připojení „%s“ budou uloženy v souboru "
-"„%s“\n"
+"Všechny informace vztahující se k připojení „%s“ budou uloženy v souboru „%"
+"s“\n"
 
 #: ../tools/gda-sql.c:1506
 #, c-format
