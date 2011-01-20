@@ -344,9 +344,11 @@ cnc3>
       to list a table's attributes, or for command line completion.
     </para>
     <para>
-      If some modifications to the database structure have been made (either from the SQL console or from another tool), then
-      the meta data must be updated using the <command>.meta</command> command, which does not output anything unless an error
-      occurred.
+      If some modifications to the database structure have been made using a tool not using &LIBGDA;, then
+      the meta data must be updated using the <command>.meta</command> command, which does not output
+      anything unless an error occurred. Updates to the meta data are automatic when a shema change
+      is done using &LIBGDA; if the connection has been opened using the GDA_CONNECTION_OPTIONS_AUTO_META_DATA flag
+      (which is the case for &LIBGDA;'s own tools).
     </para>
     <para>
       As the meta data are also stored in a database, the console tool allows one to directly execute SQL commands in the
