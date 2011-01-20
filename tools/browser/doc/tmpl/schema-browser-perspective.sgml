@@ -1,0 +1,64 @@
+<!-- ##### SECTION Title ##### -->
+Schema Browser perspective
+
+<!-- ##### SECTION Short_Description ##### -->
+Perspective to analyse the database's schema
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### SECTION Image ##### -->
+
+
+<!-- ##### MACRO SCHEMA_BROWSER_PERSPECTIVE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO IS_SCHEMA_BROWSER_PERSPECTIVE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT SchemaBrowserPerspective ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION schema_browser_perspective_display_table_info ##### -->
+<para>
+
+</para>
+
+@bpers: 
+@table_schema: 
+@table_name: 
+@table_short_name: 
+
+
+<!-- ##### FUNCTION schema_browser_perspective_display_diagram ##### -->
+<para>
+
+</para>
+
+@bpers: 
+@fav_id: 
+
+
