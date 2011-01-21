@@ -753,8 +753,8 @@ main (int argc, char **argv)
         textdomain (GETTEXT_PACKAGE);
 
         /* Initialize libgda-ui & GTK+ */
-        gdaui_init ();
 	gtk_init (&argc, &argv);
+	gdaui_init ();
 
 	/* Initialize GdaConnection object */
 	full_filename = demo_find_file ("demo_db.db", &error);

@@ -420,6 +420,7 @@ query_exec_perspective_get_actions_group (BrowserPerspective *perspective)
 	if (!bpers->priv->action_group) {
 		GtkActionGroup *agroup;
 		agroup = gtk_action_group_new ("QueryExecActions");
+		gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
 		gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
 		bpers->priv->action_group = g_object_ref (agroup);
 

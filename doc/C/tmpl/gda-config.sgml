@@ -18,7 +18,7 @@ Access/Management of libgda configuration
   <link linkend="gda-init">gda_init()</link>) force the creation of a GdaConfig object with some
   specific properties set, using a simple call like:
   <programlisting>
-g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
+g_object_new (GDA_TYPE_CONFIG, "user-filename", "my_file", NULL);
   </programlisting>
   Please note that after that call, the caller has a reference to the newly created object, and should technically
   call <link linkend="g-object-unref">g_object_unref()</link> when finished using it. It is safe to do this
@@ -35,6 +35,16 @@ g_object_new (GDA_TYPE_CONFIG, "user-file", "my_file", NULL);
 </para>
 <para>
   The #GdaConfig object implements its own locking mechanism so it is thread-safe.
+</para>
+<para>
+  Note about localization: when the #GdaConfig loads configuration files, it filters the
+  contents based on the current locale, so for example if your current locale is "de" then
+  all the loaded strings (for the ones which are translated) will be in the German language.
+  Changing the locale afterwards will have no effect on the #GdaConfig and the already loaded
+  configuration.
+  The consequence is that you should first call setlocale() youself in your code before using
+  a #GdaConfig object. As a side note you should also call gtk_init() before gdaui_init() because
+  gtk_init() calls setlocale().
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

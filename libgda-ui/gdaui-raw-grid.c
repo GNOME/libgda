@@ -1,6 +1,6 @@
 /* gdaui-raw-grid.c
  *
- * Copyright (C) 2002 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -383,6 +383,7 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 
 	/* action group */
 	grid->priv->actions_group = gtk_action_group_new ("Actions");
+	gtk_action_group_set_translation_domain (grid->priv->actions_group, GETTEXT_PACKAGE);
 	gtk_action_group_add_actions (grid->priv->actions_group, ui_actions, G_N_ELEMENTS (ui_actions), grid);
 
 	grid->priv->filter = NULL;

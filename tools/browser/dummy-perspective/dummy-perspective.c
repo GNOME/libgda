@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -173,6 +173,7 @@ dummy_perspective_get_actions_group (BrowserPerspective *bpers)
 {
 	GtkActionGroup *agroup;
 	agroup = gtk_action_group_new ("DummyActions");
+	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
 	
 	return agroup;

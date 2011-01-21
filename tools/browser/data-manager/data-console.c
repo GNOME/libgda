@@ -824,7 +824,7 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 					schema_changed = FALSE;
 
 				if (schema_changed) {
-					str = g_strdup_printf (_("In schema %s"), current_schema);
+					str = g_strdup_printf (_("In schema '%s'"), current_schema);
 					mitem = gtk_menu_item_new_with_label (str);
 					gtk_widget_show (mitem);
 					g_free (str);
@@ -949,6 +949,7 @@ data_console_page_get_actions_group (BrowserPage *page)
 	dconsole = DATA_CONSOLE (page);
 	if (! dconsole->priv->agroup) {
 		dconsole->priv->agroup = gtk_action_group_new ("QueryExecConsoleActions");
+		gtk_action_group_set_translation_domain (dconsole->priv->agroup, GETTEXT_PACKAGE);
 		gtk_action_group_add_toggle_actions (dconsole->priv->agroup,
 						     ui_actions, G_N_ELEMENTS (ui_actions), page);
 	}
