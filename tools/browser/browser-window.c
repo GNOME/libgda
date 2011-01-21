@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -420,6 +420,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	GtkActionGroup *group;
 
         group = gtk_action_group_new ("Actions");
+	gtk_action_group_set_translation_domain (group, GETTEXT_PACKAGE);
+
 	bwin->priv->agroup = group;
         gtk_action_group_add_actions (group, ui_actions, G_N_ELEMENTS (ui_actions), bwin);
 	gtk_action_group_add_toggle_actions (group, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions), bwin);
@@ -486,6 +488,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
 	GSList *connections, *list;
 	bwin->priv->cnc_agroup = gtk_action_group_new ("CncActions");
+	gtk_action_group_set_translation_domain (bwin->priv->cnc_agroup, GETTEXT_PACKAGE);
+
 	connections = browser_core_get_connections ();
 	for (list = connections; list; list = list->next)
 		connection_added_cb (browser_core_get(), BROWSER_CONNECTION (list->data), bwin);
@@ -505,6 +509,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	GtkActionGroup *actions;
 	actions = browser_perspective_get_actions_group (BROWSER_PERSPECTIVE (pers->perspective_widget));
 	if (actions) {
+		gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
 		gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, actions, 0);
 		g_object_unref (actions);
 	}
@@ -540,6 +545,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
 	mid = gtk_ui_manager_new_merge_id (bwin->priv->ui_manager);
 	agroup = gtk_action_group_new ("Perspectives");
+	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
+
 	gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, agroup, 0);
 	bwin->priv->perspectives_actions = agroup;
 	g_object_unref (agroup);
@@ -640,6 +647,7 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 		GtkActionGroup *actions;
 		actions = browser_perspective_get_actions_group (BROWSER_PERSPECTIVE (pers->perspective_widget));
 		if (actions) {
+			gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
 			gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, actions, 0);
 			g_object_unref (actions);
 		}
@@ -1648,6 +1656,7 @@ browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective
 
 	if (actions_group) {
 		g_return_if_fail (GTK_IS_ACTION_GROUP (actions_group));
+		gtk_action_group_set_translation_domain (actions_group, GETTEXT_PACKAGE);
 		gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, actions_group, 0);
 		pdata->customized_actions = g_object_ref (actions_group);
 	}

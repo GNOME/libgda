@@ -989,6 +989,7 @@ table_info_page_get_actions_group (BrowserPage *page)
 {
 	GtkActionGroup *agroup;
 	agroup = gtk_action_group_new ("SchemaBrowserTableInfoActions");
+	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
 	
 	return agroup;

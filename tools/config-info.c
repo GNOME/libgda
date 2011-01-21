@@ -142,13 +142,21 @@ config_info_detail_provider (const gchar *provider, GError **error)
 			}
 			else
 				string = g_string_new (gda_holder_get_id (holder));
+			g_string_append (string, ": ");
 
-			gchar *str;
+			gchar *descr, *name;
 			GType type;
-			g_object_get (holder, "description", &str, "g-type", &type, NULL);
-			if (str) {
-				g_string_append_printf (string, ": %s", str); 
-				g_free (str);
+			g_object_get (holder, "name", &name, "description", &descr,
+				      "g-type", &type, NULL);
+			if (name) {
+				g_string_append (string, name); 
+				g_free (name);
+			}
+			if (descr) {
+				if (name)
+					g_string_append (string, ". ");
+				g_string_append (string, descr); 
+				g_free (descr);
 			}
 			g_string_append_printf (string, " (%s)", gda_g_type_to_string (type));
 		}

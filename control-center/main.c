@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2000 - 2009 The GNOME Foundation.
+ * Copyright (C) 2000 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -197,13 +197,13 @@ about_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 }
 
 static GtkActionEntry ui_actions[] = {
-	{ "Database", NULL, "_Data source", NULL, "Database", NULL },
-	{ "DatabaseClose", GTK_STOCK_CLOSE, "_Close", NULL, "Close this window", G_CALLBACK (window_closed_cb) },
-	{ "DatabaseNew", GTK_STOCK_NEW, "_New datasource", NULL, "Create new data source", G_CALLBACK (file_new_cb) },
-	{ "DatabaseDelete", GTK_STOCK_DELETE, "_Delete datasource", NULL, "Delete selected data source", G_CALLBACK (file_delete_cb) },
-	{ "DatabaseProperties", GTK_STOCK_PROPERTIES, "_Properties", NULL, "Edit properties for selected data source", G_CALLBACK (file_properties_cb) },
-	{ "About", NULL, "_About", NULL, "About", NULL },
-	{ "HelpAbout", GTK_STOCK_ABOUT, "_About", NULL, "About GNOME-DB", G_CALLBACK (about_cb) }
+	{ "Database", NULL, N_("_Data source"), NULL, N_("Database"), NULL },
+	{ "DatabaseClose", GTK_STOCK_CLOSE, N_("_Close"), NULL, N_("Close this window"), G_CALLBACK (window_closed_cb) },
+	{ "DatabaseNew", GTK_STOCK_NEW, N_("_New datasource"), NULL, N_("Create new data source"), G_CALLBACK (file_new_cb) },
+	{ "DatabaseDelete", GTK_STOCK_DELETE, N_("_Delete datasource"), NULL, N_("Delete selected data source"), G_CALLBACK (file_delete_cb) },
+	{ "DatabaseProperties", GTK_STOCK_PROPERTIES, N_("_Properties"), NULL, N_("Edit properties for selected data source"), G_CALLBACK (file_properties_cb) },
+	{ "About", NULL, N_("_About"), NULL, N_("About"), NULL },
+	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, N_("About GNOME-DB"), G_CALLBACK (about_cb) }
 };
 
 static const gchar *ui_actions_info =
@@ -235,6 +235,7 @@ prepare_menu (GtkBox *vbox, GtkWidget *nb)
 	GtkUIManager *ui;
 
         actions = gtk_action_group_new ("Actions");
+	gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
         gtk_action_group_add_actions (actions, ui_actions, G_N_ELEMENTS (ui_actions), nb);
 
         ui = gtk_ui_manager_new ();

@@ -1200,6 +1200,7 @@ query_console_page_get_actions_group (BrowserPage *page)
 	tconsole = QUERY_CONSOLE (page);
 	if (! tconsole->priv->agroup) {
 		tconsole->priv->agroup = gtk_action_group_new ("QueryExecConsoleActions");
+		gtk_action_group_set_translation_domain (tconsole->priv->agroup, GETTEXT_PACKAGE);
 		gtk_action_group_add_actions (tconsole->priv->agroup,
 					      ui_actions, G_N_ELEMENTS (ui_actions), page);
 

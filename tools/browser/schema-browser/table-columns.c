@@ -490,7 +490,7 @@ table_columns_new (TableInfo *tinfo)
 
 	/* Colum: Nullok */
 	renderer = gtk_cell_renderer_toggle_new ();
-	/* To translators: "Not NULL?" is a table's column's attribute */
+	/* To translators: "Not NULL?" is a table's column's attribute. The NULL term should not be translated as it refers to the SQL NULL value */
 	column = gtk_tree_view_column_new_with_attributes (_("Not NULL?"), renderer,
 							   "active", COLUMN_NOTNULL, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);

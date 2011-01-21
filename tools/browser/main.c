@@ -171,8 +171,9 @@ main (int argc, char *argv[])
 		return 0;
 	}
 
-	gdaui_init ();
 	gtk_init (&argc, &argv);
+	gdaui_init ();
+
 #ifdef HAVE_MAC_INTEGRATION
 	theApp = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
 #endif
