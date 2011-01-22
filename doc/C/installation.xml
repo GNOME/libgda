@@ -20,27 +20,33 @@
       compile the software. To do so, once you have unpacked
       the source tree, you must:
       <programlisting>
-<prompt>$</prompt>/configure
-<prompt>$</prompt>make
-<prompt>$</prompt>make install
+<prompt>$ </prompt>./configure
+<prompt>$ </prompt>make
+<prompt>$ </prompt>make install
       </programlisting>
     </para>
     <para>
       This will generate the makefiles for your specific platform,
       compile all the source tree, and install the binaries and
-      documentation in your system.
+      documentation in your system. This method works in the following environments:
+      <itemizedlist mark="bullet">
+	<listitem><para>On Linux (or other Unix systems, including MacOSX)</para></listitem>
+	<listitem><para>On linux using the MinGW compiler in a cross compilation environment to generate Windows binaries</para></listitem>
+	<listitem><para>On Windows using the MinGW compiler</para></listitem>
+      </itemizedlist>
     </para>
     <para>
-      If you don't find a file named <filename>configure</filename>, there
-      should be one called <filename>autogen.sh</filename>. In this case,
-      run <filename>autogen.sh</filename>, which will create and run the
-      generated <filename>configure</filename> file.
+      If you don't find a file named <filename>configure</filename>, usually because you use
+      non packaged sources which come from a Git repository, then
+      execute the <filename>autogen.sh</filename> script which will create and run the
+      generated <filename>configure</filename> file (please not that for this script to work,
+      you'll need to have the autotools components installed on your system).
     </para>
     <para>
       You can specify several arguments to <filename>configure</filename> (or
-      <filename>autogen.sh</filename>). The most significant are (you can
+      <filename>autogen.sh</filename>). You can
       check all the available arguments by running
-      <command>configure --help</command>):
+      <command>configure --help</command>, but the most significant ones are:
     </para>
     <itemizedlist mark="bullet">
       <listitem>
@@ -57,51 +63,30 @@
       </listitem>
       <listitem>
         <para>
-          <userinput>--enable-debug</userinput>: Specify to explicietly print some debuging
-          information
+          <userinput>--enable-warnings</userinput>: Specify compilation warnings, to choose from:
+	  min, max, fatal or no.
         </para>
       </listitem>
       <listitem>
         <para>
-          <userinput>--with-mysql=&lt;directory&gt;</userinput>: Specify
-          directory where &MYSQL; libraries are installed
+          <userinput>--with-&lt;provider name&gt;=[yes/no/&lt;directory&gt;]</userinput>: Specify, for
+	  each supported database type (bdb, mysql, postgres, oracle, java, mdb) if the corresponding
+	  provider is resquired ("yes"), should not be built ("no"), or can be built if its development
+	  files can be detected by the configure script (you can specify a directory to look into if these
+	  files are installed in a non standard location, for example
+	  <userinput>--with-oracle=/local/BASES/OCI32</userinput>).
         </para>
       </listitem>
       <listitem>
         <para>
-          <userinput>--with-postgres=&lt;directory&gt;</userinput>:
-          Specify directory where &PGSQL; libraries are installed
+          <userinput>--enable-system-sqlite</userinput>: Specify that the SQLite installed with the
+	  system must be used instead of the embedded version.
         </para>
       </listitem>
       <listitem>
         <para>
-          <userinput>--with-sybase=&lt;directory&gt;</userinput>: Specify
-          directory where &SYBASE; libraries are installed
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--with-ldap=&lt;directory&gt;</userinput>: Specify
-          directory where &LDAP; libraries are installed
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--with-oracle=&lt;directory&gt;</userinput>: Specify
-          directory where &ORAC; libraries are installed
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--with-interbase=&lt;directory&gt;</userinput>: Specify
-          directory where &INTERB; libraries are installed
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--with-mdb=&lt;directory&gt;</userinput>: Specify
-          directory where the MDB libraries (for accessing &MSACC; files)
-          are installed
+          <userinput>--with-ui</userinput>: Require that the UI extension (using GTK+) be built. This
+	  also enables building the graphical tools such as the control center and GdaBrowser.
         </para>
       </listitem>
     </itemizedlist>
@@ -122,15 +107,21 @@
     </para>
   </sect1>
   <sect1 id="compiling">
-    <title>Compiling with the library</title>
+    <title>Compiling your code using the &LIBGDA; library</title>
     <para>
       To compile you will need to set the C flags and to link the library, so we recommend
       to use the <command>pkg-config</command> command.
     </para>
     <programlisting>
-<systemitem class="prompt">$</systemitem>gcc -c full_example.c `pkg-config --cflags libgda-5.0`
-<systemitem class="prompt">$</systemitem>gcc -o full_example `pkg-config --libs libgda-5.0` full_example.o
+<systemitem class="prompt">$ </systemitem>gcc -c full_example.c `pkg-config --cflags libgda-5.0`
+<systemitem class="prompt">$ </systemitem>gcc -o full_example `pkg-config --libs libgda-5.0` full_example.o
     </programlisting>
+    <para>
+      or more simply:
+      <programlisting>
+<systemitem class="prompt">$ </systemitem>gcc -o full_example `pkg-config --cflags --libs libgda-4.0` full_example.c
+    </programlisting>
+    </para>
     <para>
       Doing this will add to the C compiler command line all needed header files
       and library directories as well as all needed libraries for linking your GDA
@@ -149,8 +140,7 @@
       <title>Configuration for development</title>
       <para>
         If you want to develop applications using &LIBGDA;, you should 
-        install the libgda-dev[el] package if you do a &RPM; or <link
-								   linkend="installation-debian">Debian-based</link>
+        install the libgda-dev[el] package if you do a &RPM; or <link linkend="installation-debian">Debian-based</link>
         installation. If you compiled the source code, development files are
         installed in your system.
       </para>
@@ -213,8 +203,8 @@
 	(which
 	is created the first time &LIBGDA; is used within an application. System wide DSN are defined in the
 	<filename>&lt;prefix&gt;/etc/libgda/config</filename>. Rather than editing that
-	file manually, it is possible to use the <command>gnome-database-properties-5.0</command>
-	from the <ulink url="http://www.gnome-db.org">Libgnomedb</ulink> library.
+	file manually, it is possible to use the <command>gda-control-center-5.0</command> tool
+	(part of &LIBGDA;).
 	Note: if the <filename>$HOME/.libgda/config</filename> already exists from a previous use
 	of &LIBGDA;, then that file is used instead of
 	<filename>$HOME/.local/share/libgda/config</filename>.
@@ -228,9 +218,9 @@
         &LIBGDA; providers.
       </para>
       <sect3 id="installation-provider-default">
-	<title>Default provider</title>
+	<title>SQLite provider</title>
 	<para>
-	  The &GDA; default provider (based on an SQLite database file) is always installed 
+	  The SQLite provider is always installed (it is required by &LIBGDA;'s internally)
           with &LIBGDA;, which means that a default database system is always available. 
 	  Specifically the first time you use
 	  &LIBGDA;, a test database is copied into <filename>$HOME/.local/share/libgda/config</filename>
@@ -239,40 +229,33 @@
 	  named "SalesTest". 
 	</para>
       </sect3>
-      <sect3 id="installation-provider-odbc">
-	<title>&ODBC; Provider</title>
-	<para>
-	  The &ODBC; provider is a special case, since &ODBC; is itself a 
-          data access layer, the same as &LIBGDA;. So, in the case of the
-          &GDA; &ODBC; provider, the &DSN; string is completely up to the
-          &ODBC; driver manager. That is, the &GDA; &ODBC; provider does not
-          parse it all, nor does it try to understand what it means; it
-          simply passes it over to the &ODBC; library.
-	</para>
-	<para>
-	  So, if you want to use &LIBGDA; with &ODBC;, you should first know
-          how to set up an &ODBC; data source, and then just specify the
-          &DSN; string you would pass to the &ODBC; library in the &DSN;
-          string of the &GDA; data sources.
-	</para>
-	<para>
-	  There is a project called
-	  <ulink url="http://www.unixodbc.org">unixODBC</ulink>,
-          which provides some graphical tools to help you in
-	  setting up &ODBC; data sources. You may find it
-	  interesting to give it a try.
-	</para>
-      </sect3>
       <sect3 id="installation-provider-all">
-	<title>Common to all provider</title>
+	<title>Connection information for each database provider</title>
 	<para>
 	  Each provider exports a list of the arguments it requires in 
 	  its connection string which is used internally by &LIBGDA; to
-	  establish each connection. If you don't use a GUI which proposes
-	  you valid choices (such as &GNOMEDB;), you can get that list in
-	  each file named <filename>&lt;provider_name&gt;_specs_dsn.xml</filename>
-	  installed in the <filename>$PREFIX/share/libgda</filename> directory.
-	  This file is easy to parse and read.
+	  establish each connection. To obtain the required information to open a connection
+	  using a provider, use the <link linkend="gda-sql">Gda SQL console tool</link> with the
+	  <userinput>-L &lt;provider name&gt;</userinput> option. For example for PostgreSQL (strings truncated
+	  for better readability):
+	  <programlisting>
+<systemitem class="prompt">$ </systemitem>gda-sql -L PostgreSQL
+                   Provider 'PostgreSQL' description
+Attribute      | Value                                                   
+---------------+-------------------------------------------------------------
+Provider       | PostgreSQL                                              
+Description    | Provider for PostgreSQL databases                       
+DSN parameters | DB_NAME: The name of a database to connect to (string),     
+                 SEARCHPATH: Search path among database's schemas ('search_pa
+                 HOST: Host on which the database server is running (for serv
+                 PORT: Database server port (for servers running on unix doma
+                 OPTIONS: Extra connection options (string),                 
+                 USE_SSL: Whether or not to use SSL to establish the connecti
+Authentication | USERNAME (string),                                                         
+                 PASSWORD (string)
+File           | /local/lib/libgda-4.0/providers/libgda-postgres.so
+(5 rows)
+	  </programlisting>
 	</para>
       </sect3>
     </sect2>
