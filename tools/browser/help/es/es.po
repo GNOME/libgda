@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-01-16 11:54+0000\n"
-"PO-Revision-Date: 2011-01-18 16:22+0100\n"
+"POT-Creation-Date: 2011-01-20 21:35+0000\n"
+"PO-Revision-Date: 2011-01-21 12:41+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,9 @@ msgstr ""
 #: C/transactions.page:5(title) C/schema-browser-perspective.page:5(title)
 #: C/query-execution-perspective.page:5(title) C/general-ui.page:5(title)
 #: C/features.page:5(title) C/diagram.page:5(title)
+#: C/data-manager-source-editor.page:5(title)
 #: C/data-manager-xml-syntax.page:5(title)
-#: C/data-manager-perspective.page:5(title)
+#: C/data-manager-perspective.page:5(title) C/actions.page:5(title)
 msgid "1"
 msgstr "1"
 
@@ -355,11 +356,14 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/query-execution-perspective.page:21(None)
+#: C/query-execution-perspective.page:17(None)
+#| msgid ""
+#| "@@image: 'figures/query-exec-persp.png'; "
+#| "md5=14f701b0619a497da6c7902facad9f42"
 msgid ""
-"@@image: 'figures/query-exec-persp.png'; md5=14f701b0619a497da6c7902facad9f42"
+"@@image: 'figures/query-exec-persp.png'; md5=c52ce85c0f89d26775c8b9dad282910a"
 msgstr ""
-"@@image: 'figures/query-exec-persp.png'; md5=14f701b0619a497da6c7902facad9f42"
+"@@image: 'figures/query-exec-persp.png'; md5=c52ce85c0f89d26775c8b9dad282910a"
 
 #: C/query-execution-perspective.page:8(title)
 msgid "The query execution perspective"
@@ -373,7 +377,16 @@ msgid ""
 "shortcut."
 msgstr ""
 
-#: C/query-execution-perspective.page:14(p)
+#: C/query-execution-perspective.page:15(title)
+msgid "Query exec perspective"
+msgstr "Perspectiva de ejecución de la consulta"
+
+#: C/query-execution-perspective.page:16(desc)
+msgid "The query exec perspective with one SELECT statement executed"
+msgstr ""
+"La perspectiva de ejecución de la consulta con una sentencia SELECT ejecutada"
+
+#: C/query-execution-perspective.page:20(p)
 msgid ""
 "The perspective is divided in two horizontal panes: the left pane for the "
 "user defined favorite statements, and the right pane being the action area."
@@ -382,16 +395,23 @@ msgstr ""
 "izquierda para las declaraciones favoritas del usuario, y el panel de la "
 "derecha que es el área de acción."
 
-#: C/query-execution-perspective.page:19(title)
-msgid "Query exec perspective"
-msgstr "Perspectiva de ejecución de la consulta"
-
-#: C/query-execution-perspective.page:20(desc)
-msgid "The query exec perspective with one SELECT statement executed"
-msgstr ""
-"La perspectiva de ejecución de la consulta con una sentencia SELECT ejecutada"
-
 #: C/query-execution-perspective.page:24(p)
+msgid ""
+"In the figure above, there are two favorites: a SELECT statement (named "
+"\"List customers\") and an INSERT statement (named \"New customer ...\"). "
+"The INSERT statement needs one \"name\" parameter, whereas the SELECT "
+"statement does not require any parameter to be executed."
+msgstr ""
+
+#: C/query-execution-perspective.page:30(p)
+msgid ""
+"The icon difference between the two illustrates the fact that the INSERT "
+"favorite is also marked to be an <link xref=\"actions\">action</link>: it "
+"will be proposed as an action to be executed when the contextual menu is "
+"brought up in any grid representation of a resultset."
+msgstr ""
+
+#: C/query-execution-perspective.page:35(p)
 msgid ""
 "The left part of the perspective lists the favorite statements which have "
 "been user defined. Activating a favorite (double clicking) resets the SQL "
@@ -401,33 +421,33 @@ msgstr ""
 "definidas por el usuario. Activa una favorita (doble pulsación) reinicia el "
 "contenido del área de texto SQL a la setencia SQL seleccionada."
 
-#: C/query-execution-perspective.page:29(p)
+#: C/query-execution-perspective.page:40(p)
 msgid ""
 "The right pane is composed of zero or more tabs where the SQL is entered and "
 "executed. In each tab there is:"
 msgstr ""
 
-#: C/query-execution-perspective.page:34(p)
+#: C/query-execution-perspective.page:45(p)
 msgid "an SQL area in the top left part"
 msgstr "un área SQL en la parte superior izquierda"
 
-#: C/query-execution-perspective.page:35(p)
+#: C/query-execution-perspective.page:46(p)
 msgid "command buttons in the top right part"
 msgstr "botones de comandos en la parte superior derecha"
 
-#: C/query-execution-perspective.page:36(p)
+#: C/query-execution-perspective.page:47(p)
 msgid "execution history in the lower left part"
 msgstr "histórico de ejecución en la parte inferior izquierda"
 
-#: C/query-execution-perspective.page:37(p)
+#: C/query-execution-perspective.page:48(p)
 msgid "execution results in the lower right part"
 msgstr "resultados de ejecución en la parte inferior derecha"
 
-#: C/query-execution-perspective.page:41(title)
+#: C/query-execution-perspective.page:52(title)
 msgid "SQL area"
 msgstr "Área SQL"
 
-#: C/query-execution-perspective.page:42(p)
+#: C/query-execution-perspective.page:53(p)
 msgid ""
 "The SQL area is an SQL editor. The SQL can be any SQL understood by the "
 "database, with the exception of <link xref=\"variables-syntax\">variables</"
@@ -437,28 +457,28 @@ msgstr ""
 "base de datos entienda, con la excepción de las <link xref=\"variables-syntax"
 "\">variables</link> (que deben tener una sintaxis específica)."
 
-#: C/query-execution-perspective.page:46(p)
+#: C/query-execution-perspective.page:57(p)
 msgid "The keyboard shortcuts in the SQL editor are:"
 msgstr "Los atajos de teclado en el editor SQL son:"
 
-#: C/query-execution-perspective.page:50(p)
+#: C/query-execution-perspective.page:61(p)
 msgid ""
 "<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
 msgstr ""
 "<keyseq><key>Ctrl</key><key>Espacio</key></keyseq> para obtener una lista de "
 "finalización"
 
-#: C/query-execution-perspective.page:51(p)
+#: C/query-execution-perspective.page:62(p)
 msgid ""
 "<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code"
 msgstr ""
 "<keyseq><key>Ctrl</key><key>Intro</key></keyseq> para ejecutar el código SQL"
 
-#: C/query-execution-perspective.page:52(p)
+#: C/query-execution-perspective.page:63(p)
 msgid "<keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor"
 msgstr "<keyseq><key>Ctrl</key><key>l</key></keyseq> para limpiar el editor"
 
-#: C/query-execution-perspective.page:53(p)
+#: C/query-execution-perspective.page:64(p)
 msgid ""
 "<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</"
 "key><key>Down</key></keyseq> to navigate through the editor's history"
@@ -466,16 +486,16 @@ msgstr ""
 "<keyseq><key>Ctrl</key><key>Arriba</key></keyseq> y <keyseq><key>Ctrl</"
 "key><key>Abajo</key></keyseq> para navegar por el histórico del editor"
 
-#: C/query-execution-perspective.page:59(title)
+#: C/query-execution-perspective.page:70(title)
 msgid "Command buttons"
 msgstr "Botones de comandos"
 
-#: C/query-execution-perspective.page:60(p)
-#: C/data-manager-perspective.page:63(p)
+#: C/query-execution-perspective.page:71(p)
+#: C/data-manager-perspective.page:72(p)
 msgid "The commands available through the command buttons are:"
 msgstr "Los comandos disponibles a través de los botones de comandos son:"
 
-#: C/query-execution-perspective.page:64(p)
+#: C/query-execution-perspective.page:75(p)
 msgid ""
 "<gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</"
 "key><key>l</key></keyseq> shortcut)"
@@ -483,7 +503,7 @@ msgstr ""
 "<gui>Limipiar</gui>: limpia el editor (similar al atajo <keyseq><key>Ctrl</"
 "key><key>l</key></keyseq>)"
 
-#: C/query-execution-perspective.page:65(p)
+#: C/query-execution-perspective.page:76(p)
 msgid ""
 "<gui>Variables</gui>: shows or hides the <link xref=\"variables-syntax"
 "\">variables</link> panel where you can give values to the variables present "
@@ -495,7 +515,7 @@ msgstr ""
 "presentes en el código SQL. El panel se muestra automáticamente cuando se "
 "detecta una variable en el código SQL."
 
-#: C/query-execution-perspective.page:68(p)
+#: C/query-execution-perspective.page:79(p)
 msgid ""
 "<gui>Execute</gui>: executes the SQL code. If the SQL code contains some "
 "variables which have not been set, then a popup first appears requesting the "
@@ -507,7 +527,7 @@ msgstr ""
 "pidiendo que se asigne un valor a esas variables. Esto es similar al atajo "
 "<keyseq><key>Ctrl</key><key>Intro</key></keyseq>."
 
-#: C/query-execution-perspective.page:71(p)
+#: C/query-execution-perspective.page:82(p)
 msgid ""
 "<gui>Indent</gui>: re-indents the SQL code (warning: this removes any "
 "comments)"
@@ -515,15 +535,15 @@ msgstr ""
 "<gui>Sangrar</gui>: reindenta el código SQL (aviso: esto quita cualquier "
 "comentario)"
 
-#: C/query-execution-perspective.page:72(p)
+#: C/query-execution-perspective.page:83(p)
 msgid "<gui>Favorites</gui>: adds the current SQL code to the favorites"
 msgstr "<gui>Favoritos</gui>: añade el código SQL actual a los favoritos"
 
-#: C/query-execution-perspective.page:77(title)
+#: C/query-execution-perspective.page:88(title)
 msgid "Execution history"
 msgstr "Histórico de ejecución"
 
-#: C/query-execution-perspective.page:78(p)
+#: C/query-execution-perspective.page:89(p)
 msgid ""
 "The execution history part contains a list of the past executed statements, "
 "ordered by execution date along with an indication when the statement was "
@@ -536,7 +556,7 @@ msgstr ""
 "elemento del histórico se muestra el resultado correspondiente en la parte "
 "de resultados."
 
-#: C/query-execution-perspective.page:83(p)
+#: C/query-execution-perspective.page:94(p)
 msgid ""
 "The <gui>Copy</gui> button copies the currently selected history item's SQL "
 "code to the SQL editor, and the <gui>Clear</gui> button removes all the "
@@ -546,7 +566,7 @@ msgstr ""
 "seleccionado actualmente al editor SQL, y el botón <gui>Limpiar</gui> quita "
 "todos los elementos del histórico."
 
-#: C/query-execution-perspective.page:87(p)
+#: C/query-execution-perspective.page:98(p)
 msgid ""
 "Note that any given history item can also be removed individually using the "
 "<key>Suppr</key> key."
@@ -554,11 +574,11 @@ msgstr ""
 "Tenga en cuenta que se puede quitar individualmente cualquier elemento del "
 "histórico usando la tecla <key>Supr</key>."
 
-#: C/query-execution-perspective.page:93(title)
+#: C/query-execution-perspective.page:104(title)
 msgid "Execution results"
 msgstr "Resultados de la ejecución"
 
-#: C/query-execution-perspective.page:94(p)
+#: C/query-execution-perspective.page:105(p)
 msgid ""
 "The Execution results part displays the execution result of the currently "
 "selected execution history item, as a table for SELECT statement, giving "
@@ -845,6 +865,15 @@ msgstr "añadir elementos, a través del menú contextual"
 msgid "removing items, through the items's contextual menu"
 msgstr "quitar elementos, a través del menú contextual del elemento"
 
+#: C/data-manager-source-editor.page:7(title)
+#| msgid "The data manager perspective, with two data sources"
+msgid "The data manager's data sources editor"
+msgstr "El editor de fuentes del administrador de datos"
+
+#: C/data-manager-source-editor.page:8(p)
+msgid "To be done."
+msgstr "Para hacer."
+
 #: C/data-manager-xml-syntax.page:7(title)
 msgid "The data manager's XML syntax"
 msgstr "La sintaxis XML del administrador de datos"
@@ -1120,7 +1149,7 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:53(None)
-#: C/data-manager-perspective.page:84(None)
+#: C/data-manager-perspective.page:93(None)
 msgid ""
 "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 msgstr ""
@@ -1128,13 +1157,29 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/data-manager-perspective.page:60(None)
+#: C/data-manager-perspective.page:62(None)
+#| msgid ""
+#| "@@image: 'figures/data-man-xmlcompose.png'; "
+#| "md5=8a96e29b3290b6df09f842c5ed7ce8c3"
 msgid ""
 "@@image: 'figures/data-man-xmlcompose.png'; "
-"md5=8a96e29b3290b6df09f842c5ed7ce8c3"
+"md5=fd3ae97c42d58ddbd87404c92b95ee9c"
 msgstr ""
 "@@image: 'figures/data-man-xmlcompose.png'; "
-"md5=8a96e29b3290b6df09f842c5ed7ce8c3"
+"md5=fd3ae97c42d58ddbd87404c92b95ee9c"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/data-manager-perspective.page:69(None)
+#| msgid ""
+#| "@@image: 'figures/data-man-xmlcompose.png'; "
+#| "md5=8a96e29b3290b6df09f842c5ed7ce8c3"
+msgid ""
+"@@image: 'figures/data-man-uicompose.png'; "
+"md5=33b1cf9354761dac4ee3f14a9534357a"
+msgstr ""
+"@@image: 'figures/data-man-uicompose.png'; "
+"md5=33b1cf9354761dac4ee3f14a9534357a"
 
 #: C/data-manager-perspective.page:8(title)
 msgid "The data manager perspective"
@@ -1224,27 +1269,53 @@ msgstr ""
 "<link xref=\"query-execution-perspective\"/>."
 
 #: C/data-manager-perspective.page:51(p)
+#| msgid ""
+#| "The following figure shows the data sources editing mode (switch to "
+#| "editing mode using the <media type=\"image\" mime=\"image/png\" src="
+#| "\"figures/data-man-mode.png\"/> toolbar button) at the moment data "
+#| "sources can only be defined using an <link xref=\"data-manager-xml-syntax"
+#| "\">XML syntax</link>."
 msgid ""
 "The following figure shows the data sources editing mode (switch to editing "
 "mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-"
-"man-mode.png\"/> toolbar button) at the moment data sources can only be "
-"defined using an <link xref=\"data-manager-xml-syntax\">XML syntax</link>."
+"man-mode.png\"/> toolbar button)."
 msgstr ""
-"La siguiente figura muestra el modo de edición de los orígenes de datos "
+"La siguiente figura muestra el modo de edición de las fuentes de datos "
 "(cambie al modo de edición usando el <media type=\"image\" mime=\"image/png"
-"\" src=\"figures/data-man-mode.png\"/> botón de la barra de herramientas). "
-"Por el momento, sólo se pueden definir orígenes de datos usando una <link "
-"xref=\"data-manager-xml-syntax\">sintaxis XML</link>."
+"\" src=\"figures/data-man-mode.png\"/> botón de la barra de herramientas)."
 
-#: C/data-manager-perspective.page:58(title)
+#: C/data-manager-perspective.page:55(p)
+msgid ""
+"Data sources can be defined using an <link xref=\"data-manager-xml-syntax"
+"\">XML syntax</link>, or using the <link xref=\"data-manager-source-editor"
+"\">default interface</link>."
+msgstr ""
+"Se pueden definir las fuentes de datos usando una <link xref=\"data-manager-"
+"xml-syntax\">sintaxis XML</link>, o usando la <link xref=\"data-manager-"
+"source-editor\">interfaz predeterminada</link>."
+
+#: C/data-manager-perspective.page:60(title)
+#: C/data-manager-perspective.page:65(title)
 msgid "Data sources edition"
 msgstr "Editar las fuentes de datos"
 
-#: C/data-manager-perspective.page:59(desc)
-msgid "Editing data sources in the data manager perspective"
-msgstr "Editar fuentes de datos en la perspectiva del gestor de datos"
+#: C/data-manager-perspective.page:61(desc)
+#| msgid "Editing data sources in the data manager perspective"
+msgid ""
+"Editing data sources in the data manager perspective, from the XML syntax"
+msgstr ""
+"Editar fuentes de datos en la perspectiva del gestor de datos, desde la "
+"sintaxis XML"
 
-#: C/data-manager-perspective.page:67(p)
+#: C/data-manager-perspective.page:66(desc)
+msgid ""
+"Editing data sources in the data manager perspective, using the default "
+"interface: two data sources are defined, which list the contents of the "
+"\"customers\" and \"orders\" tables. The setup is the same as the figure "
+"above showing the XML syntax"
+msgstr ""
+
+#: C/data-manager-perspective.page:76(p)
 msgid ""
 "<gui>Reset</gui>: resets the XML editor to a default XML template, only "
 "available when the XML view is currently displayed"
@@ -1252,18 +1323,24 @@ msgstr ""
 "<gui>Restablecer</gui>: restablece el editor XML a una plantilla XML "
 "predeterminada, sólo disponible cuando la vista XML se muestra actualmente"
 
-#: C/data-manager-perspective.page:69(p)
+#: C/data-manager-perspective.page:78(p)
+#| msgid ""
+#| "<gui>Add</gui>: displays a popup menu with an entry per table to quickly "
+#| "add the whole contents of a table as a data source, only available when "
+#| "the UI editor is currently displayed"
 msgid ""
-"<gui>Add</gui>: displays a popup menu with an entry per table to quickly add "
-"the whole contents of a table as a data source, only available when the UI "
-"editor is currently displayed"
+"<gui>Add</gui>: displays a popup menu with shortcuts to quickly define new "
+"data sources as whole table contents (also analyses the database schema to "
+"propose relevant choices), only available when the XML edition mode is not "
+"selected"
 msgstr ""
-"<gui>Añadir</gui>: muestra un menú emergente con una entrada por cada tabla, "
-"para añadir rápidamente la totalidad de los contenidos de una tabla como un "
-"origen de datos, sólo disponible cuando el editor de la IU se muestra "
-"actualmente"
+"<gui>Añadir</gui>: muestra un menú emergente con atajos para definir "
+"rápidamente nuevos orígenes de datos como contenido de la tabla completa "
+"(también analiza el esquema de la base de datos para proponer elecciones "
+"relevantes), sólo disponible cuando el modo de edición XML no está "
+"seleccionado"
 
-#: C/data-manager-perspective.page:72(p)
+#: C/data-manager-perspective.page:81(p)
 msgid ""
 "<gui>Variables</gui>: shows/hide the <link xref=\"variables-syntax"
 "\">variables</link> panel where you can give values to the variables present "
@@ -1275,23 +1352,23 @@ msgstr ""
 "el código SQL de cualquier definición de orígenes de datos. El panel se "
 "muestra automáticamente cuando se detecta una variable en el código SQL."
 
-#: C/data-manager-perspective.page:75(p)
+#: C/data-manager-perspective.page:84(p)
 msgid "<gui>Execute</gui>: executes the defined data sources"
 msgstr "<gui>Ejecutar</gui>: ejecuta los orígenes de datos definidos"
 
-#: C/data-manager-perspective.page:76(p)
+#: C/data-manager-perspective.page:85(p)
 msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
 msgstr "<gui>Ver XML</gui>: alterna entre el editor XML y el editor del IU"
 
-#: C/data-manager-perspective.page:77(p)
+#: C/data-manager-perspective.page:86(p)
 msgid "<gui>Help</gui>: shows some help"
 msgstr "<gui>Ayuda</gui>: muestra alguna ayuda"
 
-#: C/data-manager-perspective.page:81(title)
+#: C/data-manager-perspective.page:90(title)
 msgid "Executing defined data sources"
 msgstr "Ejecutar orígenes de datos definidos"
 
-#: C/data-manager-perspective.page:82(p)
+#: C/data-manager-perspective.page:91(p)
 msgid ""
 "To execute a defined set of data sources, simply switch to execute mode "
 "using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-"
@@ -1302,7 +1379,7 @@ msgstr ""
 "\"figures/data-man-mode.png\"/> botón de la barra de herramientas o el botón "
 "<gui>Ejecutar</gui>."
 
-#: C/data-manager-perspective.page:87(p)
+#: C/data-manager-perspective.page:96(p)
 msgid ""
 "The layout of tabular views for each data source is automatically generated "
 "in columns using the following rule: if a data source B depends on a data "
@@ -1313,12 +1390,133 @@ msgstr ""
 "datos B depende de otra A, su vista tabular se muestra a la derecha de la de "
 "A."
 
-#: C/data-manager-perspective.page:92(p)
+#: C/data-manager-perspective.page:101(p)
 msgid ""
 "Also if you change the selected row of tabular view of a data source A, then "
 "the tabular views of all the data sources depending on A will also have "
 "their tabular view refreshed."
 msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/actions.page:34(None)
+#| msgid ""
+#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+msgid "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
+msgstr "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/actions.page:41(None)
+#| msgid ""
+#| "@@image: 'figures/data-man-persp.png'; "
+#| "md5=b4e0678527c03093031dcb3805bb2841"
+msgid "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
+msgstr "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/actions.page:49(None)
+#| msgid ""
+#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+msgid "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
+msgstr "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/actions.page:57(None)
+#| msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
+msgid "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
+msgstr "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
+
+#: C/actions.page:10(title)
+#| msgid "Transactions"
+msgid "Actions"
+msgstr "Acciones"
+
+#: C/actions.page:11(p)
+msgid ""
+"Actions are bits of SQL code which depends on variables and can be executed "
+"from the contextual menu of any data set presented in a grid."
+msgstr ""
+
+#: C/actions.page:15(p)
+msgid ""
+"For example if there is a table \"products\" which lists some kind of "
+"products and a table \"comments\" which lists all the comments left by users "
+"on a product (presumably the \"comments\" table will have a foreign key on "
+"the \"products\" table to reference it)."
+msgstr ""
+
+#: C/actions.page:20(p)
+msgid ""
+"An action can be defined to show all the entries in the \"comments\" table "
+"provided the key defining a product. Then anytime a product is listed in a "
+"resultset, the contextual menu will allow the user to execute this action "
+"and thus display all the comments on the selected product. This situation is "
+"illustrated in the following figures."
+msgstr ""
+
+#: C/actions.page:26(p)
+msgid ""
+"The first step is to define an action, which is just a favorite in the <link "
+"xref=\"query-execution-perspective\">query execution</link> perspective "
+"which is defined as an action: bring up the properties for the favorite, and "
+"make sure the \"Is action\" toggle is checked:"
+msgstr ""
+
+#: C/actions.page:32(title)
+msgid "Action - define an action"
+msgstr "Acción: define una acción"
+
+#: C/actions.page:33(desc)
+msgid ""
+"Define the action to list the comments for a product, from the query "
+"execution perspective"
+msgstr ""
+"Define la acción para listar los comentarios de un producto, desde la "
+"perspectiva de ejecución de la consulta"
+
+#: C/actions.page:37(title)
+msgid "Action - display a list of products"
+msgstr "Acción: muestra una lista de productor"
+
+#: C/actions.page:38(desc)
+msgid ""
+"In the query execution perspective, let's select all the products. Notice "
+"that there are here two defined actions: \"Add comment on product\" and "
+"\"List comments for product\""
+msgstr ""
+
+#: C/actions.page:43(p)
+#| msgid "adding items, through the contextual menu"
+msgid "Now let's pop up the contextual menu:"
+msgstr "Ahora aparece el menú contextual"
+
+#: C/actions.page:47(title)
+#| msgid "printing, through the contextual menu"
+msgid "Action - contextual menu"
+msgstr "Acción: menú contextual"
+
+#: C/actions.page:48(desc)
+msgid ""
+"Pop up the contextual menu and select <guiseq><gui>Execute action</"
+"gui><gui>List comments for product</gui></guiseq>"
+msgstr ""
+
+#: C/actions.page:51(p)
+msgid ""
+"After a confirmation of the parameters to execute the action, the result is "
+"there:"
+msgstr ""
+
+#: C/actions.page:55(title)
+msgid "Action - executed"
+msgstr "Acción: ejecutada"
+
+#: C/actions.page:56(desc)
+msgid "The action is now executed"
+msgstr "La acción ahora está ejecutada"
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/index.page:0(None)
