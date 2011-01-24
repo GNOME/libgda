@@ -11,15 +11,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-21 23:06+0100\n"
-"PO-Revision-Date: 2011-01-20 17:14+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=libgda&component=general\n"
+"POT-Creation-Date: 2011-01-21 22:08+0000\n"
+"PO-Revision-Date: 2011-01-24 18:02+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
@@ -418,9 +419,8 @@ msgid "Database access services for the GNOME Desktop"
 msgstr "Servicios de acceso a bases de datos para el Escritorio GNOME"
 
 #: ../control-center/main.c:200
-#, fuzzy
 msgid "_Data source"
-msgstr "Fuentes de datos:"
+msgstr "Fuente de _datos"
 
 #: ../control-center/main.c:200 ../libgda/gda-server-provider-extra.c:327
 msgid "Database"
@@ -435,33 +435,28 @@ msgid "Close this window"
 msgstr "Cerrar esta ventana"
 
 #: ../control-center/main.c:202
-#, fuzzy
 msgid "_New datasource"
-msgstr "Usar fuente de datos:"
+msgstr "Fuente de datos _nueva"
 
 #: ../control-center/main.c:202
-#, fuzzy
 msgid "Create new data source"
-msgstr "Añadir una fuente de datos nueva"
+msgstr "Crear una fuente de datos nueva"
 
 #: ../control-center/main.c:203
-#, fuzzy
 msgid "_Delete datasource"
-msgstr "Eliminar fuente de datos"
+msgstr "Eliminar fuente de _datos"
 
 #: ../control-center/main.c:203
-#, fuzzy
 msgid "Delete selected data source"
-msgstr "Usar fuente de datos:"
+msgstr "Eliminar la fuente de datos seleccionada"
 
 #: ../control-center/main.c:204 ../tools/browser/browser-window.c:281
 msgid "_Properties"
 msgstr "_Propiedades"
 
 #: ../control-center/main.c:204
-#, fuzzy
 msgid "Edit properties for selected data source"
-msgstr "Lista de las fuentes de datos definidas"
+msgstr "Editar las propiedades de las fuentes de datos seleccionadas"
 
 #: ../control-center/main.c:205 ../control-center/main.c:206
 #: ../tools/browser/browser-window.c:294
@@ -474,7 +469,7 @@ msgstr "Acerca de"
 
 #: ../control-center/main.c:206
 msgid "About GNOME-DB"
-msgstr ""
+msgstr "Acerca de GNOME-DB"
 
 #. title
 #: ../control-center/main.c:436 ../control-center/provider-config.c:69
@@ -1316,9 +1311,9 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila "
-"actualizada» o «fila eliminada». Esto es un error de la implementación de %s "
-"(informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto es un error de la implementación de %s (informe del "
+"error)."
 
 #: ../libgda/gda-data-proxy.c:2098
 #, c-format
@@ -1328,9 +1323,9 @@ msgid ""
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila "
-"actualizada» o «fila eliminada». Esto puede ser un error de la "
-"implementación de %s (informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto puede ser un error de la implementación de %s "
+"(informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2944 ../tools/gda-sql.c:3176
 msgid "Could not create virtual connection"
@@ -1410,8 +1405,8 @@ msgstr "La modificación de la declaración usa un parámetro «%s» desconocido
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"La modificación del parámetro «%s» de la declaración es %s cuando debería "
-"ser %s"
+"La modificación del parámetro «%s» de la declaración es %s cuando debería ser "
+"%s"
 
 #: ../libgda/gda-data-select.c:1276
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1695,15 +1690,14 @@ msgstr "Falta la definición de la vista en el nodo <view>"
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
-"La definición de la vista contiene más de una declaración (para la vista "
-"«%s»)"
+"La definición de la vista contiene más de una declaración (para la vista «%s»)"
 
 #: ../libgda/gda-meta-store.c:1301
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
-"La definición de la vista no es una declaración de selección (para la vista "
-"«%s»)"
+"La definición de la vista no es una declaración de selección (para la vista «%"
+"s»)"
 
 #. FIXME
 #: ../libgda/gda-meta-store.c:1328 ../libgda/gda-meta-struct-io.c:176
@@ -2051,8 +2045,8 @@ msgstr "El proveedor %s creó un GdaServerOperation sin un nodo para «%s»"
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
-"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para "
-"«%s»"
+"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%"
+"s»"
 
 #: ../libgda/gda-server-provider.c:938 ../libgda/gda-server-provider.c:972
 #, c-format
@@ -2392,8 +2386,8 @@ msgstr ""
 #, c-format
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr ""
-"El modelo de datos para el esquema tiene un tipo gda erróneo: «%s» en vez de "
-"«%s»"
+"El modelo de datos para el esquema tiene un tipo gda erróneo: «%s» en vez de «%"
+"s»"
 
 #: ../libgda/gda-set.c:552 ../libgda/gda-set.c:653
 #, c-format
@@ -2513,8 +2507,7 @@ msgstr "No existe un manejador de datos para el tipo «%s»"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo "
-"«%s»"
+"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
 
 #: ../libgda/gda-statement.c:1232
 #, c-format
@@ -3240,8 +3233,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1143
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de "
-"campos que unir"
+"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de campos "
+"que unir"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1152
 msgid "Empty FROM clause"
@@ -3285,7 +3278,7 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:164
 msgid "DELETE statement needs a table to delete from"
-msgstr "La declaración DELETE necesita una tabla de la que borrar"
+msgstr "La declaración DELETE necesita una tabla de la que eliminar"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:355
 msgid "INSERT statement needs a table to insert into"
@@ -3452,8 +3445,7 @@ msgstr "No se especificó una expresión"
 #: ../libgda-report/engine/gda-report-engine.c:922
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr ""
-"No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
+msgstr "No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1060
 #, c-format
@@ -3652,9 +3644,8 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a "
-"establecer usando la propiedad «manejador») espere algún comportamiento no "
-"deseado"
+"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a establecer "
+"usando la propiedad «manejador») espere algún comportamiento no deseado"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:408
 msgid "Value is NULL"
@@ -5096,7 +5087,7 @@ msgstr "Nombre de la vista"
 #: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:1
 msgid "Drop index only if it exists"
-msgstr "Borrar el índice sólo si existe"
+msgstr "Eliminar el índice sólo si existe"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_index.xml.in.h:2
 #: ../providers/bdbsql/bdbsql_specs_drop_table.xml.in.h:2
@@ -5121,14 +5112,14 @@ msgstr "Si existe"
 #: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:4
 msgid "Index to delete"
-msgstr "Índice para borrar"
+msgstr "Índice para eliminar"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_table.xml.in.h:1
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
 msgid "Drop table only if it exists"
-msgstr "Borrar la tabla sólo si existe"
+msgstr "Eliminar la tabla sólo si existe"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:8
@@ -5136,7 +5127,7 @@ msgstr "Borrar la tabla sólo si existe"
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:4
 msgid "Table to delete"
-msgstr "Tabla para borrar"
+msgstr "Tabla para eliminar"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_view.xml.in.h:1
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:1
@@ -5144,7 +5135,7 @@ msgstr "Tabla para borrar"
 #: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:1
 msgid "Drop view only if it exists"
-msgstr "Borrar la vista sólo si existe"
+msgstr "Eliminar la vista sólo si existe"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_view.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:4
@@ -5152,7 +5143,7 @@ msgstr "Borrar la vista sólo si existe"
 #: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:4
 msgid "View to delete"
-msgstr "Vista para borrar"
+msgstr "Vista para eliminar"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:4
@@ -5335,8 +5326,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando "
-"%s. Habrá problemas con los caracteres que no sean UTF-8."
+"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando %"
+"s. Habrá problemas con los caracteres que no sean UTF-8."
 
 #: ../providers/mysql/gda-mysql-provider.c:588
 msgid "The connection string must contain the DB_NAME values"
@@ -5994,7 +5985,7 @@ msgstr "Sin acción"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 msgid "On delete action"
-msgstr "Acción al borrar"
+msgstr "Acción al eliminar"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
@@ -6090,7 +6081,7 @@ msgstr "nombre de la columna"
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:11
 msgid "Drop database only if it exists"
-msgstr "Borrar la base de datos sólo si ya existe"
+msgstr "Eliminar la base de datos sólo si ya existe"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
@@ -6101,11 +6092,12 @@ msgstr "Sólo si existe"
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
 msgid "Automatically drop objects that depend on the table (CASCADE)"
-msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADE)"
+msgstr ""
+"Eliminar automáticamente los objetos que dependan de la tabla (CASCADE)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:3
 msgid "Drop table only if it is temporary"
-msgstr "Borrar la tabla sólo si es temporal"
+msgstr "Eliminar la tabla sólo si es temporal"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:6
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
@@ -6842,11 +6834,13 @@ msgstr "Contraseña del usuario"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:1
 msgid "Automatically drop objects that depend on the column (CASCADE)"
-msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADE)"
+msgstr ""
+"Eliminar automáticamente los objetos que dependan de la tabla (CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:5
 msgid "Refuse to drop the column if any objects depend on it (RESTRICT)"
-msgstr "Rehusar borrar la tabla si cualquier objeto depende de ella (RESTRICT)"
+msgstr ""
+"Rehusar eliminar la tabla si cualquier objeto depende de ella (RESTRICT)"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
 msgid "What to do with references on the column to delete"
@@ -6855,24 +6849,25 @@ msgstr "Qué hacer con las referencias en la columna a eliminar"
 #. DSN parameters
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
 msgid "The name of a database to drop"
-msgstr "El nombre de la base de datos para borrar"
+msgstr "El nombre de la base de datos para eliminar"
 
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:1
 msgid "Drop role only if it exists"
-msgstr "Borrar el rol sólo si existe"
+msgstr "Eliminar el rol sólo si existe"
 
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:1
 msgid "Drop user only if it exists"
-msgstr "Borrar el usuario sólo si existe"
+msgstr "Eliminar el usuario sólo si existe"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:1
 msgid "Automatically drop objects that depend on the view (CASCADE)"
-msgstr "Borrar automáticamente los objetos que dependan de la vista (CASCADE)"
+msgstr ""
+"Eliminar automáticamente los objetos que dependan de la vista (CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:5
 msgid "Refuse to drop the view if any objects depend on it (RESTRICT)"
 msgstr ""
-"Rehusar a borrar la tabla si cualquier objeto depende de ella (RESTRICT)"
+"Rehusar a eliminar la tabla si cualquier objeto depende de ella (RESTRICT)"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:8
 msgid "What to do with objects referencing the view"
@@ -7560,8 +7555,7 @@ msgid ""
 "'%s' shortcut"
 msgstr ""
 "La perspectiva actual ha cambiado a la perspectiva «%s», puede volver a la "
-"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo "
-"«%s»"
+"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo «%s»"
 
 #: ../tools/browser/connection-binding-properties.c:143
 msgid "New virtual connection"
@@ -7670,8 +7664,8 @@ msgstr ""
 #: ../tools/browser/main.c:169 ../tools/gda-sql.c:249
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: "
-"%s\n"
+"Error while purging files used to store information about each connection: %"
+"s\n"
 msgstr ""
 "Error al limpiar los archivos usados para almacenar la información de cada "
 "conexión: %s\n"
@@ -8427,8 +8421,7 @@ msgstr "No se definió un origen de datos"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo "
-"«%s»"
+"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo «%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:245
 msgid "Data sources:"
@@ -8812,8 +8805,8 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
-"tipos incompatibles: «%s» para la clave externa y «%s» para la clave "
-"primaria referenciada"
+"tipos incompatibles: «%s» para la clave externa y «%s» para la clave primaria "
+"referenciada"
 
 #: ../tools/browser/schema-browser/table-columns.c:304
 #, c-format
@@ -9224,11 +9217,11 @@ msgstr "Sin contraseña para «%s»"
 #: ../tools/gda-sql.c:1480
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the "
-"'%s' file\n"
+"All the information related to the '%s' connection will be stored in the '%"
+"s' file\n"
 msgstr ""
-"Toda la información relativa a la conexión «%s» se almacenará en el archivo "
-"«%s»\n"
+"Toda la información relativa a la conexión «%s» se almacenará en el archivo «%"
+"s»\n"
 
 #: ../tools/gda-sql.c:1510
 #, c-format
@@ -9241,8 +9234,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
-"Obteniendo la información de esquema para la conexión «%s», esto puede "
-"llevar algún tiempo… "
+"Obteniendo la información de esquema para la conexión «%s», esto puede llevar "
+"algún tiempo… "
 
 #: ../tools/gda-sql.c:1525 ../tools/gda-sql.c:1662 ../tools/gda-sql.c:2971
 #, c-format
@@ -9509,7 +9502,7 @@ msgstr "Cargar búfer de consulta del diccionario"
 
 #: ../tools/gda-sql.c:2347
 msgid "Delete query buffer from dictionary"
-msgstr "Borrar búfer de consulta del diccionario"
+msgstr "Eliminar búfer de consulta del diccionario"
 
 #: ../tools/gda-sql.c:2358
 #, c-format
@@ -9538,7 +9531,7 @@ msgstr "[NOMBRE] %s"
 
 #: ../tools/gda-sql.c:2383
 msgid "Unset (delete) internal named parameter (or all parameters)"
-msgstr "Borrar (unset) el parámetro interno (o todos los parámetros)"
+msgstr "Eliminar (unset) el parámetro interno (o todos los parámetros)"
 
 #: ../tools/gda-sql.c:2393
 msgid "Formatting"
@@ -9988,9 +9981,9 @@ msgstr "Disparadores"
 #~ msgstr "Conectar con otra fuente de datos definidos (DSN, vea \\l)"
 
 #~ msgid ""
-#~ "<small>The XML tree's root node must be a <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one "
-#~ "or more data source definitions.\n"
+#~ "<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
+#~ "data source definitions.\n"
 #~ "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;"
 #~ "query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
 #~ "tt></span> nodes, both accepting the following optional attributes:\n"
@@ -10017,15 +10010,15 @@ msgstr "Disparadores"
 #~ "   the aforementioned table.\n"
 #~ "</small>"
 #~ msgstr ""
-#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
+#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
 #~ "definiciones de fuentes de datos.\n"
-#~ "Cada fuente de datos está definida por nodos <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;query&gt;</tt></span> o <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;table&gt;</tt></span>, ambos aceptan los siguientes "
-#~ "atributos opcionales:\n"
-#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena "
-#~ "de ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
+#~ "Cada fuente de datos está definida por nodos <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;query&gt;</tt></span> o <span foreground=\"#4e9a06\"><tt>&lt;"
+#~ "table&gt;</tt></span>, ambos aceptan los siguientes atributos "
+#~ "opcionales:\n"
+#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena de "
+#~ "ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
 #~ " - <span foreground=\"#4e9a06\">«title»</span> para especificar un "
 #~ "título.\n"
 #~ "\n"
