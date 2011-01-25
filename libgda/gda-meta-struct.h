@@ -371,7 +371,7 @@ typedef struct {
  *
  * Returns: the policy as a #GdaMetaForeignKeyPolicy
  */
-#define GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(fk) (*(((GdaMetaTableForeignKey*)(fk))->on_update_policy))
+#define GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(fk) (*(((GdaMetaTableForeignKey*)(fk))->on_delete_policy))
 
 /**
  * GDA_META_TABLE_FOREIGN_KEY_IN_SCHEMA
