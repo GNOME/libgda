@@ -1,6 +1,6 @@
 /* gda-meta-struct.h
  *
- * Copyright (C) 2008 - 2009 Vivien Malerba
+ * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -57,6 +57,7 @@ struct _GdaMetaStructClass
 {
 	GObjectClass              parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
@@ -64,8 +65,13 @@ struct _GdaMetaStructClass
 	void (*_gda_reserved4) (void);
 };
 
-/*
- * Type of database object which can be handled
+/**
+ * GdaMetaDbObjectType:
+ * @GDA_META_DB_UNKNOWN: unknown type
+ * @GDA_META_DB_TABLE: represents a table
+ * @GDA_META_DB_VIEW: represents a view
+ *
+ * Type of database object which can be handled as a #GdaMetaDbObject
  */
 typedef enum {
 	GDA_META_DB_UNKNOWN,
@@ -85,7 +91,11 @@ typedef enum {
 	                                            GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES
 } GdaMetaStructFeature;
 
-/*
+/**
+ * GdaMetaSortType:
+ * @GDA_META_SORT_ALHAPETICAL: sort alphabetically
+ * @GDA_META_SORT_DEPENDENCIES: sort by dependencies
+ *
  * Types of sorting
  */
 typedef enum {
@@ -193,8 +203,35 @@ typedef struct {
 	gpointer _gda_reserved3;
 	gpointer _gda_reserved4;
 } GdaMetaDbObject;
-#define GDA_META_DB_OBJECT(x) ((GdaMetaDbObject*)(x))
+
+/**
+ * GDA_META_DB_OBJECT:
+ * @dbo: a pointer
+ *
+ * Casts @dbo to a #GdaMetaDbObject, no check is made on the validity of @dbo
+ *
+ * Returns: a pointer to a #GdaMetaDbObject
+ */
+#define GDA_META_DB_OBJECT(dbo) ((GdaMetaDbObject*)(dbo))
+
+/**
+ * GDA_META_TABLE:
+ * @dbo: a pointer
+ *
+ * Casts @dbo to a #GdaMetaTable, no check is made on the validity of @dbo
+ *
+ * Returns: a pointer to a #GdaMetaTable
+ */
 #define GDA_META_TABLE(dbobj) (&((dbobj)->extra.meta_table))
+
+/**
+ * GDA_META_VIEW:
+ * @dbo: a pointer
+ *
+ * Casts @dbo to a #GdaMetaView, no check is made on the validity of @dbo
+ *
+ * Returns: a pointer to a #GdaMetaView
+ */
 #define GDA_META_VIEW(dbobj) (&((dbobj)->extra.meta_view))
 
 /**
@@ -224,7 +261,17 @@ typedef struct {
 	gpointer _gda_reserved3;
 	gpointer _gda_reserved4;
 } GdaMetaTableColumn;
-#define GDA_META_TABLE_COLUMN(x) ((GdaMetaTableColumn*)(x))
+
+/**
+ * GDA_META_TABLE_COLUMN:
+ * @col: a pointer
+ *
+ * Casts @col to a #GdaMetaTableColumn, no check is made
+ *
+ * Returns: @col, casted to a #GdaMetaTableColumn
+ */
+#define GDA_META_TABLE_COLUMN(col) ((GdaMetaTableColumn*)(col))
+
 const GValue *gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attribute);
 void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value,
 						   GDestroyNotify destroy);
@@ -239,6 +286,29 @@ void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, con
 #define gda_meta_table_column_set_attribute_static(column,attribute,value) gda_meta_table_column_set_attribute((column),(attribute),(value),NULL)
 
 void          gda_meta_table_column_foreach_attribute (GdaMetaTableColumn *tcol, GdaAttributesManagerFunc func, gpointer data);
+
+/**
+ * GdaMetaForeignKeyPolicy:
+ * @GDA_META_FOREIGN_KEY_UNKNOWN: unspecified policy
+ * @GDA_META_FOREIGN_KEY_NONE: not enforced policy
+ * @GDA_META_FOREIGN_KEY_NO_ACTION: return an error, no action taken
+ * @GDA_META_FOREIGN_KEY_RESTRICT: same as @GDA_META_FOREIGN_KEY_NO_ACTION, not deferrable
+ * @GDA_META_FOREIGN_KEY_CASCADE: policy is to delete any rows referencing the deleted row, or update the value of the referencing column to the new value of the referenced column, respectively
+ * @GDA_META_FOREIGN_KEY_SET_NULL: policy is to set the referencing column to NULL
+ * @GDA_META_FOREIGN_KEY_SET_DEFAULT: policy is to set the referencing column to its default value
+ *
+ * Defines the filtering policy of a foreign key when invoked on an UPDATE
+ * or DELETE operation.
+ */
+typedef enum {
+	GDA_META_FOREIGN_KEY_UNKNOWN,
+	GDA_META_FOREIGN_KEY_NONE,
+	GDA_META_FOREIGN_KEY_NO_ACTION,
+	GDA_META_FOREIGN_KEY_RESTRICT,
+	GDA_META_FOREIGN_KEY_CASCADE,
+	GDA_META_FOREIGN_KEY_SET_NULL,
+	GDA_META_FOREIGN_KEY_SET_DEFAULT
+} GdaMetaForeignKeyPolicy;
 
 /**
  * GdaMetaTableForeignKey:
@@ -266,14 +336,53 @@ typedef struct {
 	gchar           **ref_pk_names_array; /* Ref PK fields names */
 
 	/*< private >*/
+	GdaMetaForeignKeyPolicy *on_update_policy;
+	GdaMetaForeignKeyPolicy *on_delete_policy;
+	gboolean                *defined_in_schema;
+
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
-	gpointer _gda_reserved2;
-	gpointer _gda_reserved3;
-	gpointer _gda_reserved4;
 } GdaMetaTableForeignKey;
-#define GDA_META_TABLE_FOREIGN_KEY(x) ((GdaMetaTableForeignKey*)(x))
+/**
+ * GDA_META_TABLE_FOREIGN_KEY
+ * @fk: a pointer
+ *
+ * Casts @fk to a #GdaMetaTableForeignKey (no check is actuelly being done on @fk's validity)
+ *
+ * Returns: @col, casted to a #GdaMetaTableForeignKey
+ */
+#define GDA_META_TABLE_FOREIGN_KEY(fk) ((GdaMetaTableForeignKey*)(fk))
 
+/**
+ * GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY:
+ * @fk: a pointer to a #GdaMetaTableForeignKey
+ * 
+ * Tells the actual policy implemented by @fk when used in the context of an UPDATE.
+ *
+ * Returns: the policy as a #GdaMetaForeignKeyPolicy
+ */
+#define GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY(fk) (*(((GdaMetaTableForeignKey*)(fk))->on_update_policy))
+
+/**
+ * GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY:
+ * @fk: a pointer to a #GdaMetaTableForeignKey
+ * 
+ * Tells the actual policy implemented by @fk when used in the context of a DELETE.
+ *
+ * Returns: the policy as a #GdaMetaForeignKeyPolicy
+ */
+#define GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(fk) (*(((GdaMetaTableForeignKey*)(fk))->on_update_policy))
+
+/**
+ * GDA_META_TABLE_FOREIGN_KEY_IN_SCHEMA
+ * @fk: a pointer to a #GdaMetaTableForeignKey
+ *
+ * Tells if @fk is an actual foreign key defined in the database's schema, or if it is an indication which
+ * has been added to help Libgda understand the database schema.
+ *
+ * Returns: %TRUE if @fk is an actual foreign key defined in the database's schema
+ */
+#define GDA_META_TABLE_FOREIGN_KEY_IN_SCHEMA(fk) (*(((GdaMetaTableForeignKey*)(fk))->defined_in_schema))
 
 GType               gda_meta_struct_get_type           (void) G_GNUC_CONST;
 GdaMetaStruct      *gda_meta_struct_new                (GdaMetaStore *store, GdaMetaStructFeature features);

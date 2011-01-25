@@ -161,7 +161,7 @@ gda_meta_struct_free (mstruct);
 
 </para>
 
-@x: 
+@dbo: 
 
 
 <!-- ##### MACRO GDA_META_TABLE ##### -->
@@ -217,7 +217,7 @@ gda_meta_struct_free (mstruct);
 
 </para>
 
-@x: 
+@col: 
 
 
 <!-- ##### FUNCTION gda_meta_table_column_get_attribute ##### -->
@@ -261,6 +261,19 @@ gda_meta_struct_free (mstruct);
 @data: 
 
 
+<!-- ##### ENUM GdaMetaForeignKeyPolicy ##### -->
+<para>
+
+</para>
+
+@GDA_META_FOREIGN_KEY_UNKNOWN: 
+@GDA_META_FOREIGN_KEY_NONE: 
+@GDA_META_FOREIGN_KEY_NO_ACTION: 
+@GDA_META_FOREIGN_KEY_RESTRICT: 
+@GDA_META_FOREIGN_KEY_CASCADE: 
+@GDA_META_FOREIGN_KEY_SET_NULL: 
+@GDA_META_FOREIGN_KEY_SET_DEFAULT: 
+
 <!-- ##### STRUCT GdaMetaTableForeignKey ##### -->
 <para>
 
@@ -279,7 +292,31 @@ gda_meta_struct_free (mstruct);
 
 </para>
 
-@x: 
+@fk: 
+
+
+<!-- ##### MACRO GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY ##### -->
+<para>
+
+</para>
+
+@fk: 
+
+
+<!-- ##### MACRO GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY ##### -->
+<para>
+
+</para>
+
+@fk: 
+
+
+<!-- ##### MACRO GDA_META_TABLE_FOREIGN_KEY_IN_SCHEMA ##### -->
+<para>
+
+</para>
+
+@fk: 
 
 
 <!-- ##### MACRO GDA_META_STRUCT_ERROR ##### -->

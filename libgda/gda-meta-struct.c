@@ -1,6 +1,6 @@
 /* gda-meta-struct.c
  *
- * Copyright (C) 2008 - 2010 Vivien Malerba
+ * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -69,6 +69,9 @@ static void gda_meta_table_foreign_key_free (GdaMetaTableForeignKey *tfk);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 static GdaAttributesManager *att_mgr;
+
+#define ON_UPDATE_POLICY "upd_policy";
+#define ON_DELETE_POLICY "del_policy";
 
 /* properties */
 enum {
@@ -551,6 +554,30 @@ gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 	return dbo;
 }
 
+static GdaMetaForeignKeyPolicy
+policy_string_to_value (const gchar *string)
+{
+	if (!string)
+		return GDA_META_FOREIGN_KEY_UNKNOWN;
+	if (*string == 'C')
+		return GDA_META_FOREIGN_KEY_CASCADE;
+	else if (*string == 'R')
+		return GDA_META_FOREIGN_KEY_RESTRICT;
+	else if (*string == 'N') {
+		if (!strcmp (string + 1, "ONE"))
+			return GDA_META_FOREIGN_KEY_NONE;
+		else
+			return GDA_META_FOREIGN_KEY_NO_ACTION;
+	}
+	else if (*string == 'S') {
+		if (!strcmp (string + 1, "ET NULL"))
+			return GDA_META_FOREIGN_KEY_SET_NULL;
+		else
+			return GDA_META_FOREIGN_KEY_SET_DEFAULT;
+	} 
+	return GDA_META_FOREIGN_KEY_UNKNOWN;
+}
+
 static GdaMetaDbObject *
 _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			 const GValue *icatalog, const GValue *ischema, const GValue *iname, 
@@ -829,7 +856,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 
 		/* foreign keys */
 		if (mstruct->priv->features & GDA_META_STRUCT_FEATURE_FOREIGN_KEYS) { 
-			sql = "SELECT ref_table_catalog, ref_table_schema, ref_table_name, constraint_name, ref_constraint_name FROM _referential_constraints WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
+			sql = "SELECT ref_table_catalog, ref_table_schema, ref_table_name, constraint_name, ref_constraint_name, update_rule, delete_rule FROM _referential_constraints WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
 			model = gda_meta_store_extract (mstruct->priv->store, sql, error, 
 							"tc", icatalog, 
 							"ts", ischema, 
@@ -841,13 +868,18 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			for (i = 0; i < nrows; i++) {
 				GdaMetaTableForeignKey *tfk;
 				const GValue *fk_catalog, *fk_schema, *fk_name;
-				
+				const GValue *upd_policy, *del_policy;
+
 				fk_catalog = gda_data_model_get_value_at (model, 0, i, error);
 				if (!fk_catalog) goto onfkerror;
 				fk_schema = gda_data_model_get_value_at (model, 1, i, error);
 				if (!fk_schema) goto onfkerror;
 				fk_name = gda_data_model_get_value_at (model, 2, i, error);
 				if (!fk_name) goto onfkerror;
+				upd_policy = gda_data_model_get_value_at (model, 5, i, error);
+				if (!upd_policy) goto onfkerror;
+				del_policy = gda_data_model_get_value_at (model, 6, i, error);
+				if (!del_policy) goto onfkerror;
 
 				tfk = g_new0 (GdaMetaTableForeignKey, 1);
 				tfk->meta_table = dbo;
@@ -870,7 +902,23 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 					dot->reverse_fk_list = g_slist_prepend (dot->reverse_fk_list, tfk);
 				}
 				dbo->depend_list = g_slist_append (dbo->depend_list, tfk->depend_on);
-				
+
+				tfk->on_update_policy = g_new (GdaMetaForeignKeyPolicy, 1);
+				if (G_VALUE_TYPE (upd_policy) == G_TYPE_STRING)
+					*tfk->on_update_policy = policy_string_to_value (g_value_get_string (upd_policy));
+				else
+					*tfk->on_update_policy = GDA_META_FOREIGN_KEY_UNKNOWN;
+
+				tfk->on_delete_policy = g_new (GdaMetaForeignKeyPolicy, 1);
+				if (G_VALUE_TYPE (upd_policy) == G_TYPE_STRING)
+					*tfk->on_delete_policy = policy_string_to_value (g_value_get_string (del_policy));
+				else
+					*tfk->on_delete_policy = GDA_META_FOREIGN_KEY_UNKNOWN;
+
+				tfk->defined_in_schema = g_new (gboolean, 1);
+				*tfk->defined_in_schema = TRUE;
+					
+
 				/* FIXME: compute @cols_nb, and all the @*_array members (ref_pk_cols_array must be
 				 * initialized with -1 values everywhere */
 				sql = "SELECT k.column_name, c.ordinal_position FROM _key_column_usage k INNER JOIN _columns c ON (c.table_catalog = k.table_catalog AND c.table_schema = k.table_schema AND c.table_name=k.table_name AND c.column_name=k.column_name) WHERE k.table_catalog = ##tc::string AND k.table_schema = ##ts::string AND k.table_name = ##tname::string AND k.constraint_name = ##cname::string ORDER BY k.ordinal_position";
@@ -1843,6 +1891,9 @@ gda_meta_table_foreign_key_free (GdaMetaTableForeignKey *tfk)
 	g_free (tfk->fk_names_array);
 	g_free (tfk->ref_pk_cols_array);
 	g_free (tfk->ref_pk_names_array);
+	g_free (tfk->on_update_policy);
+	g_free (tfk->on_delete_policy);
+	g_free (tfk->defined_in_schema);
 	g_free (tfk);
 }
 
