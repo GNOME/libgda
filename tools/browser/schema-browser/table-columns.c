@@ -146,6 +146,7 @@ static gboolean key_press_event (GtkWidget *text_view, GdkEventKey *event, Table
 static gboolean event_after (GtkWidget *text_view, GdkEvent *ev, TableColumns *tcolumns);
 static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, TableColumns *tcolumns);
 static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, TableColumns *tcolumns);
+static const gchar *fk_policy_to_string (GdaMetaForeignKeyPolicy policy);
 
 static void
 meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns)
@@ -287,6 +288,26 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 						}
 					}
 				}
+
+				GdaMetaForeignKeyPolicy policy;
+				policy = GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY (fk);
+				if (policy != GDA_META_FOREIGN_KEY_UNKNOWN) {
+					gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+					/* To translators: the UPDATE is an SQL operation type */
+					gtk_text_buffer_insert (tbuffer, &current, _("Policy on UPDATE"), -1);
+					gtk_text_buffer_insert (tbuffer, &current, ": ", -1);
+					gtk_text_buffer_insert (tbuffer, &current,
+								fk_policy_to_string (policy), -1);
+				}
+				policy = GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (fk);
+				if (policy != GDA_META_FOREIGN_KEY_UNKNOWN) {
+					gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+					/* To translators: the DELETE is an SQL operation type */
+					gtk_text_buffer_insert (tbuffer, &current, _("Policy on DELETE"), -1);
+					gtk_text_buffer_insert (tbuffer, &current, ": ", -1);
+					gtk_text_buffer_insert (tbuffer, &current,
+								fk_policy_to_string (policy), -1);
+				}
 				
 				gtk_text_buffer_insert (tbuffer, &current, "\n\n", -1);
 			}
@@ -398,6 +419,29 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 		if (catalog_v)
 			gda_value_free (catalog_v);
 		gda_value_free (name_v);
+	}
+}
+
+static const gchar *
+fk_policy_to_string (GdaMetaForeignKeyPolicy policy)
+{
+	switch (policy) {
+	default:
+		g_assert_not_reached ();
+	case GDA_META_FOREIGN_KEY_UNKNOWN:
+		return _("Unknown");
+	case GDA_META_FOREIGN_KEY_NONE:
+		return _("not enforced");
+	case GDA_META_FOREIGN_KEY_NO_ACTION:
+		return _("stop with error");
+	case GDA_META_FOREIGN_KEY_RESTRICT:
+		return _("stop with error, not deferrable");
+	case GDA_META_FOREIGN_KEY_CASCADE:
+		return _("cascade changes");
+	case GDA_META_FOREIGN_KEY_SET_NULL:
+		return _("set to NULL");
+	case GDA_META_FOREIGN_KEY_SET_DEFAULT:
+		return _("set to default value");
 	}
 }
 
