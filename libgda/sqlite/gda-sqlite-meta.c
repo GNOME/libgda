@@ -45,7 +45,8 @@ typedef enum {
 	I_PRAGMA_INDEX_LIST,
 	I_PRAGMA_INDEX_INFO,
 	I_PRAGMA_FK_LIST,
-	I_PRAGMA_PROCLIST
+	I_PRAGMA_PROCLIST,
+	I_PRAGMA_FK_ENFORCED
 } InternalStatementItem;
 
 
@@ -69,7 +70,10 @@ static gchar *internal_sql[] = {
 	"PRAGMA foreign_key_list (##tblname::string)",
 
 	/* I_PRAGMA_PROCLIST */
-	"PRAGMA proc_list"
+	"PRAGMA proc_list",
+
+	/* I_PRAGMA_FK_ENFORCED */
+	"PRAGMA foreign_keys"
 };
 /* name of the temporary database we don't want */
 #define TMP_DATABASE_NAME "temp"
@@ -93,7 +97,8 @@ static GValue       *view_check_option;
 static GValue       *false_value;
 static GValue       *true_value;
 static GValue       *zero_value;
-static GValue       *rule_value;
+static GValue       *rule_value_none;
+static GValue       *rule_value_action;
 static GdaSet       *pragma_set;
 
 static GValue *
@@ -175,7 +180,8 @@ _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 	g_value_set_boolean ((false_value = gda_value_new (G_TYPE_BOOLEAN)), FALSE);
 	g_value_set_boolean ((true_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
 	g_value_set_int ((zero_value = gda_value_new (G_TYPE_INT)), 0);
-	g_value_set_string ((rule_value = gda_value_new (G_TYPE_STRING)), "NONE");
+	rule_value_none = view_check_option;
+	g_value_set_string ((rule_value_action = gda_value_new (G_TYPE_STRING)), "NO ACTION");
 
 	pragma_set = gda_set_new_inline (2, "tblname", G_TYPE_STRING, "",
 					 "idxname", G_TYPE_STRING, "");
@@ -1549,7 +1555,7 @@ _gda_sqlite_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConn
 static gboolean 
 fill_constraints_ref_model (GdaConnection *cnc, G_GNUC_UNUSED SqliteConnectionData *cdata,
 			    GdaDataModel *mod_model, const GValue *p_table_schema, const GValue *p_table_name,
-			    const GValue *constraint_name_n, GError **error)
+			    const GValue *constraint_name_n, gint fk_enforced, GError **error)
 {
 	GdaDataModel *tmpmodel;
 	gboolean retval = TRUE;
@@ -1617,8 +1623,8 @@ fill_constraints_ref_model (GdaConnection *cnc, G_GNUC_UNUSED SqliteConnectionDa
 					    TRUE, v3, /* ref_table_name */
 					    TRUE, v4, /* ref_constraint_name */
 					    FALSE, NULL, /* match_option */
-					    FALSE, rule_value, /* update_rule */
-					    FALSE, rule_value /* delete_rule */))
+					    FALSE, fk_enforced ? rule_value_action : rule_value_none, /* update_rule */
+					    FALSE, fk_enforced ? rule_value_action : rule_value_none /* delete_rule */))
 				retval = FALSE;
 			if (constraint_name_n)
 				g_free (constname);
@@ -1637,6 +1643,7 @@ _gda_sqlite_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaCon
 	gboolean retval = TRUE;
 	gint i, nrows;
 	SqliteConnectionData *cdata;
+	gint fk_enforced = -1;
 	
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata)
@@ -1684,13 +1691,31 @@ _gda_sqlite_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaCon
 		gint tnrows, ti;
 		tnrows = gda_data_model_get_n_rows (tables_model);
 		for (ti = 0; ti < tnrows; ti++) {
+		       
 			/* iterate through the tables */
 			const GValue *cv = gda_data_model_get_value_at (tables_model, 0, ti, error);
 			if (!cv) {
 				retval = FALSE;
 				break;
 			}
-			if (!fill_constraints_ref_model (cnc, cdata, mod_model, cvalue, cv, NULL, error)) {
+
+ 			if (fk_enforced < 0) {
+				GdaDataModel *pmodel;
+				fk_enforced = 0;
+				pmodel = (GdaDataModel *) gda_connection_statement_execute (cnc,
+							   internal_stmt[I_PRAGMA_FK_ENFORCED],
+							   NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+							   NULL, NULL);
+				if (pmodel) {
+					const GValue *pv;
+					pv = gda_data_model_get_value_at (pmodel, 0, 0, NULL);
+					if (pv && (G_VALUE_TYPE (pv) == G_TYPE_INT))
+						fk_enforced = g_value_get_int (pv) ? 1 : 0;
+					g_object_unref (pmodel);
+				}
+			}
+			if (!fill_constraints_ref_model (cnc, cdata, mod_model, cvalue, cv, NULL,
+							 fk_enforced, error)) {
 				retval = FALSE;
 				break;
 			}
@@ -1727,7 +1752,22 @@ _gda_sqlite_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaConn
 	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
 	g_assert (mod_model);
 
-	retval = fill_constraints_ref_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name, error);
+	GdaDataModel *pmodel;
+	gint fk_enforced = 0;
+	pmodel = (GdaDataModel *) gda_connection_statement_execute (cnc,
+								    internal_stmt[I_PRAGMA_FK_ENFORCED],
+								    NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
+								    NULL, NULL);
+	if (pmodel) {
+		const GValue *pv;
+		pv = gda_data_model_get_value_at (pmodel, 0, 0, NULL);
+		if (pv && (G_VALUE_TYPE (pv) == G_TYPE_INT))
+			fk_enforced = g_value_get_int (pv) ? 1 : 0;
+		g_object_unref (pmodel);
+	}
+
+	retval = fill_constraints_ref_model (cnc, cdata, mod_model, table_schema, table_name, constraint_name,
+					     fk_enforced, error);
 	if (retval) {
 		gda_meta_store_set_reserved_keywords_func (store, _gda_sqlite_get_reserved_keyword_func());
 		retval = gda_meta_store_modify_with_context (store, context, mod_model, error);
