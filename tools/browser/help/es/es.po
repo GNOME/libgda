@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-01-20 21:35+0000\n"
-"PO-Revision-Date: 2011-01-21 12:41+0100\n"
+"POT-Creation-Date: 2011-01-22 09:35+0000\n"
+"PO-Revision-Date: 2011-01-26 09:41+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -126,6 +126,11 @@ msgid ""
 "appear containing a data entry for each column of the table to insert data "
 "into."
 msgstr ""
+"Desde la <link xref=\"schema-browser-perspective\">perspectiva del visor de "
+"esquemas</link>, cuando las propiedades de una tabla se muestran en una "
+"solapa, use el menú <guiseq><gui>Tabla</gui><gui>Insertar datos</gui></"
+"guiseq> para hacer que aparezca el menú contextual que contiene una entrada "
+"de datos por cada columna de la tabla en la que insertar los datos."
 
 #: C/table-insert-data.page:14(p)
 msgid "A popup similar to the following will appear:"
@@ -161,6 +166,11 @@ msgid ""
 "set it to a default value. The button's color has the following "
 "signification:"
 msgstr ""
+"Cada entrada de datos tiene un pequeño botón a la derecha que da información "
+"sobre la entrada de datos correspondientes, y le permite reiniciar el valor "
+"de la entrada de datos al valor que tenía antes de hacer la modificaciones, "
+"establecerlo a NULL o establecerlo al valor predeterminado. El color del "
+"botón tiene el siguiente significado:"
 
 #: C/table-insert-data.page:33(p)
 msgid "Red: means the current value in the data entry is invalid"
@@ -195,6 +205,10 @@ msgid ""
 "(hint: to have that values list refresned you should close the popup dialog "
 "and reopen it);"
 msgstr ""
+"Las columnas que son claves ajenas para otras tablas se presentan como cajas "
+"desplegables donde usted sólo puede seleccionar entre los valores de la "
+"tabla referenciada (pista: para tener esos valores actualizados debería "
+"cerrar el diálogo emergente y volver a abrirlo);"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -292,6 +306,10 @@ msgid ""
 "gui><gui>Schema browser</gui></guiseq> menu, or the <keyseq><key>Ctrl</"
 "key><key>B</key></keyseq> shortcut."
 msgstr ""
+"Use la perspectiva del visor de esquemas para comprender la organización de "
+"la base de datos (esquema). Para cambiar a esta perspectiva, use el menú "
+"<guiseq><gui>Perspectiva</gui><gui>Visor de esquemas</gui></guiseq> o el "
+"atajo <keyseq><key>Ctrl</key><key>B</key></keyseq>."
 
 #: C/schema-browser-perspective.page:14(p)
 msgid ""
@@ -316,6 +334,9 @@ msgid ""
 "diagrams. Double clicking on a favorite opens its properties in the right "
 "pane."
 msgstr ""
+"La parte izquierda de la perspectiva lista los objetos de la base de datos "
+"favoritos o los diagramas. Una doble pulsación sobre un favorito abre sus "
+"propiedades en el panel derecho."
 
 #: C/schema-browser-perspective.page:29(p)
 msgid "The right pane is composed of several types of tabs:"
@@ -357,9 +378,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/query-execution-perspective.page:17(None)
-#| msgid ""
-#| "@@image: 'figures/query-exec-persp.png'; "
-#| "md5=14f701b0619a497da6c7902facad9f42"
 msgid ""
 "@@image: 'figures/query-exec-persp.png'; md5=c52ce85c0f89d26775c8b9dad282910a"
 msgstr ""
@@ -376,6 +394,10 @@ msgid ""
 "</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> "
 "shortcut."
 msgstr ""
+"Use la perspectiva de consulta para ejecutar sentencias SQL. Para cambiar a "
+"esta perspectiva, use el menú <guiseq><gui>Perspectiva</gui><gui>Ejecución "
+"de consulta (SQL)</gui></guiseq> o el atajo <keyseq><key>Ctrl</key><key>S</"
+"key></keyseq>."
 
 #: C/query-execution-perspective.page:15(title)
 msgid "Query exec perspective"
@@ -402,6 +424,10 @@ msgid ""
 "The INSERT statement needs one \"name\" parameter, whereas the SELECT "
 "statement does not require any parameter to be executed."
 msgstr ""
+"En la figura anterior, hay dos favoritos: una sentencia SELECT (llamada "
+"«Lista de clientes») y una sentencia INSERT (llamada «Cliente nuevo...»). La "
+"sentencia INSERT necesita un parámetro «nombre», mientras que la setencia "
+"SELECT no necesita ningún parámetro para ejecutarse."
 
 #: C/query-execution-perspective.page:30(p)
 msgid ""
@@ -410,6 +436,10 @@ msgid ""
 "will be proposed as an action to be executed when the contextual menu is "
 "brought up in any grid representation of a resultset."
 msgstr ""
+"La diferencia entre el icono de los dos ilustra el hecho de que el favorito "
+"INSERT también se marca para ser una <link xref=\"actions\">acción</link>: "
+"se propone como una acción que se ejecutará cuando el menú contextual se "
+"muestra en cualquier representación de rejilla de un conjunto de resultados."
 
 #: C/query-execution-perspective.page:35(p)
 msgid ""
@@ -426,6 +456,8 @@ msgid ""
 "The right pane is composed of zero or more tabs where the SQL is entered and "
 "executed. In each tab there is:"
 msgstr ""
+"El panel de la derecha se compone de cero o más solapas donde se introduce y "
+"ejecuta la sentencia SQL. En cada solapa hay:"
 
 #: C/query-execution-perspective.page:45(p)
 msgid "an SQL area in the top left part"
@@ -844,6 +876,8 @@ msgid ""
 "bring closer or moving away items from one another using the mouse's wheel "
 "while holding the <key>Shift</key> key"
 msgstr ""
+"acerque o aleje los elementos entre sí usando la rueda del ratón mientras se "
+"mantiene pulsada la tecla <key> Mayús </ clave>"
 
 #: C/diagram.page:26(p)
 msgid "arranging items linearly or radially, through the contextual menu"
@@ -866,7 +900,6 @@ msgid "removing items, through the items's contextual menu"
 msgstr "quitar elementos, a través del menú contextual del elemento"
 
 #: C/data-manager-source-editor.page:7(title)
-#| msgid "The data manager perspective, with two data sources"
 msgid "The data manager's data sources editor"
 msgstr "El editor de fuentes del administrador de datos"
 
@@ -969,6 +1002,11 @@ msgid ""
 "executed because it won't be exported by any data source in this "
 "specification."
 msgstr ""
+"la fuente de datos <code>customers</code> que selecciona algunos campos de "
+"la tabla <em>clientes</em>, y que depende de una variable de cadena llamada "
+"<code>name</code>. Esta variable se debe establecer cuando las fuentes de "
+"datos se ejecutan porque, en esta especificación, ninguna fuente de datos la "
+"exportará."
 
 #: C/data-manager-xml-syntax.page:62(p)
 msgid ""
@@ -977,6 +1015,10 @@ msgid ""
 "previous one because the <code>customers@id</code> variable is exported from "
 "the <code>customers</code> data source."
 msgstr ""
+"la fuente de datos <code>cust_details</code> que selecciona todos los "
+"detalles de un cliente especificado usando su ID. Esta segunda fuente de "
+"datos depende de la anterior porque la variable <code>customers@id</code> se "
+"exporta desde la fuente de datos <code>customers</code>."
 
 #: C/data-manager-xml-syntax.page:67(p)
 msgid ""
@@ -1071,6 +1113,9 @@ msgid ""
 "source. If not provided, then the dependency may fail if there is no data "
 "source which ID is the\"foreign_key_table\" attribute."
 msgstr ""
+"puede tener un atributo «id» correspondiente al ID de la fuente de datos "
+"referenciada. Si no se proporciona, la dependencia puede fallar si no hay "
+"ninguna fuente de datos cuyo ID sea el atributo «foreign_key_table»."
 
 #: C/data-manager-xml-syntax.page:113(p)
 msgid ""
@@ -1103,6 +1148,12 @@ msgid ""
 "customers table. The \"id\" attribute of the <code>&lt;depend&gt;</code> tag "
 "is necessary here to identify referenced the data source."
 msgstr ""
+"la fuente de datos <code>orders</code> que selecciona entre los contenidos "
+"de la tabla <code>orders</code> las filas que corresponden a una fila en la "
+"tabla <code>customers</code> usando la clave ajena en la tabla «pedidos» que "
+"involucra a la columna «orders.customer_id» y la clave primaria de la tabla "
+"«clientes». El atributo «id» de la etiqueta <code>&lt;depend&gt;</code> es "
+"necesario para identificar la fuente de datos referenciada."
 
 #: C/data-manager-xml-syntax.page:143(p)
 msgid "Note in this example that:"
@@ -1122,6 +1173,9 @@ msgid ""
 "no \"id\" attribute has been specified for the <code>&lt;table&gt;</code> "
 "tags."
 msgstr ""
+"los ID de las fuentes de datos se han asignado como nombres a las tablas "
+"seleccionadas, y no se ha especificado ningún atributo «id» para las "
+"etiquetas <code>&lt;table&gt;</code>."
 
 #: C/data-manager-xml-syntax.page:155(p)
 msgid ""
@@ -1158,9 +1212,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:62(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-xmlcompose.png'; "
-#| "md5=8a96e29b3290b6df09f842c5ed7ce8c3"
 msgid ""
 "@@image: 'figures/data-man-xmlcompose.png'; "
 "md5=fd3ae97c42d58ddbd87404c92b95ee9c"
@@ -1171,9 +1222,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:69(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-xmlcompose.png'; "
-#| "md5=8a96e29b3290b6df09f842c5ed7ce8c3"
 msgid ""
 "@@image: 'figures/data-man-uicompose.png'; "
 "md5=33b1cf9354761dac4ee3f14a9534357a"
@@ -1251,6 +1299,11 @@ msgid ""
 "'customers' data source. Also when the row selection of the 'customers' view "
 "changes, the whole contents of the 'orders' view is refreshed."
 msgstr ""
+"Debido a que la fuente de datos «órdenes» depende de la fuente de datos "
+"«clientes» de datos, su vista correspondiente está a la derecha de la "
+"correspondiente a la fuente de datos «clientes». También cuando la selección "
+"de la fila de la vista «clientes» cambia,  se actualiza todo el contenido de "
+"la vista «órdenes»."
 
 #: C/data-manager-perspective.page:44(title)
 msgid "Defining data sources"
@@ -1269,12 +1322,6 @@ msgstr ""
 "<link xref=\"query-execution-perspective\"/>."
 
 #: C/data-manager-perspective.page:51(p)
-#| msgid ""
-#| "The following figure shows the data sources editing mode (switch to "
-#| "editing mode using the <media type=\"image\" mime=\"image/png\" src="
-#| "\"figures/data-man-mode.png\"/> toolbar button) at the moment data "
-#| "sources can only be defined using an <link xref=\"data-manager-xml-syntax"
-#| "\">XML syntax</link>."
 msgid ""
 "The following figure shows the data sources editing mode (switch to editing "
 "mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-"
@@ -1300,7 +1347,6 @@ msgid "Data sources edition"
 msgstr "Editar las fuentes de datos"
 
 #: C/data-manager-perspective.page:61(desc)
-#| msgid "Editing data sources in the data manager perspective"
 msgid ""
 "Editing data sources in the data manager perspective, from the XML syntax"
 msgstr ""
@@ -1314,6 +1360,10 @@ msgid ""
 "\"customers\" and \"orders\" tables. The setup is the same as the figure "
 "above showing the XML syntax"
 msgstr ""
+"Editar fuentes de datos en la perspectiva del gestor de datos, usando la "
+"interfaz predeterminada: se definen dos fuentes de datos que listan los "
+"contenidos de las tablas «clientes» y «pedidos». La configuración es la misma "
+"que la de la figura anterior que muestra la sintaxis XML"
 
 #: C/data-manager-perspective.page:76(p)
 msgid ""
@@ -1324,10 +1374,6 @@ msgstr ""
 "predeterminada, sólo disponible cuando la vista XML se muestra actualmente"
 
 #: C/data-manager-perspective.page:78(p)
-#| msgid ""
-#| "<gui>Add</gui>: displays a popup menu with an entry per table to quickly "
-#| "add the whole contents of a table as a data source, only available when "
-#| "the UI editor is currently displayed"
 msgid ""
 "<gui>Add</gui>: displays a popup menu with shortcuts to quickly define new "
 "data sources as whole table contents (also analyses the database schema to "
@@ -1396,41 +1442,35 @@ msgid ""
 "the tabular views of all the data sources depending on A will also have "
 "their tabular view refreshed."
 msgstr ""
+"Además, si cambia la fila seleccionada de la vista tabular de una fuente de "
+"datos «A», también se actualizará la vista tabular de todas las fuentes de "
+"datos que dependen de «A»."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/actions.page:34(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 msgid "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
 msgstr "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/actions.page:41(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-persp.png'; "
-#| "md5=b4e0678527c03093031dcb3805bb2841"
 msgid "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
 msgstr "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/actions.page:49(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 msgid "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
 msgstr "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/actions.page:57(None)
-#| msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
 msgid "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
 msgstr "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
 
 #: C/actions.page:10(title)
-#| msgid "Transactions"
 msgid "Actions"
 msgstr "Acciones"
 
@@ -1439,6 +1479,9 @@ msgid ""
 "Actions are bits of SQL code which depends on variables and can be executed "
 "from the contextual menu of any data set presented in a grid."
 msgstr ""
+"Las acciones son fragmentos de código SQL que dependen de variables y se "
+"pueden ejecutar desde el menú contextual de cualquier conjunto de datos "
+"presentado en una rejilla."
 
 #: C/actions.page:15(p)
 msgid ""
@@ -1447,6 +1490,10 @@ msgid ""
 "on a product (presumably the \"comments\" table will have a foreign key on "
 "the \"products\" table to reference it)."
 msgstr ""
+"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos y "
+"una tabla «comentarios» que lista todos los comentarios de los usuarios sobre "
+"un producto (presumiblemente, la tabla «comentarios» tendrá una clave ajena "
+"en la tabla «productos» para referenciarla)."
 
 #: C/actions.page:20(p)
 msgid ""
@@ -1456,6 +1503,12 @@ msgid ""
 "and thus display all the comments on the selected product. This situation is "
 "illustrated in the following figures."
 msgstr ""
+"Se puede definir una acción para mostrar todas las entradas de la tabla "
+"«comentarios» proporcionando la clave que define a un producto. Entonces, "
+"cada vez que un producto aparece en un conjunto de resultados, el menú "
+"contextual permitirá al usuario ejecutar esta acción y, por lo tanto, "
+"mostrar todos los comentarios sobre el producto seleccionado. Esta situación "
+"se ilustra en las siguientes figuras."
 
 #: C/actions.page:26(p)
 msgid ""
@@ -1464,6 +1517,10 @@ msgid ""
 "which is defined as an action: bring up the properties for the favorite, and "
 "make sure the \"Is action\" toggle is checked:"
 msgstr ""
+"El primer paso es definir una acción, que sólo es un favorito en la "
+"perspectiva de <link xref=\"query-execution-perspective\">ejecución de la "
+"consulta</link>, que se define como una acción: abra las propiedades del "
+"favorito y asegúrese de que la casilla «Es una acción» está marcada:"
 
 #: C/actions.page:32(title)
 msgid "Action - define an action"
@@ -1487,14 +1544,15 @@ msgid ""
 "that there are here two defined actions: \"Add comment on product\" and "
 "\"List comments for product\""
 msgstr ""
+"En la perspectiva de ejecución de la consulta, seleccione todos los "
+"productos. Tenga en cuenta que hay dos acciones definidas: «añadir comentario "
+"sobre el producto» y «listar comentarios para el producto»"
 
 #: C/actions.page:43(p)
-#| msgid "adding items, through the contextual menu"
 msgid "Now let's pop up the contextual menu:"
 msgstr "Ahora aparece el menú contextual"
 
 #: C/actions.page:47(title)
-#| msgid "printing, through the contextual menu"
 msgid "Action - contextual menu"
 msgstr "Acción: menú contextual"
 
@@ -1503,12 +1561,16 @@ msgid ""
 "Pop up the contextual menu and select <guiseq><gui>Execute action</"
 "gui><gui>List comments for product</gui></guiseq>"
 msgstr ""
+"Abrir el menú contextual y seleccionar <guiseq><gui>Ejecutar acción</"
+"gui><gui>Listar comentarios para el producto</gui></guiseq>"
 
 #: C/actions.page:51(p)
 msgid ""
 "After a confirmation of the parameters to execute the action, the result is "
 "there:"
 msgstr ""
+"Después de la confirmación de los parámetros para ejecutar la acción, el "
+"resultado está ahí:"
 
 #: C/actions.page:55(title)
 msgid "Action - executed"
