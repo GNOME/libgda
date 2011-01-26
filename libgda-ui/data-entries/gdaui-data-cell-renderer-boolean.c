@@ -408,7 +408,10 @@ gdaui_data_cell_renderer_boolean_activate  (GtkCellRenderer            *cell,
 		gboolean retval, active;
 		GValue *value;
 
-		retval = gtk_cell_renderer_activate (cell, event, widget, path, background_area, cell_area, flags);
+		retval = GTK_CELL_RENDERER_CLASS (parent_class)->activate (cell, event,
+									   widget, path,
+									   background_area,
+									   cell_area, flags);
 		active = gtk_cell_renderer_toggle_get_active (GTK_CELL_RENDERER_TOGGLE (cell));
 
 		value = gda_value_new (G_TYPE_BOOLEAN);
