@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -864,11 +864,20 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 					string = g_string_new (_("Foreign key"));
 					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
 
-					str = "SELECT ref_table_schema, ref_table_name, fk_column, ref_column "
-						"FROM _detailed_fk WHERE fk_table_catalog = ##tc::string "
-						"AND fk_table_schema = ##ts::string AND fk_table_name = ##tname::string AND "
-						"fk_constraint_name = ##cname::string "
-						"ORDER BY ordinal_position";
+					str = "SELECT rc.ref_table_schema as ref_table_schema, "
+						"rc.ref_table_name as ref_table_name, "
+						"kc1.column_name as fk_column, "
+						"kc2.column_name as ref_column, "
+						"rc.update_rule, rc.delete_rule "
+						"FROM _referential_constraints rc "
+						"INNER JOIN _key_column_usage kc2 ON "
+						"(rc.ref_table_catalog=kc2.table_catalog AND rc.ref_table_schema=kc2.table_schema AND rc.ref_table_name=kc2.table_name AND rc.ref_constraint_name=kc2.constraint_name) "
+						"INNER JOIN _key_column_usage kc1 ON (rc.table_catalog=kc1.table_catalog AND rc.table_schema=kc1.table_schema AND rc.table_name=kc1.table_name AND rc.constraint_name=kc1.constraint_name) "
+						"WHERE kc1.ordinal_position = kc2.ordinal_position "
+						"AND rc.table_catalog = ##tc::string "
+						"AND rc.table_schema = ##ts::string AND rc.table_name = ##tname::string "
+						"AND rc.constraint_name = ##cname::string "
+						"ORDER BY rc.table_catalog, rc.table_schema, rc.table_name, kc1.ordinal_position";
 					
 					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, NULL, 
 								       "tc", catalog, "ts", schema, "tname", name, "cname", cvalue, 
@@ -891,7 +900,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 								}
 								g_string_append (string, g_value_get_string (cvalue));
 							}
-							g_string_append (string, ") references ");
+							g_string_append (string, ") references");
 
 							const GValue *v1, *v2;
 							
@@ -928,6 +937,35 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 								g_string_append (string, g_value_get_string (cvalue));
 							}
 							g_string_append_c (string, ')');
+
+							v1 = gda_data_model_get_value_at (cols, 4, 0, error);
+							if (!v1) {
+								gda_internal_command_exec_result_free (res);
+								res = NULL;
+								g_object_unref (cols);
+								g_string_free (string, TRUE);
+								goto out;
+							}
+							v2 = gda_data_model_get_value_at (cols, 5, 0, error);
+							if (!v2) {
+								gda_internal_command_exec_result_free (res);
+								res = NULL;
+								g_object_unref (cols);
+								g_string_free (string, TRUE);
+								goto out;
+							}
+							if (G_VALUE_TYPE (v1) == G_TYPE_STRING) {
+								g_string_append (string, ", ");
+								g_string_append (string, _("Policy on UPDATE"));
+								g_string_append (string, ": ");
+								g_string_append (string, g_value_get_string (v1));
+							}
+							if (G_VALUE_TYPE (v2) == G_TYPE_STRING) {
+								g_string_append (string, ", ");
+								g_string_append (string, _("Policy on DELETE"));
+								g_string_append (string, ": ");
+								g_string_append (string, g_value_get_string (v1));
+							}
 						}
 						g_object_unref (cols);
 					}
