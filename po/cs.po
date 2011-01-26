@@ -1,10 +1,9 @@
 # libgda Czech translation.
 # Copyright (C) 2002, 2010 the author(s) of libgda.
-# Copyright (C) 2004, 2005 Miloslav Trmac <mitr@volny.cz>.
 # This file is distributed under the same license as the libgda package.
 #
 # Michal Bukovjan <bukm@centrum.cz>, 2002.
-# Miloslav Trmac <mitr@volny.cz>, 2003, 2004, 2005.
+# Miloslav Trmac <mitr@volny.cz>, 2003 – 2005.
 # Marek Černocký <marek@manet.cz>, 2010, 2011.
 #
 msgid ""
@@ -12,8 +11,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2011-01-21 22:08+0000\n"
-"PO-Revision-Date: 2011-01-23 15:13+0100\n"
+"POT-Creation-Date: 2011-01-25 20:28+0000\n"
+"PO-Revision-Date: 2011-01-27 00:17+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1681,7 +1680,7 @@ msgstr "Schází název sloupce cizího klíče (pro tabulku „%s“)"
 msgid "Column '%s' not found in table '%s'"
 msgstr "Sloupec „%s“ nebyl v tabulce „%s“ nelezen"
 
-#: ../libgda/gda-meta-store.c:1909 ../libgda/gda-meta-struct.c:1029
+#: ../libgda/gda-meta-store.c:1909 ../libgda/gda-meta-struct.c:1077
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Sloupec cizího klíče „%s“ nebyl nalezen v tabulce „%s“"
@@ -1819,46 +1818,46 @@ msgstr "Neznámý název sloupce „%s“ v kontextu metadat"
 msgid "Unknown table in meta data context"
 msgstr "Neznámá tabulka v kontextu metadat"
 
-#: ../libgda/gda-meta-struct.c:129
+#: ../libgda/gda-meta-struct.c:132
 msgid "GdaMetaStore object to fetch information from"
 msgstr "Objekt GdaMetaStore, ze kterého se mají získat informace"
 
 #. To translators: The GdaMetaStruct object computes lists of tables, views,
 #. * and some other information, the "Features to compute" allows one to avoid
 #. * computing some features which won't be used
-#: ../libgda/gda-meta-struct.c:137
+#: ../libgda/gda-meta-struct.c:140
 msgid "Features to compute"
 msgstr "Vlastnosti k výpočtu"
 
-#: ../libgda/gda-meta-struct.c:501 ../libgda/gda-meta-struct.c:516
-#: ../libgda/gda-meta-struct.c:533
+#: ../libgda/gda-meta-struct.c:504 ../libgda/gda-meta-struct.c:519
+#: ../libgda/gda-meta-struct.c:536
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Nelze najít objekt pojmenovaný „%s“"
 
-#: ../libgda/gda-meta-struct.c:582
+#: ../libgda/gda-meta-struct.c:609
 #, c-format
 msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
 "type"
 msgstr "Objekt %s.%s.%s již existuje v GdaMetaStruct a má jiný typ objektu"
 
-#: ../libgda/gda-meta-struct.c:608
+#: ../libgda/gda-meta-struct.c:635
 #, c-format
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "Pohled %s.%s.%s nebyl nalezen v objektu uchovaných metaúdajů"
 
-#: ../libgda/gda-meta-struct.c:690
+#: ../libgda/gda-meta-struct.c:717
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "Tabulka %s.%s.%s nebyla nalezena (nebo schází informace o sloupcích)"
 
-#: ../libgda/gda-meta-struct.c:816
+#: ../libgda/gda-meta-struct.c:843
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Interní chyba GdaMetaStore: sloupec %s nebyl nalezen"
 
-#: ../libgda/gda-meta-struct.c:946
+#: ../libgda/gda-meta-struct.c:994
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1867,11 +1866,11 @@ msgstr ""
 "Nesouvislost metadat v omezení cizím klíčem pro tabulku %s.%s.%s odkazující "
 "na tabulku %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2264
+#: ../libgda/gda-meta-struct.c:2315
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Schází název objektu ve struktuře GdaMetaDbObject"
 
-#: ../libgda/gda-meta-struct.c:2289
+#: ../libgda/gda-meta-struct.c:2340
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "Databázový objekt „%s“ již existuje"
@@ -2158,7 +2157,7 @@ msgstr "Odkazy"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:21
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
-#: ../tools/browser/schema-browser/table-columns.c:501
+#: ../tools/browser/schema-browser/table-columns.c:545
 msgid "Default value"
 msgstr "Výchozí hodnota"
 
@@ -2244,7 +2243,7 @@ msgstr "Trigger"
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
-#: ../tools/browser/schema-browser/table-columns.c:487
+#: ../tools/browser/schema-browser/table-columns.c:531
 #: ../tools/command-exec.c:654 ../tools/command-exec.c:728
 #: ../tools/web-server.c:931
 msgid "Type"
@@ -3458,6 +3457,7 @@ msgstr "Velikost dat"
 #: ../libgda-ui/data-entries/common-bin.c:301
 #: ../providers/mysql/gda-mysql-provider.c:623
 #: ../providers/mysql/gda-mysql-util.c:67
+#: ../tools/browser/schema-browser/table-columns.c:432
 msgid "Unknown"
 msgstr "Neznámo"
 
@@ -4267,7 +4267,7 @@ msgstr "Název souboru"
 
 #. To translators: "Details" is a table's column's attribute
 #: ../libgda-ui/gdaui-raw-grid.c:1914
-#: ../tools/browser/schema-browser/table-columns.c:508
+#: ../tools/browser/schema-browser/table-columns.c:552
 msgid "Details"
 msgstr "Podrobnosti"
 
@@ -4904,7 +4904,7 @@ msgstr "Globální omezení"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:31
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
 #: ../tools/browser/schema-browser/mgr-columns.c:382
-#: ../tools/browser/schema-browser/table-columns.c:191
+#: ../tools/browser/schema-browser/table-columns.c:192
 #: ../tools/command-exec.c:821
 msgid "Primary key"
 msgstr "Primární klíč"
@@ -8686,11 +8686,11 @@ msgstr "Vytvořit nový diagram"
 msgid "Could not load diagram"
 msgstr "Nelze načíst diagram"
 
-#: ../tools/browser/schema-browser/table-columns.c:229
+#: ../tools/browser/schema-browser/table-columns.c:230
 msgid "Foreign key on "
 msgstr "Cizí klíč směřující na "
 
-#: ../tools/browser/schema-browser/table-columns.c:277
+#: ../tools/browser/schema-browser/table-columns.c:278
 #, c-format
 msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
@@ -8698,29 +8698,65 @@ msgid ""
 msgstr ""
 "nekompatibilní typy: „%s“ pro cizí klíč a „%s“ pro odkazovaný primární klíč"
 
-#: ../tools/browser/schema-browser/table-columns.c:304
+#. To translators: the UPDATE is an SQL operation type
+#: ../tools/browser/schema-browser/table-columns.c:297
+msgid "Policy on UPDATE"
+msgstr "Strategie při AKTUALIZACI"
+
+#. To translators: the DELETE is an SQL operation type
+#: ../tools/browser/schema-browser/table-columns.c:306
+msgid "Policy on DELETE"
+msgstr "Strategie při MAZÁNÍ"
+
+#: ../tools/browser/schema-browser/table-columns.c:325
 #, c-format
 msgid "Could not compute table's UNIQUE constraints for %s.%s.%s"
 msgstr "Nelze vypočítat omezení na JEDINEČNOST pro tabulku %s.%s.%s"
 
-#: ../tools/browser/schema-browser/table-columns.c:327
+#: ../tools/browser/schema-browser/table-columns.c:348
 msgid "Unique constraint"
 msgstr "Omezení na jedinečnost"
 
-#: ../tools/browser/schema-browser/table-columns.c:358
+#: ../tools/browser/schema-browser/table-columns.c:379
 msgid "Tables referencing this one"
 msgstr "Tabulky odkazující na toto"
 
-#: ../tools/browser/schema-browser/table-columns.c:472
+#: ../tools/browser/schema-browser/table-columns.c:434
+msgid "not enforced"
+msgstr "nevnucovat"
+
+#: ../tools/browser/schema-browser/table-columns.c:436
+msgid "stop with error"
+msgstr "zastavit s chybou"
+
+#: ../tools/browser/schema-browser/table-columns.c:438
+msgid "stop with error, not deferrable"
+msgstr "zastavit s chybou, neodkladnou"
+
+#: ../tools/browser/schema-browser/table-columns.c:440
+msgid "cascade changes"
+msgstr "kaskádovitě provést změny"
+
+#: ../tools/browser/schema-browser/table-columns.c:442
+#| msgid "Set to NULL"
+msgid "set to NULL"
+msgstr "nastavit na prázdné (NULL)"
+
+#: ../tools/browser/schema-browser/table-columns.c:444
+#| msgid "Set to default value"
+msgid "set to default value"
+msgstr "nastavit na výchozí hodnotu"
+
+#: ../tools/browser/schema-browser/table-columns.c:516
 msgid "Column Name"
 msgstr "Název sloupce"
 
 #. To translators: "Not NULL?" is a table's column's attribute. The NULL term should not be translated as it refers to the SQL NULL value
-#: ../tools/browser/schema-browser/table-columns.c:494
+#: ../tools/browser/schema-browser/table-columns.c:538
 msgid "Not NULL?"
 msgstr "Neprázdné?"
 
-#: ../tools/browser/schema-browser/table-columns.c:531
+#: ../tools/browser/schema-browser/table-columns.c:575
 msgid "Constraints and integrity rules"
 msgstr "Pravidla omezení a integrity"
 
