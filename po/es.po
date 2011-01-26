@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2011-01-24 20:22+0000\n"
-"PO-Revision-Date: 2011-01-25 16:49+0100\n"
+"POT-Creation-Date: 2011-01-25 20:28+0000\n"
+"PO-Revision-Date: 2011-01-26 15:07+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1726,7 +1726,7 @@ msgstr "Falta el nombre de la columna de claves externas (para la tabla «%s»)"
 msgid "Column '%s' not found in table '%s'"
 msgstr "No se encontró la columna «%s» en la tabla «%s»"
 
-#: ../libgda/gda-meta-store.c:1909 ../libgda/gda-meta-struct.c:1029
+#: ../libgda/gda-meta-store.c:1909 ../libgda/gda-meta-struct.c:1077
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "La clave de la columna externa «%s» no se encontró en la tabla «%s»"
@@ -1867,24 +1867,24 @@ msgstr "Nombre de columna «%s» desconocido en el contexto de los metadatos"
 msgid "Unknown table in meta data context"
 msgstr "Tabla desconocida en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-struct.c:129
+#: ../libgda/gda-meta-struct.c:132
 msgid "GdaMetaStore object to fetch information from"
 msgstr "Objeto GdaMetaStore del que obtener la información"
 
 #. To translators: The GdaMetaStruct object computes lists of tables, views,
 #. * and some other information, the "Features to compute" allows one to avoid
 #. * computing some features which won't be used
-#: ../libgda/gda-meta-struct.c:137
+#: ../libgda/gda-meta-struct.c:140
 msgid "Features to compute"
 msgstr "Características que computar"
 
-#: ../libgda/gda-meta-struct.c:501 ../libgda/gda-meta-struct.c:516
-#: ../libgda/gda-meta-struct.c:533
+#: ../libgda/gda-meta-struct.c:504 ../libgda/gda-meta-struct.c:519
+#: ../libgda/gda-meta-struct.c:536
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "No se pudo encontrar el objeto llamado «%s»"
 
-#: ../libgda/gda-meta-struct.c:582
+#: ../libgda/gda-meta-struct.c:609
 #, c-format
 msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
@@ -1893,22 +1893,22 @@ msgstr ""
 "El objeto %s.%s.%s ya existe en GdaMetaStruct y tiene un tipo de objeto "
 "diferente"
 
-#: ../libgda/gda-meta-struct.c:608
+#: ../libgda/gda-meta-struct.c:635
 #, c-format
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "No se encontró la vista %s.%s.%s en el objeto de meta almacenamiento"
 
-#: ../libgda/gda-meta-struct.c:690
+#: ../libgda/gda-meta-struct.c:717
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "No se encontró la tabla %s.%s.%s (o falta información de las columnas)"
 
-#: ../libgda/gda-meta-struct.c:816
+#: ../libgda/gda-meta-struct.c:843
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Error interno de GdaMetaStore: no se encontró la cadena %s"
 
-#: ../libgda/gda-meta-struct.c:946
+#: ../libgda/gda-meta-struct.c:994
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1917,11 +1917,11 @@ msgstr ""
 "Incoherencia en los metadatos de restricción de la clave externa para la "
 "tabla %s.%s.%s referenciando la tabla %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2264
+#: ../libgda/gda-meta-struct.c:2315
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Falta el nombre del objeto en la estructura GdaMetaDbObject"
 
-#: ../libgda/gda-meta-struct.c:2289
+#: ../libgda/gda-meta-struct.c:2340
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "El objeto de la base de datos «%s» ya existe"
@@ -2211,7 +2211,7 @@ msgstr "Referencias"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:21
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
-#: ../tools/browser/schema-browser/table-columns.c:501
+#: ../tools/browser/schema-browser/table-columns.c:545
 msgid "Default value"
 msgstr "Valor predeterminado"
 
@@ -2297,7 +2297,7 @@ msgstr "Disparador"
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
-#: ../tools/browser/schema-browser/table-columns.c:487
+#: ../tools/browser/schema-browser/table-columns.c:531
 #: ../tools/command-exec.c:654 ../tools/command-exec.c:728
 #: ../tools/web-server.c:931
 msgid "Type"
@@ -3542,6 +3542,7 @@ msgstr "Tamaño de datos"
 #: ../libgda-ui/data-entries/common-bin.c:301
 #: ../providers/mysql/gda-mysql-provider.c:623
 #: ../providers/mysql/gda-mysql-util.c:67
+#: ../tools/browser/schema-browser/table-columns.c:432
 msgid "Unknown"
 msgstr "Desconocido"
 
@@ -4356,7 +4357,7 @@ msgstr "Nombre del archivo"
 
 #. To translators: "Details" is a table's column's attribute
 #: ../libgda-ui/gdaui-raw-grid.c:1914
-#: ../tools/browser/schema-browser/table-columns.c:508
+#: ../tools/browser/schema-browser/table-columns.c:552
 msgid "Details"
 msgstr "Detalles"
 
@@ -4995,7 +4996,7 @@ msgstr "Restricciones globales"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:31
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
 #: ../tools/browser/schema-browser/mgr-columns.c:382
-#: ../tools/browser/schema-browser/table-columns.c:191
+#: ../tools/browser/schema-browser/table-columns.c:192
 #: ../tools/command-exec.c:821
 msgid "Primary key"
 msgstr "Clave primaria"
@@ -8795,11 +8796,11 @@ msgstr "Crear un diagrama nuevo"
 msgid "Could not load diagram"
 msgstr "No se pudo cargar el diagrama"
 
-#: ../tools/browser/schema-browser/table-columns.c:229
+#: ../tools/browser/schema-browser/table-columns.c:230
 msgid "Foreign key on "
 msgstr "Clave externa en "
 
-#: ../tools/browser/schema-browser/table-columns.c:277
+#: ../tools/browser/schema-browser/table-columns.c:278
 #, c-format
 msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
@@ -8808,30 +8809,66 @@ msgstr ""
 "tipos incompatibles: «%s» para la clave externa y «%s» para la clave primaria "
 "referenciada"
 
-#: ../tools/browser/schema-browser/table-columns.c:304
+#. To translators: the UPDATE is an SQL operation type
+#: ../tools/browser/schema-browser/table-columns.c:297
+msgid "Policy on UPDATE"
+msgstr "Política para UPDATE"
+
+#. To translators: the DELETE is an SQL operation type
+#: ../tools/browser/schema-browser/table-columns.c:306
+msgid "Policy on DELETE"
+msgstr "Política para DELETE"
+
+#: ../tools/browser/schema-browser/table-columns.c:325
 #, c-format
 msgid "Could not compute table's UNIQUE constraints for %s.%s.%s"
 msgstr ""
 "No se pudieron computar las restricciones UNIQUE de la tabla para %s.%s.%s"
 
-#: ../tools/browser/schema-browser/table-columns.c:327
+#: ../tools/browser/schema-browser/table-columns.c:348
 msgid "Unique constraint"
 msgstr "Restricción única"
 
-#: ../tools/browser/schema-browser/table-columns.c:358
+#: ../tools/browser/schema-browser/table-columns.c:379
 msgid "Tables referencing this one"
 msgstr "Tablas que referencian a esta"
 
-#: ../tools/browser/schema-browser/table-columns.c:472
+#: ../tools/browser/schema-browser/table-columns.c:434
+msgid "not enforced"
+msgstr "no se cumple"
+
+#: ../tools/browser/schema-browser/table-columns.c:436
+msgid "stop with error"
+msgstr "parar con error"
+
+#: ../tools/browser/schema-browser/table-columns.c:438
+msgid "stop with error, not deferrable"
+msgstr "parar con error, no aplazable"
+
+#: ../tools/browser/schema-browser/table-columns.c:440
+msgid "cascade changes"
+msgstr "cambios en cascada"
+
+#: ../tools/browser/schema-browser/table-columns.c:442
+#| msgid "Set to NULL"
+msgid "set to NULL"
+msgstr "establecer a NULL"
+
+#: ../tools/browser/schema-browser/table-columns.c:444
+#| msgid "Set to default value"
+msgid "set to default value"
+msgstr "establecer a un valor predeterminado"
+
+#: ../tools/browser/schema-browser/table-columns.c:516
 msgid "Column Name"
 msgstr "Nombre de columna"
 
 #. To translators: "Not NULL?" is a table's column's attribute. The NULL term should not be translated as it refers to the SQL NULL value
-#: ../tools/browser/schema-browser/table-columns.c:494
+#: ../tools/browser/schema-browser/table-columns.c:538
 msgid "Not NULL?"
 msgstr "¿No es nulo?"
 
-#: ../tools/browser/schema-browser/table-columns.c:531
+#: ../tools/browser/schema-browser/table-columns.c:575
 msgid "Constraints and integrity rules"
 msgstr "Reglas de restricciones e integridad"
 
