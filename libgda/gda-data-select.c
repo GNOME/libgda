@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2008 - 2010 The GNOME Foundation.
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -1634,7 +1634,8 @@ gda_data_select_get_access_flags (GdaDataModel *model)
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 	}
 
-	if (! imodel->priv->sh->modif_internals->safely_locked) {
+	if (! imodel->priv->sh->modif_internals->safely_locked &&
+	    (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		if (imodel->priv->sh->modif_internals->modif_stmts [UPD_QUERY])
 			flags |= GDA_DATA_MODEL_ACCESS_UPDATE;
 		if (imodel->priv->sh->modif_internals->modif_stmts [INS_QUERY])
