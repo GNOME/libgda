@@ -1949,7 +1949,8 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
 		return gda_data_model_iter_move_prev_default (model, iter);
 
-	g_return_val_if_fail (CLASS (model)->fetch_prev, FALSE);
+	if (! CLASS (model)->fetch_prev)
+		return FALSE;
 
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
@@ -2031,9 +2032,22 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 		}
 		else {
 			/* implementation of fetch_at() is optional */
-			TO_IMPLEMENT; /* iter back or forward the right number of times */
-			g_object_set (G_OBJECT (iter), "current-row", row, NULL);
-			return FALSE;
+			if (imodel->priv->sh->iter_row < row) {
+				for (; gda_data_model_iter_get_row (iter) < row; ) {
+					if (! gda_data_model_iter_move_next (iter))
+						return FALSE;
+				}
+				return gda_data_model_iter_get_row (iter) == row ? TRUE : FALSE;
+			}
+			else if (imodel->priv->sh->iter_row > row) {
+				for (; gda_data_model_iter_get_row (iter) > row; ) {
+					if (! gda_data_model_iter_move_prev (iter))
+						return FALSE;
+				}
+				return gda_data_model_iter_get_row (iter) == row ? TRUE : FALSE;
+			}
+			else
+				return TRUE;
 		}
 	}
 }
