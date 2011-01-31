@@ -192,7 +192,6 @@ typedef struct {
 typedef struct {
 	sqlite3_vtab_cursor      base; /* base.pVtab is a pointer to the sqlite3_vtab virtual table */
 	GdaDataModelIter        *iter;
-	gint                     ncols;
 } VirtualCursor;
 
 /* module creation */
@@ -370,6 +369,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		}
 		ncols = g_list_length (td->columns);
 	}
+	td->n_columns = ncols;
 
 	/* create the CREATE TABLE statement */
 	sql = g_string_new ("CREATE TABLE ");
@@ -560,7 +560,7 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 
 	GdaHolder *param;
 	
-	if (i == cursor->ncols) {
+	if (i == ((VirtualTable*) cur->pVtab)->td->n_columns) {
 		/* private hidden column, which returns the row number */
 		SQLITE3_CALL (sqlite3_result_int) (ctx, gda_data_model_iter_get_row (cursor->iter));
 		return SQLITE_OK;
@@ -774,15 +774,11 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 		return SQLITE_ERROR;
 
 	/* initialize cursor */
-	if (GDA_IS_DATA_PROXY (vtable->td->real_model)) {
+	if (GDA_IS_DATA_PROXY (vtable->td->real_model))
 		cursor->iter = g_object_new (GDA_TYPE_DATA_MODEL_ITER,
 					     "data-model", vtable->td->real_model, NULL);
-		cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
-	}
-	else {
+	else
 		cursor->iter = gda_data_model_create_iter (vtable->td->real_model);
-		cursor->ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (vtable->td->real_model));
-	}
 
 	gda_data_model_iter_move_next (cursor->iter);
 	return SQLITE_OK;
@@ -1012,45 +1008,59 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			return SQLITE_READONLY;
 		}
 		
-		GdaStatement *stmt;
+		/* determine parameters required to execute MOD statement */
+		GdaStatement *stmt = NULL;
+		ParamType ptype;
 		switch (optype) {
 		case 1:
-			g_object_get (vtable->td->real_model, "delete-stmt", &stmt, NULL);
+			ptype = PARAMS_DELETE;
+			if (! vtable->td->modif_stmt [ptype])
+				g_object_get (vtable->td->real_model, "delete-stmt", &stmt, NULL);
 			break;
 		case 2:
-			g_object_get (vtable->td->real_model, "insert-stmt", &stmt, NULL);
+			ptype = PARAMS_INSERT;
+			if (! vtable->td->modif_stmt [ptype])
+				g_object_get (vtable->td->real_model, "insert-stmt", &stmt, NULL);
 			break;
 		case 3:
-			g_object_get (vtable->td->real_model, "update-stmt", &stmt, NULL);
+			ptype = PARAMS_UPDATE;
+			if (! vtable->td->modif_stmt [ptype])
+				g_object_get (vtable->td->real_model, "update-stmt", &stmt, NULL);
 			break;
 		default:
 			g_assert_not_reached ();
 		}
 		
-		if (! stmt) {
-			tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-				(_("No statement provided to modify the data model representing the table"));
-			return SQLITE_READONLY;
-		}
+		if (! vtable->td->modif_stmt [ptype]) {
+			if (! stmt) {
+				tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+					(_("No statement provided to modify the data model "
+					   "representing the table"));
+				return SQLITE_READONLY;
+			}
 		
-		GdaSet *params;
-		if (! gda_statement_get_parameters (stmt, &params, NULL) || !params) {
-			tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-				(_("Invalid statement provided to modify the data model representing the table"));
-			g_object_unref (stmt);
-			return SQLITE_READONLY;
+			GdaSet *params;
+			if (! gda_statement_get_parameters (stmt, &params, NULL) || !params) {
+				tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+					(_("Invalid statement provided to modify the data model "
+					   "representing the table"));
+				g_object_unref (stmt);
+				return SQLITE_READONLY;
+			}
+			vtable->td->modif_stmt [ptype] = stmt;
+			vtable->td->modif_params [ptype] = params;
 		}
+		stmt = vtable->td->modif_stmt [ptype];
 		
+		/* bind parameters */
 		GSList *list;
-		for (list = params->holders; list; list = list->next) {
+		for (list = vtable->td->modif_params [ptype]->holders; list; list = list->next) {
 			const gchar *id;
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			gboolean holder_value_set = FALSE;
 			
 			id = gda_holder_get_id (holder);
 			if (!id) {
-				g_object_unref (params);
-				g_object_unref (stmt);
 				tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
 					(_("Invalid parameter in statement provided to modify "
 					   "the data model representing the table"));
@@ -1058,8 +1068,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			}
 			if (*id == '+' && id[1]) {
 				long int i;
-				i = param_name_to_number (gda_data_model_get_n_columns (vtable->td->real_model),
-							  id+1);
+				i = param_name_to_number (vtable->td->n_columns, id+1);
 				if (i >= 0) {
 					GType type;
 					GValue *value;
@@ -1090,8 +1099,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 				}
 
 				long int i;
-				i = param_name_to_number (gda_data_model_get_n_columns (vtable->td->real_model),
-							  id+1);
+				i = param_name_to_number (vtable->td->n_columns, id+1);
 				if (i >= 0) {
 					GValue *value;
 					value = gda_row_get_value (grow, i);
@@ -1107,8 +1115,6 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 					      &exec_set, NULL);
 				if (! exec_set) {
 					/* can't give value to param named @id */
-					g_object_unref (params);
-					g_object_unref (stmt);
 					tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
 						(_("Invalid parameter in statement provided to modify "
 						   "the data model representing the table"));
@@ -1118,8 +1124,6 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 				if (! eh ||
 				    ! gda_holder_set_bind (holder, eh, NULL)) {
 					/* can't give value to param named @id */
-					g_object_unref (params);
-					g_object_unref (stmt);
 					tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
 						(_("Invalid parameter in statement provided to modify "
 						   "the data model representing the table"));
@@ -1149,11 +1153,10 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 #endif
 		
 		if (!cnc ||
-		    (gda_connection_statement_execute_non_select (cnc, stmt, params,
+		    (gda_connection_statement_execute_non_select (cnc, stmt,
+								  vtable->td->modif_params [ptype],
 								  NULL, NULL) == -1)) {
 			/* failed to execute */
-			g_object_unref (params);
-			g_object_unref (stmt);
 			tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
 				(_("Failed to execute the statement provided to modify "
 				   "the data model representing the table"));
@@ -1285,7 +1288,7 @@ virtualRollback (G_GNUC_UNUSED sqlite3_vtab *tab)
 }
 
 static int
-virtualRename(sqlite3_vtab *pVtab, const char *zNew)
+virtualRename (sqlite3_vtab *pVtab, G_GNUC_UNUSED const char *zNew)
 {
 	TRACE (pVtab, NULL);
 	/* not yet analysed and implemented */

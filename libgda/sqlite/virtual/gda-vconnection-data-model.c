@@ -452,6 +452,8 @@ gda_vconnection_get_table_data_by_model (GdaVconnectionDataModel *cnc, GdaDataMo
 void
 gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td)
 {
+	ParamType i;
+
 	if (td->real_model)
 		g_object_unref (td->real_model);
 	if (td->columns) {
@@ -462,5 +464,11 @@ gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td)
 	g_free (td->unique_name);
 	if (td->spec_free_func)
 		td->spec_free_func (td->spec);
+	for (i = 0; i < PARAMS_NB; i++) {
+		if (td->modif_params[i])
+			g_object_unref (td->modif_params[i]);
+		if (td->modif_stmt[i])
+			g_object_unref (td->modif_stmt[i]);
+	}
 	g_free (td);
 }

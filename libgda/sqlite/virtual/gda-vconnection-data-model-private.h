@@ -25,6 +25,13 @@
 
 G_BEGIN_DECLS
 
+typedef enum {
+	PARAMS_INSERT,
+	PARAMS_UPDATE,
+	PARAMS_DELETE,
+	PARAMS_NB
+} ParamType;
+
 typedef struct {
 	GdaVconnectionDataModelSpec *spec;
 	GDestroyNotify               spec_free_func;
@@ -33,9 +40,10 @@ typedef struct {
 	GList                       *columns;
 	gchar                       *table_name;
 	gchar                       *unique_name;
+	gint                         n_columns;
 
-	gpointer _gda_reserved_1;
-	gpointer _gda_reserved_2;
+	GdaStatement                *modif_stmt[PARAMS_NB];
+	GdaSet                      *modif_params[PARAMS_NB];
 } GdaVConnectionTableData;
 
 void                     gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td);
