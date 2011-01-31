@@ -786,6 +786,8 @@ gda_data_model_import_get_property (GObject *object,
  *   <listitem><para>Other formats: no option</para></listitem>
  * </itemizedlist>
  *
+ * Note: after the creation, please use gda_data_model_import_get_errors() to check any error.
+ *
  * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
