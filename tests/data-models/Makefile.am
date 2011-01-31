@@ -73,7 +73,12 @@ EXTRA_DIST = \
 	data1.xml \
 	pmodel_dbstruct.xml \
 	pmodel_data_customers.xml \
-	pmodel_data_locations.xml
+	pmodel_data_locations.xml \
+	cities1.xml \
+	cities2.xml \
+	cities3.xml \
+	countriesA.xml \
+	countriesB.xml
 
 CLEANFILES = \
 	pmodel.db pmodel.db-journal \
