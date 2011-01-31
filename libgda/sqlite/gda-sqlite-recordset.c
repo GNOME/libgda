@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	   Rodrigo Moya <rodrigo@gnome-db.org>
@@ -539,6 +539,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
 		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 		break;
+	case SQLITE_READONLY:
 	case SQLITE_MISUSE:
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 

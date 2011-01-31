@@ -29,7 +29,7 @@ typedef struct {
 	GdaVconnectionDataModelSpec *spec;
 	GDestroyNotify               spec_free_func;
 
-	GdaDataModel                *real_model; /* data model really being used, a reference count is kept on it */
+	GdaDataModel                *real_model; /* data model really being used, a reference is kept on it */
 	GList                       *columns;
 	gchar                       *table_name;
 	gchar                       *unique_name;

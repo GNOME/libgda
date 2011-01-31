@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<gda_array id="EXPORT" name="Exported Data">
+  <gda_array_field id="FI0" name="code" title="code" dbms_type="string" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="name" title="name" dbms_type="string" gdatype="string" nullok="TRUE"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>BDI</gda_value>
+      <gda_value>Burundi</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>BEL</gda_value>
+      <gda_value>Belgium</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>BEN</gda_value>
+      <gda_value>Benin</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>BFA</gda_value>
+      <gda_value>Burkina Faso</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>BGD</gda_value>
+      <gda_value>Bangladesh</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>BGR</gda_value>
+      <gda_value>Bulgaria</gda_value>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>

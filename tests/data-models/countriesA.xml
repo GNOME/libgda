@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<gda_array id="EXPORT" name="Exported Data">
+  <gda_array_field id="FI0" name="code" title="code" dbms_type="string" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="name" title="name" dbms_type="string" gdatype="string" nullok="TRUE"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>ABW</gda_value>
+      <gda_value>Aruba</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>AFG</gda_value>
+      <gda_value>Afghanistan</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>AGO</gda_value>
+      <gda_value>Angola</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>AIA</gda_value>
+      <gda_value>Anguilla</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ALB</gda_value>
+      <gda_value>Albania</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>AND</gda_value>
+      <gda_value>Andorra</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ANT</gda_value>
+      <gda_value>Netherlands Antilles</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ARE</gda_value>
+      <gda_value>United Arab Emirates</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ARG</gda_value>
+      <gda_value>Argentina</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ARM</gda_value>
+      <gda_value>Armenia</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ASM</gda_value>
+      <gda_value>American Samoa</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ATA</gda_value>
+      <gda_value>Antarctica</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ATF</gda_value>
+      <gda_value>French Southern territories</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ATG</gda_value>
+      <gda_value>Antigua and Barbuda</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>AUS</gda_value>
+      <gda_value>Australia</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>AUT</gda_value>
+      <gda_value>Austria</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>AZE</gda_value>
+      <gda_value>Azerbaijan</gda_value>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>

@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<gda_array id="EXPORT" name="Donn&#xE9;es export&#xE9;es">
+  <gda_array_field id="FI0" name="name" title="name" dbms_type="string" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="countrycode" title="countrycode" dbms_type="string" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI2" name="population" title="population" dbms_type="integer" gdatype="int" nullok="TRUE"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>Baku</gda_value>
+      <gda_value>AZE</gda_value>
+      <gda_value>1787800</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Brisbane</gda_value>
+      <gda_value>AUS</gda_value>
+      <gda_value>1291117</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Buenos Aires</gda_value>
+      <gda_value>ARG</gda_value>
+      <gda_value>2982146</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Chittagong</gda_value>
+      <gda_value>BGD</gda_value>
+      <gda_value>1392860</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>C&#xF3;rdoba</gda_value>
+      <gda_value>ARG</gda_value>
+      <gda_value>1157507</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Dhaka</gda_value>
+      <gda_value>BGD</gda_value>
+      <gda_value>3612850</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Kabul</gda_value>
+      <gda_value>AFG</gda_value>
+      <gda_value>1780000</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>La Matanza</gda_value>
+      <gda_value>ARG</gda_value>
+      <gda_value>1266461</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Luanda</gda_value>
+      <gda_value>AGO</gda_value>
+      <gda_value>2022000</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Melbourne</gda_value>
+      <gda_value>AUS</gda_value>
+      <gda_value>2865329</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Perth</gda_value>
+      <gda_value>AUS</gda_value>
+      <gda_value>1096829</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Sofija</gda_value>
+      <gda_value>BGR</gda_value>
+      <gda_value>1122302</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Sydney</gda_value>
+      <gda_value>AUS</gda_value>
+      <gda_value>3276207</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Wien</gda_value>
+      <gda_value>AUT</gda_value>
+      <gda_value>1608144</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Yerevan</gda_value>
+      <gda_value>ARM</gda_value>
+      <gda_value>1248700</gda_value>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>
