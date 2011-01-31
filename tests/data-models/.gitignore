@@ -5,4 +5,5 @@ check_model_copy
 check_pmodel
 check_empty_rs
 check_model_errors
+check_vcnc
 *.db

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<gda_array id="EXPORT" name="Donn&#xE9;es export&#xE9;es">
+  <gda_array_field id="FI0" name="name" title="name" dbms_type="string" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI1" name="countrycode" title="countrycode" dbms_type="string" gdatype="string" nullok="TRUE"/>
+  <gda_array_field id="FI2" name="population" title="population" dbms_type="integer" gdatype="int" nullok="TRUE"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>Buenos Aires</gda_value>
+      <gda_value>ARG</gda_value>
+      <gda_value>2982146</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Dhaka</gda_value>
+      <gda_value>BGD</gda_value>
+      <gda_value>3612850</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Luanda</gda_value>
+      <gda_value>AGO</gda_value>
+      <gda_value>2022000</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Melbourne</gda_value>
+      <gda_value>AUS</gda_value>
+      <gda_value>2865329</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>Sydney</gda_value>
+      <gda_value>AUS</gda_value>
+      <gda_value>3276207</gda_value>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>
