@@ -548,6 +548,10 @@ gda_set_new_inline (gint nb, ...)
 			g_value_set_ulong (value, va_arg (ap, gulong));
 		else if (type == G_TYPE_GTYPE)
 			g_value_set_gtype (value, va_arg(ap, GType));
+		else if (type == GDA_TYPE_TIMESTAMP)
+			gda_value_set_timestamp (value, va_arg(ap, GdaTimestamp *));
+		else if (type == GDA_TYPE_TIME)
+			gda_value_set_time (value, va_arg(ap, GdaTime *));
 		else {
 			g_warning (_("%s() does not handle values of type '%s'."),
 				   __FUNCTION__, g_type_name (type));
