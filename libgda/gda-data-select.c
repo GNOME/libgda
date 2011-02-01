@@ -1,4 +1,4 @@
-/* GDA library
+/*
  * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -1302,8 +1302,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
  * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
  * Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
  *
- * Returns: TRUE if no error occurred. If FALSE is returned, then some modification statement may still have been
- * computed
+ * Returns: %TRUE if no error occurred. If %FALSE is returned, then some modification statement may still have been computed
  */
 gboolean
 gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **error)
@@ -1332,8 +1331,11 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **
 
 	retval = gda_compute_dml_statements (model->priv->cnc, stmt, TRUE,
 					     &(modif_stmts[INS_QUERY]),
+					     NULL, NULL, error);
+	retval = gda_compute_dml_statements (model->priv->cnc, stmt, TRUE,
+					     NULL,
 					     &(modif_stmts[UPD_QUERY]),
-					     &(modif_stmts[DEL_QUERY]), error);
+					     &(modif_stmts[DEL_QUERY]), error) && retval;
 	for (mtype = FIRST_QUERY; mtype < NB_QUERIES; mtype++) {
 #ifdef GDA_DEBUG_NO
 		if (modif_stmts[mtype]) {
