@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -840,6 +840,8 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
  * Computes a #GdaSqlExpr expression which can be used in the WHERE clause of an UPDATE
  * or DELETE statement when a row from the result of the @stsel statement has to be modified.
  *
+ * REM: the case where @require_pk is %FALSE is not currently implemented.
+ *
  * Returns: a new #GdaSqlExpr, or %NULL if an error occurred.
  *
  * Since: 4.0.3
@@ -971,8 +973,10 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
  *
  * Creates an INSERT, an UPDATE and a DELETE statement from a SELECT statement
  * using the database metadata available in @cnc's meta store.
+ *
+ * %FALSE will be returned if any of the statement cannot be built.
  * 
- * returns: TRUE if no error occurred
+ * returns: %TRUE if no error occurred
  */
 gboolean
 gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
