@@ -2,6 +2,9 @@
 #include <virtual/libgda-virtual.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <string.h>
+#include <unistd.h>
+
+#define NTHREADS 50
 
 typedef enum {
 	ACTION_COMPARE,
@@ -10,17 +13,19 @@ typedef enum {
 
 static GdaDataModel *run_sql_select (GdaConnection *cnc, const gchar *sql,
 				     gboolean iter_only, GError **error);
-static gboolean run_sql_non_select (GdaConnection *cnc, const gchar *sql, GError **error);
+static gboolean run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params, GError **error);
 static GdaDataModel *assert_run_sql_select (GdaConnection *cnc, const gchar *sql,
 					    Action action, const gchar *compare_file);
-static void assert_run_sql_non_select (GdaConnection *cnc, const gchar *sql);
+static void assert_run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params);
 GdaDataModel *load_from_file (const gchar *filename);
-static void assert_data_model_equel (GdaDataModel *model, GdaDataModel *ref);
+static void assert_data_model_equal (GdaDataModel *model, GdaDataModel *ref);
 
 static GdaConnection *open_destination_connection (void);
 static void check_update_delete (GdaConnection *virtual);
 static void check_simultanous_select_random (GdaConnection *virtual);
 static void check_simultanous_select_forward (GdaConnection *virtual);
+static void check_threads_select_random (GdaConnection *virtual);
+static void check_date (GdaConnection *virtual);
 
 int
 main (int argc, char *argv[])
@@ -70,10 +75,12 @@ main (int argc, char *argv[])
 	check_update_delete (virtual);
 
 	g_print ("*** Copying data into 'countries' virtual table...\n");
-	assert_run_sql_non_select (virtual, "INSERT INTO out.countries SELECT * FROM country");	
+	assert_run_sql_non_select (virtual, "INSERT INTO out.countries SELECT * FROM country", NULL);
 
 	check_simultanous_select_random (virtual);
 	check_simultanous_select_forward (virtual);
+	check_threads_select_random (virtual);
+	check_date (virtual);
 
         gda_connection_close (virtual);
         gda_connection_close (out_cnc);
@@ -97,12 +104,16 @@ open_destination_connection (void)
         }
 
         /* table "cities" */
-        assert_run_sql_non_select (cnc, "DROP table IF EXISTS cities");
-        assert_run_sql_non_select (cnc, "CREATE table cities (name string not NULL primary key, countrycode string not null, population int)");
+        assert_run_sql_non_select (cnc, "DROP table IF EXISTS cities", NULL);
+        assert_run_sql_non_select (cnc, "CREATE table cities (name string not NULL primary key, countrycode string not null, population int)", NULL);
 
         /* table "countries" */
-        assert_run_sql_non_select (cnc, "DROP table IF EXISTS countries");
-        assert_run_sql_non_select (cnc, "CREATE table countries (code string not null primary key, name string not null)");
+        assert_run_sql_non_select (cnc, "DROP table IF EXISTS countries", NULL);
+        assert_run_sql_non_select (cnc, "CREATE table countries (code string not null primary key, name string not null)", NULL);
+
+	/* table "misc" */
+        assert_run_sql_non_select (cnc, "DROP table IF EXISTS misc", NULL);
+        assert_run_sql_non_select (cnc, "CREATE table misc (ts timestamp, adate date, atime time)", NULL);
 
         return cnc;
 }
@@ -128,7 +139,7 @@ run_sql_select (GdaConnection *cnc, const gchar *sql, gboolean iter_only, GError
 
 
 static gboolean
-run_sql_non_select (GdaConnection *cnc, const gchar *sql, GError **error)
+run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params, GError **error)
 {
 	GdaStatement *stmt;
         gint nrows;
@@ -138,7 +149,7 @@ run_sql_non_select (GdaConnection *cnc, const gchar *sql, GError **error)
         stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
         g_object_unref (parser);
 
-        nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, error);
+        nrows = gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, error);
         g_object_unref (stmt);
         if (nrows == -1)
 		return FALSE;
@@ -147,7 +158,7 @@ run_sql_non_select (GdaConnection *cnc, const gchar *sql, GError **error)
 }
 
 static void
-assert_data_model_equel (GdaDataModel *model, GdaDataModel *ref)
+assert_data_model_equal (GdaDataModel *model, GdaDataModel *ref)
 {
 	GdaDataComparator *comp;
 	GError *error = NULL;
@@ -198,7 +209,7 @@ assert_run_sql_select (GdaConnection *cnc, const gchar *sql, Action action, cons
 		else if (action == ACTION_COMPARE) {
 			GdaDataModel *ref;
 			ref = load_from_file (compare_file);
-			assert_data_model_equel (model, ref);
+			assert_data_model_equal (model, ref);
 			g_object_unref (ref);
 		}
 		else
@@ -210,10 +221,10 @@ assert_run_sql_select (GdaConnection *cnc, const gchar *sql, Action action, cons
 }
 
 static void
-assert_run_sql_non_select (GdaConnection *cnc, const gchar *sql)
+assert_run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params)
 {
 	GError *error = NULL;
-	if (! run_sql_non_select (cnc, sql, &error)) {
+	if (! run_sql_non_select (cnc, sql, params, &error)) {
 		g_print ("Error executing [%s]: %s\n",
 			 sql,
 			 error && error->message ? error->message : "No detail");
@@ -242,18 +253,22 @@ move_iter_forward (GdaDataModelIter *iter, const gchar *iter_name, gint nb, GdaD
 {
 	gint i;
 	for (i = 0; i < nb; i++) {
+#ifdef DEBUG_PRINT
 		g_print ("*** moving iter %s forward... ", iter_name);
+#endif
 		if (! gda_data_model_iter_move_next (iter)) {
 			g_print ("Could not move forward at step %d\n", i);
 			exit (1);
 		}
 		else {
 			const GValue *cvalue;
-			gchar *str;
 			cvalue = gda_data_model_iter_get_value_at (iter, 0);
+#ifdef DEBUG_PRINT
+			gchar *str;
 			str = gda_value_stringify (cvalue);
 			g_print ("Col0=[%s]", str);
 			g_free (str);
+#endif
 
 			if (ref) {
 				if (gda_data_model_iter_get_row (iter) != (start_row + i)) {
@@ -272,12 +287,16 @@ move_iter_forward (GdaDataModelIter *iter, const gchar *iter_name, gint nb, GdaD
 						 str1, str2);
 					exit (1);
 				}
+#ifdef DEBUG_PRINT
 				else
 					g_print (" Value Ok.");
+#endif
 				g_free (str1);
 				g_free (str2);
 			}
+#ifdef DEBUG_PRINT
 			g_print ("\n");
+#endif
 		}
 	}
 }
@@ -294,7 +313,7 @@ check_simultanous_select_random (GdaConnection *virtual)
 	m1 = run_sql_select (virtual, "SELECT * FROM countries WHERE code LIKE 'A%' ORDER BY code",
 			     FALSE, &error);
 	if (!m1) {
-		g_print ("Could not execute SELECT with forward iter only (1): %s\n",
+		g_print ("Could not execute SELECT (1): %s\n",
                          error && error->message ? error->message : "No detail");
                 exit (1);
 	}
@@ -303,7 +322,7 @@ check_simultanous_select_random (GdaConnection *virtual)
 	m2 = run_sql_select (virtual, "SELECT * FROM countries WHERE code LIKE 'B%' ORDER BY code",
 			     FALSE, &error);
 	if (!m2) {
-		g_print ("Could not execute SELECT with forward iter only (2): %s\n",
+		g_print ("Could not execute SELECT (2): %s\n",
                          error && error->message ? error->message : "No detail");
                 exit (1);
 	}
@@ -339,10 +358,10 @@ check_simultanous_select_random (GdaConnection *virtual)
 	g_free (file);
 #else
 	refA = load_from_file ("countriesA.xml");
-	assert_data_model_equel (m1, refA);
+	assert_data_model_equal (m1, refA);
 
 	refB = load_from_file ("countriesB.xml");
-	assert_data_model_equel (m2, refB);
+	assert_data_model_equal (m2, refB);
 #endif
 
 	iter1 = gda_data_model_create_iter (m1);
@@ -427,13 +446,13 @@ check_update_delete (GdaConnection *virtual)
 {
 	/* Check DELETE and UPDATE */
 	g_print ("*** Copying data into virtual 'cities' table...\n");
-	assert_run_sql_non_select (virtual, "INSERT INTO out.cities SELECT * FROM city WHERE population >= 500000");
+	assert_run_sql_non_select (virtual, "INSERT INTO out.cities SELECT * FROM city WHERE population >= 500000", NULL);
 	g_print ("*** Showing list of cities WHERE population >= 1000000\n");
 	assert_run_sql_select (virtual, "SELECT * FROM out.cities WHERE population >= 1000000 "
 			       "ORDER BY name", ACTION_COMPARE, "cities1.xml");
 
 	g_print ("*** Deleting data where population < 2000000...\n");
-	assert_run_sql_non_select (virtual, "DELETE FROM out.cities WHERE population < 2000000");
+	assert_run_sql_non_select (virtual, "DELETE FROM out.cities WHERE population < 2000000", NULL);
 
 	g_print ("*** Showing (shorter) list of cities WHERE population >= 1000000\n");
 	assert_run_sql_select (virtual, "SELECT * FROM out.cities WHERE population >= 1000000 "
@@ -441,9 +460,156 @@ check_update_delete (GdaConnection *virtual)
 
 	g_print ("*** Updating data where population > 3000000...\n");
 	assert_run_sql_non_select (virtual, "UPDATE out.cities SET population = 3000000 WHERE "
-				   "population >= 3000000");
+				   "population >= 3000000", NULL);
 	
 	g_print ("*** Showing list of cities WHERE population >= 2100000\n");
 	assert_run_sql_select (virtual, "SELECT * FROM out.cities WHERE population >= 2100000 "
 			       "ORDER BY name", ACTION_COMPARE, "cities3.xml");
+}
+
+typedef struct {
+	GThread  *thread;
+	gint      th_id;
+	GdaConnection *virtual;
+} ThData;
+
+static gboolean
+test_multiple_threads (GThreadFunc func, GdaConnection *virtual)
+{
+	ThData data[NTHREADS];
+	gint i;
+
+	for (i = 0; i < NTHREADS; i++) {
+		ThData *d = &(data[i]);
+		d->th_id = i;
+		d->virtual = virtual;
+	}
+
+	for (i = 0; i < NTHREADS; i++) {
+		ThData *d = &(data[i]);
+#ifdef DEBUG_PRINT
+		g_print ("Running thread %d\n", d->th_id);
+#endif
+		d->thread = g_thread_create (func, d, TRUE, NULL);
+	}
+
+	for (i = 0; i < NTHREADS; i++) {
+		ThData *d = &(data[i]);
+		g_thread_join (d->thread);
+	}
+	
+	g_print ("All threads finished\n");
+	return TRUE;
+}
+
+/* executed in another thread */
+gpointer
+threads_select_random_start_thread (ThData *data)
+{
+	GdaDataModel *model;
+	GdaDataModel *ref;
+	GdaDataModelIter *iter;
+	GError *error = NULL;
+	GThread *self;
+	gchar *str;
+
+	self = g_thread_self ();
+	g_print ("*** sub thread %p SELECT RANDOM\n", self);
+	model = run_sql_select (data->virtual, "SELECT * FROM countries WHERE code LIKE 'A%' ORDER BY code",
+				FALSE, &error);
+	if (!model) {
+		g_print ("Could not execute SELECT with forward iter only: %s\n",
+                         error && error->message ? error->message : "No detail");
+                exit (1);
+	}
+
+	ref = load_from_file ("countriesA.xml");
+	assert_data_model_equal (model, ref);
+
+	iter = gda_data_model_create_iter (model);
+
+	str = g_strdup_printf ("iter thread %p", self);
+	move_iter_forward (iter, str, 10, ref, 0);
+	move_iter_forward (iter, str, 3, ref, 10);
+	g_free (str);
+
+	g_object_unref (iter);
+	g_object_unref (model);
+	g_object_unref (ref);
+	g_print ("thread %p finished\n", self);
+
+	return NULL;
+}
+
+static void
+check_threads_select_random (GdaConnection *virtual)
+{
+	test_multiple_threads ((GThreadFunc) threads_select_random_start_thread, virtual);
+}
+
+static void
+check_date (GdaConnection *virtual)
+{
+	g_print ("*** insert dates into 'misc' table...\n");
+	GdaSet *set;
+	GdaTimestamp ts = {2011, 01, 31, 12, 34, 56, 0, GDA_TIMEZONE_INVALID};
+	GdaTime atime = {13, 45, 59, 0, GDA_TIMEZONE_INVALID};
+	GDate *adate;
+	GdaDataModel *model;
+	GError *error = NULL;
+
+	adate = g_date_new_dmy (23, G_DATE_FEBRUARY, 2010);
+	set = gda_set_new_inline (3,
+				  "ts", GDA_TYPE_TIMESTAMP, &ts,
+				  "adate", G_TYPE_DATE, adate,
+				  "atime", GDA_TYPE_TIME, &atime);
+	g_date_free (adate);
+
+	assert_run_sql_non_select (virtual, "INSERT INTO out.misc VALUES (##ts::timestamp, "
+				   "##adate::date, ##atime::time)", set);
+
+	g_print ("*** Showing contents of 'misc'\n");
+	model = assert_run_sql_select (virtual, "SELECT * FROM out.misc",
+				       ACTION_EXPORT, NULL);
+	const GValue *cvalue, *exp;
+	cvalue = gda_data_model_get_value_at (model, 0, 0, &error);
+	if (! cvalue) {
+		g_print ("Could not get timestamp value: %s\n",
+                         error && error->message ? error->message : "No detail");
+                exit (1);
+	}
+	exp = gda_set_get_holder_value (set, "ts");
+	if (gda_value_differ (cvalue, exp)) {
+		g_print ("Expected value '%s', got '%s'\n",
+			 gda_value_stringify (exp), gda_value_stringify (cvalue));
+		exit (1);
+	}
+
+	cvalue = gda_data_model_get_value_at (model, 1, 0, &error);
+	if (! cvalue) {
+		g_print ("Could not get timestamp value: %s\n",
+                         error && error->message ? error->message : "No detail");
+                exit (1);
+	}
+	exp = gda_set_get_holder_value (set, "adate");
+	if (gda_value_differ (cvalue, exp)) {
+		g_print ("Expected value '%s', got '%s'\n",
+			 gda_value_stringify (exp), gda_value_stringify (cvalue));
+		exit (1);
+	}
+
+	cvalue = gda_data_model_get_value_at (model, 2, 0, &error);
+	if (! cvalue) {
+		g_print ("Could not get timestamp value: %s\n",
+                         error && error->message ? error->message : "No detail");
+                exit (1);
+	}
+	exp = gda_set_get_holder_value (set, "atime");
+	if (gda_value_differ (cvalue, exp)) {
+		g_print ("Expected value '%s', got '%s'\n",
+			 gda_value_stringify (exp), gda_value_stringify (cvalue));
+		exit (1);
+	}
+
+	g_object_unref (set);
 }
