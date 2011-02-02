@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -49,12 +49,23 @@ typedef enum {
 	GDA_CONFIG_PROVIDER_CREATION_ERROR
 } GdaConfigError;
 
+/**
+ * GdaDsnInfo:
+ * @name: the (unique) name of the DSN (plain text, not RFC 1738 encoded)
+ * @provider: the ID of the database provider to be used (plain text, not RFC 1738 encoded)
+ * @description: a descriptive string (plain text, not RFC 1738 encoded), can be %NULL.
+ * @cnc_string: the connection string, a semi-colon separated &lt;key>=&lt;value&gt; list where &lt;key&gt; and &lt;value&gt; are RFC 1738 encoded 
+ * @auth_string: the authentication string, a semi-colon separated &lt;key>=&lt;value&gt; list where &lt;key&gt; and &lt;value&gt; are RFC 1738 encoded. Can be %NULL.
+ * @is_system: %TRUE if the DSN is a system wide defined data source
+ *
+ * This structure defines the properties of a named data source (DSN).
+ */
 struct _GdaDsnInfo {
-        gchar    *name;        /* plain text, not RFC 1738 encoded */
-        gchar    *provider;    /* plain text, not RFC 1738 encoded */
-        gchar    *description; /* plain text, not RFC 1738 encoded */
-        gchar    *cnc_string;  /* semi-colon separated <key>=<value> list where <key> and <value> are RFC 1738 encoded */
-        gchar    *auth_string; /* semi-colon separated <key>=<value> list where <key> and <value> are RFC 1738 encoded */
+        gchar    *name;
+        gchar    *provider;
+        gchar    *description;
+        gchar    *cnc_string;
+        gchar    *auth_string;
         gboolean  is_system;
 
 	/*< private >*/
@@ -65,6 +76,15 @@ struct _GdaDsnInfo {
 	gpointer _gda_reserved4;
 };
 
+/**
+ * GdaProviderInfo:
+ * @id: the unique identifier of the database provider
+ * @location: the complete path to the shared library implementing the database provider
+ * @dsn_params: a #GdaSet containing all the parameters which can/must be specified when opening a connection or defining a named data source (DSN)
+ * @auth_params: a #GdaSet containing all the authentication parameters
+ *
+ * This structure holds the information associated to a database provider as discovered by Libgda.
+ */
 struct _GdaProviderInfo {
         gchar             *id;
         gchar             *location;

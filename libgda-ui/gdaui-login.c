@@ -155,8 +155,10 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 	memset (&(login->priv->dsn_info), 0, sizeof (GdaDsnInfo));
 	
 	/* catch DSN definition changes */
-	g_signal_connect (gda_config_get (), "dsn-changed",
+	GdaConfig *conf = gda_config_get ();
+	g_signal_connect (conf, "dsn-changed",
 			  G_CALLBACK (config_dsn_changed_cb), login);
+	g_object_unref (conf);
 
 	/* table layout */
 	table = gtk_table_new (3, 3, FALSE);
@@ -298,8 +300,10 @@ gdaui_login_finalize (GObject *object)
 
 	g_return_if_fail (GDAUI_IS_LOGIN (login));
 
-	g_signal_handlers_disconnect_by_func (gda_config_get (),
+	GdaConfig *conf = gda_config_get ();
+	g_signal_handlers_disconnect_by_func (conf,
 					      G_CALLBACK (config_dsn_changed_cb), login);
+	g_object_unref (conf);
 
 	/* free memory */
 	clear_dsn_info (login);

@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -150,6 +150,7 @@ gda_data_model_dsn_list_init (GdaDataModelDsnList *model,
 			  G_CALLBACK (dsn_removed_cb), model);
 	g_signal_connect (G_OBJECT (config), "dsn-changed",
 			  G_CALLBACK (dsn_changed_cb), model);
+	g_object_unref (config);
 
 	model->priv->tmp_value = NULL;
 }
@@ -181,7 +182,7 @@ gda_data_model_dsn_list_dispose (GObject *object)
 						      G_CALLBACK (dsn_to_be_removed_cb), model);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (config),
 						      G_CALLBACK (dsn_changed_cb), model);
-
+		g_object_unref (config);
 		if (model->priv->tmp_value) {
 			gda_value_free (model->priv->tmp_value);
 			model->priv->tmp_value = NULL;
