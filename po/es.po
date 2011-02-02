@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2011-01-27 20:05+0000\n"
-"PO-Revision-Date: 2011-01-28 10:39+0100\n"
+"POT-Creation-Date: 2011-01-31 19:29+0000\n"
+"PO-Revision-Date: 2011-02-02 18:02+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -110,11 +110,11 @@ msgstr "No se pudo ejecutar el visor"
 #: ../control-center/dsn-properties-dialog.c:283
 #: ../libgda/gda-connection.c:1539 ../libgda/gda-data-model.c:2088
 #: ../libgda/gda-data-model.c:2096 ../libgda/gda-data-model-dir.c:386
-#: ../libgda/gda-data-model-import.c:1680
-#: ../libgda/gda-data-model-import.c:1977
-#: ../libgda/gda-data-model-import.c:2055 ../libgda/gda-data-select.c:370
-#: ../libgda/gda-data-select.c:2064 ../libgda/gda-data-select.c:2073
-#: ../libgda/gda-data-select.c:2083 ../libgda/gda-data-select.c:3481
+#: ../libgda/gda-data-model-import.c:1682
+#: ../libgda/gda-data-model-import.c:1979
+#: ../libgda/gda-data-model-import.c:2057 ../libgda/gda-data-select.c:370
+#: ../libgda/gda-data-select.c:2078 ../libgda/gda-data-select.c:2087
+#: ../libgda/gda-data-select.c:2097 ../libgda/gda-data-select.c:3495
 #: ../libgda/gda-holder.c:490 ../libgda/gda-holder.c:1742
 #: ../libgda/gda-server-operation.c:627 ../libgda/gda-server-operation.c:1025
 #: ../libgda/gda-set.c:561 ../libgda/gda-tree-mgr-select.c:189
@@ -779,7 +779,7 @@ msgstr "El proveedor no soporta operaciones asíncronas de servidor"
 
 #: ../libgda/gda-connection.c:3336 ../libgda/gda-connection.c:3351
 msgid "Statement is a selection statement"
-msgstr "La declaración es una declaración de seleccion"
+msgstr "La declaración es una declaración de selección"
 
 #: ../libgda/gda-connection.c:3409 ../libgda/gda-connection.c:3485
 #: ../libgda/gda-connection.c:3555
@@ -825,7 +825,7 @@ msgstr "Error interno: manejo del proveedor no válido"
 #: ../libgda/gda-data-model-dsn-list.c:312 ../libgda/gda-data-model-iter.c:296
 #: ../libgda/gda-data-model-iter.c:1025 ../libgda/gda-data-proxy.c:3536
 #: ../libgda/gda-data-select.c:1227 ../libgda/gda-data-select.c:1724
-#: ../libgda/gda-data-select.c:2620 ../libgda/gda-data-select.c:2687
+#: ../libgda/gda-data-select.c:2634 ../libgda/gda-data-select.c:2701
 #: ../libgda-ui/gdaui-combo.c:790
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -1177,17 +1177,17 @@ msgstr "La opción «%s» debe mantener un valor booleano, ignorado."
 msgid "\"options\" property is not a GdaSet object"
 msgstr "La propiedad \"options\" no es un objeto GdaSet"
 
-#: ../libgda/gda-data-model-import.c:933
+#: ../libgda/gda-data-model-import.c:935
 #, c-format
 msgid "The '%s' option must hold a GType value, ignored."
 msgstr "La opción «%s» debe mantener un valor GType, ignorado."
 
-#: ../libgda/gda-data-model-import.c:999
+#: ../libgda/gda-data-model-import.c:1001
 #, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "La conversión de caracteres en la línea %d, error: %s"
 
-#: ../libgda/gda-data-model-import.c:1002
+#: ../libgda/gda-data-model-import.c:1004
 #: ../libgda/sqlite/gda-sqlite-provider.c:779
 #: ../providers/bdb/gda-bdb-provider.c:209
 #: ../tools/browser/common/gdaui-data-import.c:178
@@ -1195,96 +1195,96 @@ msgstr "La conversión de caracteres en la línea %d, error: %s"
 msgid "no detail"
 msgstr "Sin detalles"
 
-#: ../libgda/gda-data-model-import.c:1040
+#: ../libgda/gda-data-model-import.c:1042
 #, c-format
 msgid "Could not convert string '%s' to a '%s' value"
 msgstr "No se puede convertir la cadena «%s» a un valor «%s»"
 
-#: ../libgda/gda-data-model-import.c:1096
+#: ../libgda/gda-data-model-import.c:1098
 #, c-format
 msgid "Error while parsing CSV file: %s"
 msgstr "Error al analizar el archivo CSV: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1199
+#: ../libgda/gda-data-model-import.c:1201
 msgid "Failed to read node in XML file"
 msgstr "Falló al leer el nodo en el archivo XML"
 
-#: ../libgda/gda-data-model-import.c:1218
+#: ../libgda/gda-data-model-import.c:1220
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "Se esperaba un nodo <gda_array> en el archivo XML, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1262
-#: ../libgda/gda-data-model-import.c:1585
+#: ../libgda/gda-data-model-import.c:1264
+#: ../libgda/gda-data-model-import.c:1587
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "No hay un atributo \"gdatype\" especificado en <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1313
+#: ../libgda/gda-data-model-import.c:1315
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Se esperaba <gda_array_field> en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1347
+#: ../libgda/gda-data-model-import.c:1349
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "Se esperaba <gda_array_data> en <gda_array>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1349
+#: ../libgda/gda-data-model-import.c:1351
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Se esperaba <gda_array_data>, en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1361
+#: ../libgda/gda-data-model-import.c:1363
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "No se puede leer el contenido del nodo <gda_array_data>"
 
-#: ../libgda/gda-data-model-import.c:1410
+#: ../libgda/gda-data-model-import.c:1412
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr "Se esperaba <gda_array_row> en <gda_array_data>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1434
+#: ../libgda/gda-data-model-import.c:1436
 msgid "Row has too many values (which are ignored)"
 msgstr "La fila tiene demasiados valores (los cuales se ignoran)"
 
-#: ../libgda/gda-data-model-import.c:1481
+#: ../libgda/gda-data-model-import.c:1483
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "No se puede convertir '%s' a un valor de tipo %s"
 
-#: ../libgda/gda-data-model-import.c:1554
+#: ../libgda/gda-data-model-import.c:1556
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Se esperaba <gda_array> pero se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1636
+#: ../libgda/gda-data-model-import.c:1638
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr ""
 "No hay especificado ningún <gda_array_field> especificado en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1814
+#: ../libgda/gda-data-model-import.c:1816
 msgid "Data model does not support random access"
 msgstr "El modelo de datos no soporta acceso aleatorio"
 
-#: ../libgda/gda-data-model-import.c:1871
+#: ../libgda/gda-data-model-import.c:1873
 #, c-format
 msgid "Row at line %d does not have enough values"
 msgstr "La fila en la línea %d no tiene suficientes valores"
 
-#: ../libgda/gda-data-model-import.c:1876
+#: ../libgda/gda-data-model-import.c:1878
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr ""
 "La fila en la línea %d no tiene valores suficientes, se completaron con "
 "valores NULL"
 
-#: ../libgda/gda-data-model-import.c:1901
+#: ../libgda/gda-data-model-import.c:1903
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr ""
 "La fila en la línea %d no tiene suficientes valores (los cuales se ignoran)"
 
-#: ../libgda/gda-data-model-import.c:1976
-#: ../libgda/gda-data-model-import.c:2054
+#: ../libgda/gda-data-model-import.c:1978
+#: ../libgda/gda-data-model-import.c:2056
 #, c-format
 msgid "Could not set iterator's value: %s"
 msgstr "No se puede establecer el valor del iterador: %s"
@@ -1415,7 +1415,7 @@ msgstr ""
 "DELETE"
 
 #: ../libgda/gda-data-select.c:1324 ../libgda/gda-data-select.c:1530
-#: ../libgda/gda-data-select.c:3354
+#: ../libgda/gda-data-select.c:3368
 msgid "No connection to use"
 msgstr "No hay conexión para usar"
 
@@ -1438,9 +1438,9 @@ msgstr ""
 "La declaración SELECT involucra más de una tabla o expresión de la que "
 "seleccionar"
 
-#: ../libgda/gda-data-select.c:1717 ../libgda/gda-data-select.c:2437
-#: ../libgda/gda-data-select.c:2607 ../libgda/gda-data-select.c:2759
-#: ../libgda/gda-data-select.c:2847 ../libgda/gda-data-select.c:3042
+#: ../libgda/gda-data-select.c:1717 ../libgda/gda-data-select.c:2451
+#: ../libgda/gda-data-select.c:2621 ../libgda/gda-data-select.c:2773
+#: ../libgda/gda-data-select.c:2861 ../libgda/gda-data-select.c:3056
 msgid "Data model does only support random access"
 msgstr "Los modelos de datos soportan acceso aleatorio"
 
@@ -1462,80 +1462,80 @@ msgstr ""
 msgid "Unable to get value for row %d and column %d"
 msgstr "No se pudo obtener el valor para la fila %d y columna %d"
 
-#: ../libgda/gda-data-select.c:2063 ../libgda/gda-data-select.c:2072
-#: ../libgda/gda-data-select.c:2082
+#: ../libgda/gda-data-select.c:2077 ../libgda/gda-data-select.c:2086
+#: ../libgda/gda-data-select.c:2096
 #, c-format
 msgid "Could not change iter's value for column %d: %s"
 msgstr "No se pudo cambiar el valor de iteración para la columna %d: %s"
 
-#: ../libgda/gda-data-select.c:2077
+#: ../libgda/gda-data-select.c:2091
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
 "Permitir que el valor del GdaHolder sea nulo (NULL) para la actualización "
 "del iterador"
 
-#: ../libgda/gda-data-select.c:2157 ../libgda/gda-data-select.c:2250
+#: ../libgda/gda-data-select.c:2171 ../libgda/gda-data-select.c:2264
 msgid "Some columns can't be modified"
 msgstr "Algunas columnas no se pueden modificar"
 
-#: ../libgda/gda-data-select.c:2304
+#: ../libgda/gda-data-select.c:2318
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
 "Error interno: no se puede obtener la consulta actual de la consulta "
 "preparada"
 
-#: ../libgda/gda-data-select.c:2344
+#: ../libgda/gda-data-select.c:2358
 msgid "Unable to identify a way to fetch a single row"
 msgstr "No se pudo identificar una manera de conseguir una sola fila"
 
-#: ../libgda/gda-data-select.c:2351
+#: ../libgda/gda-data-select.c:2365
 msgid "Can only operate on non compound SELECT statements"
 msgstr "Sólo se puede operar con declaraciones SELECT no compuestas"
 
-#: ../libgda/gda-data-select.c:2432 ../libgda/gda-data-select.c:2602
-#: ../libgda/gda-data-select.c:2673 ../libgda/gda-data-select.c:2754
-#: ../libgda/gda-data-select.c:2842 ../libgda/gda-data-select.c:3037
+#: ../libgda/gda-data-select.c:2446 ../libgda/gda-data-select.c:2616
+#: ../libgda/gda-data-select.c:2687 ../libgda/gda-data-select.c:2768
+#: ../libgda/gda-data-select.c:2856 ../libgda/gda-data-select.c:3051
 msgid "Modifications are not allowed anymore"
 msgstr "Ya no se soportan modificaciones"
 
-#: ../libgda/gda-data-select.c:2442 ../libgda/gda-data-select.c:2612
-#: ../libgda/gda-data-select.c:2678 ../libgda/gda-data-select.c:2764
+#: ../libgda/gda-data-select.c:2456 ../libgda/gda-data-select.c:2626
+#: ../libgda/gda-data-select.c:2692 ../libgda/gda-data-select.c:2778
 msgid "No UPDATE statement provided"
 msgstr "No se ha proporcionado de una declaración UPDATE"
 
-#: ../libgda/gda-data-select.c:2482
+#: ../libgda/gda-data-select.c:2496
 msgid "Could not get iterator's value"
 msgstr "No se pudo obtener el valor del iterador"
 
-#: ../libgda/gda-data-select.c:2639 ../libgda/gda-data-select.c:2706
+#: ../libgda/gda-data-select.c:2653 ../libgda/gda-data-select.c:2720
 #, c-format
 msgid "Column %d can't be modified"
 msgstr "No se puede modificar la columna %d"
 
-#: ../libgda/gda-data-select.c:2772
+#: ../libgda/gda-data-select.c:2786
 #, c-format
 msgid "Too many values (%d as maximum)"
 msgstr "Demasiados valores (%d es el máximo)"
 
-#: ../libgda/gda-data-select.c:2852
+#: ../libgda/gda-data-select.c:2866
 msgid "No INSERT statement provided"
 msgstr "No se ha proporcionado una declaración INSERT"
 
-#: ../libgda/gda-data-select.c:2857
+#: ../libgda/gda-data-select.c:2871
 msgid "Cannot add a row because the number of rows in unknown"
 msgstr "No se puede insertar una fila porque se desconoce el número de filas"
 
-#: ../libgda/gda-data-select.c:2886
+#: ../libgda/gda-data-select.c:2900
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:391
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:400
 msgid "Missing values to insert in INSERT statement"
 msgstr "Faltan los valores para insertar en la declaración INSERT"
 
-#: ../libgda/gda-data-select.c:3047
+#: ../libgda/gda-data-select.c:3061
 msgid "No DELETE statement provided"
 msgstr "No se ha proporcionado una declaración DELETE"
 
-#: ../libgda/gda-data-select.c:3479
+#: ../libgda/gda-data-select.c:3493
 #, c-format
 msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
@@ -2792,7 +2792,7 @@ msgid "Can't find libsqlite3."
 msgstr "No se puede encontrar libsqlite3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:634
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:215
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:263
 #: ../libgda/thread-wrapper/gda-thread-provider.c:391
 #: ../providers/bdb/gda-bdb-provider.c:154
 #: ../providers/jdbc/gda-jdbc-provider.c:356
@@ -3047,11 +3047,11 @@ msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
 "Marca de tiempo «%s» no válida (el formato debe ser AAAA-MM-DD HH:MM:SS[.ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:545
+#: ../libgda/sqlite/gda-sqlite-recordset.c:546
 msgid "SQLite provider fatal internal error"
 msgstr "Error interno fatal del proveedor SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:593
+#: ../libgda/sqlite/gda-sqlite-recordset.c:594
 #: ../providers/jdbc/gda-jdbc-recordset.c:491
 #, c-format
 msgid "Row %d not found"
@@ -3095,35 +3095,77 @@ msgstr ""
 "Error interno: el proveedor virtual no implementa el método virtual "
 "create_operation()"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:322
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:351
 msgid "Data model must have at least one column"
 msgstr "El modelo de datos debe tener al menos una columna"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:339
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:368
 msgid "Could not compute virtual table's columns"
 msgstr "No se pudieron computar las tablas de la tabla virtual"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:364
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:393
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr ""
 "No se puede obtener la descripción del modelo de datos para la columna %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:378
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:407
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
 msgstr ""
 "No se puede obtener el tipo de la columna del modelo de datos o el tipo para "
 "la columna %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:425
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:454
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "No se puede declarar la tabla virtual (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:540
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:571
 msgid "Column not found"
 msgstr "No se encontró la columna"
+
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1011
+#| msgid "Data model must have at least one column"
+msgid "Data model representing the table is read only"
+msgstr "El modelo de datos que representa la tabla es de sólo lectura"
+
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1032
+msgid "No statement provided to modify the data model representing the table"
+msgstr ""
+"No se proporcionó ninguna declaración para modificar el modelo de datos que "
+"representa la tabla"
+
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1039
+msgid ""
+"Invalid statement provided to modify the data model representing the table"
+msgstr ""
+"La declaración proporcionada no es válida para modificar el modelo de datos "
+"que representa la tabla"
+
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1055
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1113
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1124
+msgid ""
+"Invalid parameter in statement provided to modify the data model "
+"representing the table"
+msgstr ""
+"El parámetro en la declaración proporcionada no es válido para modificar el "
+"modelo de datos que representa la tabla"
+
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1078
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1088
+#| msgid "Could not get iterator's value"
+msgid "Could not retreive row to delete"
+msgstr "No se pudo obtener una fila para eliminar"
+
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1158
+msgid ""
+"Failed to execute the statement provided to modify the data model "
+"representing the table"
+msgstr ""
+"Falló al ejecutar la declaración proporcionada para modificar el modelo de "
+"datos que representa la tabla"
 
 #: ../libgda/sql-parser/gda-sql-parser.c:636
 #: ../libgda/sql-parser/gda-sql-parser.c:727
