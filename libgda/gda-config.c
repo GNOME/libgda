@@ -1736,6 +1736,20 @@ internal_provider_free (InternalProvider *ip)
 	g_free (ip);
 }
 
+static gboolean
+str_equal (const gchar *str1, const gchar *str2)
+{
+	if (str1 && str2) {
+		if (!strcmp (str1, str2))
+			return TRUE;
+		else
+			return FALSE;
+	}
+	else if (!str1 && !str2)
+		return TRUE;
+	return FALSE;
+}
+
 static void
 reload_dsn_configuration (void)
 {
@@ -1758,12 +1772,16 @@ reload_dsn_configuration (void)
 	unique_instance->priv->dsn_list = NULL;
 
 	unique_instance->priv->emit_signals = FALSE;
+#ifdef HAVE_GIO
 	lock_notify_changes ();
+#endif
 	if (unique_instance->priv->system_file)
 		load_config_file (unique_instance->priv->system_file, TRUE);
 	if (unique_instance->priv->user_file)
 		load_config_file (unique_instance->priv->user_file, FALSE);
+#ifdef HAVE_GIO
 	unlock_notify_changes ();
+#endif
 	unique_instance->priv->emit_signals = TRUE;
 
 	new_dsn_list = unique_instance->priv->dsn_list;
@@ -1834,20 +1852,6 @@ reload_dsn_configuration (void)
  * File monitoring actions
  */
 #ifdef HAVE_GIO
-
-static gboolean
-str_equal (const gchar *str1, const gchar *str2)
-{
-	if (str1 && str2) {
-		if (!strcmp (str1, str2))
-			return TRUE;
-		else
-			return FALSE;
-	}
-	else if (!str1 && !str2)
-		return TRUE;
-	return FALSE;
-}
 
 static void
 conf_file_changed (G_GNUC_UNUSED GFileMonitor *mon, G_GNUC_UNUSED GFile *file,
