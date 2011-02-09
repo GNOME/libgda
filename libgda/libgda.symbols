@@ -417,6 +417,7 @@
 	gda_meta_sort_type_get_type
 	gda_meta_store_change_type_get_type
 	gda_meta_store_create_modify_data_model
+	gda_meta_store_declare_foreign_key
 	gda_meta_store_error_get_type
 	gda_meta_store_error_quark
 	gda_meta_store_extract
@@ -437,6 +438,7 @@
 	gda_meta_store_set_identifiers_style
 	gda_meta_store_set_reserved_keywords_func
 	gda_meta_store_sql_identifier_quote
+	gda_meta_store_undeclare_foreign_key
 	gda_meta_struct_add_db_object
 	gda_meta_struct_complement
 	gda_meta_struct_complement_all

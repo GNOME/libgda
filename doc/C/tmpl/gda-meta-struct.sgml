@@ -286,6 +286,7 @@ gda_meta_struct_free (mstruct);
 @fk_names_array: 
 @ref_pk_cols_array: 
 @ref_pk_names_array: 
+@fk_name: 
 
 <!-- ##### MACRO GDA_META_TABLE_FOREIGN_KEY ##### -->
 <para>
@@ -311,7 +312,7 @@ gda_meta_struct_free (mstruct);
 @fk: 
 
 
-<!-- ##### MACRO GDA_META_TABLE_FOREIGN_KEY_IN_SCHEMA ##### -->
+<!-- ##### MACRO GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED ##### -->
 <para>
 
 </para>

@@ -1,6 +1,6 @@
 /* gda-meta-store.h
  *
- * Copyright (C) 2008 - 2009 Vivien Malerba
+ * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -95,6 +95,7 @@ struct _GdaMetaStoreClass
 	GError  *(*suggest_update)(GdaMetaStore *store, GdaMetaContext *suggest);
 	void     (*meta_changed)  (GdaMetaStore *store, GSList *changes);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
@@ -131,6 +132,20 @@ gboolean          gda_meta_store_schema_remove_custom_object (GdaMetaStore *stor
 GSList           *gda_meta_store_schema_get_all_tables    (GdaMetaStore *store);
 GSList           *gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table_name);
 GdaMetaStruct    *gda_meta_store_schema_get_structure     (GdaMetaStore *store, GError **error);
+
+gboolean          gda_meta_store_declare_foreign_key      (GdaMetaStore *store, GdaMetaStruct *mstruct,
+							   const gchar *fk_name,
+							   const gchar *catalog, const gchar *schema, const gchar *table,
+							   const gchar *ref_catalog, const gchar *ref_schema, const gchar *ref_table,
+							   guint nb_cols,
+							   gchar **colnames, gchar **ref_colnames,
+							   GError **error);
+
+gboolean          gda_meta_store_undeclare_foreign_key    (GdaMetaStore *store, GdaMetaStruct *mstruct,
+							   const gchar *fk_name,
+							   const gchar *catalog, const gchar *schema, const gchar *table,
+							   const gchar *ref_catalog, const gchar *ref_schema, const gchar *ref_table,
+							   GError **error);
 
 G_END_DECLS
 

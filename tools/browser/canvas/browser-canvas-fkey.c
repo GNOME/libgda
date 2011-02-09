@@ -1,6 +1,6 @@
 /* browser-canvas-fkey.c
  *
- * Copyright (C) 2004 - 2007 Vivien Malerba
+ * Copyright (C) 2004 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,6 +28,10 @@
 #include "browser-canvas-text.h"
 #include "browser-canvas-utility.h"
 #include "browser-canvas-db-relations.h"
+#include "../../tools-utils.h"
+#include "../support.h"
+#include "../browser-window.h"
+#include "../common/fk-declare.h"
 
 static void browser_canvas_fkey_class_init (BrowserCanvasFkeyClass * class);
 static void browser_canvas_fkey_init       (BrowserCanvasFkey * cc);
@@ -68,6 +72,7 @@ struct _BrowserCanvasFkeyPrivate
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
+static GooCanvasLineDash *dash = NULL, *no_dash = NULL;
 
 GType
 browser_canvas_fkey_get_type (void)
@@ -119,7 +124,9 @@ browser_canvas_fkey_class_init (BrowserCanvasFkeyClass * class)
 					 g_param_spec_pointer ("fk_constraint", "FK constraint", 
 							       NULL, 
 							       G_PARAM_WRITABLE));
-       
+
+	dash = goo_canvas_line_dash_new (2, 5., 1.5);
+	no_dash = goo_canvas_line_dash_new (0);
 }
 
 static void
@@ -341,6 +348,7 @@ create_items (BrowserCanvasFkey *cc)
 		gchar *color = "black";
 		g_object_set (G_OBJECT (item), 
 			      "stroke-color", color,
+			      "line-dash", GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED (cc->priv->fk) ? dash : no_dash,
 			      NULL);
 		
 		if (G_OBJECT_TYPE (item) == GOO_TYPE_CANVAS_POLYLINE) {
@@ -385,7 +393,7 @@ update_items (BrowserCanvasFkey *cc)
  * item is for a single FK constraint
  */
 static gboolean
-single_item_enter_notify_event_cb (G_GNUC_UNUSED GooCanvasItem *ci, G_GNUC_UNUSED GooCanvasItem *target_item,
+single_item_enter_notify_event_cb (GooCanvasItem *ci, G_GNUC_UNUSED GooCanvasItem *target_item,
 				   G_GNUC_UNUSED GdkEventCrossing *event, BrowserCanvasFkey *cc)
 {
 	gint i;
@@ -407,6 +415,19 @@ single_item_enter_notify_event_cb (G_GNUC_UNUSED GooCanvasItem *ci, G_GNUC_UNUSE
 
 		column = browser_canvas_table_get_column_item (cc->priv->ref_pk_table_item, tcol);
 		browser_canvas_text_set_highlight (BROWSER_CANVAS_TEXT (column), TRUE);
+
+		gchar *str;
+		str = g_strdup_printf ("%s '%s'\n%s: %s\n%s: %s",
+				       GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED (cc->priv->fk) ? 
+				       _("Declared foreign key") : _("Foreign key"),
+				       cc->priv->fk->fk_name,
+				       _("Policy on UPDATE"),
+				       tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY (cc->priv->fk)),
+				       _("Policy on DELETE"),
+				       tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (cc->priv->fk)));
+		gtk_widget_set_tooltip_text (GTK_WIDGET (goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (ci))),
+					     str);
+		g_free (str);
 	}
 
 	return FALSE;
@@ -440,26 +461,49 @@ single_item_leave_notify_event_cb (G_GNUC_UNUSED GooCanvasItem *ci, G_GNUC_UNUSE
 	return FALSE;
 }
 
+static void
+delete_declared_fk_cb (GtkMenuItem *mitem, BrowserCanvasFkey *cc)
+{
+	GError *error = NULL;
+	GtkWidget *parent;
+	parent = (GtkWidget*) gtk_widget_get_toplevel ((GtkWidget*) goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (cc)));
+	if (! fk_declare_undeclare (cc->priv->mstruct,
+				    BROWSER_IS_WINDOW (parent) ? BROWSER_WINDOW (parent) : NULL,
+				    cc->priv->fk, &error)) {
+		browser_show_error ((GtkWindow *) parent, _("Failed to undeclare foreign key: %s"),
+				    error && error->message ? error->message : _("No detail"));
+		g_clear_error (&error);
+	}
+	else if (BROWSER_IS_WINDOW (parent))
+		browser_window_show_notice (BROWSER_WINDOW (parent),
+					    GTK_MESSAGE_INFO, "fkdeclare",
+					    _("Successfully undeclared foreign key"));
+	else
+		browser_show_message ((GtkWindow *) parent, "%s",
+				      _("Successfully undeclared foreign key"));
+}
+
 static gboolean
 single_item_button_press_event_cb (G_GNUC_UNUSED GooCanvasItem *ci, G_GNUC_UNUSED GooCanvasItem *target_item,
-				   G_GNUC_UNUSED GdkEventButton *event, G_GNUC_UNUSED BrowserCanvasFkey *cc)
+				   G_GNUC_UNUSED GdkEventButton *event, BrowserCanvasFkey *cc)
 {
-	return FALSE;
-	/*
-	GdaMetaTableForeignKey *fkcons = g_object_get_data (G_OBJECT (ci), "fkcons");
-	GtkWidget *menu, *entry;
-
-	menu = gtk_menu_new ();
-	entry = gtk_menu_item_new_with_label (_("Remove"));
-	g_object_set_data (G_OBJECT (entry), "fkcons", fkcons);
-	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_delete_cb), cc);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
-	gtk_widget_show (entry);
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-			NULL, NULL, ((GdkEventButton *)event)->button,
-			((GdkEventButton *)event)->time);
-	return TRUE;
-	*/
+	GdaMetaTableForeignKey *fk = g_object_get_data (G_OBJECT (ci), "fkcons");
+	if (GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED (fk)) {
+		GtkWidget *menu, *entry;
+		
+		menu = gtk_menu_new ();
+		entry = gtk_menu_item_new_with_label (_("Remove this declared foreign key"));
+		g_object_set_data (G_OBJECT (entry), "fkcons", fk);
+		g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (delete_declared_fk_cb), cc);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
+		gtk_widget_show (entry);
+		gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
+				NULL, NULL, ((GdkEventButton *)event)->button,
+				((GdkEventButton *)event)->time);
+		return TRUE;
+	}
+	else
+		return FALSE;
 }
 
 static void

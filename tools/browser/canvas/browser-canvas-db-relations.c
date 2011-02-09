@@ -1,6 +1,6 @@
 /* browser-canvas-db-relations.c
  *
- * Copyright (C) 2002 - 2009 Vivien Malerba
+ * Copyright (C) 2002 - 2011 Vivien Malerba
  * Copyright (C) 2002 Fernando Martins
  *
  * This program is free software; you can redistribute it and/or
@@ -28,7 +28,10 @@
 #include "browser-canvas-column.h"
 #include "browser-canvas-fkey.h"
 #include "../common/objects-cloud.h"
+#include "../common/fk-declare.h"
 #include <libgda-ui/internal/popup-container.h>
+#include "../browser-window.h"
+#include "../support.h"
 
 static void browser_canvas_db_relations_class_init (BrowserCanvasDbRelationsClass *class);
 static void browser_canvas_db_relations_init       (BrowserCanvasDbRelations *canvas);
@@ -367,26 +370,71 @@ static GtkWidget *canvas_entity_popup_func (BrowserCanvasTable *ce);
 static void popup_func_delete_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce);
 static void popup_func_add_depend_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce);
 static void popup_func_add_ref_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce);
+static void popup_func_declare_fk_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce);
+
 static GtkWidget *
 canvas_entity_popup_func (BrowserCanvasTable *ce)
 {
 	GtkWidget *menu, *entry;
 
 	menu = gtk_menu_new ();
-	entry = gtk_menu_item_new_with_label (_("Remove"));
+	entry = gtk_menu_item_new_with_label (_("Remove from graph"));
 	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_func_delete_cb), ce);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 	gtk_widget_show (entry);
-	entry = gtk_menu_item_new_with_label (_("Add referenced tables"));
+	entry = gtk_menu_item_new_with_label (_("Add referenced tables to graph"));
 	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_func_add_depend_cb), ce);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 	gtk_widget_show (entry);
-	entry = gtk_menu_item_new_with_label (_("Add tables referencing this table"));
+	entry = gtk_menu_item_new_with_label (_("Add tables referencing this table to graph"));
 	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_func_add_ref_cb), ce);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 	gtk_widget_show (entry);
 
+	entry = gtk_separator_menu_item_new ();
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
+	gtk_widget_show (entry);
+
+	entry = gtk_menu_item_new_with_label (_("Declare foreign key for this table"));
+	g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (popup_func_declare_fk_cb), ce);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
+	gtk_widget_show (entry);
+
 	return menu;
+}
+
+static void
+popup_func_declare_fk_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
+{
+	GtkWidget *dlg, *parent;
+	GdaMetaStruct *mstruct;
+	GdaMetaTable *mtable;
+	gint response;
+
+	parent = (GtkWidget*) gtk_widget_get_toplevel ((GtkWidget*) goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (ce)));
+	g_object_get (G_OBJECT (ce), "meta-struct", &mstruct, "table", &mtable, NULL);
+	dlg = fk_declare_new ((GtkWindow *) parent, mstruct, mtable);
+	response = gtk_dialog_run (GTK_DIALOG (dlg));
+	if (response == GTK_RESPONSE_ACCEPT) {
+		GError *error = NULL;
+		if (! fk_declare_write (FK_DECLARE (dlg),
+					BROWSER_IS_WINDOW (parent) ? BROWSER_WINDOW (parent) : NULL,
+					&error)) {
+			browser_show_error ((GtkWindow *) parent, _("Failed to declare foreign key: %s"),
+					    error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+		else if (BROWSER_IS_WINDOW (parent))
+			browser_window_show_notice (BROWSER_WINDOW (parent),
+						    GTK_MESSAGE_INFO, "fkdeclare",
+						    _("Successfully declared foreign key"));
+		else
+			browser_show_message ((GtkWindow *) parent, "%s",
+					      _("Successfully declared foreign key"));
+	}
+	
+	gtk_widget_destroy (dlg);
+	g_object_unref (mstruct);
 }
 
 static void

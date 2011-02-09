@@ -328,6 +328,7 @@ wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 	return GINT_TO_POINTER (retval ? 2 : 1);
 }
 
+
 static void
 meta_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper,
 		 G_GNUC_UNUSED GdaMetaStore *store,
@@ -357,6 +358,20 @@ meta_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper,
 				    lerror->message ? lerror->message : _("No detail"));
 		g_error_free (lerror);
 	}
+}
+
+/**
+ * browser_connection_meta_data_changed
+ * @bcnc: a #BrowserConnection
+ *
+ * Call this function if the meta data has been changed directly (ie. for example after
+ * declaring or undeclaring a foreign key). This call creates a new #GdaMetaStruct internally used.
+ */
+void
+browser_connection_meta_data_changed (BrowserConnection *bcnc)
+{
+	g_return_if_fail (BROWSER_IS_CONNECTION (bcnc));
+	meta_changed_cb (NULL, NULL, NULL, 0, NULL, NULL, bcnc);
 }
 
 static void

@@ -40,4 +40,11 @@
       linked using their relations (as foreign key constraints)</p></item>
 </list>
 
+<figure>
+  <title>Tab showing information about a table</title>
+  <desc>Example of information displayed for each table, note the difference between foreign keys implemented in
+  the database and <link xref="declared-fk">declared foreign keys</link></desc>
+  <media type="image" mime="image/png" src="figures/schema-browser-persp.png"/>
+</figure>
+
 </page>

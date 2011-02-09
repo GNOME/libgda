@@ -336,12 +336,17 @@ typedef struct {
 	gchar           **ref_pk_names_array; /* Ref PK fields names */
 
 	/*< private >*/
-	GdaMetaForeignKeyPolicy *on_update_policy;
-	GdaMetaForeignKeyPolicy *on_delete_policy;
-	gboolean                *defined_in_schema;
+	gpointer          on_update_policy; /* pointer containing the GdaMetaForeignKeyPolicy integer
+					     * to keep ABI from 4.0, use GINT_TO_POINTER and
+					     * GPOINTER_TO_INT */
+	gpointer          on_delete_policy; /* pointer containing the GdaMetaForeignKeyPolicy integer
+					     * to keep ABI from 4.0, use GINT_TO_POINTER and
+					     * GPOINTER_TO_INT */
+	gpointer          declared; /* pointer to a boolean to keep ABI from 4.0.
+				     * Any non NULL if FK has been declared in meta data */
 
-	/* Padding for future expansion */
-	gpointer _gda_reserved1;
+	/*< public >*/
+	gchar            *fk_name;
 } GdaMetaTableForeignKey;
 /**
  * GDA_META_TABLE_FOREIGN_KEY
@@ -361,7 +366,7 @@ typedef struct {
  *
  * Returns: the policy as a #GdaMetaForeignKeyPolicy
  */
-#define GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY(fk) (*(((GdaMetaTableForeignKey*)(fk))->on_update_policy))
+#define GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY(fk) ((GdaMetaForeignKeyPolicy) GPOINTER_TO_INT ((GdaMetaTableForeignKey*)(fk)->on_update_policy))
 
 /**
  * GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY:
@@ -371,18 +376,18 @@ typedef struct {
  *
  * Returns: the policy as a #GdaMetaForeignKeyPolicy
  */
-#define GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(fk) (*(((GdaMetaTableForeignKey*)(fk))->on_delete_policy))
+#define GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(fk) ((GdaMetaForeignKeyPolicy) GPOINTER_TO_INT ((GdaMetaTableForeignKey*)(fk)->on_delete_policy))
 
 /**
- * GDA_META_TABLE_FOREIGN_KEY_IN_SCHEMA
+ * GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED
  * @fk: a pointer to a #GdaMetaTableForeignKey
  *
  * Tells if @fk is an actual foreign key defined in the database's schema, or if it is an indication which
  * has been added to help Libgda understand the database schema.
  *
- * Returns: %TRUE if @fk is an actual foreign key defined in the database's schema
+ * Returns: %TRUE if @fk has been declared in the database's meta data and %FALSE if @fk is an actual foreign key defined in the database's schema
  */
-#define GDA_META_TABLE_FOREIGN_KEY_IN_SCHEMA(fk) (*(((GdaMetaTableForeignKey*)(fk))->defined_in_schema))
+#define GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED(fk) ((((GdaMetaTableForeignKey*)(fk))->declared) ? TRUE : FALSE)
 
 GType               gda_meta_struct_get_type           (void) G_GNUC_CONST;
 GdaMetaStruct      *gda_meta_struct_new                (GdaMetaStore *store, GdaMetaStructFeature features);

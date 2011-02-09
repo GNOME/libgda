@@ -231,6 +231,11 @@ do not modify-->
       </itemizedlist>
     </para>
   </sect3>
+  <sect3 id="is:__declared_fk">
+    <title>__declared_fk table</title>
+    <para>List of foreign key constraints, declared in Libgda and unknown to the database</para>
+    <para>The following table describes the columns:<informaltable frame="all"><tgroup cols="5" colsep="1" rowsep="1" align="justify"><thead><row><entry>Column name</entry><entry>Type</entry><entry>Key</entry><entry>Can be NULL</entry><entry>description</entry></row></thead><tbody><row><entry>constraint_name</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>table_catalog</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>table_schema</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>table_name</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>column_name</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>ref_table_catalog</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>ref_table_schema</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>ref_table_name</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>ref_column_name</entry><entry>string</entry><entry>Yes</entry><entry>No</entry><entry></entry></row><row><entry>ts</entry><entry>timestamp</entry><entry></entry><entry>Yes</entry><entry></entry></row><row><entry>descr</entry><entry>string</entry><entry></entry><entry>Yes</entry><entry></entry></row></tbody></tgroup></informaltable></para>
+  </sect3>
   <sect3 id="is:_check_column_usage">
     <title>_check_column_usage table</title>
     <para>List of check constraints and the name of the tables' columns involved</para>

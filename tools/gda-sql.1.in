@@ -200,6 +200,11 @@ Lists all schemas if no argument is provided. \fB.d <SCHEMA_NAME>\fP lists speci
 Lists all tables if no argument is provided. \fB.d <TABLE_NAME>\fP lists specified table.
 .IP \fB.dv\fP
 Lists all views if no argument is provided. \fB.d <VIEW_NAME>\fP lists specified view.
+.IP \fB.fkdeclare\fP
+Declares a new foreign key (no constraint is added to the database). The meta data is modified to take into account a foreign key constraint. The foreign key specification is \fB <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)\fP where \fB<fkname>\fP is the name given to the foreign key constraint and \fB<tableA>\fP references \fB<tableB>\fP using the columns mentionned between the parenthesis. Note that the (\fB<fkname>\fP, \fB<tableA>\fP, \fB<tableB>\fP) triplet uniquely identifies a declared foreign key (declaring a new foreign key with the same triplet will remove any previously declared one).
+\fINote:\fP any actual foreign key constraint will always have precedence over any declared foreign key.
+.IP \fB.fkundeclare\fP
+Un-declares a foreign key (does the opposite of \fB.fkdeclare\fP).
 .IP \fB.e\fP
 Edits the query buffer with external editor, if no argument is provided. \fB.e <FILE_NAME>\fP
 edits the specified file name. The external editor can be specified using environment variables.
