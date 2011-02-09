@@ -43,6 +43,11 @@ a tree manager which creates a node for each table in a schema
 
 </para>
 
+<!-- ##### ARG GdaTreeMgrTables:meta-store ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaTreeMgrTables:schema ##### -->
 <para>
 

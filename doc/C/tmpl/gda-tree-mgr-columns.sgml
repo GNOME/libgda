@@ -43,6 +43,11 @@ a tree manager which creates a node for each column of a table
 
 </para>
 
+<!-- ##### ARG GdaTreeMgrColumns:meta-store ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaTreeMgrColumns:schema ##### -->
 <para>
 

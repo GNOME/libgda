@@ -39,6 +39,11 @@ a tree manager which creates a node for each schema in a database
 
 </para>
 
+<!-- ##### ARG GdaTreeMgrSchemas:meta-store ##### -->
+<para>
+
+</para>
+
 <!-- ##### FUNCTION gda_tree_mgr_schemas_new ##### -->
 <para>
 

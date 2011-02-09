@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -28,6 +28,7 @@
 
 struct _GdaTreeMgrColumnsPriv {
 	GdaConnection *cnc;
+	GdaMetaStore  *mstore;
 	gchar         *schema; /* imposed upon construction */
 	gchar         *table_name; /* imposed upon construction */
 
@@ -39,13 +40,13 @@ static void gda_tree_mgr_columns_class_init (GdaTreeMgrColumnsClass *klass);
 static void gda_tree_mgr_columns_init       (GdaTreeMgrColumns *tmgr1, GdaTreeMgrColumnsClass *klass);
 static void gda_tree_mgr_columns_dispose    (GObject *object);
 static void gda_tree_mgr_columns_set_property (GObject *object,
-					      guint param_id,
-					      const GValue *value,
-					      GParamSpec *pspec);
+					       guint param_id,
+					       const GValue *value,
+					       GParamSpec *pspec);
 static void gda_tree_mgr_columns_get_property (GObject *object,
-					      guint param_id,
-					      GValue *value,
-					      GParamSpec *pspec);
+					       guint param_id,
+					       GValue *value,
+					       GParamSpec *pspec);
 
 /* virtual methods */
 static GSList *gda_tree_mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, 
@@ -58,7 +59,8 @@ enum {
         PROP_0,
 	PROP_CNC,
 	PROP_SCHEMA,
-	PROP_TABLE
+	PROP_TABLE,
+	PROP_META_STORE
 };
 
 /*
@@ -79,10 +81,31 @@ gda_tree_mgr_columns_class_init (GdaTreeMgrColumnsClass *klass)
         object_class->set_property = gda_tree_mgr_columns_set_property;
         object_class->get_property = gda_tree_mgr_columns_get_property;
 
+	/**
+	 * GdaTreeMgrColumns:connection:
+	 *
+	 * Defines the #GdaConnection to display information for. Necessary upon construction unless
+	 * the #GdaTreeMgrColumns:meta-store property is specified instead.
+	 */
 	g_object_class_install_property (object_class, PROP_CNC,
                                          g_param_spec_object ("connection", NULL, "Connection to use",
                                                               GDA_TYPE_CONNECTION,
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+
+	/**
+	 * GdaTreeMgrColumns:meta-store:
+	 *
+	 * Defines the #GdaMetaStore to extract information from. Necessary upon construction unless
+	 * the #GdaTreeMgrColumns:connection property is specified instead. This property has
+	 * priority over the GdaTreeMgrColumns:connection property.
+	 *
+	 * Since: 4.2.4
+	 */
+	g_object_class_install_property (object_class, PROP_META_STORE,
+                                         g_param_spec_object ("meta-store", NULL, "GdaMetaStore to use",
+                                                              GDA_TYPE_META_STORE,
+                                                              G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+
 	/**
 	 * GdaTreeMgrColumns:schema:
 	 *
@@ -123,6 +146,8 @@ gda_tree_mgr_columns_dispose (GObject *object)
 	if (mgr->priv) {
 		if (mgr->priv->cnc)
 			g_object_unref (mgr->priv->cnc);
+		if (mgr->priv->mstore)
+			g_object_unref (mgr->priv->mstore);
 		g_free (mgr->priv->schema);
 		g_free (mgr->priv->table_name);
 
@@ -190,6 +215,11 @@ gda_tree_mgr_columns_set_property (GObject *object,
 			if (mgr->priv->cnc)
 				g_object_ref (mgr->priv->cnc);
 			break;
+		case PROP_META_STORE:
+			mgr->priv->mstore = (GdaMetaStore*) g_value_get_object (value);
+			if (mgr->priv->mstore)
+				g_object_ref (mgr->priv->mstore);
+			break;
 		case PROP_SCHEMA:
 			mgr->priv->schema = g_value_dup_string (value);
 			break;
@@ -216,6 +246,9 @@ gda_tree_mgr_columns_get_property (GObject *object,
                 switch (param_id) {
 		case PROP_CNC:
 			g_value_set_object (value, mgr->priv->cnc);
+			break;
+		case PROP_META_STORE:
+			g_value_set_object (value, mgr->priv->mstore);
 			break;
 		case PROP_SCHEMA:
 			g_value_set_string (value, mgr->priv->schema);
@@ -266,15 +299,18 @@ gda_tree_mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node
 	GSList *list = NULL;
 	GdaConnection *scnc;
 
-	if (!mgr->priv->cnc) {
+	if (!mgr->priv->cnc && !mgr->priv->mstore) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No connection specified"));
+			     _("No connection and no GdaMetaStore specified"));
 		if (out_error)
 			*out_error = TRUE;
 		return NULL;
 	}
+	else if (mgr->priv->mstore)
+		store = mgr->priv->mstore;
+	else
+		store = gda_connection_get_meta_store (mgr->priv->cnc);
 
-	store = gda_connection_get_meta_store (mgr->priv->cnc);
 	scnc = gda_meta_store_get_internal_connection (store);
 
 	/* create statements if necessary */
