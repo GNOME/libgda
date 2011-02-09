@@ -4207,6 +4207,29 @@ _gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaCont
 	return g_slist_reverse (retlist);
 }
 
+/*
+ * arguments_to_name
+ *
+ * Returns: a new string
+ */
+static gchar *
+arguments_to_name (const gchar *catalog, const gchar *schema, const gchar *table)
+{
+	g_assert (table);
+	gchar *str;
+	if (catalog) {
+		if (schema)
+			str = g_strdup_printf ("%s.%s.%s", catalog, schema, table);
+		else
+			str = g_strdup (table); /* should not happen */
+	}
+	else if (schema)
+		str = g_strdup_printf ("%s.%s", schema, table);
+	else
+		str = g_strdup (table);
+	return str;
+}
+
 /**
  * gda_meta_store_declare_foreign_key:
  * @store: a #GdaMetaStore
@@ -4230,8 +4253,9 @@ _gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaCont
  * then if there is an error, the job may be partially done.
  *
  * A check is always performed to make sure all the database objects actually
- * exist and returns an error if not. The check is performed using @mstruct if it's not %NULL, and in
- * an internal #GdaMetaStruct if not. 
+ * exist and returns an error if not. The check is performed using @mstruct if it's not %NULL (in
+ * this case only the tables already represented in @mstruct will be considered, in other words: @mstruct
+ * will not be modified), and using an internal #GdaMetaStruct is %NULL.
  *
  * The @catalog, @schema, @table, @ref_catalog, @ref_schema and @ref_table must follow the SQL
  * identifiers naming convention, see the <link linkend="gen:sql_identifiers">SQL identifiers</link>
@@ -4258,6 +4282,7 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 	GdaMetaStoreClass *klass;
 	GdaMetaTable *mtable = NULL, *ref_mtable = NULL;
 	GdaMetaDbObject *dbo = NULL, *ref_dbo = NULL;
+	GdaMetaStruct *u_mstruct = NULL;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
@@ -4271,10 +4296,8 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 	g_return_val_if_fail (colnames, FALSE);
 	g_return_val_if_fail (ref_colnames, FALSE);
 	
-	if (mstruct)
-		g_object_ref (mstruct);
-	else
-		mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
+	if (!mstruct)
+		u_mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
 
 	/* find database objects */
 	GValue *v1 = NULL, *v2 = NULL, *v3;
@@ -4284,7 +4307,20 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 	if (schema)
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), schema);
 	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), table);		
-	dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
+	if (mstruct) {
+		dbo = gda_meta_struct_get_db_object (mstruct, v1, v2, v3);
+		if (!dbo || (dbo->obj_type != GDA_META_DB_TABLE)) {
+			gchar *tmp;
+			tmp = arguments_to_name (catalog, schema, table);
+			g_set_error (error, GDA_META_STRUCT_ERROR,
+				     GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
+				     _("Could not find object named '%s'"), tmp);
+			g_free (tmp);
+			dbo = NULL;
+		}
+	}
+	else
+		dbo = gda_meta_struct_complement (u_mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
 	if (v1)
 		gda_value_free (v1);
 	if (v2)
@@ -4301,7 +4337,20 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 	if (ref_schema)
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), ref_schema);
 	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), ref_table);		
-	ref_dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
+	if (mstruct) {
+		ref_dbo = gda_meta_struct_get_db_object (mstruct, v1, v2, v3);
+		if (!ref_dbo || (ref_dbo->obj_type != GDA_META_DB_TABLE)) {
+			gchar *tmp;
+			tmp = arguments_to_name (ref_catalog, ref_schema, ref_table);
+			g_set_error (error, GDA_META_STRUCT_ERROR,
+				     GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
+				     _("Could not find object named '%s'"), tmp);
+			g_free (tmp);
+			ref_dbo = NULL;
+		}
+	}
+	else
+		ref_dbo = gda_meta_struct_complement (u_mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
 	if (v1)
 		gda_value_free (v1);
 	if (v2)
@@ -4360,16 +4409,7 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 		}
 		if (!list) {
 			gchar *str;
-			if (catalog) {
-				if (schema)
-					str = g_strdup_printf ("%s.%s.%s", catalog, schema, table);
-				else
-					str = g_strdup (table);
-			}
-			else if (schema)
-				str = g_strdup_printf ("%s.%s", schema, table);
-			else
-				str = g_strdup (table);
+			str = arguments_to_name (catalog, schema, table);
 			g_set_error (error, GDA_META_STORE_ERROR,
 				     GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
 				     _("Could not find column '%s' in table '%s'"),
@@ -4388,17 +4428,7 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 		}
 		if (!list) {
 			gchar *str;
-			if (ref_catalog) {
-				if (ref_schema)
-					str = g_strdup_printf ("%s.%s.%s", ref_catalog,
-							       ref_schema, ref_table);
-				else
-					str = g_strdup (ref_table);
-			}
-			else if (ref_schema)
-				str = g_strdup_printf ("%s.%s", ref_schema, ref_table);
-			else
-				str = g_strdup (ref_table);
+			str = arguments_to_name (ref_catalog, ref_schema, ref_table);
 			g_set_error (error, GDA_META_STORE_ERROR,
 				     GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
 				     _("Could not find column '%s' in table '%s'"),
@@ -4424,8 +4454,9 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 		gda_connection_commit_transaction (store_cnc, NULL, NULL);
 	retval = TRUE;
 
- out:		
-	g_object_unref (mstruct);
+ out:
+	if (u_mstruct)
+		g_object_unref (u_mstruct);
 	if (params)
 		g_object_unref (params);
 
@@ -4451,8 +4482,9 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
  * is an error, the job may be partially done.
  *
  * A check is always performed to make sure all the database objects actually
- * exist and returns an error if not. The check is performed using @mstruct if it's not %NULL, and in
- * an internal #GdaMetaStruct if not. 
+ * exist and returns an error if not. The check is performed using @mstruct if it's not %NULL (in
+ * this case only the tables already represented in @mstruct will be considered, in other words: @mstruct
+ * will not be modified), and using an internal #GdaMetaStruct is %NULL.
  *
  * See gda_meta_store_declare_foreign_key() for more information anout the @catalog, @schema, @name,
  * @ref_catalog, @ref_schema and @ref_name arguments.
@@ -4473,6 +4505,7 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 	GdaMetaStoreClass *klass;
 	GdaMetaTable *mtable = NULL, *ref_mtable = NULL;
 	GdaMetaDbObject *dbo = NULL, *ref_dbo = NULL;
+	GdaMetaStruct *u_mstruct = NULL;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
@@ -4483,10 +4516,8 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 	g_return_val_if_fail (table, FALSE);
 	g_return_val_if_fail (ref_table, FALSE);
 	
-	if (mstruct)
-		g_object_ref (mstruct);
-	else
-		mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
+	if (!mstruct)
+		u_mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
 
 	/* find database objects */
 	GValue *v1 = NULL, *v2 = NULL, *v3;
@@ -4496,7 +4527,20 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 	if (schema)
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), schema);
 	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), table);		
-	dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
+	if (mstruct) {
+		dbo = gda_meta_struct_get_db_object (mstruct, v1, v2, v3);
+		if (!dbo || (dbo->obj_type != GDA_META_DB_TABLE)) {
+			gchar *tmp;
+			tmp = arguments_to_name (catalog, schema, table);
+			g_set_error (error, GDA_META_STRUCT_ERROR,
+				     GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
+				     _("Could not find object named '%s'"), tmp);
+			g_free (tmp);
+			dbo = NULL;
+		}
+	}
+	else
+		dbo = gda_meta_struct_complement (u_mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
 	if (v1)
 		gda_value_free (v1);
 	if (v2)
@@ -4513,7 +4557,20 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 	if (ref_schema)
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), ref_schema);
 	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), ref_table);		
-	ref_dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
+	if (mstruct) {
+		ref_dbo = gda_meta_struct_get_db_object (mstruct, v1, v2, v3);
+		if (!ref_dbo || (ref_dbo->obj_type != GDA_META_DB_TABLE)) {
+			gchar *tmp;
+			tmp = arguments_to_name (ref_catalog, ref_schema, ref_table);
+			g_set_error (error, GDA_META_STRUCT_ERROR,
+				     GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
+				     _("Could not find object named '%s'"), tmp);
+			g_free (tmp);
+			ref_dbo = NULL;
+		}
+	}
+	else
+		ref_dbo = gda_meta_struct_complement (u_mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
 	if (v1)
 		gda_value_free (v1);
 	if (v2)
@@ -4524,7 +4581,7 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 	ref_mtable = GDA_META_TABLE (ref_dbo);
 
 	/* set statement's variables */
-	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_ADD_DECLARE_FK],
+	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_DEL_DECLARE_FK],
 					    &params, error))
 		goto out;
 	if (! gda_set_set_holder_value (params, error, "tcal", dbo->obj_catalog))
@@ -4564,8 +4621,9 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 		gda_connection_commit_transaction (store_cnc, NULL, NULL);
 	retval = TRUE;
 
- out:		
-	g_object_unref (mstruct);
+ out:
+	if (u_mstruct)
+		g_object_unref (u_mstruct);
 	if (params)
 		g_object_unref (params);
 
