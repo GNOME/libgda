@@ -299,4 +299,5 @@ tools/gda-list-server-op.c
 tools/gda-sql.c
 tools/html-doc.c
 tools/tools-input.c
+tools/tools-utils.c
 tools/web-server.c
