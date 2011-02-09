@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 - 2010 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -237,8 +237,10 @@ auth_dialog_init (AuthDialog *dialog)
 	dialog->priv->spinner = browser_spinner_new ();
 	gtk_container_add (GTK_CONTAINER (hbox), dialog->priv->spinner);
 
-	g_signal_connect (gda_config_get (), "dsn-changed",
+	GdaConfig *conf = gda_config_get ();
+	g_signal_connect (conf, "dsn-changed",
 			  G_CALLBACK (dsn_changed_cb), dialog);
+	g_object_unref (conf);
 }
 
 static void
@@ -247,8 +249,10 @@ auth_dialog_dispose (GObject *object)
 	AuthDialog *dialog;
 	dialog = AUTH_DIALOG (object);
 	if (dialog->priv) {
-		g_signal_handlers_disconnect_by_func (gda_config_get (),
+		GdaConfig *conf = gda_config_get ();
+		g_signal_handlers_disconnect_by_func (conf,
 						      G_CALLBACK (dsn_changed_cb), dialog);
+		g_object_unref (conf);
 		if (dialog->priv->auth_list) {
 			g_slist_foreach (dialog->priv->auth_list, (GFunc) auth_data_free, NULL);
 			g_slist_free (dialog->priv->auth_list);

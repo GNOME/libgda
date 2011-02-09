@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -90,6 +90,8 @@ static void internal_provider_free (InternalProvider *ip);
 static void load_config_file (const gchar *file, gboolean is_system);
 static void save_config_file (gboolean is_system);
 static void load_all_providers (void);
+static void reload_dsn_configuration (void);
+
 
 enum {
 	DSN_ADDED,
@@ -146,7 +148,7 @@ gda_config_class_init (GdaConfigClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/**
-	 * GdaConfig::dsn-added
+	 * GdaConfig::dsn-added:
 	 * @conf: the #GdaConfig object
 	 * @new_dsn: a #GdaDsnInfo
 	 *
@@ -161,7 +163,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 	/**
-	 * GdaConfig::dsn-to-be-removed
+	 * GdaConfig::dsn-to-be-removed:
 	 * @conf: the #GdaConfig object
 	 * @old_dsn: a #GdaDsnInfo
 	 *
@@ -176,7 +178,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 	/**
-	 * GdaConfig::dsn-removed
+	 * GdaConfig::dsn-removed:
 	 * @conf: the #GdaConfig object
 	 * @old_dsn: a #GdaDsnInfo
 	 *
@@ -191,7 +193,7 @@ gda_config_class_init (GdaConfigClass *klass)
                               _gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
 	/**
-	 * GdaConfig::dsn-changed
+	 * GdaConfig::dsn-changed:
 	 * @conf: the #GdaConfig object
 	 * @dsn: a #GdaDsnInfo
 	 *
@@ -210,12 +212,22 @@ gda_config_class_init (GdaConfigClass *klass)
         object_class->set_property = gda_config_set_property;
         object_class->get_property = gda_config_get_property;
 
+	/**
+	 * GdaConfig:user-filename:
+	 *
+	 * File to use for per-user DSN list. When changed, the whole list of DSN will be reloaded.
+	 */
 	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $XDG_DATA_HOME/libgda/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
                                          g_param_spec_string ("user-filename", NULL, 
 							      "File to use for per-user DSN list", 
 							      NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	/**
+	 * GdaConfig:system-filename:
+	 *
+	 * File to use for system-wide DSN list. When changed, the whole list of DSN will be reloaded.
+	 */
 	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $PREFIX/etc/libgda-5.0/config */
 	g_object_class_install_property (object_class, PROP_USER_FILE,
                                          g_param_spec_string ("system-filename", NULL,
@@ -734,21 +746,38 @@ gda_config_set_property (GObject *object,
 			 GParamSpec *pspec)
 {
 	GdaConfig *conf;
+	const gchar *cstr;
 
         conf = GDA_CONFIG (object);
         if (conf->priv) {
                 switch (param_id) {
 		case PROP_USER_FILE:
+			cstr = g_value_get_string (value);
+			if ((cstr && conf->priv->user_file &&
+			     !strcmp (cstr, conf->priv->user_file)) ||
+			    (! cstr && !conf->priv->user_file)) {
+				/* nothing to do */
+				break;
+			}
 			g_free (conf->priv->user_file);
 			conf->priv->user_file = NULL;
 			if (g_value_get_string (value))
-				conf->priv->user_file = g_strdup (g_value_get_string (value));
+				conf->priv->user_file = g_strdup (cstr);
+			reload_dsn_configuration ();
 			break;
                 case PROP_SYSTEM_FILE:
+			cstr = g_value_get_string (value);
+			if ((cstr && conf->priv->system_file &&
+			     !strcmp (cstr, conf->priv->system_file)) ||
+			    (! cstr && !conf->priv->system_file)) {
+				/* nothing to do */
+				break;
+			}
 			g_free (conf->priv->system_file);
 			conf->priv->system_file = NULL;
 			if (g_value_get_string (value))
-				conf->priv->system_file = g_strdup (g_value_get_string (value));
+				conf->priv->system_file = g_strdup (cstr);
+			reload_dsn_configuration ();
                         break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -784,9 +813,10 @@ gda_config_get_property (GObject *object,
 /**
  * gda_config_get:
  * 
- * Get a pointer to the global GdaConfig object
+ * Get a pointer to the global (unique) #GdaConfig object. This functions increments
+ * the reference count of the object, so you need to call g_object_unref() on it once finished.
  *
- * Returns: (transfer full): a non %NULL pointer to a #GdaConfig
+ * Returns: (transfer full): a non %NULL pointer to the unique #GdaConfig
  */
 GdaConfig*
 gda_config_get (void)
@@ -1706,34 +1736,14 @@ internal_provider_free (InternalProvider *ip)
 	g_free (ip);
 }
 
-/*
- * File monitoring actions
- */
-#ifdef HAVE_GIO
-
-static gboolean
-str_equal (const gchar *str1, const gchar *str2)
-{
-	if (str1 && str2) {
-		if (!strcmp (str1, str2))
-			return TRUE;
-		else
-			return FALSE;
-	}
-	else if (!str1 && !str2)
-		return TRUE;
-	return FALSE;
-}
-
 static void
-conf_file_changed (G_GNUC_UNUSED GFileMonitor *mon, G_GNUC_UNUSED GFile *file,
-		   G_GNUC_UNUSED GFile *other_file, GFileMonitorEvent event_type, G_GNUC_UNUSED gpointer data)
+reload_dsn_configuration (void)
 {
 	GSList *list, *current_dsn_list, *new_dsn_list;
-	g_assert (unique_instance);
-
-	if (event_type != G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT)
+	if (!unique_instance) {
+		/* object not yet created */
 		return;
+	}
 
         GDA_CONFIG_LOCK ();
 #ifdef GDA_DEBUG_NO
@@ -1818,6 +1828,35 @@ conf_file_changed (G_GNUC_UNUSED GFileMonitor *mon, G_GNUC_UNUSED GFile *file,
 	g_hash_table_destroy (hash);
 
         GDA_CONFIG_UNLOCK ();
+}
+
+/*
+ * File monitoring actions
+ */
+#ifdef HAVE_GIO
+
+static gboolean
+str_equal (const gchar *str1, const gchar *str2)
+{
+	if (str1 && str2) {
+		if (!strcmp (str1, str2))
+			return TRUE;
+		else
+			return FALSE;
+	}
+	else if (!str1 && !str2)
+		return TRUE;
+	return FALSE;
+}
+
+static void
+conf_file_changed (G_GNUC_UNUSED GFileMonitor *mon, G_GNUC_UNUSED GFile *file,
+		   G_GNUC_UNUSED GFile *other_file, GFileMonitorEvent event_type,
+		   G_GNUC_UNUSED gpointer data)
+{
+	if (event_type != G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT)
+		return;
+	reload_dsn_configuration ();
 }
 
 static void
