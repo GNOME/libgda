@@ -270,9 +270,11 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 		
 		g_error_free (error);
 	}
-	else
+	else if (BROWSER_IS_WINDOW (parent))
 		browser_window_show_notice (BROWSER_WINDOW (parent), GTK_MESSAGE_INFO,
 					    "show-help", _("Help is being loaded, please wait..."));
+	else
+		browser_show_message (parent, "%s", _("Help is being loaded, please wait..."));
 
 	g_free (uri);
 }

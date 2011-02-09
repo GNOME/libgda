@@ -28,8 +28,9 @@
  *  - the version number is increased by 1:
  *      version 1 for libgda between 4.0.0 and 4.1.3
  *      version 2 for libgda >= 4.1.4: added the "_table_indexes" and "_index_column_usage" tables
+ *      version 3 for libgda >= 4.2.4: added the "__declared_fk" table
  */
-#define CURRENT_SCHEMA_VERSION "2"
+#define CURRENT_SCHEMA_VERSION "3"
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
@@ -91,6 +92,8 @@ enum {
 	STMT_UPD_VERSION,
 	STMT_DEL_ATT_VALUE,
 	STMT_SET_ATT_VALUE,
+	STMT_ADD_DECLARE_FK,
+	STMT_DEL_DECLARE_FK,
 	STMT_LAST
 } PreStmtType;
 
@@ -465,6 +468,12 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	klass->cpriv->prep_stmts[STMT_SET_ATT_VALUE] =
 		compute_prepared_stmt (klass->cpriv->parser, 
 				       "INSERT INTO _attributes VALUES (##name::string, ##value::string::null)");
+	klass->cpriv->prep_stmts[STMT_ADD_DECLARE_FK] =
+		compute_prepared_stmt (klass->cpriv->parser,
+				       "INSERT INTO __declared_fk (constraint_name, table_catalog, table_schema, table_name, column_name, ref_table_catalog, ref_table_schema, ref_table_name, ref_column_name) VALUES (##fkname::string, ##tcal::string, ##tschema::string, ##tname::string, ##colname::string, ##ref_tcal::string, ##ref_tschema::string, ##ref_tname::string, ##ref_colname::string)");
+	klass->cpriv->prep_stmts[STMT_DEL_DECLARE_FK] =
+		compute_prepared_stmt (klass->cpriv->parser,
+				       "DELETE FROM __declared_fk WHERE constraint_name = ##fkname::string AND table_catalog = ##tcal::string AND table_schema = ##tschema::string AND table_name = ##tname::string AND ref_table_catalog = ##ref_tcal::string AND ref_table_schema = ##ref_tschema::string AND ref_table_name = ##ref_tname::string");
 
 /*#define GDA_DEBUG_GRAPH*/
 #ifdef GDA_DEBUG_GRAPH
@@ -2116,15 +2125,46 @@ migrate_schema_from_v1_to_v2 (GdaMetaStore *store, GError **error)
 
 	/* create tables for this migration */
 	if (! create_a_dbobj (store, "_table_indexes", error))
-		return;
+		goto out;
 	if (! create_a_dbobj (store, "_index_column_usage", error))
-		return;
+		goto out;
 
 	/* set version info to CURRENT_SCHEMA_VERSION */
 	update_schema_version (store, "2", error);
+
+ out:
 	if (transaction_started) {
 		/* handle transaction started if necessary */
 		if (store->priv->version != 2)
+			gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+		else
+			gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+	}
+}
+
+/* migrate schema from version 2 to 3 */
+static void
+migrate_schema_from_v2_to_v3 (GdaMetaStore *store, GError **error)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (store->priv->cnc));
+	g_return_if_fail (gda_connection_is_opened (store->priv->cnc));
+
+	/* begin a transaction if possible */
+	gboolean transaction_started = FALSE;
+	if (! check_transaction_started (store->priv->cnc, &transaction_started))
+		return;
+
+	/* create tables for this migration */
+	if (! create_a_dbobj (store, "__declared_fk", error))
+		goto out;
+
+	/* set version info to CURRENT_SCHEMA_VERSION */
+	update_schema_version (store, "3", error);
+
+ out:
+	if (transaction_started) {
+		/* handle transaction started if necessary */
+		if (store->priv->version != 3)
 			gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
 		else
 			gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
@@ -2170,12 +2210,12 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 			case 1:
 				migrate_schema_from_v1_to_v2 (store, error);
 			case 2:
-				/* function call for migration from V2 will be here */
+				migrate_schema_from_v2_to_v3 (store, error);
+			case 3:
+				/* function call for migration from V3 will be here */
 				break;
 			default:
-				g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-					     _ ("Unknown internal schema's version: '%s'"),
-					     g_value_get_string (version));
+				/* no downgrade to do */
 				break;
 			}
 			
@@ -4165,4 +4205,369 @@ _gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaCont
 
 	gda_mutex_unlock (store->priv->mutex);
 	return g_slist_reverse (retlist);
+}
+
+/**
+ * gda_meta_store_declare_foreign_key:
+ * @store: a #GdaMetaStore
+ * @mstruct: (allow-none): a #GdaMetaStruct, or %NULL
+ * @fk_name: the name of the foreign key to declare
+ * @catalog: (allow-none): the catalog in which the table (for which the foreign key is for) is, or %NULL
+ * @schema: (allow-none): the schema in which the table (for which the foreign key is for) is, or %NULL
+ * @table: the name of the table (for which the foreign key is for)
+ * @ref_catalog: (allow-none): the catalog in which the referenced table is, or %NULL
+ * @ref_schema: (allow-none): the schema in which the referenced table is, or %NULL
+ * @ref_table: the name of the referenced table
+ * @nb_cols: the number of columns involved (>0)
+ * @colnames: (array length=nb_cols): an array of column names from the table for which the foreign key is for
+ * @ref_colnames: (array length=nb_cols): an array of column names from the referenced table
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Defines a new declared foreign key into @store. If another declared foreign key is already defined
+ * between the two tables and with the same name, then it is first removed.
+ *
+ * This method begins a transaction if possible (ie. none is already started), and if it can't,
+ * then if there is an error, the job may be partially done.
+ *
+ * A check is always performed to make sure all the database objects actually
+ * exist and returns an error if not. The check is performed using @mstruct if it's not %NULL, and in
+ * an internal #GdaMetaStruct if not. 
+ *
+ * The @catalog, @schema, @table, @ref_catalog, @ref_schema and @ref_table must follow the SQL
+ * identifiers naming convention, see the <link linkend="gen:sql_identifiers">SQL identifiers</link>
+ * section. The same convention needs to be respected for the strings in @conames and @ref_colnames.
+ *
+ * If @catalog is not %NULL, then @schema must also be not %NULL (the same restriction applies to
+ * @ref_catalog and @ref_schema).
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 4.2.4
+ */
+gboolean
+gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
+				    const gchar *fk_name,
+				    const gchar *catalog, const gchar *schema, const gchar *table,
+				    const gchar *ref_catalog, const gchar *ref_schema, const gchar *ref_table,
+				    guint nb_cols,
+				    gchar **colnames, gchar **ref_colnames,
+				    GError **error)
+{
+ 	gboolean retval = FALSE;
+	GdaSet *params = NULL;
+	GdaMetaStoreClass *klass;
+	GdaMetaTable *mtable = NULL, *ref_mtable = NULL;
+	GdaMetaDbObject *dbo = NULL, *ref_dbo = NULL;
+
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	g_return_val_if_fail (!mstruct || GDA_IS_META_STRUCT (mstruct), FALSE);
+	g_return_val_if_fail (fk_name, FALSE);
+	g_return_val_if_fail (!catalog || (catalog && schema), FALSE);
+	g_return_val_if_fail (!ref_catalog || (ref_catalog && ref_schema), FALSE);
+	g_return_val_if_fail (table, FALSE);
+	g_return_val_if_fail (ref_table, FALSE);
+	g_return_val_if_fail (nb_cols > 0, FALSE);
+	g_return_val_if_fail (colnames, FALSE);
+	g_return_val_if_fail (ref_colnames, FALSE);
+	
+	if (mstruct)
+		g_object_ref (mstruct);
+	else
+		mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
+
+	/* find database objects */
+	GValue *v1 = NULL, *v2 = NULL, *v3;
+	
+	if (catalog)
+		g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), catalog);
+	if (schema)
+		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), schema);
+	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), table);		
+	dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
+	if (v1)
+		gda_value_free (v1);
+	if (v2)
+		gda_value_free (v2);
+	gda_value_free (v3);
+	if (! dbo)
+		goto out;
+	mtable = GDA_META_TABLE (dbo);
+	
+	v1 = NULL;
+	v2 = NULL;
+	if (ref_catalog)
+		g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), ref_catalog);
+	if (ref_schema)
+		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), ref_schema);
+	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), ref_table);		
+	ref_dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
+	if (v1)
+		gda_value_free (v1);
+	if (v2)
+		gda_value_free (v2);
+	gda_value_free (v3);
+	if (! ref_dbo)
+		goto out;
+	ref_mtable = GDA_META_TABLE (ref_dbo);
+
+	/* set statement's variables */
+	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_ADD_DECLARE_FK],
+					    &params, error))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "tcal", dbo->obj_catalog))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "tschema", dbo->obj_schema))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "tname",	dbo->obj_name))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "ref_tcal", ref_dbo->obj_catalog))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "ref_tschema", ref_dbo->obj_schema))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "ref_tname", ref_dbo->obj_name))
+		goto out;
+
+	if (! gda_set_set_holder_value (params, error, "fkname", fk_name))
+                goto out;
+
+	GdaConnection *store_cnc;
+	gboolean intrans;
+	store_cnc = gda_meta_store_get_internal_connection (store);
+	intrans = gda_connection_begin_transaction (store_cnc, NULL,
+						    GDA_TRANSACTION_ISOLATION_UNKNOWN,
+						    NULL);
+
+	/* remove existing declared FK, if any */
+	if (gda_connection_statement_execute_non_select (store_cnc,
+							 klass->cpriv->prep_stmts[STMT_DEL_DECLARE_FK],
+							 params,
+							 NULL, error) == -1) {
+		if (intrans)
+			gda_connection_rollback_transaction (store_cnc, NULL, NULL);
+		goto out;
+	}
+
+	/* declare FK */
+	guint l;
+	for (l = 0; l < nb_cols; l++) {
+		/* check that column name exists */
+		GSList *list;
+		for (list = mtable->columns; list; list = list->next) {
+			if (!strcmp (GDA_META_TABLE_COLUMN (list->data)->column_name,
+				     colnames[l]))
+				break;
+		}
+		if (!list) {
+			gchar *str;
+			if (catalog) {
+				if (schema)
+					str = g_strdup_printf ("%s.%s.%s", catalog, schema, table);
+				else
+					str = g_strdup (table);
+			}
+			else if (schema)
+				str = g_strdup_printf ("%s.%s", schema, table);
+			else
+				str = g_strdup (table);
+			g_set_error (error, GDA_META_STORE_ERROR,
+				     GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
+				     _("Could not find column '%s' in table '%s'"),
+				     colnames[l], str);
+			g_free (str);
+			goto out;
+		}
+		if (! gda_set_set_holder_value (params, error, "colname", colnames[l]))
+			goto out;
+
+		/* check that column name exists */
+		for (list = ref_mtable->columns; list; list = list->next) {
+			if (!strcmp (GDA_META_TABLE_COLUMN (list->data)->column_name,
+				     ref_colnames[l]))
+				break;
+		}
+		if (!list) {
+			gchar *str;
+			if (ref_catalog) {
+				if (ref_schema)
+					str = g_strdup_printf ("%s.%s.%s", ref_catalog,
+							       ref_schema, ref_table);
+				else
+					str = g_strdup (ref_table);
+			}
+			else if (ref_schema)
+				str = g_strdup_printf ("%s.%s", ref_schema, ref_table);
+			else
+				str = g_strdup (ref_table);
+			g_set_error (error, GDA_META_STORE_ERROR,
+				     GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
+				     _("Could not find column '%s' in table '%s'"),
+				     ref_colnames[l], str);
+			g_free (str);
+			goto out;
+		}
+		if (! gda_set_set_holder_value (params, error, "ref_colname", ref_colnames[l]))
+			goto out;
+		
+		if (gda_connection_statement_execute_non_select (store_cnc,
+								 klass->cpriv->prep_stmts[STMT_ADD_DECLARE_FK],
+								 params,
+								 NULL, error) == -1) {
+			if (intrans)
+				gda_connection_rollback_transaction (store_cnc, NULL,
+								     NULL);
+			goto out;
+		}
+	}
+	
+	if (intrans)
+		gda_connection_commit_transaction (store_cnc, NULL, NULL);
+	retval = TRUE;
+
+ out:		
+	g_object_unref (mstruct);
+	if (params)
+		g_object_unref (params);
+
+	return retval;
+}
+
+/**
+ * gda_meta_store_undeclare_foreign_key:
+ * @store: a #GdaMetaStore
+ * @mstruct: (allow-none): a #GdaMetaStruct, or %NULL
+ * @fk_name: the name of the foreign key to declare
+ * @catalog: (allow-none): the catalog in which the table (for which the foreign key is for) is, or %NULL
+ * @schema: (allow-none): the schema in which the table (for which the foreign key is for) is, or %NULL
+ * @table: the name of the table (for which the foreign key is for)
+ * @ref_catalog: (allow-none): the catalog in which the referenced table is, or %NULL
+ * @ref_schema: (allow-none): the schema in which the referenced table is, or %NULL
+ * @ref_table: the name of the referenced table
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Removes a declared foreign key from @store.
+ *
+ * This method begins a transaction if possible (ie. none is already started), and if it can't, then if there
+ * is an error, the job may be partially done.
+ *
+ * A check is always performed to make sure all the database objects actually
+ * exist and returns an error if not. The check is performed using @mstruct if it's not %NULL, and in
+ * an internal #GdaMetaStruct if not. 
+ *
+ * See gda_meta_store_declare_foreign_key() for more information anout the @catalog, @schema, @name,
+ * @ref_catalog, @ref_schema and @ref_name arguments.
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 4.2.4
+ */
+gboolean
+gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
+				      const gchar *fk_name,
+				      const gchar *catalog, const gchar *schema, const gchar *table,
+				      const gchar *ref_catalog, const gchar *ref_schema, const gchar *ref_table,
+				      GError **error)
+{
+ 	gboolean retval = FALSE;
+	GdaSet *params = NULL;
+	GdaMetaStoreClass *klass;
+	GdaMetaTable *mtable = NULL, *ref_mtable = NULL;
+	GdaMetaDbObject *dbo = NULL, *ref_dbo = NULL;
+
+	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	g_return_val_if_fail (!mstruct || GDA_IS_META_STRUCT (mstruct), FALSE);
+	g_return_val_if_fail (fk_name, FALSE);
+	g_return_val_if_fail (!catalog || (catalog && schema), FALSE);
+	g_return_val_if_fail (!ref_catalog || (ref_catalog && ref_schema), FALSE);
+	g_return_val_if_fail (table, FALSE);
+	g_return_val_if_fail (ref_table, FALSE);
+	
+	if (mstruct)
+		g_object_ref (mstruct);
+	else
+		mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
+
+	/* find database objects */
+	GValue *v1 = NULL, *v2 = NULL, *v3;
+	
+	if (catalog)
+		g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), catalog);
+	if (schema)
+		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), schema);
+	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), table);		
+	dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
+	if (v1)
+		gda_value_free (v1);
+	if (v2)
+		gda_value_free (v2);
+	gda_value_free (v3);
+	if (! dbo)
+		goto out;
+	mtable = GDA_META_TABLE (dbo);
+	
+	v1 = NULL;
+	v2 = NULL;
+	if (ref_catalog)
+		g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), ref_catalog);
+	if (ref_schema)
+		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), ref_schema);
+	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), ref_table);		
+	ref_dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, v1, v2, v3, error);
+	if (v1)
+		gda_value_free (v1);
+	if (v2)
+		gda_value_free (v2);
+	gda_value_free (v3);
+	if (! ref_dbo)
+		goto out;
+	ref_mtable = GDA_META_TABLE (ref_dbo);
+
+	/* set statement's variables */
+	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_ADD_DECLARE_FK],
+					    &params, error))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "tcal", dbo->obj_catalog))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "tschema", dbo->obj_schema))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "tname",	dbo->obj_name))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "ref_tcal", ref_dbo->obj_catalog))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "ref_tschema", ref_dbo->obj_schema))
+		goto out;
+	if (! gda_set_set_holder_value (params, error, "ref_tname", ref_dbo->obj_name))
+		goto out;
+
+	if (! gda_set_set_holder_value (params, error, "fkname", fk_name))
+                goto out;
+
+	GdaConnection *store_cnc;
+	gboolean intrans;
+	store_cnc = gda_meta_store_get_internal_connection (store);
+	intrans = gda_connection_begin_transaction (store_cnc, NULL,
+						    GDA_TRANSACTION_ISOLATION_UNKNOWN,
+						    NULL);
+
+	/* remove existing declared FK, if any */
+	if (gda_connection_statement_execute_non_select (store_cnc,
+							 klass->cpriv->prep_stmts[STMT_DEL_DECLARE_FK],
+							 params,
+							 NULL, error) == -1) {
+		if (intrans)
+			gda_connection_rollback_transaction (store_cnc, NULL, NULL);
+		goto out;
+	}
+	
+	if (intrans)
+		gda_connection_commit_transaction (store_cnc, NULL, NULL);
+	retval = TRUE;
+
+ out:		
+	g_object_unref (mstruct);
+	if (params)
+		g_object_unref (params);
+
+	return retval;
 }

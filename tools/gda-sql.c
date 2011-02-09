@@ -1984,6 +1984,14 @@ static GdaInternalCommandResult *extra_command_set2 (SqlConsole *console, GdaCon
 						     const gchar **args,
 						     GError **error, gpointer data);
 
+static GdaInternalCommandResult *extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
+							   const gchar **args,
+							   GError **error, gpointer data);
+
+static GdaInternalCommandResult *extra_command_undeclare_fk (SqlConsole *console, GdaConnection *cnc,
+							     const gchar **args,
+							     GError **error, gpointer data);
+
 static GdaInternalCommandsList *
 build_internal_commands_list (void)
 {
@@ -2011,6 +2019,30 @@ build_internal_commands_list (void)
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Information");
+	c->name = g_strdup_printf (_("%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"), "fkdeclare");
+	c->description = _("Declare a new foreign key (not actually in database): tableA references tableB");
+	c->args = NULL;
+	c->command_func = extra_command_declare_fk;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = args_as_string_func;
+	c->unquote_args = FALSE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Information");
+	c->name = g_strdup_printf (_("%s <fkname> <tableA> <tableB>"), "fkundeclare");
+	c->description = _("Un-declare a foreign key (not actually in database)");
+	c->args = NULL;
+	c->command_func = extra_command_undeclare_fk;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = args_as_string_func;
+	c->unquote_args = FALSE;
 	c->limit_to_main = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
@@ -3963,6 +3995,360 @@ foreach_param_set (const gchar *pname, GdaHolder *param, GdaDataModel *model)
 	value = gda_value_new_from_string (str ? str : "(NULL)", G_TYPE_STRING);
 	gda_data_model_set_value_at (model, 1, row, value, NULL);
 	gda_value_free (value);
+}
+
+typedef struct {
+	gchar *fkname;
+	gchar *table;
+	gchar *ref_table;
+	GArray *columns;
+	GArray *ref_columns;
+} FkDeclData;
+
+static void
+fk_decl_data_free (FkDeclData *data)
+{
+	g_free (data->fkname);
+	g_free (data->table);
+	g_free (data->ref_table);
+	if (data->columns) {
+		gint i;
+		for (i = 0; i < data->columns->len; i++)
+			g_free (g_array_index (data->columns, gchar*, i));
+		g_array_free (data->columns, TRUE);
+	}
+	if (data->ref_columns) {
+		gint i;
+		for (i = 0; i < data->ref_columns->len; i++)
+			g_free (g_array_index (data->ref_columns, gchar*, i));
+		g_array_free (data->ref_columns, TRUE);
+	}
+	g_free (data);
+}
+
+static FkDeclData *
+parse_fk_decl_spec (const gchar *spec, gboolean columns_required, GError **error)
+{
+	FkDeclData *decldata;
+	decldata = g_new0 (FkDeclData, 1);
+
+	gchar *ptr, *dspec, *start, *subptr, *substart;
+
+	if (!spec || !*spec) {
+		g_set_error (error, 0, 0,
+			     _("Missing foreign key declaration specification"));
+		return NULL;
+	}
+	dspec = g_strstrip (g_strdup (spec));
+
+	/* FK name */
+	for (ptr = dspec; *ptr && !g_ascii_isspace (*ptr); ptr++) {
+		if (! g_ascii_isalnum (*ptr) && (*ptr != '_'))
+			goto onerror;
+	}
+	if (!*ptr)
+		goto onerror;
+	*ptr = 0;
+	decldata->fkname = g_strstrip (g_strdup (dspec));
+#ifdef GDA_DEBUG_NO
+	g_print ("KFNAME [%s]\n", decldata->fkname);
+#endif
+
+	/* table name */
+	start = ++ptr;
+	if (columns_required)
+		for (ptr = start; *ptr && (*ptr != '('); ptr++);
+	else {
+		for (ptr = start; *ptr && g_ascii_isspace (*ptr); ptr++);
+		start = ptr;
+		for (; *ptr && !g_ascii_isspace (*ptr); ptr++);
+	}
+	if (!*ptr)
+		goto onerror;
+	*ptr = 0;
+	if (!*start)
+		goto onerror;
+	decldata->table = g_strstrip (g_strdup (start));
+#ifdef GDA_DEBUG_NO
+	g_print ("TABLE [%s]\n", decldata->table);
+#endif
+
+	if (columns_required) {
+		/* columns names */
+		start = ++ptr;
+		for (ptr = start; *ptr && (*ptr != ')'); ptr++);
+		if (!*ptr)
+			goto onerror;
+		*ptr = 0;
+#ifdef GDA_DEBUG_NO
+		g_print ("COLS [%s]\n", start);
+#endif
+		substart = start;
+		for (substart = start; substart < ptr; substart = ++subptr) {
+			gchar *tmp;
+			for (subptr = substart; *subptr && (*subptr != ','); subptr++);
+			*subptr = 0;
+			if (!decldata->columns)
+				decldata->columns = g_array_new (FALSE, FALSE, sizeof (gchar*));
+			tmp = g_strstrip (g_strdup (substart));
+			g_array_append_val (decldata->columns, tmp);
+#ifdef GDA_DEBUG_NO
+			g_print ("  COL [%s]\n", tmp);
+#endif
+		}
+		if (! decldata->columns)
+			goto onerror;
+	}
+
+	/* ref table */
+	start = ++ptr;
+	if (columns_required)
+		for (ptr = start; *ptr && (*ptr != '('); ptr++);
+	else {
+		for (ptr = start; *ptr && g_ascii_isspace (*ptr); ptr++);
+		start = ptr;
+		for (; *ptr && !g_ascii_isspace (*ptr); ptr++);
+	}
+	*ptr = 0;
+	if (!*start)
+		goto onerror;
+	decldata->ref_table = g_strstrip (g_strdup (start));
+#ifdef GDA_DEBUG_NO
+	g_print ("REFTABLE [%s]\n", decldata->ref_table);
+#endif
+
+	if (columns_required) {
+		/* ref columns names */
+		start = ++ptr;
+		for (ptr = start; *ptr && (*ptr != ')'); ptr++);
+		if (!*ptr)
+			goto onerror;
+		*ptr = 0;
+#ifdef GDA_DEBUG_NO
+		g_print ("REF COLS [%s]\n", start);
+#endif
+		for (substart = start; substart < ptr; substart = ++subptr) {
+			gchar *tmp;
+			for (subptr = substart; *subptr && (*subptr != ','); subptr++);
+			*subptr = 0;
+			if (!decldata->ref_columns)
+				decldata->ref_columns = g_array_new (FALSE, FALSE, sizeof (gchar*));
+			tmp = g_strstrip (g_strdup (substart));
+			g_array_append_val (decldata->ref_columns, tmp);
+#ifdef GDA_DEBUG_NO
+			g_print ("  COL [%s]\n", tmp);
+#endif
+		}
+		if (! decldata->ref_columns)
+			goto onerror;
+	}
+
+	g_free (dspec);
+
+	if (columns_required && (decldata->columns->len != decldata->ref_columns->len))
+		goto onerror;
+
+	return decldata;
+
+ onerror:
+	fk_decl_data_free (decldata);
+	g_set_error (error, 0, 0,
+		     _("Malformed foreign key declaration specification"));
+	return NULL;
+}
+
+/*
+ * decomposes @table and sets the the out* variables
+ */
+static gboolean
+fk_decl_analyse_table_name (const gchar *table, GdaMetaStore *mstore,
+			    gchar **out_catalog, gchar **out_schema, gchar **out_table,
+			    GError **error)
+{
+	gchar **id_array;
+	gint size = 0, l;
+
+	id_array = gda_sql_identifier_split (table);
+	if (id_array) {
+		size = g_strv_length (id_array) - 1;
+		g_assert (size >= 0);
+		l = size;
+		*out_table = g_strdup (id_array[l]);
+		l--;
+		if (l >= 0) {
+			*out_schema = g_strdup (id_array[l]);
+			l--;
+			if (l >= 0)
+				*out_catalog = g_strdup (id_array[l]);
+		}
+		g_strfreev (id_array);
+	}
+	else {
+		g_set_error (error, 0, 0,
+			     _("Malformed table name specification '%s'"), table);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+static GdaInternalCommandResult *
+extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
+			  const gchar **args,
+			  GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+
+	if (!main_data->current) {
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		return NULL;
+	}
+
+	if (args[0] && *args[0]) {
+		FkDeclData *decldata;
+		GdaMetaStore *mstore;
+		gchar *catalog = NULL, *schema = NULL, *table = NULL;
+		gchar *ref_catalog = NULL, *ref_schema = NULL, *ref_table = NULL;
+
+		mstore = gda_connection_get_meta_store (main_data->current->cnc);
+		if (! (decldata = parse_fk_decl_spec (args[0], TRUE, error)))
+			return NULL;
+		
+		/* table name */
+		if (!fk_decl_analyse_table_name (decldata->table, mstore,
+						 &catalog, &schema, &table, error)) {
+			fk_decl_data_free (decldata);
+			return NULL;
+		}
+		
+		/* ref table name */
+		if (!fk_decl_analyse_table_name (decldata->ref_table, mstore,
+						 &ref_catalog, &ref_schema, &ref_table, error)) {
+			fk_decl_data_free (decldata);
+			g_free (catalog);
+			g_free (schema);
+			g_free (table);
+			return NULL;
+		}
+
+#ifdef GDA_DEBUG_NO
+		g_print ("NOW: %s.%s.%s REFERENCES %s.%s.%s\n",
+			 gda_value_stringify (gda_set_get_holder_value (params, "tcal")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "tschema")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "tname")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "ref_tcal")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "ref_tschema")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "ref_tname")));
+#endif
+
+		gchar **colnames, **ref_colnames;
+		gint l;
+		gboolean allok;
+		colnames = g_new0 (gchar *, decldata->columns->len);
+		ref_colnames = g_new0 (gchar *, decldata->columns->len);
+		for (l = 0; l < decldata->columns->len; l++) {
+			colnames [l] = g_array_index (decldata->columns, gchar*, l);
+			ref_colnames [l] = g_array_index (decldata->ref_columns, gchar*, l);
+		}
+
+		allok = gda_meta_store_declare_foreign_key (mstore, NULL,
+							    decldata->fkname,
+							    catalog, schema, table,
+							    ref_catalog, ref_schema, ref_table,
+							    decldata->columns->len,
+							    colnames, ref_colnames, error);
+		g_free (catalog);
+		g_free (schema);
+		g_free (table);
+		g_free (ref_catalog);
+		g_free (ref_schema);
+		g_free (ref_table);
+		g_free (colnames);
+		g_free (ref_colnames);
+		fk_decl_data_free (decldata);
+
+		if (allok) {
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+		}
+	}
+	else
+		g_set_error (error, 0, 0,
+			     _("Missing foreign key name argument"));
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_undeclare_fk (SqlConsole *console, GdaConnection *cnc,
+			    const gchar **args,
+			    GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+
+	if (!main_data->current) {
+		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		return NULL;
+	}
+
+	if (args[0] && *args[0]) {
+		FkDeclData *decldata;
+		GdaMetaStore *mstore;
+		gchar *catalog = NULL, *schema = NULL, *table = NULL;
+		gchar *ref_catalog = NULL, *ref_schema = NULL, *ref_table = NULL;
+
+		mstore = gda_connection_get_meta_store (main_data->current->cnc);
+		if (! (decldata = parse_fk_decl_spec (args[0], FALSE, error)))
+			return NULL;
+		
+		/* table name */
+		if (!fk_decl_analyse_table_name (decldata->table, mstore,
+						 &catalog, &schema, &table, error)) {
+			fk_decl_data_free (decldata);
+			return NULL;
+		}
+		
+		/* ref table name */
+		if (!fk_decl_analyse_table_name (decldata->ref_table, mstore,
+						 &ref_catalog, &ref_schema, &ref_table, error)) {
+			fk_decl_data_free (decldata);
+			g_free (catalog);
+			g_free (schema);
+			g_free (table);
+			return NULL;
+		}
+
+#ifdef GDA_DEBUG_NO
+		g_print ("NOW: %s.%s.%s REFERENCES %s.%s.%s\n",
+			 gda_value_stringify (gda_set_get_holder_value (params, "tcal")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "tschema")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "tname")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "ref_tcal")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "ref_tschema")),
+			 gda_value_stringify (gda_set_get_holder_value (params, "ref_tname")));
+#endif
+
+		gboolean allok;
+		allok = gda_meta_store_undeclare_foreign_key (mstore, NULL,
+							      decldata->fkname,
+							      catalog, schema, table,
+							      ref_catalog, ref_schema, ref_table,
+							      error);
+		g_free (catalog);
+		g_free (schema);
+		g_free (table);
+		g_free (ref_catalog);
+		g_free (ref_schema);
+		g_free (ref_table);
+		fk_decl_data_free (decldata);
+
+		if (allok) {
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+		}
+	}
+	else
+		g_set_error (error, 0, 0,
+			     _("Missing foreign key name argument"));
+	return res;
 }
 
 static const GValue *

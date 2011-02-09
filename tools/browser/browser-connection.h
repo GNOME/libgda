@@ -65,6 +65,7 @@ const GdaDsnInfo   *browser_connection_get_information        (BrowserConnection
 
 gboolean            browser_connection_is_busy                (BrowserConnection *bcnc, gchar **out_reason);
 void                browser_connection_update_meta_data       (BrowserConnection *bcnc);
+void                browser_connection_meta_data_changed      (BrowserConnection *bcnc);
 GdaMetaStruct      *browser_connection_get_meta_struct        (BrowserConnection *bcnc);
 GdaMetaStore       *browser_connection_get_meta_store         (BrowserConnection *bcnc);
 const gchar        *browser_connection_get_dictionary_file    (BrowserConnection *bcnc);

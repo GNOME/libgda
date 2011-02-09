@@ -151,6 +151,14 @@ An opened connection
 @bcnc: 
 
 
+<!-- ##### FUNCTION browser_connection_meta_data_changed ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+
+
 <!-- ##### FUNCTION browser_connection_get_meta_struct ##### -->
 <para>
 

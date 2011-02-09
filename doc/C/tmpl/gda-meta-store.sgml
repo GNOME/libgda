@@ -234,3 +234,42 @@ Dictionary object
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_meta_store_declare_foreign_key ##### -->
+<para>
+
+</para>
+
+@store: 
+@mstruct: 
+@fk_name: 
+@catalog: 
+@schema: 
+@table: 
+@ref_catalog: 
+@ref_schema: 
+@ref_table: 
+@nb_cols: 
+@colnames: 
+@ref_colnames: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_meta_store_undeclare_foreign_key ##### -->
+<para>
+
+</para>
+
+@store: 
+@mstruct: 
+@fk_name: 
+@catalog: 
+@schema: 
+@table: 
+@ref_catalog: 
+@ref_schema: 
+@ref_table: 
+@error: 
+@Returns: 
+
+

@@ -25,9 +25,6 @@
 #include "browser-canvas-item.h"
 #include "browser-canvas-print.h"
 #include <libgda/libgda.h>
-#ifndef CANVAS_EXAMPLE
-#include "../support.h"
-#endif
 
 #define DEFAULT_SCALE .8
 #ifdef HAVE_GRAPHVIZ

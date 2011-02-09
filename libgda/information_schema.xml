@@ -435,6 +435,41 @@
     </fkey>
   </table>
 
+  <!-- 
+     This table lists foreign keys declared but no present in the database. The constraint name is mandatory.
+    -->
+  <table name="__declared_fk" descr="List of foreign key constraints, declared in Libgda and unknown to the database">
+    <column name="constraint_name" pkey="TRUE"/>
+
+    <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
+    <column name="table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="column_name" pkey="TRUE" ident="TRUE"/>
+
+    <column name="ref_table_catalog" pkey="TRUE" ident="TRUE"/>
+    <column name="ref_table_schema" pkey="TRUE" ident="TRUE"/>
+    <column name="ref_table_name" pkey="TRUE" ident="TRUE"/>
+    <column name="ref_column_name" pkey="TRUE" ident="TRUE"/>
+
+    <column name="ts" type="timestamp" nullok="TRUE"/>
+    <column name="descr" nullok="TRUE"/>
+
+    <!-- FK indication, not enforced
+    <fkey ref_table="_columns">
+      <part column="table_catalog" ref_column="table_catalog"/>
+      <part column="table_schema" ref_column="table_schema"/>
+      <part column="table_name" ref_column="table_name"/>
+      <part column="column_name" ref_column="column_name"/>
+    </fkey>
+    <fkey ref_table="_columns">
+      <part column="ref_table_catalog" ref_column="table_catalog"/>
+      <part column="ref_table_schema" ref_column="table_schema"/>
+      <part column="ref_table_name" ref_column="table_name"/>
+      <part column="ref_column_name" ref_column="column_name"/>
+    </fkey>
+    -->
+  </table>
+
   <table name="_check_column_usage" descr="List of check constraints and the name of the tables' columns involved">
     <column name="table_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>

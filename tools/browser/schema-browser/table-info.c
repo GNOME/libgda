@@ -40,6 +40,7 @@
 #include <libgda-ui/gdaui-basic-form.h>
 #include <libgda-ui/internal/popup-container.h>
 #include <libgda/gda-data-model-extra.h>
+#include "../common/fk-declare.h"
 
 struct _TableInfoPrivate {
 	BrowserConnection *bcnc;
@@ -942,6 +943,50 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 	gtk_widget_show_all (popup);
 }
 
+static void
+action_declarefk_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
+{
+	GtkWidget *dlg, *parent;
+	GdaMetaStruct *mstruct;
+	GdaMetaDbObject *dbo;
+	gint response;
+	GValue *v1, *v2;
+
+	parent = (GtkWidget*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
+	mstruct = browser_connection_get_meta_struct (tinfo->priv->bcnc);
+	g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), tinfo->priv->schema);
+	g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), tinfo->priv->table_name);
+	dbo = gda_meta_struct_get_db_object (mstruct, NULL, v1, v2);
+	gda_value_free (v1);
+	gda_value_free (v2);
+	if (!dbo || (dbo->obj_type != GDA_META_DB_TABLE)) {
+		browser_show_error ((GtkWindow *) parent, _("Can't find information about table '%s'"),
+				    tinfo->priv->table_short_name);
+		return;
+	}
+
+	dlg = fk_declare_new ((GtkWindow *) parent, mstruct, GDA_META_TABLE (dbo));
+	response = gtk_dialog_run (GTK_DIALOG (dlg));
+	if (response == GTK_RESPONSE_ACCEPT) {
+		GError *error = NULL;
+		if (! fk_declare_write (FK_DECLARE (dlg),
+					BROWSER_IS_WINDOW (parent) ? BROWSER_WINDOW (parent) : NULL,
+					&error)) {
+			browser_show_error ((GtkWindow *) parent, _("Failed to declare foreign key: %s"),
+					    error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+		else if (BROWSER_IS_WINDOW (parent))
+			browser_window_show_notice (BROWSER_WINDOW (parent),
+						    GTK_MESSAGE_INFO, "fkdeclare",
+						    _("Successfully declared foreign key"));
+		else
+			browser_show_message ((GtkWindow *) parent, "%s",
+					      _("Successfully declared foreign key"));
+	}
+	
+	gtk_widget_destroy (dlg);
+}
 
 static GtkActionEntry ui_actions[] = {
 	{ "Table", NULL, N_("_Table"), NULL, N_("Table"), NULL },
@@ -951,6 +996,8 @@ static GtkActionEntry ui_actions[] = {
 	  G_CALLBACK (action_view_contents_cb)},
 	{ "InsertData", GTK_STOCK_ADD, N_("_Insert data"), NULL, N_("Insert data into table"),
 	  G_CALLBACK (action_insert_cb)},
+	{ "KfDeclare", NULL, N_("_Declare foreign key"), NULL, N_("Declare a foreign key for table"),
+	  G_CALLBACK (action_declarefk_cb)},
 };
 static const gchar *ui_actions_info =
 	"<ui>"
@@ -960,6 +1007,8 @@ static const gchar *ui_actions_info =
         "        <menuitem name='AddToFav' action= 'AddToFav'/>"
         "        <menuitem name='InsertData' action= 'InsertData'/>"
         "        <menuitem name='ViewContents' action= 'ViewContents'/>"
+        "        <separator/>"
+        "        <menuitem name='KfDeclare' action= 'KfDeclare'/>"
         "      </menu>"
         "    </placeholder>"
 	"  </menubar>"

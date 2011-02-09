@@ -24,7 +24,9 @@ libcommon_la_SOURCES = \
 	gdaui-entry-import.c \
 	gdaui-entry-import.h \
 	ui-formgrid.c \
-	ui-formgrid.h
+	ui-formgrid.h \
+	fk-declare.c \
+	fk-declare.h
 
 $(OBJECTS): marshal.c marshal.h
 

@@ -28,6 +28,7 @@
 #include <readline/history.h>
 #endif
 #include <sql-parser/gda-statement-struct-util.h>
+#include "tools-utils.h"
 
 /*
  *  gda_internal_command_arg_remove_quotes
@@ -789,6 +790,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 			const gchar *sql = "SELECT constraint_type, constraint_name  "
 				"FROM _table_constraints WHERE table_catalog = ##tc::string "
 				"AND table_schema = ##ts::string AND table_name = ##tname::string "
+				"AND constraint_type != 'FOREIGN KEY' "
 				"ORDER BY constraint_type DESC, constraint_name";
 
 			g_value_set_string ((catalog = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
@@ -853,122 +855,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 					}
 				}
 				else if (*str == 'F') {
-					/* foreign key */
-					GdaDataModel *cols;
-					cvalue = gda_data_model_get_value_at (model, 1, i, error);
-					if (!cvalue) {
-						gda_internal_command_exec_result_free (res);
-						res = NULL;
-						goto out;
-					}
-					string = g_string_new (_("Foreign key"));
-					g_string_append_printf (string, " '%s'", g_value_get_string (cvalue));
-
-					str = "SELECT rc.ref_table_schema as ref_table_schema, "
-						"rc.ref_table_name as ref_table_name, "
-						"kc1.column_name as fk_column, "
-						"kc2.column_name as ref_column, "
-						"rc.update_rule, rc.delete_rule "
-						"FROM _referential_constraints rc "
-						"INNER JOIN _key_column_usage kc2 ON "
-						"(rc.ref_table_catalog=kc2.table_catalog AND rc.ref_table_schema=kc2.table_schema AND rc.ref_table_name=kc2.table_name AND rc.ref_constraint_name=kc2.constraint_name) "
-						"INNER JOIN _key_column_usage kc1 ON (rc.table_catalog=kc1.table_catalog AND rc.table_schema=kc1.table_schema AND rc.table_name=kc1.table_name AND rc.constraint_name=kc1.constraint_name) "
-						"WHERE kc1.ordinal_position = kc2.ordinal_position "
-						"AND rc.table_catalog = ##tc::string "
-						"AND rc.table_schema = ##ts::string AND rc.table_name = ##tname::string "
-						"AND rc.constraint_name = ##cname::string "
-						"ORDER BY rc.table_catalog, rc.table_schema, rc.table_name, kc1.ordinal_position";
-					
-					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, NULL, 
-								       "tc", catalog, "ts", schema, "tname", name, "cname", cvalue, 
-								       NULL);
-					if (cols) {
-						gint j, cnrows;
-						cnrows = gda_data_model_get_n_rows (cols);
-						if (cnrows > 0) {
-							g_string_append (string, " (");
-							for (j = 0; j < cnrows; j++) {
-								if (j > 0)
-									g_string_append (string, ", ");
-								cvalue = gda_data_model_get_value_at (cols, 2, j, error);
-								if (!cvalue) {
-									gda_internal_command_exec_result_free (res);
-									res = NULL;
-									g_object_unref (cols);
-									g_string_free (string, TRUE);
-									goto out;
-								}
-								g_string_append (string, g_value_get_string (cvalue));
-							}
-							g_string_append (string, ") references");
-
-							const GValue *v1, *v2;
-							
-							v1 = gda_data_model_get_value_at (cols, 0, 0, error);
-							if (!v1) {
-								gda_internal_command_exec_result_free (res);
-								res = NULL;
-								g_object_unref (cols);
-								g_string_free (string, TRUE);
-								goto out;
-							}
-							v2 = gda_data_model_get_value_at (cols, 1, 0, error);
-							if (!v2) {
-								gda_internal_command_exec_result_free (res);
-								res = NULL;
-								g_object_unref (cols);
-								g_string_free (string, TRUE);
-								goto out;
-							}
-							g_string_append_printf (string, " %s.%s (", 
-										g_value_get_string (v1),
-										g_value_get_string (v2));
-							for (j = 0; j < cnrows; j++) {
-								if (j > 0)
-									g_string_append (string, ", ");
-								cvalue = gda_data_model_get_value_at (cols, 3, j, error);
-								if (!cvalue) {
-									gda_internal_command_exec_result_free (res);
-									res = NULL;
-									g_object_unref (cols);
-									g_string_free (string, TRUE);
-									goto out;
-								}
-								g_string_append (string, g_value_get_string (cvalue));
-							}
-							g_string_append_c (string, ')');
-
-							v1 = gda_data_model_get_value_at (cols, 4, 0, error);
-							if (!v1) {
-								gda_internal_command_exec_result_free (res);
-								res = NULL;
-								g_object_unref (cols);
-								g_string_free (string, TRUE);
-								goto out;
-							}
-							v2 = gda_data_model_get_value_at (cols, 5, 0, error);
-							if (!v2) {
-								gda_internal_command_exec_result_free (res);
-								res = NULL;
-								g_object_unref (cols);
-								g_string_free (string, TRUE);
-								goto out;
-							}
-							if (G_VALUE_TYPE (v1) == G_TYPE_STRING) {
-								g_string_append (string, ", ");
-								g_string_append (string, _("Policy on UPDATE"));
-								g_string_append (string, ": ");
-								g_string_append (string, g_value_get_string (v1));
-							}
-							if (G_VALUE_TYPE (v2) == G_TYPE_STRING) {
-								g_string_append (string, ", ");
-								g_string_append (string, _("Policy on DELETE"));
-								g_string_append (string, ": ");
-								g_string_append (string, g_value_get_string (v1));
-							}
-						}
-						g_object_unref (cols);
-					}
+					/* foreign key, not handled here */
 				}
 				else if (*str == 'U') {
 					/* Unique constraint */
@@ -1027,6 +914,62 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 			gda_value_free (name);
 
 			g_object_unref (model);
+
+			/* foreign key constraints */
+			GSList *list;
+			for (list = mt->fk_list; list; list = list->next) {
+				GString *string;
+				GdaMetaTableForeignKey *fk;
+				gint i;
+				fk = (GdaMetaTableForeignKey*) list->data;
+				if (GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED (fk))
+					string = g_string_new (_("Declared foreign key"));
+				else
+					string = g_string_new (_("Foreign key"));
+				g_string_append_printf (string, " '%s' (", fk->fk_name);
+				for (i = 0; i < fk->cols_nb; i++) {
+					if (i != 0)
+						g_string_append (string, ", ");
+					g_string_append (string, fk->fk_names_array [i]);
+				}
+				g_string_append (string, ") ");
+				if (fk->depend_on->obj_short_name)
+					/* To translators: the term "references" is the verb
+					 * "to reference" in the context of foreign keys where
+					 * "table A REFERENCES table B" */
+					g_string_append_printf (string, _("references %s"),
+								fk->depend_on->obj_short_name);
+				else
+					/* To translators: the term "references" is the verb
+					 * "to reference" in the context of foreign keys where
+					 * "table A REFERENCES table B" */
+					g_string_append_printf (string, _("references %s.%s"),
+								fk->depend_on->obj_schema,
+								fk->depend_on->obj_name);
+				g_string_append (string, " (");
+				for (i = 0; i < fk->cols_nb; i++) {
+					if (i != 0)
+						g_string_append (string, ", ");
+					g_string_append (string, fk->ref_pk_names_array [i]);
+				}
+				g_string_append (string, ")");
+
+				g_string_append (string, "\n  ");
+				g_string_append (string, _("Policy on UPDATE"));
+				g_string_append (string, ": ");
+				g_string_append (string, tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY (fk)));
+				g_string_append (string, "\n  ");
+				g_string_append (string, _("Policy on DELETE"));
+				g_string_append (string, ": ");
+				g_string_append (string, tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (fk)));
+
+				subres = g_new0 (GdaInternalCommandResult, 1);
+				subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+				subres->u.txt = string;
+				res->u.multiple_results = g_slist_append (res->u.multiple_results,
+									  subres);
+			}
+
 			return res;
 		}
 	}

@@ -1250,6 +1250,27 @@ g_object_unref (store);
 	  </para>
 	</sect2>
 
+	<sect2>
+	  <title>Declared foreign keys</title>
+	  <para>
+	    Foreign key constraints are used to constraint the contents of one or more columns of a table
+	    to the columns of another table. They are also use to help understand the database structure
+	    and withing UI programs to present relevant choices.
+	  </para>
+	  <para>
+	    &LIBGDA; reports existing foreign key constraints in its meta data.
+	  </para>
+	  <para>
+	    There are however some situations where the database developper does not whish to use
+	    foreign keys to actually implement the constraint, but the relation between the tables
+	    still exists. &LIBGDA; allows one to declare foreign keys, an operation which does not
+	    alter the database's schema, but add information to the database's meta data, specifically
+	    into the "__declared_fk" table. For more information, see the
+	    <link linkend="gda-meta-store-declare-foreign-key">gda_meta_store_declare_foreign_key()</link> and
+	    <link linkend="gda-meta-store-undeclare-foreign-key">gda_meta_store_undeclare_foreign_key</link> methods.
+	  </para>
+	</sect2>
+
 	<!-- tables and views documentation -->
 	&i-s-doc;
       </sect1>
@@ -1814,6 +1835,9 @@ g_object_unref (eng);
     </index>
     <index id="index-4-2-3" role="4.2.3">
       <title>Index of new symbols in 4.2.3</title>
+    </index>
+    <index id="index-4-2-4" role="4.2.4">
+      <title>Index of new symbols in 4.2.4</title>
     </index>
     <index id="index-deprecated" role="deprecated">
       <title>Index of deprecated symbols</title>

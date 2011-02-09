@@ -31,6 +31,8 @@ gda_list_config_5_0_LDADD = \
 gda_sql_5_0_SOURCES = \
 	config-info.h \
 	config-info.c \
+	tools-utils.h \
+	tools-utils.c \
         gda-sql.c \
 	gda-sql.h \
 	gda-threader.h \

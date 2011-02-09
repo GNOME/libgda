@@ -32,7 +32,10 @@ marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_marshal > $@
 
 libbrowser_la_SOURCES=\
+	../config-info.h \
 	../config-info.c \
+	../tools-utils.h \
+	../tools-utils.c \
 	cc-gray-bar.c \
 	cc-gray-bar.h \
 	marshal.c \
@@ -118,16 +121,23 @@ desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 # canvas example
 canvas_example_DEPENDENCIES = \
-	canvas/libcanvas.la
+	canvas/libcanvas.la \
+	common/libcommon.la
+
 canvas_example_SOURCES = \
+	../tools-utils.h \
+	../tools-utils.c \
 	canvas-example.c \
 	dnd.c \
 	dnd.h
+
 canvas_example_CFLAGS = -DCANVAS_EXAMPLE
 canvas_example_LDFLAGS = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
 	$(top_builddir)/tools/browser/canvas/libcanvas.la \
+	libbrowser.la \
+	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
 	$(top_builddir)/tools/browser/common/libcommon.la
 
 # icons

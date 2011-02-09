@@ -262,6 +262,7 @@ tools/browser/canvas/browser-canvas-fkey.c
 tools/browser/canvas/browser-canvas-print.c
 tools/browser/canvas/browser-canvas-table.c
 tools/browser/canvas/browser-canvas.c
+tools/browser/common/fk-declare.c
 tools/browser/common/gdaui-data-import.c
 tools/browser/common/gdaui-entry-import.c
 tools/browser/common/objects-cloud.c

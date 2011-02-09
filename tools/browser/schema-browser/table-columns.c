@@ -28,10 +28,13 @@
 #include "table-info.h"
 #include "table-columns.h"
 #include <libgda-ui/gdaui-tree-store.h>
+#include "../tools-utils.h"
 #include "../support.h"
 #include "../cc-gray-bar.h"
 #include "mgr-columns.h"
 #include "schema-browser-perspective.h"
+#include "../browser-window.h"
+#include "../common/fk-declare.h"
 
 struct _TableColumnsPrivate {
 	BrowserConnection *bcnc;
@@ -146,7 +149,7 @@ static gboolean key_press_event (GtkWidget *text_view, GdkEventKey *event, Table
 static gboolean event_after (GtkWidget *text_view, GdkEvent *ev, TableColumns *tcolumns);
 static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, TableColumns *tcolumns);
 static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, TableColumns *tcolumns);
-static const gchar *fk_policy_to_string (GdaMetaForeignKeyPolicy policy);
+static GSList *build_reverse_depend_list (GdaMetaStruct *mstruct, GdaMetaTable *mtable);
 
 static void
 meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns)
@@ -209,6 +212,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 				GdaMetaTableForeignKey *fk = GDA_META_TABLE_FOREIGN_KEY (list->data);
 				GdaMetaDbObject *fdbo = fk->depend_on;
 				gint i;
+				gchar *str;
 				
 				if (fdbo->obj_type == GDA_META_DB_UNKNOWN) {
 					GValue *v1, *v2, *v3;
@@ -225,10 +229,16 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 					gda_value_free (v3);
 					continue;
 				}
+				if (GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED (fk))
+					str = g_strdup_printf (_("Declared foreign key '%s' on "),
+							       fk->fk_name);
+				else
+					str = g_strdup_printf (_("Foreign key '%s' on "),
+							       fk->fk_name);
 				gtk_text_buffer_insert_with_tags_by_name (tbuffer,
-									  &current, 
-									  _("Foreign key on "), -1,
+									  &current, str, -1,
 									  "section", NULL);
+				g_free (str);
 				if (fdbo->obj_type == GDA_META_DB_TABLE) {
 					/* insert link to table name */
 					GtkTextTag *tag;
@@ -245,6 +255,20 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 								g_strdup (fdbo->obj_short_name), g_free);
 					gtk_text_buffer_insert_with_tags (tbuffer, &current,
 									  fdbo->obj_short_name, -1, tag, NULL);
+					if (GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED (fk)) {
+						tag = gtk_text_buffer_create_tag (tbuffer, NULL, 
+										  "foreground", "blue", 
+										  "underline",
+										  PANGO_UNDERLINE_SINGLE, 
+										  NULL);
+						g_object_set_data_full (G_OBJECT (tag), "fk_name", 
+									g_strdup (fk->fk_name),
+									g_free);
+						gtk_text_buffer_insert (tbuffer, &current, "\n(", -1);
+						gtk_text_buffer_insert_with_tags (tbuffer, &current,
+										  _("Remove"), -1, tag, NULL);
+						gtk_text_buffer_insert (tbuffer, &current, ")", -1);
+					}					
 				}
 				else
 					gtk_text_buffer_insert_with_tags_by_name (tbuffer,
@@ -297,7 +321,8 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 					gtk_text_buffer_insert (tbuffer, &current, _("Policy on UPDATE"), -1);
 					gtk_text_buffer_insert (tbuffer, &current, ": ", -1);
 					gtk_text_buffer_insert (tbuffer, &current,
-								fk_policy_to_string (policy), -1);
+								tools_utils_fk_policy_to_string (policy),
+								-1);
 				}
 				policy = GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (fk);
 				if (policy != GDA_META_FOREIGN_KEY_UNKNOWN) {
@@ -306,7 +331,8 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 					gtk_text_buffer_insert (tbuffer, &current, _("Policy on DELETE"), -1);
 					gtk_text_buffer_insert (tbuffer, &current, ": ", -1);
 					gtk_text_buffer_insert (tbuffer, &current,
-								fk_policy_to_string (policy), -1);
+								tools_utils_fk_policy_to_string (policy),
+								-1);
 				}
 				
 				gtk_text_buffer_insert (tbuffer, &current, "\n\n", -1);
@@ -362,38 +388,18 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 			}
 
 			/* reverse FK constraints */
-			g_value_set_string ((catalog_v = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
-			model = gda_meta_store_extract (browser_connection_get_meta_store (tcolumns->priv->bcnc),
-							"SELECT c.table_schema, c.table_name, t.table_short_name FROM _referential_constraints c NATURAL JOIN _tables t WHERE ref_table_catalog = ##catalog::string AND ref_table_schema=##schema::string AND ref_table_name=##tname::string", &error,
-							"catalog", catalog_v,
-							"schema", schema_v,
-							"tname", name_v, NULL);
-			if (model) {
-				gint nrows;
-				
-				/*gda_data_model_dump (model, NULL);*/
-				nrows = gda_data_model_get_n_rows (model);
-				if (nrows > 0) {
-					gtk_text_buffer_insert_with_tags_by_name (tbuffer,
-										  &current, 
-										  _("Tables referencing this one"), -1,
-										  "section", NULL);
-					gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
-
-					gint i;
-					const GValue *cvalue[3];
-					for (i = 0; i < nrows; i++) {
-						if (i > 0)
-							gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
-
-						gint j;
-						for (j = 0; j < 3; j++) {
-							cvalue[j] = gda_data_model_get_value_at (model, j, i, NULL);
-							if (! cvalue[j])
-								break;
-						}
-						if (j != 3)
-							break;
+			GSList *rev_list;
+			rev_list = build_reverse_depend_list (mstruct, mtable);
+			if (rev_list) {
+				gtk_text_buffer_insert_with_tags_by_name (tbuffer,
+									  &current, 
+									  _("Tables referencing this one"), -1,
+									  "section", NULL);
+				for (list = rev_list; list; list = list->next) {
+					GdaMetaDbObject *ddbo;
+					ddbo = GDA_META_DB_OBJECT (list->data);
+					if (ddbo->obj_type == GDA_META_DB_TABLE) {
+						gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
 						GtkTextTag *tag;
 						tag = gtk_text_buffer_create_tag (tbuffer, NULL, 
 										  "foreground", "blue", 
@@ -401,16 +407,18 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 										  "underline", PANGO_UNDERLINE_SINGLE, 
 										  NULL);
 						g_object_set_data_full (G_OBJECT (tag), "table_schema", 
-									g_value_dup_string (cvalue[0]), g_free);
+									g_strdup (ddbo->obj_schema), g_free);
 						g_object_set_data_full (G_OBJECT (tag), "table_name", 
-									g_value_dup_string (cvalue[1]), g_free);
+									g_strdup (ddbo->obj_name), g_free);
 						g_object_set_data_full (G_OBJECT (tag), "table_short_name", 
-									g_value_dup_string (cvalue[2]), g_free);
+									g_strdup (ddbo->obj_short_name), g_free);
 						gtk_text_buffer_insert_with_tags (tbuffer, &current,
-										  g_value_get_string (cvalue[2]), -1, tag, NULL);
+										  ddbo->obj_short_name,
+										  -1, tag, NULL);
 					}
 				}
-				g_object_unref (model);
+				g_slist_free (rev_list);
+				gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
 			}
 		}
 
@@ -422,27 +430,22 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 	}
 }
 
-static const gchar *
-fk_policy_to_string (GdaMetaForeignKeyPolicy policy)
+/*
+ * builds a list of #GdaMetaDbObject where dbo->depend_list includes @mtable in @mstruct
+ * Returns: (transfer container): a new list
+ */
+static GSList *
+build_reverse_depend_list (GdaMetaStruct *mstruct, GdaMetaTable *mtable)
 {
-	switch (policy) {
-	default:
-		g_assert_not_reached ();
-	case GDA_META_FOREIGN_KEY_UNKNOWN:
-		return _("Unknown");
-	case GDA_META_FOREIGN_KEY_NONE:
-		return _("not enforced");
-	case GDA_META_FOREIGN_KEY_NO_ACTION:
-		return _("stop with error");
-	case GDA_META_FOREIGN_KEY_RESTRICT:
-		return _("stop with error, not deferrable");
-	case GDA_META_FOREIGN_KEY_CASCADE:
-		return _("cascade changes");
-	case GDA_META_FOREIGN_KEY_SET_NULL:
-		return _("set to NULL");
-	case GDA_META_FOREIGN_KEY_SET_DEFAULT:
-		return _("set to default value");
+	GSList *retlist = NULL;
+	GSList *list, *alldbo;
+	alldbo = gda_meta_struct_get_all_db_objects (mstruct);
+	for (list = alldbo; list; list = list->next) {
+		if (g_slist_find (GDA_META_DB_OBJECT (list->data)->depend_list, mtable))
+			retlist = g_slist_prepend (retlist, list->data);
 	}
+	g_slist_free (alldbo);
+	return retlist;
 }
 
 /**
@@ -640,10 +643,9 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, TableColumns 
 	tags = gtk_text_iter_get_tags (&iter);
 	for (tagp = tags;  tagp != NULL;  tagp = tagp->next) {
 		GtkTextTag *tag = tagp->data;
-		gchar *table_name;
-		
-		table_name = g_object_get_data (G_OBJECT (tag), "table_name");
-		if (table_name) {
+
+		if (g_object_get_data (G_OBJECT (tag), "table_name") ||
+		    g_object_get_data (G_OBJECT (tag), "fk_name")) {
 			hovering = TRUE;
 			break;
 		}
@@ -727,11 +729,13 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 		const gchar *table_name;
 		const gchar *table_schema;
 		const gchar *table_short_name;
+		const gchar *fk_name;
 		SchemaBrowserPerspective *bpers;
 		
 		table_schema = g_object_get_data (G_OBJECT (tag), "table_schema");
 		table_name = g_object_get_data (G_OBJECT (tag), "table_name");
 		table_short_name = g_object_get_data (G_OBJECT (tag), "table_short_name");
+		fk_name = g_object_get_data (G_OBJECT (tag), "fk_name");
 
 		bpers = SCHEMA_BROWSER_PERSPECTIVE (browser_find_parent_widget (GTK_WIDGET (tcolumns),
 									      TYPE_SCHEMA_BROWSER_PERSPECTIVE));
@@ -740,6 +744,61 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 								       table_schema,
 								       table_name,
 								       table_short_name);
+		}
+		else if (fk_name) {
+			GdaMetaStruct *mstruct;
+			GdaMetaDbObject *dbo;
+			GValue *v1, *v2;
+			GtkWidget *parent;
+			table_schema = table_info_get_table_schema (tcolumns->priv->tinfo);
+			table_name = table_info_get_table_name (tcolumns->priv->tinfo);
+			g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), table_schema);
+			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), table_name);
+			mstruct = browser_connection_get_meta_struct (tcolumns->priv->bcnc);
+			dbo = gda_meta_struct_get_db_object (mstruct, NULL, v1, v2);
+			gda_value_free (v1);
+			gda_value_free (v2);
+			parent = gtk_widget_get_toplevel (GTK_WIDGET (tcolumns));
+			if (!dbo || (dbo->obj_type != GDA_META_DB_TABLE)) {
+				browser_show_error ((GtkWindow*) parent,
+						    _("Could not find table '%s.%s'"),
+						    table_schema, table_name);
+			}
+			else {
+				GdaMetaTableForeignKey *fk = NULL;
+				GdaMetaTable *mtable;
+				GSList *list;
+				mtable = GDA_META_TABLE (dbo);
+				for (list = mtable->fk_list; list; list = list->next) {
+					GdaMetaTableForeignKey *tfk;
+					tfk = (GdaMetaTableForeignKey*) list->data;
+					if (tfk->fk_name && !strcmp (tfk->fk_name, fk_name)) {
+						fk = tfk;
+						break;
+					}
+				}
+				if (fk) {
+					GError *error = NULL;
+					if (! fk_declare_undeclare (mstruct,
+								    BROWSER_IS_WINDOW (parent) ? BROWSER_WINDOW (parent) : NULL,
+								    fk, &error)) {
+						browser_show_error ((GtkWindow *) parent, _("Failed to undeclare foreign key: %s"),
+								    error && error->message ? error->message : _("No detail"));
+						g_clear_error (&error);
+					}
+					else if (BROWSER_IS_WINDOW (parent))
+						browser_window_show_notice (BROWSER_WINDOW (parent),
+									    GTK_MESSAGE_INFO, "fkdeclare",
+									    _("Successfully undeclared foreign key"));
+					else
+						browser_show_message ((GtkWindow *) parent, "%s",
+								      _("Successfully undeclared foreign key"));
+				}
+				else
+					browser_show_error ((GtkWindow*) parent,
+							    _("Could not find declared foreign key '%s'"),
+							    fk_name);
+			}
 		}
         }
 

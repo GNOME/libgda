@@ -1,5 +1,5 @@
 /* GDA - Information schema data types extractor
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -76,18 +76,20 @@ main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 		if (!strcmp ((gchar *) node->name, "table")) {
 			xmlChar *prop, *descr;
 			xmlNodePtr child;
+			GString *tmp_out_str;
 
+			tmp_out_str = g_string_new ("");
 			descr = xmlGetProp (node, BAD_CAST "descr");
 			prop = xmlGetProp (node, BAD_CAST "name");
 			if (prop) {
-				g_string_append (out_str, "\n\n");
+				g_string_append (tmp_out_str, "\n\n");
 				if (descr)
-					g_string_append_printf (out_str, "/*\n * TABLE: %s\n *\n * %s\n */\n",
+					g_string_append_printf (tmp_out_str, "/*\n * TABLE: %s\n *\n * %s\n */\n",
 								(gchar*) prop, (gchar *) descr);
 				else
-					g_string_append_printf (out_str, "/*\n * TABLE: %s\n */\n",
+					g_string_append_printf (tmp_out_str, "/*\n * TABLE: %s\n */\n",
 								(gchar*) prop);
-				g_string_append_printf (out_str,
+				g_string_append_printf (tmp_out_str,
 							"static GType _col_types%s[] = {\n", prop);
 				xmlFree (prop);
 			}
@@ -104,21 +106,31 @@ main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 				if (!strcmp ((gchar *) child->name, "column")) {
 					if (firstcol) {
 						firstcol = FALSE;
-						g_string_append (out_str, "  ");
+						g_string_append (tmp_out_str, "  ");
 					}
 					else
-						g_string_append (out_str, ", ");
+						g_string_append (tmp_out_str, ", ");
 
 					prop = xmlGetProp (child, BAD_CAST "type");
 					if (prop) {
 						GType type;
 						type = gda_g_type_from_string ((gchar*) prop);
 						if (type == G_TYPE_STRING)
-							g_string_append (out_str, "G_TYPE_STRING");
+							g_string_append (tmp_out_str, "G_TYPE_STRING");
 						else if (type == G_TYPE_BOOLEAN)
-							g_string_append (out_str, "G_TYPE_BOOLEAN");
+							g_string_append (tmp_out_str, "G_TYPE_BOOLEAN");
 						else if (type == G_TYPE_INT)
-							g_string_append (out_str, "G_TYPE_INT");
+							g_string_append (tmp_out_str, "G_TYPE_INT");
+						else if (type == GDA_TYPE_TIMESTAMP) {
+							xmlChar *tname;
+							tname = xmlGetProp (node, BAD_CAST "name");
+							g_print ("Warning: ignoring table %s because the '%s' type is "
+								 "not constant.\n", (gchar*) tname, (gchar*) prop);
+							xmlFree (tname);
+							g_string_free (tmp_out_str, TRUE);
+							tmp_out_str = NULL;
+							break;
+						}
 						else
 							g_error ("Non handled type "
 								 "%s (interpreted as %s)\n", prop,
@@ -127,20 +139,24 @@ main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 						xmlFree (prop);
 					}
 					else
-						g_string_append (out_str, "G_TYPE_STRING");
+						g_string_append (tmp_out_str, "G_TYPE_STRING");
 
 					prop = xmlGetProp (child, BAD_CAST "name");
 					if (prop) {
-						g_string_append_printf (out_str, "  /* column: %s */\n",
+						g_string_append_printf (tmp_out_str, "  /* column: %s */\n",
 									prop);
 						xmlFree (prop);
 					}
 					else
-						g_string_append (out_str, "\n");
+						g_string_append (tmp_out_str, "\n");
 				}
 			}
-			g_string_append (out_str, ", G_TYPE_NONE /* end of array marker */\n");
-			g_string_append (out_str, "};\n\n");
+			if (tmp_out_str) {
+				g_string_append (tmp_out_str, ", G_TYPE_NONE /* end of array marker */\n");
+				g_string_append (tmp_out_str, "};\n\n");
+				g_string_append (out_str, tmp_out_str->str);
+				g_string_free (tmp_out_str, TRUE);
+			}
 		}
 	}
 	xmlFreeDoc (doc);

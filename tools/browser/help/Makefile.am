@@ -19,13 +19,17 @@ DOC_FIGURES = \
 	figures/trans-begin.png \
 	figures/trans-commit.png \
 	figures/trans-rollback.png \
-	figures/table-insert-data.png
+	figures/table-insert-data.png \
+	figures/declaredfk.png \
+	figures/declaredfk-dialog.png \
+	figures/schema-browser-persp.png
 
 DOC_PAGES = \
 	actions.page \
 	data-manager-perspective.page \
 	data-manager-xml-syntax.page \
 	data-manager-source-editor.page \
+	declaredfk.page \
 	diagram.page \
 	features.page \
 	general-ui.page \

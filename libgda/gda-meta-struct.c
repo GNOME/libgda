@@ -70,9 +70,6 @@ static void gda_meta_table_foreign_key_free (GdaMetaTableForeignKey *tfk);
 static GObjectClass  *parent_class = NULL;
 static GdaAttributesManager *att_mgr;
 
-#define ON_UPDATE_POLICY "upd_policy";
-#define ON_DELETE_POLICY "del_policy";
-
 /* properties */
 enum {
         PROP_0,
@@ -578,6 +575,239 @@ policy_string_to_value (const gchar *string)
 	return GDA_META_FOREIGN_KEY_UNKNOWN;
 }
 
+/*
+ * Find if there is already a declared foreign for @dbo to @ref_dbo using the columns
+ * listed in @columns
+ *
+ * @columns contains 4 columns, with no NULL value, and with nrows>0
+ *  - @dbo's column name (string)
+ *  - @dbo's column name ordinal position (int)
+ *  - @ref_dbo's column name (string)
+ *  - @ref_dbo's column name ordinal position (int)
+ */
+static GdaMetaTableForeignKey *
+find_real_foreign_key (GdaMetaTable *table, GdaMetaDbObject *ref_dbo, GdaDataModel *columns)
+{
+	GSList *list;
+	gint nrows = -1;
+	for (list = table->fk_list; list; list = list->next) {
+		GdaMetaTableForeignKey *fk = (GdaMetaTableForeignKey*) list->data;
+		gint i;
+		gboolean *mapping;
+		if (fk->depend_on != ref_dbo)
+			continue;
+
+		if (nrows == -1)
+			nrows = gda_data_model_get_n_rows (columns);
+
+		if (nrows != fk->cols_nb)
+			continue;
+
+		mapping = g_new0 (gboolean, nrows);
+		for (i = 0; i < nrows; i++) {
+			const GValue *cvalues[4];
+			const gchar *fk_colname, *ref_colname;
+			gint fk_pos, ref_pos;
+			gint j;
+			for (j = 0; j < 4; j++) {
+				cvalues[j] = gda_data_model_get_value_at (columns, j, i, NULL);
+				if (!cvalues[j]) {
+					g_free (mapping);
+					goto out;
+				}
+			}
+			fk_colname = g_value_get_string (cvalues[0]);
+			fk_pos = g_value_get_int (cvalues[1]);
+			ref_colname = g_value_get_string (cvalues[2]);
+			ref_pos = g_value_get_int (cvalues[3]);
+			if (!fk_colname || !*fk_colname ||
+			    !ref_colname || !*ref_colname) {
+				g_free (mapping);
+				goto out;
+			}
+
+			for (j = 0; j < nrows; j++) {
+				if (mapping [j]) /* row already mapped? */
+					continue;
+				if ((fk_pos == fk->fk_cols_array[j]) &&
+				    (ref_pos == fk->ref_pk_cols_array[j]) &&
+				    !strcmp (fk_colname, fk->fk_names_array[j]) &&
+				    !strcmp (ref_colname, fk->ref_pk_names_array[j])) {
+					mapping [j] = TRUE;
+					break;
+				}
+			}
+			if (j == nrows)
+				/* i'th row has not been mapped */
+				break;
+		}
+		g_free (mapping);
+		if (i == nrows)
+			/* all the rows have been mapped */
+			return fk;
+		else
+			continue;
+	}
+ out:
+	return NULL;
+}
+
+static gboolean
+add_declared_foreign_keys (GdaMetaStruct *mstruct, GdaMetaTable *mt, GError **error)
+{
+	const gchar *sql1 = "SELECT DISTINCT constraint_name, ref_table_catalog, ref_table_schema, ref_table_name FROM __declared_fk WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY constraint_name, ref_table_catalog, ref_table_schema, ref_table_name";
+	const gchar *sql2 = "select de.column_name, c.ordinal_position, de.ref_column_name, rc.ordinal_position FROM __declared_fk de LEFT JOIN _columns c ON (de.table_catalog=c.table_catalog AND de.table_schema=c.table_schema AND de.table_name=c.table_name AND de.column_name=c.column_name) LEFT JOIN _columns rc ON (de.ref_table_catalog=rc.table_catalog AND de.ref_table_schema=rc.table_schema AND de.ref_table_name=rc.table_name AND de.ref_column_name=rc.column_name) WHERE de.constraint_name=##cname::string AND de.table_catalog=##tc::string AND de.table_schema=##ts::string AND de.table_name=##tname::string";
+	GdaDataModel *model, *cmodel = NULL;
+	gint i, nrows;
+	GValue *v1, *v2, *v3;
+	GdaMetaDbObject *dbo;
+
+	dbo = (GdaMetaDbObject*) mt;
+	g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
+	g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
+	g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
+	model = gda_meta_store_extract (mstruct->priv->store, sql1, 
+					error, "tc", v1, "ts", v2, "tname", v3, NULL);
+	if (!model) 
+		goto onerror;
+
+	nrows = gda_data_model_get_n_rows (model);
+	for (i = 0; i < nrows; i++) {
+		GdaMetaDbObject *ref_dbo = NULL;
+		GdaMetaTableForeignKey *tfk = NULL;
+		const GValue *fk_catalog, *fk_schema, *fk_tname, *fk_name;
+		gboolean ignore = FALSE;
+
+		fk_name = gda_data_model_get_value_at (model, 0, i, error);
+		if (!fk_name) goto onerror;		
+		fk_catalog = gda_data_model_get_value_at (model, 1, i, error);
+		if (!fk_catalog) goto onerror;
+		fk_schema = gda_data_model_get_value_at (model, 2, i, error);
+		if (!fk_schema) goto onerror;
+		fk_tname = gda_data_model_get_value_at (model, 3, i, error);
+		if (!fk_tname) goto onerror;
+
+		/* get columns */
+		cmodel = gda_meta_store_extract (mstruct->priv->store, sql2, 
+						 error, "tc", v1, "ts", v2, "tname", v3,
+						 "cname", fk_name, NULL);
+		if (!cmodel) 
+			goto onerror;
+
+		/* create new FK structure */
+		tfk = g_new0 (GdaMetaTableForeignKey, 1);
+		tfk->meta_table = dbo;
+		tfk->declared = (gpointer) 0x01;
+		tfk->fk_name = g_value_dup_string (fk_name);
+		tfk->on_update_policy = GINT_TO_POINTER (GDA_META_FOREIGN_KEY_NONE);
+		tfk->on_delete_policy = GINT_TO_POINTER (GDA_META_FOREIGN_KEY_NONE);
+		
+		/* ignore if some columns are not found in the schema
+		 * (maybe wrong or outdated FK decl) */
+		gint j, cnrows;
+		cnrows = gda_data_model_get_n_rows (cmodel);
+		if (cnrows == 0)
+			ignore = TRUE;
+		else {
+			tfk->cols_nb = cnrows;
+			tfk->fk_cols_array = g_new0 (gint, cnrows);
+			tfk->fk_names_array = g_new0 (gchar *, cnrows);
+			tfk->ref_pk_cols_array = g_new0 (gint, cnrows);
+			tfk->ref_pk_names_array = g_new0 (gchar *, cnrows);
+		}
+		for (j = 0; j < cnrows; j++) {
+			const GValue *ov;
+			ov = gda_data_model_get_value_at (cmodel, 0, j, error);
+			if (!ov) goto onerror;
+			if (G_VALUE_TYPE (ov) != G_TYPE_STRING) {
+				ignore = TRUE;
+				break;
+			}
+			tfk->fk_names_array [j] = g_value_dup_string (ov);
+
+			ov = gda_data_model_get_value_at (cmodel, 1, j, error);
+			if (!ov) goto onerror;
+			if (G_VALUE_TYPE (ov) != G_TYPE_INT) {
+				ignore = TRUE;
+				break;
+			}
+			tfk->fk_cols_array [j] = g_value_get_int (ov);
+
+			ov = gda_data_model_get_value_at (cmodel, 2, j, error);
+			if (!ov) goto onerror;
+			if (G_VALUE_TYPE (ov) != G_TYPE_STRING) {
+				ignore = TRUE;
+				break;
+			}
+			tfk->ref_pk_names_array [j] = g_value_dup_string (ov);
+
+			ov = gda_data_model_get_value_at (cmodel, 3, j, error);
+			if (!ov) goto onerror;
+			if (G_VALUE_TYPE (ov) != G_TYPE_INT) {
+				ignore = TRUE;
+				break;
+			}
+			tfk->ref_pk_cols_array [j] = g_value_get_int (ov);
+		}
+
+		/* ignore if there is already an implemented FK */
+		if (! ignore) {
+			ref_dbo = _meta_struct_get_db_object (mstruct, fk_catalog,
+							      fk_schema, fk_tname);
+			if (ref_dbo && find_real_foreign_key (mt, ref_dbo, cmodel))
+				ignore = TRUE;
+		}
+		if (ignore) {
+			/* ignore this FK end move on to the next one */
+			if (tfk)
+				gda_meta_table_foreign_key_free (tfk);
+			continue;
+		}
+
+		tfk->depend_on = ref_dbo;
+		if (!tfk->depend_on) {
+			gchar *str;
+			tfk->depend_on = g_new0 (GdaMetaDbObject, 1);
+			tfk->depend_on->obj_type = GDA_META_DB_UNKNOWN;
+			tfk->depend_on->obj_catalog = g_strdup (g_value_get_string (fk_catalog));
+			tfk->depend_on->obj_schema = g_strdup (g_value_get_string (fk_schema));
+			tfk->depend_on->obj_name = g_strdup (g_value_get_string (fk_tname));
+			mstruct->priv->db_objects = g_slist_append (mstruct->priv->db_objects, tfk->depend_on);
+			str = g_strdup_printf ("%s.%s.%s", g_value_get_string (fk_catalog), 
+					       g_value_get_string (fk_schema), 
+					       g_value_get_string (fk_tname));
+			g_hash_table_insert (mstruct->priv->index, str, tfk->depend_on);
+		}
+		else if (tfk->depend_on->obj_type == GDA_META_DB_TABLE) {
+			GdaMetaTable *dot = GDA_META_TABLE (tfk->depend_on);
+			dot->reverse_fk_list = g_slist_prepend (dot->reverse_fk_list, tfk);
+		}
+
+		dbo->depend_list = g_slist_append (dbo->depend_list, tfk->depend_on);
+		mt->fk_list = g_slist_prepend (mt->fk_list, tfk);
+	}
+	g_object_unref (model);
+	if (cmodel)
+		g_object_unref (cmodel);
+
+	gda_value_free (v1);
+	gda_value_free (v2);
+	gda_value_free (v3);
+
+	return TRUE;
+
+ onerror:
+	if (model)
+		g_object_unref (model);
+	if (cmodel)
+		g_object_unref (cmodel);
+	gda_value_free (v1);
+	gda_value_free (v2);
+	gda_value_free (v3);
+
+	return FALSE;
+}
+
 static GdaMetaDbObject *
 _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			 const GValue *icatalog, const GValue *ischema, const GValue *iname, 
@@ -856,7 +1086,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 
 		/* foreign keys */
 		if (mstruct->priv->features & GDA_META_STRUCT_FEATURE_FOREIGN_KEYS) { 
-			sql = "SELECT ref_table_catalog, ref_table_schema, ref_table_name, constraint_name, ref_constraint_name, update_rule, delete_rule FROM _referential_constraints WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
+			sql = "SELECT ref_table_catalog, ref_table_schema, ref_table_name, constraint_name, ref_constraint_name, update_rule, delete_rule, constraint_name FROM _referential_constraints WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string";
 			model = gda_meta_store_extract (mstruct->priv->store, sql, error, 
 							"tc", icatalog, 
 							"ts", ischema, 
@@ -867,34 +1097,37 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			nrows = gda_data_model_get_n_rows (model);
 			for (i = 0; i < nrows; i++) {
 				GdaMetaTableForeignKey *tfk;
-				const GValue *fk_catalog, *fk_schema, *fk_name;
+				const GValue *fk_catalog, *fk_schema, *fk_tname, *fk_name;
 				const GValue *upd_policy, *del_policy;
 
 				fk_catalog = gda_data_model_get_value_at (model, 0, i, error);
 				if (!fk_catalog) goto onfkerror;
 				fk_schema = gda_data_model_get_value_at (model, 1, i, error);
 				if (!fk_schema) goto onfkerror;
-				fk_name = gda_data_model_get_value_at (model, 2, i, error);
-				if (!fk_name) goto onfkerror;
+				fk_tname = gda_data_model_get_value_at (model, 2, i, error);
+				if (!fk_tname) goto onfkerror;
 				upd_policy = gda_data_model_get_value_at (model, 5, i, error);
 				if (!upd_policy) goto onfkerror;
 				del_policy = gda_data_model_get_value_at (model, 6, i, error);
 				if (!del_policy) goto onfkerror;
+				fk_name = gda_data_model_get_value_at (model, 7, i, error);
+				if (!fk_name) goto onfkerror;
 
 				tfk = g_new0 (GdaMetaTableForeignKey, 1);
 				tfk->meta_table = dbo;
-				tfk->depend_on = _meta_struct_get_db_object (mstruct, fk_catalog, fk_schema, fk_name);
+				tfk->fk_name = g_value_dup_string (fk_name);
+				tfk->depend_on = _meta_struct_get_db_object (mstruct, fk_catalog, fk_schema, fk_tname);
 				if (!tfk->depend_on) {
 					gchar *str;
 					tfk->depend_on = g_new0 (GdaMetaDbObject, 1);
 					tfk->depend_on->obj_type = GDA_META_DB_UNKNOWN;
 					tfk->depend_on->obj_catalog = g_strdup (g_value_get_string (fk_catalog));
 					tfk->depend_on->obj_schema = g_strdup (g_value_get_string (fk_schema));
-					tfk->depend_on->obj_name = g_strdup (g_value_get_string (fk_name));
+					tfk->depend_on->obj_name = g_strdup (g_value_get_string (fk_tname));
 					mstruct->priv->db_objects = g_slist_append (mstruct->priv->db_objects, tfk->depend_on);
 					str = g_strdup_printf ("%s.%s.%s", g_value_get_string (fk_catalog), 
 							       g_value_get_string (fk_schema), 
-							       g_value_get_string (fk_name));
+							       g_value_get_string (fk_tname));
 					g_hash_table_insert (mstruct->priv->index, str, tfk->depend_on);
 				}
 				else if (tfk->depend_on->obj_type == GDA_META_DB_TABLE) {
@@ -903,21 +1136,17 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 				}
 				dbo->depend_list = g_slist_append (dbo->depend_list, tfk->depend_on);
 
-				tfk->on_update_policy = g_new (GdaMetaForeignKeyPolicy, 1);
 				if (G_VALUE_TYPE (upd_policy) == G_TYPE_STRING)
-					*tfk->on_update_policy = policy_string_to_value (g_value_get_string (upd_policy));
+					tfk->on_update_policy = GINT_TO_POINTER (policy_string_to_value (g_value_get_string (upd_policy)));
 				else
-					*tfk->on_update_policy = GDA_META_FOREIGN_KEY_UNKNOWN;
+					tfk->on_update_policy = GINT_TO_POINTER (GDA_META_FOREIGN_KEY_UNKNOWN);
 
-				tfk->on_delete_policy = g_new (GdaMetaForeignKeyPolicy, 1);
 				if (G_VALUE_TYPE (upd_policy) == G_TYPE_STRING)
-					*tfk->on_delete_policy = policy_string_to_value (g_value_get_string (del_policy));
+					tfk->on_delete_policy = GINT_TO_POINTER (policy_string_to_value (g_value_get_string (del_policy)));
 				else
-					*tfk->on_delete_policy = GDA_META_FOREIGN_KEY_UNKNOWN;
+					tfk->on_delete_policy = GINT_TO_POINTER (GDA_META_FOREIGN_KEY_UNKNOWN);
 
-				tfk->defined_in_schema = g_new (gboolean, 1);
-				*tfk->defined_in_schema = TRUE;
-					
+				tfk->declared = NULL;
 
 				/* FIXME: compute @cols_nb, and all the @*_array members (ref_pk_cols_array must be
 				 * initialized with -1 values everywhere */
@@ -939,9 +1168,9 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 				ref_pk_cols = gda_meta_store_extract (mstruct->priv->store, sql, error, 
 								      "tc", fk_catalog,
 								      "ts", fk_schema,
-								      "tname", fk_name,
+								      "tname", fk_tname,
 								      "cname", cvalue, NULL);
-				/*g_print ("tname=%s cvalue=%s\n", gda_value_stringify (fk_name),
+				/*g_print ("tname=%s cvalue=%s\n", gda_value_stringify (fk_tname),
 				  gda_value_stringify (cvalue));*/
 				
 				if (fk_cols && ref_pk_cols) {
@@ -998,7 +1227,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 						     g_value_get_string (iname),
 						     g_value_get_string (fk_catalog), 
 						     g_value_get_string (fk_schema), 
-						     g_value_get_string (fk_name));
+						     g_value_get_string (fk_tname));
 					goto onfkerror;
 				}
 				if (fk_cols)
@@ -1021,6 +1250,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			mt->fk_list = g_slist_reverse (mt->fk_list);
 			g_object_unref (model);
 			/* Note: mt->reverse_fk_list is not determined here */
+
+			add_declared_foreign_keys (mstruct, mt, NULL);
 		}
 		
 		break;
@@ -1891,9 +2122,7 @@ gda_meta_table_foreign_key_free (GdaMetaTableForeignKey *tfk)
 	g_free (tfk->fk_names_array);
 	g_free (tfk->ref_pk_cols_array);
 	g_free (tfk->ref_pk_names_array);
-	g_free (tfk->on_update_policy);
-	g_free (tfk->on_delete_policy);
-	g_free (tfk->defined_in_schema);
+	g_free (tfk->fk_name);
 	g_free (tfk);
 }
 

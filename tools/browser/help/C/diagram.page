@@ -11,7 +11,8 @@
   </p>
   <figure>
     <title>Diagram</title>
-    <desc>Diagram showing some tables and their relations</desc>
+    <desc>Diagram showing some tables and their relations represented by foreign key constraints (also see 
+    <link xref="declared-fk">the declared foreign keys</link>)</desc>
     <media type="image" mime="image/png" src="figures/diagram.png"/>
   </figure>
   <p>
