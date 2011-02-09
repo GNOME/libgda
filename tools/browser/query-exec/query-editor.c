@@ -1,5 +1,5 @@
 /* GNOME DB library
- * Copyright (C) 1999 - 2010 The GNOME Foundation.
+ * Copyright (C) 1999 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -1273,8 +1273,10 @@ query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *
 		query_editor_history_batch_unref (hist_batch);
 
 	/* add timout to 1 sec. */
-	editor->priv->ts_timeout_id  = g_timeout_add_seconds (60,
-							      (GSourceFunc) timestamps_update_cb, editor);
+	if (editor->priv->ts_timeout_id == 0)
+		editor->priv->ts_timeout_id  = g_timeout_add_seconds (60,
+								      (GSourceFunc) timestamps_update_cb,
+								      editor);
 
 	/* remove too old batches */
 	if (g_slist_length (editor->priv->batches_list) > MAX_HISTORY_BATCH_ITEMS) {
