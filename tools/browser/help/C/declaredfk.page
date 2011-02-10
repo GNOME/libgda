@@ -74,7 +74,7 @@
       <link xref="schema-browser-perspective">Schema Browser perspective</link>). 
     </p>
     <p>
-      Another way to remobe a declared foreign key is in a <link xref="diagram">diagram</link> page through
+      Another way to remove a declared foreign key is in a <link xref="diagram">diagram</link> page through
       the contextual menu associated with the dashed line representing the declared foreign key, selecting
       the <guiseq><gui>Remove this declared foreign key</gui></guiseq> option.
     </p>
