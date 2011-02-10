@@ -417,6 +417,23 @@ fk_declare_new (GtkWindow *parent, GdaMetaStruct *mstruct, GdaMetaTable *table)
 	return wid;
 }
 
+static gint
+dbo_sort_func (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
+{
+	const gchar *n1, *n2;
+	g_assert (dbo1);
+	g_assert (dbo2);
+	if (dbo1->obj_name[0] ==  '"')
+		n1 = dbo1->obj_name + 1;
+	else
+		n1 = dbo1->obj_name;
+	if (dbo2->obj_name[0] ==  '"')
+		n2 = dbo2->obj_name + 1;
+	else
+		n2 = dbo2->obj_name;
+	return strcmp (n2, n1);
+}
+
 static GtkTreeModel *
 create_tables_model (GdaMetaStruct *mstruct)
 {
@@ -428,6 +445,7 @@ create_tables_model (GdaMetaStruct *mstruct)
 	schemas = g_hash_table_new_full (g_str_hash, g_str_equal,
 					 NULL, (GDestroyNotify) gtk_tree_row_reference_free);
 	all_dbo = gda_meta_struct_get_all_db_objects (mstruct);
+	all_dbo = g_slist_sort (all_dbo, (GCompareFunc) dbo_sort_func);
 	for (list = all_dbo; list; list = list->next) {
 		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
 		GtkTreeIter iter;
