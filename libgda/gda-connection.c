@@ -6175,7 +6175,7 @@ get_next_word (gchar *str, gboolean for_ident, gchar **out_next)
 		else if (*ptr == '_')
 			continue;
 		else if (for_ident) {
-			if (*ptr == '\'') {
+			if ((*ptr == '"') || (*ptr == '\'') || (*ptr == '`')) {
 				if (inquotes) {
 					*ptr = '"';
 					inquotes = FALSE;
@@ -6189,6 +6189,8 @@ get_next_word (gchar *str, gboolean for_ident, gchar **out_next)
 				continue;
 			}
 		}
+		else if (inquotes)
+			continue;
 		break;
 	}
 	if (ptr != start) {
