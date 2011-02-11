@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
 "POT-Creation-Date: 2011-02-10 19:30+0000\n"
-"PO-Revision-Date: 2011-02-11 08:49+0100\n"
+"PO-Revision-Date: 2011-02-11 19:27+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1856,7 +1856,7 @@ msgstr "Ni mogoče najti predmeta z imenom '%s'"
 
 #: ../libgda/gda-meta-store.c:4415
 #: ../libgda/gda-meta-store.c:4434
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Ni mogoče najti stolpca '%s' v razpredelnici '%s'"
 
@@ -2515,7 +2515,7 @@ msgstr "Ni mogoče najti cilja za povezavo"
 #: ../libgda/gda-tree-mgr-columns.c:304
 #: ../libgda/gda-tree-mgr-schemas.c:257
 #: ../libgda/gda-tree-mgr-tables.c:289
-#, fuzzy, c-format
+#, c-format
 msgid "No connection and no GdaMetaStore specified"
 msgstr "Ni določene povezave in določila GdaMetaStore"
 
@@ -3066,7 +3066,7 @@ msgid "Can't get data model's column type or type for column %d"
 msgstr "Ni mogoče pridobiti vrste stolpca podatkovnega modela ali pa vrste stolpca %d"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:454
-#, fuzzy, c-format
+#, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "Ni mogoče napovedati navidezne razpredelnice (%s)"
 
@@ -3079,19 +3079,16 @@ msgid "Data model representing the table is read only"
 msgstr "Podatkovni model razpredelnice je le za branje"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1037
-#, fuzzy
 msgid "No statement provided to modify the data model representing the table"
 msgstr "Ni določene izjave za spreminjanje podatkovnega modela, ki predstavlja razpredelnico"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1045
-#, fuzzy
 msgid "Invalid statement provided to modify the data model representing the table"
 msgstr "Določena je neveljavna izjava za spreminjanje podatkovnega modela, ki predstavlja razpredelnico"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1065
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1119
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1128
-#, fuzzy
 msgid "Invalid parameter in statement provided to modify the data model representing the table"
 msgstr "Določeno je neveljavno določilo v izjavi za spreminjanje podatkovnega modela, ki predstavlja razpredelnico"
 
@@ -3101,7 +3098,6 @@ msgid "Could not retreive row to delete"
 msgstr "Ni mogoče pridobiti vrstice za brisanje"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1161
-#, fuzzy
 msgid "Failed to execute the statement provided to modify the data model representing the table"
 msgstr "Izvajanje izjave za spreminjanje podatkovnega modela, ki predstavlja razpredelnico, je spodletelo."
 
@@ -3352,12 +3348,12 @@ msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
 msgstr "Ni mogoče najti DocBook XSL slogovne predloge za oblikovane predmete"
 
 #: ../libgda-report/engine/gda-report-engine.c:313
-#, fuzzy, c-format
+#, c-format
 msgid "Object type '%s' cannot be declared in this context"
 msgstr "Predmeta vrste '%s' ni mogoče napovedati na ta način"
 
 #: ../libgda-report/engine/gda-report-engine.c:321
-#, fuzzy, c-format
+#, c-format
 msgid "An object with the '%s' name has already been declared"
 msgstr "Predmet z imenom '%s' je že napovedan"
 
@@ -6885,7 +6881,7 @@ msgstr "Vrata spletnega strežnika (prazno polje določa privzeto vrednost)"
 
 #: ../testing/gda-test-blob.c:78
 #: ../testing/gda-test-connection.c:67
-#, fuzzy, c-format
+#, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN '%s' ni napovedan"
 
@@ -7629,23 +7625,20 @@ msgid "Remove from graph"
 msgstr "Odstrani iz grafa"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:385
-#, fuzzy
 msgid "Add referenced tables to graph"
 msgstr "Dodaj sklicno razpredelnico v graf"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:389
-#, fuzzy
 msgid "Add tables referencing this table to graph"
 msgstr "Dodaj razpredelnice, ki se sklicujejo na to razpredelnico v graf"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:398
-#, fuzzy
 msgid "Declare foreign key for this table"
 msgstr "Napovej tuj ključ za to razpredelnico"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
 #: ../tools/browser/schema-browser/table-info.c:988
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to declare foreign key: %s"
 msgstr "Napoved tujega ključa je spodletela: %s"
 
@@ -7653,7 +7646,6 @@ msgstr "Napoved tujega ključa je spodletela: %s"
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:433
 #: ../tools/browser/schema-browser/table-info.c:995
 #: ../tools/browser/schema-browser/table-info.c:998
-#, fuzzy
 msgid "Successfully declared foreign key"
 msgstr "Uspešno napovedan tuji ključ"
 
@@ -7686,7 +7678,7 @@ msgstr "Pravila ob izvajanju brisanja"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:473
 #: ../tools/browser/schema-browser/table-columns.c:793
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to undeclare foreign key: %s"
 msgstr "Odstranjevanje napovedi tujega ključa je spodletelo: %s"
 
@@ -7694,12 +7686,10 @@ msgstr "Odstranjevanje napovedi tujega ključa je spodletelo: %s"
 #: ../tools/browser/canvas/browser-canvas-fkey.c:483
 #: ../tools/browser/schema-browser/table-columns.c:800
 #: ../tools/browser/schema-browser/table-columns.c:803
-#, fuzzy
 msgid "Successfully undeclared foreign key"
 msgstr "Uspešno odstranjena napoved tujega ključa"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:495
-#, fuzzy
 msgid "Remove this declared foreign key"
 msgstr "Odstrani napovedan tuj ključ"
 
@@ -7778,12 +7768,11 @@ msgstr "Ni mogoče ustvariti PNG datoteke"
 
 #: ../tools/browser/common/fk-declare.c:190
 #: ../tools/browser/common/fk-declare.c:403
-#, fuzzy, c-format
+#, c-format
 msgid "Declare a foreign key for table '%s'"
 msgstr "Napovej tuj ključ za razpredelnico '%s'"
 
 #: ../tools/browser/common/fk-declare.c:193
-#, fuzzy
 msgid "define which table is references, which columns are part of the foreign key, and which column each one references"
 msgstr "določi katera razpredelnica je sklicna, kateri stolpci so del tujega ključa in kateri stolpci jih določajo"
 
@@ -7801,12 +7790,12 @@ msgid "Referenced column"
 msgstr "Sklicni stolpec"
 
 #: ../tools/browser/common/fk-declare.c:566
-#, fuzzy, c-format
+#, c-format
 msgid "Missing information to declare foreign key"
 msgstr "Manjkajo podatki za napoved tujega ključa"
 
 #: ../tools/browser/common/fk-declare.c:648
-#, fuzzy, c-format
+#, c-format
 msgid "Missing information to undeclare foreign key"
 msgstr "Manjkajo podatki za odstranjevanje napovedi tujega ključa"
 
@@ -8726,12 +8715,12 @@ msgid "Could not load diagram"
 msgstr "Ni mogoče naložiti diagrama"
 
 #: ../tools/browser/schema-browser/table-columns.c:233
-#, fuzzy, c-format
+#, c-format
 msgid "Declared foreign key '%s' on "
 msgstr "Napovedan tuj ključ  '%s' na"
 
 #: ../tools/browser/schema-browser/table-columns.c:236
-#, fuzzy, c-format
+#, c-format
 msgid "Foreign key '%s' on "
 msgstr "Tuj ključ  '%s' na"
 
@@ -8767,12 +8756,12 @@ msgid "Constraints and integrity rules"
 msgstr "Omejitve in celostna pravila"
 
 #: ../tools/browser/schema-browser/table-columns.c:772
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find table '%s.%s'"
 msgstr "Ni mogoče najti razpredelnice '%s.%s'"
 
 #: ../tools/browser/schema-browser/table-columns.c:807
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find declared foreign key '%s'"
 msgstr "Ni mogoče najti napovedanega tujega ključa  '%s'"
 
@@ -8863,7 +8852,6 @@ msgid "_Declare foreign key"
 msgstr "_Napovej tuj ključ"
 
 #: ../tools/browser/schema-browser/table-info.c:1012
-#, fuzzy
 msgid "Declare a foreign key for table"
 msgstr "Napovej tuj ključ za razpredelnico"
 
@@ -9271,22 +9259,20 @@ msgid "Force reading the database meta data (or part of the meta data, ex:\"tabl
 msgstr "Vsili branje metapodatkov podatkovne zbirke (ali njihov del, npr:\"tables\")"
 
 #: ../tools/gda-sql.c:2027
-#, fuzzy, c-format
+#, c-format
 msgid "%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"
 msgstr "%s <ime-tujega-ključa> <razpredelnicaA>(<stolpecA>,...) <razpredelnicaB>(<stolpecB>,...)"
 
 #: ../tools/gda-sql.c:2028
-#, fuzzy
 msgid "Declare a new foreign key (not actually in database): tableA references tableB"
 msgstr "Napovej nov tuj ključ (izven podatkovne zbirke): razpredelnicaA se sklicuje na razpredelnicoB"
 
 #: ../tools/gda-sql.c:2039
-#, fuzzy, c-format
+#, c-format
 msgid "%s <fkname> <tableA> <tableB>"
 msgstr "%s <fkname> <tableA> <tableB>"
 
 #: ../tools/gda-sql.c:2040
-#, fuzzy
 msgid "Un-declare a foreign key (not actually in database)"
 msgstr "Odstrani napoved tujega ključa (izven podatkovne zbirke): "
 
@@ -9733,23 +9719,23 @@ msgid "List of defined parameters"
 msgstr "Seznam določenih parametrov"
 
 #: ../tools/gda-sql.c:4039
-#, fuzzy, c-format
+#, c-format
 msgid "Missing foreign key declaration specification"
 msgstr "Manjka določilo napovedi tujega ključa"
 
 #: ../tools/gda-sql.c:4156
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed foreign key declaration specification"
 msgstr "Nepravilno oblikovano določilo napovedi tujega ključa"
 
 #: ../tools/gda-sql.c:4188
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed table name specification '%s'"
 msgstr "Nepravilno oblikovano določilo imena razpredelnice '%s'"
 
 #: ../tools/gda-sql.c:4276
 #: ../tools/gda-sql.c:4350
-#, fuzzy, c-format
+#, c-format
 msgid "Missing foreign key name argument"
 msgstr "Manjka argument tujega ključa"
 
@@ -9971,99 +9957,68 @@ msgstr "Sprožilniki"
 
 #~ msgid "Unknown internal schema's version: '%s'"
 #~ msgstr "Neznana različica sheme: '%s'"
-
 #~ msgid "In schema %s"
 #~ msgstr "V shemi %s"
-
 #~ msgid "Could not find any provider named '%s'"
 #~ msgstr "Ni mogoče najti ponudnika z imenom '%s'"
-
 #~ msgid "Error: no detail"
 #~ msgstr "Napaka: ni podrobnosti"
-
 #~ msgid "Parameter '%s' does not correspond to a table's column"
 #~ msgstr "Parameter '%s' ni v skladu s stolpcem razpredelnice"
-
 #~ msgid "Add data source"
 #~ msgstr "Dodaj podatkovni vir"
-
 #~ msgid "Cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
-
 #~ msgid "The cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
-
 #~ msgid "Cgrid gtype"
 #~ msgstr "Cgrid gtype"
-
 #~ msgid "The cgrid gtype"
 #~ msgstr "Vrsta grid gtype"
-
 #~ msgid "Cgrid options"
 #~ msgstr "Možnosti Cgrid"
-
 #~ msgid "The cgrid options"
 #~ msgstr "možnosti cgrid"
-
 #~ msgid "Cgrid is editable"
 #~ msgstr "Cgrid je mogoče urejati"
-
 #~ msgid "Cgrid editable"
 #~ msgstr "Uredljiv Cgrid"
-
 #~ msgid "Cgrid is to be deleted"
 #~ msgstr "Cgrid bo izbrisan"
-
 #~ msgid "Cgrid to be deleted"
 #~ msgstr "Cgrid pripravljen za brisanje"
-
 #~ msgid "Cgrid value"
 #~ msgstr "Vrednost Cgrid"
-
 #~ msgid "Cgrid value attributes"
 #~ msgstr "Atributi vrednosti Cgrid"
-
 #~ msgid "Cgrid text column"
 #~ msgstr "Cgrid stolpec besedila"
-
 #~ msgid "A column in the data source model to get the string from."
 #~ msgstr "Stolpec podatkovnega vira, iz katerega naj bodo pridobljeni nizi"
-
 #~ msgid "Cgrid grid height"
 #~ msgstr "Višina Cgrid mreže"
-
 #~ msgid "Cgrid height's."
 #~ msgstr "Cgrid višina"
-
 #~ msgid "Cgrid has its headers visible"
 #~ msgstr "Cgrid ima glave vidne"
-
 #~ msgid "Cgrid headers visible"
 #~ msgstr "Vidne glave Cgrid"
-
 #~ msgid "Unsaved diagram"
 #~ msgstr "Neshranjen diagram"
-
 #~ msgid "_Favorite"
 #~ msgstr "_Priljubljeno"
-
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
-
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
-
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
-
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
-
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokumenta ni mogoče uspešno razčleniti\n"
-
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
-
 #~ msgid "Tables:"
 #~ msgstr "Razpredelnice:"
+
