@@ -88,7 +88,22 @@ find_sqlite_library (const gchar *name_part)
 	GModule *handle;
 	const gchar *env;
 
-	/* first try by 'normal' shared library finding */
+	/* first use the compile time SEARCH_LIB_PATH */
+	if (SEARCH_LIB_PATH) {
+		gchar **array;
+		gint i;
+		array = g_strsplit (SEARCH_LIB_PATH, ":", 0);
+		for (i = 0; array[i]; i++) {
+			handle = find_sqlite_in_dir (array [i], name_part);
+			if (handle)
+				break;
+		}
+		g_strfreev (array);
+		if (handle)
+			return handle;
+	}
+
+	/* then try by 'normal' shared library finding */
 	handle = g_module_open (name_part, G_MODULE_BIND_LAZY | G_MODULE_BIND_LOCAL);
 	if (handle) {
 		gpointer func;
@@ -103,27 +118,12 @@ find_sqlite_library (const gchar *name_part)
 		handle = NULL;
 	}
 
-	/* first, use LD_LIBRARY_PATH */
+	/* lastly, use LD_LIBRARY_PATH */
 	env = g_getenv ("LD_LIBRARY_PATH");
 	if (env) {
 		gchar **array;
 		gint i;
 		array = g_strsplit (env, ":", 0);
-		for (i = 0; array[i]; i++) {
-			handle = find_sqlite_in_dir (array [i], name_part);
-			if (handle)
-				break;
-		}
-		g_strfreev (array);
-		if (handle)
-			return handle;
-	}
-
-	/* then use the compile time SEARCH_LIB_PATH */
-	if (SEARCH_LIB_PATH) {
-		gchar **array;
-		gint i;
-		array = g_strsplit (SEARCH_LIB_PATH, ":", 0);
 		for (i = 0; array[i]; i++) {
 			handle = find_sqlite_in_dir (array [i], name_part);
 			if (handle)
