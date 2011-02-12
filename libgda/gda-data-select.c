@@ -279,7 +279,7 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 	g_object_class_install_property (object_class, PROP_RESET_WITH_EXT_PARAM,
 					 g_param_spec_boolean ("auto-reset", "Automatically reset itself",
 							       "Automatically re-run the SELECT statement if any parameter "
-							       "has chanegd since it was first executed", FALSE,
+							       "has changed since it was first executed", FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/* virtual functions */
