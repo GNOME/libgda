@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-01-22 09:35+0000\n"
-"PO-Revision-Date: 2011-01-26 09:41+0100\n"
+"POT-Creation-Date: 2011-02-09 20:02+0000\n"
+"PO-Revision-Date: 2011-02-10 16:05+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: C/variables.page:5(title) C/table-insert-data.page:5(title)
 #: C/transactions.page:5(title) C/schema-browser-perspective.page:5(title)
 #: C/query-execution-perspective.page:5(title) C/general-ui.page:5(title)
-#: C/features.page:5(title) C/diagram.page:5(title)
+#: C/features.page:5(title) C/diagram.page:5(title) C/declaredfk.page:5(title)
 #: C/data-manager-source-editor.page:5(title)
 #: C/data-manager-xml-syntax.page:5(title)
 #: C/data-manager-perspective.page:5(title) C/actions.page:5(title)
@@ -52,7 +52,7 @@ msgstr ""
 "Las variables se pueden usar en cualquier código SQL, y se definen usando la "
 "siguiente sintaxis:"
 
-#: C/variables.page:21(p)
+#: C/variables.page:21(p) C/declaredfk.page:27(p)
 msgid "Notes:"
 msgstr "Notas:"
 
@@ -292,8 +292,23 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/schema-browser-perspective.page:21(None) C/general-ui.page:18(None)
-msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
-msgstr "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
+#| msgid ""
+#| "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
+msgid "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
+msgstr "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/schema-browser-perspective.page:47(None)
+#| msgid ""
+#| "@@image: 'figures/data-man-persp.png'; "
+#| "md5=b4e0678527c03093031dcb3805bb2841"
+msgid ""
+"@@image: 'figures/schema-browser-persp.png'; "
+"md5=991ae01b9fb6b17c0b93ee4873b9b985"
+msgstr ""
+"@@image: 'figures/schema-browser-persp.png'; "
+"md5=991ae01b9fb6b17c0b93ee4873b9b985"
 
 #: C/schema-browser-perspective.page:8(title)
 msgid "The schema browser perspective"
@@ -374,6 +389,20 @@ msgstr ""
 "cero o más <link xref=\"diagram\">diagramas</link> en los que se puede "
 "representar cualquier número de tablas, y donde están enlazadas usando sus "
 "relaciones (como restricciones de clave externa)"
+
+#: C/schema-browser-perspective.page:44(title)
+msgid "Tab showing information about a table"
+msgstr "Solapa que muestra información sobre una tabla"
+
+#: C/schema-browser-perspective.page:45(desc)
+msgid ""
+"Example of information displayed for each table, note the difference between "
+"foreign keys implemented in the database and <link xref=\"declared-fk"
+"\">declared foreign keys</link>"
+msgstr ""
+"Ejemplo de información mostrada para cada tabla. Tenga en cuenta la "
+"diferencia entre las claves externas implementadas en la base de datos y las "
+"<link xref=\"declared-fk\">claves externas declaradas</link>"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -826,7 +855,7 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/diagram.page:15(None)
+#: C/diagram.page:16(None)
 msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
 msgstr "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
 
@@ -848,10 +877,16 @@ msgid "Diagram"
 msgstr "Diagrama"
 
 #: C/diagram.page:14(desc)
-msgid "Diagram showing some tables and their relations"
-msgstr "Diagrama que muestra algunas tablas y sus relaciones"
+msgid ""
+"Diagram showing some tables and their relations represented by foreign key "
+"constraints (also see <link xref=\"declared-fk\">the declared foreign keys</"
+"link>)"
+msgstr ""
+"Diagrama que muestra algunas tablas y sus relaciones representadas por "
+"restricciones de clave externa (vea también la <link xref=\"declared-fk"
+"\">las claves externas declaradas</link>)"
 
-#: C/diagram.page:17(p)
+#: C/diagram.page:18(p)
 msgid ""
 "The items can be moved around on the canvas (note that as long as the whole "
 "diagram fits in the canvas, it remains centered on it). Other manipulations "
@@ -861,7 +896,7 @@ msgstr ""
 "mientras el diagrama completo cabe en la ventana, se mantiene centrado en "
 "él). Son posibles otras manipulaciones:"
 
-#: C/diagram.page:22(p)
+#: C/diagram.page:23(p)
 msgid ""
 "zooming in and out using the mouse's wheel, or through the contextual menu "
 "(right click on the canvas); a zoom to fit the canvas is also available in "
@@ -871,7 +906,7 @@ msgstr ""
 "(pulse con el botón derecho sobre el canvas); también está disponible una "
 "ampliación hasta ajustar a la ventana en el menú contextual"
 
-#: C/diagram.page:24(p)
+#: C/diagram.page:25(p)
 msgid ""
 "bring closer or moving away items from one another using the mouse's wheel "
 "while holding the <key>Shift</key> key"
@@ -879,25 +914,183 @@ msgstr ""
 "acerque o aleje los elementos entre sí usando la rueda del ratón mientras se "
 "mantiene pulsada la tecla <key> Mayús </ clave>"
 
-#: C/diagram.page:26(p)
+#: C/diagram.page:27(p)
 msgid "arranging items linearly or radially, through the contextual menu"
 msgstr "alinear elementos lineal o radialmente, a través del menú contextual"
 
-#: C/diagram.page:27(p)
+#: C/diagram.page:28(p)
 msgid "printing, through the contextual menu"
 msgstr "imprimir, a través del menú contextual"
 
-#: C/diagram.page:28(p)
+#: C/diagram.page:29(p)
 msgid "exporting as PNG or SVG images, through the contextual menu"
 msgstr "exportar como imágenes PNG o SVG, a través del menú contextual"
 
-#: C/diagram.page:29(p)
+#: C/diagram.page:30(p)
 msgid "adding items, through the contextual menu"
 msgstr "añadir elementos, a través del menú contextual"
 
-#: C/diagram.page:30(p)
+#: C/diagram.page:31(p)
 msgid "removing items, through the items's contextual menu"
 msgstr "quitar elementos, a través del menú contextual del elemento"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/declaredfk.page:25(None)
+#| msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
+msgid "@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
+msgstr ""
+"@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/declaredfk.page:65(None)
+#| msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
+msgid ""
+"@@image: 'figures/declaredfk-dialog.png'; "
+"md5=56aba297f8b88248fabc23c54b361a8f"
+msgstr ""
+"@@image: 'figures/declaredfk-dialog.png'; "
+"md5=56aba297f8b88248fabc23c54b361a8f"
+
+#: C/declaredfk.page:8(title)
+msgid "Declared foreign keys"
+msgstr "Claves externas declaradas"
+
+#: C/declaredfk.page:9(p)
+msgid ""
+"All the foreign key constraints (where the contents of one or more columns "
+"in a table is constrained to be among the values of one or more columns of "
+"another table) are analysed and reported in the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link>. Foreign key constraints "
+"help understand the database schema and is automatically used where "
+"appropriate by the application."
+msgstr ""
+
+#: C/declaredfk.page:16(p)
+msgid ""
+"However sometimes the designer of a database has forgotten or did not whish "
+"to use foreign key constraints, and so it is possible to \"declare foreign "
+"keys\" which are only declaration to the tool and not actually defined in "
+"the database."
+msgstr ""
+
+#: C/declaredfk.page:22(title)
+msgid "Declared foreign keys in diagrams"
+msgstr "Claves externas declaradas en diagramas"
+
+#: C/declaredfk.page:23(desc)
+msgid ""
+"When displayed in diagrams, declared foreign keys are represented using a "
+"dashed line instead of a solid line for actual foreign keys"
+msgstr ""
+
+#: C/declaredfk.page:31(p)
+msgid ""
+"the (foreign key name, table, referenced table) triplet uniquely identifies "
+"a declared foreign key and thus declaring a new foreign key with the same "
+"triplet will remove any previously declared one."
+msgstr ""
+"la tripla (nombre de clave externa, tabla, tabla referenciada) identifica de "
+"manera única una clave externa declarada y, por lo tanto, declarar una clave "
+"externa nueva con la misma tripleta quitará cualquiera que se haya declarado "
+"anteriormente."
+
+#: C/declaredfk.page:34(p)
+msgid ""
+"If the same constraint is actually represented by a real foreign key and "
+"also by a declared foreign key, then the real foreign key definition will "
+"mask the declared one"
+msgstr ""
+
+#: C/declaredfk.page:37(p)
+msgid ""
+"Declared foreign key don't have any policy to determine what action to "
+"perform on UPDATE or DELETE situations, so the reported policy will always "
+"be \"not enforced\""
+msgstr ""
+"La clave externa declarada no tiene ninguna política para determinar qué "
+"acción realizar en casos de UPDATE o DELETE, por lo que la política indicada "
+"será siempre «no forzado»"
+
+#: C/declaredfk.page:42(title)
+msgid "Declaring a new foreign key"
+msgstr "Declarar una clave externa nueva"
+
+#: C/declaredfk.page:43(p)
+#| msgid ""
+#| "From the <link xref=\"schema-browser-perspective\">schema browser "
+#| "perspective</link>, when a table's properties is displayed in a tab, use "
+#| "the <guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu to have "
+#| "a popup appear containing a data entry for each column of the table to "
+#| "insert data into."
+msgid ""
+"A new foreign key can be declared from the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link> using the "
+"<guiseq><gui>Table</gui><gui>Declare foreign key</gui></guiseq> menu which "
+"is present when a table's properties are shown in the current tab."
+msgstr ""
+"Se puede declarar una clave externa nueva desde la <link xref=\"schema-"
+"browser-perspective\">perspectiva del visor de esquemas</link>, usando el "
+"menú <guiseq><gui>Tabla</gui><gui>Declarar clave externa</gui></guiseq>, que "
+"está presente cuando se muestran las propiedades de una tabla en la solapa "
+"actual."
+
+#: C/declaredfk.page:49(p)
+msgid ""
+"Another way of declaring a foreign key is using the contextual menu on a "
+"table in a diagram, and selecting the <guiseq><gui>Declare foreign key for "
+"this table</gui></guiseq> option."
+msgstr ""
+
+#: C/declaredfk.page:53(p)
+msgid ""
+"In any way, to declare a new foreign key, the following information must be "
+"provided:"
+msgstr ""
+
+#: C/declaredfk.page:57(p)
+msgid "A foreign key name"
+msgstr "El nombre de una clave externa"
+
+#: C/declaredfk.page:58(p)
+msgid "The referenced table"
+msgstr "La tabla referenciada"
+
+#: C/declaredfk.page:59(p)
+msgid ""
+"Columns and referenced columns for each column involved in the foreign key"
+msgstr ""
+
+#: C/declaredfk.page:62(title)
+msgid "Information to declare a new foreign key"
+msgstr "Información para declarar una clave externa nueva"
+
+#: C/declaredfk.page:63(desc)
+msgid ""
+"UI dialog poping up to declare a new foreign key. Here the referenced table "
+"is 'warehouses', and the involved columns are 'country' and 'city'."
+msgstr ""
+
+#: C/declaredfk.page:70(title)
+msgid "Remove a declared foreign key"
+msgstr "Quitar una clave externa declarada"
+
+#: C/declaredfk.page:71(p)
+msgid ""
+"A declared foreign key can be removed by clicking on the <guiseq><gui>"
+"(Remove)</gui></guiseq> link displayed below each declared foreign key "
+"properties in the table's properties (in the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link>)."
+msgstr ""
+
+#: C/declaredfk.page:76(p)
+msgid ""
+"Another way to remobe a declared foreign key is in a <link xref=\"diagram"
+"\">diagram</link> page through the contextual menu associated with the "
+"dashed line representing the declared foreign key, selecting the "
+"<guiseq><gui>Remove this declared foreign key</gui></guiseq> option."
+msgstr ""
 
 #: C/data-manager-source-editor.page:7(title)
 msgid "The data manager's data sources editor"
@@ -1586,3 +1779,10 @@ msgid "translator-credits"
 msgstr ""
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2010\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2010"
+
+#~ msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
+#~ msgstr ""
+#~ "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
+
+#~ msgid "Diagram showing some tables and their relations"
+#~ msgstr "Diagrama que muestra algunas tablas y sus relaciones"
