@@ -308,14 +308,14 @@ cloud_object_selected_cb (G_GNUC_UNUSED ObjectsCloud *ocloud, G_GNUC_UNUSED Obje
 		
 		x = BROWSER_CANVAS (dbrel)->xmouse;
 		y = BROWSER_CANVAS (dbrel)->ymouse;
-		//goo_canvas_convert_from_pixels (BROWSER_CANVAS (dbrel)->priv->goocanvas, &x, &y);
+
 		ctable = browser_canvas_db_relations_add_table (dbrel, NULL, table_schema, table_name);
 		goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ctable), &bounds);
 		browser_canvas_item_translate (BROWSER_CANVAS_ITEM (ctable),
 					       x - bounds.x1, y - bounds.y1);
 	}
-	else
-		g_print ("Unknown...\n");
+	gda_value_free (table_schema);
+	gda_value_free (table_name);
 }
 
 /**
@@ -615,24 +615,204 @@ get_layout_items (BrowserCanvas *canvas)
 
 	return g_slist_reverse (items);
 }
-
+static gint dbo_sort_func (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2);
 static void popup_add_table_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *canvas);
+static void table_menu_item_activated_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrel);
+static void popup_add_all_tables_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrel);
 static GtkWidget *
 build_context_menu (BrowserCanvas *canvas)
 {
-	GtkWidget *menu, *submitem;
+	GtkWidget *menu, *submitem, *submenu, *mitem;
 	BrowserCanvasDbRelations *dbrel = BROWSER_CANVAS_DB_RELATIONS (canvas);
+	GSList *list, *all_dbo;
 
 	if (!dbrel->priv->mstruct)
 		return NULL;
 
 	menu = gtk_menu_new ();
-	submitem = gtk_menu_item_new_with_label (_("Add table"));
+	/* entry to display a window with tables in it */
+	submitem = gtk_menu_item_new_with_label (_("Add tables"));
 	gtk_widget_show (submitem);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), submitem);
 	g_signal_connect (G_OBJECT (submitem), "activate", G_CALLBACK (popup_add_table_cb), canvas);
 
+	/* entry to display sub menus */
+	submitem = gtk_menu_item_new_with_label (_("Add one table"));
+	gtk_widget_show (submitem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), submitem);
+	submenu = gtk_menu_new ();
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (submitem), submenu);
+
+	/* build sub menu */
+	GHashTable *schemas = NULL; /* key = schema name, value = a #GtkMenu as parent */
+	GSList *added_schemas = NULL;
+	schemas = g_hash_table_new (g_str_hash, g_str_equal);
+	all_dbo = gda_meta_struct_get_all_db_objects (dbrel->priv->mstruct);
+	all_dbo = g_slist_sort (all_dbo, (GCompareFunc) dbo_sort_func);
+
+	for (list = all_dbo; list; list = list->next) {
+		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
+		GtkWidget *img;
+		if (dbo->obj_type != GDA_META_DB_TABLE)
+			continue;
+		if (g_hash_table_lookup (dbrel->priv->hash_tables, dbo))
+			/* table already present on canvas */
+			continue;
+		
+		if (strcmp (dbo->obj_short_name, dbo->obj_full_name)) {
+			mitem = gtk_image_menu_item_new_with_label (dbo->obj_short_name);
+			img = gtk_image_new_from_pixbuf (browser_get_pixbuf_icon (BROWSER_ICON_TABLE));
+			gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), img);
+			g_object_set_data (G_OBJECT (mitem), "dbtable", GDA_META_TABLE (dbo));
+			gtk_menu_shell_prepend (GTK_MENU_SHELL (submenu), mitem);
+			g_signal_connect (mitem, "activate",
+					  G_CALLBACK (table_menu_item_activated_cb), dbrel);
+		}
+
+		GtkWidget *schema_menu;
+		schema_menu = g_hash_table_lookup (schemas, dbo->obj_schema);
+		if (!schema_menu) {
+			mitem = gtk_image_menu_item_new_with_label (dbo->obj_schema);
+			img = gtk_image_new_from_pixbuf (browser_get_pixbuf_icon (BROWSER_ICON_SCHEMA));
+			gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), img);
+			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
+
+			schema_menu = gtk_menu_new ();
+			g_object_set_data (G_OBJECT (schema_menu), "dbo", dbo);
+			gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), schema_menu);
+			g_hash_table_insert (schemas, dbo->obj_schema, schema_menu);
+			added_schemas = g_slist_prepend (added_schemas, schema_menu);
+		}
+		
+		mitem = gtk_image_menu_item_new_with_label (dbo->obj_short_name);
+		img = gtk_image_new_from_pixbuf (browser_get_pixbuf_icon (BROWSER_ICON_TABLE));
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), img);
+		g_object_set_data (G_OBJECT (mitem), "dbtable", GDA_META_TABLE (dbo));
+		gtk_menu_shell_prepend (GTK_MENU_SHELL (schema_menu), mitem);
+		g_signal_connect (mitem, "activate",
+				  G_CALLBACK (table_menu_item_activated_cb), dbrel);
+	}
+	g_slist_free (all_dbo);
+	g_hash_table_destroy (schemas);
+
+	/* entry to add ALL tables */
+	mitem = gtk_separator_menu_item_new ();
+	gtk_widget_show (mitem);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (submenu), mitem);
+
+	mitem = gtk_menu_item_new_with_label (_("Add all tables"));
+	gtk_widget_show (mitem);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (submenu), mitem);
+	g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_add_all_tables_cb), dbrel);
+
+	/* entry below each schema sub menu to add all tables in schema */
+	for (list = added_schemas; list; list = list->next) {
+		GdaMetaDbObject *dbo;
+		dbo = g_object_get_data (G_OBJECT (list->data), "dbo");
+		g_assert (dbo);
+
+		mitem = gtk_separator_menu_item_new ();
+		gtk_widget_show (mitem);
+		gtk_menu_shell_prepend (GTK_MENU_SHELL (list->data), mitem);
+
+		mitem = gtk_menu_item_new_with_label (_("Add all tables in schema"));
+		gtk_widget_show (mitem);
+		gtk_menu_shell_prepend (GTK_MENU_SHELL (list->data), mitem);
+		g_object_set_data_full (G_OBJECT (mitem), "schema", g_strdup (dbo->obj_schema),
+					g_free);
+		g_signal_connect (G_OBJECT (mitem), "activate",
+				  G_CALLBACK (popup_add_all_tables_cb), dbrel);
+	}
+	g_slist_free (added_schemas);
+
+	gtk_widget_show_all (submenu);
+
 	return menu;
+}
+
+static gint
+dbo_sort_func (GdaMetaDbObject *dbo1, GdaMetaDbObject *dbo2)
+{
+	const gchar *n1, *n2;
+	g_assert (dbo1);
+	g_assert (dbo2);
+	if (dbo1->obj_name[0] ==  '"')
+		n1 = dbo1->obj_name + 1;
+	else
+		n1 = dbo1->obj_name;
+	if (dbo2->obj_name[0] ==  '"')
+		n2 = dbo2->obj_name + 1;
+	else
+		n2 = dbo2->obj_name;
+	return strcmp (n2, n1);
+}
+
+static void
+popup_add_all_tables_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrel)
+{
+	GSList *all_dbo, *list;
+	const gchar *schema;
+	schema = g_object_get_data (G_OBJECT (mitem), "schema");
+	all_dbo = gda_meta_struct_get_all_db_objects (dbrel->priv->mstruct);
+	for (list = all_dbo; list; list = list->next) {
+		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
+		if (dbo->obj_type != GDA_META_DB_TABLE)
+			continue;
+		if (g_hash_table_lookup (dbrel->priv->hash_tables, dbo))
+			/* table already present on canvas */
+			continue;
+		if (schema && strcmp (schema, dbo->obj_schema))
+			continue;
+		
+		GValue *table_schema;
+		GValue *table_name;
+		BrowserCanvasTable *ctable;
+		GooCanvasBounds bounds;
+		gdouble x, y;
+		g_value_set_string ((table_schema = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
+		g_value_set_string ((table_name = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
+		
+		x = BROWSER_CANVAS (dbrel)->xmouse;
+		y = BROWSER_CANVAS (dbrel)->ymouse;
+		
+		ctable = browser_canvas_db_relations_add_table (dbrel, NULL, table_schema, table_name);
+		goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ctable), &bounds);
+		browser_canvas_item_translate (BROWSER_CANVAS_ITEM (ctable),
+					       x - bounds.x1, y - bounds.y1);
+		gda_value_free (table_schema);
+		gda_value_free (table_name);
+	}
+	g_slist_free (all_dbo);
+}
+
+static void
+table_menu_item_activated_cb (GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrel)
+{
+	GValue *table_schema;
+	GValue *table_name;
+	GdaMetaTable *mtable;
+	GdaMetaDbObject *dbo;
+	BrowserCanvasTable *ctable;
+	GooCanvasBounds bounds;
+	gdouble x, y;
+
+	mtable = g_object_get_data (G_OBJECT (mitem), "dbtable");
+	if (! mtable)
+		return;
+	
+	dbo = GDA_META_DB_OBJECT (mtable);
+	g_value_set_string ((table_schema = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
+	g_value_set_string ((table_name = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
+
+	x = BROWSER_CANVAS (dbrel)->xmouse;
+	y = BROWSER_CANVAS (dbrel)->ymouse;
+
+	ctable = browser_canvas_db_relations_add_table (dbrel, NULL, table_schema, table_name);
+	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (ctable), &bounds);
+	browser_canvas_item_translate (BROWSER_CANVAS_ITEM (ctable),
+				       x - bounds.x1, y - bounds.y1);
+	gda_value_free (table_schema);
+	gda_value_free (table_name);
 }
 
 static gboolean
