@@ -215,7 +215,7 @@ introspection_sources = \
 	$(ui_sources) \
 	$(ui_data_entries_sources)
 
-Gdaui-4_0.gir: $(lib_LTLIBRARIES)
+Gdaui-4.0.gir: $(lib_LTLIBRARIES)
 Gdaui_4_0_gir_INCLUDES = Gtk-2.0 Gda-4.0
 Gdaui_4_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
 Gdaui_4_0_gir_LIBS = $(lib_LTLIBRARIES) ../libgda/libgda-4.0.la
