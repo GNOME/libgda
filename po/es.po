@@ -11,15 +11,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-09 20:59+0100\n"
-"PO-Revision-Date: 2011-02-02 18:02+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=libgda&component=general\n"
+"POT-Creation-Date: 2011-02-09 20:01+0000\n"
+"PO-Revision-Date: 2011-02-10 15:49+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
@@ -1314,9 +1315,9 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila "
-"actualizada» o «fila eliminada». Esto es un error de la implementación de %s "
-"(informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto es un error de la implementación de %s (informe del "
+"error)."
 
 #: ../libgda/gda-data-proxy.c:2098
 #, c-format
@@ -1326,9 +1327,9 @@ msgid ""
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila "
-"actualizada» o «fila eliminada». Esto puede ser un error de la "
-"implementación de %s (informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto puede ser un error de la implementación de %s "
+"(informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2944 ../tools/gda-sql.c:3208
 msgid "Could not create virtual connection"
@@ -1408,8 +1409,8 @@ msgstr "La modificación de la declaración usa un parámetro «%s» desconocido
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"La modificación del parámetro «%s» de la declaración es %s cuando debería "
-"ser %s"
+"La modificación del parámetro «%s» de la declaración es %s cuando debería ser "
+"%s"
 
 #: ../libgda/gda-data-select.c:1276
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1693,15 +1694,14 @@ msgstr "Falta la definición de la vista en el nodo <view>"
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
-"La definición de la vista contiene más de una declaración (para la vista "
-"«%s»)"
+"La definición de la vista contiene más de una declaración (para la vista «%s»)"
 
 #: ../libgda/gda-meta-store.c:1310
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
-"La definición de la vista no es una declaración de selección (para la vista "
-"«%s»)"
+"La definición de la vista no es una declaración de selección (para la vista «%"
+"s»)"
 
 #. FIXME
 #: ../libgda/gda-meta-store.c:1337 ../libgda/gda-meta-struct-io.c:176
@@ -1875,9 +1875,9 @@ msgid "Could not find object named '%s'"
 msgstr "No se pudo encontrar el objeto llamado «%s»"
 
 #: ../libgda/gda-meta-store.c:4415 ../libgda/gda-meta-store.c:4434
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find column '%s' in table '%s'"
-msgstr "No se pudo encontrar ningún DNS llamado «%s»"
+msgstr "No se pudo encontrar la columna «%s» en la tabla «%s»"
 
 #: ../libgda/gda-meta-struct.c:129
 msgid "GdaMetaStore object to fetch information from"
@@ -2051,8 +2051,8 @@ msgstr "El proveedor %s creó un GdaServerOperation sin un nodo para «%s»"
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
-"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para "
-"«%s»"
+"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%"
+"s»"
 
 #: ../libgda/gda-server-provider.c:938 ../libgda/gda-server-provider.c:972
 #, c-format
@@ -2392,8 +2392,8 @@ msgstr ""
 #, c-format
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr ""
-"El modelo de datos para el esquema tiene un tipo gda erróneo: «%s» en vez de "
-"«%s»"
+"El modelo de datos para el esquema tiene un tipo gda erróneo: «%s» en vez de «%"
+"s»"
 
 #: ../libgda/gda-set.c:556 ../libgda/gda-set.c:657
 #, c-format
@@ -2513,8 +2513,7 @@ msgstr "No existe un manejador de datos para el tipo «%s»"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo "
-"«%s»"
+"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
 
 #: ../libgda/gda-statement.c:1232
 #, c-format
@@ -2548,9 +2547,9 @@ msgstr "No se pudo encontrar el destino para la unión («JOIN»)"
 
 #: ../libgda/gda-tree-mgr-columns.c:304 ../libgda/gda-tree-mgr-schemas.c:257
 #: ../libgda/gda-tree-mgr-tables.c:289
-#, fuzzy, c-format
+#, c-format
 msgid "No connection and no GdaMetaStore specified"
-msgstr "No se especificó una conexión"
+msgstr "No se especificó una conexión ni un GdaMetaStore"
 
 #: ../libgda/gda-tree-mgr-columns.c:390
 #, c-format
@@ -3285,8 +3284,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1143
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de "
-"campos que unir"
+"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de campos "
+"que unir"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1152
 msgid "Empty FROM clause"
@@ -3497,8 +3496,7 @@ msgstr "No se especificó una expresión"
 #: ../libgda-report/engine/gda-report-engine.c:922
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr ""
-"No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
+msgstr "No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1060
 #, c-format
@@ -3697,9 +3695,8 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a "
-"establecer usando la propiedad «manejador») espere algún comportamiento no "
-"deseado"
+"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a establecer "
+"usando la propiedad «manejador») espere algún comportamiento no deseado"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:408
 msgid "Value is NULL"
@@ -5381,8 +5378,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando "
-"%s. Habrá problemas con los caracteres que no sean UTF-8."
+"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando %"
+"s. Habrá problemas con los caracteres que no sean UTF-8."
 
 #: ../providers/mysql/gda-mysql-provider.c:588
 msgid "The connection string must contain the DB_NAME values"
@@ -7611,8 +7608,7 @@ msgid ""
 "'%s' shortcut"
 msgstr ""
 "La perspectiva actual ha cambiado a la perspectiva «%s», puede volver a la "
-"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo "
-"«%s»"
+"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo «%s»"
 
 #: ../tools/browser/connection-binding-properties.c:143
 msgid "New virtual connection"
@@ -7721,8 +7717,8 @@ msgstr ""
 #: ../tools/browser/main.c:169 ../tools/gda-sql.c:249
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: "
-"%s\n"
+"Error while purging files used to store information about each connection: %"
+"s\n"
 msgstr ""
 "Error al limpiar los archivos usados para almacenar la información de cada "
 "conexión: %s\n"
@@ -7878,9 +7874,9 @@ msgstr ""
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
 #: ../tools/browser/schema-browser/table-info.c:988
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to declare foreign key: %s"
-msgstr "Campos en la clave externa"
+msgstr "Falló al declarar la clave externa: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:430
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:433
@@ -7899,9 +7895,8 @@ msgstr "Seleccionar tablas para añadir a la imagen"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
 #: ../tools/command-exec.c:926
-#, fuzzy
 msgid "Declared foreign key"
-msgstr "Forzar claves externas"
+msgstr "Clave externa declarada"
 
 #. To translators: the UPDATE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:424
@@ -7919,9 +7914,9 @@ msgstr "Política para DELETE"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:473
 #: ../tools/browser/schema-browser/table-columns.c:793
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to undeclare foreign key: %s"
-msgstr "Campos en la clave externa"
+msgstr "Falló al declarar la clave externa: %s"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:480
 #: ../tools/browser/canvas/browser-canvas-fkey.c:483
@@ -7931,9 +7926,8 @@ msgid "Successfully undeclared foreign key"
 msgstr ""
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:495
-#, fuzzy
 msgid "Remove this declared foreign key"
-msgstr "Quitar campo seleccionado"
+msgstr "Quitar esta clave externa declarada"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:82
 msgid "Page size and zoom"
@@ -8010,9 +8004,9 @@ msgstr "Falló al crear el archivo PNG"
 
 #: ../tools/browser/common/fk-declare.c:190
 #: ../tools/browser/common/fk-declare.c:403
-#, fuzzy, c-format
+#, c-format
 msgid "Declare a foreign key for table '%s'"
-msgstr "Falta el nombre de la columna de la clave externa para la tabla «%s»"
+msgstr "Declarar una clave externa para la tabla «%s»"
 
 #: ../tools/browser/common/fk-declare.c:193
 msgid ""
@@ -8021,20 +8015,17 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/common/fk-declare.c:213
-#, fuzzy
 msgid "Foreign key name:"
-msgstr "Clave externa en "
+msgstr "Nombre de la clave externa:"
 
 #. table to reference
 #: ../tools/browser/common/fk-declare.c:224
-#, fuzzy
 msgid "Referenced table:"
-msgstr "Tabla referenciada"
+msgstr "Tabla referenciada:"
 
 #: ../tools/browser/common/fk-declare.c:267
-#, fuzzy
 msgid "Referenced column"
-msgstr "Campo referenciado"
+msgstr "Columna referenciada:"
 
 #: ../tools/browser/common/fk-declare.c:548
 #, fuzzy, c-format
@@ -8573,8 +8564,7 @@ msgstr "No se definió un origen de datos"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo "
-"«%s»"
+"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo «%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:166
 #: ../tools/browser/schema-browser/table-columns.c:269
@@ -8958,14 +8948,14 @@ msgid "Could not load diagram"
 msgstr "No se pudo cargar el diagrama"
 
 #: ../tools/browser/schema-browser/table-columns.c:233
-#, fuzzy, c-format
+#, c-format
 msgid "Declared foreign key '%s' on "
-msgstr "Clave externa en "
+msgstr "Clave externa declarada en «%s» "
 
 #: ../tools/browser/schema-browser/table-columns.c:236
-#, fuzzy, c-format
+#, c-format
 msgid "Foreign key '%s' on "
-msgstr "Clave externa en "
+msgstr "Clave externa «%s» en "
 
 #: ../tools/browser/schema-browser/table-columns.c:302
 #, c-format
@@ -8973,8 +8963,8 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
-"tipos incompatibles: «%s» para la clave externa y «%s» para la clave "
-"primaria referenciada"
+"tipos incompatibles: «%s» para la clave externa y «%s» para la clave primaria "
+"referenciada"
 
 #: ../tools/browser/schema-browser/table-columns.c:351
 #, c-format
@@ -9004,9 +8994,9 @@ msgid "Constraints and integrity rules"
 msgstr "Reglas de restricciones e integridad"
 
 #: ../tools/browser/schema-browser/table-columns.c:772
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find table '%s.%s'"
-msgstr "No se pudo mapear la tabla «%s»: %s"
+msgstr "No se pudo encontrar la tabla «%s.%s»"
 
 #: ../tools/browser/schema-browser/table-columns.c:807
 #, fuzzy, c-format
@@ -9096,9 +9086,8 @@ msgid "Insert data into table"
 msgstr "Insertar datos en la tabla"
 
 #: ../tools/browser/schema-browser/table-info.c:1012
-#, fuzzy
 msgid "_Declare foreign key"
-msgstr "Forzar claves externas"
+msgstr "_Declarar clave externa"
 
 #: ../tools/browser/schema-browser/table-info.c:1012
 msgid "Declare a foreign key for table"
@@ -9218,17 +9207,17 @@ msgstr "Definición de la vista: %s"
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
 #: ../tools/command-exec.c:940
-#, fuzzy, c-format
+#, c-format
 msgid "references %s"
-msgstr "Preferencias"
+msgstr "referencia a %s"
 
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
 #: ../tools/command-exec.c:946
-#, fuzzy, c-format
+#, c-format
 msgid "references %s.%s"
-msgstr "Preferencias"
+msgstr "referencia a %s.%s"
 
 #: ../tools/config-info.c:45
 msgid "Installed providers list"
@@ -9425,11 +9414,11 @@ msgstr "Sin contraseña para «%s»"
 #: ../tools/gda-sql.c:1480
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the "
-"'%s' file\n"
+"All the information related to the '%s' connection will be stored in the '%"
+"s' file\n"
 msgstr ""
-"Toda la información relativa a la conexión «%s» se almacenará en el archivo "
-"«%s»\n"
+"Toda la información relativa a la conexión «%s» se almacenará en el archivo «%"
+"s»\n"
 
 #: ../tools/gda-sql.c:1510
 #, c-format
@@ -9442,8 +9431,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
-"Obteniendo la información de esquema para la conexión «%s», esto puede "
-"llevar algún tiempo… "
+"Obteniendo la información de esquema para la conexión «%s», esto puede llevar "
+"algún tiempo… "
 
 #: ../tools/gda-sql.c:1525 ../tools/gda-sql.c:1662 ../tools/gda-sql.c:3003
 #, c-format
@@ -9494,7 +9483,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2027
 #, c-format
 msgid "%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"
-msgstr ""
+msgstr "%s <nombre_clave_ext> <tablaA>(<colA>,...) <tablaB>(<colB>,...)"
 
 #: ../tools/gda-sql.c:2028
 msgid ""
@@ -9505,7 +9494,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2039
 #, c-format
 msgid "%s <fkname> <tableA> <tableB>"
-msgstr ""
+msgstr "%s <nombre_clave_ext> <tablaA> <tablaB>"
 
 #: ../tools/gda-sql.c:2040
 msgid "Un-declare a foreign key (not actually in database)"
@@ -10257,9 +10246,9 @@ msgstr "Disparadores"
 #~ msgstr "Conectar con otra fuente de datos definidos (DSN, vea \\l)"
 
 #~ msgid ""
-#~ "<small>The XML tree's root node must be a <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one "
-#~ "or more data source definitions.\n"
+#~ "<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
+#~ "data source definitions.\n"
 #~ "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;"
 #~ "query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
 #~ "tt></span> nodes, both accepting the following optional attributes:\n"
@@ -10286,15 +10275,15 @@ msgstr "Disparadores"
 #~ "   the aforementioned table.\n"
 #~ "</small>"
 #~ msgstr ""
-#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
+#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
 #~ "definiciones de fuentes de datos.\n"
-#~ "Cada fuente de datos está definida por nodos <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;query&gt;</tt></span> o <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;table&gt;</tt></span>, ambos aceptan los siguientes "
-#~ "atributos opcionales:\n"
-#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena "
-#~ "de ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
+#~ "Cada fuente de datos está definida por nodos <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;query&gt;</tt></span> o <span foreground=\"#4e9a06\"><tt>&lt;"
+#~ "table&gt;</tt></span>, ambos aceptan los siguientes atributos "
+#~ "opcionales:\n"
+#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena de "
+#~ "ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
 #~ " - <span foreground=\"#4e9a06\">«title»</span> para especificar un "
 #~ "título.\n"
 #~ "\n"
