@@ -1706,13 +1706,27 @@ static GtkWidget *new_check_menu_item (const gchar *label,
 				       GCallback cb_func,
 				       gpointer user_data);
 
+static void
+hidden_column_mitem_toggled_cb (GtkCheckMenuItem *check, GdauiRawGrid *grid)
+{
+	ColumnData *cdata;
+	gboolean act;
+	cdata = g_object_get_data (G_OBJECT (check), "c");
+	g_assert (cdata);
+	act = gtk_check_menu_item_get_active (check);
+	gtk_tree_view_column_set_visible (cdata->column, act);
+	cdata->hidden = !act;
+}
+
 static gint
 tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, GdauiRawGrid *grid)
 {
-	GtkWidget *menu;
+	GtkWidget *menu, *submenu;
 	GtkTreeView *tree_view;
 	GtkTreeSelection *selection;
 	GtkSelectionMode sel_mode;
+	GSList *list;
+	GtkWidget *mitem;
 
 	if (event->button != 3)
 		return FALSE;
@@ -1723,6 +1737,26 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 
 	/* create the menu */
 	menu = gtk_menu_new ();
+	mitem = gtk_menu_item_new_with_label (_("Shown columns"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+	gtk_widget_show (mitem);
+	
+	submenu = gtk_menu_new ();
+	gtk_widget_show (submenu);
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+	for (list = grid->priv->columns_data; list; list = list->next) {
+		ColumnData *cdata = (ColumnData*) list->data;
+
+		mitem = gtk_check_menu_item_new_with_label (cdata->title);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), !cdata->hidden);
+		gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
+		gtk_widget_show (mitem);
+
+		g_object_set_data (G_OBJECT (mitem), "c", cdata);
+		g_signal_connect (mitem, "toggled",
+				  G_CALLBACK (hidden_column_mitem_toggled_cb), grid);
+	}
+
 	if (sel_mode == GTK_SELECTION_MULTIPLE)
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu),
 				       new_menu_item (_("Select _All"), FALSE,

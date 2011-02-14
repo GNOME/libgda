@@ -1,6 +1,6 @@
 /* gdaui-basic-form.c
  *
- * Copyright (C) 2002 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -91,6 +91,8 @@ typedef struct {
 	}               pack;
 	
 } SingleEntry;
+static void real_gdaui_basic_form_entry_set_visible (GdauiBasicForm *form,
+						      SingleEntry *sentry, gboolean show);
 static SingleEntry *get_single_entry_for_holder (GdauiBasicForm *form, GdaHolder *param);
 static SingleEntry *get_single_entry_for_id (GdauiBasicForm *form, const gchar *id);
 static void create_entry_widget (SingleEntry *sentry);
@@ -149,18 +151,20 @@ size_group_free (SizeGroup *sg)
 
 struct _GdauiBasicFormPriv
 {
-	GdaSet                 *set;
-	GdauiSet               *set_info;
-	GSList                 *s_entries;/* list of SingleEntry pointers */
-	GHashTable             *place_holders; /* key = place holder ID, value = a GtkWidget pointer */
+	GdaSet     *set;
+	GdauiSet   *set_info;
+	GSList     *s_entries;/* list of SingleEntry pointers */
+	GHashTable *place_holders; /* key = place holder ID, value = a GtkWidget pointer */
 
-	GtkWidget              *top_container;
+	GtkWidget  *top_container;
 
-	gboolean                headers_sensitive;
-	gboolean                show_actions;
-	gboolean                entries_auto_default;
+	gboolean    headers_sensitive;
+	gboolean    show_actions;
+	gboolean    entries_auto_default;
 
-	GSList                 *size_groups; /* list of SizeGroup pointers */
+	GSList     *size_groups; /* list of SizeGroup pointers */
+
+	GtkWidget  *mainbox;
 };
 
 
@@ -288,8 +292,78 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 }
 
 static void
-gdaui_basic_form_init (GdauiBasicForm * wid)
+hidden_entry_mitem_toggled_cb (GtkCheckMenuItem *check, GdauiBasicForm *form)
 {
+	SingleEntry *sentry;
+	sentry = g_object_get_data (G_OBJECT (check), "s");
+	g_assert (sentry);
+	real_gdaui_basic_form_entry_set_visible (form, sentry,
+						 gtk_check_menu_item_get_active (check));
+}
+
+static void
+do_popup_menu (GdauiBasicForm *form, GdkEventButton *event)
+{
+	int button, event_time;
+	GtkWidget *menu, *submenu, *mitem;
+	GSList *list;
+	
+	menu = gtk_menu_new ();
+	mitem = gtk_menu_item_new_with_label (_("Shown data entries"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+	gtk_widget_show (mitem);
+	
+	submenu = gtk_menu_new ();
+	gtk_widget_show (submenu);
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+	
+	for (list = form->priv->s_entries; list; list = list->next) {
+		SingleEntry *sentry = (SingleEntry*) list->data;
+		mitem = gtk_check_menu_item_new_with_label (sentry->label_title);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), !sentry->hidden);
+		gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
+		gtk_widget_show (mitem);
+
+		g_object_set_data (G_OBJECT (mitem), "s", sentry);
+		g_signal_connect (mitem, "toggled",
+				  G_CALLBACK (hidden_entry_mitem_toggled_cb), form);
+	}
+		
+	if (event) {
+		button = event->button;
+		event_time = event->time;
+	}
+	else {
+		button = 0;
+		event_time = gtk_get_current_event_time ();
+	}
+
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 
+			button, event_time);
+}
+
+static gboolean
+popup_menu_cb (G_GNUC_UNUSED GtkWidget *wid, GdauiBasicForm *form)
+{
+	do_popup_menu (form, NULL);
+	return TRUE;
+}
+
+static gboolean
+button_press_event_cb (G_GNUC_UNUSED GdauiBasicForm *wid, GdkEventButton *event, GdauiBasicForm *form)
+{
+	if (event->button == 3 && event->type == GDK_BUTTON_PRESS) {
+		do_popup_menu (form, event);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static void
+gdaui_basic_form_init (GdauiBasicForm *wid)
+{
+	GtkWidget *evbox;
 	wid->priv = g_new0 (GdauiBasicFormPriv, 1);
 	wid->priv->set = NULL;
 	wid->priv->s_entries = NULL;
@@ -299,6 +373,18 @@ gdaui_basic_form_init (GdauiBasicForm * wid)
 	wid->priv->headers_sensitive = FALSE;
 	wid->priv->show_actions = FALSE;
 	wid->priv->entries_auto_default = FALSE;
+
+	evbox = gtk_event_box_new ();
+	gtk_widget_show (evbox);
+	gtk_box_pack_start (GTK_BOX (wid), evbox, TRUE, TRUE, 0);
+	wid->priv->mainbox = gtk_vbox_new (FALSE, 0);
+	gtk_widget_show (wid->priv->mainbox);
+	gtk_container_add (GTK_CONTAINER (evbox), wid->priv->mainbox);
+
+	g_signal_connect (evbox, "popup-menu",
+			  G_CALLBACK (popup_menu_cb), wid);
+	g_signal_connect (evbox, "button-press-event",
+			  G_CALLBACK (button_press_event_cb), wid);
 }
 
 /**
@@ -1070,7 +1156,7 @@ pack_entries_in_table (GdauiBasicForm *form)
 	gtk_table_set_row_spacings (GTK_TABLE (table), SPACING);
 	gtk_table_set_col_spacings (GTK_TABLE (table), SPACING);
 	form->priv->top_container = table;
-	gtk_box_pack_start (GTK_BOX (form), table, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (form->priv->mainbox), table, TRUE, TRUE, 0);
 	for (list = form->priv->s_entries, i = 0;
 	     list;
 	     list = list->next, i++) {
@@ -1106,7 +1192,7 @@ pack_entries_in_xml_layout (GdauiBasicForm *form, xmlNodePtr form_node)
 	}
 
 	top = load_xml_layout_children (form, form_node);
-	gtk_box_pack_start (GTK_BOX (form), top, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (form->priv->mainbox), top, TRUE, TRUE, 0);
 	gtk_widget_show_all (top);
 	mark_not_null_entry_labels (form, TRUE);
 }
@@ -1714,31 +1800,11 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 	}
 }
 
-
-/**
- * gdaui_basic_form_entry_set_visible:
- * @form: a #GdauiBasicForm widget
- * @param: a #GdaHolder object
- * @show: set to %TRUE to show the data entry, and to %FALSE to hide it
- *
- * Shows or hides the #GdauiDataEntry in @form which corresponds to the
- * @param parameter
- *
- * Since: 4.2
- */
-void
-gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *param, gboolean show)
+static void
+real_gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, SingleEntry *sentry, gboolean show)
 {
-	SingleEntry *sentry;
-
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
-	g_return_if_fail (GDA_IS_HOLDER (param));
-
-	sentry = get_single_entry_for_holder (form, param);
-	if (!sentry) {
-		g_warning (_("Can't find data entry for GdaHolder"));
-		return;
-	}
+	g_return_if_fail (sentry);
 
 	if (sentry->entry) {
 		if (show) {
@@ -1776,6 +1842,34 @@ gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *param, gboo
 			gtk_table_set_row_spacing (GTK_TABLE (parent), row, show ? SPACING : 0);
 		}
 	}
+}
+
+/**
+ * gdaui_basic_form_entry_set_visible:
+ * @form: a #GdauiBasicForm widget
+ * @param: a #GdaHolder object
+ * @show: set to %TRUE to show the data entry, and to %FALSE to hide it
+ *
+ * Shows or hides the #GdauiDataEntry in @form which corresponds to the
+ * @param parameter
+ *
+ * Since: 4.2
+ */
+void
+gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *param, gboolean show)
+{
+	SingleEntry *sentry;
+
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	g_return_if_fail (GDA_IS_HOLDER (param));
+
+	sentry = get_single_entry_for_holder (form, param);
+	if (!sentry) {
+		g_warning (_("Can't find data entry for GdaHolder"));
+		return;
+	}
+
+	real_gdaui_basic_form_entry_set_visible (form, sentry, show);
 }
 
 /**
