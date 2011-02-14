@@ -260,6 +260,13 @@ gdaui_raw_grid_class_init (GdauiRawGridClass *klass)
 	GObjectClass  *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
+	/**
+	 * GdauiRawGrid::double-clicked:
+	 * @grid: GdauiRawGrid
+	 * @row: the row that was double clicked
+	 *
+	 * Emitted when the user double clicks on a row
+	 */
 	gdaui_raw_grid_signals[DOUBLE_CLICKED] =
 		g_signal_new ("double-clicked",
                               G_TYPE_FROM_CLASS (object_class),
@@ -268,6 +275,14 @@ gdaui_raw_grid_class_init (GdauiRawGridClass *klass)
                               NULL, NULL,
                               _gdaui_marshal_VOID__INT, G_TYPE_NONE,
                               1, G_TYPE_INT);
+
+	/**
+	 * GdauiRawGrid::populate-popup:
+	 * @grid: GdauiRawGrid
+	 * @menu: a #GtkMenu to modify
+	 *
+	 * Connect this signal and modify the popup menu.
+	 */
 	gdaui_raw_grid_signals[POPULATE_POPUP] =
 		g_signal_new ("populate-popup",
                               G_TYPE_FROM_CLASS (object_class),

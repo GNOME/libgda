@@ -136,6 +136,14 @@ which can be described by the following DTD.
 
 @gdauibasicform: the object which received the signal.
 
+<!-- ##### SIGNAL GdauiBasicForm::populate-popup ##### -->
+<para>
+
+</para>
+
+@gdauibasicform: the object which received the signal.
+@arg1: 
+
 <!-- ##### ARG GdauiBasicForm:can-expand-v ##### -->
 <para>
 

@@ -209,11 +209,11 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 	/* signals */
 	/**
 	 * GdauiBasicForm::holder-changed:
-	 * @form: GdauiBasicForm
-	 * @param: that changed
+	 * @form: #GdauiBasicForm
+	 * @param: the #GdaHolder that changed
 	 * @is_user_modif: TRUE if the modification has been initiated by a user modification
 	 *
-	 * Emitted when a GdaHolder changes
+	 * Emitted when a GdaHolder changed in @form
 	 */
 	gdaui_basic_form_signals[HOLDER_CHANGED] =
 		g_signal_new ("holder-changed",
@@ -225,7 +225,7 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 			      GDA_TYPE_HOLDER, G_TYPE_BOOLEAN);
 	/**
 	 * GdauiBasicForm::activated:
-	 * @form: GdauiBasicForm
+	 * @form: #GdauiBasicForm
 	 *
 	 * Emitted when the use has activated any of the #GdaDataEntry widget
 	 * in @form.
@@ -240,7 +240,7 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 
 	/**
 	 * GdauiBasicForm::layout-changed:
-	 * @form: GdauiBasicForm
+	 * @form: #GdauiBasicForm
 	 *
 	 * Emitted when the form's layout changes
 	 */
@@ -254,7 +254,8 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 
 	/**
 	 * GdauiBasicForm::populate-popup:
-	 * @form: GdauiBasicForm
+	 * @form: #GdauiBasicForm
+	 * @menu: a #GtkMenu to modify
 	 *
 	 * Connect this signal and modify the popup menu.
 	 *
