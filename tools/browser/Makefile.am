@@ -132,14 +132,16 @@ canvas_example_SOURCES = \
 	dnd.c \
 	dnd.h
 
+canvas_example_LDFLAGS = $(EXTRALDFLAGS)
 canvas_example_CFLAGS = -DCANVAS_EXAMPLE
-canvas_example_LDFLAGS = \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
-	$(top_builddir)/tools/browser/canvas/libcanvas.la \
+canvas_example_LDADD=\
+	$(CANVAS_LDADD) \
 	libbrowser.la \
 	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
-	$(top_builddir)/tools/browser/common/libcommon.la
+	common/libcommon.la \
+	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-4.0.la \
+	$(LIBGDA_LIBS) $(GTK_LIBS)
 
 # icons
 iconsdir=$(datadir)/libgda-4.0/pixmaps
