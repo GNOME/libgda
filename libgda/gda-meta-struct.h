@@ -175,9 +175,11 @@ typedef struct {
  * Struture to hold information about each database object (tables, views, ...),
  * its contents must not be modified.
  *
- * Note: @obj_catalog, @obj_schema, @obj_name, @obj_short_name and @obj_full_name are case sensitive:
- *       one must use gda_sql_identifier_quote() to know if is it is necessary to surround by double quotes
- *       before using in an SQL statement
+ * Note: @obj_catalog, @obj_schema, @obj_name, @obj_short_name and @obj_full_name respect the
+ * <link linkend="information_schema:sql_identifiers">SQL identifiers</link> convention used in
+ * #GdaMetaStore objects. Before using these SQL identifiers, you should check the
+ * gda_sql_identifier_quote() to know if is it is necessary to surround by double quotes
+ * before using in an SQL statement.
  */
 typedef struct {
 	/*< public >*/
@@ -194,7 +196,7 @@ typedef struct {
 	gchar                  *obj_full_name;
 	gchar                  *obj_owner;
 
-	GSList                 *depend_list; /* list of GdaMetaDbObject pointers on which this object depends */
+	GSList                 *depend_list;
 
 	/*< private >*/
 	/* Padding for future expansion */
