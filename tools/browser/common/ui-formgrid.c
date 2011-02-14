@@ -47,7 +47,6 @@ static BrowserConnection *get_browser_connection (UiFormGrid *formgrid);
 struct _UiFormGridPriv
 {
 	GtkWidget   *nb;
-	GtkWidget   *sw;
 	GtkWidget   *raw_form;
 	GtkWidget   *raw_grid;
 	GtkWidget   *info;
@@ -151,7 +150,7 @@ ui_formgrid_show (GtkWidget *widget)
 
 static void form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid);
 static void form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid);
-static void raw_grid_populate_popup_cb (GdauiRawGrid *gdauirawgrid, GtkMenu *menu, UiFormGrid *formgrid);
+static void form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid);
 
 static void
 ui_formgrid_init (UiFormGrid *formgrid)
@@ -186,19 +185,15 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	gtk_container_add (GTK_CONTAINER (sw), formgrid->priv->raw_grid);
 	gtk_widget_show (formgrid->priv->raw_grid);
 	g_signal_connect (formgrid->priv->raw_grid, "populate-popup",
-			  G_CALLBACK (raw_grid_populate_popup_cb), formgrid);
+			  G_CALLBACK (form_grid_populate_popup_cb), formgrid);
 
 	/* form on the 2nd page of the notebook */
-	formgrid->priv->sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (formgrid->priv->sw), GTK_SHADOW_NONE);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (formgrid->priv->sw), GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
 	formgrid->priv->raw_form = gdaui_raw_form_new (NULL);
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (formgrid->priv->sw), formgrid->priv->raw_form);
 	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_form), -1, FALSE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), formgrid->priv->sw, NULL);
-        gtk_widget_show (formgrid->priv->sw);
+	gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), formgrid->priv->raw_form, NULL);
         gtk_widget_show (formgrid->priv->raw_form);
+	g_signal_connect (formgrid->priv->raw_form, "populate-popup",
+			  G_CALLBACK (form_grid_populate_popup_cb), formgrid);
 
 	/* info widget and toggle button at last */
 	hbox = gtk_hbox_new (FALSE, 0);
@@ -308,7 +303,7 @@ get_browser_connection (UiFormGrid *formgrid)
 static void execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid);
 
 static void
-raw_grid_populate_popup_cb (G_GNUC_UNUSED GdauiRawGrid *gdauirawgrid, GtkMenu *menu, UiFormGrid *formgrid)
+form_grid_populate_popup_cb (G_GNUC_UNUSED GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid)
 {
 	/* add actions to execute to menu */
 	GdaDataModelIter *iter;
