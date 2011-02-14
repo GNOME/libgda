@@ -124,6 +124,7 @@ enum {
 	HOLDER_CHANGED,
 	ACTIVATED,
 	LAYOUT_CHANGED,
+	POPULATE_POPUP,
 	LAST_SIGNAL
 };
 
@@ -251,6 +252,23 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
 			      NULL, NULL,
 			      _gdaui_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
+	/**
+	 * GdauiBasicForm::populate-popup:
+	 * @form: GdauiBasicForm
+	 *
+	 * Connect this signal and modify the popup menu.
+	 *
+	 * Since: 4.2.4
+	 */
+	gdaui_basic_form_signals[POPULATE_POPUP] =
+		g_signal_new ("populate-popup",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              0,
+                              NULL, NULL,
+                              _gdaui_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GTK_TYPE_MENU);
+
 	class->holder_changed = NULL;
 	class->activated = NULL;
 	class->layout_changed = NULL;
@@ -337,6 +355,9 @@ do_popup_menu (GdauiBasicForm *form, GdkEventButton *event)
 		button = 0;
 		event_time = gtk_get_current_event_time ();
 	}
+
+	/* allow listeners to add their custom menu items */
+	g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals [POPULATE_POPUP], 0, GTK_MENU (menu));
 
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 
 			button, event_time);
