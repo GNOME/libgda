@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2011-02-09 20:01+0000\n"
-"PO-Revision-Date: 2011-02-10 15:49+0100\n"
+"POT-Creation-Date: 2011-02-12 10:48+0000\n"
+"PO-Revision-Date: 2011-02-15 09:49+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -166,8 +166,10 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/main.c:204 ../tools/browser/main.c:230
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:424
 #: ../tools/browser/canvas/browser-canvas-fkey.c:474
-#: ../tools/browser/common/ui-formgrid.c:324
-#: ../tools/browser/common/ui-formgrid.c:417
+#: ../tools/browser/common/ui-formgrid.c:405
+#: ../tools/browser/common/ui-formgrid.c:433
+#: ../tools/browser/common/ui-formgrid.c:463
+#: ../tools/browser/common/ui-formgrid.c:575
 #: ../tools/browser/data-manager/analyser.c:284
 #: ../tools/browser/data-manager/data-console.c:564
 #: ../tools/browser/data-manager/data-favorite-selector.c:202
@@ -7856,21 +7858,19 @@ msgstr "Tipo: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:381
 msgid "Remove from graph"
-msgstr ""
+msgstr "Quitar del gráfico"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:385
-#, fuzzy
 msgid "Add referenced tables to graph"
-msgstr "Añadir tablas referenciadas"
+msgstr "Añadir tablas referenciadas al gráfico"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:389
-#, fuzzy
 msgid "Add tables referencing this table to graph"
-msgstr "Añadir tablas que referencien a esta"
+msgstr "Añadir al gráfico tablas que referencien a esta"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:398
 msgid "Declare foreign key for this table"
-msgstr ""
+msgstr "Declarar una clave externa para esta tabla"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
 #: ../tools/browser/schema-browser/table-info.c:988
@@ -7883,13 +7883,32 @@ msgstr "Falló al declarar la clave externa: %s"
 #: ../tools/browser/schema-browser/table-info.c:995
 #: ../tools/browser/schema-browser/table-info.c:998
 msgid "Successfully declared foreign key"
-msgstr ""
+msgstr "Clave externa declara con éxito"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:630
-msgid "Add table"
-msgstr "Añadir tabla"
+#. entry to display a window with tables in it
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:634
+#| msgid "Add table"
+msgid "Add tables"
+msgstr "Añadir tablas"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:650
+#. entry to display sub menus
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:640
+#| msgid "Add table"
+msgid "Add one table"
+msgstr "Añadir una tabla"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:703
+#| msgid "Add table"
+msgid "Add all tables"
+msgstr "Añadir todas las tablas"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:718
+#| msgid "%d table in current schema:"
+#| msgid_plural "%d tables in current schema:"
+msgid "Add all tables in schema"
+msgstr "Añadir todas las tablas del esquema"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:830
 msgid "Select tables to add to diagram"
 msgstr "Seleccionar tablas para añadir a la imagen"
 
@@ -7923,7 +7942,7 @@ msgstr "Falló al declarar la clave externa: %s"
 #: ../tools/browser/schema-browser/table-columns.c:800
 #: ../tools/browser/schema-browser/table-columns.c:803
 msgid "Successfully undeclared foreign key"
-msgstr ""
+msgstr "Clave externa anulada con éxito"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:495
 msgid "Remove this declared foreign key"
@@ -8013,6 +8032,8 @@ msgid ""
 "define which table is references, which columns are part of the foreign key, "
 "and which column each one references"
 msgstr ""
+"definir qué tabla se referencia, qué columnas son parte de la clave externa, "
+"y a qué columnas referencia cada una"
 
 #: ../tools/browser/common/fk-declare.c:213
 msgid "Foreign key name:"
@@ -8027,15 +8048,15 @@ msgstr "Tabla referenciada:"
 msgid "Referenced column"
 msgstr "Columna referenciada:"
 
-#: ../tools/browser/common/fk-declare.c:548
-#, fuzzy, c-format
+#: ../tools/browser/common/fk-declare.c:566
+#, c-format
 msgid "Missing information to declare foreign key"
-msgstr "Falta información obligatoria para crear la base de datos"
+msgstr "Falta información para declarar la clave externa"
 
-#: ../tools/browser/common/fk-declare.c:630
-#, fuzzy, c-format
+#: ../tools/browser/common/fk-declare.c:648
+#, c-format
 msgid "Missing information to undeclare foreign key"
-msgstr "Falta información obligatoria para crear la base de datos"
+msgstr "Falta información para anular la clave externa"
 
 #: ../tools/browser/common/gdaui-data-import.c:124
 msgid "Import specifications"
@@ -8163,15 +8184,28 @@ msgstr[1] "%d tablas en el esquema «%s»:"
 msgid "None"
 msgstr "Ninguno"
 
-#: ../tools/browser/common/ui-formgrid.c:198
+#: ../tools/browser/common/ui-formgrid.c:218
 msgid "Toggle between grid and form presentations"
 msgstr "Conmutar entre las presentaciones de rejilla y formulario"
 
-#: ../tools/browser/common/ui-formgrid.c:291
+#: ../tools/browser/common/ui-formgrid.c:230
+#| msgid "UPDATE statement needs a table to update data"
+msgid "Enable or disable auto update of data"
+msgstr "Activar o desactivar la actualización automática de datos"
+
+#: ../tools/browser/common/ui-formgrid.c:329
 msgid "Execute action"
 msgstr "Ejecutar acción"
 
-#: ../tools/browser/common/ui-formgrid.c:322
+#: ../tools/browser/common/ui-formgrid.c:395
+#: ../tools/browser/data-manager/data-source.c:809
+#, c-format
+msgid "Statement to execute is not a selection statement"
+msgstr "La declaración que ejecutar no es una declaración de selección"
+
+#: ../tools/browser/common/ui-formgrid.c:403
+#: ../tools/browser/common/ui-formgrid.c:431
+#: ../tools/browser/common/ui-formgrid.c:461
 #: ../tools/browser/query-exec/query-console.c:1066
 #: ../tools/browser/query-exec/query-console.c:1117
 #: ../tools/browser/schema-browser/table-info.c:529
@@ -8183,17 +8217,12 @@ msgstr ""
 "Error al ejecutar la consulta:\n"
 "%s"
 
-#: ../tools/browser/common/ui-formgrid.c:331
-#: ../tools/browser/common/ui-formgrid.c:343
-msgid "Action executed"
-msgstr "Acción ejecutada"
-
-#: ../tools/browser/common/ui-formgrid.c:376
-#: ../tools/browser/common/ui-formgrid.c:380
+#: ../tools/browser/common/ui-formgrid.c:522
+#: ../tools/browser/common/ui-formgrid.c:526
 msgid "Action successfully executed"
 msgstr "Acción ejecutada con éxito"
 
-#: ../tools/browser/common/ui-formgrid.c:394
+#: ../tools/browser/common/ui-formgrid.c:543
 #, c-format
 msgid ""
 "Set or confirm the parameters to execute\n"
@@ -8202,11 +8231,11 @@ msgstr ""
 "Configurar o confirmar los parámetros que ejecutar\n"
 "acción «%s»"
 
-#: ../tools/browser/common/ui-formgrid.c:398
+#: ../tools/browser/common/ui-formgrid.c:547
 msgid "Execution of action"
 msgstr "Ejecución de la acción"
 
-#: ../tools/browser/common/ui-formgrid.c:416
+#: ../tools/browser/common/ui-formgrid.c:574
 #: ../tools/browser/query-exec/query-console.c:1013
 #: ../tools/browser/schema-browser/table-info.c:557
 #, c-format
@@ -8468,11 +8497,6 @@ msgstr "No se pudo encontrar ninguna clave externa hacia «%s»"
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr "Se desconocen los campos involucrados en la clave externa hacia «%s»"
-
-#: ../tools/browser/data-manager/data-source.c:809
-#, c-format
-msgid "Statement to execute is not a selection statement"
-msgstr "La declaración que ejecutar no es una declaración de selección"
 
 #: ../tools/browser/data-manager/data-source.c:949
 #, c-format
@@ -8999,9 +9023,9 @@ msgid "Could not find table '%s.%s'"
 msgstr "No se pudo encontrar la tabla «%s.%s»"
 
 #: ../tools/browser/schema-browser/table-columns.c:807
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find declared foreign key '%s'"
-msgstr "No se pudo encontrar ninguna clave externa hacia «%s»"
+msgstr "No se pudo encontrar ninguna la clave externa declarada «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:366
 msgid ""
@@ -9057,9 +9081,9 @@ msgid "Values to insert into table"
 msgstr "Valores para insertar en la tabla"
 
 #: ../tools/browser/schema-browser/table-info.c:976
-#, fuzzy, c-format
+#, c-format
 msgid "Can't find information about table '%s'"
-msgstr "No se puede encontrar información acerca de la tabla"
+msgstr "No se pudo encontrar información acerca de la tabla «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:1005
 msgid "_Table"
@@ -9091,7 +9115,7 @@ msgstr "_Declarar clave externa"
 
 #: ../tools/browser/schema-browser/table-info.c:1012
 msgid "Declare a foreign key for table"
-msgstr ""
+msgstr "Declarar una clave externa para una tabla"
 
 #: ../tools/browser/schema-browser/table-preferences.c:262
 msgid "default"
@@ -9490,6 +9514,8 @@ msgid ""
 "Declare a new foreign key (not actually in database): tableA references "
 "tableB"
 msgstr ""
+"Declarar una clave externa nueva (que no esté actualmente en la base de "
+"datos): tablaA references tablaB"
 
 #: ../tools/gda-sql.c:2039
 #, c-format
@@ -9498,7 +9524,7 @@ msgstr "%s <nombre_clave_ext> <tablaA> <tablaB>"
 
 #: ../tools/gda-sql.c:2040
 msgid "Un-declare a foreign key (not actually in database)"
-msgstr ""
+msgstr "Anular una clave externa (que no esté actualmente en la base de datos)"
 
 #: ../tools/gda-sql.c:2051
 #, c-format
@@ -9927,24 +9953,24 @@ msgid "List of defined parameters"
 msgstr "Lista de los parámetros definidos"
 
 #: ../tools/gda-sql.c:4039
-#, fuzzy, c-format
+#, c-format
 msgid "Missing foreign key declaration specification"
-msgstr "Especificación de operaciones del servidor"
+msgstr "Falta la especificación de declaración de clave externa"
 
 #: ../tools/gda-sql.c:4156
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed foreign key declaration specification"
-msgstr "Especificación de operaciones del servidor"
+msgstr "Especificación de declaración de clave externa mal formada"
 
 #: ../tools/gda-sql.c:4188
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed table name specification '%s'"
-msgstr "Especificación de origen de datos «%s» mal formada"
+msgstr "Especificación de nombre de tabla «%s» mal formado"
 
 #: ../tools/gda-sql.c:4276 ../tools/gda-sql.c:4350
-#, fuzzy, c-format
+#, c-format
 msgid "Missing foreign key name argument"
-msgstr "Falta el nombre de la columna de la clave externa para la tabla «%s»"
+msgstr "Falta el argumento del nombre de la clave externa"
 
 #: ../tools/gda-sql.c:4382 ../tools/gda-sql.c:4904
 msgid "Wrong row condition"
@@ -10158,6 +10184,9 @@ msgstr "Objetos"
 #: ../tools/web-server.c:1888
 msgid "Triggers"
 msgstr "Disparadores"
+
+#~ msgid "Action executed"
+#~ msgstr "Acción ejecutada"
 
 #~ msgid "Unknown internal schema's version: '%s'"
 #~ msgstr "Versión interna del esquema desconocida: «%s»"
