@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-02-09 20:02+0000\n"
-"PO-Revision-Date: 2011-02-10 16:05+0100\n"
+"POT-Creation-Date: 2011-02-12 08:56+0000\n"
+"PO-Revision-Date: 2011-02-13 20:31+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -292,17 +292,12 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/schema-browser-perspective.page:21(None) C/general-ui.page:18(None)
-#| msgid ""
-#| "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
 msgid "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
 msgstr "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/schema-browser-perspective.page:47(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-persp.png'; "
-#| "md5=b4e0678527c03093031dcb3805bb2841"
 msgid ""
 "@@image: 'figures/schema-browser-persp.png'; "
 "md5=991ae01b9fb6b17c0b93ee4873b9b985"
@@ -765,7 +760,8 @@ msgstr "Una ventana de conexión"
 msgid ""
 "Window opened for the 'c1' connection (and the Schema browser perspective)"
 msgstr ""
-"Ventana abierta para la conexión «c1» (y la perspectiva del visor de esquemas)"
+"Ventana abierta para la conexión «c1» (y la perspectiva del visor de "
+"esquemas)"
 
 #: C/general-ui.page:21(p)
 msgid ""
@@ -937,7 +933,6 @@ msgstr "quitar elementos, a través del menú contextual del elemento"
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/declaredfk.page:25(None)
-#| msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
 msgid "@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
 msgstr ""
 "@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
@@ -945,7 +940,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/declaredfk.page:65(None)
-#| msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
 msgid ""
 "@@image: 'figures/declaredfk-dialog.png'; "
 "md5=56aba297f8b88248fabc23c54b361a8f"
@@ -966,6 +960,12 @@ msgid ""
 "help understand the database schema and is automatically used where "
 "appropriate by the application."
 msgstr ""
+"Todas las restricciones de clave externa (donde el contenido de una o más "
+"columnas en una tabla está restringido a estar entre los valores de una o "
+"más columnas de otra tabla) se analizan y se muestran en la <link xref="
+"\"schema-browser-perspective\">perspectiva del visor de esquemas</link>. Las "
+"restricciones de clave externa ayudan a entender el esquema y la aplicación "
+"las usa automáticamente donde es apropiado."
 
 #: C/declaredfk.page:16(p)
 msgid ""
@@ -974,6 +974,10 @@ msgid ""
 "keys\" which are only declaration to the tool and not actually defined in "
 "the database."
 msgstr ""
+"Sin embargo, algunas veces el diseñador de una base de datos ha olvidado o "
+"no ha querido usar restricciones de clave externa, y es posible «declarar "
+"claves externas» que son sólo declaraciones de la herramienta que "
+"actualmente no se definen en la base de datos."
 
 #: C/declaredfk.page:22(title)
 msgid "Declared foreign keys in diagrams"
@@ -984,6 +988,9 @@ msgid ""
 "When displayed in diagrams, declared foreign keys are represented using a "
 "dashed line instead of a solid line for actual foreign keys"
 msgstr ""
+"Cuando se muestran en diagramas, las claves externas declaradas se "
+"representan usando una línea discontinua en lugar de una línea continua para "
+"las claves externas actuales."
 
 #: C/declaredfk.page:31(p)
 msgid ""
@@ -1002,6 +1009,9 @@ msgid ""
 "also by a declared foreign key, then the real foreign key definition will "
 "mask the declared one"
 msgstr ""
+"Si la misma restricción se representa actualmente por una clave externa real "
+"y también por una clave externa declarada, la definición de la clave externa "
+"real enmascarará a la declarada."
 
 #: C/declaredfk.page:37(p)
 msgid ""
@@ -1018,12 +1028,6 @@ msgid "Declaring a new foreign key"
 msgstr "Declarar una clave externa nueva"
 
 #: C/declaredfk.page:43(p)
-#| msgid ""
-#| "From the <link xref=\"schema-browser-perspective\">schema browser "
-#| "perspective</link>, when a table's properties is displayed in a tab, use "
-#| "the <guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu to have "
-#| "a popup appear containing a data entry for each column of the table to "
-#| "insert data into."
 msgid ""
 "A new foreign key can be declared from the <link xref=\"schema-browser-"
 "perspective\">Schema Browser perspective</link> using the "
@@ -1042,12 +1046,17 @@ msgid ""
 "table in a diagram, and selecting the <guiseq><gui>Declare foreign key for "
 "this table</gui></guiseq> option."
 msgstr ""
+"Otra manera de declarar una clave externa es usar el menú contextual de una "
+"tabla en un diagrama, y elegir la opción <guiseq><gui>Declarar una clave "
+"externa para esta tabla</gui></guiseq>."
 
 #: C/declaredfk.page:53(p)
 msgid ""
 "In any way, to declare a new foreign key, the following information must be "
 "provided:"
 msgstr ""
+"De cualquier modo, para declarar una clave externa nueva se debe "
+"proporcionar la siguiente información:"
 
 #: C/declaredfk.page:57(p)
 msgid "A foreign key name"
@@ -1061,6 +1070,8 @@ msgstr "La tabla referenciada"
 msgid ""
 "Columns and referenced columns for each column involved in the foreign key"
 msgstr ""
+"Columnas y columnas referenciadas para cada columna implicada en la clave "
+"externa"
 
 #: C/declaredfk.page:62(title)
 msgid "Information to declare a new foreign key"
@@ -1071,6 +1082,9 @@ msgid ""
 "UI dialog poping up to declare a new foreign key. Here the referenced table "
 "is 'warehouses', and the involved columns are 'country' and 'city'."
 msgstr ""
+"Diálogo emergente de la IU para declarar una clave externa nueva. Aquí, la "
+"tabla referencia es «almacenes», y las columnas involucradas son «país» y "
+"«ciudad»."
 
 #: C/declaredfk.page:70(title)
 msgid "Remove a declared foreign key"
@@ -1083,14 +1097,23 @@ msgid ""
 "properties in the table's properties (in the <link xref=\"schema-browser-"
 "perspective\">Schema Browser perspective</link>)."
 msgstr ""
+"Se puede quitar una clave externa declara pulsando en el enlace <guiseq><gui>"
+"(Quitar)</gui></guiseq> mostrado junto a las propiedades de cada clave "
+"externa declarada en las propiedades de la tabla (en la <link xref=\"schema-"
+"browser-perspective\">perspectiva del visor de esquemas</link>)."
 
 #: C/declaredfk.page:76(p)
 msgid ""
-"Another way to remobe a declared foreign key is in a <link xref=\"diagram"
+"Another way to remove a declared foreign key is in a <link xref=\"diagram"
 "\">diagram</link> page through the contextual menu associated with the "
 "dashed line representing the declared foreign key, selecting the "
 "<guiseq><gui>Remove this declared foreign key</gui></guiseq> option."
 msgstr ""
+"Otra forma de quitar una clave externa declara es en la página de un <link "
+"xref=\"diagram\">diagrama</link>, a través del menú contextual asociado con "
+"la línea discontinua que representa la clave externa declarada, "
+"seleccionando la opción <guiseq><gui>Quitar esta clave externa declarada</"
+"gui></guiseq>."
 
 #: C/data-manager-source-editor.page:7(title)
 msgid "The data manager's data sources editor"
@@ -1121,8 +1144,8 @@ msgid ""
 "\"id\" to specify a data source string ID, used when linking data sources "
 "one to another;"
 msgstr ""
-"«id» para especificar el ID de cadena de una fuente de datos, usado cuando se "
-"enlazan unas fuentes de datos con otras;"
+"«id» para especificar el ID de cadena de una fuente de datos, usado cuando "
+"se enlazan unas fuentes de datos con otras;"
 
 #: C/data-manager-xml-syntax.page:16(p)
 msgid "\"title\" to specify a title."
@@ -1555,8 +1578,8 @@ msgid ""
 msgstr ""
 "Editar fuentes de datos en la perspectiva del gestor de datos, usando la "
 "interfaz predeterminada: se definen dos fuentes de datos que listan los "
-"contenidos de las tablas «clientes» y «pedidos». La configuración es la misma "
-"que la de la figura anterior que muestra la sintaxis XML"
+"contenidos de las tablas «clientes» y «pedidos». La configuración es la "
+"misma que la de la figura anterior que muestra la sintaxis XML"
 
 #: C/data-manager-perspective.page:76(p)
 msgid ""
@@ -1683,10 +1706,10 @@ msgid ""
 "on a product (presumably the \"comments\" table will have a foreign key on "
 "the \"products\" table to reference it)."
 msgstr ""
-"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos y "
-"una tabla «comentarios» que lista todos los comentarios de los usuarios sobre "
-"un producto (presumiblemente, la tabla «comentarios» tendrá una clave ajena "
-"en la tabla «productos» para referenciarla)."
+"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos "
+"y una tabla «comentarios» que lista todos los comentarios de los usuarios "
+"sobre un producto (presumiblemente, la tabla «comentarios» tendrá una clave "
+"ajena en la tabla «productos» para referenciarla)."
 
 #: C/actions.page:20(p)
 msgid ""
@@ -1738,8 +1761,8 @@ msgid ""
 "\"List comments for product\""
 msgstr ""
 "En la perspectiva de ejecución de la consulta, seleccione todos los "
-"productos. Tenga en cuenta que hay dos acciones definidas: «añadir comentario "
-"sobre el producto» y «listar comentarios para el producto»"
+"productos. Tenga en cuenta que hay dos acciones definidas: «añadir "
+"comentario sobre el producto» y «listar comentarios para el producto»"
 
 #: C/actions.page:43(p)
 msgid "Now let's pop up the contextual menu:"
