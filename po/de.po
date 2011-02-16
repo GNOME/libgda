@@ -1271,7 +1271,7 @@ msgstr "Zeile hat zu viele Werte (die ignoriert werden)"
 #: ../libgda/gda-data-model-import.c:1483
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
-msgstr "»%s« konnte nicht in einen Wer des Typs %s umgewandelt werden"
+msgstr "»%s« konnte nicht in einen Wert des Typs %s umgewandelt werden"
 
 #: ../libgda/gda-data-model-import.c:1556
 #, c-format
