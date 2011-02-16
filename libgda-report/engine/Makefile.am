@@ -27,7 +27,7 @@ libgda_report_engine_4_0_la_LIBADD = $(LIBGDA_LIBS) \
 test_rt_parser_SOURCES = \
 	test-rt-parser.c
 
-test_rt_parser_LDFLAGS = libgda-report-engine-4.0.la $(GDKPIXBUF_LIBS)
+test_rt_parser_LDADD = libgda-report-engine-4.0.la $(GDKPIXBUF_LIBS)
 
 gdareportincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda-report
 gdareportinclude_HEADERS=$(gda_report_headers)
