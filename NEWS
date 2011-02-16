@@ -1,3 +1,23 @@
+libgda 4.2.4, 2011-02-16
+
+ - SQLite provider: correctly report error messages (for example instead of "constraint failed")
+ - SQLite provider: correctly report if foreign key constraints are enforced or not
+ - Added possibility to "declare foreign key constraints", which are declarations in the
+   metadata where databases don't actually use foreign keys
+ - GdaMetaStruct: report information about foreign keys
+ - GdaBrowser: many small improvements and corrections
+ - GdaSql and GdaBrowser: display more information about database providers and DSN's connection
+   parameters, and display information about foreign key constraints
+ - Documentation improvements and corrections
+ - Misc small corrections
+ - Bug fixes: #639533, #639897, #639897, #640482, #642037, #642100 and #642170
+ - translations:
+	- sl (Matej Urbančič)
+	- es (Daniel Mustieles)
+	- cz (Marek Černocký)
+	- fr (Bruno Brouard)
+	- de (Christian Kirbach)
+
 libgda 4.2.3, 2011-01-09
 
  - Correction to the expression rendering in SQL (very important!)
