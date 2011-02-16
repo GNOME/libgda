@@ -6,13 +6,14 @@
 # Miloslav Trmac <mitr@volny.cz>, 2003, 2004, 2005.
 # Marek Černocký <marek@manet.cz>, 2010, 2011.
 #
+#: ../libgda/gda-connection.c:375
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2011-02-14 20:55+0000\n"
-"PO-Revision-Date: 2011-02-16 19:30+0100\n"
+"POT-Creation-Date: 2011-02-16 18:46+0000\n"
+"PO-Revision-Date: 2011-02-16 19:48+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -128,7 +129,7 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:509
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:168
 #: ../libgda-ui/gdaui-init.c:511 ../libgda-ui/gdaui-login.c:426
-#: ../libgda-ui/gdaui-rt-editor.c:671
+#: ../libgda-ui/gdaui-rt-editor.c:670
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -3458,7 +3459,7 @@ msgstr "Výběr souboru k načtení"
 
 #: ../libgda-ui/data-entries/common-bin.c:77
 #: ../libgda-ui/data-entries/plugins/common-pict.c:398
-#: ../libgda-ui/gdaui-rt-editor.c:669
+#: ../libgda-ui/gdaui-rt-editor.c:668
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3741,7 +3742,7 @@ msgid "_Save image"
 msgstr "_Uložit obrázek"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:339
-#: ../libgda-ui/gdaui-rt-editor.c:631
+#: ../libgda-ui/gdaui-rt-editor.c:630
 msgid "Select image to load"
 msgstr "Výběr obrázku k načtení"
 
@@ -4112,7 +4113,6 @@ msgid "TRUE if expanding the form vertically makes sense"
 msgstr "ZAPNUTO, pokud reaguje rozbalování formuláře svisle"
 
 #: ../libgda-ui/gdaui-basic-form.c:331
-#| msgid "Show data source's properties"
 msgid "Shown data entries"
 msgstr "Zobrazené datové záznamy"
 
@@ -4283,7 +4283,6 @@ msgid "No title"
 msgstr "Bez názvu"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1783
-#| msgid "Show Column _Titles"
 msgid "Shown columns"
 msgstr "Zobrazené sloupce"
 
@@ -4505,47 +4504,48 @@ msgstr "Nápověda _syntaxe"
 msgid "Show syntax help"
 msgstr "Zobrazit nápovědu k syntaxi"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:164
 msgid "_Add image"
 msgstr "Přid_at obrázek"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:164
 msgid "Insert image"
 msgstr "Vložit obrázek"
 
-#: ../libgda-ui/gdaui-rt-editor.c:166
-msgid "_Reset"
-msgstr "V_rátit"
+#: ../libgda-ui/gdaui-rt-editor.c:165
+#| msgid "Bold text"
+msgid "_Normal text"
+msgstr "_Normální text"
 
-#: ../libgda-ui/gdaui-rt-editor.c:166
+#: ../libgda-ui/gdaui-rt-editor.c:165
 msgid "Reset to normal text"
 msgstr "Vrátit na normální text"
 
-#: ../libgda-ui/gdaui-rt-editor.c:241
+#: ../libgda-ui/gdaui-rt-editor.c:240
 msgid "Don't display a specific background for the text"
 msgstr "Nezobrazovat specifické pozadí pro text"
 
-#: ../libgda-ui/gdaui-rt-editor.c:251
+#: ../libgda-ui/gdaui-rt-editor.c:250
 msgid "Display raw markup text instead of formatted text"
 msgstr "Zobrazit surový text se značkami namísto naformátovaného textu"
 
-#: ../libgda-ui/gdaui-rt-editor.c:262
+#: ../libgda-ui/gdaui-rt-editor.c:261
 msgid "The buffer which is displayed"
 msgstr "Vyrovnávací paměť, která je zobrazená"
 
-#: ../libgda-ui/gdaui-rt-editor.c:835
+#: ../libgda-ui/gdaui-rt-editor.c:834
 msgid "Reset font size"
 msgstr "Původní velikost písma"
 
-#: ../libgda-ui/gdaui-rt-editor.c:841
+#: ../libgda-ui/gdaui-rt-editor.c:840
 msgid "Decrease font size (zoom out)"
 msgstr "Zmenšit velikost písma"
 
-#: ../libgda-ui/gdaui-rt-editor.c:847
+#: ../libgda-ui/gdaui-rt-editor.c:846
 msgid "Increase font size (zoom in)"
 msgstr "Zvětšit velikost písma"
 
-#: ../libgda-ui/gdaui-rt-editor.c:853
+#: ../libgda-ui/gdaui-rt-editor.c:852
 msgid "Show source markup"
 msgstr "Zobrazit zdrojové značky"
 
@@ -7783,24 +7783,19 @@ msgstr "Úspěšně deklarován cizí klíč"
 
 #. entry to display a window with tables in it
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:634
-#| msgid "Add table"
 msgid "Add tables"
 msgstr "Přidat tabulky"
 
 #. entry to display sub menus
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:640
-#| msgid "Add table"
 msgid "Add one table"
 msgstr "Přidat jednu tabulku"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:703
-#| msgid "Add table"
 msgid "Add all tables"
 msgstr "Přidat všechny tabulky"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:718
-#| msgid "%d table in current schema:"
-#| msgid_plural "%d tables in current schema:"
 msgid "Add all tables in schema"
 msgstr "Přidat všechny tabulky ve schématu"
 
@@ -8089,7 +8084,6 @@ msgid "Toggle between grid and form presentations"
 msgstr "Přepíná mezi zobrazením v podobě mřížky a formuláře"
 
 #: ../tools/browser/common/ui-formgrid.c:225
-#| msgid "UPDATE statement needs a table to update data"
 msgid "Enable or disable auto update of data"
 msgstr "Zapnout nebo vypnout automatické aktualizace dat"
 
@@ -10078,6 +10072,9 @@ msgstr "Objekty"
 #: ../tools/web-server.c:1888
 msgid "Triggers"
 msgstr "Triggery"
+
+#~ msgid "_Reset"
+#~ msgstr "V_rátit"
 
 #~ msgid "Action executed"
 #~ msgstr "Akce provedena"
