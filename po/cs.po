@@ -6,19 +6,19 @@
 # Miloslav Trmac <mitr@volny.cz>, 2003, 2004, 2005.
 # Marek Černocký <marek@manet.cz>, 2010, 2011.
 #
-#: ../libgda/gda-connection.c:375
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-09 20:59+0100\n"
-"PO-Revision-Date: 2011-02-01 12:52+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=libgda&component=general\n"
+"POT-Creation-Date: 2011-02-14 20:55+0000\n"
+"PO-Revision-Date: 2011-02-16 19:30+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. title
@@ -159,8 +159,10 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/main.c:204 ../tools/browser/main.c:230
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:424
 #: ../tools/browser/canvas/browser-canvas-fkey.c:474
-#: ../tools/browser/common/ui-formgrid.c:324
-#: ../tools/browser/common/ui-formgrid.c:417
+#: ../tools/browser/common/ui-formgrid.c:400
+#: ../tools/browser/common/ui-formgrid.c:428
+#: ../tools/browser/common/ui-formgrid.c:458
+#: ../tools/browser/common/ui-formgrid.c:570
 #: ../tools/browser/data-manager/analyser.c:284
 #: ../tools/browser/data-manager/data-console.c:564
 #: ../tools/browser/data-manager/data-favorite-selector.c:202
@@ -1826,9 +1828,9 @@ msgid "Could not find object named '%s'"
 msgstr "Nelze najít objekt pojmenovaný „%s“"
 
 #: ../libgda/gda-meta-store.c:4415 ../libgda/gda-meta-store.c:4434
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find column '%s' in table '%s'"
-msgstr "Nelze najít DSN pojmenovaný „%s“"
+msgstr "Nelze najít sloupec „%s“ v tabulce „%s“"
 
 #: ../libgda/gda-meta-struct.c:129
 msgid "GdaMetaStore object to fetch information from"
@@ -2486,9 +2488,9 @@ msgstr "Nelze nají cíl, ke kterému se má spojit (join)"
 
 #: ../libgda/gda-tree-mgr-columns.c:304 ../libgda/gda-tree-mgr-schemas.c:257
 #: ../libgda/gda-tree-mgr-tables.c:289
-#, fuzzy, c-format
+#, c-format
 msgid "No connection and no GdaMetaStore specified"
-msgstr "Nezadáno žádné připojení"
+msgstr "Nezadáno žádné připojení a GdaMetaStore"
 
 #: ../libgda/gda-tree-mgr-columns.c:390
 #, c-format
@@ -3016,7 +3018,7 @@ msgstr "Připojení se nenachází v hubu"
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:423
 #, c-format
 msgid "Unable to get information about table '%s'"
-msgstr "Nelze nalézt informace o tabulce „%s“"
+msgstr "Nelze najít informace o tabulce „%s“"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:654
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:670
@@ -3517,8 +3519,8 @@ msgstr "Neznámo"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:188
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
-#: ../libgda-ui/gdaui-basic-form.c:719 ../libgda-ui/gdaui-basic-form.c:754
-#: ../libgda-ui/gdaui-raw-grid.c:742 ../tools/config-info.c:93
+#: ../libgda-ui/gdaui-basic-form.c:827 ../libgda-ui/gdaui-basic-form.c:862
+#: ../libgda-ui/gdaui-raw-grid.c:757 ../tools/config-info.c:93
 #: ../tools/gda-sql.c:2689 ../tools/gda-sql.c:3971
 msgid "Value"
 msgstr "Hodnota"
@@ -4081,7 +4083,7 @@ msgstr "Zahodit změněná data"
 msgid "Correct data first"
 msgstr "Nejdříve data opravit"
 
-#: ../libgda-ui/gdaui-basic-form.c:261
+#: ../libgda-ui/gdaui-basic-form.c:284
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
@@ -4089,46 +4091,51 @@ msgstr ""
 "Ukazatel na specifikaci rozvržení v XML (jako ukazatel xmlNodePtr na uzel "
 "<gdaui_form>)"
 
-#: ../libgda-ui/gdaui-basic-form.c:265
+#: ../libgda-ui/gdaui-basic-form.c:288
 msgid "List of parameters to show in the form"
 msgstr "Seznam parametrů, které se mají zobrazit ve formuláři"
 
-#: ../libgda-ui/gdaui-basic-form.c:269
+#: ../libgda-ui/gdaui-basic-form.c:292
 msgid "Entry headers are sensitive"
 msgstr "Záhlaví záznamů jsou citlivá"
 
-#: ../libgda-ui/gdaui-basic-form.c:274
+#: ../libgda-ui/gdaui-basic-form.c:297
 msgid "Show Entry actions"
 msgstr "Zobrazit akce záznamu"
 
-#: ../libgda-ui/gdaui-basic-form.c:279
+#: ../libgda-ui/gdaui-basic-form.c:302
 msgid "Entries Auto-default"
 msgstr "Záznamy automaticky na výchozí"
 
-#: ../libgda-ui/gdaui-basic-form.c:284
+#: ../libgda-ui/gdaui-basic-form.c:307
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "ZAPNUTO, pokud reaguje rozbalování formuláře svisle"
 
-#: ../libgda-ui/gdaui-basic-form.c:840 ../libgda-ui/gdaui-raw-grid.c:783
-#: ../libgda-ui/gdaui-raw-grid.c:2616
+#: ../libgda-ui/gdaui-basic-form.c:331
+#| msgid "Show data source's properties"
+msgid "Shown data entries"
+msgstr "Zobrazené datové záznamy"
+
+#: ../libgda-ui/gdaui-basic-form.c:948 ../libgda-ui/gdaui-raw-grid.c:798
+#: ../libgda-ui/gdaui-raw-grid.c:2665
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Atribut „%s“ by měl být hodnotou G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1739
+#: ../libgda-ui/gdaui-basic-form.c:1890
 msgid "Can't find data entry for GdaHolder"
 msgstr "Nelze najít datový záznam pro GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:2011
+#: ../libgda-ui/gdaui-basic-form.c:2127
 msgid "Values to be filled"
 msgstr "Hodnoty, které se mají vyplnit"
 
-#: ../libgda-ui/gdaui-basic-form.c:2094 ../libgda-ui/gdaui-raw-grid.c:2443
+#: ../libgda-ui/gdaui-basic-form.c:2210 ../libgda-ui/gdaui-raw-grid.c:2492
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "Dokument „%s“ nebyl úspěšně zpracován"
 
-#: ../libgda-ui/gdaui-basic-form.c:2104 ../libgda-ui/gdaui-raw-grid.c:2453
+#: ../libgda-ui/gdaui-basic-form.c:2220 ../libgda-ui/gdaui-raw-grid.c:2502
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -4137,7 +4144,7 @@ msgstr ""
 "Analýza DTD „%s“ nebyla úspěšná. Ověření správnosti rozvržení dat XML nebude "
 "provedeno (mohou se vyskytnout nějaké chyby)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2236
+#: ../libgda-ui/gdaui-basic-form.c:2352
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4241,7 +4248,7 @@ msgstr "Zdroje dat…"
 msgid "Could not execute the Database access control center"
 msgstr "Nelze spustit Ovládací centrum přístupu k databázím"
 
-#: ../libgda-ui/gdaui-raw-form.c:180 ../libgda-ui/gdaui-raw-grid.c:286
+#: ../libgda-ui/gdaui-raw-form.c:180 ../libgda-ui/gdaui-raw-grid.c:301
 msgid "Data to display"
 msgstr "Data, která se mají zobrazit"
 
@@ -4250,7 +4257,7 @@ msgstr "Data, která se mají zobrazit"
 msgid "Can't append row to data model: %s"
 msgstr "Nelze přidat řádek do modelu dat: %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:291
+#: ../libgda-ui/gdaui-raw-grid.c:306
 msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
@@ -4258,53 +4265,58 @@ msgstr ""
 "Ukazatel na specifikaci rozvržení v XML (jako ukazatel xmlNodePtr na uzel "
 "<gdaui_grid>)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:294
+#: ../libgda-ui/gdaui-raw-grid.c:309
 msgid "Info cell visible"
 msgstr "Informační buňky viditelné"
 
-#: ../libgda-ui/gdaui-raw-grid.c:298
+#: ../libgda-ui/gdaui-raw-grid.c:313
 msgid "Global Actions visible"
 msgstr "Globální akce viditelné"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
-#: ../libgda-ui/gdaui-raw-grid.c:745 ../libgda-ui/gdaui-raw-grid.c:768
+#: ../libgda-ui/gdaui-raw-grid.c:760 ../libgda-ui/gdaui-raw-grid.c:783
 msgid "Can't be NULL"
 msgstr "Nemůže být prázdné (NULL)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:776
+#: ../libgda-ui/gdaui-raw-grid.c:791
 msgid "No title"
 msgstr "Bez názvu"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1756
+#: ../libgda-ui/gdaui-raw-grid.c:1783
+#| msgid "Show Column _Titles"
+msgid "Shown columns"
+msgstr "Zobrazené sloupce"
+
+#: ../libgda-ui/gdaui-raw-grid.c:1805
 msgid "Select _All"
 msgstr "Vybrat _vše"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1761
+#: ../libgda-ui/gdaui-raw-grid.c:1810
 msgid "_Clear Selection"
 msgstr "Zrušit vý_běr"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1764
+#: ../libgda-ui/gdaui-raw-grid.c:1813
 msgid "Show Column _Titles"
 msgstr "Zobrazi_t záhlaví sloupců"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1769
+#: ../libgda-ui/gdaui-raw-grid.c:1818
 msgid "_Set filter"
 msgstr "Na_stavit filtr"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1772
+#: ../libgda-ui/gdaui-raw-grid.c:1821
 msgid "_Unset filter"
 msgstr "Zr_ušit filtr"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:1871
+#: ../libgda-ui/gdaui-raw-grid.c:1920
 msgid "Saving Data"
 msgstr "Uložení dat"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1879
+#: ../libgda-ui/gdaui-raw-grid.c:1928
 msgid "Saving data to a file"
 msgstr "Uložení dat do souboru"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1880
+#: ../libgda-ui/gdaui-raw-grid.c:1929
 msgid ""
 "The data will be exported without any of the modifications which may have "
 "been made and have not been committed."
@@ -4312,55 +4324,55 @@ msgstr ""
 "Data budou exportována bez jakýchkoliv úprav, které možná byly provedeny a "
 "nebyly zařazeny."
 
-#: ../libgda-ui/gdaui-raw-grid.c:1895 ../tools/config-info.c:251
+#: ../libgda-ui/gdaui-raw-grid.c:1944 ../tools/config-info.c:251
 msgid "File name"
 msgstr "Název souboru"
 
 #. To translators: "Details" is a table's column's attribute
-#: ../libgda-ui/gdaui-raw-grid.c:1914
+#: ../libgda-ui/gdaui-raw-grid.c:1963
 #: ../tools/browser/schema-browser/table-columns.c:555
 msgid "Details"
 msgstr "Podrobnosti"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:1935
+#: ../libgda-ui/gdaui-raw-grid.c:1984
 msgid "File type:"
 msgstr "Typ souboru:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1945
+#: ../libgda-ui/gdaui-raw-grid.c:1994
 msgid "Tab-delimited"
 msgstr "Oddělovaný tabulátory"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1946
+#: ../libgda-ui/gdaui-raw-grid.c:1995
 msgid "Comma-delimited"
 msgstr "Oddělovaný čárkami"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1947
+#: ../libgda-ui/gdaui-raw-grid.c:1996
 msgid "XML"
 msgstr "XML"
 
 #. limit to selection ?
-#: ../libgda-ui/gdaui-raw-grid.c:1954
+#: ../libgda-ui/gdaui-raw-grid.c:2003
 msgid "Limit to selection?"
 msgstr "Omezit na výběr?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1975
+#: ../libgda-ui/gdaui-raw-grid.c:2024
 msgid "Other options"
 msgstr "Ostatní volby"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1982
+#: ../libgda-ui/gdaui-raw-grid.c:2031
 msgid "Empty string when NULL?"
 msgstr "Prázdný řetězec, když je prázdné?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1985 ../libgda-ui/gdaui-raw-grid.c:1990
+#: ../libgda-ui/gdaui-raw-grid.c:2034 ../libgda-ui/gdaui-raw-grid.c:2039
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Exportovat prázdné hodnoty (NULL) jako prázdný řetězec „“"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1992
+#: ../libgda-ui/gdaui-raw-grid.c:2041
 msgid "Invalid data as NULL?"
 msgstr "Neplatná data jako prázdná?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1995 ../libgda-ui/gdaui-raw-grid.c:2000
+#: ../libgda-ui/gdaui-raw-grid.c:2044 ../libgda-ui/gdaui-raw-grid.c:2049
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4368,28 +4380,28 @@ msgstr ""
 "Neexportovat neplatná data,\n"
 "ale exportovat místo nich prázdnou hodnotu (NULL)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2002
+#: ../libgda-ui/gdaui-raw-grid.c:2051
 msgid "Field names on first row?"
 msgstr "Názvy polí na prvním řádku?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2005 ../libgda-ui/gdaui-raw-grid.c:2010
+#: ../libgda-ui/gdaui-raw-grid.c:2054 ../libgda-ui/gdaui-raw-grid.c:2059
 msgid "Add a row at beginning with columns names"
 msgstr "Přidat na začátek řádek s názvy sloupců"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2177
+#: ../libgda-ui/gdaui-raw-grid.c:2226
 #, c-format
 msgid "Could not save file %s"
 msgstr "Nelze uložit soubor %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2185
+#: ../libgda-ui/gdaui-raw-grid.c:2234
 msgid "You must specify a file name"
 msgstr "Musíte určit název souboru"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2191
+#: ../libgda-ui/gdaui-raw-grid.c:2240
 msgid "Got empty file while converting the data"
 msgstr "Obdržen prázdný soubor během převodu dat"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2204
+#: ../libgda-ui/gdaui-raw-grid.c:2253
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4398,7 +4410,7 @@ msgstr ""
 "Soubor „%s“ již existuje.\n"
 "Chcete jej přepsat?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2214
+#: ../libgda-ui/gdaui-raw-grid.c:2263
 msgid "If you choose yes, the contents will be lost."
 msgstr "Pokud zvolíte ano, bude obsah ztracen."
 
@@ -7355,11 +7367,11 @@ msgstr "Zobrazit"
 
 #: ../tools/browser/browser-window.c:288
 msgid "_Perspective"
-msgstr "_Pohled"
+msgstr "_Hledisko"
 
 #: ../tools/browser/browser-window.c:288
 msgid "Perspective"
-msgstr "Pohled"
+msgstr "Hledisko"
 
 #: ../tools/browser/browser-window.c:289
 msgid "_Window"
@@ -7742,48 +7754,64 @@ msgstr "Typ: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:381
 msgid "Remove from graph"
-msgstr ""
+msgstr "Odebrat z grafu"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:385
-#, fuzzy
 msgid "Add referenced tables to graph"
-msgstr "Přidat odkazované tabulky"
+msgstr "Přidat odkazované tabulky do grafu"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:389
-#, fuzzy
 msgid "Add tables referencing this table to graph"
-msgstr "Přidat tabulky odkazující na tuto tabulku"
+msgstr "Přidat tabulky odkazující na tuto tabulku do grafu"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:398
 msgid "Declare foreign key for this table"
-msgstr ""
+msgstr "Deklarovat cizí klíč pro tuto tabulku"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
 #: ../tools/browser/schema-browser/table-info.c:988
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to declare foreign key: %s"
-msgstr "Pole v cizím klíči"
+msgstr "Selhala deklarace cizího klíče: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:430
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:433
 #: ../tools/browser/schema-browser/table-info.c:995
 #: ../tools/browser/schema-browser/table-info.c:998
 msgid "Successfully declared foreign key"
-msgstr ""
+msgstr "Úspěšně deklarován cizí klíč"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:630
-msgid "Add table"
-msgstr "Přidat tabulku"
+#. entry to display a window with tables in it
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:634
+#| msgid "Add table"
+msgid "Add tables"
+msgstr "Přidat tabulky"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:650
+#. entry to display sub menus
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:640
+#| msgid "Add table"
+msgid "Add one table"
+msgstr "Přidat jednu tabulku"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:703
+#| msgid "Add table"
+msgid "Add all tables"
+msgstr "Přidat všechny tabulky"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:718
+#| msgid "%d table in current schema:"
+#| msgid_plural "%d tables in current schema:"
+msgid "Add all tables in schema"
+msgstr "Přidat všechny tabulky ve schématu"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:830
 msgid "Select tables to add to diagram"
 msgstr "Vybrat tabulky pro přidání do diagramu"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
 #: ../tools/command-exec.c:926
-#, fuzzy
 msgid "Declared foreign key"
-msgstr "Dbát na dodržování cizích klíčů"
+msgstr "Deklarovaný cizí klíč"
 
 #. To translators: the UPDATE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:424
@@ -7801,21 +7829,20 @@ msgstr "Strategie při MAZÁNÍ"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:473
 #: ../tools/browser/schema-browser/table-columns.c:793
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to undeclare foreign key: %s"
-msgstr "Pole v cizím klíči"
+msgstr "Selhalo zrušení deklarace cizího klíče: %s"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:480
 #: ../tools/browser/canvas/browser-canvas-fkey.c:483
 #: ../tools/browser/schema-browser/table-columns.c:800
 #: ../tools/browser/schema-browser/table-columns.c:803
 msgid "Successfully undeclared foreign key"
-msgstr ""
+msgstr "Úspěšně zrušena deklarace cizího klíče"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:495
-#, fuzzy
 msgid "Remove this declared foreign key"
-msgstr "Odstranit vybraná pole"
+msgstr "Odstranit tento deklarovaný cizí klíč"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:82
 msgid "Page size and zoom"
@@ -7892,41 +7919,40 @@ msgstr "Selhalo vytvoření souboru PNG"
 
 #: ../tools/browser/common/fk-declare.c:190
 #: ../tools/browser/common/fk-declare.c:403
-#, fuzzy, c-format
+#, c-format
 msgid "Declare a foreign key for table '%s'"
-msgstr "Schází název sloupce cizího klíče pro tabulku „%s“"
+msgstr "Deklarace cizího klíče pro tabulku „%s“"
 
 #: ../tools/browser/common/fk-declare.c:193
 msgid ""
 "define which table is references, which columns are part of the foreign key, "
 "and which column each one references"
 msgstr ""
+"definuje, na kterou tabulku je odkazováno, které sloupce jsou součástí "
+"cizího klíče a který ze sloupců je ten odkazující"
 
 #: ../tools/browser/common/fk-declare.c:213
-#, fuzzy
 msgid "Foreign key name:"
-msgstr "Cizí klíč směřující na "
+msgstr "Název cizího klíče:"
 
 #. table to reference
 #: ../tools/browser/common/fk-declare.c:224
-#, fuzzy
 msgid "Referenced table:"
-msgstr "Odkazovaná tabulka"
+msgstr "Odkazovaná tabulka:"
 
 #: ../tools/browser/common/fk-declare.c:267
-#, fuzzy
 msgid "Referenced column"
-msgstr "Odkazované pole"
+msgstr "Odkazovaný sloupec"
 
-#: ../tools/browser/common/fk-declare.c:548
-#, fuzzy, c-format
+#: ../tools/browser/common/fk-declare.c:566
+#, c-format
 msgid "Missing information to declare foreign key"
-msgstr "Schází povinné informace pro vytvoření databáze"
+msgstr "Schází informace pro deklaraci cizího klíče"
 
-#: ../tools/browser/common/fk-declare.c:630
-#, fuzzy, c-format
+#: ../tools/browser/common/fk-declare.c:648
+#, c-format
 msgid "Missing information to undeclare foreign key"
-msgstr "Schází povinné informace pro vytvoření databáze"
+msgstr "Schází informace pro zrušení deklarace cizího klíče"
 
 #: ../tools/browser/common/gdaui-data-import.c:124
 msgid "Import specifications"
@@ -8058,15 +8084,28 @@ msgstr[2] "%d tabulek ve schématu „%s“:"
 msgid "None"
 msgstr "Žádné"
 
-#: ../tools/browser/common/ui-formgrid.c:198
+#: ../tools/browser/common/ui-formgrid.c:213
 msgid "Toggle between grid and form presentations"
 msgstr "Přepíná mezi zobrazením v podobě mřížky a formuláře"
 
-#: ../tools/browser/common/ui-formgrid.c:291
+#: ../tools/browser/common/ui-formgrid.c:225
+#| msgid "UPDATE statement needs a table to update data"
+msgid "Enable or disable auto update of data"
+msgstr "Zapnout nebo vypnout automatické aktualizace dat"
+
+#: ../tools/browser/common/ui-formgrid.c:324
 msgid "Execute action"
 msgstr "Provést akci"
 
-#: ../tools/browser/common/ui-formgrid.c:322
+#: ../tools/browser/common/ui-formgrid.c:390
+#: ../tools/browser/data-manager/data-source.c:809
+#, c-format
+msgid "Statement to execute is not a selection statement"
+msgstr "Příkaz ke spuštění není příkazem pro výběr"
+
+#: ../tools/browser/common/ui-formgrid.c:398
+#: ../tools/browser/common/ui-formgrid.c:426
+#: ../tools/browser/common/ui-formgrid.c:456
 #: ../tools/browser/query-exec/query-console.c:1066
 #: ../tools/browser/query-exec/query-console.c:1117
 #: ../tools/browser/schema-browser/table-info.c:529
@@ -8078,17 +8117,12 @@ msgstr ""
 "Chyba při provádění dotazu:\n"
 "%s"
 
-#: ../tools/browser/common/ui-formgrid.c:331
-#: ../tools/browser/common/ui-formgrid.c:343
-msgid "Action executed"
-msgstr "Akce provedena"
-
-#: ../tools/browser/common/ui-formgrid.c:376
-#: ../tools/browser/common/ui-formgrid.c:380
+#: ../tools/browser/common/ui-formgrid.c:517
+#: ../tools/browser/common/ui-formgrid.c:521
 msgid "Action successfully executed"
 msgstr "Akce úspěšně provedena"
 
-#: ../tools/browser/common/ui-formgrid.c:394
+#: ../tools/browser/common/ui-formgrid.c:538
 #, c-format
 msgid ""
 "Set or confirm the parameters to execute\n"
@@ -8097,11 +8131,11 @@ msgstr ""
 "Nastavte nebo potvrďte parametry pro spuštění\n"
 "akce „%s“"
 
-#: ../tools/browser/common/ui-formgrid.c:398
+#: ../tools/browser/common/ui-formgrid.c:542
 msgid "Execution of action"
 msgstr "Provádění akce"
 
-#: ../tools/browser/common/ui-formgrid.c:416
+#: ../tools/browser/common/ui-formgrid.c:569
 #: ../tools/browser/query-exec/query-console.c:1013
 #: ../tools/browser/schema-browser/table-info.c:557
 #, c-format
@@ -8110,7 +8144,7 @@ msgstr "Chyba při provádění dotazu: %s"
 
 #: ../tools/browser/data-manager/analyser.c:198
 msgid "Obtain referenced data in table "
-msgstr "Získat odkazovaná data v tabulce"
+msgstr "Získat odkazovaná data v tabulce "
 
 #: ../tools/browser/data-manager/analyser.c:215
 msgid "List referencing data in "
@@ -8363,11 +8397,6 @@ msgstr "Nelze najít žádný cizí klíč k „%s“"
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr "Pole zapojená do cizího klíče směřujícího na „%s“ nejsou známá"
-
-#: ../tools/browser/data-manager/data-source.c:809
-#, c-format
-msgid "Statement to execute is not a selection statement"
-msgstr "Příkaz ke spuštění není příkazem pro výběr"
 
 #: ../tools/browser/data-manager/data-source.c:949
 #, c-format
@@ -8766,7 +8795,7 @@ msgstr "Požadovaný objekt není tabulkou ani pohledem"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:397
 msgid "Auto incremented"
-msgstr "Automaticky zvýšeno"
+msgstr "Automaticky zvýšováno"
 
 #: ../tools/browser/schema-browser/objects-index.c:171
 msgid "Tables' index"
@@ -8843,14 +8872,14 @@ msgid "Could not load diagram"
 msgstr "Nelze načíst diagram"
 
 #: ../tools/browser/schema-browser/table-columns.c:233
-#, fuzzy, c-format
+#, c-format
 msgid "Declared foreign key '%s' on "
-msgstr "Cizí klíč směřující na "
+msgstr "Deklarovaný cizí klíč „%s“ směřující na "
 
 #: ../tools/browser/schema-browser/table-columns.c:236
-#, fuzzy, c-format
+#, c-format
 msgid "Foreign key '%s' on "
-msgstr "Cizí klíč směřující na "
+msgstr "Cizí klíč „%s“ směřující na "
 
 #: ../tools/browser/schema-browser/table-columns.c:302
 #, c-format
@@ -8871,7 +8900,7 @@ msgstr "Omezení na jedinečnost"
 
 #: ../tools/browser/schema-browser/table-columns.c:396
 msgid "Tables referencing this one"
-msgstr "Tabulky odkazující na toto"
+msgstr "Tabulky odkazující na tuto"
 
 #: ../tools/browser/schema-browser/table-columns.c:519
 msgid "Column Name"
@@ -8887,14 +8916,14 @@ msgid "Constraints and integrity rules"
 msgstr "Pravidla omezení a integrity"
 
 #: ../tools/browser/schema-browser/table-columns.c:772
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find table '%s.%s'"
-msgstr "Nelze namapovat tabulku „%s“: %s"
+msgstr "Nelze najít tabulku „%s.%s“"
 
 #: ../tools/browser/schema-browser/table-columns.c:807
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find declared foreign key '%s'"
-msgstr "Nelze najít žádný cizí klíč k „%s“"
+msgstr "Nelze najít deklarovaný cizí klíč „%s“"
 
 #: ../tools/browser/schema-browser/table-info.c:366
 msgid ""
@@ -8924,7 +8953,7 @@ msgstr "Metadata zatím nejsou dostupná"
 
 #: ../tools/browser/schema-browser/table-info.c:701
 msgid "Can't find information about table"
-msgstr "Nelze nalézt informace o tabulce"
+msgstr "Nelze najít informace o tabulce"
 
 #: ../tools/browser/schema-browser/table-info.c:737
 #, c-format
@@ -8950,9 +8979,9 @@ msgid "Values to insert into table"
 msgstr "Hodnoty, které se mají vložit do tabulky"
 
 #: ../tools/browser/schema-browser/table-info.c:976
-#, fuzzy, c-format
+#, c-format
 msgid "Can't find information about table '%s'"
-msgstr "Nelze nalézt informace o tabulce"
+msgstr "Nelze najít informace o tabulce „%s“"
 
 #: ../tools/browser/schema-browser/table-info.c:1005
 msgid "_Table"
@@ -8979,13 +9008,12 @@ msgid "Insert data into table"
 msgstr "Vložit data do tabulky"
 
 #: ../tools/browser/schema-browser/table-info.c:1012
-#, fuzzy
 msgid "_Declare foreign key"
-msgstr "Dbát na dodržování cizích klíčů"
+msgstr "_Deklarovat cizí klíč"
 
 #: ../tools/browser/schema-browser/table-info.c:1012
 msgid "Declare a foreign key for table"
-msgstr ""
+msgstr "Deklarovat cizí klíč pro tabulku"
 
 #: ../tools/browser/schema-browser/table-preferences.c:262
 msgid "default"
@@ -9100,17 +9128,17 @@ msgstr "Definice pohledu: %s"
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
 #: ../tools/command-exec.c:940
-#, fuzzy, c-format
+#, c-format
 msgid "references %s"
-msgstr "Předvolby"
+msgstr "odkazuje na %s"
 
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
 #: ../tools/command-exec.c:946
-#, fuzzy, c-format
+#, c-format
 msgid "references %s.%s"
-msgstr "Předvolby"
+msgstr "odkazuje na %s.%s"
 
 #: ../tools/config-info.c:45
 msgid "Installed providers list"
@@ -9375,22 +9403,24 @@ msgstr "Vynucené čtení metadat databáze (nebo části metadat, např. \"tabl
 #: ../tools/gda-sql.c:2027
 #, c-format
 msgid "%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"
-msgstr ""
+msgstr "%s <název_ck> <tabulkaA>(<sloupecA>,…) <tabulkaB>(<sloupecB>,…)"
 
 #: ../tools/gda-sql.c:2028
 msgid ""
 "Declare a new foreign key (not actually in database): tableA references "
 "tableB"
 msgstr ""
+"Deklarovat nový cizí klíč (ne skutečně v databázi): tabulkaA odkazuje na "
+"tabulkaB"
 
 #: ../tools/gda-sql.c:2039
 #, c-format
 msgid "%s <fkname> <tableA> <tableB>"
-msgstr ""
+msgstr "%s <název_ck> <tabulkaA> <tabulkaB>"
 
 #: ../tools/gda-sql.c:2040
 msgid "Un-declare a foreign key (not actually in database)"
-msgstr ""
+msgstr "Zrušit deklaraci cizího klíče (ne skutečně v databázi)"
 
 #: ../tools/gda-sql.c:2051
 #, c-format
@@ -9817,24 +9847,24 @@ msgid "List of defined parameters"
 msgstr "Seznam definovaných parametrů"
 
 #: ../tools/gda-sql.c:4039
-#, fuzzy, c-format
+#, c-format
 msgid "Missing foreign key declaration specification"
-msgstr "Specifikace serverové operace"
+msgstr "Schází specifikace deklarace cizího klíče"
 
 #: ../tools/gda-sql.c:4156
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed foreign key declaration specification"
-msgstr "Specifikace serverové operace"
+msgstr "Chybná specifikace deklarace cizího klíče"
 
 #: ../tools/gda-sql.c:4188
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed table name specification '%s'"
-msgstr "Chybná specifikace zdroje dat „%s“"
+msgstr "Chybná specifikace názvu tabulky „%s“"
 
 #: ../tools/gda-sql.c:4276 ../tools/gda-sql.c:4350
-#, fuzzy, c-format
+#, c-format
 msgid "Missing foreign key name argument"
-msgstr "Schází název sloupce cizího klíče pro tabulku „%s“"
+msgstr "Schází argument s názvem cizího klíče"
 
 #: ../tools/gda-sql.c:4382 ../tools/gda-sql.c:4904
 msgid "Wrong row condition"
@@ -10048,6 +10078,9 @@ msgstr "Objekty"
 #: ../tools/web-server.c:1888
 msgid "Triggers"
 msgstr "Triggery"
+
+#~ msgid "Action executed"
+#~ msgstr "Akce provedena"
 
 #~ msgid "Unknown internal schema's version: '%s'"
 #~ msgstr "Neznámá verze interního schématu: „%s“"
