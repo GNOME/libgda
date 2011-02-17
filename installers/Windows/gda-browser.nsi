@@ -23,9 +23,19 @@ SetCompressor lzma
 !include "prov_sqlite.nsh"
 !include "uninst.nsh"
 
+
+; MUI Settings / Header
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_RIGHT
+!define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\orange-r-nsis.bmp"
+!define MUI_HEADERIMAGE_UNBITMAP "${NSISDIR}\Contrib\Graphics\Header\orange-uninstall-r-nsis.bmp"
+
+; MUI Settings / Wizard
+!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange-nsis.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange-uninstall-nsis.bmp"
+
 ; MUI Settings
 !define MUI_ABORTWARNING
-;!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
 !define MUI_ICON "gda-browser.ico"
 !define MUI_UNICON "gda-browser.ico"
 
@@ -101,8 +111,8 @@ LangString DESC_prov_mdb ${LANG_ENGLISH} "Ms Access database provider"
 LangString DESC_prov_mdb ${LANG_FRENCH} "Fournisseur pour les bases de données MS Access"
 LangString DESC_prov_postgresql ${LANG_ENGLISH} "PostgreSQL database provider"
 LangString DESC_prov_postgresql ${LANG_FRENCH} "Fournisseur pour les bases de données PostgreSQL"
-LangString DESC_prov_oracle ${LANG_ENGLISH} "Oracle database provider"
-LangString DESC_prov_oracle ${LANG_FRENCH} "Fournisseur pour les bases de données Oracle"
+LangString DESC_prov_oracle ${LANG_ENGLISH} "Oracle database provider (needs runtime provided by Oracle)"
+LangString DESC_prov_oracle ${LANG_FRENCH} "Fournisseur pour les bases de données Oracle (nécessite un composant fourni par Oracle)"
 LangString DESC_prov_sqlite ${LANG_ENGLISH} "Sqlite database provider"
 LangString DESC_prov_sqlite ${LANG_FRENCH} "Fournisseur pour les bases de données Sqlite"
 LangString DESC_prov_web ${LANG_ENGLISH} "Provider for database accessed through a web server"
