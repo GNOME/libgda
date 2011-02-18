@@ -177,11 +177,7 @@ create_internal_layout (FkDeclare *decl)
 	gint i, nrows;
 	GSList *list;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (decl));
-#else
-	dcontents = GTK_DIALOG (decl)->vbox;
-#endif
 	gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 
 	/* label */
