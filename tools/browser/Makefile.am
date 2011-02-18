@@ -121,6 +121,7 @@ desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 # canvas example
 canvas_example_DEPENDENCIES = \
+	libbrowser.la \
 	canvas/libcanvas.la \
 	common/libcommon.la
 

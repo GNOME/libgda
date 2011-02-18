@@ -354,6 +354,7 @@ introspection_sources = $(gda_sources) \
 Gda-5.0.gir: $(lib_LTLIBRARIES)
 Gda_5_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
 Gda_5_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
+
 Gda_5_0_gir_LIBS = $(lib_LTLIBRARIES)
 Gda_5_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
 INTROSPECTION_GIRS += Gda-5.0.gir

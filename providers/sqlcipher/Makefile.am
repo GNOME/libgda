@@ -14,9 +14,7 @@ AM_CPPFLAGS = \
 
 sqlite_sources = sqlite3.c sqlite3.h
 $(sqlite_sources): $(srcdir)/sqlcipher.patch $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h
-	cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c sqlite3.c
-	cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h sqlite3.h
-	patch -p0 < $(srcdir)/sqlcipher.patch
+	(cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c sqlite3.c && cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h sqlite3.h && patch -p0 < $(srcdir)/sqlcipher.patch)
 
 libgda_sqlcipher_la_SOURCES = \
 	$(sqlite_sources) \
