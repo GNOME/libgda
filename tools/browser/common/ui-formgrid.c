@@ -27,6 +27,7 @@
 #include <libgda-ui/gdaui-data-selector.h>
 #include "../support.h"
 #include "../browser-window.h"
+#include <libgda/gda-data-model-extra.h>
 
 static void ui_formgrid_class_init (UiFormGridClass * class);
 static void ui_formgrid_init (UiFormGrid *wid);
@@ -40,6 +41,7 @@ static void ui_formgrid_get_property (GObject *object,
 				      guint param_id,
 				      GValue *value,
 				      GParamSpec *pspec);
+static void ui_formgrid_show (GtkWidget *widget);
 static BrowserConnection *get_browser_connection (UiFormGrid *formgrid);
 
 struct _UiFormGridPriv
@@ -49,6 +51,9 @@ struct _UiFormGridPriv
 	GtkWidget   *raw_form;
 	GtkWidget   *raw_grid;
 	GtkWidget   *info;
+	GtkWidget   *autoupdate_toggle;
+	gboolean     autoupdate;
+	gboolean     autoupdate_possible;
 	GdauiDataProxyInfoFlag flags;
 	
 	BrowserConnection *bcnc;
@@ -97,6 +102,7 @@ ui_formgrid_class_init (UiFormGridClass *class)
 	
 	parent_class = g_type_class_peek_parent (class);
 	object_class->dispose = ui_formgrid_dispose;
+	GTK_WIDGET_CLASS (class)->show = ui_formgrid_show;
 
 	/* Properties */
         object_class->set_property = ui_formgrid_set_property;
@@ -133,6 +139,17 @@ ui_formgrid_dispose (GObject *object)
         parent_class->dispose (object);
 }
 
+static void
+ui_formgrid_show (GtkWidget *widget)
+{
+	UiFormGrid *formgrid;
+	((GtkWidgetClass *)parent_class)->show (widget);
+	formgrid = UI_FORMGRID (widget);
+	if (! formgrid->priv->autoupdate_possible)
+		gtk_widget_hide (formgrid->priv->autoupdate_toggle);
+}
+
+static void form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid);
 static void form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid);
 static void raw_grid_populate_popup_cb (GdauiRawGrid *gdauirawgrid, GtkMenu *menu, UiFormGrid *formgrid);
 
@@ -147,6 +164,8 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv->info = NULL;
 	formgrid->priv->flags = GDAUI_DATA_PROXY_INFO_CURRENT_ROW;
 	formgrid->priv->bcnc = NULL;
+	formgrid->priv->autoupdate = TRUE;
+	formgrid->priv->autoupdate_possible = FALSE;
 
 	/* notebook */
 	formgrid->priv->nb = gtk_notebook_new ();
@@ -158,7 +177,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	/* grid on 1st page of notebook */
 	sw = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-        gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_IN);
+        gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), sw, NULL);
 	gtk_widget_show (sw);
 
@@ -185,7 +204,8 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	hbox = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (formgrid), hbox, FALSE, TRUE, 0);
 	gtk_widget_show (hbox);
-		
+
+	/* button to toggle between grid and form mode */
 	button = gtk_toggle_button_new ();
 	GdkPixbuf *pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_GRID);
 	gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
@@ -197,12 +217,30 @@ ui_formgrid_init (UiFormGrid *formgrid)
 			  G_CALLBACK (form_grid_toggled_cb), formgrid);
 	gtk_widget_set_tooltip_text (button, _("Toggle between grid and form presentations"));
 
+	/* button to toggle between auto update and not */
+	button = gtk_toggle_button_new ();
+	GtkWidget *img = gtk_image_new_from_stock (GTK_STOCK_EXECUTE, GTK_ICON_SIZE_MENU);
+	gtk_button_set_image (GTK_BUTTON (button), img);
+	formgrid->priv->autoupdate_toggle  = button;
+
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), formgrid->priv->autoupdate);
+	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, TRUE, 0);
+	g_signal_connect (G_OBJECT (button), "toggled",
+			  G_CALLBACK (form_grid_autoupdate_cb), formgrid);
+	gtk_widget_set_tooltip_text (button, _("Enable or disable auto update of data"));
+
 	formgrid->priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (formgrid->priv->raw_grid), 
 							  formgrid->priv->flags |
 							  GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 							  GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS);
 	gtk_box_pack_start (GTK_BOX (hbox), formgrid->priv->info, TRUE, TRUE, 0);
 	gtk_widget_show (formgrid->priv->info);
+}
+
+static void
+form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid)
+{
+	formgrid->priv->autoupdate = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button));
 }
 
 static void
@@ -270,7 +308,7 @@ get_browser_connection (UiFormGrid *formgrid)
 static void execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid);
 
 static void
-raw_grid_populate_popup_cb (GdauiRawGrid *gdauirawgrid, GtkMenu *menu, UiFormGrid *formgrid)
+raw_grid_populate_popup_cb (G_GNUC_UNUSED GdauiRawGrid *gdauirawgrid, GtkMenu *menu, UiFormGrid *formgrid)
 {
 	/* add actions to execute to menu */
 	GdaDataModelIter *iter;
@@ -308,44 +346,144 @@ raw_grid_populate_popup_cb (GdauiRawGrid *gdauirawgrid, GtkMenu *menu, UiFormGri
 	g_slist_free (actions_list);
 }
 
+typedef struct {
+	BrowserConnection *bcnc; /* ref held */
+	UiFormGrid    *formgrid; /* ref held */
+	gchar         *name;
+        GdaStatement  *stmt; /* ref held */
+        GdaSet        *params; /* ref held */
+	GdaDataModel  *model; /* ref held */
+	guint          exec_id;
+	guint          timer_id;
+} ActionExecutedData;
+static void
+action_executed_data_free (ActionExecutedData *data)
+{
+	g_object_unref ((GObject*) data->bcnc);
+	if (data->formgrid)
+		g_object_unref ((GObject*) data->formgrid);
+	g_free (data->name);
+	g_object_unref ((GObject*) data->stmt);
+	g_object_unref ((GObject*) data->params);
+	if (data->model)
+		g_object_unref ((GObject*) data->model);
+	if (data->timer_id)
+		g_source_remove (data->timer_id);
+	g_free (data);
+}
+
+static gboolean
+exec_end_timeout_cb (ActionExecutedData *aed)
+{
+	GError *error = NULL;
+	GObject *obj;
+	obj = browser_connection_execution_get_result (aed->bcnc, aed->exec_id,
+                                                       NULL, &error);
+	if (obj) {
+                if (GDA_IS_DATA_MODEL (obj)) {
+                        g_assert (aed->model == (GdaDataModel*) obj);
+			gda_data_model_thaw (aed->model);
+			gda_data_model_reset (aed->model);
+
+			aed->exec_id = 0;
+			aed->timer_id = 0;
+			return FALSE;
+                }
+                else {
+			g_object_unref (obj);
+                        g_set_error (&error, 0, 0,
+                                     _("Statement to execute is not a selection statement"));
+                }
+        }
+
+        if (error) {
+		GtkWidget *toplevel;
+		toplevel = gtk_widget_get_toplevel (GTK_WIDGET (aed->formgrid));
+		browser_show_error (GTK_WINDOW (toplevel),
+                                    _("Error executing query:\n%s"),
+                                    error->message ?
+                                    error->message : _("No detail"));
+		g_clear_error (&error);
+		gda_data_model_thaw (aed->model);
+                aed->exec_id = 0;
+		aed->timer_id = 0;
+                return FALSE;
+        }
+        else
+                return TRUE; /* keep timer */
+}
+
+static void
+action_executed_holder_changed_cb (G_GNUC_UNUSED GdaSet *params, G_GNUC_UNUSED GdaHolder *holder,
+				   ActionExecutedData *aed)
+{
+	if (! aed->formgrid->priv->autoupdate || ! aed->formgrid->priv->autoupdate_possible)
+		return;
+
+	GError *error = NULL;
+	guint jid;
+	gda_data_model_freeze (aed->model);
+	jid = browser_connection_rerun_select (aed->bcnc, aed->model, &error);
+	if (!jid) {
+		GtkWidget *toplevel;
+		toplevel = gtk_widget_get_toplevel (GTK_WIDGET (aed->formgrid));
+		browser_show_error (GTK_WINDOW (toplevel),
+                                    _("Error executing query:\n%s"),
+                                    error->message ?
+                                    error->message : _("No detail"));
+		gda_data_model_thaw (aed->model);
+	}
+	else {
+		/* watch the end of execution */
+		aed->exec_id = jid;
+		if (! aed->timer_id)
+			aed->timer_id = g_timeout_add (50, (GSourceFunc) exec_end_timeout_cb, aed);
+	}
+}
+
+/*
+ * Called after an action's statement has been executed
+ */
 static void
 statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 		       G_GNUC_UNUSED guint exec_id,
 		       GObject *out_result,
 		       G_GNUC_UNUSED GdaSet *out_last_inserted_row, GError *error,
-		       UiFormGrid *formgrid)
+		       ActionExecutedData *aed)
 {
 	GtkWidget *toplevel;
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (formgrid));
+
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (aed->formgrid));
+	g_object_unref (aed->formgrid);
+	aed->formgrid = NULL;
         if (error)
                 browser_show_error (GTK_WINDOW (toplevel),
                                     _("Error executing query:\n%s"),
                                     error->message ?
                                     error->message : _("No detail"));
 	else if (out_result && GDA_IS_DATA_MODEL (out_result)) {
-		GtkWidget *dialog, *toplevel, *label, *fg;
+		GtkWidget *dialog, *label, *fg;
 		GtkWidget *dcontents;
 		
 		gchar *tmp;
-		toplevel = gtk_widget_get_toplevel (GTK_WIDGET (formgrid));
-		dialog = gtk_dialog_new_with_buttons (_("Action executed"),
-						      GTK_WINDOW (toplevel),
+		dialog = gtk_dialog_new_with_buttons (aed->name,
+						      NULL,
 						      0,
 						      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE, NULL);
 		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 		gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE, TRUE);
 		
-		tmp = g_strdup_printf ("<b>%s</b>", _("Action executed"));
+		tmp = g_markup_printf_escaped ("<b>%s:</b>", aed->name);
 		label = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (label), tmp);
 		g_free (tmp);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
-		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 5);
 		
 		fg = ui_formgrid_new (GDA_DATA_MODEL (out_result),
 				      GDAUI_DATA_PROXY_INFO_CURRENT_ROW);
-		ui_formgrid_set_connection (UI_FORMGRID (fg), get_browser_connection (formgrid));
+		ui_formgrid_set_connection (UI_FORMGRID (fg), aed->bcnc);
 
 		if (GDA_IS_DATA_SELECT (out_result)) {
 			GdaStatement *stmt;
@@ -354,6 +492,13 @@ statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 				ui_formgrid_handle_user_prefs (UI_FORMGRID (fg), NULL, stmt);
 				g_object_unref (stmt);
 			}
+			aed->model = g_object_ref (out_result);
+			g_signal_connect (aed->params, "holder-changed",
+					  G_CALLBACK (action_executed_holder_changed_cb), aed);
+
+			aed->formgrid = g_object_ref (fg);
+			aed->formgrid->priv->autoupdate_possible = TRUE;
+			gtk_widget_show (aed->formgrid->priv->autoupdate_toggle);
 		}
 		gtk_box_pack_start (GTK_BOX (dcontents), fg, TRUE, TRUE, 0);
 		
@@ -364,6 +509,7 @@ statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 				  G_CALLBACK (gtk_widget_destroy), NULL);
 		g_signal_connect (dialog, "close",
 				  G_CALLBACK (gtk_widget_destroy), NULL);
+		aed = NULL;
 	}
         else if (BROWSER_IS_WINDOW (toplevel)) {
 		browser_window_show_notice_printf (BROWSER_WINDOW (toplevel),
@@ -374,6 +520,9 @@ statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 	else
 		browser_show_message (GTK_WINDOW (toplevel),
 				      "%s", _("Action successfully executed"));
+
+	if (aed)
+		action_executed_data_free (aed);
 }
 
 static void
@@ -398,20 +547,30 @@ execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
 	if (response == GTK_RESPONSE_ACCEPT) {
                 GError *lerror = NULL;
 		BrowserConnection *bcnc;
+		ActionExecutedData *aed;
 		
 		bcnc = get_browser_connection (formgrid);
 		g_assert (bcnc);
 		
+		aed = g_new0 (ActionExecutedData, 1);
+		aed->formgrid = g_object_ref (formgrid);
+		aed->bcnc = g_object_ref (bcnc);
+		if (act->name)
+			aed->name = g_strdup (act->name);
+		aed->stmt = g_object_ref (act->stmt);
+		aed->params = g_object_ref (act->params);
+
                 if (! browser_connection_execute_statement_cb (bcnc,
                                                                act->stmt, act->params,
                                                                GDA_STATEMENT_MODEL_RANDOM_ACCESS,
                                                                FALSE,
                                                                (BrowserConnectionExecuteCallback) statement_executed_cb,
-                                                               formgrid, &lerror)) {
+                                                               aed, &lerror)) {
                         browser_show_error (GTK_WINDOW (toplevel),
                                             _("Error executing query: %s"),
                                             lerror && lerror->message ? lerror->message : _("No detail"));
                         g_clear_error (&lerror);
+			action_executed_data_free (aed);
                 }
 	}
 }
