@@ -1,0 +1,4 @@
+Run the "make-zip-setup.sh" to create ZIP files of Libgda; it also creates the necessary
+files to execute the NSIS installer builder to create an installer for GdaBrowser.
+
+Run the "make-clean.sh" to clean all generated files.
