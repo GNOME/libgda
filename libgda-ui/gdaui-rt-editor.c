@@ -160,10 +160,9 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
         { "ActionHelp", GTK_STOCK_HELP, N_("_Syntax help"), NULL, N_("Show syntax help"), G_CALLBACK (help_cb), FALSE}
 };
 
-/* STOCK_SELECT_COLOR */
 static const GtkActionEntry ui_actions[] = {
         { "ActionAddImage", "insert-image", N_("_Add image"), NULL, N_("Insert image"), G_CALLBACK (add_image_cb)},
-        { "ActionReset", GTK_STOCK_CLEAR, N_("_Reset"), NULL, N_("Reset to normal text"), G_CALLBACK (reset_all_cb)},
+        { "ActionReset", GTK_STOCK_CLEAR, N_("_Normal text"), NULL, N_("Reset to normal text"), G_CALLBACK (reset_all_cb)},
 };
 
 static const gchar *ui_actions_info =
