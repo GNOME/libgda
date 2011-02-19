@@ -4,8 +4,8 @@
 #
 # CAMBIAR: mantenedor -> manejador
 # JulioBorjaBarra <juboba@gmail.com>, 2010.
-# Jorge González <jorgegonz@svn.gnome.org>, 200, 2010.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
+# Jorge González <jorgegonz@svn.gnome.org>, 200, 2010, 2011.
 #
 #: ../libgda/gda-connection.c:375
 msgid ""
@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2011-02-15 20:18+0000\n"
-"PO-Revision-Date: 2011-02-15 21:25+0100\n"
-"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
+"POT-Creation-Date: 2011-02-16 15:01+0000\n"
+"PO-Revision-Date: 2011-02-19 15:01+0100\n"
+"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,7 +135,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:509
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:168
 #: ../libgda-ui/gdaui-init.c:511 ../libgda-ui/gdaui-login.c:426
-#: ../libgda-ui/gdaui-rt-editor.c:671
+#: ../libgda-ui/gdaui-rt-editor.c:670
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -3547,7 +3547,7 @@ msgstr "Seleccionar archivo para cargar"
 
 #: ../libgda-ui/data-entries/common-bin.c:77
 #: ../libgda-ui/data-entries/plugins/common-pict.c:398
-#: ../libgda-ui/gdaui-rt-editor.c:669
+#: ../libgda-ui/gdaui-rt-editor.c:668
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3827,7 +3827,7 @@ msgid "_Save image"
 msgstr "_Guardar imagen"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:339
-#: ../libgda-ui/gdaui-rt-editor.c:631
+#: ../libgda-ui/gdaui-rt-editor.c:630
 msgid "Select image to load"
 msgstr "Seleccionar la imagen que cargar"
 
@@ -4203,7 +4203,6 @@ msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Cierto si tiene sentido expandir el formulario verticalmente"
 
 #: ../libgda-ui/gdaui-basic-form.c:331
-#| msgid "Show data source's properties"
 msgid "Shown data entries"
 msgstr "Entradas de datos mostradas"
 
@@ -4377,7 +4376,6 @@ msgid "No title"
 msgstr "Sin título"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1783
-#| msgid "Show Column _Titles"
 msgid "Shown columns"
 msgstr "Columnas mostradas"
 
@@ -4599,48 +4597,49 @@ msgstr "Ayuda de _sintaxis"
 msgid "Show syntax help"
 msgstr "Mostrar la ayuda de sintaxis"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:164
 msgid "_Add image"
 msgstr "_Añadir imagen"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:164
 msgid "Insert image"
 msgstr "Insertar imagen"
 
-#: ../libgda-ui/gdaui-rt-editor.c:166
-msgid "_Reset"
-msgstr "_Restablecer"
+#: ../libgda-ui/gdaui-rt-editor.c:165
+#| msgid "Bold text"
+msgid "_Normal text"
+msgstr "Texto _normal"
 
-#: ../libgda-ui/gdaui-rt-editor.c:166
+#: ../libgda-ui/gdaui-rt-editor.c:165
 msgid "Reset to normal text"
 msgstr "Restablecer al texto normal"
 
-#: ../libgda-ui/gdaui-rt-editor.c:241
+#: ../libgda-ui/gdaui-rt-editor.c:240
 msgid "Don't display a specific background for the text"
 msgstr "No mostrar un fondo específico para el texto"
 
-#: ../libgda-ui/gdaui-rt-editor.c:251
+#: ../libgda-ui/gdaui-rt-editor.c:250
 msgid "Display raw markup text instead of formatted text"
 msgstr ""
 "Mostrar un marcado en bruto para el texto en lugar del texto formateado"
 
-#: ../libgda-ui/gdaui-rt-editor.c:262
+#: ../libgda-ui/gdaui-rt-editor.c:261
 msgid "The buffer which is displayed"
 msgstr "El búfer que se está mostrando"
 
-#: ../libgda-ui/gdaui-rt-editor.c:835
+#: ../libgda-ui/gdaui-rt-editor.c:834
 msgid "Reset font size"
 msgstr "Restablecer el tamaño de la tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:841
+#: ../libgda-ui/gdaui-rt-editor.c:840
 msgid "Decrease font size (zoom out)"
 msgstr "Reducir tamaño de tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:847
+#: ../libgda-ui/gdaui-rt-editor.c:846
 msgid "Increase font size (zoom in)"
 msgstr "Aumentar tamaño de tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:853
+#: ../libgda-ui/gdaui-rt-editor.c:852
 msgid "Show source markup"
 msgstr "Mostrar el origen del marcado"
 
@@ -10194,6 +10193,9 @@ msgstr "Objetos"
 #: ../tools/web-server.c:1888
 msgid "Triggers"
 msgstr "Disparadores"
+
+#~ msgid "_Reset"
+#~ msgstr "_Restablecer"
 
 #~ msgid "Action executed"
 #~ msgstr "Acción ejecutada"
