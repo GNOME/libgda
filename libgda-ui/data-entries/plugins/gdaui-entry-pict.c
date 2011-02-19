@@ -1,6 +1,6 @@
 /* gdaui-entry-pict.c
  *
- * Copyright (C) 2006 - 2010 Vivien Malerba
+ * Copyright (C) 2006 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -509,12 +509,8 @@ value_is_equal_to (GdauiEntryWrapper *mgwrap, const GValue *value)
 						    mgpict->priv->bindata.data_length);
 				break;
 			case ENCODING_BASE64: 
-#if (GLIB_MINOR_VERSION >= 12)
-				curstr = g_base64_encode (mgpict->priv->bindata.data, mgpict->priv->bindata.data_length);
-#else
-				g_warning ("Base64 enoding/decoding is not supported in the GLib version %d.%d.%d",
-					   glib_major_version, glib_minor_version, glib_micro_version);
-#endif
+				curstr = g_base64_encode (mgpict->priv->bindata.data,
+							  mgpict->priv->bindata.data_length);
 				break;
 			default:
 				g_assert_not_reached ();

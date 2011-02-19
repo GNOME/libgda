@@ -400,8 +400,7 @@ fk_declare_new (GtkWindow *parent, GdaMetaStruct *mstruct, GdaMetaTable *table)
 			       GDA_META_DB_OBJECT (table)->obj_short_name);
 	wid = (GtkWidget*) g_object_new (FK_DECLARE_TYPE, "title", str,
 					 "transient-for", parent,
-					 "border-width", 10, 
-					 "has-separator", FALSE, NULL);
+					 "border-width", 10, NULL);
 	g_free (str);
 
 	decl = FK_DECLARE (wid);

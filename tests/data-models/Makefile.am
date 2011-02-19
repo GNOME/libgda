@@ -62,7 +62,7 @@ check_vcnc_CFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda/sqlite/vcnc
 check_vcnc_LDADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 

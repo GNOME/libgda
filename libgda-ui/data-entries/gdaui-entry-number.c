@@ -1,6 +1,6 @@
 /* gdaui-entry-number.c
  *
- * Copyright (C) 2009 - 2010 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -142,7 +142,8 @@ gdaui_entry_number_class_init (GdauiEntryNumberClass * klass)
 	object_class->get_property = gdaui_entry_number_get_property;
 
 	g_object_class_install_property (object_class, PROP_EDITING_CANCELED,
-					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE, G_PARAM_READABLE));
+					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE,
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_OPTIONS,
 					 g_param_spec_string ("options", NULL, NULL, NULL, G_PARAM_WRITABLE));
 }
@@ -255,9 +256,9 @@ gdaui_entry_number_finalize (GObject   * object)
 
 static void
 gdaui_entry_number_set_property (GObject *object,
-				    guint param_id,
-				    const GValue *value,
-				    GParamSpec *pspec)
+				 guint param_id,
+				 const GValue *value,
+				 GParamSpec *pspec)
 {
 	GdauiEntryNumber *mgstr;
 
@@ -266,6 +267,9 @@ gdaui_entry_number_set_property (GObject *object,
 		switch (param_id) {
 		case PROP_OPTIONS:
 			set_entry_options (mgstr, g_value_get_string (value));
+			break;
+		case PROP_EDITING_CANCELED:
+			TO_IMPLEMENT;
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -276,9 +280,9 @@ gdaui_entry_number_set_property (GObject *object,
 
 static void
 gdaui_entry_number_get_property (GObject *object,
-			     guint param_id,
-			     GValue *value,
-			     GParamSpec *pspec)
+				 guint param_id,
+				 GValue *value,
+				 GParamSpec *pspec)
 {
 	GdauiEntryNumber *mgstr;
 

@@ -592,13 +592,8 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 }
 
 static gboolean
-text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *editor)
+text_view_draw (GtkTextView *tv, cairo_t *cr, QueryEditor *editor)
 {
-	GdkWindow *win;
-
-	win = gtk_text_view_get_window (tv, GTK_TEXT_WINDOW_TEXT);
-	if (event->window != win)
-		return FALSE;
 	if (!editor->priv->hist_focus)
 		return FALSE;
 	
@@ -648,16 +643,15 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	redraw_rect.width = visible_rect.width;
 	redraw_rect.height = visible_rect.height;
 	
-	cairo_t *cr = gdk_cairo_create (win);
 	GdkRectangle rect;
 	margin = gtk_text_view_get_left_margin (tv);
 	rect.x = redraw_rect.x + MAX (0, margin - 1);
 	rect.y = win_y;
 	rect.width = redraw_rect.width;
 	rect.height = height;
+	cairo_set_source_rgba (cr, .5, .5, .5, .3);
 	gdk_cairo_rectangle (cr, &rect);
 	cairo_fill (cr);
-	cairo_destroy (cr);
 
 	return FALSE;
 }
@@ -708,8 +702,8 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 			  G_CALLBACK (event), editor);
 	g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text)), "changed", 
 			  G_CALLBACK (text_buffer_changed_cb), editor);
-	g_signal_connect (editor->priv->text, "expose-event",
-			  G_CALLBACK (text_view_expose_event), editor);
+	g_signal_connect (editor->priv->text, "draw",
+			  G_CALLBACK (text_view_draw), editor);
 
 	/* create some tags */
 	GtkTextBuffer *buffer;

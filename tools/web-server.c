@@ -1,6 +1,6 @@
 /* web-server.c
  *
- * Copyright (C) 2008 - 2009 Vivien Malerba
+ * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -472,11 +472,7 @@ get_file (G_GNUC_UNUSED WebServer *server, SoupMessage *msg, const char *path, G
 	SoupBuffer *buffer;
 	buffer = soup_buffer_new_with_owner (g_mapped_file_get_contents (mfile),
 					     g_mapped_file_get_length (mfile),
-#if GLIB_CHECK_VERSION(2,22,0)
 					     mfile, (GDestroyNotify) g_mapped_file_unref);
-#else
-					     mfile, (GDestroyNotify) g_mapped_file_free);
-#endif
 	soup_message_body_append_buffer (msg->response_body, buffer);
 	soup_buffer_free (buffer);
 	soup_message_set_status (msg, SOUP_STATUS_OK);

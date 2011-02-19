@@ -1,6 +1,6 @@
 /* gdaui-entry-common-time.c
  *
- * Copyright (C) 2003 - 2010 Vivien Malerba
+ * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -147,7 +147,8 @@ gdaui_entry_common_time_class_init (GdauiEntryCommonTimeClass * class)
 	object_class->get_property = gdaui_entry_common_time_get_property;
 
 	g_object_class_install_property (object_class, PROP_EDITING_CANCELED,
-					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE, G_PARAM_READABLE));
+					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE,
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_TYPE,
 					 g_param_spec_uint ("type", NULL, NULL, 0, G_MAXUINT, GDA_TYPE_TIME, 
 							    G_PARAM_WRITABLE | G_PARAM_READABLE));
@@ -258,6 +259,9 @@ gdaui_entry_common_time_set_property (GObject *object,
 		switch (param_id) {
 		case PROP_TYPE:
 			gdaui_data_entry_set_value_type (GDAUI_DATA_ENTRY (object), g_value_get_uint (value));
+			break;
+		case PROP_EDITING_CANCELED:
+			TO_IMPLEMENT;
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
