@@ -171,6 +171,22 @@ spec_destroy_func (GdaVconnectionDataModelSpec *spec)
 	g_free (spec);
 }
 
+static GList *
+create_columns (GdaVconnectionDataModelSpec *spec)
+{
+	g_return_val_if_fail (spec->data_model, NULL);
+
+	GList *columns = NULL;
+	guint i, ncols;
+	ncols = gda_data_model_get_n_columns (spec->data_model);
+	for (i = 0; i < ncols; i++) {
+		GdaColumn *mcol = gda_data_model_describe_column (spec->data_model, i);
+		GdaColumn *ccol = gda_column_copy (mcol);
+		columns = g_list_prepend (columns, ccol);
+	}
+	return g_list_reverse (columns);
+}
+
 /**
  * gda_vconnection_data_model_add_model
  * @cnc: a #GdaVconnectionDataModel connection
@@ -195,6 +211,7 @@ gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc,
 
 	spec = g_new0 (GdaVconnectionDataModelSpec, 1);
 	spec->data_model = model;
+	spec->create_columns_func = create_columns;
 	g_object_ref (model);
 	retval = gda_vconnection_data_model_add (cnc, spec, (GDestroyNotify) spec_destroy_func, table_name, error);
 

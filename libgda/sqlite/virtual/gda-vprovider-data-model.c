@@ -353,22 +353,21 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		td->real_model = td->spec->data_model;
 		g_object_ref (td->real_model);
 	}
-	else  {
-		GError *error = NULL;
-		if (!td->columns)
-			td->columns = td->spec->create_columns_func (td->spec, &error);
-		if (! td->columns) {
-			if (error && error->message) {
-				int len = strlen (error->message) + 1;
-				*pzErr = SQLITE3_CALL (sqlite3_malloc) (sizeof (gchar) * len);
-				memcpy (*pzErr, error->message, len); /* Flawfinder: ignore */
-			}
-			else 
-				*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Could not compute virtual table's columns"));
-			return SQLITE_ERROR;
+
+	GError *error = NULL;
+	if (!td->columns && td->spec->create_columns_func)
+		td->columns = td->spec->create_columns_func (td->spec, &error);
+	if (! td->columns) {
+		if (error && error->message) {
+			int len = strlen (error->message) + 1;
+			*pzErr = SQLITE3_CALL (sqlite3_malloc) (sizeof (gchar) * len);
+			memcpy (*pzErr, error->message, len); /* Flawfinder: ignore */
 		}
-		ncols = g_list_length (td->columns);
+		else 
+			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Could not compute virtual table's columns"));
+		return SQLITE_ERROR;
 	}
+	ncols = g_list_length (td->columns);
 	td->n_columns = ncols;
 
 	/* create the CREATE TABLE statement */

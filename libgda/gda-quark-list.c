@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * Authors:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -192,6 +192,16 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 
 		while (arr[n] && (* (arr[n]))) {
 			gchar **pair;
+			gchar *tmp;
+			for (tmp = arr[n]; *tmp; tmp++) {
+				if (*tmp == '=')
+					break;
+			}
+			if (!*tmp) {
+				/* ignore this string since it does not contain the '=' char */
+				n++;
+				continue;
+			}
 
 			pair = (gchar **) g_strsplit (arr[n], "=", 2);
 			if (pair && pair[0]) {
@@ -199,8 +209,10 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 				gchar *value = pair[1];
 				g_strstrip (name);
 				gda_rfc1738_decode (name);
-				g_strstrip (value);
-				gda_rfc1738_decode (value);
+				if (value) {
+					g_strstrip (value);
+					gda_rfc1738_decode (value);
+				}
 				g_hash_table_insert (qlist->hash_table, 
 						     (gpointer) name, (gpointer) value);
 				g_free (pair);
