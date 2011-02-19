@@ -166,7 +166,7 @@ gda_tree_node_class_init (GdaTreeNodeClass *klass)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaTreeNodeClass, node_deleted),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__BOXED,
+			      g_cclosure_marshal_VOID__STRING,
 			      G_TYPE_NONE, 1, G_TYPE_STRING);
 
 	klass->node_changed = m_node_changed;
