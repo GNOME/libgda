@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-02-12 08:56+0000\n"
-"PO-Revision-Date: 2011-02-13 20:31+0100\n"
+"POT-Creation-Date: 2011-02-15 20:23+0000\n"
+"PO-Revision-Date: 2011-02-20 18:31+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -128,7 +128,7 @@ msgid ""
 msgstr ""
 "Desde la <link xref=\"schema-browser-perspective\">perspectiva del visor de "
 "esquemas</link>, cuando las propiedades de una tabla se muestran en una "
-"solapa, use el menú <guiseq><gui>Tabla</gui><gui>Insertar datos</gui></"
+"pestaña, use el menú <guiseq><gui>Tabla</gui><gui>Insertar datos</gui></"
 "guiseq> para hacer que aparezca el menú contextual que contiene una entrada "
 "de datos por cada columna de la tabla en la que insertar los datos."
 
@@ -350,7 +350,7 @@ msgstr ""
 
 #: C/schema-browser-perspective.page:29(p)
 msgid "The right pane is composed of several types of tabs:"
-msgstr "El panel derecho se compone de distintos tipos de solapas:"
+msgstr "El panel derecho se compone de distintos tipos de pestañas:"
 
 #: C/schema-browser-perspective.page:33(p)
 msgid ""
@@ -358,9 +358,9 @@ msgid ""
 "where the tables with the more relations to other tables being displayed in "
 "a larger font; this tab is always present"
 msgstr ""
-"una solapa que lista todas las tablas y vistas de la base de datos, en una "
+"una pestaña que lista todas las tablas y vistas de la base de datos, en una "
 "vista de <em>nube</em> donde las tablas con más relaciones que otras se "
-"muestran con una tipografía más grande; está solapa está siempre presente"
+"muestran con una tipografía más grande; está pestaña está siempre presente"
 
 #: C/schema-browser-perspective.page:36(p)
 msgid ""
@@ -369,11 +369,11 @@ msgid ""
 "constraints), a <link xref=\"diagram\">diagram</link> showing the related "
 "tables, and an area to define display preferences for each column's data"
 msgstr ""
-"cero o más solapas que representan las propiedades de una tabla o una vista: "
-"la lista de columnas, la lista de restricciones (claves primarias o externas "
-"y restricciones de unicidad), un <link xref=\"diagram\">diagrama</link> que "
-"muestra las tablas relacionadas y un área para definir preferencias de "
-"visualización para los datos de cada columna"
+"cero o más pestañas que representan las propiedades de una tabla o una "
+"vista: la lista de columnas, la lista de restricciones (claves primarias o "
+"externas y restricciones de unicidad), un <link xref=\"diagram\">diagrama</"
+"link> que muestra las tablas relacionadas y un área para definir "
+"preferencias de visualización para los datos de cada columna"
 
 #: C/schema-browser-perspective.page:39(p)
 msgid ""
@@ -387,7 +387,7 @@ msgstr ""
 
 #: C/schema-browser-perspective.page:44(title)
 msgid "Tab showing information about a table"
-msgstr "Solapa que muestra información sobre una tabla"
+msgstr "Pestaña que muestra información sobre una tabla"
 
 #: C/schema-browser-perspective.page:45(desc)
 msgid ""
@@ -480,8 +480,8 @@ msgid ""
 "The right pane is composed of zero or more tabs where the SQL is entered and "
 "executed. In each tab there is:"
 msgstr ""
-"El panel de la derecha se compone de cero o más solapas donde se introduce y "
-"ejecuta la sentencia SQL. En cada solapa hay:"
+"El panel de la derecha se compone de cero o más pestañas donde se introduce "
+"y ejecuta la sentencia SQL. En cada pestaña hay:"
 
 #: C/query-execution-perspective.page:45(p)
 msgid "an SQL area in the top left part"
@@ -806,10 +806,10 @@ msgid ""
 msgstr ""
 "La perspectiva mostrada actualmente se puede cambiar individualmente para "
 "cada ventana y, ya que todas las perspectivas tienen un área de acción "
-"formada por solapas, estas solapas se pueden mover de una ventana a otra si "
-"la ventana de origen y la de destino son de la misma conexión, y muestran la "
-"misma perspectiva (simplemente arrastre y suelte una solapa desde una "
-"ventana a la otra usando la etiqueta de la solapa como un tirador)."
+"formada por pestañas, estas pestañas se pueden mover de una ventana a otra "
+"si la ventana de origen y la de destino son de la misma conexión, y muestran "
+"la misma perspectiva (simplemente arrastre y suelte una pestaña desde una "
+"ventana a la otra usando la etiqueta de la pestaña como un tirador)."
 
 #: C/features.page:8(title)
 msgid "Features"
@@ -1037,7 +1037,7 @@ msgstr ""
 "Se puede declarar una clave externa nueva desde la <link xref=\"schema-"
 "browser-perspective\">perspectiva del visor de esquemas</link>, usando el "
 "menú <guiseq><gui>Tabla</gui><gui>Declarar clave externa</gui></guiseq>, que "
-"está presente cuando se muestran las propiedades de una tabla en la solapa "
+"está presente cuando se muestran las propiedades de una tabla en la pestaña "
 "actual."
 
 #: C/declaredfk.page:49(p)
