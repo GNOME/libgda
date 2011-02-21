@@ -1138,11 +1138,13 @@ text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte)
 		g_signal_emit (rte, gdaui_rt_editor_signals[CHANGED], 0, NULL);
 }
 
-/**
+/*
  * get_token
  *
  * returns the token type starting from @iter, and positions @out_end to the last used position
  * position.
+ *
+ * Returns: a #MarkupTag
  */
 static MarkupTag
 get_token (GtkTextIter *iter, gint *out_nb_spaces_before, GtkTextIter *out_end,
@@ -1577,7 +1579,7 @@ serialize_tag (GtkTextTag *tag, gboolean starting, GdauiRtEditor *editor)
 	}
 }
 
-/**
+/*
  * steals @base64
  */
 static gchar *
@@ -1596,7 +1598,7 @@ add_newlines_to_base64 (gchar *base64)
 	return g_string_free (string, FALSE);
 }
 
-/**
+/*
  * steals @base64
  */
 static gchar *

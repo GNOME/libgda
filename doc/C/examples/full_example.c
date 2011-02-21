@@ -1,3 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<programlisting>
 <![CDATA[#include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 
@@ -229,3 +233,4 @@ run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 	g_object_unref (stmt);
 }
 ]]>
+</programlisting>

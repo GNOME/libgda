@@ -1,164 +1,25 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
      "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
-<!ENTITY nbsp            " ">
+<!ENTITY copy           "The GNOME Foundation">
 <!ENTITY version SYSTEM "version.xml">
 <!ENTITY builddate SYSTEM "builddate.xml">
 <!ENTITY LIBGDA          "<application>Libgda</application>">
-<!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
 <!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
 <!ENTITY xobas           '<emphasis><ulink url="http://www.xobas.com">Xobas Software</ulink></emphasis>'>
 <!ENTITY API             "<acronym>API</acronym>">
-<!ENTITY DBMS            "<acronym>DBMS</acronym>">
-<!ENTITY DSN             "<acronym>DSN</acronym>">
 <!ENTITY ODBC            "<acronym>ODBC</acronym>">
 <!ENTITY GDA             "<acronym>GDA</acronym>">
 <!ENTITY LDAP            "<acronym>LDAP</acronym>">
-<!ENTITY CORBA           "<acronym>CORBA</acronym>">
-<!ENTITY IDL             "<acronym>IDL</acronym>">
-<!ENTITY ORB             "<acronym>ORB</acronym>">
 <!ENTITY SQL             "<acronym>SQL</acronym>">
-<!ENTITY RPM             "<acronym>RPM</acronym>">
-<!ENTITY XML             "<acronym>XML</acronym>">
-<!ENTITY PGSQL           "<application>PostgreSQL</application>">
-<!ENTITY MYSQL           "<application>MySQL</application>">
-<!ENTITY ORAC            "<application>Oracle</application>">
-<!ENTITY INTERB          "<application>Interbase</application>">
-<!ENTITY SYBASE          "<application>Sybase</application>">
-<!ENTITY MSACC           "<application>MS Access</application>">
-<!ENTITY INFOR           "<application>Informix</application>">
-<!ENTITY GDASERVERPROVIDER "<link linkend='GdaServerProvider'>GdaServerProvider</link>">
-<!ENTITY GDADATAMODEL    "<link linkend='GdaDataModel'>GdaDataModel</link>">
-<!ENTITY GDADATAMODELARRAY "<link linkend='GdaDataModelArray'>GdaDataModelArray</link>">
-<!ENTITY GDADATAMODELHASH "<link linkend='GdaDataModelHash'>GdaDataModelHash</link>">
 <!ENTITY gda-list-server-op "<command>gda-list-server-op-5.0</command>">
 <!ENTITY gda-list-config "<command>gda-list-config-5.0</command>">
-<!ENTITY gda-sql "<command>gda-sql</command>">
+<!ENTITY gda-sql         "<command>gda-sql</command>">
 <!ENTITY gda-test-connection "<command>gda-test-connection-5.0</command>">
-<!ENTITY fullexample SYSTEM "examples/full_example.c">
-<!ENTITY blobsexample SYSTEM "examples/blobtest.c">
-<!ENTITY install SYSTEM "installation.xml">
-<!ENTITY examples SYSTEM "gettingstarted.xml">
-<!ENTITY migration SYSTEM "migration.xml">
-<!ENTITY migration2 SYSTEM "migration2.xml">
-<!ENTITY data-validation SYSTEM "data_validation.xml">
-<!ENTITY data-select SYSTEM "data_select.xml">
-<!ENTITY limitations SYSTEM "limitations.xml">
-<!ENTITY provnotes SYSTEM "prov-notes.xml">
-<!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
-<!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
-<!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
-<!ENTITY libgda-GdaMutex SYSTEM "xml/gda-mutex.xml">
-<!ENTITY libgda-GdaLockable SYSTEM "xml/gda-lockable.xml">
-<!ENTITY libgda-GdaRow SYSTEM "xml/gda-row.xml">
-<!ENTITY libgda-GdaDataModelArray SYSTEM "xml/gda-data-model-array.xml">
-<!ENTITY libgda-GdaDataModelBdb SYSTEM "xml/gda-data-model-bdb.xml">
-<!ENTITY libgda-GdaDataModelDir SYSTEM "xml/gda-data-model-dir.xml">
-<!ENTITY libgda-GdaDataModel SYSTEM "xml/gda-data-model.xml">
-<!ENTITY libgda-GdaDataModelIter SYSTEM "xml/gda-data-model-iter.xml">
-<!ENTITY libgda-GdaDataModelImport SYSTEM "xml/gda-data-model-import.xml">
-<!ENTITY libgda-GdaDataAccessWrapper SYSTEM "xml/gda-data-access-wrapper.xml">
-<!ENTITY libgda-GdaDataProxy SYSTEM "xml/gda-data-proxy.xml">
-<!ENTITY libgda-GdaConnection-event SYSTEM "xml/gda-connection-event.xml">
-<!ENTITY libgda-GdaColumn SYSTEM "xml/gda-column.xml">
-<!ENTITY libgda-init SYSTEM "xml/libgda.xml">
-<!ENTITY libgdaui-init SYSTEM "xml/libgdaui.xml">
-<!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
-<!ENTITY libgda-quark-list SYSTEM "xml/gda-quark-list.xml">
-<!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
-<!ENTITY libgda-GdaVirtualProvider SYSTEM "xml/gda-virtual-provider.xml">
-<!ENTITY libgda-GdaVproviderDataModel SYSTEM "xml/gda-vprovider-data-model.xml">
-<!ENTITY libgda-GdaVproviderHub SYSTEM "xml/gda-vprovider-hub.xml">
-<!ENTITY libgda-GdaVirtualConnection SYSTEM "xml/gda-virtual-connection.xml">
-<!ENTITY libgda-GdaVconnectionDataModel SYSTEM "xml/gda-vconnection-data-model.xml">
-<!ENTITY libgda-GdaVconnectionHub SYSTEM "xml/gda-vconnection-hub.xml">
-<!ENTITY libgda-GdaServerOperation SYSTEM "xml/gda-server-operation.xml">
-<!ENTITY libgda-GdaServerOperationNodes SYSTEM "xml/gda-server-operation-nodes.xml">
-<!ENTITY libgda-GdaServerOperationSequences SYSTEM "xml/gda-server-operation-sequences.xml">
-<!ENTITY libgda-serverop-intro SYSTEM "server-operation.xml">
-<!ENTITY libgda-virtual SYSTEM "virtual.xml">
-<!ENTITY libgda-virtual-notice SYSTEM "virtual-notice.xml">
-<!ENTITY libgda-xa-transaction SYSTEM "xml/gda-xa-transaction.xml">
-<!ENTITY libgda-transaction-status SYSTEM "xml/gda-transaction-status.xml">
-<!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
-<!ENTITY libgda-GValue SYSTEM "xml/gda-value.xml">
-<!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
-<!ENTITY GdaStoreMetaType SYSTEM "store-meta-type.xml">
-<!ENTITY libgda-GdaDataHandler SYSTEM "xml/gda-data-handler.xml">
-<!ENTITY libgda-GdaHandlerString SYSTEM "xml/gda-handler-string.xml">
-<!ENTITY libgda-GdaHandlerBoolean SYSTEM "xml/gda-handler-boolean.xml">
-<!ENTITY libgda-GdaHandlerTime SYSTEM "xml/gda-handler-time.xml">
-<!ENTITY libgda-GdaHandlerNumerical SYSTEM "xml/gda-handler-numerical.xml">
-<!ENTITY libgda-GdaHandlerBin SYSTEM "xml/gda-handler-bin.xml">
-<!ENTITY libgda-GdaHandlerType SYSTEM "xml/gda-handler-type.xml">
-<!ENTITY libgda-GdaBlobOp SYSTEM "xml/gda-blob-op.xml">
-<!ENTITY libgda-GdaReportEngine SYSTEM "xml/gda-report-engine.xml">
-<!ENTITY libgda-GdaReportDocument SYSTEM "xml/gda-report-document.xml">
-<!ENTITY libgda-GdaReportDocbookDocument SYSTEM "xml/gda-report-docbook-document.xml">
-<!ENTITY libgda-GdaReportRmlDocument SYSTEM "xml/gda-report-rml-document.xml">
-<!ENTITY libgda-GdaHolder SYSTEM "xml/gda-holder.xml">
-<!ENTITY libgda-GdaSet SYSTEM "xml/gda-set.xml">
-<!ENTITY libgda-GdaStatement SYSTEM "xml/gda-statement.xml">
-<!ENTITY libgda-GdaRepetitiveStatement SYSTEM "xml/gda-repetitive-statement.xml">
-<!ENTITY libgda-GdaSqlStatement SYSTEM "xml/gda-sql-statement.xml">
-<!ENTITY libgda-GdaBatch SYSTEM "xml/gda-batch.xml">
-<!ENTITY libgda-GdaSqlParser SYSTEM "xml/gda-sql-parser.xml">
-<!ENTITY libgda-GdaMetaStore SYSTEM "xml/gda-meta-store.xml">
-<!ENTITY libgda-GdaMetaStruct SYSTEM "xml/gda-meta-struct.xml">
-<!ENTITY libgda-GdaDataSelect SYSTEM "xml/gda-data-select.xml">
-<!ENTITY libgda-GdaDataSelectPriv SYSTEM "xml/gda-data-select-priv.xml">
-<!ENTITY libgda-PStmt SYSTEM "xml/gda-pstmt.xml">
-<!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
-<!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
-<!ENTITY libgda-GdaDataComparator SYSTEM "xml/gda-data-comparator.xml">
-<!ENTITY provider-writing SYSTEM "prov-writing.xml">
-<!ENTITY packaging SYSTEM "packaging.xml">
-<!ENTITY packaging-ui SYSTEM "packaging_ui.xml">
-<!ENTITY provider-support SYSTEM "xml/provider-support.xml">
-<!ENTITY provider-support-sql SYSTEM "xml/provider-support-sql.xml">
-<!ENTITY i-s-doc SYSTEM "i_s_doc.xml">
-<!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
-<!ENTITY howto SYSTEM "howto.xml">
-<!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
-<!ENTITY GdaSqlManual SYSTEM "gda-sql-manual.xml">
-<!ENTITY GdaAttributesManager SYSTEM "xml/gda-attributes-manager.xml">
-<!ENTITY libgda-GdaTree SYSTEM "xml/gda-tree.xml">
-<!ENTITY libgda-GdaTreeManager SYSTEM "xml/gda-tree-manager.xml">
-<!ENTITY libgda-GdaTreeNode SYSTEM "xml/gda-tree-node.xml">
-<!ENTITY libgda-GdaTreeMgrLabel SYSTEM "xml/gda-tree-mgr-label.xml">
-<!ENTITY libgda-GdaTreeMgrSelect SYSTEM "xml/gda-tree-mgr-select.xml">
-<!ENTITY libgda-GdaTreeMgrSchemas SYSTEM "xml/gda-tree-mgr-schemas.xml">
-<!ENTITY libgda-GdaTreeMgrTables SYSTEM "xml/gda-tree-mgr-tables.xml">
-<!ENTITY libgda-GdaTreeMgrColumns SYSTEM "xml/gda-tree-mgr-columns.xml">
-<!ENTITY libgda-GdaSqlBuilder SYSTEM "xml/gda-sql-builder.xml">
-<!ENTITY libgda-GdaThreadWrapper SYSTEM "xml/gda-thread-wrapper.xml">
-
-<!ENTITY visual-index SYSTEM "visual_index.xml">
-<!ENTITY libgdaui-GdauiBasicForm SYSTEM "xml/gdaui-basic-form.xml">
-<!ENTITY libgdaui-GdauiCombo SYSTEM "xml/gdaui-combo.xml">
-<!ENTITY libgdaui-GdauiDataEntry SYSTEM "xml/gdaui-data-entry.xml">
-<!ENTITY libgdaui-gdaui-easy SYSTEM "xml/gdaui-easy.xml">
-<!ENTITY libgdaui-gdaui-plugins SYSTEM "xml/gdaui-plugins.xml">
-<!ENTITY libgdaui-GdauiDataStore SYSTEM "xml/gdaui-data-store.xml">
-<!ENTITY libgdaui-GdauiDataFilter SYSTEM "xml/gdaui-data-filter.xml">
-<!ENTITY libgdaui-GdauiDataProxy SYSTEM "xml/gdaui-data-proxy.xml">
-<!ENTITY libgdaui-GdauiDataProxyInfo SYSTEM "xml/gdaui-data-proxy-info.xml">
-<!ENTITY libgdaui-GdauiForm SYSTEM "xml/gdaui-form.xml">
-<!ENTITY libgdaui-GdauiGrid SYSTEM "xml/gdaui-grid.xml">
-<!ENTITY libgdaui-GdauiLogin SYSTEM "xml/gdaui-login.xml">
-<!ENTITY libgdaui-GdauiProviderSelector SYSTEM "xml/gdaui-provider-selector.xml">
-<!ENTITY libgdaui-GdauiRawForm SYSTEM "xml/gdaui-raw-form.xml">
-<!ENTITY libgdaui-GdauiRawGrid SYSTEM "xml/gdaui-raw-grid.xml">
-<!ENTITY libgdaui-GdauiServerOperation SYSTEM "xml/gdaui-server-operation.xml">
-<!ENTITY libgdaui-GdauiTreeStore SYSTEM "xml/gdaui-tree-store.xml">
-<!ENTITY libgdaui-GdauiCloud SYSTEM "xml/gdaui-cloud.xml">
-<!ENTITY libgdaui-GdauiDataSelector SYSTEM "xml/gdaui-data-selector.xml">
-<!ENTITY libgdaui-GdauiRtEditor SYSTEM "xml/gdaui-rt-editor.xml">
 ]>
-
-<book id="index">
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
   <bookinfo>
-    <title>GNOME Data Access 4 manual</title>
+    <title>GNOME Data Access 5 manual</title>
     <releaseinfo>for version &version;</releaseinfo>
     <authorgroup>
       <author>
@@ -237,7 +98,7 @@
     <date>&builddate;</date>
     <copyright>
       <year>1999 - 2011</year>
-      <holder>The GNOME Foundation</holder>
+      <holder>&copy;</holder>
     </copyright>
     <abstract>
       <para>
@@ -443,12 +304,12 @@
       </mediaobject>
     </chapter>
 
-    &install;
-    &examples;
-    &migration;
-    &migration2;
-    &provnotes;
-    &limitations;
+    <xi:include href="installation.xml"/>
+    <xi:include href="gettingstarted.xml"/>
+    <xi:include href="migration.xml"/>
+    <xi:include href="migration2.xml"/>
+    <xi:include href="prov-notes.xml"/>
+    <xi:include href="limitations.xml"/>
   </part>  
   <part id="part_libgda_api">
     <title>API reference</title>
@@ -543,17 +404,17 @@
 
     </chapter>
 
-    &howto;
+    <xi:include href="howto.xml"/>
     <chapter>
       <title>Object Hierarchy</title>
-      &libgda-TreeIndex;
+      <xi:include href="xml/tree_index.sgml"/>
     </chapter>
 
     <chapter id="init_config">
       <title>Initialization and configuration</title>
       <para>Configuration examples are given in <link linkend="installation-configuring">this introduction section</link></para>
-      &libgda-init;
-      &libgda-config;
+      <xi:include href="xml/libgda.xml"/>
+      <xi:include href="xml/gda-config.xml"/>
       <sect1 id="libgda_env_variables">
 	<title>Configuring &LIBGDA; with environment variables</title>
 	<para>Some functional aspects of &LIBGDA; can be configured using environment variables which are
@@ -670,30 +531,30 @@
 	  </textobject>
 	</mediaobject>
       </para>
-      &libgda-convenient;
-      &libgda-GdaConnection;
-      &libgda-GdaSqlParser;
-      &libgda-GdaSqlBuilder;
-      &libgda-GdaStatement;
-      &libgda-GdaRepetitiveStatement;
-      &libgda-GdaBatch;
-      &libgda-GdaHolder;
-      &libgda-GdaSet;
-      &libgda-GdaConnection-event;
-      &libgda-transaction-status;
-      &libgda-xa-transaction;
-      &GdaStoreMetaType;
+      <xi:include href="xml/gda-convenient.xml"/>
+      <xi:include href="xml/gda-connection.xml"/>
+      <xi:include href="xml/gda-sql-parser.xml"/>
+      <xi:include href="xml/gda-sql-builder.xml"/>
+      <xi:include href="xml/gda-statement.xml"/>
+      <xi:include href="xml/gda-repetitive-statement.xml"/>
+      <xi:include href="xml/gda-batch.xml"/>
+      <xi:include href="xml/gda-holder.xml"/>
+      <xi:include href="xml/gda-set.xml"/>
+      <xi:include href="xml/gda-connection-event.xml"/>
+      <xi:include href="xml/gda-transaction-status.xml"/>
+      <xi:include href="xml/gda-xa-transaction.xml"/>
+      <xi:include href="store-meta-type.xml"/>
     </chapter>
 
     <chapter id="virtual_connection">
       <title>Virtual connections</title>
-      &libgda-virtual;
-      &libgda-GdaVirtualProvider;
-      &libgda-GdaVproviderDataModel;
-      &libgda-GdaVproviderHub;
-      &libgda-GdaVirtualConnection;
-      &libgda-GdaVconnectionDataModel;
-      &libgda-GdaVconnectionHub;
+      <xi:include href="virtual.xml"/>
+      <xi:include href="xml/gda-virtual-provider.xml"/>
+      <xi:include href="xml/gda-vprovider-data-model.xml"/>
+      <xi:include href="xml/gda-vprovider-hub.xml"/>
+      <xi:include href="xml/gda-virtual-connection.xml"/>
+      <xi:include href="xml/gda-vconnection-data-model.xml"/>
+      <xi:include href="xml/gda-vconnection-hub.xml"/>
     </chapter>
 
     <chapter id="data_models">
@@ -738,22 +599,22 @@
 	  </listitem>
 	</itemizedlist>
       </para>
-      &libgda-GValue;
-      &data-validation;
-      &data-select;
-      &libgda-GdaBlobOp;
-      &libgda-GdaDataModel;
-      &libgda-GdaDataSelect;
-      &libgda-GdaColumn;
-      &libgda-GdaDataModelIter;
-      &libgda-GdaDataModelImport;
-      &libgda-GdaDataAccessWrapper;
-      &libgda-GdaDataModelArray;
-      &libgda-GdaRow;
-      &libgda-GdaDataModelBdb;
-      &libgda-GdaDataModelDir;
-      &libgda-GdaDataProxy;
-      &libgda-GdaDataComparator;
+      <xi:include href="xml/gda-value.xml"/>
+      <xi:include href="data_validation.xml"/>
+      <xi:include href="data_select.xml"/>
+      <xi:include href="xml/gda-blob-op.xml"/>
+      <xi:include href="xml/gda-data-model.xml"/>
+      <xi:include href="xml/gda-data-select.xml"/>
+      <xi:include href="xml/gda-column.xml"/>
+      <xi:include href="xml/gda-data-model-iter.xml"/>
+      <xi:include href="xml/gda-data-model-import.xml"/>
+      <xi:include href="xml/gda-data-access-wrapper.xml"/>
+      <xi:include href="xml/gda-data-model-array.xml"/>
+      <xi:include href="xml/gda-row.xml"/>
+      <xi:include href="xml/gda-data-model-bdb.xml"/>
+      <xi:include href="xml/gda-data-model-dir.xml"/>
+      <xi:include href="xml/gda-data-proxy.xml"/>
+      <xi:include href="xml/gda-data-comparator.xml"/>
     </chapter>
 
     <chapter id="trees">
@@ -910,14 +771,14 @@ else {
 g_object_unref (tree);
 	</programlisting>
       </para>
-      &libgda-GdaTree;
-      &libgda-GdaTreeManager;
-      &libgda-GdaTreeNode;
-      &libgda-GdaTreeMgrLabel;
-      &libgda-GdaTreeMgrSelect;
-      &libgda-GdaTreeMgrSchemas;
-      &libgda-GdaTreeMgrTables;
-      &libgda-GdaTreeMgrColumns;
+      <xi:include href="xml/gda-tree.xml"/>
+      <xi:include href="xml/gda-tree-manager.xml"/>
+      <xi:include href="xml/gda-tree-node.xml"/>
+      <xi:include href="xml/gda-tree-mgr-label.xml"/>
+      <xi:include href="xml/gda-tree-mgr-select.xml"/>
+      <xi:include href="xml/gda-tree-mgr-schemas.xml"/>
+      <xi:include href="xml/gda-tree-mgr-tables.xml"/>
+      <xi:include href="xml/gda-tree-mgr-columns.xml"/>
     </chapter>
 
     <chapter id="data_conv">
@@ -949,13 +810,13 @@ g_object_unref (tree);
 	  </listitem>
 	</itemizedlist>
       </para>
-      &libgda-GdaDataHandler;
-      &libgda-GdaHandlerString;
-      &libgda-GdaHandlerBoolean;
-      &libgda-GdaHandlerTime;
-      &libgda-GdaHandlerNumerical;
-      &libgda-GdaHandlerBin;
-      &libgda-GdaHandlerType;
+      <xi:include href="xml/gda-data-handler.xml"/>
+      <xi:include href="xml/gda-handler-string.xml"/>
+      <xi:include href="xml/gda-handler-boolean.xml"/>
+      <xi:include href="xml/gda-handler-time.xml"/>
+      <xi:include href="xml/gda-handler-numerical.xml"/>
+      <xi:include href="xml/gda-handler-bin.xml"/>
+      <xi:include href="xml/gda-handler-type.xml"/>
     </chapter>
 
     <chapter id="gda-dict">
@@ -1272,64 +1133,64 @@ g_object_unref (store);
 	</sect2>
 
 	<!-- tables and views documentation -->
-	&i-s-doc;
+	<xi:include href="i_s_doc.xml"/>
       </sect1>
 
-      &libgda-GdaMetaStore;
-      &libgda-GdaMetaStruct;
+      <xi:include href="xml/gda-meta-store.xml"/>
+      <xi:include href="xml/gda-meta-struct.xml"/>
     </chapter>
 
     <chapter>
       <title>Data definition (DDL) queries</title>
-      &libgda-serverop-intro;
-      &libgda-GdaServerOperation;
-      &libgda-GdaServerOperationNodes;
-      &libgda-GdaServerOperationSequences;
+      <xi:include href="server-operation.xml"/>
+      <xi:include href="xml/gda-server-operation.xml"/>
+      <xi:include href="xml/gda-server-operation-nodes.xml"/>
+      <xi:include href="xml/gda-server-operation-sequences.xml"/>
     </chapter>
 
     <chapter>
       <title>User interface API reference</title>
-      &visual-index;
+      <xi:include href="visual_index.xml"/>
 
-      &libgdaui-init;
-      &libgdaui-GdauiLogin;
-      &libgdaui-GdauiProviderSelector;
+      <xi:include href="xml/libgdaui.xml"/>
 
-      &libgdaui-GdauiDataSelector;
-      &libgdaui-GdauiDataProxy;
-      &libgdaui-GdauiBasicForm;
-      &libgdaui-GdauiForm;
-      &libgdaui-GdauiRawForm;
-      &libgdaui-GdauiGrid;
-      &libgdaui-GdauiRawGrid;
-      &libgdaui-GdauiCombo;
-      &libgdaui-GdauiCloud;
-      &libgdaui-GdauiRtEditor;
+      <xi:include href="xml/gdaui-login.xml"/>
+      <xi:include href="xml/gdaui-provider-selector.xml"/>
 
-      &libgdaui-gdaui-plugins;
+      <xi:include href="xml/gdaui-data-selector.xml"/>
+      <xi:include href="xml/gdaui-data-proxy.xml"/>
+      <xi:include href="xml/gdaui-basic-form.xml"/>
+      <xi:include href="xml/gdaui-form.xml"/>
+      <xi:include href="xml/gdaui-raw-form.xml"/>
+      <xi:include href="xml/gdaui-grid.xml"/>
+      <xi:include href="xml/gdaui-raw-grid.xml"/>
+      <xi:include href="xml/gdaui-combo.xml"/>
+      <xi:include href="xml/gdaui-cloud.xml"/>
+      <xi:include href="xml/gdaui-rt-editor.xml"/>
+      <xi:include href="xml/gdaui-plugins.xml"/>
 
-      &libgdaui-GdauiDataEntry;
-      &libgdaui-GdauiDataStore;
-      &libgdaui-GdauiDataFilter;
-      &libgdaui-GdauiDataProxyInfo;
-      &libgdaui-GdauiServerOperation;
-      &libgdaui-GdauiTreeStore;
+      <xi:include href="xml/gdaui-data-entry.xml"/>
+      <xi:include href="xml/gdaui-data-store.xml"/>
+      <xi:include href="xml/gdaui-data-filter.xml"/>
+      <xi:include href="xml/gdaui-data-proxy-info.xml"/>
+      <xi:include href="xml/gdaui-server-operation.xml"/>
+      <xi:include href="xml/gdaui-tree-store.xml"/>
 
-      &libgdaui-gdaui-easy;
+      <xi:include href="xml/gdaui-easy.xml"/>
     </chapter>
 
     <chapter id="multi-threading">
       <title>Multi threading</title>
-      &libgda-GdaMutex;
-      &libgda-GdaLockable;
-      &libgda-GdaThreadWrapper;      
+      <xi:include href="xml/gda-mutex.xml"/>
+      <xi:include href="xml/gda-lockable.xml"/>
+      <xi:include href="xml/gda-thread-wrapper.xml"/>
     </chapter>
 
     <chapter id="misc">
       <title>Miscellaneous</title>
-      &libgda-util;
-      &libgda-log;
-      &GdaAttributesManager;
+      <xi:include href="xml/gda-util.xml"/>
+      <xi:include href="xml/gda-log.xml"/>
+      <xi:include href="xml/gda-attributes-manager.xml"/>
     </chapter>
   </part>
 
@@ -1701,10 +1562,10 @@ g_object_unref (eng);
     </chapter>
     <chapter>
       <title>API reference</title>
-      &libgda-GdaReportEngine;
-      &libgda-GdaReportDocument;
-      &libgda-GdaReportDocbookDocument;
-      &libgda-GdaReportRmlDocument;
+      <xi:include href="xml/gda-report-engine.xml"/>
+      <xi:include href="xml/gda-report-document.xml"/>
+      <xi:include href="xml/gda-report-docbook-document.xml"/>
+      <xi:include href="xml/gda-report-rml-document.xml"/>
     </chapter>
   </part>
 
@@ -1726,10 +1587,7 @@ g_object_unref (eng);
     </chapter>
   </part>
 
-  <part id="gda-sql">
-    <title>Gda SQL console's user manual</title>
-    &GdaSqlManual;
-  </part>
+  <xi:include href="gda-sql-manual.xml"/>
 
   <part id="part_providers">
     <title>Databases providers for developers</title>
@@ -1765,62 +1623,66 @@ g_object_unref (eng);
       <link linkend="psupport">Providers' support API</link> section.
     </para>
 
+    <chapter>
+      <title>Getting started</title>
+      <para>
+	&LIBGDA;'s sources contain templates to get started in creating a new database provider. The following templates
+	are available:
+	<itemizedlist>
+	  <listitem><para>the template in the <filename class="directory">providers/skel-implementation/capi</filename>
+	      directory which can be used when writing a provider using the database's C or C++ API (for example
+	      the PostgreSQL or MySQL providers)</para></listitem>
+	  <listitem><para>the template in the <filename class="directory">providers/skel-implementation/models</filename>
+	      directory which can be used when writing a provider for a system which is not a relational database (or
+	      does offer a very limited API, such as for the MS Access or Berkeley DB systems).</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	In any case, for example to create a DummyDb provider, follow these steps:
+	<itemizedlist>
+	  <listitem><para>copy one of the template's directory into a new directory named
+	      <filename class="directory">dummydb</filename></para></listitem>
+	  <listitem><para>From inside that new directory, run the
+	      <filename class="directory">providers/prepare_provider_sources.sh</filename> script with the name
+	      of the provider as sole argument ("dummydb" here), which replaces
+	      all the class and object names with the name of the provider and renames the files correctly. These
+	      new sources should be compilable without any modification.</para></listitem>
+	  <listitem><para>Edit the <filename>Makefile.am</filename> to add provider specific compilation and link
+	      flags</para></listitem>
+	  <listitem><para>Integrate the provider's new code into a compilation unit: either &LIBGDA;'s sources in
+	      the <filename class="directory">providers</filename>directory or in your own application (this step usually involves
+	      modifying the <filename>configure.ac</filename> or <filename>configure.in</filename> files).</para></listitem>
+	  <listitem><para>Implement the missing parts (it is usually a good idea to look how other provider's
+	      implementations are done to get ideas).</para></listitem>
+	</itemizedlist>
+      </para>
+    </chapter>
+
+    <xi:include href="prov-writing-virtual-methods.xml"/>
+    <xi:include href="prov-writing-recordsets.xml"/>
+    <xi:include href="prov-writing-blobs.xml"/>
+    <xi:include href="prov-writing-parser.xml"/>
+    <xi:include href="prov-writing-assembly.xml"/>
 
     <chapter id="psupport">
       <title>Providers' support API</title>
-      &libgda-GdaServerProvider;
-      &libgda-GdaDataSelectPriv;
-      &libgda-PStmt;
-      &libgda-quark-list;
-      &provider-support-sql;
-      &provider-support;
+      <xi:include href="xml/gda-server-provider.xml"/>
+      <xi:include href="xml/gda-data-select-priv.xml"/>
+      <xi:include href="xml/gda-pstmt.xml"/>
+      <xi:include href="xml/gda-quark-list.xml"/>
+      <xi:include href="xml/provider-support-sql.xml"/>
+      <xi:include href="xml/provider-support.xml"/>
     </chapter>
-<sect1>
-    <title>Getting started</title>
-    <para>
-      &LIBGDA;'s sources contain templates to get started in creating a new database provider. The following templates
-      are available:
-      <itemizedlist>
-	<listitem><para>the template in the <filename class="directory">providers/skel-implementation/capi</filename>
-	    directory which can be used when writing a provider using the database's C or C++ API (for example
-	    the PostgreSQL or MySQL providers)</para></listitem>
-	<listitem><para>the template in the <filename class="directory">providers/skel-implementation/models</filename>
-	    directory which can be used when writing a provider for a system which is not a relational database (or
-	    does offer a very limited API, such as for the MS Access or Berkeley DB systems).</para></listitem>
-      </itemizedlist>
-    </para>
-    <para>
-      In any case, for example to create a DummyDb provider, follow these steps:
-      <itemizedlist>
-	<listitem><para>copy one of the template's directory into a new directory named
-	    <filename class="directory">dummydb</filename></para></listitem>
-	<listitem><para>From inside that new directory, run the
-	    <filename class="directory">providers/prepare_provider_sources.sh</filename> script with the name
-	    of the provider as sole argument ("dummydb" here), which replaces
-	    all the class and object names with the name of the provider and renames the files correctly. These
-	    new sources should be compilable without any modification.</para></listitem>
-	<listitem><para>Edit the <filename>Makefile.am</filename> to add provider specific compilation and link
-	    flags</para></listitem>
-	<listitem><para>Integrate the provider's new code into a compilation unit: either &LIBGDA;'s sources in
-	    the <filename class="directory">providers</filename>directory or in your own application (this step usually involves
-	    modifying the <filename>configure.ac</filename> or <filename>configure.in</filename> files).</para></listitem>
-	<listitem><para>Implement the missing parts (it is usually a good idea to look how other provider's
-	    implementations are done to get ideas).</para></listitem>
-      </itemizedlist>
-    </para>
-  </sect1>
-    &provider-writing;
   </part>
 
   <part>
     <title>Packaging</title>
-    &packaging;
-    &packaging-ui;
+    <xi:include href="packaging.xml"/>
+    <xi:include href="packaging_ui.xml"/>
   </part>
 
   <part id="part_index">
     <title>Appendix</title>
-    &fdl-appendix;
     <index id="index_main">
       <title>Index</title>
     </index>
@@ -1842,7 +1704,7 @@ g_object_unref (eng);
     <index id="index-deprecated" role="deprecated">
       <title>Index of deprecated symbols</title>
     </index>
-    &fdl-appendix;
+    <xi:include href="fdl-appendix.sgml"/>
   </part>
 </book>
 

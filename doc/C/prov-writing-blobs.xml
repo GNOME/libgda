@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<chapter id="libgda-provider-blobop">
+  <title>Virtual methods for Blob operations</title>
+  <para>
+    Blobs are a special feature of databases because they allow one to access the contents of a "cell" from the
+    API without using SQL (usually no SQL can be used to manipulate a blob's contents: an SQL statement is used to
+    create, delete or retrieve a blob, but the contents is accessed through the API).
+  </para>
+  <para>
+    &LIBGDA; encapsulates all blob operations in objects which must be implemented by each provider if they want to support
+    blobs; otherwise binary data may still be used if supported by the database, but the whole binary data is transferred in
+    the SQL statement which is not suitable for large data.
+  </para>
+  <para>
+    &LIBGDA; defines <link linkend="GdaBlop">GdaBlob</link> structure which is an extension of the
+    <link linkend="GdaBinary">GdaBinary</link> structure (which contains a pointer to some data and the size of the pointed
+    data). The extension simply adds a pointer to a <link linkend="GdaBlopOp">GdaBlobOp</link> object which has
+    to be implemented by each provider which supports blobs. The following documents the
+    <link linkend="GdaBlopOp">GdaBlobOp</link>'s virtual methods which actually implement the reading from and
+    writing to a blob contained in the database.
+  </para>
+  <para>
+    When reading from a blob in the database or writing to a blob in the database, data read or written is the stored in
+    the <link linkend="GdaBinary">GdaBinary</link> part of the <link linkend="GdaBlopOp">GdaBlobOp</link>.
+  </para>
+  <sect2>
+    <title>get_length()</title>
+    <para>
+      This method returns the total length of a blob in bytes. In case of error, -1 is returned and the
+      provider should have added an error (a <link linkend="GdaConnectionEvent">GdaConnectionEvent</link>) to the connection.
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>read()</title>
+    <para>
+      This method requests that some data be read from the blob. The data read must be stored in the
+      <link linkend="GdaBinary">GdaBinary</link> part of the <parameter>blob</parameter> parameter. The data to read is
+      the data starting at the <parameter>offset</parameter> offset from the beginning of the blob, and
+      of the <parameter>size</parameter> length.
+    </para>
+    <para>
+      Note that in this method, the <structfield>op</structfield> attribute of the <parameter>blob</parameter>
+      parameter is not used.
+    </para>
+    <para>
+      The returned value is the number of bytes read, or -1 if an error
+      occured (then the provider should have added an error to the connection).
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>write()</title>
+    <para>
+      This method requests the some data be written to the blob. The data has to be written
+      in the blob starting at the <parameter>offset</parameter> offset from the beginning of the blob.
+    </para>
+    <para>
+      If the <structfield>op</structfield> attribute of the <parameter>blob</parameter> parameter is not NULL and is different
+      than the <parameter>op</parameter>, then the data to be written is the complete contents of the data stored in the
+      blob represented by the <structfield>op</structfield> attribute of the <parameter>blob</parameter> parameter. Otherwise
+      The data to be written is stored in the
+      <link linkend="GdaBinary">GdaBinary</link> part of the <parameter>blob</parameter>.
+    </para>
+    <para>
+      The returned value is the number of bytes written, or -1 if an error
+      occured (then the provider should have added an error to the connection).
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>write_all()</title>
+    <para>
+      This method requests that all the contents of the blob be replaced by some data (if necessary the
+      blob is truncated from its previous length). The data to be written is the same as for the write() method, and
+      the returned value is also the same.
+    </para>
+    <para>
+      If this virtual method is not implemented, then the write() virtual method is used with an <parameter>offset</parameter>
+      parameter of 0.
+    </para>
+  </sect2>
+</chapter>

@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<chapter id="libgda-provider-recordset">
+  <title>Virtual methods for recordsets</title>
+  <para>
+    This section explains how to write virtual methods for the <link linkend="GdaDataSelect">GdaDataSelect</link> subclasses
+    implementations, which should be done when implementing a database provider.
+  </para>
+  <para>
+    That data model implementation simplifies the implementation of provider's recordsets by having them implement only a
+    few virtual methods, and offering some services.
+  </para>
+  <para>
+    The data model represents each row in a separate <link linkend="GdaRow">GdaRow</link> object, and virtual
+    methods to retrieve rows have to return new (and correctly initialized) objects of that class. The referencing
+    of these new objects is left up to the implementation which:
+    <itemizedlist>
+      <listitem>
+	<para>can rely on the <link linkend="GdaRow">GdaRow</link> implementation to keep them, using
+	  the <link linkend="gda-data-select-take-row">gda_data_select_take_row ()</link> method for each row object created which
+	  is the easiest, the fastest as once created, the rows are available for further usage, 
+	  but will consume more memory with each row read from the model.</para>
+      </listitem>
+      <listitem>
+	<para>can keep the references to these objects to the subclass implementation which will consume less memory but
+	  will make it necessary to create a new row object each time a row is read which is slower</para>
+      </listitem>
+      <listitem>
+	<para>can do a mix of the two solutions above: monitor the memory usage for the data model to 
+	  enable to "cache" some rows and discard some when memory is needed</para>
+      </listitem>
+    </itemizedlist>
+    Note that the methods mentioned in the 1st and 3rd items should be reserved for random data access mode, 
+    and that cursor based access mode should implement the method mentioned in th 2nd item.
+  </para>
+  <sect2>
+    <title>fetch_nb_rows()</title>
+    <para>
+      This method is called when the user calls <link linkend="gda-data-model-get-n-rows">gda_data_model_get_n_rows ()</link>.
+    </para>
+    <para>
+      Note that the number of rows of the data model may not be known until the cursor has reached the last row of
+      the recordset.
+      Once known, the number of rows can be stored in the <structfield>advertized_nrows</structfield>'s member of the
+      <link linkend="GdaDataSelect">GdaDataSelect</link> object.
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>fetch_random()</title>
+    <para>
+      This method is called when the user calls <link linkend="gda-data-model-get-value-at">gda_data_model_get_value_at ()</link>,
+      and in available only when the data access mode for the data model is random (that is not cursor based). When data
+      access is cursor based, this method will not be called.
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>store_all()</title>
+    <para>
+      This method is called when the user sets the "store-all-rows" to TRUE. It has the effect of forcing the creation
+      of a <link linkend="GdaRow">GdaRow</link> object for each row of the data model (thus increasing the memory consumption
+      but reducing further access times). It is available only when the data access mode for the data model is random 
+      (that is not cursor based). When data access is cursor based, this method will not be called.
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>fetch_next()</title>
+    <para>
+      This method is called when data access is cursor based and a data model iterator is moved one position forward. The
+      <parameter>rownum</parameter> is an indication of what the row number will be once the next row has been fetched (it can 
+      safely be discarded if that information is not necessary).
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>fetch_prev()</title>
+    <para>
+      This method is called when data access is cursor based and a data model iterator is moved one position backward. The
+      <parameter>rownum</parameter> is an indication of what the row number will be once the previous row has been fetched (it can 
+      safely be discarded if that information is not necessary).
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>fetch_at()</title>
+    <para>
+      This method can be implemented when data access is cursor based and there is a shorter way of getting to a
+      specific row than having to call the fetch_next() or fetch_prev() methods several times.
+    </para>
+  </sect2>
+</chapter>

@@ -1,6 +1,6 @@
 /* utility.c
  *
- * Copyright (C) 2003 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2003 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -28,7 +28,7 @@
 #include <libgda-ui/gdaui-decl.h>
 
 
-/**
+/*
  * _gdaui_utility_entry_build_actions_menu
  * @obj_data:
  * @attrs:

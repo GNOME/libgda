@@ -1,4 +1,9 @@
-<chapter id="getting_started">
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<chapter id="getting_started" xmlns:xi="http://www.w3.org/2003/XInclude">
   <title>Code examples</title>
   <sect1 id="initializing">
     <title>Initializing</title>
@@ -342,9 +347,7 @@ cc -o example example.c `pkg-config --cflags --libs libgda-3.0`
     </para>
     <para>
       The code is:
-      <programlisting>
-&fullexample;
-      </programlisting>
+<xi:include href="examples/full_example.c"/>
       and executing should output something like:
       <programlisting>> ./example 
 ref   | name  | price   
@@ -461,9 +464,7 @@ create_table (GdaConnection *cnc)
     </para>
     <para>
       The code is:
-      <programlisting>
-&blobsexample;
-      </programlisting>
+<xi:include href="examples/blobtest.c"/>
     </para>
   </sect1>
 

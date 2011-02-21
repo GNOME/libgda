@@ -1,5 +1,5 @@
 /* GNOME DB library
- * Copyright (C) 2005 - 2009 The GNOME Foundation
+ * Copyright (C) 2005 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -346,7 +346,7 @@ _gdaui_provider_spec_editor_get_type (void)
 	return type;
 }
 
-/**
+/*
  * _gdaui_provider_spec_editor_new
  * @provider: the provider to be used 
  *
