@@ -2487,27 +2487,40 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		g_string_free (string, FALSE);
 		if (max_width > 0) {
 			/* truncate all lines */
-			gchar *ptr;
+			GString *ns;
+			ns = g_string_sized_new (strlen (str));
+
+			gchar *ptr, *sptr;
 			gint len; /* number of characters since start of line */
-			for (ptr = str, len=0;
+			for (ptr = str, sptr = ptr, len=0;
 			     *ptr;
 			     ptr = g_utf8_next_char (ptr), len++) {
-				if (*ptr == '\n')
+				if (*ptr == '\n') {
+					*ptr = 0;
 					len = 0;
-				else if (len >= max_width) {
-					gchar *sptr;
+					g_string_append (ns, sptr);
+					g_string_append_c (ns, '\n');
 					*ptr = '\n';
-					ptr++;
-					sptr = ptr;
-					for (; *ptr && (*ptr != '\n'); ptr++) ;
-					if (*ptr == '\n')
-						ptr++;
-					if (ptr > sptr)
-						g_memmove (sptr, ptr, strlen (ptr) + 1);
+					sptr = ptr+1;
+				}
+				else if (len >= max_width) {
+					gchar c;
+					c = *ptr;
+					*ptr = 0;
 					len = 0;
-					ptr = sptr;
+					g_string_append (ns, sptr);
+					g_string_append_c (ns, '\n');
+					*ptr = c;
+					for (; *ptr && (*ptr != '\n');
+					     ptr = g_utf8_next_char (ptr));
+					if (!*ptr)
+						break;
+					sptr = ptr+1;
 				}
 			}
+			g_free (str);
+			str = ns->str;
+			g_string_free (ns, FALSE);
 		}
 	}
 	else {
