@@ -1,6 +1,15 @@
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-mdb.la
 
+if PLATFORM_WIN32
+SUBDIRS = libmdb-src
+extra_mdb_cflags = -I$(srcdir)/libmdb-src/include
+extra_mdb_ldflags = libmdb-src/libmdb.la
+else
+extra_mdb_cflags = $(MDB_CFLAGS)
+extra_mdb_ldflags = $(MDB_LIBS)
+endif
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
@@ -8,7 +17,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(LIBGDA_WFLAGS) \
-	$(MDB_CFLAGS) \
+	$(extra_mdb_cflags) \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-4.0"\"
 
 libgda_mdb_la_SOURCES = \
@@ -21,7 +30,7 @@ libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $
 libgda_mdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-4.0.la \
 	$(LIBGDA_LIBS) \
-	$(MDB_LIBS)
+	$(extra_mdb_ldflags)
 
 xmldir   = $(datadir)/libgda-4.0
 xml_in_files = mdb_specs_dsn.xml.in

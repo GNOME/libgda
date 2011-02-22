@@ -44,7 +44,7 @@ dnl   This macro always calls:
 dnl
 dnl    AC_SUBST(MDB_LIBS)
 dnl    AC_SUBST(MDB_CFLAGS)
-dnl    mdbtools_found=yes/no
+dnl    mdbtools_found=yes (from where)/no
 dnl
 dnl   and if the mdbtools package is found:
 dnl
@@ -171,7 +171,7 @@ int main() {
 	then
 	    AC_MSG_NOTICE([MDB backend not used])
 	else
-    	    mdbtools_found=yes
+    	    mdbtools_found="yes (from system installation)"
 
   	    save_CFLAGS="$CFLAGS"
 	    CFLAGS="$CFLAGS $MDB_CFLAGS $mdb_glib_cflags"
@@ -214,7 +214,7 @@ int main() {
 	fi
     fi
 
-    AM_CONDITIONAL(MDB,[test "$mdbtools_found" = "yes"])
+    AM_CONDITIONAL(MDB,[test "$mdbtools_found" != "no"])
     AC_SUBST(MDB_LIBS)
     AC_SUBST(MDB_CFLAGS)
 ])
@@ -225,5 +225,16 @@ dnl   MDBTOOLS_CHECK([libdirname],[GLib's CFLAGS],[GLib's LIBS])
 
 AC_DEFUN([MDBTOOLS_CHECK],
 [
-    _MDBTOOLS_CHECK_INTERNAL([$1],[$2],[$3])
+     AC_ARG_ENABLE(system-mdbtools,
+		AS_HELP_STRING([--enable-system-mdbtools], [Use MDBTools installed on the system [default=yes]]),
+        	[use_syst_mdb=$enableval], [use_syst_mdb="yes"])
+    if test "x$use_syst_mdb" = "xyes"; then
+        _MDBTOOLS_CHECK_INTERNAL([$1],[$2],[$3])
+    else
+        AM_ICONV
+        AM_CONDITIONAL(MDB, true)
+        AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS,[1],[define if mdb_bind_column accepts four args])
+        AC_DEFINE(MDB_WITH_WRITE_SUPPORT,[1],[define if mdb_open accepts MDB_WRITABLE])
+        mdbtools_found="yes (embedded)"
+    fi
 ])

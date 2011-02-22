@@ -574,7 +574,15 @@ fi
 AM_CONDITIONAL(FIREBIRD, test x$firebirddir != x)
 
 dnl Test for MDB Tools (for MS Access files)
-MDBTOOLS_CHECK([$lib])
+if test "x$platform_win32" = "xyes"; then
+    AM_ICONV
+    AM_CONDITIONAL(MDB, true)
+    AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS,[1],[define if mdb_bind_column accepts four args])
+    AC_DEFINE(MDB_WITH_WRITE_SUPPORT,[1],[define if mdb_open accepts MDB_WRITABLE])
+    mdbtools_found="yes (embedded)"
+else
+    MDBTOOLS_CHECK([$lib])
+fi
 
 dnl test for system-installed SQLite
 dnl If no SQLite is found or if the SQLite found does not have the sqlite3_table_column_metadata()
@@ -582,7 +590,7 @@ dnl function call, then use the embedded version
 dnl also, on Win32, always use the embedded version
 if test x"$platform_win32" = "xyes"
 then
-        AM_CONDITIONAL(HAVE_SQLITE, 0)
+        AM_CONDITIONAL(HAVE_SQLITE, false)
 else
 	AC_ARG_ENABLE(system-sqlite,
 		AS_HELP_STRING([--enable-system-sqlite], [Use SQLite installed on the system [default=no]]),
@@ -802,6 +810,7 @@ providers/bdb/libgda-bdb-4.0.pc
 providers/bdbsql/Makefile
 providers/bdbsql/libgda-bdbsql-4.0.pc
 providers/mdb/Makefile
+providers/mdb/libmdb-src/Makefile
 providers/mdb/libgda-mdb-4.0.pc
 providers/mysql/Makefile
 providers/mysql/libgda-mysql-4.0.pc

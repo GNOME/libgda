@@ -248,10 +248,6 @@ files=(libdb51.dll)
 add_files_to_zip $archive_ext ${depend_path}/bdb bin $files
 add_files_to_nsh prov_bdb ${depend_path}/bdb bin $files
 
-files=(libmdb-0.dll)
-add_files_to_zip $archive_ext ${depend_path}/mdb bin $files
-add_files_to_nsh prov_mdb ${depend_path}/mdb bin $files
-
 files=(libmySQL.dll)
 add_files_to_zip $archive_ext ${depend_path}/mysql bin $files
 add_files_to_nsh prov_mysql ${depend_path}/mysql bin $files
