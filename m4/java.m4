@@ -133,7 +133,7 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	acx_java_works=no
 	if test -n "${JAVA_PROG}"
 	then
-	    RUN_JAVA(acx_jc_result,[-classpath . getsp -test])
+	    RUN_JAVA(acx_jc_result,[-classpath ${srcdir} getsp -test])
 	    if test "${acx_jc_result}" = "Test1234OK"
 	    then
 	        acx_java_works=yes
@@ -189,7 +189,7 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	        ## retrieve JAVA_HOME from Java itself if not set
 	        if test -z "${JAVA_HOME}"
 	        then
-	            RUN_JAVA(JAVA_HOME,[-classpath . getsp java.home])
+	            RUN_JAVA(JAVA_HOME,[-classpath ${srcdir} getsp java.home])
 	        fi
 
 	        ## the availability of JAVA_HOME will tell us whether it's supported
@@ -208,9 +208,9 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	                    JAVA_LD_PATH=
 	                    ;;
 	                *)
-	                    RUN_JAVA(JAVA_LIBS, [-classpath . getsp -libs])
+	                    RUN_JAVA(JAVA_LIBS, [-classpath ${srcdir} getsp -libs])
 	                    JAVA_LIBS="${JAVA_LIBS} -ljvm"
-	           	    RUN_JAVA(JAVA_LD_PATH, [-classpath . getsp java.library.path])
+	           	    RUN_JAVA(JAVA_LD_PATH, [-classpath ${srcdir} getsp java.library.path])
 	           	    ;;
 	            esac
 	            # note that we actually don't test JAVA_LIBS - we hope that the detection
