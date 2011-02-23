@@ -1,3 +1,16 @@
+libgda 4.2.5, 2011-02-22
+
+ - corrected regression which prevented correct execution of SELECT statements
+   by virtual connections
+ - new NSIS based installer for the GdaBrowser tool under Windows
+ - embedd MDBTools when compiling for Windows
+ - misc other corrections
+ - translations:
+	- sl (Matej Urbančič)
+	- es (Jorge González, Daniel Mustieles)
+	- cz (Marek Černocký)
+	- de (Andre Klapper)
+
 libgda 4.2.4, 2011-02-16
 
  - SQLite provider: correctly report error messages (for example instead of "constraint failed")
