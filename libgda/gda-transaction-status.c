@@ -152,7 +152,7 @@ gda_transaction_status_new (const gchar *name)
 }
 
 /**
- * gda_transaction_status_add_event_svp: (skip):
+ * gda_transaction_status_add_event_svp: (skip)
  *
  */
 GdaTransactionStatusEvent *
@@ -173,7 +173,7 @@ gda_transaction_status_add_event_svp (GdaTransactionStatus *tstatus, const gchar
 }
 
 /**
- * gda_transaction_status_add_event_sql: (skip):
+ * gda_transaction_status_add_event_sql: (skip)
  *
  */
 GdaTransactionStatusEvent *

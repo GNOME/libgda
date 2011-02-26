@@ -1,4 +1,4 @@
-/* GDA common library
+/*
  * Copyright (C) 2005 - 2010 The GNOME Foundation.
  *
  * AUTHORS:

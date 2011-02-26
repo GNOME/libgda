@@ -172,6 +172,7 @@ gda_tree_class_init (GdaTreeClass *klass)
 
 	/**
 	 * GdaTree:is-list:
+	 *
 	 * Tells if the GdaTree is a list or a tree.
 	 */
 	g_object_class_install_property (object_class, PROP_IS_LIST,

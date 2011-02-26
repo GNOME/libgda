@@ -1,5 +1,5 @@
-/* GNOME DB library
- * Copyright (C) 2005 - 2009 The GNOME Foundation
+/*
+ * Copyright (C) 2005 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -346,7 +346,7 @@ _gdaui_provider_spec_editor_get_type (void)
 	return type;
 }
 
-/**
+/*
  * _gdaui_provider_spec_editor_new
  * @provider: the provider to be used 
  *
@@ -416,7 +416,7 @@ params_to_string (GdauiProviderSpecEditor *spec)
 	return str;
 }
 
-/**
+/*
  * _gdaui_provider_spec_editor_set_provider
  * @spec: a #GdauiProviderSpecEditor widget
  * @provider: the provider to be used 
@@ -440,7 +440,7 @@ _gdaui_provider_spec_editor_set_provider (GdauiProviderSpecEditor *spec, const g
 	adapt_form_widget (spec);
 }
 
-/**
+/*
  * _gdaui_provider_spec_editor_is_valid
  * @spec: a #GdauiProviderSpecEditor widget
  * 
@@ -464,7 +464,7 @@ _gdaui_provider_spec_editor_is_valid (GdauiProviderSpecEditor *spec)
 	}
 }
 
-/**
+/*
  * _gdaui_provider_spec_editor_get_specs
  * @spec: a #GdauiProviderSpecEditor widget
  *
@@ -487,7 +487,7 @@ _gdaui_provider_spec_editor_get_specs (GdauiProviderSpecEditor *spec)
 	}
 }
 
-/**
+/*
  * _gdaui_provider_spec_editor_set_specs
  * @spec: a #GdauiProviderSpecEditor widget
  * @specs_string: the connection string
@@ -511,7 +511,7 @@ _gdaui_provider_spec_editor_set_specs (GdauiProviderSpecEditor *spec, const gcha
 	update_form_contents (spec);
 }
 
-/**
+/*
  * _gdaui_provider_spec_editor_add_to_size_group
  * @spec: a #GdauiProviderSpecEditor widget
  */

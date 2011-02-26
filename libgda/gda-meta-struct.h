@@ -162,7 +162,7 @@ typedef struct {
  * GdaMetaDbObject:
  * @extra: union for the actual object's contents, to be able to cast it using GDA_META_TABLE(), GDA_META_VIEW()
  * @obj_type: the type of object (table, view)
- * @outdated:
+ * @outdated: set to %TRUE if the information in this #GdaMetaDbObject may be outdated because the #GdaMetaStore has been updated
  * @obj_catalog: the catalog the object is in
  * @obj_schema: the schema the object is in
  * @obj_name: the object's name

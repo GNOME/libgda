@@ -465,7 +465,7 @@ gda_tree_manager_set_node_create_func (GdaTreeManager *manager, GdaTreeManagerNo
 }
 
 /**
- * gda_tree_manager_get_node_create_func: (skip):
+ * gda_tree_manager_get_node_create_func: (skip)
  * @manager: a #GdaTreeManager tree manager object
  *
  * Get the function used by @manager when creating new #GdaTreeNode nodes

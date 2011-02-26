@@ -1,6 +1,5 @@
-/* rt-parser.c
- *
- * Copyright (C) 2010 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -97,7 +96,7 @@ static MarkupTag get_markup_token (const gchar *alltext, const gchar *start, gin
 static MarkupTag get_token (const gchar *alltext, const gchar *start, gint *out_nb_spaces_before, const gchar **out_end,
 			    MarkupTag start_tag);
 
-/**
+/*
  * get_token
  *
  * returns the token type starting from @iter, and positions @out_end to the last used position
@@ -125,7 +124,7 @@ get_token (const gchar *alltext, const gchar *start, gint *out_nb_spaces_before,
 	return MARKUP_NONE;
 }
 
-/**
+/*
  * get_markup_token
  * @alltext: the complete text
  * @start: starting point

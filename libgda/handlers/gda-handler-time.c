@@ -232,7 +232,7 @@ gda_handler_time_new_no_locale (void)
 }
 
 /**
- * gda_handler_time_set_sql_spec
+ * gda_handler_time_set_sql_spec:
  * @dh: a #GdaHandlerTime object
  * @first: what comes first in the date representation
  * @sec: what comes second in the date representation
@@ -265,7 +265,7 @@ gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec
 }
 
 /**
- * gda_handler_time_set_str_spec
+ * gda_handler_time_set_str_spec:
  * @dh: a #GdaHandlerTime object
  * @first: what comes first in the date representation
  * @sec: what comes second in the date representation
@@ -412,7 +412,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
 }
 
 /**
- * gda_handler_time_get_no_locale_str_from_value
+ * gda_handler_time_get_no_locale_str_from_value:
  * @hdl: a #GdaHandlerTime object
  * @value: a GValue value
  *
@@ -485,7 +485,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue
 }
 
 /**
- * gda_handler_time_get_format
+ * gda_handler_time_get_format:
  * @dh: a #GdaHandlerTime object
  * @type: the type of data being handled
  *

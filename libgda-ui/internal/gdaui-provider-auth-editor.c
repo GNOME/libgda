@@ -1,5 +1,5 @@
-/* GNOME DB library
- * Copyright (C) 2008 The GNOME Foundation
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -208,7 +208,7 @@ _gdaui_provider_auth_editor_get_type (void)
 	return type;
 }
 
-/**
+/*
  * _gdaui_provider_auth_editor_new
  * @provider: the provider to be used 
  *
@@ -227,7 +227,7 @@ _gdaui_provider_auth_editor_new (const gchar *provider)
 	return GTK_WIDGET (auth);
 }
 
-/**
+/*
  * _gdaui_provider_auth_editor_set_provider
  * @auth: a #GdauiProviderAuthEditor widget
  * @provider: the provider to be used 
@@ -290,7 +290,7 @@ _gdaui_provider_auth_editor_set_provider (GdauiProviderAuthEditor *auth, const g
 	g_signal_emit_by_name (auth, "changed");
 }
 
-/**
+/*
  * _gdaui_provider_auth_editor_is_valid
  * @auth: a #GdauiProviderAuthEditor widget
  * 
@@ -367,7 +367,7 @@ params_to_string (GdauiProviderAuthEditor *auth)
 	return str;
 }
 
-/**
+/*
  * _gdaui_provider_auth_editor_get_auths
  * @auth: a #GdauiProviderAuthEditor widget
  *
@@ -393,7 +393,7 @@ _gdaui_provider_auth_editor_get_auth (GdauiProviderAuthEditor *auth)
 		return NULL;
 }
 
-/**
+/*
  * _gdaui_provider_auth_editor_set_auths
  * @auth: a #GdauiProviderAuthEditor widget
  * @auth_string: 
@@ -457,7 +457,7 @@ _gdaui_provider_auth_editor_set_auth (GdauiProviderAuthEditor *auth, const gchar
 	g_signal_emit_by_name (auth, "changed");
 }
 
-/**
+/*
  * _gdaui_provider_auth_editor_add_to_size_group
  * @auth: a #GdauiProviderAuthEditor widget
  */

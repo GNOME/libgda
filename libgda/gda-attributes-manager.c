@@ -1,6 +1,5 @@
 /* 
- * GDA common library
- * Copyright (C) 2008 - 2010 The GNOME Foundation.
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -91,7 +90,7 @@ objattrs_unref (ObjAttrs *attrs)
 }
 
 /**
- * gda_attributes_manager_new: (skip):
+ * gda_attributes_manager_new: (skip)
  * @for_objects: set to TRUE if attributes will be set on objects.
  * @signal_func: a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
  * @signal_data: user data passed as last argument of @signal_func when it is called
