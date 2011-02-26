@@ -83,6 +83,7 @@ struct _GdauiRtEditorPriv
 	gint            insert_offset;
 
 	gboolean        contents_setting; /* TRUE if whole contents is being changed */
+	GtkWidget      *sw; /* swrolled window in which the contents is */
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -123,7 +124,8 @@ enum {
 	PROP_0,
 	PROP_NO_BACKGROUND,
 	PROP_SHOW_MARKUP,
-	PROP_TEXTBUFFER
+	PROP_TEXTBUFFER,
+	PROP_SCROLLED_WINDOW
 };
 
 /* global pixbufs */
@@ -261,6 +263,17 @@ gdaui_rt_editor_class_init (GdauiRtEditorClass *klass)
 							      _("The buffer which is displayed"),
 							      NULL, GTK_TYPE_TEXT_BUFFER,
 							      G_PARAM_READABLE));
+
+	/**
+	 * GdauiRtEditor:in-scrolled-window:
+	 *
+	 * Determines if the contents of the widget appears in a scrolled window or not.
+	 **/
+	g_object_class_install_property (object_class, PROP_SCROLLED_WINDOW,
+					 g_param_spec_boolean ("in-scrolled-window",
+                                                               _("Determines if the contents appears in a scrolled window"),
+                                                               NULL, TRUE,
+                                                               G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
 static void
@@ -294,6 +307,7 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 	gtk_widget_show_all (sw);
 
 	rte->priv = g_new0 (GdauiRtEditorPriv, 1);
+	rte->priv->sw = sw;
 	rte->priv->saved_for_help = NULL;
 	rte->priv->enable_changed_signal = TRUE;
 	rte->priv->no_background = FALSE;
@@ -453,6 +467,31 @@ gdaui_rt_editor_set_property (GObject *object,
 		case PROP_SHOW_MARKUP:
 			_gdaui_rt_editor_set_show_markup (editor, g_value_get_boolean (value));
 			break;
+		case PROP_SCROLLED_WINDOW: {
+			gboolean setting;
+			setting = g_value_get_boolean (value);
+			if ((editor->priv->sw && setting) ||
+			    (! editor->priv->sw && ! setting))
+				break; /* nothing to change */
+			if (editor->priv->sw) {
+				/* remove scrolled window */
+				gtk_widget_reparent (GTK_WIDGET (editor->priv->textview), GTK_WIDGET (editor));
+				gtk_widget_destroy (editor->priv->sw);
+				editor->priv->sw = NULL;
+			}
+			else {
+				/* add scrolled window */
+				GtkWidget *sw;
+				sw = gtk_scrolled_window_new (NULL, NULL);
+				gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+								GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+				gtk_box_pack_end (GTK_BOX (editor), sw, TRUE, TRUE, 0);
+				editor->priv->sw = sw;
+				gtk_widget_show (sw);
+				gtk_widget_reparent (GTK_WIDGET (editor->priv->textview), GTK_WIDGET (sw));
+			}
+			break;
+		}
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -479,6 +518,9 @@ gdaui_rt_editor_get_property (GObject *object,
 			break;
 		case PROP_TEXTBUFFER:
 			g_value_set_object (value, editor->priv->textbuffer);
+			break;
+		case PROP_SCROLLED_WINDOW:
+			g_value_set_boolean (value, editor->priv->sw ? TRUE : FALSE);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -1138,7 +1180,7 @@ text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte)
 		g_signal_emit (rte, gdaui_rt_editor_signals[CHANGED], 0, NULL);
 }
 
-/**
+/*
  * get_token
  *
  * returns the token type starting from @iter, and positions @out_end to the last used position
@@ -1577,7 +1619,7 @@ serialize_tag (GtkTextTag *tag, gboolean starting, GdauiRtEditor *editor)
 	}
 }
 
-/**
+/*
  * steals @base64
  */
 static gchar *
@@ -1596,7 +1638,7 @@ add_newlines_to_base64 (gchar *base64)
 	return g_string_free (string, FALSE);
 }
 
-/**
+/*
  * steals @base64
  */
 static gchar *
