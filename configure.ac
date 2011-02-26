@@ -5,6 +5,7 @@ m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 AC_CONFIG_MACRO_DIR([m4])
 m4_include(m4/introspection.m4)
+m4_include(m4/dk-warn.m4)
 m4_include(m4/mdbtools.m4)
 m4_include(m4/bdb.m4)
 m4_include(m4/mysql.m4)
