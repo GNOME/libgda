@@ -1,10 +1,16 @@
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-mdb.la
 
-if PLATFORM_WIN32
+if MDBEMBEDDED
 SUBDIRS = libmdb-src
 extra_mdb_cflags = -I$(srcdir)/libmdb-src/include
 extra_mdb_ldflags = libmdb-src/libmdb.la
+if CROSS_COMPILING
+else
+if PLATFORM_WIN32
+extra_mdb_ldflags = -liconv libmdb-src/libmdb.la
+endif
+endif
 else
 extra_mdb_cflags = $(MDB_CFLAGS)
 extra_mdb_ldflags = $(MDB_LIBS)
