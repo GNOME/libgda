@@ -215,6 +215,7 @@ int main() {
     fi
 
     AM_CONDITIONAL(MDB,[test "$mdbtools_found" != "no"])
+    AM_CONDITIONAL(MDBEMBEDDED, false)
     AC_SUBST(MDB_LIBS)
     AC_SUBST(MDB_CFLAGS)
 ])
@@ -233,6 +234,7 @@ AC_DEFUN([MDBTOOLS_CHECK],
     else
         AM_ICONV
         AM_CONDITIONAL(MDB, true)
+        AM_CONDITIONAL(MDBEMBEDDED, true)
         AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS,[1],[define if mdb_bind_column accepts four args])
         AC_DEFINE(MDB_WITH_WRITE_SUPPORT,[1],[define if mdb_open accepts MDB_WRITABLE])
         mdbtools_found="yes (embedded)"
