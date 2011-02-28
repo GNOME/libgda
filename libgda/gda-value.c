@@ -1,4 +1,4 @@
-/* GDA library
+/*
  * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -1979,7 +1979,6 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 gint
 gda_value_compare (const GValue *value1, const GValue *value2)
 {
-	GList *l1, *l2;
 	gint retval;
 	GType type;
 
