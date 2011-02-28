@@ -1,5 +1,8 @@
 /*
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -66,7 +69,7 @@ typedef struct _GdaSqlSelectOrder GdaSqlSelectOrder;
  * <userinput>"'joe'"</userinput> and not <userinput>"joe"</userinput>.
  *
  * Note 2 about the @value field: if the expression represents an SQL identifier (such as a table
- * or field name), then the @value_is_ident should be set to %0x01, and @value should be a string
+ * or field name), then the @value_is_ident should be set to %TRUE, and @value should be a string
  * which may contain double quotes around SQL identifiers which also are reserved keywords or which
  * are case sensitive.
  */
@@ -81,14 +84,14 @@ struct _GdaSqlExpr {
 
 	gchar           *cast_as;
 
-	gpointer         value_is_ident; /* pointer to a boolean to keep ABI from 4.0.
-					  * Non NULL if @value represents an SQL identifier
-					  * Mem in _NOT_ allocated!
-					  */
+	gboolean         value_is_ident;
 
 	/*< private >*/
 	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
+	gpointer         _gda_reserved3;
+	gpointer         _gda_reserved4;
 };
 
 #define GDA_TYPE_SQL_EXPR (gda_sql_expr_get_type())

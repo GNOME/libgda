@@ -1,5 +1,5 @@
-/* GDA Oracle provider
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -1293,7 +1293,6 @@ oracle_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext 
 {
         GString *string;
         gchar *str;
-	gpointer tmp;
 
         g_return_val_if_fail (target, NULL);
         g_return_val_if_fail (GDA_SQL_ANY_PART (target)->type == GDA_SQL_ANY_SQL_SELECT_TARGET, NULL);
@@ -1309,8 +1308,9 @@ oracle_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext 
 		g_free (str);
 	}
 	else {
+		gboolean tmp;
 		tmp = target->expr->value_is_ident;
-		target->expr->value_is_ident = (gpointer) 0x1;
+		target->expr->value_is_ident = TRUE;
 		str = context->render_expr (target->expr, context, NULL, NULL, error);
 		target->expr->value_is_ident = tmp;
 		string = g_string_new (str);

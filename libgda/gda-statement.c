@@ -1,6 +1,5 @@
-/* gda-statement.c
- *
- * Copyright (C) 2007 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -1864,7 +1863,6 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 {
 	GString *string;
 	gchar *str;
-	gpointer tmp;
 
 	g_return_val_if_fail (target, NULL);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (target)->type == GDA_SQL_ANY_SQL_SELECT_TARGET, NULL);
@@ -1880,8 +1878,9 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 		g_free (str);
 	}
 	else {
+		gboolean tmp;
 		tmp = target->expr->value_is_ident;
-		target->expr->value_is_ident = (gpointer) 0x1;
+		target->expr->value_is_ident = TRUE;
 		str = context->render_expr (target->expr, context, NULL, NULL, error);
 		target->expr->value_is_ident = tmp;
 		string = g_string_new (str);
