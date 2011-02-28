@@ -1,5 +1,8 @@
 /* 
- * Copyright (C) 2007 Vivien Malerba
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -138,18 +141,18 @@ _remove_quotes (gchar *str)
 }
 
 /**
- * gda_sql_identifier_add_quotes
+ * gda_sql_identifier_force_quotes
  * @str: an SQL identifier
  *
- * Add double quotes around the @str identifier. Use the gda_sql_identifier_needs_quotes()
- * function to tell if an identifier needs to be quoted.
+ * Add double quotes around the @str identifier. This function is normally used only by database provider's
+ * implementation.
  *
- * Returns: a new string
+ * For other uses, see gda_sql_identifier_quote().
  *
- * Deprecated: 4.0.3: Use gda_sql_identifier_quote() instead.
+ * Since: 5.0
  */
 gchar *
-gda_sql_identifier_add_quotes (const gchar *str)
+gda_sql_identifier_force_quotes (const gchar *str)
 {
 	gchar *retval, *rptr;
 	const gchar *sptr;
@@ -292,60 +295,7 @@ _string_is_identifier (const gchar *str)
 }
 
 /**
- * gda_sql_identifier_needs_quotes
- * @str: an SQL identifier
- *
- * Tells if @str needs to be quoted before using it in an SQL statement. To actually add quotes,
- * use gda_sql_identifier_add_quotes().
- *
- * To determine if quotes are needed: the following rules are applied:
- * <itemizedlist>
- *  <listitem><para>If the 1st character is a digit, then %TRUE is returned</para></listitem>
- *  <listitem><para>If there are mixed lower and upper case letters, then %TRUE is returned</para></listitem>
- *  <listitem><para>If there are other characters than digits, letters and the '_', '$' and '#', then %TRUE is returned</para></listitem>
- *  <listitem><para>Otherwise %FALSE is returned</para></listitem>
- * </itemizedlist>
- *
- * Returns: TRUE if @str needs some quotes
- *
- * Deprecated: 4.0.3: Not needed anymore because of the gda_sql_identifier_quote() function.
- */
-gboolean
-gda_sql_identifier_needs_quotes (const gchar *str)
-{
-	const gchar *ptr;
-	gchar icase = 0;
-
-	g_return_val_if_fail (str, FALSE);
-	for (ptr = str; *ptr; ptr++) {
-		/* quote if 1st char is a number */
-		if ((*ptr <= '9') && (*ptr >= '0')) {
-			if (ptr == str)
-				return TRUE;
-			continue;
-		}
-		if ((*ptr >= 'A') && (*ptr <= 'Z')) {
-			if (icase == 0) /* first alpha char encountered */
-				icase = 'U';
-			else if (icase == 'L') /* @str has mixed case */
-				return TRUE;
-			continue;
-		}
-		if ((*ptr >= 'a') && (*ptr <= 'z')) {
-			if (icase == 0) /* first alpha char encountered */
-				icase = 'L';
-			else if (icase == 'U')
-				return TRUE; /* @str has mixed case */
-			continue;
-		}
-		if ((*ptr != '$') && (*ptr != '_') && (*ptr != '#'))
-			return TRUE;
-	}
-	return FALSE;
-}
-
-/**
- * gda_sql_identifier_remove_quotes
+ * gda_sql_identifier_prepare_for_compare
  * @str: a quoted string
  *
  * Prepares @str to be compared:
@@ -359,14 +309,16 @@ gda_sql_identifier_needs_quotes (const gchar *str)
  *     of it is preceeded with a backslash character or with the delimiter character itself</para></listitem>
  * </itemizedlist>
  *
+ * This function is normally used only by database provider's implementation.
+ *
  * WARNING: @str must NOT be a composed identifier (&lt;part1&gt;."&lt;part2&gt;" for example)
  * 
  * Returns: @str
- * 
- * Deprecated: 4.0.3: Not needed anymore because of the gda_sql_identifier_quote() function.
+ *
+ * Since: 5.0
  */
 gchar *
-gda_sql_identifier_remove_quotes (gchar *str)
+gda_sql_identifier_prepare_for_compare (gchar *str)
 {
 	if (!str)
 		return NULL;

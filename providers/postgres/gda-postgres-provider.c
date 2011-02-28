@@ -2478,7 +2478,7 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 		gchar *tmp, *ptr;
 		tmp = pg_remove_quotes (g_strdup (id));
 		if (kwfunc (tmp)) {
-			ptr = gda_sql_identifier_add_quotes (tmp);
+			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;
 		}
@@ -2490,7 +2490,7 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 				    (*ptr == '_'))
 					continue;
 				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
@@ -2505,7 +2505,7 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}
@@ -2513,7 +2513,7 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 				else if ((*ptr >= 'A') && (*ptr <= 'Z'))
 					*ptr += 'a' - 'A';
 				else if ((*ptr >= '0') && (*ptr <= '9') && (ptr == tmp)) {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}

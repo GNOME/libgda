@@ -2880,7 +2880,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 			gchar *tmp, *ptr;
 			tmp = my_remove_quotes (g_strdup (id));
 			if (kwfunc (tmp)) {
-				ptr = gda_sql_identifier_add_quotes (tmp);
+				ptr = gda_sql_identifier_force_quotes (tmp);
 				g_free (tmp);
 				return ptr;
 			}
@@ -2890,13 +2890,13 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 				    (*ptr == '_'))
 					continue;
 				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
 			}
 			return tmp;
-			/*			ptr = gda_sql_identifier_add_quotes (tmp);
+			/*			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;*/
 		}
@@ -2920,7 +2920,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 			gchar *tmp, *ptr;
 			tmp = my_remove_quotes (g_strdup (id));
 			if (kwfunc (tmp)) {
-				ptr = gda_sql_identifier_add_quotes (tmp);
+				ptr = gda_sql_identifier_force_quotes (tmp);
 				g_free (tmp);
 				return ptr;
 			}
@@ -2932,7 +2932,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}
@@ -2948,7 +2948,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}

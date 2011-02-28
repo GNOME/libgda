@@ -44,13 +44,47 @@ ATest tests[] = {
 	{"T8BLE_a", TRUE},
 };
 
+static gboolean
+identifier_needs_quotes (const gchar *str)
+{
+	const gchar *ptr;
+	gchar icase = 0;
+
+	g_return_val_if_fail (str, FALSE);
+	for (ptr = str; *ptr; ptr++) {
+		/* quote if 1st char is a number */
+		if ((*ptr <= '9') && (*ptr >= '0')) {
+			if (ptr == str)
+				return TRUE;
+			continue;
+		}
+		if ((*ptr >= 'A') && (*ptr <= 'Z')) {
+			if (icase == 0) /* first alpha char encountered */
+				icase = 'U';
+			else if (icase == 'L') /* @str has mixed case */
+				return TRUE;
+			continue;
+		}
+		if ((*ptr >= 'a') && (*ptr <= 'z')) {
+			if (icase == 0) /* first alpha char encountered */
+				icase = 'L';
+			else if (icase == 'U')
+				return TRUE; /* @str has mixed case */
+			continue;
+		}
+		if ((*ptr != '$') && (*ptr != '_') && (*ptr != '#'))
+			return TRUE;
+	}
+	return FALSE;
+}
+
 int
 main (int argc, char** argv)
 {
 	gint i, nfailed = 0;
 	for (i = 0; i < G_N_ELEMENTS (tests); i++) {
 		ATest *test = &(tests [i]);
-		if (gda_sql_identifier_needs_quotes (test->sql_identifier) != test->need_quotes) {
+		if (identifier_needs_quotes (test->sql_identifier) != test->need_quotes) {
 			g_print ("Failed for %s: reported %s\n", test->sql_identifier,
 				 test->need_quotes ? "no quotes needed" : "quotes needed");
 			nfailed++;

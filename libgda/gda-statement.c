@@ -1290,7 +1290,7 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 				     "%s", _("Unnamed parameter"));
 			goto err;
 		}
-		quoted_pname = gda_sql_identifier_add_quotes (pspec->name);
+		quoted_pname = gda_sql_identifier_force_quotes (pspec->name);
 
 		if (! (flag & (GDA_STATEMENT_SQL_PARAMS_LONG | GDA_STATEMENT_SQL_PARAMS_SHORT))) {
 			if (!expr->value || gda_value_is_null (expr->value) || strcmp (quoted_pname, pspec->name))
@@ -1315,12 +1315,12 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 			g_string_append (string, " /* ");
 			g_string_append_printf (string, "name:%s", quoted_pname);
 			if (pspec->g_type) {
-				str = gda_sql_identifier_add_quotes (gda_g_type_to_string (pspec->g_type));
+				str = gda_sql_identifier_force_quotes (gda_g_type_to_string (pspec->g_type));
 				g_string_append_printf (string, " type:%s", str);
 				g_free (str);
 			}
 			if (pspec->descr) {
-				str = gda_sql_identifier_add_quotes (pspec->descr);
+				str = gda_sql_identifier_force_quotes (pspec->descr);
 				g_string_append_printf (string, " descr:%s", str);
 				g_free (str);
 			}

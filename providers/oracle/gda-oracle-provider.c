@@ -2371,7 +2371,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 		gchar *tmp, *ptr;
 		tmp = ora_remove_quotes (g_strdup (id));
 		if (kwfunc (tmp)) {
-			ptr = gda_sql_identifier_add_quotes (tmp);
+			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;
 		}
@@ -2383,7 +2383,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 				    (*ptr == '_'))
 					continue;
 				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
@@ -2402,7 +2402,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}
@@ -2410,7 +2410,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 				else if ((*ptr >= 'A') && (*ptr <= 'Z'))
 					*ptr += 'a' - 'A';
 				else if ((*ptr >= '0') && (*ptr <= '9') && (ptr == tmp)) {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}

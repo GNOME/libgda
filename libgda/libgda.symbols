@@ -643,10 +643,9 @@
 	gda_sql_function_serialize
 	gda_sql_function_take_args_list
 	gda_sql_function_take_name
-	gda_sql_identifier_add_quotes
-	gda_sql_identifier_needs_quotes
+	gda_sql_identifier_force_quotes
+	gda_sql_identifier_prepare_for_compare
 	gda_sql_identifier_quote
-	gda_sql_identifier_remove_quotes
 	gda_sql_identifier_split
 	gda_sql_identifier_style_get_type
 	gda_sqlite_provider_get_type
