@@ -1,6 +1,5 @@
-/* gda-set.h
- *
- * Copyright (C) 2003 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -111,6 +110,8 @@ struct _GdaSetClass
 
 	/*< private >*/
 	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };

@@ -314,6 +314,9 @@ struct _GdaServerProviderClass {
 							 GdaStatement *stmt, GdaSet *params, GError **error);
 	/*< private >*/
 	/* Padding for future expansion */
+	void                    (*_gda_reserved1)        (void);
+	void                    (*_gda_reserved2)        (void);
+	void                    (*_gda_reserved3)        (void);
 	void                    (*_gda_reserved4)        (void);
 	void                    (*_gda_reserved5)        (void);
 	void                    (*_gda_reserved6)        (void);
