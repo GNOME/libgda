@@ -1,5 +1,4 @@
-/* utility.c
- *
+/*
  * Copyright (C) 2003 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -119,7 +118,7 @@ _gdaui_utility_entry_build_actions_menu (GObject *obj_data, guint attrs, GCallba
 }
 
 
-/**
+/*
  * _gdaui_utility_entry_build_info_colors_array
  * 
  * Creates an array of colors for the different states of an entry:
@@ -132,7 +131,8 @@ _gdaui_utility_entry_build_actions_menu (GObject *obj_data, guint attrs, GCallba
  *
  * Returns: a new array of 6 colors
  */
-GdkColor **_gdaui_utility_entry_build_info_colors_array ()
+GdkColor **
+_gdaui_utility_entry_build_info_colors_array (void)
 {
 	GdkColor **colors;
 	GdkColor *color;
@@ -171,7 +171,7 @@ GdkColor **_gdaui_utility_entry_build_info_colors_array ()
 	return colors;
 }
 
-/**
+/*
  * _gdaui_utility_markup_title
  */
 gchar *
@@ -183,7 +183,7 @@ _gdaui_utility_markup_title (const gchar *title, gboolean optional)
 		return g_strdup_printf ("%s:", title);
 }
 
-/**
+/*
  * _gdaui_utility_proxy_compute_attributes_for_group
  *
  * Computes an attributes from the individual attributes of the values stored in @store and
@@ -230,7 +230,7 @@ _gdaui_utility_proxy_compute_attributes_for_group (GdauiSetGroup *group, GdauiDa
         return attributes;
 }
 
-/**
+/*
  * _gdaui_utility_proxy_compute_values_for_group:
  *
  * Computes a list of values containing the individual values stored in @store and
@@ -426,7 +426,7 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 	return dlg;
 }
 
-/**
+/*
  * _gdaui_utility_display_error_with_keep_or_discard_choice
  * @form: a #GdauiDataProxy
  * @filled_error: a #GError containing the error to display
@@ -455,7 +455,7 @@ _gdaui_utility_display_error_with_keep_or_discard_choice (GdauiDataProxy *form, 
 	return (res == GTK_RESPONSE_REJECT) ? TRUE : FALSE;
 }
 
-/**
+/*
  * _gdaui_utility_display_error
  * @form: a #GdauiDataProxy
  * @filled_error: a #GError containing the error to display
@@ -478,8 +478,8 @@ _gdaui_utility_display_error (GdauiDataProxy *form, gboolean can_discard, GError
 
 }
 
-/**
- * gnome_db_show_error
+/*
+ * _gdaui_utility_show_error
  * @format:
  * @...:
  *

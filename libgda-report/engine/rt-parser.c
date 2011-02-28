@@ -1,5 +1,4 @@
-/* rt-parser.c
- *
+/*
  * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -125,7 +124,7 @@ get_token (const gchar *alltext, const gchar *start, gint *out_nb_spaces_before,
 	return MARKUP_NONE;
 }
 
-/**
+/*
  * get_markup_token
  * @alltext: the complete text
  * @start: starting point

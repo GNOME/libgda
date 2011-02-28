@@ -80,6 +80,7 @@ struct _GdaDsnInfo {
  * GdaProviderInfo:
  * @id: the unique identifier of the database provider
  * @location: the complete path to the shared library implementing the database provider
+ * @description: provider's description
  * @dsn_params: a #GdaSet containing all the parameters which can/must be specified when opening a connection or defining a named data source (DSN)
  * @auth_params: a #GdaSet containing all the authentication parameters
  *

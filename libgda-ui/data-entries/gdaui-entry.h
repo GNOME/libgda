@@ -59,7 +59,7 @@ struct _GdauiEntryClass
 
 	/**
 	 * GdauiEntryClass::assume_insert
-	 * @entry:
+	 * @entry: a #GdauiEntry
 	 * @text: the text to be inserted
 	 * @text_length: @text's length in bytes (not characters)
 	 * @virt_pos: the position where @text is to be inserted
@@ -71,7 +71,7 @@ struct _GdauiEntryClass
 						  gint *virt_pos, gint offset);
 	/**
 	 * GdauiEntryClass::assume_delete
-	 * @entry:
+	 * @entry: a #GdauiEntry
 	 * @virt_start_pos: the starting position.
 	 * @virt_end_pos: the end position (not included in deletion), always > @start_pos
 	 * @offset: an offset to add to positions using @virt_start_pos or @virt_end_pos as reference

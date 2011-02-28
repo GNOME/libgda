@@ -171,6 +171,7 @@ typedef enum {
  * @GDA_CONNECTION_FEATURE_VIEWS: test for views support
  * @GDA_CONNECTION_FEATURE_XA_TRANSACTIONS: test for distributed transactions support
  * @GDA_CONNECTION_FEATURE_MULTI_THREADING: test for native multi-threading support
+ * @GDA_CONNECTION_FEATURE_LAST: not used
  *
  * Used in gda_connection_supports_feature() and gda_server_provider_supports_feature() to test if a connection
  * or a database provider supports some specific feature.

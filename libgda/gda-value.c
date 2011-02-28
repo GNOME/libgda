@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
@@ -2257,7 +2257,7 @@ to_string (const GValue *value)
 
 
 /**
- * gda_value_to_xml: (skip):
+ * gda_value_to_xml: (skip)
  * @value: a #GValue.
  *
  * Serializes the given #GValue to an XML node string.

@@ -187,7 +187,7 @@ gda_mutex_usage_unlocked (GdaMutex *mutex)
 #endif
 
 /**
- * gda_mutex_new: (skip):
+ * gda_mutex_new: (skip)
  *
  * Creates a new #GdaMutex.
  *
