@@ -332,11 +332,13 @@ static const gchar *ui_actions_info =
 	"    <menu name='Display' action='Display'>"
 	"      <menuitem name='SchemaBrowserFavoritesShow' action='SchemaBrowserFavoritesShow'/>"
         "    </menu>"
+#ifdef HAVE_GOOCANVAS
         "    <placeholder name='MenuExtension'>"
         "      <menu name='Schema' action='Schema'>"
         "        <menuitem name='NewDiagram' action= 'NewDiagram'/>"
         "      </menu>"
         "    </placeholder>"
+#endif
         "  </menubar>"
         "</ui>";
 
