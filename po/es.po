@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&component=general\n"
-"POT-Creation-Date: 2011-02-19 14:08+0000\n"
-"PO-Revision-Date: 2011-02-20 18:27+0100\n"
+"POT-Creation-Date: 2011-02-26 18:00+0000\n"
+"PO-Revision-Date: 2011-02-27 22:35+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -135,7 +135,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:509
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:168
 #: ../libgda-ui/gdaui-init.c:511 ../libgda-ui/gdaui-login.c:426
-#: ../libgda-ui/gdaui-rt-editor.c:671
+#: ../libgda-ui/gdaui-rt-editor.c:712
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -2621,11 +2621,11 @@ msgstr "No se pudo obtener el valor del iterador"
 msgid "Unable to get table name"
 msgstr "No se pudo obtener el nombre de la tabla"
 
-#: ../libgda/gda-tree.c:178
+#: ../libgda/gda-tree.c:179
 msgid "Tells if the GdaTree is a list or a tree"
 msgstr "Dice si el GdaTree es una lista o un árbol"
 
-#: ../libgda/gda-tree.c:748 ../libgda/gda-tree.c:756
+#: ../libgda/gda-tree.c:749 ../libgda/gda-tree.c:757
 #, c-format
 msgid "Path format error: %s"
 msgstr "Error de formato de ruta: %s"
@@ -3072,7 +3072,7 @@ msgstr "Error interno fatal del proveedor SQLite"
 msgid "Row %d not found"
 msgstr "No se encontró la fila %d"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:308
+#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:325
 msgid "Table to remove not found"
 msgstr "No se encontró la tabla para eliminar"
 
@@ -3118,48 +3118,48 @@ msgstr "El modelo de datos debe tener al menos una columna"
 msgid "Could not compute virtual table's columns"
 msgstr "No se pudieron computar las tablas de la tabla virtual"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:393
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:392
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr ""
 "No se puede obtener la descripción del modelo de datos para la columna %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:407
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:406
 #, c-format
 msgid "Can't get data model's column type or type for column %d"
 msgstr ""
 "No se puede obtener el tipo de la columna del modelo de datos o el tipo para "
 "la columna %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:454
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:453
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "No se puede declarar la tabla virtual (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:571
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:570
 msgid "Column not found"
 msgstr "No se encontró la columna"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1006
 msgid "Data model representing the table is read only"
 msgstr "El modelo de datos que representa la tabla es de sólo lectura"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1037
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1036
 msgid "No statement provided to modify the data model representing the table"
 msgstr ""
 "No se proporcionó ninguna declaración para modificar el modelo de datos que "
 "representa la tabla"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1045
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1044
 msgid ""
 "Invalid statement provided to modify the data model representing the table"
 msgstr ""
 "La declaración proporcionada no es válida para modificar el modelo de datos "
 "que representa la tabla"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1065
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1119
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1128
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1064
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1118
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1127
 msgid ""
 "Invalid parameter in statement provided to modify the data model "
 "representing the table"
@@ -3167,12 +3167,12 @@ msgstr ""
 "El parámetro en la declaración proporcionada no es válido para modificar el "
 "modelo de datos que representa la tabla"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1087
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1097
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1086
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1096
 msgid "Could not retreive row to delete"
 msgstr "No se pudo obtener una fila para eliminar"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1161
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1160
 msgid ""
 "Failed to execute the statement provided to modify the data model "
 "representing the table"
@@ -3518,7 +3518,7 @@ msgstr "La expresión «%s» debería devolver exactamente un valor"
 msgid "Binary data"
 msgstr "Dato binario"
 
-#: ../libgda-report/engine/rt-parser.c:1208
+#: ../libgda-report/engine/rt-parser.c:1207
 msgid "link"
 msgstr "enlace"
 
@@ -3547,7 +3547,7 @@ msgstr "Seleccionar archivo para cargar"
 
 #: ../libgda-ui/data-entries/common-bin.c:77
 #: ../libgda-ui/data-entries/plugins/common-pict.c:398
-#: ../libgda-ui/gdaui-rt-editor.c:669
+#: ../libgda-ui/gdaui-rt-editor.c:710
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3827,7 +3827,7 @@ msgid "_Save image"
 msgstr "_Guardar imagen"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:339
-#: ../libgda-ui/gdaui-rt-editor.c:631
+#: ../libgda-ui/gdaui-rt-editor.c:672
 msgid "Select image to load"
 msgstr "Seleccionar la imagen que cargar"
 
@@ -4112,17 +4112,17 @@ msgid "Provider '%s' does not report the required parameters for DSN"
 msgstr "El proveedor «%s» no informó de los parámetros necesarios para DSN"
 
 #. set to NULL item
-#: ../libgda-ui/internal/utility.c:80
+#: ../libgda-ui/internal/utility.c:79
 msgid "Unset"
 msgstr "Sin asignar"
 
 #. default value item
-#: ../libgda-ui/internal/utility.c:93
+#: ../libgda-ui/internal/utility.c:92
 msgid "Set to default value"
 msgstr "Establecer a un valor predeterminado"
 
 #. reset to original value item
-#: ../libgda-ui/internal/utility.c:106
+#: ../libgda-ui/internal/utility.c:105
 msgid "Reset to original value"
 msgstr "Restablecer al valor original"
 
@@ -4508,7 +4508,7 @@ msgstr ""
 msgid "If you choose yes, the contents will be lost."
 msgstr "Si elige sí, se perderá todo el contenido."
 
-#: ../libgda-ui/gdaui-rt-editor.c:90
+#: ../libgda-ui/gdaui-rt-editor.c:91
 msgid ""
 "\"\"\"= Title level 1 =\n"
 "== Title level 2 ==\n"
@@ -4559,88 +4559,94 @@ msgstr ""
 "Las áreas en bruto se delimitan dentro de comillas dobles y no se interpreta "
 "ningún marcado"
 
-#: ../libgda-ui/gdaui-rt-editor.c:156
+#: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "_Bold"
 msgstr "_Negrita"
 
-#: ../libgda-ui/gdaui-rt-editor.c:156
+#: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "Bold text"
 msgstr "Negrita"
 
-#: ../libgda-ui/gdaui-rt-editor.c:157
+#: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "_Italic"
 msgstr "_Cursiva"
 
-#: ../libgda-ui/gdaui-rt-editor.c:157
+#: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "Italic text"
 msgstr "Texto en cursiva"
 
-#: ../libgda-ui/gdaui-rt-editor.c:158
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "_Underline"
 msgstr "S_ubrayado"
 
-#: ../libgda-ui/gdaui-rt-editor.c:158
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "Underline text"
 msgstr "Subrayar"
 
-#: ../libgda-ui/gdaui-rt-editor.c:159
+#: ../libgda-ui/gdaui-rt-editor.c:161
 msgid "_Strike through"
 msgstr "_Tachar"
 
-#: ../libgda-ui/gdaui-rt-editor.c:159
+#: ../libgda-ui/gdaui-rt-editor.c:161
 msgid "Strike through text"
 msgstr "Tachar el texto"
 
-#: ../libgda-ui/gdaui-rt-editor.c:160
+#: ../libgda-ui/gdaui-rt-editor.c:162
 msgid "_Syntax help"
 msgstr "Ayuda de _sintaxis"
 
-#: ../libgda-ui/gdaui-rt-editor.c:160
+#: ../libgda-ui/gdaui-rt-editor.c:162
 msgid "Show syntax help"
 msgstr "Mostrar la ayuda de sintaxis"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:166
 msgid "_Add image"
 msgstr "_Añadir imagen"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:166
 msgid "Insert image"
 msgstr "Insertar imagen"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:167
 msgid "_Normal text"
 msgstr "Texto _normal"
 
-#: ../libgda-ui/gdaui-rt-editor.c:166
+#: ../libgda-ui/gdaui-rt-editor.c:167
 msgid "Reset to normal text"
 msgstr "Restablecer al texto normal"
 
-#: ../libgda-ui/gdaui-rt-editor.c:241
+#: ../libgda-ui/gdaui-rt-editor.c:242
 msgid "Don't display a specific background for the text"
 msgstr "No mostrar un fondo específico para el texto"
 
-#: ../libgda-ui/gdaui-rt-editor.c:251
+#: ../libgda-ui/gdaui-rt-editor.c:252
 msgid "Display raw markup text instead of formatted text"
 msgstr ""
 "Mostrar un marcado en bruto para el texto en lugar del texto formateado"
 
-#: ../libgda-ui/gdaui-rt-editor.c:262
+#: ../libgda-ui/gdaui-rt-editor.c:263
 msgid "The buffer which is displayed"
 msgstr "El búfer que se está mostrando"
 
-#: ../libgda-ui/gdaui-rt-editor.c:835
+#: ../libgda-ui/gdaui-rt-editor.c:274
+msgid "Determines if the contents appears in a scrolled window"
+msgstr ""
+"Determina si los contenidos aparecen en una ventana con barras de "
+"desplazamiento"
+
+#: ../libgda-ui/gdaui-rt-editor.c:876
 msgid "Reset font size"
 msgstr "Restablecer el tamaño de la tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:841
+#: ../libgda-ui/gdaui-rt-editor.c:882
 msgid "Decrease font size (zoom out)"
 msgstr "Reducir tamaño de tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:847
+#: ../libgda-ui/gdaui-rt-editor.c:888
 msgid "Increase font size (zoom in)"
 msgstr "Aumentar tamaño de tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:853
+#: ../libgda-ui/gdaui-rt-editor.c:894
 msgid "Show source markup"
 msgstr "Mostrar el origen del marcado"
 
