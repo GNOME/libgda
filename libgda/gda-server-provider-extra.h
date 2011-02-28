@@ -1,6 +1,5 @@
-/* gda-server-provider-extra.h
- *
- * Copyright (C) 2005 - 2008 Vivien Malerba
+/*
+ * Copyright (C) 2005 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -31,14 +30,6 @@ G_BEGIN_DECLS
  * GdaSqlParser associated to each provider
  */
 GdaSqlParser *gda_server_provider_internal_get_parser (GdaServerProvider *prov);
-
-/*
- * Help to implement providers, so the schemas return the same
- * number of columns and column titles across the providers.
- */
-gint      gda_server_provider_get_schema_nb_columns (GdaConnectionSchema schema);
-gboolean  gda_server_provider_init_schema_model     (GdaDataModel *model, GdaConnectionSchema schema);
-gboolean  gda_server_provider_test_schema_model     (GdaDataModel *model, GdaConnectionSchema schema, GError **error);
 
 /*
  * Default perform operation

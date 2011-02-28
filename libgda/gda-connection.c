@@ -1,4 +1,4 @@
-/* GDA library
+/*
  * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -1534,7 +1534,8 @@ add_connection_event_from_error (GdaConnection *cnc, GError **error)
 {
 	GdaConnectionEvent *event;
 	gchar *str;
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_WARNING);
+	event = GDA_CONNECTION_EVENT (g_object_new (GDA_TYPE_CONNECTION_EVENT,
+							  "type", (int)GDA_CONNECTION_EVENT_WARNING, NULL));
 	str = g_strdup_printf (_("Error while maintaining the meta data up to date: %s"),
 			       error && *error && (*error)->message ? (*error)->message : _("No detail"));
 	gda_connection_event_set_description (event, str);
@@ -2264,9 +2265,7 @@ gda_connection_parse_sql_string (GdaConnection *cnc, const gchar *sql, GdaSet **
  * @type: a #GdaConnectionEventType
  *
  * Use this method to get a pointer to the next available connection event which can then be customized
- * and taken into account using gda_connection_add_event(). This method is a drop-in replacament
- * for gda_connection_event_new() which improves performances by reusing as much as possible
- * #GdaConnectionEvent objects. Newly written database providers should use this method.
+ * and taken into account using gda_connection_add_event().
  *
  * Returns: (transfer full) (allow-none): a pointer to the next available connection event, or %NULL if event should
  * be ignored
@@ -2283,7 +2282,8 @@ gda_connection_point_available_event (GdaConnection *cnc, GdaConnectionEventType
 	GdaConnectionEvent *eev;
 	eev = cnc->priv->events_array [cnc->priv->events_array_next];
 	if (!eev)
-		eev = gda_connection_event_new (type);
+		eev = GDA_CONNECTION_EVENT (g_object_new (GDA_TYPE_CONNECTION_EVENT,
+							  "type", (int)type, NULL));
 	else {
 		gda_connection_event_set_event_type (eev, type);
 		cnc->priv->events_array [cnc->priv->events_array_next] = NULL;
@@ -3305,8 +3305,7 @@ gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet
  * @last_insert_row: (out) (transfer full) (allow-none): a place to store a new #GdaSet object which contains the values of the last inserted row, or %NULL
  * @error: a place to store an error, or %NULL
  *
- * Executes a non-selection statement on the given connection. The gda_execute_non_select_command() method can be easier
- * to use if one prefers to use some SQL directly.
+ * Executes a non-selection statement on the given connection.
  *
  * This function returns the number of rows affected by the execution of @stmt, or -1
  * if an error occurred, or -2 if the connection's provider does not return the number of rows affected.
@@ -3375,8 +3374,7 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
  * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @error: a place to store an error, or %NULL
  *
- * Executes a selection command on the given connection. The gda_execute_select_command() method can be easier
- * to use if one prefers to use some SQL directly.
+ * Executes a selection command on the given connection.
  *
  * This function returns a #GdaDataModel resulting from the SELECT statement, or %NULL
  * if an error occurred.

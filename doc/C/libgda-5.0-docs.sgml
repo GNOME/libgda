@@ -531,7 +531,6 @@
 	  </textobject>
 	</mediaobject>
       </para>
-      <xi:include href="xml/gda-convenient.xml"/>
       <xi:include href="xml/gda-connection.xml"/>
       <xi:include href="xml/gda-sql-parser.xml"/>
       <xi:include href="xml/gda-sql-builder.xml"/>
@@ -797,7 +796,7 @@ g_object_unref (tree);
 	need to unref() it after usage, data handler objects are stateless), and so to obtain such a pointer one can:
 	<itemizedlist>
 	  <listitem>
-	    <para>Use the <link linkend="gda-get-default-handler">gda_get_default_handler()</link>: the returned data handler
+	    <para>Use the <link linkend="gda-data-handlet-get-default">gda_data_handler_get_default()</link>: the returned data handler
 	      is a generic one and should not be used to convert data to use with any connection, but only to have
 	      a portable way of storing and loading data in a locale independent fashion (for serialization purposes).</para>
 	  </listitem>

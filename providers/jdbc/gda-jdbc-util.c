@@ -40,7 +40,8 @@ _gda_jdbc_make_error (GdaConnection *cnc, gint error_code, gchar *sql_state, GEr
         GdaConnectionEventCode gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
         GdaTransactionStatus *trans;
 
-        error_ev = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+        error_ev = GDA_CONNECTION_EVENT (g_object_new (GDA_TYPE_CONNECTION_EVENT, "type",
+						       (gint) GDA_CONNECTION_EVENT_ERROR, NULL));
 	if (error) {
 		gda_connection_event_set_description (error_ev,
 						      error->message ? error->message : _("No detail"));

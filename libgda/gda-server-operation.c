@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2006 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2006 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -2496,7 +2496,7 @@ gda_server_operation_prepare_drop_database (const gchar *provider, const gchar *
 /**
  * gda_server_operation_perform_drop_database:
  * @provider: the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_drop_database()
- * @op: a #GdaServerOperation object obtained using gda_prepare_drop_database()
+ * @op: a #GdaServerOperation object obtained using gda_server_operation_prepare_drop_database()
  * @error: a place to store en error, or %NULL
  *
  * Destroys an existing database using the specifications in @op. @op can be obtained using
@@ -2531,7 +2531,7 @@ gda_server_operation_perform_drop_database (GdaServerOperation *op, const gchar 
  * @table_name: name of the table to create
  * @error: a place to store errors, or %NULL
  * @...: group of three arguments for column's name, column's #GType
- * and a #GdaEasyCreateTableFlag flag, finished with %NULL
+ * and a #GdaServerOperationCreateTableFlag flag, finished with %NULL
  *
  * Add more arguments if the flag needs them:
  *
@@ -2548,7 +2548,7 @@ gda_server_operation_perform_drop_database (GdaServerOperation *op, const gchar 
  * </itemizedlist>
  *
  * Create a #GdaServerOperation object using an opened connection, taking three
- * arguments, a column's name the column's GType and #GdaEasyCreateTableFlag
+ * arguments, a column's name the column's GType and #GdaServerOperationCreateTableFlag
  * flag, you need to finish the list using %NULL.
  *
  * You'll be able to modify the #GdaServerOperation object to add custom options * to the operation. When finished call #gda_server_operation_perform_create_table

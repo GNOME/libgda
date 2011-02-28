@@ -928,31 +928,6 @@ gda_handler_type_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gda-convenient</FILE>
-<TITLE>Convenience functions</TITLE>
-gda_prepare_create_database
-gda_perform_create_database
-gda_prepare_drop_database
-gda_perform_drop_database
-<SUBSECTION>
-gda_execute_select_command
-gda_execute_non_select_command
-<SUBSECTION>
-gda_prepare_create_table
-gda_perform_create_table
-gda_prepare_drop_table
-gda_perform_drop_table
-<SUBSECTION>
-gda_insert_row_into_table
-gda_update_row_in_table
-gda_delete_row_from_table
-<SUBSECTION>
-gda_parse_sql_string
-<SUBSECTION>
-gda_get_default_handler
-</SECTION>
-
-<SECTION>
 <FILE>gda-report-engine</FILE>
 <TITLE>GdaReportEngine</TITLE>
 <INCLUDE>libgda-report/gda-report-engine.h</INCLUDE>
@@ -1485,7 +1460,6 @@ gda_connection_internal_get_provider_data
 gda_connection_add_event
 gda_connection_add_event_string
 gda_connection_clear_events_list
-gda_connection_event_new
 gda_connection_event_set_event_type
 gda_connection_event_set_description
 gda_connection_event_set_code

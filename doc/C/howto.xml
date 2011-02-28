@@ -354,7 +354,7 @@ g_object_unref (b);
     </para>
     <para>
       However when one only wants to run a simple SQL statement, &LIBGDA; provides the
-      <link linkend="gda-execute-select-command">gda_execute_select_command()</link> function which does
+      <link linkend="gda-connection-statement-execute-select-command">gda_connection_statement_execute_select_command()</link> function which does
       everything in one step. The following codes illustrates parsing and executing a SELECT statement:
     </para>
     <para>

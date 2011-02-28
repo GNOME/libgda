@@ -1,5 +1,5 @@
-/* GDA server library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -108,26 +108,6 @@ gda_connection_event_init (GdaConnectionEvent *event, G_GNUC_UNUSED GdaConnectio
 	event->priv = g_new0 (GdaConnectionEventPrivate, 1);
 	event->priv->type = GDA_CONNECTION_EVENT_ERROR;
 	event->priv->gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
-}
-
-/**
- * gda_connection_event_new:
- * @type: the type of event
- *
- * Creates a new uninitialized event object. This class is used for communicating
- * events from the different providers to the clients.
- *
- * Returns: the event object.
- *
- * Deprecated: 4.2: use gda_connection_point_available_event() instead
- */
-GdaConnectionEvent *
-gda_connection_event_new (GdaConnectionEventType type)
-{
-	GdaConnectionEvent *event;
-
-	event = GDA_CONNECTION_EVENT (g_object_new (GDA_TYPE_CONNECTION_EVENT, "type", (int)type, NULL));
-	return event;
 }
 
 static void

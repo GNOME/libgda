@@ -1,5 +1,5 @@
-/* GDA server library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -44,6 +44,7 @@ struct _GdaConnectionEvent {
 struct _GdaConnectionEventClass {
 	GObjectClass parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
@@ -86,7 +87,6 @@ typedef enum
 #define GDA_SQLSTATE_GENERAL_ERROR "HY000"
 
 GType                   gda_connection_event_get_type (void) G_GNUC_CONST;
-GdaConnectionEvent     *gda_connection_event_new (GdaConnectionEventType type);
 
 void                    gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEventType type);
 GdaConnectionEventType  gda_connection_event_get_event_type (GdaConnectionEvent *event);
