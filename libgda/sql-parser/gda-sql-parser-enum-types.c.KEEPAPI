@@ -1,7 +1,0 @@
-/* Content designed to maitain API/ABI */
-
-GType
-gda_sql_error_type_get_type (void)
-{
-  return gda_sql_error_get_type ();
-}

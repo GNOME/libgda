@@ -122,7 +122,7 @@ gda_sql_builder_class_init (GdaSqlBuilderClass *klass)
 	 */
 	g_object_class_install_property (object_class, PROP_TYPE,
 					 g_param_spec_enum ("stmt-type", NULL, "Statement Type",
-							    GDA_SQL_PARSER_TYPE_SQL_STATEMENT_TYPE,
+							    GDA_TYPE_SQL_STATEMENT_TYPE,
 							    GDA_SQL_STATEMENT_UNKNOWN,
 							    (G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 }
