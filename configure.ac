@@ -171,7 +171,7 @@ AC_ARG_WITH(ui,
 
 if test "$with_ui" = "auto" -o "$with_ui" = "yes"
 then
-	GTK_MODULES="gtk+-3.0 >= 2.90.0"
+	GTK_MODULES="gtk+-3.0 >= 3.0.0"
 	PKG_CHECK_MODULES(GTK, $GTK_MODULES, [
 		AC_DEFINE(HAVE_UI, [1], [GTK+ support enabled])
 		have_ui=yes], [

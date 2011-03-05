@@ -1,3 +1,106 @@
+libgda 4.99.0, 2011-03-05
+
+ - Adaptations to the GTK3 environment (requires gtk+-3.0 >= 3.0.0):
+        - API is preserved but ABI has changed
+	- Deprecated API has been removed
+ - Embedded SQLite version 3.7.5
+ - Embedded SQLCipher version is 2.0Beta
+
+WARNING: this is a beta version and should not be used in a production environment, and the
+	 SQLCipher database provider is itself in a beta state, so again don't use it on production data,
+	 as you may lose your data!
+
+libgda 4.2.5, 2011-02-22
+
+ - corrected regression which prevented correct execution of SELECT statements
+   by virtual connections
+ - new NSIS based installer for the GdaBrowser tool under Windows
+ - embedd MDBTools when compiling for Windows
+ - misc other corrections
+ - translations:
+	- sl (Matej Urbančič)
+	- es (Jorge González, Daniel Mustieles)
+	- cz (Marek Černocký)
+	- de (Andre Klapper)
+
+libgda 4.2.4, 2011-02-16
+
+ - SQLite provider: correctly report error messages (for example instead of "constraint failed")
+ - SQLite provider: correctly report if foreign key constraints are enforced or not
+ - Added possibility to "declare foreign key constraints", which are declarations in the
+   metadata where databases don't actually use foreign keys
+ - GdaMetaStruct: report information about foreign keys
+ - GdaBrowser: many small improvements and corrections
+ - GdaSql and GdaBrowser: display more information about database providers and DSN's connection
+   parameters, and display information about foreign key constraints
+ - Documentation improvements and corrections
+ - Misc small corrections
+ - Bug fixes: #639533, #639897, #639897, #640482, #642037, #642100 and #642170
+ - translations:
+	- sl (Matej Urbančič)
+	- es (Daniel Mustieles)
+	- cz (Marek Černocký)
+	- fr (Bruno Brouard)
+	- de (Christian Kirbach)
+
+libgda 4.2.3, 2011-01-09
+
+ - Correction to the expression rendering in SQL (very important!)
+ - SQLite: fixed date and related formats when rendering as SQL
+ - MySQL: fixed error code ignored and not available via gda_connection_event_get_code()
+ - Move convenience functions to appropriate classes
+ - documentation updates
+ - GdaSql and GdaBrowser: better information about configuration and added possibility to
+   clean data files and truncate data output to available width
+ - build system: Enable compiler warnings by default, detect Oracle on Windows
+ - Initial support for rich text rendering in reports
+ - misc. improvements
+ - bugs fixed: #636439, #636608, #637010, crash in gdaui-demo, build system, misc
+ - translations:
+	- sl (Matej Urbančič)
+	- es (Daniel Mustieles, Jorge González)
+	- de (Christian Kirbach, Mario Blättermann)
+	- cs (Petr Kovar)
+
+libgda 4.2.2, 2010-11-27
+
+ - GdaBrowser: better take user preferences into account
+ - new GdauiRtEditor widget and plugin
+ - bug fixes: bug #635377, #635419 and misc.
+ - translations:
+	- sl (Matej Urbančič)
+	- es (Julio Borja Barra)
+	- cz (Marek Cernocky)
+	- de (Mario Blättermann)
+
+libgda 4.2.1, 2010-11-14
+
+ - code cleanups and compilation warnings removal (thanks to David King and Murray Cumming),
+   used the FlawFinder and cppcheck tools
+ - more annotations for GObject Introspection (thanks to Jonh Wendell)
+ - removed old database providers' code
+ - build system improvements:
+   	 - use better build of generated source code
+   	 - better detection of external dependencies in configure script using specfic M4 files
+	 - updated Lemon parser generator from SQLite
+ - GdaBrowser improvements: error reporting in data manager perspective, authentification dialog
+ - documentation corrections
+ - updated SQLCipher to version 1.1.8
+ - optimized virtual tables usage
+ - improved GdaDataModel import and export
+ - MySQL provider: support for statements where the prepared statement API does not work
+ - bug fixes: #630655, #630953, #617550, #633247, #634737 and other minor ones
+ - translations:
+	- id (Andika Triwidada)
+	- cs (Marek Černocký, Petr Kovar)
+	- es (Jorge González)
+	- eu (Inaki Larranaga Murgoitio)
+	- sl (Matej Urbančič)
+	- fr (Bruno Brouard)
+	- da (Joe Hansen)
+	- ca@valencia (Carles Ferrando)
+	- el (Vasilis Tsivikis)
+
 libgda 4.2.0, 2010-09-26
 
  - misc corrections
