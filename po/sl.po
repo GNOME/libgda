@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&component=general\n"
-"POT-Creation-Date: 2011-02-19 17:29+0000\n"
-"PO-Revision-Date: 2011-02-20 13:51+0100\n"
+"POT-Creation-Date: 2011-02-27 21:35+0000\n"
+"PO-Revision-Date: 2011-03-09 13:07+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
@@ -134,7 +134,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda-ui/gdaui-data-filter.c:168
 #: ../libgda-ui/gdaui-init.c:511
 #: ../libgda-ui/gdaui-login.c:426
-#: ../libgda-ui/gdaui-rt-editor.c:670
+#: ../libgda-ui/gdaui-rt-editor.c:712
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1339
 #: ../providers/jdbc/gda-jdbc-provider.c:1368
@@ -2585,12 +2585,12 @@ msgstr "Ni mogoče pridobiti vrednosti ponavljalnika"
 msgid "Unable to get table name"
 msgstr "Ni mogoče pridobiti imena podatkovne zbirke"
 
-#: ../libgda/gda-tree.c:178
+#: ../libgda/gda-tree.c:179
 msgid "Tells if the GdaTree is a list or a tree"
 msgstr "Pove ali je predmet GdaTree sezmam ali drevesna postavitev"
 
-#: ../libgda/gda-tree.c:748
-#: ../libgda/gda-tree.c:756
+#: ../libgda/gda-tree.c:749
+#: ../libgda/gda-tree.c:757
 #, c-format
 msgid "Path format error: %s"
 msgstr "Napaka oblike poti: %s"
@@ -3417,7 +3417,7 @@ msgstr "Izraz '%s' mora vrniti natanko eno vrednost"
 msgid "Binary data"
 msgstr "_Dvojiški podatki"
 
-#: ../libgda-report/engine/rt-parser.c:1208
+#: ../libgda-report/engine/rt-parser.c:1207
 msgid "link"
 msgstr "povezava"
 
@@ -3446,7 +3446,7 @@ msgstr "Izberite datoteko za nalaganje"
 
 #: ../libgda-ui/data-entries/common-bin.c:77
 #: ../libgda-ui/data-entries/plugins/common-pict.c:398
-#: ../libgda-ui/gdaui-rt-editor.c:668
+#: ../libgda-ui/gdaui-rt-editor.c:710
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3715,7 +3715,7 @@ msgid "_Save image"
 msgstr "_Shrani sliko"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:339
-#: ../libgda-ui/gdaui-rt-editor.c:630
+#: ../libgda-ui/gdaui-rt-editor.c:672
 msgid "Select image to load"
 msgstr "Izbor slike za nalaganje"
 
@@ -3997,17 +3997,17 @@ msgid "Provider '%s' does not report the required parameters for DSN"
 msgstr "Ponudnik '%s' ne podpira zahtevanih parametrov za DSN"
 
 #. set to NULL item
-#: ../libgda-ui/internal/utility.c:80
+#: ../libgda-ui/internal/utility.c:79
 msgid "Unset"
 msgstr "Nedoločeno"
 
 #. default value item
-#: ../libgda-ui/internal/utility.c:93
+#: ../libgda-ui/internal/utility.c:92
 msgid "Set to default value"
 msgstr "Nastavi na privzeto vrednost"
 
 #. reset to original value item
-#: ../libgda-ui/internal/utility.c:106
+#: ../libgda-ui/internal/utility.c:105
 msgid "Reset to original value"
 msgstr "Ponastavi na izvorno vrednost"
 
@@ -4377,7 +4377,7 @@ msgstr ""
 msgid "If you choose yes, the contents will be lost."
 msgstr "V koliko odgovorite z da, bo vsebina izgubljena."
 
-#: ../libgda-ui/gdaui-rt-editor.c:90
+#: ../libgda-ui/gdaui-rt-editor.c:91
 msgid ""
 "\"\"\"= Title level 1 =\n"
 "== Title level 2 ==\n"
@@ -4427,87 +4427,91 @@ msgstr ""
 "\n"
 "Območja brez oblikovanja so zajeta znotraj treh dvojnih narekovajev, kar onemogoči izris oblikvanja"
 
-#: ../libgda-ui/gdaui-rt-editor.c:156
+#: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "_Bold"
 msgstr "_Krepko"
 
-#: ../libgda-ui/gdaui-rt-editor.c:156
+#: ../libgda-ui/gdaui-rt-editor.c:158
 msgid "Bold text"
 msgstr "Krepko besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:157
+#: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "_Italic"
 msgstr "_Ležeče"
 
-#: ../libgda-ui/gdaui-rt-editor.c:157
+#: ../libgda-ui/gdaui-rt-editor.c:159
 msgid "Italic text"
 msgstr "Ležeče besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:158
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "_Underline"
 msgstr "_Podčrtano"
 
-#: ../libgda-ui/gdaui-rt-editor.c:158
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "Underline text"
 msgstr "Podčrtano besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:159
+#: ../libgda-ui/gdaui-rt-editor.c:161
 msgid "_Strike through"
 msgstr "Pre_črtano"
 
-#: ../libgda-ui/gdaui-rt-editor.c:159
+#: ../libgda-ui/gdaui-rt-editor.c:161
 msgid "Strike through text"
 msgstr "Prečrtano besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:160
+#: ../libgda-ui/gdaui-rt-editor.c:162
 msgid "_Syntax help"
 msgstr "Pomo_č o skladnji"
 
-#: ../libgda-ui/gdaui-rt-editor.c:160
+#: ../libgda-ui/gdaui-rt-editor.c:162
 msgid "Show syntax help"
 msgstr "Pokaži pomoč o skladnji"
 
-#: ../libgda-ui/gdaui-rt-editor.c:164
+#: ../libgda-ui/gdaui-rt-editor.c:166
 msgid "_Add image"
 msgstr "_Dodaj sliko"
 
-#: ../libgda-ui/gdaui-rt-editor.c:164
+#: ../libgda-ui/gdaui-rt-editor.c:166
 msgid "Insert image"
 msgstr "_Vstavi sliko"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:167
 msgid "_Normal text"
 msgstr "_Običajno besedilo"
 
-#: ../libgda-ui/gdaui-rt-editor.c:165
+#: ../libgda-ui/gdaui-rt-editor.c:167
 msgid "Reset to normal text"
 msgstr "Ponastavi besedilo na izvorno obliko"
 
-#: ../libgda-ui/gdaui-rt-editor.c:240
+#: ../libgda-ui/gdaui-rt-editor.c:242
 msgid "Don't display a specific background for the text"
 msgstr "Ne prikaži oblikovanja ozadja besedila"
 
-#: ../libgda-ui/gdaui-rt-editor.c:250
+#: ../libgda-ui/gdaui-rt-editor.c:252
 msgid "Display raw markup text instead of formatted text"
 msgstr "Prikaži surovo obliko besedila namesto oblikovanega"
 
-#: ../libgda-ui/gdaui-rt-editor.c:261
+#: ../libgda-ui/gdaui-rt-editor.c:263
 msgid "The buffer which is displayed"
 msgstr "Medpomnilnik, ki je prikazan"
 
-#: ../libgda-ui/gdaui-rt-editor.c:834
+#: ../libgda-ui/gdaui-rt-editor.c:274
+msgid "Determines if the contents appears in a scrolled window"
+msgstr "Določa ali se vsebina pojavi v drsnem oknu"
+
+#: ../libgda-ui/gdaui-rt-editor.c:876
 msgid "Reset font size"
 msgstr "Počisti velikost pisave"
 
-#: ../libgda-ui/gdaui-rt-editor.c:840
+#: ../libgda-ui/gdaui-rt-editor.c:882
 msgid "Decrease font size (zoom out)"
 msgstr "Zmanjšaj velikost pisave (oddalji)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:846
+#: ../libgda-ui/gdaui-rt-editor.c:888
 msgid "Increase font size (zoom in)"
 msgstr "Povečaj velikost pisave (približaj)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:852
+#: ../libgda-ui/gdaui-rt-editor.c:894
 msgid "Show source markup"
 msgstr "Prikaži izvorno oblikovanje"
 
@@ -9983,72 +9987,105 @@ msgstr "Sprožilniki"
 
 #~ msgid "_Reset"
 #~ msgstr "_Ponastavi"
+
 #~ msgid "Action executed"
 #~ msgstr "Dejanje je izvedeno"
+
 #~ msgid "Unknown internal schema's version: '%s'"
 #~ msgstr "Neznana različica sheme: '%s'"
+
 #~ msgid "In schema %s"
 #~ msgstr "V shemi %s"
+
 #~ msgid "Could not find any provider named '%s'"
 #~ msgstr "Ni mogoče najti ponudnika z imenom '%s'"
+
 #~ msgid "Error: no detail"
 #~ msgstr "Napaka: ni podrobnosti"
+
 #~ msgid "Parameter '%s' does not correspond to a table's column"
 #~ msgstr "Parameter '%s' ni v skladu s stolpcem razpredelnice"
+
 #~ msgid "Add data source"
 #~ msgstr "Dodaj podatkovni vir"
+
 #~ msgid "Cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
+
 #~ msgid "The cgrid data handler"
 #~ msgstr "Podatkovni upravljalnik Cgrid"
+
 #~ msgid "Cgrid gtype"
 #~ msgstr "Cgrid gtype"
+
 #~ msgid "The cgrid gtype"
 #~ msgstr "Vrsta grid gtype"
+
 #~ msgid "Cgrid options"
 #~ msgstr "Možnosti Cgrid"
+
 #~ msgid "The cgrid options"
 #~ msgstr "možnosti cgrid"
+
 #~ msgid "Cgrid is editable"
 #~ msgstr "Cgrid je mogoče urejati"
+
 #~ msgid "Cgrid editable"
 #~ msgstr "Uredljiv Cgrid"
+
 #~ msgid "Cgrid is to be deleted"
 #~ msgstr "Cgrid bo izbrisan"
+
 #~ msgid "Cgrid to be deleted"
 #~ msgstr "Cgrid pripravljen za brisanje"
+
 #~ msgid "Cgrid value"
 #~ msgstr "Vrednost Cgrid"
+
 #~ msgid "Cgrid value attributes"
 #~ msgstr "Atributi vrednosti Cgrid"
+
 #~ msgid "Cgrid text column"
 #~ msgstr "Cgrid stolpec besedila"
+
 #~ msgid "A column in the data source model to get the string from."
 #~ msgstr "Stolpec podatkovnega vira, iz katerega naj bodo pridobljeni nizi"
+
 #~ msgid "Cgrid grid height"
 #~ msgstr "Višina Cgrid mreže"
+
 #~ msgid "Cgrid height's."
 #~ msgstr "Cgrid višina"
+
 #~ msgid "Cgrid has its headers visible"
 #~ msgstr "Cgrid ima glave vidne"
+
 #~ msgid "Cgrid headers visible"
 #~ msgstr "Vidne glave Cgrid"
+
 #~ msgid "Unsaved diagram"
 #~ msgstr "Neshranjen diagram"
+
 #~ msgid "_Favorite"
 #~ msgstr "_Priljubljeno"
+
 #~ msgid "_Begin"
 #~ msgstr "_Začni"
+
 #~ msgid "_Commit"
 #~ msgstr "_Uveljavi"
+
 #~ msgid "_Rollback"
 #~ msgstr "_Povrni"
+
 #~ msgid "Group:"
 #~ msgstr "Skupina:"
+
 #~ msgid "'%s' Document not parsed successfully\n"
 #~ msgstr "'%s' dokumenta ni mogoče uspešno razčleniti\n"
+
 #~ msgid "Options (connection sharing)"
 #~ msgstr "Možnosti (souporaba povezave)"
+
 #~ msgid "Tables:"
 #~ msgstr "Razpredelnice:"
-
