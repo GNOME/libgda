@@ -1,4 +1,4 @@
-/* GNOME DB library
+/*
  * Copyright (C) 1999 - 2009 The GNOME Foundation
  *
  * AUTHORS:
@@ -177,7 +177,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	g_signal_connect (G_OBJECT (config->priv->wprovider), "changed",
 			  G_CALLBACK (field_changed_cb), config);
 	gtk_table_attach (GTK_TABLE (table), config->priv->wprovider, 1, 2, 2, 3,
-			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+			  GTK_FILL|GTK_EXPAND, 0, 0, 0);
 
 	label = gtk_label_new_with_mnemonic (_("_Description:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);

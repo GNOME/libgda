@@ -177,7 +177,7 @@ about_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 	dialog = gtk_about_dialog_new ();
 	gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database access control center"));
 	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), PACKAGE_VERSION);
-	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 1998 - 2010 GNOME Foundation");
+	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 1998 - 2011 GNOME Foundation");
 	gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (dialog), _("Database access services for the GNOME Desktop"));
 	gtk_about_dialog_set_license (GTK_ABOUT_DIALOG (dialog), "GNU Lesser General Public License");
 	gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), "http://www.gnome-db.org");
@@ -332,10 +332,11 @@ dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, gboolean row_selected, G_GNUC
 	GtkAction *action;
 	GArray *selection;
 
-	action = gtk_action_group_get_action (actions, "DatabaseProperties");
-	g_object_set (G_OBJECT (action), "sensitive", row_selected, NULL);
-
 	selection = gdaui_data_selector_get_selected_rows (GDAUI_DATA_SELECTOR (dbrawgrid));
+
+	action = gtk_action_group_get_action (actions, "DatabaseProperties");
+	g_object_set (G_OBJECT (action), "sensitive", selection ? TRUE : FALSE, NULL);
+
 	action = gtk_action_group_get_action (actions, "DatabaseDelete");
 	g_object_set (G_OBJECT (action), "sensitive", selection ? TRUE : FALSE, NULL);
 	if (selection)

@@ -1,5 +1,5 @@
-/* GNOME-DB Components
- * Copyright (C) 2000 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2000 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -113,7 +113,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 					      GTK_STOCK_REVERT_TO_SAVED, REVERT_BUTTON,
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 					      NULL);
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	gtk_window_set_default_size (GTK_WINDOW (dialog), 450, 300);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), TEST_BUTTON, pinfo ? TRUE : FALSE);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), BROWSE_BUTTON, pinfo ? TRUE : FALSE);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), REVERT_BUTTON, FALSE);
