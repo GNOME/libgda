@@ -28,9 +28,6 @@
 #include "dsn-config.h"
 #include "provider-config.h"
 #include "gdaui-dsn-assistant.h"
-#ifdef HAVE_UNIQUE
-#include <unique/unique.h>
-#endif
 
 GtkWindow *main_window;
 GtkActionGroup *actions;
@@ -300,75 +297,33 @@ create_main_window (void)
 	return window;
 }
 
-#ifdef HAVE_UNIQUE
-static UniqueResponse
-message_received_cb (G_GNUC_UNUSED UniqueApp         *app,
-                     UniqueCommand      command,
-                     UniqueMessageData *message,
-                     G_GNUC_UNUSED guint              time_,
-                     gpointer           user_data)
+static void
+activate (GtkApplication *app)
 {
-	UniqueResponse res = UNIQUE_RESPONSE_OK;
-	switch (command) {
-	case UNIQUE_ACTIVATE:
-		/* move the main window to the screen that sent us the command */
-		gtk_window_set_screen (GTK_WINDOW (user_data), unique_message_data_get_screen (message));
-		gtk_window_present (GTK_WINDOW (user_data));
-		res = UNIQUE_RESPONSE_OK;
-		break;
-	default:
-		TO_IMPLEMENT;
+	static GtkWidget *window = NULL;
+
+	if (! window) {
+		gdaui_init ();
+		window = create_main_window ();
+		gtk_window_set_application (GTK_WINDOW (window), app);
+		gtk_widget_show (window);
 	}
-	return res;
 }
-#endif
 
 int
 main (int argc, char *argv[])
 {
-#ifdef HAVE_UNIQUE
-	UniqueApp *app;
-#endif
-	/*
-	str = gnome_db_gbr_get_locale_dir_path ();
-	bindtextdomain (GETTEXT_PACKAGE, str);
-	g_free (str);
-
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-	*/
-	gdaui_init ();
-	gtk_init (&argc, &argv);
-
-#ifdef HAVE_UNIQUE
-	app = unique_app_new ("org.gnome-db.gda-browser", NULL);
-	if (unique_app_is_running (app)) {
-		UniqueResponse response;
-		response = unique_app_send_message (app, UNIQUE_ACTIVATE, NULL);
-		if (response != UNIQUE_RESPONSE_OK)
-			TO_IMPLEMENT;
-		g_object_unref (app);
-		return 0;
-	}
-	else {
-		GtkWidget *main_window;
-		main_window = create_main_window ();
-		unique_app_watch_window (app, GTK_WINDOW (main_window));
-		g_signal_connect (app, "message-received", G_CALLBACK (message_received_cb), main_window);
-	}
-#else	
-	create_main_window ();
-#endif
+	GtkApplication *app;
+	gint status;
 	
-
-	/* application loop */
-	gtk_main ();
-
-#ifdef HAVE_UNIQUE
+	app = gtk_application_new ("org.GnomeDb.GdaBrowser", G_APPLICATION_FLAGS_NONE);
+	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+	
+	status = g_application_run (G_APPLICATION (app), argc, argv);
+	
 	g_object_unref (app);
-#endif
 
-	return 0;
+	return status;
 }
 
 static void

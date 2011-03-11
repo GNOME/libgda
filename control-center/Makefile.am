@@ -9,7 +9,6 @@ AM_CPPFLAGS = \
         $(LIBGDA_CFLAGS) \
 	$(LIBGDA_WFLAGS) \
         $(GTK_CFLAGS) \
-        $(UNIQUE_CFLAGS) \
         -DPREFIX=\""$(prefix)"\" \
         -DSYSCONFDIR=\""$(sysconfdir)"\" \
         -DDATADIR=\""$(datadir)"\" \
@@ -54,7 +53,7 @@ gda_control_center_5_0_LDADD=\
 	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-	$(LIBGDA_LIBS) $(GTK_LIBS) $(UNIQUE_LIBS)
+	$(LIBGDA_LIBS) $(GTK_LIBS)
 
 @INTLTOOL_DESKTOP_RULE@
 

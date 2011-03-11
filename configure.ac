@@ -40,7 +40,7 @@ m4_undefine([minor])
 m4_undefine([micro])
 
 dnl required versions of other tools.
-m4_define([req_ver_glib],[2.12.11])
+m4_define([req_ver_glib],[2.28.0])
 
 #
 # Making releases:
@@ -262,29 +262,6 @@ AC_SUBST(GRAPHVIZ_LIBS)
 
 
 dnl ******************************
-dnl Checks for LibUnique
-dnl ******************************
-have_unique=no
-AC_ARG_WITH(unique,
-	AS_HELP_STRING([--with-unique], [Use LibUnique to have only one control center]),
-	,with_unique=auto)
-
-if test "$with_unique" = "auto" -o "$with_unique" = "yes"
-then
-	PKG_CHECK_MODULES(UNIQUE, "unique-3.0", [
-		AC_DEFINE(HAVE_UNIQUE, [1], [LibUnique support enabled])
-		have_unique=yes], [
-		if test "$with_unique" = "yes"
-		then
-			AC_MSG_ERROR([LibUnique support requested but not found.])
-		fi
-		have_unique=no])
-fi
-AM_CONDITIONAL(HAVE_UNIQUE, test x"$have_unique" = "xyes")
-AC_SUBST(UNIQUE_CFLAGS)
-AC_SUBST(UNIQUE_LIBS)
-
-dnl ******************************
 dnl Checks for iso codes
 dnl ******************************
 
@@ -499,7 +476,7 @@ dnl ******************************
 dnl gtk-doc
 dnl ******************************
 
-GTK_DOC_CHECK([1.0])
+GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
 
 dnl ******************************
 dnl Checks for providers
