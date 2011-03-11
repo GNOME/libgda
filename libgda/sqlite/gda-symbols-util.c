@@ -47,9 +47,14 @@ find_sqlite_in_dir (const gchar *dir_name, const gchar *name_part)
 	}
 	
 	while ((name = g_dir_read_name (dir))) {
-		if (!g_str_has_suffix (name, "." G_MODULE_SUFFIX))
+		const gchar *ptr1, *ptr2;
+		ptr1 = g_strrstr (name, "." G_MODULE_SUFFIX);
+		if (! ptr1)
 			continue;
-		if (!g_strrstr (name, name_part))
+		ptr2 = g_strrstr (name, name_part);
+		if (!ptr2)
+			continue;
+		if (ptr1 < ptr2)
 			continue;
 		
 		gchar *path;
