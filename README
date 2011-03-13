@@ -22,7 +22,7 @@ developed based on it.
 
 The libgda library is released under the terms of the LGPL license,  which
 allows for commercial applications to be developed based on libgda. Its 
-command-line tools are under the GPL.
+command-line and UI tools are under the GPL.
 
 See COPYING for the GPL license.
 See COPYING.LIB for the LGPL license.
