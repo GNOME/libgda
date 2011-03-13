@@ -33,6 +33,14 @@ extern GtkOSXApplication *theApp;
 
 G_BEGIN_DECLS
 
+/**
+ * SECTION:support
+ * @short_description: Misc. functions for various situations
+ * @title: Support functions
+ * @stability: Stable
+ * @see_also:
+ */
+
 BrowserConnection *browser_connection_open (GError **error);
 gboolean           browser_connection_close (GtkWindow *parent, BrowserConnection *bcnc);
 void               browser_show_error (GtkWindow *parent, const gchar *format, ...);

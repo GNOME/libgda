@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -45,6 +45,17 @@ struct _BrowserPerspectiveIface {
 							      const gchar **out_ui);
 	void                 (* i_page_tab_label_change) (BrowserPerspective *perspective, BrowserPage *page);
 };
+
+/**
+ * SECTION:browser-perspective
+ * @short_description: A "perspective" in a #BrowserWindow window
+ * @title: BrowserPerspective
+ * @stability: Stable
+ * @see_also:
+ *
+ * #BrowserPerspective is an interface used by the #BrowserWindow object to switch
+ * between the activities ("perspectives"); it requires the #GtkWidget.
+ */
 
 GType           browser_perspective_get_type          (void) G_GNUC_CONST;
 

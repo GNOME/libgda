@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -46,6 +46,14 @@ struct _MgrFavorites {
 struct _MgrFavoritesClass {
 	GdaTreeManagerClass object_class;
 };
+
+/**
+ * SECTION:mgr-favorites
+ * @short_description: A #GdaTreeManager for the stored favorites
+ * @title: MgrFavorites
+ * @stability: Stable
+ * @see_also:
+ */
 
 GType           mgr_favorites_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager* mgr_favorites_new                      (BrowserConnection *bcnc, BrowserFavoritesType type,

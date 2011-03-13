@@ -1,8 +1,8 @@
 /* 
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -51,6 +51,17 @@ struct _BrowserCoreClass
 	void    (*connection_added) (BrowserCore *bcore, BrowserConnection *bcnc);
 	void    (*connection_removed) (BrowserCore *bcore, BrowserConnection *bcnc);
 };
+
+/**
+ * SECTION:browser-core
+ * @short_description: Singleton holding the global browser information
+ * @title: BrowserCore
+ * @stability: Stable
+ * @see_also:
+ *
+ * A single instance of a #BrowserCore is created when the browser is started,
+ * accessible using browser_core_get().
+ */
 
 GType           browser_core_get_type               (void) G_GNUC_CONST;
 gboolean        browser_core_exists                 (void);
