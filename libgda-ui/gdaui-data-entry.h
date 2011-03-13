@@ -73,6 +73,32 @@ struct _GdauiDataEntryIface
         void (*_gdaui_reserved4) (void);
 };
 
+/**
+ * SECTION:gdaui-data-entry
+ * @short_description: Data entry widget
+ * @title: GdauiDataEntry
+ * @stability: Stable
+ * @Image: vi-data-entry.png
+ * @see_also:
+ *
+ * The #GdaUiDataEntry is an interface for widgets (simple or complex)
+ * which lets the user view and/or modify a #GValue.
+ *
+ * This interface is implemented by widgets which feature data editing (usually composed of an editing
+ * area and a button to have some more control on the value being edited).
+ * The interface allows to control how the widget works and to query the value and the attributes
+ * of the data held by the widget.
+ *
+ * The widget can store the original value (to be able to tell if the value has been changed
+ * by the user) and a default value (which will be returned if the user explicitly forces the widget
+ * to be set to the default value).
+ * Control methods allow to set the type of value to be edited (the requested type must be
+ * compatible with what the widget can handle), set the value (which replaces the currently edited
+ * value), set the value and the original value (the value passed as argument is set and is also
+ * considered to be the original value).
+ *
+ * #GdaUiDataEntry widgets are normally created using the gdaui_new_data_entry() function.
+ */
 
 
 

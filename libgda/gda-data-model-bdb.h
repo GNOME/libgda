@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -49,6 +49,7 @@ struct _GdaDataModelBdbClass {
 	GSList                *(*create_key_columns)  (GdaDataModelBdb *model);
 	GSList                *(*create_data_columns) (GdaDataModelBdb *model);
 	GValue                *(*get_key_part)        (GdaDataModelBdb *model, 
+
 						       gpointer data, gint length, gint part);
 	GValue                *(*get_data_part)       (GdaDataModelBdb *model,
 						       gpointer data, gint length, gint part);
@@ -58,13 +59,31 @@ struct _GdaDataModelBdbClass {
 	gboolean               (*update_data_part)    (GdaDataModelBdb *model,
 						       gpointer data, gint length, gint part, 
 						       const GValue *value, GError **error);
-
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-data-model-bdb
+ * @short_description: GdaDataModel to access Berkeley DB database contents
+ * @title: GdaDataModelBdb
+ * @stability: Stable
+ * @see_also: #GdaDataModel
+ *
+ * The #GdaDataModelBdb object allows to access the contents of a Berkeley DB database as a
+ * #GdaDataModel object.
+ *
+ * By default the resulting GdaDataModel contains only two columns (named "key" and "data") of type
+ * GDA_TYPE_BINARY, but this object can be subclassed to convert the key or data part of a BDB record
+ * into several columns (implement the create_key_columns(), create_data_columns(), get_key_part(), and get_data_part() 
+ * virtual methods).
+ *
+ * Note: this type of data model is available only if the Berkeley DB library was found at compilation time.
+ */
 
 GType         gda_data_model_bdb_get_type     (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_bdb_new          (const gchar *filename, const gchar *db_name);

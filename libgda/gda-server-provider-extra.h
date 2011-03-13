@@ -26,6 +26,17 @@
 
 G_BEGIN_DECLS
 
+/**
+ * SECTION:provider-support
+ * @short_description: Methods dedicated to implementing providers
+ * @title: Misc API for database providers
+ * @stability: Stable
+ * @see_also:
+ *
+ * The methods mentioned in this section are reserved for database providers implementations and should
+ * not bu used by developers outside that scope.
+ */
+
 /*
  * GdaSqlParser associated to each provider
  */

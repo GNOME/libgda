@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
@@ -58,18 +58,39 @@ G_BEGIN_DECLS
 #define GDA_VALUE_HOLDS_TIME(value)            G_VALUE_HOLDS(value, GDA_TYPE_TIME)
 #define GDA_VALUE_HOLDS_TIMESTAMP(value)       G_VALUE_HOLDS(value, GDA_TYPE_TIMESTAMP)
 
+/**
+ * GdaGeometricPoint:
+ * @x:
+ * @y:
+ */
 typedef struct {
 	gdouble x;
 	gdouble y;
 } GdaGeometricPoint;
 
+/**
+ * GdaNumeric:
+ * @number:
+ * @precision:
+ * @width:
+ */
 typedef struct {
 	gchar   *number;
 	glong    precision;
 	glong    width;
+	
+	/*< private >*/
 	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
 } GdaNumeric;
 
+/**
+ * GdaTime:
+ * @hour: 
+ * @minute: 
+ * @second: 
+ * @fraction: 
+ * @timezone: 
+ */
 typedef struct {
 	gushort hour;
 	gushort minute;
@@ -78,6 +99,17 @@ typedef struct {
 	glong   timezone;	/* # of seconds to the east UTC */
 } GdaTime;
 
+/**
+ * GdaTimestamp:
+ * @year: representation of the date
+ * @month: month representation of the date, as a number between 1 and 12
+ * @day: day representation of the date, as a number between 1 and 31
+ * @hour: 
+ * @minute: 
+ * @second: 
+ * @fraction: 
+ * @timezone:
+ */
 typedef struct {
 	gshort  year;
 	gushort month;
@@ -89,6 +121,11 @@ typedef struct {
 	glong   timezone;	/* # of seconds to the east UTC */
 } GdaTimestamp;
 
+/**
+ * GdaBinary:
+ * @data:
+ * @binary_length:
+ */
 typedef struct {
 	guchar *data;
 	glong   binary_length;
@@ -109,6 +146,40 @@ typedef struct {
 } GdaBlob;
 
 #define gda_value_isa(value, type) (G_VALUE_HOLDS(value, type))
+
+/**
+ * SECTION:gda-value
+ * @short_description: Assorted functions for dealing with #GValue values
+ * @title: A single Value
+ * @stability: Stable
+ * @see_also: #GValue and #GdaBlobOp
+ *
+ * &LIBGDA; manages each individual value within an opaque #GValue structure. Any GValue type can be used,
+ * and &LIBGDA; adds a few more data types usually found in DBMS such as NUMERIC, TIME, TIMESTAMP, GEOMETRIC POINT, BINARY and BLOB.
+ *
+ * Libgda makes a distinction between binary and blob types
+ * <itemizedlist>
+ *   <listitem><para>binary data can be inserted into an SQL statement using a
+ *	(DBMS dependent) syntax, such as "X'ABCD'" syntax for SQLite or the binary strings syntax for PostgreSQL. Binary data
+ *	is manipulated using a #GdaBinary structure (which is basically a bytes buffer and a length attribute).
+ *   </para></listitem>
+ *   <listitem><para>blob data are a special feature that some DBMS have which requires some non SQL code to manipulate them.
+ *	Usually only a reference is stored in each table containing a blob, and the actual blob data resides somewhere on the disk
+ *	(while still being managed transparently by the database). For example PotsgreSQL stores blobs as files on the disk and
+ *	references them using object identifiers (Oid). Blob data
+ *	is manipulated using a #GdaBlob structure which encapsulates a #GdaBinary structure and adds a reference to a
+ *	#GdaBlobOp object used to read and write data from and to the blob.
+ *   </para></listitem>
+ * </itemizedlist>
+ * Please note that is distinction between binary data and blobs is Libgda only and does not reflect the DBMS's documentations; 
+ * for instance MySQL has several BLOB types but Libgda interprets them as binary types.
+ *
+ * Each provider or connection can be queried about its blob support using the gda_server_provider_supports_feature() or
+ * gda_connection_supports_feature() methods.
+ *
+ * The NULL value is a special case value: it is represented by to a zero-filled (uninitialized) #GValue and has a type equal
+ * to %GDA_TYPE_NULL.
+ */
 
 GValue                           *gda_value_new (GType type);
 
@@ -204,6 +275,13 @@ GType                             gda_short_get_type (void) G_GNUC_CONST;
 GType                             gda_ushort_get_type (void) G_GNUC_CONST;
 
 /* Helper macros */
+/**
+ * gda_value_new_null:
+ * 
+ * Creates a new #GValue of type %GDA_TYPE_NULL representing a NULL value
+ *
+ * Returns: (transfer full): a new #GValue
+ */
 #define                           gda_value_new_null() (g_new0 (GValue, 1))
 
 G_END_DECLS

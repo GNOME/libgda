@@ -1,5 +1,4 @@
-/* gda-meta-struct.h
- *
+/*
  * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
@@ -81,6 +80,15 @@ typedef enum {
 
 /*
  * Controls which features are computed about database objects
+ */
+/**
+ * GdaMetaStructFeature:
+ * @GDA_META_STRUCT_FEATURE_NONE: database objects only have their own attributes
+ * @GDA_META_STRUCT_FEATURE_FOREIGN_KEYS: foreign keys are computed for tables
+ * @GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES: for views, the tables they use are also computed
+ * @GDA_META_STRUCT_FEATURE_ALL: all the features are computed
+ *
+ * Controls which features are computed about database objects.
  */
 typedef enum {
 	GDA_META_STRUCT_FEATURE_NONE              = 0,
@@ -397,6 +405,85 @@ typedef struct {
  * Returns: %TRUE if @fk has been declared in the database's meta data and %FALSE if @fk is an actual foreign key defined in the database's schema
  */
 #define GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED(fk) (((GdaMetaTableForeignKey*)(fk))->declared)
+
+/**
+ * SECTION:gda-meta-struct
+ * @short_description: In memory representation of some database objects
+ * @title: GdaMetaStruct
+ * @stability: Stable
+ * @see_also: #GdaMetaStore
+ *
+ * The #GdaMetaStruct object reads data from a #GdaMetaStore object and
+ *  creates an easy to use in memory representation for some database objects. For example one can easily
+ *  analyze the columns of a table (or its foreign keys) using a #GdaMetaStruct.
+ *
+ *  When created, the new #GdaMetaStruct object is empty (it does not have any information about any database object).
+ *  Information about database objects is computed upon request using the gda_meta_struct_complement() method. Information
+ *  about individual database objects is represented by #GdaMetaDbObject structures, which can be obtained using
+ *  gda_meta_struct_get_db_object() or gda_meta_struct_get_all_db_objects().
+ *
+ *  Note that the #GdaMetaDbObject structures may change or may be removed or replaced by others, so it not
+ *  advised to keep pointers to these structures: pointers to these structures should be considered valid
+ *  as long as gda_meta_struct_complement() and other similar functions have not been called.
+ *
+ *  In the following code sample, one prints the columns names and types of a table:
+ *  <programlisting>
+ *GdaMetaStruct *mstruct;
+ *GdaMetaDbObject *dbo;
+ *GValue *catalog, *schema, *name;
+ *
+ * // Define name (and optionnally catalog and schema)
+ *[...]
+ *
+ *mstruct = gda_meta_struct_new ();
+ *gda_meta_struct_complement (mstruct, store, GDA_META_DB_TABLE, catalog, schema, name, NULL);
+ *dbo = gda_meta_struct_get_db_object (mstruct, catalog, schema, name);
+ *if (!dbo)
+ *        g_print ("Table not found\n");
+ *else {
+ *        GSList *list;
+ *        for (list = GDA_META_TABLE (dbo)->columns; list; list = list->next) {
+ *                GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+ *                g_print ("COLUMN: %s (%s)\n", tcol->column_name, tcol->column_type);
+ *        }
+ *}
+ *gda_meta_struct_free (mstruct);
+ *  </programlisting>
+ *  If now the database object type is not known, one can use the following code:
+ *  <programlisting>
+ *GdaMetaStruct *mstruct;
+ *GdaMetaDbObject *dbo;
+ *GValue *catalog, *schema, *name;
+ *
+ * // Define name (and optionnally catalog and schema)
+ *[...]
+ *
+ *mstruct = gda_meta_struct_new ();
+ *gda_meta_struct_complement (mstruct, store, GDA_META_DB_UNKNOWN, catalog, schema, name, NULL);
+ *dbo = gda_meta_struct_get_db_object (mstruct, catalog, schema, name);
+ *if (!dbo)
+ *        g_print ("Object not found\n");
+ *else {
+ *        if ((dbo->obj_type == GDA_META_DB_TABLE) || (dbo->obj_type == GDA_META_DB_VIEW)) {
+ *                if (dbo->obj_type == GDA_META_DB_TABLE)
+ *                        g_print ("Is a table\n");
+ *                else if (dbo->obj_type == GDA_META_DB_VIEW) {
+ *                        g_print ("Is a view, definition is:\n");
+ *                        g_print ("%s\n", GDA_META_VIEW (dbo)->view_def);
+ *                }
+ *
+ *                GSList *list;
+ *                for (list = GDA_META_TABLE (dbo)->columns; list; list = list->next) {
+ *                        GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+ *                        g_print ("COLUMN: %s (%s)\n", tcol->column_name, tcol->column_type);
+ *                }
+ *        }
+ *        else 
+ *                g_print ("Not a table or a view\n");
+ *}
+ *gda_meta_struct_free (mstruct);
+ *  </programlisting>
+ */
 
 GType               gda_meta_struct_get_type           (void) G_GNUC_CONST;
 GdaMetaStruct      *gda_meta_struct_new                (GdaMetaStore *store, GdaMetaStructFeature features);

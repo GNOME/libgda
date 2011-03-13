@@ -1,6 +1,5 @@
-/* gda-data-handler.h
- *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+/*
+ * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -51,6 +50,28 @@ struct _GdaDataHandlerIface
 };
 
 
+/**
+ * SECTION:gda-data-handler
+ * @short_description: Interface which provides data handling (conversions) capabilities
+ * @title: GdaDataHandler
+ * @stability: Stable
+ * @see_also:
+ *
+ * Because data types vary a lot from a DBMS to another, the #GdaDataHandler interface helps
+ * managing data in its various representations, and converting from one to another:
+ * <itemizedlist>
+ *   <listitem><para>as a #GValue which is a generic value container for the C language</para></listitem>
+ *   <listitem><para>as a human readable string</para></listitem>
+ *   <listitem><para>as an SQL string (a string which can be used in SQL statements)</para></listitem>
+ * </itemizedlist>
+ *
+ * For each data type, a corresponding #GdaDataHandler object can be requested using the
+ * <link linkend="gda-data-handler-get-default">gda_data_handler_get_default()</link> function. However, when working
+ * with a specific database provider, it's better to use a #GdaDataHandler which may be specific to the
+ * database provider which will correctly handle each database specifics using
+ * <link linkend="gda-server-provider-get-data-handler-g-type">gda_server_provider_get_data_handler_g_type()</link> or
+ * <link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link>.
+ */
 
 
 GType        gda_data_handler_get_type               (void) G_GNUC_CONST;

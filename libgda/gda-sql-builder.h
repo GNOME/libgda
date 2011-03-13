@@ -1,6 +1,5 @@
-/* gda-sql-builder.h
- *
- * Copyright (C) 2009 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -67,6 +66,42 @@ struct _GdaSqlBuilderClass
 };
 
 typedef guint GdaSqlBuilderId;
+
+/**
+ * SECTION:gda-sql-builder
+ * @short_description: Factory object for statements
+ * @title: GdaSqlBuilder
+ * @stability: Stable
+ * @see_also: #GdaSqlParser, #GdaSqlStatement and #GdaStatement
+ *
+ * The #GdaSqlBuilder can be used to build a #GdaStatement from its structural description,
+ * much in the same way a #GdaSqlParser can be used to build a #GdaStatement from an SQL
+ * string.
+ *
+ * The #GdaSqlBuilder internally constructs a #GdaSqlStatement and uses it when requested to produce
+ * a #GdaStatement (see gda_sql_builder_get_statement()), or a #GdaSqlStatement (see
+ * gda_sql_builder_get_sql_statement()).
+ *
+ * During the building process, some pieces of the statement are constructed, and assembled into the
+ * final statement. Each of these pieces can be reused anytime in the same #GdaSqlBuilder object, and each
+ * is identified using a single unsigned integer ID. That ID is dynamically allocated by the object.
+ *
+ * The following example builds the equivalent of the <![CDATA["name='joe' AND age >= ##ageparam::int"]]> expression:
+ * <programlisting><![CDATA[
+ *GdaSqlBuilder *b=...
+ *guint id_field = gda_sql_builder_add_id (b, "name"); // build the "name" SQL identifier
+ *guint id_value = gda_sql_builder_add_expr (b, NULL, G_TYPE_STRING, "joe"); // 'joe' expression
+ *guint id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id_field, id_value, 0); // "name='joe'"
+ *
+ *guint id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_GT,
+ *      gda_sql_builder_add_id (b, "age"), // build the "age" SQL identifier
+ *      gda_sql_builder_add_param (b, "ageparam", G_TYPE_INT, FALSE), // parameter
+ *      0);
+ *guint id_cond_and = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_cond1, id_cond2, 0); // whole expression
+ *]]></programlisting>
+ *
+ * For more examples, see the <link linkend="howto-sqlbuilder">Build statements without using a parser</link> section.
+ */
 
 GType             gda_sql_builder_get_type       (void) G_GNUC_CONST;
 GdaSqlBuilder    *gda_sql_builder_new            (GdaSqlStatementType stmt_type);

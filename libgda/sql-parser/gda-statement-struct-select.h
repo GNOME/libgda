@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -30,6 +30,20 @@ G_BEGIN_DECLS
 /*
  * Structure definition
  */
+/**
+ * GdaSqlStatementSelect:
+ * @any: 
+ * @distinct: 
+ * @distinct_expr: 
+ * @expr_list: 
+ * @from: 
+ * @where_cond: 
+ * @group_by: 
+ * @having_cond: 
+ * @order_by: 
+ * @limit_count: 
+ * @limit_offset: 
+ */
 struct _GdaSqlStatementSelect {
 	GdaSqlAnyPart     any;
 	gboolean          distinct;
@@ -46,6 +60,7 @@ struct _GdaSqlStatementSelect {
 	GdaSqlExpr       *limit_count;
 	GdaSqlExpr       *limit_offset;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

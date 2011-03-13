@@ -1,5 +1,5 @@
-/* GDA SQLite vprovider for GdaDataModel
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -45,12 +45,26 @@ struct _GdaVproviderDataModel {
 struct _GdaVproviderDataModelClass {
 	GdaVirtualProviderClass       parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-vprovider-data-model
+ * @short_description: Virtual provider for connections based on a list of GdaDataModel
+ * @title: GdaVproviderDataModel
+ * @stability: Stable
+ * @see_also: See also the <link linkend="VirtualIntro">introduction to virtual connections</link>
+ *
+ * This provider is used to create virtual connections in which each #GdaDataModel data model can be
+ * added as a table in the connection. Using gda_virtual_connection_open() with this provider as argument
+ * will generate a #GdaVconnectionDataModel connection object, from which data models can be added.
+ */
+
 
 GType               gda_vprovider_data_model_get_type (void) G_GNUC_CONST;
 GdaVirtualProvider *gda_vprovider_data_model_new      (void);

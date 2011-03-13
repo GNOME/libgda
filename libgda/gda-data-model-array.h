@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -47,12 +47,27 @@ struct _GdaDataModelArray {
 struct _GdaDataModelArrayClass {
 	GObjectClass              parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-data-model-array
+ * @short_description: An implementation of #GdaDataModel based on a #GArray
+ * @title: GdaDataModelArray
+ * @stability: Stable
+ * @see_also: #GdaDataModel
+ *
+ * The #GdaDataModelArray object is a data model which internally uses a #GArray to index all its rows (represented
+ * as #GdaRow objects). In this data model, all the data is stored in memory, which can be a memory limitation if the number
+ * of rows is huge.
+ * This type of data model is easy to use to store some temporary data, and has a random access mode (any value can be accessed
+ * at any time without the need for an iterator).
+ */
 
 GType              gda_data_model_array_get_type          (void) G_GNUC_CONST;
 GdaDataModel      *gda_data_model_array_new_with_g_types  (gint cols, ...);

@@ -1,6 +1,5 @@
-/* gdaui-cloud.h
- *
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -50,9 +49,22 @@ struct _GdauiCloudClass
 	void            (* activate) (GdauiCloud *cloud, gint row);
 };
 
-/* 
- * Generic widget's methods 
+/**
+ * SECTION:gdaui-cloud
+ * @short_description: Cloud widget
+ * @title: GdauiCloud
+ * @stability: Stable
+ * @Image: vi-cloud.png
+ * @see_also:
+ *
+ * The #GdauiCloud widget displays a string for each row in a #GdaDataModel for which the size
+ * is variable (determined either by some data in the data model, or by a function provided by
+ * the programmer).
+ *
+ * Depending on the selection mode of the widget, each string can be selected by the user and
+ * the "selection-changed" signal is emitted.
  */
+
 GType             gdaui_cloud_get_type             (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_cloud_new                  (GdaDataModel *model, gint label_column, gint weight_column);

@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -118,6 +118,45 @@ struct _GdaDataModelIface {
 	void                 (* changed)            (GdaDataModel *model);
 	void                 (* reset)              (GdaDataModel *model);
 };
+
+/**
+ * SECTION:gda-data-model
+ * @short_description: Data model interface
+ * @title: GdaDataModel
+ * @stability: Stable
+ * @see_also: #GdaDataModelIter
+ *
+ * A #GdaDataModel represents an array of values organized in rows and columns. All the data in the same 
+ * column have the same type, and all the data in each row have the same semantic meaning. The #GdaDataModel is
+ * actually an interface implemented by other objects to support various kinds of data storage and operations.
+ *
+ * Depending on the real implementation, the contents of data models may be modified by the user using functions
+ * provided by the model. The actual operations a data model permits can be known using the 
+ * gda_data_model_get_access_flags() method.
+ *
+ * Again, depending on the real implementation, data retrieving can be done either accessing direct random
+ * values located by their row and column, or using a cursor, or both. Use the gda_data_model_get_access_flags() 
+ * method to know how the data model can be accessed. 
+ * <itemizedlist>
+ *   <listitem><para>Random access to a data model's contents is done using gda_data_model_get_value_at(), or using
+ *       one or more #GdaDataModelIter object(s);</para></listitem>
+ *   <listitem><para>Cursor access to a data model's contents is done using a #GdaDataModelIter object (only one can be created),
+ *       it is <emphasis>not possible</emphasis> to use gda_data_model_get_value_at() in this mode.</para></listitem>
+ * </itemizedlist>
+ *
+ * Random access data models are easier to use since picking a value is very simple using the gda_data_model_get_value_at(),
+ * but consume more memory since all the accessible values must generally be present in memory even if they are not used.
+ * Thus if a data model must handle large quantities of data, it is generally wiser to use a data model which can be 
+ * only accessed using a cursor.
+ *
+ * As a side note there are also data models which wrap other data models such as:
+ * <itemizedlist>
+ *     <listitem><para>The #GdaDataProxy data model which stores temporary modifications and shows only some
+ * 	parts of the wrapped data model</para></listitem>
+ *     <listitem><para>The #GdaDataAccessWrapper data model which offers a memory efficient random access on top of a
+ * 	wrapped cursor based access data model</para></listitem>
+ * </itemizedlist>
+ */
 
 GType               gda_data_model_get_type               (void) G_GNUC_CONST;
 

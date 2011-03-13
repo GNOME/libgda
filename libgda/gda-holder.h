@@ -1,6 +1,5 @@
-/* gda-holder.h
- *
- * Copyright (C) 2003 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -66,6 +65,20 @@ struct _GdaHolderClass
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-holder
+ * @short_description: Container for a single #GValue
+ * @title: GdaHolder
+ * @stability: Stable
+ * @see_also: The #GdaSet object which "groups" several #GdaHolder objects 
+ *
+ * The #GdaHolder is a container for a single #GValue value. It also specifies various attributes
+ * of the contained value (default value, ...)
+ *
+ * The type of a #GdaHolder has to be set and cannot be modified, except if it's initialized
+ * with a GDA_TYPE_NULL GType (representing NULL values) where it can be changed once to a real GType.
+ */
 
 GType               gda_holder_get_type                (void) G_GNUC_CONST;
 GdaHolder          *gda_holder_new                     (GType type);

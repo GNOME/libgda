@@ -1,6 +1,5 @@
-/* gda-statement.h
- *
- * Copyright (C) 2007 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -36,6 +35,16 @@ G_BEGIN_DECLS
 extern GQuark gda_statement_error_quark (void);
 #define GDA_STATEMENT_ERROR gda_statement_error_quark ()
 
+/**
+ * GdaStatementError:
+ * @GDA_STATEMENT_PARSE_ERROR: 
+ * @GDA_STATEMENT_SYNTAX_ERROR: 
+ * @GDA_STATEMENT_NO_CNC_ERROR: 
+ * @GDA_STATEMENT_CNC_CLOSED_ERROR: 
+ * @GDA_STATEMENT_EXEC_ERROR: 
+ * @GDA_STATEMENT_PARAM_TYPE_ERROR: 
+ * @GDA_STATEMENT_PARAM_ERROR: 
+ */
 typedef enum
 {
 	GDA_STATEMENT_PARSE_ERROR,
@@ -47,6 +56,16 @@ typedef enum
 	GDA_STATEMENT_PARAM_ERROR
 } GdaStatementError;
 
+/**
+ * GdaStatementModelUsage:
+ * @GDA_STATEMENT_MODEL_RANDOM_ACCESS: access to the data model will be random (usually this will result in a data model completely stored in memory)
+ * @GDA_STATEMENT_MODEL_CURSOR_FORWARD: access to the data model will be done using a cursor moving forward
+ * @GDA_STATEMENT_MODEL_CURSOR_BACKWARD: access to the data model will be done using a cursor moving backward
+ * @GDA_STATEMENT_MODEL_CURSOR: access to the data model will be done using a cursor (moving both forward and backward)
+ * @GDA_STATEMENT_MODEL_ALLOW_NOPARAM: specifies that the data model should be executed even if some parameters required to execute it are invalid (in this case the data model will have no row, and will automatically be re-run when the missing parameters are once again valid)
+ *
+ * These flags specify how the #GdaDataModel returned when executing a #GdaStatement will be used
+ */
 typedef enum {
 	GDA_STATEMENT_MODEL_RANDOM_ACCESS   = 1 << 0,
 	GDA_STATEMENT_MODEL_CURSOR_FORWARD  = 1 << 1,
@@ -55,6 +74,19 @@ typedef enum {
 	GDA_STATEMENT_MODEL_ALLOW_NOPARAM   = 1 << 3
 } GdaStatementModelUsage;
 
+/**
+ * GdaStatementSqlFlag:
+ * @GDA_STATEMENT_SQL_PARAMS_AS_VALUES: rendering will replace parameters with their values
+ * @GDA_STATEMENT_SQL_PRETTY: rendering will include newlines and indentation to make it easy to read
+ * @GDA_STATEMENT_SQL_PARAMS_LONG: parameters will be rendered using the "/&ast; name:&lt;param_name&gt; ... &ast;/" syntax
+ * @GDA_STATEMENT_SQL_PARAMS_SHORT: parameters will be rendered using the "##&lt;param_name&gt;..." syntax
+ * @GDA_STATEMENT_SQL_PARAMS_AS_COLON: parameters will be rendered using the ":&lt;param_name&gt;" syntax
+ * @GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR: parameters will be rendered using the "$&lt;param_number&gt;" syntax where parameters are numbered starting from 1
+ * @GDA_STATEMENT_SQL_PARAMS_AS_QMARK: parameters will be rendered using the "?&lt;param_number&gt;" syntax where parameters are numbered starting from 1
+ * @GDA_STATEMENT_SQL_PARAMS_AS_UQMARK: parameters will be rendered using the "?" syntax
+ *
+ * Specifies rendering options
+ */
 typedef enum {
 	GDA_STATEMENT_SQL_PARAMS_AS_VALUES   = 0,
         GDA_STATEMENT_SQL_PRETTY             = 1 << 0,
@@ -82,12 +114,36 @@ struct _GdaStatementClass
 	void   (*checked)   (GdaStatement *stmt, GdaConnection *cnc, gboolean checked);
 	void   (*reset)     (GdaStatement *stmt);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-statement
+ * @short_description: Single SQL statement
+ * @title: GdaStatement
+ * @stability: Stable
+ * @see_also: #GdaBatch
+ *
+ * The #GdaStatement represents a single SQL statement (multiple statements can be grouped in a #GdaBatch object).
+ *
+ *  A #GdaStatement can either be built by describing its constituing parts using a #GdaSqlBuilder object,
+ *  or from an SQL statement using a #GdaSqlParser object.
+ *
+ *  A #GdaConnection can use a #GdaStatement to:
+ *  <itemizedlist>
+ *    <listitem><para>prepare it for a future execution, the preparation step involves converting the #GdaStatement
+ *	object into a structure used by the database's own API, see gda_connection_statement_prepare()</para></listitem>
+ *    <listitem><para>execute it using gda_connection_statement_execute_select() if it is known that the statement is a
+ *	selection statement, gda_connection_statement_execute_non_select() if it is not a selection statement, or
+ *	gda_connection_statement_execute() when the type of expected result is unknown.</para></listitem>
+ *  </itemizedlist>
+ *  Note that it is possible to use the same #GdaStatement object at the same time with several #GdaConnection objects.
+ */
 
 GType               gda_statement_get_type               (void) G_GNUC_CONST;
 GdaStatement       *gda_statement_new                    (void);

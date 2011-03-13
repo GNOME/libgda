@@ -1,5 +1,5 @@
-/* GDA virtual connection
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -53,6 +53,16 @@ struct _GdaVirtualConnectionClass {
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-virtual-connection
+ * @short_description: Base class for all virtual connection objects
+ * @title: GdaVirtualConnection
+ * @stability: Stable
+ * @see_also: 
+ *
+ * This is a base virtual class for all virtual connection implementations.
+ */
 
 GType          gda_virtual_connection_get_type                   (void) G_GNUC_CONST;
 GdaConnection *gda_virtual_connection_open                       (GdaVirtualProvider *virtual_provider, GError **error);

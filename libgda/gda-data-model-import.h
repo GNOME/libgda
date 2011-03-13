@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 2006 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2006 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -54,6 +54,37 @@ struct _GdaDataModelImportClass {
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-data-model-import
+ * @short_description: Importing data from a string or a file
+ * @title: GdaDataModelImport
+ * @stability: Stable
+ * @see_also: #GdaDataModel
+ *
+ * The #GdaDataModelImport data model imports data from a string or a file. The data can either be
+ * in a CSV (comma separated values) format or in an XML format as described by the libgda-array.dtd DTD (as a side
+ * way it is also possible to import data from an already-build XML tree validated against that DTD).
+ *
+ * The caller must decide, upon construction, if the new #GdaDataModelImport must support random access or simply
+ * a cursor based access. Random access makes it easier to use the resulting data model but consumes more memory as
+ * all the data is copied in memory, and is thus not suitable for large data sets. Note that importing from an 
+ * already-build XML tree will always result in a random access data model.
+ *
+ * Various import options can be specified using parameters in a #GdaParameterList object. The available options
+ * depend on the format of the imported data listed here:
+ * <itemizedlist>
+ *   <listitem><para>"SEPARATOR" (string, CVS import only): specifies the separator to consider</para></listitem>
+ *   <listitem><para>"ESCAPE_CHAR" (string, CVS import only): specifies the character used to "escape" the strings
+ *       contained between two separators</para></listitem>
+ *   <listitem><para>"ENCODING" (string, CVS import only): specifies the character set used in the imported data</para></listitem>
+ *   <listitem><para>"TITLE_AS_FIRST_LINE" (boolean, CVS import only): TRUE to specify that the first line of the 
+ *       imported data contains the column names</para></listitem>
+ *   <listitem><para>"G_TYPE_&lt;col number&gt;" (GType, CVS import only): specifies the requested GType type for the column
+ * 	numbered "col number"</para></listitem>
+ * </itemizedlist>
+ */
+
 
 GType         gda_data_model_import_get_type     (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_import_new_file     (const gchar *filename, gboolean random_access, GdaSet *options);

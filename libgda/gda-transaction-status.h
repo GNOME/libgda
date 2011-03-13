@@ -1,5 +1,5 @@
-/* GDA client library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -41,17 +41,34 @@ typedef struct _GdaTransactionStatus        GdaTransactionStatus;
 typedef struct _GdaTransactionStatusClass   GdaTransactionStatusClass;
 typedef struct _GdaTransactionStatusEvent   GdaTransactionStatusEvent;
 
+/**
+ * GdaTransactionStatusEventType:
+ * @GDA_TRANSACTION_STATUS_EVENT_SAVEPOINT: 
+ * @GDA_TRANSACTION_STATUS_EVENT_SQL: 
+ * @GDA_TRANSACTION_STATUS_EVENT_SUB_TRANSACTION:
+ */
 typedef enum {
 	GDA_TRANSACTION_STATUS_EVENT_SAVEPOINT,
 	GDA_TRANSACTION_STATUS_EVENT_SQL,
 	GDA_TRANSACTION_STATUS_EVENT_SUB_TRANSACTION
 } GdaTransactionStatusEventType;
 
+/**
+ * GdaTransactionStatusState:
+ * @GDA_TRANSACTION_STATUS_STATE_OK:
+ * @GDA_TRANSACTION_STATUS_STATE_FAILED:
+ */
 typedef enum {
 	GDA_TRANSACTION_STATUS_STATE_OK,
 	GDA_TRANSACTION_STATUS_STATE_FAILED
 } GdaTransactionStatusState;
 
+/**
+ * GdaTransactionStatusEvent:
+ * @trans: 
+ * @type: 
+ * @conn_event:
+ */
 struct _GdaTransactionStatusEvent {
 	GdaTransactionStatus         *trans;
 	GdaTransactionStatusEventType type;
@@ -62,6 +79,7 @@ struct _GdaTransactionStatusEvent {
 	} pl;
 	GdaConnectionEvent           *conn_event;
 
+	/*< private >*/
 	gpointer  _gda_reserved1;
 	gpointer  _gda_reserved2;
 };
@@ -74,6 +92,7 @@ struct _GdaTransactionStatus {
 	GdaTransactionStatusState  state;
 	GList                     *events;
 
+	/*< private >*/
 	gpointer  _gda_reserved1;
 	gpointer  _gda_reserved2;
 };
@@ -81,12 +100,34 @@ struct _GdaTransactionStatus {
 struct _GdaTransactionStatusClass {
 	GObjectClass             parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-transaction-status
+ * @short_description: Keeps track of the transaction status of a connection
+ * @title: GdaTransactionStatus
+ * @stability: Stable
+ * @see_also: #GdaConnection
+ *
+ * On any connection (as a #GdaConnection object), if the database provider used by the connection
+ * supports it, transactions may be started, committed or rolledback, or savepoints added, removed or rolledback.
+ * These operations can be performed using Libgda's API (such as gda_connection_begin_transaction()), or directly
+ * using some SQL on the connection (usually a "BEGIN;" command). The #GdaTransactionStatus's aim is to 
+ * make it easy to keep track of all the commands which have been issued on a connection regarding transactions.
+ *
+ * One #GdaTransactionStatus object is automatically attached to a #GdaConnection when a transaction is started, and
+ * is destroyed when the transaction is finished. A pointer to this object can be fetched using
+ * gda_connection_get_transaction_status() (beware that it should then not be modified). The end user is not
+ * supposed to instantiate #GdaTransactionStatus objects
+ *
+ * #GdaTransactionStatus's attributes are directly accessible using the public members of the object.
+ */
 
 GType                 gda_transaction_status_get_type (void) G_GNUC_CONST;
 GdaTransactionStatus *gda_transaction_status_new      (const gchar *name);

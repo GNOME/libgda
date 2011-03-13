@@ -1,6 +1,5 @@
-/* gdaui-raw-grid.h
- *
- * Copyright (C) 2002 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -52,9 +51,18 @@ struct _GdauiRawGridClass
         void             (* populate_popup)    (GdauiRawGrid *grid, GtkMenu *menu);
 };
 
-/* 
- * Generic widget's methods 
+/**
+ * SECTION:gdaui-raw-grid
+ * @short_description: Grid widget to manipulate data in a #GdaDataModel
+ * @title: GdauiRawGrid
+ * @stability: Stable
+ * @Image: vi-raw-grid.png
+ * @see_also: the #GdauiGrid widget which uses the #GdauiRawGrid and adds decorations such as information about data model size, and features searching.
+ *
+ * The #GdauiGrid widget which uses the #GdauiRawGrid and adds decorations such as
+ * information about data model size, and features searching.
  */
+
 GType      gdaui_raw_grid_get_type              (void) G_GNUC_CONST;
 
 GtkWidget *gdaui_raw_grid_new                   (GdaDataModel *model);

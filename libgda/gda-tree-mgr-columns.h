@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -47,6 +47,26 @@ struct _GdaTreeMgrColumns {
 struct _GdaTreeMgrColumnsClass {
 	GdaTreeManagerClass   object_class;
 };
+
+/**
+ * SECTION:gda-tree-mgr-columns
+ * @short_description: A tree manager which creates a node for each column of a table
+ * @title: GdaTreeMgrColumns
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #GdaTreeMgrColumns is a #GdaTreeManager object which creates a node for
+ * each column in a table.
+ *
+ * It uses the #GdaMetaStore associated to a #GdaConnection to get the columns list
+ * for a table designated by its name and the database schema it is in; it's up to the
+ * caller to make sure the data in the #GdaMetaStore is up to date.
+ *
+ * The #GdaConnection to be used needs to be specified when the object is created. The table
+ * name and schema can however be specified when the object is created, and if not, are
+ * fetched from the #GdaTreeNode below which the nodes will be placed (using
+ * gda_tree_node_fetch_attribute()).
+ */
 
 GType              gda_tree_mgr_columns_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager*    gda_tree_mgr_columns_new                      (GdaConnection *cnc, const gchar *schema,

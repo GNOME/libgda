@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -73,6 +73,26 @@ struct _GdaTreeManagerClass {
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-tree-manager
+ * @short_description: Base class for all the tree managers
+ * @title: GdaTreeManager
+ * @stability: Stable
+ * @see_also:
+ *
+ * A #GdaTreeManager object is responsible for creating nodes in the tree(s) for which it
+ * operates.
+ *
+ * When creating nodes, a #GdaTreeManager object can (depending on its implementation), get some
+ * named attributes from the node below which it has to create nodes, using the gda_tree_node_fetch_attribute()
+ * or gda_tree_node_get_node_attribute(). For example the #GdaTreeMgrColumns manager (which creates a node for each column
+ * of a table) needs the table name and the schema in which the table is; both can be specified using an
+ * object's property, or, if not specified that way, are fetched as attributes.
+ *
+ * The #GdaTreeManager itself is an abstract type (which can't be instantiated). Use an existing sub class or subclass
+ * it yourself.
+ */
 
 GType                  gda_tree_manager_get_type                 (void) G_GNUC_CONST;
 

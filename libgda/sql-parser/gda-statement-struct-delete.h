@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -31,11 +31,18 @@ G_BEGIN_DECLS
 /*
  * Structure definition
  */
+/**
+ * GdaSqlStatementDelete:
+ * @any: 
+ * @table: 
+ * @cond:
+ */
 struct _GdaSqlStatementDelete {
 	GdaSqlAnyPart any;
 	GdaSqlTable  *table;
 	GdaSqlExpr   *cond;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

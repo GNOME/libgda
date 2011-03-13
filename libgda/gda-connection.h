@@ -62,6 +62,47 @@ typedef enum {
 
 #define GDA_CONNECTION_NONEXIST_DSN_ERROR GDA_CONNECTION_DSN_NOT_FOUND_ERROR
 
+/**
+ * SECTION:gda-connection
+ * @short_description: A connection to a database
+ * @title: GdaConnection
+ * @stability: Stable
+ *
+ * Each connection to a database is represented by a #GdaConnection object. A connection is created (and opened)
+ * using gda_connection_open_from_dsn() if a data source has been defined, or gda_connection_open_from_string()
+ * otherwise. It is not recommended to create a #GdaConnection object using g_object_new() as the results are
+ * unpredictable (some parts won't correctly be initialized).
+ *
+ * Use the connection object to execute statements, use transactions, get meta data information, ...
+ *
+ * If supported by the database provider being used, statements can be executed asynchronously instead of
+ * blocking the execution thread untill the execution of a statement is finished. Each database provider
+ * is free to implement this feature as it wishes (using the API or using threads). The steps involved to
+ * execute a statement are then:
+ * <itemizedlist>
+ *   <listitem><para>Request the statement execution using
+ *	<link linkend="gda-connection-async-statement-execute">gda_connection_async_statement_execute() which returns an
+ *	  execution ID to be used to identify a specific request</link></para></listitem>
+ *   <listitem><para>Do some useful things (that is why async. statements' excution are for)</para></listitem>
+ *   <listitem><para>Use one or more times 
+ *	<link linkend="gda-connection-async-fetch-result">gda_connection_async_fetch_result()</link> to see
+ *	if the execution is finished, using the request ID</para></listitem>
+ *   <listitem><para>Use <link linkend="gda-connection-async-cancel">gda_connection_async_cancel()</link> to cancel
+ * the execution of a statement</para></listitem>
+ * </itemizedlist>
+ *
+ * The #GdaConnection object implements its own locking mechanism so it is thread-safe. However ad some database
+ * providers rely on an API which does not support threads or supports it only partially, the connections
+ * opened using those providers will only be accessible from the thread which created them (any other thread will
+ * be blocked trying to access the connection, use the
+ * <link linkend="gda-lockable-try-lock">gda_lockable_try_lock()</link> method to check it the connection
+ * is usable from a thread).
+ *
+ * If a connection really needs to be accessed by several threads at once, then it is possible to pass the
+ * #GDA_CONNECTION_OPTIONS_THREAD_SAFE flag when opening it. This flag requests that the real connection
+ * be created and really accessed in a <emphasis>private</emphasis> sub thread.
+ */
+
 struct _GdaConnection {
 	GObject               object;
 	GdaConnectionPrivate *priv;

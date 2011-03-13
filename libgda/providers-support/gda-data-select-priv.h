@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 2008 The GNOME Foundation.
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -31,6 +31,27 @@
 
 G_BEGIN_DECLS
 
+/**
+ * SECTION:gda-data-select-priv
+ * @short_description: Base class for all the data models returned by DBMS providers when a SELECT statement is executed
+ * @title: Subclassing GdaDataSelect
+ * @stability: Stable
+ * @see_also: #GdaDataModel and #GdaDataSelect
+ *
+ * All database providers should subclass this class when returning a data model after the execution of a SELECT
+ *  statement. Specifically it has the following features:
+ *  <itemizedlist>
+ *    <listitem><para>Manages its list of <link linkend="GdaColumn">GdaColumn</link> using the list exported by the prepared statement object (<link linkend="GdaPStmt">GdaPStmt</link>)</para></listitem>
+ *    <listitem><para>Allows random or cursor based access</para></listitem>
+ *    <listitem><para>Allows for efficient memory usage allowing the subclass to finely tune its memory usage</para></listitem>
+ *    <listitem><para>Provides a generic mechanism for writable data models</para></listitem>
+ *  </itemizedlist>
+ *
+ *  See the <link linkend="libgda-provider-recordset">Virtual methods for recordsets</link> section for more information
+ *  about how to implement the virtual methods of the subclassed object.
+ *
+ *  This section documents the methods available for the database provider's implementations.
+ */
 
 GType          gda_data_select_get_type                     (void) G_GNUC_CONST;
 

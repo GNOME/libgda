@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -47,6 +47,17 @@ struct _GdaTreeMgrLabel {
 struct _GdaTreeMgrLabelClass {
 	GdaTreeManagerClass   object_class;
 };
+
+/**
+ * SECTION:gda-tree-mgr-label
+ * @short_description: A tree manager which creates a single node
+ * @title: GdaTreeMgrLabel
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #GdaTreeMgrLabel is a #GdaTreeManager object which creates a single node. This tree manager
+ * is useful to create "sections" in a #GdaTree hierarchy.
+ */
 
 GType              gda_tree_mgr_label_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager*    gda_tree_mgr_label_new                      (const gchar *label);

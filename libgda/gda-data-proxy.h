@@ -1,6 +1,5 @@
-/* gda-data-proxy.h
- *
- * Copyright (C) 2005 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2005 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -70,12 +69,115 @@ struct _GdaDataProxyClass
 
 	void                 (* filter_changed)       (GdaDataProxy *proxy);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-data-proxy
+ * @short_description: Proxy to hold modifications for any #GdaDataModel, providing the #GdaDataModel interface itself
+ * @title: GdaDataProxy
+ * @stability: Stable
+ * @see_also: #GdaDataModel
+ *
+ * This object stores modifications to be made to a #GdaDataModel object which is proxied until the modifications are actually
+ *  written to the #GdaDataModel, it can also filter the proxied data model to show only a subset (a defined number of continuous
+ *  rows or by a filter to apply).
+ *
+ *  Specifically, for a proxied data model having <varname>nb_cols</varname> columns and <varname>nb_rows</varname> rows, 
+ *  the #GdaDataProxy object has the following attributes:
+ *  <itemizedlist>
+ *    <listitem>
+ *      <para><varname>2 * nb_cols</varname> columns:
+ *	<itemizedlist>
+ *	  <listitem><para>the first (&gt;= 0) <varname>nb_cols</varname> columns are the current values stored in the 
+ *	      proxy (which correspond to the values of the proxied data model if the considered row has not been 
+ *	      changed). The associated values are writable.</para></listitem>
+ *	  <listitem><para>the last <varname>nb_cols</varname> columns are the values stored in the proxied data model, 
+ *	      at column <varname>col - nb_cols</varname></para></listitem>
+ *	</itemizedlist>
+ *      </para>
+ *    </listitem>
+ *    <listitem><para>a variable number of rows depending on the following attributes:
+ *	<itemizedlist>
+ *	  <listitem><para>if the proxy is configured to have an empty row as the first row</para></listitem>
+ *	  <listitem><para>if the proxy only displays parts of the proxied data model</para></listitem>
+ *	  <listitem><para>if new rows have been added to the proxy</para></listitem>
+ *	</itemizedlist>
+ *    </para></listitem>
+ *  </itemizedlist>
+ *  This situation is illustrated in the following schema, where there is a direct mapping between the proxy's
+ *  rows and the proxied data model's rows:
+ *  <mediaobject>
+ *    <imageobject role="html">
+ *      <imagedata fileref="data_proxy1.png" format="PNG" contentwidth="170mm"/>
+ *    </imageobject>
+ *    <textobject>
+ *      <phrase>GdaDataProxy's values mapping regarding the proxied data model</phrase>
+ *    </textobject>
+ *  </mediaobject>
+ *
+ *  Note that unless explicitly mentioned, the columns are read-only.
+ *
+ *  The following figures illustrate row mappings between the data proxy and the proxied data model in 
+ *  several situations (which can be combined, but are shown alone for simplicity):
+ *  <itemizedlist>
+ *    <listitem><para>situation where rows 1 and 5 have been marked as deleted from the data proxy, using
+ *	<link linkend="gda-data-proxy-delete">gda_data_proxy_delete()</link> method, the data
+ *	proxy has 2 rows less than the proxied data model:
+ *	<mediaobject>
+ *	  <imageobject role="html">
+ *	    <imagedata fileref="data_proxy2.png" format="PNG" contentwidth="100mm"/>
+ *	  </imageobject>
+ *	  <textobject>
+ *	    <phrase>GdaDataProxy with 2 rows marked as deleted</phrase>
+ *	  </textobject>
+ *	</mediaobject>
+ *    </para></listitem>
+ *    <listitem><para>situation where the data proxy only shows a sample of the proxied data model
+ *	at any given time, using the 
+ *	<link linkend="gda-data-proxy-set-sample-size">gda_data_proxy_set_sample_size()</link> method
+ *	(the sample here is 4 rows wide, and starts at row 3):
+ *	<mediaobject>
+ *	  <imageobject role="html">
+ *	    <imagedata fileref="data_proxy3.png" format="PNG" contentwidth="100mm"/>
+ *	  </imageobject>
+ *	  <textobject>
+ *	    <phrase>GdaDataProxy with a sample size of 4</phrase>
+ *	  </textobject>
+ *	</mediaobject>
+ *    </para></listitem>
+ *    <listitem><para>situation where the data proxy shows a row of NULL values, using the
+ *	<link linkend="GdaDataproxy-prepend-null-entry">"prepend-null-entry"</link> property:
+ *	<mediaobject>
+ *	  <imageobject role="html">
+ *	    <imagedata fileref="data_proxy4.png" format="PNG" contentwidth="100mm"/>
+ *	  </imageobject>
+ *	  <textobject>
+ *	    <phrase>GdaDataProxy with an extra row of NULL values</phrase>
+ *	  </textobject>
+ *	</mediaobject>
+ *    </para></listitem>
+ *    <listitem><para>situation where a row has been added to the data proxy, using for example the
+ *	<link linkend="gda-data-model-append-row">gda_data_model_append_row()</link> method:
+ *	<mediaobject>
+ *	  <imageobject role="html">
+ *	    <imagedata fileref="data_proxy5.png" format="PNG" contentwidth="100mm"/>
+ *	  </imageobject>
+ *	  <textobject>
+ *	    <phrase>GdaDataProxy where a row has been added</phrase>
+ *	  </textobject>
+ *	</mediaobject>
+ *    </para></listitem>
+ *  </itemizedlist>
+ *
+ *  The #GdaDataProxy objects are thread safe, which means any proxy object can be used from
+ *  any thread at the same time as they implement their own locking mechanisms.
+ */
 
 GType             gda_data_proxy_get_type                 (void) G_GNUC_CONST;
 GObject          *gda_data_proxy_new                      (GdaDataModel *model);

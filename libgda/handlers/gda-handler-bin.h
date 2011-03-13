@@ -1,6 +1,5 @@
-/* gda-handler-bin.h
- *
- * Copyright (C) 2005 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2005 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -47,11 +46,22 @@ struct _GdaHandlerBinClass
 {
 	GObjectClass        parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 };
 
+/**
+ * SECTION:gda-handler-bin
+ * @short_description: Default handler for binary values
+ * @title: GdaHanderBin
+ * @stability: Stable
+ * @see_also: #GdaDataHandler interface
+ *
+ * You should normally not need to use this API, refer to the #GdaDataHandler
+ * interface documentation for more information.
+ */
 
 GType           gda_handler_bin_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_bin_new           (void);

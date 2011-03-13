@@ -104,6 +104,38 @@ typedef enum {
 	GDA_SERVER_OPERATION_STATUS_UNKNOWN
 } GdaServerOperationNodeStatus;
 
+/**
+ * SECTION:gda-server-operation-sequences
+ * @short_description: Manipulating sequences
+ * @title: GdaServerOperation: sequences
+ * @stability: Stable
+ * @see_also: #GdaServerOperation
+ *
+ * The #GdaServerOperation object can contain sequences of templates. For example when creating a table,
+ * one can specify several foreign keys where for each foreign key, one must define the column(s) on which the
+ * foreign key applies, the referenced table and the corresponding columns of the referenced table (plus some
+ * additional information). In this case the foreign keys are defined as a sequence of templates (the foreign key
+ * definition): there can be zero or more foreign keys.
+ */
+
+/**
+ * SECTION:gda-server-operation-nodes
+ * @short_description: Getting information about parts (nodes) composing a path
+ * @title: GdaServerOperation: individual nodes
+ * @stability: Stable
+ * @see_also: #GdaServerOperation
+ *
+ * To each part of a path is associated a node (as a #GdaServerOperationNode structure). For example the
+ * "/TABLE_DEF_P/TABLE_NAME" path has two nodes, one associated to "/TABLE_DEF_P" and one to
+ * "/TABLE_DEF_P/TABLE_NAME". For more information about the path's format, see the
+ * gda_server_operation_set_value_at()'s documentation.
+ *
+ * This API is designed to get information about all the nodes present in a #GdaServerOperation object (refer to the
+ * gda_server_operation_get_root_nodes() function) and about each node of a path, and allows inspection
+ * of its contents. It is mainly reserved for database provider's implementations but can have its purpose
+ * outside of this scope.
+ */
+
 typedef struct _GdaServerOperationNode {
 	GdaServerOperationNodeType    type;
 	GdaServerOperationNodeStatus  status;
@@ -127,12 +159,42 @@ struct _GdaServerOperationClass {
 	void                     (*seq_item_added) (GdaServerOperation *op, const gchar *seq_path, gint item_index);
 	void                     (*seq_item_remove) (GdaServerOperation *op, const gchar *seq_path, gint item_index);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-server-operation
+ * @short_description: Handles any DDL query in an abstract way
+ * @title: GdaServerOperation
+ * @stability: Stable
+ * @see_also:
+ *
+ * This object is basically just a data store: it can store named values, the values being
+ * organized hierarchically by their name which are similar to a Unix file path. For example a value can be read from its path
+ * using the gda_server_operation_get_value_at() method, or set using the gda_server_operation_set_value_at() method.
+ *
+ * Each #GdaServerOperation contains some structure which is usually defined by a database provider to implement
+ * a specific operation. The structure is composed of the following building blocks:
+ * <itemizedlist>
+ *   <listitem><para>Named values (internally represented as a #GdaHolder object)</para></listitem>
+ *   <listitem><para>Named values in a vector (internally represented as a #GdaSet object)</para></listitem>
+ *   <listitem><para>Values in an array (internally represented as a #GdaDataModel object)</para></listitem>
+ *   <listitem><para>Sequences of one or more of the previous blocks. A sequence can contain any number of
+ *   instances of the template block (there may be lower and upper boundaries to the number of instances)</para></listitem>
+ * </itemizedlist>
+ *
+ * <emphasis>Important note:</emphasis> #GdaServerOperation objects are usually not created 
+ * manually using gda_server_operation_new(), but
+ * using a #GdaServerProvider object with gda_server_provider_create_operation().
+ * See the <link linkend="DDLIntro">global introduction about DDL</link> for more information.
+ * Alternatively one can use the <link linkend="libgda-40-Convenience-functions">Convenience functions</link>
+ * which internally manipulate #GdaServerOperation objects.
+ */
 
 GType                      gda_server_operation_get_type                (void) G_GNUC_CONST;
 GdaServerOperation        *gda_server_operation_new                     (GdaServerOperationType op_type, const gchar *xml_file);

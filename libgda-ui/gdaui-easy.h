@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -26,6 +26,15 @@
 #include <libgda-ui/gdaui-data-entry.h>
 
 G_BEGIN_DECLS
+
+/**
+ * SECTION:gdaui-easy
+ * @short_description: Set of UI related functions
+ * @title: UI Utility functions
+ * @stability: Stable
+ * @Image:
+ * @see_also:
+ */
 
 GdauiDataEntry  *gdaui_new_data_entry    (GType type, const gchar *plugin_name);
 GtkCellRenderer *_gdaui_new_cell_renderer (GType type, const gchar *plugin_name);

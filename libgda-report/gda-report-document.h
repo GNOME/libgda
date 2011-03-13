@@ -1,5 +1,5 @@
-/* GDA 
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -50,12 +50,24 @@ struct _GdaReportDocumentClass {
 	gboolean                (*run_as_html) (GdaReportDocument *doc, const gchar *filename, GError **error);
 	gboolean                (*run_as_pdf) (GdaReportDocument *doc, const gchar *filename, GError **error);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-report-document
+ * @short_description: Report document
+ * @title: GdaReportDocument
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #GdaReportDocument wraps the usage of a #GdaReportEngine for specific HTML or PDF targets. This class is
+ * abstract (no instance be created directly), and one of its subclasses has to be used.
+ */
 
 GType                 gda_report_document_get_type        (void) G_GNUC_CONST;
 

@@ -1,6 +1,9 @@
-/* GDA library
- * 
- * Copyright (C) Daniel Espinosa Ortiz 2008 <esodan@gmail.com>
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
+ *
+ * Authors:
+ *      Daniel Espinosa Ortiz <esodan@gmail.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  * 
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -43,6 +46,20 @@ struct _GdaRepetitiveStatement
 	GObject parent_instance;
 };
 
+/**
+ * SECTION:gda-repetitive-statement
+ * @short_description: Execute the same statement several times with different values
+ * @title: GdaRepetitiveStatement
+ * @stability: Stable
+ * @see_also: #GdaStatement, #GdaBatch and #GdaConnection
+ *
+ * The #GdaRepetitiveStatement object allows one to specify a statement to be executed
+ * several times using different variables' values sets for each execution. Using the object
+ * has almost no interrest at all if the statement to be executed several times has no parameter.
+ *
+ * Use the gda_connection_repetitive_statement_execute() method to execute the repetitive statement.
+ */
+
 GType                   gda_repetitive_statement_get_type         (void) G_GNUC_CONST;
 
 GdaRepetitiveStatement* gda_repetitive_statement_new              (GdaStatement *stmt);
@@ -52,4 +69,4 @@ gboolean                gda_repetitive_statement_append_set       (GdaRepetitive
 
 G_END_DECLS
 
-#endif /* _GDA_REPETITIVE_STATEMENT_H_ */
+#endif

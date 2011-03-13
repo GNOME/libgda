@@ -86,6 +86,18 @@ typedef enum
 #define GDA_SQLSTATE_NO_ERROR "00000"
 #define GDA_SQLSTATE_GENERAL_ERROR "HY000"
 
+/**
+ * SECTION:gda-connection-event
+ * @short_description: Any event which has occurred on a #GdaConnection
+ * @title: GdaConnectionEvent
+ * @stability: Stable
+ * @see_also: #GdaConnection
+ *
+ * Events occurring on a connection are each represented as a #GdaConnectionEvent object. Each #GdaConnection
+ * is responsible for keeping a list of past events; that list can be consulted using the 
+ * gda_connection_get_events() function.
+ */
+
 GType                   gda_connection_event_get_type (void) G_GNUC_CONST;
 
 void                    gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEventType type);

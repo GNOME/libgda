@@ -1,6 +1,5 @@
-/* gda-data-comparator.h
- *
- * Copyright (C) 2008 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -75,12 +74,34 @@ struct _GdaDataComparatorClass
 	GObjectClass              parent_class;
 	gboolean               (* diff_computed)  (GdaDataComparator *comp, GdaDiff *diff);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-data-comparator
+ * @short_description: Simple data model's contents comparison
+ * @title: GdaDataComparator
+ * @stability: Stable
+ * @see_also: #GdaDataModel
+ *
+ * The #GdaDataComparator is a simple object which takes two #GdaDataModel objects and compare them.
+ * Actual comparison is performed when the gda_data_comparator_compute_diff() is called; for each
+ * difference found, the <link linkend="GdaDataComparator-diff-computed">diff-computed</link> signal
+ * is emitted (any user installed signal handler which returns FALSE stops the computing process).
+ *
+ * There are some limitations to this object:
+ * <itemizedlist>
+ *   <listitem><para>The data models compared must have the same number and type of columns</para></listitem>
+ *   <listitem><para>The comparison is done column-for-column: one cannot omit columns in the comparison, nor compare
+ *   columns with different positions</para></listitem>
+ * </itemizedlist>
+ */
+
 
 GType             gda_data_comparator_get_type        (void) G_GNUC_CONST;
 GObject          *gda_data_comparator_new             (GdaDataModel *old_model, GdaDataModel *new_model);

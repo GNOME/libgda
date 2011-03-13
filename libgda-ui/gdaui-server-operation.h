@@ -1,6 +1,5 @@
-/* gdaui-server-operation.h
- *
- * Copyright (C) 2006 Vivien Malerba
+/*
+ * Copyright (C) 2006 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -52,9 +51,20 @@ struct _GdauiServerOperationClass
 	GtkVBoxClass                parent_class;
 };
 
-/* 
- * Generic widget's methods 
-*/
+/**
+ * SECTION:gdaui-server-operation
+ * @short_description: Enter information to perform a DDL query
+ * @title: GdauiServerOperation
+ * @stability: Stable
+ * @Image:
+ * @see_also: See the #GdaServerOperation which actually holds the information to perform the action
+ *
+ * The #GdauiServerOperation widget allows the user to enter information to perform
+ * Data Definition queries (all queries which are not SELECT, INSERT, UPDATE or DELETE).
+ * For example the figure shows a #GdauiServerOperation widget set to create an index in an
+ * SQLite database.
+ */
+
 GType             gdaui_server_operation_get_type      (void) G_GNUC_CONST;
 GtkWidget        *gdaui_server_operation_new           (GdaServerOperation *op);
 GtkWidget        *gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,

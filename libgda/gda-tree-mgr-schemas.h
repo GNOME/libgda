@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -47,6 +47,22 @@ struct _GdaTreeMgrSchemas {
 struct _GdaTreeMgrSchemasClass {
 	GdaTreeManagerClass   object_class;
 };
+
+/**
+ * SECTION:gda-tree-mgr-schemas
+ * @short_description: A tree manager which creates a node for each schema in a database
+ * @title: GdaTreeMgrSchemas
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #GdaTreeMgrSchemas is a #GdaTreeManager object which creates a node for
+ * each schema in a database.
+ *
+ * It uses the #GdaMetaStore associated to a #GdaConnection to get the schemas list; it's up to the
+ * caller to make sure the data in the #GdaMetaStore is up to date.
+ *
+ * The #GdaConnection to be used needs to be specified when the object is created.
+ */
 
 GType              gda_tree_mgr_schemas_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager*    gda_tree_mgr_schemas_new                      (GdaConnection *cnc);

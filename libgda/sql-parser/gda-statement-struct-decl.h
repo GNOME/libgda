@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2008 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -56,6 +56,24 @@ typedef struct _GdaSqlStatementCompound GdaSqlStatementCompound;
 /*
  * Statement type
  */
+/**
+ * GdaSqlStatementType:
+ * @GDA_SQL_STATEMENT_SELECT: a SELECT statement
+ * @GDA_SQL_STATEMENT_INSERT: an INSERT statement
+ * @GDA_SQL_STATEMENT_UPDATE: an UPDATE statement
+ * @GDA_SQL_STATEMENT_DELETE: a DELETE statement
+ * @GDA_SQL_STATEMENT_COMPOUND: a compound statement: multiple SELECT statements grouped together using an operator
+ * @GDA_SQL_STATEMENT_BEGIN: start of transaction statement
+ * @GDA_SQL_STATEMENT_ROLLBACK: transaction abort statement
+ * @GDA_SQL_STATEMENT_COMMIT: transaction commit statement
+ * @GDA_SQL_STATEMENT_SAVEPOINT: new savepoint definition statement
+ * @GDA_SQL_STATEMENT_ROLLBACK_SAVEPOINT: return to savepoint statement
+ * @GDA_SQL_STATEMENT_DELETE_SAVEPOINT: savepoint deletion statement
+ * @GDA_SQL_STATEMENT_UNKNOWN: unknown statement, only identifies variables
+ * @GDA_SQL_STATEMENT_NONE: not used
+ *
+ * Known types of statements
+ */
 typedef enum {
 	GDA_SQL_STATEMENT_SELECT,
 	GDA_SQL_STATEMENT_INSERT,
@@ -78,6 +96,34 @@ typedef enum {
 
 /*
  * Structures identification
+ */
+/**
+ * GdaSqlAnyPartType:
+ * @GDA_SQL_ANY_STMT_SELECT: structure is a #GdaSqlStatementSelect
+ * @GDA_SQL_ANY_STMT_INSERT: structure is a #GdaSqlStatementInsert
+ * @GDA_SQL_ANY_STMT_UPDATE: structure is a #GdaSqlStatementUpdate
+ * @GDA_SQL_ANY_STMT_DELETE: structure is a #GdaSqlStatementDelete
+ * @GDA_SQL_ANY_STMT_COMPOUND: structure is a #GdaSqlStatementCompound
+ * @GDA_SQL_ANY_STMT_BEGIN: structure is a #GdaSqlStatementTransaction
+ * @GDA_SQL_ANY_STMT_ROLLBACK: structure is a #GdaSqlStatementTransaction
+ * @GDA_SQL_ANY_STMT_COMMIT: structure is a #GdaSqlStatementTransaction
+ * @GDA_SQL_ANY_STMT_SAVEPOINT: structure is a #GdaSqlStatementTransaction
+ * @GDA_SQL_ANY_STMT_ROLLBACK_SAVEPOINT: structure is a #GdaSqlStatementTransaction
+ * @GDA_SQL_ANY_STMT_DELETE_SAVEPOINT: structure is a #GdaSqlStatementTransaction
+ * @GDA_SQL_ANY_STMT_UNKNOWN: structure is a #GdaSqlStatementUnknown
+ * @GDA_SQL_ANY_EXPR: structure is a #GdaSqlExpr
+ * @GDA_SQL_ANY_SQL_FIELD: structure is a #GdaSqlField
+ * @GDA_SQL_ANY_SQL_TABLE: structure is a #GdaSqlTable
+ * @GDA_SQL_ANY_SQL_FUNCTION: structure is a #GdaSqlFunction
+ * @GDA_SQL_ANY_SQL_OPERATION: structure is a #GdaSqlOperation
+ * @GDA_SQL_ANY_SQL_CASE: structure is a #GdaSqlCase
+ * @GDA_SQL_ANY_SQL_SELECT_FIELD: structure is a #GdaSqlSelectField
+ * @GDA_SQL_ANY_SQL_SELECT_TARGET: structure is a #GdaSqlSelectTarget
+ * @GDA_SQL_ANY_SQL_SELECT_JOIN: structure is a #GdaSqlSelectJoin
+ * @GDA_SQL_ANY_SQL_SELECT_FROM: structure is a #GdaSqlSelectFrom
+ * @GDA_SQL_ANY_SQL_SELECT_ORDER: structure is a #GdaSqlSelectOrder
+ *
+ * Type of part.
  */
 typedef enum {
 	/* complete statements */
@@ -108,6 +154,15 @@ typedef enum {
 	GDA_SQL_ANY_SQL_SELECT_ORDER
 } GdaSqlAnyPartType;
 
+
+/**
+ * GdaSqlAnyPart:
+ * @type: type of structure, as a #GdaSqlAnyPartType enum.
+ * @parent: pointer to the parent #GdaSqlAnyPart structure
+ *
+ * Base structure of which all structures (except #GdaSqlStatement) "inherit". It identifies, for each structure,
+ * its type and its parent in the structure hierarchy.
+ */
 struct _GdaSqlAnyPart {
 	GdaSqlAnyPartType  type;
 	GdaSqlAnyPart     *parent;
@@ -122,6 +177,15 @@ struct _GdaSqlAnyPart {
  */
 
 /* returns FALSE if a recursive walking should be stopped (mandatory is @error is set) */
+/**
+ * GdaSqlForeachFunc:
+ * @Param1: the current #GdaSqlAnyPart node
+ * @Param2: user data passed to gda_sql_any_part_foreach().
+ * @Param3: pointer to a place to store errors
+ * @Returns: FALSE if the gda_sql_any_part_foreach() should stop at this point and fail
+ *
+ * Specifies the type of functions passed to gda_sql_any_part_foreach().
+ */
 typedef gboolean (*GdaSqlForeachFunc) (GdaSqlAnyPart *, gpointer, GError **);
 
 gboolean gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer data, GError **error);
@@ -146,6 +210,7 @@ typedef struct {
 	GdaSqlForeachFunc     check_structure_func;
 	GdaSqlForeachFunc     check_validity_func;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
@@ -156,12 +221,12 @@ typedef struct {
 /*
  * Validation against a dictionary
  */
-
 typedef struct {
 	GdaConnection *cnc;
 	GdaMetaStore  *store;
 	GdaMetaStruct *mstruct;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

@@ -1,6 +1,5 @@
-/* gdaui-data-store.h
- *
- * Copyright (C) 2005 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -58,6 +57,18 @@ struct _GdauiDataStoreClass
 	GObjectClass           parent_class;
 };
 
+/**
+ * SECTION:gdaui-data-store
+ * @short_description: Bridge between a #GdaDataModel and a #GtkTreeModel
+ * @title: GdauiDataStore
+ * @stability: Stable
+ * @Image:
+ * @see_also:
+ *
+ * The #GdauiDataStore object implements the #GtkTreeModel interface
+ * on top of a #GdaDataModel to be able to display its contents
+ * in a #GtkTreeView.
+ */
 
 GType           gdaui_data_store_get_type             (void) G_GNUC_CONST;
 GtkTreeModel   *gdaui_data_store_new                  (GdaDataModel *model);

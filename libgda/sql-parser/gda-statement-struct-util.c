@@ -299,8 +299,10 @@ _string_is_identifier (const gchar *str)
  * @str: a quoted string
  *
  * Prepares @str to be compared:
- * - if surrounded by double quotes or single quotes, then just remove the quotes
- * - otherwise convert to lower case
+ * <itemizedlist>
+ * <listitem><para>if surrounded by double quotes or single quotes, then just remove the quotes</para></listitem>
+ * <listitem><para>otherwise convert to lower case</para></listitem>
+ * </itemizedlist>
  *
  * The quoted string:
  * <itemizedlist>

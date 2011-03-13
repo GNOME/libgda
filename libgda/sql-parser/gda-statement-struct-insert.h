@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -31,6 +31,41 @@ G_BEGIN_DECLS
 /*
  * Structure definition
  */
+/**
+ * GdaSqlStatementInsert:
+ * @any: inheritance structure
+ * @on_conflict: conflict resolution clause if there is one (such as "OR REPLACE")
+ * @table: name of the table to which data is inserted
+ * @fields_list: list of #GdaSqlField fields which are valued for insertion
+ * @values_list: list of list of #GdaSqlExpr expressions (this is a list of list, not a simple list)
+ * @select: a #GdaSqlStatementSelect or #GdaSqlStatementCompound structure representing the values to insert
+ *
+ * The statement is an INSERT statement, any kind of INSERT statement can be represented using this structure 
+ * (if this is not the case
+ * then report a bug).
+ * <mediaobject>
+ *   <imageobject role="html">
+ *     <imagedata fileref="stmt-insert1.png" format="PNG"/>
+ *   </imageobject>
+ *   <caption>
+ *     <para>
+ *	Example of a #GdaSqlStatement having a #GdaSqlStatementInsert as its contents with 2 lists of values
+ *	to insert.
+ *     </para>
+ *   </caption>
+ * </mediaobject>
+ * <mediaobject>
+ *   <imageobject role="html">
+ *     <imagedata fileref="stmt-insert2.png" format="PNG"/>
+ *   </imageobject>
+ *   <caption>
+ *     <para>
+ *	Another example of a #GdaSqlStatement having a #GdaSqlStatementInsert as its contents, using a SELECT
+ *	to express the values to insert.
+ *     </para>
+ *   </caption>
+ * </mediaobject>
+ */
 struct _GdaSqlStatementInsert {
 	GdaSqlAnyPart           any;
 	gchar                  *on_conflict; /* conflict resolution clause */
@@ -39,6 +74,7 @@ struct _GdaSqlStatementInsert {
 	GSList                 *values_list; /* list of list of GdaSqlExpr */
 	GdaSqlAnyPart          *select; /* SELECT OR COMPOUND statements: GdaSqlStatementSelect or GdaSqlStatementCompound */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

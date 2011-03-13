@@ -1,6 +1,5 @@
-/* gda-batch.h
- *
- * Copyright (C) 2007 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -55,12 +54,26 @@ struct _GdaBatchClass
 	/* signals */
 	void   (*changed) (GdaBatch *batch, GdaStatement *changed_stmt);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-batch
+ * @short_description: Multiple SQL statements grouped together.
+ * @title: GdaBatch
+ * @stability: Stable
+ * @see_also: #GdaStatement
+ *
+ * The #GdaBatch object represents one or more SQL statements (as #GdaStatement objects) in a single object.
+ *
+ * A #GdaBatch can either be built "manually" by assembling together several #GdaStatement objects,
+ * or from an SQL string using a #GdaSqlParser object.
+ */
 
 GType              gda_batch_get_type               (void) G_GNUC_CONST;
 GdaBatch          *gda_batch_new                    (void);

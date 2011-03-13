@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -62,6 +62,7 @@ struct _GdaDataSelect {
 	gint              nb_stored_rows; /* number of GdaRow objects currently stored */
 	gint              advertized_nrows; /* set when the number of rows becomes known, -1 untill then */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;
@@ -94,12 +95,46 @@ struct _GdaDataSelectClass {
 	gboolean         (*fetch_prev)    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 	gboolean         (*fetch_at)      (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-data-select
+ * @short_description: Base class for data models returned by the execution of a SELECT statement
+ * @title: GdaDataSelect
+ * @stability: Stable
+ * @see_also: #GdaDataModel and the <link linkend="data-select">Advanced GdaDataSelect usage</link> section.
+ *
+ * This data model implements the <link linkend="GdaDataModel">GdaDataModel</link> interface and is the required
+ *  base object when database providers implement a data model returned when a SELECT statement has been executed.
+ *  As the <link linkend="GdaDataModel">GdaDataModel</link> interface is implemented, consult the API
+ *  to access and modify the data held in a <link linkend="GdaDataSelect">GdaDataSelect</link> object.
+ *
+ *  The default behaviour however is to disallow modifications, and this section documents how to characterize
+ *  a <link linkend="GdaDataSelect">GdaDataSelect</link> to allow modifications. Once this is done, any modification
+ *  done to the data model will be propagated to the modified table in the database using INSERT, UPDATE or DELETE
+ *  statements.
+ *
+ *  After any modification, it is still possible to read values from the data model (even values for rows which have
+ *  been modified or inserted). The data model might then execute some SELECT statement to fetch some actualized values.
+ *  Note: there is a corner case where a modification made to a row would make the row not selected at first in the data model
+ *  (for example is the original SELECT statement included a clause <![CDATA["WHERE id < 100"]]> and the modification sets the 
+ *  <![CDATA["id"]]> value to 110), then the row will still be in the data model even though it would not be if the SELECT statement
+ *  which execution created the data model in the first place was re-run. This is illustrated in the schema below:
+ *  <mediaobject>
+ *    <imageobject role="html">
+ *      <imagedata fileref="writable_data_model.png" format="PNG" contentwidth="100mm"/>
+ *    </imageobject>
+ *    <textobject>
+ *      <phrase>GdaDataSelect data model's contents after some modifications</phrase>
+ *    </textobject>
+ *  </mediaobject>
+ */
 
 GType          gda_data_select_get_type                     (void) G_GNUC_CONST;
 

@@ -1,6 +1,5 @@
-/* gdaui-data-proxy.h
- *
- * Copyright (C) 2004 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2004 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -35,11 +34,21 @@ G_BEGIN_DECLS
 #define GDAUI_IS_DATA_PROXY(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, GDAUI_TYPE_DATA_PROXY)
 #define GDAUI_DATA_PROXY_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDAUI_TYPE_DATA_PROXY, GdauiDataProxyIface))
 
+/**
+ * GdauiDataProxyWriteMode:
+ * @GDAUI_DATA_PROXY_WRITE_ON_DEMAND: write only when explicitly requested 
+ * @GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE: write when the current selected row changes
+ * @GDAUI_DATA_PROXY_WRITE_ON_VALUE_ACTIVATED: write when user activates a value change
+ * @GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE: write when a parameters's value changes
+ *
+ * Defines when the data modifications held in the underlying #GdaDataProxy are written to the
+ * data model being proxied (using gda_data_proxy_apply_row_changes()).
+ */
 typedef enum {
-	GDAUI_DATA_PROXY_WRITE_ON_DEMAND           = 0, /* write only when explicitly requested */
-	GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE       = 1, /* write when the current selected row changes */
-	GDAUI_DATA_PROXY_WRITE_ON_VALUE_ACTIVATED  = 2, /* write when user activates a value change */
-	GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE     = 3  /* write when a parameters's value changes */
+	GDAUI_DATA_PROXY_WRITE_ON_DEMAND           = 0,
+	GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE       = 1,
+	GDAUI_DATA_PROXY_WRITE_ON_VALUE_ACTIVATED  = 2,
+	GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE     = 3 
 } GdauiDataProxyWriteMode;
 
 /* struct for the interface */
@@ -58,6 +67,19 @@ struct _GdauiDataProxyIface
 	/* signals */
 	void                 (* proxy_changed)       (GdauiDataProxy *iface, GdaDataProxy *proxy);
 };
+
+/**
+ * SECTION:gdaui-data-proxy
+ * @short_description: Displaying and modifying data in a #GdaDataProxy
+ * @title: GdauiDataProxy
+ * @stability: Stable
+ * @Image:
+ * @see_also: The #GdauiDataSelector interface which is usually also implemented by the widgets which implement the #GdauiDataProxy interface.
+ *
+ * The #GdauiDataProxy interface is implemented by widgets which allow modifications
+ * to a #GdaDataModel (through a #GdaDataProxy to actually proxy the changes before they
+ * are written to the data model).
+ */
 
 GType             gdaui_data_proxy_get_type                  (void) G_GNUC_CONST;
 
