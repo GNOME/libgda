@@ -27,3 +27,4 @@ gda-browser-unused.sgml
 version.xml
 *.bak
 gda-browser-sections.sgml
+setup-build.stamp

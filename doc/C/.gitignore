@@ -30,3 +30,4 @@ version.xml
 builddate.xml
 *.bak
 libgda-5.0-sections.txt
+setup-build.stamp
