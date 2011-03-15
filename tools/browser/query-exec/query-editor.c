@@ -5,8 +5,8 @@
  *      Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -490,10 +490,10 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 	else if (ev->type == GDK_KEY_PRESS) {
 		GdkEventKey *evkey = ((GdkEventKey*) ev);
 		if ((editor->priv->mode == QUERY_EDITOR_HISTORY) &&
-		    ((evkey->keyval == GDK_Up) || (evkey->keyval == GDK_Down))) {
+		    ((evkey->keyval == GDK_KEY_Up) || (evkey->keyval == GDK_KEY_Down))) {
 			HistItemData *nfocus = NULL;
 			if (editor->priv->hist_focus) {
-				if (((GdkEventKey*) ev)->keyval == GDK_Up)
+				if (((GdkEventKey*) ev)->keyval == GDK_KEY_Up)
 					nfocus = get_prev_hist_data (editor, editor->priv->hist_focus);
 				else
 					nfocus = get_next_hist_data (editor, editor->priv->hist_focus);
@@ -505,7 +505,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 			return TRUE;
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_HISTORY) &&
-			 ((evkey->keyval == GDK_Delete) && editor->priv->hist_focus)) {
+			 ((evkey->keyval == GDK_KEY_Delete) && editor->priv->hist_focus)) {
 			if (editor->priv->hist_focus->item)
 				query_editor_del_current_history_item (editor);
 			else if (editor->priv->hist_focus->batch)
@@ -514,7 +514,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 ((evkey->keyval == GDK_L) || (evkey->keyval == GDK_l))) {
+			 ((evkey->keyval == GDK_KEY_L) || (evkey->keyval == GDK_KEY_l))) {
 			GtkTextIter start, end;
 			gtk_text_buffer_get_start_iter (buffer, &start);
 			gtk_text_buffer_get_end_iter (buffer, &end);
@@ -523,13 +523,13 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 (evkey->keyval == GDK_Return)) {
+			 (evkey->keyval == GDK_KEY_Return)) {
 			g_signal_emit (editor, query_editor_signals[EXECUTE_REQUEST], 0);
 			return TRUE;
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 (evkey->keyval == GDK_Up) &&
+			 (evkey->keyval == GDK_KEY_Up) &&
 			 editor->priv->states) {
 			if (editor->priv->states->len > 0) {
 				gint i = -1;
@@ -560,7 +560,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 (evkey->keyval == GDK_Down) &&
+			 (evkey->keyval == GDK_KEY_Down) &&
 			 editor->priv->states) {
 			if (editor->priv->states->len > 0) {
 				if (editor->priv->current_state < editor->priv->states->len - 1) {
@@ -580,7 +580,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 		}
 		else if ((editor->priv->mode == QUERY_EDITOR_READWRITE) && 
 			 (evkey->state & GDK_CONTROL_MASK) &&
-			 (evkey->keyval == GDK_space)) {
+			 (evkey->keyval == GDK_KEY_space)) {
 			display_completions (editor);
 			return TRUE;
 		}
@@ -592,13 +592,8 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 }
 
 static gboolean
-text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *editor)
+text_view_draw (GtkTextView *tv, cairo_t *cr, QueryEditor *editor)
 {
-	GdkWindow *win;
-
-	win = gtk_text_view_get_window (tv, GTK_TEXT_WINDOW_TEXT);
-	if (event->window != win)
-		return FALSE;
 	if (!editor->priv->hist_focus)
 		return FALSE;
 	
@@ -608,7 +603,6 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	gint y, ye;
 	gint height, heighte;
 	gint win_y;
-	GdkGC *gc;
 	gint margin;
 	GtkTextBuffer *tbuffer;
 	
@@ -649,22 +643,15 @@ text_view_expose_event (GtkTextView *tv, GdkEventExpose *event, QueryEditor *edi
 	redraw_rect.width = visible_rect.width;
 	redraw_rect.height = visible_rect.height;
 	
-	GtkStateType state;
-#if GTK_CHECK_VERSION(2,18,0)
-	state = gtk_widget_get_state (GTK_WIDGET (tv));
-#else
-	state = GTK_WIDGET_STATE (GTK_WIDGET (tv));
-#endif
-	gc = gtk_widget_get_style (GTK_WIDGET (tv))->bg_gc[state];
+	GdkRectangle rect;
 	margin = gtk_text_view_get_left_margin (tv);
-	
-	gdk_draw_rectangle (event->window,
-			    gc,
-			    TRUE,
-			    redraw_rect.x + MAX (0, margin - 1),
-			    win_y,
-			    redraw_rect.width,
-			    height);
+	rect.x = redraw_rect.x + MAX (0, margin - 1);
+	rect.y = win_y;
+	rect.width = redraw_rect.width;
+	rect.height = height;
+	cairo_set_source_rgba (cr, .5, .5, .5, .3);
+	gdk_cairo_rectangle (cr, &rect);
+	cairo_fill (cr);
 
 	return FALSE;
 }
@@ -715,8 +702,8 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 			  G_CALLBACK (event), editor);
 	g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text)), "changed", 
 			  G_CALLBACK (text_buffer_changed_cb), editor);
-	g_signal_connect (editor->priv->text, "expose-event",
-			  G_CALLBACK (text_view_expose_event), editor);
+	g_signal_connect (editor->priv->text, "draw",
+			  G_CALLBACK (text_view_draw), editor);
 
 	/* create some tags */
 	GtkTextBuffer *buffer;

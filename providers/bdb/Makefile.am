@@ -18,7 +18,7 @@ libgda_bdb_la_SOURCES = \
 
 libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_bdb_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) 
 
 noinst_PROGRAMS = gda-bdb-test
@@ -27,9 +27,9 @@ gda_bdb_test_SOURCES = gda-bdb-test.c
 gda_bdb_test_LDADD = \
 	$(LIBGDA_LIBS) \
 	$(BDB_LIBS) \
-	$(top_builddir)/libgda/libgda-4.0.la 
+	$(top_builddir)/libgda/libgda-5.0.la 
 
-xmldir   = $(datadir)/libgda-4.0
+xmldir   = $(datadir)/libgda-5.0
 xml_in_files = bdb_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@
@@ -37,8 +37,8 @@ xml_in_files = bdb_specs_dsn.xml.in
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-bdb-4.0.pc
+pkgconfig_DATA = libgda-bdb-5.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-bdb-4.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-bdb-5.0.pc.in
 DISTCLEANFILES = $(xml_DATA)
 

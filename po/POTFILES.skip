@@ -1,4 +1,4 @@
-doc/C/prov-writing.xml
+doc/C/prov-writing-assembly.xml
 libgda/sqlite/sql-parser.c/lemon.c
 libgda/sqlite/sql-parser.c/lempar.c
 libgda/sqlite/sqlite-src/sqlite3.c

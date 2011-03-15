@@ -4,8 +4,8 @@
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -148,7 +148,7 @@ key_press_event (GtkWidget *widget, GdkEventKey *event)
 {
 	DataConsole *dconsole;
 	dconsole = DATA_CONSOLE (widget);
-	if ((event->keyval == GDK_Escape) &&
+	if ((event->keyval == GDK_KEY_Escape) &&
 	    (gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook)) == MAIN_PAGE_DATA)) {
 		if (dconsole->priv->agroup) {
 			GtkAction *action;

@@ -1,6 +1,5 @@
-/* gda-set.h
- *
- * Copyright (C) 2003 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -111,9 +110,27 @@ struct _GdaSetClass
 
 	/*< private >*/
 	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-set
+ * @short_description: Container for several values
+ * @title: GdaSet
+ * @stability: Stable
+ * @see_also: #GdaHolder
+ *
+ * The #GdaSet object is a container for several values (as #GdaHolder objects). The list of #GdaHolder objects is
+ * publicly accessible (and should not be modified), using the "holders" attribute. Each #GdaSet object also
+ * maintains some publicly accessible information about the #GdaHolder objects, through the #GdaSetNode, #GdaSetSource and
+ * #GdaSetGroup structures (see gda_set_get_node(), gda_set_get_source() and gda_set_get_group()).
+ *
+ * It is possible to control the values a #GdaHolder can have in the #GdaSet by connecting to the 
+ * <link linkend="GdaSet-before-holder-change">"before-holder-change"</link> signal.
+ */
 
 GType         gda_set_get_type                 (void) G_GNUC_CONST;
 GdaSet       *gda_set_new                      (GSList *holders);

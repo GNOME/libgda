@@ -144,7 +144,7 @@ typedef struct
 {
 	RowModif      *row_modif;    /* RowModif in which this structure instance appears */
 	gint           model_column; /* column index in the GdaDataModel */
-        GValue        *value;        /* can also be GDA_TYPE_LIST for multiple values; values are owned here */
+        GValue        *value;        /* values are owned here */
         GValue        *attributes;   /* holds flags of GdaValueAttribute */
 } RowValue;
 #define ROW_VALUE(x) ((RowValue *)(x))

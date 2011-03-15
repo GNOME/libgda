@@ -1,12 +1,12 @@
-/* GNOME DB library
+/*
  * Copyright (C) 1999 - 2009 The GNOME Foundation
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -177,7 +177,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	g_signal_connect (G_OBJECT (config->priv->wprovider), "changed",
 			  G_CALLBACK (field_changed_cb), config);
 	gtk_table_attach (GTK_TABLE (table), config->priv->wprovider, 1, 2, 2, 3,
-			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+			  GTK_FILL|GTK_EXPAND, 0, 0, 0);
 
 	label = gtk_label_new_with_mnemonic (_("_Description:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);

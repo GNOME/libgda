@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -55,6 +55,18 @@ struct _GdauiTreeStoreClass
 	gboolean           (*drag_drop)     (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data);
 	gboolean           (*drag_delete)   (GdauiTreeStore *store, const gchar *path);
 };
+
+/**
+ * SECTION:gdaui-tree-store
+ * @short_description: Bridge between a #GdaTree and a #GtkTreeModel
+ * @title: GdauiTreeStore
+ * @stability: Stable
+ * @Image:
+ * @see_also: #GdaTree
+ *
+ * The #GdauiTreeStore implements the #GtkTreeModel interface required
+ * to display data from a #GdaTree in a #GtkTreeView widget.
+ */
 
 GType           gdaui_tree_store_get_type             (void) G_GNUC_CONST;
 

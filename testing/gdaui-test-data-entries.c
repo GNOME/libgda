@@ -2,6 +2,9 @@
 #include <libgda-ui/libgda-ui.h>
 #include <libgda-ui/gdaui-plugin.h>
 #include <gtk/gtk.h>
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 typedef enum {
 	TESTED_BASIC,
@@ -104,8 +107,10 @@ main (int argc, char **argv)
 	GOptionContext *context;
 	GError *error = NULL;
 
+#ifdef HAVE_LOCALE_H
 	/* Initialize i18n support */
-	gtk_set_locale ();
+	setlocale (LC_ALL,"");
+#endif
 
 	/* command line parsing */
         context = g_option_context_new ("Gdaui entry widgets and cell renderers testing");
@@ -123,7 +128,7 @@ main (int argc, char **argv)
 	/* init main conf */
 	GType tested_gtypes [] = {G_TYPE_INT64, G_TYPE_UINT64, GDA_TYPE_BINARY, G_TYPE_BOOLEAN, GDA_TYPE_BLOB,
 				  G_TYPE_DATE, G_TYPE_DOUBLE,
-				  GDA_TYPE_GEOMETRIC_POINT, G_TYPE_OBJECT, G_TYPE_INT, GDA_TYPE_LIST, 
+				  GDA_TYPE_GEOMETRIC_POINT, G_TYPE_OBJECT, G_TYPE_INT, 
 				  GDA_TYPE_NUMERIC, G_TYPE_FLOAT, GDA_TYPE_SHORT, GDA_TYPE_USHORT, G_TYPE_STRING, 
 				  GDA_TYPE_TIME, GDA_TYPE_TIMESTAMP, G_TYPE_CHAR, G_TYPE_UCHAR, G_TYPE_UINT};
 	mainconf.test_type = TESTED_BASIC;
@@ -543,7 +548,7 @@ static GtkWidget *build_form_test_for_gtype (GdaDataHandler *dh, GType type, con
 static GtkWidget *build_grid_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_name);
 
 static void
-plugin_nb_page_changed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint pageno, 
+plugin_nb_page_changed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint pageno,
 			   G_GNUC_UNUSED GtkWidget *table)
 {
 	GtkWidget *vbox;

@@ -1,6 +1,5 @@
-/* gdaui-basic-form.h
- *
- * Copyright (C) 2002 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -57,9 +56,100 @@ struct _GdauiBasicFormClass
 	void       (*layout_changed) (GdauiBasicForm *form);
 };
 
-/* 
- * Generic widget's methods 
-*/
+/**
+ * SECTION:gdaui-basic-form
+ * @short_description: Form widget mapping the values contained in a #GdaSet
+ * @title: GdauiBasicForm
+ * @stability: Stable
+ * @Image: vi-basic-form.png
+ * @see_also:
+ *
+ * The #GdauiBasicForm widget is a form containing an entry for each #GdaHolder object
+ * contained in a #GdaSet (specified when the form is created). A typical usage is when the
+ * user is requested to enter a value which will be used in a statement (without any error checking for clarity):
+ * <programlisting>
+ * GdaStatement *stmt;
+ * GdaSet *params;
+ * stmt = gda_sql_parser_parse_string (parser, "SELECT * FROM customers where name LIKE ##name::string", NULL, NULL);
+ * gda_statement_get_parameters (stmt, &amp;params, NULL);
+ * 
+ * GtkWidget *form;
+ * gint result;
+ * form = gdaui_basic_form_new_in_dialog (params, NULL, "Customer search", "Enter Customer search expression");
+ * result = gtk_dialog_run (GTK_DIALOG (form));
+ * gtk_widget_destroy (form);
+ * if (result == GTK_RESPONSE_ACCEPT) {
+ *    // execute statement
+ *    GdaDataModel *model;
+ *    model = gda_connection_statement_execute_select (cnc, stmt, params, NULL);
+ *    [...]
+ * }
+ * g_object_unref (params);
+ * g_object_unref (stmt);
+ * </programlisting>
+ *
+ * The default layout within a #GdauiBasicForm is a vertical column: all the data entry widgets are aligned
+ * in a single column. This behaviour can be changed using the gdaui_basic_form_set_layout_from_file() method or
+ * setting the <link linkend="GdauiBasicForm--xml-layout">xml-layout</link> property.
+ * 
+ * <anchor id="GdauiBasicFormXMLLayout"/>
+ * The #GdauiBasicForm class parses textual descriptions of XML layout which
+ * which can be described by the following DTD. 
+ *
+ * <programlisting><![CDATA[
+ * <!ELEMENT gdaui_layouts (gdaui_form | gdaui_grid)>
+ * 
+ * <!ELEMENT gdaui_form (gdaui_section | gdaui_column | gdaui_notebook)*>
+ * <!ATTLIST gdaui_form
+ *          name CDATA #REQUIRED
+ * 	  container (columns|rows|hpaned|vpaned) #IMPLIED>
+ * 
+ * <!ELEMENT gdaui_section (gdaui_section | gdaui_column | gdaui_notebook)*>
+ * <!ATTLIST gdaui_section
+ *          title CDATA #IMPLIED >
+ * 
+ * <!ELEMENT gdaui_notebook (gdaui_section | gdaui_column | gdaui_notebook)*>
+ * 
+ * <!ELEMENT gdaui_column (gdaui_entry | gdaui_placeholder)*>
+ * 
+ * <!ELEMENT gdaui_entry EMPTY>
+ * <!ATTLIST gdaui_entry
+ *          name CDATA #REQUIRED
+ * 	  editable (true|false) #IMPLIED
+ * 	  label CDATA #IMPLIED
+ * 	  plugin CDATA #IMPLIED>
+ * 
+ * <!ELEMENT gdaui_placeholder EMPTY>
+ * <!ATTLIST gdaui_placeholder
+ * 	  id CDATA #REQUIRED
+ * 	  label CDATA #IMPLIED>
+ * ]]></programlisting>
+ *
+ * <example>
+ *  <title>A GdauiBasicForm layout example</title>
+ *  <programlisting><![CDATA[
+ * <?xml version="1.0" encoding="UTF-8"?>
+ * <gdaui_layouts>
+ *  <gdaui_form name="customers" container="hpaned">
+ *    <gdaui_section title="Summary">
+ *      <gdaui_column>
+ * 	<gdaui_entry name="id" editable="no"/>
+ * 	<gdaui_entry name="name"/>
+ * 	<gdaui_entry name="comments" plugin="text"/>
+ * 	<gdaui_entry name="total_orders" label="Total ordered" plugin="number:NB_DECIMALS=2;CURRENCY=€"/>
+ *      </gdaui_column>
+ *    </gdaui_section>
+ *    <gdaui_section title="Photo">
+ *      <gdaui_column>
+ * 	<gdaui_entry name="photo" plugin="picture"/>
+ *      </gdaui_column>
+ *    </gdaui_section>
+ *  </gdaui_form>
+ * </gdaui_layouts>
+ * ]]></programlisting>
+ * </example>
+ */
+
 GType             gdaui_basic_form_get_type                 (void) G_GNUC_CONST;
 GtkWidget        *gdaui_basic_form_new                      (GdaSet *data_set);
 GtkWidget        *gdaui_basic_form_new_in_dialog            (GdaSet *data_set, GtkWindow *parent,

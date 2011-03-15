@@ -921,7 +921,6 @@ gda_firebird_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
 	if ((type == G_TYPE_DATE) || 
 	    (type == GDA_TYPE_GEOMETRIC_POINT) ||
 	    (type == G_TYPE_OBJECT) ||
-	    (type == GDA_TYPE_LIST) ||
 	    (type == G_TYPE_STRING) ||
 	    (type == GDA_TYPE_TIME) ||
 	    (type == GDA_TYPE_TIMESTAMP) ||

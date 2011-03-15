@@ -1,6 +1,5 @@
-/* gdaui-form.h
- *
- * Copyright (C) 2002 - 2006 Vivien Malerba
+/*
+ * Copyright (C) 2002 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -50,9 +49,15 @@ struct _GdauiFormClass
 	GtkVBoxClass       parent_class;
 };
 
-/* 
- * Generic widget's methods 
+/**
+ * SECTION:gdaui-form
+ * @short_description: Form widget to manipulate data in a #GdaDataModel, with decorations
+ * @title: GdauiForm
+ * @stability: Stable
+ * @Image:
+ * @see_also: The #GdauiRawForm widget which is used by the #GdaForm widget.
  */
+
 GType             gdaui_form_get_type            (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_form_new                 (GdaDataModel *model);

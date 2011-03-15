@@ -56,10 +56,10 @@ libgda_capi_la_SOURCES = \
 
 libgda_capi_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_capi_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) #$(CAPI_LIBS)
 
-xmldir   = $(datadir)/libgda-4.0
+xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \
 	capi_specs_dsn.xml.in \
 	capi_specs_create_table.xml.in 
@@ -70,10 +70,10 @@ xml_in_files = \
 noinst_DATA = $(xml_in_files:.xml.in=.xml)
 
 pkgconfigdir = $(libdir)/pkgconfig
-#pkgconfig_DATA = libgda-capi-4.0.pc
-noinst_DATA += libgda-capi-4.0.pc
+#pkgconfig_DATA = libgda-capi-5.0.pc
+noinst_DATA += libgda-capi-5.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-capi-4.0.pc.in parser.y gen_def.c $(keyword_files)
+EXTRA_DIST = $(xml_in_files) libgda-capi-5.0.pc.in parser.y gen_def.c $(keyword_files)
 DISTCLEANFILES = $(noinst_DATA)
 
 CLEANFILES = parser.h parser.c parser.out capi_token_types.h gen_def$(EXEEXT_FOR_BUILD) \

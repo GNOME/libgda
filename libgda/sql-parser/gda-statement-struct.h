@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -27,12 +27,22 @@
 
 G_BEGIN_DECLS
 
+/**
+ * GdaSqlStatement:
+ * @sql: 
+ * @stmt_type: type of statement 
+ * @contents: contents, cast it depending on @stmt_type (for example to a #GdaSqlStatementSelect).
+ * @validity_meta_struct:
+ *
+ * This structure is the top level structure encapsulating several type of statements.
+ */
 struct _GdaSqlStatement {
 	gchar               *sql;
 	GdaSqlStatementType  stmt_type;
 	gpointer             contents; /* depends on stmt_type */
 	GdaMetaStruct       *validity_meta_struct; /* set when gda_sql_statement_check_validity() was last called */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

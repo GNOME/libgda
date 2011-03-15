@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -27,7 +27,6 @@
 #define __LIBGDA_H__
 
 #include <libgda/gda-attributes-manager.h>
-#include <libgda/gda-easy.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection-event.h>
@@ -87,6 +86,14 @@
 #include <libgda/gda-mutex.h>
 
 G_BEGIN_DECLS
+
+/**
+ * SECTION:libgda
+ * @short_description: Library initialization and information
+ * @title: Library initialization
+ * @stability: Stable
+ * @see_also:
+ */
 
 void gda_init (void);
 void gda_locale_changed (void);

@@ -114,14 +114,14 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 		GdaServerOperation *op;
 
 		db_quark_list = gda_quark_list_new_from_string (db_params);
-		op = gda_server_operation_prepare_drop_database (prov_info->id, dbname, NULL);
+		op = gda_server_operation_prepare_create_database (prov_info->id, dbname, NULL);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
 		gda_server_operation_perform_drop_database (op, NULL, NULL);
 		g_object_unref (op);
 
 		op = gda_server_operation_prepare_create_database (prov_info->id, dbname, NULL);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		if (!gda_perform_create_database (NULL, op, error)) 
+		if (!gda_server_operation_perform_create_database (op, NULL, error)) 
 			goto out;
 		db_created = TRUE;
 	}

@@ -1,0 +1,1712 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY copy           "The GNOME Foundation">
+<!ENTITY version SYSTEM "version.xml">
+<!ENTITY builddate SYSTEM "builddate.xml">
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+<!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
+<!ENTITY xobas           '<emphasis><ulink url="http://www.xobas.com">Xobas Software</ulink></emphasis>'>
+<!ENTITY API             "<acronym>API</acronym>">
+<!ENTITY ODBC            "<acronym>ODBC</acronym>">
+<!ENTITY GDA             "<acronym>GDA</acronym>">
+<!ENTITY LDAP            "<acronym>LDAP</acronym>">
+<!ENTITY SQL             "<acronym>SQL</acronym>">
+<!ENTITY gda-list-server-op "<command>gda-list-server-op-5.0</command>">
+<!ENTITY gda-list-config "<command>gda-list-config-5.0</command>">
+<!ENTITY gda-sql         "<command>gda-sql</command>">
+<!ENTITY gda-test-connection "<command>gda-test-connection-5.0</command>">
+]>
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+    <title>GNOME Data Access 5 manual</title>
+    <releaseinfo>for version &version;</releaseinfo>
+    <authorgroup>
+      <author>
+        <firstname>Michael</firstname>
+        <surname>Lausch</surname>
+        <affiliation>
+          <address><email>michael.lausch@1012surf.net</email></address>
+        </affiliation>
+      </author>
+      <author>
+        <firstname>Rodrigo</firstname>
+        <surname>Moya</surname>
+        <affiliation>
+          <address><email>rodrigo@gnome-db.org</email></address>
+        </affiliation>
+      </author>
+      <author role="clean up">
+	<firstname>Sean</firstname>
+	<surname>Allen</surname>
+	<affiliation>
+	  <address><email>zeroone@worldonline.co.za</email></address>
+	</affiliation>
+	<contrib>GDP compliance, FDL, added mark-up, English and syntax
+        </contrib>
+      </author>
+      <author>
+	<firstname>Xabier</firstname>
+	<surname>Rodriguez Calvar</surname>
+	<affiliation>
+          <orgname>&igalia;</orgname>
+	  <address><email>xrcalvar@igalia.com</email></address>
+	</affiliation>
+	<contrib>How to begin and migration formulae
+        </contrib>
+      </author>
+      <author>
+	<firstname>Jose</firstname>
+	<surname>Dapena Paz</surname>
+	<affiliation>
+          <orgname>&igalia;</orgname>
+	  <address><email>jdapena@igalia.com</email></address>
+	</affiliation>
+	<contrib>Some examples
+        </contrib>
+      </author>
+      <author>
+        <firstname>Bas</firstname>
+        <surname>Driessen</surname>
+        <affiliation>
+          <orgname>&xobas;</orgname>
+          <address><email>bas.driessen@xobas.com</email></address>
+        </affiliation>
+	<contrib>libgda, gda-postgres, gda-mysql
+        </contrib>
+      </author>
+      <author>
+        <firstname>Daniel</firstname>
+        <surname>Espinosa Ortiz</surname>
+        <affiliation>
+          <orgname></orgname>
+          <address><email>esodan@gmail.com</email></address>
+        </affiliation>
+	<contrib>libgda, gda-postgres, gda-mysql
+        </contrib>
+      </author>
+      <author>
+        <firstname>Vivien</firstname>
+        <surname>Malerba</surname>
+        <affiliation>
+          <address><email>malerba@gnome-db.org</email></address>
+        </affiliation>
+	<contrib>Current maintainer
+        </contrib>
+      </author>
+    </authorgroup>
+    <date>&builddate;</date>
+    <copyright>
+      <year>1999 - 2011</year>
+      <holder>&copy;</holder>
+    </copyright>
+    <abstract>
+      <para>
+        GNOME Data Access (&GDA;) is an architecture whose 
+        purpose is to provide universal access to many different kinds and
+        types of data sources. This goes from traditional relational database
+        systems, to any imaginable kind of data source such as a mail server,
+        a &LDAP; directory...
+      </para>
+      <para>
+        This universality is obtained through the use of
+        an easily extensible plug-in system as the mechanism for
+	communication between the different components in the architecture.
+      </para>
+    </abstract>
+    <legalnotice id="legalnotice">
+      <para>
+        Permission is granted to copy, distribute and/or modify this document
+        under the terms of the <link linkend="fdl"><citetitle>GNU
+        Free Documentation License</citetitle></link>, Version 1.1 or any later
+        version published by the Free Software Foundation with no Invariant
+        Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the
+        license can be found in <link linkend="fdl">the appendix</link>.
+      </para>
+      <para>
+        Many of the names used by companies to distinguish their products and
+        services are claimed as trademarks. Where those names appear in any
+        GNOME documentation, and those trademarks are made aware to the members
+        of the GNOME Documentation Project, the names have been printed in caps
+        or initial caps.
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <part id="part_begin">
+    <title>Getting started</title>
+    <chapter id="introduction">
+      <title>Introduction</title>
+      <para>
+	&ODBC; and &SQL; are established standards. The problem is, that &ODBC;
+	doesn't specify the wire protocol and for some databases no &ODBC; driver
+	exists. You might use <acronym>RPC</acronym>, <acronym>TCP/IP</acronym>,
+	or shared memory and signals to pass the request from the client to the
+	server. So you have to use the database specific &ODBC; library. This 
+	library might not be available for the <acronym>CPU</acronym> or 
+	operating system on which the client is running. 
+      </para>
+      <para>
+	&SQL; itself is also not standardized enough, so that source
+	compatibility can not be assured for all database servers. And for some
+	sort of servers, &SQL; is not even feasible (think about &LDAP;).
+      </para>
+      <para>
+	&GDA; (GNOME Data Access) tries to tackle the &ODBC; problem and help you with the &SQL;
+	problem. It's a sort of middleware (or can be blown up to be a middleware
+	layer) to access different data sources. It offers a high level view of
+	data sources and has some places where you can plug in low level access
+	to the database for special tasks.
+      </para>
+      <para>
+	It offers a wrapper around the database internals, thus making it easier
+	for programmers to make use of all the power provided by many RDBMS without
+	even knowing about it. It comes along with a library, for both
+	clients and servers, as a C implementation of this architecture. This level of
+	abstraction would make possible to, at a later time, change all the
+	internals without having to modify applications using the libraries.
+      </para>
+      <para>
+	Along with these libraries (and associated header files and language 
+	bindings for development), &LIBGDA; includes several tools and utilities
+	to help you with the task of developing applications based on &LIBGDA;,
+	as well as for automating some database-related tasks.
+      </para>
+      <para>
+	&LIBGDA; is implemented for <systemitem class="osname">UNIX
+	</systemitem>-like operating systems (including <systemitem 
+							   class="osname">Linux</systemitem>), and does not depend on other 
+	libraries apart from  <systemitem class="resource">libxml2</systemitem> and 
+	<systemitem class="resource">Glib</systemitem>, which makes it a very
+	lightweight system also ideal for applications to be run on 
+	hardware-limited systems.
+      </para>
+    </chapter>
+
+    <chapter id="features">
+      <title>Features</title>
+      <para>
+	This section presents the main features of the 5.0 version of Libgda.
+      </para>
+      <para>
+	Libgda is a low-level database abstraction layer built on top of each database C API. In terms of abstraction, 
+	Libgda offers the following top features:
+	<itemizedlist>
+          <listitem>
+            <para>Open a connection to any database which type is supported using either a defined data source (defined per
+	      user or system wide) or directly providing connection parameters. Several connections can be opened at the
+	      same time.</para>
+          </listitem>
+          <listitem>
+            <para>Run any SQL query against an opened connection; furthermore any SQL query can be extended to define query parameters
+	      using an easy to understand notation. If the SQL query was a SELECT statement, then an array of data is
+	      returned (as a <classname>GdaDataModel</classname> object), and otherwise the number of rows affected
+	      by the query is returned. For very large data sets, it is possible to specify that the returned array
+	      of data should be based on a cursor to avoid loading it into memory .</para>
+          </listitem>
+          <listitem>
+            <para>Perform most of the data definition queries (including database creation) for the database types which support
+	      it using a key/value mechanism.</para>
+          </listitem>
+          <listitem>
+            <para>Create, maintain and extend a view of the database's structure and meta data including the definitions of
+	      the tables, constraints, data types, .... It is defined as closely as possible to the information schema SQL
+	    standard (ISO/IEC 9075); see the <link linkend="gda-dict">Dictionary - metadata</link> section 
+	      for more information.</para>
+          </listitem>
+          <listitem>
+            <para>Easy to extend data models for custom requirements</para>
+          </listitem>
+          <listitem>
+            <para>Support for binary data and for BLOBs in a transparent way, see the <link linkend="libgda-Gda-Value">Gda value section</link></para>
+          </listitem>
+          <listitem>
+            <para>Support for detailed parameters in SQL queries, see the <link linkend="GdaSqlParser">GdaSqlParser</link> object</para>
+          </listitem>
+	  <listitem>
+            <para>Support for virtual connections, see the <link linkend="virtual_connection">Virtual connections chapter</link></para>
+          </listitem>
+	  <listitem>
+            <para>Partially thread-safe, see <link linkend="threads">the threads limitation</link> for
+	      more details</para>
+          </listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	The database types which can be accessed at the time of writing are the following ones:
+	<itemizedlist>
+          <listitem>
+            <para>Access (.MDB files): uses the <ulink url="http://mdbtools.sourceforge.net/">MDB Tools</ulink> library
+	      to access the .MDB files, and is limited to getting information about tables and running very simple SELECT
+	      queries;</para>
+          </listitem>
+          <listitem>
+            <para>Firebird: compiles, needs testing;</para>
+          </listitem>
+          <listitem>
+            <para>MySQL: fully functional;</para>
+          </listitem>
+          <listitem>
+            <para>Oracle: work is progress, usable;</para>
+          </listitem>
+          <listitem>
+            <para>PostgreSQL: fully functional;</para>
+          </listitem>
+          <listitem>
+            <para>SQLite: fully functional;</para>
+          </listitem>
+          <listitem>
+            <para>Oracle Berkeley DB: fully functional;</para>
+          </listitem>
+          <listitem>
+            <para>Oracle Berkeley DB with SQL: fully functional;</para>
+          </listitem>
+          <listitem>
+            <para>SQLCipher: fully functional;</para>
+          </listitem>
+	</itemizedlist>
+      </para>
+    </chapter>
+    
+    <chapter id="architecture">
+      <title>Architecture</title>
+      <para>
+	&LIBGDA; is composed of three independent layers. The lower level is
+	covered by the &GDA; providers, which are plug-ins whose task is
+	to map the <acronym>RDBMS</acronym>-specific &API; to the &GDA; model.
+	That is, they are objects implementing the &GDA; interfaces.
+      </para>
+      <para>
+	Then, in a middle layer, are the client libraries: an easy-to-use and
+	full featured library which offers access to all the architecture,
+	also including several utility functions to help you on the development
+	of applications based on &GDA;. This library, although targeted to client
+	applications, also includes a set of helper classes and functions to help
+	in the addition of new providers to the &LIBGDA; architecture.
+      </para>
+      <para>
+	Finally, at the upper level sit all the client applications provided in
+	the suite, as well as any application that may make use of the client
+	libraries.
+      </para>
+      <mediaobject>
+	<imageobject role="html">
+          <imagedata fileref="architecture.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+          <phrase>Typical &LIBGDA; application's architecture</phrase>
+	</textobject>
+	<caption>
+          <para>
+	    Architecture of an application connected to 4 databases of 3 different types.
+          </para>
+	</caption>
+      </mediaobject>
+    </chapter>
+
+    <xi:include href="installation.xml"/>
+    <xi:include href="gettingstarted.xml"/>
+    <xi:include href="migration.xml"/>
+    <xi:include href="migration2.xml"/>
+    <xi:include href="prov-notes.xml"/>
+    <xi:include href="limitations.xml"/>
+  </part>  
+  <part id="part_libgda_api">
+    <title>API reference</title>
+    <para>
+      The following sections describe the API available for &GDA; applications.
+    </para>
+    <chapter>
+      <title>Foreword about abstraction</title>
+      <para>
+	&LIBGDA; aims both at making it easier to use databases and, for applications written using it, 
+	at making it easier to switch to a different database or to to be able to use different types of databases
+	with a minimum or no code modifications. To achieve the 2nd goal, &LIBGDA; proposes an abstraction of
+	most of database's engine features, which has to be understood to write portable code.
+      </para>
+
+      <sect1 id="gen:sql_identifiers">
+	<title>SQL identifiers</title>
+	<para>
+	  The SQL standard has never defined if SQL identifiers (database object's names) have to be case sensitive
+	  or not, leaving that
+	  subject to each database engine implementation. All of them accept two syntaxes for SQL identifiers:
+	  <itemizedlist>
+	    <listitem><para>the first is if the SQL identifier is surrounded by double quotes (sometimes backquotes
+		or other characters), usually making the SQL identifier case sensitive (and also making
+		it possible to use reserved SQL keywords as identifiers).</para></listitem>
+	    <listitem><para>the second is if it's not enquoted, usually meaning that the SQL identifier is not
+		case sensitive.</para></listitem>
+	  </itemizedlist>
+	  <note>
+	    <para>Sometimes those rules don't apply or apply only partially. For example a MySQL server, depending
+	      on how it is configured and on what kind of OS it is running on, will have different sets of meanings
+	      for these notations.
+	    </para>
+	  </note>
+	</para>
+
+	<para>
+	  As a result, &LIBGDA; has to be the least intrusive possible when the user wants to execute an SQL statement,
+	  and lets the database being accessed apply its own rules. However &LIBGDA; features meta data information
+	  retrieval (getting the list of tables, views,...) and there some representation conventions have been fixed,
+	  see the <link linkend="information_schema:sql_identifiers">meta data section about SQL identifiers</link>
+	  for more information.
+	</para>
+
+	<para>
+	  The following diagram illustrates how &LIBGDA; handles SQL identifiers' representations depending where
+	  they are used:
+	  <mediaobject>
+	    <imageobject role="html">
+	      <imagedata fileref="SqlIdentifiers.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>Diagram illustrating how &LIBGDA; handles SQL identifiers' representations</phrase>
+	    </textobject>
+	  </mediaobject>
+	</para>
+      </sect1>
+
+      <sect1 id="gen_blobs">
+	<title>Binary large objects (BLOBs)</title>
+	<para>
+	  Binary large objects (BLOBs) are potentially very big (several GigaBytes) pieces of binary
+	  data which databases can store. Because of their potential size, they are not manipulated
+	  like any other data, and are usually not transfered to the database engine at the same time
+	  as the SQL text is transfered: first
+	  a reference to a blob is created for an existing or a new blob, and then
+	  that reference is used, <emphasis>before or after the statement is being executed,
+	    depending on the database engine accessed</emphasis>, to get or set some parts of the blob.
+	</para>
+	<para>
+	  &LIBGDA; makes its best to hide the complexity of this and most of the time blobs can be used
+	  like any other type of values with the following limitations:
+	  <itemizedlist>
+	    <listitem><para>When getting a blob through a SELECT statement, a transaction will automatically
+		be started if it's not already started, and usually the transaction (implicitly or explicitly)
+		will be locked untill all the ressources associated to the fetched blobs are liberated (by
+		calling <link linkend="g-object-unref">g_object_unref()</link> on the model).</para></listitem>
+	    <listitem><para>When fetching a blob value (using
+		<link linkend="gda-data-model-get-value-at()">gda_data_model_get_value_at()</link> for example), the blob
+		itself is not fetched, only a reference to the blob is fetched, and one has to use the
+		<link linkend="GdaBlobOp">GdaBlobOp</link> object embedded in a blob value to get the blob's
+		contents.</para></listitem>
+	  </itemizedlist>
+	</para>
+	<para>
+	  Please consult each database provider's <link linkend="provider-notes">notes</link> and
+	  <link linkend="limitations">limitations</link> for database specific rules
+	  regarding BLOBs. Also have a look at the
+	  <link linkend="blobs_example">Blobs manipulation source code example</link>.
+	</para>
+      </sect1>
+
+    </chapter>
+
+    <xi:include href="howto.xml"/>
+    <chapter>
+      <title>Object Hierarchy</title>
+      <xi:include href="xml/tree_index.sgml"/>
+    </chapter>
+
+    <chapter id="init_config">
+      <title>Initialization and configuration</title>
+      <para>Configuration examples are given in <link linkend="installation-configuring">this introduction section</link></para>
+      <xi:include href="xml/libgda.xml"/>
+      <xi:include href="xml/gda-config.xml"/>
+      <sect1 id="libgda_env_variables">
+	<title>Configuring &LIBGDA; with environment variables</title>
+	<para>Some functional aspects of &LIBGDA; can be configured using environment variables which are
+	  listed here:
+	  <itemizedlist>
+	    <listitem>
+              <para>GDA_CONNECTION_EVENTS_SHOW: if set, then lists the type of events which must be displayed on STDOUT
+		(event types are NOTICE, COMMAND, WARNING, ERROR, the variable can contain a list of types separated by
+		colons, commas or spaces)</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_PROVIDERS_ROOT_DIR: if set, must point to the directory where the providers files are (providers
+	      files are shared libraries)</para>
+	    </listitem>
+	    <listitem>
+              <para>LIBGDA_NO_THREADS: if set, then multi threading will be disabled (see the 
+		<link linkend="threads">section about multi threading</link> for more information about
+		&LIBGDA; threads' support).</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_SHOW_PROVIDER_LOADING_ERROR: if set, then in case a provider fails to be loaded (usually because
+		it requires a library which can't be found) &LIBGDA; will display a warning message. This variable
+		is useful to debug the absence of a provider at runtime</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_DUMP_TITLE: if set, then <link linkend="gda-data-model-dump">gda_data_model_dump()</link>
+	      will also output the name of the data model as its first line</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, then 
+		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will prepend a column containing row
+		numbers</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_NULL_AS_EMPTY: if set, then 
+		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will show an empty ("") string
+		for NULL values, instead of the "NULL" string</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_DUMP_TRUNCATE: if set to a numeric value, then 
+		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will truncates the output to the width specified by the value. If the value is -1 then the actual terminal size (if it can be determined) is used</para>
+	    </listitem>
+	    <listitem>
+              <para>GDA_DATA_MODEL_DUMP_ATTRIBUTES: if set, then 
+		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will also include a description of
+	      the data model's attributes</para>
+	    </listitem>
+	  <listitem>
+              <para>GDA_CONFIG_SYNCHRONOUS: if set, and if the Gnome Keyring is used to store DSN authentification information,
+		then the requests to the Gnome Keyring will be made synchronously. This is usefull if Libgda is used in a program where
+		there is no main loop (otherwise no authentification will be fetched).</para>
+            </listitem>
+	  </itemizedlist>
+	</para>
+      </sect1>
+    </chapter>
+
+    <chapter id="connection">
+      <title>Connections &amp; commands</title>
+      <para>
+	The &LIBGDA; library allows several connections to databases to be opened at once.
+	Once a connection (manipulated through the <link linkend="GdaConnection">GdaConnection</link> object)
+	has been created and is opened, it is able to proceed <link linkend="GdaStatement">GdaStatement</link> statements.
+      </para>
+      <para>
+	Each <link linkend="GdaStatement">GdaStatement</link> can only hold one SQL statement (such as SELECT, INSERT,
+	CREATE TABLE, BEGIN, etc); statements can be grouped together into  <link linkend="GdaBatch">GdaBatch</link> batches
+	objects. There are two ways for creating a <link linkend="GdaStatement">GdaStatement</link> object:
+	<itemizedlist>
+	   <listitem>
+	     <para>
+	       either by passing an SQL string to a parser (a <link linkend="GdaSqlParser">GdaSqlParser</link>).
+	     </para>
+	     <para>
+	       &LIBGDA; unifies the way variables (also known as "placeholders") are defined (because each database type
+	       has its own syntax for doing so); consult the <link linkend="GdaSqlParser">GdaSqlParser</link> object's
+	       documentation for a description of this syntax.
+	     </para>
+	   </listitem>
+	   <listitem><para>by building it from its structure: see the 
+	       <link linkend="GdaSqlStatement">GdaSqlStatement</link> for reference.
+	       However keep in mind that this API is meant to be used primarily by database
+	       provider's implementations and for &LIBGDA;'s internal usage. A more user friendly
+	       API will be added in the future.
+	   </para></listitem>
+	</itemizedlist>
+
+      <para>
+	The following schema illustrates how a statement is created and executed:
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="GdaStatement.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Statement execution illustrated</phrase>
+	  </textobject>
+	</mediaobject>
+      </para>
+
+      </para>
+      <para>
+	As each database implements its own SQL variant (all variants more or less close to the SQL92 or SQL99 standards), the
+	&LIBGDA; library allows one to use either a generic SQL parser, or a parser provided by each database adapter (database
+	provider), through the <link linkend="gda-connection-create-parser">gda_connection_create_parser()</link> method.
+      </para>
+      <para>
+	The following schema illustrates how a statement is executed:
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="howto-exec.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Statement execution illustrated</phrase>
+	  </textobject>
+	</mediaobject>
+      </para>
+      <xi:include href="xml/gda-connection.xml"/>
+      <xi:include href="xml/gda-sql-parser.xml"/>
+      <xi:include href="xml/gda-sql-builder.xml"/>
+      <xi:include href="xml/gda-statement.xml"/>
+      <xi:include href="xml/gda-repetitive-statement.xml"/>
+      <xi:include href="xml/gda-batch.xml"/>
+      <xi:include href="xml/gda-holder.xml"/>
+      <xi:include href="xml/gda-set.xml"/>
+      <xi:include href="xml/gda-connection-event.xml"/>
+      <xi:include href="xml/gda-transaction-status.xml"/>
+      <xi:include href="xml/gda-xa-transaction.xml"/>
+      <xi:include href="store-meta-type.xml"/>
+    </chapter>
+
+    <chapter id="virtual_connection">
+      <title>Virtual connections</title>
+      <xi:include href="virtual.xml"/>
+      <xi:include href="xml/gda-virtual-provider.xml"/>
+      <xi:include href="xml/gda-vprovider-data-model.xml"/>
+      <xi:include href="xml/gda-vprovider-hub.xml"/>
+      <xi:include href="xml/gda-virtual-connection.xml"/>
+      <xi:include href="xml/gda-vconnection-data-model.xml"/>
+      <xi:include href="xml/gda-vconnection-hub.xml"/>
+    </chapter>
+
+    <chapter id="data_models">
+      <title>Data handling</title>
+      <para>
+	&LIBGDA; being a data oriented library, data handling is a central point of the library:
+	<itemizedlist>
+	  <listitem>
+            <para>individual values are encapsulated within a <link linkend="GValue">GValue</link> 
+	      container (from GLIB)</para>
+	  </listitem>
+	  <listitem>
+            <para>value holders which are each a specification for a value: a type, a name, a description,
+	      a default value, etc. Value holders are encapsulated within a 
+	      <link linkend="GdaHolder">GdaHolder</link> container object.</para>
+	    <para>
+	      Note that it is possible to set a hint to make a value holder have its value constrained
+	      by the values contained in a column of a <link linkend="GdaDataModel">GdaDataModel</link>.
+	    </para>
+	  </listitem>
+	  <listitem>
+            <para>lists of value holders which are encapsulated within a 
+	      <link linkend="GdaSet">GdaSet</link> container object.</para>
+	    <para>
+	      The GdaSet object also makes some computations to group value holders which are
+	      constrained by values in the same GdaDataModel (it makes it easy to use value holders
+	      which are not really independent).
+	    </para>
+	  </listitem>
+	  <listitem>
+            <para>arrays of values organized in rows and columns. All the data in the same 
+	      column have the same type, and all the data in each row have the same semantic meaning. 
+	      &LIBGDA; uses the <link linkend="GdaDataModel">GdaDataModel</link> 
+	      objects to actually hold the data (note that this is actually an interface which has 
+	      several implementations depending on the real data organization in the data model).</para>
+	    <para>Note that depending on the real implementation, access to the data can be random or
+	    done using an iterator, and that the data model can be read-only or modifiable.</para>
+	  </listitem>
+	  <listitem>
+            <para>The <link linkend="GdaDataModelIter">GdaDataModelIter</link> object is used to 
+	      iterate through the rows of a <link linkend="GdaDataModel">GdaDataModel</link>.</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+      <xi:include href="xml/gda-value.xml"/>
+      <xi:include href="data_validation.xml"/>
+      <xi:include href="data_select.xml"/>
+      <xi:include href="xml/gda-blob-op.xml"/>
+      <xi:include href="xml/gda-data-model.xml"/>
+      <xi:include href="xml/gda-data-select.xml"/>
+      <xi:include href="xml/gda-column.xml"/>
+      <xi:include href="xml/gda-data-model-iter.xml"/>
+      <xi:include href="xml/gda-data-model-import.xml"/>
+      <xi:include href="xml/gda-data-access-wrapper.xml"/>
+      <xi:include href="xml/gda-data-model-array.xml"/>
+      <xi:include href="xml/gda-row.xml"/>
+      <xi:include href="xml/gda-data-model-bdb.xml"/>
+      <xi:include href="xml/gda-data-model-dir.xml"/>
+      <xi:include href="xml/gda-data-proxy.xml"/>
+      <xi:include href="xml/gda-data-comparator.xml"/>
+    </chapter>
+
+    <chapter id="trees">
+      <title>Trees</title>
+      <para>
+	&LIBGDA; supports data organized hierarchically in a tree. The specific aspect of this object is that
+	one does not actually create nodes in it directly, but rather specifies the tree structure (ie. what
+	top level nodes represent, whan their children represent, ...) using 
+	<link linkend="GdaTreeManager">GdaTreeManager</link> objects: any node in the tree
+	is managed by one and only one such object. This approach makes it very easy to produce trees organized
+	around repetitive data coming from a database. So again, one does not create or remove nodes in a tree,
+	but asks that the tree be specifically updated, in part or starting from a specific node (note that
+	nodes can also be added and removed on events depending on each GdaTreeManager object).
+      </para>
+      <para>
+	A tree is represented by a
+	unique <link linkend="GdaTree">GdaTree</link> object,
+	in which each node is represented by a <link linkend="GdaTreeNode">GdaTreeNode</link> object. As mentioned previously, any
+	<link linkend="GdaTreeNode">GdaTreeNode</link> in a <link linkend="GdaTree">GdaTree</link> is created (and destroyed)
+	by a <link linkend="GdaTreeManager">GdaTreeManager</link> object: the nodes hierarchy itself is
+	represented by a hierarchy of <link linkend="GdaTreeManager">GdaTreeManager</link> objects
+	(with the one(s) managing the nodes immediately under the tree root attached to the <link linkend="GdaTree">GdaTree</link>
+	itself and the others attached to the <link linkend="GdaTreeManager">GdaTreeManager</link> which act as their parent).
+      </para>
+
+      <para>
+	When populating a tree (or updating a part of it), a <link linkend="GdaTreeManager">GdaTreeManager</link> 
+	is requested to create (or update) nodes
+	below a parent node. For any node it creates (or updates), and for any sub tree managers it has, it
+	requests those sub managers to populate (or update) the sub nodes of that node; this is a recursive process. Note that
+	the tree manager itself does not store any information about the nodes it has created (this information is stored in
+	the <link linkend="GdaTreeNode">GdaTreeNode</link> themselves): it is stateless
+	(much in the same way as the <link linkend="GtkCellRenderer">GtkCellRenderer</link> objects are stateless in a
+	<link linkend="GtkTreeView">GtkTreeView</link> widget).
+      </para>
+
+      <para>
+	The following figure illustrates a simple tree:
+	<mediaobject>
+          <imageobject role="html">
+            <imagedata fileref="tree-overview.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Overview of the GdaTree</phrase>
+          </textobject>
+	</mediaobject>
+	The tree has 3 top level nodes (labelled "Node 0", "Node 1" and "Node 2" in the schema), which have been created
+	by the GdaTreeManager labelled "GdaTreeManager 0". These top level nodes have sub 
+	nodes (two for the "Node 0" and "Node 1", and none for "Node 2") which have been created by
+	the GdaTreeManager labelled "GdaTreeManager 1"
+      </para>
+      <para>
+	The following figure illustrates a mode complicated tree which, when dumped is (truncated here for readability):
+	<programlisting>
+.
+|-- information_schema
+|   |-- sql_features
+|   |   |-- feature_name
+|   |   `-- feature_id
+|   `-- sql_parts
+|       |-- comments
+|       `-- feature_id
+|-- public
+|   |-- customers
+|   |   |-- name
+|   |   `-- id
+|   `-- products
+|       |-- name
+|       `-- ref
+|-- customers
+|   |-- name
+|   `-- id
+`-- products
+    |-- name
+    `-- ref
+	</programlisting>
+	<mediaobject>
+          <imageobject role="html">
+            <imagedata fileref="tree-overview2.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Overview of the GdaTree</phrase>
+          </textobject>
+	</mediaobject>
+	The tree has 4 top level nodes ("information_schema", "public" which in fact represent schemas in a PostgreSQL database
+	and "customers" and "products" which are the tables in the "public" schema). Two GdaTreeManager objects are
+	associated to the GdaTree object: the <link linkend="GdaTreeMgrSchemas">GdaTreeMgrSchemas</link> manager (which
+	creates nodes for each schema in a database) and the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link>
+	manager (which creates nodes for each table in a schema, or, if no schema is specified creates nodes for
+	each table visible by default).
+	Here the <link linkend="GdaTreeMgrSchemas">GdaTreeMgrSchemas</link> manager created the "information_schema" and "public"
+	top level nodes and the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link> manager created the
+	"customers" and "products" top level nodes.
+      </para>
+      <para>
+	The topmost GdaTreeMgrSchemas tree manager object has a child tree manager which is also a GdaTreeManagerTables
+	(and which here is the same object as the GdaTreeManagerTables object which created two of the top level nodes
+	to avoid the unnecessary complication of creating too many tree manager objects). This GdaTreeManagerTables object
+	created the "sql_features", "sql_parts" nodes below the "information_schema" node and the "customers" and
+	"products" nodes below the "public" node.
+      </para>
+      <para>
+	As the GdaTreeManagerTables object also has a child tree manager, the 
+	<link linkend="GdaTreeMgrColumns">GdaTreeMgrColumns</link> manager, some nodes are created below the "customers"
+	nodes and below the "products" nodes (some of these nodes are not represented in the figure above for
+	clarity).
+      </para>
+      <para>
+	As illustrated on the figure above, tree nodes can be assigned named attributes as <link linkend="GValue">GValue</link>
+	values. For instance the <link linkend="GdaTreeMgrSchemas">GdaTreeMgrSchemas</link> manager sets the "schema" attribute
+	to the nodes it creates, the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link> manager sets the "table_name"
+	attribute (and the "schema" attribute if the node has been created as a table which is visible by default) and
+	the <link linkend="GdaTreeMgrColumns">GdaTreeMgrColumns</link> manager sets the "column_name" attribute to the nodes
+	it creates.
+      </para>
+      <para>
+	Node attributes can be read and changed at will by the programmer, and are used extensively by the
+	tree manager objects themselves to determine the nodes they nees to create as children of a given node. For example
+	the <link linkend="GdaTreeMgrTables">GdaTreeMgrTables</link> manager, uses
+	<link linkend="gda-tree-node-fetch-attribute">gda_tree_node_fetch_attribute()</link> to get the
+	"schema" attribute from the node below which it has to create children nodes. If the attribute exists, it
+	then creates a node for each table in the mentioned schema, and otherwise creates a node for each table
+	visible by default.
+      </para>
+      <para>
+	The code to set up this tree would be the following one:
+	<programlisting>
+GdaConnection *cnc = ...
+GdaTree *tree;
+GdaTreeManager *schemas_mgr, *tables_mgr, *columns_mgr;
+
+tree = gda_tree_new ();
+
+schemas_mgr = gda_tree_mgr_schemas_new (cnc);
+tables_mgr = gda_tree_mgr_tables_new (cnc, NULL);
+columns_mgr = gda_tree_mgr_columns_new (cnc, NULL, NULL);
+
+gda_tree_manager_add_manager (schemas_mgr, tables_mgr);
+gda_tree_manager_add_manager (tables_mgr, columns_mgr);
+
+gda_tree_add_manager (tree, schemas_mgr);
+gda_tree_add_manager (tree, tables_mgr);
+
+g_object_unref (schemas_mgr);
+g_object_unref (tables_mgr);
+g_object_unref (columns_mgr);
+
+if (!gda_tree_update_all (tree, NULL)) {
+        /* ERROR */
+}
+else {
+        gda_tree_dump (tree, NULL, NULL);
+}
+g_object_unref (tree);
+	</programlisting>
+      </para>
+      <xi:include href="xml/gda-tree.xml"/>
+      <xi:include href="xml/gda-tree-manager.xml"/>
+      <xi:include href="xml/gda-tree-node.xml"/>
+      <xi:include href="xml/gda-tree-mgr-label.xml"/>
+      <xi:include href="xml/gda-tree-mgr-select.xml"/>
+      <xi:include href="xml/gda-tree-mgr-schemas.xml"/>
+      <xi:include href="xml/gda-tree-mgr-tables.xml"/>
+      <xi:include href="xml/gda-tree-mgr-columns.xml"/>
+    </chapter>
+
+    <chapter id="data_conv">
+      <title>Data conversions</title>
+      <para>
+	A single piece of data can have several representations
+	depending on its usage: a string representation, an SQL representation and of course a 
+	<link linkend="GValue">GValue</link> representation. Conversions from one representation to
+	the other is DBMS dependent as each database can have its own SQL representation rules. The
+	<link linkend="GdaDataHandler">GdaDataHandler</link> object's purpose is to do all these conversions in a easy way.
+	Except when mentioned otherwise, conversions take into account locale settings and DBMS specifications.
+      </para>
+      <para>
+	To convert a data, one needs to instantiate a new data handler from one of the many classes which implement this interface, or
+	better to get a pointer to a <link linkend="GdaDataHandler">GdaDataHandler</link> object (no
+	need to unref() it after usage, data handler objects are stateless), and so to obtain such a pointer one can:
+	<itemizedlist>
+	  <listitem>
+	    <para>Use the <link linkend="gda-data-handlet-get-default">gda_data_handler_get_default()</link>: the returned data handler
+	      is a generic one and should not be used to convert data to use with any connection, but only to have
+	      a portable way of storing and loading data in a locale independent fashion (for serialization purposes).</para>
+	  </listitem>
+	  <listitem>
+	    <para>Ask a <link linkend="GdaServerProvider">GdaServerProvider</link> object for one using the
+	    <link linkend="gda-server-provider-get-data-handler-g-type">gda_server_provider_get_data_handler_g_type()</link>
+	    or <link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link>:
+	    the returned data handler can then safely be used to convert any data to be used with any connection
+	    relying on the GdaServerProvider object.</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+      <xi:include href="xml/gda-data-handler.xml"/>
+      <xi:include href="xml/gda-handler-string.xml"/>
+      <xi:include href="xml/gda-handler-boolean.xml"/>
+      <xi:include href="xml/gda-handler-time.xml"/>
+      <xi:include href="xml/gda-handler-numerical.xml"/>
+      <xi:include href="xml/gda-handler-bin.xml"/>
+      <xi:include href="xml/gda-handler-type.xml"/>
+    </chapter>
+
+    <chapter id="gda-dict">
+      <title>Dictionary - metadata</title>
+      <para>
+	Each connection has a dictionary object (a <link linkend="GdaMetaStore">GdaMetaStore</link>) attached to it. That
+	dictionary is either created by the connection when it needs it, or is created and set by the user 
+	(to be able to re-use a dictionary), using the <link linkend="GdaConnection--meta-store">"meta-store"</link> 
+	property of the <link linkend="GdaConnection">GdaConnection</link> object.
+      </para>
+      <para>
+	Previous versions of &LIBGDA; used an XML file based dictionary which had several drawbacks (see the 
+	<link linkend="migration-2-dict">migrations notes</link> for more details), now a database is used: the default
+	is to use an SQLite base database which is easily transportable and can be used in the same way the previous
+	XML based dictionary was used.
+      </para>
+      <para>
+	Each <link linkend="GdaMetaStore">GdaMetaStore</link> requires (and creates) a dictionary 
+	structure which is a set of tables implementing an 
+	"information schema" schema (as defined in the information schema SQL standard (ISO/IEC 9075), and adapted). 
+	The user is then free to add more database objects (tables and views) to contain his own data in the dictionary,
+	using the <link linkend="gda-meta-store-schema-add-custom-object">gda_meta_store_schema_add_custom_object()</link>
+	method.
+      </para>
+      <para>
+	Extracting information can be done using SQL statements on the dictionary database (a special 
+	<link linkend="gda_meta_store_extract">gda_meta_store_extract()</link> method), or, for information about
+	the database structure, using the <link linkend="GdaMetaStruct">GdaMetaStruct</link> object which creates
+	an easy to use in-memory representation	of some database objects.
+      </para>
+
+      <sect1 id="GdaMetaStoreSetup">
+	<title>Setup</title>
+	<para>
+	  Each <link linkend="GdaMetaStore">GdaMetaStore</link> object internally uses a (private)
+	  <link linkend="GdaConnection">GdaConnection</link> connection object. The following figure illustrates
+	  the situation when the programmer uses a <link linkend="GdaConnection">GdaConnection</link> connection object
+	  when the meta data is stored in a different database (usually an SQLite file):
+	  <mediaobject>
+	    <imageobject role="html">
+              <imagedata fileref="MetaStore1.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+              <phrase></phrase>
+	    </textobject>
+	    <caption>
+              <para>
+		GdaConnection object and its associated GdaMetaStore using its own database to store the
+		meta data.
+              </para>
+	    </caption>
+	  </mediaobject>
+	</para>
+	<para>
+	  From a programmer's point of view, the following code example shows how to get a connection's associated
+	  meta store object, without being able to specify anything about the meta store's private connection (in which
+	  case the private connection will be an in-memory database destroyed when the meta store object is destroyed):
+	  <programlisting>
+GdaConnection *cnc;
+GdaMetaStore *store;
+
+cnc = gda_connection_open_from_dsn (...);
+g_object_get (G_OBJECT (cnc), "meta-store", &amp;store, NULL);
+
+[... use the meta store object ...]
+g_object_unref (store);
+	  </programlisting>
+	</para>
+	<para>
+	  One can also specify the meta store object to be used by a connection, as in:
+	  <programlisting>
+GdaConnection *cnc;
+GdaMetaStore *store;
+
+cnc = gda_connection_open_from_dsn (...);
+store = gda_meta_store_new_with_file ("/path/to/file");
+/* or */
+store = gda_meta_store_new ("PostgreSQL://DB_NAME=meta_db");
+
+g_object_set (G_OBJECT (cnc), "meta-store", store, NULL);
+g_object_unref (store);
+	  </programlisting>
+	</para>
+
+	<para>
+	  The meta data can also be stored in the same database as the connection the meta data is for. In this case
+	  (and if the associated database provider supports it), the dictionary structure can be placed into a spearate
+	  schema. The next figure illustrates this situation:
+	  <mediaobject>
+	    <imageobject role="html">
+              <imagedata fileref="MetaStore2.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+              <phrase></phrase>
+	    </textobject>
+	    <caption>
+              <para>
+		GdaConnection object and its associated GdaMetaStore using the same database.
+              </para>
+	    </caption>
+	  </mediaobject>
+	</para>
+	<para>
+	  From a programmer's point of view, the following code example shows how to do the setup:
+	  <programlisting>
+GdaConnection *cnc;
+GdaMetaStore *store;
+
+cnc = gda_connection_open_from_dsn (...);
+store = GDA_META_STORE (g_object_new (GDA_TYPE_META_STORE, "cnc", cnc, NULL));
+g_object_set (G_OBJECT (cnc), "meta-store", store, NULL);
+g_object_unref (store);
+	  </programlisting>
+	</para>
+      </sect1>
+
+      <sect1 id="GdaMetaStoreCustomData">
+	<title>Adding custom data</title>
+	<para>
+	  This section explains how to add application specific data (custom data) to a 
+	  <link linked="GdaMetaStore">GdaMetaStore</link> object.
+	</para>
+	<para>
+	  Applications of course don't need to use that feature to manage their own data but it makes sense to use
+	  it if the application also uses metadata to avoid having to manipulate several files for the same "task".
+	</para>
+	<sect3>
+	  <title>Storing data as (key, value) pairs</title>
+	  <para>
+	    In very simple cases, when the data to store is made of named values, the easiest way is to use the
+	    <link linkend="gda-meta-store-set-attribute-value">gda_meta_store_set_attribute_value()</link> and
+	    <link linkend="gda-meta-store-get-attribute-value">gda_meta_store_get_attribute_value()</link> methods
+	    where the values are stored and retrieved as strings.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Declaring the new custom database objects</title>
+	  <para>
+	    The <link linkend="gda-meta-store-schema-add-custom-object">gda_meta_store_schema_add_custom_object()</link>
+	    method canbe used to add custom objects, which have to be described using an XML syntax. The advantages
+	    of using that method are:
+	    <itemizedlist>
+	      <listitem><para>The object's definition will be the same for all database types</para></listitem>
+	      <listitem><para>If another object with a different definition already exists, then a error is returned</para></listitem>
+	    </itemizedlist>
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Adding and removing data</title>
+	  <para>
+	    For the moment adding and removing data must be done as for any other database connection,
+	    using the <link linkend="GdaMetaStore's">GdaMetaStore</link>'s internal connection obtained 
+	    with <link linkend="gda_meta_store_get_internal_connection">gda_meta_store_get_internal_connection()</link>.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Removing custom database objects</title>
+	  <para>
+	    For the moment adding and removing data must be done as for any other database connection,
+	    using the <link linkend="GdaMetaStore's">GdaMetaStore</link>'s internal connection obtained 
+	    with <link linkend="gda_meta_store_get_internal_connection">gda_meta_store_get_internal_connection()</link>.
+	  </para>
+	</sect3>
+	<para>
+	</para>
+      </sect1>
+
+      <sect1 id="information_schema">
+	<title>Database structure</title>
+	<para>
+	  &LIBGDA; imposes its own structure (based on objects such as tables and views which name starts with an 
+	  underscore '_') for the meta data database associated to a <link linkend="GdaMetaStore">GdaMetaStore</link> object,
+	  but a user can also add its own tables or other database objects. The following diagram shows the tables 
+	  defined by &LIBGDA; for its internal needs:
+	  <mediaobject>
+	    <imageobject role="html">
+	      <imagedata fileref="information_schema.png" format="PNG" contentwidth="210mm"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>Dictionary's tables and views initially defined by &LIBGDA;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</para>
+
+	<sect2 id="information_schema:data_types">
+	  <title>Data types</title>
+	  <para>
+	    Data types (as reported for example for table's columns) can be one of the following kinds:
+	    <itemizedlist>
+	      <listitem><para>Builtin data types offered by the database engine such as integers, varchar, etc. Those data 
+		  types are all listed in the 
+		  <link linkend="is:_builtin_data_types">"_builtin_data_types"</link> table.</para></listitem>
+	      <listitem><para>Database domains: domains are data types with optional constraints 
+		  (restrictions on the allowed set of values). A domain refers to the base data type from which it is defined
+		  (that base data type can also be an array). Those data types are all listed in the
+		  <link linkend="is:_domains">"_domains"</link> table.</para></listitem>
+	      <listitem><para>User defined data types (which are not part of the SQL standard but featured by some databases
+		  such as PostgreSQL) are simple or composed data types based on existing data types 
+		  (which may also be arrays). Those data types are all listed in the
+		  <link linkend="is:_udt">"_udt"</link> table.</para></listitem>
+	      <listitem><para>Arrays of any of the previous data types (one or more dimensions). Arrays are not per-se data
+		  types, but rather refer to an existing data type. Arrays are described in the 
+		  <link linkend="is:_element_types">"_element_types"</link> table.</para></listitem>
+	    </itemizedlist>
+	    Note that the data types which are built in, domains or user defined are all also listed in the
+	    <link linkend="is:_all_types">"_all_types"</link> view as a convenience.
+	  </para>
+	  <para>
+	    The impact of that data types' hierarchy is that every time a data type is referenced (from a table's column
+	    definition for example), there will be two attributes for the data type: one named 
+	    <parameter>data_type</parameter> which, if not NULL, refers to a data type listed in the
+	    <link linkend="is:_all_types">"_all_types"</link> view (thus a built in, domain or user defined data type), and
+	    one named <parameter>array_spec</parameter> which, if not NULL, refers to an array, listed in the
+	    <link linkend="is:_element_types">"_element_types"</link> table. Any of these attributes can be NULL, but they
+	    should never be both NULL at the same time.
+	  </para>
+	  <para>
+	    Single dimension arrays will have the <parameter>data_type</parameter> attribute referencing a data type in the
+	    <link linkend="is:_all_types">"_all_types"</link> view (and the <parameter>array_spec</parameter> attribute
+	    set to NULL), whereas multi dimension arrays will have the <parameter>data_type</parameter> attribute set to NULL
+	    and the <parameter>array_spec</parameter> attribute referencing another tow in the 
+	    <link linkend="is:_element_types">"_element_types"</link> table.
+	  </para>
+	  <para>
+	    The following diagram illustrates the data types representation and how they are referred from table's columns,
+	    domains, and other database objects which refer to a data type:
+	    <mediaobject>
+	      <imageobject role="html">
+		<imagedata fileref="i_s_data_types.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase>Dictioanry's tables and views initially defined by &LIBGDA;</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </para>
+	</sect2>
+
+	<sect2 id="information_schema:sql_identifiers">
+	  <title>SQL identifiers</title>
+	  <para>
+	    Please refer to the <link linkend="gen:sql_identifiers">SQL identifiers and abstraction</link> section
+	    for an overview of how SQL identifiers are handled thoughout &LIBGDA;
+	  </para> 
+	  <para>
+	    Considering that each database has its own
+	    internal way of representing case insensitive SQL identifiers (for instance PostgreSQL
+	    represents them in lower
+	    case whereas Oracle represents them in upper case and MySQL represents them in upper or lower case
+	    depending on the platform and the configuration), &LIBGDA; has chosen by convention
+	    to represent <emphasis>case insensitive SQL identifiers in lower case 
+	      and case sensitive SQL identifiers enclosed between double quotes</emphasis> when storing
+	    meta data in <link linkend="GdaMetaStore">GdaMetaStore</link>. 
+	  </para>
+	  <para>
+	    This convention has been made necessary to avoid confusion. To illustrate the problem, let's consider a 
+	    table named <emphasis>mytable</emphasis>. Without this convention, if that table was in a PostgreSQL
+	    database, then the meta data would report it as <emphasis>mytable</emphasis>, and if it was in an ORACLE,
+	    it would report it as <emphasis>MYTABLE</emphasis>. Now, a programmer which wants to compare the schemas
+	    of the PostgreSQL and Oracle databases has to know that the PostgreSQL's <emphasis>mytable</emphasis> and
+	    Oracle's <emphasis>MYTABLE</emphasis> represent in fact the same table which means he needs to know
+	    how each database internally stores SQL identifiers, which is not a good choice because it makes
+	    the application less portable between database engines. Better let each database provider do the job.
+
+	    Note that things can even get more confusing if MySQL is used because then one needs to figure out on
+	    which platform the MySQL server is running and how it's configured, a task which makes an application
+	    even less portable.
+	  </para>
+	  <para>
+	    To keep the same example, to build some SQL using the SQL identifier as reported by the meta data
+	    (<emphasis>mytable</emphasis> for PostgreSQL and <emphasis>MYTABLE</emphasis> for Oracle), one has either
+	    to determine if the SQL identifier needs to be quoted or not (which limits the application's portability),
+	    or systematically enquote the SQL identifier which is not something &LIBGDA; can impose to
+	    application developpers.
+	  </para>
+	</sect2>
+
+	<sect2>
+	  <title>Short and full names</title>
+	  <para>
+	    Database objects will have two associated names, the <emphasis>short name</emphasis> and the
+	    <emphasis>long name</emphasis>, the difference being the same as machine in a local network being called
+	    either by its machine name such as "moon" or by its fully qualified domain name such as "moon.my.network", but
+	    applied to databases and schemas. The full name corresponding to the 
+	    &lt;database&gt;.&lt;schema&gt;.&lt;object_name&gt; or &lt;schema&gt;.&lt;object_name&gt;, and the
+	    short name corresponding to the &lt;object_name&gt;.
+	  </para>
+	  <para>
+	    Short name and full name differ when the schema being accessed is not the schema containing the named
+	    database object, in which case the full name must be used. Some database specific features may also alter
+	    the differences between the short name and the sull name such as the "search_path" variable for PostgreSQL
+	    (which is to a unix PATH variable but for schemas).
+	  </para>
+	</sect2>
+
+	<sect2>
+	  <title>Declared foreign keys</title>
+	  <para>
+	    Foreign key constraints are used to constraint the contents of one or more columns of a table
+	    to the columns of another table. They are also use to help understand the database structure
+	    and withing UI programs to present relevant choices.
+	  </para>
+	  <para>
+	    &LIBGDA; reports existing foreign key constraints in its meta data.
+	  </para>
+	  <para>
+	    There are however some situations where the database developper does not whish to use
+	    foreign keys to actually implement the constraint, but the relation between the tables
+	    still exists. &LIBGDA; allows one to declare foreign keys, an operation which does not
+	    alter the database's schema, but add information to the database's meta data, specifically
+	    into the "__declared_fk" table. For more information, see the
+	    <link linkend="gda-meta-store-declare-foreign-key">gda_meta_store_declare_foreign_key()</link> and
+	    <link linkend="gda-meta-store-undeclare-foreign-key">gda_meta_store_undeclare_foreign_key</link> methods.
+	  </para>
+	</sect2>
+
+	<!-- tables and views documentation -->
+	<xi:include href="i_s_doc.xml"/>
+      </sect1>
+
+      <xi:include href="xml/gda-meta-store.xml"/>
+      <xi:include href="xml/gda-meta-struct.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>Data definition (DDL) queries</title>
+      <xi:include href="server-operation.xml"/>
+      <xi:include href="xml/gda-server-operation.xml"/>
+      <xi:include href="xml/gda-server-operation-nodes.xml"/>
+      <xi:include href="xml/gda-server-operation-sequences.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>User interface API reference</title>
+      <xi:include href="visual_index.xml"/>
+
+      <xi:include href="xml/libgdaui.xml"/>
+
+      <xi:include href="xml/gdaui-login.xml"/>
+      <xi:include href="xml/gdaui-provider-selector.xml"/>
+
+      <xi:include href="xml/gdaui-data-selector.xml"/>
+      <xi:include href="xml/gdaui-data-proxy.xml"/>
+      <xi:include href="xml/gdaui-basic-form.xml"/>
+      <xi:include href="xml/gdaui-form.xml"/>
+      <xi:include href="xml/gdaui-raw-form.xml"/>
+      <xi:include href="xml/gdaui-grid.xml"/>
+      <xi:include href="xml/gdaui-raw-grid.xml"/>
+      <xi:include href="xml/gdaui-combo.xml"/>
+      <xi:include href="xml/gdaui-cloud.xml"/>
+      <xi:include href="xml/gdaui-rt-editor.xml"/>
+      <xi:include href="xml/gdaui-plugins.xml"/>
+
+      <xi:include href="xml/gdaui-data-entry.xml"/>
+      <xi:include href="xml/gdaui-data-store.xml"/>
+      <xi:include href="xml/gdaui-data-filter.xml"/>
+      <xi:include href="xml/gdaui-data-proxy-info.xml"/>
+      <xi:include href="xml/gdaui-server-operation.xml"/>
+      <xi:include href="xml/gdaui-tree-store.xml"/>
+
+      <xi:include href="xml/gdaui-easy.xml"/>
+    </chapter>
+
+    <chapter id="multi-threading">
+      <title>Multi threading</title>
+      <xi:include href="xml/gda-mutex.xml"/>
+      <xi:include href="xml/gda-lockable.xml"/>
+      <xi:include href="xml/gda-thread-wrapper.xml"/>
+    </chapter>
+
+    <chapter id="misc">
+      <title>Miscellaneous</title>
+      <xi:include href="xml/gda-util.xml"/>
+      <xi:include href="xml/gda-log.xml"/>
+      <xi:include href="xml/gda-attributes-manager.xml"/>
+    </chapter>
+  </part>
+
+  <part id="part_tools">
+    <title>&GDA; Tools</title>
+    <chapter id="libgda-tools-introduction">
+      <title>Introduction</title>
+      <para>
+	&LIBGDA; offers several command line tools to help diagnose and resolve problems. All the
+	provided tools can be run with the "--help" command line argument to give an online help
+	and description. Also, some environment variables can be set to control the output for some of
+	the tools, see <link linkend="libgda_env_variables">&LIBGDA;'s environment variables</link> section
+	for more details.
+      </para>
+    </chapter>
+
+    <chapter id="libgda-sql">
+      <title>&gda-sql;</title>
+      <para>
+	The &gda-sql; tool is an interactive command line tool to run SQL commands and work
+	with dictionaries. This tool has got several options, use the <option>--help</option> option
+	to list them all, or consult the man page (<command>man gda-sql</command>)
+      </para>
+      <para>
+	For example to list the installed providers, do:
+	<programlisting>
+[prompt]> gda-sql-5.0 -L
+Provider    | Description                       | DSN parameters     | File                                          
+------------+-----------------------------------+--------------------+-----------------------------------------------
+SQLite      | Provider for SQLite databases     | DB_NAME,           | /usr/lib/libgda-5.0/providers/libgda-sqlite.so  
+                                                  DB_DIR,                                                            
+                                                  LOAD_GDA_FUNCTIONS                                                       
+Berkeley-DB | Provider for Berkeley databases   | FILE,              | /usr/lib/libgda-5.0/providers/libgda-bdb.so 
+                                                  DATABASE                                                                
+[...]
+	</programlisting>
+	To list the configured data sources (DSN):
+	<programlisting>
+[prompt]> gda-sql-5.0 -l
+DSN      | Provider   | Description  | Connection string      | Username
+---------+------------+--------------+------------------------+---------
+Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
+[...]
+	</programlisting>
+	To run an interactive session, just specify a DSN or a connection string using
+	the &quot;&lt;provider&gt;://&lt;connection string&gt;&quot; 
+	format (such as for example "Firebird://DATABASE=/path/to/dbfile.fdb"), or set
+	the GDA_SQL_CNC environment variable to contain that string, and run the command without any argument, 
+	for example:
+	<programlisting>
+[prompt]> gda-sql-5.0 PostgreSQL://DB_NAME=sales
+Welcome to the GDA SQL console, version 3.99.3
+
+Type: .copyright to show usage and distribution terms
+      .? for help with internal commands
+      .q (or CTRL-D) to quit
+      (the '.' can be replaced by a '\')
+      or any query terminated by a semicolon
+
+Opening connection 'c0' for: PostgreSQL://DB_NAME=sales
+        Getting database schema information, this may take some time... Done.
+c0>
+	</programlisting>
+	Note that the "c0" is the prompt for the first opened connection.
+      </para>
+      <para>
+	Several connections can be opened at once (with only one "active" at any given time), by specifying
+	all of them on the command line, or by using the <option>\c</option>
+	and <option>\close</option> to manage (open, change, close) the connections; the prompt contains
+	the name of the current connection used. The following example opens two connections, one for the "pgsales"
+	DSN, and one for the "PostgreSQL://DB_NAME=sales" connection string, and shows the usage of the ".c" command
+	to list the opened connections:
+	<programlisting>
+[prompt]> gda-sql-5.0 pgsales PostgreSQL://DB_NAME=sales
+Welcome to the GDA SQL console, version 3.99.3
+
+Type: .copyright to show usage and distribution terms
+      .? for help with internal commands
+      .q (or CTRL-D) to quit
+      (the '.' can be replaced by a '\')
+      or any query terminated by a semicolon
+
+Opening connection 'pgsales' for: pgsales
+Opening connection 'c1' for: PostgreSQL://DB_NAME=sales
+        Getting database schema information, this may take some time... Done.
+c1> .c
+             List of opened connections
+Name    | Provider   | DSN or connection string | Username
+--------+------------+--------------------------+---------
+pgsales | PostgreSQL | pgsales                  |         
+c1      | PostgreSQL | DB_NAME=sales            |         
+(2 rows)
+
+c1>
+	</programlisting>
+      </para>
+      <para>
+	Here is another sample session showing how to use variables in statements:
+	<programlisting><![CDATA[
+[prompt]> gda-sql-5.0 -p SQLite -c "DB_DIR=.;DB_NAME=sales_test"
+Welcome to the GDA SQL console, version 3.1.2
+
+Type: \copyright to show usage and distribution terms
+      \? for help with internal commands
+      \q (or CTRL-D) to quit
+      or any query terminated by a semicolon
+
+c0> select * from customers;
+id | name            | default_served_by | country | city
+---+-----------------+-------------------+---------+-----
+ 2 | Ed Lamton       |                 4 | SP      | MDR 
+ 3 | Lew Bonito      |                 1 | FR      | TLS 
+ 4 | Mark Lawrencep  |              NULL | SP      | MDR 
+ 9 | Greg Popoff     |                 2 | SP      | MDR 
+10 | Vladimir Zirkov |                 4 | NULL    | NULL
+c0> \set the_id 9
+c0> select * from customers where id= ##the_id;
+id | name        | default_served_by | country | city
+---+-------------+-------------------+---------+-----
+ 9 | Greg Popoff |                 2 | SP      | MDR 
+c0> ]]>
+	</programlisting>
+      </para>
+      <para>
+	See the <link linkend="gda-sql">Gda SQL console tool manual section</link> for more information.
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-list-config">
+      <title>&gda-list-config;</title>
+      <para>
+	The &gda-list-config; tool simply lists all the declared data sources, and all the installed
+	providers, giving some other useful information as well for each. This tool has no option.
+      </para>
+      <para>
+	An example output will be:
+	<programlisting>
+[prompt]> gda-list-config-5.0
+=== Installed providers ===
+Provider: SQLite
+Description: Provider for SQLite databases
+Location: /usr/lib/libgda-5.0/providers/libgda-sqlite.so
+Data source's parameters (Name / Type / Description):
+  DB_NAME / gchararray / Database name
+  DB_DIR / gchararray / Directory
+  LOAD_GDA_FUNCTIONS / gboolean / Extra functions
+
+Provider: Berkeley-DB
+Description: Provider for Berkeley databases
+Location: /usr/lib/libgda-5.0/providers/libgda-bdb.so
+Data source's parameters (Name / Type / Description):
+  FILE / gchararray / Database file
+  DATABASE / gchararray / Database name
+
+[...]
+
+=== Declared data sources ===
+Data source: Sales
+  Key 'DSN' = 'DB_NAME=sales'
+  Key 'Description' = 'Sales'
+  Key 'Password' = ''
+  Key 'Provider' = 'PostgreSQL'
+  Key 'Username' = ''
+
+[...]
+	</programlisting>
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-test-connection">
+      <title>&gda-test-connection;</title>
+      <para>
+	This tool is a 'ping' like tool to test connectivity to databases. Connections can either
+	be declared as DSN, or described in the command line.
+      </para>
+    </chapter>
+
+    <chapter id="libgda-list-server-op">
+      <title>&gda-list-server-op;</title>
+      <para>
+	The &gda-list-server-op; tool lists available DDL operations for one or all of the installed
+	providers. For each type of operation (and each provider), the named parameters are also displayed.
+	See the <link linkend="DDLIntro">General words about DDL queries</link> for more information
+	about possible operations and usage. This tool has got several options, use the <option>--help</option> option
+	to list them all.
+      </para>
+      <para>
+	For example listing all the possible operations (for all the providers) is:
+	<programlisting>
+[prompt]> gda-list-server-op-5.0 -l
+Using XML descriptions in /usr/share/libgda-5.0
+Existing operation types:
+CREATE_DB
+DROP_DB
+CREATE_TABLE
+DROP_TABLE
+RENAME_TABLE
+ADD_COLUMN
+DROP_COLUMN
+CREATE_INDEX
+DROP_INDEX
+	</programlisting>
+	Listing all the operations supported by the SQLite provider (notice that the SQLite provider does not support the
+	DROP_COLUMN operation as SQLite does not support it):
+	<programlisting>
+[prompt]> gda-list-server-op-5.0 -l -p SQLite
+Using XML descriptions in /usr/share/libgda-5.0
+For provider SQLite
+Existing operation types for provider 'SQLite':
+CREATE_DB
+DROP_DB
+CREATE_TABLE
+DROP_TABLE
+RENAME_TABLE
+ADD_COLUMN
+CREATE_INDEX
+DROP_INDEX
+	</programlisting>
+	Listing all the possible parameters for the MySQL provider and for the DROP_COLUMN operation:
+	<programlisting><![CDATA[
+[prompt]> gda-list-server-op-5.0 -o DROP_COLUMN -p MySQL
+Using XML descriptions in /usr/share/libgda-5.0
+For provider MySQL
+Description for type: DROP_COLUMN
+<?xml version="1.0"?>
+<server_op>
+  <path id="/COLUMN_DESC_P" node_type="PARAMLIST" name="Column's description"/>
+  <path id="/COLUMN_DESC_P/TABLE_NAME" node_type="PARAMETER" gdatype="gchararray" name="Table" descr="Table's name"/>
+  <path id="/COLUMN_DESC_P/COLUMN_NAME" node_type="PARAMETER" gdatype="gchararray" name="Field name"/>
+</server_op>]]>
+	</programlisting>
+	Listing all the possible parameters for the all the installed providers and for the DROP_COLUMN operation:
+	<programlisting><![CDATA[
+[prompt]> gda-list-server-op-5.0 -o DROP_COLUMN 
+Using XML descriptions in /usr/share/libgda-5.0
+Description for type: DROP_COLUMN
+<?xml version="1.0"?>
+<server_op>
+  <path id="/COLUMN_DESC_P" node_type="PARAMLIST">
+    <prov prov_name="mysql" name="Column's description"/>
+    <prov prov_name="postgres" name="Column's description"/>
+  </path>
+  <path id="/COLUMN_DESC_P/TABLE_NAME" node_type="PARAMETER" gdatype="gchararray">
+    <prov prov_name="mysql" name="Table" descr="Table's name"/>
+    <prov prov_name="postgres" name="Table" descr="Table's name"/>
+  </path>
+  <path id="/COLUMN_DESC_P/COLUMN_NAME" node_type="PARAMETER" gdatype="gchararray">
+    <prov prov_name="mysql" name="Field name"/>
+    <prov prov_name="postgres" name="Field name"/>
+  </path>
+  <path id="/COLUMN_DESC_P/REFERENCED_ACTION" node_type="PARAMETER" gdatype="gchararray">
+    <prov prov_name="postgres" name="References" descr="What to do with references on the column to delete"/>
+  </path>
+</server_op>]]>
+	</programlisting>
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-controlcenter">
+      <title>Control center</title>
+      <para>
+	This tool is a graphical utility which allows the user to configure and test data sources (define DSN).
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-gdabrowser">
+      <title>GdaBrowser</title>
+      <para>
+	This tool is a graphical utility which helps database administrators in their tasks.
+      </para>
+    </chapter>
+
+  </part>
+
+  <part id="part_libgda-reports">
+    <title>Reports</title>
+    <chapter id="libgda-reports-introduction">
+      <title>Introduction</title>
+      <para>
+	&LIBGDA;'s report feature has been reworked and is only offers it <link linkend="GdaReportEngine">report engine object</link>, 
+	a low level general usage engine to generate reports in the XML format. More specifically it converts
+	an XML tree containing special tags into another XML tree where all the specific tags have been
+	expanded/replaced with database contents. For more information about the special tags taken
+	into account, please refer to the <link linkend="GdaReportEngine">GdaReportEngine</link>'s
+	documentation.
+      </para>
+      <para>
+	Working on any XML file allows the report engine to work with all the existing post-processors which will actually
+	generate the final file(s) in HTML, PDF or other; for example:
+	<itemizedlist>
+	  <listitem><para>SVG can be processed by a web browser or further edited using inkscape for example</para></listitem>
+	  <listitem><para>DocBook can then be converted to HTML of PDF 
+	      (see <ulink url="http://wiki.docbook.org/topic/DocBookXsltPublishingModelDiagram">this docbook Wiki page</ulink>)
+	  </para></listitem>
+	  <listitem><para>RML files (Report Markup Language), see <ulink url="http://www.reportlab.org/">ReportLab</ulink> or
+	      <ulink url="http://oreports.com">OpenReports</ulink> can be converted to HTML or PDF.
+	  </para></listitem>
+	  <listitem><para>some other XML dialects can also be used such as 
+	      <ulink url="http://sourceforge.net/projects/rlib/">RLib</ulink>, 
+	      <ulink url="http://www.treshna.com/papyrus/">Papyrus</ulink>, and other.
+	  </para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	To make it easier to use RML or Docbook XML dialects, &LIBGDA; has the 
+	<link linkend="GdaReportDocbookDocument">GdaReportDocbookDocument</link> and 
+	<link linkend="GdaReportRmlDocument">GdaReportRmlDocument</link> which both offer high level of
+	features when dealing with those XML dialects.
+      </para>
+      <para>
+	From a programmer's point of view, the following code example shows how to convert the "report-spec.xml" file
+	to a "report.xml" report:
+	<programlisting>
+GdaConnection *cnc;
+GdaReportEngine *eng
+xmlDocPtr doc;
+GError *error = NULL;
+
+cnc = gda_connection_open_from_dsn (...);
+eng = gda_report_engine_new_from_file ("report-spec.xml");
+gda_report_engine_declare_object (eng, G_OBJECT (cnc), "main_cnc");
+
+doc = gda_report_engine_run_as_doc (eng, &amp;error);
+if (!doc) {
+    /* ERROR */
+}
+else {
+    xmlSaveFile ("report.xml", doc);
+    xmlFreeDoc (doc);
+}
+g_object_unref (eng);
+	</programlisting>
+	For example the XML "report-spec.xml" file could be:
+	<programlisting><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Customers report example</title>
+    <abstract>
+      <!-- Use the "abstract" parameter which is supposed to be defined using gda_report_engine_declare_object() -->
+      <para><gda_report_param_value param_name="abstract"/></para>
+    </abstract>
+  </articleinfo>
+
+  <!-- 
+       Start a new section, with the "customers" SELECT query, which is supposed to be defined using 
+       gda_report_engine_declare_object() 
+
+       Any <gda_report_iter> node will repeat its contents as many times as there are rows in the
+       data model returned by the "customers" SELECT query.
+    -->
+  <gda_report_section query_name="customers" cnc_name="main_cnc">
+    <sect1>
+      <!-- Will be replaced by: <title>List of customers (5)</title> if there are 5 rows for example -->
+      <title>List of customers (<gda_report_param_value param_name="customers|?nrows"/>)</title>
+
+      <!-- List all the customer's names -->
+      <ul>
+	<gda_report_iter>
+	  <li><gda_report_param_value param_name="customers|@name"/></li>
+	</gda_report_iter>
+      </ul>
+    </sect1>
+  </gda_report_section>
+</article>]]></programlisting>
+	For a more detailed example, have a look at the <filename class="directory">samples/Report</filename> of &LIBGDA;'s
+	sources.
+	</para>
+    </chapter>
+    <chapter>
+      <title>API reference</title>
+      <xi:include href="xml/gda-report-engine.xml"/>
+      <xi:include href="xml/gda-report-document.xml"/>
+      <xi:include href="xml/gda-report-docbook-document.xml"/>
+      <xi:include href="xml/gda-report-rml-document.xml"/>
+    </chapter>
+  </part>
+
+  <part id="part_libgda-xslt">
+    <title>XSLT extension</title>
+    <chapter id="libgda-xslt-introduction">
+      <title>Introduction</title>
+      <para>
+	&LIBGDA; features an XSLT extension...
+      </para>
+    </chapter>
+    <chapter id="libgda-xslt-api">
+      <title>API reference</title>
+      <para>TODO</para>
+    </chapter>
+    <chapter>
+      <title>Example</title>
+      <para>TODO</para>
+    </chapter>
+  </part>
+
+  <xi:include href="gda-sql-manual.xml"/>
+
+  <part id="part_providers">
+    <title>Databases providers for developers</title>
+      <para>
+	For each database engine, &LIBGDA; requires an object which maps &LIBGDA;'s API
+	to the native API offered by that database engine. That object, a <emphasis>database provider</emphasis> 
+	needs to inherit <link linkend="GdaServerProvider">GdaServerProvider</link> and implement its
+	virtual methods.
+      </para>
+      <para>
+	Database provider objects are generally instantiated once by the &LIBGDA; framework and can be used several
+	times to open and work on connections to several databases of the same type.
+      </para>
+      <para>
+	Since &LIBGDA; itself is developed in the C language, and that most
+	providers are also implemented in that language, the &LIBGDA; library
+	itself contains a set of helper classes and functions to guide you
+	in the addition of a new provider to the GDA framework. Two reference implementations
+	are provided in the <filename class="directory">providers/skel-implementation</filename>
+	directory of &LIBGDA;'s sources:
+	<itemizedlist>
+	  <listitem><para>in <filename class="directory">providers/skel-implementation/capi</filename>: a skeleton
+	    implementation from scratch for a database accessed through a C API, where all the methods to implement are partially
+	    coded</para></listitem>
+	  <listitem><para>in <filename class="directory">providers/skel-implementation/models</filename>: a skeleton
+	    implementation to write a provider for sources which are not databases (which do not implement any SQL) such
+	    as the Berkeley DB provider (a BDB database is a key/value collection) or the MDB (MS Access files) provider.
+	    This kind of provider "export" tables which are in fact data models.</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      The helper objects and functions to write database providers are documented in the 
+      <link linkend="psupport">Providers' support API</link> section.
+    </para>
+
+    <chapter>
+      <title>Getting started</title>
+      <para>
+	&LIBGDA;'s sources contain templates to get started in creating a new database provider. The following templates
+	are available:
+	<itemizedlist>
+	  <listitem><para>the template in the <filename class="directory">providers/skel-implementation/capi</filename>
+	      directory which can be used when writing a provider using the database's C or C++ API (for example
+	      the PostgreSQL or MySQL providers)</para></listitem>
+	  <listitem><para>the template in the <filename class="directory">providers/skel-implementation/models</filename>
+	      directory which can be used when writing a provider for a system which is not a relational database (or
+	      does offer a very limited API, such as for the MS Access or Berkeley DB systems).</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	In any case, for example to create a DummyDb provider, follow these steps:
+	<itemizedlist>
+	  <listitem><para>copy one of the template's directory into a new directory named
+	      <filename class="directory">dummydb</filename></para></listitem>
+	  <listitem><para>From inside that new directory, run the
+	      <filename class="directory">providers/prepare_provider_sources.sh</filename> script with the name
+	      of the provider as sole argument ("dummydb" here), which replaces
+	      all the class and object names with the name of the provider and renames the files correctly. These
+	      new sources should be compilable without any modification.</para></listitem>
+	  <listitem><para>Edit the <filename>Makefile.am</filename> to add provider specific compilation and link
+	      flags</para></listitem>
+	  <listitem><para>Integrate the provider's new code into a compilation unit: either &LIBGDA;'s sources in
+	      the <filename class="directory">providers</filename>directory or in your own application (this step usually involves
+	      modifying the <filename>configure.ac</filename> or <filename>configure.in</filename> files).</para></listitem>
+	  <listitem><para>Implement the missing parts (it is usually a good idea to look how other provider's
+	      implementations are done to get ideas).</para></listitem>
+	</itemizedlist>
+      </para>
+    </chapter>
+
+    <xi:include href="prov-writing-virtual-methods.xml"/>
+    <xi:include href="prov-writing-recordsets.xml"/>
+    <xi:include href="prov-writing-blobs.xml"/>
+    <xi:include href="prov-writing-parser.xml"/>
+    <xi:include href="prov-writing-assembly.xml"/>
+
+    <chapter id="psupport">
+      <title>Providers' support API</title>
+      <xi:include href="xml/gda-server-provider.xml"/>
+      <xi:include href="xml/gda-data-select-priv.xml"/>
+      <xi:include href="xml/gda-pstmt.xml"/>
+      <xi:include href="xml/gda-quark-list.xml"/>
+      <xi:include href="xml/provider-support-sql.xml"/>
+      <xi:include href="xml/provider-support.xml"/>
+    </chapter>
+  </part>
+
+  <part>
+    <title>Packaging</title>
+    <xi:include href="packaging.xml"/>
+    <xi:include href="packaging_ui.xml"/>
+  </part>
+
+  <part id="part_index">
+    <title>Appendix</title>
+    <index id="index_main">
+      <title>Index</title>
+    </index>
+    <index id="index-4-2" role="4.2">
+      <title>Index of new symbols in 4.2</title>
+    </index>
+    <index id="index-4-2-1" role="4.2.1">
+      <title>Index of new symbols in 4.2.1</title>
+    </index>
+    <index id="index-4-2-2" role="4.2.2">
+      <title>Index of new symbols in 4.2.2</title>
+    </index>
+    <index id="index-4-2-3" role="4.2.3">
+      <title>Index of new symbols in 4.2.3</title>
+    </index>
+    <index id="index-4-2-4" role="4.2.4">
+      <title>Index of new symbols in 4.2.4</title>
+    </index>
+    <index id="index-5-0" role="5.0">
+      <title>Index of new symbols in 5.0</title>
+    </index>
+    <index id="index-deprecated" role="deprecated">
+      <title>Index of deprecated symbols</title>
+    </index>
+    <xi:include href="fdl-appendix.sgml"/>
+  </part>
+</book>
+

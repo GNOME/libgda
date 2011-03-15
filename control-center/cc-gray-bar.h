@@ -1,12 +1,12 @@
-/* GNOME DB library
- * Copyright (C) 1999 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 1999 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -46,6 +46,16 @@ struct _CcGrayBar {
 struct _CcGrayBarClass {
 	GtkBinClass parent_class;
 };
+
+/**
+ * SECTION:cc-gray-bar
+ * @short_description: A title bar
+ * @title: CcGrayBar
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #CcGrayBar widget is a styled title bar
+ */
 
 GType        cc_gray_bar_get_type (void) G_GNUC_CONST;
 GtkWidget   *cc_gray_bar_new (const gchar *label);

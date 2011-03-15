@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libgda_sql_parser-4.0.la
+noinst_LTLIBRARIES = libgda_sql_parser-5.0.la
 noinst_PROGRAMS = 
 
 AM_CPPFLAGS = \
@@ -50,7 +50,6 @@ s-enum-types-h: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 		$(libgda_sql_parser_headers)) > tmp-gda-enum-types.h \
 	&& (cmp -s tmp-gda-enum-types.h gda-sql-parser-enum-types.h || cp tmp-gda-enum-types.h gda-sql-parser-enum-types.h ) \
 	&& rm -f tmp-gda-enum-types.h	\
-	&& cat $(srcdir)/gda-sql-parser-enum-types.h.KEEPAPI >> gda-sql-parser-enum-types.h \
 	&& echo timestamp > $(@F)
 
 gda-sql-parser-enum-types.c: s-enum-types-c
@@ -68,7 +67,6 @@ s-enum-types-c: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 		$(libgda_sql_parser_headers)) > tmp-gda-enum-types.c \
 	&& (cmp -s tmp-gda-enum-types.c gda-sql-parser-enum-types.c || cp tmp-gda-enum-types.c gda-sql-parser-enum-types.c ) \
 	&& rm -f tmp-gda-enum-types.c \
-	&& cat $(srcdir)/gda-sql-parser-enum-types.c.KEEPAPI >> gda-sql-parser-enum-types.c \
 	&& echo timestamp > $(@F)
 
 # Generate the enums source code, with glib-mkenums:
@@ -76,11 +74,11 @@ s-enum-types-c: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 libgda_sql_parser_built_headers = gda-sql-parser-enum-types.h
 libgda_sql_parser_built_cfiles = gda-sql-parser-enum-types.c
 
-$(OBJECTS) $(libgda_sql_parser_4_0_la_OBJECTS): token_types.h
+$(OBJECTS) $(libgda_sql_parser_5_0_la_OBJECTS): token_types.h
 libgda_sql_parserincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/sql-parser
 libgda_sql_parserinclude_HEADERS=$(libgda_sql_parser_headers) $(libgda_sql_parser_built_headers)
 
-libgda_sql_parser_4_0_la_SOURCES = \
+libgda_sql_parser_5_0_la_SOURCES = \
 	$(libgda_sql_parser_headers) \
 	$(libgda_sql_parser_built_headers) \
 	$(libgda_sql_parser_built_cfiles) \
@@ -103,8 +101,7 @@ libgda_sql_parser_4_0_la_SOURCES = \
         gda-statement-struct-unknown.c \
         gda-statement-struct-util.c
 
-EXTRA_DIST= parser.y delimiter.y lemon.c lempar.c gen_def.c parser_tokens.h \
-	gda-sql-parser-enum-types.c.KEEPAPI gda-sql-parser-enum-types.h.KEEPAPI
+EXTRA_DIST= parser.y delimiter.y lemon.c lempar.c gen_def.c parser_tokens.h
 
 CLEANFILES = parser.h parser.c parser.out delimiter.h delimiter.c delimiter.out token_types.h \
 	lemon$(EXEEXT_FOR_BUILD) gen_def$(EXEEXT_FOR_BUILD) \

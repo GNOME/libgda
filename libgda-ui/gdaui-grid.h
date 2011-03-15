@@ -1,6 +1,5 @@
-/* gdaui-grid.h
- *
- * Copyright (C) 2002 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -49,9 +48,15 @@ struct _GdauiGridClass
 	GtkVBoxClass       parent_class;
 };
 
-/* 
- * Generic widget's methods 
+/**
+ * SECTION:gdaui-grid
+ * @short_description: Grid widget to manipulate data in a #GdaDataModel, with decorations
+ * @title: GdauiGrid
+ * @stability: Stable
+ * @Image:
+ * @see_also: The #GdauiRawGrid widget which is used by the #GdaGrid widget.
  */
+
 GType             gdaui_grid_get_type            (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_grid_new                 (GdaDataModel *model);

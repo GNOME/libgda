@@ -1,6 +1,5 @@
-/* gdaui-data-filter.h
- *
- * Copyright (C) 2007 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -51,9 +50,18 @@ struct _GdauiDataFilterClass
 	GtkVBoxClass                 parent_class;
 };
 
-/* 
- * Generic widget's methods 
+/**
+ * SECTION:gdaui-data-filter
+ * @short_description: Entrer rules to filter the rows in a #GdauiDataProxy
+ * @title: GdauiDataFilter
+ * @stability: Stable
+ * @Image: vi-filter.png
+ * @see_also:
+ *
+ * The #GdauiDataFilter widget can be used as a standalone widget, but is also
+ * used internally by the #GdauiDataProxyInfo widget for its search option.
  */
+
 GType             gdaui_data_filter_get_type                  (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_data_filter_new                       (GdauiDataProxy *data_widget);

@@ -14,7 +14,7 @@ AM_CPPFLAGS = \
 	-DLIBGDASBIN=\""$(sbindir)"\" \
 	-DLIBGDASYSCONF=\""$(sysconfdir)"\"
 
-noinst_LTLIBRARIES = libgda_binreloc-4.0.la
+noinst_LTLIBRARIES = libgda_binreloc-5.0.la
 
 binreloc_headers = \
 	gda-binreloc.h 
@@ -22,7 +22,7 @@ binreloc_headers = \
 binrelocincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
 binrelocinclude_HEADERS=$(binreloc_headers)
 
-libgda_binreloc_4_0_la_SOURCES = \
+libgda_binreloc_5_0_la_SOURCES = \
 	gda-binreloc.c \
 	$(binreloc_headers)
 

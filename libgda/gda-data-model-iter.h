@@ -1,6 +1,5 @@
-/* gda-data-model-iter.h
- *
- * Copyright (C) 2005 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2005 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -58,12 +57,57 @@ struct _GdaDataModelIterClass
 	void                    (* row_changed)      (GdaDataModelIter *iter, gint row);
 	void                    (* end_of_data)      (GdaDataModelIter *iter);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-data-model-iter
+ * @short_description: Data model iterator
+ * @title: GdaDataModelIter
+ * @stability: Stable
+ * @see_also: #GdaDataModel
+ *
+ * A #GdaDataModelIter object is used to iterate through the rows of a #GdaDataModel. If the data model is accessible
+ * in a random access way then any number of #GdaDataModelIter objects can be created on the same data model, and
+ * if the data model only supports a cursor based access then only one #GdaDataModelIter can be created. In any case
+ * creating a #GdaDataModelIter should be done using the gda_data_model_create_iter() method. Note that if 
+ * the data model only supports a cursor based access, then calling this method several times will always return
+ * the same #GdaDataModelIter, but with its reference count increased by 1 (so you should call g_object_unref() when
+ * finished with it).
+ *
+ * When a #GdaDataModelIter is valid (that is when it points to an existing row in the data model it iterates through),
+ * the individual values (corresponding to each column of the data model, at the pointer row) can be accessed 
+ * using the gda_data_model_iter_get_value_at() or gda_data_model_iter_get_value_for_field() methods
+ * (or in the same way #GdaSet's values are accessed as #GdaDataModelIter inherits the #GdaSet).
+ *
+ * Right after being created, a #GdaDataModelIter is invalid (does not point to any row of its data model). To read the
+ * first row of the data model, use the gda_data_model_iter_move_next() method. Calling this method several times will
+ * move the iterator forward, up to when the data model has no more rows and the #GdaDataModelIter will be declared invalid
+ * (and gda_data_model_iter_move_next() has returned FALSE). Note that at this point, the number of rows in the data
+ * model will be known.
+ *
+ * If the data model supports it, a #GdaDataModelIter can be moved backwards using the gda_data_model_iter_move_prev()
+ * method. However if the iterator is invalid, moving backwards will not be possible (on the contrary to 
+ * gda_data_model_iter_move_next() which moves to the first row).
+ *
+ * The gda_data_model_iter_move_to_row() method, if the iterator can be moved both forward and backwards, can move the 
+ * iterator to a specific row (sometimes faster than moving it forward or backwards a number of times).
+ *
+ * The following figure illustrates the #GdaDataModelIter usage:
+ * <mediaobject>
+ *   <imageobject role="html">
+ *     <imagedata fileref="GdaDataModelIter.png" format="PNG" contentwidth="190mm"/>
+ *   </imageobject>
+ *   <textobject>
+ *     <phrase>GdaDataModelIter's usage</phrase>
+ *   </textobject>
+ * </mediaobject>
+ */
 
 GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
 

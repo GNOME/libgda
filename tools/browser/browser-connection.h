@@ -1,8 +1,8 @@
 /* 
  * Copyright (C) 2009 - 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -16,7 +16,6 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-
 
 #ifndef __BROWSER_CONNECTION_H_
 #define __BROWSER_CONNECTION_H_
@@ -56,6 +55,19 @@ struct _BrowserConnectionClass
 							      GdaMetaTableColumn *column,
 							      const gchar *attr_name, const gchar *value);
 };
+
+/**
+ * SECTION:browser-connection
+ * @short_description: An opened connection
+ * @title: BrowserConnection
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #BrowserConnection object wraps a #GdaConnection with some
+ * additionnal features. The wrapped #GdaConnection is only accessible from within
+ * the #BrowserConnection object, so to use a connection, you have to use the
+ * #BrowserConnection's methods.
+ */
 
 GType               browser_connection_get_type               (void) G_GNUC_CONST;
 

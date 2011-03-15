@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2009 - 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -102,10 +102,8 @@ struct _BrowserWindowPrivate {
 	gulong             cnc_added_sigid;
 	gulong             cnc_removed_sigid;
 
-#if GTK_CHECK_VERSION (2,18,0)
 	GtkWidget         *notif_box;
 	GSList            *notif_widgets;
-#endif
 
 	GtkWidget         *statusbar;
 	guint              cnc_statusbar_context;
@@ -227,10 +225,8 @@ browser_window_dispose (GObject *object)
 		if (bwin->priv->perspectives_nb)
 			g_object_unref (bwin->priv->perspectives_nb);
 
-#if GTK_CHECK_VERSION (2,18,0)
 		if (bwin->priv->notif_widgets)
 			g_slist_free (bwin->priv->notif_widgets);
-#endif
 		g_free (bwin->priv);
 		bwin->priv = NULL;
 	}
@@ -453,12 +449,10 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
         gtk_widget_show (toolbar);
 	bwin->priv->toolbar_style = gtk_toolbar_get_style (GTK_TOOLBAR (toolbar));
 
-#if GTK_CHECK_VERSION (2,18,0)
 	bwin->priv->notif_box = gtk_vbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->notif_box, FALSE, FALSE, 0);
         gtk_widget_show (bwin->priv->notif_box);
 	bwin->priv->notif_widgets = NULL;
-#endif
 
 	GtkToolItem *ti;
 	GtkWidget *spinner, *svbox, *align;
@@ -592,16 +586,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
         gtk_widget_show (GTK_WIDGET (bwin));
 
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_set_can_focus ((GtkWidget* )pers->perspective_widget, TRUE);
-#else
-	GtkWidget *fwid = (GtkWidget* )pers->perspective_widget;
-	if (! GTK_WIDGET_CAN_FOCUS (fwid)) {
-		GTK_WIDGET_SET_FLAGS (fwid, GTK_CAN_FOCUS);
-		gtk_widget_queue_resize (fwid);
-		g_object_notify (G_OBJECT (fwid), "can-focus");
-	}
-#endif
 	gtk_widget_grab_focus ((GtkWidget* )pers->perspective_widget);
 
 	return bwin;
@@ -958,13 +943,8 @@ static gboolean
 fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, G_GNUC_UNUSED gpointer user_data)
 {
 	BrowserWindow *bwin = BROWSER_WINDOW (widget);
-#if GTK_CHECK_VERSION(2,14,0)
 	if (gtk_widget_get_window (widget) != event->window)
 		return FALSE;
-#else
-	if (widget->window != event->window)
-		return FALSE;
-#endif
 
 	if (event->y < BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD) {
 		gtk_widget_show (bwin->priv->toolbar);
@@ -1048,7 +1028,7 @@ window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
 static gboolean
 key_press_event (GtkWidget *widget, GdkEventKey *event)
 {
-	if ((event->keyval == GDK_Escape) &&
+	if ((event->keyval == GDK_KEY_Escape) &&
 	    browser_window_is_fullscreen (BROWSER_WINDOW (widget))) {
 		browser_window_set_fullscreen (BROWSER_WINDOW (widget), FALSE);
 		return TRUE;
@@ -1094,7 +1074,6 @@ window_state_event (GtkWidget *widget, GdkEventWindowState *event)
 		else
 			gtk_widget_show (wid);
 		
-		gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (bwin->priv->statusbar), !fullscreen);
 		g_signal_emit (G_OBJECT (bwin), browser_window_signals[FULLSCREEN_CHANGED], 0, fullscreen);
         }
 	return FALSE;
@@ -1411,14 +1390,12 @@ browser_window_show_notice_printf (BrowserWindow *bwin, GtkMessageType type, con
 }
 
 
-#if GTK_CHECK_VERSION (2,18,0)
 static void
 info_bar_response_cb (GtkInfoBar *ibar, G_GNUC_UNUSED gint response, BrowserWindow *bwin)
 {
 	bwin->priv->notif_widgets = g_slist_remove (bwin->priv->notif_widgets, ibar);	
 	gtk_widget_destroy ((GtkWidget*) ibar);
 }
-#endif
 
 /* hash table to remain which context notices have to be hidden: key=context, value=GINT_TO_POINTER (1) */
 static GHashTable *hidden_contexts = NULL;
@@ -1556,7 +1533,6 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 					       (GClosureNotify) g_free, 0);
 		}
 
-#if GTK_CHECK_VERSION (2,18,0)
 		/* use a GtkInfoBar */
 		GtkWidget *ibar, *content_area, *label;
 		
@@ -1589,21 +1565,6 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 									 bwin->priv->notif_widgets);
 		}
 		gtk_widget_show (ibar);
-#else
-		/* create the error message dialog */
-		GtkWidget *dialog;
-		dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (bwin),
-							     GTK_DIALOG_DESTROY_WITH_PARENT |
-							     GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
-							     GTK_BUTTONS_CLOSE,
-							     "<span weight=\"bold\">%s</span>\n%s", _("Note:"), text);
-		if (cb)
-			gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), cb, FALSE, FALSE, 10);
-	
-		gtk_widget_show_all (dialog);
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (dialog);
-#endif
 	}
 }
 

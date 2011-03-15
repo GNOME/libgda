@@ -1,8 +1,8 @@
 /* 
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -47,6 +47,14 @@ struct _QueryExecPerspectiveClass
 {
 	GtkVBoxClass         parent_class;
 };
+
+/**
+ * SECTION:query-exec-perspective
+ * @short_description: Perspective to execute SQL commands
+ * @title: Query Exec perspective
+ * @stability: Stable
+ * @see_also:
+ */
 
 GType                query_exec_perspective_get_type               (void) G_GNUC_CONST;
 BrowserPerspective  *query_exec_perspective_new                    (BrowserWindow *bwin);

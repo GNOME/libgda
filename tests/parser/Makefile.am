@@ -13,32 +13,32 @@ check_PROGRAMS = check_parser check_validation check_normalization check_dml_com
 
 check_parser_SOURCES = check_parser.c
 check_parser_LDADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_validation_SOURCES = check_validation.c
 check_validation_LDADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_normalization_SOURCES = check_normalization.c
 check_normalization_LDADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_dml_comp_SOURCES = check_dml_comp.c
 check_dml_comp_LDADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_script_SOURCES = check_script.c
 check_script_LDADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_rewrite_for_default_SOURCES = check_rewrite_for_default.c
 check_rewrite_for_default_LDADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS)
 
 

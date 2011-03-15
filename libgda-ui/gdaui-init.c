@@ -174,8 +174,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 			 (type == GDA_TYPE_BINARY))
 			entry = (GdauiDataEntry *) gdaui_entry_bin_new (dh, type);
 		else if	((type == GDA_TYPE_GEOMETRIC_POINT) ||
-			 (type == G_TYPE_OBJECT) ||
-			 (type == GDA_TYPE_LIST))
+			 (type == G_TYPE_OBJECT))
 			entry = (GdauiDataEntry *) gdaui_entry_none_new (type);
 		else if	(type == GDA_TYPE_TIME)
 			entry = (GdauiDataEntry *) gdaui_entry_time_new (dh);

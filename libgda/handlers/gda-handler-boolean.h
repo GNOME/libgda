@@ -1,6 +1,5 @@
-/* gda-handler-boolean.h
- *
- * Copyright (C) 2003 - 2009 Vivien Malerba
+/*
+ * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -47,11 +46,22 @@ struct _GdaHandlerBooleanClass
 {
 	GObjectClass           parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 };
 
+/**
+ * SECTION:gda-handler-boolean
+ * @short_description: Default handler for boolean values
+ * @title: GdaHanderBoolean
+ * @stability: Stable
+ * @see_also: #GdaDataHandler interface
+ *
+ * You should normally not need to use this API, refer to the #GdaDataHandler
+ * interface documentation for more information.
+ */
 
 GType           gda_handler_boolean_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_boolean_new           (void);

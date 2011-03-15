@@ -46,6 +46,13 @@ typedef enum  {
 } GdaValueAttribute;
 
 /* how SQL identifiers are represented */
+/**
+ * GdaSqlIdentifierStyle
+ * @GDA_SQL_IDENTIFIERS_LOWER_CASE: case insensitive SQL identifiers are represented in lower case (meaning that any SQL identifier which has a non lower case character is case sensitive)
+ * @GDA_SQL_IDENTIFIERS_UPPER_CASE: case insensitive SQL identifiers are represented in upper case (meaning that any SQL identifier which has a non upper case character is case sensitive)
+ *
+ * Specifies how SQL identifiers are represented by a specific database
+ */
 typedef enum {
 	GDA_SQL_IDENTIFIERS_LOWER_CASE = 1 << 0,
 	GDA_SQL_IDENTIFIERS_UPPER_CASE = 1 << 1

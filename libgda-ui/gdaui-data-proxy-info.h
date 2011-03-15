@@ -1,6 +1,5 @@
-/* gdaui-data-proxy-info.h
- *
- * Copyright (C) 2006 Vivien Malerba
+/*
+ * Copyright (C) 2006 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -37,6 +36,15 @@ typedef struct _GdauiDataProxyInfo      GdauiDataProxyInfo;
 typedef struct _GdauiDataProxyInfoClass GdauiDataProxyInfoClass;
 typedef struct _GdauiDataProxyInfoPriv  GdauiDataProxyInfoPriv;
 
+/**
+ * GdauiDataProxyInfoFlag:
+ * @GDAUI_DATA_PROXY_INFO_NONE: 
+ * @GDAUI_DATA_PROXY_INFO_CURRENT_ROW: 
+ * @GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS: 
+ * @GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS: 
+ * @GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS: 
+ * @GDAUI_DATA_PROXY_INFO_NO_FILTER: 
+ */
 typedef enum 
 {
 	GDAUI_DATA_PROXY_INFO_NONE = 0,
@@ -61,9 +69,21 @@ struct _GdauiDataProxyInfoClass
 	GtkHBoxClass            parent_class;
 };
 
-/* 
- * Generic widget's methods 
+/**
+ * SECTION:gdaui-data-proxy-info
+ * @short_description: Shows information &amp; actions about a #GdauiDataProxy widget
+ * @title: GdauiDataProxyInfo
+ * @stability: Stable
+ * @Image: vi-info.png
+ * @see_also:
+ *
+ * The #GdauiDataProxyInfo widget is a container widget which, depending on how it is configured:
+ * <itemizedlist>
+ *   <listitem><para>proposes action buttons to change the currently displayed row, add new row, ...</para></listitem>
+ *   <listitem><para>displays information about the number of rows in a #GdauiDataProxy</para></listitem>
+ * </itemizedlist>
  */
+
 GType             gdaui_data_proxy_info_get_type (void) G_GNUC_CONST;
 GtkWidget        *gdaui_data_proxy_info_new      (GdauiDataProxy *data_proxy, GdauiDataProxyInfoFlag flags);
 

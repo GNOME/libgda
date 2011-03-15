@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -47,6 +47,28 @@ struct _GdaTreeMgrSelect {
 struct _GdaTreeMgrSelectClass {
 	GdaTreeManagerClass   object_class;
 };
+
+/**
+ * SECTION:gda-tree-mgr-select
+ * @short_description: A tree manager which creates a node for each row resulting from the execution of a SELECT statement
+ * @title: GdaTreeMgrSelect
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #GdaTreeMgrSelect is a #GdaTreeManager object which executes a SELECT statement and
+ * creates a node for each row in the result.
+ *
+ * The #GdaConnection and SELECT #GdaStatement to be used need to be specified when the object is created.
+ * If the SELECT statement to be used needs some parameters, then it is possible to give values to some of them
+ * when constructing the object, but not necessary.
+ *
+ * If the SELECT statement needs some parameters which have not been provided during the construction, then
+ * these parameters will be fetched from the #GdaTreeNode below which the nodes will be placed (using
+ * gda_tree_node_fetch_attribute()).
+ *
+ * For each node created, an attribute is set for each column in the SELECT statement: the attribute name is
+ * the column name and the attribute value is the value if that column.
+ */
 
 GType              gda_tree_mgr_select_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager*    gda_tree_mgr_select_new                      (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params);

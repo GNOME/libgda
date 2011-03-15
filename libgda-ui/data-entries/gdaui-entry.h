@@ -38,13 +38,13 @@ typedef struct _GdauiEntryPrivate GdauiEntryPrivate;
 
 struct _GdauiEntry
 {
-	GtkEntry                   entry;
+	GtkEntry           entry;
 	GdauiEntryPrivate *priv;
 };
 
 struct _GdauiEntryClass
 {
-	GtkEntryClass              parent_class;
+	GtkEntryClass           parent_class;
 
 	/* virtual methods */
 	/**

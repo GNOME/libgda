@@ -506,7 +506,6 @@ config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string)
 					    info->name);
 	}
 	else {
-#if GLIB_CHECK_VERSION(2,16,0)
 		GdaQuarkList *ql;
 		GSList *list, *sorted_list = NULL;
 		GString *string = NULL;
@@ -538,7 +537,6 @@ config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string)
 					    chname);
 			g_free (chname);
 		}
-#endif
 	}
 
 	g_free (confdir);

@@ -1,6 +1,5 @@
-/* gdaui-data-selector.h
- *
- * Copyright (C) 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -54,6 +53,25 @@ struct _GdauiDataSelectorIface
 	/* signals */
 	void              (* selection_changed)    (GdauiDataSelector *iface);
 };
+
+/**
+ * SECTION:gdaui-data-selector
+ * @short_description: Selecting data in a #GdaDataModel
+ * @title: GdauiDataSelector
+ * @stability: Stable
+ * @Image:
+ * @see_also:
+ *
+ * The #GdauiDataSelector interface is implemented by widgets which allow the user
+ * to select some data from a #GdaDataModel. Depending on the actual widget, the selection
+ * can be a single row or more than one row.
+ *
+ * This interface allows one to set and get the #GdaDataModel from which data is to be selected
+ * and offers a few other common behaviours.
+ *
+ * Please note that any row number in this interface is in reference to the #GdaDataModel returned by
+ * the gdaui_data_selector_get_model() method.
+ */
 
 GType             gdaui_data_selector_get_type              (void) G_GNUC_CONST;
 

@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -48,12 +48,27 @@ struct _GdaRow {
 struct _GdaRowClass {
 	GObjectClass   parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-row
+ * @short_description: Individual row of a #GdaDataModelArray object
+ * @title: GdaRow
+ * @stability: Stable
+ * @see_also: #GdaDataModelArray
+ *
+ * The #GdaDataModelArray object uses #GdaRow to store each row of data. Each #GdaRow has the same
+ * number of #GValue values (equal to the number of columns of the data model).
+ *
+ * As a side note, the #GdaRow object is also used internally by the implementation of the data models returned
+ * when executing a SELECT statement.
+ */
 
 GType         gda_row_get_type       (void) G_GNUC_CONST;
 
@@ -64,8 +79,6 @@ GValue       *gda_row_get_value      (GdaRow *row, gint num);
 /* for database providers mainly */
 void          gda_row_invalidate_value (GdaRow *row, GValue *value);
 gboolean      gda_row_value_is_valid (GdaRow *row, GValue *value);
-
-
 
 G_END_DECLS
 

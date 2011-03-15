@@ -1,5 +1,5 @@
-/* GNOME-DB Components
- * Copyright (C) 2000 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2000 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -13,7 +13,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -113,8 +113,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 					      GTK_STOCK_REVERT_TO_SAVED, REVERT_BUTTON,
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 					      NULL);
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	gtk_window_set_default_size (GTK_WINDOW (dialog), 450, 300);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), TEST_BUTTON, pinfo ? TRUE : FALSE);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), BROWSE_BUTTON, pinfo ? TRUE : FALSE);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), REVERT_BUTTON, FALSE);
@@ -161,11 +160,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
         g_free (str);
 
 	GtkWidget *dcontents;
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-	dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
 	gtk_container_set_border_width (GTK_CONTAINER (dcontents), 5);
 	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
@@ -250,30 +245,40 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 		break;
 		case BROWSE_BUTTON:
 		{
-			char *argv[3];
+			GAppInfo *appinfo;
+			GdkAppLaunchContext *context;
+			GdkScreen *screen;
 			gboolean sresult;
 			GError *lerror = NULL;
+			gchar *cmd;
 #ifdef G_OS_WIN32
 #define EXENAME "gda-browser-" GDA_ABI_VERSION ".exe"
 #else
 #define EXENAME "gda-browser-" GDA_ABI_VERSION
 #endif
 			/* run the gda-browser tool */
-			argv[0] = gda_gbr_get_file_path (GDA_BIN_DIR, (gchar *) EXENAME, NULL);
-			argv[1] = (char *) dsn;
-			argv[2] = NULL;
-
-			sresult = gdk_spawn_on_screen (gtk_widget_get_screen (GTK_WIDGET (dialog)),
-						       NULL, argv, NULL, 0,
-						       NULL, NULL, NULL, &lerror);
-			if (!sresult && lerror && (lerror->domain == G_SPAWN_ERROR) && (lerror->code == G_SPAWN_ERROR_NOENT)) {
-				g_error_free (lerror);
-				g_free (argv[0]);
-				argv[0] = g_strdup (EXENAME);
-				sresult = g_spawn_async (NULL, argv, NULL, G_SPAWN_SEARCH_PATH,
-							 NULL, NULL, NULL, &lerror);
+			cmd = gda_gbr_get_file_path (GDA_BIN_DIR, (char *) EXENAME, NULL);
+			appinfo = g_app_info_create_from_commandline (cmd,
+								      "Gda browser",
+								      G_APP_INFO_CREATE_NONE,
+								      NULL);
+			g_free (cmd);
+			
+			screen = gtk_widget_get_screen (GTK_WIDGET (parent));
+			context = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
+			gdk_app_launch_context_set_screen (context, screen);
+			sresult = g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (context), NULL);
+			if (! sresult) {
+				g_object_unref (appinfo);
+				appinfo = g_app_info_create_from_commandline (EXENAME,
+									      "Gda Control center",
+									      G_APP_INFO_CREATE_NONE,
+									      NULL);
+				sresult = g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (context), &lerror);
 			}
-			g_free (argv [0]);
+			g_object_unref (context);
+			g_object_unref (appinfo);
+
 			if (!sresult) {
 				GtkWidget *msgdialog;
 				msgdialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (dialog), GTK_DIALOG_MODAL,

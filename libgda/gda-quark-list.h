@@ -1,5 +1,5 @@
-/* GDA Common Library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * Authors:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -32,6 +32,17 @@ G_BEGIN_DECLS
 typedef struct _GdaQuarkList GdaQuarkList;
 
 #define GDA_TYPE_QUARK_LIST (gda_quark_list_get_type())
+
+/**
+ * SECTION:gda-quark-list
+ * @short_description: Manages lists of KEY=VALUE pairs
+ * @title: Quark list
+ * @stability: Stable
+ * @see_also:
+ *
+ * This object is used mainly by database provider's implementation to parse connection
+ * strings into lists of KEY=VALUE pairs.
+ */
 
 GType         gda_quark_list_get_type        (void) G_GNUC_CONST;
 GdaQuarkList *gda_quark_list_new             (void);

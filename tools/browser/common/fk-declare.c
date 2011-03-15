@@ -1,8 +1,8 @@
 /* 
  * Copyright (C) 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -177,11 +177,7 @@ create_internal_layout (FkDeclare *decl)
 	gint i, nrows;
 	GSList *list;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (decl));
-#else
-	dcontents = GTK_DIALOG (decl)->vbox;
-#endif
 	gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 
 	/* label */
@@ -404,8 +400,7 @@ fk_declare_new (GtkWindow *parent, GdaMetaStruct *mstruct, GdaMetaTable *table)
 			       GDA_META_DB_OBJECT (table)->obj_short_name);
 	wid = (GtkWidget*) g_object_new (FK_DECLARE_TYPE, "title", str,
 					 "transient-for", parent,
-					 "border-width", 10, 
-					 "has-separator", FALSE, NULL);
+					 "border-width", 10, NULL);
 	g_free (str);
 
 	decl = FK_DECLARE (wid);

@@ -78,12 +78,8 @@ do_login (GtkWidget *do_widget)
 		
 
 		table = gtk_table_new (3, 2, FALSE);
-#if GTK_CHECK_VERSION(2,18,0)
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
 				    table, TRUE, TRUE, 0);
-#else
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), table, TRUE, TRUE, 0);
-#endif
 		gtk_container_set_border_width (GTK_CONTAINER (table), 5);
 
 		/* Create the login widget */

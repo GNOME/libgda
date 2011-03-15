@@ -1,8 +1,8 @@
 /* 
  * Copyright (C) 2009 - 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -207,11 +207,7 @@ auth_dialog_init (AuthDialog *dialog)
 				GTK_STOCK_CANCEL,
 				GTK_RESPONSE_REJECT, NULL);
 
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-	dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
 	gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, TRUE);
 
@@ -286,8 +282,7 @@ auth_dialog_new (GtkWindow *parent)
 	return (AuthDialog*) g_object_new (AUTH_TYPE_DIALOG, "title", _("Authentication"),
 					   "transient-for", parent,
 					   "resizable", FALSE,
-					   "border-width", 10, 
-					   "has-separator", FALSE, NULL);
+					   "border-width", 10, NULL);
 }
 
 /*
@@ -366,13 +361,11 @@ update_dialog_focus (AuthDialog *dialog)
 		}
 	}
 
-#if GTK_CHECK_VERSION(2,20,0)
 	if (allvalid) {
 		GtkWidget *wid;
 		wid = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 		gtk_widget_grab_focus (wid);
 	}
-#endif
 }
 
 /**
@@ -503,12 +496,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 		gchar *str, *tmp, *ptr;
 		GtkWidget *dcontents;
 
-#if GTK_CHECK_VERSION(2,18,0)
 		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-		dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
-
 		label = gtk_label_new ("");
 		tmp = g_strdup (ad->ext.cnc_string);
 		for (ptr = tmp; *ptr; ptr++) {

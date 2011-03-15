@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<chapter id="libgda-provider-pack">
+  <title>Assembling all the parts</title>
+  <para>
+    A database provider is in fact a shared library which is loaded when &LIBGDA; is initialized. The skeleton implementations
+    in <filename class="directory">providers/skel-implementation</filename> propose the following files layout (some of the files
+    are not required for virtual providers).
+  </para>
+  <para> Of course this files layout is not required, but make it easy for maintenance. In the following list,
+    the filenames here are the one for the "Capi" provider, and each provider should rename them:
+    <itemizedlist>
+      <listitem><para><filename>gda-capi.h</filename>: contains the provider name, the include files necessary to use the API and the
+	  declaration of the provider's specific connection data</para></listitem>
+      <listitem><para><filename>gda-capi-provider.[ch]</filename>: are the header and implementation files for the object
+	  inheriting the <link linkend="GdaServerProvider">GdaServerProvider</link> object. This object must implement its
+	  <link linkend="libgda-provider-class">virtual methods</link>.</para></listitem>
+      <listitem><para><filename>gda-capi-recordset.[ch]</filename>: are the header and implementation files for the object
+	  inheriting the <link linkend="GdaDataSelect">GdaDataSelect</link> object. This object must implement its
+	  <link linkend="libgda-provider-recordset">virtual methods</link>.</para></listitem>
+      <listitem><para><filename>gda-capi-ddl.[ch]</filename>: are the files implementing the DDL queries</para></listitem>
+      <listitem><para><filename>gda-capi-parser.[ch]</filename>: are the header and implementation files 
+	  for the object implementing a specific parser,
+	  inheriting <link linkend="GdaSqlParser">GdaSqlParser</link>, see the PostgreSQL provider's implementation for 
+	  example.</para></listitem>
+      <listitem><para><filename>gda-capi-pstmt.[ch]</filename>: are the header and implementation files for the object
+      representing prepared statement and inheriting <link linkend="GdaPStmt">GdaPStmt</link></para></listitem>
+      <listitem><para><filename>gda-capi-blob-op.[ch]</filename>: are the header and implementation files for the object
+	  inheriting the <link linkend="GdaBlobOp">GdaBlopOp</link> object. This object must implement its
+	  <link linkend="libgda-provider-blobop">virtual methods</link>.</para></listitem>
+      <listitem><para><filename>gda-capi-meta.[ch]</filename>: are the files where the meta-data information extraction
+      is implemented.</para></listitem>
+      <listitem><para><filename>libmain.c</filename>: file to make it possible for &LIBGDA; to identify the provider.</para></listitem>
+      <listitem><para><filename>capi_specs_dsn.xml.in</filename>: file where the connection parameters are described, 
+	  before being translated</para></listitem>
+      <listitem><para><filename>libgda-capi-5.0.pc.in</filename>: file to be used by <command>pkg-config</command> to identify
+	  the provider, before being computed by the <command>configure</command> script.</para></listitem>
+      <listitem><para>other .xml.in files: DDL queries' parameters, before translation</para></listitem>
+    </itemizedlist>
+  </para>
+
+  <sect1>
+    <title>libmain.c</title>
+    <para>
+      Once the shared library implementing the provider is loaded (and
+      all the necessary dependencies are also loaded), &LIBGDA; tries to locate some functions to identify the provider (if any of
+      these function is missing, then the DLL is unloaded and the provider is not availaibe).
+    </para>
+    <para>
+      The skeleton implementations in <filename class="directory">providers/skel-implementation</filename> propose to implement those
+      functions in a <filename>libmain.c</filename> file. The functions are the following ones:
+    </para>
+    <sect2>
+      <title>plugin_init()</title>
+      <para>This function initializes the plugin; it has a single argument which is the path where the provider is.
+	As the module can be unloaded, any static data allocated here must be freed when the module is unloaded,
+	in a <link linkend="GModuleUnload">g_module_unload()</link> function. If the module must not be
+	unloaded, it must be made resident using <link linkend="g-module-make-resident">g_module_make_resident()</link>, 
+	in a <link linkend="GModuleCheckInit">g_module_check_init()</link> function</para>
+      <para>Note that after a <link linkend="GdaServerProvider">GdaServerProvider</link> object has been 
+	created (ie after plugin_create_provider() has
+	been called once), the module will not be unloaded anymore.</para>
+    </sect2>
+    <sect2>
+      <title>plugin_get_name()</title>
+      <para>This funtion returns the name of the provider, it <emphasis>must</emphasis> return the same string as what the
+	<link linkend="prov-get-name">get_name()</link>'s provider's virtual method returns.</para>
+    </sect2>
+    <sect2>
+      <title>plugin_get_description()</title>
+      <para>This funtion returns a description of the provider.</para>
+    </sect2>
+    <sect2>
+      <title>plugin_get_dsn_spec()</title>
+      <para>This function returns a description of the parameters which have or can be set when opening a connection. This
+	description uses an XML syntax and is usually stored in a separate XML file (for easier translation).</para>
+      <para>Here is an example, when only one "DB_NAME" parameter is required:
+	<programlisting>
+&lt;?xml version="1.0"?&gt;
+&lt;data-set-spec&gt;
+  &lt;parameters&gt;
+    &lt;parameter id="DB_NAME" _name="Database name" _descr="The name of a database to use" gdatype="gchararray" nullok="FALSE"/&gt;
+  &lt;/parameters&gt;
+&lt;/data-set-spec&gt;
+	</programlisting>
+	Note that the the attributes which have a name starting with an underscore should be translated (see the
+	<filename>Makefile.am</filename> file for some example on ho this is done).
+      </para>
+    </sect2>
+    <sect2>
+      <title>plugin_get_auth_spec()</title>
+      <para>
+	This function returns a description of the authentication information required by the provider. If the
+	only information is a username/password pair, then it is not necessary to implement that function.
+      </para>
+      <para>
+	However, if a username is required, then it must be name "USERNAME", and if a password is required,
+	it must be named "PASSWORD".
+      </para>
+    </sect2>
+    <sect2>
+      <title>plugin_create_provider()</title>
+      <para>This function actually instantiates a provider object and returns it.</para>
+    </sect2>
+  </sect1>
+
+</chapter>

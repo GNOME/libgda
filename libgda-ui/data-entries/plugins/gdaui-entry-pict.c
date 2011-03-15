@@ -1,6 +1,6 @@
 /* gdaui-entry-pict.c
  *
- * Copyright (C) 2006 - 2009 Vivien Malerba
+ * Copyright (C) 2006 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -379,16 +379,10 @@ display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_s
 	PictAllocation alloc;
 	GError *error = NULL;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	GtkAllocation walloc;
 	gtk_widget_get_allocation (mgpict->priv->sw, &walloc);
 	alloc.width = walloc.width;
 	alloc.height = walloc.height;
-#else
-	alloc.width = mgpict->priv->sw->allocation.width;
-	alloc.height = mgpict->priv->sw->allocation.height;
-#endif
-
 	alloc.width = MAX (alloc.width, 10);
 	alloc.height = MAX (alloc.height, 10);
 
@@ -515,12 +509,8 @@ value_is_equal_to (GdauiEntryWrapper *mgwrap, const GValue *value)
 						    mgpict->priv->bindata.data_length);
 				break;
 			case ENCODING_BASE64: 
-#if (GLIB_MINOR_VERSION >= 12)
-				curstr = g_base64_encode (mgpict->priv->bindata.data, mgpict->priv->bindata.data_length);
-#else
-				g_warning ("Base64 enoding/decoding is not supported in the GLib version %d.%d.%d",
-					   glib_major_version, glib_minor_version, glib_micro_version);
-#endif
+				curstr = g_base64_encode (mgpict->priv->bindata.data,
+							  mgpict->priv->bindata.data_length);
 				break;
 			default:
 				g_assert_not_reached ();

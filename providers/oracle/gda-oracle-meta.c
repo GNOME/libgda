@@ -501,7 +501,7 @@ oracle_identifier_to_value (const gchar *sqlid)
 		for (ptr = sqlid; *ptr; ptr++) {
 			if ((*ptr == ' ') || (*ptr != g_ascii_toupper (*ptr))) {
 				/* add quotes */
-				g_value_take_string (v, gda_sql_identifier_add_quotes (sqlid));
+				g_value_take_string (v, gda_sql_identifier_force_quotes (sqlid));
 				return v;
 			}
 		}
@@ -509,7 +509,7 @@ oracle_identifier_to_value (const gchar *sqlid)
 		g_value_set_string (v, sqlid);
 	}
 	else
-		g_value_take_string (v, gda_sql_identifier_add_quotes (sqlid));
+		g_value_take_string (v, gda_sql_identifier_force_quotes (sqlid));
 	return v;
 }
 

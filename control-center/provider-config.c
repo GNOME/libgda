@@ -1,6 +1,5 @@
-/* GNOME-DB Configurator
- *
- * Copyright (C) 2000 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2000 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -14,7 +13,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -46,24 +45,19 @@ provider_config_new (void)
 {
 	ProviderConfigPrivate *priv;
 	GtkWidget *provider;
-	GtkWidget *table;
 	GtkWidget *box;
-	GtkWidget *button;
+	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *sw;
 	gchar *title;
 	GdaDataModel *model;
 
 	priv = g_new0 (ProviderConfigPrivate, 1);
-	provider = gtk_vbox_new (FALSE, 6);
+	provider = gtk_vbox_new (FALSE, 0);
 	gtk_widget_show (provider);
         gtk_container_set_border_width (GTK_CONTAINER (provider), 6);
 	g_object_set_data_full (G_OBJECT (provider), PROVIDER_CONFIG_DATA, priv,
 				(GDestroyNotify) g_free);
-
-	table = gtk_table_new (3, 1, FALSE);
-	gtk_box_pack_start (GTK_BOX (provider), table, TRUE, TRUE, 0);
-	gtk_widget_show (table);
 
 	/* title */
 	title = g_strdup_printf ("<b>%s</b>\n%s", _("Providers"),
@@ -76,20 +70,14 @@ provider_config_new (void)
 	cc_gray_bar_set_icon_from_file (CC_GRAY_BAR (priv->title), path);
 	g_free (path);
 
-	gtk_table_attach (GTK_TABLE (table), priv->title, 0, 1, 0, 1,
-			  GTK_FILL | GTK_SHRINK,
-			  GTK_FILL | GTK_SHRINK,
-			  0, 0);
+	gtk_box_pack_start (GTK_BOX (provider), priv->title, FALSE, FALSE, 0);
 	gtk_widget_show (priv->title);
 
 	/* create the provider list */
 	sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);	
-	gtk_table_attach (GTK_TABLE (table), sw, 0, 1, 1, 2,
-			  GTK_FILL | GTK_SHRINK | GTK_EXPAND,
-			  GTK_FILL | GTK_SHRINK | GTK_EXPAND,
-			  0, 0);
+					GTK_POLICY_AUTOMATIC);
+	gtk_box_pack_start (GTK_BOX (provider), sw, TRUE, TRUE, 0);
 
 	model = gda_config_list_providers ();
 	priv->provider_list = gdaui_raw_grid_new (model);
@@ -105,22 +93,17 @@ provider_config_new (void)
 	box = gtk_hbox_new (FALSE, 6);
 	gtk_widget_show (box);
         gtk_container_set_border_width (GTK_CONTAINER (box), 6);
-	gtk_table_attach (GTK_TABLE (table), box, 0, 1, 2, 3,
-			  GTK_FILL, GTK_FILL, 0, 0);
+	gtk_box_pack_start (GTK_BOX (provider), box, FALSE, FALSE, 0);
 
-	button = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
-        gtk_misc_set_alignment (GTK_MISC (button), 0.5, 0.0);
-	gtk_widget_show (button);
-	gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
+	gtk_widget_show (image);
+	gtk_box_pack_start (GTK_BOX (box), image, FALSE, FALSE, 0);
 
-	label = gtk_label_new_with_mnemonic (
-		_("Providers are addons that actually implement the access "
-		  "to each database using the means provided by each database vendor."));
+	label = gtk_label_new (_("Providers are addons that actually implement the access "
+				 "to each database using the means provided by each database vendor."));
 	gtk_widget_show (label);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-        gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
-        gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-	gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, 0);
 
 	return provider;
 }

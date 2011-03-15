@@ -26,7 +26,7 @@ static gboolean compute_intersect_rect_line (gdouble rectx1, gdouble recty1, gdo
 					     gdouble *R1x, gdouble *R1y, gdouble *R2x, gdouble *R2y);
 
 static void     compute_text_marks_offsets (gdouble x1, gdouble y1, gdouble x2, gdouble y2,
-					    gdouble *xoff, gdouble *yoff, GtkAnchorType *anchor_type);
+					    gdouble *xoff, gdouble *yoff, GooCanvasAnchorType *anchor_type);
 
 static GSList *browser_canvas_util_compute_handle_shapes  (GooCanvasItem *parent, GSList *shapes, gint index,
 							 gdouble x1, gdouble y1, gdouble x2, gdouble y2);
@@ -172,7 +172,7 @@ browser_canvas_util_compute_anchor_shapes (GooCanvasItem *parent, GSList *shapes
 					item = goo_canvas_text_new (parent, "*", 
 								    points->coords[2] + 5.,
 								    points->coords[3] - 5., -1,
-								    GTK_ANCHOR_SOUTH, NULL);
+								    GOO_CANVAS_ANCHOR_SOUTH, NULL);
 					retval = browser_canvas_canvas_shape_add_to_list (retval, id, item);
 				}
 			}
@@ -190,7 +190,7 @@ browser_canvas_util_compute_anchor_shapes (GooCanvasItem *parent, GSList *shapes
 					item = goo_canvas_text_new (parent, "*", 
 								    points->coords[4] + 5.,
 								    points->coords[5] + 5., -1,
-								    GTK_ANCHOR_NORTH, NULL);
+								    GOO_CANVAS_ANCHOR_NORTH, NULL);
 					retval = browser_canvas_canvas_shape_add_to_list (retval, id, item);
 				}
 			}
@@ -295,7 +295,7 @@ browser_canvas_util_compute_anchor_shapes (GooCanvasItem *parent, GSList *shapes
 			/* extension marks as text */
 			if (ext & CANVAS_SHAPE_EXT_JOIN_OUTER_1) {
 				gdouble mxoff = 0., myoff = 0.;
-				GtkAnchorType atype;
+				GooCanvasAnchorType atype;
 
 				compute_text_marks_offsets (points->coords[0], points->coords[1], 
 							    points->coords[2], points->coords[3],
@@ -321,7 +321,7 @@ browser_canvas_util_compute_anchor_shapes (GooCanvasItem *parent, GSList *shapes
 
 			if (ext & CANVAS_SHAPE_EXT_JOIN_OUTER_2) {
 				gdouble mxoff, myoff;
-				GtkAnchorType atype;
+				GooCanvasAnchorType atype;
 				
 				compute_text_marks_offsets (points->coords[2], points->coords[3], 
 							    points->coords[0], points->coords[1],
@@ -365,10 +365,10 @@ browser_canvas_util_compute_anchor_shapes (GooCanvasItem *parent, GSList *shapes
  */
 static void
 compute_text_marks_offsets (gdouble x1, gdouble y1, gdouble x2, gdouble y2,
-			    gdouble *xoff, gdouble *yoff, GtkAnchorType *anchor_type)
+			    gdouble *xoff, gdouble *yoff, GooCanvasAnchorType *anchor_type)
 {
 	gdouble mxoff, myoff;
-	GtkAnchorType atype = GTK_ANCHOR_CENTER; /* FIXME */
+	GooCanvasAnchorType atype = GOO_CANVAS_ANCHOR_CENTER; /* FIXME */
 	gdouble sint, cost;
 	gdouble sina = 0.5;
 	gdouble cosa = 0.866025; /* sqrt(3)/2 */
@@ -620,7 +620,7 @@ browser_canvas_util_compute_connect_shapes (GooCanvasItem *parent, GSList *shape
 	/* extension marks as text */
 	if (ext & CANVAS_SHAPE_EXT_JOIN_OUTER_1) {
 		gdouble mxoff = 0., myoff = 0.;
-		GtkAnchorType atype;
+		GooCanvasAnchorType atype;
 		
 		compute_text_marks_offsets (points->coords[4], points->coords[5], 
 					    points->coords[2], points->coords[3],
@@ -647,7 +647,7 @@ browser_canvas_util_compute_connect_shapes (GooCanvasItem *parent, GSList *shape
 	
 	if (ext & CANVAS_SHAPE_EXT_JOIN_OUTER_2) {
 		gdouble mxoff, myoff;
-		GtkAnchorType atype;
+		GooCanvasAnchorType atype;
 		
 		compute_text_marks_offsets (points->coords[2], points->coords[3], 
 					    points->coords[4], points->coords[5],

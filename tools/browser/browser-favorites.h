@@ -1,8 +1,8 @@
 /* 
  * Copyright (C) 2009 - 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -39,6 +39,9 @@ typedef struct _BrowserFavoritesPrivate BrowserFavoritesPrivate;
  * BrowserFavoritesType:
  * @BROWSER_FAVORITES_TABLES: a database's table favorite
  * @BROWSER_FAVORITES_DIAGRAMS: a diagram favorite
+ * @BROWSER_FAVORITES_QUERIES:
+ * @BROWSER_FAVORITES_DATA_MANAGERS:
+ * @BROWSER_FAVORITES_ACTIONS:
  *
  * Enum to identify favorite's types.
  */
@@ -81,6 +84,17 @@ struct _BrowserFavoritesClass
 
 	void                    (*favorites_changed) (BrowserFavorites *bfav);
 };
+
+/**
+ * SECTION:browser-favorites
+ * @short_description: Favorites management
+ * @title: BrowserFavorites
+ * @stability: Stable
+ * @see_also:
+ *
+ * Each connection uses a single #BrowserFavorites object to manage its favorites,
+ * see browser_connection_get_favorites().
+ */
 
 GType               browser_favorites_get_type               (void) G_GNUC_CONST;
 

@@ -1,5 +1,4 @@
-/* gda-meta-store.h
- *
+/*
  * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
@@ -69,7 +68,17 @@ typedef struct {
 	                               * value = a GValue pointer */
 } GdaMetaStoreChange;
 
-/* suggestion */
+/**
+ * GdaMetaContext:
+ * @table_name: the name of the table <emphasis>in the GdaMetaStore's internal database</emphasis>
+ * @size: the size of the @column_names and @column_values arrays
+ * @column_names: an array of column names (columns of the @table_name table)
+ * @column_values: an array of values, one for each column named in @column_names
+ *
+ * The <structname>GdaMetaContext</structname> represents a meta data modification
+ * context: the <emphasis>how</emphasis> when used with gda_meta_store_modify_with_context(),
+ * and the <emphasis>what</emphasis> when used with gda_connection_update_meta_store().
+ */
 typedef struct {
 	gchar                  *table_name;
 	gint                    size;
@@ -102,6 +111,27 @@ struct _GdaMetaStoreClass
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-meta-store
+ * @short_description: Dictionary object
+ * @title: GdaMetaStore
+ * @stability: Stable
+ * @see_also: #GdaMetaStruct
+ *
+ * Previous versions of &LIBGDA; relied on an XML based file to store dictionary information, such as
+ * the database's schema (tables, views, etc) and various other information. The problems were that it was
+ * difficult for an application to integrate its own data into the dictionary and that there were some
+ * performances problems as the XML file needed to be parsed (and converted into its own in-memory structure)
+ * before any data could be read out of it.
+ *
+ * The new dictionary now relies on a database structure to store its data (see the 
+ * <link linkend="information_schema">database schema</link> section for a detailed description). The actual database can be a
+ * single file (using an SQLite database), an entirely in memory database (also using an SQLite database), or
+ * a more conventional backend such as a PostgreSQL database for a shared dictionary on a server.
+ *
+ * The #GdaMetaStore object is thread safe.
+ */
 
 GType             gda_meta_store_get_type                 (void) G_GNUC_CONST;
 GdaMetaStore     *gda_meta_store_new_with_file            (const gchar *file_name);

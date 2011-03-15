@@ -1,5 +1,5 @@
 /* GDA Mysql provider
- * Copyright (C) 2008 - 2010 The GNOME Foundation.
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
@@ -506,11 +506,7 @@ real_open_connection (const gchar  *host,
 						  (port > 0) ? port : 0,
 						  socket, flags);
 	if (!return_mysql || mysql != return_mysql) {
-#if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 18
-		g_set_error (error, 0, 0, "%s", mysql_error (mysql));
-#else
 		g_set_error_literal (error, GDA_SERVER_PROVIDER_ERROR, 0, mysql_error (mysql));
-#endif
 		g_free (mysql);
 		mysql = NULL;
 	}
@@ -1346,8 +1342,6 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 		return "text";
 	if (type == G_TYPE_INT)
 		return "int";
-	if (type == GDA_TYPE_LIST)
-		return "text";
 	if (type == GDA_TYPE_NUMERIC)
 		return "numeric";
 	if (type == G_TYPE_FLOAT)
@@ -2886,7 +2880,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 			gchar *tmp, *ptr;
 			tmp = my_remove_quotes (g_strdup (id));
 			if (kwfunc (tmp)) {
-				ptr = gda_sql_identifier_add_quotes (tmp);
+				ptr = gda_sql_identifier_force_quotes (tmp);
 				g_free (tmp);
 				return ptr;
 			}
@@ -2896,13 +2890,13 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 				    (*ptr == '_'))
 					continue;
 				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
 			}
 			return tmp;
-			/*			ptr = gda_sql_identifier_add_quotes (tmp);
+			/*			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;*/
 		}
@@ -2926,7 +2920,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 			gchar *tmp, *ptr;
 			tmp = my_remove_quotes (g_strdup (id));
 			if (kwfunc (tmp)) {
-				ptr = gda_sql_identifier_add_quotes (tmp);
+				ptr = gda_sql_identifier_force_quotes (tmp);
 				g_free (tmp);
 				return ptr;
 			}
@@ -2938,7 +2932,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}
@@ -2954,7 +2948,7 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}

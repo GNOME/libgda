@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=Database access control center
+_Comment=Configure your database access environment
+Icon=gda-control-center
+Exec=gda-control-center-5.0
+Terminal=false
+Type=Application
+Categories=Settings;DesktopSettings;
+StartupNotify=true

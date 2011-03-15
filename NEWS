@@ -1,3 +1,15 @@
+libgda 4.99.0, 2011-03-05
+
+ - Adaptations to the GTK3 environment (requires gtk+-3.0 >= 3.0.0):
+        - API is preserved but ABI has changed
+	- Deprecated API has been removed
+ - Embedded SQLite version 3.7.5
+ - Embedded SQLCipher version is 2.0Beta
+
+WARNING: this is a beta version and should not be used in a production environment, and the
+	 SQLCipher database provider is itself in a beta state, so again don't use it on production data,
+	 as you may lose your data!
+
 libgda 4.2.5, 2011-02-22
 
  - corrected regression which prevented correct execution of SELECT statements

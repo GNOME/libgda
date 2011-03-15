@@ -1175,8 +1175,6 @@ gtype_to_webtype (GType type)
                 return "text";
         if (type == G_TYPE_INT)
                 return "integer";
-        if (type == GDA_TYPE_LIST)
-                return "text";
         if (type == GDA_TYPE_NUMERIC)
                 return "decimal";
         if (type == G_TYPE_FLOAT)

@@ -463,13 +463,9 @@ statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 		gchar *tmp;
 		dialog = gtk_dialog_new_with_buttons (aed->name,
 						      NULL,
-						      GTK_DIALOG_NO_SEPARATOR,
+						      0,
 						      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE, NULL);
-#if GTK_CHECK_VERSION(2,18,0)
 		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-		dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
 		gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE, TRUE);
 		

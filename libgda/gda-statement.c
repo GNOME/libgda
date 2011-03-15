@@ -1,6 +1,5 @@
-/* gda-statement.c
- *
- * Copyright (C) 2007 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -1290,7 +1289,7 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 				     "%s", _("Unnamed parameter"));
 			goto err;
 		}
-		quoted_pname = gda_sql_identifier_add_quotes (pspec->name);
+		quoted_pname = gda_sql_identifier_force_quotes (pspec->name);
 
 		if (! (flag & (GDA_STATEMENT_SQL_PARAMS_LONG | GDA_STATEMENT_SQL_PARAMS_SHORT))) {
 			if (!expr->value || gda_value_is_null (expr->value) || strcmp (quoted_pname, pspec->name))
@@ -1315,12 +1314,12 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 			g_string_append (string, " /* ");
 			g_string_append_printf (string, "name:%s", quoted_pname);
 			if (pspec->g_type) {
-				str = gda_sql_identifier_add_quotes (gda_g_type_to_string (pspec->g_type));
+				str = gda_sql_identifier_force_quotes (gda_g_type_to_string (pspec->g_type));
 				g_string_append_printf (string, " type:%s", str);
 				g_free (str);
 			}
 			if (pspec->descr) {
-				str = gda_sql_identifier_add_quotes (pspec->descr);
+				str = gda_sql_identifier_force_quotes (pspec->descr);
 				g_string_append_printf (string, " descr:%s", str);
 				g_free (str);
 			}
@@ -1864,7 +1863,6 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 {
 	GString *string;
 	gchar *str;
-	gpointer tmp;
 
 	g_return_val_if_fail (target, NULL);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (target)->type == GDA_SQL_ANY_SQL_SELECT_TARGET, NULL);
@@ -1880,8 +1878,9 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 		g_free (str);
 	}
 	else {
+		gboolean tmp;
 		tmp = target->expr->value_is_ident;
-		target->expr->value_is_ident = (gpointer) 0x1;
+		target->expr->value_is_ident = TRUE;
 		str = context->render_expr (target->expr, context, NULL, NULL, error);
 		target->expr->value_is_ident = tmp;
 		string = g_string_new (str);

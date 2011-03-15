@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation
+ * Copyright (C) 2009 - 2010 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -66,7 +66,7 @@ delete_popup (G_GNUC_UNUSED GtkWidget *widget, PopupContainer *container)
 static gboolean
 key_press_popup (GtkWidget *widget, GdkEventKey *event, PopupContainer *container)
 {
-        if (event->keyval != GDK_Escape)
+        if (event->keyval != GDK_KEY_Escape)
                 return FALSE;
 
         g_signal_stop_emission_by_name (widget, "key-press-event");
@@ -215,13 +215,8 @@ popup_container_show (GtkWidget *widget)
         if (do_move)
                 gtk_window_move (GTK_WINDOW (widget), root_x, root_y);
 
-#if GTK_CHECK_VERSION(2,18,0)
 	popup_grab_on_window (gtk_widget_get_window (widget),
                               gtk_get_current_event_time ());
-#else
-	popup_grab_on_window (widget->window,
-                              gtk_get_current_event_time ());
-#endif
 }
 
 static void
@@ -269,20 +264,12 @@ popup_position (PopupContainer *container, gint *out_x, gint *out_y)
 
         gtk_widget_size_request (poswidget, &req);
 
-#if GTK_CHECK_VERSION(2,18,0)
 	GtkAllocation alloc;
         gdk_window_get_origin (gtk_widget_get_window (poswidget), &x, &y);
 	gtk_widget_get_allocation (poswidget, &alloc);
         x += alloc.x;
         y += alloc.y;
         y += alloc.height;
-#else
-        gdk_window_get_origin (poswidget->window, &x, &y);
-
-        x += poswidget->allocation.x;
-        y += poswidget->allocation.y;
-        y += poswidget->allocation.height;
-#endif
 
         if (x < 0)
                 x = 0;

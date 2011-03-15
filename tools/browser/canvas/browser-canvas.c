@@ -1,18 +1,18 @@
 /* browser-canvas.c
  *
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2010 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
@@ -170,7 +170,7 @@ browser_canvas_init (BrowserCanvas *canvas)
 		      "automatic-bounds", TRUE,
 		      "bounds-padding", 5., 
 		      "bounds-from-origin", FALSE, 
-		      "anchor", GTK_ANCHOR_CENTER, NULL);
+		      "anchor", GOO_CANVAS_ANCHOR_CENTER, NULL);
 
 	/* reseting the zoom */
 	goo_canvas_set_scale (canvas->priv->goocanvas, DEFAULT_SCALE);
@@ -275,29 +275,17 @@ motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, G_GNUC_UNUSED Go
 				ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (canvas));
 				va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (canvas));
 
-#if GTK_CHECK_VERSION(2,18,0)
 				upper = gtk_adjustment_get_upper (ha);
 				lower = gtk_adjustment_get_lower (ha);
 				page_size = gtk_adjustment_get_page_size (ha);
-#else
-				upper = ha->upper;
-				lower = ha->lower;
-				page_size = ha->page_size;
-#endif
 				x = gtk_adjustment_get_value (ha);
 				x = CLAMP (x + canvas->xmouse - ((GdkEventMotion*) event)->x,
 					   lower, upper - page_size);
 				gtk_adjustment_set_value (ha, x);
 
-#if GTK_CHECK_VERSION(2,18,0)
 				upper = gtk_adjustment_get_upper (va);
 				lower = gtk_adjustment_get_lower (va);
 				page_size = gtk_adjustment_get_page_size (va);
-#else
-				upper = va->upper;
-				lower = va->lower;
-				page_size = va->page_size;
-#endif
 				y = gtk_adjustment_get_value (va);
 				y = CLAMP (y + canvas->ymouse - ((GdkEventMotion*) event)->y,
 					   lower, upper - page_size);
@@ -309,13 +297,8 @@ motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, G_GNUC_UNUSED Go
 				canvas->priv->canvas_moving = TRUE;
 				if (! hand_cursor)
 					hand_cursor = gdk_cursor_new (GDK_HAND2);
-#if GTK_CHECK_VERSION(2,18,0)
 				gdk_window_set_cursor (gtk_widget_get_window (GTK_WIDGET (canvas)),
 						       hand_cursor);
-#else
-				gdk_window_set_cursor (GTK_WIDGET (canvas)->window,
-						       hand_cursor);
-#endif
 			}
 		}
 		done = TRUE;
@@ -420,11 +403,7 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 	case GDK_BUTTON_RELEASE:
 		if (canvas->priv->canvas_moving) {
 			canvas->priv->canvas_moving = FALSE;
-#if GTK_CHECK_VERSION(2,18,0)
 			gdk_window_set_cursor (gtk_widget_get_window (GTK_WIDGET (canvas)), NULL);
-#else
-			gdk_window_set_cursor (GTK_WIDGET (canvas)->window, NULL);
-#endif
 		}
 		break;
 	case GDK_2BUTTON_PRESS:
@@ -496,13 +475,8 @@ popup_export_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 
 #define MARGIN 5.
 
-#if GTK_CHECK_VERSION(2,18,0)
 	if (!gtk_widget_is_toplevel (toplevel))
 		toplevel = NULL;
-#else
-	if (!GTK_WIDGET_TOPLEVEL (toplevel))
-		toplevel = NULL;
-#endif
 
 	dlg = gtk_file_chooser_dialog_new (_("Save diagram as"), (GtkWindow*) toplevel,
 					   GTK_FILE_CHOOSER_ACTION_SAVE, 
@@ -784,15 +758,10 @@ browser_canvas_fit_zoom_factor (BrowserCanvas *canvas)
 	g_return_val_if_fail (IS_BROWSER_CANVAS (canvas), 1.);
 	g_return_val_if_fail (canvas->priv, 1.);
 
-#if GTK_CHECK_VERSION(2,18,0)
 	GtkAllocation alloc;
 	gtk_widget_get_allocation (GTK_WIDGET (canvas), &alloc);
 	xall = alloc.width;
 	yall = alloc.height;
-#else
-	xall = GTK_WIDGET (canvas)->allocation.width;
-	yall = GTK_WIDGET (canvas)->allocation.height;
-#endif
 
 	goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (goo_canvas_get_root_item (canvas->priv->goocanvas)),
 				    &bounds);

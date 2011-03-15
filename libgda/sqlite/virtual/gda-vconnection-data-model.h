@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -40,11 +40,33 @@ typedef struct _GdaVconnectionDataModelPrivate GdaVconnectionDataModelPrivate;
 typedef struct _GdaVconnectionDataModelSpec  GdaVconnectionDataModelSpec;
 typedef struct _GdaVconnectionDataModelFilter GdaVconnectionDataModelFilter;
 
+/**
+ * GdaVconnectionDataModelCreateColumnsFunc:
+ * @Param1: 
+ * @Param2: 
+ * @Returns: 
+ */
 typedef GList        *(*GdaVconnectionDataModelCreateColumnsFunc) (GdaVconnectionDataModelSpec *, GError **);
+
+/**
+ * GdaVconnectionDataModelCreateModelFunc:
+ * @Param1: 
+ * @Returns: 
+ */
 typedef GdaDataModel *(*GdaVconnectionDataModelCreateModelFunc)   (GdaVconnectionDataModelSpec *);
+
+/**
+ * GdaVconnectionDataModelFunc:
+ * @Param1: 
+ * @Param2: 
+ * @Param3: 
+ */
+
 typedef void (*GdaVconnectionDataModelFunc) (GdaDataModel *, const gchar *, gpointer );
 
-/* 
+/**
+ * GdaVconnectionDataModelFilter:
+ *
  * Enabling pre-filtering when creating a data model to be used as a table,
  * (structure closely mapped with SQLite's sqlite3_index_info type), to enable
  * the data model to perform some filter tasks itself.
@@ -82,10 +104,29 @@ struct _GdaVconnectionDataModelFilter {
 	double estimatedCost;      /* Estimated cost of using this index */
 };
 
+/**
+ * GdaVconnectionDataModelParseFilterFunc:
+ * @Param1:
+ * @Param2:
+ */
 typedef void          (*GdaVconnectionDataModelParseFilterFunc)   (GdaVconnectionDataModelSpec *, GdaVconnectionDataModelFilter *); 
+
+/**
+ * GdaVconnectionDataModelCreateFModelFunc:
+ * @Param1: 
+ * @Returns: 
+ */
 typedef GdaDataModel *(*GdaVconnectionDataModelCreateFModelFunc)  (GdaVconnectionDataModelSpec *,
 								   int, const char *, int, GValue **);
-
+/**
+ * GdaVconnectionDataModelSpec:
+ * @data_model: 
+ * @create_columns_func: 
+ * @create_model_func: 
+ * @create_filter_func: 
+ * @create_filtered_model_func:
+ *
+ */
 struct _GdaVconnectionDataModelSpec {
 	GdaDataModel                             *data_model;
 	GdaVconnectionDataModelCreateColumnsFunc  create_columns_func;
@@ -104,10 +145,22 @@ struct _GdaVconnectionDataModel {
 struct _GdaVconnectionDataModelClass {
 	GdaVirtualConnectionClass       parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 };
+
+/**
+ * SECTION:gda-vconnection-data-model
+ * @short_description: Virtual connection based on a list of GdaDataModel
+ * @title: GdaVconnectionDataModel
+ * @stability: Stable
+ * @see_also: The #GdaVproviderDataModel provider to use to create such connection objects.
+ *
+ * The #GdaVconnectionDataModel is a virtual connection in which #GdaDataModel data models can be added
+ * or removed, each representing a table in the connection.
+ */
 
 GType               gda_vconnection_data_model_get_type  (void) G_GNUC_CONST;
 

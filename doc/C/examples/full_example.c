@@ -1,3 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<programlisting>
 <![CDATA[#include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 
@@ -116,7 +120,7 @@ insert_data (GdaConnection *cnc)
 			g_value_set_float (v3, data[i].price);
 		}
 		
-		res = gda_insert_row_into_table (cnc, "products", &error, "ref", v1, "name", v2, "price", v3, NULL);
+		res = gda_connection_insert_row_into_table (cnc, "products", &error, "ref", v1, "name", v2, "price", v3, NULL);
 
 		if (!res) {
 			g_error ("Could not INSERT data into the 'products' table: %s\n",
@@ -145,7 +149,7 @@ update_data (GdaConnection *cnc)
 	v3 = gda_value_new (G_TYPE_FLOAT);
 	g_value_set_float (v3, 1.99);
 		
-	res = gda_update_row_in_table (cnc, "products", "ref", v1, &error, "name", v2, "price", v3, NULL);
+	res = gda_connection_update_row_in_table (cnc, "products", "ref", v1, &error, "name", v2, "price", v3, NULL);
 
 	if (!res) {
 		g_error ("Could not UPDATE data in the 'products' table: %s\n",
@@ -168,7 +172,7 @@ delete_data (GdaConnection *cnc)
 
 	/* delete data where name is 'table' */
 	v = gda_value_new_from_string ("table", G_TYPE_STRING);
-	res = gda_delete_row_from_table (cnc, "products", "name", v, &error);
+	res = gda_connection_delete_row_from_table (cnc, "products", "name", v, &error);
 	if (!res) {
 		g_error ("Could not DELETE data from the 'products' table: %s\n",
 			 error && error->message ? error->message : "No detail");
@@ -176,7 +180,7 @@ delete_data (GdaConnection *cnc)
 	gda_value_free (v);
 
 	/* delete data where price is NULL */
-	res = gda_delete_row_from_table (cnc, "products", "price", NULL, &error);
+	res = gda_connection_delete_row_from_table (cnc, "products", "price", NULL, &error);
 	if (!res) {
 		g_error ("Could not DELETE data from the 'products' table: %s\n",
 			 error && error->message ? error->message : "No detail");
@@ -229,3 +233,4 @@ run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 	g_object_unref (stmt);
 }
 ]]>
+</programlisting>

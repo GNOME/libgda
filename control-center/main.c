@@ -13,7 +13,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -28,9 +28,6 @@
 #include "dsn-config.h"
 #include "provider-config.h"
 #include "gdaui-dsn-assistant.h"
-#ifdef HAVE_UNIQUE
-#include <unique/unique.h>
-#endif
 
 GtkWindow *main_window;
 GtkActionGroup *actions;
@@ -180,7 +177,7 @@ about_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 	dialog = gtk_about_dialog_new ();
 	gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database access control center"));
 	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), PACKAGE_VERSION);
-	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 1998 - 2010 GNOME Foundation");
+	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 1998 - 2011 GNOME Foundation");
 	gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (dialog), _("Database access services for the GNOME Desktop"));
 	gtk_about_dialog_set_license (GTK_ABOUT_DIALOG (dialog), "GNU Lesser General Public License");
 	gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), "http://www.gnome-db.org");
@@ -300,75 +297,33 @@ create_main_window (void)
 	return window;
 }
 
-#ifdef HAVE_UNIQUE
-static UniqueResponse
-message_received_cb (G_GNUC_UNUSED UniqueApp         *app,
-                     UniqueCommand      command,
-                     UniqueMessageData *message,
-                     G_GNUC_UNUSED guint              time_,
-                     gpointer           user_data)
+static void
+activate (GtkApplication *app)
 {
-	UniqueResponse res = UNIQUE_RESPONSE_OK;
-	switch (command) {
-	case UNIQUE_ACTIVATE:
-		/* move the main window to the screen that sent us the command */
-		gtk_window_set_screen (GTK_WINDOW (user_data), unique_message_data_get_screen (message));
-		gtk_window_present (GTK_WINDOW (user_data));
-		res = UNIQUE_RESPONSE_OK;
-		break;
-	default:
-		TO_IMPLEMENT;
+	static GtkWidget *window = NULL;
+
+	if (! window) {
+		gdaui_init ();
+		window = create_main_window ();
+		gtk_window_set_application (GTK_WINDOW (window), app);
+		gtk_widget_show (window);
 	}
-	return res;
 }
-#endif
 
 int
 main (int argc, char *argv[])
 {
-#ifdef HAVE_UNIQUE
-	UniqueApp *app;
-#endif
-	/*
-	str = gnome_db_gbr_get_locale_dir_path ();
-	bindtextdomain (GETTEXT_PACKAGE, str);
-	g_free (str);
-
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-	*/
-	gdaui_init ();
-	gtk_init (&argc, &argv);
-
-#ifdef HAVE_UNIQUE
-	app = unique_app_new ("org.gnome-db.gda-browser", NULL);
-	if (unique_app_is_running (app)) {
-		UniqueResponse response;
-		response = unique_app_send_message (app, UNIQUE_ACTIVATE, NULL);
-		if (response != UNIQUE_RESPONSE_OK)
-			TO_IMPLEMENT;
-		g_object_unref (app);
-		return 0;
-	}
-	else {
-		GtkWidget *main_window;
-		main_window = create_main_window ();
-		unique_app_watch_window (app, GTK_WINDOW (main_window));
-		g_signal_connect (app, "message-received", G_CALLBACK (message_received_cb), main_window);
-	}
-#else	
-	create_main_window ();
-#endif
+	GtkApplication *app;
+	gint status;
 	
-
-	/* application loop */
-	gtk_main ();
-
-#ifdef HAVE_UNIQUE
+	app = gtk_application_new ("org.GnomeDb.GdaBrowser", G_APPLICATION_FLAGS_NONE);
+	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+	
+	status = g_application_run (G_APPLICATION (app), argc, argv);
+	
 	g_object_unref (app);
-#endif
 
-	return 0;
+	return status;
 }
 
 static void
@@ -377,10 +332,11 @@ dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, gboolean row_selected, G_GNUC
 	GtkAction *action;
 	GArray *selection;
 
-	action = gtk_action_group_get_action (actions, "DatabaseProperties");
-	g_object_set (G_OBJECT (action), "sensitive", row_selected, NULL);
-
 	selection = gdaui_data_selector_get_selected_rows (GDAUI_DATA_SELECTOR (dbrawgrid));
+
+	action = gtk_action_group_get_action (actions, "DatabaseProperties");
+	g_object_set (G_OBJECT (action), "sensitive", selection ? TRUE : FALSE, NULL);
+
 	action = gtk_action_group_get_action (actions, "DatabaseDelete");
 	g_object_set (G_OBJECT (action), "sensitive", selection ? TRUE : FALSE, NULL);
 	if (selection)

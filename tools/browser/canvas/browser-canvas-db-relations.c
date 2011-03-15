@@ -4,16 +4,16 @@
  * Copyright (C) 2002 Fernando Martins
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
@@ -829,7 +829,7 @@ popup_add_table_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasDbRelations *
 		GtkWidget *vbox, *cloud, *find, *dcontents;
 		dbrels->priv->add_dialog = gtk_dialog_new_with_buttons (_("Select tables to add to diagram"),
 									(GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dbrels),
-									GTK_DIALOG_NO_SEPARATOR,
+									0,
 									NULL);
 		g_signal_connect (dbrels->priv->add_dialog, "close",
 				  G_CALLBACK (gtk_widget_hide), NULL);
@@ -840,11 +840,7 @@ popup_add_table_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasDbRelations *
 		g_object_set_data (G_OBJECT (dbrels->priv->add_dialog), "__canvas", dbrels);
 
 		vbox = gtk_vbox_new (FALSE, 0);
-#if GTK_CHECK_VERSION(2,18,0)
 		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dbrels->priv->add_dialog));
-#else
-		dcontents = GTK_DIALOG (dbrels->priv->add_dialog)->vbox;
-#endif
 		gtk_container_add (GTK_CONTAINER (dcontents), vbox);
 		
 		cloud = objects_cloud_new (dbrels->priv->mstruct, OBJECTS_CLOUD_TYPE_TABLE);

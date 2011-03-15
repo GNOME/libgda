@@ -1,8 +1,8 @@
 /* 
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -50,6 +50,17 @@ struct _BrowserWindowClass
 	/* signals */
 	void                (*fullscreen_changed) (BrowserWindow *bwin, gboolean fullscreen);
 };
+
+/**
+ * SECTION:browser-window
+ * @short_description: A top level browser window
+ * @title: BrowserWindow
+ * @stability: Stable
+ * @see_also:
+ *
+ * Each top level browser window is represented by a #BrowserWindow object, and uses
+ * a single #BrowserConnection connection object.
+ */
 
 GType               browser_window_get_type               (void) G_GNUC_CONST;
 BrowserWindow      *browser_window_new                    (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory);

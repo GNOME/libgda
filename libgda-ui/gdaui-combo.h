@@ -1,6 +1,5 @@
-/* GNOME DB library
- *
- * Copyright (C) 1999 - 2009 The Free Software Foundation
+/*
+ * Copyright (C) 1999 - 2011 The Free Software Foundation
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -48,6 +47,15 @@ struct _GdauiCombo {
 struct _GdauiComboClass {
 	GtkComboBoxClass     parent_class;
 };
+
+/**
+ * SECTION:gdaui-combo
+ * @short_description: Combo box to choose from the contents of a #GdaDataModel
+ * @title: GdauiCombo
+ * @stability: Stable
+ * @Image: vi-combo.png
+ * @see_also:
+ */
 
 GType         gdaui_combo_get_type         (void) G_GNUC_CONST;
 

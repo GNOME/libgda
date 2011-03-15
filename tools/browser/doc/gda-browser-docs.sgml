@@ -1,27 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
-<!ENTITY nbsp            " ">
-<!ENTITY LIBGDA          "<application>Libgda</application>">
-<!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
-<!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
-<!ENTITY BrowserCore SYSTEM "xml/browser-core.xml">
-<!ENTITY BrowserWindow SYSTEM "xml/browser-window.xml">
-<!ENTITY BrowserConnection SYSTEM "xml/browser-connection.xml">
-<!ENTITY BrowserFavorites SYSTEM "xml/browser-favorites.xml">
-<!ENTITY BrowserPage SYSTEM "xml/browser-page.xml">
-<!ENTITY BrowserPerspective SYSTEM "xml/browser-perspective.xml">
-<!ENTITY DataManagerPerspective SYSTEM "xml/data-manager-perspective.xml">
-<!ENTITY SchemaBrowserPerspective SYSTEM "xml/schema-browser-perspective.xml">
-<!ENTITY QueryExecPerspective SYSTEM "xml/query-exec-perspective.xml">
-<!ENTITY CCGrayBar SYSTEM "xml/cc-gray-bar.xml">
-<!ENTITY PopupContainer SYSTEM "xml/popup-container.xml">
-<!ENTITY UIFomrGrid SYSTEM "xml/ui-formgrid.xml">
-<!ENTITY MgrFavorites SYSTEM "xml/mgr-favorites.xml">
-<!ENTITY Support SYSTEM "xml/support.xml">
-]>
-
-<book id="index">
+     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
   <bookinfo>
     <title>GdaBrowser hacking manual</title>
     <authorgroup>
@@ -35,7 +15,7 @@
         </contrib>
       </author>
     </authorgroup>
-    <date>Jan. 2011</date>
+    <date>Feb. 2011</date>
     <copyright>
       <year>2009 - 2011</year>
       <holder>The GNOME Foundation</holder>
@@ -126,10 +106,10 @@
 	This section is a reference to all the core objects of the Gda browser,
 	which can be used in any extension.
       </para>
-      &BrowserCore;
-      &BrowserConnection;
-      &BrowserFavorites;
-      &Support;
+      <xi:include href="xml/browser-core.xml"/>
+      <xi:include href="xml/browser-connection.xml"/>
+      <xi:include href="xml/browser-favorites.xml"/>
+      <xi:include href="xml/support.xml"/>
     </chapter>
 
     <chapter id="windows">
@@ -150,9 +130,9 @@
         </textobject>
       </mediaobject>
       </para>
-      &BrowserWindow;
-      &BrowserPerspective;
-      &BrowserPage;
+      <xi:include href="xml/browser-window.xml"/>
+      <xi:include href="xml/browser-perspective.xml"/>
+      <xi:include href="xml/browser-page.xml"/>
     </chapter>
 
     <chapter id="extrawidgets">
@@ -161,9 +141,9 @@
 	This section is a reference to all the extra widgets used in the Gda browser,
 	which can be used in any extension.
       </para>
-      &UIFomrGrid;
-      &CCGrayBar;
-      &PopupContainer;
+      <xi:include href="xml/ui-formgrid.xml"/>
+      <xi:include href="xml/cc-gray-bar.xml"/>
+      <xi:include href="xml/popup-container.xml"/>
     </chapter>
 
     <chapter id="perspectives">
@@ -172,16 +152,16 @@
 	This section is a reference to some of the existing perspectives and the associated
 	widgets.
       </para>
-      &MgrFavorites;
-      &SchemaBrowserPerspective;
-      &DataManagerPerspective;
-      &QueryExecPerspective;
+      <xi:include href="xml/mgr-favorites.xml"/>
+      <xi:include href="xml/schema-browser-perspective.xml"/>
+      <xi:include href="xml/data-manager-perspective.xml"/>
+      <xi:include href="xml/query-exec-perspective.xml"/>
     </chapter>
   </part>
 
   <part id="part_index">
     <title>Appendix</title>
-    &fdl-appendix;
+      <xi:include href="fdl-appendix.xml"/>
   </part>
 </book>
 

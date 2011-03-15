@@ -1,6 +1,8 @@
-/* gda-meta-struct.c
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
- * Copyright (C) 2008 - 2011 Vivien Malerba
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -697,10 +699,10 @@ add_declared_foreign_keys (GdaMetaStruct *mstruct, GdaMetaTable *mt, GError **er
 		/* create new FK structure */
 		tfk = g_new0 (GdaMetaTableForeignKey, 1);
 		tfk->meta_table = dbo;
-		tfk->declared = (gpointer) 0x01;
+		tfk->declared = TRUE;
 		tfk->fk_name = g_value_dup_string (fk_name);
-		tfk->on_update_policy = GINT_TO_POINTER (GDA_META_FOREIGN_KEY_NONE);
-		tfk->on_delete_policy = GINT_TO_POINTER (GDA_META_FOREIGN_KEY_NONE);
+		tfk->on_update_policy = GDA_META_FOREIGN_KEY_NONE;
+		tfk->on_delete_policy = GDA_META_FOREIGN_KEY_NONE;
 		
 		/* ignore if some columns are not found in the schema
 		 * (maybe wrong or outdated FK decl) */
@@ -1137,16 +1139,16 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 				dbo->depend_list = g_slist_append (dbo->depend_list, tfk->depend_on);
 
 				if (G_VALUE_TYPE (upd_policy) == G_TYPE_STRING)
-					tfk->on_update_policy = GINT_TO_POINTER (policy_string_to_value (g_value_get_string (upd_policy)));
+					tfk->on_update_policy = policy_string_to_value (g_value_get_string (upd_policy));
 				else
-					tfk->on_update_policy = GINT_TO_POINTER (GDA_META_FOREIGN_KEY_UNKNOWN);
+					tfk->on_update_policy = GDA_META_FOREIGN_KEY_UNKNOWN;
 
 				if (G_VALUE_TYPE (upd_policy) == G_TYPE_STRING)
-					tfk->on_delete_policy = GINT_TO_POINTER (policy_string_to_value (g_value_get_string (del_policy)));
+					tfk->on_delete_policy = policy_string_to_value (g_value_get_string (del_policy));
 				else
-					tfk->on_delete_policy = GINT_TO_POINTER (GDA_META_FOREIGN_KEY_UNKNOWN);
+					tfk->on_delete_policy = GDA_META_FOREIGN_KEY_UNKNOWN;
 
-				tfk->declared = NULL;
+				tfk->declared = FALSE;
 
 				/* FIXME: compute @cols_nb, and all the @*_array members (ref_pk_cols_array must be
 				 * initialized with -1 values everywhere */

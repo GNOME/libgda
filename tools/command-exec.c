@@ -398,7 +398,7 @@ gda_internal_command_list_tables (G_GNUC_UNUSED SqlConsole *console, GdaConnecti
 			"table_type LIKE '%TABLE%' "
 			"ORDER BY table_schema, table_name";
 
-		gchar *tmp = gda_sql_identifier_remove_quotes (g_strdup (args[0]));
+		gchar *tmp = gda_sql_identifier_prepare_for_compare (g_strdup (args[0]));
 		g_value_take_string (v = gda_value_new (G_TYPE_STRING), tmp);
 		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, "tname", v, NULL);
 		gda_value_free (v);

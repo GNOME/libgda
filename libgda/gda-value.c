@@ -1,4 +1,4 @@
-/* GDA library
+/*
  * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -567,97 +567,6 @@ gda_geometricpoint_free (gpointer boxed)
 {
 	g_free (boxed);
 }
-
-
-
-
-/* 
- * Register the GdaValueList type in the GType system 
- */
-static gpointer gda_value_list_copy (gpointer boxed);
-static void gda_value_list_free (gpointer boxed);
-
-static void 
-list_to_string (const GValue *src, GValue *dest) 
-{
-	gchar *str;
-	const GdaValueList *list;
-	GList *l;
-	GString *gstr = NULL;
-	
-	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
-			  GDA_VALUE_HOLDS_LIST (src));
-	
-	list = gda_value_get_list ((GValue *) src);
-	
-	for (l = (GList *) list; l != NULL; l = l->next) {
-		str = gda_value_stringify ((GValue *) l->data);
-		if (!gstr) {
-			gstr = g_string_new ("{ ");
-			gstr = g_string_append (gstr, str);
-		}
-		else {
-			gstr = g_string_append (gstr, ", ");
-			gstr = g_string_append (gstr, str);
-		}
-		g_free (str);
-	}
-
-	if (gstr) {
-		g_string_append (gstr, " }");
-		str = gstr->str;
-		g_string_free (gstr, FALSE);
-	}
-	else
-		str = g_strdup ("");
-	
-	g_value_take_string (dest, str);
-}
-
-GType
-gda_value_list_get_type(void)
-{
-	static GType type = 0;
-	
-	if (G_UNLIKELY (type == 0)) {
-		type = g_boxed_type_register_static ("GdaValueList",
-						     (GBoxedCopyFunc) gda_value_list_copy,
-						     (GBoxedFreeFunc) gda_value_list_free);
-		
-		g_value_register_transform_func (type, 
-						 G_TYPE_STRING,
-						 list_to_string);
-		/* FIXME: No function to transform from string to a GdaValueList */
-	}
-
-	return type;
-}
-
-static gpointer 
-gda_value_list_copy (gpointer boxed)
-{
-	GList *list = NULL;
-	const GList *values;
-	
-	values = (GList*) boxed;
-	
-	while (values) {
-		list = g_list_append (list, gda_value_copy ((GValue *) (values->data)));
-		values = values->next;
-	}
-
-	return list;
-}
-
-static void
-gda_value_list_free (gpointer boxed)
-{
-	GList *l = (GList*) boxed;
-	g_list_free (l);
-}
-
-
-
 
 
 /* 
@@ -1597,41 +1506,7 @@ gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val)
 }
 
 /**
- * gda_value_get_list:
- * @value: a #GValue whose value we want to get.
- *
- * Returns: (transfer none): the value stored in @value.
- */
-G_CONST_RETURN GdaValueList *
-gda_value_get_list (const GValue *value)
-{
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
-	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_LIST), NULL);
-	return (const GdaValueList *) g_value_get_boxed(value);
-}
-
-/**
- * gda_value_set_list:
- * @value: a #GValue that will store @val.
- * @val: value to be stored in @value.
- *
- * Stores @val into @value.
- */
-void
-gda_value_set_list (GValue *value, const GdaValueList *val)
-{
-	g_return_if_fail (value);
-	g_return_if_fail (val);
-
-	l_g_value_unset (value);
-	g_value_init (value, GDA_TYPE_LIST);
-	
-	/* See the implementation of GdaValueList as a GBoxed for the Copy function used by GValue*/
-	g_value_set_boxed (value, val);
-}
-
-/**
- * gda_value_set_null:
+ * gda_value_set_null
  * @value: a #GValue that will store a value of type #GDA_TYPE_NULL.
  *
  * Sets the type of @value to #GDA_TYPE_NULL.
@@ -1919,26 +1794,6 @@ gda_value_stringify (const GValue *value)
 				else
 					return g_strdup ("0000-00-00");
 			}
-			else if (type == GDA_TYPE_LIST) {
-				const GdaValueList *list;
-				const GList *ptr;
-				GString *string;
-				gchar *tmp;
-
-				string = g_string_new ("[");
-				list = gda_value_get_list (value);
-				for (ptr = list; ptr; ptr = ptr->next) {
-					tmp = gda_value_stringify ((GValue *) ptr->data);
-					if (ptr != list)
-						g_string_append_c (string, ',');
-					g_string_append (string, tmp);
-					g_free (tmp);
-				}
-				g_string_append_c (string, ']');
-				tmp = string->str;
-				g_string_free (string, FALSE);
-				return tmp;
-			}
 			else
 				return g_strdup ("");
 		}
@@ -2037,16 +1892,6 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 			return -1;
 	}
 
-	else if (type == GDA_TYPE_LIST) {
-		GList *l1, *l2;
-		for (l1 = (GList*) gda_value_get_list (value1), l2 = (GList*) gda_value_get_list (value2); 
-		     l1 != NULL && l2 != NULL; l1 = l1->next, l2 = l2->next){
-			if (gda_value_differ ((GValue *) l1->data, (GValue *) l2->data))
-				return 1;
-		}
-		return 0;
-	}
-
 	else if (type == GDA_TYPE_NUMERIC) {
 		const GdaNumeric *num1, *num2;
 		num1= gda_value_get_numeric (value1);
@@ -2134,7 +1979,6 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 gint
 gda_value_compare (const GValue *value1, const GValue *value2)
 {
-	GList *l1, *l2;
 	gint retval;
 	GType type;
 
@@ -2251,21 +2095,6 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 
 	else if (type == G_TYPE_INT)
 		return g_value_get_int (value1) - g_value_get_int (value2);
-
-	else if (type == GDA_TYPE_LIST) {
-		retval = 0;
-		for (l1 = (GList*) gda_value_get_list (value1), l2 = (GList*) gda_value_get_list (value2); 
-		     l1 != NULL && l2 != NULL; l1 = l1->next, l2 = l2->next){
-			retval = gda_value_compare ((GValue *) l1->data,
-						    (GValue *) l2->data);
-			if (retval != 0) 
-				return retval;
-		}
-		if (retval == 0 && (l1 == NULL || l2 == NULL) && l1 != l2)
-			retval = (l1 == NULL) ? -1 : 1;
-		
-		return retval;
-	}
 
 	else if (type == GDA_TYPE_NUMERIC) {
 		const GdaNumeric *num1, *num2;

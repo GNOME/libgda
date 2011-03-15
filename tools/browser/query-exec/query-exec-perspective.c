@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2009 - 2011 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -195,7 +195,7 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), page, tlabel);
 
 	gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (nb), page, TRUE);
-	gtk_notebook_set_group (GTK_NOTEBOOK (nb), bcnc + 0x01); /* add 0x01 to differentiate it from SchemaBrowser */
+	gtk_notebook_set_group_name (GTK_NOTEBOOK (nb), "query-exec");
 	gtk_notebook_set_tab_detachable (GTK_NOTEBOOK (perspective->priv->notebook), page,
 					 TRUE);
 

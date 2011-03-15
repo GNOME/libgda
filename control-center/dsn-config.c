@@ -1,6 +1,5 @@
-/* GNOME-DB Components
- *
- * Copyright (C) 2000 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2000 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -14,7 +13,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -103,9 +102,8 @@ dsn_config_new (void)
 {
 	DsnConfigPrivate *priv;
 	GtkWidget *dsn;
-	GtkWidget *table;
 	GtkWidget *box;
-	GtkWidget *button;
+	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *sw;
 	gchar *title;
@@ -117,10 +115,6 @@ dsn_config_new (void)
 	g_object_set_data_full (G_OBJECT (dsn), DSN_CONFIG_DATA, priv,
 				(GDestroyNotify) free_private_data);
 
-	/* create the main table */
-	table = cc_new_table_widget (3, 1, FALSE);
-	gtk_box_pack_start (GTK_BOX (dsn), table, TRUE, TRUE, 0);
-
 	/* title */
 	title = g_strdup_printf ("<b>%s</b>\n%s", _("Data Sources"),
 				 _("Configured data sources in the system"));
@@ -131,20 +125,14 @@ dsn_config_new (void)
 	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gdaui-generic.png", NULL);
 	cc_gray_bar_set_icon_from_file (CC_GRAY_BAR (priv->title), path);
 	g_free (path);
-	gtk_table_attach (GTK_TABLE (table), priv->title, 0, 1, 0, 1,
-			  GTK_FILL | GTK_SHRINK,
-			  GTK_FILL | GTK_SHRINK,
-			  0, 0);
+	gtk_box_pack_start (GTK_BOX (dsn), priv->title, FALSE, FALSE, 0);
 	gtk_widget_show (priv->title);
 
 	/* create the data source list */
 	sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
-	gtk_table_attach (GTK_TABLE (table), sw, 0, 1, 1, 2,
-			  GTK_FILL | GTK_SHRINK | GTK_EXPAND,
-			  GTK_FILL | GTK_SHRINK | GTK_EXPAND,
-			  0, 0);
+	gtk_box_pack_start (GTK_BOX (dsn), sw, TRUE, TRUE, 0);
 	
 	model = gda_config_list_dsn ();
 	priv->dsn_list = gdaui_raw_grid_new (model);
@@ -168,29 +156,25 @@ dsn_config_new (void)
 			  G_CALLBACK (list_popup_cb), dsn);
 
 	/* add tip */
-	box = cc_new_hbox_widget (FALSE, 6);
+	box = gtk_hbox_new (FALSE, 6);
         gtk_container_set_border_width (GTK_CONTAINER (box), 6);
-	gtk_table_attach (GTK_TABLE (table), box, 0, 1, 2, 3,
-			  GTK_FILL,
-			  GTK_FILL,
-                          0, 0);
+	gtk_box_pack_start (GTK_BOX (dsn), box, FALSE, FALSE, 0);
+	gtk_widget_show (box);
 
-	button = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
-        gtk_misc_set_alignment (GTK_MISC (button), 0.5, 0.0);
-	gtk_widget_show (button);
-	gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
+        gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
+	gtk_widget_show (image);
+	gtk_box_pack_start (GTK_BOX (box), image, FALSE, FALSE, 0);
 
-	label = cc_new_label_widget (
-		_("Data sources are the means by which database "
-		  "connections are identified: all "
-		  "the information needed to open a connection to "
-		  "a specific database using a 'provider' is referenced using "
-		  "a unique name."));
+	label = gtk_label_new (_("Data sources are the means by which database "
+				 "connections are identified: all "
+				 "the information needed to open a connection to "
+				 "a specific database using a 'provider' is referenced using "
+				 "a unique name."));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-        gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
-        gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
 	gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
-	
+	gtk_widget_show (label);
+
 	return dsn;
 }
 

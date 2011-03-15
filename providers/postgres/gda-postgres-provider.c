@@ -1389,8 +1389,6 @@ gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
                 return "text";
         if (type == G_TYPE_INT)
                 return "int4";
-        if (type == GDA_TYPE_LIST)
-                return "text";
         if (type == GDA_TYPE_NUMERIC)
                 return "numeric";
         if (type == G_TYPE_FLOAT)
@@ -2480,7 +2478,7 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 		gchar *tmp, *ptr;
 		tmp = pg_remove_quotes (g_strdup (id));
 		if (kwfunc (tmp)) {
-			ptr = gda_sql_identifier_add_quotes (tmp);
+			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;
 		}
@@ -2492,7 +2490,7 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 				    (*ptr == '_'))
 					continue;
 				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
@@ -2507,7 +2505,7 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}
@@ -2515,7 +2513,7 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 				else if ((*ptr >= 'A') && (*ptr <= 'Z'))
 					*ptr += 'a' - 'A';
 				else if ((*ptr >= '0') && (*ptr <= '9') && (ptr == tmp)) {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}

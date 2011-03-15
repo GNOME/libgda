@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2007 - 2010 The GNOME Foundation
+ * Copyright (C) 2007 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -1043,11 +1043,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 											   new_filename);
 						}
 					}
-#if GLIB_CHECK_VERSION(2,22,0)
 					g_mapped_file_unref (old_file);
-#else
-					g_mapped_file_free (old_file);
-#endif
 				}
 				if (!allok) {
 					gchar *str;

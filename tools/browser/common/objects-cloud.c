@@ -4,8 +4,8 @@
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -527,11 +527,7 @@ visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility 
 {
 	gint wx, wy, bx, by;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	gdk_window_get_pointer (gtk_widget_get_window (text_view), &wx, &wy, NULL);
-#else
-	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
-#endif
 	
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
 					       GTK_TEXT_WINDOW_WIDGET,
@@ -555,11 +551,7 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ObjectsCloud *
 					       event->x, event->y, &x, &y);
 	
 	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, cloud);
-#if GTK_CHECK_VERSION(2,18,0)
 	gdk_window_get_pointer (gtk_widget_get_window (text_view), NULL, NULL, NULL);
-#else
-	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
-#endif
 	return FALSE;
 }
 
@@ -653,8 +645,8 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, ObjectsCloud *cloud)
 	GtkTextBuffer *buffer;
 	
 	switch (event->keyval) {
-	case GDK_Return: 
-	case GDK_KP_Enter:
+	case GDK_KEY_Return: 
+	case GDK_KEY_KP_Enter:
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
 		gtk_text_buffer_get_iter_at_mark (buffer, &iter, 
 						  gtk_text_buffer_get_insert (buffer));

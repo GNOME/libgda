@@ -3916,7 +3916,7 @@ gda_meta_store_schema_remove_custom_object (GdaMetaStore *store, const gchar *ob
 }
 
 /*
- * Makes sure @context is well formed, and call gda_sql_identifier_remove_quotes() on SQL
+ * Makes sure @context is well formed, and call gda_sql_identifier_prepare_for_compare() on SQL
  * identifiers's values
  *
  * Returns: a new #GdaMetaContext
@@ -3983,7 +3983,7 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 							else if (G_VALUE_TYPE (context->column_values [i]) == G_TYPE_STRING) {
 								gchar *id;
 								id = g_value_dup_string (context->column_values [i]);
-								gda_sql_identifier_remove_quotes (id);
+								gda_sql_identifier_prepare_for_compare (id);
 								if (store->priv->ident_style == GDA_SQL_IDENTIFIERS_UPPER_CASE) {
 									/* move to upper case */
 									gchar *ptr;

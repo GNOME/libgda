@@ -2,17 +2,17 @@
  *
  * Copyright (C) 2002 - 2007 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
@@ -346,7 +346,7 @@ create_items (BrowserCanvasText *ct)
 	/* text: text's name */
 	text = goo_canvas_text_new (GOO_CANVAS_ITEM (ct), ct->priv->text,
 				    0., 0.,
-				    -1, GTK_ANCHOR_NORTH_WEST, 
+				    -1, GOO_CANVAS_ANCHOR_NORTH_WEST, 
 				    "fill_color", "black",
 				    "font", BROWSER_CANVAS_FONT,
 				    "alignment", PANGO_ALIGN_RIGHT, 

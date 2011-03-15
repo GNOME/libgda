@@ -1,5 +1,5 @@
-/* GNOME DB library
- * Copyright (C) 1999 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 1999 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -46,6 +46,15 @@ struct _GdauiProviderSelector {
 struct _GdauiProviderSelectorClass {
 	GdauiComboClass               parent_class;
 };
+
+/**
+ * SECTION:gdaui-provider-selector
+ * @short_description: Select a database provider from a combo box
+ * @title: GdauiProviderSelector
+ * @stability: Stable
+ * @Image: vi-provider-selector.png
+ * @see_also:
+ */
 
 GType              gdaui_provider_selector_get_type         (void) G_GNUC_CONST;
 GtkWidget         *gdaui_provider_selector_new              (void);

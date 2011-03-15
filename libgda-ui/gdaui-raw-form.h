@@ -1,6 +1,5 @@
-/* gdaui-raw-form.h
- *
- * Copyright (C) 2002 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -51,9 +50,18 @@ struct _GdauiRawFormClass
 	GdauiBasicFormClass parent_class;
 };
 
-/* 
- * Generic widget's methods 
+/**
+ * SECTION:gdaui-raw-form
+ * @short_description: Form widget to manipulate data in a #GdaDataModel
+ * @title: GdauiRawForm
+ * @stability: Stable
+ * @Image:
+ * @see_also: the #GdauiForm widget which uses the #GdauiRawForm and adds decorations such as information about data model size, and features searching.
+ *
+ * The #GdauiForm widget which uses the #GdauiRawForm and adds decorations such as
+ * information about data model size, and features searching.
  */
+
 GType        gdaui_raw_form_get_type              (void) G_GNUC_CONST;
 GtkWidget   *gdaui_raw_form_new                   (GdaDataModel *model);
 

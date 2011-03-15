@@ -1,5 +1,5 @@
-/* GDA 
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -45,12 +45,29 @@ struct _GdaReportRmlDocument {
 struct _GdaReportRmlDocumentClass {
 	GdaReportDocumentClass       parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-report-rml-document
+ * @short_description: Report document based on the RML dialect
+ * @title: GdaReportRmlDocument
+ * @stability: Stable
+ * @see_also: #GdaReportDocument
+ *
+ * The #GdaReportRmlDocument makes it easy to create reports based on a RML
+ * template file. 
+ *
+ * RML (Report Markup Language) is an XML dialect which allows one to describe in a very precise way
+ * layouts which can then be converted to PDF. For more information, see the
+ * <ulink url="http://www.reportlab.org/">ReportLab</ulink> or
+ * <ulink url="http://en.openreport.org/index.py/static/page/trml2pdf">OpenReport</ulink> web pages.
+ */
 
 GType              gda_report_rml_document_get_type        (void) G_GNUC_CONST;
 

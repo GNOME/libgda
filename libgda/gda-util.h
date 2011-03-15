@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -32,6 +32,16 @@
 #include <libgda/gda-data-select.h>
 
 G_BEGIN_DECLS
+
+/**
+ * SECTION:gda-util
+ * @short_description: Utility functions
+ * @title: Utility functions
+ * @stability: Stable
+ * @see_also:
+ *
+ * Some usefull functions.
+ */
 
 /*
  * Type utilities

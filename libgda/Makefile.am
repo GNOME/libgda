@@ -1,6 +1,6 @@
 QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
 
-lib_LTLIBRARIES = libgda-4.0.la
+lib_LTLIBRARIES = libgda-5.0.la
 
 SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper
 
@@ -63,7 +63,6 @@ gda_headers = \
 	gda-data-select.h \
 	gda-debug-macros.h \
 	gda-decl.h \
-	gda-easy.h \
 	gda-enums.h \
 	gda-holder.h \
 	gda-lockable.h \
@@ -122,7 +121,6 @@ gda_sources= \
 	gda-data-meta-wrapper.h \
 	gda-data-proxy.c \
 	gda-data-select.c \
-	gda-easy.c \
 	gda-holder.c \
 	gda-init.c \
 	gda-lockable.c \
@@ -215,30 +213,30 @@ libgda_built_headers = gda-marshal.h gda-enum-types.h
 libgda_built_cfiles = gda-enum-types.c
 
 # Don't build the library until we have built the headers that it needs:
-$(OBJECTS) $(libgda_4_0_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles) keywords_hash.c
+$(OBJECTS) $(libgda_5_0_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles) keywords_hash.c
 
-libgda_4_0_la_SOURCES = \
+libgda_5_0_la_SOURCES = \
 	$(libgda_built_cfiles) \
 	$(libgda_sources)
 
-libgda_4_0_la_LDFLAGS = \
+libgda_5_0_la_LDFLAGS = \
 	-version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) \
 	-export-dynamic $(NO_UNDEFINED) $(LIBTOOL_EXPORT_OPTIONS) \
 	$(GDA_DEBUG_LDFLAGS)
 
-libgda_4_0_la_LIBADD = \
-	sql-parser/libgda_sql_parser-4.0.la \
+libgda_5_0_la_LIBADD = \
+	sql-parser/libgda_sql_parser-5.0.la \
 	providers-support/libgda-psupport.la \
-	handlers/libgda_handlers-4.0.la \
-	binreloc/libgda_binreloc-4.0.la \
+	handlers/libgda_handlers-5.0.la \
+	binreloc/libgda_binreloc-5.0.la \
 	sqlite/libgda-sqlite.la \
-	thread-wrapper/libgda_threadwrapper-4.0.la \
+	thread-wrapper/libgda_threadwrapper-5.0.la \
 	$(LIBGDA_LIBS) \
 	$(GIO_LIBS) $(GNOME_KEYRING_LIBS)
 
 if PLATFORM_WIN32
-libgda_4_0_la_LDFLAGS += -export-symbols $(builddir)/libgda.def
-libgda_4_0_la_DEPENDENCIES = libgda.def
+libgda_5_0_la_LDFLAGS += -export-symbols $(builddir)/libgda.def
+libgda_5_0_la_DEPENDENCIES = libgda.def
 
 libgda.def: libgda.symbols
 	(echo -e EXPORTS; $(CPP) -P $(DEF_FLAGS) - <$(srcdir)/libgda.symbols | sed -e '/^$$/d' -e 's/^/ /' -e 's/G_GNUC_[^ ]*//g' | sort) > libgda.def.tmp && mv libgda.def.tmp libgda.def
@@ -274,7 +272,7 @@ CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers) $(libgda_built_cfiles)
 
-xmldir   = $(datadir)/libgda-4.0
+xmldir   = $(datadir)/libgda-5.0
 xml_DATA = information_schema.xml
 
 DTD_FILES = libgda-array.dtd libgda-paramlist.dtd  libgda-server-operation.dtd
@@ -346,20 +344,18 @@ handlers = \
 	handlers/gda-handler-type.c
 
 introspection_sources = $(gda_sources) \
-	gda-types.c \
-	gda-types.h \
 	$(gda_headers) \
 	$(psupport) \
 	$(threadwrapper) \
 	$(sqlparser) \
 	$(handlers)
-Gda-4.0.gir: $(lib_LTLIBRARIES)
-Gda_4_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
-Gda_4_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
+Gda-5.0.gir: $(lib_LTLIBRARIES)
+Gda_5_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
+Gda_5_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
 
-Gda_4_0_gir_LIBS = $(lib_LTLIBRARIES)
-Gda_4_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
-INTROSPECTION_GIRS += Gda-4.0.gir
+Gda_5_0_gir_LIBS = $(lib_LTLIBRARIES)
+Gda_5_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+INTROSPECTION_GIRS += Gda-5.0.gir
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)

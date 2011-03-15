@@ -1,0 +1,596 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<chapter id="libgda-provider-class">
+  <title>Virtual methods for providers</title>
+  <para>
+    Database providers usually (that is except for <emphasis>virtual</emphasis> providers explained later) subclass
+    the <link linkend="GdaServerProvider">GdaServerProvider</link> class and implement at least the mandatory
+    virtual methods.
+  </para>
+  <para>
+    Virtual providers are database providers when the database engine accessed does not support SQL (or
+    supports it poorly), such as Berkeley databases or MDB (or even LDAP). These provider's implementation's
+    design is to create <link linkend="GdaDataModel">GdaDataModel</link> data model objects and make
+    each of them appear as a named table once the connection is opened. For example the MDB provider creates
+    a read-only data model for each table in an MDB file and make it appear using the original table
+    name used in MS Access (the tables cannot be modified but it is possible to use all SQLite's SQL
+    to make SELECT queries).
+  </para>
+  <para>
+    Virtual providers inherit the <link linkend="GdaVproviderDataModel">GdaVproviderDataModel</link> class
+    and not the <link linkend="GdaServerProvider">GdaServerProvider</link> as "normal" providers do,
+    and the number of virtual methods to implement is very limited: only the <link linkend="prov-get-name">get_name()</link>,
+    <link linkend="prov-get-version">get_version()</link>, <link linkend="prov-get-server-version">get_server_version()</link>, 
+    <link linkend="prov-open-connection">open_connection()</link> and <link linkend="prov-get-database">get_database()</link>
+    should be implemented, optionnally the <link linkend="prov-close-connection">close_connection()</link> can
+    also be implemented.
+  </para>
+
+  <sect1>
+    <title>Synchronous / asynchronous mode</title>
+    <para>
+      All the provider's commands are executed in a synchronous mode (the caller is blocked until the provider's
+      method terminates). However some virtual methods have the a <parameter>task_id</parameter> parameter, 
+      an <parameter>async_cb</parameter> or <parameter>exec_cb</parameter> callback function pointer and 
+      a <parameter>cb_data</parameter> parameter which can be set when an asynchronous mode 
+      is required; asynchronous mode is requested if and only if the <parameter>async_cb</parameter> or
+      <parameter>exec_cb</parameter> parmeter is not NULL.
+    </para>
+    <para>
+      When an asynchronous mode is requested, the method should return TRUE if it returns a boolean or NULL if it returns a
+      pointer and set a task identifier
+      into the <parameter>task_id</parameter> parameter if not NULL. The task identifier is passed again when
+      the <parameter>async_cb</parameter> or <parameter>exec_cb</parameter> callback functions are called by the
+      provider when the execution is finished.
+    </para>
+    <para>
+      When the provider's method terminates, it then should call the function passed as <parameter>async_cb</parameter>
+      with the <parameter>cb_data</parameter> as last parameters.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Multi threaded environment</title>
+    <para>
+      Each database provider should be usable in a multi threaded environment, even if they impose some restrictions
+      as to how they can be used in such an environment. The &LIBGDA;'s framework provides some locking mechanism which
+      is:
+      <itemizedlist>
+	<listitem><para>if multi threading cannot be supported at all (for example if the client library internally
+	    used by the provider does not support it), then  the provider's
+	    class implementation should set the class's <structfield>limiting_thread</structfield> attribute to:
+	    the GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD constant.
+	    This constant will be resolved at run time as the thread which creates the 1st connection using that
+	    provider.</para>
+	</listitem>
+	<listitem><para>if multi threading is supported but any connection (or related object) can only be 
+	    used by the thread in which it was created, then for each opened connection, the 
+	    &quot;<link linkend="GdaConnection--thread-owner">thread-owner</link>&quot; connection's property
+	    must be set to the current thread (and other related objects must be locked in a similar way)</para>
+	</listitem>
+	<listitem><para>if no locking is done, then the provider is assumed to support full multi threading access,
+	  in this case make sure to set class's <structfield>limiting_thread</structfield> attribute to the NULL constant.</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Note that the default provider's class value for the <structfield>limiting_thread</structfield> is safely set to the
+      GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD constant.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Methods - provider's information</title>
+    <sect2 id="prov-get-name">
+      <title>get_name() - mandatory</title>
+      <para>This method returns the name of the provider; it should only contain alphanumeric characters.</para>
+    </sect2>
+    <sect2 id="prov-get-version">
+      <title>get_version() - mandatory</title>
+      <para>This method returns the version of the provider (providers built as part of &LIBGDA; have the same
+	version as &LIBGDA;).</para>
+    </sect2>
+    <sect2 id="prov-get-server-version">
+      <title>get_server_version() - mandatory</title>
+      <para>This method returns the version of the database server to which a connection is opened</para>
+    </sect2>
+    <sect2>
+      <title>supports_feature()</title>
+      <para>This method allows one to ask the provider if some specific features are available</para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Methods - connection management</title>
+    <sect2 id="prov-open-connection">
+      <title>open_connection() - mandatory</title>
+      <para>
+	This method actually opens a connection to the database.
+      </para>
+      <para>
+	Any data specific to the connection (such as 
+	a database handle created by the database API when opening the connection) must be stored in a private structure
+	(which should be defined in the <filename>gda-&lt;providername&gt;.h</filename> file as a 
+	<classname>&lt;Providername&gt;ConnectionData</classname>); this private structure's adress should be
+	"attached" to the <link linkend="GdaConnection">GdaConnection</link> object using the
+	<link linkend="gda-connection-internal-set-provider-data">gda_connection_internal_set_provider_data()</link>.
+      </para>
+    </sect2>
+    <sect2 id="prov-close-connection">
+      <title>close_connection() - mandatory</title>
+      <para>
+	This method actually closes a connection previously opened by the 
+	<link linkend="prov-open-connection">open_connection()</link> virtual method. This method is not mandatory for
+	virtual providers.
+      </para>
+      <para>
+	The connection specific data for the database API can be retrieved using the
+	<link linkend="gda-connection-internal-get-provider-data">gda_connection_internal_get_provider_data()</link> method.
+      </para>
+    </sect2>
+    <sect2>
+      <title>get_database()</title>
+      <para>This method returns the name of the database to which a connection is opened.</para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Methods - DDL queries</title>
+    <para>
+      This group of virtual methods is composed of virtual methods which make it possible to handle DDL (data definition) queries
+      to be executed using descriptions of the data required for each kind of DDL query, rather than using SQL directly (because
+      DDL SQL is usually very database specific and must thus be adapted when migrating to another database type). For more
+      information, see the <link linkend="DDLIntro">global introduction to DDL queries</link>.
+    </para>
+    <para>
+      Implementing these methods is not mandatory, and virtual provider's implementation should not implement them.
+    </para>
+    <sect2>
+      <title>supports_operation()</title>
+      <para>
+	This virtual method tells if a particular DDL query type is supported (DDL query types are identified as 
+      <link linkend="GdaServerOperationType">GdaServerOperationType</link> enums).
+      </para>
+    </sect2>
+    <sect2>
+      <title>create_operation()</title>
+      <para>
+	This virtual method is used to create and initialize a <link linkend="GdaServerOperation">GdaServerOperation</link>
+	object.
+      </para>
+    </sect2>
+    <sect2>
+      <title>render_operation()</title>
+      <para>
+	This virtual method uses the information stored in a <link linkend="GdaServerOperation">GdaServerOperation</link> object
+	to create the SQL statement(s) which would be executed if the operation was performed.
+      </para>
+      <para>
+	Note: more than one SQL statement may be returned by this method
+      </para>
+      <para>
+	Note: some operations don't return any SQL at all, if the operation can only be done using an API (and not through SQL)
+      </para>
+    </sect2>
+    <sect2>
+      <title>perform_operation()</title>
+      <para>
+	This virtual method "performs" (execute) a <link linkend="GdaServerOperation">GdaServerOperation</link> object.
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Methods - transactions management</title>
+    <para>
+      When a connection has been opened and no transaction has been started, then the provider should execute queries in
+      auto commit mode.
+    </para>
+    <sect2>
+      <title>begin_transaction()</title>
+      <para>
+	This method starts a new transaction.
+      </para>
+    </sect2>
+    <sect2>
+      <title>commit_transaction()</title>
+      <para>
+	This method commits the current transaction.
+      </para>
+    </sect2>
+    <sect2>
+      <title>rollback_transaction()</title>
+      <para>
+	This method cancels the current transaction.
+      </para>
+    </sect2>
+    <sect2>
+      <title>add_savepoint()</title>
+      <para>
+	This method adds a save point to the current transaction, which allows for partial rollbacks within transactions.
+      </para>
+    </sect2>
+    <sect2>
+      <title>rollback_savepoint()</title>
+      <para>
+	This method rolls back to a previously defined save point within the current transaction.
+      </para>
+    </sect2>
+    <sect2>
+      <title>delete_savepoint()</title>
+      <para>
+	This method deletes a previously defined save point within the current transaction, it does not affect the
+	transaction but it simply won't be possible to roll back to the savepoint afterwards.
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Methods - DML queries</title>
+    <para>
+      This group of virtual methods is related to executing SQL queries of any kind. &LIBGDA; imposes that SQL
+      statements be converted to one or more <link linkend="GdaStatement">GdaStatement</link> object(s), each
+      GdaStatement object containing exactly one SQL statement (usually terminated
+      by a semi colon). Each GdaStatement can then be prepared and/or executed individually.
+    </para>
+    <para>
+      Creating a <link linkend="GdaStatement">GdaStatement</link> object from some SQL is the job of a
+      <link linkend="GdaSqlParser">GdaSqlParser</link> object.
+    </para>
+    <sect2>
+      <title>create_parser()</title>
+      <para>
+	This method instantiates a <link linkend="GdaSqlParser">GdaSqlParser</link> object which is
+	adapted to the database's specific SQL dialect. If the provider does not implement its own parser,
+	then this method should not be implemented.
+      </para>
+    </sect2>
+    <sect2>
+      <title>statement_to_sql()</title>
+      <para>
+	This method converts a <link linkend="GdaStatement">GdaStatement</link> object to its SQL representation. It should be
+	implemented only if the default rendering is incorrect (to support some SQL specific dialect). The rendering process
+	is decomposed into several rendering methods, and it is possible to override only some of the methods (see the
+	PostgreSQL's implementation as an example).
+      </para>
+    </sect2>
+    <sect2>
+      <title>statement_prepare()</title>
+      <para>
+	This method requests that a <link linkend="GdaStatement">GdaStatement</link> object be prepared for a future execution.
+	It is called when <link linkend="gda-connection-statement-prepare">gda_connection_statement_prepare()</link> is called.
+      </para>
+    </sect2>
+    <sect2>
+      <title>statement_execute() - mandatory</title>
+      <para>
+	This method actually executes a query represented by a <link linkend="GdaStatement">GdaStatement</link> object. See
+	<link linkend="gda-connection-statement-execute">gda_connection_statement_execute()</link> for more information, note that
+	this method is also always the one called when any of the gda_connection_statement_execute*() methods are called.
+      </para>
+      <para>
+	A non NULL <parameter>exec_cb</parameter> parameter specifies that the user requests an asynchronous execution: the
+	function has to return the NULL value immediately (it must not be blocking), and the <parameter>task_id</parameter>
+	parameter must be set to contain a provider specific task ID.
+	The <parameter>exec_cb</parameter> parameter points to a callback function (specified by the
+	<link linkend="GdaConnection">GdaConnection</link>) which the provider has to call once the statement has been
+	executed, using the same task ID which was defined when the statement_execute() function was called, and
+	the <parameter>cb_data</parameter> specified when the statement_execute() function was called.
+      </para>
+      <para>
+	Note that if an asynchronous execution is requested, then the <parameter>stmt</parameter>, <parameter>params</parameter>,
+	<parameter>col_types</parameter>, <parameter>last_inserted_row</parameter>, and <parameter>cb_data</parameter>
+	parameters are supposed to exist and not be altered during the time the statement is executed (the
+	<link linkend="GdaConnection">GdaConnection</link> ensures this) which means it's not necessary to make copies
+	of them during the execution.
+      </para>
+    </sect2>
+    <sect2>
+      <title>handle_async()</title>
+      <para>
+	This method, if implemented, is called to give the database provider a chance to execute some code in case an
+	asynchronous statement's execution has been requested. Often providers will send some data over the network to the
+	database server when the statement_execute() is called, and implement this virtual function as a way to get
+	some data from the database server to see if the execution is terminated.
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Methods - data representation</title>
+    <para>
+      This group of virtual methods is related to converting some data between the three representations which are the 
+      SQL representation (to be directly included in a SQL statement), the human readable representation, and the 
+      <link linkend="GValue">GValue</link> representation. For each type of data (identified as a 
+      <link linkend="GType">GType</link> type) which the provider can handle, a <link linkend="GdaDataHandler">GdaDataHandler</link>
+      object is responsible of the conversions.
+    </para>
+    <sect2>
+      <title>get_data_handler()</title>
+      <para>
+	This method returns a <link linkend="GdaDataHandler">GdaDataHandler</link> for the requested data type. It should
+	only instantiate each <link linkend="GdaDataHandler">GdaDataHandler</link> once and reuse it if the same request happens 
+	(the returned object will not be modified).
+      </para>
+      <para>
+	This method is called by both
+	<link linkend="gda-server-provider-get-data-handler-g-type">gda_server_provider_get_data_handler_g_type()</link> and
+	<link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link> methods.
+      </para>
+    </sect2>
+    <sect2>
+      <title>get_def_dbms_type()</title>
+      <para>
+	This method returns the name of the most common (database specific) data type which has the requested type.
+      </para>
+    </sect2>
+    <sect2>
+      <title>escape_string()</title>
+      <para>
+	This method adds escape characters to a string, to be able to safely add it into an SQL statement.
+      </para>
+    </sect2>
+    <sect2>
+      <title>unescape_string()</title>
+      <para>
+	This method does the reverse of the escape_string() method.
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1 id="prov-metadata">
+    <title>Methods - metadata</title>
+    <para>
+      The <link linkend="GdaServerProviderMeta">GdaServerProviderMeta</link> structure defines all the methods
+      which database providers must implement for the meta data extraction feature to work. Each method is
+      used internally by the <link linkend="GdaConnection">GdaConnection</link> object when one calls the
+      <link linkend="gda-connection-update-meta-store">gda_connection_update_meta_store()</link> method (where the
+      connection object itself computes the list and order of methods to call).
+      Each method must update the contents of one table in the connection's associated metadata
+      (in its associated <link linkend="GdaMetaStore">GdaMetaStore</link> object), each has the same
+      "base" arguments and some have extra arguments further specifying what needs to be updated. 
+    </para>
+    <para>
+      For each table to update, there are two methods, which differ in their name only by the fact that one is starting 
+      with an underscore '_'. The method starting with an underscore must update the whole contents of the meta data
+      table, and the other one must accept some more parameters to refine what gets updated. There are exception 
+      to this rule (such as the
+      "tables_views()" method which must update both the <link linkend="is:_tables">"_tables"</link> and 
+      <link linkend="is:_views">"_views"</link> tables, or the for the
+      tables which have no foreign key (no dependency) to any other table).
+    </para>
+    <para> 
+      Also, by convetion, the arguments can't be NULL unless the argument name has the "_n" suffix. For example
+      the signature of the "tables_views()" method has the following signature (as defined in the 
+      <filename>gda-server-provider.h</filename> file) 
+      <programlisting>
+gboolean (*tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                          GdaMetaContext *, GError **,
+                          const GValue *table_catalog, const GValue *table_schema, 
+                          const GValue *table_name_n);
+      </programlisting>
+      which means that the <parameter>table_catalog</parameter> and <parameter>table_schema</parameter>
+      arguments can't be NULL, whereas the <parameter>table_name</parameter> can be NULL (and in this case the 
+      "tables_views()" method must update the <link linkend="is:_tables">"_tables"</link> and 
+      <link linkend="is:_views">"_views"</link> tables regarding all the tables which
+      are in the specified catalog and schema.
+    </para>
+    <para>
+      Make sure you read the information about the meta data's database structure in the
+      <link linkend="information_schema">Database structure</link>, and specifically the
+      <link linkend="information_schema:data_types">data types</link> section and the 
+      <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section.
+    </para>
+    <sect2>
+      <title>Important note about SQL identifiers</title>
+      <para>
+	As mentioned in the <link linkend="information_schema:sql_identifiers">SQL identifiers</link> section,
+	any SQL identifier in the meta store is represented either:
+	<itemizedlist>
+	  <listitem><para>between double quotes if the SQL identifier is case sensitive</para></listitem>
+	  <listitem><para>all in lower case if the SQL identifier is not case sensitive</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	For database engines which internally store case insensitive SQL identifiers in lower case
+	(such as PostgreSQL),
+	the meta data reported by the database engine can be used almost AS IS, but for database
+	engines which internally store case insensitive SQL identifiers in upper case (such as Oracle),
+	the upper case needs to be converted to lower case. Also case sensitive SQL identifiers also need
+	to be double quoted.
+      </para>
+      <para>
+	To minimize the work required to implement a database provider, &LIBGDA; allows the database
+	provider to specifiy how case insensitive SQL identifiers are represented using 
+	<link linkend="gda-meta-store-set-identifiers-style">gda_meta_store_set_identifiers_style()</link>
+	and the <link linkend="GdaMetaStore">GdaMetaStore</link> object will perform the work itself (the
+	default being GDA_SQL_IDENTIFIERS_LOWER_CASE in <link linkend="GdaSqlIdentifierStyle">GdaSqlIdentifierStyle</link>.
+      </para>
+      <para>
+	Also note that the extra arguments for each virtual method listed below, when they are present
+	and when they represent an SQL identifier, will be represented:
+	<itemizedlist>
+	  <listitem><para>for case insensitive SQL identifiers: using all lower or all upper case (depending on the setting
+	      set using <link linkend="gda-meta-store-set-identifiers-style">gda_meta_store_set_identifiers_style()</link>
+	  </para></listitem>
+	  <listitem><para>for case sensitive SQL identifiers: without the double quotes, but possibily with
+	      mixed or not lower and upper characters</para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+    <sect2>
+      <title>Reserved SQL keywords</title>
+      <para>
+	Every database engine reserves some keywords for its own usage or because they are part of the SQL
+	language. Reserved keywords can be used as SQL identifiers if they are put between double quotes.
+      </para>
+      <para>
+	As Each database engine has its own set of reserved keywords, the database provider has to tell the
+	<link linkend="GdaMetaStore">GdaMetaStore</link> object what its keywords are, which is done using
+	<link linkend="gda-meta-store-set-reserved-keywords-func">gda_meta_store_set_reserved_keywords_func()</link>
+	and passing a function which determines if a specific string is a reserved keyword. The usage of
+	this function is similar to the usage of the
+	<link linkend="gda-meta-store-set-identifiers-style">gda_meta_store_set_identifiers_style()</link>
+	mentioned above.
+      </para>
+      <para>
+	Writing a function which tests if a string is a reserved keyword is a non complicated but error
+	prone and not optimized, in the same way as writing a parser/lexer directly, so &LIBGDA; has a tool
+	which generates a static hash table from a list of reserved keywords, which is in the
+	<filename>keywords.list</filename> (several keywords can appear on the same line, separated by spaces or commas
+	but the last line must remain empty).
+      </para>
+    </sect2>
+    <sect2>
+      <title>_info()</title>
+      <para>
+	<programlisting>
+gboolean (*_info) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                   GdaMetaContext *, GError **);
+	</programlisting>
+	This method must update the contents of the 
+	<link linkend="is:_information_schema_catalog_name">"_information_schema_catalog_name"</link>
+	table, which must contain exactly
+	one row describing the catalog name for the connection.
+      </para>
+    </sect2>
+    
+    <sect2>
+      <title>_btypes()</title>
+      <para>
+	<programlisting>
+gboolean (*_btypes) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                     GdaMetaContext *, GError **);
+	</programlisting>
+	This method must update the contents of the <link linkend="is:_builtin_data_types">"_builtin_data_types"</link>
+	table which lists all the
+	database's built in data types. There is no specific parameter.
+      </para>
+    </sect2>
+    
+    <sect2>
+      <title>schemata() and _schemata()</title>
+      <para>
+	<programlisting>
+gboolean (*_schemata) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                       GdaMetaContext *, GError **);
+gboolean (*schemata)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                       GdaMetaContext *, GError **,
+                       const GValue *catalog_name, const GValue *schema_name_n);
+	</programlisting>
+        This method must update the contents of the <link linkend="is:_schemata">"_schemata"</link> table, 
+	which lists all the schemas (namespaces). 
+      </para>
+    </sect2>
+    <sect2>
+      <title>tables_views() and _tables_views()</title>
+      <para>
+	<programlisting>
+gboolean (*_tables_views) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                           GdaMetaContext *, GError **);
+gboolean (*tables_views)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                           GdaMetaContext *, GError **,
+                           const GValue *table_catalog, const GValue *table_schema, 
+                           const GValue *table_name_n);
+	</programlisting>
+	This method must update the contents of the <link linkend="is:_tables">"_tables"</link> and 
+	<link linkend="is:_views">"_views"</link> tables which list all the
+	tables and views.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>columns() and _columns()</title>
+      <para>
+	<programlisting>
+gboolean (*_columns) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                      GdaMetaContext *, GError **);
+gboolean (*columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                      GdaMetaContext *, GError **,
+                      const GValue *table_catalog, const GValue *table_schema, 
+                      const GValue *table_name);
+	</programlisting>
+	This method must update the contents of the <link linkend="is:_columns">"_columns"</link> table which lists all the
+	columns of all the tables and views.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>constraints_tab() and _constraints_tab()</title>
+      <para>
+	<programlisting>
+gboolean (*_constraints_tab) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                              GdaMetaContext *, GError **);
+gboolean (*constraints_tab)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                              GdaMetaContext *, GError **,
+                              const GValue *table_catalog, const GValue *table_schema, 
+                              const GValue *table_name, const GValue *constraint_name_n);
+	</programlisting>
+	This method must update the contents of the <link linkend="is:_table_constraints">"_table_constraints"</link>
+	table which lists all the
+	constraints (primary key, foreign key, unique or check constraints) for each table.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>constraints_ref() and _constraints_ref()</title>
+      <para>
+	<programlisting>
+gboolean (*_constraints_ref) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                              GdaMetaContext *, GError **);
+gboolean (*constraints_ref)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                              GdaMetaContext *, GError **,
+                              const GValue *table_catalog, const GValue *table_schema, 
+                              const GValue *table_name, const GValue *constraint_name);
+	</programlisting>
+	This method must update the contents of the 
+	<link linkend="is:_referential_constraints">"_referential_constraints"</link> table which lists all the
+	referential constraints (which are also listed in the 
+	<link linkend="is:_table_constraints">"_table_constraints"</link> table).
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>key_columns() and _key_columns()</title>
+      <para>
+	<programlisting>
+gboolean (*_key_columns) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                          GdaMetaContext *, GError **);
+gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *, 
+                          GdaMetaContext *, GError **,
+                          const GValue *table_catalog, const GValue *table_schema,
+                          const GValue *table_name, const GValue *constraint_name);
+	</programlisting>
+	This method must update the contents of the <link linkend="is:_key_column_usage">"_key_column_usage"</link>
+	table which lists all the
+	columns involved in each table constraint (as listed in the 
+	<link linkend="is:_table_constraints">"_table_constraints"</link> table).
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Methods - misc.</title>
+    <sect2>
+      <title>cancel()</title>
+      <para>
+	This method cancels an asynchronous task.
+      </para>
+    </sect2>
+    <sect2>
+      <title>create_connection()</title>
+      <para>
+	Reserved for internal implementation.
+      </para>
+    </sect2>
+    <sect2>
+      <title>is_busy()</title>
+      <para>
+	This method tests if a connection is already busy in a, asynchronous task.
+      </para>
+    </sect2>
+  </sect1>
+</chapter>

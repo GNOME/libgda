@@ -67,7 +67,7 @@ libgda_sqlite_la_SOURCES = $(sqlitesources)
 libgda_sqlite_la_CFLAGS = -DPNAME=\""SQLite"\" -DCLASS_PREFIX=\""GdaSqlite"\" -DSEARCH_LIB_PATH=\""$(SQLITE_PATH)"\"
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sqlite_la_LIBADD = \
-	virtual/libgda-virtual-4.0.la \
+	virtual/libgda-virtual-5.0.la \
 	$(sqlitelibs) \
 	$(LIBGDA_LIBS)
 

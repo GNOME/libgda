@@ -58,10 +58,10 @@ libgda_oracle_la_SOURCES = \
 
 libgda_oracle_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_oracle_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) $(ORACLE_LIBS)
 
-xmldir   = $(datadir)/libgda-4.0
+xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \
 	oracle_specs_dsn.xml.in \
 	oracle_specs_create_table.xml.in 
@@ -71,9 +71,9 @@ xml_in_files = \
 xml_DATA = $(xml_in_files:.xml.in=.xml) 
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-oracle-4.0.pc
+pkgconfig_DATA = libgda-oracle-5.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-oracle-4.0.pc.in parser.y gen_def.c $(keyword_files)
+EXTRA_DIST = $(xml_in_files) libgda-oracle-5.0.pc.in parser.y gen_def.c $(keyword_files)
 DISTCLEANFILES = $(xml_DATA)
 
 CLEANFILES = parser.h parser.c parser.out oracle_token_types.h gen_def$(EXEEXT_FOR_BUILD) \

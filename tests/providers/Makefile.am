@@ -49,50 +49,50 @@ common_sources = \
 check_sqlite_SOURCES = $(common_sources) check_sqlite.c
 check_sqlite_CFLAGS = 
 check_sqlite_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/tests/libgda-test-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_bdb_SOURCES = $(common_sources) check_bdb.c
 check_bdb_CFLAGS = 
 check_bdb_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/tests/libgda-test-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_firebird_SOURCES = $(common_sources) check_firebird.c
 check_firebird_CFLAGS = 
 check_firebird_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/tests/libgda-test-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_mdb_SOURCES = $(common_sources) check_mdb.c
 check_mdb_CFLAGS = 
 check_mdb_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/tests/libgda-test-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_mysql_SOURCES = $(common_sources) check_mysql.c
 check_mysql_CFLAGS = 
 check_mysql_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/tests/libgda-test-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_oracle_SOURCES = $(common_sources) check_oracle.c
 check_oracle_CFLAGS = 
 check_oracle_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/tests/libgda-test-5.0.la \
 	$(LIBGDA_LIBS)
 
 check_postgres_SOURCES = $(common_sources) check_postgres.c
 check_postgres_CFLAGS = 
 check_postgres_LDADD =  \
-	$(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/tests/libgda-test-4.0.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/tests/libgda-test-5.0.la \
 	$(LIBGDA_LIBS)
 
 EXTRA_DIST = \

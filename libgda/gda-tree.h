@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -65,6 +65,21 @@ struct _GdaTreeClass {
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-tree
+ * @short_description: A tree-structure
+ * @title: GdaTree
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #GdaTree is the top level object representing hierarchically structured data. From this object it
+ * is also possible (depending on the tree managers it uses), to clean (remove all the nodes) the whole tree,
+ * or to request a complete or partial update of the nodes.
+ *
+ * It is also possible to set attributes to the tree itself (as it is possible to do for tree nodes),
+ * or to dump the whole or part of a tree in an indented and easy to read fashion.
+ */
 
 GType              gda_tree_get_type      (void) G_GNUC_CONST;
 GdaTree*           gda_tree_new           (void);

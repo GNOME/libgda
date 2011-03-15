@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -30,6 +30,15 @@ G_BEGIN_DECLS
 /*
  * Kinds
  */
+/**
+ * GdaSqlStatementCompoundType:
+ * @GDA_SQL_STATEMENT_COMPOUND_UNION: 
+ * @GDA_SQL_STATEMENT_COMPOUND_UNION_ALL: 
+ * @GDA_SQL_STATEMENT_COMPOUND_INTERSECT: 
+ * @GDA_SQL_STATEMENT_COMPOUND_INTERSECT_ALL: 
+ * @GDA_SQL_STATEMENT_COMPOUND_EXCEPT: 
+ * @GDA_SQL_STATEMENT_COMPOUND_EXCEPT_ALL: 
+ */
 typedef enum {
 	GDA_SQL_STATEMENT_COMPOUND_UNION,
 	GDA_SQL_STATEMENT_COMPOUND_UNION_ALL,
@@ -42,11 +51,18 @@ typedef enum {
 /*
  * Structure definition
  */
+/**
+ * GdaSqlStatementCompound:
+ * @any: 
+ * @compound_type: 
+ * @stmt_list:
+ */
 struct _GdaSqlStatementCompound {
 	GdaSqlAnyPart                any;
 	GdaSqlStatementCompoundType  compound_type;
 	GSList                      *stmt_list; /* list of SELECT or COMPOUND statements */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

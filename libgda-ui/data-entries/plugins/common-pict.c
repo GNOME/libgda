@@ -1,5 +1,5 @@
 /* common-pict.c
- * Copyright (C) 2006 - 2007 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -83,7 +83,6 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 						bindata->data_length = strlen ((gchar *) bindata->data);
 						break;
 					case ENCODING_BASE64: {
-#if (GLIB_MINOR_VERSION >= 12)
 						gsize out_len;
 						bindata->data = g_base64_decode (str, &out_len);
 						if (out_len > 0)
@@ -93,12 +92,6 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 							bindata->data = NULL;
 							bindata->data_length = 0;
 						}
-#else
-						g_warning ("Base64 enoding/decoding is not supported in the "
-							   "GLib version %d.%d.%d",
-							   glib_major_version, glib_minor_version, glib_micro_version);
-#endif
-
 						break;
 					}
 					}
@@ -263,13 +256,10 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 				gchar *notice_msg;
 				notice_msg = g_strdup_printf (_("Error while interpreting data as an image:\n%s"),
 							      loc_error && loc_error->message ? loc_error->message : _("No detail"));
-				g_error_free (loc_error);
 				*stock = GTK_STOCK_DIALOG_WARNING;
-#if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 18
-				g_set_error (error, 0, 0, "%s", notice_msg);
-#else
-				g_set_error_literal (error, 0, 0, notice_msg);
-#endif
+				g_set_error_literal (error, loc_error ? loc_error->domain : 0,
+						     loc_error ? loc_error->code : 0, notice_msg);
+				g_error_free (loc_error);
 				g_free (notice_msg);
 			}
 			
@@ -426,7 +416,7 @@ add_if_writable (GdkPixbufFormat *data, PictFormat *format)
 
 		str= g_strdup_printf ("%s (%s)", gdk_pixbuf_format_get_name (data),
 				      gdk_pixbuf_format_get_description (data));
-		gtk_combo_box_append_text (format->combo, str);
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (format->combo), str);
 		g_free (str);
 		format->formats = g_slist_append (format->formats, g_strdup (gdk_pixbuf_format_get_name (data)));
 	}
@@ -447,7 +437,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 
 	label = gtk_label_new (_("Format image as:"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	combo = gtk_combo_box_new_text ();
+	combo = gtk_combo_box_text_new ();
 	gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);
 
@@ -457,7 +447,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 	g_slist_foreach (formats, (GFunc) add_if_writable, &pictformat);
 	g_slist_free (formats);
 
-	gtk_combo_box_prepend_text (GTK_COMBO_BOX (combo), _("Current format"));
+	gtk_combo_box_text_prepend_text (GTK_COMBO_BOX_TEXT (combo), _("Current format"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
 
 	dlg = gtk_file_chooser_dialog_new (_("Select a file to save the image to"), 
@@ -693,12 +683,7 @@ common_pict_get_value (PictBinData *bindata, PictOptions *options, GType gtype)
 						 bindata->data_length);
 				break;
 			case ENCODING_BASE64: 
-#if (GLIB_MINOR_VERSION >= 12)
 				str = g_base64_encode (bindata->data, bindata->data_length);
-#else
-				g_warning ("Base64 enoding/decoding is not supported in the GLib version %d.%d.%d",
-					   glib_major_version, glib_minor_version, glib_micro_version);
-#endif
 				break;
 			}
 			

@@ -343,7 +343,7 @@ get_markup_token (const gchar *alltext, const gchar *start, gint *out_nb_spaces_
 	return MARKUP_NONE;
 }
 
-/**
+/*
  * steals @base64
  */
 static gchar *

@@ -1,6 +1,5 @@
-/* gda-sql-builder.c
- *
- * Copyright (C) 2008 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -123,7 +122,7 @@ gda_sql_builder_class_init (GdaSqlBuilderClass *klass)
 	 */
 	g_object_class_install_property (object_class, PROP_TYPE,
 					 g_param_spec_enum ("stmt-type", NULL, "Statement Type",
-							    GDA_SQL_PARSER_TYPE_SQL_STATEMENT_TYPE,
+							    GDA_TYPE_SQL_STATEMENT_TYPE,
 							    GDA_SQL_STATEMENT_UNKNOWN,
 							    (G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 }
@@ -511,12 +510,12 @@ gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_nam
 	const GdaSqlBuilderId field_id = gda_sql_builder_add_id (builder, tmp);
 	if (alias && *alias)
 		gda_sql_builder_add_field_value_id (builder,
-					      field_id,
-					      gda_sql_builder_add_id (builder, alias));
+						    field_id,
+						    gda_sql_builder_add_id (builder, alias));
 	else
 		gda_sql_builder_add_field_value_id (builder,
-					      field_id,
-					      0);
+						    field_id,
+						    0);
 	if (table_name)
 		g_free (tmp);
 
@@ -942,7 +941,7 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string)
 	if (string) {
 		expr->value = gda_value_new (G_TYPE_STRING);
 		g_value_set_string (expr->value, string);
-		expr->value_is_ident = (gpointer) 0x1;
+		expr->value_is_ident = TRUE;
 	}
 
 	return add_part (builder, (GdaSqlAnyPart *) expr);

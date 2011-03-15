@@ -1,5 +1,5 @@
-/* GNOME DB library
- * Copyright (C) 1999 - 2008 The GNOME Foundation.
+/*
+ * Copyright (C) 1999 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -50,11 +50,37 @@ struct _GdauiLoginClass {
 	void               (*changed) (GdauiLogin *login, gboolean is_valid);
 };
 
+/**
+ * GdauiLoginMode:
+ * @GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE: 
+ * @GDA_UI_LOGIN_HIDE_DSN_SELECTION_MODE: 
+ * @GDA_UI_LOGIN_HIDE_DIRECT_CONNECTION_MODE: 
+ *
+ * Defines the aspect of the #GdauiLogin widget
+ */
 typedef enum {
 	GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE = 1 << 0,
 	GDA_UI_LOGIN_HIDE_DSN_SELECTION_MODE = 1 << 1,
 	GDA_UI_LOGIN_HIDE_DIRECT_CONNECTION_MODE = 1 << 2
 } GdauiLoginMode;
+
+/**
+ * SECTION:gdaui-login
+ * @short_description: Connection opening widget
+ * @title: GdauiLogin
+ * @stability: Stable
+ * @Image: vi-login.png
+ * @see_also:
+ *
+ * The #GdauiLogin widget can be used when the user needs to enter
+ * data to open a connection. It can be customized in several ways:
+ * <itemizedlist>
+ *   <listitem><para>data source (DSN) selection can be shown or hidden</para></listitem>
+ *   <listitem><para>the button to launch the control center to declare new data sources can be
+ *	shown or hidden</para></listitem>
+ *   <listitem><para>the form to open a connection not using a DSN can be shown or hidden</para></listitem>
+ * </itemizedlist>
+ */
 
 GType             gdaui_login_get_type                   (void) G_GNUC_CONST;
 GtkWidget        *gdaui_login_new                        (const gchar *dsn);

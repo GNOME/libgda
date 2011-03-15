@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -94,7 +94,7 @@ gda_sql_expr_free (GdaSqlExpr *expr)
 	}
 	gda_sql_case_free (expr->case_s);
 	g_free (expr->cast_as);
-	expr->value_is_ident = (gpointer) 0x1;
+	expr->value_is_ident = TRUE;
 	g_free (expr);
 }
 

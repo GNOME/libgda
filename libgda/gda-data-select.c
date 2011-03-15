@@ -3178,7 +3178,7 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 		}
 		g_assert (cdata.colid);
 		if ((*(cdata.colid) == '"') || (*(cdata.colid) == '`'))
-			gda_sql_identifier_remove_quotes ((gchar*) cdata.colid);
+			gda_sql_identifier_prepare_for_compare ((gchar*) cdata.colid);
 		/*g_print ("SEL param '%s' <=> column named '%s'\n", cdata.hid, cdata.colid);*/
 		
 		GSList *ins_list;

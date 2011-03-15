@@ -3,7 +3,7 @@
 AUTOMAKE_OPTIONS = 1.6
 
 # The name of the module.
-DOC_MODULE=libgda-4.0
+DOC_MODULE=libgda-5.0
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
@@ -17,6 +17,9 @@ SCANGOBJ_OPTIONS=
 # The directory containing the source code. Relative to $(srcdir)
 DOC_SOURCE_DIR=../..
 
+# Add the builddir to the HTML path so that version.xml is found
+MKHTML_OPTIONS=--path="$(abs_srcdir)"
+
 # Used for dependencies.
 HFILE_GLOB=
 CFILE_GLOB=
@@ -24,7 +27,7 @@ CFILE_GLOB=
 # Header files to ignore when scanning
 IGNORE_HFILES= gda-marshal.h gda-custom-marshal.h gda-enum-types.h sqlite3.h csv.h md5.h \
 	jni-wrapper.h gda-jdbc-recordset.h gda-jdbc-blob-op.h gda-jdbc-provider.h gda-jdbc-pstmt.h \
-	popup-container.h providers tools control-center tests samples plugins
+	popup-container.h providers tools control-center tests samples plugins tmp
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
@@ -37,14 +40,14 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
 
-GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-4.0.la \
-	$(top_builddir)/libgda-report/libgda-report-4.0.la \
+GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda-report/libgda-report-5.0.la \
 	$(LIBGDA_LIBS)
 
 if HAVE_UI
 GTKDOC_CFLAGS += $(GTK_CFLAGS)
 GTKDOC_LIBS += $(GTK_LIBS) \
-	$(top_builddir)/libgda-ui/libgda-ui-4.0.la
+	$(top_builddir)/libgda-ui/libgda-ui-5.0.la
 endif
 
 # Extra options to supply to gtkdoc-mkdb
@@ -77,7 +80,8 @@ include $(top_srcdir)/gtk-doc.make
 # Other files to distribute
 EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml migration2.xml \
 	server-operation.xml gettingstarted.xml virtual.xml virtual-notice.xml store-meta-type.xml \
-	prov-writing.xml packaging.xml packaging_ui.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \
+	prov-writing-virtual-methods.xml prov-writing-recordsets.xml prov-writing-blobs.xml prov-writing-parser.xml prov-writing-assembly.xml \
+	packaging.xml packaging_ui.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \
 	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
@@ -89,7 +93,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
 # for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
-DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-4.0.types libgda-4.0-sections.txt
+DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-5.0.types libgda-5.0-sections.txt
 
 DOC_STAMPS += pdf-build.stamp
 CLEANFILES += $(DOC_STAMPS)

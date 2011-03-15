@@ -1,5 +1,5 @@
-/* GDA Common Library
- * Copyright (C) 1998 - 2002 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,6 +24,16 @@
 #include <time.h>
 
 G_BEGIN_DECLS
+
+/**
+ * SECTION:gda-log
+ * @short_description: Log functions
+ * @title: Logging
+ * @stability: Stable
+ * @see_also:
+ *
+ * Logging functions.
+ */
 
 /*
  * For application generating logs

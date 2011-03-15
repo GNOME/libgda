@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -31,12 +31,25 @@ G_BEGIN_DECLS
 /*
  * Structure definition
  */
+/**
+ * GdaSqlStatementTransaction:
+ * @any: inheritance structure
+ * @isolation_level: isolation level as a #GdaTransactionIsolation
+ * @trans_mode: transaction mode (DEFERRED, IMMEDIATE, EXCLUSIVE, READ_WRITE, READ_ONLY)
+ * @trans_name: transaction name
+ *
+ * The statement is a transaction management related statement (BEGIN, ROLLBACK, etc). The #GdaSqlStatementTransaction structure
+ * does not hold enough information to reconstruct the complete SQL statement (some information may be missing) - the aim of this
+ * structure is to identify a minimum set of information in the transaction statement. Note that the complete SQL which created the
+ * statement should be available in the #GdaSqlStatement structure which encapsulates this structure.
+ */
 struct _GdaSqlStatementTransaction {
 	GdaSqlAnyPart           any;
 	GdaTransactionIsolation isolation_level;
 	gchar                  *trans_mode; /* DEFERRED, IMMEDIATE, EXCLUSIVE, READ_WRITE, READ_ONLY */
 	gchar                  *trans_name;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

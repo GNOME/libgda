@@ -1,4 +1,4 @@
-/* GDA library
+/*
  * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -28,6 +28,22 @@
 G_BEGIN_DECLS
 
 typedef struct _GdaMutex GdaMutex;
+
+/**
+ * SECTION:gda-mutex
+ * @short_description: Recursive mutex implementation
+ * @title: GdaMutex
+ * @stability: Stable
+ * @see_also: #GdaLockable and #GMutex
+ *
+ * #GdaMutex implements a recursive mutex (unlike the #GMutex implementation which offers no
+ * guarantee about recursiveness). A recursive mutex is a mutex which can be locked several
+ * times by the same thread (and needs to be unlocked the same number of times before
+ * another thread can lock it).
+ *
+ * A #GdaMutex can safely be used even in a non multi-threaded environment in which case
+ * it does nothing.
+ */
 
 GdaMutex*   gda_mutex_new       (void);
 void        gda_mutex_lock      (GdaMutex *mutex);

@@ -113,7 +113,6 @@
 	gda_connection_event_get_source
 	gda_connection_event_get_sqlstate
 	gda_connection_event_get_type
-	gda_connection_event_new
 	gda_connection_event_set_code
 	gda_connection_event_set_description
 	gda_connection_event_set_event_type
@@ -327,25 +326,18 @@
 	gda_data_select_take_row
 	gda_default_escape_string
 	gda_default_unescape_string
-	gda_delete_row_from_table
 	gda_diff_type_get_type
 	gda_dir_blob_get_filename
 	gda_dir_blob_op_get_type
 	gda_dir_blob_op_new
 	gda_dir_blob_set_filename
 	gda_dsn_split
-	gda_easy_create_table_flag_get_type
-	gda_easy_error_get_type
-	gda_easy_error_quark
-	gda_execute_non_select_command
-	gda_execute_select_command
 	gda_gbr_get_file_path
 	gda_gbr_init
 	gda_geometricpoint_copy
 	gda_geometricpoint_free
 	gda_geometricpoint_get_type
 	gda_get_application_exec_path
-	gda_get_default_handler
 	gda_g_type_from_string
 	gda_g_type_to_string
 	gda_handler_bin_get_type
@@ -399,8 +391,6 @@
 	gda_identifier_equal
 	gda_identifier_hash
 	gda_init
-	gda_insert_row_into_table
-	gda_insert_row_into_table_v
 	gda_lang_locale
 	gda_locale_changed
 	gda_lockable_get_type
@@ -472,15 +462,6 @@
 	gda_parse_iso8601_date
 	gda_parse_iso8601_time
 	gda_parse_iso8601_timestamp
-	gda_parse_sql_string
-	gda_perform_create_database
-	gda_perform_create_table
-	gda_perform_drop_database
-	gda_perform_drop_table
-	gda_prepare_create_database
-	gda_prepare_create_table
-	gda_prepare_drop_database
-	gda_prepare_drop_table
 	gda_pstmt_copy_contents
 	gda_pstmt_get_gda_statement
 	gda_pstmt_get_type
@@ -556,13 +537,11 @@
 	gda_server_provider_get_data_handler_g_type
 	gda_server_provider_get_default_dbms_type
 	gda_server_provider_get_name
-	gda_server_provider_get_schema_nb_columns
 	gda_server_provider_get_server_version
 	gda_server_provider_get_type
 	gda_server_provider_get_version
 	gda_server_provider_handler_declare
 	gda_server_provider_handler_find
-	gda_server_provider_init_schema_model
 	gda_server_provider_internal_get_parser
 	gda_server_provider_load_file_contents
 	gda_server_provider_perform_operation
@@ -571,7 +550,6 @@
 	gda_server_provider_string_to_value
 	gda_server_provider_supports_feature
 	gda_server_provider_supports_operation
-	gda_server_provider_test_schema_model
 	gda_server_provider_unescape_string
 	gda_server_provider_value_to_sql_string
 	gda_set_add_holder
@@ -647,7 +625,6 @@
 	gda_sql_delimiterTrace
 	gda_sql_error_get_type
 	gda_sql_error_quark
-	gda_sql_error_type_get_type
 	gda_sql_expr_copy
 	gda_sql_expr_free
 	gda_sql_expr_get_type
@@ -665,10 +642,9 @@
 	gda_sql_function_serialize
 	gda_sql_function_take_args_list
 	gda_sql_function_take_name
-	gda_sql_identifier_add_quotes
-	gda_sql_identifier_needs_quotes
+	gda_sql_identifier_force_quotes
+	gda_sql_identifier_prepare_for_compare
 	gda_sql_identifier_quote
-	gda_sql_identifier_remove_quotes
 	gda_sql_identifier_split
 	gda_sql_identifier_style_get_type
 	gda_sqlite_provider_get_type
@@ -876,8 +852,6 @@
 	gda_tree_set_attribute
 	gda_tree_update_all
 	gda_tree_update_part
-	gda_update_row_in_table
-	gda_update_row_in_table_v
 	gda_ushort_get_type
 	gda_utility_check_data_model
 	gda_utility_data_model_dump_data_to_xml
@@ -899,7 +873,6 @@
 	gda_value_get_ushort
 	gda_value_is_null
 	gda_value_is_number
-	gda_value_list_get_type
 	gda_value_new
 	gda_value_new_binary
 	gda_value_new_blob

@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -68,6 +68,21 @@ struct _GdaTreeNodeClass {
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-tree-node
+ * @short_description: A node in a #GdaTree
+ * @title: GdaTreeNode
+ * @stability: Stable
+ * @see_also:
+ *
+ * Every node in a #GdaTree tree is represented by a single #GdaTreeNode object. There is no distinction
+ * between nodes which have children and those which don't (leaf nodes).
+ *
+ * The #GdaTreeNode is very basic as it only has a "name" attribute: users are encouraged to subclass it to
+ * add more features if needed (and make use of them by defining a #GdaTreeManagerNodeFunc function and 
+ * calling gda_tree_manager_set_node_create_func()).
+ */
 
 GType              gda_tree_node_get_type          (void) G_GNUC_CONST;
 GdaTreeNode*       gda_tree_node_new               (const gchar *name);

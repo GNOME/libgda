@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2008 The GNOME Foundation.
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -24,6 +24,35 @@
 #define __GDA_SQL_STATEMENT_H__
 
 G_BEGIN_DECLS
+
+/**
+ * SECTION:gda-sql-statement
+ * @short_description: SQL parser
+ * @title: GdaSqlParser
+ * @stability: Stable
+ * @see_also: The #GdaSqlBuilder object which features some easy to use API to build #GdaSqlStatement structures or #GdaStatement objects without having to worry about the details of #GdaSqlStatement's contents.
+ *
+ * Please note that it is not advised to build #GdaSqlStatement structures directly, but rather
+ * it is recommended to use the #GdaSqlBuilder object and its associated API.
+ *
+ * Every SQL statement can be decomposed in a #GdaSqlStatement structure. This is not a #GObject, but rather just a C structure
+ * which can be manipulated directly. The structure is a tree composed of several key structures which are show in the following diagram
+ * (even though it does not show, all structures "inherit" the #GdaSqlAnyPart structure which holds some basic information).
+ *<mediaobject>
+ *  <imageobject role="html">
+ *    <imagedata fileref="parts.png" format="PNG"/>
+ *  </imageobject>
+ *  <caption>
+ *    <para>
+ *      Main parts of the #GdaSqlStatement structure.
+ *    </para>
+ *  </caption>
+ *</mediaobject>
+ *
+ * The samples/SqlParserConsole directory of &LIBGDA;'s sources contains a small utility
+ * to display statements' structures as a graph (using the GraphViz language). It has been used to
+ * provide the examples in this section of the documentation.
+ */
 
 #include <sql-parser/gda-statement-struct-select.h>
 #include <sql-parser/gda-statement-struct-insert.h>

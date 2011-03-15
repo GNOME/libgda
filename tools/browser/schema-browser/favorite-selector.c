@@ -4,8 +4,8 @@
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -150,7 +150,7 @@ favorite_selector_get_type (void)
 static gboolean
 key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, FavoriteSelector *tsel)
 {
-	if (event->keyval == GDK_Delete) {
+	if (event->keyval == GDK_KEY_Delete) {
 		GtkTreeModel *model;
 		GtkTreeSelection *select;
 		GtkTreeIter iter;
@@ -342,11 +342,7 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	fav.type = BROWSER_FAVORITES_TABLES;
 	fav.name = NULL;
 	fav.descr = NULL;
-#if GTK_CHECK_VERSION(2,18,0)
 	fav.contents = (gchar*) gtk_selection_data_get_data (selection_data);
-#else
-	fav.contents = (gchar*) selection_data->data;
-#endif
 
 	pos = atoi (path);
 	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
@@ -390,14 +386,9 @@ tree_store_drag_get_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 		if (cvalue) {
 			const gchar *str;
 			str = g_value_get_string (cvalue);
-#if GTK_CHECK_VERSION(2,18,0)
 			gtk_selection_data_set (selection_data,
 						gtk_selection_data_get_target (selection_data), 8,
 						(guchar*) str, strlen (str));
-#else
-			gtk_selection_data_set (selection_data, selection_data->target, 8,
-						(guchar*) str, strlen (str));
-#endif
 			return TRUE;
 		}
 	}

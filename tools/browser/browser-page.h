@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -42,6 +42,19 @@ struct _BrowserPageIface {
 	const gchar         *(* i_get_actions_ui) (BrowserPage *page);
 	GtkWidget           *(* i_get_tab_label) (BrowserPage *page, GtkWidget **out_close_button);
 };
+
+/**
+ * SECTION:browser-page
+ * @short_description: A "page" within a #BrowserPerspective widget
+ * @title: BrowserPage
+ * @stability: Stable
+ * @see_also:
+ *
+ * Some widgets packed within a #BrowserPerspective can implement
+ * the #BrowserPage interface to specify their specific actions and menu and
+ * toolbar customizations. When they are packed in a notebook, they can also
+ * request some specific tab labels.
+ */
 
 GType               browser_page_get_type          (void) G_GNUC_CONST;
 

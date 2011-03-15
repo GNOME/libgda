@@ -1,0 +1,32 @@
+<?php
+
+/*
+ * initial shared secret: will have to be passed as the SECRET argument when opening
+ * the connection from Libgda
+ */
+$init_shared = "MySecret";
+
+/*
+ * declared connections: for each connection which can be opened by Libgda, the
+ * the connection's password and the real connection's DSN need to be added respectively
+ * to the $cnc and $dsn arrays, using the connection name as a key. The connection name
+ * and password have no significance outside of the Libgda's context and be arbitrary.
+ * However the real connection's DSN need to be valid for the PEAR's MDB2 module, as
+ * per http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
+ *
+ */
+
+/* sample connection cnc1 */
+$cnc["cnc1"] = "MyPass1";
+//$dsn["cnc1"] = "pgsql://vivien@unix(/var/run/postgresql)/sales";
+$dsn["cnc1"] = "pgsql://unix(/tmp)/sales";
+
+/* sample connection cnc2 */
+$cnc["cnc2"] = "MyPass2";
+$dsn["cnc2"] = "pgsql://vivien:Escobar@127.0.0.1/sales";
+
+/* sample connection cnc3 */
+$cnc["cnc3"] = "MyPass3";
+$dsn["cnc3"] = "mysql://vmalerba:Escobar@unix(/tmp/mysql.sock)/sales";
+
+?>

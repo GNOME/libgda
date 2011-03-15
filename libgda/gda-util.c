@@ -2105,7 +2105,7 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 		gchar *tmp, *ptr;
 		tmp = _remove_quotes (g_strdup (id));
 		if (is_keyword (tmp)) {
-			ptr = gda_sql_identifier_add_quotes (tmp);
+			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;
 		}
@@ -2117,7 +2117,7 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 				    (*ptr == '_'))
 					continue;
 				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
@@ -2132,7 +2132,7 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}
@@ -2140,7 +2140,7 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 				else if ((*ptr >= 'A') && (*ptr <= 'Z'))
 					*ptr += 'a' - 'A';
 				else if ((*ptr >= '0') && (*ptr <= '9') && (ptr == tmp)) {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
@@ -2155,7 +2155,7 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 			return g_strdup (id);
 		}
 		if (is_keyword (id) || _sql_identifier_needs_quotes (id) || force_quotes)
-			return gda_sql_identifier_add_quotes (id);
+			return gda_sql_identifier_force_quotes (id);
 		
 		/* nothing to do */
 		return g_strdup (id);

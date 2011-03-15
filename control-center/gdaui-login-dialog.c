@@ -1,12 +1,12 @@
 /* GNOME DB library
- * Copyright (C) 1999 - 2009 The GNOME Foundation.
+ * Copyright (C) 1999 - 2010 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -103,12 +103,7 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialo
 
 	g_return_if_fail (GDAUI_IS_LOGIN_DIALOG (dialog));
 
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-	dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
-
 	dialog->priv = g_new0 (GdauiLoginDialogPrivate, 1);
         
 	gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
@@ -117,7 +112,6 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialo
 
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
         gtk_box_set_spacing (GTK_BOX (dcontents), 12);
-        gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
         gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 
 	hbox = gtk_hbox_new (FALSE, 12);

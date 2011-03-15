@@ -1,18 +1,18 @@
 /* browser-canvas-table.c
  *
- * Copyright (C) 2002 - 2007 Vivien Malerba
+ * Copyright (C) 2002 - 2010 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Library General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
@@ -318,7 +318,7 @@ create_items (BrowserCanvasTable *ce)
 	y = RADIUS_Y;
         title = goo_canvas_text_new  (GOO_CANVAS_ITEM (ce), tmpstr,
 				      RADIUS_X + X_PAD, y, 
-				      -1, GTK_ANCHOR_NORTH_WEST,
+				      -1, GOO_CANVAS_ANCHOR_NORTH_WEST,
 				      "font", "Sans 11",
 				      "use-markup", TRUE, NULL);
 
@@ -544,11 +544,7 @@ browser_canvas_table_drag_data_get (BrowserCanvasItem *citem, G_GNUC_UNUSED GdkD
 	g_free (tmp1);
 	g_free (tmp2);
 	g_free (tmp3);
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_selection_data_set (data, gtk_selection_data_get_target (data), 8, (guchar*) str, strlen (str));
-#else
-	gtk_selection_data_set (data, data->target, 8, (guchar*) str, strlen (str));
-#endif
 	g_free (str);
 }
 

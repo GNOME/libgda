@@ -1,3 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
 <chapter id="libgdaui-packaging">
   <title>Packaging &LIBGDA; UI extension</title>
   <para>
@@ -53,7 +58,7 @@
       <programlisting>
 .
 |-- lib
-|   |-- libgda-4.0
+|   |-- libgda-5.0
 |   |   |-- plugins
 |   |   |   |-- gdaui-entry-filesel-spec.xml
 |   |   |   |-- gdaui-entry-password.xml
@@ -61,11 +66,11 @@
 |   |   |   |-- gdaui-entry-pict-spec_string.xml
 |   |   |   |-- gdaui-entry-text-spec.xml
 |   |   |   `-- libgdaui-plugins.so
-|   |-- libgdaui-4.0.so -> libgdaui-4.0.so.4.1.0
-|   |-- libgdaui-4.0.so.4 -> libgdaui-4.0.so.4.1.0
-|   `-- libgdaui-4.0.so.4.1.0
+|   |-- libgdaui-5.0.so -> libgdaui-5.0.so.4.1.0
+|   |-- libgdaui-5.0.so.4 -> libgdaui-5.0.so.4.1.0
+|   `-- libgdaui-5.0.so.4.1.0
 `-- share
-    `-- libgda-4.0
+    `-- libgda-5.0
         |-- language-specs
         |   `-- gda-sql.lang
         |-- server_operation.glade
@@ -86,10 +91,10 @@
       <programlisting>
 |-- share
 |   `-- gir-1.0
-|       `-- Gdaui-4.0.gir
+|       `-- Gdaui-5.0.gir
 `-- lib
     `-- girepository-1.0
-        `-- Gdaui-4.0.typelib
+        `-- Gdaui-5.0.typelib
       </programlisting>
     </para>
   </sect1>
@@ -103,11 +108,11 @@
 	<programlisting>
 .
 |-- bin
-|   `-- gda-control-center-4.0
+|   `-- gda-control-center-5.0
 `-- share
     |-- applications
-    |   `-- gda-control-center-4.0.desktop
-    |-- libgda-4.0
+    |   `-- gda-control-center-5.0.desktop
+    |-- libgda-5.0
     |   `-- pixmaps
     |       `-- gdaui-generic.png
     `-- pixmaps
@@ -125,10 +130,10 @@
 	<programlisting>
 .
 |-- bin
-|   `-- gda-browser-4.0
+|   `-- gda-browser-5.0
 `-- share
     |-- applications
-    |   `-- gda-browser-4.0.desktop
+    |   `-- gda-browser-5.0.desktop
     |-- gnome
     |   `-- help
     |       `-- gda-browser
@@ -157,18 +162,18 @@
       <programlisting>
 .
 |-- bin
-|   `-- gdaui-demo-4.0
+|   `-- gdaui-demo-5.0
 |-- include
-|   `-- libgda-4.0
+|   `-- libgda-5.0
 |       `-- libgdaui
 |           [...]
 `-- lib
-|   |-- libgdaui-4.0.a
-|   |-- libgdaui-4.0.la
+|   |-- libgdaui-5.0.a
+|   |-- libgdaui-5.0.la
 |   `-- pkgconfig
-|       `-- libgdaui-4.0.pc
+|       `-- libgdaui-5.0.pc
 `-- share
-    `-- libgda-4.0
+    `-- libgda-5.0
         `-- demo
             [...]
       </programlisting>

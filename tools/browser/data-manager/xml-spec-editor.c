@@ -4,8 +4,8 @@
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -218,7 +218,6 @@ signal_editor_changed (XmlSpecEditor *sped)
 
 	if (lerror) {
 		if (! sped->priv->info) {
-#if GTK_CHECK_VERSION (2,18,0)
 			sped->priv->info = gtk_info_bar_new ();
 			gtk_box_pack_start (GTK_BOX (sped), sped->priv->info, FALSE, FALSE, 0);
 			sped->priv->info_label = gtk_label_new ("");
@@ -226,10 +225,6 @@ signal_editor_changed (XmlSpecEditor *sped)
 			gtk_label_set_ellipsize (GTK_LABEL (sped->priv->info_label), PANGO_ELLIPSIZE_END);
 			gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (sped->priv->info))),
 					   sped->priv->info_label);
-#else
-			sped->priv->info = gtk_label_new ("");
-			sped->priv->info_label = sped->priv->info;
-#endif
 			gtk_widget_show (sped->priv->info_label);
 		}
 		gchar *str;

@@ -1,8 +1,8 @@
 /* 
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2010 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -107,12 +107,7 @@ login_dialog_init (LoginDialog *dialog)
 	char *markup, *str;
 	GtkWidget *dcontents;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-	dcontents = GTK_DIALOG (dialog)->vbox;
-#endif
-
 	dialog->priv = g_new0 (LoginDialogPrivate, 1);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
@@ -159,7 +154,8 @@ login_dialog_init (LoginDialog *dialog)
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	
 	dialog->priv->login = gdaui_login_new (NULL);
-	gdaui_login_set_mode (GDAUI_LOGIN (dialog->priv->login), GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE);
+	gdaui_login_set_mode (GDAUI_LOGIN (dialog->priv->login),
+			      GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE);
 	g_signal_connect (dialog->priv->login, "changed",
 			  G_CALLBACK (login_contents_changed_cb), dialog);
 	gtk_container_add (GTK_CONTAINER (hbox), dialog->priv->login);
@@ -192,8 +188,7 @@ login_dialog_new (GtkWindow *parent)
 {
 	return (LoginDialog*) g_object_new (LOGIN_TYPE_DIALOG, "title", _("Connection opening"),
 					    "transient-for", parent,
-					    "resizable", FALSE,
-					    "has-separator", FALSE, NULL);
+					    "resizable", FALSE, NULL);
 }
 
 /**

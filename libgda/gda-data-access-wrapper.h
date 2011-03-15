@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 2006 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2006 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -45,12 +45,24 @@ struct _GdaDataAccessWrapper {
 struct _GdaDataAccessWrapperClass {
 	GObjectClass                   parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-data-access-wrapper
+ * @short_description: Offers a random access on top of a cursor-only access data model
+ * @title: GdaDataAccessWrapper
+ * @stability: Stable
+ * @see_also: #GdaDataModel
+ *
+ * The #GdaDataAccessWrapper object simply wraps around another #GdaDataModel data model object
+ * and allows data to be accessed in a random way while remaining memory efficient as much as possible.
+ */
 
 GType         gda_data_access_wrapper_get_type    (void) G_GNUC_CONST;
 GdaDataModel *gda_data_access_wrapper_new         (GdaDataModel *model);

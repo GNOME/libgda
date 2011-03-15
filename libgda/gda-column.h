@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -51,12 +51,23 @@ struct _GdaColumnClass {
 	void (* name_changed)   (GdaColumn *column, const gchar *old_name);
 	void (* g_type_changed) (GdaColumn *column, GType old_type, GType new_type);
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-column
+ * @short_description: Management of #GdaDataModel column attributes
+ * @title: GdaDataModel columns
+ * @stability: Stable
+ * @see_also: #GdaDataModel
+ *
+ * The #GdaColumn object represents a #GdaDataModel's column and handle all its properties.
+ */
 
 GType           gda_column_get_type           (void) G_GNUC_CONST;
 GdaColumn      *gda_column_new                (void);
@@ -91,7 +102,7 @@ void            gda_column_set_attribute      (GdaColumn *column, const gchar *a
 					       GDestroyNotify destroy);
 
 /**
- * gda_column_set_attribute_static
+ * gda_column_set_attribute_static:
  * @holder: a #GdaHolder
  * @attribute: attribute's name
  * @value: the value to set the attribute to, or %NULL

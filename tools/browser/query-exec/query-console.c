@@ -4,8 +4,8 @@
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -843,18 +843,11 @@ popup_container_position_func (PopupContainer *cont, gint *out_x, gint *out_y)
 	console = g_object_get_data (G_OBJECT (cont), "console");
 	top = gtk_widget_get_toplevel (console);	
         gtk_widget_size_request ((GtkWidget*) cont, &req);
-#if GTK_CHECK_VERSION(2,18,0)
 	GtkAllocation alloc;
         gdk_window_get_origin (gtk_widget_get_window (top), &x, &y);
 	gtk_widget_get_allocation (top, &alloc);
 	x += (alloc.width - req.width) / 2;
 	y += (alloc.height - req.height) / 2;
-#else
-        gdk_window_get_origin (top->window, &x, &y);
-	
-	x += (top->allocation.width - req.width) / 2;
-	y += (top->allocation.height - req.height) / 2;
-#endif
 
         if (x < 0)
                 x = 0;

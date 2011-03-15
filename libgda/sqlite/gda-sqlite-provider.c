@@ -1472,7 +1472,6 @@ gda_sqlite_provider_get_default_dbms_type (G_GNUC_UNUSED GdaServerProvider *prov
 	
 	if ((type == GDA_TYPE_GEOMETRIC_POINT) ||
 	    (type == G_TYPE_OBJECT) ||
-	    (type == GDA_TYPE_LIST) ||
 	    (type == G_TYPE_STRING) ||
 	    (type == G_TYPE_INVALID) ||
 	    (type == G_TYPE_GTYPE))
@@ -1988,11 +1987,11 @@ add_oid_columns (GdaStatement *stmt, GHashTable **out_hash, gint *out_nb_cols_ad
 		
 		/* add to hash table */
 		add_index++;
-		g_hash_table_insert (hash, gda_sql_identifier_remove_quotes (g_strdup (name)),
+		g_hash_table_insert (hash, gda_sql_identifier_prepare_for_compare (g_strdup (name)),
 				     GINT_TO_POINTER (add_index)); /* ADDED 1 to column number,
 								    * don't forget to remove 1 when using */
 		if (target->as)
-			g_hash_table_insert (hash, gda_sql_identifier_remove_quotes (g_strdup (target->table_name)),
+			g_hash_table_insert (hash, gda_sql_identifier_prepare_for_compare (g_strdup (target->table_name)),
 					     GINT_TO_POINTER (add_index)); /* ADDED 1 to column number,
 									    * don't forget to remove 1 when using */
 		nb_cols_added ++;

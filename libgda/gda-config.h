@@ -123,6 +123,50 @@ struct _GdaConfigClass {
 	void (*_gda_reserved4) (void);
 };
 
+/**
+ * SECTION:gda-config
+ * @short_description: Access/Management of libgda configuration
+ * @title: Configuration
+ * @stability: Stable
+ * @see_also:
+ *
+ * The functions in this section allow applications an easy access to libgda's
+ * configuration (the list of data sources and database providers).
+ *
+ * As soon as a <link linkend="GdaConfig">GdaConfig</link> is needed (for example when requesting information
+ * about a data source or about a server provider), a single instance object is created,
+ * and no other will need to be created. A pointer to this object can be obtained with
+ * <link linkend="gda-config-get">gda_config_get()</link>. Of course one can (right after having called
+ * <link linkend="gda-init">gda_init()</link>) force the creation of a GdaConfig object with some
+ * specific properties set, using a simple call like:
+ * <programlisting>
+ *g_object_new (GDA_TYPE_CONFIG, "user-filename", "my_file", NULL);
+ * </programlisting>
+ * Please note that after that call, the caller has a reference to the newly created object, and should technically
+ * call <link linkend="g-object-unref">g_object_unref()</link> when finished using it. It is safe to do this
+ * but also pointless since that object should not be destroyed (as no other will be created) as &LIBGDA; also
+ * keeps a reference for itself.
+ * 
+ *Data sources are defined in a per-user configuration file which is by default <filename>${HOME}/.libgda/config</filename> and
+ * in a system wide configuration file which is by default <filename>${prefix}/etc/libgda-4.0/config</filename>. Those
+ * filenames can be modified by setting the <link linkend="GdaConfig--user-file">user-file</link> and
+ * <link linkend="GdaConfig--system-file">system-file</link> properties for the single <link linkend="GdaConfig">GdaConfig</link>
+ * instance. Note that setting either of these properties to <literal>NULL</literal> will disable using the corresponding
+ * configuration file (DSN will exist only in memory and their definition will be lost when the application finishes).
+ *
+ * The #GdaConfig object implements its own locking mechanism so it is thread-safe.
+ *
+ * Note about localization: when the #GdaConfig loads configuration files, it filters the
+ * contents based on the current locale, so for example if your current locale is "de" then
+ * all the loaded strings (for the ones which are translated) will be in the German language.
+ * Changing the locale afterwards will have no effect on the #GdaConfig and the already loaded
+ * configuration.
+ * The consequence is that you should first call setlocale() youself in your code before using
+ * a #GdaConfig object. As a side note you should also call gtk_init() before gdaui_init() because
+ * gtk_init() calls setlocale().
+ */
+
+
 GType              gda_config_get_type                 (void) G_GNUC_CONST;
 GdaConfig*         gda_config_get                      (void);
 

@@ -1,5 +1,5 @@
-/* GDA SQLite vprovider for Hub of connections
- * Copyright (C) 2007 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -45,12 +45,29 @@ struct _GdaVproviderHub {
 struct _GdaVproviderHubClass {
 	GdaVproviderDataModelClass parent_class;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/**
+ * SECTION:gda-vprovider-hub
+ * @short_description: Virtual provider for connections based on other connection
+ * @title: GdaVproviderHub
+ * @stability: Stable
+ * @see_also: See also the <link linkend="VirtualIntro">introduction to virtual connections</link>
+ *
+ * This provider is used to create virtual connections which "incorporate" tables from other connections. This is typically
+ * used when one need to compare or migrate data from one database to the other by creating two connections for each database,
+ * and "binding" them into a third virtual connection using this provider.
+ *
+ * Using gda_virtual_connection_open() with this provider as argument
+ * will generate a #GdaVconnectionHub connection object, from which connections can be added.
+ */
+
 
 GType               gda_vprovider_hub_get_type (void) G_GNUC_CONST;
 GdaVirtualProvider *gda_vprovider_hub_new      (void);

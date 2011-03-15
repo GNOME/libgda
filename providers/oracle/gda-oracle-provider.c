@@ -1,5 +1,5 @@
-/* GDA Oracle provider
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -1198,7 +1198,6 @@ gda_oracle_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	if ((type == G_TYPE_DATE) || 
 	    (type == GDA_TYPE_GEOMETRIC_POINT) ||
 	    (type == G_TYPE_OBJECT) ||
-	    (type == GDA_TYPE_LIST) ||
 	    (type == G_TYPE_STRING) ||
 	    (type == GDA_TYPE_TIME) ||
 	    (type == GDA_TYPE_TIMESTAMP) ||
@@ -1294,7 +1293,6 @@ oracle_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext 
 {
         GString *string;
         gchar *str;
-	gpointer tmp;
 
         g_return_val_if_fail (target, NULL);
         g_return_val_if_fail (GDA_SQL_ANY_PART (target)->type == GDA_SQL_ANY_SQL_SELECT_TARGET, NULL);
@@ -1310,8 +1308,9 @@ oracle_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext 
 		g_free (str);
 	}
 	else {
+		gboolean tmp;
 		tmp = target->expr->value_is_ident;
-		target->expr->value_is_ident = (gpointer) 0x1;
+		target->expr->value_is_ident = TRUE;
 		str = context->render_expr (target->expr, context, NULL, NULL, error);
 		target->expr->value_is_ident = tmp;
 		string = g_string_new (str);
@@ -2372,7 +2371,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 		gchar *tmp, *ptr;
 		tmp = ora_remove_quotes (g_strdup (id));
 		if (kwfunc (tmp)) {
-			ptr = gda_sql_identifier_add_quotes (tmp);
+			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;
 		}
@@ -2384,7 +2383,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 				    (*ptr == '_'))
 					continue;
 				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
@@ -2403,7 +2402,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 					    (*ptr == '_'))
 						continue;
 					else {
-						ptr = gda_sql_identifier_add_quotes (tmp);
+						ptr = gda_sql_identifier_force_quotes (tmp);
 						g_free (tmp);
 						return ptr;
 					}
@@ -2411,7 +2410,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 				else if ((*ptr >= 'A') && (*ptr <= 'Z'))
 					*ptr += 'a' - 'A';
 				else if ((*ptr >= '0') && (*ptr <= '9') && (ptr == tmp)) {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}

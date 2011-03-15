@@ -4,8 +4,8 @@
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -250,7 +250,6 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 		return;
 	}
 
-#if GTK_CHECK_VERSION(2,14,0)
 	gchar *ruri;
 
 	screen = gtk_widget_get_screen ((GtkWidget*) parent);
@@ -258,14 +257,6 @@ browser_show_help (GtkWindow *parent, const gchar *topic)
 	gtk_show_uri (screen, ruri,  gtk_get_current_event_time (), &error);
 	g_free (ruri);
 
-#else
-	gchar *command;
-	
-	command = g_strconcat ("gnome-help ghelp://", uri,  NULL);
-	screen = gtk_widget_get_screen (GTK_WIDGET (parent));
-	gdk_spawn_command_line_on_screen (screen, command, &error);
-	g_free (command);
-#endif
 	if (error) {
 		GtkWidget *d;
 		d = gtk_message_dialog_new (parent, 

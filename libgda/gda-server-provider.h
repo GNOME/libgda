@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 1998 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -66,6 +66,60 @@ struct _GdaServerProvider {
 	GdaServerProviderPrivate *priv;
 };
 
+
+/**
+ * GdaServerProviderMeta:
+ * @_info: 
+ * @_btypes: 
+ * @_udt: 
+ * @udt: 
+ * @_udt_cols: 
+ * @udt_cols: 
+ * @_enums: 
+ * @enums: 
+ * @_domains: 
+ * @domains: 
+ * @_constraints_dom: 
+ * @constraints_dom: 
+ * @_el_types: 
+ * @el_types: 
+ * @_collations: 
+ * @collations: 
+ * @_character_sets: 
+ * @character_sets: 
+ * @_schemata: 
+ * @schemata: 
+ * @_tables_views: 
+ * @tables_views: 
+ * @_columns: 
+ * @columns: 
+ * @_view_cols: 
+ * @view_cols: 
+ * @_constraints_tab: 
+ * @constraints_tab: 
+ * @_constraints_ref: 
+ * @constraints_ref: 
+ * @_key_columns: 
+ * @key_columns: 
+ * @_check_columns: 
+ * @check_columns: 
+ * @_triggers: 
+ * @triggers: 
+ * @_routines: 
+ * @routines: 
+ * @_routine_col: 
+ * @routine_col: 
+ * @_routine_par: 
+ * @routine_par: 
+ * @_indexes_tab: 
+ * @indexes_tab: 
+ * @_index_cols: 
+ * @index_cols:
+ *
+ * These methods must be implemented by providers to update a connection's associated metadata (in a 
+ * #GdaMetaStore object), see the <link linkend="prov-metadata">Virtual methods for providers/Methods - metadata</link>
+ * for more information.
+ */
 typedef struct {
 	/* _information_schema_catalog_name */
 	gboolean (*_info)            (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
@@ -189,6 +243,7 @@ typedef struct {
 	gboolean (*index_cols)       (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **,
 				      const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, const GValue *index_name);
 	
+	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved5) (void);
 	void (*_gda_reserved6) (void);
@@ -218,8 +273,30 @@ typedef struct {
 	GList   *(*xa_recover)  (GdaServerProvider *, GdaConnection *, GError **);
 } GdaServerProviderXa;
 
+/**
+ * GdaServerProviderAsyncCallback:
+ * @provider: 
+ * @cnc: 
+ * @task_id: 
+ * @result_status: 
+ * @error: 
+ * @data: 
+ *
+ * Function to be called by Libgda when the associated asynchronous method invoked finishes.
+ */
 typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
 						gboolean result_status, const GError *error, gpointer data);
+/**
+ * GdaServerProviderExecCallback:
+ * @provider: 
+ * @cnc: 
+ * @task_id: 
+ * @result_obj: 
+ * @error: 
+ * @data: 
+ *
+ * Function to be called by Libgda when the associated asynchronous method invoked finishes
+ */
 typedef void (*GdaServerProviderExecCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
 					       GObject *result_obj, const GError *error, gpointer data);
 
@@ -314,10 +391,27 @@ struct _GdaServerProviderClass {
 							 GdaStatement *stmt, GdaSet *params, GError **error);
 	/*< private >*/
 	/* Padding for future expansion */
+	void                    (*_gda_reserved1)        (void);
+	void                    (*_gda_reserved2)        (void);
+	void                    (*_gda_reserved3)        (void);
 	void                    (*_gda_reserved4)        (void);
 	void                    (*_gda_reserved5)        (void);
 	void                    (*_gda_reserved6)        (void);
 };
+
+/**
+ * SECTION:gda-server-provider
+ * @short_description: Base class for all the DBMS providers
+ * @title: GdaServerProvider
+ * @stability: Stable
+ * @see_also: #GdaConnection
+ *
+ * The #GdaServerProvider class is a virtual class which all the DBMS providers
+ * must inherit, and implement its virtual methods.
+ *
+ * See the <link linkend="libgda-provider-class">Virtual methods for providers</link> section for more information
+ * about how to implement the virtual methods.
+ */
 
 GType                  gda_server_provider_get_type (void) G_GNUC_CONST;
 

@@ -154,8 +154,6 @@ gda_init (void)
 	g_assert (type);
 	type = GDA_TYPE_GEOMETRIC_POINT;
 	g_assert (type);
-	type = GDA_TYPE_LIST;
-	g_assert (type);
 	type = GDA_TYPE_NUMERIC;
 	g_assert (type);
 	type = GDA_TYPE_SHORT;
@@ -251,8 +249,8 @@ gda_init (void)
  *
  * Find the path to the application identified by @app_name. For example if the application
  * is "gda-sql", then calling this function will return
- * "/your/prefix/bin/gda-sql-4.0" if Libgda is installed in
- * the "/your/prefix" prefix (which would usually be "/usr"), and for the ABI version 4.0.
+ * "/your/prefix/bin/gda-sql-5.0" if Libgda is installed in
+ * the "/your/prefix" prefix (which would usually be "/usr"), and for the ABI version 5.0.
  *
  * Returns: the path as a new string, or %NULL if the application cannot be found
  */

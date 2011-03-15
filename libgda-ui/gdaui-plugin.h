@@ -1,6 +1,5 @@
-/* gdaui-plugin.h
- *
- * Copyright (C) 2006 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -26,7 +25,26 @@
 #include <libgda-ui/gdaui-data-entry.h>
 #include "gdaui-decl.h"
 
+/**
+ * GdauiEntryCreateFunc:
+ * @Param1: 
+ * @Param2: 
+ * @Param3: 
+ * @Returns:
+ *
+ * Defines a function which creates a #GdauiDataEntry widget
+ */
 typedef GdauiDataEntry   *(*GdauiEntryCreateFunc)(GdaDataHandler *, GType, const gchar *);
+
+/**
+ * GdauiCellCreateFunc:
+ * @Param1: 
+ * @Param2: 
+ * @Param3: 
+ * @Returns:
+ *
+ * Defines a function which creates a #GtkCellRenderer object
+ */
 typedef GtkCellRenderer  *(*GdauiCellCreateFunc) (GdaDataHandler *, GType, const gchar *);
 
 
@@ -60,6 +78,17 @@ typedef struct {
 	GdauiEntryCreateFunc  entry_create_func;
 	GdauiCellCreateFunc   cell_create_func;
 } GdauiPlugin;
+
+/**
+ * SECTION:gdaui-plugins
+ * @short_description: 
+ * @title: UI plugins
+ * @stability: Stable
+ * @Image:
+ * @see_also:
+ *
+ * This section describes the functions used to declare UI plugins: data entry and cell renderers.
+ */
 
 void gdaui_plugin_declare (const GdauiPlugin *plugin);
 

@@ -1,3 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<programlisting>
 <![CDATA[#include <libgda/libgda.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda/gda-blob-op.h>
@@ -190,3 +194,4 @@ do_fetch (GdaConnection *cnc, gint id, GError **error)
 	return result;
 }
 ]]>
+</programlisting>

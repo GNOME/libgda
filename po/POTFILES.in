@@ -1,6 +1,6 @@
 control-center/dsn-config.c
 control-center/dsn-properties-dialog.c
-control-center/gda-control-center-4.0.desktop.in
+control-center/gda-control-center-5.0.desktop.in
 control-center/gdaui-dsn-assistant.c
 control-center/gdaui-dsn-editor.c
 control-center/gdaui-login-dialog.c
@@ -22,7 +22,6 @@ libgda/gda-data-model-import.c
 libgda/gda-data-model-iter.c
 libgda/gda-data-proxy.c
 libgda/gda-data-select.c
-libgda/gda-easy.c
 libgda/gda-holder.c
 libgda/gda-init.c
 libgda/gda-log.c
@@ -250,7 +249,7 @@ tools/browser/browser-stock-icons.c
 tools/browser/browser-virtual-connection.c
 tools/browser/browser-window.c
 tools/browser/connection-binding-properties.c
-tools/browser/gda-browser-4.0.desktop.in
+tools/browser/gda-browser-5.0.desktop.in
 tools/browser/login-dialog.c
 tools/browser/main.c
 tools/browser/mgr-favorites.c

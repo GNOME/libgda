@@ -1,6 +1,6 @@
 /* gdaui-entry-string.c
  *
- * Copyright (C) 2003 - 2010 Vivien Malerba
+ * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -153,7 +153,8 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 					 g_param_spec_boolean ("multiline", NULL, NULL, FALSE, 
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_EDITING_CANCELED,
-					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE, G_PARAM_READABLE));
+					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE,
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_OPTIONS,
 					 g_param_spec_string ("options", NULL, NULL, NULL, G_PARAM_WRITABLE));
 }
@@ -161,7 +162,7 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 static gboolean
 key_press_event_cb (GdauiEntryString *mgstr, GdkEventKey *key_event, G_GNUC_UNUSED gpointer data)
 {
-	if (key_event->keyval == GDK_Escape)
+	if (key_event->keyval == GDK_KEY_Escape)
 		mgstr->priv->editing_canceled = TRUE;
 	return FALSE;
 }
@@ -289,6 +290,9 @@ gdaui_entry_string_set_property (GObject *object,
 			break;
 		case PROP_OPTIONS:
 			set_entry_options (mgstr, g_value_get_string (value));
+			break;
+		case PROP_EDITING_CANCELED:
+			TO_IMPLEMENT;
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);

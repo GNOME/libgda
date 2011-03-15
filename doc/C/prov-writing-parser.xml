@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<chapter id="libgda-provider-parser" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <title>SQL parser</title>
+  <para>
+    &LIBGDA; implements a generic SQL parser which creates <link linkend="GdaStatement">GdaStatement</link> objects from
+    an SQL string. If the database provider needs to implement its own parser because the generic one does not handle
+    the database specific SQL syntax, it can be done using instructions in this chapter. Otherwise, the provider's sources
+    can be cleared of any code related to the parser.
+  </para>
+  <sect1>
+    <title>Implementation overview</title>
+    <para>
+      This section describes how the generic SQL parser and a provider specific parser are built regarding the files
+      and programs which are involved.
+    </para>
+    <sect2>
+      <title>Generic SQL parser</title>
+      <para>
+	The <link linkend="GdaSqlParser">GdaSqlParser</link> object can parse any SQL string of any SQL dialect,
+	while always identifying the variables (which have a &LIBGDA;'s specific syntax) in the string. If the parser
+	can identify a structure in the SQL string it understands, then it internally builds a
+	<link linkend="GdaSqlStatement">GdaSqlStatement</link> structure of the correct type, and if it cannot then is simply
+	delimits parts in the SQL string to identify variables and also builds a
+	<link linkend="GdaSqlStatement">GdaSqlStatement</link> structure but of 
+	<link linkend="GDA-SQL-STATEMENT-UNKNOWN:CAPS">GDA_SQL_STATEMENT_UNKNOWN</link>. If the string
+	cannot be delimited and variables identified, then it returns an error (usually there is a quotes mismatch problem
+	within the SQL string).
+      </para>
+      <para>
+	Failing to identify a known structure in the SQL string can have several reasons:
+	<itemizedlist>
+	   <listitem><para>the SQL string is not one of the known types of statements (see 
+	       <link linkend="GdaSqlStatementType">GdaSqlStatementType</link>)</para></listitem>
+	   <listitem><para>the SQL uses some database specific extensions</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	The generic SQL parser implementation has its source files in the 
+	<filename class="directory">libgda/sql-parser</filename> directory; the files which actually implement
+	the parser itself are the <filename>parser.y</filename>, <filename>delimiter.y</filename> and
+	 <filename>parser_tokens.h</filename> files:
+	 <itemizedlist>
+	   <listitem><para>The <filename>parser.y</filename> file contains the grammar used by the parser</para></listitem>
+	   <listitem><para>The <filename>delimiter.y</filename> file contains the grammar used by the parser when it 
+	       is operating as a delimiter</para></listitem>
+	   <listitem><para>The <filename>parser_tokens.h</filename> defines some hard coded tokens</para></listitem>
+	 </itemizedlist>
+      </para>
+      <para>
+	The parser grammar files use the <ulink url="http://www.hwaci.com/sw/lemon/">Lemon parser generator</ulink> syntax
+	which is a LALR parser similar to <application>YACC</application> or <application>bison</application>. The lexer part
+	however is not <application>LEX</application> but is a custom one integrated in the
+	<filename>gda-sql-parser.c</filename> file (this allows a better integration between the lexer and parser parts).
+      </para>
+      <para>
+	The following figure illustrates the files involved and how they are produced and used to create
+	the generic SQL parser.
+	<mediaobject>
+          <imageobject role="html">
+            <imagedata fileref="parser_gen.png" format="PNG"/>
+          </imageobject>
+          <textobject> 
+            <phrase>Generic SQL parser's implementation</phrase>
+          </textobject>
+	</mediaobject>
+	<itemizedlist>
+	   <listitem><para>The white background indicate files which are sources
+	       (part of &LIBGDA;'s distribution)</para></listitem>
+	   <listitem><para>The blue background indicate files that they are produced dynamically</para></listitem>
+	   <listitem><para>The pink background indicate programs that are compiled and used themselves in
+	       the compilation process to generate files. These programs are:
+	       <itemizedlist>
+		 <listitem><para><application>lemon</application>: the lemon parser itself</para></listitem>
+		 <listitem><para><application>gen_def</application>: generated the "converters" arrays (see blow)</para>
+		 </listitem>
+	       </itemizedlist>
+	       Note that none of these programs gets installed (and when cross compiling, they are compiled as programs
+	       executing on the host actually making the compilation).
+	   </para></listitem>
+	   <listitem><para>The green background identifies components which are reused when implementing provider specific
+	       parsers</para></listitem>
+	 </itemizedlist>
+      </para>
+      <para>
+	The tokenizer (AKA lexer) generates values identified by the "L_" prefix (for example "L_BEGIN"). Because
+	the GdaSqlParser object uses the same lexer with at least two different parsers (namely the parser and delimiter
+	mentioned earlier), and because the Lemon parser generator generates its own value identifiers for tokens, there
+	is a conversion step (the "converter" block in the diagram) which converts the "L_" prefixed tokens with the ones
+	usable by each parser (both converters are defined as arrays in the <filename>token_types.h</filename> file.
+      </para>
+    </sect2>
+    <sect2>
+      <title>Provider specific SQL parser</title>
+      <para>
+	One wants to write a database specific SQL parser when:
+	<itemizedlist>
+	  <listitem><para>the SQL understood by the database differs from the generic SQL. For example
+	      PostgreSQL associates priorities to the compound statement in a different way as the generic SQL.
+	      In this case it is strongly recommended to write a custom SQL parser</para></listitem>
+	  <listitem><para>the SQL understood by the database has specific extensions</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	Using the same background color conventions as the previous diagram, the following diagram illustrates
+	the files involved and how they are produced and used to create a provider specific SQL parser:
+      </para>
+      <para>
+	<mediaobject>
+          <imageobject role="html">
+            <imagedata fileref="parser_prov.png" format="PNG"/>
+          </imageobject>
+          <textobject> 
+            <phrase>Provider specific SQL parser's implementation</phrase>
+          </textobject>
+	</mediaobject>
+      </para>
+      <para>
+	The key differences are:
+	<itemizedlist>
+	  <listitem><para>The delimiter part of the <link linkend="GdaSqlParser">GdaSqlParser</link> object
+	      is the same as for the generic SQL parser implementation</para></listitem>
+	  <listitem><para>While the <application>lemon</application> program is the same as for the generic SQL parser,
+	      the <application>gen_def</application> is different, and takes as its input the ".h" file produced by
+	      the <application>lemon</application> program and the <filename>libgda/sql-parser/token_types.h</filename>.
+	  </para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+  </sect1>
+  <sect1>
+    <title>Tips to write a custom parser</title>
+    <para>
+      <itemizedlist>
+	<listitem><para>Write a new <filename>parser.y</filename> file (better to copy and adapt 
+	    it than starting from scratch)</para></listitem>
+	<listitem><para>Sub class the <link linkend="GdaSqlParser">GdaSqlParser</link> class and "connect" the
+	    class's virtual methods to the new generated parser</para></listitem>
+	<listitem><para>Start from the skeleton implementation</para></listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
+  <xi:include href="xml/gda-sql-statement.xml"/>
+</chapter>

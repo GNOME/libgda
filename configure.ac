@@ -1,6 +1,6 @@
 m4_define(major, 4)
-m4_define(minor, 2)
-m4_define(micro, 6)
+m4_define(minor, 99)
+m4_define(micro, 1)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 AC_CONFIG_MACRO_DIR([m4])
@@ -25,7 +25,7 @@ AC_SUBST(GDA_VERSION, major.minor.micro)
 # ABI version:
 # Careful. Changing these will break ABI, because it is used for the library name and header install path:
 # This allows us to do a 3.2 version that is ABI-compatible with 3.0, but with API additions.
-AC_SUBST(GDA_ABI_MAJOR_VERSION, 4)
+AC_SUBST(GDA_ABI_MAJOR_VERSION, 5)
 AC_SUBST(GDA_ABI_MINOR_VERSION, 0)
 #AC_SUBST(GDA_MICRO_VERSION, micro)
 LIBGDA_ABI_VERSION=$GDA_ABI_MAJOR_VERSION.$GDA_ABI_MINOR_VERSION
@@ -40,7 +40,7 @@ m4_undefine([minor])
 m4_undefine([micro])
 
 dnl required versions of other tools.
-m4_define([req_ver_glib],[2.12.11])
+m4_define([req_ver_glib],[2.28.0])
 
 #
 # Making releases:
@@ -171,7 +171,7 @@ AC_ARG_WITH(ui,
 
 if test "$with_ui" = "auto" -o "$with_ui" = "yes"
 then
-	GTK_MODULES="gtk+-2.0 >= 2.12.0"
+	GTK_MODULES="gtk+-3.0 >= 3.0.0"
 	PKG_CHECK_MODULES(GTK, $GTK_MODULES, [
 		AC_DEFINE(HAVE_UI, [1], [GTK+ support enabled])
 		have_ui=yes], [
@@ -208,7 +208,7 @@ then
 
 	if test "$with_sourceview" = "auto" -o "$with_sourceview" = "yes"
 	then
-		PKG_CHECK_MODULES(GTKSOURCEVIEW, "gtksourceview-2.0", [
+		PKG_CHECK_MODULES(GTKSOURCEVIEW, "gtksourceview-3.0", [
 			AC_DEFINE(HAVE_GTKSOURCEVIEW, [1], [GtkSourceView support enabled])
 			have_sourceview=yes], [
 			if test "$with_sourceview" = "yes"
@@ -220,7 +220,7 @@ then
 
 	if test "$with_goo" = "auto" -o "$with_goo" = "yes"
 	then
-		PKG_CHECK_MODULES(GOOCANVAS, "goocanvas", [
+		PKG_CHECK_MODULES(GOOCANVAS, "goocanvas-2.0", [
 			AC_DEFINE(HAVE_GOOCANVAS, [1], [GooCanvas support enabled])
 			have_goocanvas=yes], [
 			if test "$with_goo" = "yes"
@@ -260,29 +260,6 @@ AM_CONDITIONAL(HAVE_GRAPHVIZ, test x"$have_graphviz" = "xyes")
 AC_SUBST(GRAPHVIZ_CFLAGS)
 AC_SUBST(GRAPHVIZ_LIBS)
 
-
-dnl ******************************
-dnl Checks for LibUnique
-dnl ******************************
-have_unique=no
-AC_ARG_WITH(unique,
-	AS_HELP_STRING([--with-unique], [Use LibUnique to have only one control center]),
-	,with_unique=auto)
-
-if test "$with_unique" = "auto" -o "$with_unique" = "yes"
-then
-	PKG_CHECK_MODULES(UNIQUE, "unique-1.0", [
-		AC_DEFINE(HAVE_UNIQUE, [1], [LibUnique support enabled])
-		have_unique=yes], [
-		if test "$with_unique" = "yes"
-		then
-			AC_MSG_ERROR([LibUnique support requested but not found.])
-		fi
-		have_unique=no])
-fi
-AM_CONDITIONAL(HAVE_UNIQUE, test x"$have_unique" = "xyes")
-AC_SUBST(UNIQUE_CFLAGS)
-AC_SUBST(UNIQUE_LIBS)
 
 dnl ******************************
 dnl Checks for iso codes
@@ -499,7 +476,7 @@ dnl ******************************
 dnl gtk-doc
 dnl ******************************
 
-GTK_DOC_CHECK([1.0])
+GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
 
 dnl ******************************
 dnl Checks for providers
@@ -604,7 +581,7 @@ else
 		if test x"$have_sqlite" = "xyes"
 		then
 			AC_CHECK_LIB(sqlite3, sqlite3_table_column_metadata,[sqlite3_api=1], [sqlite3_api=0], $SQLITE_CFLAGS $SQLITE_LIBS)
-	
+
 			if test $sqlite3_api = 0
         		then
 				AC_MSG_RESULT([Installed SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, using embedded SQLite])
@@ -623,7 +600,6 @@ else
 	fi
 	AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
 fi
-
 
 dnl ************************
 dnl Check for libsoup
@@ -788,10 +764,10 @@ AC_SUBST(LIBGDA_LIBS)
 AC_OUTPUT([
 Makefile
 libgda.spec
-libgda-4.0.pc
-libgda-ui-4.0.pc
-libgda-report-4.0.pc
-libgda-xslt-4.0.pc
+libgda-5.0.pc
+libgda-ui-5.0.pc
+libgda-report-5.0.pc
+libgda-xslt-5.0.pc
 po/Makefile.in
 libgda/Makefile
 libgda/libgda.h
@@ -808,31 +784,31 @@ providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile
 providers/reuseable/mysql/Makefile
 providers/bdb/Makefile
-providers/bdb/libgda-bdb-4.0.pc
+providers/bdb/libgda-bdb-5.0.pc
 providers/bdbsql/Makefile
-providers/bdbsql/libgda-bdbsql-4.0.pc
+providers/bdbsql/libgda-bdbsql-5.0.pc
 providers/mdb/Makefile
 providers/mdb/libmdb-src/Makefile
-providers/mdb/libgda-mdb-4.0.pc
+providers/mdb/libgda-mdb-5.0.pc
 providers/mysql/Makefile
-providers/mysql/libgda-mysql-4.0.pc
+providers/mysql/libgda-mysql-5.0.pc
 providers/oracle/Makefile
-providers/oracle/libgda-oracle-4.0.pc
+providers/oracle/libgda-oracle-5.0.pc
 providers/postgres/Makefile
-providers/postgres/libgda-postgres-4.0.pc
+providers/postgres/libgda-postgres-5.0.pc
 providers/sqlite/Makefile
-providers/sqlite/libgda-sqlite-4.0.pc
+providers/sqlite/libgda-sqlite-5.0.pc
 providers/jdbc/Makefile
-providers/jdbc/libgda-jdbc-4.0.pc
+providers/jdbc/libgda-jdbc-5.0.pc
 providers/web/Makefile
-providers/web/libgda-web-4.0.pc
+providers/web/libgda-web-5.0.pc
 providers/skel-implementation/Makefile
 providers/skel-implementation/capi/Makefile
-providers/skel-implementation/capi/libgda-capi-4.0.pc
+providers/skel-implementation/capi/libgda-capi-5.0.pc
 providers/skel-implementation/models/Makefile
-providers/skel-implementation/models/libgda-models-4.0.pc
+providers/skel-implementation/models/libgda-models-5.0.pc
 providers/sqlcipher/Makefile
-providers/sqlcipher/libgda-sqlcipher-4.0.pc
+providers/sqlcipher/libgda-sqlcipher-5.0.pc
 libgda-report/Makefile
 libgda-report/engine/Makefile
 libgda-report/DocBook/Makefile
@@ -851,7 +827,7 @@ libgda-ui/demos/geninclude.pl
 control-center/Makefile
 control-center/data/Makefile
 tools/Makefile
-tools/gda-sql-4.0.1:tools/gda-sql.1.in
+tools/gda-sql-5.0.1:tools/gda-sql.1.in
 tools/browser/Makefile
 tools/browser/data/Makefile
 tools/browser/common/Makefile
@@ -888,17 +864,17 @@ mv ${srcdir}/doc/C/version.xml.tmp ${srcdir}/doc/C/version.xml
 cp doc/C/builddate.xml ${srcdir}/doc/C/builddate.xml.tmp
 mv ${srcdir}/doc/C/builddate.xml.tmp ${srcdir}/doc/C/builddate.xml
 
-cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-4.0-sections.txt
-echo "" >> doc/C/libgda-4.0-sections.txt
-cat ${srcdir}/doc/C/libgda-ui-sections.txt >> doc/C/libgda-4.0-sections.txt
-cp doc/C/libgda-4.0-sections.txt ${srcdir}/doc/C/libgda-4.0-sections.txt.tmp
-mv ${srcdir}/doc/C/libgda-4.0-sections.txt.tmp ${srcdir}/doc/C/libgda-4.0-sections.txt
+cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-5.0-sections.txt
+echo "" >> doc/C/libgda-5.0-sections.txt
+cat ${srcdir}/doc/C/libgda-ui-sections.txt >> doc/C/libgda-5.0-sections.txt
+cp doc/C/libgda-5.0-sections.txt ${srcdir}/doc/C/libgda-5.0-sections.txt.tmp
+mv ${srcdir}/doc/C/libgda-5.0-sections.txt.tmp ${srcdir}/doc/C/libgda-5.0-sections.txt
 
-cp doc/C/libgda.types doc/C/libgda-4.0.types
+cp doc/C/libgda.types doc/C/libgda-5.0.types
 if test x$have_ui != xno
 then
-	echo "" >> doc/C/libgda-4.0.types
-	cat ${srcdir}/doc/C/libgda-ui.types >> doc/C/libgda-4.0.types
+	echo "" >> doc/C/libgda-5.0.types
+	cat ${srcdir}/doc/C/libgda-ui.types >> doc/C/libgda-5.0.types
 fi
 
 
@@ -925,4 +901,3 @@ then
        echo "   Binreloc support is disabled: Libgda will not be relocatable. To enable binreloc support re-run with --enable-binreloc (see http://autopackage.org/docs/binreloc for more information)"
 fi
 echo ""
-

@@ -1,5 +1,5 @@
-/* GDA common library
- * Copyright (C) 2008 The GNOME Foundation.
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -44,6 +44,18 @@ struct _GdaLockableIface {
 	gboolean             (* i_trylock)    (GdaLockable *lock);
 	void                 (* i_unlock)     (GdaLockable *lock);
 };
+
+/**
+ * SECTION:gda-lockable
+ * @short_description: Interface for locking objects in a multi threaded environment
+ * @title: GdaLockable
+ * @stability: Stable
+ * @see_also: #GdaMutex and #GMutex
+ *
+ * This interface is implemented by objects which are thread safe (ie. can be used by several threads at
+ * the same time). Before using an object from a thread, one has to call gda_lockable_lock() or
+ * gda_lockable_trylock() and call gda_lockable_unlock() when the object is not used anymore.
+ */
 
 GType      gda_lockable_get_type   (void) G_GNUC_CONST;
 

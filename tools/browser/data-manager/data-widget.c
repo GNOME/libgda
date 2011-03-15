@@ -4,8 +4,8 @@
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -109,7 +109,6 @@ data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 	gtk_box_pack_start (GTK_BOX (dwid), dwid->priv->top_nb, TRUE, TRUE, 0);
 
 	/* error page */
-#if GTK_CHECK_VERSION (2,18,0)
 	GtkWidget *info;
 	info = gtk_info_bar_new ();
 	gtk_notebook_append_page (GTK_NOTEBOOK (dwid->priv->top_nb), info, NULL);
@@ -118,10 +117,6 @@ data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 	gtk_label_set_ellipsize (GTK_LABEL (dwid->priv->info_label), PANGO_ELLIPSIZE_END);
 	gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (info))),
 			   dwid->priv->info_label);
-#else
-	dwid->priv->info_label = gtk_label_new ("");
-	gtk_notebook_append_page (GTK_NOTEBOOK (dwid->priv->top_nb), dwid->priv->info_label, NULL);
-#endif
 
 	/* contents page */
 	GtkWidget *vbox;
@@ -262,12 +257,8 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 
 	part->spinner = BROWSER_SPINNER (browser_spinner_new ());
 	browser_spinner_set_size ((BrowserSpinner*) part->spinner, GTK_ICON_SIZE_LARGE_TOOLBAR);
-#if GTK_CHECK_VERSION(2,20,0)
 	page = gtk_alignment_new (0.5, 0.5, 0., 0.);
 	gtk_container_add (GTK_CONTAINER (page), (GtkWidget*) part->spinner);
-#else
-	page = GTK_WIDGET (part->spinner);
-#endif
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), page, NULL);
 	part->data_widget = NULL;
 

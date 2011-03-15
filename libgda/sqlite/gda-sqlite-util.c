@@ -255,7 +255,7 @@ _gda_sqlite_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaConn
 		gchar *tmp, *ptr;
 		tmp = sqlite_remove_quotes (g_strdup (id));
 		if (kwfunc (tmp)) {
-			ptr = gda_sql_identifier_add_quotes (tmp);
+			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;
 		}
@@ -269,7 +269,7 @@ _gda_sqlite_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaConn
 				    (*ptr >= '_'))
 					continue;
 				else {
-					ptr = gda_sql_identifier_add_quotes (tmp);
+					ptr = gda_sql_identifier_force_quotes (tmp);
 					g_free (tmp);
 					return ptr;
 				}
@@ -286,7 +286,7 @@ _gda_sqlite_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaConn
 			/* there are already some quotes */
 			gchar *tmp, *ptr;
 			tmp = sqlite_remove_quotes (g_strdup (id));
-			ptr = gda_sql_identifier_add_quotes (tmp);
+			ptr = gda_sql_identifier_force_quotes (tmp);
 			g_free (tmp);
 			return ptr;
 		}

@@ -133,20 +133,12 @@ label_drag_data_received (G_GNUC_UNUSED GtkWidget *label, GdkDragContext *contex
 			  G_GNUC_UNUSED gint x, G_GNUC_UNUSED gint y, GtkSelectionData *data,
 			  G_GNUC_UNUSED guint info, guint time)
 {
-#if GTK_CHECK_VERSION(2,18,0)
 	if ((gtk_selection_data_get_length (data) >= 0) && (gtk_selection_data_get_format (data) == 8)) {
 		g_print ("Received \"%s\" in drop zone\n",
 			 (gchar *) gtk_selection_data_get_data (data));
 		gtk_drag_finish (context, TRUE, FALSE, time);
 		return;
 	}
-#else
-	if ((data->length >= 0) && (data->format == 8)) {
-		g_print ("Received \"%s\" in drop zone\n", (gchar *)data->data);
-		gtk_drag_finish (context, TRUE, FALSE, time);
-		return;
-	}
-#endif
 
 	gtk_drag_finish (context, FALSE, FALSE, time);
 }

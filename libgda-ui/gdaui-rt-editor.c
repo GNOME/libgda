@@ -1185,6 +1185,8 @@ text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte)
  *
  * returns the token type starting from @iter, and positions @out_end to the last used position
  * position.
+ *
+ * Returns: a #MarkupTag
  */
 static MarkupTag
 get_token (GtkTextIter *iter, gint *out_nb_spaces_before, GtkTextIter *out_end,

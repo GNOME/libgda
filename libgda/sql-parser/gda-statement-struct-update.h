@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2009  Vivien Malerba
+ * Copyright (C) 2007 - 2011  Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -31,6 +31,15 @@ G_BEGIN_DECLS
 /*
  * Structure definition
  */
+/**
+ * GdaSqlStatementUpdate:
+ * @any: 
+ * @on_conflict: 
+ * @table: 
+ * @fields_list: 
+ * @expr_list: 
+ * @cond:
+ */
 struct _GdaSqlStatementUpdate {
 	GdaSqlAnyPart     any;
 	gchar            *on_conflict; /* conflict resolution clause */
@@ -39,6 +48,7 @@ struct _GdaSqlStatementUpdate {
 	GSList           *expr_list;   /* list of GdaSqlExpr pointers */
 	GdaSqlExpr       *cond;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

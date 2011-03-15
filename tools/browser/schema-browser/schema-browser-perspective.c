@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2009 - 2010 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -167,7 +167,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 				  browser_make_tab_label_with_stock (_("Index"), GTK_STOCK_ABOUT, FALSE,
 								     NULL));
 	gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (nb), wid, TRUE);
-	gtk_notebook_set_group (GTK_NOTEBOOK (nb), bcnc);
+	gtk_notebook_set_group_name (GTK_NOTEBOOK (nb), "schema-browser");
 
 	gtk_notebook_set_menu_label (GTK_NOTEBOOK (nb), wid,
 				     browser_make_tab_label_with_stock (_("Index"), GTK_STOCK_ABOUT, FALSE,
@@ -332,11 +332,13 @@ static const gchar *ui_actions_info =
 	"    <menu name='Display' action='Display'>"
 	"      <menuitem name='SchemaBrowserFavoritesShow' action='SchemaBrowserFavoritesShow'/>"
         "    </menu>"
+#ifdef HAVE_GOOCANVAS
         "    <placeholder name='MenuExtension'>"
         "      <menu name='Schema' action='Schema'>"
         "        <menuitem name='NewDiagram' action= 'NewDiagram'/>"
         "      </menu>"
         "    </placeholder>"
+#endif
         "  </menubar>"
         "</ui>";
 

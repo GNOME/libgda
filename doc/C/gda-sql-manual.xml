@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<part id="gda-sql">
+  <title>Gda SQL console's user manual</title>
 <para>
   The &LIBGDA;'s console tool allow one to send SQL commands to a database server, and
   to easily browse the meta data associated to the database (ie. get information about
@@ -773,5 +780,4 @@ SalesTest>
   </sect1>
 
 </chapter>
-
-
+</part>

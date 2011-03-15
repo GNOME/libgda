@@ -53,9 +53,14 @@ struct _UiFormGridClass
 	GtkVBoxClass       parent_class;
 };
 
-/* 
- * Generic widget's methods 
+/**
+ * SECTION:ui-formgrid
+ * @short_description: Widget embedding both a form and a grid to display a #GdaDataModel's contents
+ * @title: UiFormgrid
+ * @stability: Stable
+ * @see_also:
  */
+
 GType             ui_formgrid_get_type            (void);
 
 GtkWidget        *ui_formgrid_new                 (GdaDataModel *model, GdauiDataProxyInfoFlag flags);

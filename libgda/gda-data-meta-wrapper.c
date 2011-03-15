@@ -494,7 +494,7 @@ _gda_data_meta_wrapper_compute_value (const GValue *value, GdaSqlIdentifierStyle
 		gboolean onechanged = FALSE;
 		for (i = 0; sa[i]; i++) {
 			if (identifier_needs_quotes (sa[i], mode)) {
-				gchar *tmp = gda_sql_identifier_add_quotes (sa[i]);
+				gchar *tmp = gda_sql_identifier_force_quotes (sa[i]);
 				g_free (sa[i]);
 				sa[i] = tmp;
 				onechanged = TRUE;
@@ -507,7 +507,7 @@ _gda_data_meta_wrapper_compute_value (const GValue *value, GdaSqlIdentifierStyle
 
 				if ((reserved_keyword_func && reserved_keyword_func (sa[i])) ||
 				    (! reserved_keyword_func && is_keyword (sa[i]))) {
-					gchar *tmp = gda_sql_identifier_add_quotes (sa[i]);
+					gchar *tmp = gda_sql_identifier_force_quotes (sa[i]);
 					g_free (sa[i]);
 					sa[i] = tmp;
 					onechanged = TRUE;
@@ -522,7 +522,7 @@ _gda_data_meta_wrapper_compute_value (const GValue *value, GdaSqlIdentifierStyle
 	else {
 		if (identifier_needs_quotes (str, mode)) {
 			retval = gda_value_new (G_TYPE_STRING);
-			g_value_take_string (retval, gda_sql_identifier_add_quotes (str));
+			g_value_take_string (retval, gda_sql_identifier_force_quotes (str));
 		}
 		else {
 			gchar *tmp = NULL;
@@ -531,7 +531,7 @@ _gda_data_meta_wrapper_compute_value (const GValue *value, GdaSqlIdentifierStyle
 
 			if ((reserved_keyword_func && reserved_keyword_func (tmp ? tmp : str)) ||
 			    (! reserved_keyword_func && is_keyword (tmp ? tmp : str))) {
-				gchar *tmp2 = gda_sql_identifier_add_quotes (tmp ? tmp : str);
+				gchar *tmp2 = gda_sql_identifier_force_quotes (tmp ? tmp : str);
 				if (tmp)
 					g_free (tmp);
 				tmp = tmp2;

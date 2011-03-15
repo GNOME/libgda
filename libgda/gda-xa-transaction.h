@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2008 - 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -67,12 +67,52 @@ struct _GdaXaTransactionClass {
 	void (*_gda_reserved4) (void);
 };
 
+
+/**
+ * GdaXaTransactionId:
+ * @format: any number
+ * @gtrid_length: number between 1 and 64
+ * @bqual_length: number between 1 and 64
+ * @data:
+ */
 struct _GdaXaTransactionId {
-	guint32  format;       /* any number */
-	gushort  gtrid_length; /* 1-64 */
-	gushort  bqual_length; /* 1-64 */
+	guint32  format;
+	gushort  gtrid_length;
+	gushort  bqual_length;
 	char     data [128];
 };
+
+/**
+ * SECTION:gda-xa-transaction
+ * @short_description: Distributed transaction manager
+ * @title: GdaXaTransaction
+ * @stability: Stable
+ * @see_also:
+ *
+ * The #GdaXaTransaction object acts as a distributed transaction manager: to make sure local transactions on several
+ * connections (to possibly different databases and database types) either all succeed or all fail. For more information,
+ * see the X/Open CAE document Distributed Transaction Processing: The XA Specification. 
+ * This document is published by The Open Group and available at 
+ * <ulink url="http://www.opengroup.org/public/pubs/catalog/c193.htm">http://www.opengroup.org/public/pubs/catalog/c193.htm</ulink>.
+ *
+ * The two phases commit protocol is implemented during the execution of a distributed transaction: modifications
+ * made on any connection are first <emphasis>prepared</emphasis> (which means that they are store in the database), and
+ * if that phase succeeded for all the involved connections, then the <emphasis>commit</emphasis> phase is executed
+ * (where all the data previously stored during the <emphasis>prepare</emphasis> phase are actually committed).
+ * That second phase may actually fail, but the distributed transaction will still be considered as sucessfull
+ * as the data stored during the <emphasis>prepare</emphasis> phase can be committed afterwards.
+ *
+ * A distributed transaction involves the following steps:
+ * <orderedlist>
+ *   <listitem><para>Create a #GdaXaTransaction object</para></listitem>
+ *   <listitem><para>Register the connections which will be part of the distributed transaction with that object
+ *	using gda_xa_transaction_register_connection()</para></listitem>
+ *   <listitem><para>Beging the distributed transaction using gda_xa_transaction_begin()</para></listitem>
+ *   <listitem><para>Work individually on each connection as normally (make modifications)</para></listitem>
+ *   <listitem><para>Commit the distributed transaction using gda_xa_transaction_commit()</para></listitem>
+ *   <listitem><para>Discard the #GdaXaTransaction object using g_object_unref()</para></listitem>
+ * </orderedlist>
+ */
 
 GType                     gda_xa_transaction_get_type             (void) G_GNUC_CONST;
 GdaXaTransaction         *gda_xa_transaction_new                  (guint32 format, const gchar *global_transaction_id);

@@ -1496,10 +1496,10 @@ filter_event (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventAny *event,
 static gboolean
 key_press_filter_event (G_GNUC_UNUSED GtkWidget *widget, GdkEventKey *event, GdauiRawGrid *grid)
 {
-	if (event->keyval == GDK_Escape ||
-	    event->keyval == GDK_Tab ||
-            event->keyval == GDK_KP_Tab ||
-            event->keyval == GDK_ISO_Left_Tab) {
+	if (event->keyval == GDK_KEY_Escape ||
+	    event->keyval == GDK_KEY_Tab ||
+            event->keyval == GDK_KEY_KP_Tab ||
+            event->keyval == GDK_KEY_ISO_Left_Tab) {
 		hide_filter_window (grid);
 		return TRUE;
 	}
@@ -1520,12 +1520,8 @@ filter_position_func (GtkWidget *widget,
 	gint monitor_num;
 	GdkRectangle monitor;
 
-#if GTK_CHECK_VERSION(2,18,0)
 	window = gtk_widget_get_window (widget);
-#else
-	window = widget->window;
-#endif
-	screen = gdk_drawable_get_screen (window);
+	screen = gdk_window_get_screen (window);
 
 	monitor_num = gdk_screen_get_monitor_at_window (screen, window);
 	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
@@ -1533,9 +1529,8 @@ filter_position_func (GtkWidget *widget,
 	gtk_widget_realize (search_dialog);
 
 	gdk_window_get_origin (window, &tree_x, &tree_y);
-	gdk_drawable_get_size (window,
-			       &tree_width,
-			       &tree_height);
+	tree_width = gdk_window_get_width (window);
+	tree_height = gdk_window_get_height (window);
 	gtk_widget_size_request (search_dialog, &requisition);
 
 	if (tree_x + tree_width > gdk_screen_get_width (screen))
@@ -1590,15 +1585,9 @@ action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
 		gtk_widget_set_events (grid->priv->filter_window,
 				       gtk_widget_get_events (grid->priv->filter_window) | GDK_KEY_PRESS_MASK);
 
-#if GTK_CHECK_VERSION(2,18,0)
 		if (gtk_widget_is_toplevel (toplevel) && gtk_window_get_group (GTK_WINDOW (toplevel)))
 			gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (toplevel)),
 						     GTK_WINDOW (grid->priv->filter_window));
-#else
-		if (GTK_WIDGET_TOPLEVEL (toplevel) && GTK_WINDOW (toplevel)->group)
-			gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
-						     GTK_WINDOW (grid->priv->filter_window));
-#endif
 
 		g_signal_connect (grid->priv->filter_window, "delete-event",
 				  G_CALLBACK (filter_event), grid);
@@ -1623,7 +1612,6 @@ action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
 		}
 		gtk_container_add (GTK_CONTAINER (vbox), grid->priv->filter);
 	}
-#if GTK_CHECK_VERSION(2,18,0)
 	else if (gtk_widget_is_toplevel (toplevel)) {
 		if (gtk_window_get_group ((GtkWindow*) toplevel))
 			gtk_window_group_add_window (gtk_window_get_group ((GtkWindow*) toplevel),
@@ -1632,30 +1620,14 @@ action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
 			gtk_window_group_remove_window (gtk_window_get_group (GTK_WINDOW (grid->priv->filter_window)),
 							GTK_WINDOW (grid->priv->filter_window));
 	}
-#else
-	else if (GTK_WIDGET_TOPLEVEL (toplevel)) {
-		if (GTK_WINDOW (toplevel)->group)
-			gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
-						     GTK_WINDOW (grid->priv->filter_window));
-		else if (GTK_WINDOW (grid->priv->filter_window)->group)
-			gtk_window_group_remove_window (GTK_WINDOW (grid->priv->filter_window)->group,
-							GTK_WINDOW (grid->priv->filter_window));
-	}
-#endif
 
 	/* move the filter window to a correct location */
 	/* FIXME: let the user specify the position function like GtkTreeView -> search_position_func() */
 	gtk_grab_add (grid->priv->filter_window);
 	filter_position_func (GTK_WIDGET (grid), grid->priv->filter_window, NULL);
 	gtk_widget_show (grid->priv->filter_window);
-#if GTK_CHECK_VERSION(2,18,0)
 	popup_grab_on_window (gtk_widget_get_window (grid->priv->filter_window),
-			      gtk_get_current_event_time ());
-#else
-	popup_grab_on_window (grid->priv->filter_window->window,
-			      gtk_get_current_event_time ());
-#endif
-	
+			      gtk_get_current_event_time ());	
 }
 
 /*
@@ -1671,7 +1643,7 @@ tree_view_event_cb (GtkWidget *treeview, GdkEvent *event, GdauiRawGrid *grid)
 		guint modifiers = gtk_accelerator_get_default_mod_mask ();
 
 		/* Tab to move one column left or right */
-		if (ekey->keyval == GDK_Tab) {
+		if (ekey->keyval == GDK_KEY_Tab) {
 			GtkTreeViewColumn *column;
 			GtkTreePath *path;
 
@@ -1706,7 +1678,7 @@ tree_view_event_cb (GtkWidget *treeview, GdkEvent *event, GdauiRawGrid *grid)
 		}
 
 		/* DELETE to delete the selected row */
-		if (ekey->keyval == GDK_Delete) {
+		if (ekey->keyval == GDK_KEY_Delete) {
 			GtkTreeIter iter;
 			GtkTreeSelection *selection;
 			GtkTreeModel *model;
@@ -1934,11 +1906,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	g_free (str);
 
-#if GTK_CHECK_VERSION(2,18,0)
 	dbox = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-#else
-	dbox = GTK_DIALOG (dialog)->vbox;
-#endif
 	gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
 	str = g_strdup_printf ("<b>%s:</b>", _("File name"));
@@ -1986,14 +1954,14 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (label);
 
-	types = gtk_combo_box_new_text ();
+	types = gtk_combo_box_text_new ();
 	gtk_table_attach_defaults (GTK_TABLE (table), types, 1, 2, 0, 1);
 	gtk_widget_show (label);
 	g_object_set_data (G_OBJECT (dialog), "types", types);
 
-	gtk_combo_box_append_text (GTK_COMBO_BOX (types), _("Tab-delimited"));
-	gtk_combo_box_append_text (GTK_COMBO_BOX (types), _("Comma-delimited"));
-	gtk_combo_box_append_text (GTK_COMBO_BOX (types), _("XML"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (types), _("Tab-delimited"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (types), _("Comma-delimited"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (types), _("XML"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (types), grid->priv->export_type);
 
 	g_signal_connect (types, "changed",
@@ -2264,11 +2232,7 @@ confirm_file_overwrite (GtkWindow *parent, const gchar *path)
 	g_free (msg);
 
 	button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
-#if GTK_CHECK_VERSION(2,18,0)
 	gtk_widget_set_can_default (button, TRUE);
-#else
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-#endif
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
 					 GTK_RESPONSE_NO);
 
