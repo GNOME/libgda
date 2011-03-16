@@ -2,8 +2,8 @@ noinst_LTLIBRARIES = libmdb.la
 
 AM_CPPFLAGS = \
 	-I$(srcdir)/include \
-	$(LIBGDA_CFLAGS) \
-        $(LIBGDA_WFLAGS)
+	$(COREDEPS_CFLAGS) \
+        $(COREDEPS_WFLAGS)
 
 libmdb_la_SOURCES = \
 	catalog.c \

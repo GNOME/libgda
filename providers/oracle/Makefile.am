@@ -8,8 +8,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	$(ORACLE_CFLAGS) 
 
 keyword_files=keywords_8.list keywords_9.list
@@ -59,7 +59,7 @@ libgda_oracle_la_SOURCES = \
 libgda_oracle_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_oracle_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS) $(ORACLE_LIBS)
+	$(COREDEPS_LIBS) $(ORACLE_LIBS)
 
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \

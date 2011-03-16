@@ -12,8 +12,8 @@ noinst_LTLIBRARIES = libgda-virtual-5.0.la
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	$(SQLITE_CFLAGS) \
 	-I$(top_srcdir)/libgda/sqlite \
         -I$(top_builddir)/libgda/sqlite \

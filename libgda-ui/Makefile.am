@@ -12,13 +12,13 @@ GLOBAL_CFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-DPLUGINSDIR=\""$(top_builddir)/libgda-ui/plugins/.libs"\" \
 	-DGDA_ABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
-	$(LIBGDA_CFLAGS) \
+	$(COREDEPS_CFLAGS) \
 	$(GTK_CFLAGS) \
 	$(GIO_CFLAGS)
 
 AM_CPPFLAGS = \
 	$(GLOBAL_CFLAGS) \
-	$(LIBGDA_WFLAGS)
+	$(COREDEPS_WFLAGS)
 
 ui_headers = \
 	gdaui-basic-form.h \
@@ -119,7 +119,7 @@ libgda_ui_5_0_la_LIBADD = \
 	internal/libgda-ui-internal.la \
 	data-entries/libgda-ui-data-entries.la \
 	../libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
 	$(GTK_LIBS) \
 	$(GIO_LIBS)
 

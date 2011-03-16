@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/providers/reuseable/postgres \
-	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(POSTGRES_CFLAGS) 
+	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(POSTGRES_CFLAGS) 
 
 libgda_postgres_la_SOURCES = \
 	gda-postgres-blob-op.c \
@@ -30,7 +30,7 @@ libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFIN
 libgda_postgres_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/providers/reuseable/postgres/libgda-postgres.la \
-	$(LIBGDA_LIBS) $(POSTGRES_LIBS)
+	$(COREDEPS_LIBS) $(POSTGRES_LIBS)
 
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \

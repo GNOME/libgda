@@ -147,15 +147,15 @@ dnl ******************************
 dnl Checks for required libraries
 dnl ******************************
 
-PKG_CHECK_MODULES(LIBGDA, [
+PKG_CHECK_MODULES(COREDEPS, [
 	glib-2.0	>= req_ver_glib
 	gobject-2.0	>= req_ver_glib
 	gthread-2.0	>= req_ver_glib
 	gmodule-no-export-2.0	>= req_ver_glib
 	libxml-2.0
 ])
-TST_CFLAGS="$LIBGDA_CFLAGS"
-LIBGDA_CFLAGS="$LIBGDA_CFLAGS -DLIBGDA_ABI_NAME=$LIBGDA_ABI_NAME"
+TST_CFLAGS="$COREDEPS_CFLAGS"
+COREDEPS_CFLAGS="$COREDEPS_CFLAGS -DLIBGDA_ABI_NAME=$LIBGDA_ABI_NAME"
 
 
 dnl ******************************
@@ -338,7 +338,7 @@ case "$host" in
     LIBTOOL_PROV_EXPORT_OPTIONS=$EXPORT_PROV_SYM_REGEX
     LIBTOOL_UI_EXPORT_OPTIONS=$EXPORT_UI_SYM_REGEX
     AC_DEFINE(HAVE_CARBON)
-    LIBGDA_LIBS="$LIBGDA_LIBS -framework Carbon"
+    COREDEPS_LIBS="$COREDEPS_LIBS -framework Carbon"
   ;;
 *)
     AC_MSG_RESULT([Unix])
@@ -753,13 +753,13 @@ AC_ARG_ENABLE(default-binary,
 
 AM_CONDITIONAL(DEFAULT_BINARY, test "x$enable_default_binary" = xyes)
 
-DK_ARG_ENABLE_WARNINGS([LIBGDA_WFLAGS],
+DK_ARG_ENABLE_WARNINGS([COREDEPS_WFLAGS],
 	[-Wall],
 	[-Wall -Wextra],
 	[PANGO G GDK GDK_PIXBUF GTK])
 
-AC_SUBST(LIBGDA_CFLAGS)
-AC_SUBST(LIBGDA_LIBS)
+AC_SUBST(COREDEPS_CFLAGS)
+AC_SUBST(COREDEPS_LIBS)
 
 AC_OUTPUT([
 Makefile

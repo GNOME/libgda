@@ -21,8 +21,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	$(extra_mdb_cflags) \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-5.0"\"
 
@@ -35,7 +35,7 @@ libgda_mdb_la_SOURCES = \
 libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_mdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
 	$(extra_mdb_ldflags)
 
 xmldir   = $(datadir)/libgda-5.0

@@ -2,8 +2,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	-DTOP_SRC_DIR=\""$(top_srcdir)"\" \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
@@ -15,22 +15,22 @@ common_sources = common.c common.h
 check_meta_store_memory_SOURCES = check_meta_store_memory.c $(common_sources)
 check_meta_store_memory_LDADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS)
+	$(COREDEPS_LIBS)
 
 check_meta_store_sqlite_SOURCES = check_meta_store_sqlite.c $(common_sources)
 check_meta_store_sqlite_LDADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS)
+	$(COREDEPS_LIBS)
 
 check_meta_store_postgresql_SOURCES = check_meta_store_postgresql.c $(common_sources)
 check_meta_store_postgresql_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 check_meta_store_mysql_SOURCES = check_meta_store_mysql.c $(common_sources)
 check_meta_store_mysql_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 EXTRA_DIST = data_builtin_data_types.csv \
 	data_columns.csv \

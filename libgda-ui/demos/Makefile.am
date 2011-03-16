@@ -37,8 +37,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
         -I$(top_builddir) \
 	-I$(top_builddir)/libgda \
-        $(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+        $(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
         $(GTK_CFLAGS) \
         -DPREFIX=\""$(prefix)"\" \
         -DSYSCONFDIR=\""$(sysconfdir)"\" \
@@ -63,7 +63,7 @@ gdaui_demo_5_0_LDFLAGS =  $(EXTRALDFLAGS)
 gdaui_demo_5_0_LDADD =  \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-	$(LIBGDA_LIBS) $(GTK_LIBS)
+	$(COREDEPS_LIBS) $(GTK_LIBS)
 
 democode_DATA = $(demos) $(demofiles)
 

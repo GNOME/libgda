@@ -3,8 +3,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS)
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS)
 
 bin_PROGRAMS = gda-test-connection-5.0
 if HAVE_UI
@@ -17,7 +17,7 @@ gda_test_connection_5_0_SOURCES = \
 
 gda_test_connection_5_0_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 
 gda_test_blob_SOURCES = \
@@ -25,7 +25,7 @@ gda_test_blob_SOURCES = \
 
 gda_test_blob_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 
 gda_provider_status_SOURCES = \
@@ -35,21 +35,21 @@ gda_provider_status_SOURCES = \
 
 gda_provider_status_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 virtual_test_SOURCES = \
 	virtual-test.c
 
 virtual_test_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 virtual_test_2_SOURCES = \
 	virtual-test-2.c
 
 virtual_test_2_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 gdaui_test_data_entries_CFLAGS = $(GTK_CFLAGS)
 gdaui_test_data_entries_SOURCES = \
@@ -58,7 +58,7 @@ gdaui_test_data_entries_SOURCES = \
 gdaui_test_data_entries_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-        $(LIBGDA_LIBS) \
+        $(COREDEPS_LIBS) \
 	$(GTK_LIBS)
 
 gdaui_test_widget_entry_CFLAGS = $(GTK_CFLAGS)
@@ -68,7 +68,7 @@ gdaui_test_widget_entry_SOURCES = \
 gdaui_test_widget_entry_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-        $(LIBGDA_LIBS) \
+        $(COREDEPS_LIBS) \
 	$(GTK_LIBS)
 
 gdaui_test_errors_CFLAGS = $(GTK_CFLAGS)
@@ -79,7 +79,7 @@ gdaui_test_errors_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
 	$(top_builddir)/tests/libgda-test-5.0.la \
-        $(LIBGDA_LIBS) \
+        $(COREDEPS_LIBS) \
 	$(GTK_LIBS)
 
 gdaui_test_rt_editor_CFLAGS = $(GTK_CFLAGS)
@@ -89,7 +89,7 @@ gdaui_test_rt_editor_SOURCES = \
 gdaui_test_rt_editor_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-        $(LIBGDA_LIBS) \
+        $(COREDEPS_LIBS) \
 	$(GTK_LIBS)
 
 EXTRA_DIST = 

@@ -7,7 +7,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir) \
         -I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
-        $(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(LIBXSLT_CFLAGS)
+        $(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(LIBXSLT_CFLAGS)
 
 gda_xslt_headers = \
         libgda-xslt.h
@@ -20,7 +20,7 @@ libgda_xslt_5_0_la_SOURCES =   \
 	sql_backend.c
 
 libgda_xslt_5_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
-libgda_xslt_5_0_la_LIBADD = $(LIBGDA_LIBS) $(LIBXSLT_LIBS)\
+libgda_xslt_5_0_la_LIBADD = $(COREDEPS_LIBS) $(LIBXSLT_LIBS)\
         $(top_builddir)/libgda/libgda-5.0.la
 
 gdaxsltincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda-xslt

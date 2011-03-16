@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(JAVA_CFLAGS) \
+	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(JAVA_CFLAGS) \
 	-DJVM_PATH=\""$(JAVA_LD_PATH)"\" \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
@@ -59,7 +59,7 @@ libgda_jdbc_la_SOURCES = \
 libgda_jdbc_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_jdbc_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS)
+	$(COREDEPS_LIBS)
 # rem: don't link with JAVA_LIBS because we don't want the dependency on it
 # (JVM runtime will be loaded when running)
 
@@ -120,12 +120,12 @@ DISTCLEANFILES = $(xml_DATA)
 
 gda_jdbc_test_SOURCES = gda-jdbc-test.c
 gda_jdbc_test_LDADD = \
-        $(LIBGDA_LIBS) \
+        $(COREDEPS_LIBS) \
         $(top_builddir)/libgda/libgda-5.0.la
 
 
 gda_list_jdbc_providers_5_0_SOURCES = gda-list-jdbc-providers.c
 gda_list_jdbc_providers_5_0_LDADD = \
-        $(LIBGDA_LIBS) \
+        $(COREDEPS_LIBS) \
         $(top_builddir)/libgda/libgda-5.0.la
 

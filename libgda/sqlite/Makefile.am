@@ -19,8 +19,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	$(SQLITE_CFLAGS) \
 	$(sqliteinc) 
 
@@ -69,7 +69,7 @@ libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED
 libgda_sqlite_la_LIBADD = \
 	virtual/libgda-virtual-5.0.la \
 	$(sqlitelibs) \
-	$(LIBGDA_LIBS)
+	$(COREDEPS_LIBS)
 
 libgda_bdbsqlite_la_SOURCES = $(sqlitesources)
 libgda_bdbsqlite_la_CFLAGS = $(BDBSQL_CFLAGS) -DPNAME=\""BDBSql"\" -DCLASS_PREFIX=\""GdaDBDSql"\" -DWITH_BDBSQLITE -DSEARCH_LIB_PATH=\""$(BDBSQL_PATH)"\"

@@ -3,8 +3,8 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	$(BINRELOC_CFLAGS) \
 	-DLIBGDAPREFIX=\""$(prefix)"\" \
 	-DLIBGDADATA=\""$(datadir)"\" \

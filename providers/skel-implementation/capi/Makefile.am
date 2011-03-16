@@ -9,7 +9,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) #$(CAPI_CFLAGS) 
+	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) #$(CAPI_CFLAGS) 
 
 # SQL keywords HASH generation
 keyword_files=keywords.list
@@ -57,7 +57,7 @@ libgda_capi_la_SOURCES = \
 libgda_capi_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_capi_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS) #$(CAPI_LIBS)
+	$(COREDEPS_LIBS) #$(CAPI_LIBS)
 
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \

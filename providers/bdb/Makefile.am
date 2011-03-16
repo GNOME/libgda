@@ -6,8 +6,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	$(BDB_CFLAGS)
 
 libgda_bdb_la_SOURCES = \
@@ -19,13 +19,13 @@ libgda_bdb_la_SOURCES = \
 libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_bdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS) 
+	$(COREDEPS_LIBS) 
 
 noinst_PROGRAMS = gda-bdb-test
 
 gda_bdb_test_SOURCES = gda-bdb-test.c
 gda_bdb_test_LDADD = \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
 	$(BDB_LIBS) \
 	$(top_builddir)/libgda/libgda-5.0.la 
 
