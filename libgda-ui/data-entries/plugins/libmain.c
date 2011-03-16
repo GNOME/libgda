@@ -1,5 +1,5 @@
-/* libmain.c
- * Copyright (C) 2006 - 2010 The GNOME Foundation
+/*
+ * Copyright (C) 2006 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gdaui.org>
@@ -181,26 +181,28 @@ plugin_init (GError **error)
 			}
 			GtkSourceLanguageManager *lm;
 			const gchar * const * langs;
-			gint i;
 			lm = gtk_source_language_manager_get_default ();
 			langs = gtk_source_language_manager_get_language_ids (lm);
-			for (i = 0; ; i++) {
-				const gchar *tmp;
-				tmp = langs [i];
-				if (!tmp)
-					break;
-				if (node) {
-					xmlNodePtr row;
-					row = xmlNewChild (node, NULL, BAD_CAST "gda_array_row", NULL);
-					xmlNewChild (row, NULL, BAD_CAST "gda_value", BAD_CAST tmp);
-
-					GtkSourceLanguage *sl;
-					sl = gtk_source_language_manager_get_language (lm, tmp);
-					if (sl)
-						xmlNewChild (row, NULL, BAD_CAST "gda_value",
-							     BAD_CAST gtk_source_language_get_name (sl));
-					else
+			if (langs) {
+				gint i;
+				for (i = 0; ; i++) {
+					const gchar *tmp;
+					tmp = langs [i];
+					if (!tmp)
+						break;
+					if (node) {
+						xmlNodePtr row;
+						row = xmlNewChild (node, NULL, BAD_CAST "gda_array_row", NULL);
 						xmlNewChild (row, NULL, BAD_CAST "gda_value", BAD_CAST tmp);
+						
+						GtkSourceLanguage *sl;
+						sl = gtk_source_language_manager_get_language (lm, tmp);
+						if (sl)
+							xmlNewChild (row, NULL, BAD_CAST "gda_value",
+								     BAD_CAST gtk_source_language_get_name (sl));
+						else
+							xmlNewChild (row, NULL, BAD_CAST "gda_value", BAD_CAST tmp);
+					}
 				}
 			}
 
