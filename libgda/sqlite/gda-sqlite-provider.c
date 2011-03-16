@@ -1,5 +1,5 @@
-/* GDA SQLite provider
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -339,9 +339,19 @@ static ScalarFunction scalars[] = {
 	{"gda_hex_print", 1, NULL, scalar_gda_hex_print_func},
 	{"gda_hex_print", 2, NULL, scalar_gda_hex_print_func2},
 	{"gda_hex", 1, NULL, scalar_gda_hex_func},
-	{"gda_hex", 2, NULL, scalar_gda_hex_func2},
+	{"gda_hex", 2, NULL, scalar_gda_hex_func2}
 };
 
+/* Regexp handling */
+static void scalar_regexp_func (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_regexp_match_func (sqlite3_context *context, int argc, sqlite3_value **argv);
+
+static ScalarFunction regexp_functions[] = {
+	{"regexp", 2, NULL, scalar_regexp_func},
+	{"regexp", 3, NULL, scalar_regexp_func},
+	{"regexp_match", 2, NULL, scalar_regexp_match_func},
+	{"regexp_match", 3, NULL, scalar_regexp_match_func}
+};
 
 /*
  * Prepared internal statements
@@ -621,7 +631,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
 	const gchar *is_virtual = NULL;
-	const gchar *use_extra_functions = NULL, *with_fk = NULL;
+	const gchar *use_extra_functions = NULL, *with_fk = NULL, *regexp;
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
@@ -645,6 +655,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	is_virtual = gda_quark_list_find (params, "_IS_VIRTUAL");
 	with_fk = gda_quark_list_find (params, "FK");
 	use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
+	regexp = gda_quark_list_find (params, "REGEXP");
 	if (auth)
 		passphrase = gda_quark_list_find (auth, "PASSWORD");
 
@@ -861,6 +872,24 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 		for (i = 0; i < sizeof (scalars) / sizeof (ScalarFunction); i++) {
 			ScalarFunction *func = (ScalarFunction *) &(scalars [i]);
+			gint res = SQLITE3_CALL (sqlite3_create_function) (cdata->connection, 
+									   func->name, func->nargs,
+									   SQLITE_UTF8, func->user_data, 
+									   func->xFunc, NULL, NULL);
+			if (res != SQLITE_OK) {
+				gda_sqlite_free_cnc_data (cdata);
+				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
+				g_static_rec_mutex_unlock (&cnc_mutex);
+				return FALSE;
+			}
+		}
+	}
+
+	if (!regexp || ((*regexp == 't') || (*regexp == 'T'))) {
+		gsize i;
+
+		for (i = 0; i < sizeof (regexp_functions) / sizeof (ScalarFunction); i++) {
+			ScalarFunction *func = (ScalarFunction *) &(regexp_functions [i]);
 			gint res = SQLITE3_CALL (sqlite3_create_function) (cdata->connection, 
 									   func->name, func->nargs,
 									   SQLITE_UTF8, func->user_data, 
@@ -1619,15 +1648,21 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 		str = g_strdup_printf ("%s != %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
 	case GDA_SQL_OPERATOR_TYPE_REGEXP:
-		str = g_strdup_printf ("%s REGEXP %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		str = g_strdup_printf ("regexp (%s, %s)", SQL_OPERAND (sql_list->next->data)->sql, SQL_OPERAND (sql_list->data)->sql);
 		break;
 	case GDA_SQL_OPERATOR_TYPE_REGEXP_CI:
+		str = g_strdup_printf ("regexp (%s, %s, 'i')", SQL_OPERAND (sql_list->next->data)->sql,
+				       SQL_OPERAND (sql_list->data)->sql);
+		break;
 	case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP_CI:
+		str = g_strdup_printf ("NOT regexp (%s, %s, 'i')", SQL_OPERAND (sql_list->next->data)->sql,
+				       SQL_OPERAND (sql_list->data)->sql);
 	case GDA_SQL_OPERATOR_TYPE_SIMILAR:
 		/* does not exist in SQLite => error */
 		break;
 	case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP:
-		str = g_strdup_printf ("NOT %s REGEXP %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		str = g_strdup_printf ("NOT regexp (%s, %s)", SQL_OPERAND (sql_list->next->data)->sql,
+				       SQL_OPERAND (sql_list->data)->sql);
 		break;
 	case GDA_SQL_OPERATOR_TYPE_REM:
 		str = g_strdup_printf ("%s %% %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
@@ -3134,6 +3169,141 @@ scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_value **argv)
 		string->str[size] = 0;
 	SQLITE3_CALL (sqlite3_result_text) (context, string->str, -1, g_free);
 	g_string_free (string, FALSE);
+}
+
+static void
+scalar_regexp_func (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	GRegex *regex = NULL;
+	GError *error = NULL;
+	const gchar *str, *pattern, *options = NULL;
+	GRegexCompileFlags flags = G_REGEX_OPTIMIZE;
+	gboolean as_boolean = TRUE;
+
+#define MAX_DEFINED_REGEX 10
+	static GArray *re_array = NULL; /* array of signatures (pattern+option) */
+	static GHashTable *re_hash = NULL; /* hash of GRegex */
+
+	if ((argc != 2) && (argc != 3)) {
+		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires two or three arguments"), -1);
+		return;
+	}
+
+	str = (gchar*) SQLITE3_CALL (sqlite3_value_text) (argv [1]);
+	if (!str) {
+		SQLITE3_CALL (sqlite3_result_null) (context);
+		return;
+	}
+
+	pattern = (gchar*) SQLITE3_CALL (sqlite3_value_text) (argv [0]);
+	if (!pattern) {
+		SQLITE3_CALL (sqlite3_result_null) (context);
+		return;
+	}
+
+	if (argc == 3)
+		options = (gchar*) SQLITE3_CALL (sqlite3_value_text) (argv [2]);
+	
+	if (options) {
+		const gchar *ptr;
+		for (ptr = options; *ptr; ptr++) {
+			switch (*ptr) {
+			case 'i':
+			case 'I':
+				flags |= G_REGEX_CASELESS;
+				break;
+			case 'm':
+			case 'M':
+				flags |= G_REGEX_MULTILINE;
+				break;
+			case 'v':
+			case 'V':
+				as_boolean = FALSE;
+				break;
+			}
+		}
+	}
+
+	GString *sig;
+	sig = g_string_new (pattern);
+	g_string_append_c (sig, 0x01);
+	if (options && *options)
+		g_string_append (sig, options);
+	
+	if (re_hash)
+		regex = g_hash_table_lookup (re_hash, sig->str);
+	if (regex) {
+		/*g_print ("FOUND GRegex %p as [%s]\n", regex, sig->str);*/
+		g_string_free (sig, TRUE);
+	}
+	else {
+		regex = g_regex_new ((const gchar*) pattern, flags, 0, &error);
+		if (! regex) {
+			gda_log_error (_("SQLite regexp '%s' error:"), pattern,
+				       error && error->message ? error->message : _("Invalid regular expression"));
+			g_clear_error (&error);
+			if (as_boolean)
+				SQLITE3_CALL (sqlite3_result_int) (context, 0);
+			else
+				SQLITE3_CALL (sqlite3_result_null) (context);
+
+			g_string_free (sig, TRUE);
+			return;
+		}
+
+		if (!re_array) {
+			re_array = g_array_new (FALSE, FALSE, sizeof (gchar*));
+			re_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_regex_unref);
+		}
+		/*g_print ("ADDED new GRegex %p as [%s]\n", regex, sig->str);*/
+		g_hash_table_insert (re_hash, sig->str, regex);
+		g_array_prepend_val (re_array, sig->str);
+		g_string_free (sig, FALSE);
+		if (re_array->len > MAX_DEFINED_REGEX) {
+			/* get rid of the 'oldest' GRexex */
+			gchar *osig;
+			osig = g_array_index (re_array, gchar*, re_array->len - 1);
+			/*g_print ("REMOVED GRegex [%s]\n", osig);*/
+			g_hash_table_remove (re_hash, osig);
+			g_array_remove_index (re_array, re_array->len - 1);
+		}
+	}
+
+	if (as_boolean) {
+		if (g_regex_match (regex, str, 0, NULL))
+			SQLITE3_CALL (sqlite3_result_int) (context, 1);
+		else
+			SQLITE3_CALL (sqlite3_result_int) (context, 0);
+	}
+	else {
+		GMatchInfo *match_info;
+		g_regex_match (regex, str, 0, &match_info);
+		if (g_match_info_matches (match_info)) {
+			gchar *word = g_match_info_fetch (match_info, 0);
+			SQLITE3_CALL (sqlite3_result_text) (context, word, -1, g_free);
+		}
+		else
+			SQLITE3_CALL (sqlite3_result_null) (context);
+		g_match_info_free (match_info);
+	}
+}
+
+static void
+scalar_regexp_match_func (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	if ((argc != 2) && (argc != 3)) {
+		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires two or three arguments"), -1);
+		return;
+	}
+
+	sqlite3_value **nargv;
+	nargv = g_new (sqlite3_value*, argc);
+	nargv[0] = argv[1];
+	nargv[1] = argv[0];
+	if (argc == 3)
+		nargv[2] = argv[2];
+	scalar_regexp_func (context, argc, nargv);
+	g_free (nargv);
 }
 
 static void

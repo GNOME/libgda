@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
 <chapter id="provider-notes">
   <title>Provider's notes</title>
 
@@ -71,10 +73,53 @@
 	      directory is used.</entry>
               <entry>No</entry>
 	    </row>
+	    <row>
+              <entry>LOAD_GDA_FUNCTIONS</entry>
+              <entry>If set to TRUE, then some extra functions defined by &LIBGDA; are added. The functions are
+	      for &LIBGDA;'s own internal use and of little interrest otherwise.
+	      </entry>
+              <entry>No</entry>
+	    </row>
+	    <row>
+              <entry>REGEXP</entry>
+              <entry>If set to TRUE, then the <function>regexp()</function> and <function>regexp_match()</function>
+	      functions are defined. The <function>regexp()</function> function is used by SQL statement with a
+	      construct as "x REGEXP y", and the <function>regexp_match()</function> is more general. The default for
+	      this option is TRUE. See below for more information about this function.
+	      </entry>
+              <entry>No</entry>
+	    </row>
 	  </tbody>
 	</tgroup>
       </table>
     </para>
+    <sect2>
+      <title>The <function>regexp_match()</function> function</title>
+      <para>
+	This function accepts at most 3 arguments, in that order:
+	<itemizedlist>
+	  <listitem><para>the string on which the regular expression will be applied</para></listitem>
+	  <listitem><para>the regular expression to apply</para></listitem>
+	  <listitem><para>the options (not mandatory)</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	The options are specified as a string where each character corresponds to a boolean flag (the presence of the
+	character meaning the flag is set). They are:
+	<itemizedlist>
+	  <listitem><para>'i': specifies a case insensitive matching</para></listitem>
+	  <listitem><para>'m': specifies that the the "start of line" and "end of line" constructs match immediately
+	  following or immediately before any newline in the string, respectively, as well as at the very start
+	  and end of the string</para></listitem>
+	  <listitem><para>'v': specifies that instead of returning 0 or 1 as a result for matching or non
+	  matching, the function returns the string which actually matches, or NULL if not match was found</para></listitem>
+	</itemizedlist>	
+      </para>
+      <para>
+	This function is implemented using GLib's Perl-compatible regular expressions implementation:
+	<link linkend="GRegex">GRegex</link>, itself based on the <ulink url="http://www.pcre.org/">PCRE</ulink> library.
+      </para>
+    </sect2>
     <para>
       Also refer to the <link linkend="limitations_sqlite">SQLite's provider's limitations</link>.
     </para>
