@@ -4,7 +4,7 @@ noinst_PROGRAMS =
 AM_CPPFLAGS = \
 	-I$(top_srcdir) -I$(srcdir)/.. \
         -I$(top_builddir) \
-        $(LIBGDA_CFLAGS) \
+        $(COREDEPS_CFLAGS) \
 	$(LIBGDA_WFLAGDS)
 
 lemon$(EXEEXT_FOR_BUILD): lemon.c

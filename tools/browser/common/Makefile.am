@@ -4,8 +4,8 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	$(GTK_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS)
 
@@ -32,7 +32,7 @@ $(OBJECTS): marshal.c marshal.h
 
 libcommon_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
 	$(GTK_LIBS)
 
 xmldir=$(datadir)/libgda-5.0

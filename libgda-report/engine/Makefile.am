@@ -8,9 +8,9 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
-	$(LIBGDA_CFLAGS) \
+	$(COREDEPS_CFLAGS) \
 	$(GDKPIXBUF_CFLAGS) \
-	$(LIBGDA_WFLAGS)
+	$(COREDEPS_WFLAGS)
 
 gda_report_headers = \
 	gda-report-engine.h
@@ -21,7 +21,7 @@ libgda_report_engine_5_0_la_SOURCES =	\
 	rt-parser.c \
 	gda-report-engine.c	
 
-libgda_report_engine_5_0_la_LIBADD = $(LIBGDA_LIBS) \
+libgda_report_engine_5_0_la_LIBADD = $(COREDEPS_LIBS) \
 	$(top_builddir)/libgda/libgda-5.0.la 
 
 test_rt_parser_SOURCES = \

@@ -16,8 +16,8 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/libgda \
         -I$(top_srcdir)/libgda/sqlite \
         -I$(top_builddir) \
-        $(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+        $(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
         $(GTK_CFLAGS) \
         $(GTKSOURCEVIEW_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS) \
@@ -110,7 +110,7 @@ gda_browser_5_0_LDADD=\
 	common/libcommon.la \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-	$(LIBGDA_LIBS) $(GTK_LIBS) $(GTKSOURCEVIEW_LIBS) $(MAC_INTEGRATION_LIBS)
+	$(COREDEPS_LIBS) $(GTK_LIBS) $(GTKSOURCEVIEW_LIBS) $(MAC_INTEGRATION_LIBS)
 
 
 @INTLTOOL_DESKTOP_RULE@
@@ -141,7 +141,7 @@ canvas_example_LDADD=\
 	common/libcommon.la \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-	$(LIBGDA_LIBS) $(GTK_LIBS)
+	$(COREDEPS_LIBS) $(GTK_LIBS)
 
 # icons
 iconsdir=$(datadir)/libgda-5.0/pixmaps

@@ -4,8 +4,8 @@ plugindir = $(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/p
 AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(top_srcdir)/libgda -I$(srcdir)/.. \
         -I$(top_builddir) \
-        $(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+        $(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
         $(GTK_CFLAGS) \
 	$(LIBGCRYPT_CFLAGS) \
 	$(GTKSOURCEVIEW_CFLAGS) \
@@ -55,7 +55,7 @@ libgda_ui_plugins_la_LIBADD = \
         $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGCRYPT_LIBS) \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
         $(GTK_LIBS) \
 	$(GTKSOURCEVIEW_LIBS)
 

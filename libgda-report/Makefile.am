@@ -8,8 +8,8 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS)
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS)
 
 report_headers = \
 	gda-report-document.h
@@ -24,7 +24,7 @@ libgda_report_5_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GD
 libgda_report_5_0_la_LIBADD = engine/libgda-report-engine-5.0.la \
 	DocBook/libgda-report-docbook-5.0.la \
 	RML/libgda-report-rml-5.0.la \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
 	$(GDKPIXBUF_LIBS)
 
 if PLATFORM_WIN32

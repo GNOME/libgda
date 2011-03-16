@@ -34,8 +34,8 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/tools/browser \
 	-I$(top_srcdir)/tools/browser/common \
-        $(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+        $(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
         $(GTK_CFLAGS) \
 	$(GTKSOURCEVIEW_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
@@ -55,7 +55,7 @@ GTKDOC_LIBS = \
 	$(top_builddir)/tools/browser/common/libcommon.la \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
 	$(GTK_LIBS) \
 	$(GTKSOURCEVIEW_LIBS)
 

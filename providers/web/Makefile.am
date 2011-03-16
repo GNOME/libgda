@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(LIBSOUP_CFLAGS) 
+	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(LIBSOUP_CFLAGS) 
 
 libgda_web_la_SOURCES = \
 	gda-web-blob-op.c \
@@ -35,7 +35,7 @@ libgda_web_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $
 libgda_web_la_LIBADD = \
 	$(top_builddir)/providers/reuseable/libreuseable.la \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS) $(LIBSOUP_LIBS)
+	$(COREDEPS_LIBS) $(LIBSOUP_LIBS)
 
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \

@@ -9,8 +9,8 @@ AM_CPPFLAGS = \
         -I$(top_builddir) \
         -I$(top_srcdir) \
         -I$(top_srcdir)/libgda \
-        $(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+        $(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	-DCHECK_FILES=\""$(top_srcdir)"\" \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
@@ -28,7 +28,7 @@ libgda_test_5_0_la_SOURCES = \
 libgda_test_5_0_la_LDFLAGS = $(NO_UNDEFINED)
 
 libgda_test_5_0_la_LIBADD = \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
 	$(top_builddir)/libgda/libgda-5.0.la 
 
 test_ddl_creator_SOURCES = \
@@ -37,7 +37,7 @@ test_ddl_creator_SOURCES = \
 test_ddl_creator_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
 	libgda-test-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 
 test_bin_converter_SOURCES = \
@@ -46,41 +46,41 @@ test_bin_converter_SOURCES = \
 test_bin_converter_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
 	libgda-test-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 test_sql_identifier_SOURCES = \
         test-sql-identifier.c
 
 test_sql_identifier_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 test_identifiers_quotes_SOURCES = \
         test-identifiers-quotes.c
 
 test_identifiers_quotes_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 test_sql_builder_SOURCES = \
         test-sql-builder.c
 
 test_sql_builder_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 test_connection_string_split_SOURCES = \
         test-connection-string-split.c
 
 test_connection_string_split_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 test_input_parsers_SOURCES = \
         test-input-parsers.c
 
 test_input_parsers_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 EXTRA_DIST = dbstruct.xml

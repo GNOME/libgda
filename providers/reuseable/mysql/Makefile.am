@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS)
+	$(COREDEPS_CFLAGS)
 
 keyword_files=keywords_V50.list keywords_V51.list keywords_V54.list keywords_V60.list
 pkeyword_files=$(addprefix $(top_srcdir)/providers/reuseable/mysql/,$(keyword_files))
@@ -43,7 +43,7 @@ libgda_mysql_la_SOURCES = \
 
 libgda_mysql_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS)
+	$(COREDEPS_LIBS)
 
 EXTRA_DIST = $(xml_in_files) parser.y gen_def.c $(keyword_files)
 

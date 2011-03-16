@@ -4,8 +4,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS)
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS)
 
 psupport_headers = \
 	gda-data-select-priv.h \
@@ -17,7 +17,7 @@ libgda_psupport_la_SOURCES = \
 	gda-pstmt.c
 
 libgda_psupport_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
-libgda_psupport_la_LIBADD = $(LIBGDA_LIBS)
+libgda_psupport_la_LIBADD = $(COREDEPS_LIBS)
 
 psupportincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/providers-support
 psupportinclude_HEADERS=$(psupport_headers)

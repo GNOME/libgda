@@ -16,14 +16,14 @@ GLOBAL_CFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
 	-DABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
-	$(LIBGDA_CFLAGS) \
+	$(COREDEPS_CFLAGS) \
 	$(BDB_CFLAGS) \
 	-DBDB_LIB=\""$(BDB_LIB)"\" \
 	$(GIO_CFLAGS) $(GNOME_KEYRING_CFLAGS)
 
 AM_CPPFLAGS = \
 	$(GLOBAL_CFLAGS) \
-	$(LIBGDA_WFLAGS)
+	$(COREDEPS_WFLAGS)
 
 _gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -231,7 +231,7 @@ libgda_5_0_la_LIBADD = \
 	binreloc/libgda_binreloc-5.0.la \
 	sqlite/libgda-sqlite.la \
 	thread-wrapper/libgda_threadwrapper-5.0.la \
-	$(LIBGDA_LIBS) \
+	$(COREDEPS_LIBS) \
 	$(GIO_LIBS) $(GNOME_KEYRING_LIBS)
 
 if PLATFORM_WIN32

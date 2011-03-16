@@ -2,8 +2,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
 	$(JSON_GLIB_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
@@ -15,17 +15,17 @@ common_sources = common.c common.h
 check_holder_SOURCES = check_holder.c $(common_sources)
 check_holder_LDADD = $(JSON_GLIB_LIBS) \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS)
+	$(COREDEPS_LIBS)
 
 check_set_SOURCES = check_set.c $(common_sources)
 check_set_LDADD = $(JSON_GLIB_LIBS) \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS)
+	$(COREDEPS_LIBS)
 
 check_statement_SOURCES = check_statement.c $(common_sources)
 check_statement_LDADD = $(JSON_GLIB_LIBS) \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(LIBGDA_LIBS)
+	$(COREDEPS_LIBS)
 
 
 EXTRA_DIST = set.data stmt.data

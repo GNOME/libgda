@@ -9,7 +9,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/providers/reuseable/mysql \
-	$(LIBGDA_CFLAGS) $(LIBGDA_WFLAGS) $(MYSQL_CFLAGS) 
+	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(MYSQL_CFLAGS) 
 
 libgda_mysql_la_SOURCES = \
 	gda-mysql-blob-op.c \
@@ -33,7 +33,7 @@ libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_mysql_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/providers/reuseable/mysql/libgda-mysql.la \
-	$(LIBGDA_LIBS) $(MYSQL_LIBS)
+	$(COREDEPS_LIBS) $(MYSQL_LIBS)
 
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \

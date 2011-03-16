@@ -17,8 +17,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
 	-I. \
-	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_CFLAGS) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
 gda_list_config_5_0_SOURCES = \
@@ -26,7 +26,7 @@ gda_list_config_5_0_SOURCES = \
 
 gda_list_config_5_0_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 gda_sql_5_0_SOURCES = \
 	config-info.h \
@@ -47,7 +47,7 @@ gda_sql_5_0_SOURCES = \
 
 gda_sql_5_0_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS) \
+        $(COREDEPS_LIBS) \
 	$(READLINE_LIB) \
         $(HISTORY_LIB)
 
@@ -78,7 +78,7 @@ gda_list_server_op_5_0_SOURCES = \
 
 gda_list_server_op_5_0_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 
 information_schema_doc_SOURCES = \
@@ -86,14 +86,14 @@ information_schema_doc_SOURCES = \
 
 information_schema_doc_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 information_schema_types_SOURCES = \
         information-schema-types.c
 
 information_schema_types_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
-        $(LIBGDA_LIBS)
+        $(COREDEPS_LIBS)
 
 webdatadir = $(datadir)/libgda-5.0/web
 webdata_DATA = \
