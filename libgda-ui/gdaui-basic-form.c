@@ -2124,7 +2124,7 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 
 	rtitle = title;
 	if (!rtitle)
-		rtitle = _("Values to be filled");
+		rtitle = _("Values to be defined");
 
 	dlg = gtk_dialog_new_with_buttons (rtitle, parent,
 					   GTK_DIALOG_MODAL,

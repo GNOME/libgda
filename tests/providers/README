@@ -54,6 +54,8 @@ EXAMPLES
 Here are some examples of the environment variables for the various providers:
 
 export MYSQL_DBCREATE_PARAMS="HOST=localhost"
+export MYSQL_DBCREATE_PARAMS="HOST=gdatester;ADM_LOGIN=gdauser;ADM_PASSWORD=GdaUser"
+export MYSQL_CNC_PARAMS="HOST=gdatester;USERNAME=gdauser;PASSWORD=GdaUser"
 
 export POSTGRESQL_DBCREATE_PARAMS="HOST=gdatester;PORT=5432;ADM_LOGIN=gdauser;ADM_PASSWORD=GdaUser"
 export POSTGRESQL_CNC_PARAMS="HOST=gdatester;PORT=5432;USERNAME=gdauser;PASSWORD=GdaUser"
