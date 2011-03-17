@@ -1,5 +1,5 @@
-/* GNOME DB library
- * Copyright (C) 1999 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 1999 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -34,6 +34,7 @@ static void gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klas
 static void gdaui_provider_selector_init       (GdauiProviderSelector *selector,
 						GdauiProviderSelectorClass *klass);
 static void gdaui_provider_selector_finalize   (GObject *object);
+static void gdaui_provider_selector_show       (GtkWidget *widget);
 
 static GObjectClass *parent_class = NULL;
 
@@ -48,18 +49,26 @@ static void
 show_providers (GdauiProviderSelector *selector)
 {
 	GdaDataModel *model;
-	GSList *list;
-	GValue *tmpval;
 
 	model = gda_config_list_providers ();
 	gdaui_combo_set_model (GDAUI_COMBO (selector), model, 1, cols);
+	g_object_unref (model);
+}
 
+static void
+gdaui_provider_selector_show (GtkWidget *widget)
+{
+	GSList *list;
+	GValue *tmpval;
+	GdauiProviderSelector *selector;
+
+	selector = (GdauiProviderSelector *) widget;
+	GTK_WIDGET_CLASS (parent_class)->show (widget);
 	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "SQLite");
 	list = g_slist_append (NULL, tmpval);
 	_gdaui_combo_set_selected_ext (GDAUI_COMBO (selector), list, cols);
 	gda_value_free ((GValue *)(list->data));
 	g_slist_free (list);
-	g_object_unref (model);
 }
 
 /*
@@ -74,6 +83,7 @@ gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gdaui_provider_selector_finalize;
+	GTK_WIDGET_CLASS (klass)->show = gdaui_provider_selector_show;
 }
 
 static void
