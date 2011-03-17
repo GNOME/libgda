@@ -1,6 +1,5 @@
-/* GNOME DB library
- *
- * Copyright (C) 1999 - 2010 The Free Software Foundation
+/*
+ * Copyright (C) 1999 - 2011 The Free Software Foundation
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>
@@ -374,6 +373,8 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 	if (combo->priv->store) {
 		g_object_unref (G_OBJECT (combo->priv->store));
 		combo->priv->store = NULL;
+		gtk_combo_box_set_model (GTK_COMBO_BOX (combo), NULL);
+		gtk_combo_box_set_active (GTK_COMBO_BOX (combo), -1);
 	}
 	if (combo->priv->model) {
 		g_object_unref (combo->priv->model);
