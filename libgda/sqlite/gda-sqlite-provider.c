@@ -279,6 +279,12 @@ static gboolean            gda_sqlite_provider_commit_transaction (GdaServerProv
 								   const gchar *name, GError **error);
 static gboolean            gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection * cnc,
 								     const gchar *name, GError **error);
+static gboolean            gda_sqlite_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
+							      const gchar *name, GError **error);
+static gboolean            gda_sqlite_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
+								   const gchar *name, GError **error);
+static gboolean            gda_sqlite_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
+								 const gchar *name, GError **error);
 
 /* information retrieval */
 static const gchar        *gda_sqlite_provider_get_version (GdaServerProvider *provider);
@@ -374,7 +380,10 @@ typedef enum {
 	INTERNAL_COMMIT,
 	INTERNAL_COMMIT_NAMED,
 	INTERNAL_ROLLBACK,
-	INTERNAL_ROLLBACK_NAMED
+	INTERNAL_ROLLBACK_NAMED,
+	INTERNAL_ADD_SAVEPOINT,
+	INTERNAL_ROLLBACK_SAVEPOINT,
+	INTERNAL_RELEASE_SAVEPOINT
 } InternalStatementItem;
 
 static gchar *internal_sql[] = {
@@ -393,6 +402,9 @@ static gchar *internal_sql[] = {
 	"COMMIT TRANSACTION ##name::string",
 	"ROLLBACK TRANSACTION",
 	"ROLLBACK TRANSACTION ##name::string"
+	"SAVEPOINT ##name::string",
+	"ROLLBACK TO ##name::string",
+	"RELEASE ##name::string"
 };
 
 static gchar *
@@ -451,9 +463,9 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->begin_transaction = gda_sqlite_provider_begin_transaction;
 	provider_class->commit_transaction = gda_sqlite_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_sqlite_provider_rollback_transaction;
-	provider_class->add_savepoint = NULL;
-	provider_class->rollback_savepoint = NULL;
-	provider_class->delete_savepoint = NULL;
+	provider_class->add_savepoint = gda_sqlite_provider_add_savepoint;
+	provider_class->rollback_savepoint = gda_sqlite_provider_rollback_savepoint;
+	provider_class->delete_savepoint = gda_sqlite_provider_delete_savepoint;
 
 	provider_class->create_parser = gda_sqlite_provider_create_parser;
 	provider_class->statement_to_sql = gda_sqlite_provider_statement_to_sql;
@@ -1372,6 +1384,84 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 								 NULL, NULL, error) == -1) 
 			status = FALSE;
 	}
+
+	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
+	return status;
+}
+
+static gboolean
+gda_sqlite_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
+				   const gchar *name, GError **error)
+{
+	gboolean status = TRUE;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+	g_return_val_if_fail (name && *name, FALSE);
+
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GdaSet *params_set = NULL;
+	g_static_mutex_lock (&mutex);
+	if (!params_set)
+		params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
+	else if (! gda_set_set_holder_value (params_set, error, "name", name))
+		status = FALSE;
+	if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ADD_SAVEPOINT], 
+								   params_set, NULL, error) == -1) 
+		status = FALSE;
+	g_static_mutex_unlock (&mutex);
+
+	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
+	return status;
+}
+
+static gboolean
+gda_sqlite_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
+					const gchar *name, GError **error)
+{
+	gboolean status = TRUE;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+	g_return_val_if_fail (name && *name, FALSE);
+
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GdaSet *params_set = NULL;
+	g_static_mutex_lock (&mutex);
+	if (!params_set)
+		params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
+	else if (! gda_set_set_holder_value (params_set, error, "name", name))
+		status = FALSE;
+	if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ROLLBACK_SAVEPOINT], 
+								   params_set, NULL, error) == -1) 
+		status = FALSE;
+	g_static_mutex_unlock (&mutex);
+
+	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
+	return status;
+}
+
+static gboolean
+gda_sqlite_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
+				      const gchar *name, GError **error)
+{
+	gboolean status = TRUE;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+	g_return_val_if_fail (name && *name, FALSE);
+
+	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GdaSet *params_set = NULL;
+	g_static_mutex_lock (&mutex);
+	if (!params_set)
+		params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
+	else if (! gda_set_set_holder_value (params_set, error, "name", name))
+		status = FALSE;
+	if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_RELEASE_SAVEPOINT], 
+								   params_set, NULL, error) == -1) 
+		status = FALSE;
+	g_static_mutex_unlock (&mutex);
 
 	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
 	return status;
