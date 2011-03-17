@@ -1,4 +1,4 @@
-/* GDA library
+/*
  * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -273,8 +273,8 @@ password_found_cb (GnomeKeyringResult res, const gchar *password, const gchar *d
 			g_signal_emit (unique_instance, gda_config_signals [DSN_CHANGED], 0, dsn);
 	}
 	else if (res != GNOME_KEYRING_RESULT_NO_MATCH)
-		g_warning (_("Error loading authentification information for '%s' DSN: %s"),
-			     dsnname, gnome_keyring_result_to_message (res));
+		gda_log_message (_("Error loading authentification information for '%s' DSN: %s"),
+				 dsnname, gnome_keyring_result_to_message (res));
 }
 #endif
 
@@ -483,11 +483,11 @@ save_config_file (gboolean is_system)
 #endif
 	if (!is_system && unique_instance->priv->user_file) {
 		if (xmlSaveFormatFile (unique_instance->priv->user_file, doc, TRUE) == -1)
-                        g_warning ("Error saving config data to '%s'", unique_instance->priv->user_file);
+                        gda_log_error ("Error saving config data to '%s'", unique_instance->priv->user_file);
 	}
 	else if (is_system && unique_instance->priv->system_file) {
 		if (xmlSaveFormatFile (unique_instance->priv->system_file, doc, TRUE) == -1)
-                        g_warning ("Error saving config data to '%s'", unique_instance->priv->system_file);
+                        gda_log_error ("Error saving config data to '%s'", unique_instance->priv->system_file);
 	}
 	fflush (NULL);
 #ifdef HAVE_GIO
@@ -551,9 +551,9 @@ gda_config_constructor (GType type,
 					g_free (old_path);
 					if (g_mkdir_with_parents (confdir, 0700)) {
 						setup_ok = FALSE;
-						g_warning (_("Error creating user specific "
-							     "configuration directory '%s'"), 
-							   confdir);
+						gda_log_error (_("Error creating user specific "
+								 "configuration directory '%s'"), 
+							       confdir);
 					}
 					if (setup_ok) {
 						gchar *str;
@@ -600,9 +600,9 @@ gda_config_constructor (GType type,
 				}
 				if (setup_ok && !g_file_test (confdir, G_FILE_TEST_IS_DIR)) {
 					setup_ok = FALSE;
-					g_warning (_("User specific "
-						     "configuration directory '%s' exists and is not a directory"), 
-						   confdir);
+					gda_log_message (_("User specific "
+							   "configuration directory '%s' exists and is not a directory"), 
+							 confdir);
 				}
 				g_free (confdir);
 
@@ -613,9 +613,9 @@ gda_config_constructor (GType type,
 			}
 			else {
 				if (!g_file_test (confdir, G_FILE_TEST_IS_DIR)) {
-					g_warning (_("User specific "
-						     "configuration directory '%s' exists and is not a directory"), 
-						   confdir);
+					gda_log_message (_("User specific "
+							   "configuration directory '%s' exists and is not a directory"), 
+							 confdir);
 				}
 				else
 					unique_instance->priv->user_file = conffile;
@@ -852,7 +852,7 @@ gda_config_get_dsn_info (const gchar *dsn_name)
 	g_free (user);
 	g_free (pass);
         if (!real_dsn) {
-		g_warning (_("Malformed data source name '%s'"), dsn_name);
+		gda_log_message (_("Malformed data source name '%s'"), dsn_name);
                 return NULL;
 	}
 
@@ -876,8 +876,8 @@ static void
 password_stored_cb (GnomeKeyringResult res, const gchar *dsnname)
 {
         if (res != GNOME_KEYRING_RESULT_OK)
-                g_warning (_("Couldn't save authentification information for DSN '%s': %s"), dsnname,
-			     gnome_keyring_result_to_message (res));
+                gda_log_error (_("Couldn't save authentification information for DSN '%s': %s"), dsnname,
+			       gnome_keyring_result_to_message (res));
 }
 #endif
 
@@ -998,8 +998,8 @@ static void
 password_deleted_cb (GnomeKeyringResult res, const gchar *dsnname)
 {
 	if (res != GNOME_KEYRING_RESULT_OK)
-                g_warning (_("Couldn't delete authentication information for DSN '%s': %s"), dsnname,
-			   gnome_keyring_result_to_message (res));
+                gda_log_error (_("Couldn't delete authentication information for DSN '%s': %s"), dsnname,
+			       gnome_keyring_result_to_message (res));
 }
 #endif
 
@@ -1101,7 +1101,7 @@ gda_config_dsn_needs_authentication (const gchar *dsn_name)
 		return FALSE;
 	pinfo = gda_config_get_provider_info (info->provider);
 	if (!pinfo) {
-		g_warning (_("Provider '%s' not found"), info->provider);
+		gda_log_message (_("Provider '%s' not found"), info->provider);
 		return FALSE;
 	}
 	if (pinfo->auth_params && pinfo->auth_params->holders)
@@ -1490,9 +1490,9 @@ create_internal_provider (const gchar *path,
 		GError *error = NULL;
 		info->dsn_params = gda_set_new_from_spec_string (dsn_spec, &error);
 		if (!info->dsn_params) {
-			g_warning ("Invalid format for provider '%s' DSN spec : %s",
-				   info->id,
-				   error ? error->message : "Unknown error");
+			gda_log_message ("Invalid format for provider '%s' DSN spec : %s",
+					 info->id,
+					 error ? error->message : "Unknown error");
 			if (error)
 				g_error_free (error);
 		}
@@ -1506,7 +1506,7 @@ create_internal_provider (const gchar *path,
 		g_free (dsn_spec);
 	}
 	else
-		g_warning ("Provider '%s' does not provide a DSN spec", info->id);
+		gda_log_message ("Provider '%s' does not provide a DSN spec", info->id);
 
 	/* Authentication parameters */
 	info->auth_params = NULL;
@@ -1515,8 +1515,8 @@ create_internal_provider (const gchar *path,
 
 		info->auth_params = gda_set_new_from_spec_string (auth_spec, &error);
 		if (!info->auth_params) {
-			g_warning ("Invalid format for provider '%s' AUTH spec : %s",
-				   info->id,
+			gda_log_message ("Invalid format for provider '%s' AUTH spec : %s",
+					 info->id,
 				   error ? error->message : "Unknown error");
 			if (error)
 				g_error_free (error);
@@ -1609,7 +1609,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		handle = g_module_open (path, G_MODULE_BIND_LAZY);
 		if (!handle) {
 			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
-				g_warning (_("Error loading provider '%s': %s"), path, g_module_error ());
+				gda_log_message (_("Error loading provider '%s': %s"), path, g_module_error ());
 			g_free (path);
 			continue;
 		}
