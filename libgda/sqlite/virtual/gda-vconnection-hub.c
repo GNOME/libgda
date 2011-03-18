@@ -962,7 +962,7 @@ meta_changed_cb (G_GNUC_UNUSED GdaMetaStore *store, GSList *changes, HubConnecti
 			}
 		}
 		else if (!strcmp (ch->table_name, "_columns")) {
-			TO_IMPLEMENT;
+			/* TODO */
 		}
 	}
 }
