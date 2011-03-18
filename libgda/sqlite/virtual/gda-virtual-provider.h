@@ -37,11 +37,11 @@ G_BEGIN_DECLS
 
 typedef struct _GdaVirtualProvider      GdaVirtualProvider;
 typedef struct _GdaVirtualProviderClass GdaVirtualProviderClass;
-typedef struct _GdaVirtualProviderPrivate GdaVirtualProviderPrivate;
 
 struct _GdaVirtualProvider {
-	GdaSqliteProvider          provider;
-	GdaVirtualProviderPrivate *priv;
+	GdaSqliteProvider  provider;
+	/*< private >*/
+	void             (*_gda_reserved1) (void);
 };
 
 struct _GdaVirtualProviderClass {
