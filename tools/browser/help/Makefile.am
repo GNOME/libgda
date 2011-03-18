@@ -39,7 +39,8 @@ DOC_PAGES = \
 	schema-browser-perspective.page \
 	transactions.page \
 	table-insert-data.page \
-	variables.page
+	variables.page \
+	virtual-connections.page
 
 DOC_LINGUAS = de es sl
 

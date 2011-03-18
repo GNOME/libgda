@@ -113,6 +113,16 @@ connection_binding_properties_dispose (GObject *object)
 	parent_class->dispose (object);
 }
 
+#ifdef HAVE_GDU
+static void
+help_clicked_cb (GtkButton *button, G_GNUC_UNUSED ConnectionBindingProperties *cprop)
+{
+        browser_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) button),
+                           "virtual-connections");
+        g_signal_stop_emission_by_name (button, "clicked");
+}
+#endif
+
 /**
  * connection_binding_properties_new_create
  * @bcnc: a #BrowserConnection
@@ -147,6 +157,14 @@ connection_binding_properties_new_create (BrowserConnection *bcnc)
 
 	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), _("Create connection"), GTK_RESPONSE_OK));
 	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL));
+#ifdef HAVE_GDU
+        GtkWidget *help_btn;
+        help_btn = gtk_button_new_from_stock (GTK_STOCK_HELP);
+        g_signal_connect (help_btn, "clicked",
+                          G_CALLBACK (help_clicked_cb), cprop);
+        gtk_widget_show (help_btn);
+        gtk_dialog_add_action_widget (GTK_DIALOG (cprop), help_btn, GTK_RESPONSE_HELP);
+#endif
 
 	return (GtkWidget*) cprop;
 }
