@@ -1,5 +1,5 @@
-/* GNOME DB library
- * Copyright (C) 1999 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 1999 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -252,7 +252,7 @@ _gdaui_new_cell_renderer (GType type, const gchar *plugin_name)
 
 /**
  * gdaui_plugin_declare:
- * @plugin: a pointer to a structure filled to describe the new plugin
+ * @plugin: a pointer to a structure filled to describe the new plugin. All the contained information is copied.
  *
  * Adds a new plugin which will be used by the forms and grids. The new plugin, as
  * described by @plugin can declare a custom widget to be used for forms, grids, or both.
@@ -289,7 +289,7 @@ gdaui_plugin_declare (const GdauiPlugin *plugin)
 	np->nb_g_types = plugin->nb_g_types;
 	if (plugin->valid_g_types) {
 		np->valid_g_types = g_new0 (GType, np->nb_g_types);
-		memcpy (np->valid_g_types, plugin->valid_g_types, np->nb_g_types);
+		memcpy (np->valid_g_types, plugin->valid_g_types, sizeof (GType) * np->nb_g_types);
 	}
 
 	if (plugin->options_xml_spec)
