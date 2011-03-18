@@ -1,0 +1,29 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="virtual-connections">
+  <info>
+    <title type="sort">1</title>
+    <link type="guide" xref="features"/>
+  </info>
+  <title>Connections binding</title>
+  <p>
+    Connection binding is a feature which allows to "bind" several connections and/or imported
+    data sets into a single connection, which can be used almost like a regular connection.
+  </p>
+  <p>
+    This feature is usefull when one needs to execute an SQL command (for example to extract data)
+    takinginto account data actually stored in different databases. Without this feature, the way
+    to achieve the same result is by exporting the necessary data from each database and work on
+    the data outside of the databases.
+  </p>
+  <p>
+    To create a new "bound" connection (or "virtual" connection), use the
+    <guiseq><gui>Connection</gui><gui>Bind connection</gui></guiseq> menu, or the
+    <keyseq><key>Ctrl</key><key>i</key></keyseq> shortcut. This pops up a new dialog window
+    from which "items" to be included in the "bound" connection can be defined:
+  </p>
+  <list>	
+    <item><p>Bind a connection to include all the tables of that connection</p></item>
+    <item><p>Bind a data set to import data from a text file as a single table</p></item>
+  </list>
+</page>
