@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -271,13 +271,12 @@ sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
 #ifndef DUMMY
 	/* create GDA virtual connection */
 	static GdaVirtualProvider *provider = NULL;
-	GdaConnection *virtual, *cnc;
+	GdaConnection *virtual;
 	if (!provider)
 		provider = gda_vprovider_hub_new ();
 
 	virtual = gda_virtual_connection_open_extended (provider, GDA_CONNECTION_OPTIONS_THREAD_SAFE, NULL);
-	cnc = g_object_get_data (G_OBJECT (virtual), "gda-virtual-connection");
-
+		
 	/* add parts to connection as specified by @specs */
 	GSList *list;
 	for (list = specs->parts; list; list = list->next) {
@@ -287,7 +286,7 @@ sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
 		case BROWSER_VIRTUAL_CONNECTION_PART_MODEL: {
 			BrowserVirtualConnectionModel *pm;
 			pm = &(part->u.model);
-			if (! gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc),
+			if (! gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (virtual),
 								    pm->model, pm->table_name, error)) {
 				g_object_unref (virtual);
 				return NULL;
@@ -297,7 +296,8 @@ sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
 		case BROWSER_VIRTUAL_CONNECTION_PART_CNC: {
 			BrowserVirtualConnectionCnc *scnc;
 			scnc = &(part->u.cnc);
-			if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (cnc), scnc->source_cnc->priv->cnc,
+			if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual),
+						      scnc->source_cnc->priv->cnc,
 						      scnc->table_schema, error)) {
 				g_object_unref (virtual);
 				return NULL;
@@ -367,6 +367,7 @@ browser_virtual_connection_new (const BrowserVirtualConnectionSpecs *specs, GErr
 		nbcnc = g_object_new (BROWSER_TYPE_VIRTUAL_CONNECTION, "specs", specs,
 				      "gda-connection", data.cnc, NULL);
 		g_object_unref (data.cnc);
+		/*g_print ("BrowserVirtualConnection %p had TMP wrapper %p\n", nbcnc, wrapper);*/
 
 		return nbcnc;
 	}
