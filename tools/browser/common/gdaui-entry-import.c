@@ -47,6 +47,8 @@ struct _GdauiEntryImportPrivate
 	GdaDataModel  *model;
 	GtkLabel      *label;
 	GCallback      modify_cb;
+	GtkWidget     *import_dlg;
+	GtkWidget     *import_wid;
 };
 
 
@@ -97,6 +99,7 @@ gdaui_entry_import_init (GdauiEntryImport * gdaui_entry_import)
 	gdaui_entry_import->priv = g_new0 (GdauiEntryImportPrivate, 1);
 	gdaui_entry_import->priv->button = NULL;
 	gdaui_entry_import->priv->model = NULL;
+	gdaui_entry_import->priv->import_dlg = NULL;
 }
 
 /**
@@ -137,6 +140,10 @@ gdaui_entry_import_dispose (GObject   * object)
 			g_object_unref (gdaui_entry_import->priv->model);
 			gdaui_entry_import->priv->model = NULL;
 		}
+		if (gdaui_entry_import->priv->import_dlg) {
+			gtk_widget_destroy (gdaui_entry_import->priv->import_dlg);
+			gdaui_entry_import->priv->import_dlg = NULL;
+		}
 	}
 
 	/* parent class */
@@ -167,27 +174,34 @@ typedef void (*Callback2) (gpointer, gpointer);
 static void
 open_button_clicked_cb (GtkWidget *button, GdauiEntryImport *mgtxt)
 {
-	GtkWidget *dialog, *wid;
 	gint res;
-	dialog = gtk_dialog_new_with_buttons (_("Data set import from file"),
-					      (GtkWindow*) gtk_widget_get_toplevel (button),
-					      GTK_DIALOG_MODAL,
-					      GTK_STOCK_OK,
-					      GTK_RESPONSE_ACCEPT,
-					      GTK_STOCK_CANCEL,
-					      GTK_RESPONSE_REJECT,
-					      NULL);
-	gtk_window_set_default_size (GTK_WINDOW (dialog), 620, 450);
-	wid = gdaui_data_import_new ();
-	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), wid, TRUE, TRUE, 0);
-	gtk_widget_show_all (dialog);
+
+	if (! mgtxt->priv->import_dlg) {
+		GtkWidget *dialog, *wid;
+		dialog = gtk_dialog_new_with_buttons (_("Data set import from file"),
+						      (GtkWindow*) gtk_widget_get_toplevel (button),
+						      GTK_DIALOG_MODAL,
+						      GTK_STOCK_OK,
+						      GTK_RESPONSE_ACCEPT,
+						      GTK_STOCK_CANCEL,
+						      GTK_RESPONSE_REJECT,
+						      NULL);
+		gtk_window_set_default_size (GTK_WINDOW (dialog), 620, 450);
+		wid = gdaui_data_import_new ();
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), wid, TRUE, TRUE, 0);
+		gtk_widget_show_all (dialog);
+		mgtxt->priv->import_dlg = dialog;
+		mgtxt->priv->import_wid = wid;
+	}
+	else
+		gtk_window_present (GTK_WINDOW (mgtxt->priv->import_dlg));
 	
-	res = gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_hide (dialog);
+	res = gtk_dialog_run (GTK_DIALOG (mgtxt->priv->import_dlg));
+	gtk_widget_hide (mgtxt->priv->import_dlg);
 	if (res == GTK_RESPONSE_ACCEPT) {
 		if (mgtxt->priv->model)
 			g_object_unref (mgtxt->priv->model);
-		mgtxt->priv->model = gdaui_data_import_get_model (GDAUI_DATA_IMPORT (wid));
+		mgtxt->priv->model = gdaui_data_import_get_model (GDAUI_DATA_IMPORT (mgtxt->priv->import_wid));
 		if (mgtxt->priv->model) {
 			g_object_ref (mgtxt->priv->model);
 
@@ -203,16 +217,18 @@ open_button_clicked_cb (GtkWidget *button, GdauiEntryImport *mgtxt)
 			g_free (tmp2);
 			gtk_label_set_text (mgtxt->priv->label, str);
 			g_free (str);
+			gtk_button_set_label (GTK_BUTTON (mgtxt->priv->button), _("Modify"));
 		}
-		else
+		else {
+			gtk_button_set_label (GTK_BUTTON (mgtxt->priv->button), _("Import"));
 			gtk_label_set_text (mgtxt->priv->label, _("No data set"));
+		}
 		
 
 		/* send notofocations */
 		if (mgtxt->priv->modify_cb)
 			((Callback2)mgtxt->priv->modify_cb) (NULL, mgtxt);
 	}
-	gtk_widget_destroy (dialog);
 }
 
 static GtkWidget *
@@ -234,7 +250,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	gtk_widget_show ((GtkWidget*) mgtxt->priv->label);
 	gtk_box_pack_start (GTK_BOX (hbox), (GtkWidget*) mgtxt->priv->label, TRUE, TRUE, 0);
 
-	mgtxt->priv->button = gtk_button_new_from_stock (GTK_STOCK_OPEN);
+	mgtxt->priv->button = gtk_button_new_with_label (_("Import"));
 	g_signal_connect (mgtxt->priv->button, "clicked",
 			  G_CALLBACK (open_button_clicked_cb), mgtxt);
 	gtk_widget_show (mgtxt->priv->button);
