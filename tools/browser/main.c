@@ -233,10 +233,11 @@ main (int argc, char *argv[])
 					}
 				}
 			}
+			gtk_widget_destroy (dialog);
 		}
 	}
 	
-	/*g_print ("Main THREAD is %p\n", g_thread_self ());*/
+	/*g_print ("Main (GTK+) THREAD is %p\n", g_thread_self ());*/
 	if (have_loop)
 		/* application loop */
 		gtk_main ();

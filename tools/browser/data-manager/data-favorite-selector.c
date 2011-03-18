@@ -480,7 +480,7 @@ data_favorite_selector_new (BrowserConnection *bcnc)
 	/* header */
 	GtkWidget *label;
 	gchar *str;
-	str = g_strdup_printf ("<b>%s</b>", _("Favorites"));
+	str = g_strdup_printf ("<b>%s</b>", _("Saved"));
 	label = cc_gray_bar_new (str);
 	g_free (str);
 	cc_gray_bar_set_icon_from_pixbuf (CC_GRAY_BAR (label), browser_get_pixbuf_icon (BROWSER_ICON_BOOKMARK));

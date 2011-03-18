@@ -667,6 +667,9 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 static void
 connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, BrowserWindow *bwin)
 {
+	if (bcnc != bwin->priv->bcnc)
+		return;
+
 	if (is_busy) {
 		browser_spinner_start (BROWSER_SPINNER (bwin->priv->spinner));
 		gtk_widget_set_tooltip_text (bwin->priv->spinner, reason);
