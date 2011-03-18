@@ -1,6 +1,5 @@
 /* 
- * GDA common library
- * Copyright (C) 2007 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -29,27 +28,9 @@
 #define PARENT_TYPE GDA_TYPE_SQLITE_PROVIDER
 #define CLASS(obj) (GDA_VIRTUAL_PROVIDER_CLASS (G_OBJECT_GET_CLASS (obj)))
 
-struct _GdaVirtualProviderPrivate {
-	int foo;
-};
-
-/* properties */
-enum
-{
-        PROP_0,
-};
-
 static void gda_virtual_provider_class_init (GdaVirtualProviderClass *klass);
 static void gda_virtual_provider_init       (GdaVirtualProvider *prov, GdaVirtualProviderClass *klass);
 static void gda_virtual_provider_finalize   (GObject *object);
-static void gda_virtual_provider_set_property (GObject *object,
-					       guint param_id,
-					       const GValue *value,
-					       GParamSpec *pspec);
-static void gda_virtual_provider_get_property (GObject *object,
-					       guint param_id,
-					       GValue *value,
-					       GParamSpec *pspec);
 static GObjectClass *parent_class = NULL;
 
 static gboolean gda_virtual_provider_close_connection (GdaServerProvider *prov,
@@ -69,16 +50,11 @@ gda_virtual_provider_class_init (GdaVirtualProviderClass *klass)
 	/* virtual methods */
 	object_class->finalize = gda_virtual_provider_finalize;
 	prov_class->close_connection = gda_virtual_provider_close_connection;
-
-	/* Properties */
-        object_class->set_property = gda_virtual_provider_set_property;
-        object_class->get_property = gda_virtual_provider_get_property;
 }
 
 static void
 gda_virtual_provider_init (GdaVirtualProvider *vprov, G_GNUC_UNUSED GdaVirtualProviderClass *klass)
 {
-	vprov->priv = g_new (GdaVirtualProviderPrivate, 1);
 }
 
 static void
@@ -87,10 +63,6 @@ gda_virtual_provider_finalize (GObject *object)
 	GdaVirtualProvider *prov = (GdaVirtualProvider *) object;
 
 	g_return_if_fail (GDA_IS_VIRTUAL_PROVIDER (prov));
-
-	/* free memory */
-	g_free (prov->priv);
-	prov->priv = NULL;
 
 	/* chain to parent class */
 	parent_class->finalize (object);
@@ -102,7 +74,6 @@ gda_virtual_provider_close_connection (GdaServerProvider *prov, GdaConnection *c
 	g_return_val_if_fail (GDA_IS_VIRTUAL_PROVIDER (prov), FALSE);
 	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (prov, cnc);
 }
-
 
 GType
 gda_virtual_provider_get_type (void)
@@ -132,40 +103,4 @@ gda_virtual_provider_get_type (void)
 	}
 
 	return type;
-}
-
-static void
-gda_virtual_provider_set_property (GObject *object,
-				   guint param_id,
-				   G_GNUC_UNUSED const GValue *value,
-				   GParamSpec *pspec)
-{
-        GdaVirtualProvider *prov;
-
-        prov = GDA_VIRTUAL_PROVIDER (object);
-        if (prov->priv) {
-                switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }
-}
-
-static void
-gda_virtual_provider_get_property (GObject *object,
-				 guint param_id,
-				 G_GNUC_UNUSED GValue *value,
-				 GParamSpec *pspec)
-{
-        GdaVirtualProvider *prov;
-
-        prov = GDA_VIRTUAL_PROVIDER (object);
-        if (prov->priv) {
-		switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
-        }
 }
