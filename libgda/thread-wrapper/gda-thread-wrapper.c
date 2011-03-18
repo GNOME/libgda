@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -305,7 +305,9 @@ worker_thread_entry_point (GAsyncQueue *to_worker_thread)
 		if (job->type == JOB_TYPE_DESTROY) {
 			g_assert (! job->arg_destroy_func);
 			job_free (job);
-			/*g_print ("... exit sub thread for wrapper\n");*/
+#ifdef THREAD_WRAPPER_DEBUG
+			g_print ("... exit sub thread %p for wrapper\n", g_thread_self ());
+#endif
 
 			/* exit sub thread */
 			break;
@@ -343,7 +345,9 @@ gda_thread_wrapper_init (GdaThreadWrapper *wrapper, G_GNUC_UNUSED GdaThreadWrapp
 	wrapper->priv->worker_thread = g_thread_create ((GThreadFunc) worker_thread_entry_point,
 						     g_async_queue_ref (wrapper->priv->to_worker_thread), /* inc. ref for sub thread usage */
 						     FALSE, NULL);
-	/*g_print ("... new wrapper %p, worker_thread=%p\n", wrapper, wrapper->priv->worker_thread);*/
+#ifdef THREAD_WRAPPER_DEBUG
+	g_print ("... new wrapper %p, worker_thread=%p\n", wrapper, wrapper->priv->worker_thread);
+#endif
 }
 
 static gboolean
@@ -388,7 +392,9 @@ gda_thread_wrapper_dispose (GObject *object)
 		Job *job = g_new0 (Job, 1);
 		job->type = JOB_TYPE_DESTROY;
 		g_async_queue_push (wrapper->priv->to_worker_thread, job);
-		/*g_print ("... pushed JOB_TYPE_DESTROY for wrapper %p\n", wrapper);*/
+#ifdef THREAD_WRAPPER_DEBUG
+		g_print ("... pushed JOB_TYPE_DESTROY for wrapper %p\n", wrapper);
+#endif
 		
 		g_async_queue_lock (wrapper->priv->to_worker_thread);
 		if (wrapper->priv->threads_hash) {
@@ -558,7 +564,9 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 	job->reply_queue = g_async_queue_ref (td->from_worker_thread);
 
 	id = job->job_id;
-	/* g_print ("... submitted job %d from thread %p\n", id, g_thread_self()); */
+#ifdef THREAD_WRAPPER_DEBUG
+	g_print ("... submitted job %d for wrapper %p from thread %p\n", id, wrapper, g_thread_self());
+#endif
 
 	td->jobs = g_slist_append (td->jobs, job);
 
@@ -570,7 +578,9 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
                         job->u.exe.result = NULL;
                         job->void_func (job->arg, &(job->u.exe.error));
                 }
-		/* g_print ("... IMMEDIATELY done job %d => %p\n", job->job_id, job->u.exe.result); */
+#ifdef THREAD_WRAPPER_DEBUG
+		g_print ("... IMMEDIATELY done job %d => %p\n", job->job_id, job->u.exe.result);
+#endif
                 g_async_queue_push (job->reply_queue, job);
         }
         else
@@ -632,7 +642,9 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 	job->reply_queue = g_async_queue_ref (td->from_worker_thread);
 
 	id = job->job_id;
-	/* g_print ("... submitted VOID job %d\n", id); */
+#ifdef THREAD_WRAPPER_DEBUG
+	g_print ("... submitted VOID job %d\n", id);
+#endif
 
 	td->jobs = g_slist_append (td->jobs, job);
 
@@ -644,7 +656,9 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
                         job->u.exe.result = NULL;
                         job->void_func (job->arg, &(job->u.exe.error));
                 }
-		/* g_print ("... IMMEDIATELY done VOID job %d => %p\n", job->job_id, job->u.exe.result); */
+#ifdef THREAD_WRAPPER_DEBUG
+		g_print ("... IMMEDIATELY done VOID job %d => %p\n", job->job_id, job->u.exe.result);
+#endif
                 g_async_queue_push (job->reply_queue, job);
         }
         else
@@ -749,6 +763,10 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 	if (job) {
 		gboolean do_again = FALSE;
 		td->jobs = g_slist_remove (td->jobs, job);
+#ifdef THREAD_WRAPPER_DEBUG
+		g_print ("Popped job %d (type %d), for wrapper %p from thread %p\n",
+			 job->job_id, job->type, wrapper, g_thread_self ());
+#endif
 
 		if (job->type == JOB_TYPE_EXECUTE) {
 			if (!job->func) {
@@ -766,8 +784,10 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 				spec->callback (wrapper, spec->instance, ((GSignalQuery*)spec)->signal_name,
 						job->u.signal.n_param_values, job->u.signal.param_values, NULL,
 						spec->data);
+#ifdef THREAD_WRAPPER_DEBUG
 			else
 				g_print ("Not propagating signal %s\n", ((GSignalQuery*)spec)->signal_name);
+#endif
 			job->u.signal.spec = NULL;
 			job_free (job);
 			signal_spec_lock (spec);
@@ -1006,7 +1026,7 @@ worker_thread_closure_marshal_anythread (GClosure *closure,
  * @private_thread:  set to %TRUE if @callback is to be invoked only if the signal has
  *    been emitted while in @wrapper's private sub thread (ie. used when @wrapper is executing some functions
  *    specified by gda_thread_wrapper_execute() or gda_thread_wrapper_execute_void()), and to %FALSE if the
- *    callback is to be invoked whenever the signal is emitted, independently of th thread in which the
+ *    callback is to be invoked whenever the signal is emitted, independently of the thread in which the
  *    signal is emitted.
  * @private_job: set to %TRUE if @callback is to be invoked only if the signal has
  *    been emitted when a job created for the calling thread is being executed, and to %FALSE
@@ -1023,10 +1043,7 @@ worker_thread_closure_marshal_anythread (GClosure *closure,
  *  <listitem><para>the signal handler must not have to return any value</para></listitem>
  *  <listitem><para>the @callback function will be called asynchronously, the caller may need to use 
  *    gda_thread_wrapper_iterate() to get the notification</para></listitem>
- *  <listitem><para>if @private is set to %TRUE, then the @callback function will be called only
- *    if the signal has been emitted by @instance while doing a job on behalf of the current
- *    calling thread. If @private is set to %FALSE, then @callback will be called whenever @instance
- *    emits the @sig_name signal.</para></listitem>
+ *  <listitem><para>if @private_job and @private_thread control in which case the signal is propagated.</para></listitem>
  * </itemizedlist>
  *
  * Also note that signal handling is done asynchronously: when emitted in the worker thread, it
@@ -1163,7 +1180,9 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 	}
 
 	signal_spec_lock (sigspec);
-	/*g_print ("Disconnecting signal %s\n", ((GSignalQuery*)sigspec)->signal_name);*/
+#ifdef THREAD_WRAPPER_DEBUG
+	g_print ("Disconnecting signal %s for wrapper %p\n", ((GSignalQuery*)sigspec)->signal_name, wrapper);
+#endif
 	td->signals_list = g_slist_remove (td->signals_list, sigspec);
 	g_signal_handler_disconnect (sigspec->instance, sigspec->signal_id);
 	sigspec->instance = NULL;
