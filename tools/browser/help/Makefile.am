@@ -22,7 +22,12 @@ DOC_FIGURES = \
 	figures/table-insert-data.png \
 	figures/declaredfk.png \
 	figures/declaredfk-dialog.png \
-	figures/schema-browser-persp.png
+	figures/schema-browser-persp.png \
+	figures/virtual-cnc.png \
+	figures/virtual-cnc-2.png \
+	figures/virtual-cnc-3.png \
+	figures/virtual-cnc-4.png \
+	figures/virtual-cnc-5.png
 
 DOC_PAGES = \
 	actions.page \
