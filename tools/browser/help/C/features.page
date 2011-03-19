@@ -40,12 +40,15 @@
       <item><p>analyse the table's contents, see the
       <link xref="data-manager-perspective">Data manager perspective</link></p></item>
     </list>
+    <p>
+      See also the section about <link xref="actions">actions</link>
+    </p>
   </section>
   <section>
     <title>Openness</title>
     <list>
       <item><p>CSV and other text files can be imported and used in conjunction with <link type="topic" xref="virtual-connections">connection binding</link></p></item>
-      <item><p>the general framework is opened enough to add new integrated features; specifically anyone can develop new <link type="topic" xref="general-ui">perspectives</link></p></item>      
+x      <item><p>the general framework is opened enough to add new integrated features; specifically anyone can develop new <link type="topic" xref="general-ui">perspectives</link></p></item>      
     </list>
   </section>
 </page>
