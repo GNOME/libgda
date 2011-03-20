@@ -27,6 +27,7 @@
 #include <libgda/gda-sql-builder.h>
 #include <libgda-ui/gdaui-enums.h>
 #include "../config-info.h"
+#include "browser-virtual-connection.h"
 
 #include "browser-connection-priv.h"
 
@@ -415,7 +416,10 @@ browser_connection_set_property (GObject *object,
 									     cnc_string);
 			g_free (cnc_string);
 			if (dict_file_name) {
-				if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
+				if (BROWSER_IS_VIRTUAL_CONNECTION (bcnc))
+					/* force meta store update in case of virtual connection */
+					update_store = TRUE;
+				else if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
 					update_store = TRUE;
 				store = gda_meta_store_new_with_file (dict_file_name);
 			}
