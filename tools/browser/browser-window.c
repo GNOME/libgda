@@ -682,42 +682,42 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 static void
 connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, BrowserWindow *bwin)
 {
-	if (bcnc != bwin->priv->bcnc)
-		return;
-
-	if (is_busy) {
-		browser_spinner_start (BROWSER_SPINNER (bwin->priv->spinner));
-		gtk_widget_set_tooltip_text (bwin->priv->spinner, reason);
-		gtk_statusbar_push (GTK_STATUSBAR (bwin->priv->statusbar),
-				    bwin->priv->cnc_statusbar_context,
-				    reason);
-	}
-	else {
-		browser_spinner_stop (BROWSER_SPINNER (bwin->priv->spinner));
-		gtk_widget_set_tooltip_text (bwin->priv->spinner, NULL);
-		gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar),
-				   bwin->priv->cnc_statusbar_context);
-	}
-
 	GtkAction *action;
-	action = gtk_action_group_get_action (bwin->priv->agroup, "WindowNew");
-	gtk_action_set_sensitive (action, !is_busy);
-	action = gtk_action_group_get_action (bwin->priv->agroup, "ConnectionMetaSync");
-	gtk_action_set_sensitive (action, !is_busy);
+	if (bcnc == bwin->priv->bcnc) {
+		/* @bcbc is @bwin's own connection */
+		if (is_busy) {
+			browser_spinner_start (BROWSER_SPINNER (bwin->priv->spinner));
+			gtk_widget_set_tooltip_text (bwin->priv->spinner, reason);
+			gtk_statusbar_push (GTK_STATUSBAR (bwin->priv->statusbar),
+					    bwin->priv->cnc_statusbar_context,
+					    reason);
+		}
+		else {
+			browser_spinner_stop (BROWSER_SPINNER (bwin->priv->spinner));
+			gtk_widget_set_tooltip_text (bwin->priv->spinner, NULL);
+			gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar),
+					   bwin->priv->cnc_statusbar_context);
+		}
 
-	gboolean bsens = FALSE, csens = FALSE;
-	if (!is_busy) {
-		if (browser_connection_get_transaction_status (bcnc))
-			csens = TRUE;
-		else
-			bsens = TRUE;
+		gboolean bsens = FALSE, csens = FALSE;
+		if (!is_busy) {
+			if (browser_connection_get_transaction_status (bcnc))
+				csens = TRUE;
+			else
+				bsens = TRUE;
+		}
+		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionBegin");
+		gtk_action_set_sensitive (action, bsens);
+		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionCommit");
+		gtk_action_set_sensitive (action, csens);
+		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionRollback");
+		gtk_action_set_sensitive (action, csens);
+
+		action = gtk_action_group_get_action (bwin->priv->agroup, "WindowNew");
+		gtk_action_set_sensitive (action, !is_busy);
+		action = gtk_action_group_get_action (bwin->priv->agroup, "ConnectionMetaSync");
+		gtk_action_set_sensitive (action, !is_busy);
 	}
-	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionBegin");
-	gtk_action_set_sensitive (action, bsens);
-	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionCommit");
-	gtk_action_set_sensitive (action, csens);
-	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionRollback");
-	gtk_action_set_sensitive (action, csens);	
 
 	const gchar *cncname;
 	cncname = browser_connection_get_name (bcnc);
