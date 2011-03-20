@@ -54,6 +54,7 @@ do_grid (GtkWidget *do_widget)
 		gdaui_grid_set_sample_size (GDAUI_GRID (grid), 100);
 		g_object_set (G_OBJECT (grid), "info-flags",
 			      GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS, NULL);
+		gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (grid), 1, FALSE);
 
 		gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 	}

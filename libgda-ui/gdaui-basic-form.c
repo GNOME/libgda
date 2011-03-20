@@ -1,5 +1,4 @@
-/* gdaui-basic-form.c
- *
+/*
  * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -66,7 +65,8 @@ typedef struct {
 	GdauiDataEntry *entry; /* ref held here */
 	GtkWidget      *label; /* ref held here */
 	gchar          *label_title;
-	gboolean        hidden;
+	gboolean        prog_hidden; /* status as requested by the programmer */
+	gboolean        hidden; /* real status of the data entry */
 	gboolean        not_null; /* TRUE if @entry's contents can't be NULL */
 	gboolean        can_expand; /* tells if @entry can expand */
 	gboolean        forward_param_updates; /* forward them to the GdauiDataEntry widgets ? */
@@ -338,6 +338,8 @@ do_popup_menu (GdauiBasicForm *form, GdkEventButton *event)
 	
 	for (list = form->priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
+		if (sentry->prog_hidden)
+			continue;
 		mitem = gtk_check_menu_item_new_with_label (sentry->label_title);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), !sentry->hidden);
 		gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
@@ -1892,6 +1894,7 @@ gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *param, gboo
 	}
 
 	real_gdaui_basic_form_entry_set_visible (form, sentry, show);
+	sentry->prog_hidden = !show;
 }
 
 /**

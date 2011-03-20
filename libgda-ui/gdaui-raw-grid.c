@@ -1,5 +1,4 @@
-/* gdaui-raw-grid.c
- *
+/*
  * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -84,9 +83,10 @@ static void              gdaui_raw_grid_selector_set_column_visible (GdauiDataSe
 typedef struct {
 	GtkCellRenderer   *data_cell;
 	GtkCellRenderer   *info_cell;
-	GtkTreeViewColumn *column;
+	GtkTreeViewColumn *column; /* no ref held */
 
-	gboolean           hidden;
+	gboolean           prog_hidden; /* status as requested by the programmer */
+	gboolean           hidden; /* real status of the column */
 	gchar             *title;
 
 	GdaHolder         *single_param;
@@ -668,7 +668,7 @@ _gdaui_raw_grid_get_selection (GdauiRawGrid *grid)
  * WARNING: the old string is free'ed so it is possible to do "str=double_underscores(str);"
  */
 static gchar *
-replace_double_underscores (gchar *str)
+add_double_underscores (gchar *str)
 {
         gchar **arr;
         gchar *ret;
@@ -677,6 +677,25 @@ replace_double_underscores (gchar *str)
         ret = g_strjoinv ("__", arr);
         g_strfreev (arr);
 	g_free (str);
+
+        return ret;
+}
+
+/*
+ * Creates a NEW string
+ */
+static gchar *
+remove_double_underscores (gchar *str)
+{
+        gchar *ptr1, *ptr2, *ret;
+
+	ret = g_new (gchar, strlen (str) + 1);
+	for (ptr1 = str, ptr2 = ret; *ptr1; ptr1++, ptr2++) {
+		*ptr2 = *ptr1;
+		if ((ptr1[0] == '_') && (ptr1[1] == '_'))
+			ptr1++;
+	}
+	*ptr2 = 0;
 
         return ret;
 }
@@ -751,7 +770,7 @@ create_columns_data (GdauiRawGrid *grid)
 								     "name");
 
 			if (title)
-				title = replace_double_underscores (g_strdup (title));
+				title = add_double_underscores (g_strdup (title));
 			else
 				/* FIXME: find a better label */
 				title = g_strdup (_("Value"));
@@ -784,7 +803,7 @@ create_columns_data (GdauiRawGrid *grid)
 
 			g_object_get (G_OBJECT (param), "name", &title, NULL);
 			if (title && *title)
-				title = replace_double_underscores (title);
+				title = add_double_underscores (title);
 			else
 				title = NULL;
 			if (!title)
@@ -829,6 +848,13 @@ create_columns_data (GdauiRawGrid *grid)
 	}
 }
 
+/* keep track of the columns shown and hidden */
+static void
+column_visibility_changed (GtkTreeViewColumn *column, GParamSpec *pspec, ColumnData *cdata)
+{
+	cdata->hidden = !gtk_tree_view_column_get_visible (column);
+}
+
 /*
  * Remove all columns from @grid, does not modify ColumnData
  */
@@ -868,6 +894,9 @@ create_tree_view_column (GdauiRawGrid *grid, ColumnData *cdata, gint pos)
 						 (GtkTreeCellDataFunc) cell_info_set_attributes,
 						 grid, NULL);
 	
+	g_signal_connect (column, "notify::visible",
+			  G_CALLBACK (column_visibility_changed), cdata);
+
 	/* Sorting data */
 	gtk_tree_view_column_set_clickable (column, TRUE);
 	g_signal_connect (G_OBJECT (column), "clicked",
@@ -882,7 +911,7 @@ reset_columns_default (GdauiRawGrid *grid)
 	remove_all_columns (grid);
 	for (list = grid->priv->columns_data; list; list = list->next) {
 		ColumnData *cdata = COLUMN_DATA (list->data);
-		if (cdata->hidden)
+		if (cdata->prog_hidden)
 			continue;
 
 		/* create treeview column */
@@ -918,6 +947,7 @@ reset_columns_in_xml_layout (GdauiRawGrid *grid, xmlNodePtr grid_node)
 			xmlFree (name);
 
 			/* create treeview column */
+			cdata->prog_hidden = FALSE;
 			cdata->hidden = FALSE;
 			create_tree_view_column (grid, cdata, -1);
 
@@ -1758,7 +1788,6 @@ hidden_column_mitem_toggled_cb (GtkCheckMenuItem *check, GdauiRawGrid *grid)
 	g_assert (cdata);
 	act = gtk_check_menu_item_get_active (check);
 	gtk_tree_view_column_set_visible (cdata->column, act);
-	cdata->hidden = !act;
 }
 
 static gint
@@ -1789,8 +1818,13 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
 	for (list = grid->priv->columns_data; list; list = list->next) {
 		ColumnData *cdata = (ColumnData*) list->data;
+		gchar *tmp;
 
-		mitem = gtk_check_menu_item_new_with_label (cdata->title);
+		if (cdata->prog_hidden)
+			continue;
+		tmp = remove_double_underscores (cdata->title);
+		mitem = gtk_check_menu_item_new_with_label (tmp);
+		g_free (tmp);
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), !cdata->hidden);
 		gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
 		gtk_widget_show (mitem);
@@ -3019,4 +3053,8 @@ gdaui_raw_grid_selector_set_column_visible (GdauiDataSelector *iface, gint colum
 
 	/* Sets the column's visibility */
 	gtk_tree_view_column_set_visible (viewcol, visible);
+	ColumnData *cdata;
+	cdata = g_slist_nth_data (grid->priv->columns_data, column);
+	g_assert (cdata);
+	cdata->prog_hidden = !visible;
 }
