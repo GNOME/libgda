@@ -1,0 +1,15 @@
+GObject Introspection demo
+==========================
+
+Description:
+------------
+
+The examples in this directory illustrate how use the gobject introspection
+files produced by Libgda.
+
+Javascript:
+-----------
+
+Depending on your execution environment, Set the GI_TYPELIB_PATH environment variable to make sure
+it contains the path to the Gda-5.0.typelib file. Then run:
+> gjs libgda.js

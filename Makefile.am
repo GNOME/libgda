@@ -96,7 +96,10 @@ example_files = \
 	samples/Blobs/blobtest.c \
 	samples/Blobs/Makefile \
 	samples/Blobs/README \
-	samples/Blobs/testblob.db
+	samples/Blobs/testblob.db \
+	samples/Gir/Makefile \
+	samples/Gir/README \
+	samples/Gir/libgda.js
 
 EXTRA_DIST = \
 	COPYING \
