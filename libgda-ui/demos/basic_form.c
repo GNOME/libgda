@@ -38,7 +38,8 @@ do_basic_form (GtkWidget *do_widget)
 				       "same GdaSet. When a value is modified in one form, then it is\n"
 				       "automatically updated in the other form.\n\n"
 				       "Also the top form uses the default layout, while the bottom one\n"
-				       "uses a custom (2 columns) layout.");
+				       "uses a custom (2 columns) layout.\n"
+				       "The 'an int' entry is hidden in the top form.");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		
 		/* Create the demo widget */
@@ -50,6 +51,7 @@ do_basic_form (GtkWidget *do_widget)
 					  "a picture", GDA_TYPE_BINARY, NULL);
 		form = gdaui_basic_form_new (set);
 		gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
+		gdaui_basic_form_entry_set_visible (GDAUI_BASIC_FORM (form), gda_set_get_holder (set, "an int"), FALSE);
 
 		label = gtk_label_new ("2nd form is below:");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
