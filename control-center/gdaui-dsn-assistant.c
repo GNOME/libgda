@@ -494,8 +494,6 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	
 	assistant->priv->general_provider = gdaui_provider_selector_new ();
 	gtk_table_attach_defaults (GTK_TABLE (table), assistant->priv->general_provider, 1, 2, 3, 4);
-	g_signal_connect (G_OBJECT (assistant->priv->general_provider), "changed",
-			  G_CALLBACK (provider_changed_cb), assistant);
 
 	label = gtk_label_new (_("Description:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
@@ -656,7 +654,11 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_assistant_set_page_complete (assist, vbox, TRUE);
 
 	/* force correct init */
-	provider_changed_cb (assistant->priv->general_provider, assistant);	
+	provider_changed_cb (assistant->priv->general_provider, assistant);
+
+
+	g_signal_connect (G_OBJECT (assistant->priv->general_provider), "changed",
+			  G_CALLBACK (provider_changed_cb), assistant);
 }
 
 static void
