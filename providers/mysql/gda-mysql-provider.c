@@ -1,5 +1,5 @@
-/* GDA Mysql provider
- * Copyright (C) 2008 The GNOME Foundation.
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Carlos Savoretti <csavoretti@gmail.com>
@@ -471,7 +471,7 @@ real_open_connection (const gchar  *host,
 	unsigned int flags = 0;
 
 	/* Exclusive: host/pair otherwise unix socket. */
-	if ((host || port >= 0) && socket) {
+	if ((host || port > 0) && socket) {
 		g_set_error (error, 0, 0, "%s", 
 			     _("Cannot give a UNIX SOCKET if you also provide "
 			       "either a HOST or a PORT"));
