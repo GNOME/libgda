@@ -1,6 +1,5 @@
-/* gdaui-data-import.c
- *
- * Copyright (C) 2006 - 2008 Vivien Malerba
+/*
+ * Copyright (C) 2006 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -174,8 +173,9 @@ gdaui_data_import_init (GdauiDataImport * import)
 	encs_errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (encs));
 	if (encs_errors) {
 		for (; encs_errors; encs_errors = g_slist_next (encs_errors)) {
-			g_print ("Error: %s\n", encs_errors->data && ((GError *) encs_errors->data)->message ?
-				 ((GError *) encs_errors->data)->message : _("no detail"));
+			gda_log_message ("Error importing import_encodings.xml: %s\n",
+					 encs_errors->data && ((GError *) encs_errors->data)->message ?
+					 ((GError *) encs_errors->data)->message : _("no detail"));
 		}
 		import->priv->encoding_combo = NULL;
 	}
@@ -275,11 +275,12 @@ gdaui_data_import_init (GdauiDataImport * import)
         gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
         hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+	import->priv->preview_box = hbox;
+
         gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
         gtk_widget_show (hbox);
         label = gtk_label_new ("    ");
         gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	import->priv->preview_box = hbox;
 
         label = gtk_label_new ("");
         gtk_label_set_markup (GTK_LABEL (label), _("No data."));
@@ -289,8 +290,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 
 	gtk_widget_show_all (vbox);
 
-	gtk_paned_set_position (GTK_PANED (import), 1);
-	
+	gtk_paned_set_position (GTK_PANED (import), 1);	
 }
 
 /**

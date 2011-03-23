@@ -427,6 +427,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 	AuthData *ad;
 	ad = g_new0 (AuthData, 1);
 	ad->wrapper = gda_thread_wrapper_new ();
+	/*g_print ("Login dialog: new thread wrapper %p\n", ad->wrapper);*/
 	ad->ext.cnc_string = g_strdup (cnc_string);
 	ad->auth_string = NULL;
 	info = gda_config_get_dsn_info (real_cnc);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -373,7 +373,7 @@ browser_connections_list_show (BrowserConnection *current)
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 						GTK_POLICY_NEVER,
 						GTK_POLICY_AUTOMATIC);
-		gtk_table_attach_defaults (GTK_TABLE (table), sw, 0, 1, 2, 4);
+		gtk_table_attach (GTK_TABLE (table), sw, 0, 1, 2, 4, 0, GTK_FILL, 0, 0);
 		
 		/* connection's properties */
 		label = gtk_label_new ("");

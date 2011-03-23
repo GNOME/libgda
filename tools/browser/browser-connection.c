@@ -390,6 +390,8 @@ browser_connection_set_property (GObject *object,
                         if (!bcnc->priv->cnc)
 				return;
 
+			/*g_print ("BrowserConnection %p [%s], wrapper %p, GdaConnection %p\n",
+			  bcnc, bcnc->priv->name, bcnc->priv->wrapper, bcnc->priv->cnc);*/
 			g_object_ref (bcnc->priv->cnc);
 			bcnc->priv->transaction_status_signal =
 				gda_thread_wrapper_connect_raw (bcnc->priv->wrapper,
