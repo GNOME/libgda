@@ -2475,10 +2475,10 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			g_strfreev (cols_str [i]);
 		g_free (cols_str);
 	}
-	if (n_rows < 0)
-		g_string_append_printf (string, _("(error getting data)\n"));
-	else
+	if (n_rows > 0)
 		g_string_append_printf (string, ngettext("(%d row)\n", "(%d rows)\n", n_rows), n_rows);
+	else
+		g_string_append_printf (string, _("(0 row)\n"));
 
  out:
 	if (ramodel)

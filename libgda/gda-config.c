@@ -391,8 +391,8 @@ load_config_file (const gchar *file, gboolean is_system)
 						info->auth_string = g_strdup (auth);
 					}
 					else if (res != GNOME_KEYRING_RESULT_NO_MATCH)
-						g_warning (_("Error loading authentification information for '%s' DSN: %s"),
-							   info->name, gnome_keyring_result_to_message (res));
+						gda_log_message (_("Error loading authentification information for '%s' DSN: %s"),
+								 info->name, gnome_keyring_result_to_message (res));
 					if (auth)
 						gnome_keyring_free_password (auth);
 				}
