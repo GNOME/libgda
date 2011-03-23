@@ -48,7 +48,7 @@
   <item><p>execution results in the lower right part</p></item>
 </list>
 
-<section>
+<section id="query-exec-sql">
   <title>SQL area</title>
   <p>
     The SQL area is an SQL editor. The SQL can be any SQL understood by the database, with the exception
@@ -66,7 +66,7 @@
   </list>
 </section>
 
-<section>
+<section id="query-exec-command-buttons">
   <title>Command buttons</title>
   <p>
     The commands available through the command buttons are:
@@ -84,7 +84,7 @@
   </list>
 </section>
 
-<section>
+<section id="query-exec-history">
   <title>Execution history</title>
   <p>
     The execution history part contains a list of the past executed statements, ordered by execution date
@@ -100,7 +100,7 @@
   </p>
 </section>
 
-<section>
+<section id="query-exec-results">
   <title>Execution results</title>
   <p>
     The Execution results part displays the execution result of the currently selected execution

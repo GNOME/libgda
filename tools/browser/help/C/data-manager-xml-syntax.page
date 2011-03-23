@@ -20,7 +20,7 @@
   in the same data sources specifications.
 </p>
 
-<section>
+<section id="data-manager-exp-variables">
   <title>Exported variables</title>
   <p>
     Each data source exports some variables which can be reused by other data sources to introduce
@@ -33,7 +33,7 @@
     in case the variable is unset, the data source's execution result is an empty data set.
   </p>
 </section>
-<section>
+<section id="data-manager-query-tag">
   <title>The <code>&lt;query&gt;</code> tag</title>
   <p>
     Use the <code>&lt;query&gt;</code> tag to specify an SQL SELECT statement, as the contents of the tag.
@@ -69,7 +69,7 @@
     a customer, and one which displays all the attributes for the selected customer.
   </p>
 
-  <section>
+  <section id="data-manager-query-exp-variables">
     <title>Exported variables</title>
     <p>
       Each data source defined by a <code>&lt;query&gt;</code> tag exports the following variable for
@@ -84,7 +84,7 @@
 
 </section>
 
-<section>
+<section id="data-manager-table-tag">
   <title>The <code>&lt;table&gt;</code> tag</title>
   <p>
     Use the <code>&lt;table&gt;</code> tag to define a data source which will display the contents of a table.
@@ -150,7 +150,7 @@
 	has been specified for the <code>&lt;table&gt;</code> tags.</p></item>
   </list>
 
-  <section>
+  <section id="data-manager-table-exp-variables">
     <title>Exported variables</title>
     <p>
       Each data source defined by a <code>&lt;query&gt;</code> tag exports the following variable for
