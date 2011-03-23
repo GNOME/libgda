@@ -38,7 +38,7 @@
 	UPDATE or DELETE situations, so the reported policy will always be "not enforced"</p></item>
   </list>
 
-  <section>
+  <section id="declare-new-fk">
     <title>Declaring a new foreign key</title>
     <p>
       A new foreign key can be declared from the
@@ -66,7 +66,7 @@
     </figure>
   </section>
   
-  <section>
+  <section id="remove-fk">
     <title>Remove a declared foreign key</title>
     <p>
       A declared foreign key can be removed by clicking on the <guiseq><gui>(Remove)</gui></guiseq> link

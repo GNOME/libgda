@@ -40,7 +40,7 @@
   Also when the row selection of the 'customers' view changes, the whole contents of the 'orders' view
   is refreshed.
 </p>
-<section>
+<section id="data-manager-def-data-source">
   <title>Defining data sources</title>
   <p>
     The simplest data source
@@ -86,7 +86,7 @@
     <item><p><gui>Help</gui>: shows some help</p></item>
   </list>
 </section>
-<section>
+<section id="data-manager-exec-data-source">
   <title>Executing defined data sources</title>
   <p>
     To execute a defined set of data sources, simply switch to execute mode using

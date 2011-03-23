@@ -9,7 +9,7 @@
   <p>
     <app>gda-browser</app>'s current features are:
   </p>
-  <section>
+  <section id="features-gen-ui">
     <title>General user interface</title>
     <list>	
       <item><p>multi threaded: each connection is handled in it own thread, meaning that no single
@@ -18,7 +18,7 @@
       <item><p>full screen mode accessible to maximize the screen space usage</p></item>
     </list>
   </section>
-  <section>
+  <section id="features-cnc-mgmt">
     <title>Connection management</title>
     <list>
       <item><p>multiple simultaneous connections can be opened at once</p></item>
@@ -27,7 +27,7 @@
       connection can lock the application</p></item>
     </list>
   </section>
-  <section>
+  <section id="features-activities">
     <title>Activities</title>
     <p>
       The activities are grouped by theme around the notion of <link type="topic" xref="general-ui">perspectives</link>, the following are currently implemented:
@@ -44,7 +44,7 @@
       See also the section about <link xref="actions">actions</link>
     </p>
   </section>
-  <section>
+  <section id="features-open">
     <title>Openness</title>
     <list>
       <item><p>CSV and other text files can be imported and used in conjunction with <link type="topic" xref="virtual-connections">connection binding</link></p></item>

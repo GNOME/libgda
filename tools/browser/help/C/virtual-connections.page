@@ -36,7 +36,7 @@
     <item><p>bind a data set to import data from a text file as a single table: use the <guiseq><gui>Bind a data set</gui></guiseq> option. See section below for more information.</p></item>
   </list>
 
-  <section>
+  <section id="vcnc-use-case">
     <title>Use case for virtual connections</title>
     <p>
       To illustrate virtual connection usage, let's define a simple use case and see how it's usefull. Suppose you have
@@ -96,7 +96,7 @@ WHERE "Error code"=0
   </section>
 
 
-  <section>
+  <section id="vcnc-import-dataset">
     <title>Importing a data set into a virtual connection</title>
     <p>
       To import a data set into a table in the virtual connection (for example to import the "problems.csv" file
