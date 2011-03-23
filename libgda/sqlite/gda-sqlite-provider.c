@@ -2568,12 +2568,15 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 changes = sqlite3_changes (handle);
                 if (status != SQLITE_DONE) {
                         if (sqlite3_errcode (handle) != SQLITE_OK) {
-				const char *errmsg = sqlite3_errmsg (handle);
-                                event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				const char *errmsg;
+                                sqlite3_reset (ps->sqlite_stmt);
+
+				errmsg = sqlite3_errmsg (handle);
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
                                 gda_connection_event_set_description (event, errmsg);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, "%s", errmsg);
-                                sqlite3_reset (ps->sqlite_stmt);
+
                                 gda_connection_add_event (cnc, event);
 				gda_connection_internal_statement_executed (cnc, stmt, params, event);
 				if (new_ps)
