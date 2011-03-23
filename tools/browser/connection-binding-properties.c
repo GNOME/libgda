@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -145,7 +145,7 @@ connection_binding_properties_new_create (BrowserConnection *bcnc)
 	create_layout (cprop);
 	update_display (cprop);
 
-	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), GTK_STOCK_NEW, GTK_RESPONSE_OK));
+	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), _("Create connection"), GTK_RESPONSE_OK));
 	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL));
 
 	return (GtkWidget*) cprop;
@@ -182,7 +182,7 @@ connection_binding_properties_new_edit (const BrowserVirtualConnectionSpecs *spe
 static void
 create_layout (ConnectionBindingProperties *cprop)
 {
-	GtkWidget *sw, *vp, *label, *hbox;
+	GtkWidget *label, *hbox;
 	gchar *str;
 	GtkWidget *dcontents;
 
@@ -192,33 +192,28 @@ create_layout (ConnectionBindingProperties *cprop)
 	dcontents = GTK_DIALOG (cprop)->vbox;
 #endif
 
-
+	gtk_container_set_border_width (GTK_CONTAINER (dcontents), 10);
 	str = g_strdup_printf ("<b>%s:</b>\n<small>%s</small>",
 			       _("Virtual connection's properties"),
-			       _("Define the sources of data for which tables will\n"
-				 "appear in the virtual connection"));
+			       _("The virtual connection you are about to define can bind tables "
+				 "from an existing connection as well as bind a data set which will "
+				 "appear as a table (importing CSV data for example). "
+				 "You can add as many binds as needed"));
+
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	g_free (str);
-	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 
 	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
 	gtk_box_pack_start (GTK_BOX (dcontents), hbox, TRUE, TRUE, 0);
 	label = gtk_label_new ("      ");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
-	gtk_box_pack_start (GTK_BOX (hbox), sw, TRUE, TRUE, 0);
-
-	vp = gtk_viewport_new (NULL, NULL);
-	gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
-	gtk_container_add (GTK_CONTAINER (sw), vp);
-
 	cprop->priv->layout_table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
-	gtk_container_add (GTK_CONTAINER (vp), (GtkWidget*) cprop->priv->layout_table);
+	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (cprop->priv->layout_table), TRUE, TRUE, 0);
 
 	gtk_widget_show_all (dcontents);
 
@@ -229,8 +224,8 @@ create_layout (ConnectionBindingProperties *cprop)
 static void add_part_clicked_cb (GtkWidget *button, ConnectionBindingProperties *cprop);
 static void del_part_clicked_cb (GtkWidget *button, BrowserVirtualConnectionPart *part);
 
-static GtkWidget *create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionModel *pm);
-static GtkWidget *create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectionCnc *cnc);
+static GtkWidget *create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionPart *part, BrowserVirtualConnectionModel *pm);
+static GtkWidget *create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectionPart *part, BrowserVirtualConnectionCnc *cnc);
 
 static void
 update_display (ConnectionBindingProperties *cprop)
@@ -240,7 +235,7 @@ update_display (ConnectionBindingProperties *cprop)
 
 	/* new contents */
 	gint top = 0;
-	GtkWidget *button, *label;
+	GtkWidget *label;
 	if (cprop->priv->specs) {
 		GSList *list;
 		for (list = cprop->priv->specs->parts; list; list = list->next, top++) {
@@ -250,10 +245,10 @@ update_display (ConnectionBindingProperties *cprop)
 			part = (BrowserVirtualConnectionPart*) list->data;
 			switch (part->part_type) {
 			case BROWSER_VIRTUAL_CONNECTION_PART_MODEL:
-				display = create_part_for_model (cprop, &(part->u.model));
+				display = create_part_for_model (cprop, part, &(part->u.model));
 				break;
 			case BROWSER_VIRTUAL_CONNECTION_PART_CNC:
-				display = create_part_for_cnc (cprop, &(part->u.cnc));
+				display = create_part_for_cnc (cprop, part, &(part->u.cnc));
 				break;
 			default:
 				g_assert_not_reached ();
@@ -261,23 +256,14 @@ update_display (ConnectionBindingProperties *cprop)
 
 			gtk_table_attach (cprop->priv->layout_table, display, 0, 1, top, top + 1,
 					  GTK_EXPAND | GTK_FILL, 0, 0, 10);
-
-			button = gtk_button_new ();
-			label = browser_make_tab_label_with_stock (NULL, GTK_STOCK_REMOVE, FALSE, NULL);
-			gtk_container_add (GTK_CONTAINER (button), label);
-			gtk_table_attach (cprop->priv->layout_table, button, 1, 2, top, top + 1, 0, GTK_FILL, 0, 10);
-
-			g_signal_connect (button, "clicked",
-					  G_CALLBACK (del_part_clicked_cb), part);
-			g_object_set_data (G_OBJECT (button), "cprop", cprop);
 		}
 	}
 
 	/* bottom button to add a part */
+	GtkWidget *arrow, *button;
 	button = gtk_button_new ();
 	label = browser_make_tab_label_with_stock (_("Add binding"), GTK_STOCK_ADD, FALSE, NULL);
 	gtk_container_add (GTK_CONTAINER (button), label);
-	GtkWidget *arrow;
 	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
 	gtk_box_pack_start (GTK_BOX (label), arrow, FALSE, FALSE, 0);
 	g_object_set (G_OBJECT (button), "relief", GTK_RELIEF_NONE, NULL);
@@ -394,9 +380,9 @@ plugin_entry_import_create_func (G_GNUC_UNUSED GdaDataHandler *handler, GType ty
 }
 
 static GtkWidget *
-create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionModel *pm)
+create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionPart *part, BrowserVirtualConnectionModel *pm)
 {
-	GtkWidget *vbox, *label;
+	GtkWidget *hbox, *vbox, *label, *button;
 	gchar *str;
 	static gboolean plugin_added = FALSE;
 
@@ -411,12 +397,22 @@ create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnect
 	}
 
 	vbox = gtk_vbox_new (FALSE, 0);
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 5);
+
 	label = gtk_label_new ("");
-	str = g_markup_printf_escaped ("<b>%s</b>", _("Table from a data set:"));
+	str = g_markup_printf_escaped ("<b>%s</b>", _("Bind a data set as a table:"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	g_free (str);
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 5);
+	gtk_widget_set_tooltip_text (label, _("Import a data set and make it appear as a table"));
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+	button = browser_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_REMOVE,
+					    _("Remove this bind"));
+	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 10);
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (del_part_clicked_cb), part);
+	g_object_set_data (G_OBJECT (button), "cprop", cprop);
 
 	GdaSet *set;
 	GdaHolder *holder;
@@ -502,20 +498,31 @@ part_for_cnc_holder_changed_cb (GdaSet *set, GdaHolder *holder, BrowserVirtualCo
 }
 
 static GtkWidget *
-create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectionCnc *cnc)
+create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectionPart *part, BrowserVirtualConnectionCnc *cnc)
 {
-	GtkWidget *vbox, *label;
+	GtkWidget *hbox, *vbox, *label, *button;
 	gchar *str;
 
 	vbox = gtk_vbox_new (FALSE, 0);
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 5);
+
 	label = gtk_label_new ("");
-	str = g_markup_printf_escaped ("<b>%s</b>", _("All tables of a connection:"));
+	str = g_markup_printf_escaped ("<b>%s</b>", _("Bind all tables of a connection using a schema prefix:"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	g_free (str);
-	gtk_widget_set_tooltip_text (label, _("Each table in the selected connection will appear\n"
-					      "as a table in the virtual connection"));
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 5);
+	gtk_widget_set_tooltip_text (label, _("Each table in the selected connection will appear "
+					      "as a table in the virtual connection using the specified "
+					      "schema as a prefix"));
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+
+	button = browser_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_REMOVE,
+					    _("Remove this bind"));
+	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 10);
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (del_part_clicked_cb), part);
+	g_object_set_data (G_OBJECT (button), "cprop", cprop);
 
 	GdaSet *set;
 	GdaHolder *holder;
@@ -537,7 +544,7 @@ create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectio
 	g_object_unref (holder);
 
 	holder = gda_set_get_holder (set, "SCHEMA");
-	g_object_set (holder, "name", "Table's schema",
+	g_object_set (holder, "name", "Schema",
 		      "description", _("Name of the schema the\ntables will be in"), NULL);
 							  
 	form = gdaui_basic_form_new (set);
