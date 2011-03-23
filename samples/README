@@ -22,6 +22,7 @@ Currently the contents are:
 * in AsyncExec: simple example illustrating how to perform asynchronous statement execution
 * in WritableSelect/: example to show how to modify a GdaDataModel returned after
   the execution of a SELECT statement
+* in Git/: JavaScript example to use the GObject introspection with Libgda
 
 And using the UI extension:
 * in SimpleUIForm/: a very simple form, with read-only and read-write versions
