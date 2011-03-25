@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-03-19 11:39+0000\n"
-"PO-Revision-Date: 2011-03-21 19:41+0100\n"
+"POT-Creation-Date: 2011-03-21 20:35+0000\n"
+"PO-Revision-Date: 2011-03-22 12:34+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/virtual-connections.page:29(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-persp.png'; "
-#| "md5=b4e0678527c03093031dcb3805bb2841"
 msgid ""
 "@@image: 'figures/virtual-cnc.png'; md5=0a3b008f3696c6239331bf697e2b4847"
 msgstr ""
@@ -31,8 +28,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/virtual-connections.page:94(None)
-#| msgid ""
-#| "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
 msgid ""
 "@@image: 'figures/virtual-cnc-4.png'; md5=9c19e575c63411872a3742efd02473c1"
 msgstr ""
@@ -41,8 +36,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/virtual-connections.page:108(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 msgid ""
 "@@image: 'figures/virtual-cnc-5.png'; md5=aec9ae2fc4bfac2ac3460720f5f31bb9"
 msgstr ""
@@ -51,8 +44,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/virtual-connections.page:117(None)
-#| msgid ""
-#| "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
 msgid ""
 "@@image: 'figures/virtual-cnc-2.png'; md5=275c8e47da75738596b0b4c47b06a70a"
 msgstr ""
@@ -61,8 +52,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/virtual-connections.page:124(None)
-#| msgid ""
-#| "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
 msgid ""
 "@@image: 'figures/virtual-cnc-3.png'; md5=a47d581b293767deb95f77e555f07e8c"
 msgstr ""
@@ -81,7 +70,7 @@ msgstr "1"
 
 #: C/virtual-connections.page:9(title)
 msgid "Connections binding (ie. virtual connections)"
-msgstr ""
+msgstr "Vincular conexiones (ej. conexiones virtuales)"
 
 #: C/virtual-connections.page:10(p)
 msgid ""
@@ -89,6 +78,9 @@ msgid ""
 "and/or imported data sets into a single connection, which can be used almost "
 "like a regular connection."
 msgstr ""
+"La vinculación de conexiones es una característica que permite «vincular» "
+"varias conexiones y/o conjuntos de datos importados en una única conexión, "
+"que se puede usar casi como una conexión regular."
 
 #: C/virtual-connections.page:14(p)
 msgid ""
@@ -98,6 +90,11 @@ msgid ""
 "result is by exporting the necessary data from each database and work on the "
 "data outside of the databases."
 msgstr ""
+"Esta característica es útil cuando se necesita ejecutar un comando SQL (por "
+"ejemplo, para extraer datos) tomando datos almacenados actualmente en "
+"diferentes bases de datos. Sin esta característica, la manera de obtener el "
+"mismo resultado es exportar los datos necesarios desde cada base de datos y "
+"trabajar sobre ellos fuera de las bases de datos."
 
 #: C/virtual-connections.page:20(p)
 msgid ""
@@ -107,6 +104,11 @@ msgid ""
 "new dialog window from which elements to be included in the \"bound\" "
 "connection can be defined as shown below."
 msgstr ""
+"Para crear una nueva conexión «ligada» (o conexión «virtual»), use el menú "
+"<guiseq><gui>Conexión</gui><gui>Vincular conexión</gui></guiseq>, o el atajo "
+"<keyseq><key>Ctrl</key><key>i</key></keyseq>. Esto abre una nueva ventana de "
+"diálogo desde la que se pueden definir los elementos que se incluirán en la "
+"conexión «ligada», como se muestra a continuación."
 
 #: C/virtual-connections.page:27(title)
 msgid "Dialog to create a new virtual connection"
@@ -118,7 +120,7 @@ msgstr "Aquí se ligará la conexión actual (c1) con el esquema «c1»"
 
 #: C/virtual-connections.page:31(p)
 msgid "Use the <guiseq><gui>Add binding</gui></guiseq> button to either:"
-msgstr ""
+msgstr "Use el botón <guiseq><gui>Añadir vinculación</gui></guiseq> o:"
 
 #: C/virtual-connections.page:35(p)
 msgid ""
@@ -127,6 +129,10 @@ msgid ""
 "adds a new element in the dialog, to specify a schema name and select an "
 "existing connection"
 msgstr ""
+"vincular una conexión para incluir todas las tablas de esa conexión: use la "
+"opción <guiseq><gui>Vincular una conexión</gui></guiseq>. Esta opción "
+"simplemente añade un elemento nuevo en el diálogo, para especificar un "
+"nombre de esquema y seleccionar una conexión existente."
 
 #: C/virtual-connections.page:36(p)
 msgid ""
@@ -134,6 +140,10 @@ msgid ""
 "<guiseq><gui>Bind a data set</gui></guiseq> option. See section below for "
 "more information."
 msgstr ""
+"vincular un conjunto de datos para importar datos desde un archivo de texto "
+"como una única tabla: use la opción <guiseq><gui>Vincular un conjunto de "
+"datos</gui></guiseq>. Consulte la siguiente sección para obtener más "
+"información."
 
 #: C/virtual-connections.page:40(title)
 msgid "Use case for virtual connections"
@@ -198,6 +208,11 @@ msgid ""
 "a column describing the problem. Let's assume the CSV file has the following "
 "contents:"
 msgstr ""
+"Ahora se asume que tiene un programa de terceras partes que le da una lista "
+"de servidores que pueden tener un problema. La salida de este programa es un "
+"archivo CSV con una columna para el nombre del servidor, una columna para el "
+"código de error y una columna que describe el problema. Se asume que el "
+"archivo CSV contiene lo siguiente:"
 
 #: C/virtual-connections.page:67(code)
 #, no-wrap
@@ -230,6 +245,11 @@ msgid ""
 "problems CSV file (for example in the \"tab\" table), and execute the "
 "following SQL command:"
 msgstr ""
+"Ahora se supone que quiere conocer todos los servidores, dónde están "
+"ubicados y dónde hay un problema con código de error «0». La solución es "
+"vincular la conexión a la base de datos (por ejemplo, en el esquema «c1»), "
+"importar el archivo CSV de problemas (por ejemplo, en la tabla «tab») y "
+"ejecutar el siguiente comando SQL:"
 
 #: C/virtual-connections.page:81(code)
 #, no-wrap
@@ -255,6 +275,8 @@ msgstr ""
 #: C/virtual-connections.page:89(p)
 msgid "Which returns the expected results as shown in the following figure:"
 msgstr ""
+"Lo que devuelve los resultados esperados, como se muestra en la siguiente "
+"figura:"
 
 #: C/virtual-connections.page:93(title)
 msgid "Expected results from virtual connection"
@@ -271,6 +293,10 @@ msgid ""
 "<guiseq><gui>Bind a data set</gui></guiseq> option from the virtual "
 "connection creation dialog:"
 msgstr ""
+"Para importar un conjunto de datos en una tabla en la conexión virtual (por "
+"ejemplo, para importar el archivo «problemas.csv» desde el caso de uso), use "
+"la opción <guiseq><gui>Vincular un conjunto de datos</gui></guiseq> desde el "
+"diálogo de creación de una conexión virtual."
 
 #: C/virtual-connections.page:107(title)
 msgid "Import a data set into a virtual connection - 1"
@@ -283,6 +309,10 @@ msgid ""
 "encoding, file type, ...) After this step, the virtual connection is ready "
 "to be used:"
 msgstr ""
+"Desde ahí use el botón <guiseq><gui>Importar</gui></guiseq>, que le permite "
+"seleccionar un archivo que importar y también definir algunas opciones de "
+"importación (codificación del archivo, tipo de archivo, ...). Después de "
+"este paso, la conexión virtual ya está lista para usarse:"
 
 #: C/virtual-connections.page:116(title)
 msgid "Import a data set into a virtual connection - 2"
@@ -293,6 +323,8 @@ msgid ""
 "The resulting virtual connection, identified as \"c2\" here is opened in its "
 "own new window:"
 msgstr ""
+"La conexión virtual resultante, identificada aquí como «c2», está abierta es "
+"su propia ventana nueva:"
 
 #: C/virtual-connections.page:123(title)
 msgid "New opened virtual connection"
@@ -1031,8 +1063,7 @@ msgstr "Una ventana de conexión"
 msgid ""
 "Window opened for the 'c1' connection (and the Schema browser perspective)"
 msgstr ""
-"Ventana abierta para la conexión «c1» (y la perspectiva del visor de "
-"esquemas)"
+"Ventana abierta para la conexión «c1» (y la perspectiva del visor de esquemas)"
 
 #: C/general-ui.page:21(p)
 msgid ""
@@ -1091,7 +1122,6 @@ msgid "<app>gda-browser</app>'s current features are:"
 msgstr "Las características actuales de <app>gda-browser</app> son:"
 
 #: C/features.page:13(title)
-#| msgid "General interface organization"
 msgid "General user interface"
 msgstr "Interfaz general de usuario"
 
@@ -1114,7 +1144,6 @@ msgstr ""
 "pantalla"
 
 #: C/features.page:22(title)
-#| msgid "Connections management"
 msgid "Connection management"
 msgstr "Administración de conexiones"
 
@@ -1128,6 +1157,9 @@ msgid ""
 "connections\">\"bind\"</link> several connections into one to execute SQL "
 "commands on several connections at once"
 msgstr ""
+"vinculación de conexiones: es posible <link type=\"topic\" xref=\"virtual-"
+"connections\">«vincular»</link> varias conexiones en una para ejecutar "
+"comandos SQL en varias conexiones a la vez."
 
 #: C/features.page:31(title)
 msgid "Activities"
@@ -1139,17 +1171,20 @@ msgid ""
 "\" xref=\"general-ui\">perspectives</link>, the following are currently "
 "implemented:"
 msgstr ""
+"Las actividades se agrupan por tema en torno a la noción de <link type="
+"\"topic\" xref=\"general-ui\">perspectivas</link>. Actualmente están "
+"implementadas las siguientes:"
 
 #: C/features.page:36(p)
 msgid ""
 "analyse the database schema (tables, relations, ...), see the the <link xref="
 "\"schema-browser-perspective\">Schema browser perspective</link>"
 msgstr ""
+"analizar el esquema de la base de datos (tablas, relaciones, ...), consulte "
+"la <link xref=\"schema-browser-perspective\">perspectiva del visor de "
+"esquemas</link>"
 
 #: C/features.page:38(p)
-#| msgid ""
-#| "the <link xref=\"query-execution-perspective\">Query execution "
-#| "perspective</link> to execute any SQL command"
 msgid ""
 "execute SQL commands, see the <link xref=\"query-execution-perspective"
 "\">Query execution perspective</link>"
@@ -1158,9 +1193,6 @@ msgstr ""
 "\">perspectiva de ejecución de una consulta</link>"
 
 #: C/features.page:40(p)
-#| msgid ""
-#| "the <link xref=\"data-manager-perspective\">Data manager perspective</"
-#| "link> to navigate through the database's contents"
 msgid ""
 "analyse the table's contents, see the <link xref=\"data-manager-perspective"
 "\">Data manager perspective</link>"
@@ -1171,16 +1203,20 @@ msgstr ""
 #: C/features.page:43(p)
 msgid "See also the section about <link xref=\"actions\">actions</link>"
 msgstr ""
+"Consulte también la sección sobre las <link xref=\"actions\">acciones</link>"
 
 #: C/features.page:48(title)
 msgid "Openness"
-msgstr ""
+msgstr "Apertura"
 
 #: C/features.page:50(p)
 msgid ""
 "CSV and other text files can be imported and used in conjunction with <link "
 "type=\"topic\" xref=\"virtual-connections\">connection binding</link>"
 msgstr ""
+"Los archivos CSV y otros archivos de texto se pueden importar y usar junto "
+"con la <link type=\"topic\" xref=\"virtual-connections\">vinculación de "
+"conexiones</link>"
 
 #: C/features.page:51(p)
 msgid ""
@@ -1188,6 +1224,9 @@ msgid ""
 "specifically anyone can develop new <link type=\"topic\" xref=\"general-ui"
 "\">perspectives</link>"
 msgstr ""
+"el marco de trabajo general está abierto lo suficiente para añadir nuevas "
+"características integradas; específicamente, cualquier puede desarrollar "
+"<link type=\"topic\" xref=\"general-ui\">perspectives</link> nuevas"
 
 #: C/features.page:49(list)
 msgid "<placeholder-1/> x <placeholder-2/>"
@@ -1488,8 +1527,8 @@ msgid ""
 "\"id\" to specify a data source string ID, used when linking data sources "
 "one to another;"
 msgstr ""
-"«id» para especificar el ID de cadena de una fuente de datos, usado cuando "
-"se enlazan unas fuentes de datos con otras;"
+"«id» para especificar el ID de cadena de una fuente de datos, usado cuando se "
+"enlazan unas fuentes de datos con otras;"
 
 #: C/data-manager-xml-syntax.page:16(p)
 msgid "\"title\" to specify a title."
@@ -1922,8 +1961,8 @@ msgid ""
 msgstr ""
 "Editar fuentes de datos en la perspectiva del gestor de datos, usando la "
 "interfaz predeterminada: se definen dos fuentes de datos que listan los "
-"contenidos de las tablas «clientes» y «pedidos». La configuración es la "
-"misma que la de la figura anterior que muestra la sintaxis XML"
+"contenidos de las tablas «clientes» y «pedidos». La configuración es la misma "
+"que la de la figura anterior que muestra la sintaxis XML"
 
 #: C/data-manager-perspective.page:76(p)
 msgid ""
@@ -2050,10 +2089,10 @@ msgid ""
 "on a product (presumably the \"comments\" table will have a foreign key on "
 "the \"products\" table to reference it)."
 msgstr ""
-"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos "
-"y una tabla «comentarios» que lista todos los comentarios de los usuarios "
-"sobre un producto (presumiblemente, la tabla «comentarios» tendrá una clave "
-"ajena en la tabla «productos» para referenciarla)."
+"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos y "
+"una tabla «comentarios» que lista todos los comentarios de los usuarios sobre "
+"un producto (presumiblemente, la tabla «comentarios» tendrá una clave ajena "
+"en la tabla «productos» para referenciarla)."
 
 #: C/actions.page:19(p)
 msgid ""
@@ -2105,8 +2144,8 @@ msgid ""
 "\"List comments for product\""
 msgstr ""
 "En la perspectiva de ejecución de la consulta, seleccione todos los "
-"productos. Tenga en cuenta que hay dos acciones definidas: «añadir "
-"comentario sobre el producto» y «listar comentarios para el producto»"
+"productos. Tenga en cuenta que hay dos acciones definidas: «añadir comentario "
+"sobre el producto» y «listar comentarios para el producto»"
 
 #: C/actions.page:42(p)
 msgid "Now let's pop up the contextual menu:"
