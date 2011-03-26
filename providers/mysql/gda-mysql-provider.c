@@ -472,7 +472,7 @@ real_open_connection (const gchar  *host,
 		      gboolean      compress,
 		      GError      **error)
 {
-	unsigned int flags = 0;
+	unsigned int flags = CLIENT_FOUND_ROWS;
 
 	/* Exclusive: host/pair otherwise unix socket. */
 	if ((host || port > 0) && socket) {
