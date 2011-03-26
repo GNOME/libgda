@@ -13,10 +13,10 @@ m4_include(m4/postgresql.m4)
 m4_include(m4/oracle.m4)
 m4_include(m4/java.m4)
 
-AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
-AC_PREREQ(2.59)
+AC_INIT([GNU Data Access],[major.minor.micro],[https://bugzilla.gnome.org/enter_bug.cgi?product=libgda],[libgda],[http://www.gnome-db.org])
+AC_PREREQ([2.67])
 AC_CONFIG_SRCDIR(libgda/libgda.h.in)
-AM_INIT_AUTOMAKE(1.8 -Wall no-define dist-bzip2)
+AM_INIT_AUTOMAKE([1.8 -Wall no-define dist-bzip2 no-dist-gzip dist-xz])
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
@@ -90,7 +90,7 @@ _______EOF
   for i in .exe ""; do
     compile="$CC_FOR_BUILD conftest.c -o conftest$i"
     if AC_TRY_EVAL(compile); then
-      if (./conftest) 2>&AC_FD_CC; then
+      if (./conftest) 2>&AS_MESSAGE_LOG_FD; then
 	EXEEXT_FOR_BUILD=$i
 	break
       fi
@@ -109,12 +109,12 @@ AC_SUBST(EXEEXT_FOR_BUILD)
 dnl ******************************
 dnl Checks for programs
 dnl ******************************
-AC_ISC_POSIX
+AC_SEARCH_LIBS([strerror],[cposix])
 AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_CC_C_O
-AC_STDC_HEADERS
-AM_PROG_LIBTOOL
+AC_HEADER_STDC
+LT_INIT([disable-static])
 AC_PROG_MAKE_SET
 
 dnl -- Initialize docs
@@ -761,7 +761,7 @@ DK_ARG_ENABLE_WARNINGS([COREDEPS_WFLAGS],
 AC_SUBST(COREDEPS_CFLAGS)
 AC_SUBST(COREDEPS_LIBS)
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 libgda.spec
 libgda-5.0.pc
@@ -855,6 +855,7 @@ doc/C/builddate.xml
 data/Makefile
 stamp.h
 ])
+AC_OUTPUT
 
 
 dnl Dirty work to be able to build documentation
