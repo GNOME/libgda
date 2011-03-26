@@ -1,5 +1,4 @@
-/* ui-formgrid.c
- *
+/*
  * Copyright (C) 2010 - 2011 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
@@ -56,6 +55,7 @@ struct _UiFormGridPriv
 	GdauiDataProxyInfoFlag flags;
 	
 	BrowserConnection *bcnc;
+	gboolean     scroll_form;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -67,6 +67,7 @@ enum {
 	PROP_RAW_GRID,
 	PROP_RAW_FORM,
 	PROP_INFO,
+	PROP_SCROLL_FORM
 };
 
 GType
@@ -118,6 +119,10 @@ ui_formgrid_class_init (UiFormGridClass *class)
                                          g_param_spec_object ("widget_info", NULL, NULL, 
 							      GDAUI_TYPE_DATA_PROXY_INFO,
 							      G_PARAM_READABLE));
+	g_object_class_install_property (object_class, PROP_SCROLL_FORM,
+					 g_param_spec_boolean ("scroll-form", NULL, NULL,
+							       FALSE,
+							       G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 }
 
 static void
@@ -142,8 +147,28 @@ static void
 ui_formgrid_show (GtkWidget *widget)
 {
 	UiFormGrid *formgrid;
-	((GtkWidgetClass *)parent_class)->show (widget);
 	formgrid = UI_FORMGRID (widget);
+
+	/* finalize packing */
+	if (formgrid->priv->scroll_form) {
+		GtkWidget *sw, *vp;
+		sw = gtk_scrolled_window_new (NULL, NULL);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
+		vp = gtk_viewport_new (NULL, NULL);
+		gtk_container_add (GTK_CONTAINER (sw), vp);
+		gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
+		gtk_container_add (GTK_CONTAINER (vp), formgrid->priv->raw_form);
+		gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), sw, NULL);
+		gtk_widget_show_all (sw);
+	}
+	else {
+		gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), formgrid->priv->raw_form, NULL);
+		gtk_widget_show (formgrid->priv->raw_form);
+	}
+
+	((GtkWidgetClass *)parent_class)->show (widget);
 	if (! formgrid->priv->autoupdate_possible)
 		gtk_widget_hide (formgrid->priv->autoupdate_toggle);
 }
@@ -165,6 +190,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv->bcnc = NULL;
 	formgrid->priv->autoupdate = TRUE;
 	formgrid->priv->autoupdate_possible = FALSE;
+	formgrid->priv->scroll_form = FALSE;
 
 	/* notebook */
 	formgrid->priv->nb = gtk_notebook_new ();
@@ -190,8 +216,6 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	/* form on the 2nd page of the notebook */
 	formgrid->priv->raw_form = gdaui_raw_form_new (NULL);
 	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_form), -1, FALSE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), formgrid->priv->raw_form, NULL);
-        gtk_widget_show (formgrid->priv->raw_form);
 	g_signal_connect (formgrid->priv->raw_form, "populate-popup",
 			  G_CALLBACK (form_grid_populate_popup_cb), formgrid);
 
@@ -476,7 +500,7 @@ statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
 		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 5);
 		
-		fg = ui_formgrid_new (GDA_DATA_MODEL (out_result),
+		fg = ui_formgrid_new (GDA_DATA_MODEL (out_result), TRUE,
 				      GDAUI_DATA_PROXY_INFO_CURRENT_ROW);
 		ui_formgrid_set_connection (UI_FORMGRID (fg), aed->bcnc);
 
@@ -573,20 +597,22 @@ execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
 /**
  * ui_formgrid_new
  * @model: a #GdaDataModel
+ * @scroll_form: set to %TRUE to wrap the embedded form in a scrolled window
+ * @flags: the #GdauiDataProxyInfoFlag, specifying what to display in the new widget
  *
  * Creates a new #UiFormGrid widget suitable to display the data in @model
  *
  *  Returns: the new widget
  */
 GtkWidget *
-ui_formgrid_new (GdaDataModel *model, GdauiDataProxyInfoFlag flags)
+ui_formgrid_new (GdaDataModel *model, gboolean scroll_form, GdauiDataProxyInfoFlag flags)
 {
 	UiFormGrid *formgrid;
 	GdaDataProxy *proxy;
 
 	g_return_val_if_fail (!model || GDA_IS_DATA_MODEL (model), NULL);
 
-	formgrid = (UiFormGrid *) g_object_new (UI_TYPE_FORMGRID, NULL);
+	formgrid = (UiFormGrid *) g_object_new (UI_TYPE_FORMGRID, "scroll-form", scroll_form, NULL);
 	formgrid->priv->flags = flags;
 
 	/* a raw form and a raw grid for the same proxy */
@@ -688,7 +714,9 @@ ui_formgrid_set_property (GObject *object,
 	formgrid = UI_FORMGRID (object);
 	
 	switch (param_id) {
-		
+	case PROP_SCROLL_FORM:
+		formgrid->priv->scroll_form = g_value_get_boolean (value);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;

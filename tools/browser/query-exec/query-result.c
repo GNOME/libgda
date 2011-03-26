@@ -1,5 +1,5 @@
-/* GNOME DB library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -334,7 +334,7 @@ static GtkWidget *
 make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar *sql)
 {
 	GtkWidget *grid;
-	grid = ui_formgrid_new (model, 0);
+	grid = ui_formgrid_new (model, TRUE, 0);
 	ui_formgrid_set_sample_size (UI_FORMGRID (grid), 300);
 	if (sql) {
 		BrowserConnection *bcnc;

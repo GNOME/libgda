@@ -1,5 +1,4 @@
-/* ui-formgrid.h
- *
+/*
  * Copyright (C) 2010 - 2011 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
@@ -63,7 +62,8 @@ struct _UiFormGridClass
 
 GType             ui_formgrid_get_type            (void);
 
-GtkWidget        *ui_formgrid_new                 (GdaDataModel *model, GdauiDataProxyInfoFlag flags);
+GtkWidget        *ui_formgrid_new                 (GdaDataModel *model, gboolean scroll_form,
+						   GdauiDataProxyInfoFlag flags);
 void              ui_formgrid_handle_user_prefs   (UiFormGrid *formgrid, BrowserConnection *bcnc,
 						   GdaStatement *stmt);
 

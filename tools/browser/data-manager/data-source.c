@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -1017,7 +1017,7 @@ data_source_create_grid (DataSource *source)
 
 	GtkWidget *fg;
 	GdauiRawGrid *grid;
-	fg = ui_formgrid_new (source->priv->model, 0);
+	fg = ui_formgrid_new (source->priv->model, FALSE, 0);
 	grid = ui_formgrid_get_grid_widget (UI_FORMGRID (fg));
 
 	GList *columns, *list;
