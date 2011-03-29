@@ -8,7 +8,7 @@ extra_mdb_ldflags = libmdb-src/libmdb.la
 if CROSS_COMPILING
 else
 if PLATFORM_WIN32
-extra_mdb_ldflags = -liconv libmdb-src/libmdb.la
+extra_mdb_ldflags += -liconv
 endif
 endif
 else
@@ -30,7 +30,7 @@ libgda_mdb_la_SOURCES = \
 	gda-mdb-provider.c \
 	gda-mdb-provider.h \
 	gda-mdb.h \
-	libmain.c 
+	libmain.c
 
 libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_mdb_la_LIBADD = \
@@ -50,5 +50,3 @@ pkgconfig_DATA = libgda-mdb-5.0.pc
 
 EXTRA_DIST = $(xml_in_files) libgda-mdb-5.0.pc.in
 DISTCLEANFILES = $(xml_DATA)
-
-
