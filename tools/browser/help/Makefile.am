@@ -47,6 +47,6 @@ DOC_PAGES = \
 	variables.page \
 	virtual-connections.page
 
-DOC_LINGUAS = de es sl
+DOC_LINGUAS = de es sl zh_CN
 
 dist-hook: doc-dist-hook
