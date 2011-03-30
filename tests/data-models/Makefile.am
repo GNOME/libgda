@@ -4,10 +4,9 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
-	-DCHECK_FILES=\""$(top_srcdir)"\" \
-	-DTOP_SRC_DIR=\""$(top_srcdir)"\" \
-	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
+	-DCHECK_FILES=\""$(top_srcdir)"\"
 
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc
 TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc
 

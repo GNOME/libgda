@@ -4,9 +4,9 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
-	-DROOT_DIR=\""$(top_srcdir)"\" \
-	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
+	-DROOT_DIR=\""$(top_srcdir)"\"
 
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 TESTS = check_mutex check_parser check_cnc_lock check_threaded_cnc check_wrapper
 check_PROGRAMS = check_mutex check_parser check_cnc_lock check_threaded_cnc check_wrapper
 

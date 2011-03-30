@@ -15,8 +15,6 @@ main (int argc, char **argv)
 	int number_failed = 0;
 	fork_tests = FALSE;
 
-	/* set up test environment */
-	g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
 	gda_init ();
 
 	pinfo = gda_config_get_provider_info (PROVIDER);

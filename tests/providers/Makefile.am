@@ -4,9 +4,9 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
-	-DCHECK_SQL_FILES=\""$(top_srcdir)"\" \
-	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
+	-DCHECK_SQL_FILES=\""$(top_srcdir)"\"
 
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 check_PROGRAMS = check_sqlite
 TESTS = check_sqlite
 

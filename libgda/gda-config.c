@@ -284,6 +284,9 @@ load_config_file (const gchar *file, gboolean is_system)
 	xmlDocPtr doc;
 	xmlNodePtr root;
 
+	if (!g_file_test (file, G_FILE_TEST_EXISTS))
+		return;
+
 	doc = xmlParseFile (file);
 	if (!doc) 
 		return;

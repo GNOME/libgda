@@ -4,9 +4,9 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
-	-DTOP_SRC_DIR=\""$(top_srcdir)"\" \
-	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
+	-DTOP_SRC_DIR=\""$(top_srcdir)"\"
 
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 TESTS = check_meta_store_memory check_meta_store_sqlite check_meta_store_postgresql check_meta_store_mysql
 check_PROGRAMS = check_meta_store_memory check_meta_store_sqlite check_meta_store_postgresql check_meta_store_mysql
 

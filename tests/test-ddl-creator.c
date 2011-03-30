@@ -20,6 +20,7 @@
  */
 
 #include <libgda/libgda.h>
+#include <glib/gstdio.h>
 #include <gda-ddl-creator.h>
 
 int
@@ -31,8 +32,6 @@ main (int argc, char** argv)
 	gchar *str;
 	gchar *file;
 
-	/* set up test environment */
-        g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, 0);
 	gda_init ();
 	
 	ddl = gda_ddl_creator_new ();
