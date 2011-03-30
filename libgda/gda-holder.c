@@ -241,7 +241,7 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaHolderClass, validate_change),
                               validate_change_accumulator, NULL,
-                              _gda_marshal_ERROR__VALUE, GDA_TYPE_ERROR, 1, G_TYPE_VALUE);
+                              _gda_marshal_ERROR__VALUE, G_TYPE_ERROR, 1, G_TYPE_VALUE);
 
         class->changed = NULL;
         class->source_changed = NULL;

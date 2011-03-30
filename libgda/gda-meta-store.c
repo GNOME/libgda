@@ -388,7 +388,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_SIGNAL_RUN_LAST,
 		G_STRUCT_OFFSET (GdaMetaStoreClass, suggest_update),
 		suggest_update_accumulator, NULL,
-		_gda_marshal_ERROR__METACONTEXT, GDA_TYPE_ERROR,
+		_gda_marshal_ERROR__METACONTEXT, G_TYPE_ERROR,
 		1, GDA_TYPE_META_CONTEXT);
 	/**
 	 * GdaMetaStore::meta-changed

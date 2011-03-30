@@ -166,7 +166,7 @@ gda_init (void)
 	g_assert (type);
 	type = GDA_TYPE_TIMESTAMP;
 	g_assert (type);
-	type = GDA_TYPE_ERROR;
+	type = G_TYPE_ERROR;
 	g_assert (type);
 
 	/* acquire locale */

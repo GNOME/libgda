@@ -3226,7 +3226,7 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, const gchar *sql,
  *
  * Executes @stmt. 
  *
- * As @stmt can, by desing (and if not abused), contain only one SQL statement, the
+ * As @stmt can, by design (and if not abused), contain only one SQL statement, the
  * return object will either be:
  * <itemizedlist>
  *   <listitem><para>a #GdaDataSelect object (which is also a #GdaDataModel) if @stmt is a SELECT statement 

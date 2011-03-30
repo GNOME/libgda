@@ -267,7 +267,7 @@ gda_set_class_init (GdaSetClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaSetClass, validate_holder_change),
 			      validate_accumulator, NULL,
-			      _gda_marshal_ERROR__OBJECT_VALUE, GDA_TYPE_ERROR, 2,
+			      _gda_marshal_ERROR__OBJECT_VALUE, G_TYPE_ERROR, 2,
 			      GDA_TYPE_HOLDER, G_TYPE_VALUE);
 	/**
 	 * GdaSet::validate-set
@@ -285,7 +285,7 @@ gda_set_class_init (GdaSetClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaSetClass, validate_set),
 			      validate_accumulator, NULL,
-			      _gda_marshal_ERROR__VOID, GDA_TYPE_ERROR, 0);
+			      _gda_marshal_ERROR__VOID, G_TYPE_ERROR, 0);
 	/**
 	 * GdaSet::holder-attr-changed
 	 * @set: the #GdaSet

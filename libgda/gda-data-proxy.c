@@ -613,7 +613,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GdaDataProxyClass, validate_row_changes),
                               validate_row_changes_accumulator, NULL,
-                              _gda_marshal_ERROR__INT_INT, GDA_TYPE_ERROR, 2, G_TYPE_INT, G_TYPE_INT);
+                              _gda_marshal_ERROR__INT_INT, G_TYPE_ERROR, 2, G_TYPE_INT, G_TYPE_INT);
 	/**
 	 * GdaDataProxy::row-changes-applied
 	 * @proxy: the #GdaDataProxy
