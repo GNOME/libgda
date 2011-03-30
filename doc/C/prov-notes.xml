@@ -29,6 +29,11 @@
               <entry>Port: database server port (leave this field empty for the default 1521 port)</entry>
               <entry>No</entry>
 	    </row>
+	    <row>
+              <entry>SCHEMA</entry>
+              <entry>Schema: Name of the schema to use. If not specified, the schema defaults to that of the connected user.</entry>
+              <entry>No</entry>
+	    </row>
 	  </tbody>
 	</tgroup>
       </table>
