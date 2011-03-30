@@ -6,6 +6,7 @@
  *      Tim Coleman <tim@timcoleman.com>
  *      Vivien Malerba <malerba@gnome-db.org>
  *      Bas Driessen <bas.driessen@xobas.com>
+ *      Andrea Zagli <azagli@libero.it>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -452,7 +453,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	}
 
 	/* Check for connection parameters */
-	const gchar *tnsname, *username, *password;
+	const gchar *tnsname, *username, *password, *schema;
 	gchar *easy = NULL;
  	tnsname = gda_quark_list_find (params, "TNSNAME");
 	if (!tnsname) {
@@ -479,6 +480,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	if (!username)
 		username = g_get_user_name ();
 	password = gda_quark_list_find (auth, "PASSWORD");
+	schema = gda_quark_list_find (params, "SCHEMA");
 	
 	/* open the real connection to the database */
 	gint result;
@@ -670,7 +672,11 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 	/* Create a new instance of the provider specific data associated to a connection (OracleConnectionData),
 	 * and set its contents */
-	cdata->schema = g_ascii_strup (username, -1);
+	if (schema)
+		cdata->schema = g_ascii_strup (schema, -1);
+	else
+		cdata->schema = g_ascii_strup (username, -1);
+
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_oracle_free_cnc_data);
 
 	/* get version */
@@ -704,7 +710,8 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 	/* Optionnally set some attributes for the newly opened connection (encoding to UTF-8 for example )*/
 	if (! execute_raw_command (cnc, "ALTER SESSION SET NLS_DATE_FORMAT = 'MM/DD/YYYY'") ||
-	    ! execute_raw_command (cnc, "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \". \"")) {
+	    ! execute_raw_command (cnc, "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \". \"") ||
+		(schema && ! execute_raw_command (cnc, g_strdup_printf ("ALTER SESSION SET CURRENT_SCHEMA = \"%s\"", schema)))) {
 		gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 		gda_oracle_free_cnc_data (cdata);
 		return FALSE;

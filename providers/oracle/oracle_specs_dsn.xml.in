@@ -4,5 +4,6 @@
     <parameter id="DB_NAME" _name="Service name" _descr="Global database name entered during database creation (it combines a database name with a domain name)" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running" gdatype="gchararray"/>
     <parameter id="PORT" _name="Port" _descr="Database server port (leave this field empty for the default 1521 port)" gdatype="gint"/>
+    <parameter id="SCHEMA" _name="Schema" _descr="Name of the schema to use. If not specified, the schema defaults to that of the connected user." gdatype="gchararray"/>
   </parameters>
 </data-set-spec>
