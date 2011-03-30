@@ -43,4 +43,6 @@ check_rewrite_for_default_LDADD = \
 
 EXTRA_DIST = testdata.xml testvalid.xml testscripts.xml \
 	scripts/mysql_employees.sql \
-	scripts/mysql_employees_partitioned.sql
+	scripts/mysql_employees_partitioned.sql \
+	scripts/piggydb.sql \
+	scripts/e-venement.sql
