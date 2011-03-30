@@ -4,10 +4,9 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(LIBGDA_WFLAGS) \
-	-DROOT_DIR=\""$(top_srcdir)"\"  \
-	-DTOP_BUILD_DIR=\""$(top_builddir)"\" \
-	-DTOP_SRC_DIR=\""$(top_srcdir)"\"
+	-DROOT_DIR=\""$(top_srcdir)"\"
 
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 TESTS = check_parser check_validation check_normalization check_dml_comp check_script check_rewrite_for_default
 check_PROGRAMS = check_parser check_validation check_normalization check_dml_comp check_script check_rewrite_for_default
 
@@ -44,4 +43,6 @@ check_rewrite_for_default_LDADD = \
 
 EXTRA_DIST = testdata.xml testvalid.xml testscripts.xml \
 	scripts/mysql_employees.sql \
-	scripts/mysql_employees_partitioned.sql
+	scripts/mysql_employees_partitioned.sql \
+	scripts/piggydb.sql \
+	scripts/e-venement.sql

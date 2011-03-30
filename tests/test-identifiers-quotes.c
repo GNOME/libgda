@@ -168,12 +168,14 @@ main (int argc, char** argv)
 		GdaServerProvider *prov = NULL;
 
 		if (test->provider) {
+			const gchar *real_pname;
 			if ((*test->provider == 'i') || (*test->provider == 's'))
-				prov = gda_config_get_provider (test->provider + 1, NULL);
+				real_pname = test->provider + 1;
 			else
-				prov = gda_config_get_provider (test->provider, NULL);
+				real_pname = test->provider;
+			prov = gda_config_get_provider (real_pname, NULL);
 			if (!prov) {
-				g_print ("Can't find provider for %s, ignoring test\n", test->provider);
+				g_print ("Can't find provider for %s, ignoring test\n", real_pname);
 				continue;
 			}
 			if (*test->provider == 'i')

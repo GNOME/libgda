@@ -8,9 +8,6 @@ main(int argc, char ** argv)
 {
 	GdaMetaStore *store;
 
-	/* set up test environment */
-	g_setenv ("GDA_TOP_SRC_DIR", TOP_SRC_DIR, TRUE);
-	g_setenv ("GDA_TOP_BUILD_DIR", TOP_BUILD_DIR, TRUE);
 	gda_init ();
 
 	/* Clean eveything which might exist in the store */

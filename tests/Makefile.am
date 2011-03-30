@@ -1,4 +1,6 @@
 noinst_LTLIBRARIES = libgda-test-4.0.la
+
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers
 check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers
 

@@ -1,5 +1,4 @@
-/* gda-meta-store.c
- *
+/*
  * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
@@ -1096,11 +1095,12 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 	GError *lerror = NULL;
 	GError **error = &lerror;
 	gchar *file;
-	xmlDocPtr doc;
+	xmlDocPtr doc = NULL;
 
 	/* load information schema's structure XML file */
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "information_schema.xml", NULL);
-	doc = xmlParseFile (file);
+	if (g_file_test (file, G_FILE_TEST_EXISTS))
+		doc = xmlParseFile (file);
 	if (!doc) {
 		if (g_getenv ("GDA_TOP_SRC_DIR")) {
 			g_free (file);

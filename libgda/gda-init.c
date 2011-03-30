@@ -1,4 +1,4 @@
-/* GDA Library
+/*
  * Copyright (C) 1998 - 2008 The GNOME Foundation.
  *
  * This Library is free software; you can redistribute it and/or
