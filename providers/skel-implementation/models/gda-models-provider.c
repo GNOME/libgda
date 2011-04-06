@@ -1,8 +1,9 @@
-/* GDA Models provider
- * Copyright (C) 2008 The GNOME Foundation
+/*
+ * Copyright (C) YEAR The GNOME Foundation
  *
  * AUTHORS:
  *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -141,9 +142,9 @@ gda_models_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
  *   - open the real connection to the database using the parameters previously checked, create one or
  *     more GdaDataModel objects and declare them to the virtual connection with table names
  *   - open virtual (SQLite) connection
- *   - create a CapiConnectionData structure and associate it to @cnc
+ *   - create a ModelsConnectionData structure and associate it to @cnc
  *
- * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR gonnection event must be added to @cnc)
+ * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR connection event must be added to @cnc)
  */
 static gboolean
 gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
@@ -166,7 +167,7 @@ gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection 
         db_name = gda_quark_list_find (params, "DB_NAME");
         if (!db_name) {
                 gda_connection_add_event_string (cnc,
-                                                 _("The connection string must contain the DB_NAME values"));
+                                                 _("The connection string must contain the DB_NAME value"));
                 return FALSE;
         }
 

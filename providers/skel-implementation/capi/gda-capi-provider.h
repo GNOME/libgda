@@ -1,8 +1,9 @@
-/* GDA capi provider
- * Copyright (C) 2008 The GNOME Foundation.
+/*
+ * Copyright (C) YEAR The GNOME Foundation.
  *
  * AUTHORS:
  *      TO_ADD: your name and email
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
