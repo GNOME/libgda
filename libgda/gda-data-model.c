@@ -1,6 +1,5 @@
 /* 
- * GDA common library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -772,7 +771,9 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * @model: a #GdaDataModel object.
  *
  * Creates a new iterator object #GdaDataModelIter object which can be used to iterate through
- * rows in @model.
+ * rows in @model. The new #GdaDataModelIter does not hold any reference to @model (ie. if @model
+ * is destroyed at some point, the new iterator will become useless but in any case it will not prevent
+ * the data model from being destroyed).
  *
  * Depending on the data model's implementation, a new #GdaDataModelIter object may be created,
  * or a reference to an already existing #GdaDataModelIter may be returned.

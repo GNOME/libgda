@@ -1,6 +1,5 @@
-/* gda-data-model-iter.c
- *
- * Copyright (C) 2005 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2005 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -84,7 +83,7 @@ enum
 /* private structure */
 struct _GdaDataModelIterPrivate
 {
-	GdaDataModel          *data_model;
+	GdaDataModel          *data_model; /* may be %NULL because there is only a weak ref on it */
 	gulong                 model_changes_signals[3];
 	gboolean               keep_param_changes;
 	gint                   row; /* -1 if row is unknown */
@@ -621,6 +620,8 @@ gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 
 		gboolean move_ok;
 		model = iter->priv->data_model;
+		g_return_val_if_fail (iter->priv->data_model, FALSE);
+
 		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
 			move_ok = (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
 		else {
@@ -726,6 +727,7 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
 	GdaDataModel *model;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	g_return_val_if_fail (iter->priv, FALSE);
+	g_return_val_if_fail (iter->priv->data_model, FALSE);
 
 	if ((gda_data_model_iter_get_row (iter) >= 0) &&
 	    ! _gda_set_validate ((GdaSet*) iter, NULL))
@@ -814,6 +816,7 @@ gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	g_return_val_if_fail (iter->priv, FALSE);
+	g_return_val_if_fail (iter->priv->data_model, FALSE);
 
 	if ((gda_data_model_iter_get_row (iter) >= 0) &&
 	    ! _gda_set_validate ((GdaSet*) iter, NULL))

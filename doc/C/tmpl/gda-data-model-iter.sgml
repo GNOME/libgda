@@ -46,6 +46,10 @@ Data model iterator
       <phrase>GdaDataModelIter's usage</phrase>
     </textobject>
   </mediaobject>
+
+Note: the new #GdaDataModelIter does not hold any reference to the data model it iterates through (ie.
+if this data model is destroyed at some point, the new iterator will become useless but in
+any case it will not prevent the data model from being destroyed).
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -70,8 +74,6 @@ Data model iterator
 
 </para>
 
-@:
-
 @gdadatamodeliter: the object which received the signal.
 
 <!-- ##### SIGNAL GdaDataModelIter::row-changed ##### -->
@@ -79,7 +81,6 @@ Data model iterator
 
 </para>
 
-@: 
 @:
 
 @gdadatamodeliter: the object which received the signal.
