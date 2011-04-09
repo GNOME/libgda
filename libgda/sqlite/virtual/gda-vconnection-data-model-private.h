@@ -1,4 +1,4 @@
-/* GDA
+/*
  * Copyright (C) 2007 The GNOME Foundation.
  *
  * AUTHORS:

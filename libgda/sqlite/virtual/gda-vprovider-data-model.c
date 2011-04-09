@@ -1,5 +1,4 @@
 /* 
- * GDA common library
  * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -191,6 +190,7 @@ typedef struct {
 
 typedef struct {
 	sqlite3_vtab_cursor      base; /* base.pVtab is a pointer to the sqlite3_vtab virtual table */
+	GdaDataModel            *model; /* in which @iter iterates */
 	GdaDataModelIter        *iter;
 } VirtualCursor;
 
@@ -357,7 +357,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	GError *error = NULL;
 	if (!td->columns && td->spec->create_columns_func)
 		td->columns = td->spec->create_columns_func (td->spec, &error);
-	if (! td->columns) {
+	if (!td->columns) {
 		if (error && error->message) {
 			int len = strlen (error->message) + 1;
 			*pzErr = SQLITE3_CALL (sqlite3_malloc) (sizeof (gchar) * len);
@@ -384,10 +384,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 
 		if (i != 0)
 			g_string_append (sql, ", ");
-		if (td->columns)
-			column = g_list_nth_data (td->columns, i);
-		else
-			column = gda_data_model_describe_column (td->spec->data_model, i);
+		column = g_list_nth_data (td->columns, i);
 		if (!column) {
 			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't get data model description for column %d"), i);
 			g_string_free (sql, TRUE);
@@ -497,11 +494,10 @@ virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
 {
 	VirtualCursor *cursor;
 
-	TRACE (pVTab, NULL);
-
 	/* create empty cursor */
 	cursor = g_new0 (VirtualCursor, 1);
 	*ppCursor = (sqlite3_vtab_cursor*) cursor;
+	TRACE (pVTab, cursor);
 
 	return SQLITE_OK;
 }
@@ -515,8 +511,11 @@ virtualClose (sqlite3_vtab_cursor *cur)
 
 	if (cursor->iter)
 		g_object_unref (cursor->iter);
+	if (cursor->model)
+		g_object_unref (cursor->model);
 
 	g_free (cur);
+
 	return SQLITE_OK;
 }
 
@@ -779,6 +778,7 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 	else
 		cursor->iter = gda_data_model_create_iter (vtable->td->real_model);
 
+	cursor->model = g_object_ref (vtable->td->real_model);
 	gda_data_model_iter_move_next (cursor->iter);
 	return SQLITE_OK;
 }
@@ -827,43 +827,48 @@ index_info_dump (sqlite3_index_info *pIdxInfo, gboolean dump_out)
 static void
 map_sqlite3_info_to_gda_filter (sqlite3_index_info *info, GdaVconnectionDataModelFilter *filter)
 {
-	gint i;
 	memset (filter, 0, sizeof (GdaVconnectionDataModelFilter));
-	filter->nConstraint = info->nConstraint;
 	if (info->nConstraint > 0) {
-		filter->aConstraint = g_new (struct GdaVirtualConstraint, filter->nConstraint);
-		filter->aConstraintUsage = g_new (struct GdaVirtualConstraintUsage, filter->nConstraint);
-		for (i = 0; i < info->nConstraint; i++) {
-			filter->aConstraint[i].iColumn = info->aConstraint[i].iColumn;
+		gint i, j;
+		filter->aConstraint = g_new (struct GdaVirtualConstraint, info->nConstraint);
+		filter->aConstraintUsage = g_new (struct GdaVirtualConstraintUsage, info->nConstraint);
+		for (i = 0, j = 0; i < info->nConstraint; i++) {
+			if (! info->aConstraint[i].usable)
+				continue;
+
+			filter->aConstraint[j].iColumn = info->aConstraint[i].iColumn;
 			switch (info->aConstraint[i].op) {
 			case SQLITE_INDEX_CONSTRAINT_EQ:
-				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_EQ;
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_EQ;
 				break;
 			case SQLITE_INDEX_CONSTRAINT_GT:
-				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_GT;
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_GT;
 				break;
 			case SQLITE_INDEX_CONSTRAINT_LE:
-				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_LEQ;
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_LEQ;
 				break;
 			case SQLITE_INDEX_CONSTRAINT_LT:
-				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_LT;
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_LT;
 				break;
 			case SQLITE_INDEX_CONSTRAINT_GE:
-				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_GEQ;
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_GEQ;
 				break;
 			case SQLITE_INDEX_CONSTRAINT_MATCH:
-				filter->aConstraint[i].op = GDA_SQL_OPERATOR_TYPE_REGEXP;
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_REGEXP;
 				break;
 			default:
 				g_assert_not_reached ();
 			}
 
-			filter->aConstraintUsage[i].argvIndex = 0;
-			filter->aConstraintUsage[i].omit = FALSE;
+			filter->aConstraintUsage[j].argvIndex = 0;
+			filter->aConstraintUsage[j].omit = FALSE;
+			j++;
 		}
+		filter->nConstraint = j;
 	}
 	filter->nOrderBy = info->nOrderBy;
 	if (filter->nOrderBy > 0) {
+		gint i;
 		filter->aOrderBy = g_new (struct GdaVirtualOrderby, filter->nOrderBy);
 		for (i = 0; i < info->nOrderBy; i++) {
 			filter->aOrderBy[i].iColumn = info->aOrderBy[i].iColumn;
@@ -882,15 +887,18 @@ map_sqlite3_info_to_gda_filter (sqlite3_index_info *info, GdaVconnectionDataMode
 static void
 map_consume_gda_filter_to_sqlite3_info (GdaVconnectionDataModelFilter *filter, sqlite3_index_info *info)
 {
-	gint i;
 	g_assert (filter->nConstraint == info->nConstraint);
 	if (info->nConstraint > 0) {
-		for (i = 0; i < info->nConstraint; i++) {
-			info->aConstraintUsage[i].argvIndex = filter->aConstraintUsage[i].argvIndex;
-			info->aConstraintUsage[i].omit = filter->aConstraintUsage[i].omit ? 1 : 0;
+		gint i, j;
+		for (i = 0, j = 0; i < info->nConstraint; i++) {
+			if (! info->aConstraint[i].usable)
+				continue;
+			info->aConstraintUsage[i].argvIndex = filter->aConstraintUsage[j].argvIndex;
+			info->aConstraintUsage[i].omit = filter->aConstraintUsage[j].omit ? 1 : 0;
 		}
 		g_free (filter->aConstraint);
 		g_free (filter->aConstraintUsage);
+		j++;
 
 	}
 	if (filter->nOrderBy > 0)
