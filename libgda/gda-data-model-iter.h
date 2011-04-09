@@ -107,6 +107,10 @@ struct _GdaDataModelIterClass
  *     <phrase>GdaDataModelIter's usage</phrase>
  *   </textobject>
  * </mediaobject>
+ *
+ * Note: the new #GdaDataModelIter does not hold any reference to the data model it iterates through (ie.
+ * if this data model is destroyed at some point, the new iterator will become useless but in
+ * any case it will not prevent the data model from being destroyed).
  */
 
 GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
