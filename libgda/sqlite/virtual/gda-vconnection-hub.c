@@ -1,6 +1,5 @@
 /* 
- * GDA common library
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -47,23 +46,9 @@ struct _GdaVconnectionHubPrivate {
 	GSList *hub_connections; /* list of HubConnection structures */
 };
 
-/* properties */
-enum
-{
-        PROP_0,
-};
-
 static void gda_vconnection_hub_class_init (GdaVconnectionHubClass *klass);
 static void gda_vconnection_hub_init       (GdaVconnectionHub *cnc, GdaVconnectionHubClass *klass);
 static void gda_vconnection_hub_dispose   (GObject *object);
-static void gda_vconnection_hub_set_property (GObject *object,
-					      guint param_id,
-					      const GValue *value,
-					      GParamSpec *pspec);
-static void gda_vconnection_hub_get_property (GObject *object,
-					      guint param_id,
-					      GValue *value,
-					      GParamSpec *pspec);
 static GObjectClass  *parent_class = NULL;
 
 static HubConnection *get_hub_cnc_by_ns (GdaVconnectionHub *hub, const gchar *ns);
@@ -80,10 +65,6 @@ gda_vconnection_hub_class_init (GdaVconnectionHubClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gda_vconnection_hub_dispose;
-
-	/* Properties */
-        object_class->set_property = gda_vconnection_hub_set_property;
-        object_class->get_property = gda_vconnection_hub_get_property;
 
 	/* static objects */
 	internal_parser = gda_sql_parser_new ();
@@ -146,44 +127,8 @@ gda_vconnection_hub_get_type (void)
 	return type;
 }
 
-static void
-gda_vconnection_hub_set_property (GObject *object,
-					 guint param_id,
-					 G_GNUC_UNUSED const GValue *value,
-					 GParamSpec *pspec)
-{
-        GdaVconnectionHub *cnc;
-
-        cnc = GDA_VCONNECTION_HUB (object);
-        if (cnc->priv) {
-                switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }
-}
-
-static void
-gda_vconnection_hub_get_property (GObject *object,
-					 guint param_id,
-					 G_GNUC_UNUSED GValue *value,
-					 GParamSpec *pspec)
-{
-        GdaVconnectionHub *cnc;
-
-        cnc = GDA_VCONNECTION_HUB (object);
-        if (cnc->priv) {
-		switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
-        }
-}
-
 /**
- * gda_vconnection_hub_add
+ * gda_vconnection_hub_add:
  * @hub: a #GdaVconnectionHub connection
  * @cnc: a #GdaConnection
  * @ns: a namespace, or %NULL
@@ -239,7 +184,7 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 }
 
 /**
- * gda_vconnection_hub_remove
+ * gda_vconnection_hub_remove:
  * @hub: a #GdaVconnectionHub connection
  * @cnc: a #GdaConnection
  * @error: a place to store errors, or %NULL
@@ -293,7 +238,7 @@ get_hub_cnc_by_cnc (GdaVconnectionHub *hub, GdaConnection *cnc)
 }
 
 /**
- * gda_vconnection_hub_get_connection
+ * gda_vconnection_hub_get_connection:
  * @hub: a #GdaVconnectionHub connection
  * @ns: a name space, or %NULL
  *
@@ -316,7 +261,7 @@ gda_vconnection_hub_get_connection (GdaVconnectionHub *hub, const gchar *ns)
 }
 
 /**
- * gda_vconnection_hub_foreach
+ * gda_vconnection_hub_foreach:
  * @hub: a #GdaVconnectionHub connection
  * @func: a #GdaVconnectionDataModelFunc function pointer
  * @data: data to pass to @func calls
@@ -455,22 +400,20 @@ dict_table_create_columns_func (GdaVconnectionDataModelSpec *spec, GError **erro
 }
 
 static gchar *
-make_string_for_sqlite3_index_info (sqlite3_index_info *info)
+make_string_for_filter (GdaVconnectionDataModelFilter *info)
 {
 	GString *string;
 	gint i;
 
 	string = g_string_new ("");
 	for (i = 0; i < info->nConstraint; i++) {
-		const struct sqlite3_index_constraint *cons;
+		const struct GdaVirtualConstraint *cons;
 		cons = &(info->aConstraint [i]);
-		if (! cons->usable)
-			continue;
 		g_string_append_printf (string, "|%d,%d", cons->iColumn, cons->op);
 	}
 	g_string_append_c (string, '/');
 	for (i = 0; i < info->nOrderBy; i++) {
-		struct sqlite3_index_orderby *order;
+		struct GdaVirtualOrderby *order;
 		order = &(info->aOrderBy[i]);
 		g_string_append_printf (string, "|%d,%d", order->iColumn, order->desc ? 1 : 0);
 	}
@@ -480,7 +423,7 @@ make_string_for_sqlite3_index_info (sqlite3_index_info *info)
 typedef struct {
 	GdaStatement *stmt;
 	int orderByConsumed;
-	struct sqlite3_index_constraint_usage *out_const;
+	struct GdaVirtualConstraintUsage *out_const;
 } ComputedFilter;
 
 static void
@@ -492,7 +435,7 @@ computed_filter_free (ComputedFilter *filter)
 }
 
 static void
-dict_table_create_filter (GdaVconnectionDataModelSpec *spec, sqlite3_index_info *info)
+dict_table_create_filter (GdaVconnectionDataModelSpec *spec, GdaVconnectionDataModelFilter *info)
 {
 	LocalSpec *lspec = (LocalSpec *) spec;
 	GdaSqlBuilder *b;
@@ -503,17 +446,16 @@ dict_table_create_filter (GdaVconnectionDataModelSpec *spec, sqlite3_index_info 
 	if (lspec->cols_error)
 		return;
 
-	hash = make_string_for_sqlite3_index_info (info);
+	hash = make_string_for_filter (info);
 	if (lspec->filters_hash) {
 		ComputedFilter *filter;
 		filter = g_hash_table_lookup (lspec->filters_hash, hash);
 		if (filter) {
-			info->idxStr = (char*) filter->stmt;
-			info->needToFreeIdxStr = FALSE;
+			info->idxPointer = filter->stmt;
 			info->orderByConsumed = filter->orderByConsumed;
 			memcpy (info->aConstraintUsage,
 				filter->out_const,
-				sizeof (struct sqlite3_index_constraint_usage) * info->nConstraint);
+				sizeof (struct GdaVirtualConstraintUsage) * info->nConstraint);
 			/*g_print ("Reusing filter %p, hash=[%s]\n", filter, hash);*/
 			g_free (hash);
 			return;
@@ -533,10 +475,8 @@ dict_table_create_filter (GdaVconnectionDataModelSpec *spec, sqlite3_index_info 
 	GdaSqlBuilderId *op_ids;
 	op_ids = g_new (GdaSqlBuilderId, info->nConstraint);
 	for (i = 0, argpos = 0; i < info->nConstraint; i++) {
-		const struct sqlite3_index_constraint *cons;
+		const struct GdaVirtualConstraint *cons;
 		cons = &(info->aConstraint [i]);
-		if (! cons->usable)
-			continue;
 		if (cons->iColumn >= lspec->ncols) {
 			g_warning ("Internal error: column known by SQLite's virtual table %d is not known for "
 				   "table '%s', which has %d column(s)", cons->iColumn,
@@ -570,10 +510,11 @@ dict_table_create_filter (GdaVconnectionDataModelSpec *spec, sqlite3_index_info 
 	g_free (op_ids);
 	
 	/* ORDER BY part */
-	info->orderByConsumed = TRUE;
+	info->orderByConsumed = FALSE;
 	for (i = 0; i < info->nOrderBy; i++) {
-		struct sqlite3_index_orderby *ao;
+		struct GdaVirtualOrderby *ao;
 		GdaSqlBuilderId fid;
+		info->orderByConsumed = TRUE;
 		ao = &(info->aOrderBy [i]);
 		if (ao->iColumn >= lspec->ncols) {
 			g_warning ("Internal error: column known by SQLite's virtual table %d is not known for "
@@ -595,10 +536,10 @@ dict_table_create_filter (GdaVconnectionDataModelSpec *spec, sqlite3_index_info 
 		filter = g_new0 (ComputedFilter, 1);
 		filter->stmt = stmt;
 		filter->orderByConsumed = info->orderByConsumed;
-		filter->out_const = g_new (struct sqlite3_index_constraint_usage,  info->nConstraint);
+		filter->out_const = g_new (struct GdaVirtualConstraintUsage,  info->nConstraint);
 		memcpy (filter->out_const,
 			info->aConstraintUsage,
-			sizeof (struct sqlite3_index_constraint_usage) * info->nConstraint);
+			sizeof (struct GdaVirtualConstraintUsage) * info->nConstraint);
 
 		gchar *sql;
 		sql = gda_statement_to_sql (stmt, NULL, NULL);
@@ -611,16 +552,16 @@ dict_table_create_filter (GdaVconnectionDataModelSpec *spec, sqlite3_index_info 
 								     (GDestroyNotify) computed_filter_free);
 		
 		g_hash_table_insert (lspec->filters_hash, hash, filter);
-		info->idxStr = (char*) filter->stmt;
+		info->idxPointer = filter->stmt;
 		/*g_print ("There are now %d statements in store...\n", g_hash_table_size (lspec->filters_hash));*/
 	}
 	else {
 		for (i = 0, argpos = 0; i < info->nConstraint; i++) {
 			info->aConstraintUsage[i].argvIndex = 0;
-			info->aConstraintUsage[i].omit = 0;
+			info->aConstraintUsage[i].omit = FALSE;
 		}
-		info->idxStr = NULL;
-		info->orderByConsumed = 0;
+		info->idxPointer = NULL;
+		info->orderByConsumed = FALSE;
 		g_free (hash);
 	}
 }
@@ -977,8 +918,8 @@ table_add (HubConnection *hc, const GValue *table_name, GError **error)
 	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->data_model = NULL;
 	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_columns_func = (GdaVconnectionDataModelCreateColumnsFunc) dict_table_create_columns_func;
 	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_model_func = NULL;
-	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_filter_func = (GdaVconnectionDataModelParseFilterFunc) dict_table_create_filter;
-	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_filtered_model_func = (GdaVconnectionDataModelCreateFModelFunc) dict_table_create_model_func;
+	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_filter_func = dict_table_create_filter;
+	GDA_VCONNECTION_DATA_MODEL_SPEC (lspec)->create_filtered_model_func = dict_table_create_model_func;
 	lspec->table_name = gda_value_copy (table_name);
 	lspec->hc = hc;
 	tmp = get_complete_table_name (hc, lspec->table_name);

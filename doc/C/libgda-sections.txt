@@ -610,6 +610,7 @@ gda_vconnection_data_model_add_model
 gda_vconnection_data_model_remove
 gda_vconnection_data_model_get_table_name
 gda_vconnection_data_model_get_model
+gda_vconnection_data_model_get
 gda_vconnection_data_model_foreach
 <SUBSECTION Standard>
 GDA_IS_VCONNECTION_DATA_MODEL

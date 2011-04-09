@@ -1,6 +1,5 @@
 /* 
- * GDA common library
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -33,23 +32,9 @@ struct _GdaVconnectionDataModelPrivate {
 	GSList *table_data_list; /* list of GdaVConnectionTableData structures */
 };
 
-/* properties */
-enum
-{
-        PROP_0,
-};
-
 static void gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass *klass);
 static void gda_vconnection_data_model_init       (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelClass *klass);
 static void gda_vconnection_data_model_dispose   (GObject *object);
-static void gda_vconnection_data_model_set_property (GObject *object,
-						     guint param_id,
-						     const GValue *value,
-						     GParamSpec *pspec);
-static void gda_vconnection_data_model_get_property (GObject *object,
-						     guint param_id,
-						     GValue *value,
-						     GParamSpec *pspec);
 static GObjectClass  *parent_class = NULL;
 
 /*
@@ -63,10 +48,6 @@ gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gda_vconnection_data_model_dispose;
-
-	/* Properties */
-        object_class->set_property = gda_vconnection_data_model_set_property;
-        object_class->get_property = gda_vconnection_data_model_get_property;
 }
 
 static void
@@ -98,6 +79,11 @@ gda_vconnection_data_model_dispose (GObject *object)
 	parent_class->dispose (object);
 }
 
+/**
+ * gda_vconnection_data_model_get_type:
+ *
+ * Returns: a new #GType
+ */
 GType
 gda_vconnection_data_model_get_type (void)
 {
@@ -129,42 +115,6 @@ gda_vconnection_data_model_get_type (void)
 }
 
 static void
-gda_vconnection_data_model_set_property (GObject *object,
-					 guint param_id,
-					 G_GNUC_UNUSED const GValue *value,
-					 GParamSpec *pspec)
-{
-        GdaVconnectionDataModel *cnc;
-
-        cnc = GDA_VCONNECTION_DATA_MODEL (object);
-        if (cnc->priv) {
-                switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }
-}
-
-static void
-gda_vconnection_data_model_get_property (GObject *object,
-					 guint param_id,
-					 G_GNUC_UNUSED GValue *value,
-					 GParamSpec *pspec)
-{
-        GdaVconnectionDataModel *cnc;
-
-        cnc = GDA_VCONNECTION_DATA_MODEL (object);
-        if (cnc->priv) {
-		switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
-        }
-}
-
-static void
 spec_destroy_func (GdaVconnectionDataModelSpec *spec)
 {
 	g_object_unref (spec->data_model);
@@ -172,7 +122,7 @@ spec_destroy_func (GdaVconnectionDataModelSpec *spec)
 }
 
 static GList *
-create_columns (GdaVconnectionDataModelSpec *spec)
+create_columns (GdaVconnectionDataModelSpec *spec, GError **error)
 {
 	g_return_val_if_fail (spec->data_model, NULL);
 
@@ -188,7 +138,7 @@ create_columns (GdaVconnectionDataModelSpec *spec)
 }
 
 /**
- * gda_vconnection_data_model_add_model
+ * gda_vconnection_data_model_add_model:
  * @cnc: a #GdaVconnectionDataModel connection
  * @model: a #GdaDataModel
  * @table_name: the name of the table
@@ -200,7 +150,7 @@ create_columns (GdaVconnectionDataModelSpec *spec)
  *
  * For a more general approach, see the gda_vconnection_data_model_add() method.
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc, 
@@ -219,9 +169,9 @@ gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc,
 }
 
 /**
- * gda_vconnection_data_model_add
+ * gda_vconnection_data_model_add:
  * @cnc: a #GdaVconnectionDataModel connection
- * @spec: a #GdaVconnectionDataModelSpec structure
+ * @spec: a #GdaVconnectionDataModelSpec structure, used AS IS (not copied) and can be modified
  * @spec_free_func: function to call when freeing @spec, or %NULL
  * @table_name: the name of the table
  * @error: a place to store errors, or %NULL
@@ -232,7 +182,12 @@ gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc,
  * If there is just one #GdaDataModel to make appear as a table
  * then the gda_vconnection_data_model_add_model() method is easier to use.
  *
- * Returns: TRUE if no error occurred
+ * The @spec_free_func can (depending on your code) be used to clean memory allocated for @spec or
+ * @spec->data_model.
+ *
+ * If an error occurs, then the @spec_free_func function is called using @spec as argument.
+ *
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelSpec *spec, 
@@ -251,8 +206,21 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	g_return_val_if_fail (table_name && *table_name, FALSE);
 	g_return_val_if_fail (spec, FALSE);
 	g_return_val_if_fail (spec->data_model || (spec->create_columns_func && (spec->create_model_func || spec->create_filtered_model_func)), FALSE);
-	if (spec->data_model)
+
+	/* cleaning functions */
+	if (spec->data_model) {
 		g_return_val_if_fail (GDA_IS_DATA_MODEL (spec->data_model), FALSE);
+		spec->create_columns_func = create_columns;
+		spec->create_model_func = NULL;
+		spec->create_filter_func = NULL;
+		spec->create_filtered_model_func = NULL;
+	}
+	else if (spec->create_filter_func)
+		spec->create_model_func = NULL;
+	else {
+		spec->create_filter_func = NULL;
+		spec->create_filtered_model_func = NULL;
+	}
 
 	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
 	if (!scnc) 
@@ -284,13 +252,12 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 		g_print ("Virtual connection: added table %s (model = %p)\n", td->table_name, td->spec->data_model);
 	*/
 
-
 	return retval;
 }
 
 
 /**
- * gda_vconnection_data_model_remove
+ * gda_vconnection_data_model_remove:
  * @cnc: a #GdaVconnectionDataModel connection
  * @table_name: the name of the table to remove from @cnc
  * @error: a place to store errors, or %NULL
@@ -298,7 +265,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
  * Remove the table named @table_name in the @cnc connection (as if a "DROP TABLE..."
  * statement was executed, except that no data gets destroyed as the associated data model remains the same).
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *table_name, GError **error)
@@ -348,13 +315,41 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 }
 
 /**
- * gda_vconnection_data_model_get_model
+ * gda_vconnection_data_model_get:
  * @cnc: a #GdaVconnectionDataModel connection
  * @table_name: a table name within @cnc
  *
- * Find the #GdaDataModel object representing the @table_name table in @cnc
+ * Find the #GdaVconnectionDataModelSpec specifying how the table named @table_name is represented
+ * in @cnc.
  *
- * Returns: the #GdaDataModel, or %NULL if no table named @table_name exists
+ * Returns: (transfer none) (allow-none): a #GdaVconnectionDataModelSpec pointer, of %NULL if there is no table named @table_name
+ *
+ * Since: 4.2.6
+ */
+GdaVconnectionDataModelSpec *
+gda_vconnection_data_model_get (GdaVconnectionDataModel *cnc, const gchar *table_name)
+{
+	GdaVConnectionTableData *td;
+	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), NULL);
+	if (!table_name || !(*table_name))
+		return NULL;
+	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
+	if (td)
+		return td->spec;
+	else
+		return NULL;
+}
+
+/**
+ * gda_vconnection_data_model_get_model:
+ * @cnc: a #GdaVconnectionDataModel connection
+ * @table_name: a table name within @cnc
+ *
+ * Find the #GdaDataModel object representing the @table_name table in @cnc. it can return %NULL
+ * either if no table named @table_name exists, or if that table actually exists but no #GdaDataModel
+ * has yet been created. For a more general approach, use the gda_vconnection_data_model_get().
+ *
+ * Returns: (transfer none) (allow-none): the #GdaDataModel, or %NULL
  */
 GdaDataModel *
 gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar *table_name)
@@ -373,13 +368,13 @@ gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar 
 }
 
 /**
- * gda_vconnection_data_model_get_table_name
+ * gda_vconnection_data_model_get_table_name:
  * @cnc: a #GdaVconnectionDataModel connection
  * @model: a #GdaDataModel representing a table within @cnc
  *
  * Find the name of the table associated to @model in @cnc
  *
- * Returns: the table name, or %NULL if not found
+ * Returns: (transfer none) (allow-none): the table name, or %NULL if not found
  */
 const gchar *
 gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaDataModel *model)
@@ -399,7 +394,7 @@ gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaData
 }
 
 /**
- * gda_vconnection_data_model_foreach
+ * gda_vconnection_data_model_foreach:
  * @cnc: a #GdaVconnectionDataModel connection
  * @func: a #GdaVconnectionDataModelFunc function pointer
  * @data: data to pass to @func calls
