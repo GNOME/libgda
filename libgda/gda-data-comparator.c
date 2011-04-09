@@ -1,6 +1,5 @@
-/* gda-data-comparator.c
- *
- * Copyright (C) 2008 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2008 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -485,11 +484,21 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 
 	/* actual differences computations : rows to insert / update */
 	onrows = gda_data_model_get_n_rows (comp->priv->old_model);
-	g_assert (onrows >= 0);
+	if (onrows < 0) {
+		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MODEL_ACCESS_ERROR,
+			     "%s", _("Can't get the number of rows of data model to compare from"));
+		return FALSE;
+	}
 	nnrows = gda_data_model_get_n_rows (comp->priv->new_model);
-	g_assert (nnrows >= 0);
-	rows_to_del = g_new (gboolean, onrows);
-	memset (rows_to_del, TRUE, sizeof (gboolean) * onrows);
+	if (nnrows < 0) {
+		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MODEL_ACCESS_ERROR,
+			     "%s", _("Can't get the number of rows of data model to compare to"));
+		return FALSE;
+	}
+	if (onrows > 0) {
+		rows_to_del = g_new (gboolean, onrows);
+		memset (rows_to_del, TRUE, sizeof (gboolean) * onrows);
+	}
 	for (i = 0; i < nnrows; i++) {
 		gint erow = -1;
 		gboolean has_changed = FALSE;
@@ -532,6 +541,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 			gint j;
 			diff = g_new0 (GdaDiff, 1);
 			diff->type = GDA_DIFF_MODIFY_ROW;
+			rows_to_del [erow] = FALSE;
 			diff->old_row = erow;
 			diff->new_row = i;
 			diff->values = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free,
@@ -558,7 +568,9 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 						     gda_value_copy (cvalue));
 			}
 		}
-		rows_to_del [i] = FALSE;
+		else
+			rows_to_del [erow] = FALSE; /* row has not been changed */
+
 		if (diff) {
 			g_array_append_val (comp->priv->diffs, diff);
 			g_signal_emit (comp, gda_data_comparator_signals [DIFF_COMPUTED], 0, diff, &stop);
@@ -579,7 +591,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 		if (rows_to_del [i]) {
 			gint j;
 			diff = g_new0 (GdaDiff, 1);
-			diff->type = GDA_DIFF_ADD_ROW;
+			diff->type = GDA_DIFF_REMOVE_ROW;
 			diff->old_row = i;
 			diff->new_row = -1;
 			diff->values = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free,
