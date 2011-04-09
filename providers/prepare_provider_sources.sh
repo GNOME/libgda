@@ -8,16 +8,21 @@
 # Usage:
 # 1 - Copy the ./skel-implementation/capi or ./skel-implementation/models to another directory (for example MySQL)
 # 2 - go into the new directory (MySQL/ in this case)
-# 3 - execute this script with the name of the provider to create (mysql in this case)
-#     ../prepare_provider_sources.sh mysql
+# 3 - execute this script with the name of the provider to create (mysql in this case),
+#     the name of the author and his/her email adress, for example:
+#     ../prepare_provider_sources.sh mysql 'Vivien Malerba' malerba@gnome-db.org
 # 
 
-if [ $# != 1 ]
+if [ $# != 3 ]
 then
-  echo "Usage: `basename $0` <provider name>"
+  echo "Usage: $0 <provider name> <author' name> <author's email>"
+  echo "example: $0 MySQL 'Vivien Malerba' malerba@gnome-db.org"
   exit 1
 fi  
 provname=$1
+username=$2
+email=$3
+thisyear=`date +%Y`
 
 #
 # compute what to rename from ("capi", "models")
@@ -50,7 +55,7 @@ ballupname=$(echo $base | tr a-z A-Z)
 for file in *
 do
     mv $file $file.1
-    cat $file.1 | sed -e "s/$base/$provname/g" -e "s/$bupname/$upname/g" -e "s/$ballupname/$allupname/g" -e "s/skel-implementation\///g" > $file
+    cat $file.1 | sed -e "s/$base/$provname/g" -e "s/$bupname/$upname/g" -e "s/$ballupname/$allupname/g" -e "s/skel-implementation\///g" -e "s/TO_ADD: your name and email/$username <$email>/g" -e "s/YEAR/2008 - $thisyear/g"> $file
     rm -f $file.1
 done
 

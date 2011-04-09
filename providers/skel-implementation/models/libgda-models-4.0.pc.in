@@ -4,6 +4,6 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: libgda-models-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
-Description: GDA Models provider
+Description:
 Requires: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Version: @VERSION@

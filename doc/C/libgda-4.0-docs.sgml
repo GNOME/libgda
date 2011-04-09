@@ -1796,7 +1796,7 @@ g_object_unref (eng);
 	    <filename class="directory">dummydb</filename></para></listitem>
 	<listitem><para>From inside that new directory, run the
 	    <filename class="directory">providers/prepare_provider_sources.sh</filename> script with the name
-	    of the provider as sole argument ("dummydb" here), which replaces
+	    of the provider ("dummydb" here), the author's name and the author's email adress, which replaces
 	    all the class and object names with the name of the provider and renames the files correctly. These
 	    new sources should be compilable without any modification.</para></listitem>
 	<listitem><para>Edit the <filename>Makefile.am</filename> to add provider specific compilation and link
