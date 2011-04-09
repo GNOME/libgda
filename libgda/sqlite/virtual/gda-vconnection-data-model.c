@@ -324,7 +324,7 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
  *
  * Returns: (transfer none) (allow-none): a #GdaVconnectionDataModelSpec pointer, of %NULL if there is no table named @table_name
  *
- * Since: 5.0
+ * Since: 4.2.6
  */
 GdaVconnectionDataModelSpec *
 gda_vconnection_data_model_get (GdaVconnectionDataModel *cnc, const gchar *table_name)
