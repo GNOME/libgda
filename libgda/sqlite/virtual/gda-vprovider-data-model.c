@@ -895,10 +895,10 @@ map_consume_gda_filter_to_sqlite3_info (GdaVconnectionDataModelFilter *filter, s
 				continue;
 			info->aConstraintUsage[i].argvIndex = filter->aConstraintUsage[j].argvIndex;
 			info->aConstraintUsage[i].omit = filter->aConstraintUsage[j].omit ? 1 : 0;
+			j++;
 		}
 		g_free (filter->aConstraint);
 		g_free (filter->aConstraintUsage);
-		j++;
 
 	}
 	if (filter->nOrderBy > 0)
