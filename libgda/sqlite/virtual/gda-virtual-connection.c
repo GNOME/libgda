@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -22,7 +22,6 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include <sqlite3.h>
 #include "gda-virtual-connection.h"
 #include <gda-connection-private.h>
 #include <libgda/gda-connection-internal.h>

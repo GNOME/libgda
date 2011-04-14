@@ -184,6 +184,11 @@ struct _GdaVconnectionDataModel {
 struct _GdaVconnectionDataModelClass {
 	GdaVirtualConnectionClass       parent_class;
 
+	void                          (*vtable_created) (GdaVconnectionDataModel *cnc,
+							  const gchar *table_name);
+	void                          (*vtable_dropped) (GdaVconnectionDataModel *cnc,
+							    const gchar *table_name);
+
 	/*< private >*/
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);

@@ -768,6 +768,12 @@ dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, int idxNum, con
 		g_assert (stmt);
 	}
 	GError *lerror = NULL;
+#ifdef GDA_DEBUG_NO
+	gchar *sql;
+	sql = gda_statement_to_sql (stmt, params, NULL);
+	g_print ("Executed: [%s]\n", sql);
+	g_free (sql);
+#endif
 	model = gda_connection_statement_execute_select_full (lspec->hc->cnc, stmt, params,
 							      GDA_STATEMENT_MODEL_CURSOR_FORWARD, NULL,
 							      &lerror);
