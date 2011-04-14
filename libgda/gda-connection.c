@@ -48,6 +48,7 @@
 #include <libgda/thread-wrapper/gda-thread-provider.h>
 #include <libgda/gda-repetitive-statement.h>
 #include <gda-statement-priv.h>
+#include <sqlite/virtual/gda-vconnection-data-model.h>
 
 #include <glib/gstdio.h>
 #include <fcntl.h>
@@ -6216,6 +6217,12 @@ get_next_word (gchar *str, gboolean for_ident, gchar **out_next)
 static GdaMetaContext *
 meta_data_context_from_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params)
 {
+	if (GDA_IS_VCONNECTION_DATA_MODEL (cnc))
+		/* meta data is updated when the virtual connection emits the
+		 * "vtable-created" or "vtable-dropped" signals
+		 */
+		return NULL;
+
 	GdaMetaContext *context = NULL;
 	gchar *sql, *current, *next;
 	sql = gda_statement_to_sql (stmt, params, NULL);
@@ -6225,18 +6232,20 @@ meta_data_context_from_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet
 	current = get_next_word (sql, FALSE, &next);
 	if (current && (!strcmp (current, "CREATE") || !strcmp (current, "DROP") ||
 			!strcmp (current, "ALTER"))) {
+		const gchar *tname = NULL;
 		current = get_next_word (next, FALSE, &next);
-		if (current && (!strcmp (current, "TABLE") || !strcmp (current, "VIEW"))) {
+		if (current && (!strcmp (current, "TABLE") || !strcmp (current, "VIEW")))
+			tname = get_next_word (next, TRUE, &next);
+		if (tname) {
 			gchar *tmp;
-			current = get_next_word (next, TRUE, &next);
-			/*g_print ("CONTEXT: update for table [%s]\n", current);*/
+			/*g_print ("CONTEXT: update for table [%s]\n", tname);*/
 			context = g_new0 (GdaMetaContext, 1);
 			context->table_name = "_tables";
 			context->size = 1;
 			context->column_names = g_new0 (gchar *, 1);
 			context->column_names[0] = "table_name";
 			context->column_values = g_new0 (GValue *, 1);
-			tmp = gda_sql_identifier_quote (current, cnc, cnc->priv->provider_obj,
+			tmp = gda_sql_identifier_quote (tname, cnc, cnc->priv->provider_obj,
 							TRUE,
 							cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 			g_value_take_string ((context->column_values[0] = gda_value_new (G_TYPE_STRING)),
@@ -6327,6 +6336,34 @@ update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, 
 	}
 }
 
+void
+_gda_connection_signal_meta_table_update (GdaConnection *cnc, const gchar *table_name)
+{
+	GdaMetaContext *context;
+	gchar *tmp;
+	/*g_print ("CONTEXT: update for table [%s]\n", tname);*/
+	context = g_new0 (GdaMetaContext, 1);
+	context->table_name = "_tables";
+	context->size = 1;
+	context->column_names = g_new0 (gchar *, 1);
+	context->column_names[0] = "table_name";
+	context->column_values = g_new0 (GValue *, 1);
+	tmp = gda_sql_identifier_quote (table_name, cnc, cnc->priv->provider_obj,
+					TRUE,
+					cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+	g_value_take_string ((context->column_values[0] = gda_value_new (G_TYPE_STRING)),
+			     tmp);
+
+	GError *lerror = NULL;
+	if (! gda_connection_update_meta_store (cnc, context, &lerror))
+		add_connection_event_from_error (cnc, &lerror);
+	
+	if (cnc->priv->trans_meta_context)
+		g_array_prepend_val (cnc->priv->trans_meta_context, context);
+	else
+		auto_update_meta_context_free (context);
+}
+
 /*
  * Free @context which must have been created by meta_data_context_from_statement()
  */
@@ -6340,4 +6377,38 @@ auto_update_meta_context_free (GdaMetaContext *context)
 		gda_value_free (context->column_values[i]);
 	g_free (context->column_values);
 	g_free (context);
+}
+
+
+/*
+ * _gda_connection_get_table_virtual_name
+ * @table_name: a non %NULL string
+ *
+ * Returns: a new string.
+ */
+gchar *
+_gda_connection_compute_table_virtual_name (GdaConnection *cnc, const gchar *table_name)
+{
+	gchar **array;
+	gchar *tmp;
+	GString *string = NULL;
+	gint i;
+
+	g_assert (table_name && *table_name);
+	array = gda_sql_identifier_split (table_name);
+	for (i = 0; ; i++) {
+		if (array [i]) {
+			tmp = gda_sql_identifier_quote (array[i], cnc, NULL, TRUE, FALSE);
+			if (string) {
+				g_string_append_c (string, '.');
+				g_string_append (string, tmp);
+			}
+			else
+				string = g_string_new (tmp);
+		}
+		else
+			break;
+	}
+	g_strfreev (array);
+	return g_string_free (string, FALSE);
 }

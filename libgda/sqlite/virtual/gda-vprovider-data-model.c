@@ -27,6 +27,7 @@
 #include "gda-vconnection-data-model-private.h"
 #include <sqlite3.h>
 #include <libgda/gda-connection-private.h>
+#include <libgda/gda-connection-internal.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-blob-op.h>
 #include "../gda-sqlite.h"
@@ -51,6 +52,12 @@ static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvide
 								gpointer cb_data);
 static gboolean       gda_vprovider_data_model_close_connection (GdaServerProvider *provider,
 								 GdaConnection *cnc);
+static GObject        *gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
+								   GdaStatement *stmt, GdaSet *params,
+								   GdaStatementModelUsage model_usage,
+								   GType *col_types, GdaSet **last_inserted_row,
+								   guint *task_id, GdaServerProviderExecCallback async_cb,
+								   gpointer cb_data, GError **error);
 static const gchar   *gda_vprovider_data_model_get_name (GdaServerProvider *provider);
 
 /*
@@ -68,6 +75,7 @@ gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
 	server_class->create_connection = gda_vprovider_data_model_create_connection;
 	server_class->open_connection = gda_vprovider_data_model_open_connection;
 	server_class->close_connection = gda_vprovider_data_model_close_connection;
+	server_class->statement_execute = gda_vprovider_data_model_statement_execute;
 
 	server_class->get_name = gda_vprovider_data_model_get_name;
 
@@ -311,6 +319,73 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 					    (GdaVconnectionDataModelFunc) cnc_close_foreach_func, cnc);
 
 	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc);
+}
+
+static GObject *
+gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
+					    GdaStatement *stmt, GdaSet *params,
+					    GdaStatementModelUsage model_usage,
+					    GType *col_types, GdaSet **last_inserted_row,
+					    guint *task_id, GdaServerProviderExecCallback async_cb,
+					    gpointer cb_data, GError **error)
+{
+	GObject *retval;
+	if (async_cb) {
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+                             "%s", _("Provider does not support asynchronous statement execution"));
+                return NULL;
+        }
+        
+	retval = GDA_SERVER_PROVIDER_CLASS (parent_class)->statement_execute (provider, cnc, stmt, params,
+									      model_usage, col_types,
+									      last_inserted_row, task_id,
+									      async_cb, cb_data, error);
+	if (retval) {
+		gchar *sql;
+		sql = gda_statement_to_sql (stmt, params, NULL);
+		if (sql) {
+			gchar *ptr = NULL;
+			/* look for DROP TABLE to signal table removal */
+			if (! g_ascii_strncasecmp (sql, "DROP", 4))
+				ptr = sql + 4;
+			else if (! g_ascii_strncasecmp (sql, "CREATE", 6))
+				ptr = sql + 6;
+			if (ptr) {
+				/* skip spaces */
+				for (; *ptr && (g_ascii_isspace (*ptr) || (*ptr == '\n')); ptr++);
+
+				if (! g_ascii_strncasecmp (ptr, "TABLE", 5)) {
+					/* skip spaces */
+					gchar delim = 0;
+					gchar *table_name, *quoted;
+					for (ptr = ptr+5;
+					     *ptr && (g_ascii_isspace (*ptr) || (*ptr == '\n'));
+					     ptr++);
+					if (*ptr == '\'') {
+						delim = '\'';
+						ptr++;
+					}
+					else if (*ptr == '"') {
+						delim = '"';
+						ptr++;
+					}
+					table_name = ptr;
+					if (delim)
+						for (; *ptr && (*ptr != delim) ; ptr++);
+					else
+						for (; *ptr && g_ascii_isalnum (*ptr); ptr++);
+					*ptr = 0;
+					quoted = _gda_connection_compute_table_virtual_name (GDA_CONNECTION (cnc), table_name);
+					/*g_print ("%s() emits the 'vtable-dropped' signal for table [%s]\n",
+					  __FUNCTION__, quoted);*/
+					g_signal_emit_by_name (cnc, "vtable-dropped", quoted);
+					g_free (quoted);
+				}
+			}
+			g_free (sql);
+		}
+	}
+	return retval;
 }
 
 static const gchar *

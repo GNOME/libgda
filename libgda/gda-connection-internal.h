@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -72,6 +72,14 @@ typedef struct {
 } ThreadConnectionData; /* Per connection private data for */
 void               _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc);
 GdaServerProvider *_gda_connection_get_internal_thread_provider (void);
+
+/*
+ * Used by virtual connections to keep meta data up to date when a table
+ * is added or removed, without using the update_meta_store_after_statement_exec()
+ * because it may not be called everytime
+ */
+void               _gda_connection_signal_meta_table_update (GdaConnection *cnc, const gchar *table_name);
+gchar             *_gda_connection_compute_table_virtual_name (GdaConnection *cnc, const gchar *table_name);
 
 G_END_DECLS
 

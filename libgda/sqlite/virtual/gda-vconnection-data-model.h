@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2010 The GNOME Foundation.
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -185,9 +185,10 @@ struct _GdaVconnectionDataModel {
 struct _GdaVconnectionDataModelClass {
 	GdaVirtualConnectionClass       parent_class;
 
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
+	void                          (*vtable_created) (GdaVconnectionDataModel *cnc,
+							  const gchar *table_name);
+	void                          (*vtable_dropped) (GdaVconnectionDataModel *cnc,
+							    const gchar *table_name);
 };
 
 GType               gda_vconnection_data_model_get_type  (void) G_GNUC_CONST;

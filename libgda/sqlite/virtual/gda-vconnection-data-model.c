@@ -26,6 +26,7 @@
 #include "gda-vconnection-data-model-private.h"
 #include "gda-virtual-provider.h"
 #include <libgda/gda-connection-private.h>
+#include <libgda/gda-connection-internal.h>
 #include "../gda-sqlite.h"
 
 struct _GdaVconnectionDataModelPrivate {
@@ -35,7 +36,51 @@ struct _GdaVconnectionDataModelPrivate {
 static void gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass *klass);
 static void gda_vconnection_data_model_init       (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelClass *klass);
 static void gda_vconnection_data_model_dispose   (GObject *object);
+
+enum {
+	VTABLE_CREATED,
+	VTABLE_DROPPED,
+	LAST_SIGNAL
+};
+
+static gint gda_vconnection_data_model_signals[LAST_SIGNAL] = { 0, 0 };
+
 static GObjectClass  *parent_class = NULL;
+
+#ifdef GDA_DEBUG
+static void
+dump_all_tables (GdaVconnectionDataModel *cnc)
+{
+	GSList *list;
+	g_print ("GdaVconnectionDataModel's tables:\n");
+	for (list = cnc->priv->table_data_list; list; list = list->next) {
+		GdaVConnectionTableData *td = (GdaVConnectionTableData *) list->data;
+		g_print ("    table %s, td=%p, spec=%p\n", td->table_name, td, td->spec);
+	}
+}
+#endif
+
+static void
+vtable_created (GdaVconnectionDataModel *cnc, const gchar *table_name)
+{
+	_gda_connection_signal_meta_table_update ((GdaConnection *)cnc, table_name);
+#ifdef GDA_DEBUG
+	dump_all_tables (cnc);
+#endif
+}
+
+static void
+vtable_dropped (GdaVconnectionDataModel *cnc, const gchar *table_name)
+{
+	GdaVConnectionTableData *td;
+	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
+	if (td)
+		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
+	_gda_connection_signal_meta_table_update ((GdaConnection *)cnc, table_name);
+#ifdef GDA_DEBUG
+	dump_all_tables (cnc);
+#endif
+}
 
 /*
  * GdaVconnectionDataModel class implementation
@@ -46,6 +91,40 @@ gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
+
+	/**
+	 * GdaVconnectionDataModel::vtable-created
+	 * @cnc: the #GdaVconnectionDataModel connection
+	 * @spec: the #GdaVconnectionDataModelSpec for the new virtual table
+	 *
+	 * Signal emitted when a new virtual table has been declared
+	 */
+	gda_vconnection_data_model_signals[VTABLE_CREATED] =
+		g_signal_new ("vtable-created",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaVconnectionDataModelClass, vtable_created),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__STRING,
+			      G_TYPE_NONE, 1, G_TYPE_STRING);
+	/**
+	 * GdaVconnectionDataModel::vtable-dropped
+	 * @cnc: the #GdaVconnectionDataModel connection
+	 * @spec: the #GdaVconnectionDataModelSpec for the new virtual table
+	 *
+	 * Signal emitted when a new virtual table has been undeclared
+	 */
+	gda_vconnection_data_model_signals[VTABLE_DROPPED] =
+		g_signal_new ("vtable-dropped",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaVconnectionDataModelClass, vtable_dropped),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__STRING,
+			      G_TYPE_NONE, 1, G_TYPE_STRING);
+
+	klass->vtable_created = vtable_created;
+	klass->vtable_dropped = vtable_dropped;
 
 	object_class->dispose = gda_vconnection_data_model_dispose;
 }
@@ -122,7 +201,7 @@ spec_destroy_func (GdaVconnectionDataModelSpec *spec)
 }
 
 static GList *
-create_columns (GdaVconnectionDataModelSpec *spec, GError **error)
+create_columns (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED GError **error)
 {
 	g_return_val_if_fail (spec->data_model, NULL);
 
@@ -231,13 +310,13 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	td = g_new0 (GdaVConnectionTableData, 1);
 	td->spec = spec;
 	td->spec_free_func = spec_free_func;
-	td->table_name = g_strdup (table_name);
+	td->table_name = _gda_connection_compute_table_virtual_name (GDA_CONNECTION (cnc), table_name);
 	td->unique_name = g_strdup_printf ("Spec%d", counter++);
 	cnc->priv->table_data_list = g_slist_append (cnc->priv->table_data_list, td);
 
 	/* actually create the virtual table in @cnc */
 	prov = (GdaVirtualProvider *) gda_connection_get_provider (GDA_CONNECTION (cnc));
-	str = g_strdup_printf ("CREATE VIRTUAL TABLE %s USING %s ('%s')", table_name, G_OBJECT_TYPE_NAME (prov), td->unique_name);
+	str = g_strdup_printf ("CREATE VIRTUAL TABLE %s USING %s ('%s')", td->table_name, G_OBJECT_TYPE_NAME (prov), td->unique_name);
 	rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
 	g_free (str);
 	if (rc != SQLITE_OK) {
@@ -247,10 +326,11 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
 		retval = FALSE;
 	}
-	/*
-	else 
-		g_print ("Virtual connection: added table %s (model = %p)\n", td->table_name, td->spec->data_model);
-	*/
+	else {
+		g_signal_emit (G_OBJECT (cnc), gda_vconnection_data_model_signals[VTABLE_CREATED], 0,
+			       td->table_name);
+		/*g_print ("Virtual connection: added table %s (spec = %p)\n", td->table_name, td->spec);*/
+	}
 
 	return retval;
 }
@@ -306,6 +386,8 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 	else {
 		/* clean the cnc->priv->table_data_list list */
 		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
+		g_signal_emit (G_OBJECT (cnc), gda_vconnection_data_model_signals[VTABLE_DROPPED], 0,
+			       td->table_name);
 		/*g_print ("Virtual connection: removed table %s (%p)\n", td->table_name, td->spec->data_model);*/
 		gda_vconnection_data_model_table_data_free (td);
 		return TRUE;
@@ -432,10 +514,17 @@ GdaVConnectionTableData *
 gda_vconnection_get_table_data_by_name (GdaVconnectionDataModel *cnc, const gchar *table_name)
 {
 	GSList *list;
+	gchar *quoted;
+	if (!table_name || !*table_name)
+		return NULL;
+	quoted = _gda_connection_compute_table_virtual_name (GDA_CONNECTION (cnc), table_name);
 	for (list = cnc->priv->table_data_list; list; list = list->next) {
-		if (!strcmp (((GdaVConnectionTableData*) list->data)->table_name, table_name))
+		if (!strcmp (((GdaVConnectionTableData*) list->data)->table_name, quoted)) {
+			g_free (quoted);
 			return (GdaVConnectionTableData*) list->data;
+		}
 	}
+	g_free (quoted);
 	return NULL;
 }
 
