@@ -6337,6 +6337,10 @@ update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, 
 void
 _gda_connection_signal_meta_table_update (GdaConnection *cnc, const gchar *table_name)
 {
+	if (! cnc->priv->meta_store ||
+	    ! (cnc->priv->options & GDA_CONNECTION_OPTIONS_AUTO_META_DATA))
+		return;
+
 	GdaMetaContext *context;
 	gchar *tmp;
 	/*g_print ("CONTEXT: update for table [%s]\n", tname);*/

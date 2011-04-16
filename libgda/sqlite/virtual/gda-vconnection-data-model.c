@@ -47,7 +47,7 @@ static gint gda_vconnection_data_model_signals[LAST_SIGNAL] = { 0, 0 };
 
 static GObjectClass  *parent_class = NULL;
 
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 static void
 dump_all_tables (GdaVconnectionDataModel *cnc)
 {
@@ -64,7 +64,7 @@ static void
 vtable_created (GdaVconnectionDataModel *cnc, const gchar *table_name)
 {
 	_gda_connection_signal_meta_table_update ((GdaConnection *)cnc, table_name);
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	dump_all_tables (cnc);
 #endif
 }
@@ -77,7 +77,7 @@ vtable_dropped (GdaVconnectionDataModel *cnc, const gchar *table_name)
 	if (td)
 		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
 	_gda_connection_signal_meta_table_update ((GdaConnection *)cnc, table_name);
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	dump_all_tables (cnc);
 #endif
 }

@@ -475,7 +475,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		gtype = gda_column_get_g_type (column);
 		type = g_type_name (gtype);
 		if (!type) {
-			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't get data model's column type or type for column %d"), i);
+			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't get data model's column type for column %d"), i);
 			g_string_free (sql, TRUE);
 			return SQLITE_ERROR;
 		}
