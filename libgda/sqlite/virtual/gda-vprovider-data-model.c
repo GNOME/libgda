@@ -479,8 +479,10 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			g_string_free (sql, TRUE);
 			return SQLITE_ERROR;
 		}
-		else if ((gtype == GDA_TYPE_BLOB) || (gtype == GDA_TYPE_BINARY))
+		else if (gtype == GDA_TYPE_BLOB)
 			type = "blob";
+		else if (gtype == GDA_TYPE_BINARY)
+			type = "binary";
 		else if (gtype == G_TYPE_STRING)
 			type = "string";
 		else if ((gtype == G_TYPE_INT) || (gtype == G_TYPE_UINT) || 
