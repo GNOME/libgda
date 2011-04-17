@@ -6,14 +6,14 @@
 # Miloslav Trmac <mitr@volny.cz>, 2003, 2004, 2005.
 # Marek Černocký <marek@manet.cz>, 2010, 2011.
 #
-#: ../libgda/gda-connection.c:375
+#: ../libgda/gda-connection.c:376
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-04-09 13:23+0000\n"
-"PO-Revision-Date: 2011-04-11 23:45+0200\n"
+"POT-Creation-Date: 2011-04-17 18:23+0000\n"
+"PO-Revision-Date: 2011-04-17 23:33+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -102,7 +102,7 @@ msgstr "Nelze spustit prohlížecí program"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:288
-#: ../libgda/gda-connection.c:1540 ../libgda/gda-data-model.c:2089
+#: ../libgda/gda-connection.c:1541 ../libgda/gda-data-model.c:2089
 #: ../libgda/gda-data-model.c:2097 ../libgda/gda-data-model-dir.c:386
 #: ../libgda/gda-data-model-import.c:1682
 #: ../libgda/gda-data-model-import.c:1979
@@ -544,8 +544,8 @@ msgstr "Neznámý DSN „%s“"
 msgid "Provider '%s' not found"
 msgstr "Poskytovatel „%s“ nebyl nalezen"
 
-#: ../libgda/gda-config.c:1292 ../libgda/gda-connection.c:1026
-#: ../libgda/gda-connection.c:1183
+#: ../libgda/gda-config.c:1292 ../libgda/gda-connection.c:1027
+#: ../libgda/gda-connection.c:1184
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Není nainstalován žádný poskytovatel „%s“"
@@ -610,23 +610,23 @@ msgstr "Heslo"
 msgid "Error loading provider '%s': %s"
 msgstr "Chyba při načítání poskytovatele „%s“: %s"
 
-#: ../libgda/gda-connection.c:309
+#: ../libgda/gda-connection.c:310
 msgid "DSN to use"
 msgstr "DSN, které se má použít"
 
-#: ../libgda/gda-connection.c:312
+#: ../libgda/gda-connection.c:313
 msgid "Connection string to use"
 msgstr "Připojovací řetězec, který se má použít"
 
-#: ../libgda/gda-connection.c:315
+#: ../libgda/gda-connection.c:316
 msgid "Provider to use"
 msgstr "Poskytovatel, který se má použít"
 
-#: ../libgda/gda-connection.c:320
+#: ../libgda/gda-connection.c:321
 msgid "Authentication string to use"
 msgstr "Ověřovací řetězec, který se má použít"
 
-#: ../libgda/gda-connection.c:324 ../libgda-ui/data/server_operation.glade.h:5
+#: ../libgda/gda-connection.c:325 ../libgda-ui/data/server_operation.glade.h:5
 #: ../libgda-ui/gdaui-server-operation.c:793
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:55
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:33
@@ -635,11 +635,11 @@ msgid "Options"
 msgstr "Volby"
 
 #. To translators: Don't translate "GdaMetaStore", it's a class name
-#: ../libgda/gda-connection.c:329
+#: ../libgda/gda-connection.c:330
 msgid "GdaMetaStore used by the connection"
 msgstr "Objekt GdaMetaStore použitý tímto připojením"
 
-#: ../libgda/gda-connection.c:335
+#: ../libgda/gda-connection.c:336
 msgid ""
 "Unique GThread from which the connection will be available.This should only "
 "be modified by the database providers' implementation"
@@ -647,7 +647,7 @@ msgstr ""
 "Jedinečný GThread, ze kterého bude připojení dostupné. Toto by měla "
 "upravovat pouze implementace databázového poskytovatele"
 
-#: ../libgda/gda-connection.c:346
+#: ../libgda/gda-connection.c:347
 msgid ""
 "Tells if the connection acts as a thread wrapper around another connection, "
 "making it completely thread safe"
@@ -655,7 +655,7 @@ msgstr ""
 "Říká, zda připojení pracuje jako obalující vlákno jiného připojení, aby to "
 "mohlo pracovat v rámci vláken bezpečně"
 
-#: ../libgda/gda-connection.c:361
+#: ../libgda/gda-connection.c:362
 msgid ""
 "Make the connection set up a monitoring function in the mainloop to monitor "
 "the wrapped connection"
@@ -663,98 +663,98 @@ msgstr ""
 "Nastavit připojení na sledovací funkci v hlavní smyčce, aby sledovala "
 "obalené připojení"
 
-#: ../libgda/gda-connection.c:651 ../libgda/gda-connection.c:679
-#: ../libgda/gda-connection.c:693 ../libgda/gda-connection.c:708
+#: ../libgda/gda-connection.c:652 ../libgda/gda-connection.c:680
+#: ../libgda/gda-connection.c:694 ../libgda/gda-connection.c:709
 #, c-format
 msgid "Could not set the '%s' property when the connection is opened"
 msgstr "Vlastnost „%s“ nelze nastavit, když je připojení otevřené"
 
-#: ../libgda/gda-connection.c:659
+#: ../libgda/gda-connection.c:660
 #, c-format
 msgid "No DSN named '%s' defined"
 msgstr "Není definován žádný DSN pojmenovaný „%s“"
 
-#: ../libgda/gda-connection.c:729
+#: ../libgda/gda-connection.c:730
 #, c-format
 msgid "Can't set the '%s' property once the connection is opened"
 msgstr "Jakmile je připojení otevřeno, nelze měnit vlastnost „%s“"
 
-#: ../libgda/gda-connection.c:971 ../libgda/gda-connection.c:1124
+#: ../libgda/gda-connection.c:972 ../libgda/gda-connection.c:1125
 #: ../libgda/thread-wrapper/gda-thread-provider.c:430
 #: ../libgda/thread-wrapper/gda-thread-provider.c:515
 msgid "Multi threading is not supported or enabled"
 msgstr "Vícevláknový běh není podporován nebo povolen"
 
-#: ../libgda/gda-connection.c:980
+#: ../libgda/gda-connection.c:981
 #, c-format
 msgid "Malformed data source specification '%s'"
 msgstr "Chybná specifikace zdroje dat „%s“"
 
-#: ../libgda/gda-connection.c:988 ../libgda/gda-connection.c:1371
-#: ../libgda/gda-connection.c:1373
+#: ../libgda/gda-connection.c:989 ../libgda/gda-connection.c:1372
+#: ../libgda/gda-connection.c:1374
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dat %s nebyl nalezen v nastavení"
 
-#: ../libgda/gda-connection.c:1054
+#: ../libgda/gda-connection.c:1055
 msgid "Datasource configuration error: no provider specified"
 msgstr "Chyba nastavení zdroje dat: není určen žádný poskytovatel"
 
-#: ../libgda/gda-connection.c:1134 ../tools/browser/auth-dialog.c:415
+#: ../libgda/gda-connection.c:1135 ../tools/browser/auth-dialog.c:415
 #: ../tools/browser/auth-dialog.c:452 ../tools/gda-sql.c:1353
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Chybný připojovací řetězec „%s“"
 
-#: ../libgda/gda-connection.c:1140 ../libgda/gda-connection.c:1395
+#: ../libgda/gda-connection.c:1141 ../libgda/gda-connection.c:1396
 msgid "No provider specified"
 msgstr "Není zadán žádný poskytovatel"
 
-#: ../libgda/gda-connection.c:1383 ../libgda/gda-connection.c:1385
+#: ../libgda/gda-connection.c:1384 ../libgda/gda-connection.c:1386
 msgid "No DSN or connection string specified"
 msgstr "Není zadán žádný DSN nebo připojovací řetězec"
 
-#: ../libgda/gda-connection.c:1415
+#: ../libgda/gda-connection.c:1416
 msgid "Provider does not allow usage from this thread"
 msgstr "Poskytovatel nedovoluje použití z tohoto vlákna"
 
-#: ../libgda/gda-connection.c:1429
+#: ../libgda/gda-connection.c:1430
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr ""
 "Interní chyba: poskytovatel neimplementuje virtuální metodu open_connection()"
 
-#: ../libgda/gda-connection.c:1539
+#: ../libgda/gda-connection.c:1540
 #, c-format
 msgid "Error while maintaining the meta data up to date: %s"
 msgstr "Chyba při snaze udržet metadata v aktuálním stavu: %s"
 
-#: ../libgda/gda-connection.c:2702
+#: ../libgda/gda-connection.c:2703
 msgid "Provider does not support statement preparation"
 msgstr "Poskytovatel nepodporuje přípravu příkazů"
 
-#: ../libgda/gda-connection.c:2897 ../libgda/gda-connection.c:2983
-#: ../libgda/gda-connection.c:3053 ../libgda/gda-meta-store.c:668
+#: ../libgda/gda-connection.c:2898 ../libgda/gda-connection.c:2984
+#: ../libgda/gda-connection.c:3054 ../libgda/gda-meta-store.c:668
 #, c-format
 msgid "Can't obtain connection lock"
 msgstr "Nelze získat zámek připojení"
 
-#: ../libgda/gda-connection.c:2904 ../libgda/gda-connection.c:3120
-#: ../libgda/gda-connection.c:3463 ../libgda/gda-connection.c:3533
-#: ../libgda/gda-connection.c:3603
+#: ../libgda/gda-connection.c:2905 ../libgda/gda-connection.c:3121
+#: ../libgda/gda-connection.c:3464 ../libgda/gda-connection.c:3534
+#: ../libgda/gda-connection.c:3604
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:167
 #: ../libgda/thread-wrapper/gda-thread-provider.c:1626
 #, c-format
 msgid "Connection is closed"
 msgstr "Připojení je uzavřeno"
 
-#: ../libgda/gda-connection.c:2998 ../libgda/gda-connection.c:3088
+#: ../libgda/gda-connection.c:2999 ../libgda/gda-connection.c:3089
 #, c-format
 msgid "Can't find task %u"
 msgstr "Nelze najít úlohu %u"
 
-#: ../libgda/gda-connection.c:3076 ../libgda/sqlite/gda-sqlite-provider.c:1138
+#: ../libgda/gda-connection.c:3077 ../libgda/sqlite/gda-sqlite-provider.c:1138
 #: ../libgda/thread-wrapper/gda-thread-provider.c:924
 #: ../providers/jdbc/gda-jdbc-provider.c:580
 #: ../providers/mysql/gda-mysql-provider.c:959
@@ -763,41 +763,41 @@ msgstr "Nelze najít úlohu %u"
 msgid "Provider does not support asynchronous server operation"
 msgstr "Poskytovatel nepodporuje asynchronní serverové operace"
 
-#: ../libgda/gda-connection.c:3335 ../libgda/gda-connection.c:3350
+#: ../libgda/gda-connection.c:3336 ../libgda/gda-connection.c:3351
 msgid "Statement is a selection statement"
 msgstr "Příkaz je příkazem provádějícím výběr"
 
-#: ../libgda/gda-connection.c:3407 ../libgda/gda-connection.c:3483
-#: ../libgda/gda-connection.c:3553
+#: ../libgda/gda-connection.c:3408 ../libgda/gda-connection.c:3484
+#: ../libgda/gda-connection.c:3554
 msgid "Statement is not a selection statement"
 msgstr "Příkaz není příkazem provádějícím výběr"
 
-#: ../libgda/gda-connection.c:4012
+#: ../libgda/gda-connection.c:4013
 msgid "Invalid argument"
 msgstr "Neplatný parametr"
 
-#: ../libgda/gda-connection.c:4021
+#: ../libgda/gda-connection.c:4022
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Chybějící nebo nesprávné parametry pro tabulku „%s“: %s"
 
-#: ../libgda/gda-connection.c:4775
+#: ../libgda/gda-connection.c:4776
 msgid "Meta update error"
 msgstr "Chyba aktualizace metaúdajů"
 
-#: ../libgda/gda-connection.c:5339
+#: ../libgda/gda-connection.c:5340
 msgid "Wrong filter arguments"
 msgstr "Nesprávné parametry filtru"
 
-#: ../libgda/gda-connection.c:5527 ../libgda/gda-connection.c:5580
-#: ../libgda/gda-connection.c:5624 ../libgda/gda-connection.c:5668
-#: ../libgda/gda-connection.c:5712
+#: ../libgda/gda-connection.c:5528 ../libgda/gda-connection.c:5581
+#: ../libgda/gda-connection.c:5625 ../libgda/gda-connection.c:5669
+#: ../libgda/gda-connection.c:5713
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Sledování stavu transakcí připojení: pro %s neexistuje žádná transakce"
 
-#: ../libgda/gda-connection.c:6018
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:239
+#: ../libgda/gda-connection.c:6019
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:238
 msgid "Internal error: invalid provider handle"
 msgstr "Interní chyba: neplatný ovladač poskytovatele"
 
@@ -2425,7 +2425,7 @@ msgid "Can't find libsqlite3."
 msgstr "Nelze najít libsqlite3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:656
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:262
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:270
 #: ../libgda/thread-wrapper/gda-thread-provider.c:391
 #: ../providers/bdb/gda-bdb-provider.c:154
 #: ../providers/jdbc/gda-jdbc-provider.c:356
@@ -2569,6 +2569,7 @@ msgstr ""
 "Nelze zjistit ROWID rozsáhlého binárního objektu (BLOB), který se má vyplnit"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2578
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:335
 #: ../providers/jdbc/gda-jdbc-provider.c:1217
 #: ../providers/mysql/gda-mysql-provider.c:2074
 #: ../providers/postgres/gda-postgres-provider.c:1802
@@ -2700,7 +2701,7 @@ msgstr "Kritická interní chyba poskytovatele SQLite"
 msgid "Row %d not found"
 msgstr "Řádek %d nebyl nalezen"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:292
+#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:372
 msgid "Table to remove not found"
 msgstr "Tabulka, která se má odstranit, nebyla nalezena"
 
@@ -2729,8 +2730,8 @@ msgstr ""
 "Omezení rozsáhlých binárních objektů (BLOB) není v podmínkách virtuální "
 "tabulky kontrolováno"
 
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:154
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:194
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:153
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:193
 msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
@@ -2738,53 +2739,54 @@ msgstr ""
 "Interní chyba: virtuální poskytovatel neimplementuje virtuální metodu "
 "create_operation()"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:350
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:425
 msgid "Data model must have at least one column"
 msgstr "Datový model musí mít nejméně jeden sloupec"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:367
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:442
 msgid "Could not compute virtual table's columns"
 msgstr "Nelze vypočítat sloupce virtuální tabulky"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:389
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:464
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Nelze získat popis datového modelu pro sloupec %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:403
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:478
 #, c-format
-msgid "Can't get data model's column type or type for column %d"
-msgstr "Nelze získat typ sloupce datového modelu nebo typ pro sloupec %d"
+#| msgid "Can't get data model's column type or type for column %d"
+msgid "Can't get data model's column type for column %d"
+msgstr "Nelze získat typ sloupce datového modelu pro sloupec %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:450
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:527
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "Nelze deklarovat virtuální tabulku (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:569
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:646
 msgid "Column not found"
 msgstr "Sloupec nebyl nalezen"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1014
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1091
 msgid "Data model representing the table is read only"
 msgstr "Datový model představující tabulku je pouze ke čtení"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1044
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1121
 msgid "No statement provided to modify the data model representing the table"
 msgstr ""
 "Není poskytován žádný příkaz, kterým se dá upravit datový model "
 "představující tabulku"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1052
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1129
 msgid ""
 "Invalid statement provided to modify the data model representing the table"
 msgstr ""
 "Je poskytován neplatný příkaz, kterým se dá upravit datový model "
 "představující tabulku"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1072
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1126
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1135
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1149
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1203
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1212
 msgid ""
 "Invalid parameter in statement provided to modify the data model "
 "representing the table"
@@ -2792,12 +2794,12 @@ msgstr ""
 "Neplatný parametr v příkazu poskytovaném k upravě datového modelu "
 "představujícího tabulku"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1094
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1104
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1171
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1181
 msgid "Could not retreive row to delete"
 msgstr "Nelze získat řádek, který se má smazat"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1168
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1245
 msgid ""
 "Failed to execute the statement provided to modify the data model "
 "representing the table"
