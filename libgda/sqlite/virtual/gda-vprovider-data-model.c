@@ -713,10 +713,14 @@ virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
 			GValue *gvalue;
 			cvalue = gda_data_model_iter_get_value_at (cursor->iter, i);
 			gvalue = gda_row_get_value (grow, i);
-			if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL) {
-				g_value_init (gvalue, G_VALUE_TYPE (cvalue));
-				g_value_copy (cvalue, gvalue);
-			}
+			if (cvalue) {
+				if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL) {
+					g_value_init (gvalue, G_VALUE_TYPE (cvalue));
+					g_value_copy (cvalue, gvalue);
+				}
+ 			}
+			else
+				gda_row_invalidate_value (grow, gvalue);
 		}
 		
 		hid = g_new (gint64, 1);
