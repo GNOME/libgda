@@ -277,6 +277,7 @@ GdaDataModel
 GdaDataModelError
 gda_data_model_get_n_rows
 gda_data_model_get_n_columns
+gda_data_model_get_exceptions
 gda_data_model_describe_column
 gda_data_model_get_column_index
 gda_data_model_get_column_name
@@ -1413,6 +1414,7 @@ gda_data_select_set_modification_statement_sql
 gda_data_select_compute_modification_statements
 gda_data_select_compute_columns_attributes
 gda_data_select_rerun
+gda_data_select_add_exception
 <SUBSECTION Standard>
 GDA_IS_DATA_SELECT
 GDA_DATA_SELECT

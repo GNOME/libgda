@@ -40,6 +40,8 @@ GdaRow        *gda_data_select_get_stored_row               (GdaDataSelect *mode
 GdaConnection *gda_data_select_get_connection               (GdaDataSelect *model);
 void           gda_data_select_set_columns                  (GdaDataSelect *model, GSList *columns);
 
+void           gda_data_select_add_exception                (GdaDataSelect *model, GError *error);
+
 /* internal API */
 void           _gda_data_select_share_private_data (GdaDataSelect *master, GdaDataSelect *slave);
 

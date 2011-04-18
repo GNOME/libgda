@@ -75,7 +75,9 @@ typedef enum {
 	GDA_DATA_MODEL_ACCESS_ERROR,
 	GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
 	GDA_DATA_MODEL_FILE_EXIST_ERROR,
-	GDA_DATA_MODEL_XML_FORMAT_ERROR
+	GDA_DATA_MODEL_XML_FORMAT_ERROR,
+
+	GDA_DATA_MODEL_TRUNCATED_ERROR
 } GdaDataModelError;
 
 /* struct for the interface */
@@ -117,6 +119,9 @@ struct _GdaDataModelIface {
 	void                 (* row_removed)        (GdaDataModel *model, gint row);
 	void                 (* changed)            (GdaDataModel *model);
 	void                 (* reset)              (GdaDataModel *model);
+
+	/* getting more information about a data model */
+	GError             **(* i_get_exceptions)   (GdaDataModel *model);
 };
 
 GType               gda_data_model_get_type               (void) G_GNUC_CONST;
@@ -150,6 +155,8 @@ gboolean            gda_data_model_remove_row             (GdaDataModel *model, 
 gint                gda_data_model_get_row_from_values    (GdaDataModel *model, GSList *values, gint *cols_index);
 
 void                gda_data_model_send_hint              (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
+
+GError            **gda_data_model_get_exceptions         (GdaDataModel *model);
 
 /* contents saving and loading */
 gchar              *gda_data_model_export_to_string       (GdaDataModel *model, GdaDataModelIOFormat format, 
