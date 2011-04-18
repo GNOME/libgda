@@ -1,4 +1,4 @@
-/* GDA SQLite provider
+/*
  * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -545,6 +545,21 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
 			      "%s", _("SQLite provider fatal internal error"));
 		break;
+	default: {
+		GError *lerror = NULL;
+		if (rc == SQLITE_IOERR_TRUNCATE)
+			g_set_error (&lerror, GDA_DATA_MODEL_ERROR,
+				     GDA_DATA_MODEL_TRUNCATED_ERROR, _("Tuncated data"));
+		else
+			g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
+				     "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
+		gda_data_select_add_exception (GDA_DATA_SELECT (model), lerror);
+
+		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
+		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+		break;
+	}
 	}
 	return prow;
 }
