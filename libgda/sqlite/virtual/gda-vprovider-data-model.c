@@ -617,6 +617,9 @@ virtualNext (sqlite3_vtab_cursor *cur)
 
 	TRACE (cur->pVtab, cur);
 
+	if (gda_data_model_get_exceptions (cursor->model))
+		return SQLITE_IOERR_TRUNCATE;
+
 	if (!gda_data_model_iter_move_next (cursor->iter)) {
 		if (gda_data_model_iter_is_valid (cursor->iter))
 			return SQLITE_IOERR;
