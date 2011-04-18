@@ -92,6 +92,7 @@ typedef struct {
 struct _GdaDataSelectPrivate {
 	GdaConnection          *cnc;
         GdaDataModelIter       *iter;
+	GArray                 *exceptions; /* array of #GError pointers */
 	PrivateShareable       *sh;
 	gulong                  ext_params_changed_sig_id;
 };
@@ -174,6 +175,7 @@ static gboolean             gda_data_select_remove_row      (GdaDataModel *model
 
 static void                 gda_data_select_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
 static gboolean             gda_data_select_get_notify      (GdaDataModel *model);
+static GError             **gda_data_select_get_exceptions  (GdaDataModel *model);
 
 static GObjectClass *parent_class = NULL;
 
@@ -313,6 +315,8 @@ gda_data_select_data_model_init (GdaDataModelIface *iface)
 	iface->i_set_notify = gda_data_select_set_notify;
 	iface->i_get_notify = gda_data_select_get_notify;
 	iface->i_send_hint = NULL;
+
+	iface->i_get_exceptions = gda_data_select_get_exceptions;
 }
 
 static void
@@ -322,6 +326,7 @@ gda_data_select_init (GdaDataSelect *model, G_GNUC_UNUSED GdaDataSelectClass *kl
 
 	model->priv = g_new0 (GdaDataSelectPrivate, 1);
 	model->priv->cnc = NULL;
+	model->priv->exceptions = NULL;
 	model->priv->sh = g_new0 (PrivateShareable, 1);
 	model->priv->sh-> notify_changes = TRUE;
 	model->priv->sh->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
@@ -558,6 +563,15 @@ gda_data_select_finalize (GObject *object)
 
 	/* free memory */
 	if (model->priv) {
+		if (model->priv->exceptions) {
+			gint i;
+			for (i = 0; i < model->priv->exceptions->len; i++) {
+				GError *e;
+				e = g_array_index (model->priv->exceptions, GError*, i);
+				g_error_free (e);
+			}
+			g_array_free (model->priv->exceptions, TRUE);
+		}
 		g_free (model->priv);
 		model->priv = NULL;
 	}
@@ -3130,6 +3144,40 @@ static gboolean
 gda_data_select_get_notify (GdaDataModel *model)
 {
 	return ((GdaDataSelect *) model)->priv->sh->notify_changes;
+}
+
+static GError **
+gda_data_select_get_exceptions (GdaDataModel *model)
+{
+	GdaDataSelect *sel;
+	sel =  GDA_DATA_SELECT (model);
+	if (sel->priv->exceptions && (sel->priv->exceptions->len > 0))
+		return (GError **) sel->priv->exceptions->data;
+	else
+		return NULL;
+}
+
+/**
+ * gda_data_select_add_exception:
+ * @model: a #GdaDataSelect
+ * @error: (transfer full): an error to add as exception
+ *
+ * Add an exception to @model.
+ *
+ * Since: 5.0
+ */
+void
+gda_data_select_add_exception (GdaDataSelect *model, GError *error)
+{
+	GdaDataSelect *sel;
+
+	g_return_if_fail (GDA_IS_DATA_SELECT (model));
+	g_return_if_fail (error);
+	g_return_if_fail (error->message);
+	sel =  GDA_DATA_SELECT (model);
+	if (!sel->priv->exceptions)
+		sel->priv->exceptions = g_array_new (TRUE, FALSE, sizeof (GError*));
+	g_array_append_val (sel->priv->exceptions, error);
 }
 
 /*

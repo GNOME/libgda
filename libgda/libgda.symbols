@@ -232,6 +232,7 @@
 	gda_data_model_get_column_index
 	gda_data_model_get_column_name
 	gda_data_model_get_column_title
+	gda_data_model_get_exceptions
 	gda_data_model_get_n_columns
 	gda_data_model_get_n_rows
 	gda_data_model_get_row_from_values
@@ -310,6 +311,7 @@
 	gda_data_proxy_set_sample_size
 	gda_data_proxy_set_sample_start
 	gda_data_proxy_undelete
+	gda_data_select_add_exception
 	gda_data_select_compute_columns_attributes
 	gda_data_select_compute_modification_statements
 	gda_data_select_compute_row_selection_condition

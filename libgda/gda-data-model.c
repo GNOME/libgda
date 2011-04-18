@@ -996,6 +996,31 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
 		(GDA_DATA_MODEL_GET_CLASS (model)->i_send_hint) (model, hint, hint_value);
 }
 
+/**
+ * gda_data_model_get_exceptions:
+ * @model: a #GdaDataModel
+ *
+ * Get the global data model exception(s) that occurred when using @model.
+ * This is usefull for example for the LDAP related
+ * data models where some rows may be missing because the LDAP search has reached a limit
+ * imposed by the LDAP server.
+ *
+ * Returns: (transfer none) (element-type GError) (array zero-terminated=1): a pointer to a %NULL terminated array of #GError, or %NULL.
+ *
+ * Since: 5.0
+ */
+GError **
+gda_data_model_get_exceptions (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_exceptions)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_exceptions) (model);
+	else
+		return NULL;
+}
+
+
 static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, 
 					const gint *rows, gint nb_rows, gchar sep, gchar quote, gboolean field_quotes,
 					gboolean null_as_empty, gboolean invalid_as_null);
@@ -2475,10 +2500,29 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			g_strfreev (cols_str [i]);
 		g_free (cols_str);
 	}
+
+	/* status message */
+	g_string_append_c (string, '(');
 	if (n_rows > 0)
-		g_string_append_printf (string, ngettext("(%d row)\n", "(%d rows)\n", n_rows), n_rows);
+		g_string_append_printf (string, ngettext("%d row", "%d rows", n_rows), n_rows);
 	else
-		g_string_append_printf (string, _("(0 row)\n"));
+		g_string_append_printf (string, _("0 row"));
+
+	GError **exceptions;
+	exceptions = gda_data_model_get_exceptions (model);
+	if (exceptions) {
+		gint i;
+		for (i = 0; exceptions[i]; i++) {
+			GError *ex;
+			ex = exceptions[i];
+			if (ex && ex->message) {
+				g_string_append (string, ", ");
+				g_string_append (string, ex->message);
+			}
+		}
+	}
+	g_string_append (string, ")\n");
+
 
  out:
 	if (ramodel)
