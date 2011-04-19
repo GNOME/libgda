@@ -1,4 +1,4 @@
-/* GDA - SQL console
+/*
  * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
@@ -1292,7 +1292,8 @@ static void conn_closed_cb (GdaConnection *cnc, ConnectionSetting *cs);
 
 static gchar* read_hidden_passwd ();
 static void user_password_needed (GdaDsnInfo *info, const gchar *real_provider,
-				  gboolean *out_need_username, gboolean *out_need_password);
+				  gboolean *out_need_username, gboolean *out_need_password,
+				  gboolean *out_need_password_if_user);
 
 /*
  * Open a connection
@@ -1302,7 +1303,6 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 {
 	GdaConnection *newcnc = NULL;
 	ConnectionSetting *cs = NULL;
-	static gint cncindex = 0;
 	gchar *real_cnc_string;
 
 	if (cnc_name && ! connection_name_is_valid (cnc_name)) {
@@ -1312,7 +1312,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	}
 	
 	GdaDsnInfo *info;
-	gboolean need_user, need_pass;
+	gboolean need_user, need_pass, need_password_if_user;
 	gchar *user, *pass, *real_cnc, *real_provider, *real_auth_string = NULL;
 
 	/* if cnc string is a regular file, then use it with SQLite */
@@ -1343,7 +1343,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	}
 
 	info = gda_config_get_dsn_info (real_cnc);
-	user_password_needed (info, real_provider, &need_user, &need_pass);
+	user_password_needed (info, real_provider, &need_user, &need_pass, &need_password_if_user);
 
 	if (!real_cnc) {
 		g_free (user);
@@ -1393,6 +1393,8 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		g_free (user);
 		user = g_strdup (buf);
 	}
+	if (user)
+		need_pass = need_password_if_user;
 	if (need_pass && ((pass && !*pass) || !pass)) {
 		gchar *tmp;
 		g_print (_("\tPassword for '%s': "), cnc_name);
@@ -1413,17 +1415,23 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	}
 
 	if (user || pass) {
-		gchar *s1;
-		s1 = gda_rfc1738_encode (user);
-		if (pass) {
-			gchar *s2;
-			s2 = gda_rfc1738_encode (pass);
-			real_auth_string = g_strdup_printf ("USERNAME=%s;PASSWORD=%s", s1, s2);
-			g_free (s2);
+		GString *string;
+		string = g_string_new ("");
+		if (user) {
+			gchar *enc;
+			enc = gda_rfc1738_encode (user);
+			g_string_append_printf (string, "USERNAME=%s", enc);
+			g_free (enc);
 		}
-		else
-			real_auth_string = g_strdup_printf ("USERNAME=%s", s1);
-		g_free (s1);
+		if (pass) {
+			gchar *enc;
+			enc = gda_rfc1738_encode (pass);
+			if (user)
+				g_string_append_c (string, ';');
+			g_string_append_printf (string, "PASSWORD=%s", enc);
+			g_free (enc);
+		}
+		real_auth_string = g_string_free (string, FALSE);
 	}
 	
 	if (info && !real_provider)
@@ -1445,17 +1453,32 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	if (newcnc) {
 		gchar *dict_file_name = NULL;
 		gchar *cnc_string;
+		const gchar *rootname;
+		gint i;
 		g_object_get (G_OBJECT (newcnc),
 			      "cnc-string", &cnc_string, NULL);
 		dict_file_name = config_info_compute_dict_file_name (info, cnc_string);
 		g_free (cnc_string);
 
 		cs = g_new0 (ConnectionSetting, 1);
-		if (cnc_name && *cnc_name) 
-			cs->name = g_strdup (cnc_name);
+		if (cnc_name && *cnc_name)
+			rootname = cnc_name;
 		else
-			cs->name = g_strdup_printf ("c%d", cncindex);
-		cncindex++;
+			rootname = "c";
+		if (gda_sql_get_connection (rootname)) {
+			for (i = 0; ; i++) {
+				gchar *tmp;
+				tmp = g_strdup_printf ("%s%d", rootname, i);
+				if (gda_sql_get_connection (tmp))
+					g_free (tmp);
+				else {
+					cs->name = tmp;
+					break;
+				}
+			}
+		}
+		else
+			cs->name = g_strdup (rootname);
 		cs->parser = gda_connection_create_parser (newcnc);
 		if (!cs->parser)
 			cs->parser = gda_sql_parser_new ();
@@ -1547,13 +1570,16 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 
 static void
 user_password_needed (GdaDsnInfo *info, const gchar *real_provider,
-		      gboolean *out_need_username, gboolean *out_need_password)
+		      gboolean *out_need_username, gboolean *out_need_password,
+		      gboolean *out_need_password_if_user)
 {
 	GdaProviderInfo *pinfo = NULL;
 	if (out_need_username)
 		*out_need_username = FALSE;
 	if (out_need_password)
 		*out_need_password = FALSE;
+	if (out_need_password_if_user)
+		*out_need_password_if_user = FALSE;
 
 	if (real_provider)
 		pinfo = gda_config_get_provider_info (real_provider);
@@ -1561,10 +1587,23 @@ user_password_needed (GdaDsnInfo *info, const gchar *real_provider,
 		pinfo = gda_config_get_provider_info (info->provider);
 
 	if (pinfo && pinfo->auth_params) {
-		if (out_need_password && gda_set_get_holder (pinfo->auth_params, "PASSWORD"))
-			*out_need_password = TRUE;
-		if (out_need_username && gda_set_get_holder (pinfo->auth_params, "USERNAME"))
-			*out_need_username = TRUE;
+		if (out_need_password) {
+			GdaHolder *h;
+			h = gda_set_get_holder (pinfo->auth_params, "PASSWORD");
+			if (h && gda_holder_get_not_null (h))
+				*out_need_password = TRUE;
+		}
+		if (out_need_username) {
+			GdaHolder *h;
+			h = gda_set_get_holder (pinfo->auth_params, "USERNAME");
+			if (h && gda_holder_get_not_null (h))
+				*out_need_username = TRUE;
+		}
+		if (out_need_password_if_user) {
+			if (gda_set_get_holder (pinfo->auth_params, "PASSWORD") &&
+			    gda_set_get_holder (pinfo->auth_params, "USERNAME"))
+				*out_need_password_if_user = TRUE;
+		}
 	}
 }
 
