@@ -1540,9 +1540,9 @@ create_internal_provider (const gchar *path,
 		info->auth_params = gda_set_new_inline (2, "USERNAME", G_TYPE_STRING, NULL,
 							"PASSWORD", G_TYPE_STRING, NULL);
 		h = gda_set_get_holder (info->auth_params, "USERNAME");
-		g_object_set (G_OBJECT (h), "name", _("Username"), NULL);
+		g_object_set (G_OBJECT (h), "name", _("Username"), "not-null", TRUE, NULL);
 		h = gda_set_get_holder (info->auth_params, "PASSWORD");
-		g_object_set (G_OBJECT (h), "name", _("Password"), NULL);
+		g_object_set (G_OBJECT (h), "name", _("Password"), "not-null", TRUE, NULL);
 
 		GValue *value;
 #define GDAUI_ATTRIBUTE_PLUGIN "__gdaui_attr_plugin"
