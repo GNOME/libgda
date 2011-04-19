@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2007 - 2009 Vivien Malerba
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,7 +24,7 @@
 #include <libgda/gda-util.h>
 
 /**
- * gda_sql_param_spec_take_name
+ * gda_sql_param_spec_take_name:
  * @pspec: a #GdaSqlParamSpec pointer
  * @value: a G_TYPE_STRING #GValue
  *
@@ -46,7 +46,7 @@ gda_sql_param_spec_take_name (GdaSqlParamSpec *pspec, GValue *value)
 }
 
 /**
- * gda_sql_param_spec_take_descr
+ * gda_sql_param_spec_take_descr:
  * @pspec: a #GdaSqlParamSpec pointer
  * @value: a G_TYPE_STRING #GValue
  *
@@ -68,7 +68,7 @@ gda_sql_param_spec_take_descr (GdaSqlParamSpec *pspec, GValue *value)
 }
 
 /**
- * gda_sql_param_spec_take_nullok
+ * gda_sql_param_spec_take_nullok:
  * @pspec: a #GdaSqlParamSpec pointer
  * @value: a G_TYPE_STRING #GValue. 
  *
@@ -94,7 +94,7 @@ gda_sql_param_spec_take_nullok (GdaSqlParamSpec *pspec, GValue *value)
 }
 
 /**
- * gda_sql_param_spec_take_type
+ * gda_sql_param_spec_take_type:
  * @pspec: a #GdaSqlParamSpec pointer
  * @value: a G_TYPE_STRING #GValue
  *
@@ -119,7 +119,7 @@ gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
 }
 
 /**
- * gda_sql_param_spec_new
+ * gda_sql_param_spec_new:
  * @value: a G_TYPE_STRING #GValue
  *
  * @value must contain a string representing a variable, see the documentation associated to the
@@ -174,7 +174,7 @@ gda_sql_param_spec_new (GValue *value)
 }
 
 /**
- * gda_sql_param_spec_copy
+ * gda_sql_param_spec_copy:
  * @pspec: #GdaSqlParamSpec pointer
  *
  * Creates a copy of @pspec.
@@ -200,7 +200,7 @@ gda_sql_param_spec_copy (GdaSqlParamSpec *pspec)
 }
 
 /**
- * gda_sql_param_spec_free
+ * gda_sql_param_spec_free:
  * @pspec: #GdaSqlParamSpec pointer
  *
  * Destroys @pspec.
@@ -216,7 +216,7 @@ gda_sql_param_spec_free (GdaSqlParamSpec *pspec)
 }
 
 /**
- * gda_sql_param_spec_serialize
+ * gda_sql_param_spec_serialize:
  * @pspec: a #GdaSqlParamSpec pointer
  *
  * Creates a new string representing @pspec.
