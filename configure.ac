@@ -436,6 +436,49 @@ dnl *********************************
 dnl Check for GObject Introspection
 dnl *********************************
 GOBJECT_INTROSPECTION_CHECK([0.6.5])
+AC_ARG_ENABLE([gda-gi],
+    AS_HELP_STRING([--enable-gda-gi], [Enable GObject Introspection for libgda [default=auto]]),
+    [enable_gda_gi=$enableval],[enable_gda_gi=auto])
+
+if test "x$found_introspection" = xno
+then
+    if test "x$enable_gda_gi" = xyes
+    then
+	AC_MSG_ERROR([Introspection for Libgda is requested but not available])
+    fi
+    if test "x$enable_gda_gi" = xauto
+    then
+	enable_gda_gi=no
+    fi
+else
+    if test "x$enable_gda_gi" = xauto
+    then
+        enable_gda_gi=yes
+    fi
+fi
+AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
+
+AC_ARG_ENABLE([gdaui-gi],
+    AS_HELP_STRING([--enable-gdaui-gi], [Enable GObject Introspection for libgda-ui [default=auto]]),
+    [enable_gdaui_gi=$enableval],[enable_gdaui_gi=auto])
+
+if test "x$found_introspection" = xno
+then
+    if test "x$enable_gdaui_gi" = xyes
+    then
+	AC_MSG_ERROR([Introspection for Libgda UI is requested but not available])
+    fi
+    if test "x$enable_gdaui_gi" = xauto
+    then
+	enable_gdaui_gi=no
+    fi
+else
+    if test "x$enable_gdaui_gi" = xauto
+    then
+        enable_gdaui_gi=yes
+    fi
+fi
+AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "$enable_gdaui_gi" = "yes"])
 
 dnl ******************************
 dnl Checks for libcrypto
@@ -908,6 +951,8 @@ echo " Configuration summary for version $GDA_VERSION"
 echo "   Installation prefix = $prefix"
 echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
+echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi != xno; then echo yes; else echo no; fi`"
+echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
 echo "      Berkeley DB SQL = $bdbsql_found"
