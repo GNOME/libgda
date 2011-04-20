@@ -1,3 +1,20 @@
+libgda 4.2.6, 2011-04-20
+
+ - MySQL provider: correctly handle the UNIX SOCKET connection argument and
+   corrected the IMPACTED_ROWS returned value
+ - Oracle provider: added the "SCHEMA" parameter when opening a connection
+ - GdaBrowser: corrections, UI and help improvements
+ - Enable GdaDataModel to report global exceptions
+ - Misc corrections: SQLite DLL loading, building of embedded MDBTools
+   virtual connections, GObject introspection and more
+ - Bug fixes: #639319, #647887, #639472
+ - Translations:
+	- cz (Marek Černocký)
+	- es (Daniel Mustieles)
+	- sl (Matej Urbančič)
+	- de (Mario Blättermann, Paul Seyfert)
+	- gl (Fran Diéguez)
+
 libgda 4.2.5, 2011-02-22
 
  - corrected regression which prevented correct execution of SELECT statements
