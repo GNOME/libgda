@@ -265,7 +265,7 @@ gda_default_unescape_string (const gchar *string)
 }
 
 /**
- * gda_utility_check_data_model
+ * gda_utility_check_data_model: (skip)
  * @model: a #GdaDataModel object
  * @nbcols: the minimum requested number of columns
  * @Varargs: @nbcols arguments of type GType or -1 (if any data type is accepted)

@@ -473,7 +473,7 @@ gda_set_copy (GdaSet *set)
 }
 
 /**
- * gda_set_new_inline:
+ * gda_set_new_inline: (skip)
  * @nb: the number of value holders which will be contained in the new #GdaSet
  * @...: a serie of a (const gchar*) id, (GType) type, and value
  *
@@ -584,7 +584,7 @@ gda_set_new_inline (gint nb, ...)
 }
 
 /**
- * gda_set_set_holder_value:
+ * gda_set_set_holder_value: (skip)
  * @set: a #GdaSet object
  * @error: (allow-none): a place to store errors, or %NULL
  * @holder_id: the ID of the holder to set the value

@@ -2038,7 +2038,7 @@ real_gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *pat
 }
 
 /**
- * gda_server_operation_get_value_at:
+ * gda_server_operation_get_value_at: (skip)
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path
@@ -2071,7 +2071,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 }
 
 /**
- * gda_server_operation_get_sql_identifier_at:
+ * gda_server_operation_get_sql_identifier_at: (skip)
  * @op: a #GdaServerOperation object
  * @cnc: a #GdaConnection, or %NULL
  * @prov: a #GdaServerProvider, or %NULL
@@ -2119,7 +2119,7 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 }
 
 /**
- * gda_server_operation_set_value_at:
+ * gda_server_operation_set_value_at: (skip)
  * @op: a #GdaServerOperation object
  * @value: a string
  * @error: a place to store errors or %NULL
@@ -2526,7 +2526,7 @@ gda_server_operation_perform_drop_database (GdaServerOperation *op, const gchar 
 }
 
 /**
- * gda_server_operation_prepare_create_table:
+ * gda_server_operation_prepare_create_table: (skip)
  * @cnc: an opened connection
  * @table_name: name of the table to create
  * @error: a place to store errors, or %NULL

@@ -283,7 +283,7 @@ gda_data_model_array_new (gint cols)
 }
 
 /**
- * gda_data_model_array_new_with_g_types:
+ * gda_data_model_array_new_with_g_types: (skip)
  * @cols: number of columns for rows in this data model.
  * @...: types of the columns of the model to create as #GType, as many as indicated by @cols
  * 
