@@ -1,5 +1,9 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba
+ * Copyright (C) 2008 - 2011 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
+ *      Daniel Espinosa <esodan@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -2416,16 +2420,127 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 	return model;
 }
 
+/**
+ * gda_meta_store_extract_v: (Rename to: gda_meta_store_extract)
+ * @store: a #GdaMetaStore object
+ * @select_sql: a SELECT statement
+ * @vars: (allow-none): a hash table with all variables names as keys and GValue* as value, representing values for all the
+ * variables mentioned in @select_sql. If there is no variable then this part can be omitted.
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Extracts some data stored in @store using a custom SELECT query. If the @select_sql filter involves
+ * SQL identifiers (such as table or column names), then the values should have been adapted using
+ * gda_meta_store_sql_identifier_quote().
+ *
+ * For more information about
+ * SQL identifiers are represented in @store, see the
+ * <link linkend="information_schema:sql_identifiers">meta data section about SQL identifiers</link>.
+ *
+ * Returns: (transfer full): a new #GdaDataModel, or %NULL if an error occurred
+ *
+ * Since: 4.2.6
+ */
+GdaDataModel *
+gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTable *vars, GError **error)
+{
+	GdaStatement *stmt = NULL;
+	GdaDataModel *model;
+	GdaSet *params = NULL;
+
+	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+	g_return_val_if_fail (select_sql, NULL);
+
+	if (store->priv->init_error) {
+		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		return NULL;
+	}		
+
+	gda_mutex_lock (store->priv->mutex);
+
+	if ((store->priv->max_extract_stmt > 0) && !store->priv->extract_stmt_hash)
+		store->priv->extract_stmt_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+
+	/* statement creation */
+	if (store->priv->extract_stmt_hash)
+		stmt = g_hash_table_lookup (store->priv->extract_stmt_hash, select_sql);
+	if (stmt) 
+		g_object_ref (stmt);
+	else {
+		GdaMetaStoreClass *klass;
+		const gchar *remain;
+
+		klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+		stmt = gda_sql_parser_parse_string (klass->cpriv->parser, select_sql, &remain, error);
+		if (!stmt) {
+			gda_mutex_unlock (store->priv->mutex);
+			return NULL;
+		}
+		if (remain) {
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
+				     "%s", _("More than one SQL statement"));
+			g_object_unref (stmt);
+			gda_mutex_unlock (store->priv->mutex);
+			return NULL;
+		}
+
+		if (store->priv->current_extract_stmt < store->priv->max_extract_stmt) {
+			g_hash_table_insert (store->priv->extract_stmt_hash, g_strdup (select_sql), g_object_ref (stmt));
+			store->priv->current_extract_stmt++;
+		}
+	}
+	
+	/* parameters */
+	if (!gda_statement_get_parameters (stmt, &params, error)) {
+		g_object_unref (stmt);
+		gda_mutex_unlock (store->priv->mutex);
+		return NULL;
+	}
+	if (params) {
+		GSList *list, *params_set = NULL;
+		gchar *pname;
+		GValue *value;
+		GHashTableIter iter;
+		g_hash_table_iter_init (&iter, vars);
+		while (g_hash_table_iter_next (&iter, &pname, &value)) {
+			GdaHolder *h;
+			h = gda_set_get_holder (params, pname);
+			if (!h)
+				g_warning (_("Parameter '%s' is not present in statement"), pname);
+			else {
+				if (!gda_holder_set_value (h, value, error)) {
+					g_object_unref (stmt);
+					g_object_unref (params);
+					gda_mutex_unlock (store->priv->mutex);
+					return NULL;
+				}
+				params_set = g_slist_prepend (params_set, h);
+			}
+		}
+		
+		for (list = params->holders; list; list = list->next) {
+			if (!g_slist_find (params_set, list->data))
+				g_warning (_("No value set for parameter '%s'"), 
+					   gda_holder_get_id (GDA_HOLDER (list->data)));
+		}
+		g_slist_free (params_set);
+	}
+
+	/* execution */
+	model = gda_connection_statement_execute_select (store->priv->cnc, stmt, params, error);
+	g_object_unref (stmt);
+	if (params)
+		g_object_unref (params);
+
+	gda_mutex_unlock (store->priv->mutex);
+	return model;
+} 
+
 static gboolean prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table_infos, 
 				      TableConditionInfo **out_cond_infos, gboolean *out_with_key,
 				      const gchar *table_name, const gchar *condition, GError **error, 
 				      gint nvalues, const gchar **value_names, const GValue **values);
 static gint find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row,
 			       gint *pk_cols, gint pk_cols_nb, gboolean *out_has_changed, GError **error);
-static gboolean gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name, 
-					 GdaDataModel *new_data, const gchar *condition, GError **error, 
-					 gint nvalues, const gchar **value_names, const GValue **values);
-
 /**
  * gda_meta_store_modify: (skip)
  * @store: a #GdaMetaStore object
@@ -2486,8 +2601,8 @@ gda_meta_store_modify (GdaMetaStore *store, const gchar *table_name,
 		values [n_values] = v;
 	}
 	va_end (ap);
-	retval = gda_meta_store_modify_v (store, table_name, new_data, condition, error,
-					  n_values, value_names, values);
+	retval = gda_meta_store_modify_v (store, table_name, new_data, condition, 
+					  n_values, value_names, values, error);
 	g_free (value_names);
 	g_free (values);
 	return retval;
@@ -2531,20 +2646,40 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
 		return FALSE;
 	}
 
-	retval = gda_meta_store_modify_v (store, context->table_name, new_data, cond ? cond->str : NULL, error,
+	retval = gda_meta_store_modify_v (store, context->table_name, new_data, cond ? cond->str : NULL,
 					  context->size, 
 					  (const gchar **) context->column_names,
-					  (const GValue **)context->column_values);
+					  (const GValue **)context->column_values, error);
 	if (cond)
 		g_string_free (cond, TRUE);
 	return retval;
 }
 
 /*#define DEBUG_STORE_MODIFY*/
-static gboolean
+/**
+ * gda_meta_store_modify_v:
+ * @store: a #GdaMetaStore object
+ * @table_name: the name of the table to modify within @store
+ * @new_data: (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
+ * with no row at all)
+ * @condition: (allow-none): SQL expression (which may contain variables) defining the rows which are being obsoleted by @new_data, or %NULL
+ * @nvalues: number of values in @value_names and @values
+ * @value_names: (array length=nvalues): names of values
+ * @values: (array length=nvalues): values
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Propagates an update to @store, the update's contents is represented by @new_data, this function is
+ * primarily reserved to database providers.
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 4.2.6
+ */
+gboolean
 gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name, 
-			 GdaDataModel *new_data, const gchar *condition, GError **error, 
-			 gint nvalues, const gchar **value_names, const GValue **values)
+			 GdaDataModel *new_data, const gchar *condition,  
+			 gint nvalues, const gchar **value_names, const GValue **values,
+			 GError **error)
 {
 	TableInfo *schema_set;
 	TableConditionInfo *custom_set;
@@ -2880,8 +3015,8 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 						}
 					}
 					if (!gda_meta_store_modify_v (store, tfk->table_info->obj_name, NULL,
-								      tfk->fk_fields_cond, error, 
-								      tfk->cols_nb, (const gchar **) tfk->fk_names_array, values)) {
+								      tfk->fk_fields_cond,
+								      tfk->cols_nb, (const gchar **) tfk->fk_names_array, values, error)) {
 						retval = FALSE;
 						g_free (values);
 						goto out;

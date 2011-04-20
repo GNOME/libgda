@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
+ *      Daniel Espinosa <esodan@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -907,9 +908,12 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 			
 			prop = xmlGetProp(node, (xmlChar*)"minitems");
 			if (prop) {
-				opnode->d.seq.min_items = atoi ((gchar*)prop); /* Flawfinder: ignore */
-				if (opnode->d.seq.min_items < 0)
+				gint tmp;
+				tmp = atoi ((gchar*)prop); /* Flawfinder: ignore */
+				if (i < 0)
 					opnode->d.seq.min_items = 0;
+				else
+					opnode->d.seq.min_items = tmp;
 				xmlFree (prop);
 			}
 
@@ -1973,18 +1977,19 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
 	return FALSE;
 }
 
-/*
- * real_gda_server_operation_get_value_at
+/**
+ * gda_server_operation_get_value_at_path:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a node (starting with "/")
  *
  * Get the value for the node at the @path path
  *
- * Returns: a constant #GValue if a value has been defined, or %NULL if the value is undefined or
- * if the @path is not defined or @path does not hold any value.
+ * Returns: (transfer none): a constant #GValue if a value has been defined, or %NULL if the value is undefined or if the @path is not defined or @path does not hold any value.
+ *
+ * Since: 4.2.6
  */
-static const GValue *
-real_gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path)
+const GValue *
+gda_server_operation_get_value_at_path (GdaServerOperation *op, const gchar *path)
 {
 	const GValue *value = NULL;
 	GdaServerOperationNode *node_info;
@@ -2064,7 +2069,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 	path = g_strdup_vprintf (path_format, args);
 	va_end (args);
 
-	value = real_gda_server_operation_get_value_at (op, path);
+	value = gda_server_operation_get_value_at_path (op, path);
 	g_free (path);
 
 	return value;
@@ -2087,17 +2092,15 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
  * if the @path is not defined or @path does not hold any value, or if the value held is not a string
  * (in that last case a warning is shown).
  *
- * Since: 5.0.3
+ * Since: 4.0.3
  */
 gchar *
 gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,
 					    const gchar *path_format, ...)
 {
-	const GValue *value = NULL;
-	gchar *path;
+	gchar *path, *ret;
 	va_list args;
-	GdaConnectionOptions cncoptions = 0;
-
+	
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
 
 	/* build path */
@@ -2105,9 +2108,41 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 	path = g_strdup_vprintf (path_format, args);
 	va_end (args);
 
-	value = real_gda_server_operation_get_value_at (op, path);
+	ret = gda_server_operation_get_sql_identifier_at_path (op, cnc, prov, path);
 	g_free (path);
 
+	return ret;
+}
+
+/**
+ * gda_server_operation_get_sql_identifier_at_path:
+ * @op: a #GdaServerOperation object
+ * @cnc: a #GdaConnection, or %NULL
+ * @prov: a #GdaServerProvider, or %NULL
+ * @path: a complete path to a node (starting with "/")
+ *
+ * This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
+ * is returned instead of a #GValue. Also the returned string is assumed to represents an SQL identifier
+ * and will correctly be quoted to be used with @cnc, or @prov if @cnc is %NULL (a generic quoting rule
+ * will be applied if both are %NULL).
+ *
+ * Returns: (transfer full): a new string, or %NULL if the value is undefined or
+ * if the @path is not defined or @path does not hold any value, or if the value held is not a string
+ * (in that last case a warning is shown).
+ *
+ * Since: 4.2.6
+ */
+gchar *
+gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,
+						 const gchar *path)
+{
+	const GValue *value = NULL;
+	GdaConnectionOptions cncoptions = 0;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
+
+	value = gda_server_operation_get_value_at_path (op, path);
+	
 	if (!value || (G_VALUE_TYPE (value) == GDA_TYPE_NULL))
 		return NULL;
 	g_return_val_if_fail (G_VALUE_TYPE (value) == G_TYPE_STRING, NULL);
@@ -2119,12 +2154,11 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 }
 
 /**
- * gda_server_operation_set_value_at: (skip)
+ * gda_server_operation_set_value_at_path:
  * @op: a #GdaServerOperation object
  * @value: a string
  * @error: a place to store errors or %NULL
- * @path_format: a complete path to a node (starting with "/")
- * @...: arguments to use with @path_format to make a complete path
+ * @path: a complete path to a node (starting with "/")
  *
  * Set the value for the node at the path formed using @path_format and the ... ellipse (the rules are the same as
  * for g_strdup_printf()). 
@@ -2157,14 +2191,13 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
  * </itemizedlist>
  *
  * Returns: %TRUE if no error occurred
+ *
+ * Since: 4.2.6
  */
 gboolean
-gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, GError **error,
-				   const gchar *path_format, ...)
+gda_server_operation_set_value_at_path (GdaServerOperation *op, const gchar *value, 
+					const gchar *path, GError **error)
 {
-	gchar *path;
-	va_list args;
-
 	Node *opnode;
 	gchar *extension = NULL;
 	gchar *colname = NULL;
@@ -2172,11 +2205,6 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 	g_return_val_if_fail (op->priv, FALSE);
-
-	/* build path */
-	va_start (args, path_format);
-	path = g_strdup_vprintf (path_format, args);
-	va_end (args);
 
 	/* set the value */
 	opnode = node_find_or_create (op, path);
@@ -2302,8 +2330,69 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 
 	g_free (extension);
 	g_free (colname);
-	g_free (path);
 	return allok;
+}
+
+/**
+ * gda_server_operation_set_value_at: (skip)
+ * @op: a #GdaServerOperation object
+ * @value: a string
+ * @error: a place to store errors or %NULL
+ * @path_format: a complete path to a node (starting with "/")
+ * @...: arguments to use with @path_format to make a complete path
+ *
+ * Set the value for the node at the path formed using @path_format and the ... ellipse (the rules are the same as
+ * for g_strdup_printf()). 
+ *
+ * Note that trying to set a value for a path which is not used by the current
+ * provider, such as "/TABLE_OPTIONS_P/TABLE_ENGINE" for a PostgreSQL connection (this option is only supported for MySQL), 
+ * will <emphasis>not</emphasis> generate
+ * any error; this allows one to give values to a superset of the parameters and thus use the same code for several providers.
+ *
+ * Here are the possible formats of @path_format:
+ * <itemizedlist>
+ *  <listitem><para>If the path corresponds to a #GdaHolder, then the parameter is set to <![CDATA["@value"]]></para></listitem>
+ *  <listitem><para>If the path corresponds to a sequence item like for example "/SEQUENCE_NAME/5/NAME" for
+ *     the "NAME" value of the 6th item of the "SEQUENCE_NAME" sequence then:
+ *     <itemizedlist>
+ *        <listitem><para>if the sequence already has 6 or more items, then the value is just set to the corresponding 
+ *           value in the 6th item of the sequence</para></listitem>
+ *        <listitem><para>if the sequence has less then 6 items, then items are added up to the 6th one before setting
+ *           the value to the corresponding in the 6th item of the sequence</para></listitem>
+ *     </itemizedlist>
+ *  </para></listitem>
+ *  <listitem><para>If the path corresponds to a #GdaDataModel, like for example "/ARRAY/@@COLUMN/5" for the value at the
+ *     6th row of the "COLUMN" column of the "ARRAY" data model, then:
+ *     <itemizedlist>
+ *        <listitem><para>if the data model already contains 6 or more rows, then the value is just set</para></listitem>
+ *        <listitem><para>if the data model has less than 6 rows, then rows are added up to the 6th one before setting
+ *           the value</para></listitem>
+ *     </itemizedlist>
+ *  </para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: %TRUE if no error occurred
+ */
+gboolean
+gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, GError **error,
+				   const gchar *path_format, ...)
+{
+	gchar *path;
+	va_list args;
+	gboolean ret;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	g_return_val_if_fail (op->priv, FALSE);
+
+	/* build path */
+	va_start (args, path_format);
+	path = g_strdup_vprintf (path_format, args);
+	va_end (args);
+
+	ret = gda_server_operation_set_value_at_path (op, value, path, error);
+	g_free (path);
+
+	return ret;
 }
 
 /**
@@ -2526,7 +2615,7 @@ gda_server_operation_perform_drop_database (GdaServerOperation *op, const gchar 
 }
 
 /**
- * gda_server_operation_prepare_create_table: (skip)
+ * gda_server_operation_prepare_create_table:
  * @cnc: an opened connection
  * @table_name: name of the table to create
  * @error: a place to store errors, or %NULL

@@ -1,5 +1,9 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
+ *      Daniel Espinosa <esodan@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -141,8 +145,14 @@ gint              gda_meta_store_get_version              (GdaMetaStore *store);
 GdaConnection    *gda_meta_store_get_internal_connection  (GdaMetaStore *store);
 gchar            *gda_meta_store_sql_identifier_quote     (const gchar *id, GdaConnection *cnc);
 GdaDataModel     *gda_meta_store_extract                  (GdaMetaStore *store, const gchar *select_sql, GError **error, ...);
+GdaDataModel     *gda_meta_store_extract_v                (GdaMetaStore *store, const gchar *select_sql, GHashTable *vars, 
+							   GError **error);
 gboolean          gda_meta_store_modify                   (GdaMetaStore *store, const gchar *table_name, 
 							   GdaDataModel *new_data, const gchar *condition, GError **error, ...);
+gboolean          gda_meta_store_modify_v                 (GdaMetaStore *store, const gchar *table_name, 
+			 				   GdaDataModel *new_data, const gchar *condition,
+							   gint nvalues, const gchar **value_names,
+							   const GValue **values, GError **error);
 gboolean          gda_meta_store_modify_with_context      (GdaMetaStore *store, GdaMetaContext *context, 
 							   GdaDataModel *new_data, GError **error);
 GdaDataModel     *gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table_name);

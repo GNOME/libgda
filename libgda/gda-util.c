@@ -55,7 +55,7 @@ extern GdaAttributesManager *gda_holder_attributes_manager;
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 /**
- * gda_g_type_to_string
+ * gda_g_type_to_string:
  * @type: Type to convert from.
  *
  * Converts a GType to its string representation (use gda_g_type_from_string() for the
@@ -94,7 +94,7 @@ gda_g_type_to_string (GType type)
 }
 
 /**
- * gda_g_type_from_string
+ * gda_g_type_from_string:
  * @str: the name of a #GType, as returned by gda_g_type_to_string().
  *
  * Converts a named type to ts GType type (also see the gda_g_type_to_string() function).
@@ -150,7 +150,7 @@ gda_g_type_from_string (const gchar *str)
 }
 
 /**
- * gda_default_escape_string
+ * gda_default_escape_string:
  * @string: string to escape
  *
  * Escapes @string to make it understandable by a DBMS. The escape method is very common and replaces any
@@ -204,7 +204,7 @@ gda_default_escape_string (const gchar *string)
 }
 
 /**
- * gda_default_unescape_string
+ * gda_default_unescape_string:
  * @string: string to unescape
  *
  * Do the reverse of gda_default_escape_string(): transforms any "''" into "'", any
@@ -265,6 +265,55 @@ gda_default_unescape_string (const gchar *string)
 }
 
 /**
+ * gda_utility_check_data_model_v:
+ * @model: a #GdaDataModel object
+ * @nbcols: the minimum requested number of columns
+ * @types: (array length=nbcols): array with @nbcols length of type GType or null (if any data type is accepted)
+ *
+ * Check the column types of a GdaDataModel.
+ *
+ * Returns: %TRUE if the data model's columns match the provided data types and number
+ *
+ * Since: 4.2.6
+ */
+gboolean
+gda_utility_check_data_model_v (GdaDataModel *model, gint nbcols, GType* types)
+{
+	gboolean retval = TRUE;
+	gint i;
+
+	g_return_val_if_fail (model && GDA_IS_DATA_MODEL (model), FALSE);
+
+	/* number of columns */
+	if (gda_data_model_get_n_columns (model) < nbcols)
+		return FALSE;
+
+	/* type of each column */
+	if (nbcols > 0) {
+		GdaColumn *att;
+		GType mtype, rtype;
+		i = 0;
+		while ((i<nbcols) && retval) {
+			att = gda_data_model_describe_column (model, i);
+			mtype = gda_column_get_g_type (att);
+
+			rtype = types [i];
+			if (mtype != rtype) {
+				retval = FALSE;
+#ifdef GDA_DEBUG_NO
+				g_print ("Column %d: Expected %s, got %s\n",
+					 i, gda_g_type_to_string (rtype), gda_g_type_to_string (mtype));
+#endif
+			}
+			i++;
+		}
+	}
+
+	return retval;
+}
+
+
+/**
  * gda_utility_check_data_model: (skip)
  * @model: a #GdaDataModel object
  * @nbcols: the minimum requested number of columns
@@ -272,7 +321,7 @@ gda_default_unescape_string (const gchar *string)
  *
  * Check the column types of a GdaDataModel.
  *
- * Returns: TRUE if the data model's columns match the provided data types and number
+ * Returns: %TRUE if the data model's columns match the provided data types and number
  */
 gboolean
 gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
@@ -321,7 +370,7 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 }
 
 /**
- * gda_utility_data_model_dump_data_to_xml
+ * gda_utility_data_model_dump_data_to_xml:
  * @model: a #GdaDataModel
  * @parent: the parent XML node
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
@@ -337,7 +386,7 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * to access data in @model previously to calling this method, and this iterator will be moved (point to
  * another row).
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
@@ -477,7 +526,7 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 
 
 /**
- * gda_utility_data_model_find_column_description
+ * gda_utility_data_model_find_column_description:
  * @model: a #GdaDataSelect data model
  * @field_name: field name
  *
@@ -531,7 +580,7 @@ gda_utility_data_model_find_column_description (GdaDataSelect *model, const gcha
 }
 
 /**
- * gda_utility_holder_load_attributes
+ * gda_utility_holder_load_attributes:
  * @holder: a #GdaHolder
  * @node: an xmlNodePtr with a &lt;parameter&gt; tag
  * @sources: a list of #GdaDataModel
@@ -705,7 +754,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 
 #define GDA_PARAM_ENCODE_TOKEN "__gda"
 /**
- * gda_text_to_alphanum
+ * gda_text_to_alphanum:
  * @text: the text to convert
  *
  * The "encoding" consists in replacing non
@@ -740,7 +789,7 @@ gda_text_to_alphanum (const gchar *text)
 }
 
 /**
- * gda_alphanum_to_text
+ * gda_alphanum_to_text:
  * @text: a string
  *
  * Does the opposite of gda_text_to_alphanum(), in the same string 
@@ -830,7 +879,7 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 }
 
 /**
- * gda_compute_unique_table_row_condition_with_cnc
+ * gda_compute_unique_table_row_condition_with_cnc:
  * @cnc: a #GdaConnection, or %NULL
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
@@ -944,7 +993,7 @@ gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlState
 }
 
 /**
- * gda_compute_unique_table_row_condition
+ * gda_compute_unique_table_row_condition:
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
  * @require_pk: set to TRUE if a primary key ir required
@@ -962,7 +1011,7 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
 }
 
 /**
- * gda_compute_dml_statements
+ * gda_compute_dml_statements:
  * @cnc: a #GdaConnection
  * @select_stmt: a SELECT #GdaStatement (compound statements not handled)
  * @require_pk: TRUE if the created statement have to use a primary key
@@ -1175,7 +1224,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 }
 
 /**
- * gda_compute_select_statement_from_update
+ * gda_compute_select_statement_from_update:
  * @update_stmt: an UPDATE statement
  * @error: a place to store errors, or %NULL
  *
@@ -1235,7 +1284,7 @@ static gboolean stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd,
 
 
 /**
- * gda_statement_rewrite_for_default_values
+ * gda_statement_rewrite_for_default_values:
  * @stmt: a #GdaStatement object
  * @params: a #GdaSet containing the variable's values to be bound when executing @stmt
  * @remove: set to %TRUE if DEFAULT fields are removed, of %FALSE if the "DEFAULT" keyword is used
@@ -1459,7 +1508,7 @@ stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd, GdaSet *params,
 }
 
 /**
- * gda_identifier_hash
+ * gda_identifier_hash:
  * @id: an identifier string
  *
  * computes a hash string from @id, to be used in hash tables as a #GHashFunc
@@ -1491,7 +1540,7 @@ gda_identifier_hash (const gchar *id)
 }
 
 /**
- * gda_identifier_equal
+ * gda_identifier_equal:
  * @id1: an identifier string
  * @id2: an identifier string
  *
@@ -1897,7 +1946,7 @@ gda_sql_identifier_split (const gchar *id)
 static gboolean _sql_identifier_needs_quotes (const gchar *str);
 
 /**
- * gda_sql_identifier_quote
+ * gda_sql_identifier_quote:
  * @id: an SQL identifier
  * @cnc: a #GdaConnection object, or %NULL
  * @prov: a #GdaServerProvider object, or %NULL
@@ -2221,7 +2270,7 @@ static char rfc1738_reserved_chars[] =
 };
 
 /**
- * gda_rfc1738_encode
+ * gda_rfc1738_encode:
  * @string: a string to encode 
  *
  * Encodes @string using the RFC 1738 recommendations: the
@@ -2291,7 +2340,7 @@ gda_rfc1738_encode (const gchar *string)
 }
 
 /**
- * gda_rfc1738_decode
+ * gda_rfc1738_decode:
  * @string: a string to decode
  *
  * Decodes @string using the RFC 1738 recommendations: the
@@ -2359,7 +2408,7 @@ gda_rfc1738_decode (gchar *string)
 
 
 /**
- * gda_dsn_split
+ * gda_dsn_split:
  * @string: a string in the "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" form
  * @out_dsn: a place to store the new string containing the &lt;DSN&gt; part
  * @out_username: a place to store the new string containing the &lt;username&gt; part
@@ -2407,7 +2456,7 @@ gda_dsn_split (const gchar *string, gchar **out_dsn, gchar **out_username, gchar
 }
 
 /**
- * gda_connection_string_split
+ * gda_connection_string_split:
  * @string: a string in the "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;" form
  * @out_cnc_params: a place to store the new string containing the &lt;connection_params&gt; part
  * @out_provider: a place to store the new string containing the &lt;provider&gt; part
@@ -2593,7 +2642,7 @@ _parse_iso8601_date (GDate *gdate, const gchar *value, char **out_endptr)
 }
 
 /**
- * gda_parse_iso8601_date
+ * gda_parse_iso8601_date:
  * @gdate: a pointer to a #GDate structure which will be filled
  * @value: a string
  *
@@ -2690,7 +2739,7 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, char **out_endptr)
 }
 
 /**
- * gda_parse_iso8601_time
+ * gda_parse_iso8601_time:
  * @timegda: a pointer to a #GdaTime structure which will be filled
  * @value: a string
  *
@@ -2717,7 +2766,7 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 }
 
 /**
- * gda_parse_iso8601_timestamp
+ * gda_parse_iso8601_timestamp:
  * @timestamp: a pointer to a #GdaTimeStamp structure which will be filled
  * @value: a string
  *
