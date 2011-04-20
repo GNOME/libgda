@@ -594,7 +594,7 @@ create_typed_value (GType type, va_list *ap)
 }
 
 /**
- * gda_sql_builder_add_field_value:
+ * gda_sql_builder_add_field_value: (skip)
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
  * @type: the GType of the following argument
@@ -844,7 +844,7 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
 }
 
 /**
- * gda_sql_builder_add_expr:
+ * gda_sql_builder_add_expr: (skip)
  * @builder: a #GdaSqlBuilder object
  * @dh: a #GdaDataHandler to use, or %NULL
  * @type: the GType of the following argument
@@ -1623,7 +1623,7 @@ gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id
 }
 
 /**
- * gda_sql_builder_add_function:
+ * gda_sql_builder_add_function: (skip)
  * @builder: a #GdaSqlBuilder object
  * @func_name: the functions's name
  * @...: a list, terminated with %0, of each function's argument's ID
@@ -1805,7 +1805,7 @@ gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement
 }
 
 /**
- * gda_sql_builder_add_case:
+ * gda_sql_builder_add_case: (skip)
  * @builder: a #GdaSqlBuilder object
  * @test_expr: the expression ID representing the test of the CASE, or %0
  * @else_expr: the expression ID representing the ELSE expression, or %0
