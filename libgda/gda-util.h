@@ -4,6 +4,7 @@
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
+ *      Daniel Espinosa <esodan@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -55,6 +56,7 @@ gchar       *gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaS
  * Param & model utilities
  */
 gboolean     gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
+gboolean     gda_utility_check_data_model_v (GdaDataModel *model, gint nbcols, GType* types);
 gboolean     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
 					      const gint *cols, gint nb_cols, const gint *rows, gint nb_rows,
 					      gboolean use_col_ids);

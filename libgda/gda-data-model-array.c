@@ -1,9 +1,10 @@
-/* GDA library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
+ *      Daniel Espinosa <esodan@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -313,6 +314,34 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
 		i++;
 	}
 	va_end (args);
+	return model;
+}
+
+/**
+ * gda_data_model_array_new_with_g_types_v:
+ * @cols: number of columns for rows in this data model.
+ * @types: array of types of the columns of the model to create as #GType, as many as indicated by @cols
+ *
+ * Creates a new #GdaDataModel object with the column types as
+ * specified.
+ *
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
+ *
+ * Since: 4.2.6
+ */
+GdaDataModel *
+gda_data_model_array_new_with_g_types_v (gint cols, GType *types)
+{
+	GdaDataModel *model;
+	gint i;
+
+	model = gda_data_model_array_new (cols);
+	i = 0;
+	while (i < cols) {
+		GType type = types [i];
+		gda_column_set_g_type (gda_data_model_describe_column (model, i), type);
+		i++;
+	}
 	return model;
 }
 

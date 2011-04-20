@@ -207,6 +207,7 @@
 	gda_data_model_array_get_type
 	gda_data_model_array_new
 	gda_data_model_array_new_with_g_types
+	gda_data_model_array_new_with_g_types_v
 	gda_data_model_array_set_n_columns
 #ifdef HAVE_BDB
 	gda_data_model_bdb_clean_errors
@@ -423,11 +424,13 @@
 	gda_meta_store_error_get_type
 	gda_meta_store_error_quark
 	gda_meta_store_extract
+	gda_meta_store_extract_v
 	gda_meta_store_get_attribute_value
 	gda_meta_store_get_internal_connection
 	gda_meta_store_get_type
 	gda_meta_store_get_version
 	gda_meta_store_modify
+	gda_meta_store_modify_v
 	gda_meta_store_modify_with_context
 	gda_meta_store_new
 	gda_meta_store_new_with_file
@@ -527,8 +530,10 @@
 	gda_server_operation_get_sequence_name
 	gda_server_operation_get_sequence_size
 	gda_server_operation_get_sql_identifier_at
+	gda_server_operation_get_sql_identifier_at_path
 	gda_server_operation_get_type
 	gda_server_operation_get_value_at
+	gda_server_operation_get_value_at_path
 	gda_server_operation_is_valid
 	gda_server_operation_load_data_from_xml
 	gda_server_operation_new
@@ -545,6 +550,7 @@
 	gda_server_operation_prepare_drop_table
 	gda_server_operation_save_data_to_xml
 	gda_server_operation_set_value_at
+	gda_server_operation_set_value_at_path
 	gda_server_operation_string_to_op_type
 	gda_server_operation_type_get_type
 	gda_server_provider_create_operation
@@ -882,6 +888,7 @@
 	gda_update_row_in_table_v
 	gda_ushort_get_type
 	gda_utility_check_data_model
+	gda_utility_check_data_model_v
 	gda_utility_data_model_dump_data_to_xml
 	gda_utility_data_model_find_column_description
 	gda_utility_holder_load_attributes

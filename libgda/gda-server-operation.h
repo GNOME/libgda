@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
+ *      Daniel Espinosa <esodan@gmail.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -142,11 +143,17 @@ GdaServerOperationType     gda_server_operation_string_to_op_type       (const g
 GdaServerOperationNode    *gda_server_operation_get_node_info           (GdaServerOperation *op, const gchar *path_format, ...);
 
 const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path_format, ...);
+const GValue              *gda_server_operation_get_value_at_path       (GdaServerOperation *op, const gchar *path);
 gchar                     *gda_server_operation_get_sql_identifier_at   (GdaServerOperation *op,
 									 GdaConnection *cnc, GdaServerProvider *prov,
-									 const gchar *path_format, ...);
+									 const gchar *path_format, ...);    
+gchar                     *gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, 
+									    GdaConnection *cnc, GdaServerProvider *prov,
+									    const gchar *path);
 gboolean                   gda_server_operation_set_value_at            (GdaServerOperation *op, const gchar *value, 
 									 GError **error, const gchar *path_format, ...);
+gboolean                   gda_server_operation_set_value_at_path       (GdaServerOperation *op, const gchar *value, 
+									 const gchar *path, GError **error);
 
 xmlNodePtr                 gda_server_operation_save_data_to_xml        (GdaServerOperation *op, GError **error);
 gboolean                   gda_server_operation_load_data_from_xml      (GdaServerOperation *op, 

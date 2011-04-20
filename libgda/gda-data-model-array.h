@@ -56,6 +56,7 @@ struct _GdaDataModelArrayClass {
 
 GType              gda_data_model_array_get_type          (void) G_GNUC_CONST;
 GdaDataModel      *gda_data_model_array_new_with_g_types  (gint cols, ...);
+GdaDataModel      *gda_data_model_array_new_with_g_types_v (gint cols, GType *types);
 GdaDataModel      *gda_data_model_array_new               (gint cols);
 GdaDataModelArray *gda_data_model_array_copy_model        (GdaDataModel *src, GError **error);
 
