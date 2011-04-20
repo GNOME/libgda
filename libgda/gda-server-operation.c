@@ -910,7 +910,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 			if (prop) {
 				gint tmp;
 				tmp = atoi ((gchar*)prop); /* Flawfinder: ignore */
-				if (i < 0)
+				if (tmp < 0)
 					opnode->d.seq.min_items = 0;
 				else
 					opnode->d.seq.min_items = tmp;
