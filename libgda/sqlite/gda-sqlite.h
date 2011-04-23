@@ -1,5 +1,5 @@
-/* GDA SQLite provider
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -58,7 +58,8 @@ typedef struct {
 	GdaConnection *gdacnc;
 	sqlite3      *connection;
 	gchar        *file;
-	GHashTable   *types; /* key = type name, value = GType */
+	GHashTable   *types_hash; /* key = type name, value = pointer to a GType */
+	GType        *types_array;/* holds GType values, pointed by @types_hash */
 } SqliteConnectionData;
 
 #endif

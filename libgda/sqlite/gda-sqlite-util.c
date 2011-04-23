@@ -1,5 +1,5 @@
-/* GDA sqlite provider
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -52,30 +52,81 @@ nocase_str_equal (gconstpointer v1, gconstpointer v2)
 void
 _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 {
-	GHashTable *types;
-	types = cdata->types;
-	if (!types) {
-		types = g_hash_table_new_full (nocase_str_hash, nocase_str_equal, g_free, NULL); 
-		/* key= type name, value= gda type */
-		cdata->types = types;
+	if (!cdata->types_hash) {
+		gint i;
+		GType type, *array;
+		GHashTable *hash;
+		cdata->types_hash = g_hash_table_new (nocase_str_hash, nocase_str_equal);
+		hash = cdata->types_hash;
+#define NB_DECLARED_G_TYPES 12
+		cdata->types_array = g_new (GType, NB_DECLARED_G_TYPES);
+		array = cdata->types_array;
+
+		type = G_TYPE_INT;
+		i = 0;
+		array [i] = type;
+		g_hash_table_insert (hash, "integer", array + i);
+		g_hash_table_insert (hash, "int", array + i);
+
+		type = G_TYPE_UINT;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "unsigned integer", array + i);
+		g_hash_table_insert (hash, "unsigned int", array + i);
+		g_hash_table_insert (hash, "uint", array + i);
+
+		type = G_TYPE_BOOLEAN;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "boolean", array + i);
+
+		type = G_TYPE_DATE;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "date", array + i);
+
+		type = GDA_TYPE_TIME;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "time", array + i);
+
+		type = GDA_TYPE_TIMESTAMP;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "timestamp", array + i);
+
+		type = G_TYPE_DOUBLE;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "real", array + i);
+
+		type = G_TYPE_STRING;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "text", array + i);
+		g_hash_table_insert (hash, "string", array + i);
+
+		type = GDA_TYPE_BINARY;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "binary", array + i);
+
+		type = GDA_TYPE_BLOB;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "blob", array + i);
+
+		type = G_TYPE_INT64;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "int64", array + i);
+
+		type = G_TYPE_UINT64;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "uint64", array + i);
+		g_assert (i < NB_DECLARED_G_TYPES);
 	}
-	
-	g_hash_table_insert (types, g_strdup ("integer"), GINT_TO_POINTER (G_TYPE_INT));
-	g_hash_table_insert (types, g_strdup ("int"), GINT_TO_POINTER (G_TYPE_INT));
-	g_hash_table_insert (types, g_strdup ("unsigned integer"), GINT_TO_POINTER (G_TYPE_UINT));
-	g_hash_table_insert (types, g_strdup ("unsigned int"), GINT_TO_POINTER (G_TYPE_UINT));
-	g_hash_table_insert (types, g_strdup ("uint"), GINT_TO_POINTER (G_TYPE_UINT));
-	g_hash_table_insert (types, g_strdup ("boolean"), GINT_TO_POINTER (G_TYPE_BOOLEAN));
-	g_hash_table_insert (types, g_strdup ("date"), GINT_TO_POINTER (G_TYPE_DATE));
-	g_hash_table_insert (types, g_strdup ("time"), GINT_TO_POINTER (GDA_TYPE_TIME));
-	g_hash_table_insert (types, g_strdup ("timestamp"), GINT_TO_POINTER (GDA_TYPE_TIMESTAMP));
-	g_hash_table_insert (types, g_strdup ("real"), GINT_TO_POINTER (G_TYPE_DOUBLE));
-	g_hash_table_insert (types, g_strdup ("text"), GINT_TO_POINTER (G_TYPE_STRING));
-	g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (G_TYPE_STRING));
-	g_hash_table_insert (types, g_strdup ("binary"), GINT_TO_POINTER (GDA_TYPE_BINARY));
-	g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BLOB));
-	g_hash_table_insert (types, g_strdup ("int64"), GINT_TO_POINTER (G_TYPE_INT64));
-	g_hash_table_insert (types, g_strdup ("uint64"), GINT_TO_POINTER (G_TYPE_UINT64));
 }
 
 GType

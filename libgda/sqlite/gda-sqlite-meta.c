@@ -1,5 +1,5 @@
-/* Gda Sqlite provider
- * Copyright (C) 2008 - 2010 The GNOME Foundation
+/*
+ * Copyright (C) 2008 - 2011 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -377,7 +377,7 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 	if ((status != SQLITE_OK) || !tables_stmt)
 		return FALSE;
 	
-	if (!cdata->types)
+	if (!cdata->types_hash)
                 _gda_sqlite_compute_types_hash (cdata);
 
 	for (status = SQLITE3_CALL (sqlite3_step) (tables_stmt);
@@ -403,11 +403,13 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 		     fields_status == SQLITE_ROW; 
 		     fields_status = SQLITE3_CALL (sqlite3_step) (fields_stmt)) {
 			GType gtype;
+			GType *pg;
 			const gchar *typname = (gchar *) SQLITE3_CALL (sqlite3_column_text) (fields_stmt, 2);
 			if (!typname || !(*typname)) 
 				continue;
 
-			gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, typname));
+			pg = g_hash_table_lookup (cdata->types_hash, typname);
+			gtype = pg ? *pg : GDA_TYPE_NULL;
 			if ((gtype == GDA_TYPE_NULL) && !g_hash_table_lookup (added_hash, typname)) {
 				GValue *vname, *vgtyp;
 
@@ -1051,10 +1053,12 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		if (pzDataType) {
 			gchar *tmp = g_strdup (pzDataType);
 			gchar *ptr;
+			GType *pg;
 			for (ptr = tmp; *ptr && (*ptr != '(') && (*ptr != '['); ptr++);
 			if (*ptr)
 				*ptr = 0;
-			gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, tmp));
+			pg = g_hash_table_lookup (cdata->types_hash, tmp);
+			gtype = pg ? (GType) *pg : GDA_TYPE_NULL;
 			g_free (tmp);
 		}
 		if (gtype == 0) 
