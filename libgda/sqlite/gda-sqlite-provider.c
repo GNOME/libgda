@@ -3407,8 +3407,10 @@ gda_sqlite_free_cnc_data (SqliteConnectionData *cdata)
 	if (cdata->connection) 
 		SQLITE3_CALL (sqlite3_close) (cdata->connection);
 	g_free (cdata->file);
-	if (cdata->types)
-		g_hash_table_destroy (cdata->types);
+	if (cdata->types_hash)
+		g_hash_table_destroy (cdata->types_hash);
+	if (cdata->types_array)
+		g_free (cdata->types_array);
 	g_free (cdata);
 }
 

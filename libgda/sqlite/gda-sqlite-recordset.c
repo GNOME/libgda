@@ -205,7 +205,7 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 	if (!cdata)
 		return NULL;
 
-        if (!cdata->types)
+        if (!cdata->types_hash)
                 _gda_sqlite_compute_types_hash (cdata);
 
         /* make sure @ps reports the correct number of columns */
@@ -293,8 +293,11 @@ fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 	else {
 		ctype = SQLITE3_CALL (sqlite3_column_decltype) (ps->sqlite_stmt, real_col);
 		
-		if (ctype)
-			gtype = GPOINTER_TO_INT (g_hash_table_lookup (cdata->types, ctype));
+		if (ctype) {
+			GType *pg;
+			pg = g_hash_table_lookup (cdata->types_hash, ctype);
+			gtype = pg ? *pg : GDA_TYPE_NULL;
+		}
 		if (gtype == GDA_TYPE_NULL) 
 			gtype = _gda_sqlite_compute_g_type (SQLITE3_CALL (sqlite3_column_type) (ps->sqlite_stmt, real_col));
 	}
@@ -514,6 +517,30 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 					else
 						gda_value_set_timestamp (value, &timestamp);
+				}
+				else if (type == G_TYPE_INT) {
+					gint64 i;
+					i = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					if ((i > G_MAXINT8) || (i < G_MININT8)) {
+						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     "%s", _("Integer value is too big"));
+						gda_row_invalidate_value (prow, value);
+					}
+					else
+						g_value_set_char (value, (gchar) i);
+				}
+				else if (type == G_TYPE_UCHAR) {
+					guint64 i;
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					if (i > G_MAXUINT8) {
+						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     "%s", _("Integer value is too big"));
+						gda_row_invalidate_value (prow, value);
+					}
+					else
+						g_value_set_uchar (value, (guchar) i);
 				}
 				else 
 					g_error ("Unhandled GDA type %s in SQLite recordset", 
