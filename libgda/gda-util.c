@@ -275,6 +275,8 @@ gda_default_unescape_string (const gchar *string)
  * Returns: %TRUE if the data model's columns match the provided data types and number
  *
  * Since: 4.2.6
+ *
+ * Rename to: gda_utility_check_data_model
  */
 gboolean
 gda_utility_check_data_model_v (GdaDataModel *model, gint nbcols, GType* types)

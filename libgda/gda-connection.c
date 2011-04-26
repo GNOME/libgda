@@ -927,7 +927,7 @@ _gda_connection_get_internal_thread_provider (void)
 /**
  * gda_connection_open_from_dsn:
  * @dsn: data source name.
- * @auth_string: authentication string, or %NULL
+ * @auth_string: (allow-none): authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
