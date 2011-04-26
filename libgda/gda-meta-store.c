@@ -2421,12 +2421,13 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 }
 
 /**
- * gda_meta_store_extract_v: (Rename to: gda_meta_store_extract)
+ * gda_meta_store_extract_v:
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
- * @vars: (allow-none): a hash table with all variables names as keys and GValue* as value, representing values for all the
- * variables mentioned in @select_sql. If there is no variable then this part can be omitted.
- * @error: (allow-none): a place to store errors, or %NULL
+ * @vars: (element-type gchar GObject.Value) (allow-none): a hash table with all variables names as keys and GValue* as 
+ * value, representing values for all the variables mentioned in @select_sql. If there is no variable then this part can be
+ * omitted.
+ * @error: a place to store errors, or %NULL
  *
  * Extracts some data stored in @store using a custom SELECT query. If the @select_sql filter involves
  * SQL identifiers (such as table or column names), then the values should have been adapted using
@@ -2439,6 +2440,8 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
  * Returns: (transfer full): a new #GdaDataModel, or %NULL if an error occurred
  *
  * Since: 4.2.6
+ *
+ * Rename to: gda_meta_store_extract
  */
 GdaDataModel *
 gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTable *vars, GError **error)
@@ -2674,6 +2677,8 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
  * Returns: %TRUE if no error occurred
  *
  * Since: 4.2.6
+ *
+ * Rename to: gda_meta_store_modify
  */
 gboolean
 gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name, 
