@@ -93,7 +93,7 @@ int
 prov_test_common_check_meta ()
 {
 	int number_failed = 0;
-	GSList *tables, *list;
+	GSList *tables = NULL, *list;
 	gboolean dump_ok = TRUE;
 	GdaMetaStore *store;
 	gchar **dump1 = NULL;

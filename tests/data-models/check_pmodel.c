@@ -300,7 +300,7 @@ static gint
 test2 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 	GdaStatement *stmt, *mod_stmt;
 	gint nfailed = 0;
 	GdaSet *params;
@@ -365,8 +365,9 @@ test2 (GdaConnection *cnc)
 		goto out;
 	}
 
- out:	
-	g_object_unref (model);
+ out:
+	if (model)
+		g_object_unref (model);
 	g_object_unref (stmt);
 	
 	return nfailed;
@@ -809,7 +810,7 @@ static gint
 test7 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 	GdaStatement *stmt;
 	gint nfailed = 0;
 	GdaSet *params;
@@ -865,8 +866,9 @@ test7 (GdaConnection *cnc)
 	}
 	gda_value_free (value);
 
- out:	
-	g_object_unref (model);
+ out:
+	if (model)
+		g_object_unref (model);
 	g_object_unref (stmt);
 	g_object_unref (params);
 	
@@ -945,7 +947,7 @@ static gint
 test9 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 	GdaStatement *stmt;
 	gint nfailed = 0;
 	GdaSet *params;
@@ -1013,8 +1015,9 @@ test9 (GdaConnection *cnc)
 	gda_value_free (value);
 	clear_signals ();
 
- out:	
-	g_object_unref (model);
+ out:
+	if (model)
+		g_object_unref (model);
 	g_object_unref (stmt);
 	g_object_unref (params);
 	
@@ -1031,7 +1034,7 @@ static gint
 test10 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-	GdaDataModel *model, *copy;
+	GdaDataModel *model = NULL, *copy;
 	GdaStatement *stmt;
 	gint nfailed = 0;
 	GdaSet *params;
@@ -1099,8 +1102,9 @@ test10 (GdaConnection *cnc)
 	g_object_unref (cmp);
 	g_object_unref (copy);
 
- out:	
-	g_object_unref (model);
+ out:
+	if (model)
+		g_object_unref (model);
 	g_object_unref (stmt);
 	g_object_unref (params);
 	
@@ -1116,7 +1120,7 @@ static gint
 test11 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-	GdaDataModel *ramodel, *model;
+	GdaDataModel *ramodel = NULL, *model = NULL;
 	GdaStatement *stmt;
 	gint nfailed = 0;
 	GdaSet *params;
@@ -1217,9 +1221,11 @@ test11 (GdaConnection *cnc)
 	}
 	g_object_unref (iter);
 
- out:	
-	g_object_unref (ramodel);
-	g_object_unref (model);
+ out:
+	if (ramodel)
+		g_object_unref (ramodel);
+	if (model)
+		g_object_unref (model);
 	g_object_unref (stmt);
 	g_object_unref (params);
 	
@@ -1567,7 +1573,7 @@ static gint
 test15 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-        GdaDataModel *model, *rerun;
+        GdaDataModel *model = NULL, *rerun;
         GdaStatement *stmt;
         GdaSet *params;
         gint nfailed = 0;
@@ -1628,7 +1634,8 @@ test15 (GdaConnection *cnc)
         g_object_unref (rerun);
 
  out:
-        g_object_unref (model);
+	if (model)
+		g_object_unref (model);
         g_object_unref (stmt);
 
         return nfailed;
