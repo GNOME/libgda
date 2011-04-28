@@ -63,7 +63,7 @@ static gint external_to_internal_row (GdaDataSelect *model, gint ext_row, GError
 typedef struct {
 	GSList                 *columns; /* list of GdaColumn objects */
 	GArray                 *rows; /* Array of GdaRow pointers */
-	GHashTable             *index; /* key = model row number + 1, value = index in @rows array + 1*/
+	GHashTable             *index; /* key = model row number, value = index in @rows array*/
 
 	/* Internal iterator's information, if GDA_DATA_MODEL_CURSOR_* based access */
         gint                    iter_row; /* G_MININT if at start, G_MAXINT if at end, "external" row number */
@@ -330,7 +330,7 @@ gda_data_select_init (GdaDataSelect *model, G_GNUC_UNUSED GdaDataSelectClass *kl
 	model->priv->sh = g_new0 (PrivateShareable, 1);
 	model->priv->sh-> notify_changes = TRUE;
 	model->priv->sh->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
-	model->priv->sh->index = g_hash_table_new (g_direct_hash, g_direct_equal);
+	model->priv->sh->index = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
 	model->prep_stmt = NULL;
 	model->priv->sh->columns = NULL;
 	model->nb_stored_rows = 0;
@@ -785,14 +785,18 @@ gda_data_select_get_property (GObject *object,
 void
 gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
 {
+	gint tmp, *ptr;
 	g_return_if_fail (GDA_IS_DATA_SELECT (model));
 	g_return_if_fail (GDA_IS_ROW (row));
 
-	if (g_hash_table_lookup (model->priv->sh->index, GINT_TO_POINTER (rownum + 1))) 
+	tmp = rownum;
+	if (g_hash_table_lookup (model->priv->sh->index, &tmp)) 
 		g_error ("INTERNAL error: row %d already exists, aborting", rownum);
 
-	g_hash_table_insert (model->priv->sh->index, GINT_TO_POINTER (rownum + 1),
-			     GINT_TO_POINTER (model->priv->sh->rows->len + 1));
+	ptr = g_new (gint, 2);
+	ptr [0] = rownum;
+	ptr [1] = model->priv->sh->rows->len;
+	g_hash_table_insert (model->priv->sh->index, ptr, ptr+1);
 	g_array_append_val (model->priv->sh->rows, row);
 	model->nb_stored_rows = model->priv->sh->rows->len;
 }
@@ -809,15 +813,16 @@ gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
 GdaRow *
 gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
 {
-	gint irow;
+	gint irow, *ptr;
 	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), NULL);
 	g_return_val_if_fail (model->priv, NULL);
 
-	irow = GPOINTER_TO_INT (g_hash_table_lookup (model->priv->sh->index, GINT_TO_POINTER (rownum + 1)));
-	if (irow <= 0) 
-		return NULL;
+	irow = rownum;
+	ptr = g_hash_table_lookup (model->priv->sh->index, &irow);
+	if (ptr) 
+		return g_array_index (model->priv->sh->rows, GdaRow *, *ptr);
 	else 
-		return g_array_index (model->priv->sh->rows, GdaRow *, irow - 1);
+		return NULL;
 }
 
 /**
@@ -1831,16 +1836,17 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			prow = dstmt->row;
 	}
 	else {
-		irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->sh->index, 
-							     GINT_TO_POINTER (int_row + 1)));
-		if (irow <= 0) {
+		gint *ptr;
+		irow = int_row;
+		ptr = g_hash_table_lookup (imodel->priv->sh->index, &irow);
+		if (!ptr) {
 			prow = NULL;
 			if (CLASS (model)->fetch_random && 
 			    !CLASS (model)->fetch_random (imodel, &prow, int_row, error))
 				return NULL;
 		}
 		else
-			prow = g_array_index (imodel->priv->sh->rows, GdaRow *, irow - 1);
+			prow = g_array_index (imodel->priv->sh->rows, GdaRow *, *ptr);
 	}
 	
 	g_assert (prow);
@@ -1930,9 +1936,11 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		target_iter_row = imodel->priv->sh->iter_row + 1;
 	int_row = external_to_internal_row (imodel, target_iter_row, NULL);
 
-	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->sh->index, GINT_TO_POINTER (int_row + 1)));
-	if (irow > 0)
-		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, irow - 1);
+	gint *ptr;
+	irow = int_row;
+	ptr = g_hash_table_lookup (imodel->priv->sh->index, &irow);
+	if (ptr)
+		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, *ptr);
 	else if (!CLASS (model)->fetch_next (imodel, &prow, int_row, NULL)) {
 		/* an error occurred */
 		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
@@ -1981,10 +1989,12 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
         else
                 target_iter_row = imodel->priv->sh->iter_row - 1;
 
+	gint *ptr;
 	int_row = external_to_internal_row (imodel, target_iter_row, NULL);
-	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->sh->index, GINT_TO_POINTER (int_row + 1)));
-	if (irow > 0)
-		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, irow - 1);
+	irow = int_row;
+	ptr = g_hash_table_lookup (imodel->priv->sh->index, &irow);
+	if (ptr)
+		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, *ptr);
 	else if (!CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL)) {
 		/* an error occurred */
 		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
@@ -2007,7 +2017,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 {
 	GdaDataSelect *imodel;
 	GdaRow *prow = NULL;
-	gint irow, int_row;
+	gint irow, int_row, *ptr;
 
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
@@ -2019,10 +2029,10 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
 
-	irow = GPOINTER_TO_INT (g_hash_table_lookup (imodel->priv->sh->index, 
-						     GINT_TO_POINTER (int_row + 1)));
-	if (irow > 0)
-		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, irow - 1);
+	irow = int_row;
+	ptr = g_hash_table_lookup (imodel->priv->sh->index, &irow);
+	if (ptr)
+		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, *ptr);
 
 	if (CLASS (model)->fetch_at) {
 		if (!CLASS (model)->fetch_at (imodel, &prow, int_row, NULL)) {

@@ -1726,7 +1726,16 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
  *
  * The @cols_trans is a hash table for which keys are @to columns numbers and the values are
  * the corresponding column numbers in the @from data model. To set the values of a column in @to to NULL,
- * create an entry in the hash table with a negative value.
+ * create an entry in the hash table with a negative value. For example:
+ * <programlisting><![CDATA[GHashTable *hash;
+ * gint *ptr;
+ * hash = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
+ * ptr = g_new (gint, 1);
+ * *ptr = 2;
+ * g_hash_table_insert (hash, ptr, GINT_TO_POINTER (3));
+ * gda_data_model_import_from_model (...);
+ * g_hash_table_free (hash);
+ * ]]></programlisting>
  *
  * Upon errors FALSE will be returned and @error will be assigned a
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
@@ -1775,8 +1784,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 		GdaColumn *column;
 
 		if (cols_trans) {
-			col = GPOINTER_TO_INT (g_hash_table_lookup (cols_trans, GINT_TO_POINTER (i)));
-			if (col >= from_nb_cols) {
+			col = GPOINTER_TO_INT (g_hash_table_lookup (cols_trans, &i));
+			if ((col < 0) || (col >= from_nb_cols)) {
 				g_slist_free (copy_params);
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
 					     _("Inexistent column in source data model: %d"), col);

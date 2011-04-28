@@ -182,7 +182,7 @@ gda_data_model_array_init (GdaDataModelArray *model, G_GNUC_UNUSED GdaDataModelA
 	/* allocate internal structure */
 	model->priv = g_new0 (GdaDataModelArrayPrivate, 1);
 	model->priv->notify_changes = TRUE;
-        model->priv->column_spec = g_hash_table_new (g_direct_hash, g_direct_equal);
+        model->priv->column_spec = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
         model->priv->read_only = FALSE;
 	model->priv->number_of_columns = 0;
 	model->priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
@@ -197,7 +197,6 @@ hash_free_column (G_GNUC_UNUSED gpointer key, GdaColumn *column, GdaDataModelArr
                                               G_CALLBACK (column_g_type_changed_cb), model);
         g_object_unref (column);
 }
-
 
 static void
 gda_data_model_array_finalize (GObject *object)
@@ -491,15 +490,19 @@ gda_data_model_array_describe_column (GdaDataModel *model, gint col)
                 return NULL;
         }
 
-        column = g_hash_table_lookup (((GdaDataModelArray*) model)->priv->column_spec,
-                                      GINT_TO_POINTER (col));
+	gint tmp;
+	tmp = col;
+        column = g_hash_table_lookup (((GdaDataModelArray*) model)->priv->column_spec, &tmp);
         if (!column) {
                 column = gda_column_new ();
                 g_signal_connect (G_OBJECT (column), "g-type-changed",
                                   G_CALLBACK (column_g_type_changed_cb), model);
                 gda_column_set_position (column, col);
-                g_hash_table_insert (((GdaDataModelArray*) model)->priv->column_spec,
-                                     GINT_TO_POINTER (col), column);
+
+		gint *ptr;
+		ptr = g_new (gint, 1);
+		*ptr = col;
+                g_hash_table_insert (((GdaDataModelArray*) model)->priv->column_spec, ptr, column);
         }
 
         return column;
