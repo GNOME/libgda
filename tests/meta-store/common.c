@@ -97,7 +97,7 @@ find_expected_change (const gchar *change_as_str)
 static void
 meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data)
 {
-	GSList *gl, *el;
+	GSList *gl;
 	gint i;
 	for (i = 0, gl = changes; gl; gl = gl->next) {
 		gchar *gstr = stringify_a_change ((GdaMetaStoreChange *) gl->data);

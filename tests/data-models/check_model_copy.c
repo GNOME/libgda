@@ -51,6 +51,7 @@ main (int argc, char **argv)
 			}
 		}
 		g_free (dirname);
+		g_dir_close (dir);
 
 		/* data models in the current dir */
 		dirname = g_build_filename (CHECK_FILES, "tests", "data-models", NULL);
@@ -72,8 +73,8 @@ main (int argc, char **argv)
 			}
 		}
 		g_free (dirname);
+		g_dir_close (dir);
 	}
-	g_dir_close (dir);
 
 	if (number_failed == 0)
 		g_print ("Ok.\n");

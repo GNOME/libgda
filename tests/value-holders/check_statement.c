@@ -119,7 +119,7 @@ test1 (GError **error)
 static gboolean
 test2 (GError **error)
 {
-	GdaSqlParser *parser;
+	GdaSqlParser *parser = NULL;
 	GHashTable *parsers_hash;
 	GdaDataModel *providers_model;
 	gint i;
