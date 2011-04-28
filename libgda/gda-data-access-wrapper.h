@@ -47,6 +47,7 @@ struct _GdaDataAccessWrapperClass {
 
 	/*< private >*/
 	/* Padding for future expansion */
+	/*< private >*/
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);

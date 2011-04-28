@@ -302,8 +302,9 @@ gda_data_access_wrapper_set_property (GObject *object,
 					g_signal_connect (G_OBJECT (model->priv->iter), "end-of-data",
 							  G_CALLBACK (iter_end_of_data_cb), model);
 					model->priv->iter_row = -1; /* because model->priv->iter is invalid */
-					model->priv->rows = g_hash_table_new_full (g_direct_hash, g_direct_equal,
-										   NULL, (GDestroyNotify) g_object_unref);
+					model->priv->rows = g_hash_table_new_full (g_int_hash, g_int_equal,
+										   g_free,
+										   (GDestroyNotify) g_object_unref);
 				}
 				else {
 					g_signal_connect (G_OBJECT (mod), "row-inserted",
@@ -465,7 +466,10 @@ create_new_row (GdaDataAccessWrapper *model)
 			gda_row_invalidate_value (row, dest);
 	}
 
-	g_hash_table_insert (model->priv->rows, GINT_TO_POINTER (model->priv->iter_row), row);
+	gint *ptr;
+	ptr = g_new (gint, 1);
+	*ptr = model->priv->iter_row;
+	g_hash_table_insert (model->priv->rows, ptr, row);
 	/*g_print ("%s(%d)\n", __FUNCTION__, model->priv->iter_row);*/
 
 	return row;
@@ -493,8 +497,9 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 		return gda_data_model_get_value_at (imodel->priv->model, col, row, error);
 	else {
 		GdaRow *gda_row;
-
-		gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
+		gint tmp;
+		tmp = row;
+		gda_row = g_hash_table_lookup (imodel->priv->rows, &tmp);
 		if (gda_row) {
 			GValue *val = gda_row_get_value (gda_row, col);
 			if (gda_row_value_is_valid (gda_row, val))
@@ -506,7 +511,8 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 			g_assert (imodel->priv->iter);
 			if (imodel->priv->iter_row < 0) {
 				if (gda_data_model_iter_move_next (imodel->priv->iter)) {
-					gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
+					tmp = row;
+					gda_row = g_hash_table_lookup (imodel->priv->rows, &tmp);
 					if (row == imodel->priv->iter_row) {
 						GValue *val = gda_row_get_value (gda_row, col);
 						if (gda_row_value_is_valid (gda_row, val))
@@ -539,7 +545,8 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 
 			if (! (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD) ||
 			    ! (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD)) {
-				gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
+				tmp = row;
+				gda_row = g_hash_table_lookup (imodel->priv->rows, &tmp);
 
 				if (gda_row) {
 					GValue *val = gda_row_get_value (gda_row, col);
@@ -552,7 +559,8 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 			else {
 				/* in this case iter can be moved forward and backward at will => we only
 				 * need to keep a pool of GdaRow for performances reasons */
-				gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
+				tmp = row;
+				gda_row = g_hash_table_lookup (imodel->priv->rows, &tmp);
 
 				if (!gda_row) {
 					if (! imodel->priv->rows_buffer_array) {
@@ -573,7 +581,7 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 								      ROWS_POOL_SIZE - 1);
 						g_array_remove_index (imodel->priv->rows_buffer_index,
 								      ROWS_POOL_SIZE - 1);
-						g_hash_table_remove (imodel->priv->rows, GINT_TO_POINTER (index_row));
+						g_hash_table_remove (imodel->priv->rows, &index_row);
 					}
 
 					gda_row = create_new_row (imodel);
@@ -609,11 +617,11 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *mod
 		    ! (model->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD)) {
 			/* keep the changes in rows */
 			GdaRow *gda_row;
-			
-			gda_row = g_hash_table_lookup (model->priv->rows, GINT_TO_POINTER (row));
-			if (!gda_row) {
+			gint tmp;
+			tmp = row;
+			gda_row = g_hash_table_lookup (model->priv->rows, &tmp);
+			if (!gda_row)
 				create_new_row (model);
-			}
 		}
 	}
 }
