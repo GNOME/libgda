@@ -696,7 +696,7 @@ virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
 	*pRowid = gda_data_model_iter_get_row (cursor->iter);
 	if (! vtable->rowid_hash || (vtable->rowid_hash_model == vtable->td->real_model)) {
 		if (! vtable->rowid_hash) {
-			vtable->rowid_hash = g_hash_table_new_full (g_int_hash, g_int_equal,
+			vtable->rowid_hash = g_hash_table_new_full (g_int64_hash, g_int64_equal,
 								    g_free,
 								    (GDestroyNotify) g_object_unref);
 			vtable->rowid_hash_model = vtable->td->real_model;
