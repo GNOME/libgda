@@ -250,7 +250,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
- * @value: a #GValue, or %NULL
+ * @value: (transfer none): a #GValue, or %NULL
  *
  * Associates an attribute named @att_name to @ptr, with the value @value. Any previous association is replaced by
  * this one, and if @value is %NULL then the association is removed.

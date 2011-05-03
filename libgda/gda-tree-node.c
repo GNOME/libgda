@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -724,7 +724,7 @@ gda_tree_node_get_node_attribute (GdaTreeNode *node, const gchar *attribute)
  * gda_tree_node_set_node_attribute:
  * @node: a #GdaTreeNode
  * @attribute: attribute name
- * @value: a #GValue, or %NULL
+ * @value: (transfer none): a #GValue, or %NULL
  * @destroy: a function to be called when @attribute is not needed anymore, or %NULL
  *
  * Set the value associated to a named attribute. The @attribute string is used AS IT IS by this method (eg.
@@ -738,8 +738,8 @@ gda_tree_node_get_node_attribute (GdaTreeNode *node, const gchar *attribute)
  * For example one would use it as:
  *
  * <code>
- * gda_tree_node_set_node_attribute (node, g_strdup (my_attribute), g_free, my_value);
- * gda_tree_node_set_node_attribute (node, GDA_ATTRIBUTE_NAME, NULL, my_value);
+ * gda_tree_node_set_node_attribute (node, g_strdup (my_attribute), my_value, g_free);
+ * gda_tree_node_set_node_attribute (node, GDA_ATTRIBUTE_NAME, my_value, NULL);
  * </code>
  *
  * If there is already an attribute named @attribute set, then its value is replaced with the new value (@value is

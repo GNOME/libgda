@@ -622,7 +622,7 @@ auth_dialog_run (AuthDialog *dialog)
 						const GValue *cvalue = NULL;
 						if (gda_holder_is_valid (holder))
 							cvalue = gda_holder_get_value (holder);
-						if (cvalue) {
+						if (cvalue && (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)) {
 							gchar *r1, *r2;
 							r1 = gda_value_stringify (cvalue);
 							r2 = gda_rfc1738_encode (r1);
