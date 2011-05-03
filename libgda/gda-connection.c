@@ -2705,6 +2705,11 @@ gda_connection_statement_prepare (GdaConnection *cnc, GdaStatement *stmt, GError
 	}
 }
 
+/*
+ * @args is consumed as a succession of (column number, GType) arguments
+ * which ends with a column number of -1. The returned array is always terminated by G_TYPE_NONE,
+ * and contains 0 where no column type information has been provided
+ */
 static GType *
 make_col_types_array (va_list args)
 {
@@ -2712,16 +2717,16 @@ make_col_types_array (va_list args)
 	gint max = 10;
 	gint col;
 
-	types = g_new (GType, max + 1);
-	for (col = 0; col <= max; col ++)
-		types[col] = G_TYPE_NONE;
+	types = g_new0 (GType, max + 1);
+	types [max] = G_TYPE_NONE;
 	for (col = va_arg (args, gint); col >= 0; col = va_arg (args, gint)) {
-		if (col > max) {
+		if (col >= max) {
 			gint i;
 			types = g_renew (GType, types, col + 5 + 1);
-			for (i = max; col <= col + 5; i ++)
-				types[i] = G_TYPE_NONE;
+			for (i = max; i <= col + 5; i ++)
+				types[i] = 0;
 			max = col + 5;
+			types [max] = G_TYPE_NONE;
 		}
 		types [col] = va_arg (args, GType);
 	}
