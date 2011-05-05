@@ -1,3 +1,12 @@
+libgda 4.2.7, 2011-05-05
+
+ - corrections (wrong usage of GPOINTER_TO_INT, big endian issues and others)
+ - correctly handle the --enable-introspection=no when configuring
+ - Translations:
+	- es (Daniel Mustieles)
+	- pt_BR (Rodolfo Ribeiro Gomes)
+	- de (Christian Kirbach)
+
 libgda 4.2.6, 2011-04-20
 
  - MySQL provider: correctly handle the UNIX SOCKET connection argument and
