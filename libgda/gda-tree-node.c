@@ -379,7 +379,6 @@ gda_tree_node_get_property (GObject *object,
 	}	
 }
 
-#ifdef GDA_DEBUG_NO
 static void
 attributes_foreach_func (const gchar *att_name, const GValue *value, GString *string)
 {
@@ -387,8 +386,6 @@ attributes_foreach_func (const gchar *att_name, const GValue *value, GString *st
 	g_string_append_printf (string, " %s=%s", att_name, str);
 	g_free (str);
 }
-#endif
-
 
 static gchar *
 gda_tree_node_dump_header (GdaTreeNode *node)
@@ -397,23 +394,24 @@ gda_tree_node_dump_header (GdaTreeNode *node)
 
 	cvalue = gda_attributes_manager_get (gda_tree_node_attributes_manager, node,
 					     GDA_ATTRIBUTE_NAME);
-#ifdef GDA_DEBUG_NO
-	GString *string;
-	string = g_string_new ("");
-	if (cvalue)
-		g_string_append (string, g_value_get_string (cvalue));
-	else
-		g_string_append (string, "Unnamed node");
-	g_string_append_c (string, ':');
-	gda_attributes_manager_foreach (gda_tree_node_attributes_manager, node,
-					(GdaAttributesManagerFunc) attributes_foreach_func, string);
-	return g_string_free (string, FALSE);
-#else
-	if (cvalue)
-		return g_strdup (g_value_get_string (cvalue));
-	else
-		return g_strdup_printf ("Unnamed node");
-#endif
+	if (g_getenv ("GDA_TREE_DUMP_ALL_ATTRIBUTES")) {
+		GString *string;
+		string = g_string_new ("");
+		if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING))
+			g_string_append (string, g_value_get_string (cvalue));
+		else
+			g_string_append (string, "Unnamed node");
+		g_string_append_c (string, ':');
+		gda_attributes_manager_foreach (gda_tree_node_attributes_manager, node,
+						(GdaAttributesManagerFunc) attributes_foreach_func, string);
+		return g_string_free (string, FALSE);
+	}
+	else {
+		if (cvalue)
+			return g_strdup (g_value_get_string (cvalue));
+		else
+			return g_strdup_printf ("Unnamed node");
+	}
 }
 
 
