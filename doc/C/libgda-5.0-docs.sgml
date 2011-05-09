@@ -462,11 +462,16 @@
 		<link linkend="gda-data-model-dump">gda_data_model_dump()</link> will also include a description of
 	      the data model's attributes</para>
 	    </listitem>
-	  <listitem>
+	    <listitem>
               <para>GDA_CONFIG_SYNCHRONOUS: if set, and if the Gnome Keyring is used to store DSN authentification information,
 		then the requests to the Gnome Keyring will be made synchronously. This is usefull if Libgda is used in a program where
 		there is no main loop (otherwise no authentification will be fetched).</para>
             </listitem>
+	    <listitem>
+              <para>GDA_TREE_DUMP_ALL_ATTRIBUTES: if set, then 
+		<link linkend="gda-tree-dump">gda_tree_dump()</link> will dump all the attributes of each
+		node in the tree</para>
+	    </listitem>
 	  </itemizedlist>
 	</para>
       </sect1>
