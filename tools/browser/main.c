@@ -131,9 +131,20 @@ main (int argc, char *argv[])
 	if (list_configs) {
 		gda_init ();
 		setlocale (LC_ALL, "");
-		GdaDataModel *model = config_info_list_all_dsn ();
-		output_data_model (model);
-		g_object_unref (model);
+		GdaDataModel *model;
+		if (argc == 2)
+			model = config_info_detail_dsn (argv[1], &error);
+		else
+			model = config_info_list_all_dsn ();
+		if (model) {
+			output_data_model (model);
+			g_object_unref (model);
+		}
+		else {
+			g_print (_("Error: %s\n"),
+				 error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
 		return 0;
 	}
 	if (list_data_files) {
