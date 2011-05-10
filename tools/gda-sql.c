@@ -216,10 +216,17 @@ main (int argc, char *argv[])
 		}
 	}
 	if (list_configs) {
-		GdaDataModel *model = config_info_list_all_dsn ();
-		output_data_model (model);
-		g_object_unref (model);
-		goto cleanup;
+		if (argc == 2) {
+			single_command = g_strdup_printf (".l %s", argv[1]);
+			argc = 1;
+			show_welcome = FALSE;
+		}
+		else {
+			GdaDataModel *model = config_info_list_all_dsn ();
+			output_data_model (model);
+			g_object_unref (model);
+			goto cleanup;
+		}
 	}
 	if (list_data_files) {
 		gchar *confdir;
@@ -2704,61 +2711,28 @@ extra_command_list_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConn
 			const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
-	GdaDataModel *dsn_list, *model = NULL;
-	gint i, nrows;
 	GList *list = NULL;
-
-	dsn_list = gda_config_list_dsn ();
-	nrows = gda_data_model_get_n_rows (dsn_list);
+	GdaDataModel *dsn_list = NULL, *model = NULL;
 
 	if (args[0]) {
 		/* details about a DSN */
-		for (i = 0; i < nrows; i++) {
-			const GValue *value;
-			value = gda_data_model_get_value_at (dsn_list, 0, i, error);
-			if (!value)
-				goto onerror;
-
-			if (!strcmp (g_value_get_string (value), args[0])) {
-				gint j;
-				model = gda_data_model_array_new_with_g_types (2,
-									       G_TYPE_STRING,
-									       G_TYPE_STRING);
-				gda_data_model_set_column_title (model, 0, _("Attribute"));
-				gda_data_model_set_column_title (model, 1, _("Value"));
-				g_object_set_data_full (G_OBJECT (model), "name", 
-							g_strdup_printf (_("DSN '%s' description"), args[0]),
-							g_free);
-				
-				for (j = 0; j < 6; j++) {
-					GValue *tmpvalue;
-					if (gda_data_model_append_row (model, error) == -1) 
-						goto onerror;
-					
-					g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)),
-							    gda_data_model_get_column_title (dsn_list, j));
-					if (! gda_data_model_set_value_at (model, 0, j, tmpvalue, error))
-						goto onerror;
-					gda_value_free (tmpvalue);
-									 
-					value = gda_data_model_get_value_at (dsn_list, j, i, error);
-					if (!value ||
-					    ! gda_data_model_set_value_at (model, 1, j, value, error))
-						goto onerror;
-				}
-				res = g_new0 (GdaInternalCommandResult, 1);
-				res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-				res->u.model = model;
-				g_object_unref (dsn_list);
-				return res;
-			}
+		GdaDataModel *model;
+		model = config_info_detail_dsn (args[0], error);
+		if (model) {
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+			res->u.model = model;
+			return res;
 		}
-		g_object_unref (dsn_list);
-		g_set_error (error, 0, 0,
-			     _("Could not find any DSN named '%s'"), args[0]);
-		return NULL;
+		else
+			return NULL;
 	}
 	else {
+		gint i, nrows;
+		
+		dsn_list = gda_config_list_dsn ();
+		nrows = gda_data_model_get_n_rows (dsn_list);
+
 		model = gda_data_model_array_new_with_g_types (3,
 							       G_TYPE_STRING,
 							       G_TYPE_STRING,

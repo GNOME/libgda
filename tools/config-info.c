@@ -78,8 +78,11 @@ config_info_detail_provider (const gchar *provider, GError **error)
 {
 	GdaProviderInfo *pinfo;
 	pinfo = gda_config_get_provider_info (provider);
-	if (! pinfo)
+	if (! pinfo) {
+		g_set_error (error, 0, 0,
+			     _("Could not find provider '%s'"), provider);
 		return NULL;
+	}
 
 	GdaDataModel *model;
 	GValue *tmpvalue = NULL;
@@ -218,6 +221,152 @@ config_info_detail_provider (const gchar *provider, GError **error)
 	gda_value_free (tmpvalue);
 
 	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), pinfo->location);
+	if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	return model;
+ onerror:
+	if (tmpvalue)
+		gda_value_free (tmpvalue);
+	g_object_unref (model);
+	return NULL;
+}
+
+static void
+ql_foreach_cb (const gchar *name, const gchar *value, GString *string)
+{
+	if (*string->str)
+		g_string_append (string, "\n");
+	g_string_append_printf (string, "%s: %s", name, value);
+}
+
+GdaDataModel *
+config_info_detail_dsn (const gchar *dsn, GError **error)
+{
+	GdaDsnInfo *info = NULL;
+	if (dsn && *dsn)
+		info = gda_config_get_dsn_info (dsn);
+	if (!info) {
+		g_set_error (error, 0, 0,
+			     _("Could not find data source '%s'"), dsn);
+		return NULL;
+	}
+
+	GdaDataModel *model;
+	GValue *tmpvalue = NULL;
+	gint row;
+
+	/* define data model */
+	model = gda_data_model_array_new_with_g_types (2,
+						       G_TYPE_STRING,
+						       G_TYPE_STRING);
+	gda_data_model_set_column_title (model, 0, _("Attribute"));
+	gda_data_model_set_column_title (model, 1, _("Value"));
+	g_object_set_data_full (G_OBJECT (model), "name", 
+				g_strdup_printf (_("DSN '%s' description"), dsn),
+				g_free);
+	/* DSN name */
+	row = 0;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("DSN name"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), info->name);
+	if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	/* provider */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("Provider"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), info->provider);
+	if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	/* description */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("Description"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), info->description);
+	if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	/* CNC prameters */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("Parameters"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	if (info->cnc_string) {
+		GString *string;
+		GdaQuarkList *ql;
+		string = g_string_new ("");
+		ql = gda_quark_list_new_from_string (info->cnc_string);
+		gda_quark_list_foreach (ql, (GHFunc) ql_foreach_cb, string);
+		gda_quark_list_free (ql);
+
+		g_value_take_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), string->str);
+		g_string_free (string, FALSE);
+		if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+			goto onerror;
+		gda_value_free (tmpvalue);
+	}
+
+	/* authentication */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("Authentication"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	if (info->auth_string) {
+		GString *string;
+		GdaQuarkList *ql;
+		string = g_string_new ("");
+		ql = gda_quark_list_new_from_string (info->auth_string);
+		gda_quark_list_foreach (ql, (GHFunc) ql_foreach_cb, string);
+		gda_quark_list_free (ql);
+
+		g_value_take_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), string->str);
+		g_string_free (string, FALSE);
+		if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
+			goto onerror;
+		gda_value_free (tmpvalue);
+	}
+
+	/* system wide? */
+	row++;
+	if (gda_data_model_append_row (model, error) == -1) 
+		goto onerror;
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)), _("System DSN?"));
+	if (! gda_data_model_set_value_at (model, 0, row, tmpvalue, error))
+		goto onerror;
+	gda_value_free (tmpvalue);
+
+	g_value_set_string ((tmpvalue = gda_value_new (G_TYPE_STRING)),
+			    info->is_system ? _("Yes") : _("No"));
 	if (! gda_data_model_set_value_at (model, 1, row, tmpvalue, error))
 		goto onerror;
 	gda_value_free (tmpvalue);
