@@ -1,5 +1,4 @@
-/* gdaui-entry-common-time.c
- *
+/*
  * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
@@ -911,8 +910,8 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
                 return;
 
         position_popup (mgtim);
-        gtk_grab_add (mgtim->priv->window);
         gtk_widget_show (mgtim->priv->window);
+        gtk_grab_add (mgtim->priv->window);
 
 	GdkScreen *screen;
 	gint swidth, sheight;

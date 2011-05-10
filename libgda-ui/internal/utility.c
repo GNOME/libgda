@@ -148,7 +148,6 @@ _gdaui_utility_entry_build_info_colors_array (void)
 	gdk_color_parse (GDAUI_COLOR_PRELIGHT_NULL, color);
 	colors[1] = color;
 	
-	
 	/* Blue color */
 	color = g_new0 (GdkColor, 1);
 	gdk_color_parse (GDAUI_COLOR_NORMAL_DEFAULT, color);
@@ -157,7 +156,6 @@ _gdaui_utility_entry_build_info_colors_array (void)
 	color = g_new0 (GdkColor, 1);
 	gdk_color_parse (GDAUI_COLOR_PRELIGHT_DEFAULT, color);
 	colors[3] = color;
-	
 	
 	/* Red color */
 	color = g_new0 (GdkColor, 1);

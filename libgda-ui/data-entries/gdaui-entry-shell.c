@@ -1,6 +1,5 @@
-/* gdaui-entry-shell.c
- *
- * Copyright (C) 2003 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2003 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -56,7 +55,6 @@ struct  _GdauiEntryShellPriv {
         GtkWidget           *embedder;
 	GtkWidget           *hbox;
         GtkWidget           *button;
-        GtkStyle            *orig_style;
         GdaDataHandler      *data_handler;
 	gboolean             show_actions;
 
@@ -159,7 +157,6 @@ gdaui_entry_shell_init (GdauiEntryShell * shell)
 	/* Setting the initial layout */
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (shell), GTK_SHADOW_NONE);
 	gtk_container_set_border_width (GTK_CONTAINER (shell), 0);
-	shell->priv->orig_style = gtk_style_copy (gtk_widget_get_style (GTK_WIDGET (shell)));
 
 	/* hbox */
 	hbox = gtk_hbox_new (FALSE, 0);
@@ -382,15 +379,13 @@ gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell)
 {
 	static GdkColor **colors = NULL;
 	GdkColor *normal = NULL, *prelight = NULL;
-	GdkColor *orig_normal, *orig_prelight;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
 
-	orig_normal = & (shell->priv->orig_style->bg[GTK_STATE_NORMAL]);
-	orig_prelight = & (shell->priv->orig_style->bg[GTK_STATE_PRELIGHT]);
-
 	if (!colors)
 		colors = _gdaui_utility_entry_build_info_colors_array ();
+
+	gtk_widget_set_tooltip_text (shell->priv->button, NULL);
 
 	if (shell->priv->value_is_null) {
 		normal = colors[0];
@@ -409,11 +404,6 @@ gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell)
 		prelight = colors[5];
 		gtk_widget_set_tooltip_text (shell->priv->button, _("Value is invalid"));
 	}
-
-	if (!normal)
-		normal = orig_normal;
-	if (!prelight)
-		prelight = orig_prelight;
 
 	gtk_widget_modify_bg (shell->priv->button, GTK_STATE_NORMAL, normal);
 	gtk_widget_modify_bg (shell->priv->button, GTK_STATE_ACTIVE, normal);
