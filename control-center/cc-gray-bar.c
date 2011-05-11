@@ -44,8 +44,6 @@ static void cc_gray_bar_get_preferred_height (GtkWidget *widget,
 					      gint      *natural);
 static void cc_gray_bar_allocate     (GtkWidget           *widget,
 				      GtkAllocation       *allocation);
-static void cc_gray_bar_paint        (GtkWidget           *widget,
-				      GdkRectangle        *area);
 static gboolean cc_gray_bar_draw     (GtkWidget           *widget,
 				      cairo_t             *cr);
 static void cc_gray_bar_style_set    (GtkWidget           *w,
@@ -213,24 +211,22 @@ cc_gray_bar_style_set (GtkWidget *w, GtkStyle *previous_style)
 static gboolean
 cc_gray_bar_draw (GtkWidget *widget, cairo_t *cr)
 {
-	gboolean paintable;
+	GdkWindow *window;
 
-	paintable = gtk_widget_get_app_paintable (widget);
-	if (!paintable) {
+	window = gtk_widget_get_window (widget);
+	if (gtk_cairo_should_draw_window (cr, window)) {
 		GtkStyle *style;
-		GtkAllocation alloc;
 		GtkStateType state;
+		GtkAllocation alloc;
 
+		gtk_widget_get_allocation (widget, &alloc);
 		style = gtk_widget_get_style (widget);
 		state = gtk_widget_get_state (widget);
-		gtk_widget_get_allocation (widget, &alloc);
-		gtk_paint_flat_box (style, cr,
-				    state, GTK_SHADOW_NONE,
-				    widget, "gnomedbgraybar",
-				    1, 1,
-				    alloc.width - 2,
-				    alloc.height - 2);
-	}
+
+		gdk_cairo_set_source_color (cr, &style->dark[state]);
+		cairo_rectangle (cr, 2, 2, alloc.width - 4, alloc.height - 4);
+		cairo_fill (cr);
+        }
 	return (* GTK_WIDGET_CLASS (parent_class)->draw) (widget, cr);
 }
 
