@@ -1803,13 +1803,19 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 		break;
 	case OUTPUT_FORMAT_HTML: {
 		xmlBufferPtr buffer;
-		xmlNodePtr html, table, node, row_node, col_node;
+		xmlNodePtr top, div, table, node, row_node, col_node, header, meta;
 		gint ncols, nrows, i, j;
 		gchar *str;
 
-		html = xmlNewNode (NULL, BAD_CAST "div");
+		top = xmlNewNode (NULL, BAD_CAST "html");
+		header = xmlNewChild (top, NULL, BAD_CAST "head", NULL);
+		meta = xmlNewChild (header, NULL, BAD_CAST "meta", NULL);
+		xmlSetProp (meta, BAD_CAST "http-equiv", BAD_CAST "content-type");
+		xmlSetProp (meta, BAD_CAST "content", BAD_CAST "text/html; charset=UTF-8");
 
-		table = xmlNewChild (html, NULL, BAD_CAST "table", NULL);
+		div = xmlNewChild (top, NULL, BAD_CAST "body", NULL);
+
+		table = xmlNewChild (div, NULL, BAD_CAST "table", NULL);
 		xmlSetProp (table, BAD_CAST "border", BAD_CAST "1");
 		
 		if (g_object_get_data (G_OBJECT (model), "name"))
@@ -1845,16 +1851,16 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 			}
 		}
 
-		node = xmlNewChild (html, NULL, BAD_CAST "p", NULL);
+		node = xmlNewChild (div, NULL, BAD_CAST "p", NULL);
 		str = g_strdup_printf (ngettext ("(%d row)", "(%d rows)", nrows), nrows);
 		xmlNodeSetContent (node, BAD_CAST str);
 		g_free (str);
 
 		buffer = xmlBufferCreate ();
-		xmlNodeDump (buffer, NULL, html, 0, 1);
+		xmlNodeDump (buffer, NULL, top, 0, 1);
 		str = g_strdup ((gchar *) xmlBufferContent (buffer));
 		xmlBufferFree (buffer);
-		xmlFreeNode (html);
+		xmlFreeNode (top);
 		return str;
 	}
 	default: 
