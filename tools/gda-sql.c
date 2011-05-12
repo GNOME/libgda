@@ -303,6 +303,32 @@ main (int argc, char *argv[])
 
 		if (*argv[i] == '-')
 			continue;
+#define SHEBANG "#!"
+#define SHEBANGLEN 2
+
+		/* try to see if argv[i] corresponds to a file starting with SHEBANG */
+		FILE *file;
+		file = fopen (argv[i], "r");
+		if (file) {
+			char buffer [SHEBANGLEN + 1];
+			size_t nread;
+			nread = fread (buffer, 1, SHEBANGLEN, file);
+			if (nread == SHEBANGLEN) {
+				buffer [SHEBANGLEN] = 0;
+				if (!strcmp (buffer, SHEBANG)) {
+					if (! set_input_file (argv[i], &error)) {
+						g_print ("Can't read file '%s': %s\n", commandsfile,
+							 error->message);
+						exit_status = EXIT_FAILURE;
+						fclose (file);
+						goto cleanup;
+					}
+					fclose (file);
+					continue;
+				}
+			}
+			fclose (file);
+		}
 
                 info = gda_config_get_dsn_info (argv[i]);
 		if (info)
@@ -1812,9 +1838,7 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 		meta = xmlNewChild (header, NULL, BAD_CAST "meta", NULL);
 		xmlSetProp (meta, BAD_CAST "http-equiv", BAD_CAST "content-type");
 		xmlSetProp (meta, BAD_CAST "content", BAD_CAST "text/html; charset=UTF-8");
-
 		div = xmlNewChild (top, NULL, BAD_CAST "body", NULL);
-
 		table = xmlNewChild (div, NULL, BAD_CAST "table", NULL);
 		xmlSetProp (table, BAD_CAST "border", BAD_CAST "1");
 		

@@ -36,6 +36,14 @@ Alternatively, input can be from a file.
 In addition, it provides a number of meta-commands and various shell-like features to facilitate writing
 scripts and automating a wide variety of tasks.
 
+.PP
+It is also possible to run the tool as a script using the classic '#!' string at the start of a script file,
+with the limitation that behaviour of arguments passed on the line after the '#!' command is undefined.
+Example:
+
+\fB#!/bin/path/to/gda-sql\fP
+
+\fB#!/usr/bin/env gda-sql\fP
 
 
 .SH OPTIONS
