@@ -23,6 +23,34 @@
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
 
+/*
+ * Replace @argvi's contents with the connection name
+ */
+void
+config_info_modify_argv (char *argvi)
+{
+	GString *string;
+	gchar *prov, *cncparams, *user, *pass;
+	size_t size;
+	string = g_string_new ("");
+	gda_connection_string_split (argvi, &cncparams, &prov, &user, &pass);
+	g_free (user);
+	g_free (pass);
+	if (prov) {
+		g_string_append (string, prov);
+		g_free (prov);
+	}
+	if (cncparams) {
+		g_string_append (string, cncparams);
+		g_free (cncparams);
+	}
+	size = MIN (strlen (string->str), strlen (argvi));
+	strncpy (argvi, string->str, size);
+	g_string_free (string, TRUE);
+	if (size < strlen (argvi))
+		memset (argvi + size, 0, strlen (argvi) - size);
+}
+
 GdaDataModel *
 config_info_list_all_dsn (void)
 {
