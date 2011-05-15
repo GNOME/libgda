@@ -215,6 +215,7 @@ main (int argc, char *argv[])
 					 error && error->message ? error->message : _("No detail"));
 				break;
 			}
+			config_info_modify_argv (argv[i]);
 		}
 		
 		if (dialog) {

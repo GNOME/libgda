@@ -338,6 +338,7 @@ main (int argc, char *argv[])
 		if (!data->output_stream) 
 			g_print (_("Opening connection '%s' for: %s\n"), str, argv[i]);
 		cs = open_connection (NULL, str, argv[i], &error);
+		config_info_modify_argv (argv[i]);
 		g_free (str);
 		if (!cs) {
 			g_print (_("Can't open connection %d: %s\n"), i,
@@ -346,6 +347,7 @@ main (int argc, char *argv[])
 			goto cleanup;
 		}
 	}
+
 	if (getenv ("GDA_SQL_CNC")) {
 		ConnectionSetting *cs;
 		gchar *str;
