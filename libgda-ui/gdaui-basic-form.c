@@ -374,7 +374,7 @@ popup_menu_cb (G_GNUC_UNUSED GtkWidget *wid, GdauiBasicForm *form)
 }
 
 static gboolean
-button_press_event_cb (G_GNUC_UNUSED GdauiBasicForm *wid, GdkEventButton *event, GdauiBasicForm *form)
+button_press_event_cb (G_GNUC_UNUSED GtkWidget *wid, GdkEventButton *event, GdauiBasicForm *form)
 {
 	if (event->button == 3 && event->type == GDK_BUTTON_PRESS) {
 		do_popup_menu (form, event);
@@ -404,6 +404,7 @@ gdaui_basic_form_init (GdauiBasicForm *wid)
 	wid->priv->mainbox = gtk_vbox_new (FALSE, 0);
 	gtk_widget_show (wid->priv->mainbox);
 	gtk_container_add (GTK_CONTAINER (evbox), wid->priv->mainbox);
+	g_object_set (evbox, "visible-window", FALSE, NULL);
 
 	g_signal_connect (evbox, "popup-menu",
 			  G_CALLBACK (popup_menu_cb), wid);
