@@ -2366,6 +2366,66 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				mysql_bind_param[i].length = NULL; /* str is 0 terminated */
 			}
 		}
+		else if (G_VALUE_TYPE (value) == G_TYPE_DOUBLE) {
+			gdouble *pv;
+			pv = g_new (gdouble, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_double (value);
+			mysql_bind_param[i].buffer_type= MYSQL_TYPE_DOUBLE;
+			mysql_bind_param[i].buffer= pv;
+			mysql_bind_param[i].buffer_length = sizeof (gdouble);
+			mysql_bind_param[i].length = NULL;
+		}
+		else if (G_VALUE_TYPE (value) == G_TYPE_FLOAT) {
+			gfloat *pv;
+			pv = g_new (gfloat, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_float (value);
+			mysql_bind_param[i].buffer_type= MYSQL_TYPE_FLOAT;
+			mysql_bind_param[i].buffer= pv;
+			mysql_bind_param[i].buffer_length = sizeof (gfloat);
+			mysql_bind_param[i].length = NULL;
+		}
+		else if (G_VALUE_TYPE (value) == G_TYPE_CHAR) {
+			gchar *pv;
+			pv = g_new (gchar, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_char (value);
+			mysql_bind_param[i].buffer_type= MYSQL_TYPE_TINY;
+			mysql_bind_param[i].buffer= pv;
+			mysql_bind_param[i].buffer_length = sizeof (gchar);
+			mysql_bind_param[i].length = NULL;
+		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_SHORT) {
+			gshort *pv;
+			pv = g_new (gshort, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = gda_value_get_short (value);
+			mysql_bind_param[i].buffer_type= MYSQL_TYPE_SHORT;
+			mysql_bind_param[i].buffer= pv;
+			mysql_bind_param[i].buffer_length = sizeof (gshort);
+			mysql_bind_param[i].length = NULL;
+		}
+		else if (G_VALUE_TYPE (value) == G_TYPE_LONG) {
+			glong *pv;
+			pv = g_new (glong, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_long (value);
+			mysql_bind_param[i].buffer_type= MYSQL_TYPE_LONG;
+			mysql_bind_param[i].buffer= pv;
+			mysql_bind_param[i].buffer_length = sizeof (glong);
+			mysql_bind_param[i].length = NULL;
+		}
+		else if (G_VALUE_TYPE (value) == G_TYPE_INT64) {
+			gint64 *pv;
+			pv = g_new (gint64, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_long (value);
+			mysql_bind_param[i].buffer_type= MYSQL_TYPE_LONGLONG;
+			mysql_bind_param[i].buffer= pv;
+			mysql_bind_param[i].buffer_length = sizeof (gint64);
+			mysql_bind_param[i].length = NULL;
+		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 			const GdaBinary *bin = NULL;
 			GdaBlob *blob = (GdaBlob*) gda_value_get_blob (value);
