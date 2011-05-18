@@ -408,19 +408,14 @@ widget_embedder_draw (GtkWidget *widget, cairo_t *cr)
 			}
 		}
 	}
-	if (gtk_cairo_should_draw_window (cr, bin->offscreen_window)) {
-		gtk_paint_flat_box (gtk_widget_get_style (widget), cr,
-				    GTK_STATE_NORMAL, GTK_SHADOW_NONE,
-				    widget, "blah",
-				    0, 0,
-				    gdk_window_get_width (bin->offscreen_window),
-				    gdk_window_get_height (bin->offscreen_window));
 
+	if (gtk_cairo_should_draw_window (cr, bin->offscreen_window)) {
 		if (bin->child)
 			gtk_container_propagate_draw (GTK_CONTAINER (widget),
 						      bin->child,
 						      cr);
 	}
+
 	return FALSE;
 }
 
