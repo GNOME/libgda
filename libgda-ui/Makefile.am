@@ -223,10 +223,10 @@ Gdaui_5_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
 INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/libgda
 INTROSPECTION_GIRS += Gdaui-5.0.gir
 
-girdir = $(datadir)/gir-1.0
+girdir = $(INTROSPECTION_GIRDIR)
 gir_DATA = $(INTROSPECTION_GIRS)
 
-typelibsdir = $(libdir)/girepository-1.0/
+typelibsdir = $(INTROSPECTION_TYPELIBDIR)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
 CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA)
