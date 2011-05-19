@@ -12,9 +12,16 @@ AM_CPPFLAGS = \
 	$(sqliteinc) \
 	-DSQLITE_HAS_CODEC -DSQLITE_API= -DSQLITE_PRIVATE= -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -DSQLITE_OMIT_LOAD_EXTENSION=1
 
+
 sqlite_sources = sqlite3.c sqlite3.h
-$(sqlite_sources): $(srcdir)/sqlcipher.patch $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h
-	(cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c sqlite3.c && cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h sqlite3.h && patch -p0 < $(srcdir)/sqlcipher.patch)
+sqlite3.c: $(srcdir)/sqlcipher.patch $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c
+	cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c sqlite3.c
+	patch -p0 < $(srcdir)/sqlcipher.patch
+
+sqlite3.h: $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h
+	cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h sqlite3.h
+
+libmain.lo: sqlite3.h
 
 libgda_sqlcipher_la_SOURCES = \
 	$(sqlite_sources) \
