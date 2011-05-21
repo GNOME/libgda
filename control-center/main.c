@@ -267,7 +267,7 @@ create_main_window (void)
 	main_window = GTK_WINDOW (window);
 	gtk_window_set_title (GTK_WINDOW (window), _("Database access control center"));
 	gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
-	gtk_window_set_default_size (GTK_WINDOW (window), 550, 450);
+	gtk_window_set_default_size (GTK_WINDOW (window), 650, 600);
 	g_signal_connect (G_OBJECT (window), "destroy",
 			  G_CALLBACK (window_closed_cb), NULL);
 
