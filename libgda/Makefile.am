@@ -357,10 +357,16 @@ Gda_5_0_gir_LIBS = $(lib_LTLIBRARIES)
 Gda_5_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
 INTROSPECTION_GIRS += Gda-5.0.gir
 
+if ENABLE_GI_SYSTEM_INSTALL
 girdir = $(INTROSPECTION_GIRDIR)
-gir_DATA = $(INTROSPECTION_GIRS)
-
 typelibsdir = $(INTROSPECTION_TYPELIBDIR)
+else
+girdir = $(datadir)/gir-1.0
+typelibsdir = $(libdir)/girepository-1.0
+endif
+
+gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
 CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA)
 endif
