@@ -28,6 +28,7 @@
 #include <libgda-ui/gdaui-enums.h>
 #include "../config-info.h"
 #include "browser-virtual-connection.h"
+#include <sqlite/virtual/gda-virtual-connection.h>
 
 #include "browser-connection-priv.h"
 
@@ -820,6 +821,24 @@ browser_connection_get_information (BrowserConnection *bcnc)
 		bcnc->priv->dsn_info.auth_string = g_strdup (gda_connection_get_authentication (bcnc->priv->cnc));
 
 	return &(bcnc->priv->dsn_info);
+}
+
+/**
+ * browser_connection_is_virtual
+ * @bcnc: a #BrowserConnection
+ *
+ * Tells if @bcnc is a virtual connection or not
+ *
+ * Returns: %TRUE if @bcnc is a virtual connection
+ */
+gboolean
+browser_connection_is_virtual (BrowserConnection *bcnc)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	if (GDA_IS_VIRTUAL_CONNECTION (bcnc->priv->cnc))
+		return TRUE;
+	else
+		return FALSE;
 }
 
 /**

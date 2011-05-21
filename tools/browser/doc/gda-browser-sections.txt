@@ -79,6 +79,7 @@ BrowserConnection
 browser_connection_new
 browser_connection_get_name
 browser_connection_get_information
+browser_connection_is_virtual
 browser_connection_is_busy
 browser_connection_update_meta_data
 browser_connection_meta_data_changed

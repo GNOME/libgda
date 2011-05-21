@@ -76,6 +76,7 @@ const gchar        *browser_connection_get_name               (BrowserConnection
 const GdaDsnInfo   *browser_connection_get_information        (BrowserConnection *bcnc);
 
 gboolean            browser_connection_is_busy                (BrowserConnection *bcnc, gchar **out_reason);
+gboolean            browser_connection_is_virtual             (BrowserConnection *bcnc);
 void                browser_connection_update_meta_data       (BrowserConnection *bcnc);
 void                browser_connection_meta_data_changed      (BrowserConnection *bcnc);
 GdaMetaStruct      *browser_connection_get_meta_struct        (BrowserConnection *bcnc);

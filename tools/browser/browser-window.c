@@ -421,6 +421,15 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	bwin->priv->agroup = group;
         gtk_action_group_add_actions (group, ui_actions, G_N_ELEMENTS (ui_actions), bwin);
 	gtk_action_group_add_toggle_actions (group, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions), bwin);
+	if (browser_connection_is_virtual (bwin->priv->bcnc)) {
+		GtkAction *action;
+		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionBegin");
+		gtk_action_set_visible (action, FALSE);
+		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionCommit");
+		gtk_action_set_visible (action, FALSE);
+		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionRollback");
+		gtk_action_set_visible (action, FALSE);
+	}
 	transaction_status_changed_cb (bwin->priv->bcnc, bwin);
 
         ui = gtk_ui_manager_new ();
