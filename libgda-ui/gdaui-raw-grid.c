@@ -1653,9 +1653,9 @@ action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
 
 	/* move the filter window to a correct location */
 	/* FIXME: let the user specify the position function like GtkTreeView -> search_position_func() */
+	gtk_widget_show (grid->priv->filter_window);
 	gtk_grab_add (grid->priv->filter_window);
 	filter_position_func (GTK_WIDGET (grid), grid->priv->filter_window, NULL);
-	gtk_widget_show (grid->priv->filter_window);
 	popup_grab_on_window (gtk_widget_get_window (grid->priv->filter_window),
 			      gtk_get_current_event_time ());	
 }
