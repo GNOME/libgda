@@ -375,6 +375,12 @@ update_dialog_focus (AuthDialog *dialog)
 #endif
 }
 
+static void
+auth_form_activated_cb (G_GNUC_UNUSED GdauiBasicForm *form, AuthDialog *dialog)
+{
+	gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+}
+
 /**
  * auth_dialog_add_cnc_string
  */
@@ -495,8 +501,8 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 
                 set = gda_set_copy (pinfo->auth_params);
                 ad->auth_widget = gdaui_basic_form_new (set);
-                /*g_signal_connect (G_OBJECT (ad->auth_widget), "holder-changed",
-		  G_CALLBACK (auth_form_changed), dialog);*/
+                g_signal_connect (G_OBJECT (ad->auth_widget), "activated",
+				  G_CALLBACK (auth_form_activated_cb), dialog);
                 g_object_unref (set);
 
 		/* add widget */
