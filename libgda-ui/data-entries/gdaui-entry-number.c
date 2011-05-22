@@ -1,6 +1,5 @@
-/* gdaui-entry-number.c
- *
- * Copyright (C) 2009 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -212,7 +211,6 @@ gdaui_entry_number_new (GdaDataHandler *dh, GType type, const gchar *options)
 	return GTK_WIDGET (obj);
 }
 
-static gboolean focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryNumber *mgstr);
 static void
 gdaui_entry_number_dispose (GObject   * object)
 {
@@ -223,11 +221,8 @@ gdaui_entry_number_dispose (GObject   * object)
 
 	mgstr = GDAUI_ENTRY_NUMBER (object);
 	if (mgstr->priv) {
-		if (mgstr->priv->entry) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (mgstr->priv->entry),
-							      G_CALLBACK (focus_out_cb), mgstr);
+		if (mgstr->priv->entry)
 			mgstr->priv->entry = NULL;
-		}
 	}
 
 	/* parent class */
@@ -354,18 +349,6 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	return value;
 }
 
-typedef void (*Callback2) (gpointer, gpointer);
-static gboolean
-focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryNumber *mgstr)
-{
-	GCallback activate_cb;
-	activate_cb = g_object_get_data (G_OBJECT (widget), "_activate_cb");
-	g_assert (activate_cb);
-	((Callback2)activate_cb) (widget, mgstr);
-
-	return gtk_widget_event (GTK_WIDGET (mgstr), (GdkEvent*) event);
-}
-
 static void
 connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb)
 {
@@ -374,14 +357,11 @@ connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activ
 	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap));
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
 	g_return_if_fail (mgstr->priv);
-	g_object_set_data (G_OBJECT (mgstr->priv->entry), "_activate_cb", activate_cb);
 
 	mgstr->priv->entry_change_sig = g_signal_connect (G_OBJECT (mgstr->priv->entry), "changed",
 							  modify_cb, mgwrap);
 	g_signal_connect (G_OBJECT (mgstr->priv->entry), "activate",
 			  activate_cb, mgwrap);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "focus-out-event",
-			  G_CALLBACK (focus_out_cb), mgstr);
 }
 
 static gboolean

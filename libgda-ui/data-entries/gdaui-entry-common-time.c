@@ -474,18 +474,6 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	return value;
 }
 
-typedef void (*Callback2) (gpointer, gpointer);
-static gboolean
-focus_out_cb (GtkWidget *widget, GdkEventFocus *event, GdauiEntryCommonTime *mgtim)
-{
-	GCallback activate_cb;
-	activate_cb = g_object_get_data (G_OBJECT (widget), "_activate_cb");
-	g_assert (activate_cb);
-	((Callback2)activate_cb) (widget, mgtim);
-
-	return gtk_widget_event (GTK_WIDGET (mgtim), (GdkEvent*) event);
-}
-
 static void
 connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb)
 {
@@ -499,23 +487,17 @@ connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activ
 	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgtim));
 
 	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP)) {
-		g_object_set_data (G_OBJECT (mgtim->priv->entry_date), "_activate_cb", activate_cb);
 		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "changed",
 				  modify_cb, mgwrap);
 		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "activate",
 				  activate_cb, mgwrap);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "focus-out-event",
-				  G_CALLBACK (focus_out_cb), mgtim);
 	}
 
 	if ((type == GDA_TYPE_TIME) || (type == GDA_TYPE_TIMESTAMP)) {
-		g_object_set_data (G_OBJECT (mgtim->priv->entry_time), "_activate_cb", activate_cb);
 		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "changed",
 				  modify_cb, mgwrap);
 		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "activate",
 				  activate_cb, mgwrap);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "focus-out-event",
-				  G_CALLBACK (focus_out_cb), mgtim);
 	}
 }
 
