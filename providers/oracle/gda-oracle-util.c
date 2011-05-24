@@ -1,5 +1,5 @@
-/* GDA Oracle provider
- * Copyright (C) 2002 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2002 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
@@ -236,11 +236,13 @@ _g_type_to_oracle_sqltype (GType type)
 	else if (type == GDA_TYPE_TIME)
 		return SQLT_TIME;
 	else if (type == G_TYPE_INT64)
-		return SQLT_CHR;
+		return SQLT_NUM;
+	else if (type == G_TYPE_UINT64)
+		return SQLT_UIN;
 	else if (type == G_TYPE_UINT)
 		return SQLT_UIN;
 	else if (type == G_TYPE_ULONG)
-		return SQLT_INT;
+		return SQLT_UIN;
 	else if (type == G_TYPE_LONG)
 		return SQLT_INT;
 	else if (type == GDA_TYPE_SHORT)
@@ -367,36 +369,6 @@ _oracle_sqltype_to_string (const ub2 sqltype)
 	}
 }
 
-gchar *
-_gda_oracle_value_to_sql_string (GValue *value)
-{
-	gchar *val_str;
-	gchar *ret;
-	GType type;
-
-	g_return_val_if_fail (value != NULL, NULL);
-
-	val_str = gda_value_stringify (value);
-	if (!val_str)
-		return NULL;
-
-	type = G_VALUE_TYPE (value);
-	if ((type == G_TYPE_INT64) ||
-	    (type == G_TYPE_DOUBLE) ||
-	    (type == G_TYPE_INT) ||
-	    (type == GDA_TYPE_NUMERIC) ||
-	    (type == G_TYPE_FLOAT) ||
-	    (type == GDA_TYPE_SHORT) ||
-	    (type == G_TYPE_CHAR))
-		ret = val_str;
-	else {
-		ret = g_strdup_printf ("\"%s\"", val_str);
-		g_free(val_str);
-	}
-	
-	return ret;
-}
-
 GdaOracleValue *
 _gda_value_to_oracle_value (const GValue *value)
 {
@@ -415,18 +387,24 @@ _gda_value_to_oracle_value (const GValue *value)
 	if (type == GDA_TYPE_NULL)
 		ora_value->indicator = -1;
 	else if ((type == G_TYPE_INT64) ||
+		 (type == G_TYPE_UINT64) ||
 		 (type == G_TYPE_DOUBLE) ||
 		 (type == G_TYPE_INT) ||
+		 (type == G_TYPE_UINT) ||
 		 (type == GDA_TYPE_NUMERIC) ||
 		 (type == G_TYPE_FLOAT) ||
 		 (type == GDA_TYPE_SHORT) ||
-		 (type == G_TYPE_CHAR)) {
+		 (type == GDA_TYPE_USHORT) ||
+		 (type == G_TYPE_LONG) ||
+		 (type == G_TYPE_ULONG) ||
+		 (type == G_TYPE_CHAR) ||
+		 (type == G_TYPE_UCHAR)) {
 		gchar *val_str;
 		val_str = gda_value_stringify ((GValue *) value);
 		if (!val_str)
 			return NULL;
 		
-		ora_value->sql_type = SQLT_NUM;
+		ora_value->sql_type = SQLT_CHR;
 		ora_value->value = (void *) val_str;
 		ora_value->defined_size = strlen (val_str);
 	}
@@ -586,9 +564,15 @@ _gda_oracle_set_value (GValue *value,
 		break;
 	}
 	case GDA_STYPE_INT64:
+		TO_IMPLEMENT; /* test that value fits in */
 		g_value_set_int64 (value, atoll (ora_value->value));
 		break;
+	case GDA_STYPE_UINT64:
+		TO_IMPLEMENT; /* test that value fits in */
+		g_value_set_uint64 (value, atoll (ora_value->value));
+		break;
 	case GDA_STYPE_UINT:
+		TO_IMPLEMENT; /* test that value fits in */
 		g_value_set_uint (value, *((guint*) ora_value->value));
 		break;
 	case GDA_STYPE_FLOAT:
