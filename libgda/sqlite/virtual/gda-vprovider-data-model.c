@@ -416,7 +416,11 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 
 	td = gda_vconnection_get_table_data_by_unique_name (cnc, spec_name);
 	g_free (spec_name);
-	g_assert (td);
+	if (!td) {
+		/* wrong usage! */
+		*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Wrong usage of Libgda's virtual tables"));
+		return SQLITE_ERROR;
+	}
 
 	/* preparations */
 	if (td->spec->data_model) {
