@@ -51,7 +51,7 @@
  */
 static void gda_oracle_provider_class_init (GdaOracleProviderClass *klass);
 static void gda_oracle_provider_init       (GdaOracleProvider *provider,
-					  GdaOracleProviderClass *klass);
+					    GdaOracleProviderClass *klass);
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -59,65 +59,65 @@ static GObjectClass *parent_class = NULL;
  */
 /* connection management */
 static gboolean            gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-							      GdaQuarkList *params, GdaQuarkList *auth,
-							      guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+								GdaQuarkList *params, GdaQuarkList *auth,
+								guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
 static gboolean            gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_oracle_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_oracle_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 /* DDL operations */
 static gboolean            gda_oracle_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
-								 GdaServerOperationType type, GdaSet *options);
+								   GdaServerOperationType type, GdaSet *options);
 static GdaServerOperation *gda_oracle_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
-							       GdaServerOperationType type,
-							       GdaSet *options, GError **error);
+								 GdaServerOperationType type,
+								 GdaSet *options, GError **error);
 static gchar              *gda_oracle_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc,
-							       GdaServerOperation *op, GError **error);
+								 GdaServerOperation *op, GError **error);
 
 static gboolean            gda_oracle_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-								GdaServerOperation *op, guint *task_id, 
-								GdaServerProviderAsyncCallback async_cb, gpointer cb_data,
-								GError **error);
+								  GdaServerOperation *op, guint *task_id, 
+								  GdaServerProviderAsyncCallback async_cb, gpointer cb_data,
+								  GError **error);
 /* transactions */
 static gboolean            gda_oracle_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-								const gchar *name, GdaTransactionIsolation level, GError **error);
+								  const gchar *name, GdaTransactionIsolation level, GError **error);
 static gboolean            gda_oracle_provider_commit_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-								 const gchar *name, GError **error);
-static gboolean            gda_oracle_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection * cnc,
 								   const gchar *name, GError **error);
+static gboolean            gda_oracle_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection * cnc,
+								     const gchar *name, GError **error);
 static gboolean            gda_oracle_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-							    const gchar *name, GError **error);
+							      const gchar *name, GError **error);
 static gboolean            gda_oracle_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-								 const gchar *name, GError **error);
+								   const gchar *name, GError **error);
 static gboolean            gda_oracle_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-							       const gchar *name, GError **error);
+								 const gchar *name, GError **error);
 
 /* information retrieval */
 static const gchar        *gda_oracle_provider_get_version (GdaServerProvider *provider);
 static gboolean            gda_oracle_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
-							       GdaConnectionFeature feature);
+								 GdaConnectionFeature feature);
 
 static const gchar        *gda_oracle_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_oracle_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
-							       GType g_type, const gchar *dbms_type);
+								 GType g_type, const gchar *dbms_type);
 
 static const gchar*        gda_oracle_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc,
-								    GType type);
+								      GType type);
 /* statements */
 static GdaSqlParser        *gda_oracle_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc);
 static gchar               *gda_oracle_provider_statement_to_sql  (GdaServerProvider *provider, GdaConnection *cnc,
-								 GdaStatement *stmt, GdaSet *params, 
-								 GdaStatementSqlFlag flags,
-								 GSList **params_used, GError **error);
+								   GdaStatement *stmt, GdaSet *params, 
+								   GdaStatementSqlFlag flags,
+								   GSList **params_used, GError **error);
 static gboolean             gda_oracle_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *cnc,
-								 GdaStatement *stmt, GError **error);
+								   GdaStatement *stmt, GError **error);
 static GObject             *gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
-								 GdaStatement *stmt, GdaSet *params,
-								 GdaStatementModelUsage model_usage, 
-								 GType *col_types, GdaSet **last_inserted_row, 
-								 guint *task_id, GdaServerProviderExecCallback async_cb, 
-								 gpointer cb_data, GError **error);
+								   GdaStatement *stmt, GdaSet *params,
+								   GdaStatementModelUsage model_usage, 
+								   GType *col_types, GdaSet **last_inserted_row, 
+								   guint *task_id, GdaServerProviderExecCallback async_cb, 
+								   gpointer cb_data, GError **error);
 static GdaSqlStatement     *gda_oracle_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
 							  GdaStatement *stmt, GdaSet *params, GError **error);
 
@@ -128,20 +128,20 @@ static gchar               *gda_oracle_identifier_quote    (GdaServerProvider *p
 
 /* distributed transactions */
 static gboolean gda_oracle_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+						 const GdaXaTransactionId *xid, GError **error);
 
 static gboolean gda_oracle_provider_xa_end      (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+						 const GdaXaTransactionId *xid, GError **error);
 static gboolean gda_oracle_provider_xa_prepare  (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+						 const GdaXaTransactionId *xid, GError **error);
 
 static gboolean gda_oracle_provider_xa_commit   (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+						 const GdaXaTransactionId *xid, GError **error);
 static gboolean gda_oracle_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+						 const GdaXaTransactionId *xid, GError **error);
 
 static GList   *gda_oracle_provider_xa_recover  (GdaServerProvider *provider, GdaConnection *cnc, 
-						   GError **error);
+						 GError **error);
 
 /* 
  * private connection data destroy 
@@ -278,6 +278,7 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	static_types[GDA_STYPE_TIME] = GDA_STYPE_TIME;
 	static_types[GDA_STYPE_TIMESTAMP] = GDA_STYPE_TIMESTAMP;
 	static_types[GDA_STYPE_INT64] = G_TYPE_INT64;
+	static_types[GDA_STYPE_UINT64] = G_TYPE_UINT64;
 	static_types[GDA_STYPE_UINT] = G_TYPE_UINT;
 	static_types[GDA_STYPE_FLOAT] = G_TYPE_FLOAT;
 	static_types[GDA_STYPE_DOUBLE] = G_TYPE_DOUBLE;
@@ -294,7 +295,7 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 }
 
 static void
-gda_oracle_provider_init (GdaOracleProvider *oracle_prv, GdaOracleProviderClass *klass)
+gda_oracle_provider_init (GdaOracleProvider *oracle_prv, G_GNUC_UNUSED GdaOracleProviderClass *klass)
 {
 	InternalStatementItem i;
 	GdaSqlParser *parser;
@@ -342,7 +343,7 @@ gda_oracle_provider_get_type (void)
  * Get provider name request
  */
 static const gchar *
-gda_oracle_provider_get_name (GdaServerProvider *provider)
+gda_oracle_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return ORACLE_PROVIDER_NAME;
 }
@@ -351,7 +352,7 @@ gda_oracle_provider_get_name (GdaServerProvider *provider)
  * Get provider's version, no need to change this
  */
 static const gchar *
-gda_oracle_provider_get_version (GdaServerProvider *provider)
+gda_oracle_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -440,7 +441,8 @@ execute_raw_command (GdaConnection *cnc, const gchar *sql)
 static gboolean
 gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
 				     GdaQuarkList *params, GdaQuarkList *auth,
-				     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				     G_GNUC_UNUSED gpointer cb_data)
 {
 	OracleConnectionData *cdata;
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (provider), FALSE);
@@ -498,6 +500,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
         /* initialize the Oracle environment */
 	cdata = g_new0 (OracleConnectionData, 1);
+	cdata->autocommit = TRUE;
         result = OCIEnvInit ((OCIEnv **) & cdata->henv,
                              (ub4) OCI_DEFAULT,
                              (size_t) 0,
@@ -566,7 +569,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	/* attach to Oracle server */
         result = OCIServerAttach (cdata->hserver,
                                   cdata->herr,
-                                  (text *) tnsname ? tnsname : easy,
+                                  (text *) (tnsname ? tnsname : easy),
                                   (ub4) strlen (tnsname ? tnsname : easy),
                                   OCI_DEFAULT);
 	g_free (easy);
@@ -684,7 +687,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	cdata->version = NULL;
 	cdata->major_version = 8;
 	cdata->minor_version = 0;
-	result = OCIServerVersion (cdata->hservice, cdata->herr, version, 511, OCI_HTYPE_SVCCTX);
+	result = OCIServerVersion (cdata->hservice, cdata->herr, (text*) version, 511, OCI_HTYPE_SVCCTX);
 	if ((result == OCI_SUCCESS) || (result = OCI_SUCCESS_WITH_INFO)) {
 		cdata->version = g_strdup (version);
 		gchar *tmp, *ptr;
@@ -711,7 +714,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	/* Optionnally set some attributes for the newly opened connection (encoding to UTF-8 for example )*/
 	if (! execute_raw_command (cnc, "ALTER SESSION SET NLS_DATE_FORMAT = 'MM/DD/YYYY'") ||
 	    ! execute_raw_command (cnc, "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \". \"") ||
-		(schema && ! execute_raw_command (cnc, g_strdup_printf ("ALTER SESSION SET CURRENT_SCHEMA = \"%s\"", schema)))) {
+	    (schema && ! execute_raw_command (cnc, g_strdup_printf ("ALTER SESSION SET CURRENT_SCHEMA = \"%s\"", schema)))) {
 		gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 		gda_oracle_free_cnc_data (cdata);
 		return FALSE;
@@ -814,7 +817,7 @@ gda_oracle_provider_get_database (GdaServerProvider *provider, GdaConnection *cn
  */
 static gboolean
 gda_oracle_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				      GdaServerOperationType type, GdaSet *options)
+					GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -851,7 +854,7 @@ gda_oracle_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
  */
 static GdaServerOperation *
 gda_oracle_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				      GdaServerOperationType type, GdaSet *options, GError **error)
+				      GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options, GError **error)
 {
         gchar *file;
         GdaServerOperation *op;
@@ -951,8 +954,9 @@ gda_oracle_provider_render_operation (GdaServerProvider *provider, GdaConnection
  */
 static gboolean
 gda_oracle_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				       GdaServerOperation *op, guint *task_id, 
-				       GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+				       GdaServerOperation *op, G_GNUC_UNUSED guint *task_id, 
+				       GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data,
+				       GError **error)
 {
         GdaServerOperationType optype;
 
@@ -982,8 +986,8 @@ gda_oracle_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
  */
 static gboolean
 gda_oracle_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-				     const gchar *name, GdaTransactionIsolation level,
-				     GError **error)
+				       const gchar *name, GdaTransactionIsolation level,
+				       GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -996,6 +1000,7 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 
 	TO_IMPLEMENT;
 
+	cdata->autocommit = FALSE;
 	return FALSE;
 }
 
@@ -1004,27 +1009,6 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
  */
 static gboolean
 gda_oracle_provider_commit_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-				      const gchar *name, GError **error)
-{
-	OracleConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-
-	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
-		return FALSE;
-
-	TO_IMPLEMENT;
-
-	return FALSE;
-}
-
-/*
- * Rollback transaction request
- */
-static gboolean
-gda_oracle_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection *cnc,
 					const gchar *name, GError **error)
 {
 	OracleConnectionData *cdata;
@@ -1038,6 +1022,29 @@ gda_oracle_provider_rollback_transaction (GdaServerProvider *provider, GdaConnec
 
 	TO_IMPLEMENT;
 
+	cdata->autocommit = TRUE;
+	return FALSE;
+}
+
+/*
+ * Rollback transaction request
+ */
+static gboolean
+gda_oracle_provider_rollback_transaction (GdaServerProvider *provider, GdaConnection *cnc,
+					  const gchar *name, GError **error)
+{
+	OracleConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata) 
+		return FALSE;
+
+	TO_IMPLEMENT;
+
+	cdata->autocommit = TRUE;
 	return FALSE;
 }
 
@@ -1046,7 +1053,7 @@ gda_oracle_provider_rollback_transaction (GdaServerProvider *provider, GdaConnec
  */
 static gboolean
 gda_oracle_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-				 const gchar *name, GError **error)
+				   const gchar *name, GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -1067,7 +1074,7 @@ gda_oracle_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *c
  */
 static gboolean
 gda_oracle_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-				      const gchar *name, GError **error)
+					const gchar *name, GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -1088,7 +1095,7 @@ gda_oracle_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnecti
  */
 static gboolean
 gda_oracle_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
-				    const gchar *name, GError **error)
+				      const gchar *name, GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -1140,7 +1147,7 @@ gda_oracle_provider_supports_feature (GdaServerProvider *provider, GdaConnection
  */
 static GdaDataHandler *
 gda_oracle_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
-				    GType type, const gchar *dbms_type)
+				      GType type, const gchar *dbms_type)
 {
 	GdaDataHandler *dh;
 	if (cnc) {
@@ -1501,7 +1508,7 @@ oracle_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 				else
 					g_string_append_c (string, '.');
 				tmp = gda_sql_identifier_quote (ids_array[i], context->cnc, context->provider, FALSE,
-					   cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+								cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 				g_string_append (string, tmp);
 				g_free (tmp);
 			}
@@ -1635,7 +1642,7 @@ gda_oracle_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
                 return FALSE;
 	}
 	
-	/*g_print ("Really PREPARED: %s\n", sql);*/
+	g_print ("Really PREPARED: %s\n", sql);
 	result = OCIStmtPrepare2 (cdata->hservice,
 				  &hstmt,
 				  (dvoid *) cdata->herr,
@@ -1692,6 +1699,16 @@ gda_oracle_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
         if (params)
                 g_object_unref (params);
 	return retval;
+}
+
+static void
+clear_ora_values_list (GSList *oravalues_list)
+{
+	if (oravalues_list) {
+		g_slist_foreach (oravalues_list, (GFunc) _gda_oracle_value_free, NULL);
+		g_slist_free (oravalues_list);
+		oravalues_list = NULL;
+	}
 }
 
 /*
@@ -1775,10 +1792,12 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	g_assert (ps);
 
 	/* bind statement's parameters */
-	GSList *list;
+	GSList *list, *oravalues_list;
 	GdaConnectionEvent *event = NULL;
 	int i;
-	for (i = 1, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
+	for (i = 1, list = _GDA_PSTMT (ps)->param_ids, oravalues_list = NULL;
+	     list;
+	     list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
 		gchar *real_pname = NULL;
 		GdaHolder *h;
@@ -1883,8 +1902,10 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		result = OCIBindByName ((dvoid *) ps->hstmt,
 					(OCIBind **) &bindpp,
 					(OCIError *) cdata->herr,
-					(text *) real_pname ? real_pname : pname,
+					/* param name */
+					(text *) (real_pname ? real_pname : pname),
 					(sb4) strlen (real_pname ? real_pname : pname),
+					/* bound value */
 					(dvoid *) ora_value->value,
 					(sb4) ora_value->defined_size,
 					(ub2) ora_value->sql_type,
@@ -1894,7 +1915,8 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					(ub4) 0,
 					(ub4 *) 0,
 					(ub4) OCI_DEFAULT);
-		_gda_oracle_value_free (ora_value);
+
+		oravalues_list = g_slist_prepend (oravalues_list, ora_value);
 		if ((event = gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
 						      _("Could not bind the Oracle statement parameter"))))
 			break;
@@ -1903,6 +1925,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	if (event) {
 		gda_connection_add_event (cnc, event);
 		g_object_unref (ps);
+		clear_ora_values_list (oravalues_list);
 		return NULL;
 	}
 	
@@ -1920,8 +1943,10 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			     OCI_ATTR_STMT_TYPE, cdata->herr);
 	event = gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
 					 _("Could not get the Oracle statement type"));
-	if (event)
+	if (event) {
+		clear_ora_values_list (oravalues_list);
 		return NULL;
+	}
 
 	if (empty_rs) {
 		/* There are some missing parameters, so the SQL can't be executed but we still want
@@ -1937,12 +1962,14 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 estmt = gda_select_alter_select_for_empty (stmt, error);
                 if (!estmt) {
 			g_object_unref (ps);
+			clear_ora_values_list (oravalues_list);
                         return NULL;
 		}
                 esql = gda_statement_to_sql (estmt, NULL, error);
                 g_object_unref (estmt);
                 if (!esql) {
 			g_object_unref (ps);
+			clear_ora_values_list (oravalues_list);
                         return NULL;
 		}
 
@@ -1968,6 +1995,7 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 						 _("Could not execute the Oracle statement"));
 	}
 
+	clear_ora_values_list (oravalues_list);
 	if (event) {
 		g_object_unref (ps);
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
@@ -2063,6 +2091,17 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					     _("Could not get the number of affected rows")))
 			nrows = -2;
 
+		if (cdata->autocommit) {
+			result = OCITransCommit (cdata->hservice, cdata->herr, OCI_DEFAULT);
+			if ((event = gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+							      _("Error auto-commiting transaction")))) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_STATEMENT_EXEC_ERROR, "%s",
+					     gda_connection_event_get_description (event));
+                                return NULL;
+                        }
+		}
+
 		set = gda_set_new_inline (1, "IMPACTED_ROWS", G_TYPE_INT, nrows);
 
 		if (nrows >= 0) {
@@ -2115,7 +2154,7 @@ gda_oracle_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_oracle_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc, 
-				const GdaXaTransactionId *xid, GError **error)
+			      const GdaXaTransactionId *xid, GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -2137,7 +2176,7 @@ gda_oracle_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_oracle_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc, 
-			      const GdaXaTransactionId *xid, GError **error)
+			    const GdaXaTransactionId *xid, GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -2158,7 +2197,7 @@ gda_oracle_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_oracle_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc, 
-				  const GdaXaTransactionId *xid, GError **error)
+				const GdaXaTransactionId *xid, GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -2180,7 +2219,7 @@ gda_oracle_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_oracle_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc, 
-				 const GdaXaTransactionId *xid, GError **error)
+			       const GdaXaTransactionId *xid, GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -2201,7 +2240,7 @@ gda_oracle_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_oracle_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
-				   const GdaXaTransactionId *xid, GError **error)
+				 const GdaXaTransactionId *xid, GError **error)
 {
 	OracleConnectionData *cdata;
 
@@ -2224,7 +2263,7 @@ gda_oracle_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc
  */
 static GList *
 gda_oracle_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
-				  GError **error)
+				GError **error)
 {
 	OracleConnectionData *cdata;
 

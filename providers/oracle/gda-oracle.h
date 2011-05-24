@@ -1,5 +1,5 @@
-/* GDA oracle provider
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -46,6 +46,8 @@ typedef struct {
 	gchar *version;
 	guint8 major_version;
 	guint8 minor_version;
+
+	gboolean autocommit;
 } OracleConnectionData;
 
 #endif

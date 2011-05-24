@@ -1,5 +1,5 @@
-/* GDA oracle provider
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+/*
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -47,6 +47,7 @@ typedef enum {
 	GDA_STYPE_TIME,
 	GDA_STYPE_TIMESTAMP,
 	GDA_STYPE_INT64,
+	GDA_STYPE_UINT64,
 	GDA_STYPE_UINT,
 	GDA_STYPE_FLOAT,
 	GDA_STYPE_DOUBLE,
@@ -69,7 +70,7 @@ GdaStaticType gda_g_type_to_static_type (GType type);
    @indicator
    -2  item length > variable size so data truncated
    -1  value is NULL
-   0  value is in host variable
+   0   value is in host variable
    >0  item length > variable, indicator is length before truncation
 */
 typedef struct {
@@ -100,7 +101,6 @@ GdaConnectionEvent *_gda_oracle_handle_error (gint result, GdaConnection *cnc,
 GType               _oracle_sqltype_to_g_type (const ub2 sqltype, sb2 precision, sb1 scale);
 ub2                 _g_type_to_oracle_sqltype (GType type);
 gchar *             _oracle_sqltype_to_string (const ub2 sqltype);
-gchar *             _gda_oracle_value_to_sql_string (GValue *value);
 GdaOracleValue     *_gda_value_to_oracle_value (const GValue *value);
 void                _gda_oracle_set_value (GValue *value,
 					   GdaOracleValue *ora_value,
