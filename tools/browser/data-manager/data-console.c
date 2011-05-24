@@ -948,7 +948,7 @@ data_console_page_get_actions_group (BrowserPage *page)
 	DataConsole *dconsole;
 	dconsole = DATA_CONSOLE (page);
 	if (! dconsole->priv->agroup) {
-		dconsole->priv->agroup = gtk_action_group_new ("QueryExecConsoleActions");
+		dconsole->priv->agroup = gtk_action_group_new ("DataManagerConsoleActions");
 		gtk_action_group_set_translation_domain (dconsole->priv->agroup, GETTEXT_PACKAGE);
 		gtk_action_group_add_toggle_actions (dconsole->priv->agroup,
 						     ui_actions, G_N_ELEMENTS (ui_actions), page);
