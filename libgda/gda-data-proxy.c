@@ -2917,7 +2917,8 @@ sql_where_foreach (GdaSqlAnyPart *part, GdaDataProxy *proxy, G_GNUC_UNUSED GErro
 					/* column name is "_<number>", use column: <number> - 1 */
 					gint colnum;
 					colnum = atoi (cstr+1) - 1; /* Flawfinder: ignore */
-					if (colnum >= 0) {
+					if ((colnum >= 0) &&
+					    (colnum < gda_data_model_get_n_columns ((GdaDataModel*) proxy))) {
 						GdaColumn *col = gda_data_model_describe_column ((GdaDataModel*) proxy,
 												 colnum);
 						const gchar *cname = gda_column_get_name (col);
@@ -3447,7 +3448,13 @@ gda_data_proxy_describe_column (GdaDataModel *model, gint col)
 	if (!proxy->priv->columns)
 		create_columns (proxy);
 	gda_mutex_unlock (proxy->priv->mutex);
-	return proxy->priv->columns [col];
+	if ((col < 0) || (col >= 2 * proxy->priv->model_nb_cols)) {
+		g_warning (_("Column %d out of range (0-%d)"), col,
+			   gda_data_model_get_n_columns (model) - 1);
+		return NULL;
+	}
+	else
+		return proxy->priv->columns [col];
 }
 
 static const GValue *
