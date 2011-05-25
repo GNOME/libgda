@@ -886,7 +886,7 @@ _gda_nodes_list_free (GdaTreeNodesList *nl)
 	if (nl->nodes) {
 		g_slist_foreach (nl->nodes, (GFunc) g_object_unref, NULL);
 		g_slist_free (nl->nodes);
-		g_object_unref (nl->mgr);
 	}
+	g_object_unref (nl->mgr);
 	g_free (nl);
 }
