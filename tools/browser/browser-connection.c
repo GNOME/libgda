@@ -278,6 +278,7 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->store_cnc = NULL;
 
 	bcnc->priv->variables = NULL;
+	/*g_print ("Created BrowserConnection %p\n", bcnc);*/
 }
 
 static void
@@ -574,6 +575,10 @@ browser_connection_dispose (GObject *object)
 		if (bcnc->priv->meta_store_signal)
 			gda_thread_wrapper_disconnect (bcnc->priv->wrapper,
 						       bcnc->priv->meta_store_signal);
+		if (bcnc->priv->transaction_status_signal)
+			gda_thread_wrapper_disconnect (bcnc->priv->wrapper,
+						       bcnc->priv->transaction_status_signal);
+
 		g_object_unref (bcnc->priv->wrapper);
 		g_free (bcnc->priv->name);
 		if (bcnc->priv->c_mstruct)
@@ -587,9 +592,6 @@ browser_connection_dispose (GObject *object)
 		if (bcnc->priv->p_mstruct_mutex)
 			g_mutex_free (bcnc->priv->p_mstruct_mutex);
 
-		if (bcnc->priv->transaction_status_signal)
-			gda_thread_wrapper_disconnect (bcnc->priv->wrapper,
-						       bcnc->priv->transaction_status_signal);
 		if (bcnc->priv->cnc)
 			g_object_unref (bcnc->priv->cnc);
 
@@ -604,6 +606,7 @@ browser_connection_dispose (GObject *object)
 
 		g_free (bcnc->priv);
 		bcnc->priv = NULL;
+		/*g_print ("Disposed BrowserConnection %p\n", bcnc);*/
 	}
 
 	/* parent class */
