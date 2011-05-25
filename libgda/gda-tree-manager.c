@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -31,7 +31,8 @@ typedef struct {
 } AddedAttribute;
 
 struct _GdaTreeManagerPrivate {
-        GSList  *sub_managers; /* list of GdaTreeManager structures */
+        GSList  *sub_managers; /* list of GdaTreeManager structures, no ref held */
+	GSList  *ref_managers; /* list of GdaTreeManager structures, ref held */
 	gboolean recursive;
 
 	GdaTreeManagerNodeFunc node_create_func;
@@ -112,6 +113,7 @@ gda_tree_manager_init (GdaTreeManager *manager, G_GNUC_UNUSED GdaTreeManagerClas
 
 	manager->priv = g_new0 (GdaTreeManagerPrivate, 1);
 	manager->priv->sub_managers = NULL;
+	manager->priv->ref_managers = NULL;
 	manager->priv->added_attributes = NULL;
 }
 
@@ -124,8 +126,12 @@ gda_tree_manager_dispose (GObject *object)
 
 	if (manager->priv) {
 		if (manager->priv->sub_managers) {
-			g_slist_foreach (manager->priv->sub_managers, (GFunc) g_object_unref, NULL);
 			g_slist_free (manager->priv->sub_managers);
+			manager->priv->sub_managers = NULL;
+		}
+		if (manager->priv->ref_managers) {
+			g_slist_foreach (manager->priv->ref_managers, (GFunc) g_object_unref, NULL);
+			g_slist_free (manager->priv->ref_managers);
 		}
 		if (manager->priv->added_attributes) {
 			GSList *list;
@@ -403,6 +409,19 @@ gda_tree_manager_create_node (GdaTreeManager *manager, GdaTreeNode *parent, cons
 	return node;
 }
 
+static gboolean
+manager_is_sub_manager_of (GdaTreeManager *mgr, GdaTreeManager *sub)
+{
+	if (g_slist_find (mgr->priv->ref_managers, sub))
+		return TRUE;
+	GSList *list;
+	for (list = mgr->priv->sub_managers; list; list = list->next) {
+		if (manager_is_sub_manager_of (GDA_TREE_MANAGER (list->data), sub))
+			return TRUE;
+	}
+	return FALSE;
+}
+
 /**
  * gda_tree_manager_add_manager:
  * @manager: a #GdaTreeManager object
@@ -413,7 +432,8 @@ gda_tree_manager_create_node (GdaTreeManager *manager, GdaTreeNode *parent, cons
  * or several times in the same #GdaTree's structure.
  *
  * Please note that it's possible for @mgr and @sub to be the same object, but beware of the possible
- * infinite recursive behaviour in this case (depending on the actual implementation of the #GdaTreeManager)
+ * infinite recursive behaviour in this case when creating children nodes 
+ * (depending on the actual implementation of the #GdaTreeManager).
  *
  * Since: 4.2
  */
@@ -424,8 +444,14 @@ gda_tree_manager_add_manager (GdaTreeManager *manager, GdaTreeManager *sub)
 	g_return_if_fail (GDA_IS_TREE_MANAGER (sub));
 
 	manager->priv->sub_managers = g_slist_append (manager->priv->sub_managers, sub);
-	g_object_ref (sub);
+
+	/* determine if @sub should be ref'ed or not to avoid circular dependencies */
+	if ((sub != manager) && !manager_is_sub_manager_of (sub, manager)) {
+		manager->priv->ref_managers = g_slist_prepend (manager->priv->ref_managers, sub);
+		g_object_ref (sub);
+	}
 }
+
 
 /**
  * gda_tree_manager_get_managers:
