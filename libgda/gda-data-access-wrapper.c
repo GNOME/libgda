@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2006 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2006 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -186,6 +186,7 @@ gda_data_access_wrapper_init (GdaDataAccessWrapper *model, G_GNUC_UNUSED GdaData
 	model->priv->iter_row = -1; /* because model->priv->iter does not yet exist */
 	model->priv->rows = NULL;
 	model->priv->end_of_data = FALSE;
+	model->priv->last_row = -1;
 	
 	model->priv->rows_buffer_array = NULL;
 	model->priv->rows_buffer_index = NULL;
