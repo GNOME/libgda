@@ -42,6 +42,7 @@ struct _BrowserVirtualConnectionPrivate
 {
 	GtkTable    *layout_table;
 	BrowserVirtualConnectionSpecs *specs;
+	gboolean in_m_busy;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -85,6 +86,8 @@ static void
 source_cnc_busy_cb (G_GNUC_UNUSED BrowserConnection *bcnc, gboolean is_busy,
 		    G_GNUC_UNUSED const gchar *reason, BrowserConnection *virtual)
 {
+	if (BROWSER_VIRTUAL_CONNECTION (virtual)->priv->in_m_busy)
+		return;
 	g_signal_emit_by_name (virtual, "busy", is_busy,
 			       is_busy ? _("Bound connection is used") : NULL);
 }
@@ -98,6 +101,8 @@ m_busy (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason)
 	GSList *list;
 	if (! BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->specs)
 		return;
+
+	BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->in_m_busy = TRUE;
 
 	for (list = BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->specs->parts; list; list = list->next) {
 		BrowserVirtualConnectionPart *part;
@@ -117,6 +122,8 @@ m_busy (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason)
 	}
 
 	BROWSER_CONNECTION_CLASS (parent_class)->busy (bcnc, is_busy, reason);
+
+	BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->in_m_busy = FALSE;
 }
 
 static void
