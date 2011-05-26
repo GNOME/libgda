@@ -800,15 +800,18 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	gchar *tmp;
 	GdaMetaStore *store;
 	GdaMetaContext context;
+	GdaConnectionOptions options;
 	
 	store = gda_connection_get_meta_store (hc->cnc);
 	g_assert (store);
-
-	/* make sure the meta store is up to date */
-	context.table_name = "_tables";
-	context.size = 0;
-	if (!gda_connection_update_meta_store (hc->cnc, &context, error))
-		return FALSE;
+	g_object_get ((GObject*) hc->cnc, "options", &options, NULL);
+	if (! (options & GDA_CONNECTION_OPTIONS_AUTO_META_DATA)) {
+		/* make sure the meta store is up to date */
+		context.table_name = "_tables";
+		context.size = 0;
+		if (!gda_connection_update_meta_store (hc->cnc, &context, error))
+			return FALSE;
+	}
 
 	/* add a :memory: database */
 	if (hc->ns) {
