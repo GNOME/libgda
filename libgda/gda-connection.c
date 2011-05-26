@@ -6213,18 +6213,21 @@ get_next_word (gchar *str, gboolean for_ident, gchar **out_next)
 
 
 /*
- * the returned context has:
+ * the contexts in returned list have:
  *  - the @table_name attribute as a static string
  *  - the @column_names[x] as a static string, not the @column_names array itself which has to be freed
+ *
+ * Returns: a new list of new #GdaMetaContext
  */
-static GdaMetaContext *
+static GSList *
 meta_data_context_from_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params)
 {
+	gboolean ignore_create_drop = FALSE;
 	if (GDA_IS_VCONNECTION_DATA_MODEL (cnc))
 		/* meta data is updated when the virtual connection emits the
 		 * "vtable-created" or "vtable-dropped" signals
 		 */
-		return NULL;
+		ignore_create_drop = TRUE;
 
 	GdaMetaContext *context = NULL;
 	gchar *sql, *current, *next;
@@ -6232,9 +6235,13 @@ meta_data_context_from_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet
 	if (!sql)
 		return NULL;
 
+	GSList *clist = NULL;
 	current = get_next_word (sql, FALSE, &next);
-	if (current && (!strcmp (current, "CREATE") || !strcmp (current, "DROP") ||
-			!strcmp (current, "ALTER"))) {
+	if (!current)
+		goto out;
+
+	if (!strcmp (current, "ALTER") ||
+	    (!ignore_create_drop && (!strcmp (current, "CREATE") || !strcmp (current, "DROP")))) {
 		const gchar *tname = NULL;
 		current = get_next_word (next, FALSE, &next);
 		if (current && (!strcmp (current, "TABLE") || !strcmp (current, "VIEW")))
@@ -6253,11 +6260,38 @@ meta_data_context_from_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet
 							cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 			g_value_take_string ((context->column_values[0] = gda_value_new (G_TYPE_STRING)),
 					     tmp);
+			clist = g_slist_prepend (clist, context);
+
+			/* seek RENAME TO */
+			current = get_next_word (next, FALSE, &next);
+			if (!current || strcmp (current, "RENAME"))
+				goto out;
+			current = get_next_word (next, FALSE, &next);
+			if (!current || strcmp (current, "TO"))
+				goto out;
+			tname = get_next_word (next, TRUE, &next);
+			if (tname) {
+				gchar *tmp;
+				/*g_print ("CONTEXT: update for table [%s]\n", tname);*/
+				context = g_new0 (GdaMetaContext, 1);
+				context->table_name = "_tables";
+				context->size = 1;
+				context->column_names = g_new0 (gchar *, 1);
+				context->column_names[0] = "table_name";
+				context->column_values = g_new0 (GValue *, 1);
+				tmp = gda_sql_identifier_quote (tname, cnc, cnc->priv->provider_obj,
+								TRUE,
+								cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+				g_value_take_string ((context->column_values[0] = gda_value_new (G_TYPE_STRING)),
+						     tmp);
+				clist = g_slist_prepend (clist, context);
+			}
 		}
 	}
 
+ out:
 	g_free (sql);
-	return context;
+	return clist;
 }
 
 /*
@@ -6325,18 +6359,23 @@ update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, 
 	else if (type != GDA_SQL_STATEMENT_UNKNOWN)
 		return;
 
-	GdaMetaContext *context;
-	context = meta_data_context_from_statement (cnc, stmt, params);
-	if (context) {
-		GError *lerror = NULL;
-		if (! gda_connection_update_meta_store (cnc, context, &lerror))
-			add_connection_event_from_error (cnc, &lerror);
-		
-		if (cnc->priv->trans_meta_context)
-			g_array_prepend_val (cnc->priv->trans_meta_context, context);
-		else
-			auto_update_meta_context_free (context);
+	GSList *clist, *list;
+	clist = meta_data_context_from_statement (cnc, stmt, params);
+	for (list = clist; list; list = list->next) {
+		GdaMetaContext *context;
+		context = (GdaMetaContext*) list->data;
+		if (context) {
+			GError *lerror = NULL;
+			if (! gda_connection_update_meta_store (cnc, context, &lerror))
+				add_connection_event_from_error (cnc, &lerror);
+			
+			if (cnc->priv->trans_meta_context)
+				g_array_prepend_val (cnc->priv->trans_meta_context, context);
+			else
+				auto_update_meta_context_free (context);
+		}
 	}
+	g_slist_free (clist);
 }
 
 void
