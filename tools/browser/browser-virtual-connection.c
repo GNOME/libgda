@@ -42,7 +42,6 @@ struct _BrowserVirtualConnectionPrivate
 {
 	GtkTable    *layout_table;
 	BrowserVirtualConnectionSpecs *specs;
-	gboolean in_m_busy;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -86,10 +85,9 @@ static void
 source_cnc_busy_cb (G_GNUC_UNUSED BrowserConnection *bcnc, gboolean is_busy,
 		    G_GNUC_UNUSED const gchar *reason, BrowserConnection *virtual)
 {
-	if (BROWSER_VIRTUAL_CONNECTION (virtual)->priv->in_m_busy)
-		return;
-	g_signal_emit_by_name (virtual, "busy", is_busy,
-			       is_busy ? _("Bound connection is used") : NULL);
+	if (browser_connection_is_busy (virtual, NULL) != is_busy)
+		g_signal_emit_by_name (virtual, "busy", is_busy,
+				       is_busy ? _("Bound connection is used") : NULL);
 }
 
 static void
@@ -102,8 +100,6 @@ m_busy (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason)
 	if (! BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->specs)
 		return;
 
-	BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->in_m_busy = TRUE;
-
 	for (list = BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->specs->parts; list; list = list->next) {
 		BrowserVirtualConnectionPart *part;
 		part = (BrowserVirtualConnectionPart*) list->data;
@@ -113,8 +109,9 @@ m_busy (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason)
 			g_signal_handlers_block_by_func (cnc->source_cnc,
 							 G_CALLBACK (source_cnc_busy_cb),
 							 bcnc);
-			g_signal_emit_by_name (cnc->source_cnc, "busy", is_busy,
-					       is_busy ? _("Virtual connection using this connection is busy") : NULL);
+			if (browser_connection_is_busy (cnc->source_cnc, NULL) != is_busy)
+				g_signal_emit_by_name (cnc->source_cnc, "busy", is_busy,
+				is_busy ? _("Virtual connection using this connection is busy") : NULL);
 			g_signal_handlers_unblock_by_func (cnc->source_cnc,
 							   G_CALLBACK (source_cnc_busy_cb),
 							   bcnc);			
@@ -122,8 +119,6 @@ m_busy (BrowserConnection *bcnc, gboolean is_busy, const gchar *reason)
 	}
 
 	BROWSER_CONNECTION_CLASS (parent_class)->busy (bcnc, is_busy, reason);
-
-	BROWSER_VIRTUAL_CONNECTION (bcnc)->priv->in_m_busy = FALSE;
 }
 
 static void
