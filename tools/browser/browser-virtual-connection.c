@@ -282,7 +282,8 @@ sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
 	if (!provider)
 		provider = gda_vprovider_hub_new ();
 
-	virtual = gda_virtual_connection_open_extended (provider, GDA_CONNECTION_OPTIONS_THREAD_SAFE, NULL);
+	virtual = gda_virtual_connection_open_extended (provider, GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+							GDA_CONNECTION_OPTIONS_AUTO_META_DATA, NULL);
 		
 	/* add parts to connection as specified by @specs */
 	GSList *list;
