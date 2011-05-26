@@ -92,6 +92,7 @@ struct _BrowserWindowPrivate {
 	gboolean           toolbar_shown;
 	gboolean           cursor_in_toolbar;
 	GtkWidget         *spinner;
+	guint              spinner_timer;
 	GtkUIManager      *ui_manager;
 	GtkActionGroup    *agroup;
 	GtkActionGroup    *perspectives_actions;
@@ -181,6 +182,7 @@ browser_window_init (BrowserWindow *bwin)
 	bwin->priv->fullscreen = FALSE;
 	bwin->priv->fullscreen_motion_sig_id = 0;
 	bwin->priv->fullscreen_timer_id = 0;
+	bwin->priv->spinner_timer = 0;
 }
 
 static void
@@ -194,6 +196,11 @@ browser_window_dispose (GObject *object)
 	bwin = BROWSER_WINDOW (object);
 	if (bwin->priv) {
 		GSList *connections, *list;
+
+		if (bwin->priv->spinner_timer) {
+			g_source_remove (bwin->priv->spinner_timer);
+			bwin->priv->spinner_timer = 0;
+		}
 		connections = browser_core_get_connections ();
 		for (list = connections; list; list = list->next)
 			connection_removed_cb (browser_core_get(), BROWSER_CONNECTION (list->data), bwin);
@@ -347,10 +354,9 @@ static const gchar *ui_actions_info =
         "      <menuitem name='HelpAbout' action= 'HelpAbout'/>"
         "    </menu>"
         "  </menubar>"
-        "  <toolbar  name='ToolBar'>"
+        "  <toolbar name='ToolBar'>"
         "    <toolitem action='WindowClose'/>"
         "    <toolitem action='WindowFullScreen'/>"
-	"    <separator/>"
         "    <toolitem action='TransactionBegin'/>"
         "    <toolitem action='TransactionCommit'/>"
         "    <toolitem action='TransactionRollback'/>"
@@ -696,12 +702,24 @@ perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserW
 		g_object_unref (actions);
 }
 
+static gboolean
+spinner_stop_timer (BrowserWindow *bwin)
+{
+	browser_spinner_stop (BROWSER_SPINNER (bwin->priv->spinner));
+	bwin->priv->spinner_timer = 0;
+	return FALSE; /* remove timer */
+}
+
 static void
 connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, BrowserWindow *bwin)
 {
 	GtkAction *action;
 	if (bcnc == bwin->priv->bcnc) {
 		/* @bcbc is @bwin's own connection */
+		if (bwin->priv->spinner_timer) {
+			g_source_remove (bwin->priv->spinner_timer);
+			bwin->priv->spinner_timer = 0;
+		}
 		if (is_busy) {
 			browser_spinner_start (BROWSER_SPINNER (bwin->priv->spinner));
 			gtk_widget_set_tooltip_text (bwin->priv->spinner, reason);
@@ -710,7 +728,8 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Br
 					    reason);
 		}
 		else {
-			browser_spinner_stop (BROWSER_SPINNER (bwin->priv->spinner));
+			bwin->priv->spinner_timer = g_timeout_add (300,
+						    (GSourceFunc) spinner_stop_timer, bwin);
 			gtk_widget_set_tooltip_text (bwin->priv->spinner, NULL);
 			gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar),
 					   bwin->priv->cnc_statusbar_context);
