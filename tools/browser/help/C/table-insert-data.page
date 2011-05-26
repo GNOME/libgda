@@ -32,13 +32,13 @@
 	<list>
 	  <item><p>Red: means the current value in the data entry is invalid</p></item>
 	  <item><p>Blue: means the current value in the data entry is unused and the column's default value
-	      will be used instead (usefull for example for auto incremented columns)</p></item>
+	      will be used instead (useful for example for auto incremented columns)</p></item>
 	  <item><p>Green: means the current value in the data entry is NULL</p></item>
 	  <item><p>Same color as the rest of the UI: means none of the above situations apply</p></item>
 	</list>
     </item>
     <item><p>Columns which are foreign keys to other tables are presented as a drop down combo box where
 	you can only choose among the values in the referenced table (hint: to have that values list
-	refresned you should close the popup dialog and reopen it);</p></item>
+	refreshed you should close the popup dialog and reopen it);</p></item>
   </list>
 </page>

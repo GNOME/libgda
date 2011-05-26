@@ -33,7 +33,7 @@
       The activities are grouped by theme around the notion of <link type="topic" xref="general-ui">perspectives</link>, the following are currently implemented:
     </p>
     <list>	
-      <item><p>analyse the database schema (tables, relations, ...), see the
+      <item><p>analyse the database schema (tables, relations, ...), see 
       the <link xref="schema-browser-perspective">Schema browser perspective</link></p></item>
       <item><p>execute SQL commands, see the
       <link xref="query-execution-perspective">Query execution perspective</link></p></item>
