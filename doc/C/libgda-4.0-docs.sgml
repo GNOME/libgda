@@ -1366,7 +1366,7 @@ Provider    | Description                       | DSN parameters     | File
 ------------+-----------------------------------+--------------------+-----------------------------------------------
 SQLite      | Provider for SQLite databases     | DB_NAME,           | /usr/lib/libgda-4.0/providers/libgda-sqlite.so  
                                                   DB_DIR,                                                            
-                                                  LOAD_GDA_FUNCTIONS                                                       
+                                                  EXTRA_FUNCTIONS                                                       
 Berkeley-DB | Provider for Berkeley databases   | FILE,              | /usr/lib/libgda-4.0/providers/libgda-bdb.so 
                                                   DATABASE                                                                
 [...]
@@ -1480,7 +1480,7 @@ Location: /usr/lib/libgda-4.0/providers/libgda-sqlite.so
 Data source's parameters (Name / Type / Description):
   DB_NAME / gchararray / Database name
   DB_DIR / gchararray / Directory
-  LOAD_GDA_FUNCTIONS / gboolean / Extra functions
+  EXTRA_FUNCTIONS / gboolean / Extra functions
 
 Provider: Berkeley-DB
 Description: Provider for Berkeley databases

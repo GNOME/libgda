@@ -321,13 +321,16 @@ static gchar               *gda_sqlite_provider_unescape_string (GdaServerProvid
 static void gda_sqlite_free_cnc_data (SqliteConnectionData *cdata);
 
 /* 
- * extending SQLite with our own functions 
+ * extending SQLite with our own functions  and collations
  */
 static void scalar_gda_file_exists_func (sqlite3_context *context, int argc, sqlite3_value **argv);
 static void scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **argv);
 static void scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **argv);
 static void scalar_gda_hex_func (sqlite3_context *context, int argc, sqlite3_value **argv);
 static void scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_rmdiacr (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_lower (sqlite3_context *context, int argc, sqlite3_value **argv);
+static void scalar_upper (sqlite3_context *context, int argc, sqlite3_value **argv);
 typedef struct {
 	char     *name;
 	int       nargs;
@@ -340,8 +343,26 @@ static ScalarFunction scalars[] = {
 	{"gda_hex_print", 2, NULL, scalar_gda_hex_print_func2},
 	{"gda_hex", 1, NULL, scalar_gda_hex_func},
 	{"gda_hex", 2, NULL, scalar_gda_hex_func2},
+	{"gda_rmdiacr", 1, NULL, scalar_rmdiacr},
+	{"gda_rmdiacr", 2, NULL, scalar_rmdiacr},
+	{"gda_lower", 1, NULL, scalar_lower},
+	{"gda_upper", 1, NULL, scalar_upper},
 };
 
+
+/* Collations */
+static int locale_collate_func (G_GNUC_UNUSED void *pArg, int nKey1, const void *pKey1,
+				int nKey2, const void *pKey2);
+static int dcase_collate_func (G_GNUC_UNUSED void *pArg, int nKey1, const void *pKey1,
+			       int nKey2, const void *pKey2);
+typedef struct {
+	char     *name;
+	int     (*xFunc)(void *, int, const void *, int, const void *);
+} CollationFunction;
+static CollationFunction collation_functions[] = {
+	{"LOCALE", locale_collate_func},
+	{"DCASE", dcase_collate_func}
+};
 
 /*
  * Prepared internal statements
@@ -610,6 +631,55 @@ gda_sqlite_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 	return PACKAGE_VERSION;
 }
 
+typedef enum {
+	CASE_UP,
+	CASE_DOWN,
+	CASE_UNCHANGED
+} CaseModif;
+
+gchar *
+remove_diacritics_and_change_case (const gchar *str, gssize len, CaseModif cmod)
+{
+	gchar *retval = NULL;
+
+	if (str) {
+		GString* string;
+		gchar *normstr, *ptr;
+
+		normstr = g_utf8_normalize (str, len, G_NORMALIZE_NFD);
+		string = g_string_new ("");
+		ptr = normstr;
+		while (ptr) {
+			gunichar c;
+			c = g_utf8_get_char (ptr);
+			if (c != '\0') {
+				if (!g_unichar_ismark(c)) {
+					switch (cmod) {
+					case CASE_UP:
+						c = g_unichar_toupper (c);
+						break;
+					case CASE_DOWN:
+						c = g_unichar_tolower (c);
+						break;
+					case CASE_UNCHANGED:
+						break;
+					}
+					g_string_append_unichar (string, c);
+				}
+				ptr = g_utf8_next_char (ptr);
+			}
+			else
+				break;
+		}
+
+		retval = g_string_free (string, FALSE);
+		g_free (normstr);
+	}
+
+	return retval;
+}
+
+
 /* 
  * Open connection request
  */
@@ -621,7 +691,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
 	const gchar *is_virtual = NULL;
-	const gchar *use_extra_functions = NULL, *with_fk = NULL;
+	const gchar *use_extra_functions = NULL, *with_fk = NULL, *locale_collate;
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
@@ -644,7 +714,11 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	dbname = gda_quark_list_find (params, "DB_NAME");
 	is_virtual = gda_quark_list_find (params, "_IS_VIRTUAL");
 	with_fk = gda_quark_list_find (params, "FK");
-	use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
+	use_extra_functions = gda_quark_list_find (params, "EXTRA_FUNCTIONS");
+	if (!use_extra_functions)
+		use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
+
+	locale_collate = gda_quark_list_find (params, "EXTRA_COLLATIONS");
 	if (auth)
 		passphrase = gda_quark_list_find (auth, "PASSWORD");
 
@@ -856,7 +930,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 #endif
 	}
 
-	if (use_extra_functions && ((*use_extra_functions == 't') || (*use_extra_functions == 'T'))) {
+	if (!use_extra_functions || ((*use_extra_functions == 't') || (*use_extra_functions == 'T'))) {
 		gsize i;
 
 		for (i = 0; i < sizeof (scalars) / sizeof (ScalarFunction); i++) {
@@ -866,6 +940,8 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 									   SQLITE_UTF8, func->user_data, 
 									   func->xFunc, NULL, NULL);
 			if (res != SQLITE_OK) {
+				gda_connection_add_event_string (cnc, _("Could not register function '%s'"),
+								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
 				g_static_rec_mutex_unlock (&cnc_mutex);
@@ -873,7 +949,26 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			}
 		}
 	}
-	
+
+	if (! locale_collate || ((*locale_collate == 't') || (*locale_collate == 'T'))) {
+		gsize i;
+		for (i = 0; i < sizeof (collation_functions) / sizeof (CollationFunction); i++) {
+			CollationFunction *func = (CollationFunction*) &(collation_functions [i]);
+			gint res;
+			res = SQLITE3_CALL (sqlite3_create_collation) (cdata->connection, func->name,
+								       SQLITE_UTF8, NULL, func->xFunc);
+			if (res != SQLITE_OK) {
+				gda_connection_add_event_string (cnc,
+								 _("Could not define the %s collation"),
+								 func->name);
+				gda_sqlite_free_cnc_data (cdata);
+				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
+				g_static_rec_mutex_unlock (&cnc_mutex);
+				return FALSE;
+			}
+		}
+	}
+
 	if (SQLITE3_CALL (sqlite3_threadsafe) ())
 		g_object_set (G_OBJECT (cnc), "thread-owner", NULL, NULL);
 	else
@@ -881,6 +976,36 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 	g_static_rec_mutex_unlock (&cnc_mutex);
 	return TRUE;
+}
+
+static int
+locale_collate_func (G_GNUC_UNUSED void *pArg,
+		     int nKey1, const void *pKey1,
+		     int nKey2, const void *pKey2)
+{
+	gchar *tmp1, *tmp2;
+	int res;
+	tmp1 = g_utf8_collate_key ((gchar*) pKey1, nKey1);
+	tmp2 = g_utf8_collate_key ((gchar*) pKey2, nKey2);
+	res = strcmp (tmp1, tmp2);
+	g_free (tmp1);
+	g_free (tmp2);
+	return res;
+}
+
+static int
+dcase_collate_func (G_GNUC_UNUSED void *pArg,
+		    int nKey1, const void *pKey1,
+		    int nKey2, const void *pKey2)
+{
+	gchar *tmp1, *tmp2;
+	int res;
+	tmp1 = remove_diacritics_and_change_case ((gchar*) pKey1, nKey1, CASE_DOWN);
+	tmp2 = remove_diacritics_and_change_case ((gchar*) pKey2, nKey2, CASE_DOWN);
+	res = strcmp (tmp1, tmp2);
+	g_free (tmp1);
+	g_free (tmp2);
+	return res;
 }
 
 /* 
@@ -3067,7 +3192,75 @@ scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **
 
 	size = SQLITE3_CALL (sqlite3_value_int) (argv [1]);
 
-	SQLITE3_CALL (sqlite3_result_text) (context, str, -1, g_free);
+	SQLITE3_CALL (sqlite3_result_text) (context, str, size, g_free);
+}
+
+static void
+scalar_rmdiacr (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	gchar *data, *tmp;
+	CaseModif ncase = CASE_UNCHANGED;
+
+	if (argc == 2) {
+		data = (gchar*) SQLITE3_CALL (sqlite3_value_text) (argv [1]);
+		if ((*data == 'u') || (*data == 'U'))
+			ncase = CASE_UP;
+		else if ((*data == 'l') || (*data == 'l'))
+			ncase = CASE_DOWN;
+	}
+	else if (argc != 1) {
+		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires one or two arguments"), -1);
+		return;
+	}
+
+	data = (gchar*) SQLITE3_CALL (sqlite3_value_text) (argv [0]);
+	if (!data) {
+		SQLITE3_CALL (sqlite3_result_null) (context);
+		return;
+	}
+
+	tmp = remove_diacritics_and_change_case (data, -1, ncase);
+	SQLITE3_CALL (sqlite3_result_text) (context, tmp, -1, g_free);
+}
+
+static void
+scalar_lower (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	gchar *data, *tmp;
+
+	if (argc != 1) {
+		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires one arguments"), -1);
+		return;
+	}
+
+	data = (gchar*) SQLITE3_CALL (sqlite3_value_text) (argv [0]);
+	if (!data) {
+		SQLITE3_CALL (sqlite3_result_null) (context);
+		return;
+	}
+
+	tmp = g_utf8_strdown (data, -1);
+	SQLITE3_CALL (sqlite3_result_text) (context, tmp, -1, g_free);
+}
+
+static void
+scalar_upper (sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	gchar *data, *tmp;
+
+	if (argc != 1) {
+		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires one arguments"), -1);
+		return;
+	}
+
+	data = (gchar*) SQLITE3_CALL (sqlite3_value_text) (argv [0]);
+	if (!data) {
+		SQLITE3_CALL (sqlite3_result_null) (context);
+		return;
+	}
+
+	tmp = g_utf8_strup (data, -1);
+	SQLITE3_CALL (sqlite3_result_text) (context, tmp, -1, g_free);
 }
 
 static void

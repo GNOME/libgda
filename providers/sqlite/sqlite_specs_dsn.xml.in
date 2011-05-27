@@ -3,7 +3,15 @@
   <parameters>
     <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to use (without the .db)" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="DB_DIR" _name="Directory" _descr="Directory where the database file is stored" gdatype="gchararray" nullok="FALSE" plugin="filesel:MODE=PICKFOLDER"/>
-    <parameter id="LOAD_GDA_FUNCTIONS" _name="Extra functions" _descr="Enable usage of some extra functions in SQL" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="EXTRA_FUNCTIONS" _name="Extra functions" _descr="Enable usage of extra functions (gda_upper, ...)" gdatype="gboolean" nullok="TRUE">
+      <gda_value>TRUE</gda_value>
+    </parameter>
+    <parameter id="REGEXP" _name="Define REGEXP" _descr="Define the REGEXP function" gdatype="gboolean" nullok="TRUE">
+      <gda_value>TRUE</gda_value>
+    </parameter>
+    <parameter id="EXTRA_COLLATIONS" _name="Localized comparisons" _descr="Enable usage of extra collation methods (LOCALE and DCASE)" gdatype="gboolean" nullok="TRUE">
+      <gda_value>TRUE</gda_value>
+    </parameter>
     <parameter id="FK" _name="With foreign keys" _descr="Enforce foreign keys" gdatype="gboolean" nullok="TRUE"/>
   </parameters>
 </data-set-spec>

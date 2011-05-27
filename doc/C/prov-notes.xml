@@ -73,10 +73,95 @@
 	      directory is used.</entry>
               <entry>No</entry>
 	    </row>
+	    <row>
+              <entry>EXTRA_FUNCTIONS</entry>
+              <entry>If set to TRUE (or unspecified), then some extra functions defined by &LIBGDA; are added. The functions are:
+	      <function>gda_file_exists()</function>, <function>gda_hex_print()</function>,
+	      <function>gda_hex()</function>, <function>gda_rmdiacr()</function>,
+	      <function>gda_lower()</function> and <function>gda_upper()</function>; see below 
+	      for more information about them.
+	      </entry>
+              <entry>No</entry>
+	    </row>
+	    <row>
+              <entry>EXTRA_COLLATIONS</entry>
+              <entry>If set to TRUE (or unspecified), then some extra collations defined by &LIBGDA; are added.
+	      They are:
+	      <function>LOCALE</function> (the strings are compared taking into account UTF8 sorting and the
+	      current locale) and <function>DCASE</function> (before comparison, all the diacritical
+	      signs (for example accents) are removed from the strings and they are converted to lower case).
+	      </entry>
+              <entry>No</entry>
+	    </row>
 	  </tbody>
 	</tgroup>
       </table>
     </para>
+
+    <sect2>
+      <title>The <function>gda_file_exists()</function> function</title>
+      <para>
+	This function accepts a filename as argument, and returns 0 if the file with that filename does not
+	exist, or 1 if it does.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>The <function>gda_hex_print()</function> function</title>
+      <para>
+	This function accepts at most 2 arguments, in that order:
+	<itemizedlist>
+	  <listitem><para>a blob value</para></listitem>
+	  <listitem><para>a length (not mandatory)</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	It returns a string suitable to be printed (where all the non ascii characters are converted to
+	the "\xyz" syntax where "xyz" is the decimal value of the character), limited to the specified
+	length if any. 
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>The <function>gda_hex()</function> function</title>
+      <para>
+	This function accepts at most 2 arguments, in that order:
+	<itemizedlist>
+	  <listitem><para>a blob value</para></listitem>
+	  <listitem><para>a length (not mandatory)</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	It returns a hex dump string of the blob value, limited to the specified length if any.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>The <function>gda_rmdiacr()</function> function</title>
+      <para>
+	This function accepts at most 2 arguments, in that order:
+	<itemizedlist>
+	  <listitem><para>a string value</para></listitem>
+	  <listitem><para>a case conversion to do (not mandatory), as a string which must be
+	  'upper' or 'lower'</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	It returns a string where all the diacritical signs (for example accents) from the input string,
+	and optionally converts the string to upper or lower case if specified. This function takes into
+	account the current locale and is usefull to do some text search.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>The <function>gda_upper()</function> and <function>gda_lower()</function> functions</title>
+      <para>
+	These function accept one string argument and convert it to upper or lower case, taking into account
+	the locale (the standard SQLite <function>upper()</function> and <function>lower()</function>
+	functions only operating on ASCII characters).
+      </para>
+    </sect2>
+
     <para>
       Also refer to the <link linkend="limitations_sqlite">SQLite's provider's limitations</link>.
     </para>
