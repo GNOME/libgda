@@ -618,17 +618,23 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 			"ORDER BY table_schema, table_name";
 		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, NULL);
 
-		/* if no row, then return all the objects from all the schemas */
-		if (model && (gda_data_model_get_n_rows (model) == 0)) {
-			g_object_unref (model);
-			sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
-			"table_owner as Owner FROM _tables "
-			"ORDER BY table_schema, table_name";
-			model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, NULL);
+		if (model) {
+			/* if no row, then return all the objects from all the schemas */
+			if (gda_data_model_get_n_rows (model) == 0) {
+				g_object_unref (model);
+				sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
+					"table_owner as Owner FROM _tables "
+					"ORDER BY table_schema, table_name";
+				model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, NULL);
+			}
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+			res->u.model = model;
 		}
-		res = g_new0 (GdaInternalCommandResult, 1);
-		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-		res->u.model = model;
+		else {
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+		}
 		return res;
 	}
 
