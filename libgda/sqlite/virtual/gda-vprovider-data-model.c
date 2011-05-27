@@ -511,6 +511,8 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		g_string_append (sql, type);
 		if (! gda_column_get_allow_null (column)) 
 			g_string_append (sql, " NOT NULL");
+		if (gtype == G_TYPE_STRING)
+			g_string_append (sql, " COLLATE LOCALE");
 	}
 
 	/* add a hidden column which contains the row number of the data model */
