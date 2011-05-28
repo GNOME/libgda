@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-05-26 18:41+0000\n"
-"PO-Revision-Date: 2011-05-27 12:56+0200\n"
+"POT-Creation-Date: 2011-05-28 08:16+0000\n"
+"PO-Revision-Date: 2011-05-28 10:25+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -119,12 +119,12 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda/gda-server-operation.c:628 ../libgda/gda-server-operation.c:1029
 #: ../libgda/gda-set.c:565 ../libgda/gda-tree-mgr-select.c:189
 #: ../libgda/gda-tree-mgr-select.c:224
-#: ../libgda/sqlite/gda-sqlite-provider.c:2323
-#: ../libgda/sqlite/gda-sqlite-provider.c:2335
-#: ../libgda/sqlite/gda-sqlite-provider.c:2357
-#: ../libgda/sqlite/gda-sqlite-provider.c:2547
-#: ../libgda/sqlite/gda-sqlite-provider.c:2832
-#: ../libgda/sqlite/gda-sqlite-provider.c:2844
+#: ../libgda/sqlite/gda-sqlite-provider.c:2450
+#: ../libgda/sqlite/gda-sqlite-provider.c:2462
+#: ../libgda/sqlite/gda-sqlite-provider.c:2484
+#: ../libgda/sqlite/gda-sqlite-provider.c:2674
+#: ../libgda/sqlite/gda-sqlite-provider.c:2959
+#: ../libgda/sqlite/gda-sqlite-provider.c:2971
 #: ../libgda/thread-wrapper/gda-thread-provider.c:456
 #: ../libgda-ui/data-entries/common-bin.c:79
 #: ../libgda-ui/data-entries/common-bin.c:156
@@ -773,7 +773,7 @@ msgstr "La conexión está cerrada"
 msgid "Can't find task %u"
 msgstr "No se puede encontrar la tarea %u"
 
-#: ../libgda/gda-connection.c:3082 ../libgda/sqlite/gda-sqlite-provider.c:1138
+#: ../libgda/gda-connection.c:3082 ../libgda/sqlite/gda-sqlite-provider.c:1265
 #: ../libgda/thread-wrapper/gda-thread-provider.c:924
 #: ../providers/jdbc/gda-jdbc-provider.c:580
 #: ../providers/mysql/gda-mysql-provider.c:959
@@ -1206,7 +1206,7 @@ msgid "Character conversion at line %d, error: %s"
 msgstr "La conversión de caracteres en la línea %d, error: %s"
 
 #: ../libgda/gda-data-model-import.c:1004
-#: ../libgda/sqlite/gda-sqlite-provider.c:802
+#: ../libgda/sqlite/gda-sqlite-provider.c:876
 #: ../providers/bdb/gda-bdb-provider.c:209
 #: ../tools/browser/common/gdaui-data-import.c:178
 #: ../tools/browser/data-manager/data-widget.c:611
@@ -1329,9 +1329,9 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
-"o «fila eliminada». Esto es un error de la implementación de %s (informe del "
-"error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila "
+"actualizada» o «fila eliminada». Esto es un error de la implementación de %s "
+"(informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2125
 #, c-format
@@ -1341,9 +1341,9 @@ msgid ""
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
-"o «fila eliminada». Esto puede ser un error de la implementación de %s "
-"(informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila "
+"actualizada» o «fila eliminada». Esto puede ser un error de la "
+"implementación de %s (informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2978 ../tools/gda-sql.c:3253
 msgid "Could not create virtual connection"
@@ -1423,8 +1423,8 @@ msgstr "La modificación de la declaración usa un parámetro «%s» desconocido
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"La modificación del parámetro «%s» de la declaración es %s cuando debería ser "
-"%s"
+"La modificación del parámetro «%s» de la declaración es %s cuando debería "
+"ser %s"
 
 #: ../libgda/gda-data-select.c:1295
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1696,14 +1696,15 @@ msgstr "Falta la definición de la vista en el nodo <view>"
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
-"La definición de la vista contiene más de una declaración (para la vista «%s»)"
+"La definición de la vista contiene más de una declaración (para la vista "
+"«%s»)"
 
 #: ../libgda/gda-meta-store.c:1314
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
-"La definición de la vista no es una declaración de selección (para la vista «%"
-"s»)"
+"La definición de la vista no es una declaración de selección (para la vista "
+"«%s»)"
 
 #. FIXME
 #: ../libgda/gda-meta-store.c:1341 ../libgda/gda-meta-struct-io.c:176
@@ -2066,8 +2067,8 @@ msgstr "El proveedor %s creó un GdaServerOperation sin un nodo para «%s»"
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
-"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%"
-"s»"
+"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para "
+"«%s»"
 
 #: ../libgda/gda-server-provider.c:938 ../libgda/gda-server-provider.c:972
 #, c-format
@@ -2198,14 +2199,15 @@ msgstr "No existe un manejador de datos para el tipo «%s»"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
+"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo "
+"«%s»"
 
 #: ../libgda/gda-statement.c:1231
 #, c-format
 msgid "Missing parameter '%s'"
 msgstr "Falta el parámetro «%s»"
 
-#: ../libgda/gda-statement.c:1243 ../libgda/sqlite/gda-sqlite-provider.c:2725
+#: ../libgda/gda-statement.c:1243 ../libgda/sqlite/gda-sqlite-provider.c:2852
 #: ../providers/jdbc/gda-jdbc-provider.c:1351
 #: ../providers/mysql/gda-mysql-provider.c:2234
 #: ../providers/postgres/gda-postgres-provider.c:1952
@@ -2352,7 +2354,7 @@ msgstr ""
 "predeterminados"
 
 #: ../libgda/gda-util.c:1393 ../libgda/gda-util.c:1450
-#: ../libgda/gda-util.c:1490 ../libgda/sqlite/gda-sqlite-provider.c:2706
+#: ../libgda/gda-util.c:1490 ../libgda/sqlite/gda-sqlite-provider.c:2833
 #: ../providers/jdbc/gda-jdbc-provider.c:1322
 #: ../providers/mysql/gda-mysql-provider.c:2214
 #: ../providers/postgres/gda-postgres-provider.c:1934
@@ -2483,11 +2485,11 @@ msgid "Binding a BLOB for this type of statement is not supported"
 msgstr ""
 "No está soportada la vinculación de un BLOB para este tipo de declaración"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:604
+#: ../libgda/sqlite/gda-sqlite-provider.c:625
 msgid "Can't find libsqlite3."
 msgstr "No se puede encontrar libsqlite3."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:656
+#: ../libgda/sqlite/gda-sqlite-provider.c:726
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:270
 #: ../libgda/thread-wrapper/gda-thread-provider.c:391
 #: ../providers/bdb/gda-bdb-provider.c:154
@@ -2499,13 +2501,13 @@ msgstr "No se puede encontrar libsqlite3."
 msgid "Provider does not support asynchronous connection open"
 msgstr "El proveedor no soporta la apertura de conexiones asíncronas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:681
+#: ../libgda/sqlite/gda-sqlite-provider.c:755
 #: ../providers/mdb/gda-mdb-provider.c:246
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "La cadena de conexión debe contener los valores DB_DIR y DB_NAME"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:708
-#: ../libgda/sqlite/gda-sqlite-provider.c:716
+#: ../libgda/sqlite/gda-sqlite-provider.c:782
+#: ../libgda/sqlite/gda-sqlite-provider.c:790
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
@@ -2516,24 +2518,37 @@ msgstr ""
 "(la ruta al archivo de la base de datos) y DB_NAME (el archivo de la base de "
 "datos sin el «%s» al final)."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:731
+#: ../libgda/sqlite/gda-sqlite-provider.c:805
 #: ../providers/mdb/gda-mdb-provider.c:288
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr ""
 "La parte DB_DIR de la cadena de conexión debe apuntar a un directorio válido"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:773
+#: ../libgda/sqlite/gda-sqlite-provider.c:847
 msgid "Wrong encryption passphrase"
 msgstr "Contraseña de cifrado errónea"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:801
+#: ../libgda/sqlite/gda-sqlite-provider.c:875
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "No se pudo establecer la opción de SQLite empty_result_callbacks: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1034
-#: ../libgda/sqlite/gda-sqlite-provider.c:1074
+#: ../libgda/sqlite/gda-sqlite-provider.c:966
+#: ../libgda/sqlite/gda-sqlite-provider.c:986
+#, c-format
+#| msgid "Could not create directory '%s'"
+msgid "Could not register function '%s'"
+msgstr "No se pudo registrar la función «%s»"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:1005
+#, c-format
+#| msgid "Could not find the '%s' program"
+msgid "Could not define the %s collation"
+msgstr "No se pudo definir el cotejamiento «%s»"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:1161
+#: ../libgda/sqlite/gda-sqlite-provider.c:1201
 #: ../libgda-ui/data-entries/plugins/libmain.c:87
 #: ../libgda-ui/data-entries/plugins/libmain.c:125
 #: ../libgda-ui/data-entries/plugins/libmain.c:153
@@ -2548,32 +2563,32 @@ msgstr "No se pudo establecer la opción de SQLite empty_result_callbacks: %s"
 msgid "Missing spec. file '%s'"
 msgstr "Falta el archivo spec. «%s»"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1196
-#: ../libgda/sqlite/gda-sqlite-provider.c:1205
-#: ../libgda/sqlite/gda-sqlite-provider.c:1217
-#: ../libgda/sqlite/gda-sqlite-provider.c:1226
+#: ../libgda/sqlite/gda-sqlite-provider.c:1323
+#: ../libgda/sqlite/gda-sqlite-provider.c:1332
+#: ../libgda/sqlite/gda-sqlite-provider.c:1344
+#: ../libgda/sqlite/gda-sqlite-provider.c:1353
 msgid "Error initializing database with passphrase"
 msgstr "Error al inicializar la base de datos con contraseña"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1268
+#: ../libgda/sqlite/gda-sqlite-provider.c:1395
 msgid "Missing database name or directory"
 msgstr "Falta el nombre o el directorio de la base de datos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1294
+#: ../libgda/sqlite/gda-sqlite-provider.c:1421
 #: ../providers/postgres/gda-postgres-provider.c:996
 #: ../providers/postgres/gda-postgres-provider.c:997
 msgid "Transactions are not supported in read-only mode"
 msgstr "Las transacciones no están soportadas en el modo de sólo lectura"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2210
+#: ../libgda/sqlite/gda-sqlite-provider.c:2337
 #: ../providers/jdbc/gda-jdbc-provider.c:1119
 #: ../providers/postgres/gda-postgres-provider.c:1531
 #: ../providers/web/gda-web-provider.c:1261
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "No se permite un parámetro si nombre en las declaraciones preparadas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2322
-#: ../libgda/sqlite/gda-sqlite-provider.c:2334
+#: ../libgda/sqlite/gda-sqlite-provider.c:2449
+#: ../libgda/sqlite/gda-sqlite-provider.c:2461
 #: ../providers/mysql/gda-mysql-provider.c:1953
 #: ../providers/postgres/gda-postgres-provider.c:1675
 #, c-format
@@ -2582,7 +2597,7 @@ msgstr ""
 "No se puede construir una declaración SELECT para obtener la última fila "
 "insertada: %s)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2356
+#: ../libgda/sqlite/gda-sqlite-provider.c:2483
 #: ../providers/mysql/gda-mysql-provider.c:1968
 #: ../providers/postgres/gda-postgres-provider.c:1690
 #, c-format
@@ -2591,7 +2606,7 @@ msgstr ""
 "No se puede ejecutar la declaración SELECT para obtener la última fila "
 "insertada: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2369
+#: ../libgda/sqlite/gda-sqlite-provider.c:2496
 #: ../providers/mysql/gda-mysql-provider.c:1981
 #: ../providers/postgres/gda-postgres-provider.c:1703
 msgid "SELECT statement to get last inserted row did not return any row"
@@ -2599,7 +2614,7 @@ msgstr ""
 "La declaración SELECT para obtener la última fila insertada no devolvió "
 "ningún valor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2373
+#: ../libgda/sqlite/gda-sqlite-provider.c:2500
 #: ../providers/mysql/gda-mysql-provider.c:1985
 #: ../providers/postgres/gda-postgres-provider.c:1707
 #, c-format
@@ -2608,21 +2623,21 @@ msgstr ""
 "La declaración SELECT para obtener la última fila insertada devolvió "
 "demasiadas (%d) filas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2438
+#: ../libgda/sqlite/gda-sqlite-provider.c:2565
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "La declaración preparada no tiene una GdaStatement asociada"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2478
-#: ../libgda/sqlite/gda-sqlite-provider.c:2515
+#: ../libgda/sqlite/gda-sqlite-provider.c:2605
+#: ../libgda/sqlite/gda-sqlite-provider.c:2642
 msgid "Can't create SQLite BLOB handle"
 msgstr "No se puede crear el manejador BLOB de SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2482
-#: ../libgda/sqlite/gda-sqlite-provider.c:2520
+#: ../libgda/sqlite/gda-sqlite-provider.c:2609
+#: ../libgda/sqlite/gda-sqlite-provider.c:2647
 msgid "Can't write to SQLite's BLOB"
 msgstr "No se puede escribir en el BLOB de SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2505
+#: ../libgda/sqlite/gda-sqlite-provider.c:2632
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2631,11 +2646,11 @@ msgstr ""
 "No se puede obtener el manejador de SQLite BLOB (el tipo informado es «%s»), "
 "informe del error en http://bugzilla.gnome.org/ para el producto «libgda»."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2530
+#: ../libgda/sqlite/gda-sqlite-provider.c:2657
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "No se puede identificar el id de fila (ROWID) del BLOB que rellenar"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2578
+#: ../libgda/sqlite/gda-sqlite-provider.c:2705
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:335
 #: ../providers/jdbc/gda-jdbc-provider.c:1217
 #: ../providers/mysql/gda-mysql-provider.c:2074
@@ -2644,13 +2659,13 @@ msgstr "No se puede identificar el id de fila (ROWID) del BLOB que rellenar"
 msgid "Provider does not support asynchronous statement execution"
 msgstr "El proveedor no soporta la ejecución de conexiones asíncronas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2646
+#: ../libgda/sqlite/gda-sqlite-provider.c:2773
 #: ../tools/browser/mgr-favorites.c:224 ../tools/browser/mgr-favorites.c:266
 msgid "Empty statement"
 msgstr "Declaración vacía"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2688
-#: ../libgda/sqlite/gda-sqlite-provider.c:2691
+#: ../libgda/sqlite/gda-sqlite-provider.c:2815
+#: ../libgda/sqlite/gda-sqlite-provider.c:2818
 #: ../providers/jdbc/gda-jdbc-provider.c:1304
 #: ../providers/jdbc/gda-jdbc-provider.c:1307
 #: ../providers/mysql/gda-mysql-provider.c:2196
@@ -2663,7 +2678,7 @@ msgstr "Declaración vacía"
 msgid "Missing parameter(s) to execute query"
 msgstr "Falta(n) parámetro(s) para ejecutar la consulta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2750
+#: ../libgda/sqlite/gda-sqlite-provider.c:2877
 #: ../providers/jdbc/gda-jdbc-provider.c:1386
 #: ../providers/mysql/gda-mysql-provider.c:2260
 #: ../providers/postgres/gda-postgres-provider.c:1977
@@ -2673,47 +2688,58 @@ msgstr ""
 "No se puede reescribir la declaración para gestionar los valores "
 "predeterminados"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2814
+#: ../libgda/sqlite/gda-sqlite-provider.c:2941
 #: ../providers/mysql/gda-mysql-provider.c:2452
 msgid "Can't get BLOB's length"
 msgstr "No se puede obtener la longitud del BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2816
+#: ../libgda/sqlite/gda-sqlite-provider.c:2943
 #: ../providers/mysql/gda-mysql-provider.c:2454
 msgid "BLOB is too big"
 msgstr "El BLOB es demasiado grande"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2898
+#: ../libgda/sqlite/gda-sqlite-provider.c:3025
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "No existe un manejador del tipo de datos «%s»"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2954
+#: ../libgda/sqlite/gda-sqlite-provider.c:3081
 msgid "Could not start transaction to create BLOB"
 msgstr "No se pudo establecer la el parámetro ID de la transacción XA"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3119
-#: ../libgda/sqlite/gda-sqlite-provider.c:3140
-#: ../libgda/sqlite/gda-sqlite-provider.c:3206
+#: ../libgda/sqlite/gda-sqlite-provider.c:3246
+#: ../libgda/sqlite/gda-sqlite-provider.c:3267
+#: ../libgda/sqlite/gda-sqlite-provider.c:3401
 msgid "Function requires one argument"
 msgstr "La función requiere un argumento"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3172
-#: ../libgda/sqlite/gda-sqlite-provider.c:3238
+#: ../libgda/sqlite/gda-sqlite-provider.c:3299
+#: ../libgda/sqlite/gda-sqlite-provider.c:3433
 msgid "Function requires two arguments"
 msgstr "La función requiere dos argumento"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3278
-#: ../libgda/sqlite/gda-sqlite-provider.c:3385
+#: ../libgda/sqlite/gda-sqlite-provider.c:3338
+#| msgid "Function requires two arguments"
+msgid "Function requires one or two arguments"
+msgstr "La función requiere uno o dos argumentos"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:3358
+#: ../libgda/sqlite/gda-sqlite-provider.c:3378
+#| msgid "Function requires one argument"
+msgid "Function requires one arguments"
+msgstr "La función requiere un argumento"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:3473
+#: ../libgda/sqlite/gda-sqlite-provider.c:3580
 msgid "Function requires two or three arguments"
 msgstr "La función requiere dos o tres argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3332
+#: ../libgda/sqlite/gda-sqlite-provider.c:3527
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Error en la expresión regular «%s» de SQLite:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3333
+#: ../libgda/sqlite/gda-sqlite-provider.c:3528
 msgid "Invalid regular expression"
 msgstr "Expresión regular no válida"
 
@@ -2838,35 +2864,35 @@ msgid "Can't get data model's column type for column %d"
 msgstr ""
 "No se puede obtener el tipo de la columna del modelo para la columna %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:531
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:533
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "No se puede declarar la tabla virtual (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:653
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:655
 msgid "Column not found"
 msgstr "No se encontró la columna"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1098
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1100
 msgid "Data model representing the table is read only"
 msgstr "El modelo de datos que representa la tabla es de sólo lectura"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1128
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1130
 msgid "No statement provided to modify the data model representing the table"
 msgstr ""
 "No se proporcionó ninguna declaración para modificar el modelo de datos que "
 "representa la tabla"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1136
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1138
 msgid ""
 "Invalid statement provided to modify the data model representing the table"
 msgstr ""
 "La declaración proporcionada no es válida para modificar el modelo de datos "
 "que representa la tabla"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1156
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1210
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1219
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1158
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1212
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1221
 msgid ""
 "Invalid parameter in statement provided to modify the data model "
 "representing the table"
@@ -2874,12 +2900,12 @@ msgstr ""
 "El parámetro en la declaración proporcionada no es válido para modificar el "
 "modelo de datos que representa la tabla"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1178
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1188
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1180
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1190
 msgid "Could not retreive row to delete"
 msgstr "No se pudo obtener una fila para eliminar"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1252
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1254
 msgid ""
 "Failed to execute the statement provided to modify the data model "
 "representing the table"
@@ -2995,8 +3021,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1143
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de campos "
-"que unir"
+"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de "
+"campos que unir"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1152
 msgid "Empty FROM clause"
@@ -3207,7 +3233,8 @@ msgstr "No se especificó una expresión"
 #: ../libgda-report/engine/gda-report-engine.c:922
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr "No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
+msgstr ""
+"No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1060
 #, c-format
@@ -3423,8 +3450,9 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a establecer "
-"usando la propiedad «manejador») espere algún comportamiento no deseado"
+"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a "
+"establecer usando la propiedad «manejador») espere algún comportamiento no "
+"deseado"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:393
 msgid "Value is NULL"
@@ -4559,7 +4587,7 @@ msgstr "Descripción de la columna"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:19
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
-#: ../tools/command-exec.c:731 ../tools/web-server.c:929
+#: ../tools/command-exec.c:737 ../tools/web-server.c:929
 msgid "Default"
 msgstr "Predeterminado"
 
@@ -4799,7 +4827,7 @@ msgstr "Campo(s) indexado(s)"
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:3
 #: ../tools/browser/data-manager/data-favorite-selector.c:305
 #: ../tools/browser/query-exec/query-favorite-selector.c:353
-#: ../tools/command-exec.c:654 ../tools/gda-sql.c:3086 ../tools/gda-sql.c:4015
+#: ../tools/command-exec.c:660 ../tools/gda-sql.c:3086 ../tools/gda-sql.c:4015
 msgid "Name"
 msgstr "Nombre"
 
@@ -4841,7 +4869,7 @@ msgstr "Tipo de ordenación"
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 #: ../tools/browser/schema-browser/table-columns.c:534
-#: ../tools/command-exec.c:655 ../tools/command-exec.c:729
+#: ../tools/command-exec.c:661 ../tools/command-exec.c:735
 #: ../tools/web-server.c:927
 msgid "Type"
 msgstr "Tipo"
@@ -4918,7 +4946,7 @@ msgstr "Restricciones globales"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
 #: ../tools/browser/schema-browser/mgr-columns.c:382
 #: ../tools/browser/schema-browser/table-columns.c:195
-#: ../tools/command-exec.c:823
+#: ../tools/command-exec.c:829
 msgid "Primary key"
 msgstr "Clave primaria"
 
@@ -4964,7 +4992,7 @@ msgstr "Tabla temporal"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:42
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
-#: ../tools/command-exec.c:869
+#: ../tools/command-exec.c:875
 msgid "Unique"
 msgstr "Único"
 
@@ -5108,30 +5136,44 @@ msgstr "Definir la función REGEXP"
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:6
-msgid "Enable usage of some extra functions in SQL"
-msgstr "Activar el uso de algunas funciones adicionales en SQL"
+#| msgid "Enable usage of some extra functions in SQL"
+msgid "Enable usage of extra collation methods (LOCALE and DCASE)"
+msgstr "Activar el uso de métodos de cotejamiento adicionales (LOCALE y DCASE)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:7
-msgid "Enforce foreign keys"
-msgstr "Forzar claves externas"
+#| msgid "Enable usage of some extra functions in SQL"
+msgid "Enable usage of extra functions (gda_upper, ...)"
+msgstr "Activar el uso de algunas funciones adicionales (gda_upper, ...)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:8
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:8
-msgid "Extra functions"
-msgstr "Funciones adicionales"
+msgid "Enforce foreign keys"
+msgstr "Forzar claves externas"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:9
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:9
-msgid "The name of a database to use (without the .db)"
-msgstr "El nombre de la base de datos que usar (sin el .db)"
+msgid "Extra functions"
+msgstr "Funciones adicionales"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:10
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:10
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:10
+msgid "Localized comparisons"
+msgstr ""
+
+#: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:11
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:11
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:11
+msgid "The name of a database to use (without the .db)"
+msgstr "El nombre de la base de datos que usar (sin el .db)"
+
+#: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:12
+#: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:12
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:12
 msgid "With foreign keys"
 msgstr "Con claves externas"
 
@@ -5286,8 +5328,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando %"
-"s. Habrá problemas con los caracteres que no sean UTF-8."
+"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando "
+"%s. Habrá problemas con los caracteres que no sean UTF-8."
 
 #: ../providers/mysql/gda-mysql-provider.c:584
 msgid "The connection string must contain the DB_NAME values"
@@ -5873,7 +5915,7 @@ msgstr "Fijo"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
 #: ../tools/browser/schema-browser/mgr-columns.c:388
-#: ../tools/command-exec.c:928
+#: ../tools/command-exec.c:934
 msgid "Foreign key"
 msgstr "Clave externa"
 
@@ -6393,7 +6435,7 @@ msgid "Korean EUC (Hangle base)"
 msgstr "EUC coreano (base hangle)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:56
-#: ../tools/command-exec.c:656
+#: ../tools/command-exec.c:662
 msgid "Owner"
 msgstr "Propietario"
 
@@ -7468,7 +7510,6 @@ msgid "unnamed"
 msgstr "sin nombre"
 
 #: ../tools/browser/browser-window.c:400
-#| msgid "_Data source"
 msgid "data source"
 msgstr "fuente de datos"
 
@@ -7535,7 +7576,8 @@ msgid ""
 "'%s' shortcut"
 msgstr ""
 "La perspectiva actual ha cambiado a la perspectiva «%s», puede volver a la "
-"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo «%s»"
+"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo "
+"«%s»"
 
 #: ../tools/browser/connection-binding-properties.c:153
 msgid "New virtual connection"
@@ -7662,8 +7704,8 @@ msgstr ""
 #: ../tools/browser/main.c:181 ../tools/gda-sql.c:256
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: %"
-"s\n"
+"Error while purging files used to store information about each connection: "
+"%s\n"
 msgstr ""
 "Error al limpiar los archivos usados para almacenar la información de cada "
 "conexión: %s\n"
@@ -7851,21 +7893,21 @@ msgid "Select tables to add to diagram"
 msgstr "Seleccionar tablas para añadir a la imagen"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
-#: ../tools/command-exec.c:926
+#: ../tools/command-exec.c:932
 msgid "Declared foreign key"
 msgstr "Clave externa declarada"
 
 #. To translators: the UPDATE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:424
 #: ../tools/browser/schema-browser/table-columns.c:321
-#: ../tools/command-exec.c:958
+#: ../tools/command-exec.c:964
 msgid "Policy on UPDATE"
 msgstr "Política para UPDATE"
 
 #. To translators: the DELETE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:426
 #: ../tools/browser/schema-browser/table-columns.c:331
-#: ../tools/command-exec.c:962
+#: ../tools/command-exec.c:968
 msgid "Policy on DELETE"
 msgstr "Política para DELETE"
 
@@ -8528,7 +8570,8 @@ msgstr "No se definió un origen de datos"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo «%s»"
+"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo "
+"«%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:166
 #: ../tools/browser/schema-browser/table-columns.c:269
@@ -8900,7 +8943,7 @@ msgid "_Schema"
 msgstr "_Esquema"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:323
-#: ../tools/command-exec.c:653
+#: ../tools/command-exec.c:659
 msgid "Schema"
 msgstr "Esquema"
 
@@ -8932,8 +8975,8 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
-"tipos incompatibles: «%s» para la clave externa y «%s» para la clave primaria "
-"referenciada"
+"tipos incompatibles: «%s» para la clave externa y «%s» para la clave "
+"primaria referenciada"
 
 #: ../tools/browser/schema-browser/table-columns.c:351
 #, c-format
@@ -9133,41 +9176,41 @@ msgstr "Lista de vistas"
 msgid "List of schemas"
 msgstr "Lista de esquemas"
 
-#: ../tools/command-exec.c:574 ../tools/command-exec.c:699
+#: ../tools/command-exec.c:574 ../tools/command-exec.c:705
 msgid "No object found"
 msgstr "No se encontró ningún objeto"
 
-#: ../tools/command-exec.c:728 ../tools/web-server.c:926
+#: ../tools/command-exec.c:734 ../tools/web-server.c:926
 msgid "Column"
 msgstr "Columna"
 
-#: ../tools/command-exec.c:730 ../tools/web-server.c:928
+#: ../tools/command-exec.c:736 ../tools/web-server.c:928
 msgid "Nullable"
 msgstr "Que puede ser Null"
 
-#: ../tools/command-exec.c:732 ../tools/web-server.c:930
+#: ../tools/command-exec.c:738 ../tools/web-server.c:930
 msgid "Extra"
 msgstr "Extra"
 
-#: ../tools/command-exec.c:735
+#: ../tools/command-exec.c:741
 #, c-format
 msgid "List of columns for view '%s'"
 msgstr "Lista de columnas para la vista «%s»"
 
-#: ../tools/command-exec.c:739
+#: ../tools/command-exec.c:745
 #, c-format
 msgid "List of columns for table '%s'"
 msgstr "Lista de columnas para la tabla «%s»"
 
-#: ../tools/command-exec.c:751 ../tools/web-server.c:941
+#: ../tools/command-exec.c:757 ../tools/web-server.c:941
 msgid "yes"
 msgstr "sí"
 
-#: ../tools/command-exec.c:751 ../tools/web-server.c:941
+#: ../tools/command-exec.c:757 ../tools/web-server.c:941
 msgid "no"
 msgstr "no"
 
-#: ../tools/command-exec.c:783
+#: ../tools/command-exec.c:789
 #, c-format
 msgid "View definition: %s"
 msgstr "Definición de la vista: %s"
@@ -9175,7 +9218,7 @@ msgstr "Definición de la vista: %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/command-exec.c:940
+#: ../tools/command-exec.c:946
 #, c-format
 msgid "references %s"
 msgstr "referencia a %s"
@@ -9183,7 +9226,7 @@ msgstr "referencia a %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/command-exec.c:946
+#: ../tools/command-exec.c:952
 #, c-format
 msgid "references %s.%s"
 msgstr "referencia a %s.%s"
@@ -9418,11 +9461,11 @@ msgstr "Sin contraseña para «%s»"
 #: ../tools/gda-sql.c:1538
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the '%"
-"s' file\n"
+"All the information related to the '%s' connection will be stored in the "
+"'%s' file\n"
 msgstr ""
-"Toda la información relativa a la conexión «%s» se almacenará en el archivo «%"
-"s»\n"
+"Toda la información relativa a la conexión «%s» se almacenará en el archivo "
+"«%s»\n"
 
 #: ../tools/gda-sql.c:1568
 #, c-format
@@ -9435,8 +9478,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
-"Obteniendo la información de esquema para la conexión «%s», esto puede llevar "
-"algún tiempo… "
+"Obteniendo la información de esquema para la conexión «%s», esto puede "
+"llevar algún tiempo… "
 
 #: ../tools/gda-sql.c:1583 ../tools/gda-sql.c:1736 ../tools/gda-sql.c:3048
 #, c-format
@@ -10345,9 +10388,9 @@ msgstr "Disparadores"
 #~ msgstr "Conectar con otra fuente de datos definidos (DSN, vea \\l)"
 
 #~ msgid ""
-#~ "<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
-#~ "data source definitions.\n"
+#~ "<small>The XML tree's root node must be a <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one "
+#~ "or more data source definitions.\n"
 #~ "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;"
 #~ "query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
 #~ "tt></span> nodes, both accepting the following optional attributes:\n"
@@ -10374,15 +10417,15 @@ msgstr "Disparadores"
 #~ "   the aforementioned table.\n"
 #~ "</small>"
 #~ msgstr ""
-#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
+#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
 #~ "definiciones de fuentes de datos.\n"
-#~ "Cada fuente de datos está definida por nodos <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;query&gt;</tt></span> o <span foreground=\"#4e9a06\"><tt>&lt;"
-#~ "table&gt;</tt></span>, ambos aceptan los siguientes atributos "
-#~ "opcionales:\n"
-#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena de "
-#~ "ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
+#~ "Cada fuente de datos está definida por nodos <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;query&gt;</tt></span> o <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;table&gt;</tt></span>, ambos aceptan los siguientes "
+#~ "atributos opcionales:\n"
+#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena "
+#~ "de ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
 #~ " - <span foreground=\"#4e9a06\">«title»</span> para especificar un "
 #~ "título.\n"
 #~ "\n"
