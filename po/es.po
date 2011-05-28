@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-05-24 21:15+0000\n"
-"PO-Revision-Date: 2011-05-25 10:31+0200\n"
+"POT-Creation-Date: 2011-05-26 18:41+0000\n"
+"PO-Revision-Date: 2011-05-27 12:56+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -151,17 +151,17 @@ msgstr "No se pudo ejecutar el visor"
 #: ../providers/postgres/gda-postgres-util.c:108
 #: ../providers/postgres/gda-postgres-util.c:111
 #: ../tools/browser/auth-dialog.c:678 ../tools/browser/auth-dialog.c:681
-#: ../tools/browser/browser-connection.c:360
-#: ../tools/browser/browser-connection.c:447
-#: ../tools/browser/browser-connection.c:467
-#: ../tools/browser/browser-connection.c:657
-#: ../tools/browser/browser-connection.c:677
-#: ../tools/browser/browser-connection.c:903
-#: ../tools/browser/browser-window.c:893 ../tools/browser/browser-window.c:907
-#: ../tools/browser/browser-window.c:921
-#: ../tools/browser/browser-window.c:1146
-#: ../tools/browser/browser-window.c:1187
-#: ../tools/browser/browser-window.c:1456 ../tools/browser/login-dialog.c:235
+#: ../tools/browser/browser-connection.c:361
+#: ../tools/browser/browser-connection.c:448
+#: ../tools/browser/browser-connection.c:468
+#: ../tools/browser/browser-connection.c:660
+#: ../tools/browser/browser-connection.c:680
+#: ../tools/browser/browser-connection.c:906
+#: ../tools/browser/browser-window.c:920 ../tools/browser/browser-window.c:934
+#: ../tools/browser/browser-window.c:948
+#: ../tools/browser/browser-window.c:1173
+#: ../tools/browser/browser-window.c:1214
+#: ../tools/browser/browser-window.c:1483 ../tools/browser/login-dialog.c:235
 #: ../tools/browser/main.c:127 ../tools/browser/main.c:146
 #: ../tools/browser/main.c:202 ../tools/browser/main.c:216
 #: ../tools/browser/main.c:243
@@ -422,7 +422,7 @@ msgstr "No se pudo declarar el nuevo origen de datos"
 msgid "No valid data source info was created"
 msgstr "No se creó una información válida para la fuente de datos"
 
-#: ../control-center/main.c:181 ../tools/browser/browser-window.c:1229
+#: ../control-center/main.c:181 ../tools/browser/browser-window.c:1256
 msgid "Database access services for the GNOME Desktop"
 msgstr "Servicios de acceso a bases de datos para el Escritorio GNOME"
 
@@ -434,11 +434,11 @@ msgstr "Fuente de _datos"
 msgid "Database"
 msgstr "Base de datos"
 
-#: ../control-center/main.c:198 ../tools/browser/browser-window.c:288
+#: ../control-center/main.c:198 ../tools/browser/browser-window.c:295
 msgid "_Close"
 msgstr "_Cerrar"
 
-#: ../control-center/main.c:198 ../tools/browser/browser-window.c:288
+#: ../control-center/main.c:198 ../tools/browser/browser-window.c:295
 msgid "Close this window"
 msgstr "Cerrar esta ventana"
 
@@ -458,7 +458,7 @@ msgstr "Eliminar fuente de _datos"
 msgid "Delete selected data source"
 msgstr "Eliminar la fuente de datos seleccionada"
 
-#: ../control-center/main.c:201 ../tools/browser/browser-window.c:277
+#: ../control-center/main.c:201 ../tools/browser/browser-window.c:284
 msgid "_Properties"
 msgstr "_Propiedades"
 
@@ -467,11 +467,11 @@ msgid "Edit properties for selected data source"
 msgstr "Editar las propiedades de las fuentes de datos seleccionadas"
 
 #: ../control-center/main.c:202 ../control-center/main.c:203
-#: ../tools/browser/browser-window.c:290
+#: ../tools/browser/browser-window.c:297
 msgid "_About"
 msgstr "Acerca _de"
 
-#: ../control-center/main.c:202 ../tools/browser/browser-window.c:290
+#: ../control-center/main.c:202 ../tools/browser/browser-window.c:297
 msgid "About"
 msgstr "Acerca de"
 
@@ -822,25 +822,25 @@ msgstr ""
 msgid "Internal error: invalid provider handle"
 msgstr "Error interno: manejo del proveedor no válido"
 
-#: ../libgda/gda-data-access-wrapper.c:491
+#: ../libgda/gda-data-access-wrapper.c:492
 #: ../libgda/gda-data-meta-wrapper.c:579 ../libgda/gda-data-model-array.c:582
 #: ../libgda/gda-data-model-bdb.c:656 ../libgda/gda-data-model-bdb.c:760
 #: ../libgda/gda-data-model-bdb.c:789 ../libgda/gda-data-model-dir.c:784
 #: ../libgda/gda-data-model-dir.c:883 ../libgda/gda-data-model-dir.c:925
 #: ../libgda/gda-data-model-dsn-list.c:313 ../libgda/gda-data-model-iter.c:295
-#: ../libgda/gda-data-model-iter.c:1028 ../libgda/gda-data-proxy.c:3569
-#: ../libgda/gda-data-select.c:1246 ../libgda/gda-data-select.c:1745
-#: ../libgda/gda-data-select.c:2660 ../libgda/gda-data-select.c:2727
-#: ../libgda-ui/gdaui-combo.c:791
+#: ../libgda/gda-data-model-iter.c:1028 ../libgda/gda-data-proxy.c:3452
+#: ../libgda/gda-data-proxy.c:3576 ../libgda/gda-data-select.c:1246
+#: ../libgda/gda-data-select.c:1745 ../libgda/gda-data-select.c:2660
+#: ../libgda/gda-data-select.c:2727 ../libgda-ui/gdaui-combo.c:791
 #, c-format
 msgid "Column %d out of range (0-%d)"
 msgstr "Columna %d fuera de rango (0 - %d)"
 
-#: ../libgda/gda-data-access-wrapper.c:526
+#: ../libgda/gda-data-access-wrapper.c:527
 msgid "Can't set iterator's position"
 msgstr "No se puede establecer la posición del iterador"
 
-#: ../libgda/gda-data-access-wrapper.c:601
+#: ../libgda/gda-data-access-wrapper.c:602
 msgid "Can't access data"
 msgstr "No se puede acceder a los datos"
 
@@ -896,8 +896,8 @@ msgstr "Indica si el modelo de datos se puede modificar"
 #: ../libgda/gda-data-model-array.c:420 ../libgda/gda-data-model-array.c:573
 #: ../libgda/gda-data-model-array.c:660 ../libgda/gda-data-model-dir.c:795
 #: ../libgda/gda-data-model-dir.c:968 ../libgda/gda-data-model-dir.c:1319
-#: ../libgda/gda-data-model-dsn-list.c:321 ../libgda/gda-data-proxy.c:3518
-#: ../libgda/gda-data-proxy.c:3556 ../libgda/gda-data-select.c:1701
+#: ../libgda/gda-data-model-dsn-list.c:321 ../libgda/gda-data-proxy.c:3525
+#: ../libgda/gda-data-proxy.c:3563 ../libgda/gda-data-select.c:1701
 #: ../libgda/gda-data-select.c:1755
 #, c-format
 msgid "Row %d out of range (0-%d)"
@@ -906,8 +906,8 @@ msgstr "Fila %d fuera de rango (0 - %d)"
 #: ../libgda/gda-data-model-array.c:424 ../libgda/gda-data-model-array.c:576
 #: ../libgda/gda-data-model-array.c:663 ../libgda/gda-data-model-dir.c:798
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1322
-#: ../libgda/gda-data-model-dsn-list.c:324 ../libgda/gda-data-proxy.c:3521
-#: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-select.c:1704
+#: ../libgda/gda-data-model-dsn-list.c:324 ../libgda/gda-data-proxy.c:3528
+#: ../libgda/gda-data-proxy.c:3566 ../libgda/gda-data-select.c:1704
 #: ../libgda/gda-data-select.c:1758
 #, c-format
 msgid "Row %d not found (empty data model)"
@@ -1316,7 +1316,7 @@ msgid "GdaDataProxy can't handle non random access data models"
 msgstr ""
 "GdaDataProxy no puede manipular modelos de acceso a datos no aleatorios"
 
-#: ../libgda/gda-data-proxy.c:1566 ../libgda/gda-data-proxy.c:3976
+#: ../libgda/gda-data-proxy.c:1566 ../libgda/gda-data-proxy.c:3983
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr "La primera fila es una fila vacía al comienzo y no se puede eliminar"
@@ -1345,34 +1345,34 @@ msgstr ""
 "o «fila eliminada». Esto puede ser un error de la implementación de %s "
 "(informe del error)."
 
-#: ../libgda/gda-data-proxy.c:2977 ../tools/gda-sql.c:3253
+#: ../libgda/gda-data-proxy.c:2978 ../tools/gda-sql.c:3253
 msgid "Could not create virtual connection"
 msgstr "No se pudo crear la conexión virtual"
 
-#: ../libgda/gda-data-proxy.c:3018 ../libgda/gda-data-proxy.c:3031
+#: ../libgda/gda-data-proxy.c:3019 ../libgda/gda-data-proxy.c:3032
 msgid "Error in filter expression"
 msgstr "Error en la expresión de filtrado"
 
-#: ../libgda/gda-data-proxy.c:3145 ../libgda/gda-data-select.c:1496
+#: ../libgda/gda-data-proxy.c:3146 ../libgda/gda-data-select.c:1496
 msgid "Incorrect filter expression"
 msgstr "Expresión de filtrado incorrecta"
 
-#: ../libgda/gda-data-proxy.c:3729
+#: ../libgda/gda-data-proxy.c:3736
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr "La primera fila es una fila vacía al comienzo y no se puede alterar"
 
-#: ../libgda/gda-data-proxy.c:3751
+#: ../libgda/gda-data-proxy.c:3758
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Tipo de valor erróneo: se esperaba «%s» y se obtuvo «%s»"
 
-#: ../libgda/gda-data-proxy.c:3839
+#: ../libgda/gda-data-proxy.c:3846
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "intentando cambiar una columna de sólo lectura: %d"
 
-#: ../libgda/gda-data-proxy.c:3876
+#: ../libgda/gda-data-proxy.c:3883
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "El tipo del valor no coincide %s en lugar de %s"
@@ -2934,8 +2934,8 @@ msgstr "No se encontró la tabla «%s»"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:779
 #: ../libgda/sql-parser/gda-statement-struct.c:794
-#: ../tools/browser/browser-connection.c:1837
-#: ../tools/browser/browser-connection.c:1891
+#: ../tools/browser/browser-connection.c:1840
+#: ../tools/browser/browser-connection.c:1894
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "No se pudo identificar la tabla para el campo «%s»"
@@ -7153,49 +7153,49 @@ msgstr ""
 msgid "c%u"
 msgstr "c%u"
 
-#: ../tools/browser/browser-connection.c:357
-#: ../tools/browser/browser-connection.c:464
+#: ../tools/browser/browser-connection.c:358
+#: ../tools/browser/browser-connection.c:465
 msgid "Analysing database schema"
 msgstr "Analizando el esquema de la base de datos"
 
-#: ../tools/browser/browser-connection.c:359
-#: ../tools/browser/browser-connection.c:446
-#: ../tools/browser/browser-connection.c:466
-#: ../tools/browser/browser-connection.c:902
+#: ../tools/browser/browser-connection.c:360
+#: ../tools/browser/browser-connection.c:447
+#: ../tools/browser/browser-connection.c:467
+#: ../tools/browser/browser-connection.c:905
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Error al obtener los metadatos de la conexión: %s"
 
-#: ../tools/browser/browser-connection.c:444
-#: ../tools/browser/browser-connection.c:900
+#: ../tools/browser/browser-connection.c:445
+#: ../tools/browser/browser-connection.c:903
 msgid "Getting database schema information"
 msgstr "Obteniendo la información de esquema de la base de datos"
 
-#: ../tools/browser/browser-connection.c:656
-#: ../tools/browser/browser-connection.c:676
+#: ../tools/browser/browser-connection.c:659
+#: ../tools/browser/browser-connection.c:679
 #, c-format
 msgid "Error while analysing database schema: %s"
 msgstr "Error al analizar el esquema de la base de datos: %s"
 
-#: ../tools/browser/browser-connection.c:1156
-#: ../tools/browser/browser-connection.c:1206
+#: ../tools/browser/browser-connection.c:1159
+#: ../tools/browser/browser-connection.c:1209
 msgid "Executing a query"
 msgstr "Ejecutando una consulta"
 
-#: ../tools/browser/browser-connection.c:1486
+#: ../tools/browser/browser-connection.c:1489
 #, c-format
 msgid "Connection not yet opened"
 msgstr "La conexión aún no está abierta"
 
-#: ../tools/browser/browser-connection.c:1492
+#: ../tools/browser/browser-connection.c:1495
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
 "No se puede inicializar el diccionario para almacenar las preferencias de la "
 "tabla"
 
-#: ../tools/browser/browser-connection.c:1538
-#: ../tools/browser/browser-connection.c:1544
-#: ../tools/browser/browser-connection.c:1680
+#: ../tools/browser/browser-connection.c:1541
+#: ../tools/browser/browser-connection.c:1547
+#: ../tools/browser/browser-connection.c:1683
 #: ../tools/browser/browser-favorites.c:535
 #: ../tools/browser/browser-favorites.c:541
 #: ../tools/browser/browser-favorites.c:970
@@ -7203,7 +7203,7 @@ msgstr ""
 msgid "Can't initialize transaction to access favorites"
 msgstr "No se puede inicializar la transacción para acceder a los favoritos"
 
-#: ../tools/browser/browser-connection.c:1625
+#: ../tools/browser/browser-connection.c:1628
 #: ../tools/browser/browser-favorites.c:714
 #: ../tools/browser/browser-favorites.c:1028
 msgid "Can't commit transaction to access favorites"
@@ -7285,17 +7285,17 @@ msgid "Bookmarks"
 msgstr "Marcadores"
 
 #: ../tools/browser/browser-stock-icons.c:47
-#: ../tools/browser/browser-window.c:294
+#: ../tools/browser/browser-window.c:301
 msgid "Begin"
 msgstr "Inicio"
 
 #: ../tools/browser/browser-stock-icons.c:48
-#: ../tools/browser/browser-window.c:296
+#: ../tools/browser/browser-window.c:303
 msgid "Commit"
 msgstr "Efectuar"
 
 #: ../tools/browser/browser-stock-icons.c:49
-#: ../tools/browser/browser-window.c:298
+#: ../tools/browser/browser-window.c:305
 msgid "Rollback"
 msgstr "Deshacer"
 
@@ -7303,43 +7303,43 @@ msgstr "Deshacer"
 msgid "Builder"
 msgstr "Constructor"
 
-#: ../tools/browser/browser-virtual-connection.c:89
+#: ../tools/browser/browser-virtual-connection.c:90
 msgid "Bound connection is used"
 msgstr "Se está usando una conexión vinculada"
 
-#: ../tools/browser/browser-virtual-connection.c:112
+#: ../tools/browser/browser-virtual-connection.c:114
 msgid "Virtual connection using this connection is busy"
 msgstr "La conexión virtual usando esta conexión está ocupada"
 
-#: ../tools/browser/browser-window.c:268
+#: ../tools/browser/browser-window.c:275
 msgid "_Fullscreen"
 msgstr "Pantalla _completa"
 
-#: ../tools/browser/browser-window.c:268
+#: ../tools/browser/browser-window.c:275
 msgid "Use the whole screen"
 msgstr "Usar la pantalla completa"
 
-#: ../tools/browser/browser-window.c:272
+#: ../tools/browser/browser-window.c:279
 msgid "_Connection"
 msgstr "_Conexión"
 
-#: ../tools/browser/browser-window.c:272
+#: ../tools/browser/browser-window.c:279 ../tools/browser/browser-window.c:395
 msgid "Connection"
 msgstr "Conexión"
 
-#: ../tools/browser/browser-window.c:273
+#: ../tools/browser/browser-window.c:280
 msgid "_Connect"
 msgstr "_Conectar"
 
-#: ../tools/browser/browser-window.c:273
+#: ../tools/browser/browser-window.c:280
 msgid "Open a connection"
 msgstr "Abrir una conexión"
 
-#: ../tools/browser/browser-window.c:274
+#: ../tools/browser/browser-window.c:281
 msgid "_Bind connection"
 msgstr "_Vincular conexión"
 
-#: ../tools/browser/browser-window.c:274
+#: ../tools/browser/browser-window.c:281
 msgid ""
 "Use connection to create\n"
 "a new binding connection to access data\n"
@@ -7350,184 +7350,184 @@ msgstr ""
 "acceder a los datos desde varias\n"
 "bases de datos a la vez"
 
-#: ../tools/browser/browser-window.c:277
+#: ../tools/browser/browser-window.c:284
 msgid "Connection properties"
 msgstr "Propiedades de la conexión"
 
-#: ../tools/browser/browser-window.c:278
+#: ../tools/browser/browser-window.c:285
 msgid "_Connections list"
 msgstr "_Lista de conexiones"
 
-#: ../tools/browser/browser-window.c:278
+#: ../tools/browser/browser-window.c:285
 msgid "Connections list"
 msgstr "Lista de conexiones"
 
-#: ../tools/browser/browser-window.c:279
+#: ../tools/browser/browser-window.c:286
 msgid "_Fetch meta data"
 msgstr "Extraer _metadatos"
 
-#: ../tools/browser/browser-window.c:279
+#: ../tools/browser/browser-window.c:286
 msgid "Fetch meta data"
 msgstr "Extraer metadatos"
 
-#: ../tools/browser/browser-window.c:280
+#: ../tools/browser/browser-window.c:287
 msgid "_Close connection"
 msgstr "_Cerrar la conexión"
 
-#: ../tools/browser/browser-window.c:280
+#: ../tools/browser/browser-window.c:287
 msgid "Close this connection"
 msgstr "Cerrar esta conexión"
 
-#: ../tools/browser/browser-window.c:281
+#: ../tools/browser/browser-window.c:288
 msgid "_Quit"
 msgstr "_Salir"
 
-#: ../tools/browser/browser-window.c:281 ../tools/gda-sql.c:2337
+#: ../tools/browser/browser-window.c:288 ../tools/gda-sql.c:2337
 msgid "Quit"
 msgstr "Salir"
 
-#: ../tools/browser/browser-window.c:282
+#: ../tools/browser/browser-window.c:289
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../tools/browser/browser-window.c:282
+#: ../tools/browser/browser-window.c:289
 msgid "Edit"
 msgstr "Editar"
 
-#: ../tools/browser/browser-window.c:283
+#: ../tools/browser/browser-window.c:290
 msgid "_Display"
 msgstr "_Mostrar"
 
-#: ../tools/browser/browser-window.c:283
+#: ../tools/browser/browser-window.c:290
 msgid "Display"
 msgstr "Mostrar"
 
-#: ../tools/browser/browser-window.c:284
+#: ../tools/browser/browser-window.c:291
 msgid "_Perspective"
 msgstr "_Perspectiva"
 
-#: ../tools/browser/browser-window.c:284
+#: ../tools/browser/browser-window.c:291
 msgid "Perspective"
 msgstr "Perspectiva"
 
-#: ../tools/browser/browser-window.c:285
+#: ../tools/browser/browser-window.c:292
 msgid "_Window"
 msgstr "_Ventana"
 
-#: ../tools/browser/browser-window.c:285
+#: ../tools/browser/browser-window.c:292
 msgid "Window"
 msgstr "Ventana"
 
-#: ../tools/browser/browser-window.c:286
+#: ../tools/browser/browser-window.c:293
 msgid "_New window"
 msgstr "Ventana _nueva"
 
-#: ../tools/browser/browser-window.c:286
+#: ../tools/browser/browser-window.c:293
 msgid "Open a new window for current connection"
 msgstr "Abrir una ventana nueva para la conexión actual"
 
-#: ../tools/browser/browser-window.c:287
+#: ../tools/browser/browser-window.c:294
 msgid "New window for _connection"
 msgstr "Ventana nueva para la cone_xión"
 
-#: ../tools/browser/browser-window.c:287
+#: ../tools/browser/browser-window.c:294
 msgid "Open a new window for a connection"
 msgstr "Abrir una ventana nueva para una conexión"
 
-#: ../tools/browser/browser-window.c:289
+#: ../tools/browser/browser-window.c:296
 msgid "_Help"
 msgstr "Ay_uda"
 
-#: ../tools/browser/browser-window.c:289
+#: ../tools/browser/browser-window.c:296
 #: ../tools/browser/data-manager/data-console.c:423
 msgid "Help"
 msgstr "Ayuda"
 
-#: ../tools/browser/browser-window.c:292
+#: ../tools/browser/browser-window.c:299
 msgid "_Manual"
 msgstr "_Manual"
 
-#: ../tools/browser/browser-window.c:292
+#: ../tools/browser/browser-window.c:299
 msgid "Manual"
 msgstr "Manual"
 
-#: ../tools/browser/browser-window.c:294
+#: ../tools/browser/browser-window.c:301
 msgid "Begin a new transaction"
 msgstr "Iniciar una transacción nueva"
 
-#: ../tools/browser/browser-window.c:296
+#: ../tools/browser/browser-window.c:303
 msgid "Commit current transaction"
 msgstr "Efectuar la transacción actual"
 
-#: ../tools/browser/browser-window.c:298
+#: ../tools/browser/browser-window.c:305
 msgid "Rollback current transaction"
 msgstr "Deshacer la transacción actual"
 
-#: ../tools/browser/browser-window.c:388
+#: ../tools/browser/browser-window.c:397
 msgid "unnamed"
 msgstr "sin nombre"
 
-#: ../tools/browser/browser-window.c:389
-#, c-format
-msgid "Connection: %s"
-msgstr "Conexión: %s"
+#: ../tools/browser/browser-window.c:400
+#| msgid "_Data source"
+msgid "data source"
+msgstr "fuente de datos"
 
-#: ../tools/browser/browser-window.c:791 ../tools/browser/support.c:83
+#: ../tools/browser/browser-window.c:818 ../tools/browser/support.c:83
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "¿Quiere cerrar la conexión «%s»?"
 
-#: ../tools/browser/browser-window.c:833 ../tools/browser/browser-window.c:840
+#: ../tools/browser/browser-window.c:860 ../tools/browser/browser-window.c:867
 msgid "Do you want to quit the application?"
 msgstr "¿Quiere salir de la aplicación?"
 
-#: ../tools/browser/browser-window.c:834
+#: ../tools/browser/browser-window.c:861
 msgid "all the connections will be closed."
 msgstr "se cerrarán todas las conexiones."
 
-#: ../tools/browser/browser-window.c:841
+#: ../tools/browser/browser-window.c:868
 msgid "the connection will be closed."
 msgstr "se cerrará la conexión."
 
-#: ../tools/browser/browser-window.c:892
+#: ../tools/browser/browser-window.c:919
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Error al iniciar la transacción: %s"
 
-#: ../tools/browser/browser-window.c:906
+#: ../tools/browser/browser-window.c:933
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Error al efectuar la transacción: %s"
 
-#: ../tools/browser/browser-window.c:920
+#: ../tools/browser/browser-window.c:947
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Error al deshacer la transacción: %s"
 
-#: ../tools/browser/browser-window.c:1000
+#: ../tools/browser/browser-window.c:1027
 msgid "Hit the Escape key to leave the fullscreen mode"
 msgstr "Pulse Esc para salir del modo pantalla completa"
 
-#: ../tools/browser/browser-window.c:1145
+#: ../tools/browser/browser-window.c:1172
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Error al actualizar la conexión vinculada: %s"
 
-#: ../tools/browser/browser-window.c:1186
+#: ../tools/browser/browser-window.c:1213
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "No se pudo abrir la conexión de vinculación: %s"
 
-#: ../tools/browser/browser-window.c:1226
+#: ../tools/browser/browser-window.c:1253
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
 msgid "Database browser"
 msgstr "Visor de la base de datos"
 
-#: ../tools/browser/browser-window.c:1542
+#: ../tools/browser/browser-window.c:1569
 msgid "Don't show this message again"
 msgstr "No mostrar este mensaje de nuevo"
 
-#: ../tools/browser/browser-window.c:1685
+#: ../tools/browser/browser-window.c:1712
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -10154,6 +10154,9 @@ msgstr "Objetos"
 #: ../tools/web-server.c:1884
 msgid "Triggers"
 msgstr "Disparadores"
+
+#~ msgid "Connection: %s"
+#~ msgstr "Conexión: %s"
 
 #~ msgid "Could not find any DSN named '%s'"
 #~ msgstr "No se pudo encontrar ningún DNS llamado «%s»"
