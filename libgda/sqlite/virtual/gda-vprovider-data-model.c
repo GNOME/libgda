@@ -692,19 +692,19 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 }
 
 #if GLIB_CHECK_VERSION (2,22,0)
-#define rowid_equal g_int64_equal
-#define rowid_hash g_int64_hash
+#define rowid_equal_func g_int64_equal
+#define rowid_hash_func g_int64_hash
 #else
 /* taken from GLib to ensure compatibility with older GLibe versions */
 static
 gboolean
-rowid_equal (gconstpointer v1, gconstpointer v2)
+rowid_equal_func (gconstpointer v1, gconstpointer v2)
 {
 	return *((const gint64*) v1) == *((const gint64*) v2);
 }
 
 static guint
-rowid_hash (gconstpointer v)
+rowid_hash_func (gconstpointer v)
 {
 	return (guint) *(const gint64*) v;
 }
@@ -721,7 +721,8 @@ virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
 	*pRowid = gda_data_model_iter_get_row (cursor->iter);
 	if (! vtable->rowid_hash || (vtable->rowid_hash_model == vtable->td->real_model)) {
 		if (! vtable->rowid_hash) {
-			vtable->rowid_hash = g_hash_table_new_full (rowid_hash, rowid_equal,
+			vtable->rowid_hash = g_hash_table_new_full (rowid_hash_func,
+								    rowid_equal_func,
 								    g_free,
 								    (GDestroyNotify) g_object_unref);
 			vtable->rowid_hash_model = vtable->td->real_model;
