@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The GNOME Foundation.
+ * Copyright (C) 2010 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -283,6 +283,9 @@ load_symbols (GModule *module)
 	if (! g_module_symbol (module, "sqlite3_key", (gpointer*) &(s3r->sqlite3_key)))
 		s3r->sqlite3_key = NULL;
 	if (! g_module_symbol (module, "sqlite3_rekey", (gpointer*) &(s3r->sqlite3_key)))
+		s3r->sqlite3_rekey = NULL;
+
+	if (! g_module_symbol (module, "sqlite3_create_collation", (gpointer*) &(s3r->sqlite3_create_collation)))
 		s3r->sqlite3_rekey = NULL;
 	return;
 
