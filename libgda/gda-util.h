@@ -41,7 +41,7 @@ G_BEGIN_DECLS
  * @stability: Stable
  * @see_also:
  *
- * Some usefull functions.
+ * Some useful functions.
  */
 
 /*

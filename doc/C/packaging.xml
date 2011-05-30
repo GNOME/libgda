@@ -125,7 +125,7 @@
     <sect2>
       <title>Diagnostic tools</title>
       <para>
-	The diagnostic tools are usefull to test connections. This component has the following files:
+	The diagnostic tools are useful to test connections. This component has the following files:
 	<programlisting>
 .
 `-- bin

@@ -32,4 +32,4 @@ and, for each configured connection, tests if it can be opened.
 Note that by default the gda-tester.php will _not_ display any
 configured connection information, this needs to be enabled in the
 script's source. Better yet is to remove that file once not necessary
-anymore as it could leak usefull information.
+anymore as it could leak useful information.

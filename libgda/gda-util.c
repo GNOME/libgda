@@ -1296,7 +1296,7 @@ static gboolean stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd,
  * (as returned by gda_holder_value_is_default()) are either removed from the statement (if @remove
  * is %TRUE) or replaced by the "DEFAULT" keyword (if @remove is %FALSE).
  *
- * This function is only usefull for database providers' implementations which have to deal with default
+ * This function is only useful for database providers' implementations which have to deal with default
  * values when executing statements, and is only relevant in the case of INSERT or UPDATE statements
  * (in the latter case an error is returned if @remove is %TRUE).
  *

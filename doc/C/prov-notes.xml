@@ -163,7 +163,7 @@
       <para>
 	It returns a string where all the diacritical signs (for example accents) from the input string,
 	and optionally converts the string to upper or lower case if specified. This function takes into
-	account the current locale and is usefull to do some text search.
+	account the current locale and is useful to do some text search.
       </para>
     </sect2>
 

@@ -1317,7 +1317,7 @@ timestamps_update_cb (QueryEditor *editor)
  * @editor: a #QueryEditor widget.
  * @hist_item: a #QueryEditorHistoryItem to add, or %NULL
  *
- * Adds some text. @text_data is usefull only if @editor's mode is HISTORY, it will be ignored
+ * Adds some text. @text_data is useful only if @editor's mode is HISTORY, it will be ignored
  * otherwise.
  *
  * Returns: the position of the added text chunk, or %0 if mode is not HISTORY
@@ -1449,7 +1449,7 @@ query_editor_history_is_empty (QueryEditor *editor)
  * query_editor_del_current_history_item
  * @editor: a #QueryEditor widget.
  * 
- * Deletes the text associated to the current selection, usefull only if @editor's mode is HISTORY
+ * Deletes the text associated to the current selection, useful only if @editor's mode is HISTORY
  */
 void
 query_editor_del_current_history_item (QueryEditor *editor)
