@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The GNOME Foundation.
+ * Copyright (C) 2010 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -111,6 +111,8 @@ typedef struct {
 
 	int  (*sqlite3_key)(sqlite3 *, const void *, int);
 	int  (*sqlite3_rekey)(sqlite3 *, const void *, int);
+
+	int  (*sqlite3_create_collation) (sqlite3*, const char *, int, void*, int(*xCompare)(void*,int,const void*,int,const void*));
 } Sqlite3ApiRoutines;
 
 extern Sqlite3ApiRoutines *s3r;
