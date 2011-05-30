@@ -603,7 +603,7 @@
 	    </listitem>
 	    <listitem>
               <para>GDA_CONFIG_SYNCHRONOUS: if set, and if the Gnome Keyring is used to store DSN authentification information,
-		then the requests to the Gnome Keyring will be made synchronously. This is usefull if Libgda is used in a program where
+		then the requests to the Gnome Keyring will be made synchronously. This is useful if Libgda is used in a program where
 		there is no main loop (otherwise no authentification will be fetched).</para>
             </listitem>
 	    <listitem>

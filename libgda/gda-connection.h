@@ -127,7 +127,7 @@ struct _GdaConnectionClass {
  * from the calling thread to the actual connection's specific thread, and gets the results back).
  *
  * The GDA_CONNECTION_OPTIONS_THREAD_ISOLATED forces using a specific thread and a "wrapper connection" even if the
- * "normal" connection would itself be thread safe; this is usefull for example to be sure the asynchronous API can
+ * "normal" connection would itself be thread safe; this is useful for example to be sure the asynchronous API can
  * always be used (see gda_connection_async_statement_execute()).
  *
  * Having a specific thread and a "wrapper connection" definitely has an impact on the performances (because it involves

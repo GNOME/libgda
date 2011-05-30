@@ -1001,7 +1001,7 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
  * @model: a #GdaDataModel
  *
  * Get the global data model exception(s) that occurred when using @model.
- * This is usefull for example for the LDAP related
+ * This is useful for example for the LDAP related
  * data models where some rows may be missing because the LDAP search has reached a limit
  * imposed by the LDAP server.
  *
