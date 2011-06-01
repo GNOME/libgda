@@ -1,3 +1,19 @@
+libgda 4.2.8, 2011-06-01
+
+ - tools (GdaSql & GdaBrowser): allow to display detailed DSN information, and
+   modify command lines to hide usernames & passwords
+ - GdaSql : allow to be called as an interpreter shell (shebang)
+ - GObject Introspection improvements
+ - SQLite provider: added collations and locale related functions
+ - Corrections: PostgreSQL 9 meta data, make -j x, Oracle provider handling of variables,
+   bugs #650016, #651178, #651069 and #651607, and misc other corrections
+ - New LDAP provider (read only for the moment)
+ - Translations:
+	- sl (Matej Urbančič)
+	- es (Daniel Mustieles)
+	- de (Mario Blättermann)
+	- pt_BR (Rodolfo Ribeiro Gomes)
+
 libgda 4.2.7, 2011-05-05
 
  - corrections (wrong usage of GPOINTER_TO_INT, big endian issues and others)
