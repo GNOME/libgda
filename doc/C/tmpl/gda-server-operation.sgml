@@ -147,6 +147,16 @@ Handles any DDL query in an abstract way
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_operation_get_value_at_path ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_operation_get_sql_identifier_at ##### -->
 <para>
 
@@ -160,6 +170,18 @@ Handles any DDL query in an abstract way
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_operation_get_sql_identifier_at_path ##### -->
+<para>
+
+</para>
+
+@op: 
+@cnc: 
+@prov: 
+@path: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_operation_set_value_at ##### -->
 <para>
 
@@ -170,6 +192,18 @@ Handles any DDL query in an abstract way
 @error: 
 @path_format: 
 @Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_set_value_at_path ##### -->
+<para>
+
+</para>
+
+@op: 
+@value: 
+@path: 
+@error: 
 @Returns: 
 
 

@@ -36,6 +36,11 @@ Widget embedding both a form and a grid to display a #GdaDataModel's contents
 
 </para>
 
+<!-- ##### ARG UiFormGrid:scroll-form ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG UiFormGrid:widget-info ##### -->
 <para>
 
@@ -47,6 +52,7 @@ Widget embedding both a form and a grid to display a #GdaDataModel's contents
 </para>
 
 @model: 
+@scroll_form: 
 @flags: 
 @Returns: 
 

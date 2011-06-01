@@ -180,6 +180,18 @@ Dictionary object
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_meta_store_extract_v ##### -->
+<para>
+
+</para>
+
+@store: 
+@select_sql: 
+@vars: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_meta_store_schema_get_structure ##### -->
 <para>
 

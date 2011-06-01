@@ -47,6 +47,12 @@ void                  gda_attributes_manager_clear       (GdaAttributesManager *
 void                  gda_attributes_manager_foreach     (GdaAttributesManager *mgr, gpointer ptr, 
 							  GdaAttributesManagerFunc func, gpointer data);
 
+/**
+ * GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN:
+ * This attribute, if %TRUE specifies that a tree node may or may not have any children nodes (value has a G_TYPE_BOOLEAN type).
+ */
+#define GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN "__gda_attr_tnuchild"
+
 
 /* possible predefined attribute names for gda_holder_get_attribute() or gda_column_get_attribute() */
 #define GDA_ATTRIBUTE_DESCRIPTION "__gda_attr_descr" /* G_TYPE_STRING */

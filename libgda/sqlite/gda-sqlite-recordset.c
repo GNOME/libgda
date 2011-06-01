@@ -558,10 +558,6 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	case SQLITE_BUSY:
 		/* nothing to do */
 		break;
-	case SQLITE_ERROR:
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,  "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
-		break;
 	case SQLITE_DONE:
 		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
 		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
@@ -572,8 +568,10 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
 			      "%s", _("SQLite provider fatal internal error"));
 		break;
+	case SQLITE_ERROR:
 	default: {
 		GError *lerror = NULL;
+		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 		if (rc == SQLITE_IOERR_TRUNCATE)
 			g_set_error (&lerror, GDA_DATA_MODEL_ERROR,
 				     GDA_DATA_MODEL_TRUNCATED_ERROR, _("Tuncated data"));
@@ -582,9 +580,9 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
 				     "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
 		gda_data_select_add_exception (GDA_DATA_SELECT (model), lerror);
-
+		if (rc == SQLITE_ERROR)
+			g_propagate_error (error, g_error_copy (lerror));
 		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
-		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 		break;
 	}
 	}

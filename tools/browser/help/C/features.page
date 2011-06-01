@@ -39,6 +39,8 @@
       <link xref="query-execution-perspective">Query execution perspective</link></p></item>
       <item><p>analyse the table's contents, see the
       <link xref="data-manager-perspective">Data manager perspective</link></p></item>
+      <item><p>for <link xref="ldap-connection">LDAP connections</link>, manage the hierarchical data in the LDAP tree, see the
+      <link xref="ldap-browser-perspective">LDAP browser perspective</link></p></item>
     </list>
     <p>
       See also the section about <link xref="actions">actions</link>

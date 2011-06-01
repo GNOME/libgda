@@ -1,0 +1,48 @@
+<!-- ##### SECTION Title ##### -->
+GdaTreeMgrLdap
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### SECTION Image ##### -->
+
+
+<!-- ##### STRUCT GdaTreeMgrLdap ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaTreeMgrLdap:connection ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaTreeMgrLdap:dn ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_tree_mgr_ldap_new ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@dn: 
+@Returns: 
+
+

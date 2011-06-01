@@ -39,6 +39,7 @@ static void schema_browser_perspective_dispose (GObject *object);
 
 /* BrowserPerspective interface */
 static void                 schema_browser_perspective_perspective_init (BrowserPerspectiveIface *iface);
+static BrowserWindow       *schema_browser_perspective_get_window (BrowserPerspective *perspective);
 static GtkActionGroup      *schema_browser_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *schema_browser_perspective_get_actions_ui (BrowserPerspective *perspective);
 static void                 schema_browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
@@ -104,6 +105,7 @@ schema_browser_perspective_class_init (SchemaBrowserPerspectiveClass * klass)
 static void
 schema_browser_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
+	iface->i_get_window = schema_browser_perspective_get_window;
 	iface->i_get_actions_group = schema_browser_perspective_get_actions_group;
 	iface->i_get_actions_ui = schema_browser_perspective_get_actions_ui;
 	iface->i_page_tab_label_change = schema_browser_perspective_page_tab_label_change;
@@ -122,8 +124,6 @@ static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFav
 				      const gchar *selection, SchemaBrowserPerspective *bpers);
 static void objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_type,
 						const gchar *selection, SchemaBrowserPerspective *bpers);
-static void nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
-			       SchemaBrowserPerspective *perspective); 
 /**
  * schema_browser_perspective_new
  *
@@ -135,30 +135,31 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 	BrowserConnection *bcnc;
 	BrowserPerspective *bpers;
 	SchemaBrowserPerspective *perspective;
+	gboolean fav_supported;
 
 	bpers = (BrowserPerspective*) g_object_new (TYPE_SCHEMA_BROWSER_PERSPECTIVE, NULL);
 	perspective = (SchemaBrowserPerspective*) bpers;
-
+	bcnc = browser_window_get_connection (bwin);
+	fav_supported = browser_connection_get_favorites (bcnc) ? TRUE : FALSE;
 	perspective->priv->bwin = bwin;
 
 	/* contents */
 	GtkWidget *paned, *wid, *nb;
-	bcnc = browser_window_get_connection (bwin);
 	paned = gtk_hpaned_new ();
-	wid = favorite_selector_new (bcnc);
-	g_signal_connect (wid, "selection-changed",
-			  G_CALLBACK (fav_selection_changed_cb), bpers);
-	gtk_paned_add1 (GTK_PANED (paned), wid);
-	gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
-	perspective->priv->favorites = wid;
+	if (fav_supported) {
+		wid = favorite_selector_new (bcnc);
+		g_signal_connect (wid, "selection-changed",
+				  G_CALLBACK (fav_selection_changed_cb), bpers);
+		gtk_paned_add1 (GTK_PANED (paned), wid);
+		gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
+		perspective->priv->favorites = wid;
+	}
 
 	nb = gtk_notebook_new ();
 	perspective->priv->notebook = nb;
 	gtk_paned_add2 (GTK_PANED (paned), nb);
 	gtk_notebook_set_scrollable (GTK_NOTEBOOK (nb), TRUE);
 	gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
-	g_signal_connect (G_OBJECT (nb), "switch-page",
-			  G_CALLBACK (nb_switch_page_cb), perspective);
 
 	wid = objects_index_new (bcnc);
 	g_signal_connect (wid, "selection-changed",
@@ -175,30 +176,12 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
 
-	if (!perspective->priv->favorites_shown)
+	if (perspective->priv->favorites && !perspective->priv->favorites_shown)
 		gtk_widget_hide (perspective->priv->favorites);
 
+	browser_perspective_declare_notebook (bpers, GTK_NOTEBOOK (perspective->priv->notebook));
+
 	return bpers;
-}
-
-static void
-nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint page_num,
-		   SchemaBrowserPerspective *perspective)
-{
-	GtkWidget *page_contents;
-	GtkActionGroup *actions = NULL;
-	const gchar *ui = NULL;
-
-	page_contents = gtk_notebook_get_nth_page (nb, page_num);
-	if (IS_BROWSER_PAGE (page_contents)) {
-		actions = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
-		ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
-	}
-	browser_window_customize_perspective_ui (perspective->priv->bwin,
-						 BROWSER_PERSPECTIVE (perspective), actions, 
-						 ui);
-	if (actions)
-		g_object_unref (actions);
 }
 
 static void
@@ -285,6 +268,7 @@ schema_browser_perspective_dispose (GObject *object)
 
 	perspective = SCHEMA_BROWSER_PERSPECTIVE (object);
 	if (perspective->priv) {
+		browser_perspective_declare_notebook ((BrowserPerspective*) perspective, NULL);
 		g_free (perspective->priv);
 		perspective->priv = NULL;
 	}
@@ -306,6 +290,9 @@ favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
 {
 	SchemaBrowserPerspective *perspective;
 	perspective = SCHEMA_BROWSER_PERSPECTIVE (bpers);
+	if (! perspective->priv->favorites)
+		return;
+
 	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
 	if (perspective->priv->favorites_shown)
 		gtk_widget_show (perspective->priv->favorites);
@@ -341,19 +328,26 @@ static const gchar *ui_actions_info =
         "</ui>";
 
 static GtkActionGroup *
-schema_browser_perspective_get_actions_group (BrowserPerspective *bpers)
+schema_browser_perspective_get_actions_group (BrowserPerspective *perspective)
 {
+	SchemaBrowserPerspective *bpers;
 	GtkActionGroup *agroup;
+	bpers = SCHEMA_BROWSER_PERSPECTIVE (perspective);
 	agroup = gtk_action_group_new ("SchemaBrowserActions");
 	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
 
 	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions),
+
+	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions,
+					     G_N_ELEMENTS (ui_toggle_actions),
 					     bpers);
 	GtkAction *action;
 	action = gtk_action_group_get_action (agroup, "SchemaBrowserFavoritesShow");
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      SCHEMA_BROWSER_PERSPECTIVE (bpers)->priv->favorites_shown);	
+	if (bpers->priv->favorites)
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+					      bpers->priv->favorites_shown);
+	else
+		gtk_action_set_sensitive (GTK_ACTION (action), FALSE);
 
 	return agroup;
 }
@@ -515,4 +509,12 @@ schema_browser_perspective_get_current_customization (BrowserPerspective *perspe
 		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
 		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
 	}
+}
+
+static BrowserWindow *
+schema_browser_perspective_get_window (BrowserPerspective *perspective)
+{
+	SchemaBrowserPerspective *bpers;
+	bpers = SCHEMA_BROWSER_PERSPECTIVE (perspective);
+	return bpers->priv->bwin;
 }

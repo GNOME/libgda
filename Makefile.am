@@ -96,7 +96,10 @@ example_files = \
 	samples/Blobs/blobtest.c \
 	samples/Blobs/Makefile \
 	samples/Blobs/README \
-	samples/Blobs/testblob.db
+	samples/Blobs/testblob.db \
+	samples/LdapBrowser/Makefile \
+	samples/LdapBrowser/README \
+	samples/LdapBrowser/ldap-browser.c
 
 EXTRA_DIST = \
 	COPYING \

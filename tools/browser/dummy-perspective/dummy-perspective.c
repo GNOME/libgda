@@ -25,11 +25,12 @@
  * Main static functions 
  */
 static void dummy_perspective_class_init (DummyPerspectiveClass *klass);
-static void dummy_perspective_init (DummyPerspective *stmt);
+static void dummy_perspective_init (DummyPerspective *pers);
 static void dummy_perspective_dispose (GObject *object);
 
 /* BrowserPerspective interface */
 static void                 dummy_perspective_perspective_init (BrowserPerspectiveIface *iface);
+static BrowserWindow       *dummy_perspective_get_window (BrowserPerspective *perspective);
 static GtkActionGroup      *dummy_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *dummy_perspective_get_actions_ui (BrowserPerspective *perspective);
 /* get a pointer to the parents to be able to call their destructor */
@@ -84,6 +85,7 @@ dummy_perspective_class_init (DummyPerspectiveClass * klass)
 static void
 dummy_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
+	iface->i_get_window = dummy_perspective_get_window;
 	iface->i_get_actions_group = dummy_perspective_get_actions_group;
 	iface->i_get_actions_ui = dummy_perspective_get_actions_ui;
 }
@@ -113,6 +115,10 @@ dummy_perspective_new (G_GNUC_UNUSED BrowserWindow *bwin)
 	BrowserPerspective *bpers;
 	bpers = (BrowserPerspective*) g_object_new (TYPE_DUMMY_PERSPECTIVE, NULL);
 
+	/* if there is a notebook to store pages, use: 
+	browser_perspective_declare_notebook (bpers, GTK_NOTEBOOK (perspective->priv->notebook));
+	*/
+
 	return bpers;
 }
 
@@ -126,6 +132,7 @@ dummy_perspective_dispose (GObject *object)
 	g_return_if_fail (IS_DUMMY_PERSPECTIVE (object));
 
 	perspective = DUMMY_PERSPECTIVE (object);
+	browser_perspective_declare_notebook ((BrowserPerspective*) perspective, NULL);
 
 	/* parent class */
 	parent_class->dispose (object);
@@ -183,4 +190,12 @@ static const gchar *
 dummy_perspective_get_actions_ui (G_GNUC_UNUSED BrowserPerspective *bpers)
 {
 	return ui_actions_info;
+}
+
+static BrowserWindow *
+dummy_perspective_get_window (BrowserPerspective *perspective)
+{
+	DummyPerspective *bpers;
+	bpers = DUMMY_PERSPECTIVE (perspective);
+	return NULL;/*bpers->priv->bwin;*/
 }

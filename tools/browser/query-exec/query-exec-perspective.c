@@ -22,7 +22,7 @@
 #include "query-exec-perspective.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
-#include "query-console.h"
+#include "query-console-page.h"
 #include "../browser-stock-icons.h"
 #include "../support.h"
 #include "query-favorite-selector.h"
@@ -39,6 +39,7 @@ static void query_exec_perspective_grab_focus (GtkWidget *widget);
 
 /* BrowserPerspective interface */
 static void                 query_exec_perspective_perspective_init (BrowserPerspectiveIface *iface);
+static BrowserWindow       *query_exec_perspective_get_window (BrowserPerspective *perspective);
 static GtkActionGroup      *query_exec_perspective_get_actions_group (BrowserPerspective *perspective);
 static const gchar         *query_exec_perspective_get_actions_ui (BrowserPerspective *perspective);
 static void                 query_exec_perspective_get_current_customization (BrowserPerspective *perspective,
@@ -46,7 +47,6 @@ static void                 query_exec_perspective_get_current_customization (Br
 									      const gchar **out_ui);
 static void                 query_exec_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
 
-static void                 adapt_notebook_for_fullscreen (QueryExecPerspective *perspective);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -57,9 +57,6 @@ struct _QueryExecPerspectivePrivate {
 	gboolean favorites_shown;
 	BrowserWindow *bwin;
 	BrowserConnection *bcnc;
-	
-	GtkActionGroup *action_group;
-	gboolean fullscreen;
 };
 
 GType
@@ -117,10 +114,10 @@ query_exec_perspective_grab_focus (GtkWidget *widget)
 	gtk_widget_grab_focus (gtk_notebook_get_nth_page (nb,
 							  gtk_notebook_get_current_page (nb)));
 }
-
 static void
 query_exec_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
+	iface->i_get_window = query_exec_perspective_get_window;
 	iface->i_get_actions_group = query_exec_perspective_get_actions_group;
 	iface->i_get_actions_ui = query_exec_perspective_get_actions_ui;
 	iface->i_get_current_customization = query_exec_perspective_get_current_customization;
@@ -131,21 +128,12 @@ static void
 query_exec_perspective_init (QueryExecPerspective *perspective)
 {
 	perspective->priv = g_new0 (QueryExecPerspectivePrivate, 1);
-	perspective->priv->action_group = NULL;
 	perspective->priv->favorites_shown = TRUE;
-	perspective->priv->fullscreen = FALSE;
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
                                       const gchar *selection, QueryExecPerspective *perspective);
-static void nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
-			       QueryExecPerspective *perspective);
-static void nb_page_removed_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
-				QueryExecPerspective *perspective);
-static void nb_page_added_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
-			      QueryExecPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
-static void fullscreen_changed_cb (BrowserWindow *bwin, gboolean fullscreen, QueryExecPerspective *perspective);
 
 /**
  * query_exec_perspective_new
@@ -158,26 +146,27 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	BrowserConnection *bcnc;
 	BrowserPerspective *bpers;
 	QueryExecPerspective *perspective;
+	gboolean fav_supported;
 
 	bpers = (BrowserPerspective*) g_object_new (TYPE_QUERY_EXEC_PERSPECTIVE, NULL);
 	perspective = (QueryExecPerspective*) bpers;
 
 	perspective->priv->bwin = bwin;
-	g_signal_connect (bwin, "fullscreen-changed",
-			  G_CALLBACK (fullscreen_changed_cb), bpers);
 	bcnc = browser_window_get_connection (bwin);
 	perspective->priv->bcnc = g_object_ref (bcnc);
-	perspective->priv->fullscreen = browser_window_is_fullscreen (bwin);
+	fav_supported = browser_connection_get_favorites (bcnc) ? TRUE : FALSE;
 
 	/* contents */
 	GtkWidget *paned, *nb, *wid;
 	paned = gtk_hpaned_new ();
-	wid = query_favorite_selector_new (bcnc);
-	g_signal_connect (wid, "selection-changed",
-			  G_CALLBACK (fav_selection_changed_cb), bpers);
-	gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
-	gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
-	perspective->priv->favorites = wid;
+	if (fav_supported) {
+		wid = query_favorite_selector_new (bcnc);
+		g_signal_connect (wid, "selection-changed",
+				  G_CALLBACK (fav_selection_changed_cb), bpers);
+		gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
+		gtk_paned_set_position (GTK_PANED (paned), DEFAULT_FAVORITES_SIZE);
+		perspective->priv->favorites = wid;
+	}
 
 	nb = gtk_notebook_new ();
 	perspective->priv->notebook = nb;
@@ -187,7 +176,7 @@ query_exec_perspective_new (BrowserWindow *bwin)
 
 	GtkWidget *page, *tlabel, *button;
 
-	page = query_console_new (bcnc);
+	page = query_console_page_new (bcnc);
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), &button);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (close_button_clicked_cb), page);
@@ -205,20 +194,11 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
 
-	if (!perspective->priv->favorites_shown)
+	if (perspective->priv->favorites && !perspective->priv->favorites_shown)
 		gtk_widget_hide (perspective->priv->favorites);
 	gtk_widget_grab_focus (page);
 
-	/* signals to customize perspective */
-	g_signal_connect (G_OBJECT (nb), "switch-page",
-			  G_CALLBACK (nb_switch_page_cb), perspective);
-	g_signal_connect (G_OBJECT (nb), "page-removed",
-			  G_CALLBACK (nb_page_removed_cb), perspective);
-	g_signal_connect (G_OBJECT (nb), "page-added",
-			  G_CALLBACK (nb_page_added_cb), perspective);
-
-	if (perspective->priv->fullscreen)
-		adapt_notebook_for_fullscreen (perspective);
+	browser_perspective_declare_notebook (bpers, GTK_NOTEBOOK (perspective->priv->notebook));
 
 	return bpers;
 }
@@ -235,8 +215,8 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id,
 	page = gtk_notebook_get_nth_page (nb, gtk_notebook_get_current_page (nb));
 	if (!page)
 		return;
-	if (IS_QUERY_CONSOLE (page)) {
-		query_console_set_text (QUERY_CONSOLE (page), selection, fav_id);
+	if (IS_QUERY_CONSOLE_PAGE_PAGE (page)) {
+		query_console_page_set_text (QUERY_CONSOLE_PAGE (page), selection, fav_id);
 		gtk_widget_grab_focus (page);
 	}
 	else {
@@ -245,67 +225,11 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id,
 }
 
 static void
-nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint page_num,
-		   QueryExecPerspective *perspective)
-{
-	GtkWidget *page_contents;
-	GtkActionGroup *actions = NULL;
-	const gchar *ui = NULL;
-
-	page_contents = gtk_notebook_get_nth_page (nb, page_num);
-	if (IS_BROWSER_PAGE (page_contents)) {
-		actions = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
-		ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
-	}
-	browser_window_customize_perspective_ui (perspective->priv->bwin,
-						 BROWSER_PERSPECTIVE (perspective), actions, 
-						 ui);
-	if (actions)
-		g_object_unref (actions);
-}
-
-static void
-nb_page_removed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, G_GNUC_UNUSED gint page_num,
-		    QueryExecPerspective *perspective)
-{
-	if (gtk_notebook_get_n_pages (nb) == 0) {
-		browser_window_customize_perspective_ui (perspective->priv->bwin,
-							 BROWSER_PERSPECTIVE (perspective),
-							 NULL, NULL);
-	}
-	adapt_notebook_for_fullscreen (perspective);
-}
-
-static void
-nb_page_added_cb (G_GNUC_UNUSED GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page,
-		  G_GNUC_UNUSED gint page_num, QueryExecPerspective *perspective)
-{
-	adapt_notebook_for_fullscreen (perspective);
-}
-
-static void
 close_button_clicked_cb (G_GNUC_UNUSED GtkWidget *wid, GtkWidget *page_widget)
 {
 	gtk_widget_destroy (page_widget);
 }
 
-static void
-adapt_notebook_for_fullscreen (QueryExecPerspective *perspective)
-{
-	gboolean showtabs = TRUE;
-	
-	if (perspective->priv->fullscreen && 
-	    gtk_notebook_get_n_pages (GTK_NOTEBOOK (perspective->priv->notebook)) == 1)
-		showtabs = FALSE;
-	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (perspective->priv->notebook), showtabs);
-}
-
-static void
-fullscreen_changed_cb (G_GNUC_UNUSED BrowserWindow *bwin, gboolean fullscreen, QueryExecPerspective *perspective)
-{
-	perspective->priv->fullscreen = fullscreen;
-	adapt_notebook_for_fullscreen (perspective);
-}
 
 static void
 query_exec_perspective_dispose (GObject *object)
@@ -317,18 +241,10 @@ query_exec_perspective_dispose (GObject *object)
 
 	perspective = QUERY_EXEC_PERSPECTIVE (object);
 	if (perspective->priv) {
+		browser_perspective_declare_notebook ((BrowserPerspective*) perspective, NULL);
 		if (perspective->priv->bcnc)
 			g_object_unref (perspective->priv->bcnc);
 
-		if (perspective->priv->action_group)
-			g_object_unref (perspective->priv->action_group);
-
-		g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
-						      G_CALLBACK (nb_page_removed_cb), perspective);
-		g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
-						      G_CALLBACK (nb_page_added_cb), perspective);
-		g_signal_handlers_disconnect_by_func (perspective->priv->notebook,
-						      G_CALLBACK (nb_switch_page_cb), perspective);
 		g_free (perspective->priv);
 		perspective->priv = NULL;
 	}
@@ -348,7 +264,7 @@ query_exec_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
 	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
 	bcnc = perspective->priv->bcnc;
 
-	page = query_console_new (bcnc);
+	page = query_console_page_new (bcnc);
 	gtk_widget_show (page);
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), &button);
 	g_signal_connect (button, "clicked",
@@ -366,8 +282,6 @@ query_exec_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
 	gtk_notebook_set_menu_label (GTK_NOTEBOOK (perspective->priv->notebook), page, tlabel);
 
 	gtk_widget_grab_focus (page);
-
-	adapt_notebook_for_fullscreen (perspective);
 }
 
 static void
@@ -375,6 +289,9 @@ favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
 {
 	QueryExecPerspective *perspective;
 	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
+	if (!perspective->priv->favorites)
+		return;
+
 	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
 	if (perspective->priv->favorites_shown)
 		gtk_widget_show (perspective->priv->favorites);
@@ -415,24 +332,24 @@ static GtkActionGroup *
 query_exec_perspective_get_actions_group (BrowserPerspective *perspective)
 {
 	QueryExecPerspective *bpers;
+	GtkActionGroup *agroup;
 	bpers = QUERY_EXEC_PERSPECTIVE (perspective);
-
-	if (!bpers->priv->action_group) {
-		GtkActionGroup *agroup;
-		agroup = gtk_action_group_new ("QueryExecActions");
-		gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-		gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-		bpers->priv->action_group = g_object_ref (agroup);
-
-		gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions),
-						     bpers);
-		GtkAction *action;
-		action = gtk_action_group_get_action (agroup, "QueryExecFavoritesShow");
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-					      QUERY_EXEC_PERSPECTIVE (bpers)->priv->favorites_shown);
-	}
+	agroup = gtk_action_group_new ("QueryExecActions");
+	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
+	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
 	
-	return bpers->priv->action_group;
+	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions,
+					     G_N_ELEMENTS (ui_toggle_actions),
+					     bpers);
+	GtkAction *action;
+	action = gtk_action_group_get_action (agroup, "QueryExecFavoritesShow");
+	if (bpers->priv->favorites)
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+					      bpers->priv->favorites_shown);
+	else
+		gtk_action_set_sensitive (GTK_ACTION (action), FALSE);
+	
+	return agroup;
 }
 
 static const gchar *
@@ -477,4 +394,12 @@ query_exec_perspective_get_current_customization (BrowserPerspective *perspectiv
 		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
 		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
 	}
+}
+
+static BrowserWindow *
+query_exec_perspective_get_window (BrowserPerspective *perspective)
+{
+	QueryExecPerspective *bpers;
+	bpers = QUERY_EXEC_PERSPECTIVE (perspective);
+	return bpers->priv->bwin;
 }

@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2007 The GNOME Foundation.
+/*
+ * Copyright (C) 2007 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -30,5 +30,7 @@
 #include <virtual/gda-virtual-connection.h>
 #include <virtual/gda-vconnection-data-model.h>
 #include <virtual/gda-vconnection-hub.h>
+
+@LIBGDA_LDAP_VINC@
 
 #endif

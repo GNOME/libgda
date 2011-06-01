@@ -39,6 +39,8 @@ Favorites management
 @BROWSER_FAVORITES_QUERIES: 
 @BROWSER_FAVORITES_DATA_MANAGERS: 
 @BROWSER_FAVORITES_ACTIONS: 
+@BROWSER_FAVORITES_LDAP_DN: 
+@BROWSER_FAVORITES_LDAP_CLASS: 
 
 <!-- ##### MACRO BROWSER_FAVORITES_NB_TYPES ##### -->
 <para>
@@ -77,6 +79,15 @@ Favorites management
 </para>
 
 @store: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_favorites_type_to_string ##### -->
+<para>
+
+</para>
+
+@type: 
 @Returns: 
 
 

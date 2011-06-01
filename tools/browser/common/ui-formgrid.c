@@ -27,6 +27,9 @@
 #include "../support.h"
 #include "../browser-window.h"
 #include <libgda/gda-data-model-extra.h>
+#ifdef HAVE_LDAP
+#include "../ldap-browser/ldap-browser-perspective.h"
+#endif
 
 static void ui_formgrid_class_init (UiFormGridClass * class);
 static void ui_formgrid_init (UiFormGrid *wid);
@@ -283,7 +286,8 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 		gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
 
 		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_grid));
-		row = gda_data_model_iter_get_row (iter);
+		if (iter)
+			row = gda_data_model_iter_get_row (iter);
 		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_form));
 	}
 	else {
@@ -301,11 +305,13 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 		gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
 
 		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_form));
-		row = gda_data_model_iter_get_row (iter);
+		if (iter)
+			row = gda_data_model_iter_get_row (iter);
 		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_grid));
 	}
 
-	gda_data_model_iter_move_to_row (iter, row >= 0 ? row : 0);
+	if (iter)
+		gda_data_model_iter_move_to_row (iter, row >= 0 ? row : 0);
 }
 
 static BrowserConnection *
@@ -325,13 +331,15 @@ get_browser_connection (UiFormGrid *formgrid)
 
 
 static void execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid);
+#ifdef HAVE_LDAP
+static void ldap_view_dn_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid);
+#endif
 
 static void
 form_grid_populate_popup_cb (G_GNUC_UNUSED GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid)
 {
 	/* add actions to execute to menu */
 	GdaDataModelIter *iter;
-	GSList *actions_list, *list;
 	BrowserConnection *bcnc = NULL;
 
 	bcnc = get_browser_connection (formgrid);
@@ -339,30 +347,71 @@ form_grid_populate_popup_cb (G_GNUC_UNUSED GtkWidget *wid, GtkMenu *menu, UiForm
 		return;
 	
 	iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_grid));
+
+	/* actions */
+	GSList *actions_list, *list;
 	actions_list = browser_favorites_get_actions (browser_connection_get_favorites (bcnc),
 						      bcnc, GDA_SET (iter));
-	if (! actions_list)
-		return;
-
-	GtkWidget *mitem, *submenu;
-	mitem = gtk_menu_item_new_with_label (_("Execute action"));
-	gtk_widget_show (mitem);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
-
-	submenu = gtk_menu_new ();
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
-	for (list = actions_list; list; list = list->next) {
-		BrowserFavoriteAction *act = (BrowserFavoriteAction*) list->data;
-		mitem = gtk_menu_item_new_with_label (act->name);
+	if (actions_list) {
+		GtkWidget *mitem, *submenu;
+		mitem = gtk_menu_item_new_with_label (_("Execute action"));
 		gtk_widget_show (mitem);
-		gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
-		g_object_set_data_full (G_OBJECT (mitem), "action", act,
-					(GDestroyNotify) browser_favorites_free_action);
-		g_signal_connect (mitem, "activate",
-				  G_CALLBACK (execute_action_mitem_cb), formgrid);
+		gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
+		
+		submenu = gtk_menu_new ();
+		gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+		for (list = actions_list; list; list = list->next) {
+			BrowserFavoriteAction *act = (BrowserFavoriteAction*) list->data;
+			mitem = gtk_menu_item_new_with_label (act->name);
+			gtk_widget_show (mitem);
+			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
+			g_object_set_data_full (G_OBJECT (mitem), "action", act,
+						(GDestroyNotify) browser_favorites_free_action);
+			g_signal_connect (mitem, "activate",
+					  G_CALLBACK (execute_action_mitem_cb), formgrid);
+		}
+		g_slist_free (actions_list);
 	}
 
-	g_slist_free (actions_list);
+#ifdef HAVE_LDAP
+	/* LDAP specific */
+	if (browser_connection_is_ldap (bcnc)) {
+		GdaHolder *dnh;
+		dnh = gda_set_get_holder (GDA_SET (iter), "dn");
+		if (dnh) {
+			const GValue *cvalue;
+			cvalue = gda_holder_get_value (GDA_HOLDER (dnh));
+			if (!cvalue && (G_VALUE_TYPE (cvalue) != G_TYPE_STRING))
+				dnh = NULL;
+		}
+		if (!dnh) {
+			GSList *list;
+			for (list = GDA_SET (iter)->holders; list; list = list->next) {
+				const GValue *cvalue;
+				cvalue = gda_holder_get_value (GDA_HOLDER (list->data));
+				if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING) &&
+				    gda_ldap_is_dn (g_value_get_string (cvalue))) {
+					dnh = GDA_HOLDER (list->data);
+					break;
+				}
+			}
+		}
+
+		if (dnh) {
+			const GValue *cvalue;
+			cvalue = gda_holder_get_value (dnh);
+
+			GtkWidget *mitem;
+			mitem = gtk_menu_item_new_with_label (_("View LDAP entry's details"));
+			gtk_widget_show (mitem);
+			gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
+			g_object_set_data_full (G_OBJECT (mitem), "dn",
+						g_value_dup_string (cvalue), g_free);
+			g_signal_connect (mitem, "activate",
+					  G_CALLBACK (ldap_view_dn_mitem_cb), formgrid);
+		}
+	}
+#endif
 }
 
 typedef struct {
@@ -598,6 +647,21 @@ execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
 	}
 }
 
+#ifdef HAVE_LDAP
+static void ldap_view_dn_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
+{
+	const gchar *dn;
+	BrowserWindow *bwin;
+        BrowserPerspective *pers;
+
+	dn = g_object_get_data (G_OBJECT (menuitem), "dn");
+        bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) formgrid);
+        pers = browser_window_change_perspective (bwin, _("LDAP browser"));
+
+	ldap_browser_perspective_display_ldap_entry (LDAP_BROWSER_PERSPECTIVE (pers), dn);
+}
+#endif
+
 /**
  * ui_formgrid_new
  * @model: a #GdaDataModel
@@ -630,7 +694,8 @@ ui_formgrid_new (GdaDataModel *model, gboolean scroll_form, GdauiDataProxyInfoFl
 		      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS, NULL);
 
 	/* no more than 300 rows at a time */
-	gda_data_proxy_set_sample_size (proxy, 300);
+	if (model)
+		gda_data_proxy_set_sample_size (proxy, 300);
 
 	return (GtkWidget *) formgrid;
 }

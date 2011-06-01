@@ -2935,13 +2935,26 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
                 data_model = (GObject *) _gda_sqlite_recordset_new (cnc, ps, params, flags, col_types, empty_rs);
-		gda_connection_internal_statement_executed (cnc, stmt, params, NULL);
-		if (new_ps)
-			g_object_unref (ps);
-		if (allow_noparam)
-			g_object_set (data_model, "auto-reset", TRUE, NULL);
-		pending_blobs_free_list (blobs_list);
-		return data_model;
+		GError **exceptions;
+		exceptions = gda_data_model_get_exceptions (GDA_DATA_MODEL (data_model));
+		if (exceptions && exceptions[0]) {
+			GError *e;
+			e = g_error_copy (exceptions[0]);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
+			gda_connection_event_set_description (event, e->message ? e->message : _("No detail"));
+			g_propagate_error (error, e);
+			g_object_unref (data_model);
+			return NULL;
+		}
+		else {
+			gda_connection_internal_statement_executed (cnc, stmt, params, NULL);
+			if (new_ps)
+				g_object_unref (ps);
+			if (allow_noparam)
+				g_object_set (data_model, "auto-reset", TRUE, NULL);
+			pending_blobs_free_list (blobs_list);
+			return data_model;
+		}
         }
 	else {
                 int status, changes;

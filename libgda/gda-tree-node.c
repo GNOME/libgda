@@ -750,13 +750,35 @@ gda_tree_node_set_node_attribute (GdaTreeNode *node, const gchar *attribute, con
 {
 	const GValue *cvalue;
 	g_return_if_fail (GDA_IS_TREE_NODE (node));
+	g_return_if_fail (attribute);
 
 	cvalue = gda_attributes_manager_get (gda_tree_node_attributes_manager, node, attribute);
 	if ((value && cvalue && !gda_value_differ (cvalue, value)) ||
 	    (!value && !cvalue))
 		return;
 
-	gda_attributes_manager_set_full (gda_tree_node_attributes_manager, node, attribute, value, destroy);
+	if (!strcmp (attribute, GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN) &&
+	    (!value || (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))) {
+		gboolean ouc = FALSE;
+		gboolean nuc = FALSE;
+		if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_BOOLEAN) &&
+		    g_value_get_boolean (cvalue))
+			ouc = TRUE;
+
+		if (value && g_value_get_boolean (value))
+			nuc = TRUE;
+
+		if (ouc != nuc) {
+			gda_attributes_manager_set_full (gda_tree_node_attributes_manager, node,
+							 attribute, value, destroy);
+			g_signal_emit (node, gda_tree_node_signals[NODE_HAS_CHILD_TOGGLED], 0, node);
+			g_signal_emit (node, gda_tree_node_signals[NODE_CHANGED], 0, node);
+			return;
+		}
+	}
+
+	gda_attributes_manager_set_full (gda_tree_node_attributes_manager, node, attribute,
+					 value, destroy);
 	g_signal_emit (node, gda_tree_node_signals[NODE_CHANGED], 0, node);
 }
 

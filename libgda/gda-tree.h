@@ -73,6 +73,7 @@ void               gda_tree_add_manager   (GdaTree *tree, GdaTreeManager *manage
 void               gda_tree_clean         (GdaTree *tree);
 gboolean           gda_tree_update_all    (GdaTree *tree, GError **error);
 gboolean           gda_tree_update_part   (GdaTree *tree, GdaTreeNode *node, GError **error);
+gboolean           gda_tree_update_children (GdaTree *tree, GdaTreeNode *node, GError **error);
 
 GSList            *gda_tree_get_nodes_in_path (GdaTree *tree, const gchar *tree_path, gboolean use_names);
 GdaTreeNode       *gda_tree_get_node      (GdaTree *tree, const gchar *tree_path, gboolean use_names);

@@ -22,6 +22,8 @@
 
 #include "browser-perspective.h"
 #include "browser-page.h"
+#include "browser-window.h"
+#include "support.h"
 
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
 static void browser_perspective_class_init (gpointer g_class);
@@ -149,4 +151,140 @@ browser_perspective_page_tab_label_change (BrowserPerspective *pers, BrowserPage
 
 	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_page_tab_label_change)
 		(BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_page_tab_label_change) (pers, page);
+}
+
+/**
+ * browser_perspective_get_window:
+ * @pers: an object implementing the #BrowserPerspective interface
+ *
+ * Returns: (transfer none): the #BrowserWindow @perspective is in
+ */
+BrowserWindow *
+browser_perspective_get_window (BrowserPerspective *pers)
+{
+	g_return_val_if_fail (IS_BROWSER_PERSPECTIVE (pers), NULL);
+	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_window)
+		return (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_window) (pers);
+	else
+		return (BrowserWindow*) browser_find_parent_widget (GTK_WIDGET (pers),
+								    BROWSER_PERSPECTIVE_TYPE);
+}
+
+static void nb_page_added_or_removed_cb (GtkNotebook *nb, GtkWidget *child, guint page_num,
+					 BrowserPerspective *perspective);
+static void nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
+			       BrowserPerspective *perspective);
+static void adapt_notebook_for_fullscreen (BrowserPerspective *perspective);;
+static void fullscreen_changed_cb (BrowserWindow *bwin, gboolean fullscreen, BrowserPerspective *perspective);
+
+/**
+ * browser_perspective_declare_notebook:
+ * @pers: an object implementing the #BrowserPerspective interface
+ * @nb: a #GtkNotebook
+ *
+ * Internally used by browser's perspectives to declare they internally use a notebook
+ * which state is modified when switching to and from fullscreen
+ */
+void
+browser_perspective_declare_notebook (BrowserPerspective *perspective, GtkNotebook *nb)
+{
+	BrowserWindow *bwin;
+	g_return_if_fail (IS_BROWSER_PERSPECTIVE (perspective));
+	g_return_if_fail (! nb || GTK_IS_NOTEBOOK (nb));
+	
+	bwin = browser_perspective_get_window (perspective);
+	if (!bwin)
+		return;
+
+	GtkNotebook *onb;
+	onb = g_object_get_data (G_OBJECT (perspective), "fullscreen_nb");
+	if (onb) {
+		g_signal_handlers_disconnect_by_func (onb,
+						      G_CALLBACK (nb_page_added_or_removed_cb),
+						      perspective);
+		g_signal_handlers_disconnect_by_func (onb,
+						      G_CALLBACK (nb_switch_page_cb),
+						      perspective);
+		g_signal_handlers_disconnect_by_func (bwin,
+						      G_CALLBACK (fullscreen_changed_cb), perspective);
+
+	}
+
+	g_object_set_data (G_OBJECT (perspective), "fullscreen_nb", nb);
+	if (nb) {
+		g_signal_connect (bwin, "fullscreen-changed",
+				  G_CALLBACK (fullscreen_changed_cb), perspective);
+		g_signal_connect (nb, "page-added",
+				  G_CALLBACK (nb_page_added_or_removed_cb), perspective);
+		g_signal_connect (nb, "page-removed",
+				  G_CALLBACK (nb_page_added_or_removed_cb), perspective);
+		g_signal_connect (nb, "switch-page",
+				  G_CALLBACK (nb_switch_page_cb), perspective);
+		adapt_notebook_for_fullscreen (perspective);
+	}
+}
+
+static void
+nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num, BrowserPerspective *perspective)
+{
+	GtkWidget *page_contents;
+	GtkActionGroup *actions = NULL;
+	const gchar *ui = NULL;
+	BrowserWindow *bwin;
+
+	page_contents = gtk_notebook_get_nth_page (nb, page_num);
+	if (IS_BROWSER_PAGE (page_contents)) {
+		actions = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
+		ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
+	}
+
+	bwin = browser_perspective_get_window (perspective);
+	if (bwin)
+		browser_window_customize_perspective_ui (bwin, perspective, actions, ui);
+	if (actions)
+		g_object_unref (actions);
+}
+
+static void
+nb_page_added_or_removed_cb (GtkNotebook *nb, GtkWidget *child, guint page_num,
+			     BrowserPerspective *perspective)
+{
+	adapt_notebook_for_fullscreen (perspective);
+	if (gtk_notebook_get_n_pages (nb) == 0) {
+		BrowserWindow *bwin;
+		bwin = browser_perspective_get_window (perspective);
+		if (!bwin)
+			return;
+		browser_window_customize_perspective_ui (bwin,
+							 BROWSER_PERSPECTIVE (perspective),
+							 NULL, NULL);
+	}
+}
+
+static void
+fullscreen_changed_cb (G_GNUC_UNUSED BrowserWindow *bwin, gboolean fullscreen,
+		       BrowserPerspective *perspective)
+{
+	adapt_notebook_for_fullscreen (perspective);
+}
+
+static void
+adapt_notebook_for_fullscreen (BrowserPerspective *perspective)
+{
+	gboolean showtabs = TRUE;
+	gboolean fullscreen;
+	BrowserWindow *bwin;
+	GtkNotebook *nb;
+
+	bwin = browser_perspective_get_window (perspective);
+	if (!bwin)
+		return;
+	nb = g_object_get_data (G_OBJECT (perspective), "fullscreen_nb");
+	if (!nb)
+		return;
+
+	fullscreen = browser_window_is_fullscreen (bwin);
+	if (fullscreen && gtk_notebook_get_n_pages (nb) == 1)
+		showtabs = FALSE;
+	gtk_notebook_set_show_tabs (nb, showtabs);
 }

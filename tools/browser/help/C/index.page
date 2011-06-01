@@ -20,7 +20,8 @@
     for which a database driver (provider) exists in <app>libgda</app>
     (<link href="http://www.oracle.com">Oracle</link>, <link href="http://www.mysql.org">MySQL</link>,
     <link href="http://www.postgresql.org/">PostgreSQL</link>, <link href="http://www.sqlite.org">SQLite</link>,
-    MS Access (through the <link href="http://sourceforge.net/projects/mdbtools/">MDBTools</link> library) and
+    MS Access (through the <link href="http://sourceforge.net/projects/mdbtools/">MDBTools</link> library),
+    <link href="http://en.wikipedia.org/wiki/LDAP">LDAP</link> and
     <link href="http://java.sun.com/docs/books/tutorial/jdbc/index.html">JDBC</link> are supported at
     the moment). </p>
 

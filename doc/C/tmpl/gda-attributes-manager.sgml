@@ -81,6 +81,13 @@ Manager for lists of attributes
 
 
 
+<!-- ##### MACRO GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### STRUCT GdaAttributesManager ##### -->
 <para>
 

@@ -41,6 +41,9 @@
 #include "schema-browser/perspective-main.h"
 #include "query-exec/perspective-main.h"
 #include "data-manager/perspective-main.h"
+#ifdef HAVE_LDAP
+#include "ldap-browser/perspective-main.h"
+#endif
 /* #include "dummy-perspective/perspective-main.h" */
 
 extern BrowserCoreInitFactories browser_core_init_factories;
@@ -52,6 +55,9 @@ main_browser_core_init_factories (void)
 	factories = g_slist_append (factories, schema_browser_perspective_get_factory ());
 	factories = g_slist_append (factories, query_exec_perspective_get_factory ());
 	factories = g_slist_append (factories, data_manager_perspective_get_factory ());
+#ifdef HAVE_LDAP
+	factories = g_slist_append (factories, ldap_browser_perspective_get_factory ());
+#endif
 	/* factories = g_slist_append (factories, dummy_perspective_get_factory ()); */
 	return factories;
 }
@@ -246,7 +252,7 @@ main (int argc, char *argv[])
 					}
 				}
 			}
-			gtk_widget_destroy (dialog);
+			gtk_widget_destroy ((GtkWidget*) dialog);
 		}
 	}
 	

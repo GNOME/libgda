@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="DB_NAME" _name="Base name" _descr="Base distinguished name, starting point for the searches" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="HOST" _name="Database server" _descr="Host on which the LDAP server is running" gdatype="gchararray"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port (leave this field empty to use the default port)" gdatype="gint"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
+    <parameter id="USE_CACHE" _name="Cache server data" _descr="Use a cache to store some static server data (the cached files are in the user's cache directory), default is TRUE" gdatype="gboolean">
+      <gda_value>TRUE</gda_value>
+    </parameter>
+  </parameters>
+</data-set-spec>

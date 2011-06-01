@@ -116,6 +116,17 @@ A tree-structure
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_tree_update_children ##### -->
+<para>
+
+</para>
+
+@tree: 
+@node: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_tree_get_nodes_in_path ##### -->
 <para>
 

@@ -56,11 +56,13 @@ struct _GdauiTreeStoreClass
 	gboolean           (*drag_delete)   (GdauiTreeStore *store, const gchar *path);
 };
 
-GType           gdaui_tree_store_get_type             (void) G_GNUC_CONST;
+GType           gdaui_tree_store_get_type  (void) G_GNUC_CONST;
 
-GtkTreeModel   *gdaui_tree_store_new                  (GdaTree *tree, guint n_columns, ...);
-GtkTreeModel   *gdaui_tree_store_newv                 (GdaTree *tree, guint n_columns,
-						       GType *types, const gchar **attribute_names);
+GtkTreeModel   *gdaui_tree_store_new       (GdaTree *tree, guint n_columns, ...);
+GtkTreeModel   *gdaui_tree_store_newv      (GdaTree *tree, guint n_columns,
+					   GType *types, const gchar **attribute_names);
+GdaTreeNode    *gdaui_tree_store_get_node  (GdauiTreeStore *store, GtkTreeIter *iter);
+gboolean        gdaui_tree_store_get_iter  (GdauiTreeStore *store, GtkTreeIter *iter, GdaTreeNode *node);
 
 G_END_DECLS
 

@@ -208,8 +208,6 @@ Assorted functions for dealing with #GValue values.
 
 </para>
 
-@data: 
-@binary_length: 
 
 <!-- ##### FUNCTION gda_value_new_binary ##### -->
 <para>
@@ -379,8 +377,6 @@ Assorted functions for dealing with #GValue values.
 
 </para>
 
-@x: 
-@y: 
 
 <!-- ##### FUNCTION gda_geometricpoint_copy ##### -->
 <para>
@@ -446,10 +442,6 @@ Assorted functions for dealing with #GValue values.
 
 </para>
 
-@number: 
-@precision: 
-@width: 
-@reserved: 
 
 <!-- ##### FUNCTION gda_numeric_copy ##### -->
 <para>
@@ -491,11 +483,6 @@ Assorted functions for dealing with #GValue values.
 
 </para>
 
-@hour: 
-@minute: 
-@second: 
-@fraction: 
-@timezone: 
 
 <!-- ##### FUNCTION gda_time_copy ##### -->
 <para>
@@ -546,14 +533,6 @@ Assorted functions for dealing with #GValue values.
 
 </para>
 
-@year: representation of the date
-@month: month representation of the date, as a number between 1 and 12
-@day: day representation of the date, as a number between 1 and 31
-@hour: 
-@minute: 
-@second: 
-@fraction: 
-@timezone: 
 
 <!-- ##### FUNCTION gda_timestamp_copy ##### -->
 <para>

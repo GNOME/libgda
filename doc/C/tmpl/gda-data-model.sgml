@@ -118,6 +118,8 @@ values are accessible at the provided row).
 @GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR: 
 @GDA_DATA_MODEL_FILE_EXIST_ERROR: 
 @GDA_DATA_MODEL_XML_FORMAT_ERROR: 
+@GDA_DATA_MODEL_TRUNCATED_ERROR: 
+@GDA_DATA_MODEL_OTHER_ERROR: 
 
 <!-- ##### FUNCTION gda_data_model_get_n_rows ##### -->
 <para>
@@ -129,6 +131,15 @@ values are accessible at the provided row).
 
 
 <!-- ##### FUNCTION gda_data_model_get_n_columns ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_exceptions ##### -->
 <para>
 
 </para>

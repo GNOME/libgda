@@ -78,6 +78,16 @@ An implementation of #GdaDataModel based on a #GArray.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_array_new_with_g_types_v ##### -->
+<para>
+
+</para>
+
+@cols: 
+@types: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_array_copy_model ##### -->
 <para>
 

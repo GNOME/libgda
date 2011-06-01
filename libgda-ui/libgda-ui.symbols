@@ -172,6 +172,8 @@
 	gdaui_server_operation_get_type
 	gdaui_server_operation_new
 	gdaui_server_operation_new_in_dialog
+	gdaui_tree_store_get_iter
+	gdaui_tree_store_get_node
 	gdaui_tree_store_get_type
 	gdaui_tree_store_new
 	gdaui_tree_store_newv

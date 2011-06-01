@@ -2,6 +2,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
+	-I$(top_builddir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(LIBGDA_WFLAGS)

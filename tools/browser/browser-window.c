@@ -578,8 +578,11 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	for (plist = browser_core_get_factories (); plist; plist = plist->next) {
 		GtkAction *action;
 		const gchar *name;
-		
+
 		name = BROWSER_PERSPECTIVE_FACTORY (plist->data)->perspective_name;
+		if (!strcmp (name, _("LDAP browser")) && !browser_connection_is_ldap (bcnc))
+			continue;
+
 		action = GTK_ACTION (gtk_radio_action_new (name, name, NULL, NULL, FALSE));
 
 		if (!active_action && 
@@ -990,8 +993,8 @@ toolbar_hide_timeout_cb (BrowserWindow *bwin)
 		return TRUE;
 }
 
-#define BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD 5
-#define BWIN_WINDOW_FULLSCREEN_POPUP_TIMER 1
+#define BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD 15
+#define BWIN_WINDOW_FULLSCREEN_POPUP_TIMER 5
 
 static gboolean
 fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, G_GNUC_UNUSED gpointer user_data)

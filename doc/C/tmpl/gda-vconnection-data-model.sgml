@@ -28,6 +28,22 @@ The #GdaVproviderDataModel provider to use to create such connection objects.
 </para>
 
 
+<!-- ##### SIGNAL GdaVconnectionDataModel::vtable-created ##### -->
+<para>
+
+</para>
+
+@gdavconnectiondatamodel: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaVconnectionDataModel::vtable-dropped ##### -->
+<para>
+
+</para>
+
+@gdavconnectiondatamodel: the object which received the signal.
+@arg1: 
+
 <!-- ##### USER_FUNCTION GdaVconnectionDataModelFunc ##### -->
 <para>
 
@@ -115,6 +131,16 @@ The #GdaVproviderDataModel provider to use to create such connection objects.
 
 
 <!-- ##### FUNCTION gda_vconnection_data_model_get_model ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_vconnection_data_model_get ##### -->
 <para>
 
 </para>

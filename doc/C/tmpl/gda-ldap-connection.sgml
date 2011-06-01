@@ -1,0 +1,207 @@
+<!-- ##### SECTION Title ##### -->
+GdaLdapConnection
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### SECTION Image ##### -->
+
+
+<!-- ##### STRUCT GdaLdapConnection ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaLdapConnection:startup-file ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaLdapConnectionClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaLdapConnectionPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_ldap_connection_get_base_dn ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_ldap_connection_declare_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table_name: 
+@base_dn: 
+@filter: 
+@attributes: 
+@scope: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_ldap_connection_undeclare_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_ldap_dn_split ##### -->
+<para>
+
+</para>
+
+@dn: 
+@all: 
+@Returns: 
+
+
+<!-- ##### STRUCT GdaLdapAttribute ##### -->
+<para>
+
+</para>
+
+@attr_name: 
+@nb_values: 
+@values: 
+
+<!-- ##### STRUCT GdaLdapEntry ##### -->
+<para>
+
+</para>
+
+@dn: 
+@nb_attributes: 
+@attributes: 
+@attributes_hash: 
+
+<!-- ##### FUNCTION gda_ldap_is_dn ##### -->
+<para>
+
+</para>
+
+@dn: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_ldap_dn_split ##### -->
+<para>
+
+</para>
+
+@dn: 
+@all: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_ldap_describe_entry ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@dn: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_ldap_entry_free ##### -->
+<para>
+
+</para>
+
+@entry: 
+
+
+<!-- ##### FUNCTION gda_ldap_get_entry_children ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@dn: 
+@attributes: 
+@error: 
+@Returns: 
+
+
+<!-- ##### ENUM GdaLdapClassKind ##### -->
+<para>
+
+</para>
+
+@GDA_LDAP_CLASS_KIND_ABSTRACT: 
+@GDA_LDAP_CLASS_KIND_STRUTURAL: 
+@GDA_LDAP_CLASS_KIND_AUXILIARY: 
+@GDA_LDAP_CLASS_KIND_UNKNOWN: 
+
+<!-- ##### STRUCT GdaLdapClass ##### -->
+<para>
+
+</para>
+
+@oid: 
+@nb_names: 
+@names: 
+@description: 
+@kind: 
+@obsolete: 
+@nb_req_attributes: 
+@req_attributes: 
+@nb_opt_attributes: 
+@opt_attributes: 
+@parents: 
+@children: 
+
+<!-- ##### FUNCTION gda_ldap_get_class_info ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@classname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_ldap_get_top_classes ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+

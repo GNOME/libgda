@@ -19,8 +19,8 @@ marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 libperspective_la_SOURCES = \
         marshal.c \
         marshal.h \
-	query-console.c \
-	query-console.h \
+	query-console-page.c \
+	query-console-page.h \
 	query-editor.c \
 	query-editor.h \
 	query-favorite-selector.c \

@@ -281,6 +281,8 @@ gdaui_server_operation_get_type
 GdauiTreeStore
 gdaui_tree_store_new
 gdaui_tree_store_newv
+gdaui_tree_store_get_node
+gdaui_tree_store_get_iter
 <SUBSECTION Standard>
 GDAUI_TREE_STORE
 GDAUI_IS_TREE_STORE

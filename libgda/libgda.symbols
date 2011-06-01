@@ -269,6 +269,11 @@
 	gda_data_model_iter_move_to_row
 	gda_data_model_iter_move_to_row_default
 	gda_data_model_iter_set_value_at
+#ifdef HAVE_LDAP
+	gda_data_model_ldap_compute_columns
+	gda_data_model_ldap_get_type
+	gda_data_model_ldap_new
+#endif
 	gda_data_model_remove_row
 	gda_data_model_reset
 	gda_data_model_row_inserted
@@ -405,6 +410,20 @@
 	gda_insert_row_into_table
 	gda_insert_row_into_table_v
 	gda_lang_locale
+#ifdef HAVE_LDAP
+	gda_ldap_connection_get_type
+	gda_ldap_get_class_info
+	gda_ldap_get_top_classes
+	gda_ldap_connection_declare_table
+	gda_ldap_connection_describe_table
+	gda_ldap_connection_get_base_dn
+	gda_ldap_connection_undeclare_table
+	gda_ldap_describe_entry
+	gda_ldap_dn_split
+	gda_ldap_entry_free
+	gda_ldap_get_entry_children
+	gda_ldap_is_dn
+#endif
 	gda_locale_changed
 	gda_lockable_get_type
 	gda_lockable_lock
@@ -862,6 +881,10 @@
 	gda_tree_mgr_columns_new
 	gda_tree_mgr_label_get_type
 	gda_tree_mgr_label_new
+#ifdef HAVE_LDAP
+	gda_tree_mgr_ldap_get_type
+	gda_tree_mgr_ldap_new
+#endif
 	gda_tree_mgr_schemas_get_type
 	gda_tree_mgr_schemas_new
 	gda_tree_mgr_select_get_type
@@ -883,6 +906,7 @@
 	gda_tree_node_set_node_attribute
 	gda_tree_set_attribute
 	gda_tree_update_all
+	gda_tree_update_children
 	gda_tree_update_part
 	gda_update_row_in_table
 	gda_update_row_in_table_v

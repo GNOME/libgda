@@ -359,6 +359,22 @@ Methods dedicated to implementing providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_meta_store_modify_v ##### -->
+<para>
+
+</para>
+
+@store: 
+@table_name: 
+@new_data: 
+@condition: 
+@nvalues: 
+@value_names: 
+@values: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_meta_store_modify_with_context ##### -->
 <para>
 

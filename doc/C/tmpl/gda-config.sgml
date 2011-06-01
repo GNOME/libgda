@@ -68,9 +68,6 @@ g_object_new (GDA_TYPE_CONFIG, "user-filename", "my_file", NULL);
 
 </para>
 
-@: 
-@:
-
 @gdaconfig: the object which received the signal.
 @arg1: 
 
@@ -78,9 +75,6 @@ g_object_new (GDA_TYPE_CONFIG, "user-filename", "my_file", NULL);
 <para>
 
 </para>
-
-@: 
-@:
 
 @gdaconfig: the object which received the signal.
 @arg1: 
@@ -90,9 +84,6 @@ g_object_new (GDA_TYPE_CONFIG, "user-filename", "my_file", NULL);
 
 </para>
 
-@: 
-@:
-
 @gdaconfig: the object which received the signal.
 @arg1: 
 
@@ -100,9 +91,6 @@ g_object_new (GDA_TYPE_CONFIG, "user-filename", "my_file", NULL);
 <para>
 
 </para>
-
-@: 
-@:
 
 @gdaconfig: the object which received the signal.
 @arg1: 

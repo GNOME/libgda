@@ -30,7 +30,6 @@ Execute the same statement several times with different values
 
 </para>
 
-@parent_instance: 
 
 <!-- ##### FUNCTION gda_repetitive_statement_new ##### -->
 <para>

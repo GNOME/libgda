@@ -12,6 +12,7 @@ m4_include(m4/mysql.m4)
 m4_include(m4/postgresql.m4)
 m4_include(m4/oracle.m4)
 m4_include(m4/java.m4)
+m4_include(m4/ldap.m4)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
@@ -310,7 +311,7 @@ dnl ******************************
 dnl linklibext is the shared link library extension, which varies by platform
 
 EXPORT_SYM_REGEX='-export-symbols-regex "^(gda_|fnYM49765777344607__gda).*"'
-EXPORT_PROV_SYM_REGEX='-export-symbols-regex "^(plugin_|Java_|g_module).*"'
+EXPORT_PROV_SYM_REGEX='-export-symbols-regex "^(plugin_|Java_|g_module|gdaprov_).*"'
 EXPORT_UI_SYM_REGEX='-export-symbols-regex "^(gdaui_).*"'
 AC_MSG_CHECKING([for platform])
 platform_win32=no
@@ -573,6 +574,9 @@ ORACLE_CHECK($lib)
 
 dnl Test for JAVA and JDBC
 JAVA_CHECK()
+
+dnl Test for LDAP
+LDAP_CHECK($lib)
 
 dnl test for FireBird
 try_firebird=true
@@ -840,6 +844,7 @@ libgda/providers-support/Makefile
 libgda/sql-parser/Makefile
 libgda/sqlite/Makefile
 libgda/sqlite/sqlite-src/Makefile
+libgda/sqlite/virtual/libgda-virtual.h
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile
 providers/Makefile
@@ -863,6 +868,8 @@ providers/sqlite/Makefile
 providers/sqlite/libgda-sqlite-4.0.pc
 providers/jdbc/Makefile
 providers/jdbc/libgda-jdbc-4.0.pc
+providers/ldap/Makefile
+providers/ldap/libgda-ldap-4.0.pc
 providers/web/Makefile
 providers/web/libgda-web-4.0.pc
 providers/skel-implementation/Makefile
@@ -897,6 +904,7 @@ tools/browser/common/Makefile
 tools/browser/schema-browser/Makefile
 tools/browser/query-exec/Makefile
 tools/browser/data-manager/Makefile
+tools/browser/ldap-browser/Makefile
 tools/browser/dummy-perspective/Makefile
 tools/browser/canvas/Makefile
 tools/browser/doc/Makefile
@@ -961,6 +969,7 @@ echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system 
 echo "      SQLCipher = `if test x$enable_crypto != xyes; then echo no; else echo yes; fi`"
 echo "      JDBC = $java_found"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
+echo "      LDAP = `if test x$ldap_found = xyes; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
 then
        echo "   Binreloc support is disabled: Libgda will not be relocatable. To enable binreloc support re-run with --enable-binreloc (see http://autopackage.org/docs/binreloc for more information)"

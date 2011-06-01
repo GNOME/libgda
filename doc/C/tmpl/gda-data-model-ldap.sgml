@@ -1,0 +1,98 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelLdap
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### SECTION Image ##### -->
+
+
+<!-- ##### STRUCT GdaDataModelLdap ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataModelLdap:attributes ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelLdap:base ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelLdap:cnc ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelLdap:filter ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelLdap:scope ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaDataModelLdapClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaDataModelLdapPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GdaLdapSearchScope ##### -->
+<para>
+
+</para>
+
+@GDA_LDAP_SEARCH_BASE: 
+@GDA_LDAP_SEARCH_ONELEVEL: 
+@GDA_LDAP_SEARCH_SUBTREE: 
+
+<!-- ##### FUNCTION gda_data_model_ldap_new ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@base_dn: 
+@filter: 
+@attributes: 
+@scope: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_ldap_compute_columns ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@attributes: 
+@Returns: 
+
+

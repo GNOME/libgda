@@ -2,6 +2,13 @@ bin_PROGRAMS=gda-browser-4.0
 noinst_LTLIBRARIES = libbrowser.la
 
 SUBDIRS = data common schema-browser query-exec data-manager dummy-perspective
+
+if LDAP
+ldap_flags=-DHAVE_LDAP
+SUBDIRS+=ldap-browser
+LDAP_LDADD=$(top_builddir)/tools/browser/ldap-browser/libperspective.la
+endif
+
 if HAVE_GOOCANVAS
 SUBDIRS+=canvas
 noinst_PROGRAMS=canvas-example
@@ -15,6 +22,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir) \
         -I$(top_srcdir)/libgda \
         -I$(top_srcdir)/libgda/sqlite \
+	-I$(top_builddir)/libgda/sqlite \
         -I$(top_builddir) \
         $(LIBGDA_CFLAGS) \
 	$(LIBGDA_WFLAGS) \
@@ -24,7 +32,8 @@ AM_CPPFLAGS = \
         -DPREFIX=\""$(prefix)"\" \
         -DSYSCONFDIR=\""$(sysconfdir)"\" \
         -DDATADIR=\""$(datadir)"\" \
-        -DLIBDIR=\""$(libdir)"\"
+        -DLIBDIR=\""$(libdir)"\" \
+	$(ldap_flags)
 
 marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_marshal > $@
@@ -104,6 +113,7 @@ gda_browser_4_0_LDADD=\
 	schema-browser/libperspective.la \
 	query-exec/libperspective.la \
 	data-manager/libperspective.la \
+	$(LDAP_LDADD) \
 	libbrowser.la \
 	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
 	$(CANVAS_LDADD) \
@@ -167,7 +177,15 @@ icons_DATA= \
 	gda-browser-action.png \
 	gda-browser-form.png \
 	gda-browser-grid.png \
-	gda-browser-menu-ind.png
+	gda-browser-menu-ind.png \
+	gda-browser-ldap-entry.png \
+	gda-browser-ldap-group.png \
+	gda-browser-ldap-organization.png \
+	gda-browser-ldap-person.png \
+	gda-browser-ldap-class-a.png \
+	gda-browser-ldap-class-s.png \
+	gda-browser-ldap-class-x.png \
+	gda-browser-ldap-class-u.png
 
 # app icon
 appiconsdir=$(datadir)/pixmaps

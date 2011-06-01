@@ -31,13 +31,13 @@ current_dir=`pwd`
 archive=${current_dir}/libgda-${version}.zip
 archive_dev=${current_dir}/libgda-dev-${version}.zip
 archive_ext=${current_dir}/libgda-dep-${version}.zip
-nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh prov_oracle.nsh prov_postgresql.nsh prov_sqlite.nsh prov_web.nsh)
+nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh prov_oracle.nsh prov_postgresql.nsh prov_sqlite.nsh prov_web.nsh prov_ldap.nsh)
 
 # remove current archive if it exists
 rm -f $archive $archive_dev $archive_ext
 rm -f *.nsh *.exe
 
-if test $CLEAN == "yes"
+if test $CLEAN = "yes"
 then
     exit 0
 fi
@@ -213,6 +213,12 @@ Section /o "Web" SEC08
   SetOverwrite try
 EOF
 
+cat > prov_ldap.nsh <<EOF
+Section "Ldap" SEC09
+  SetOutPath "\$INSTDIR\bin"
+  SetOverwrite try
+EOF
+
 cat > config.nsh <<EOF
 !define PRODUCT_VERSION "$version"
 EOF
@@ -256,6 +262,9 @@ files=(iconv.dll libeay32.dll libiconv-2.dll libintl-8.dll libpq.dll libxml2.dll
 add_files_to_zip $archive_ext ${depend_path}/pgsql bin $files
 add_files_to_nsh prov_postgresql ${depend_path}/pgsql bin $files
 
+files=(liblber.dll libldap.dll)
+add_files_to_zip $archive_ext ${depend_path}/ldap bin $files
+add_files_to_nsh prov_ldap ${depend_path}/ldap bin $files
 
 #
 # dependencies from the cross compilation environment
@@ -298,6 +307,9 @@ files=(oracle_specs_dsn.xml oracle_specs_create_table.xml)
 add_files_to_zip $archive $prefix share/libgda-4.0 $files
 add_files_to_nsh prov_oracle $prefix share/libgda-4.0 $files
 
+files=(ldap_specs_auth.xml ldap_specs_dsn.xml)
+add_files_to_zip $archive $prefix share/libgda-4.0 $files
+add_files_to_nsh prov_ldap $prefix share/libgda-4.0 $files
 
 files=(gdaui-generic.png)
 add_files_to_zip $archive $prefix share/libgda-4.0/pixmaps $files
@@ -423,6 +435,10 @@ files=(libgda-web.dll)
 add_files_to_zip $archive $prefix lib/libgda-4.0/providers $files
 add_files_to_nsh prov_web $prefix lib/libgda-4.0/providers $files
 
+files=(libgda-ldap.dll)
+add_files_to_zip $archive $prefix lib/libgda-4.0/providers $files
+add_files_to_nsh prov_ldap $prefix lib/libgda-4.0/providers $files
+
 files=(libgda-oracle.dll)
 add_files_to_zip $archive $prefix lib/libgda-4.0/providers $files
 add_files_to_nsh prov_oracle $prefix lib/libgda-4.0/providers $files
@@ -485,7 +501,7 @@ add_files_to_zip $archive_dev $prefix share/libgda-4.0/demo $files
 #
 # doc
 #
-add_all_files_to_zip $archive_dev $prefix share/gtk-doc/html/libgda-4.0
+#add_all_files_to_zip $archive_dev $prefix share/gtk-doc/html/libgda-4.0
 
 #
 # translations

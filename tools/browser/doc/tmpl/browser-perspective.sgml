@@ -67,6 +67,15 @@ A "perspective" in a #BrowserWindow window
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_perspective_get_window ##### -->
+<para>
+
+</para>
+
+@perspective: 
+@Returns: 
+
+
 <!-- ##### FUNCTION browser_perspective_get_actions_group ##### -->
 <para>
 
@@ -102,5 +111,14 @@ A "perspective" in a #BrowserWindow window
 
 @perspective: 
 @page: 
+
+
+<!-- ##### FUNCTION browser_perspective_declare_notebook ##### -->
+<para>
+
+</para>
+
+@perspective: 
+@nb: 
 
 

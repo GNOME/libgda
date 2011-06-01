@@ -1,6 +1,6 @@
 /*
  *  Copyright © 2002 Jorn Baayen
- *  Copyright © 2009 Vivien Malerba <malerba@nome-db.org>
+ *  Copyright © 2009 - 2011 Vivien Malerba <malerba@nome-db.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,6 +48,8 @@ browser_stock_icons_init (void)
 		{ BROWSER_STOCK_COMMIT, N_("Commit"), 0, 0, NULL },
 		{ BROWSER_STOCK_ROLLBACK, N_("Rollback"), 0, 0, NULL },
 		{ BROWSER_STOCK_BUILDER, N_("Builder"), 0, 0, NULL },
+		{ BROWSER_STOCK_LDAP_ENTRIES, N_("Ldap entries"), 0, 0, NULL },
+		{ BROWSER_STOCK_TABLE_ADD, N_("Add table"), 0, 0, NULL},
 	};
 
 	factory = gtk_icon_factory_new ();

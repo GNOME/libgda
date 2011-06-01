@@ -36,6 +36,8 @@
 #include <libgda/gda-data-comparator.h>
 #include <libgda/gda-data-model-array.h>
 @LIBGDA_BDB_INC@
+@LIBGDA_LDAP_INC@
+@LIBGDA_LDAP_INC2@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-data-model-import.h>

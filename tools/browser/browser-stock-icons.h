@@ -1,6 +1,6 @@
 /*
  *  Copyright © 2002 Jorn Baayen
- *  Copyright © 2009 Vivien Malerba <malerba@nome-db.org>
+ *  Copyright © 2009 - 2011 Vivien Malerba <malerba@nome-db.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,9 @@ G_BEGIN_DECLS
 #define BROWSER_STOCK_COMMIT          "transaction-commit"
 #define BROWSER_STOCK_ROLLBACK        "transaction-rollback"
 #define BROWSER_STOCK_BUILDER         "glade"
+#define BROWSER_STOCK_LDAP_ENTRIES    "ldap-entries"
+#define BROWSER_STOCK_TABLE_ADD       "table-add"
+
 
 /* Named icons defined in fd.o Icon Naming Spec */
 #define STOCK_NEW_WINDOW           "window-new"

@@ -4,10 +4,17 @@ lib_LTLIBRARIES = libgda-4.0.la
 
 SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper
 
+DEF_FLAGS=
 if BDB 
 GDA_BDB_H=gda-data-model-bdb.h
 GDA_BDB_S=gda-data-model-bdb.c
-DEF_FLAGS=-DHAVE_BDB
+DEF_FLAGS+=-DHAVE_BDB
+endif
+
+if LDAP 
+GDA_LDAP_H=gda-data-model-ldap.h gda-tree-mgr-ldap.h
+GDA_LDAP_S=gda-data-model-ldap.c gda-tree-mgr-ldap.c
+DEF_FLAGS+=-DHAVE_LDAP
 endif
 
 GLOBAL_CFLAGS = \
@@ -15,6 +22,7 @@ GLOBAL_CFLAGS = \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
+	-I$(top_builddir)/libgda/sqlite \
 	-DABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(LIBGDA_CFLAGS) \
 	$(BDB_CFLAGS) \
@@ -52,6 +60,7 @@ gda_headers = \
 	gda-data-model-array.h \
 	gda-data-model.h \
 	$(GDA_BDB_H) \
+	$(GDA_LDAP_H) \
 	gda-data-model-dir.h \
 	gda-data-model-extra.h \
 	gda-data-model-import.h \
@@ -111,6 +120,7 @@ gda_sources= \
 	gda-data-handler.c \
 	gda-data-model-array.c \
 	$(GDA_BDB_S) \
+	$(GDA_LDAP_S) \
 	gda-data-model.c \
 	gda-data-model-dir.c \
 	gda-data-model-dsn-list.c \

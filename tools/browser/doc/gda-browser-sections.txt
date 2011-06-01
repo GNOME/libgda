@@ -128,6 +128,7 @@ BrowserFavoritesAttributes
 <TITLE>BrowserFavorites</TITLE>
 BrowserFavorites
 browser_favorites_new
+browser_favorites_type_to_string
 browser_favorites_add
 browser_favorites_list
 browser_favorites_delete
@@ -156,10 +157,13 @@ IS_BROWSER_PERSPECTIVE
 BROWSER_PERSPECTIVE_GET_CLASS
 BrowserPerspective
 browser_perspective_get_type
+browser_perspective_get_window
 browser_perspective_get_actions_group
 browser_perspective_get_actions_ui
 browser_perspective_get_current_customization
 browser_perspective_page_tab_label_change
+<SUBSECTION>
+browser_perspective_declare_notebook
 </SECTION>
 
 <SECTION>

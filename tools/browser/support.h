@@ -30,6 +30,9 @@
 #include <gtkosxapplication.h>
 extern GtkOSXApplication *theApp;
 #endif
+#ifdef HAVE_LDAP
+#include <libgda/sqlite/virtual/gda-ldap-connection.h>
+#endif
 
 G_BEGIN_DECLS
 
@@ -59,7 +62,7 @@ GtkWidget          *browser_make_tree_view (GtkTreeModel *model);
 GtkWidget          *browser_find_parent_widget (GtkWidget *current, GType requested_type);
 
 /*
- * icons
+ * icons, see browser_get_pixbuf_icon() for the associated icons
  */
 typedef enum {
 	BROWSER_ICON_BOOKMARK,
@@ -80,10 +83,23 @@ typedef enum {
 
 	BROWSER_ICON_MENU_INDICATOR,
 
+	BROWSER_ICON_LDAP_ENTRY,
+	BROWSER_ICON_LDAP_GROUP,
+	BROWSER_ICON_LDAP_ORGANIZATION,
+	BROWSER_ICON_LDAP_PERSON,
+	BROWSER_ICON_LDAP_CLASS_STRUCTURAL,
+	BROWSER_ICON_LDAP_CLASS_ABSTRACT,
+	BROWSER_ICON_LDAP_CLASS_AUXILIARY,
+	BROWSER_ICON_LDAP_CLASS_UNKNOWN,
+
 	BROWSER_ICON_LAST
 } BrowserIconType;
 
 GdkPixbuf          *browser_get_pixbuf_icon (BrowserIconType type);
+#ifdef HAVE_LDAP
+GdkPixbuf          *browser_get_pixbuf_for_ldap_class (GdaLdapClassKind kind);
+const gchar        *browser_get_kind_for_ldap_class (GdaLdapClassKind kind);
+#endif
 
 /*
  * Connections list

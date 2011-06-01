@@ -47,9 +47,16 @@ typedef enum {
 	BROWSER_FAVORITES_DIAGRAMS = 1 << 1,
 	BROWSER_FAVORITES_QUERIES  = 1 << 2,
 	BROWSER_FAVORITES_DATA_MANAGERS  = 1 << 3,
-	BROWSER_FAVORITES_ACTIONS  = 1 << 4
+	BROWSER_FAVORITES_ACTIONS  = 1 << 4,
+	BROWSER_FAVORITES_LDAP_DN  = 1 << 5,
+	BROWSER_FAVORITES_LDAP_CLASS = 1 << 6
 } BrowserFavoritesType;
-#define BROWSER_FAVORITES_NB_TYPES 5
+#define BROWSER_FAVORITES_NB_TYPES 7
+
+#define ORDER_KEY_SCHEMA 1
+#define ORDER_KEY_QUERIES 2
+#define ORDER_KEY_DATA_MANAGERS 3
+#define ORDER_KEY_LDAP 4
 
 /**
  * BrowserFavoritesAttributes:
@@ -85,13 +92,14 @@ struct _BrowserFavoritesClass
 GType               browser_favorites_get_type               (void) G_GNUC_CONST;
 
 BrowserFavorites   *browser_favorites_new                    (GdaMetaStore *store);
-
+const gchar        *browser_favorites_type_to_string (BrowserFavoritesType type);
 gboolean            browser_favorites_add          (BrowserFavorites *bfav, guint session_id,
 						    BrowserFavoritesAttributes *fav,
 						    gint order_key, gint pos,
 						    GError **error);
 GSList             *browser_favorites_list         (BrowserFavorites *bfav, guint session_id, 
 						    BrowserFavoritesType type, gint order_key, GError **error);
+
 gboolean            browser_favorites_delete       (BrowserFavorites *bfav, guint session_id,
 						    BrowserFavoritesAttributes *fav, GError **error);
 void                browser_favorites_free_list    (GSList *fav_list);

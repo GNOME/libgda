@@ -133,6 +133,15 @@ An opened connection
 @Returns: 
 
 
+<!-- ##### FUNCTION browser_connection_is_virtual ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION browser_connection_is_busy ##### -->
 <para>
 

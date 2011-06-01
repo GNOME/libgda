@@ -9,6 +9,13 @@ endif
 
 noinst_LTLIBRARIES = libgda-virtual-4.0.la
 
+if LDAP
+GDA_LDAP_H=gda-ldap-connection.h
+GDA_LDAP_S=gda-ldap-connection.c
+DEF_FLAGS=-DHAVE_LDAP
+endif
+
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
@@ -27,6 +34,7 @@ virtual_headers = \
 	gda-vprovider-hub.h \
 	gda-virtual-connection.h \
 	gda-virtual-provider.h \
+	$(GDA_LDAP_H) \
 	libgda-virtual.h
 
 libgda_virtual_4_0_la_SOURCES = \
@@ -37,7 +45,8 @@ libgda_virtual_4_0_la_SOURCES = \
 	gda-vprovider-data-model.c \
 	gda-vprovider-hub.c \
 	gda-virtual-connection.c \
-	gda-virtual-provider.c 
+	$(GDA_LDAP_S) \
+	gda-virtual-provider.c
 
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/virtual
 gdainclude_HEADERS=$(virtual_headers)

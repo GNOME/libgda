@@ -201,8 +201,14 @@ meta_store_addons_init (BrowserFavorites *bfav, GError **error)
 	return TRUE;
 }
 
-static const gchar *
-favorite_type_to_string (BrowserFavoritesType type)
+/**
+ * browser_favorites_type_to_string:
+ * @type: a #BrowserFavoritesType
+ *
+ * Returns: a string representing @type
+ */
+const gchar *
+browser_favorites_type_to_string (BrowserFavoritesType type)
 {
 	switch (type) {
 	case BROWSER_FAVORITES_TABLES:
@@ -215,6 +221,10 @@ favorite_type_to_string (BrowserFavoritesType type)
 		return "DATAMAN";
 	case BROWSER_FAVORITES_ACTIONS:
 		return "ACTION";
+	case BROWSER_FAVORITES_LDAP_DN:
+		return "LDAP_DN";
+	case BROWSER_FAVORITES_LDAP_CLASS:
+		return "LDAP_CLASS";
 	default:
 		g_warning ("Unknown type of favorite");
 	}
@@ -237,6 +247,12 @@ favorite_string_to_type (const gchar *str)
 		return BROWSER_FAVORITES_QUERIES;
 	else if (*str == 'A')
 		return BROWSER_FAVORITES_ACTIONS;
+	else if (*str == 'L') {
+		if (strlen (str) == 7)
+			return BROWSER_FAVORITES_LDAP_DN;
+		else
+			return BROWSER_FAVORITES_LDAP_CLASS;
+	}
 	else
 		g_warning ("Unknown type '%s' of favorite", str);
 	return 0;
@@ -555,7 +571,7 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 	params = gda_set_new_inline (8,
 				     "session", G_TYPE_INT, session_id,
 				     "id", G_TYPE_INT, fav->id,
-				     "type", G_TYPE_STRING, favorite_type_to_string (rtype),
+				     "type", G_TYPE_STRING, browser_favorites_type_to_string (rtype),
 				     "name", G_TYPE_STRING, fav->name ? fav->name : efav.name,
 				     "contents", G_TYPE_STRING, fav->contents,
 				     "rank", G_TYPE_INT, pos,
@@ -719,7 +735,7 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		g_object_unref (params);
 	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
 	g_signal_emit (bfav, browser_favorites_signals [FAV_CHANGED],
-		       g_quark_from_string (favorite_type_to_string (rtype)));
+		       g_quark_from_string (browser_favorites_type_to_string (rtype)));
 	return TRUE;
 
  err:
@@ -842,7 +858,7 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 	for (i = 0, flag = 1; i < BROWSER_FAVORITES_NB_TYPES; i++, flag <<= 1) {
 		if (type & flag) {
 			gchar *str;
-			str = g_strdup_printf ("'%s'", favorite_type_to_string (flag));
+			str = g_strdup_printf ("'%s'", browser_favorites_type_to_string (flag));
 			or_cond_ids [or_cond_size] = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 							     gda_sql_builder_add_id (b, "fav.type"),
 							     gda_sql_builder_add_id (b, str),
@@ -1037,7 +1053,7 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 	gda_lockable_unlock (GDA_LOCKABLE (bfav->priv->store_cnc));
 	if (retval)
 		g_signal_emit (bfav, browser_favorites_signals [FAV_CHANGED],
-			       g_quark_from_string (favorite_type_to_string (efav.type)));
+			       g_quark_from_string (browser_favorites_type_to_string (efav.type)));
 	browser_favorites_reset_attributes (&efav);
 	if (params)
 		g_object_unref (G_OBJECT (params));

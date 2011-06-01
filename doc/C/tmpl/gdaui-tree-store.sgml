@@ -103,3 +103,24 @@ Bridge between a GdaTree and a GtkTreeModel
 @Returns: 
 
 
+<!-- ##### FUNCTION gdaui_tree_store_get_node ##### -->
+<para>
+
+</para>
+
+@store: 
+@iter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gdaui_tree_store_get_iter ##### -->
+<para>
+
+</para>
+
+@store: 
+@iter: 
+@node: 
+@Returns: 
+
+

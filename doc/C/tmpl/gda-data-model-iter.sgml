@@ -81,8 +81,6 @@ any case it will not prevent the data model from being destroyed).
 
 </para>
 
-@:
-
 @gdadatamodeliter: the object which received the signal.
 @arg1: 
 
