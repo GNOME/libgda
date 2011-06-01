@@ -1,3 +1,10 @@
+libgda 4.99.1, 2011-06-01
+
+ - Many GTK3 adaptations (GtkApplication instead of libunique, code cleanups)
+ - New LDAP provider (read only for the moment)
+ - Improvements and corrections from the 4.2 branch
+ - Translations from the 4.2 branch
+
 libgda 4.99.0, 2011-03-05
 
  - Adaptations to the GTK3 environment (requires gtk+-3.0 >= 3.0.0):
