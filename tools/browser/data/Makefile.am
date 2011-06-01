@@ -20,9 +20,12 @@ private_icons = \
 	hicolor_actions_24x24_transaction-commit.png \
 	hicolor_actions_24x24_transaction-rollback.png \
 	hicolor_actions_24x24_glade.png \
+	hicolor_actions_24x24_table-add.png \
 	hicolor_actions_32x32_bookmark-view.png \
 	hicolor_actions_32x32_history-view.png \
 	hicolor_actions_32x32_glade.png \
+	hicolor_actions_32x32_ldap-entries.png \
+	hicolor_actions_32x32_table-add.png \
 	hicolor_actions_scalable_bookmark-view.svg \
 	hicolor_actions_scalable_history-view.svg \
 	hicolor_actions_scalable_glade.svg \

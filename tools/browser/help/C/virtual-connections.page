@@ -123,6 +123,18 @@ WHERE "Error code"=0
       <title>New opened virtual connection</title>
       <media type="image" mime="image/png" src="figures/virtual-cnc-3.png"/>
     </figure>
+  </section>
 
+  <section id="virtual-ddl-sql">
+    <title>SQL useable with virtual connections</title>
+    <p>
+      You can use the SQL understood by <link href="http://sqlite.org/lang.html">SQLite</link> in any virtual
+      connection. Be aware however that if you define database objects (outside of the extended SQL
+      presented next section), they will be lost the next time the virtual connection is opened.
+    </p>
+    <p>
+      See the <link xref="sql-sqlite">SQL understood by LDAP connections and virtual connections</link>
+      section for more information.
+    </p>
   </section>
 </page>

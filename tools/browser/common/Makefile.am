@@ -1,13 +1,19 @@
 noinst_LTLIBRARIES = libcommon.la
 
+if LDAP
+ldap_flags=-DHAVE_LDAP
+endif
+
 AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
+	-I$(top_srcdir)/libgda/sqlite \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	$(GTK_CFLAGS) \
-	$(MAC_INTEGRATION_CFLAGS)
+	$(MAC_INTEGRATION_CFLAGS) \
+	$(ldap_flags)
 
 marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_common_marshal > $@

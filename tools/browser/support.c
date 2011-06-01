@@ -371,7 +371,7 @@ GdkPixbuf *
 browser_get_pixbuf_icon (BrowserIconType type)
 {
 	static GdkPixbuf **array = NULL;
-	static const gchar* names[] = {
+	static const gchar* names[] = { /* array indexed by BrowserIconType */
 		"gda-browser-bookmark.png",
 		"gda-browser-schema.png",
 		"gda-browser-table.png",
@@ -387,6 +387,14 @@ browser_get_pixbuf_icon (BrowserIconType type)
 		"gda-browser-grid.png",
 		"gda-browser-form.png",
 		"gda-browser-menu-ind.png",
+		"gda-browser-ldap-entry.png",
+		"gda-browser-ldap-group.png",
+		"gda-browser-ldap-organization.png",
+		"gda-browser-ldap-person.png",
+		"gda-browser-ldap-class-s.png",
+		"gda-browser-ldap-class-a.png",
+		"gda-browser-ldap-class-x.png",
+		"gda-browser-ldap-class-u.png",
 	};
 
 	if (!array)
@@ -405,6 +413,45 @@ browser_get_pixbuf_icon (BrowserIconType type)
 	else
 		return array [type];
 }
+
+#ifdef HAVE_LDAP
+/**
+ * browser_get_pixbuf_for_ldap_class:
+ */
+GdkPixbuf *
+browser_get_pixbuf_for_ldap_class (GdaLdapClassKind kind)
+{
+	switch (kind) {
+	case GDA_LDAP_CLASS_KIND_ABSTRACT:
+		return browser_get_pixbuf_icon (BROWSER_ICON_LDAP_CLASS_ABSTRACT);
+        case GDA_LDAP_CLASS_KIND_STRUTURAL:
+		return browser_get_pixbuf_icon (BROWSER_ICON_LDAP_CLASS_STRUCTURAL);
+        case GDA_LDAP_CLASS_KIND_AUXILIARY:
+		return browser_get_pixbuf_icon (BROWSER_ICON_LDAP_CLASS_AUXILIARY);
+        default:
+		return browser_get_pixbuf_icon (BROWSER_ICON_LDAP_CLASS_UNKNOWN);
+	}
+}
+
+/**
+ * browser_get_kind_for_ldap_class:
+ */
+const gchar *
+browser_get_kind_for_ldap_class (GdaLdapClassKind kind)
+{
+	switch (kind) {
+        case GDA_LDAP_CLASS_KIND_ABSTRACT:
+                return _("Abstract");
+        case GDA_LDAP_CLASS_KIND_STRUTURAL:
+                return _("Structural");
+        case GDA_LDAP_CLASS_KIND_AUXILIARY:
+                return _("Auxilliary");
+        default:
+                return _("Unknown");
+        }
+}
+#endif
+
 
 /**
  * browser_find_parent_widget

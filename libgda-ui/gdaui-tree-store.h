@@ -61,18 +61,26 @@ struct _GdauiTreeStoreClass
  * @short_description: Bridge between a #GdaTree and a #GtkTreeModel
  * @title: GdauiTreeStore
  * @stability: Stable
- * @Image:
  * @see_also: #GdaTree
  *
  * The #GdauiTreeStore implements the #GtkTreeModel interface required
  * to display data from a #GdaTree in a #GtkTreeView widget.
+ *
+ * To allow a tree to be populated only on request (ie. when the user expands a row), each
+ * #GdaTreeNode can give the attribute named #GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN
+ * a boolean %TRUE #GValue to tell the #GdauiTreeStore data model to artificially add
+ * a dummy child for the row corresponding to the #GdaTreeNode. Then the programmer
+ * can connect to the <link linkend="GtkTreeView-test-expand-row">GtkTreeView::test-expand-row</link>
+ * signal and update the requested children.
  */
 
-GType           gdaui_tree_store_get_type             (void) G_GNUC_CONST;
+GType           gdaui_tree_store_get_type  (void) G_GNUC_CONST;
 
-GtkTreeModel   *gdaui_tree_store_new                  (GdaTree *tree, guint n_columns, ...);
-GtkTreeModel   *gdaui_tree_store_newv                 (GdaTree *tree, guint n_columns,
-						       GType *types, const gchar **attribute_names);
+GtkTreeModel   *gdaui_tree_store_new       (GdaTree *tree, guint n_columns, ...);
+GtkTreeModel   *gdaui_tree_store_newv      (GdaTree *tree, guint n_columns,
+					    GType *types, const gchar **attribute_names);
+GdaTreeNode    *gdaui_tree_store_get_node  (GdauiTreeStore *store, GtkTreeIter *iter);
+gboolean        gdaui_tree_store_get_iter  (GdauiTreeStore *store, GtkTreeIter *iter, GdaTreeNode *node);
 
 G_END_DECLS
 

@@ -27,7 +27,11 @@ DOC_FIGURES = \
 	figures/virtual-cnc-2.png \
 	figures/virtual-cnc-3.png \
 	figures/virtual-cnc-4.png \
-	figures/virtual-cnc-5.png
+	figures/virtual-cnc-5.png \
+	figures/ldap-browser-persp.png \
+	figures/ldap-classes.png \
+	figures/ldap-search.png \
+	figures/ldap-table-mapping.png
 
 DOC_PAGES = \
 	actions.page \
@@ -45,7 +49,9 @@ DOC_PAGES = \
 	transactions.page \
 	table-insert-data.page \
 	variables.page \
-	virtual-connections.page
+	virtual-connections.page \
+	ldap-browser-perspective.page \
+	ldap-connections.page
 
 DOC_LINGUAS = de es sl zh_CN
 

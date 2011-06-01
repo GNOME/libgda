@@ -1,0 +1,60 @@
+/*
+ * Copyright (C) 2011 The GNOME Foundation
+ *
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This Program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef __ENTRY_PROPERTIES_H__
+#define __ENTRY_PROPERTIES_H__
+
+#include "../browser-connection.h"
+
+G_BEGIN_DECLS
+
+#define ENTRY_PROPERTIES_TYPE            (entry_properties_get_type())
+#define ENTRY_PROPERTIES(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, ENTRY_PROPERTIES_TYPE, EntryProperties))
+#define ENTRY_PROPERTIES_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, ENTRY_PROPERTIES_TYPE, EntryPropertiesClass))
+#define IS_ENTRY_PROPERTIES(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, ENTRY_PROPERTIES_TYPE))
+#define IS_ENTRY_PROPERTIES_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), ENTRY_PROPERTIES_TYPE))
+
+typedef struct _EntryProperties        EntryProperties;
+typedef struct _EntryPropertiesClass   EntryPropertiesClass;
+typedef struct _EntryPropertiesPrivate EntryPropertiesPrivate;
+
+struct _EntryProperties {
+	GtkVBox                 parent;
+	EntryPropertiesPrivate *priv;
+};
+
+struct _EntryPropertiesClass {
+	GtkVBoxClass            parent_class;
+
+	/* signals */
+	void                  (*open_dn) (EntryProperties *eprop, const gchar *dn);
+	void                  (*open_class) (EntryProperties *eprop, const gchar *classname);
+};
+
+GType                    entry_properties_get_type (void) G_GNUC_CONST;
+
+GtkWidget               *entry_properties_new      (BrowserConnection *bcnc);
+void                     entry_properties_set_dn   (EntryProperties *eprop, const gchar *dn);
+
+G_END_DECLS
+
+#endif

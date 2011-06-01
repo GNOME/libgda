@@ -31,13 +31,13 @@ current_dir=`pwd`
 archive=${current_dir}/libgda-${version}.zip
 archive_dev=${current_dir}/libgda-dev-${version}.zip
 archive_ext=${current_dir}/libgda-dep-${version}.zip
-nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh prov_oracle.nsh prov_postgresql.nsh prov_sqlite.nsh prov_web.nsh)
+nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh prov_oracle.nsh prov_postgresql.nsh prov_sqlite.nsh prov_web.nsh prov_ldap.nsh)
 
 # remove current archive if it exists
 rm -f $archive $archive_dev $archive_ext
 rm -f *.nsh *.exe
 
-if test $CLEAN == "yes"
+if test "$CLEAN" = "yes"
 then
     exit 0
 fi
@@ -213,6 +213,12 @@ Section /o "Web" SEC08
   SetOverwrite try
 EOF
 
+cat > prov_ldap.nsh <<EOF
+Section "Ldap" SEC09
+  SetOutPath "\$INSTDIR\bin"
+  SetOverwrite try
+EOF
+
 cat > config.nsh <<EOF
 !define PRODUCT_VERSION "$version"
 EOF
@@ -240,7 +246,7 @@ EOF
 #
 # dependencies DLLs
 #
-files=(Pathplan.dll ltdl.dll libexpat*.dll intl.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll zlib1.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-win32-2.*.dll libgtk-win32-2.*.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libfontconfig-1.dll libgoocanvas-*.dll libgtksourceview-2.0-0.dll cdt.dll graph.dll gvc.dll freetype6.dll)
+files=(Pathplan.dll ltdl.dll libexpat*.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll cdt.dll graph.dll gvc.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg-8.dll libtiff-3.dll)
 add_files_to_zip $archive_ext ${depend_path}/gtk bin $files
 add_files_to_nsh core ${depend_path}/gtk bin $files
 
@@ -252,10 +258,13 @@ files=(libmySQL.dll)
 add_files_to_zip $archive_ext ${depend_path}/mysql bin $files
 add_files_to_nsh prov_mysql ${depend_path}/mysql bin $files
 
-files=(iconv.dll libeay32.dll libiconv-2.dll libintl-8.dll libpq.dll libxml2.dll libxslt.dll msvcr71.dll ssleay32.dll)
+files=(iconv.dll libeay32.dll libiconv-2.dll libpq.dll libxml2.dll libxslt.dll msvcr71.dll ssleay32.dll)
 add_files_to_zip $archive_ext ${depend_path}/pgsql bin $files
 add_files_to_nsh prov_postgresql ${depend_path}/pgsql bin $files
 
+files=(liblber.dll libldap.dll)
+add_files_to_zip $archive_ext ${depend_path}/ldap bin $files
+add_files_to_nsh prov_ldap ${depend_path}/ldap bin $files
 
 #
 # dependencies from the cross compilation environment
@@ -298,6 +307,9 @@ files=(oracle_specs_dsn.xml oracle_specs_create_table.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
 add_files_to_nsh prov_oracle $prefix share/libgda-5.0 $files
 
+files=(ldap_specs_auth.xml ldap_specs_dsn.xml)
+add_files_to_zip $archive $prefix share/libgda-5.0 $files
+add_files_to_nsh prov_ldap $prefix share/libgda-5.0 $files
 
 files=(gdaui-generic.png)
 add_files_to_zip $archive $prefix share/libgda-5.0/pixmaps $files
@@ -374,16 +386,16 @@ add_files_to_zip $archive $prefix etc/libgda-5.0 $files
 add_files_to_nsh core $prefix etc/libgda-5.0 $files
 
 files=(gdk-pixbuf.loaders gtk.immodules)
-add_files_to_zip $archive_ext $cross_path etc/gtk-2.0 $files
-add_files_to_nsh core $cross_path etc/gtk-2.0 $files
+add_files_to_zip $archive_ext $cross_path etc/gtk-3.0 $files
+add_files_to_nsh core $cross_path etc/gtk-3.0 $files
 
 files=(gtkrc)
-add_files_to_zip $archive_ext . etc/gtk-2.0 $files
+add_files_to_zip $archive_ext . etc/gtk-3.0 $files
 add_files_to_nsh core . etc/gtk-2.0 $files
 
-files=(pango.modules)
-add_files_to_zip $archive_ext $cross_path etc/pango $files
-add_files_to_nsh core $cross_path etc/pango $files
+#files=(pango.modules)
+#add_files_to_zip $archive_ext $cross_path etc/pango $files
+#add_files_to_nsh core $cross_path etc/pango $files
 
 files=(gda-sql-5.0.exe libgda-5.0-4.dll libgda-report-5.0-4.dll libgda-ui-5.0-4.dll gda-browser-5.0.exe gda-control-center-5.0.exe)
 add_files_to_zip $archive $prefix bin $files
@@ -423,6 +435,10 @@ files=(libgda-web.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
 add_files_to_nsh prov_web $prefix lib/libgda-5.0/providers $files
 
+files=(libgda-ldap.dll)
+add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
+add_files_to_nsh prov_ldap $prefix lib/libgda-5.0/providers $files
+
 files=(libgda-oracle.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
 add_files_to_nsh prov_oracle $prefix lib/libgda-5.0/providers $files
@@ -431,9 +447,9 @@ files=(gdaui-entry-filesel-spec.xml gdaui-entry-password.xml gdaui-entry-pict-sp
 add_files_to_zip $archive $prefix lib/libgda-5.0/plugins $files
 add_files_to_nsh core $prefix lib/libgda-5.0/plugins $files
 
-files=(libpixmap.dll libwimp.dll)
-add_files_to_zip $archive_ext $cross_path lib/gtk-2.0/2.10.0/engines $files
-add_files_to_nsh core $cross_path lib/gtk-2.0/2.10.0/engines $files
+files=(libwimp.dll)
+add_files_to_zip $archive_ext $cross_path lib/gtk-3.0/3.0.0/engines $files
+add_files_to_nsh core $cross_path lib/gtk-3.0/3.0.0/engines $files
 
 #
 # includes
@@ -473,7 +489,7 @@ add_all_files_to_zip $archive_dev $prefix lib/pkgconfig
 #
 # static libs
 #
-files=(libgda-5.0.a libgda-5.0.dll.a libgda-5.0.lib libgda-5.0.def libgda-report-5.0.a libgda-report-5.0.dll.a libgda-report-5.0.lib libgda-report-5.0.def libgda-ui-5.0.a libgda-ui-5.0.dll.a libgda-ui-5.0.lib libgda-ui-5.0.def)
+files=(libgda-5.0.dll.a libgda-5.0.lib libgda-5.0.def libgda-report-5.0.dll.a libgda-report-5.0.lib libgda-report-5.0.def libgda-ui-5.0.dll.a libgda-ui-5.0.lib libgda-ui-5.0.def)
 add_files_to_zip $archive_dev $prefix lib $files
 
 #
@@ -485,7 +501,7 @@ add_files_to_zip $archive_dev $prefix share/libgda-5.0/demo $files
 #
 # doc
 #
-add_all_files_to_zip $archive_dev $prefix share/gtk-doc/html/libgda-5.0
+#add_all_files_to_zip $archive_dev $prefix share/gtk-doc/html/libgda-5.0
 
 #
 # translations

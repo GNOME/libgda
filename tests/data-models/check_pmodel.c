@@ -811,7 +811,7 @@ test7 (GdaConnection *cnc)
 {
 	GError *error = NULL;
 	GdaDataModel *model = NULL;
-	GdaStatement *stmt;
+	GdaStatement *stmt = NULL;
 	gint nfailed = 0;
 	GdaSet *params;
 	GValue *value;

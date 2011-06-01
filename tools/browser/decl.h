@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Vivien Malerba <malerba@gnome-db.org>
@@ -44,10 +44,6 @@ typedef struct {
 	BrowserPerspective *(*perspective_create) (BrowserWindow *);
 } BrowserPerspectiveFactory;
 #define BROWSER_PERSPECTIVE_FACTORY(x) ((BrowserPerspectiveFactory*)(x))
-
-#define ORDER_KEY_SCHEMA 1
-#define ORDER_KEY_QUERIES 2
-#define ORDER_KEY_DATA_MANAGERS 3
 
 #define DEFAULT_FAVORITES_SIZE 150
 

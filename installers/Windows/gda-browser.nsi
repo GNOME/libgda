@@ -18,6 +18,7 @@ SetCompressor lzma
 !include "prov_mysql.nsh"
 !include "prov_postgresql.nsh"
 !include "prov_web.nsh"
+!include "prov_ldap.nsh"
 !include "prov_mdb.nsh"
 !include "prov_oracle.nsh"
 !include "prov_sqlite.nsh"
@@ -117,6 +118,8 @@ LangString DESC_prov_sqlite ${LANG_ENGLISH} "Sqlite database provider"
 LangString DESC_prov_sqlite ${LANG_FRENCH} "Fournisseur pour les bases de données Sqlite"
 LangString DESC_prov_web ${LANG_ENGLISH} "Provider for database accessed through a web server"
 LangString DESC_prov_web ${LANG_FRENCH} "Fournisseur pour les bases de données via un serveur web"
+LangString DESC_prov_ldap ${LANG_ENGLISH} "Provider for LDAP directory"
+LangString DESC_prov_ldap ${LANG_FRENCH} "Fournisseur pour les répertoires LDAP"
 
 
 ; Section descriptions
@@ -129,6 +132,7 @@ LangString DESC_prov_web ${LANG_FRENCH} "Fournisseur pour les bases de données v
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC06} $(DESC_prov_oracle)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC07} $(DESC_prov_sqlite)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC08} $(DESC_prov_web)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC09} $(DESC_prov_ldap)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 

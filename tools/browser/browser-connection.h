@@ -23,6 +23,10 @@
 #include <libgda/libgda.h>
 #include "browser-favorites.h"
 #include "decl.h"
+#include "support.h"
+#ifdef HAVE_LDAP
+#include <libgda/sqlite/virtual/gda-ldap-connection.h>
+#endif
 
 G_BEGIN_DECLS
 
@@ -87,6 +91,24 @@ BrowserFavorites   *browser_connection_get_favorites          (BrowserConnection
 
 gchar             **browser_connection_get_completions        (BrowserConnection *bcnc, const gchar *sql,
 							       gint start, gint end);
+
+/**
+ * BrowserConnectionJobCallback:
+ * @bcnc: the #BrowserConnection
+ * @out_result: the execution result
+ * @data: a pointer passed when calling the execution function such as browser_connection_ldap_describe_entry()
+ * @error: the error returned, if any
+ *
+ * Callback function called when a job (not a statement execution job) is finished.
+ * the out_result is not used by the BrowserConnection anymore after this function has been
+ * called, so you need to keep it or free it.
+ *
+ * @error should not be modified.
+ */
+typedef void (*BrowserConnectionJobCallback) (BrowserConnection *bcnc,
+					      gpointer out_result, gpointer data, GError *error);
+#define BROWSER_CONNECTION_JOB_CALLBACK(x) ((BrowserConnectionJobCallback)(x))
+void                browser_connection_job_cancel             (BrowserConnection *bcnc, guint job_id);
 
 /*
  * statements's manipulations
@@ -173,6 +195,49 @@ void                 browser_connection_define_ui_plugins_for_stmt (BrowserConne
  */
 void                 browser_connection_keep_variables (BrowserConnection *bcnc, GdaSet *set);
 void                 browser_connection_load_variables (BrowserConnection *bcnc, GdaSet *set);
+
+/*
+ * LDAP
+ */
+gboolean             browser_connection_is_ldap        (BrowserConnection *bcnc);
+#ifdef HAVE_LDAP
+const         gchar *browser_connection_ldap_get_base_dn (BrowserConnection *bcnc);
+guint                browser_connection_ldap_search (BrowserConnection *bcnc,
+						     const gchar *base_dn, const gchar *filter,
+						     const gchar *attributes, GdaLdapSearchScope scope,
+						     BrowserConnectionJobCallback callback,
+						     gpointer cb_data, GError **error);
+guint                browser_connection_ldap_describe_entry (BrowserConnection *bcnc, const gchar *dn,
+							     BrowserConnectionJobCallback callback,
+							     gpointer cb_data, GError **error);
+guint                browser_connection_ldap_get_entry_children (BrowserConnection *bcnc, const gchar *dn,
+								 gchar **attributes,
+								 BrowserConnectionJobCallback callback,
+								 gpointer cb_data, GError **error);
+guint                browser_connection_ldap_icon_for_dn (BrowserConnection *bcnc, const gchar *dn,
+							  BrowserConnectionJobCallback callback,
+							  gpointer cb_data, GError **error);
+GdkPixbuf           *browser_connection_ldap_icon_for_class (GdaLdapAttribute *objectclass);
+gboolean             browser_connection_describe_table  (BrowserConnection *bcnc, const gchar *table_name,
+							 const gchar **out_base_dn, const gchar **out_filter,
+							 const gchar **out_attributes,
+							 GdaLdapSearchScope *out_scope, GError **error);
+
+GdaLdapClass        *browser_connection_get_class_info (BrowserConnection *bcnc, const gchar *classname);
+const GSList        *browser_connection_get_top_classes (BrowserConnection *bcnc);
+
+gboolean             browser_connection_declare_table   (BrowserConnection *bcnc,
+                                                         const gchar *table_name,
+                                                         const gchar *base_dn,
+                                                         const gchar *filter,
+                                                         const gchar *attributes,
+                                                         GdaLdapSearchScope scope,
+                                                         GError **error);
+gboolean             browser_connection_undeclare_table   (BrowserConnection *bcnc,
+							   const gchar *table_name,
+							   GError **error);
+
+#endif
 
 G_END_DECLS
 

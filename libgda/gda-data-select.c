@@ -3174,7 +3174,7 @@ gda_data_select_get_exceptions (GdaDataModel *model)
  *
  * Add an exception to @model.
  *
- * Since: 5.0
+ * Since: 4.2.6
  */
 void
 gda_data_select_add_exception (GdaDataSelect *model, GError *error)

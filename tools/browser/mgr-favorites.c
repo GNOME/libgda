@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The GNOME Foundation.
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -27,10 +27,26 @@
 #include "mgr-favorites.h"
 #include "support.h"
 
+/* asynchronous (in idle loop) icon resolution */
+typedef struct {
+        GdaTreeNode *node;
+        gchar *dn;
+} IconResolutionData;
+static void
+icon_resolution_data_free (IconResolutionData *data)
+{
+        g_object_unref (G_OBJECT (data->node));
+        g_free (data->dn);
+        g_free (data);
+}
+
 struct _MgrFavoritesPriv {
 	BrowserConnection    *bcnc;
 	BrowserFavoritesType  fav_type;
 	gint                  order_key;
+
+	GSList               *icons_resol_list; /* list of IconResolutionData pointers */
+        guint                 icons_resol_timer;
 };
 
 static void mgr_favorites_class_init (MgrFavoritesClass *klass);
@@ -96,6 +112,17 @@ mgr_favorites_dispose (GObject *object)
 	if (mgr->priv) {
 		if (mgr->priv->bcnc)
 			g_object_unref (mgr->priv->bcnc);
+
+		if (mgr->priv->icons_resol_timer) {
+                        g_source_remove (mgr->priv->icons_resol_timer);
+                        mgr->priv->icons_resol_timer = 0;
+                }
+
+                if (mgr->priv->icons_resol_list) {
+                        g_slist_foreach (mgr->priv->icons_resol_list, (GFunc) icon_resolution_data_free, NULL);
+                        g_slist_free (mgr->priv->icons_resol_list);
+                        mgr->priv->icons_resol_list = NULL;
+                }
 
 		g_free (mgr->priv);
 		mgr->priv = NULL;
@@ -328,6 +355,8 @@ hash_for_existing_nodes (const GSList *nodes)
 	return hash;
 }
 
+static gboolean icons_resol_cb (MgrFavorites *mgr);
+
 static GSList *
 mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
 			       gboolean *out_error, GError **error)
@@ -356,14 +385,17 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 			BrowserFavoritesAttributes *fav = (BrowserFavoritesAttributes *) list->data;
 			GdaTreeNode* snode = NULL;
 			GValue *av;
+			gboolean newsnode = TRUE;
 
 			if (ehash)
 				snode = g_hash_table_lookup (ehash, &(fav->id));
 
 			
-			if (snode)
+			if (snode) {
 				/* use the same node */
 				g_object_ref (G_OBJECT (snode));
+				newsnode = FALSE;
+			}
 
 			if (fav->type == BROWSER_FAVORITES_TABLES) {
 				if (!snode) {
@@ -557,6 +589,159 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 								  av, NULL);
 				gda_value_free (av);
 			}
+#ifdef HAVE_LDAP
+			else if (fav->type == BROWSER_FAVORITES_LDAP_DN) {
+				if (!snode) {
+					/* favorite ID */
+					snode = gda_tree_manager_create_node (manager, node, NULL);
+
+					g_value_set_int ((av = gda_value_new (G_TYPE_INT)), fav->id);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_ID_ATT_NAME,
+									  av, NULL);
+					gda_value_free (av);
+
+					/* icon */
+					GdkPixbuf *pixbuf;
+					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_LDAP_ENTRY);
+					
+					av = gda_value_new (G_TYPE_OBJECT);
+					g_value_set_object (av, pixbuf);
+					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
+					gda_value_free (av);
+
+					g_value_set_uint ((av = gda_value_new (G_TYPE_UINT)), fav->type);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_TYPE_ATT_NAME,
+									  av, NULL);
+                                        gda_value_free (av);
+					
+					IconResolutionData *data;
+					data = g_new0 (IconResolutionData, 1);
+					data->node = g_object_ref (snode);
+					data->dn = g_strdup (fav->name);
+					mgr->priv->icons_resol_list = g_slist_prepend (mgr->priv->icons_resol_list, data);
+					if (mgr->priv->icons_resol_timer == 0)
+						mgr->priv->icons_resol_timer = g_idle_add ((GSourceFunc) icons_resol_cb, mgr);
+				}
+
+				gchar **dna;
+				GString *tmpstring;
+				dna = gda_ldap_dn_split (fav->name, FALSE);
+				tmpstring = g_string_new ("");
+				if (dna) {
+					if (dna[0]) {
+						if (dna[1])
+							g_string_append_printf (tmpstring,
+										"<b>%s</b>,%s",
+										dna[0], dna[1]);
+						else
+							g_string_append_printf (tmpstring,
+										"<b>%s</b>",
+										dna[0]);
+					}
+					else {
+						gchar *tmp;
+						tmp = g_markup_escape_text (fav->name, -1);
+						g_string_append (tmpstring, tmp);
+						g_free (tmp);
+					}
+					g_strfreev (dna);
+				}
+				else {
+					gchar *tmp;
+					tmp = g_markup_escape_text (fav->name, -1);
+					g_string_append (tmpstring, tmp);
+					g_free (tmp);
+				}
+				
+				if (fav->descr && *fav->descr) {
+					gchar *tmp;
+					tmp = g_markup_escape_text (fav->descr, -1);
+					g_string_append_printf (tmpstring,
+								"\n<small>%s</small>", tmp);
+					g_free (tmp);
+
+					g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
+							    fav->descr);
+					gda_tree_node_set_node_attribute (snode, "descr", av, NULL);
+					gda_value_free (av);
+				}
+				
+				g_value_take_string ((av = gda_value_new (G_TYPE_STRING)),
+						     g_string_free (tmpstring, FALSE));
+				gda_tree_node_set_node_attribute (snode, "markup", av, NULL);
+				gda_value_free (av);				
+
+				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
+						    fav->name);
+				gda_tree_node_set_node_attribute (snode,
+								  MGR_FAVORITES_CONTENTS_ATT_NAME,
+								  av, NULL);
+				gda_value_free (av);
+			}
+			else if (fav->type == BROWSER_FAVORITES_LDAP_CLASS) {
+				if (!snode) {
+					/* favorite ID */
+					snode = gda_tree_manager_create_node (manager, node, NULL);
+
+					g_value_set_int ((av = gda_value_new (G_TYPE_INT)), fav->id);
+					gda_tree_node_set_node_attribute (snode,
+									  MGR_FAVORITES_ID_ATT_NAME,
+									  av, NULL);
+					gda_value_free (av);
+
+					/* icon */
+					GdkPixbuf *pixbuf;
+					GdaLdapClass *lcl;
+					lcl = browser_connection_get_class_info (bcnc, fav->name);
+					pixbuf = browser_get_pixbuf_for_ldap_class (lcl ? lcl->kind : GDA_LDAP_CLASS_KIND_UNKNOWN);					
+					av = gda_value_new (G_TYPE_OBJECT);
+					g_value_set_object (av, pixbuf);
+					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
+					gda_value_free (av);
+
+					g_value_set_uint ((av = gda_value_new (G_TYPE_UINT)), fav->type);
+                                                gda_tree_node_set_node_attribute (snode,
+                                                                                  MGR_FAVORITES_TYPE_ATT_NAME,
+                                                                                  av, NULL);
+                                        gda_value_free (av);
+				}
+
+				GString *tmpstring;
+				gchar *tmp;
+				
+				tmpstring = g_string_new ("");
+				tmp = g_markup_escape_text (fav->name, -1);
+				g_string_append (tmpstring, tmp);
+				g_free (tmp);
+				
+				if (fav->descr && *fav->descr) {
+					gchar *tmp;
+					tmp = g_markup_escape_text (fav->descr, -1);
+					g_string_append_printf (tmpstring,
+								"\n<small>%s</small>", tmp);
+					g_free (tmp);
+
+					g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
+							    fav->descr);
+					gda_tree_node_set_node_attribute (snode, "descr", av, NULL);
+					gda_value_free (av);
+				}
+				
+				g_value_take_string ((av = gda_value_new (G_TYPE_STRING)),
+						     g_string_free (tmpstring, FALSE));
+				gda_tree_node_set_node_attribute (snode, "markup", av, NULL);
+				gda_value_free (av);				
+
+				g_value_set_string ((av = gda_value_new (G_TYPE_STRING)),
+						    fav->name);
+				gda_tree_node_set_node_attribute (snode,
+								  MGR_FAVORITES_CONTENTS_ATT_NAME,
+								  av, NULL);
+				gda_value_free (av);
+			}
+#endif
 			else {
 				TO_IMPLEMENT;
 			}
@@ -599,3 +784,45 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 
 	return g_slist_reverse (nodes_list);
 }
+
+static void
+icon_fetched_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
+		 GdkPixbuf *pixbuf, GdaTreeNode *node, G_GNUC_UNUSED GError *error)
+{
+	if (pixbuf) {
+		GValue *av;
+		av = gda_value_new (G_TYPE_OBJECT);
+		g_value_set_object (av, pixbuf);
+		gda_tree_node_set_node_attribute (node, "icon", av, NULL);
+		gda_value_free (av);
+	}
+	g_object_unref (node);
+}
+
+#ifdef HAVE_LDAP
+static gboolean
+icons_resol_cb (MgrFavorites *mgr)
+{
+        if (mgr->priv->icons_resol_timer == 0)
+                return FALSE;
+        if (mgr->priv->icons_resol_list) {
+                IconResolutionData *data;
+                data = (IconResolutionData*) mgr->priv->icons_resol_list->data;
+                mgr->priv->icons_resol_list = g_slist_delete_link (mgr->priv->icons_resol_list,
+                                                                   mgr->priv->icons_resol_list);
+
+		if (browser_connection_ldap_icon_for_dn (mgr->priv->bcnc, data->dn,
+							 (BrowserConnectionJobCallback) icon_fetched_cb,
+							 g_object_ref (data->node), NULL) == 0)
+			g_object_unref (data->node);
+                icon_resolution_data_free (data);
+        }
+
+        if (! mgr->priv->icons_resol_list) {
+                mgr->priv->icons_resol_timer = 0;
+                return FALSE;
+        }
+        else
+                return TRUE;
+}
+#endif

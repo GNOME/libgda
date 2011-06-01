@@ -245,6 +245,48 @@ static sqlite3_module Module = {
 	virtualRename                 /* Rename - Notification that the table will be given a new name */
 };
 
+/*
+ * handle data model exceptions and return appropriate code
+ */
+static int
+handle_data_model_exception (sqlite3_vtab *pVtab, GdaDataModel *model)
+{
+	GError **exceptions;
+	gint i;
+	exceptions = gda_data_model_get_exceptions (model);
+	if (!exceptions)
+		return SQLITE_OK;
+
+	GError *trunc_error = NULL;
+	GError *fatal_error = NULL;
+	for (i = 0; exceptions [i]; i++) {
+		GError *e;
+		e = exceptions [i];
+		if ((e->domain == GDA_DATA_MODEL_ERROR) &&
+		    (e->code == GDA_DATA_MODEL_TRUNCATED_ERROR))
+			trunc_error = e;
+		else {
+			fatal_error = e;
+			break;
+		}
+	}
+	if (fatal_error || trunc_error) {
+		GError *e;
+		e = fatal_error;
+		if (!e)
+			e = trunc_error;
+		if (pVtab->zErrMsg)
+			SQLITE3_CALL (sqlite3_free) (pVtab->zErrMsg);
+		pVtab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+			(e->message ? e->message : _("No detail"));
+		if (fatal_error)
+			return SQLITE_ERROR;
+		else
+			return SQLITE_IOERR_TRUNCATE;
+	}
+	return SQLITE_OK;
+}
+
 static GdaConnection *
 gda_vprovider_data_model_create_connection (GdaServerProvider *provider)
 {
@@ -573,7 +615,7 @@ virtualDestroy (sqlite3_vtab *pVtab)
 }
 
 static int
-virtualOpen (sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
+virtualOpen (G_GNUC_UNUSED sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor)
 {
 	VirtualCursor *cursor;
 
@@ -629,10 +671,8 @@ virtualNext (sqlite3_vtab_cursor *cur)
 	if (!gda_data_model_iter_move_next (cursor->iter)) {
 		if (gda_data_model_iter_is_valid (cursor->iter))
 			return SQLITE_IOERR;
-		else
-			return SQLITE_OK;
 	}
-	return SQLITE_OK;
+	return handle_data_model_exception (cur->pVtab, cursor->model);
 }
 
 static int
@@ -719,10 +759,14 @@ virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
 			GValue *gvalue;
 			cvalue = gda_data_model_iter_get_value_at (cursor->iter, i);
 			gvalue = gda_row_get_value (grow, i);
-			if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL) {
-				g_value_init (gvalue, G_VALUE_TYPE (cvalue));
-				g_value_copy (cvalue, gvalue);
+			if (cvalue) {
+				if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL) {
+					g_value_init (gvalue, G_VALUE_TYPE (cvalue));
+					g_value_copy (cvalue, gvalue);
+				}
 			}
+			else
+				gda_row_invalidate_value (grow, gvalue);
 		}
 		
 		hid = g_new (gint64, 1);
@@ -866,7 +910,8 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 
 	cursor->model = g_object_ref (vtable->td->real_model);
 	gda_data_model_iter_move_next (cursor->iter);
-	return SQLITE_OK;
+
+	return handle_data_model_exception (pVtabCursor->pVtab, cursor->model);
 }
 
 #ifdef GDA_DEBUG_VIRTUAL
@@ -1015,7 +1060,6 @@ virtualBestIndex (sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo)
 		index_info_dump (pIdxInfo, TRUE);
 #endif
 	}
-
 
 	return SQLITE_OK;
 }
@@ -1234,7 +1278,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 		sql = gda_statement_to_sql (stmt, NULL, NULL);
 		g_print ("SQL: [%s] ", sql);
 		g_free (sql);
-		sql = gda_statement_to_sql_extended (stmt, cnc, params, GDA_STATEMENT_SQL_PRETTY, NULL, &lerror);
+		sql = gda_statement_to_sql_extended (stmt, cnc, vtable->td->modif_params [ptype], GDA_STATEMENT_SQL_PRETTY, NULL, &lerror);
 		if (sql) {
 			g_print ("With params: [%s]\n", sql);
 			g_free (sql);
@@ -1342,7 +1386,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 }
 
 static int
-virtualBegin (sqlite3_vtab *tab)
+virtualBegin (G_GNUC_UNUSED sqlite3_vtab *tab)
 {
 	TRACE (tab, NULL);
 	/* no documentation currently available, don't do anything */
@@ -1381,7 +1425,7 @@ virtualRollback (G_GNUC_UNUSED sqlite3_vtab *tab)
 }
 
 static int
-virtualRename (sqlite3_vtab *pVtab, G_GNUC_UNUSED const char *zNew)
+virtualRename (G_GNUC_UNUSED sqlite3_vtab *pVtab, G_GNUC_UNUSED const char *zNew)
 {
 	TRACE (pVtab, NULL);
 	/* not yet analysed and implemented */

@@ -35,6 +35,9 @@
 #include "schema-browser-perspective.h"
 #include "../browser-window.h"
 #include "../common/fk-declare.h"
+#ifdef HAVE_LDAP
+#include "../ldap-browser/ldap-browser-perspective.h"
+#endif
 
 struct _TableColumnsPrivate {
 	BrowserConnection *bcnc;
@@ -44,11 +47,18 @@ struct _TableColumnsPrivate {
 
 	GtkTextBuffer *constraints;
 	gboolean hovering_over_link;
+#ifdef HAVE_LDAP
+	GtkTextBuffer *ldap_def;
+	GtkWidget *ldap_header;
+	GtkWidget *ldap_text;
+	gboolean ldap_props_shown;
+#endif
 };
 
 static void table_columns_class_init (TableColumnsClass *klass);
 static void table_columns_init       (TableColumns *tcolumns, TableColumnsClass *klass);
-static void table_columns_dispose   (GObject *object);
+static void table_columns_dispose    (GObject *object);
+static void table_columns_show_all   (GtkWidget *widget);
 
 static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns);
 
@@ -67,6 +77,7 @@ table_columns_class_init (TableColumnsClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = table_columns_dispose;
+	GTK_WIDGET_CLASS (klass)->show_all = table_columns_show_all;
 }
 
 
@@ -99,6 +110,19 @@ table_columns_dispose (GObject *object)
 	}
 
 	parent_class->dispose (object);
+}
+
+static void
+table_columns_show_all (GtkWidget *widget)
+{
+	TableColumns *tcolumns = (TableColumns *) widget;
+        GTK_WIDGET_CLASS (parent_class)->show_all (widget);
+	if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
+		if (! tcolumns->priv->ldap_props_shown) {
+			gtk_widget_hide (tcolumns->priv->ldap_header);
+			gtk_widget_hide (tcolumns->priv->ldap_text);
+		}
+	}
 }
 
 GType
@@ -157,7 +181,15 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 	GtkTextBuffer *tbuffer;
 	GtkTextIter start, end;
 
-	/* constraints descr. cleaning */
+	/* cleanups */
+#ifdef HAVE_LDAP
+	if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
+		tbuffer = tcolumns->priv->ldap_def;
+		gtk_text_buffer_get_start_iter (tbuffer, &start);
+		gtk_text_buffer_get_end_iter (tbuffer, &end);
+		gtk_text_buffer_delete (tbuffer, &start, &end);
+	}
+#endif
 	tbuffer = tcolumns->priv->constraints;
 	gtk_text_buffer_get_start_iter (tbuffer, &start);
         gtk_text_buffer_get_end_iter (tbuffer, &end);
@@ -420,6 +452,81 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 				g_slist_free (rev_list);
 				gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
 			}
+
+#ifdef HAVE_LDAP
+			if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
+				const gchar *base_dn, *filter, *attributes, *scope_str;
+				GdaLdapSearchScope scope;
+				tbuffer = tcolumns->priv->ldap_def;
+				gtk_text_buffer_get_start_iter (tbuffer, &current);
+				if (browser_connection_describe_table  (tcolumns->priv->bcnc, dbo->obj_name,
+									&base_dn, &filter,
+									&attributes, &scope, NULL)) {
+					gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
+										  "BASE: ", -1,
+										  "section", NULL);
+					if (base_dn) {
+						GtkTextTag *tag;
+						tag = gtk_text_buffer_create_tag (tbuffer, NULL, 
+										  "foreground", "blue", 
+										  "weight", PANGO_WEIGHT_NORMAL,
+										  "underline", PANGO_UNDERLINE_SINGLE,
+										  NULL);
+						g_object_set_data_full (G_OBJECT (tag), "dn",
+									g_strdup (base_dn), g_free);
+						
+						gtk_text_buffer_insert_with_tags (tbuffer, &current, base_dn, -1,
+										  tag, NULL);
+					}
+					
+					gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+					gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
+										  "FILTER: ", -1,
+										  "section", NULL);
+					if (filter)
+						gtk_text_buffer_insert (tbuffer, &current, filter, -1);
+					
+					gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+					gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
+										  "ATTRIBUTES: ", -1,
+										  "section", NULL);
+					if (attributes)
+						gtk_text_buffer_insert (tbuffer, &current, attributes, -1);
+					
+					gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+					gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
+										  "SCOPE: ", -1,
+										  "section", NULL);
+					
+					switch (scope) {
+					case GDA_LDAP_SEARCH_BASE:
+						scope_str = "base";
+						break;
+					case GDA_LDAP_SEARCH_ONELEVEL:
+						scope_str = "onelevel";
+						break;
+					case GDA_LDAP_SEARCH_SUBTREE:
+						scope_str = "subtree";
+						break;
+					default:
+						TO_IMPLEMENT;
+						scope_str = _("Unknown");
+						break;
+					}
+					gtk_text_buffer_insert (tbuffer, &current, scope_str, -1);
+					
+					tcolumns->priv->ldap_props_shown = TRUE;
+					gtk_widget_show (tcolumns->priv->ldap_header);
+					gtk_widget_show (tcolumns->priv->ldap_text);
+				}
+				else {
+					tcolumns->priv->ldap_props_shown = FALSE;
+					gtk_widget_hide (tcolumns->priv->ldap_header);
+					gtk_widget_hide (tcolumns->priv->ldap_text);
+				}
+			}
+#endif
+
 		}
 
 		if (schema_v)
@@ -566,14 +673,62 @@ table_columns_new (TableInfo *tinfo)
         gtk_container_add (GTK_CONTAINER (sw), treeview);
 	gtk_paned_pack1 (GTK_PANED (paned), sw, TRUE, FALSE);
 	
+	/* Paned, part 2 */
+	GtkWidget *vbox;
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_paned_pack2 (GTK_PANED (paned), vbox, TRUE, TRUE);
+
+#ifdef HAVE_LDAP
+	if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
+		GtkWidget *label;
+		gchar *str;
+		
+		str = g_strdup_printf ("<b>%s</b>", _("LDAP virtual table definition"));
+		label = cc_gray_bar_new (str);
+		g_free (str);
+		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+		tcolumns->priv->ldap_header = label;
+
+		sw = gtk_scrolled_window_new (NULL, NULL);
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+						GTK_POLICY_NEVER,
+						GTK_POLICY_AUTOMATIC);
+		gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
+		tcolumns->priv->ldap_text = sw;
+
+		GtkWidget *textview;
+		textview = gtk_text_view_new ();
+		gtk_container_add (GTK_CONTAINER (sw), textview);
+		gtk_text_view_set_left_margin (GTK_TEXT_VIEW (textview), 5);
+		gtk_text_view_set_right_margin (GTK_TEXT_VIEW (textview), 5);
+		gtk_text_view_set_editable (GTK_TEXT_VIEW (textview), FALSE);
+		tcolumns->priv->ldap_def = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
+		gtk_text_buffer_set_text (tcolumns->priv->ldap_def, "aa", -1);
+
+		gtk_text_buffer_create_tag (tcolumns->priv->ldap_def, "section",
+					    "weight", PANGO_WEIGHT_BOLD,
+					    "foreground", "blue", NULL);
+		
+		gtk_text_buffer_create_tag (tcolumns->priv->ldap_def, "warning",
+					    "foreground", "red", NULL);
+
+		g_signal_connect (textview, "key-press-event", 
+				  G_CALLBACK (key_press_event), tcolumns);
+		g_signal_connect (textview, "event-after", 
+				  G_CALLBACK (event_after), tcolumns);
+		g_signal_connect (textview, "motion-notify-event", 
+				  G_CALLBACK (motion_notify_event), tcolumns);
+		g_signal_connect (textview, "visibility-notify-event", 
+				  G_CALLBACK (visibility_notify_event), tcolumns);
+	}
+#endif
+
 	/*
 	 * Constraints
 	 */
-	GtkWidget *vbox, *label;
+	GtkWidget *label;
 	gchar *str;
-
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_paned_pack2 (GTK_PANED (paned), vbox, TRUE, TRUE);
 
 	str = g_strdup_printf ("<b>%s</b>", _("Constraints and integrity rules"));
 	label = cc_gray_bar_new (str);
@@ -613,6 +768,8 @@ table_columns_new (TableInfo *tinfo)
 	g_signal_connect (textview, "visibility-notify-event", 
 			  G_CALLBACK (visibility_notify_event), tcolumns);
 
+	gtk_widget_show_all (vbox);
+
 	/*
 	 * initial update
 	 */
@@ -645,7 +802,8 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, TableColumns 
 		GtkTextTag *tag = tagp->data;
 
 		if (g_object_get_data (G_OBJECT (tag), "table_name") ||
-		    g_object_get_data (G_OBJECT (tag), "fk_name")) {
+		    g_object_get_data (G_OBJECT (tag), "fk_name") ||
+		    g_object_get_data (G_OBJECT (tag), "dn")) {
 			hovering = TRUE;
 			break;
 		}
@@ -730,15 +888,17 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 		const gchar *table_schema;
 		const gchar *table_short_name;
 		const gchar *fk_name;
+		const gchar *dn;
 		SchemaBrowserPerspective *bpers;
 		
 		table_schema = g_object_get_data (G_OBJECT (tag), "table_schema");
 		table_name = g_object_get_data (G_OBJECT (tag), "table_name");
 		table_short_name = g_object_get_data (G_OBJECT (tag), "table_short_name");
 		fk_name = g_object_get_data (G_OBJECT (tag), "fk_name");
+		dn = g_object_get_data (G_OBJECT (tag), "dn");
 
 		bpers = SCHEMA_BROWSER_PERSPECTIVE (browser_find_parent_widget (GTK_WIDGET (tcolumns),
-									      TYPE_SCHEMA_BROWSER_PERSPECTIVE));
+						    TYPE_SCHEMA_BROWSER_PERSPECTIVE));
 		if (table_name && table_schema && table_short_name && bpers) {
 			schema_browser_perspective_display_table_info (bpers,
 								       table_schema,
@@ -800,6 +960,17 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 							    fk_name);
 			}
 		}
+#ifdef HAVE_LDAP
+		else if (dn) {
+			BrowserWindow *bwin;
+			BrowserPerspective *pers;
+
+			bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tcolumns);
+			pers = browser_window_change_perspective (bwin, _("LDAP browser"));
+			
+			ldap_browser_perspective_display_ldap_entry (LDAP_BROWSER_PERSPECTIVE (pers), dn);
+		}
+#endif
         }
 
 	if (tags) 

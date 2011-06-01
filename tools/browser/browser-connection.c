@@ -70,13 +70,18 @@ static gboolean check_for_wrapper_result (BrowserConnection *bcnc);
 typedef enum {
 	JOB_TYPE_META_STORE_UPDATE,
 	JOB_TYPE_META_STRUCT_SYNC,
-	JOB_TYPE_STATEMENT_EXECUTE
+	JOB_TYPE_STATEMENT_EXECUTE,
+	JOB_TYPE_CALLBACK
 } JobType;
 
 typedef struct {
 	guint    job_id;
 	JobType  job_type;
 	gchar   *reason;
+	
+	/* the following may be %NULL for stmt execution and meta store updates */
+	BrowserConnectionJobCallback callback;
+	gpointer cb_data;
 } WrapperJob;
 
 static void
@@ -90,7 +95,8 @@ wrapper_job_free (WrapperJob *wj)
  * Pushes a job which has been asked to be exected in a sub thread using gda_thread_wrapper_execute()
  */
 static void
-push_wrapper_job (BrowserConnection *bcnc, guint job_id, JobType job_type, const gchar *reason)
+push_wrapper_job (BrowserConnection *bcnc, guint job_id, JobType job_type, const gchar *reason,
+		  BrowserConnectionJobCallback callback, gpointer cb_data)
 {
 	/* setup timer */
 	if (bcnc->priv->wrapper_results_timer == 0) {
@@ -116,6 +122,8 @@ push_wrapper_job (BrowserConnection *bcnc, guint job_id, JobType job_type, const
 	wj->job_type = job_type;
 	if (reason)
 		wj->reason = g_strdup (reason);
+	wj->callback = callback;
+	wj->cb_data = cb_data;
 
 	bcnc->priv->wrapper_jobs = g_slist_append (bcnc->priv->wrapper_jobs, wj);
 
@@ -355,7 +363,7 @@ meta_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper,
 					     g_object_ref (bcnc), g_object_unref, &lerror);
 	if (job_id > 0)
 		push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
-				  _("Analysing database schema"));
+				  _("Analysing database schema"), NULL, NULL);
 	else if (lerror) {
 		browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
 				    lerror->message ? lerror->message : _("No detail"));
@@ -442,7 +450,8 @@ browser_connection_set_property (GObject *object,
 								     g_object_ref (bcnc), g_object_unref, &lerror);
 				if (job_id > 0)
 					push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STORE_UPDATE,
-							  _("Getting database schema information"));
+							  _("Getting database schema information"),
+							  NULL, NULL);
 				else if (lerror) {
 					browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
 							    lerror->message ? lerror->message : _("No detail"));
@@ -462,7 +471,8 @@ browser_connection_set_property (GObject *object,
 								     g_object_ref (bcnc), g_object_unref, &lerror);
 				if (job_id > 0)
 					push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
-							  _("Analysing database schema"));
+							  _("Analysing database schema"),
+							  NULL, NULL);
 				else if (lerror) {
 					browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
 							    lerror->message ? lerror->message : _("No detail"));
@@ -475,6 +485,7 @@ browser_connection_set_property (GObject *object,
 								FALSE, FALSE,
 								(GdaThreadWrapperCallback) meta_changed_cb,
 								bcnc);
+
                         break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -729,6 +740,16 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 			g_hash_table_insert (bcnc->priv->executed_statements, id, res);
 			break;
 		}
+		case JOB_TYPE_CALLBACK:
+			if (wj->callback) {
+				wj->callback (bcnc, exec_res == (gpointer) 0x01 ? NULL : exec_res,
+					      wj->cb_data, lerror);
+				g_clear_error (&lerror);
+			}
+			break;
+		default:
+			g_assert_not_reached ();
+			break;
 		}
 
 		pop_wrapper_job (bcnc, wj);
@@ -900,7 +921,7 @@ browser_connection_update_meta_data (BrowserConnection *bcnc)
 					     g_object_ref (bcnc), g_object_unref, &lerror);
 	if (job_id > 0)
 		push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STORE_UPDATE,
-				  _("Getting database schema information"));
+				  _("Getting database schema information"), NULL, NULL);
 	else if (lerror) {
 		browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
 				    lerror->message ? lerror->message : _("No detail"));
@@ -1011,13 +1032,13 @@ browser_connection_rollback (BrowserConnection *bcnc, GError **error)
  *
  * Get @bcnc's favorites handler
  *
- * Returns: the #BrowserFavorites used by @bcnc
+ * Returns: (transfer none): the #BrowserFavorites used by @bcnc
  */
 BrowserFavorites *
 browser_connection_get_favorites (BrowserConnection *bcnc)
 {
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
-	if (!bcnc->priv->bfav) {
+	if (!bcnc->priv->bfav && !BROWSER_IS_VIRTUAL_CONNECTION (bcnc)) {
 		bcnc->priv->bfav = browser_favorites_new (gda_connection_get_meta_store (bcnc->priv->cnc));
 		g_signal_connect (bcnc->priv->bfav, "favorites-changed",
 				  G_CALLBACK (fav_changed_cb), bcnc);
@@ -1100,16 +1121,26 @@ wrapper_statement_execute (StmtExecData *data, GError **error)
 {
 	GObject *obj;
 	GdaSet *last_insert_row = NULL;
+	GError *lerror = NULL;
 	obj = gda_connection_statement_execute (data->cnc, data->stmt,
 						data->params, data->model_usage,
 						data->need_last_insert_row ? &last_insert_row : NULL,
-						error);
+						&lerror);
 	if (obj) {
 		if (GDA_IS_DATA_MODEL (obj))
 			/* force loading of rows if necessary */
 			gda_data_model_get_n_rows ((GdaDataModel*) obj);
 		else if (last_insert_row)
 			g_object_set_data (obj, "__bcnc_last_inserted_row", last_insert_row);
+	}
+	else {
+		if (lerror)
+			g_propagate_error (error, lerror);
+		else {
+			g_warning (_("Execution reported an undefined error, please report error to "
+				     "http://bugzilla.gnome.org/ for the \"libgda\" product"));
+			g_set_error (error, 0, 0, _("No detail"));
+		}
 	}
 	return obj ? obj : (gpointer) 0x01;
 }
@@ -1156,7 +1187,7 @@ browser_connection_execute_statement (BrowserConnection *bcnc,
 					     data, (GDestroyNotify) g_free, error);
 	if (job_id > 0)
 		push_wrapper_job (bcnc, job_id, JOB_TYPE_STATEMENT_EXECUTE,
-				  _("Executing a query"));
+				  _("Executing a query"), NULL, NULL);
 
 	return job_id;
 }
@@ -1206,7 +1237,7 @@ browser_connection_rerun_select (BrowserConnection *bcnc,
 					     data, (GDestroyNotify) g_free, error);
 	if (job_id > 0)
 		push_wrapper_job (bcnc, job_id, JOB_TYPE_STATEMENT_EXECUTE,
-				  _("Executing a query"));
+				  _("Executing a query"), NULL, NULL);
 
 	return job_id;
 }
@@ -1259,6 +1290,23 @@ browser_connection_execution_get_result (BrowserConnection *bcnc, guint exec_id,
 	/*if (GDA_IS_DATA_MODEL (retval))
 	  gda_data_model_dump (GDA_DATA_MODEL (retval), NULL);*/
 	return retval;
+}
+
+/**
+ * browser_connection_job_cancel:
+ * @bcnc: a #BrowserConnection
+ * @job_id: the job_id to cancel
+ *
+ * Cancel a job, from the job ID returned by browser_connection_ldap_describe_entry()
+ * or browser_connection_ldap_get_entry_children().
+ */
+void
+browser_connection_job_cancel (BrowserConnection *bcnc, guint job_id)
+{
+	g_return_if_fail (BROWSER_IS_CONNECTION (bcnc));
+	g_return_if_fail (job_id > 0);
+
+	TO_IMPLEMENT;
 }
 
 static gboolean query_exec_fetch_cb (BrowserConnection *bcnc);
@@ -2143,3 +2191,442 @@ browser_connection_load_variables (BrowserConnection *bcnc, GdaSet *set)
 		}
 	}	
 }
+
+/**
+ * browser_connection_is_ldap:
+ * @bcnc: a #BrowserConnection
+ *
+ * Returns: %TRUE if @bcnc proxies an LDAP connection
+ */
+gboolean
+browser_connection_is_ldap (BrowserConnection *bcnc)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+
+#ifdef HAVE_LDAP
+	return GDA_IS_LDAP_CONNECTION (bcnc->priv->cnc) ? TRUE : FALSE;
+#endif
+	return FALSE;
+}
+
+#ifdef HAVE_LDAP
+
+typedef struct {
+	GdaConnection *cnc;
+	gchar *base_dn;
+	gchar *attributes;
+	gchar *filter;
+	GdaLdapSearchScope scope;
+} LdapSearchData;
+static void
+ldap_search_data_free (LdapSearchData *data)
+{
+	g_free (data->base_dn);
+	g_free (data->filter);
+	g_free (data->attributes);
+	g_free (data);
+}
+
+/* executed in sub @bcnc->priv->wrapper's thread */
+static gpointer
+wrapper_ldap_search (LdapSearchData *data, GError **error)
+{
+	GdaDataModel *model;
+	model = gda_data_model_ldap_new (GDA_CONNECTION (data->cnc), data->base_dn,
+					 data->filter, data->attributes, data->scope);
+	if (!model) {
+		g_set_error (error, 0, 0,
+			     _("Could not execute LDAP search"));
+		return (gpointer) 0x01;
+	}
+	else {
+		GdaDataModel *wrapped;
+		gint nb;
+		wrapped = gda_data_access_wrapper_new (model);
+		g_object_unref (model);
+		/* force loading all the LDAP entries in memory to avoid
+		 * having the GTK thread lock on LDAP searches */
+		nb = gda_data_model_get_n_rows (wrapped);
+		return wrapped;
+	}
+}
+
+/**
+ * browser_connection_ldap_search:
+ *
+ * Executes an LDAP search. Wrapper around gda_data_model_ldap_new()
+ *
+ * Returns: a job ID, or %0 if an error occurred
+ */
+guint
+browser_connection_ldap_search (BrowserConnection *bcnc,
+				const gchar *base_dn, const gchar *filter,
+				const gchar *attributes, GdaLdapSearchScope scope,
+				BrowserConnectionJobCallback callback,
+				gpointer cb_data, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), 0);
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (bcnc->priv->cnc), 0);
+
+	LdapSearchData *data;
+	guint job_id;
+	data = g_new0 (LdapSearchData, 1);
+	data->cnc = bcnc->priv->cnc;
+	data->base_dn = g_strdup (base_dn);
+	data->filter = g_strdup (filter);
+	data->attributes = g_strdup (attributes);
+	data->scope = scope;
+
+	job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+					     (GdaThreadWrapperFunc) wrapper_ldap_search,
+					     data, (GDestroyNotify) ldap_search_data_free, error);
+	if (job_id > 0)
+		push_wrapper_job (bcnc, job_id, JOB_TYPE_CALLBACK,
+				  _("Executing LDAP search"), callback, cb_data);
+	return job_id;
+}
+
+
+typedef struct {
+	GdaConnection *cnc;
+	gchar *dn;
+	gchar **attributes;
+} LdapData;
+static void
+ldap_data_free (LdapData *data)
+{
+	g_free (data->dn);
+	if (data->attributes)
+		g_strfreev (data->attributes);
+	g_free (data);
+}
+
+/* executed in sub @bcnc->priv->wrapper's thread */
+static gpointer
+wrapper_ldap_describe_entry (LdapData *data, GError **error)
+{
+	GdaLdapEntry *lentry;
+	lentry = gda_ldap_describe_entry (GDA_LDAP_CONNECTION (data->cnc), data->dn, error);
+	return lentry ? lentry : (gpointer) 0x01;
+}
+
+/**
+ * browser_connection_ldap_describe_entry:
+ * @bcnc: a #BrowserConnection
+ * @dn: the DN of the entry to describe
+ * @callback: the callback to execute with the results
+ * @cb_data: a pointer to pass to @callback
+ * @error: a place to store errors, or %NULL
+ *
+ * Wrapper around gda_ldap_describe_entry().
+ *
+ * Returns: a job ID, or %0 if an error occurred
+ */
+guint
+browser_connection_ldap_describe_entry (BrowserConnection *bcnc, const gchar *dn,
+					BrowserConnectionJobCallback callback,
+					gpointer cb_data, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), 0);
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (bcnc->priv->cnc), 0);
+
+	LdapData *data;
+	guint job_id;
+
+	data = g_new0 (LdapData, 1);
+	data->cnc = bcnc->priv->cnc;
+	data->dn = g_strdup (dn);
+
+	job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+					     (GdaThreadWrapperFunc) wrapper_ldap_describe_entry,
+					     data, (GDestroyNotify) ldap_data_free, error);
+	if (job_id > 0)
+		push_wrapper_job (bcnc, job_id, JOB_TYPE_CALLBACK,
+				  _("Fetching LDAP entry's attributes"), callback, cb_data);
+
+	return job_id;
+}
+
+/* executed in sub @bcnc->priv->wrapper's thread */
+static gpointer
+wrapper_ldap_get_entry_children (LdapData *data, GError **error)
+{
+	GdaLdapEntry **array;
+	array = gda_ldap_get_entry_children (GDA_LDAP_CONNECTION (data->cnc), data->dn, data->attributes, error);
+	return array ? array : (gpointer) 0x01;
+}
+
+/**
+ * browser_connection_ldap_get_entry_children:
+ * @bcnc: a #BrowserConnection
+ * @dn: the DN of the entry to get children from
+ * @callback: the callback to execute with the results
+ * @cb_data: a pointer to pass to @callback
+ * @error: a place to store errors, or %NULL
+ *
+ * Wrapper around gda_ldap_get_entry_children().
+ *
+ * Returns: a job ID, or %0 if an error occurred
+ */
+guint
+browser_connection_ldap_get_entry_children (BrowserConnection *bcnc, const gchar *dn,
+					    gchar **attributes,
+					    BrowserConnectionJobCallback callback,
+					    gpointer cb_data, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), 0);
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (bcnc->priv->cnc), 0);
+
+	LdapData *data;
+	guint job_id;
+
+	data = g_new0 (LdapData, 1);
+	data->cnc = bcnc->priv->cnc;
+	data->dn = g_strdup (dn);
+	if (attributes) {
+		gint i;
+		GArray *array = NULL;
+		for (i = 0; attributes [i]; i++) {
+			gchar *tmp;
+			if (! array)
+				array = g_array_new (TRUE, FALSE, sizeof (gchar*));
+			tmp = g_strdup (attributes [i]);
+			g_array_append_val (array, tmp);
+		}
+		if (array)
+			data->attributes = (gchar**) g_array_free (array, FALSE);
+	}
+
+	job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+					     (GdaThreadWrapperFunc) wrapper_ldap_get_entry_children,
+					     data, (GDestroyNotify) ldap_data_free, error);
+	if (job_id > 0)
+		push_wrapper_job (bcnc, job_id, JOB_TYPE_CALLBACK,
+				  _("Fetching LDAP entry's children"), callback, cb_data);
+
+	return job_id;
+}
+
+/**
+ * browser_connection_ldap_icon_for_class:
+ * @objectclass: objectClass attribute
+ *
+ * Returns: the correct icon, or %NULL if it could not be determined
+ */
+GdkPixbuf *
+browser_connection_ldap_icon_for_class (GdaLdapAttribute *objectclass)
+{
+	gint type = 0;
+	if (objectclass) {
+		guint i;
+		for (i = 0; i < objectclass->nb_values; i++) {
+			const gchar *class = g_value_get_string (objectclass->values[i]);
+			if (!class)
+				continue;
+			else if (!strcmp (class, "organization"))
+				type = MAX(type, 1);
+			else if (!strcmp (class, "groupOfNames") ||
+				 !strcmp (class, "posixGroup"))
+				type = MAX(type, 2);
+			else if (!strcmp (class, "account") ||
+				 !strcmp (class, "mailUser") ||
+				 !strcmp (class, "organizationalPerson") ||
+				 !strcmp (class, "person") ||
+				 !strcmp (class, "pilotPerson") ||
+				 !strcmp (class, "newPilotPerson") ||
+				 !strcmp (class, "pkiUser") ||
+				 !strcmp (class, "posixUser") ||
+				 !strcmp (class, "posixAccount") ||
+				 !strcmp (class, "residentalPerson") ||
+				 !strcmp (class, "shadowAccount") ||
+				 !strcmp (class, "strongAuthenticationUser") ||
+				 !strcmp (class, "inetOrgPerson"))
+				type = MAX(type, 3);
+		}
+	}
+
+	switch (type) {
+	case 0:
+		return browser_get_pixbuf_icon (BROWSER_ICON_LDAP_ENTRY);
+	case 1:
+		return browser_get_pixbuf_icon (BROWSER_ICON_LDAP_ORGANIZATION);
+	case 2:
+		return browser_get_pixbuf_icon (BROWSER_ICON_LDAP_GROUP);
+	case 3:
+		return browser_get_pixbuf_icon (BROWSER_ICON_LDAP_PERSON);
+	default:
+		g_assert_not_reached ();
+	}
+	return NULL;
+}
+
+typedef struct {
+	BrowserConnectionJobCallback callback;
+	gpointer cb_data;
+} IconTypeData;
+
+static void
+fetch_classes_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
+		  gpointer out_result, IconTypeData *data, G_GNUC_UNUSED GError *error)
+{
+	GdkPixbuf *pixbuf = NULL;
+	if (out_result) {
+		GdaLdapEntry *lentry = (GdaLdapEntry*) out_result;
+		GdaLdapAttribute *attr;
+		attr = g_hash_table_lookup (lentry->attributes_hash, "objectClass");
+		pixbuf = browser_connection_ldap_icon_for_class (attr);
+		gda_ldap_entry_free (lentry);
+	}
+	if (data->callback)
+		data->callback (bcnc, pixbuf, data->cb_data, error);
+
+	g_free (data);
+}
+
+/**
+ * browser_connection_ldap_icon_for_dn:
+ * @bcnc: a #BrowserConnection
+ * @dn: the DN of the entry
+ * @callback: the callback to execute with the results
+ * @cb_data: a pointer to pass to @callback
+ * @error: a place to store errors, or %NULL
+ *
+ * Determines the correct icon type for @dn based on which class it belongs to
+ *
+ * Returns: a job ID, or %0 if an error occurred
+ */
+guint
+browser_connection_ldap_icon_for_dn (BrowserConnection *bcnc, const gchar *dn,
+				     BrowserConnectionJobCallback callback,
+				     gpointer cb_data, GError **error)
+{
+	IconTypeData *data;
+	guint job_id;
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), 0);
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (bcnc->priv->cnc), 0);
+	g_return_val_if_fail (dn && *dn, 0);
+
+	data = g_new (IconTypeData, 1);
+	data->callback = callback;
+	data->cb_data = cb_data;
+	job_id = browser_connection_ldap_describe_entry (bcnc, dn,
+							 BROWSER_CONNECTION_JOB_CALLBACK (fetch_classes_cb),
+							 data, error);
+	return job_id;
+}
+
+/**
+ * browser_connection_ldap_get_base_dn:
+ * @bcnc: a #BrowserConnection
+ *
+ * wrapper for gda_ldap_connection_get_base_dn()
+ *
+ * Returns: the base DN or %NULL
+ */
+const gchar *
+browser_connection_ldap_get_base_dn (BrowserConnection *bcnc)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (bcnc->priv->cnc), NULL);
+
+	return gda_ldap_connection_get_base_dn (GDA_LDAP_CONNECTION (bcnc->priv->cnc));
+}
+
+/**
+ * browser_connection_describe_table:
+ * @bcnc: a #BrowserConnection
+ * @table_name: a table name, not %NULL
+ * @out_base_dn: (allow-none) (transfer none): a place to store the LDAP search base DN, or %NULL
+ * @out_filter: (allow-none) (transfer none): a place to store the LDAP search filter, or %NULL
+ * @out_attributes: (allow-none) (transfer none): a place to store the LDAP search attributes, or %NULL
+ * @out_scope: (allow-none) (transfer none): a place to store the LDAP search scope, or %NULL
+ * @error: a place to store errors, or %NULL
+ */
+gboolean
+browser_connection_describe_table  (BrowserConnection *bcnc, const gchar *table_name,
+				    const gchar **out_base_dn, const gchar **out_filter,
+				    const gchar **out_attributes,
+				    GdaLdapSearchScope *out_scope, GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	g_return_val_if_fail (browser_connection_is_ldap (bcnc), FALSE);
+	g_return_val_if_fail (table_name && *table_name, FALSE);
+
+	return gda_ldap_connection_describe_table (GDA_LDAP_CONNECTION (bcnc->priv->cnc),
+						   table_name, out_base_dn, out_filter,
+						   out_attributes, out_scope, error);
+}
+
+/**
+ * browser_connection_get_class_info:
+ * @bcnc: a #BrowserConnection
+ * @classname: a class name
+ *
+ * proxy for gda_ldap_get_class_info.
+ */
+GdaLdapClass *
+browser_connection_get_class_info (BrowserConnection *bcnc, const gchar *classname)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (browser_connection_is_ldap (bcnc), NULL);
+
+	return gda_ldap_get_class_info (GDA_LDAP_CONNECTION (bcnc->priv->cnc), classname);
+}
+
+/**
+ * browser_connection_get_top_classes:
+ * @bcnc: a #BrowserConnection
+ *
+ * proxy for gda_ldap_get_top_classes.
+ */
+const GSList *
+browser_connection_get_top_classes (BrowserConnection *bcnc)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (browser_connection_is_ldap (bcnc), NULL);
+
+	return gda_ldap_get_top_classes (GDA_LDAP_CONNECTION (bcnc->priv->cnc));
+}
+
+/**
+ * browser_connection_declare_table:
+ * @bcnc: a #BrowserConnection
+ *
+ * Wrapper around gda_ldap_connection_declare_table()
+ */
+gboolean
+browser_connection_declare_table (BrowserConnection *bcnc,
+				  const gchar *table_name,
+				  const gchar *base_dn,
+				  const gchar *filter,
+				  const gchar *attributes,
+				  GdaLdapSearchScope scope,
+				  GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	g_return_val_if_fail (browser_connection_is_ldap (bcnc), FALSE);
+
+	return gda_ldap_connection_declare_table (GDA_LDAP_CONNECTION (bcnc->priv->cnc),
+						  table_name, base_dn, filter,
+						  attributes, scope, error);
+}
+
+/**
+ * browser_connection_undeclare_table:
+ * @bcnc: a #BrowserConnection
+ *
+ * Wrapper around gda_ldap_connection_undeclare_table()
+ */
+gboolean
+browser_connection_undeclare_table (BrowserConnection *bcnc,
+				    const gchar *table_name,
+				    GError **error)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), FALSE);
+	g_return_val_if_fail (browser_connection_is_ldap (bcnc), FALSE);
+
+	return gda_ldap_connection_undeclare_table (GDA_LDAP_CONNECTION (bcnc->priv->cnc),
+						    table_name, error);
+}
+
+#endif /* HAVE_LDAP */

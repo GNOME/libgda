@@ -1007,7 +1007,7 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
  *
  * Returns: (transfer none) (element-type GError) (array zero-terminated=1): a pointer to a %NULL terminated array of #GError, or %NULL.
  *
- * Since: 5.0
+ * Since: 4.2.6
  */
 GError **
 gda_data_model_get_exceptions (GdaDataModel *model)

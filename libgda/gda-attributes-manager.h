@@ -85,6 +85,12 @@ void                  gda_attributes_manager_foreach     (GdaAttributesManager *
  */
 #define GDA_ATTRIBUTE_IS_DEFAULT "__gda_attr_is_default"
 
+/**
+ * GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN:
+ * This attribute, if %TRUE specifies that a tree node may or may not have any children nodes (value has a G_TYPE_BOOLEAN type).
+ */
+#define GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN "__gda_attr_tnuchild"
+
 
 /**
  * SECTION:gda-attributes-manager

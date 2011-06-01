@@ -263,5 +263,29 @@ Opening connection 'c0' for: SQLCipher://DB_NAME=testcrypt
     and <link linkend="limitations_sqlcipher">SQLCipher provider's limitations</link>.
   </para>
   </sect1>
+
+  <sect1 id="provider_notes_ldap"><title>For LDAP</title>
+    <para>
+      The LDAP provider maps LDAP searches to &LIBGDA;'s data models, with the following design choices:
+      <itemizedlist>
+	<listitem><para>A data model column is created for each attibute the LDAP search returns, plus one
+	column for the DN (Distinguished name), as the 1st column of each search;
+	so if no attribute is requested, the resulting data model
+	will only contain one column for the DN</para></listitem>
+	<listitem><para>If not otherwise specified, the data type of each data model column is determined
+	by the data type of the corresponding column attribute</para></listitem>
+	<listitem><para>Multi valued attributes are by default handled as an invalid data, but it is possible to
+	specify instead to report a NULL value, or an array in a CSV notation.</para></listitem>
+	<listitem><para>For performances reasons, some data is cached (unless the "USE_CACHE" connection
+	variable is set to FALSE). Cache files are in the users's home directory, as per the
+	<ulink url="http://www.freedesktop.org/wiki/Specifications/basedir-spec">XDG Base Directory Specification</ulink></para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      For more information, see the <link linkend="GdaDataModelLdap">GdaDataModelLdap</link> and
+      the <link linkend="GdaLdapConnection">GdaLdapConnection</link> objects.
+    </para>
+  </sect1>
+
   
 </chapter>

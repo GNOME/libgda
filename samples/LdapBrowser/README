@@ -1,0 +1,22 @@
+LDAP browser demo
+=================
+
+Description:
+------------
+
+The example in this directory is a very simple LDAP tree browser, illustrating the usage of
+an LDAP connection and the GdaTree and GdaTreeMgrLdap objects.
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgda is installed prior to this):
+> make
+
+and to run:
+> ./ldap-browser [-h <server>] [-u <username>] [-p <password>] [-b <base>] [-s]
+
+Results:
+--------
+Opens a window with the LDAP entries hierarchy, showing only the RDN of each entry. Selecting
+an entry displays its RND and complete DN in the standard output stream.

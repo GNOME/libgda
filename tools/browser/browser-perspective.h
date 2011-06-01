@@ -38,6 +38,7 @@ struct _BrowserPerspectiveIface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */
+	BrowserWindow       *(* i_get_window) (BrowserPerspective *perspective);
 	GtkActionGroup      *(* i_get_actions_group) (BrowserPerspective *perspective);
 	const gchar         *(* i_get_actions_ui) (BrowserPerspective *perspective);
 	void                 (* i_get_current_customization) (BrowserPerspective *perspective,
@@ -66,6 +67,9 @@ void            browser_perspective_get_current_customization (BrowserPerspectiv
 							       const gchar **out_ui);
 void            browser_perspective_page_tab_label_change (BrowserPerspective *perspective,
 							   BrowserPage *page);
+
+BrowserWindow  *browser_perspective_get_window (BrowserPerspective *perspective);
+void            browser_perspective_declare_notebook (BrowserPerspective *perspective, GtkNotebook *nb);
 
 G_END_DECLS
 

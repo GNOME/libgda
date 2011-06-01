@@ -99,7 +99,10 @@ example_files = \
 	samples/Blobs/testblob.db \
 	samples/Gir/Makefile \
 	samples/Gir/README \
-	samples/Gir/libgda.js
+	samples/Gir/libgda.js \
+	samples/LdapBrowser/Makefile \
+	samples/LdapBrowser/README \
+	samples/LdapBrowser/ldap-browser.c
 
 EXTRA_DIST = \
 	COPYING \

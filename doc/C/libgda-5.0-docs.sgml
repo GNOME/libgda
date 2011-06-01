@@ -559,6 +559,7 @@
       <xi:include href="xml/gda-virtual-connection.xml"/>
       <xi:include href="xml/gda-vconnection-data-model.xml"/>
       <xi:include href="xml/gda-vconnection-hub.xml"/>
+      <xi:include href="xml/gda-ldap-connection.xml"/>
     </chapter>
 
     <chapter id="data_models">
@@ -615,6 +616,7 @@
       <xi:include href="xml/gda-data-access-wrapper.xml"/>
       <xi:include href="xml/gda-data-model-array.xml"/>
       <xi:include href="xml/gda-row.xml"/>
+      <xi:include href="xml/gda-data-model-ldap.xml"/>
       <xi:include href="xml/gda-data-model-bdb.xml"/>
       <xi:include href="xml/gda-data-model-dir.xml"/>
       <xi:include href="xml/gda-data-proxy.xml"/>
@@ -783,6 +785,7 @@ g_object_unref (tree);
       <xi:include href="xml/gda-tree-mgr-schemas.xml"/>
       <xi:include href="xml/gda-tree-mgr-tables.xml"/>
       <xi:include href="xml/gda-tree-mgr-columns.xml"/>
+      <xi:include href="xml/gda-tree-mgr-ldap.xml"/>
     </chapter>
 
     <chapter id="data_conv">
@@ -1704,6 +1707,18 @@ g_object_unref (eng);
     </index>
     <index id="index-4-2-4" role="4.2.4">
       <title>Index of new symbols in 4.2.4</title>
+    </index>
+    <index id="index-4-2-5" role="4.2.5">
+      <title>Index of new symbols in 4.2.5</title>
+    </index>
+    <index id="index-4-2-6" role="4.2.6">
+      <title>Index of new symbols in 4.2.6</title>
+    </index>
+    <index id="index-4-2-7" role="4.2.7">
+      <title>Index of new symbols in 4.2.7</title>
+    </index>
+    <index id="index-4-2-8" role="4.2.8">
+      <title>Index of new symbols in 4.2.8</title>
     </index>
     <index id="index-5-0" role="5.0">
       <title>Index of new symbols in 5.0</title>

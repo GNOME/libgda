@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -32,10 +32,6 @@
 struct _GdaTreePrivate {
 	GSList      *managers; /* list of GdaTreeManager */
 	GdaTreeNode *root;
-
-	gboolean     update_on_searching; /* set to FALSE if GdaTree's contents is supposed to be constant
-					   * needs a PROPRERTY because it's now a constant, or even
-					   * maybe move it to each GdaTreeManager */
 };
 
 static void gda_tree_class_init (GdaTreeClass *klass);
@@ -191,8 +187,6 @@ gda_tree_init (GdaTree *tree, G_GNUC_UNUSED GdaTreeClass *klass)
 	tree->priv->managers = NULL;
 
 	take_root_node (tree, gda_tree_node_new (NULL));
-
-	tree->priv->update_on_searching = FALSE;
 }
 
 static void
@@ -331,7 +325,7 @@ gda_tree_new (void)
 /**
  * gda_tree_add_manager:
  * @tree: a #GdaTree object
- * @manager: a #GdaTreeManager object
+ * @manager: (transfer none): a #GdaTreeManager object
  * 
  * Sets @manager as a top #GdaTreeManager object, which will be responsible for creating top level nodes in @tree.
  *
@@ -421,18 +415,67 @@ gboolean
 gda_tree_update_part (GdaTree *tree, GdaTreeNode *node, GError **error)
 {
 	GSList *mgrlist;
+	GdaTreeManager *mgr;
+	GdaTreeNode *top;
 
 	g_return_val_if_fail (GDA_IS_TREE (tree), FALSE);
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), FALSE);
-	
-	mgrlist = _gda_tree_node_get_managers_for_children (node);
+
+	top = gda_tree_node_get_parent (node);
+	if (!top)
+		top = tree->priv->root;
+	mgr = _gda_tree_node_get_manager_for_child (top, node);
+	mgrlist = (GSList*) gda_tree_manager_get_managers (mgr);
 
 	if (mgrlist) {
 		gboolean res;
 		res = create_or_update_children (mgrlist, node, FALSE, error);
-		g_slist_free (mgrlist);
 		return res;
 	}
+	return TRUE;
+}
+
+/**
+ * gda_tree_update_children:
+ * @tree: a #GdaTree object
+ * @node: (allow-none): a #GdaTreeNode node in @tree
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Update the children of @node in @tree (not recursively, to update recursively, use
+ * gda_tree_update_part()). If @node is %NULL then the top level nodes are updated.
+ *
+ * Returns: TRUE if no error occurred.
+ *
+ * Since: 4.2.8
+ */
+gboolean
+gda_tree_update_children (GdaTree *tree, GdaTreeNode *node, GError **error)
+{
+	GSList *mgrlist;
+	GdaTreeManager *mgr;
+	GdaTreeNode *top;
+
+	g_return_val_if_fail (GDA_IS_TREE (tree), FALSE);
+	g_return_val_if_fail (! node || GDA_IS_TREE_NODE (node), FALSE);
+
+	if (node) {
+		top = gda_tree_node_get_parent (node);
+		if (!top)
+			top = tree->priv->root;
+		mgr = _gda_tree_node_get_manager_for_child (top, node);
+		mgrlist = (GSList*) gda_tree_manager_get_managers (mgr);
+
+		if (mgrlist) {
+			gboolean res;
+			res = create_or_update_children (mgrlist, node, TRUE, error);
+			return res;
+		}
+	}
+	else {
+		/* update top level nodes */
+		create_or_update_children (tree->priv->managers, tree->priv->root, TRUE, error);
+	}
+
 	return TRUE;
 }
 
@@ -523,10 +566,6 @@ gda_tree_get_nodes_in_path (GdaTree *tree, const gchar *tree_path, gboolean use_
 static GSList *
 real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_names, GdaTreeNode **out_last_node)
 {
-	/* update 1st level if necessary */
-	if (tree->priv->update_on_searching)
-		create_or_update_children (tree->priv->managers, tree->priv->root, TRUE, NULL);
-
 	if (out_last_node)
 		*out_last_node = NULL;
 
@@ -542,7 +581,6 @@ real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_n
 	GSList *seglist;
 	GdaTreeNode *node;
 	GdaTreeNode *parent;
-	GSList *mgrlist;
 	for (seglist = segments, parent = tree->priv->root;
 	     seglist;
 	     seglist = seglist->next, parent = node) {
@@ -550,32 +588,10 @@ real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_n
 			node = gda_tree_node_get_child_name (parent, (gchar *) seglist->data);
 		else
 			node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data)); /* Flawfinder: ignore */
-		if (!node && tree->priv->update_on_searching) {
-			/* update level if necessary */
-			mgrlist = _gda_tree_node_get_managers_for_children (parent);
-
-			if (mgrlist) {
-				create_or_update_children (mgrlist, parent, TRUE, NULL);
-				g_slist_free (mgrlist);
-			}
-
-			/* try again now */
-			if (use_names)
-				node = gda_tree_node_get_child_name (parent, (gchar *) seglist->data);
-			else
-				node = gda_tree_node_get_child_index (parent, atoi ((gchar *) seglist->data)); /* Flawfinder: ignore */
-		}
 		if (!node) 
 			return NULL;
 	}
 
-	if (tree->priv->update_on_searching) {
-		mgrlist = _gda_tree_node_get_managers_for_children (node);
-		if (mgrlist) {
-			create_or_update_children (mgrlist, node, TRUE, NULL);
-			g_slist_free (mgrlist);
-		}
-	}
 	if (out_last_node) {
 		*out_last_node = node;
 		return NULL;

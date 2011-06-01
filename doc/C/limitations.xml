@@ -163,6 +163,12 @@
     </para>
   </sect1>
 
+  <sect1 id="limitations_ldap"><title>For LDAP</title>
+    <para>
+      TODO.
+    </para>
+  </sect1>
+
   <sect1 id="limitations_jdbc"><title>For JDBC based providers</title>
     <para>
       The following limitations apply to databases accessed via Libgda through a JDBC driver. When loading

@@ -1,10 +1,16 @@
 noinst_LTLIBRARIES = libperspective.la
 
+if LDAP
+ldap_flags=-DHAVE_LDAP
+endif
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/tools/browser \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
+	-I$(top_srcdir)/libgda/sqlite \
+	$(ldap_flags) \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	$(GTK_CFLAGS) \
