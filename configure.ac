@@ -623,16 +623,7 @@ fi
 AM_CONDITIONAL(FIREBIRD, test x$firebirddir != x)
 
 dnl Test for MDB Tools (for MS Access files)
-if test "x$platform_win32" = "xyes"; then
-    AM_ICONV
-    AM_CONDITIONAL(MDB, true)
-    AM_CONDITIONAL(MDBEMBEDDED, true)
-    AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS,[1],[define if mdb_bind_column accepts four args])
-    AC_DEFINE(MDB_WITH_WRITE_SUPPORT,[1],[define if mdb_open accepts MDB_WRITABLE])
-    mdbtools_found="yes (embedded)"
-else
-    MDBTOOLS_CHECK([$lib])
-fi
+MDBTOOLS_CHECK([$lib])
 
 dnl test for system-installed SQLite
 dnl If no SQLite is found or if the SQLite found does not have the sqlite3_table_column_metadata()
