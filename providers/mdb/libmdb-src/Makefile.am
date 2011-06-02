@@ -24,4 +24,10 @@ libmdb_la_SOURCES = \
 	props.c \
 	worktable.c \
 	options.c \
-	iconv.c
+	iconv.c \
+	include/config.h \
+	include/mdbodbc.h \
+	include/mdbprivate.h \
+	include/mdbsql.h \
+	include/mdbtools.h \
+	include/mdbver.h
