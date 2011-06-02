@@ -126,7 +126,7 @@ WHERE "Error code"=0
   </section>
 
   <section id="virtual-ddl-sql">
-    <title>SQL useable with virtual connections</title>
+    <title>SQL usable with virtual connections</title>
     <p>
       You can use the SQL understood by <link href="http://sqlite.org/lang.html">SQLite</link> in any virtual
       connection. Be aware however that if you define database objects (outside of the extended SQL
