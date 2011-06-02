@@ -117,12 +117,14 @@ table_columns_show_all (GtkWidget *widget)
 {
 	TableColumns *tcolumns = (TableColumns *) widget;
         GTK_WIDGET_CLASS (parent_class)->show_all (widget);
+#ifdef HAVE_LDAP
 	if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
 		if (! tcolumns->priv->ldap_props_shown) {
 			gtk_widget_hide (tcolumns->priv->ldap_header);
 			gtk_widget_hide (tcolumns->priv->ldap_text);
 		}
 	}
+#endif
 }
 
 GType
