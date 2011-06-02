@@ -9,7 +9,7 @@
   <title>LDAP connections</title>
   <p>
     LDAP connections are different than other connections in a way that an LDAP database stores data in
-    a hierarchical way, in the DIT (Directory Information Tree), whereas other databases acessible using
+    a hierarchical way, in the DIT (Directory Information Tree), whereas other databases accessible using
     the <app>gda-browser</app> application are relational databases.
   </p>
   <p>
@@ -39,7 +39,7 @@
       then the top level entry of the LDAP connection is used)</p></item>
       <item><p>the search filter: a valid LDAP search filter (if none is provided then the default 
       search filter is "(objectClass=*)", requesting any LDAP entry).</p></item>
-      <item><p>the attributes: the attributes to retreive, each attribute will be mapped to a column of the
+      <item><p>the attributes: the attributes to retrieve, each attribute will be mapped to a column of the
       table. The attributes must be a comma separated list of attributes, where each attribute can optionally
       be assigned a type and a multi value option (see below).</p></item>
       <item><p>the scope: the search scope, "subtree" (to search the base DN and the entire sub tree below),
@@ -60,7 +60,7 @@
   <section id="ldap-columns-mapping">
     <title>Attributes to columns mapping</title>
     <p>
-      As mentionned in the previous section, each attribute will be mapped to a column. The column type
+      As mentioned in the previous section, each attribute will be mapped to a column. The column type
       is normally automatically determined (string, number, ...) but can be forced by appending to the attribute
       name the "::&lt;type&gt;" for the requested type.
     </p>
@@ -76,7 +76,7 @@
       This only works for string attribute types.</p></item>
       <item><p>"MULT" or "*": a row will be returned for each value of the attribute, effectively
       multiplying the number of returned rows</p></item>
-      <item><p>"1": only the first vakue of the attribute will be used, the other values ignored</p></item>
+      <item><p>"1": only the first value of the attribute will be used, the other values ignored</p></item>
       <item><p>"CONCAT": the attributes' values are concatenated (with a newline char
       between each value)</p></item>
       <item><p>"ERROR": an error value will be returned (this is the default behaviour)</p></item>
@@ -84,7 +84,7 @@
   </section>
 
   <section id="ldap-ddl-sql">
-    <title>SQL useable with LDAP connections</title>
+    <title>SQL usable with LDAP connections</title>
     <p>
       You can use the SQL understood by <link href="http://sqlite.org/lang.html">SQLite</link> in any LDAP
       connection. Be aware however that if you define database objects (outside of the extended SQL
@@ -102,7 +102,7 @@
   </section>
 
   <section id="ldap-sql">
-    <title>SQL extension to hande LDAP tables</title>
+    <title>SQL extension to handle LDAP tables</title>
     <p>
       LDAP tables can be created using an extended set of SQL commands:
     </p>

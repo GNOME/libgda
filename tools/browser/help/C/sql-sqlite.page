@@ -12,15 +12,15 @@
     are the same.
   </p>
   <p>
-    All the SQL understood by <link href="http://sqlite.org/lang.html">SQLite</link> is useable
-    in these connections, with the limitations and modifications detailled in the next sections.
+    All the SQL understood by <link href="http://sqlite.org/lang.html">SQLite</link> is usable
+    in these connections, with the limitations and modifications detailed in the next sections.
   </p>
 
   <section id="sql-sqlite-dbobjects">
     <title>Database objects</title>
     <p>
       It is possible to create database objects (tables, views, ...) but these will be lost when the
-      connection is closed. The only "persistant" objects are the ones automatically created
+      connection is closed. The only "persistent" objects are the ones automatically created
       when the connection is opened (and they contain no data as they are merely proxies to
       other sources of data).
     </p>
@@ -30,7 +30,7 @@
     <title>Extra available functions</title>
     <p>
       All the functions provided by <link href="http://sqlite.org/lang_corefunc.html">SQLite</link>
-      are useable in these connections, and a few other ones have been added:
+      are usable in these connections, and a few other ones have been added:
     </p>
     <list>
       <item>

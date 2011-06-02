@@ -18,7 +18,7 @@
   </p>
   <p>
     An action can be defined to show all the entries in the "comments" table provided
-    the key is defining a product. Then anytime a product is listed in a resultset, the
+    the key is defining a product. Then anytime a product is listed in a result set, the
     contextual menu will allow the user to execute this action and thus display all
     the comments on the selected product. This situation is illustrated in the following figures.
   </p>
