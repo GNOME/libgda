@@ -1,5 +1,4 @@
-/* gdaui-rt-editor.c
- *
+/*
  * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -19,13 +18,13 @@
  */
 
 #include <string.h>
-#include "gdaui-rt-editor.h"
 #include <glib/gi18n-lib.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include "bullet.h"
 #include "bulleth.h"
 #define MAX_BULLETS 2
 //gchar * bullet_strings[] = {"•", "◦"};
+#include <libgda-ui.h>
 
 GdkPixbuf *bullet_pix[MAX_BULLETS] = {NULL};
 gchar     *lists_tokens[MAX_BULLETS] = {"- ", " - "};
@@ -675,6 +674,8 @@ add_image_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
                                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                            GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
                                            NULL);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
+					     gdaui_get_default_path ());
         filter = gtk_file_filter_new ();
         gtk_file_filter_add_pixbuf_formats (filter);
         gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (dlg), filter);
@@ -684,6 +685,7 @@ add_image_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
                 GError *error = NULL;
 
                 filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dlg));
+		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg)));
 
 		GdkPixbuf *pixbuf;
 		pixbuf = gdk_pixbuf_new_from_file (filename, &error);

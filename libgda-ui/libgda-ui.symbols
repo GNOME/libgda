@@ -135,6 +135,7 @@
 	gdaui_formatted_entry_set_insert_func
 	gdaui_form_get_type
 	gdaui_form_new
+	gdaui_get_default_path
 	gdaui_grid_get_type
 	gdaui_grid_new
 	gdaui_grid_set_sample_size
@@ -172,6 +173,7 @@
 	gdaui_server_operation_get_type
 	gdaui_server_operation_new
 	gdaui_server_operation_new_in_dialog
+	gdaui_set_default_path
 	gdaui_tree_store_get_iter
 	gdaui_tree_store_get_node
 	gdaui_tree_store_get_type

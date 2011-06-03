@@ -1,5 +1,5 @@
-/* GDA library
- * Copyright (C) 2009 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2009 - 2011 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -48,7 +48,17 @@
 
 G_BEGIN_DECLS
 
-void gdaui_init (void);
+/**
+ * SECTION:libgdaui
+ * @short_description: Library initialization and information
+ * @title: Library initialization
+ * @stability: Stable
+ * @see_also:
+ */
+
+void         gdaui_init (void);
+const gchar *gdaui_get_default_path (void);
+void         gdaui_set_default_path (const gchar *path);
 
 G_END_DECLS
 

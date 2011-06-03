@@ -734,3 +734,40 @@ get_spec_with_isocodes (const gchar *file)
 
 	return retval;
 }
+
+static gchar *gdaui_path = NULL;
+
+/**
+ * gdaui_get_default_path:
+ *
+ * Get the default path used when saving a file, or when showing a #GtkFileChooser file chooser.
+ * When the application starts, the default path will be the same as the onde returned by
+ * g_get_current_dir().
+ *
+ * Returns: (transfer none): the default path, or %NULL
+ *
+ * Since: 4.2.9
+ */
+const gchar *
+gdaui_get_default_path (void)
+{
+	if (! gdaui_path)
+		gdaui_path = g_get_current_dir ();
+	return gdaui_path;
+}
+
+/**
+ * gdaui_set_default_path:
+ *
+ * Define the default path used when saving a file, or when showing a #GtkFileChooser file chooser.
+ *
+ * Since: 4.2.9
+ */
+void
+gdaui_set_default_path (const gchar *path)
+{
+	g_free (gdaui_path);
+	gdaui_path = NULL;
+	if (path)
+		gdaui_path = g_strdup (path);
+}

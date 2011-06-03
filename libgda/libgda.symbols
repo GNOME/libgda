@@ -824,7 +824,6 @@
 	gda_transaction_status_add_event_sql
 	gda_transaction_status_add_event_sub
 	gda_transaction_status_add_event_svp
-	gda_transaction_status_dump
 	gda_transaction_status_event_type_get_type
 	gda_transaction_status_find
 	gda_transaction_status_find_current

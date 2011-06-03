@@ -1,6 +1,5 @@
-/* browser-canvas.c
- *
- * Copyright (C) 2007 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2007 - 2011 Vivien Malerba
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -483,6 +482,8 @@ popup_export_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 					   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					   GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 					   NULL);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
+					     gdaui_get_default_path ());
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("PNG Image"));
 	gtk_file_filter_add_mime_type (filter, "image/png");
@@ -499,6 +500,7 @@ popup_export_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 		gchar *lcfilename;
 		cairo_surface_t *surface = NULL;
 
+		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg)));
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dlg));
 		if (filename) {
 			GooCanvasBounds bounds;

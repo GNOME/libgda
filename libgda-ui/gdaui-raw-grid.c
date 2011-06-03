@@ -21,13 +21,9 @@
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/libgda.h>
-#include "gdaui-raw-grid.h"
-#include "gdaui-data-proxy.h"
-#include "gdaui-data-filter.h"
-#include "gdaui-data-selector.h"
+#include <libgda-ui.h>
 #include "internal/utility.h"
 #include "marshallers/gdaui-marshal.h"
-#include "gdaui-easy.h"
 #include "data-entries/gdaui-data-cell-renderer-combo.h"
 #include "data-entries/gdaui-data-cell-renderer-info.h"
 #include <libgda/binreloc/gda-binreloc.h>
@@ -850,7 +846,7 @@ create_columns_data (GdauiRawGrid *grid)
 
 /* keep track of the columns shown and hidden */
 static void
-column_visibility_changed (GtkTreeViewColumn *column, GParamSpec *pspec, ColumnData *cdata)
+column_visibility_changed (GtkTreeViewColumn *column, G_GNUC_UNUSED GParamSpec *pspec, ColumnData *cdata)
 {
 	cdata->hidden = !gtk_tree_view_column_get_visible (column);
 }
@@ -1752,7 +1748,7 @@ static GtkWidget *new_check_menu_item (const gchar *label,
 				       gpointer user_data);
 
 static void
-hidden_column_mitem_toggled_cb (GtkCheckMenuItem *check, GdauiRawGrid *grid)
+hidden_column_mitem_toggled_cb (GtkCheckMenuItem *check, G_GNUC_UNUSED GdauiRawGrid *grid)
 {
 	ColumnData *cdata;
 	gboolean act;
@@ -1961,6 +1957,8 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	g_object_set_data (G_OBJECT (dialog), "filename", filename);
 	gtk_box_pack_start (GTK_BOX (hbox), filename, TRUE, TRUE, 0);
 	gtk_widget_show (filename);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (filename),
+					     gdaui_get_default_path ());
 
 	str = g_strdup_printf ("<b>%s:</b>", _("Details"));
 	label = gtk_label_new ("");
@@ -2106,6 +2104,7 @@ save_as_response_cb (GtkDialog *dialog, gint response_id, GdauiRawGrid *grid)
 
 		types = g_object_get_data (G_OBJECT (dialog), "types");
 		filename = g_object_get_data (G_OBJECT (dialog), "filename");
+		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (filename)));
 		selection_only = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
 							       (g_object_get_data (G_OBJECT (dialog), "sel_only")));
 		null_as_empty = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON

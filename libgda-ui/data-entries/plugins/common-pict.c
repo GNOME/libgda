@@ -1,4 +1,4 @@
-/* common-pict.c
+/*
  * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <string.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-blob-op.h>
+#include <libgda-ui/libgda-ui.h>
 
 /*
  * Fills in @bindata->data and @bindata->data_length with the contents of @value.
@@ -335,7 +336,9 @@ file_load_cb (GtkWidget *button, PictMenuData *menudata)
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_add_pixbuf_formats (filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (dlg), filter);
-	
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
+					     gdaui_get_default_path ());	
+
 	if (gtk_dialog_run (GTK_DIALOG (dlg)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		gsize length;
@@ -343,6 +346,7 @@ file_load_cb (GtkWidget *button, PictMenuData *menudata)
 		gchar *data;
 
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dlg));
+		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg)));
 
 		if (g_file_get_contents (filename, &data, &length, &error)) {
 			if (menudata->bindata->data) {
@@ -456,6 +460,8 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 					   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					   GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 					   NULL);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
+					     gdaui_get_default_path ());
 
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (dlg), expander);
 	if (gtk_dialog_run (GTK_DIALOG (dlg)) == GTK_RESPONSE_ACCEPT) {
@@ -466,6 +472,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 
 		format = gtk_combo_box_get_active (GTK_COMBO_BOX (combo));
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dlg));
+		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg)));
 
 		if (format == 0) {
 			/* save data AS IS */
