@@ -67,7 +67,7 @@
     <p>
       Also, because
       some attributes can have multiple values, the table construction handles multi-valued attributes in
-      different ways, depending on each attribute's options, an option can be specified by appending the
+      different ways, depending on each attribute's options. An option can be specified by appending the
       "::&lt;option&gt;" to the attribute name. Valid options are:
     </p>
     <list>
@@ -109,7 +109,7 @@
     <list>
       <item><p><code>CREATE LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] [FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;filter&gt;']</code> to declare a new LDAP virtual table</p></item>
       <item><p><code>DESCRIBE LDAP TABLE &lt;table_name&gt;</code> to show LDAP virtual table's definition</p></item>
-      <item><p><code>ALTER LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] [FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;filter&gt;']</code> to modify an LDAP virtual table's definition (only the specified part is actually modified</p></item>
+      <item><p><code>ALTER LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] [FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;filter&gt;']</code> to modify an LDAP virtual table's definition (only the specified part is actually modified)</p></item>
       <item><p><code>DROP LDAP TABLE &lt;table_name&gt;</code> to remove an LDAP virtual table. Note that the
       usual <code>DROP TABLE &lt;table_name&gt;</code> can also be used instead.</p></item>
     </list>
