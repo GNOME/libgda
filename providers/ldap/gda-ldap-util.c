@@ -849,7 +849,22 @@ gda_ldap_attr_value_to_g_value (LdapConnectionData *cdata, GType type, BerValue 
 		}
 		if (conv) {
 			struct tm *ptm;
+#ifdef HAVE_LOCALTIME_R
+			struct tm tmpstm;
+			ptm = localtime_r (&(tv.tv_sec), &tmpstm);
+#elif HAVE_LOCALTIME_S
+			struct tm tmpstm;
+			if (localtime_s (&tmpstm, &(tv.tv_sec)) == 0)
+				ptm = &tmpstm;
+			else
+				ptm = NULL;
+#else
 			ptm = localtime (&(tv.tv_sec));
+#endif
+
+			if (!ptm)
+				return NULL;
+
 			if (type == GDA_TYPE_TIMESTAMP) {
 				GdaTimestamp ts;
 				ts.year = ptm->tm_year + 1900;

@@ -1,6 +1,5 @@
-/* gda-handler-time.c
- *
- * Copyright (C) 2003 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2003 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -358,7 +357,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
 		time_t now;
 		struct tm *now_tm;
 
-		for (i=0; i<3; i++) {
+		for (i=0; i < 3; i++) {
 			switch (nums[i]) {
 			case 7:
 				hdl->priv->str_locale->dmy_order[i] = G_DATE_MONTH;
@@ -377,7 +376,16 @@ handler_compute_locale (GdaHandlerTime *hdl)
 		}
 		
 		now = time (NULL);
-		now_tm = localtime (&now);
+#ifdef HAVE_LOCALTIME_R
+		struct tm tmpstm;
+		now_tm = localtime_r (&now, &tmpstm);
+#elif HAVE_LOCALTIME_S
+		struct tm tmpstm;
+		g_assert (localtime_s (&tmpstm, &now) == 0);
+		now_tm = &tmpstm;
+#else
+                now_tm = localtime (&now);
+#endif
 		hdl->priv->str_locale->current_offset = ((now_tm->tm_year + 1900) / 100) * 100;
 
 #ifdef GDA_DEBUG_NO		
@@ -1118,7 +1126,16 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	now = time (NULL);
+#ifdef HAVE_LOCALTIME_R
+	struct tm tmpstm;
+	stm = localtime_r (&now, &tmpstm);
+#elif HAVE_LOCALTIME_S
+	struct tm tmpstm;
+	g_assert (localtime_s (&tmpstm, &now) == 0);
+	stm = &tmpstm;
+#else
 	stm = localtime (&now);
+#endif
 
 	if (type == G_TYPE_DATE) {
 		GDate *gdate;

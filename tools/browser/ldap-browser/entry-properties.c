@@ -578,20 +578,34 @@ ad_1601_timestamp_to_string (const gchar *value, const gchar *attname)
 		return NULL;
 
 	GdaDataHandler *dh;
-	struct tm stm;
+	struct tm *stm;
 	GValue tvalue;
 	GdaTimestamp ts;
 	time_t nsec = (time_t) i64;
 	gchar *str;
-	 
-	localtime_r (&nsec, &stm);
+#ifdef HAVE_LOCALTIME_R
+	struct tm tmpstm;
+	stm = localtime_r (&nsec, &tmpstm);
+#elif HAVE_LOCALTIME_S
+	struct tm tmpstm;
+	if (localtime_s (&tmpstm, &nsec) == 0)
+		stm = &tmpstm;
+	else
+		stm = NULL;
+#else
+	stm = localtime (&nsec);
+#endif
+
+	if (!stm)
+		return NULL;
+
 	memset (&ts, 0, sizeof (GdaTimestamp));
-	ts.year = stm.tm_year + 1900;
-	ts.month = stm.tm_mon + 1;
-	ts.day = stm.tm_mday;
-	ts.hour = stm.tm_hour;
-	ts.minute = stm.tm_min;
-	ts.second = stm.tm_sec;
+	ts.year = stm->tm_year + 1900;
+	ts.month = stm->tm_mon + 1;
+	ts.day = stm->tm_mday;
+	ts.hour = stm->tm_hour;
+	ts.minute = stm->tm_min;
+	ts.second = stm->tm_sec;
 	ts.timezone = GDA_TIMEZONE_INVALID;
 	memset (&tvalue, 0, sizeof (GValue));
 	gda_value_set_timestamp (&tvalue, &ts);
