@@ -204,7 +204,7 @@ update_history_actions (LdapSearchPage *epage)
 
 static void
 search_done_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
-		gpointer out_result, LdapSearchPage *epage, GError *error)
+		gpointer out_result, LdapSearchPage *epage, G_GNUC_UNUSED GError *error)
 {
 	if (epage->priv->result_view) {
 		gtk_widget_destroy (epage->priv->result_view);
@@ -227,7 +227,7 @@ search_done_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 }
 
 static void
-filter_exec_clicked_cb (GtkWidget *button, LdapSearchPage *epage)
+filter_exec_clicked_cb (G_GNUC_UNUSED GtkWidget *button, LdapSearchPage *epage)
 {
 	guint id;
 	gchar *base_dn, *filter, *attributes;
@@ -253,9 +253,15 @@ filter_exec_clicked_cb (GtkWidget *button, LdapSearchPage *epage)
 }
 
 static void
-filter_clear_clicked_cb (GtkWidget *button, LdapSearchPage *epage)
+filter_clear_clicked_cb (G_GNUC_UNUSED GtkWidget *button, LdapSearchPage *epage)
 {
 	filter_editor_clear (FILTER_EDITOR (epage->priv->search_entry));
+}
+
+static void
+search_entry_activated_cb (G_GNUC_UNUSED FilterEditor *feditor, LdapSearchPage *epage)
+{
+	filter_exec_clicked_cb (NULL, epage);
 }
 
 /**
@@ -307,6 +313,8 @@ ldap_search_page_new (BrowserConnection *bcnc, const gchar *base_dn)
 				    GDA_LDAP_SEARCH_SUBTREE);
 	gtk_box_pack_start (GTK_BOX (hb), wid, TRUE, TRUE, 0);
 	epage->priv->search_entry = wid;
+	g_signal_connect (wid, "activate",
+			  G_CALLBACK (search_entry_activated_cb), epage);
 
 	bb = gtk_vbutton_box_new ();
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bb), GTK_BUTTONBOX_END);

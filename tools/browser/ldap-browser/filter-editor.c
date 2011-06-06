@@ -42,6 +42,13 @@ static void filter_editor_dispose    (GObject *object);
 
 static GObjectClass *parent_class = NULL;
 
+/* signals */
+enum {
+        ACTIVATE,
+	LAST_SIGNAL
+};
+
+gint filter_editor_signals [LAST_SIGNAL] = { 0 };
 
 /*
  * FilterEditor class implementation
@@ -54,6 +61,14 @@ filter_editor_class_init (FilterEditorClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	filter_editor_signals [ACTIVATE] =
+                g_signal_new ("activate",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (FilterEditorClass, activate),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	klass->activate = NULL;
 	object_class->dispose = filter_editor_dispose;
 }
 
@@ -105,6 +120,12 @@ filter_editor_get_type (void)
 	return type;
 }
 
+static void
+activated_cb (GtkEntry *entry, FilterEditor *feditor)
+{
+	g_signal_emit (feditor, filter_editor_signals [ACTIVATE], 0);
+}
+
 /**
  * filter_editor_new:
  *
@@ -149,14 +170,20 @@ filter_editor_new (BrowserConnection *bcnc)
 	entry = gtk_entry_new ();
 	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 0, 1);
 	feditor->priv->base_dn = entry;
+	g_signal_connect (entry, "activate",
+			  G_CALLBACK (activated_cb), feditor);
 
 	entry = gtk_entry_new ();
 	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 1, 2);
 	feditor->priv->filter = entry;
+	g_signal_connect (entry, "activate",
+			  G_CALLBACK (activated_cb), feditor);
 
 	entry = gtk_entry_new ();
 	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 2, 3);
 	feditor->priv->attributes = entry;
+	g_signal_connect (entry, "activate",
+			  G_CALLBACK (activated_cb), feditor);
 
 	model = gda_data_model_array_new_with_g_types (2, G_TYPE_INT, G_TYPE_STRING);
 	g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), "Base (search the base DN only)");
