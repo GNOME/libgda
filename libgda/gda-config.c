@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <unistd.h>
 #include <stdio.h>
 #include <gmodule.h>
 #include <libgda/gda-config.h>
@@ -630,12 +631,34 @@ gda_config_constructor (GType type,
 										    LIBGDA_ABI_NAME, "config", NULL);
 		unique_instance->priv->system_config_allowed = FALSE;
 		if (unique_instance->priv->system_file) {
+#ifdef G_OS_WIN32
+
 			FILE *file;
                         file = fopen (unique_instance->priv->system_file, "a");  /* Flawfinder: ignore */
                         if (file) {
                                 unique_instance->priv->system_config_allowed = TRUE;
                                 fclose (file);
                         }
+#else
+			struct stat stbuf;
+			if (stat (unique_instance->priv->system_file, &stbuf) == 0) {
+				/* use effective user and group IDs */
+				uid_t euid;
+				gid_t egid;
+				euid = geteuid ();
+				egid = getegid ();
+				if (euid == stbuf.st_uid) {
+					if ((stbuf.st_mode & S_IWUSR) && (stbuf.st_mode & S_IRUSR))
+						unique_instance->priv->system_config_allowed = TRUE;
+				}
+				else if (egid == stbuf.st_gid) {
+					if ((stbuf.st_mode & S_IWGRP) && (stbuf.st_mode & S_IRGRP))
+						unique_instance->priv->system_config_allowed = TRUE;
+				}
+				else if ((stbuf.st_mode & S_IWOTH) && (stbuf.st_mode & S_IROTH))
+					unique_instance->priv->system_config_allowed = TRUE;
+			}
+#endif
 		}
 
 		/* Setup file monitoring */
