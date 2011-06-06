@@ -1251,7 +1251,19 @@ gda_value_new_timestamp_from_timet (time_t val)
 	struct tm *ltm;
 
         value = g_new0 (GValue, 1);
-        ltm = localtime ((const time_t *) &val);
+#ifdef HAVE_LOCALTIME_R
+	struct tm tmpstm;
+	ltm = localtime_r ((const time_t *) &val, &tmpstm);
+#elif HAVE_LOCALTIME_S
+	struct tm tmpstm;
+	if (localtime_s (&tmpstm, (const time_t *) &val) == 0)
+		ltm = &tmpstm;
+	else
+		ltm = NULL;
+#else
+	ltm = localtime ((const time_t *) &val);
+#endif
+
         if (ltm) {
                 GdaTimestamp tstamp;
                 tstamp.year = ltm->tm_year + 1900;

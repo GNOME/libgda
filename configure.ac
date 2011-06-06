@@ -62,6 +62,7 @@ AC_SUBST(INTLTOOL_XML_RULE)
 AC_CHECK_SIZEOF(unsigned int,0)
 AC_CHECK_SIZEOF(unsigned long int,0)
 AC_CHECK_TYPE(uint8_t, unsigned char)
+AC_CHECK_FUNCS(localtime_r localtime_s)
 
 GDA_BUILDDATE=`date '+%F'`
 AC_SUBST(GDA_BUILDDATE, $GDA_BUILDDATE)

@@ -874,7 +874,16 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
                 struct tm *stm;
 
                 now = time (NULL);
+#ifdef HAVE_LOCALTIME_R
+		struct tm tmpstm;
+		stm = localtime_r (&now, &tmpstm);
+#elif HAVE_LOCALTIME_S
+		struct tm tmpstm;
+		g_assert (localtime_s (&tmpstm, &now) == 0);
+		stm = &tmpstm;
+#else
                 stm = localtime (&now);
+#endif
                 year = stm->tm_year + 1900;
                 month = stm->tm_mon;
                 day = stm->tm_mday;

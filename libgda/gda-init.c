@@ -1,5 +1,8 @@
 /*
- * Copyright (C) 1998 - 2008 The GNOME Foundation.
+ * Copyright (C) 1998 - 2011 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -170,6 +173,9 @@ gda_init (void)
 	g_assert (type);
 	type = GDA_TYPE_ERROR;
 	g_assert (type);
+
+	/* force TZ init */
+	tzset ();
 
 	/* acquire locale */
 	gda_locale_changed ();
