@@ -46,6 +46,9 @@ struct _FilterEditor {
 
 struct _FilterEditorClass {
 	GtkVBoxClass         parent_class;
+	
+	/* signals */
+	void               (*activate) (FilterEditor *feditor);
 };
 
 GType        filter_editor_get_type       (void) G_GNUC_CONST;
