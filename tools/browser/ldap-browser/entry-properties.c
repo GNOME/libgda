@@ -27,6 +27,7 @@
 #include "entry-properties.h"
 #include "marshal.h"
 #include <time.h>
+#include <libgda-ui/libgda-ui.h>
 
 struct _EntryPropertiesPrivate {
 	BrowserConnection *bcnc;
@@ -220,6 +221,8 @@ data_save_cb (GtkWidget *mitem, EntryProperties *eprop)
 					      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					      GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 					      NULL);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog),
+					     gdaui_get_default_path ());
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		GValue *binvalue;
@@ -237,6 +240,7 @@ data_save_cb (GtkWidget *mitem, EntryProperties *eprop)
 					    lerror && lerror->message ? lerror->message : _("No detail"));
 			g_clear_error (&lerror);
 		}
+		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dialog)));
 		g_free (filename);
 	}
 	gtk_widget_destroy (dialog);

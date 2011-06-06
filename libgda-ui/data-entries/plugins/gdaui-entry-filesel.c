@@ -1,6 +1,5 @@
-/* gdaui-entry-filesel.c
- *
- * Copyright (C) 2005 - 2010 Vivien Malerba
+/*
+ * Copyright (C) 2005 - 2011 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,6 +20,7 @@
 #include <glib/gi18n-lib.h>
 #include "gdaui-entry-filesel.h"
 #include <libgda/gda-data-handler.h>
+#include <libgda-ui/libgda-ui.h>
 
 /* 
  * Main static functions 
@@ -201,6 +201,8 @@ button_clicked_cb (G_GNUC_UNUSED GtkWidget *button, GdauiEntryFilesel *filesel)
 					   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					   GTK_STOCK_APPLY, GTK_RESPONSE_ACCEPT,
 					   NULL);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
+					     gdaui_get_default_path ());
 		
 	result = gtk_dialog_run (GTK_DIALOG (dlg));
 	if (result == GTK_RESPONSE_ACCEPT) {
@@ -209,6 +211,7 @@ button_clicked_cb (G_GNUC_UNUSED GtkWidget *button, GdauiEntryFilesel *filesel)
 		file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dlg));
 		gtk_entry_set_text (GTK_ENTRY (filesel->priv->entry), file);
 		g_free (file);
+		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg)));
 	}
 	gtk_widget_destroy (dlg);
 }

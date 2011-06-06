@@ -1,6 +1,5 @@
-/* gdaui-decl.h
- *
- * Copyright (C) 2003 - 2009 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2003 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -42,9 +41,5 @@ typedef struct _GdauiDataProxyIface  GdauiDataProxyIface;
 
 #define GDAUI_COLOR_NORMAL_INVALID "#ff6a6a"
 #define GDAUI_COLOR_PRELIGHT_INVALID "#ff7b7b"
-
-#define GDAUI_REFERER_ACTIVE   "#e0ffe0"
-#define GDAUI_REFERER_INACTIVE "#ffe0e0"
-#define GDAUI_REFERER_UNKNOWN  "#e0e0ff"
 
 #endif

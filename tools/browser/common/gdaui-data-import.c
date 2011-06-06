@@ -21,12 +21,7 @@
 #include "gdaui-data-import.h"
 #include <libgda/libgda.h>
 #include <glib/gi18n-lib.h>
-#include <libgda-ui/gdaui-combo.h>
-#include <libgda-ui/gdaui-grid.h>
-#include <libgda-ui/gdaui-raw-grid.h>
-#include <libgda-ui/gdaui-data-proxy.h>
-#include <libgda-ui/gdaui-data-proxy-info.h>
-#include <libgda-ui/gdaui-data-selector.h>
+#include <libgda-ui/libgda-ui.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
 static void gdaui_data_import_class_init (GdauiDataImportClass *class);
@@ -144,6 +139,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_SHRINK | GTK_FILL, 0, 0, 0);
 
 	entry = gtk_file_chooser_button_new (_("File to import data from"), GTK_FILE_CHOOSER_ACTION_OPEN);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (entry), gdaui_get_default_path ());
 	import->priv->file_chooser = entry;
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("Comma separated values"));
@@ -425,6 +421,7 @@ spec_changed_cb (GtkWidget *wid, GdauiDataImport *import)
 			      GDAUI_DATA_PROXY_INFO_CURRENT_ROW, NULL);
 		gtk_box_pack_start (GTK_BOX (import->priv->preview_box), import->priv->preview_grid, TRUE, TRUE, 0);
 		gtk_widget_show (import->priv->preview_grid);
+		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (import->priv->file_chooser)));
 	}
 	else 
 		gtk_widget_show (import->priv->no_data_label);

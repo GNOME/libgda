@@ -2,6 +2,8 @@
 <FILE>libgdaui</FILE>
 <TITLE>LibgdaUI Initialization</TITLE>
 gdaui_init
+gdaui_get_default_path
+gdaui_set_default_path
 <SUBSECTION Standard>
 </SECTION>
 
