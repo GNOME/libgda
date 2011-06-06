@@ -1815,6 +1815,10 @@ gda_sql_builder_get_type
 <INCLUDE>libgda/thread-wrapper/gda-thread-wrapper.h</INCLUDE>
 GdaThreadWrapper
 gda_thread_wrapper_new
+GdaThreadNotification
+GdaThreadNotificationType
+gda_thread_wrapper_get_io_channel
+gda_thread_wrapper_unset_io_channel
 GdaThreadWrapperFunc
 gda_thread_wrapper_execute
 GdaThreadWrapperVoidFunc

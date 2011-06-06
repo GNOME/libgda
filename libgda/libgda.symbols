@@ -807,11 +807,13 @@
 	gda_thread_wrapper_execute
 	gda_thread_wrapper_execute_void
 	gda_thread_wrapper_fetch_result
+	gda_thread_wrapper_get_io_channel
 	gda_thread_wrapper_get_type
 	gda_thread_wrapper_get_waiting_size
 	gda_thread_wrapper_iterate
 	gda_thread_wrapper_new
 	gda_thread_wrapper_steal_signal
+	gda_thread_wrapper_unset_io_channel
 	gda_time_copy
 	gda_time_free
 	gda_time_get_type

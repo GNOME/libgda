@@ -92,28 +92,45 @@ wrapper_job_free (WrapperJob *wj)
 }
 
 /*
+ * Returns: %TRUE if current timer should be removed
+ */
+static gboolean
+setup_results_timer (BrowserConnection *bcnc)
+{
+	gboolean short_timer = TRUE;
+
+	if (bcnc->priv->ioc_watch_id != 0)
+		return FALSE; /* nothing to do, we use notifications */
+
+	bcnc->priv->nb_no_job_waits ++;
+	if (bcnc->priv->nb_no_job_waits > 100)
+		short_timer = FALSE;
+
+	if ((bcnc->priv->wrapper_results_timer > 0) &&
+	    (bcnc->priv->long_timer != short_timer))
+		return FALSE; /* nothing to do, timer already correctlyset up */
+
+	/* switch to a short/long timer to check for results */
+	if (bcnc->priv->long_timer == short_timer)
+		g_source_remove (bcnc->priv->wrapper_results_timer);
+
+	bcnc->priv->long_timer = !short_timer;
+	bcnc->priv->wrapper_results_timer = g_timeout_add (short_timer ? CHECK_RESULTS_SHORT_TIMER : CHECK_RESULTS_LONG_TIMER,
+							   (GSourceFunc) check_for_wrapper_result,
+							   bcnc);
+	bcnc->priv->nb_no_job_waits = 0;
+	return TRUE;
+}
+
+/*
  * Pushes a job which has been asked to be exected in a sub thread using gda_thread_wrapper_execute()
  */
 static void
 push_wrapper_job (BrowserConnection *bcnc, guint job_id, JobType job_type, const gchar *reason,
 		  BrowserConnectionJobCallback callback, gpointer cb_data)
 {
-	/* setup timer */
-	if (bcnc->priv->wrapper_results_timer == 0) {
-		bcnc->priv->long_timer = FALSE;
-		bcnc->priv->wrapper_results_timer = g_timeout_add (CHECK_RESULTS_SHORT_TIMER,
-								   (GSourceFunc) check_for_wrapper_result,
-								   bcnc);
-	}
-	else if (bcnc->priv->long_timer) {
-		/* switch to a short timer to check for results */
-		g_source_remove (bcnc->priv->wrapper_results_timer);
-		bcnc->priv->wrapper_results_timer = g_timeout_add (CHECK_RESULTS_SHORT_TIMER,
-								   (GSourceFunc) check_for_wrapper_result,
-								   bcnc);
-		bcnc->priv->long_timer = FALSE;
-		bcnc->priv->nb_no_job_waits = 0;
-	}
+	/* handle timers if necessary */
+	setup_results_timer (bcnc);
 
 	/* add WrapperJob structure */
 	WrapperJob *wj;
@@ -257,12 +274,73 @@ browser_connection_class_init (BrowserConnectionClass *klass)
 	object_class->dispose = browser_connection_dispose;
 }
 
+static gboolean
+wrapper_ioc_cb (GIOChannel *source, GIOCondition condition, BrowserConnection *bcnc)
+{
+	GIOStatus status;
+	gsize nread;
+	GdaThreadNotification notif;
+
+	g_assert (source == bcnc->priv->ioc);
+//#define DEBUG_POLLING_SWITCH
+#ifdef DEBUG_POLLING_SWITCH
+	static guint c = 0;
+	c++;
+	if (c == 4)
+		goto onerror;
+#endif
+	if (condition & G_IO_IN) {
+		status = g_io_channel_read_chars (bcnc->priv->ioc, (gchar*) &notif, sizeof (notif),
+						  &nread, NULL);
+		if ((status != G_IO_STATUS_NORMAL) || (nread != sizeof (notif)))
+			goto onerror;
+
+		switch (notif.type) {
+		case GDA_THREAD_NOTIFICATION_JOB:
+			check_for_wrapper_result (bcnc);
+			break;
+		case GDA_THREAD_NOTIFICATION_SIGNAL:
+			gda_thread_wrapper_iterate (bcnc->priv->wrapper, FALSE);
+			break;
+		default:
+			/* an error occurred somewhere */
+			goto onerror;
+		}
+	}
+	if (condition & (G_IO_ERR | G_IO_HUP | G_IO_NVAL))
+		goto onerror;
+
+	return TRUE; /* keep callback */
+
+ onerror:
+#ifdef GDA_DEBUG
+	g_print ("Switching to polling instead of notifications...\n");
+#endif
+	g_source_remove (bcnc->priv->ioc_watch_id);
+	bcnc->priv->ioc_watch_id = 0;
+	g_io_channel_shutdown (bcnc->priv->ioc, FALSE, NULL);
+	g_io_channel_unref (bcnc->priv->ioc);
+	bcnc->priv->ioc = NULL;
+
+	setup_results_timer (bcnc);
+	return FALSE; /* remove callback */
+}
+
 static void
 browser_connection_init (BrowserConnection *bcnc)
 {
 	static guint index = 1;
 	bcnc->priv = g_new0 (BrowserConnectionPrivate, 1);
 	bcnc->priv->wrapper = gda_thread_wrapper_new ();
+	bcnc->priv->ioc = gda_thread_wrapper_get_io_channel (bcnc->priv->wrapper);
+	if (bcnc->priv->ioc) {
+		g_io_channel_ref (bcnc->priv->ioc);
+		bcnc->priv->ioc_watch_id = g_io_add_watch (bcnc->priv->ioc,
+							   G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_NVAL,
+							   (GIOFunc) wrapper_ioc_cb, bcnc);
+	}
+	else
+		bcnc->priv->ioc_watch_id = 0;
 	bcnc->priv->wrapper_jobs = NULL;
 	bcnc->priv->wrapper_results_timer = 0;
 	bcnc->priv->long_timer = FALSE;
@@ -615,6 +693,16 @@ browser_connection_dispose (GObject *object)
 		}
 		browser_connection_set_busy_state (bcnc, FALSE, NULL);
 
+		if (bcnc->priv->ioc_watch_id > 0) {
+			g_source_remove (bcnc->priv->ioc_watch_id);
+			bcnc->priv->ioc_watch_id = 0;
+		}
+
+		if (bcnc->priv->ioc) {
+			g_io_channel_unref (bcnc->priv->ioc);
+			bcnc->priv->ioc = NULL;
+		}
+
 		g_free (bcnc->priv);
 		bcnc->priv = NULL;
 		/*g_print ("Disposed BrowserConnection %p\n", bcnc);*/
@@ -632,31 +720,10 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 	WrapperJob *wj;
 	gboolean retval = TRUE; /* return FALSE to interrupt current timer */
 
+	retval = !setup_results_timer (bcnc);
 	if (!bcnc->priv->wrapper_jobs) {
 		gda_thread_wrapper_iterate (bcnc->priv->wrapper, FALSE);
-		if (! bcnc->priv->long_timer) {
-			if (bcnc->priv->nb_no_job_waits > 100) {
-				/* switch to a long timer to check for results */
-				bcnc->priv->wrapper_results_timer = g_timeout_add_seconds (CHECK_RESULTS_LONG_TIMER,
-											   (GSourceFunc) check_for_wrapper_result,
-											   bcnc);
-				bcnc->priv->nb_no_job_waits = 0;
-				bcnc->priv->long_timer = TRUE;
-				return FALSE;
-			}
-			else
-				bcnc->priv->nb_no_job_waits ++;
-		}
-		return TRUE;
-	}
-	else if (bcnc->priv->long_timer) {
-		/* switch to a short timer to check for results */
-		bcnc->priv->wrapper_results_timer = g_timeout_add (CHECK_RESULTS_SHORT_TIMER,
-								   (GSourceFunc) check_for_wrapper_result,
-								   bcnc);
-		retval = FALSE;
-		bcnc->priv->long_timer = FALSE;
-		bcnc->priv->nb_no_job_waits = 0;
+		return retval;
 	}
 
 	wj = (WrapperJob*) bcnc->priv->wrapper_jobs->data;

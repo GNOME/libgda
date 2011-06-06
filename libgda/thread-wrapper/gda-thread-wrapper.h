@@ -63,6 +63,77 @@ struct _GdaThreadWrapperClass {
 };
 
 /**
+ * GdaThreadNotificationType:
+ * @GDA_THREAD_NOTIFICATION_SIGNAL: the notification regards a signal
+ * @GDA_THREAD_NOTIFICATION_JOB: the notification regards a job finished
+ *
+ * Defines the kind of notification which can be obtained when reading from te #GIOChannel
+ * returned by gda_thread_wrapper_get_io_channel().
+ */
+typedef enum {
+	GDA_THREAD_NOTIFICATION_JOB    = 0x01,
+	GDA_THREAD_NOTIFICATION_SIGNAL = 0x02
+} GdaThreadNotificationType;
+
+/**
+ * GdaThreadNotification:
+ * @type: the notification type
+ * @job_id: the job ID, if @type is a #GDA_THREAD_NOTIFICATION_JOB
+ *
+ * A notification to be read through the #GIOChannel which is returned by gda_thread_wrapper_get_io_channel(),
+ * for example:
+ * <programlisting><![CDATA[
+ * gboolean
+ * wrapper_ioc_cb (GIOChannel *source, GIOCondition condition, gpointer data)
+ * {
+ *     GIOStatus status;
+ *     gsize nread;
+ *     GdaThreadNotification notif;
+ *     if (condition & G_IO_IN) {
+ *	   status = g_io_channel_read_chars (source, (gchar*) &notif, sizeof (notif), &nread, NULL);
+ *         if ((status != G_IO_STATUS_NORMAL) || (nread != sizeof (notif)))
+ *             goto onerror;
+ *	   switch (notif.type) {
+ *	   case GDA_THREAD_NOTIFICATION_JOB:
+ *             check_for_wrapper_result (bcnc);
+ *             break;
+ *         case GDA_THREAD_NOTIFICATION_SIGNAL:
+ *             gda_thread_wrapper_iterate (bcnc->priv->wrapper, FALSE);
+ *             break;
+ *         default:
+ *             goto onerror;
+ *             break;
+ *	   }
+ *   }
+ *   if (condition & (G_IO_ERR | G_IO_HUP | G_IO_NVAL))
+ *             goto onerror;
+ *   return TRUE; // keep callback
+ *
+ * onerror:
+ *   g_io_channel_shutdown (bcnc->priv->ioc, FALSE, NULL);
+ *   return FALSE; // removed callback
+ * }
+ *
+ * {
+ * [...]
+ *     GIOChannel *ioc;
+ *     ioc = gda_thread_wrapper_get_io_channel (wrapper);
+ *     if (!ioc)
+ *         [handle error]
+ *     else {
+ *         guint watch_id;
+ *         watch_id = g_io_add_watch (ioc, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_NVAL,
+ *                                    (GIOFunc) wrapper_ioc_cb, NULL);
+ *     }
+ * }
+ * ]]></programlisting>
+ */
+typedef struct {
+	GdaThreadNotificationType type;
+	guint                     job_id;
+} GdaThreadNotification;
+
+/**
  * GdaThreadWrapperFunc:
  * @arg: pointer to the data (which is the @arg argument passed to gda_thread_wrapper_execute_void())
  * @error: a place to store errors
@@ -125,7 +196,7 @@ typedef void (*GdaThreadWrapperCallback) (GdaThreadWrapper *wrapper, gpointer in
  * are represented (assigned a red and green colors), both using a single #GdaThreadWrapper, so in this diagram, 3 threads
  * are present. The communication between the threads are handled by some #GAsyncQueue objects (in a transparent way for
  * the user, presented here only for illustration purposes). The queue represented in yellow is where jobs are
- * pushed by each user thread (step 1), and popped by the worker thread (step 2). Once the user thread has finished
+ * pushed by each user thread (step 1), and popped by the worker thread (step 2). Once the worker thread has finished
  * with a job, it stores the result along with the job and pushes it to the queue dedicated to the user thread
  * (step 3) in this example the red queue (because the job was issued from the thread represented in red). The last
  * step is when the user fetches the result (in its user thread), step 4.
@@ -142,10 +213,22 @@ typedef void (*GdaThreadWrapperCallback) (GdaThreadWrapper *wrapper, gpointer in
  *     <phrase>GdaThreadWrapper's conceptual working</phrase>
  *   </textobject>
  * </mediaobject>
+ *
+ * It's the user's responsability to regularly check if a submitted job has completed
+ * (using gda_thread_wrapper_fetch_result()) or if a signal
+ * has been emitted by an object while in the worker thread and needs to be handled by the #GdaThreadWrapper
+ * to call the associated callback (using gda_thread_wrapper_iterate() or automatically done when
+ * calling gda_thread_wrapper_fetch_result()).
+ *
+ * However, when a main loop is available, the #GdaThreadWrapper can emit notifications through a
+ * #GIOChannel which can be intregated in the main loop. The #GIOChannel can be created
+ * using gda_thread_wrapper_get_io_channel().
  */
 
 GType                  gda_thread_wrapper_get_type          (void) G_GNUC_CONST;
 GdaThreadWrapper      *gda_thread_wrapper_new               (void);
+GIOChannel            *gda_thread_wrapper_get_io_channel    (GdaThreadWrapper *wrapper);
+void                   gda_thread_wrapper_unset_io_channel  (GdaThreadWrapper *wrapper);
 
 guint                  gda_thread_wrapper_execute           (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func,
 							     gpointer arg, GDestroyNotify arg_destroy_func, GError **error);

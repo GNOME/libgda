@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 Vivien Malerba
+ * Copyright (C) 2009 - 2011 Vivien Malerba
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -24,6 +24,8 @@
 
 struct _BrowserConnectionPrivate {
 	GdaThreadWrapper *wrapper;
+	GIOChannel       *ioc;
+	guint             ioc_watch_id;
 	GSList           *wrapper_jobs;
 	guint             wrapper_results_timer;
 	gboolean          long_timer;
