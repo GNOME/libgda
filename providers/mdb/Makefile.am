@@ -3,15 +3,16 @@ provider_LTLIBRARIES = libgda-mdb.la
 
 if MDBEMBEDDED
 SUBDIRS = libmdb-src
-extra_mdb_cflags = -I$(srcdir)/libmdb-src/include
-extra_mdb_ldflags = libmdb-src/libmdb.la
 if CROSS_COMPILING
+iconv_ldflags = -liconv
 else
 if PLATFORM_WIN32
-extra_mdb_ldflags = -liconv libmdb-src/libmdb.la
+iconv_ldflags = -liconv
 endif
 endif
-else
+extra_mdb_cflags = -I$(srcdir)/libmdb-src/include
+extra_mdb_ldflags = $(iconv_ldflags) libmdb-src/libmdb.la
+else # not MDBEMBEDDED
 extra_mdb_cflags = $(MDB_CFLAGS)
 extra_mdb_ldflags = $(MDB_LIBS)
 endif
