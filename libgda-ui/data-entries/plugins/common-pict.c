@@ -283,6 +283,17 @@ typedef struct {
 } PictMenuData;
 static void file_load_cb (GtkWidget *button, PictMenuData *menudata);
 static void file_save_cb (GtkWidget *button, PictMenuData *menudata);
+static void copy_cb (GtkWidget *button, PictMenuData *menudata);
+
+static void
+menudata_free (PictMenuData *menudata)
+{
+	if (menudata->bindata) {
+		g_free (menudata->bindata->data);
+		g_free (menudata->bindata);
+	}
+	g_free (menudata);
+}
 
 void
 common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *bindata, PictOptions *options,
@@ -292,7 +303,9 @@ common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *
 	PictMenuData *menudata;
 	
 	menudata = g_new (PictMenuData, 1);
-	menudata->bindata = bindata;
+	menudata->bindata = g_new (PictBinData, 1);
+	menudata->bindata->data = g_memdup (bindata->data, bindata->data_length);
+	menudata->bindata->data_length = bindata->data_length;
 	menudata->options = options;
 	menudata->callback = callback;
 	menudata->data = data;
@@ -302,7 +315,15 @@ common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *
 	g_signal_connect (menu, "deactivate", 
 			  G_CALLBACK (gtk_widget_hide), NULL);
 	pictmenu->menu = menu;
-		
+
+	mitem = gtk_menu_item_new_with_mnemonic (_("_Copy image"));
+	gtk_widget_show (mitem);
+	gtk_container_add (GTK_CONTAINER (menu), mitem);
+	g_signal_connect (mitem, "activate",
+			  G_CALLBACK (copy_cb), menudata);
+	gtk_widget_set_sensitive (mitem, bindata->data ? TRUE : FALSE);
+	pictmenu->copy_mitem = mitem;
+
 	mitem = gtk_menu_item_new_with_mnemonic (_("_Load image from file"));
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menu), mitem);
@@ -458,7 +479,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 					   GTK_WINDOW (gtk_widget_get_toplevel (button)),
 					   GTK_FILE_CHOOSER_ACTION_SAVE, 
 					   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					   GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+					   GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 					   NULL);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
 					     gdaui_get_default_path ());
@@ -522,6 +543,38 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 	g_slist_free (pictformat.formats);
 }
 
+static void
+copy_cb (GtkWidget *button, PictMenuData *menudata)
+{
+	GtkClipboard *cp;
+	cp = gtk_clipboard_get (gdk_atom_intern_static_string ("CLIPBOARD"));
+	if (!cp)
+		return;
+
+	GdkPixbufLoader *loader;
+	GdkPixbuf *pixbuf = NULL;
+	loader = gdk_pixbuf_loader_new ();
+	if (gdk_pixbuf_loader_write (loader, menudata->bindata->data,
+				     menudata->bindata->data_length, NULL)) {
+		if (gdk_pixbuf_loader_close (loader, NULL)) {
+			pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
+			g_object_ref (pixbuf);
+		}
+		else
+			gdk_pixbuf_loader_close (loader, NULL);
+	}
+	else
+		gdk_pixbuf_loader_close (loader, NULL);
+	g_object_unref (loader);
+	
+	if (pixbuf) {
+		gtk_clipboard_set_image (cp, pixbuf);
+		g_object_unref (pixbuf);
+	}
+	else
+		gtk_clipboard_set_image (cp, NULL);
+}
+
 /* 
  * adjust the sensitiveness of the menu items in the popup menu
  */
@@ -532,6 +585,7 @@ common_pict_adjust_menu_sensitiveness (PictMenu *pictmenu, gboolean editable, Pi
 		return;
 	gtk_widget_set_sensitive (pictmenu->load_mitem, editable);
 	gtk_widget_set_sensitive (pictmenu->save_mitem, bindata->data ? TRUE : FALSE);
+	gtk_widget_set_sensitive (pictmenu->copy_mitem, bindata->data ? TRUE : FALSE);
 }
 
 /*

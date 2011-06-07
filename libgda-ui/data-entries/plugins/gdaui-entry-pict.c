@@ -289,10 +289,13 @@ do_popup_menu (GtkWidget *widget, GdkEventButton *event, GdauiEntryPict *mgpict)
 {
 	int button, event_time;
 	
-	if (!mgpict->priv->popup_menu.menu)
-		common_pict_create_menu (&(mgpict->priv->popup_menu), widget, &(mgpict->priv->bindata), 
-					 &(mgpict->priv->options), 
-					 (PictCallback) pict_data_changed_cb, mgpict);
+	if (mgpict->priv->popup_menu.menu) {
+		gtk_widget_destroy (mgpict->priv->popup_menu.menu);
+		mgpict->priv->popup_menu.menu = NULL;
+	}
+	common_pict_create_menu (&(mgpict->priv->popup_menu), widget, &(mgpict->priv->bindata), 
+				 &(mgpict->priv->options), 
+				 (PictCallback) pict_data_changed_cb, mgpict);
 
 	common_pict_adjust_menu_sensitiveness (&(mgpict->priv->popup_menu), mgpict->priv->editable, 
 						       &(mgpict->priv->bindata));
@@ -325,11 +328,14 @@ event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryPict *mgpict)
 	}
 	if ((event->type == GDK_2BUTTON_PRESS) && (((GdkEventButton *) event)->button == 1)) {
 		if (mgpict->priv->editable) {
-			if (!mgpict->priv->popup_menu.menu) 
-				common_pict_create_menu (&(mgpict->priv->popup_menu), widget, &(mgpict->priv->bindata), 
-							 &(mgpict->priv->options), 
-							 (PictCallback) pict_data_changed_cb, mgpict);
-
+			if (mgpict->priv->popup_menu.menu) {
+				gtk_widget_destroy (mgpict->priv->popup_menu.menu);
+				mgpict->priv->popup_menu.menu = NULL;
+			}
+			common_pict_create_menu (&(mgpict->priv->popup_menu), widget, &(mgpict->priv->bindata), 
+						 &(mgpict->priv->options), 
+						 (PictCallback) pict_data_changed_cb, mgpict);
+			
 			common_pict_adjust_menu_sensitiveness (&(mgpict->priv->popup_menu), mgpict->priv->editable, 
 							       &(mgpict->priv->bindata));
 			

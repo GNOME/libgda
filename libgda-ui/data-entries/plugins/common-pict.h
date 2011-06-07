@@ -1,5 +1,5 @@
-/* common-pict.h
- * Copyright (C) 2006  Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -52,6 +52,7 @@ typedef struct {
 	GtkWidget    *menu; /* popup menu */
 	GtkWidget    *load_mitem;
 	GtkWidget    *save_mitem;
+	GtkWidget    *copy_mitem;
 } PictMenu;
 
 void         common_pict_parse_options (PictOptions *options, const gchar *options_str);

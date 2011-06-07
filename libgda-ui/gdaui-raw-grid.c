@@ -22,6 +22,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/libgda.h>
 #include <libgda-ui.h>
+#include <libgda/gda-blob-op.h>
 #include "internal/utility.h"
 #include "marshallers/gdaui-marshal.h"
 #include "data-entries/gdaui-data-cell-renderer-combo.h"
@@ -123,6 +124,10 @@ struct _GdauiRawGridPriv
 
 	GtkWidget                  *filter;
 	GtkWidget                  *filter_window;
+
+	/* store the position of the mouse for popup menu on button press event */
+	gint                        bin_x;
+	gint                        bin_y;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -1738,6 +1743,7 @@ static void menu_show_columns_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_set_filter_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_unset_filter_cb (GtkWidget *widget, GdauiRawGrid *grid);
+static void menu_copy_row_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static GtkWidget *new_menu_item (const gchar *label,
 				 gboolean pixmap,
 				 GCallback cb_func,
@@ -1758,7 +1764,7 @@ hidden_column_mitem_toggled_cb (GtkCheckMenuItem *check, G_GNUC_UNUSED GdauiRawG
 	gtk_tree_view_column_set_visible (cdata->column, act);
 }
 
-static gint
+static gboolean
 tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, GdauiRawGrid *grid)
 {
 	GtkWidget *menu, *submenu;
@@ -1772,8 +1778,14 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 		return FALSE;
 
 	tree_view = GTK_TREE_VIEW (grid);
+	if (event->window != gtk_tree_view_get_bin_window (tree_view))
+		return FALSE;
+
 	selection = gtk_tree_view_get_selection (tree_view);
 	sel_mode = gtk_tree_selection_get_mode (selection);
+
+	grid->priv->bin_x = (gint) event->x;
+	grid->priv->bin_y = (gint) event->y;
 
 	/* create the menu */
 	menu = gtk_menu_new ();
@@ -1801,6 +1813,11 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 		g_signal_connect (mitem, "toggled",
 				  G_CALLBACK (hidden_column_mitem_toggled_cb), grid);
 	}
+
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
+			       new_menu_item (GTK_STOCK_COPY, TRUE,
+					      G_CALLBACK (menu_copy_row_cb), grid));
+	
 
 	if (sel_mode == GTK_SELECTION_MULTIPLE)
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu),
@@ -1890,6 +1907,93 @@ menu_unselect_all_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
 
 	gtk_tree_selection_unselect_all (selection);
+}
+
+static void
+menu_copy_row_cb (GtkWidget *widget, GdauiRawGrid *grid)
+{
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	GtkClipboard *cp;
+	GtkTreeViewColumn *column;
+	GList *columns;
+	cp = gtk_clipboard_get (gdk_atom_intern_static_string ("CLIPBOARD"));
+	if (!cp)
+		return;
+
+	if (! gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (grid),
+					     grid->priv->bin_x, grid->priv->bin_y, &path,
+					     &column, NULL, NULL))
+		return;
+
+	model = GTK_TREE_MODEL (grid->priv->store);
+	if (! gtk_tree_model_get_iter (model, &iter, path)) {
+		gtk_tree_path_free (path);
+		return;
+	}
+	gtk_tree_path_free (path);
+
+	columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
+	const GValue *cvalue;
+	gboolean cpset = TRUE;
+	gtk_tree_model_get (model, &iter, g_list_index (columns, column), &cvalue, -1);
+	g_list_free (columns);
+	if (G_VALUE_TYPE (cvalue) == GDA_TYPE_NULL)
+		gtk_clipboard_set_text (cp, "", -1);
+	else if ((G_VALUE_TYPE (cvalue) == GDA_TYPE_BINARY) ||
+		 (G_VALUE_TYPE (cvalue) == GDA_TYPE_BLOB)) {
+		const GdaBinary *bin;
+		
+		cpset = FALSE;
+		if (G_VALUE_TYPE (cvalue) == GDA_TYPE_BINARY)
+			bin = gda_value_get_binary (cvalue);
+		else {
+			GdaBlob *blob;
+			blob = (GdaBlob *) gda_value_get_blob ((GValue *) cvalue);
+			g_assert (blob);
+			bin = (GdaBinary *) blob;
+			if (blob->op &&
+			    (bin->binary_length != gda_blob_op_get_length (blob->op)))
+				gda_blob_op_read_all (blob->op, blob);
+		}
+		if (bin) {
+			GdkPixbufLoader *loader;
+			GdkPixbuf *pixbuf = NULL;
+			loader = gdk_pixbuf_loader_new ();
+			if (gdk_pixbuf_loader_write (loader, bin->data, bin->binary_length, NULL)) {
+				if (gdk_pixbuf_loader_close (loader, NULL)) {
+					pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
+					g_object_ref (pixbuf);
+				}
+				else
+					gdk_pixbuf_loader_close (loader, NULL);
+			}
+			else
+				gdk_pixbuf_loader_close (loader, NULL);
+			g_object_unref (loader);
+			
+			if (pixbuf) {
+				gtk_clipboard_set_image (cp, pixbuf);
+				g_object_unref (pixbuf);
+				cpset = TRUE;
+			}
+		}
+	}
+	else
+		cpset = FALSE;
+
+	if (!cpset) {
+		gchar *str;
+		GdaDataHandler *dh;
+		dh = gda_data_handler_get_default (G_VALUE_TYPE (cvalue));
+		if (dh)
+			str = gda_data_handler_get_str_from_value (dh, cvalue);
+		else
+			str = gda_value_stringify (cvalue);
+		gtk_clipboard_set_text (cp, str, -1);
+		g_free (str);
+	}
 }
 
 static void

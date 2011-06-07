@@ -1,6 +1,5 @@
-/* gdaui-data-cell-renderer-pict.c
- *
- * Copyright (C) 2006 - 2010 Vivien Malerba <malerba@gdaui.org>
+/*
+ * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gdaui.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -451,10 +450,13 @@ gdaui_data_cell_renderer_pict_activate  (GtkCellRenderer            *cell,
 		int event_time;
 
 		g_object_set_data_full (G_OBJECT (pictcell), "last-path", g_strdup (path), g_free);
-		if (!pictcell->priv->popup_menu.menu)
-			common_pict_create_menu (&(pictcell->priv->popup_menu), widget, &(pictcell->priv->bindata),
-						 &(pictcell->priv->options),
-						 (PictCallback) pict_data_changed_cb, pictcell);
+		if (pictcell->priv->popup_menu.menu) {
+			gtk_widget_destroy (pictcell->priv->popup_menu.menu);
+			pictcell->priv->popup_menu.menu = NULL;
+		}
+		common_pict_create_menu (&(pictcell->priv->popup_menu), widget, &(pictcell->priv->bindata),
+					 &(pictcell->priv->options),
+					 (PictCallback) pict_data_changed_cb, pictcell);
 
 		common_pict_adjust_menu_sensitiveness (&(pictcell->priv->popup_menu), pictcell->priv->editable,
 						       &(pictcell->priv->bindata));
