@@ -31,6 +31,10 @@
 #include <libgda/gda-value.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#ifdef G_OS_WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 
 /* this GPrivate holds a pointer to the GAsyncQueue used by the job being currently treated
  * by the worker thread. It is used to avoid creating signal data for threads for which
@@ -117,19 +121,24 @@ pipe_new (void)
 {
 	Pipe *p;
 
-#ifdef G_OS_WIN32
-	p = NULL;
-#else
 	p = g_new0 (Pipe, 1);
 	p->mutex = g_mutex_new ();
 	p->ref_count = 1;
 	p->thread = g_thread_self ();
+#ifdef G_OS_WIN32
+	if (_pipe (p->fds, 156, O_BINARY) != 0) {
+#else
 	if (pipe (p->fds) != 0) {
+#endif
 		pipe_unref (p);
 		p = NULL;
 		goto out;
 	}
+#ifdef G_OS_WIN32
+	p->ioc = g_io_channel_win32_new_fd (p->fds [0]);
+#else
 	p->ioc = g_io_channel_unix_new (p->fds [0]);
+#endif
 
 	/* we want raw data */
 	if (g_io_channel_set_encoding (p->ioc, NULL, NULL) != G_IO_STATUS_NORMAL) {
@@ -137,7 +146,6 @@ pipe_new (void)
 		pipe_unref (p);
 		p = NULL;
 	}
-#endif
 
  out:
 #ifdef DEBUG_NOTIFICATION
