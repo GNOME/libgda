@@ -1009,7 +1009,7 @@
 +}
 +
 +
-+static int codec_hmac(cipher_ctx *ctx, Pgno pgno, unsigned char *in, int in_sz, unsigned char *out) {
++static void codec_hmac(cipher_ctx *ctx, Pgno pgno, unsigned char *in, int in_sz, unsigned char *out) {
 +  HMAC_CTX hctx;
 +  HMAC_CTX_init(&hctx);
 +  HMAC_Init_ex(&hctx, ctx->hmac_key, ctx->key_sz, EVP_sha1(), NULL); 
