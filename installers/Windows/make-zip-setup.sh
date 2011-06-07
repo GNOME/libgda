@@ -279,6 +279,13 @@ files=(information_schema.xml import_encodings.xml)
 add_files_to_zip $archive $prefix share/libgda-4.0 $files
 add_files_to_nsh core $prefix share/libgda-4.0 $files
 
+files=(gda-sql.lang)
+add_files_to_zip $archive $prefix share/libgda-4.0/language-specs $files
+add_files_to_nsh core $prefix share/libgda-4.0/language-specs $files
+
+add_all_files_to_zip $archive_ext $cross_path share/gtksourceview-2.0/language-specs
+add_all_files_to_nsh core $cross_path share/gtksourceview-2.0/language-specs
+
 files=(bdb_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-4.0 $files
 add_files_to_nsh prov_bdb $prefix share/libgda-4.0 $files
