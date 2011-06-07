@@ -115,26 +115,31 @@ pipe_unref (Pipe *p)
 static Pipe *
 pipe_new (void)
 {
-	Pipe *p = g_new0 (Pipe, 1);
+	Pipe *p;
+
+#ifdef G_OS_WIN32
+	p = NULL;
+#else
+	p = g_new0 (Pipe, 1);
 	p->mutex = g_mutex_new ();
 	p->ref_count = 1;
 	p->thread = g_thread_self ();
 	if (pipe (p->fds) != 0) {
 		pipe_unref (p);
-		return NULL;
+		p = NULL;
+		goto out;
 	}
-#ifdef G_OS_WIN32
-	p->ioc = g_io_channel_win32_new_fd (p->fds [0]);
-#else
 	p->ioc = g_io_channel_unix_new (p->fds [0]);
-#endif
 
 	/* we want raw data */
 	if (g_io_channel_set_encoding (p->ioc, NULL, NULL) != G_IO_STATUS_NORMAL) {
 		g_warning ("Can't set IO encoding to NULL\n");
 		pipe_unref (p);
-		return NULL;
+		p = NULL;
 	}
+#endif
+
+ out:
 #ifdef DEBUG_NOTIFICATION
 	g_print ("Created Pipe %p\n", p);
 #endif
