@@ -650,7 +650,7 @@ _gdaui_raw_grid_get_selection (GdauiRawGrid *grid)
 			if (gtk_tree_model_get_iter (GTK_TREE_MODEL (grid->priv->store), &iter,
 						     (GtkTreePath *)(list->data))) {
 				gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), &iter,
-						    DATA_STORE_COL_MODEL_ROW, &row, -1);
+						    GDAUI_DATA_STORE_COL_MODEL_ROW, &row, -1);
 				retlist = g_list_prepend (retlist, GINT_TO_POINTER (row));
 			}
 		}
@@ -1074,8 +1074,8 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 		col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
 				     GDA_SET_NODE (group->group->nodes->data)->holder);
 		gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), iter,
-				    DATA_STORE_COL_TO_DELETE, &to_be_deleted,
-				    DATA_STORE_COL_MODEL_ROW, &row,
+				    GDAUI_DATA_STORE_COL_TO_DELETE, &to_be_deleted,
+				    GDAUI_DATA_STORE_COL_MODEL_ROW, &row,
 				    col, &value,
 				    offset + col, &attributes, -1);
 		g_object_set (G_OBJECT (cell),
@@ -1144,8 +1144,8 @@ cell_info_set_attributes (GtkTreeViewColumn *tree_column,
 		col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
 				     GDA_SET_NODE (group->group->nodes->data)->holder);
 		gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), iter,
-				    DATA_STORE_COL_TO_DELETE, &to_be_deleted,
-				    DATA_STORE_COL_MODEL_ROW, &row,
+				    GDAUI_DATA_STORE_COL_TO_DELETE, &to_be_deleted,
+				    GDAUI_DATA_STORE_COL_MODEL_ROW, &row,
 				    offset + col, &attributes, -1);
 		g_object_set (G_OBJECT (cell),
 			      "editable", !cdata->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
@@ -3066,7 +3066,7 @@ gdaui_raw_grid_selector_get_selected_rows (GdauiDataSelector *iface)
 			if (gtk_tree_model_get_iter (GTK_TREE_MODEL (grid->priv->store), &iter,
 						     (GtkTreePath *)(list->data))) {
 				gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), &iter,
-						    DATA_STORE_COL_MODEL_ROW, &row, -1);
+						    GDAUI_DATA_STORE_COL_MODEL_ROW, &row, -1);
 				if (!selarray)
 					selarray = g_array_new (FALSE, FALSE, sizeof (gint));
 				g_array_append_val (selarray, row);

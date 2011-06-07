@@ -239,7 +239,7 @@ _gdaui_utility_proxy_compute_attributes_for_group (GdauiSetGroup *group, GdauiDa
         for (list = group->group->nodes; list; list = list->next) {
 		col = g_slist_index (((GdaSet*)model_iter)->holders, GDA_SET_NODE (list->data)->holder);
                 gtk_tree_model_get (GTK_TREE_MODEL (store), tree_iter,
-                                    DATA_STORE_COL_TO_DELETE, &local_to_del,
+                                    GDAUI_DATA_STORE_COL_TO_DELETE, &local_to_del,
                                     offset + col, &localattr, -1);
 		if (list == group->group->nodes)
 			attributes = localattr;

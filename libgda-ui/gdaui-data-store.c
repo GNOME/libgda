@@ -1,6 +1,5 @@
-/* gdaui-data-store.c
- *
- * Copyright (C) 2005 - 2010 Vivien Malerba <malerba@gnome-db.org>
+/*
+ * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -382,13 +381,13 @@ gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
 	/* Global attributes */
 	if (col < 0) {
 		switch (col) {
-		case DATA_STORE_COL_MODEL_N_COLUMNS:
-		case DATA_STORE_COL_MODEL_POINTER:
-		case DATA_STORE_COL_MODEL_ROW:
-		case DATA_STORE_COL_MODIFIED:
+		case GDAUI_DATA_STORE_COL_MODEL_N_COLUMNS:
+		case GDAUI_DATA_STORE_COL_MODEL_POINTER:
+		case GDAUI_DATA_STORE_COL_MODEL_ROW:
+		case GDAUI_DATA_STORE_COL_MODIFIED:
 			g_warning (_("Trying to modify a read-only row"));
 			break;
-		case DATA_STORE_COL_TO_DELETE:
+		case GDAUI_DATA_STORE_COL_TO_DELETE:
 			if (g_value_get_boolean (value))
 				gda_data_proxy_delete (store->priv->proxy, row);
 			else
@@ -622,15 +621,15 @@ data_store_get_column_type (GtkTreeModel *tree_model, gint index)
 
 	if (index < 0) {
 		switch (index) {
-		case DATA_STORE_COL_MODEL_N_COLUMNS:
-		case DATA_STORE_COL_MODEL_ROW:
+		case GDAUI_DATA_STORE_COL_MODEL_N_COLUMNS:
+		case GDAUI_DATA_STORE_COL_MODEL_ROW:
 			retval = G_TYPE_INT;
 			break;
-		case DATA_STORE_COL_MODEL_POINTER:
+		case GDAUI_DATA_STORE_COL_MODEL_POINTER:
 			retval = G_TYPE_POINTER;
 			break;
-		case DATA_STORE_COL_MODIFIED:
-		case DATA_STORE_COL_TO_DELETE:
+		case GDAUI_DATA_STORE_COL_MODIFIED:
+		case GDAUI_DATA_STORE_COL_TO_DELETE:
 			retval = G_TYPE_BOOLEAN;
 			break;
 		}
@@ -720,22 +719,22 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 	/* Global attributes */
 	if (column < 0) {
 		switch (column) {
-		case DATA_STORE_COL_MODEL_N_COLUMNS:
+		case GDAUI_DATA_STORE_COL_MODEL_N_COLUMNS:
 			model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
 			g_value_set_int (value, model_nb_cols);
 			break;
-		case DATA_STORE_COL_MODEL_POINTER:
+		case GDAUI_DATA_STORE_COL_MODEL_POINTER:
 			g_value_set_pointer (value, gda_data_proxy_get_proxied_model (store->priv->proxy));
 			break;
-		case DATA_STORE_COL_MODEL_ROW:
+		case GDAUI_DATA_STORE_COL_MODEL_ROW:
 			g_value_set_int (value, gda_data_proxy_get_proxied_model_row (store->priv->proxy,
 										      GPOINTER_TO_INT (iter->user_data)));
 			break;
-		case DATA_STORE_COL_MODIFIED:
+		case GDAUI_DATA_STORE_COL_MODIFIED:
 			g_value_set_boolean (value, gda_data_proxy_row_has_changed (store->priv->proxy,
 										    GPOINTER_TO_INT (iter->user_data)));
 			break;
-		case DATA_STORE_COL_TO_DELETE:
+		case GDAUI_DATA_STORE_COL_TO_DELETE:
 			g_value_set_boolean (value, gda_data_proxy_row_is_deleted (store->priv->proxy,
 										   GPOINTER_TO_INT (iter->user_data)));
 			break;
