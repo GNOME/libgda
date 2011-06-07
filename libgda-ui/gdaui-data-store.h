@@ -36,12 +36,20 @@ typedef struct _GdauiDataStoreClass GdauiDataStoreClass;
 typedef struct _GdauiDataStorePriv GdauiDataStorePriv;
 
 enum {
-	DATA_STORE_COL_MODEL_N_COLUMNS = -2, /* number of columns in the GdaDataModel */
-	DATA_STORE_COL_MODEL_POINTER = -3, /* pointer to the GdaDataModel */
-	DATA_STORE_COL_MODEL_ROW = -4, /* row number in the GdaDataModel, or -1 for new rows */
-	DATA_STORE_COL_MODIFIED = -5, /* TRUE if row has been modified */
-	DATA_STORE_COL_TO_DELETE = -6 /* TRUE if row is marked to be deleted */
+	GDAUI_DATA_STORE_COL_MODEL_N_COLUMNS = -2, /* number of columns in the GdaDataModel */
+	GDAUI_DATA_STORE_COL_MODEL_POINTER = -3, /* pointer to the GdaDataModel */
+	GDAUI_DATA_STORE_COL_MODEL_ROW = -4, /* row number in the GdaDataModel, or -1 for new rows */
+	GDAUI_DATA_STORE_COL_MODIFIED = -5, /* TRUE if row has been modified */
+	GDAUI_DATA_STORE_COL_TO_DELETE = -6 /* TRUE if row is marked to be deleted */
 };
+
+#ifndef GDA_DISABLE_DEPRECATED
+#define DATA_STORE_COL_MODEL_N_COLUMNS GDAUI_DATA_STORE_COL_MODEL_N_COLUMNS
+#define DATA_STORE_COL_MODEL_POINTER GDAUI_DATA_STORE_COL_MODEL_POINTER
+#define DATA_STORE_COL_MODEL_ROW GDAUI_DATA_STORE_COL_MODEL_ROW
+#define DATA_STORE_COL_MODIFIED GDAUI_DATA_STORE_COL_MODIFIED
+#define DATA_STORE_COL_TO_DELETE GDAUI_DATA_STORE_COL_TO_DELETE
+#endif
 
 /* struct for the object's data */
 struct _GdauiDataStore
