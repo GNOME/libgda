@@ -3368,7 +3368,7 @@ scalar_lower (sqlite3_context *context, int argc, sqlite3_value **argv)
 	gchar *data, *tmp;
 
 	if (argc != 1) {
-		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires one arguments"), -1);
+		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires one argument"), -1);
 		return;
 	}
 
@@ -3388,7 +3388,7 @@ scalar_upper (sqlite3_context *context, int argc, sqlite3_value **argv)
 	gchar *data, *tmp;
 
 	if (argc != 1) {
-		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires one arguments"), -1);
+		SQLITE3_CALL (sqlite3_result_error) (context, _("Function requires one argument"), -1);
 		return;
 	}
 
