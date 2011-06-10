@@ -1,25 +1,37 @@
-/* 
- * Copyright (C) 1998 - 2011 The GNOME Foundation.
+/*
+ * Copyright (C) 2001 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
+ * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ * Copyright (C) 2002 Holger Thon <holger.thon@gnome-db.org>
+ * Copyright (C) 2003 Laurent Sansonetti <lrz@src.gnome.org>
+ * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
+ * Copyright (C) 2003 Philippe CHARLIER <p.charlier@chello.be>
+ * Copyright (C) 2004 Dani Baeyens <daniel.baeyens@hispalinux.es>
+ * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
+ * Copyright (C) 2004 - 2005 Álvaro Peña <alvaropg@telefonica.net>
+ * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
+ * Copyright (C) 2005 Dan Winship <danw@src.gnome.org>
+ * Copyright (C) 2005 Stanislav Brabec <sbrabec@suse.de>
+ * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2010 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
+ * Copyright (C) 2008 Phil Longstaff <plongstaff@rogers.com>
+ * Copyright (C) 2008 PrzemysÅ‚aw Grzegorczyk <pgrzegorczyk@gmail.com>
+ * Copyright (C) 2010 David King <davidk@openismus.com>
  *
- * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This Library is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this Library; see the file COPYING.LIB.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 #include <glib/gi18n-lib.h>

@@ -1,27 +1,22 @@
-/* 
- * Copyright © 2000 Eazel, Inc.
- * Copyright © 2002-2004 Marco Pesenti Gritti
- * Copyright © 2004, 2006 Christian Persch
+/*
+ * Copyright (C) 2000 Andy Hertzfeld, Eazel, Inc. <andy.com>
+ * Copyright (C) 2002 - 2004 Marco Pesenti Gritti <marco.gnome.org>
+ * Copyright (C) 2004 - 2006 Christian Persch
+ * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
- * Nautilus is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * Nautilus is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * Author: Andy Hertzfeld <andy@eazel.com>
- *
- * Ephy port by Marco Pesenti Gritti <marco@it.gnome.org>
- * 
- * $Id$
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 #ifdef GSEAL_ENABLE

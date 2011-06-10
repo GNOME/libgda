@@ -1,25 +1,35 @@
 /*
- * Copyright (C) 1998 - 2011 The GNOME Foundation.
+ * Copyright (C) 2001 - 2002 Carlos Perelló Marín <carlos@gnome-db.org>
+ * Copyright (C) 2001 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
+ * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
+ * Copyright (C) 2004 Benjamin Otte <in7y118@public.uni-hamburg.de>
+ * Copyright (C) 2004 J.H.M. Dassen (Ray) <jdassen@debian.org>
+ * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
+ * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2004 Nikolai Weibull <ruby-gnome2-devel-en-list@pcppopper.org>
+ * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
+ * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
+ * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
+ * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2009 Armin Burgmeier <armin@openismus.com>
+ * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2011 Marek ÄŒernockÃ½ <marek@manet.cz>
  *
- * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Carlos Perellï¿½ Marï¿½n <carlos@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This Library is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this Library; see the file COPYING.LIB.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 #undef GDA_DISABLE_DEPRECATED
