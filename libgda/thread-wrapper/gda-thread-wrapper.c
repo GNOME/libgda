@@ -59,6 +59,9 @@ struct _GdaThreadWrapperPrivate {
 
 /*
  * Threads synchronization with notifications
+ *
+ * Both Unix and Windows create a set of 2 file descriptors, the one at potision 0 for reading
+ * and the one at position 1 for writing.
  */
 struct _Pipe {
 	GThread     *thread;
@@ -100,10 +103,17 @@ pipe_unref (Pipe *p)
 			/* destroy @p */
 			if (p->ioc)
 				g_io_channel_unref (p->ioc);
+#ifdef G_OS_WIN32
+			if (p->fds[0] >= 0)
+				_close (p->fds[0]);
+			if (p->fds[1] >= 0)
+				_close (p->fds[1]);
+#else
 			if (p->fds[0] >= 0)
 				close (p->fds[0]);
 			if (p->fds[1] >= 0)
 				close (p->fds[1]);
+#endif
 			g_mutex_free (p->mutex);
 #ifdef DEBUG_NOTIFICATION
 			g_print ("Destroyed Pipe %p\n", p);
@@ -453,8 +463,11 @@ write_notification (GdaThreadWrapper *wrapper, ThreadData *td,
 	ssize_t nw;
 	notif.type = type;
 	notif.job_id = job_id;
-
+#ifdef G_OS_WIN32
+	nw = _write (p->fds[1], &notif, sizeof (notif));
+#else
 	nw = write (p->fds[1], &notif, sizeof (notif));
+#endif
 	if (nw != sizeof (notif)) {
 		/* Error */
 		goto onerror;
@@ -470,7 +483,11 @@ write_notification (GdaThreadWrapper *wrapper, ThreadData *td,
 	g_print ("Closed FD %d\n", p->fds [1]);
 #endif
 	/* close the writing end of the pipe */
+#ifdef G_OS_WIN32
+	_close (p->fds [1]);
+#else
 	close (p->fds [1]);
+#endif
 	p->fds [1] = -1;
 	if (td)
 		clean_notifications (wrapper, td);
