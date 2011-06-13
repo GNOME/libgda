@@ -236,7 +236,7 @@ gda_holder_class_init (GdaHolderClass *class)
 	 * Gets emitted when @holder is going to change its value. One can connect to
 	 * this signal to control which values @holder can have (for example to implement some business rules)
 	 *
-	 * Return value: NULL if @holder is allowed to change its value to @new_value, or a #GError
+	 * Returns: NULL if @holder is allowed to change its value to @new_value, or a #GError
 	 * otherwise.
 	 */
 	gda_holder_signals[VALIDATE_CHANGE] =

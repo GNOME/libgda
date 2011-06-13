@@ -342,7 +342,7 @@ gdaui_data_cell_renderer_password_set_property (GObject *object,
  *
  * Creates a new #GdauiDataCellRendererPassword.
  *
- * Return value: the new cell renderer
+ * Returns: the new cell renderer
  **/
 GtkCellRenderer *
 gdaui_data_cell_renderer_password_new (GdaDataHandler *dh, GType type, const gchar *options)

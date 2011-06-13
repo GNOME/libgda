@@ -355,7 +355,7 @@ gdaui_data_cell_renderer_pict_set_property (GObject *object,
  * in the model, thus causing the check button to reflect the state of
  * the model.
  *
- * Return value: the new cell renderer
+ * Returns: the new cell renderer
  */
 GtkCellRenderer *
 gdaui_data_cell_renderer_pict_new (GdaDataHandler *dh, GType type, const gchar *options)

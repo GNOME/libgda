@@ -48,7 +48,7 @@ struct _CallbackData
  * location GTK+ where it will be installed on make install,
  * returns the first file found.
  * 
- * Return value: the filename, if found or %NULL
+ * Returns: the filename, if found or %NULL
  **/
 gchar *
 demo_find_file (const char *base, GError **err)
