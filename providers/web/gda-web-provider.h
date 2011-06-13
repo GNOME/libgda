@@ -1,23 +1,24 @@
-/* GDA provider
- * Copyright (C) 2009 The GNOME Foundation.
+/*
+ * Copyright (C) 2001 - 2002 Rodrigo Moya <rodrigo@src.gnome.org>
+ * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
+ * Copyright (C) 2002 Tim Coleman <tim@timcoleman.com>
+ * Copyright (C) 2003 Steve Fosdick <fozzy@src.gnome.org>
+ * Copyright (C) 2007 - 2009 Vivien Malerba <malerba@gnome-db.org>
  *
- * AUTHORS:
- *      Vivien Malerba <malerba@gnome-db.org>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This Library is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this Library; see the file COPYING.LIB.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 #ifndef __GDA_WEB_PROVIDER_H__

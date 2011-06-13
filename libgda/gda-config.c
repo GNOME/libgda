@@ -1,23 +1,35 @@
 /*
- * Copyright (C) 2007 - 2011 The GNOME Foundation.
+ * Copyright (C) 2000 Akira Tagoh <tagoh@src.gnome.org>
+ * Copyright (C) 2000 Reinhard Müller <reinhard@src.gnome.org>
+ * Copyright (C) 2000 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
+ * Copyright (C) 2001 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
+ * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
+ * Copyright (C) 2003 - 2004 Laurent Sansonetti <lrz@gnome.org>
+ * Copyright (C) 2003 - 2010 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2004 Alan Knowles <alank@src.gnome.org>
+ * Copyright (C) 2004 Dani Baeyens <daniel.baeyens@hispalinux.es>
+ * Copyright (C) 2005 Stanislav Brabec <sbrabec@suse.de>
+ * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
+ * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
+ * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  *
- * AUTHORS:
- *      Vivien Malerba <malerba@gnome-db.org>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This Library is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this Library; see the file COPYING.LIB.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 #include <unistd.h>

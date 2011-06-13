@@ -1,25 +1,31 @@
-/* GDA library
- * Copyright (C) 1998 - 2010 The GNOME Foundation.
+/*
+ * Copyright (C) 2000 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
+ * Copyright (C) 2001 Cleber Rodrigues <cleberrrjr@bol.com.br>
+ * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
+ * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
+ * Copyright (C) 2003 Xabier Rodríguez Calvar <xrcalvar@igalia.com>
+ * Copyright (C) 2004 Paisa  Seeluangsawat <paisa@users.sf.net>
+ * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
+ * Copyright (C) 2005 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
+ * Copyright (C) 2010 David King <davidk@openismus.com>
  *
- * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *	Álvaro Peña <alvaropg@telefonica.net>
- *      Vivien Malerba <malerba@gnome-db.org>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This Library is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this Library; see the file COPYING.LIB.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 #include "gda-row.h"
