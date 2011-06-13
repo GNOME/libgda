@@ -65,7 +65,7 @@ static gboolean lang_locale_dyn = FALSE;
 gchar          *gda_lang_locale = "";
 
 /**
- * gda_locale_changed
+ * gda_locale_changed:
  *
  * Call this function whenever the setlocale() function has been called
  * to change the current locale; this function is first called by gda_init() so you
@@ -111,7 +111,7 @@ gda_locale_changed (void)
 }
 
 /**
- * gda_init
+ * gda_init:
  * 
  * Initializes the GDA library, must be called prior to any Libgda usage. Note that unless the
  * LIBGDA_NO_THREADS environment variable is set (to any value), the GLib thread system will
@@ -261,7 +261,7 @@ gda_init (void)
 }
 
 /**
- * gda_get_application_exec_path
+ * gda_get_application_exec_path:
  * @app_name: the name of the application to find
  *
  * Find the path to the application identified by @app_name. For example if the application
@@ -269,7 +269,7 @@ gda_init (void)
  * "/your/prefix/bin/gda-sql-5.0" if Libgda is installed in
  * the "/your/prefix" prefix (which would usually be "/usr"), and for the ABI version 5.0.
  *
- * Returns: the path as a new string, or %NULL if the application cannot be found
+ * Returns: (transfer full): the path as a new string, or %NULL if the application cannot be found
  */
 gchar *
 gda_get_application_exec_path (const gchar *app_name)

@@ -334,7 +334,7 @@ gdaui_data_cell_renderer_boolean_set_property (GObject *object,
  * in the model, thus causing the check button to reflect the state of
  * the model.
  *
- * Return value: (transfer full): the new cell renderer
+ * Returns: (transfer full): the new cell renderer
  */
 GtkCellRenderer *
 gdaui_data_cell_renderer_boolean_new (GdaDataHandler *dh, GType type)

@@ -260,7 +260,7 @@ gda_set_class_init (GdaSetClass *class)
 	 * Gets emitted when a #GdaHolder's in @set is going to change its value. One can connect to
 	 * this signal to control which values @holder can have (for example to implement some business rules)
 	 *
-	 * Return value: NULL if @holder is allowed to change its value to @new_value, or a #GError
+	 * Returns: NULL if @holder is allowed to change its value to @new_value, or a #GError
 	 * otherwise.
 	 */
 	gda_set_signals[VALIDATE_HOLDER_CHANGE] =
@@ -278,7 +278,7 @@ gda_set_class_init (GdaSetClass *class)
 	 * Gets emitted when gda_set_is_valid() is called, use
 	 * this signal to control which combination of values @set's holder can have (for example to implement some business rules)
 	 *
-	 * Return value: NULL if @set's contents has been validated, or a #GError
+	 * Returns: NULL if @set's contents has been validated, or a #GError
 	 * otherwise.
 	 */
 	gda_set_signals[VALIDATE_SET] =
