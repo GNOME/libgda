@@ -32,6 +32,12 @@ struct _EntryPropertiesPrivate {
 	GtkTextBuffer *text;
 	gboolean hovering_over_link;
 
+	GtkWidget *search_bar;
+	GtkWidget *search_entry;
+	GtkToggleButton *search_sensitive;
+	GList     *search_marks;
+	GList     *current_mark; /* in @search_marks */
+
 	/* coordinates of mouse */
 	gint bx;
 	gint by;
@@ -40,6 +46,9 @@ struct _EntryPropertiesPrivate {
 static void entry_properties_class_init (EntryPropertiesClass *klass);
 static void entry_properties_init       (EntryProperties *eprop, EntryPropertiesClass *klass);
 static void entry_properties_dispose   (GObject *object);
+
+static void search_text_changed_cb (GtkEntry *entry, EntryProperties *eprop);
+
 
 static GObjectClass *parent_class = NULL;
 
@@ -102,6 +111,10 @@ entry_properties_dispose (GObject *object)
 		if (eprop->priv->bcnc) {
 			g_object_unref (eprop->priv->bcnc);
 		}
+
+		if (eprop->priv->search_marks)
+			g_list_free (eprop->priv->search_marks);
+
 		g_free (eprop->priv);
 		eprop->priv = NULL;
 	}
@@ -137,6 +150,8 @@ static gboolean event_after (GtkWidget *text_view, GdkEvent *ev, EntryProperties
 static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, EntryProperties *eprop);
 static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, EntryProperties *eprop);
 static void populate_popup_cb (GtkWidget *text_view, GtkMenu *menu, EntryProperties *eprop);
+
+static void show_search_bar (EntryProperties *eprop);
 
 /**
  * entry_properties_new:
@@ -189,6 +204,9 @@ entry_properties_new (BrowserConnection *bcnc)
         gtk_text_buffer_create_tag (eprop->priv->text, "starter",
                                     "indent", -10,
                                     "left-margin", 20, NULL);
+
+	gtk_text_buffer_create_tag (eprop->priv->text, "search",
+                                    "background", "yellow", NULL);
 
 	g_signal_connect (textview, "key-press-event", 
 			  G_CALLBACK (key_press_event), eprop);
@@ -454,7 +472,17 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, EntryProperties *epro
 						  gtk_text_buffer_get_insert (buffer));
 		follow_if_link (text_view, &iter, eprop);
 		break;
-		
+	case GDK_KEY_F:
+	case GDK_KEY_f:
+		if (event->state & GDK_CONTROL_MASK) {
+			show_search_bar (eprop);
+			return TRUE;
+		}
+		break;
+	case GDK_KEY_slash:
+		show_search_bar (eprop);
+		return TRUE;
+		break;
 	default:
 		break;
 	}
@@ -906,6 +934,9 @@ info_fetch_cb (BrowserConnection *bcnc, gpointer out_result, EntryProperties *ep
 		browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eprop)),
 				      "%s", _("Could not get information about LDAP entry"));
 
+	if (eprop->priv->search_bar && gtk_widget_get_visible (eprop->priv->search_bar))
+		search_text_changed_cb (GTK_ENTRY (eprop->priv->search_entry), eprop);
+
 	g_object_unref (eprop);
 }
 
@@ -938,4 +969,190 @@ entry_properties_set_dn (EntryProperties *eprop, const gchar *dn)
 			browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eprop)),
 					      "%s", _("Could not get information about LDAP entry"));
 	}
+}
+
+/*
+ * Search capabilities
+ */
+static void
+search_text_changed_cb (GtkEntry *entry, EntryProperties *eprop)
+{
+	GtkTextIter iter, siter, end;
+	GtkTextBuffer *buffer;
+	const gchar *search_text, *sptr;
+	gboolean sensitive;
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (eprop->priv->view));
+	
+	/* clean all previous search result */
+	gtk_text_buffer_get_bounds (buffer, &iter, &end);
+	gtk_text_buffer_remove_tag_by_name (buffer, "search", &iter, &end);
+	eprop->priv->current_mark = NULL;
+	if (eprop->priv->search_marks) {
+		GList *list;
+		for (list = eprop->priv->search_marks; list; list = list->next)
+			gtk_text_buffer_delete_mark (buffer, GTK_TEXT_MARK (list->data));
+
+		g_list_free (eprop->priv->search_marks);
+		eprop->priv->search_marks = NULL;
+	}
+
+	gtk_text_buffer_get_start_iter (buffer, &iter);
+	search_text = gtk_entry_get_text (entry);
+
+	if (!search_text || !*search_text)
+		return;
+
+	sensitive = gtk_toggle_button_get_active (eprop->priv->search_sensitive);
+
+	while (1) {
+		gboolean high = TRUE;
+		siter = iter;
+		sptr = search_text;
+
+		/* search for @search_text starting from the @siter position */
+		while (1) {
+			gunichar c1, c2;
+			c1 = gtk_text_iter_get_char (&siter);
+			c2 = g_utf8_get_char (sptr);
+			if (!sensitive) {
+				c1 = g_unichar_tolower (c1);
+				c2 = g_unichar_tolower (c2);
+			}
+			if (c1 != c2) {
+				high = FALSE;
+				break;
+			}
+			
+			sptr = g_utf8_find_next_char (sptr, NULL);
+			if (!sptr || !*sptr)
+				break;
+
+			if (! gtk_text_iter_forward_char (&siter)) {
+				high = FALSE;
+				break;
+			}
+		}
+		if (high) {
+			if (gtk_text_iter_forward_char (&siter)) {
+				GtkTextMark *mark;
+				gtk_text_buffer_apply_tag_by_name (buffer, "search", &iter, &siter);
+				mark = gtk_text_buffer_create_mark (buffer, NULL, &iter, FALSE);
+				eprop->priv->search_marks = g_list_prepend (eprop->priv->search_marks,
+									    mark);
+			}
+			iter = siter;
+		}
+		else {
+			if (! gtk_text_iter_forward_char (&iter))
+				break;
+		}
+	}
+
+	if (eprop->priv->search_marks) {
+		eprop->priv->search_marks = g_list_reverse (eprop->priv->search_marks);
+		eprop->priv->current_mark = eprop->priv->search_marks;
+		gtk_text_view_scroll_mark_onscreen (eprop->priv->view,
+						    GTK_TEXT_MARK (eprop->priv->current_mark->data));
+	}
+}
+
+static void
+sensitive_toggled_cb (G_GNUC_UNUSED GtkToggleButton *button, EntryProperties *eprop)
+{
+	search_text_changed_cb (GTK_ENTRY (eprop->priv->search_entry), eprop);
+}
+
+static void
+hide_search_bar (EntryProperties *eprop)
+{
+	GtkTextIter start, end;
+	GtkTextBuffer *buffer;
+
+	/* clean all previous search result */
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (eprop->priv->view));
+	gtk_text_buffer_get_bounds (buffer, &start, &end);
+	gtk_text_buffer_remove_tag_by_name (buffer, "search", &start, &end);
+
+	if (eprop->priv->search_marks) {
+		GList *list;
+		for (list = eprop->priv->search_marks; list; list = list->next)
+			gtk_text_buffer_delete_mark (buffer, GTK_TEXT_MARK (list->data));
+
+		g_list_free (eprop->priv->search_marks);
+		eprop->priv->search_marks = NULL;
+	}
+	eprop->priv->current_mark = NULL;
+
+	gtk_widget_hide (eprop->priv->search_bar);
+}
+
+static void
+go_back_search_cb (G_GNUC_UNUSED GtkButton *button, EntryProperties *eprop)
+{
+	if (eprop->priv->current_mark && eprop->priv->current_mark->prev) {
+		eprop->priv->current_mark = eprop->priv->current_mark->prev;
+		gtk_text_view_scroll_mark_onscreen (eprop->priv->view,
+						    GTK_TEXT_MARK (eprop->priv->current_mark->data));
+	}
+}
+
+static void
+go_forward_search_cb (G_GNUC_UNUSED GtkButton *button, EntryProperties *eprop)
+{
+	if (eprop->priv->current_mark && eprop->priv->current_mark->next) {
+		eprop->priv->current_mark = eprop->priv->current_mark->next;
+		gtk_text_view_scroll_mark_onscreen (eprop->priv->view,
+						    GTK_TEXT_MARK (eprop->priv->current_mark->data));
+	}
+}
+
+static void
+show_search_bar (EntryProperties *eprop)
+{
+	if (! eprop->priv->search_bar) {
+		GtkWidget *hbox, *wid;
+		hbox = gtk_hbox_new (FALSE, 5);
+		eprop->priv->search_bar = hbox;
+
+		wid = browser_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_CLOSE,
+						 _("Hide search toolbar"));
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+		g_signal_connect_swapped (wid, "clicked",
+					  G_CALLBACK (hide_search_bar), eprop);
+
+		wid = gtk_label_new (_("Search:"));
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+
+		wid = gtk_entry_new ();
+		gtk_box_pack_start (GTK_BOX (hbox), wid, TRUE, TRUE, 0);
+		eprop->priv->search_entry = wid;
+		g_signal_connect (wid, "changed",
+				  G_CALLBACK (search_text_changed_cb), eprop);
+
+		wid = browser_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_GO_BACK, NULL);
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+		g_signal_connect (wid, "clicked",
+				  G_CALLBACK (go_back_search_cb), eprop);
+
+		wid = browser_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_GO_FORWARD, NULL);
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+		g_signal_connect (wid, "clicked",
+				  G_CALLBACK (go_forward_search_cb), eprop);
+		
+		wid = gtk_check_button_new_with_label (_("Case sensitive"));
+		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
+		eprop->priv->search_sensitive = GTK_TOGGLE_BUTTON (wid);
+		g_signal_connect (wid, "toggled",
+				  G_CALLBACK (sensitive_toggled_cb), eprop);
+
+		gtk_box_pack_start (GTK_BOX (eprop), eprop->priv->search_bar, FALSE, FALSE, 0);
+		gtk_widget_show_all (eprop->priv->search_bar);
+	}
+	else {
+		gtk_widget_show (eprop->priv->search_bar);
+		search_text_changed_cb (GTK_ENTRY (eprop->priv->search_entry), eprop);
+	}
+
+	gtk_widget_grab_focus (eprop->priv->search_entry);
 }

@@ -338,7 +338,7 @@ static GtkActionEntry ui_actions[] = {
           G_CALLBACK (ldab_ldap_entries_page_add_cb)},
         { "LdapLdapClassesPageNew", NULL, N_("_New LDAP classes browser"), "<control>C", N_("Open a new LDAP classes browser"),
 	  G_CALLBACK (ldab_ldap_classes_page_add_cb)},
-        { "LdapSearchNew", GTK_STOCK_FIND, N_("_New LDAP search"), "<control>F", N_("Open a new LDAP search form"),
+        { "LdapSearchNew", GTK_STOCK_FIND, N_("_New LDAP search"), "<control>G", N_("Open a new LDAP search form"),
 	  G_CALLBACK (ldab_search_add_cb)},
 };
 
