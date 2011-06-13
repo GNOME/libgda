@@ -33,7 +33,7 @@
 gchar *
 gda_sql_value_stringify (const GValue *value)
 {
-        if (value && G_IS_VALUE (value)) {
+        if (value && !GDA_VALUE_HOLDS_NULL (value)) {
                 if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
                         GValue *string;
                         gchar *str;
@@ -41,8 +41,7 @@ gda_sql_value_stringify (const GValue *value)
                         string = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
                         g_value_transform (value, string);
                         str = g_value_dup_string (string);
-                        g_value_unset (string);
-			g_free (string);
+			gda_value_free (string);
                         return str;
                 }
                 else {

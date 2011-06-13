@@ -392,11 +392,12 @@ gboolean
 tests_common_check_set (GHashTable *data, const gchar *id, GdaSet *set, GError **error)
 {
 	gchar *s;
-	const gchar *got;
+	const gchar *got = NULL;
 
 	s = tests_common_set_serialize (set);
 	
-	got = g_hash_table_lookup (data, id);
+	if (id)
+		got = g_hash_table_lookup (data, id);
 	if (!got) {
 #ifdef HAVE_JSON_GLIB
 		JsonParser *jparser;

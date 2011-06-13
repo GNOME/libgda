@@ -252,7 +252,6 @@ gda_mysql_handler_boolean_accepts_g_type (GdaDataHandler *iface, GType type)
 	gboolean found = FALSE;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_HANDLER_BOOLEAN (iface), FALSE);
-	g_return_val_if_fail (type != G_TYPE_INVALID, FALSE);
 	hdl = GDA_MYSQL_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 

@@ -313,7 +313,7 @@ static GType
 _gda_mysql_type_to_gda (MysqlConnectionData *cdata,
 			enum enum_field_types  mysql_type, unsigned int charsetnr)
 {
-	GType gtype = 0;
+	GType gtype;
 	switch (mysql_type) {
 	case MYSQL_TYPE_TINY:
 	case MYSQL_TYPE_SHORT:
@@ -559,8 +559,11 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 									 gda_column_new ());
 		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
 
-		/* create prepared statement's types */
-		_GDA_PSTMT (ps)->types = g_new0 (GType, _GDA_PSTMT (ps)->ncols); /* all types are initialized to GDA_TYPE_NULL */
+		/* create prepared statement's types, all types are initialized to GDA_TYPE_NULL */
+		_GDA_PSTMT (ps)->types = g_new (GType, _GDA_PSTMT (ps)->ncols);
+		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
+			_GDA_PSTMT (ps)->types [i] = GDA_TYPE_NULL;
+
 		if (col_types) {
 			for (i = 0; ; i++) {
 				if (col_types [i] > 0) {
@@ -825,8 +828,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 			}
 			break;
 		case MYSQL_TYPE_NULL:
-			if (G_IS_VALUE(value))
-				g_value_unset (value);
+			gda_value_set_null (value);
 			break;
 		case MYSQL_TYPE_TIME:
 		case MYSQL_TYPE_DATE:

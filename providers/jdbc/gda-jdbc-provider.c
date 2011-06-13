@@ -962,8 +962,8 @@ static const gchar*
 gda_jdbc_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, GType type)
 {
 	if (cnc) {
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	}
 
 	TO_IMPLEMENT;
@@ -992,7 +992,6 @@ gda_jdbc_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnect
 	    (type == G_TYPE_STRING) ||
 	    (type == GDA_TYPE_TIME) ||
 	    (type == GDA_TYPE_TIMESTAMP) ||
-	    (type == G_TYPE_INVALID) ||
 	    (type == G_TYPE_GTYPE))
 		return "string";
 
@@ -1007,6 +1006,10 @@ gda_jdbc_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnect
 		return "timestamp";
 	if (type == G_TYPE_DATE)
 		return "date";
+
+	if ((type == GDA_TYPE_NULL) ||
+	    (type == G_TYPE_GTYPE))
+		return NULL;
 
 	return "text";
 }

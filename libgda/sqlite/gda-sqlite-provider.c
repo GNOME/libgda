@@ -1729,8 +1729,7 @@ gda_sqlite_provider_get_default_dbms_type (G_GNUC_UNUSED GdaServerProvider *prov
 	if ((type == GDA_TYPE_GEOMETRIC_POINT) ||
 	    (type == G_TYPE_OBJECT) ||
 	    (type == G_TYPE_STRING) ||
-	    (type == G_TYPE_INVALID) ||
-	    (type == G_TYPE_GTYPE))
+	    (type == G_TYPE_INVALID))
 		return "string";
 
 	if ((type == G_TYPE_DOUBLE) ||
@@ -1744,6 +1743,10 @@ gda_sqlite_provider_get_default_dbms_type (G_GNUC_UNUSED GdaServerProvider *prov
 		return "timestamp";
 	if (type == G_TYPE_DATE)
 		return "date";
+	
+	if ((type == GDA_TYPE_NULL) ||
+	    (type == G_TYPE_GTYPE))
+		return NULL;
 
 	return "text";
 }

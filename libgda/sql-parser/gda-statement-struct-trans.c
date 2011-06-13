@@ -252,7 +252,7 @@ gda_sql_statement_trans_serialize (gpointer stmt)
 /**
  * gda_sql_statement_trans_take_name
  * @stmt: a #GdaSqlStatement pointer
- * @value: a G_TYPE_STRING value
+ * @value: (transfer full): a G_TYPE_STRING value
  *
  * Sets the name of the transaction
  *
@@ -269,15 +269,14 @@ gda_sql_statement_trans_take_name (GdaSqlStatement *stmt, GValue *value)
 	}
 	if (value) {
 		trans->trans_name = g_value_dup_string (value);
-		g_value_unset (value);
-		g_free (value);
+		gda_value_free (value);
 	}
 }
 
 /**
  * gda_sql_statement_trans_take_mode
  * @stmt: a #GdaSqlStatement pointer
- * @value: a G_TYPE_STRING value
+ * @value: (transfer full): a G_TYPE_STRING value
  *
  * Sets the model of the transaction
  *
@@ -294,8 +293,7 @@ gda_sql_statement_trans_take_mode (GdaSqlStatement *stmt, GValue *value)
 	}
 	if (value) {
 		trans->trans_mode = g_value_dup_string (value);
-		g_value_unset (value);
-		g_free (value);
+		gda_value_free (value);
 	}
 }
 

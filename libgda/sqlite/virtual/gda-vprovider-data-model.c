@@ -759,10 +759,8 @@ virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
 			cvalue = gda_data_model_iter_get_value_at (cursor->iter, i);
 			gvalue = gda_row_get_value (grow, i);
 			if (cvalue) {
-				if (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL) {
-					g_value_init (gvalue, G_VALUE_TYPE (cvalue));
-					g_value_copy (cvalue, gvalue);
-				}
+				gda_value_reset_with_type (gvalue, G_VALUE_TYPE (cvalue));
+				g_value_copy (cvalue, gvalue);
 			}
 			else
 				gda_row_invalidate_value (grow, gvalue);
@@ -808,6 +806,7 @@ create_value_from_sqlite3_value_notype (sqlite3_value *svalue)
 		break;
 	}
 	case SQLITE_NULL:
+		gda_value_set_null (value);
 		break;
 	case SQLITE3_TEXT:
 	default:

@@ -134,7 +134,7 @@ gdaui_data_cell_renderer_password_init (GdauiDataCellRendererPassword *datacell)
 {
 	datacell->priv = g_new0 (GdauiDataCellRendererPasswordPrivate, 1);
 	datacell->priv->dh = NULL;
-	datacell->priv->type = G_TYPE_INVALID;
+	datacell->priv->type = GDA_TYPE_NULL;
 	datacell->priv->type_forced = FALSE;
 	datacell->priv->value = NULL;
 	datacell->priv->options = NULL;

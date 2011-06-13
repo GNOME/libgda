@@ -151,7 +151,7 @@ gdaui_data_cell_renderer_textual_init (GdauiDataCellRendererTextual *datacell)
 {
 	datacell->priv = g_new0 (GdauiDataCellRendererTextualPrivate, 1);
 	datacell->priv->dh = NULL;
-	datacell->priv->type = G_TYPE_INVALID;
+	datacell->priv->type = GDA_TYPE_NULL;
 	datacell->priv->type_forced = FALSE;
 	datacell->priv->value = NULL;
 	datacell->priv->options = NULL;
@@ -429,7 +429,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 				if (G_VALUE_TYPE (gval) != datacell->priv->type) {
 					if (!datacell->priv->type_forced) {
 						datacell->priv->type_forced = TRUE;
-						if (datacell->priv->type != G_TYPE_INVALID)
+						if (datacell->priv->type != GDA_TYPE_NULL)
 							g_warning (_("Data cell renderer's specified type (%s) "
 								     "differs from actual "
 								     "value to display type (%s)"),
@@ -451,7 +451,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 				if (! OPTIMIZE)
 					datacell->priv->value = gda_value_copy (gval);
 
-				if (!datacell->priv->dh && (datacell->priv->type != G_TYPE_INVALID))
+				if (!datacell->priv->dh && (datacell->priv->type != GDA_TYPE_NULL))
 					datacell->priv->dh = g_object_ref (gda_data_handler_get_default (datacell->priv->type));
 
 				if (datacell->priv->dh) {

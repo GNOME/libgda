@@ -137,12 +137,16 @@ gda_row_set_property (GObject *object,
         row = GDA_ROW (object);
         if (row->priv) {
                 switch (param_id) {
-		case PROP_NB_VALUES:
+		case PROP_NB_VALUES: {
+			gint i;
 			g_return_if_fail (!row->priv->fields);
 
 			row->priv->nfields = g_value_get_int (value);
-			row->priv->fields = g_new0 (GValue, row->priv->nfields);			
+			row->priv->fields = g_new0 (GValue, row->priv->nfields);
+			for (i = 0; i < row->priv->nfields; i++)
+				gda_value_set_null (& (row->priv->fields [i]));
 			break;
+		}
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;

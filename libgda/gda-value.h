@@ -40,7 +40,7 @@ G_BEGIN_DECLS
 #define GDA_TIMEZONE_INVALID (2*12*60*60)
 
 /* Definition of the GType's values used in GValue*/
-#define GDA_TYPE_NULL 0
+#define GDA_TYPE_NULL (gda_null_get_type())
 #define	GDA_TYPE_BINARY (gda_binary_get_type())
 #define GDA_TYPE_BLOB (gda_blob_get_type())
 #define	GDA_TYPE_GEOMETRIC_POINT (gda_geometricpoint_get_type())
@@ -52,6 +52,7 @@ G_BEGIN_DECLS
 
 
 /* Definition of the GDA_VALUE_HOLDS macros */
+#define GDA_VALUE_HOLDS_NULL(value)            G_VALUE_HOLDS(value, GDA_TYPE_NULL)
 #define GDA_VALUE_HOLDS_BINARY(value)          G_VALUE_HOLDS(value, GDA_TYPE_BINARY)
 #define GDA_VALUE_HOLDS_BLOB(value)            G_VALUE_HOLDS(value, GDA_TYPE_BLOB)
 #define GDA_VALUE_HOLDS_GEOMETRIC_POINT(value) G_VALUE_HOLDS(value, GDA_TYPE_GEOMETRIC_POINT)
@@ -186,6 +187,7 @@ typedef struct {
 
 GValue                           *gda_value_new (GType type);
 
+GValue                           *gda_value_new_null (void);
 GValue                           *gda_value_new_binary (const guchar *val, glong size);
 GValue                           *gda_value_new_blob (const guchar *val, glong size);
 GValue                           *gda_value_new_blob_from_file (const gchar *filename);
@@ -196,7 +198,6 @@ GValue                           *gda_value_new_from_xml (const xmlNodePtr node)
 
 void                              gda_value_free (GValue *value);
 void                              gda_value_reset_with_type (GValue *value, GType type);
-
 
 gboolean                          gda_value_is_null (const GValue *value); 
 gboolean                          gda_value_is_number (const GValue *value); 
@@ -245,6 +246,7 @@ GdaBlob                          *gda_string_to_blob (const gchar *str);
 
 /* Custom data types */
 
+GType                             gda_null_get_type (void) G_GNUC_CONST;
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
 gpointer                          gda_numeric_copy (gpointer boxed);
 void                              gda_numeric_free (gpointer boxed);
@@ -276,16 +278,6 @@ void                              gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
 
 GType                             gda_short_get_type (void) G_GNUC_CONST;
 GType                             gda_ushort_get_type (void) G_GNUC_CONST;
-
-/* Helper macros */
-/**
- * gda_value_new_null:
- * 
- * Creates a new #GValue of type %GDA_TYPE_NULL representing a NULL value
- *
- * Returns: (transfer full): a new #GValue
- */
-#define                           gda_value_new_null() (g_new0 (GValue, 1))
 
 G_END_DECLS
 

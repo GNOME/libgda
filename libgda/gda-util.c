@@ -984,7 +984,7 @@ gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlState
 				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
 				pspec = g_new0 (GdaSqlParamSpec, 1);
 				pspec->name = g_strdup_printf ("-%d", index);
-				pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
+				pspec->g_type = (tcol->gtype != GDA_TYPE_NULL) ? tcol->gtype: G_TYPE_STRING;
 				pspec->nullok = tcol->nullok;
 				opexpr->param_spec = pspec;
 				op->operands = g_slist_append (op->operands, opexpr);
@@ -1178,7 +1178,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		if (insert_stmt) {
 			GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
 			pspec->name = g_strdup_printf ("+%d", colindex);
-			pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
+			pspec->g_type = (tcol->gtype != GDA_TYPE_NULL) ? tcol->gtype: G_TYPE_STRING;
 			pspec->nullok = tcol->nullok;
 			expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ist));
 			expr->param_spec = pspec;
@@ -1187,7 +1187,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 		if (update_stmt) {
 			GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
 			pspec->name = g_strdup_printf ("+%d", colindex);
-			pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
+			pspec->g_type = (tcol->gtype != GDA_TYPE_NULL) ? tcol->gtype: G_TYPE_STRING;
 			pspec->nullok = tcol->nullok;
 			expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ust));
 			expr->param_spec = pspec;

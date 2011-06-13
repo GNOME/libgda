@@ -256,7 +256,7 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 		for (i = 0; i < nbcols; i++) {
 			column = gda_data_model_describe_column (model, i);
 			value = gda_data_model_get_value_at (model, i, 0, NULL);
-			if (value && (gda_column_get_g_type (column) == G_TYPE_INVALID))
+			if (value && (gda_column_get_g_type (column) == GDA_TYPE_NULL))
 				gda_column_set_g_type (column, G_VALUE_TYPE ((GValue *)value));
 		}
 	}
@@ -1622,8 +1622,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		}
 
 		gdatype = gda_column_get_g_type (column);
-		if ((gdatype == G_TYPE_INVALID) ||
-		    (gdatype == GDA_TYPE_NULL)) {
+		if ((gdatype == G_TYPE_INVALID) || (gdatype == GDA_TYPE_NULL)) {
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_XML_FORMAT_ERROR,
 				      "%s", _("Cannot retrieve column data type (type is UNKNOWN or not specified)"));
 			retval = FALSE;
@@ -1642,14 +1641,12 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			value = g_new0 (GValue, 1);
 			gchar* nodeval = (gchar*)xmlNodeGetContent (xml_field);
 			if (nodeval) {
-				if (!gda_value_set_from_string (value, nodeval, gdatype)) {
-					g_free (value);
-					value = gda_value_new_null ();
-				}
+				if (!gda_value_set_from_string (value, nodeval, gdatype))
+					gda_value_set_null (value);
 				xmlFree(nodeval);
 			}
 			else
-				value = gda_value_new_null ();	
+				gda_value_set_null (value);
 		}
 
 		g_ptr_array_index (values, pos) = value;

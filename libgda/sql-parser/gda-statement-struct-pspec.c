@@ -28,7 +28,7 @@
 /**
  * gda_sql_param_spec_take_name:
  * @pspec: a #GdaSqlParamSpec pointer
- * @value: a G_TYPE_STRING #GValue
+ * @value: (transfer full): a G_TYPE_STRING #GValue
  *
  * Sets @pspec's name. @value's ownership is transferred to
  * @pspec (which means @pspec is then responsible for freeing it when no longer needed).
@@ -42,15 +42,14 @@ gda_sql_param_spec_take_name (GdaSqlParamSpec *pspec, GValue *value)
 	}
 	if (value) {
 		pspec->name = _remove_quotes (g_value_dup_string (value));
-		g_value_unset (value);
-		g_free (value);
+		gda_value_free (value);
 	}
 }
 
 /**
  * gda_sql_param_spec_take_descr:
  * @pspec: a #GdaSqlParamSpec pointer
- * @value: a G_TYPE_STRING #GValue
+ * @value: (transfer full): a G_TYPE_STRING #GValue
  *
  * Sets @pspec's description. @value's ownership is transferred to
  * @pspec (which means @pspec is then responsible for freeing it when no longer needed).
@@ -64,15 +63,14 @@ gda_sql_param_spec_take_descr (GdaSqlParamSpec *pspec, GValue *value)
 	}
 	if (value) {
 		pspec->descr = _remove_quotes (g_value_dup_string (value));
-		g_value_unset (value);
-		g_free (value);
+		gda_value_free (value);
 	}
 }
 
 /**
  * gda_sql_param_spec_take_nullok:
  * @pspec: a #GdaSqlParamSpec pointer
- * @value: a G_TYPE_STRING #GValue. 
+ * @value: (transfer full): a G_TYPE_STRING #GValue. 
  *
  * Sets @pspec's ability of being NULL. @value's ownership is transferred to
  * @pspec (which means @pspec is then responsible for freeing it when no longer needed).
@@ -90,15 +88,14 @@ gda_sql_param_spec_take_nullok (GdaSqlParamSpec *pspec, GValue *value)
 			if ((*str == 't') || (*str == 'T'))
 				pspec->nullok = TRUE;
 		}
-		g_value_unset (value);
-		g_free (value);
+		gda_value_free (value);
 	}
 }
 
 /**
  * gda_sql_param_spec_take_type:
  * @pspec: a #GdaSqlParamSpec pointer
- * @value: a G_TYPE_STRING #GValue
+ * @value: (transfer full): a G_TYPE_STRING #GValue
  *
  * Sets @pspec's data type. @value's ownership is transferred to
  * @pspec (which means @pspec is then responsible for freeing it when no longer needed).
@@ -108,12 +105,11 @@ gda_sql_param_spec_take_nullok (GdaSqlParamSpec *pspec, GValue *value)
 void
 gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
 {
-	pspec->g_type = 0;
+	pspec->g_type = GDA_TYPE_NULL;
 	if (value) {
 		gchar *tmp;
 		tmp = _remove_quotes (g_value_dup_string (value));
-		g_value_unset (value);
-		g_free (value);
+		gda_value_free (value);
 
 		pspec->g_type = gda_g_type_from_string (tmp);
 		g_free (tmp);
@@ -122,7 +118,7 @@ gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
 
 /**
  * gda_sql_param_spec_new:
- * @value: a G_TYPE_STRING #GValue
+ * @value: (transfer full): a G_TYPE_STRING #GValue
  *
  * @value must contain a string representing a variable, see the documentation associated to the
  * #GdaSqlParser object.
@@ -139,6 +135,7 @@ gda_sql_param_spec_new (GValue *value)
 	pspec =g_new0 (GdaSqlParamSpec, 1);
 	pspec->is_param = TRUE;
 	pspec->nullok = FALSE;
+	pspec->g_type = GDA_TYPE_NULL;
 
 	if (value) {
 		gchar *str = (gchar *) g_value_get_string (value);
@@ -168,8 +165,7 @@ gda_sql_param_spec_new (GValue *value)
 				str = ptr;
 			}
 		}
-		g_value_unset (value);
-		g_free (value);
+		gda_value_free (value);
 	}
 
 	return pspec;
@@ -244,7 +240,7 @@ gda_sql_param_spec_serialize (GdaSqlParamSpec *pspec)
 	g_string_append_printf (string, ",\"descr\":%s", str);
 	g_free (str);
 
-	if (pspec->g_type != G_TYPE_INVALID) {
+	if (pspec->g_type != GDA_TYPE_NULL) {
 		str = _json_quote_string (gda_g_type_to_string (pspec->g_type));
 		g_string_append_printf (string, ",\"type\":%s", str);
 		g_free (str);

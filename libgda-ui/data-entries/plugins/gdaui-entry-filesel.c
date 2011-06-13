@@ -118,7 +118,6 @@ gdaui_entry_filesel_new (GdaDataHandler *dh, GType type, const gchar *options)
 	GdauiEntryFilesel *filesel;
 
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 	g_return_val_if_fail (gda_data_handler_accepts_g_type (dh, type), NULL);
 
 	obj = g_object_new (GDAUI_TYPE_ENTRY_FILESEL, "handler", dh, NULL);

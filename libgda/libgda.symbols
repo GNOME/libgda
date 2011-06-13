@@ -477,6 +477,7 @@
 	gda_mutex_new
 	gda_mutex_trylock
 	gda_mutex_unlock
+	gda_null_get_type
 	gda_numeric_copy
 	gda_numeric_free
 	gda_numeric_get_type

@@ -1330,8 +1330,8 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 					  GType               type)
 {
 	if (cnc) {
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	}
 
 	if (type == G_TYPE_INT64)
@@ -1376,8 +1376,10 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 		return "bigint unsigned";
 	if (type == G_TYPE_UINT)
 		return "int unsigned";
-	if (type == G_TYPE_INVALID)
-		return "text";
+
+	if ((type == GDA_TYPE_NULL) ||
+	    (type == G_TYPE_GTYPE))
+		return NULL;
 
 	return "text";
 }

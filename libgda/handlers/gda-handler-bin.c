@@ -308,7 +308,6 @@ gda_handler_bin_accepts_g_type (GdaDataHandler *iface, GType type)
 	gboolean found = FALSE;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), FALSE);
-	g_return_val_if_fail (type != G_TYPE_INVALID, FALSE);
 	hdl = GDA_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 

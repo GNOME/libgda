@@ -146,7 +146,7 @@ gda_column_init (GdaColumn *column, G_GNUC_UNUSED GdaColumnClass *klass)
 	column->priv = g_new0 (GdaColumnPrivate, 1);
 	column->priv->defined_size = 0;
 	column->priv->id = NULL;
-	column->priv->g_type = G_TYPE_INVALID;
+	column->priv->g_type = GDA_TYPE_NULL;
 	column->priv->allow_null = TRUE;
 	column->priv->auto_increment = FALSE;
 	column->priv->auto_increment_start = 0;

@@ -240,7 +240,7 @@ gdaui_entry_wrapper_init (GdauiEntryWrapper *mgwrap)
 	mgwrap->priv->real_class = NULL;
 	mgwrap->priv->signals_blocked = 0;
 
-	mgwrap->priv->type = G_TYPE_INVALID;
+	mgwrap->priv->type = GDA_TYPE_NULL;
 	mgwrap->priv->value_ref = NULL;
 	mgwrap->priv->value_default = NULL;
 

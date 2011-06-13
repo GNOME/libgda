@@ -64,9 +64,13 @@ set_from_string (GValue *value, const gchar *as_string)
 
 	g_return_val_if_fail (value, FALSE);
 	if (! G_IS_VALUE (value)) {
-		g_warning ("Can't determine the GType of a NULL GValue");
+		g_warning ("Can't set value for a G_TYPE_INVALID GValue");
 		return FALSE;
 	}
+	else if (GDA_VALUE_HOLDS_NULL (value)) {
+		g_warning ("Can't set value for a NULL GValue");
+                return FALSE;
+        }
 
 	type = G_VALUE_TYPE (value);
 	g_value_reset (value);
@@ -259,6 +263,56 @@ set_from_string (GValue *value, const gchar *as_string)
 	}
 
 	return retval;
+}
+
+/* 
+ * Register the NULL type in the GType system 
+ */
+static void
+string_to_null (const GValue *src, GValue *dest)
+{
+       g_return_if_fail (G_VALUE_HOLDS_STRING (src) && GDA_VALUE_HOLDS_NULL (dest));
+       /* Do nothing just a dummy function to register */
+}
+
+static void
+null_to_string (const GValue *src, GValue *dest)
+{
+       g_return_if_fail (G_VALUE_HOLDS_STRING (dest) && GDA_VALUE_HOLDS_NULL (src));
+       g_value_set_string (dest, "NULL");
+}
+
+static gpointer
+gda_null_copy (G_GNUC_UNUSED gpointer boxed)
+{
+	return (gpointer) NULL;
+}
+
+static void
+gda_null_free (G_GNUC_UNUSED gpointer boxed)
+{
+}
+
+GType
+gda_null_get_type (void)
+{
+       static GType type = 0;
+
+       if (G_UNLIKELY (type == 0)) {
+               type = g_boxed_type_register_static ("GdaNull",
+                                                    (GBoxedCopyFunc) gda_null_copy,
+                                                    (GBoxedFreeFunc) gda_null_free);
+
+               g_value_register_transform_func (G_TYPE_STRING,
+                                                type,
+                                                string_to_null);
+
+               g_value_register_transform_func (type,
+                                                G_TYPE_STRING,
+                                                null_to_string);
+       }
+
+       return type;
 }
 
 /* 
@@ -1065,6 +1119,20 @@ gda_value_new (GType type)
 }
 
 /**
+ * gda_value_new_null:
+ *
+ * Creates a new #GValue initiated to a #GdaNull structure with a #GDA_TYPE_NULL, to
+ * represent a NULL in the database.
+ *
+ * Returns: (transfer full): a new #GValue of the type #GDA_TYPE_NULL
+ */
+GValue*
+gda_value_new_null (void)
+{
+	return gda_value_new (GDA_TYPE_NULL);
+}
+
+/**
  * gda_value_new_binary:
  * @val: value to set for the new #GValue.
  * @size: the size of the memory pool pointer to by @val.
@@ -1277,20 +1345,21 @@ gda_value_new_from_xml (const xmlNodePtr node)
 
 /**
  * gda_value_free:
- * @value: (transfer full): the resource to free.
+ * @value: (transfer full) (allow-none): the resource to free (or %NULL)
  *
  * Deallocates all memory associated to a #GValue.
  */
 void
 gda_value_free (GValue *value)
 {
-	g_return_if_fail (value);
-
+	if (!value)
+		return;
 	l_g_value_unset (value);
 	g_free (value);
 }
 
-/* gda_value_reset_with_type
+/**
+ * gda_value_reset_with_type:
  * @value: the #GValue to be reseted
  * @type:  the #GType to set to
  *
@@ -1305,7 +1374,7 @@ gda_value_reset_with_type (GValue *value, GType type)
 		g_value_reset (value);
 	else {
 		l_g_value_unset (value);
-		if (type == GDA_TYPE_NULL || type == G_TYPE_INVALID)
+		if (type == G_TYPE_INVALID)
 			return;
 		else
 			g_value_init (value, type);
@@ -1326,7 +1395,7 @@ gboolean
 gda_value_is_null (const GValue *value)
 {
 	g_return_val_if_fail (value, FALSE);
-	return !G_IS_VALUE (value);
+	return gda_value_isa (value, GDA_TYPE_NULL);
 }
 
 /**
@@ -1340,7 +1409,7 @@ gda_value_is_null (const GValue *value)
 gboolean
 gda_value_is_number (const GValue *value)
 {
-	g_return_val_if_fail (value && G_IS_VALUE(value), FALSE);
+	g_return_val_if_fail (value, FALSE);
 	if(G_VALUE_HOLDS_INT(value) ||
 		G_VALUE_HOLDS_INT64(value) ||
 		G_VALUE_HOLDS_UINT(value) ||
@@ -1390,7 +1459,7 @@ gda_value_get_binary (const GValue *value)
 {
 	GdaBinary *val;
 
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
+	g_return_val_if_fail (value, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_BINARY), NULL);
 
 	val = (GdaBinary*) g_value_get_boxed (value);
@@ -1469,7 +1538,7 @@ gda_value_get_blob (const GValue *value)
 {
 	GdaBlob *val;
 
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
+	g_return_val_if_fail (value, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_BLOB), NULL);
 
 	val = (GdaBlob*) g_value_get_boxed (value);
@@ -1505,7 +1574,7 @@ gda_value_take_blob (GValue *value, GdaBlob *blob)
 G_CONST_RETURN GdaGeometricPoint *
 gda_value_get_geometric_point (const GValue *value)
 {
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
+	g_return_val_if_fail (value, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_GEOMETRIC_POINT), NULL);
 	return (const GdaGeometricPoint *) g_value_get_boxed(value);
 }
@@ -1538,8 +1607,7 @@ void
 gda_value_set_null (GValue *value)
 {
 	g_return_if_fail (value);
-
-	l_g_value_unset (value);
+	gda_value_reset_with_type (value, GDA_TYPE_NULL);
 }
 
 /**
@@ -1551,7 +1619,7 @@ gda_value_set_null (GValue *value)
 G_CONST_RETURN GdaNumeric *
 gda_value_get_numeric (const GValue *value)
 {
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
+	g_return_val_if_fail (value, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_NUMERIC), NULL);
 	return (const GdaNumeric *) g_value_get_boxed(value);
 }
@@ -1583,7 +1651,7 @@ gda_value_set_numeric (GValue *value, const GdaNumeric *val)
 gshort
 gda_value_get_short (const GValue *value)
 {
-	g_return_val_if_fail (value && G_IS_VALUE (value), -1);
+	g_return_val_if_fail (value, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_SHORT), -1);
 	return (gshort) value->data[0].v_int;
 }
@@ -1614,7 +1682,7 @@ gda_value_set_short (GValue *value, gshort val)
 gushort
 gda_value_get_ushort (const GValue *value)
 {
-	g_return_val_if_fail (value && G_IS_VALUE (value), -1);
+	g_return_val_if_fail (value, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_USHORT), -1);
 	return (gushort) value->data[0].v_uint;
 }
@@ -1646,7 +1714,7 @@ gda_value_set_ushort (GValue *value, gushort val)
 const GdaTime *
 gda_value_get_time (const GValue *value)
 {
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
+	g_return_val_if_fail (value, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_TIME), NULL);
 	return (const GdaTime *) g_value_get_boxed(value);
 }
@@ -1678,7 +1746,7 @@ gda_value_set_time (GValue *value, const GdaTime *val)
 const GdaTimestamp *
 gda_value_get_timestamp (const GValue *value)
 {
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
+	g_return_val_if_fail (value, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_TIMESTAMP), NULL);
 	return (const GdaTimestamp *) g_value_get_boxed(value);
 }
@@ -1749,6 +1817,9 @@ gda_value_set_from_string (GValue *value,
  * #gda_value_set_from_value, on the other hand, copies the contents
  * of @copy into @value, which must already be allocated.
  *
+ * If values are incompatible (see @g_value_type_compatible) then @value is set to a
+ * #GDA_TYPE_NULL, and %FALSE is returned.
+ *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
@@ -1763,8 +1834,10 @@ gda_value_set_from_value (GValue *value, const GValue *from)
 			g_value_copy (from, value);
 			return TRUE;
 		}
-		else
+		else {
+			gda_value_set_null (value);
 			return FALSE;
+		}
 	}
 	else {
 		l_g_value_unset (value);
@@ -1788,41 +1861,39 @@ gda_value_set_from_value (GValue *value, const GValue *from)
 gchar *
 gda_value_stringify (const GValue *value)
 {
-	if (value && G_IS_VALUE (value)) {
-		if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
-			GValue *string;
-			gchar *str;
-			
-			string = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-			g_value_transform (value, string);
-			str = g_value_dup_string (string);
-			gda_value_free (string);
-			return str;
-		}
-		else {
-			GType type = G_VALUE_TYPE (value);
-			if (type == G_TYPE_DATE) {
-				GDate *date;
-				date = (GDate *) g_value_get_boxed (value);
-				if (date) {
-					if (g_date_valid (date))
-						return g_strdup_printf ("%04u-%02u-%02u",
-									g_date_get_year (date),
-									g_date_get_month (date),
-									g_date_get_day (date));
-					else
-						return g_strdup_printf ("%04u-%02u-%02u",
-									date->year, date->month, date->day);
-				}
+	if (!value)
+		return g_strdup ("NULL");
+	if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
+		GValue *string;
+		gchar *str;
+
+		string = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_transform (value, string);
+		str = g_value_dup_string (string);
+		gda_value_free (string);
+		return str;
+	}
+	else {
+		GType type = G_VALUE_TYPE (value);
+		if (type == G_TYPE_DATE) {
+			GDate *date;
+			date = (GDate *) g_value_get_boxed (value);
+			if (date) {
+				if (g_date_valid (date))
+					return g_strdup_printf ("%04u-%02u-%02u",
+								g_date_get_year (date),
+								g_date_get_month (date),
+								g_date_get_day (date));
 				else
-					return g_strdup ("0000-00-00");
+					return g_strdup_printf ("%04u-%02u-%02u",
+								date->year, date->month, date->day);
 			}
 			else
-				return g_strdup ("");
+				return g_strdup ("0000-00-00");
 		}
+		else
+			return g_strdup ("");
 	}
-	else
-		return g_strdup ("NULL");
 }
 	
 /**
@@ -2263,7 +2334,7 @@ to_string (const GValue *value)
 {
 	gchar *retval = NULL;
 
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
+	g_return_val_if_fail (value, NULL);
 
 	if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN) {
 		if (g_value_get_boolean (value))
@@ -2292,7 +2363,7 @@ gda_value_to_xml (const GValue *value)
 	gchar *valstr;
 	xmlNodePtr retval;
 
-	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
+	g_return_val_if_fail (value, NULL);
 
 	valstr = to_string (value);
 

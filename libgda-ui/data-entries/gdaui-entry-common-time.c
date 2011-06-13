@@ -194,7 +194,6 @@ gdaui_entry_common_time_new (GdaDataHandler *dh, GType type)
 	GdauiEntryCommonTime *mgtim;
 
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 	g_return_val_if_fail (gda_data_handler_accepts_g_type (dh, type), NULL);
 
 	obj = g_object_new (GDAUI_TYPE_ENTRY_COMMON_TIME, "handler", dh, NULL);

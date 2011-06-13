@@ -229,16 +229,7 @@ gda_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str,
 	lcstr = g_utf8_strdown (str, -1);
 	if (!strcmp (lcstr, "true") || (*lcstr == 't'))
 		g_value_set_boolean (value, TRUE);
-	if (!value && (!strcmp (lcstr, "FALSE") || (*lcstr == 'f')))
-		g_value_set_boolean (value, FALSE);
 	g_free (lcstr);
-
-	if (! G_IS_VALUE (value)) {
-		g_value_set_boolean (value, TRUE);
-		lcstr = gda_value_stringify (value);
-		if (strcmp (str, lcstr))
-			g_value_set_boolean (value, FALSE);
-	}
 
 	return value;
 }
@@ -268,7 +259,6 @@ gda_handler_boolean_accepts_g_type (GdaDataHandler *iface, GType type)
 	gboolean found = FALSE;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_BOOLEAN (iface), FALSE);
-	g_return_val_if_fail (type != G_TYPE_INVALID, FALSE);
 	hdl = GDA_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 

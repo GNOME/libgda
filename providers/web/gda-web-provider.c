@@ -1197,6 +1197,8 @@ gtype_to_webtype (GType type)
                 return "text";
         if (type == G_TYPE_UINT)
                 return "integer";
+        if (type == GDA_TYPE_NULL)
+                return "text";
         if (type == G_TYPE_INVALID)
                 return "text";
 

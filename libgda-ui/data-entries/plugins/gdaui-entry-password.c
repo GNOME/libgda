@@ -123,7 +123,6 @@ gdaui_entry_password_new (GdaDataHandler *dh, GType type, const gchar *options)
 	GdauiEntryPassword *mgtxt;
 
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 	g_return_val_if_fail (gda_data_handler_accepts_g_type (dh, type), NULL);
 
 	obj = g_object_new (GDAUI_ENTRY_PASSWORD_TYPE, "handler", dh, NULL);

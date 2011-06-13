@@ -254,7 +254,6 @@ gda_sqlite_handler_boolean_accepts_g_type (GdaDataHandler *iface, GType type)
 	gboolean found = FALSE;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (iface), FALSE);
-	g_return_val_if_fail (type != G_TYPE_INVALID, FALSE);
 	hdl = GDA_SQLITE_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 

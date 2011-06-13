@@ -156,7 +156,10 @@ gda_init (void)
 	if (!g_module_supported ())
 		g_error (_("libgda needs GModule. Finishing..."));
 
-	/* create the required Gda types */
+	/* create the required Gda types, to avoid multiple simultaneous type creation when
+	 * multi threads are used */
+	type = GDA_TYPE_NULL;
+	g_assert (type);
 	type = G_TYPE_DATE;
 	g_assert (type);
 	type = GDA_TYPE_BINARY;

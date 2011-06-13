@@ -987,7 +987,7 @@ csv_parser_field_read_cb (char *s, size_t len, void *data)
 	GdaDataModelImport *model = pdata->model;
 	GValue *value = NULL;
 	GdaColumn *column;
-	GType type = G_TYPE_INVALID;
+	GType type = GDA_TYPE_NULL;
 	gchar *copy;
 
 	if (pdata->model->priv->extract.csv.ignore_first_line) 

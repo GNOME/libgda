@@ -578,8 +578,7 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 	gboolean allok = TRUE;
 	value = g_new0 (GValue, 1);
 
-	if (type != GDA_TYPE_NULL)
-		g_value_init (value, type);
+	g_value_init (value, type);
 
 	if (type == GDA_TYPE_NULL)
 		;

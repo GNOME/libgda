@@ -76,7 +76,7 @@ JNICALL Java_GdaJValue_setCString (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlon
 		g_free (tmp);
 		return;
 	}
-	g_value_init (value, G_TYPE_STRING);
+	gda_value_reset_with_type (value, G_TYPE_STRING);
 	g_value_take_string (value, tmp);
 }
 
@@ -94,7 +94,7 @@ JNICALL Java_GdaJValue_setCInt (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobjec
 				jint col, jint i)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, G_TYPE_INT);
+	gda_value_reset_with_type (value, G_TYPE_INT);
 	g_value_set_int (value, i);
 }
 
@@ -109,7 +109,7 @@ JNICALL Java_GdaJValue_setCChar (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobje
 				 jint col, jbyte b)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, G_TYPE_CHAR);
+	gda_value_reset_with_type (value, G_TYPE_CHAR);
 	g_value_set_char (value, b);
 }
 
@@ -124,7 +124,7 @@ JNICALL Java_GdaJValue_setCDouble (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED job
 				   jint col, jdouble d)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, G_TYPE_DOUBLE);
+	gda_value_reset_with_type (value, G_TYPE_DOUBLE);
 	g_value_set_double (value, d);
 }
 
@@ -139,7 +139,7 @@ JNICALL Java_GdaJValue_setCFloat (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobj
 				  jint col, jfloat f)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, G_TYPE_FLOAT);
+	gda_value_reset_with_type (value, G_TYPE_FLOAT);
 	g_value_set_float (value, f);
 }
 
@@ -154,7 +154,7 @@ JNICALL Java_GdaJValue_setCBoolean (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jo
 				    jint col, jboolean b)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, G_TYPE_BOOLEAN);
+	gda_value_reset_with_type (value, G_TYPE_BOOLEAN);
 	g_value_set_boolean (value, b);
 }
 
@@ -173,7 +173,7 @@ JNICALL Java_GdaJValue_setCDate (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong 
 	date = g_date_new_dmy (day, month, year);
 	if (g_date_valid (date)) {
 		GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-		g_value_init (value, G_TYPE_DATE);
+		gda_value_reset_with_type (value, G_TYPE_DATE);
 		g_value_take_boxed (value, date);
 	}
 	else {
@@ -229,7 +229,7 @@ JNICALL Java_GdaJValue_setCTime (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobje
 	tim->second = sec;
 
 	value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, GDA_TYPE_TIME);
+	gda_value_reset_with_type (value, GDA_TYPE_TIME);
 	g_value_take_boxed (value, tim);
 }
 
@@ -277,7 +277,7 @@ JNICALL Java_GdaJValue_setCTimestamp (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED 
 	ts->second = sec;
 
 	value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, GDA_TYPE_TIMESTAMP);
+	gda_value_reset_with_type (value, GDA_TYPE_TIMESTAMP);
 	g_value_take_boxed (value, ts);
 }
 
@@ -324,7 +324,7 @@ JNICALL Java_GdaJValue_setCBinary (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlon
 	(*jenv)->GetByteArrayRegion(jenv, bytes, 0, len, (jbyte *) bin->data);
 
 	value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, GDA_TYPE_BINARY);
+	gda_value_reset_with_type (value, GDA_TYPE_BINARY);
 	g_value_take_boxed (value, bin);
 }
 
@@ -368,7 +368,7 @@ JNICALL Java_GdaJValue_setCBlob (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong 
 	blob->op = gda_jdbc_blob_op_new_with_jblob (GDA_CONNECTION ((gpointer) cnc_c_pointer), jenv, blobop);
 
 	value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, GDA_TYPE_BLOB);
+	gda_value_reset_with_type (value, GDA_TYPE_BLOB);
 	g_value_take_boxed (value, blob);
 }
 
@@ -444,7 +444,7 @@ JNIEXPORT void
 JNICALL Java_GdaJValue_setCLong (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer, jint col, jlong l)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, G_TYPE_INT64);
+	gda_value_reset_with_type (value, G_TYPE_INT64);
 	g_value_set_int64 (value, l);
 }
 
@@ -459,7 +459,7 @@ JNICALL Java_GdaJValue_setCShort (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobj
 				  jint col, jshort s)
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
-	g_value_init (value, G_TYPE_INT64);
+	gda_value_reset_with_type (value, G_TYPE_INT64);
 	gda_value_set_short (value, s);
 }
 
@@ -496,7 +496,7 @@ JNICALL Java_GdaJValue_setCNumeric (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlo
 	num->number = tmp;
 	num->precision = precision;
 	num->width = scale;
-	g_value_init (value, GDA_TYPE_NUMERIC);
+	gda_value_reset_with_type (value, GDA_TYPE_NUMERIC);
 	g_value_take_boxed (value, num);
 }
 

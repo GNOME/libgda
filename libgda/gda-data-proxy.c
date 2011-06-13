@@ -471,6 +471,7 @@ row_modifs_new (GdaDataProxy *proxy, gint proxy_row)
 		rm->orig_values = g_new0 (GValue *, proxy->priv->model_nb_cols);
 		rm->orig_values_size = proxy->priv->model_nb_cols;
 		model_row = proxy_row_to_model_row (proxy, proxy_row);
+
 		if (model_row >= 0) {
 			for (i=0; i<proxy->priv->model_nb_cols; i++) {
 				const GValue *oval;

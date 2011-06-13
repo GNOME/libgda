@@ -200,7 +200,6 @@ gdaui_entry_number_new (GdaDataHandler *dh, GType type, const gchar *options)
 	GdauiEntryNumber *mgstr;
 
 	g_return_val_if_fail (GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 	g_return_val_if_fail (gda_data_handler_accepts_g_type (dh, type), NULL);
 	g_return_val_if_fail (gdaui_entry_number_is_type_numeric (type), NULL);
 

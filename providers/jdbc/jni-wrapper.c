@@ -290,8 +290,7 @@ jni_wrapper_instantiate_object (JNIEnv *jenv, jclass klass, const gchar *signatu
 	va_end (args);
 	
 	if (jni_wrapper_handle_exception (jenv, NULL, NULL, error)) {
-		g_value_unset (retval);
-		g_free (retval);
+		gda_value_free (retval);
 		retval = NULL;
 	}
 
@@ -352,8 +351,7 @@ jni_wrapper_handle_exception (JNIEnv *jenv, gint *out_error_code, gchar **out_sq
 				if (res) {
 					if (G_VALUE_TYPE (res) == G_TYPE_INT)
 						*out_error_code = g_value_get_int (res);
-					g_value_unset (res);
-					g_free (res);
+					gda_value_free (res);
 				}
 			}
 			if (out_sql_state) {
@@ -364,8 +362,7 @@ jni_wrapper_handle_exception (JNIEnv *jenv, gint *out_error_code, gchar **out_sq
 				if (res) {
 					if (G_VALUE_TYPE (res) == G_TYPE_STRING)
 						*out_sql_state = g_value_dup_string (res);
-					g_value_unset (res);
-					g_free (res);
+					gda_value_free (res);
 				}
 			}
 		}
@@ -381,13 +378,10 @@ jni_wrapper_handle_exception (JNIEnv *jenv, gint *out_error_code, gchar **out_sq
 			if (res) {
 				if (G_VALUE_TYPE (res) == G_TYPE_STRING) {
 					g_set_error (error, 0, 0, "%s", g_value_get_string (res));
-					g_value_unset (res);
-					g_free (res);
+					gda_value_free (res);
 				}
 				else {
-					if (G_VALUE_TYPE (res) != 0) /* GDA_TYPE_NULL */
-						g_value_unset (res);
-					g_free (res);
+					gda_value_free (res);
 					goto fallback;
 				}
 			}
@@ -398,20 +392,13 @@ jni_wrapper_handle_exception (JNIEnv *jenv, gint *out_error_code, gchar **out_sq
 			goto fallback;
 	}
 
-	if (exc_value) {
-		g_value_unset (exc_value);
-		g_free (exc_value);
-	}
+	gda_value_free (exc_value);
 
 	return TRUE;
 
  fallback:
-	g_set_error (error, 0, 0, "%s", 
-		     "An exception occurred");
-	if (exc_value) {
-		g_value_unset (exc_value);
-		g_free (exc_value);
-	}
+	g_set_error (error, 0, 0, "%s", "An exception occurred");
+	gda_value_free (exc_value);
 	(*jenv)->DeleteLocalRef(jenv, exc);
 	return TRUE;
 }
@@ -502,6 +489,7 @@ jni_wrapper_method_call (JNIEnv *jenv, JniWrapperMethod *method, GValue *object,
 			(*jenv)->CallStaticVoidMethodV (jenv, method->klass, method->mid, args);
 		else
 			(*jenv)->CallVoidMethodV (jenv, jobj, method->mid, args);
+		gda_value_set_null (retval);
 		break;
 	case '[':
 	case 'L': 
@@ -628,9 +616,7 @@ jni_wrapper_method_call (JNIEnv *jenv, JniWrapperMethod *method, GValue *object,
 	va_end (args);
 
 	if (jni_wrapper_handle_exception (jenv, out_error_code, out_sql_state, error)) {
-		if (G_VALUE_TYPE (retval) != 0)
-			g_value_unset (retval);
-		g_free (retval);
+		gda_value_free (retval);
 		return NULL;
 	}
  
@@ -841,9 +827,7 @@ jni_wrapper_field_get (JNIEnv *jenv, JniWrapperField *field, GValue *object, GEr
 	}
 
 	if (jni_wrapper_handle_exception (jenv, NULL, NULL, error)) {
-		if (G_VALUE_TYPE (retval) != 0)
-			g_value_unset (retval);
-		g_free (retval);
+		gda_value_free (retval);
 		return NULL;
 	}
  

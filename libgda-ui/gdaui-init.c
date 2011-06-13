@@ -112,7 +112,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 	if (!gdaui_plugins_hash)
 		gdaui_plugins_hash = init_plugins_hash ();
 
-	if (type == G_TYPE_INVALID)
+	if (type == GDA_TYPE_NULL)
 		return (GdauiDataEntry *) gdaui_entry_none_new (GDA_TYPE_NULL);
 
 	dh = gda_data_handler_get_default (type);

@@ -753,7 +753,7 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
  *
  * The returned value may be %NULL either if the provider does not implement that method, or if
  * there is no DBMS data type which could contain data of the @g_type type (for example %NULL may be
- * returned if a DBMS has integers only up to 4 bytes and a G_TYPE_INT64 is requested).
+ * returned if a DBMS has integers only up to 4 bytes and a #G_TYPE_INT64 is requested).
  *
  * Returns: (transfer none) (allow-none): the name of the DBMS type, or %NULL
  */
@@ -781,14 +781,14 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
  * @provider: a server provider.
  * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @string: the SQL string to convert to a value
- * @preferred_type: a #GType, or G_TYPE_INVALID
+ * @preferred_type: a #GType, or #G_TYPE_INVALID
  * @dbms_type: (allow-none): place to get the actual database type used if the conversion succeeded, or %NULL
  *
  * Use @provider to create a new #GValue from a single string representation. 
  *
  * The @preferred_type can optionally ask @provider to return a #GValue of the requested type 
  * (but if such a value can't be created from @string, then %NULL is returned); 
- * pass G_TYPE_INVALID if any returned type is acceptable.
+ * pass #G_TYPE_INVALID if any returned type is acceptable.
  *
  * The returned value is either a new #GValue or %NULL in the following cases:
  * - @string cannot be converted to @preferred_type type

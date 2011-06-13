@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<chapter id="migration-3" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <title>Migration from 4.X versions</title>
+  <sect1><title>Overview</title>
+    <para>Version 5.0 of &LIBGDA; is a small evolution to adapt to the GTK3 environment; as such it is API
+    compatible with versions 4.0.x or 4.2.x. However there are some few behavioural changes explicited
+    below.
+    </para>
+  </sect1>  
+
+  <sect1><title>GDA_TYPE_NULL</title>
+    <para>
+      Previous versions of &LIBGDA; represented SQL NULL values as a <link linkend="GValue">GValue</link> completely filled
+      with zeros (i.e. of type G_TYPE_INVALID), and GDA_TYPE_NULL was thus equivalent to G_TYPE_INVALID.
+    </para>
+    <para>
+      This new version introduces a new specific type for the same GDA_TYPE_NULL (which means
+      GDA_TYPE_NULL no longer equals G_TYPE_INVALID). The most common sources of errors brought by this
+      change are:
+      <itemizedlist>
+	<listitem><para>if you used <link linkend="g-value-init">g_value_init()</link> on a
+	value of type GDA_TYPE_NULL, then you'll have to eight clear the value first, or replace
+	that call with a call to <link linkend="gda-value-reset-with-type">gda_value_reset_with_type()</link></para></listitem>
+	<listitem><para>creating a GValue using <link linkend="g-new0">g_new0()</link> resulted
+	in a GDA_TYPE_NULL value, which is not longer the case; the value needs to be initialized
+	with a call to <link linkend="g-value-init">g_value_init()</link></para></listitem>
+	<listitem><para>testing for NULL values using G_IS_VALUE does not work anymore, you'll have to
+	replace them with <link linkend="GDA-VALUE-HOLDS-NULL:CAPS">GDA_VALUE_HOLDS_NULL()</link></para></listitem>
+      </itemizedlist>
+    </para>
+  </sect1>  
+
+</chapter>

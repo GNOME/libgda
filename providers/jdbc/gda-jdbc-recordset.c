@@ -267,8 +267,11 @@ gda_jdbc_recordset_new (GdaConnection *cnc, GdaJdbcPStmt *ps, GdaSet *exec_param
 									 gda_column_new ());
 		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
 
-		/* create prepared statement's types */
-		_GDA_PSTMT (ps)->types = g_new0 (GType, _GDA_PSTMT (ps)->ncols); /* all types are initialized to GDA_TYPE_NULL */
+		/* create prepared statement's types, all types are initialized to GDA_TYPE_NULL */
+		_GDA_PSTMT (ps)->types = g_new (GType, _GDA_PSTMT (ps)->ncols);
+		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
+			_GDA_PSTMT (ps)->types [i] = GDA_TYPE_NULL;
+
 		if (col_types) {
 			for (i = 0; ; i++) {
 				if (col_types [i] > 0) {

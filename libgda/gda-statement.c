@@ -482,7 +482,7 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 	    (pspec = ((GdaSqlExpr*) node)->param_spec)) {
 		GdaHolder *h;
 
-		if (pspec->g_type == 0) {
+		if (pspec->g_type == GDA_TYPE_NULL) {
 			g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_TYPE_ERROR,
 				     _("Could not determine GType for parameter '%s'"),
 				     pspec->name ? pspec->name : _("Unnamed"));
@@ -1335,7 +1335,7 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 		else {
 			g_string_append (string, "##");
 			g_string_append (string, pspec->name);
-			if (pspec->g_type != G_TYPE_INVALID) {
+			if (pspec->g_type != GDA_TYPE_NULL) {
 				g_string_append (string, "::");
 				g_string_append (string, gda_g_type_to_string (pspec->g_type));
 				if (pspec->nullok) 

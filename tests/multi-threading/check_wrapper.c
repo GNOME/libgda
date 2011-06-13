@@ -521,10 +521,8 @@ wrapper_callback (GdaThreadWrapper *wrapper, gpointer instance, const gchar *sig
 	for (i = 0; i < n_param_values; i++) {
 		GValue *dest = ts->param_values + i;
 		const GValue *src = param_values + i;
-		if (G_VALUE_TYPE (src) != GDA_TYPE_NULL) {
-			g_value_init (dest, G_VALUE_TYPE (src));
-			g_value_copy (src, dest);
-		}
+		g_value_init (dest, G_VALUE_TYPE (src));
+		g_value_copy (src, dest);
 	}
 	*sig_list = g_slist_append (*sig_list, ts);
 }

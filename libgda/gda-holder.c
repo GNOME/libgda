@@ -36,8 +36,6 @@
 #include <libgda/gda-custom-marshal.h>
 #include <libgda/gda-types.h>
 
-#define __gda_value_is_null(value) (!G_IS_VALUE (value))
-
 /* 
  * Main static functions 
  */
@@ -307,7 +305,7 @@ gda_holder_init (GdaHolder *holder)
 
 	holder->priv->id = NULL;
 
-	holder->priv->g_type = G_TYPE_INVALID;
+	holder->priv->g_type = GDA_TYPE_NULL;
 	holder->priv->full_bind = NULL;
 	holder->priv->simple_bind = NULL;
 	holder->priv->simple_bind_notify_signal_id = 0;
@@ -593,11 +591,11 @@ gda_holder_set_property (GObject *object,
 				
 				/* updating the holder's validity regarding the NULL value */
 				if (!not_null && 
-				    (!holder->priv->value || __gda_value_is_null (holder->priv->value)))
+				    (!holder->priv->value || GDA_VALUE_HOLDS_NULL (holder->priv->value)))
 					holder->priv->valid = TRUE;
 				
 				if (not_null && 
-				    (!holder->priv->value || __gda_value_is_null (holder->priv->value)))
+				    (!holder->priv->value || GDA_VALUE_HOLDS_NULL (holder->priv->value)))
 					holder->priv->valid = FALSE;
 				
 				g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
@@ -776,7 +774,7 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
 	g_return_val_if_fail (holder->priv, NULL);
 
 	current_val = gda_holder_get_value (holder);
-        if (!current_val || __gda_value_is_null (current_val))
+        if (!current_val || GDA_VALUE_HOLDS_NULL (current_val))
                 return NULL;
         else {
                 if (!dh)
@@ -851,21 +849,21 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
 
 	if (!value || !g_ascii_strcasecmp (value, "NULL")) 
                 return gda_holder_set_value (holder, NULL, error);
-    else {
+	else {
 		GValue *gdaval = NULL;
-
+		
 		if (!dh)
 			dh = gda_data_handler_get_default (holder->priv->g_type);
 		if (dh)
 			gdaval = gda_data_handler_get_value_from_str (dh, value, holder->priv->g_type);
-
+		
 		if (gdaval)
 			return real_gda_holder_set_value (holder, gdaval, FALSE, error);
-        else {
+		else {
 			g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_STRING_CONVERSION_ERROR,
 				     _("Unable to convert string to '%s' type"), 
 				     gda_g_type_to_string (holder->priv->g_type));
-        	return FALSE;
+			return FALSE;
 		}
 	}
 }
@@ -928,11 +926,11 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	}
 		
 	/* holder will be changed? */
-	newnull = !value || __gda_value_is_null (value);
+	newnull = !value || GDA_VALUE_HOLDS_NULL (value);
 	current_val = gda_holder_get_value (holder);
 	if (current_val == value)
 		changed = FALSE;
-	else if ((!current_val || __gda_value_is_null ((GValue *)current_val)) && newnull)
+	else if ((!current_val || GDA_VALUE_HOLDS_NULL ((GValue *)current_val)) && newnull)
 		changed = FALSE;
 	else if (value && current_val &&
 		 (G_VALUE_TYPE (value) == G_VALUE_TYPE ((GValue *)current_val)))
@@ -1062,11 +1060,11 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 #endif
 
 	/* holder will be changed? */
-	newnull = !value || __gda_value_is_null (value);
+	newnull = !value || GDA_VALUE_HOLDS_NULL (value);
 	current_val = gda_holder_get_value (holder);
 	if (current_val == value)
 		changed = FALSE;
-	else if ((!current_val || __gda_value_is_null (current_val)) && newnull) 
+	else if ((!current_val || GDA_VALUE_HOLDS_NULL (current_val)) && newnull) 
 		changed = FALSE;
 	else if (value && current_val &&
 		 (G_VALUE_TYPE (value) == G_VALUE_TYPE (current_val))) 
@@ -1390,8 +1388,8 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 		const GValue *current = gda_holder_get_value (holder);
 
 		/* check if default is equal to current value */
-		if (__gda_value_is_null (value) &&
-		    (!current || __gda_value_is_null (current)))
+		if (GDA_VALUE_HOLDS_NULL (value) &&
+		    (!current || GDA_VALUE_HOLDS_NULL (current)))
 			holder->priv->default_forced = TRUE;
 		else if ((G_VALUE_TYPE (value) == holder->priv->g_type) &&
 			 current && !gda_value_compare (value, current))
@@ -1675,12 +1673,12 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 		g_return_if_fail (alias_of->priv);
 		g_return_if_fail (holder->priv->g_type == alias_of->priv->g_type);
 		cvalue = gda_holder_get_value (alias_of);
-		if (cvalue && !__gda_value_is_null ((GValue*)cvalue))
+		if (cvalue && !GDA_VALUE_HOLDS_NULL ((GValue*)cvalue))
 			value2 = gda_value_copy ((GValue*)cvalue);
 	}
 
 	cvalue = gda_holder_get_value (holder);
-	if (cvalue && !__gda_value_is_null ((GValue*)cvalue))
+	if (cvalue && !GDA_VALUE_HOLDS_NULL ((GValue*)cvalue))
 		value1 = gda_value_copy ((GValue*)cvalue);
 		
 	

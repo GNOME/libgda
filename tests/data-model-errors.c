@@ -132,7 +132,7 @@ data_model_errors_init (DataModelErrors *model,
 			if (*arow->col0 == '-')
 				G_VALUE_TYPE (value) = G_MAXINT;
 			else {
-				g_value_init (value, G_TYPE_STRING);
+				gda_value_reset_with_type (value, G_TYPE_STRING);
 				g_value_set_string (value, arow->col0);
 			}
 		}
@@ -142,7 +142,7 @@ data_model_errors_init (DataModelErrors *model,
 			if (*arow->col1 == '-')
 				G_VALUE_TYPE (value) = G_MAXINT;
 			else {
-				g_value_init (value, G_TYPE_STRING);
+				gda_value_reset_with_type (value, G_TYPE_STRING);
 				g_value_set_string (value, arow->col1);
 			}
 		}
@@ -152,7 +152,7 @@ data_model_errors_init (DataModelErrors *model,
 			if (*arow->col2 == '-')
 				G_VALUE_TYPE (value) = G_MAXINT;
 			else {
-				g_value_init (value, G_TYPE_STRING);
+				gda_value_reset_with_type (value, G_TYPE_STRING);
 				g_value_set_string (value, arow->col2);
 			}
 		}
@@ -162,7 +162,7 @@ data_model_errors_init (DataModelErrors *model,
 			if (*arow->col3 == '-')
 				G_VALUE_TYPE (value) = G_MAXINT;
 			else {
-				g_value_init (value, G_TYPE_STRING);
+				gda_value_reset_with_type (value, G_TYPE_STRING);
 				g_value_set_string (value, arow->col3);
 			}
 		}

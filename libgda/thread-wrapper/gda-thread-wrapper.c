@@ -1300,10 +1300,8 @@ worker_thread_closure_marshal (GClosure *closure,
 		src = param_values + i;
 		dest = job->u.signal.param_values + i - 1;
 
-		if (G_VALUE_TYPE (src) != GDA_TYPE_NULL) {
-			g_value_init (dest, G_VALUE_TYPE (src));
-			g_value_copy (src, dest);
-		}
+		g_value_init (dest, G_VALUE_TYPE (src));
+		g_value_copy (src, dest);
 	}
 
 	g_async_queue_push (sigspec->reply_queue, job);
@@ -1348,10 +1346,8 @@ worker_thread_closure_marshal_anythread (GClosure *closure,
 		src = param_values + i;
 		dest = job->u.signal.param_values + i - 1;
 
-		if (G_VALUE_TYPE (src) != GDA_TYPE_NULL) {
-			g_value_init (dest, G_VALUE_TYPE (src));
-			g_value_copy (src, dest);
-		}
+		g_value_init (dest, G_VALUE_TYPE (src));
+		g_value_copy (src, dest);
 	}
 
 	g_async_queue_push (sigspec->reply_queue, job);

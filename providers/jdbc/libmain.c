@@ -170,8 +170,7 @@ plugin_get_sub_names (void)
 	}
 	if (!gda_value_is_null (lvalue)) {
 		sub_names = g_strsplit (g_value_get_string (lvalue), ":", 0);
-		g_value_unset (lvalue);
-		g_free (lvalue);
+		gda_value_free (lvalue);
 		
 		describe_driver_names ();
 		

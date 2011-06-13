@@ -79,10 +79,7 @@ gda_sql_expr_free (GdaSqlExpr *expr)
 	if (!expr) return;
 
 	_gda_sql_expr_check_clean (expr);
-	if (expr->value) {
-		g_value_unset (expr->value);
-		g_free (expr->value);
-	}
+	gda_value_free (expr->value);
 	gda_sql_param_spec_free (expr->param_spec);
 	gda_sql_function_free (expr->func);
 	gda_sql_operation_free (expr->cond);

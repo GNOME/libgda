@@ -228,8 +228,11 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 									 gda_column_new ());
 		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
 
-		/* create prepared statement's types */
-		_GDA_PSTMT (ps)->types = g_new0 (GType, _GDA_PSTMT (ps)->ncols); /* all types are initialized to GDA_TYPE_NULL */
+		/* create prepared statement's types, all types are initialized to GDA_TYPE_NULL */
+		_GDA_PSTMT (ps)->types = g_new (GType, _GDA_PSTMT (ps)->ncols);
+		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
+			_GDA_PSTMT (ps)->types [i] = GDA_TYPE_NULL;
+
 		if (col_types) {
 			for (i = 0; ; i++) {
 				if (col_types [i] > 0) {
@@ -379,8 +382,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				gda_value_set_null (value);
 			}
 			else {
-				if (type != GDA_TYPE_NULL)
-					g_value_init (value, type);
+				gda_value_reset_with_type (value, type);
 				
 				if (type == GDA_TYPE_NULL)
 					;
