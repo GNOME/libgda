@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2011-06-10 19:03+0000\n"
-"PO-Revision-Date: 2011-06-11 09:28+0100\n"
+"PO-Revision-Date: 2011-06-13 14:28+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -2254,9 +2254,9 @@ msgstr "Brez imena"
 #: ../libgda/gda-tree-mgr-ldap.c:242
 #: ../tools/browser/ldap-browser/mgr-ldap-classes.c:186
 #: ../tools/browser/ldap-browser/mgr-ldap-classes.c:274
-#, fuzzy, c-format
+#, c-format
 msgid "No LDAP connection specified"
-msgstr "Povezava končne točke ni določena "
+msgstr "Ni določene povezave LDAP"
 
 #: ../libgda/gda-tree-mgr-schemas.c:310
 #, c-format
@@ -2782,27 +2782,27 @@ msgstr "Napaka med shranjevanjem seznama razpredelnic LDAP: %s"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:203
 msgid "File used to store startup data"
-msgstr ""
+msgstr "Datoteka za shranjevanje podatkov"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:248
-#, fuzzy, c-format
+#, c-format
 msgid "Error recreating LDAP tables: %s"
-msgstr "Napaka med poizvedovanjem strežnika LDAP: %s"
+msgstr "Napaka med ustvarjanjem razpredelnic LDAP: %s"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:772
-#, fuzzy, c-format
+#, c-format
 msgid "Can't remove non LDAP virtual table"
-msgstr "Ni mogoče napovedati navidezne razpredelnice (%s)"
+msgstr "Ni mogoče odstraniti navidezne razpredelnice, ki ni LDAP"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:819
-#, fuzzy, c-format
+#, c-format
 msgid "Can't describe non LDAP virtual table"
-msgstr "Ni mogoče napovedati navidezne razpredelnice (%s)"
+msgstr "Ni mogoče opisati navidezne razpredelnice, ki ni LDAP"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:825
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown LDAP virtual table"
-msgstr "Ni mogoče napovedati navidezne razpredelnice (%s)"
+msgstr "Neznana navidezna razpredelnica LDAP"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:372
 msgid "Table to remove not found"
@@ -5196,34 +5196,32 @@ msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr "Ni mogoče uporabiti JVM (libjvm.so), Ponudnik JDBC ni na voljo."
 
 #: ../providers/ldap/gda-ldap-provider.c:267
-#, fuzzy
 msgid "The connection string must contain the DB_NAME value"
-msgstr "Niz povezave mora vsebovati vrednosti DB_NAME"
+msgstr "Niz povezave mora vključevati vrednost DB_NAME"
 
 #: ../providers/ldap/gda-ldap-provider.c:715
 msgid "Parameter"
 msgstr "Parameter"
 
 #: ../providers/ldap/gda-ldap-provider.c:929
-#, fuzzy, c-format
+#, c-format
 msgid "near \"%s\": syntax error"
-msgstr "Napaka skladnje; ukaz ni prepoznan"
+msgstr "blizu \"%s\": napaka skladnje"
 
 #: ../providers/ldap/gda-ldap-util.c:1124
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
-msgstr ""
+msgstr "Strežnik LDAP je vrnil več kot en vnos z razločnim imenom '%s'"
 
 #: ../providers/ldap/gda-ldap-util.c:1256
 #, c-format
 msgid "Could not parse distinguished name returned by LDAP server"
-msgstr ""
+msgstr "Ni mogoče razčleniti razločnega imena, ki ga je vrnil strežnik LDAP"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:213
 #: ../providers/ldap/gdaprov-data-model-ldap.c:490
-#, fuzzy
 msgid "Distinguished name"
-msgstr "Z uporabo razločnega imena (DN)"
+msgstr "Razločno ime"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:856
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1110
@@ -5237,7 +5235,7 @@ msgstr "Uporabniško ime"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base distinguished name, starting point for the searches"
-msgstr ""
+msgstr "Osnovno razločno ime, začetna točka iskanja"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
 msgid "Base name"
@@ -7134,9 +7132,8 @@ msgid "Error while analysing database schema: %s"
 msgstr "Napaka ob proučevanju sheme podatkovne zbirke: %s"
 
 #: ../tools/browser/browser-connection.c:1208
-#, fuzzy
 msgid "Execution reported an undefined error, please report error to http://bugzilla.gnome.org/ for the \"libgda\" product"
-msgstr "Neupravljana vrsta GdaServerOperationType; pošljite poročilo o napaki na http://bugzilla.gnome.org/ za knjižnico \"libgda\""
+msgstr "Pri izvedbi je prišlo do nedoločene napake; pošljite poročilo o napaki na http://bugzilla.gnome.org/ za knjižnico \"libgda\"."
 
 #: ../tools/browser/browser-connection.c:1258
 #: ../tools/browser/browser-connection.c:1308
@@ -7179,11 +7176,11 @@ msgstr "Izvajanje iskanja LDAP"
 
 #: ../tools/browser/browser-connection.c:2413
 msgid "Fetching LDAP entry's attributes"
-msgstr ""
+msgstr "Pridobivanje atributov vnosa LDAP"
 
 #: ../tools/browser/browser-connection.c:2473
 msgid "Fetching LDAP entry's children"
-msgstr ""
+msgstr "Pridobivanje podrejenih predmetov vnosa LDAP"
 
 #: ../tools/browser/browser-connections-list.c:156
 #, c-format
@@ -7739,9 +7736,8 @@ msgid "Abstract"
 msgstr "Izvleček"
 
 #: ../tools/browser/support.c:443
-#, fuzzy
 msgid "Structural"
-msgstr "Strukturno"
+msgstr "Po zgradbi"
 
 #: ../tools/browser/support.c:445
 msgid "Auxilliary"
@@ -8122,9 +8118,8 @@ msgid "Execute action"
 msgstr "Izvedi dejanje"
 
 #: ../tools/browser/common/ui-formgrid.c:405
-#, fuzzy
 msgid "View LDAP entry's details"
-msgstr "Pogled seznama ali podrobnosti"
+msgstr "Pogled podrobnosti vnosa LDAP"
 
 #: ../tools/browser/common/ui-formgrid.c:463
 #: ../tools/browser/data-manager/data-source.c:811
@@ -8556,9 +8551,8 @@ msgid "SQL code to execute:"
 msgstr "Koda SQL ia izvedbo:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:385
-#, fuzzy
 msgid "Could not get information about LDAP class"
-msgstr "Ni mogoče dobiti podatkov o shemi za strežnik LDAP."
+msgstr "Ni mogoče pridobiti podrobnosti o razredu LDAP"
 
 #: ../tools/browser/ldap-browser/class-properties.c:405
 msgid "Class OID:"
@@ -8577,9 +8571,8 @@ msgstr[2] "Imeni razreda:"
 msgstr[3] "Imena razreda:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:443
-#, fuzzy
 msgid "This LDAP class is obsolete"
-msgstr "Razred s tem imenom že obstaja"
+msgstr "Ta razred LDAP je zastarel."
 
 #: ../tools/browser/ldap-browser/class-properties.c:451
 msgid "Required attribute:"
@@ -8606,13 +8599,12 @@ msgstr[2] "Podrejena razreda:"
 msgstr[3] "Podrejeni razredi:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:531
-#, fuzzy
 msgid "Inherited class:"
 msgid_plural "Inherited classes:"
-msgstr[0] "Osnovni razred:"
-msgstr[1] "Prevzemi"
-msgstr[2] "Prevzemi"
-msgstr[3] "Prevzemi"
+msgstr[0] "Podedovani razredi:"
+msgstr[1] "Podedovani razred:"
+msgstr[2] "Podedovana razreda:"
+msgstr[3] "Podedovani razredi:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:213
 msgid "Select the file to save data to"
@@ -8624,9 +8616,8 @@ msgid "Could not save data: %s"
 msgstr "Ni mogoče shraniti podatkov: %s"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:512
-#, fuzzy
 msgid "Non activated"
-msgstr "Dejavni vstavki"
+msgstr "Nedejavno"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:560
 #: ../tools/browser/ldap-browser/entry-properties.c:564
@@ -8635,45 +8626,38 @@ msgstr "Nikoli"
 
 #. DN
 #: ../tools/browser/ldap-browser/entry-properties.c:744
-#, fuzzy
 msgid "Distinguished Name:"
-msgstr "Z uporabo razločnega imena (DN)"
+msgstr "Razločno ime (DN):"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:891
-#, fuzzy
 msgid "Can't display attribute value"
-msgstr "Ni mogoče prikazati neposrednega naslova URL: %s"
+msgstr "Ni mogoče prikazati vrednosti atributa"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:906
 #: ../tools/browser/ldap-browser/entry-properties.c:938
-#, fuzzy
 msgid "Could not get information about LDAP entry"
-msgstr "Ni mogoče dobiti podatkov o shemi za strežnik LDAP."
+msgstr "Ni mogoče pridobiti podrobnosti o vnosu LDAP"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:149
-#, fuzzy
 msgid "Base DN:"
-msgstr "_Osnovni DN:"
+msgstr "_Osnovno razločno ime (DN):"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:153
-#, fuzzy
 msgid "Filter expression:"
-msgstr "Napaka v izrazu filtra"
+msgstr "Izraz filtra"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:157
-#, fuzzy
 msgid "Attributes to fetch:"
-msgstr "Kliknite za pridobivanje"
+msgstr "Atributi za pridobivanje:"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:161
-#, fuzzy
 msgid "Search scope:"
-msgstr "_Območje iskanja"
+msgstr "Območje iskanja:"
 
 #: ../tools/browser/ldap-browser/hierarchy-view.c:567
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find LDAP entry whith DN '%s'"
-msgstr "Ni mogoče najti DSN z imenom '%s'"
+msgstr "Ni mogoče najti vnosa LDAP z razločnim imenom '%s'"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:334
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:551
@@ -8690,50 +8674,41 @@ msgid "LDAP"
 msgstr "LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:335
-#, fuzzy
 msgid "_New LDAP entries browser"
-msgstr "Odpri novo okno brskalnika"
+msgstr "Brskalnik novih _vnosov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:335
-#, fuzzy
 msgid "Open a new LDAP entries browser"
-msgstr "Odpri nov zavihek v obstoječem oknu brskalnika"
+msgstr "Odpri nov brskalnik vnosov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
-#, fuzzy
 msgid "_New LDAP classes browser"
-msgstr "Odpri novo okno brskalnika"
+msgstr "Brskalnik novih _razredov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
-#, fuzzy
 msgid "Open a new LDAP classes browser"
-msgstr "Odpri nov zavihek v obstoječem oknu brskalnika"
+msgstr "Odpri nov brskalnik razredov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
-#, fuzzy
 msgid "_New LDAP search"
-msgstr "Nova iskalna mapa"
+msgstr "Novo _iskanje LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
-#, fuzzy
 msgid "Open a new LDAP search form"
-msgstr "Odpiranje rezultatov iskanja v novem zavihku"
+msgstr "Odpiri nov obrazec iskanja LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:360
-#, fuzzy
 msgid "LDAP classes browser"
-msgstr "Brskalnik na levi"
+msgstr "Brskalnik razredov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:380
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:619
-#, fuzzy
 msgid "LDAP classes"
-msgstr "Pridobi razrede"
+msgstr "Razredi LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:407
-#, fuzzy
 msgid "LDAP class's properties"
-msgstr "Splošne lastnosti razreda"
+msgstr "Lastnosti razreda LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:552
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:557
@@ -8742,9 +8717,8 @@ msgid "Add to _Favorites"
 msgstr "Dodaj med _priljubljene"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:552
-#, fuzzy
 msgid "Add class to favorites"
-msgstr "Dodaj razpredelnico med priljubljene"
+msgstr "Dodaj razred med priljubljene"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:554
 msgid "Previous class"
@@ -8752,35 +8726,31 @@ msgstr "Predhodni razred"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:554
 msgid "Move back to previous LDAP class"
-msgstr ""
+msgstr "Premakni nazaj na predhodni razred LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:556
 msgid "Next class"
 msgstr "Naslednji razred"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:556
-#, fuzzy
 msgid "Move to next LDAP class"
-msgstr "Premakni okno v naslednje vidno polje."
+msgstr "Premakni v naslednji razred LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:366
 msgid "LDAP entries browser"
 msgstr "Brskalnik vnosov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:386
-#, fuzzy
 msgid "LDAP hierarchy"
-msgstr "_Hierarhija potrdil"
+msgstr "Hierarhija LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:413
-#, fuzzy
 msgid "LDAP entry's details"
-msgstr "Ogled podrobnosti predmeta"
+msgstr "Podrobnosti vnosa LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:557
-#, fuzzy
 msgid "Add entry to favorites"
-msgstr "Dodaj razpredelnico med priljubljene"
+msgstr "Dodaj vnos med priljubljene"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:559
 msgid "Previous entry"
@@ -8788,7 +8758,7 @@ msgstr "Predhodni vnos"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:559
 msgid "Move back to previous LDAP entry"
-msgstr ""
+msgstr "Premakni nazaj na predhodni vnos LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:561
 msgid "Next entry"
@@ -8836,14 +8806,14 @@ msgid "Results"
 msgstr "Rezultati"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:380
-#, fuzzy, c-format
+#, c-format
 msgid "Could not define virtual table for this LDAP search: %s"
-msgstr "Ni mogoče določiti razpredelnice za polje '%s'"
+msgstr "Ni mogoče določiti navidezne razpredelnice za to iskanje LDAP: %s"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:386
 #, c-format
 msgid "Virtual table '%s' for this LDAP search has been defined"
-msgstr ""
+msgstr "Navidezna razpredelnica '%s' za iskanje LDAP je določena"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:462
 msgid "Define as table"
@@ -8859,7 +8829,7 @@ msgstr "Iskanje LDAP"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:116
 msgid "Define LDAP search as a virtual table"
-msgstr ""
+msgstr "Določi iskanje LDAP kot navidezno razpredelnico"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:125
 msgid "Name of the virtual LDAP table to create"
@@ -8874,9 +8844,8 @@ msgid "Table name:"
 msgstr "Ime razpredelnice:"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:147
-#, fuzzy
 msgid "Replace if exists:"
-msgstr "Izbrana možnost določa, da izbor obstaja."
+msgstr "Zamenjaj, če obstaja:"
 
 #: ../tools/browser/query-exec/perspective-main.c:33
 msgid "Query execution (SQL)"
@@ -9264,9 +9233,8 @@ msgid "Not NULL?"
 msgstr "Ali ni prazna vrednost?"
 
 #: ../tools/browser/schema-browser/table-columns.c:686
-#, fuzzy
 msgid "LDAP virtual table definition"
-msgstr "Ni mogoče napovedati navidezne razpredelnice (%s)"
+msgstr "Dolčilo navidezne razpredelnice LDAP"
 
 #: ../tools/browser/schema-browser/table-columns.c:733
 msgid "Constraints and integrity rules"
