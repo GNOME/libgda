@@ -328,7 +328,7 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 			return FALSE;
 		}
         }
-	int param = LDAP_OPT_ON;
+	int param = (int) LDAP_OPT_ON;
 	res = ldap_set_option (cdata->handle, LDAP_OPT_RESTART, &param);
 
 #ifdef NO
@@ -689,8 +689,6 @@ static const gchar *
 scope_to_string (GdaLdapSearchScope scope)
 {
 	switch (scope) {
-	case 0:
-		return _("Unknown");
 	case GDA_LDAP_SEARCH_BASE:
 		return "BASE";
 	case GDA_LDAP_SEARCH_ONELEVEL:
@@ -698,8 +696,7 @@ scope_to_string (GdaLdapSearchScope scope)
 	case GDA_LDAP_SEARCH_SUBTREE:
 		return "SUBTREE";
 	default:
-		g_assert_not_reached();
-		return NULL;
+		return _("Unknown");
 	}
 }
 

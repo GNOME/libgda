@@ -523,8 +523,8 @@ static gint classes_sort (GdaLdapClass *lcl1, GdaLdapClass *lcl2);
 
 /**
  * gdaprov_ldap_get_class_info:
- * @cdata:
- * @class:
+ * @cnc: a #GdaLdapConnection (not %NULL)
+ * @classname: the class name (not %NULL)
  *
  * Returns: the #GdaLdapClass for @classname, or %NULL
  */
@@ -719,6 +719,22 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	return retval;
 }
 
+static gint
+my_sort_func (gconstpointer a, gconstpointer b)
+{
+	gchar *sa, *sb;
+	sa = * (gchar**) a;
+	sb = * (gchar**) b;
+	if (sa && sb)
+		return g_utf8_collate (sa, sb);
+	else if (sa)
+		return -1;
+	else if (sb)
+		return 1;
+	else
+		return 0;
+}
+
 static gchar **
 make_array_from_strv (char **values, guint *out_size)
 {
@@ -737,13 +753,15 @@ make_array_from_strv (char **values, guint *out_size)
 	if (out_size)
 		*out_size = array->len;
 
+	g_array_sort (array, (GCompareFunc) my_sort_func);
+
 	return (gchar**) g_array_free (array, FALSE);
 }
 
 static gint
 classes_sort (GdaLdapClass *lcl1, GdaLdapClass *lcl2)
 {
-	return g_ascii_strcasecmp (lcl1->names[0], lcl2->names[0]);
+	return g_utf8_collate (lcl1->names[0], lcl2->names[0]);
 }
 
 static void
