@@ -101,7 +101,7 @@ enum
 		COL_MIME,
 		COL_MD5SUM,
 		COL_DATA,
-	
+
 		COL_LAST
 	};
 
@@ -312,7 +312,7 @@ gda_data_model_dir_set_property (GObject *object,
 				model->priv->basedir = NULL;
 			}
 			string = g_value_get_string (value);
-			if (string) 
+			if (string)
 				model->priv->basedir = g_strdup (string);
 			break;
 		default:
@@ -324,7 +324,7 @@ gda_data_model_dir_set_property (GObject *object,
 			/* create columns */
 			model->priv->columns = NULL;
 			GdaColumn *column;
-		
+
 			/* COL_DIRNAME */
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns , column);
@@ -400,7 +400,7 @@ update_data_model_real (GdaDataModelDir *model, const gchar *rel_path)
 			/* ignore hidden directories */
 			if (*raw_filename != '.') {
 				gchar *path;
-				
+
 				path = g_build_path (G_DIR_SEPARATOR_S, rel_path, raw_filename, NULL);
 				update_data_model_real (model, path);
 				g_free (path);
@@ -418,8 +418,8 @@ update_data_model_real (GdaDataModelDir *model, const gchar *rel_path)
 #endif
 				FileRow *row;
 				model->priv->upd_row ++;
-				
-				if (model->priv->upd_row < model->priv->rows->len) {
+
+				if (model->priv->upd_row < (int)model->priv->rows->len) {
 					row = g_ptr_array_index (model->priv->rows, model->priv->upd_row);
 					file_row_clean (row);
 				}
@@ -431,23 +431,23 @@ update_data_model_real (GdaDataModelDir *model, const gchar *rel_path)
 #else
 				row->raw_filename_value = NULL; /* no need top copy on Windows */
 #endif
-				g_value_take_string (row->filename_value = gda_value_new (G_TYPE_STRING), 
+				g_value_take_string (row->filename_value = gda_value_new (G_TYPE_STRING),
 						     utf8_filename);
-				
+
 				/* file size */
 				update_file_size (row, complete_filename);
-				
+
 				/* other attributes, computed only when needed */
 				row->mime_value = NULL;
 				row->md5sum_value = NULL;
 				row->data_value = NULL;
-				
+
 				/* add row */
-				if (model->priv->upd_row < model->priv->rows->len) 
+				if (model->priv->upd_row < (int)model->priv->rows->len)
 					gda_data_model_row_updated ((GdaDataModel *) model, model->priv->upd_row);
 				else {
 					g_ptr_array_add (model->priv->rows, row);
-					gda_data_model_row_inserted ((GdaDataModel *) model, 
+					gda_data_model_row_inserted ((GdaDataModel *) model,
 								     model->priv->rows->len - 1);
 				}
 			}
@@ -470,7 +470,7 @@ update_file_size (FileRow *row, const gchar *complete_filename)
 
 	if (! g_stat (complete_filename, &filestat)) {
 		if (row->size_value && (G_VALUE_TYPE (row->size_value) == G_TYPE_UINT)
-		    && (g_value_get_uint (row->size_value) == filestat.st_size))
+		    && (g_value_get_uint (row->size_value) == (guint)filestat.st_size))
 			changed = FALSE;
 		else {
 			if (row->size_value)
@@ -537,14 +537,14 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 	MD5Init (&context);
 	MD5Update (&context, map, length);
 	MD5Final (digest, &context);
-	
+
 	md5str = g_string_new ("");
 	for (i = 0; i < 16; i++)
 		g_string_append_printf (md5str, "%02x", digest[i]);
 	value = gda_value_new (G_TYPE_STRING);
 	g_value_take_string (value, md5str->str);
 	g_string_free (md5str, FALSE);
-		
+
 #ifndef G_OS_WIN32
 	munmap (map, length);
 #else
@@ -572,7 +572,7 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 			row->md5sum_value = gda_value_new_null ();
 		}
 	}
-	
+
 	return changed;
 }
 
@@ -676,7 +676,7 @@ gda_data_model_dir_new (const gchar *basedir)
 
 	g_return_val_if_fail (basedir && *basedir, NULL);
 
-	model = (GdaDataModel *) g_object_new (GDA_TYPE_DATA_MODEL_DIR, "basedir", basedir, NULL); 
+	model = (GdaDataModel *) g_object_new (GDA_TYPE_DATA_MODEL_DIR, "basedir", basedir, NULL);
 
 	return model;
 }
@@ -760,7 +760,7 @@ gda_data_model_dir_get_access_flags (GdaDataModel *model)
 	imodel = GDA_DATA_MODEL_DIR (model);
 	g_return_val_if_fail (imodel->priv, 0);
 
-	flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD | 
+	flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD |
 		GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD |
 		GDA_DATA_MODEL_ACCESS_RANDOM |
 		GDA_DATA_MODEL_ACCESS_WRITE;
@@ -838,7 +838,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 			}
 			value = frow->md5sum_value;
 			break;
-		case COL_DATA: 
+		case COL_DATA:
 			value = frow->data_value;
 			if (! value) {
 				value = gda_value_new (GDA_TYPE_BLOB);
@@ -854,7 +854,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 				g_free (filename);
 				gda_blob_set_op (blob, op);
 				g_object_unref (op);
-				
+
 				gda_value_take_blob (value, blob);
 				frow->data_value = value;
 			}
@@ -983,7 +983,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		const GValue *cvalue = gda_data_model_get_value_at (model, col, row, error);
 		if (!cvalue)
 			return FALSE;
-		if (!value || !gda_value_compare (value, cvalue)) 
+		if (!value || !gda_value_compare (value, cvalue))
 			continue;
 
 		switch (col) {
@@ -992,7 +992,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		case COL_MD5SUM:
 		default:
 			add_error (imodel, _("Column cannot be modified"));
-			g_set_error (error, 0, 0, "%s", 
+			g_set_error (error, 0, 0, "%s",
 				     _("Column cannot be modified"));
 			return FALSE;
 		case COL_DIRNAME: {
@@ -1007,11 +1007,11 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 			if ((len < base_len) ||
 			    (strncmp (new_path, imodel->priv->basedir, base_len))) {
 				add_error (imodel, _("New path must be a subpath of the base directory"));
-				g_set_error (error, 0, 0, "%s", 
+				g_set_error (error, 0, 0, "%s",
 					     _("New path must be a subpath of the base directory"));
 				return FALSE;
 			}
-			
+
 			old_path = compute_dirname (imodel, frow);
 			if (dir_equal (new_path, old_path)) {
 				g_free (old_path);
@@ -1025,7 +1025,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				gboolean allok = FALSE;
 				gchar *filename;
 
-				new_filename = g_build_filename (new_path, 
+				new_filename = g_build_filename (new_path,
 								 frow->raw_filename_value ? frow->raw_filename_value :
 								 g_value_get_string (frow->filename_value), NULL);
 				filename = compute_filename (imodel, frow);
@@ -1048,7 +1048,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				}
 				if (!allok) {
 					gchar *str;
-					str = g_strdup_printf (_("Could not rename file '%s' to '%s'"), 
+					str = g_strdup_printf (_("Could not rename file '%s' to '%s'"),
 							       filename, new_filename);
 					add_error (imodel, str);
 					g_set_error (error, 0, 0, "%s", str);
@@ -1133,7 +1133,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				/* create a new empty blob */
 				blob = g_new0 (GdaBlob, 1);
 			}
-			
+
 			if (blob) {
 				GdaBlobOp *op;
 				gchar *filename;
@@ -1168,7 +1168,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		}
 	}
 
-	if (has_changed) 
+	if (has_changed)
 		/* signal changes to data model */
 		gda_data_model_row_updated ((GdaDataModel *) model, row);
 
@@ -1181,7 +1181,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 	GdaDataModelDir *imodel;
 	const gchar *dirname = NULL, *filename = NULL;
 	GdaBinary *bin_data = NULL;
-	
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), -1);
 	imodel = (GdaDataModelDir *) model;
 	g_return_val_if_fail (imodel->priv, -1);
@@ -1202,7 +1202,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 		case COL_MD5SUM:
 		default:
 			add_error (imodel, _("Column cannot be set"));
-			g_set_error (error, 0, 0, "%s", 
+			g_set_error (error, 0, 0, "%s",
 				     _("Column cannot be set"));
 			return -1;
 		case COL_DIRNAME:
@@ -1214,13 +1214,13 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 				if ((len < base_len) ||
 				    (strncmp (dirname, imodel->priv->basedir, base_len))) {
 					add_error (imodel, _("New path must be a subpath of the base directory"));
-					g_set_error (error, 0, 0, "%s", 
+					g_set_error (error, 0, 0, "%s",
 						     _("New path must be a subpath of the base directory"));
 					return -1;
 				}
 			}
 			break;
-		case COL_FILENAME: 
+		case COL_FILENAME:
 			if (G_VALUE_TYPE (value) == G_TYPE_STRING)
 				filename = g_value_get_string (value);
 			break;
@@ -1232,7 +1232,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 			break;
 		}
 	}
-	
+
 	if (dirname && filename && *filename) {
 		if (!g_mkdir_with_parents (dirname, 0755)) {
 			gchar *complete_filename;
@@ -1242,10 +1242,10 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 				bin_data = g_new0 (GdaBinary, 1);
 				bin_to_free = TRUE;
 			}
-			if (g_file_set_contents (complete_filename, (gchar *) bin_data->data, 
+			if (g_file_set_contents (complete_filename, (gchar *) bin_data->data,
 						 bin_data->binary_length, NULL)) {
 				FileRow *row;
-				
+
 				row = file_row_new ();
 				row->reldir = g_strdup (dirname + strlen (imodel->priv->basedir));
 #ifndef G_OS_WIN32
@@ -1253,12 +1253,12 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 #else
 				row->raw_filename_value = NULL; /* no need top copy on Windows */
 #endif
-				g_value_set_string (row->filename_value = gda_value_new (G_TYPE_STRING), 
+				g_value_set_string (row->filename_value = gda_value_new (G_TYPE_STRING),
 						    filename);
-				
+
 				/* file size */
 				update_file_size (row, complete_filename);
-				
+
 				/* other attributes, computed only when needed */
 				row->mime_value = NULL;
 				row->md5sum_value = NULL;
@@ -1294,7 +1294,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 	}
 	else {
 		add_error (imodel, _("Cannot add row: filename missing"));
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, 0, 0, "%s",
 			     _("Cannot add row: filename missing"));
 		return -1;
 	}
@@ -1328,7 +1328,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
         }
 
 	frow =  g_ptr_array_index (imodel->priv->rows, row);
-	
+
 	/* remove filename */
 	filename = g_build_filename (imodel->priv->basedir,
 				     frow->reldir,
@@ -1348,7 +1348,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 	/* remove dir */
 #ifndef G_OS_WIN32
 	gchar *path;
-		
+
 	path = g_build_path (G_DIR_SEPARATOR_S, imodel->priv->basedir,
 			     frow->reldir, NULL);
 	g_rmdir (path);
@@ -1359,7 +1359,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 	file_row_free (frow);
 	g_ptr_array_remove_index (imodel->priv->rows, row);
 	gda_data_model_row_removed (model, row);
-	
+
 	return TRUE;
 }
 
@@ -1367,7 +1367,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
  * Returns: TRUE if @path1 and @path2 relate in fact to the same dir
  */
 static gboolean
-dir_equal (const gchar *path1, const gchar *path2) 
+dir_equal (const gchar *path1, const gchar *path2)
 {
 	g_assert (path1);
 	g_assert (path2);
@@ -1383,7 +1383,7 @@ dir_equal (const gchar *path1, const gchar *path2)
 				p2++;
 		}
 		else {
-			p1++; 
+			p1++;
 			p2++;
 		}
 	}

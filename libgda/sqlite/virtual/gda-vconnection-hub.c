@@ -116,7 +116,7 @@ gda_vconnection_hub_get_type (void)
 				(GInstanceInitFunc) gda_vconnection_hub_init,
 				0
 			};
-			
+
 		g_static_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (GDA_TYPE_VCONNECTION_DATA_MODEL, "GdaVconnectionHub", &info, 0);
@@ -143,7 +143,7 @@ gda_vconnection_hub_get_type (void)
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_vconnection_hub_add (GdaVconnectionHub *hub, 
+gda_vconnection_hub_add (GdaVconnectionHub *hub,
 			 GdaConnection *cnc, const gchar *ns, GError **error)
 {
 	HubConnection *hc;
@@ -154,7 +154,7 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 	/* check for constraints */
 	hc = get_hub_cnc_by_ns (hub, ns);
 	if (hc && (hc->cnc != cnc)) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, 0, 0, "%s",
 			     _("Namespace must be specified"));
 		return FALSE;
 	}
@@ -163,7 +163,7 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 		return TRUE;
 
 	if (!gda_connection_is_opened (cnc)) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, 0, 0, "%s",
 			     _("Connection is closed"));
 		return FALSE;
 	}
@@ -174,7 +174,7 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 	hc->cnc = cnc;
 	g_object_ref (cnc);
 	hc->ns = ns ? g_strdup (ns) : NULL;
-	
+
 	if (!attach_hub_connection (hub, hc, error)) {
 		hub_connection_free (hc);
 		return FALSE;
@@ -204,7 +204,7 @@ gda_vconnection_hub_remove (GdaVconnectionHub *hub, GdaConnection *cnc, GError *
 	hc = get_hub_cnc_by_cnc (hub, cnc);
 
 	if (!hc) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, 0, 0, "%s",
 			     _("Connection was not represented in hub"));
 		return FALSE;
 	}
@@ -219,7 +219,7 @@ get_hub_cnc_by_ns (GdaVconnectionHub *hub, const gchar *ns)
 {
 	GSList *list;
 	for (list = hub->priv->hub_connections; list; list = list->next) {
-		if ((!ns && !((HubConnection*) list->data)->ns)|| 
+		if ((!ns && !((HubConnection*) list->data)->ns)||
 		    (ns && ((HubConnection*) list->data)->ns && !strcmp (((HubConnection*) list->data)->ns, ns)))
 			return (HubConnection*) list->data;
 	}
@@ -269,7 +269,7 @@ gda_vconnection_hub_get_connection (GdaVconnectionHub *hub, const gchar *ns)
  * Call @func for each #GdaConnection represented in @hub.
  */
 void
-gda_vconnection_hub_foreach (GdaVconnectionHub *hub, 
+gda_vconnection_hub_foreach (GdaVconnectionHub *hub,
 			     GdaVConnectionHubFunc func, gpointer data)
 {
 	GSList *list, *next;
@@ -329,7 +329,7 @@ compute_column_specs (GdaVconnectionDataModelSpec *spec)
 	if (lspec->col_names)
 		return;
 
-	model = gda_connection_get_meta_store_data (lspec->hc->cnc, 
+	model = gda_connection_get_meta_store_data (lspec->hc->cnc,
 						    GDA_CONNECTION_META_FIELDS, NULL, 1, "name", lspec->table_name);
 	if (!model)
 		return;
@@ -508,7 +508,7 @@ dict_table_create_filter (GdaVconnectionDataModelSpec *spec, GdaVconnectionDataM
 		gda_sql_builder_set_where (b, whid);
 	}
 	g_free (op_ids);
-	
+
 	/* ORDER BY part */
 	info->orderByConsumed = FALSE;
 	for (i = 0; i < info->nOrderBy; i++) {
@@ -550,7 +550,7 @@ dict_table_create_filter (GdaVconnectionDataModelSpec *spec, GdaVconnectionDataM
 			lspec->filters_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
 								     g_free,
 								     (GDestroyNotify) computed_filter_free);
-		
+
 		g_hash_table_insert (lspec->filters_hash, hash, filter);
 		info->idxPointer = filter->stmt;
 		/*g_print ("There are now %d statements in store...\n", g_hash_table_size (lspec->filters_hash));*/
@@ -717,7 +717,7 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 }
 
 static GdaDataModel *
-dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, int idxNum, const char *idxStr,
+dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED int idxNum, const char *idxStr,
 			      int argc, GValue **argv)
 {
 	GdaDataModel *model;
@@ -732,7 +732,7 @@ dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, int idxNum, con
 		if (! gda_statement_get_parameters (stmt, &params, NULL))
 			return NULL;
 		if (argc > 0) {
-			g_assert (params && (argc == g_slist_length (params->holders)));
+			g_assert (params && ((guint)argc == g_slist_length (params->holders)));
 			for (i = 0, list = params->holders; i < argc; i++, list = list->next) {
 				GdaHolder *holder = GDA_HOLDER (list->data);
 				GValue *value;
@@ -779,7 +779,7 @@ dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, int idxNum, con
 	g_object_unref (stmt);
 	if (params)
 		g_object_unref (params);
-	if (model) 
+	if (model)
 		gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL);
 	else {
 		gda_log_message ("Virtual table: data model error: %s",
@@ -800,7 +800,7 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	GdaMetaStore *store;
 	GdaMetaContext context;
 	GdaConnectionOptions options;
-	
+
 	store = gda_connection_get_meta_store (hc->cnc);
 	g_assert (store);
 	g_object_get ((GObject*) hc->cnc, "options", &options, NULL);
@@ -876,7 +876,7 @@ meta_changed_cb (G_GNUC_UNUSED GdaMetaStore *store, GSList *changes, HubConnecti
 	for (list = changes; list; list = list->next) {
 		GdaMetaStoreChange *ch = (GdaMetaStoreChange*) list->data;
 		GValue *tsn, *tn;
-			
+
 		/* we are only intsrested in changes occurring in the "_tables" table */
 		if (!strcmp (ch->table_name, "_tables")) {
 			switch (ch->c_type) {
@@ -931,7 +931,7 @@ table_add (HubConnection *hc, const GValue *table_name, GError **error)
 	lspec->table_name = gda_value_copy (table_name);
 	lspec->hc = hc;
 	tmp = get_complete_table_name (hc, lspec->table_name);
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (hc->hub), (GdaVconnectionDataModelSpec*) lspec, 
+	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (hc->hub), (GdaVconnectionDataModelSpec*) lspec,
 					     (GDestroyNotify) local_spec_free, tmp, error)) {
 		g_free (tmp);
 		return FALSE;
@@ -984,7 +984,7 @@ detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc)
 		g_assert (stmt);
 		gda_connection_statement_execute_non_select (GDA_CONNECTION (hub), stmt, NULL, NULL, NULL);
 		g_object_unref (stmt);
-	}	
+	}
 
 	hub->priv->hub_connections = g_slist_remove (hub->priv->hub_connections, hc);
 	hub_connection_free (hc);

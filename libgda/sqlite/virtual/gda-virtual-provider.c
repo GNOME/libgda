@@ -51,7 +51,7 @@ gda_virtual_provider_class_init (GdaVirtualProviderClass *klass)
 }
 
 static void
-gda_virtual_provider_init (GdaVirtualProvider *vprov, G_GNUC_UNUSED GdaVirtualProviderClass *klass)
+gda_virtual_provider_init (G_GNUC_UNUSED GdaVirtualProvider *vprov, G_GNUC_UNUSED GdaVirtualProviderClass *klass)
 {
 }
 
@@ -92,7 +92,7 @@ gda_virtual_provider_get_type (void)
 				(GInstanceInitFunc) gda_virtual_provider_init,
 				0
 			};
-			
+
 		g_static_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (PARENT_TYPE, "GdaVirtualProvider", &info, G_TYPE_FLAG_ABSTRACT);

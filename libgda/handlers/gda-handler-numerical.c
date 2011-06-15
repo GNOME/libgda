@@ -74,7 +74,7 @@ gda_handler_numerical_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_handler_numerical_init,
 			0
-		};		
+		};
 
 		static const GInterfaceInfo data_entry_info = {
 			(GInterfaceInitFunc) gda_handler_numerical_data_handler_init,
@@ -109,7 +109,7 @@ static void
 gda_handler_numerical_class_init (GdaHandlerNumericalClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-	
+
 	parent_class = g_type_class_peek_parent (class);
 
 	object_class->dispose = gda_handler_numerical_dispose;
@@ -195,7 +195,7 @@ gda_handler_numerical_get_sql_from_value (GdaDataHandler *iface, const GValue *v
 	setlocale (LC_NUMERIC, "C");
 	str = gda_value_stringify ((GValue *) value);
 	setlocale (LC_NUMERIC, gda_numeric_locale);
-	if (str) 
+	if (str)
 		retval = str;
 	else
 		retval = g_strdup ("0");
@@ -266,7 +266,7 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 		const gchar *p = str;
 		gboolean ok = TRUE;
 		gboolean hasdot = FALSE;
-		
+
 		numeric.precision = 0;
 		numeric.width = 0;
 		while (p && *p && ok) {
@@ -314,7 +314,7 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 		}
 	}
 	else if (type == G_TYPE_UINT64) {
-		if (!*endptr && (llint >= 0) && (llint <= G_MAXUINT64)) {
+		if (!*endptr && (llint >= 0) && (llint <= G_MAXINT64)) {
 			value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT64);
 			g_value_set_uint64 (value, (guint64) llint);
 		}

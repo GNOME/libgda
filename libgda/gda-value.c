@@ -213,7 +213,7 @@ set_from_string (GValue *value, const gchar *as_string)
 	else if (type == G_TYPE_ULONG)
 	{
 		gulong ulvalue;
-		
+
 		ulvalue = strtoul (as_string, endptr, 10);
 		if (*as_string!=0 && **endptr==0) {
 			g_value_set_ulong (value, ulvalue);
@@ -223,7 +223,7 @@ set_from_string (GValue *value, const gchar *as_string)
 	else if (type == G_TYPE_LONG)
 	{
 		glong lvalue;
-		
+
 		lvalue = strtol (as_string, endptr, 10);
 		if (*as_string!=0 && **endptr==0) {
 			g_value_set_long (value, lvalue);
@@ -265,8 +265,8 @@ set_from_string (GValue *value, const gchar *as_string)
 	return retval;
 }
 
-/* 
- * Register the NULL type in the GType system 
+/*
+ * Register the NULL type in the GType system
  */
 static void
 string_to_null (const GValue *src, GValue *dest)
@@ -315,38 +315,38 @@ gda_null_get_type (void)
        return type;
 }
 
-/* 
- * Register the GdaBinary type in the GType system 
+/*
+ * Register the GdaBinary type in the GType system
  */
 
 /* Transform a String GValue to a GdaBinary*/
-static void 
-string_to_binary (const GValue *src, GValue *dest) 
+static void
+string_to_binary (const GValue *src, GValue *dest)
 {
 	/* FIXME: add more checks*/
 	GdaBinary *bin;
 	const gchar *as_string;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_BINARY (dest));
-	
+
 	as_string = g_value_get_string (src);
-	
+
 	bin = gda_string_to_binary (as_string);
 	g_return_if_fail (bin);
 	gda_value_take_binary (dest, bin);
 }
 
-static void 
-binary_to_string (const GValue *src, GValue *dest) 
+static void
+binary_to_string (const GValue *src, GValue *dest)
 {
 	gchar *str;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_BINARY (src));
-	
+
 	str = gda_binary_to_string (gda_value_get_binary ((GValue *) src), 0);
-	
+
 	g_value_take_string (dest, str);
 }
 
@@ -354,21 +354,21 @@ GType
 gda_binary_get_type (void)
 {
 	static GType type = 0;
-	
+
 	if (G_UNLIKELY (type == 0)) {
 		type = g_boxed_type_register_static ("GdaBinary",
 						     (GBoxedCopyFunc) gda_binary_copy,
 						     (GBoxedFreeFunc) gda_binary_free);
-		
+
 		g_value_register_transform_func (G_TYPE_STRING,
 						 type,
 						 string_to_binary);
-		
-		g_value_register_transform_func (type, 
+
+		g_value_register_transform_func (type,
 						 G_TYPE_STRING,
 						 binary_to_string);
 	}
-	
+
 	return type;
 }
 
@@ -393,7 +393,7 @@ gda_binary_copy (gpointer boxed)
 	copy = g_new0 (GdaBinary, 1);
 	copy->data = g_memdup (src->data, src->binary_length);
 	copy->binary_length = src->binary_length;
-	
+
 	return copy;
 }
 
@@ -407,44 +407,44 @@ void
 gda_binary_free (gpointer boxed)
 {
 	GdaBinary *binary = (GdaBinary*) boxed;
-	
+
 	g_return_if_fail (binary);
-		
+
 	g_free (binary->data);
 	g_free (binary);
 }
 
-/* 
- * Register the GdaBlob type in the GType system 
+/*
+ * Register the GdaBlob type in the GType system
  */
 /* Transform a String GValue to a GdaBlob*/
-static void 
-string_to_blob (const GValue *src, GValue *dest) 
+static void
+string_to_blob (const GValue *src, GValue *dest)
 {
 	/* FIXME: add more checks*/
 	GdaBlob *blob;
 	const gchar *as_string;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_BLOB (dest));
-	
+
 	as_string = g_value_get_string (src);
-	
+
 	blob = gda_string_to_blob (as_string);
 	g_return_if_fail (blob);
 	gda_value_take_blob (dest, blob);
 }
 
-static void 
-blob_to_string (const GValue *src, GValue *dest) 
+static void
+blob_to_string (const GValue *src, GValue *dest)
 {
 	gchar *str;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_BLOB (src));
-	
+
 	str = gda_blob_to_string ((GdaBlob *) gda_value_get_blob ((GValue *) src), 0);
-	
+
 	g_value_take_string (dest, str);
 }
 
@@ -452,21 +452,21 @@ GType
 gda_blob_get_type (void)
 {
 	static GType type = 0;
-	
+
 	if (G_UNLIKELY (type == 0)) {
 		type = g_boxed_type_register_static ("GdaBlob",
 						     (GBoxedCopyFunc) gda_blob_copy,
 						     (GBoxedFreeFunc) gda_blob_free);
-		
+
 		g_value_register_transform_func (G_TYPE_STRING,
 						 type,
 						 string_to_blob);
-		
-		g_value_register_transform_func (type, 
+
+		g_value_register_transform_func (type,
 						 G_TYPE_STRING,
 						 blob_to_string);
 	}
-	
+
 	return type;
 }
 
@@ -494,7 +494,7 @@ gda_blob_copy (gpointer boxed)
 		((GdaBinary *)copy)->binary_length = ((GdaBinary *)src)->binary_length;
 	}
 	gda_blob_set_op (copy, src->op);
-	
+
 	return copy;
 }
 
@@ -508,7 +508,7 @@ void
 gda_blob_free (gpointer boxed)
 {
 	GdaBlob *blob = (GdaBlob*) boxed;
-	
+
 	g_return_if_fail (blob);
 
 	if (blob->op) {
@@ -538,26 +538,26 @@ gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
 	}
 }
 
-/* 
- * Register the GdaGeometricPoint type in the GType system 
+/*
+ * Register the GdaGeometricPoint type in the GType system
  */
 static void
-geometric_point_to_string (const GValue *src, GValue *dest) 
+geometric_point_to_string (const GValue *src, GValue *dest)
 {
 	gchar *str;
 	GdaGeometricPoint *point;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_GEOMETRIC_POINT (src));
-	
+
 	point = (GdaGeometricPoint *) gda_value_get_geometric_point ((GValue *) src);
-	
+
 	str = g_strdup_printf ("(%.*g,%.*g)",
 				  DBL_DIG,
 				  point->x,
 				  DBL_DIG,
 				  point->y);
-	
+
 	g_value_take_string (dest, str);
 }
 
@@ -568,13 +568,13 @@ string_to_geometricpoint (const GValue *src, GValue *dest)
 	/* FIXME: add more checks*/
 	GdaGeometricPoint *point;
 	const gchar *as_string;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_GEOMETRIC_POINT (dest));
-	
+
 	as_string = g_value_get_string (src);
 	point = g_new0 (GdaGeometricPoint, 1);
-	
+
 	as_string++;
 	point->x = atof (as_string);
 	as_string = strchr (as_string, ',');
@@ -589,21 +589,21 @@ GType
 gda_geometricpoint_get_type (void)
 {
 	static GType type = 0;
-	
+
 	if (G_UNLIKELY (type == 0)) {
 		type = g_boxed_type_register_static ("GdaGeometricPoint",
 						     (GBoxedCopyFunc) gda_geometricpoint_copy,
 						     (GBoxedFreeFunc) gda_geometricpoint_free);
-		
+
 		g_value_register_transform_func (G_TYPE_STRING,
 						 type,
 						 string_to_geometricpoint);
-		
-		g_value_register_transform_func (type, 
+
+		g_value_register_transform_func (type,
 						 G_TYPE_STRING,
 						 geometric_point_to_string);
 	}
-	
+
 	return type;
 }
 
@@ -612,14 +612,14 @@ gda_geometricpoint_get_type (void)
  *
  * Returns: (transfer full):
  */
-gpointer 
+gpointer
 gda_geometricpoint_copy (gpointer boxed)
 {
 	GdaGeometricPoint *val = (GdaGeometricPoint*) boxed;
 	GdaGeometricPoint *copy;
-	
+
 	g_return_val_if_fail( val, NULL);
-		
+
 	copy = g_new0 (GdaGeometricPoint, 1);
 	copy->x = val->x;
 	copy->y = val->y;
@@ -634,14 +634,14 @@ gda_geometricpoint_free (gpointer boxed)
 }
 
 
-/* 
- * Register the GdaNumeric type in the GType system 
+/*
+ * Register the GdaNumeric type in the GType system
  */
-static void 
-numeric_to_string (const GValue *src, GValue *dest) 
+static void
+numeric_to_string (const GValue *src, GValue *dest)
 {
 	const GdaNumeric *numeric;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_NUMERIC (src));
 
@@ -652,11 +652,11 @@ numeric_to_string (const GValue *src, GValue *dest)
 		g_value_set_string (dest, "");
 }
 
-static void 
-numeric_to_int (const GValue *src, GValue *dest) 
+static void
+numeric_to_int (const GValue *src, GValue *dest)
 {
 	const GdaNumeric *numeric;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_INT (dest) &&
 			  GDA_VALUE_HOLDS_NUMERIC (src));
 
@@ -672,11 +672,11 @@ numeric_to_int (const GValue *src, GValue *dest)
 		g_value_set_int (dest, 0);
 }
 
-static void 
-numeric_to_uint (const GValue *src, GValue *dest) 
+static void
+numeric_to_uint (const GValue *src, GValue *dest)
 {
 	const GdaNumeric *numeric;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_UINT (dest) &&
 			  GDA_VALUE_HOLDS_NUMERIC (src));
 
@@ -684,7 +684,7 @@ numeric_to_uint (const GValue *src, GValue *dest)
 	if (numeric) {
 		glong tmp;
 		tmp = atol (numeric->number); /* Flawfinder: ignore */
-		if ((tmp < 0) || (tmp > G_MAXUINT))
+		if ((tmp < 0) || (tmp > (glong)G_MAXUINT))
 			g_warning ("Unsigned integer overflow for value %ld", tmp);
 		g_value_set_uint (dest, tmp);
 	}
@@ -692,11 +692,11 @@ numeric_to_uint (const GValue *src, GValue *dest)
 		g_value_set_uint (dest, 0);
 }
 
-static void 
-numeric_to_boolean (const GValue *src, GValue *dest) 
+static void
+numeric_to_boolean (const GValue *src, GValue *dest)
 {
 	const GdaNumeric *numeric;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_BOOLEAN (dest) &&
 			  GDA_VALUE_HOLDS_NUMERIC (src));
 
@@ -711,20 +711,20 @@ GType
 gda_numeric_get_type (void)
 {
 	static GType type = 0;
-	
+
 	if (G_UNLIKELY (type == 0)) {
 		type = g_boxed_type_register_static ("GdaNumeric",
 						     (GBoxedCopyFunc) gda_numeric_copy,
 						     (GBoxedFreeFunc) gda_numeric_free);
-	
+
 		/* FIXME: No function to Transform String to from GdaNumeric */
-	
+
 		g_value_register_transform_func (type, G_TYPE_STRING, numeric_to_string);
 		g_value_register_transform_func (type, G_TYPE_INT, numeric_to_int);
 		g_value_register_transform_func (type, G_TYPE_UINT, numeric_to_uint);
 		g_value_register_transform_func (type, G_TYPE_BOOLEAN, numeric_to_boolean);
 	}
-	
+
 	return type;
 }
 
@@ -750,7 +750,7 @@ gda_numeric_copy (gpointer boxed)
 	copy = g_new0 (GdaNumeric, 1);
 	copy->number = g_strdup (src->number);
 	copy->precision = src->precision;
-	copy->width = src->width;  
+	copy->width = src->width;
 
 	return copy;
 }
@@ -773,21 +773,21 @@ gda_numeric_free (gpointer boxed)
 
 
 
-/* 
- * Register the GdaTime type in the GType system 
+/*
+ * Register the GdaTime type in the GType system
  */
 
-static void 
-time_to_string (const GValue *src, GValue *dest) 
+static void
+time_to_string (const GValue *src, GValue *dest)
 {
 	GdaTime *gdatime;
 	GString *string;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_TIME (src));
-	
+
 	gdatime = (GdaTime *) gda_value_get_time ((GValue *) src);
-	
+
 	string = g_string_new ("");
 	g_string_append_printf (string, "%02u:%02u:%02u",
 				gdatime->hour,
@@ -795,7 +795,7 @@ time_to_string (const GValue *src, GValue *dest)
 				gdatime->second);
 	if (gdatime->fraction != 0)
 		g_string_append_printf (string, ".%lu", gdatime->fraction);
-	
+
 	if (gdatime->timezone != GDA_TIMEZONE_INVALID)
 		g_string_append_printf (string, "%+02d", (int) gdatime->timezone / 3600);
 
@@ -811,10 +811,10 @@ string_to_time (const GValue *src, GValue *dest)
 	GdaTime *timegda;
 	const gchar *as_string;
 	const gchar *ptr;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_TIME (dest));
-       
+
 	as_string = g_value_get_string (src);
 	if (!as_string)
 		return;
@@ -861,11 +861,11 @@ string_to_time (const GValue *src, GValue *dest)
 	if ((*ptr >= '0') && (*ptr <= '9') &&
 	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
 		timegda->second = (*ptr - '0') * 10 + *(ptr+1) - '0';
-	
+
 	/* extra */
 	ptr += 2;
 	if (! *ptr) {
-		if ((timegda->hour <= 24) && (timegda->minute <= 60) && 
+		if ((timegda->hour <= 24) && (timegda->minute <= 60) &&
 		    (timegda->second <= 60))
 			gda_value_set_time (dest, timegda);
 		g_free (timegda);
@@ -891,7 +891,7 @@ string_to_time (const GValue *src, GValue *dest)
 		}
 		timegda->timezone *= 3600;
 	}
-	
+
 	/* checks */
 	if ((timegda->hour <= 24) || (timegda->minute <= 60) || (timegda->second <= 60))
 		gda_value_set_time (dest, timegda);
@@ -902,16 +902,16 @@ GType
 gda_time_get_type(void)
 {
 	static GType type = 0;
-	
+
 	if (G_UNLIKELY (type == 0)) {
 		type = g_boxed_type_register_static ("GdaTime",
 						     (GBoxedCopyFunc) gda_time_copy,
 						     (GBoxedFreeFunc) gda_time_free);
-	
+
 		g_value_register_transform_func (G_TYPE_STRING, type, string_to_time);
 		g_value_register_transform_func (type, G_TYPE_STRING, time_to_string);
 	}
-	
+
 	return type;
 }
 
@@ -923,12 +923,12 @@ gda_time_get_type(void)
 gpointer
 gda_time_copy (gpointer boxed)
 {
-	
+
 	GdaTime *src = (GdaTime*) boxed;
 	GdaTime *copy = NULL;
-	
+
 	g_return_val_if_fail (src, NULL);
-	
+
 	copy = g_new0 (GdaTime, 1);
 	copy->hour = src->hour;
 	copy->minute = src->minute;
@@ -967,8 +967,8 @@ gda_time_valid (const GdaTime *time)
 }
 
 
-/* 
- * Register the GdaTimestamp type in the GType system 
+/*
+ * Register the GdaTimestamp type in the GType system
  */
 /* Transform a String GValue to a GdaTimestamp from a string like "2003-12-13 13:12:01.12+01" */
 static void
@@ -976,7 +976,7 @@ string_to_timestamp (const GValue *src, GValue *dest)
 {
 	/* FIXME: add more checks*/
 	GdaTimestamp timestamp;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_TIMESTAMP (dest));
 
@@ -985,17 +985,17 @@ string_to_timestamp (const GValue *src, GValue *dest)
 	gda_value_set_timestamp (dest, &timestamp);
 }
 
-static void 
-timestamp_to_string (const GValue *src, GValue *dest) 
+static void
+timestamp_to_string (const GValue *src, GValue *dest)
 {
 	GdaTimestamp *timestamp;
 	GString *string;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_TIMESTAMP (src));
-	
+
 	timestamp = (GdaTimestamp *) gda_value_get_timestamp ((GValue *) src);
-	
+
 	string = g_string_new ("");
 	g_string_append_printf (string, "%04u-%02u-%02u %02u:%02u:%02u",
 				timestamp->year,
@@ -1017,16 +1017,16 @@ GType
 gda_timestamp_get_type (void)
 {
 	static GType type = 0;
-	
+
 	if (G_UNLIKELY (type == 0)) {
 		type = g_boxed_type_register_static ("GdaTimestamp",
 						     (GBoxedCopyFunc) gda_timestamp_copy,
 						     (GBoxedFreeFunc) gda_timestamp_free);
-	
+
 		g_value_register_transform_func (G_TYPE_STRING, type, string_to_timestamp);
 		g_value_register_transform_func (type, G_TYPE_STRING, timestamp_to_string);
 	}
-	
+
 	return type;
 }
 
@@ -1035,14 +1035,14 @@ gda_timestamp_get_type (void)
  *
  * Returns: (transfer full):
  */
-gpointer 
+gpointer
 gda_timestamp_copy (gpointer boxed)
 {
 	GdaTimestamp *src = (GdaTimestamp*) boxed;
 	GdaTimestamp *copy;
-	
+
 	g_return_val_if_fail(src, NULL);
-	
+
 	copy = g_new0 (GdaTimestamp, 1);
 	copy->year = src->year;
 	copy->month = src->month;
@@ -1052,7 +1052,7 @@ gda_timestamp_copy (gpointer boxed)
 	copy->second = src->second;
 	copy->fraction = src->fraction;
 	copy->timezone = src->timezone;
-	
+
 	return copy;
 }
 
@@ -1149,7 +1149,7 @@ gda_value_new_binary (const guchar *val, glong size)
 	GValue *value;
 	GdaBinary binary;
 
-	/* We use the const on the function parameter to make this clearer, 
+	/* We use the const on the function parameter to make this clearer,
 	 * but it would be awkward to keep the const in the struct.
          */
         binary.data = (guchar*)val;
@@ -1273,11 +1273,11 @@ gda_value_new_timestamp_from_timet (time_t val)
  * @as_string: stringified representation of the value.
  * @type: the new value type.
  *
- * Makes a new #GValue of type @type from its string representation. 
+ * Makes a new #GValue of type @type from its string representation.
  *
  * For more information
  * about the string format, see the gda_value_set_from_string() function.
- * This function is typically used when reading configuration files or other non-user input that should be locale 
+ * This function is typically used when reading configuration files or other non-user input that should be locale
  * independent.
  *
  * Returns: (transfer full): the newly created #GValue or %NULL if the string representation cannot be converted to the specified @type.
@@ -1288,9 +1288,9 @@ GValue *
 gda_value_new_from_string (const gchar *as_string, GType type)
 {
 	GValue *value;
-	
+
 	g_return_val_if_fail (as_string, NULL);
-	
+
 	value = gda_value_new (type);
 	if (set_from_string (value, as_string))
 		return value;
@@ -1310,7 +1310,7 @@ gda_value_new_from_string (const gchar *as_string, GType type)
  *
  * For more information
  * about the string format, see the gda_value_set_from_string() function.
- * This function is typically used when reading configuration files or other non-user input that should be locale 
+ * This function is typically used when reading configuration files or other non-user input that should be locale
  * independent.
  *
  * Returns: (transfer full): the newly created #GValue.
@@ -1326,7 +1326,7 @@ gda_value_new_from_xml (const xmlNodePtr node)
 	g_return_val_if_fail (node, NULL);
 
 	/* parse the XML */
-	if (!node || !(node->name) || (node && strcmp ((gchar*)node->name, "value"))) 
+	if (!node || !(node->name) || (node && strcmp ((gchar*)node->name, "value")))
 		return NULL;
 
 	value = g_new0 (GValue, 1);
@@ -1426,7 +1426,7 @@ gda_value_is_number (const GValue *value)
  * @value: value to get a copy from.
  *
  * Creates a new #GValue from an existing one.
- * 
+ *
  * Returns: (transfer full): a newly allocated #GValue with a copy of the data in @value.
  *
  * Free-function: gda_value_free
@@ -1435,7 +1435,7 @@ GValue *
 gda_value_copy (const GValue *value)
 {
 	GValue *copy;
-	
+
 	g_return_val_if_fail (value, NULL);
 
 	copy = g_new0 (GValue, 1);
@@ -1479,7 +1479,7 @@ void
 gda_value_set_binary (GValue *value, const GdaBinary *binary)
 {
 	g_return_if_fail (value);
-	
+
 	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_BINARY);
 	if (binary)
@@ -1503,7 +1503,7 @@ gda_value_take_binary (GValue *value, GdaBinary *binary)
 {
 	g_return_if_fail (value);
 	g_return_if_fail (binary);
-	
+
 	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_BINARY);
 	g_value_take_boxed (value, binary);
@@ -1521,7 +1521,7 @@ gda_value_set_blob (GValue *value, const GdaBlob *blob)
 {
 	g_return_if_fail (value);
 	g_return_if_fail (blob);
-	
+
 	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_BLOB);
 	g_value_set_boxed (value, blob);
@@ -1559,7 +1559,7 @@ gda_value_take_blob (GValue *value, GdaBlob *blob)
 {
 	g_return_if_fail (value);
 	g_return_if_fail (blob);
-	
+
 	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_BLOB);
 	g_value_take_boxed (value, blob);
@@ -1592,7 +1592,7 @@ gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val)
 	g_return_if_fail (value);
 	g_return_if_fail (val);
 
-	l_g_value_unset (value);	
+	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_GEOMETRIC_POINT);
 	g_value_set_boxed (value, val);
 }
@@ -1786,21 +1786,21 @@ gda_value_set_timestamp (GValue *value, const GdaTimestamp *val)
  *   <listitem><para>GDA_TYPE_TIMESTAMP: see <link linkend="gda-parse-iso8601-timestamp">gda_parse_iso8601_timestamp()</link></para></listitem>
  * </itemizedlist>
  *
- * This function is typically used when reading configuration files or other non-user input that should be locale 
+ * This function is typically used when reading configuration files or other non-user input that should be locale
  * independent.
  *
  * Returns: %TRUE if the value has been converted to @type from
- * its string representation; it not means that the value is converted 
+ * its string representation; it not means that the value is converted
  * successfully, just that the transformation is available. %FALSE otherwise.
  */
 gboolean
-gda_value_set_from_string (GValue *value, 
+gda_value_set_from_string (GValue *value,
 			   const gchar *as_string,
 			   GType type)
 {
 	g_return_val_if_fail (value, FALSE);
 	g_return_val_if_fail (as_string, FALSE);
-		
+
 	/* REM: glib does not register any transform function from G_TYPE_STRING to any other
 	 * type except to a G_TYPE_STRING, so we can't use g_value_type_transformable (G_TYPE_STRING, type) */
 	gda_value_reset_with_type (value, type);
@@ -1856,7 +1856,7 @@ gda_value_set_from_value (GValue *value, const GValue *from)
  *
  * Dates are converted in a YYYY-MM-DD format.
  *
- * Returns: (transfer full): a new string, or %NULL if the conversion cannot be done. Free the value with a g_free() when you've finished using it. 
+ * Returns: (transfer full): a new string, or %NULL if the conversion cannot be done. Free the value with a g_free() when you've finished using it.
  */
 gchar *
 gda_value_stringify (const GValue *value)
@@ -1895,7 +1895,7 @@ gda_value_stringify (const GValue *value)
 			return g_strdup ("");
 	}
 }
-	
+
 /**
  * gda_value_differ:
  * @value1: a #GValue to compare.
@@ -1954,7 +1954,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		const GdaBlob *blob2 = gda_value_get_blob (value2);
 		if (blob1 && blob2 && (((GdaBinary *)blob1)->binary_length == ((GdaBinary *)blob2)->binary_length)) {
 			if (blob1->op == blob2->op)
-				return bcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
+				return bcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data,
 					     ((GdaBinary *)blob1)->binary_length);
 		}
 		return 1;
@@ -1994,7 +1994,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 			return strcmp (num1->number, num2->number);
 		return 1;
 	}
-	
+
 	else if (type == G_TYPE_STRING)	{
 		const gchar *str1, *str2;
 		str1 = g_value_get_string (value1);
@@ -2003,7 +2003,7 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 			return strcmp (str1, str2);
 		return 1;
 	}
-	
+
 	else if (type == GDA_TYPE_TIME) {
 		const GdaTime *t1, *t2;
 		t1 = gda_value_get_time (value1);
@@ -2079,7 +2079,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	g_return_val_if_fail (value1 && value2, -1);
 
 	type = G_VALUE_TYPE (value1);
-	
+
 	if (value1 == value2)
 		return 0;
 
@@ -2102,7 +2102,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		gint64 i2 = g_value_get_int64 (value2);
 		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
 	}
-		
+
 	else if (type == G_TYPE_UINT64) {
 		guint64 i1 = g_value_get_uint64 (value1);
 		guint64 i2 = g_value_get_uint64 (value2);
@@ -2126,7 +2126,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		const GdaBlob *blob2 = gda_value_get_blob (value2);
 		if (blob1 && blob2 && (((GdaBinary *)blob1)->binary_length == ((GdaBinary *)blob2)->binary_length)) {
 			if (blob1->op == blob2->op)
-				return memcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
+				return memcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data,
 					       ((GdaBinary *)blob1)->binary_length);
 			else
 				return -1;
@@ -2159,7 +2159,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 
 		v1 = g_value_get_double (value1);
 		v2 = g_value_get_double (value2);
-		
+
 		if (v1 == v2)
 			return 0;
 		else
@@ -2232,13 +2232,13 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		glong i2 = g_value_get_long (value2);
 		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
 	}
-	
+
 	else if (type == GDA_TYPE_USHORT) {
 		gushort i1 = gda_value_get_ushort (value1);
 		gushort i2 = gda_value_get_ushort (value2);
 		return (i1 > i2) ? 1 : ((i1 == i2) ? 0 : -1);
 	}
-	
+
 	else if (type == G_TYPE_STRING)	{
 		const gchar *str1, *str2;
 		str1 = g_value_get_string (value1);
@@ -2255,10 +2255,10 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 					return 0;
 			}
 		}
-		
+
 		return retval;
 	}
-	
+
 	else if (type == GDA_TYPE_TIME) {
 		const GdaTime *t1, *t2;
 		t1 = gda_value_get_time (value1);
@@ -2325,7 +2325,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 
 /*
  * to_string
- * 
+ *
  * The exact reverse process of set_from_string(), almost the same as gda_value_stingify ()
  * because of some localization with gda_value_stingify ().
  */
@@ -2344,7 +2344,7 @@ to_string (const GValue *value)
 	}
 	else
 		retval = gda_value_stringify (value);
-        	
+
 	return retval;
 }
 
@@ -2381,21 +2381,21 @@ gda_value_to_xml (const GValue *value)
 
 /* Gda gshort type */
 /* Transform a String GValue to a gshort*/
-static void 
+static void
 string_to_short(const GValue *src, GValue *dest)
 {
-	
+
 	const gchar *as_string;
 	long int lvalue;
 	gchar *endptr;
 
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  (GDA_VALUE_HOLDS_SHORT (dest) || GDA_VALUE_HOLDS_USHORT (dest)));
-	
+
 	as_string = g_value_get_string ((GValue *) src);
-	
+
 	lvalue = strtol (as_string, &endptr, 10);
-	
+
 	if (*as_string != '\0' && *endptr == '\0') {
 		if (GDA_VALUE_HOLDS_SHORT (dest))
 			gda_value_set_short (dest, (gshort) lvalue);
@@ -2404,25 +2404,25 @@ string_to_short(const GValue *src, GValue *dest)
 	}
 }
 
-static void 
-short_to_string (const GValue *src, GValue *dest) 
+static void
+short_to_string (const GValue *src, GValue *dest)
 {
 	gchar *str;
-	
+
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  (GDA_VALUE_HOLDS_SHORT (src) || GDA_VALUE_HOLDS_USHORT (src)));
-	
+
 	if (GDA_VALUE_HOLDS_SHORT (src))
 		str = g_strdup_printf ("%d", gda_value_get_short ((GValue *) src));
 	else
 		str = g_strdup_printf ("%d", gda_value_get_ushort ((GValue *) src));
-	
+
 	g_value_take_string (dest, str);
 }
 
 
 GType
-gda_short_get_type (void) 
+gda_short_get_type (void)
 {
 	static GType type = 0;
 
@@ -2439,20 +2439,20 @@ gda_short_get_type (void)
     			NULL,		/* instance_init */
     			NULL		/* value_table */
   		};
-  
-  		type = g_type_register_static (G_TYPE_INT, "GdaShort", &type_info, 0);		
+
+  		type = g_type_register_static (G_TYPE_INT, "GdaShort", &type_info, 0);
 
 		g_value_register_transform_func(G_TYPE_STRING,
 						type,
 						string_to_short);
-		
-		g_value_register_transform_func(type, 
+
+		g_value_register_transform_func(type,
 						G_TYPE_STRING,
-						short_to_string);  
+						short_to_string);
 	}
-	  
-	
-	
+
+
+
   	return type;
 }
 
@@ -2473,18 +2473,18 @@ gda_ushort_get_type (void) {
     			NULL,		/* instance_init */
     			NULL		/* value_table */
   		};
-  
-  		type = g_type_register_static (G_TYPE_UINT, "GdaUShort", &type_info, 0);		
-		
+
+  		type = g_type_register_static (G_TYPE_UINT, "GdaUShort", &type_info, 0);
+
   		g_value_register_transform_func (G_TYPE_STRING,
 						 type,
 						 string_to_short);
-		
-		g_value_register_transform_func (type, 
+
+		g_value_register_transform_func (type,
 						 G_TYPE_STRING,
 						 short_to_string);
 	}
-	
+
   	return type;
 }
 
@@ -2515,7 +2515,7 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 {
 	gint nb_rewrites = 0;
 	gchar *sptr, *rptr;
-	gulong realsize = MYMIN (bin->binary_length, maxlen);
+	gulong realsize = MYMIN ((gulong)(bin->binary_length), maxlen);
 
 	gchar *retval;
 	gulong offset = 0;
@@ -2524,13 +2524,13 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 		return g_strdup ("");
 
 	/* compute number of char rewrites */
-	for (offset = 0, sptr = (gchar*) bin->data; 
-	     offset < realsize; 
+	for (offset = 0, sptr = (gchar*) bin->data;
+	     offset < realsize;
 	     offset ++, sptr++) {
 		if ((*sptr != '\n') && ((*sptr == '\\') || !g_ascii_isprint (*sptr)))
 			nb_rewrites++;
 	}
-	
+
 	/* mem allocation and copy */
 	retval = g_malloc0 (realsize + nb_rewrites * 4 + 1);
 	rptr = retval;
