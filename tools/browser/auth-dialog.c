@@ -232,10 +232,12 @@ auth_dialog_init (AuthDialog *dialog)
 	g_free (markup);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 12);
-	gtk_widget_show_all (hbox);
 	
 	dialog->priv->spinner = browser_spinner_new ();
-	gtk_container_add (GTK_CONTAINER (hbox), dialog->priv->spinner);
+	gtk_box_pack_start (GTK_BOX (hbox), dialog->priv->spinner, FALSE, FALSE, 0);
+
+	gtk_widget_show_all (hbox);
+	gtk_widget_hide (dialog->priv->spinner);
 
 	GdaConfig *conf = gda_config_get ();
 	g_signal_connect (conf, "dsn-changed",
