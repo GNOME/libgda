@@ -1454,7 +1454,7 @@ gda_value_copy (const GValue *value)
  *
  * Returns: (transfer none): the value stored in @value.
  */
-G_CONST_RETURN GdaBinary *
+const GdaBinary *
 gda_value_get_binary (const GValue *value)
 {
 	GdaBinary *val;
@@ -1533,7 +1533,7 @@ gda_value_set_blob (GValue *value, const GdaBlob *blob)
  *
  * Returns: (transfer none): the value stored in @value.
  */
-G_CONST_RETURN GdaBlob *
+const GdaBlob *
 gda_value_get_blob (const GValue *value)
 {
 	GdaBlob *val;
@@ -1571,7 +1571,7 @@ gda_value_take_blob (GValue *value, GdaBlob *blob)
  *
  * Returns: (transfer none): the value stored in @value.
  */
-G_CONST_RETURN GdaGeometricPoint *
+const GdaGeometricPoint *
 gda_value_get_geometric_point (const GValue *value)
 {
 	g_return_val_if_fail (value, NULL);
@@ -1616,7 +1616,7 @@ gda_value_set_null (GValue *value)
  *
  * Returns: (transfer none): the value stored in @value.
  */
-G_CONST_RETURN GdaNumeric *
+const GdaNumeric *
 gda_value_get_numeric (const GValue *value)
 {
 	g_return_val_if_fail (value, NULL);
