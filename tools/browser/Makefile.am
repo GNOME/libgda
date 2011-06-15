@@ -84,7 +84,9 @@ libbrowser_la_SOURCES=\
 	mgr-favorites.h \
 	mgr-favorites.c \
 	browser-stock-icons.c \
-	browser-stock-icons.h
+	browser-stock-icons.h \
+	text-search.c \
+	text-search.h
 
 gda_browser_5_0_SOURCES=\
 	main.c

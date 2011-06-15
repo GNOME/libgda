@@ -21,16 +21,20 @@
 #include <gtk/gtk.h>
 #include "class-properties.h"
 #include "marshal.h"
+#include "../text-search.h"
 
 struct _ClassPropertiesPrivate {
 	BrowserConnection *bcnc;
 
+	GtkTextView *view;
 	GtkTextBuffer *text;
 	gboolean hovering_over_link;
+
+	GtkWidget *text_search;
 };
 
 static void class_properties_class_init (ClassPropertiesClass *klass);
-static void class_properties_init       (ClassProperties *eprop, ClassPropertiesClass *klass);
+static void class_properties_init       (ClassProperties *cprop, ClassPropertiesClass *klass);
 static void class_properties_dispose   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
@@ -68,24 +72,24 @@ class_properties_class_init (ClassPropertiesClass *klass)
 
 
 static void
-class_properties_init (ClassProperties *eprop, G_GNUC_UNUSED ClassPropertiesClass *klass)
+class_properties_init (ClassProperties *cprop, G_GNUC_UNUSED ClassPropertiesClass *klass)
 {
-	eprop->priv = g_new0 (ClassPropertiesPrivate, 1);
-	eprop->priv->hovering_over_link = FALSE;
+	cprop->priv = g_new0 (ClassPropertiesPrivate, 1);
+	cprop->priv->hovering_over_link = FALSE;
 }
 
 static void
 class_properties_dispose (GObject *object)
 {
-	ClassProperties *eprop = (ClassProperties *) object;
+	ClassProperties *cprop = (ClassProperties *) object;
 
 	/* free memory */
-	if (eprop->priv) {
-		if (eprop->priv->bcnc) {
-			g_object_unref (eprop->priv->bcnc);
+	if (cprop->priv) {
+		if (cprop->priv->bcnc) {
+			g_object_unref (cprop->priv->bcnc);
 		}
-		g_free (eprop->priv);
-		eprop->priv = NULL;
+		g_free (cprop->priv);
+		cprop->priv = NULL;
 	}
 
 	parent_class->dispose (object);
@@ -114,10 +118,12 @@ class_properties_get_type (void)
 	return type;
 }
 
-static gboolean key_press_event (GtkWidget *text_view, GdkEventKey *event, ClassProperties *eprop);
-static gboolean event_after (GtkWidget *text_view, GdkEvent *ev, ClassProperties *eprop);
-static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ClassProperties *eprop);
-static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, ClassProperties *eprop);
+static gboolean key_press_event (GtkWidget *text_view, GdkEventKey *event, ClassProperties *cprop);
+static gboolean event_after (GtkWidget *text_view, GdkEvent *ev, ClassProperties *cprop);
+static gboolean motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ClassProperties *cprop);
+static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibility *event, ClassProperties *cprop);
+
+static void show_search_bar (ClassProperties *cprop);
 
 /**
  * class_properties_new:
@@ -127,11 +133,11 @@ static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibilit
 GtkWidget *
 class_properties_new (BrowserConnection *bcnc)
 {
-	ClassProperties *eprop;
+	ClassProperties *cprop;
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
 
-	eprop = CLASS_PROPERTIES (g_object_new (CLASS_PROPERTIES_TYPE, NULL));
-	eprop->priv->bcnc = g_object_ref (bcnc);
+	cprop = CLASS_PROPERTIES (g_object_new (CLASS_PROPERTIES_TYPE, NULL));
+	cprop->priv->bcnc = g_object_ref (bcnc);
 	
 	GtkWidget *sw;
         sw = gtk_scrolled_window_new (NULL, NULL);
@@ -139,7 +145,7 @@ class_properties_new (BrowserConnection *bcnc)
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
                                         GTK_POLICY_AUTOMATIC,
                                         GTK_POLICY_AUTOMATIC);
-	gtk_box_pack_start (GTK_BOX (eprop), sw, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (cprop), sw, TRUE, TRUE, 0);
 
 	GtkWidget *textview;
 	textview = gtk_text_view_new ();
@@ -148,35 +154,36 @@ class_properties_new (BrowserConnection *bcnc)
         gtk_text_view_set_right_margin (GTK_TEXT_VIEW (textview), 5);
         gtk_text_view_set_editable (GTK_TEXT_VIEW (textview), FALSE);
 	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (textview), FALSE);
-        eprop->priv->text = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
+        cprop->priv->text = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
+	cprop->priv->view = GTK_TEXT_VIEW (textview);
         gtk_widget_show_all (sw);
 
-        gtk_text_buffer_create_tag (eprop->priv->text, "section",
+        gtk_text_buffer_create_tag (cprop->priv->text, "section",
                                     "weight", PANGO_WEIGHT_BOLD,
                                     "foreground", "blue", NULL);
 
-        gtk_text_buffer_create_tag (eprop->priv->text, "error",
+        gtk_text_buffer_create_tag (cprop->priv->text, "error",
                                     "foreground", "red", NULL);
 
-        gtk_text_buffer_create_tag (eprop->priv->text, "data",
+        gtk_text_buffer_create_tag (cprop->priv->text, "data",
                                     "left-margin", 20, NULL);
 
-        gtk_text_buffer_create_tag (eprop->priv->text, "starter",
+        gtk_text_buffer_create_tag (cprop->priv->text, "starter",
                                     "indent", -10,
                                     "left-margin", 20, NULL);
 
 	g_signal_connect (textview, "key-press-event", 
-			  G_CALLBACK (key_press_event), eprop);
+			  G_CALLBACK (key_press_event), cprop);
 	g_signal_connect (textview, "event-after", 
-			  G_CALLBACK (event_after), eprop);
+			  G_CALLBACK (event_after), cprop);
 	g_signal_connect (textview, "motion-notify-event", 
-			  G_CALLBACK (motion_notify_event), eprop);
+			  G_CALLBACK (motion_notify_event), cprop);
 	g_signal_connect (textview, "visibility-notify-event", 
-			  G_CALLBACK (visibility_notify_event), eprop);
+			  G_CALLBACK (visibility_notify_event), cprop);
 
-	class_properties_set_class (eprop, NULL);
+	class_properties_set_class (cprop, NULL);
 
-	return (GtkWidget*) eprop;
+	return (GtkWidget*) cprop;
 }
 
 static GdkCursor *hand_cursor = NULL;
@@ -187,7 +194,7 @@ static GdkCursor *regular_cursor = NULL;
  * typically used by web browsers.
  */
 static void
-set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, ClassProperties *eprop)
+set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, ClassProperties *cprop)
 {
 	GSList *tags = NULL, *tagp = NULL;
 	GtkTextIter iter;
@@ -205,10 +212,10 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, ClassProperti
 		}
 	}
 	
-	if (hovering != eprop->priv->hovering_over_link) {
-		eprop->priv->hovering_over_link = hovering;
+	if (hovering != cprop->priv->hovering_over_link) {
+		cprop->priv->hovering_over_link = hovering;
 		
-		if (eprop->priv->hovering_over_link) {
+		if (cprop->priv->hovering_over_link) {
 			if (! hand_cursor)
 				hand_cursor = gdk_cursor_new (GDK_HAND2);
 			gdk_window_set_cursor (gtk_text_view_get_window (text_view,
@@ -234,7 +241,7 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, ClassProperti
  */
 static gboolean
 visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility *event,
-			 ClassProperties *eprop)
+			 ClassProperties *cprop)
 {
 	gint wx, wy, bx, by;
 	
@@ -244,7 +251,7 @@ visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility 
 					       GTK_TEXT_WINDOW_WIDGET,
 					       wx, wy, &bx, &by);
 	
-	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), bx, by, eprop);
+	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), bx, by, cprop);
 	
 	return FALSE;
 }
@@ -253,7 +260,7 @@ visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility 
  * Update the cursor image if the pointer moved. 
  */
 static gboolean
-motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ClassProperties *eprop)
+motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ClassProperties *cprop)
 {
 	gint x, y;
 	
@@ -261,7 +268,7 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ClassPropertie
 					       GTK_TEXT_WINDOW_WIDGET,
 					       event->x, event->y, &x, &y);
 	
-	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, eprop);
+	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, cprop);
 
 	gdk_window_get_pointer (gtk_widget_get_window (text_view), NULL, NULL, NULL);
 
@@ -273,7 +280,7 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ClassPropertie
  * by the data attached to it.
  */
 static void
-follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, ClassProperties *eprop)
+follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, ClassProperties *cprop)
 {
 	GSList *tags = NULL, *tagp = NULL;
 	
@@ -284,7 +291,7 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, ClassProp
 		
 		dn = g_object_get_data (G_OBJECT (tag), "class");
 		if (dn)
-			g_signal_emit (eprop, class_properties_signals [OPEN_CLASS], 0, dn);
+			g_signal_emit (cprop, class_properties_signals [OPEN_CLASS], 0, dn);
         }
 
 	if (tags) 
@@ -296,7 +303,7 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, ClassProp
  * Links can also be activated by clicking.
  */
 static gboolean
-event_after (GtkWidget *text_view, GdkEvent *ev, ClassProperties *eprop)
+event_after (GtkWidget *text_view, GdkEvent *ev, ClassProperties *cprop)
 {
 	GtkTextIter start, end, iter;
 	GtkTextBuffer *buffer;
@@ -324,7 +331,7 @@ event_after (GtkWidget *text_view, GdkEvent *ev, ClassProperties *eprop)
 	
 	gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW (text_view), &iter, x, y);
 	
-	follow_if_link (text_view, &iter, eprop);
+	follow_if_link (text_view, &iter, cprop);
 	
 	return FALSE;
 }
@@ -333,7 +340,7 @@ event_after (GtkWidget *text_view, GdkEvent *ev, ClassProperties *eprop)
  * Links can be activated by pressing Enter.
  */
 static gboolean
-key_press_event (GtkWidget *text_view, GdkEventKey *event, ClassProperties *eprop)
+key_press_event (GtkWidget *text_view, GdkEventKey *event, ClassProperties *cprop)
 {
 	GtkTextIter iter;
 	GtkTextBuffer *buffer;
@@ -344,9 +351,19 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, ClassProperties *epro
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
 		gtk_text_buffer_get_iter_at_mark (buffer, &iter, 
 						  gtk_text_buffer_get_insert (buffer));
-		follow_if_link (text_view, &iter, eprop);
+		follow_if_link (text_view, &iter, cprop);
 		break;
-		
+	case GDK_KEY_F:
+	case GDK_KEY_f:
+		if (event->state & GDK_CONTROL_MASK) {
+			show_search_bar (cprop);
+			return TRUE;
+		}
+		break;
+	case GDK_KEY_slash:
+		show_search_bar (cprop);
+		return TRUE;
+		break;		
 	default:
 		break;
 	}
@@ -355,23 +372,23 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, ClassProperties *epro
 
 /**
  * class_properties_set_class:
- * @eprop: a #ClassProperties widget
+ * @cprop: a #ClassProperties widget
  * @classname: a DN to display information for
  *
  * Adjusts the display to show @classname's properties
  */
 void
-class_properties_set_class (ClassProperties *eprop, const gchar *classname)
+class_properties_set_class (ClassProperties *cprop, const gchar *classname)
 {
-	g_return_if_fail (IS_CLASS_PROPERTIES (eprop));
+	g_return_if_fail (IS_CLASS_PROPERTIES (cprop));
 
 	GtkTextBuffer *tbuffer;
 	GtkTextIter start, end;
 	GdaLdapClass *lcl;
 	GtkTextIter current;
-	gint i;
+	guint i;
 
-	tbuffer = eprop->priv->text;
+	tbuffer = cprop->priv->text;
 	gtk_text_buffer_get_start_iter (tbuffer, &start);
         gtk_text_buffer_get_end_iter (tbuffer, &end);
         gtk_text_buffer_delete (tbuffer, &start, &end);
@@ -379,9 +396,9 @@ class_properties_set_class (ClassProperties *eprop, const gchar *classname)
 	if (!classname || !*classname)
 		return;
 
-	lcl = browser_connection_get_class_info (eprop->priv->bcnc, classname);
+	lcl = browser_connection_get_class_info (cprop->priv->bcnc, classname);
 	if (!lcl) {
-		browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eprop)),
+		browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) cprop)),
 				      "%s", _("Could not get information about LDAP class"));
 		return;
 	}
@@ -569,4 +586,23 @@ class_properties_set_class (ClassProperties *eprop, const gchar *classname)
 			gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
 		}
 	}
+
+	if (cprop->priv->text_search && gtk_widget_get_visible (cprop->priv->text_search))
+		text_search_rerun (TEXT_SEARCH (cprop->priv->text_search));
+}
+
+static void
+show_search_bar (ClassProperties *cprop)
+{
+	if (! cprop->priv->text_search) {
+		cprop->priv->text_search = text_search_new (GTK_TEXT_VIEW (cprop->priv->view));
+		gtk_box_pack_start (GTK_BOX (cprop), cprop->priv->text_search, FALSE, FALSE, 0);
+		gtk_widget_show (cprop->priv->text_search);
+	}
+	else {
+		gtk_widget_show (cprop->priv->text_search);
+		text_search_rerun (TEXT_SEARCH (cprop->priv->text_search));
+	}
+
+	gtk_widget_grab_focus (cprop->priv->text_search);
 }
