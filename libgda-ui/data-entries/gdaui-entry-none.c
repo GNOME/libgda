@@ -110,8 +110,6 @@ gdaui_entry_none_new (GType type)
 	GObject *obj;
 	GdauiEntryNone *entry;
 
-	g_return_val_if_fail (type != GDA_TYPE_NULL , NULL);
-
 	obj = g_object_new (GDAUI_TYPE_ENTRY_NONE, NULL);
 	entry = GDAUI_ENTRY_NONE (obj);
 	gdaui_data_entry_set_value_type (GDAUI_DATA_ENTRY (entry), type);

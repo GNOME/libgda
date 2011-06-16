@@ -1856,9 +1856,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 
 		column = gda_data_model_describe_column (to, i);
 		if (plist->data) {
-			if ((gda_holder_get_g_type (GDA_HOLDER (plist->data)) != 
-			     gda_column_get_g_type (column)) &&
-			    (gda_column_get_g_type (column) != G_TYPE_INVALID)) {
+			if ((gda_holder_get_g_type (GDA_HOLDER (plist->data)) != gda_column_get_g_type (column)) &&
+			    (gda_column_get_g_type (column) != GDA_TYPE_NULL)) {
 				GValue *newval;
 				
 				newval = g_new0 (GValue, 1);
@@ -1911,7 +1910,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 				value = (GValue *) gda_holder_get_value (GDA_HOLDER (plist->data));
 				if (avlist->data) {
 					if (append_types [i] && gda_value_is_null ((GValue *) (avlist->data))) 
-						g_value_init ((GValue *) (avlist->data), append_types [i]);
+						gda_value_reset_with_type ((GValue *) (avlist->data), append_types [i]);
 					if (!gda_value_is_null (value) && 
 					    !g_value_transform (value, (GValue *) (avlist->data))) {
 						gchar *str;

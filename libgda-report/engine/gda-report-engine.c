@@ -962,7 +962,7 @@ rewrite_statement_foreach_func (GdaSqlAnyPart *node, ForeachData *fdata, GError 
 
 	if ((node->type == GDA_SQL_ANY_EXPR) &&
 	    (pspec = ((GdaSqlExpr*) node)->param_spec)) {
-		if (pspec->g_type != 0)
+		if (pspec->g_type != GDA_TYPE_NULL)
 			return TRUE;
 
 		GdaHolder *source_param;

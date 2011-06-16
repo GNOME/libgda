@@ -462,7 +462,7 @@ gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flag
 		MYSQL_FIELD *field = &mysql_fields[i];
 		
 		GType gtype = model->priv->types [i];
-		if (gtype == 0) {
+		if (gtype == GDA_TYPE_NULL) {
 			gtype = _gda_mysql_type_to_gda (cdata, field->type, field->charsetnr);
 			model->priv->types [i] = gtype;
 		}
@@ -609,7 +609,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		MYSQL_FIELD *field = &mysql_fields[i];
 		
 		GType gtype = _GDA_PSTMT(ps)->types[i];
-		if (gtype == 0) {
+		if (gtype == GDA_TYPE_NULL) {
 			gtype = _gda_mysql_type_to_gda (cdata, field->type, field->charsetnr);
 			_GDA_PSTMT(ps)->types[i] = gtype;
 		}
