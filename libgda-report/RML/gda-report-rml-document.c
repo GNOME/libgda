@@ -198,7 +198,7 @@ gda_report_rml_document_run_as_html (GdaReportDocument *doc, const gchar *filena
 	if (!converter) {
 		converter = g_find_program_in_path ("trml2html.py");
 		if (!converter) {
-			converter = gda_gbr_get_file_path (GDA_BIN_DIR, "gda_trml2html", "trml2html.py", NULL);
+			converter = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "gda_trml2html", "trml2html.py", NULL);
 			if (!g_file_test (converter, G_FILE_TEST_IS_EXECUTABLE)) {
 				g_free (converter);
 				converter = NULL;
@@ -229,7 +229,7 @@ gda_report_rml_document_run_as_pdf (GdaReportDocument *doc, const gchar *filenam
 	if (!converter) {
 		converter = g_find_program_in_path ("trml2pdf.py");
 		if (!converter) {
-			converter = gda_gbr_get_file_path (GDA_BIN_DIR, "gda_trml2pdf", "trml2pdf.py", NULL);
+			converter = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "gda_trml2pdf", "trml2pdf.py", NULL);
 			if (!g_file_test (converter, G_FILE_TEST_IS_EXECUTABLE)) {
 				g_free (converter);
 				converter = NULL;
