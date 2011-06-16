@@ -300,7 +300,8 @@ if ENABLE_GDA_GI
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) \
-			     --namespace Gda
+			     --namespace Gda \
+			     --warn-all
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 psupport = \

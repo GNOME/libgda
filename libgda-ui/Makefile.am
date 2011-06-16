@@ -167,7 +167,8 @@ if ENABLE_GDAUI_GI
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) \
                              --add-include-path=$(top_builddir)/libgda \
-                             --namespace Gdaui
+                             --namespace Gdaui \
+			     --warn-all
 ui_data_entries_sources = \
 	data-entries/gdaui-data-cell-renderer-bin.h \
 	data-entries/gdaui-data-cell-renderer-boolean.h \
