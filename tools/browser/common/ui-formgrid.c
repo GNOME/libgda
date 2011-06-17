@@ -64,6 +64,14 @@ struct _UiFormGridPriv
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
 
+/* signals */
+enum {
+        DATA_SET_CHANGED,
+        LAST_SIGNAL
+};
+
+gint ui_formgrid_signals [LAST_SIGNAL] = { 0 };
+
 /* properties */
 enum {
 	PROP_0,
@@ -99,13 +107,23 @@ ui_formgrid_get_type (void)
 }
 
 static void
-ui_formgrid_class_init (UiFormGridClass *class)
+ui_formgrid_class_init (UiFormGridClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (class);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	
-	parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (klass);
 	object_class->dispose = ui_formgrid_dispose;
-	GTK_WIDGET_CLASS (class)->show = ui_formgrid_show;
+	GTK_WIDGET_CLASS (klass)->show = ui_formgrid_show;
+
+	/* signals */
+	ui_formgrid_signals [DATA_SET_CHANGED] = 
+		g_signal_new ("data-set-changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (UiFormGridClass, data_set_changed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	klass->data_set_changed = NULL;
 
 	/* Properties */
         object_class->set_property = ui_formgrid_set_property;
@@ -662,6 +680,12 @@ static void ldap_view_dn_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
 }
 #endif
 
+static void
+proxy_changed_cb (GdauiDataProxy *dp, GdaDataProxy *proxy, UiFormGrid *formgrid)
+{
+	g_signal_emit (formgrid, ui_formgrid_signals [DATA_SET_CHANGED], 0);
+}
+
 /**
  * ui_formgrid_new
  * @model: a #GdaDataModel
@@ -692,6 +716,9 @@ ui_formgrid_new (GdaDataModel *model, gboolean scroll_form, GdauiDataProxyInfoFl
 	g_object_set (G_OBJECT (formgrid->priv->info),
 		      "flags", formgrid->priv->flags | GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 		      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS, NULL);
+
+	g_signal_connect (formgrid->priv->raw_grid, "proxy-changed",
+			  G_CALLBACK (proxy_changed_cb), formgrid);
 
 	/* no more than 300 rows at a time */
 	if (model)

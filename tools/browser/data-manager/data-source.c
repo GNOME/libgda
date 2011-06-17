@@ -988,22 +988,6 @@ data_source_execute (DataSource *source, GError **error)
 	source->priv->executing = FALSE;
 }
 
-/*
- * creates a new string where double underscores '__' are replaced by a single underscore '_'
- */
-static gchar *
-replace_double_underscores (const gchar *str)
-{
-        gchar **arr;
-        gchar *ret;
-
-        arr = g_strsplit (str, "__", 0);
-        ret = g_strjoinv ("_", arr);
-        g_strfreev (arr);
-
-        return ret;
-}
-
 /**
  * data_source_create_grid
  *
@@ -1018,46 +1002,8 @@ data_source_create_grid (DataSource *source)
 		return NULL;
 
 	GtkWidget *fg;
-	GdauiRawGrid *grid;
 	fg = ui_formgrid_new (source->priv->model, FALSE, 0);
-	grid = ui_formgrid_get_grid_widget (UI_FORMGRID (fg));
 
-	GList *columns, *list;
-	columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
-	for (list = columns; list; list = list->next) {
-		/* reduce column's title */
-		const gchar *title;
-		GtkWidget *header;
-		title = gtk_tree_view_column_get_title (GTK_TREE_VIEW_COLUMN (list->data));
-		header = gtk_label_new ("");
-		if (title) {
-			gchar *tmp, *str;
-			str = replace_double_underscores (title);
-			tmp = g_markup_printf_escaped ("<small>%s</small>", str);
-			g_free (str);
-			gtk_label_set_markup (GTK_LABEL (header), tmp);
-			g_free (tmp);
-		}
-		else
-			gtk_label_set_markup (GTK_LABEL (header), "<small></small>");
-		gtk_widget_show (header);
-		gtk_tree_view_column_set_widget (GTK_TREE_VIEW_COLUMN (list->data),
-						 header);
-		
-		/* reduce text's size */
-		GList *renderers, *list2;
-		renderers = gtk_cell_layout_get_cells (GTK_CELL_LAYOUT (list->data));
-		for (list2 = renderers; list2; list2 = list2->next) {
-			if (GTK_IS_CELL_RENDERER_TEXT (list2->data))
-				g_object_set ((GObject*) list2->data,
-					      "scale", 0.8, NULL);
-		}
-		g_list_free (renderers);
-	}
-	
-	/*if (!columns || !columns->next)*/
-		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (grid), FALSE);
-	g_list_free (columns);
 	return fg;
 }
 
