@@ -49,6 +49,8 @@ struct _UiFormGrid
 struct _UiFormGridClass
 {
 	GtkVBoxClass       parent_class;
+	/* signals */
+	void             (*data_set_changed) (UiFormGrid *fg);
 };
 
 /**
