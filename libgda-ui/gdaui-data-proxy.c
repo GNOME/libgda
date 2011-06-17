@@ -68,6 +68,16 @@ gdaui_data_proxy_iface_init (G_GNUC_UNUSED gpointer g_class)
 	static gboolean initialized = FALSE;
 
 	if (! initialized) {
+		/**
+		 * GdauiDataProxy::proxy-changed:
+		 * @gdauidataproxy: the #GdauiDataProxy
+		 * @arg1: the GdaDataProxy which would be returned by gdaui_data_proxy_get_proxy()
+		 *
+		 * The ::proxy-changed signal is emitted each time the #GdaDataProxy which would be
+		 * returned by gdaui_data_proxy_get_proxy() changes. This is generally the result
+		 * of changes in the structure of the proxied data model (different number and/or type
+		 * of columns for example).
+		 */
 		gdaui_data_proxy_signals[PROXY_CHANGED] = 
 			g_signal_new ("proxy-changed",
                                       GDAUI_TYPE_DATA_PROXY,
