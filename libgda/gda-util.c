@@ -696,9 +696,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	if (vnode) {
 		xmlChar *this_lang, *isnull;
 		const gchar *lang = gda_lang_locale;
-		GType gdatype;
 
-		gdatype = gda_holder_get_g_type (holder);
 		while (vnode) {
 			if (xmlNodeIsText (vnode)) {
 				vnode = vnode->next;
@@ -2371,7 +2369,6 @@ gboolean
 gda_rfc1738_decode (gchar *string)
 {
 	gchar *wptr, *rptr;
-	gboolean retval = TRUE;
 
 	if (!string || !*string)
 		return TRUE;
@@ -2408,7 +2405,7 @@ gda_rfc1738_decode (gchar *string)
 			}
 			else {
 				/* error */
-				retval = FALSE;
+				/* TODO: Actually return this? retval = FALSE; murrayc */
 				rptr--;
 			}
 		}

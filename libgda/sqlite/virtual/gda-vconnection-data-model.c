@@ -352,7 +352,6 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 {
 	GdaVConnectionTableData *td;
 
-	GdaVirtualProvider *prov;
 	gchar *str;
 	int rc;
 	char *zErrMsg = NULL;
@@ -372,8 +371,7 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 			     _("Table to remove not found"));
 		return FALSE;
 	}
-	
-	prov = (GdaVirtualProvider *) gda_connection_get_provider (GDA_CONNECTION (cnc));
+
 	str = g_strdup_printf ("DROP TABLE %s", td->table_name);
 	rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
 	g_free (str);

@@ -178,13 +178,11 @@ GdaBlobOp *
 gda_postgres_blob_op_new_with_id (GdaConnection *cnc, const gchar *sql_id)
 {
 	GdaPostgresBlobOp *pgop;
-	PGconn *pconn;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	pgop = g_object_new (GDA_TYPE_POSTGRES_BLOB_OP, NULL);
 
-	pconn = get_pconn (cnc);
 	pgop->priv->blobid = atoi (sql_id);
 	pgop->priv->cnc = cnc;
 

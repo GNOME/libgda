@@ -620,12 +620,11 @@ _gda_tree_node_add_children (GdaTreeNode *node, GdaTreeManager *mgr, const GSLis
 const GSList *
 _gda_tree_node_get_children_for_manager (GdaTreeNode *node, GdaTreeManager *mgr)
 {
-	GdaTreeNodesList *etn;
 	GSList *list;
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), NULL);
 	g_return_val_if_fail (GDA_IS_TREE_MANAGER (mgr), NULL);
 	
-	for (etn = NULL, list = node->priv->children; list; list = list->next) {
+	for (list = node->priv->children; list; list = list->next) {
 		if (GDA_TREE_NODES_LIST (list->data)->mgr == mgr)
 			return GDA_TREE_NODES_LIST (list->data)->nodes;
 	}

@@ -289,9 +289,8 @@ common_bin_adjust_menu (BinMenu *binmenu, gboolean editable, const GValue *value
 					g_free (size);
 #ifdef HAVE_GIO
 					GdaBlob *blob2;
-					glong read;
 					blob2 = (GdaBlob*) gda_blob_copy ((gpointer) blob);
-					read = gda_blob_op_read (blob2->op, blob2, 0, 1024);
+					gda_blob_op_read (blob2->op, blob2, 0, 1024);
 					bin = (GdaBinary *) blob2;
 					ctype = g_content_type_guess (NULL, bin->data,
 								      (gsize) bin->binary_length, NULL);

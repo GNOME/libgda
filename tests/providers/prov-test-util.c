@@ -149,12 +149,10 @@ prov_test_check_types_schema (GdaConnection *cnc)
 		return FALSE;
 	}
 
-	GdaServerProvider *prov;
 	GdaDataModel *schema_m;
 	GError *error = NULL;
 	gchar *str;
 	
-	prov = gda_connection_get_provider (cnc);
 	schema_m = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TYPES, &error, 0);
 	if (!schema_m) {
 #ifdef CHECK_EXTRA_INFO

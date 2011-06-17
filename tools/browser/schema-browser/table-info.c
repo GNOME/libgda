@@ -179,8 +179,6 @@ table_info_set_property (GObject *object,
 			 G_GNUC_UNUSED const GValue *value,
 			 GParamSpec *pspec)
 {
-	TableInfo *tinfo;
-	tinfo = TABLE_INFO (object);
 	switch (param_id) {
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -194,8 +192,6 @@ table_info_get_property (GObject *object,
 			 G_GNUC_UNUSED GValue *value,
 			 GParamSpec *pspec)
 {
-	TableInfo *tinfo;
-	tinfo = TABLE_INFO (object);
 	switch (param_id) {
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);

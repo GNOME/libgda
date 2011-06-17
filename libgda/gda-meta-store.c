@@ -3382,7 +3382,6 @@ gda_meta_store_change_free (GdaMetaStoreChange *change) {
 GdaDataModel *
 gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table_name)
 {
-	GdaMetaStoreClass *klass;
 	DbObject *dbobj;
 	TableInfo *tinfo;
 	GdaDataModel *model;
@@ -3394,7 +3393,6 @@ gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table
 
 	gda_mutex_lock (store->priv->mutex);
 
-	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	dbobj = g_hash_table_lookup (store->priv->p_db_objects_hash, table_name);
 	if (!dbobj) {
 		g_warning ("Table '%s' is not known by the GdaMetaStore", table_name);
@@ -3476,13 +3474,10 @@ GSList *
 gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table_name)
 {
 	GSList *list, *ret;
-	GdaMetaStoreClass *klass;
 	DbObject *dbo;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 	g_return_val_if_fail (table_name && *table_name, NULL);
-
-	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 
 	gda_mutex_lock (store->priv->mutex);
 	dbo = g_hash_table_lookup (store->priv->p_db_objects_hash, table_name);
@@ -4644,7 +4639,6 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
  	gboolean retval = FALSE;
 	GdaSet *params = NULL;
 	GdaMetaStoreClass *klass;
-	GdaMetaTable *mtable = NULL, *ref_mtable = NULL;
 	GdaMetaDbObject *dbo = NULL, *ref_dbo = NULL;
 	GdaMetaStruct *u_mstruct = NULL;
 
@@ -4689,7 +4683,6 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 	gda_value_free (v3);
 	if (! dbo)
 		goto out;
-	mtable = GDA_META_TABLE (dbo);
 
 	v1 = NULL;
 	v2 = NULL;
@@ -4719,7 +4712,6 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 	gda_value_free (v3);
 	if (! ref_dbo)
 		goto out;
-	ref_mtable = GDA_META_TABLE (ref_dbo);
 
 	/* set statement's variables */
 	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_DEL_DECLARE_FK],
