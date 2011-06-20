@@ -1,3 +1,18 @@
+libgda 4.99.2, 2011-06-20
+
+ - GDA_TYPE_NULL is not 0 anymore (bug #647633)
+ - Improved responsiveness when using GdaThreadWrapper
+ - Misc. compilation and installation issues corrected
+ - MDBTools: distribute missing files
+ - GdaBrowser: UI improvements (better LDAP search filter, image clipboard copy, text search)
+ - Bug fixed: #651692, #651829, #651922, #652023, #652024, #631645
+ - Translations:
+	- eo (Kristjan Schmidt)
+	- de (Christian Kirbach, Mario Blättermann)
+	- cs (Marek Černocký)
+	- es (Daniel Mustieles)
+	- ls (Matej Urbančič)
+
 libgda 4.99.1, 2011-06-01
 
  - Many GTK3 adaptations (GtkApplication instead of libunique, code cleanups)
