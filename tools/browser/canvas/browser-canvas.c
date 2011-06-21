@@ -25,6 +25,7 @@
 #include "browser-canvas-item.h"
 #include "browser-canvas-print.h"
 #include <libgda/libgda.h>
+#include <libgda-ui/libgda-ui.h>
 
 #define DEFAULT_SCALE .8
 #ifdef HAVE_GRAPHVIZ
