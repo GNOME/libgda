@@ -508,8 +508,10 @@ gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_nam
 	}
 	g_return_val_if_fail (field_name && *field_name, 0);
 
-	if (table_name && *table_name)
+	gboolean tmp_is_allocated = FALSE;
+	if (table_name && *table_name) {
 		tmp = g_strdup_printf ("%s.%s", table_name, field_name);
+		tmp_is_allocated = TRUE;
 	else
 		tmp = (gchar*) field_name;
 
@@ -522,7 +524,7 @@ gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_nam
 		gda_sql_builder_add_field_value_id (builder,
 						    field_id,
 						    0);
-	if (table_name)
+	if (tmp_is_allocated)
 		g_free (tmp);
 
     return field_id;
@@ -976,14 +978,17 @@ GdaSqlBuilderId
 gda_sql_builder_add_field_id (GdaSqlBuilder *builder, const gchar *field_name, const gchar *table_name)
 {
 	gchar* tmp = 0;
-	if (table_name && *table_name)
+	gboolean tmp_is_allocated = FALSE;
+	if (table_name && *table_name) {
 		tmp = g_strdup_printf ("%s.%s", table_name, field_name);
+		tmp_is_allocated = TRUE;
+        }
 	else
 		tmp = (gchar*) field_name;
 
 	guint field_id = gda_sql_builder_add_id (builder, tmp);
 
-	if (table_name)
+	if (tmp_is_allocated)
 		g_free (tmp);
 
 	return field_id;
