@@ -512,6 +512,7 @@ gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_nam
 	if (table_name && *table_name) {
 		tmp = g_strdup_printf ("%s.%s", table_name, field_name);
 		tmp_is_allocated = TRUE;
+	}
 	else
 		tmp = (gchar*) field_name;
 
