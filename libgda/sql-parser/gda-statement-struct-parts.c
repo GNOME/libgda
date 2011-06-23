@@ -152,10 +152,10 @@ gda_sql_expr_copy (GdaSqlExpr *expr)
  * gda_sql_expr_serialize
  * @expr: a #GdaSqlExpr structure
  *
- * Creates a new string representing a field. You need to free the returned string
+ * Creates a new string representation of the SQL expression. You need to free the returned string
  * using g_free();
  *
- * Returns: a new string with the name of the field or "null" in case @expr is invalid.
+ * Returns: a new string with the SQL expression or "null" in case @expr is invalid.
  */
 gchar *
 gda_sql_expr_serialize (GdaSqlExpr *expr)
