@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the libgda package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Jorge González <jorgegonz@svn.gnome.org>, 2010.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
+# 
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011., 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-06-04 09:23+0000\n"
-"PO-Revision-Date: 2011-06-21 12:33+0200\n"
+"POT-Creation-Date: 2011-06-23 18:19+0000\n"
+"PO-Revision-Date: 2011-06-25 13:17+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,8 +21,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/ldap-connections.page:52(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 msgid ""
 "@@image: 'figures/ldap-table-mapping.png'; "
 "md5=39f204f664cf1202deb716bb19b8993b"
@@ -42,7 +41,6 @@ msgid "1"
 msgstr "1"
 
 #: C/ldap-connections.page:9(title)
-#| msgid "A connection window"
 msgid "LDAP connections"
 msgstr "Conexiones LDAP"
 
@@ -53,6 +51,11 @@ msgid ""
 "Information Tree), whereas other databases accessible using the <app>gda-"
 "browser</app> application are relational databases."
 msgstr ""
+"Las conexiones LDAP son diferentes a las otras conexiones de tal modo que "
+"una base de datos LDAP almacena datos de manera jerárquica, en el DIT "
+"(«Directory Information Tree», Árbol de Información del Directorio), "
+"mientras que las otras bases de datos accesibles que usan la aplicación "
+"<app>gda-browser</app> son bases de datos relacionales."
 
 #: C/ldap-connections.page:15(p)
 msgid ""
@@ -61,6 +64,10 @@ msgid ""
 "the presence of the <link xref=\"ldap-browser-perspective\"> LDAP browser "
 "perspective</link>"
 msgstr ""
+"Como consecuencia, las conexiones LDAP se tratan de manera especial: como "
+"conexiones normales con tablas (consulte el mapeado de tablas explicado más "
+"adelante), y mediante la presencia de la <link xref=\"ldap-browser-"
+"perspective\">perspectiva del visor LDAP</link>"
 
 #: C/ldap-connections.page:20(p)
 msgid ""
@@ -68,10 +75,13 @@ msgid ""
 "provider is not installed or if the LDAP support was disabled during the "
 "compilation."
 msgstr ""
+"Tenga en cuenta que las conexiones LDAP pueden no estar disponibles si el "
+"proveedor de la base de datos LDAP no está instalado o si el soporte LDAP "
+"estaba desactivado durante la compilación."
 
 #: C/ldap-connections.page:26(title)
 msgid "LDAP table's mapping"
-msgstr ""
+msgstr "Mapeado de la tabla LDAP"
 
 #: C/ldap-connections.page:27(p)
 msgid ""
@@ -81,10 +91,15 @@ msgid ""
 "always be the DN (Distinguished Name) of the entry represented in the row; "
 "the other columns depend on the table definition."
 msgstr ""
+"En una conexión LDAP, es posible declarar las tablas virtuales que están "
+"mapeadas en búsqueda LDAP. Estas tablas virtuales se pueden usar después "
+"como cualquier otra tabla. La primera columna de cada tabla virtual LDAP "
+"será siempre el DN (Nombre Distintivo) de la entrada representada en la "
+"fila; las otras columnas dependen de la definición de la tabla."
 
 #: C/ldap-connections.page:33(p)
 msgid "An LDAP virtual table is defined by the following attributes:"
-msgstr ""
+msgstr "Una tabla virtual LDAP se define por los siguientes atributos:"
 
 #: C/ldap-connections.page:37(p)
 msgid "a table name"
@@ -95,12 +110,18 @@ msgid ""
 "the base DN for the search: the LDAP entry at which the search begins (if "
 "not specified then the top level entry of the LDAP connection is used)"
 msgstr ""
+"el DN base de la búsqueda: la entrada LDAP en la que comienza la búsqueda "
+"(si no se especifica, entonces se utiliza la entrada de nivel superior de la "
+"conexión LDAP)"
 
 #: C/ldap-connections.page:40(p)
 msgid ""
 "the search filter: a valid LDAP search filter (if none is provided then the "
 "default search filter is \"(objectClass=*)\", requesting any LDAP entry)."
 msgstr ""
+"el filtro de búsqueda: un filtro de búsqueda LDAP válido (si no se "
+"proporciona ninguno, entonces el filtro de búsqueda predeterminado es "
+"«(objectClass=*)», para solicitar cualquier entrada LDAP)"
 
 #: C/ldap-connections.page:42(p)
 msgid ""
@@ -109,6 +130,10 @@ msgid ""
 "attributes, where each attribute can optionally be assigned a type and a "
 "multi value option (see below)."
 msgstr ""
+"los atributos: los atributos que recuperar, cada atributo se mapeará en una "
+"columna de la tabla. Los atributos deben ser una lista de atributos "
+"separados por comas, donde a cada atributo se le pueda asignar opcionalmente "
+"un tipo y una opción con varios valores (véase más adelante)."
 
 #: C/ldap-connections.page:45(p)
 msgid ""
@@ -116,10 +141,13 @@ msgid ""
 "entire sub tree below), \"onelevel\" (to search the immediate children of "
 "the base DN entry only), or \"base\" (to search the base DN only)"
 msgstr ""
+"el ámbito: el ámbito de búsqueda, «subtree» (para buscar el DN base y el "
+"subárbol completo debajo), «onelevel» (para buscar sólo los hijos inmediatos "
+"de la entrada DN base), o «base» (para buscar sólo el DN base)"
 
 #: C/ldap-connections.page:50(title) C/ldap-connections.page:51(desc)
 msgid "LDAP table's properties"
-msgstr ""
+msgstr "Propiedades de la tabla LDAP"
 
 #: C/ldap-connections.page:54(p)
 msgid ""
@@ -127,10 +155,13 @@ msgid ""
 "the LDAP entries from the top level LDAP entry of the connection, and have 3 "
 "columns: the DN, the \"cn\" and the \"jpegPhoto\"."
 msgstr ""
+"Por ejemplo, en la figura anterior, la tabla «usuarios» «contendrá» todas "
+"las entradas LDAP de la entrada LDAP de nivel superior de la conexión, y "
+"tiene 3 columnas: la DN, la «cn» y la «jpegPhoto»."
 
 #: C/ldap-connections.page:61(title)
 msgid "Attributes to columns mapping"
-msgstr ""
+msgstr "Mapeado de atributos en columnas"
 
 #: C/ldap-connections.page:62(p)
 msgid ""
@@ -139,6 +170,10 @@ msgid ""
 "number, ...) but can be forced by appending to the attribute name the \"::"
 "&lt;type&gt;\" for the requested type."
 msgstr ""
+"Como se mencionó en la sección anterior, cada atributo se mapeará en una "
+"columna. Normalmente, el tipo de columna se determina automáticamente "
+"(cadena, número, ...) pero se puede forzar añadiendo al nombre del atributo "
+"«::&lt;type&gt;»para el tipo solicitado."
 
 #: C/ldap-connections.page:67(p)
 msgid ""
@@ -147,39 +182,54 @@ msgid ""
 "each attribute's options. An option can be specified by appending the \"::"
 "&lt;option&gt;\" to the attribute name. Valid options are:"
 msgstr ""
+"Además, debido a que algunos atributos pueden terner varios valores, la "
+"construcción de la tabla manipula los atributos con varios valores de "
+"diferentes maneras, dependiendo de las opciones de cada atributo. Una opción "
+"se puede especificar añadiendo «::&lt;option&gt;» al nombre del atributo. "
+"Las opciones válidas son:"
 
 #: C/ldap-connections.page:74(p)
 msgid "\"NULL\" or \"0\": a NULL value will be returned for the attribute"
-msgstr ""
+msgstr "«NULL» o «0»: se devolverá un valor NULL para el atributo."
 
 #: C/ldap-connections.page:75(p)
 msgid ""
 "\"CSV\": a comma separated value with all the values of the attribute will "
 "be returned. This only works for string attribute types."
 msgstr ""
+"«CSV»: se devolverá un valor separado por comas con todos los valores del "
+"atributo. Esto sólo funciona para los tipos de atributos de cadena."
 
 #: C/ldap-connections.page:77(p)
 msgid ""
 "\"MULT\" or \"*\": a row will be returned for each value of the attribute, "
 "effectively multiplying the number of returned rows"
 msgstr ""
+"«MULT» o «*»: se devolverá una fila para cada valor del atributo, al "
+"multiplicar efectivamente el número de filas devueltas."
 
 #: C/ldap-connections.page:79(p)
 msgid ""
 "\"1\": only the first value of the attribute will be used, the other values "
 "ignored"
 msgstr ""
+"«1»: se utilizará sólo el primer valor del atributo y se ignorarán los otros "
+"valores."
 
 #: C/ldap-connections.page:80(p)
 msgid ""
 "\"CONCAT\": the attributes' values are concatenated (with a newline char "
 "between each value)"
 msgstr ""
+"«CONCAT»: los valores de los atributos están concatenados (con un carácter "
+"de nueva línea entre cada valor)."
 
 #: C/ldap-connections.page:82(p)
 msgid ""
 "\"ERROR\": an error value will be returned (this is the default behaviour)"
 msgstr ""
+"«ERROR»: se devolverá un valor de error (este es el comportamiento "
+"predeterminado)."
 
 #: C/ldap-connections.page:87(title)
 msgid "SQL usable with LDAP connections"
@@ -192,6 +242,11 @@ msgid ""
 "database objects (outside of the extended SQL presented next section), they "
 "will be lost the next time the LDAP connection is opened."
 msgstr ""
+"Puede usar el SQL que entiende <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> en cualquier conexión LDAP. Tenga en cuenta, sin embargo, "
+"que si define los objetos de base de datos (fuera del SQL extendido que se "
+"presenta en la siguiente sección), se perderán la próxima vez que se abra la "
+"conexión LDAP."
 
 #: C/ldap-connections.page:93(p)
 msgid ""
@@ -199,6 +254,10 @@ msgid ""
 "data which may require a long operation to obtain, but after closing the "
 "LDAP connection, the table and its data will be lost."
 msgstr ""
+"Por lo tanto, es perfectamente seguro, por ejemplo, para crear una tabla "
+"para almacenar algunos datos LDAP que pueden requerir una operación larga de "
+"conseguir, pero después de cerrar la conexión LDAP, la tabla y sus datos se "
+"perderán."
 
 #: C/ldap-connections.page:98(p) C/virtual-connections.page:135(p)
 msgid ""
@@ -269,9 +328,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/ldap-browser-perspective.page:22(None)
-#| msgid ""
-#| "@@image: 'figures/schema-browser-persp.png'; "
-#| "md5=991ae01b9fb6b17c0b93ee4873b9b985"
 msgid ""
 "@@image: 'figures/ldap-browser-persp.png'; "
 "md5=e2c1bbcb2f65ffe16b632141908f7027"
@@ -282,8 +338,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/ldap-browser-perspective.page:47(None)
-#| msgid ""
-#| "@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
 msgid ""
 "@@image: 'figures/ldap-classes.png'; md5=1ef8ffca04b9ba762a3cf2e884c98d03"
 msgstr ""
@@ -292,9 +346,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/ldap-browser-perspective.page:52(None)
-#| msgid ""
-#| "@@image: 'figures/data-man-persp.png'; "
-#| "md5=b4e0678527c03093031dcb3805bb2841"
 msgid ""
 "@@image: 'figures/ldap-search.png'; md5=81aa2f8a2770590d96fd9c980c578d62"
 msgstr ""
@@ -722,7 +773,6 @@ msgid "New opened virtual connection"
 msgstr "Nueva conexión virtual abierta"
 
 #: C/virtual-connections.page:129(title)
-#| msgid "Use case for virtual connections"
 msgid "SQL usable with virtual connections"
 msgstr "SQL usable con conexiones virtuales"
 
@@ -1475,7 +1525,8 @@ msgstr "Una ventana de conexión"
 msgid ""
 "Window opened for the 'c1' connection (and the Schema browser perspective)"
 msgstr ""
-"Ventana abierta para la conexión «c1» (y la perspectiva del visor de esquemas)"
+"Ventana abierta para la conexión «c1» (y la perspectiva del visor de "
+"esquemas)"
 
 #: C/general-ui.page:21(p)
 msgid ""
@@ -1946,8 +1997,8 @@ msgid ""
 "\"id\" to specify a data source string ID, used when linking data sources "
 "one to another;"
 msgstr ""
-"«id» para especificar el ID de cadena de una fuente de datos, usado cuando se "
-"enlazan unas fuentes de datos con otras;"
+"«id» para especificar el ID de cadena de una fuente de datos, usado cuando "
+"se enlazan unas fuentes de datos con otras;"
 
 #: C/data-manager-xml-syntax.page:16(p)
 msgid "\"title\" to specify a title."
@@ -2380,8 +2431,8 @@ msgid ""
 msgstr ""
 "Editar fuentes de datos en la perspectiva del gestor de datos, usando la "
 "interfaz predeterminada: se definen dos fuentes de datos que listan los "
-"contenidos de las tablas «clientes» y «pedidos». La configuración es la misma "
-"que la de la figura anterior que muestra la sintaxis XML"
+"contenidos de las tablas «clientes» y «pedidos». La configuración es la "
+"misma que la de la figura anterior que muestra la sintaxis XML"
 
 #: C/data-manager-perspective.page:76(p)
 msgid ""
@@ -2508,10 +2559,10 @@ msgid ""
 "on a product (presumably the \"comments\" table will have a foreign key on "
 "the \"products\" table to reference it)."
 msgstr ""
-"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos y "
-"una tabla «comentarios» que lista todos los comentarios de los usuarios sobre "
-"un producto (presumiblemente, la tabla «comentarios» tendrá una clave ajena "
-"en la tabla «productos» para referenciarla)."
+"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos "
+"y una tabla «comentarios» que lista todos los comentarios de los usuarios "
+"sobre un producto (presumiblemente, la tabla «comentarios» tendrá una clave "
+"ajena en la tabla «productos» para referenciarla)."
 
 #: C/actions.page:19(p)
 #, fuzzy
@@ -2570,8 +2621,8 @@ msgid ""
 "\"List comments for product\""
 msgstr ""
 "En la perspectiva de ejecución de la consulta, seleccione todos los "
-"productos. Tenga en cuenta que hay dos acciones definidas: «añadir comentario "
-"sobre el producto» y «listar comentarios para el producto»"
+"productos. Tenga en cuenta que hay dos acciones definidas: «añadir "
+"comentario sobre el producto» y «listar comentarios para el producto»"
 
 #: C/actions.page:42(p)
 msgid "Now let's pop up the contextual menu:"
