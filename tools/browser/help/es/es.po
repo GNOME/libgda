@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Jorge González <jorgegonz@svn.gnome.org>, 2010.
 # 
+# 
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011., 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-06-23 18:19+0000\n"
-"PO-Revision-Date: 2011-06-25 13:17+0200\n"
+"POT-Creation-Date: 2011-06-25 11:20+0000\n"
+"PO-Revision-Date: 2011-06-28 10:36+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -53,9 +54,9 @@ msgid ""
 msgstr ""
 "Las conexiones LDAP son diferentes a las otras conexiones de tal modo que "
 "una base de datos LDAP almacena datos de manera jerárquica, en el DIT "
-"(«Directory Information Tree», Árbol de Información del Directorio), "
-"mientras que las otras bases de datos accesibles que usan la aplicación "
-"<app>gda-browser</app> son bases de datos relacionales."
+"(«Directory Information Tree», Árbol de Información del Directorio), mientras "
+"que las otras bases de datos accesibles que usan la aplicación <app>gda-"
+"browser</app> son bases de datos relacionales."
 
 #: C/ldap-connections.page:15(p)
 msgid ""
@@ -155,9 +156,9 @@ msgid ""
 "the LDAP entries from the top level LDAP entry of the connection, and have 3 "
 "columns: the DN, the \"cn\" and the \"jpegPhoto\"."
 msgstr ""
-"Por ejemplo, en la figura anterior, la tabla «usuarios» «contendrá» todas "
-"las entradas LDAP de la entrada LDAP de nivel superior de la conexión, y "
-"tiene 3 columnas: la DN, la «cn» y la «jpegPhoto»."
+"Por ejemplo, en la figura anterior, la tabla «usuarios» «contendrá» todas las "
+"entradas LDAP de la entrada LDAP de nivel superior de la conexión, y tiene 3 "
+"columnas: la DN, la «cn» y la «jpegPhoto»."
 
 #: C/ldap-connections.page:61(title)
 msgid "Attributes to columns mapping"
@@ -185,8 +186,8 @@ msgstr ""
 "Además, debido a que algunos atributos pueden terner varios valores, la "
 "construcción de la tabla manipula los atributos con varios valores de "
 "diferentes maneras, dependiendo de las opciones de cada atributo. Una opción "
-"se puede especificar añadiendo «::&lt;option&gt;» al nombre del atributo. "
-"Las opciones válidas son:"
+"se puede especificar añadiendo «::&lt;option&gt;» al nombre del atributo. Las "
+"opciones válidas son:"
 
 #: C/ldap-connections.page:74(p)
 msgid "\"NULL\" or \"0\": a NULL value will be returned for the attribute"
@@ -221,8 +222,8 @@ msgid ""
 "\"CONCAT\": the attributes' values are concatenated (with a newline char "
 "between each value)"
 msgstr ""
-"«CONCAT»: los valores de los atributos están concatenados (con un carácter "
-"de nueva línea entre cada valor)."
+"«CONCAT»: los valores de los atributos están concatenados (con un carácter de "
+"nueva línea entre cada valor)."
 
 #: C/ldap-connections.page:82(p)
 msgid ""
@@ -264,6 +265,8 @@ msgid ""
 "See the <link xref=\"sql-sqlite\">SQL understood by LDAP connections and "
 "virtual connections</link> section for more information."
 msgstr ""
+"Para obtener más información, consulte la sección <link xref=\"sql-sqlite"
+"\">SQL que entienden las conexiones LDAP y las conexiones virtuales</link>."
 
 #: C/ldap-connections.page:105(title)
 msgid "SQL extension to handle LDAP tables"
@@ -272,6 +275,8 @@ msgstr "Extensiones de SQL para manejar tablas de LDAP"
 #: C/ldap-connections.page:106(p)
 msgid "LDAP tables can be created using an extended set of SQL commands:"
 msgstr ""
+"Las tablas LDAP se pueden crear utilizando un conjunto extendido de comandos "
+"SQL:"
 
 #: C/ldap-connections.page:110(p)
 msgid ""
@@ -279,12 +284,17 @@ msgid ""
 "[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
 "filter&gt;']</code> to declare a new LDAP virtual table"
 msgstr ""
+"<code>CREATE LDAP TABLE &lt;nombre_tabla&gt; [BASE='&lt;dn_base&gt;'] "
+"[FILTER='&lt;filtro&gt;'] [ATTRIBUTES='&lt;filtro&gt;'] [SCOPE='&lt;"
+"filtro&gt;']</code> para declarar una tabla virtual LDAP nueva."
 
 #: C/ldap-connections.page:111(p)
 msgid ""
 "<code>DESCRIBE LDAP TABLE &lt;table_name&gt;</code> to show LDAP virtual "
 "table's definition"
 msgstr ""
+"<code>DESCRIBE LDAP TABLE &lt;nombre_tabla&gt;</code> para mostrar la "
+"definición de la tabla virtual LDAP."
 
 #: C/ldap-connections.page:112(p)
 msgid ""
@@ -293,6 +303,10 @@ msgid ""
 "filter&gt;']</code> to modify an LDAP virtual table's definition (only the "
 "specified part is actually modified)"
 msgstr ""
+"<code>ALTER LDAP TABLE &lt;nombre_tabla&gt; [BASE='&lt;dn_base&gt;'] "
+"[FILTER='&lt;filtro&gt;'] [ATTRIBUTES='&lt;filtro&gt;'] [SCOPE='&lt;"
+"filtro&gt;']</code> para modificar la definición de una tabla virtual LDAP "
+"(sólo se modifica la parte especificada)"
 
 #: C/ldap-connections.page:113(p)
 msgid ""
@@ -300,6 +314,9 @@ msgid ""
 "table. Note that the usual <code>DROP TABLE &lt;table_name&gt;</code> can "
 "also be used instead."
 msgstr ""
+"<code>DROP LDAP TABLE &lt;nombre_tabla&gt;</code> para eliminar una tabla "
+"virtual LDAP. Tenga en cuenta que el <code>DROP TABLE &lt;nombre_tabla&gt;</"
+"code> usual también se puede usar en reemplazo."
 
 #: C/ldap-connections.page:116(p)
 msgid "For example the following SQL code:"
@@ -317,6 +334,14 @@ msgid ""
 "      DROP LDAP TABLE users;\n"
 "    "
 msgstr ""
+"\n"
+"      CREATE LDAP TABLE usuarios FILTER='(objectClass=inetOrgPerson)'\n"
+"              ATTRIBUTES='cn,sn,givenName,seeAlso::*' SCOPE='subtree';\n"
+"      SELECT * FROM usuarios WHERE cn like '%juan%';\n"
+"      ALTER LDAP TABLE usuarios FILTER='(&amp;(objectClass=inetOrgPerson)(cn=*juan*))';\n"
+"      SELECT * FROM usuarios;\n"
+"      DROP LDAP TABLE usuarios;\n"
+"    "
 
 #: C/ldap-connections.page:127(p)
 msgid ""
@@ -324,6 +349,9 @@ msgid ""
 "the \"inetOrgPerson\" class with a CommonName (cn) containing the \"john\" "
 "string."
 msgstr ""
+"debería mostrar dos veces los mismos resultados, los cuales listan todas las "
+"entradas de la clase «inetOrgPerson» con un Nombre Común (cn) que contiene la "
+"cadena «juan»."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -352,13 +380,11 @@ msgstr ""
 "@@image: 'figures/ldap-search.png'; md5=81aa2f8a2770590d96fd9c980c578d62"
 
 #: C/ldap-browser-perspective.page:8(title)
-#, fuzzy
 #| msgid "The schema browser perspective"
 msgid "The LDAP browser perspective"
-msgstr "La perspectiva del visor de esquemas"
+msgstr "La perspectiva del visor LDAP"
 
 #: C/ldap-browser-perspective.page:9(p)
-#, fuzzy
 #| msgid ""
 #| "Use the schema browser perspective to understand the database's "
 #| "organisation (schema). To switch to this perspective, use the "
@@ -372,13 +398,14 @@ msgid ""
 "of course only available when the opened connection is an <link xref=\"ldap-"
 "connection\">LDAP connection</link>."
 msgstr ""
-"Use la perspectiva del visor de esquemas para comprender la organización de "
-"la base de datos (esquema). Para cambiar a esta perspectiva, use el menú "
-"<guiseq><gui>Perspectiva</gui><gui>Visor de esquemas</gui></guiseq> o el "
-"atajo <keyseq><key>Ctrl</key><key>B</key></keyseq>."
+"Use la perspectiva del visor LDAP ver y manipular los datos almacenados en "
+"un directorio LDAP. Para cambiar a esta perspectiva, use el menú "
+"<guiseq><gui>Perspectiva</gui><gui>Visor LDAP</gui></guiseq> o el atajo "
+"<keyseq><key>Ctrl</key><key>P</key></keyseq>. Por supuesto, esta perspectiva "
+"sólo está disponible cuando la conexión abierta es una <link xref=\"ldap-"
+"connection\">conexión LDAP</link>."
 
 #: C/ldap-browser-perspective.page:14(p)
-#, fuzzy
 #| msgid ""
 #| "The perspective is divided in two horizontal panes: the left pane for the "
 #| "user defined favorite statements, and the right pane being the action "
@@ -389,19 +416,19 @@ msgid ""
 "specific LDAP classes), and the right pane being the action area."
 msgstr ""
 "La perspectiva se divide en dos paneles horizontales: el panel de la "
-"izquierda para las declaraciones favoritas del usuario, y el panel de la "
+"izquierda para las declaraciones favoritas del usuario (para mantener las "
+"referencias a entradas o clases específicas de LDAP), y el panel de la "
 "derecha que es el área de acción."
 
 #: C/ldap-browser-perspective.page:20(title)
 msgid "LDAP browser's entry tab"
-msgstr ""
+msgstr "Pestaña de entradas del visor LDAP"
 
 #: C/ldap-browser-perspective.page:21(desc)
 msgid "LDAP entries tab"
-msgstr ""
+msgstr "Pestaña de entradas LDAP"
 
 #: C/ldap-browser-perspective.page:25(p)
-#, fuzzy
 #| msgid ""
 #| "The left part of the perspective lists the favorite database objects or "
 #| "diagrams. Double clicking on a favorite opens its properties in the right "
@@ -412,9 +439,10 @@ msgid ""
 "that the LDAP entries favorites will always appear before the classes "
 "favorites."
 msgstr ""
-"La parte izquierda de la perspectiva lista los objetos de la base de datos "
-"favoritos o los diagramas. Una doble pulsación sobre un favorito abre sus "
-"propiedades en el panel derecho."
+"La parte izquierda de la perspectiva lista las clases o las entradas LDAP "
+"favoritas. Una doble pulsación sobre un favorito abre sus propiedades en el "
+"panel derecho. Tenga en cuenta que las entradas LDAP favoritas aparecerán "
+"siempre antes que las clases favoritas."
 
 #: C/ldap-browser-perspective.page:31(p)
 #: C/schema-browser-perspective.page:29(p)
@@ -430,6 +458,13 @@ msgid ""
 "the children of each entry are only fetched when necessary to avoid "
 "unnecessary requests to the LDAP server."
 msgstr ""
+"pestañas para explorar el DIT («Directory Information Tree», Árbol de "
+"Información del Directorio) del LDAP: cuando se selecciona una entrada del "
+"árbol, se muestran sus atributos (sólo se muestran los atributos que tienen "
+"valores, se ocultan los atributos sin valor), y siempre se muestra primero "
+"el DN (Nombre Distintivo) de la entrada. Además, tenga en cuenta que los "
+"hijos de cada entrada sólo se buscan cuando es necesario para evitar "
+"solicitudes innecesarias al servidor LDAP."
 
 #: C/ldap-browser-perspective.page:39(p)
 msgid ""
@@ -437,6 +472,9 @@ msgid ""
 "all the information regarding the class is displayed (description, OID, "
 "type, ...)"
 msgstr ""
+"pestañas para explorar las clases del LDAP, consulte la figura de más abajo. "
+"Cuando se selecciona una clase, se muestra toda la información referente a "
+"la clase (descripción, OID, tipo, ...)"
 
 #: C/ldap-browser-perspective.page:41(p)
 msgid ""
@@ -444,22 +482,26 @@ msgid ""
 "can be saved as a virtual table, see the <link xref=\"ldap-connection#ldap-"
 "table-mapping\">LDAP table's mapping</link>."
 msgstr ""
+"pestañas para realizar búsquedas LDAP, consulte la figura de más abajo. Una "
+"definición de búsqueda LDAP se puede guardar como una tabla virtual, "
+"consulte el <link xref=\"ldap-connection#ldap-table-mapping\">mapeado de la "
+"tabla LDAP</link>."
 
 #: C/ldap-browser-perspective.page:45(title)
 msgid "LDAP browser's classes tab"
-msgstr ""
+msgstr "pestaña de clases del visor LDAP"
 
 #: C/ldap-browser-perspective.page:46(desc)
 msgid "LDAP classes tab"
-msgstr ""
+msgstr "pestaña de clases LDAP"
 
 #: C/ldap-browser-perspective.page:50(title)
 msgid "LDAP browser's search tab"
-msgstr ""
+msgstr "pestaña de búsqueda del visor LDAP"
 
 #: C/ldap-browser-perspective.page:51(desc)
 msgid "LDAP search tab"
-msgstr ""
+msgstr "pestaña de búsqueda LDAP"
 
 #: C/ldap-browser-perspective.page:54(p)
 msgid ""
@@ -469,6 +511,12 @@ msgid ""
 "entries tab, clicking on the \"inetOrgPerson\" will open a new \"LDAP classes"
 "\" tab and display the information about that class."
 msgstr ""
+"Los enlaces en estas pestañas (que se identifican por tener texto azul y "
+"subrayado) abren una nueva pestaña, o utilizan la primera pestaña junto a la "
+"pestaña actual para mostrar la información del enlace seleccionado. Por "
+"ejemplo, en la figura anterior en la que se ilustra una pestaña de entradas "
+"LDAP, al pulsar en «inetOrgPerson» se abrirá una pestaña de «clases LDAP» y se "
+"mostrará la información sobre esa clase."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -783,6 +831,11 @@ msgid ""
 "define database objects (outside of the extended SQL presented next "
 "section), they will be lost the next time the virtual connection is opened."
 msgstr ""
+"Puede usar el SQL que entiende <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> en cualquier conexión LDAP. Tenga en cuenta, sin embargo, "
+"que si define los objetos de base de datos (fuera del SQL extendido que se "
+"presenta en la siguiente sección), se perderán la próxima vez que se abra la "
+"conexión LDAP."
 
 #: C/variables.page:9(title)
 msgid "Variables in SQL code"
@@ -1454,7 +1507,6 @@ msgstr ""
 "posible ejecutar comandos en varias conexiones al mismo tiempo)."
 
 #: C/index.page:19(p)
-#, fuzzy
 #| msgid ""
 #| "As <app>gda-browser</app> uses the <app>libgda</app> library, it can open "
 #| "connections to databases for which a database driver (provider) exists in "
@@ -1479,13 +1531,14 @@ msgid ""
 msgstr ""
 "Ya que <app>gda-browser</app> usa la biblioteca <app>libgda</app> puede "
 "abrir conexiones a bases de datos cuyo controlador (proveedor) exista en "
-"<app>libgda</app> (por el momento, <link href=\"http://www.oracle.com"
-"\">Oracle</link>, <link href=\"http://www.mysql.org\">MySQL</link>, <link "
-"href=\"http://www.postgresql.org/\">PostgreSQL</link>, <link href=\"http://"
-"www.sqlite.org\">SQLite</link>, MS Access (a través de la biblioteca <link "
-"href=\"http://sourceforge.net/projects/mdbtools/\">MDBTools</link>) y <link "
-"href=\"http://java.sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> "
-"están soportadas)."
+"<app>libgda</app> (por el momento están soportadas, <link href=\"http://www."
+"oracle.com\">Oracle</link>, <link href=\"http://www.mysql.org\">MySQL</"
+"link>, <link href=\"http://www.postgresql.org/\">PostgreSQL</link>, <link "
+"href=\"http://www.sqlite.org\">SQLite</link>, MS Access (a traés de la "
+"bilbioteca <link href=\"http://sourceforge.net/projects/mdbtools/"
+"\">MDBTools</link>), <link href=\"http://en.wikipedia.org/wiki/LDAP\">LDAP</"
+"link> and <link href=\"http://java.sun.com/docs/books/tutorial/jdbc/index."
+"html\">JDBC</link>)."
 
 #: C/index.page:29(title)
 msgid "Presentation"
@@ -1525,8 +1578,7 @@ msgstr "Una ventana de conexión"
 msgid ""
 "Window opened for the 'c1' connection (and the Schema browser perspective)"
 msgstr ""
-"Ventana abierta para la conexión «c1» (y la perspectiva del visor de "
-"esquemas)"
+"Ventana abierta para la conexión «c1» (y la perspectiva del visor de esquemas)"
 
 #: C/general-ui.page:21(p)
 msgid ""
@@ -1669,6 +1721,9 @@ msgid ""
 "hierarchical data in the LDAP tree, see the <link xref=\"ldap-browser-"
 "perspective\">LDAP browser perspective</link>"
 msgstr ""
+"para las <link xref=\"ldap-connection\">conexiones LDAP</link>, manejar los "
+"datos jerárquicos en el árbol LDAP, consulte la <link xref=\"ldap-browser-"
+"perspective\">perspectiva del visor LDAP</link>"
 
 #: C/features.page:45(p)
 msgid "See also the section about <link xref=\"actions\">actions</link>"
@@ -1997,8 +2052,8 @@ msgid ""
 "\"id\" to specify a data source string ID, used when linking data sources "
 "one to another;"
 msgstr ""
-"«id» para especificar el ID de cadena de una fuente de datos, usado cuando "
-"se enlazan unas fuentes de datos con otras;"
+"«id» para especificar el ID de cadena de una fuente de datos, usado cuando se "
+"enlazan unas fuentes de datos con otras;"
 
 #: C/data-manager-xml-syntax.page:16(p)
 msgid "\"title\" to specify a title."
@@ -2431,8 +2486,8 @@ msgid ""
 msgstr ""
 "Editar fuentes de datos en la perspectiva del gestor de datos, usando la "
 "interfaz predeterminada: se definen dos fuentes de datos que listan los "
-"contenidos de las tablas «clientes» y «pedidos». La configuración es la "
-"misma que la de la figura anterior que muestra la sintaxis XML"
+"contenidos de las tablas «clientes» y «pedidos». La configuración es la misma "
+"que la de la figura anterior que muestra la sintaxis XML"
 
 #: C/data-manager-perspective.page:76(p)
 msgid ""
@@ -2559,13 +2614,12 @@ msgid ""
 "on a product (presumably the \"comments\" table will have a foreign key on "
 "the \"products\" table to reference it)."
 msgstr ""
-"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos "
-"y una tabla «comentarios» que lista todos los comentarios de los usuarios "
-"sobre un producto (presumiblemente, la tabla «comentarios» tendrá una clave "
-"ajena en la tabla «productos» para referenciarla)."
+"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos y "
+"una tabla «comentarios» que lista todos los comentarios de los usuarios sobre "
+"un producto (presumiblemente, la tabla «comentarios» tendrá una clave ajena "
+"en la tabla «productos» para referenciarla)."
 
 #: C/actions.page:19(p)
-#, fuzzy
 #| msgid ""
 #| "An action can be defined to show all the entries in the \"comments\" "
 #| "table provided the key is defining a product. Then anytime a product is "
@@ -2621,8 +2675,8 @@ msgid ""
 "\"List comments for product\""
 msgstr ""
 "En la perspectiva de ejecución de la consulta, seleccione todos los "
-"productos. Tenga en cuenta que hay dos acciones definidas: «añadir "
-"comentario sobre el producto» y «listar comentarios para el producto»"
+"productos. Tenga en cuenta que hay dos acciones definidas: «añadir comentario "
+"sobre el producto» y «listar comentarios para el producto»"
 
 #: C/actions.page:42(p)
 msgid "Now let's pop up the contextual menu:"
