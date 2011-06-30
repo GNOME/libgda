@@ -25,6 +25,9 @@
 	<listitem><para>if you used <link linkend="g-value-init">g_value_init()</link> on a
 	value of type GDA_TYPE_NULL, then you'll have to eight clear the value first, or replace
 	that call with a call to <link linkend="gda-value-reset-with-type">gda_value_reset_with_type()</link></para></listitem>
+	<listitem><para>the <link linkend="gda-g-type-from-string">gda_g_type_from_string()</link> function
+	now returns G_TYPE_INVALID if it does not know how to interpret the argument, so testing the return
+	value now also involves testing for the G_TYPE_INVALID value.</para></listitem>
 	<listitem><para>creating a GValue using <link linkend="g-new0">g_new0()</link> resulted
 	in a GDA_TYPE_NULL value, which is not longer the case; the value needs to be initialized
 	with a call to <link linkend="g-value-init">g_value_init()</link></para></listitem>

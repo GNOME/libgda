@@ -997,6 +997,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			cvalue = gda_data_model_get_value_at (model, 2, i, error);
 			if (!cvalue) goto onerror;
 			tcol->gtype = gda_g_type_from_string (g_value_get_string (cvalue));
+			if (tcol->gtype == G_TYPE_INVALID)
+				tcol->gtype = GDA_TYPE_NULL;
 
 			cvalue = gda_data_model_get_value_at (model, 3, i, error);
 			if (!cvalue) goto onerror;

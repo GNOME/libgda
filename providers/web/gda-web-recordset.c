@@ -266,6 +266,8 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 						GType type;
 						
 						type = gda_g_type_from_string ((gchar*) prop);
+						if (type == G_TYPE_INVALID)
+							type = GDA_TYPE_NULL;
 						_GDA_PSTMT (ps)->types [i] = type;
 						gda_column_set_g_type (column, type);
 						xmlFree (prop);

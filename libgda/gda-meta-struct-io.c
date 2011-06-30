@@ -259,6 +259,8 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 			tcol->gtype = ctype ? gda_g_type_from_string ((gchar *) ctype) : G_TYPE_STRING;
 			if (ctype)
 				xmlFree (ctype);
+			if (tcol->gtype == G_TYPE_INVALID)
+				tcol->gtype = GDA_TYPE_NULL;
 			tcol->pkey = pkey;
 			tcol->nullok = nullok;
 			if (pkey) 

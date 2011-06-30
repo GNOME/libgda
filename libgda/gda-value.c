@@ -205,8 +205,10 @@ set_from_string (GValue *value, const gchar *as_string)
 		retval = TRUE;
 	}
 	else if (type == G_TYPE_GTYPE) {
-		if (gda_g_type_from_string (as_string) != 0) {
-			g_value_set_gtype (value, gda_g_type_from_string (as_string));
+		GType gt;
+		gt = gda_g_type_from_string (as_string);
+		if (gt != G_TYPE_INVALID) {
+			g_value_set_gtype (value, gt);
 			retval = TRUE;
 		}
 	}
@@ -1330,7 +1332,7 @@ gda_value_new_from_xml (const xmlNodePtr node)
 		return NULL;
 
 	value = g_new0 (GValue, 1);
-	prop = xmlGetProp (node, (xmlChar*)"gdatype");
+	prop = xmlGetProp (node, (xmlChar*) "gdatype");
 	if (prop && !gda_value_set_from_string (value,
 						(gchar*)xmlNodeGetContent (node),
 						gda_g_type_from_string ((gchar*) prop))) {

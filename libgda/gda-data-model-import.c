@@ -1261,6 +1261,8 @@ init_xml_import (GdaDataModelImport *model)
 			if (str) {
 				spec->gdatype = gda_g_type_from_string (str);
 				xmlFree (str);
+				if (spec->gdatype == G_TYPE_INVALID)
+					spec->gdatype = GDA_TYPE_NULL;
 			}
 			else {
 				add_error (model, _("No \"gdatype\" attribute specified in <gda_array_field>"));
@@ -1584,6 +1586,8 @@ init_node_import (GdaDataModelImport *model)
 			if (str) {
 				spec->gdatype = gda_g_type_from_string (str);
 				xmlFree (str);
+				if (spec->gdatype == G_TYPE_INVALID)
+					spec->gdatype = GDA_TYPE_NULL;
 			}
 			else {
 				add_error (model, _("No \"gdatype\" attribute specified in <gda_array_field>"));

@@ -1487,6 +1487,8 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         GdaSqlParamSpec *pspec = g_new0 (GdaSqlParamSpec, 1);
                         GdaSqlExpr *expr;
                         ptype = ctype ? gda_g_type_from_string ((gchar *) ctype) : G_TYPE_STRING;
+			if (ptype == G_TYPE_INVALID)
+				ptype = GDA_TYPE_NULL;
                         pspec->name = g_strdup_printf ("+%d", colindex);
                         pspec->g_type = ptype;
                         pspec->nullok = nullok;

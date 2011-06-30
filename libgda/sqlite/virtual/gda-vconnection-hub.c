@@ -352,6 +352,8 @@ compute_column_specs (GdaVconnectionDataModelSpec *spec)
 
 		lspec->col_names[i] = g_value_dup_string (v0);
 		lspec->col_gtypes[i] = gda_g_type_from_string (g_value_get_string (v2));
+		if (lspec->col_gtypes[i] == G_TYPE_INVALID)
+			lspec->col_gtypes[i] = GDA_TYPE_NULL;
 		lspec->col_dtypes[i] = g_value_dup_string (v1);
 	}
 	g_object_unref (model);

@@ -113,6 +113,8 @@ gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
 
 		pspec->g_type = gda_g_type_from_string (tmp);
 		g_free (tmp);
+		if (pspec->g_type == G_TYPE_INVALID)
+			pspec->g_type = GDA_TYPE_NULL;
 	}
 }
 
@@ -154,6 +156,8 @@ gda_sql_param_spec_new (GValue *value)
 				break;
 			case 1:
 				pspec->g_type = gda_g_type_from_string (str);
+				if (pspec->g_type == G_TYPE_INVALID)
+					pspec->g_type = GDA_TYPE_NULL;
 				break;
 			case 2:
 				pspec->nullok = (*str == 'n') || (*str == 'N') ? TRUE : FALSE;

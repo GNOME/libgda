@@ -904,9 +904,12 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 			gdatype = xmlGetProp (cur, BAD_CAST "gdatype");
 
 			if (!holder) {
+				GType gt;
+				gt = gdatype ? gda_g_type_from_string ((gchar *) gdatype) : G_TYPE_STRING;
+				if (gt == G_TYPE_INVALID)
+					gt = GDA_TYPE_NULL;
 				holder = (GdaHolder*) (g_object_new (GDA_TYPE_HOLDER,
-								     "g-type", 
-								     gdatype ? gda_g_type_from_string ((gchar *) gdatype) : G_TYPE_STRING,
+								     "g-type", gt,
 								     NULL));
 				holders = g_slist_append (holders, holder);
 			}

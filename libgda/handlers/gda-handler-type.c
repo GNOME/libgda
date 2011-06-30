@@ -234,8 +234,10 @@ gda_handler_type_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, G_
 			str[i-1] = 0;
 			type = gda_g_type_from_string (str+1);
 			g_free (str);
-			value = g_value_init (g_new0 (GValue, 1), G_TYPE_GTYPE);
-			g_value_set_gtype (value, type);
+			if (type != G_TYPE_INVALID) {
+				value = g_value_init (g_new0 (GValue, 1), G_TYPE_GTYPE);
+				g_value_set_gtype (value, type);
+			}
 		}
 	}
 	else
@@ -247,7 +249,7 @@ static GValue *
 gda_handler_type_get_value_from_str (GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
 {
 	GdaHandlerType *hdl;
-	GValue *value;
+	GValue *value = NULL;
 	GType vtype;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TYPE (iface), NULL);
@@ -255,8 +257,10 @@ gda_handler_type_get_value_from_str (GdaDataHandler *iface, const gchar *str, G_
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	vtype = gda_g_type_from_string (str);
-	value = g_value_init (g_new0 (GValue, 1), G_TYPE_GTYPE);
-	g_value_set_gtype (value, vtype);
+	if (vtype != G_TYPE_INVALID) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_GTYPE);
+		g_value_set_gtype (value, vtype);
+	}
 
 	return value;
 }

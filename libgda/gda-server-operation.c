@@ -943,12 +943,15 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 		else if (!strcmp ((gchar*)node->name, "parameter")) {
 			GdaHolder *param = NULL;
 			xmlChar *gdatype;
+			GType gt;
 
 			/* find data type and create GdaHolder */
 			gdatype = xmlGetProp (node, BAD_CAST "gdatype");
+			gt = gdatype ? gda_g_type_from_string ((gchar*) gdatype) : G_TYPE_STRING;
+			if (gt == G_TYPE_INVALID)
+				gt = GDA_TYPE_NULL;
 			param = GDA_HOLDER (g_object_new (GDA_TYPE_HOLDER,
-							  "g-type", 
-							  gdatype ? gda_g_type_from_string ((gchar*) gdatype) : G_TYPE_STRING,
+							  "g-type", gt,
 							  NULL));
 			if (gdatype)
 				xmlFree (gdatype);

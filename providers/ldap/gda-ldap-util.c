@@ -816,13 +816,13 @@ gda_ldap_get_g_type (LdapConnectionData *cdata, const gchar *attribute_name, con
 	GType coltype = GDA_TYPE_NULL;
 	if (specified_gtype)
 		coltype = gda_g_type_from_string (specified_gtype);
-	if (coltype == GDA_TYPE_NULL) {
+	if ((coltype == G_TYPE_INVALID) || (coltype == GDA_TYPE_NULL)) {
 		LdapAttribute *lat;
 		lat = gda_ldap_get_attr_info (cdata, attribute_name);
 		if (lat)
 			coltype = lat->type->gtype;
 	}
-	if (coltype == GDA_TYPE_NULL)
+	if ((coltype == G_TYPE_INVALID) || (coltype == GDA_TYPE_NULL))
 		coltype = G_TYPE_STRING;
 	return coltype;
 }
