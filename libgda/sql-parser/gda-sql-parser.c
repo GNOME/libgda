@@ -940,6 +940,7 @@ keywordCode (GdaSqlParser *parser, gchar *str, gint len)
 		g_hash_table_insert (keywords, "full", GINT_TO_POINTER (L_FULL));
 		g_hash_table_insert (keywords, "group", GINT_TO_POINTER (L_GROUP));
 		g_hash_table_insert (keywords, "having", GINT_TO_POINTER (L_HAVING));
+		g_hash_table_insert (keywords, "ilike", GINT_TO_POINTER (L_ILIKE));
 		g_hash_table_insert (keywords, "immediate", GINT_TO_POINTER (L_IMMEDIATE));
 		g_hash_table_insert (keywords, "in", GINT_TO_POINTER (L_IN));
 		g_hash_table_insert (keywords, "inner", GINT_TO_POINTER (L_INNER));

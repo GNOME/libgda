@@ -1039,6 +1039,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
 		case GDA_SQL_OPERATOR_TYPE_EQ:
 		case GDA_SQL_OPERATOR_TYPE_IS:
 		case GDA_SQL_OPERATOR_TYPE_LIKE:
+		case GDA_SQL_OPERATOR_TYPE_ILIKE:
 		case GDA_SQL_OPERATOR_TYPE_GT:
 		case GDA_SQL_OPERATOR_TYPE_LT:
 		case GDA_SQL_OPERATOR_TYPE_GEQ:

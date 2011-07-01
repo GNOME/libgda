@@ -729,6 +729,11 @@ gda_sql_operation_operator_to_string (GdaSqlOperatorType op)
 		return "NOT IN";
 	case GDA_SQL_OPERATOR_TYPE_LIKE:
 		return "LIKE";
+        /* ILIKE is a PostgreSQL extension for case-insensitive comparison.
+         * See http://developer.postgresql.org/pgdocs/postgres/functions-matching.html
+         */ 
+	case GDA_SQL_OPERATOR_TYPE_ILIKE:
+		return "ILIKE";
 	case GDA_SQL_OPERATOR_TYPE_BETWEEN:
 		return "BETWEEN";
 	case GDA_SQL_OPERATOR_TYPE_GT:
@@ -800,6 +805,8 @@ gda_sql_operation_operator_from_string (const gchar *op)
 			return GDA_SQL_OPERATOR_TYPE_IS;
 		else if (op[1] == 'N')
 			return GDA_SQL_OPERATOR_TYPE_IN;
+		else if (op[1] == 'L')
+			return GDA_SQL_OPERATOR_TYPE_ILIKE;
 		break;
 	case 'L':
 		return GDA_SQL_OPERATOR_TYPE_LIKE;
