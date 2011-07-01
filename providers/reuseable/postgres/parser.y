@@ -86,6 +86,8 @@ sql_operation_string_to_operator (const gchar *op)
 			return GDA_SQL_OPERATOR_TYPE_IS;
 		else if (op[1] == 'N')
 			return GDA_SQL_OPERATOR_TYPE_IN;
+		else if (op[1] == 'I')
+			return GDA_SQL_OPERATOR_TYPE_ILIKE;
 		break;
 	case 'L':
 		return GDA_SQL_OPERATOR_TYPE_LIKE;
@@ -237,7 +239,7 @@ compose_multiple_compounds (GdaSqlStatementCompoundType ctype, GdaSqlStatement *
 %fallback ID
   ABORT AFTER ANALYZE ASC ATTACH BEFORE BEGIN CASCADE CAST CONFLICT
   DATABASE DEFERRED DESC DETACH EACH END EXCLUSIVE EXPLAIN FAIL FOR
-  IGNORE IMMEDIATE INITIALLY INSTEAD LIKE MATCH PLAN
+  IGNORE IMMEDIATE INITIALLY INSTEAD LIKE ILIKE MATCH PLAN
   QUERY KEY OF OFFSET PRAGMA RAISE REPLACE RESTRICT ROW
   TEMP TRIGGER VACUUM VIEW VIRTUAL
   REINDEX RENAME CTIME_KW IF
@@ -251,7 +253,7 @@ compose_multiple_compounds (GdaSqlStatementCompoundType ctype, GdaSqlStatement *
 %left OR.
 %left AND.
 %right NOT.
-%left IS MATCH LIKE IN ISNULL NOTNULL DIFF EQ.
+%left IS MATCH LIKE ILIKE IN ISNULL NOTNULL DIFF EQ.
 %left BETWEEN.
 %left GT LEQ LT GEQ.
 %left REGEXP REGEXP_CI NOT_REGEXP NOT_REGEXP_CI.
@@ -821,6 +823,7 @@ expr(C) ::= expr(L) CONCAT expr(R). {C = compose_multiple_expr (GDA_SQL_OPERATOR
 expr(C) ::= expr(L) GT|LEQ|GEQ|LT(O) expr(R). {C = create_two_expr (string_to_op_type (O), L, R);}
 expr(C) ::= expr(L) DIFF|EQ(O) expr(R). {C = create_two_expr (string_to_op_type (O), L, R);}
 expr(C) ::= expr(L) LIKE expr(R). {C = create_two_expr (GDA_SQL_OPERATOR_TYPE_LIKE, L, R);}
+expr(C) ::= expr(L) ILIKE expr(R). {C = create_two_expr (GDA_SQL_OPERATOR_TYPE_ILIKE, L, R);}
 expr(C) ::= expr(L) REGEXP|REGEXP_CI|NOT_REGEXP|NOT_REGEXP_CI|SIMILAR(O) expr(R). {C = create_two_expr (string_to_op_type (O), L, R);}
 expr(C) ::= expr(L) BETWEEN expr(R) AND expr(E). {GdaSqlOperation *cond;
 						  C = gda_sql_expr_new (NULL);
