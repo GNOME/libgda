@@ -6,7 +6,6 @@
 # JulioBorjaBarra <juboba@gmail.com>, 2010.
 # Jorge González <jorgegonz@svn.gnome.org>, 200, 2010, 2011.
 # 
-# 
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011., 2011.
 #
 #: ../libgda/gda-connection.c:391
@@ -15,8 +14,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-07-01 08:05+0000\n"
-"PO-Revision-Date: 2011-07-01 16:26+0200\n"
+"POT-Creation-Date: 2011-06-28 19:45+0000\n"
+"PO-Revision-Date: 2011-06-30 15:43+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -112,13 +111,13 @@ msgstr "No se pudo ejecutar el visor"
 #: ../control-center/dsn-properties-dialog.c:285
 #: ../libgda/gda-connection.c:1556 ../libgda/gda-data-model.c:2131
 #: ../libgda/gda-data-model.c:2139 ../libgda/gda-data-model-dir.c:387
-#: ../libgda/gda-data-model-import.c:1688
-#: ../libgda/gda-data-model-import.c:1986
-#: ../libgda/gda-data-model-import.c:2064 ../libgda/gda-data-select.c:376
+#: ../libgda/gda-data-model-import.c:1684
+#: ../libgda/gda-data-model-import.c:1982
+#: ../libgda/gda-data-model-import.c:2060 ../libgda/gda-data-select.c:376
 #: ../libgda/gda-data-select.c:2105 ../libgda/gda-data-select.c:2114
 #: ../libgda/gda-data-select.c:2124 ../libgda/gda-data-select.c:3556
 #: ../libgda/gda-holder.c:492 ../libgda/gda-holder.c:1744
-#: ../libgda/gda-server-operation.c:633 ../libgda/gda-server-operation.c:1037
+#: ../libgda/gda-server-operation.c:633 ../libgda/gda-server-operation.c:1034
 #: ../libgda/gda-set.c:567 ../libgda/gda-tree-mgr-select.c:187
 #: ../libgda/gda-tree-mgr-select.c:222
 #: ../libgda/sqlite/gda-sqlite-provider.c:2464
@@ -1255,76 +1254,76 @@ msgstr "Falló al leer el nodo en el archivo XML"
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "Se esperaba un nodo <gda_array> en el archivo XML, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1268
-#: ../libgda/gda-data-model-import.c:1593
+#: ../libgda/gda-data-model-import.c:1266
+#: ../libgda/gda-data-model-import.c:1589
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "No hay un atributo \"gdatype\" especificado en <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1319
+#: ../libgda/gda-data-model-import.c:1317
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Se esperaba <gda_array_field> en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1353
+#: ../libgda/gda-data-model-import.c:1351
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "Se esperaba <gda_array_data> en <gda_array>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1355
+#: ../libgda/gda-data-model-import.c:1353
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Se esperaba <gda_array_data>, en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1367
+#: ../libgda/gda-data-model-import.c:1365
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "No se puede leer el contenido del nodo <gda_array_data>"
 
-#: ../libgda/gda-data-model-import.c:1416
+#: ../libgda/gda-data-model-import.c:1414
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr "Se esperaba <gda_array_row> en <gda_array_data>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1440
+#: ../libgda/gda-data-model-import.c:1438
 msgid "Row has too many values (which are ignored)"
 msgstr "La fila tiene demasiados valores (los cuales se ignoran)"
 
-#: ../libgda/gda-data-model-import.c:1487
+#: ../libgda/gda-data-model-import.c:1485
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "No se puede convertir '%s' a un valor de tipo %s"
 
-#: ../libgda/gda-data-model-import.c:1560
+#: ../libgda/gda-data-model-import.c:1558
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Se esperaba <gda_array> pero se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1644
+#: ../libgda/gda-data-model-import.c:1640
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr ""
 "No hay especificado ningún <gda_array_field> especificado en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1823
+#: ../libgda/gda-data-model-import.c:1819
 msgid "Data model does not support random access"
 msgstr "El modelo de datos no soporta acceso aleatorio"
 
-#: ../libgda/gda-data-model-import.c:1880
+#: ../libgda/gda-data-model-import.c:1876
 #, c-format
 msgid "Row at line %d does not have enough values"
 msgstr "La fila en la línea %d no tiene suficientes valores"
 
-#: ../libgda/gda-data-model-import.c:1885
+#: ../libgda/gda-data-model-import.c:1881
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr ""
 "La fila en la línea %d no tiene valores suficientes, se completaron con "
 "valores NULL"
 
-#: ../libgda/gda-data-model-import.c:1910
+#: ../libgda/gda-data-model-import.c:1906
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr ""
 "La fila en la línea %d no tiene suficientes valores (los cuales se ignoran)"
 
-#: ../libgda/gda-data-model-import.c:1985
-#: ../libgda/gda-data-model-import.c:2063
+#: ../libgda/gda-data-model-import.c:1981
+#: ../libgda/gda-data-model-import.c:2059
 #, c-format
 msgid "Could not set iterator's value: %s"
 msgstr "No se puede establecer el valor del iterador: %s"
@@ -1713,7 +1712,7 @@ msgstr ""
 "usable"
 
 #: ../libgda/gda-meta-store.c:919 ../libgda/gda-meta-store.c:928
-#: ../libgda/gda-meta-store.c:2048 ../libgda/gda-meta-store.c:2057
+#: ../libgda/gda-meta-store.c:2046 ../libgda/gda-meta-store.c:2055
 msgid "Could not set the internal schema's version"
 msgstr "No se pudo establecer la versión interna del esquema"
 
@@ -1743,106 +1742,106 @@ msgstr ""
 msgid "Missing table name from <table> node"
 msgstr "Falta el nombre de la tabla del nodo <table>"
 
-#: ../libgda/gda-meta-store.c:1573
+#: ../libgda/gda-meta-store.c:1571
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
 msgstr "La columna «%s» ya existe y tiene características diferentes"
 
-#: ../libgda/gda-meta-store.c:1607
+#: ../libgda/gda-meta-store.c:1605
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr ""
 "Falta el nombre de la tabla referenciada por las claves externas (para la "
 "tabla «%s»)"
 
-#: ../libgda/gda-meta-store.c:1660
+#: ../libgda/gda-meta-store.c:1658
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "Falta el nombre de la columna de claves externas (para la tabla «%s»)"
 
-#: ../libgda/gda-meta-store.c:1671
+#: ../libgda/gda-meta-store.c:1669
 #, c-format
 msgid "Column '%s' not found in table '%s'"
 msgstr "No se encontró la columna «%s» en la tabla «%s»"
 
-#: ../libgda/gda-meta-store.c:1925 ../libgda/gda-meta-struct.c:1313
+#: ../libgda/gda-meta-store.c:1923 ../libgda/gda-meta-struct.c:1311
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "La clave de la columna externa «%s» no se encontró en la tabla «%s»"
 
-#: ../libgda/gda-meta-store.c:2105
+#: ../libgda/gda-meta-store.c:2103
 #, c-format
 msgid "Schema description does not contain the object '%s', check installation"
 msgstr ""
 "La descripción del esquema no contiene el objeto «%s», compruebe la "
 "instalación"
 
-#: ../libgda/gda-meta-store.c:2197 ../libgda/gda-meta-store.c:2208
-#: ../libgda/gda-meta-store.c:2240
+#: ../libgda/gda-meta-store.c:2195 ../libgda/gda-meta-store.c:2206
+#: ../libgda/gda-meta-store.c:2238
 msgid "Could not get the internal schema's version"
 msgstr "No se pudo obtener la versión interna del esquema"
 
-#: ../libgda/gda-meta-store.c:2364 ../libgda/gda-meta-store.c:2486
+#: ../libgda/gda-meta-store.c:2362 ../libgda/gda-meta-store.c:2484
 #: ../tools/gda-sql.c:1045
 msgid "More than one SQL statement"
 msgstr "Más de una declaración SQL"
 
-#: ../libgda/gda-meta-store.c:2393 ../libgda/gda-meta-store.c:2514
+#: ../libgda/gda-meta-store.c:2391 ../libgda/gda-meta-store.c:2512
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "El parámetro «%s» no está presente en la declaración"
 
-#: ../libgda/gda-meta-store.c:2410 ../libgda/gda-meta-store.c:2528
+#: ../libgda/gda-meta-store.c:2408 ../libgda/gda-meta-store.c:2526
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "No se estableció un valor para el parámetro «%s»"
 
-#: ../libgda/gda-meta-store.c:3105
+#: ../libgda/gda-meta-store.c:3103
 msgid "Data models should have the same number of columns"
 msgstr "El modelo de datos debería tener el mismo número de columnas"
 
-#: ../libgda/gda-meta-store.c:3166 ../libgda/gda-meta-store.c:4213
-#: ../libgda/gda-meta-store.c:4316
+#: ../libgda/gda-meta-store.c:3164 ../libgda/gda-meta-store.c:4211
+#: ../libgda/gda-meta-store.c:4314
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Objeto de la base de datos «%s» desconocido"
 
-#: ../libgda/gda-meta-store.c:3182
+#: ../libgda/gda-meta-store.c:3180
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "No se pudo establecer el valor para el parámetro «%s»"
 
-#: ../libgda/gda-meta-store.c:3211
+#: ../libgda/gda-meta-store.c:3209
 msgid "Could not create SELECT statement"
 msgstr "No se pudo crear la declaración SELECT"
 
-#: ../libgda/gda-meta-store.c:3226
+#: ../libgda/gda-meta-store.c:3224
 msgid "Could not create DELETE statement"
 msgstr "No se pudo crear la declaración DELETE"
 
-#: ../libgda/gda-meta-store.c:3276
+#: ../libgda/gda-meta-store.c:3274
 msgid "A transaction has already been started"
 msgstr "Ya se ha iniciado una transacción"
 
-#: ../libgda/gda-meta-store.c:3663
+#: ../libgda/gda-meta-store.c:3661
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "No se encontró el atributo «%s»"
 
-#: ../libgda/gda-meta-store.c:3666
+#: ../libgda/gda-meta-store.c:3664
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "El atributo «%s» tiene %d valor"
 msgstr[1] "El atributo «%s» tiene %d valor"
 
-#: ../libgda/gda-meta-store.c:3713
+#: ../libgda/gda-meta-store.c:3711
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 "Los atributos con nombres que empiezan por «_» están reservados para uso "
 "interno"
 
-#: ../libgda/gda-meta-store.c:3741
+#: ../libgda/gda-meta-store.c:3739
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1850,17 +1849,17 @@ msgstr ""
 "No se pudo iniciar una transacción porque ya hay una iniciada, esto podría "
 "llevar a problemas con los atributos de GdaMetaStore"
 
-#: ../libgda/gda-meta-store.c:3856
+#: ../libgda/gda-meta-store.c:3854
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "No se pudo analizar la descripción XML del objeto personalizado de la base "
 "de datos que añadir"
 
-#: ../libgda/gda-meta-store.c:3870
+#: ../libgda/gda-meta-store.c:3868
 msgid "Missing custom database object name"
 msgstr "Falta el nombre personalizado del objeto de la base de datos"
 
-#: ../libgda/gda-meta-store.c:3875
+#: ../libgda/gda-meta-store.c:3873
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1868,49 +1867,49 @@ msgstr ""
 "Los nombres personalizados de objetos de la base de datos que comienzan por "
 "«_» están reservados para uso interno"
 
-#: ../libgda/gda-meta-store.c:3973
+#: ../libgda/gda-meta-store.c:3971
 msgid "Another object with the same name already exists"
 msgstr "Ya existe un objeto con el mismo nombre"
 
-#: ../libgda/gda-meta-store.c:4075
+#: ../libgda/gda-meta-store.c:4073
 #, c-format
 msgid "Missing table name in meta data context"
 msgstr "Falta el nombre de la tabla en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4102
+#: ../libgda/gda-meta-store.c:4100
 #, c-format
 msgid "Missing column name in meta data context"
 msgstr "Falta el nombre de la columna en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4118
+#: ../libgda/gda-meta-store.c:4116
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Falta la condición en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4143
+#: ../libgda/gda-meta-store.c:4141
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Condición malformada en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4160
+#: ../libgda/gda-meta-store.c:4158
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Nombre de columna «%s» desconocido en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4182
+#: ../libgda/gda-meta-store.c:4180
 #, c-format
 msgid "Unknown table in meta data context"
 msgstr "Tabla desconocida en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4455 ../libgda/gda-meta-store.c:4485
-#: ../libgda/gda-meta-store.c:4674 ../libgda/gda-meta-store.c:4703
+#: ../libgda/gda-meta-store.c:4453 ../libgda/gda-meta-store.c:4483
+#: ../libgda/gda-meta-store.c:4672 ../libgda/gda-meta-store.c:4701
 #: ../libgda/gda-meta-struct.c:504 ../libgda/gda-meta-struct.c:519
 #: ../libgda/gda-meta-struct.c:536
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "No se pudo encontrar el objeto llamado «%s»"
 
-#: ../libgda/gda-meta-store.c:4553 ../libgda/gda-meta-store.c:4572
+#: ../libgda/gda-meta-store.c:4551 ../libgda/gda-meta-store.c:4570
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "No se pudo encontrar la columna «%s» en la tabla «%s»"
@@ -1945,12 +1944,12 @@ msgstr "No se encontró la vista %s.%s.%s en el objeto de meta almacenamiento"
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "No se encontró la tabla %s.%s.%s (o falta información de las columnas)"
 
-#: ../libgda/gda-meta-struct.c:1078
+#: ../libgda/gda-meta-struct.c:1076
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Error interno de GdaMetaStore: no se encontró la cadena %s"
 
-#: ../libgda/gda-meta-struct.c:1228
+#: ../libgda/gda-meta-struct.c:1226
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1959,11 +1958,11 @@ msgstr ""
 "Incoherencia en los metadatos de restricción de la clave externa para la "
 "tabla %s.%s.%s referenciando la tabla %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2549
+#: ../libgda/gda-meta-struct.c:2547
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Falta el nombre del objeto en la estructura GdaMetaDbObject"
 
-#: ../libgda/gda-meta-struct.c:2574
+#: ../libgda/gda-meta-struct.c:2572
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "El objeto de la base de datos «%s» ya existe"
@@ -1987,7 +1986,7 @@ msgid "Missing column name for table '%s'"
 msgstr "Falta el nombre de la columna para la tabla «%s»"
 
 #. FIXME
-#: ../libgda/gda-meta-struct-io.c:289
+#: ../libgda/gda-meta-struct-io.c:287
 #, c-format
 msgid "Missing foreign key's referenced table name for table '%s'"
 msgstr ""
@@ -1995,14 +1994,14 @@ msgstr ""
 "tabla «%s»"
 
 #. FIXME
-#: ../libgda/gda-meta-struct-io.c:300 ../libgda/gda-meta-struct-io.c:306
-#: ../libgda/gda-meta-struct-io.c:312
+#: ../libgda/gda-meta-struct-io.c:298 ../libgda/gda-meta-struct-io.c:304
+#: ../libgda/gda-meta-struct-io.c:310
 #, c-format
 msgid "Invalid referenced table name '%s'"
 msgstr "El nombre de ta tabla referenciada «%s» no es válido"
 
 #. FIXME
-#: ../libgda/gda-meta-struct-io.c:351
+#: ../libgda/gda-meta-struct-io.c:349
 #, c-format
 msgid "Missing foreign key's column name for table '%s'"
 msgstr "Falta el nombre de la columna de la clave externa para la tabla «%s»"
@@ -2017,7 +2016,7 @@ msgstr "GdaServerOperation: no se pudo encontrar el archivo «%s»"
 msgid "GdaServerOperation: could not load file '%s'"
 msgstr "GdaServerOperation: no se pudo cargar el archivo «%s»"
 
-#: ../libgda/gda-server-operation.c:632 ../libgda/gda-server-operation.c:1036
+#: ../libgda/gda-server-operation.c:632 ../libgda/gda-server-operation.c:1033
 #, c-format
 msgid "Could not load XML specifications: %s"
 msgstr "No se pudieron cargar las especificaciones: %s"
@@ -2049,7 +2048,7 @@ msgstr "GdaServerOperation: el archivo «%s» no se ajusta a DTD"
 msgid "GdaServerOperation specification does not conform to DTD\n"
 msgstr "La especificación GdaServerOperation no se ajusta a DTD \n"
 
-#: ../libgda/gda-server-operation.c:1265
+#: ../libgda/gda-server-operation.c:1262
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://bugzilla."
 "gnome.org/ for the \"libgda\" product"
@@ -2057,36 +2056,36 @@ msgstr ""
 "No existe el manejador GdaServerOperationType, por favor informe del error "
 "en http://bugzilla.gnome.org/ para el producto «libgda»"
 
-#: ../libgda/gda-server-operation.c:1499 ../libgda/gda-server-operation.c:1513
+#: ../libgda/gda-server-operation.c:1496 ../libgda/gda-server-operation.c:1510
 #, c-format
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Se esperaba la etiqueta <%s>, se obtuvo <%s>"
 
-#: ../libgda/gda-server-operation.c:1544 ../libgda/gda-server-operation.c:2260
+#: ../libgda/gda-server-operation.c:1541 ../libgda/gda-server-operation.c:2257
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 "Los valores de la lista de parámetros sólo se pueden establecer para "
 "parámetros individuales dentro de ella"
 
-#: ../libgda/gda-server-operation.c:1601
+#: ../libgda/gda-server-operation.c:1598
 msgid "Missing attribute named 'path'"
 msgstr "Falta el atributo llamado «path»"
 
-#: ../libgda/gda-server-operation.c:2450
+#: ../libgda/gda-server-operation.c:2447
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "Falta el valor requerido para «%s»"
 
-#: ../libgda/gda-server-operation.c:2678
+#: ../libgda/gda-server-operation.c:2675
 msgid "Unspecified table name"
 msgstr "Nombre de la tabla no especificado"
 
-#: ../libgda/gda-server-operation.c:2717
+#: ../libgda/gda-server-operation.c:2714
 msgid "Invalid type"
 msgstr "Tipo no válido"
 
-#: ../libgda/gda-server-operation.c:2811
+#: ../libgda/gda-server-operation.c:2808
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "El servidor de la base de datos no soporta la operación CREATE TABLE"
 
@@ -2133,20 +2132,20 @@ msgstr "Nodo raíz de las especificaciones != 'data-set-spec': «%s»"
 msgid "Missing node <parameters>: '%s'"
 msgstr "Faltan <parameters> del nodo: «%s»"
 
-#: ../libgda/gda-set.c:1047
+#: ../libgda/gda-set.c:1044
 #, c-format
 msgid "Data set does not allow modifications"
 msgstr "El conjunto de datos no permite modificaciones"
 
-#: ../libgda/gda-set.c:1312
+#: ../libgda/gda-set.c:1309
 msgid "GdaHolder needs to have an ID"
 msgstr "GdaGolder necesita tener un ID"
 
-#: ../libgda/gda-set.c:1425
+#: ../libgda/gda-set.c:1422
 msgid "One or more values are invalid"
 msgstr "Uno o más valores no son válidos"
 
-#: ../libgda/gda-set.c:1644 ../libgda/gda-set.c:1657
+#: ../libgda/gda-set.c:1641 ../libgda/gda-set.c:1654
 msgid ""
 "Replacing data model must have the same characteristics as the data model it "
 "replaces"
@@ -2292,9 +2291,10 @@ msgstr "Sin nombre"
 #: ../libgda/gda-tree-mgr-ldap.c:242
 #: ../tools/browser/ldap-browser/mgr-ldap-classes.c:186
 #: ../tools/browser/ldap-browser/mgr-ldap-classes.c:274
-#, c-format
+#, fuzzy, c-format
+#| msgid "No connection specified"
 msgid "No LDAP connection specified"
-msgstr "No se especificó una conexión LDAP"
+msgstr "No se especificó una conexión"
 
 #: ../libgda/gda-tree-mgr-schemas.c:310
 #, c-format
@@ -2798,21 +2798,21 @@ msgid "Unable to open BLOB"
 msgstr "No se puede abrir el BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:492
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:669
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:667
 #: ../providers/postgres/gda-postgres-recordset.c:638
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr "Fecha «%s» no válida (el formato debe ser AAAA-MM-DD)"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:506
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:685
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:683
 #: ../providers/postgres/gda-postgres-recordset.c:649
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Hora «%s» no válida (el formato debe ser HH:MM:SS[.ms])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:520
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:701
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:699
 #: ../providers/postgres/gda-postgres-recordset.c:691
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
@@ -2849,19 +2849,22 @@ msgid "Error recreating LDAP tables: %s"
 msgstr "Error al volver a crear las tablas LDAP: %s"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:772
-#, c-format
+#, fuzzy, c-format
+#| msgid "Can't declare virtual table (%s)"
 msgid "Can't remove non LDAP virtual table"
-msgstr "No se puede eliminar la tabla virtual no LDAP"
+msgstr "No se puede declarar la tabla virtual (%s)"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:819
-#, c-format
+#, fuzzy, c-format
+#| msgid "Can't declare virtual table (%s)"
 msgid "Can't describe non LDAP virtual table"
-msgstr "No se puede descibir la tabla virtual no LDAP"
+msgstr "No se puede declarar la tabla virtual (%s)"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:825
-#, c-format
+#, fuzzy, c-format
+#| msgid "Unknown part type"
 msgid "Unknown LDAP virtual table"
-msgstr "Tabla virtual LDAP desconocida"
+msgstr "Tipo de parte desconocido"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:371
 msgid "Table to remove not found"
@@ -2875,17 +2878,17 @@ msgstr "Se debe especificar el nombre de espacio"
 msgid "Connection was not represented in hub"
 msgstr "La conexión no estaba representada en el concentrador"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:370
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:368
 #, c-format
 msgid "Unable to get information about table '%s'"
 msgstr "No se pudo obtener la información acerca de la tabla «%s»"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:596
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:612
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:594
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:610
 msgid "Integer value is out of bounds"
 msgstr "El valor entero está fuera de los límites"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:652
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:650
 #, c-format
 msgid "Blob constraints are not handled in virtual table condition"
 msgstr ""
@@ -5325,8 +5328,10 @@ msgstr ""
 "proveedor JDBC no está disponible."
 
 #: ../providers/ldap/gda-ldap-provider.c:267
+#, fuzzy
+#| msgid "The connection string must contain the DB_NAME values"
 msgid "The connection string must contain the DB_NAME value"
-msgstr "La cadena de conexión debe contener el valor DB_NAME"
+msgstr "La cadena de la conexión debe contener el valor DB_NAME"
 
 #: ../providers/ldap/gda-ldap-provider.c:712
 msgid "Parameter"
@@ -5349,8 +5354,10 @@ msgstr "No se pudo analizar el nombre distintivo devuelto por el servidor LDAP"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:213
 #: ../providers/ldap/gdaprov-data-model-ldap.c:490
+#, fuzzy
+#| msgid "Missing provider name"
 msgid "Distinguished name"
-msgstr "Nombre distintivo"
+msgstr "Falta el nombre del proveedor"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:856
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1110
@@ -5371,8 +5378,10 @@ msgid "Base name"
 msgstr "Nombre de la base de datos"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:3
+#, fuzzy
+#| msgid "Web server name"
 msgid "Cache server data"
-msgstr "Datos del servidor caché"
+msgstr "Nombre del servidor web"
 
 #. Connection parameters
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
@@ -5386,14 +5395,16 @@ msgid "Database server"
 msgstr "Servidor de bases de datos"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
+#, fuzzy
+#| msgid "Web server port (leave this field empty for default)"
 msgid "Database server port (leave this field empty to use the default port)"
-msgstr ""
-"Puerto del servidor de base de datos (deje este campo vacío para usar el "
-"puerto pretederminado)"
+msgstr "Puerto del servidor web (déjelo vacío para el predeterminado)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
+#, fuzzy
+#| msgid "Host on which the database server is running"
 msgid "Host on which the LDAP server is running"
-msgstr "Equipo en el que el servidor LDAP se está ejecutando"
+msgstr "Equipo en el que el servidor de la base de datos se está ejecutando"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:7
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:76
@@ -7078,8 +7089,8 @@ msgstr "Se requiere al menos la versión 5.0 de MySQL"
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:174
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:215
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
-#: ../providers/web/gda-web-recordset.c:453
-#: ../providers/web/gda-web-recordset.c:474
+#: ../providers/web/gda-web-recordset.c:451
+#: ../providers/web/gda-web-recordset.c:472
 #: ../providers/web/gda-web-meta.c:105
 msgid "Can't import data from web server"
 msgstr "No se pueden importar los datos del servidor web"
@@ -7155,9 +7166,9 @@ msgstr "No se soporta el punto de guardado sin nombre"
 msgid "Can't create temporary file '%s'"
 msgstr "No se pudo crear el archivo temporal «%s»"
 
-#: ../providers/web/gda-web-recordset.c:370
-#: ../providers/web/gda-web-recordset.c:376
-#: ../providers/web/gda-web-recordset.c:386
+#: ../providers/web/gda-web-recordset.c:368
+#: ../providers/web/gda-web-recordset.c:374
+#: ../providers/web/gda-web-recordset.c:384
 msgid "Can't create temporary table to store data from web server"
 msgstr ""
 "No se puede crear una tabla temporal para almacenar los datos del servidor "
@@ -7370,12 +7381,16 @@ msgid "Error while analysing database schema: %s"
 msgstr "Error al analizar el esquema de la base de datos: %s"
 
 #: ../tools/browser/browser-connection.c:1208
+#, fuzzy
+#| msgid ""
+#| "Non handled GdaServerOperationType, please report error to http://"
+#| "bugzilla.gnome.org/ for the \"libgda\" product"
 msgid ""
 "Execution reported an undefined error, please report error to http://"
 "bugzilla.gnome.org/ for the \"libgda\" product"
 msgstr ""
-"Se ha producido un error no definido, por favor informe del error en http://"
-"bugzilla.gnome.org/ para el producto «libgda»"
+"No existe el manejador GdaServerOperationType, por favor informe del error "
+"en http://bugzilla.gnome.org/ para el producto «libgda»"
 
 #: ../tools/browser/browser-connection.c:1258
 #: ../tools/browser/browser-connection.c:1308
@@ -7410,13 +7425,16 @@ msgid "Can't commit transaction to access favorites"
 msgstr "No se puede efectuar la transacción para acceder a los favoritos"
 
 #: ../tools/browser/browser-connection.c:2307
-#, c-format
+#, fuzzy, c-format
+#| msgid "Could not execute browser program"
 msgid "Could not execute LDAP search"
-msgstr "No se pudo ejecutar la búsqueda LDAP"
+msgstr "No se pudo ejecutar el visor"
 
 #: ../tools/browser/browser-connection.c:2353
+#, fuzzy
+#| msgid "Executing a query"
 msgid "Executing LDAP search"
-msgstr "Ejecutando búsqueda LDAP"
+msgstr "Ejecutando una consulta"
 
 #: ../tools/browser/browser-connection.c:2413
 msgid "Fetching LDAP entry's attributes"
@@ -7521,8 +7539,10 @@ msgid "Builder"
 msgstr "Constructor"
 
 #: ../tools/browser/browser-stock-icons.c:50
+#, fuzzy
+#| msgid "Shown data entries"
 msgid "Ldap entries"
-msgstr "Entradas LDAP"
+msgstr "Entradas de datos mostradas"
 
 #: ../tools/browser/browser-stock-icons.c:51
 msgid "Add table"
@@ -7700,8 +7720,10 @@ msgstr "fuente de datos"
 #: ../tools/browser/common/ui-formgrid.c:673
 #: ../tools/browser/ldap-browser/perspective-main.c:33
 #: ../tools/browser/schema-browser/table-columns.c:969
+#, fuzzy
+#| msgid "Database browser"
 msgid "LDAP browser"
-msgstr "Visor LDAP"
+msgstr "Visor de la base de datos"
 
 #: ../tools/browser/browser-window.c:821 ../tools/browser/support.c:80
 #, c-format
@@ -7994,8 +8016,10 @@ msgid "Close tab"
 msgstr "Cerrar pestaña"
 
 #: ../tools/browser/support.c:441
+#, fuzzy
+#| msgid "Restrict"
 msgid "Abstract"
-msgstr "Abstracta"
+msgstr "Restringir"
 
 #: ../tools/browser/support.c:443
 msgid "Structural"
@@ -8816,8 +8840,10 @@ msgid "SQL code to execute:"
 msgstr "Código SQL que ejecutar:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:402
+#, fuzzy
+#| msgid "Unable to get information about table '%s'"
 msgid "Could not get information about LDAP class"
-msgstr "No se pudo obtener la información sobre la clase LDAP"
+msgstr "No se pudo obtener la información acerca de la tabla «%s»"
 
 #: ../tools/browser/ldap-browser/class-properties.c:422
 msgid "Class OID:"
@@ -8828,10 +8854,12 @@ msgid "Class kind:"
 msgstr "Tipo de clase:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:447
+#, fuzzy
+#| msgid "Canvas's name"
 msgid "Class name:"
 msgid_plural "Class names:"
 msgstr[0] "Nombre de la clase:"
-msgstr[1] "Nombres de la clase"
+msgstr[1] "Nombre del marco"
 
 #: ../tools/browser/ldap-browser/class-properties.c:460
 msgid "This LDAP class is obsolete"
@@ -8850,10 +8878,12 @@ msgstr[0] "Atributo opcional:"
 msgstr[1] "Atributos opcionales:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:503
+#, fuzzy
+#| msgid "Current flags: "
 msgid "Children class:"
 msgid_plural "Children classes:"
-msgstr[0] "Clase de hijos:"
-msgstr[1] "Clases de hijos:"
+msgstr[0] "Marcas actuales: "
+msgstr[1] "Marcas actuales: "
 
 #: ../tools/browser/ldap-browser/class-properties.c:548
 msgid "Inherited class:"
@@ -8862,8 +8892,10 @@ msgstr[0] "Clase heredada:"
 msgstr[1] "Clases heredadas:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:219
+#, fuzzy
+#| msgid "Select a file to save data to"
 msgid "Select the file to save data to"
-msgstr "Seleccionar el archivo donde se guardarán los datos"
+msgstr "Seleccionar un archivo donde guardar los datos"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:240
 #, c-format
@@ -8871,8 +8903,10 @@ msgid "Could not save data: %s"
 msgstr "No pudieron guardar los datos: %s"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:528
+#, fuzzy
+#| msgid "No title"
 msgid "Non activated"
-msgstr "No activado"
+msgstr "Sin título"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:576
 #: ../tools/browser/ldap-browser/entry-properties.c:580
@@ -8890,29 +8924,38 @@ msgstr "No se puede mostrar el valor del atributo"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:922
 #: ../tools/browser/ldap-browser/entry-properties.c:957
+#, fuzzy
+#| msgid "Could not get attribute"
 msgid "Could not get information about LDAP entry"
-msgstr "No se pudo obtener la información sobre la entrada LDAP"
+msgstr "No se pudo obtener el atributo"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:149
+#, fuzzy
+#| msgid "Base 64"
 msgid "Base DN:"
-msgstr "DN base:"
+msgstr "Base 64"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:153
+#, fuzzy
+#| msgid "Error in filter expression"
 msgid "Filter expression:"
-msgstr "Expresión de filtro:"
+msgstr "Error en la expresión de filtrado"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:157
+#, fuzzy
+#| msgid "Attribute '%s' not found"
 msgid "Attributes to fetch:"
-msgstr "Atributos que obtener:"
+msgstr "No se encontró el atributo «%s»"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:161
 msgid "Search scope:"
 msgstr "Ámbito de búsqueda:"
 
 #: ../tools/browser/ldap-browser/hierarchy-view.c:567
-#, c-format
+#, fuzzy, c-format
+#| msgid "Could not find any DSN named '%s'"
 msgid "Could not find LDAP entry whith DN '%s'"
-msgstr "No se pudo encontrar la entrada LDAP con DN «%s»"
+msgstr "No se pudo encontrar ningún DNS llamado «%s»"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:334
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:551
@@ -8949,12 +8992,16 @@ msgid "_New LDAP search"
 msgstr "_Búsqueda LDAP nueva"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
+#, fuzzy
+#| msgid "Open a new query editor"
 msgid "Open a new LDAP search form"
-msgstr "Abrir un formulario de búsqueda LDAP nuevo"
+msgstr "Abrir una consulta de edición nueva"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:360
+#, fuzzy
+#| msgid "Database browser"
 msgid "LDAP classes browser"
-msgstr "Visor de clases LDAP"
+msgstr "Visor de la base de datos"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:380
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:619
@@ -8962,8 +9009,10 @@ msgid "LDAP classes"
 msgstr "Clases LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:407
+#, fuzzy
+#| msgid "Favorite's properties"
 msgid "LDAP class's properties"
-msgstr "Propiedades de la clase LDAP"
+msgstr "Propiedades de los favoritos"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:552
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:557
@@ -9061,9 +9110,10 @@ msgid "Results"
 msgstr "Resultados"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:380
-#, c-format
+#, fuzzy, c-format
+#| msgid "Could not identify table for field '%s'"
 msgid "Could not define virtual table for this LDAP search: %s"
-msgstr "No se pudo definir la tabla virtual para esta búsqueda LDAP: «%s»"
+msgstr "No se pudo identificar la tabla para el campo «%s»"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:386
 #, c-format
@@ -9087,6 +9137,7 @@ msgid "Define LDAP search as a virtual table"
 msgstr "Definir búsqueda LDAP como una tabla virtual"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:125
+#| msgid "Name of the favorite to create"
 msgid "Name of the virtual LDAP table to create"
 msgstr "Nombre de la tablar virtual LDAP que crear"
 
@@ -9498,8 +9549,10 @@ msgid "Not NULL?"
 msgstr "¿No es nulo?"
 
 #: ../tools/browser/schema-browser/table-columns.c:686
+#, fuzzy
+#| msgid "New database definition"
 msgid "LDAP virtual table definition"
-msgstr "Definición de la tabla virtual LDAP"
+msgstr "Definición de la nueva base de datos"
 
 #: ../tools/browser/schema-browser/table-columns.c:733
 msgid "Constraints and integrity rules"
@@ -9654,8 +9707,10 @@ msgid "Hide search toolbar"
 msgstr "Ocultar la barra de herramientas de búsqueda"
 
 #: ../tools/browser/text-search.c:269
+#, fuzzy
+#| msgid "Search scope:"
 msgid "Search:"
-msgstr "Buscar:"
+msgstr "Ámbito de búsqueda:"
 
 #: ../tools/browser/text-search.c:289
 msgid "Case sensitive"
