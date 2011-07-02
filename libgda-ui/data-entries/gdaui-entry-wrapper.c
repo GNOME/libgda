@@ -424,7 +424,6 @@ gdaui_entry_wrapper_set_value_type (GdauiDataEntry *iface, GType type)
 
 	if (mgwrap->priv->type != type) {
 		GValue *value;
-		GdaDataHandler *dh;
 
 		if (mgwrap->priv->value_ref) {
 			gda_value_free (mgwrap->priv->value_ref);
@@ -439,7 +438,6 @@ gdaui_entry_wrapper_set_value_type (GdauiDataEntry *iface, GType type)
 		mgwrap->priv->value_default = gda_value_new_null ();
 
 		/* Set original value */
-		dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 		value = gda_value_new_null ();
 		gdaui_entry_wrapper_set_ref_value (GDAUI_DATA_ENTRY (mgwrap), value);
  		gda_value_free (value);
@@ -495,12 +493,9 @@ gdaui_entry_wrapper_get_value (GdauiDataEntry *iface)
 {
 	GValue *value = NULL;
 	GdauiEntryWrapper *mgwrap;
-	GdaDataHandler *dh;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface), NULL);
 	mgwrap = (GdauiEntryWrapper*) iface;
-
-	dh = gdaui_entry_wrapper_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 
 	if (mgwrap->priv->null_forced)
 		value = gda_value_new_null ();

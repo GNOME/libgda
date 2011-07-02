@@ -181,7 +181,7 @@ static glong
 gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset)
 {
 	GdaCapiBlobOp *bop;
-	GdaBinary *bin;
+	GdaBinary *bin = NULL;
 	glong nbwritten = -1;
 
 	g_return_val_if_fail (GDA_IS_CAPI_BLOB_OP (op), -1);
@@ -221,6 +221,7 @@ gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset
 	else {
 		/* write blob using bin->data and bin->binary_length */
 		bin = (GdaBinary *) blob;
+    		g_warning("bin not used. length=%ld", bin->binary_length); /* Avoids a compiler warning. */        
 		nbwritten = -1; TO_IMPLEMENT;
 	}
 

@@ -833,10 +833,8 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
 	GValue *value;
         guint year=0, month=0, day=0;
 	gboolean unset = TRUE;
-	GdaDataHandler *dh;
 
         /* setting the calendar to the latest displayed date */
-	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
 	value = gdaui_data_entry_get_value (GDAUI_DATA_ENTRY (mgtim));
 	
         if (value && !gda_value_is_null (value)) {
