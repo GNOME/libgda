@@ -151,13 +151,13 @@ m4_define([_BDB_CHECK_INTERNAL],
 	                CFLAGS="$CFLAGS -I$d/include"
   	                save_LIBS="$LIBS"
 	                LIBS="$LIBS -L$d/$bdb_loclibdir $db_lib"
-   	                AC_LINK_IFELSE([[
+   	                AC_LINK_IFELSE([AC_LANG_SOURCE([
 #include <${db_hdr}>
 int main() {
     printf("%p", db_create);
     return 0;
 }
-]],
+])],
 	                             bdbdir=$d)
 	                CFLAGS="$save_CFLAGS"
   	                LIBS="$save_LIBS"

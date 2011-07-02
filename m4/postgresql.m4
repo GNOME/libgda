@@ -131,13 +131,13 @@ m4_define([_POSTGRES_CHECK_INTERNAL],
 	                CFLAGS="$CFLAGS -I$d/include"
   	                save_LIBS="$LIBS"
 	                LIBS="$LIBS -L$d/$pg_loclibdir -lpq"
-   	                AC_LINK_IFELSE([[
+   	                AC_LINK_IFELSE([AC_LANG_SOURCE([
 #include <libpq-fe.h>
 int main() {
     printf("%p", PQconnectdb);
     return 0;
 }
-]],
+])],
 	                             postgres_found=yes)
 	                CFLAGS="$save_CFLAGS"
   	                LIBS="$save_LIBS"

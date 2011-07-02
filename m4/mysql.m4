@@ -130,14 +130,14 @@ m4_define([_MYSQL_CHECK_INTERNAL],
 	                CFLAGS="$CFLAGS -I$d/include"
   	                save_LIBS="$LIBS"
 	                LIBS="$LIBS -L$d/$mysql_loclibdir -lmysql"
-   	                AC_LINK_IFELSE([[
+   	                AC_LINK_IFELSE([AC_LANG_SOURCE([
 #include <winsock.h>
 #include <mysql.h>
 int main() {
     printf("%p", mysql_real_connect);
     return 0;
 }
-]],
+])],
 	                             mysql_found=yes)
 	                CFLAGS="$save_CFLAGS"
   	                LIBS="$save_LIBS"

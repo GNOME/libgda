@@ -120,7 +120,7 @@ m4_define([_LDAP_CHECK_INTERNAL],
 	        CFLAGS="$CFLAGS -I$d/include"
   	        save_LIBS="$LIBS"
 	        LIBS="$LIBS -L$d/$ldap_loclibdir -lldap -llber"
-   	        AC_LINK_IFELSE([[
+   	        AC_LINK_IFELSE([AC_LANG_SOURCE([
 #include <ldap.h>
 #include <lber.h>
 #include <ldap_schema.h>
@@ -129,7 +129,7 @@ int main() {
     printf("%p", ber_free);
     return 0;
 }
-]],
+])],
 	                     ldapdir=$d)
 	        CFLAGS="$save_CFLAGS"
   	        LIBS="$save_LIBS"
