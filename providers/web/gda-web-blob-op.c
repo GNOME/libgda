@@ -218,6 +218,7 @@ gda_web_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset)
 	else {
 		/* write blob using bin->data and bin->binary_length */
 		bin = (GdaBinary *) blob;
+		g_warning("bin not used. length=%ld", bin->binary_length); /* Avoids a compiler warning. */   
 		nbwritten = -1; TO_IMPLEMENT;
 	}
 

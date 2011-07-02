@@ -720,7 +720,7 @@ gda_web_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *
 
 	/* prepare XML command */
 	xmlDocPtr doc;
-	xmlNodePtr root, cmdnode;
+	xmlNodePtr root;
 	gchar *token;
 	doc = xmlNewDoc (BAD_CAST "1.0");
 	root = xmlNewNode (NULL, BAD_CAST "request");
@@ -728,7 +728,7 @@ gda_web_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *
 	token = _gda_web_compute_token (cdata);
 	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
 	g_free (token);
-	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "BEGIN");
+	xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "BEGIN");
 
 	/* send command */
 	xmlChar *cmde;
@@ -780,7 +780,7 @@ gda_web_provider_commit_transaction (GdaServerProvider *provider, GdaConnection 
 
 	/* prepare XML command */
 	xmlDocPtr doc;
-	xmlNodePtr root, cmdnode;
+	xmlNodePtr root;
 	gchar *token;
 	doc = xmlNewDoc (BAD_CAST "1.0");
 	root = xmlNewNode (NULL, BAD_CAST "request");
@@ -788,7 +788,7 @@ gda_web_provider_commit_transaction (GdaServerProvider *provider, GdaConnection 
 	token = _gda_web_compute_token (cdata);
 	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
 	g_free (token);
-	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "COMMIT");
+	xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "COMMIT");
 
 	/* send command */
 	xmlChar *cmde;
@@ -840,7 +840,7 @@ gda_web_provider_rollback_transaction (GdaServerProvider *provider, GdaConnectio
 
 	/* prepare XML command */
 	xmlDocPtr doc;
-	xmlNodePtr root, cmdnode;
+	xmlNodePtr root;
 	gchar *token;
 	doc = xmlNewDoc (BAD_CAST "1.0");
 	root = xmlNewNode (NULL, BAD_CAST "request");
@@ -848,7 +848,7 @@ gda_web_provider_rollback_transaction (GdaServerProvider *provider, GdaConnectio
 	token = _gda_web_compute_token (cdata);
 	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
 	g_free (token);
-	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "ROLLBACK");
+	xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "ROLLBACK");
 
 	/* send command */
 	xmlChar *cmde;

@@ -95,7 +95,7 @@ gda_web_pstmt_finalize (GObject *object)
 
 		/* send command to deallocate prepared statement */
 		xmlDocPtr doc;
-		xmlNodePtr root, cmdnode, node;
+		xmlNodePtr root, cmdnode;
 		gchar *token;
 		doc = xmlNewDoc (BAD_CAST "1.0");
 		root = xmlNewNode (NULL, BAD_CAST "request");
@@ -104,7 +104,7 @@ gda_web_pstmt_finalize (GObject *object)
 		xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
 		g_free (token);
 		cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "UNPREPARE");
-		node = xmlNewChild (cmdnode, NULL, BAD_CAST "preparehash", BAD_CAST pstmt->pstmt_hash);
+		xmlNewChild (cmdnode, NULL, BAD_CAST "preparehash", BAD_CAST pstmt->pstmt_hash);
 
 		xmlChar *cmde;
 		xmlDocPtr replydoc;
