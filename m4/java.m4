@@ -277,12 +277,12 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	CFLAGS="${CFLAGS} ${JAVA_CFLAGS} ${JAVA_CFLAGS}"
 
 	AC_MSG_CHECKING([whether JNI programs can be compiled])
-	AC_LINK_IFELSE([
+	AC_LINK_IFELSE([AC_LANG_SOURCE([
 #include <jni.h>
 int main(void) {
     jobject o;
     return 0;
-}],
+}])],
 	               [AC_MSG_RESULT(yes)],
 	      	       [AC_MSG_ERROR([Cannot compile a simple JNI program. See config.log for details.])])
 
@@ -290,21 +290,21 @@ int main(void) {
 	export LD_LIBRARY_PATH
 
 	AC_MSG_CHECKING([whether JNI programs can be run])
-	AC_RUN_IFELSE([
+	AC_RUN_IFELSE([AC_LANG_SOURCE([
 #include <jni.h>
 int main(void) {
     jobject o;
     return 0;
-}],
+}])],
 	              [AC_MSG_RESULT(yes)],
 	      	      [AC_MSG_ERROR([Cannot run a simple JNI program - probably your jvm library is in non-standard location or JVM is unsupported. See config.log for details.])])
 
 	AC_MSG_CHECKING([JNI data types])
-	AC_RUN_IFELSE([AC_LANG_SOURCE([[
+	AC_RUN_IFELSE([AC_LANG_SOURCE([
 #include <jni.h>
 int main(void) {
   return (sizeof(int)==sizeof(jint) && sizeof(long)==sizeof(long) && sizeof(jbyte)==sizeof(char) && sizeof(jshort)==sizeof(short) && sizeof(jfloat)==sizeof(float) && sizeof(jdouble)==sizeof(double))?0:1;
-}]])],
+}])],
 	              [AC_MSG_RESULT([ok])],
 		      [AC_MSG_ERROR([One or more JNI types differ from the corresponding native type. You may need to use non-standard compiler flags or a different compiler in order to fix this.])],[])
 

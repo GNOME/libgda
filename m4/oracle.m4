@@ -129,13 +129,13 @@ m4_define([_ORACLE_CHECK_INTERNAL],
 	            CFLAGS="$CFLAGS -I$d/include -I$d/include/oracle/client -I$d/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$d/network/public"
 	            LIBS="$LIBS -L$d/$oracle_loclibdir -lm -ldl -lclntsh"
 		fi
-   	        AC_LINK_IFELSE([[
+   	        AC_LINK_IFELSE([AC_LANG_SOURCE([
 #include <oci.h>
 int main() {
     printf("%p", OCIInitialize);
     return 0;
 }
-]],
+])],
 	                     oracledir=$d)
 	        CFLAGS="$save_CFLAGS"
   	        LIBS="$save_LIBS"
