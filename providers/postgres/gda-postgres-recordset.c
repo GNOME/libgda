@@ -374,7 +374,7 @@ gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, Gda
 	pg_res = PQexec (cdata->pconn, str);
 	g_free (str);
 	status = PQresultStatus (pg_res);
-	if (!pg_res || (PQresultStatus (pg_res) != PGRES_TUPLES_OK)) {
+	if (!pg_res || (status != PGRES_TUPLES_OK)) {
 		_gda_postgres_make_error (cdata->cnc, cdata->pconn, pg_res, NULL);
 		if (pg_res) {
 			PQclear (pg_res);
