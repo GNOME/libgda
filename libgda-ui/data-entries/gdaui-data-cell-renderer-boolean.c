@@ -376,16 +376,14 @@ gdaui_data_cell_renderer_boolean_render (GtkCellRenderer      *cell,
 	(toggle_class->render) (cell, cr, widget, background_area, cell_area, flags);
 
 	if (datacell->priv->to_be_deleted) {
-		GtkStyle *style;
+		GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
 		guint xpad;
-
-		g_object_get (G_OBJECT(widget), "style", &style, "xpad", &xpad, NULL);
-		gtk_paint_hline (style,
-				 cr, GTK_STATE_SELECTED,
-				 widget,
-				 "hline",
+		g_object_get (G_OBJECT(widget), "xpad", &xpad, NULL);
+		gdouble y = cell_area->y + cell_area->height / 2.;
+		gtk_render_line (style_context,
+				 cr,
 				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
-				 cell_area->y + cell_area->height / 2.);
+				 y, y);
 
 	}
 	if (datacell->priv->invalid)
