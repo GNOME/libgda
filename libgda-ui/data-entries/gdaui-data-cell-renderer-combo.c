@@ -522,21 +522,18 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 
 	if (combocell->priv->show_expander) {
 		gint expander_size;
-		GtkStyle *style;
+		GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
 		guint xpad, ypad;
 
 		gtk_widget_style_get (widget, "expander-size", &expander_size, NULL);
-		g_object_get ((GObject*) widget, "style", &style, NULL);
 		g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
 		
-		gtk_paint_expander (style,
-				    cr, state,
-				    widget,
-				    "expander",
+		
+		gtk_render_expander (style_context,
+				    cr,
 				    cell_area->x + cell_area->width - xpad - expander_size/2.,
-				    cell_area->y + cell_area->height - ypad - expander_size/2. ,
-				    GTK_EXPANDER_EXPANDED);
-		g_object_unref (style);
+				    cell_area->y + cell_area->height - ypad - expander_size/2.,
+                                    expander_size, expander_size);
 	}
 
 	if (combocell->priv->to_be_deleted) {
