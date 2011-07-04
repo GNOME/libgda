@@ -385,7 +385,7 @@ browser_connections_list_show (BrowserConnection *current)
 
 		/* buttons at the bottom*/
 		GtkWidget *bbox, *button;
-		bbox = gtk_hbutton_box_new ();
+		bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 		gtk_table_attach (GTK_TABLE (table), bbox, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, 0, 0, 6);
 		gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 		button = gtk_button_new_with_label (_("Close connection"));

@@ -230,7 +230,7 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
 
 	/* page size's adjustments */
-	bbox = gtk_hbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_START);
 
@@ -300,7 +300,7 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
         label = gtk_label_new ("    ");
         gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
-	bbox = gtk_hbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_START);
 

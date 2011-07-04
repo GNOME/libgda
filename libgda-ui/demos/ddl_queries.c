@@ -124,7 +124,7 @@ do_ddl_queries (GtkWidget *do_widget)
 		data->op_container = vp;
 		
 		/* bottom buttons */
-		bbox = gtk_hbutton_box_new ();
+		bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 		gtk_table_attach (GTK_TABLE (table), bbox, 0, 2, 5, 6, 0, 0, 0, 0);
 
 		wid = gtk_button_new_with_label ("Show named parameters");

@@ -210,7 +210,7 @@ common_bin_create_menu (BinMenu *binmenu, PopupContainerPositionFunc pos_func, G
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	binmenu->props_label = label;
 
-	bbox = gtk_hbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_from_stock (GTK_STOCK_OPEN);

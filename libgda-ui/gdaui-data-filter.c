@@ -221,7 +221,7 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 	wid->priv->notice = label;
 	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 1, 2, GTK_FILL, 0, GTK_SHRINK, 5);
 
-	bbox = gtk_hbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_table_attach (GTK_TABLE (table), bbox, 0, 2, 2, 3, GTK_FILL | GTK_EXPAND, 0, GTK_SHRINK, 5);
 	button = gtk_button_new_with_label (_("Set filter"));
 	gtk_container_add (GTK_CONTAINER (bbox), button);

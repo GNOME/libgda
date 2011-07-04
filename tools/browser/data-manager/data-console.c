@@ -381,7 +381,7 @@ data_console_new (BrowserConnection *bcnc)
 
 	/* buttons */
 	GtkWidget *bbox, *button;
-	bbox = gtk_vbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 

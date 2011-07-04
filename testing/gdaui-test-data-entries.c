@@ -741,7 +741,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 
 	entry_contents_modified (wid, GTK_LABEL (label));
 
-	bbox = gtk_hbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_table_attach (GTK_TABLE (table), bbox, 0, 3, 4, 5, 0, 0, 0, 0);
 		
 	button = gtk_toggle_button_new_with_label (_("NULL ok"));

@@ -357,7 +357,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	gtk_container_add (GTK_CONTAINER (tconsole->priv->params_form_box), wid);
 	tconsole->priv->params_form = wid;
 	
-	bbox = gtk_vbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 
@@ -418,7 +418,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	g_signal_connect (wid, "changed",
 			  G_CALLBACK (history_changed_cb), tconsole);
 
-	bbox = gtk_hbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 
@@ -913,7 +913,7 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 				gtk_box_pack_start (GTK_BOX (vbox), cont, FALSE, FALSE, 10);
 				g_object_set_data (G_OBJECT (tconsole->priv->params_popup), "cont", cont);
 
-				bbox = gtk_hbutton_box_new ();
+				bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 				gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 10);
 				gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 				

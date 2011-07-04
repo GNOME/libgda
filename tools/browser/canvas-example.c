@@ -93,7 +93,7 @@ main (int argc, char *argv[])
 				   0, 1, 0, 1);
 
 	GtkWidget *bbox, *button;
-	bbox = gtk_hbutton_box_new ();
+	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_table_attach (GTK_TABLE (table), bbox, 0, 1, 1, 2, 0, 0, 0, 0);
 	button = gtk_button_new_with_label ("Auto layout");
 	g_signal_connect (button, "clicked",

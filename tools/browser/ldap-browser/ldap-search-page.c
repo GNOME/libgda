@@ -314,7 +314,7 @@ ldap_search_page_new (BrowserConnection *bcnc, const gchar *base_dn)
 	g_signal_connect (wid, "activate",
 			  G_CALLBACK (search_entry_activated_cb), epage);
 
-	bb = gtk_vbutton_box_new ();
+	bb = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bb), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hb), bb, FALSE, FALSE, 5);
 
