@@ -36,13 +36,13 @@ typedef struct _DummyPerspectiveClass DummyPerspectiveClass;
 /* struct for the object's data */
 struct _DummyPerspective
 {
-	GtkVBox              object;
+	GtkBox              object;
 };
 
 /* struct for the object's class */
 struct _DummyPerspectiveClass
 {
-	GtkVBoxClass         parent_class;
+	GtkBoxClass         parent_class;
 };
 
 GType                dummy_perspective_get_type               (void) G_GNUC_CONST;

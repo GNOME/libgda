@@ -40,7 +40,7 @@ typedef struct _GdauiBasicFormPriv  GdauiBasicFormPriv;
 /* struct for the object's data */
 struct _GdauiBasicForm
 {
-	GtkVBox             object;
+	GtkBox             object;
 
 	GdauiBasicFormPriv *priv;
 };
@@ -48,7 +48,7 @@ struct _GdauiBasicForm
 /* struct for the object's class */
 struct _GdauiBasicFormClass
 {
-	GtkVBoxClass        parent_class;
+	GtkBoxClass        parent_class;
 
 	/* signals */
         void       (*holder_changed) (GdauiBasicForm *form, GdaHolder *holder, gboolean is_user_action);

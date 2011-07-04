@@ -49,7 +49,7 @@ provider_config_new (void)
 	GdaDataModel *model;
 
 	priv = g_new0 (ProviderConfigPrivate, 1);
-	provider = gtk_vbox_new (FALSE, 0);
+	provider = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_show (provider);
         gtk_container_set_border_width (GTK_CONTAINER (provider), 6);
 	g_object_set_data_full (G_OBJECT (provider), PROVIDER_CONFIG_DATA, priv,

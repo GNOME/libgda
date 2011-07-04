@@ -150,6 +150,8 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 	/* Init the properties*/
 	login->priv->mode = GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE;
 	memset (&(login->priv->dsn_info), 0, sizeof (GdaDsnInfo));
+
+	gtk_box_set_orientation (GTK_BOX (login), GTK_ORIENTATION_VERTICAL);
 	
 	/* catch DSN definition changes */
 	GdaConfig *conf = gda_config_get ();
@@ -328,7 +330,7 @@ gdaui_login_get_type (void)
 			(GInstanceInitFunc) gdaui_login_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiLogin", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiLogin", &info, 0);
 	}
 	return type;
 }

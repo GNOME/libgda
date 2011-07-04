@@ -112,7 +112,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 	/* 
 	 * top part: import specs. 
 	 */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
         gtk_paned_pack1 (GTK_PANED (import), vbox, FALSE, FALSE);
 
 	str = g_strdup_printf ("<b>%s:</b>", _("Import specifications"));
@@ -260,7 +260,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 	/* 
 	 * bottom part: import preview 
 	 */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
         gtk_paned_pack2 (GTK_PANED (import), vbox, TRUE, FALSE);
 
 	str = g_strdup_printf ("<b>%s:</b>", _("Import preview"));

@@ -76,12 +76,12 @@ void                     query_editor_history_batch_unref (QueryEditorHistoryBat
 
 
 struct _QueryEditor {
-	GtkVBox parent;
+	GtkBox parent;
 	QueryEditorPrivate *priv;
 };
 
 struct _QueryEditorClass {
-	GtkVBoxClass parent_class;
+	GtkBoxClass parent_class;
 
 	/* signals */
 	void (* changed) (QueryEditor *editor);

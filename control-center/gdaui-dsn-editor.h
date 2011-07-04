@@ -34,12 +34,12 @@ typedef struct _GdauiDsnEditorClass   GdauiDsnEditorClass;
 typedef struct _GdauiDsnEditorPrivate GdauiDsnEditorPrivate;
 
 struct _GdauiDsnEditor {
-	GtkVBox box;
+	GtkBox box;
 	GdauiDsnEditorPrivate *priv;
 };
 
 struct _GdauiDsnEditorClass {
-	GtkVBoxClass parent_class;
+	GtkBoxClass parent_class;
 
 	/* signals */
 	void (* changed) (GdauiDsnEditor *config);

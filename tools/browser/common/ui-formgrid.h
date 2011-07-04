@@ -40,7 +40,7 @@ typedef struct _UiFormGridPriv  UiFormGridPriv;
 /* struct for the object's data */
 struct _UiFormGrid
 {
-	GtkVBox             object;
+	GtkBox             object;
 
 	UiFormGridPriv     *priv;
 };
@@ -48,7 +48,7 @@ struct _UiFormGrid
 /* struct for the object's class */
 struct _UiFormGridClass
 {
-	GtkVBoxClass       parent_class;
+	GtkBoxClass       parent_class;
 	/* signals */
 	void             (*data_set_changed) (UiFormGrid *fg);
 };

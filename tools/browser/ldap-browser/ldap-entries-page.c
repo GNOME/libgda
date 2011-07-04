@@ -118,6 +118,8 @@ ldap_entries_page_init (LdapEntriesPage *ebrowser, G_GNUC_UNUSED LdapEntriesPage
 	ebrowser->priv->history_items = g_array_new (FALSE, FALSE, sizeof (HistoryItem*));
 	ebrowser->priv->history_max_len = 20;
 	ebrowser->priv->add_hist_item = TRUE;
+
+	gtk_box_set_orientation (GTK_BOX (ebrowser), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -172,7 +174,7 @@ ldap_entries_page_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "LdapEntriesPage", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "LdapEntriesPage", &info, 0);
 		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_info);
 	}
 	return type;
@@ -380,7 +382,7 @@ ldap_entries_page_new (BrowserConnection *bcnc, const gchar *dn)
 	GtkWidget *vbox, *hview, *sw;
 	gfloat yalign;
 
-	vbox = gtk_vbox_new (FALSE, FALSE);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, FALSE);
 	gtk_paned_add1 (GTK_PANED (hp), vbox);
 	
 	str = g_strdup_printf ("<b>%s:</b>", _("LDAP hierarchy"));
@@ -407,7 +409,7 @@ ldap_entries_page_new (BrowserConnection *bcnc, const gchar *dn)
 			  G_CALLBACK (selection_changed_cb), ebrowser);
 
 	/* details */
-	vbox = gtk_vbox_new (FALSE, FALSE);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, FALSE);
 	gtk_paned_add2 (GTK_PANED (hp), vbox);
 
 	str = g_strdup_printf ("<b>%s:</b>", _("LDAP entry's details"));

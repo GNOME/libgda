@@ -37,7 +37,7 @@ typedef struct _GdauiCloudPriv  GdauiCloudPriv;
 /* struct for the object's data */
 struct _GdauiCloud
 {
-	GtkVBox             object;
+	GtkBox             object;
 
 	GdauiCloudPriv     *priv;
 };
@@ -45,7 +45,7 @@ struct _GdauiCloud
 /* struct for the object's class */
 struct _GdauiCloudClass
 {
-	GtkVBoxClass       parent_class;
+	GtkBoxClass       parent_class;
 	void            (* activate) (GdauiCloud *cloud, gint row);
 };
 

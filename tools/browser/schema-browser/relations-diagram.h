@@ -35,12 +35,12 @@ typedef struct _RelationsDiagramClass   RelationsDiagramClass;
 typedef struct _RelationsDiagramPrivate RelationsDiagramPrivate;
 
 struct _RelationsDiagram {
-	GtkVBox                  parent;
+	GtkBox                  parent;
 	RelationsDiagramPrivate *priv;
 };
 
 struct _RelationsDiagramClass {
-	GtkVBoxClass             parent_class;
+	GtkBoxClass             parent_class;
 };
 
 GType                    relations_diagram_get_type (void) G_GNUC_CONST;

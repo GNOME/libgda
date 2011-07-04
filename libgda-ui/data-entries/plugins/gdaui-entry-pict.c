@@ -226,7 +226,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgpict = GDAUI_ENTRY_PICT (mgwrap);
 	g_return_val_if_fail (mgpict->priv, NULL);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	/* sw */
 	wid = gtk_scrolled_window_new (NULL, NULL);

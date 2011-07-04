@@ -82,7 +82,7 @@ data_manager_perspective_get_type (void)
 		
 		g_static_mutex_lock (&registering);
 		if (type == 0) {
-			type = g_type_register_static (GTK_TYPE_VBOX, "DataManagerPerspective", &info, 0);
+			type = g_type_register_static (GTK_TYPE_BOX, "DataManagerPerspective", &info, 0);
 			g_type_add_interface_static (type, BROWSER_PERSPECTIVE_TYPE, &perspective_info);
 		}
 		g_static_mutex_unlock (&registering);
@@ -125,6 +125,8 @@ data_manager_perspective_init (DataManagerPerspective *perspective)
 {
 	perspective->priv = g_new0 (DataManagerPerspectivePriv, 1);
 	perspective->priv->favorites_shown = TRUE;
+
+	gtk_box_set_orientation (GTK_BOX (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,

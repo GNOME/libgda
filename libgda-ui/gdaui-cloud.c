@@ -114,7 +114,7 @@ gdaui_cloud_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiCloud", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiCloud", &info, 0);
 		g_type_add_interface_static (type, GDAUI_TYPE_DATA_SELECTOR, &selector_info);
 	}
 
@@ -347,6 +347,8 @@ gdaui_cloud_init (GdauiCloud *cloud)
 	cloud->priv->selected_tags = NULL;
 	cloud->priv->selection_mode = GTK_SELECTION_SINGLE;
 
+	gtk_box_set_orientation (GTK_BOX (cloud), GTK_ORIENTATION_VERTICAL);
+
 	/* text buffer */
         cloud->priv->tbuffer = gtk_text_buffer_new (NULL);
         gtk_text_buffer_create_tag (cloud->priv->tbuffer, "section",
@@ -360,7 +362,7 @@ gdaui_cloud_init (GdauiCloud *cloud)
                                         GTK_POLICY_AUTOMATIC);
         gtk_box_pack_start (GTK_BOX (cloud), sw, TRUE, TRUE, 0);
 
-        vbox = gtk_vbox_new (FALSE, 0);
+        vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	vp = gtk_viewport_new (NULL, NULL);
         gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
 

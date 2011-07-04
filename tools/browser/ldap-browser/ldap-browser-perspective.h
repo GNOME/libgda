@@ -37,14 +37,14 @@ typedef struct _LdapBrowserPerspectivePrivate LdapBrowserPerspectivePrivate;
 /* struct for the object's data */
 struct _LdapBrowserPerspective
 {
-	GtkVBox              object;
+	GtkBox              object;
 	LdapBrowserPerspectivePrivate *priv;
 };
 
 /* struct for the object's class */
 struct _LdapBrowserPerspectiveClass
 {
-	GtkVBoxClass         parent_class;
+	GtkBoxClass         parent_class;
 };
 
 /**

@@ -83,6 +83,8 @@ static void
 objects_index_init (ObjectsIndex *index, G_GNUC_UNUSED ObjectsIndexClass *klass)
 {
 	index->priv = g_new0 (ObjectsIndexPrivate, 1);
+
+	gtk_box_set_orientation (GTK_BOX (index), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -123,7 +125,7 @@ objects_index_get_type (void)
 			(GInstanceInitFunc) objects_index_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "ObjectsIndex",
+		type = g_type_register_static (GTK_TYPE_BOX, "ObjectsIndex",
 					       &info, 0);
 	}
 	return type;

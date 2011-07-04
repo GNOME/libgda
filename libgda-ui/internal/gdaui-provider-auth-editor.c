@@ -110,6 +110,8 @@ gdaui_provider_auth_editor_init (GdauiProviderAuthEditor *auth,
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_AUTH_EDITOR (auth));
 
+	gtk_box_set_orientation (GTK_BOX (config), GTK_ORIENTATION_VERTICAL);
+
 	auth->priv = g_new0 (GdauiProviderAuthEditorPrivate, 1);
 	auth->priv->provider = NULL;
 	auth->priv->auth_needed = FALSE;
@@ -199,7 +201,7 @@ _gdaui_provider_auth_editor_get_type (void)
 		};
 		type = g_type_from_name ("GdauiProviderAuthEditor");
 		if (type == 0)
-			type = g_type_register_static (GTK_TYPE_VBOX,
+			type = g_type_register_static (GTK_TYPE_BOX,
 						       "GdauiProviderAuthEditor",
 					       	       &info, 0);
 	}

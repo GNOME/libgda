@@ -39,7 +39,7 @@ typedef struct _GdauiDataFilterPriv  GdauiDataFilterPriv;
 /* struct for the object's data */
 struct _GdauiDataFilter
 {
-	GtkVBox                      object;
+	GtkBox                      object;
 
 	GdauiDataFilterPriv *priv;
 };
@@ -47,7 +47,7 @@ struct _GdauiDataFilter
 /* struct for the object's class */
 struct _GdauiDataFilterClass
 {
-	GtkVBoxClass                 parent_class;
+	GtkBoxClass                 parent_class;
 };
 
 /**

@@ -35,12 +35,12 @@ typedef struct _DataFavoriteSelectorClass   DataFavoriteSelectorClass;
 typedef struct _DataFavoriteSelectorPrivate DataFavoriteSelectorPrivate;
 
 struct _DataFavoriteSelector {
-	GtkVBox               parent;
+	GtkBox               parent;
 	DataFavoriteSelectorPrivate *priv;
 };
 
 struct _DataFavoriteSelectorClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 
 	void                (*selection_changed) (DataFavoriteSelector *sel, gint fav_id,
 						  BrowserFavoritesType fav_type, const gchar *fav_contents);

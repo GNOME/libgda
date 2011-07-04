@@ -86,6 +86,9 @@ objects_cloud_init (ObjectsCloud *cloud, G_GNUC_UNUSED ObjectsCloudClass *klass)
 	cloud->priv = g_new0 (ObjectsCloudPrivate, 1);
 	cloud->priv->show_schemas = FALSE;
 	cloud->priv->tbuffer = gtk_text_buffer_new (NULL);
+
+	gtk_box_set_orientation (GTK_BOX (cloud), GTK_ORIENTATION_VERTICAL);
+
 	gtk_text_buffer_create_tag (cloud->priv->tbuffer, "section",
                                     "weight", PANGO_WEIGHT_BOLD,
                                     "foreground", "blue", NULL);
@@ -126,7 +129,7 @@ objects_cloud_get_type (void)
 			(GInstanceInitFunc) objects_cloud_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "ObjectsCloud",
+		type = g_type_register_static (GTK_TYPE_BOX, "ObjectsCloud",
 					       &info, 0);
 	}
 	return type;
@@ -377,7 +380,7 @@ objects_cloud_new (GdaMetaStruct *mstruct, ObjectsCloudObjType type)
 					GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start (GTK_BOX (cloud), sw, TRUE, TRUE, 0);
 	
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), vbox);
 
 	cloud->priv->tview = gtk_text_view_new_with_buffer (cloud->priv->tbuffer);

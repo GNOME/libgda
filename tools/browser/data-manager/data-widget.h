@@ -38,12 +38,12 @@ typedef struct _DataWidgetClass   DataWidgetClass;
 typedef struct _DataWidgetPrivate DataWidgetPrivate;
 
 struct _DataWidget {
-	GtkVBox parent;
+	GtkBox parent;
 	DataWidgetPrivate *priv;
 };
 
 struct _DataWidgetClass {
-	GtkVBoxClass parent_class;
+	GtkBoxClass parent_class;
 };
 
 

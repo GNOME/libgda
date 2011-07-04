@@ -105,6 +105,8 @@ relations_diagram_init (RelationsDiagram *diagram, G_GNUC_UNUSED RelationsDiagra
 	diagram->priv = g_new0 (RelationsDiagramPrivate, 1);
 	diagram->priv->fav_id = -1;
 	diagram->priv->popup_container = NULL;
+
+	gtk_box_set_orientation (GTK_BOX (diagram), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -156,7 +158,7 @@ relations_diagram_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "RelationsDiagram", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "RelationsDiagram", &info, 0);
 		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_info);
 	}
 	return type;

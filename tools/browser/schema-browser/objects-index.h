@@ -35,12 +35,12 @@ typedef struct _ObjectsIndexClass   ObjectsIndexClass;
 typedef struct _ObjectsIndexPrivate ObjectsIndexPrivate;
 
 struct _ObjectsIndex {
-	GtkVBox               parent;
+	GtkBox               parent;
 	ObjectsIndexPrivate  *priv;
 };
 
 struct _ObjectsIndexClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 
 	/* signals */
 	void                (*selection_changed) (ObjectsIndex *sel,

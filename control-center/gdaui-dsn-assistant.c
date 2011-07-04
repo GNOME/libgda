@@ -438,7 +438,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	/* 
 	 * general info page 
 	 */
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 
 	table = gtk_table_new (5, 2, FALSE);
 	gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -511,7 +511,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	/*
 	 * Choose between existing database or create a new one
 	 */
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 
 	table = gtk_table_new (2, 2, FALSE);
 	gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -543,7 +543,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	/*
 	 * New database information page
 	 */
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
 	
 	label = gtk_label_new (NULL);
@@ -580,7 +580,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	/* 
 	 * provider parameters to open connection page 
 	 */
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
 	
 	label = gtk_label_new (NULL);
@@ -592,7 +592,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-	assistant->priv->provider_container = gtk_vbox_new (FALSE, 0);
+	assistant->priv->provider_container = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), assistant->priv->provider_container, TRUE, TRUE, 0);
 
 	gtk_widget_show_all (vbox);
@@ -606,7 +606,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	/* 
 	 * authentication page 
 	 */
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
 	
 	label = gtk_label_new (NULL);
@@ -616,7 +616,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-	assistant->priv->auth_container = gtk_vbox_new (FALSE, 0);
+	assistant->priv->auth_container = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), assistant->priv->auth_container, TRUE, TRUE, 0);
 
 	gtk_widget_show_all (vbox);
@@ -630,7 +630,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	/* 
 	 * end page 
 	 */
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
 
 	label = gtk_label_new (NULL);

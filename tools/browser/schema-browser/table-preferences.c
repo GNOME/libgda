@@ -92,6 +92,8 @@ static void
 table_preferences_init (TablePreferences *tpreferences, G_GNUC_UNUSED TablePreferencesClass *klass)
 {
 	tpreferences->priv = g_new0 (TablePreferencesPrivate, 1);
+
+	gtk_box_set_orientation (GTK_BOX (tpreferences), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -138,7 +140,7 @@ table_preferences_get_type (void)
 			(GInstanceInitFunc) table_preferences_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "TablePreferences", &preferences, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "TablePreferences", &preferences, 0);
 	}
 	return type;
 }
@@ -317,7 +319,7 @@ table_preferences_new (TableInfo *tinfo)
 	
 	/* top vbox */
 	GtkWidget *top_vbox;
-	top_vbox = gtk_vbox_new (FALSE, 0);
+	top_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX (tpref), top_vbox, TRUE, TRUE, 0);
 
 	/* Field's display properties */
@@ -462,7 +464,7 @@ create_column_properties (TablePreferences *tpref)
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
 	
 	/* plugin options */
-	tpref->priv->options_vbox = gtk_vbox_new (FALSE, 0);
+	tpref->priv->options_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_table_attach (GTK_TABLE (table), tpref->priv->options_vbox, 1, 2, 1, 2, GTK_FILL, 0, 0, 0);
 	tpref->priv->options_none = gtk_label_new (_("none"));
 	gtk_misc_set_alignment (GTK_MISC (tpref->priv->options_none), 0., -1);
@@ -473,7 +475,7 @@ create_column_properties (TablePreferences *tpref)
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
 
 	/* plugin preview */
-	tpref->priv->preview_vbox = gtk_vbox_new (FALSE, 0);
+	tpref->priv->preview_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_table_attach (GTK_TABLE (table), tpref->priv->preview_vbox, 1, 2, 2, 3, GTK_FILL, 0, 0, 0);
 	tpref->priv->preview_none = gtk_label_new (_("none"));
 	gtk_misc_set_alignment (GTK_MISC (tpref->priv->preview_none), 0., -1);

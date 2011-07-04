@@ -37,12 +37,12 @@ typedef struct _XmlSpecEditorClass   XmlSpecEditorClass;
 typedef struct _XmlSpecEditorPrivate XmlSpecEditorPrivate;
 
 struct _XmlSpecEditor {
-	GtkVBox parent;
+	GtkBox parent;
 	XmlSpecEditorPrivate *priv;
 };
 
 struct _XmlSpecEditorClass {
-	GtkVBoxClass parent_class;
+	GtkBoxClass parent_class;
 };
 
 GType          xml_spec_editor_get_type     (void) G_GNUC_CONST;

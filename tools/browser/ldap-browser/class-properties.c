@@ -76,6 +76,8 @@ class_properties_init (ClassProperties *cprop, G_GNUC_UNUSED ClassPropertiesClas
 {
 	cprop->priv = g_new0 (ClassPropertiesPrivate, 1);
 	cprop->priv->hovering_over_link = FALSE;
+
+	gtk_box_set_orientation (GTK_BOX (cprop), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -113,7 +115,7 @@ class_properties_get_type (void)
 			(GInstanceInitFunc) class_properties_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "ClassProperties", &columns, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "ClassProperties", &columns, 0);
 	}
 	return type;
 }

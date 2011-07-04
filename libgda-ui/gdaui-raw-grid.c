@@ -1633,7 +1633,7 @@ action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
 		gtk_widget_show (frame);
 		gtk_container_add (GTK_CONTAINER (grid->priv->filter_window), frame);
 
-		vbox = gtk_vbox_new (FALSE, 0);
+		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_widget_show (vbox);
 		gtk_container_add (GTK_CONTAINER (frame), vbox);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 3);

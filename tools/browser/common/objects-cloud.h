@@ -40,12 +40,12 @@ typedef enum {
 } ObjectsCloudObjType;
 
 struct _ObjectsCloud {
-	GtkVBox               parent;
+	GtkBox               parent;
 	ObjectsCloudPrivate  *priv;
 };
 
 struct _ObjectsCloudClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 
 	/* signals */
 	void                (*selected) (ObjectsCloud *sel, ObjectsCloudObjType sel_type, 

@@ -195,7 +195,7 @@ gdaui_basic_form_get_type (void)
 			0
 		};
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiBasicForm", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiBasicForm", &info, 0);
 	}
 
 	return type;
@@ -400,10 +400,12 @@ gdaui_basic_form_init (GdauiBasicForm *wid)
 	wid->priv->show_actions = FALSE;
 	wid->priv->entries_auto_default = FALSE;
 
+	gtk_box_set_orientation (GTK_BOX (wid), GTK_ORIENTATION_VERTICAL);
+
 	evbox = gtk_event_box_new ();
 	gtk_widget_show (evbox);
 	gtk_box_pack_start (GTK_BOX (wid), evbox, TRUE, TRUE, 0);
-	wid->priv->mainbox = gtk_vbox_new (FALSE, 0);
+	wid->priv->mainbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_show (wid->priv->mainbox);
 	gtk_container_add (GTK_CONTAINER (evbox), wid->priv->mainbox);
 	g_object_set (evbox, "visible-window", FALSE, NULL);
@@ -1248,7 +1250,7 @@ load_xml_layout_children (GdauiBasicForm *form, xmlNodePtr parent_node)
 			ctype = TOP_BOX;
 		}
 		if (xmlStrEqual (prop, BAD_CAST "rows")) {
-			top = gtk_vbox_new (FALSE, 0);
+			top = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 			ctype = TOP_BOX;
 		}
 		else if (xmlStrEqual (prop, BAD_CAST "hpaned")) {
@@ -1380,7 +1382,7 @@ load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 				if (! form->priv->place_holders)
 					form->priv->place_holders = g_hash_table_new_full (g_str_hash, g_str_equal,
 											   g_free, g_object_unref);
-				ph = gtk_vbox_new (FALSE, 0);
+				ph = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 				g_hash_table_insert (form->priv->place_holders, g_strdup ((gchar*) id),
 						     g_object_ref_sink ((GObject*)ph));
 				gtk_table_attach_defaults (GTK_TABLE (table), ph, 1, 2, i, i+1);
@@ -1415,7 +1417,7 @@ load_xml_layout_section (GdauiBasicForm *form, xmlNodePtr section_node)
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 
 		GtkWidget *vbox;
-		vbox = gtk_vbox_new (FALSE, 0);
+		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 		retval = vbox;

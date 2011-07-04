@@ -103,6 +103,8 @@ ldap_search_page_init (LdapSearchPage *epage, G_GNUC_UNUSED LdapSearchPageClass 
 	epage->priv->history_items = g_array_new (FALSE, FALSE, sizeof (HistoryItem*));
 	epage->priv->history_max_len = 20;
 	epage->priv->add_hist_item = TRUE;
+
+	gtk_box_set_orientation (GTK_BOX (epage), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -157,7 +159,7 @@ ldap_search_page_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "LdapSearchPage", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "LdapSearchPage", &info, 0);
 		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_info);
 	}
 	return type;

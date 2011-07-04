@@ -89,7 +89,7 @@ do_linked_grid_form (GtkWidget *do_widget)
 				  G_CALLBACK (gtk_widget_destroyed), &window);
 		g_object_set_data_full (G_OBJECT (window), "demodata", data, g_free);
 		
-		vbox = gtk_vbox_new (FALSE, 5);
+		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
 				    vbox, TRUE, TRUE, 0);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);

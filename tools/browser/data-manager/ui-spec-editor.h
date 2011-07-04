@@ -37,12 +37,12 @@ typedef struct _UiSpecEditorClass   UiSpecEditorClass;
 typedef struct _UiSpecEditorPrivate UiSpecEditorPrivate;
 
 struct _UiSpecEditor {
-	GtkVBox parent;
+	GtkBox parent;
 	UiSpecEditorPrivate *priv;
 };
 
 struct _UiSpecEditorClass {
-	GtkVBoxClass parent_class;
+	GtkBoxClass parent_class;
 };
 
 GType          ui_spec_editor_get_type      (void) G_GNUC_CONST;

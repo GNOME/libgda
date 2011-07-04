@@ -35,12 +35,12 @@ typedef struct _TablePreferencesClass   TablePreferencesClass;
 typedef struct _TablePreferencesPrivate TablePreferencesPrivate;
 
 struct _TablePreferences {
-	GtkVBox               parent;
+	GtkBox               parent;
 	TablePreferencesPrivate *priv;
 };
 
 struct _TablePreferencesClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 };
 
 GType                    table_preferences_get_type (void) G_GNUC_CONST;

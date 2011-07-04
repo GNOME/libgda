@@ -36,12 +36,12 @@ typedef struct _QueryResultClass   QueryResultClass;
 typedef struct _QueryResultPrivate QueryResultPrivate;
 
 struct _QueryResult {
-	GtkVBox parent;
+	GtkBox parent;
 	QueryResultPrivate *priv;
 };
 
 struct _QueryResultClass {
-	GtkVBoxClass parent_class;
+	GtkBoxClass parent_class;
 };
 
 

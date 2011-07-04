@@ -89,6 +89,8 @@ xml_spec_editor_init (XmlSpecEditor *sped, G_GNUC_UNUSED XmlSpecEditorClass *kla
 	/* allocate private structure */
 	sped->priv = g_new0 (XmlSpecEditorPrivate, 1);
 	sped->priv->signal_editor_changed_id = 0;
+
+	gtk_box_set_orientation (GTK_BOX (sped), GTK_ORIENTATION_VERTICAL);
 }
 
 GType
@@ -109,7 +111,7 @@ xml_spec_editor_get_type (void)
 			(GInstanceInitFunc) xml_spec_editor_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "XmlSpecEditor", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "XmlSpecEditor", &info, 0);
 	}
 	return type;
 }

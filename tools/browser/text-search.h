@@ -40,7 +40,7 @@ struct _TextSearch {
 };
 
 struct _TextSearchClass {
-	GtkVBoxClass         parent_class;
+	GtkBoxClass         parent_class;
 };
 
 GType        text_search_get_type       (void) G_GNUC_CONST;

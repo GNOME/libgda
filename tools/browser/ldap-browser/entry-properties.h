@@ -34,12 +34,12 @@ typedef struct _EntryPropertiesClass   EntryPropertiesClass;
 typedef struct _EntryPropertiesPrivate EntryPropertiesPrivate;
 
 struct _EntryProperties {
-	GtkVBox                 parent;
+	GtkBox                 parent;
 	EntryPropertiesPrivate *priv;
 };
 
 struct _EntryPropertiesClass {
-	GtkVBoxClass            parent_class;
+	GtkBoxClass            parent_class;
 
 	/* signals */
 	void                  (*open_dn) (EntryProperties *eprop, const gchar *dn);

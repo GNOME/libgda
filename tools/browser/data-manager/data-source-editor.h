@@ -36,14 +36,14 @@ typedef struct _DataSourceEditorPrivate DataSourceEditorPrivate;
 /* struct for the object's data */
 struct _DataSourceEditor
 {
-	GtkVBox                  object;
+	GtkBox                  object;
 	DataSourceEditorPrivate *priv;
 };
 
 /* struct for the object's class */
 struct _DataSourceEditorClass
 {
-	GtkVBoxClass             parent_class;
+	GtkBoxClass             parent_class;
 
 	/* signals */
 	/*void             (*changed) (DataSourceEditor *mgr);*/

@@ -38,7 +38,7 @@ typedef struct _GdauiFormPriv  GdauiFormPriv;
 /* struct for the object's data */
 struct _GdauiForm
 {
-	GtkVBox             object;
+	GtkBox             object;
 
 	GdauiFormPriv     *priv;
 };
@@ -46,7 +46,7 @@ struct _GdauiForm
 /* struct for the object's class */
 struct _GdauiFormClass
 {
-	GtkVBoxClass       parent_class;
+	GtkBoxClass       parent_class;
 };
 
 /**

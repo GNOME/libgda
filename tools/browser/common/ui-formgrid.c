@@ -100,7 +100,7 @@ ui_formgrid_get_type (void)
 			0
 		};		
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "UiFormGrid", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "UiFormGrid", &info, 0);
 	}
 
 	return type;
@@ -212,6 +212,8 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv->autoupdate = TRUE;
 	formgrid->priv->autoupdate_possible = FALSE;
 	formgrid->priv->scroll_form = FALSE;
+
+	gtk_box_set_orientation (GTK_BOX (formgrid), GTK_ORIENTATION_VERTICAL);
 
 	/* notebook */
 	formgrid->priv->nb = gtk_notebook_new ();

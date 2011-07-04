@@ -37,14 +37,14 @@ typedef struct _DataManagerPerspectivePriv DataManagerPerspectivePriv;
 /* struct for the object's data */
 struct _DataManagerPerspective
 {
-	GtkVBox                     object;
+	GtkBox                     object;
 	DataManagerPerspectivePriv *priv;
 };
 
 /* struct for the object's class */
 struct _DataManagerPerspectiveClass
 {
-	GtkVBoxClass                parent_class;
+	GtkBoxClass                parent_class;
 };
 
 /**

@@ -66,6 +66,8 @@ table_relations_init (TableRelations *trels, G_GNUC_UNUSED TableRelationsClass *
 {
 	trels->priv = g_new0 (TableRelationsPrivate, 1);
 	trels->priv->all_schemas = FALSE;
+
+	gtk_box_set_orientation (GTK_BOX (trels), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -105,7 +107,7 @@ table_relations_get_type (void)
 			(GInstanceInitFunc) table_relations_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "TableRelations", &relations, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "TableRelations", &relations, 0);
 	}
 	return type;
 }

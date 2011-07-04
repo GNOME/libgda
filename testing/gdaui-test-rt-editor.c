@@ -149,7 +149,7 @@ create_window (void)
 	g_signal_connect (G_OBJECT (p_win), "destroy", gtk_main_quit, NULL);
 
 	/* contents */
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_add (GTK_CONTAINER (p_win), vbox);
 	rte = gdaui_rt_editor_new ();
 	gtk_box_pack_start (GTK_BOX (vbox), rte, TRUE, TRUE, 0);

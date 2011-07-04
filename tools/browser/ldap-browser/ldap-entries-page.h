@@ -35,12 +35,12 @@ typedef struct _LdapEntriesPageClass   LdapEntriesPageClass;
 typedef struct _LdapEntriesPagePrivate LdapEntriesPagePrivate;
 
 struct _LdapEntriesPage {
-	GtkVBox                parent;
+	GtkBox                parent;
 	LdapEntriesPagePrivate *priv;
 };
 
 struct _LdapEntriesPageClass {
-	GtkVBoxClass           parent_class;
+	GtkBoxClass           parent_class;
 };
 
 GType        ldap_entries_page_get_type       (void) G_GNUC_CONST;

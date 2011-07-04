@@ -41,14 +41,14 @@ typedef struct _GdauiServerOperationPriv  GdauiServerOperationPriv;
 /* struct for the object's data */
 struct _GdauiServerOperation
 {
-	GtkVBox                     object;
+	GtkBox                     object;
 	GdauiServerOperationPriv *priv;
 };
 
 /* struct for the object's class */
 struct _GdauiServerOperationClass
 {
-	GtkVBoxClass                parent_class;
+	GtkBoxClass                parent_class;
 };
 
 /**

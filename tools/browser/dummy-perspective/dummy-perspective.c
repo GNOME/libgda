@@ -65,7 +65,7 @@ dummy_perspective_get_type (void)
 		
 		g_static_mutex_lock (&registering);
 		if (type == 0) {
-			type = g_type_register_static (GTK_TYPE_VBOX, "DummyPerspective", &info, 0);
+			type = g_type_register_static (GTK_TYPE_BOX, "DummyPerspective", &info, 0);
 			g_type_add_interface_static (type, BROWSER_PERSPECTIVE_TYPE, &perspective_info);
 		}
 		g_static_mutex_unlock (&registering);
@@ -95,6 +95,8 @@ static void
 dummy_perspective_init (DummyPerspective *perspective)
 {
 	GtkWidget *wid;
+
+	gtk_box_set_orientation (GTK_BOX (perspective), GTK_ORIENTATION_VERTICAL);
 	
 	wid = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (wid),

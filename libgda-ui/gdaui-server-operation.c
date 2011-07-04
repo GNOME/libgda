@@ -174,7 +174,7 @@ gdaui_server_operation_get_type (void)
 			0
 		};
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiServerOperation", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiServerOperation", &info, 0);
 	}
 
 	return type;
@@ -215,6 +215,8 @@ gdaui_server_operation_init (GdauiServerOperation * wid)
 	wid->priv->glade = NULL;
 #endif
 	wid->priv->opt_header = FALSE;
+
+	gtk_box_set_orientation (GTK_BOX (wid), GTK_ORIENTATION_VERTICAL);
 }
 
 
@@ -476,7 +478,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		winfo = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (grid),
 						   GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS);
 
-		box = gtk_vbox_new (FALSE, 0);
+		box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_box_pack_start (GTK_BOX (box), plwid, TRUE, TRUE, 0);
 		gtk_widget_show (plwid);
 
@@ -1165,7 +1167,7 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	hlayout = gtk_hpaned_new ();
 
 	/* form for field properties */
-	box = gtk_vbox_new (FALSE, 0);
+	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_paned_pack2 (GTK_PANED (hlayout), box, TRUE, TRUE);
 
 	label = gtk_label_new (_("<b>Field properties:</b>"));
@@ -1184,7 +1186,7 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	gtk_widget_show_all (box);
 
 	/* grid for field names */
-	box = gtk_vbox_new (FALSE, 0);
+	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_paned_pack1 (GTK_PANED (hlayout), box, TRUE, TRUE);
 
 	label = gtk_label_new (_("<b>Fields:</b>"));

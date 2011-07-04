@@ -35,12 +35,12 @@ typedef struct _GdauiProviderSpecEditorClass   GdauiProviderSpecEditorClass;
 typedef struct _GdauiProviderSpecEditorPrivate GdauiProviderSpecEditorPrivate;
 
 struct _GdauiProviderSpecEditor {
-	GtkVBox                box;
+	GtkBox                box;
 	GdauiProviderSpecEditorPrivate *priv;
 };
 
 struct _GdauiProviderSpecEditorClass {
-	GtkVBoxClass           parent_class;
+	GtkBoxClass           parent_class;
 
 	/* signals */
 	void                (* changed) (GdauiProviderSpecEditor *spec);

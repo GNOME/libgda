@@ -127,7 +127,7 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialo
 	gtk_widget_show (nb);
 	g_object_set_data (G_OBJECT (dialog), "main_part", nb);	
 
-	vbox = gtk_vbox_new (FALSE, 12);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 	gtk_widget_show (vbox);
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), vbox, NULL);
 	gtk_widget_show (vbox);

@@ -92,6 +92,8 @@ entry_properties_init (EntryProperties *eprop, G_GNUC_UNUSED EntryPropertiesClas
 {
 	eprop->priv = g_new0 (EntryPropertiesPrivate, 1);
 	eprop->priv->hovering_over_link = FALSE;
+
+	gtk_box_set_orientation (GTK_BOX (eprop), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -130,7 +132,7 @@ entry_properties_get_type (void)
 			(GInstanceInitFunc) entry_properties_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "EntryProperties", &columns, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "EntryProperties", &columns, 0);
 	}
 	return type;
 }

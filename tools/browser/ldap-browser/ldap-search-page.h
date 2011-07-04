@@ -35,12 +35,12 @@ typedef struct _LdapSearchPageClass   LdapSearchPageClass;
 typedef struct _LdapSearchPagePrivate LdapSearchPagePrivate;
 
 struct _LdapSearchPage {
-	GtkVBox            parent;
+	GtkBox            parent;
 	LdapSearchPagePrivate *priv;
 };
 
 struct _LdapSearchPageClass {
-	GtkVBoxClass       parent_class;
+	GtkBoxClass       parent_class;
 };
 
 GType        ldap_search_page_get_type       (void) G_GNUC_CONST;

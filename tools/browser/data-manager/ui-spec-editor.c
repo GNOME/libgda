@@ -227,13 +227,15 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 
 	/* allocate private structure */
 	sped->priv = g_new0 (UiSpecEditorPrivate, 1);
+
+	gtk_box_set_orientation (GTK_BOX (sped), GTK_ORIENTATION_VERTICAL);
 	
 	GtkWidget *hpaned;
 	hpaned = gtk_hpaned_new ();
 	gtk_box_pack_start (GTK_BOX (sped), hpaned, TRUE, TRUE, 0);
 	
 	GtkWidget *vbox;
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 
 	GtkWidget *label;
@@ -293,7 +295,7 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 	gtk_container_add (GTK_CONTAINER (sw), sped->priv->sources_tree);
 	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 
 	label = gtk_label_new ("");
@@ -332,7 +334,7 @@ ui_spec_editor_get_type (void)
 			(GInstanceInitFunc) ui_spec_editor_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "UiSpecEditor", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "UiSpecEditor", &info, 0);
 	}
 	return type;
 }

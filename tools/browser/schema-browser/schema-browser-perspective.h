@@ -37,14 +37,14 @@ typedef struct _SchemaBrowserPerspectivePrivate SchemaBrowserPerspectivePrivate;
 /* struct for the object's data */
 struct _SchemaBrowserPerspective
 {
-	GtkVBox              object;
+	GtkBox              object;
 	SchemaBrowserPerspectivePrivate *priv;
 };
 
 /* struct for the object's class */
 struct _SchemaBrowserPerspectiveClass
 {
-	GtkVBoxClass         parent_class;
+	GtkBoxClass         parent_class;
 };
 
 /**

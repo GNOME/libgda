@@ -37,14 +37,14 @@ typedef struct _QueryExecPerspectivePrivate QueryExecPerspectivePrivate;
 /* struct for the object's data */
 struct _QueryExecPerspective
 {
-	GtkVBox              object;
+	GtkBox              object;
 	QueryExecPerspectivePrivate *priv;
 };
 
 /* struct for the object's class */
 struct _QueryExecPerspectiveClass
 {
-	GtkVBoxClass         parent_class;
+	GtkBoxClass         parent_class;
 };
 
 /**

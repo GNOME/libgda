@@ -106,6 +106,8 @@ ldap_favorite_selector_init (LdapFavoriteSelector *fsel, G_GNUC_UNUSED LdapFavor
 	fsel->priv = g_new0 (LdapFavoriteSelectorPrivate, 1);
 	fsel->priv->idle_update_favorites = 0;
 	fsel->priv->prop_save_timeout = 0;
+
+	gtk_box_set_orientation (GTK_BOX (fsel), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -159,7 +161,7 @@ ldap_favorite_selector_get_type (void)
 			(GInstanceInitFunc) ldap_favorite_selector_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "LdapFavoriteSelector",
+		type = g_type_register_static (GTK_TYPE_BOX, "LdapFavoriteSelector",
 					       &info, 0);
 	}
 	return type;
@@ -274,7 +276,7 @@ properties_activated_cb (GtkMenuItem *mitem, LdapFavoriteSelector *fsel)
 		gfloat align;
 		
 		pcont = popup_container_new (GTK_WIDGET (mitem));
-		vbox = gtk_vbox_new (FALSE, 0);
+		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_container_add (GTK_CONTAINER (pcont), vbox);
 		
 		label = gtk_label_new ("");

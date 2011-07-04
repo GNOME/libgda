@@ -35,12 +35,12 @@ typedef struct _DataConsoleClass   DataConsoleClass;
 typedef struct _DataConsolePrivate DataConsolePrivate;
 
 struct _DataConsole {
-	GtkVBox               parent;
+	GtkBox               parent;
 	DataConsolePrivate   *priv;
 };
 
 struct _DataConsoleClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 };
 
 GType                    data_console_get_type (void) G_GNUC_CONST;

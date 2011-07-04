@@ -45,7 +45,7 @@ typedef struct {
 	GType      *tested_gtypes;
 	gint        nb_tested_gtypes;
 	GHashTable *models_hash; /* key = GType, value = a GdaDataModel to test */
-	GHashTable *tests_hash; /* key = a GtkVBox, value = a TestWidgetData */
+	GHashTable *tests_hash; /* key = a GtkBox, value = a TestWidgetData */
 } TestConfig;
 
 extern GHashTable *gdaui_plugins_hash;
@@ -170,7 +170,7 @@ main (int argc, char **argv)
 	g_signal_connect (G_OBJECT (mainwin), "destroy",
 			  G_CALLBACK (destroy), NULL);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (mainwin), vbox);
 	gtk_widget_show (vbox);
 
@@ -186,7 +186,7 @@ main (int argc, char **argv)
 	/*
 	 * Default handlers
 	 */
-	vbox = gtk_vbox_new (FALSE, 10);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
 	gtk_notebook_append_page (GTK_NOTEBOOK (top_nb), vbox, NULL);
 	gtk_widget_show (vbox);
 
@@ -210,7 +210,7 @@ main (int argc, char **argv)
 	/*
 	 * Plugins page 
 	 */
-	vbox = gtk_vbox_new (FALSE, 10);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
 	gtk_notebook_append_page (GTK_NOTEBOOK (top_nb), vbox, NULL);
 	gtk_widget_show (vbox);
 
@@ -511,7 +511,7 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 			if (dh) {
 				TestWidgetData *tdata;
 
-				wid = gtk_vbox_new (FALSE, 0);
+				wid = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 				tdata = g_new0 (TestWidgetData, 1);
 				tdata->vbox = wid;
 				tdata->type = type;
@@ -536,7 +536,7 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 			if (dh) {
 				TestWidgetData *tdata;
 
-				wid = gtk_vbox_new (FALSE, 0);
+				wid = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 				tdata = g_new0 (TestWidgetData, 1);
 				tdata->vbox = wid;
 				tdata->type = type;
@@ -681,7 +681,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	GString *string;
 	gboolean expand;
 	
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	table = gtk_table_new (7, 3, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 5);

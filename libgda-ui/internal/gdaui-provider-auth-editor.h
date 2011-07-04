@@ -35,12 +35,12 @@ typedef struct _GdauiProviderAuthEditorClass   GdauiProviderAuthEditorClass;
 typedef struct _GdauiProviderAuthEditorPrivate GdauiProviderAuthEditorPrivate;
 
 struct _GdauiProviderAuthEditor {
-	GtkVBox                box;
+	GtkBox                box;
 	GdauiProviderAuthEditorPrivate *priv;
 };
 
 struct _GdauiProviderAuthEditorClass {
-	GtkVBoxClass           parent_class;
+	GtkBoxClass           parent_class;
 
 	/* signals */
 	void                (* changed) (GdauiProviderAuthEditor *auth);

@@ -85,6 +85,8 @@ table_columns_init (TableColumns *tcolumns, G_GNUC_UNUSED TableColumnsClass *kla
 	tcolumns->priv = g_new0 (TableColumnsPrivate, 1);
 	tcolumns->priv->idle_update_columns = 0;
 	tcolumns->priv->hovering_over_link = FALSE;
+
+	gtk_box_set_orientation (GTK_BOX (tcolumns), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -143,7 +145,7 @@ table_columns_get_type (void)
 			(GInstanceInitFunc) table_columns_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "TableColumns", &columns, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "TableColumns", &columns, 0);
 	}
 	return type;
 }
@@ -675,7 +677,7 @@ table_columns_new (TableInfo *tinfo)
 	
 	/* Paned, part 2 */
 	GtkWidget *vbox;
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_paned_pack2 (GTK_PANED (paned), vbox, TRUE, TRUE);
 
 #ifdef HAVE_LDAP

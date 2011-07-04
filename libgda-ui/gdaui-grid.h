@@ -37,7 +37,7 @@ typedef struct _GdauiGridPriv  GdauiGridPriv;
 /* struct for the object's data */
 struct _GdauiGrid
 {
-	GtkVBox             object;
+	GtkBox             object;
 
 	GdauiGridPriv     *priv;
 };
@@ -45,7 +45,7 @@ struct _GdauiGrid
 /* struct for the object's class */
 struct _GdauiGridClass
 {
-	GtkVBoxClass       parent_class;
+	GtkBoxClass       parent_class;
 };
 
 /**

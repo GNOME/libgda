@@ -35,12 +35,12 @@ typedef struct _TableInfoClass   TableInfoClass;
 typedef struct _TableInfoPrivate TableInfoPrivate;
 
 struct _TableInfo {
-	GtkVBox               parent;
+	GtkBox               parent;
 	TableInfoPrivate     *priv;
 };
 
 struct _TableInfoClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 };
 
 GType                    table_info_get_type (void) G_GNUC_CONST;

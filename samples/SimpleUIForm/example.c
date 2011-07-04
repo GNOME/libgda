@@ -67,7 +67,7 @@ main (int argc, char *argv[])
 				  window);
 	gtk_container_set_border_width (GTK_CONTAINER (window), 10);
 
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 
 	/* main form to list customers */

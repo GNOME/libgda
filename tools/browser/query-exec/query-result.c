@@ -71,6 +71,8 @@ query_result_init (QueryResult *result, G_GNUC_UNUSED QueryResultClass *klass)
 	result->priv->hitem = NULL;
 	result->priv->hash = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
 
+	gtk_box_set_orientation (GTK_BOX (result), GTK_ORIENTATION_VERTICAL);
+
 	wid = make_widget_for_notice ();
 	gtk_box_pack_start (GTK_BOX (result), wid, TRUE, TRUE, 0);
 	gtk_widget_show (wid);
@@ -136,7 +138,7 @@ query_result_get_type (void)
 			(GInstanceInitFunc) query_result_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "QueryResult", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "QueryResult", &info, 0);
 	}
 	return type;
 }
@@ -192,7 +194,7 @@ query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hba
 		return;
 	}
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	child = query_editor_new ();
 	query_editor_set_mode (QUERY_EDITOR (child), QUERY_EDITOR_READONLY);

@@ -37,7 +37,7 @@ typedef struct _GdauiRtEditorPriv  GdauiRtEditorPriv;
 /* struct for the object's data */
 struct _GdauiRtEditor
 {
-	GtkVBox              object;
+	GtkBox              object;
 
 	GdauiRtEditorPriv   *priv;
 };
@@ -45,7 +45,7 @@ struct _GdauiRtEditor
 /* struct for the object's class */
 struct _GdauiRtEditorClass
 {
-	GtkVBoxClass         parent_class;
+	GtkBoxClass         parent_class;
 
 	/* signals */
         void (* changed) (GdauiRtEditor *editor);

@@ -35,12 +35,12 @@ typedef struct _QueryConsolePageClass   QueryConsolePageClass;
 typedef struct _QueryConsolePagePrivate QueryConsolePagePrivate;
 
 struct _QueryConsolePage {
-	GtkVBox               parent;
+	GtkBox               parent;
 	QueryConsolePagePrivate     *priv;
 };
 
 struct _QueryConsolePageClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 };
 
 GType                    query_console_page_get_type (void) G_GNUC_CONST;

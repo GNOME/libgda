@@ -123,7 +123,7 @@ main (int argc, char* argv[])
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-	top_vbox = gtk_vbox_new (FALSE, 0);
+	top_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
 	gtk_container_add(GTK_CONTAINER(window), top_vbox);
 
@@ -133,7 +133,7 @@ main (int argc, char* argv[])
 	/*
 	 * GdauiEntry widgets
 	 */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
 
 	label = gtk_label_new ("");
@@ -199,7 +199,7 @@ main (int argc, char* argv[])
 	/*
 	 * GdauiFormattedEntry widgets
 	 */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
 
 	label = gtk_label_new ("");
@@ -239,7 +239,7 @@ main (int argc, char* argv[])
 	/*
 	 * GdauiNumericEntry widgets
 	 */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
 
 	label = gtk_label_new ("");
@@ -322,7 +322,7 @@ main (int argc, char* argv[])
 	/*
 	 * complete tests
 	 */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
 
 	label = gtk_label_new ("");

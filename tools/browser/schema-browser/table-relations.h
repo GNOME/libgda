@@ -35,12 +35,12 @@ typedef struct _TableRelationsClass   TableRelationsClass;
 typedef struct _TableRelationsPrivate TableRelationsPrivate;
 
 struct _TableRelations {
-	GtkVBox               parent;
+	GtkBox               parent;
 	TableRelationsPrivate *priv;
 };
 
 struct _TableRelationsClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 };
 
 GType                    table_relations_get_type (void) G_GNUC_CONST;

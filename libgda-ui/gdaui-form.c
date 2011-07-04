@@ -108,7 +108,7 @@ gdaui_form_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiForm", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiForm", &info, 0);
 		g_type_add_interface_static (type, GDAUI_TYPE_DATA_PROXY, &proxy_info);
 		g_type_add_interface_static (type, GDAUI_TYPE_DATA_SELECTOR, &selector_info);
 	}
@@ -185,6 +185,8 @@ gdaui_form_init (GdauiForm *form)
 	form->priv = g_new0 (GdauiFormPriv, 1);
 	form->priv->raw_form = NULL;
 	form->priv->info = NULL;
+
+	gtk_box_set_orientation (GTK_BOX (form), GTK_ORIENTATION_VERTICAL);
 
 	form->priv->raw_form = gdaui_raw_form_new (NULL);
 	gtk_box_pack_start (GTK_BOX (form), form->priv->raw_form, FALSE, FALSE, 0);

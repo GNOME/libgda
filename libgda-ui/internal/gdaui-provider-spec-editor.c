@@ -233,6 +233,8 @@ gdaui_provider_spec_editor_init (GdauiProviderSpecEditor *spec,
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_SPEC_EDITOR (spec));
 
+	gtk_box_set_orientation (GTK_BOX (config), GTK_ORIENTATION_VERTICAL);
+
 	spec->priv = g_new0 (GdauiProviderSpecEditorPrivate, 1);
 	spec->priv->type = NO_PROVIDER;
 }
@@ -337,7 +339,7 @@ _gdaui_provider_spec_editor_get_type (void)
 		};
 		type = g_type_from_name ("GdauiProviderSpecEditor");
 		if (type == 0)
-			type = g_type_register_static (GTK_TYPE_VBOX,
+			type = g_type_register_static (GTK_TYPE_BOX,
 						       "GdauiProviderSpecEditor",
 						       &info, 0);
 	}

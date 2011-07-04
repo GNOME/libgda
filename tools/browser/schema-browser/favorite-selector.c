@@ -93,6 +93,8 @@ favorite_selector_init (FavoriteSelector *tsel,	G_GNUC_UNUSED FavoriteSelectorCl
 {
 	tsel->priv = g_new0 (FavoriteSelectorPrivate, 1);
 	tsel->priv->idle_update_favorites = 0;
+
+	gtk_box_set_orientation (GTK_BOX (tsel), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -138,7 +140,7 @@ favorite_selector_get_type (void)
 			(GInstanceInitFunc) favorite_selector_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "FavoriteSelector",
+		type = g_type_register_static (GTK_TYPE_BOX, "FavoriteSelector",
 					       &info, 0);
 	}
 	return type;

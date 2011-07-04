@@ -85,7 +85,7 @@ gdaui_data_filter_get_type (void)
 			0
 		};		
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiDataFilter", &filter, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiDataFilter", &filter, 0);
 	}
 
 	return type;
@@ -97,7 +97,6 @@ gdaui_data_filter_class_init (GdauiDataFilterClass * class)
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 	
 	parent_class = g_type_class_peek_parent (class);
-
 
 	object_class->dispose = gdaui_data_filter_dispose;
 
@@ -199,6 +198,8 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 	wid->priv = g_new0 (GdauiDataFilterPriv, 1);
 	wid->priv->data_widget = NULL;
 	wid->priv->proxy = NULL;
+
+	gtk_box_set_orientation (GTK_BOX (wid), GTK_ORIENTATION_VERTICAL);
 
 	table = gtk_table_new (2, 2, FALSE);
 	gtk_table_set_row_spacing (GTK_TABLE (table), 1, 10);

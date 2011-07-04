@@ -188,7 +188,7 @@ common_bin_create_menu (BinMenu *binmenu, PopupContainerPositionFunc pos_func, G
 	popup = popup_container_new_with_func (pos_func);
 	binmenu->popup = popup;
 	
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (popup), vbox);
 
 	label = gtk_label_new ("");

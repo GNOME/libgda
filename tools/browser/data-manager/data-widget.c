@@ -99,6 +99,8 @@ data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 	/* allocate private structure */
 	dwid->priv = g_new0 (DataWidgetPrivate, 1);
 
+	gtk_box_set_orientation (GTK_BOX (dwid), GTK_ORIENTATION_VERTICAL);
+
 	/* init Widgets's structure */
 	dwid->priv->top_nb = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (dwid->priv->top_nb), FALSE);
@@ -117,7 +119,7 @@ data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 
 	/* contents page */
 	GtkWidget *vbox;
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_notebook_append_page (GTK_NOTEBOOK (dwid->priv->top_nb), vbox, NULL);
 	dwid->priv->contents_page_vbox = vbox;
 
@@ -142,7 +144,7 @@ data_widget_get_type (void)
 			(GInstanceInitFunc) data_widget_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "DataWidget", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "DataWidget", &info, 0);
 	}
 	return type;
 }
@@ -208,7 +210,7 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	dwid->priv->parts = g_slist_append (dwid->priv->parts, part);
 
 	GtkWidget *vbox;
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	part->top = vbox;
 	g_object_ref_sink ((GObject*) part->top);
 
@@ -371,7 +373,7 @@ update_layout (DataWidget *dwid)
 	GError *lerror = NULL;
 	GtkWidget *new_contents;
 
-	new_contents = gtk_vbox_new (FALSE, 0);
+	new_contents = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	sources_array = data_source_manager_get_sources_array (dwid->priv->mgr, &lerror);
 	if (!sources_array) {

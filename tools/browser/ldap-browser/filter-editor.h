@@ -36,12 +36,12 @@ typedef struct _FilterEditorClass   FilterEditorClass;
 typedef struct _FilterEditorPrivate FilterEditorPrivate;
 
 struct _FilterEditor {
-	GtkVBox              parent;
+	GtkBox              parent;
 	FilterEditorPrivate *priv;
 };
 
 struct _FilterEditorClass {
-	GtkVBoxClass         parent_class;
+	GtkBoxClass         parent_class;
 	
 	/* signals */
 	void               (*activate) (FilterEditor *feditor);

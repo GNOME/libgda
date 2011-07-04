@@ -837,7 +837,7 @@ popup_add_table_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasDbRelations *
 		
 		g_object_set_data (G_OBJECT (dbrels->priv->add_dialog), "__canvas", dbrels);
 
-		vbox = gtk_vbox_new (FALSE, 0);
+		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dbrels->priv->add_dialog));
 		gtk_container_add (GTK_CONTAINER (dcontents), vbox);
 		

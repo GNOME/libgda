@@ -34,12 +34,12 @@ typedef struct _ClassPropertiesClass   ClassPropertiesClass;
 typedef struct _ClassPropertiesPrivate ClassPropertiesPrivate;
 
 struct _ClassProperties {
-	GtkVBox                 parent;
+	GtkBox                 parent;
 	ClassPropertiesPrivate *priv;
 };
 
 struct _ClassPropertiesClass {
-	GtkVBoxClass            parent_class;
+	GtkBoxClass            parent_class;
 
 	/* signals */
 	void                  (*open_class) (ClassProperties *eprop, const gchar *dn);

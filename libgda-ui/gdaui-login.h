@@ -35,12 +35,12 @@ typedef struct _GdauiLoginClass   GdauiLoginClass;
 typedef struct _GdauiLoginPrivate GdauiLoginPrivate;
 
 struct _GdauiLogin {
-	GtkVBox            parent;
+	GtkBox            parent;
 	GdauiLoginPrivate *priv;
 };
 
 struct _GdauiLoginClass {
-	GtkVBoxClass       parent_class;
+	GtkBoxClass       parent_class;
 
 	/* signals */
 	void               (*changed) (GdauiLogin *login, gboolean is_valid);

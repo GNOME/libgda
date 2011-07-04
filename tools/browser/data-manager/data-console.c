@@ -174,6 +174,8 @@ data_console_init (DataConsole *dconsole, G_GNUC_UNUSED DataConsoleClass *klass)
 	dconsole->priv->layout_type = LAYOUT_HORIZ;
 	dconsole->priv->fav_id = -1;
 	dconsole->priv->popup_container = NULL;
+
+	gtk_box_set_orientation (GTK_BOX (dconsole), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -236,7 +238,7 @@ data_console_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "DataConsole", &console, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "DataConsole", &console, 0);
 		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_console);
 	}
 	return type;
@@ -321,7 +323,7 @@ data_console_new (BrowserConnection *bcnc)
 
 	/* variables */
         GtkWidget *vbox, *sw;
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	dconsole->priv->params_top = vbox;
 	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, FALSE, TRUE);
 
@@ -355,7 +357,7 @@ data_console_new (BrowserConnection *bcnc)
 	dconsole->priv->main_notebook = nb;
 
 	/* editors page */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -425,7 +427,7 @@ data_console_new (BrowserConnection *bcnc)
 
 
 	/* data contents page */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	dconsole->priv->data_box = vbox;
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
 

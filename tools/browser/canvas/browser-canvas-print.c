@@ -226,7 +226,7 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
 	cdata = g_new0 (PrintCustomData, 1);
 	cdata->pdata = pdata;
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
 
 	/* page size's adjustments */

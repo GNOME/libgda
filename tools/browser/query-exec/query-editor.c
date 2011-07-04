@@ -661,6 +661,8 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 
 	g_return_if_fail (QUERY_IS_EDITOR (editor));
 
+	gtk_box_set_orientation (GTK_BOX (editor), GTK_ORIENTATION_VERTICAL);
+
 	/* allocate private structure */
 	editor->priv = g_new0 (QueryEditorPrivate, 1);
 	editor->priv->mode = QUERY_EDITOR_READWRITE;
@@ -842,7 +844,7 @@ query_editor_get_type (void)
 			(GInstanceInitFunc) query_editor_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "QueryEditor", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "QueryEditor", &info, 0);
 	}
 	return type;
 }

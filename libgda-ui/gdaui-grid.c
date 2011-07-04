@@ -108,7 +108,7 @@ gdaui_grid_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiGrid", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiGrid", &info, 0);
 		g_type_add_interface_static (type, GDAUI_TYPE_DATA_PROXY, &proxy_info);
 		g_type_add_interface_static (type, GDAUI_TYPE_DATA_SELECTOR, &selector_info);
 
@@ -177,6 +177,8 @@ gdaui_grid_init (GdauiGrid *grid)
 	grid->priv = g_new0 (GdauiGridPriv, 1);
 	grid->priv->raw_grid = NULL;
 	grid->priv->info = NULL;
+
+	gtk_box_set_orientation (GTK_BOX (grid), GTK_ORIENTATION_VERTICAL);
 
 	sw = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);

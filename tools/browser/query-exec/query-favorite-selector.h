@@ -35,12 +35,12 @@ typedef struct _QueryFavoriteSelectorClass   QueryFavoriteSelectorClass;
 typedef struct _QueryFavoriteSelectorPrivate QueryFavoriteSelectorPrivate;
 
 struct _QueryFavoriteSelector {
-	GtkVBox               parent;
+	GtkBox               parent;
 	QueryFavoriteSelectorPrivate *priv;
 };
 
 struct _QueryFavoriteSelectorClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 
 	void                (*selection_changed) (QueryFavoriteSelector *sel, gint fav_id,
 						  BrowserFavoritesType fav_type, const gchar *fav_contents);

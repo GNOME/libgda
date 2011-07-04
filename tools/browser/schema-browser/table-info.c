@@ -113,6 +113,8 @@ static void
 table_info_init (TableInfo *tinfo, G_GNUC_UNUSED TableInfoClass *klass)
 {
 	tinfo->priv = g_new0 (TableInfoPrivate, 1);
+
+	gtk_box_set_orientation (GTK_BOX (tinfo), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -167,7 +169,7 @@ table_info_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "TableInfo", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "TableInfo", &info, 0);
 		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_info);
 	}
 	return type;

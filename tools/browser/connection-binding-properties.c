@@ -410,7 +410,7 @@ create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnect
 		plugin_added = TRUE;
 	}
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 5);
 
@@ -517,7 +517,7 @@ create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectio
 	GtkWidget *hbox, *vbox, *label, *button;
 	gchar *str;
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 5);
 

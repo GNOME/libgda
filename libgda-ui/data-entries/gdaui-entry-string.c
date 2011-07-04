@@ -329,7 +329,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
 	g_return_val_if_fail (mgstr->priv, NULL);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	mgstr->priv->vbox = vbox;
 
 	/* one line entry */

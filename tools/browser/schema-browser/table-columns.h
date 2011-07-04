@@ -35,12 +35,12 @@ typedef struct _TableColumnsClass   TableColumnsClass;
 typedef struct _TableColumnsPrivate TableColumnsPrivate;
 
 struct _TableColumns {
-	GtkVBox               parent;
+	GtkBox               parent;
 	TableColumnsPrivate *priv;
 };
 
 struct _TableColumnsClass {
-	GtkVBoxClass          parent_class;
+	GtkBoxClass          parent_class;
 };
 
 GType                    table_columns_get_type (void) G_GNUC_CONST;

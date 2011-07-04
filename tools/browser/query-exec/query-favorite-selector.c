@@ -108,6 +108,8 @@ query_favorite_selector_init (QueryFavoriteSelector *tsel, G_GNUC_UNUSED QueryFa
 	tsel->priv = g_new0 (QueryFavoriteSelectorPrivate, 1);
 	tsel->priv->idle_update_favorites = 0;
 	tsel->priv->prop_save_timeout = 0;
+
+	gtk_box_set_orientation (GTK_BOX (tsel), GTK_ORIENTATION_VERTICAL);
 }
 
 static void
@@ -160,7 +162,7 @@ query_favorite_selector_get_type (void)
 			(GInstanceInitFunc) query_favorite_selector_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "QueryFavoriteSelector",
+		type = g_type_register_static (GTK_TYPE_BOX, "QueryFavoriteSelector",
 					       &info, 0);
 	}
 	return type;
@@ -327,7 +329,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		gfloat align;
 		
 		pcont = popup_container_new (GTK_WIDGET (mitem));
-		vbox = gtk_vbox_new (FALSE, 0);
+		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_container_add (GTK_CONTAINER (pcont), vbox);
 		
 		label = gtk_label_new ("");

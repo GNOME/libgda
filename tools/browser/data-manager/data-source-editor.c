@@ -71,7 +71,7 @@ data_source_editor_get_type (void)
 		
 		g_static_mutex_lock (&registering);
 		if (type == 0)
-			type = g_type_register_static (GTK_TYPE_VBOX, "DataSourceEditor", &info, 0);
+			type = g_type_register_static (GTK_TYPE_BOX, "DataSourceEditor", &info, 0);
 		g_static_mutex_unlock (&registering);
 	}
 	return type;
@@ -99,6 +99,9 @@ static void
 data_source_editor_init (DataSourceEditor *editor)
 {
 	GtkWidget *vpaned;
+
+	gtk_box_set_orientation (GTK_BOX (editor), GTK_ORIENTATION_VERTICAL);
+
 	editor->priv = g_new0 (DataSourceEditorPrivate, 1);
 	editor->priv->attributes = gda_set_new_inline (4,
 						       "id", G_TYPE_STRING, "",

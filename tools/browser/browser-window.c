@@ -419,7 +419,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
 	/* main VBox */
 	GtkWidget *vbox;
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
         gtk_container_add (GTK_CONTAINER (bwin), vbox);
         gtk_widget_show (vbox);
 
@@ -472,7 +472,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
         gtk_widget_show (toolbar);
 	bwin->priv->toolbar_style = gtk_toolbar_get_style (GTK_TOOLBAR (toolbar));
 
-	bwin->priv->notif_box = gtk_vbox_new (FALSE, 0);
+	bwin->priv->notif_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->notif_box, FALSE, FALSE, 0);
         gtk_widget_show (bwin->priv->notif_box);
 	bwin->priv->notif_widgets = NULL;
@@ -489,7 +489,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	spinner = browser_spinner_new ();
 	browser_spinner_set_size ((BrowserSpinner*) spinner, GTK_ICON_SIZE_SMALL_TOOLBAR);
 
-	svbox = gtk_vbox_new (FALSE, 0);
+	svbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
 	gtk_container_add (GTK_CONTAINER (align), spinner);
 	gtk_box_pack_start (GTK_BOX (svbox), align, TRUE, TRUE, 0);

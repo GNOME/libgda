@@ -84,7 +84,7 @@ ldap_browser_perspective_get_type (void)
 		
 		g_static_mutex_lock (&registering);
 		if (type == 0) {
-			type = g_type_register_static (GTK_TYPE_VBOX, "LdapBrowserPerspective", &info, 0);
+			type = g_type_register_static (GTK_TYPE_BOX, "LdapBrowserPerspective", &info, 0);
 			g_type_add_interface_static (type, BROWSER_PERSPECTIVE_TYPE, &perspective_info);
 		}
 		g_static_mutex_unlock (&registering);
@@ -117,6 +117,8 @@ ldap_browser_perspective_init (LdapBrowserPerspective *perspective)
 {
 	perspective->priv = g_new0 (LdapBrowserPerspectivePrivate, 1);
 	perspective->priv->favorites_shown = TRUE;
+
+	gtk_box_set_orientation (GTK_BOX (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

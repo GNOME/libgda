@@ -109,6 +109,8 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 
 	g_return_if_fail (GDAUI_IS_DSN_EDITOR (config));
 
+	gtk_box_set_orientation (GTK_BOX (config), GTK_ORIENTATION_VERTICAL);
+
 	/* allocate private structure */
 	config->priv = g_new0 (GdauiDsnEditorPrivate, 1);
 	config->priv->dsn_info = g_new0 (GdaDsnInfo, 1);
@@ -271,7 +273,7 @@ gdaui_dsn_editor_get_type (void)
 			(GInstanceInitFunc) gdaui_dsn_editor_init,
 			0
 		};
-		type = g_type_register_static (GTK_TYPE_VBOX, "GdauiDsnEditor", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiDsnEditor", &info, 0);
 	}
 	return type;
 }

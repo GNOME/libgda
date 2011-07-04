@@ -184,7 +184,10 @@ query_console_page_init (QueryConsolePage *tconsole, G_GNUC_UNUSED QueryConsoleP
 	tconsole->priv->params_popup = NULL;
 	tconsole->priv->agroup = NULL;
 	tconsole->priv->fav_id = -1;
+
+	gtk_box_set_orientation (GTK_BOX (tconsole), GTK_ORIENTATION_VERTICAL);
 }
+
 static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
 				gchar *reason, QueryConsolePage *tconsole);
 static void
@@ -248,7 +251,7 @@ query_console_page_get_type (void)
                         NULL
                 };
 
-		type = g_type_register_static (GTK_TYPE_VBOX, "QueryConsolePage", &console, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "QueryConsolePage", &console, 0);
 		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_console);
 	}
 	return type;
@@ -306,7 +309,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	hpaned = gtk_hpaned_new ();
 	gtk_box_pack_start (GTK_BOX (hbox), hpaned, TRUE, TRUE, 0);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 
 	wid = gtk_label_new ("");
@@ -326,7 +329,7 @@ query_console_page_new (BrowserConnection *bcnc)
 			  G_CALLBACK (editor_execute_request_cb), tconsole);
 	gtk_widget_set_size_request (wid, -1, 200);
 	
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	tconsole->priv->params_top = vbox;
 	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, FALSE, TRUE);
 	
@@ -397,7 +400,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	gtk_paned_add2 (GTK_PANED (vpaned), hpaned);
 
 	/* bottom left */
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, FALSE, TRUE);
 
 	wid = gtk_label_new ("");
@@ -436,7 +439,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	gtk_widget_set_sensitive (button, FALSE);
 
 	/* bottom right */
-	vbox = gtk_vbox_new (FALSE, 8);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
 	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 	
 	wid = gtk_label_new ("");
@@ -894,7 +897,7 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 
 				GtkWidget *vbox, *label, *bbox, *button;
 				gchar *str;
-				vbox = gtk_vbox_new (FALSE, 0);
+				vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 				gtk_container_add (GTK_CONTAINER (tconsole->priv->params_popup), vbox);
 				gtk_container_set_border_width (GTK_CONTAINER (tconsole->priv->params_popup), 10);
 
@@ -906,7 +909,7 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 				g_free (str);
 				gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-				cont = gtk_vbox_new (FALSE, 0);
+				cont = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 				gtk_box_pack_start (GTK_BOX (vbox), cont, FALSE, FALSE, 10);
 				g_object_set_data (G_OBJECT (tconsole->priv->params_popup), "cont", cont);
 
