@@ -47,7 +47,7 @@ main (int argc, char** argv)
 	gint failures = 0;
 	gint j, ntests = 0;;
 	for (j = 0; j < 10; j++) {
-		gint i;
+		guint i;
 		
 		for (i = 0; i < sizeof (tests) / sizeof (TestFunc); i++) {
 			GError *error = NULL;

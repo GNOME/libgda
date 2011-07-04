@@ -361,7 +361,7 @@ compare_signals_lists (GSList *explist, GSList *gotlist)
 				 es->name, gs->n_param_values);
 			return FALSE;
 		}
-		gint i;
+		guint i;
 		for (i = 0; i < es->n_param_values; i++) {
 			GValue *ev, *gv;
 			ev = es->param_values + i;
@@ -379,7 +379,7 @@ compare_signals_lists (GSList *explist, GSList *gotlist)
 		g_print ("Error: Some signals have not been received:\n");
 		for (; elist; elist = elist->next) {
 			TestSignal *es = (TestSignal*) elist->data;
-			gint i;
+			guint i;
 			g_print ("\tSignal: %s", es->name);
 			for (i = 0; i < es->n_param_values; i++)
 				g_print (" %s", gda_value_stringify (es->param_values + i));
@@ -392,7 +392,7 @@ compare_signals_lists (GSList *explist, GSList *gotlist)
 		g_print ("Error: Received too many signals:\n");
 		for (; glist; glist = glist->next) {
 			TestSignal *gs = (TestSignal*) glist->data;
-			gint i;
+			guint i;
 			g_print ("\tSignal: %s", gs->name);
 			for (i = 0; i < gs->n_param_values; i++)
 				g_print (" %s", gda_value_stringify (gs->param_values + i));

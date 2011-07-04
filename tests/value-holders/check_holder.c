@@ -75,8 +75,8 @@ main (int argc, char** argv)
 	g_type_init ();
 	gda_init ();
 
-	gint failures = 0;
-	gint i, ntests = 0;
+	guint failures = 0;
+	guint i, ntests = 0;
   
 	for (i = 0; i < sizeof (tests) / sizeof (TestFunc); i++) {
 		GError *error = NULL;

@@ -44,7 +44,7 @@ TestFunc tests[] = {
 int
 main (int argc, char **argv)
 {
-	gint i, ntests = 0, number_failed = 0;
+	guint i, ntests = 0, number_failed = 0;
 
 	gda_init ();
 	
@@ -63,7 +63,7 @@ main (int argc, char **argv)
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-
+/* Commented out because it is not used:
 static GdaStatement *
 stmt_from_string (const gchar *sql)
 {
@@ -83,6 +83,7 @@ stmt_from_string (const gchar *sql)
 	}
 	return stmt;
 }
+*/
 
 static gboolean
 check_iter_contents (GdaDataModel *model, GdaDataModelIter *iter)
@@ -220,6 +221,7 @@ dump_data_model (GdaDataModel *model)
         gda_data_model_dump (model, stdout);
 }
 
+/* Commented out because it is not used.
 static gboolean
 compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
 {
@@ -257,3 +259,4 @@ compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
         g_propagate_error (error, lerror);
         return FALSE;
 }
+*/

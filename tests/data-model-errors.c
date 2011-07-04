@@ -329,7 +329,7 @@ data_model_errors_get_value_at (GdaDataModel *model, gint col, gint row, GError 
 		return NULL;
 	}
 
-	if (row >= imodel->priv->rows->len) {
+	if (row >= (gint)imodel->priv->rows->len) {
 		gchar *str;
 		if (imodel->priv->rows->len > 0)
 			str = g_strdup_printf ("Row %d out of range (0-%d)", row,
@@ -438,7 +438,7 @@ data_model_errors_remove_row (GdaDataModel *model, gint row, GError **error)
 	imodel = (DataModelErrors *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
 
-	if (row >= imodel->priv->rows->len) {
+	if (row >= (gint)imodel->priv->rows->len) {
 		gchar *str;
 		if (imodel->priv->rows->len > 0)
 			str = g_strdup_printf ("Row %d out of range (0-%d)", row,

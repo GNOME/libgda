@@ -55,10 +55,10 @@ main (int argc, char** argv)
 	}
 	g_free (fname);
 
-	gint failures = 0;
-	gint j, ntests = 0;;
+	guint failures = 0;
+	guint j, ntests = 0;;
 	for (j = 0; j < 500; j++) {
-		gint i;
+		guint i;
 		
 #ifdef DEBUG_PRINT
 		g_print ("================================================== test %d\n", j);

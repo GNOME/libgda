@@ -158,7 +158,7 @@ int
 main (int argc, char** argv)
 {
 	gda_init ();
-	gint i, nfailed = 0;
+	guint i, nfailed = 0;
 	for (i = 0; i < G_N_ELEMENTS (tests); i++) {
 		ATest *test = &(tests [i]);
 		gchar *result;

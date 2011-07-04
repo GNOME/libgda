@@ -42,8 +42,8 @@ main (int argc, char** argv)
 	g_type_init ();
 	gda_init ();
 
-	gint failures = 0;
-	gint i, ntests = 0;
+	guint failures = 0;
+	guint i, ntests = 0;
   
 	data = tests_common_load_data ("stmt.data");
 	for (i = 0; i < sizeof (tests) / sizeof (TestFunc); i++) {
@@ -84,7 +84,7 @@ static gboolean
 test1 (GError **error)
 {
 	GdaSqlParser *parser;
-	gint i;
+	guint i;
 
 	parser = gda_sql_parser_new ();
 	

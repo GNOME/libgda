@@ -145,7 +145,7 @@ do_test (GdaSqlParser *parser, const xmlChar *id, const xmlChar *file, xmlNodePt
 	else {
 		const GSList *stmt_list;
 		xmlNodePtr snode;
-		gint nb_stmt = 0;
+		guint nb_stmt = 0;
 
 		stmt_list = gda_batch_get_statements (batch);
 

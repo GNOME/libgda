@@ -940,7 +940,7 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 			}
 
 			/* move children DOWN if necessary and change the "_index" property */
-			if (top_attach >= item_index) {
+			if (top_attach >= (guint)item_index) {
 				struct MoveChild *mc;
 				gint index;
 
@@ -1016,7 +1016,7 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 			guint top_attach;
 			gtk_container_child_get (GTK_CONTAINER (table), child,
 						 "top-attach", &top_attach, NULL);
-			if (top_attach == item_index) {
+			if (top_attach == (guint)item_index) {
 				gtk_widget_destroy (child);
 				g_list_free (children);
 				children = gtk_container_get_children (GTK_CONTAINER (table));
@@ -1046,7 +1046,7 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 			}
 
 			/* move widgets UP if necessary and change the "_index" property */
-			if (top_attach > item_index) {
+			if (top_attach > (guint)item_index) {
 				struct MoveChild *mc;
 				gint index;
 

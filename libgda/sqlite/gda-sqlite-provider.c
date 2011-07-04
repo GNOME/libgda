@@ -852,6 +852,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 #ifdef SQLITE_HAS_CODEC
   /* TODO Fix this compiler warning: the address of 'sqlite3_key' will always evaluate as 'true' */
+  /* We disable this warning in the meantime with -Wno-address */
 
 	if (auth)
 		passphrase = gda_quark_list_find (auth, "PASSWORD");

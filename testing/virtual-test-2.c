@@ -24,7 +24,11 @@
 #include <string.h>
 
 /* utility functions */
+
+/* Commented out because it is not used.
 static void          run_sql_non_select (GdaConnection *cnc, const gchar *sql);
+*/
+
 static GdaDataModel *run_sql_select (GdaConnection *cnc, const gchar *sql);
 static gint          run_and_show_sql_select (GdaConnection *cnc, const gchar *sql, const gchar *title);
 int
@@ -111,6 +115,7 @@ run_sql_select (GdaConnection *cnc, const gchar *sql)
 	return res;
 }
 
+/* Commented out because it is not used.
 static void
 run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 {
@@ -128,3 +133,4 @@ run_sql_non_select (GdaConnection *cnc, const gchar *sql)
         if (nrows == -1) 
                 g_error ("NON SELECT error: %s\n", error && error->message ? error->message : "no detail");
 }
+*/

@@ -20,6 +20,7 @@
 #include <string.h>
 #include <libgda-ui/gdaui-rt-editor.h>
 
+#ifdef GDA_DEBUG
 static gboolean
 texttags_equal (GtkTextTag *tag1, GtkTextTag *tag2)
 {
@@ -104,6 +105,7 @@ textbuffers_equal (GtkTextBuffer *buffer1, GtkTextBuffer *buffer2, GError **erro
 	}
 	return TRUE;
 }
+#endif
 
 static void
 copy_cb (GtkButton *button, GdauiRtEditor *from)

@@ -828,7 +828,7 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 
 	/* Can be NULL ? */
 	if (mask & GDA_VALUE_ATTR_CAN_BE_NULL)
-		if (combo->priv->null_possible != (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE) {
+		if (combo->priv->null_possible != (gboolean)(attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE) {
 			combo->priv->null_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE;
 			gdaui_combo_add_null (GDAUI_COMBO (combo->priv->combo_entry),
 						      combo->priv->null_possible);		 

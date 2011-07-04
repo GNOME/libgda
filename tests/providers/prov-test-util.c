@@ -286,7 +286,7 @@ iter_is_correct (GdaDataModelIter *iter, GdaDataModel *ref_model)
         g_object_get (G_OBJECT (iter), "current-row", &rownum, NULL);
 
         cols = gda_data_model_get_n_columns (ref_model);
-        if (cols != g_slist_length (GDA_SET (iter)->holders)) {
+        if (cols != (gint)g_slist_length (GDA_SET (iter)->holders)) {
 #ifdef CHECK_EXTRA_INFO
                 g_warning ("Number of columns in iter is not the same as for the referenced data model\n");
 #endif

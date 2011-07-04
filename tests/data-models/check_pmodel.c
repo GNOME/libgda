@@ -104,7 +104,7 @@ TestFunc tests[] = {
 int
 main (int argc, char **argv)
 {
-	gint i, ntests = 0, number_failed = 0;
+	guint i, ntests = 0, number_failed = 0;
 	GdaConnection *cnc;
 
 	gda_init ();

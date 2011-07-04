@@ -78,7 +78,7 @@ identifier_needs_quotes (const gchar *str)
 int
 main (int argc, char** argv)
 {
-	gint i, nfailed = 0;
+	guint i, nfailed = 0;
 	for (i = 0; i < G_N_ELEMENTS (tests); i++) {
 		ATest *test = &(tests [i]);
 		if (identifier_needs_quotes (test->sql_identifier) != test->need_quotes) {

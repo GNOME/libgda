@@ -220,7 +220,7 @@ mgr_ldap_entries_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 	g_main_loop_unref (data.loop);
 	
 	if (data.entries) {
-		gint i;
+		guint i;
 		GSList *list = NULL;
 		GArray *sorted_array;
 		sorted_array = g_array_new (FALSE, FALSE, sizeof (GdaLdapEntry*));

@@ -58,9 +58,9 @@ main (int argc, char** argv)
 typedef struct {
 	gchar   *in_string;
 	gboolean exp_retval;
-	gint     exp_day;
-	gint     exp_month;
-	gint     exp_year;
+	guint    exp_day;
+	guint    exp_month;
+	gint    exp_year;
 } TestDate;
 
 TestDate datedata[] = {
@@ -88,7 +88,7 @@ TestDate datedata[] = {
 static gboolean
 test_parse_iso8601_date (void)
 {
-	gint i;
+	guint i;
 
 	for (i = 0; i < sizeof (datedata) / sizeof (TestDate); i++) {
 		TestDate td = datedata[i];
@@ -150,7 +150,7 @@ TestTime timedata[] = {
 static gboolean
 test_parse_iso8601_time (void)
 {
-	gint i;
+	guint i;
 
 	for (i = 0; i < sizeof (timedata) / sizeof (TestTime); i++) {
 		TestTime td = timedata[i];
@@ -185,7 +185,7 @@ test_parse_iso8601_time (void)
 static gboolean
 test_parse_iso8601_timestamp (void)
 {
-	gint idate, itime;
+	guint idate, itime;
 
 	for (idate = 0; idate < sizeof (datedata) / sizeof (TestTime); idate++) {
 		TestDate td = datedata [idate];
@@ -236,7 +236,7 @@ static gboolean
 test_date_handler (void)
 {
 	GdaDataHandler *dh;
-	gint i;
+	guint i;
 	dh = gda_handler_time_new_no_locale ();
 	gda_handler_time_set_str_spec (GDA_HANDLER_TIME (dh),
 				       G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
@@ -308,7 +308,7 @@ static gboolean
 test_time_handler (void)
 {
 	GdaDataHandler *dh;
-	gint i, j;
+	guint i, j;
 	dh = gda_data_handler_get_default (GDA_TYPE_TIME);
 	g_assert (dh);
 
@@ -399,7 +399,7 @@ static gboolean
 test_timestamp_handler (void)
 {
 	GdaDataHandler *dh;
-	gint idate, itime, itime2;
+	guint idate, itime, itime2;
 	dh = gda_handler_time_new_no_locale ();
 	gda_handler_time_set_str_spec (GDA_HANDLER_TIME (dh),
 				       G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-', FALSE);

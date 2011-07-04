@@ -458,7 +458,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 					str = gda_data_handler_get_str_from_value (datacell->priv->dh, gval);
 					gboolean use_markup = FALSE;
 					if (str) {
-						gint length;
+						guint length;
 						length = g_utf8_strlen (str, -1);
 						if (length > MAX_ACCEPTED_STRING_LENGTH + too_long_msg_len) {
 							gchar *tmp;

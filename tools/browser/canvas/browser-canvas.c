@@ -311,8 +311,10 @@ motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, G_GNUC_UNUSED Go
 	return done;
 }
 
+#ifdef HAVE_GRAPHVIZ
 static void popup_layout_default_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_layout_radial_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
+#endif
 static void popup_zoom_in_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_zoom_out_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
 static void popup_zoom_fit_cb (GtkMenuItem *mitem, BrowserCanvas *canvas);
@@ -436,6 +438,7 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 	return done;	
 }
 
+#ifdef HAVE_GRAPHVIZ
 static void
 popup_layout_default_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
@@ -447,6 +450,7 @@ popup_layout_radial_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 {
 	browser_canvas_perform_auto_layout (canvas, TRUE, BROWSER_CANVAS_LAYOUT_RADIAL);
 }
+#endif
 
 static void
 popup_zoom_in_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
