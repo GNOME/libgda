@@ -233,7 +233,7 @@ gdaui_provider_spec_editor_init (GdauiProviderSpecEditor *spec,
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_SPEC_EDITOR (spec));
 
-	gtk_box_set_orientation (GTK_BOX (config), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (spec), GTK_ORIENTATION_VERTICAL);
 
 	spec->priv = g_new0 (GdauiProviderSpecEditorPrivate, 1);
 	spec->priv->type = NO_PROVIDER;

@@ -228,7 +228,7 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 	/* allocate private structure */
 	sped->priv = g_new0 (UiSpecEditorPrivate, 1);
 
-	gtk_box_set_orientation (GTK_BOX (sped), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (sped), GTK_ORIENTATION_VERTICAL);
 	
 	GtkWidget *hpaned;
 	hpaned = gtk_hpaned_new ();

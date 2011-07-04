@@ -75,7 +75,7 @@ filter_editor_init (FilterEditor *feditor, G_GNUC_UNUSED FilterEditorClass *klas
 	feditor->priv->bcnc = NULL;
 	feditor->priv->default_scope = GDA_LDAP_SEARCH_SUBTREE;
 
-	gtk_box_set_orientation (GTK_BOX (feditor), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (feditor), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

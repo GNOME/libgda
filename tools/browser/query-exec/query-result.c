@@ -71,7 +71,7 @@ query_result_init (QueryResult *result, G_GNUC_UNUSED QueryResultClass *klass)
 	result->priv->hitem = NULL;
 	result->priv->hash = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
 
-	gtk_box_set_orientation (GTK_BOX (result), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (result), GTK_ORIENTATION_VERTICAL);
 
 	wid = make_widget_for_notice ();
 	gtk_box_pack_start (GTK_BOX (result), wid, TRUE, TRUE, 0);

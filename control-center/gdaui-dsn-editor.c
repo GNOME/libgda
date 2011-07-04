@@ -109,7 +109,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 
 	g_return_if_fail (GDAUI_IS_DSN_EDITOR (config));
 
-	gtk_box_set_orientation (GTK_BOX (config), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (config), GTK_ORIENTATION_VERTICAL);
 
 	/* allocate private structure */
 	config->priv = g_new0 (GdauiDsnEditorPrivate, 1);

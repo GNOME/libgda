@@ -199,7 +199,7 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 	wid->priv->data_widget = NULL;
 	wid->priv->proxy = NULL;
 
-	gtk_box_set_orientation (GTK_BOX (wid), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
 
 	table = gtk_table_new (2, 2, FALSE);
 	gtk_table_set_row_spacing (GTK_TABLE (table), 1, 10);

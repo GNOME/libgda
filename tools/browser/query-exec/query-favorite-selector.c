@@ -109,7 +109,7 @@ query_favorite_selector_init (QueryFavoriteSelector *tsel, G_GNUC_UNUSED QueryFa
 	tsel->priv->idle_update_favorites = 0;
 	tsel->priv->prop_save_timeout = 0;
 
-	gtk_box_set_orientation (GTK_BOX (tsel), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (tsel), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

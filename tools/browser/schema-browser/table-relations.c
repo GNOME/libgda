@@ -67,7 +67,7 @@ table_relations_init (TableRelations *trels, G_GNUC_UNUSED TableRelationsClass *
 	trels->priv = g_new0 (TableRelationsPrivate, 1);
 	trels->priv->all_schemas = FALSE;
 
-	gtk_box_set_orientation (GTK_BOX (trels), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (trels), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

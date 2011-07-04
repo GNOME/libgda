@@ -96,7 +96,7 @@ dummy_perspective_init (DummyPerspective *perspective)
 {
 	GtkWidget *wid;
 
-	gtk_box_set_orientation (GTK_BOX (perspective), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 	
 	wid = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (wid),

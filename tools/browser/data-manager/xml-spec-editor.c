@@ -90,7 +90,7 @@ xml_spec_editor_init (XmlSpecEditor *sped, G_GNUC_UNUSED XmlSpecEditorClass *kla
 	sped->priv = g_new0 (XmlSpecEditorPrivate, 1);
 	sped->priv->signal_editor_changed_id = 0;
 
-	gtk_box_set_orientation (GTK_BOX (sped), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (sped), GTK_ORIENTATION_VERTICAL);
 }
 
 GType

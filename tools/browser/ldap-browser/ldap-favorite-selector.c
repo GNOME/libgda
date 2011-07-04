@@ -107,7 +107,7 @@ ldap_favorite_selector_init (LdapFavoriteSelector *fsel, G_GNUC_UNUSED LdapFavor
 	fsel->priv->idle_update_favorites = 0;
 	fsel->priv->prop_save_timeout = 0;
 
-	gtk_box_set_orientation (GTK_BOX (fsel), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (fsel), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

@@ -400,7 +400,7 @@ gdaui_basic_form_init (GdauiBasicForm *wid)
 	wid->priv->show_actions = FALSE;
 	wid->priv->entries_auto_default = FALSE;
 
-	gtk_box_set_orientation (GTK_BOX (wid), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
 
 	evbox = gtk_event_box_new ();
 	gtk_widget_show (evbox);

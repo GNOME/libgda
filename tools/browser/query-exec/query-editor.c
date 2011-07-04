@@ -661,7 +661,7 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 
 	g_return_if_fail (QUERY_IS_EDITOR (editor));
 
-	gtk_box_set_orientation (GTK_BOX (editor), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (editor), GTK_ORIENTATION_VERTICAL);
 
 	/* allocate private structure */
 	editor->priv = g_new0 (QueryEditorPrivate, 1);

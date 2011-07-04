@@ -84,7 +84,7 @@ objects_index_init (ObjectsIndex *index, G_GNUC_UNUSED ObjectsIndexClass *klass)
 {
 	index->priv = g_new0 (ObjectsIndexPrivate, 1);
 
-	gtk_box_set_orientation (GTK_BOX (index), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (index), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

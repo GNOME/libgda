@@ -347,7 +347,7 @@ gdaui_cloud_init (GdauiCloud *cloud)
 	cloud->priv->selected_tags = NULL;
 	cloud->priv->selection_mode = GTK_SELECTION_SINGLE;
 
-	gtk_box_set_orientation (GTK_BOX (cloud), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (cloud), GTK_ORIENTATION_VERTICAL);
 
 	/* text buffer */
         cloud->priv->tbuffer = gtk_text_buffer_new (NULL);

@@ -106,7 +106,7 @@ relations_diagram_init (RelationsDiagram *diagram, G_GNUC_UNUSED RelationsDiagra
 	diagram->priv->fav_id = -1;
 	diagram->priv->popup_container = NULL;
 
-	gtk_box_set_orientation (GTK_BOX (diagram), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (diagram), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

@@ -114,7 +114,7 @@ table_info_init (TableInfo *tinfo, G_GNUC_UNUSED TableInfoClass *klass)
 {
 	tinfo->priv = g_new0 (TableInfoPrivate, 1);
 
-	gtk_box_set_orientation (GTK_BOX (tinfo), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (tinfo), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

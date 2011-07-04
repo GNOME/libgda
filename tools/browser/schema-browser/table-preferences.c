@@ -93,7 +93,7 @@ table_preferences_init (TablePreferences *tpreferences, G_GNUC_UNUSED TablePrefe
 {
 	tpreferences->priv = g_new0 (TablePreferencesPrivate, 1);
 
-	gtk_box_set_orientation (GTK_BOX (tpreferences), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (tpreferences), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

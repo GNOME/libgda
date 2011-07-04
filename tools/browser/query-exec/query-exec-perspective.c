@@ -130,7 +130,7 @@ query_exec_perspective_init (QueryExecPerspective *perspective)
 	perspective->priv = g_new0 (QueryExecPerspectivePrivate, 1);
 	perspective->priv->favorites_shown = TRUE;
 
-	gtk_box_set_orientation (GTK_BOX (perspective), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,

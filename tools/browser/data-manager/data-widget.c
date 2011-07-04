@@ -99,7 +99,7 @@ data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 	/* allocate private structure */
 	dwid->priv = g_new0 (DataWidgetPrivate, 1);
 
-	gtk_box_set_orientation (GTK_BOX (dwid), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (dwid), GTK_ORIENTATION_VERTICAL);
 
 	/* init Widgets's structure */
 	dwid->priv->top_nb = gtk_notebook_new ();

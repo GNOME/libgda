@@ -94,7 +94,7 @@ favorite_selector_init (FavoriteSelector *tsel,	G_GNUC_UNUSED FavoriteSelectorCl
 	tsel->priv = g_new0 (FavoriteSelectorPrivate, 1);
 	tsel->priv->idle_update_favorites = 0;
 
-	gtk_box_set_orientation (GTK_BOX (tsel), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (tsel), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

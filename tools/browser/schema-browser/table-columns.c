@@ -86,7 +86,7 @@ table_columns_init (TableColumns *tcolumns, G_GNUC_UNUSED TableColumnsClass *kla
 	tcolumns->priv->idle_update_columns = 0;
 	tcolumns->priv->hovering_over_link = FALSE;
 
-	gtk_box_set_orientation (GTK_BOX (tcolumns), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (tcolumns), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

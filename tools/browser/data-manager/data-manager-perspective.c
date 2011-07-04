@@ -126,7 +126,7 @@ data_manager_perspective_init (DataManagerPerspective *perspective)
 	perspective->priv = g_new0 (DataManagerPerspectivePriv, 1);
 	perspective->priv->favorites_shown = TRUE;
 
-	gtk_box_set_orientation (GTK_BOX (perspective), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
 static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,

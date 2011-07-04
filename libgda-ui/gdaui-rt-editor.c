@@ -292,7 +292,7 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 {
 	GtkWidget *sw, *textview, *toolbar;
 
-	gtk_box_set_orientation (GTK_BOX (rte), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (rte), GTK_ORIENTATION_VERTICAL);
 
 	sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),

@@ -77,7 +77,7 @@ class_properties_init (ClassProperties *cprop, G_GNUC_UNUSED ClassPropertiesClas
 	cprop->priv = g_new0 (ClassPropertiesPrivate, 1);
 	cprop->priv->hovering_over_link = FALSE;
 
-	gtk_box_set_orientation (GTK_BOX (cprop), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (cprop), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

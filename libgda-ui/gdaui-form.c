@@ -186,7 +186,7 @@ gdaui_form_init (GdauiForm *form)
 	form->priv->raw_form = NULL;
 	form->priv->info = NULL;
 
-	gtk_box_set_orientation (GTK_BOX (form), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (form), GTK_ORIENTATION_VERTICAL);
 
 	form->priv->raw_form = gdaui_raw_form_new (NULL);
 	gtk_box_pack_start (GTK_BOX (form), form->priv->raw_form, FALSE, FALSE, 0);

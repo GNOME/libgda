@@ -110,7 +110,7 @@ gdaui_provider_auth_editor_init (GdauiProviderAuthEditor *auth,
 {
 	g_return_if_fail (GDAUI_IS_PROVIDER_AUTH_EDITOR (auth));
 
-	gtk_box_set_orientation (GTK_BOX (config), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (auth), GTK_ORIENTATION_VERTICAL);
 
 	auth->priv = g_new0 (GdauiProviderAuthEditorPrivate, 1);
 	auth->priv->provider = NULL;

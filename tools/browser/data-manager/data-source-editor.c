@@ -100,7 +100,7 @@ data_source_editor_init (DataSourceEditor *editor)
 {
 	GtkWidget *vpaned;
 
-	gtk_box_set_orientation (GTK_BOX (editor), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (editor), GTK_ORIENTATION_VERTICAL);
 
 	editor->priv = g_new0 (DataSourceEditorPrivate, 1);
 	editor->priv->attributes = gda_set_new_inline (4,

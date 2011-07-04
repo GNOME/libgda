@@ -118,7 +118,7 @@ ldap_browser_perspective_init (LdapBrowserPerspective *perspective)
 	perspective->priv = g_new0 (LdapBrowserPerspectivePrivate, 1);
 	perspective->priv->favorites_shown = TRUE;
 
-	gtk_box_set_orientation (GTK_BOX (perspective), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

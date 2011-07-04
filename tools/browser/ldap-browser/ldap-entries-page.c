@@ -119,7 +119,7 @@ ldap_entries_page_init (LdapEntriesPage *ebrowser, G_GNUC_UNUSED LdapEntriesPage
 	ebrowser->priv->history_max_len = 20;
 	ebrowser->priv->add_hist_item = TRUE;
 
-	gtk_box_set_orientation (GTK_BOX (ebrowser), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (ebrowser), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

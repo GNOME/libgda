@@ -151,7 +151,7 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 	login->priv->mode = GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE;
 	memset (&(login->priv->dsn_info), 0, sizeof (GdaDsnInfo));
 
-	gtk_box_set_orientation (GTK_BOX (login), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (login), GTK_ORIENTATION_VERTICAL);
 	
 	/* catch DSN definition changes */
 	GdaConfig *conf = gda_config_get ();

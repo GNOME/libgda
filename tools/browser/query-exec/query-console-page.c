@@ -185,7 +185,7 @@ query_console_page_init (QueryConsolePage *tconsole, G_GNUC_UNUSED QueryConsoleP
 	tconsole->priv->agroup = NULL;
 	tconsole->priv->fav_id = -1;
 
-	gtk_box_set_orientation (GTK_BOX (tconsole), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (tconsole), GTK_ORIENTATION_VERTICAL);
 }
 
 static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,

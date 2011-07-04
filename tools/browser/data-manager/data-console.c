@@ -175,7 +175,7 @@ data_console_init (DataConsole *dconsole, G_GNUC_UNUSED DataConsoleClass *klass)
 	dconsole->priv->fav_id = -1;
 	dconsole->priv->popup_container = NULL;
 
-	gtk_box_set_orientation (GTK_BOX (dconsole), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (dconsole), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

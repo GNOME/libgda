@@ -104,7 +104,7 @@ ldap_search_page_init (LdapSearchPage *epage, G_GNUC_UNUSED LdapSearchPageClass 
 	epage->priv->history_max_len = 20;
 	epage->priv->add_hist_item = TRUE;
 
-	gtk_box_set_orientation (GTK_BOX (epage), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (epage), GTK_ORIENTATION_VERTICAL);
 }
 
 static void

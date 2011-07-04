@@ -87,7 +87,7 @@ objects_cloud_init (ObjectsCloud *cloud, G_GNUC_UNUSED ObjectsCloudClass *klass)
 	cloud->priv->show_schemas = FALSE;
 	cloud->priv->tbuffer = gtk_text_buffer_new (NULL);
 
-	gtk_box_set_orientation (GTK_BOX (cloud), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (cloud), GTK_ORIENTATION_VERTICAL);
 
 	gtk_text_buffer_create_tag (cloud->priv->tbuffer, "section",
                                     "weight", PANGO_WEIGHT_BOLD,

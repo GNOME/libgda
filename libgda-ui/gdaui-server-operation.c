@@ -216,7 +216,7 @@ gdaui_server_operation_init (GdauiServerOperation * wid)
 #endif
 	wid->priv->opt_header = FALSE;
 
-	gtk_box_set_orientation (GTK_BOX (wid), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
 }
 
 

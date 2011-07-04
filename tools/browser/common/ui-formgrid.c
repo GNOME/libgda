@@ -213,7 +213,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv->autoupdate_possible = FALSE;
 	formgrid->priv->scroll_form = FALSE;
 
-	gtk_box_set_orientation (GTK_BOX (formgrid), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (formgrid), GTK_ORIENTATION_VERTICAL);
 
 	/* notebook */
 	formgrid->priv->nb = gtk_notebook_new ();
