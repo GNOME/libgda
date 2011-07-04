@@ -392,7 +392,7 @@ gdaui_data_cell_renderer_password_render (GtkCellRenderer      *cell,
 
 		gdouble y = cell_area->y + cell_area->height / 2.;
 		gtk_render_line (style_context,
-				 cr
+				 cr,
 				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
 				 y, y);
 	}

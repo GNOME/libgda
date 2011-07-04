@@ -107,7 +107,7 @@ dsn_config_new (void)
 	GdaDataModel *model;
 
 	priv = g_new0 (DsnConfigPrivate, 1);
-	dsn = cc_new_vbox_widget (FALSE, 6);
+	dsn = cc_new_vbox_widget (6);
         gtk_container_set_border_width (GTK_CONTAINER (dsn), 6);
 	g_object_set_data_full (G_OBJECT (dsn), DSN_CONFIG_DATA, priv,
 				(GDestroyNotify) free_private_data);

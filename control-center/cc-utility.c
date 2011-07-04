@@ -38,11 +38,11 @@ cc_new_menu_item (const gchar *label,
 }
 
 GtkWidget *
-cc_new_vbox_widget (gboolean homogenous, gint spacing)
+cc_new_vbox_widget (gint spacing)
 {
 	GtkWidget *vbox;
 
-	vbox = gtk_vbox_new (homogenous, spacing);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, spacing);
 	gtk_widget_show (vbox);
 
 	return vbox;

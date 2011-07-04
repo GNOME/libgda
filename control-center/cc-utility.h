@@ -29,8 +29,8 @@ GtkWidget   *cc_new_menu_item (const gchar *label,
 				     gboolean pixmap,
 				     GCallback cb_func,
 				     gpointer user_data);
-GtkWidget   *cc_new_vbox_widget (gboolean homogenous, gint spacing);
-GtkWidget   *cc_new_hbox_widget (gboolean homogenous, gint spacing);
+GtkWidget   *cc_new_vbox_widget (gint spacing);
+GtkWidget   *cc_new_hbox_widget (gint spacing);
 GtkWidget   *cc_new_table_widget (gint rows, gint cols, gboolean homogenous);
 GtkWidget   *cc_new_label_widget (const gchar *text);
 GtkWidget   *cc_new_notebook_widget (void);
