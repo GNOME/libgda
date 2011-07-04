@@ -292,7 +292,7 @@ data_console_new (BrowserConnection *bcnc)
         GtkWidget *hbox, *label, *wid;
 	gchar *str;
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (dconsole), hbox, FALSE, FALSE, 0);
 
 	str = g_strdup_printf ("<b>%s</b>\n%s", _("Data Manager"), _("Unsaved"));
@@ -358,7 +358,7 @@ data_console_new (BrowserConnection *bcnc)
 	vbox = gtk_vbox_new (FALSE, 0);
 	gtk_notebook_append_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), vbox, NULL);
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
 	nb = gtk_notebook_new ();
@@ -580,7 +580,7 @@ save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
 		window = popup_container_new (button);
 		dconsole->priv->popup_container = window;
 
-		hbox = gtk_hbox_new (FALSE, 0);
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 		gtk_container_add (GTK_CONTAINER (window), hbox);
 		wid = gtk_label_new ("");
 		str = g_strdup_printf ("%s:", _("Data manager's name"));

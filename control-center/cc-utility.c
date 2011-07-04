@@ -49,11 +49,11 @@ cc_new_vbox_widget (gboolean homogenous, gint spacing)
 }
 
 GtkWidget *
-cc_new_hbox_widget (gboolean homogenous, gint spacing)
+cc_new_hbox_widget (gint spacing)
 {
 	GtkWidget *hbox;
 
-	hbox = gtk_hbox_new (homogenous, spacing);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, spacing);
 	gtk_widget_show (hbox);
 
 	return hbox;

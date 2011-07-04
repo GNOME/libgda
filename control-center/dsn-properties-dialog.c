@@ -162,7 +162,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
         gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 10);
         gtk_widget_show (hbox);
         label = gtk_label_new ("    ");

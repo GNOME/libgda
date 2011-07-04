@@ -157,14 +157,14 @@ do_combo (GtkWidget *do_widget)
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-		hbox = gtk_hbox_new (FALSE, 0);
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 		gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 		label = gtk_label_new ("row number:");
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 		entry = gtk_entry_new ();
 		gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
 
-		hbox = gtk_hbox_new (FALSE, 0);
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 		gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);		
 		button = gtk_button_new_with_label ("Force select");
 		gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);

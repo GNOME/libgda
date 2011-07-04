@@ -299,7 +299,7 @@ ldap_search_page_new (BrowserConnection *bcnc, const gchar *base_dn)
 	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
 	gtk_box_pack_start (GTK_BOX (epage), label, FALSE, FALSE, 0);
 
-	hb = gtk_hbox_new (FALSE, 0);
+	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (epage), hb, FALSE, FALSE, 3);
 
 	wid = filter_editor_new (bcnc);

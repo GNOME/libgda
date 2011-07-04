@@ -1244,7 +1244,7 @@ load_xml_layout_children (GdauiBasicForm *form, xmlNodePtr parent_node)
 	prop = xmlGetProp (parent_node, BAD_CAST "container");
 	if (prop) {
 		if (xmlStrEqual (prop, BAD_CAST "columns")) {
-			top = gtk_hbox_new (FALSE, 0);
+			top = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 			ctype = TOP_BOX;
 		}
 		if (xmlStrEqual (prop, BAD_CAST "rows")) {
@@ -1264,7 +1264,7 @@ load_xml_layout_children (GdauiBasicForm *form, xmlNodePtr parent_node)
 		xmlFree (prop);
 	}
 	if (!top)
-		top = gtk_hbox_new (FALSE, 0);
+		top = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	xmlNodePtr child;
 	for (child = parent_node->children; child; child = child->next) {
@@ -1402,7 +1402,7 @@ load_xml_layout_section (GdauiBasicForm *form, xmlNodePtr section_node)
 	xmlChar *title;
 	GtkWidget *hbox, *label, *sub, *retval;
 
-	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
 	title = xmlGetProp (section_node, BAD_CAST "title");
 	if (title) {
 		gchar *str;

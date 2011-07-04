@@ -226,7 +226,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	filesel = GDAUI_ENTRY_FILESEL (mgwrap);
 	g_return_val_if_fail (filesel->priv, NULL);
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	wid = gtk_entry_new ();
 	gtk_box_pack_start (GTK_BOX (hbox), wid, TRUE, TRUE, 0);

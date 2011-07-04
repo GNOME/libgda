@@ -357,7 +357,7 @@ static GtkWidget *
 make_widget_for_set (GdaSet *set)
 {
 	GtkWidget *hbox, *img;
-	hbox = gtk_hbox_new (FALSE, 5);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
 	
 	img = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
 	gtk_misc_set_alignment (GTK_MISC (img), 0., 0.);
@@ -409,7 +409,7 @@ static GtkWidget *
 make_widget_for_error (GError *error)
 {
 	GtkWidget *hbox, *img;
-	hbox = gtk_hbox_new (FALSE, 5);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
 	
 	img = gtk_image_new_from_stock (GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_DIALOG);
 	gtk_misc_set_alignment (GTK_MISC (img), 0., 0.);

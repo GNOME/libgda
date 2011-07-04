@@ -198,7 +198,7 @@ common_bin_create_menu (BinMenu *binmenu, PopupContainerPositionFunc pos_func, G
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
         gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 5);
         gtk_widget_show (hbox);
         label = gtk_label_new ("    ");

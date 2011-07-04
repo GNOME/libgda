@@ -171,7 +171,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
 	g_return_val_if_fail (mgbool->priv, NULL);
 
-	hbox = gtk_hbox_new (FALSE, 5);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
 	mgbool->priv->hbox = hbox;
 
 	cb = gtk_check_button_new ();

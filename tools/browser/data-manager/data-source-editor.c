@@ -147,7 +147,7 @@ data_source_editor_init (DataSourceEditor *editor)
 #define SPACING 3
 	GtkWidget *hbox, *label, *sw, *text;
 	GtkSizeGroup *sg;
-	hbox = gtk_hbox_new (FALSE, SPACING);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, SPACING);
 	gtk_paned_add2 (GTK_PANED (vpaned), hbox);
 
 	label = gtk_label_new (_("Dependencies:"));

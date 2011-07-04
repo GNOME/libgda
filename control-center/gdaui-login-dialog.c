@@ -110,7 +110,7 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialo
         gtk_box_set_spacing (GTK_BOX (dcontents), 12);
         gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 
-	hbox = gtk_hbox_new (FALSE, 12);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_widget_show (hbox);
 	gtk_box_pack_start (GTK_BOX (dcontents), hbox, TRUE, TRUE, 0);

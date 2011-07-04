@@ -100,7 +100,7 @@ text_search_get_type (void)
 			0
 		};
 
-		type = g_type_register_static (GTK_TYPE_HBOX, "TextSearch", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "TextSearch", &info, 0);
 	}
 	return type;
 }

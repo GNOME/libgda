@@ -124,7 +124,7 @@ login_dialog_init (LoginDialog *dialog)
 	g_free (str);
 
 	/* label and spinner */
-	hbox = gtk_hbox_new (FALSE, 0); 
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); 
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 10);
 	gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 0);
 	
@@ -148,7 +148,7 @@ login_dialog_init (LoginDialog *dialog)
 	gtk_container_add (GTK_CONTAINER (hbox), dialog->priv->spinner);
 
 	/* login (not shown) */
-	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
 	gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 10);
 	label = gtk_label_new ("    ");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);

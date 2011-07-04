@@ -215,7 +215,7 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	GtkWidget *header, *label, *button, *image;
 	const gchar *cstr;
 
-	header = gtk_hbox_new (FALSE, 0);
+	header = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), header, FALSE, FALSE, 0);
 
 	label = gtk_label_new ("");

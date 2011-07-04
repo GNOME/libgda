@@ -95,7 +95,7 @@ gdaui_data_proxy_info_get_type (void)
 			0
 		};
 
-		type = g_type_register_static (GTK_TYPE_HBOX, "GdauiDataProxyInfo", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiDataProxyInfo", &info, 0);
 	}
 
 	return type;
@@ -459,7 +459,7 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 	if (flags & GDAUI_DATA_PROXY_INFO_CURRENT_ROW) {
 		GtkWidget *toolwid;
 		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
-			toolwid = gtk_hbox_new (FALSE, 0);
+			toolwid = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 			/* read-write spin counter (mainly for forms) */
 			wid = gtk_spin_button_new_with_range (0, 1, 1);

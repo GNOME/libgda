@@ -35,7 +35,7 @@ typedef struct _TextSearchClass   TextSearchClass;
 typedef struct _TextSearchPrivate TextSearchPrivate;
 
 struct _TextSearch {
-	GtkHBox            parent;
+	GtkBox            parent;
 	TextSearchPrivate *priv;
 };
 

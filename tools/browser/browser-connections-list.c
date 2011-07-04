@@ -342,7 +342,7 @@ browser_connections_list_show (BrowserConnection *current)
 
 		/* image and explaining label */
 		GtkWidget *hbox;
-		hbox = gtk_hbox_new (FALSE, 6);
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 		gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 6);
 
 		str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-connected-big.png", NULL);

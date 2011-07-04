@@ -1587,7 +1587,7 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 		content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (ibar));
 		if (cb) {
 			GtkWidget *box;
-			box = gtk_hbox_new (FALSE, 0);
+			box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 			gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
 			gtk_box_pack_start (GTK_BOX (box), cb, FALSE, FALSE, 0);
 			gtk_container_add (GTK_CONTAINER (content_area), box);

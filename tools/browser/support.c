@@ -300,7 +300,7 @@ _browser_make_tab_label (const gchar *label,
 				     "widget \"*.browser-tab-close-button\" style \"browser-tab-close-button-style\"");
 	}
 
-        hbox = gtk_hbox_new (FALSE, 4);
+        hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
 
 	if (img)
 		gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
@@ -560,7 +560,7 @@ browser_make_small_button (gboolean is_toggle, gboolean with_arrow,
 	else
 		button = gtk_button_new ();
 	if ((label && stock_id) || with_arrow) {
-		hbox = gtk_hbox_new (FALSE, 0);
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 		gtk_container_add (GTK_CONTAINER (button), hbox);
 		gtk_widget_show (hbox);
 	}

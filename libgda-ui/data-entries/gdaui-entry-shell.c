@@ -160,7 +160,7 @@ gdaui_entry_shell_init (GdauiEntryShell * shell)
 	gtk_container_set_border_width (GTK_CONTAINER (shell), 0);
 
 	/* hbox */
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_add (GTK_CONTAINER (shell), hbox);
 	gtk_widget_show (hbox);
 	shell->priv->hbox = hbox;

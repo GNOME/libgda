@@ -216,7 +216,7 @@ auth_dialog_init (AuthDialog *dialog)
 	g_free (str);
 
 	/* label and spinner */
-	hbox = gtk_hbox_new (FALSE, 0); 
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); 
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 10);
 	gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 0);
 	
@@ -537,7 +537,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 		gtk_widget_show (label);
 
-		hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
 		gtk_box_pack_start (GTK_BOX (dcontents), hbox, TRUE, TRUE, 0);
 		label = gtk_label_new ("      ");
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);

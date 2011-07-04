@@ -459,7 +459,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 
 	/* determine writable formats */
 	expander = gtk_expander_new (_("Image format"));
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_add (GTK_CONTAINER (expander), hbox);
 
 	label = gtk_label_new (_("Format image as:"));

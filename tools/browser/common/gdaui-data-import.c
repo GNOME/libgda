@@ -122,7 +122,7 @@ gdaui_data_import_init (GdauiDataImport * import)
         g_free (str);
         gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-        hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+        hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
         gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
         gtk_widget_show (hbox);
         label = gtk_label_new ("    ");
@@ -237,7 +237,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 	g_signal_connect (G_OBJECT (entry), "toggled",
 			  G_CALLBACK (spec_changed_cb), import);
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_table_attach (GTK_TABLE (table), hbox, 2, 3, 5, 6, GTK_FILL, 0, 0, 0);
 	entry = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (entry), _("Other:"));
 	import->priv->sep_array [SEP_OTHER] = entry;
@@ -270,7 +270,7 @@ gdaui_data_import_init (GdauiDataImport * import)
         g_free (str);
         gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-        hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+        hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
 	import->priv->preview_box = hbox;
 
         gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);

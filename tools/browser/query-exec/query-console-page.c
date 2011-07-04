@@ -300,7 +300,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	/* top paned for the editor */
 	GtkWidget *wid, *vbox, *hbox, *bbox, *hpaned, *button;
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_paned_add1 (GTK_PANED (vpaned), hbox);
 
 	hpaned = gtk_hpaned_new ();

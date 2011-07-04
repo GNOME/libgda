@@ -153,7 +153,7 @@ dsn_config_new (void)
 			  G_CALLBACK (list_popup_cb), dsn);
 
 	/* add tip */
-	box = gtk_hbox_new (FALSE, 6);
+	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
         gtk_container_set_border_width (GTK_CONTAINER (box), 6);
 	gtk_box_pack_start (GTK_BOX (dsn), box, FALSE, FALSE, 0);
 	gtk_widget_show (box);

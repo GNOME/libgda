@@ -272,7 +272,7 @@ cc_gray_bar_init (CcGrayBar *bar, G_GNUC_UNUSED CcGrayBarClass *klass)
 
 	bar->priv = g_new0 (CcGrayBarPrivate, 1);
 
-	bar->priv->hbox = gtk_hbox_new (FALSE, 6);
+	bar->priv->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (bar->priv->hbox), 6);
 
 	bar->priv->show_icon = FALSE;

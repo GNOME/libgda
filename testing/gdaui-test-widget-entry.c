@@ -127,7 +127,7 @@ main (int argc, char* argv[])
 	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
 	gtk_container_add(GTK_CONTAINER(window), top_vbox);
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (top_vbox), hbox, FALSE, FALSE, 0);
 
 	/*

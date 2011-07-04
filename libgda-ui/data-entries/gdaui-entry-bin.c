@@ -234,7 +234,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	button = gtk_button_new ();
 	dbin->priv->button = button;
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
         gtk_container_add (GTK_CONTAINER (button), hbox);
 	dbin->priv->button_hbox = hbox;
 

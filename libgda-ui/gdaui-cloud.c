@@ -1062,7 +1062,7 @@ gdaui_cloud_create_filter_widget (GdauiCloud *cloud)
 	GtkWidget *hbox, *label, *wid;
 	g_return_val_if_fail (GDAUI_IS_CLOUD (cloud), NULL);
 	
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	label = gtk_label_new (_("Find:"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);

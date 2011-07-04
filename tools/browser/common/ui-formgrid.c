@@ -241,7 +241,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 			  G_CALLBACK (form_grid_populate_popup_cb), formgrid);
 
 	/* info widget and toggle button at last */
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (formgrid), hbox, FALSE, TRUE, 0);
 	gtk_widget_show (hbox);
 

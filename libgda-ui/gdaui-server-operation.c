@@ -767,7 +767,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 				gtk_label_set_markup (GTK_LABEL (label), section_str);
 				g_free (section_str);
 
-				hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+				hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
 				gtk_widget_show (hbox);
 				lab = gtk_label_new ("    ");
 				gtk_box_pack_start (GTK_BOX (hbox), lab, FALSE, FALSE, 0);

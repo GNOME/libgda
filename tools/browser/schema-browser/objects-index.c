@@ -159,7 +159,7 @@ objects_index_new (BrowserConnection *bcnc)
 
 	/* header */
 	GtkWidget *hbox, *wid;
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (index), hbox, FALSE, FALSE, 0);
 
 	GtkWidget *label;

@@ -2052,7 +2052,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	g_free (str);
 	gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
-	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
 	gtk_box_pack_start (GTK_BOX (dbox), hbox, FALSE, FALSE, 5);
 	gtk_widget_show (hbox);
 	label = gtk_label_new ("    ");
@@ -2073,7 +2073,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	g_free (str);
 	gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
-	hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
 	gtk_box_pack_start (GTK_BOX (dbox), hbox, FALSE, FALSE, 5);
 	gtk_widget_show (hbox);
 	label = gtk_label_new ("    ");

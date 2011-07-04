@@ -564,7 +564,7 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 	GdaDataHandler *dh;
 
 	/* top widget */
-	hb = gtk_hbox_new (FALSE, 3);
+	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 
 	/* text entry */
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
@@ -1075,7 +1075,7 @@ create_entry_ts (GdauiEntryCommonTime *mgtim)
 {
 	GtkWidget *hb, *wid;
 
-	hb = gtk_hbox_new (FALSE, 0);
+	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	
 	/* date part */
 	wid = create_entry_date (mgtim);

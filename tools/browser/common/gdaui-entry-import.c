@@ -242,7 +242,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	mgtxt = GDAUI_ENTRY_IMPORT (mgwrap);
 	g_return_val_if_fail (mgtxt->priv, NULL);
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	mgtxt->priv->label = GTK_LABEL (gtk_label_new (_("No data set")));
 	gtk_misc_get_alignment (GTK_MISC (mgtxt->priv->label), NULL, &ya);

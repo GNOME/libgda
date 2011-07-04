@@ -58,7 +58,7 @@ typedef enum
 /* struct for the object's data */
 struct _GdauiDataProxyInfo
 {
-	GtkHBox                 object;
+	GtkBox                 object;
 
 	GdauiDataProxyInfoPriv *priv;
 };
@@ -66,7 +66,7 @@ struct _GdauiDataProxyInfo
 /* struct for the object's class */
 struct _GdauiDataProxyInfoClass
 {
-	GtkHBoxClass            parent_class;
+	GtkBoxClass            parent_class;
 };
 
 /**

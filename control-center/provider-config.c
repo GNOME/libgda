@@ -86,7 +86,7 @@ provider_config_new (void)
 	gtk_widget_show_all (sw);
 
 	/* add tip */
-	box = gtk_hbox_new (FALSE, 6);
+	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	gtk_widget_show (box);
         gtk_container_set_border_width (GTK_CONTAINER (box), 6);
 	gtk_box_pack_start (GTK_BOX (provider), box, FALSE, FALSE, 0);

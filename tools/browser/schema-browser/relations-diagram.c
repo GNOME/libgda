@@ -258,7 +258,7 @@ save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 		window = popup_container_new (button);
 		diagram->priv->popup_container = window;
 
-		hbox = gtk_hbox_new (FALSE, 0);
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 		gtk_container_add (GTK_CONTAINER (window), hbox);
 		wid = gtk_label_new ("");
 		str = g_strdup_printf ("%s:", _("Canvas's name"));
@@ -317,7 +317,7 @@ relations_diagram_new (BrowserConnection *bcnc)
 
 	/* header */
 	GtkWidget *hbox, *wid;
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (diagram), hbox, FALSE, FALSE, 0);
 
         GtkWidget *label;

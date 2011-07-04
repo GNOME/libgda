@@ -338,7 +338,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		
-		hbox = gtk_hbox_new (FALSE, 0); /* HIG */
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
 		gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 5);
 		label = gtk_label_new ("      ");
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
