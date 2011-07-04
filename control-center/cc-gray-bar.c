@@ -188,15 +188,16 @@ static void
 cc_gray_bar_style_set (GtkWidget *w, GtkStyle *previous_style)
 {
 	static int in_style_set = 0;
-	GtkStyle   *style;
+	GtkStyleContext   *style_context = gtk_widget_get_style_context (w);
 
 	if (in_style_set > 0)
                 return;
 
         in_style_set ++;
 
-	style = gtk_rc_get_style (GTK_WIDGET (w));
-	gtk_widget_modify_bg (GTK_WIDGET (w), GTK_STATE_NORMAL, &style->bg[GTK_STATE_ACTIVE]);
+	GdkRGBA color;
+	gtk_style_context_get_background_color (style_context, GTK_STATE_FLAG_ACTIVE, &color);
+	gtk_widget_override_background_color (GTK_WIDGET (w), GTK_STATE_FLAG_NORMAL, &color);
 
 	in_style_set --;
 

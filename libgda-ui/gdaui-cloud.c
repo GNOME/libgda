@@ -125,11 +125,11 @@ static void
 cloud_map (GtkWidget *widget)
 {
         GTK_WIDGET_CLASS (parent_class)->map (widget);
-	GtkStyle *style;
-	GdkColor color;
-	style = gtk_widget_get_style (widget);
-	color = style->bg[GTK_STATE_NORMAL];
-	gtk_widget_modify_base (GDAUI_CLOUD (widget)->priv->tview, GTK_STATE_NORMAL, &color);
+	GtkStyleContext *style_context;
+	GdkRGBA color;
+	style_context = gtk_widget_get_style_context (widget);
+	gtk_style_context_get_background_color (style_context, GTK_STATE_FLAG_NORMAL, &color);
+	gtk_widget_override_background_color (GDAUI_CLOUD (widget)->priv->tview, GTK_STATE_FLAG_NORMAL, &color);
 }
 
 static void
