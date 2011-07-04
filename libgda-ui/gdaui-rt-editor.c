@@ -843,7 +843,7 @@ bigger_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
 	fd = pango_context_get_font_description (pcontext);
 	nfd = pango_font_description_copy_static (fd);
 	pango_font_description_set_size (nfd, pango_font_description_get_size (fd) * 1.2);
-	gtk_widget_modify_font (GTK_WIDGET (rte->priv->textview), nfd);
+	gtk_widget_override_font (GTK_WIDGET (rte->priv->textview), nfd);
 	pango_font_description_free (nfd);
 }
 
@@ -857,7 +857,7 @@ smaller_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
 	fd = pango_context_get_font_description (pcontext);
 	nfd = pango_font_description_copy_static (fd);
 	pango_font_description_set_size (nfd, pango_font_description_get_size (fd) / 1.2);
-	gtk_widget_modify_font (GTK_WIDGET (rte->priv->textview), nfd);
+	gtk_widget_override_font (GTK_WIDGET (rte->priv->textview), nfd);
 	pango_font_description_free (nfd);
 }
 
@@ -865,7 +865,7 @@ static void
 reset_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
 			     GdauiRtEditor *rte)
 {
-	gtk_widget_modify_font (GTK_WIDGET (rte->priv->textview), NULL);
+	gtk_widget_override_font (GTK_WIDGET (rte->priv->textview), NULL);
 }
 
 static void
