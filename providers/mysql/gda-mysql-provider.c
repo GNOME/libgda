@@ -409,7 +409,8 @@ gda_mysql_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaMysqlProvider),
 			0,
-			(GInstanceInitFunc) gda_mysql_provider_init
+			(GInstanceInitFunc) gda_mysql_provider_init,
+			NULL
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -2451,7 +2452,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 			else {
 				gchar *str = NULL;
-				gulong blob_len;
+				glong blob_len;
 				if (blob->op) {
 					blob_len = gda_blob_op_get_length (blob->op);
 					if ((blob_len != bin->binary_length) &&

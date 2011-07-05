@@ -58,7 +58,8 @@ gda_mysql_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaMysqlBlobOp),
 			0,
-			(GInstanceInitFunc) gda_mysql_blob_op_init
+			(GInstanceInitFunc) gda_mysql_blob_op_init,
+			NULL
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
