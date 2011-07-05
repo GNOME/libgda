@@ -331,13 +331,13 @@ selection_changed_cb (GtkTreeSelection *sel, LdapEntriesPage *ebrowser)
 }
 
 static void
-open_dn_requested_cb (EntryProperties *eprop, const gchar *dn, LdapEntriesPage *ebrowser)
+open_dn_requested_cb (G_GNUC_UNUSED EntryProperties *eprop, const gchar *dn, LdapEntriesPage *ebrowser)
 {
 	ldap_entries_page_set_current_dn (ebrowser, dn);
 }
 
 static void
-open_class_requested_cb (EntryProperties *eprop, const gchar *classname, LdapEntriesPage *ebrowser)
+open_class_requested_cb (G_GNUC_UNUSED EntryProperties *eprop, const gchar *classname, LdapEntriesPage *ebrowser)
 {
 	BrowserPerspective *bpers;
 	bpers = browser_page_get_perspective (BROWSER_PAGE (ebrowser));

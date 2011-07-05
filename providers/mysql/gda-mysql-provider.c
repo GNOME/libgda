@@ -108,7 +108,7 @@ static gboolean            gda_mysql_provider_supports_operation (GdaServerProvi
 static GdaServerOperation *gda_mysql_provider_create_operation (GdaServerProvider       *provider,
 								GdaConnection           *cnc,
 								GdaServerOperationType   type,
-								GdaSet                  *options,
+								G_GNUC_UNUSED GdaSet                  *options,
 								GError                **error);
 static gchar              *gda_mysql_provider_render_operation (GdaServerProvider   *provider,
 								GdaConnection       *cnc,
@@ -373,7 +373,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 
 static void
 gda_mysql_provider_init (GdaMysqlProvider       *mysql_prv,
-			 GdaMysqlProviderClass  *klass)
+			 G_GNUC_UNUSED GdaMysqlProviderClass  *klass)
 {
 	InternalStatementItem i;
 	GdaSqlParser *parser;
@@ -425,7 +425,7 @@ static void
 gda_mysql_provider_set_property (GObject *object,
 				 guint param_id,
 				 const GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaMysqlProvider *mysql_prv;
 	mysql_prv = GDA_MYSQL_PROVIDER (object);
@@ -441,7 +441,7 @@ static void
 gda_mysql_provider_get_property (GObject *object,
 				 guint param_id,
 				 GValue *value,
-				 GParamSpec *pspec)
+				 G_GNUC_UNUSED GParamSpec *pspec)
 {
 	GdaMysqlProvider *mysql_prv;
 	mysql_prv = GDA_MYSQL_PROVIDER (object);
@@ -456,7 +456,7 @@ gda_mysql_provider_get_property (GObject *object,
  * Get provider name request
  */
 static const gchar *
-gda_mysql_provider_get_name (GdaServerProvider *provider)
+gda_mysql_provider_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
 	return MYSQL_PROVIDER_NAME;
 }
@@ -465,7 +465,7 @@ gda_mysql_provider_get_name (GdaServerProvider *provider)
  * Get provider's version, no need to change this
  */
 static const gchar *
-gda_mysql_provider_get_version (GdaServerProvider  *provider)
+gda_mysql_provider_get_version (G_GNUC_UNUSED GdaServerProvider  *provider)
 {
 	return PACKAGE_VERSION;
 }
@@ -579,7 +579,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 				    GdaConnection                   *cnc,
 				    GdaQuarkList                    *params,
 				    GdaQuarkList                    *auth,
-				    guint                           *task_id,
+				    G_GNUC_UNUSED guint                           *task_id,
 				    GdaServerProviderAsyncCallback   async_cb,
 				    gpointer                         cb_data)
 {
@@ -798,7 +798,7 @@ static gboolean
 gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
 				       GdaConnection           *cnc,
 				       GdaServerOperationType   type,
-				       GdaSet                  *options)
+				       G_GNUC_UNUSED GdaSet                  *options)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -835,7 +835,7 @@ static GdaServerOperation *
 gda_mysql_provider_create_operation (GdaServerProvider       *provider,
 				     GdaConnection           *cnc,
 				     GdaServerOperationType   type,
-				     GdaSet                  *options,
+				     G_GNUC_UNUSED GdaSet                  *options,
 				     GError                 **error)
 {
         gchar *file;
@@ -963,7 +963,7 @@ static gboolean
 gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 				      GdaConnection                   *cnc,
 				      GdaServerOperation              *op,
-				      guint                           *task_id, 
+				      G_GNUC_UNUSED guint                           *task_id, 
 				      GdaServerProviderAsyncCallback   async_cb,
 				      gpointer                         cb_data,
 				      GError                         **error)
@@ -1056,7 +1056,7 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 static gboolean
 gda_mysql_provider_begin_transaction (GdaServerProvider        *provider,
 				      GdaConnection            *cnc,
-				      const gchar              *name,
+				      G_GNUC_UNUSED const gchar              *name,
 				      GdaTransactionIsolation   level,
 				      GError                  **error)
 {
@@ -1112,7 +1112,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider        *provider,
 static gboolean
 gda_mysql_provider_commit_transaction (GdaServerProvider  *provider,
 				       GdaConnection      *cnc,
-				       const gchar        *name,
+				       G_GNUC_UNUSED const gchar        *name,
 				       GError            **error)
 {
 	MysqlConnectionData *cdata;
@@ -1142,7 +1142,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider  *provider,
 static gboolean
 gda_mysql_provider_rollback_transaction (GdaServerProvider  *provider,
 					 GdaConnection      *cnc,
-					 const gchar        *name,
+					 G_GNUC_UNUSED const gchar        *name,
 					 GError            **error)
 {
 	MysqlConnectionData *cdata;
@@ -1172,8 +1172,8 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider  *provider,
 static gboolean
 gda_mysql_provider_add_savepoint (GdaServerProvider  *provider,
 				  GdaConnection      *cnc,
-				  const gchar        *name,
-				  GError            **error)
+				  G_GNUC_UNUSED const gchar        *name,
+				  G_GNUC_UNUSED GError            **error)
 {
 	MysqlConnectionData *cdata;
 
@@ -1195,8 +1195,8 @@ gda_mysql_provider_add_savepoint (GdaServerProvider  *provider,
 static gboolean
 gda_mysql_provider_rollback_savepoint (GdaServerProvider  *provider,
 				       GdaConnection      *cnc,
-				       const gchar        *name,
-				       GError            **error)
+				       G_GNUC_UNUSED const gchar        *name,
+				       G_GNUC_UNUSED GError            **error)
 {
 	MysqlConnectionData *cdata;
 
@@ -1218,8 +1218,8 @@ gda_mysql_provider_rollback_savepoint (GdaServerProvider  *provider,
 static gboolean
 gda_mysql_provider_delete_savepoint (GdaServerProvider  *provider,
 				     GdaConnection      *cnc,
-				     const gchar        *name,
-				     GError            **error)
+				     G_GNUC_UNUSED const gchar        *name,
+				     G_GNUC_UNUSED GError            **error)
 {
 	MysqlConnectionData *cdata;
 
@@ -1396,8 +1396,8 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
  * by the database. See the PostgreSQL provider implementation for an example.
  */
 static GdaSqlParser *
-gda_mysql_provider_create_parser (GdaServerProvider  *provider,
-				  GdaConnection      *cnc)
+gda_mysql_provider_create_parser (G_GNUC_UNUSED GdaServerProvider  *provider,
+				  G_GNUC_UNUSED GdaConnection      *cnc)
 {
 	return (GdaSqlParser *) g_object_new (GDA_TYPE_MYSQL_PARSER,
 					      "tokenizer-flavour", GDA_SQL_PARSER_FLAVOUR_MYSQL,
@@ -2679,7 +2679,7 @@ static gboolean
 gda_mysql_provider_xa_start (GdaServerProvider         *provider,
 			     GdaConnection             *cnc, 
 			     const GdaXaTransactionId  *xid,
-			     GError                   **error)
+			     G_GNUC_UNUSED GError                   **error)
 {
 	MysqlConnectionData *cdata;
 
@@ -2703,7 +2703,7 @@ static gboolean
 gda_mysql_provider_xa_end (GdaServerProvider         *provider,
 			   GdaConnection             *cnc, 
 			   const GdaXaTransactionId  *xid,
-			   GError                   **error)
+			   G_GNUC_UNUSED GError                   **error)
 {
 	MysqlConnectionData *cdata;
 
@@ -2726,7 +2726,7 @@ static gboolean
 gda_mysql_provider_xa_prepare (GdaServerProvider         *provider,
 			       GdaConnection             *cnc, 
 			       const GdaXaTransactionId  *xid,
-			       GError                   **error)
+			       G_GNUC_UNUSED GError                   **error)
 {
 	MysqlConnectionData *cdata;
 
@@ -2750,7 +2750,7 @@ static gboolean
 gda_mysql_provider_xa_commit (GdaServerProvider         *provider,
 			      GdaConnection             *cnc, 
 			      const GdaXaTransactionId  *xid,
-			      GError                   **error)
+			      G_GNUC_UNUSED GError                   **error)
 {
 	MysqlConnectionData *cdata;
 
@@ -2773,7 +2773,7 @@ static gboolean
 gda_mysql_provider_xa_rollback (GdaServerProvider         *provider,
 				GdaConnection             *cnc, 
 				const GdaXaTransactionId  *xid,
-				GError                   **error)
+				G_GNUC_UNUSED GError                   **error)
 {
 	MysqlConnectionData *cdata;
 
@@ -2797,7 +2797,7 @@ gda_mysql_provider_xa_rollback (GdaServerProvider         *provider,
 static GList *
 gda_mysql_provider_xa_recover (GdaServerProvider  *provider,
 			       GdaConnection      *cnc,
-			       GError            **error)
+			       G_GNUC_UNUSED GError            **error)
 {
 	MysqlConnectionData *cdata;
 

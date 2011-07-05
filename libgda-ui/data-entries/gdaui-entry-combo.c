@@ -719,7 +719,7 @@ gdaui_entry_combo_set_default_values (GdauiEntryCombo *combo, G_GNUC_UNUSED GSLi
  */
 
 static void
-gdaui_entry_combo_set_value (GdauiDataEntry *iface, const GValue *value)
+gdaui_entry_combo_set_value (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue *value)
 {
 	GdauiEntryCombo *combo;
 

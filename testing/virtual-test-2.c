@@ -32,7 +32,7 @@ static void          run_sql_non_select (GdaConnection *cnc, const gchar *sql);
 static GdaDataModel *run_sql_select (GdaConnection *cnc, const gchar *sql);
 static gint          run_and_show_sql_select (GdaConnection *cnc, const gchar *sql, const gchar *title);
 int
-main (int argc, char *argv [])
+main ()
 {
 	GError *error = NULL;
 	GdaConnection *hub, *cnc;

@@ -556,7 +556,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 }
 
 static void
-copy_cb (GtkWidget *button, PictMenuData *menudata)
+copy_cb (G_GNUC_UNUSED GtkWidget *button, PictMenuData *menudata)
 {
 	GtkClipboard *cp;
 	cp = gtk_clipboard_get (gdk_atom_intern_static_string ("CLIPBOARD"));

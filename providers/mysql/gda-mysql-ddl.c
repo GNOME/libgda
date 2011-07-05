@@ -26,7 +26,7 @@
 
 gchar *
 gda_mysql_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc, 
-			    GdaServerOperation *op, GError **error)
+			    GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -70,7 +70,7 @@ gda_mysql_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_mysql_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc, 
-			  GdaServerOperation *op, GError **error)
+			  GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -471,7 +471,7 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_mysql_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-			     GdaServerOperation *op, GError **error)
+			     GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -509,7 +509,7 @@ gda_mysql_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_mysql_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-			       GdaServerOperation *op, GError **error)
+			       GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	gchar *sql = NULL;
@@ -535,7 +535,7 @@ gda_mysql_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_mysql_render_COMMENT_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-				GdaServerOperation *op, GError **error)
+				GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -563,7 +563,7 @@ gda_mysql_render_COMMENT_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_mysql_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
-			     GdaServerOperation *op, GError **error)
+			     GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -671,7 +671,7 @@ gda_mysql_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_mysql_render_DROP_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
-			      GdaServerOperation *op, GError **error)
+			      GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	gchar *sql = NULL;
@@ -775,7 +775,7 @@ gda_mysql_render_COMMENT_COLUMN (GdaServerProvider *provider, GdaConnection *cnc
 
 gchar *
 gda_mysql_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
-			       GdaServerOperation *op, GError **error)
+			       GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -848,7 +848,7 @@ gda_mysql_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_mysql_render_DROP_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
-			     GdaServerOperation *op, GError **error)
+			     GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	gchar *sql = NULL;
@@ -944,7 +944,7 @@ gda_mysql_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	
 gchar *
 gda_mysql_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
-			    GdaServerOperation *op, GError **error)
+			    GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;

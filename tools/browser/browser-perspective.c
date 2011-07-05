@@ -222,7 +222,7 @@ browser_perspective_declare_notebook (BrowserPerspective *perspective, GtkNotebo
 }
 
 static void
-nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num, BrowserPerspective *perspective)
+nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint page_num, BrowserPerspective *perspective)
 {
 	GtkWidget *page_contents;
 	GtkActionGroup *actions = NULL;
@@ -243,7 +243,7 @@ nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num, BrowserPersp
 }
 
 static void
-nb_page_added_or_removed_cb (GtkNotebook *nb, GtkWidget *child, guint page_num,
+nb_page_added_or_removed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *child, G_GNUC_UNUSED guint page_num,
 			     BrowserPerspective *perspective)
 {
 	adapt_notebook_for_fullscreen (perspective);
@@ -259,7 +259,7 @@ nb_page_added_or_removed_cb (GtkNotebook *nb, GtkWidget *child, guint page_num,
 }
 
 static void
-fullscreen_changed_cb (G_GNUC_UNUSED BrowserWindow *bwin, gboolean fullscreen,
+fullscreen_changed_cb (G_GNUC_UNUSED BrowserWindow *bwin, G_GNUC_UNUSED gboolean fullscreen,
 		       BrowserPerspective *perspective)
 {
 	adapt_notebook_for_fullscreen (perspective);

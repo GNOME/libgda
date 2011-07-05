@@ -75,7 +75,7 @@ TestCase test_cases[] = {
 };
 
 int 
-main (int argc, char **argv)
+main ()
 {
 	guint i;
 

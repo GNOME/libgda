@@ -105,7 +105,7 @@ static GObjectClass *parent_class = NULL;
  */
 static void
 gda_mysql_recordset_init (GdaMysqlRecordset       *recset,
-			  GdaMysqlRecordsetClass  *klass)
+			  G_GNUC_UNUSED GdaMysqlRecordsetClass  *klass)
 {
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
 	recset->priv = g_new0 (GdaMysqlRecordsetPrivate, 1);
@@ -311,7 +311,7 @@ gda_mysql_recordset_get_type (void)
 }
 
 static GType
-_gda_mysql_type_to_gda (MysqlConnectionData *cdata,
+_gda_mysql_type_to_gda (G_GNUC_UNUSED MysqlConnectionData *cdata,
 			enum enum_field_types  mysql_type, unsigned int charsetnr)
 {
 	GType gtype = 0;
@@ -713,7 +713,7 @@ gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 }
 
 static GdaRow *
-new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
+new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, GError **error)
 {
 	//g_print ("%s(): NCOLS=%d  ROWNUM=%d\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum);
 	int res;
@@ -1091,10 +1091,10 @@ gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
  * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
-				GdaRow        **row,
-				gint            rownum,
-				GError        **error)
+gda_mysql_recordset_fetch_prev (G_GNUC_UNUSED GdaDataSelect  *model,
+				G_GNUC_UNUSED GdaRow        **row,
+				G_GNUC_UNUSED gint            rownum,
+				G_GNUC_UNUSED GError        **error)
 {
 	/*GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;*/
 
@@ -1116,10 +1116,10 @@ gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
  * can use gda_data_select_take_row().
  */
 static gboolean 
-gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
-			      GdaRow        **row,
-			      gint            rownum,
-			      GError        **error)
+gda_mysql_recordset_fetch_at (G_GNUC_UNUSED GdaDataSelect  *model,
+			      G_GNUC_UNUSED GdaRow        **row,
+			      G_GNUC_UNUSED gint            rownum,
+			      G_GNUC_UNUSED GError        **error)
 {
 	/*GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;*/
 	

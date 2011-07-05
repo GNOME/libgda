@@ -758,7 +758,7 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 }
 
 static void
-sql_favorite_new_mitem_cb (GtkMenuItem *mitem, QueryConsolePage *tconsole)
+sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *tconsole)
 {
 	BrowserFavorites *bfav;
 	BrowserFavoritesAttributes fav;

@@ -24,7 +24,7 @@
 static gboolean run_sql_non_select (GdaConnection *cnc, const gchar *sql);
 
 int 
-main (int argc, char **argv)
+main ()
 {
 	GError *error = NULL;	
 	GdaConnection *cnc;

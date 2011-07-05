@@ -214,8 +214,8 @@ enum {
 };
 
 static void
-text_cell_data_func (GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
-		     GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data)
+text_cell_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column, GtkCellRenderer *cell,
+		     GtkTreeModel *tree_model, GtkTreeIter *iter, G_GNUC_UNUSED gpointer data)
 {
 	gchar *tmp;
 	gtk_tree_model_get (tree_model, iter,

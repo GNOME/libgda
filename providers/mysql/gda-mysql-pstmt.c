@@ -76,7 +76,7 @@ gda_mysql_pstmt_class_init (GdaMysqlPStmtClass  *klass)
 
 static void
 gda_mysql_pstmt_init (GdaMysqlPStmt       *pstmt,
-		      GdaMysqlPStmtClass  *klass)
+		      G_GNUC_UNUSED GdaMysqlPStmtClass  *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	
