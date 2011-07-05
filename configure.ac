@@ -831,7 +831,7 @@ AM_CONDITIONAL(DEFAULT_BINARY, test "x$enable_default_binary" = xyes)
 # has problems but we do not want to patch that code.
 DK_ARG_ENABLE_WARNINGS([LIBGDA_WFLAGS],
 	[-Wall],
-	[-Wall -Wextra -Wno-address -Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign],
+	[-Wall -Wextra -Wformat-security -Wno-address -Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign],
 	[PANGO G GDK GDK_PIXBUF GTK])
 
 AC_SUBST(LIBGDA_CFLAGS)
