@@ -66,7 +66,8 @@ gda_mysql_handler_boolean_get_type (void)
 			NULL,
 			sizeof (GdaMysqlHandlerBoolean),
 			0,
-			(GInstanceInitFunc) gda_mysql_handler_boolean_init
+			(GInstanceInitFunc) gda_mysql_handler_boolean_init,
+			NULL
 		};		
 
 		static const GInterfaceInfo data_entry_info = {

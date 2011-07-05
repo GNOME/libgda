@@ -298,7 +298,8 @@ gda_mysql_recordset_get_type (void)
 			NULL,
 			sizeof (GdaMysqlRecordset),
 			0,
-			(GInstanceInitFunc) gda_mysql_recordset_init
+			(GInstanceInitFunc) gda_mysql_recordset_init,
+			NULL
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -773,7 +774,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 		long long longlongvalue = 0;
 		double doublevalue = 0.0;
 		float floatvalue = 0.;
-		MYSQL_TIME timevalue = { 0 };
+		MYSQL_TIME timevalue = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		my_bool is_null = FALSE;
 		unsigned long length;
 		
@@ -927,14 +928,10 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, gint rownum, GError **error)
 				gda_value_set_binary (value, &binary);
 			}
 			else if (type == GDA_TYPE_BLOB) {
-				/* web don't use GdaMysqlBlobOp because it looks like the MySQL
+				/* we don't use GdaMysqlBlobOp because it looks like the MySQL
 				 * API does not support BLOBs accessed in a random way,
 				 * so we return the whole BLOB at once */
-				GdaBlob blob = {
-					.data.data = (guchar*) strvalue,
-					.data.binary_length = length,
-					.op = NULL
-				};
+				GdaBlob blob = { {(guchar*) strvalue, length}, NULL };
 				gda_value_set_blob (value, &blob);
 			}
 			else if (type == G_TYPE_DOUBLE) {
