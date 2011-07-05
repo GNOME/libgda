@@ -431,7 +431,10 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_widget_show (label);
 	gtk_assistant_append_page (assist, label);
 	gtk_assistant_set_page_title (assist, label, _("Add a new data source..."));
+	
+	/* TODO: This is deprecated. Add it to the main content instead: */
 	gtk_assistant_set_page_header_image (assist, label, assistant->priv->logo);
+	
 	gtk_assistant_set_page_type (assist, label, GTK_ASSISTANT_PAGE_INTRO);
 	gtk_assistant_set_page_complete (assist, label, TRUE);
 

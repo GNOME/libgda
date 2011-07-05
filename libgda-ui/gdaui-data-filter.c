@@ -118,7 +118,7 @@ set_wait_cursor (GtkWidget *w)
 		GdkCursor* cursor;
 		cursor = gdk_cursor_new (GDK_WATCH);
 		gdk_window_set_cursor (gtk_widget_get_window (parent), cursor);
-		gdk_cursor_unref (cursor);
+		g_object_unref (cursor);
 	}
 }
 

@@ -536,7 +536,7 @@ ldap_search_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_bu
 	GdkPixbuf *search_pixbuf;
 
 	epage = LDAP_SEARCH_PAGE (page);
-	search_pixbuf = gtk_widget_render_icon (GTK_WIDGET (page), GTK_STOCK_FIND, GTK_ICON_SIZE_MENU, NULL);
+	search_pixbuf = gtk_widget_render_icon_pixbuf (GTK_WIDGET (page), GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 	tab_name = _("LDAP search");
 	return browser_make_tab_label_with_pixbuf (tab_name,
 						   search_pixbuf,

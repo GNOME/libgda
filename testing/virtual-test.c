@@ -31,7 +31,7 @@ main (int argc, char **argv)
 	GError *error = NULL;	
 	GdaConnection *cnc;
 	GdaVirtualProvider *provider;
-	GdaDataModel *xml_model, *csv_model, *rw_model;
+	GdaDataModel *xml_model, /* *csv_model, */ *rw_model;
 	GdaDataModel *proxy = NULL;
 	
 	gda_init ();
