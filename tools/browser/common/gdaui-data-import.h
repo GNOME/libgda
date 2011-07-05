@@ -37,7 +37,7 @@ typedef struct _GdauiDataImportPriv  GdauiDataImportPriv;
 /* struct for the object's data */
 struct _GdauiDataImport
 {
-	GtkVPaned              object;
+	GtkPaned              object;
 
 	GdauiDataImportPriv *priv;
 };
@@ -45,7 +45,7 @@ struct _GdauiDataImport
 /* struct for the object's class */
 struct _GdauiDataImportClass
 {
-	GtkVPanedClass         parent_class;
+	GtkPanedClass         parent_class;
 };
 
 /* 

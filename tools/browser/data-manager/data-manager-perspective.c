@@ -156,7 +156,7 @@ data_manager_perspective_new (BrowserWindow *bwin)
 
 	/* contents */
         GtkWidget *paned, *nb, *wid;
-        paned = gtk_hpaned_new ();
+        paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	if (fav_supported) {
 		wid = data_favorite_selector_new (bcnc);
 		g_signal_connect (wid, "selection-changed",

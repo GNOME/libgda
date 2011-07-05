@@ -149,7 +149,7 @@ ldap_browser_perspective_new (BrowserWindow *bwin)
 	/* contents */
 	GtkWidget *paned, *wid, *nb, *button, *tlabel;
 	bcnc = browser_window_get_connection (bwin);
-	paned = gtk_hpaned_new ();
+	paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	wid = ldap_favorite_selector_new (bcnc);
 	g_signal_connect (wid, "selection-changed",
 			  G_CALLBACK (fav_selection_changed_cb), bpers);

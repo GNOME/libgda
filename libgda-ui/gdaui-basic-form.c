@@ -1254,11 +1254,11 @@ load_xml_layout_children (GdauiBasicForm *form, xmlNodePtr parent_node)
 			ctype = TOP_BOX;
 		}
 		else if (xmlStrEqual (prop, BAD_CAST "hpaned")) {
-			top = gtk_hpaned_new ();
+			top = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 			ctype = TOP_PANED;
 		}
 		else if (xmlStrEqual (prop, BAD_CAST "vpaned")) {
-			top = gtk_vpaned_new ();
+			top = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
 			ctype = TOP_PANED;
 		}
 		else 

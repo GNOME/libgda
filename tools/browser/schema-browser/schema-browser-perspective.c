@@ -147,7 +147,7 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 
 	/* contents */
 	GtkWidget *paned, *wid, *nb;
-	paned = gtk_hpaned_new ();
+	paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	if (fav_supported) {
 		wid = favorite_selector_new (bcnc);
 		g_signal_connect (wid, "selection-changed",

@@ -375,7 +375,7 @@ ldap_entries_page_new (BrowserConnection *bcnc, const gchar *dn)
 
 	/* VPaned widget */
 	GtkWidget *hp;
-	hp = gtk_hpaned_new ();
+	hp = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (ebrowser), hp, TRUE, TRUE, 0);
 
 	/* tree */

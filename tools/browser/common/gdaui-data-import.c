@@ -80,7 +80,7 @@ gdaui_data_import_get_type (void)
 			0
 		};		
 		
-		type = g_type_register_static (GTK_TYPE_VPANED, "GdauiDataImport", &info, 0);
+		type = g_type_register_static (GTK_TYPE_PANED, "GdauiDataImport", &info, 0);
 	}
 
 	return type;
@@ -108,6 +108,8 @@ gdaui_data_import_init (GdauiDataImport * import)
 	
 	import->priv = g_new0 (GdauiDataImportPriv, 1);
 	import->priv->model = NULL;
+
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (import), GTK_ORIENTATION_VERTICAL);
 
 	/* 
 	 * top part: import specs. 

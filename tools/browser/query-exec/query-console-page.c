@@ -296,7 +296,7 @@ query_console_page_new (BrowserConnection *bcnc)
 
 	/* main contents */
 	GtkWidget *vpaned;
-	vpaned = gtk_vpaned_new ();
+	vpaned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
 	tconsole->priv->vpaned = NULL;
 	gtk_box_pack_start (GTK_BOX (tconsole), vpaned, TRUE, TRUE, 6);	
 
@@ -306,7 +306,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_paned_add1 (GTK_PANED (vpaned), hbox);
 
-	hpaned = gtk_hpaned_new ();
+	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (hbox), hpaned, TRUE, TRUE, 0);
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
@@ -396,7 +396,7 @@ query_console_page_new (BrowserConnection *bcnc)
 			  G_CALLBACK (sql_favorite_clicked_cb), tconsole);
 
 	/* bottom paned for the results and history */
-	hpaned = gtk_hpaned_new ();
+	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_paned_add2 (GTK_PANED (vpaned), hpaned);
 
 	/* bottom left */

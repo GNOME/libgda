@@ -280,12 +280,12 @@ make_paned_list (gint size, gboolean horiz)
 	GtkWidget *paned;
 
 	g_assert (size >= 2);
-	paned = horiz ? gtk_hpaned_new () : gtk_vpaned_new ();
+	paned = gtk_paned_new (horiz ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL);
 	list = g_slist_prepend (list, paned);
 
 	for (i = 2; i < size; i++) {
 		GtkWidget *paned2;
-		paned2 = horiz ? gtk_hpaned_new () : gtk_vpaned_new ();
+		paned2 = gtk_paned_new (horiz ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL);
 		gtk_paned_add2 (GTK_PANED (paned), paned2);
 		list = g_slist_prepend (list, paned2);
 		paned = paned2;

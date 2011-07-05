@@ -111,7 +111,7 @@ data_source_editor_init (DataSourceEditor *editor)
 	g_signal_connect (editor->priv->attributes, "holder-changed",
 			  G_CALLBACK (attribute_changed_cb), editor);
 
-	vpaned = gtk_vpaned_new ();
+	vpaned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start (GTK_BOX (editor), vpaned, TRUE, TRUE, 0);
 	gtk_widget_show (vpaned);
 

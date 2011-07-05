@@ -588,7 +588,7 @@ table_columns_new (TableInfo *tinfo)
 	
 	/* main container */
 	GtkWidget *paned;
-	paned = gtk_vpaned_new ();
+	paned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start (GTK_BOX (tcolumns), paned, TRUE, TRUE, 0);
 	gtk_widget_show (paned);
 

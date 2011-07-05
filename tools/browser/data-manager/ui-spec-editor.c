@@ -231,7 +231,7 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (sped), GTK_ORIENTATION_VERTICAL);
 	
 	GtkWidget *hpaned;
-	hpaned = gtk_hpaned_new ();
+	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (sped), hpaned, TRUE, TRUE, 0);
 	
 	GtkWidget *vbox;

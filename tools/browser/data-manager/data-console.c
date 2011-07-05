@@ -318,7 +318,7 @@ data_console_new (BrowserConnection *bcnc)
 
 	/* main container */
 	GtkWidget *hpaned, *nb;
-	hpaned = gtk_hpaned_new ();
+	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (dconsole), hpaned, TRUE, TRUE, 0);
 
 	/* variables */

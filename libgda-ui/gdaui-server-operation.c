@@ -1164,7 +1164,7 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	info_node = gda_server_operation_get_node_info (form->priv->op, path);
 	g_assert (info_node->type == GDA_SERVER_OPERATION_NODE_DATA_MODEL);
 
-	hlayout = gtk_hpaned_new ();
+	hlayout = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 
 	/* form for field properties */
 	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
