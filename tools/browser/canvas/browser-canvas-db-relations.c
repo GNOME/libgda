@@ -402,7 +402,7 @@ canvas_entity_popup_func (BrowserCanvasTable *ce)
 }
 
 static void
-popup_func_declare_fk_cb (GtkMenuItem *mitem, BrowserCanvasTable *ce)
+popup_func_declare_fk_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasTable *ce)
 {
 	GtkWidget *dlg, *parent;
 	GdaMetaStruct *mstruct;

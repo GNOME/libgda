@@ -335,7 +335,7 @@ selection_changed_cb (GtkTreeSelection *sel, LdapClassesPage *ebrowser)
 }
 
 static void
-open_classname_requested_cb (ClassProperties *eprop, const gchar *classname, LdapClassesPage *ebrowser)
+open_classname_requested_cb (G_GNUC_UNUSED ClassProperties *eprop, const gchar *classname, LdapClassesPage *ebrowser)
 {
 	ldap_classes_page_set_current_class (ebrowser, classname);
 }

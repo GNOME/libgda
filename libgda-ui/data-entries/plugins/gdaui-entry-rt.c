@@ -109,7 +109,7 @@ gdaui_entry_rt_init (GdauiEntryRt * gdaui_entry_rt)
  * Returns: the new widget
  */
 GtkWidget *
-gdaui_entry_rt_new (GdaDataHandler *dh, GType type, const gchar *options)
+gdaui_entry_rt_new (GdaDataHandler *dh, GType type, G_GNUC_UNUSED const gchar *options)
 {
 	GObject *obj;
 

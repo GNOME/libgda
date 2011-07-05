@@ -679,7 +679,7 @@ static void ldap_view_dn_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
 #endif
 
 static void
-proxy_changed_cb (GdauiDataProxy *dp, GdaDataProxy *proxy, UiFormGrid *formgrid)
+proxy_changed_cb (G_GNUC_UNUSED GdauiDataProxy *dp, G_GNUC_UNUSED GdaDataProxy *proxy, UiFormGrid *formgrid)
 {
 	g_signal_emit (formgrid, ui_formgrid_signals [DATA_SET_CHANGED], 0);
 }

@@ -324,7 +324,7 @@ main (int argc, char *argv[])
 }
 
 static void
-dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, gboolean row_selected, G_GNUC_UNUSED gpointer data)
+dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, G_GNUC_UNUSED gboolean row_selected, G_GNUC_UNUSED gpointer data)
 {
 	GtkAction *action;
 	GArray *selection;

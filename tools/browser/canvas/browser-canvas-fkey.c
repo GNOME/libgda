@@ -461,7 +461,7 @@ single_item_leave_notify_event_cb (G_GNUC_UNUSED GooCanvasItem *ci, G_GNUC_UNUSE
 }
 
 static void
-delete_declared_fk_cb (GtkMenuItem *mitem, BrowserCanvasFkey *cc)
+delete_declared_fk_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasFkey *cc)
 {
 	GError *error = NULL;
 	GtkWidget *parent;

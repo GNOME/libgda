@@ -119,7 +119,7 @@ filter_editor_get_type (void)
 }
 
 static void
-activated_cb (GtkEntry *entry, FilterEditor *feditor)
+activated_cb (G_GNUC_UNUSED GtkEntry *entry, FilterEditor *feditor)
 {
 	g_signal_emit (feditor, filter_editor_signals [ACTIVATE], 0);
 }

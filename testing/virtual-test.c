@@ -26,7 +26,7 @@ static gboolean test_sql_non_select (GdaConnection *cnc, const gchar *sql);
 GdaSqlParser *parser;
 
 int 
-main (int argc, char **argv)
+main ()
 {
 	GError *error = NULL;	
 	GdaConnection *cnc;

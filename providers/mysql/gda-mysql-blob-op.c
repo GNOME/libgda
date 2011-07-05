@@ -71,7 +71,7 @@ gda_mysql_blob_op_get_type (void)
 
 static void
 gda_mysql_blob_op_init (GdaMysqlBlobOp       *op,
-			GdaMysqlBlobOpClass  *klass)
+			G_GNUC_UNUSED GdaMysqlBlobOpClass  *klass)
 {
 	g_return_if_fail (GDA_IS_MYSQL_BLOB_OP (op));
 
@@ -179,7 +179,7 @@ gda_mysql_blob_op_read (GdaBlobOp  *op,
 static glong
 gda_mysql_blob_op_write (GdaBlobOp  *op,
 			 GdaBlob    *blob,
-			 glong       offset)
+			 G_GNUC_UNUSED glong       offset)
 {
 	GdaMysqlBlobOp *pgop;
 	GdaBinary *bin;

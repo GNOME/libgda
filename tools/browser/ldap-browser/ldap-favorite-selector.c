@@ -195,7 +195,7 @@ favorite_delete_selected (LdapFavoriteSelector *fsel)
 }
 
 static gboolean
-key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, LdapFavoriteSelector *fsel)
+key_press_event_cb (G_GNUC_UNUSED GtkTreeView *treeview, GdkEventKey *event, LdapFavoriteSelector *fsel)
 {
 	if (event->keyval == GDK_KEY_Delete) {
 		favorite_delete_selected (fsel);
