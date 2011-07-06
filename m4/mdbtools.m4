@@ -193,7 +193,7 @@ int main() {
 	    fi
 
 	    AC_MSG_CHECKING([whether mdb_bind_column takes three or four arguments])
-	    AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+	    AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #include <mdbtools.h>
 int main() {
 	MdbHandle *mdb;
@@ -203,7 +203,7 @@ int main() {
 	mdb_bind_column(mdb, c, bound_data[c], &len);
 	return 0;
 }
-])],
+]])],
 	                      mdb_bind_column_args=four, mdb_bind_column_args=three)
 
 	    AC_MSG_RESULT($mdb_bind_column_args)
