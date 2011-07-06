@@ -1,3 +1,15 @@
+libgda 4.99.3, 2011-07-06
+
+ Lots of thanks to Murray Cumming for all the corrections he made in this version!
+
+ - Convert deprecated GTK3 API to new ones
+ - Improved compilation system (M4 macros, compiler warnings)
+ - PostgreSQL: support the ILIKE operator
+ - Misc corrections and improvements
+ - Bugs fixed: #653082
+ - Translations:
+	- es (Daniel Mustieles, Gonzalo Sanhueza)
+
 libgda 4.99.2, 2011-06-20
 
  - GDA_TYPE_NULL is not 0 anymore (bug #647633)
