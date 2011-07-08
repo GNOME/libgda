@@ -145,7 +145,7 @@ void                              gda_value_take_blob (GValue *value, GdaBlob *b
 
 const GdaGeometricPoint *gda_value_get_geometric_point (const GValue *value);
 void                              gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val);
-G_CONST_RETURN GdaValueList      *gda_value_get_list (const GValue *value);
+const GdaValueList      *gda_value_get_list (const GValue *value);
 void                              gda_value_set_list (GValue *value, const GdaValueList *val);
 void                              gda_value_set_null (GValue *value);
 const GdaNumeric        *gda_value_get_numeric (const GValue *value);

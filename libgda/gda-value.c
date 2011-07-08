@@ -1625,7 +1625,7 @@ gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val)
  *
  * Returns: (transfer none): the value stored in @value.
  */
-G_CONST_RETURN GdaValueList *
+const GdaValueList *
 gda_value_get_list (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
