@@ -1904,6 +1904,7 @@ gdaui_rt_editor_set_editable (GdauiRtEditor *editor, gboolean editable)
 {
 	g_return_if_fail (GDAUI_IS_RT_EDITOR (editor));
 	gtk_text_view_set_editable (editor->priv->textview, editable);
+	gtk_text_view_set_cursor_visible (editor->priv->textview, editable);
 	show_hide_toolbar (editor);
 }
 

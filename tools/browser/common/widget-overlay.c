@@ -450,7 +450,7 @@ widget_overlay_event (GtkWidget *widget, GdkEvent *event)
 		scale -= SCALE_STEP;
 	change_widget_scale (ovl, cd, scale);
 
-	return FALSE;
+	return TRUE;
 }
 
 static void
