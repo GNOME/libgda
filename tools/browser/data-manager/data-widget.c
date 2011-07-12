@@ -775,6 +775,10 @@ formgrid_data_set_changed_cb (UiFormGrid *cwid, DataPart *part)
 		part->export_data = NULL;
 	}
 
+#ifdef GDA_DEBUG_NO
+	g_print ("+++++ Reset export_data for data source [%s]\n", data_source_get_id (part->source));
+#endif	
+
 	export_names = data_source_get_export_names (part->source);
 	if (export_names && (export_names->len > 0)) {
 		GSList *holders = NULL;
@@ -800,7 +804,7 @@ formgrid_data_set_changed_cb (UiFormGrid *cwid, DataPart *part)
 				g_object_set ((GObject*) holder, "id",
 					      g_array_index (export_names, gchar*, i), NULL);
 				holders = g_slist_prepend (holders, holder);
-#ifdef DEBUG_NO
+#ifdef GDA_DEBUG_NO
 				g_print ("HOLDER [%s::%s]\n",
 					 gda_holder_get_id (holder),
 					 g_type_name (gda_holder_get_g_type (holder)));
@@ -821,7 +825,19 @@ formgrid_data_set_changed_cb (UiFormGrid *cwid, DataPart *part)
 	if (! compute_sources_dependencies (part, &lerror)) {
 		data_part_show_error (part, lerror);
 		g_clear_error (&lerror);
-	}	
+		lerror = NULL;
+	}
+
+	if (part->dep_parts) {
+		GSList *list;
+		for (list = part->dep_parts; list; list = list->next) {
+			if (! compute_sources_dependencies ((DataPart*) list->data, &lerror)) {
+				data_part_show_error (part, lerror);
+				g_clear_error (&lerror);
+				lerror = NULL;
+			}
+		}
+	}
 }
 
 static void
@@ -829,11 +845,13 @@ data_part_selection_changed_cb (G_GNUC_UNUSED GdauiDataSelector *gdauidataselect
 {
 	if (part->export_data) {
 		GSList *list;
-#ifdef DEBUG_NO
+#ifdef GDA_DEBUG_NO
 		for (list = part->export_data->holders; list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			gchar *tmp;
 			tmp = gda_value_stringify (gda_holder_get_value (holder));
+			if (strlen (tmp) > 10)
+				tmp [15] = 0;
 			g_print ("%s=>[%s]\n", gda_holder_get_id (holder), tmp);
 			g_free (tmp);
 		}
@@ -869,6 +887,7 @@ compute_sources_dependencies (DataPart *part, GError **error)
 
 			GdaSet *export;
 			GdaHolder *holder2;
+			opart->dep_parts = g_slist_remove (opart->dep_parts, part);
 			export = data_widget_get_export (part->dwid, opart->source);
 			if (!export)
 				continue;
@@ -898,15 +917,15 @@ compute_sources_dependencies (DataPart *part, GError **error)
 						g_clear_error (&lerror);
 				}
 #ifdef GDA_DEBUG_NO
-				g_print ("[%s.][%s] bound to [%s].[%s]\n",
-					 data_source_get_title (part->source),
-					 hid,
-					 data_source_get_title (opart->source),
-					 gda_holder_get_id (holder2));
+				else {
+					g_print ("[%s].[%s] bound to [%s].[%s]\n",
+						 data_source_get_id (part->source),
+						 hid,
+						 data_source_get_id (opart->source),
+						 gda_holder_get_id (holder2));
+				}
 #endif
-				
-				if (! g_slist_find (opart->dep_parts, part))
-					opart->dep_parts = g_slist_append (opart->dep_parts, part);
+				opart->dep_parts = g_slist_append (opart->dep_parts, part);
 				continue;
 			}
 		}
