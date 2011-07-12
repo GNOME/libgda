@@ -1,0 +1,26 @@
+LibgdaUI simple custom plugin
+=============================
+
+Description:
+------------
+
+The example in this directory illustrate how to create a simple custom data entry plugin.
+
+The custom data entry is a password entry which replaces any entered character with a
+generic '*' character and allows one to set the minimum length.
+
+The compilation creates a "custom-plugin.so" file. This file, along with the XML file containing
+the plugin options need to be copied to LibgdaUI's plugins directory, which can be queried
+using the pkg-config program as:
+> pkg-config --variable=pluginsdir libgda-ui-5.0
+
+Compiling and running:
+----------------------
+
+To compile (make sure Libgdaui is installed prior to this):
+> make
+> make install
+
+The plugin will now automatically be loaded at runtime and useable.
+
+> make uninstall
