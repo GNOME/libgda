@@ -27,10 +27,10 @@
 
 /**
  * GdauiEntryCreateFunc:
- * @Param1: 
- * @Param2: 
- * @Param3: 
- * @Returns:
+ * @Param1: a #GdaDataHandler
+ * @Param2: a #GType
+ * @Param3: options, or %NULL
+ * @Returns: a new #GdauiDataEntry
  *
  * Defines a function which creates a #GdauiDataEntry widget
  */
@@ -38,10 +38,10 @@ typedef GdauiDataEntry   *(*GdauiEntryCreateFunc)(GdaDataHandler *, GType, const
 
 /**
  * GdauiCellCreateFunc:
- * @Param1: 
- * @Param2: 
- * @Param3: 
- * @Returns:
+ * @Param1: a #GdaDataHandler
+ * @Param2: a #GType
+ * @Param3: options, or %NULL
+ * @Returns:a new #GtkCellRenderer
  *
  * Defines a function which creates a #GtkCellRenderer object
  */
@@ -54,8 +54,7 @@ typedef GtkCellRenderer  *(*GdauiCellCreateFunc) (GdaDataHandler *, GType, const
  * @plugin_descr: a description for the plugin, or %NULL
  * @plugin_file: the shared object implementing the plugin, can be %NULL for internal plugins
  * @nb_g_types: number of types the plugin can handle, or %0 for any type
- * @valid_g_types: an array of #GType, containing the accepted types, its size is @nb_g_types,
- *                 or %NULL if @nb_g_types is %0
+ * @valid_g_types: an array of #GType, containing the accepted types, its size is @nb_g_types, or %NULL if @nb_g_types is %0
  * @options_xml_spec: a string describing the plugin's options, or %NULL
  * @entry_create_func: the function called to create a #GdauiDataEntry, or %NULL
  * @cell_create_func: the function called to create a #GtkCellRenderer, or %NULL
@@ -74,14 +73,13 @@ typedef struct {
 
 	gchar                  *options_xml_spec; /* NULL if no option possible */
 
-	/* actual widget creation: one of them must be not NULL */
-	GdauiEntryCreateFunc  entry_create_func;
-	GdauiCellCreateFunc   cell_create_func;
+	GdauiEntryCreateFunc    entry_create_func;
+	GdauiCellCreateFunc     cell_create_func;
 } GdauiPlugin;
 
 /**
  * SECTION:gdaui-plugins
- * @short_description: 
+ * @short_description: Plugin to customize dana entry widgets and call renderers in tree views
  * @title: UI plugins
  * @stability: Stable
  * @Image:

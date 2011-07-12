@@ -41,7 +41,7 @@ else {
   <sect1>
     <title>Define a data source (DSN)</title>
     <para>
-      The <link linkend="libgda-40-Configuration">Configuration section</link> details how to manage data sources
+      The <link linkend="libgda-5.0-Configuration">Configuration section</link> details how to manage data sources
       definitions. To define a data source, one needs to create and fill a 
       <link linkend="GdaDsnInfo">GdaDsnInfo</link> structure, and use the
       <link linkend="gda-config-define-dsn">gda_config_define_dsn()</link> function.

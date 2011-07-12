@@ -755,6 +755,7 @@ gdaui_get_default_path (void)
 
 /**
  * gdaui_set_default_path:
+ * @path: (allow-none): a path, or %NULL to unset
  *
  * Define the default path used when saving a file, or when showing a #GtkFileChooser file chooser.
  *
