@@ -32,7 +32,9 @@ libcommon_la_SOURCES = \
 	ui-formgrid.c \
 	ui-formgrid.h \
 	fk-declare.c \
-	fk-declare.h
+	fk-declare.h \
+	widget-overlay.c \
+	widget-overlay.h
 
 $(OBJECTS): marshal.c marshal.h
 

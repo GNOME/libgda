@@ -26,6 +26,7 @@
 #include <libgda-ui/gdaui-data-selector.h>
 #include "../support.h"
 #include "../browser-window.h"
+#include "widget-overlay.h"
 #include <libgda/gda-data-model-extra.h>
 #ifdef HAVE_LDAP
 #include "../ldap-browser/ldap-browser-perspective.h"
@@ -52,6 +53,7 @@ struct _UiFormGridPriv
 	GtkWidget   *raw_form;
 	GtkWidget   *raw_grid;
 	GtkWidget   *info;
+	GtkWidget   *overlay;
 	GtkWidget   *autoupdate_toggle;
 	gboolean     autoupdate;
 	gboolean     autoupdate_possible;
@@ -168,25 +170,48 @@ static void
 ui_formgrid_show (GtkWidget *widget)
 {
 	UiFormGrid *formgrid;
+	GtkWidget *ovl, *packed;
 	formgrid = UI_FORMGRID (widget);
 
-	/* finalize packing */
-	if (formgrid->priv->scroll_form) {
-		GtkWidget *sw, *vp;
-		sw = gtk_scrolled_window_new (NULL, NULL);
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
-		vp = gtk_viewport_new (NULL, NULL);
-		gtk_container_add (GTK_CONTAINER (sw), vp);
-		gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
-		gtk_container_add (GTK_CONTAINER (vp), formgrid->priv->raw_form);
-		gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), sw, NULL);
-		gtk_widget_show_all (sw);
-	}
-	else {
-		gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), formgrid->priv->raw_form, NULL);
-		gtk_widget_show (formgrid->priv->raw_form);
+	if (! formgrid->priv->overlay) {
+		/* finalize packing */
+		if (formgrid->priv->scroll_form) {
+			GtkWidget *sw, *vp;
+			sw = gtk_scrolled_window_new (NULL, NULL);
+			gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+							GTK_POLICY_AUTOMATIC,
+							GTK_POLICY_AUTOMATIC);
+			gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw),
+							     GTK_SHADOW_NONE);
+			vp = gtk_viewport_new (NULL, NULL);
+			gtk_container_add (GTK_CONTAINER (sw), vp);
+			gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
+			gtk_container_add (GTK_CONTAINER (vp), formgrid->priv->raw_form);
+			gtk_widget_show_all (sw);
+			packed = sw;
+		}
+		else {
+			gtk_widget_show (formgrid->priv->raw_form);
+			packed = formgrid->priv->raw_form;
+		}
+		
+		/* overlay */
+		ovl = widget_overlay_new ();
+		formgrid->priv->overlay = ovl;
+		g_object_set (G_OBJECT (ovl), "add-scale", TRUE, NULL);
+		g_object_set (G_OBJECT (ovl), "add-scale", FALSE, NULL);
+		gtk_container_add (GTK_CONTAINER (ovl), packed);
+		widget_overlay_set_child_props (WIDGET_OVERLAY (ovl), packed,
+						WIDGET_OVERLAY_CHILD_HALIGN,
+						WIDGET_OVERLAY_ALIGN_FILL,
+						WIDGET_OVERLAY_CHILD_VALIGN,
+						WIDGET_OVERLAY_ALIGN_FILL,
+						WIDGET_OVERLAY_CHILD_SCALE, 1.,
+						-1);
+		gtk_widget_show (ovl);
+		gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), ovl, NULL);
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (formgrid->priv->nb),
+					       0);
 	}
 
 	((GtkWidgetClass *)parent_class)->show (widget);
@@ -354,9 +379,10 @@ static void execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid
 #ifdef HAVE_LDAP
 static void ldap_view_dn_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid);
 #endif
+static void zoom_mitem_cb (GtkCheckMenuItem *checkmenuitem, UiFormGrid *formgrid);
 
 static void
-form_grid_populate_popup_cb (G_GNUC_UNUSED GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid)
+form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid)
 {
 	/* add actions to execute to menu */
 	GdaDataModelIter *iter;
@@ -432,6 +458,25 @@ form_grid_populate_popup_cb (G_GNUC_UNUSED GtkWidget *wid, GtkMenu *menu, UiForm
 		}
 	}
 #endif
+
+	if (wid == formgrid->priv->raw_form) {
+		GtkWidget *mitem;
+		gboolean add_scale;
+		g_object_get (G_OBJECT (formgrid->priv->overlay), "add-scale", &add_scale, NULL);
+		mitem = gtk_check_menu_item_new_with_label (_("Zoom..."));
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), add_scale);
+		gtk_widget_show (mitem);
+		gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
+		g_signal_connect (mitem, "toggled",
+				  G_CALLBACK (zoom_mitem_cb), formgrid);
+	}
+}
+
+static void
+zoom_mitem_cb (GtkCheckMenuItem *checkmenuitem, UiFormGrid *formgrid)
+{
+	g_object_set (G_OBJECT (formgrid->priv->overlay), "add-scale",
+		      gtk_check_menu_item_get_active (checkmenuitem), NULL);
 }
 
 typedef struct {
