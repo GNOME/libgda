@@ -20,6 +20,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "data-source-editor.h"
+#include "../common/widget-overlay.h"
 
 /* signals */
 enum {
@@ -96,9 +97,30 @@ data_source_editor_class_init (DataSourceEditorClass *klass)
 }
 
 static void
+zoom_mitem_cb (GtkCheckMenuItem *checkmenuitem, WidgetOverlay *ovl)
+{
+	g_object_set (G_OBJECT (ovl), "add-scale",
+		      gtk_check_menu_item_get_active (checkmenuitem), NULL);
+}
+
+static void
+form_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, WidgetOverlay *ovl)
+{
+	GtkWidget *mitem;
+	gboolean add_scale;
+	g_object_get (G_OBJECT (ovl), "add-scale", &add_scale, NULL);
+	mitem = gtk_check_menu_item_new_with_label (_("Zoom..."));
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), add_scale);
+	gtk_widget_show (mitem);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
+	g_signal_connect (mitem, "toggled",
+			  G_CALLBACK (zoom_mitem_cb), ovl);
+}
+
+static void
 data_source_editor_init (DataSourceEditor *editor)
 {
-	GtkWidget *vpaned;
+	GtkWidget *vbox, *ovl;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (editor), GTK_ORIENTATION_VERTICAL);
 
@@ -111,15 +133,27 @@ data_source_editor_init (DataSourceEditor *editor)
 	g_signal_connect (editor->priv->attributes, "holder-changed",
 			  G_CALLBACK (attribute_changed_cb), editor);
 
-	vpaned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
-	gtk_box_pack_start (GTK_BOX (editor), vpaned, TRUE, TRUE, 0);
-	gtk_widget_show (vpaned);
+	ovl = widget_overlay_new ();
+	gtk_box_pack_start (GTK_BOX (editor), ovl, TRUE, TRUE, 0);
+
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_container_add (GTK_CONTAINER (ovl), vbox);
+	widget_overlay_set_child_props (WIDGET_OVERLAY (ovl), vbox,
+					WIDGET_OVERLAY_CHILD_VALIGN, WIDGET_OVERLAY_ALIGN_FILL,
+					WIDGET_OVERLAY_CHILD_HALIGN, WIDGET_OVERLAY_ALIGN_FILL,
+					WIDGET_OVERLAY_CHILD_SCALE, .9,
+					-1);
+	g_object_set (G_OBJECT (ovl), "add-scale", TRUE, NULL);
+	g_object_set (G_OBJECT (ovl), "add-scale", FALSE, NULL);
+	gtk_widget_show_all (ovl);
 
 	GtkWidget *form;
 	form = gdaui_basic_form_new (editor->priv->attributes);
 	editor->priv->form = GDAUI_BASIC_FORM (form);
-	gtk_paned_add1 (GTK_PANED (vpaned), form);
+	gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
 	gtk_widget_show (form);
+	g_signal_connect (form, "populate-popup",
+			  G_CALLBACK (form_populate_popup_cb), ovl);
 
 	GdaHolder *holder;
 	GValue *value;
@@ -151,7 +185,7 @@ data_source_editor_init (DataSourceEditor *editor)
 	GtkWidget *hbox, *label, *sw, *text;
 	GtkSizeGroup *sg;
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, SPACING);
-	gtk_paned_add2 (GTK_PANED (vpaned), hbox);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
 	label = gtk_label_new (_("Dependencies:"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
