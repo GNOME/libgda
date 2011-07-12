@@ -58,7 +58,8 @@ GdaDataHandler *gda_handler_time_new           (void);
 GdaDataHandler *gda_handler_time_new_no_locale (void);
 void            gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec,
 						GDateDMY third, gchar separator, gboolean twodigits_years);
-
+void            gda_handler_time_set_str_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec,
+						GDateDMY third, gchar separator, gboolean twodigits_years);
 gchar          *gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue *value);
 
 gchar          *gda_handler_time_get_format    (GdaHandlerTime *dh, GType type);

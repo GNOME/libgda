@@ -1,13 +1,16 @@
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-sqlcipher.la
 
+# We don't use $(COREDEPS_WFLAGS) because we use a copy of the sqlite sources,
+# which we don't want to fix ourselves.
+# TODO: Report sqlite warnings upstream so we can use warnings for the rest 
+# of our source code here too. 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_WFLAGS) \
 	$(LIBCRYPTO_CFLAGS) \
 	$(sqliteinc) \
 	-DSQLITE_HAS_CODEC -DSQLITE_API= -DSQLITE_PRIVATE= -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -DSQLITE_OMIT_LOAD_EXTENSION=1

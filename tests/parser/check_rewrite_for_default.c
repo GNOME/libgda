@@ -102,7 +102,7 @@ int main()
 	GdaSet *params;
 	GdaHolder *h;
 	GValue *value;
-	gint i;
+	guint i;
 	gint n_errors = 0;
 	
 	parser = gda_sql_parser_new ();

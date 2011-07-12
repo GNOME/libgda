@@ -77,7 +77,7 @@ main (int argc, char *argv[])
 	g_type_init();
 	gda_init ();
 
-	gint i;
+	guint i;
 	for (i = 0; i < sizeof (the_tests) / sizeof (ATest); i++) {
 		ATest test = the_tests[i];
 		gchar *cnc_params, *prov, *user, *pass;

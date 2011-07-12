@@ -55,7 +55,8 @@ dummy_object_get_type (void)
 			NULL,
 			sizeof (DummyObject),
 			0,
-			(GInstanceInitFunc) dummy_object_init
+			(GInstanceInitFunc) dummy_object_init,
+			NULL
 		};
 		
 		g_static_mutex_lock (&registering);

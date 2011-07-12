@@ -77,7 +77,7 @@ TestCase test_cases[] = {
 int 
 main (int argc, char **argv)
 {
-	gint i;
+	guint i;
 
 	for (i = 0; i < (sizeof (test_cases) / sizeof (TestCase)); i++) {
 		TestCase *test = (TestCase*) &(test_cases[i]);

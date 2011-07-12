@@ -19,6 +19,7 @@
  * Boston, MA  02110-1301, USA.
  */
 #include <jni-wrapper.h>
+#include <gda-value.h>
 
 gboolean jni_wrapper_describe_exceptions = TRUE;
 

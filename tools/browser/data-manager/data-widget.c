@@ -749,7 +749,7 @@ source_exec_finished_cb (G_GNUC_UNUSED DataSource *source, GError *error, DataPa
 #endif
 		
 		/* compute part->export_data */
-		formgrid_data_set_changed_cb (cwid, part);
+		formgrid_data_set_changed_cb (UI_FORMGRID (cwid), part);
 	}
 	else {
 		GError *lerror = NULL;

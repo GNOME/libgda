@@ -188,7 +188,7 @@ test_select (GdaConnection *cnc, GdaConnection *tcnc)
 		g_object_unref (m2);
 
 		/* check iter's contents */
-		gint ncols;
+		guint ncols;
 		ncols = g_slist_length (GDA_SET (titer)->holders);
 		if (ncols != g_slist_length (GDA_SET (iter)->holders)) {
 			g_print ("ERROR: threaded iterator is at the wrong number of columns: "
@@ -221,7 +221,7 @@ test_select (GdaConnection *cnc, GdaConnection *tcnc)
 				break;
 			}
 			if (ncols > 0) {
-				gint i;
+				guint i;
 				for (i = 0; i < ncols; i++) {
 					const GValue *cv, *tcv;
 					cv = gda_data_model_iter_get_value_at (iter, i);
@@ -264,7 +264,7 @@ test_select (GdaConnection *cnc, GdaConnection *tcnc)
 				break;
 			}
 			if (ncols > 0) {
-				gint i;
+				guint i;
 				for (i = 0; i < ncols; i++) {
 					const GValue *cv, *tcv;
 					cv = gda_data_model_iter_get_value_at (iter, i);
@@ -354,7 +354,7 @@ test_select_cursor (GdaConnection *cnc, GdaConnection *tcnc)
 		g_object_unref (m2);
 
 		/* check iter's contents */
-		gint ncols;
+		guint ncols;
 		ncols = g_slist_length (GDA_SET (titer)->holders);
 		if (ncols != g_slist_length (GDA_SET (iter)->holders)) {
 			g_print ("ERROR: threaded iterator is at the wrong number of columns: "
@@ -386,7 +386,7 @@ test_select_cursor (GdaConnection *cnc, GdaConnection *tcnc)
 				break;
 			}
 			if (ncols > 0) {
-				gint i;
+				guint i;
 				for (i = 0; i < ncols; i++) {
 					const GValue *cv, *tcv;
 					cv = gda_data_model_iter_get_value_at (iter, i);

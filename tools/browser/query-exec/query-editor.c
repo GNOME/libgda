@@ -534,7 +534,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 					g_free (editor->priv->current_state_text);
 					editor->priv->current_state_text = query_editor_get_all_text (editor);
 				}
-				else if (editor->priv->current_state >= editor->priv->states->len)
+				else if (editor->priv->current_state >= (gint)editor->priv->states->len)
 					i = editor->priv->states->len - 1; /* last stored state */
 				else if (editor->priv->current_state > 0)
 					i = editor->priv->current_state - 1;
@@ -559,7 +559,7 @@ event (GtkWidget *text_view, GdkEvent *ev, QueryEditor *editor)
 			 (evkey->keyval == GDK_Down) &&
 			 editor->priv->states) {
 			if (editor->priv->states->len > 0) {
-				if (editor->priv->current_state < editor->priv->states->len - 1) {
+				if (editor->priv->current_state < (gint)editor->priv->states->len - 1) {
 					gchar *tmp;
 					editor->priv->current_state ++;
 					tmp = g_array_index (editor->priv->states, gchar*, editor->priv->current_state);

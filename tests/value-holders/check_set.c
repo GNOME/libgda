@@ -32,7 +32,7 @@ typedef struct {
 static void     emitted_signal_add (EmittedSignal *es);
 static void     emitted_signals_reset (void);
 static gboolean emitted_signals_find (gpointer obj, const gchar *signal_name, GError **error);
-static gboolean emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error);
+/* Not used: static gboolean emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error); */
 static gboolean emitted_signals_chech_empty (gpointer obj, const gchar *signal_name, GError **error);
 static void     emitted_signals_monitor_set (GdaSet *set);
 
@@ -61,8 +61,8 @@ main (int argc, char** argv)
 	g_type_init ();
 	gda_init ();
 
-	gint failures = 0;
-	gint i, ntests = 0;
+	guint failures = 0;
+	guint i, ntests = 0;
   
 	data = tests_common_load_data ("set.data");
 	for (i = 0; i < sizeof (tests) / sizeof (TestFunc); i++) {
@@ -434,6 +434,7 @@ emitted_signals_find (gpointer obj, const gchar *signal_name, GError **error)
 	return FALSE;
 }
 
+/* Commented out because it is not used.
 static gboolean
 emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error)
 {
@@ -451,6 +452,7 @@ emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error)
 	}
 	return TRUE;
 }
+*/
 
 static gboolean
 emitted_signals_chech_empty (gpointer obj, const gchar *signal_name, GError **error)

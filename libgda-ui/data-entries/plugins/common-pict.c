@@ -295,6 +295,7 @@ static void file_load_cb (GtkWidget *button, PictMenuData *menudata);
 static void file_save_cb (GtkWidget *button, PictMenuData *menudata);
 static void copy_cb (GtkWidget *button, PictMenuData *menudata);
 
+/* Commented out because it's not used:
 static void
 menudata_free (PictMenuData *menudata)
 {
@@ -304,6 +305,7 @@ menudata_free (PictMenuData *menudata)
 	}
 	g_free (menudata);
 }
+*/
 
 void
 common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *bindata, PictOptions *options,

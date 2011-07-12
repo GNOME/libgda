@@ -134,7 +134,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 		if (plugin_struct && plugin_struct->entry_create_func) { 
 			gboolean allok = TRUE;
 			if (plugin_struct->nb_g_types > 0) {
-				gint i;
+				guint i;
 				for (i = 0; i < plugin_struct->nb_g_types; i++) {
 					if (plugin_struct->valid_g_types[i] == type)
 						break;

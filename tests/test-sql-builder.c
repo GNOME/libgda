@@ -66,7 +66,7 @@ int
 main (int argc, char** argv)
 {
 	gda_init ();
-	gint i, nfailed = 0;
+	guint i, nfailed = 0;
 	for (i = 0; i < G_N_ELEMENTS (tests); i++) {
 		ATest *test = &(tests [i]);
 		GdaSqlStatement *stmt;
@@ -617,7 +617,7 @@ build13 (void)
 					    gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 234), 0);
 	gda_sql_builder_add_field_value_id (b,
 					    gda_sql_builder_add_expr (b, NULL, G_TYPE_BOOLEAN, TRUE), 0);
-	GdaNumeric numval = {"123.4567890", 0, 0};
+	GdaNumeric numval = {"123.4567890", 0, 0, NULL};
 	gda_sql_builder_add_field_value_id (b,
 					    gda_sql_builder_add_expr (b, NULL, GDA_TYPE_NUMERIC, &numval), 0);
 	GDate *date = g_date_new_dmy (27, G_DATE_MAY, 1972);

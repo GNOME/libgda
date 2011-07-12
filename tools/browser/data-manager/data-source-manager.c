@@ -540,7 +540,7 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, G_GNUC_UNUSED GEr
 					if (source_depends_on (source, source2)) {
 						dep_found = TRUE;
 						/* add source to column i+1 if not yet present */
-						if (i == array->len - 1) {
+						if (i == (gssize)array->len - 1) {
 							GArray *subarray = g_array_new (FALSE, FALSE,
 											sizeof (DataSource*));
 							g_array_append_val (array, subarray);

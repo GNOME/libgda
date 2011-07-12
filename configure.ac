@@ -821,9 +821,17 @@ AC_ARG_ENABLE(default-binary,
 
 AM_CONDITIONAL(DEFAULT_BINARY, test "x$enable_default_binary" = xyes)
 
+# We use -Wno-address because SQLITE3_CALL() has an ifdefed definition that 
+# makes it hard to always avoid the warning.
+# We use -Wno-unused-variable because the lemon parser generator (in libgda's sources),
+# creates some generic macros that declare variables that are not always used. 
+# We use -Wno-unused-parameter because the lemon parser generator (in libgda's sources),
+# produces generic code, and it's hard to fix that generated code.
+# We use -Wno-pointer-sign because the sqlite source code (copied into libgda's sources)
+# has problems but we do not want to patch that code.
 DK_ARG_ENABLE_WARNINGS([LIBGDA_WFLAGS],
 	[-Wall],
-	[-Wall -Wextra],
+	[-Wall -Wextra -Wno-address -Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign],
 	[PANGO G GDK GDK_PIXBUF GTK])
 
 AC_SUBST(LIBGDA_CFLAGS)

@@ -1267,7 +1267,7 @@ typedef struct {
 
 GArray      *expected_signals;
 const gchar *expected_signals_name;
-gint         expected_signals_index;
+guint         expected_signals_index;
 
 /* Format is "<nb><type><row_nb>[/...]"
  * for example: 

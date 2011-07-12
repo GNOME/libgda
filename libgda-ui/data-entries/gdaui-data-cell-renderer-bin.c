@@ -470,7 +470,7 @@ gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
 		common_bin_adjust_menu (&(bincell->priv->menu), bincell->priv->editable,
 					value);
 		g_object_set_data (G_OBJECT (bincell->priv->menu.popup), "__event", event);
-		g_object_set_data (G_OBJECT (bincell->priv->menu.popup), "__rect", cell_area);
+		g_object_set_data (G_OBJECT (bincell->priv->menu.popup), "__rect", (GdkRectangle*)cell_area);
 		gtk_widget_show (bincell->priv->menu.popup);
 	}
 	gtk_tree_path_free (tpath);
