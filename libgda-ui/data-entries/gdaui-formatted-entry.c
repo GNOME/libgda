@@ -251,9 +251,11 @@ is_writable (GdauiFormattedEntry *fentry, gint pos, const gchar *ptr)
 static gboolean
 is_allowed (G_GNUC_UNUSED GdauiFormattedEntry *fentry, const gchar *ptr, const gunichar wc, gunichar *out_wc)
 {
+/* TODO: Use this?
 	gunichar fwc;
 
 	fwc = g_utf8_get_char (ptr);
+*/
 	*out_wc = wc;
 	if (*ptr == '0')
 		return g_unichar_isdigit (wc);

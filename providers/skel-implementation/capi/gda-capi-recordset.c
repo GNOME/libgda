@@ -196,6 +196,7 @@ gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_param
 			column = GDA_COLUMN (list->data);
 
 			/* use C API to set columns' information using gda_column_set_*() */
+			g_warning("column not used: %p", column); /* Avoids a compiler warning. */
 			TO_IMPLEMENT;
 		}
         }
@@ -234,6 +235,7 @@ gda_capi_recordset_fetch_nb_rows (GdaDataSelect *model)
 		return model->advertized_nrows;
 
 	/* use C API to determine number of rows,if possible */
+	g_warning("imodel not used: %p", imodel); /* Avoids a compiler warning. */
 	TO_IMPLEMENT;
 
 	return model->advertized_nrows;
@@ -262,6 +264,7 @@ gda_capi_recordset_fetch_random (GdaDataSelect *model, G_GNUC_UNUSED GdaRow **pr
 
 	imodel = GDA_CAPI_RECORDSET (model);
 
+	g_warning("imodel not used: %p", imodel); /* Avoids a compiler warning. */
 	TO_IMPLEMENT;
 
 	return TRUE;

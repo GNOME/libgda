@@ -695,7 +695,7 @@ remove_diacritics_and_change_case (const gchar *str, gssize len, CaseModif cmod)
  */
 static gboolean
 gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaQuarkList *params, GdaQuarkList *auth,
+				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
 				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data)
 {
 	gchar *filename = NULL;
@@ -705,7 +705,9 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
+#ifdef SQLITE_HAS_CODEC
 	const gchar *passphrase = NULL;
+#endif
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -729,8 +731,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
 
 	locale_collate = gda_quark_list_find (params, "EXTRA_COLLATIONS");
-	if (auth)
-		passphrase = gda_quark_list_find (auth, "PASSWORD");
 
 	if (! is_virtual) {
 		if (!dbname) {
@@ -828,6 +828,11 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	}
 
 #ifdef SQLITE_HAS_CODEC
+  /* TODO Fix this compiler warning: the address of 'sqlite3_key' will always evaluate as 'true' */
+
+	if (auth)
+		passphrase = gda_quark_list_find (auth, "PASSWORD");
+
 	if (passphrase && *passphrase && SQLITE3_CALL (sqlite3_key)) {
 		errmsg = SQLITE3_CALL (sqlite3_key) (cdata->connection, (void*) passphrase, strlen (passphrase));
 		if (errmsg != SQLITE_OK) {

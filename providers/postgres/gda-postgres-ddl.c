@@ -934,9 +934,6 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 	
 	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/VALIDITY");
 	if (value && G_VALUE_HOLDS (value, GDA_TYPE_TIMESTAMP)) {
-		const GdaTimestamp *ts;
-
-		ts = gda_value_get_timestamp (value);
 		if (value) {
 			GdaDataHandler *dh;
 			if (!with) {
