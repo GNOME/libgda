@@ -547,7 +547,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
         bwin->priv->perspectives_nb = (GtkNotebook*) gtk_notebook_new ();
         g_object_ref (bwin->priv->perspectives_nb);
         gtk_notebook_set_show_tabs (bwin->priv->perspectives_nb, FALSE);
-	gtk_container_add (GTK_CONTAINER (vbox), (GtkWidget*) bwin->priv->perspectives_nb);
+	gtk_box_pack_start (GTK_BOX (vbox), (GtkWidget*) bwin->priv->perspectives_nb,
+			    TRUE, TRUE, 0);
 
 	pers->page_number = gtk_notebook_append_page (bwin->priv->perspectives_nb,
 						      GTK_WIDGET (pers->perspective_widget), NULL);
