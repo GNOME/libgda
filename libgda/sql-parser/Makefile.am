@@ -44,7 +44,6 @@ gda-sql-parser-enum-types.h: s-enum-types-h
 s-enum-types-h: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 	( cd $(srcdir) && glib-mkenums \
 	                --fhead "#ifndef __LIBGDA_SQL_PARSER_ENUM_TYPES_H__\n#define __LIBGDA_SQL_PARSER_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
-			--fprod "/* enumerations from \"@filename@\" */\n" \
 			--vhead "GType @enum_name@_get_type (void);\n#define GDA_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
 			--ftail "G_END_DECLS\n\n#endif /* __LIBGDA_ENUM_TYPES_H__ */" \
 		$(libgda_sql_parser_headers)) > tmp-gda-enum-types.h \
@@ -61,7 +60,6 @@ s-enum-types-c: @REBUILD@ $(libgda_sql_parser_headers) Makefile
 	                --fhead "#include <sql-parser/gda-sql-parser.h>\n" \
 	                --fhead "#include <sql-parser/gda-sql-statement.h>\n" \
 	                --fhead "#include <glib-object.h>" \
-                        --fprod "\n/* enumerations from \"@filename@\" */" \
 			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" 	\
 			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
 			--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
