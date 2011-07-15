@@ -45,7 +45,6 @@ struct _DataSourceEditorPrivate {
 	DataSource *source;
         GdaSet *attributes;
 	GdauiBasicForm *form;
-	GtkTextBuffer *tbuffer;
 };
 
 GType
@@ -98,24 +97,20 @@ data_source_editor_class_init (DataSourceEditorClass *klass)
 static void
 data_source_editor_init (DataSourceEditor *editor)
 {
-	GtkWidget *vpaned;
 	editor->priv = g_new0 (DataSourceEditorPrivate, 1);
-	editor->priv->attributes = gda_set_new_inline (4,
+	editor->priv->attributes = gda_set_new_inline (5,
 						       "id", G_TYPE_STRING, "",
 						       "descr", G_TYPE_STRING, "",
 						       "table", G_TYPE_STRING, "",
-						       "sql", G_TYPE_STRING, "");
+						       "sql", G_TYPE_STRING, "",
+						       "depend", G_TYPE_STRING, "");
 	g_signal_connect (editor->priv->attributes, "holder-changed",
 			  G_CALLBACK (attribute_changed_cb), editor);
-
-	vpaned = gtk_vpaned_new ();
-	gtk_box_pack_start (GTK_BOX (editor), vpaned, TRUE, TRUE, 0);
-	gtk_widget_show (vpaned);
 
 	GtkWidget *form;
 	form = gdaui_basic_form_new (editor->priv->attributes);
 	editor->priv->form = GDAUI_BASIC_FORM (form);
-	gtk_paned_add1 (GTK_PANED (vpaned), form);
+	gtk_box_pack_start (GTK_BOX (editor), form, TRUE, TRUE, 0);
 	gtk_widget_show (form);
 
 	GdaHolder *holder;
@@ -144,41 +139,13 @@ data_source_editor_init (DataSourceEditor *editor)
         gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
         gda_value_free (value);
 
-#define SPACING 3
-	GtkWidget *hbox, *label, *sw, *text;
-	GtkSizeGroup *sg;
-	hbox = gtk_hbox_new (FALSE, SPACING);
-	gtk_paned_add2 (GTK_PANED (vpaned), hbox);
-
-	label = gtk_label_new (_("Dependencies:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-
-	sg = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	gtk_size_group_add_widget (sg, label);
-	gdaui_basic_form_add_to_size_group (GDAUI_BASIC_FORM (form), sg, GDAUI_BASIC_FORM_LABELS);
-	g_object_unref ((GObject*) sg);
-
-	sw = gtk_scrolled_window_new (NULL, NULL);
-        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC,
-                                        GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
-        gtk_box_pack_start (GTK_BOX (hbox), sw, TRUE, TRUE, 0);
-
-	editor->priv->tbuffer = gtk_text_buffer_new (NULL);
-	text = gtk_text_view_new_with_buffer (editor->priv->tbuffer);
-	sg = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	gtk_size_group_add_widget (sg, sw);
-	gdaui_basic_form_add_to_size_group (GDAUI_BASIC_FORM (form), sg, GDAUI_BASIC_FORM_ENTRIES);
-	g_object_unref ((GObject*) sg);
-
-	gtk_container_add (GTK_CONTAINER (sw), text);
-	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
-        gtk_text_view_set_editable (GTK_TEXT_VIEW (text), FALSE);
-        gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (text), FALSE);
-	gtk_text_buffer_create_tag (editor->priv->tbuffer, "section",
-                                    "weight", PANGO_WEIGHT_BOLD, NULL);
-
-	gtk_widget_show_all (hbox);
+	holder = gda_set_get_holder (editor->priv->attributes, "depend");
+	g_object_set ((GObject*) holder, "name", _("Dependencies"),
+		      "description", _("Required and provided named parameters"), NULL);
+	gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (form), holder, FALSE);
+	value = gda_value_new_from_string ("rtext", G_TYPE_STRING);
+        gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+        gda_value_free (value);
 }
 
 static void
@@ -191,8 +158,6 @@ data_source_editor_dispose (GObject *object)
 
 	editor = DATA_SOURCE_EDITOR (object);
 	if (editor->priv) {
-		if (editor->priv->tbuffer)
-			g_object_unref ((GObject*) editor->priv->tbuffer);
 		if (editor->priv->source)
 			g_object_unref (editor->priv->source);
 		if (editor->priv->attributes) {
@@ -230,51 +195,41 @@ data_source_editor_new (void)
 static void
 update_dependencies_display (DataSourceEditor *editor)
 {
-	GtkTextIter start, end;
-	GtkTextBuffer *tbuffer;
+	GString *string;
 
-	tbuffer = editor->priv->tbuffer;
-        gtk_text_buffer_get_start_iter (tbuffer, &start);
-        gtk_text_buffer_get_end_iter (tbuffer, &end);
-        gtk_text_buffer_delete (tbuffer, &start, &end);
-	gtk_text_buffer_get_start_iter (tbuffer, &start);
-
+	string = g_string_new ("");
 	if (editor->priv->source) {
 		GdaSet *import;
 		import = data_source_get_import ( editor->priv->source);
-		gtk_text_buffer_insert_with_tags_by_name (tbuffer, &start,
-							  _("Requires:"), -1,
-							  "section", NULL);
-		gtk_text_buffer_insert (tbuffer, &start, "\n", -1);
+		g_string_append_printf (string, "**%s**\n", _("Requires:"));
 		if (import && import->holders) {
 			GSList *list;
-			for (list = import->holders; list; list = list->next) {
-				gtk_text_buffer_insert (tbuffer, &start,
-							gda_holder_get_id (GDA_HOLDER (list->data)), -1);
-				gtk_text_buffer_insert (tbuffer, &start, "\n", -1);
-			}
+			for (list = import->holders; list; list = list->next)
+				g_string_append_printf (string, "%s\n",
+							gda_holder_get_id (GDA_HOLDER (list->data)));
 		}
-		else 
-			gtk_text_buffer_insert (tbuffer, &start, "--\n", -1);
+		else
+			g_string_append (string, "--\n");
 
 		GArray *export;
 		export = data_source_get_export_names ( editor->priv->source);
-		gtk_text_buffer_insert_with_tags_by_name (tbuffer, &start,
-							  _("Exports:"), -1,
-							  "section", NULL);
-		gtk_text_buffer_insert (tbuffer, &start, "\n", -1);
+		g_string_append_printf (string, "\n**%s**\n", _("Exports:"));
 		if (export) {
 			gsize i;
 			for (i = 0; i < export->len ; i++) {
 				gchar *tmp;
 				tmp = g_array_index (export, gchar *, i);
-				gtk_text_buffer_insert (tbuffer, &start, tmp, -1);
-				gtk_text_buffer_insert (tbuffer, &start, "\n", -1);
+				g_string_append_printf (string, "%s\n", tmp);
 			}
 		}
 		else
-			gtk_text_buffer_insert (tbuffer, &start, "--\n", -1);
+			g_string_append (string, "--\n");
 	}
+
+	GdaHolder *holder;
+	holder = gda_set_get_holder (editor->priv->attributes, "depend");
+	g_assert (gda_holder_set_value_str (holder, NULL, string->str, NULL));
+	g_string_free (string, TRUE);
 }
 
 /**
@@ -414,7 +369,7 @@ attribute_changed_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *holder, DataSourceEd
 		data_source_set_query (editor->priv->source, str, NULL);
 		update_dependencies_display (editor);
 	}
-	else
+	else if (strcmp (id, "depend"))
 		g_assert_not_reached ();
 
 	g_signal_handlers_unblock_by_func (editor->priv->attributes,
