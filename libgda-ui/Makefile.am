@@ -80,7 +80,6 @@ gdaui-enum-types.h: s-enum-types-h
 s-enum-types-h: @REBUILD@ $(ui_headers) Makefile
 	( cd $(srcdir) && glib-mkenums \
 	                --fhead "#ifndef __LIBGDAUI_ENUM_TYPES_H__\n#define __LIBGDAUI_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
-			--fprod "/* enumerations from \"@filename@\" */\n" \
 			--vhead "GType @enum_name@_get_type (void);\n#define GDAUI_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
 			--ftail "G_END_DECLS\n\n#endif /* __LIBGDAUI_ENUM_TYPES_H__ */" \
 		$(ui_headers) ) > tmp-gdaui-enum-types.h \
@@ -95,7 +94,6 @@ s-enum-types-c: @REBUILD@ $(ui_headers) Makefile
 	( cd $(srcdir) && glib-mkenums \
 	                --fhead "#include <libgda-ui/libgda-ui.h>\n" \
 	                --fhead "#include <glib-object.h>" \
-                        --fprod "\n/* enumerations from \"@filename@\" */" \
 			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" 	\
 			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
 			--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
