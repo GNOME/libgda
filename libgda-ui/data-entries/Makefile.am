@@ -17,7 +17,9 @@ AM_CPPFLAGS = \
 gdauiincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda-ui
 gdauiinclude_HEADERS= $(extra_headers)
 extra_headers = \
-	gdaui-data-cell-renderer-util.h
+	gdaui-data-cell-renderer-util.h \
+	gdaui-entry-shell.h \
+	gdaui-entry-wrapper.h
 
 libgda_ui_data_entries_headers = \
 	gdaui-data-cell-renderer-bin.h \
@@ -29,14 +31,12 @@ libgda_ui_data_entries_headers = \
 	gdaui-entry-boolean.h \
 	gdaui-entry-combo.h \
 	gdaui-entry-none.h \
-	gdaui-entry-shell.h \
 	gdaui-entry-string.h \
 	gdaui-entry-number.h \
 	gdaui-entry-common-time.h \
 	gdaui-entry-time.h \
 	gdaui-entry-timestamp.h \
 	gdaui-entry-date.h \
-	gdaui-entry-wrapper.h \
 	gdaui-entry.h \
 	gdaui-formatted-entry.h \
 	gdaui-numeric-entry.h

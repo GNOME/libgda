@@ -99,7 +99,13 @@ example_files = \
 	samples/Blobs/testblob.db \
 	samples/LdapBrowser/Makefile \
 	samples/LdapBrowser/README \
-	samples/LdapBrowser/ldap-browser.c
+	samples/LdapBrowser/ldap-browser.c \
+	samples/CustomUIPlugin/Makefile \
+	samples/CustomUIPlugin/README \
+	samples/CustomUIPlugin/custom-entry-password.c \
+	samples/CustomUIPlugin/custom-entry-password.h \
+	samples/CustomUIPlugin/custom-entry-password.xml \
+	samples/CustomUIPlugin/libmain.c
 
 EXTRA_DIST = \
 	COPYING \
