@@ -747,6 +747,7 @@
 	gda_sql_statement_delete_take_table_name
 	gda_sql_statement_free
 	gda_sql_statement_get_contents_infos
+	gda_sql_statement_get_type
 	gda_sql_statement_insert_take_1_values_list
 	gda_sql_statement_insert_take_extra_values_list
 	gda_sql_statement_insert_take_fields_list
