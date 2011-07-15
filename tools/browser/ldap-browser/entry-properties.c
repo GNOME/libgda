@@ -345,7 +345,11 @@ visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility 
 {
 	gint wx, wy, bx, by;
 	
+#if GTK_CHECK_VERSION(2,14,0)
 	gdk_window_get_pointer (gtk_widget_get_window (text_view), &wx, &wy, NULL);
+#else
+	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
+#endif
 	
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
 					       GTK_TEXT_WINDOW_WIDGET,
@@ -370,7 +374,11 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, EntryPropertie
 	
 	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, eprop);
 
+#if GTK_CHECK_VERSION(2,14,0)
 	gdk_window_get_pointer (gtk_widget_get_window (text_view), NULL, NULL, NULL);
+#else
+	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
+#endif
 
 	/* store coordinates */
 	eprop->priv->bx = x;
@@ -460,14 +468,14 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, EntryProperties *epro
 						  gtk_text_buffer_get_insert (buffer));
 		follow_if_link (text_view, &iter, eprop);
 		break;
-	case GDK_KEY_F:
-	case GDK_KEY_f:
+	case GDK_F:
+	case GDK_f:
 		if (event->state & GDK_CONTROL_MASK) {
 			show_search_bar (eprop);
 			return TRUE;
 		}
 		break;
-	case GDK_KEY_slash:
+	case GDK_slash:
 		show_search_bar (eprop);
 		return TRUE;
 		break;
@@ -922,8 +930,13 @@ info_fetch_cb (BrowserConnection *bcnc, gpointer out_result, EntryProperties *ep
 		browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eprop)),
 				      "%s", _("Could not get information about LDAP entry"));
 
+#if GTK_CHECK_VERSION(2,18,0)
 	if (eprop->priv->text_search && gtk_widget_get_visible (eprop->priv->text_search))
 		text_search_rerun (TEXT_SEARCH (eprop->priv->text_search));
+#else
+	if (eprop->priv->text_search && GTK_WIDGET_VISIBLE (eprop->priv->text_search))
+		text_search_rerun (TEXT_SEARCH (eprop->priv->text_search));
+#endif
 
 	g_object_unref (eprop);
 }

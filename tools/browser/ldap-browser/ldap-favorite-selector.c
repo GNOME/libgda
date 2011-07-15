@@ -578,15 +578,25 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	gint id;
 	bfav = browser_connection_get_favorites (fsel->priv->bcnc);
 
+#if GTK_CHECK_VERSION(2,18,0)
 	id = browser_favorites_find (bfav, 0, (gchar*) gtk_selection_data_get_data (selection_ldap),
 				     &fav, NULL);
+#else
+	id = browser_favorites_find (bfav, 0, (gchar*) selection_ldap->data,
+				     &fav, NULL);
+#endif
 	if (id < 0) {
 		memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
 		fav.id = -1;
 		fav.type = BROWSER_FAVORITES_LDAP_DN;
+#if GTK_CHECK_VERSION(2,18,0)
 		fav.name = (gchar*) gtk_selection_data_get_data (selection_ldap);
-		fav.descr = NULL;
 		fav.contents = (gchar*) gtk_selection_data_get_data (selection_ldap);
+#else
+		fav.name = (gchar*) selection_ldap->data;
+		fav.contents = (gchar*) selection_ldap->data;
+#endif
+		fav.descr = NULL;
 	}
 
 	pos = atoi (path);
@@ -634,8 +644,13 @@ tree_store_drag_get_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 		if (cvalue) {
 			const gchar *str;
 			str = g_value_get_string (cvalue);
+#if GTK_CHECK_VERSION(2,18,0)
 			gtk_selection_data_set (selection_ldap, gtk_selection_data_get_target (selection_ldap),
 						8, (guchar*) str, strlen (str));
+#else
+			gtk_selection_data_set (selection_ldap, selection_ldap->target,
+						8, (guchar*) str, strlen (str));
+#endif
 			return TRUE;
 		}
 	}

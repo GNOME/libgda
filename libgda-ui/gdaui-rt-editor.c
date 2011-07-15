@@ -1051,7 +1051,14 @@ apply_markup (GdauiRtEditor *rte, GtkTextBuffer *textbuffer, TextTag *current, G
 		pe = start;
 		data = remove_newlines_from_base64 (gtk_text_buffer_get_text (textbuffer, &ps, &pe, FALSE));
 		/*g_print ("{{{%s}}}\n", data);*/
+#if GLIB_CHECK_VERSION(2,20,0)
 		g_base64_decode_inplace (data, &length);
+#else
+		gchar *tmp;
+		tmp = g_base64_decode (data, &length);
+		g_free (data);
+		data = tmp;
+#endif
 		if (gdk_pixdata_deserialize (&pixdata, length, (guint8*) data, NULL)) {
 			GdkPixbuf *pixbuf;
 			pixbuf = gdk_pixbuf_from_pixdata (&pixdata, TRUE, NULL);

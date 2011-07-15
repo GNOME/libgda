@@ -912,7 +912,12 @@ rt_parse_text (const gchar *text)
 			else {
 				gchar *tmp;
 				tmp = remove_newlines_from_base64 (part);
+#if GLIB_CHECK_VERSION(2,20,0)
 				node->binary.data = g_base64_decode_inplace (tmp, (gsize*) & node->binary.binary_length);
+#else
+				node->binary.data = g_base64_decode (tmp, (gsize*) & node->binary.binary_length);
+				g_free (tmp);
+#endif
 			}
 		}
 		else {

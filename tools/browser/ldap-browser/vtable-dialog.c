@@ -118,7 +118,12 @@ vtable_dialog_new (GtkWindow *parent, BrowserConnection *bcnc)
 	GtkWidget *dcontents;
 	GtkWidget *label, *entry, *table, *button;
 	gchar *str;
+
+#if GTK_CHECK_VERSION(2,18,0)
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dlg));
+#else
+	dcontents = GTK_DIALOG (dlg)->vbox;
+#endif
 	label = gtk_label_new (NULL);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
 	str = g_markup_printf_escaped ("<b>%s:</b>\n<small>%s</small>",

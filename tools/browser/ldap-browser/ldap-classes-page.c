@@ -227,9 +227,15 @@ source_drag_data_get_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkDragC
 	case TARGET_KEY_VALUE: {
 		gchar *str;
 		str = ldap_classes_page_to_selection (ebrowser);
+#if GTK_CHECK_VERSION(2,18,0)
 		gtk_selection_data_set (selection_data,
 					gtk_selection_data_get_target (selection_data), 8, (guchar*) str,
 					strlen (str));
+#else
+		gtk_selection_data_set (selection_data,
+					(GdkAtom) selection_data->data, 8, (guchar*) str,
+					strlen (str));
+#endif
 		g_free (str);
 		break;
 	}

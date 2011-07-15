@@ -246,7 +246,11 @@ visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility 
 {
 	gint wx, wy, bx, by;
 	
+#if GTK_CHECK_VERSION(2,14,0)
 	gdk_window_get_pointer (gtk_widget_get_window (text_view), &wx, &wy, NULL);
+#else
+	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
+#endif
 	
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
 					       GTK_TEXT_WINDOW_WIDGET,
@@ -271,7 +275,11 @@ motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, ClassPropertie
 	
 	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, cprop);
 
+#if GTK_CHECK_VERSION(2,14,0)
 	gdk_window_get_pointer (gtk_widget_get_window (text_view), NULL, NULL, NULL);
+#else
+	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
+#endif
 
 	return FALSE;
 }
@@ -354,14 +362,14 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, ClassProperties *cpro
 						  gtk_text_buffer_get_insert (buffer));
 		follow_if_link (text_view, &iter, cprop);
 		break;
-	case GDK_KEY_F:
-	case GDK_KEY_f:
+	case GDK_F:
+	case GDK_f:
 		if (event->state & GDK_CONTROL_MASK) {
 			show_search_bar (cprop);
 			return TRUE;
 		}
 		break;
-	case GDK_KEY_slash:
+	case GDK_slash:
 		show_search_bar (cprop);
 		return TRUE;
 		break;		
@@ -588,8 +596,13 @@ class_properties_set_class (ClassProperties *cprop, const gchar *classname)
 		}
 	}
 
+#if GTK_CHECK_VERSION(2,18,0)
 	if (cprop->priv->text_search && gtk_widget_get_visible (cprop->priv->text_search))
 		text_search_rerun (TEXT_SEARCH (cprop->priv->text_search));
+#else
+	if (cprop->priv->text_search && GTK_WIDGET_VISIBLE (cprop->priv->text_search))
+		text_search_rerun (TEXT_SEARCH (cprop->priv->text_search));
+#endif
 }
 
 static void
