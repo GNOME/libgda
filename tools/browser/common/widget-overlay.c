@@ -749,7 +749,7 @@ widget_overlay_size_request (GtkWidget *widget, GtkRequisition *req_min, GtkRequ
 	GList *list;
 	for (list = ovl->priv->children; list; list = list->next) {
 		ChildData *cd = (ChildData*) list->data;
-		if (gtk_widget_get_visible (cd->child)) {
+		if (gtk_widget_get_visible (cd->child) && !cd->is_tooltip) {
 			GtkRequisition child_req_min, child_req_nat;
 			gtk_widget_get_preferred_size (cd->child, &child_req_min, &child_req_nat);
 			if (cd->halign == WIDGET_OVERLAY_ALIGN_FILL) {
@@ -842,6 +842,21 @@ widget_overlay_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 			if ((cd->valign == WIDGET_OVERLAY_ALIGN_FILL) ||
 			    (cd == ovl->priv->scale_child))
 				child_allocation.height = h / cd->scale;
+
+			if (cd->is_tooltip) {
+				cd->scale = 1.;
+				if ((allocation->width > 0) && (allocation->height > 0)) {
+					if (child_allocation.width > allocation->width)
+						cd->scale = (gdouble) allocation->width /
+							(gdouble) child_allocation.width;
+					if (child_allocation.height > allocation->height) {
+						if (cd->scale > ((gdouble) allocation->height /
+								 (gdouble) child_allocation.height))
+							cd->scale = (gdouble) allocation->height /
+								(gdouble) child_allocation.height;
+					}
+				}
+			}
 
 			if (gtk_widget_get_realized (widget))
 				gdk_window_move_resize (cd->offscreen_window,

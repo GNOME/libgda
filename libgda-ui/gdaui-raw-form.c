@@ -557,6 +557,7 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiRawForm *form)
 							     param, !(attributes & GDA_VALUE_ATTR_NO_MODIF));
 		}
 	}
+	g_signal_emit_by_name (G_OBJECT (form), "selection-changed");
 }
 
 static void

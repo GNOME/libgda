@@ -222,6 +222,7 @@ ui_formgrid_show (GtkWidget *widget)
 static void form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid);
 static void form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid);
 static void form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid);
+static void selection_changed_cb (GdauiDataSelector *sel, UiFormGrid *formgrid);
 
 static void
 ui_formgrid_init (UiFormGrid *formgrid)
@@ -302,6 +303,35 @@ ui_formgrid_init (UiFormGrid *formgrid)
 							  GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS);
 	gtk_box_pack_start (GTK_BOX (hbox), formgrid->priv->info, TRUE, TRUE, 0);
 	gtk_widget_show (formgrid->priv->info);
+
+	/* keep data in sync */
+	g_signal_connect (formgrid->priv->raw_grid, "selection-changed",
+			  G_CALLBACK (selection_changed_cb), formgrid);
+	g_signal_connect (formgrid->priv->raw_form, "selection-changed",
+			  G_CALLBACK (selection_changed_cb), formgrid);
+}
+
+static void
+selection_changed_cb (GdauiDataSelector *sel, UiFormGrid *formgrid)
+{
+	GdaDataModelIter *iter;
+	GdauiDataSelector *tosel;
+	gint row;
+	if (sel == (GdauiDataSelector*) formgrid->priv->raw_grid)
+		tosel = (GdauiDataSelector*) formgrid->priv->raw_form;
+	else
+		tosel = (GdauiDataSelector*) formgrid->priv->raw_grid;
+
+	iter = gdaui_data_selector_get_data_set (sel);
+	g_assert (iter);
+	row = gda_data_model_iter_get_row (iter);
+	/*g_print ("Moved %s to row %d\n", sel == (GdauiDataSelector*) formgrid->priv->raw_grid ? "grid" : "form", row);*/
+	iter = gdaui_data_selector_get_data_set (tosel);
+	if (iter) {
+		g_signal_handlers_block_by_func (tosel, G_CALLBACK (selection_changed_cb), formgrid);
+		gda_data_model_iter_move_to_row (iter, row >= 0 ? row : 0);
+		g_signal_handlers_unblock_by_func (tosel, G_CALLBACK (selection_changed_cb), formgrid);
+	}
 }
 
 static void
@@ -313,9 +343,6 @@ form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 static void
 form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 {
-	GdaDataModelIter *iter;
-	gint row;
-
 	if (!gtk_toggle_button_get_active (button)) {
 		/* switch to form  view */
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (formgrid->priv->nb), 1);
@@ -329,11 +356,6 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 
 		GdkPixbuf *pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_FORM);
 		gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
-
-		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_grid));
-		if (iter)
-			row = gda_data_model_iter_get_row (iter);
-		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_form));
 	}
 	else {
 		/* switch to grid view */
@@ -348,15 +370,7 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 
 		GdkPixbuf *pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_GRID);
 		gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
-
-		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_form));
-		if (iter)
-			row = gda_data_model_iter_get_row (iter);
-		iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (formgrid->priv->raw_grid));
 	}
-
-	if (iter)
-		gda_data_model_iter_move_to_row (iter, row >= 0 ? row : 0);
 }
 
 static BrowserConnection *
@@ -489,6 +503,9 @@ typedef struct {
 	guint          exec_id;
 	guint          timer_id;
 } ActionExecutedData;
+
+static void action_executed_holder_changed_cb (G_GNUC_UNUSED GdaSet *params, G_GNUC_UNUSED GdaHolder *holder,
+					       ActionExecutedData *aed);
 static void
 action_executed_data_free (ActionExecutedData *data)
 {
@@ -497,7 +514,12 @@ action_executed_data_free (ActionExecutedData *data)
 		g_object_unref ((GObject*) data->formgrid);
 	g_free (data->name);
 	g_object_unref ((GObject*) data->stmt);
-	g_object_unref ((GObject*) data->params);
+
+	if (data->params) {
+		g_signal_handlers_disconnect_by_func (data->params,
+						      G_CALLBACK (action_executed_holder_changed_cb), data);
+		g_object_unref ((GObject*) data->params);
+	}
 	if (data->model)
 		g_object_unref ((GObject*) data->model);
 	if (data->timer_id)
@@ -589,6 +611,7 @@ statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (aed->formgrid));
 	g_object_unref (aed->formgrid);
 	aed->formgrid = NULL;
+
         if (error)
                 browser_show_error (GTK_WINDOW (toplevel),
                                     _("Error executing query:\n%s"),
@@ -642,7 +665,9 @@ statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 				  G_CALLBACK (gtk_widget_destroy), NULL);
 		g_signal_connect (dialog, "close",
 				  G_CALLBACK (gtk_widget_destroy), NULL);
-		aed = NULL;
+		g_object_set_data_full (G_OBJECT (dialog), "aed", aed,
+					(GDestroyNotify) action_executed_data_free);
+		aed = NULL; /* don't free it yet */
 	}
         else if (BROWSER_IS_WINDOW (toplevel)) {
 		browser_window_show_notice_printf (BROWSER_WINDOW (toplevel),
