@@ -72,6 +72,7 @@ enum {
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
+static GtkCssProvider *css_provider = NULL;
 
 /*
  * GdauiCombo class implementation
@@ -159,6 +160,18 @@ gdaui_combo_init (GdauiCombo *combo, G_GNUC_UNUSED GdauiComboClass *klass)
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 0);
 	combo->priv->changed_id = g_signal_connect (combo, "changed",
 						    G_CALLBACK (selection_changed_cb), NULL);
+
+	if (!css_provider) {
+		css_provider = gtk_css_provider_new ();
+		gtk_css_provider_load_from_data (css_provider,
+						 "#gdaui-combo-as-list {\n"
+						 "-GtkComboBox-appears-as-list : 1;\n"
+						 "-GtkComboBox-arrow-size : 5}",
+						 -1, NULL);
+	}
+	gtk_style_context_add_provider (gtk_widget_get_style_context ((GtkWidget*) combo),
+					GTK_STYLE_PROVIDER (css_provider),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
 static void
@@ -205,18 +218,8 @@ gdaui_combo_set_property (GObject *object,
 				       0, NULL);
 		break;
 	case PROP_AS_LIST: {
-		static gboolean rc_done = FALSE;
-		if (!rc_done) {
-			rc_done = TRUE;
-			gtk_rc_parse_string ("style \"gdaui-combo-as-list-style\"\n"
-					     "{\n"
-					     "GtkComboBox::appears-as-list = 1\n"
-					     "GtkComboBox::arrow-size = 5\n"
-					     "}\n"
-					     "widget \"*.gdaui-combo-as-list-style\" style \"gdaui-combo-as-list-style\"");
-		}
 		if (g_value_get_boolean (value))
-			gtk_widget_set_name ((GtkWidget*) combo, "gdaui-combo-as-list-style");
+			gtk_widget_set_name ((GtkWidget*) combo, "gdaui-combo-as-list");
 		else
 			gtk_widget_set_name ((GtkWidget*) combo, NULL);
 		break;
@@ -244,7 +247,7 @@ gdaui_combo_get_property (GObject *object,
 	case PROP_AS_LIST: {
 		const gchar *name;
 		name = gtk_widget_get_name ((GtkWidget*) combo);
-		g_value_set_boolean (value, name && !strcmp (name, "gdaui-combo-as-list-style") ? TRUE : FALSE);
+		g_value_set_boolean (value, name && !strcmp (name, "gdaui-combo-as-list") ? TRUE : FALSE);
 		break;
 	}
 	default :
@@ -460,8 +463,6 @@ gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint
 			renderer = gtk_cell_renderer_text_new ();
 			g_object_set_data (G_OBJECT (renderer), "data-handler", dh);
 			g_object_set_data (G_OBJECT (renderer), "colnum", GINT_TO_POINTER (index));
-			g_object_set ((GObject*) renderer, "width-chars",
-				      combo->priv->cols_width [index] + 1, NULL);
 			
 			gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
 			gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo), renderer,
@@ -827,8 +828,6 @@ combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboole
 	gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo), renderer,
 					    (GtkCellLayoutDataFunc) cell_layout_data_func, combo, NULL);
 	gtk_cell_layout_reorder (GTK_CELL_LAYOUT (combo), renderer, cellpos);
-	g_object_set ((GObject*) renderer, "width-chars",
-		      combo->priv->cols_width [column], NULL);
 	/* Don't unref the renderer! */
 
 	gint ww;

@@ -68,6 +68,7 @@ struct _GdauiDataProxyInfoPriv
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
+static GtkCssProvider *css_provider = NULL;
 
 /* properties */
 enum {
@@ -411,17 +412,15 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 {
 	GtkWidget *wid;
 	GdauiDataProxyInfoFlag flags = info->priv->flags;
-	static gboolean rc_done = FALSE;
 
-	if (!rc_done) {
-                rc_done = TRUE;
-                gtk_rc_parse_string ("style \"gdaui-data-proxy-info-style\"\n"
-                                     "{\n"
-                                     "GtkToolbar::shadow-type = GTK_SHADOW_NONE\n"
-                                     "xthickness = 0\n"
-                                     "ythickness = 0\n"
-                                     "}\n"
-                                     "widget \"*.gdaui-data-proxy-info\" style \"gdaui-data-proxy-info-style\"");
+	if (!css_provider) {
+		css_provider = gtk_css_provider_new ();
+		gtk_css_provider_load_from_data (css_provider,
+						 "* {\n"
+						 "-GtkToolbar-shadow-type : GTK_SHADOW_NONE;\n"
+						 "xthickness : 0;\n"
+						 "ythickness : 0}",
+						 -1, NULL);
         }
 
 	if (! info->priv->data_proxy)
@@ -447,7 +446,9 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		info->priv->buttons_bar = gtk_ui_manager_get_widget (ui, "/ToolBar");
 		gtk_toolbar_set_icon_size (GTK_TOOLBAR (info->priv->buttons_bar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 		g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
-		gtk_widget_set_name (info->priv->buttons_bar, "gdaui-data-proxy-info");
+		gtk_style_context_add_provider (gtk_widget_get_style_context (info->priv->buttons_bar),
+						GTK_STYLE_PROVIDER (css_provider),
+						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 		gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
 	}
 	else {

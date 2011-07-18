@@ -283,24 +283,23 @@ _browser_make_tab_label (const gchar *label,
 			 GtkWidget **out_close_button)
 {
         GtkWidget  *hbox, *wid, *close_button, *image = NULL;
-	static gboolean rc_done = FALSE;
+	static GtkCssProvider *css_provider = NULL;
+
+	if (!css_provider) {
+		css_provider = gtk_css_provider_new ();
+		gtk_css_provider_load_from_data (css_provider,
+						 "* {\n"
+						 "-GtkWidget-focus-padding : 0;\n"
+						 "-GtkWidget-focus-line-width : 0;\n"
+						 "xthickness : 0;\n"
+						 "ythickness : 0}",
+						 -1, NULL);
+	}
 
 	if (out_close_button)
 		*out_close_button = NULL;
 
-	if (!rc_done) {
-		rc_done = TRUE;
-		gtk_rc_parse_string ("style \"browser-tab-close-button-style\"\n"
-				     "{\n"
-				     "GtkWidget::focus-padding = 0\n"
-				     "GtkWidget::focus-line-width = 0\n"
-				     "xthickness = 0\n"
-				     "ythickness = 0\n"
-				     "}\n"
-				     "widget \"*.browser-tab-close-button\" style \"browser-tab-close-button-style\"");
-	}
-
-        hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
+        hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	if (img)
 		gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
@@ -316,7 +315,9 @@ _browser_make_tab_label (const gchar *label,
 		close_button = gtk_button_new ();
 		gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
 		gtk_button_set_focus_on_click (GTK_BUTTON (close_button), FALSE);
-		gtk_widget_set_name (close_button, "browser-tab-close-button");
+		gtk_style_context_add_provider (gtk_widget_get_style_context ((GtkWidget*) close_button),
+						GTK_STYLE_PROVIDER (css_provider),
+						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 		gtk_widget_set_tooltip_text (close_button, _("Close tab"));
 		

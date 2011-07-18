@@ -160,12 +160,6 @@ gdaui_entry_combo_class_init (GdauiEntryComboClass *class)
         g_object_class_install_property (object_class, PROP_SET_DEFAULT_IF_INVALID,
 					 g_param_spec_boolean ("set-default-if-invalid", NULL, NULL, FALSE,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-
-	/* RC setting */
-#define RC_STRING						\
-	"style \"gnomedb\" { GdauiCombo::appears-as-list = 1 }" \
-		"class \"GtkComboBox\" style \"gnomedb\""
-	/*gtk_rc_parse_string (RC_STRING);*/
 }
 
 static void
