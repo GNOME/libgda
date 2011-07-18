@@ -69,6 +69,7 @@ struct  _GdauiEntryShellPriv {
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
+static GtkCssProvider *css_provider = NULL;
 
 /**
  * gdaui_entry_shell_get_type:
@@ -136,10 +137,27 @@ show_all (GtkWidget *widget)
 }
 
 static void
-gdaui_entry_shell_init (GdauiEntryShell * shell)
+gdaui_entry_shell_init (GdauiEntryShell *shell)
 {
 	GtkWidget *button, *hbox, *arrow;
 	GValue *gval;
+
+	if (!css_provider) {
+		css_provider = gtk_css_provider_new ();
+                gtk_css_provider_load_from_data (css_provider,
+						 "* {\n"
+						 "-GtkArrow-arrow-scaling: 0.4;\n"
+						 "margin: 0;\n"
+						 "padding: 0;\n"
+						 "xthickness: 0;\n"
+						 "ythickness: 0;\n"
+						 "border-style: none;\n"
+						 "border-width: 0;\n"
+						 "-GtkButton-default-border: 0;\n"
+						 "-GtkButton-default-outside-border: 0;\n"
+						 "-GtkButton-inner-border: 0}",
+						 -1, NULL);
+	}
 
 	/* Private structure */
 	shell->priv = g_new0 (GdauiEntryShellPriv, 1);
@@ -158,26 +176,44 @@ gdaui_entry_shell_init (GdauiEntryShell * shell)
 	/* Setting the initial layout */
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (shell), GTK_SHADOW_NONE);
 	gtk_container_set_border_width (GTK_CONTAINER (shell), 0);
+	gtk_style_context_add_provider (gtk_widget_get_style_context ((GtkWidget*) shell),
+					GTK_STYLE_PROVIDER (css_provider),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	/* hbox */
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_add (GTK_CONTAINER (shell), hbox);
 	gtk_widget_show (hbox);
 	shell->priv->hbox = hbox;
+	gtk_style_context_add_provider (gtk_widget_get_style_context (hbox),
+					GTK_STYLE_PROVIDER (css_provider),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	/* vbox to insert the real widget to edit data */
 	shell->priv->embedder = widget_embedder_new ();
+	gtk_style_context_add_provider (gtk_widget_get_style_context (shell->priv->embedder),
+					GTK_STYLE_PROVIDER (css_provider),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	gtk_box_pack_start (GTK_BOX (hbox), shell->priv->embedder, TRUE, TRUE, 0);
 	gtk_widget_show (shell->priv->embedder);	
 
+
+
 	/* button to change the entry's state and to display that state */
 	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
+	gtk_style_context_add_provider (gtk_widget_get_style_context (arrow),
+					GTK_STYLE_PROVIDER (css_provider),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
 	button = gtk_button_new ();
+	gtk_style_context_add_provider (gtk_widget_get_style_context (button),
+					GTK_STYLE_PROVIDER (css_provider),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
 	gtk_container_add (GTK_CONTAINER (button), arrow);
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
 	shell->priv->button = button;
 	gtk_widget_show_all (button);
-	gtk_widget_set_size_request (button, 15, 15);
 
 	g_signal_connect (G_OBJECT (button), "event",
 			  G_CALLBACK (event_cb), shell);
