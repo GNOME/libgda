@@ -18,6 +18,8 @@
  * Boston, MA  02110-1301, USA.
  */
 #include "widget-embedder.h"
+#include <gdaui-decl.h>
+
 static void     widget_embedder_realize       (GtkWidget       *widget);
 static void     widget_embedder_unrealize     (GtkWidget       *widget);
 static void     widget_embedder_get_preferred_width  (GtkWidget *widget,
@@ -401,7 +403,7 @@ widget_embedder_draw (GtkWidget *widget, cairo_t *cr)
 			cairo_paint (cr);
 
 			if (! bin->valid) {
-				cairo_set_source_rgba (cr, .8, .1, .1, .2);
+				cairo_set_source_rgba (cr, GDAUI_COLOR_UNKNOWN_MASK);
 				cairo_rectangle (cr, child_area.x, child_area.y,
 						 child_area.width, child_area.height);
 				cairo_fill (cr);

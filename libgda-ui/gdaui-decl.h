@@ -42,4 +42,9 @@ typedef struct _GdauiDataProxyIface  GdauiDataProxyIface;
 #define GDAUI_COLOR_NORMAL_INVALID "#ff6a6a"
 #define GDAUI_COLOR_PRELIGHT_INVALID "#ff7b7b"
 
+/*
+ * Data of unknown status (no value available)
+ */
+#define GDAUI_COLOR_UNKNOWN_MASK .3, .3, .3, .6
+
 #endif

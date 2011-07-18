@@ -474,10 +474,8 @@ gdaui_entry_wrapper_set_value (GdauiDataEntry *iface, const GValue *value)
 			mgwrap->priv->null_forced = TRUE;
 		else
 			mgwrap->priv->null_forced = FALSE;
-		gdaui_entry_shell_set_unknown ((GdauiEntryShell*) iface, FALSE);
 	}
 	else {
-		gdaui_entry_shell_set_unknown ((GdauiEntryShell*) iface, TRUE);
 		(*mgwrap->priv->real_class->real_set_value) (mgwrap, NULL);
 		mgwrap->priv->null_forced = TRUE;
 	}
@@ -713,8 +711,6 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 		g_warning ("Having an original value is not a write attribute on GdauiDataEntry!");
 
 	current = gdaui_data_entry_get_attributes (iface);
-	gdaui_entry_shell_set_unknown ((GdauiEntryShell*) iface,
-				       current & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE);
 
 	if (signal_contents_changed) {
 		mgwrap->priv->contents_has_changed = FALSE;
