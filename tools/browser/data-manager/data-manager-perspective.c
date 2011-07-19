@@ -263,12 +263,9 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, BrowserF
 		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (perspective->priv->notebook),
 							   current_page);
 		
-		if (IS_DATA_CONSOLE (page_contents)) {
-			gchar *text;
-			text = data_console_get_text (DATA_CONSOLE (page_contents));
-			if (!text || !*text)
-				page_to_reuse = DATA_CONSOLE (page_contents);
-		}
+		if (IS_DATA_CONSOLE (page_contents) &&
+		    data_console_is_unused (DATA_CONSOLE (page_contents)))
+			page_to_reuse = DATA_CONSOLE (page_contents);
 	}
 
 	if (! page_to_reuse)
@@ -403,15 +400,8 @@ data_manager_perspective_new_tab (DataManagerPerspective *dmp, const gchar *xml_
 	current = gtk_notebook_get_current_page (GTK_NOTEBOOK (dmp->priv->notebook));
 	if (current >= 0) {
 		page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (dmp->priv->notebook), current);
-		if (! IS_DATA_CONSOLE (page))
+		if (! IS_DATA_CONSOLE (page) || !data_console_is_unused (DATA_CONSOLE (page)))
 			page = NULL;
-		else {
-			gchar *text;
-			text = data_console_get_text (DATA_CONSOLE (page));
-			if (text && *text)
-				page = NULL;
-			g_free (text);
-		}
 	}
 
 	if (!page) {

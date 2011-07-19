@@ -996,6 +996,26 @@ data_console_get_text (DataConsole *console)
 }
 
 /**
+ * data_console_is_unused
+ */
+gboolean
+data_console_is_unused (DataConsole *console)
+{
+	gchar *text;
+	gboolean retval = TRUE;
+	g_return_val_if_fail (IS_DATA_CONSOLE (console), FALSE);
+	text = data_console_get_text (console);
+	if (!text || !*text) {
+		g_free (text);
+		return TRUE;
+	}
+	if (strcmp (text, DEFAULT_XML))
+		retval = FALSE;
+	g_free (text);
+	return retval;
+}
+
+/**
  * data_console_execute
  * @console: a #DataConsole widget
  *
