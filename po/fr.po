@@ -988,11 +988,11 @@ msgstr "Le modèle de données a renvoyé une valeur NULL non valide"
 #: ../libgda/gda-data-model.c:732
 msgid "Data model does not support setting individual value"
 msgstr ""
-"Le modèle de données ne gère pas la configuration de valeurs individuelles"
+"Le modèle de données ne gère pas la modification de valeurs individuelles"
 
 #: ../libgda/gda-data-model.c:765
 msgid "Data model does not support setting values"
-msgstr "Le modèle de données ne gère pas la configuration de valeurs"
+msgstr "Le modèle de données ne gère pas la modification des données"
 
 #: ../libgda/gda-data-model.c:834 ../libgda/gda-data-model.c:868
 msgid "Data model does not support row append"
