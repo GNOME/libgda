@@ -130,7 +130,7 @@ data_model_errors_init (DataModelErrors *model,
 		value = gda_row_get_value (row, 0);
 		if (arow->col0) {
 			if (*arow->col0 == '-')
-				G_VALUE_TYPE (value) = G_MAXINT;
+				G_VALUE_TYPE (value) = G_TYPE_INVALID;
 			else {
 				gda_value_reset_with_type (value, G_TYPE_STRING);
 				g_value_set_string (value, arow->col0);
@@ -140,7 +140,7 @@ data_model_errors_init (DataModelErrors *model,
 		value = gda_row_get_value (row, 1);
 		if (arow->col1) {
 			if (*arow->col1 == '-')
-				G_VALUE_TYPE (value) = G_MAXINT;
+				G_VALUE_TYPE (value) = G_TYPE_INVALID;
 			else {
 				gda_value_reset_with_type (value, G_TYPE_STRING);
 				g_value_set_string (value, arow->col1);
@@ -150,7 +150,7 @@ data_model_errors_init (DataModelErrors *model,
 		value = gda_row_get_value (row, 2);
 		if (arow->col2) {
 			if (*arow->col2 == '-')
-				G_VALUE_TYPE (value) = G_MAXINT;
+				G_VALUE_TYPE (value) = G_TYPE_INVALID;
 			else {
 				gda_value_reset_with_type (value, G_TYPE_STRING);
 				g_value_set_string (value, arow->col2);
@@ -160,7 +160,7 @@ data_model_errors_init (DataModelErrors *model,
 		value = gda_row_get_value (row, 3);
 		if (arow->col3) {
 			if (*arow->col3 == '-')
-				G_VALUE_TYPE (value) = G_MAXINT;
+				G_VALUE_TYPE (value) = G_TYPE_INVALID;
 			else {
 				gda_value_reset_with_type (value, G_TYPE_STRING);
 				g_value_set_string (value, arow->col3);
@@ -197,7 +197,7 @@ data_model_errors_dispose (GObject * object)
                 }
 
 		/* DONT: g_ptr_array_foreach (model->priv->rows, (GFunc) g_object_unref, NULL);
-		 * because we use the convention that G_VALUE_TYPE() == G_MAXINT for errors */
+		 * because we use the convention that G_VALUE_TYPE() == G_TYPE_INVALID for errors */
 		g_ptr_array_free (model->priv->rows, TRUE);
 		g_free (model->priv);
 		model->priv = NULL;
@@ -344,7 +344,7 @@ data_model_errors_get_value_at (GdaDataModel *model, gint col, gint row, GError 
 	drow =  g_ptr_array_index (imodel->priv->rows, row);
 	if (drow) {
 		GValue *val = gda_row_get_value (drow, col);
-		if (G_VALUE_TYPE (val) == G_MAXINT) {
+		if (G_VALUE_TYPE (val) == G_TYPE_INVALID) {
 			/* simulates an error */
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 				     "%s", "Simulated error");
