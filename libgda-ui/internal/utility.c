@@ -118,9 +118,8 @@ _gdaui_utility_entry_build_actions_menu (GObject *obj_data, guint attrs, GCallba
 	return menu;
 }
 
-
 /*
- * _gdaui_utility_entry_build_info_colors_array
+ * _gdaui_utility_entry_build_info_colors_array_a
  * 
  * Creates an array of colors for the different states of an entry:
  *    Valid   <-> No special color
@@ -132,43 +131,45 @@ _gdaui_utility_entry_build_actions_menu (GObject *obj_data, guint attrs, GCallba
  *
  * Returns: a new array of 6 colors
  */
-GdkColor **
-_gdaui_utility_entry_build_info_colors_array (void)
+GdkRGBA **
+_gdaui_utility_entry_build_info_colors_array_a (void)
 {
-	GdkColor **colors;
-	GdkColor *color;
+	GdkRGBA **colors;
+	GdkRGBA *color;
 	
-	colors = g_new0 (GdkColor *, 6);
+	colors = g_new0 (GdkRGBA *, 6);
 	
 	/* Green color */
-	color = g_new0 (GdkColor, 1);
-	gdk_color_parse (GDAUI_COLOR_NORMAL_NULL, color);
+	color = g_new0 (GdkRGBA, 1);
+	g_assert (gdk_rgba_parse (color, GDAUI_COLOR_NORMAL_NULL));
 	colors[0] = color;
 	
-	color = g_new0 (GdkColor, 1);
-	gdk_color_parse (GDAUI_COLOR_PRELIGHT_NULL, color);
+	color = g_new0 (GdkRGBA, 1);
+	g_assert (gdk_rgba_parse (color, GDAUI_COLOR_PRELIGHT_NULL));
 	colors[1] = color;
 	
 	/* Blue color */
-	color = g_new0 (GdkColor, 1);
-	gdk_color_parse (GDAUI_COLOR_NORMAL_DEFAULT, color);
+	color = g_new0 (GdkRGBA, 1);
+	g_assert (gdk_rgba_parse (color, GDAUI_COLOR_NORMAL_DEFAULT));
 	colors[2] = color;
 	
-	color = g_new0 (GdkColor, 1);
-	gdk_color_parse (GDAUI_COLOR_PRELIGHT_DEFAULT, color);
+	color = g_new0 (GdkRGBA, 1);
+	g_assert (gdk_rgba_parse (color, GDAUI_COLOR_PRELIGHT_DEFAULT));
 	colors[3] = color;
 	
 	/* Red color */
-	color = g_new0 (GdkColor, 1);
-	gdk_color_parse (GDAUI_COLOR_NORMAL_INVALID, color);
+	color = g_new0 (GdkRGBA, 1);
+	g_assert (gdk_rgba_parse (color, GDAUI_COLOR_NORMAL_INVALID));
 	colors[4] = color;
 	
-	color = g_new0 (GdkColor, 1);
-	gdk_color_parse (GDAUI_COLOR_PRELIGHT_INVALID, color);
+	color = g_new0 (GdkRGBA, 1);
+	g_assert (gdk_rgba_parse (color, GDAUI_COLOR_PRELIGHT_INVALID));
 	colors[5] = color;
 
 	return colors;
 }
+
+
 
 /*
  * _gdaui_utility_markup_title

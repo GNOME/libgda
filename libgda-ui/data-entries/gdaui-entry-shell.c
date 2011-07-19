@@ -414,13 +414,13 @@ mitem_activated_cb (GtkWidget *mitem, GdauiEntryShell *shell)
 static void
 gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell)
 {
-	static GdkColor **colors = NULL;
-	GdkColor *normal = NULL, *prelight = NULL;
+	static GdkRGBA **colors = NULL;
+	GdkRGBA *normal = NULL, *prelight = NULL;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
 
 	if (!colors)
-		colors = _gdaui_utility_entry_build_info_colors_array ();
+		colors = _gdaui_utility_entry_build_info_colors_array_a ();
 
 	gtk_widget_set_tooltip_text (shell->priv->button, NULL);
 
@@ -442,9 +442,9 @@ gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell)
 		gtk_widget_set_tooltip_text (shell->priv->button, _("Value is invalid"));
 	}
 
-	gtk_widget_modify_bg (shell->priv->button, GTK_STATE_NORMAL, normal);
-	gtk_widget_modify_bg (shell->priv->button, GTK_STATE_ACTIVE, normal);
-	gtk_widget_modify_bg (shell->priv->button, GTK_STATE_PRELIGHT, prelight);
+	gtk_widget_override_background_color (shell->priv->button, GTK_STATE_FLAG_NORMAL, normal);
+	gtk_widget_override_background_color (shell->priv->button, GTK_STATE_FLAG_ACTIVE, normal);
+	gtk_widget_override_background_color (shell->priv->button, GTK_STATE_FLAG_PRELIGHT, prelight);
 }
 
 static GdaValueAttribute

@@ -374,46 +374,35 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 	GdauiDataCellRendererInfo *cellinfo = (GdauiDataCellRendererInfo *) cell;
 	gint width, height;
 	gint x_offset, y_offset;
-	GtkStateType state = 0;
 
-	static GdkColor **colors = NULL;
-	GdkColor *normal = NULL, *prelight = NULL;
-	GdkColor *orig_normal, *orig_prelight;
-	GtkStyle *style;
+	static GdkRGBA **colors = NULL;
+	GdkRGBA statenormal, stateprelight;
+	GdkRGBA *normal = NULL, *prelight = NULL;
+
 
 	if (!colors)
-		colors = _gdaui_utility_entry_build_info_colors_array ();
-
-	GtkStyle *estyle;
-	g_object_get ((GObject*) widget, "style", &estyle, NULL);
-	style = gtk_style_copy (estyle);
-	g_object_unref (estyle);
-
-	orig_normal = & (style->bg[GTK_STATE_NORMAL]);
-	orig_prelight = & (style->bg[GTK_STATE_PRELIGHT]);
-	if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_NULL) {
-		normal = colors[0];
-		prelight = colors[1];
-	}
-
-	if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_DEFAULT) {
-		normal = colors[2];
-		prelight = colors[3];
-	}
+		colors = _gdaui_utility_entry_build_info_colors_array_a ();
 
 	if (cellinfo->priv->attributes & GDA_VALUE_ATTR_DATA_NON_VALID) {
 		normal = colors[4];
 		prelight = colors[5];
 	}
-
-	if (!normal)
-		normal = orig_normal;
-	if (!prelight)
-		prelight = orig_prelight;
-
-	style->bg[GTK_STATE_NORMAL] = *normal;
-	style->bg[GTK_STATE_ACTIVE] = *normal;
-	style->bg[GTK_STATE_PRELIGHT] = *prelight;
+	else if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_DEFAULT) {
+		normal = colors[2];
+		prelight = colors[3];
+	}
+	else if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_NULL) {
+		normal = colors[0];
+		prelight = colors[1];
+	}
+	else {
+		GtkStyleContext *stc;
+		stc = gtk_widget_get_style_context (widget);
+		gtk_style_context_get_background_color (stc, GTK_STATE_FLAG_NORMAL, &statenormal);
+		gtk_style_context_get_background_color (stc, GTK_STATE_FLAG_NORMAL, &stateprelight);
+		normal = &statenormal;
+		prelight = &stateprelight;
+	}
 
 	gdaui_data_cell_renderer_info_get_size (cell, widget, cell_area,
 						&x_offset, &y_offset,
@@ -427,17 +416,11 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 	if (width <= 0 || height <= 0)
 		return;
 
-	state = GTK_STATE_NORMAL;
-
-	gtk_paint_box (style,
-		       cr,
-		       state, GTK_SHADOW_NONE,
-		       widget, "cellcheck",
-		       cell_area->x + x_offset + xpad,
-		       cell_area->y + y_offset + ypad,
-		       width - 1, height - 1);
-
-	g_object_unref (G_OBJECT (style));
+	cairo_set_source_rgba (cr, normal->red, normal->green, normal->blue, normal->alpha);
+	cairo_rectangle (cr, cell_area->x + x_offset + xpad,
+			 cell_area->y + y_offset + ypad,
+			 width - 1, height - 1);
+	cairo_fill (cr);
 }
 
 

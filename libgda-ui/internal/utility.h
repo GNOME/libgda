@@ -30,7 +30,7 @@
  *
  */
 GtkWidget              *_gdaui_utility_entry_build_actions_menu      (GObject *obj_data, guint attrs, GCallback function);
-GdkColor              **_gdaui_utility_entry_build_info_colors_array (void);
+GdkRGBA               **_gdaui_utility_entry_build_info_colors_array_a (void);
 gchar                  *_gdaui_utility_markup_title                  (const gchar *title, gboolean optional);
 
 /*
