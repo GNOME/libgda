@@ -167,7 +167,6 @@ data_model_errors_init (DataModelErrors *model,
 			}
 		}
 
-
 		g_ptr_array_add (model->priv->rows, row);
 	}
 }
@@ -376,7 +375,7 @@ data_model_errors_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSE
 		return 0;
 	}
 
-	flags = GDA_VALUE_ATTR_NO_MODIF;
+	flags = 0;
 	return flags;
 }
 
@@ -402,12 +401,16 @@ data_model_errors_set_value_at (GdaDataModel *model, gint col, gint row, const G
 	drow =  g_ptr_array_index (imodel->priv->rows, row);
 	if (drow) {
 		GValue *dvalue;
-		dvalue = gda_row_get_value (drow, row);
+		dvalue = gda_row_get_value (drow, col);
+		gda_value_reset_with_type (dvalue, G_VALUE_TYPE (value));
 		g_value_copy (value, dvalue);
+		gda_data_model_row_updated (model, row);
 	}
-	else
+	else {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
 			      "%s", "Row not found");
+		retval = FALSE;
+	}
 
 	return retval;
 }

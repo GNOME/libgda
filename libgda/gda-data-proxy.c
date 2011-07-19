@@ -1998,50 +1998,40 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 	else {
 		if (rm->model_row >= 0) {
 			/* update the row */
-			GSList *list;
 			GList *values = NULL;
 			gint i;
-			gboolean newvalue_found;
-			GValue *newvalue;
-			GValue **free_val;
 
 			g_assert (rm->modify_values);
 			g_assert (rm->orig_values);
-			free_val = g_new0 (GValue *, proxy->priv->model_nb_cols);
 			for (i=0; i < rm->orig_values_size; i++) {
-				newvalue_found = FALSE;
-				newvalue = NULL;
+				gboolean newvalue_found = FALSE;
+				GValue *newvalue = NULL;
+				GSList *list;
 
-				list = rm->modify_values;
-				while (list && !newvalue_found) {
+				for (list = rm->modify_values; list; list = list->next) {
 					if (ROW_VALUE (list->data)->model_column == i) {
 						newvalue_found = TRUE;
 						if (g_value_get_flags (ROW_VALUE (list->data)->attributes) &
 						    GDA_VALUE_ATTR_IS_DEFAULT)
 							newvalue = NULL;
 						else {
-							if (! ROW_VALUE (list->data)->value) {
+							if (! ROW_VALUE (list->data)->value)
 								newvalue = gda_value_new_null ();
-								free_val [i] = newvalue;
-							}
 							else
-								newvalue = ROW_VALUE (list->data)->value;
+								newvalue = gda_value_copy (ROW_VALUE (list->data)->value);
 						}
+						break;
 					}
-					list = g_slist_next (list);
 				}
-				if (!newvalue_found)
-					newvalue = rm->orig_values[i];
+				if (!newvalue_found && rm->orig_values[i])
+					newvalue = gda_value_copy (rm->orig_values[i]);
 				values = g_list_append (values, newvalue);
 			}
 
 			err = ! gda_data_model_set_values (proxy->priv->model, rm->model_row,
 							   values, error);
+			g_list_foreach (values, (GFunc) gda_value_free, NULL);
 			g_list_free (values);
-			for (i = 0; i < proxy->priv->model_nb_cols; i++)
-				if (free_val [i])
-					gda_value_free (free_val [i]);
-			g_free (free_val);
 		}
 		else {
 			/* insert a new row */
