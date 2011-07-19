@@ -369,11 +369,11 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 	if (can_discard) {
 		msg1 = _("Current modified data is invalid");
 		if (with_question)
-			msg2 =_("You may now choose to correct it, or to discard\n"
+			msg2 =_("You may now choose to correct it, or to discard "
 				"the modifications.\n\n"
 				"What do you wan to do?");
 		else
-			msg2 = _("please correct it and try again, or discard\n"
+			msg2 = _("please correct it and try again, or discard "
 				 "the modifications.");
 	}
 	else {
@@ -392,35 +392,11 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 						  "<b>%s:</b>\n\n%s", msg1, msg2);
 
 	if (filled_error && filled_error->message) {
-		GtkWidget *exp, *sw, *view;
-		GtkTextBuffer *buffer;
-		GtkTextIter start, end;
-		GtkTextTag *tag;
-		
-		exp = gtk_expander_new (_("Error details"));
+		GtkWidget *label;
 
-		sw = gtk_scrolled_window_new (NULL, NULL);
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-						GTK_POLICY_AUTOMATIC,
-						GTK_POLICY_AUTOMATIC);
-
-		view = gtk_text_view_new ();
-		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
-		gtk_text_buffer_set_text (buffer, filled_error->message, -1);
-						
-		/* Use a tag to change the color for just one part of the widget */
-		tag = gtk_text_buffer_create_tag (buffer, "monospace",
-						  "family", "monospace", NULL);
-		gtk_text_buffer_get_bounds (buffer, &start, &end);
-		gtk_text_buffer_apply_tag (buffer, tag, &start, &end);
-		
-		gtk_container_add (GTK_CONTAINER (sw), view);
-		gtk_container_add (GTK_CONTAINER (exp), sw);
+		label = gtk_label_new (filled_error->message);
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
-				    exp, TRUE, TRUE, 0);
-		gtk_widget_show_all (exp);
-
-		gtk_window_set_resizable (GTK_WINDOW (dlg), TRUE);
+				    label, TRUE, TRUE, 0);
 	}
 
 	return dlg;

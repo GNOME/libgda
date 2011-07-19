@@ -574,6 +574,7 @@ proxy_reset_cb (GdaDataProxy *proxy, GdauiRawForm *form)
 	g_object_ref (G_OBJECT (proxy));
 	g_object_set (G_OBJECT (form), "model", proxy, NULL);
 	g_object_unref (G_OBJECT (proxy));
+	g_signal_emit_by_name (G_OBJECT (form), "selection-changed");
 }
 
 static void
