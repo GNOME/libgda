@@ -808,6 +808,7 @@ gda_blob_op_get_type
 <SECTION>
 <FILE>gda-value</FILE>
 <TITLE>Gda Value</TITLE>
+GdaValueAttribute
 gda_value_new
 GDA_TYPE_NULL
 GDA_VALUE_HOLDS_NULL
