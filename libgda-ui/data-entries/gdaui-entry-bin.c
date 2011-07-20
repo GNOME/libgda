@@ -328,10 +328,6 @@ popup_position (PopupContainer *container, gint *out_x, gint *out_y)
 	poswidget = g_object_get_data (G_OBJECT (container), "__poswidget");
 
 	gint x, y;
-        GtkRequisition req;
-
-        gtk_widget_size_request (poswidget, &req);
-
         gdk_window_get_origin (gtk_widget_get_window (poswidget), &x, &y);
 	GtkAllocation alloc;
 	gtk_widget_get_allocation (poswidget, &alloc);

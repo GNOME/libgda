@@ -965,9 +965,10 @@ position_popup (GdauiEntryCommonTime *mgtim)
 {
         gint x, y;
         gint bwidth, bheight;
-        GtkRequisition req;
+        GtkRequisition req_minimum, req_natural;
 
-        gtk_widget_size_request (mgtim->priv->window, &req);
+        gtk_widget_get_preferred_size (mgtim->priv->window, &req_minimum,
+                &req_natural);
 
         gdk_window_get_origin (gtk_widget_get_window (mgtim->priv->date_button), &x, &y);
 	GtkAllocation alloc;
@@ -977,7 +978,7 @@ position_popup (GdauiEntryCommonTime *mgtim)
         bwidth = alloc.width;
         bheight = alloc.height;
 
-        x += bwidth - req.width;
+        x += bwidth - req_natural.width;
         y += bheight;
 
         if (x < 0)

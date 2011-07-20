@@ -210,13 +210,11 @@ widget_embedder_realize (GtkWidget *widget)
 	g_signal_connect (bin->offscreen_window, "from-embedder",
 			  G_CALLBACK (offscreen_window_from_parent), bin);
 
-	GtkStyle *style;
-	style = gtk_widget_get_style (widget);
-	style = gtk_style_attach (style, win);
-	gtk_widget_set_style (widget, style);
+	GtkStyleContext *style;
+	style = gtk_widget_get_style_context (widget);
 
-	gtk_style_set_background (style, win, GTK_STATE_NORMAL);
-	gtk_style_set_background (style, bin->offscreen_window, GTK_STATE_NORMAL);
+	gtk_style_context_set_background (style, win);
+	gtk_style_context_set_background (style, bin->offscreen_window);
 	gdk_window_show (bin->offscreen_window);
 }
 
@@ -355,10 +353,8 @@ widget_embedder_size_allocate (GtkWidget     *widget,
 	}
 
 	if (bin->child && gtk_widget_get_visible (bin->child)){
-		GtkRequisition child_requisition;
 		GtkAllocation child_allocation;
 		
-		gtk_widget_get_child_requisition (bin->child, &child_requisition);
 		child_allocation.x = 0;
 		child_allocation.y = 0;
 		child_allocation.height = h;
