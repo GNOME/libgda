@@ -235,10 +235,9 @@ favorite_selector_new (BrowserConnection *bcnc)
 	g_object_unref (manager);
 
 	/* update the tree's contents */
-	if (! gda_tree_update_all (tsel->priv->tree, NULL)) {
-		if (tsel->priv->idle_update_favorites == 0)
-			tsel->priv->idle_update_favorites = g_idle_add ((GSourceFunc) idle_update_favorites, tsel);
-	}
+	if (tsel->priv->idle_update_favorites == 0)
+		tsel->priv->idle_update_favorites = g_idle_add ((GSourceFunc) idle_update_favorites,
+								tsel);
 
 	/* header */
 	GtkWidget *label;

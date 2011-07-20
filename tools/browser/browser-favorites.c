@@ -178,6 +178,8 @@ static gboolean
 meta_store_addons_init (BrowserFavorites *bfav, GError **error)
 {
 	GError *lerror = NULL;
+	if (bfav->priv->store_cnc)
+		return TRUE;
 
 	if (!gda_meta_store_schema_add_custom_object (bfav->priv->store, FAVORITES_TABLE_DESC, &lerror)) {
                 g_set_error (error, 0, 0, "%s",
@@ -542,8 +544,7 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 	g_return_val_if_fail (fav, FALSE);
 	g_return_val_if_fail (fav->contents, FALSE);
 
-	if (! bfav->priv->store_cnc &&
-	    ! meta_store_addons_init (bfav, error))
+	if (! meta_store_addons_init (bfav, error))
 		return FALSE;
 
 	store_cnc = bfav->priv->store_cnc;
@@ -815,8 +816,7 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), NULL);
 	g_return_val_if_fail ((type != 0) || (order_key >= 0), NULL);
 
-	if (! bfav->priv->store_cnc &&
-	    ! meta_store_addons_init (bfav, error))
+	if (! meta_store_addons_init (bfav, error))
 		return NULL;
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
@@ -978,8 +978,7 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 	g_return_val_if_fail ((fav->id >= 0) || fav->contents, FALSE);
 	
 	memset (&efav, 0, sizeof (BrowserFavoritesAttributes));
-	if (! bfav->priv->store_cnc &&
-	    ! meta_store_addons_init (bfav, error))
+	if (! meta_store_addons_init (bfav, error))
 		return FALSE;
 
 	if (! gda_lockable_trylock (GDA_LOCKABLE (bfav->priv->store_cnc))) {
