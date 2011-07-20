@@ -29,6 +29,8 @@ G_BEGIN_DECLS
 #define BROWSER_STOCK_BUILDER         "glade"
 #define BROWSER_STOCK_LDAP_ENTRIES    "ldap-entries"
 #define BROWSER_STOCK_TABLE_ADD       "table-add"
+#define BROWSER_STOCK_GRID            "grid"
+#define BROWSER_STOCK_FORM            "form"
 
 
 /* Named icons defined in fd.o Icon Naming Spec */
