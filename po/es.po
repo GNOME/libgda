@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-07-19 20:31+0000\n"
-"PO-Revision-Date: 2011-07-20 12:51+0200\n"
+"POT-Creation-Date: 2011-07-20 20:37+0000\n"
+"PO-Revision-Date: 2011-07-21 13:38+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -178,10 +178,10 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/main.c:247
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:422
 #: ../tools/browser/canvas/browser-canvas-fkey.c:473
-#: ../tools/browser/common/ui-formgrid.c:560
-#: ../tools/browser/common/ui-formgrid.c:588
-#: ../tools/browser/common/ui-formgrid.c:619
-#: ../tools/browser/common/ui-formgrid.c:729
+#: ../tools/browser/common/ui-formgrid.c:580
+#: ../tools/browser/common/ui-formgrid.c:608
+#: ../tools/browser/common/ui-formgrid.c:639
+#: ../tools/browser/common/ui-formgrid.c:749
 #: ../tools/browser/data-manager/analyser.c:280
 #: ../tools/browser/data-manager/data-console.c:563
 #: ../tools/browser/data-manager/data-favorite-selector.c:201
@@ -208,7 +208,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/query-exec/query-result.c:259
 #: ../tools/browser/query-exec/query-result.c:433
 #: ../tools/browser/schema-browser/favorite-selector.c:170
-#: ../tools/browser/schema-browser/favorite-selector.c:353
+#: ../tools/browser/schema-browser/favorite-selector.c:352
 #: ../tools/browser/schema-browser/relations-diagram.c:241
 #: ../tools/browser/schema-browser/table-columns.c:948
 #: ../tools/browser/schema-browser/table-info.c:468
@@ -3393,7 +3393,7 @@ msgstr "Tamaño de datos"
 #: ../libgda-ui/data-entries/common-bin.c:301
 #: ../providers/ldap/gda-ldap-provider.c:699
 #: ../providers/mysql/gda-mysql-provider.c:632
-#: ../providers/mysql/gda-mysql-util.c:63 ../tools/browser/support.c:448
+#: ../providers/mysql/gda-mysql-util.c:63 ../tools/browser/support.c:446
 #: ../tools/browser/ldap-browser/entry-properties.c:584
 #: ../tools/browser/schema-browser/table-columns.c:515
 #: ../tools/tools-utils.c:35
@@ -3507,7 +3507,7 @@ msgid "Invalid UTF-8 format!"
 msgstr "Formato UTF-8 no válido."
 
 #. format tooltip
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:1028
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:1029
 msgid "Format is hh:mm:ss"
 msgstr "El formato es hh:mm:ss"
 
@@ -3951,11 +3951,6 @@ msgid "Current modified data is invalid"
 msgstr "Los datos actualmente modificados no son válidos"
 
 #: ../libgda-ui/internal/utility.c:372
-#| msgid ""
-#| "You may now choose to correct it, or to discard\n"
-#| "the modifications.\n"
-#| "\n"
-#| "What do you wan to do?"
 msgid ""
 "You may now choose to correct it, or to discard the modifications.\n"
 "\n"
@@ -3966,9 +3961,6 @@ msgstr ""
 "¿Qué quiere hacer?"
 
 #: ../libgda-ui/internal/utility.c:376
-#| msgid ""
-#| "please correct it and try again, or discard\n"
-#| "the modifications."
 msgid "please correct it and try again, or discard the modifications."
 msgstr "corríjala e inténtelo de nuevo, o descarte las modificaciones."
 
@@ -7395,16 +7387,16 @@ msgstr ""
 #: ../tools/browser/browser-connection.c:1657
 #: ../tools/browser/browser-connection.c:1663
 #: ../tools/browser/browser-connection.c:1799
-#: ../tools/browser/browser-favorites.c:552
-#: ../tools/browser/browser-favorites.c:558
-#: ../tools/browser/browser-favorites.c:987
-#: ../tools/browser/browser-favorites.c:994
+#: ../tools/browser/browser-favorites.c:553
+#: ../tools/browser/browser-favorites.c:559
+#: ../tools/browser/browser-favorites.c:986
+#: ../tools/browser/browser-favorites.c:993
 msgid "Can't initialize transaction to access favorites"
 msgstr "No se puede inicializar la transacción para acceder a los favoritos"
 
 #: ../tools/browser/browser-connection.c:1744
-#: ../tools/browser/browser-favorites.c:731
-#: ../tools/browser/browser-favorites.c:1045
+#: ../tools/browser/browser-favorites.c:732
+#: ../tools/browser/browser-favorites.c:1044
 msgid "Can't commit transaction to access favorites"
 msgstr "No se puede efectuar la transacción para acceder a los favoritos"
 
@@ -7487,8 +7479,8 @@ msgstr "Conectar"
 msgid "Open a new connection"
 msgstr "Abrir una conexión nueva"
 
-#: ../tools/browser/browser-favorites.c:184
-#: ../tools/browser/browser-favorites.c:193
+#: ../tools/browser/browser-favorites.c:186
+#: ../tools/browser/browser-favorites.c:195
 msgid "Can't initialize dictionary to store favorites"
 msgstr "No se puede inicializar el diccionario para almacenar los favoritos"
 
@@ -7526,6 +7518,14 @@ msgstr "Entradas LDAP"
 #: ../tools/browser/browser-stock-icons.c:51
 msgid "Add table"
 msgstr "Añadir tabla"
+
+#: ../tools/browser/browser-stock-icons.c:52
+msgid "Grid"
+msgstr "Rejilla"
+
+#: ../tools/browser/browser-stock-icons.c:53
+msgid "Form"
+msgstr "Formulario"
 
 #: ../tools/browser/browser-virtual-connection.c:90
 msgid "Bound connection is used"
@@ -7696,7 +7696,7 @@ msgid "data source"
 msgstr "fuente de datos"
 
 #: ../tools/browser/browser-window.c:578
-#: ../tools/browser/common/ui-formgrid.c:745
+#: ../tools/browser/common/ui-formgrid.c:765
 #: ../tools/browser/ldap-browser/perspective-main.c:33
 #: ../tools/browser/schema-browser/table-columns.c:971
 msgid "LDAP browser"
@@ -7992,19 +7992,19 @@ msgstr "Se está cargando la ayuda, espere…"
 msgid "Close tab"
 msgstr "Cerrar pestaña"
 
-#: ../tools/browser/support.c:442
+#: ../tools/browser/support.c:440
 msgid "Abstract"
 msgstr "Abstracta"
 
-#: ../tools/browser/support.c:444
+#: ../tools/browser/support.c:442
 msgid "Structural"
 msgstr "Estructural"
 
-#: ../tools/browser/support.c:446
+#: ../tools/browser/support.c:444
 msgid "Auxilliary"
 msgstr "Auxiliar"
 
-#: ../tools/browser/support.h:120
+#: ../tools/browser/support.h:117
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -8365,36 +8365,36 @@ msgstr[1] "%d tablas en el esquema «%s»:"
 msgid "None"
 msgstr "Ninguno"
 
-#: ../tools/browser/common/ui-formgrid.c:286
-msgid "Toggle between grid and form presentations"
-msgstr "Conmutar entre las presentaciones de rejilla y formulario"
-
-#: ../tools/browser/common/ui-formgrid.c:298
+#: ../tools/browser/common/ui-formgrid.c:287
 msgid "Enable or disable auto update of data"
 msgstr "Activar o desactivar la actualización automática de datos"
 
-#: ../tools/browser/common/ui-formgrid.c:417
+#: ../tools/browser/common/ui-formgrid.c:305
+msgid "Toggle between grid and form presentations"
+msgstr "Conmutar entre las presentaciones de rejilla y formulario"
+
+#: ../tools/browser/common/ui-formgrid.c:437
 msgid "Execute action"
 msgstr "Ejecutar acción"
 
-#: ../tools/browser/common/ui-formgrid.c:465
+#: ../tools/browser/common/ui-formgrid.c:485
 msgid "View LDAP entry's details"
 msgstr "Ver detalles de la entrada LDAP"
 
-#: ../tools/browser/common/ui-formgrid.c:480
+#: ../tools/browser/common/ui-formgrid.c:500
 #: ../tools/browser/data-manager/data-source-editor.c:111
 msgid "Zoom..."
 msgstr "Ampliación…"
 
-#: ../tools/browser/common/ui-formgrid.c:550
+#: ../tools/browser/common/ui-formgrid.c:570
 #: ../tools/browser/data-manager/data-source.c:811
 #, c-format
 msgid "Statement to execute is not a selection statement"
 msgstr "La declaración que ejecutar no es una declaración de selección"
 
-#: ../tools/browser/common/ui-formgrid.c:558
-#: ../tools/browser/common/ui-formgrid.c:586
-#: ../tools/browser/common/ui-formgrid.c:617
+#: ../tools/browser/common/ui-formgrid.c:578
+#: ../tools/browser/common/ui-formgrid.c:606
+#: ../tools/browser/common/ui-formgrid.c:637
 #: ../tools/browser/query-exec/query-console-page.c:1058
 #: ../tools/browser/query-exec/query-console-page.c:1109
 #: ../tools/browser/schema-browser/table-info.c:519
@@ -8406,12 +8406,12 @@ msgstr ""
 "Error al ejecutar la consulta:\n"
 "%s"
 
-#: ../tools/browser/common/ui-formgrid.c:676
-#: ../tools/browser/common/ui-formgrid.c:680
+#: ../tools/browser/common/ui-formgrid.c:696
+#: ../tools/browser/common/ui-formgrid.c:700
 msgid "Action successfully executed"
 msgstr "Acción ejecutada con éxito"
 
-#: ../tools/browser/common/ui-formgrid.c:697
+#: ../tools/browser/common/ui-formgrid.c:717
 #, c-format
 msgid ""
 "Set or confirm the parameters to execute\n"
@@ -8420,11 +8420,11 @@ msgstr ""
 "Configurar o confirmar los parámetros que ejecutar\n"
 "acción «%s»"
 
-#: ../tools/browser/common/ui-formgrid.c:701
+#: ../tools/browser/common/ui-formgrid.c:721
 msgid "Execution of action"
 msgstr "Ejecución de la acción"
 
-#: ../tools/browser/common/ui-formgrid.c:728
+#: ../tools/browser/common/ui-formgrid.c:748
 #: ../tools/browser/query-exec/query-console-page.c:1005
 #: ../tools/browser/schema-browser/table-info.c:547
 #, c-format
@@ -8598,7 +8598,7 @@ msgstr "No se pudo quitar el favorito: %s"
 #: ../tools/browser/query-exec/query-console-page.c:827
 #: ../tools/browser/query-exec/query-favorite-selector.c:265
 #: ../tools/browser/query-exec/query-favorite-selector.c:706
-#: ../tools/browser/schema-browser/favorite-selector.c:352
+#: ../tools/browser/schema-browser/favorite-selector.c:351
 #: ../tools/browser/schema-browser/table-info.c:467
 #, c-format
 msgid "Could not add favorite: %s"
@@ -9037,7 +9037,7 @@ msgstr "Entradas LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:477
 #: ../tools/browser/query-exec/query-favorite-selector.c:563
-#: ../tools/browser/schema-browser/favorite-selector.c:246
+#: ../tools/browser/schema-browser/favorite-selector.c:245
 msgid "Favorites"
 msgstr "Favoritos"
 
