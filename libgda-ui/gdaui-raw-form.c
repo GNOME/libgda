@@ -711,7 +711,7 @@ action_commit_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 	}
 
 	/* get to a correct selected row */
-	for (; !gda_data_model_iter_move_to_row (form->priv->iter, row) && (row >= 0); row--);
+	for (; (row >= 0) &&!gda_data_model_iter_move_to_row (form->priv->iter, row); row--);
 }
 
 static void

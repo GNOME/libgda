@@ -711,8 +711,14 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
 
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_attributes_at)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_attributes_at) (model, col, row);
-	else 
-		return 0;
+	else {
+		GdaDataModelAccessFlags flags;
+		GdaValueAttribute attrs = GDA_VALUE_ATTR_NO_MODIF;
+		flags = gda_data_model_get_access_flags (model);
+		if (flags & GDA_DATA_MODEL_ACCESS_WRITE)
+			attrs = 0;
+		return attrs;
+	}
 }
 
 /**
@@ -770,6 +776,28 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values) (model, row, values, error);
+	else if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_value_at) {
+		/* save the values */
+		gint col, ncols;
+		ncols = gda_data_model_get_n_columns (model);
+		if (g_list_length (values) > ncols) {
+			g_set_error (error, GDA_DATA_MODEL_ERROR,  GDA_DATA_MODEL_VALUES_LIST_ERROR,
+				     "%s", _("Too many values in list"));
+			return FALSE;
+		}
+
+		for (col = 0;
+		     (col < ncols) && values;
+		     col++, values = values->next) {
+			const GValue *cvalue;
+			cvalue = (const GValue*) values->data;
+			if (!cvalue)
+				continue;
+			if (! gda_data_model_set_value_at (model, col, row, cvalue, error))
+				return FALSE;
+		}
+		return TRUE;
+	}
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
