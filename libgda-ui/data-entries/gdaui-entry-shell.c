@@ -185,7 +185,6 @@ gdaui_entry_shell_init (GdauiEntryShell * shell)
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
 	shell->priv->button = button;
 	gtk_widget_show_all (button);
-	gtk_widget_set_size_request (button, 15, 15);
 
 	g_signal_connect (G_OBJECT (button), "event",
 			  G_CALLBACK (event_cb), shell);
