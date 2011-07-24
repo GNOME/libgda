@@ -19,6 +19,8 @@
  */
 #include "widget-embedder.h"
 #if GTK_CHECK_VERSION (2,20,0)
+#include <gdaui-decl.h>
+
 static void     widget_embedder_realize       (GtkWidget       *widget);
 static void     widget_embedder_unrealize     (GtkWidget       *widget);
 static void     widget_embedder_size_request  (GtkWidget       *widget,
@@ -392,7 +394,7 @@ widget_embedder_expose (GtkWidget      *widget,
 				cairo_paint (cr);
 
 				if (! bin->valid) {
-					cairo_set_source_rgba (cr, .8, .1, .1, .2);
+					cairo_set_source_rgba (cr, GDAUI_COLOR_UNKNOWN_MASK);
 					cairo_rectangle (cr, child_area.x, child_area.y,
 							 child_area.width, child_area.height);
 					cairo_fill (cr);

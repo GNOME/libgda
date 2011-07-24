@@ -18,6 +18,7 @@
  */
 
 #include "gdaui-data-cell-renderer-util.h"
+#include <libgda-ui/gdaui-decl.h>
 
 void
 gdaui_data_cell_renderer_draw_invalid_area (GdkWindow *window, GdkRectangle *cell_area)
@@ -28,7 +29,7 @@ gdaui_data_cell_renderer_draw_invalid_area (GdkWindow *window, GdkRectangle *cel
 	cairo_rectangle (cr, cell_area->x, cell_area->y, cell_area->width,  cell_area->height);
 	cairo_clip (cr);
 	
-	cairo_set_source_rgba (cr, .8, .1, .1, .2);
+	cairo_set_source_rgba (cr, GDAUI_COLOR_UNKNOWN_MASK);
 	cairo_rectangle (cr, cell_area->x, cell_area->y,
 			 cell_area->width, cell_area->height);
 	cairo_fill (cr);
