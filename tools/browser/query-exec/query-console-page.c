@@ -307,7 +307,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	gtk_box_pack_start (GTK_BOX (hbox), hpaned, TRUE, TRUE, 0);
 
 	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
+	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, TRUE);
 
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("SQL code to execute:"));
@@ -324,11 +324,10 @@ query_console_page_new (BrowserConnection *bcnc)
 			  G_CALLBACK (editor_changed_cb), tconsole);
 	g_signal_connect (wid, "execute-request",
 			  G_CALLBACK (editor_execute_request_cb), tconsole);
-	gtk_widget_set_size_request (wid, -1, 200);
 	
 	vbox = gtk_vbox_new (FALSE, 0);
 	tconsole->priv->params_top = vbox;
-	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, FALSE, TRUE);
+	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, TRUE, TRUE);
 	
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("Variables' values:"));
