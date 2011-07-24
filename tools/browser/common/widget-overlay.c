@@ -537,7 +537,7 @@ pick_offscreen_child (G_GNUC_UNUSED GdkWindow *offscreen_window,
 
 	for (list = g_list_last (ovl->priv->children); list; list = list->prev) {
 		ChildData *cd = (ChildData*) list->data;
-		if (!cd->ignore_events && gtk_widget_get_visible (cd->child) &&
+		if (!cd->ignore_events && gtk_widget_get_visible (cd->child) && (cd->alpha > 0.) &&
 		    (!ign_non_tooltip || (ign_non_tooltip && cd->is_tooltip))) {
 			GtkAllocation alloc;
 			double x, y;
