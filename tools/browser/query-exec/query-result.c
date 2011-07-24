@@ -334,6 +334,7 @@ make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar 
 {
 	GtkWidget *grid;
 	grid = ui_formgrid_new (model, TRUE, 0);
+	g_object_set (G_OBJECT (grid), "compute-mod-statements", TRUE, NULL);
 	ui_formgrid_set_sample_size (UI_FORMGRID (grid), 300);
 	if (sql) {
 		BrowserConnection *bcnc;
