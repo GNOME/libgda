@@ -1024,15 +1024,14 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
  * @cnc: a #GdaConnection
  * @select_stmt: a SELECT #GdaStatement (compound statements not handled)
  * @require_pk: TRUE if the created statement have to use a primary key
- * @insert_stmt: a place to store the created INSERT statement, or %NULL
- * @update_stmt: a place to store the created UPDATE statement, or %NULL
- * @delete_stmt: a place to store the created DELETE statement, or %NULL
- * @error: a place to store errors, or %NULL
+ * @insert_stmt: (allow-none) (transfer full): a place to store the created INSERT statement, or %NULL
+ * @update_stmt: (allow-none) (transfer full): a place to store the created UPDATE statement, or %NULL
+ * @delete_stmt: (allow-none) (transfer full): a place to store the created DELETE statement, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Creates an INSERT, an UPDATE and a DELETE statement from a SELECT statement
- * using the database metadata available in @cnc's meta store.
- *
- * %FALSE will be returned if any of the statement cannot be built.
+ * using the database metadata available in @cnc's meta store. Each statements are computed only if
+ * the corresponding place to store the created statement is not %NULL.
  * 
  * returns: %TRUE if no error occurred
  */
@@ -1238,7 +1237,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
  * @error: a place to store errors, or %NULL
  *
  * Computes a SELECT statement which selects all the rows the @update_stmt would update. Beware
- * however that this GdaSqlStatement does not select anything (ie it would be rendered as "SELECT FROM ... WHERE ...")
+ * however that this #GdaSqlStatement does not select anything (ie it would be rendered as "SELECT FROM ... WHERE ...")
  * and before being usable, one needs to add some fields to actually select.
  *
  * Returns: a new #GdaStatement if no error occurred, or %NULL otherwise
