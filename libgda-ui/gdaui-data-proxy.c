@@ -161,12 +161,13 @@ gdaui_data_proxy_column_show_actions (GdauiDataProxy *iface, gint column, gboole
  *
  * The actions are among: 
  * <itemizedlist><listitem><para>Data edition actions: "ActionNew", "ActionCommit", 
- *    "ActionDelete, "ActionUndelete, "ActionReset", </para></listitem>
+ *    "ActionDelete", "ActionReset". Note that the "ActionDelete" action is actually a #GtkToggleAction
+ *    action which can be used to delete a row or undelete it.</para></listitem>
  * <listitem><para>Record by record moving: "ActionFirstRecord", "ActionPrevRecord", 
- *    "ActionNextRecord", "ActionLastRecord",</para></listitem>
+ *    "ActionNextRecord", "ActionLastRecord".</para></listitem>
  * <listitem><para>Chuncks of records moving: "ActionFirstChunck", "ActionPrevChunck", 
  *     "ActionNextChunck", "ActionLastChunck".</para></listitem>
- * <listitem><para>Filtering: "ActionFilter"</para></listitem></itemizedlist>
+ * <listitem><para>Filtering: "ActionFilter".</para></listitem></itemizedlist>
  * 
  * Returns: (transfer none): the #GtkActionGroup with all the possible actions on the widget.
  *
@@ -217,10 +218,8 @@ gdaui_data_proxy_perform_action (GdauiDataProxy *iface, GdauiAction action)
 		action_name = "ActionCommit";
 		break;
         case GDAUI_ACTION_DELETE_SELECTED_DATA:
-		action_name = "ActionDelete";
-		break;
         case GDAUI_ACTION_UNDELETE_SELECTED_DATA:
-		action_name = "ActionUndelete";
+		action_name = "ActionDelete";
 		break;
         case GDAUI_ACTION_RESET_DATA:
 		action_name = "ActionReset";

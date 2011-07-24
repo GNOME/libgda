@@ -404,7 +404,6 @@ static const gchar *ui_row_modif =
 	"  <toolbar name='ToolBar'>"
 	"    <toolitem action='ActionNew'/>"
 	"    <toolitem action='ActionDelete'/>"
-	"    <toolitem action='ActionUndelete'/>"
 	"    <toolitem action='ActionCommit'/>"
 	"    <toolitem action='ActionReset'/>"
 	"  </toolbar>"
@@ -790,15 +789,23 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 				      flags & GDA_DATA_MODEL_ACCESS_INSERT ? TRUE : FALSE, NULL);
 
 			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionDelete");
-			wrows = is_inserted ||
-				((flags & GDA_DATA_MODEL_ACCESS_DELETE) &&
-				 (force_del_btn || (! to_be_deleted && has_selection)));
-			g_object_set (G_OBJECT (action), "sensitive", wrows, NULL);
+			gtk_action_block_activate (action);
+			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), to_be_deleted);
+			gtk_action_unblock_activate (action);
 
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionUndelete");
-			wrows = (flags & GDA_DATA_MODEL_ACCESS_DELETE) &&
-				(force_undel_btn || (to_be_deleted && has_selection));
-			g_object_set (G_OBJECT (action), "sensitive", wrows, NULL);
+			if (to_be_deleted) {
+				wrows = (flags & GDA_DATA_MODEL_ACCESS_DELETE) &&
+					(force_undel_btn || has_selection);
+				g_object_set (G_OBJECT (action), "sensitive", wrows, NULL);
+				gtk_action_set_tooltip (action, _("Undelete the selected entry"));
+			}
+			else {
+				wrows = is_inserted ||
+					((flags & GDA_DATA_MODEL_ACCESS_DELETE) &&
+					 (force_del_btn || has_selection));
+				g_object_set (G_OBJECT (action), "sensitive", wrows, NULL);
+				gtk_action_set_tooltip (action, _("Delete the selected entry"));
+			}
 
 			if ((mode == GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) ||
 			    (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE) ||
