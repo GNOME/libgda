@@ -240,7 +240,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv = g_new0 (UiFormGridPriv, 1);
 	formgrid->priv->raw_grid = NULL;
 	formgrid->priv->info = NULL;
-	formgrid->priv->flags = GDAUI_DATA_PROXY_INFO_CURRENT_ROW;
+	formgrid->priv->flags = GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS;
 	formgrid->priv->bcnc = NULL;
 	formgrid->priv->autoupdate = TRUE;
 	formgrid->priv->autoupdate_possible = FALSE;
@@ -786,12 +786,6 @@ ui_formgrid_new (GdaDataModel *model, gboolean scroll_form, GdauiDataProxyInfoFl
 	formgrid = (UiFormGrid *) g_object_new (UI_TYPE_FORMGRID, "scroll-form", scroll_form, NULL);
 	formgrid->priv->flags = flags;
 
-	compute_modification_statements (formgrid, model);
-	if (formgrid->priv->mod_stmt [MOD_INSERT] ||
-	    formgrid->priv->mod_stmt [MOD_DELETE] ||
-	    formgrid->priv->mod_stmt [MOD_UPDATE])
-		formgrid->priv->flags = formgrid->priv->flags | GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS;
-
 	/* a raw form and a raw grid for the same proxy */
 	g_object_set (formgrid->priv->raw_grid, "model", model, NULL);
 	proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (formgrid->priv->raw_grid));
@@ -805,8 +799,12 @@ ui_formgrid_new (GdaDataModel *model, gboolean scroll_form, GdauiDataProxyInfoFl
 			  G_CALLBACK (proxy_changed_cb), formgrid);
 
 	/* no more than 300 rows at a time */
-	if (model)
+	if (model) {
 		gda_data_proxy_set_sample_size (proxy, 300);
+		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS)
+			g_object_set (G_OBJECT (formgrid), "compute-mod-statements", TRUE, NULL);
+	}
+
 
 	return (GtkWidget *) formgrid;
 }
@@ -1067,8 +1065,7 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 		}
 	}
 
-	g_assert (model);
-	if (!GDA_IS_DATA_SELECT (model))
+	if (!model || !GDA_IS_DATA_SELECT (model))
 		return;
 
 	if (! formgrid->priv->compute_mod_stmt)

@@ -331,8 +331,7 @@ static GtkWidget *
 make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar *sql)
 {
 	GtkWidget *grid;
-	grid = ui_formgrid_new (model, TRUE, 0);
-	g_object_set (G_OBJECT (grid), "compute-mod-statements", TRUE, NULL);
+	grid = ui_formgrid_new (model, TRUE, GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS);
 	ui_formgrid_set_sample_size (UI_FORMGRID (grid), 300);
 	if (sql) {
 		BrowserConnection *bcnc;

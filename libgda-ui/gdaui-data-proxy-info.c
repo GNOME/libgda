@@ -47,6 +47,8 @@ static void data_proxy_proxy_changed_cb (GdauiDataProxy *data_proxy, GdaDataProx
 static void proxy_changed_cb (GdaDataProxy *proxy, GdauiDataProxyInfo *info);
 static void proxy_sample_changed_cb (GdaDataProxy *proxy, gint sample_start, gint sample_end, GdauiDataProxyInfo *info);
 static void proxy_row_changed_cb (GdaDataProxy *proxy, gint row, GdauiDataProxyInfo *info);
+static void proxy_reset_cb (GdaDataProxy *wid, GdauiDataProxyInfo *info);
+
 static void raw_grid_selection_changed_cb (GdauiRawGrid *grid, GdauiDataProxyInfo *info);
 
 
@@ -192,7 +194,6 @@ data_proxy_destroyed_cb (GdauiDataProxy *wid, GdauiDataProxyInfo *info)
 	info->priv->data_proxy = NULL;
 }
 
-
 static void
 release_proxy (GdauiDataProxyInfo *info)
 {
@@ -202,6 +203,8 @@ release_proxy (GdauiDataProxyInfo *info)
 					      G_CALLBACK (proxy_sample_changed_cb), info);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (info->priv->proxy),
 					      G_CALLBACK (proxy_row_changed_cb), info);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (info->priv->proxy),
+					      G_CALLBACK (proxy_reset_cb), info);
 	g_object_unref (info->priv->proxy);
 	info->priv->proxy = NULL;
 }
@@ -309,6 +312,9 @@ gdaui_data_proxy_info_set_property (GObject *object,
 							  G_CALLBACK (proxy_row_changed_cb), info);
 					g_signal_connect (G_OBJECT (proxy), "row-removed",
 							  G_CALLBACK (proxy_row_changed_cb), info);
+					g_signal_connect (G_OBJECT (proxy), "reset",
+							  G_CALLBACK (proxy_reset_cb), info);
+
 
 					/* iter */
 					iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR
@@ -379,6 +385,13 @@ proxy_sample_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, G_GNUC_UNUSED gint s
 static void
 proxy_row_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, G_GNUC_UNUSED gint row, GdauiDataProxyInfo *info)
 {
+	modif_buttons_update (info);
+}
+
+static void
+proxy_reset_cb (G_GNUC_UNUSED GdaDataProxy *wid, GdauiDataProxyInfo *info)
+{
+	modif_buttons_make (info);
 	modif_buttons_update (info);
 }
 
