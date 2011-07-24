@@ -177,8 +177,6 @@ icons_DATA= \
 	gda-browser-diagram.png \
 	gda-browser-query.png \
 	gda-browser-action.png \
-	gda-browser-form.png \
-	gda-browser-grid.png \
 	gda-browser-menu-ind.png \
 	gda-browser-ldap-entry.png \
 	gda-browser-ldap-group.png \

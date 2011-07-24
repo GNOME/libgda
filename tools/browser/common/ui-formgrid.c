@@ -26,6 +26,7 @@
 #include <libgda-ui/gdaui-data-selector.h>
 #include "../support.h"
 #include "../browser-window.h"
+#include "../browser-stock-icons.h"
 #include <libgda/gda-data-model-extra.h>
 #ifdef HAVE_LDAP
 #include "../ldap-browser/ldap-browser-perspective.h"
@@ -195,7 +196,7 @@ ui_formgrid_show (GtkWidget *widget)
 }
 
 static void form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid);
-static void form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid);
+static void form_grid_toggled_cb (GtkToggleAction *action, UiFormGrid *formgrid);
 static void form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid);
 static void selection_changed_cb (GdauiDataSelector *sel, UiFormGrid *formgrid);
 
@@ -246,18 +247,6 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	gtk_box_pack_start (GTK_BOX (formgrid), hbox, FALSE, TRUE, 0);
 	gtk_widget_show (hbox);
 
-	/* button to toggle between grid and form mode */
-	button = gtk_toggle_button_new ();
-	GdkPixbuf *pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_GRID);
-	gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
-
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
-	gtk_widget_show (button);
-	g_signal_connect (G_OBJECT (button), "toggled",
-			  G_CALLBACK (form_grid_toggled_cb), formgrid);
-	gtk_widget_set_tooltip_text (button, _("Toggle between grid and form presentations"));
-
 	/* button to toggle between auto update and not */
 	button = gtk_toggle_button_new ();
 	GtkWidget *img = gtk_image_new_from_stock (GTK_STOCK_EXECUTE, GTK_ICON_SIZE_MENU);
@@ -270,12 +259,45 @@ ui_formgrid_init (UiFormGrid *formgrid)
 			  G_CALLBACK (form_grid_autoupdate_cb), formgrid);
 	gtk_widget_set_tooltip_text (button, _("Enable or disable auto update of data"));
 
+	/* Proxy info */
 	formgrid->priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (formgrid->priv->raw_grid), 
 							  formgrid->priv->flags |
 							  GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 							  GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS);
+
+	GtkUIManager *uimanager;
+	GtkActionGroup *agroup;
+	GtkAction *action;
+	guint mid;
+	
+	g_object_get (G_OBJECT (formgrid->priv->info), "ui-manager", &uimanager, NULL);
+	agroup = gtk_action_group_new ("FormGrid");
+	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
+
+	action = GTK_ACTION (gtk_toggle_action_new ("FGToggle", "FGToggle",
+						    _("Toggle between grid and form presentations"),
+						    BROWSER_STOCK_GRID));
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
+	gtk_action_group_add_action (agroup, action);
+	g_signal_connect (G_OBJECT (action), "toggled",
+			  G_CALLBACK (form_grid_toggled_cb), formgrid);
+	g_object_unref (action);
+	gtk_ui_manager_insert_action_group (uimanager, agroup, 0);
+	g_object_unref (agroup);
+
+	mid = gtk_ui_manager_new_merge_id (uimanager);
+	gtk_ui_manager_add_ui (uimanager, mid, "/ToolBar", "FGToggle", "FGToggle",
+			       GTK_UI_MANAGER_AUTO, TRUE);
+	gtk_ui_manager_ensure_update (uimanager);
 	gtk_box_pack_start (GTK_BOX (hbox), formgrid->priv->info, TRUE, TRUE, 0);
 	gtk_widget_show (formgrid->priv->info);
+
+
+	/*gchar *tmp;
+	g_object_get (uimanager, "ui", &tmp, NULL);
+	g_print ("==>[%s]\n", tmp);
+	g_free (tmp);
+	*/
 
 	/* keep data in sync */
 	g_signal_connect (formgrid->priv->raw_grid, "selection-changed",
@@ -314,9 +336,9 @@ form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 }
 
 static void
-form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
+form_grid_toggled_cb (GtkToggleAction *action, UiFormGrid *formgrid)
 {
-	if (!gtk_toggle_button_get_active (button)) {
+	if (!gtk_toggle_action_get_active (action)) {
 		/* switch to form  view */
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (formgrid->priv->nb), 1);
 		g_object_set (G_OBJECT (formgrid->priv->info),
@@ -327,8 +349,7 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 				GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
 				GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS*/, NULL);
 
-		GdkPixbuf *pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_FORM);
-		gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
+		g_object_set (G_OBJECT (action), "stock-id", BROWSER_STOCK_FORM, NULL);
 	}
 	else {
 		/* switch to grid view */
@@ -341,8 +362,7 @@ form_grid_toggled_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 				GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
 				GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS*/, NULL);
 
-		GdkPixbuf *pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_GRID);
-		gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_pixbuf (pixbuf));
+		g_object_set (G_OBJECT (action), "stock-id", BROWSER_STOCK_GRID, NULL);
 	}
 }
 

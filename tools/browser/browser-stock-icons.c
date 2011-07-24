@@ -49,6 +49,8 @@ browser_stock_icons_init (void)
 		{ BROWSER_STOCK_BUILDER, N_("Builder"), 0, 0, NULL },
 		{ BROWSER_STOCK_LDAP_ENTRIES, N_("Ldap entries"), 0, 0, NULL },
 		{ BROWSER_STOCK_TABLE_ADD, N_("Add table"), 0, 0, NULL},
+		{ BROWSER_STOCK_GRID, N_("Grid"), 0, 0, NULL},
+		{ BROWSER_STOCK_FORM, N_("Form"), 0, 0, NULL},
 	};
 
 	factory = gtk_icon_factory_new ();
