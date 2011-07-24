@@ -46,6 +46,17 @@ static void ui_formgrid_get_property (GObject *object,
 				      GParamSpec *pspec);
 static void ui_formgrid_show (GtkWidget *widget);
 static BrowserConnection *get_browser_connection (UiFormGrid *formgrid);
+static void compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model);
+
+#define GRID_FLAGS (GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)
+#define FORM_FLAGS (GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS)
+
+typedef enum {
+	MOD_INSERT,
+	MOD_UPDATE,
+	MOD_DELETE,
+	MOD_LAST
+} ModType;
 
 struct _UiFormGridPriv
 {
@@ -60,6 +71,13 @@ struct _UiFormGridPriv
 	
 	BrowserConnection *bcnc;
 	gboolean     scroll_form;
+
+	/* modifications to the data */
+	gboolean           compute_mod_stmt; /* if %TRUE, then the INSERT, UPDATE and DELETE
+					       * statements are automatically computed, see the PROP_AUTOMOD property */
+	gboolean           mod_stmt_auto_computed; /* %TRUE if mod_stmt[*] have automatically
+						    * been computed */
+	GdaStatement      *mod_stmt[MOD_LAST];
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -79,7 +97,8 @@ enum {
 	PROP_RAW_GRID,
 	PROP_RAW_FORM,
 	PROP_INFO,
-	PROP_SCROLL_FORM
+	PROP_SCROLL_FORM,
+	PROP_AUTOMOD
 };
 
 GType
@@ -145,6 +164,10 @@ ui_formgrid_class_init (UiFormGridClass *klass)
 					 g_param_spec_boolean ("scroll-form", NULL, NULL,
 							       FALSE,
 							       G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (object_class, PROP_AUTOMOD,
+					 g_param_spec_boolean ("compute-mod-statements", NULL, NULL,
+							       FALSE,
+							       G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
 }
 
 static void
@@ -156,6 +179,14 @@ ui_formgrid_dispose (GObject *object)
         if (formgrid->priv) {
                 if (formgrid->priv->bcnc)
                         g_object_unref (formgrid->priv->bcnc);
+
+		ModType mod;
+		for (mod = MOD_INSERT; mod < MOD_LAST; mod++) {
+			if (formgrid->priv->mod_stmt[mod]) {
+				g_object_unref (formgrid->priv->mod_stmt[mod]);
+				formgrid->priv->mod_stmt[mod] = NULL;
+			}
+		}
 
                 g_free (formgrid->priv);
                 formgrid->priv = NULL;
@@ -214,6 +245,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv->autoupdate = TRUE;
 	formgrid->priv->autoupdate_possible = FALSE;
 	formgrid->priv->scroll_form = FALSE;
+	formgrid->priv->compute_mod_stmt = FALSE;
 
 	/* notebook */
 	formgrid->priv->nb = gtk_notebook_new ();
@@ -353,11 +385,7 @@ form_grid_toggled_cb (GtkToggleAction *action, UiFormGrid *formgrid)
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (formgrid->priv->nb), 1);
 		g_object_set (G_OBJECT (formgrid->priv->info),
 			      "data-proxy", formgrid->priv->raw_form,
-			      "flags", formgrid->priv->flags | GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
-			      GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS
-			      /*GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
-				GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
-				GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS*/, NULL);
+			      "flags", formgrid->priv->flags | FORM_FLAGS, NULL);
 
 		g_object_set (G_OBJECT (action), "stock-id", BROWSER_STOCK_FORM, NULL);
 	}
@@ -366,11 +394,7 @@ form_grid_toggled_cb (GtkToggleAction *action, UiFormGrid *formgrid)
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (formgrid->priv->nb), 0);
 		g_object_set (G_OBJECT (formgrid->priv->info),
 			      "data-proxy", formgrid->priv->raw_grid,
-			      "flags", formgrid->priv->flags | GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
-			      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS
-			      /*GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
-				GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
-				GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS*/, NULL);
+			      "flags", formgrid->priv->flags | GRID_FLAGS, NULL);
 
 		g_object_set (G_OBJECT (action), "stock-id", BROWSER_STOCK_GRID, NULL);
 	}
@@ -762,15 +786,20 @@ ui_formgrid_new (GdaDataModel *model, gboolean scroll_form, GdauiDataProxyInfoFl
 	formgrid = (UiFormGrid *) g_object_new (UI_TYPE_FORMGRID, "scroll-form", scroll_form, NULL);
 	formgrid->priv->flags = flags;
 
+	compute_modification_statements (formgrid, model);
+	if (formgrid->priv->mod_stmt [MOD_INSERT] ||
+	    formgrid->priv->mod_stmt [MOD_DELETE] ||
+	    formgrid->priv->mod_stmt [MOD_UPDATE])
+		formgrid->priv->flags = formgrid->priv->flags | GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS;
+
 	/* a raw form and a raw grid for the same proxy */
 	g_object_set (formgrid->priv->raw_grid, "model", model, NULL);
 	proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (formgrid->priv->raw_grid));
 	g_object_set (formgrid->priv->raw_form, "model", proxy, NULL);
 	gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (formgrid->priv->raw_form),
-					 GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE);
+					 GDAUI_DATA_PROXY_WRITE_ON_DEMAND);
 	g_object_set (G_OBJECT (formgrid->priv->info),
-		      "flags", formgrid->priv->flags | GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
-		      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS, NULL);
+		      "flags", formgrid->priv->flags | GRID_FLAGS, NULL);
 
 	g_signal_connect (formgrid->priv->raw_grid, "proxy-changed",
 			  G_CALLBACK (proxy_changed_cb), formgrid);
@@ -868,6 +897,31 @@ ui_formgrid_set_property (GObject *object,
 	case PROP_SCROLL_FORM:
 		formgrid->priv->scroll_form = g_value_get_boolean (value);
 		break;
+	case PROP_AUTOMOD:
+		formgrid->priv->compute_mod_stmt = g_value_get_boolean (value);
+		if (formgrid->priv->mod_stmt_auto_computed && !formgrid->priv->compute_mod_stmt) {
+			/* clean up the mod stmt */
+			ModType mod;
+			GdaDataModel *model;
+			g_object_get (formgrid->priv->raw_grid, "model", &model, NULL);
+			for (mod = MOD_INSERT; mod < MOD_LAST; mod++) {
+				if (! formgrid->priv->mod_stmt[mod])
+					continue;
+				g_object_unref (formgrid->priv->mod_stmt [mod]);
+			}
+			g_object_set (model, "delete-stmt", NULL,
+				      "insert-stmt", NULL, NULL,
+				      "update-stmt", NULL, NULL);
+			g_object_unref (model);
+			formgrid->priv->mod_stmt_auto_computed = FALSE;
+		}
+		else if (!formgrid->priv->mod_stmt_auto_computed && formgrid->priv->compute_mod_stmt) {
+			GdaDataModel *model;
+			g_object_get (formgrid->priv->raw_grid, "model", &model, NULL);
+			compute_modification_statements (formgrid, model);
+			g_object_unref (model);
+		}
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
@@ -893,6 +947,9 @@ ui_formgrid_get_property (GObject *object,
 		break;
 	case PROP_INFO:
 		g_value_set_object (value, formgrid->priv->info);
+		break;
+	case PROP_AUTOMOD:
+		g_value_set_boolean (value, formgrid->priv->compute_mod_stmt);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -996,4 +1053,44 @@ ui_formgrid_set_connection (UiFormGrid *formgrid, BrowserConnection *bcnc)
 	}
 	if (bcnc)
 		formgrid->priv->bcnc = g_object_ref (bcnc);
+}
+
+static void
+compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
+{
+	/* clear existing modification statements */
+	ModType mod;
+	for (mod = MOD_INSERT; mod < MOD_LAST; mod++) {
+		if (formgrid->priv->mod_stmt[mod]) {
+			g_object_unref (formgrid->priv->mod_stmt[mod]);
+			formgrid->priv->mod_stmt[mod] = NULL;
+		}
+	}
+
+	g_assert (model);
+	if (!GDA_IS_DATA_SELECT (model))
+		return;
+
+	if (! formgrid->priv->compute_mod_stmt)
+		return;
+
+	g_print ("Computing MOD STMTs\n");
+	if (! gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL))
+		return;
+
+	formgrid->priv->mod_stmt_auto_computed = TRUE;
+	g_object_get (model,
+		      "insert-stmt", &formgrid->priv->mod_stmt[MOD_INSERT],
+		      "update-stmt", &formgrid->priv->mod_stmt[MOD_UPDATE],
+		      "delete-stmt", &formgrid->priv->mod_stmt[MOD_DELETE], NULL);
+
+	for (mod = MOD_INSERT; mod < MOD_LAST; mod++) {
+		if (formgrid->priv->mod_stmt[mod]) {
+			gchar *sql;
+			sql = gda_statement_to_sql_extended (formgrid->priv->mod_stmt[mod], NULL, NULL,
+							     GDA_STATEMENT_SQL_PARAMS_LONG, NULL, NULL);
+			g_print ("STMT[%d] = [%s]\n", mod, sql);
+			g_free (sql);
+		}
+	}
 }
