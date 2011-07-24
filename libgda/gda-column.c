@@ -163,8 +163,7 @@ gda_column_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_COLUMN (column));
 	
 	if (column->priv) {
-		if (column->priv->default_value) 
-			gda_value_free (column->priv->default_value);
+		gda_value_free (column->priv->default_value);
 	
 		g_free (column->priv->id);
 		g_free (column->priv->dbms_type);
@@ -547,7 +546,7 @@ gda_column_set_position (GdaColumn *column, gint position)
  * gda_column_get_default_value:
  * @column: a #GdaColumn.
  *
- * Returns: @column's default value, as a #GValue object.
+ * Returns: (allow-none): @column's default value, as a #GValue object, or %NULL if column does not have a default value
  */
 const GValue *
 gda_column_get_default_value (GdaColumn *column)
@@ -559,7 +558,7 @@ gda_column_get_default_value (GdaColumn *column)
 /**
  * gda_column_set_default_value:
  * @column: a #GdaColumn.
- * @default_value: default #GValue for the column
+ * @default_value: (allow-none): default #GValue for the column
  *
  * Sets @column's default #GValue.
  */
@@ -567,11 +566,12 @@ void
 gda_column_set_default_value (GdaColumn *column, const GValue *default_value)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
-	g_return_if_fail (default_value != NULL);
 
-	if (column->priv->default_value)
-		gda_value_free (column->priv->default_value);
-	column->priv->default_value = gda_value_copy ( (GValue*)default_value);
+	gda_value_free (column->priv->default_value);
+	if (default_value)
+		column->priv->default_value = gda_value_copy ( (GValue*)default_value);
+	else
+		column->priv->default_value = NULL;
 }
 
 /**
