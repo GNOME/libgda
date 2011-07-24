@@ -1267,6 +1267,24 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 			}
 		}
 
+		if (mtype == INS_QUERY) {
+			/* update GdaDataSelect's column attributes with GdaHolder's attributes */
+			for (list = params->holders; list; list = list->next) {
+				GdaHolder *holder = GDA_HOLDER (list->data);
+				gint num;
+				gboolean is_old;
+				if (param_name_to_int (gda_holder_get_id (holder), &num, &is_old) &&
+				    !is_old) {
+					GdaColumn *gdacol;
+					gdacol = gda_data_model_describe_column ((GdaDataModel*) model, num);
+					if (!gdacol)
+						continue;
+					gda_column_set_default_value (gdacol,
+								      gda_holder_get_default_value (holder));
+				}
+			}
+		}
+
 		/* all ok, accept the modif statement */
 		if (model->priv->sh->modif_internals->modif_stmts[mtype]) {
 			g_object_unref (model->priv->sh->modif_internals->modif_stmts[mtype]);
@@ -1304,9 +1322,18 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 		for (hlist = model->priv->sh->modif_internals->modif_set->holders; hlist;
 		     hlist = hlist->next) {
 			GdaHolder *h = GDA_HOLDER (hlist->data);
-			g_print ("  %s type=> %s (%d)\n", gda_holder_get_id (h),
+			const GValue *defval;
+			defval = gda_holder_get_default_value (h);
+			g_print ("  %s type=> %s (%d)", gda_holder_get_id (h),
 				 g_type_name (gda_holder_get_g_type (h)),
 				 gda_holder_get_g_type (h));
+			if (defval) {
+				gchar *tmp;
+				tmp = gda_value_stringify (defval);
+				g_print (" defaults [%s]", tmp);
+				g_free (tmp);
+			}
+			g_print ("\n");
 		}
 	}
 #endif
