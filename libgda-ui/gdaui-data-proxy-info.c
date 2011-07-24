@@ -516,20 +516,21 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		}
 
 		GtkWidget *toolwid;
+		PangoContext *pc;
+		PangoFontDescription *fd, *fdc;
+		pc = gtk_widget_get_pango_context (GTK_WIDGET (info));
+		fd = pango_context_get_font_description (pc);
+		fdc = pango_font_description_copy (fd);
+		pango_font_description_set_size (fdc,
+						 pango_font_description_get_size (fd) * .8);
+
 		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
 			toolwid = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 			
 			/* read-write spin counter (mainly for forms) */
 			wid = gtk_spin_button_new_with_range (0, 1, 1);
-			PangoContext *pc;
-			PangoFontDescription *fd, *fdc;
-			pc = gtk_widget_get_pango_context (wid);
-			fd = pango_context_get_font_description (pc);
-			fdc = pango_font_description_copy (fd);
-			pango_font_description_set_size (fdc,
-							 pango_font_description_get_size (fd) * .8);
+
 			gtk_widget_override_font (wid, fdc);
-			pango_font_description_free (fdc);
 			gtk_style_context_add_provider (gtk_widget_get_style_context (wid),
 							GTK_STYLE_PROVIDER (css_provider),
 							GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
@@ -540,18 +541,22 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 			info->priv->row_spin = wid;
 			g_signal_connect (G_OBJECT (wid), "value-changed",
 					  G_CALLBACK (row_spin_changed_cb), info);
-			
+
 			/* rows counter */
 			wid = gtk_label_new (" /?");
+			gtk_widget_override_font (wid, fdc);
 			info->priv->current_sample = wid;
 			gtk_box_pack_start (GTK_BOX (toolwid), wid, FALSE, FALSE, 2);
 		}
 		else {
 			/* read-only counter (mainly for grids) */
 			wid = gtk_label_new ("? - ? /?");
+			gtk_widget_override_font (wid, fdc);
 			info->priv->current_sample = wid;
 			toolwid = wid;
 		}
+
+		pango_font_description_free (fdc);
 
 		gtk_container_add (GTK_CONTAINER (info->priv->tool_item), toolwid);
 		gtk_widget_show_all (info->priv->tool_item);
