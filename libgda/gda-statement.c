@@ -495,7 +495,32 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 			      "description", pspec->descr, NULL);
 		gda_holder_set_not_null (h, ! pspec->nullok);
 		if (((GdaSqlExpr*) node)->value) {
-			gda_holder_set_default_value (h, ((GdaSqlExpr*) node)->value);
+			/* Expr's value is "SQL encoded" => we need to convert it to a real value */
+			GValue *evalue;
+			evalue = ((GdaSqlExpr*) node)->value;
+			if (G_VALUE_TYPE (evalue) == G_TYPE_STRING) {
+				GdaDataHandler *dh;
+				GValue *value;
+				dh = gda_data_handler_get_default (pspec->g_type);
+				if (!dh) {
+					g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_PARAM_TYPE_ERROR,
+						     _("Can't handle default value of type '%s'"),
+						     gda_g_type_to_string (pspec->g_type));
+					g_object_unref (h);
+					return FALSE;
+				}
+				value = gda_data_handler_get_value_from_sql (dh,
+									     g_value_get_string (evalue),
+									     pspec->g_type);
+				if (value) {
+					gda_holder_set_default_value (h, value);
+					gda_value_free (value);
+				}
+				else
+					gda_holder_set_default_value (h, ((GdaSqlExpr*) node)->value);
+			}
+			else
+				gda_holder_set_default_value (h, ((GdaSqlExpr*) node)->value);
 			gda_holder_set_value_to_default (h);
 		}
 		gda_set_add_holder (*params, h);
@@ -1304,7 +1329,10 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 
 		if (flag & GDA_STATEMENT_SQL_PARAMS_LONG) {
 			if (expr->value) {
-				str = context->render_value (expr->value, context, error);
+				if (G_VALUE_TYPE (expr->value) == G_TYPE_STRING)
+					str = g_value_dup_string (expr->value);
+				else
+					str = context->render_value (expr->value, context, error);
 				if (!str) {
 					g_free (quoted_pname);
 					goto err;
