@@ -688,16 +688,6 @@ customize_form_grid (UiFormGrid *cwid)
 		gtk_widget_show (header);
 		gtk_tree_view_column_set_widget (GTK_TREE_VIEW_COLUMN (list->data),
 						 header);
-		
-		/* reduce text's size */
-		GList *renderers, *list2;
-		renderers = gtk_cell_layout_get_cells (GTK_CELL_LAYOUT (list->data));
-		for (list2 = renderers; list2; list2 = list2->next) {
-			if (GTK_IS_CELL_RENDERER_TEXT (list2->data))
-				g_object_set ((GObject*) list2->data,
-					      "scale", 0.8, NULL);
-		}
-		g_list_free (renderers);
 	}
 	
 	/*if (!columns || !columns->next)*/
