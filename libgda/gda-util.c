@@ -1180,6 +1180,12 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
 			pspec->nullok = tcol->nullok;
 			expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ist));
+			if (tcol->default_value)
+				g_value_set_string ((expr->value = gda_value_new (G_TYPE_STRING)),
+						    tcol->default_value);
+			else if (gda_meta_table_column_get_attribute (tcol, GDA_ATTRIBUTE_AUTO_INCREMENT))
+				g_value_set_string ((expr->value = gda_value_new (G_TYPE_STRING)), "''");
+
 			expr->param_spec = pspec;
 			insert_values_list = g_slist_append (insert_values_list, expr);
 		}
@@ -1189,6 +1195,11 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
 			pspec->nullok = tcol->nullok;
 			expr = gda_sql_expr_new (GDA_SQL_ANY_PART (ust));
+			if (tcol->default_value)
+				g_value_set_string ((expr->value = gda_value_new (G_TYPE_STRING)),
+						    tcol->default_value);
+			else if (gda_meta_table_column_get_attribute (tcol, GDA_ATTRIBUTE_AUTO_INCREMENT))
+				g_value_set_string ((expr->value = gda_value_new (G_TYPE_STRING)), "''");
 			expr->param_spec = pspec;
 			ust->expr_list = g_slist_append (ust->expr_list, expr);
 		}
