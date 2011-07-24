@@ -23,10 +23,6 @@
 void
 gdaui_data_cell_renderer_draw_invalid_area (cairo_t *cr, const GdkRectangle *cell_area)
 {
-	cairo_set_source_rgba (cr, .5, .5, .5, .4);
-	cairo_rectangle (cr, cell_area->x, cell_area->y, cell_area->width,  cell_area->height);
-	cairo_clip (cr);
-	
 	cairo_set_source_rgba (cr, GDAUI_COLOR_UNKNOWN_MASK);
 	cairo_rectangle (cr, cell_area->x, cell_area->y,
 			 cell_area->width, cell_area->height);

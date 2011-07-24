@@ -626,15 +626,10 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 	(text_class->render) (cell, cr, widget, background_area, cell_area, flags);
 
 	if (datacell->priv->to_be_deleted) {
-		GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
-		guint xpad;
-		g_object_get ((GObject*) cell, "xpad", &xpad, NULL);
-
-		gdouble y = cell_area->y + cell_area->height / 2.;
-		gtk_render_line (style_context,
-				 cr,
-				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
-				 y, y);
+		cairo_set_source_rgba (cr, 0., 0., 0., 1.);
+		cairo_rectangle (cr, cell_area->x, cell_area->y + cell_area->height / 2. - .5,
+				 cell_area->width, 1.);
+		cairo_fill (cr);
 	}
 	if (datacell->priv->invalid)
 		gdaui_data_cell_renderer_draw_invalid_area (cr, cell_area);
