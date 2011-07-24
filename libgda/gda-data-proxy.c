@@ -3744,19 +3744,37 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 		/* compare with the current stored value */
 		cmp_value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, col, proxy_row, error);
 		if (!cmp_value) {
-			gda_mutex_unlock (proxy->priv->mutex);
-			return FALSE;
+			GdaValueAttribute attrs;
+			attrs = gda_data_proxy_get_value_attributes (proxy, proxy_row, col);
+			if (attrs & GDA_VALUE_ATTR_NO_MODIF) {
+				gda_mutex_unlock (proxy->priv->mutex);
+				return FALSE;
+			}
+			else {
+				GType exptype;
+				exptype = gda_column_get_g_type (gda_data_model_describe_column ((GdaDataModel *) proxy,
+												 col));
+				if ((G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
+				    (exptype != GDA_TYPE_NULL) &&
+				    (exptype != G_VALUE_TYPE (value))) {
+					gda_mutex_unlock (proxy->priv->mutex);
+					g_warning (_("Wrong value type: expected '%s' and got '%s'"),
+						   g_type_name (exptype),
+						   g_type_name (G_VALUE_TYPE (value)));
+					return FALSE;
+				}
+			}
 		}
-		if ((G_VALUE_TYPE (cmp_value) != GDA_TYPE_NULL) &&
-		    (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
-		    (G_VALUE_TYPE (value) != G_VALUE_TYPE (cmp_value))) {
+		else if ((G_VALUE_TYPE (cmp_value) != GDA_TYPE_NULL) &&
+			 (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
+			 (G_VALUE_TYPE (value) != G_VALUE_TYPE (cmp_value))) {
 			gda_mutex_unlock (proxy->priv->mutex);
 			g_warning (_("Wrong value type: expected '%s' and got '%s'"),
 				   g_type_name (G_VALUE_TYPE (cmp_value)),
 				   g_type_name (G_VALUE_TYPE (value)));
 			return FALSE;
 		}
-		if (! gda_value_compare ((GValue *) value, (GValue *) cmp_value)) {
+		else if (! gda_value_compare ((GValue *) value, (GValue *) cmp_value)) {
 			/* nothing to do: values are equal */
 			gda_mutex_unlock (proxy->priv->mutex);
 			return TRUE;
@@ -3766,8 +3784,8 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 		rm = find_or_create_row_modif (proxy, proxy_row, col, &rv);
 
 		if (rv) {
-			/* compare with the original value (before modifications) and either delete the RowValue, 
-			 * or alter it */
+			/* compare with the original value (before modifications) and either
+			 * delete the RowValue or alter it */
 			if (rv->value) {
 				gda_value_free (rv->value);
 				rv->value = NULL;
