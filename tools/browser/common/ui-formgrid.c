@@ -263,6 +263,16 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	g_signal_connect (formgrid->priv->raw_grid, "populate-popup",
 			  G_CALLBACK (form_grid_populate_popup_cb), formgrid);
 
+	PangoContext *pc;
+	PangoFontDescription *fd, *fdc;
+	pc = gtk_widget_get_pango_context (formgrid->priv->raw_grid);
+	fd = pango_context_get_font_description (pc);
+	fdc = pango_font_description_copy (fd);
+	pango_font_description_set_size (fdc,
+					 pango_font_description_get_size (fd) * .8);
+	gtk_widget_override_font (formgrid->priv->raw_grid, fdc);
+	pango_font_description_free (fdc);
+
 	/* form on the 2nd page of the notebook */
 	formgrid->priv->raw_form = gdaui_raw_form_new (NULL);
 	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_form), -1, FALSE);
