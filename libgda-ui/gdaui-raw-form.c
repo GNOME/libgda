@@ -184,8 +184,7 @@ gdaui_raw_form_class_init (GdauiRawFormClass *class)
 }
 
 static void action_new_cb (GtkAction *action, GdauiRawForm *form);
-static void action_delete_cb (GtkAction *action, GdauiRawForm *form);
-static void action_undelete_cb (GtkAction *action, GdauiRawForm *form);
+static void action_delete_cb (GtkToggleAction *action, GdauiRawForm *form);
 static void action_commit_cb (GtkAction *action, GdauiRawForm *form);
 static void action_reset_cb (GtkAction *action, GdauiRawForm *form);
 static void action_first_record_cb (GtkAction *action, GdauiRawForm *form);
@@ -194,23 +193,19 @@ static void action_next_record_cb (GtkAction *action, GdauiRawForm *form);
 static void action_last_record_cb (GtkAction *action, GdauiRawForm *form);
 static void action_filter_cb (GtkAction *action, GdauiRawForm *form);
 
+static GtkToggleActionEntry ui_actions_t[] = {
+	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, N_("Delete the selected entry"), G_CALLBACK (action_delete_cb), FALSE},
+};
+
 static GtkActionEntry ui_actions[] = {
-	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, "Create a new data entry", G_CALLBACK (action_new_cb)},
-	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, "Delete the selected entry", G_CALLBACK (action_delete_cb)},
-	{ "ActionUndelete", GTK_STOCK_UNDELETE, "_Undelete", NULL, "Cancels the deletion of the current entry",
-	  G_CALLBACK (action_undelete_cb)},
-	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, "Commit the latest changes", G_CALLBACK (action_commit_cb)},
-	{ "ActionReset", GTK_STOCK_REFRESH, "_Reset", NULL, "Reset the data", G_CALLBACK (action_reset_cb)},
-	{ "ActionFirstRecord", GTK_STOCK_GOTO_FIRST, "_First record", NULL, "Go to first record of records",
-	  G_CALLBACK (action_first_record_cb)},
-	{ "ActionLastRecord", GTK_STOCK_GOTO_LAST, "_Last record", NULL, "Go to last record of records",
-	  G_CALLBACK (action_last_record_cb)},
-	{ "ActionPrevRecord", GTK_STOCK_GO_BACK, "_Previous record", NULL, "Go to previous record of records",
-	  G_CALLBACK (action_prev_record_cb)},
-	{ "ActionNextRecord", GTK_STOCK_GO_FORWARD, "Ne_xt record", NULL, "Go to next record of records",
-	  G_CALLBACK (action_next_record_cb)},
-	{ "ActionFilter", GTK_STOCK_FIND, "Filter", NULL, "Filter records",
-	  G_CALLBACK (action_filter_cb)}
+	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, N_("Create a new data entry"), G_CALLBACK (action_new_cb)},
+	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, N_("Commit the latest changes"), G_CALLBACK (action_commit_cb)},
+	{ "ActionReset", GTK_STOCK_CLEAR, "_Clear", NULL, N_("Clear all the modifications"), G_CALLBACK (action_reset_cb)},
+	{ "ActionFirstRecord", GTK_STOCK_GOTO_FIRST, "_First record", NULL, N_("Go to first record of records"), G_CALLBACK (action_first_record_cb)},
+	{ "ActionLastRecord", GTK_STOCK_GOTO_LAST, "_Last record", NULL, N_("Go to last record of records"), G_CALLBACK (action_last_record_cb)},
+	{ "ActionPrevRecord", GTK_STOCK_GO_BACK, "_Previous record", NULL, N_("Go to previous record of records"), G_CALLBACK (action_prev_record_cb)},
+	{ "ActionNextRecord", GTK_STOCK_GO_FORWARD, "Ne_xt record", NULL, N_("Go to next record of records"), G_CALLBACK (action_next_record_cb)},
+	{ "ActionFilter", GTK_STOCK_FIND, "Filter", NULL, N_("Filter records"), G_CALLBACK (action_filter_cb)}
 };
 
 static void
@@ -228,7 +223,7 @@ form_activated_cb (GdauiRawForm *form, G_GNUC_UNUSED gpointer data)
 {
 	if (form->priv->write_mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_ACTIVATED) {
 		gint row;
-
+		
 		row = gda_data_model_iter_get_row (form->priv->iter);
 		if (row >= 0) {
 			/* write back the current row */
@@ -289,6 +284,7 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 	gtk_action_group_set_translation_domain (wid->priv->actions_group, GETTEXT_PACKAGE);
 
         gtk_action_group_add_actions (wid->priv->actions_group, ui_actions, G_N_ELEMENTS (ui_actions), wid);
+        gtk_action_group_add_toggle_actions (wid->priv->actions_group, ui_actions_t, G_N_ELEMENTS (ui_actions_t), wid);
 	action = gtk_action_group_get_action (wid->priv->actions_group, "ActionNew");
 	g_signal_connect (G_OBJECT (action), "activate",
 			  G_CALLBACK (action_new_activated_cb), wid);
@@ -641,38 +637,36 @@ action_new_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 }
 
 static void
-action_delete_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
+action_delete_cb (GtkToggleAction *action, GdauiRawForm *form)
 {
-	gint row;
-
-	row = gda_data_model_iter_get_row (form->priv->iter);
-	g_return_if_fail (row >= 0);
-	gda_data_proxy_delete (form->priv->proxy, row);
-
-	if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
-		/* force the proxy to apply the current row deletion */
-		gint newrow;
-
-		newrow = gda_data_model_iter_get_row (form->priv->iter);
-		if (row == newrow) {/* => row has been marked as delete but not yet really deleted */
-			GError *error = NULL;
-			if (!gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error)) {
-				_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);
-				if (error)
-					g_error_free (error);
+	if (gtk_toggle_action_get_active (action)) {
+		gint row;
+		row = gda_data_model_iter_get_row (form->priv->iter);
+		g_return_if_fail (row >= 0);
+		gda_data_proxy_delete (form->priv->proxy, row);
+		
+		if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
+			/* force the proxy to apply the current row deletion */
+			gint newrow;
+			
+			newrow = gda_data_model_iter_get_row (form->priv->iter);
+			if (row == newrow) {/* => row has been marked as delete but not yet really deleted */
+				GError *error = NULL;
+				if (!gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error)) {
+					_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);
+					if (error)
+						g_error_free (error);
+				}
 			}
 		}
 	}
-}
-
-static void
-action_undelete_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	gint row;
-
-	row = gda_data_model_iter_get_row (form->priv->iter);
-	g_return_if_fail (row >= 0);
-	gda_data_proxy_undelete (form->priv->proxy, row);
+	else {
+		gint row;
+		
+		row = gda_data_model_iter_get_row (form->priv->iter);
+		g_return_if_fail (row >= 0);
+		gda_data_proxy_undelete (form->priv->proxy, row);
+	}
 }
 
 static void

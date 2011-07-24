@@ -167,8 +167,7 @@ static void     tree_view_row_activated_cb     (GtkTreeView *tree_view, GtkTreeP
 						GtkTreeViewColumn *column, GdauiRawGrid *grid);
 
 static void action_new_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_delete_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_undelete_cb (GtkAction *action, GdauiRawGrid *grid);
+static void action_delete_cb (GtkToggleAction *action, GdauiRawGrid *grid);
 static void action_commit_cb (GtkAction *action, GdauiRawGrid *grid);
 static void action_reset_cb (GtkAction *action, GdauiRawGrid *grid);
 static void action_first_chunck_cb (GtkAction *action, GdauiRawGrid *grid);
@@ -177,23 +176,19 @@ static void action_next_chunck_cb (GtkAction *action, GdauiRawGrid *grid);
 static void action_last_chunck_cb (GtkAction *action, GdauiRawGrid *grid);
 static void action_filter_cb (GtkAction *action, GdauiRawGrid *grid);
 
+static GtkToggleActionEntry ui_actions_t[] = {
+	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, N_("Delete the selected entry"), G_CALLBACK (action_delete_cb), FALSE},
+};
+
 static GtkActionEntry ui_actions[] = {
-	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, "Create a new data entry", G_CALLBACK (action_new_cb)},
-	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, "Delete the selected entry", G_CALLBACK (action_delete_cb)},
-	{ "ActionUndelete", GTK_STOCK_UNDELETE, "_Undelete", NULL, "Cancels the deletion of the selected entry",
-	  G_CALLBACK (action_undelete_cb)},
-	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, "Commit the latest changes", G_CALLBACK (action_commit_cb)},
-	{ "ActionReset", GTK_STOCK_REFRESH, "_Reset", NULL, "Reset the data", G_CALLBACK (action_reset_cb)},
-	{ "ActionFirstChunck", GTK_STOCK_GOTO_FIRST, "_First chunck", NULL, "Go to first chunck of records",
-	  G_CALLBACK (action_first_chunck_cb)},
-	{ "ActionLastChunck", GTK_STOCK_GOTO_LAST, "_Last chunck", NULL, "Go to last chunck of records",
-	  G_CALLBACK (action_last_chunck_cb)},
-	{ "ActionPrevChunck", GTK_STOCK_GO_BACK, "_Previous chunck", NULL, "Go to previous chunck of records",
-	  G_CALLBACK (action_prev_chunck_cb)},
-	{ "ActionNextChunck", GTK_STOCK_GO_FORWARD, "Ne_xt chunck", NULL, "Go to next chunck of records",
-	  G_CALLBACK (action_next_chunck_cb)},
-	{ "ActionFilter", GTK_STOCK_FIND, "Filter", NULL, "Filter records",
-	  G_CALLBACK (action_filter_cb)}
+	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, N_("Create a new data entry"), G_CALLBACK (action_new_cb)},
+	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, N_("Commit the latest changes"), G_CALLBACK (action_commit_cb)},
+	{ "ActionReset", GTK_STOCK_CLEAR, "_Clear", NULL, N_("Clear all the modifications"), G_CALLBACK (action_reset_cb)},
+	{ "ActionFirstChunck", GTK_STOCK_GOTO_FIRST, "_First chunck", NULL, N_("Go to first chunck of records"), G_CALLBACK (action_first_chunck_cb)},
+	{ "ActionLastChunck", GTK_STOCK_GOTO_LAST, "_Last chunck", NULL, N_("Go to last chunck of records"), G_CALLBACK (action_last_chunck_cb)},
+	{ "ActionPrevChunck", GTK_STOCK_GO_BACK, "_Previous chunck", NULL, N_("Go to previous chunck of records"), G_CALLBACK (action_prev_chunck_cb)},
+	{ "ActionNextChunck", GTK_STOCK_GO_FORWARD, "Ne_xt chunck", NULL, N_("Go to next chunck of records"), G_CALLBACK (action_next_chunck_cb)},
+	{ "ActionFilter", GTK_STOCK_FIND, "Filter", NULL, N_("Filter records"), G_CALLBACK (action_filter_cb)}
 };
 
 GType
@@ -404,6 +399,7 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	grid->priv->actions_group = gtk_action_group_new ("Actions");
 	gtk_action_group_set_translation_domain (grid->priv->actions_group, GETTEXT_PACKAGE);
 	gtk_action_group_add_actions (grid->priv->actions_group, ui_actions, G_N_ELEMENTS (ui_actions), grid);
+	gtk_action_group_add_toggle_actions (grid->priv->actions_group, ui_actions_t, G_N_ELEMENTS (ui_actions_t), grid);
 
 	grid->priv->filter = NULL;
 	grid->priv->filter_window = NULL;
@@ -1381,53 +1377,52 @@ action_new_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
 }
 
 static void
-action_delete_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
+action_delete_cb (GtkToggleAction *action, GdauiRawGrid *grid)
 {
-	GtkTreeIter iter;
-	GtkTreeSelection *select;
-	GtkTreeModel *model;
-	GList *sel_rows;
-	GdaDataProxy *proxy;
-
-	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
-	sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
-	proxy = gdaui_data_store_get_proxy (GDAUI_DATA_STORE (model));
-
-	/* rem: get the list of selected rows after each row deletion because the data model might have changed and
-	 * row numbers might also have changed */
-	while (sel_rows) {
-		gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (sel_rows->data));
-		if (!gda_data_proxy_row_is_deleted (proxy,
-						    gdaui_data_store_get_row_from_iter (GDAUI_DATA_STORE (model),
-											&iter))) {
-			gdaui_data_store_delete (grid->priv->store, &iter);
-			g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
-			g_list_free (sel_rows);
-			sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
+	if (gtk_toggle_action_get_active (action)) {
+		GtkTreeIter iter;
+		GtkTreeSelection *select;
+		GtkTreeModel *model;
+		GList *sel_rows;
+		GdaDataProxy *proxy;
+		
+		select = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
+		sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
+		proxy = gdaui_data_store_get_proxy (GDAUI_DATA_STORE (model));
+		
+		/* rem: get the list of selected rows after each row deletion because the data model might have changed and
+		 * row numbers might also have changed */
+		while (sel_rows) {
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (sel_rows->data));
+			if (!gda_data_proxy_row_is_deleted (proxy,
+							    gdaui_data_store_get_row_from_iter (GDAUI_DATA_STORE (model),
+												&iter))) {
+				gdaui_data_store_delete (grid->priv->store, &iter);
+				g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
+				g_list_free (sel_rows);
+				sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
+			}
+			else
+				sel_rows = sel_rows->next;
 		}
-		else
-			sel_rows = sel_rows->next;
 	}
-}
-
-static void
-action_undelete_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	GtkTreeIter iter;
-	GtkTreeSelection *select;
-	GtkTreeModel *model;
-	GList *sel_rows, *cur_row;
-
-	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
-	sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
-	cur_row = sel_rows;
-	while (cur_row) {
-		gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (cur_row->data));
-		gdaui_data_store_undelete (grid->priv->store, &iter);
-		cur_row = g_list_next (cur_row);
+	else {
+		GtkTreeIter iter;
+		GtkTreeSelection *select;
+		GtkTreeModel *model;
+		GList *sel_rows, *cur_row;
+		
+		select = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
+		sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
+		cur_row = sel_rows;
+		while (cur_row) {
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (cur_row->data));
+			gdaui_data_store_undelete (grid->priv->store, &iter);
+			cur_row = g_list_next (cur_row);
+		}
+		g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
+		g_list_free (sel_rows);
 	}
-	g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
-	g_list_free (sel_rows);
 }
 
 static void
