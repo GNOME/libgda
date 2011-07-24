@@ -780,7 +780,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 		/* save the values */
 		gint col, ncols;
 		ncols = gda_data_model_get_n_columns (model);
-		if (g_list_length (values) > ncols) {
+		if ((gint)g_list_length (values) > ncols) {
 			g_set_error (error, GDA_DATA_MODEL_ERROR,  GDA_DATA_MODEL_VALUES_LIST_ERROR,
 				     "%s", _("Too many values in list"));
 			return FALSE;

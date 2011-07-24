@@ -329,9 +329,6 @@ popup_position (PopupContainer *container, gint *out_x, gint *out_y)
 	poswidget = g_object_get_data (G_OBJECT (container), "__poswidget");
 
 	gint x, y;
-        GtkRequisition req;
-
-        gtk_widget_size_request (poswidget, &req);
 
 #if GTK_CHECK_VERSION(2,18,0)
         gdk_window_get_origin (gtk_widget_get_window (poswidget), &x, &y);
