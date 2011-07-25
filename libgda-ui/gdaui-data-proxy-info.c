@@ -64,6 +64,7 @@ struct _GdauiDataProxyInfoPriv
 	guint              merge_id_chunck_change;
 
 	GtkWidget         *buttons_bar;
+	gboolean           buttons_bar_from_ui;
 	GtkWidget         *tool_item;
 	GtkWidget         *current_sample;
 	GtkWidget         *row_spin;
@@ -147,6 +148,8 @@ gdaui_data_proxy_info_init (GdauiDataProxyInfo *wid)
 	wid->priv->data_proxy = NULL;
 	wid->priv->proxy = NULL;
 	wid->priv->row_spin = NULL;
+	wid->priv->buttons_bar = NULL;
+	wid->priv->tool_item = NULL;
 }
 
 /**
@@ -427,6 +430,7 @@ static const gchar *ui_chunck_change =
 	"  </toolbar>"
 	"</ui>";
 
+
 static void row_spin_changed_cb (GtkSpinButton *spin, GdauiDataProxyInfo *info);
 static void
 modif_buttons_make (GdauiDataProxyInfo *info)
@@ -449,6 +453,13 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 
 	if (! info->priv->data_proxy)
 		return;
+
+	if (info->priv->tool_item) {
+		/* remove tool_item from toolbar */
+		gtk_container_remove (GTK_CONTAINER (info->priv->buttons_bar),
+				      info->priv->tool_item);
+		gtk_widget_unparent (info->priv->tool_item);
+	}
 
 	if (info->priv->uimanager) {
 		if (info->priv->merge_id_row_modif) {
@@ -489,16 +500,35 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 												-1, NULL);
 	}
 
-	if (! info->priv->buttons_bar) {
-		GtkUIManager *ui;
-		ui = info->priv->uimanager;
-		info->priv->buttons_bar = gtk_ui_manager_get_widget (ui, "/ToolBar");
-		gtk_toolbar_set_icon_size (GTK_TOOLBAR (info->priv->buttons_bar), GTK_ICON_SIZE_MENU);
-		g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
-		gtk_widget_set_name (info->priv->buttons_bar, "gdaui-data-proxy-info");
-		gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
-		gtk_widget_show (info->priv->buttons_bar);
+	/* get rid of previous toolbar if any */
+	if (info->priv->buttons_bar) {
+		if (gtk_widget_get_parent (info->priv->buttons_bar)) {
+			gtk_container_remove (GTK_CONTAINER (info), info->priv->buttons_bar);
+			gtk_widget_unparent (info->priv->buttons_bar);
+		}
+		if (info->priv->buttons_bar_from_ui)
+			g_object_unref (info->priv->buttons_bar);
+		else
+			gtk_widget_destroy (info->priv->buttons_bar);
+		info->priv->buttons_bar = NULL;
 	}
+
+	/* create new toolbar */
+	GtkUIManager *ui;
+	ui = info->priv->uimanager;
+	info->priv->buttons_bar = gtk_ui_manager_get_widget (ui, "/ToolBar");
+	if (info->priv->buttons_bar)
+		info->priv->buttons_bar_from_ui = TRUE;
+	else {
+		info->priv->buttons_bar = gtk_toolbar_new ();
+		info->priv->buttons_bar_from_ui = FALSE;
+	}
+	g_object_ref_sink (info->priv->buttons_bar);
+	gtk_toolbar_set_icon_size (GTK_TOOLBAR (info->priv->buttons_bar), GTK_ICON_SIZE_MENU);
+	g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
+	gtk_widget_set_name (info->priv->buttons_bar, "gdaui-data-proxy-info");
+	gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
+	gtk_widget_show (info->priv->buttons_bar);
 
 	if (flags & GDAUI_DATA_PROXY_INFO_CURRENT_ROW) {
 		if (info->priv->tool_item) {
@@ -506,12 +536,14 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 			gtk_widget_destroy (gtk_bin_get_child (GTK_BIN (info->priv->tool_item)));
 			info->priv->row_spin = NULL;
 			info->priv->current_sample = NULL;
+			gtk_toolbar_insert (GTK_TOOLBAR (info->priv->buttons_bar),
+					    GTK_TOOL_ITEM (info->priv->tool_item), -1);
 		}
 		else {
 			GtkToolItem *ti;
 			ti = gtk_tool_item_new  ();
 			gtk_toolbar_insert (GTK_TOOLBAR (info->priv->buttons_bar), ti, -1);
-			info->priv->tool_item = GTK_WIDGET (ti);	
+			info->priv->tool_item = GTK_WIDGET (g_object_ref (G_OBJECT (ti)));
 		}
 
 		GtkWidget *toolwid;
