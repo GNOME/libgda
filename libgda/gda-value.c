@@ -1368,14 +1368,15 @@ gda_value_new_from_xml (const xmlNodePtr node)
 
 /**
  * gda_value_free:
- * @value: (transfer full): the resource to free.
+ * @value: (transfer full) (allow-none): the resource to free (or %NULL)
  *
  * Deallocates all memory associated to a #GValue.
  */
 void
 gda_value_free (GValue *value)
 {
-	g_return_if_fail (value);
+	if (!value)
+		return;
 
 	l_g_value_unset (value);
 	g_free (value);
