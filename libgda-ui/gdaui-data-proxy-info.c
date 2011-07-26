@@ -701,7 +701,9 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 						str = g_strdup_printf (" / %d", proxy_rows);
 				}
 				BLOCK_SPIN;
-				gtk_spin_button_set_range (GTK_SPIN_BUTTON (info->priv->row_spin), 1, proxy_rows);
+				gtk_spin_button_set_range (GTK_SPIN_BUTTON (info->priv->row_spin),
+							   proxy_rows > 0 ? 1 : 0,
+							   proxy_rows);
 				if (row >= 0)
 					if (gtk_spin_button_get_value (GTK_SPIN_BUTTON (info->priv->row_spin)) != row+1)
 						gtk_spin_button_set_value (GTK_SPIN_BUTTON (info->priv->row_spin), row+1);
