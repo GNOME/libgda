@@ -49,6 +49,7 @@ static GError *iter_validate_set_cb (GdaDataModelIter *iter, GdauiRawForm *form)
 static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiRawForm *form);
 static void proxy_changed_cb (GdaDataProxy *proxy, GdauiRawForm *form);
 static void proxy_reset_cb (GdaDataProxy *proxy, GdauiRawForm *form);
+static void proxy_access_changed_cb (GdaDataProxy *proxy, GdauiRawForm *form);
 static void proxy_row_inserted_or_removed_cb (GdaDataProxy *proxy, gint row, GdauiRawForm *form);
 
 /* GdauiDataProxy interface */
@@ -346,6 +347,8 @@ gdaui_raw_form_dispose (GObject *object)
 							      G_CALLBACK (proxy_changed_cb), form);
 			g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
 							      G_CALLBACK (proxy_reset_cb), form);
+			g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+							      G_CALLBACK (proxy_access_changed_cb), form);
 			g_object_unref (form->priv->proxy);
 			form->priv->proxy = NULL;
 		}
@@ -417,6 +420,8 @@ gdaui_raw_form_set_property (GObject *object,
 									      G_CALLBACK (proxy_changed_cb), form);
 					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
 									      G_CALLBACK (proxy_reset_cb), form);
+					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+									      G_CALLBACK (proxy_access_changed_cb), form);
 					g_object_unref (G_OBJECT (form->priv->proxy));
 					form->priv->proxy = NULL;
 					form->priv->model = NULL;
@@ -447,6 +452,8 @@ gdaui_raw_form_set_property (GObject *object,
 							  G_CALLBACK (proxy_changed_cb), form);
 					g_signal_connect (G_OBJECT (form->priv->proxy), "reset",
 							  G_CALLBACK (proxy_reset_cb), form);
+					g_signal_connect (G_OBJECT (form->priv->proxy), "access-changed",
+							  G_CALLBACK (proxy_access_changed_cb), form);
 
 					/* we don't want chuncking */
 					g_object_set (object, "paramlist", form->priv->iter, NULL);
@@ -571,6 +578,12 @@ proxy_reset_cb (GdaDataProxy *proxy, GdauiRawForm *form)
 	g_object_set (G_OBJECT (form), "model", proxy, NULL);
 	g_object_unref (G_OBJECT (proxy));
 	g_signal_emit_by_name (G_OBJECT (form), "selection-changed");
+}
+
+static void
+proxy_access_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, GdauiRawForm *form)
+{
+	iter_row_changed_cb (form->priv->iter, gda_data_model_iter_get_row (form->priv->iter), form);
 }
 
 static void

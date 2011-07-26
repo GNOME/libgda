@@ -1338,6 +1338,8 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 	}
 #endif
 
+	g_signal_emit_by_name (model, "access-changed");
+
 	return TRUE;
 }
 

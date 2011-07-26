@@ -198,6 +198,22 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 
+		/**
+		 * GdaDataModel::access-changed
+		 * @model: the #GdaDataModel
+		 *
+		 * Gets emitted when @model's access flags have changed. Use
+		 * gda_data_model_get_access_flags() to get the access flags.
+		 */
+		gda_data_model_signals[RESET] =
+			g_signal_new ("access-changed",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, access_changed),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
+
 		initialized = TRUE;
 	}
 	g_static_rec_mutex_unlock (&init_mutex);

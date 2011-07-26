@@ -122,6 +122,7 @@ struct _GdaDataModelIface {
 	void                 (* row_removed)        (GdaDataModel *model, gint row);
 	void                 (* changed)            (GdaDataModel *model);
 	void                 (* reset)              (GdaDataModel *model);
+	void                 (* access_changed)     (GdaDataModel *model);
 
 	/* getting more information about a data model */
 	GError             **(* i_get_exceptions)   (GdaDataModel *model);
