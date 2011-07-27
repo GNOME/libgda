@@ -73,6 +73,7 @@ enum {
 	ROW_UPDATED,
 	ROW_REMOVED,
 	RESET,
+	ACCESS_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -205,7 +206,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 		 * Gets emitted when @model's access flags have changed. Use
 		 * gda_data_model_get_access_flags() to get the access flags.
 		 */
-		gda_data_model_signals[RESET] =
+		gda_data_model_signals[ACCESS_CHANGED] =
 			g_signal_new ("access-changed",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
