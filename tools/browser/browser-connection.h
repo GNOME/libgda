@@ -76,6 +76,7 @@ GType               browser_connection_get_type               (void) G_GNUC_CONS
 
 BrowserConnection  *browser_connection_new                    (GdaConnection *cnc);
 const gchar        *browser_connection_get_name               (BrowserConnection *bcnc);
+gchar              *browser_connection_get_long_name          (BrowserConnection *bcnc);
 const GdaDsnInfo   *browser_connection_get_information        (BrowserConnection *bcnc);
 
 gboolean            browser_connection_is_busy                (BrowserConnection *bcnc, gchar **out_reason);
