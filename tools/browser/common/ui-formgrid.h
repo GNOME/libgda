@@ -70,6 +70,7 @@ void              ui_formgrid_set_sample_size     (UiFormGrid *formgrid, gint sa
 GdauiRawGrid     *ui_formgrid_get_grid_widget     (UiFormGrid *formgrid);
 
 void              ui_formgrid_set_connection      (UiFormGrid *formgrid, BrowserConnection *bcnc);
+GtkUIManager     *ui_formgrid_get_ui_manager      (UiFormGrid *formgrid);
 
 G_END_DECLS
 

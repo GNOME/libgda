@@ -333,6 +333,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	gtk_ui_manager_ensure_update (uimanager);
 	gtk_box_pack_start (GTK_BOX (hbox), formgrid->priv->info, TRUE, TRUE, 0);
 	gtk_widget_show (formgrid->priv->info);
+	g_object_unref (G_OBJECT (uimanager));
 
 
 	/*gchar *tmp;
@@ -346,6 +347,21 @@ ui_formgrid_init (UiFormGrid *formgrid)
 			  G_CALLBACK (selection_changed_cb), formgrid);
 	g_signal_connect (formgrid->priv->raw_form, "selection-changed",
 			  G_CALLBACK (selection_changed_cb), formgrid);
+}
+
+/**
+ * ui_formgrid_get_ui_manager:
+ *
+ * Returns: (transfer none): the #GtkUIManager
+ */
+GtkUIManager *
+ui_formgrid_get_ui_manager (UiFormGrid *formgrid)
+{
+	GtkUIManager *uimanager;
+	g_return_val_if_fail (UI_IS_FORMGRID (formgrid), NULL);
+	g_object_get (G_OBJECT (formgrid->priv->info), "ui-manager", &uimanager, NULL);
+	g_object_unref (uimanager);
+	return uimanager;
 }
 
 static void
