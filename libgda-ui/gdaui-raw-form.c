@@ -195,17 +195,17 @@ static void action_last_record_cb (GtkAction *action, GdauiRawForm *form);
 static void action_filter_cb (GtkAction *action, GdauiRawForm *form);
 
 static GtkToggleActionEntry ui_actions_t[] = {
-	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, N_("Delete the selected entry"), G_CALLBACK (action_delete_cb), FALSE},
+	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, N_("Delete the current record"), G_CALLBACK (action_delete_cb), FALSE},
 };
 
 static GtkActionEntry ui_actions[] = {
-	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, N_("Create a new data entry"), G_CALLBACK (action_new_cb)},
-	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, N_("Commit the latest changes"), G_CALLBACK (action_commit_cb)},
+	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, N_("Create a new record"), G_CALLBACK (action_new_cb)},
+	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, N_("Commit the modifications"), G_CALLBACK (action_commit_cb)},
 	{ "ActionReset", GTK_STOCK_CLEAR, "_Clear", NULL, N_("Clear all the modifications"), G_CALLBACK (action_reset_cb)},
-	{ "ActionFirstRecord", GTK_STOCK_GOTO_FIRST, "_First record", NULL, N_("Go to first record of records"), G_CALLBACK (action_first_record_cb)},
-	{ "ActionLastRecord", GTK_STOCK_GOTO_LAST, "_Last record", NULL, N_("Go to last record of records"), G_CALLBACK (action_last_record_cb)},
-	{ "ActionPrevRecord", GTK_STOCK_GO_BACK, "_Previous record", NULL, N_("Go to previous record of records"), G_CALLBACK (action_prev_record_cb)},
-	{ "ActionNextRecord", GTK_STOCK_GO_FORWARD, "Ne_xt record", NULL, N_("Go to next record of records"), G_CALLBACK (action_next_record_cb)},
+	{ "ActionFirstRecord", GTK_STOCK_GOTO_FIRST, "_First record", NULL, N_("Go to first record"), G_CALLBACK (action_first_record_cb)},
+	{ "ActionLastRecord", GTK_STOCK_GOTO_LAST, "_Last record", NULL, N_("Go to last record"), G_CALLBACK (action_last_record_cb)},
+	{ "ActionPrevRecord", GTK_STOCK_GO_BACK, "_Previous record", NULL, N_("Go to previous record"), G_CALLBACK (action_prev_record_cb)},
+	{ "ActionNextRecord", GTK_STOCK_GO_FORWARD, "Ne_xt record", NULL, N_("Go to next record"), G_CALLBACK (action_next_record_cb)},
 	{ "ActionFilter", GTK_STOCK_FIND, "Filter", NULL, N_("Filter records"), G_CALLBACK (action_filter_cb)}
 };
 

@@ -412,33 +412,48 @@ raw_grid_selection_changed_cb (G_GNUC_UNUSED GdauiRawGrid *grid, GdauiDataProxyI
  * Modification buttons (Commit changes, Reset info, New entry, Delete)
  *
  */
+static const gchar *ui_base =
+	"<ui>"
+	"  <toolbar name='ToolBar'>"
+	"    <placeholder name='RowModif'/>"
+	"    <placeholder name='RowModifExtension'/>"
+	"    <placeholder name='RowMove'/>"
+	"    <placeholder name='ChunkChange'/>"
+	"    <toolitem action='ActionFilter'/>"
+	"  </toolbar>"
+	"</ui>";
+
 static const gchar *ui_row_modif =
 	"<ui>"
 	"  <toolbar name='ToolBar'>"
-	"    <toolitem action='ActionNew'/>"
-	"    <toolitem action='ActionDelete'/>"
-	"    <toolitem action='ActionCommit'/>"
-	"    <toolitem action='ActionReset'/>"
+	"    <placeholder name='RowModif'>"
+	"      <toolitem action='ActionNew'/>"
+	"      <toolitem action='ActionDelete'/>"
+	"      <toolitem action='ActionCommit'/>"
+	"      <toolitem action='ActionReset'/>"
+	"    </placeholder>"
 	"  </toolbar>"
 	"</ui>";
 static const gchar *ui_row_move =
 	"<ui>"
 	"  <toolbar name='ToolBar'>"
-	"    <toolitem action='ActionFirstRecord'/>"
-	"    <toolitem action='ActionPrevRecord'/>"
-	"    <toolitem action='ActionNextRecord'/>"
-	"    <toolitem action='ActionLastRecord'/>"
-	"    <toolitem action='ActionFilter'/>"
+	"    <placeholder name='RowMove'>"
+	"      <toolitem action='ActionFirstRecord'/>"
+	"      <toolitem action='ActionPrevRecord'/>"
+	"      <toolitem action='ActionNextRecord'/>"
+	"      <toolitem action='ActionLastRecord'/>"
+	"    </placeholder>"
 	"  </toolbar>"
 	"</ui>";
 static const gchar *ui_chunck_change =
 	"<ui>"
 	"  <toolbar name='ToolBar'>"
-	"    <toolitem action='ActionFirstChunck'/>"
-	"    <toolitem action='ActionPrevChunck'/>"
-	"    <toolitem action='ActionNextChunck'/>"
-	"    <toolitem action='ActionLastChunck'/>"
-	"    <toolitem action='ActionFilter'/>"
+	"    <placeholder name='ChunkChange'>"
+	"      <toolitem action='ActionFirstChunck'/>"
+	"      <toolitem action='ActionPrevChunck'/>"
+	"      <toolitem action='ActionNextChunck'/>"
+	"      <toolitem action='ActionLastChunck'/>"
+	"    </placeholder>"
 	"  </toolbar>"
 	"</ui>";
 
@@ -473,6 +488,22 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		gtk_widget_unparent (info->priv->tool_item);
 	}
 
+	gboolean row_modif_needed = FALSE;
+	gboolean row_move_needed = FALSE;
+	gboolean chunk_change_needed = FALSE;
+	gboolean ensure_update = FALSE;
+
+	if (flags & (GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
+		     GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS |
+		     GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)) {
+		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS)
+			row_modif_needed = TRUE;
+		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS)
+			row_move_needed = TRUE;
+		if (flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)
+			chunk_change_needed = TRUE;
+	}
+
 	if (info->priv->uimanager) {
 		if (info->priv->merge_id_row_modif) {
 			gtk_ui_manager_remove_ui (info->priv->uimanager, info->priv->merge_id_row_modif);
@@ -488,10 +519,11 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		}
 		gtk_ui_manager_remove_action_group (info->priv->uimanager, info->priv->agroup);
 		info->priv->agroup = NULL;
-		gtk_ui_manager_ensure_update (info->priv->uimanager);
 	}
-	else
+	else {
 		info->priv->uimanager = gtk_ui_manager_new ();	
+		gtk_ui_manager_add_ui_from_string (info->priv->uimanager, ui_base, -1, NULL);
+	}
 
 	info->priv->agroup = gdaui_data_proxy_get_actions_group (info->priv->data_proxy);
 	gtk_ui_manager_insert_action_group (info->priv->uimanager, info->priv->agroup, 0);
@@ -785,25 +817,25 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 			GdauiDataProxyWriteMode mode;
 			mode = gdaui_data_proxy_get_write_mode (info->priv->data_proxy);
 
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionCommit");
+			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowModif/ActionCommit");
 			g_object_set (G_OBJECT (action), "sensitive", changed ? TRUE : FALSE, NULL);
 			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
 				gtk_action_set_visible (action, FALSE);
 			else
 				gtk_action_set_visible (action, TRUE);
 
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionReset");
+			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowModif/ActionReset");
 			g_object_set (G_OBJECT (action), "sensitive", changed ? TRUE : FALSE, NULL);
 			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
 				gtk_action_set_visible (action, FALSE);
 			else
 				gtk_action_set_visible (action, TRUE);
 
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionNew");
+			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowModif/ActionNew");
 			g_object_set (G_OBJECT (action), "sensitive",
 				      flags & GDA_DATA_MODEL_ACCESS_INSERT ? TRUE : FALSE, NULL);
 
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionDelete");
+			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowModif/ActionDelete");
 			gtk_action_block_activate (action);
 			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), to_be_deleted);
 			gtk_action_unblock_activate (action);
@@ -833,14 +865,14 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 
 	/* current row moving */
 	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionFirstRecord");
+		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowMove/ActionFirstRecord");
 		g_object_set (G_OBJECT (action), "sensitive", (row <= 0) ? FALSE : TRUE, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionPrevRecord");
+		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowMove/ActionPrevRecord");
 		g_object_set (G_OBJECT (action), "sensitive", (row <= 0) ? FALSE : TRUE, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionNextRecord");
+		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowMove/ActionNextRecord");
 		g_object_set (G_OBJECT (action), "sensitive", (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE,
 			      NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionLastRecord");
+		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowMove/ActionLastRecord");
 		g_object_set (G_OBJECT (action), "sensitive", (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE,
 			      NULL);
 	}
@@ -849,22 +881,23 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS) {
 		gboolean abool;
 		wrows = (sample_size > 0) ? TRUE : FALSE;
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionFirstChunck");
+		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ChunkChange/ActionFirstChunck");
 		g_object_set (G_OBJECT (action), "sensitive", wrows && sample_first_row > 0 ? TRUE : FALSE, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionPrevChunck");
+		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ChunkChange/ActionPrevChunck");
 		g_object_set (G_OBJECT (action), "sensitive", wrows && sample_first_row > 0 ? TRUE : FALSE, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionNextChunck");
+		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ChunkChange/ActionNextChunck");
 		abool = (proxied_rows != -1) ? wrows && (sample_last_row < proxied_rows - 1) : TRUE;
 		g_object_set (G_OBJECT (action), "sensitive", abool, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionLastChunck");
+		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ChunkChange/ActionLastChunck");
 		g_object_set (G_OBJECT (action), "sensitive", wrows && (sample_last_row < proxied_rows - 1), NULL);
 	}
 
 	/* filter */
-	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_NO_FILTER) {
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionFilter");
+	action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionFilter");
+	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_NO_FILTER)
 		g_object_set (G_OBJECT (action), "visible", FALSE, NULL);
-	}
+	else
+		g_object_set (G_OBJECT (action), "visible", TRUE, NULL);
 
 	if (info->priv->uimanager)
 		gtk_ui_manager_ensure_update (info->priv->uimanager);

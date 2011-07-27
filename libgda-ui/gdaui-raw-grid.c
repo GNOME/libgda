@@ -177,17 +177,17 @@ static void action_last_chunck_cb (GtkAction *action, GdauiRawGrid *grid);
 static void action_filter_cb (GtkAction *action, GdauiRawGrid *grid);
 
 static GtkToggleActionEntry ui_actions_t[] = {
-	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, N_("Delete the selected entry"), G_CALLBACK (action_delete_cb), FALSE},
+	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, N_("Delete the current record"), G_CALLBACK (action_delete_cb), FALSE},
 };
 
 static GtkActionEntry ui_actions[] = {
-	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, N_("Create a new data entry"), G_CALLBACK (action_new_cb)},
-	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, N_("Commit the latest changes"), G_CALLBACK (action_commit_cb)},
+	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, N_("Create a new record"), G_CALLBACK (action_new_cb)},
+	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, N_("Commit the modifications"), G_CALLBACK (action_commit_cb)},
 	{ "ActionReset", GTK_STOCK_CLEAR, "_Clear", NULL, N_("Clear all the modifications"), G_CALLBACK (action_reset_cb)},
-	{ "ActionFirstChunck", GTK_STOCK_GOTO_FIRST, "_First chunck", NULL, N_("Go to first chunck of records"), G_CALLBACK (action_first_chunck_cb)},
-	{ "ActionLastChunck", GTK_STOCK_GOTO_LAST, "_Last chunck", NULL, N_("Go to last chunck of records"), G_CALLBACK (action_last_chunck_cb)},
-	{ "ActionPrevChunck", GTK_STOCK_GO_BACK, "_Previous chunck", NULL, N_("Go to previous chunck of records"), G_CALLBACK (action_prev_chunck_cb)},
-	{ "ActionNextChunck", GTK_STOCK_GO_FORWARD, "Ne_xt chunck", NULL, N_("Go to next chunck of records"), G_CALLBACK (action_next_chunck_cb)},
+	{ "ActionFirstChunck", GTK_STOCK_GOTO_FIRST, "_First chunck", NULL, N_("Go to first chunck"), G_CALLBACK (action_first_chunck_cb)},
+	{ "ActionLastChunck", GTK_STOCK_GOTO_LAST, "_Last chunck", NULL, N_("Go to last chunck"), G_CALLBACK (action_last_chunck_cb)},
+	{ "ActionPrevChunck", GTK_STOCK_GO_BACK, "_Previous chunck", NULL, N_("Go to previous chunck"), G_CALLBACK (action_prev_chunck_cb)},
+	{ "ActionNextChunck", GTK_STOCK_GO_FORWARD, "Ne_xt chunck", NULL, N_("Go to next chunck"), G_CALLBACK (action_next_chunck_cb)},
 	{ "ActionFilter", GTK_STOCK_FIND, "Filter", NULL, N_("Filter records"), G_CALLBACK (action_filter_cb)}
 };
 
