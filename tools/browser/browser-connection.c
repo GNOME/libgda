@@ -868,6 +868,36 @@ browser_connection_get_name (BrowserConnection *bcnc)
 }
 
 /**
+ * browser_connection_get_long_name:
+ * @bcnc: a #BrowserConnection
+ *
+ * Get the "long" name of @bcnc
+ *
+ * Returns: a new string
+ */
+gchar *
+browser_connection_get_long_name (BrowserConnection *bcnc)
+{
+	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	const gchar *cncname;
+	const GdaDsnInfo *dsn;
+	GString *title;
+
+	dsn = browser_connection_get_information (bcnc);
+	cncname = browser_connection_get_name (bcnc);
+	title = g_string_new (_("Connection"));
+	g_string_append (title, " ");
+	g_string_append_printf (title, "'%s'", cncname ? cncname : _("unnamed"));
+	if (dsn) {
+		if (dsn->name)
+			g_string_append_printf (title, ", %s '%s'", _("data source"), dsn->name);
+		if (dsn->provider)
+			g_string_append_printf (title, " (%s)", dsn->provider);
+	}
+	return g_string_free (title, FALSE);
+}
+
+/**
  * browser_connection_get_information
  * @bcnc: a #BrowserConnection
  *

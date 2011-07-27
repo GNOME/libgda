@@ -383,9 +383,6 @@ BrowserWindow*
 browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 {
 	BrowserWindow *bwin;
-	const gchar *cncname;
-	const GdaDsnInfo *dsn;
-	GString *title;
 
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
 
@@ -394,19 +391,11 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	g_signal_connect (bcnc, "transaction-status-changed",
 			  G_CALLBACK (transaction_status_changed_cb), bwin);
 
-	dsn = browser_connection_get_information (bcnc);
-	cncname = browser_connection_get_name (bcnc);
-	title = g_string_new (_("Connection"));
-	g_string_append (title, " ");
-	g_string_append_printf (title, "'%s'", cncname ? cncname : _("unnamed"));
-	if (dsn) {
-		if (dsn->name)
-			g_string_append_printf (title, ", %s '%s'", _("data source"), dsn->name);
-		if (dsn->provider)
-			g_string_append_printf (title, " (%s)", dsn->provider);
-	}
-	gtk_window_set_title (GTK_WINDOW (bwin), title->str);
-	g_string_free (title, TRUE);
+	gchar *tmp;
+	tmp = browser_connection_get_long_name (bcnc);
+	gtk_window_set_title (GTK_WINDOW (bwin), tmp);
+	g_free (tmp);
+
 	gtk_window_set_default_size ((GtkWindow*) bwin, 900, 650);
 	g_signal_connect (G_OBJECT (bwin), "delete-event",
                           G_CALLBACK (delete_event), bwin);
@@ -759,9 +748,10 @@ connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy, gchar *reason, Br
 		gtk_action_set_sensitive (action, !is_busy);
 	}
 
-	const gchar *cncname;
-	cncname = browser_connection_get_name (bcnc);
+	gchar *cncname;
+	cncname = browser_connection_get_long_name (bcnc);
 	action = gtk_action_group_get_action (bwin->priv->cnc_agroup, cncname);
+	g_free (cncname);
 	if (action)
 		gtk_action_set_sensitive (action, !is_busy);
 }
@@ -771,20 +761,21 @@ static void
 connection_added_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, BrowserWindow *bwin)
 {
 	GtkAction *action;
-	const gchar *cncname;
+	gchar *cncname;
 	guint mid;
 
 	mid = gtk_ui_manager_new_merge_id (bwin->priv->ui_manager);
-	cncname = browser_connection_get_name (bcnc);
+	cncname = browser_connection_get_long_name (bcnc);
 	action = gtk_action_new (cncname, cncname, NULL, NULL);
 	gtk_action_group_add_action (bwin->priv->cnc_agroup, action);
 	guint *amid = g_new (guint, 1);
 	*amid = mid;
 	g_object_set_data_full (G_OBJECT (action), "mid", amid, g_free);
 	
-	gtk_ui_manager_add_ui (bwin->priv->ui_manager, mid,  "/MenuBar/Window/WindowNewOthers/CncList",
+	gtk_ui_manager_add_ui (bwin->priv->ui_manager, mid, "/MenuBar/Window/WindowNewOthers/CncList",
 			       cncname, cncname,
-			       GTK_UI_MANAGER_AUTO, FALSE);	
+			       GTK_UI_MANAGER_AUTO, FALSE);
+	g_free (cncname);
 	g_signal_connect (action, "activate",
 			  G_CALLBACK (window_new_with_cnc_cb), bwin);
 	g_object_set_data (G_OBJECT (action), "bcnc", bcnc);
@@ -806,11 +797,12 @@ connection_removed_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc
 {
 	GtkAction *action;
 	gchar *path;
-	const gchar *cncname;
+	gchar *cncname;
 	guint *mid;
 
-	cncname = browser_connection_get_name (bcnc);
+	cncname = browser_connection_get_long_name (bcnc);
 	path = g_strdup_printf ("/MenuBar/Window/WindowNewOthers/CncList/%s", cncname);
+	g_free (cncname);
 	action = gtk_ui_manager_get_action (bwin->priv->ui_manager, path);
 	g_free (path);
 	g_assert (action);
