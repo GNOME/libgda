@@ -125,7 +125,8 @@ void       query_editor_show_tooltip (QueryEditor *editor, gboolean show_tooltip
 /* history API */
 void       query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *hist_batch);
 void       query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist_item);
-QueryEditorHistoryItem *query_editor_get_current_history_item (QueryEditor *editor);
+QueryEditorHistoryItem *query_editor_get_current_history_item (QueryEditor *editor,
+							       QueryEditorHistoryBatch **out_in_batch);
 QueryEditorHistoryBatch *query_editor_get_current_history_batch (QueryEditor *editor);
 gboolean   query_editor_history_is_empty (QueryEditor *editor);
 

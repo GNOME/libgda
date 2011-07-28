@@ -42,6 +42,10 @@ struct _QueryResult {
 
 struct _QueryResultClass {
 	GtkBoxClass parent_class;
+
+	/* signal */
+	void      (*rerun_requested) (QueryResult *qres, QueryEditorHistoryBatch *batch,
+				      QueryEditorHistoryItem *item);
 };
 
 
