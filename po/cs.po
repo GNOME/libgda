@@ -7588,11 +7588,11 @@ msgstr "Zobrazit"
 
 #: ../tools/browser/browser-window.c:291
 msgid "_Perspective"
-msgstr "_Hledisko"
+msgstr "_Pohled"
 
 #: ../tools/browser/browser-window.c:291
 msgid "Perspective"
-msgstr "Hledisko"
+msgstr "Pohled"
 
 #: ../tools/browser/browser-window.c:292
 msgid "_Window"
@@ -7716,8 +7716,8 @@ msgid ""
 "back to previous perspective through the 'Perspective/%s' menu, or using the "
 "'%s' shortcut"
 msgstr ""
-"Současné hledisko bylo změněno na hledisko „%s“, zpátky na předchozí "
-"hledisko se můžete přepnout přes nabídku „Hledisko/%s“ nebo pomocí klávesové "
+"Současný pohled byl změněn na pohled „%s“, zpátky na předchozí "
+"pohled se můžete přepnout přes nabídku „Pohled/%s“ nebo pomocí klávesové "
 "zkratky „%s“"
 
 #: ../tools/browser/connection-binding-properties.c:153
@@ -8447,7 +8447,7 @@ msgstr "Zobrazit potřebné proměnné"
 #: ../tools/browser/ldap-browser/ldap-search-page.c:327
 #: ../tools/browser/query-exec/query-console-page.c:376
 msgid "Execute"
-msgstr "Spustit"
+msgstr "Provést"
 
 #: ../tools/browser/data-manager/data-console.c:408
 msgid ""
@@ -8656,7 +8656,7 @@ msgstr "Pole zapojená do cizího klíče směřujícího na „%s“ nejsou zn�
 #: ../tools/browser/data-manager/data-source.c:951
 #, c-format
 msgid "No SELECT statement to execute"
-msgstr "Žádný příkaz SELECT ke spuštění"
+msgstr "Žádný příkaz SELECT k provedení"
 
 #: ../tools/browser/data-manager/data-source.c:1180
 #, c-format
@@ -8778,7 +8778,7 @@ msgstr "Očekáván kořenový uzel <%s>"
 #: ../tools/browser/data-manager/xml-spec-editor.c:315
 #: ../tools/browser/query-exec/query-console-page.c:316
 msgid "SQL code to execute:"
-msgstr "Kód SQL ke spuštění:"
+msgstr "Kód SQL k provedení:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:404
 msgid "Could not get information about LDAP class"
@@ -9106,7 +9106,7 @@ msgstr "Provést SQL v editoru"
 
 #: ../tools/browser/query-exec/query-console-page.c:382
 msgid "Indent"
-msgstr "Odsazení"
+msgstr "Odsadit"
 
 #: ../tools/browser/query-exec/query-console-page.c:383
 msgid ""
@@ -9148,7 +9148,7 @@ msgstr "Vymazat historii"
 
 #: ../tools/browser/query-exec/query-console-page.c:445
 msgid "Execution Results:"
-msgstr "Výsledky zpracování:"
+msgstr "Výsledky provádění:"
 
 #: ../tools/browser/query-exec/query-console-page.c:698
 msgid "New favorite"
