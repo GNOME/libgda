@@ -1084,6 +1084,7 @@ gboolean
 gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *mod_stmt, GError **error)
 {
 	ModType mtype = NB_QUERIES;
+	gboolean coltypeschanged = FALSE;
 
 	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
 	g_return_val_if_fail (model->priv, FALSE);
@@ -1267,20 +1268,23 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 			}
 		}
 
-		if (mtype == INS_QUERY) {
-			/* update GdaDataSelect's column attributes with GdaHolder's attributes */
-			for (list = params->holders; list; list = list->next) {
-				GdaHolder *holder = GDA_HOLDER (list->data);
-				gint num;
-				gboolean is_old;
-				if (param_name_to_int (gda_holder_get_id (holder), &num, &is_old) &&
-				    !is_old) {
-					GdaColumn *gdacol;
-					gdacol = gda_data_model_describe_column ((GdaDataModel*) model, num);
-					if (!gdacol)
-						continue;
+		/* update GdaDataSelect's column attributes with GdaHolder's attributes */
+		for (list = params->holders; list; list = list->next) {
+			GdaHolder *holder = GDA_HOLDER (list->data);
+			gint num;
+			gboolean is_old;
+			if (param_name_to_int (gda_holder_get_id (holder), &num, &is_old) &&
+			    !is_old) {
+				GdaColumn *gdacol;
+				gdacol = gda_data_model_describe_column ((GdaDataModel*) model, num);
+				if (!gdacol)
+					continue;
+				if (mtype == INS_QUERY)
 					gda_column_set_default_value (gdacol,
 								      gda_holder_get_default_value (holder));
+				if (gda_column_get_g_type (gdacol) == GDA_TYPE_NULL) {
+					gda_column_set_g_type (gdacol, gda_holder_get_g_type (holder));
+					coltypeschanged = TRUE;
 				}
 			}
 		}
@@ -1338,7 +1342,9 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 	}
 #endif
 
-	g_signal_emit_by_name (model, "access-changed");
+	if (coltypeschanged)
+		gda_data_model_reset (GDA_DATA_MODEL (model));
+	g_signal_emit_by_name (GDA_DATA_MODEL (model), "access-changed");
 
 	return TRUE;
 }
@@ -1895,7 +1901,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 }
 
 static GdaValueAttribute
-gda_data_select_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
+gda_data_select_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
 	GdaValueAttribute flags = GDA_VALUE_ATTR_IS_UNCHANGED;
 	GdaDataSelect *imodel;
@@ -1903,15 +1909,38 @@ gda_data_select_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED 
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, 0);
 
-	if (imodel->priv->sh->modif_internals->safely_locked ||
-	    !imodel->priv->sh->modif_internals->modif_stmts [UPD_QUERY])
+	if (imodel->priv->sh->modif_internals->safely_locked)
 		flags = GDA_VALUE_ATTR_NO_MODIF;
+	else {
+		GdaStatement *stmt = NULL;
+		if (row == -1) {
+			/* this is for a "would be inserted" row */
+			stmt = imodel->priv->sh->modif_internals->modif_stmts [INS_QUERY];
+		}
+		else
+			stmt = imodel->priv->sh->modif_internals->modif_stmts [UPD_QUERY];
+		if (stmt) {
+			GdaSet *set;
+			if (gda_statement_get_parameters (stmt, &set, NULL) && set) {
+				gchar *tmp;
+				tmp = g_strdup_printf ("+%d", col);
+				if (!gda_set_get_holder (set, tmp))
+					flags |= GDA_VALUE_ATTR_NO_MODIF;
+				g_free (tmp);
+				g_object_unref (set);
+			}
+		}
+		else
+			flags |= GDA_VALUE_ATTR_NO_MODIF;
+	}
+
 	GdaColumn *gdacol = g_slist_nth_data (imodel->priv->sh->columns, col);
 	if (gdacol) {
 		if (gda_column_get_allow_null (gdacol))
 			flags |= GDA_VALUE_ATTR_CAN_BE_NULL;
 	}
 
+	/*g_print ("%s (%p, %d, %d) => %d\n", __FUNCTION__, model, col, row, flags);*/
 	return flags;
 }
 
