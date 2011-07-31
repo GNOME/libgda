@@ -2164,7 +2164,6 @@ msgstr "Nepojmenováno"
 
 #: ../libgda/gda-statement.c:507
 #, c-format
-#| msgid "Non handled data type '%s'"
 msgid "Can't handle default value of type '%s'"
 msgstr "Nelze obsloužit výchozí hodnotu typu „%s“"
 
@@ -4076,22 +4075,18 @@ msgid "Data to display"
 msgstr "Data, která se mají zobrazit"
 
 #: ../libgda-ui/gdaui-raw-form.c:198 ../libgda-ui/gdaui-raw-grid.c:180
-#| msgid "Change the current working directory"
 msgid "Delete the current record"
 msgstr "Smazat aktuální záznam"
 
 #: ../libgda-ui/gdaui-raw-form.c:202 ../libgda-ui/gdaui-raw-grid.c:184
-#| msgid "Create a new diagram"
 msgid "Create a new record"
 msgstr "Vytvořit nový záznam"
 
 #: ../libgda-ui/gdaui-raw-form.c:203 ../libgda-ui/gdaui-raw-grid.c:185
-#| msgid "Import specifications"
 msgid "Commit the modifications"
 msgstr "Odeslat změny"
 
 #: ../libgda-ui/gdaui-raw-form.c:204 ../libgda-ui/gdaui-raw-grid.c:186
-#| msgid "Unable to retrieve data after modifications"
 msgid "Clear all the modifications"
 msgstr "Zrušit změny"
 
@@ -4104,17 +4099,14 @@ msgid "Go to last record"
 msgstr "Přejít na poslední záznam"
 
 #: ../libgda-ui/gdaui-raw-form.c:207
-#| msgid "Move back to previous LDAP entry"
 msgid "Go to previous record"
 msgstr "Přejít na předchozí záznam"
 
 #: ../libgda-ui/gdaui-raw-form.c:208
-#| msgid "Move to next LDAP entry"
 msgid "Go to next record"
 msgstr "Přejít na následující záznam"
 
 #: ../libgda-ui/gdaui-raw-form.c:209 ../libgda-ui/gdaui-raw-grid.c:191
-#| msgid "Filter failed:"
 msgid "Filter records"
 msgstr "Filtrovat záznamy"
 
@@ -4124,12 +4116,10 @@ msgid "Can't append row to data model: %s"
 msgstr "Nelze přidat řádek do modelu dat: %s"
 
 #: ../libgda-ui/gdaui-raw-grid.c:187
-#| msgid "As first column"
 msgid "Go to first chunck"
 msgstr "Přejít na první blok"
 
 #: ../libgda-ui/gdaui-raw-grid.c:188
-#| msgid "Undo last change"
 msgid "Go to last chunck"
 msgstr "Přejít na poslední blok"
 
@@ -7716,8 +7706,8 @@ msgid ""
 "back to previous perspective through the 'Perspective/%s' menu, or using the "
 "'%s' shortcut"
 msgstr ""
-"Současný pohled byl změněn na pohled „%s“, zpátky na předchozí "
-"pohled se můžete přepnout přes nabídku „Pohled/%s“ nebo pomocí klávesové "
+"Současný hledisko bylo změněno na hledisko „%s“, zpátky na předchozí "
+"hledisko se můžete přepnout přes nabídku „Hledisko/%s“ nebo pomocí klávesové "
 "zkratky „%s“"
 
 #: ../tools/browser/connection-binding-properties.c:153
@@ -8447,7 +8437,7 @@ msgstr "Zobrazit potřebné proměnné"
 #: ../tools/browser/ldap-browser/ldap-search-page.c:327
 #: ../tools/browser/query-exec/query-console-page.c:376
 msgid "Execute"
-msgstr "Provést"
+msgstr "Spustit"
 
 #: ../tools/browser/data-manager/data-console.c:408
 msgid ""
