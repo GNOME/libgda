@@ -2730,7 +2730,7 @@ make_col_types_array (va_list args)
 {
 	GType *types;
 	gint max = 10;
-	gint col;
+	gint col, lastidx = 0;
 
 	types = g_new0 (GType, max + 1);
 	types [max] = G_TYPE_NONE;
@@ -2744,7 +2744,16 @@ make_col_types_array (va_list args)
 			types [max] = G_TYPE_NONE;
 		}
 		types [col] = va_arg (args, GType);
+		lastidx = col+1;
 	}
+
+	if (lastidx == 0) {
+		g_free (types);
+		types = NULL;
+	}
+	else
+		types [lastidx] = G_TYPE_NONE;
+
 	return types;
 }
 
