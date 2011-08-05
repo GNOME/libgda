@@ -332,6 +332,7 @@
 	gda_data_select_set_row_selection_condition_sql
 	gda_data_select_take_row
 	gda_default_escape_string
+	gda_default_get_type
 	gda_default_unescape_string
 	gda_diff_type_get_type
 	gda_dir_blob_get_filename
@@ -911,6 +912,7 @@
 	gda_value_new_binary
 	gda_value_new_blob
 	gda_value_new_blob_from_file
+	gda_value_new_default
 	gda_value_new_from_string
 	gda_value_new_from_xml
 	gda_value_new_timestamp_from_timet

@@ -41,6 +41,7 @@ G_BEGIN_DECLS
 
 /* Definition of the GType's values used in GValue*/
 #define GDA_TYPE_NULL (gda_null_get_type())
+#define GDA_TYPE_DEFAULT (gda_default_get_type())
 #define	GDA_TYPE_BINARY (gda_binary_get_type())
 #define GDA_TYPE_BLOB (gda_blob_get_type())
 #define	GDA_TYPE_GEOMETRIC_POINT (gda_geometricpoint_get_type())
@@ -53,6 +54,7 @@ G_BEGIN_DECLS
 
 /* Definition of the GDA_VALUE_HOLDS macros */
 #define GDA_VALUE_HOLDS_NULL(value)            G_VALUE_HOLDS(value, GDA_TYPE_NULL)
+#define GDA_VALUE_HOLDS_DEFAULT(value)         G_VALUE_HOLDS(value, GDA_TYPE_DEFAULT)
 #define GDA_VALUE_HOLDS_BINARY(value)          G_VALUE_HOLDS(value, GDA_TYPE_BINARY)
 #define GDA_VALUE_HOLDS_BLOB(value)            G_VALUE_HOLDS(value, GDA_TYPE_BLOB)
 #define GDA_VALUE_HOLDS_GEOMETRIC_POINT(value) G_VALUE_HOLDS(value, GDA_TYPE_GEOMETRIC_POINT)
@@ -181,13 +183,17 @@ typedef struct {
  * Each provider or connection can be queried about its blob support using the gda_server_provider_supports_feature() or
  * gda_connection_supports_feature() methods.
  *
- * The NULL value is a special case value: it is represented by to a zero-filled (uninitialized) #GValue and has a type equal
- * to %GDA_TYPE_NULL.
+ * There are two special value types which are:
+ * <itemizedlist>
+ *   <listitem><para>the GDA_TYPE_NULL value which never changes and acutally represents an SQL NULL value</para></listitem>
+ *   <listitem><para>the GDA_TYPE_DEFAULT value which represents a default value which &LIBGDA; does not interpret (such as when a table column's default value is a function call)</para></listitem>
+ * </itemizedlist>
  */
 
 GValue                           *gda_value_new (GType type);
 
 GValue                           *gda_value_new_null (void);
+GValue                           *gda_value_new_default (const gchar *default_val);
 GValue                           *gda_value_new_binary (const guchar *val, glong size);
 GValue                           *gda_value_new_blob (const guchar *val, glong size);
 GValue                           *gda_value_new_blob_from_file (const gchar *filename);
@@ -247,6 +253,7 @@ GdaBlob                          *gda_string_to_blob (const gchar *str);
 /* Custom data types */
 
 GType                             gda_null_get_type (void) G_GNUC_CONST;
+GType                             gda_default_get_type (void) G_GNUC_CONST;
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
 gpointer                          gda_numeric_copy (gpointer boxed);
 void                              gda_numeric_free (gpointer boxed);

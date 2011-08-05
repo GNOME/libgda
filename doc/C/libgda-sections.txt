@@ -812,6 +812,8 @@ GdaValueAttribute
 gda_value_new
 GDA_TYPE_NULL
 GDA_VALUE_HOLDS_NULL
+GDA_TYPE_DEFAULT
+GDA_VALUE_HOLDS_DEFAULT
 GDA_TYPE_BINARY
 GDA_VALUE_HOLDS_BINARY
 GDA_TYPE_BLOB
@@ -830,6 +832,7 @@ GDA_TYPE_TIMESTAMP
 GDA_VALUE_HOLDS_TIMESTAMP
 gda_value_new_null
 gda_value_set_null
+gda_value_new_default
 gda_value_copy
 gda_value_free
 gda_value_new_from_string
