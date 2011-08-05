@@ -1,6 +1,6 @@
 # Data file for the check_statement.c program.
 # Each line has the <id>|<string> format where <id> is referenced in the program
 #
-T1.1|{"holders":[{"type":"gint","id":"p1","name":"p1","value":"NULL","default_value":"NULL","is_default":"FALSE","is_valid":"FALSE","not_null":"TRUE"},{"type":"gfloat","id":"p2","name":"p2","value":"NULL","default_value":"12.3","is_default":"TRUE","is_valid":"TRUE","not_null":"TRUE"}],"nodes":[{"holder":0},{"holder":1}]}
+T1.1|{"holders":[{"type":"gint","id":"p1","name":"p1","value":"NULL","default_value":"NULL","is_default":"FALSE","is_valid":"FALSE","not_null":"TRUE"},{"type":"gfloat","id":"p2","name":"p2","value":"NULL","default_value":"12.300000","is_default":"TRUE","is_valid":"TRUE","not_null":"TRUE"}],"nodes":[{"holder":0},{"holder":1}]}
 T1.2|{"holders":[{"type":"gint","id":"p1","name":"p1","value":"NULL","default_value":"NULL","is_default":"FALSE","is_valid":"FALSE","not_null":"TRUE"}],"nodes":[{"holder":0}]}
 T1.3|{"holders":[{"type":"GDate","id":"vers","name":"vers","value":"NULL","default_value":"NULL","is_default":"FALSE","is_valid":"FALSE","not_null":"TRUE"},{"type":"gchararray","id":"aparam","name":"aparam","value":"NULL","default_value":"NULL","is_default":"FALSE","is_valid":"FALSE","not_null":"TRUE"}],"nodes":[{"holder":0},{"holder":1}]}
