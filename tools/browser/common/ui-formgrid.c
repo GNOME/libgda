@@ -1131,8 +1131,8 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 		return;
 
 	g_print ("Computing MOD STMTs\n");
-	if (! gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL))
-		return;
+	gda_data_select_compute_modification_statements_ext (GDA_DATA_SELECT (model),
+							     GDA_DATA_SELECT_COND_ALL_COLUMNS, NULL);
 
 	formgrid->priv->mod_stmt_auto_computed = TRUE;
 	g_object_get (model,
@@ -1148,5 +1148,7 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 			g_print ("STMT[%d] = [%s]\n", mod, sql);
 			g_free (sql);
 		}
+		else
+			g_print ("STMT[%d] = ---\n", mod);
 	}
 }
