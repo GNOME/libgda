@@ -121,6 +121,7 @@ libgda-ui/gdaui-cloud.c
 libgda-ui/gdaui-combo.c
 libgda-ui/gdaui-data-store.c
 libgda-ui/gdaui-data-proxy.c
+libgda-ui/gdaui-data-proxy-info.c
 libgda-ui/gdaui-data-filter.c
 libgda-ui/gdaui-init.c
 libgda-ui/gdaui-login.c
