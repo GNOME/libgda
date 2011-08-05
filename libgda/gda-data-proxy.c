@@ -1455,6 +1455,7 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 
 	gda_mutex_unlock (proxy->priv->mutex);
 
+	/*g_print ("%s (%p, %d, %d) => %d\n", __FUNCTION__, proxy, col, proxy_row, flags);*/
 	return flags;
 }
 

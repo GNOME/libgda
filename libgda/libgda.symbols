@@ -321,6 +321,7 @@
 	gda_data_select_add_exception
 	gda_data_select_compute_columns_attributes
 	gda_data_select_compute_modification_statements
+	gda_data_select_compute_modification_statements_ext
 	gda_data_select_compute_row_selection_condition
 	gda_data_select_error_quark
 	gda_data_select_get_connection

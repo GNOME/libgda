@@ -50,6 +50,19 @@ typedef enum {
 	GDA_DATA_SELECT_SAFETY_LOCKED_ERROR
 } GdaDataSelectError;
 
+/**
+ * GdaDataSelectConditionType:
+ * @GDA_DATA_SELECT_COND_PK: only primary key fields are used
+ * @GDA_DATA_SELECT_COND_ALL_COLUMNS: all the columns of the tables are used
+ *
+ * Defines what criteria gda_data_select_compute_modification_statements_ext() uses
+ * to uniquely identify a single row in a table when creating modification statements.
+ */
+typedef enum {
+	GDA_DATA_SELECT_COND_PK,
+	GDA_DATA_SELECT_COND_ALL_COLUMNS
+} GdaDataSelectConditionType;
+
 struct _GdaDataSelect {
 	GObject           object;
 	GdaDataSelectPrivate *priv;
@@ -107,6 +120,9 @@ gboolean       gda_data_select_compute_row_selection_condition (GdaDataSelect *m
 gboolean       gda_data_select_set_modification_statement      (GdaDataSelect *model, GdaStatement *mod_stmt, GError **error);
 gboolean       gda_data_select_set_modification_statement_sql  (GdaDataSelect *model, const gchar *sql, GError **error);
 gboolean       gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **error);
+gboolean       gda_data_select_compute_modification_statements_ext (GdaDataSelect *model,
+								    GdaDataSelectConditionType cond_type,
+								    GError **error);
 
 gboolean       gda_data_select_compute_columns_attributes      (GdaDataSelect *model, GError **error);
 GdaConnection *gda_data_select_get_connection                  (GdaDataSelect *model);

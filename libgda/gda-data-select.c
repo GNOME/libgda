@@ -1286,6 +1286,9 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 					gda_column_set_g_type (gdacol, gda_holder_get_g_type (holder));
 					coltypeschanged = TRUE;
 				}
+				if (model->prep_stmt && model->prep_stmt->types &&
+				    (model->prep_stmt->types [num] == GDA_TYPE_NULL))
+					model->prep_stmt->types [num] = gda_holder_get_g_type (holder);
 			}
 		}
 
@@ -1357,10 +1360,35 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
  * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
  * Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
  *
+ * This function is similar to calling gda_data_select_compute_modification_statements_ext with
+ * @cond_type set to %GDA_DATA_SELECT_COND_PK
+ *
  * Returns: %TRUE if no error occurred. If %FALSE is returned, then some modification statement may still have been computed
  */
 gboolean
 gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **error)
+{
+	return gda_data_select_compute_modification_statements_ext (model, GDA_DATA_SELECT_COND_PK,
+								    error);
+}
+
+/**
+ * gda_data_select_compute_modification_statements_ext:
+ * @model: a #GdaDataSelect data model
+ * @cond_type: the type of condition for the modifications where one row only should be identified
+ * @error: a place to store errors, or %NULL
+ *
+ * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
+ * Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
+ *
+ * Returns: %TRUE if no error occurred. If %FALSE is returned, then some modification statement may still have been computed
+ *
+ * Since: 4.2.9
+ */
+gboolean
+gda_data_select_compute_modification_statements_ext (GdaDataSelect *model,
+						     GdaDataSelectConditionType cond_type,
+						     GError **error)
 {
 	GdaStatement *stmt;
 	ModType mtype;
@@ -1384,10 +1412,12 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **
 			model->priv->sh->modif_internals->modif_stmts[mtype] = NULL;
 		}
 
-	retval = gda_compute_dml_statements (model->priv->cnc, stmt, TRUE,
+	retval = gda_compute_dml_statements (model->priv->cnc, stmt,
+					     cond_type == GDA_DATA_SELECT_COND_PK ? TRUE : FALSE,
 					     &(modif_stmts[INS_QUERY]),
 					     NULL, NULL, error);
-	retval = gda_compute_dml_statements (model->priv->cnc, stmt, TRUE,
+	retval = gda_compute_dml_statements (model->priv->cnc, stmt,
+					     cond_type == GDA_DATA_SELECT_COND_PK ? TRUE : FALSE,
 					     NULL,
 					     &(modif_stmts[UPD_QUERY]),
 					     &(modif_stmts[DEL_QUERY]), error) && retval;
@@ -1413,6 +1443,7 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **
 
 	return retval;
 }
+
 
 static gboolean
 row_selection_condition_foreach_func (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, GError **error)
