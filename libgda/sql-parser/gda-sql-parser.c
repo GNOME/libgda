@@ -1494,7 +1494,7 @@ getToken (GdaSqlParser *parser)
 				else {
 					for (i=1; z[i] && (! isspace (z[i])) &&
 						     (z[i] != parser->priv->context->delimiter) && (z[i] != '*') &&
-						     (z[i] != '\'') && (z[i] != '"'); i++){}
+						     (z[i] != '\'') && (z[i] != '"') && (z[i] != '#'); i++){}
 					parser->priv->context->token_type = L_RAWSTRING;
 					consumed_chars = i;
 				}
@@ -1527,6 +1527,8 @@ getToken (GdaSqlParser *parser)
 		g_print ("%d (%s)\n", parser->priv->context->token_type, str);
 		g_free (str);
 	}
+	else if (parser->priv->context->token_type == L_END_OF_FILE)
+		g_print ("%d (END OF FILE)\n", parser->priv->context->token_type);
 	else
 		g_print ("%d\n", parser->priv->context->token_type);
 #endif

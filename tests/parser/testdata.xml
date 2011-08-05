@@ -32,6 +32,11 @@
     <expected>{"statements":[{"statement":{"sql":"##pname::gint::null","stmt_type":"UNKNOWN","contents":[{"value":null,"param_spec":{"name":"pname","descr":null,"type":"int","is_param":true,"nullok":true}}]}}]}</expected>
   </test>
 
+  <test id="4.1">
+    <sql>value=##myparam</sql>
+    <expected>{"statements":[{"statement":{"sql":"value=##myparam","stmt_type":"UNKNOWN","contents":[{"value":"value="},{"value":null,"param_spec":{"name":"myparam","descr":null,"type":null,"is_param":true,"nullok":false}}]}}]}</expected>
+  </test>
+
   <!-- Extendend param notation, unspec value -->
   <test id="5">
     <sql>##/* name:pname */</sql>
