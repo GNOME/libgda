@@ -1363,6 +1363,205 @@ gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **er
 	return sel_stmt;
 }
 
+typedef struct  {
+	GdaSqlAnyPart *contents;
+	GdaSet *params;
+	GSList *expr_list; /* contains a list of #GdaSqlExpr after
+			    * gda_sql_any_part_foreach has been called */
+} NullData;
+
+static gboolean
+null_param_foreach_func (GdaSqlAnyPart *part, NullData *data , GError **error)
+{
+	if ((part->type != GDA_SQL_ANY_EXPR) || !((GdaSqlExpr*) part)->param_spec)
+		return TRUE;
+
+	if (!part->parent ||
+	    (part->parent->type != GDA_SQL_ANY_SQL_OPERATION) ||
+	    ((((GdaSqlOperation*) part->parent)->operator_type != GDA_SQL_OPERATOR_TYPE_EQ) &&
+	     (((GdaSqlOperation*) part->parent)->operator_type != GDA_SQL_OPERATOR_TYPE_DIFF)))
+		return TRUE;
+
+	GdaHolder *holder;
+	GdaSqlParamSpec *pspec = ((GdaSqlExpr*) part)->param_spec;
+	holder = gda_set_get_holder (data->params, pspec->name);
+	if (!holder)
+		return TRUE;
+	
+	const GValue *cvalue;
+	cvalue = gda_holder_get_value (holder);
+	if (!cvalue || (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL))
+		return TRUE;
+
+	GdaSqlOperation *op;
+	GdaSqlExpr *oexpr = NULL;
+	op = (GdaSqlOperation*) part->parent;
+	if (op->operands->data == part) {
+		if (op->operands->next)
+			oexpr = (GdaSqlExpr*) op->operands->next->data;
+	}
+	else
+		oexpr = (GdaSqlExpr*) op->operands->data;
+	if (oexpr && !g_slist_find (data->expr_list, oexpr)) /* handle situations where ##p1==##p2
+							      * and both p1 and p2 are set to NULL */
+		data->expr_list = g_slist_prepend (data->expr_list, part);
+	return TRUE;
+}
+
+static GdaSqlExpr *
+get_prev_expr (GSList *expr_list, GdaSqlAnyPart *expr)
+{
+	GSList *list;
+	for (list = expr_list; list && list->next; list = list->next) {
+		if ((GdaSqlAnyPart*) list->next->data == expr)
+			return (GdaSqlExpr*) list->data;
+	}
+	return NULL;
+}
+
+static gboolean
+null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data , GError **error)
+{
+	GdaSqlExpr *expr;
+	if ((part->type != GDA_SQL_ANY_EXPR) || !((GdaSqlExpr*) part)->param_spec)
+		return TRUE;
+
+	if (!part->parent || part->parent != data->contents)
+		return TRUE;
+
+	GdaHolder *holder;
+	GdaSqlParamSpec *pspec = ((GdaSqlExpr*) part)->param_spec;
+	holder = gda_set_get_holder (data->params, pspec->name);
+	if (!holder)
+		return TRUE;
+	
+	const GValue *cvalue;
+	cvalue = gda_holder_get_value (holder);
+	if (!cvalue || (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL))
+		return TRUE;
+
+	GSList *tmplist = NULL;
+	for (expr = get_prev_expr (((GdaSqlStatementUnknown*) data->contents)->expressions, part);
+	     expr;
+	     expr = get_prev_expr (((GdaSqlStatementUnknown*) data->contents)->expressions, (GdaSqlAnyPart*) expr)) {
+		gchar *str, *tmp;
+		if (!expr->value || (G_VALUE_TYPE (expr->value) != G_TYPE_STRING))
+			goto out;
+
+		str = (gchar*) g_value_get_string (expr->value);
+		if (!str || !*str) {
+			tmplist = g_slist_prepend (tmplist, expr);
+			continue;
+		}
+		for (tmp = str + strlen (str) - 1; tmp >= str; tmp --) {
+			if ((*tmp == ' ') || (*tmp == '\t') || (*tmp == '\n') || (*tmp == '\r'))
+				continue;
+			if (*tmp == '=') {
+				gchar *dup;
+				if ((tmp > str) && (*(tmp-1) == '!')) {
+					*(tmp-1) = 0;
+					dup = g_strdup_printf ("%s IS NOT NULL", str);
+				}
+				else {
+					*tmp = 0;
+					dup = g_strdup_printf ("%s IS NULL", str);
+				}
+				g_value_take_string (expr->value, dup);
+				if (tmplist) {
+					data->expr_list = g_slist_concat (tmplist, data->expr_list);
+					tmplist = NULL;
+				}
+				data->expr_list = g_slist_prepend (data->expr_list, part);
+				goto out;
+			}
+			else
+				goto out;
+		}
+		tmplist = g_slist_prepend (tmplist, expr);
+	}
+ out:
+	g_slist_free (tmplist);
+
+	return TRUE;
+}
+
+/**
+ * gda_rewrite_statement_for_null_parameters:
+ * @stmt: (transfer full): a #GdaSqlStatement
+ * @params: a #GdaSet to be used as parameters when executing @stmt
+ * @error: a place to store errors, or %NULL
+ *
+ * Modifies @stmt to take into account any parameter which might be %NULL: if @stmt contains the
+ * equivalent of "xxx = &lt;parameter definition&gt;" and if that parameter is in @params and
+ * its value is of type GDA_TYPE_NUL, then that part is replaced with "xxx IS NULL". It also
+ * handles the "xxx IS NOT NULL" transformation.
+ *
+ * This function is used by provider's implementations to make sure one can use parameters with
+ * NULL values in statements without having to rewrite statements, as database usually don't
+ * consider that "xxx = NULL" is the same as "xxx IS NULL" when using parameters.
+ *
+ * Returns: (transfer full): the modified @stmt statement, or %NULL if an error occurred
+ *
+ * Since: 4.2.9
+ */
+GdaSqlStatement *
+gda_rewrite_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *params, GError **error)
+{
+	g_return_val_if_fail (sqlst, sqlst);
+	if (!params)
+		return sqlst;
+	GSList *list;
+	for (list = params->holders; list; list = list->next) {
+		const GValue *cvalue;
+		cvalue = gda_holder_get_value ((GdaHolder*) list->data);
+		if (cvalue && (G_VALUE_TYPE (cvalue) == GDA_TYPE_NULL))
+			break;
+	}
+	if (!list || (sqlst->stmt_type == GDA_SQL_STATEMENT_NONE))
+		return sqlst; /* no modifications necessary */
+
+	NullData data;
+	data.contents = GDA_SQL_ANY_PART (sqlst->contents);
+	data.params = params;
+	data.expr_list = NULL;
+
+	if (sqlst->stmt_type == GDA_SQL_STATEMENT_UNKNOWN) {
+		if (! gda_sql_any_part_foreach (GDA_SQL_ANY_PART (sqlst->contents),
+						(GdaSqlForeachFunc) null_param_unknown_foreach_func,
+						&data, error)) {
+			gda_sql_statement_free (sqlst);
+			return NULL;
+		}
+		for (list = data.expr_list; list; list = list->next) {
+			((GdaSqlStatementUnknown*) data.contents)->expressions = 
+				g_slist_remove (((GdaSqlStatementUnknown*) data.contents)->expressions,
+						list->data);
+			gda_sql_expr_free ((GdaSqlExpr*) list->data);
+		}
+	}
+	else {
+		if (! gda_sql_any_part_foreach (GDA_SQL_ANY_PART (sqlst->contents),
+						(GdaSqlForeachFunc) null_param_foreach_func,
+						&data, error)) {
+			gda_sql_statement_free (sqlst);
+			return NULL;
+		}
+		for (list = data.expr_list; list; list = list->next) {
+			GdaSqlOperation *op;
+			op = (GdaSqlOperation*) (((GdaSqlAnyPart*) list->data)->parent);
+			op->operands = g_slist_remove (op->operands, list->data);
+			if (op->operator_type == GDA_SQL_OPERATOR_TYPE_EQ)
+				op->operator_type = GDA_SQL_OPERATOR_TYPE_ISNULL;
+			else
+				op->operator_type = GDA_SQL_OPERATOR_TYPE_ISNOTNULL;
+			gda_sql_expr_free ((GdaSqlExpr*) list->data);
+		}
+	}
+	g_slist_free (data.expr_list);
+	return sqlst;
+}
+
+
 static gboolean stmt_rewrite_insert_remove (GdaSqlStatementInsert *ins, GdaSet *params, GError **error);
 static gboolean stmt_rewrite_insert_default_keyword (GdaSqlStatementInsert *ins, GdaSet *params, GError **error);
 static gboolean stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd, GdaSet *params, GError **error);
