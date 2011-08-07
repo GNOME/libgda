@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 TESTS = check_parser check_validation check_normalization check_dml_comp check_script check_rewrite_for_default
-check_PROGRAMS = check_parser check_validation check_normalization check_dml_comp check_script check_rewrite_for_default
+check_PROGRAMS = check_parser check_validation check_normalization check_dml_comp check_script check_rewrite_for_default check_rewrite_for_null
 
 check_parser_SOURCES = check_parser.c
 check_parser_LDADD = \
@@ -37,6 +37,11 @@ check_script_LDADD = \
 
 check_rewrite_for_default_SOURCES = check_rewrite_for_default.c
 check_rewrite_for_default_LDADD = \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(COREDEPS_LIBS)
+
+check_rewrite_for_null_SOURCES = check_rewrite_for_null.c
+check_rewrite_for_null_LDADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(COREDEPS_LIBS)
 
