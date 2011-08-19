@@ -1939,7 +1939,13 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			}
 		}
 		if (!h) {
-			if (! allow_noparam) {
+			if (allow_noparam) {
+				/* bind param to NULL */
+				param_values [i] = NULL;
+				empty_rs = TRUE;
+				continue;
+			}
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -1949,15 +1955,15 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				g_free (str);
 				break;
 			}
-			else {
+		}
+		if (!gda_holder_is_valid (h)) {
+			if (allow_noparam) {
 				/* bind param to NULL */
 				param_values [i] = NULL;
 				empty_rs = TRUE;
 				continue;
 			}
-		}
-		if (!gda_holder_is_valid (h)) {
-			if (! allow_noparam) {
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -1966,12 +1972,6 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
-			}
-			else {
-				/* bind param to NULL */
-				param_values [i] = NULL;
-				empty_rs = TRUE;
-				continue;
 			}
 		}
 		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
@@ -2010,8 +2010,39 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
-		if (!value || gda_value_is_null (value))
-			param_values [i] = NULL;
+		if (!value || gda_value_is_null (value)) {
+			GdaStatement *rstmt;
+			if (! gda_rewrite_statement_for_null_parameters (stmt, params, &rstmt, error))
+				param_values [i] = NULL;
+			else if (!rstmt)
+				return NULL;
+			else {
+				GObject *obj;
+				params_freev (param_values, param_mem, nb_params);
+				g_free (param_lengths);
+				g_free (param_formats);
+				if (transaction_started)
+					gda_connection_rollback_transaction (cnc, NULL, NULL);
+
+				obj = gda_postgres_provider_statement_execute (provider, cnc,
+									       rstmt, params,
+									       model_usage,
+									       col_types,
+									       last_inserted_row,
+									       task_id, async_cb,
+									       cb_data, error);
+				g_object_unref (rstmt);
+				if (GDA_IS_DATA_SELECT (obj)) {
+					GdaPStmt *pstmt;
+					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
+					if (pstmt) {
+						gda_pstmt_set_gda_statement (pstmt, stmt);
+						g_object_unref (pstmt);
+					}
+				}
+				return obj;
+			}
+		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 			/* specific BLOB treatment */
 			GdaBlob *blob = (GdaBlob*) gda_value_get_blob ((GValue *) value);
