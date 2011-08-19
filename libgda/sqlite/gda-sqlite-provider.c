@@ -2718,7 +2718,14 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 		}
 		if (!h) {
-			if (! allow_noparam) {
+			if (allow_noparam) {
+				/* bind param to NULL */
+				SQLITE3_CALL (sqlite3_bind_null) (ps->sqlite_stmt, i);
+				empty_rs = TRUE;
+				continue;
+			}
+			else {
+
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -2728,16 +2735,16 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				g_free (str);
 				break;
 			}
-			else {
+		}
+
+		if (!gda_holder_is_valid (h)) {
+			if (allow_noparam) {
 				/* bind param to NULL */
 				SQLITE3_CALL (sqlite3_bind_null) (ps->sqlite_stmt, i);
 				empty_rs = TRUE;
 				continue;
 			}
-		}
-
-		if (!gda_holder_is_valid (h)) {
-			if (! allow_noparam) {
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -2746,12 +2753,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
-			}
-			else {
-				/* bind param to NULL */
-				SQLITE3_CALL (sqlite3_bind_null) (ps->sqlite_stmt, i);
-				empty_rs = TRUE;
-				continue;
 			}
 		}
 		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
@@ -2788,8 +2789,36 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		/*g_print ("BINDING param '%s' to %p\n", pname, h);*/
 		
 		const GValue *value = gda_holder_get_value (h);
-		if (!value || gda_value_is_null (value))
-			SQLITE3_CALL (sqlite3_bind_null) (ps->sqlite_stmt, i);
+		if (!value || gda_value_is_null (value)) {
+			GdaStatement *rstmt;
+			if (! gda_rewrite_statement_for_null_parameters (stmt, params, &rstmt, error))
+				SQLITE3_CALL (sqlite3_bind_null) (ps->sqlite_stmt, i);
+			else if (!rstmt)
+				return NULL;
+			else {
+				GObject *obj;
+				obj = gda_sqlite_provider_statement_execute (provider, cnc,
+									     rstmt, params,
+									     model_usage,
+									     col_types,
+									     last_inserted_row,
+									     task_id, async_cb,
+									     cb_data, error);
+				g_object_unref (rstmt);
+				if (GDA_IS_DATA_SELECT (obj)) {
+					GdaPStmt *pstmt;
+					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
+					if (pstmt) {
+						gda_pstmt_set_gda_statement (pstmt, stmt);
+						g_object_unref (pstmt);
+					}
+				}
+				if (new_ps)
+					g_object_unref (ps);
+				pending_blobs_free_list (blobs_list);
+				return obj;
+			}
+		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_STRING)
 			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, 
 							  g_value_get_string (value), -1, SQLITE_TRANSIENT);
