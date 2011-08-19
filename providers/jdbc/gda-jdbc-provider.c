@@ -1318,7 +1318,23 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			}
 		}
 		if (!h) {
-			if (! allow_noparam) {
+			if (allow_noparam) {
+                                /* bind param to NULL */
+				jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__setParameterValue,
+								     ps->pstmt_obj, NULL, NULL, &lerror, i, 0);
+				if (!jexec_res) {
+					event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
+					if (lerror)
+						gda_connection_event_set_description (event,
+						lerror->message ? lerror->message : _("No detail"));
+					g_propagate_error (error, lerror);
+					break;
+				}
+				gda_value_free (jexec_res);
+                                empty_rs = TRUE;
+                                continue;
+			}
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -1327,8 +1343,11 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
-			}
-			else {
+                        }
+
+		}
+		if (!gda_holder_is_valid (h)) {
+			if (allow_noparam) {
                                 /* bind param to NULL */
 				jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__setParameterValue,
 								     ps->pstmt_obj, NULL, NULL, &lerror, i, 0);
@@ -1343,11 +1362,8 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				gda_value_free (jexec_res);
                                 empty_rs = TRUE;
                                 continue;
-                        }
-
-		}
-		if (!gda_holder_is_valid (h)) {
-			if (! allow_noparam) {
+			}
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -1356,22 +1372,6 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
-			}
-			else {
-                                /* bind param to NULL */
-				jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__setParameterValue,
-								     ps->pstmt_obj, NULL, NULL, &lerror, i, 0);
-				if (!jexec_res) {
-					event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
-					if (lerror)
-						gda_connection_event_set_description (event,
-						lerror->message ? lerror->message : _("No detail"));
-					g_propagate_error (error, lerror);
-					break;
-				}
-				gda_value_free (jexec_res);
-                                empty_rs = TRUE;
-                                continue;
                         }
 		}
 		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
@@ -1407,19 +1407,63 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
-		jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__setParameterValue,
-						     ps->pstmt_obj, NULL, NULL, &lerror, i, 
-						     (G_VALUE_TYPE (value) == GDA_TYPE_NULL) ? (glong) 0 : (glong) value);
-		if (!jexec_res) {
-			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
-			if (lerror)
-				gda_connection_event_set_description (event,
-								      lerror->message ? lerror->message : _("No detail"));
-
-			g_propagate_error (error, lerror);
-			break;
+		if (!value || gda_value_is_null (value)) {
+			GdaStatement *rstmt;
+			if (! gda_rewrite_statement_for_null_parameters (stmt, params, &rstmt, error)) {
+				jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__setParameterValue,
+								     ps->pstmt_obj, NULL, NULL, &lerror, i, 
+								     (G_VALUE_TYPE (value) == GDA_TYPE_NULL) ? (glong) 0 : (glong) value);
+				if (!jexec_res) {
+					event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
+					if (lerror)
+						gda_connection_event_set_description (event,
+										      lerror->message ? lerror->message : _("No detail"));
+					
+					g_propagate_error (error, lerror);
+					break;
+				}
+				gda_value_free (jexec_res);
+			}
+			else if (!rstmt)
+				return NULL;
+			else {
+				GObject *obj;
+				g_object_unref (ps);
+				_gda_jdbc_release_jenv (jni_detach);
+				obj = gda_jdbc_provider_statement_execute (provider, cnc,
+									   rstmt, params,
+									   model_usage,
+									   col_types,
+									   last_inserted_row,
+									   task_id, async_cb,
+									   cb_data, error);
+				g_object_unref (rstmt);
+				if (GDA_IS_DATA_SELECT (obj)) {
+					GdaPStmt *pstmt;
+					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
+					if (pstmt) {
+						gda_pstmt_set_gda_statement (pstmt, stmt);
+						g_object_unref (pstmt);
+					}
+				}
+				return obj;
+			}
 		}
-		gda_value_free (jexec_res);
+		else {
+			jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__setParameterValue,
+							     ps->pstmt_obj, NULL, NULL, &lerror, i, 
+							     (G_VALUE_TYPE (value) == GDA_TYPE_NULL) ? (glong) 0 : (glong) value);
+			if (!jexec_res) {
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
+				if (lerror)
+					gda_connection_event_set_description (event,
+									      lerror->message ? lerror->message : _("No detail"));
+				
+				g_propagate_error (error, lerror);
+				break;
+			}
+			gda_value_free (jexec_res);
+		}
 	}
 		
 	if (event) {
