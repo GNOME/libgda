@@ -98,8 +98,10 @@ gboolean         gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *s
 					     GdaStatement **insert_stmt, GdaStatement **update_stmt, GdaStatement **delete_stmt, 
 					     GError **error);
 GdaSqlStatement *gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **error);
-GdaSqlStatement *gda_rewrite_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *params,
-							    GError **error);
+GdaSqlStatement *gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *params,
+								gboolean *out_modified, GError **error);
+gboolean         gda_rewrite_statement_for_null_parameters (GdaStatement *stmt, GdaSet *params,
+							    GdaStatement **out_stmt, GError **error);
 
 /*
  * DSN and connection string manipulations

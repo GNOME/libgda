@@ -1418,7 +1418,7 @@ get_prev_expr (GSList *expr_list, GdaSqlAnyPart *expr)
 }
 
 static gboolean
-null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data , GError **error)
+null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data, GError **error)
 {
 	GdaSqlExpr *expr;
 	if ((part->type != GDA_SQL_ANY_EXPR) || !((GdaSqlExpr*) part)->param_spec)
@@ -1484,28 +1484,36 @@ null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data , GError **
 }
 
 /**
- * gda_rewrite_statement_for_null_parameters:
- * @stmt: (transfer full): a #GdaSqlStatement
+ * gda_rewrite_sql_statement_for_null_parameters: (skip):
+ * @sqlst: (transfer full): a #GdaSqlStatement
  * @params: a #GdaSet to be used as parameters when executing @stmt
+ * @out_modified: (allow-none): a place to store the boolean which tells if @stmt has been modified or not, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * Modifies @stmt to take into account any parameter which might be %NULL: if @stmt contains the
+ * Modifies @sqlst to take into account any parameter which might be %NULL: if @sqlst contains the
  * equivalent of "xxx = &lt;parameter definition&gt;" and if that parameter is in @params and
  * its value is of type GDA_TYPE_NUL, then that part is replaced with "xxx IS NULL". It also
  * handles the "xxx IS NOT NULL" transformation.
+ *
+ * If @out_modified is not %NULL, then it will be set to %TRUE if @sqlst has been modified
+ * by this function, and to %FALSE otherwise.
  *
  * This function is used by provider's implementations to make sure one can use parameters with
  * NULL values in statements without having to rewrite statements, as database usually don't
  * consider that "xxx = NULL" is the same as "xxx IS NULL" when using parameters.
  *
- * Returns: (transfer full): the modified @stmt statement, or %NULL if an error occurred
+ * Returns: (transfer full): the modified @sqlst statement, or %NULL if an error occurred
  *
  * Since: 4.2.9
  */
 GdaSqlStatement *
-gda_rewrite_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *params, GError **error)
+gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *params,
+					       gboolean *out_modified, GError **error)
 {
+	if (out_modified)
+		*out_modified = FALSE;
 	g_return_val_if_fail (sqlst, sqlst);
+
 	if (!params)
 		return sqlst;
 	GSList *list;
@@ -1530,6 +1538,8 @@ gda_rewrite_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *param
 			gda_sql_statement_free (sqlst);
 			return NULL;
 		}
+		if (out_modified)
+			*out_modified = data.expr_list ? TRUE : FALSE;
 		for (list = data.expr_list; list; list = list->next) {
 			((GdaSqlStatementUnknown*) data.contents)->expressions = 
 				g_slist_remove (((GdaSqlStatementUnknown*) data.contents)->expressions,
@@ -1544,6 +1554,8 @@ gda_rewrite_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *param
 			gda_sql_statement_free (sqlst);
 			return NULL;
 		}
+		if (out_modified)
+			*out_modified = data.expr_list ? TRUE : FALSE;
 		for (list = data.expr_list; list; list = list->next) {
 			GdaSqlOperation *op;
 			op = (GdaSqlOperation*) (((GdaSqlAnyPart*) list->data)->parent);
@@ -1558,6 +1570,69 @@ gda_rewrite_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *param
 	g_slist_free (data.expr_list);
 	return sqlst;
 }
+
+/**
+ * gda_rewrite_statement_for_null_parameters:
+ * @stmt: (transfer none): a #GdaStatement
+ * @params: a #GdaSet to be used as parameters when executing @stmt
+ * @out_stmt: (transfer full) (allow-none): a place to store the new #GdaStatement, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Modifies @stmt to take into account any parameter which might be %NULL: if @stmt contains the
+ * equivalent of "xxx = &lt;parameter definition&gt;" and if that parameter is in @params and
+ * its value is of type GDA_TYPE_NUL, then that part is replaced with "xxx IS NULL". It also
+ * handles the "xxx IS NOT NULL" transformation.
+ *
+ * For example the following SELECT:
+ * <programlisting>SELECT * FROM data WHERE id = ##id::int::null AND name = ##name::string</programlisting>
+ * in case the "id" parameter is set to NULL, is converted to:
+ * <programlisting>SELECT * FROM data WHERE id IS NULL AND name = ##name::string</programlisting>
+ *
+ * if @out_stmt is not %NULL, then it will contain:
+ * <itemizedlist>
+ *   <listitem><para>the modified statement if some modifications were required and no error occured (the function returns %TRUE)</para></listitem>
+ *   <listitem><para>%NULL if no modification to @stmt were required and no erro occurred (the function returns %FALSE)</para></listitem>
+ *   <listitem><para>%NULL if an error occured (the function returns %TRUE)</para></listitem>
+ * </itemizedlist>
+ *
+ * This function is used by provider's implementations to make sure one can use parameters with
+ * NULL values in statements without having to rewrite statements, as database usually don't
+ * consider that "xxx = NULL" is the same as "xxx IS NULL" when using parameters.
+ *
+ * Returns: %TRUE if @stmt needs to be transformed to handle NULL parameters, and %FALSE otherwise
+ *
+ * Since: 4.2.9
+ */
+gboolean
+gda_rewrite_statement_for_null_parameters (GdaStatement *stmt, GdaSet *params,
+					   GdaStatement **out_stmt, GError **error)
+{
+	GdaSqlStatement *sqlst;
+	gboolean mod;
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
+	g_return_val_if_fail (!params || GDA_IS_SET (params), FALSE);
+
+	if (out_stmt)
+		*out_stmt = NULL;
+	if (!params)
+		return FALSE;
+
+	g_object_get ((GObject*) stmt, "structure", &sqlst, NULL);
+	if (gda_rewrite_sql_statement_for_null_parameters (sqlst, params, &mod, error)) {
+		if (out_stmt) {
+			if (mod) {
+				*out_stmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+				gda_sql_statement_free (sqlst);
+			}
+		}
+		return mod;
+	}
+	else {
+		/* error => leave *out_stmt to %NULL */
+		return TRUE;
+	}
+}
+
 
 
 static gboolean stmt_rewrite_insert_remove (GdaSqlStatementInsert *ins, GdaSet *params, GError **error);

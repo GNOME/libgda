@@ -508,6 +508,7 @@
 	gda_repetitive_statement_get_type
 	gda_repetitive_statement_new
 	gda_rewrite_statement_for_null_parameters
+	gda_rewrite_sql_statement_for_null_parameters
 	gda_rfc1738_decode
 	gda_rfc1738_encode
 	gda_row_get_length

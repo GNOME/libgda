@@ -48,6 +48,7 @@ struct _GdaPStmt {
 	GSList       *tmpl_columns; /* list of #GdaColumn objects which data models created from this prep. statement
 				     * can copy */
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;

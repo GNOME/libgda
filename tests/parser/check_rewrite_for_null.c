@@ -83,7 +83,7 @@ do_test (ATest *test)
 	GdaSqlStatement *sqlst;
 	g_object_get (stmt, "structure", &sqlst, NULL);
 
-	sqlst = gda_rewrite_statement_for_null_parameters (sqlst, params, &error);
+	sqlst = gda_rewrite_sql_statement_for_null_parameters (sqlst, params, NULL, &error);
 	if (!sqlst) {
 		g_print ("Rewrite error: %s\n", error && error->message ? error->message : "No detail");
 		return FALSE;
