@@ -1830,7 +1830,14 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 		}
 		if (!h) {
-			if (! allow_noparam) {
+			if (allow_noparam) {
+                                /* bind param to NULL */
+				/* Hint: Indicator Variables, see p. 118 */
+				ora_value = g_new0 (GdaOracleValue, 1);
+				ora_value->indicator = -1;
+                                empty_rs = TRUE;
+			}
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -1839,18 +1846,16 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
-			}
-			else {
+                        }
+		}
+		else if (!gda_holder_is_valid (h)) {
+			if (allow_noparam) {
                                 /* bind param to NULL */
-				/* Hint: Indicator Variables, see p. 118 */
 				ora_value = g_new0 (GdaOracleValue, 1);
 				ora_value->indicator = -1;
                                 empty_rs = TRUE;
-                        }
-
-		}
-		else if (!gda_holder_is_valid (h)) {
-			if (! allow_noparam) {
+			}
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -1859,12 +1864,6 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
-			}
-			else {
-                                /* bind param to NULL */
-				ora_value = g_new0 (GdaOracleValue, 1);
-				ora_value->indicator = -1;
-                                empty_rs = TRUE;
                         }
 		}
 		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
@@ -1898,33 +1897,86 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
-		if (!ora_value) {
-			const GValue *value = gda_holder_get_value (h);
+		const GValue *value = gda_holder_get_value (h);
+		if (!ora_value)
 			ora_value = _gda_value_to_oracle_value (value);
-		}
-		OCIBind *bindpp = (OCIBind *) 0;
-		int result;
-		result = OCIBindByName ((dvoid *) ps->hstmt,
-					(OCIBind **) &bindpp,
-					(OCIError *) cdata->herr,
-					/* param name */
-					(text *) (real_pname ? real_pname : pname),
-					(sb4) strlen (real_pname ? real_pname : pname),
-					/* bound value */
-					(dvoid *) ora_value->value,
-					(sb4) ora_value->defined_size,
-					(ub2) ora_value->sql_type,
-					(dvoid *) &ora_value->indicator,
-					(ub2 *) 0,
-					(ub2) 0,
-					(ub4) 0,
-					(ub4 *) 0,
-					(ub4) OCI_DEFAULT);
 
-		oravalues_list = g_slist_prepend (oravalues_list, ora_value);
-		if ((event = gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
-						      _("Could not bind the Oracle statement parameter"))))
-			break;
+		if (!value || gda_value_is_null (value)) {
+			GdaStatement *rstmt;
+			if (! gda_rewrite_statement_for_null_parameters (stmt, params, &rstmt, error)) {
+				OCIBind *bindpp = (OCIBind *) 0;
+				int result;
+				result = OCIBindByName ((dvoid *) ps->hstmt,
+							(OCIBind **) &bindpp,
+							(OCIError *) cdata->herr,
+							/* param name */
+							(text *) (real_pname ? real_pname : pname),
+							(sb4) strlen (real_pname ? real_pname : pname),
+							/* bound value */
+							(dvoid *) ora_value->value,
+							(sb4) ora_value->defined_size,
+							(ub2) ora_value->sql_type,
+							(dvoid *) &ora_value->indicator,
+							(ub2 *) 0,
+							(ub2) 0,
+							(ub4) 0,
+							(ub4 *) 0,
+							(ub4) OCI_DEFAULT);
+				
+				oravalues_list = g_slist_prepend (oravalues_list, ora_value);
+				if ((event = gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+								      _("Could not bind the Oracle statement parameter"))))
+					break;
+			}
+			else if (!rstmt)
+				return NULL;
+			else {
+				GObject *obj;
+				g_object_unref (ps);
+				obj = gda_oracle_provider_statement_execute (provider, cnc,
+									     rstmt, params,
+									     model_usage,
+									     col_types,
+									     last_inserted_row,
+									     task_id, async_cb,
+									     cb_data, error);
+				g_object_unref (rstmt);
+				if (GDA_IS_DATA_SELECT (obj)) {
+					GdaPStmt *pstmt;
+					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
+					if (pstmt) {
+						gda_pstmt_set_gda_statement (pstmt, stmt);
+						g_object_unref (pstmt);
+					}
+				}
+				return obj;
+			}
+		}
+		else {
+			OCIBind *bindpp = (OCIBind *) 0;
+			int result;
+			result = OCIBindByName ((dvoid *) ps->hstmt,
+						(OCIBind **) &bindpp,
+						(OCIError *) cdata->herr,
+						/* param name */
+						(text *) (real_pname ? real_pname : pname),
+						(sb4) strlen (real_pname ? real_pname : pname),
+						/* bound value */
+						(dvoid *) ora_value->value,
+						(sb4) ora_value->defined_size,
+						(ub2) ora_value->sql_type,
+						(dvoid *) &ora_value->indicator,
+						(ub2 *) 0,
+						(ub2) 0,
+						(ub4) 0,
+						(ub4 *) 0,
+						(ub4) OCI_DEFAULT);
+
+			oravalues_list = g_slist_prepend (oravalues_list, ora_value);
+			if ((event = gda_oracle_check_result (result, cnc, cdata, OCI_HTYPE_ERROR,
+							      _("Could not bind the Oracle statement parameter"))))
+				break;
+		}
 	}
 		
 	if (event) {
