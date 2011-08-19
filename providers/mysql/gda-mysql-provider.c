@@ -2228,7 +2228,14 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 		}
 		if (!h) {
-			if (!allow_noparam) {
+			if (allow_noparam) {
+                                /* bind param to NULL */
+				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
+				mysql_bind_param[i].is_null = (my_bool*)1;
+                                empty_rs = TRUE;
+                                continue;
+			}
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -2238,17 +2245,17 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				g_free (str);
 				break;
 			}
-			else {
+		}
+
+		if (!gda_holder_is_valid (h)) {
+			if (allow_noparam) {
                                 /* bind param to NULL */
 				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
 				mysql_bind_param[i].is_null = (my_bool*)1;
                                 empty_rs = TRUE;
                                 continue;
 			}
-		}
-
-		if (!gda_holder_is_valid (h)) {
-			if (!allow_noparam) {
+			else {
 				gchar *str;
 				str = g_strdup_printf (_("Parameter '%s' is invalid"), pname);
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -2257,13 +2264,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 					     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 				g_free (str);
 				break;
-			}
-			else {
-                                /* bind param to NULL */
-				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
-				mysql_bind_param[i].is_null = (my_bool*)1;
-                                empty_rs = TRUE;
-                                continue;
                         }
 		}
 		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
@@ -2299,9 +2299,35 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		/* actual binding using the C API, for parameter at position @i */
 		const GValue *value = gda_holder_get_value (h);
 
-		if (value == NULL || gda_value_is_null (value)) {
-			mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
-			mysql_bind_param[i].is_null = (my_bool*)1;
+		if (!value || gda_value_is_null (value)) {
+			GdaStatement *rstmt;
+			if (! gda_rewrite_statement_for_null_parameters (stmt, params, &rstmt, error)) {
+				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
+				mysql_bind_param[i].is_null = (my_bool*)1;
+			}
+			else if (!rstmt)
+				return NULL;
+			else {
+				GObject *obj;
+				free_bind_param_data (mem_to_free);
+				obj = gda_mysql_provider_statement_execute (provider, cnc,
+									    rstmt, params,
+									    model_usage,
+									    col_types,
+									    last_inserted_row,
+									    task_id, async_cb,
+									    cb_data, error);
+				g_object_unref (rstmt);
+				if (GDA_IS_DATA_SELECT (obj)) {
+					GdaPStmt *pstmt;
+					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
+					if (pstmt) {
+						gda_pstmt_set_gda_statement (pstmt, stmt);
+						g_object_unref (pstmt);
+					}
+				}
+				return obj;
+			}
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
 			const GdaTimestamp *ts;
