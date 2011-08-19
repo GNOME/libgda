@@ -197,11 +197,14 @@ static GdaServerProvider *_gda_thread_wrapper_provider = NULL;
 
 static gint debug_level = -1;
 static void
-dump_exec_params (GdaConnection *cnc, GdaSet *params)
+dump_exec_params (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params)
 {
 	if (params && (debug_level & 8)) {
 		GSList *list;
-		g_print ("EVENT> COMMAND: parameters (on cnx %p)\n", cnc);
+		gchar *sql;
+		sql = gda_statement_to_sql_extended (stmt, cnc, params, GDA_STATEMENT_SQL_PARAMS_SHORT,
+						     NULL, NULL);
+		g_print ("EVENT> COMMAND: parameters (on cnx %p) for statement [%s]\n", cnc, sql);
 		for (list = params->holders; list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			gchar *str;
@@ -214,6 +217,7 @@ dump_exec_params (GdaConnection *cnc, GdaSet *params)
 			if (value)
 				g_free (str);
 		}
+		g_free (sql);
 	}
 }
 
@@ -2846,7 +2850,7 @@ async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cn
 			cnc_task_lock (task);
 			task->being_processed = TRUE;
 			
-			dump_exec_params (cnc, task->params);
+			dump_exec_params (cnc, task->stmt, task->params);
 			PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
 										 task->stmt, 
 										 task->params, 
@@ -2948,7 +2952,7 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 		cnc_task_lock (task);
 		task->being_processed = TRUE;
 
-		dump_exec_params (cnc, task->params);
+		dump_exec_params (cnc, task->stmt, task->params);
 		PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
 									 task->stmt,
 									 task->params, 
@@ -3157,7 +3161,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
-	dump_exec_params (cnc, params);
+	dump_exec_params (cnc, stmt, params);
 	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
 								       model_usage, types, last_inserted_row, 
 								       NULL, NULL, NULL, error);
@@ -3500,7 +3504,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
-	dump_exec_params (cnc, params);
+	dump_exec_params (cnc, stmt, params);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, model_usage, 
 											  types, NULL, NULL, 
@@ -3570,7 +3574,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
-	dump_exec_params (cnc, params);
+	dump_exec_params (cnc, stmt, params);
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
 											  model_usage, col_types, NULL, 
@@ -3645,7 +3649,7 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 		GObject *obj;
 		GError *lerror = NULL;
 
-		dump_exec_params (cnc, (GdaSet*) list->data);
+		dump_exec_params (cnc, stmt, (GdaSet*) list->data);
 		obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, 
 									       GDA_SET (list->data), 
 									       model_usage, col_types, NULL, 
