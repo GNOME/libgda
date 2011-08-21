@@ -46,11 +46,15 @@ else {
 		$_SESSION ["counter"] ++;
 	else
 		$_SESSION ["counter"] = 1;
+	if (isset ($log))
+		$log->lwrite ("WORKER started");
 	gda_worker_main ();
 }
 
 function shutdown ()
 {
+	if (isset ($log))
+		$log->lwrite ("SHUTDOWN");
 	session_write_close ();
 	flush ();
 	ob_flush();

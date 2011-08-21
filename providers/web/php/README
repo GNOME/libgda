@@ -15,21 +15,43 @@ for which the current implementation is provided under the PEAR_MDB2/
 directory.
 
 Once the scripts are installed, some configuration needs to be done
-in the gda-config.php script.
+in the gda-config.php and gda-secure-config.php files:
+- the gda-config.php defines where the PEAR MDB2 extension should be
+  available, and where the gda-secure-config.php can be found.
+- the gda-secure-config.php defines the actual connection(s) available
+  through the Web interface. For security reasons this file should be moved
+  to a location outside the Web server's PHP scripts (such as /etc)
 
-Note that for better security, this script should not be accessible
-from the outside (ie it should be put outside ot the web server's
-root directory, and the gda-front.php and gda-worker.php scripts should be
-modified to point to its real location).
+Web server setup
+----------------
+You need a functionnal web server (tested with Apache and Lighthttpd but should
+work fine with others) whih can interpret PHP scripts.
 
+For example using Apache, you can either use an existing virtual host or create a
+one. In any case all the PHP scripts (except the gda-secure-config.php) should be
+copied in a single directory (this directory, relative to the DOCUMENT ROOT directory
+should then specified as the PATH argument in a Libgda's connection string).
 
-Note about gda-tester.php
--------------------------
+Connections setup
+-----------------
+Edit the gda-config.php file to:
+- define where the PEAR MDB2 extension is located
+- define where the gda-secure-config.php file is located
+
+Move the gda-secure-config.php to a directory outside the DOCUMENT ROOT directory and
+edit it to define connections available through the Web proxy.
+
+Setup testing
+-------------
 The gda-tester.php script can be executed to diagnose any setup problem,
 it reports errors if the MDB2 PEAR of SimpleXML extensions are missing,
 and, for each configured connection, tests if it can be opened.
 
-Note that by default the gda-tester.php will _not_ display any
-configured connection information, this needs to be enabled in the
+To use this scrip, simply point your favorite web browser to the URL:
+http://<your server>/path/to/script/gda-tester.php
+
+
+By default the gda-tester.php will _not_ test configured connection,
+this needs to be enabled in the
 script's source. Better yet is to remove that file once not necessary
 anymore as it could leak useful information.

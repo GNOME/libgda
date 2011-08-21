@@ -61,3 +61,10 @@ for:
 * the password MyPass1 (note that the gda-sql command requires a username when a password is specified which is
   the reason for the dummy "none" user name here to avoid any user name prompting, or use the -p command line option
   otherwise)
+
+
+Installation
+------------
+
+See php/README for more information.
+
