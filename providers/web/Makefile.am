@@ -54,6 +54,7 @@ php_DATA = \
 	php/README \
 	php/gda-clean.php \
 	php/gda-config.php \
+	php/gda-secure-config.php \
 	php/gda-exception.php \
 	php/gda-front.php \
 	php/gda-meta.php \

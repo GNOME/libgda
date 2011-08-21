@@ -28,6 +28,9 @@ try {
 	if (file_put_contents ($datafile, $text) == false)
 		throw new Exception ("Can't create command file ".$cmdfile);
 	
+	if (isset ($log))
+		$log->lwrite ("COMMAND: [$text]");
+
 	$file = fopen ($cmdfile, "w");
 	if (fwrite ($file, $datafile) == false) // block until there is a reader
 		throw new Exception ("Can't send command");
@@ -48,8 +51,13 @@ try {
 
 	$file = fopen ($datafile, 'rb');
 	fpassthru ($file);
+	if (isset ($log)) {
+		$tmp = file_get_contents ($datafile);
+		$log->lwrite ("RESPONSE: [$tmp]");
+	}
+
 	@unlink ($datafile);
-	
+
 	echo $text;
 }
 catch (Exception $e) {

@@ -1,28 +1,34 @@
 <?php
 
 /*
- * initial shared secret: will have to be passed as the SECRET argument when opening
- * the connection from Libgda
+ * Add this directive to use the implementation of PEAR MDB2 provided
+ * in Libgda
  */
-$init_shared = "MySecret";
+//set_include_path (get_include_path().":PEAR_MDB2");
 
 /*
- * declared connections: for each connection which can be opened by Libgda, the
- * the connection's password and the real connection's DSN need to be added respectively
- * to the $cnc and $dsn arrays, using the connection name as a key. The connection name
- * and password have no significance outside of the Libgda's context and be arbitrary.
- * However the real connection's DSN need to be valid for the PEAR's MDB2 module, as
- * per http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
- *
+ * Add the directory to which the gda-secure-config.php has been copied (here /etc for example)
  */
+set_include_path (get_include_path().":/etc");
 
-/* sample connection cnc1 */
-$cnc["cnc1"] = "MyPass1";
-//$dsn["cnc1"] = "pgsql://vivien@unix(/var/run/postgresql)/sales";
-$dsn["cnc1"] = "pgsql://unix(/tmp)/sales";
 
-/* sample connection cnc2 */
-$cnc["cnc2"] = "MyPass2";
-$dsn["cnc2"] = "mysql://user@unix(/path/to/socket)/sales";
+
+
+
+/*
+ * NO MODIFICATION BELOW
+ */
+$found = false;
+$array = explode (":", get_include_path ());
+foreach ($array as $index => $path) {
+	if (file_exists ($path.DIRECTORY_SEPARATOR."gda-secure-config.php")) {
+		include_once ($path.DIRECTORY_SEPARATOR."gda-secure-config.php");
+		$found = true;
+	}
+}
+if (! $found) {
+	echo "Missing gda-secure-config.php file!";
+	exit (1);
+}
 
 ?>
