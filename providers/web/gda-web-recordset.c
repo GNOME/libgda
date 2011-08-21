@@ -242,7 +242,7 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 				child = child->next;
 			column = GDA_COLUMN (list->data);
 
-			if (_GDA_PSTMT (ps)->types [i] == 0) {
+			if (_GDA_PSTMT (ps)->types [i] == GDA_TYPE_NULL) {
 				if (cdata && cdata->reuseable && cdata->reuseable->operations->re_get_type) {
 					prop = xmlGetProp (child, BAD_CAST "dbtype");
 					if (prop) {
@@ -335,17 +335,21 @@ create_table (GdaWebRecordset *rs, GError **error)
 	for (i = 0; i < ncols; i++) {
 		GdaColumn *column;
 		gchar *colname;
+		GType coltype;
 
 		column = gda_data_model_describe_column ((GdaDataModel*) rs, i);
 		if (i > 0)
 			g_string_append (string, ", ");
+		coltype = gda_column_get_g_type (column);
+		if (coltype == GDA_TYPE_NULL)
+			coltype = G_TYPE_STRING;
 		colname = g_strdup_printf ("col%d", i);
 		g_string_append_printf (string, "%s %s", colname,
-					gda_g_type_to_string (gda_column_get_g_type (column)));
+					gda_g_type_to_string (coltype));
 
 		gda_sql_builder_add_field_value_id (ib, gda_sql_builder_add_id (ib, colname),
-					   gda_sql_builder_add_param (ib, colname,
-								      gda_column_get_g_type (column), TRUE));
+						    gda_sql_builder_add_param (ib, colname,
+									       coltype, TRUE));
 		gda_sql_builder_add_field_value_id (sb, gda_sql_builder_add_id (sb, colname), 0);
 
 		g_free (colname);
@@ -365,7 +369,7 @@ create_table (GdaWebRecordset *rs, GError **error)
 			     _("Can't create temporary table to store data from web server"));
 		goto out;
 	}
-	if (gda_connection_statement_execute_non_select (rs->priv->rs_cnc, stmt, NULL, NULL, NULL)) {
+	if (gda_connection_statement_execute_non_select (rs->priv->rs_cnc, stmt, NULL, NULL, NULL) == -1) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
 			     _("Can't create temporary table to store data from web server"));
@@ -449,7 +453,12 @@ gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **err
 		return FALSE;
 	}
 
-	g_assert (gda_statement_get_parameters (rs->priv->insert, &params, NULL));
+	if (!gda_statement_get_parameters (rs->priv->insert, &params, NULL)) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
+			     _("Internal error"));
+		return FALSE;
+	}
 	iter = GDA_SET (gda_data_model_create_iter (data));
 	for (plist = params->holders, ilist = iter->holders;
 	     plist && ilist;
@@ -461,15 +470,22 @@ gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **err
 	}
 	g_assert (!plist && !ilist);
 
+	gboolean intrans;
+	intrans = gda_connection_begin_transaction (rs->priv->rs_cnc, NULL,
+						    GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL);
 	for (; gda_data_model_iter_move_next ((GdaDataModelIter*) iter); ) {
 		if (gda_connection_statement_execute_non_select (rs->priv->rs_cnc, rs->priv->insert, 
 								 params, NULL, NULL) == -1) {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
 			     _("Can't import data from web server"));
+			if (intrans)
+				gda_connection_rollback_transaction (rs->priv->rs_cnc, NULL, NULL);
 			goto out;
 		}
 	}
+	if (intrans)
+		gda_connection_commit_transaction (rs->priv->rs_cnc, NULL, NULL);
 
 	retval = TRUE;
 
