@@ -161,29 +161,35 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
         gint i;
 	GdaDataModelAccessFlags rflags;
 	static guint counter = 0;
+	WebConnectionData *cdata;
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
 
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
 	/* prepare internal connection which will be used to store
 	 * the recordset's data
 	 */
-	GdaConnection *rs_cnc;
 	gchar *fname, *tmp;
 	
 	for (fname = (gchar*) session_id; *fname && (*fname != '='); fname++);
 	g_assert (*fname == '=');
 	fname++;
 	tmp = g_strdup_printf ("%s%u.db", fname, counter++);
-	rs_cnc = gda_connection_open_sqlite (NULL, tmp, TRUE);
-	if (!rs_cnc) {
-		fname = g_build_filename (g_get_tmp_dir(), tmp, NULL);
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Can't create temporary file '%s'"), fname);
-		g_free (tmp);
-		g_free (fname);
-		return NULL;
+	if (! cdata->rs_cnc) {
+		cdata->rs_cnc = gda_connection_open_sqlite (NULL, tmp, TRUE);
+		if (!cdata->rs_cnc) {
+			fname = g_build_filename (g_get_tmp_dir(), tmp, NULL);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     _("Can't create temporary file '%s'"), fname);
+			g_free (tmp);
+			g_free (fname);
+			return NULL;
+		}
 	}
 	g_free (tmp);
 
@@ -226,10 +232,6 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 		
 		/* fill GdaColumn's data */
 		xmlNodePtr child;
-		WebConnectionData *cdata;
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
-		if (!cdata) 
-			return FALSE;
 
 		for (child = data_node->children, i = 0, list = _GDA_PSTMT (ps)->tmpl_columns; 
 		     child && (i < GDA_PSTMT (ps)->ncols);
@@ -304,7 +306,7 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 			      "model-usage", rflags, 
 			      "exec-params", exec_params, NULL);
         model->priv->cnc = cnc;
-	model->priv->rs_cnc = rs_cnc;
+	model->priv->rs_cnc = g_object_ref (G_OBJECT (cdata->rs_cnc));
 	g_object_ref (cnc);
 
         return GDA_DATA_MODEL (model);
@@ -321,16 +323,23 @@ create_table (GdaWebRecordset *rs, GError **error)
 	GString *string;
 	gint i, ncols;
 	gboolean retval = FALSE;
+	static guint64 counter = 0;
+	gchar *tname;
 
 	GdaSqlBuilder *sb, *ib;
 
 	ib = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 	sb = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 
-	gda_sql_builder_set_table (ib, TABLE_NAME);
-	gda_sql_builder_select_add_target (sb, TABLE_NAME, NULL);
+	tname = g_strdup_printf (TABLE_NAME "%lu", counter++);
+	gda_sql_builder_set_table (ib, tname);
+	gda_sql_builder_select_add_target (sb, tname, NULL);
 
-	string = g_string_new ("CREATE table " TABLE_NAME " (");
+	string = g_string_new ("CREATE table ");
+	g_string_append (string, tname);
+	g_string_append (string, " (");
+	g_free (tname);
+
 	ncols = gda_data_model_get_n_columns ((GdaDataModel*) rs);
 	for (i = 0; i < ncols; i++) {
 		GdaColumn *column;
