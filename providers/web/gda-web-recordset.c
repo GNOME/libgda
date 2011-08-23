@@ -52,6 +52,7 @@ struct _GdaWebRecordsetPrivate {
 	
 	GdaStatement *insert; /* adding new data to @rs_cnc */
 	GdaStatement *select; /* final SELECT */
+	GdaStatement *drop; /* to drop table in the end */
 	GdaDataModel *real_model;
 };
 static GObjectClass *parent_class = NULL;
@@ -70,6 +71,7 @@ gda_web_recordset_init (GdaWebRecordset *recset,
 	recset->priv->table_created = FALSE;
 	recset->priv->insert = NULL;
 	recset->priv->select = NULL;
+	recset->priv->drop = NULL;
 }
 
 static void
@@ -101,13 +103,20 @@ gda_web_recordset_dispose (GObject *object)
 			g_object_unref (recset->priv->cnc);
 		if (recset->priv->real_model)
 			g_object_unref (recset->priv->real_model);
-		if (recset->priv->rs_cnc)
+		if (recset->priv->rs_cnc) {
+			if (recset->priv->drop)
+				gda_connection_statement_execute_non_select (recset->priv->rs_cnc,
+									     recset->priv->drop, NULL,
+									     NULL, NULL);
 			g_object_unref (recset->priv->rs_cnc);
+		}
 
 		if (recset->priv->insert)
 			g_object_unref (recset->priv->insert);
 		if (recset->priv->select)
 			g_object_unref (recset->priv->select);
+		if (recset->priv->drop)
+			g_object_unref (recset->priv->drop);
 
 		g_free (recset->priv);
 		recset->priv = NULL;
@@ -343,7 +352,6 @@ create_table (GdaWebRecordset *rs, GError **error)
 	string = g_string_new ("CREATE table ");
 	g_string_append (string, tname);
 	g_string_append (string, " (");
-	g_free (tname);
 
 	ncols = gda_data_model_get_n_columns ((GdaDataModel*) rs);
 	for (i = 0; i < ncols; i++) {
@@ -376,19 +384,34 @@ create_table (GdaWebRecordset *rs, GError **error)
 	const gchar *remain;
 	parser = gda_sql_parser_new ();
 	stmt = gda_sql_parser_parse_string (parser, string->str, &remain, NULL);
-	g_object_unref (parser);
+	g_string_free (string, TRUE);
 	if (!stmt || remain) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
 			     _("Can't create temporary table to store data from web server"));
+		g_free (tname);
+		if (stmt)
+			g_object_unref (stmt);
+
 		goto out;
 	}
 	if (gda_connection_statement_execute_non_select (rs->priv->rs_cnc, stmt, NULL, NULL, NULL) == -1) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
 			     _("Can't create temporary table to store data from web server"));
+		g_free (tname);
+		g_object_unref (stmt);
 		goto out;
 	}
+	g_object_unref (stmt);
+
+	string = g_string_new ("DROP table ");
+	g_string_append (string, tname);
+	g_free (tname);
+	stmt = gda_sql_parser_parse_string (parser, string->str, &remain, NULL);
+	g_string_free (string, TRUE);
+	g_object_unref (parser);
+	rs->priv->drop = stmt;
 
 	rs->priv->insert = gda_sql_builder_get_statement (ib, error);
 	if (rs->priv->insert) 
@@ -414,9 +437,7 @@ create_table (GdaWebRecordset *rs, GError **error)
 	}
 	g_object_unref (ib);
 	g_object_unref (sb);
-	if (stmt)
-		g_object_unref (stmt);
-	g_string_free (string, TRUE);
+
 	return retval;
 }
 
