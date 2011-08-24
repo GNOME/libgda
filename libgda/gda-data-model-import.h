@@ -68,7 +68,7 @@ struct _GdaDataModelImportClass {
  * all the data is copied in memory, and is thus not suitable for large data sets. Note that importing from an 
  * already-build XML tree will always result in a random access data model.
  *
- * Various import options can be specified using parameters in a #GdaParameterList object. The available options
+ * Various import options can be specified using parameters in a #GdaSet object. The available options
  * depend on the format of the imported data listed here:
  * <itemizedlist>
  *   <listitem><para>"SEPARATOR" (string, CVS import only): specifies the separator to consider</para></listitem>
