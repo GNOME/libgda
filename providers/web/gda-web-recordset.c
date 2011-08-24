@@ -481,6 +481,9 @@ gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **err
 	g_assert (rs->priv->insert);
 
 	data = gda_data_model_import_new_xml_node (data_node);
+	/*data = 	(GdaDataModel*) g_object_new (GDA_TYPE_DATA_MODEL_IMPORT,
+					      "options", options,
+					      "xml-node", node, NULL);*/
 	if (!data) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
@@ -537,8 +540,22 @@ create_real_model (GdaWebRecordset *rs)
 {
 	if (rs->priv->real_model)
 		return;
-	rs->priv->real_model = gda_connection_statement_execute_select (rs->priv->rs_cnc, rs->priv->select,
-									NULL, NULL);
+
+	GType *col_types;
+	gint i, ncols;
+	ncols = gda_data_model_get_n_columns ((GdaDataModel*) rs);
+	col_types = g_new (GType, ncols + 1);
+	for (i = 0; i < ncols; i++) {
+		GdaColumn *col;
+		col = gda_data_model_describe_column ((GdaDataModel*) rs, i);
+		col_types [i] = gda_column_get_g_type (col);
+	}
+	col_types [i] = G_TYPE_NONE;
+	rs->priv->real_model = gda_connection_statement_execute_select_full (rs->priv->rs_cnc, rs->priv->select,
+									     NULL,
+									     GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									     col_types, NULL);
+	g_free (col_types);
 }
 
 /*
