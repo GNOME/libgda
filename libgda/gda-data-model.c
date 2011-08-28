@@ -1448,18 +1448,30 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols,
 				txt = g_strdup ("");
 			else {
 				gchar *tmp;
-				gsize len, size;
 				
 				tmp = gda_value_stringify (value);
-				len = strlen (tmp);
-				size = 2 * len + 3;
-				txt = g_new (gchar, size);
+				if (tmp) {
+					gsize len, size;
+					len = strlen (tmp);
+					size = 2 * len + 3;
+					txt = g_new (gchar, size);
 
-				len = csv_write2 (txt, size, tmp, len, quote);
-				txt [len] = 0;
-				if (!field_quotes) {
-					txt [len - 1] = 0;
-					memmove (txt, txt+1, len);
+					len = csv_write2 (txt, size, tmp, len, quote);
+					txt [len] = 0;
+					if (!field_quotes) {
+						txt [len - 1] = 0;
+						memmove (txt, txt+1, len);
+					}
+				}
+				else {
+					if (field_quotes) {
+						txt = g_new (gchar, 3);
+						txt [0] = quote;
+						txt [1] = quote;
+						txt [2] = 0;
+					}
+					else
+						txt = g_strdup ("");
 				}
 			}
 			if (c > 0)
