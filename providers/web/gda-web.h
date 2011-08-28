@@ -64,8 +64,6 @@ typedef struct {
 	/* front and others attributes */
 	SoupSession *front_session;
 	guint last_exec_counter; /* the worker counter which replied to the last EXEC command */
-
-	GdaConnection *rs_cnc; /* SQLite connection used by GdaWebRecordsetObjects */
 } WebConnectionData;
 
 #endif
