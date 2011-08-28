@@ -39,21 +39,13 @@ static void gda_web_recordset_dispose   (GObject *object);
 /* virtual methods */
 static gint     gda_web_recordset_fetch_nb_rows (GdaDataSelect *model);
 static gboolean gda_web_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
-static gboolean gda_web_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
-static gboolean gda_web_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
-static gboolean gda_web_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 
 
 struct _GdaWebRecordsetPrivate {
 	GdaConnection *cnc;
 	
-	GdaConnection *rs_cnc; /* connection to store resultsets */
-	gboolean table_created;
-	
-	GdaStatement *insert; /* adding new data to @rs_cnc */
-	GdaStatement *select; /* final SELECT */
-	GdaStatement *drop; /* to drop table in the end */
 	GdaDataModel *real_model;
+	GdaRow       *prow;
 };
 static GObjectClass *parent_class = NULL;
 
@@ -67,11 +59,6 @@ gda_web_recordset_init (GdaWebRecordset *recset,
 	g_return_if_fail (GDA_IS_WEB_RECORDSET (recset));
 	recset->priv = g_new0 (GdaWebRecordsetPrivate, 1);
 	recset->priv->cnc = NULL;
-	recset->priv->rs_cnc = NULL;
-	recset->priv->table_created = FALSE;
-	recset->priv->insert = NULL;
-	recset->priv->select = NULL;
-	recset->priv->drop = NULL;
 }
 
 static void
@@ -86,9 +73,9 @@ gda_web_recordset_class_init (GdaWebRecordsetClass *klass)
 	pmodel_class->fetch_nb_rows = gda_web_recordset_fetch_nb_rows;
 	pmodel_class->fetch_random = gda_web_recordset_fetch_random;
 
-	pmodel_class->fetch_next = gda_web_recordset_fetch_next;
-	pmodel_class->fetch_prev = gda_web_recordset_fetch_prev;
-	pmodel_class->fetch_at = gda_web_recordset_fetch_at;
+	pmodel_class->fetch_next = NULL;
+	pmodel_class->fetch_prev = NULL;
+	pmodel_class->fetch_at = NULL;
 }
 
 static void
@@ -103,20 +90,8 @@ gda_web_recordset_dispose (GObject *object)
 			g_object_unref (recset->priv->cnc);
 		if (recset->priv->real_model)
 			g_object_unref (recset->priv->real_model);
-		if (recset->priv->rs_cnc) {
-			if (recset->priv->drop)
-				gda_connection_statement_execute_non_select (recset->priv->rs_cnc,
-									     recset->priv->drop, NULL,
-									     NULL, NULL);
-			g_object_unref (recset->priv->rs_cnc);
-		}
-
-		if (recset->priv->insert)
-			g_object_unref (recset->priv->insert);
-		if (recset->priv->select)
-			g_object_unref (recset->priv->select);
-		if (recset->priv->drop)
-			g_object_unref (recset->priv->drop);
+		if (recset->priv->prow)
+			g_object_unref (recset->priv->prow);
 
 		g_free (recset->priv);
 		recset->priv = NULL;
@@ -168,7 +143,6 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 {
 	GdaWebRecordset *model;
         gint i;
-	GdaDataModelAccessFlags rflags;
 	static guint counter = 0;
 	WebConnectionData *cdata;
 
@@ -178,29 +152,6 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata)
 		return FALSE;
-
-	/* prepare internal connection which will be used to store
-	 * the recordset's data
-	 */
-	gchar *fname, *tmp;
-	
-	for (fname = (gchar*) session_id; *fname && (*fname != '='); fname++);
-	g_assert (*fname == '=');
-	fname++;
-	tmp = g_strdup_printf ("%s%u.db", fname, counter++);
-	if (! cdata->rs_cnc) {
-		cdata->rs_cnc = gda_connection_open_sqlite (NULL, tmp, TRUE);
-		if (!cdata->rs_cnc) {
-			fname = g_build_filename (g_get_tmp_dir(), tmp, NULL);
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-				     _("Can't create temporary file '%s'"), fname);
-			g_free (tmp);
-			g_free (fname);
-			return NULL;
-		}
-	}
-	g_free (tmp);
 
 	/* make sure @ps reports the correct number of columns using the API*/
         if (_GDA_PSTMT (ps)->ncols < 0) {
@@ -303,137 +254,15 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 		}
         }
 
-	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
-	if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
-		rflags = GDA_DATA_MODEL_ACCESS_RANDOM;
-	else
-		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
-
 	/* create data model */
         model = g_object_new (GDA_TYPE_WEB_RECORDSET, 
 			      "prepared-stmt", ps, 
-			      "model-usage", rflags, 
+			      "model-usage", GDA_DATA_MODEL_ACCESS_RANDOM, 
 			      "exec-params", exec_params, NULL);
         model->priv->cnc = cnc;
-	model->priv->rs_cnc = g_object_ref (G_OBJECT (cdata->rs_cnc));
 	g_object_ref (cnc);
 
         return GDA_DATA_MODEL (model);
-}
-
-
-/*
- * create tha table to store the actual data
- */
-static gboolean
-create_table (GdaWebRecordset *rs, GError **error)
-{
-#define TABLE_NAME "data"
-	GString *string;
-	gint i, ncols;
-	gboolean retval = FALSE;
-	static guint64 counter = 0;
-	gchar *tname;
-
-	GdaSqlBuilder *sb, *ib;
-
-	ib = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
-	sb = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-
-	tname = g_strdup_printf (TABLE_NAME "%lu", counter++);
-	gda_sql_builder_set_table (ib, tname);
-	gda_sql_builder_select_add_target (sb, tname, NULL);
-
-	string = g_string_new ("CREATE table ");
-	g_string_append (string, tname);
-	g_string_append (string, " (");
-
-	ncols = gda_data_model_get_n_columns ((GdaDataModel*) rs);
-	for (i = 0; i < ncols; i++) {
-		GdaColumn *column;
-		gchar *colname;
-		GType coltype;
-
-		column = gda_data_model_describe_column ((GdaDataModel*) rs, i);
-		if (i > 0)
-			g_string_append (string, ", ");
-		coltype = gda_column_get_g_type (column);
-		if (coltype == GDA_TYPE_NULL)
-			coltype = G_TYPE_STRING;
-		colname = g_strdup_printf ("col%d", i);
-		g_string_append_printf (string, "%s %s", colname,
-					gda_g_type_to_string (coltype));
-
-		gda_sql_builder_add_field_value_id (ib, gda_sql_builder_add_id (ib, colname),
-						    gda_sql_builder_add_param (ib, colname,
-									       coltype, TRUE));
-		gda_sql_builder_add_field_value_id (sb, gda_sql_builder_add_id (sb, colname), 0);
-
-		g_free (colname);
-	}
-	g_string_append (string, ")");
-	/*g_print ("CREATE SQL: [%s]\n", string->str);*/
-
-	GdaStatement *stmt;
-	GdaSqlParser *parser;
-	const gchar *remain;
-	parser = gda_sql_parser_new ();
-	stmt = gda_sql_parser_parse_string (parser, string->str, &remain, NULL);
-	g_string_free (string, TRUE);
-	if (!stmt || remain) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
-			     _("Can't create temporary table to store data from web server"));
-		g_free (tname);
-		if (stmt)
-			g_object_unref (stmt);
-
-		goto out;
-	}
-	if (gda_connection_statement_execute_non_select (rs->priv->rs_cnc, stmt, NULL, NULL, NULL) == -1) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
-			     _("Can't create temporary table to store data from web server"));
-		g_free (tname);
-		g_object_unref (stmt);
-		goto out;
-	}
-	g_object_unref (stmt);
-
-	string = g_string_new ("DROP table ");
-	g_string_append (string, tname);
-	g_free (tname);
-	stmt = gda_sql_parser_parse_string (parser, string->str, &remain, NULL);
-	g_string_free (string, TRUE);
-	g_object_unref (parser);
-	rs->priv->drop = stmt;
-
-	rs->priv->insert = gda_sql_builder_get_statement (ib, error);
-	if (rs->priv->insert) 
-		rs->priv->select = gda_sql_builder_get_statement (sb, NULL);
-	if (! rs->priv->insert || ! rs->priv->select) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
-			     _("Can't create temporary table to store data from web server"));
-		goto out;
-	}
-	/*g_print ("INSERT: [%s]\n", gda_statement_to_sql (rs->priv->insert, NULL, NULL));
-	  g_print ("SELECT: [%s]\n", gda_statement_to_sql (rs->priv->select, NULL, NULL));*/
-
-	retval = TRUE;
- out:
-	if (!retval) {
-		if (rs->priv->insert)
-			g_object_unref (rs->priv->insert);
-		rs->priv->insert = NULL;
-		if (rs->priv->select)
-			g_object_unref (rs->priv->select);
-		rs->priv->select = NULL;
-	}
-	g_object_unref (ib);
-	g_object_unref (sb);
-
-	return retval;
 }
 
 /**
@@ -444,18 +273,13 @@ create_table (GdaWebRecordset *rs, GError **error)
 gboolean
 gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **error)
 {
-	GdaSet *params, *iter;
 	GdaDataModel *data;
-	GSList *plist, *ilist;
-	gboolean retval = FALSE;
 	gint i, ncols;
 	xmlNodePtr node;
 
 	g_return_val_if_fail (GDA_IS_WEB_RECORDSET (rs), FALSE);
 	g_return_val_if_fail (data_node, FALSE);
 	g_return_val_if_fail (!strcmp ((gchar*) data_node->name, "gda_array"), FALSE);
-	if (! rs->priv->table_created && ! create_table (rs, error))
-		return FALSE;
 
 	/* modify the @data_node tree to set the correct data types */
 	ncols = gda_data_model_get_n_columns ((GdaDataModel*) rs);
@@ -472,9 +296,6 @@ gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **err
 			    BAD_CAST gda_g_type_to_string (gda_column_get_g_type (column)));
 	}
 
-	/* for each row in @data_mode, insert the row in @rs->priv->rs_cnc */
-	g_assert (rs->priv->insert);
-
 	data = gda_data_model_import_new_xml_node (data_node);
 	/*data = 	(GdaDataModel*) g_object_new (GDA_TYPE_DATA_MODEL_IMPORT,
 					      "options", options,
@@ -485,72 +306,9 @@ gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **err
 			     _("Can't import data from web server"));
 		return FALSE;
 	}
+	rs->priv->real_model = data;
 
-	if (!gda_statement_get_parameters (rs->priv->insert, &params, NULL)) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
-			     _("Internal error"));
-		return FALSE;
-	}
-	iter = GDA_SET (gda_data_model_create_iter (data));
-	for (plist = params->holders, ilist = iter->holders;
-	     plist && ilist;
-	     plist = plist->next, ilist = ilist->next) {
-		GdaHolder *ph, *ih;
-		ph = GDA_HOLDER (plist->data);
-		ih = GDA_HOLDER (ilist->data);
-		g_assert (gda_holder_set_bind (ph, ih, NULL));
-	}
-	g_assert (!plist && !ilist);
-
-	gboolean intrans;
-	intrans = gda_connection_begin_transaction (rs->priv->rs_cnc, NULL,
-						    GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL);
-	for (; gda_data_model_iter_move_next ((GdaDataModelIter*) iter); ) {
-		if (gda_connection_statement_execute_non_select (rs->priv->rs_cnc, rs->priv->insert, 
-								 params, NULL, NULL) == -1) {
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
-			     _("Can't import data from web server"));
-			if (intrans)
-				gda_connection_rollback_transaction (rs->priv->rs_cnc, NULL, NULL);
-			goto out;
-		}
-	}
-	if (intrans)
-		gda_connection_commit_transaction (rs->priv->rs_cnc, NULL, NULL);
-
-	retval = TRUE;
-
- out:
-	g_object_unref (data);
-	g_object_unref (iter);
-	g_object_unref (params);
-
-	return retval;
-}
-
-static void
-create_real_model (GdaWebRecordset *rs)
-{
-	if (rs->priv->real_model)
-		return;
-
-	GType *col_types;
-	gint i, ncols;
-	ncols = gda_data_model_get_n_columns ((GdaDataModel*) rs);
-	col_types = g_new (GType, ncols + 1);
-	for (i = 0; i < ncols; i++) {
-		GdaColumn *col;
-		col = gda_data_model_describe_column ((GdaDataModel*) rs, i);
-		col_types [i] = gda_column_get_g_type (col);
-	}
-	col_types [i] = G_TYPE_NONE;
-	rs->priv->real_model = gda_connection_statement_execute_select_full (rs->priv->rs_cnc, rs->priv->select,
-									     NULL,
-									     GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-									     col_types, NULL);
-	g_free (col_types);
+	return TRUE;
 }
 
 /*
@@ -565,7 +323,6 @@ gda_web_recordset_fetch_nb_rows (GdaDataSelect *model)
 	if (model->advertized_nrows >= 0)
 		return model->advertized_nrows;
 
-	create_real_model (imodel);
 	if (imodel->priv->real_model)
 		model->advertized_nrows = gda_data_model_get_n_rows (imodel->priv->real_model);
 
@@ -582,7 +339,7 @@ gda_web_recordset_fetch_nb_rows (GdaDataSelect *model)
  *     but the function may return FALSE if an error occurred.
  *
  * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implemantation
+ * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implementation
  * using that method, then this method should detect when all the data model rows have been analyzed
  * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
  * as it won't be used anymore to fetch rows.
@@ -597,101 +354,24 @@ gda_web_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum
 	if (*prow)
                 return TRUE;
 
-	create_real_model (imodel);
-	if (imodel->priv->real_model)
-		return GDA_DATA_SELECT_CLASS (G_OBJECT_GET_CLASS (imodel->priv->real_model))->fetch_random
-			((GdaDataSelect*) imodel->priv->real_model, prow, rownum, error);
+	if (imodel->priv->real_model) {
+		gint i, ncols;
+		ncols = gda_data_model_get_n_columns ((GdaDataModel*) model);
+		if (!imodel->priv->prow)
+			imodel->priv->prow = gda_row_new (ncols);
+		for (i = 0; i < ncols; i++) {
+			const GValue *cvalue;
+			GValue *pvalue;
+			cvalue = gda_data_model_get_value_at (imodel->priv->real_model, i, rownum, error);
+			if (!cvalue)
+				return FALSE;
+			pvalue = gda_row_get_value (imodel->priv->prow, i);
+			gda_value_reset_with_type (pvalue, G_VALUE_TYPE (cvalue));
+			g_value_copy (cvalue, pvalue);
+		}
+		*prow = imodel->priv->prow;
+		return TRUE;
+	}
 
 	return FALSE;
 }
-
-/*
- * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
- *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
- */
-static gboolean 
-gda_web_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
-{
-	GdaWebRecordset *imodel;
-
-	imodel = GDA_WEB_RECORDSET (model);
-
-	if (*prow)
-                return TRUE;
-
-	create_real_model (imodel);
-	if (imodel->priv->real_model)
-		return GDA_DATA_SELECT_CLASS (G_OBJECT_GET_CLASS (imodel->priv->real_model))->fetch_next
-			((GdaDataSelect*) imodel->priv->real_model, prow, rownum, error);
-
-	return FALSE;
-}
-
-/*
- * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
- *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
- */
-static gboolean 
-gda_web_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
-{
-	GdaWebRecordset *imodel;
-
-	imodel = GDA_WEB_RECORDSET (model);
-
-	if (*prow)
-                return TRUE;
-
-	create_real_model (imodel);
-	if (imodel->priv->real_model)
-		return GDA_DATA_SELECT_CLASS (G_OBJECT_GET_CLASS (imodel->priv->real_model))->fetch_prev
-			((GdaDataSelect*) imodel->priv->real_model, prow, rownum, error);
-
-	return FALSE;
-}
-
-/*
- * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
- *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
- */
-static gboolean 
-gda_web_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
-{
-	GdaWebRecordset *imodel;
-
-	imodel = GDA_WEB_RECORDSET (model);
-
-	if (*prow)
-                return TRUE;
-
-	create_real_model (imodel);
-	if (imodel->priv->real_model)
-		return GDA_DATA_SELECT_CLASS (G_OBJECT_GET_CLASS (imodel->priv->real_model))->fetch_at
-			((GdaDataSelect*) imodel->priv->real_model, prow, rownum, error);
-
-	return FALSE;
-}
-

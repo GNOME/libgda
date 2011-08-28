@@ -659,8 +659,5 @@ _gda_web_free_cnc_data (WebConnectionData *cdata)
 	g_free (cdata->key);
 	g_free (cdata->next_challenge);
 
-	if (cdata->rs_cnc)
-		g_object_unref (G_OBJECT (cdata->rs_cnc));
-
 	g_free (cdata);
 }
