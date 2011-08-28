@@ -1333,7 +1333,6 @@ init_xml_import (GdaDataModelImport *model)
 			gda_column_set_dbms_type (column, (gchar*)spec->dbms_type);
 			gda_column_set_g_type (column, spec->gdatype);
 			gda_column_set_allow_null (column, spec->nullok);
-			g_print ("New col %d type [%s]\n", pos, gda_g_type_to_string (gda_column_get_g_type (column)));
 		}
 		clean_field_specs (fields);
 
