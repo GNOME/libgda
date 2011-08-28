@@ -282,7 +282,7 @@ main (int argc, char *argv[])
 
 		wHnd = GetStdHandle(STD_OUTPUT_HANDLE);
 
-		SetConsoleTitle ("Gda console, version " PACKAGE_VERSION);
+		SetConsoleTitle ("GDA SQL console, version " PACKAGE_VERSION);
 		SetConsoleWindowInfo (wHnd, TRUE, &windowSize);
 #endif
 		g_print (_("Welcome to the GDA SQL console, version " PACKAGE_VERSION));
