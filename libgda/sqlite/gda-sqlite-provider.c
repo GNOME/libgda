@@ -819,15 +819,14 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 				return FALSE;
 			}
 
-			/* try first without the file extension */
-			filename = g_build_filename (dirname, dbname, NULL);
+			/* try first with the file extension */
+			gchar *tmp;
+			tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+			filename = g_build_filename (dirname, tmp, NULL);
+			g_free (tmp);
 			if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-				gchar *tmp;
 				g_free (filename);
-				tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
-				filename = g_build_filename (dirname, tmp, NULL);
-				g_free (tmp);
-
+				filename = g_build_filename (dirname, dbname, NULL);
 			}
 			g_free (dup);
 		}
