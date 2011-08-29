@@ -586,13 +586,38 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 		case OUTPUT_FORMAT_DEFAULT:
 			string = g_string_new ("");
 			for (list = res->u.set->holders; list; list = list->next) {
-				gchar *str;
 				const GValue *value;
-				value = gda_holder_get_value (GDA_HOLDER (list->data));
-				str = gda_value_stringify ((GValue *) value);
-				g_string_append_printf (string, "%s => %s\n", 
-							gda_holder_get_id (GDA_HOLDER (list->data)), str);
-				g_free (str);
+				gchar *tmp;
+				const gchar *cstr;
+				GdaHolder *h;
+				h = GDA_HOLDER (list->data);
+
+				cstr = gda_holder_get_id (h);
+				value = gda_holder_get_value (h);
+				if (!strcmp (cstr, "IMPACTED_ROWS")) {
+					g_string_append_printf (string, "%s: ",
+								_("Number of rows impacted"));
+					tmp = gda_value_stringify (value);
+					g_string_append_printf (string, "%s", tmp);
+					g_free (tmp);
+				}
+				else if (!strcmp (cstr, "EXEC_DELAY")) {
+					g_string_append_printf (string, "%s: ",
+								_("Execution delay"));
+					gdouble etime;
+					etime = g_value_get_double (value);
+					g_string_append_printf (string, "%.03f s", etime);
+				}
+				else {
+					tmp = g_markup_escape_text (cstr, -1);
+					g_string_append_printf (string, "%s: ", tmp);
+					g_free (tmp);
+					
+					tmp = gda_value_stringify (value);
+					g_string_append_printf (string, "%s", tmp);
+					g_free (tmp);
+				}
+				g_string_append (string, "\n");
 			}
 			str = string->str;
 			g_string_free (string, FALSE);
@@ -643,13 +668,38 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 		case OUTPUT_FORMAT_CSV: 
 			string = g_string_new ("");
 			for (list = res->u.set->holders; list; list = list->next) {
-				gchar *str;
 				const GValue *value;
-				value = gda_holder_get_value (GDA_HOLDER (list->data));
-				str = gda_value_stringify ((GValue *) value);
-				g_string_append_printf (string, "%s,%s\n", 
-							gda_holder_get_id (GDA_HOLDER (list->data)), str);
-				g_free (str);
+				gchar *tmp;
+				const gchar *cstr;
+				GdaHolder *h;
+				h = GDA_HOLDER (list->data);
+
+				cstr = gda_holder_get_id (h);
+				value = gda_holder_get_value (h);
+				if (!strcmp (cstr, "IMPACTED_ROWS")) {
+					g_string_append_printf (string, "\"%s\",",
+								_("Number of rows impacted"));
+					tmp = gda_value_stringify (value);
+					g_string_append_printf (string, "\"%s\"", tmp);
+					g_free (tmp);
+				}
+				else if (!strcmp (cstr, "EXEC_DELAY")) {
+					g_string_append_printf (string, "\"%s\",",
+								_("Execution delay"));
+					gdouble etime;
+					etime = g_value_get_double (value);
+					g_string_append_printf (string, "\"%.03f s\"", etime);
+				}
+				else {
+					tmp = g_markup_escape_text (cstr, -1);
+					g_string_append_printf (string, "\"%s\",", tmp);
+					g_free (tmp);
+					
+					tmp = gda_value_stringify (value);
+					g_string_append_printf (string, "\"%s\"", tmp);
+					g_free (tmp);
+				}
+				g_string_append (string, "\n");
 			}
 			str = string->str;
 			g_string_free (string, FALSE);
@@ -1491,6 +1541,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 		gchar *cnc_string;
 		const gchar *rootname;
 		gint i;
+		g_object_set (G_OBJECT (newcnc), "execution-timer", TRUE, NULL);
 		g_object_get (G_OBJECT (newcnc),
 			      "cnc-string", &cnc_string, NULL);
 		dict_file_name = config_info_compute_dict_file_name (info, cnc_string);
@@ -1817,9 +1868,23 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 		of = main_data->output_format;
 
 	switch (of) {
-	case OUTPUT_FORMAT_DEFAULT:
-		return gda_data_model_dump_as_string (model);
+	case OUTPUT_FORMAT_DEFAULT: {
+		gchar *tmp;
+		tmp = gda_data_model_dump_as_string (model);
+		if (GDA_IS_DATA_SELECT (model)) {
+			gchar *tmp2, *tmp3;
+			gdouble etime;
+			g_object_get ((GObject*) model, "execution-delay", &etime, NULL);
+			tmp2 = g_strdup_printf (_("Execution delay: %.03f"), etime);
+			tmp3 = g_strdup_printf ("%s\n%s", tmp, tmp2);
+			g_free (tmp);
+			g_free (tmp2);
+			return tmp3;
+		}
+		else
+			return tmp;
 		break;
+	}
 	case OUTPUT_FORMAT_XML:
 		return gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
 							NULL, 0,
@@ -3254,6 +3319,7 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 		g_set_error (error, 0, 0, "%s", _("Could not create virtual connection"));
 		return NULL;
 	}
+	g_object_set (G_OBJECT (virtual), "execution-timer", TRUE, NULL);
 
 	/* add existing connections to virtual connection */
 	string = g_string_new (_("Bound connections are as:"));
