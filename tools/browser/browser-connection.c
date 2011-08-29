@@ -398,22 +398,36 @@ wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 	g_mutex_lock (bcnc->priv->p_mstruct_mutex);
 	g_assert (bcnc->priv->p_mstruct_list);
 	mstruct = (GdaMetaStruct *) bcnc->priv->p_mstruct_list->data;
+	/*g_print ("%s() for GdaMetaStruct %p\n", __FUNCTION__, mstruct);*/
 	bcnc->priv->p_mstruct_list = g_slist_delete_link (bcnc->priv->p_mstruct_list,
 							  bcnc->priv->p_mstruct_list);
 	if (bcnc->priv->p_mstruct_list) {
 		/* don't care about this one */
 		g_object_unref (G_OBJECT (mstruct));
 		g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+		return GINT_TO_POINTER (3);
 	}
 	else {
 		if (bcnc->priv->c_mstruct)
 			g_object_unref (bcnc->priv->c_mstruct);
 		bcnc->priv->c_mstruct = mstruct;
-		g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
 
 		/*g_print ("Meta struct sync for %p\n", mstruct);*/
 		retval = gda_meta_struct_complement_all (mstruct, error);
+		g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
 	}
+
+#ifdef GDA_DEBUG_NO
+	GSList *all, *list;
+	g_print ("%s() %p:\n", __FUNCTION__, bcnc->priv->mstruct);
+	all = gda_meta_struct_get_all_db_objects (bcnc->priv->mstruct);
+	for (list = all; list; list = list->next) {
+		GdaMetaDbObject *dbo = (GdaMetaDbObject *) list->data;
+		g_print ("DBO, Type %d: short=>[%s] schema=>[%s] full=>[%s]\n", dbo->obj_type,
+			 dbo->obj_short_name, dbo->obj_schema, dbo->obj_full_name);
+	}
+	g_slist_free (all);
+#endif
 
 	return GINT_TO_POINTER (retval ? 2 : 1);
 }
@@ -436,6 +450,7 @@ meta_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper,
 	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (bcnc->priv->cnc),
 				       GDA_META_STRUCT_FEATURE_ALL);
 	bcnc->priv->p_mstruct_list = g_slist_append (bcnc->priv->p_mstruct_list, mstruct);
+	/*g_print ("%s() Added %p to p_mstruct_list\n", __FUNCTION__, mstruct);*/
 	g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
 	job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
 					     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
@@ -546,6 +561,7 @@ browser_connection_set_property (GObject *object,
 				mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
 				bcnc->priv->p_mstruct_list = g_slist_append (bcnc->priv->p_mstruct_list,
 									     mstruct);
+				/*g_print ("%s() Added %p to p_mstruct_list\n", __FUNCTION__, mstruct);*/
 				job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
 								     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
 								     g_object_ref (bcnc), g_object_unref, &lerror);
@@ -760,6 +776,9 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 						    lerror && lerror->message ? lerror->message : _("No detail"));
 				g_clear_error (&lerror);
 			}
+			else if (GPOINTER_TO_INT (exec_res) == 3) {
+				/* nothing to do */
+			}
 			else {
 				g_mutex_lock (bcnc->priv->p_mstruct_mutex);
 				
@@ -772,7 +791,7 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 						g_object_unref (old_mstruct);
 #ifdef GDA_DEBUG_NO
 					GSList *all, *list;
-					g_print ("For GdaMetaStruct %p:\n", bcnc->priv->mstruct);
+					g_print ("Signalling change for GdaMetaStruct %p:\n", bcnc->priv->mstruct);
 					all = gda_meta_struct_get_all_db_objects (bcnc->priv->mstruct);
 					for (list = all; list; list = list->next) {
 						GdaMetaDbObject *dbo = (GdaMetaDbObject *) list->data;
