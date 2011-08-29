@@ -116,6 +116,8 @@ struct _GdaConnectionPrivate {
 
 	/* auto meta data update */
 	GArray               *trans_meta_context; /* Array of GdaMetaContext pointers */
+
+	gboolean              exec_times;
 };
 
 /* represents an asynchronous execution task */
@@ -132,6 +134,7 @@ typedef struct {
 	GdaSet *last_insert_row;
 	GObject *result;
 	GError *error;
+	GTimer *exec_timer;
 } CncTask;
 #define CNC_TASK(x) ((CncTask*)(x))
 
@@ -140,6 +143,8 @@ static CncTask *cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsa
 static void     cnc_task_free (CncTask *task);
 #define         cnc_task_lock(task) g_mutex_lock ((task)->mutex)
 #define         cnc_task_unlock(task) g_mutex_unlock ((task)->mutex)
+
+static void add_exec_time_to_object (GObject *obj, GTimer *timer);
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
 static void gda_connection_init       (GdaConnection *cnc, GdaConnectionClass *klass);
@@ -188,7 +193,8 @@ enum
 	PROP_THREAD_OWNER,
 	PROP_IS_THREAD_WRAPPER,
 	PROP_MONITOR_WRAPPED_IN_MAINLOOP,
-	PROP_EVENTS_HISTORY_SIZE
+	PROP_EVENTS_HISTORY_SIZE,
+	PROP_EXEC_TIMES
 };
 
 static GObjectClass *parent_class = NULL;
@@ -396,6 +402,19 @@ gda_connection_class_init (GdaConnectionClass *klass)
 							   EVENTS_ARRAY_SIZE,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
+	/**
+	 * GdaConnection:execution-timer:
+	 *
+	 * Computes execution times for each statement executed.
+	 *
+	 * Since: 4.2.9
+	 **/
+	g_object_class_install_property (object_class, PROP_EXEC_TIMES,
+					 g_param_spec_boolean ("execution-timer", NULL,
+							       _("Computes execution demay for each executed statement"),
+							       FALSE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+
 	object_class->dispose = gda_connection_dispose;
 	object_class->finalize = gda_connection_finalize;
 
@@ -807,6 +826,9 @@ gda_connection_set_property (GObject *object,
 			change_events_array_max_size (cnc, g_value_get_int (value));
 			gda_connection_unlock ((GdaLockable*) cnc);
 			break;
+		case PROP_EXEC_TIMES:
+			cnc->priv->exec_times = g_value_get_boolean (value);
+			break;
                 }
         }	
 }
@@ -850,6 +872,9 @@ gda_connection_get_property (GObject *object,
 		case PROP_EVENTS_HISTORY_SIZE:
 			g_value_set_int (value, cnc->priv->events_array_size);
 			break;
+		case PROP_EXEC_TIMES:
+			g_value_set_boolean (value, cnc->priv->exec_times);
+			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -871,6 +896,7 @@ cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, 
 	task->being_processed = FALSE;
 	task->task_id = id;
 	task->stmt = g_object_ref (stmt);
+	task->exec_timer = NULL;
 	g_signal_connect (stmt, "reset", /* monitor statement changes */
 			  G_CALLBACK (task_stmt_reset_cb), task);
 	task->model_usage = model_usage;
@@ -922,6 +948,8 @@ cnc_task_free (CncTask *task)
 		g_object_unref (task->result);
 	if (task->error)
 		g_error_free (task->error);
+	if (task->exec_timer)
+		g_timer_destroy (task->exec_timer);
 
 	g_mutex_unlock (task->mutex);
 	g_mutex_free (task->mutex);
@@ -2761,6 +2789,22 @@ make_col_types_array (va_list args)
 	return types;
 }
 
+static void
+add_exec_time_to_object (GObject *obj, GTimer *timer)
+{
+	gdouble etime;
+	etime = g_timer_elapsed (timer, NULL);
+	if (GDA_IS_DATA_SELECT (obj))
+		g_object_set (obj, "execution-delay", etime, NULL);
+	else if (GDA_IS_SET (obj)) {
+		GdaHolder *holder;
+		holder = gda_holder_new_inline (G_TYPE_DOUBLE, "EXEC_DELAY", etime);
+		gda_set_add_holder ((GdaSet*) obj, holder);
+		g_object_unref ((GObject*) holder);
+	}
+	else
+		TO_IMPLEMENT;
+}
 
 /*
  * No locking is done here must be done before calling
@@ -2818,10 +2862,16 @@ async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cn
 		cnc_task_lock (task);
 
 		task->being_processed = FALSE;
+		if (task->exec_timer)
+			g_timer_stop (task->exec_timer);
+
 		if (error)
 			task->error = g_error_copy (error);
-		if (result_obj)
+		if (result_obj) {
 			task->result = g_object_ref (result_obj);
+			if (task->exec_timer)
+				add_exec_time_to_object (task->result, task->exec_timer);
+		}
 		if (task->stmt) {
 			g_signal_handlers_disconnect_by_func (task->stmt,
 							      G_CALLBACK (task_stmt_reset_cb), task);
@@ -2848,9 +2898,11 @@ async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cn
 			GError *lerror = NULL;
 			task = CNC_TASK (g_array_index (cnc->priv->waiting_tasks, gpointer, 0));
 			cnc_task_lock (task);
-			task->being_processed = TRUE;
-			
+			task->being_processed = TRUE;			
 			dump_exec_params (cnc, task->stmt, task->params);
+			if (cnc->priv->exec_times)
+				g_timer_start (task->exec_timer);
+
 			PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
 										 task->stmt, 
 										 task->params, 
@@ -2864,6 +2916,8 @@ async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cn
 				/* task execution failed => move it to completed tasks array */
 				task->error = lerror;
 				task->being_processed = FALSE;
+				if (cnc->priv->exec_times)
+					g_timer_stop (task->exec_timer);
 				g_array_remove_index (cnc->priv->waiting_tasks, 0);
 				g_array_append_val (cnc->priv->completed_tasks, task);
 			}
@@ -2944,6 +2998,10 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 	id = cnc->priv->next_task_id ++;
 	task = cnc_task_new (id, stmt, model_usage, col_types, params, need_last_insert_row);
 	g_array_append_val (cnc->priv->waiting_tasks, task);
+	if (cnc->priv->exec_times) {
+		task->exec_timer = g_timer_new ();
+		g_timer_stop (task->exec_timer);
+	}
 
 	if (cnc->priv->waiting_tasks->len == 1) {
 		/* execute statement now as there are no other ones to be executed */
@@ -2951,8 +3009,10 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 
 		cnc_task_lock (task);
 		task->being_processed = TRUE;
-
 		dump_exec_params (cnc, task->stmt, task->params);
+		if (cnc->priv->exec_times)
+			g_timer_start (task->exec_timer);
+
 		PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
 									 task->stmt,
 									 task->params, 
@@ -2969,6 +3029,8 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 
 			task->error = lerror;
 			task->being_processed = FALSE;
+			if (cnc->priv->exec_times)
+				g_timer_stop (task->exec_timer);
 			i = get_task_index (cnc, id, &is_completed, FALSE);
 			g_assert ((i >= 0) && !is_completed);
 			g_array_remove_index (cnc->priv->waiting_tasks, i);
@@ -3110,6 +3172,9 @@ gda_connection_async_cancel (GdaConnection *cnc, guint task_id, GError **error)
 					     "%s", _("Provider does not support asynchronous server operation"));
 				retval = FALSE;
 			}
+			task->being_processed = FALSE;
+			if (cnc->priv->exec_times)
+				g_timer_stop (task->exec_timer);
 		}
 		else {
 			/* simply remove this task from the tasks to execute */
@@ -3137,6 +3202,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	va_list ap;
 	GObject *obj;
 	GType *types;
+	GTimer *timer = NULL;
 	va_start (ap, error);
 	types = make_col_types_array (ap);
 	va_end (ap);
@@ -3162,14 +3228,24 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
 	dump_exec_params (cnc, stmt, params);
+	if (cnc->priv->exec_times)
+		timer = g_timer_new ();
 	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
 								       model_usage, types, last_inserted_row, 
 								       NULL, NULL, NULL, error);
+	if (timer)
+		g_timer_stop (timer);
 	g_free (types);
-	if (obj)
+
+	if (obj) {
+		if (timer)
+			add_exec_time_to_object (obj, timer);
 		update_meta_store_after_statement_exec (cnc, stmt, params);
+	}
 	gda_connection_unlock ((GdaLockable*) cnc);
 	g_object_unref ((GObject*) cnc);
+	if (timer)
+		g_timer_destroy (timer);
 
 	return obj;
 }
@@ -3484,7 +3560,8 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	va_list ap;
 	GdaDataModel *model;
 	GType *types;
-	
+	GTimer *timer = NULL;
+
 	va_start (ap, error);
 	types = make_col_types_array (ap);
 	va_end (ap);
@@ -3507,13 +3584,21 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
 	dump_exec_params (cnc, stmt, params);
+	if (cnc->priv->exec_times)
+		timer = g_timer_new ();
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, model_usage, 
 											  types, NULL, NULL, 
 											  NULL, NULL, error);
+	if (timer)
+		g_timer_stop (timer);
 	gda_connection_unlock ((GdaLockable*) cnc);
 	g_object_unref ((GObject*) cnc);
 	g_free (types);
+	if (model && timer)
+		add_exec_time_to_object ((GObject*) model, timer);
+	if (timer)
+		g_timer_destroy (timer);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
 			      "%s", _("Statement is not a selection statement"));
@@ -3555,6 +3640,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 					      GType *col_types, GError **error)
 {
 	GdaDataModel *model;
+	GTimer *timer = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
@@ -3577,13 +3663,19 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
 
 	dump_exec_params (cnc, stmt, params);
+	if (cnc->priv->exec_times)
+		timer = g_timer_new ();
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
 											  model_usage, col_types, NULL, 
 											  NULL, NULL, NULL, error);
+	if (timer)
+		g_timer_stop (timer);
 	gda_connection_unlock ((GdaLockable*) cnc);
 	g_object_unref ((GObject*) cnc);
 
+	if (model && timer)
+		add_exec_time_to_object ((GObject*) model, timer);
 	if (model && !GDA_IS_DATA_MODEL (model)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
 			      "%s", _("Statement is not a selection statement"));
@@ -3591,6 +3683,8 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 		model = NULL;
 		update_meta_store_after_statement_exec (cnc, stmt, params);
 	}
+	if (timer)
+		g_timer_destroy (timer);
 	return model;
 }
 
@@ -3650,15 +3744,23 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 	for (list = sets_list; list; list = list->next) {
 		GObject *obj;
 		GError *lerror = NULL;
+		GTimer *timer = NULL;
 
 		dump_exec_params (cnc, stmt, (GdaSet*) list->data);
+		if (cnc->priv->exec_times)
+			timer = g_timer_new ();
 		obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, 
 									       GDA_SET (list->data), 
 									       model_usage, col_types, NULL, 
 									       NULL, NULL, NULL, &lerror);
+		if (timer)
+			g_timer_stop (timer);
 		if (!obj) {
-			if (stop_on_error)
+			if (stop_on_error) {
+				if (timer)
+					g_timer_destroy (timer);
 				break;
+			}
 			else {
 				if (error && *error) {
 					g_error_free (*error);
@@ -3668,9 +3770,13 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 			}
 		}
 		else {
+			if (timer)
+				add_exec_time_to_object (obj, timer);
 			update_meta_store_after_statement_exec (cnc, stmt, (GdaSet*) list->data);
 			retlist = g_slist_prepend (retlist, obj);
 		}
+		if (timer)
+			g_timer_destroy (timer);
 	}
 	g_slist_free (sets_list);
 

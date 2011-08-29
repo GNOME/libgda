@@ -96,6 +96,7 @@ struct _GdaDataSelectPrivate {
 	GArray                 *exceptions; /* array of #GError pointers */
 	PrivateShareable       *sh;
 	gulong                  ext_params_changed_sig_id;
+	gdouble                 exec_time;
 };
 
 /* properties */
@@ -111,7 +112,8 @@ enum
 	PROP_UPD_QUERY,
 	PROP_DEL_QUERY,
 	PROP_SEL_STMT,
-	PROP_RESET_WITH_EXT_PARAM
+	PROP_RESET_WITH_EXT_PARAM,
+	PROP_EXEC_DELAY
 };
 
 /* module error */
@@ -284,6 +286,18 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 							       "Automatically re-run the SELECT statement if any parameter "
 							       "has changed since it was first executed", FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+
+	/**
+	 * GdaDataSelect:execution-delay:
+	 *
+	 * This property stores the execution delay which has been necessary to obtain the data
+	 *
+	 * Since: 4.2.9
+	 */
+	g_object_class_install_property (object_class, PROP_EXEC_DELAY,
+					 g_param_spec_double ("execution-delay", NULL, NULL,
+							      0., G_MAXDOUBLE, 0.,
+							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/* virtual functions */
 	object_class->dispose = gda_data_select_dispose;
@@ -715,6 +729,9 @@ gda_data_select_set_property (GObject *object,
 		case PROP_RESET_WITH_EXT_PARAM:
 			model->priv->sh->reset_with_ext_params_change = g_value_get_boolean (value);
 			break;
+		case PROP_EXEC_DELAY:
+			model->priv->exec_time = g_value_get_double (value);
+			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -766,6 +783,9 @@ gda_data_select_get_property (GObject *object,
 			break;
 		case PROP_RESET_WITH_EXT_PARAM:
 			g_value_set_boolean (value, model->priv->sh->reset_with_ext_params_change);
+			break;
+		case PROP_EXEC_DELAY:
+			g_value_set_double (value, model->priv->exec_time);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);

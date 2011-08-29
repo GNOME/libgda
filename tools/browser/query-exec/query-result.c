@@ -230,6 +230,12 @@ query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hba
 							tmp1, tmp2);
 				g_free (tmp1);
 				g_free (tmp2);
+
+				gdouble etime;
+				g_object_get (hitem->result, "execution-delay", &etime, NULL);
+				g_string_append (string, "\n");
+				g_string_append_printf (string, _("Execution delay"));
+				g_string_append_printf (string, ": %.03f s", etime);
 			}
 			else if (GDA_IS_SET (hitem->result)) {
 				GdaSet *set;
@@ -246,16 +252,26 @@ query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hba
 						g_string_append_c (string, '\n');
 					
 					cstr = gda_holder_get_id (h);
-					if (!strcmp (cstr, "IMPACTED_ROWS"))
-						g_string_append (string, _("Number of rows impacted"));
-					else
-						g_string_append (string, cstr);
-					
-					g_string_append (string, ": ");
 					value = gda_holder_get_value (h);
-					tmp = gda_value_stringify (value);
-					g_string_append_printf (string, "%s", tmp);
-					g_free (tmp);
+					if (!strcmp (cstr, "IMPACTED_ROWS")) {
+						g_string_append (string, _("Number of rows impacted"));
+						g_string_append (string, ": ");
+						tmp = gda_value_stringify (value);
+						g_free (tmp);
+					}
+					else if (!strcmp (cstr, "EXEC_DELAY")) {
+						gdouble etime;
+						etime = g_value_get_double (value);
+						g_string_append_printf (string, _("Execution delay"));
+						g_string_append_printf (string, ": %.03f s", etime);
+					}
+					else {
+						g_string_append (string, cstr);
+						g_string_append (string, ": ");
+						tmp = gda_value_stringify (value);
+						g_string_append_printf (string, "%s", tmp);
+						g_free (tmp);
+					}
 				}
 			}
 			else
@@ -422,19 +438,30 @@ make_widget_for_set (GdaSet *set)
 			g_string_append_c (string, '\n');
 		
 		cstr = gda_holder_get_id (h);
-		if (!strcmp (cstr, "IMPACTED_ROWS"))
-			g_string_append_printf (string, "<b>%s</b>  ",
-						_("Number of rows impacted:"));
-		else {
-			tmp = g_markup_escape_text (cstr, -1);
-			g_string_append_printf (string, "<b>%s</b>", tmp);
+		value = gda_holder_get_value (h);
+		if (!strcmp (cstr, "IMPACTED_ROWS")) {
+			g_string_append_printf (string, "<b>%s:</b> ",
+						_("Number of rows impacted"));
+			tmp = gda_value_stringify (value);
+			g_string_append_printf (string, "%s", tmp);
 			g_free (tmp);
 		}
+		else if (!strcmp (cstr, "EXEC_DELAY")) {
+			g_string_append_printf (string, "<b>%s:</b> ",
+						_("Execution delay"));
+			gdouble etime;
+			etime = g_value_get_double (value);
+			g_string_append_printf (string, "%.03f s", etime);
+		}
+		else {
+			tmp = g_markup_escape_text (cstr, -1);
+			g_string_append_printf (string, "<b>%s:</b> ", tmp);
+			g_free (tmp);
 
-		value = gda_holder_get_value (h);
-		tmp = gda_value_stringify (value);
-		g_string_append_printf (string, "%s", tmp);
-		g_free (tmp);
+			tmp = gda_value_stringify (value);
+			g_string_append_printf (string, "%s", tmp);
+			g_free (tmp);
+		}
 	}
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
