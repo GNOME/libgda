@@ -78,7 +78,7 @@ static void
 execution_statement_free (ExecutionStatement *estmt)
 {
 	if (estmt->exec_id > 0) {
-		/* job started => set up idle task */
+		/* job started! */
 		TO_IMPLEMENT;
 	}
 	else {
@@ -118,7 +118,6 @@ struct _QueryConsolePagePrivate {
 	GtkWidget *query_result;
 
 	ExecutionBatch *current_exec;
-	guint current_exec_id; /* timout ID to fetch execution results */
 
 	gint fav_id;
 	GtkWidget *favorites_menu;
@@ -197,8 +196,6 @@ query_console_page_dispose (GObject *object)
 
 	/* free memory */
 	if (tconsole->priv) {
-		if (tconsole->priv->current_exec_id)
-			g_source_remove (tconsole->priv->current_exec_id);
 		if (tconsole->priv->current_exec)
 			execution_batch_free (tconsole->priv->current_exec);
 		if (tconsole->priv->bcnc) {
@@ -875,7 +872,6 @@ params_form_changed_cb (GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param,
 				  gdaui_basic_form_is_valid (form));
 }
 
-static gboolean query_exec_fetch_cb (QueryConsolePage *tconsole);
 static void actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 			      gboolean add_editor_history);
 static void
@@ -958,118 +954,118 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 	g_free (sql);
 }
 
-static gboolean
-query_exec_fetch_cb (QueryConsolePage *tconsole)
+static void
+query_exec_done_cb (BrowserConnection *bcnc, guint exec_id,
+		    GObject *out_result, GdaSet *out_last_inserted_row,
+		    GError *error, QueryConsolePage *tconsole)
 {
 	gboolean alldone = TRUE;
 	
-	if (tconsole->priv->current_exec) {
-		if (tconsole->priv->current_exec->statements) {
-			ExecutionStatement *estmt;
-			estmt = (ExecutionStatement*) tconsole->priv->current_exec->statements->data;
-			g_assert (estmt->exec_id);
-			g_assert (!estmt->result);
-			g_assert (!estmt->exec_error);
-			estmt->result = browser_connection_execution_get_result (tconsole->priv->bcnc,
-										 estmt->exec_id, NULL,
-										 &(estmt->exec_error));
-			if (estmt->result || estmt->exec_error) {
-				ExecutionBatch *ebatch;
-				ebatch = tconsole->priv->current_exec;
-				query_editor_start_history_batch (tconsole->priv->history, ebatch->hist_batch);
+	if (! tconsole->priv->current_exec)
+		return;
 
-				QueryEditorHistoryItem *history;
-				GdaSqlStatement *sqlst;
-				g_object_get (G_OBJECT (estmt->stmt), "structure", &sqlst, NULL);
-				if (!sqlst->sql) {
-					gchar *sql;
-					sql = gda_statement_to_sql (GDA_STATEMENT (estmt->stmt), NULL, NULL);
-					history = query_editor_history_item_new (sql, estmt->result, estmt->exec_error);
-					g_free (sql);
-				}
-				else
-					history = query_editor_history_item_new (sqlst->sql,
-										 estmt->result, estmt->exec_error);
-				gda_sql_statement_free (sqlst);
+	if (! tconsole->priv->current_exec->statements) {
+		execution_batch_free (tconsole->priv->current_exec);
+		tconsole->priv->current_exec = NULL;
+		return;
+	}
 
-				history->within_transaction = estmt->within_transaction;
+	ExecutionStatement *estmt;
+	estmt = (ExecutionStatement*) tconsole->priv->current_exec->statements->data;
+	g_assert (estmt->exec_id == exec_id);
+	g_assert (!estmt->result);
+	g_assert (!estmt->exec_error);
 
-				if (estmt->exec_error) {
-					browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-							    _("Error executing query:\n%s"),
-							    estmt->exec_error && estmt->exec_error->message ?
-							    estmt->exec_error->message : _("No detail"));
-					TO_IMPLEMENT;
-					/* FIXME: offer the opportunity to stop execution of batch if there
-					 *        are some remaining statements to execute
-					 * FIXME: store error in history => modify QueryEditorHistoryItem
-					 */
-				}
-				else
-					browser_window_push_status (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-								    "QueryConsolePage", _("Statement executed"), TRUE);
+	ExecutionBatch *ebatch;
+	ebatch = tconsole->priv->current_exec;
+	query_editor_start_history_batch (tconsole->priv->history, ebatch->hist_batch);
+	if (out_result)
+		estmt->result = g_object_ref (out_result);
+	if (error)
+		estmt->exec_error = g_error_copy (error);
 
-				/* display a message if a transaction has been started */
-				if (! history->within_transaction &&
-				    browser_connection_get_transaction_status (tconsole->priv->bcnc) &&
-				    gda_statement_get_statement_type (estmt->stmt) != GDA_SQL_STATEMENT_BEGIN) {
-					browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-									   GTK_MESSAGE_INFO,
-									   "QueryExecTransactionStarted",
-									   "%s", _("A transaction has automatically been started\n"
-										   "during this statement's execution, this usually\n"
-										   "happens when blobs are selected (and the transaction\n"
-										   "will have to remain opened while the blobs are still\n"
-										   "accessible, clear the corresponding history item before\n"
-										   "closing the transaction)."));
-				}
-				
-				query_editor_add_history_item (tconsole->priv->history, history);
-				query_editor_history_item_unref (history);
+	QueryEditorHistoryItem *history;
+	GdaSqlStatement *sqlst;
+	g_object_get (G_OBJECT (estmt->stmt), "structure", &sqlst, NULL);
+	if (!sqlst->sql) {
+		gchar *sql;
+		sql = gda_statement_to_sql (GDA_STATEMENT (estmt->stmt), NULL, NULL);
+		history = query_editor_history_item_new (sql, estmt->result, estmt->exec_error);
+		g_free (sql);
+	}
+	else
+		history = query_editor_history_item_new (sqlst->sql,
+							 estmt->result, estmt->exec_error);
+	gda_sql_statement_free (sqlst);
 
-				/* get rid of estmt */
-				estmt->exec_id = 0;
-				execution_statement_free (estmt);
-				tconsole->priv->current_exec->statements =
-					g_slist_delete_link (tconsole->priv->current_exec->statements,
-							     tconsole->priv->current_exec->statements);
+	history->within_transaction = estmt->within_transaction;
 
-				/* more to do ? */
-				if (tconsole->priv->current_exec->statements) {
-					estmt = (ExecutionStatement*) tconsole->priv->current_exec->statements->data;
-					estmt->within_transaction =
-						browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
-					estmt->exec_id = browser_connection_execute_statement (tconsole->priv->bcnc,
-											       estmt->stmt,
-											       tconsole->priv->params,
-											       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-											       FALSE,
-											       &(estmt->exec_error));
-					if (estmt->exec_id == 0) {
-						browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-								    _("Error executing query:\n%s"),
-								    estmt->exec_error && estmt->exec_error->message ?
-								    estmt->exec_error->message : _("No detail"));
-					}
-					else
-						alldone = FALSE;
-				}
-			}
-			else
-				alldone = FALSE;
+	/* display a message if a transaction has been started */
+	if (! history->within_transaction &&
+	    browser_connection_get_transaction_status (tconsole->priv->bcnc) &&
+	    gda_statement_get_statement_type (estmt->stmt) != GDA_SQL_STATEMENT_BEGIN) {
+		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+						   GTK_MESSAGE_INFO,
+						   "QueryExecTransactionStarted",
+						   "%s", _("A transaction has automatically been started\n"
+							   "during this statement's execution, this usually\n"
+							   "happens when blobs are selected (and the transaction\n"
+							   "will have to remain opened while the blobs are still\n"
+							   "accessible, clear the corresponding history item before\n"
+							   "closing the transaction)."));
+	}
+
+	query_editor_add_history_item (tconsole->priv->history, history);
+	query_editor_history_item_unref (history);
+
+	if (estmt->exec_error)
+		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+				    _("Error executing query:\n%s"),
+				    estmt->exec_error && estmt->exec_error->message ?
+				    estmt->exec_error->message : _("No detail"));
+	else
+		browser_window_push_status (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+					    "QueryConsolePage", _("Statement executed"), TRUE);
+
+	/* get rid of estmt */
+	estmt->exec_id = 0;
+	execution_statement_free (estmt);
+	tconsole->priv->current_exec->statements =
+		g_slist_delete_link (tconsole->priv->current_exec->statements,
+				     tconsole->priv->current_exec->statements);
+	if (error)
+		goto onerror;
+
+	/* more to do ? */
+	if (tconsole->priv->current_exec->statements) {
+		estmt = (ExecutionStatement*) tconsole->priv->current_exec->statements->data;
+		estmt->within_transaction =
+			browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
+		estmt->exec_id = browser_connection_execute_statement_cb (tconsole->priv->bcnc,
+									  estmt->stmt,
+									  tconsole->priv->params,
+									  GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									  FALSE,
+									  (BrowserConnectionExecuteCallback) query_exec_done_cb,
+									  tconsole, &(estmt->exec_error));
+		if (estmt->exec_id == 0) {
+			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+					    _("Error executing query:\n%s"),
+					    estmt->exec_error && estmt->exec_error->message ?
+					    estmt->exec_error->message : _("No detail"));
+			goto onerror;
 		}
 	}
 	
-	if (alldone) {
-		if (tconsole->priv->current_exec) {
-			execution_batch_free (tconsole->priv->current_exec);
-			tconsole->priv->current_exec = NULL;
-		}
-
-		tconsole->priv->current_exec_id = 0;
+	if (! tconsole->priv->current_exec->statements) {
+		execution_batch_free (tconsole->priv->current_exec);
+		tconsole->priv->current_exec = NULL;
 	}
+	return;
 
-	return !alldone;
+ onerror:
+	execution_batch_free (tconsole->priv->current_exec);
+	tconsole->priv->current_exec = NULL;
 }
 
 static void
@@ -1121,29 +1117,32 @@ actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 		estmt->stmt = GDA_STATEMENT (list->data);
 		ebatch->statements = g_slist_prepend (ebatch->statements, estmt);
 
-		if (list == stmt_list) {
-			estmt->within_transaction =
-				browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
-			estmt->exec_id = browser_connection_execute_statement (tconsole->priv->bcnc,
-									       estmt->stmt,
-									       params,
-									       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-									       FALSE, &(estmt->exec_error));
-			if (estmt->exec_id == 0) {
-				browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-						    _("Error executing query: %s"),
-						    estmt->exec_error && estmt->exec_error->message ? estmt->exec_error->message : _("No detail"));
-				execution_batch_free (ebatch);
-				return;
-			}
+		if (list != stmt_list)
+			continue;
+
+		/* only the 1st statement is actually executed, to be able to
+		 * stop others following statements to be executed if there is an
+		 * execution error.
+		 */
+		estmt->within_transaction =
+			browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
+		estmt->exec_id = browser_connection_execute_statement_cb (tconsole->priv->bcnc,
+									  estmt->stmt,
+									  params,
+									  GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+									  FALSE,
+									  (BrowserConnectionExecuteCallback) query_exec_done_cb,
+									  tconsole, &(estmt->exec_error));
+		if (estmt->exec_id == 0) {
+			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+					    _("Error executing query: %s"),
+					    estmt->exec_error && estmt->exec_error->message ? estmt->exec_error->message : _("No detail"));
+			execution_batch_free (ebatch);
+			return;
 		}
 	}
 	ebatch->statements = g_slist_reverse (ebatch->statements);
-
 	tconsole->priv->current_exec = ebatch;
-	tconsole->priv->current_exec_id = g_timeout_add (200,
-							 (GSourceFunc) query_exec_fetch_cb,
-							 tconsole);
 }
 
 static void
