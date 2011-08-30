@@ -1160,6 +1160,8 @@ focus_on_hist_data (QueryEditor *editor, HistItemData *hdata)
 		GtkTextIter iter;
 
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
+		if (editor->priv->hist_focus)
+			hist_item_data_unref (editor->priv->hist_focus);
 		editor->priv->hist_focus = hist_item_data_ref (hdata);
 		if (hdata->item)
 			g_object_set (G_OBJECT (hdata->tag),
@@ -1245,6 +1247,10 @@ query_editor_start_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *
 		empty = TRUE;
 		
 		hist_batch = query_editor_history_batch_new (run_time, NULL);
+	}
+	else {
+		if (g_slist_find (editor->priv->batches_list, hist_batch))
+			return;
 	}
 
 	/* update editor->priv->insert_into_batch */
@@ -1605,7 +1611,7 @@ query_editor_del_history_batch (QueryEditor *editor, QueryEditorHistoryBatch *ba
 	focus_on_hist_data (editor, focus);
 
 	/* remove all history items */
-	for (list =  batch->hist_items; list; list =  batch->hist_items) {
+	for (list =  batch->hist_items; list; list = batch->hist_items) {
 		hdata = g_hash_table_lookup (editor->priv->hash, list->data);
 		g_assert (hdata);
 
@@ -1857,6 +1863,9 @@ query_editor_history_batch_ref (QueryEditorHistoryBatch *qib)
 {
 	g_return_val_if_fail (qib, NULL);
 	qib->ref_count++;
+#ifdef QUERY_EDITOR_DEBUG
+	g_print ("%s (%p) ref count:%d\n", __FUNCTION__, qib, qib->ref_count);
+#endif
 	return qib;
 }
 
@@ -1865,6 +1874,9 @@ query_editor_history_batch_unref (QueryEditorHistoryBatch *qib)
 {
 	g_return_if_fail (qib);
 	qib->ref_count--;
+#ifdef QUERY_EDITOR_DEBUG
+	g_print ("%s (%p) ref count:%d\n", __FUNCTION__, qib, qib->ref_count);
+#endif
 	if (qib->ref_count <= 0) {
 		if (qib->hist_items) {
 			g_slist_foreach (qib->hist_items, (GFunc) query_editor_history_item_unref, NULL);
@@ -1932,6 +1944,9 @@ query_editor_history_item_ref (QueryEditorHistoryItem *qih)
 {
 	g_return_val_if_fail (qih, NULL);
 	qih->ref_count++;
+#ifdef QUERY_EDITOR_DEBUG
+	g_print ("%s (%p) ref count:%d\n", __FUNCTION__, qih, qih->ref_count);
+#endif
 	return qih;
 }
 
@@ -1940,6 +1955,9 @@ query_editor_history_item_unref (QueryEditorHistoryItem *qih)
 {
 	g_return_if_fail (qih);
 	qih->ref_count--;
+#ifdef QUERY_EDITOR_DEBUG
+	g_print ("%s (%p) ref count:%d\n", __FUNCTION__, qih, qih->ref_count);
+#endif
 	if (qih->ref_count <= 0) {
 		g_free (qih->sql);
 		if (qih->result)
@@ -1974,6 +1992,9 @@ hist_item_data_ref (HistItemData *hdata)
 {
 	g_return_val_if_fail (hdata, NULL);
 	hdata->ref_count ++;
+#ifdef QUERY_EDITOR_DEBUG
+	g_print ("%s (%p) ref count:%d\n", __FUNCTION__, hdata, hdata->ref_count);
+#endif
 	return hdata;
 }
 
@@ -1982,6 +2003,9 @@ hist_item_data_unref (HistItemData *hdata)
 {
 	g_return_if_fail (hdata);
 	hdata->ref_count --;
+#ifdef QUERY_EDITOR_DEBUG
+	g_print ("%s (%p) ref count:%d\n", __FUNCTION__, hdata, hdata->ref_count);
+#endif
 	if (hdata->ref_count <= 0) {
 		if (hdata->batch)
 			query_editor_history_batch_unref (hdata->batch);
