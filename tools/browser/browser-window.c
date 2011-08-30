@@ -487,6 +487,7 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 	gtk_container_add (GTK_CONTAINER (ti), svbox);
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), ti, -1);
         gtk_widget_show_all (GTK_WIDGET (ti));
+	gtk_widget_hide (GTK_WIDGET (spinner));
 	bwin->priv->spinner = spinner;
 
 	/* statusbar */
