@@ -1158,8 +1158,7 @@ clean_field_specs (GSList *fields)
 	GSList *list;
 	XmlColumnSpec *spec;
 
-	list = fields;
-	while (list) {
+	for (list = fields; list; list = list->next) {
 		spec = (XmlColumnSpec*)(list->data);
 		xmlFree (spec->id);
 		xmlFree (spec->name);
@@ -1169,8 +1168,6 @@ clean_field_specs (GSList *fields)
 		xmlFree (spec->table);
 		xmlFree (spec->ref);
 		xmlFree (spec);
-
-		list = g_slist_next (list);
 	}
 	g_slist_free (fields);
 }
@@ -1320,10 +1317,10 @@ init_xml_import (GdaDataModelImport *model)
 			model->priv->extract.xml.reader = NULL;
 			return;
 		}
-		
-		list = fields;
-		pos = 0;
-		while (list) {
+
+		for (list = fields, pos = 0;
+		     list;
+		     list = list->next, pos++) {
 			GdaColumn *column;
 			XmlColumnSpec *spec;
 			
@@ -1336,9 +1333,7 @@ init_xml_import (GdaDataModelImport *model)
 			gda_column_set_dbms_type (column, (gchar*)spec->dbms_type);
 			gda_column_set_g_type (column, spec->gdatype);
 			gda_column_set_allow_null (column, spec->nullok);
-			
-			list = g_slist_next (list);
-			pos++;
+			g_print ("New col %d type [%s]\n", pos, gda_g_type_to_string (gda_column_get_g_type (column)));
 		}
 		clean_field_specs (fields);
 
@@ -1657,9 +1652,9 @@ init_node_import (GdaDataModelImport *model)
 	if (str) 
 		g_object_set_data_full (G_OBJECT (model), "descr", str, xmlFree);
 
-	list = fields;
-	pos = 0;
-	while (list) {
+	for (list = fields, pos = 0;
+	     list;
+	     list = list->next, pos++) {
 		GdaColumn *column;
 		XmlColumnSpec *spec;
 
@@ -1673,9 +1668,6 @@ init_node_import (GdaDataModelImport *model)
 		gda_column_set_allow_null (column, spec->nullok);
 
 		model->priv->columns = g_slist_prepend (model->priv->columns, gda_column_copy (column));
-
-		list = g_slist_next (list);
-		pos++;
 	}
 	clean_field_specs (fields);
 	model->priv->columns = g_slist_reverse (model->priv->columns);
