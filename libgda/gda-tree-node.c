@@ -456,7 +456,7 @@ gda_tree_node_dump_children (GdaTreeNode *node, const gchar *prefix, GString *in
 
 /**
  * gda_tree_node_new:
- * @name: a name, or %NULL
+ * @name: (allow-none): a name, or %NULL
  *
  * Creates a new #GdaTreeNode object
  *
@@ -474,7 +474,7 @@ gda_tree_node_new (const gchar *name)
  * _gda_tree_node_add_children:
  * @node: a #GdaTreeNode
  * @mgr: a #GdaTreeManager object
- * @childen: a list of #GdaTreeNode objects, or %NULL
+ * @childen: (allow-none): a list of #GdaTreeNode objects, or %NULL
  *
  * Requests that @node take the list of nodes in @children as its children. The children list
  * may be a new list of children, or may be an update of a list of children which previously existed.
@@ -719,7 +719,7 @@ gda_tree_node_get_node_attribute (GdaTreeNode *node, const gchar *attribute)
  * gda_tree_node_set_node_attribute:
  * @node: a #GdaTreeNode
  * @attribute: attribute name
- * @value: (transfer none): a #GValue, or %NULL
+ * @value: (transfer none) (allow-none): a #GValue, or %NULL
  * @destroy: a function to be called when @attribute is not needed anymore, or %NULL
  *
  * Set the value associated to a named attribute. The @attribute string is used AS IT IS by this method (eg.

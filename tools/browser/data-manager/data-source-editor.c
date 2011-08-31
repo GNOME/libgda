@@ -274,7 +274,7 @@ update_dependencies_display (DataSourceEditor *editor)
 /**
  * data_source_editor_display_source
  * @editor: a #DataSourceEditor widget
- * @source: the #DataSource for which properties are displayed, or %NULL
+ * @source: (allow-none): the #DataSource for which properties are displayed, or %NULL
  *
  * Update @editor's display with @source's properties
  */

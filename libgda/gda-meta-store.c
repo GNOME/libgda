@@ -643,7 +643,7 @@ gda_meta_store_new_with_file (const gchar *file_name)
 
 /**
  * gda_meta_store_new:
- * @cnc_string: a connection string, or %NULL for an in-memory internal database
+ * @cnc_string: (allow-none): a connection string, or %NULL for an in-memory internal database
  *
  * Create a new #GdaMetaStore object.
  *

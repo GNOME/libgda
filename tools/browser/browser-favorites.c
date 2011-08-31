@@ -1066,7 +1066,7 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
  * @bfav: a #BrowserFavorites
  * @session_id: 0 for now
  * @contents: the favorite's contents
- * @out_fav: a #BrowserFavoritesAttributes to be filled with the favorite's attributes, or %NULL
+ * @out_fav: (allow-none): a #BrowserFavoritesAttributes to be filled with the favorite's attributes, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
@@ -1284,7 +1284,7 @@ browser_favorites_get_actions (BrowserFavorites *bfav, BrowserConnection *bcnc, 
 
 /**
  * browser_favorites_free_action
- * @action: a #BrowserFavoriteAction, or %NULL
+ * @action: (allow-none): a #BrowserFavoriteAction, or %NULL
  *
  * Frees @action
  */
@@ -1303,7 +1303,7 @@ browser_favorites_free_action (BrowserFavoriteAction *action)
 
 /**
  * browser_favorites_free_actions_list
- * @actions_list: a list of #BrowserFavoriteAction, or %NULL
+ * @actions_list: (allow-none): a list of #BrowserFavoriteAction, or %NULL
  *
  * Free a list of #BrowserFavoriteAction (frees the list and each #BrowserFavoriteAction)
  */

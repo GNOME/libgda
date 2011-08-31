@@ -168,7 +168,7 @@ gda_report_rml_document_get_property (GObject *object,
 
 /**
  * gda_report_rml_document_new
- * @engine: a #GdaReportEngine, or %NULL
+ * @engine: (allow-none): a #GdaReportEngine, or %NULL
  *
  * Creates a new #GdaReportRmlDocument using @engine if specified
  *

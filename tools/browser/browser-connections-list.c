@@ -307,7 +307,7 @@ connection_new_cb (G_GNUC_UNUSED GtkButton *button, G_GNUC_UNUSED BrowserConnect
 
 /**
  * browser_connections_list_show
- * @current: a connection to select for displaed properties, or %NULL
+ * @current: (allow-none): a connection to select for displaed properties, or %NULL
  *
  * Creates a new #BrowserConnectionsList widget and displays it.
  * Only one is created and shown (singleton)

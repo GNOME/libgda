@@ -496,7 +496,7 @@ cnc_params_editor_changed_cb (G_GNUC_UNUSED GdauiProviderSpecEditor *editor, Gda
 
 /**
  * gdaui_login_new:
- * @dsn: a data source name, or %NULL
+ * @dsn: (allow-none): a data source name, or %NULL
  *
  * Creates a new login widget which enables the user to specify connection parameters.
  *
@@ -619,7 +619,7 @@ gdaui_login_get_connection_information (GdauiLogin *login)
 /**
  * gdaui_login_set_dsn:
  * @login: a #GdauiLogin object
- * @dsn: a data source name, or %NULL
+ * @dsn: (allow-none): a data source name, or %NULL
  *
  * Changes the information displayed in @login, to represent @dsn.
  * If @login's mode has %GDA_UI_LOGIN_HIDE_DSN_SELECTION_MODE, then

@@ -267,8 +267,8 @@ browser_canvas_item_get_canvas (BrowserCanvasItem *item)
 /**
  * browser_canvas_item_get_edge_nodes
  * @item: a #BrowserCanvasItem object
- * @from: a place to store the FROM part of the edge, or %NULL
- * @to: a place to store the TO part of the edge, or %NULL
+ * @from: (allow-none): a place to store the FROM part of the edge, or %NULL
+ * @to: (allow-none): a place to store the TO part of the edge, or %NULL
  *
  * If the @item canvas item represents a "link" between two other canvas items (an edge), then
  * set @from and @to to those items.

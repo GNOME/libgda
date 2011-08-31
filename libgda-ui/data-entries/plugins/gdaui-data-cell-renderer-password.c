@@ -336,7 +336,7 @@ gdaui_data_cell_renderer_password_set_property (GObject *object,
 
 /**
  * gdaui_data_cell_renderer_password_new
- * @dh: a #GdaDataHandler object, or %NULL
+ * @dh: (allow-none): a #GdaDataHandler object, or %NULL
  * @type: the #GType being edited
  *
  * Creates a new #GdauiDataCellRendererPassword.

@@ -115,7 +115,7 @@ gda_tree_mgr_xml_get_type (void)
 /**
  * gda_tree_mgr_xml_new:
  * rootnode: the #xmlNodePtr root
- * xml_attributes: a string containing the XML attributes which will appear in each node, separated by the | character, or %NULL to list all attributes
+ * xml_attributes: (allow-none): a string containing the XML attributes which will appear in each node, separated by the | character, or %NULL to list all attributes
  *
  * Creates a new #GdaTreeManager object which will add one tree node for each
  * subnodes of an XmlNodePtr

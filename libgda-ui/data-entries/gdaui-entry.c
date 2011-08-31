@@ -414,7 +414,7 @@ gdaui_entry_get_text (GdauiEntry *entry)
 /**
  * gdaui_entry_set_text:
  * @entry: a #GdauiEntry widget
- * @text: the text to set into @entry, or %NULL
+ * @text: (allow-none): the text to set into @entry, or %NULL
  *
  * Sets @text into @entry. 
  *

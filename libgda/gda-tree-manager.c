@@ -248,10 +248,10 @@ gda_tree_manager_get_property (GObject *object,
 
 /*
  * @manager: a #GdaTreeManager object
- * @node: a #GdaTreeNode object, or %NULL
+ * @node: (allow-none): a #GdaTreeNode object, or %NULL
  * @children_nodes: a list of #GdaTreeNode nodes which have previously been created by a similar call and
  * need to be updated ore moved
- * @out_error: a boolean to store if there was an error (can be %NULL)
+ * @out_error: (allow-none): a boolean to store if there was an error (can be %NULL)
  * @error: a place to store errors, or %NULL
  *
  * Creates (or updates) the list of #GdaTreeNode objects which are placed as children of @node. The returned

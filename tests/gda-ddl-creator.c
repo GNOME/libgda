@@ -661,7 +661,7 @@ create_server_operation_for_view (G_GNUC_UNUSED GdaDDLCreator *ddlc, GdaServerPr
 /**
  * gda_ddl_creator_set_connection
  * @ddlc: a #GdaDDLCreator object
- * @cnc: a #GdaConnection object or %NULL
+ * @cnc: (allow-none): a #GdaConnection object or %NULL
  *
  *
  */

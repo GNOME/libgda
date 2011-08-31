@@ -312,7 +312,7 @@ static gboolean gda_sql_select_target_check_validity (GdaSqlSelectTarget *target
 /**
  * gda_sql_statement_check_validity
  * @stmt: a #GdaSqlStatement pointer
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * If @cnc is not %NULL, then checks that all the database objects referenced in the statement actually
@@ -362,7 +362,7 @@ gda_sql_statement_check_validity (GdaSqlStatement *stmt, GdaConnection *cnc, GEr
 /**
  * gda_sql_statement_check_validity_m
  * @stmt: a #GdaSqlStatement pointer
- * @mstruct: a #GdaMetaStruct object, or %NULL
+ * @mstruct: (allow-none): a #GdaMetaStruct object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * If @mstruct is not %NULL, then checks that all the database objects referenced in the statement i
@@ -1379,7 +1379,7 @@ static gboolean foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GErr
 /**
  * gda_sql_statement_normalize
  * @stmt: a pointer to a #GdaSqlStatement structure
- * @cnc: a #GdaConnection object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * "Normalizes" (in place) some parts of @stmt, which means @stmt may be modified.

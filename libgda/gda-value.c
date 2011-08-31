@@ -580,7 +580,7 @@ gda_blob_free (gpointer boxed)
 /**
  * gda_blob_set_op:
  * @blob: a #GdaBlob value
- * @op: a #GdaBlobOp object, or %NULL
+ * @op: (allow-none): a #GdaBlobOp object, or %NULL
  *
  * correctly assigns @op to @blob
  */
@@ -1193,7 +1193,7 @@ gda_value_new_null (void)
 
 /**
  * gda_value_new_default:
- * @default_val: the default value as a string, or %NULL
+ * @default_val: (allow-none): the default value as a string, or %NULL
  *
  * Creates a new default value.
  *

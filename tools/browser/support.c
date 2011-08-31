@@ -201,7 +201,7 @@ browser_show_message (GtkWindow *parent, const gchar *format, ...)
 #ifdef HAVE_GDU
 /**
  * browser_show_help
- * @topic: the help topic, or %NULL for the global index
+ * @topic: (allow-none): the help topic, or %NULL for the global index
  */
 void
 browser_show_help (GtkWindow *parent, const gchar *topic)

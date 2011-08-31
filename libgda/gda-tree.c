@@ -437,7 +437,7 @@ gda_tree_update_part (GdaTree *tree, GdaTreeNode *node, GError **error)
 /**
  * gda_tree_update_children:
  * @tree: a #GdaTree object
- * @node: (allow-none): a #GdaTreeNode node in @tree
+ * @node: (allow-none): a #GdaTreeNode node in @tree, or %NULL
  * @error: (allow-none): a place to store errors, or %NULL
  *
  * Update the children of @node in @tree (not recursively, to update recursively, use
@@ -481,8 +481,8 @@ gda_tree_update_children (GdaTree *tree, GdaTreeNode *node, GError **error)
 /**
  * gda_tree_dump:
  * @tree: a #GdaTree
- * @node: a #GdaTreeNode to start the dump from, or %NULL for a full dump
- * @stream: a stream to send the dump to, or %NULL for STDOUT
+ * @node: (allow-none): a #GdaTreeNode to start the dump from, or %NULL for a full dump
+ * @stream: (allow-none): a stream to send the dump to, or %NULL for STDOUT
  *
  * Dumps the contents of @tree to @stream, using a hierarchical view.
  *
@@ -513,7 +513,7 @@ static GSList *decompose_path_as_segments (const gchar *path, gboolean use_names
 /**
  * gda_tree_get_nodes_in_path:
  * @tree: a #GdaTree object
- * @tree_path: full path to the required nodes (if @use_names is %TRUE, then it must start with '/')
+ * @tree_path: (allow-none): full path to the required nodes (if @use_names is %TRUE, then it must start with '/'), or %NULL
  * @use_names: if %TRUE, then @tree_path will be interpreted as a unix style path, and if %FALSE,
  *             then @tree_path will be interpreted similarly to the #GtkTreePath's string representation.
  *
@@ -748,7 +748,11 @@ create_or_update_children (GSList *mgrlist, GdaTreeNode *parent, gboolean disabl
 static GSList *split_absolute_path (const gchar *path, gboolean *out_error);
 static GSList *split_indexed_path (const gchar *path, gboolean *out_error);
 
-/*
+/**
+ * decompose_path_as_segments
+ * @path: a path using '/'
+ * @use_names: 
+ *
  * Returns: a new list of allocated strings (one for each segment of @path), or %NULL
  */
 static GSList *

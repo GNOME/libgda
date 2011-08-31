@@ -483,8 +483,8 @@ gda_sql_builder_set_where (GdaSqlBuilder *builder, GdaSqlBuilderId cond_id)
  * gda_sql_builder_select_add_field:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @table_name: a table name, or %NULL
- * @alias: an alias (eg. for the "AS" clause), or %NULL
+ * @table_name: (allow-none): a table name, or %NULL
+ * @alias: (allow-none): an alias (eg. for the "AS" clause), or %NULL
  *
  * Valid only for: SELECT statements.
  *
@@ -651,7 +651,7 @@ gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name
  * gda_sql_builder_add_field_value_as_gvalue:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @value: value to set the field to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
+ * @value: (allow-none): value to set the field to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
  *
  * Valid only for: INSERT, UPDATE statements.
  *
@@ -799,8 +799,8 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
 /**
  * gda_sql_builder_add_expr_value:
  * @builder: a #GdaSqlBuilder object
- * @dh: a #GdaDataHandler to use, or %NULL
- * @value: value to set the expression to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
+ * @dh: (allow-none): a #GdaDataHandler to use, or %NULL
+ * @value: (allow-none): value to set the expression to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
  *
@@ -855,7 +855,7 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
 /**
  * gda_sql_builder_add_expr: (skip)
  * @builder: a #GdaSqlBuilder object
- * @dh: a #GdaDataHandler to use, or %NULL
+ * @dh: (allow-none): a #GdaDataHandler to use, or %NULL
  * @type: the GType of the following argument
  * @...: value to set the expression to, of the type specified by @type
  *

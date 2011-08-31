@@ -49,13 +49,13 @@ typedef struct _GdaSqlSelectOrder GdaSqlSelectOrder;
 /**
  * GdaSqlExpr:
  * @any: inheritance structure
- * @value: a #GValue, or %NULL. Please see specific note about this field. 
- * @param_spec: a #GdaSqlParamSpec, or %NULL if this is not a variable
- * @func: not %NULL if expression is a function or aggregate
- * @cond: not %NULL if expression is a condition or an operation
- * @select: not %NULL if expression is a sub select statement (#GdaSqlStatementSelect or #GdaSqlStatementCompound)
- * @case_s: not %NULL if expression is a CASE WHEN ... expression
- * @cast_as: not %NULL if expression must be cast to another data type
+ * @value: (allow-none): a #GValue, or %NULL. Please see specific note about this field. 
+ * @param_spec: (allow-none): a #GdaSqlParamSpec, or %NULL if this is not a variable
+ * @func: (allow-none): not %NULL if expression is a function or aggregate
+ * @cond: (allow-none): not %NULL if expression is a condition or an operation
+ * @select: (allow-none): not %NULL if expression is a sub select statement (#GdaSqlStatementSelect or #GdaSqlStatementCompound)
+ * @case_s: (allow-none): not %NULL if expression is a CASE WHEN ... expression
+ * @cast_as: (allow-none): not %NULL if expression must be cast to another data type
  * @value_is_ident: Please see specific note about the @value field
  *
  * This structure contains any expression, either as a value (the @value part is set),
@@ -445,8 +445,8 @@ typedef enum {
  * @any: inheritance structure
  * @type: type of join
  * @position: represents a join between a target at (pos &lt; @position) and the one at @position
- * @expr: joining expression, or %NULL
- * @use: list of #GdaSqlField pointers to use when joining, or %NULL
+ * @expr: (allow-none): joining expression, or %NULL
+ * @use: (allow-none): list of #GdaSqlField pointers to use when joining, or %NULL
  *
  * This structure represents a join between two targets in a SELECT statement.
  */
@@ -478,8 +478,8 @@ const gchar       *gda_sql_select_join_type_to_string (GdaSqlSelectJoinType type
 /**
  * GdaSqlSelectFrom:
  * @any: inheritance structure
- * @targets: list of #GdaSqlSelectTarget
- * @joins: list of #GdaSqlSelectJoin
+ * @targets: (element-type Gda.SqlSelectTarget): list of #GdaSqlSelectTarget
+ * @joins: (element-type Gda.SqlSelectJoin): list of #GdaSqlSelectJoin
  *
  * This structure represents the FROM clause of a SELECT statement, it lists targets and joins
  */

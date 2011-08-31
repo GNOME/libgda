@@ -596,8 +596,8 @@ gda_column_get_attribute (GdaColumn *column, const gchar *attribute)
  * gda_column_set_attribute:
  * @column: a #GdaColumn
  * @attribute: attribute name as a static string
- * @value: a #GValue, or %NULL
- * @destroy: a function to be called when @attribute is not needed anymore, or %NULL
+ * @value: (allow-none): a #GValue, or %NULL
+ * @destroy: (allow-none): a function to be called when @attribute is not needed anymore, or %NULL
  *
  * Set the value associated to a named attribute. The @attribute string is 'stolen' by this method, and
  * the memory it uses will be freed using the @destroy function when no longer needed (if @destroy is %NULL,

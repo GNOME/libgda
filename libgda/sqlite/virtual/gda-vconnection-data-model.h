@@ -59,7 +59,7 @@ typedef GdaDataModel *(*GdaVconnectionDataModelCreateModelFunc) (GdaVconnectionD
 
 /**
  * GdaVconnectionDataModelFunc:
- * @Param1: a pointer to a #GdaDataModel
+ * @Param1: (allow-none): a pointer to a #GdaDataModel
  * @Param2: the name of the table represented by @Param1
  * @Param3: a data pointer, passed as last ergument to gda_vconnection_data_model_foreach()
  *
@@ -135,11 +135,11 @@ typedef GdaDataModel *(*GdaVconnectionDataModelCreateFModelFunc) (GdaVconnection
 
 /**
  * GdaVconnectionDataModelSpec:
- * @data_model: a #GdaDataModel, or %NULL
- * @create_columns_func: a pointer to a #GdaVconnectionDataModelCreateColumnsFunc function, or %NULL
- * @create_model_func: a pointer to a #GdaVconnectionDataModelCreateModelFunc function, or %NULL
- * @create_filter_func: a pointer to a #GdaVconnectionDataModelParseFilterFunc function, or %NULL
- * @create_filtered_model_func: a pointer to a #GdaVconnectionDataModelCreateFModelFunc function, or %NULL
+ * @data_model: (allow-none): a #GdaDataModel, or %NULL
+ * @create_columns_func: (allow-none): a pointer to a #GdaVconnectionDataModelCreateColumnsFunc function, or %NULL
+ * @create_model_func: (allow-none): a pointer to a #GdaVconnectionDataModelCreateModelFunc function, or %NULL
+ * @create_filter_func: (allow-none): a pointer to a #GdaVconnectionDataModelParseFilterFunc function, or %NULL
+ * @create_filtered_model_func: (allow-none): a pointer to a #GdaVconnectionDataModelCreateFModelFunc function, or %NULL
  *
  * This structure holds all the information supplied to declare a virtual table using
  * gda_vconnection_data_model_add(). You don't need to provider pointers for all the functions and
