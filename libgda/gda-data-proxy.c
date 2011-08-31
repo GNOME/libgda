@@ -759,6 +759,7 @@ static void proxied_model_row_inserted_cb (GdaDataModel *model, gint row, GdaDat
 static void proxied_model_row_updated_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy);
 static void proxied_model_row_removed_cb (GdaDataModel *model, gint row, GdaDataProxy *proxy);
 static void proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy);
+static void proxied_model_access_changed_cb (GdaDataModel *model, GdaDataProxy *proxy);
 
 
 /**
@@ -846,6 +847,8 @@ clean_proxy (GdaDataProxy *proxy)
 						      G_CALLBACK (proxied_model_row_removed_cb), proxy);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
 						      G_CALLBACK (proxied_model_reset_cb), proxy);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
+						      G_CALLBACK (proxied_model_access_changed_cb), proxy);
 		g_object_unref (proxy->priv->model);
 		proxy->priv->model = NULL;
 	}
@@ -952,7 +955,9 @@ gda_data_proxy_set_property (GObject *object,
 					  G_CALLBACK (proxied_model_row_removed_cb), proxy);
 			g_signal_connect (G_OBJECT (model), "reset",
 					  G_CALLBACK (proxied_model_reset_cb), proxy);
-			
+			g_signal_connect (G_OBJECT (model), "access-changed",
+					  G_CALLBACK (proxied_model_access_changed_cb), proxy);
+
 			/* initial chunk settings, no need to emit any signal as it's an initial state */
 			proxy->priv->chunk = compute_display_chunk (proxy);
 			if (!proxy->priv->chunk->mapping) {
@@ -1220,6 +1225,12 @@ proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy)
 	}
 
 	gda_data_model_reset (GDA_DATA_MODEL (proxy));
+}
+
+static void
+proxied_model_access_changed_cb (G_GNUC_UNUSED GdaDataModel *model, GdaDataProxy *proxy)
+{
+	g_signal_emit_by_name (proxy, "access-changed");
 }
 
 /**
