@@ -572,7 +572,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 
 /**
  * gdaui_data_cell_renderer_textual_new:
- * @dh: a #GdaDataHandler object, or %NULL
+ * @dh: (allow-none): a #GdaDataHandler object, or %NULL
  * @type: the #GType being edited
  * @options: options as a string
  *

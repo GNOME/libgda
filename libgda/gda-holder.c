@@ -407,7 +407,7 @@ gda_holder_copy (GdaHolder *orig)
 /**
  * gda_holder_new_inline: (skip)
  * @type: a valid GLib type
- * @id: the id of the holder to create, or %NULL
+ * @id: (allow-none): the id of the holder to create, or %NULL
  * @...: value to set
  *
  * Creates a new #GdaHolder object with an ID set to @id, of type @type, 

@@ -439,8 +439,8 @@ clean_notifications (GdaThreadWrapper *wrapper, ThreadData *td)
 }
 
 /*
- * @wrapper: may be %NULL
- * @td: may be %NULL
+ * @wrapper: (allow-none): may be %NULL
+ * @td: (allow-none): may be %NULL
  *
  * Either @wrapper and @td are both NULL, or they are both NOT NULL
  */
@@ -835,9 +835,9 @@ gda_thread_wrapper_unset_io_channel (GdaThreadWrapper *wrapper)
 /**
  * gda_thread_wrapper_execute:
  * @wrapper: a #GdaThreadWrapper object
- * @func: the function to execute
- * @arg: argument to pass to @func
- * @arg_destroy_func: function to be called when the execution has finished, to destroy @arg
+ * @func: the function to execute, not %NULL
+ * @arg: (allow-none): argument to pass to @func, or %NULL
+ * @arg_destroy_func: (allow-none): function to be called when the execution has finished, to destroy @arg, or %NULL
  * @error: a place to store errors, for errors occurring in this method, not errors occurring while @func
  *         is executed, or %NULL
  *
@@ -848,8 +848,8 @@ gda_thread_wrapper_unset_io_channel (GdaThreadWrapper *wrapper)
  * This method returns immediately, and the caller then needs to use gda_thread_wrapper_fetch_result() to
  * check if the execution has finished and get the result.
  *
- * Once @func's execution is finished, if it is not %NULL, the @arg_destroy_func destruction function is called
- * on @arg. This occurs in the thread calling gda_thread_wrapper_fetch_result().
+ * Once @func's execution is finished, if @arg is not %NULL, the @arg_destroy_func destruction function is called
+ * on @arg. This call occurs in the thread calling gda_thread_wrapper_fetch_result().
  *
  * Returns: the job ID, or 0 if an error occurred
  *
@@ -911,11 +911,11 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 }
 
 /**
- * gda_thread_wrapper_execute_void
+ * gda_thread_wrapper_execute_void:
  * @wrapper: a #GdaThreadWrapper object
- * @func: the function to execute
- * @arg: argument to pass to @func
- * @arg_destroy_func: function to be called when the execution has finished, to destroy @arg
+ * @func: the function to execute, not %NULL
+ * @arg: (allow-none): argument to pass to @func
+ * @arg_destroy_func: (allow-none): function to be called when the execution has finished, to destroy @arg, or %NULL
  * @error: a place to store errors, for errors occurring in this method, not errors occurring while @func
  *         is executed, or %NULL
  *
@@ -928,8 +928,8 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
  * chance to execute the @arg_destroy_func function if not %NULL (note that gda_thread_wrapper_iterate() is
  * called by gda_thread_wrapper_fetch_result() itself).
  *
- * Once @func's execution is finished, if it is not %NULL, the @arg_destroy_func destruction function is called
- * on @arg. This occurs in the thread calling gda_thread_wrapper_fetch_result().
+ * Once @func's execution is finished, if @arg is not %NULL, the @arg_destroy_func destruction function is called
+ * on @arg. This call occurs in the thread calling gda_thread_wrapper_fetch_result().
  *
  * Returns: the job ID, or 0 if an error occurred
  *

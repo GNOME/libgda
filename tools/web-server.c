@@ -327,7 +327,7 @@ server_callback (G_GNUC_UNUSED SoupServer *server, SoupMessage *msg,
 /**
  * web_server_new
  * @type: the #GType requested
- * @auth_token: the authentication token, or %NULL
+ * @auth_token: (allow-none): the authentication token, or %NULL
  *
  * Creates a new server of type @type
  *

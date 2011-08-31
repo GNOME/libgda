@@ -296,7 +296,7 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 
 /**
  * gdaui_raw_form_new:
- * @model: a #GdaDataModel, or %NULL
+ * @model: (allow-none): a #GdaDataModel, or %NULL
  *
  * Creates a new #GdauiRawForm widget to display data in @model
  *

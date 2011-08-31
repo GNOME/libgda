@@ -251,7 +251,7 @@ gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc,
  * gda_vconnection_data_model_add:
  * @cnc: a #GdaVconnectionDataModel connection
  * @spec: a #GdaVconnectionDataModelSpec structure, used AS IS (not copied) and can be modified
- * @spec_free_func: function to call when freeing @spec, or %NULL
+ * @spec_free_func: (allow-none): function to call when freeing @spec, or %NULL
  * @table_name: the name of the table
  * @error: a place to store errors, or %NULL
  *

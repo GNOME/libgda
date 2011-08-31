@@ -1083,9 +1083,9 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 /**
  * gdaui_server_operation_new_in_dialog
  * @op: a #GdaServerOperation object
- * @parent: the parent window for the new dialog, or %NULL
- * @title: the title of the dialog window, or %NULL
- * @header: a helper text displayed at the top of the dialog, or %NULL
+ * @parent: (allow-none): the parent window for the new dialog, or %NULL
+ * @title: (allow-none): the title of the dialog window, or %NULL
+ * @header: (allow-none): a helper text displayed at the top of the dialog, or %NULL
  *
  * Creates a new #GdauiServerOperation widget in the same way as gdaui_server_operation_new()
  * and puts it into a #GtkDialog widget. The returned dialog has the "Ok" and "Cancel" buttons

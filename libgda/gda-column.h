@@ -90,7 +90,7 @@ void            gda_column_set_attribute      (GdaColumn *column, const gchar *a
  * gda_column_set_attribute_static
  * @holder: a #GdaHolder
  * @attribute: attribute's name
- * @value: the value to set the attribute to, or %NULL
+ * @value: (allow-none): the value to set the attribute to, or %NULL
  *
  * This function is similar to gda_column_set_attribute() but for static strings
  */

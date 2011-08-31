@@ -1250,7 +1250,7 @@ spaces_since_start_of_line (GtkTextIter *iter)
  * get_markup_token
  * @iter: starting position
  * @out_nb_spaces_before: a place to set the value returned by spaces_since_start_of_line() if called
- * @out_end: place to put the last used position, or %NULL
+ * @out_end: (allow-none): place to put the last used position, or %NULL
  * @rte: the #GdauiRtEditor
  *
  * Parses marking tokens, nothing else

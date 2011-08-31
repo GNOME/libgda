@@ -76,7 +76,7 @@ gda_data_handler_iface_init (G_GNUC_UNUSED gpointer g_class)
 /**
  * gda_data_handler_get_sql_from_value:
  * @dh: an object which implements the #GdaDataHandler interface
- * @value: the value to be converted to a string
+ * @value: (allow-none): the value to be converted to a string, or %NULL
  *
  * Creates a new string which is an SQL representation of the given value, the returned string
  * can be used directly in an SQL statement. For example if @value is a G_TYPE_STRING, then
@@ -107,7 +107,7 @@ gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
 /**
  * gda_data_handler_get_str_from_value:
  * @dh: an object which implements the #GdaDataHandler interface
- * @value: the value to be converted to a string
+ * @value: (allow-none): the value to be converted to a string, or %NULL
  *
  * Creates a new string which is a "user friendly" representation of the given value
  * (in the user's locale, specially for the dates). If the value is 
@@ -133,7 +133,7 @@ gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
 /**
  * gda_data_handler_get_value_from_sql:
  * @dh: an object which implements the #GdaDataHandler interface
- * @sql: an SQL string
+ * @sql: (allow-none): an SQL string, or %NULL
  * @type: a GType
  *
  * Creates a new GValue which represents the SQL value given as argument. This is
@@ -165,7 +165,7 @@ gda_data_handler_get_value_from_sql (GdaDataHandler *dh, const gchar *sql, GType
 /**
  * gda_data_handler_get_value_from_str:
  * @dh: an object which implements the #GdaDataHandler interface
- * @str: a string
+ * @str: (allow-none): a string or %NULL
  * @type: a GType
  *
  * Creates a new GValue which represents the @str value given as argument. This is

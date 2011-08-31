@@ -384,9 +384,9 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * gda_utility_data_model_dump_data_to_xml:
  * @model: a #GdaDataModel
  * @parent: the parent XML node
- * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
+ * @cols: (allow-none) (array length=nb_cols): an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
- * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
+ * @rows: (allow-none) (array length=nb_rows): an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
  * @use_col_ids: set to %TRUE to add column ID information
  *
@@ -891,7 +891,7 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 
 /**
  * gda_compute_unique_table_row_condition_with_cnc:
- * @cnc: a #GdaConnection, or %NULL
+ * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
  * @require_pk: set to TRUE if a primary key ir required
@@ -2307,8 +2307,8 @@ static gboolean _sql_identifier_needs_quotes (const gchar *str);
 /**
  * gda_sql_identifier_quote:
  * @id: an SQL identifier
- * @cnc: a #GdaConnection object, or %NULL
- * @prov: a #GdaServerProvider object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @prov: (allow-none): a #GdaServerProvider object, or %NULL
  * @for_meta_store set to %TRUE if the returned string will be used in a #GdaMetaStore
  * @force_quotes: set to %TRUE to force the returned string to be quoted
  *

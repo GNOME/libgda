@@ -3087,7 +3087,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 /**
  * gda_data_proxy_set_filter_expr:
  * @proxy: a #GdaDataProxy object
- * @filter_expr: an SQL based expression which will filter the contents of @proxy, or %NULL to remove any previous filter
+ * @filter_expr: (allow-none): an SQL based expression which will filter the contents of @proxy, or %NULL to remove any previous filter
  * @error: a place to store errors, or %NULL
  *
  * Sets a filter among the rows presented by @proxy. The filter is defined by a filter expression

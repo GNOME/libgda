@@ -428,7 +428,7 @@ gdaui_formatted_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gin
 /**
  * gdaui_formatted_entry_new:
  * @format: a format string
- * @mask: a mask string, or %NULL
+ * @mask: (allow-none): a mask string, or %NULL
  *
  * Creates a new #GdauiFormattedEntry widget.
  *

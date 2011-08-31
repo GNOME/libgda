@@ -2085,8 +2085,8 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 /**
  * gda_server_operation_get_sql_identifier_at: (skip)
  * @op: a #GdaServerOperation object
- * @cnc: a #GdaConnection, or %NULL
- * @prov: a #GdaServerProvider, or %NULL
+ * @cnc: (allow-none): a #GdaConnection, or %NULL
+ * @prov: (allow-none): a #GdaServerProvider, or %NULL
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path
  *
@@ -2124,8 +2124,8 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 /**
  * gda_server_operation_get_sql_identifier_at_path:
  * @op: a #GdaServerOperation object
- * @cnc: a #GdaConnection, or %NULL
- * @prov: a #GdaServerProvider, or %NULL
+ * @cnc: (allow-none): a #GdaConnection, or %NULL
+ * @prov: (allow-none): a #GdaServerProvider, or %NULL
  * @path: a complete path to a node (starting with "/")
  *
  * This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
@@ -2165,9 +2165,9 @@ gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConn
 /**
  * gda_server_operation_set_value_at_path:
  * @op: a #GdaServerOperation object
- * @value: a string
- * @error: a place to store errors or %NULL
+ * @value: (allow-none): a string
  * @path: a complete path to a node (starting with "/")
+ * @error: a place to store errors or %NULL
  *
  * Set the value for the node at the path formed using @path_format and the ... ellipse (the rules are the same as
  * for g_strdup_printf()). 
@@ -2347,7 +2347,7 @@ gda_server_operation_set_value_at_path (GdaServerOperation *op, const gchar *val
 /**
  * gda_server_operation_set_value_at: (skip)
  * @op: a #GdaServerOperation object
- * @value: a string
+ * @value: (allow-none): a string
  * @error: a place to store errors or %NULL
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path
@@ -2409,7 +2409,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 /**
  * gda_server_operation_is_valid:
  * @op: a #GdaServerOperation widget
- * @xml_file: an XML specification file (see gda_server_operation_new())
+ * @xml_file: (allow-none): an XML specification file (see gda_server_operation_new()) or %NULL
  * @error: a place to store an error, or %NULL
  *
  * Tells if all the required values in @op have been defined.
@@ -2482,7 +2482,7 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 /**
  * gda_server_operation_prepare_create_database:
  * @provider: the database provider to use
- * @db_name: the name of the database to create, or %NULL
+ * @db_name: (allow-none): the name of the database to create, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Creates a new #GdaServerOperation object which contains the specifications required
@@ -2522,7 +2522,7 @@ gda_server_operation_prepare_create_database (const gchar *provider, const gchar
 
 /**
  * gda_server_operation_perform_create_database:
- * @provider: the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_create_database()
+ * @provider: (allow-none): the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_create_database()
  * @op: a #GdaServerOperation object obtained using gda_server_operation_prepare_create_database()
  * @error: a place to store en error, or %NULL
  *
@@ -2555,7 +2555,7 @@ gda_server_operation_perform_create_database (GdaServerOperation *op, const gcha
 /**
  * gda_server_operation_prepare_drop_database:
  * @provider: the database provider to use
- * @db_name: the name of the database to drop, or %NULL
+ * @db_name: (allow-none): the name of the database to drop, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Creates a new #GdaServerOperation object which contains the specifications required
@@ -2595,8 +2595,8 @@ gda_server_operation_prepare_drop_database (const gchar *provider, const gchar *
 
 /**
  * gda_server_operation_perform_drop_database:
- * @provider: the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_drop_database()
- * @op: a #GdaServerOperation object obtained using gda_prepare_drop_database()
+ * @provider: (allow-none): the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_drop_database()
+ * @op: a #GdaServerOperation object obtained using gda_server_operation_prepare_drop_database()
  * @error: a place to store en error, or %NULL
  *
  * Destroys an existing database using the specifications in @op. @op can be obtained using

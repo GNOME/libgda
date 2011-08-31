@@ -1311,7 +1311,7 @@ browser_window_get_connection (BrowserWindow *bwin)
 /*
  * perspective_data_new
  * @bwin: a #BrowserWindow in which the perspective will be
- * @factory: a #BrowserPerspectiveFactory, or %NULL
+ * @factory: (allow-none): a #BrowserPerspectiveFactory, or %NULL
  *
  * Creates a new #PerspectiveData structure, it increases @bcnc's reference count.
  *
@@ -1648,8 +1648,8 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
  * browser_window_customize_perspective_ui
  * @bwin: a #BrowserWindow
  * @bpers: the #BrowserPerspective concerned
- * @actions_group: a #GtkActionGroup object, or %NULL
- * @ui_info: a merge UI string, or %NULL. See gtk_ui_manager_add_ui_from_string()
+ * @actions_group: (allow-none): a #GtkActionGroup object, or %NULL
+ * @ui_info: (allow-none): a merge UI string, or %NULL. See gtk_ui_manager_add_ui_from_string()
  *
  * Customizes a UI specific to the @bpers perspective. Any
  * previous customization is removed, replaced by the new requested one.

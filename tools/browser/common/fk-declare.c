@@ -545,7 +545,7 @@ update_dialog_response_sensitiveness (FkDeclare *decl)
 /**
  * fk_declare_write
  * @decl: a #FkDeclare widget
- * @bwin: a #BrowserWindow, or %NULL
+ * @bwin: (allow-none): a #BrowserWindow, or %NULL
  * @error: a place to store errors or %NULL
  *
  * Actually declares the new foreign key in the meta store
@@ -617,7 +617,7 @@ fk_declare_write (FkDeclare *decl, BrowserWindow *bwin, GError **error)
 /**
  * fk_declare_undeclare:
  * @mstruct: the #GdaMEtaStruct to delete the FK from
- * @bwin: a #BrowserWindow, or %NULL
+ * @bwin: (allow-none): a #BrowserWindow, or %NULL
  * @decl_fk: the #GdaMetaTableForeignKey fk to delete
  * @error: a place to store errors, or %NULL
  *

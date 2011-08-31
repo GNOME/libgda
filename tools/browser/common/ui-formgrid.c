@@ -828,7 +828,7 @@ ui_formgrid_new (GdaDataModel *model, gboolean scroll_form, GdauiDataProxyInfoFl
 /**
  * ui_formgrid_handle_user_prefs
  * @formgrid: a #UiFormGrid widget
- * @bcnc: a #BrowserConnection, or %NULL to let @formgrid determine it itself
+ * @bcnc: (allow-none): a #BrowserConnection, or %NULL to let @formgrid determine it itself
  * @stmt: the #GdaStatement which has been executed to produce the #GdaDataModel displayed in @formgrid
  *
  * Takes into account the UI preferences of the user
@@ -1051,7 +1051,7 @@ ui_formgrid_get_grid_widget (UiFormGrid *formgrid)
 /**
  * ui_formgrid_set_connection
  * @formgrid: a #UiFormGrid widget
- * @bcnc: a #BrowserConnection, or %NULL
+ * @bcnc: (allow-none): a #BrowserConnection, or %NULL
  *
  * Tells @formgrid to use @bcnc as connection when actions have to be executed
  */

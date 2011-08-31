@@ -457,7 +457,7 @@ combo_contents_changed_cb (G_GNUC_UNUSED GdauiCombo *entry, GdauiEntryCombo *com
 /**
  * gdaui_entry_combo_set_values:
  * @combo: a #GdauiEntryCombo widet
- * @values: (element-type GValue): a list of #GValue values, or %NULL
+ * @values: (element-type GValue) (allow-none): a list of #GValue values, or %NULL
  *
  * Sets the values of @combo to the specified ones. None of the
  * values provided in the list is modified.

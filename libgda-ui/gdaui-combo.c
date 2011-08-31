@@ -543,8 +543,8 @@ _gdaui_combo_get_selected (GdauiCombo *combo)
 /*
  * _gdaui_combo_set_selected_ext
  * @combo: a #GdauiCombo widget
- * @values: a list of #GValue objects
- * @cols_index: array of gint, index of column to which each value in @values corresponds, or %NULL
+ * @values: (element-type GObject.Value): a list of #GValue objects
+ * @cols_index: (allow-none) (array): array of gint, index of column to which each value in @values corresponds, or %NULL
  *
  * Sets the currently selected row of @combo from the values stored in @values, assuming that
  * these values correspond to the columns listed in @cols_index. @cols_index must contain at least as
@@ -578,7 +578,7 @@ _gdaui_combo_set_selected_ext (GdauiCombo *combo, const GSList *values, gint *co
  * _gdaui_combo_get_selected_ext
  * @combo: a #GdauiCombo widget
  * @n_cols: the number of columns for which values are requested
- * @cols_index: an array of @n_cols #gint indicating which column to get a value for, or %NULL
+ * @cols_index: (array) (allow-none) (array length=n_cols): an array of @n_cols #gint indicating which column to get a value for, or %NULL
  *
  * Get a list of the currently selected values in @combo. The list itself must be free'd using g_slist_free(), 
  * but not the values it contains. If there is no selected value in @combo, then %NULL is returned.
