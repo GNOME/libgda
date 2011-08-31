@@ -41,6 +41,7 @@ G_BEGIN_DECLS
 
 /* Definition of the GType's values used in GValue*/
 #define GDA_TYPE_NULL 0
+#define GDA_TYPE_DEFAULT (gda_default_get_type())
 #define	GDA_TYPE_BINARY (gda_binary_get_type())
 #define GDA_TYPE_BLOB (gda_blob_get_type())
 #define	GDA_TYPE_GEOMETRIC_POINT (gda_geometricpoint_get_type())
@@ -53,6 +54,7 @@ G_BEGIN_DECLS
 
 
 /* Definition of the GDA_VALUE_HOLDS macros */
+#define GDA_VALUE_HOLDS_DEFAULT(value)         G_VALUE_HOLDS(value, GDA_TYPE_DEFAULT)
 #define GDA_VALUE_HOLDS_BINARY(value)          G_VALUE_HOLDS(value, GDA_TYPE_BINARY)
 #define GDA_VALUE_HOLDS_BLOB(value)            G_VALUE_HOLDS(value, GDA_TYPE_BLOB)
 #define GDA_VALUE_HOLDS_GEOMETRIC_POINT(value) G_VALUE_HOLDS(value, GDA_TYPE_GEOMETRIC_POINT)
@@ -118,7 +120,7 @@ typedef GList GdaValueList;
 #define gda_value_isa(value, type) (G_VALUE_HOLDS(value, type))
 
 GValue                           *gda_value_new (GType type);
-
+GValue                           *gda_value_new_default (const gchar *default_val);
 GValue                           *gda_value_new_binary (const guchar *val, glong size);
 GValue                           *gda_value_new_blob (const guchar *val, glong size);
 GValue                           *gda_value_new_blob_from_file (const gchar *filename);
@@ -180,6 +182,7 @@ GdaBlob                          *gda_string_to_blob (const gchar *str);
 
 /* Custom data types */
 
+GType                             gda_default_get_type (void) G_GNUC_CONST;
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
 gpointer                          gda_numeric_copy (gpointer boxed);
 void                              gda_numeric_free (gpointer boxed);

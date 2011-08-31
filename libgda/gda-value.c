@@ -261,8 +261,65 @@ set_from_string (GValue *value, const gchar *as_string)
 	return retval;
 }
 
-/* 
- * Register the GdaBinary type in the GType system 
+/*
+ * Register the DEFAULT type in the GType system
+ */
+static void
+string_to_default (const GValue *src, GValue *dest)
+{
+       g_return_if_fail (G_VALUE_HOLDS_STRING (src) && GDA_VALUE_HOLDS_DEFAULT (dest));
+       g_value_set_boxed (dest, g_value_get_string (src));
+}
+
+static void
+default_to_string (const GValue *src, GValue *dest)
+{
+	gchar *str;
+	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) && GDA_VALUE_HOLDS_DEFAULT (src));
+	str = (gchar*) g_value_get_boxed (src);
+	g_value_set_string (dest, str);
+}
+
+static gpointer
+gda_default_copy (G_GNUC_UNUSED gpointer boxed)
+{
+	if (boxed)
+		return (gpointer) g_strdup (boxed);
+	else
+		return (gpointer) NULL;
+}
+
+static void
+gda_default_free (G_GNUC_UNUSED gpointer boxed)
+{
+	g_free (boxed);
+}
+
+GType
+gda_default_get_type (void)
+{
+       static GType type = 0;
+
+       if (G_UNLIKELY (type == 0)) {
+               type = g_boxed_type_register_static ("GdaDefault",
+                                                    (GBoxedCopyFunc) gda_default_copy,
+                                                    (GBoxedFreeFunc) gda_default_free);
+
+               g_value_register_transform_func (G_TYPE_STRING,
+                                                type,
+                                                string_to_default);
+
+               g_value_register_transform_func (type,
+                                                G_TYPE_STRING,
+                                                default_to_string);
+       }
+
+       return type;
+}
+
+
+/*
+ * Register the GdaBinary type in the GType system
  */
 
 /* Transform a String GValue to a GdaBinary*/
@@ -1152,6 +1209,25 @@ gda_value_new (GType type)
 	value = g_new0 (GValue, 1);
 	g_value_init (value, type);
 
+	return value;
+}
+
+/**
+ * gda_value_new_default:
+ * @default_val: the default value as a string, or %NULL
+ *
+ * Creates a new default value.
+ *
+ * Returns: (transfer full): a new #GValue of the type #GDA_TYPE_DEFAULT
+ *
+ * Since: 4.2.9
+ */
+GValue *
+gda_value_new_default (const gchar *default_val)
+{
+	GValue *value;
+	value = gda_value_new (GDA_TYPE_DEFAULT);
+	g_value_set_boxed (value, default_val);
 	return value;
 }
 

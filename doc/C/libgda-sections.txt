@@ -809,6 +809,7 @@ gda_blob_op_get_type
 GdaValueAttribute
 gda_value_new
 gda_value_new_null
+gda_value_new_default
 gda_value_copy
 gda_value_free
 gda_value_new_from_string

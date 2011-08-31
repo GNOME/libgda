@@ -512,12 +512,10 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 				value = gda_data_handler_get_value_from_sql (dh,
 									     g_value_get_string (evalue),
 									     pspec->g_type);
-				if (value) {
-					gda_holder_set_default_value (h, value);
-					gda_value_free (value);
-				}
-				else
-					gda_holder_set_default_value (h, ((GdaSqlExpr*) node)->value);
+				if (!value)
+					value = gda_value_new_default (g_value_get_string (evalue));
+				gda_holder_set_default_value (h, value);
+				gda_value_free (value);
 			}
 			else
 				gda_holder_set_default_value (h, ((GdaSqlExpr*) node)->value);

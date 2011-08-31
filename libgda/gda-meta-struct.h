@@ -242,7 +242,7 @@ typedef struct {
  * @gtype: the detected column's #GType
  * @pkey: tells if the column is part of a primary key
  * @nullok: tells if the column can be %NULL
- * @default_value: the column's default value
+ * @default_value: the column's default value, represented as a valid SQL value (surrounded by simple quotes for strings, ...), or %NULL if column has no default value
  *
  * This structure represents a table of view's column, its contents must not be modified.
  */
