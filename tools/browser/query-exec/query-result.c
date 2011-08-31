@@ -24,11 +24,10 @@
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include "../common/ui-formgrid.h"
+#include "marshal.h"
 
 struct _QueryResultPrivate {
 	QueryEditor *history;
-	QueryEditorHistoryBatch *hbatch;
-	QueryEditorHistoryItem *hitem;
 
 	GHashTable *hash; /* key = a QueryEditorHistoryItem, value = a #GtkWidget, refed here all the times */
 	GtkWidget *child;
@@ -39,6 +38,14 @@ static void query_result_init       (QueryResult *result, QueryResultClass *klas
 static void query_result_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
+
+/* signals */
+enum {
+        RERUN_REQUESTED,
+        LAST_SIGNAL
+};
+
+static gint query_result_signals [LAST_SIGNAL] = { 0 };
 
 static GtkWidget *make_widget_for_notice (void);
 static GtkWidget *make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar *sql);
@@ -56,6 +63,15 @@ query_result_class_init (QueryResultClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	query_result_signals [RERUN_REQUESTED] =
+		g_signal_new ("rerun-requested",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (QueryResultClass, rerun_requested),
+                              NULL, NULL,
+                              _qe_marshal_VOID__POINTER_POINTER, G_TYPE_NONE,
+                              2, G_TYPE_POINTER, G_TYPE_POINTER);
+
 	object_class->finalize = query_result_finalize;
 }
 
@@ -67,8 +83,6 @@ query_result_init (QueryResult *result, G_GNUC_UNUSED QueryResultClass *klass)
 	/* allocate private structure */
 	result->priv = g_new0 (QueryResultPrivate, 1);
 	result->priv->history = NULL;
-	result->priv->hbatch = NULL;
-	result->priv->hitem = NULL;
 	result->priv->hash = g_hash_table_new_full (NULL, NULL, NULL, g_object_unref);
 
 	wid = make_widget_for_notice ();
@@ -107,10 +121,6 @@ query_result_finalize (GObject *object)
 						      G_CALLBACK (history_cleared_cb), result);
 		g_object_unref (result->priv->history);
 	}
-	if (result->priv->hbatch)
-		query_editor_history_batch_unref (result->priv->hbatch);
-	if (result->priv->hitem)
-		query_editor_history_item_unref (result->priv->hitem);
 
 	g_free (result->priv);
 	result->priv = NULL;
@@ -327,6 +337,15 @@ make_widget_for_notice (void)
 	return label;
 }
 
+static void
+action_refresh_cb (GtkAction *action, QueryResult *qres)
+{
+	QueryEditorHistoryBatch *batch;
+	QueryEditorHistoryItem *item;
+	item = query_editor_get_current_history_item (qres->priv->history, &batch);
+	g_signal_emit (qres, query_result_signals [RERUN_REQUESTED], 0, batch, item);
+}
+
 static GtkWidget *
 make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar *sql)
 {
@@ -348,6 +367,29 @@ make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar 
 			goto out;
 		ui_formgrid_handle_user_prefs (UI_FORMGRID (grid), bcnc, stmt);
 		g_object_unref (stmt);
+
+		GtkUIManager *uimanager;
+		GtkActionGroup *agroup;
+		GtkAction *action;
+		guint mid;
+
+		agroup = gtk_action_group_new ("QueryResultGroup");
+		gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
+		action = gtk_action_new ("Refresh", "Refresh",
+					 _("Re-execute query"),
+					 GTK_STOCK_EXECUTE);
+		gtk_action_group_add_action (agroup, action);
+		g_signal_connect (G_OBJECT (action), "activate",
+				  G_CALLBACK (action_refresh_cb), qres);
+		g_object_unref (action);
+		uimanager = ui_formgrid_get_ui_manager (UI_FORMGRID (grid));
+		gtk_ui_manager_insert_action_group (uimanager, agroup, 0);
+		g_object_unref (agroup);
+
+		mid = gtk_ui_manager_new_merge_id (uimanager);
+		gtk_ui_manager_add_ui (uimanager, mid, "/ToolBar/RowModifExtension", "Refresh", "Refresh",
+				       GTK_UI_MANAGER_AUTO, TRUE);
+		gtk_ui_manager_ensure_update (uimanager);
 	}
  out:
 	return grid;

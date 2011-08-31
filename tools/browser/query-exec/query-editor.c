@@ -1399,6 +1399,7 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
 /**
  * query_editor_get_current_history_item
  * @editor: a #QueryEditor widget.
+ * @out_in_batch: a pointer to store the #QueryEditorHistoryBatch the returned item is in, or %NULL
  *
  * Get the current selected #QueryEditorHistoryItem
  * passed to query_editor_add_history_item().
@@ -1406,13 +1407,19 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
  * Returns: a #QueryEditorHistoryItem pointer, or %NULL
  */
 QueryEditorHistoryItem *
-query_editor_get_current_history_item (QueryEditor *editor)
+query_editor_get_current_history_item (QueryEditor *editor, QueryEditorHistoryBatch **out_in_batch)
 {
 	g_return_val_if_fail (QUERY_IS_EDITOR (editor), NULL);
 	g_return_val_if_fail (editor->priv->mode == QUERY_EDITOR_HISTORY, NULL);
 
-	if (editor->priv->hist_focus)
+	if (out_in_batch)
+		*out_in_batch = NULL;
+
+	if (editor->priv->hist_focus) {
+		if (out_in_batch)
+			*out_in_batch = editor->priv->hist_focus->batch;
 		return editor->priv->hist_focus->item;
+	}
 	else
 		return NULL;
 }
@@ -1425,7 +1432,7 @@ query_editor_get_current_history_item (QueryEditor *editor)
  * a #QueryEditorHistoryItem, but on the #QueryEditorHistoryBatch which was last
  * set by a call to query_editor_start_history_batch().
  * 
- * Returns: a #QueryEditorHistoryItem pointer, or %NULL
+ * Returns: a #QueryEditorHistoryBatch pointer, or %NULL
  */
 QueryEditorHistoryBatch *
 query_editor_get_current_history_batch (QueryEditor *editor)

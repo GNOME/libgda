@@ -988,6 +988,13 @@ data_source_execute (DataSource *source, GError **error)
 	source->priv->executing = FALSE;
 }
 
+static void
+action_refresh_cb (GtkAction *action, DataSource *source)
+{
+	source->priv->need_rerun = TRUE;
+	data_source_execute (source, NULL);
+}
+
 /**
  * data_source_create_grid
  *
@@ -1002,7 +1009,30 @@ data_source_create_grid (DataSource *source)
 		return NULL;
 
 	GtkWidget *fg;
-	fg = ui_formgrid_new (source->priv->model, FALSE, 0);
+	fg = ui_formgrid_new (source->priv->model, FALSE, GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS);
+
+	/* add a refresh action */
+	GtkUIManager *uimanager;
+	GtkActionGroup *agroup;
+	GtkAction *action;
+	guint mid;
+
+	agroup = gtk_action_group_new ("DSGroup");
+	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
+	action = gtk_action_new ("Refresh", "Refresh",
+				 _("Refresh data"), GTK_STOCK_EXECUTE);
+	gtk_action_group_add_action (agroup, action);
+	g_signal_connect (G_OBJECT (action), "activate",
+			  G_CALLBACK (action_refresh_cb), source);
+	g_object_unref (action);
+	uimanager = ui_formgrid_get_ui_manager (UI_FORMGRID (fg));
+	gtk_ui_manager_insert_action_group (uimanager, agroup, 0);
+	g_object_unref (agroup);
+
+	mid = gtk_ui_manager_new_merge_id (uimanager);
+	gtk_ui_manager_add_ui (uimanager, mid, "/ToolBar/RowModifExtension", "Refresh", "Refresh",
+			       GTK_UI_MANAGER_AUTO, TRUE);
+	gtk_ui_manager_ensure_update (uimanager);
 
 	return fg;
 }
