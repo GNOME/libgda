@@ -797,14 +797,25 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			}
 
 			/* try first with the file extension */
-			gchar *tmp;
+			gchar *tmp, *f1, *f2;
 			tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
-			filename = g_build_filename (dirname, tmp, NULL);
+			f1 = g_build_filename (dirname, tmp, NULL);
 			g_free (tmp);
-			if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
-				g_free (filename);
-				filename = g_build_filename (dirname, dbname, NULL);
+			f2 = g_build_filename (dirname, dbname, NULL);
+			if (g_file_test (f1, G_FILE_TEST_EXISTS)) {
+				filename = f1;
+				f1 = NULL;
 			}
+			else if (g_file_test (f2, G_FILE_TEST_EXISTS)) {
+				filename = f2;
+				f2 = NULL;
+			}
+			else {
+				filename = f1;
+				f1 = NULL;
+			}
+			g_free (f1);
+			g_free (f2);
 			g_free (dup);
 		}
 	}
