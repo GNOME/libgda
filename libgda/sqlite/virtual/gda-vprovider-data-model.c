@@ -1190,16 +1190,14 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 		if (! vtable->td->modif_stmt [ptype]) {
 			if (! stmt) {
 				tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-					(_("No statement provided to modify the data model "
-					   "representing the table"));
+					(_("No statement provided to modify the data"));
 				return SQLITE_READONLY;
 			}
 		
 			GdaSet *params;
 			if (! gda_statement_get_parameters (stmt, &params, NULL) || !params) {
 				tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-					(_("Invalid statement provided to modify the data model "
-					   "representing the table"));
+					(_("Invalid statement provided to modify the data"));
 				g_object_unref (stmt);
 				return SQLITE_READONLY;
 			}
@@ -1218,8 +1216,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			id = gda_holder_get_id (holder);
 			if (!id) {
 				tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-					(_("Invalid parameter in statement provided to modify "
-					   "the data model representing the table"));
+					(_("Invalid parameter in statement to modify the data"));
 				return SQLITE_READONLY;
 			}
 			if (*id == '+' && id[1]) {
@@ -1272,8 +1269,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 				if (! exec_set) {
 					/* can't give value to param named @id */
 					tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-						(_("Invalid parameter in statement provided to modify "
-						   "the data model representing the table"));
+						(_("Invalid parameter in statement to modify the data"));
 					return SQLITE_READONLY;
 				}
 				eh = gda_set_get_holder (exec_set, id);
@@ -1281,8 +1277,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 				    ! gda_holder_set_bind (holder, eh, NULL)) {
 					/* can't give value to param named @id */
 					tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-						(_("Invalid parameter in statement provided to modify "
-						   "the data model representing the table"));
+						(_("Invalid parameter in statement to modify the data"));
 					return SQLITE_READONLY;
 				}
 			}
@@ -1290,10 +1285,10 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 
 		GdaConnection *cnc;
 		cnc = gda_data_select_get_connection (GDA_DATA_SELECT (vtable->td->real_model));
-		
+
+		GError *lerror = NULL;
 #ifdef GDA_DEBUG_NO
 		gchar *sql;
-		GError *lerror = NULL;
 		sql = gda_statement_to_sql (stmt, NULL, NULL);
 		g_print ("SQL: [%s] ", sql);
 		g_free (sql);
@@ -1311,11 +1306,12 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 		if (!cnc ||
 		    (gda_connection_statement_execute_non_select (cnc, stmt,
 								  vtable->td->modif_params [ptype],
-								  NULL, NULL) == -1)) {
+								  NULL, &lerror) == -1)) {
 			/* failed to execute */
 			tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-				(_("Failed to execute the statement provided to modify "
-				   "the data model representing the table"));
+				(_("Failed to modify data: %s"),
+				 lerror && lerror->message ? lerror->message : _("No detail"));
+			g_clear_error (&lerror);
 			return SQLITE_READONLY;
 		}
 		return SQLITE_OK;
