@@ -1,4 +1,4 @@
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection=no
 
 if HAVE_LIBXSLT
 XSLT_DIR=libgda-xslt

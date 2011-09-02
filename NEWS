@@ -1,3 +1,28 @@
+libgda 4.2.9, 2011-09-02
+
+ - Improved GdaThreadWrapper notifications
+ - Fixed embedded MDBTOOLS's compilation issues
+ - GdaBrowser: improved LDAP support and other general improvements and
+   corrections
+ - SQL parser: support the ILIKE operator
+ - Many small corrections and improvements (compilation warnings,
+   documentation, UI, default values handling, ...)
+ - Better handle parameters valued to NULL in statements
+ - Web provider (DB access through a web server) improvements (deployment,
+   documentation and performances)
+ - Allow reporting of statement execution's delay
+ - Support out of tree UI plugins creation
+ - Bugs corrected: #651692, #651829, #651922, #652024, #653082,
+   #654370, #654068
+ - Translations:
+	- eo (Kristjan SCHMIDT)
+	- de (Christian Kirbach, Mario Blättermann)
+	- zh_CN (Yinghua Wang)
+	- es (Daniel Mustieles, Gonzalo Sanhueza)
+	- sl (Matej Urbančič)
+	- nb (Kjartan Maraas)
+	- fr (Claude Paroz)
+
 libgda 4.2.8, 2011-06-01
 
  - tools (GdaSql & GdaBrowser): allow to display detailed DSN information, and
