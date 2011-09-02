@@ -248,7 +248,7 @@ void
 gda_row_invalidate_value (G_GNUC_UNUSED GdaRow *row, GValue *value)
 {
 	gda_value_set_null (value);
-	G_VALUE_TYPE (value) = G_TYPE_INVALID;
+	G_VALUE_TYPE (value) = G_TYPE_NONE;
 }
 
 /**
@@ -265,7 +265,7 @@ gda_row_invalidate_value (G_GNUC_UNUSED GdaRow *row, GValue *value)
 gboolean
 gda_row_value_is_valid (G_GNUC_UNUSED GdaRow *row, GValue *value)
 {
-	return (G_VALUE_TYPE (value) == G_TYPE_INVALID) ? FALSE : TRUE;
+	return (G_VALUE_TYPE (value) == G_TYPE_NONE) ? FALSE : TRUE;
 }
 
 /**
