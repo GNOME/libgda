@@ -1,3 +1,27 @@
+libgda 4.99.4, 2011-09-02
+
+ - GdaBrowser: improved LDAP support and other general improvements and
+   corrections
+ - Many small corrections and improvements (documentation, UI,
+   default values handling, use GtkCssProvider, ...)
+ - GTK3 deprecations related corrections
+ - GObject introspection improvements
+ - Better handle parameters valued to NULL in statements
+ - Support out of tree UI plugins creation
+ - Allow reporting of statement execution's delay
+ - Web provider (DB access through a web server) improvements (deployment,
+   documentation and performances)
+ - Set embedded SQLite's version to 3.7.7.1
+ - Bugs corrected: #654370, #654068
+ - Translations:
+	- es (Daniel Mustieles)
+	- cs (Marek Černocký)
+	- sl (Matej Urbančič)
+	- de (Mario Blättermann)
+	- nb (Kjartan Maraas)
+	- zh_CN (Yinghua Wang)
+	- fr (Claude Paroz)
+
 libgda 4.99.3, 2011-07-06
 
  Lots of thanks to Murray Cumming for all the corrections he made in this version!
