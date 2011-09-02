@@ -313,31 +313,7 @@ threadwrapper = \
 
 sqlparser = \
 	sql-parser/gda-sql-parser.h \
-	sql-parser/gda-sql-statement.h \
-	sql-parser/gda-statement-struct-decl.h \
-	sql-parser/gda-statement-struct.h \
-	sql-parser/gda-statement-struct-compound.h \
-	sql-parser/gda-statement-struct-delete.h \
-	sql-parser/gda-statement-struct-update.h \
-	sql-parser/gda-statement-struct-insert.h \
-	sql-parser/gda-statement-struct-parts.h \
-	sql-parser/gda-statement-struct-pspec.h \
-	sql-parser/gda-statement-struct-select.h \
-	sql-parser/gda-statement-struct-trans.h \
-	sql-parser/gda-statement-struct-unknown.h \
-	sql-parser/gda-statement-struct-util.h \
-	sql-parser/gda-sql-parser.c \
-	sql-parser/gda-statement-struct.c \
-	sql-parser/gda-statement-struct-compound.c \
-	sql-parser/gda-statement-struct-delete.c \
-	sql-parser/gda-statement-struct-update.c \
-	sql-parser/gda-statement-struct-insert.c \
-	sql-parser/gda-statement-struct-parts.c \
-	sql-parser/gda-statement-struct-pspec.c \
-	sql-parser/gda-statement-struct-select.c \
-	sql-parser/gda-statement-struct-trans.c \
-	sql-parser/gda-statement-struct-unknown.c \
-	sql-parser/gda-statement-struct-util.c
+	sql-parser/gda-sql-parser.c
 
 handlers = \
 	handlers/gda-handler-bin.h \
