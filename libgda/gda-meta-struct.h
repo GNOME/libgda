@@ -113,6 +113,10 @@ typedef enum {
  *
  * This structure specifies a #GdaMetaDbObject to represent a table's specific attributes,
  * its contents must not be modified.
+ *
+ * Note that in some cases, the columns cannot be determined for views, and in this case the
+ * @columns will be %NULL (this can be the case for example with SQLite where a view
+ * uses a function which is not natively provided by SQLite.
  */
 typedef struct {
 	/*< public >*/
