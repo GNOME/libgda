@@ -728,56 +728,73 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 	if ((dbo->obj_type == GDA_META_DB_VIEW) || (dbo->obj_type == GDA_META_DB_TABLE)) {
 		GdaInternalCommandResult *subres;
 		GdaMetaTable *mt = GDA_META_TABLE (dbo);
-		GSList *list;
 
-		model = gda_data_model_array_new (5);
-		gda_data_model_set_column_title (model, 0, _("Column"));
-		gda_data_model_set_column_title (model, 1, _("Type"));
-		gda_data_model_set_column_title (model, 2, _("Nullable"));
-		gda_data_model_set_column_title (model, 3, _("Default"));
-		gda_data_model_set_column_title (model, 4, _("Extra"));
-		if (dbo->obj_type == GDA_META_DB_VIEW)
-			g_object_set_data_full (G_OBJECT (model), "name", 
-						g_strdup_printf (_("List of columns for view '%s'"), 
-								 dbo->obj_short_name), 	g_free);
-		else
-			g_object_set_data_full (G_OBJECT (model), "name", 
-						g_strdup_printf (_("List of columns for table '%s'"), 
-								 dbo->obj_short_name), g_free);
-		for (list = mt->columns; list; list = list->next) {
-			GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
-			GList *values = NULL;
-			GValue *val;
-			GString *string = NULL;
-
-			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_name);
-			values = g_list_append (values, val);
-			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_type);
-			values = g_list_append (values, val);
-			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->nullok ? _("yes") : _("no"));
-			values = g_list_append (values, val);
-			g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->default_value);
-			values = g_list_append (values, val);
-
-			gda_meta_table_column_foreach_attribute (tcol, 
-					      (GdaAttributesManagerFunc) meta_table_column_foreach_attribute_func, &string);
-			if (string) {
-				g_value_take_string ((val = gda_value_new (G_TYPE_STRING)), string->str);
-				g_string_free (string, FALSE);
-			}
+		if (mt->columns) {
+			GSList *list;
+			model = gda_data_model_array_new (5);
+			gda_data_model_set_column_title (model, 0, _("Column"));
+			gda_data_model_set_column_title (model, 1, _("Type"));
+			gda_data_model_set_column_title (model, 2, _("Nullable"));
+			gda_data_model_set_column_title (model, 3, _("Default"));
+			gda_data_model_set_column_title (model, 4, _("Extra"));
+			if (dbo->obj_type == GDA_META_DB_VIEW)
+				g_object_set_data_full (G_OBJECT (model), "name", 
+							g_strdup_printf (_("List of columns for view '%s'"), 
+									 dbo->obj_short_name), 	g_free);
 			else
-				val = gda_value_new_null ();
-			values = g_list_append (values, val);
+				g_object_set_data_full (G_OBJECT (model), "name", 
+							g_strdup_printf (_("List of columns for table '%s'"), 
+									 dbo->obj_short_name), g_free);
+			for (list = mt->columns; list; list = list->next) {
+				GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
+				GList *values = NULL;
+				GValue *val;
+				GString *string = NULL;
 
-			gda_data_model_append_values (model, values, NULL);
-			g_list_foreach (values, (GFunc) gda_value_free, NULL);
-			g_list_free (values);
-		}
+				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_name);
+				values = g_list_append (values, val);
+				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_type);
+				values = g_list_append (values, val);
+				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->nullok ? _("yes") : _("no"));
+				values = g_list_append (values, val);
+				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->default_value);
+				values = g_list_append (values, val);
+
+				gda_meta_table_column_foreach_attribute (tcol, 
+									 (GdaAttributesManagerFunc) meta_table_column_foreach_attribute_func, &string);
+				if (string) {
+					g_value_take_string ((val = gda_value_new (G_TYPE_STRING)), string->str);
+					g_string_free (string, FALSE);
+				}
+				else
+					val = gda_value_new_null ();
+				values = g_list_append (values, val);
+
+				gda_data_model_append_values (model, values, NULL);
+				g_list_foreach (values, (GFunc) gda_value_free, NULL);
+				g_list_free (values);
+			}
 		
-		subres = g_new0 (GdaInternalCommandResult, 1);
-		subres->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-		subres->u.model = model;
-		res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
+			subres = g_new0 (GdaInternalCommandResult, 1);
+			subres->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+			subres->u.model = model;
+			res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
+		}
+		else {
+			subres = g_new0 (GdaInternalCommandResult, 1);
+			subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+			subres->u.txt = g_string_new ("");
+			if (dbo->obj_type == GDA_META_DB_VIEW)
+				g_string_append_printf (subres->u.txt,
+							_("Could not determine columns of view '%s'"),
+							dbo->obj_short_name);
+			else
+				g_string_append_printf (subres->u.txt,
+							_("Could not determine columns of table '%s'"),
+							dbo->obj_short_name);
+
+			res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
+		}
 		
 		if (dbo->obj_type == GDA_META_DB_VIEW) {
 			/* VIEW specific */
