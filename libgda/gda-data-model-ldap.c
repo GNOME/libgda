@@ -197,7 +197,7 @@ gda_data_model_ldap_get_type (void)
  * In case of multi valued attributes, an error will be returned when trying to read the attribute:
  * gda_data_model_iter_get_value_at() will return %NULL when using an iterator.
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  *
  * Since: 4.2.8
  */

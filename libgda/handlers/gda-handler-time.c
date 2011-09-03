@@ -426,10 +426,10 @@ handler_compute_locale (GdaHandlerTime *hdl)
 /**
  * gda_handler_time_get_no_locale_str_from_value:
  * @hdl: a #GdaHandlerTime object
- * @value: a GValue value
+ * @value: a #GValue value
  *
- * Retunrs: a new string representing @value without taking the current
- * locele into account
+ * Returns: a new string representing @value without taking the current
+ * locale into account
  */
 gchar *
 gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue *value)

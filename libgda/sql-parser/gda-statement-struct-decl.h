@@ -99,7 +99,7 @@ typedef enum {
  * Structures identification
  */
 /**
- * GdaSqlAnyPartType:
+ * GdaSqlAnyPartType: (skip)
  * @GDA_SQL_ANY_STMT_SELECT: structure is a #GdaSqlStatementSelect
  * @GDA_SQL_ANY_STMT_INSERT: structure is a #GdaSqlStatementInsert
  * @GDA_SQL_ANY_STMT_UPDATE: structure is a #GdaSqlStatementUpdate
@@ -157,7 +157,7 @@ typedef enum {
 
 
 /**
- * GdaSqlAnyPart:
+ * GdaSqlAnyPart: (skip)
  * @type: type of structure, as a #GdaSqlAnyPartType enum.
  * @parent: pointer to the parent #GdaSqlAnyPart structure
  *
@@ -179,15 +179,15 @@ struct _GdaSqlAnyPart {
 
 /* returns FALSE if a recursive walking should be stopped (mandatory is @error is set) */
 /**
- * GdaSqlForeachFunc:
- * @Param1: the current #GdaSqlAnyPart node
- * @Param2: user data passed to gda_sql_any_part_foreach().
- * @Param3: pointer to a place to store errors
+ * GdaSqlForeachFunc: (skip)
+ * @part: the current #GdaSqlAnyPart node
+ * @data: user data passed to gda_sql_any_part_foreach().
+ * @error: pointer to a place to store errors
  * @Returns: FALSE if the gda_sql_any_part_foreach() should stop at this point and fail
  *
  * Specifies the type of functions passed to gda_sql_any_part_foreach().
  */
-typedef gboolean (*GdaSqlForeachFunc) (GdaSqlAnyPart *, gpointer, GError **);
+typedef gboolean (*GdaSqlForeachFunc) (GdaSqlAnyPart *part, gpointer data, GError **error);
 
 gboolean gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer data, GError **error);
 

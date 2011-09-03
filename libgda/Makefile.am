@@ -312,7 +312,8 @@ threadwrapper = \
 
 sqlparser = \
 	sql-parser/gda-sql-parser.h \
-	sql-parser/gda-sql-parser.c
+	sql-parser/gda-sql-parser.c \
+	sql-parser/gda-statement-struct-decl.h
 
 handlers = \
 	handlers/gda-handler-bin.h \

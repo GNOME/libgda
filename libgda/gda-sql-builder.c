@@ -352,7 +352,7 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
 }
 
 /**
- * gda_sql_builder_get_sql_statement:
+ * gda_sql_builder_get_sql_statement: (skip)
  * @builder: a #GdaSqlBuilder object
  *
  * Creates a new #GdaSqlStatement structure from @builder's contents.
@@ -1039,7 +1039,7 @@ gda_sql_builder_add_param (GdaSqlBuilder *builder, const gchar *param_name, GTyp
 }
 
 /**
- * gda_sql_builder_add_cond:
+ * gda_sql_builder_add_cond: (skip)
  * @builder: a #GdaSqlBuilder object
  * @op: type of condition
  * @op1: the ID of the 1st argument (not 0)
@@ -1083,7 +1083,7 @@ gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op, GdaSqlB
 }
 
 /**
- * gda_sql_builder_add_cond_v:
+ * gda_sql_builder_add_cond_v: (skip)
  * @builder: a #GdaSqlBuilder object
  * @op: type of condition
  * @op_ids: (array length=op_ids_size): an array of ID for the arguments (not %0)
@@ -1267,7 +1267,7 @@ typedef struct {
 } BuilderJoin;
 
 /**
- * gda_sql_builder_select_join_targets:
+ * gda_sql_builder_select_join_targets: (skip)
  * @builder: a #GdaSqlBuilder object
  * @left_target_id: the ID of the left target to use (not %0)
  * @right_target_id: the ID of the right target to use (not %0)
@@ -1725,7 +1725,7 @@ gda_sql_builder_add_function_v (GdaSqlBuilder *builder, const gchar *func_name,
 }
 
 /**
- * gda_sql_builder_add_sub_select:
+ * gda_sql_builder_add_sub_select: (skip)
  * @builder: a #GdaSqlBuilder object
  * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT. This will be copied.
  *
@@ -1764,7 +1764,7 @@ gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst)
 }
 
 /**
- * gda_sql_builder_compound_set_type:
+ * gda_sql_builder_compound_set_type: (skip)
  * @builder: a #GdaSqlBuilder object
  * @compound_type: a type of compound
  *
@@ -1788,7 +1788,7 @@ gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompou
 }
 
 /**
- * gda_sql_builder_compound_add_sub_select:
+ * gda_sql_builder_compound_add_sub_select: (skip)
  * @builder: a #GdaSqlBuilder object
  * @sqlst: a pointer to a #GdaSqlStatement, which has to be a SELECT or compound SELECT. This will be copied.
  *
@@ -1946,7 +1946,7 @@ gda_sql_builder_add_case_v (GdaSqlBuilder *builder,
 }
 
 /**
- * gda_sql_builder_export_expression:
+ * gda_sql_builder_export_expression: (skip)
  * @builder: a #GdaSqlBuilder object
  * @id: the ID of the expression to be exported, (must be a valid ID in @builder, not %0)
  *
@@ -1973,7 +1973,7 @@ gda_sql_builder_export_expression (GdaSqlBuilder *builder, GdaSqlBuilderId id)
 }
 
 /**
- * gda_sql_builder_import_expression:
+ * gda_sql_builder_import_expression: (skip)
  * @builder: a #GdaSqlBuilder object
  * @expr: a #GdaSqlExpr obtained using gda_sql_builder_export_expression()
  *
