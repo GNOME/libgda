@@ -55,6 +55,8 @@ static gchar *internal_sql[] = {
 	"PRAGMA database_list",
 
 	/* I_PRAGMA_TABLE_INFO */
+	/* warning: this can return an error as "no such function XXX" if a view has been
+	 * defined using a function not native of SQLite (and thus not available in Libgda) */
 	"PRAGMA table_info (##tblname::string)",
 
 	/* I_PRAGMA_INDEX_LIST */
@@ -959,15 +961,22 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 	GType col_types[] = {G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, 
 			     G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
 	GdaStatement *stmt;
+	GError *lerror = NULL;
 	
 	schema_name = g_value_get_string (p_table_schema);
-	stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), error);
+	stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), NULL);
 	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
-								 col_types, error);
+								 col_types, &lerror);
 	g_object_unref (stmt);
-	if (!tmpmodel)
-		return FALSE;
+	if (!tmpmodel) {
+		if (lerror && lerror->message && !strstr (lerror->message, "no such function")) {
+			g_propagate_error (error, lerror);
+			return FALSE;
+		}
+		else
+			return TRUE;
+	}
 		
 	nrows = gda_data_model_get_n_rows (tmpmodel);
 	for (i = 0; i < nrows; i++) {
@@ -1237,6 +1246,7 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	const gchar *schema_name;
 	gint i;
 	GdaStatement *stmt;
+	GError *lerror = NULL;
 
 	schema_name = g_value_get_string (p_table_schema);
 
@@ -1249,13 +1259,19 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 				G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
 	gboolean has_pk = FALSE;
 
-	stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), error);
+	stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), NULL);
 	tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 								 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
-								 pk_col_types, error);
+								 pk_col_types, &lerror);
 	g_object_unref (stmt);
-	if (!tmpmodel)
-		return FALSE;
+	if (!tmpmodel) {
+		if (lerror && lerror->message && !strstr (lerror->message, "no such function")) {
+			g_propagate_error (error, lerror);
+			return FALSE;
+		}
+		else
+			return TRUE;
+	}
 		
 	nrows = gda_data_model_get_n_rows (tmpmodel);
 	for (i = 0; i < nrows; i++) {
@@ -1799,13 +1815,20 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		GType pk_col_types[] = {G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, 
 					G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
 		gint ord_pos = 1;
-		stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), error);
+		GError *lerror = NULL;
+		stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), NULL);
 		tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
-									 pk_col_types, error);
+									 pk_col_types, &lerror);
 		g_object_unref (stmt);
-		if (!tmpmodel)
-			return FALSE;
+		if (!tmpmodel) {
+			if (lerror && lerror->message && !strstr (lerror->message, "no such function")) {
+				g_propagate_error (error, lerror);
+				return FALSE;
+			}
+			else
+				return TRUE;
+		}
 		
 		nrows = gda_data_model_get_n_rows (tmpmodel);
 		for (i = 0; i < nrows; i++) {

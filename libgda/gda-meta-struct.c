@@ -933,7 +933,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 	}
 	case GDA_META_DB_TABLE: {
 		/* columns */
-		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec, c.extra, c.column_comments FROM _columns as c NATURAL JOIN _tables as t WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
+		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec, c.extra, c.column_comments FROM _tables as t LEFT NATURAL JOIN _columns as c WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
 		GdaMetaTable *mt;
 		GdaDataModel *model;
 		gint i, nrows;
@@ -969,6 +969,14 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 				dbo->obj_owner = g_value_dup_string (cvalue);
 		}
 
+		cvalue = gda_data_model_get_value_at (model, 0, 0, error);
+		if (cvalue && (G_VALUE_TYPE (cvalue) == GDA_TYPE_NULL)) {
+			if (type == GDA_META_DB_VIEW) {
+				/* we don't have the list of columns for the view.
+				 * This can sometimes happen in SQLite */
+				nrows = 0;
+			}
+		}
 		mt = GDA_META_TABLE (dbo);
 		for (i = 0; i < nrows; i++) {
 			GdaMetaTableColumn *tcol;
