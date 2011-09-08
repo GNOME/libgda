@@ -2222,6 +2222,7 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 gchar *
 gda_data_model_dump_as_string (GdaDataModel *model)
 {
+	gboolean dump_attrs = FALSE;
 	gboolean dump_rows = FALSE;
 	gboolean dump_title = FALSE;
 	gboolean null_as_empty = FALSE;
@@ -2230,6 +2231,8 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
+	if (getenv ("GDA_DATA_MODEL_DUMP_ATTRIBUTES")) /* Flawfinder: ignore */
+		dump_attrs = TRUE;
 	if (getenv ("GDA_DATA_MODEL_DUMP_ROW_NUMBERS")) /* Flawfinder: ignore */
 		dump_rows = TRUE;
 	if (getenv ("GDA_DATA_MODEL_DUMP_TITLE")) /* Flawfinder: ignore */
@@ -2249,7 +2252,20 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 		if (max_width < 0)
 			max_width = 0;
 	}
-	return real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width, NULL);
+	if (dump_attrs) {
+		GString *string;
+		gchar *tmp;
+		tmp = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width, NULL);
+		string = g_string_new (tmp);
+		g_free (tmp);
+		tmp = real_gda_data_model_dump_as_string (model, TRUE, dump_rows, dump_title, null_as_empty, max_width, NULL);
+		g_string_append_c (string, '\n');
+		g_string_append (string, tmp);
+		g_free (tmp);
+		return g_string_free (string, FALSE);
+	}
+	else
+		return real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width, NULL);
 }
 
 static void
