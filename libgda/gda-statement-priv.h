@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,7 @@
 G_BEGIN_DECLS
 
 const GdaSqlStatement *_gda_statement_get_internal_struct (GdaStatement *stmt);
+const GType *_gda_statement_get_requested_types (GdaStatement *stmt);
 
 G_END_DECLS
 

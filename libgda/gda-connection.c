@@ -883,6 +883,47 @@ gda_connection_get_property (GObject *object,
 }
 
 /*
+ * Returns: a new GType array, free using g_free(), or %NULL if none to compute
+ */
+static GType *
+merge_column_types (const GType *struct_types, const GType *user_types)
+{
+	if (! user_types || !struct_types)
+		return NULL;
+	GArray *array;
+	guint i;
+	array = g_array_new (TRUE, FALSE, sizeof (GType));
+	for (i = 0;
+	     (user_types [i] != G_TYPE_NONE) && (struct_types [i] != G_TYPE_NONE);
+	     i++) {
+		GType type;
+		if (user_types [i] == 0)
+			type = struct_types [i];
+		else
+			type = user_types [i];
+		g_array_append_val (array, type);
+	}
+	if (user_types [i] != G_TYPE_NONE) {
+		for (; user_types [i] != G_TYPE_NONE; i++) {
+			GType type = user_types [i];
+			g_array_append_val (array, type);
+		}
+	}
+	else {
+		for (; struct_types [i] != G_TYPE_NONE; i++) {
+			GType type = struct_types [i];
+			g_array_append_val (array, type);
+		}
+	}
+	GType *retval;
+	guint len;
+	len = array->len;
+	retval = (GType*) g_array_free (array, FALSE);
+	retval [len] = G_TYPE_NONE;
+	return retval;
+}
+
+/*
  * helper functions to manage CncTask
  */
 static void task_stmt_reset_cb (GdaStatement *stmt, CncTask *task);
@@ -900,15 +941,23 @@ cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, 
 	g_signal_connect (stmt, "reset", /* monitor statement changes */
 			  G_CALLBACK (task_stmt_reset_cb), task);
 	task->model_usage = model_usage;
-	if (col_types) {
-		gint i;
-		for (i = 0; i < 32768; i++) {
-			if (col_types [i] == G_TYPE_NONE)
-				break;
+	GType *req_types;
+	req_types = merge_column_types (_gda_statement_get_requested_types (stmt), col_types);
+	if (req_types)
+		task->col_types = req_types;
+	else {
+		if (_gda_statement_get_requested_types (stmt))
+			col_types = (GType*) _gda_statement_get_requested_types (stmt);
+		if (col_types) {
+			gint i;
+			for (i = 0; ; i++) {
+				if (col_types [i] == G_TYPE_NONE)
+					break;
+			}
+			i++;
+			task->col_types = g_new (GType, i);
+			memcpy (task->col_types, col_types, i * sizeof (GType)); /* Flawfinder: ignore */
 		}
-		i++;
-		task->col_types = g_new (GType, i);
-		memcpy (task->col_types, col_types, i * sizeof (GType)); /* Flawfinder: ignore */
 	}
 	if (params)
 		task->params = gda_set_copy (params);
@@ -3201,7 +3250,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 {
 	va_list ap;
 	GObject *obj;
-	GType *types;
+	GType *types, *req_types;
 	GTimer *timer = NULL;
 	va_start (ap, error);
 	types = make_col_types_array (ap);
@@ -3220,8 +3269,18 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 			     _("Connection is closed"));
 		gda_connection_unlock (GDA_LOCKABLE (cnc));
 		g_object_unref ((GObject*) cnc);
+		g_free (types);
 		return NULL;
 	}
+
+	req_types = merge_column_types (_gda_statement_get_requested_types (stmt), types);
+	if (req_types) {
+		g_free (types);
+		types = req_types;
+		req_types = NULL;
+	}
+	else if (_gda_statement_get_requested_types (stmt))
+		req_types = (GType*) _gda_statement_get_requested_types (stmt);
 
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
@@ -3231,7 +3290,9 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	if (cnc->priv->exec_times)
 		timer = g_timer_new ();
 	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
-								       model_usage, types, last_inserted_row, 
+								       model_usage,
+								       req_types ? req_types : types,
+								       last_inserted_row, 
 								       NULL, NULL, NULL, error);
 	if (timer)
 		g_timer_stop (timer);
@@ -3406,7 +3467,6 @@ gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet
 	return gda_connection_statement_execute_v (cnc, stmt, params, model_usage, last_inserted_row, error, -1);
 }
 
-
 /**
  * gda_connection_statement_execute_non_select:
  * @cnc: a #GdaConnection object.
@@ -3557,7 +3617,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 
 	va_list ap;
 	GdaDataModel *model;
-	GType *types;
+	GType *types, *req_types;
 	GTimer *timer = NULL;
 
 	va_start (ap, error);
@@ -3574,8 +3634,18 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 			     _("Connection is closed"));
 		gda_connection_unlock (GDA_LOCKABLE (cnc));
 		g_object_unref ((GObject*) cnc);
+		g_free (types);
 		return NULL;
 	}
+
+	req_types = merge_column_types (_gda_statement_get_requested_types (stmt), types);
+	if (req_types) {
+		g_free (types);
+		types = req_types;
+		req_types = NULL;
+	}
+	else if (_gda_statement_get_requested_types (stmt))
+		req_types = (GType*) _gda_statement_get_requested_types (stmt);
 
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
@@ -3586,7 +3656,8 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 		timer = g_timer_new ();
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, model_usage, 
-											  types, NULL, NULL, 
+											  req_types ? req_types : types,
+											  NULL, NULL, 
 											  NULL, NULL, error);
 	if (timer)
 		g_timer_stop (timer);
@@ -3656,6 +3727,11 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 		return NULL;
 	}
 
+	GType *req_types;
+	req_types = merge_column_types (_gda_statement_get_requested_types (stmt), col_types);
+	if (!req_types && !col_types)
+		col_types = (GType*) _gda_statement_get_requested_types (stmt);
+
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
@@ -3665,10 +3741,13 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 		timer = g_timer_new ();
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
-											  model_usage, col_types, NULL, 
+											  model_usage,
+											  req_types ? req_types : col_types,
+											  NULL, 
 											  NULL, NULL, NULL, error);
 	if (timer)
 		g_timer_stop (timer);
+	g_free (req_types);
 	gda_connection_unlock ((GdaLockable*) cnc);
 	g_object_unref ((GObject*) cnc);
 
@@ -3734,6 +3813,11 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 		return NULL;
 	}
 
+	GType *req_types;
+	req_types = merge_column_types (_gda_statement_get_requested_types (stmt), col_types);
+	if (!req_types && !col_types)
+		col_types = (GType*) _gda_statement_get_requested_types (stmt);
+
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
 	    ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
 		model_usage |= GDA_STATEMENT_MODEL_RANDOM_ACCESS;
@@ -3749,7 +3833,9 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 			timer = g_timer_new ();
 		obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, 
 									       GDA_SET (list->data), 
-									       model_usage, col_types, NULL, 
+									       model_usage,
+									       req_types ? req_types : col_types,
+									       NULL, 
 									       NULL, NULL, NULL, &lerror);
 		if (timer)
 			g_timer_stop (timer);
@@ -3777,6 +3863,7 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 			g_timer_destroy (timer);
 	}
 	g_slist_free (sets_list);
+	g_free (req_types);
 
 	gda_connection_unlock ((GdaLockable*) cnc);
 	g_object_unref ((GObject*) cnc);

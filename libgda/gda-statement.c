@@ -66,6 +66,7 @@ static GObjectClass  *parent_class = NULL;
 
 struct _GdaStatementPrivate {
 	GdaSqlStatement *internal_struct;
+	GType           *requested_types;
 };
 
 /* signals */
@@ -178,6 +179,7 @@ gda_statement_init (GdaStatement * stmt)
 {
 	stmt->priv = g_new0 (GdaStatementPrivate, 1);
 	stmt->priv->internal_struct = NULL;
+	stmt->priv->requested_types = NULL;
 }
 
 /**
@@ -231,6 +233,10 @@ gda_statement_dispose (GObject *object)
 
 	stmt = GDA_STATEMENT (object);
 	if (stmt->priv) {
+		if (stmt->priv->requested_types) {
+			g_free (stmt->priv->requested_types);
+			stmt->priv->requested_types = NULL;
+		}
 		if (stmt->priv->internal_struct) {
 			gda_sql_statement_free (stmt->priv->internal_struct);
 			stmt->priv->internal_struct = NULL;
@@ -275,6 +281,10 @@ gda_statement_set_property (GObject *object,
 			if (stmt->priv->internal_struct) {
 				gda_sql_statement_free (stmt->priv->internal_struct);
 				stmt->priv->internal_struct = NULL;
+			}
+			if (stmt->priv->requested_types) {
+				g_free (stmt->priv->requested_types);
+				stmt->priv->requested_types = NULL;
 			}
 			stmt->priv->internal_struct = gda_sql_statement_copy (g_value_get_pointer (value));
 			g_signal_emit (stmt, gda_statement_signals [RESET], 0);
@@ -565,6 +575,57 @@ gda_statement_get_parameters (GdaStatement *stmt, GdaSet **out_params, GError **
 		g_object_unref (set);
 	return TRUE;
 }
+
+/*
+ * _gda_statement_get_requested_types:
+ * @stmt: a #GdaStatement
+ *
+ * Returns: a new #GType, suitable to use with gda_connection_statement_execute_select_full(), or %NULL
+ */
+const GType *
+_gda_statement_get_requested_types (GdaStatement *stmt)
+{
+	if (! stmt->priv || ! stmt->priv->internal_struct)
+		return NULL;
+	if (stmt->priv->requested_types)
+		return stmt->priv->requested_types;
+	if (stmt->priv->internal_struct->stmt_type != GDA_SQL_STATEMENT_SELECT)
+		return NULL;
+
+	GdaSqlStatementSelect *selst;
+	GSList *list;
+	GArray *array = NULL;
+ rewind:
+	selst = (GdaSqlStatementSelect*) stmt->priv->internal_struct->contents;
+	for (list = selst->expr_list; list; list = list->next) {
+		GdaSqlExpr *expr;
+		GType type = G_TYPE_INVALID;
+		expr = ((GdaSqlSelectField*) list->data)->expr;
+		if (expr->cast_as && *expr->cast_as)
+			type = gda_g_type_from_string (expr->cast_as);
+		if (array) {
+			if (type == G_TYPE_INVALID)
+				type = 0;
+			g_array_append_val (array, type);
+		}
+		else if (type != G_TYPE_INVALID) {
+			array = g_array_new (TRUE, FALSE, sizeof (GType));
+			goto rewind;
+		}
+	}
+	if (array) {
+		GType *retval;
+		guint len;
+		len = array->len;
+		retval = (GType*) g_array_free (array, FALSE);
+		retval [len] = G_TYPE_NONE;
+		stmt->priv->requested_types = retval;
+		return retval;
+	}
+	else
+		return NULL;
+}
+
 
 /*
  * SQL rendering
