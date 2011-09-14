@@ -53,8 +53,11 @@
     <title>fetch_random()</title>
     <para>
       This method is called when the user calls <link linkend="gda-data-model-get-value-at">gda_data_model_get_value_at ()</link>,
-      and in available only when the data access mode for the data model is random (that is not cursor based). When data
-      access is cursor based, this method will not be called.
+      and is used only when the data access mode for the data model is random (that is not cursor based) (i.e. when data
+      access is cursor based, this method will not be called).
+    </para>
+    <para>Also it is safe to assume that when called, the
+    <parameter>prow</parameter> parameter will not be NULL, and that <parameter>*prow</parameter> is actually NULL.
     </para>
   </sect2>
 
@@ -75,6 +78,9 @@
       <parameter>rownum</parameter> is an indication of what the row number will be once the next row has been fetched (it can 
       safely be discarded if that information is not necessary).
     </para>
+    <para>This method is not used when data is accessed in a random way. Also it is safe to assume that when called, the
+    <parameter>prow</parameter> parameter will not be NULL, and that <parameter>*prow</parameter> is actually NULL.
+    </para>
   </sect2>
 
   <sect2>
@@ -82,14 +88,19 @@
     <para>
       This method is called when data access is cursor based and a data model iterator is moved one position backward. The
       <parameter>rownum</parameter> is an indication of what the row number will be once the previous row has been fetched (it can 
-      safely be discarded if that information is not necessary).
+      safely be discarded if that information is not necessary). Implementing this method is not necessary if the data model
+      does not support moving iterators backward.
+    </para>
+    <para>This method is not used when data is accessed in a random way. Also it is safe to assume that when called, the
+    <parameter>prow</parameter> parameter will not be NULL, and that <parameter>*prow</parameter> is actually NULL.
     </para>
   </sect2>
 
   <sect2>
     <title>fetch_at()</title>
     <para>
-      This method can be implemented when data access is cursor based and there is a shorter way of getting to a
+      This method can be implemented (but it is not required) when data access is cursor based
+      and there is a shorter way of getting to a
       specific row than having to call the fetch_next() or fetch_prev() methods several times.
     </para>
   </sect2>

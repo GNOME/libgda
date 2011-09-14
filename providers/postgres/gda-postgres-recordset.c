@@ -440,13 +440,10 @@ gda_postgres_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint r
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset *) model;
 
-	if (*prow)
-		return TRUE;
-
 	if (!imodel->priv->pg_res) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			     "%s", _("Internal error"));
-		return FALSE;
+		return TRUE;
 	}
 
 	*prow = new_row_from_pg_res (imodel, rownum, error);
@@ -489,15 +486,12 @@ gda_postgres_recordset_store_all (GdaDataSelect *model, GError **error)
  * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
  *
  * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
- * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
+ * never keeps a reference to it).
  */
 static gboolean
 gda_postgres_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
-
-	if (*prow)
-		return TRUE;
 
 	if (row_is_in_current_pg_res (imodel, rownum)) {
 		if (imodel->priv->tmp_row)
@@ -505,7 +499,6 @@ gda_postgres_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint row
 		else
 			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 		*prow = imodel->priv->tmp_row;
-		return TRUE;
 	}
 	else {
 		gboolean fetch_error = FALSE;
@@ -515,26 +508,21 @@ gda_postgres_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint row
 			else
 				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 			*prow = imodel->priv->tmp_row;
-			return TRUE;
 		}
-		else
-			return !fetch_error;
 	}
+	return TRUE;
 }
 
 /*
  * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
  *
  * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
- * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
+ * never keeps a reference to it).
  */
 static gboolean
 gda_postgres_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
-
-	if (*prow)
-		return TRUE;
 
 	if (row_is_in_current_pg_res (imodel, rownum)) {
 		if (imodel->priv->tmp_row)
@@ -542,7 +530,6 @@ gda_postgres_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint row
 		else
 			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 		*prow = imodel->priv->tmp_row;
-		return TRUE;
 	}
 	else {
 		gboolean fetch_error = FALSE;
@@ -552,26 +539,21 @@ gda_postgres_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint row
 			else
 				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 			*prow = imodel->priv->tmp_row;
-			return TRUE;
 		}
-		else
-			return !fetch_error;
 	}
+	return TRUE;
 }
 
 /*
  * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
  *
  * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
- * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
+ * never keeps a reference to it).
  */
 static gboolean
 gda_postgres_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
-
-	if (*prow)
-		return TRUE;
 
 	if (imodel->priv->tmp_row) {
 		g_object_unref (imodel->priv->tmp_row);
@@ -581,18 +563,15 @@ gda_postgres_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownu
 	if (row_is_in_current_pg_res (imodel, rownum)) {
 		*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 		imodel->priv->tmp_row = *prow;
-		return TRUE;
 	}
 	else {
 		gboolean fetch_error = FALSE;
 		if (fetch_row_number_chunk (imodel, rownum, &fetch_error, error)) {
 			*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
 			imodel->priv->tmp_row = *prow;
-			return TRUE;
 		}
-		else
-			return !fetch_error;
 	}
+	return TRUE;
 }
 
 

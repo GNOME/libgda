@@ -48,8 +48,6 @@ static void gda_oracle_recordset_dispose   (GObject *object);
 static gint     gda_oracle_recordset_fetch_nb_rows (GdaDataSelect *model);
 static gboolean gda_oracle_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 static gboolean gda_oracle_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
-static gboolean gda_oracle_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
-static gboolean gda_oracle_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 
 static GdaRow  *new_row (GdaDataSelect *imodel, GdaConnection *cnc, GdaOraclePStmt *ps);
 
@@ -88,8 +86,8 @@ gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 	pmodel_class->fetch_random = gda_oracle_recordset_fetch_random;
 
 	pmodel_class->fetch_next = gda_oracle_recordset_fetch_next;
-	pmodel_class->fetch_prev = gda_oracle_recordset_fetch_prev;
-	pmodel_class->fetch_at = gda_oracle_recordset_fetch_at;
+	pmodel_class->fetch_prev = NULL;
+	pmodel_class->fetch_at = NULL;
 }
 
 static void
@@ -505,7 +503,7 @@ gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_p
 }
 
 static GdaRow *
-fetch_next_oracle_row (GdaOracleRecordset *model, gboolean do_store, GError **error)
+fetch_next_oracle_row (GdaOracleRecordset *model, G_GNUC_UNUSED gboolean do_store, GError **error)
 {
 	int result;
 	GdaRow *prow = NULL;
@@ -586,17 +584,8 @@ gda_oracle_recordset_fetch_nb_rows (GdaDataSelect *model)
 /*
  * Create a new filled #GdaRow object for the row at position @rownum, and put it into *prow.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implemantation
- * using that method, then this method should detect when all the data model rows have been analyzed
- * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
- * as it won't be used anymore to fetch rows.
+ * Each new #GdaRow created needs to be "given" to the #GdaDataSelect implementation using
+ * gda_data_select_take_row() because backward iterating is not supported.
  */
 static gboolean 
 gda_oracle_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
@@ -605,120 +594,38 @@ gda_oracle_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
 	OracleConnectionData *cdata;
 	GdaConnection *cnc;
 
-	if (*prow)
-                return TRUE;
-
 	imodel = GDA_ORACLE_RECORDSET (model);
 	cnc = gda_data_select_get_connection (model);
 	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data (cnc);
 	if (!cdata)
-		return FALSE;
+		return TRUE;
 
-	for (; imodel->priv->next_row_num <= rownum; ) {
-		*prow = fetch_next_oracle_row (imodel, TRUE, error);
-		if (!*prow) {
-			/*if (GDA_DATA_SELECT (model)->advertized_nrows >= 0), it's not an error */
-			if ((GDA_DATA_SELECT (model)->advertized_nrows >= 0) &&
-			    (imodel->priv->next_row_num < rownum)) {
-				g_set_error (error, 0,
-					     GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-					     _("Row %d not found"), rownum);
-			}
-			return FALSE;
-		}
+	if (imodel->priv->next_row_num >= rownum) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
+			     "%s", _("Requested row could not be found"));
+		return TRUE;
 	}
-	return TRUE;
-}
+	for (*prow = fetch_next_oracle_row (imodel, TRUE, error);
+	     *prow && (imodel->priv->next_row_num < rownum);
+	     *prow = fetch_next_oracle_row (imodel, TRUE, error));
 
-/*
- * Create and "give" filled #GdaRow object for all the rows in the model
- */
-static gboolean
-gda_oracle_recordset_store_all (GdaDataSelect *model, GError **error)
-{
-	GdaOracleRecordset *imodel;
-	gint i;
-
-	imodel = GDA_ORACLE_RECORDSET (model);
-
-	/* default implementation */
-	for (i = 0; i < model->advertized_nrows; i++) {
-		GdaRow *prow;
-		if (! gda_oracle_recordset_fetch_random (model, &prow, i, error))
-			return FALSE;
-	}
 	return TRUE;
 }
 
 /*
  * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
+ * Each new #GdaRow created needs to be "given" to the #GdaDataSelect implementation using
+ * gda_data_select_take_row() because backward iterating is not supported.
  */
 static gboolean 
 gda_oracle_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
-	if (*prow)
-                return TRUE;
-
 	*prow = fetch_next_oracle_row ((GdaOracleRecordset*) model, TRUE, error);
-	return *prow ? TRUE : FALSE;
+	return TRUE;
 }
 
-/*
- * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
- *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
- */
-static gboolean 
-gda_oracle_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
-{
-	OracleConnectionData *cdata;
-	GdaConnection *cnc;
-
-	if (*prow)
-                return TRUE;
-
-	cnc = gda_data_select_get_connection (model);
-	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data (cnc);
-	if (!cdata)
-		return FALSE;
-
-	g_warning ("Internal implementation error: non scrollable cursor requested to go backward!\n");
-	return FALSE;
-}
-
-/*
- * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
- *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
- */
-static gboolean 
-gda_oracle_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
-{
-	return gda_oracle_recordset_fetch_random (model, prow, rownum, error);
-}
 
 /* create a new GdaRow from the last read row */
 static GdaRow *

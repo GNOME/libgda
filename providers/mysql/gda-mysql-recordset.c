@@ -1004,17 +1004,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 /*
  * Create a new filled #GdaRow object for the row at position @rownum, and put it into *row.
  *
- * WARNING: @row will NOT be NULL, but *row may or may not be NULL:
- *  -  If *row is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *row contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implemantation
- * using that method, then this method should detect when all the data model rows have been analyzed
- * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
- * as it won't be used anymore to fetch rows.
+ * Each new GdaRow is given to @model using gda_data_select_take_row().
  */
 static gboolean 
 gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
@@ -1026,12 +1016,9 @@ gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 
 	imodel = GDA_MYSQL_RECORDSET (model);
 
-	if (*row)
-		return TRUE;
-	
 	*row = new_row_from_mysql_stmt (imodel, rownum, error);
 	if (!*row)
-		return FALSE;
+		return TRUE;
 
 	gda_data_select_take_row (model, *row, rownum);
 	
@@ -1047,14 +1034,9 @@ gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 /*
  * Create a new filled #GdaRow object for the next cursor row, and put it into *row.
  *
- * WARNING: @row will NOT be NULL, but *row may or may not be NULL:
- *  -  If *row is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *row contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
+ * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * never keeps a reference to it).
+ * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean 
 gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
@@ -1064,43 +1046,33 @@ gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
 
-	// TO_IMPLEMENT;
-
-	// gda_data_select_iter_next () increments rownum
-
-	if (imodel->priv->tmp_row != NULL) {
+	if (imodel->priv->tmp_row)
 		g_object_unref (G_OBJECT(imodel->priv->tmp_row));
-		imodel->priv->tmp_row = NULL;
-	}
-	
 	*row = new_row_from_mysql_stmt (imodel, rownum, error);
-
 	imodel->priv->tmp_row = *row;
 
-	return *row ? TRUE : FALSE;
+	return TRUE;
 }
 
 /*
- * Create a new filled #GdaRow object for the previous cursor row, and put it into *row.
+ * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
  *
- * WARNING: @row will NOT be NULL, but *row may or may not be NULL:
- *  -  If *row is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *row contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
+ * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * never keeps a reference to it).
+ * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean 
-gda_mysql_recordset_fetch_prev (G_GNUC_UNUSED GdaDataSelect  *model,
-				G_GNUC_UNUSED GdaRow        **row,
-				G_GNUC_UNUSED gint            rownum,
-				G_GNUC_UNUSED GError        **error)
+gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
+				GdaRow        **row,
+				gint            rownum,
+				GError        **error)
 {
-	/*GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;*/
+	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
 
-	TO_IMPLEMENT;
+	if (imodel->priv->tmp_row)
+		g_object_unref (G_OBJECT(imodel->priv->tmp_row));
+	*row = new_row_from_mysql_stmt (imodel, rownum, error);
+	imodel->priv->tmp_row = *row;
 
 	return TRUE;
 }
@@ -1108,24 +1080,22 @@ gda_mysql_recordset_fetch_prev (G_GNUC_UNUSED GdaDataSelect  *model,
 /*
  * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *row.
  *
- * WARNING: @row will NOT be NULL, but *row may or may not be NULL:
- *  -  If *row is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *row contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
+ * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * never keeps a reference to it).
+ * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean 
-gda_mysql_recordset_fetch_at (G_GNUC_UNUSED GdaDataSelect  *model,
-			      G_GNUC_UNUSED GdaRow        **row,
-			      G_GNUC_UNUSED gint            rownum,
-			      G_GNUC_UNUSED GError        **error)
+gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
+			      GdaRow        **row,
+			      gint            rownum,
+			      GError        **error)
 {
-	/*GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;*/
-	
-	TO_IMPLEMENT;
+	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
+
+	if (imodel->priv->tmp_row)
+		g_object_unref (G_OBJECT(imodel->priv->tmp_row));
+	*row = new_row_from_mysql_stmt (imodel, rownum, error);
+	imodel->priv->tmp_row = *row;
 
 	return TRUE;
 }
