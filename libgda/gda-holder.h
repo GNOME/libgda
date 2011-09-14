@@ -138,7 +138,9 @@ gboolean            gda_holder_set_value_to_default    (GdaHolder *holder);
 gboolean            gda_holder_value_is_default        (GdaHolder *holder);
 
 void                gda_holder_force_invalid           (GdaHolder *holder);
+void                gda_holder_force_invalid_e         (GdaHolder *holder, GError *error);
 gboolean            gda_holder_is_valid                (GdaHolder *holder);
+gboolean            gda_holder_is_valid_e              (GdaHolder *holder, GError **error);
 
 
 void                gda_holder_set_not_null            (GdaHolder *holder, gboolean not_null);

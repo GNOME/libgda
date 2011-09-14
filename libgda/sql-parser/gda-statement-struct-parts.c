@@ -1131,10 +1131,15 @@ void
 gda_sql_select_field_take_expr (GdaSqlSelectField *field, GdaSqlExpr *expr)
 {
 	field->expr = expr;
+	g_assert (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR);
 	gda_sql_any_part_set_parent (field->expr, field);
 
-	if (expr && expr->value)
-		_split_identifier_string (g_value_dup_string (expr->value), &(field->table_name), &(field->field_name));
+	if (expr && expr->value) {
+		const gchar *dup;
+		dup = g_value_get_string (expr->value);
+		if (dup && *dup)
+			_split_identifier_string (g_strdup (dup), &(field->table_name), &(field->field_name));
+	}
 }
 
 /**

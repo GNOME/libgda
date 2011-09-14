@@ -25,6 +25,7 @@
 #include <glib/gstdio.h>
 #include "../test-cnc-utils.h"
 #include "../data-model-errors.h"
+#include <virtual/libgda-virtual.h>
 
 #define fail(x) g_warning (x)
 #define fail_if(x,y) if (x) g_warning (y)
@@ -36,9 +37,11 @@ static void dump_data_model (GdaDataModel *model);
 
 typedef gboolean (*TestFunc) (GdaConnection *);
 static gint test1 (GdaConnection *cnc);
+static gint test2 (GdaConnection *cnc);
 
 TestFunc tests[] = {
 	test1,
+	test2
 };
 
 int
@@ -93,24 +96,66 @@ check_iter_contents (GdaDataModel *model, GdaDataModelIter *iter)
 	for (i = 0; i < gda_data_model_get_n_columns (model); i++) {
 		GdaHolder *holder;
 		const GValue *vi, *vm;
+		GError *lerror1 = NULL, *lerror2 = NULL;
 
 		holder = gda_set_get_nth_holder (GDA_SET (iter), i);
-		if (gda_holder_is_valid (holder))
+		if (gda_holder_is_valid_e (holder, &lerror1))
 			vi = gda_holder_get_value (holder);
 		else
 			vi = NULL;
-		vm = gda_data_model_get_value_at (model, i, row, NULL);
-		if ((vi == vm) ||
-		    (vi && vm && !gda_value_differ (vi, vm)))
-			return TRUE;
-		else {
+		vm = gda_data_model_get_value_at (model, i, row, &lerror2);
+		if (vi == vm) {
+			if (!vi) {
+				if (! lerror1 || !lerror1->message) {
+#ifdef CHECK_EXTRA_INFO
+					g_print ("Iterator reported invalid value without any error set\n");
+#endif
+					return FALSE;
+				}
+				else if (! lerror2 || !lerror2->message) {
+#ifdef CHECK_EXTRA_INFO
+					g_print ("Data model reported invalid value without any error set\n");
+#endif
+					return FALSE;
+				}
+				else if (lerror1->code != lerror2->code) {
+#ifdef CHECK_EXTRA_INFO
+					g_print ("Error codes differ!\n");
+#endif
+					return FALSE;
+				}
+				else if (lerror1->domain != lerror2->domain) {
+#ifdef CHECK_EXTRA_INFO
+					g_print ("Error domains differ!\n");
+#endif
+					return FALSE;
+				}
+				else if (strcmp (lerror1->message, lerror2->message)) {
+#ifdef CHECK_EXTRA_INFO
+					g_print ("Error messages differ:\n\t%s\t%s",
+						 lerror1->message, lerror2->message);
+#endif
+					return FALSE;
+				}
+			}
+			else if (gda_value_differ (vi, vm)) {
+#ifdef CHECK_EXTRA_INFO
+				g_print ("Iter's contents at (%d,%d) is wrong: expected [%s], got [%s]\n",
+					 i, row, 
+					 vm ? gda_value_stringify (vm) : "ERROR",
+					 vi ? gda_value_stringify (vi) : "ERROR");
+#endif
+				return FALSE;
+			}
+		}
+		else if (gda_value_differ (vi, vm)) {
 #ifdef CHECK_EXTRA_INFO
 			g_print ("Iter's contents at (%d,%d) is wrong: expected [%s], got [%s]\n",
 				 i, row, 
 				 vm ? gda_value_stringify (vm) : "ERROR",
 				 vi ? gda_value_stringify (vi) : "ERROR");
 #endif
-			return FALSE;
+			return FALSE;	
 		}
 	}
 	return TRUE;
@@ -160,13 +205,14 @@ test1 (GdaConnection *cnc)
 			goto out;
 		}
 	}
+	g_print ("Now at row %d\n", gda_data_model_iter_get_row (iter));
 
 	/* iterate backward */
 	i--;
-	if (gda_data_model_iter_move_to_row (iter, i)) {
+	if (!gda_data_model_iter_move_to_row (iter, i)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-		g_print ("Error iterating: move to last row (%d) should have reported an error\n", i);
+		g_print ("Error iterating: move to last row (%d) failed\n", i);
 #endif
 		goto out;
 	}
@@ -198,6 +244,7 @@ test1 (GdaConnection *cnc)
 			goto out;
 		}
 	}
+	g_print ("Now at row %d\n", gda_data_model_iter_get_row (iter));
 
  out:
 	g_object_unref (model);
@@ -260,3 +307,177 @@ compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
         return FALSE;
 }
 */
+
+/*
+ * check modifications statements' setting
+ * 
+ * Returns the number of failures 
+ */
+static gint
+test2 (GdaConnection *cnc)
+{
+#define TABLE_NAME "data"
+	GdaDataModel *model;
+	gint nfailed = 0;
+
+	model = data_model_errors_new ();
+	if (!model) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Could not create DataModelErrors!\n");
+#endif
+		goto out;
+	}
+	dump_data_model (model);
+
+	GdaVirtualProvider *virtual_provider;
+	GError *lerror = NULL;
+	GdaConnection *vcnc;
+	GdaDataModelIter *iter = NULL;
+	GdaStatement *stmt;
+	virtual_provider = gda_vprovider_data_model_new ();
+	vcnc = gda_virtual_connection_open (virtual_provider, &lerror);
+	if (!vcnc) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Virtual ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+#endif
+		nfailed++;
+		g_clear_error (&lerror);
+		goto out;
+	}
+
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (vcnc), model,
+						   TABLE_NAME, &lerror)) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Add model as table ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+#endif
+		nfailed++;
+		g_clear_error (&lerror);
+		goto out;
+	}
+	g_object_unref (model);
+
+	/* Execute SELECT */
+	stmt = gda_connection_parse_sql_string (vcnc, "SELECT * FROM " TABLE_NAME, NULL, NULL);
+	g_assert (stmt);
+	model = gda_connection_statement_execute_select (vcnc, stmt, NULL, &lerror);
+	g_object_unref (stmt);
+	if (!model) {
+		#ifdef CHECK_EXTRA_INFO
+		g_print ("SELECT ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+#endif
+		nfailed++;
+		g_clear_error (&lerror);
+		goto out;
+	}
+
+	/* iterate forward */
+	gint i, row;
+	iter = gda_data_model_create_iter (model);
+	for (i = 0, gda_data_model_iter_move_next (iter);
+	     gda_data_model_iter_is_valid (iter);
+	     i++, gda_data_model_iter_move_next (iter)) {
+		row = gda_data_model_iter_get_row (iter);
+		if (i != row) {
+			nfailed++;
+#ifdef CHECK_EXTRA_INFO
+			g_print ("Error iterating: expected to be at row %d and reported row is %d!\n",
+				 i, row);
+#endif
+			goto out;
+		}
+		g_print ("Now at row %d\n", i);
+
+		if (! check_iter_contents (model, iter)) {
+			nfailed++;
+			goto out;
+		}
+	}
+	if (i != 4) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Error iterating: expected to have read %d rows, and read %d\n", 3,
+			 i - 1);
+		nfailed++;
+		goto out;
+#endif
+	}
+	if (gda_data_model_iter_get_row (iter) != -1) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Error iterating: expected to be at row -1 and reported row is %d!\n",
+			 gda_data_model_iter_get_row (iter));
+#endif
+		nfailed++;
+		goto out;
+	}
+
+	/* bind as another table */
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (vcnc), model,
+						   TABLE_NAME "2", &lerror)) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Add model as table2 ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+#endif
+		nfailed++;
+		g_clear_error (&lerror);
+		goto out;
+	}
+	g_object_unref (model);
+
+	stmt = gda_connection_parse_sql_string (vcnc, "SELECT * FROM " TABLE_NAME "2", NULL, NULL);
+	g_assert (stmt);
+	model = gda_connection_statement_execute_select (vcnc, stmt, NULL, &lerror);
+	g_object_unref (stmt);
+	if (!model) {
+		#ifdef CHECK_EXTRA_INFO
+		g_print ("SELECT ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+#endif
+		nfailed++;
+		g_clear_error (&lerror);
+		goto out;
+	}
+	
+	/* iterate forward */
+	iter = gda_data_model_create_iter (model);
+	for (i = 0, gda_data_model_iter_move_next (iter);
+	     gda_data_model_iter_is_valid (iter);
+	     i++, gda_data_model_iter_move_next (iter)) {
+		row = gda_data_model_iter_get_row (iter);
+		if (i != row) {
+			nfailed++;
+#ifdef CHECK_EXTRA_INFO
+			g_print ("Error iterating: expected to be at row %d and reported row is %d!\n",
+				 i, row);
+#endif
+			goto out;
+		}
+		g_print ("Now at row %d\n", i);
+
+		if (! check_iter_contents (model, iter)) {
+			nfailed++;
+			goto out;
+		}
+	}
+	if (i != 4) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Error iterating: expected to have read %d rows, and read %d\n", 3,
+			 i - 1);
+		nfailed++;
+		goto out;
+#endif
+	}
+	if (gda_data_model_iter_get_row (iter) != -1) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Error iterating: expected to be at row -1 and reported row is %d!\n",
+			 gda_data_model_iter_get_row (iter));
+#endif
+		nfailed++;
+		goto out;
+	}
+
+ out:
+	g_object_unref (iter);
+	g_object_unref (model);
+	g_object_unref (vcnc);
+	g_object_unref (virtual_provider);
+	
+	return nfailed;
+}

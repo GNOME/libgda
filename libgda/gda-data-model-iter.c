@@ -667,7 +667,6 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 	gint col;
 	GdaDataModel *test;
 	gboolean update_model;
-	gboolean retval = TRUE;
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
@@ -692,18 +691,17 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
-		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
+		GError *lerror = NULL;
+		cvalue = gda_data_model_get_value_at (model, col, row, &lerror);
 		if (!cvalue || 
-		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL)) {
-			gda_holder_force_invalid ((GdaHolder*) list->data);
-			retval = FALSE;
-		}
+		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, &lerror))
+			gda_holder_force_invalid_e ((GdaHolder*) list->data, lerror);
 		else
 			set_param_attributes ((GdaHolder*) list->data, 
 					      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current-row", row, "update-model", update_model, NULL);
-	return retval;
+	return TRUE;
 }
 
 
@@ -755,7 +753,6 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
-	gboolean retval = TRUE;
 	
 	/* validity tests */
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
@@ -780,19 +777,18 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
-		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
+		GError *lerror = NULL;
+		cvalue = gda_data_model_get_value_at (model, col, row, &lerror);
 		if (!cvalue || 
-		    !gda_holder_set_value ((GdaHolder *) list->data, cvalue, NULL)) {
-			gda_holder_force_invalid ((GdaHolder *) list->data);
-			retval = FALSE;
-		}
+		    !gda_holder_set_value ((GdaHolder *) list->data, cvalue, &lerror))
+			gda_holder_force_invalid_e ((GdaHolder *) list->data, lerror);
 		else
 			set_param_attributes ((GdaHolder *) list->data, 
 					      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current-row", row, 
 		      "update-model", update_model, NULL);
-	return retval;
+	return TRUE;
 }
 
 /**
@@ -844,7 +840,6 @@ gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
-	gboolean retval = TRUE;
 	
 	/* validity tests */
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
@@ -869,19 +864,18 @@ gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
 		const GValue *cvalue;
-		cvalue = gda_data_model_get_value_at (model, col, row, NULL);
+		GError *lerror = NULL;
+		cvalue = gda_data_model_get_value_at (model, col, row, &lerror);
 		if (!cvalue || 
-		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, NULL)) {
-			gda_holder_force_invalid ((GdaHolder*) list->data);
-			retval = FALSE;
-		}
+		    !gda_holder_set_value ((GdaHolder*) list->data, cvalue, &lerror))
+			gda_holder_force_invalid_e ((GdaHolder*) list->data, lerror);
 		else
 			set_param_attributes ((GdaHolder*) list->data,
 					      gda_data_model_get_attributes_at (model, col, row));
 	}
 	g_object_set (G_OBJECT (iter), "current-row", row, 
 		      "update-model", update_model, NULL);
-	return retval;
+	return TRUE;
 }
 
 
@@ -1001,6 +995,36 @@ gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
 	param = (GdaHolder *) g_slist_nth_data (((GdaSet *) iter)->holders, col);
 	if (param)
 		return gda_holder_get_value (param);
+	else
+		return NULL;
+}
+
+/**
+ * gda_data_model_iter_get_value_at:
+ * @iter: a #GdaDataModelIter object
+ * @col: the requested column
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Get the value stored at the column @col in @iter. The returned value must not be modified.
+ *
+ * Returns: (transfer none): the #GValue, or %NULL if the value could not be fetched
+ *
+ * Since: 4.2.10
+ */
+const GValue *
+gda_data_model_iter_get_value_at_e (GdaDataModelIter *iter, gint col, GError **error)
+{
+	GdaHolder *param;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
+	g_return_val_if_fail (iter->priv, NULL);
+
+	param = (GdaHolder *) g_slist_nth_data (((GdaSet *) iter)->holders, col);
+	if (param) {
+		if (error)
+			gda_holder_is_valid_e (param, error);
+		return gda_holder_get_value (param);
+	}
 	else
 		return NULL;
 }

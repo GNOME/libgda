@@ -117,6 +117,7 @@ struct _GdaDataModelIterClass
 GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
 
 const GValue     *gda_data_model_iter_get_value_at         (GdaDataModelIter *iter, gint col);
+const GValue     *gda_data_model_iter_get_value_at_e       (GdaDataModelIter *iter, gint col, GError **error);
 const GValue     *gda_data_model_iter_get_value_for_field  (GdaDataModelIter *iter, const gchar *field_name);
 gboolean          gda_data_model_iter_set_value_at         (GdaDataModelIter *iter, gint col, 
 							    const GValue *value, GError **error);

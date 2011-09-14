@@ -99,6 +99,7 @@ struct _GdaHolderPrivate
 	gulong           simple_bind_notify_signal_id;
 	
 	gboolean         invalid_forced;
+	GError          *invalid_error;
 	gboolean         valid;
 	gboolean         is_freeable;
 
@@ -311,6 +312,7 @@ gda_holder_init (GdaHolder *holder)
 	holder->priv->simple_bind_notify_signal_id = 0;
 
 	holder->priv->invalid_forced = FALSE;
+	holder->priv->invalid_error = NULL;
 	holder->priv->valid = TRUE;
 	holder->priv->default_forced = FALSE;
 	holder->priv->is_freeable = TRUE;
@@ -377,6 +379,8 @@ gda_holder_copy (GdaHolder *orig)
 	if (allok) {
 		/* direct settings */
 		holder->priv->invalid_forced = orig->priv->invalid_forced;
+		if (orig->priv->invalid_error)
+			holder->priv->invalid_error = g_error_copy (orig->priv->invalid_error);
 		holder->priv->valid = orig->priv->valid;
 		holder->priv->is_freeable = TRUE;
 		holder->priv->default_forced = orig->priv->default_forced;	
@@ -527,6 +531,11 @@ gda_holder_dispose (GObject *object)
 		if (holder->priv->default_value) {
 			gda_value_free (holder->priv->default_value);
 			holder->priv->default_value = NULL;
+		}
+
+		if (holder->priv->invalid_error) {
+			g_error_free (holder->priv->invalid_error);
+			holder->priv->invalid_error = NULL;
 		}
 	}
 
@@ -973,6 +982,10 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 		if (!do_copy && value)
 			gda_value_free (value);
 		holder->priv->invalid_forced = FALSE;
+		if (holder->priv->invalid_error) {
+			g_error_free (holder->priv->invalid_error);
+			holder->priv->invalid_error = NULL;
+		}
 		holder->priv->valid = newvalid;
 		return TRUE;
 	}
@@ -994,6 +1007,10 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 
 	/* new valid status */
 	holder->priv->invalid_forced = FALSE;
+	if (holder->priv->invalid_error) {
+		g_error_free (holder->priv->invalid_error);
+		holder->priv->invalid_error = NULL;
+	}
 	holder->priv->valid = newvalid;
 	/* we're setting a non-static value, so be sure to flag is as freeable */
 	holder->priv->is_freeable = TRUE;
@@ -1103,6 +1120,10 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 	/* end of procedure if the value has not been changed, after calculating the holder's validity */
 	if (!changed) {
 		holder->priv->invalid_forced = FALSE;
+		if (holder->priv->invalid_error) {
+			g_error_free (holder->priv->invalid_error);
+			holder->priv->invalid_error = NULL;
+		}
 		holder->priv->valid = newvalid;
 #ifdef DEBUG_HOLDER		
 		g_print ("Holder is not changed");
@@ -1125,6 +1146,10 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 
 	/* new valid status */
 	holder->priv->invalid_forced = FALSE;
+	if (holder->priv->invalid_error) {
+		g_error_free (holder->priv->invalid_error);
+		holder->priv->invalid_error = NULL;
+	}
 	holder->priv->valid = newvalid;
 	/* we're setting a static value, so be sure to flag is as unfreeable */
 	holder->priv->is_freeable = FALSE;
@@ -1227,11 +1252,34 @@ void
 gda_holder_force_invalid (GdaHolder *holder)
 {
 	g_return_if_fail (GDA_IS_HOLDER (holder));
+	gda_holder_force_invalid_e (holder, NULL);
+}
+
+/**
+ * gda_holder_force_invalid_e:
+ * @holder: a #GdaHolder object
+ * @error: (allow-none) (transfer full): a #GError explaining why @holder is declared invalid, or %NULL
+ *
+ * Forces a holder to be invalid; to set it valid again, a new value must be assigned
+ * to it using gda_holder_set_value() or gda_holder_take_value().
+ *
+ * @holder's value is set to %NULL.
+ *
+ * Since: 4.2.10
+ */
+void
+gda_holder_force_invalid_e (GdaHolder *holder, GError *error)
+{
+	g_return_if_fail (GDA_IS_HOLDER (holder));
 	g_return_if_fail (holder->priv);
 
 #ifdef GDA_DEBUG_NO
 	g_print ("Holder %p (%s): declare invalid\n", holder, holder->priv->id);
 #endif
+
+	if (holder->priv->invalid_error)
+		g_error_free (holder->priv->invalid_error);
+	holder->priv->invalid_error = error;
 
 	if (holder->priv->invalid_forced)
 		return;
@@ -1251,7 +1299,6 @@ gda_holder_force_invalid (GdaHolder *holder)
 		g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 }
 
-
 /**
  * gda_holder_is_valid:
  * @holder: a #GdaHolder object
@@ -1264,18 +1311,41 @@ gboolean
 gda_holder_is_valid (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
+	return gda_holder_is_valid_e (holder, NULL);
+}
+
+/**
+ * gda_holder_is_valid_e:
+ * @holder: a #GdaHolder object
+ * @error: (allow-none): a place to store invalid error, or %NULL
+ *
+ * Get the validity of @holder (that is, of the value held by @holder)
+ *
+ * Returns: TRUE if @holder's value can safely be used
+ *
+ * Since: 4.2.10
+ */
+gboolean
+gda_holder_is_valid_e (GdaHolder *holder, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
 
 	if (holder->priv->full_bind)
-		return gda_holder_is_valid (holder->priv->full_bind);
+		return gda_holder_is_valid_e (holder->priv->full_bind, error);
 	else {
+		gboolean retval;
 		if (holder->priv->invalid_forced) 
-			return FALSE;
-
-		if (holder->priv->default_forced) 
-			return holder->priv->default_value ? TRUE : FALSE;
-		else 
-			return holder->priv->valid;
+			retval = FALSE;
+		else {
+			if (holder->priv->default_forced) 
+				retval = holder->priv->default_value ? TRUE : FALSE;
+			else 
+				retval = holder->priv->valid;
+		}
+		if (!retval && holder->priv->invalid_error)
+			g_propagate_error (error,  g_error_copy (holder->priv->invalid_error));
+		return retval;
 	}
 }
 
@@ -1301,6 +1371,11 @@ gda_holder_set_value_to_default (GdaHolder *holder)
 	else {
 		holder->priv->default_forced = TRUE;
 		holder->priv->invalid_forced = FALSE;
+		if (holder->priv->invalid_error) {
+			g_error_free (holder->priv->invalid_error);
+			holder->priv->invalid_error = NULL;
+		}
+
 		if (holder->priv->value) {
 			if (holder->priv->is_freeable)
 				gda_value_free (holder->priv->value);

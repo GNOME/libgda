@@ -80,7 +80,9 @@ GValue       *gda_row_get_value      (GdaRow *row, gint num);
 
 /* for database providers mainly */
 void          gda_row_invalidate_value (GdaRow *row, GValue *value);
+void          gda_row_invalidate_value_e (GdaRow *row, GValue *value, GError *error);
 gboolean      gda_row_value_is_valid (GdaRow *row, GValue *value);
+gboolean      gda_row_value_is_valid_e (GdaRow *row, GValue *value, GError **error);
 
 G_END_DECLS
 

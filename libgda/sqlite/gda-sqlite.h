@@ -62,4 +62,6 @@ typedef struct {
 	GType        *types_array;/* holds GType values, pointed by @types_hash */
 } SqliteConnectionData;
 
+extern GHashTable *error_blobs_hash;
+
 #endif
