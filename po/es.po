@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-09-03 20:22+0000\n"
-"PO-Revision-Date: 2011-09-04 10:54+0200\n"
+"POT-Creation-Date: 2011-09-04 08:56+0000\n"
+"PO-Revision-Date: 2011-09-15 10:29+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -535,16 +535,15 @@ msgstr "Error al cargar la información de autenticación para la DSN «%s»: %s
 #: ../libgda/gda-config.c:570
 #, c-format
 msgid "Error creating user specific configuration directory '%s'"
-msgstr ""
-"Error al crear el directorio de configuración específico del usuario «%s»"
+msgstr "Error al crear la carpeta de configuración específica del usuario «%s»"
 
 #: ../libgda/gda-config.c:619 ../libgda/gda-config.c:632
 #, c-format
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
-"El directorio de configuración específico del usuario «%s» ya existe y no es "
-"un directorio"
+"La carpeta de configuración específica del usuario «%s» ya existe y no es una "
+"carpeta"
 
 #: ../libgda/gda-config.c:893
 #, c-format
@@ -1144,7 +1143,7 @@ msgstr "La columna no se puede modificar"
 #: ../libgda/gda-data-model-dir.c:1009 ../libgda/gda-data-model-dir.c:1011
 #: ../libgda/gda-data-model-dir.c:1216 ../libgda/gda-data-model-dir.c:1218
 msgid "New path must be a subpath of the base directory"
-msgstr "La nueva ruta debe ser una subruta del directorio base"
+msgstr "La nueva ruta debe ser una subruta de la carpeta base"
 
 #: ../libgda/gda-data-model-dir.c:1051 ../libgda/gda-data-model-dir.c:1095
 #, c-format
@@ -1154,7 +1153,7 @@ msgstr "No se pudo renombrar el archivo «%s» a «%s»"
 #: ../libgda/gda-data-model-dir.c:1075
 #, c-format
 msgid "Could not create directory '%s'"
-msgstr "No se pudo crear el directorio «%s»"
+msgstr "No se pudo crear la carpeta «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1144
 #, c-format
@@ -1177,7 +1176,7 @@ msgstr "No se puede establecer el contenido del archivo «%s»"
 #: ../libgda/gda-data-model-dir.c:1288
 #, c-format
 msgid "Cannot create directory '%s'"
-msgstr "No se puede crear el directorio «%s»"
+msgstr "No se puede crear la carpeta «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1296 ../libgda/gda-data-model-dir.c:1298
 msgid "Cannot add row: filename missing"
@@ -1369,9 +1368,9 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila "
-"actualizada» o «fila eliminada». Esto es un error de la implementación de %s "
-"(informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto es un error de la implementación de %s (informe del "
+"error)."
 
 #: ../libgda/gda-data-proxy.c:2134
 #, c-format
@@ -1381,9 +1380,9 @@ msgid ""
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila "
-"actualizada» o «fila eliminada». Esto puede ser un error de la "
-"implementación de %s (informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto puede ser un error de la implementación de %s "
+"(informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2987 ../tools/gda-sql.c:3319
 msgid "Could not create virtual connection"
@@ -1463,8 +1462,8 @@ msgstr "La modificación de la declaración usa un parámetro «%s» desconocido
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"La modificación del parámetro «%s» de la declaración es %s cuando debería "
-"ser %s"
+"La modificación del parámetro «%s» de la declaración es %s cuando debería ser "
+"%s"
 
 #: ../libgda/gda-data-select.c:1341
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1736,15 +1735,14 @@ msgstr "Falta la definición de la vista en el nodo <view>"
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
-"La definición de la vista contiene más de una declaración (para la vista "
-"«%s»)"
+"La definición de la vista contiene más de una declaración (para la vista «%s»)"
 
 #: ../libgda/gda-meta-store.c:1315
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
-"La definición de la vista no es una declaración de selección (para la vista "
-"«%s»)"
+"La definición de la vista no es una declaración de selección (para la vista «%"
+"s»)"
 
 #. FIXME
 #: ../libgda/gda-meta-store.c:1342 ../libgda/gda-meta-struct-io.c:176
@@ -2107,8 +2105,8 @@ msgstr "El proveedor %s creó un GdaServerOperation sin un nodo para «%s»"
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
-"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para "
-"«%s»"
+"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%"
+"s»"
 
 #: ../libgda/gda-server-provider.c:947 ../libgda/gda-server-provider.c:981
 #, c-format
@@ -2244,8 +2242,7 @@ msgstr "No existe un manejador de datos para el tipo «%s»"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo "
-"«%s»"
+"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
 
 #: ../libgda/gda-statement.c:1258
 #, c-format
@@ -2585,7 +2582,7 @@ msgstr ""
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr ""
-"La parte DB_DIR de la cadena de conexión debe apuntar a un directorio válido"
+"La parte DB_DIR de la cadena de conexión debe apuntar a una carpeta válido"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:873
 msgid "Wrong encryption passphrase"
@@ -2632,7 +2629,7 @@ msgstr "Error al inicializar la base de datos con contraseña"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1421
 msgid "Missing database name or directory"
-msgstr "Falta el nombre o el directorio de la base de datos"
+msgstr "Falta el nombre o la carpeta de la base de datos"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1447
 #: ../providers/postgres/gda-postgres-provider.c:1004
@@ -3094,8 +3091,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1148
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de "
-"campos que unir"
+"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de campos "
+"que unir"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1157
 msgid "Empty FROM clause"
@@ -3306,8 +3303,7 @@ msgstr "No se especificó una expresión"
 #: ../libgda-report/engine/gda-report-engine.c:920
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr ""
-"No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
+msgstr "No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1058
 #, c-format
@@ -3528,9 +3524,8 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a "
-"establecer usando la propiedad «manejador») espere algún comportamiento no "
-"deseado"
+"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a establecer "
+"usando la propiedad «manejador») espere algún comportamiento no deseado"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:430
 msgid "Value is NULL"
@@ -3781,7 +3776,7 @@ msgstr "Elegir un archivo"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:197
 msgid "Choose a directory"
-msgstr "Elegir un directorio"
+msgstr "Elegir una carpeta"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:236
 msgid "Choose"
@@ -4130,7 +4125,7 @@ msgstr "Se intentó inicializar una biblioteca que ya estaba inicializada"
 #: ../libgda-ui/gdaui-init.c:476
 msgid "Could not open plugins directory, no plugin loaded."
 msgstr ""
-"No se pudo abrir el directorio de complementos, no hay ningún complemento "
+"No se pudo abrir la carpeta de complementos, no hay ningún complemento "
 "cargado."
 
 #: ../libgda-ui/gdaui-init.c:496
@@ -4623,7 +4618,7 @@ msgstr "Nombre de la base de datos"
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
 msgid "Directory"
-msgstr "Directorio"
+msgstr "Carpeta"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:5
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:5
@@ -4631,7 +4626,7 @@ msgstr "Directorio"
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:5
 msgid "Directory where the database file is stored"
-msgstr "Directorio donde se almacena el archivo con la base de datos"
+msgstr "Carpeta donde se almacena el archivo con la base de datos"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:6
 msgid "Name of the database in the database file to be used"
@@ -4858,7 +4853,7 @@ msgstr "Descripción de la base de datos"
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:8
 msgid "Directory where the database file will be"
-msgstr "Directorio donde estará el archivo con la base de datos"
+msgstr "Carpeta donde estará el archivo con la base de datos"
 
 #. DSN parameters
 #: ../providers/bdbsql/bdbsql_specs_create_db.xml.in.h:10
@@ -5579,8 +5574,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando "
-"%s. Habrá problemas con los caracteres que no sean UTF-8."
+"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando %"
+"s. Habrá problemas con los caracteres que no sean UTF-8."
 
 #: ../providers/mysql/gda-mysql-provider.c:597
 msgid "The connection string must contain the DB_NAME values"
@@ -6067,7 +6062,7 @@ msgstr ""
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
 msgid "Data directory"
-msgstr "Directorio de datos"
+msgstr "Carpeta de datos"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:59
@@ -6143,7 +6138,7 @@ msgstr "En memoria (MEMORY/HEAP)"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:109
 msgid "Index directory"
-msgstr "Directorio de los índices"
+msgstr "Directorio de índices"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
 msgid "InnoDB"
@@ -7824,8 +7819,7 @@ msgid ""
 "'%s' shortcut"
 msgstr ""
 "La perspectiva actual ha cambiado a la perspectiva «%s», puede volver a la "
-"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo "
-"«%s»"
+"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo «%s»"
 
 #: ../tools/browser/connection-binding-properties.c:153
 msgid "New virtual connection"
@@ -7952,8 +7946,8 @@ msgstr ""
 #: ../tools/browser/main.c:185 ../tools/gda-sql.c:257
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: "
-"%s\n"
+"Error while purging files used to store information about each connection: %"
+"s\n"
 msgstr ""
 "Error al limpiar los archivos usados para almacenar la información de cada "
 "conexión: %s\n"
@@ -8857,8 +8851,7 @@ msgstr "No se definió un origen de datos"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo "
-"«%s»"
+"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo «%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:163
 #: ../tools/browser/schema-browser/table-columns.c:303
@@ -9562,8 +9555,8 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
-"tipos incompatibles: «%s» para la clave externa y «%s» para la clave "
-"primaria referenciada"
+"tipos incompatibles: «%s» para la clave externa y «%s» para la clave primaria "
+"referenciada"
 
 #: ../tools/browser/schema-browser/table-columns.c:385
 #, c-format
@@ -9811,13 +9804,11 @@ msgstr "no"
 
 #: ../tools/command-exec.c:789
 #, c-format
-#| msgid "Could not overwrite contents of file '%s'"
 msgid "Could not determine columns of view '%s'"
 msgstr "No se pudieron determinar la columnas en la vista «%s»"
 
 #: ../tools/command-exec.c:793
 #, c-format
-#| msgid "Could not find column '%s' in table '%s'"
 msgid "Could not determine columns of table '%s'"
 msgstr "No se pudieron determinar la columnas en la tabla «%s»"
 
@@ -10072,11 +10063,11 @@ msgstr "Sin contraseña para «%s»"
 #: ../tools/gda-sql.c:1590
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the "
-"'%s' file\n"
+"All the information related to the '%s' connection will be stored in the '%"
+"s' file\n"
 msgstr ""
-"Toda la información relativa a la conexión «%s» se almacenará en el archivo "
-"«%s»\n"
+"Toda la información relativa a la conexión «%s» se almacenará en el archivo «%"
+"s»\n"
 
 #: ../tools/gda-sql.c:1620
 #, c-format
@@ -10089,8 +10080,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
-"Obteniendo la información de esquema para la conexión «%s», esto puede "
-"llevar algún tiempo… "
+"Obteniendo la información de esquema para la conexión «%s», esto puede llevar "
+"algún tiempo… "
 
 #: ../tools/gda-sql.c:1635 ../tools/gda-sql.c:1788 ../tools/gda-sql.c:3114
 #, c-format
@@ -10327,7 +10318,7 @@ msgstr "[DIR] %s"
 
 #: ../tools/gda-sql.c:2415
 msgid "Change the current working directory"
-msgstr "Cambiar el directorio de trabajo actual"
+msgstr "Cambiar la carpeta de trabajo actual"
 
 #: ../tools/gda-sql.c:2427
 msgid "Show usage and distribution terms"
@@ -10507,17 +10498,17 @@ msgstr "Los rangos de las conexiones son:"
 #: ../tools/gda-sql.c:3429
 #, c-format
 msgid "Could not get home directory: %s"
-msgstr "No se pudo obtener el directorio de inicio: %s"
+msgstr "No se pudo obtener la carpeta de inicio: %s"
 
 #: ../tools/gda-sql.c:3455
 #, c-format
 msgid "Working directory is now: %s"
-msgstr "Ahora el directorio de trabajo es: %s"
+msgstr "Ahora la carpeta de trabajo es: %s"
 
 #: ../tools/gda-sql.c:3459
 #, c-format
 msgid "Could not change working directory to '%s': %s"
-msgstr "No se pudo cambiar el directorio de trabajo a «%s»: %s"
+msgstr "No se pudo cambiar la carpeta de trabajo a «%s»: %s"
 
 #: ../tools/gda-sql.c:3486 ../tools/gda-sql.c:3589 ../tools/gda-sql.c:3632
 #: ../tools/gda-sql.c:3661 ../tools/gda-sql.c:3702 ../tools/gda-sql.c:3753
@@ -11030,9 +11021,9 @@ msgstr "Disparadores"
 #~ msgstr "Conectar con otra fuente de datos definidos (DSN, vea \\l)"
 
 #~ msgid ""
-#~ "<small>The XML tree's root node must be a <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one "
-#~ "or more data source definitions.\n"
+#~ "<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
+#~ "data source definitions.\n"
 #~ "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;"
 #~ "query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
 #~ "tt></span> nodes, both accepting the following optional attributes:\n"
@@ -11059,15 +11050,15 @@ msgstr "Disparadores"
 #~ "   the aforementioned table.\n"
 #~ "</small>"
 #~ msgstr ""
-#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
+#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
 #~ "definiciones de fuentes de datos.\n"
-#~ "Cada fuente de datos está definida por nodos <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;query&gt;</tt></span> o <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;table&gt;</tt></span>, ambos aceptan los siguientes "
-#~ "atributos opcionales:\n"
-#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena "
-#~ "de ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
+#~ "Cada fuente de datos está definida por nodos <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;query&gt;</tt></span> o <span foreground=\"#4e9a06\"><tt>&lt;"
+#~ "table&gt;</tt></span>, ambos aceptan los siguientes atributos "
+#~ "opcionales:\n"
+#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena de "
+#~ "ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
 #~ " - <span foreground=\"#4e9a06\">«title»</span> para especificar un "
 #~ "título.\n"
 #~ "\n"
