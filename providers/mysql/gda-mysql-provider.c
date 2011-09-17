@@ -2308,8 +2308,35 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			else if (!rstmt)
 				return NULL;
 			else {
-				GObject *obj;
 				free_bind_param_data (mem_to_free);
+
+				/* The strategy here is to execute @rstmt using the prepared
+				 * statement associcted to @stmt, but adapted to @rstmt, so all
+				 * the column names, etc remain the same.
+				 *
+				 * The adaptation consists to replace MySQL specific information
+				 * in the GdaMysqlPStmt object.
+				 *
+				 * The trick is to adapt @ps, then associate @ps with @rstmt, then
+				 * execute @rstmt, and then undo the trick */
+				GObject *obj;
+				GdaMysqlPStmt *tps;
+				if (!gda_mysql_provider_statement_prepare (provider, cnc,
+									    rstmt, error))
+					return NULL;
+				tps = (GdaMysqlPStmt *)
+					gda_connection_get_prepared_statement (cnc, rstmt);
+
+				/* adapt @ps with @tps's Mysql specific information */
+				GdaMysqlPStmt hps;
+				hps.mysql_stmt = ps->mysql_stmt; /* save */
+				ps->mysql_stmt = tps->mysql_stmt; /* override */
+				hps.stmt_used = ps->stmt_used; /* save */
+				ps->stmt_used = tps->stmt_used; /* override */
+				g_object_ref (tps);
+				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) ps);
+
+				/* execute rstmt (it will use @ps) */
 				obj = gda_mysql_provider_statement_execute (provider, cnc,
 									    rstmt, params,
 									    model_usage,
@@ -2317,15 +2344,13 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 									    last_inserted_row,
 									    task_id, async_cb,
 									    cb_data, error);
+
+				/* revert adaptations */
+				ps->mysql_stmt = hps.mysql_stmt;
+				ps->stmt_used = hps.stmt_used;
+				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) tps);
+				g_object_unref (tps);
 				g_object_unref (rstmt);
-				if (GDA_IS_DATA_SELECT (obj)) {
-					GdaPStmt *pstmt;
-					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
-					if (pstmt) {
-						gda_pstmt_set_gda_statement (pstmt, stmt);
-						g_object_unref (pstmt);
-					}
-				}
 				return obj;
 			}
 		}
