@@ -411,7 +411,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	 **/
 	g_object_class_install_property (object_class, PROP_EXEC_TIMES,
 					 g_param_spec_boolean ("execution-timer", NULL,
-							       _("Computes execution demay for each executed statement"),
+							       _("Computes execution delay for each executed statement"),
 							       FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
