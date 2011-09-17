@@ -420,12 +420,13 @@ gdaui_data_cell_renderer_pict_render (GtkCellRenderer      *cell,
 }
 
 static void
-pict_data_changed_cb (GdauiDataCellRendererPict *pictcell)
+pict_data_changed_cb (PictBinData *bindata, GdauiDataCellRendererPict *pictcell)
 {
 	GValue *value;
 
-	value = common_pict_get_value (&(pictcell->priv->bindata), &(pictcell->priv->options),
+	value = common_pict_get_value (bindata, &(pictcell->priv->options),
 				       pictcell->priv->type);
+	g_free (bindata->data);
 	g_signal_emit (G_OBJECT (pictcell), pixbuf_cell_signals[CHANGED], 0,
 		       g_object_get_data (G_OBJECT (pictcell), "last-path"), value);
 	gda_value_free (value);
