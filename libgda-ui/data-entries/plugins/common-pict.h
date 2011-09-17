@@ -47,7 +47,11 @@ typedef struct {
 	gint height;
 } PictAllocation;
 
-typedef void (*PictCallback) (gpointer);
+/*
+ * Notice: when the PictCallback function is called, the bindata's contents are
+ * given to the function, which means it is responsible to free @bindata->data
+ */
+typedef void (*PictCallback) (PictBinData *, gpointer);
 typedef struct {
 	GtkWidget    *menu; /* popup menu */
 	GtkWidget    *load_mitem;

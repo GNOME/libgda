@@ -382,11 +382,9 @@ file_load_cb (GtkWidget *button, PictMenuData *menudata)
 		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg)));
 
 		if (g_file_get_contents (filename, &data, &length, &error)) {
-			if (menudata->bindata->data) {
-				g_free (menudata->bindata->data);
-				menudata->bindata->data = NULL;
-				menudata->bindata->data_length = 0;
-			}
+			g_free (menudata->bindata->data);
+			menudata->bindata->data = NULL;
+			menudata->bindata->data_length = 0;
 
 			if (menudata->options->serialize) {
 				GdkPixdata pixdata;
@@ -414,7 +412,9 @@ file_load_cb (GtkWidget *button, PictMenuData *menudata)
 
 			/* call the callback */
 			if (menudata->callback)
-				(menudata->callback) (menudata->data);
+				(menudata->callback) (menudata->bindata, menudata->data);
+			menudata->bindata->data = NULL;
+			menudata->bindata->data_length = 0;
 		}
 		else {
 			GtkWidget *msg;
@@ -607,23 +607,24 @@ void
 common_pict_init_cache (PictOptions *options)
 {
 	g_assert (!options->pixbuf_hash);
-	options->pixbuf_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_object_unref);
+	options->pixbuf_hash = g_hash_table_new_full (g_int_hash, g_int_equal,
+						      g_free, g_object_unref);
 }
 
 /* 
  * computes a "hash" of the binary data 
  */
-static guint
+static gint
 compute_hash (guchar *data, glong data_length)
 {
-	guint result = 0;
+	gint result = 0;
 	guchar *ptr;
 
 	if (!data)
 		return 0;
 	for (ptr = data; ptr <= data + data_length - 1; ptr++)
 		result += *ptr;
-	
+
 	return result;
 }
 
@@ -633,18 +634,17 @@ compute_hash (guchar *data, glong data_length)
 void
 common_pict_add_cached_pixbuf (PictOptions *options, const GValue *value, GdkPixbuf *pixbuf)
 {
-	guint hash;
+	gint *hash;
 	g_return_if_fail (pixbuf);
 
 	if (!options->pixbuf_hash || !value)
 		return;
-
 	else if (GDA_VALUE_HOLDS_BINARY (value)) {
 		const GdaBinary *bin;
 		bin = gda_value_get_binary (value);
-		hash = compute_hash (bin->data, bin->binary_length);
-		g_hash_table_insert (options->pixbuf_hash, GUINT_TO_POINTER (hash), pixbuf);
-		g_object_ref (pixbuf);
+		hash = g_new (guint, 1);
+		*hash = compute_hash (bin->data, bin->binary_length);
+		g_hash_table_insert (options->pixbuf_hash, hash, g_object_ref (pixbuf));
 	}
 	else if (GDA_VALUE_HOLDS_BLOB (value)) {
 		const GdaBinary *bin;
@@ -654,9 +654,9 @@ common_pict_add_cached_pixbuf (PictOptions *options, const GValue *value, GdkPix
 		if (bin) {
 			if (!bin->data && blob->op)
 				gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
-			hash = compute_hash (bin->data, bin->binary_length);
-			g_hash_table_insert (options->pixbuf_hash, GUINT_TO_POINTER (hash), pixbuf);
-			g_object_ref (pixbuf);
+			hash = g_new (guint, 1);
+			*hash = compute_hash (bin->data, bin->binary_length);
+			g_hash_table_insert (options->pixbuf_hash, hash, g_object_ref (pixbuf));
 		}
 	}
 }
@@ -668,7 +668,7 @@ GdkPixbuf *
 common_pict_fetch_cached_pixbuf (PictOptions *options, const GValue *value)
 {
 	GdkPixbuf *pixbuf = NULL;
-	guint hash;
+	gint hash;
 
 	if (!options->pixbuf_hash)
 		return NULL;
@@ -679,7 +679,7 @@ common_pict_fetch_cached_pixbuf (PictOptions *options, const GValue *value)
 		bin = gda_value_get_binary (value);
 		if (bin) {
 			hash = compute_hash (bin->data, bin->binary_length);
-			pixbuf = g_hash_table_lookup (options->pixbuf_hash, GUINT_TO_POINTER (hash));
+			pixbuf = g_hash_table_lookup (options->pixbuf_hash, &hash);
 		}
 	}
 	else if (GDA_VALUE_HOLDS_BLOB (value)) {
@@ -691,7 +691,7 @@ common_pict_fetch_cached_pixbuf (PictOptions *options, const GValue *value)
 			if (!bin->data && blob->op)
 				gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
 			hash = compute_hash (bin->data, bin->binary_length);
-			pixbuf = g_hash_table_lookup (options->pixbuf_hash, GUINT_TO_POINTER (hash));
+			pixbuf = g_hash_table_lookup (options->pixbuf_hash, &hash);
 		}
 	}
 

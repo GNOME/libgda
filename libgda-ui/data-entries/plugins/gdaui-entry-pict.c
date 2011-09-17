@@ -277,8 +277,11 @@ size_allocate_cb (G_GNUC_UNUSED GtkWidget *wid, GtkAllocation *allocation, Gdaui
 }
 
 static void
-pict_data_changed_cb (GdauiEntryPict *mgpict)
+pict_data_changed_cb (PictBinData *bindata, GdauiEntryPict *mgpict)
 {
+	g_free (mgpict->priv->bindata.data);
+	mgpict->priv->bindata.data = bindata->data;
+	mgpict->priv->bindata.data_length = bindata->data_length;
 	display_image (mgpict, NULL, NULL, NULL);
 	gdaui_entry_wrapper_contents_changed (GDAUI_ENTRY_WRAPPER (mgpict));
 	gdaui_entry_wrapper_contents_activated (GDAUI_ENTRY_WRAPPER (mgpict));
@@ -359,11 +362,9 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	mgpict = GDAUI_ENTRY_PICT (mgwrap);
 	g_return_if_fail (mgpict->priv);
 
-	if (mgpict->priv->bindata.data) {
-		g_free (mgpict->priv->bindata.data);
-		mgpict->priv->bindata.data = NULL;
-		mgpict->priv->bindata.data_length = 0;
-	}
+	g_free (mgpict->priv->bindata.data);
+	mgpict->priv->bindata.data = NULL;
+	mgpict->priv->bindata.data_length = 0;
 
 	/* fill in mgpict->priv->data */
 	if (!common_pict_load_data (&(mgpict->priv->options), value, &(mgpict->priv->bindata), &stock, &error)) {
