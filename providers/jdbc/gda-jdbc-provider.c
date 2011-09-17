@@ -1429,9 +1429,49 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			else if (!rstmt)
 				return NULL;
 			else {
-				GObject *obj;
-				g_object_unref (ps);
 				_gda_jdbc_release_jenv (jni_detach);
+
+				/* The strategy here is to execute @rstmt using the prepared
+				 * statement associcted to @stmt, but adapted to @rstmt, so all
+				 * the column names, etc remain the same.
+				 *
+				 * The adaptation consists to replace Jdbc specific information
+				 * in the GdaJdbcPStmt object.
+				 *
+				 * The trick is to adapt @ps, then associate @ps with @rstmt, then
+				 * execute @rstmt, and then undo the trick */
+				GObject *obj;
+				GdaJdbcPStmt *tps;
+				if (!gda_jdbc_provider_statement_prepare (provider, cnc,
+									    rstmt, error)) {
+					g_object_unref (ps);
+					return NULL;
+				}
+				tps = (GdaJdbcPStmt *)
+					gda_connection_get_prepared_statement (cnc, rstmt);
+
+				/* adapt @ps with @tps's Jdbc specific information */
+				GdaJdbcPStmt hps;
+				hps.pstmt_obj = ps->pstmt_obj; /* save */
+				ps->pstmt_obj = tps->pstmt_obj; /* override */
+				g_object_ref (tps);
+				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) ps);
+
+				/* execute rstmt (it will use @ps) */
+				obj = gda_jdbc_provider_statement_execute (provider, cnc,
+									     rstmt, params,
+									     model_usage,
+									     col_types,
+									     last_inserted_row,
+									     task_id, async_cb,
+									     cb_data, error);
+
+				/* revert adaptations */
+				ps->pstmt_obj = hps.pstmt_obj;
+				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) tps);
+				g_object_unref (tps);
+				g_object_unref (rstmt);
+
 				obj = gda_jdbc_provider_statement_execute (provider, cnc,
 									   rstmt, params,
 									   model_usage,
@@ -1440,14 +1480,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 									   task_id, async_cb,
 									   cb_data, error);
 				g_object_unref (rstmt);
-				if (GDA_IS_DATA_SELECT (obj)) {
-					GdaPStmt *pstmt;
-					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
-					if (pstmt) {
-						gda_pstmt_set_gda_statement (pstmt, stmt);
-						g_object_unref (pstmt);
-					}
-				}
+				g_object_unref (ps);
 				return obj;
 			}
 		}

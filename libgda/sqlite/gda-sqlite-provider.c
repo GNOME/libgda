@@ -2935,7 +2935,33 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			else if (!rstmt)
 				return NULL;
 			else {
+				/* The strategy here is to execute @rstmt using the prepared
+				 * statement associcted to @stmt, but adapted to @rstmt, so all
+				 * the column names, etc remain the same.
+				 *
+				 * The adaptation consists to replace SQLite specific information
+				 * in the GdaSqlitePStmt object.
+				 *
+				 * The trick is to adapt @ps, then associate @ps with @rstmt, then
+				 * execute @rstmt, and then undo the trick */
 				GObject *obj;
+				GdaSqlitePStmt *tps;
+				if (!gda_sqlite_provider_statement_prepare (provider, cnc,
+									    rstmt, error))
+					return NULL;
+				tps = (GdaSqlitePStmt *)
+					gda_connection_get_prepared_statement (cnc, rstmt);
+
+				/* adapt @ps with @tps's SQLite specific information */
+				GdaSqlitePStmt hps;
+				hps.sqlite_stmt = ps->sqlite_stmt; /* save */
+				ps->sqlite_stmt = tps->sqlite_stmt; /* override */
+				hps.stmt_used = ps->stmt_used; /* save */
+				ps->stmt_used = tps->stmt_used; /* override */
+				g_object_ref (tps);
+				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) ps);
+
+				/* execute rstmt (it will use @ps) */
 				obj = gda_sqlite_provider_statement_execute (provider, cnc,
 									     rstmt, params,
 									     model_usage,
@@ -2943,15 +2969,14 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 									     last_inserted_row,
 									     task_id, async_cb,
 									     cb_data, error);
+
+				/* revert adaptations */
+				ps->sqlite_stmt = hps.sqlite_stmt;
+				ps->stmt_used = hps.stmt_used;
+				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) tps);
+				g_object_unref (tps);
 				g_object_unref (rstmt);
-				if (GDA_IS_DATA_SELECT (obj)) {
-					GdaPStmt *pstmt;
-					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
-					if (pstmt) {
-						gda_pstmt_set_gda_statement (pstmt, stmt);
-						g_object_unref (pstmt);
-					}
-				}
+
 				if (new_ps)
 					g_object_unref (ps);
 				pending_blobs_free_list (blobs_list);

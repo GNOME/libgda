@@ -2017,13 +2017,39 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			else if (!rstmt)
 				return NULL;
 			else {
-				GObject *obj;
 				params_freev (param_values, param_mem, nb_params);
 				g_free (param_lengths);
 				g_free (param_formats);
 				if (transaction_started)
 					gda_connection_rollback_transaction (cnc, NULL, NULL);
 
+				/* The strategy here is to execute @rstmt using the prepared
+				 * statement associcted to @stmt, but adapted to @rstmt, so all
+				 * the column names, etc remain the same.
+				 *
+				 * The adaptation consists to replace Postgresql specific information
+				 * in the GdaPostgresPStmt object.
+				 *
+				 * The trick is to adapt @ps, then associate @ps with @rstmt, then
+				 * execute @rstmt, and then undo the trick */
+				GObject *obj;
+				GdaPostgresPStmt *tps;
+				if (!gda_postgres_provider_statement_prepare (provider, cnc,
+									      rstmt, error))
+					return NULL;
+				tps = (GdaPostgresPStmt *)
+					gda_connection_get_prepared_statement (cnc, rstmt);
+
+				/* adapt @ps with @tps's SQLite specific information */
+				GdaPostgresPStmt hps;
+				hps.pconn = ps->pconn; /* save */
+				ps->pconn = tps->pconn; /* override */
+				hps.prep_name = ps->prep_name; /* save */
+				ps->prep_name = tps->prep_name; /* override */
+				g_object_ref (tps);
+				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) ps);
+
+				/* execute rstmt (it will use @ps) */
 				obj = gda_postgres_provider_statement_execute (provider, cnc,
 									       rstmt, params,
 									       model_usage,
@@ -2031,15 +2057,13 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 									       last_inserted_row,
 									       task_id, async_cb,
 									       cb_data, error);
+
+				/* revert adaptations */
+				ps->pconn = hps.pconn;
+				ps->prep_name = hps.prep_name;
+				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) tps);
+				g_object_unref (tps);
 				g_object_unref (rstmt);
-				if (GDA_IS_DATA_SELECT (obj)) {
-					GdaPStmt *pstmt;
-					g_object_get (obj, "prepared-stmt", &pstmt, NULL);
-					if (pstmt) {
-						gda_pstmt_set_gda_statement (pstmt, stmt);
-						g_object_unref (pstmt);
-					}
-				}
 				return obj;
 			}
 		}
