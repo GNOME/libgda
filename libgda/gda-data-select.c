@@ -131,13 +131,13 @@ static void gda_data_select_dispose    (GObject *object);
 static void gda_data_select_finalize   (GObject *object);
 
 static void gda_data_select_set_property (GObject *object,
-				     guint param_id,
-				     const GValue *value,
-				     GParamSpec *pspec);
+					  guint param_id,
+					  const GValue *value,
+					  GParamSpec *pspec);
 static void gda_data_select_get_property (GObject *object,
-				     guint param_id,
-				     GValue *value,
-				     GParamSpec *pspec);
+					  guint param_id,
+					  GValue *value,
+					  GParamSpec *pspec);
 
 /* utility functions */
 typedef struct {

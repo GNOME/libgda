@@ -6145,14 +6145,15 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 	gda_connection_lock ((GdaLockable*) cnc);
 
 	if (!cnc->priv->prepared_stmts)
-		cnc->priv->prepared_stmts = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_object_unref);
+		cnc->priv->prepared_stmts = g_hash_table_new_full (g_direct_hash, g_direct_equal,
+								   NULL, g_object_unref);
 	g_hash_table_remove (cnc->priv->prepared_stmts, gda_stmt);
-	g_hash_table_insert (cnc->priv->prepared_stmts, gda_stmt, prepared_stmt);
-	g_object_ref (prepared_stmt);
+	g_hash_table_insert (cnc->priv->prepared_stmts, gda_stmt, g_object_ref (prepared_stmt));
 	
 	/* destroy the prepared statement if gda_stmt is destroyed, or changes */
 	g_object_weak_ref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
-	g_signal_connect (G_OBJECT (gda_stmt), "reset", G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
+	g_signal_connect (G_OBJECT (gda_stmt), "reset",
+			  G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
 
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
