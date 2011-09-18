@@ -243,7 +243,7 @@ gda_firebird_recordset_fetch_nb_rows (GdaDataSelect *model)
  *
  * NOTES:
  * - @prow will NOT be NULL, but *prow WILL be NULL.
- * - a new #GdaRow object has to be created.
+ * - a new #GdaRow object has to be created, corresponding to the @rownum row
  * - memory management for that new GdaRow object is left to the implementation, which
  *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
  *   this method won't be called anymore for the same @rownum), or may decide to
@@ -288,7 +288,7 @@ gda_firebird_recordset_store_all (GdaDataSelect *model, GError **error)
  *
  * NOTES:
  * - @prow will NOT be NULL, but *prow WILL be NULL.
- * - a new #GdaRow object has to be created.
+ * - a new #GdaRow object has to be created, corresponding to the @rownum row
  * - memory management for that new GdaRow object is left to the implementation, which
  *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
  *   this method won't be called anymore for the same @rownum), or may decide to
@@ -311,7 +311,7 @@ gda_firebird_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint row
  *
  * NOTES:
  * - @prow will NOT be NULL, but *prow WILL be NULL.
- * - a new #GdaRow object has to be created.
+ * - a new #GdaRow object has to be created, corresponding to the @rownum row
  * - memory management for that new GdaRow object is left to the implementation, which
  *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
  *   this method won't be called anymore for the same @rownum), or may decide to
@@ -335,7 +335,7 @@ gda_firebird_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint row
  *
  * NOTES:
  * - @prow will NOT be NULL, but *prow WILL be NULL.
- * - a new #GdaRow object has to be created.
+ * - a new #GdaRow object has to be created, corresponding to the @rownum row
  * - memory management for that new GdaRow object is left to the implementation, which
  *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
  *   this method won't be called anymore for the same @rownum), or may decide to

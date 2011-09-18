@@ -249,7 +249,7 @@ gda_capi_recordset_fetch_nb_rows (GdaDataSelect *model)
  *
  * NOTES:
  * - @prow will NOT be NULL, but *prow WILL be NULL.
- * - a new #GdaRow object has to be created.
+ * - a new #GdaRow object has to be created, corresponding to the @rownum row
  * - memory management for that new GdaRow object is left to the implementation, which
  *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
  *   this method won't be called anymore for the same @rownum), or may decide to
@@ -258,14 +258,11 @@ gda_capi_recordset_fetch_nb_rows (GdaDataSelect *model)
  * - this method is only called when data model is used in random access mode
  */
 static gboolean 
-gda_capi_recordset_fetch_random (GdaDataSelect *model, G_GNUC_UNUSED GdaRow **prow, G_GNUC_UNUSED gint rownum,
-				 G_GNUC_UNUSED GError **error)
+gda_capi_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum,
+				 GError **error)
 {
-	GdaCapiRecordset *imodel;
+	/*GdaCapiRecordset *imodel = GDA_CAPI_RECORDSET (model);*/
 
-	imodel = GDA_CAPI_RECORDSET (model);
-
-	g_warning("imodel not used: %p", imodel); /* Avoids a compiler warning. */
 	TO_IMPLEMENT;
 
 	return TRUE;
@@ -298,7 +295,7 @@ gda_capi_recordset_store_all (GdaDataSelect *model, GError **error)
  *
  * NOTES:
  * - @prow will NOT be NULL, but *prow WILL be NULL.
- * - a new #GdaRow object has to be created.
+ * - a new #GdaRow object has to be created, corresponding to the @rownum row
  * - memory management for that new GdaRow object is left to the implementation, which
  *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
  *   this method won't be called anymore for the same @rownum), or may decide to
@@ -307,8 +304,8 @@ gda_capi_recordset_store_all (GdaDataSelect *model, GError **error)
  * - this method is only called when data model is used in cursor access mode
  */
 static gboolean 
-gda_capi_recordset_fetch_next (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED GdaRow **prow,
-			       G_GNUC_UNUSED gint rownum, G_GNUC_UNUSED GError **error)
+gda_capi_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow,
+			       gint rownum, GError **error)
 {
 	/* GdaCapiRecordset *imodel = (GdaCapiRecordset*) model; */
 
@@ -322,7 +319,7 @@ gda_capi_recordset_fetch_next (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED
  *
  * NOTES:
  * - @prow will NOT be NULL, but *prow WILL be NULL.
- * - a new #GdaRow object has to be created.
+ * - a new #GdaRow object has to be created, corresponding to the @rownum row
  * - memory management for that new GdaRow object is left to the implementation, which
  *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
  *   this method won't be called anymore for the same @rownum), or may decide to
@@ -332,8 +329,8 @@ gda_capi_recordset_fetch_next (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED
  * - this method is only called when data model is used in cursor access mode
  */
 static gboolean 
-gda_capi_recordset_fetch_prev (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED GdaRow **prow,
-			       G_GNUC_UNUSED gint rownum, G_GNUC_UNUSED GError **error)
+gda_capi_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow,
+			       gint rownum, GError **error)
 {
 	/* GdaCapiRecordset *imodel = (GdaCapiRecordset*) model; */
 
@@ -347,7 +344,7 @@ gda_capi_recordset_fetch_prev (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED
  *
  * NOTES:
  * - @prow will NOT be NULL, but *prow WILL be NULL.
- * - a new #GdaRow object has to be created.
+ * - a new #GdaRow object has to be created, corresponding to the @rownum row
  * - memory management for that new GdaRow object is left to the implementation, which
  *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
  *   this method won't be called anymore for the same @rownum), or may decide to
@@ -357,8 +354,8 @@ gda_capi_recordset_fetch_prev (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED
  * - this method is only called when data model is used in cursor access mode
  */
 static gboolean 
-gda_capi_recordset_fetch_at (G_GNUC_UNUSED GdaDataSelect *model, G_GNUC_UNUSED GdaRow **prow,
-			     G_GNUC_UNUSED gint rownum, G_GNUC_UNUSED GError **error)
+gda_capi_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow,
+			     gint rownum, GError **error)
 {
 	/* GdaCapiRecordset *imodel = (GdaCapiRecordset*) model; */
 	
