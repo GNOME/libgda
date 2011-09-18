@@ -2033,7 +2033,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		target_iter_row = imodel->priv->sh->iter_row + 1;
 
 	int_row = external_to_internal_row (imodel, target_iter_row, NULL);
-	prow = gda_data_select_get_stored_row (model, int_row);
+	prow = gda_data_select_get_stored_row (imodel, int_row);
 	if (!prow)
 		CLASS (model)->fetch_next (imodel, &prow, int_row, NULL);
 
@@ -2044,8 +2044,8 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	}
 	else {
 		gda_data_model_iter_invalidate_contents (iter);
-                imodel->priv->sh->iter_row = G_MAXINT;
-                g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
+		imodel->priv->sh->iter_row = G_MAXINT;
+		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
 		g_signal_emit_by_name (iter, "end-of-data");
                 return FALSE;
 	}
@@ -2065,17 +2065,11 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 		return gda_data_model_iter_move_prev_default (model, iter);
 
-	if (! CLASS (model)->fetch_prev) {
-		gda_data_model_iter_invalidate_contents (iter);
-		return FALSE;
-	}
-
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
 
         if (imodel->priv->sh->iter_row <= 0)
                 goto prev_error;
-
         else if (imodel->priv->sh->iter_row == G_MAXINT) {
                 g_assert (imodel->advertized_nrows >= 0);
                 target_iter_row = imodel->advertized_nrows - 1;
@@ -2084,9 +2078,14 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
                 target_iter_row = imodel->priv->sh->iter_row - 1;
 
 	int_row = external_to_internal_row (imodel, target_iter_row, NULL);
-	prow = gda_data_select_get_stored_row (model, int_row);
-	if (!prow)
+	prow = gda_data_select_get_stored_row (imodel, int_row);
+	if (!prow) {
+		if (! CLASS (model)->fetch_prev) {
+			gda_data_model_iter_invalidate_contents (iter);
+			return FALSE;
+		}
 		CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL);
+	}
 
 	if (prow) {
 		imodel->priv->sh->iter_row = target_iter_row;
@@ -2118,7 +2117,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
 
 	int_row = external_to_internal_row (imodel, row, NULL);
-	prow = gda_data_select_get_stored_row (model, int_row);
+	prow = gda_data_select_get_stored_row (imodel, int_row);
 
 	if (prow) {
 		imodel->priv->sh->iter_row = row;

@@ -277,7 +277,7 @@ handle_data_model_exception (sqlite3_vtab *pVtab, GdaDataModel *model)
 		if (pVtab->zErrMsg)
 			SQLITE3_CALL (sqlite3_free) (pVtab->zErrMsg);
 		pVtab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
-			(e->message ? e->message : _("No detail"));
+			("%s", e->message ? e->message : _("No detail"));
 		if (fatal_error)
 			return SQLITE_ERROR;
 		else
@@ -910,10 +910,31 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 	else
 		cursor->iter = gda_data_model_create_iter (vtable->td->real_model);
 
+	if (gda_data_model_iter_is_valid (cursor->iter) &&
+	    (gda_data_model_iter_get_row (cursor->iter) > 0)) {
+		/*g_print ("@%d, rewinding...", gda_data_model_iter_get_row (cursor->iter));*/
+		for (;gda_data_model_iter_move_prev (cursor->iter););
+		/*g_print ("done: @%d\n", gda_data_model_iter_get_row (cursor->iter));*/
+		if (gda_data_model_iter_is_valid (cursor->iter))
+			goto onerror;
+	}
+	if (! gda_data_model_iter_is_valid (cursor->iter)) {
+		gda_data_model_iter_move_next (cursor->iter);
+		if (! gda_data_model_iter_is_valid (cursor->iter))
+			goto onerror;
+	}
 	cursor->model = g_object_ref (vtable->td->real_model);
-	gda_data_model_iter_move_next (cursor->iter);
 
 	return handle_data_model_exception (pVtabCursor->pVtab, cursor->model);
+
+ onerror:
+	g_object_unref (cursor->iter);
+	cursor->iter = NULL;
+	if (pVtabCursor->pVtab->zErrMsg)
+			SQLITE3_CALL (sqlite3_free) (pVtabCursor->pVtab->zErrMsg);
+	pVtabCursor->pVtab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+		("%s", _("Can't obtain an iterator located on the first row"));
+	return SQLITE_ERROR;
 }
 
 #ifdef GDA_DEBUG_VIRTUAL
