@@ -1018,7 +1018,7 @@ gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
 }
 
 /**
- * gda_data_model_iter_get_value_at:
+ * gda_data_model_iter_get_value_at_e:
  * @iter: a #GdaDataModelIter object
  * @col: the requested column
  * @error: (allow-none): a place to store errors, or %NULL

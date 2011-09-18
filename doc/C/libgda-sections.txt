@@ -341,9 +341,12 @@ gda_data_access_wrapper_get_type
 GdaDataPivot
 GdaDataPivotClass
 GdaDataPivotPrivate
+GdaDataPivotError
 gda_data_pivot_new
 GdaDataPivotFieldType
 gda_data_pivot_add_field
+GdaDataPivotAggregate
+gda_data_pivot_add_data
 gda_data_pivot_populate
 <SUBSECTION Standard>
 GDA_DATA_PIVOT
@@ -456,6 +459,7 @@ gda_data_proxy_get_type
 <TITLE>GdaDataModelIter</TITLE>
 GdaDataModelIter
 gda_data_model_iter_get_value_at
+gda_data_model_iter_get_value_at_e
 gda_data_model_iter_get_value_for_field
 gda_data_model_iter_set_value_at
 gda_data_model_iter_is_valid
@@ -1121,7 +1125,9 @@ gda_holder_set_default_value
 gda_holder_set_value_to_default
 gda_holder_value_is_default
 gda_holder_force_invalid
+gda_holder_force_invalid_e
 gda_holder_is_valid
+gda_holder_is_valid_e
 gda_holder_set_not_null
 gda_holder_get_not_null
 gda_holder_set_source_model
@@ -1531,7 +1537,9 @@ gda_data_model_iter_move_next_default
 gda_data_model_iter_move_prev_default
 <SUBSECTION>
 gda_row_invalidate_value
+gda_row_invalidate_value_e
 gda_row_value_is_valid
+gda_row_value_is_valid_e
 </SECTION>
 
 <SECTION>

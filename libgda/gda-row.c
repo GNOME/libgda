@@ -328,7 +328,7 @@ gda_row_value_is_valid (GdaRow *row, GValue *value)
 }
 
 /**
- * gda_row_value_is_valid:
+ * gda_row_value_is_valid_e:
  * @row: a #GdaRow.
  * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
  * @error: (allow-none): a place to store the invalid error, or %NULL

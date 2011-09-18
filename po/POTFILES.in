@@ -21,6 +21,7 @@ libgda/gda-data-model-dsn-list.c
 libgda/gda-data-model-import.c
 libgda/gda-data-model-iter.c
 libgda/gda-data-model-ldap.c
+libgda/gda-data-pivot.c
 libgda/gda-data-proxy.c
 libgda/gda-data-select.c
 libgda/gda-holder.c
