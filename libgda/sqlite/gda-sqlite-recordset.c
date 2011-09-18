@@ -380,7 +380,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			GError *may_error;
 			may_error = (GError*) SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt, real_col);
 			if (may_error && g_hash_table_lookup (error_blobs_hash, may_error)) {
-				g_print ("[[[%s]]]\n", may_error->message);
+				/*g_print ("Row invalidated: [%s]\n", may_error->message);*/
 				gda_row_invalidate_value_e (prow, value, may_error);
 				g_hash_table_remove (error_blobs_hash, may_error);
 			}

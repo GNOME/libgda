@@ -2180,9 +2180,9 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 		value = gda_row_get_value (prow, i);
 
 		if (!gda_row_value_is_valid_e (prow, value, &lerror)) {
-			g_warning (_("%s(%p) [%d] Could not change iter's value for column %d: %s"),
-				   __FUNCTION__, iter, imodel->priv->sh->iter_row, i,
-				   lerror && lerror->message ? lerror->message : _("No detail"));
+			/*g_print (_("%s(%p) [%d] Could not change iter's value for column %d: %s"),
+				 __FUNCTION__, iter, imodel->priv->sh->iter_row, i,
+				 lerror && lerror->message ? lerror->message : _("No detail"));*/
 			gda_holder_force_invalid_e ((GdaHolder*) plist->data, lerror);
 		}
 		else if (! gda_holder_set_value ((GdaHolder*) plist->data, value, &lerror)) {
@@ -2211,7 +2211,7 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	if (update_model)
 		g_object_set (G_OBJECT (iter), "update-model", update_model, NULL);
 
-	g_print ("%s(%p), current-row =>%d advertized_nrows => %d\n", __FUNCTION__, imodel, imodel->priv->sh->iter_row, imodel->advertized_nrows);
+	/*g_print ("%s(%p), current-row =>%d advertized_nrows => %d\n", __FUNCTION__, imodel, imodel->priv->sh->iter_row, imodel->advertized_nrows);*/
 }
 
 /*
