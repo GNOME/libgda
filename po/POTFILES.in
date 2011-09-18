@@ -29,6 +29,7 @@ libgda/gda-log.c
 libgda/gda-meta-store.c
 libgda/gda-meta-struct.c
 libgda/gda-meta-struct-io.c
+libgda/gda-row.c
 libgda/gda-server-operation.c
 libgda/gda-server-provider.c
 libgda/gda-server-provider-extra.c
