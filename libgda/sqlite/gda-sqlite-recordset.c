@@ -160,17 +160,19 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 		if (pmodel->prep_stmt->types[i] == GDA_TYPE_NULL)
 			missing_cols [nb_missing++] = i;
 	}
-	/*
+
+#ifdef GDA_DEBUG_NO
 	if (nb_missing == 0)
-		g_print ("Hey!, all columns are known for prep stmt %p\n", pmodel->prep_stmt);
-	*/
+		g_print ("All columns are known for model %p\n", pmodel);
+#endif
+
 	for (; nb_missing > 0; ) {
 		GdaRow *prow;
 		prow = fetch_next_sqlite_row (model, TRUE, NULL);
 		if (!prow)
 			break;
 #ifdef GDA_DEBUG_NO
-		g_print ("Read row %d for prep stmt %p\n", model->priv->next_row_num - 1, pmodel->prep_stmt);
+		g_print ("Prefetched row %d of model %p\n", model->priv->next_row_num - 1, pmodel);
 #endif
 		for (i = nb_missing - 1; i >= 0; i--) {
 			if (pmodel->prep_stmt->types [missing_cols [i]] != GDA_TYPE_NULL) {
@@ -669,12 +671,25 @@ gda_sqlite_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
  * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean
-gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, G_GNUC_UNUSED gint rownum, GError **error)
+gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaSqliteRecordset *imodel = (GdaSqliteRecordset*) model;
 
-	if (imodel->priv->tmp_row)
+	if (imodel->priv->tmp_row) {
 		g_object_unref (imodel->priv->tmp_row);
+		imodel->priv->tmp_row = NULL;
+	}
+	if (imodel->priv->next_row_num != rownum) {
+		GError *lerror = NULL;
+		*prow = NULL;
+		g_set_error (&lerror, GDA_DATA_MODEL_ERROR,
+			     GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
+			     "%s", _("Can't set iterator on requested row"));
+		gda_data_select_add_exception (GDA_DATA_SELECT (model), lerror);
+		if (error)
+			g_propagate_error (error, g_error_copy (lerror));
+		return TRUE;
+	}
 	*prow = fetch_next_sqlite_row (imodel, FALSE, error);
 	imodel->priv->tmp_row = *prow;
 
