@@ -4,11 +4,12 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
-	-DCHECK_FILES=\""$(top_srcdir)"\"
+	-DCHECK_FILES=\""$(top_srcdir)"\" \
+	-DROOT_DIR=\""$(top_srcdir)"\"
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc
-TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc
+check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot
+TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot
 
 common_sources = 
 
@@ -61,6 +62,14 @@ check_vcnc_CFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda/sqlite/vcnc
 check_vcnc_LDADD = \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(COREDEPS_LIBS)
+
+check_pivot_SOURCES = $(common_sources) check_pivot.c
+check_pivot_CFLAGS = \
+	-I$(top_srcdir)/libgda/sqlite \
+	-I$(top_srcdir)/libgda/sqlite/pivot
+check_pivot_LDADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(COREDEPS_LIBS)
 

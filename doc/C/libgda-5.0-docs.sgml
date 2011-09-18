@@ -529,6 +529,7 @@
       <xi:include href="xml/gda-column.xml"/>
       <xi:include href="xml/gda-data-model-iter.xml"/>
       <xi:include href="xml/gda-data-model-import.xml"/>
+      <xi:include href="xml/gda-data-pivot.xml"/>
       <xi:include href="xml/gda-data-access-wrapper.xml"/>
       <xi:include href="xml/gda-data-model-array.xml"/>
       <xi:include href="xml/gda-row.xml"/>

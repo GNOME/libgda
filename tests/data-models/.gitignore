@@ -6,4 +6,5 @@ check_pmodel
 check_empty_rs
 check_model_errors
 check_vcnc
+check_pivot
 *.db
