@@ -505,7 +505,7 @@ gda_jdbc_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownu
  * if set, is discarded.
  */
 static gboolean 
-gda_jdbc_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, G_GNUC_UNUSED gint rownum, GError **error)
+gda_jdbc_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaJdbcRecordset *imodel = (GdaJdbcRecordset*) model;
 	JNIEnv *jenv = NULL;
@@ -515,9 +515,23 @@ gda_jdbc_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, G_GNUC_UNUSE
 	if (!jenv)
 		return FALSE;
 
-	if (imodel->priv->tmp_row)
+	if (imodel->priv->tmp_row) {
                 g_object_unref (imodel->priv->tmp_row);
+		imodel->priv->tmp_row = NULL;
+	}
+	if (imodel->priv->next_row_num != rownum) {
+		GError *lerror = NULL;
+		*prow = NULL;
+		g_set_error (&lerror, GDA_DATA_MODEL_ERROR,
+			     GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
+			     "%s", _("Can't set iterator on requested row"));
+		gda_data_select_add_exception (GDA_DATA_SELECT (model), lerror);
+		if (error)
+			g_propagate_error (error, g_error_copy (lerror));
+		_gda_jdbc_release_jenv (jni_detach);
 
+		return TRUE;
+	}
         *prow = fetch_next_jdbc_row (imodel, jenv, FALSE, error);
         imodel->priv->tmp_row = *prow;
 

@@ -333,7 +333,7 @@ gda_web_recordset_fetch_nb_rows (GdaDataSelect *model)
  * Create a new filled #GdaRow object for the row at position @rownum, and put it into *prow.
  *
  * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
+ *  -  If *prow is NULL then a new #GdaRow object has to be created, corresponding to the @rownum row 
  *  -  and otherwise *prow contains a #GdaRow object which has already been created 
  *     (through a call to this very function), and in this case it should not be modified
  *     but the function may return FALSE if an error occurred.

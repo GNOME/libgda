@@ -619,6 +619,19 @@ gda_oracle_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
 static gboolean 
 gda_oracle_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
+	GdaOracleRecordset *imodel = (GdaOracleRecordset*) model;
+
+	if (imodel->priv->next_row_num != rownum) {
+		GError *lerror = NULL;
+		*prow = NULL;
+		g_set_error (&lerror, GDA_DATA_MODEL_ERROR,
+			     GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
+			     "%s", _("Can't set iterator on requested row"));
+		gda_data_select_add_exception (GDA_DATA_SELECT (model), lerror);
+		if (error)
+			g_propagate_error (error, g_error_copy (lerror));
+		return TRUE;
+	}
 	*prow = fetch_next_oracle_row ((GdaOracleRecordset*) model, TRUE, error);
 	return TRUE;
 }
