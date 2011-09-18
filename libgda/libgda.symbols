@@ -257,6 +257,7 @@
 	gda_data_model_iter_get_row
 	gda_data_model_iter_get_type
 	gda_data_model_iter_get_value_at
+	gda_data_model_iter_get_value_at_e
 	gda_data_model_iter_get_value_for_field
 	gda_data_model_iter_invalidate_contents
 	gda_data_model_iter_is_valid
@@ -377,6 +378,7 @@
 	gda_holder_error_get_type
 	gda_holder_error_quark
 	gda_holder_force_invalid
+	gda_holder_force_invalid_e
 	gda_holder_get_alphanum_id
 	gda_holder_get_attribute
 	gda_holder_get_bind
@@ -389,6 +391,7 @@
 	gda_holder_get_value
 	gda_holder_get_value_str
 	gda_holder_is_valid
+	gda_holder_is_valid_e
 	gda_holder_new
 	gda_holder_new_inline
 	gda_holder_set_attribute
@@ -520,8 +523,10 @@
 	gda_row_get_type
 	gda_row_get_value
 	gda_row_invalidate_value
+	gda_row_invalidate_value_e
 	gda_row_new
 	gda_row_value_is_valid
+	gda_row_value_is_valid_e
 	gda_select_alter_select_for_empty
 	gda_server_op_dtd
 	gda_server_operation_add_item_to_sequence
