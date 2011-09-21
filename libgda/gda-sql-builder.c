@@ -1267,7 +1267,7 @@ typedef struct {
 } BuilderJoin;
 
 /**
- * gda_sql_builder_select_join_targets:
+ * gda_sql_builder_select_join_targets: (skip)
  * @builder: a #GdaSqlBuilder object
  * @left_target_id: the ID of the left target to use (not %0)
  * @right_target_id: the ID of the right target to use (not %0)
@@ -1974,7 +1974,7 @@ gda_sql_builder_export_expression (GdaSqlBuilder *builder, GdaSqlBuilderId id)
 
 /**
  * gda_sql_builder_import_expression: (skip)
- * @builder: a #GdaSqlBuilder object 
+ * @builder: a #GdaSqlBuilder object
  * @expr: a #GdaSqlExpr obtained using gda_sql_builder_export_expression()
  *
  * Imports the @expr into @builder.

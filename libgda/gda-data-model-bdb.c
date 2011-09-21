@@ -468,7 +468,7 @@ gda_data_model_bdb_get_property (GObject *object,
  * Creates a new #GdaDataModel object to access the contents of the Berkeley DB file @file,
  * for the database @db_name if not %NULL
  *
- * Returns: a new #GdaDataModel
+ * Returns: (transfer full): a new #GdaDataModel
  */
 GdaDataModel *
 gda_data_model_bdb_new (const gchar *filename, const gchar *db_name)

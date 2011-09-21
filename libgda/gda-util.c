@@ -890,7 +890,7 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 }
 
 /**
- * gda_compute_unique_table_row_condition_with_cnc:
+ * gda_compute_unique_table_row_condition_with_cnc:  (skip)
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
@@ -1068,7 +1068,7 @@ gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlState
 }
 
 /**
- * gda_compute_unique_table_row_condition:
+ * gda_compute_unique_table_row_condition: (skip)
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
  * @require_pk: set to TRUE if a primary key ir required
@@ -1309,7 +1309,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 }
 
 /**
- * gda_compute_select_statement_from_update:
+ * gda_compute_select_statement_from_update: (skip)
  * @update_stmt: an UPDATE statement
  * @error: a place to store errors, or %NULL
  *
@@ -1643,7 +1643,7 @@ static gboolean stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd,
 
 
 /**
- * gda_statement_rewrite_for_default_values:
+ * gda_statement_rewrite_for_default_values: (skip)
  * @stmt: a #GdaStatement object
  * @params: a #GdaSet containing the variable's values to be bound when executing @stmt
  * @remove: set to %TRUE if DEFAULT fields are removed, of %FALSE if the "DEFAULT" keyword is used
