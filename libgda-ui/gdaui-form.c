@@ -237,12 +237,10 @@ gdaui_form_set_property (GObject *object,
 	if (form->priv) {
 		switch (param_id) {
 		case PROP_MODEL: {
-			gboolean expand;
 			model = GDA_DATA_MODEL (g_value_get_object (value));
 			g_object_set (G_OBJECT (form->priv->raw_form), "model", model, NULL);
-			g_object_get (G_OBJECT (form->priv->raw_form), "can-expand-v", &expand, NULL);
 			gtk_container_child_set (GTK_CONTAINER (form), form->priv->raw_form,
-						 "expand", expand, "fill", expand, NULL);
+						 "expand", TRUE, "fill", TRUE, NULL);
 			gtk_widget_queue_resize ((GtkWidget*) form);
 			break;
 		}
