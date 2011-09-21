@@ -2321,7 +2321,7 @@ gda_connection_delete_row_from_table (GdaConnection *cnc, const gchar *table,
  * @params: (out) (allow-none) (transfer full): a place to store a new #GdaSet, for parameters used in SQL command, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * This function helps to parse a SQL string which uses paramenters and store them at @params.
+ * This function helps to parse a SQL string which uses parameters and store them at @params.
  *
  * Returns: (transfer full) (allow-none): a #GdaStatement representing the SQL command, or %NULL if an error occurred
  *

@@ -28,13 +28,12 @@ G_BEGIN_DECLS
 
 /**
  * SECTION:gda-sql-statement
- * @short_description: SQL parser
- * @title: GdaSqlParser
+ * @short_description: SQL statement
+ * @title: GdaSqlStatement
  * @stability: Stable
  * @see_also: The #GdaSqlBuilder object which features some easy to use API to build #GdaSqlStatement structures or #GdaStatement objects without having to worry about the details of #GdaSqlStatement's contents.
  *
- * Please note that it is not advised to build #GdaSqlStatement structures directly, but rather
- * it is recommended to use the #GdaSqlBuilder object and its associated API.
+ * Use the #GdaSqlBuilder object to build #GdaSqlStatement structures.
  *
  * Every SQL statement can be decomposed in a #GdaSqlStatement structure. This is not a #GObject, but rather just a C structure
  * which can be manipulated directly. The structure is a tree composed of several key structures which are show in the following diagram

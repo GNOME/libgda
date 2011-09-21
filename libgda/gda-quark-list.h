@@ -40,7 +40,7 @@ typedef struct _GdaQuarkList GdaQuarkList;
  * @stability: Stable
  * @see_also:
  *
- * This object is used mainly by database provider's implementation to parse connection
+ * This object is used mainly by database providers' implementations to parse connection
  * strings into lists of KEY=VALUE pairs.
  */
 
