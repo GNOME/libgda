@@ -639,35 +639,24 @@ gda_sqlite_recordset_fetch_nb_rows (GdaDataSelect *model)
 /*
  * Create a new filled #GdaRow object for the row at position @rownum.
  *
- * Each new #GdaRow created is "given" to the #GdaDataSelect implementation using gda_data_select_take_row ().
+ * Each new #GdaRow created needs to be "given" to the #GdaDataSelect implementation using
+ * gda_data_select_take_row() because backward iterating is not supported.
  */
 static gboolean
 gda_sqlite_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaSqliteRecordset *imodel;
 
-	if (*prow)
-		return TRUE;
-
 	imodel = GDA_SQLITE_RECORDSET (model);
-	for (; imodel->priv->next_row_num <= rownum; ) {
-		*prow = fetch_next_sqlite_row (imodel, TRUE, error);
-		if (!*prow) {
-			/*if (GDA_DATA_SELECT (model)->advertized_nrows >= 0), it's not an error */
-			if ((GDA_DATA_SELECT (model)->advertized_nrows >= 0) && 
-			    (imodel->priv->next_row_num < rownum)) {
-				g_set_error (error, 0,
-					     GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-					     _("Row %d not found"), rownum);
-			}
-			return FALSE;
-		}
+	if (imodel->priv->next_row_num >= rownum) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
+			     "%s", _("Requested row could not be found"));
+		return TRUE;
 	}
-	if (! *prow) {
-		*prow = gda_data_select_get_stored_row (model, rownum);
-		if (!*prow)
-			return FALSE;
-	}
+	for (*prow = fetch_next_sqlite_row (imodel, TRUE, error);
+	     *prow && (imodel->priv->next_row_num < rownum);
+	     *prow = fetch_next_sqlite_row (imodel, TRUE, error));
 
 	return TRUE;
 }
@@ -676,16 +665,16 @@ gda_sqlite_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
  * Create a new filled #GdaRow object for the next cursor row
  *
  * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
- * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
+ * never keeps a reference to it).
+ * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
 static gboolean
 gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, G_GNUC_UNUSED gint rownum, GError **error)
 {
 	GdaSqliteRecordset *imodel = (GdaSqliteRecordset*) model;
 
-	if (imodel->priv->tmp_row) 
+	if (imodel->priv->tmp_row)
 		g_object_unref (imodel->priv->tmp_row);
-
 	*prow = fetch_next_sqlite_row (imodel, FALSE, error);
 	imodel->priv->tmp_row = *prow;
 

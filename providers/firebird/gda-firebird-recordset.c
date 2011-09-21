@@ -238,17 +238,15 @@ gda_firebird_recordset_fetch_nb_rows (GdaDataSelect *model)
 /*
  * Create a new filled #GdaRow object for the row at position @rownum, and put it into *prow.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row(). If new row objects are "given" to the GdaDataSelect implemantation
- * using that method, then this method should detect when all the data model rows have been analyzed
- * (when model->nb_stored_rows == model->advertized_nrows) and then possibly discard the API handle
- * as it won't be used anymore to fetch rows.
+ * NOTES:
+ * - @prow will NOT be NULL, but *prow WILL be NULL.
+ * - a new #GdaRow object has to be created.
+ * - memory management for that new GdaRow object is left to the implementation, which
+ *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
+ *   this method won't be called anymore for the same @rownum), or may decide to
+ *   keep a cache of GdaRow object and "recycle" them.
+ * - implementing this method is MANDATORY if the data model supports random access
+ * - this method is only called when data model is used in random access mode
  */
 static gboolean 
 gda_firebird_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
@@ -285,14 +283,15 @@ gda_firebird_recordset_store_all (GdaDataSelect *model, GError **error)
 /*
  * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
+ * NOTES:
+ * - @prow will NOT be NULL, but *prow WILL be NULL.
+ * - a new #GdaRow object has to be created.
+ * - memory management for that new GdaRow object is left to the implementation, which
+ *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
+ *   this method won't be called anymore for the same @rownum), or may decide to
+ *   keep a cache of GdaRow object and "recycle" them.
+ * - implementing this method is MANDATORY
+ * - this method is only called when data model is used in cursor access mode
  */
 static gboolean 
 gda_firebird_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
@@ -307,14 +306,16 @@ gda_firebird_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint row
 /*
  * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
+ * NOTES:
+ * - @prow will NOT be NULL, but *prow WILL be NULL.
+ * - a new #GdaRow object has to be created.
+ * - memory management for that new GdaRow object is left to the implementation, which
+ *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
+ *   this method won't be called anymore for the same @rownum), or may decide to
+ *   keep a cache of GdaRow object and "recycle" them.
+ * - implementing this method is OPTIONAL (in this case the data model is assumed not to
+ *   support moving iterators backward)
+ * - this method is only called when data model is used in cursor access mode
  */
 static gboolean 
 gda_firebird_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
@@ -329,14 +330,16 @@ gda_firebird_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint row
 /*
  * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
  *
- * WARNING: @prow will NOT be NULL, but *prow may or may not be NULL:
- *  -  If *prow is NULL then a new #GdaRow object has to be created, 
- *  -  and otherwise *prow contains a #GdaRow object which has already been created 
- *     (through a call to this very function), and in this case it should not be modified
- *     but the function may return FALSE if an error occurred.
- *
- * Memory management for that new GdaRow object is left to the implementation, which
- * can use gda_data_select_take_row().
+ * NOTES:
+ * - @prow will NOT be NULL, but *prow WILL be NULL.
+ * - a new #GdaRow object has to be created.
+ * - memory management for that new GdaRow object is left to the implementation, which
+ *   can use gda_data_select_take_row() to "give" the GdaRow to @model (in this case
+ *   this method won't be called anymore for the same @rownum), or may decide to
+ *   keep a cache of GdaRow object and "recycle" them.
+ * - implementing this method is OPTIONAL and usefull only if there is a method quicker
+ *   than iterating one step at a time to the correct position.
+ * - this method is only called when data model is used in cursor access mode
  */
 static gboolean 
 gda_firebird_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)

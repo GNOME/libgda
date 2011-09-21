@@ -577,14 +577,18 @@ gda_data_model_iter_get_property (GObject *object,
  *
  * Synchronizes the values of the parameters in @iter with the values at the @row row.
  *
- * If @row is not a valid row, then the returned value is FALSE, and the "current-row"
- * property is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE)
+ * If @row is not a valid row, then the returned value is %FALSE, and the "current-row"
+ * property is set to -1 (which means that gda_data_model_iter_is_valid() would return %FALSE),
+ * with the exception that if @row is -1, then the returned value is %TRUE.
  *
- * If any other error occurred then the returned value is FALSE, but the "current-row"
- * property is set to the @row row.  In this case
- * each #GdaHolder composing @iter for which an error occurred will be invalid (see gda_holder_is_valid()).
+ * This function can return %FALSE if it was not allowed to be moved (as it emits the
+ * "validate-set" signal before being moved).
  *
- * Returns: TRUE if no error occurred
+ * When this function returns %TRUE, then @iter has actually been moved to the next row,
+ * but some values may not have been read correctly in the row, in which case the
+ * correcsponding #GdaHolder will be left invalid.
+ *
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
@@ -592,8 +596,15 @@ gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	g_return_val_if_fail (iter->priv, FALSE);
 
+	if ((gda_data_model_iter_get_row (iter) >= 0) &&
+	    (gda_data_model_iter_get_row (iter) == row))
+		return TRUE; /* nothing to do! */
+
 	if (row < 0) {
-		if (iter->priv->row != -1) {
+		if (gda_data_model_iter_get_row (iter) >= 0) {
+			if (! _gda_set_validate ((GdaSet*) iter, NULL))
+				return FALSE;
+
 			iter->priv->row = -1;
 			g_signal_emit (G_OBJECT (iter),
 				       gda_data_model_iter_signals[ROW_CHANGED],
@@ -603,44 +614,18 @@ gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 	}
 	else {
 		GdaDataModel *model;
-		if ((gda_data_model_iter_get_row (iter) >= 0) &&
-		    (gda_data_model_iter_get_row (iter) != row) && 
-		    ! _gda_set_validate ((GdaSet*) iter, NULL)) {
-			return FALSE;
-		}
-
-		gboolean *null_oks = NULL;
-		if (GDA_SET (iter)->holders) {
-			gint i;
-			GSList *list;
-
-			null_oks = g_new (gboolean, g_slist_length (GDA_SET (iter)->holders));
-			for (i = 0, list = GDA_SET (iter)->holders; list; i++, list = list->next) {
-				null_oks[i] = gda_holder_get_not_null ((GdaHolder*) list->data);
-				gda_holder_set_not_null ((GdaHolder*) list->data, FALSE);
-			}
-		}
-
-		gboolean move_ok;
 		model = iter->priv->data_model;
 		g_return_val_if_fail (iter->priv->data_model, FALSE);
 
-		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
-			move_ok = (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
-		else {
-			/* default method */
-			move_ok = gda_data_model_iter_move_to_row_default (model, iter, row);
+		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) {
+			if ((gda_data_model_iter_get_row (iter) >= 0) &&
+			    ! _gda_set_validate ((GdaSet*) iter, NULL))
+				return FALSE;
+			return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter,
+										  row);
 		}
-		
-		if (null_oks) {
-			gint i;
-			GSList *list;
-			for (i = 0, list = GDA_SET (iter)->holders; list; i++, list = list->next)
-				gda_holder_set_not_null ((GdaHolder*) list->data, null_oks[i]);
-			g_free (null_oks);
-		}
-		
-		return move_ok;
+		else
+			return gda_data_model_iter_move_to_row_default (model, iter, row);
 	}
 }
 
@@ -658,6 +643,13 @@ set_param_attributes (GdaHolder *holder, GdaValueAttribute flags)
 
 /**
  * gda_data_model_iter_move_to_row_default: (skip)
+ * @model: a #GdaDataModel
+ * @iter: a #GdaDataModelIter iterating in @model
+ * @row: the requested row
+ * 
+ * Method reserved to #GdaDataModelIter implementations, should not be called directly.
+ *
+ * Returns: %TRUE if @iter was moved correctly.
  */
 gboolean
 gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row)
@@ -668,7 +660,9 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 	GdaDataModel *test;
 	gboolean update_model;
 	
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	if ((gda_data_model_iter_get_row (iter) >= 0) &&
+	    ! _gda_set_validate ((GdaSet*) iter, NULL))
+		return FALSE;
 
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
 		return FALSE;
@@ -713,14 +707,17 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
  * (synchronizes the values of the parameters in @iter with the values at the new row).
  *
  * If the iterator was on the data model's last row, then it can't be moved forward
- * anymore, and the returned value is FALSE; nore also that the "current-row" property
- * is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE)
+ * anymore, and the returned value is %FALSE; note also that the "current-row" property
+ * is set to -1 (which means that gda_data_model_iter_is_valid() would return %FALSE)
  *
- * If any other error occurred then the returned value is FALSE, but the "current-row"
- * property is set to the new current row (one row more than it was before the call). In this case
- * each #GdaHolder composing @iter for which an error occurred will be invalid (see gda_holder_is_valid()).
+ * This function can return %FALSE if it was not allowed to be moved (as it emits the
+ * "validate-set" signal before being moved).
  *
- * Returns: TRUE if the iterator is now at the next row
+ * When this function returns %TRUE, then @iter has actually been moved to the next row,
+ * but some values may not have been read correctly in the row, in which case the
+ * correcsponding #GdaHolder will be left invalid.
+ *
+ * Returns: %TRUE if the iterator is now at the next row
  */
 gboolean
 gda_data_model_iter_move_next (GdaDataModelIter *iter)
@@ -730,13 +727,13 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
 	g_return_val_if_fail (iter->priv, FALSE);
 	g_return_val_if_fail (iter->priv->data_model, FALSE);
 
-	if ((gda_data_model_iter_get_row (iter) >= 0) &&
-	    ! _gda_set_validate ((GdaSet*) iter, NULL))
-		return FALSE;
-
 	model = iter->priv->data_model;
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next)
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next) {
+		if ((gda_data_model_iter_get_row (iter) >= 0) &&
+		    ! _gda_set_validate ((GdaSet*) iter, NULL))
+			return FALSE;
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next) (model, iter);
+	}
 	else 
 		/* default method */
 		return gda_data_model_iter_move_next_default (model, iter);
@@ -744,6 +741,12 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
 
 /**
  * gda_data_model_iter_move_next_default: (skip)
+ * @model: a #GdaDataModel
+ * @iter: a #GdaDataModelIter iterating in @model
+ * 
+ * Method reserved to #GdaDataModelIter implementations, should not be called directly.
+ *
+ * Returns: %TRUE if @iter was moved correctly.
  */
 gboolean
 gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *iter)
@@ -753,8 +756,11 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
-	
-	/* validity tests */
+
+	if ((gda_data_model_iter_get_row (iter) >= 0) &&
+	    ! _gda_set_validate ((GdaSet*) iter, NULL))
+		return FALSE;
+
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
 		return FALSE;
 	
@@ -799,14 +805,17 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
  * with the values at the new row).
  *
  * If the iterator was on the data model's first row, then it can't be moved backwards
- * anymore, and the returned value is FALSE; note also that the "current-row" property
- * is set to -1 (which means that gda_data_model_iter_is_valid() would return FALSE).
+ * anymore, and the returned value is %FALSE; note also that the "current-row" property
+ * is set to -1 (which means that gda_data_model_iter_is_valid() would return %FALSE).
  *
- * If any other error occurred then the returned value is FALSE, but the "current-row"
- * property is set to the new current row (one row less than it was before the call).  In this case
- * each #GdaHolder composing @iter for which an error occurred will be invalid (see gda_holder_is_valid()).
+ * This function can return %FALSE if it was not allowed to be moved (as it emits the
+ * "validate-set" signal before being moved).
  *
- * Returns: TRUE if the iterator is now at the previous row
+ * When this function returns %TRUE, then @iter has actually been moved to the next row,
+ * but some values may not have been read correctly in the row, in which case the
+ * correcsponding #GdaHolder will be left invalid.
+ *
+ * Returns: %TRUE if the iterator is now at the previous row
  */
 gboolean
 gda_data_model_iter_move_prev (GdaDataModelIter *iter)
@@ -817,13 +826,13 @@ gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 	g_return_val_if_fail (iter->priv, FALSE);
 	g_return_val_if_fail (iter->priv->data_model, FALSE);
 
-	if ((gda_data_model_iter_get_row (iter) >= 0) &&
-	    ! _gda_set_validate ((GdaSet*) iter, NULL))
-		return FALSE;
-
 	model = iter->priv->data_model;
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev)
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev) {
+		if ((gda_data_model_iter_get_row (iter) >= 0) &&
+		    ! _gda_set_validate ((GdaSet*) iter, NULL))
+			return FALSE;
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev) (model, iter);
+	}
 	else 
 		/* default method */
 		return gda_data_model_iter_move_prev_default (model, iter);
@@ -831,6 +840,12 @@ gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 
 /**
  * gda_data_model_iter_move_prev_default: (skip)
+ * @model: a #GdaDataModel
+ * @iter: a #GdaDataModelIter iterating in @model
+ * 
+ * Method reserved to #GdaDataModelIter implementations, should not be called directly.
+ *
+ * Returns: %TRUE if @iter was moved correctly.
  */
 gboolean
 gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *iter)
@@ -841,7 +856,10 @@ gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	GdaDataModel *test;
 	gboolean update_model;
 	
-	/* validity tests */
+	if ((gda_data_model_iter_get_row (iter) >= 0) &&
+	    ! _gda_set_validate ((GdaSet*) iter, NULL))
+		return FALSE;
+
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
 		return FALSE;
 	

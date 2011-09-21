@@ -1045,12 +1045,14 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 	if (! imodel->priv->cnc) {
 		/* error */
+		gda_data_model_iter_invalidate_contents (iter);
 		return FALSE;
 	}
 
 	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (imodel->priv->cnc));
 	if (!cdata) {
 		/* error */
+		gda_data_model_iter_invalidate_contents (iter);
 		return FALSE;
 	}
 
@@ -1071,6 +1073,7 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		cpart = imodel->priv->current_exec;
 		if (! cpart->ldap_msg) {
 			/* error somewhere */
+			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
 
@@ -1101,7 +1104,7 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 	if (!imodel->priv->current_exec) {
 		/* execution is over */
-		g_signal_emit_by_name (iter, "end-of-data");
+		gda_data_model_iter_invalidate_contents (iter);
                 g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
 		if (imodel->priv->truncated) {
 			GError *e;
@@ -1110,6 +1113,7 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 				     _("Truncated result because LDAP server limit encountered"));
 			add_exception (imodel, e);
 		}
+		g_signal_emit_by_name (iter, "end-of-data");
                 return FALSE;
 	}
 

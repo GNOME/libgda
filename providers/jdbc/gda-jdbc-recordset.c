@@ -410,11 +410,13 @@ fetch_next_jdbc_row (GdaJdbcRecordset *model, JNIEnv *jenv, gboolean do_store, G
 	prow = gda_row_new (_GDA_PSTMT (ps)->ncols);
 
 	jexec_res = jni_wrapper_method_call (jenv, GdaJResultSet__fillNextRow,
-					     model->priv->rs_value, &error_code, &sql_state, &lerror, (jlong)GPOINTER_TO_INT(prow));
+					     model->priv->rs_value, &error_code, &sql_state, &lerror,
+					     (jlong)GPOINTER_TO_INT(prow));
 	if (!jexec_res) {
 		if (error && lerror)
 			*error = g_error_copy (lerror);
 		_gda_jdbc_make_error (model->priv->cnc, error_code, sql_state, lerror);
+		g_object_unref ((GObject*) prow);
 		return NULL;
 	}
 
@@ -422,6 +424,7 @@ fetch_next_jdbc_row (GdaJdbcRecordset *model, JNIEnv *jenv, gboolean do_store, G
 	gda_value_free (jexec_res);
 	if (! row_found) {
 		GDA_DATA_SELECT (model)->advertized_nrows = model->priv->next_row_num;
+		g_object_unref ((GObject*) prow);
 		return NULL;
 	}
 
@@ -465,7 +468,8 @@ gda_jdbc_recordset_fetch_nb_rows (GdaDataSelect *model)
 /*
  * Create a new filled #GdaRow object for the row at position @rownum.
  *
- * Each new #GdaRow created is "given" to the #GdaDataSelect implementation using gda_data_select_take_row ().
+ * Each new #GdaRow created is "given" to the #GdaDataSelect implementation
+ * using gda_data_select_take_row ().
  */
 static gboolean 
 gda_jdbc_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
@@ -476,23 +480,18 @@ gda_jdbc_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownu
 
 	jenv = _gda_jdbc_get_jenv (&jni_detach, NULL);
 	if (!jenv)
-		return FALSE;
+		return TRUE;
 
 	imodel = GDA_JDBC_RECORDSET (model);
-        for (; imodel->priv->next_row_num <= rownum; ) {
-                *prow = fetch_next_jdbc_row (imodel, jenv, TRUE, error);
-                if (!*prow) {
-                        /*if (GDA_DATA_SELECT (model)->advertized_nrows >= 0), it's not an error */
-                        if ((GDA_DATA_SELECT (model)->advertized_nrows >= 0) &&
-                            (imodel->priv->next_row_num < rownum)) {
-                                g_set_error (error, 0,
-                                             GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-                                             _("Row %d not found"), rownum);
-                        }
-			_gda_jdbc_release_jenv (jni_detach);
-                        return FALSE;
-                }
-        }
+	if (imodel->priv->next_row_num >= rownum) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
+			     "%s", _("Requested row could not be found"));
+		return TRUE;
+	}
+	for (*prow = fetch_next_jdbc_row (imodel, jenv, TRUE, error);
+	     *prow && (imodel->priv->next_row_num < rownum);
+	     *prow = fetch_next_jdbc_row (imodel, jenv, TRUE, error));
 
 	_gda_jdbc_release_jenv (jni_detach);
         return TRUE;
@@ -502,7 +501,8 @@ gda_jdbc_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownu
  * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
  *
  * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
- * never keeps a reference to it). Before a new #GdaRow gets created, the previous one, if set, is discarded.
+ * never keeps a reference to it). Before a new #GdaRow gets created, the previous one,
+ * if set, is discarded.
  */
 static gboolean 
 gda_jdbc_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, G_GNUC_UNUSED gint rownum, GError **error)
@@ -514,9 +514,6 @@ gda_jdbc_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, G_GNUC_UNUSE
 	jenv = _gda_jdbc_get_jenv (&jni_detach, NULL);
 	if (!jenv)
 		return FALSE;
-
-	if (*prow)
-                return TRUE;
 
 	if (imodel->priv->tmp_row)
                 g_object_unref (imodel->priv->tmp_row);

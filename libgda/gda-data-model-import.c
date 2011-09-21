@@ -1927,8 +1927,10 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		break;
 
 	case FORMAT_CSV:
-		if (! imodel->priv->extract.csv.rows_read)
+		if (! imodel->priv->extract.csv.rows_read) {
+			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
+		}
 
 		if (gda_data_model_iter_is_valid (iter) &&
 		    (imodel->priv->extract.csv.rows_read->len > 0)) {
@@ -1957,27 +1959,17 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		GSList *plist;
 		GSList *vlist;
 		gboolean update_model;
-		gboolean allok = TRUE;
-		
 		g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 		for (plist = ((GdaSet *) iter)->holders, vlist = next_values;
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
 			GError *lerror = NULL;
-			if (! gda_holder_set_value (GDA_HOLDER (plist->data), 
-						    (GValue *) vlist->data, &lerror)) {
-				gchar *tmp;
-				tmp = g_strdup_printf (_("Could not set iterator's value: %s"),
-						       lerror && lerror->message ? lerror->message : _("No detail"));
-				add_error (imodel, tmp);
-				g_free (tmp);
-				allok = FALSE;
-			}
+			if (! gda_holder_set_value (GDA_HOLDER (plist->data),
+						    (GValue *) vlist->data, &lerror))
+				gda_holder_force_invalid_e (GDA_HOLDER (plist->data), lerror);
 		}
 		if (plist || vlist) {
-			if (imodel->priv->strict)
-				allok = FALSE;
 			if (plist) {
 				add_error_too_few_values (imodel);
 				for (; plist; plist = plist->next) {
@@ -1998,11 +1990,12 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, 
 			      "update-model", update_model, NULL);
 
-		return allok;
+		return TRUE;
 	}
 	else {
-		g_signal_emit_by_name (iter, "end-of-data");
+		gda_data_model_iter_invalidate_contents (iter);
 		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
+		g_signal_emit_by_name (iter, "end-of-data");
 		return FALSE;
 	}
 }
@@ -2035,7 +2028,6 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		GSList *plist;
 		GSList *vlist;
 		gboolean update_model;
-		gboolean allok = TRUE;
 
 		g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
@@ -2043,19 +2035,11 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
 			GError *lerror = NULL;
-			if (! gda_holder_set_value (GDA_HOLDER (plist->data), 
-						    (GValue *) vlist->data, &lerror)) {
-				gchar *tmp;
-				tmp = g_strdup_printf (_("Could not set iterator's value: %s"),
-						       lerror && lerror->message ? lerror->message : _("No detail"));
-				add_error (imodel, tmp);
-				g_free (tmp);
-				allok = FALSE;
-			}
+			if (! gda_holder_set_value (GDA_HOLDER (plist->data),
+						    (GValue *) vlist->data, &lerror))
+				gda_holder_force_invalid_e (GDA_HOLDER (plist->data), lerror);
 		}
 		if (plist || vlist) {
-			if (imodel->priv->strict)
-				allok = FALSE;
 			if (plist) {
 				add_error_too_few_values (imodel);
 				for (; plist; plist = plist->next) {
@@ -2075,9 +2059,10 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		g_assert (imodel->priv->iter_row >= 0);
 		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row, 
 			      "update-model", update_model, NULL);
-		return allok;
+		return TRUE;
 	}
 	else {
+		gda_data_model_iter_invalidate_contents (iter);
 		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
 		return FALSE;
 	}

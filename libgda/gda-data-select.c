@@ -1923,20 +1923,12 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			prow = dstmt->row;
 	}
 	else {
-		gint *ptr;
-		irow = int_row;
-		ptr = g_hash_table_lookup (imodel->priv->sh->index, &irow);
-		if (!ptr) {
-			prow = NULL;
-			if (CLASS (model)->fetch_random && 
-			    !CLASS (model)->fetch_random (imodel, &prow, int_row, error))
-				return NULL;
-		}
-		else
-			prow = g_array_index (imodel->priv->sh->rows, GdaRow *, *ptr);
+		prow = gda_data_select_get_stored_row (imodel, int_row);
+		if (!prow && CLASS (model)->fetch_random)
+			CLASS (model)->fetch_random (imodel, &prow, int_row, error);
 	}
-	
-	g_assert (prow);
+	if (!prow)
+		return NULL;
 
 	GValue *retval = gda_row_get_value (prow, col);
 	if (gda_row_value_is_valid_e (prow, retval, error))
@@ -2011,7 +2003,7 @@ gda_data_select_create_iter (GdaDataModel *model)
 	}
 }
 
-static gboolean update_iter (GdaDataSelect *imodel, GdaRow *prow);
+static void update_iter (GdaDataSelect *imodel, GdaRow *prow);
 static gboolean
 gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 {
@@ -2027,37 +2019,33 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		return gda_data_model_iter_move_next_default (model, iter);
 
 	g_return_val_if_fail (CLASS (model)->fetch_next, FALSE);
-
 	g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
 
-	if (imodel->priv->sh->iter_row == G_MAXINT)
+	if (imodel->priv->sh->iter_row == G_MAXINT) {
+		gda_data_model_iter_invalidate_contents (iter);
 		return FALSE;
+	}
 	else if (imodel->priv->sh->iter_row == G_MININT)
 		target_iter_row = 0;
 	else
 		target_iter_row = imodel->priv->sh->iter_row + 1;
-	int_row = external_to_internal_row (imodel, target_iter_row, NULL);
 
-	gint *ptr;
-	irow = int_row;
-	ptr = g_hash_table_lookup (imodel->priv->sh->index, &irow);
-	if (ptr)
-		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, *ptr);
-	else if (!CLASS (model)->fetch_next (imodel, &prow, int_row, NULL)) {
-		/* an error occurred */
-		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
-		return FALSE;
-	}
-	
+	int_row = external_to_internal_row (imodel, target_iter_row, NULL);
+	prow = gda_data_select_get_stored_row (model, int_row);
+	if (!prow)
+		CLASS (model)->fetch_next (imodel, &prow, int_row, NULL);
+
 	if (prow) {
 		imodel->priv->sh->iter_row = target_iter_row;
-                return update_iter (imodel, prow);
+                update_iter (imodel, prow);
+		return TRUE;
 	}
 	else {
-		g_signal_emit_by_name (iter, "end-of-data");
-                g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
+		gda_data_model_iter_invalidate_contents (iter);
                 imodel->priv->sh->iter_row = G_MAXINT;
+                g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
+		g_signal_emit_by_name (iter, "end-of-data");
                 return FALSE;
 	}
 }
@@ -2076,8 +2064,10 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
 		return gda_data_model_iter_move_prev_default (model, iter);
 
-	if (! CLASS (model)->fetch_prev)
+	if (! CLASS (model)->fetch_prev) {
+		gda_data_model_iter_invalidate_contents (iter);
 		return FALSE;
+	}
 
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
@@ -2092,26 +2082,21 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
         else
                 target_iter_row = imodel->priv->sh->iter_row - 1;
 
-	gint *ptr;
 	int_row = external_to_internal_row (imodel, target_iter_row, NULL);
-	irow = int_row;
-	ptr = g_hash_table_lookup (imodel->priv->sh->index, &irow);
-	if (ptr)
-		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, *ptr);
-	else if (!CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL)) {
-		/* an error occurred */
-		g_object_set (G_OBJECT (iter), "current-row", target_iter_row, NULL);
-		return FALSE;
-	}
+	prow = gda_data_select_get_stored_row (model, int_row);
+	if (!prow)
+		CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL);
 
 	if (prow) {
 		imodel->priv->sh->iter_row = target_iter_row;
-                return update_iter (imodel, prow);
+                update_iter (imodel, prow);
+		return TRUE;
 	}
 
  prev_error:
         g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
         imodel->priv->sh->iter_row = G_MININT;
+	gda_data_model_iter_invalidate_contents (iter);
         return FALSE;
 }
 
@@ -2125,39 +2110,34 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
 
-	int_row = external_to_internal_row (imodel, row, NULL);
-	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) 
+	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 		return gda_data_model_iter_move_to_row_default (model, iter, row);
 
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
 
-	irow = int_row;
-	ptr = g_hash_table_lookup (imodel->priv->sh->index, &irow);
-	if (ptr)
-		prow = g_array_index (imodel->priv->sh->rows, GdaRow *, *ptr);
+	int_row = external_to_internal_row (imodel, row, NULL);
+	prow = gda_data_select_get_stored_row (model, int_row);
 
-	if (CLASS (model)->fetch_at) {
-		if (!CLASS (model)->fetch_at (imodel, &prow, int_row, NULL)) {
-			/* an error occurred */
-			g_object_set (G_OBJECT (iter), "current-row", row, NULL);
-			return FALSE;
-		}
-
-		if (prow) {
-			imodel->priv->sh->iter_row = row;
-			return update_iter (imodel, prow);
-		}
-		else {
-			g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
-			imodel->priv->sh->iter_row = G_MININT;
-			return FALSE;
-		}
+	if (prow) {
+		imodel->priv->sh->iter_row = row;
+		update_iter (imodel, prow);
+		return TRUE;
 	}
 	else {
-		if (prow) {
-			imodel->priv->sh->iter_row = row;
-			return update_iter (imodel, prow);
+		if (CLASS (model)->fetch_at) {
+			CLASS (model)->fetch_at (imodel, &prow, int_row, NULL);
+			if (prow) {
+				imodel->priv->sh->iter_row = row;
+				update_iter (imodel, prow);
+				return TRUE;
+			}
+			else {
+				g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
+				imodel->priv->sh->iter_row = G_MININT;
+				gda_data_model_iter_invalidate_contents (iter);
+				return FALSE;
+			}
 		}
 		else {
 			/* implementation of fetch_at() is optional */
@@ -2181,15 +2161,13 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 	}
 }
 
-static gboolean
+static void
 update_iter (GdaDataSelect *imodel, GdaRow *prow)
 {
         gint i;
 	GdaDataModelIter *iter = imodel->priv->iter;
 	GSList *plist;
 	gboolean update_model;
-	gboolean retval = TRUE;
-	
 	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 	if (update_model)
 		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
@@ -2199,7 +2177,6 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	     i++, plist = plist->next) {
 		GValue *value;
 		GError *lerror = NULL;
-		gboolean pok = TRUE;
 		value = gda_row_get_value (prow, i);
 
 		if (!gda_row_value_is_valid_e (prow, value, &lerror)) {
@@ -2213,7 +2190,7 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 			    gda_value_is_null (value)) {
 				gda_holder_set_not_null ((GdaHolder*) plist->data, FALSE);
 				if (! gda_holder_set_value ((GdaHolder*) plist->data, value, NULL)) {
-					pok = FALSE;
+					gda_holder_force_invalid_e ((GdaHolder*) plist->data, lerror);
 					g_warning (_("Could not change iter's value for column %d: %s"), i,
 						   lerror && lerror->message ? lerror->message : _("No detail"));
 					gda_holder_set_not_null ((GdaHolder*) plist->data, TRUE);
@@ -2223,14 +2200,10 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 						     "to be updated"));
 			}
 			else {
-				pok = FALSE;
+				gda_holder_force_invalid_e ((GdaHolder*) plist->data, lerror);
 				g_warning (_("Could not change iter's value for column %d: %s"), i,
 					   lerror && lerror->message ? lerror->message : _("No detail"));
 			}
-		}
-		if (!pok) {
-			retval = FALSE;
-			gda_holder_force_invalid_e ((GdaHolder*) plist->data, lerror);
 		}
         }
 
@@ -2238,8 +2211,7 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	if (update_model)
 		g_object_set (G_OBJECT (iter), "update-model", update_model, NULL);
 
-	g_print ("%s(%p) => %d, current-row =>%d advertized_nrows => %d\n", __FUNCTION__, imodel, retval, imodel->priv->sh->iter_row, imodel->advertized_nrows);
-	return retval;
+	g_print ("%s(%p), current-row =>%d advertized_nrows => %d\n", __FUNCTION__, imodel, imodel->priv->sh->iter_row, imodel->advertized_nrows);
 }
 
 /*
