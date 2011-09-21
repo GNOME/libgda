@@ -397,7 +397,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	/**
 	 * GdaMetaStore::meta-changed
 	 * @store: the #GdaMetaStore instance that emitted the signal
-	 * @changes: a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
+	 * @changes: (element-type Gda.MetaStoreChange): a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
 	 *
 	 * This signal is emitted when the @store's contents have changed (the changes are in the @changes list)
 	 */

@@ -63,6 +63,14 @@ struct _GdaTransactionStatusEvent {
 	gpointer  _gda_reserved2;
 };
 
+/**
+ * GdaTransactionStatus:
+ * @name:
+ * @isolation_level:
+ * @state:
+ * @events: (element-type Gda.TransactionStatusEvent):
+ *
+ */
 struct _GdaTransactionStatus {
 	GObject                    object;
 	

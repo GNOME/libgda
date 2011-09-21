@@ -313,7 +313,8 @@ threadwrapper = \
 
 sqlparser = \
 	sql-parser/gda-sql-parser.h \
-	sql-parser/gda-sql-parser.c
+	sql-parser/gda-sql-parser.c \
+	sql-parser/gda-statement-struct-decl.h
 
 handlers = \
 	handlers/gda-handler-bin.h \
@@ -357,4 +358,20 @@ gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
 CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA)
+endif
+
+if ENABLE_VALA
+
+vapi: libgda-4.0.vapi
+
+libgda-4.0.vapi:
+	$(VALA_VAPIGEN) --library libgda-4.0 --pkg libxml-2.0 Gda-4.0.gir 
+
+vapidir = $(VALA_VAPIDIR)
+vapi_DATA=libgda-4.0.vapi
+
+EXTRA_DIST += \
+        $(vapi_DATA)
+
+CLEANFILES += libgda-4.0.vapi
 endif

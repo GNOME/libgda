@@ -52,6 +52,16 @@ typedef gchar *(*GdaSqlRenderingPSpecFunc) (GdaSqlParamSpec *pspec, GdaSqlExpr *
 					    GError **error);
 typedef gchar *(*GdaSqlRenderingValue)     (const GValue *value, GdaSqlRenderingContext *context, GError **error);
 
+/**
+ * GdaSqlRenderingContext:
+ * @flags:
+ * @params:
+ * @params_used: (element-type Gda.Holder):
+ * @provider: (allow-none):
+ * @cnc: (allow-none):
+ *
+ * Specifies the context in which a #GdaSqlStatement is being converted to SQL.
+ */
 struct _GdaSqlRenderingContext {
 	GdaStatementSqlFlag      flags;
 	GdaSet                  *params;

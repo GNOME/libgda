@@ -80,6 +80,10 @@ typedef enum {
 /*
  * Structures identification
  */
+/**
+ * GdaSqlAnyPartType: (skip)
+ *
+ */
 typedef enum {
 	/* complete statements */
 	GDA_SQL_ANY_STMT_SELECT = GDA_SQL_STATEMENT_SELECT,
@@ -109,6 +113,10 @@ typedef enum {
 	GDA_SQL_ANY_SQL_SELECT_ORDER
 } GdaSqlAnyPartType;
 
+/**
+ * GdaSqlAnyPart: (skip)
+ *
+ */
 struct _GdaSqlAnyPart {
 	GdaSqlAnyPartType  type;
 	GdaSqlAnyPart     *parent;
@@ -135,6 +143,10 @@ gboolean gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error);
 /*
  * Contents' infos
  */
+/**
+ * GdaSqlStatementContentsInfo: (skip)
+ *
+ */
 typedef struct {
 	GdaSqlStatementType  type;
 	gchar               *name;
@@ -157,7 +169,10 @@ typedef struct {
 /*
  * Validation against a dictionary
  */
-
+/**
+ * GdaSqlStatementCheckValidityData: (skip)
+ *
+ */
 typedef struct {
 	GdaConnection *cnc;
 	GdaMetaStore  *store;

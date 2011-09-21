@@ -1835,7 +1835,7 @@ _meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const
  * Get a list of all the #GdaMetaDbObject structures representing database objects in @mstruct. Note that
  * no #GdaMetaDbObject structure must not be modified.
  *
- * Returns: (transfer container): a new #GSList list of pointers to #GdaMetaDbObject structures which must be destroyed after usage using g_slist_free(). The individual #GdaMetaDbObject must not be modified.
+ * Returns: (transfer container) (element-type Gda.MetaObject): a new #GSList list of pointers to #GdaMetaDbObject structures which must be destroyed after usage using g_slist_free(). The individual #GdaMetaDbObject must not be modified.
  */
 GSList *
 gda_meta_struct_get_all_db_objects (GdaMetaStruct *mstruct)

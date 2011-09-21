@@ -594,7 +594,7 @@ gda_utility_data_model_find_column_description (GdaDataSelect *model, const gcha
  * gda_utility_holder_load_attributes:
  * @holder: a #GdaHolder
  * @node: an xmlNodePtr with a &lt;parameter&gt; tag
- * @sources: a list of #GdaDataModel
+ * @sources: (element-type Gda.DataModel): a list of #GdaDataModel
  * @error: a place to store errors, or %NULL
  *
  * Note: this method may set the "source" custom string property

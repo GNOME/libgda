@@ -5506,7 +5506,7 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
  *
  * Warning: the @cnc object may change the list if connection events occur
  *
- * Returns: (transfer none): a #GList of #GdaConnectionEvent objects (the list should not be modified)
+ * Returns: (transfer none) (element-type Gda.ConnectionEvent): a #GList of #GdaConnectionEvent objects (the list should not be modified)
  */
 const GList *
 gda_connection_get_events (GdaConnection *cnc)
