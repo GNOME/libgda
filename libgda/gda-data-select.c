@@ -1939,16 +1939,10 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 	g_assert (prow);
 
 	GValue *retval = gda_row_get_value (prow, col);
-	if (gda_row_value_is_valid (prow, retval))
+	if (gda_row_value_is_valid_e (prow, retval, error))
 		return retval;
-	else {
-		gchar *str;
-		str = g_strdup_printf (_("Unable to get value for row %d and column %d"), row, col);
-		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     "%s", str);
-		g_free (str);
+	else
 		return NULL;
-	}
 }
 
 static GdaValueAttribute
@@ -2204,22 +2198,24 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	     plist;
 	     i++, plist = plist->next) {
 		GValue *value;
-		GError *error = NULL;
+		GError *lerror = NULL;
+		gboolean pok = TRUE;
 		value = gda_row_get_value (prow, i);
 
-		if (!gda_row_value_is_valid (prow, value)) {
-			retval = FALSE;
-			g_warning (_("Could not change iter's value for column %d: %s"), i,
-				   error && error->message ? error->message : _("No detail"));
+		if (!gda_row_value_is_valid_e (prow, value, &lerror)) {
+			g_warning (_("%s(%p) [%d] Could not change iter's value for column %d: %s"),
+				   __FUNCTION__, iter, imodel->priv->sh->iter_row, i,
+				   lerror && lerror->message ? lerror->message : _("No detail"));
+			gda_holder_force_invalid_e ((GdaHolder*) plist->data, lerror);
 		}
-		else if (! gda_holder_set_value ((GdaHolder*) plist->data, value, &error)) {
+		else if (! gda_holder_set_value ((GdaHolder*) plist->data, value, &lerror)) {
 			if (gda_holder_get_not_null ((GdaHolder*) plist->data) &&
 			    gda_value_is_null (value)) {
 				gda_holder_set_not_null ((GdaHolder*) plist->data, FALSE);
 				if (! gda_holder_set_value ((GdaHolder*) plist->data, value, NULL)) {
-					retval = FALSE;
+					pok = FALSE;
 					g_warning (_("Could not change iter's value for column %d: %s"), i,
-						   error && error->message ? error->message : _("No detail"));
+						   lerror && lerror->message ? lerror->message : _("No detail"));
 					gda_holder_set_not_null ((GdaHolder*) plist->data, TRUE);
 				}
 				else 
@@ -2227,12 +2223,14 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 						     "to be updated"));
 			}
 			else {
-				retval = FALSE;
+				pok = FALSE;
 				g_warning (_("Could not change iter's value for column %d: %s"), i,
-					   error && error->message ? error->message : _("No detail"));
+					   lerror && lerror->message ? lerror->message : _("No detail"));
 			}
-			if (error)
-				g_error_free (error);
+		}
+		if (!pok) {
+			retval = FALSE;
+			gda_holder_force_invalid_e ((GdaHolder*) plist->data, lerror);
 		}
         }
 
@@ -2240,6 +2238,7 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	if (update_model)
 		g_object_set (G_OBJECT (iter), "update-model", update_model, NULL);
 
+	g_print ("%s(%p) => %d, current-row =>%d advertized_nrows => %d\n", __FUNCTION__, imodel, retval, imodel->priv->sh->iter_row, imodel->advertized_nrows);
 	return retval;
 }
 

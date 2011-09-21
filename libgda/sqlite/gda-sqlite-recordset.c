@@ -59,6 +59,7 @@ struct _GdaSqliteRecordsetPrivate {
 	GdaRow       *tmp_row; /* used in cursor mode */
 };
 static GObjectClass *parent_class = NULL;
+GHashTable *error_blobs_hash = NULL;
 
 /*
  * Object init and finalize
@@ -88,6 +89,9 @@ gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass)
 	pmodel_class->fetch_next = gda_sqlite_recordset_fetch_next;
 	pmodel_class->fetch_prev = NULL;
 	pmodel_class->fetch_at = NULL;
+
+	g_assert (!error_blobs_hash);
+	error_blobs_hash = g_hash_table_new (NULL, NULL);
 }
 
 static void
@@ -330,7 +334,6 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	switch (rc) {
 	case  SQLITE_ROW: {
 		gint col, real_col;
-		
 		prow = gda_row_new (_GDA_PSTMT (ps)->ncols);
 		for (col = 0; col < _GDA_PSTMT (ps)->ncols; col++) {
 			GValue *value;
@@ -374,7 +377,14 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			
 			/* fill GValue */
 			value = gda_row_get_value (prow, col);
-			if (SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col) == NULL) {
+			GError *may_error;
+			may_error = (GError*) SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt, real_col);
+			if (may_error && g_hash_table_lookup (error_blobs_hash, may_error)) {
+				g_print ("[[[%s]]]\n", may_error->message);
+				gda_row_invalidate_value_e (prow, value, may_error);
+				g_hash_table_remove (error_blobs_hash, may_error);
+			}
+			else if (SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col) == NULL) {
 				/* we have a NULL value */
 				gda_value_set_null (value);
 			}
@@ -388,10 +398,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					gint64 i;
 					i = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
 					if ((i > G_MAXINT) || (i < G_MININT)) {
-						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     "%s", _("Integer value is too big"));
-						gda_row_invalidate_value (prow, value);
+						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
 						g_value_set_int (value, (gint) i);
@@ -400,10 +411,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					guint64 i;
 					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
 					if (i > G_MAXUINT) {
-						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     "%s", _("Integer value is too big"));
-						gda_row_invalidate_value (prow, value);
+						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
 						g_value_set_uint (value, (gint) i);
@@ -465,10 +477,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 									      rowid);
 					}
 					if (!bop) {
-						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     "%s", _("Unable to open BLOB"));
-						gda_row_invalidate_value (prow, value);
+						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
 						GdaBlob *blob;
@@ -485,11 +498,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					if (!gda_parse_iso8601_date (&date, 
 								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, 
 												    real_col))) {
-						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid date '%s' (date format should be YYYY-MM-DD)"), 
 							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
-						gda_row_invalidate_value (prow, value);
+						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
 						g_value_set_boxed (value, &date);
@@ -499,11 +513,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					if (!gda_parse_iso8601_time (&timegda, 
 								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, 
 												    real_col))) {
-						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), 
 							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
-						gda_row_invalidate_value (prow, value);
+						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
 						gda_value_set_time (value, &timegda);
@@ -513,11 +528,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					if (!gda_parse_iso8601_timestamp (&timestamp, 
 									  (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
 													 real_col))) {
-						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
 							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
-						gda_row_invalidate_value (prow, value);
+						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
 						gda_value_set_timestamp (value, &timestamp);
@@ -526,10 +542,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					gint64 i;
 					i = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
 					if ((i > G_MAXINT8) || (i < G_MININT8)) {
-						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     "%s", _("Integer value is too big"));
-						gda_row_invalidate_value (prow, value);
+						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
 						g_value_set_char (value, (gchar) i);
@@ -538,17 +555,23 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					guint64 i;
 					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
 					if (i > G_MAXUINT8) {
-						g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     "%s", _("Integer value is too big"));
-						gda_row_invalidate_value (prow, value);
+						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
 						g_value_set_uchar (value, (guchar) i);
 				}
-				else 
-					g_error ("Unhandled GDA type %s in SQLite recordset", 
-						 gda_g_type_to_string (_GDA_PSTMT (ps)->types [col]));
+				else {
+					GError *lerror = NULL;
+					g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_DATA_ERROR,
+						     "Unhandled type '%s' in SQLite recordset",
+						     gda_g_type_to_string (_GDA_PSTMT (ps)->types [col]));
+					gda_row_invalidate_value_e (prow, value, lerror);
+				}
 			}
 		}
 		

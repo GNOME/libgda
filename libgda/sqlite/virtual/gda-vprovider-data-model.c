@@ -691,14 +691,18 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 
 	param = gda_data_model_iter_get_holder_for_field (cursor->iter, i);
 	if (!param) {
-		SQLITE3_CALL (sqlite3_result_error) (ctx, _("Column not found"), -1);
+		SQLITE3_CALL (sqlite3_result_text) (ctx, _("Column not found"), -1, SQLITE_TRANSIENT);
 		return SQLITE_EMPTY;
 	}
 	else {
 		const GValue *value;
+		GError *lerror = NULL;
 		value = gda_holder_get_value (param);
-
-		if (!value || gda_value_is_null (value))
+		if (! gda_holder_is_valid_e (param, &lerror)) {
+			g_hash_table_insert (error_blobs_hash, lerror, GINT_TO_POINTER (1));
+			SQLITE3_CALL (sqlite3_result_blob) (ctx, lerror, sizeof (GError), NULL);
+		}
+		else if (!value || gda_value_is_null (value))
 			SQLITE3_CALL (sqlite3_result_null) (ctx);
 		else  if (G_VALUE_TYPE (value) == G_TYPE_INT) 
 			SQLITE3_CALL (sqlite3_result_int) (ctx, g_value_get_int (value));

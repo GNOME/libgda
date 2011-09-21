@@ -7,7 +7,7 @@
  * Copyright (C) 2003 Xabier Rodríguez Calvar <xrcalvar@igalia.com>
  * Copyright (C) 2004 Paisa  Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
- * Copyright (C) 2005 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -30,6 +30,7 @@
 
 #include "gda-row.h"
 #include <string.h>
+#include <glib/gi18n-lib.h>
 #include "gda-data-model.h"
 
 #define PARENT_TYPE G_TYPE_OBJECT
@@ -37,7 +38,8 @@
 struct _GdaRowPrivate {
 	GdaDataModel *model; /* can be NULL */
 
-        GValue       *fields;        /* GValue for each column */
+        GValue       *fields; /* GValues */
+	GError      **errors; /* GError for each invalid value at the same position */
         gint          nfields;
 };
 
@@ -92,6 +94,7 @@ gda_row_init (GdaRow *row, G_GNUC_UNUSED GdaRowClass *klass)
 	row->priv = g_new0 (GdaRowPrivate, 1);
 	row->priv->model = NULL;
 	row->priv->fields = NULL;
+	row->priv->errors = NULL;
 	row->priv->nfields = 0;
 }
 
@@ -115,9 +118,13 @@ gda_row_finalize (GObject *object)
 	if (row->priv) {
 		gint i;
 
-		for (i = 0; i < row->priv->nfields; i++)
+		for (i = 0; i < row->priv->nfields; i++) {
 			gda_value_set_null (&(row->priv->fields [i]));
+			if (row->priv->errors && row->priv->errors [i])
+				g_error_free (row->priv->errors [i]);
+		}
 		g_free (row->priv->fields);
+		g_free (row->priv->errors);
 
 		g_free (row->priv);
 		row->priv = NULL;
@@ -247,8 +254,56 @@ gda_row_get_value (GdaRow *row, gint num)
 void
 gda_row_invalidate_value (G_GNUC_UNUSED GdaRow *row, GValue *value)
 {
+	return gda_row_invalidate_value_e (row, value, NULL);
+}
+
+/**
+ * gda_row_invalidate_value_e:
+ * @row: a #GdaRow
+ * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
+ * @error: (allow-none) (transfer full): the error which lead to the invalidation
+ * 
+ * Marks @value as being invalid. This method is mainly used by database
+ * providers' implementations to report any error while reading a value from the database.
+ *
+ * Since: 4.2.10
+ */
+void
+gda_row_invalidate_value_e (GdaRow *row, GValue *value, GError *error)
+{
 	gda_value_set_null (value);
 	G_VALUE_TYPE (value) = G_TYPE_NONE;
+	if (error) {
+		guint i;
+		if (! row->priv->errors)
+			row->priv->errors = g_new0 (GError*, row->priv->nfields);
+		for (i = 0; i < row->priv->nfields; i++) {
+			if (& (row->priv->fields[i]) == value) {
+				if (row->priv->errors [i])
+					g_error_free (row->priv->errors [i]);
+				row->priv->errors [i] = error;
+				break;
+			}
+		}
+		if (i == row->priv->nfields) {
+			g_error_free (error);
+			g_warning (_("Value not found in row!"));
+		}
+	}
+	else if (row->priv->errors) {
+		guint i;
+		for (i = 0; i < row->priv->nfields; i++) {
+			if (& (row->priv->fields[i]) == value) {
+				if (row->priv->errors [i]) {
+					g_error_free (row->priv->errors [i]);
+					row->priv->errors [i] = NULL;
+				}
+				break;
+			}
+		}
+		if (i == row->priv->nfields)
+			g_warning (_("Value not found in row!"));
+	}
 }
 
 /**
@@ -263,9 +318,43 @@ gda_row_invalidate_value (G_GNUC_UNUSED GdaRow *row, GValue *value)
  * Returns: %TRUE if @value is valid
  */
 gboolean
-gda_row_value_is_valid (G_GNUC_UNUSED GdaRow *row, GValue *value)
+gda_row_value_is_valid (GdaRow *row, GValue *value)
 {
-	return (G_VALUE_TYPE (value) == G_TYPE_NONE) ? FALSE : TRUE;
+	return gda_row_value_is_valid_e (row, value, NULL);
+}
+
+/**
+ * gda_row_value_is_valid:
+ * @row: a #GdaRow.
+ * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
+ * @error: (allow-none): a place to store the invalid error, or %NULL
+ *
+ * Tells if @value has been marked as being invalid by gda_row_invalidate_value().
+ * This method is mainly used by database
+ * providers' implementations to report any error while reading a value from the database.
+ *
+ * Returns: %TRUE if @value is valid
+ *
+ * Since: 4.2.10
+ */
+gboolean
+gda_row_value_is_valid_e (GdaRow *row, GValue *value, GError **error)
+{
+	gboolean valid;
+	valid = (G_VALUE_TYPE (value) == G_TYPE_NONE) ? FALSE : TRUE;
+	if (!valid && row->priv->errors && error) {
+		guint i;
+		for (i = 0; i < row->priv->nfields; i++) {
+			if (& (row->priv->fields[i]) == value) {
+				if (row->priv->errors [i])
+					g_propagate_error (error, g_error_copy (row->priv->errors [i]));
+				break;
+			}
+		}
+		if (i == row->priv->nfields)
+			g_warning (_("Value not found in row!"));
+	}
+	return valid;
 }
 
 /**
