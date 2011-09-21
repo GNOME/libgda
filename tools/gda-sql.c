@@ -154,7 +154,8 @@ static const char *prompt_func (void);
 static GdaInternalCommandsList  *build_internal_commands_list (void);
 static gboolean                  command_is_complete (const gchar *command);
 static GdaInternalCommandResult *command_execute (SqlConsole *console,
-						  const gchar *command, GError **error);
+						  const gchar *command,
+						  GdaStatementModelUsage usage, GError **error);
 
 static gchar                    *result_to_string (SqlConsole *console, GdaInternalCommandResult *res);
 static void                      display_result (GdaInternalCommandResult *res);
@@ -492,7 +493,8 @@ treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok)
 				to_stream = main_data->output_stream;
 			else
 				to_stream = stdout;
-			res = command_execute (NULL, main_data->partial_command->str, &error);
+			res = command_execute (NULL, main_data->partial_command->str,
+					       GDA_STATEMENT_MODEL_RANDOM_ACCESS, &error);
 			
 			if (!res) {
 				if (!error ||
@@ -861,10 +863,13 @@ command_is_complete (const gchar *command)
  * command_execute
  */
 static GdaInternalCommandResult *execute_internal_command (SqlConsole *console, GdaConnection *cnc,
-							   const gchar *command_str, GError **error);
-static GdaInternalCommandResult *execute_external_command (SqlConsole *console, const gchar *command, GError **error);
+							   const gchar *command_str,
+							   GError **error);
+static GdaInternalCommandResult *execute_external_command (SqlConsole *console, const gchar *command,
+							   GdaStatementModelUsage usage,
+							   GError **error);
 static GdaInternalCommandResult *
-command_execute (SqlConsole *console, const gchar *command, GError **error)
+command_execute (SqlConsole *console, const gchar *command, GdaStatementModelUsage usage, GError **error)
 {
 	ConnectionSetting *cs;
 
@@ -896,7 +901,7 @@ command_execute (SqlConsole *console, const gchar *command, GError **error)
                         return NULL;
                 }
 
-                return execute_external_command (console, command, error);
+                return execute_external_command (console, command, usage, error);
         }
 }
 
@@ -1058,7 +1063,8 @@ execute_internal_command (SqlConsole *console, GdaConnection *cnc, const gchar *
  * Executes an SQL statement as understood by the DBMS
  */
 static GdaInternalCommandResult *
-execute_external_command (SqlConsole *console, const gchar *command, GError **error)
+execute_external_command (SqlConsole *console, const gchar *command,
+			  GdaStatementModelUsage usage, GError **error)
 {
 	GdaInternalCommandResult *res = NULL;
 	GdaBatch *batch;
@@ -1168,8 +1174,7 @@ execute_external_command (SqlConsole *console, const gchar *command, GError **er
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->was_in_transaction_before_exec = gda_connection_get_transaction_status (cs->cnc) ? TRUE : FALSE;
 	res->cnc = g_object_ref (cs->cnc);
-	obj = gda_connection_statement_execute (cs->cnc, stmt, params, 
-						GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL, error);
+	obj = gda_connection_statement_execute (cs->cnc, stmt, params, usage, NULL, error);
 	if (!obj) {
 		g_free (res);
 		res = NULL;
@@ -1875,7 +1880,7 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 			gchar *tmp2, *tmp3;
 			gdouble etime;
 			g_object_get ((GObject*) model, "execution-delay", &etime, NULL);
-			tmp2 = g_strdup_printf (_("Execution delay: %.03f"), etime);
+			tmp2 = g_strdup_printf ("%s: %.03f s", _("Execution delay"), etime);
 			tmp3 = g_strdup_printf ("%s\n%s", tmp, tmp2);
 			g_free (tmp);
 			g_free (tmp2);
@@ -2127,6 +2132,9 @@ static GdaInternalCommandResult *extra_command_export (SqlConsole *console, GdaC
 static GdaInternalCommandResult *extra_command_set2 (SqlConsole *console, GdaConnection *cnc,
 						     const gchar **args,
 						     GError **error, gpointer data);
+static GdaInternalCommandResult *extra_command_pivot (SqlConsole *console, GdaConnection *cnc,
+						      const gchar **args,
+						      GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
@@ -2542,30 +2550,6 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [NAME [VALUE|_null_]]"), "set");
-	c->description = _("Set or show internal parameter, or list all if no parameters");
-	c->args = NULL;
-	c->command_func = (GdaInternalCommandFunc) extra_command_set;
-	c->user_data = NULL;
-	c->arguments_delimiter_func = args_as_string_set;
-	c->unquote_args = TRUE;
-	c->limit_to_main = FALSE;
-	commands->commands = g_slist_prepend (commands->commands, c);
-
-	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [NAME]"), "unset");
-	c->description = _("Unset (delete) internal named parameter (or all parameters)");
-	c->args = NULL;
-	c->command_func = (GdaInternalCommandFunc) extra_command_unset;
-	c->user_data = NULL;
-	c->arguments_delimiter_func = NULL;
-	c->unquote_args = TRUE;
-	c->limit_to_main = FALSE;
-	commands->commands = g_slist_prepend (commands->commands, c);
-
-	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Formatting");
 	c->name = "H [HTML|XML|CSV|DEFAULT]";
 	c->description = _("Set output format");
@@ -2603,11 +2587,48 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
+	c->group = _("Execution context");
+	c->name = g_strdup_printf (_("%s [NAME [VALUE|_null_]]"), "set");
+	c->description = _("Set or show internal parameter, or list all if no parameters");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_set;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = args_as_string_set;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Execution context");
+	c->name = g_strdup_printf (_("%s [NAME]"), "unset");
+	c->description = _("Unset (delete) internal named parameter (or all parameters)");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_unset;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Execution context");
 	c->name = g_strdup_printf (_("%s NAME [FILE|TABLE COLUMN ROW_CONDITION]"), "setex");
 	c->description = _("Set internal parameter as the contents of the FILE file or from an existing table's value");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set2;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Execution context");
+	c->name = g_strdup_printf (_("%s SELECT ROW_FIELDS COLUMN_FIELDS [DATA_FIELDS]"), "pivot");
+	c->description = _("Performs a statistical analysis on the data from SELECT, "
+			   "using ROW_FIELDS and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_pivot;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
@@ -3674,7 +3695,8 @@ extra_command_exec_buffer (SqlConsole *console, GdaConnection *cnc, const gchar 
 	if (!main_data->current->query_buffer) 
 		main_data->current->query_buffer = g_string_new ("");
 	if (*main_data->current->query_buffer->str != 0)
-		res = command_execute (NULL, main_data->current->query_buffer->str, error);
+		res = command_execute (NULL, main_data->current->query_buffer->str,
+				       GDA_STATEMENT_MODEL_RANDOM_ACCESS, error);
 	else {
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
@@ -4499,7 +4521,7 @@ get_table_value_at_cell (GdaConnection *cnc, GError **error, G_GNUC_UNUSED MainD
 
 	/* execute statement */
 	GdaInternalCommandResult *tmpres;
-	tmpres = execute_external_command (NULL, sql, error);
+	tmpres = execute_external_command (NULL, sql, GDA_STATEMENT_MODEL_RANDOM_ACCESS, error);
 	g_free (sql);
 	if (!tmpres)
 		return NULL;
@@ -4610,6 +4632,143 @@ extra_command_set2 (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 		g_set_error (error, 0, 0, "%s", 
                              _("Wrong number of arguments"));
 
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args,
+		     GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	ConnectionSetting *cs;
+	cs = get_current_connection_settings (console);
+	if (!cs) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("No connection specified"));
+		return NULL;
+	}
+
+	const gchar *select = NULL;
+	const gchar *row_fields = NULL;
+	const gchar *column_fields = NULL;
+
+        if (args[0] && *args[0]) {
+                select = args[0];
+                if (args[1] && *args[1]) {
+			row_fields = args [1];
+			if (args[2] && *args[2])
+				column_fields = args[2];
+		}
+        }
+
+	if (!select) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("Missing data on which to operate"));
+		return NULL;
+	}
+	if (!row_fields) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("Missing row fields specifications"));
+		return NULL;
+	}
+	if (!column_fields) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("Missing column fields specifications"));
+		return NULL;
+	}
+
+	/* execute SELECT */
+	gboolean was_in_trans;
+	GdaInternalCommandResult *tmpres;
+
+	was_in_trans = gda_connection_get_transaction_status (cs->cnc) ? TRUE : FALSE;
+
+	tmpres = command_execute (console, select, GDA_STATEMENT_MODEL_CURSOR_FORWARD, error);
+	if (!tmpres)
+		return NULL;
+	if (tmpres->type != GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL) {
+		gda_internal_command_exec_result_free (tmpres);
+		g_set_error (error, 0, 0, "%s", 
+			     _("Wrong SELECT argument"));
+		return NULL;
+	}
+
+	GdaDataPivot *pivot;
+	gdouble etime = 0.;
+	//g_object_get ((GObject*) tmpres->u.model, "execution-delay", &etime, NULL);
+	pivot = (GdaDataPivot*) gda_data_pivot_new (tmpres->u.model);
+	gda_internal_command_exec_result_free (tmpres);
+
+	if (! gda_data_pivot_add_field (pivot, GDA_DATA_PIVOT_FIELD_ROW,
+					row_fields, NULL, error)) {
+		g_object_unref (pivot);
+		return NULL;
+	}
+
+	if (! gda_data_pivot_add_field (pivot, GDA_DATA_PIVOT_FIELD_COLUMN,
+					column_fields, NULL, error)) {
+		g_object_unref (pivot);
+		return NULL;
+	}
+
+	GTimer *timer;
+	timer = g_timer_new ();
+
+	gint i;
+	for (i = 3; args[i] && *args[i]; i++) {
+		const gchar *df = args[i];
+		GdaDataPivotAggregate agg = GDA_DATA_PIVOT_COUNT;
+		if (*df == '[') {
+			const gchar *tmp;
+			for (tmp = df; *tmp && *tmp != ']'; tmp++);
+			if (!*tmp) {
+				g_timer_destroy (timer);
+				g_object_unref (pivot);
+				g_set_error (error, 0, 0, "%s", 
+					     _("Wrong data field argument"));
+				return NULL;
+			}
+			df++;
+			if (! g_ascii_strncasecmp (df, "sum", 3) && (df[3] == ']'))
+				agg = GDA_DATA_PIVOT_SUM;
+			else if (! g_ascii_strncasecmp (df, "avg", 3) && (df[3] == ']'))
+				agg = GDA_DATA_PIVOT_AVG;
+			else if (! g_ascii_strncasecmp (df, "max", 3) && (df[3] == ']'))
+				agg = GDA_DATA_PIVOT_MAX;
+			else if (! g_ascii_strncasecmp (df, "min", 3) && (df[3] == ']'))
+				agg = GDA_DATA_PIVOT_MIN;
+			else if (! g_ascii_strncasecmp (df, "count", 5) && (df[5] == ']'))
+				agg = GDA_DATA_PIVOT_COUNT;
+			else {
+				g_timer_destroy (timer);
+				g_object_unref (pivot);
+				g_set_error (error, 0, 0, "%s", 
+					     _("Wrong data field argument"));
+				return NULL;
+			}
+			df = tmp+1;
+		}
+		if (! gda_data_pivot_add_data (pivot, agg, df, NULL, error)) {
+			g_timer_destroy (timer);
+			g_object_unref (pivot);
+			return NULL;
+		}
+	}
+
+	if (! gda_data_pivot_populate (pivot, error)) {
+		g_timer_destroy (timer);
+		g_object_unref (pivot);
+		return NULL;
+	}
+
+	etime += g_timer_elapsed (timer, NULL);
+	g_timer_destroy (timer);
+	//g_object_set (pivot, "execution-delay", etime, NULL);
+
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res->was_in_transaction_before_exec = was_in_trans;
+	res->u.model = (GdaDataModel*) pivot;
 	return res;
 }
 
@@ -5133,7 +5292,8 @@ gda_sql_console_execute (SqlConsole *console, const gchar *command, GError **err
 			/* execute command */
 			GdaInternalCommandResult *res;
 			
-			res = command_execute (console, loc_cmde, error);
+			res = command_execute (console, loc_cmde,
+					       GDA_STATEMENT_MODEL_RANDOM_ACCESS, error);
 			
 			if (res) {
 				OutputFormat of = console->output_format;

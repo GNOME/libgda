@@ -58,6 +58,7 @@
 <!ENTITY libgda-GdaDataModel SYSTEM "xml/gda-data-model.xml">
 <!ENTITY libgda-GdaDataModelIter SYSTEM "xml/gda-data-model-iter.xml">
 <!ENTITY libgda-GdaDataModelImport SYSTEM "xml/gda-data-model-import.xml">
+<!ENTITY libgda-GdaDataPivot SYSTEM "xml/gda-data-pivot.xml">
 <!ENTITY libgda-GdaDataAccessWrapper SYSTEM "xml/gda-data-access-wrapper.xml">
 <!ENTITY libgda-GdaDataProxy SYSTEM "xml/gda-data-proxy.xml">
 <!ENTITY libgda-GdaConnection-event SYSTEM "xml/gda-connection-event.xml">
@@ -667,6 +668,7 @@
       &libgda-GdaColumn;
       &libgda-GdaDataModelIter;
       &libgda-GdaDataModelImport;
+      &libgda-GdaDataPivot;
       &libgda-GdaDataAccessWrapper;
       &libgda-GdaDataModelArray;
       &libgda-GdaRow;

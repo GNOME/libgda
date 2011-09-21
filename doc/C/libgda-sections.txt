@@ -337,6 +337,25 @@ gda_data_access_wrapper_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gda-data-pivot</FILE>
+<TITLE>GdaDataPivot</TITLE>
+GdaDataPivot
+GdaDataPivotClass
+GdaDataPivotPrivate
+gda_data_pivot_new
+GdaDataPivotFieldType
+gda_data_pivot_add_field
+gda_data_pivot_populate
+<SUBSECTION Standard>
+GDA_DATA_PIVOT
+GDA_DATA_PIVOT_CLASS
+GDA_IS_DATA_PIVOT
+GDA_IS_DATA_PIVOT_CLASS
+GDA_TYPE_DATA_PIVOT
+gda_data_pivot_get_type
+</SECTION>
+
+<SECTION>
 <FILE>gda-data-model</FILE>
 <TITLE>GdaDataModel</TITLE>
 GdaDataModel
