@@ -113,12 +113,12 @@ typedef enum {
 
 /**
  * GdaMetaTable:
- * @columns: list of #GdaMetaTableColumn structures, one for each column in the table
+ * @columns: (element-type Gda.MetaTableColumn): list of #GdaMetaTableColumn structures, one for each column in the table
  * @pk_cols_array: index of the columns part of the primary key for the table (WARNING: columns numbering
  *                 here start at 0)
  * @pk_cols_nb: size of the @pk_cols_array array
- * @reverse_fk_list: list of #GdaMetaTableForeignKey where the referenced table is this table
- * @fk_list: list of #GdaMetaTableForeignKey for this table
+ * @reverse_fk_list: (element-type Gda.MetaTableForeignKey): list of #GdaMetaTableForeignKey where the referenced table is this table
+ * @fk_list: (element-type Gda.MetaTableForeignKey): list of #GdaMetaTableForeignKey for this table
  *
  * This structure specifies a #GdaMetaDbObject to represent a table's specific attributes,
  * its contents must not be modified.
@@ -181,7 +181,7 @@ typedef struct {
  * @obj_short_name: the shortest way to name the object
  * @obj_full_name: the full name of the object (in the &lt;schema&gt;.&lt;nameagt; notation
  * @obj_owner: object's owner
- * @depend_list: list of #GdaMetaDbObject pointers on which this object depends (through foreign keys
+ * @depend_list: (element-type Gda.MetaDbObject): list of #GdaMetaDbObject pointers on which this object depends (through foreign keys
  *               or tables used for views)
  *
  * Struture to hold information about each database object (tables, views, ...),

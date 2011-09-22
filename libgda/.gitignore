@@ -8,3 +8,4 @@ gda-enum-types.h
 libgda.def
 Gda-5.0.gir
 Gda-5.0.typelib
+*.vapi

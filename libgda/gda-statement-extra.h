@@ -27,6 +27,16 @@ G_BEGIN_DECLS
 /* private information to implement custom 
  * SQL renderers for GdaStatement objects
  */
+/**
+ * GdaSqlRenderingContext:
+ * @flags:
+ * @params:
+ * @params_used: (element-type Gda.Holder):
+ * @provider: (allow-none):
+ * @cnc: (allow-none):
+ *
+ * Specifies the context in which a #GdaSqlStatement is being converted to SQL.
+ */
 typedef struct _GdaSqlRenderingContext GdaSqlRenderingContext;
 
 /**

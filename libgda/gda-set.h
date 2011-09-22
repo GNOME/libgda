@@ -55,6 +55,11 @@ struct _GdaSetNode {
 	gpointer      _gda_reserved2;
 };
 
+/**
+ * GdaSetGroup:
+ * @nodes: (element-type Gda.SetNode): list of GdaSetNode, at least one entry
+ * @nodes_source: (allow-none):  if NULL, then @nodes contains exactly one entry 
+ */
 struct _GdaSetGroup {
 	GSList       *nodes;       /* list of GdaSetNode, at least one entry */
 	GdaSetSource *nodes_source; /* if NULL, then @nodes contains exactly one entry */
@@ -65,6 +70,12 @@ struct _GdaSetGroup {
 	gpointer      _gda_reserved2;
 };
 
+/**
+ * GdaSetSource:
+ * @data_model: Can't be NULL
+ * @nodes: (element-type Gda.SetNode): list of #GdaSetNode for which source_model == @data_model
+ *
+ **/
 struct _GdaSetSource {
 	GdaDataModel   *data_model;   /* Can't be NULL */
 	GSList         *nodes;        /* list of #GdaSetNode for which source_model == @data_model */
@@ -82,6 +93,15 @@ struct _GdaSetSource {
 #define GDA_SET_GROUP(x) ((GdaSetGroup *)(x))
 
 /* struct for the object's data */
+
+/**
+ * GdaSet:
+ * @holders: (element-type Gda.Holder): list of GdaHolder objects
+ * @nodes_list: (element-type Gda.SetNode): list of GdaSetNode
+ * @sources_list: (element-type Gda.SetSource): list of GdaSetSource 
+ * @groups_list: (element-type Gda.SetGroup): list of GdaSetGroup
+ *
+ */
 struct _GdaSet
 {
 	GObject         object;

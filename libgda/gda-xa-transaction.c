@@ -439,7 +439,7 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 /**
  * gda_xa_transaction_commit:
  * @xa_trans: a #GdaXaTransaction object
- * @cnc_to_recover: (allow-none): a place to store the list of connections for which the commit phase failed, or %NULL
+ * @cnc_to_recover: (allow-none) (element-type Gda.Connection) (out callee-allocates): a place to store the list of connections for which the commit phase failed, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Commits a distributed transaction (managed by @xa_trans). The commit is composed of two phases:
@@ -619,7 +619,7 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
 /**
  * gda_xa_transaction_commit_recovered:
  * @xa_trans: a #GdaXaTransaction object
- * @cnc_to_recover: (allow-none): a place to store the list of connections for which the there were data to recover and which failed to be actually committed, or %NULL
+ * @cnc_to_recover: (allow-none) (element-type Gda.Connection) (out callee-allocates): a place to store the list of connections for which the there were data to recover and which failed to be actually committed, or %NULL
  * @error: (allow-none): a place to store errors, or %NULL
  *
  * Tries to commit the data prepared but which failed to commit (see gda_xa_transaction_commit()). This

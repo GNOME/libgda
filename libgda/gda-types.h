@@ -30,6 +30,10 @@ G_BEGIN_DECLS
 
 /* Pointer type for GSList (not a boxed type!) */
 #define GDA_TYPE_SLIST (_gda_slist_get_type())
+/**
+ * GdaSList: (skip)
+ *
+ */
 typedef GSList GdaSList;
 GType   _gda_slist_get_type (void) G_GNUC_CONST;
 

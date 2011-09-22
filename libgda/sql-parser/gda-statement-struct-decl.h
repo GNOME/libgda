@@ -58,7 +58,7 @@ typedef struct _GdaSqlStatementCompound GdaSqlStatementCompound;
  * Statement type
  */
 /**
- * GdaSqlStatementType:
+ * GdaSqlStatementType: (skip)
  * @GDA_SQL_STATEMENT_SELECT: a SELECT statement
  * @GDA_SQL_STATEMENT_INSERT: an INSERT statement
  * @GDA_SQL_STATEMENT_UPDATE: an UPDATE statement
@@ -196,7 +196,9 @@ gboolean gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, 
  */
 gboolean gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error);
 
-/*
+/**
+ * GdaSqlStatementContentsInfo: (skip)
+ *
  * Contents' infos
  */
 typedef struct {
@@ -219,7 +221,9 @@ typedef struct {
 	gpointer         _gda_reserved4;
 } GdaSqlStatementContentsInfo;
 
-/*
+/**
+ * GdaSqlStatementCheckValidityData: (skip)
+ *
  * Validation against a dictionary
  */
 typedef struct {

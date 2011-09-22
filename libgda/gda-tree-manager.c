@@ -458,7 +458,7 @@ gda_tree_manager_add_manager (GdaTreeManager *manager, GdaTreeManager *sub)
  *
  * Get the list of sub managers which have already been added using gda_tree_manager_add_manager()
  *
- * Returns: (transfer none): a list of #GdaTreeMenager which should not be modified.
+ * Returns: (transfer none) (element-type Gda.TreeManager): a list of #GdaTreeMenager which should not be modified.
  *
  * Since: 4.2
  */

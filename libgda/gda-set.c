@@ -402,7 +402,7 @@ gda_set_init (GdaSet *set)
 
 /**
  * gda_set_new:
- * @holders: (element-type GdaHolder) (transfer:none): a list of #GdaHolder objects
+ * @holders: (element-type Gda.Holder) (transfer none): a list of #GdaHolder objects
  *
  * Creates a new #GdaSet object, and populates it with the list given as argument.
  * The list can then be freed as it is copied. All the value holders in @holders are referenced counted
@@ -425,7 +425,7 @@ gda_set_new (GSList *holders)
 
 /**
  * gda_set_new_read_only:
- * @holders: (element-type GdaHolder) (transfer:none): a list of #GdaHolder objects
+ * @holders: (element-type Gda.Holder) (transfer none): a list of #GdaHolder objects
  *
  * Creates a new #GdaSet like gda_set_new(), but does not allow modifications to any of the #GdaHolder
  * object in @holders. This function is used for Libgda's database providers' implementation.
