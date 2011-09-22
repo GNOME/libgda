@@ -270,31 +270,6 @@ Updates the current connection's meta data (use this command after having modifi
 database's schema).
 .IP \fB.o\fP
 Sends output to a file or |pipe. Full syntax is: \fB.o <FILE_NAME>\fP or \fB.o |<COMMAND>\fP.
-.IP \fB.pivot\fP
-Performs data summarization on a data set. Full syntax is: \fB.pivot <SELECT> <ROW_FIELDS> <COLUMN_FIELDS> [<DATA_FIELDS> [...]]\fP.
-
-The \fI<SELECT>\fP defines the data set to perform summarization on.
-
-The \fI<ROW_FIELDS>\fP defines the fields from the data set from which each individual value will
-yield to a row in the analysis (it can be any valid selectable SQL expression on the data set's
-fields); multiple expressions can be provided, separated by commas (forming a valid SQL expression).
-
-The \fI<COLUMN_FIELDS>\fP defines the fields from the data set from which each individual value will
-yield to a column in the analysis. Its syntax is similar to the \fI<ROW_FIELDS>\fP one.
-
-The \fI<DATA_FIELDS>\fP arguments are entirely optional and indicates the way data summarization
-is done for each pair of (row,column) values (the default is to count occurrences). The syntax
-for each \fI<DATA_FIELDS>\fP argument is: \fB[aggregate]<SQL_expression>\fP, where the aggregate
-part is optional and, if present must be among [SUM], [COUNT], [AVG], [MIN] or [MAX], and
-the SQL expression is a valid selectable SQL expression of the data set's fields.
-
-Examples:
-
-\fB.pivot "SELECT * FROM food" person food\fP
-
-\fB.pivot "SELECT * FROM products" category "CASE WHEN price < 15 THEN 'low' ELSE 'high' END" [AVG]price \fP
-
-
 .IP \fB.q\fP
 Quits the application.
 .IP \fB.qecho\fP

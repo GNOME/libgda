@@ -48,7 +48,6 @@
 #include <libgda/gda-data-access-wrapper.h>
 #include <libgda/gda-data-proxy.h>
 #include <libgda/gda-data-select.h>
-#include <libgda/gda-data-pivot.h>
 #include <libgda/gda-lockable.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-quark-list.h>

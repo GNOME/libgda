@@ -286,11 +286,6 @@
 	gda_data_model_set_value_at
 	gda_data_model_set_values
 	gda_data_model_thaw
-	gda_data_pivot_add_data
-	gda_data_pivot_add_field
-	gda_data_pivot_get_type
-	gda_data_pivot_new
-	gda_data_pivot_populate
 	gda_data_proxy_alter_value_attributes
 	gda_data_proxy_apply_all_changes
 	gda_data_proxy_apply_row_changes
