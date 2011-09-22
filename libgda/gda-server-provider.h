@@ -279,6 +279,20 @@ struct _GdaServerProviderClass {
 
 	/* GdaStatement */
 	GdaSqlParser           *(* create_parser)        (GdaServerProvider *provider, GdaConnection *cnc);
+
+	/**
+	 * statement_to_sql:
+	 * @cnc: a #GdaConnection object
+	 * @stmt: a #GdaStatement object
+	 * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+	 * @flags: SQL rendering flags, as #GdaStatementSqlFlag OR'ed values
+	 * @params_used: (allow-none) (element-type Gda.Holder) (out) (transfer container): a place to store the list of individual #GdaHolder objects within @params which have been used
+	 * @error: a place to store errors, or %NULL
+	 *
+	 * Renders @stmt as an SQL statement, adapted to the SQL dialect used by @cnc
+	 *
+	 * Returns: a new string, or %NULL if an error occurred
+	 */
 	gchar                  *(* statement_to_sql)     (GdaServerProvider *provider, GdaConnection *cnc, 
 							  GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
 							  GSList **params_used, GError **error);

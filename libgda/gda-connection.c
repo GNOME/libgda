@@ -2742,7 +2742,7 @@ gda_connection_quote_sql_identifier (GdaConnection *cnc, const gchar *id)
  * @stmt: a #GdaStatement object
  * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
  * @flags: SQL rendering flags, as #GdaStatementSqlFlag OR'ed values
- * @params_used: (allow-none) (element-type GdaHolder) (out) (transfer container): a place to store the list of individual #GdaHolder objects within @params which have been used
+ * @params_used: (allow-none) (element-type Gda.Holder) (out) (transfer container): a place to store the list of individual #GdaHolder objects within @params which have been used
  * @error: a place to store errors, or %NULL
  *
  * Renders @stmt as an SQL statement, adapted to the SQL dialect used by @cnc
