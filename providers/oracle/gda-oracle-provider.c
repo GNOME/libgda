@@ -1931,35 +1931,33 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			else if (!rstmt)
 				return NULL;
 			else {
-				/* The strategy here is to execute @rstmt using the prepared
-				 * statement associcted to @stmt, but adapted to @rstmt, so all
-				 * the column names, etc remain the same.
-				 *
-				 * The adaptation consists to replace Oracle specific information
-				 * in the GdaOraclePStmt object.
-				 *
-				 * The trick is to adapt @ps, then associate @ps with @rstmt, then
-				 * execute @rstmt, and then undo the trick */
+				/* The strategy here is to execute @rstmt using its prepared
+				 * statement, but with common data from @ps. Beware that
+				 * the @param_ids attribute needs to be retained (i.e. it must not
+				 * be the one copied from @ps) */
 				GObject *obj;
 				GdaOraclePStmt *tps;
+				GdaPStmt *gtps;
+				GSList *prep_param_ids, *copied_param_ids;
 				if (!gda_oracle_provider_statement_prepare (provider, cnc,
-									    rstmt, error)) {
-					g_object_unref (ps);
+									    rstmt, error))
 					return NULL;
-				}
 				tps = (GdaOraclePStmt *)
 					gda_connection_get_prepared_statement (cnc, rstmt);
+				gtps = (GdaPStmt *) tps;
 
-				/* adapt @ps with @tps's Oracle specific information */
-				GdaOraclePStmt hps;
-				hps.hstmt = ps->hstmt; /* save */
-				ps->hstmt = tps->hstmt; /* override */
-				hps.ora_values = ps->ora_values; /* save */
-				ps->ora_values = tps->ora_values; /* override */
-				g_object_ref (tps);
-				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) ps);
+				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
+				prep_param_ids = gtps->param_ids;
+				gtps->param_ids = NULL;
+				
+				/* actual copy */
+				gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) tps);
 
-				/* execute rstmt (it will use @ps) */
+				/* restore previous @param_ids */
+				copied_param_ids = gtps->param_ids;
+				gtps->param_ids = prep_param_ids;
+
+				/* execute */
 				obj = gda_oracle_provider_statement_execute (provider, cnc,
 									     rstmt, params,
 									     model_usage,
@@ -1967,12 +1965,15 @@ gda_oracle_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 									     last_inserted_row,
 									     task_id, async_cb,
 									     cb_data, error);
-				
-				/* revert adaptations */
-				ps->hstmt = hps.hstmt;
-				ps->ora_values = hps.ora_values;
-				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) tps);
-				g_object_unref (tps);
+				/* clear original @param_ids and restore copied one */
+				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
+				g_slist_free (prep_param_ids);
+
+				gtps->param_ids = copied_param_ids;
+
+				/*if (GDA_IS_DATA_MODEL (obj))
+				  gda_data_model_dump ((GdaDataModel*) obj, NULL);*/
+
 				g_object_unref (rstmt);
 				g_object_unref (ps);
 				return obj;
