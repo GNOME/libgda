@@ -779,7 +779,7 @@ parse_field_spec (GdaDataPivot *pivot, const gchar *field, const gchar *alias, G
  *
  * Returns: %TRUE if no error occurred
  *
- * Since: 4.2.10
+ * Since: 5.0
  */
 gboolean
 gda_data_pivot_add_field (GdaDataPivot *pivot, GdaDataPivotFieldType field_type,
@@ -899,7 +899,7 @@ gda_data_pivot_add_field (GdaDataPivot *pivot, GdaDataPivotFieldType field_type,
  *
  * Returns: %TRUE if no error occurred
  *
- * Since: 4.2.10
+ * Since: 5.0
  */
 gboolean
 gda_data_pivot_add_data (GdaDataPivot *pivot, GdaDataPivotAggregate aggregate_type,
@@ -997,7 +997,7 @@ gda_data_pivot_add_data (GdaDataPivot *pivot, GdaDataPivotAggregate aggregate_ty
  *
  * Returns: %TRUE if no error occurred.
  *
- * Since: 4.2.10
+ * Since: 5.0
  */
 gboolean
 gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
