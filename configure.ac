@@ -476,11 +476,18 @@ AC_ARG_ENABLE([vala],
 have_vala=no
 if test "x$found_introspection" = "xyes"
 then
-    VALA_MODULES="libvala-0.12"
+    VALA_MODULES="libvala-0.14"
     PKG_CHECK_MODULES(VALA, $VALA_MODULES,
-	AC_DEFINE(HAVE_VALA, [], [Defined if Vala support is enabled])
-	have_vala=yes
-    )
+        if test "$enable_vala" = "yes" -o "$enable_vala" = "auto"
+	then
+            have_vala=yes
+	    AC_DEFINE(HAVE_VALA, [], [Defined if Vala support is enabled])
+	fi,
+	if test "$enable_vala" = "yes"
+	then
+	    AC_MSG_ERROR([Vala support requested but not found])
+	fi)
+
     if test "x$have_vala" = "xyes"
     then
 	    VALA_BINDIR=`pkg-config $VALA_MODULES --variable=bindir`
@@ -490,32 +497,15 @@ then
 	    VALA_VAPIGEN=`pkg-config $VALA_MODULES --variable=vapigen`
 	    AC_SUBST(VALA_VAPIGEN)
 	    VALA_VAPIDIR=`pkg-config $VALA_MODULES --variable=vapidir`
-	    AC_SUBST(VALA_VAPIDIR)
-	    
-        if test "x$enable_vala" = xauto
-        then
-            enable_vala=yes
-        fi
-    else
-        if test "x$enable_vala" = xyes
-        then
-            AC_MSG_ERROR([Vala support was requested but not available])
-        fi
-        if test "x$enable_vala" = xauto
-        then
-            enable_gda_gi=no
-        fi
+	    AC_SUBST(VALA_VAPIDIR)	    
     fi
 else
     if test "x$enable_vala" = xyes
     then
 	AC_MSG_ERROR([Vala bindings for Libgda are requested but not available])
     fi
-    if test "x$enable_vala" = xauto
-    then
-    	enable_vala=no
-    fi
 fi
+enable_vala=$have_vala
 AM_CONDITIONAL(ENABLE_VALA, [test "$enable_vala" = "yes"])
 
 
