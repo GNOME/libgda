@@ -1100,9 +1100,14 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 	for (mod = MOD_INSERT; mod < MOD_LAST; mod++) {
 		if (formgrid->priv->mod_stmt[mod]) {
 			gchar *sql;
+			GError *lerror = NULL;
 			sql = gda_statement_to_sql_extended (formgrid->priv->mod_stmt[mod], NULL, NULL,
-							     GDA_STATEMENT_SQL_PARAMS_LONG, NULL, NULL);
-			g_print ("STMT[%d] = [%s]\n", mod, sql);
+							     GDA_STATEMENT_SQL_PARAMS_LONG, NULL, &lerror);
+			g_print ("STMT[%d] = [%s]", mod, sql ? sql : "ERR");
+			if (!sql)
+				g_print (" --- %s", lerror && lerror->message ? lerror->message : "No detail");
+			g_clear_error (&lerror);
+			g_print ("\n");
 			g_free (sql);
 		}
 		else
