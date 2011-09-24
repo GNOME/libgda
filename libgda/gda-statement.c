@@ -784,9 +784,14 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 			dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
 
 		if (!dh) {
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     _("No data handler for type '%s'"), g_type_name (G_VALUE_TYPE (value)));
-			return NULL;
+			if (G_VALUE_TYPE (value) == GDA_TYPE_DEFAULT)
+				return g_strdup ("DEFAULT");
+			else {
+				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+					     _("No data handler for type '%s'"),
+					     g_type_name (G_VALUE_TYPE (value)));
+				return NULL;
+			}
 		}
 		return gda_data_handler_get_sql_from_value (dh, value);
 	}
