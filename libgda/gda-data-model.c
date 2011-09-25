@@ -2398,6 +2398,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			    (coltype == G_TYPE_INT) ||
 			    (coltype == GDA_TYPE_NUMERIC) ||
 			    (coltype == G_TYPE_FLOAT) ||
+			    (coltype == G_TYPE_DOUBLE) ||
 			    (coltype == GDA_TYPE_SHORT) ||
 			    (coltype == GDA_TYPE_USHORT) ||
 			    (coltype == G_TYPE_CHAR) ||
