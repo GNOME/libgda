@@ -530,11 +530,14 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			type = "binary";
 		else if (gtype == G_TYPE_STRING)
 			type = "string";
-		else if ((gtype == G_TYPE_INT) || (gtype == G_TYPE_UINT) || 
-			 (gtype == G_TYPE_INT64) || (gtype == G_TYPE_UINT64) ||
-			 (gtype == GDA_TYPE_SHORT) || (gtype == GDA_TYPE_USHORT) ||
-			 (gtype == G_TYPE_LONG) || (gtype == G_TYPE_ULONG))
+		else if ((gtype == G_TYPE_INT) || (gtype == GDA_TYPE_SHORT))
 			type = "integer";
+		else if ((gtype == G_TYPE_UINT) || (gtype == GDA_TYPE_USHORT))
+			type = "unsigned integer";
+		else if ((gtype == G_TYPE_INT64) || (gtype == G_TYPE_LONG))
+			type = "int64";
+		else if ((gtype == G_TYPE_UINT64) || (gtype == G_TYPE_ULONG))
+			type = "uint64";
 		else if ((gtype == G_TYPE_DOUBLE) || (gtype == G_TYPE_FLOAT))
 			type = "real";
 		else if (gtype == G_TYPE_DATE)
