@@ -271,16 +271,21 @@ database's schema).
 .IP \fB.o\fP
 Sends output to a file or |pipe. Full syntax is: \fB.o <FILE_NAME>\fP or \fB.o |<COMMAND>\fP.
 .IP \fB.pivot\fP
-Performs data summarization on a data set. Full syntax is: \fB.pivot <SELECT> <ROW_FIELDS> <COLUMN_FIELDS> [<DATA_FIELDS> [...]]\fP.
+Performs data summarization on a data set. Full syntax is: \fB.pivot <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> [...]]]\fP.
 
 The \fI<SELECT>\fP defines the data set to perform summarization on.
 
 The \fI<ROW_FIELDS>\fP defines the fields from the data set from which each individual value will
 yield to a row in the analysis (it can be any valid selectable SQL expression on the data set's
 fields); multiple expressions can be provided, separated by commas (forming a valid SQL expression).
+In this case a row will be created for each combination of values of each of the expression.
 
 The \fI<COLUMN_FIELDS>\fP defines the fields from the data set from which each individual value will
-yield to a column in the analysis. Its syntax is similar to the \fI<ROW_FIELDS>\fP one.
+yield to a column in the analysis. Its syntax is similar to the \fI<ROW_FIELDS>\fP one. If not
+specified (or if specified as a single dash ("-") caracter), then only one column will be created.
+Note that, if the \fI<DATA_FIELDS>\fP argument is
+specified each column created from the \fI<COLUMN_FIELDS>\fP will in fact lead to the creation
+of as many \fI<DATA_FIELDS>\fP arguments provided.
 
 The \fI<DATA_FIELDS>\fP arguments are entirely optional and indicates the way data summarization
 is done for each pair of (row,column) values (the default is to count occurrences). The syntax
@@ -293,6 +298,8 @@ Examples:
 \fB.pivot "SELECT * FROM food" person food\fP
 
 \fB.pivot "SELECT * FROM products" category "CASE WHEN price < 15 THEN 'low' ELSE 'high' END" [AVG]price \fP
+
+\fB.pivot "SELECT * FROM sales" category,product - [AVG]quantity\fP
 
 
 .IP \fB.q\fP

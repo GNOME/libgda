@@ -4671,11 +4671,8 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 			     _("Missing row fields specifications"));
 		return NULL;
 	}
-	if (!column_fields) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing column fields specifications"));
-		return NULL;
-	}
+	if (column_fields && !strcmp (column_fields, "-"))
+		column_fields = NULL;
 
 	/* execute SELECT */
 	gboolean was_in_trans;
@@ -4705,7 +4702,8 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 		return NULL;
 	}
 
-	if (! gda_data_pivot_add_field (pivot, GDA_DATA_PIVOT_FIELD_COLUMN,
+	if (column_fields &&
+	    ! gda_data_pivot_add_field (pivot, GDA_DATA_PIVOT_FIELD_COLUMN,
 					column_fields, NULL, error)) {
 		g_object_unref (pivot);
 		return NULL;
@@ -4717,6 +4715,7 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 	gint i;
 	for (i = 3; args[i] && *args[i]; i++) {
 		const gchar *df = args[i];
+		const gchar *alias = "count";
 		GdaDataPivotAggregate agg = GDA_DATA_PIVOT_COUNT;
 		if (*df == '[') {
 			const gchar *tmp;
@@ -4729,16 +4728,26 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 				return NULL;
 			}
 			df++;
-			if (! g_ascii_strncasecmp (df, "sum", 3) && (df[3] == ']'))
+			if (! g_ascii_strncasecmp (df, "sum", 3) && (df[3] == ']')) {
 				agg = GDA_DATA_PIVOT_SUM;
-			else if (! g_ascii_strncasecmp (df, "avg", 3) && (df[3] == ']'))
+				alias = "sum";
+			}
+			else if (! g_ascii_strncasecmp (df, "avg", 3) && (df[3] == ']')) {
 				agg = GDA_DATA_PIVOT_AVG;
-			else if (! g_ascii_strncasecmp (df, "max", 3) && (df[3] == ']'))
+				alias = "avg";
+			}
+			else if (! g_ascii_strncasecmp (df, "max", 3) && (df[3] == ']')) {
 				agg = GDA_DATA_PIVOT_MAX;
-			else if (! g_ascii_strncasecmp (df, "min", 3) && (df[3] == ']'))
+				alias = "max";
+			}
+			else if (! g_ascii_strncasecmp (df, "min", 3) && (df[3] == ']')) {
 				agg = GDA_DATA_PIVOT_MIN;
-			else if (! g_ascii_strncasecmp (df, "count", 5) && (df[5] == ']'))
+				alias = "min";
+			}
+			else if (! g_ascii_strncasecmp (df, "count", 5) && (df[5] == ']')) {
 				agg = GDA_DATA_PIVOT_COUNT;
+				alias = "count";
+			}
 			else {
 				g_timer_destroy (timer);
 				g_object_unref (pivot);
@@ -4748,11 +4757,15 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 			}
 			df = tmp+1;
 		}
-		if (! gda_data_pivot_add_data (pivot, agg, df, NULL, error)) {
+		gchar *tmp;
+		tmp = g_strdup_printf ("%s_%s", alias, df);
+		if (! gda_data_pivot_add_data (pivot, agg, df, tmp, error)) {
+			g_free (tmp);
 			g_timer_destroy (timer);
 			g_object_unref (pivot);
 			return NULL;
 		}
+		g_free (tmp);
 	}
 
 	if (! gda_data_pivot_populate (pivot, error)) {

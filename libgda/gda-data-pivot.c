@@ -1005,12 +1005,6 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 	gboolean retval = FALSE;
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (pivot), FALSE);
 
-	if (!pivot->priv->column_fields || (pivot->priv->column_fields->len == 0)) {
-		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_USAGE_ERROR,
-			     "%s", _("No column field defined"));
-		return FALSE;
-	}
-
 	if (!pivot->priv->row_fields || (pivot->priv->row_fields->len == 0)) {
 		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_USAGE_ERROR,
 			     "%s", _("No row field defined"));
@@ -1037,11 +1031,13 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 			g_string_append (string, ", ");
 		g_string_append (string, part);
 	}
-	for (i = 0; i < pivot->priv->column_fields->len; i++) {
-		gchar *part;
-		part = g_array_index (pivot->priv->column_fields, gchar *, i);
-		g_string_append (string, ", ");
-		g_string_append (string, part);
+	if (pivot->priv->column_fields) {
+		for (i = 0; i < pivot->priv->column_fields->len; i++) {
+			gchar *part;
+			part = g_array_index (pivot->priv->column_fields, gchar *, i);
+			g_string_append (string, ", ");
+			g_string_append (string, part);
+		}
 	}
 	if (pivot->priv->data_fields) {
 		for (i = 0; i < pivot->priv->data_fields->len; i++) {
@@ -1175,17 +1171,23 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 		/*
 		 * Column handling
 		 */
-		for (col = 0; col < (gint) pivot->priv->column_fields->len;
-		     col++) {
-			const GValue *ivalue;
+		gint colsmax;
+		if (pivot->priv->column_fields)
+			colsmax = (gint) pivot->priv->column_fields->len;
+		else
+			colsmax = 1;
+		for (col = 0; col < colsmax; col++) {
+			const GValue *ivalue = NULL;
 			GError *lerror = NULL;
-			ivalue = gda_data_model_iter_get_value_at_e (iter,
-								     col + pivot->priv->row_fields->len,
-								     &lerror);
-			if (!ivalue || lerror) {
-				clean_previous_population (pivot);
-				g_propagate_error (error, lerror);
-				goto out;
+			if (pivot->priv->column_fields) {
+				ivalue = gda_data_model_iter_get_value_at_e (iter,
+									     col + pivot->priv->row_fields->len,
+									     &lerror);
+				if (!ivalue || lerror) {
+					clean_previous_population (pivot);
+					g_propagate_error (error, lerror);
+					goto out;
+				}
 			}
 
 			gint di, dimax;
@@ -1215,25 +1217,35 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 					/* create new column */
 					GdaColumn *column;
 					GString *name;
-					gchar *tmp;
 
 					name = g_string_new ("");
-					if (pivot->priv->column_fields->len > 1) {
+					if (pivot->priv->column_fields &&
+					    pivot->priv->column_fields->len > 1) {
 						GdaColumn *column;
 						column = gda_data_model_describe_column (model,
 											 pivot->priv->row_fields->len + col);
 						g_string_append_printf (name, "[%s]",
 									gda_column_get_name (column));
 					}
-					tmp = gda_value_stringify (ivalue);
-					g_string_append (name, tmp);
-					g_free (tmp);
+					if (ivalue) {
+						gchar *tmp;
+						tmp = gda_value_stringify (ivalue);
+						g_string_append (name, tmp);
+						g_free (tmp);
+					}
 					if ((di >= 0) && (dimax > 0)) {
 						GdaColumn *column;
-						column = gda_data_model_describe_column (model,
-											 pivot->priv->row_fields->len + pivot->priv->column_fields->len + di);
-						g_string_append_printf (name, "[%s]",
-									gda_column_get_name (column));
+						gint vcol;
+						vcol = pivot->priv->row_fields->len + di;
+						if (pivot->priv->column_fields)
+							vcol += pivot->priv->column_fields->len;
+						column = gda_data_model_describe_column (model, vcol);
+						if (pivot->priv->column_fields)
+							g_string_append_printf (name, "[%s]",
+										gda_column_get_name (column));
+						else
+							g_string_append (name,
+									 gda_column_get_name (column));	
 					}
 
 					column = gda_column_new ();
@@ -1249,7 +1261,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 					
 					ColumnData *ncoldata;
 					ncoldata = g_new (ColumnData, 1);
-					ncoldata->value = gda_value_copy ((GValue*) ivalue);
+					ncoldata->value = ivalue ? gda_value_copy ((GValue*) ivalue) : NULL;
 					ncoldata->column_fields_index = col;
 					ncoldata->data_pos = di;
 					colindex = g_new (gint, 1);
@@ -1263,9 +1275,11 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 				if (di >= 0) {
 					const GValue *cvalue;
 					GError *lerror = NULL;
-					cvalue = gda_data_model_iter_get_value_at_e (iter,
-										     pivot->priv->row_fields->len + pivot->priv->column_fields->len + di,
-										     &lerror);
+					gint vcol;
+					vcol = pivot->priv->row_fields->len + di;
+					if (pivot->priv->column_fields)
+						vcol += pivot->priv->column_fields->len;
+					cvalue = gda_data_model_iter_get_value_at_e (iter, vcol, &lerror);
 					if (!cvalue || lerror) {
 						g_object_unref (nrow);
 						g_propagate_error (error, lerror);
@@ -1307,7 +1321,6 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 	}
 	if (gda_data_model_iter_get_row (iter) != -1) {
 		/* an error occurred! */
-		g_print ("////////\n");
 		goto out;
 	}
 
@@ -1355,6 +1368,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 			av = gda_row_get_value (arow, i);
 
 			CellData ccdata, *pcdata;
+			GType coltype = GDA_TYPE_NULL;
 			ccdata.row = j;
 			ccdata.col = i;
 			ccdata.values = NULL;
@@ -1363,8 +1377,8 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 			if (pcdata) {
 				cell_data_compute_aggregate (pcdata);
 				if (pcdata->computed_value) {
-					gda_value_reset_with_type (av,
-							     G_VALUE_TYPE (pcdata->computed_value));
+					coltype = G_VALUE_TYPE (pcdata->computed_value);
+					gda_value_reset_with_type (av, coltype);
 					g_value_copy (pcdata->computed_value, av);
 				}
 				else
@@ -1375,9 +1389,12 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 				GdaDataPivotAggregate agg;
 				agg = GPOINTER_TO_INT (g_object_get_data ((GObject*) ecolumn, "agg"));
 				empty = aggregate_get_empty_value (agg);
-				gda_value_reset_with_type (av, G_VALUE_TYPE (empty));
+				coltype = G_VALUE_TYPE (empty);
+				gda_value_reset_with_type (av, coltype);
 				g_value_copy (empty, av);
 			}
+			if (coltype != GDA_TYPE_NULL)
+				gda_column_set_g_type (ecolumn, coltype);
 		}
 	}
 	pivot->priv->results = results;
@@ -1570,7 +1587,10 @@ guint column_data_hash (gconstpointer key)
 {
 	ColumnData *cd;
 	cd = (ColumnData*) key;
-	return _gda_value_hash (cd->value) + cd->column_fields_index + cd->data_pos;
+	if (cd->value)
+		return _gda_value_hash (cd->value) + cd->column_fields_index + cd->data_pos;
+	else
+		return cd->column_fields_index + cd->data_pos;
 }
 
 static gboolean
@@ -1582,7 +1602,12 @@ column_data_equal (gconstpointer a, gconstpointer b)
 	if ((cda->column_fields_index != cdb->column_fields_index) ||
 	    (cda->data_pos != cdb->data_pos))
 		return FALSE;
-	return gda_value_differ (cda->value, cdb->value) ? FALSE : TRUE;
+	if (cda->value && cdb->value)
+		return gda_value_differ (cda->value, cdb->value) ? FALSE : TRUE;
+	else if (cda->value || cdb->value)
+		return FALSE;
+	else
+		return TRUE;
 }
 
 static void
