@@ -167,6 +167,31 @@ int main() {
 		    fi
 	        done
 	    fi
+	else
+	    AC_MSG_CHECKING([checking for Mysql headers])
+	    save_CFLAGS="$CFLAGS"
+	    CFLAGS="$CFLAGS $MYSQL_CFLAGS"
+            save_LIBS="$LIBS"
+	    LIBS="$LIBS $MYSQL_LIBS"
+
+            AC_LINK_IFELSE([AC_LANG_SOURCE([
+#include <mysql.h>
+int main() {
+    printf("%p", mysql_real_connect);
+    return 0;
+}
+])],
+	    mysql_found=yes)
+	    CFLAGS="$save_CFLAGS"
+            LIBS="$save_LIBS"
+	    if test "x$mysql_found" = xyes
+	    then
+	        AC_MSG_RESULT([found])
+	    else
+	        MYSQL_LIBS=""
+		MYSQL_CFLAGS=""
+	        AC_MSG_RESULT([not found])
+	    fi
         fi
 	if test "x$MYSQL_LIBS" = x
 	then
