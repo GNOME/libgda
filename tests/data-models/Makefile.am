@@ -86,7 +86,8 @@ EXTRA_DIST = \
 	cities2.xml \
 	cities3.xml \
 	countriesA.xml \
-	countriesB.xml
+	countriesB.xml \
+	pivot.db
 
 CLEANFILES = \
 	pmodel.db pmodel.db-journal \
