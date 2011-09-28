@@ -1255,8 +1255,20 @@ parse_field_spec (GdaDataPivot *pivot, const gchar *field, const gchar *alias, G
 
 	parser = gda_connection_create_parser (pivot->priv->vcnc);
 	g_assert (parser);
-	if (alias)
-		sql = g_strdup_printf ("SELECT %s AS %s FROM " TABLE_NAME, field, alias);
+	if (alias && *alias) {
+		gchar *tmp, *ptr;
+		tmp = g_strdup (alias);
+		for (ptr = tmp; *ptr; ptr++) {
+			if (g_ascii_isdigit (*ptr)) {
+				if (ptr == tmp)
+					*ptr = '_';
+			}
+			else if (! g_ascii_isalpha (*ptr))
+				*ptr = '_';
+		}
+		sql = g_strdup_printf ("SELECT %s AS %s FROM " TABLE_NAME, field, tmp);
+		g_free (tmp);
+	}
 	else
 		sql = g_strdup_printf ("SELECT %s FROM " TABLE_NAME, field);
 	stmt = gda_sql_parser_parse_string (parser, sql, &remain, &lerror);
