@@ -59,7 +59,7 @@ _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 		GHashTable *hash;
 		cdata->types_hash = g_hash_table_new (nocase_str_hash, nocase_str_equal);
 		hash = cdata->types_hash;
-#define NB_DECLARED_G_TYPES 12
+#define NB_DECLARED_G_TYPES 14
 		cdata->types_array = g_new (GType, NB_DECLARED_G_TYPES);
 		array = cdata->types_array;
 
@@ -126,6 +126,17 @@ _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 		i++;
 		array [i] = type;
 		g_hash_table_insert (hash, "uint64", array + i);
+
+		type = GDA_TYPE_SHORT;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "short", array + i);
+
+		type = GDA_TYPE_USHORT;
+		i++;
+		array [i] = type;
+		g_hash_table_insert (hash, "ushort", array + i);
+		g_hash_table_insert (hash, "unsigned short", array + i);
 		g_assert (i < NB_DECLARED_G_TYPES);
 	}
 }

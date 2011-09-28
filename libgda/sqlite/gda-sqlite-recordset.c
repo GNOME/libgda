@@ -542,9 +542,9 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					else
 						gda_value_set_timestamp (value, &timestamp);
 				}
-				else if (type == G_TYPE_INT) {
+				else if (type == G_TYPE_CHAR) {
 					gint64 i;
-					i = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
 					if ((i > G_MAXINT8) || (i < G_MININT8)) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
@@ -556,9 +556,9 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						g_value_set_char (value, (gchar) i);
 				}
 				else if (type == G_TYPE_UCHAR) {
-					guint64 i;
+					gint64 i;
 					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
-					if (i > G_MAXUINT8) {
+					if ((i > G_MAXUINT8) || (i < 0)) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
@@ -567,6 +567,32 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 					else
 						g_value_set_uchar (value, (guchar) i);
+				}
+				else if (type == GDA_TYPE_SHORT) {
+					gint64 i;
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					if ((i > G_MAXSHORT) || (i < G_MINSHORT)) {
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     "%s", _("Integer value is too big"));
+						gda_row_invalidate_value_e (prow, value, lerror);
+					}
+					else
+						gda_value_set_short (value, (guchar) i);
+				}
+				else if (type == GDA_TYPE_USHORT) {
+					gint64 i;
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					if ((i > G_MAXUSHORT) || (i < 0)) {
+						GError *lerror = NULL;
+						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
+							     GDA_SERVER_PROVIDER_DATA_ERROR,
+							     "%s", _("Integer value is too big"));
+						gda_row_invalidate_value_e (prow, value, lerror);
+					}
+					else
+						gda_value_set_ushort (value, (guchar) i);
 				}
 				else {
 					GError *lerror = NULL;
