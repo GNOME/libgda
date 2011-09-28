@@ -112,6 +112,13 @@ gda_g_type_to_string (GType type)
  * some type synonyms such as:
  * <itemizedlist>
  *   <listitem><para>"int" for G_TYPE_INT</para></listitem>
+ *   <listitem><para>"uint" for G_TYPE_UINT</para></listitem>
+ *   <listitem><para>"int64" for G_TYPE_INT64</para></listitem>
+ *   <listitem><para>"uint64" for G_TYPE_UINT64</para></listitem>
+ *   <listitem><para>"char" for G_TYPE_CHAR</para></listitem>
+ *   <listitem><para>"uchar" for G_TYPE_UCHAR</para></listitem>
+ *   <listitem><para>"short" for GDA_TYPE_SHORT</para></listitem>
+ *   <listitem><para>"ushort" for GDA_TYPE_USHORT</para></listitem>
  *   <listitem><para>"string" for G_TYPE_STRING</para></listitem>
  *   <listitem><para>"date" for G_TYPE_DATE</para></listitem>
  *   <listitem><para>"time" for GDA_TYPE_TIME</para></listitem>
@@ -134,6 +141,8 @@ gda_g_type_from_string (const gchar *str)
 	if (type == 0) {
 		if (!g_ascii_strcasecmp (str, "int"))
 			type = G_TYPE_INT;
+		else if (!g_ascii_strcasecmp (str, "uint"))
+			type = G_TYPE_UINT;
 		else if (!g_ascii_strcasecmp (str, "string"))
 			type = G_TYPE_STRING;
 		else if (!g_ascii_strcasecmp (str, "date"))
@@ -150,6 +159,18 @@ gda_g_type_from_string (const gchar *str)
 			type = GDA_TYPE_BINARY;
 		else if (!strcmp (str, "null"))
 			type = GDA_TYPE_NULL;
+		else if (!strcmp (str, "short"))
+			type = GDA_TYPE_SHORT;
+		else if (!strcmp (str, "ushort"))
+			type = GDA_TYPE_USHORT;
+		else if (!g_ascii_strcasecmp (str, "int64"))
+			type = G_TYPE_INT64;
+		else if (!g_ascii_strcasecmp (str, "uint64"))
+			type = G_TYPE_UINT64;
+		else if (!g_ascii_strcasecmp (str, "char"))
+			type = G_TYPE_CHAR;
+		else if (!g_ascii_strcasecmp (str, "uchar"))
+			type = G_TYPE_UCHAR;
 		else
 			/* could not find a valid GType for @str */
 			type = G_TYPE_INVALID;
