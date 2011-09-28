@@ -530,9 +530,9 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			type = "binary";
 		else if (gtype == G_TYPE_STRING)
 			type = "string";
-		else if ((gtype == G_TYPE_INT) || (gtype == GDA_TYPE_SHORT))
+		else if (gtype == G_TYPE_INT)
 			type = "integer";
-		else if ((gtype == G_TYPE_UINT) || (gtype == GDA_TYPE_USHORT))
+		else if (gtype == G_TYPE_UINT)
 			type = "unsigned integer";
 		else if ((gtype == G_TYPE_INT64) || (gtype == G_TYPE_LONG))
 			type = "int64";
@@ -546,7 +546,11 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			type = "time";
 		else if (gtype == GDA_TYPE_TIMESTAMP)
 			type = "timestamp";
-		else 
+		else if (gtype == GDA_TYPE_SHORT)
+			type = "short";
+		else if (gtype == GDA_TYPE_USHORT)
+			type = "unsigned short";
+		else
 			type = "text";
 
 		g_string_append (sql, newcolname);
