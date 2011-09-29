@@ -101,7 +101,7 @@ EXTRALDFLAGS=
 endif
 
 if HAVE_GOOCANVAS
-CANVAS_LDADD=$(top_builddir)/tools/browser/canvas/libcanvas.la
+CANVAS_LDADD=$(top_builddir)/tools/browser/canvas/libcanvas.la -lm
 endif
 
 .rc.o:
