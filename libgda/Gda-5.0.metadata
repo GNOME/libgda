@@ -1,2 +1,30 @@
 // Vala Bindings for GDA
 Gda cheader_filename="libgda/libgda.h"
+ValueList type="GLib.List<GLib.Value>"
+ServerProviderMeta skip
+ServerProviderXa skip
+// libxml2: replace xml.NodePtr by xml.Node* used by Vala bindings
+Set.new_from_spec_node.xml_spec type="Xml.Node*"
+DataModel.add_data_from_xml_node.node type="Xml.Node*"
+utility_data_model_dump_data_to_xml.parent type="Xml.Node*"
+utility_holder_load_attributes.node type="Xml.Node*"
+value_new_from_xml.node type="Xml.Node*"
+DataModelImport.new_xml_node.node type="Xml.Node*"
+ServerOperation.load_data_from_xml.node type="Xml.Node*"
+// type overrides for GIR not well detected
+MetaStore.meta_changed.changes type="GLib.SList<Gda.MetaStoreChange>"
+MetaStore.meta_changed.changes out=true
+PStmt.param_ids type="GLib.List<string>"
+PStmt.tmpl_columns type="GLib.List<Gda.Column>"
+ServerProvider.statement_to_sql.params_used type="GLib.List<Gda.Holder>"
+Set.groups_list type="GLib.List<Gda.SetGroup>"
+Set.nodes_list type="GLib.List<Gda.SetNode>"
+Set.sources_list type="GLib.List<Gda.SetSource>"
+TransactionStatus.events type="GLib.List<Gda.TransactionStatusEvent>"
+MetaDbObject.depend_list type="GLib.List<Gda.MetaDbObject>"
+MetaTable.columns type="GLib.List<Gda.MetaTableColumn>"
+MetaTable.reverse_fk_list type="GLib.List<Gda.MetaTableForeignKey>"
+MetaTable.fk_list type="GLib.List<Gda.MetaTableForeignKey>"
+SetGroup.nodes type="GLib.List<Gda.SetNode>"
+SetSource.nodes type="GLib.List<Gda.SetNode>"
+SqlRenderingContext.params_used type="GLib.List<Gda.Holder>"
