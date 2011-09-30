@@ -361,6 +361,8 @@ gda_data_model_reset (GdaDataModel *model)
  * Disables notifications of changes on the given data model. To
  * re-enable notifications again, you should call the
  * #gda_data_model_thaw function.
+ *
+ * Virtual: i_set_notify
  */
 void
 gda_data_model_freeze (GdaDataModel *model)
@@ -397,6 +399,8 @@ gda_data_model_thaw (GdaDataModel *model)
  * Get the attributes of @model such as how to access the data it contains if it's modifiable, etc.
  *
  * Returns: (transfer none): an ORed value of #GdaDataModelAccessFlags flags
+ *
+ * Virtual: i_get_access_flags
  */
 GdaDataModelAccessFlags
 gda_data_model_get_access_flags (GdaDataModel *model)
@@ -417,6 +421,8 @@ gda_data_model_get_access_flags (GdaDataModel *model)
  * @model: a #GdaDataModel object.
  *
  * Returns: the number of rows in the given data model, or -1 if the number of rows is not known
+ *
+ * Virtual: i_get_n_rows
  */
 gint
 gda_data_model_get_n_rows (GdaDataModel *model)
@@ -434,6 +440,8 @@ gda_data_model_get_n_rows (GdaDataModel *model)
  * @model: a #GdaDataModel object.
  *
  * Returns: the number of columns in the given data model.
+ *
+ * Virtual: i_get_n_columns
  */
 gint
 gda_data_model_get_n_columns (GdaDataModel *model)
@@ -463,6 +471,8 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * and should not be destroyed; any modification will affect the whole data model.
  *
  * Returns: (transfer none): the description of the column.
+ *
+ * Virtual: i_describe_column
  */
 GdaColumn *
 gda_data_model_describe_column (GdaDataModel *model, gint col)
@@ -636,6 +646,8 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  *
  * Returns: (transfer none): a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
+ *
+ * Virtual: i_get_value_at
  */
 const GValue *
 gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
@@ -720,6 +732,8 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
  * if a row was added to @model.
  *
  * Returns: (transfer none): the attributes as an ORed value of #GdaValueAttribute
+ *
+ * Virtual: i_get_attributes_at
  */
 GdaValueAttribute
 gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
@@ -752,6 +766,8 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: TRUE if the value in the data model has been updated and no error occurred
+ *
+ * Virtual: i_set_value_at
  */
 gboolean
 gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error)
@@ -785,6 +801,8 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: %TRUE if the value in the data model has been updated and no error occurred
+ *
+ * Virtual: i_set_values
  */
 gboolean
 gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError **error)
@@ -851,6 +869,8 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * <programlisting><![CDATA[iter = g_object_new (GDA_TYPE_DATA_MODEL_ITER, "data-model", proxy, NULL);]]></programlisting>
  *
  * Returns: (transfer full): a #GdaDataModelIter object, or %NULL if an error occurred
+ *
+ * Virtual: i_create_iter
  */
 GdaDataModelIter *
 gda_data_model_create_iter (GdaDataModel *model)
@@ -879,6 +899,8 @@ gda_data_model_create_iter (GdaDataModel *model)
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: the number of the added row, or -1 if an error occurred
+ *
+ * Virtual: i_append_values
  */
 gint
 gda_data_model_append_values (GdaDataModel *model, const GList *values, GError **error)
@@ -907,6 +929,8 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: the number of the added row, or -1 if an error occurred
+ *
+ * Virtual: i_append_row
  */
 gint
 gda_data_model_append_row (GdaDataModel *model, GError **error)
@@ -942,6 +966,8 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
+ *
+ * Virtual: i_remove_row
  */
 gboolean
 gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
@@ -976,6 +1002,8 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
  * NOTE: the @cols_index array MUST contain a column index for each value in @values
  *
  * Returns: the requested row number, of -1 if not found
+ *
+ * Virtual: i_find_row
  */
 gint
 gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *cols_index)
@@ -1044,6 +1072,8 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
  *
  * Sends a hint to the data model. The hint may or may not be handled by the data
  * model, depending on its implementation
+ *
+ * Virtual: i_send_hint
  */
 void
 gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value)
