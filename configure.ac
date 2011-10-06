@@ -499,7 +499,7 @@ AC_ARG_ENABLE([vala],
 have_vala=no
 if test "x$found_introspection" = "xyes"
 then
-    VALA_MODULES="libvala-0.14"
+    VALA_MODULES="libvala-0.14 >= 0.14"
     PKG_CHECK_MODULES(VALA, $VALA_MODULES,
 	AC_DEFINE(HAVE_VALA, [], [Defined if Vala support is enabled])
 	have_vala=yes
