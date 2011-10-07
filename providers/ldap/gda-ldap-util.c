@@ -1138,8 +1138,10 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 			return NULL;
 		}
 		else if (nb_entries > 1) {
-			g_set_error (error, 0, 0,
-				     _("LDAP server returned more than one entry with DN '%s'"), real_dn);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     _("LDAP server returned more than one entry with DN '%s'"),
+				     real_dn);
 			return NULL;
 		}
 
@@ -1270,7 +1272,9 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 				}
 				g_array_free (children, TRUE);
 				children = NULL;
-				g_set_error (error, 0, 0,
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+					     "%s",
 					     _("Could not parse distinguished name returned by LDAP server"));
 				break;
 			}

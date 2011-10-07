@@ -320,7 +320,9 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
 	g_free (str);
 	if (rc != SQLITE_OK) {
-		g_set_error (error, 0, 0, "%s", zErrMsg);
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     "%s", zErrMsg);
 		SQLITE3_CALL (sqlite3_free) (zErrMsg);
 		gda_vconnection_data_model_table_data_free (td);
 		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
@@ -367,8 +369,9 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 
 	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (!td) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Table to remove not found"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("Table to remove not found"));
 		return FALSE;
 	}
 
@@ -377,7 +380,9 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 	g_free (str);
 
 	if (rc != SQLITE_OK) {
-		g_set_error (error, 0, 0, "%s", zErrMsg);
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     "%s", zErrMsg);
 		SQLITE3_CALL (sqlite3_free) (zErrMsg);
 		return FALSE;
 	}

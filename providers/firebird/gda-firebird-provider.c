@@ -551,7 +551,8 @@ gda_firebird_provider_create_operation (GdaServerProvider *provider, GdaConnecti
         g_free (str);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_FILE_NOT_FOUND_ERROR,
+			     _("Missing spec. file '%s'"), file);
                 return NULL;
         }
 
@@ -589,7 +590,8 @@ gda_firebird_provider_render_operation (GdaServerProvider *provider, GdaConnecti
         g_free (str);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_FILE_NOT_FOUND_ERROR,
+			     _("Missing spec. file '%s'"), file);
                 return NULL;
         }
         if (!gda_server_operation_is_valid (op, file, error)) {

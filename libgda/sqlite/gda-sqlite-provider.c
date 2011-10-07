@@ -1184,7 +1184,9 @@ gda_sqlite_provider_create_operation (GdaServerProvider *provider, G_GNUC_UNUSED
 			return op;
 		}
 		else {
-			g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+			g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+				     GDA_SERVER_OPERATION_XML_ERROR,
+				     _("Missing spec. file '%s'"), str);
 			g_free (str);
 			return NULL;
 		}
@@ -1224,7 +1226,9 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
 		const gchar *contents;
 		contents = emb_get_file (str);
 		if (!contents) {
-			g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+			g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+				     GDA_SERVER_OPERATION_XML_ERROR,
+				     _("Missing spec. file '%s'"), str);
 			g_free (str);
 			return NULL;
 		}
@@ -1319,7 +1323,9 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		g_free (filename);
 
 		if (errmsg != SQLITE_OK) {
-			g_set_error (error, 0, 0, "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
+				     "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
 			retval = FALSE;
 		}
 
@@ -1333,7 +1339,9 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 			errmsg = SQLITE3_CALL (sqlite3_key) (cdata->connection, (void*) passphrase,
 							     strlen (passphrase));
 			if (errmsg != SQLITE_OK) {
-				g_set_error (error, 0, 0, "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+					     "%s", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
 				retval = FALSE;
 			}
 			else {
@@ -1345,7 +1353,9 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 								      &pStmt, NULL);
 
 				if (res != SQLITE_OK) {
-					g_set_error (error, 0, 0, "%s",
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+						     "%s",
 						     _("Error initializing database with passphrase"));
 					retval = FALSE;
 					goto outcontents;
@@ -1354,7 +1364,9 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 				SQLITE3_CALL (sqlite3_reset) (pStmt);
 				SQLITE3_CALL (sqlite3_finalize) (pStmt);
 				if (res != SQLITE_DONE) {
-					g_set_error (error, 0, 0, "%s",
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+						     "%s",
 						     _("Error initializing database with passphrase"));
 					retval = FALSE;
 					goto outcontents;
@@ -1366,7 +1378,9 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 								      &pStmt, NULL);
 
 				if (res != SQLITE_OK) {
-					g_set_error (error, 0, 0, "%s",
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+						     "%s",
 						     _("Error initializing database with passphrase"));
 					retval = FALSE;
 					goto outcontents;
@@ -1375,7 +1389,9 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 				SQLITE3_CALL (sqlite3_reset) (pStmt);
 				SQLITE3_CALL (sqlite3_finalize) (pStmt);
 				if (res != SQLITE_DONE) {
-					g_set_error (error, 0, 0, "%s",
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+						     "%s",
 						     _("Error initializing database with passphrase"));
 					retval = FALSE;
 					goto outcontents;

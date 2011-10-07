@@ -1834,8 +1834,8 @@ gda_jdbc_provider_new (const gchar *jdbc_driver, GError **error)
 	g_return_val_if_fail (jdbc_driver, NULL);
 
 	if (!_jdbc_provider_java_vm) {
-		g_set_error (error, 0, 0, "%s", 
-			     "No JVM runtime identified (this should not happen at this point)!");
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     "%s", "No JVM runtime identified (this should not happen at this point)!");
 		return NULL;
 	}
 

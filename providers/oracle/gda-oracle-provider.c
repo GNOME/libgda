@@ -877,7 +877,8 @@ gda_oracle_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	g_free (dir);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_FILE_NOT_FOUND_ERROR,
+			     _("Missing spec. file '%s'"), str);
 		g_free (str);
                 return NULL;
         }
@@ -916,7 +917,8 @@ gda_oracle_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	g_free (dir);
 
         if (! file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_FILE_NOT_FOUND_ERROR,
+			     _("Missing spec. file '%s'"), str);
 		g_free (str);
                 return NULL;
         }

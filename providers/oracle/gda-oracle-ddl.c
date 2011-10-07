@@ -137,7 +137,9 @@ gda_oracle_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 	if (!hasfields) {
 		allok = FALSE;
-		g_set_error (error, 0, 0, "%s", _("Table to create must have at least one row"));
+		g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+                             GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+			     "%s", _("Table to create must have at least one row"));
 	}
 
 	sql = string->str;

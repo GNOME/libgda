@@ -20,6 +20,7 @@
  */
 #include <jni-wrapper.h>
 #include <gda-value.h>
+#include <gda-server-provider.h>
 
 gboolean jni_wrapper_describe_exceptions = TRUE;
 
@@ -93,8 +94,8 @@ jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
 {
 	*out_jvm = NULL;
 #ifndef JNI_VERSION_1_2
-	g_set_error (error, 0, 0, "%s", 
-		     "Java 1.2 or more is needed");
+	g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISUSE_ERROR,
+		     "%s", "Java 1.2 or more is needed");
 	return NULL;
 #else
 	GString *classpath = NULL;
@@ -107,7 +108,8 @@ jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
 	const gchar *tmp;
 
 	if (!create_func) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error,GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     "%s", 
 			     "The JNI_CreateJavaVM is not identified (as the create_func argument)");
 		return NULL;
 	}
@@ -166,8 +168,8 @@ jni_wrapper_create_vm (JavaVM **out_jvm, CreateJavaVMFunc create_func,
 	g_string_free (classpath, TRUE);
 	g_free (options[2].optionString);
 	if ((result == JNI_ERR) || !env) {
-		g_set_error (error, 0, 0, "%s", 
-			     "Can't invoke the JVM");
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     "%s", "Can't invoke the JVM");
 		return NULL;
 	}
 
@@ -378,7 +380,9 @@ jni_wrapper_handle_exception (JNIEnv *jenv, gint *out_error_code, gchar **out_sq
 			
 			if (res) {
 				if (G_VALUE_TYPE (res) == G_TYPE_STRING) {
-					g_set_error (error, 0, 0, "%s", g_value_get_string (res));
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+						     "%s", g_value_get_string (res));
 					gda_value_free (res);
 				}
 				else {
@@ -398,7 +402,9 @@ jni_wrapper_handle_exception (JNIEnv *jenv, gint *out_error_code, gchar **out_sq
 	return TRUE;
 
  fallback:
-	g_set_error (error, 0, 0, "%s", "An exception occurred");
+	g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+		     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+		     "%s", "An exception occurred");
 	gda_value_free (exc_value);
 	(*jenv)->DeleteLocalRef(jenv, exc);
 	return TRUE;
@@ -980,8 +986,8 @@ jni_wrapper_field_set (JNIEnv *jenv, JniWrapperField *field,
 	return TRUE;
 
  wrong_type:
-	g_set_error (error, 0, 0, "%s", 
-		     "Wrong value type");
+	g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+		     "%s", "Wrong value type");
 	return FALSE;
 }
 

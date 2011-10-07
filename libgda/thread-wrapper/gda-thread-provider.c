@@ -812,7 +812,9 @@ gda_thread_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return NULL;
 	}
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -865,7 +867,9 @@ gda_thread_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return NULL;
 	}
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -919,13 +923,16 @@ gda_thread_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 
 	/* If asynchronous connection opening is not supported, then exit now */
 	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
 			     "%s", _("Provider does not support asynchronous server operation"));
                 return FALSE;
 	}
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -980,7 +987,9 @@ gda_thread_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1035,7 +1044,9 @@ gda_thread_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1082,7 +1093,9 @@ gda_thread_provider_rollback_transaction (GdaServerProvider *provider, GdaConnec
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1129,7 +1142,9 @@ gda_thread_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *c
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1176,7 +1191,9 @@ gda_thread_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnecti
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1223,7 +1240,9 @@ gda_thread_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1622,7 +1641,7 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 	if (check_cnc_closed (cnc, cdata)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
-			     _("Connection is closed"));
+			     "%s", _("Connection is closed"));
 		return NULL;
 	}
 	
@@ -1753,7 +1772,9 @@ gda_thread_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1802,7 +1823,9 @@ gda_thread_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1850,7 +1873,9 @@ gda_thread_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc,
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1899,7 +1924,9 @@ gda_thread_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc,
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1947,7 +1974,9 @@ gda_thread_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 
@@ -1996,7 +2025,9 @@ gda_thread_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
 	guint jid;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, _("A connection is required"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("A connection is required"));
 		return FALSE;
 	}
 

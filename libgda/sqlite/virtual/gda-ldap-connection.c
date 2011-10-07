@@ -768,7 +768,8 @@ gda_ldap_connection_undeclare_table (GdaLdapConnection *cnc, const gchar *table_
 
 	specs =  gda_vconnection_data_model_get (GDA_VCONNECTION_DATA_MODEL (cnc), table_name);
 	if (specs && ! g_slist_find (cnc->priv->maps, specs)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
 			     _("Can't remove non LDAP virtual table"));
 		return FALSE;
 	}
@@ -815,13 +816,15 @@ gda_ldap_connection_describe_table (GdaLdapConnection *cnc, const gchar *table_n
 
 	specs =  gda_vconnection_data_model_get (GDA_VCONNECTION_DATA_MODEL (cnc), table_name);
 	if (specs && ! g_slist_find (cnc->priv->maps, specs)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
 			     _("Can't describe non LDAP virtual table"));
 		return FALSE;
 	}
 	
 	if (!specs) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
 			     _("Unknown LDAP virtual table"));
 		return FALSE;
 	}
