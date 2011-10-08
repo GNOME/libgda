@@ -1117,7 +1117,9 @@ default_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *
 		case GDA_SQL_ANY_STMT_SELECT:
 			str = context->render_select (GDA_SQL_ANY_PART (sqlstmt->contents), context, error);
 			if (!str) goto err;
+			g_string_append_c (string, '(');
 			g_string_append (string, str);
+			g_string_append_c (string, ')');
 			g_free (str);
 			break;
 		case GDA_SQL_ANY_STMT_COMPOUND:
@@ -1698,7 +1700,8 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 			goto out;
 		}
 		sqlop->sql = str;
-		if (expr->cond || expr->case_s || expr->select)
+		if ((expr->cond && expr->cond->operands && expr->cond->operands->next) ||
+		    expr->case_s || expr->select)
 			sqlop->is_composed = TRUE;
 		sql_list = g_slist_prepend (sql_list, sqlop);
 	}
@@ -1836,7 +1839,8 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 		}
 		else {
 			/* 2 or more operands */
-			if (SQL_OPERAND (sql_list->data)->is_composed) {
+			if (SQL_OPERAND (sql_list->data)->is_composed &&
+			    *(SQL_OPERAND (sql_list->data)->sql) != '(') {
 				string = g_string_new ("(");
 				g_string_append (string, SQL_OPERAND (sql_list->data)->sql);
 				g_string_append_c (string, ')');
@@ -1845,7 +1849,8 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 				string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
 			for (list = sql_list->next; list; list = list->next) {
 				g_string_append_printf (string, " %s ", multi_op);
-				if (SQL_OPERAND (list->data)->is_composed) {
+				if (SQL_OPERAND (list->data)->is_composed &&
+				    *(SQL_OPERAND (sql_list->data)->sql) != '(') {
 					g_string_append_c (string, '(');
 					g_string_append (string, SQL_OPERAND (list->data)->sql);
 					g_string_append_c (string, ')');
