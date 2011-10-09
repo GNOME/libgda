@@ -258,7 +258,9 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 				node = gda_server_operation_get_node_info (op, "/FKEY_S/%d/FKEY_FIELDS_A", i);
 				if (!node || ((nbfields = gda_data_model_get_n_rows (node->model)) == 0)) {
 					allok = FALSE;
-					g_set_error (error, 0, 0, "%s", _("No field specified in foreign key constraint"));
+					g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+						     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+						     "%s", _("No field specified in foreign key constraint"));
 				}
 				else {
 					for (j = 0; j < nbfields; j++) {
@@ -272,7 +274,9 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 						}
 						else {
 							allok = FALSE;
-							g_set_error (error, 0, 0, "%s",  
+							g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+								     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+								     "%s",  
 								     _("Empty field specified in foreign key constraint"));
 						}
 					}
@@ -286,7 +290,9 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 				}
 				else {
 					allok = FALSE;
-					g_set_error (error, 0, 0, "%s", _("No referenced table specified in foreign key constraint"));
+					g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+						     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+						     "%s", _("No referenced table specified in foreign key constraint"));
 				}
 
 				g_string_append (string, " (");
@@ -301,7 +307,9 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 					}
 					else {
 						allok = FALSE;
-						g_set_error (error, 0, 0, "%s",  
+						g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+							     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+							     "%s",  
 							     _("Empty referenced field specified in foreign key constraint"));
 					}
 				}
@@ -323,7 +331,9 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 
 	if (!hasfields) {
 		allok = FALSE;
-		g_set_error (error, 0, 0, "%s", _("Table to create must have at least one row"));
+		g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+                             GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+			     "%s", _("Table to create must have at least one row"));
 	}
 
 	/* other options */
@@ -915,7 +925,9 @@ gda_mysql_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 				g_free (tmp);
 			}
 			else {
-				g_set_error (error, 0, 0, "%s", _("Incorrect specified column name"));
+				g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+					     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+					     "%s", _("Incorrect specified column name"));
 				allok = FALSE;
 			}
 		}

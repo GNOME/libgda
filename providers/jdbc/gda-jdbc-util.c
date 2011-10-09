@@ -80,14 +80,16 @@ _gda_jdbc_get_jenv (gboolean *out_needs_detach, GError **error)
 	atres = (*_jdbc_provider_java_vm)->GetEnv (_jdbc_provider_java_vm, (void**) &env, JNI_VERSION_1_2);
 	if (atres == JNI_EDETACHED) {
 		if ((*_jdbc_provider_java_vm)->AttachCurrentThread (_jdbc_provider_java_vm, (void**) &env, NULL) < 0)
-			g_set_error (error, 0, 0, "%s", 
-				     "Could not attach JAVA virtual machine's current thread");
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     "%s", "Could not attach JAVA virtual machine's current thread");
 		else
 			*out_needs_detach = TRUE;
 	}
 	else if (atres == JNI_EVERSION)
-		g_set_error (error, 0, 0, "%s", 
-			     "Could not attach JAVA virtual machine's current thread");
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			     "%s", "Could not attach JAVA virtual machine's current thread");
 	return env;
 }
 

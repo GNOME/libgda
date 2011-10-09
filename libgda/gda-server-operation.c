@@ -1492,7 +1492,8 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 
 	/* actual data loading */
 	if (strcmp ((gchar*)node->name, "serv_op_data")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+			     GDA_SERVER_OPERATION_XML_ERROR,
 			     _("Expected tag <%s>, got <%s>"), "serv_op_data", node->name);
 		return FALSE;
 	}
@@ -1506,7 +1507,8 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 		}
 
 		if (strcmp ((gchar*)cur->name, "op_data")) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+				     GDA_SERVER_OPERATION_XML_ERROR,
 				     _("Expected tag <%s>, got <%s>"), "op_data", cur->name);
 			return FALSE;
 		}
@@ -1537,7 +1539,10 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 				switch (opnode->type) {
 				case GDA_SERVER_OPERATION_NODE_PARAMLIST:
 					if (!extension) {
-						g_set_error (error, 0, 0, "%s", 
+						g_set_error (error,
+							     GDA_SERVER_OPERATION_ERROR,
+							     GDA_SERVER_OPERATION_XML_ERROR,
+							     "%s", 
 							     _("Parameterlist values can only be set for individual parameters within it"));
 						allok = FALSE;
 					}
@@ -1594,8 +1599,9 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 				return FALSE;
 		}
 		else {
-			g_set_error (error, 0, 0, "%s", 
-				     _("Missing attribute named 'path'"));
+			g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+				     GDA_SERVER_OPERATION_XML_ERROR,
+				     "%s", _("Missing attribute named 'path'"));
 			return FALSE;
 		}
 		
@@ -2253,7 +2259,9 @@ gda_server_operation_set_value_at_path (GdaServerOperation *op, const gchar *val
 		switch (opnode->type) {
 		case GDA_SERVER_OPERATION_NODE_PARAMLIST:
 			if (!extension) {
-				g_set_error (error, 0, 0, "%s", 
+				g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+					     GDA_SERVER_OPERATION_XML_ERROR,
+					     "%s", 
 					     _("Parameterlist values can only be set for individual parameters within it"));
 				allok = FALSE;
 			}
@@ -2443,7 +2451,9 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 					value = gda_server_operation_get_value_at (op, path);
 					if (!value) {
 						valid = FALSE;
-						g_set_error (error, 0, 0,
+						g_set_error (error,
+							     GDA_SERVER_OPERATION_ERROR,
+							     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
 							     _("Missing required value for '%s'"), path);
 						break;
 					}

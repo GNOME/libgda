@@ -489,7 +489,8 @@ real_open_connection (const gchar  *host,
 
 	/* Exclusive: host/pair otherwise unix socket. */
 	if ((host || port > 0) && socket) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", 
 			     _("Cannot give a UNIX SOCKET if you also provide "
 			       "either a HOST or a PORT"));
 		return NULL;
@@ -519,11 +520,8 @@ real_open_connection (const gchar  *host,
 						  (port > 0) ? port : 0,
 						  socket, flags);
 	if (!return_mysql || mysql != return_mysql) {
-#if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 18
-		g_set_error (error, 0, 0, "%s", mysql_error (mysql));
-#else
-		g_set_error_literal (error, GDA_SERVER_PROVIDER_ERROR, 0, mysql_error (mysql));
-#endif
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+			     "%s", mysql_error (mysql));
 		g_free (mysql);
 		mysql = NULL;
 	}
@@ -533,7 +531,8 @@ real_open_connection (const gchar  *host,
 #if MYSQL_VERSION_ID < 32200
 	if (mysql &&
 	    mysql_select_db (mysql, db) != 0) {
-		g_set_error (error, 0, 0, "%s", mysql_error (mysql));
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+			     "%s", mysql_error (mysql));
 		g_free (mysql);
 		mysql = NULL;
 	}
@@ -857,7 +856,8 @@ gda_mysql_provider_create_operation (GdaServerProvider       *provider,
 	g_free (dir);
 
         if (!file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_FILE_NOT_FOUND_ERROR,
+			     _("Missing spec. file '%s'"), str);
 		g_free (str);
                 return NULL;
         }
@@ -898,7 +898,8 @@ gda_mysql_provider_render_operation (GdaServerProvider   *provider,
 	g_free (dir);
 
         if (!file) {
-                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), str);
+                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_FILE_NOT_FOUND_ERROR,
+			     _("Missing spec. file '%s'"), str);
 		g_free (str);
                 return NULL;
         }
@@ -1034,7 +1035,9 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 			g_free (sql);
 			
 			if (res) {
-			  g_set_error (error, 0, 0, "%s", mysql_error (mysql));
+			  g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				       GDA_SERVER_PROVIDER_OPERATION_ERROR,
+				       "%s", mysql_error (mysql));
 				mysql_close (mysql);
 				return FALSE;
 			}

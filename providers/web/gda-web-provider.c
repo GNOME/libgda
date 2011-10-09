@@ -625,12 +625,16 @@ gda_web_provider_create_operation (GdaServerProvider *provider, GdaConnection *c
 		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	}
 	if (!cdata) {
-		g_set_error (error, 0, 0, _("Not supported"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     "%s", _("Not supported"));
 		return NULL;
 	}
 
 	TO_IMPLEMENT;
-	g_set_error (error, 0, 0, _("Server operations not yet implemented"));
+	g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+		     GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+		     "%s", _("Server operations not yet implemented"));
 	return NULL;
 }
 
@@ -650,12 +654,16 @@ gda_web_provider_render_operation (GdaServerProvider *provider, GdaConnection *c
 		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	}
 	if (!cdata) {
-		g_set_error (error, 0, 0, _("Not supported"));
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     "%s", _("Not supported"));
 		return NULL;
 	}
 
 	TO_IMPLEMENT;
-	g_set_error (error, 0, 0, _("Server operations not yet implemented"));
+	g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+		     "%s", _("Server operations not yet implemented"));
 	return NULL;
 }
 

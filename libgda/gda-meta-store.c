@@ -1230,8 +1230,8 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 
 	view_name = xmlGetProp (node, BAD_CAST "name");
 	if (!view_name) {
-		g_set_error (error, 0, 0, "%s",  
-			     _("Missing view name from <view> node"));
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
+			     "%s", _("Missing view name from <view> node"));
 		goto onerror;
 	}
 
@@ -1270,8 +1270,8 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 			continue;
 		def = xmlNodeGetContent (cnode);
 		if (!def) {
-			g_set_error (error, 0, 0, "%s",  
-				     _("Missing view definition from <view> node"));
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
+				     "%s", _("Missing view definition from <view> node"));
 			goto onerror;
 		}
 		
@@ -1284,7 +1284,7 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 			goto onerror;
 		}
 		if (remain) {
-			g_set_error (error, 0, 0, 
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
 				     _("View definition contains more than one statement (for view '%s')"),
 				     complete_obj_name);
 			g_object_unref (stmt);
@@ -1311,8 +1311,8 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 #endif
 		}
 		else {
-			g_set_error (error, 0, 0, 
-				     _("View definition is not a selection statement (for view '%s')"), 
+			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
+				     _("View definition is not a selection statement (for view '%s')"),
 				     complete_obj_name);
 			g_object_unref (stmt);
 			goto onerror;	
@@ -1338,8 +1338,8 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 
 	table_name = xmlGetProp (node, BAD_CAST "name");
 	if (!table_name) {
-		g_set_error (error, 0, 0, "%s",  
-			     _("Missing table name from <table> node"));
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+			     "%s", _("Missing table name from <table> node"));
 		return NULL;
 	}
 
@@ -1376,8 +1376,8 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	TABLE_INFO (dbobj)->current_all = compute_prepared_stmt (klass->cpriv->parser, sql);
 	g_free (sql);
 	if (!TABLE_INFO (dbobj)->current_all) {
-		g_set_error (error, 0, 0,
-			     "Internal fatal error: could not create SELECT ALL statement (for table '%s')", 
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INTERNAL_ERROR,
+			     "Internal fatal error: could not create SELECT ALL statement (for table '%s')",
 			     complete_obj_name);
 		goto onerror;
 	}
@@ -1387,8 +1387,8 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	TABLE_INFO (dbobj)->delete_all = compute_prepared_stmt (klass->cpriv->parser, sql);
 	g_free (sql);
 	if (!TABLE_INFO (dbobj)->delete_all) {
-		g_set_error (error, 0, 0,
-			     "Internal fatal error: could not create DELETE ALL statement (for table '%s')", 
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INTERNAL_ERROR,
+			     "Internal fatal error: could not create DELETE ALL statement (for table '%s')",
 			     complete_obj_name);
 		goto onerror;
 	}
@@ -1567,8 +1567,9 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 					    (! tcol->column_type && ctype) ||
 					    (tcol->column_type && !ctype) ||
 					    (tcol->column_type && strcmp (tcol->column_type, (gchar *) ctype))) {
-						g_set_error (error, 0, 0,
-							     _("Column '%s' already exists and has different characteristics"), 
+						g_set_error (error, GDA_META_STORE_ERROR,
+							     GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+							     _("Column '%s' already exists and has different characteristics"),
 							     tcol->column_name);
 						xmlFree (cname);
 						if (ctype)
@@ -1601,8 +1602,9 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 
 			ref_table = xmlGetProp (cnode, BAD_CAST "ref_table");
 			if (!ref_table) {
-				g_set_error (error, 0, 0, 
-					     _("Missing foreign key's referenced table name (for table '%s')"), 
+				g_set_error (error, GDA_META_STORE_ERROR,
+					     GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+					     _("Missing foreign key's referenced table name (for table '%s')"),
 					     complete_obj_name);
 				goto onerror;
 			}
@@ -1654,8 +1656,9 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 					continue;
 				col = xmlGetProp (fnode, BAD_CAST "column");
 				if (!col) {
-					g_set_error (error, 0, 0, 
-						     _("Missing foreign key's column name (for table '%s')"), 
+					g_set_error (error, GDA_META_STORE_ERROR,
+						     GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
+						     _("Missing foreign key's column name (for table '%s')"),
 						     complete_obj_name);
 					table_fkey_free (tfk);
 					goto onerror;
@@ -1665,7 +1668,8 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 											(gchar *) col);
 				tfk->fk_names_array [fkcolindex] = g_strdup ((gchar *) col);
 				if (tfk->fk_cols_array [fkcolindex] < 0) {
-					g_set_error (error, 0, 0,
+					g_set_error (error, GDA_META_STORE_ERROR,
+						     GDA_META_STORE_SCHEMA_OBJECT_DESCR_ERROR,
 						     _("Column '%s' not found in table '%s'"), (gchar *) col,
 						     complete_obj_name);
 					table_fkey_free (tfk);
@@ -1919,7 +1923,8 @@ complement_db_objects (GSList *objects, G_GNUC_UNUSED GHashTable *hash, GError *
 				gint col;
 				col = column_name_to_index (TABLE_INFO (tfk->depend_on), tfk->ref_pk_names_array[i]);
 				if (col < 0) {
-					g_set_error (error, 0, 0,
+					g_set_error (error, GDA_META_STORE_ERROR,
+						     GDA_META_STORE_META_CONTEXT_ERROR,
 						     _("Foreign key column '%s' not found in table '%s'"),
 						     tfk->ref_pk_names_array[i], tfk->depend_on->obj_name);
 					if (cond)

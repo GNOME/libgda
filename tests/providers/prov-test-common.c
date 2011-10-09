@@ -53,7 +53,7 @@ prov_test_common_setup ()
 			if (error->domain != 0) {
 				gchar *str = g_strdup_printf ("Could not setup connection: %s", 
 							      error->message ? error->message : "No detail");
-				fail (str);
+				g_warning ("%s", str);
 				g_free (str);
 				number_failed++;
 			}
@@ -68,7 +68,7 @@ prov_test_common_setup ()
 		if (!test_cnc_setup_db_structure (cnc, file, &error)) {
 			gchar *str = g_strdup_printf ("Could not setup database structure: %s", 
 						      error && error->message ? error->message : "No detail");
-			fail (str);
+			g_warning ("%s", str);
 			g_free (str);
 			if (error)
 				g_error_free (error);

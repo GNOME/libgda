@@ -40,7 +40,8 @@ extern GQuark gda_meta_struct_error_quark (void);
 typedef enum {
 	GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
         GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR,
-        GDA_META_STRUCT_INCOHERENCE_ERROR
+        GDA_META_STRUCT_INCOHERENCE_ERROR,
+	GDA_META_STRUCT_XML_ERROR
 } GdaMetaStructError;
 
 

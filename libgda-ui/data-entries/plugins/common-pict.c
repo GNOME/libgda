@@ -22,6 +22,7 @@
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-blob-op.h>
 #include <libgda-ui/libgda-ui.h>
+#include <libgda-ui/gdaui-data-entry.h>
 
 /*
  * Fills in @bindata->data and @bindata->data_length with the contents of @value.
@@ -37,7 +38,8 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 	if (value) {
 		if (gda_value_is_null ((GValue *) value)) {
 			*stock = GTK_STOCK_MISSING_IMAGE;
-			g_set_error (error, 0, 0, _("No data"));
+			g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
+				     "%s", _("No data"));
 			allok = FALSE;
 		}
 		else {
@@ -68,8 +70,8 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 				}
 				else {
 					*stock = GTK_STOCK_DIALOG_ERROR;
-					g_set_error (error, 0, 0,
-						     _("No data"));
+					g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
+						     "%s", _("No data"));
 					allok = FALSE;
 				}
 			}
@@ -106,20 +108,23 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 				}
 				else {
 					*stock = GTK_STOCK_MISSING_IMAGE;
-					g_set_error (error, 0, 0, _("Empty data"));
+					g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
+						     "%s", _("Empty data"));
 					allok = FALSE;
 				}
 			}
 			else {
 				*stock = GTK_STOCK_DIALOG_ERROR;
-				g_set_error (error, 0, 0, _("Unhandled type of data"));
+				g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
+					     "%s", _("Unhandled type of data"));
 				allok = FALSE;
 			}
 		}
 	}
 	else {
 		*stock = GTK_STOCK_MISSING_IMAGE;
-		g_set_error (error, 0, 0, _("Empty data"));
+		g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
+			     "%s", _("Empty data"));
 		allok = FALSE;
 	}
 
@@ -208,7 +213,7 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 				bindata->data_length = 0;
 
 				*stock = GTK_STOCK_DIALOG_ERROR;
-				g_set_error (error, 0, 0,
+				g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 					     _("Error while deserializing data:\n%s"),
 					     loc_error && loc_error->message ? loc_error->message : _("No detail"));
 
@@ -218,7 +223,7 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 				retpixbuf = gdk_pixbuf_from_pixdata (&pixdata, FALSE, &loc_error);
 				if (!retpixbuf) {
 					*stock = GTK_STOCK_DIALOG_ERROR;
-					g_set_error (error, 0, 0,
+					g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 						     _("Error while interpreting data as an image:\n%s"),
 						     loc_error && loc_error->message ? loc_error->message : _("No detail"));
 					g_error_free (loc_error);
@@ -264,13 +269,17 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 				gchar *notice_msg;
 				notice_msg = g_strdup_printf (_("Error while interpreting data as an image:\n%s"),
 							      loc_error && loc_error->message ? loc_error->message : _("No detail"));
-				g_error_free (loc_error);
 				*stock = GTK_STOCK_DIALOG_WARNING;
 #if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 18
-				g_set_error (error, 0, 0, "%s", notice_msg);
+				g_set_error (error, loc_error ? loc_error->domain : GDAUI_DATA_ENTRY_ERROR,
+					     loc_error ? loc_error->code : GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
+					     "%s", notice_msg);
 #else
-				g_set_error_literal (error, 0, 0, notice_msg);
+				g_set_error_literal (error, loc_error ? loc_error->domain : GDAUI_DATA_ENTRY_ERROR,
+						     loc_error ? loc_error->code : GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
+						     notice_msg);
 #endif
+				g_error_free (loc_error);
 				g_free (notice_msg);
 			}
 			

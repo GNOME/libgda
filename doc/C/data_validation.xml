@@ -34,9 +34,9 @@ my_validate_change_cb (GdaHolder *h, const GValue *value, gpointer data)
 
         /* for example check that value is inferior to 5 and not NULL */
         if (gda_value_is_null (value)) 
-                g_set_error (&amp;error, 0, 0, "NULL values are not allowed!");
+                g_set_error (&amp;error, YOUR_DOMAIN, YOUR_CODE, "NULL values are not allowed!");
         else if (g_value_get_int (value) &gt;= 5)
-                g_set_error (&amp;error, 0, 0, "Value sould be inferior to 5");
+                g_set_error (&amp;error, YOUR_DOMAIN, YOUR_CODE, "Value sould be inferior to 5");
 
         return error;
 }

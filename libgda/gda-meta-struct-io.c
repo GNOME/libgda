@@ -78,14 +78,14 @@ gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog
 	/* load information schema's structure XML file */
 	doc = xmlParseFile (xml_spec_file);
 	if (!doc) {
-		g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
+		g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_XML_ERROR,
 			     _("Could not load file '%s'"), xml_spec_file);
 		return FALSE;
 	}
 	
 	node = xmlDocGetRootElement (doc);
 	if (!node || strcmp ((gchar *) node->name, "schema")) {
-		g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
+		g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_XML_ERROR,
 			     _("Root node of file '%s' should be <schema>."), xml_spec_file);
 		xmlFreeDoc (doc);
 		return FALSE;
@@ -172,7 +172,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 
 	table_name = xmlGetProp (node, BAD_CAST "name");
 	if (!table_name) {
-		g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
+		g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STRUCT_XML_ERROR,
 			     "%s", _("Missing table name from <table> node"));
 		return NULL;
 	}
@@ -231,8 +231,10 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
                                 continue;
                         cname = xmlGetProp (cnode, BAD_CAST "name");
                         if (!cname) {
-				g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
-					     _("Missing column name for table '%s'"), dbobj->obj_full_name);
+				g_set_error (error, GDA_META_STRUCT_ERROR,
+					     GDA_META_STRUCT_XML_ERROR,
+					     _("Missing column name for table '%s'"),
+					     dbobj->obj_full_name);
 				goto onerror;
 			}
 			xstr = xmlGetProp (cnode, BAD_CAST "pkey");
@@ -283,7 +285,8 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 
 			ref_table = xmlGetProp (cnode, BAD_CAST "ref_table");
 			if (!ref_table) {
-				g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
+				g_set_error (error, GDA_META_STRUCT_ERROR,
+					     GDA_META_STRUCT_XML_ERROR,
 					     _("Missing foreign key's referenced table name for table '%s'"), 
 					     dbobj->obj_full_name);
 				goto onerror;
@@ -294,19 +297,22 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 			gchar *name_part, *schema_part, *catalog_part = NULL;
 			gchar *tmp = g_strdup ((gchar *) ref_table);
 			if (!_split_identifier_string (tmp, &schema_part, &name_part)) {
-				g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
+				g_set_error (error, GDA_META_STRUCT_ERROR,
+					     GDA_META_STRUCT_XML_ERROR,
 					     _("Invalid referenced table name '%s'"), ref_table);
 				xmlFree (ref_table);
 				goto onerror;
 			}
 			if (schema_part && !_split_identifier_string (schema_part, &catalog_part, &schema_part)) {
-				g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
+				g_set_error (error, GDA_META_STRUCT_ERROR,
+					     GDA_META_STRUCT_XML_ERROR,
 					     _("Invalid referenced table name '%s'"), ref_table);
 				xmlFree (ref_table);
 				goto onerror;
 			}
 			if (catalog_part) {
-				g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
+				g_set_error (error, GDA_META_STRUCT_ERROR,
+					     GDA_META_STRUCT_XML_ERROR,
 					     _("Invalid referenced table name '%s'"), ref_table);
 				xmlFree (ref_table);
 				goto onerror;
@@ -345,7 +351,8 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 					continue;
 				col = xmlGetProp (fnode, BAD_CAST "column");
 				if (!col) {
-					g_set_error (error, GDA_META_STRUCT_ERROR, 0, /* FIXME */
+					g_set_error (error, GDA_META_STRUCT_ERROR,
+						     GDA_META_STRUCT_XML_ERROR,
 						     _("Missing foreign key's column name for table '%s'"), 
 						     dbobj->obj_full_name);
 					g_array_free (fk_names_array, TRUE);

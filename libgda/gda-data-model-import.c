@@ -1682,7 +1682,7 @@ add_error (GdaDataModelImport *model, const gchar *err)
 {
 	GError *error = NULL;
 
-	g_set_error (&error, 0, 0, "%s", err);
+	g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR, "%s", err);
 	model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 

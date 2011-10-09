@@ -4237,8 +4237,9 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 		for (j = 0; j < nb_params; j++) {
 			GValue *v = *(spec_array[j].pvalue);
 			if (v && (gda_value_is_null (v) || (G_VALUE_TYPE (v) != spec_array[j].type))) {
-				g_set_error (error, 0, 0, "%s", 
-					     _("Invalid argument"));
+				g_set_error (error, GDA_CONNECTION_ERROR,
+					     GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
+					     "%s", _("Invalid argument"));
 				retval = -1;
 			}
 		}
@@ -4246,8 +4247,10 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 	else {
 		gchar *str;
 		str = meta_context_stringify (context);
-		g_set_error (error, 0, 0,
-			     _("Missing or wrong arguments for table '%s': %s"), context->table_name, str);
+		g_set_error (error, GDA_CONNECTION_ERROR,
+			     GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
+			     _("Missing or wrong arguments for table '%s': %s"),
+			     context->table_name, str);
 		g_free (str);
 	}
 
@@ -5000,7 +5003,8 @@ suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext 
 		if (lerror)
 			data->error = lerror;
 		else {
-			g_set_error (&lerror, 0, 0,
+			g_set_error (&lerror,GDA_CONNECTION_ERROR,
+				     GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
 				      "%s", _("Meta update error"));
 			data->error = lerror;
 		}
