@@ -46,6 +46,7 @@ typedef struct {
 	GdaStatement *select;
 	GdaSet       *params;
 	GdaRow       *row; /* non NULL once @select has been executed */
+	GError       *exec_error; /* NULL if an execution error occurred */
 } DelayedSelectStmt;
 
 static void delayed_select_stmt_free (DelayedSelectStmt *dstmt);
@@ -1799,11 +1800,18 @@ external_to_internal_row (GdaDataSelect *model, gint ext_row, GError **error)
 static void foreach_func_dump (gpointer key, gpointer value, gpointer dummy)
 {
 	g_print (" row %d => %p\n", *(const gint*) key, value);
+	DelayedSelectStmt *dstmt;
+	dstmt = (DelayedSelectStmt *) value;
+	gchar *sql;
+	sql = gda_statement_to_sql_extended (dstmt->select, NULL, dstmt->params,
+					     GDA_STATEMENT_SQL_PARAMS_AS_VALUES, NULL, NULL);
+	g_print ("\tSQL: [%s]\n", sql);
+	g_free (sql);
 }
 static void dump_d (GdaDataSelect *model)
 {
 	if (model->priv->sh->upd_rows) {
-		g_print ("Delayed SELECT for %p:\n", model);
+		g_print ("Delayed SELECT for data model %p:\n", model);
 		g_hash_table_foreach (model->priv->sh->upd_rows, foreach_func_dump, NULL);
 	}
 }
@@ -1854,10 +1862,18 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 		dstmt = g_hash_table_lookup (imodel->priv->sh->upd_rows, &int_row);
 	if (dstmt) {
 		if (! dstmt->row) {
+			if (dstmt->exec_error) {
+				if (error)
+					g_propagate_error (error, g_error_copy (dstmt->exec_error));
+				return NULL;
+			}
 			GdaDataModel *tmpmodel;
 			if (!dstmt->select || !dstmt->params) {
-				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-					      "%s", _("Unable to retrieve data after modifications"));
+				g_set_error (&(dstmt->exec_error),
+					     GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+					     "%s", _("Unable to retrieve data after modifications"));
+				if (error)
+					g_propagate_error (error, g_error_copy (dstmt->exec_error));
 				return NULL;
 			}
 			GType *types = NULL;
@@ -1867,6 +1883,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 					sizeof (GType) * imodel->prep_stmt->ncols);
 				types [imodel->prep_stmt->ncols] = G_TYPE_NONE;
 			}
+			/*g_print ("*** Executing DelayedSelectStmt %p\n", dstmt);*/
 			tmpmodel = gda_connection_statement_execute_select_full (imodel->priv->cnc,
 										 dstmt->select, 
 										 dstmt->params, 
@@ -1876,16 +1893,22 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 			g_free (types);
 
 			if (!tmpmodel) {
-				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+				g_set_error (&(dstmt->exec_error),
+					     GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 					      "%s", _("Unable to retrieve data after modifications, no further modification will be allowed"));
+				if (error)
+					g_propagate_error (error, g_error_copy (dstmt->exec_error));
 				imodel->priv->sh->modif_internals->safely_locked = TRUE;
 				return NULL;
 			}
 
 			if (gda_data_model_get_n_rows (tmpmodel) != 1) {
 				g_object_unref (tmpmodel);
-				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+				g_set_error (&(dstmt->exec_error),
+					     GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 					     "%s", _("Unable to retrieve data after modifications, no further modification will be allowed"));
+				if (error)
+					g_propagate_error (error, g_error_copy (dstmt->exec_error));
 				imodel->priv->sh->modif_internals->safely_locked = TRUE;
 				return NULL;
 			}
@@ -1897,17 +1920,26 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 				GValue *value;
 				const GValue *cvalue;
 				value = gda_row_get_value (prow, i);
-				cvalue = gda_data_model_get_value_at (tmpmodel, i, 0, error);
-				if (!cvalue)
+				cvalue = gda_data_model_get_value_at (tmpmodel, i, 0,
+								      &(dstmt->exec_error));
+				if (!cvalue) {
+					if (error)
+						g_propagate_error (error,
+								   g_error_copy (dstmt->exec_error));
 					return NULL;
-				
+				}
+
 				if (!gda_value_is_null (cvalue)) {
 					gda_value_reset_with_type (value, G_VALUE_TYPE (cvalue));
 					if (! gda_value_set_from_value (value, cvalue)) {
 						g_object_unref (tmpmodel);
 						g_object_unref (prow);
-						g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-							      "%s", _("Unable to retrieve data after modifications, no further modification will be allowed"));
+						g_set_error (&(dstmt->exec_error),
+							     GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+							     "%s", _("Unable to retrieve data after modifications, no further modification will be allowed"));
+						if (error)
+							g_propagate_error (error,
+									   g_error_copy (dstmt->exec_error));
 						imodel->priv->sh->modif_internals->safely_locked = TRUE;
 						return NULL;
 					}
@@ -2851,6 +2883,8 @@ delayed_select_stmt_free (DelayedSelectStmt *dstmt)
 		g_object_unref (dstmt->params);
 	if (dstmt->row)
 		g_object_unref (dstmt->row);
+	if (dstmt->exec_error)
+		g_error_free (dstmt->exec_error);
 	g_free (dstmt);
 }
 
