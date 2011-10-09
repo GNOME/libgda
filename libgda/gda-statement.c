@@ -1524,8 +1524,33 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		gchar *tmp;
 		tmp = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
 		if (!tmp) goto err;
-		str = g_strconcat ("(", tmp, ")", NULL);
-		g_free (tmp);
+		str = NULL;
+		if (GDA_SQL_ANY_PART (expr)->parent) {
+			if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_SELECT) {
+				GdaSqlStatementSelect *selst;
+				selst = (GdaSqlStatementSelect*) (GDA_SQL_ANY_PART (expr)->parent);
+				if ((expr == selst->where_cond) ||
+				    (expr == selst->having_cond))
+					str = tmp;
+			}
+			else if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_DELETE) {
+				GdaSqlStatementDelete *delst;
+				delst = (GdaSqlStatementDelete*) (GDA_SQL_ANY_PART (expr)->parent);
+				if (expr == delst->cond)
+					str = tmp;
+			}
+			else if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_UPDATE) {
+				GdaSqlStatementUpdate *updst;
+				updst = (GdaSqlStatementUpdate*) (GDA_SQL_ANY_PART (expr)->parent);
+				if (expr == updst->cond)
+					str = tmp;
+			}
+		}
+
+		if (!str) {
+			str = g_strconcat ("(", tmp, ")", NULL);
+			g_free (tmp);
+		}
 	}
 	else if (expr->select) {
 		gchar *str1;
@@ -1700,8 +1725,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 			goto out;
 		}
 		sqlop->sql = str;
-		if ((expr->cond && expr->cond->operands && expr->cond->operands->next) ||
-		    expr->case_s || expr->select)
+		if (expr->case_s || expr->select)
 			sqlop->is_composed = TRUE;
 		sql_list = g_slist_prepend (sql_list, sqlop);
 	}
@@ -1839,8 +1863,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 		}
 		else {
 			/* 2 or more operands */
-			if (SQL_OPERAND (sql_list->data)->is_composed &&
-			    *(SQL_OPERAND (sql_list->data)->sql) != '(') {
+			if (SQL_OPERAND (sql_list->data)->is_composed) {
 				string = g_string_new ("(");
 				g_string_append (string, SQL_OPERAND (sql_list->data)->sql);
 				g_string_append_c (string, ')');
@@ -1849,8 +1872,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 				string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
 			for (list = sql_list->next; list; list = list->next) {
 				g_string_append_printf (string, " %s ", multi_op);
-				if (SQL_OPERAND (list->data)->is_composed &&
-				    *(SQL_OPERAND (sql_list->data)->sql) != '(') {
+				if (SQL_OPERAND (list->data)->is_composed) {
 					g_string_append_c (string, '(');
 					g_string_append (string, SQL_OPERAND (list->data)->sql);
 					g_string_append_c (string, ')');
