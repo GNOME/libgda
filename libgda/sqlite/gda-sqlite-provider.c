@@ -2253,6 +2253,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	ps->rowid_hash = hash;
 	ps->nb_rowid_columns = nb_rows_added;
 	g_object_unref (real_stmt);
+	/*g_print ("%s(%s) => GdaSqlitePStmt %p\n", __FUNCTION__, sql, ps);*/
 	return ps;
 
  out_err:
@@ -2796,9 +2797,9 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			g_object_unref (rstmt);
 			return res;
 		}
-		/*g_print ("BINDING param '%s' to %p\n", pname, h);*/
-		
+
 		const GValue *value = gda_holder_get_value (h);
+		/*g_print ("BINDING param '%s' to GdaHolder %p, valued to [%s]\n", pname, h, gda_value_stringify (value));*/
 		if (!value || gda_value_is_null (value)) {
 			GdaStatement *rstmt;
 			if (! gda_rewrite_statement_for_null_parameters (stmt, params, &rstmt, error))
@@ -2806,33 +2807,33 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			else if (!rstmt)
 				return NULL;
 			else {
-				/* The strategy here is to execute @rstmt using the prepared
-				 * statement associcted to @stmt, but adapted to @rstmt, so all
-				 * the column names, etc remain the same.
-				 *
-				 * The adaptation consists to replace SQLite specific information
-				 * in the GdaSqlitePStmt object.
-				 *
-				 * The trick is to adapt @ps, then associate @ps with @rstmt, then
-				 * execute @rstmt, and then undo the trick */
+				/* The strategy here is to execute @rstmt using its prepared
+				 * statement, but with common data from @ps. Beware that
+				 * the @param_ids attribute needs to be retained (i.e. it must not
+				 * be the one copied from @ps) */
 				GObject *obj;
 				GdaSqlitePStmt *tps;
+				GdaPStmt *gtps;
+				GSList *prep_param_ids, *copied_param_ids;
 				if (!gda_sqlite_provider_statement_prepare (provider, cnc,
 									    rstmt, error))
 					return NULL;
 				tps = (GdaSqlitePStmt *)
 					gda_connection_get_prepared_statement (cnc, rstmt);
+				gtps = (GdaPStmt *) tps;
 
-				/* adapt @ps with @tps's SQLite specific information */
-				GdaSqlitePStmt hps;
-				hps.sqlite_stmt = ps->sqlite_stmt; /* save */
-				ps->sqlite_stmt = tps->sqlite_stmt; /* override */
-				hps.stmt_used = ps->stmt_used; /* save */
-				ps->stmt_used = tps->stmt_used; /* override */
-				g_object_ref (tps);
-				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) ps);
+				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
+				prep_param_ids = gtps->param_ids;
+				gtps->param_ids = NULL;
+				
+				/* actual copy */
+				gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) tps);
 
-				/* execute rstmt (it will use @ps) */
+				/* restore previous @param_ids */
+				copied_param_ids = gtps->param_ids;
+				gtps->param_ids = prep_param_ids;
+
+				/* execute */
 				obj = gda_sqlite_provider_statement_execute (provider, cnc,
 									     rstmt, params,
 									     model_usage,
@@ -2840,12 +2841,15 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 									     last_inserted_row,
 									     task_id, async_cb,
 									     cb_data, error);
+				/* clear original @param_ids and restore copied one */
+				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
+				g_slist_free (prep_param_ids);
 
-				/* revert adaptations */
-				ps->sqlite_stmt = hps.sqlite_stmt;
-				ps->stmt_used = hps.stmt_used;
-				gda_connection_add_prepared_statement (cnc, rstmt, (GdaPStmt *) tps);
-				g_object_unref (tps);
+				gtps->param_ids = copied_param_ids;
+
+				/*if (GDA_IS_DATA_MODEL (obj))
+				  gda_data_model_dump ((GdaDataModel*) obj, NULL);*/
+
 				g_object_unref (rstmt);
 
 				if (new_ps)
