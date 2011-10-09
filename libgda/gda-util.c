@@ -890,17 +890,19 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 }
 
 /**
- * gda_compute_unique_table_row_condition_with_cnc:  (skip)
+ * gda_compute_unique_table_row_condition_with_cnc: (skip)
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
- * @require_pk: set to TRUE if a primary key ir required
+ * @require_pk: set to %TRUE if a primary key is required
  * @error: a place to store errors, or %NULL
  * 
  * Computes a #GdaSqlExpr expression which can be used in the WHERE clause of an UPDATE
  * or DELETE statement when a row from the result of the @stsel statement has to be modified.
  *
- * REM: the case where @require_pk is %FALSE is not currently implemented.
+ * If @require_pk is %TRUE then this function will return a non %NULL #GdaSqlExpr only if it can
+ * use a primary key of @mtable. If @require_pk is %FALSE, then it will try to use a primary key of @mtable,
+ * and if none is available, it will use all the columns of @mtable to compute a condition statement.
  *
  * Returns: a new #GdaSqlExpr, or %NULL if an error occurred.
  *
@@ -917,147 +919,152 @@ gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlState
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 	
 	expr = gda_sql_expr_new (NULL); /* no parent */
-	if (require_pk) {
-		if (mtable->pk_cols_nb == 0) {
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-				     "%s", _("Table does not have any primary key"));
-			goto onerror;
-		}
-		if (mtable->pk_cols_nb == 0) {
-			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     "%s", _("Table does not have any primary key"));
-			goto onerror;
-		}
-		else if (mtable->pk_cols_nb > 1) {
-			and_cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-			and_cond->operator_type = GDA_SQL_OPERATOR_TYPE_AND;
-			expr->cond = and_cond;
-		}
-		for (i = 0; i < mtable->pk_cols_nb; i++) {
-			GdaSqlSelectField *sfield = NULL;
-			GdaMetaTableColumn *tcol;
-			GSList *list;
-			gint index;
 
-			tcol = (GdaMetaTableColumn *) g_slist_nth_data (mtable->columns, mtable->pk_cols_array[i]);
-			for (index = 0, list = stsel->expr_list;
-			     list;
-			     index++, list = list->next) {
-				sfield = (GdaSqlSelectField *) list->data;
-				if (sfield->validity_meta_table_column == tcol)
-					break;
-				else
-					sfield = NULL;
-			}
-			if (!sfield) {
-				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     "%s", _("Table's primary key is not part of SELECT"));
+	if (mtable->pk_cols_nb == 0) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     "%s", _("Table does not have any primary key"));
+		if (require_pk)
+			goto onerror;
+		else
+			goto allcolums;
+	}
+	else if (mtable->pk_cols_nb > 1) {
+		and_cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
+		and_cond->operator_type = GDA_SQL_OPERATOR_TYPE_AND;
+		expr->cond = and_cond;
+	}
+	for (i = 0; i < mtable->pk_cols_nb; i++) {
+		GdaSqlSelectField *sfield = NULL;
+		GdaMetaTableColumn *tcol;
+		GSList *list;
+		gint index;
+		
+		tcol = (GdaMetaTableColumn *) g_slist_nth_data (mtable->columns, mtable->pk_cols_array[i]);
+		for (index = 0, list = stsel->expr_list;
+		     list;
+		     index++, list = list->next) {
+			sfield = (GdaSqlSelectField *) list->data;
+			if (sfield->validity_meta_table_column == tcol)
+				break;
+			else
+				sfield = NULL;
+		}
+		if (!sfield) {
+			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+				     "%s", _("Table's primary key is not part of SELECT"));
+			if (require_pk)
 				goto onerror;
+			else
+				goto allcolums;
+		}
+		else {
+			GdaSqlOperation *op;
+			GdaSqlExpr *opexpr;
+			GdaSqlParamSpec *pspec;
+			
+			/* equal condition */
+			if (and_cond) {
+				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (and_cond));
+				op = gda_sql_operation_new (GDA_SQL_ANY_PART (opexpr));
+				opexpr->cond = op;
+				and_cond->operands = g_slist_append (and_cond->operands, opexpr);
 			}
 			else {
-				GdaSqlOperation *op;
-				GdaSqlExpr *opexpr;
-				GdaSqlParamSpec *pspec;
-
-				/* equal condition */
-				if (and_cond) {
-					opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (and_cond));
-					op = gda_sql_operation_new (GDA_SQL_ANY_PART (opexpr));
-					opexpr->cond = op;
-					and_cond->operands = g_slist_append (and_cond->operands, opexpr);
-				}
-				else {
-					op = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-					expr->cond = op;
-				}
-				op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
-				/* left operand */
-				gchar *str;
-				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
-				str = gda_sql_identifier_quote (tcol->column_name, cnc, NULL, FALSE, FALSE);
-				g_value_take_string (opexpr->value = gda_value_new (G_TYPE_STRING), str);
-
-				op->operands = g_slist_append (op->operands, opexpr);
-
-				/* right operand */
-				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
-				pspec = g_new0 (GdaSqlParamSpec, 1);
-				pspec->name = g_strdup_printf ("-%d", index);
-				pspec->g_type = tcol->gtype != G_TYPE_INVALID ? tcol->gtype: G_TYPE_STRING;
-				pspec->nullok = tcol->nullok;
-				opexpr->param_spec = pspec;
-				op->operands = g_slist_append (op->operands, opexpr);
+				op = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
+				expr->cond = op;
 			}
+			op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
+			/* left operand */
+			gchar *str;
+			opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+			str = gda_sql_identifier_quote (tcol->column_name, cnc, NULL, FALSE, FALSE);
+			g_value_take_string (opexpr->value = gda_value_new (G_TYPE_STRING), str);
+			
+			op->operands = g_slist_append (op->operands, opexpr);
+			
+			/* right operand */
+			opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+			pspec = g_new0 (GdaSqlParamSpec, 1);
+			pspec->name = g_strdup_printf ("-%d", index);
+			pspec->g_type = (tcol->gtype != GDA_TYPE_NULL) ? tcol->gtype: G_TYPE_STRING;
+			pspec->nullok = tcol->nullok;
+			opexpr->param_spec = pspec;
+			op->operands = g_slist_append (op->operands, opexpr);
 		}
 	}
-	else {
-		GSList *columns;
-		if (! mtable->columns) {
+	return expr;
+
+ allcolums:
+
+	gda_sql_expr_free (expr);
+	expr = gda_sql_expr_new (NULL); /* no parent */
+
+	GSList *columns;
+	if (! mtable->columns) {
+		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
+			     "%s", _("Table does not have any column"));
+		goto onerror;
+	}
+	else if (mtable->columns->next) {
+		and_cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
+		and_cond->operator_type = GDA_SQL_OPERATOR_TYPE_AND;
+		expr->cond = and_cond;
+	}
+	for (columns = mtable->columns; columns; columns = columns->next) {
+		GdaSqlSelectField *sfield = NULL;
+		GdaMetaTableColumn *tcol;
+		GSList *list;
+		gint index;
+		
+		tcol = (GdaMetaTableColumn *) columns->data;
+		for (index = 0, list = stsel->expr_list;
+		     list;
+		     index++, list = list->next) {
+			sfield = (GdaSqlSelectField *) list->data;
+			if (sfield->validity_meta_table_column == tcol)
+				break;
+			else
+				sfield = NULL;
+		}
+		if (!sfield) {
 			g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     "%s", _("Table does not have any column"));
+				     _("Table's column '%s' is not part of SELECT"),
+				     tcol->column_name);
 			goto onerror;
 		}
-		else if (mtable->columns->next) {
-			and_cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-			and_cond->operator_type = GDA_SQL_OPERATOR_TYPE_AND;
-			expr->cond = and_cond;
-		}
-		for (columns = mtable->columns; columns; columns = columns->next) {
-			GdaSqlSelectField *sfield = NULL;
-			GdaMetaTableColumn *tcol;
-			GSList *list;
-			gint index;
-
-			tcol = (GdaMetaTableColumn *) columns->data;
-			for (index = 0, list = stsel->expr_list;
-			     list;
-			     index++, list = list->next) {
-				sfield = (GdaSqlSelectField *) list->data;
-				if (sfield->validity_meta_table_column == tcol)
-					break;
-				else
-					sfield = NULL;
-			}
-			if (!sfield) {
-				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
-					     _("Table's column '%s' is not part of SELECT"),
-					     tcol->column_name);
-				goto onerror;
+		else {
+			GdaSqlOperation *op;
+			GdaSqlExpr *opexpr;
+			GdaSqlParamSpec *pspec;
+			
+			/* equal condition */
+			if (and_cond) {
+				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (and_cond));
+				op = gda_sql_operation_new (GDA_SQL_ANY_PART (opexpr));
+				opexpr->cond = op;
+				and_cond->operands = g_slist_append (and_cond->operands, opexpr);
 			}
 			else {
-				GdaSqlOperation *op;
-				GdaSqlExpr *opexpr;
-				GdaSqlParamSpec *pspec;
-
-				/* equal condition */
-				if (and_cond) {
-					opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (and_cond));
-					op = gda_sql_operation_new (GDA_SQL_ANY_PART (opexpr));
-					opexpr->cond = op;
-					and_cond->operands = g_slist_append (and_cond->operands, opexpr);
-				}
-				else {
-					op = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
-					expr->cond = op;
-				}
-				op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
-				/* left operand */
-				gchar *str;
-				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
-				str = gda_sql_identifier_quote (tcol->column_name, cnc, NULL, FALSE, FALSE);
-				g_value_take_string (opexpr->value = gda_value_new (G_TYPE_STRING), str);
-
-				op->operands = g_slist_append (op->operands, opexpr);
-
-				/* right operand */
-				opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
-				pspec = g_new0 (GdaSqlParamSpec, 1);
-				pspec->name = g_strdup_printf ("-%d", index);
-				pspec->g_type = (tcol->gtype != GDA_TYPE_NULL) ? tcol->gtype: G_TYPE_STRING;
-				pspec->nullok = tcol->nullok;
-				opexpr->param_spec = pspec;
-				op->operands = g_slist_append (op->operands, opexpr);
+				op = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
+				expr->cond = op;
 			}
+			op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
+			/* left operand */
+			gchar *str;
+			opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+			str = gda_sql_identifier_quote (tcol->column_name, cnc, NULL, FALSE, FALSE);
+			g_value_take_string (opexpr->value = gda_value_new (G_TYPE_STRING), str);
+			
+			op->operands = g_slist_append (op->operands, opexpr);
+			
+			/* right operand */
+			opexpr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+			pspec = g_new0 (GdaSqlParamSpec, 1);
+			pspec->name = g_strdup_printf ("-%d", index);
+			pspec->g_type = (tcol->gtype != GDA_TYPE_NULL) ? tcol->gtype: G_TYPE_STRING;
+			pspec->nullok = tcol->nullok;
+			opexpr->param_spec = pspec;
+			op->operands = g_slist_append (op->operands, opexpr);
 		}
 	}
 	return expr;
