@@ -58,7 +58,7 @@ typedef struct _GdaSqlStatementCompound GdaSqlStatementCompound;
  * Statement type
  */
 /**
- * GdaSqlStatementType: (skip)
+ * GdaSqlStatementType:
  * @GDA_SQL_STATEMENT_SELECT: a SELECT statement
  * @GDA_SQL_STATEMENT_INSERT: an INSERT statement
  * @GDA_SQL_STATEMENT_UPDATE: an UPDATE statement
