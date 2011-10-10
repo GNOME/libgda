@@ -1972,8 +1972,21 @@ default_render_select_field (GdaSqlSelectField *field, GdaSqlRenderingContext *c
 	g_string_append (string, str);
 	g_free (str);
 
-	if (field->as)
-		g_string_append_printf (string, " AS %s", field->as);
+	if (field->as) {
+		if ((*field->as != '\'') && (*field->as != '"')) {
+			GdaConnectionOptions cncoptions = 0;
+			gchar *tmp;
+			if (context->cnc)
+				g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+			tmp = gda_sql_identifier_quote (field->as, context->cnc,
+							context->provider, FALSE,
+							cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+			g_string_append_printf (string, " AS %s", tmp);
+			g_free (tmp);
+		}
+		else
+			g_string_append_printf (string, " AS %s", field->as);
+	}
 
 	str = string->str;
 	g_string_free (string, FALSE);
@@ -2013,8 +2026,21 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 		g_free (str);
 	}
 
-	if (target->as)
-		g_string_append_printf (string, " AS %s", target->as);
+	if (target->as) {
+		if ((*target->as != '\'') && (*target->as != '"')) {
+			GdaConnectionOptions cncoptions = 0;
+			gchar *tmp;
+			if (context->cnc)
+				g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+			tmp = gda_sql_identifier_quote (target->as, context->cnc,
+							context->provider, FALSE,
+							cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+			g_string_append_printf (string, " AS %s", tmp);
+			g_free (tmp);
+		}
+		else
+			g_string_append_printf (string, " AS %s", target->as);
+	}
 
 	str = string->str;
 	g_string_free (string, FALSE);
