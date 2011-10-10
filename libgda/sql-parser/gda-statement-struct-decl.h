@@ -57,6 +57,24 @@ typedef struct _GdaSqlStatementCompound GdaSqlStatementCompound;
 /*
  * Statement type
  */
+/**
+ * GdaSqlStatementType:
+ * @GDA_SQL_STATEMENT_SELECT: a SELECT statement
+ * @GDA_SQL_STATEMENT_INSERT: an INSERT statement
+ * @GDA_SQL_STATEMENT_UPDATE: an UPDATE statement
+ * @GDA_SQL_STATEMENT_DELETE: a DELETE statement
+ * @GDA_SQL_STATEMENT_COMPOUND: a compound statement: multiple SELECT statements grouped together using an operator
+ * @GDA_SQL_STATEMENT_BEGIN: start of transaction statement
+ * @GDA_SQL_STATEMENT_ROLLBACK: transaction abort statement
+ * @GDA_SQL_STATEMENT_COMMIT: transaction commit statement
+ * @GDA_SQL_STATEMENT_SAVEPOINT: new savepoint definition statement
+ * @GDA_SQL_STATEMENT_ROLLBACK_SAVEPOINT: return to savepoint statement
+ * @GDA_SQL_STATEMENT_DELETE_SAVEPOINT: savepoint deletion statement
+ * @GDA_SQL_STATEMENT_UNKNOWN: unknown statement, only identifies variables
+ * @GDA_SQL_STATEMENT_NONE: not used
+ *
+ * Known types of statements
+ */
 typedef enum {
 	GDA_SQL_STATEMENT_SELECT,
 	GDA_SQL_STATEMENT_INSERT,
