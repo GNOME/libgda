@@ -725,9 +725,9 @@
   </test>
 
   <test id="2204">
-    <sql>select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as 123;</sql>
-    <expected>{"statements":[{"statement":{"sql":"select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as 123;","stmt_type":"SELECT","contents":{"distinct":"true","distinct_on":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"fields":[{"expr":{"value":"s1.t1.field1"},"field_name":"field1","table_name":"s1.t1","as":"_bla"},{"expr":{"func":{"function_name":"func","function_args":[{"value":"s2.t1.field_2"}]}},"as":"123"}]}}}]}</expected>
-    <expected mode="delim">{"statements":[{"statement":{"sql":"select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as 123;","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"distinct"},{"value":" "},{"value":"ON"},{"value":" "},{"value":"("},{"value":"a=b)"},{"value":" "},{"value":"s1.t1.field1"},{"value":" "},{"value":"as"},{"value":" "},{"value":"_bla,"},{"value":" "},{"value":"func"},{"value":" "},{"value":"("},{"value":"s2.t1.field_2)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"123"}]}}]}</expected>
+    <sql>select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as "123";</sql>
+    <expected>{"statements":[{"statement":{"sql":"select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as \"123\";","stmt_type":"SELECT","contents":{"distinct":"true","distinct_on":{"operation":{"operator":"=","operand0":{"value":"a"},"operand1":{"value":"b"}}},"fields":[{"expr":{"value":"s1.t1.field1"},"field_name":"field1","table_name":"s1.t1","as":"_bla"},{"expr":{"func":{"function_name":"func","function_args":[{"value":"s2.t1.field_2"}]}},"as":"\"123\""}]}}}]}</expected>
+    <expected mode="delim">{"statements":[{"statement":{"sql":"select distinct ON (a=b) s1.t1.field1 as _bla, func (s2.t1.field_2) as \"123\";","stmt_type":"UNKNOWN","contents":[{"value":"select"},{"value":" "},{"value":"distinct"},{"value":" "},{"value":"ON"},{"value":" "},{"value":"("},{"value":"a=b)"},{"value":" "},{"value":"s1.t1.field1"},{"value":" "},{"value":"as"},{"value":" "},{"value":"_bla,"},{"value":" "},{"value":"func"},{"value":" "},{"value":"("},{"value":"s2.t1.field_2)"},{"value":" "},{"value":"as"},{"value":" "},{"value":"\"123\""}]}}]}</expected>
   </test>
 
   <test id="2205">
