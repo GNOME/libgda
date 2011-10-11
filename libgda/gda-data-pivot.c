@@ -1926,15 +1926,13 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 		}
 	}
 	for (; i < (guint) ncols; i++) {
-		GdaColumn *acolumn, *ecolumn;
+		GdaColumn *ecolumn;
 		ecolumn = g_array_index (pivot->priv->columns, GdaColumn*, i);
-		acolumn = gda_data_model_describe_column (results, i);
 
 		gint j;
 		for (j = 0; j < nrows; j++) {
-			GdaRow *arow, *erow;
+			GdaRow *arow;
 			GValue *av;
-			erow = g_array_index (first_rows, GdaRow*, j);
 			arow = gda_data_model_array_get_row ((GdaDataModelArray*) results, j, NULL);
 			av = gda_row_get_value (arow, i);
 
