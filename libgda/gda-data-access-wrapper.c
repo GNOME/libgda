@@ -585,13 +585,16 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 								      ROWS_POOL_SIZE - 1);
 						g_hash_table_remove (imodel->priv->rows, &index_row);
 					}
-
-					gda_row = create_new_row (imodel);
-					g_array_prepend_val (imodel->priv->rows_buffer_array, gda_row);
-					g_array_prepend_val (imodel->priv->rows_buffer_index, imodel->priv->iter_row);
+					if (gda_data_model_iter_move_to_row (imodel->priv->iter, row)) {
+						gda_row = create_new_row (imodel);
+						g_array_prepend_val (imodel->priv->rows_buffer_array, gda_row);
+						g_array_prepend_val (imodel->priv->rows_buffer_index, imodel->priv->iter_row);
+					}
 				}
-				GValue *val = gda_row_get_value (gda_row, col);
-				if (gda_row_value_is_valid (gda_row, val))
+
+				GValue *val;
+				val = gda_row ? gda_row_get_value (gda_row, col) : NULL;
+				if (gda_row && gda_row_value_is_valid (gda_row, val))
 					return val;
 				else
 					return NULL;
@@ -609,8 +612,8 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *mod
 {
 	g_assert (model->priv->rows);
 
+	/*g_print ("%s(%d)\n", __FUNCTION__, row);*/
 	if (gda_data_model_iter_is_valid (iter)) {
-		/*g_print ("%s(%d)\n", __FUNCTION__, row);*/
 		model->priv->iter_row = row;
 		if (model->priv->last_row < row)
 			model->priv->last_row = row;
