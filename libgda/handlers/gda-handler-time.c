@@ -425,27 +425,27 @@ handler_compute_locale (GdaHandlerTime *hdl)
 
 /**
  * gda_handler_time_get_no_locale_str_from_value:
- * @hdl: a #GdaHandlerTime object
+ * @dh: a #GdaHandlerTime object
  * @value: a #GValue value
  *
  * Returns: a new string representing @value without taking the current
  * locale into account
  */
 gchar *
-gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue *value)
+gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue *value)
 {
 	gchar *retval = NULL, *str;
 	GType type;
 
-	g_return_val_if_fail (GDA_IS_HANDLER_TIME (hdl), NULL);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (dh), NULL);
+	g_return_val_if_fail (dh->priv, NULL);
 	type = G_VALUE_TYPE (value);
 
 	if (type == G_TYPE_DATE) {
 		const GDate *date;
 
 		date = (GDate *) g_value_get_boxed (value);
-		str = render_date_locale (date, hdl->priv->sql_locale);
+		str = render_date_locale (date, dh->priv->sql_locale);
 		if (!str)
 			retval = g_strdup ("NULL");
 		else 
@@ -466,7 +466,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue
 
 		gdats = gda_value_get_timestamp ((GValue *) value);
 		vdate = g_date_new_dmy (gdats->day, gdats->month, gdats->year);
-		str = render_date_locale (vdate, hdl->priv->sql_locale);
+		str = render_date_locale (vdate, dh->priv->sql_locale);
 		g_date_free (vdate);
 
 		if (str) {

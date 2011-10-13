@@ -1,6 +1,5 @@
 // Vala Bindings for GDA
 Gda cheader_filename="libgda/libgda.h"
-ValueList type="GLib.List<GLib.Value>"
 ServerProviderMeta skip
 ServerProviderXa skip
 // libxml2: replace xml.NodePtr by xml.Node* used by Vala bindings

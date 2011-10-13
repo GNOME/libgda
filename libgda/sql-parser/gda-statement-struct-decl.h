@@ -32,33 +32,76 @@ G_BEGIN_DECLS
 /* error reporting */
 extern GQuark gda_sql_error_quark (void);
 #define GDA_SQL_ERROR gda_sql_error_quark ()
-
+/*
+ * GdaSqlError: (skip)
+ *
+ **/
 typedef enum {
 	GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 	GDA_SQL_MALFORMED_IDENTIFIER_ERROR,
 	GDA_SQL_MISSING_IDENTIFIER_ERROR,
 	GDA_SQL_VALIDATION_ERROR
 } GdaSqlError;
+/*
+ * GdaSqlErrorType: (skip)
+ *
+ **/
 typedef GdaSqlError GdaSqlErrorType;
 
 /*
  * Struct declarations
  */
+/*
+ * GdaSqlAnyPart: (skip)
+ *
+ **/
 typedef struct _GdaSqlAnyPart   GdaSqlAnyPart;
+/*
+ * GdaSqlStatement: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatement GdaSqlStatement;
+/*
+ * GdaSqlStatementUnknown: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementUnknown GdaSqlStatementUnknown;
+/*
+ * GdaSqlStatementTransaction: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementTransaction GdaSqlStatementTransaction;
+/*
+ * GdaSqlStatementSelect: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementSelect GdaSqlStatementSelect;
+/*
+ * GdaSqlStatementInsert: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementInsert GdaSqlStatementInsert;
+/*
+ * GdaSqlStatementDelete: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementDelete GdaSqlStatementDelete;
+/*
+ * GdaSqlStatementUpdate: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementUpdate GdaSqlStatementUpdate;
+/*
+ * GdaSqlStatementCompound: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementCompound GdaSqlStatementCompound;
 
 /*
  * Statement type
  */
 /**
- * GdaSqlStatementType: (skip)
+ * GdaSqlStatementType:
  * @GDA_SQL_STATEMENT_SELECT: a SELECT statement
  * @GDA_SQL_STATEMENT_INSERT: an INSERT statement
  * @GDA_SQL_STATEMENT_UPDATE: an UPDATE statement
