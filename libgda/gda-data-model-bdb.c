@@ -25,6 +25,7 @@
 #include <libgda/gda-data-model-bdb.h>
 #include <db.h>
 #include <gmodule.h>
+#include <libgda/gda-server-provider.h>
 
 #define BDB_VERSION  (10000*DB_VERSION_MAJOR+100*DB_VERSION_MINOR+DB_VERSION_PATCH)
 
@@ -213,7 +214,8 @@ add_error (GdaDataModelBdb *model, const gchar *err)
 {
 	GError *error = NULL;
 
-        g_set_error (&error, 0, 0, "%s", err);
+        g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+		     "%s", err);
         model->priv->errors = g_slist_append (model->priv->errors, error);
 }
 
@@ -826,8 +828,11 @@ alter_key_value (GdaDataModelBdb *model, DBT *key, GList **values, gboolean *has
 						*has_modifications = TRUE;
 				}
 				else {
-					g_set_error (error, 0, 0, _("Custom BDB model implementation is not complete: "
-								    "the '%s' method is missing"), "update_key_part");
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+						     GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+						     _("Custom BDB model implementation is not complete: "
+						       "the '%s' method is missing"),
+						     "update_key_part");
 					return FALSE;
 				}
 			}
@@ -852,7 +857,7 @@ alter_key_value (GdaDataModelBdb *model, DBT *key, GList **values, gboolean *has
 					*has_modifications = TRUE;
 			}
 			else {
-				g_set_error (error, 0, 0,
+				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 					     _("Expected GdaBinary value, got %s"), g_type_name (G_VALUE_TYPE (v)));
 				return FALSE;
 			}
@@ -914,8 +919,11 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 						return FALSE;
 				}
 				else {
-					g_set_error (error, 0, 0, _("Custom BDB model implementation is not complete: "
-								    "the '%s' method is missing"), "update_data_part");
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
++						     GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+						     _("Custom BDB model implementation is not complete: "
+						       "the '%s' method is missing"),
+						     "update_data_part");
 					return FALSE;
 				}
 			}
@@ -938,8 +946,10 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				data.data = bin->data;
 			}
 			else {
-				g_set_error (error, 0, 0,
-					     _("Expected GdaBinary value, got %s"), g_type_name (G_VALUE_TYPE (v)));
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     _("Expected GdaBinary value, got %s"),
+					     g_type_name (G_VALUE_TYPE (v)));
 				return FALSE;
 			}
 		}

@@ -410,7 +410,7 @@ gda_sql_statement_insert_check_structure (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpo
 						g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 							      "%s", _("INSERT statement does not have the same number of target columns and expressions"));
 					else
-						g_set_error (error, GDA_SQL_ERROR, 0,
+						g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 							      "%s", _("VALUES lists must all be the same length in INSERT statement"));
 					return FALSE;
 				}

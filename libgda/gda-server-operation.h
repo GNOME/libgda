@@ -72,7 +72,8 @@ extern GQuark gda_server_operation_error_quark (void);
 
 typedef enum {
 	GDA_SERVER_OPERATION_OBJECT_NAME_ERROR,
-	GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR
+	GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+	GDA_SERVER_OPERATION_XML_ERROR
 } GdaServerOperationError;
 
 typedef enum

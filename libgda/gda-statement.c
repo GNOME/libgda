@@ -1117,7 +1117,9 @@ default_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *
 		case GDA_SQL_ANY_STMT_SELECT:
 			str = context->render_select (GDA_SQL_ANY_PART (sqlstmt->contents), context, error);
 			if (!str) goto err;
+			g_string_append_c (string, '(');
 			g_string_append (string, str);
+			g_string_append_c (string, ')');
 			g_free (str);
 			break;
 		case GDA_SQL_ANY_STMT_COMPOUND:
@@ -1522,8 +1524,33 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		gchar *tmp;
 		tmp = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
 		if (!tmp) goto err;
-		str = g_strconcat ("(", tmp, ")", NULL);
-		g_free (tmp);
+		str = NULL;
+		if (GDA_SQL_ANY_PART (expr)->parent) {
+			if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_SELECT) {
+				GdaSqlStatementSelect *selst;
+				selst = (GdaSqlStatementSelect*) (GDA_SQL_ANY_PART (expr)->parent);
+				if ((expr == selst->where_cond) ||
+				    (expr == selst->having_cond))
+					str = tmp;
+			}
+			else if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_DELETE) {
+				GdaSqlStatementDelete *delst;
+				delst = (GdaSqlStatementDelete*) (GDA_SQL_ANY_PART (expr)->parent);
+				if (expr == delst->cond)
+					str = tmp;
+			}
+			else if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_UPDATE) {
+				GdaSqlStatementUpdate *updst;
+				updst = (GdaSqlStatementUpdate*) (GDA_SQL_ANY_PART (expr)->parent);
+				if (expr == updst->cond)
+					str = tmp;
+			}
+		}
+
+		if (!str) {
+			str = g_strconcat ("(", tmp, ")", NULL);
+			g_free (tmp);
+		}
 	}
 	else if (expr->select) {
 		gchar *str1;
@@ -1698,7 +1725,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 			goto out;
 		}
 		sqlop->sql = str;
-		if (expr->cond || expr->case_s || expr->select)
+		if (expr->case_s || expr->select)
 			sqlop->is_composed = TRUE;
 		sql_list = g_slist_prepend (sql_list, sqlop);
 	}
@@ -1945,8 +1972,21 @@ default_render_select_field (GdaSqlSelectField *field, GdaSqlRenderingContext *c
 	g_string_append (string, str);
 	g_free (str);
 
-	if (field->as)
-		g_string_append_printf (string, " AS %s", field->as);
+	if (field->as) {
+		if ((*field->as != '\'') && (*field->as != '"')) {
+			GdaConnectionOptions cncoptions = 0;
+			gchar *tmp;
+			if (context->cnc)
+				g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+			tmp = gda_sql_identifier_quote (field->as, context->cnc,
+							context->provider, FALSE,
+							cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+			g_string_append_printf (string, " AS %s", tmp);
+			g_free (tmp);
+		}
+		else
+			g_string_append_printf (string, " AS %s", field->as);
+	}
 
 	str = string->str;
 	g_string_free (string, FALSE);
@@ -1986,8 +2026,21 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 		g_free (str);
 	}
 
-	if (target->as)
-		g_string_append_printf (string, " AS %s", target->as);
+	if (target->as) {
+		if ((*target->as != '\'') && (*target->as != '"')) {
+			GdaConnectionOptions cncoptions = 0;
+			gchar *tmp;
+			if (context->cnc)
+				g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+			tmp = gda_sql_identifier_quote (target->as, context->cnc,
+							context->provider, FALSE,
+							cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+			g_string_append_printf (string, " AS %s", tmp);
+			g_free (tmp);
+		}
+		else
+			g_string_append_printf (string, " AS %s", target->as);
+	}
 
 	str = string->str;
 	g_string_free (string, FALSE);

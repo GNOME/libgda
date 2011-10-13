@@ -35,6 +35,16 @@ G_BEGIN_DECLS
 typedef struct _GdauiDataEntry        GdauiDataEntry;
 typedef struct _GdauiDataEntryIface   GdauiDataEntryIface;
 
+/* error reporting */
+extern GQuark gdaui_data_entry_error_quark (void);
+#define GDAUI_DATA_ENTRY_ERROR gdaui_data_entry_error_quark ()
+
+typedef enum
+{
+	GDAUI_DATA_ENTRY_FILE_NOT_FOUND_ERROR,
+	GDAUI_DATA_ENTRY_INVALID_DATA_ERROR
+} GdauiDataEntryError;
+
 /* struct for the interface */
 struct _GdauiDataEntryIface
 {

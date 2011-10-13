@@ -23,10 +23,6 @@
 #include <libgda/libgda.h>
 #include "prov-test-util.h"
 
-#define fail(x) g_warning ("%s", x)
-#define fail_if(x,y) if (x) g_warning ("%s", y)
-#define fail_unless(x,y) if (!(x)) g_warning ("%s", y)
-
 int prov_test_common_setup ();
 int prov_test_common_load_data ();
 int prov_test_common_check_meta ();

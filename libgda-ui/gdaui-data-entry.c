@@ -35,6 +35,15 @@ enum {
 static gint gdaui_data_entry_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
 static void gdaui_data_entry_iface_init (gpointer g_class);
 
+/* module error */
+GQuark gdaui_data_entry_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gdaui_data_entry_error");
+        return quark;
+}
+
 GType
 gdaui_data_entry_get_type (void)
 {
