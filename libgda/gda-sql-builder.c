@@ -1819,6 +1819,41 @@ gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement
 }
 
 /**
+ * gda_sql_builder_compound_add_sub_select_from_builder:
+ * @builder: a #GdaSqlBuilder object
+ * @subselect: a #GdaSqlBuilder, which has to be a SELECT or compound SELECT. This will be copied.
+ *
+ * Add a sub select to a COMPOUND statement
+ *
+ * Since: 4.2
+ */
+void
+gda_sql_builder_compound_add_sub_select_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *subselect)
+{
+	GdaSqlStatementCompound *cstmt;
+	GdaSqlStatement *sqlst;
+	GdaSqlStatement *sub;
+
+	g_return_if_fail (GDA_IS_SQL_BUILDER (builder));
+	g_return_if_fail (builder->priv->main_stmt);
+	g_return_if_fail (GDA_IS_SQL_BUILDER (subselect));
+	g_return_if_fail (subselect->priv->main_stmt);
+	if (builder->priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_COMPOUND) {
+		g_warning (_("Wrong statement type"));
+		return;
+	}
+	sqlst = gda_sql_builder_get_sql_statement(subselect);
+	g_return_if_fail (sqlst);
+	g_return_if_fail ((sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) ||
+			  (sqlst->stmt_type == GDA_SQL_STATEMENT_COMPOUND));
+
+	cstmt = (GdaSqlStatementCompound*) builder->priv->main_stmt->contents;
+	sub = gda_sql_statement_copy (sqlst);
+
+	cstmt->stmt_list = g_slist_append (cstmt->stmt_list, sub);
+}
+
+/**
  * gda_sql_builder_add_case: (skip)
  * @builder: a #GdaSqlBuilder object
  * @test_expr: the expression ID representing the test of the CASE, or %0
@@ -1992,4 +2027,32 @@ gda_sql_builder_import_expression (GdaSqlBuilder *builder, GdaSqlExpr *expr)
 
 	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, 0);
 	return add_part (builder, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));
+}
+
+/**
+ * gda_sql_builder_import_expression_from_builder:
+ * @builder: a #GdaSqlBuilder object
+ * @query: a #GdaSqlBuilder object to get expression from
+ * @expr_id: a #GdaSqlBuilderId of the expression in @query
+ *
+ * Imports the an expression located in @query into @builder.
+ *
+ * Returns: the ID of the new expression, or %0 if there was an error
+ *
+ * Since: 4.2
+ */
+GdaSqlBuilderId
+gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, daSqlBuilderId *expr_id)
+{
+ GdaSqlExpr *expr;
+
+ g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+ g_return_val_if_fail (builder->priv->main_stmt, 0);
+ g_return_val_if_fail (GDA_IS_SQL_BUILDER (query), 0);
+ g_return_val_if_fail (query->priv->main_stmt, 0);
+ g_return_val_if_fail (expr_id, 0);
+
+ expr = gda_sql_builder_export_expression(query, expr_id);
+ g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, 0);
+ return add_part (builder, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));
 }

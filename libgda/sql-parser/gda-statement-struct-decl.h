@@ -33,25 +33,69 @@ G_BEGIN_DECLS
 extern GQuark gda_sql_error_quark (void);
 #define GDA_SQL_ERROR gda_sql_error_quark ()
 
+/*
+ * GdaSqlError: (skip)
+ *
+ **/
 typedef enum {
 	GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 	GDA_SQL_MALFORMED_IDENTIFIER_ERROR,
 	GDA_SQL_MISSING_IDENTIFIER_ERROR,
 	GDA_SQL_VALIDATION_ERROR
 } GdaSqlError;
+/*
+ * GdaSqlErrorType: (skip)
+ *
+ **/
 typedef GdaSqlError GdaSqlErrorType;
 
 /*
  * Struct declarations
  */
+/*
+ * GdaSqlAnyPart: (skip)
+ *
+ **/
 typedef struct _GdaSqlAnyPart   GdaSqlAnyPart;
+/*
+ * GdaSqlStatement: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatement GdaSqlStatement;
+/*
+ * GdaSqlStatementUnknown: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementUnknown GdaSqlStatementUnknown;
+/*
+ * GdaSqlStatementTransaction: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementTransaction GdaSqlStatementTransaction;
+/*
+ * GdaSqlStatementSelect: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementSelect GdaSqlStatementSelect;
+/*
+ * GdaSqlStatementInsert: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementInsert GdaSqlStatementInsert;
+/*
+ * GdaSqlStatementDelete: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementDelete GdaSqlStatementDelete;
+/*
+ * GdaSqlStatementUpdate: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementUpdate GdaSqlStatementUpdate;
+/*
+ * GdaSqlStatementCompound: (skip)
+ *
+ **/
 typedef struct _GdaSqlStatementCompound GdaSqlStatementCompound;
 
 /*
@@ -124,6 +168,7 @@ typedef enum {
  * @GDA_SQL_ANY_SQL_SELECT_FROM: structure is a #GdaSqlSelectFrom
  * @GDA_SQL_ANY_SQL_SELECT_ORDER: structure is a #GdaSqlSelectOrder
  *
+ * Type of part.
  */
 typedef enum {
 	/* complete statements */
@@ -159,6 +204,8 @@ typedef enum {
  * @type: type of structure, as a #GdaSqlAnyPartType enum.
  * @parent: pointer to the parent #GdaSqlAnyPart structure
  *
+ * Base structure of which all structures (except #GdaSqlStatement) "inherit". 
+ * its type and its parent in the structure hierarchy.
  */
 struct _GdaSqlAnyPart {
 	GdaSqlAnyPartType  type;
@@ -224,12 +271,14 @@ typedef struct {
 /**
  * GdaSqlStatementCheckValidityData: (skip)
  *
+ * Validation against a dictionary
  */
 typedef struct {
 	GdaConnection *cnc;
 	GdaMetaStore  *store;
 	GdaMetaStruct *mstruct;
 
+	/*< private >*/
 	/* Padding for future expansion */
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
