@@ -127,12 +127,11 @@ void              gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSq
 void              gda_sql_builder_compound_set_type (GdaSqlBuilder *builder, GdaSqlStatementCompoundType compound_type);
 void              gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst);
 void              gda_sql_builder_compound_add_sub_select_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *subselect);
-void              gda_sql_builder_compound_add_sub_select_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *subselect);
 
 /* import/Export API */
 GdaSqlExpr       *gda_sql_builder_export_expression (GdaSqlBuilder *builder, GdaSqlBuilderId id);
 GdaSqlBuilderId gda_sql_builder_import_expression (GdaSqlBuilder *builder, GdaSqlExpr *expr);
-GdaSqlBuilderId gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, daSqlBuilderId *expr_id);
+GdaSqlBuilderId gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, GdaSqlBuilderId expr_id);
 
 G_END_DECLS
 

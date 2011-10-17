@@ -1825,7 +1825,7 @@ gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement
  *
  * Add a sub select to a COMPOUND statement
  *
- * Since: 4.2
+ * Since: 4.2.10
  */
 void
 gda_sql_builder_compound_add_sub_select_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *subselect)
@@ -2039,10 +2039,10 @@ gda_sql_builder_import_expression (GdaSqlBuilder *builder, GdaSqlExpr *expr)
  *
  * Returns: the ID of the new expression, or %0 if there was an error
  *
- * Since: 4.2
+ * Since: 4.2.10
  */
 GdaSqlBuilderId
-gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, daSqlBuilderId *expr_id)
+gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, GdaSqlBuilderId expr_id)
 {
  GdaSqlExpr *expr;
 
