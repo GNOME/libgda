@@ -1954,6 +1954,16 @@ default_render_case (GdaSqlCase *case_s, GdaSqlRenderingContext *context, GError
 	return NULL;
 }
 
+static gboolean
+alias_is_quoted (const gchar *alias)
+{
+	g_assert (alias);
+	if ((*alias == '\'') || (*alias == '"'))
+		return TRUE;
+	else
+		return FALSE;
+}
+
 static gchar *
 default_render_select_field (GdaSqlSelectField *field, GdaSqlRenderingContext *context, GError **error)
 {
@@ -1973,7 +1983,7 @@ default_render_select_field (GdaSqlSelectField *field, GdaSqlRenderingContext *c
 	g_free (str);
 
 	if (field->as) {
-		if ((*field->as != '\'') && (*field->as != '"')) {
+		if (! alias_is_quoted (field->as)) {
 			GdaConnectionOptions cncoptions = 0;
 			gchar *tmp;
 			if (context->cnc)
@@ -2027,7 +2037,7 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 	}
 
 	if (target->as) {
-		if ((*target->as != '\'') && (*target->as != '"')) {
+		if (! alias_is_quoted (target->as)) {
 			GdaConnectionOptions cncoptions = 0;
 			gchar *tmp;
 			if (context->cnc)
