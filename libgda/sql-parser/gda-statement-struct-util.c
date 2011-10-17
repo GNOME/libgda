@@ -277,7 +277,7 @@ _string_is_identifier (const gchar *str)
 	else
 		ptr = str;
 	for (; 
-	     IdChar(*ptr) || (*ptr == '*') || (*ptr == '.') || (((*ptr == '"') || (*ptr == '`')) && ptr[1] == 0); 
+	     IdChar(*ptr) || (*ptr == '*') || (*ptr == '.') || (*ptr == '-') || (((*ptr == '"') || (*ptr == '`')) && ptr[1] == 0); 
 	     ptr++);
 	if (*ptr) 
 		return FALSE;
