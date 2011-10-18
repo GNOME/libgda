@@ -720,10 +720,7 @@ static void
 create_columns_data (GdauiRawGrid *grid)
 {
 	gint i;
-	GtkTreeView *tree_view;
 	GSList *list;
-
-	tree_view = GTK_TREE_VIEW (grid);
 
 	/* Creation of the columns in the treeview, to fit the parameters in grid->priv->iter param list */
 	for (i = 0, list = grid->priv->iter_info->groups_list;
@@ -751,7 +748,7 @@ create_columns_data (GdauiRawGrid *grid)
 		if (group->source) {
 			/* parameters depending on a GdaDataModel */
 			gchar *title;
-			gboolean nullok = TRUE;
+			/*
 			GSList *nodes;
 
 			for (nodes = group->group->nodes; nodes; nodes = nodes->next) {
@@ -760,6 +757,7 @@ create_columns_data (GdauiRawGrid *grid)
 					break;
 				}
 			}
+			*/
 
 			/* determine title */
 			if (g_slist_length (group->group->nodes) == 1)
@@ -1002,14 +1000,14 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 	if (group->group->nodes_source) {
 		/* parameters depending on a GdaDataModel */
 		GList *values = NULL;
-		GdaSetSource *source;
-
-		source = group->group->nodes_source;
 
 		/* NOTE:
 		 * For performances reasons we want to provide, if possible, all the values required by the combo cell
 		 * renderer to draw whatever it wants, without further making it search for the values it wants in
 		 * source->data_model.
+		 *
+		 * GdaSetSource *source;
+		 * source = group->group->nodes_source;
 		 *
 		 * For this purpose, we try to get a complete list of values making one row of the node->data_for_params
 		 * data model, so that the combo cell renderer has all the values it wants.
@@ -1115,10 +1113,6 @@ cell_info_set_attributes (GtkTreeViewColumn *tree_column,
 
 	if (group->group->nodes_source) {
 		/* parameters depending on a GdaDataModel */
-		GdaSetSource *source;
-
-		source = g_object_get_data (G_OBJECT (tree_column), "source");
-
 		attributes = _gdaui_utility_proxy_compute_attributes_for_group (group, grid->priv->store,
 										grid->priv->iter,
 										iter, &to_be_deleted);
@@ -1211,9 +1205,7 @@ data_cell_values_changed (GtkCellRenderer *renderer, const gchar *path,
 
 	if (set_iter_from_path (grid, path, &iter)) {
 		GSList *list, *params;
-		gint col, proxy_row;
-
-		proxy_row = gdaui_data_store_get_row_from_iter (grid->priv->store, &iter);
+		gint col;
 
 		/* update the GdauiDataStore */
 		for (params = group->group->nodes, list = new_values;
@@ -1226,6 +1218,9 @@ data_cell_values_changed (GtkCellRenderer *renderer, const gchar *path,
 
 #ifdef PROXY_STORE_EXTRA_VALUES
 		/* call gda_data_proxy_set_model_row_value() */
+		gint proxy_row;
+		proxy_row = gdaui_data_store_get_row_from_iter (grid->priv->store, &iter);
+
 		gint i;
 		for (i = 0; i < group->source->shown_n_cols; i++) {
 			GValue *value;
@@ -1315,9 +1310,7 @@ data_cell_status_changed (GtkCellRenderer *renderer, const gchar *path, GdaValue
 	g_value_set_uint (attribute = gda_value_new (G_TYPE_UINT), requested_action);
 	if (group->group->nodes_source) {
 		/* parameters depending on a GdaDataModel */
-		gint proxy_row;
 		GSList *list;
-		proxy_row = gdaui_data_store_get_row_from_iter (grid->priv->store, &iter);
 
 		for (list = group->group->nodes; list; list = list->next) {
 			col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
@@ -1326,6 +1319,9 @@ data_cell_status_changed (GtkCellRenderer *renderer, const gchar *path, GdaValue
 		}
 
 #ifdef PROXY_STORE_EXTRA_VALUES
+		gint proxy_row;
+		proxy_row = gdaui_data_store_get_row_from_iter (grid->priv->store, &iter);
+
 		/* call gda_data_proxy_set_model_row_value() */
 		gint i;
 		for (i = 0; i < group->nodes_source->shown_n_cols; i++) {
