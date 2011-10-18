@@ -897,6 +897,7 @@ action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 
 	/* move the filter window to a correct location */
 	/* FIXME: let the user specify the position function like GtkTreeView -> search_position_func() */
+	gtk_widget_show (form->priv->filter_window);
 	gtk_grab_add (form->priv->filter_window);
 	filter_position_func (GTK_WIDGET (form), form->priv->filter_window, NULL);
 	gtk_widget_show (form->priv->filter_window);
