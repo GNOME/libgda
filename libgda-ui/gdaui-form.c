@@ -30,6 +30,7 @@
 
 static void gdaui_form_class_init (GdauiFormClass * class);
 static void gdaui_form_init (GdauiForm *wid);
+static void gdaui_form_dispose (GObject *object);
 
 static void gdaui_form_set_property (GObject *object,
 				     guint param_id,
@@ -145,6 +146,7 @@ gdaui_form_class_init (GdauiFormClass *class)
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 
 	parent_class = g_type_class_peek_parent (class);
+	object_class->dispose = gdaui_form_dispose;
 
 	/* Properties */
 
@@ -180,6 +182,12 @@ form_layout_changed_cb (G_GNUC_UNUSED GdauiBasicForm *raw_form, GdauiForm *form)
 }
 
 static void
+form_selection_changed_cb (G_GNUC_UNUSED GdauiRawForm *rawform, GdauiForm *form)
+{
+	g_signal_emit_by_name (G_OBJECT (form), "selection-changed");
+}
+
+static void
 gdaui_form_init (GdauiForm *form)
 {
 	form->priv = g_new0 (GdauiFormPriv, 1);
@@ -191,6 +199,8 @@ gdaui_form_init (GdauiForm *form)
 	gtk_widget_show (form->priv->raw_form);
 	g_signal_connect (form->priv->raw_form, "layout-changed",
 			  G_CALLBACK (form_layout_changed_cb), form);
+	g_signal_connect (form->priv->raw_form, "selection-changed",
+			  G_CALLBACK (form_selection_changed_cb), form);
 
 	form->priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (form->priv->raw_form),
 						      GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
@@ -199,6 +209,30 @@ gdaui_form_init (GdauiForm *form)
 	gtk_widget_show (form->priv->info);
 
 }
+
+static void
+gdaui_form_dispose (GObject *object)
+{
+	GdauiForm *form;
+
+	g_return_if_fail (GDAUI_IS_FORM (object));
+	form = GDAUI_FORM (object);
+
+	if (form->priv) {
+		g_signal_handlers_disconnect_by_func (form->priv->raw_form,
+						      G_CALLBACK (form_layout_changed_cb), form);
+		g_signal_handlers_disconnect_by_func (form->priv->raw_form,
+						      G_CALLBACK (form_selection_changed_cb), form);
+
+		/* the private area itself */
+		g_free (form->priv);
+		form->priv = NULL;
+	}
+
+	/* for the parent class */
+	parent_class->dispose (object);
+}
+
 
 /**
  * gdaui_form_new:

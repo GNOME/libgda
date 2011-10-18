@@ -30,6 +30,7 @@
 
 static void gdaui_grid_class_init (GdauiGridClass * class);
 static void gdaui_grid_init (GdauiGrid *wid);
+static void gdaui_grid_dispose (GObject *object);
 
 static void gdaui_grid_set_property (GObject *object,
 				     guint param_id,
@@ -146,6 +147,7 @@ gdaui_grid_class_init (GdauiGridClass *class)
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 
 	parent_class = g_type_class_peek_parent (class);
+	object_class->dispose = gdaui_grid_dispose;
 
 	/* Properties */
         object_class->set_property = gdaui_grid_set_property;
@@ -170,6 +172,12 @@ gdaui_grid_class_init (GdauiGridClass *class)
 }
 
 static void
+raw_grid_selection_changed_cb (G_GNUC_UNUSED GdauiRawGrid *rawgrid, GdauiGrid *grid)
+{
+	g_signal_emit_by_name (G_OBJECT (grid), "selection-changed");
+}
+
+static void
 gdaui_grid_init (GdauiGrid *grid)
 {
 	GtkWidget *sw;
@@ -187,11 +195,34 @@ gdaui_grid_init (GdauiGrid *grid)
 	grid->priv->raw_grid = gdaui_raw_grid_new (NULL);
 	gtk_container_add (GTK_CONTAINER (sw), grid->priv->raw_grid);
 	gtk_widget_show (grid->priv->raw_grid);
+	g_signal_connect (grid->priv->raw_grid, "selection-changed",
+			  G_CALLBACK (raw_grid_selection_changed_cb), grid);
 
 	grid->priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (grid->priv->raw_grid),
 						      GDAUI_DATA_PROXY_INFO_CURRENT_ROW);
 	gtk_box_pack_start (GTK_BOX (grid), grid->priv->info, FALSE, TRUE, 0);
 	gtk_widget_show (grid->priv->info);
+}
+
+static void
+gdaui_grid_dispose (GObject *object)
+{
+	GdauiGrid *grid;
+
+	g_return_if_fail (GDAUI_IS_GRID (object));
+	grid = GDAUI_GRID (object);
+
+	if (grid->priv) {
+		g_signal_handlers_disconnect_by_func (grid->priv->raw_grid,
+						      G_CALLBACK (raw_grid_selection_changed_cb), grid);
+
+		/* the private area itself */
+		g_free (grid->priv);
+		grid->priv = NULL;
+	}
+
+	/* for the parent class */
+	parent_class->dispose (object);
 }
 
 /**
