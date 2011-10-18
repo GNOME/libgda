@@ -3063,8 +3063,10 @@ gdaui_raw_grid_selector_get_selected_rows (GdauiDataSelector *iface)
 		for (list = selected_rows; list; list = list->next) {
 			if (gtk_tree_model_get_iter (GTK_TREE_MODEL (grid->priv->store), &iter,
 						     (GtkTreePath *)(list->data))) {
-				gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), &iter,
-						    GDAUI_DATA_STORE_COL_MODEL_ROW, &row, -1);
+				gint *ind;
+				ind = gtk_tree_path_get_indices ((GtkTreePath *)(list->data));
+				g_assert (ind);
+				row = *ind;
 				if (!selarray)
 					selarray = g_array_new (FALSE, FALSE, sizeof (gint));
 				g_array_append_val (selarray, row);
