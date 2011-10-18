@@ -1049,7 +1049,7 @@ _gda_connection_get_internal_thread_provider (void)
  * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
  * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
- * Returns: (transfer full) (allow-none): a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
+ * Returns: (transfer full): a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
  */
 GdaConnection *
 gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string, 
@@ -1159,9 +1159,9 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 
 /**
  * gda_connection_open_from_string:
- * @provider_name: provider ID to connect to, or %NULL
+ * @provider_name: (allow-none): provider ID to connect to, or %NULL
  * @cnc_string: connection string.
- * @auth_string: authentication string, or %NULL
+ * @auth_string: (allow-none): authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
@@ -1203,7 +1203,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
  * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
- * Returns: (transfer full) (allow-none): a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
+ * Returns: (transfer full): a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
  */
 GdaConnection *
 gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_string, const gchar *auth_string,
@@ -1377,7 +1377,7 @@ sqlite_connection_closed_cb (GdaConnection *cnc, G_GNUC_UNUSED gpointer data)
  * to be used by database providers which need a temporary database to store
  * some information.
  *
- * Returns: (transfer full) (allow-none): a new #GdaConnection, or %NULL if an error occurred
+ * Returns: (transfer full): a new #GdaConnection, or %NULL if an error occurred
  */
 GdaConnection *
 gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gboolean auto_unlink)
@@ -2323,7 +2323,7 @@ gda_connection_delete_row_from_table (GdaConnection *cnc, const gchar *table,
  *
  * This function helps to parse a SQL string which uses parameters and store them at @params.
  *
- * Returns: (transfer full) (allow-none): a #GdaStatement representing the SQL command, or %NULL if an error occurred
+ * Returns: (transfer full): a #GdaStatement representing the SQL command, or %NULL if an error occurred
  *
  * Since: 4.2.3
  */
@@ -2364,7 +2364,7 @@ gda_connection_parse_sql_string (GdaConnection *cnc, const gchar *sql, GdaSet **
  * Use this method to get a pointer to the next available connection event which can then be customized
  * and taken into account using gda_connection_add_event().
  *
- * Returns: (transfer full) (allow-none): a pointer to the next available connection event, or %NULL if event should
+ * Returns: (transfer full): a pointer to the next available connection event, or %NULL if event should
  * be ignored
  *
  * Since: 4.2
@@ -2562,7 +2562,7 @@ gda_connection_clear_events_list (GdaConnection *cnc)
  * to perform the type type of action. It is a wrapper around the gda_server_provider_create_operation()
  * method.
  *
- * Returns: (transfer full) (allow-none): a new #GdaServerOperation object, or %NULL in the connection's provider does not support the @type type
+ * Returns: (transfer full): a new #GdaServerOperation object, or %NULL in the connection's provider does not support the @type type
  * of operation or if an error occurred
  */
 GdaServerOperation*
@@ -2610,7 +2610,7 @@ gda_connection_perform_operation (GdaConnection *cnc, GdaServerOperation *op, GE
  * then %NULL is returned, and a general SQL parser can be obtained
  * using gda_sql_parser_new().
  *
- * Returns: (transfer full) (allow-none): a new #GdaSqlParser object, or %NULL
+ * Returns: (transfer full): a new #GdaSqlParser object, or %NULL
  */
 GdaSqlParser *
 gda_connection_create_parser (GdaConnection *cnc)
@@ -2747,7 +2747,7 @@ gda_connection_quote_sql_identifier (GdaConnection *cnc, const gchar *id)
  *
  * Renders @stmt as an SQL statement, adapted to the SQL dialect used by @cnc
  *
- * Returns: a new string, or %NULL if an error occurred
+ * Returns: (transfer full): a new string, or %NULL if an error occurred
  */
 gchar *
 gda_connection_statement_to_sql (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
@@ -3111,7 +3111,7 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
  * would have if the statement had been
  * executed synchronously.
  *
- * Returns: (transfer full) (allow-none): a #GObject, or %NULL if an error occurred
+ * Returns: (transfer full): a #GObject, or %NULL if an error occurred
  *
  * Since: 4.2
  */
@@ -3320,7 +3320,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
  *
  * Execute a SQL SELECT command over an opened connection.
  *
- * Returns: (transfer full) (allow-none): a new #GdaDataModel if successful, %NULL otherwise
+ * Returns: (transfer full): a new #GdaDataModel if successful, %NULL otherwise
  *
  * Since: 4.2.3
  */
@@ -3450,7 +3450,7 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, const gchar *sql,
  * Also see the <link linkend="limitations">provider's limitations</link>, and the
  * <link linkend="data-select">Advanced GdaDataSelect usage</link> sections.
  *
- * Returns: (transfer full) (allow-none): a #GObject, or %NULL if an error occurred 
+ * Returns: (transfer full): a #GObject, or %NULL if an error occurred 
  */
 GObject *
 gda_connection_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
@@ -3555,7 +3555,7 @@ gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *s
  * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
- * Returns: (transfer full) (allow-none): a #GdaDataModel containing the data returned by the
+ * Returns: (transfer full): a #GdaDataModel containing the data returned by the
  * data source, or %NULL if an error occurred
  */
 GdaDataModel *
@@ -3602,7 +3602,7 @@ gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
  * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
- * Returns: (transfer full) (allow-none): a #GdaDataModel containing the data returned by the
+ * Returns: (transfer full): a #GdaDataModel containing the data returned by the
  * data source, or %NULL if an error occurred
  */
 GdaDataModel *
@@ -3700,7 +3700,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
  * See the documentation of the gda_connection_statement_execute() for information
  * about the @params list of parameters.
  *
- * Returns: (transfer full) (allow-none): a #GdaDataModel containing the data returned by the
+ * Returns: (transfer full): a #GdaDataModel containing the data returned by the
  * data source, or %NULL if an error occurred
  */
 GdaDataModel *
@@ -5665,7 +5665,7 @@ gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
 /**
  * gda_connection_internal_transaction_started: (skip)
  * @cnc: a #GdaConnection
- * @parent_trans: name of the parent transaction, or %NULL
+ * @parent_trans: (allow-none): name of the parent transaction, or %NULL
  * @trans_name: transaction's name, or %NULL
  * @isol_level: isolation level.
  *
@@ -5715,7 +5715,7 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
 /**
  * gda_connection_internal_transaction_rolledback: (skip)
  * @cnc: a #GdaConnection
- * @trans_name: transaction's name, or %NULL
+ * @trans_name: (allow-none): transaction's name, or %NULL
  *
  * Internal functions to be called by database providers when a transaction has been rolled
  * back to keep track of the transaction status of the connection
@@ -5768,7 +5768,7 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
 /**
  * gda_connection_internal_transaction_committed: (skip)
  * @cnc: a #GdaConnection
- * @trans_name: transaction's name, or %NULL
+ * @trans_name: (allow-none): transaction's name, or %NULL
  *
  * Internal functions to be called by database providers when a transaction has been committed
  * to keep track of the transaction status of the connection
@@ -5821,7 +5821,7 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 /**
  * gda_connection_internal_savepoint_added: (skip)
  * @cnc: a #GdaConnection
- * @parent_trans: name of the parent transaction, or %NULL
+ * @parent_trans: (allow-none): name of the parent transaction, or %NULL
  * @svp_name: savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been added
@@ -5865,7 +5865,7 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
 /**
  * gda_connection_internal_savepoint_rolledback: (skip)
  * @cnc: a #GdaConnection
- * @svp_name: savepoint's name, or %NULL
+ * @svp_name: (allow-none): savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been rolled back
  * to keep track of the transaction status of the connection
@@ -5909,7 +5909,7 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
 /**
  * gda_connection_internal_savepoint_removed: (skip)
  * @cnc: a #GdaConnection
- * @svp_name: savepoint's name, or %NULL
+ * @svp_name: (allow-none): savepoint's name, or %NULL
  *
  * Internal functions to be called by database providers when a savepoint has been removed
  * to keep track of the transaction status of the connection
@@ -5954,7 +5954,7 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
  * gda_connection_internal_statement_executed: (skip)
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement which has been executed
- * @params: execution's parameters
+ * @params: (allow-none): execution's parameters
  * @error: a #GdaConnectionEvent if the execution failed, or %NULL
  *
  * Internal functions to be called by database providers when a statement has been executed
