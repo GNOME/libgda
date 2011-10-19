@@ -19,7 +19,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I. \
 	$(COREDEPS_CFLAGS) \
-	$(COREDEPS_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
 gda_list_config_5_0_SOURCES = \
