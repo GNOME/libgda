@@ -633,6 +633,7 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 	GdaMetaDbObject *dbo;
 	GValue value;
 	GError *lerror = NULL;
+
 	memset (&value, 0, sizeof (GValue));
 
 	/* use @name as the table or view's real name */
@@ -640,6 +641,13 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 	dbo = gda_meta_struct_complement (data->mstruct, GDA_META_DB_UNKNOWN,
 					  NULL, NULL, &value, &lerror);
 	g_value_unset (&value);
+	if (!dbo && (*name == '"')) {
+		gchar *tmp;
+		tmp = gda_sql_identifier_quote (name, data->cnc, NULL, TRUE, FALSE);
+		dbo = find_table_or_view (part, data, tmp, error);
+		g_free (tmp);
+		return dbo;
+	}
 	if (!dbo) {
 		/* use @name as a table alias in the statement */
 		GdaSqlAnyPart *any;
@@ -656,7 +664,7 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 					GSList *targets;
 					for (targets = select->from->targets; targets; targets = targets->next) {
 						GdaSqlSelectTarget *target = (GdaSqlSelectTarget*) targets->data;
-						if (!target->as)
+						if (!target->as || strcmp (target->as, name))
 							continue;
 						g_value_set_string (g_value_init (&value, G_TYPE_STRING),
 								    target->table_name);
@@ -693,6 +701,7 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 		if (lerror)
 			g_propagate_error (error, lerror);
 	}
+
 	return dbo;
 }
 
