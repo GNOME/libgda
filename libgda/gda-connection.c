@@ -1049,7 +1049,7 @@ _gda_connection_get_internal_thread_provider (void)
  * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
  * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
- * Returns: (transfer full): a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
+ * Returns: (transfer full): a new #GdaConnection if connection opening was successful or %NULL if there was an error.
  */
 GdaConnection *
 gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string, 
@@ -1203,7 +1203,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
  * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
- * Returns: (transfer full): a new #GdaConnection if connection opening was sucessfull or %NULL if there was an error.
+ * Returns: (transfer full): a new #GdaConnection if connection opening was successful or %NULL if there was an error.
  */
 GdaConnection *
 gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_string, const gchar *auth_string,
@@ -6345,7 +6345,7 @@ gda_connection_lock (GdaLockable *lockable)
  * Tries to lock @cnc for the exclusive usage of the current thread, as gda_connection_lock(), except
  * that if it can't, then the calling thread is not locked by it simply returns FALSE.
  *
- * Returns: TRUE if sucessfully locked, or FALSE if lock could not be acquired
+ * Returns: TRUE if successfully locked, or FALSE if lock could not be acquired
  */
 static gboolean
 gda_connection_trylock (GdaLockable *lockable)

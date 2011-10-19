@@ -430,7 +430,7 @@ find_row_in_model (GdaDataComparator *comp, gint row, gboolean *out_has_changed,
  * If one connects to this signal and returns FALSE in the signal handler, then computing differences will be
  * stopped and an error will be returned.
  *
- * Returns: TRUE if all the differences have been sucessfully computed, and FALSE if an error occurred
+ * Returns: TRUE if all the differences have been successfully computed, and FALSE if an error occurred
  */
 gboolean
 gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)

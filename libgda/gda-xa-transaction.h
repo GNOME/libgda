@@ -96,7 +96,7 @@ struct _GdaXaTransactionId {
  * made on any connection are first <emphasis>prepared</emphasis> (which means that they are store in the database), and
  * if that phase succeeded for all the involved connections, then the <emphasis>commit</emphasis> phase is executed
  * (where all the data previously stored during the <emphasis>prepare</emphasis> phase are actually committed).
- * That second phase may actually fail, but the distributed transaction will still be considered as sucessfull
+ * That second phase may actually fail, but the distributed transaction will still be considered as successfull
  * as the data stored during the <emphasis>prepare</emphasis> phase can be committed afterwards.
  *
  * A distributed transaction involves the following steps:
