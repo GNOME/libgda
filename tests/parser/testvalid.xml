@@ -27,6 +27,16 @@
   <test id="11">
     <sql valid="f">SELECT version() FROM customers, customers</sql>
   </test>
+
+  <test id="13">
+    <sql valid="t">select p.*, ca.categoryname from products p left join categories ca on (ca.id=p.category)</sql>
+  </test>
+  <test id="14">
+    <sql valid="t">select p.*, ca."categoryname" from products p left join categories ca on (ca.id=p.category)</sql>
+  </test>
+  <test id="14">
+    <sql valid="t">select "p".*, ca."categoryname" from products p left join categories ca on (ca.id=p.category)</sql>
+  </test>
   
   <!-- computing DML commands from SELECT -->
 
