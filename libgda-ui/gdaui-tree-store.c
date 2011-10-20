@@ -380,7 +380,7 @@ gdaui_tree_store_get_property (GObject *object,
 	if (store->priv) {
 		switch (param_id) {
 		case PROP_TREE:
-			g_value_set_pointer (value, store->priv->tree);
+			g_value_set_object (value, store->priv->tree);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -898,7 +898,7 @@ tree_store_iter_n_children (GtkTreeModel *tree_model, GtkTreeIter *iter)
 		g_slist_free (list);
 		return retval;
 	}
-	else if (node != NOT_A_NODE) {
+	else if (node && (node != NOT_A_NODE)) {
 		const GValue *cv;
 		cv = gda_tree_node_get_node_attribute (node,
 						       GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN);
@@ -939,7 +939,7 @@ tree_store_iter_nth_child (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeI
 			return TRUE;
 		}
 	}
-	else if ((node != NOT_A_NODE) && (n == 0)) {
+	else if (node && (node != NOT_A_NODE) && (n == 0)) {
 		const GValue *cv;
 		cv = gda_tree_node_get_node_attribute (node,
 						       GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN);
