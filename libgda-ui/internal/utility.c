@@ -422,6 +422,7 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 		label = gtk_label_new (filled_error->message);
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
 				    label, TRUE, TRUE, 0);
+		gtk_widget_show (label);
 	}
 
 	return dlg;
