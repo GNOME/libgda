@@ -33,7 +33,7 @@ static void     emitted_signal_add (EmittedSignal *es);
 static void     emitted_signals_reset (void);
 static gboolean emitted_signals_find (gpointer obj, const gchar *signal_name, GError **error);
 /* Not used: static gboolean emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error); */
-static gboolean emitted_signals_chech_empty (gpointer obj, const gchar *signal_name, GError **error);
+static gboolean emitted_signals_check_empty (gpointer obj, const gchar *signal_name, GError **error);
 static void     emitted_signals_monitor_set (GdaSet *set);
 
 /* 
@@ -144,7 +144,7 @@ test2 (GError **error)
 
 	if (!emitted_signals_find (set, "public-data-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (set, "public-data-changed", error))
+	if (!emitted_signals_check_empty (set, "public-data-changed", error))
 		return FALSE;
 
 	if (!tests_common_check_set (data, "T2.1", set, error)) return FALSE;
@@ -157,7 +157,7 @@ test2 (GError **error)
 
 	if (!emitted_signals_find (set, "public-data-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (set, "public-data-changed", error))
+	if (!emitted_signals_check_empty (set, "public-data-changed", error))
 		return FALSE;
 
 	/***/
@@ -168,7 +168,7 @@ test2 (GError **error)
 
 	if (!emitted_signals_find (set, "public-data-changed", error))
 		return FALSE;
-	if (!emitted_signals_chech_empty (set, "public-data-changed", error))
+	if (!emitted_signals_check_empty (set, "public-data-changed", error))
 		return FALSE;
 
 	return TRUE;
@@ -455,7 +455,7 @@ emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error)
 */
 
 static gboolean
-emitted_signals_chech_empty (gpointer obj, const gchar *signal_name, GError **error)
+emitted_signals_check_empty (gpointer obj, const gchar *signal_name, GError **error)
 {
 	GSList *list;
 	for (list = signals_list; list; list = list->next) {

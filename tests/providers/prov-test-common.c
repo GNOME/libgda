@@ -624,7 +624,7 @@ prov_test_common_check_data_select ()
 		goto out;
 	}
 
-	/* chech the columns haven't changed */
+	/* check the columns haven't changed */
 	ncols = gda_data_model_get_n_columns (model);
 	if (i != ncols) {
 		g_set_error (&error, 0, 0,
