@@ -3356,9 +3356,10 @@ gda_connection_execute_select_command (GdaConnection *cnc, const gchar *sql, GEr
  * @sql: a query statement that must not begin with "SELECT"
  * @error: a place to store errors, or %NULL
  *
- * This is a convenience function to execute a SQL command over the opened connection.
+ * This is a convenience function to execute a SQL command over the opened connection. For the
+ * returned value, see gda_connection_statement_execute_non_select()'s documentation.
  *
- * Returns: the number of rows affected or -1
+ * Returns: the number of rows affected or -1, or -2
  *
  * Since: 4.2.3
  */
