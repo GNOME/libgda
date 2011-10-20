@@ -232,14 +232,12 @@ browser_canvas_column_new (GooCanvasItem *parent, GdaMetaStruct *mstruct, GdaMet
 			   gdouble x, gdouble y, ...)
 {
 	GooCanvasItem *item;
-	BrowserCanvasColumn *goocolumn;
 	const char *first_property;
 	va_list var_args;
 
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), NULL);
 
 	item = g_object_new (TYPE_BROWSER_CANVAS_COLUMN, "meta-struct", mstruct, NULL);
-	goocolumn = (BrowserCanvasColumn*) item;
 
 	if (parent) {
 		goo_canvas_item_add_child (parent, item, -1);

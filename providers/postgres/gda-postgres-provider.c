@@ -1512,12 +1512,11 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 	/* actually prepare statement */
 	PGresult *pg_res;
 	gchar *prep_stm_name;
-	GdaConnectionEvent *event = NULL;
 
 	prep_stm_name = g_strdup_printf ("psc%d", counter ++);
 	pg_res = PQprepare (cdata->pconn, prep_stm_name, sql, 0, NULL);
 	if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK)) {
-		event = _gda_postgres_make_error (cnc, cdata->pconn, pg_res, error);
+		_gda_postgres_make_error (cnc, cdata->pconn, pg_res, error);
 		g_free (prep_stm_name);
 		if (pg_res)
 			PQclear (pg_res);
@@ -1594,12 +1593,11 @@ prepare_stmt_simple (PostgresConnectionData *cdata, const gchar *sql, GError **e
 	static guint counter = 0; /* each prepared statement MUST have a unique name, ensured with this counter */
 	PGresult *pg_res;
 	gchar *prep_stm_name;
-	GdaConnectionEvent *event = NULL;
 
 	prep_stm_name = g_strdup_printf ("pss%d", counter++);
 	pg_res = PQprepare (cdata->pconn, prep_stm_name, sql, 0, NULL);
 	if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK)) {
-		event = _gda_postgres_make_error (cdata->cnc, cdata->pconn, pg_res, error);
+		_gda_postgres_make_error (cdata->cnc, cdata->pconn, pg_res, error);
 		g_free (prep_stm_name);
 		if (pg_res)
 			PQclear (pg_res);

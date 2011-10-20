@@ -487,21 +487,7 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		gtk_widget_unparent (info->priv->tool_item);
 	}
 
-	gboolean row_modif_needed = FALSE;
-	gboolean row_move_needed = FALSE;
-	gboolean chunk_change_needed = FALSE;
 	gboolean ensure_update = FALSE;
-
-	if (flags & (GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
-		     GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS |
-		     GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)) {
-		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS)
-			row_modif_needed = TRUE;
-		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS)
-			row_move_needed = TRUE;
-		if (flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)
-			chunk_change_needed = TRUE;
-	}
 
 	if (info->priv->uimanager) {
 		if (info->priv->merge_id_row_modif) {

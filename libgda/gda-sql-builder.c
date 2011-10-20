@@ -2044,7 +2044,7 @@ gda_sql_builder_import_expression (GdaSqlBuilder *builder, GdaSqlExpr *expr)
  * Since: 4.2
  */
 GdaSqlBuilderId
-gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, GdaSqlBuilderId *expr_id)
+gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, GdaSqlBuilderId expr_id)
 {
 	GdaSqlExpr *expr;
 	
@@ -2054,7 +2054,7 @@ gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBu
 	g_return_val_if_fail (query->priv->main_stmt, 0);
 	g_return_val_if_fail (expr_id, 0);
 	
-	expr = gda_sql_builder_export_expression(query, expr_id);
+	expr = gda_sql_builder_export_expression (query, expr_id);
 	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, 0);
 	return add_part (builder, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));
 }

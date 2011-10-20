@@ -461,9 +461,8 @@ action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, LdapClassesPage *ebrowser
 	BrowserFavorites *bfav;
         BrowserFavoritesAttributes fav;
         GError *error = NULL;
-	const gchar *tmp;
 
-	tmp = classes_view_get_current_class (CLASSES_VIEW (ebrowser->priv->classes_view));
+	classes_view_get_current_class (CLASSES_VIEW (ebrowser->priv->classes_view));
         memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
         fav.id = -1;
         fav.type = BROWSER_FAVORITES_LDAP_CLASS;
@@ -612,11 +611,9 @@ ldap_classes_page_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
 static GtkWidget *
 ldap_classes_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
-	LdapClassesPage *ebrowser;
 	const gchar *tab_name;
 	GdkPixbuf *classes_pixbuf;
 
-	ebrowser = LDAP_CLASSES_PAGE (page);
 	classes_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_LDAP_CLASS_STRUCTURAL);
 	tab_name = _("LDAP classes");
 	return browser_make_tab_label_with_pixbuf (tab_name,

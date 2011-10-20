@@ -350,6 +350,7 @@ widget_overlay_event (GtkWidget *widget, GdkEvent *event)
 {
 	GdkEventScroll *ev = (GdkEventScroll *) event;
 	WidgetOverlay *ovl = WIDGET_OVERLAY (widget);
+#ifdef GDA_DEBUG_NO
 	ChildData *cdevent = NULL;
 
 	/* find child */
@@ -362,7 +363,8 @@ widget_overlay_event (GtkWidget *widget, GdkEvent *event)
 			break;
 		}
 	}
-	/*g_print (" CH%d/%d", g_list_index (ovl->priv->children, cdevent), event->type);*/
+	g_print (" CH%d/%d", g_list_index (ovl->priv->children, cdevent), event->type);
+#endif
 
 	/* tooltip widgets handling */
 	gboolean tooltip_event = FALSE;
@@ -739,7 +741,7 @@ static void
 widget_overlay_size_request (GtkWidget *widget, GtkRequisition *req_min, GtkRequisition *req_nat)
 {
 	WidgetOverlay *ovl = WIDGET_OVERLAY (widget);
-	guint border_width;
+	gint border_width;
 	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 	req_min->width = 1;
 	req_min->height = 1;
@@ -989,7 +991,7 @@ widget_overlay_set_child_props (WidgetOverlay *ovl, GtkWidget *child, ...)
 				area.x = area.y = 0;
 
 			va_start (args, child);
-			for (prop = va_arg (args, WidgetOverlayChildProperty); prop != -1;
+			for (prop = va_arg (args, WidgetOverlayChildProperty); (gint) prop != -1;
 			     prop = va_arg (args, WidgetOverlayChildProperty)) {
 				switch (prop) {
 				case WIDGET_OVERLAY_CHILD_VALIGN:

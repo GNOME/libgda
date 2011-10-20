@@ -126,7 +126,8 @@ gda_oracle_recordset_get_type (void)
 			NULL,
 			sizeof (GdaOracleRecordset),
 			0,
-			(GInstanceInitFunc) gda_oracle_recordset_init
+			(GInstanceInitFunc) gda_oracle_recordset_init,
+			NULL
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)

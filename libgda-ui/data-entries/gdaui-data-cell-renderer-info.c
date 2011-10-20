@@ -377,7 +377,7 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 
 	static GdkRGBA **colors = NULL;
 	GdkRGBA statenormal, stateprelight;
-	GdkRGBA *normal = NULL, *prelight = NULL;
+	GdkRGBA *normal = NULL;
 
 
 	if (!colors)
@@ -385,15 +385,12 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 
 	if (cellinfo->priv->attributes & GDA_VALUE_ATTR_DATA_NON_VALID) {
 		normal = colors[4];
-		prelight = colors[5];
 	}
 	else if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_DEFAULT) {
 		normal = colors[2];
-		prelight = colors[3];
 	}
 	else if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_NULL) {
 		normal = colors[0];
-		prelight = colors[1];
 	}
 	else {
 		GtkStyleContext *stc;
@@ -401,7 +398,6 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 		gtk_style_context_get_background_color (stc, GTK_STATE_FLAG_NORMAL, &statenormal);
 		gtk_style_context_get_background_color (stc, GTK_STATE_FLAG_NORMAL, &stateprelight);
 		normal = &statenormal;
-		prelight = &stateprelight;
 	}
 
 	gdaui_data_cell_renderer_info_get_size (cell, widget, cell_area,

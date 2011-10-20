@@ -348,7 +348,6 @@ browser_virtual_connection_new (const BrowserVirtualConnectionSpecs *specs, GErr
                 return NULL;
 
 	GMainLoop *loop;
-        guint source_id;
         MainloopData data;
 	
         loop = g_main_loop_new (NULL, FALSE);
@@ -358,7 +357,7 @@ browser_virtual_connection_new (const BrowserVirtualConnectionSpecs *specs, GErr
         data.loop = loop;
         data.cnc = NULL;
 
-        source_id = g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
+        g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
         g_main_loop_run (loop);
         g_main_loop_unref (loop);
 	g_object_unref (wrapper);

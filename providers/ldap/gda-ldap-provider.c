@@ -328,8 +328,7 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 			return FALSE;
 		}
         }
-	int param = (int) LDAP_OPT_ON;
-	res = ldap_set_option (cdata->handle, LDAP_OPT_RESTART, &param);
+	res = ldap_set_option (cdata->handle, LDAP_OPT_RESTART, LDAP_OPT_ON);
 
 #ifdef NO
 	if (use_ssl) {

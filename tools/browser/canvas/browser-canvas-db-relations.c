@@ -497,12 +497,11 @@ popup_func_add_depend_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasTable *
 		if (g_hash_table_lookup (dbrel->priv->hash_tables, fk->depend_on))
 			continue;
 
-		BrowserCanvasTable *new_item;
 		GValue *v1, *v2, *v3;
 		g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), fk->depend_on->obj_catalog);
 		g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), fk->depend_on->obj_schema);
 		g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), fk->depend_on->obj_name);
-		new_item = browser_canvas_db_relations_add_table (dbrel, v1, v2, v3);
+		browser_canvas_db_relations_add_table (dbrel, v1, v2, v3);
 		gda_value_free (v1);
 		gda_value_free (v2);
 		gda_value_free (v3);
@@ -538,12 +537,12 @@ popup_func_add_ref_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasTable *ce)
 				continue;
 			if (g_hash_table_lookup (dbrel->priv->hash_tables, fkdbo))
 				continue;
-			BrowserCanvasTable *new_item;
+
 			GValue *v1, *v2, *v3;
 			g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), fkdbo->obj_catalog);
 			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), fkdbo->obj_schema);
 			g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), fkdbo->obj_name);
-			new_item = browser_canvas_db_relations_add_table (dbrel, v1, v2, v3);
+			browser_canvas_db_relations_add_table (dbrel, v1, v2, v3);
 			gda_value_free (v1);
 			gda_value_free (v2);
 			gda_value_free (v3);

@@ -1419,8 +1419,7 @@ get_markup_token (GtkTextIter *iter, gint *out_nb_spaces_before, GtkTextIter *ou
 		}
 	}
 	else if (c == ' ') {
-		gboolean line;
-		line = gtk_text_iter_starts_line (&inti);
+		gtk_text_iter_starts_line (&inti);
 
 		c = get_char_at_iter (&inti, TRUE);
 		if (c == '=') {

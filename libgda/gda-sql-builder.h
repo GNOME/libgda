@@ -168,7 +168,7 @@ void              gda_sql_builder_compound_add_sub_select_from_builder (GdaSqlBu
 /* import/Export API */
 GdaSqlExpr       *gda_sql_builder_export_expression (GdaSqlBuilder *builder, GdaSqlBuilderId id);
 GdaSqlBuilderId gda_sql_builder_import_expression (GdaSqlBuilder *builder, GdaSqlExpr *expr);
-GdaSqlBuilderId gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, GdaSqlBuilderId *expr_id);
+GdaSqlBuilderId gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, GdaSqlBuilderId expr_id);
 
 G_END_DECLS
 

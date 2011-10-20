@@ -466,9 +466,9 @@ action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, LdapEntriesPage *ebrowser
 	BrowserFavorites *bfav;
         BrowserFavoritesAttributes fav;
         GError *error = NULL;
-	const gchar *tmp, *cn;
+	const gchar *cn;
 
-	tmp = hierarchy_view_get_current_dn (HIERARCHY_VIEW (ebrowser->priv->entries_view), &cn);
+	hierarchy_view_get_current_dn (HIERARCHY_VIEW (ebrowser->priv->entries_view), &cn);
         memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
         fav.id = -1;
         fav.type = BROWSER_FAVORITES_LDAP_DN;
@@ -617,11 +617,9 @@ ldap_entries_page_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
 static GtkWidget *
 ldap_entries_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
-	LdapEntriesPage *ebrowser;
 	const gchar *tab_name;
 	GdkPixbuf *entries_pixbuf;
 
-	ebrowser = LDAP_ENTRIES_PAGE (page);
 	entries_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_LDAP_ORGANIZATION);
 	tab_name = _("LDAP entries");
 	return browser_make_tab_label_with_pixbuf (tab_name,

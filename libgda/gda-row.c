@@ -40,7 +40,7 @@ struct _GdaRowPrivate {
 
         GValue       *fields; /* GValues */
 	GError      **errors; /* GError for each invalid value at the same position */
-        gint          nfields;
+        guint         nfields;
 };
 
 /* properties */
@@ -116,7 +116,7 @@ gda_row_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_ROW (row));
 	
 	if (row->priv) {
-		gint i;
+		guint i;
 
 		for (i = 0; i < row->priv->nfields; i++) {
 			gda_value_set_null (&(row->priv->fields [i]));
@@ -145,10 +145,10 @@ gda_row_set_property (GObject *object,
         if (row->priv) {
                 switch (param_id) {
 		case PROP_NB_VALUES: {
-			gint i;
+			guint i;
 			g_return_if_fail (!row->priv->fields);
 
-			row->priv->nfields = g_value_get_int (value);
+			row->priv->nfields = (guint) g_value_get_int (value);
 			row->priv->fields = g_new0 (GValue, row->priv->nfields);
 			for (i = 0; i < row->priv->nfields; i++)
 				gda_value_set_null (& (row->priv->fields [i]));
@@ -242,7 +242,7 @@ GValue *
 gda_row_get_value (GdaRow *row, gint num)
 {
         g_return_val_if_fail (GDA_IS_ROW (row), NULL);
-        g_return_val_if_fail (num >= 0 && num < row->priv->nfields, NULL);
+        g_return_val_if_fail ((num >= 0) && ((guint) num < row->priv->nfields), NULL);
 
         return & (row->priv->fields[num]);
 }

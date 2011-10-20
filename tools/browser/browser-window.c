@@ -1438,8 +1438,7 @@ static GHashTable *hidden_contexts = NULL;
 static void
 hidden_contexts_foreach_save (const gchar *context, G_GNUC_UNUSED gint value, xmlNodePtr root)
 {
-	xmlNodePtr node;
-	node = xmlNewChild (root, NULL, BAD_CAST "hide-notice", BAD_CAST context);
+	xmlNewChild (root, NULL, BAD_CAST "hide-notice", BAD_CAST context);
 }
 
 static void

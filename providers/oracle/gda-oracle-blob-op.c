@@ -58,7 +58,8 @@ gda_oracle_blob_op_get_type (void)
 			NULL,
 			sizeof (GdaOracleBlobOp),
 			0,
-			(GInstanceInitFunc) gda_oracle_blob_op_init
+			(GInstanceInitFunc) gda_oracle_blob_op_init,
+			NULL
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -176,7 +177,6 @@ static glong
 gda_oracle_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 {
 	GdaOracleBlobOp *bop;
-	GdaBinary *bin;
 	glong nbwritten = -1;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_BLOB_OP (op), -1);
@@ -215,6 +215,7 @@ gda_oracle_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	}
 	else {
 		/* write blob using bin->data and bin->binary_length */
+		GdaBinary *bin;
 		bin = (GdaBinary *) blob;
 		nbwritten = -1; TO_IMPLEMENT;
 	}

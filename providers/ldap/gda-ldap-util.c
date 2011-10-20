@@ -798,8 +798,7 @@ gdaprov_ldap_get_top_classes (GdaLdapConnection *cnc)
 		return NULL;
 	if (! cdata->classes_hash) {
 		/* force classes init */
-		GdaLdapClass *lcl;
-		lcl = gdaprov_ldap_get_class_info (cnc, "top");
+		gdaprov_ldap_get_class_info (cnc, "top");
 	}
 	return cdata->top_classes;
 }

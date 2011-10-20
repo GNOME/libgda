@@ -368,7 +368,6 @@ real_open_connection (const GdaDsnInfo *cncinfo, GError **error)
 		return NULL;
 
 	GMainLoop *loop;
-	guint source_id;
 	MainloopData data;
 
 	loop = g_main_loop_new (NULL, FALSE);
@@ -378,7 +377,7 @@ real_open_connection (const GdaDsnInfo *cncinfo, GError **error)
 	data.loop = loop;
 	data.cnc = NULL;
 
-	source_id = g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
+	g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
 	g_main_loop_run (loop);
 	g_main_loop_unref (loop);
 

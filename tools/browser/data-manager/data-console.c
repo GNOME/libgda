@@ -688,7 +688,6 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 	}
 
 	GdaSet *params;
-	gboolean show_variables = FALSE;
 	params = data_source_manager_get_params (mgr);
 	if (params) {
 		dconsole->priv->params_form = gdaui_basic_form_new (params);
@@ -696,7 +695,6 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 			      "show-actions", TRUE, NULL);
 		g_signal_connect (dconsole->priv->params_form, "activated",
 				  G_CALLBACK (param_activated_cb), dconsole);
-		show_variables = TRUE;
 	}
 	else {
 		dconsole->priv->params_form = gtk_label_new ("");
@@ -964,10 +962,8 @@ data_console_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
 static GtkWidget *
 data_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
-	DataConsole *dconsole;
 	const gchar *tab_name;
 
-	dconsole = DATA_CONSOLE (page);
 	tab_name = _("Data manager");
 	return browser_make_tab_label_with_stock (tab_name,
 						  STOCK_CONSOLE,

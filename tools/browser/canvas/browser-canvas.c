@@ -97,11 +97,8 @@ browser_canvas_get_type (void)
 static void
 browser_canvas_class_init (BrowserCanvasClass *klass)
 {
-	GtkWidgetClass *widget_class;
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
-
-	widget_class = (GtkWidgetClass *) klass;
 
 	/* signals */
 	canvas_signals[ITEM_SELECTED] =
@@ -681,8 +678,7 @@ browser_canvas_set_property (GObject *object,
 			   G_GNUC_UNUSED const GValue *value,
 			   GParamSpec *pspec)
 {
-	BrowserCanvas *canvas;
-	
+	BrowserCanvas *canvas;	
 	canvas = BROWSER_CANVAS (object);
 
 	switch (param_id) {

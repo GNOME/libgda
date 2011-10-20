@@ -266,7 +266,6 @@ _string_is_identifier (const gchar *str)
 {
 	const gchar *ptr;
 	gchar *endptr;
-	gdouble d;
 	gchar c;
 
 	if (!str || !(*str)) 
@@ -285,7 +284,7 @@ _string_is_identifier (const gchar *str)
 		return TRUE;
 
 	/* @str is composed only of character that can be used in an identifier */
-	d = g_ascii_strtod (str, &endptr);
+	g_ascii_strtod (str, &endptr);
 	if (!*endptr)
 		/* @str is a number */
 		return FALSE;
