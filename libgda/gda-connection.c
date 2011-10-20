@@ -244,7 +244,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	 * @cnc: the #GdaConnection
 	 * @event: a #GdaConnectionEvent object
 	 *
-	 * Gets emitted whenever a connection event occurs. Chech the nature of @event to
+	 * Gets emitted whenever a connection event occurs. Check the nature of @event to
 	 * see if it's an error or a simple notification
 	 */
 	gda_connection_signals[ERROR] =
