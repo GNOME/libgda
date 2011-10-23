@@ -395,7 +395,7 @@ gda_data_pivot_get_property (GObject *object,
  *
  * Creates a new #GdaDataModel which will contain analysed data from @model.
  *
- * Returns: a pointer to the newly created #GdaDataModel.
+ * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_pivot_new (GdaDataModel *model)
