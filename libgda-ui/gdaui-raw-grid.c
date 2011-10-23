@@ -47,6 +47,7 @@ static void gdaui_raw_grid_get_property (GObject *object,
 
 static void create_columns_data (GdauiRawGrid *grid);
 
+static void proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiRawGrid *grid);
 static void proxy_sample_changed_cb (GdaDataProxy *proxy, gint sample_start, gint sample_end, GdauiRawGrid *grid);
 static void proxy_row_updated_cb (GdaDataProxy *proxy, gint proxy_row, GdauiRawGrid *grid);
 static void proxy_reset_cb (GdaDataProxy *proxy, GdauiRawGrid *grid);
@@ -512,6 +513,8 @@ gdaui_raw_grid_set_property (GObject *object,
 				grid->priv->data_model = gda_data_proxy_get_proxied_model (grid->priv->proxy);
 
 				g_object_ref (G_OBJECT (grid->priv->proxy));
+				g_signal_connect (grid->priv->proxy, "filter-changed",
+						  G_CALLBACK (proxy_filter_changed_cb), grid);
 				g_signal_connect (grid->priv->proxy, "sample-changed",
 						  G_CALLBACK (proxy_sample_changed_cb), grid);
 				g_signal_connect (grid->priv->proxy, "row-updated",
@@ -2010,7 +2013,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	GtkWidget *dialog;
 	GtkWidget *label;
 	GtkWidget *filename;
-	GtkWidget *types;
+	GtkWidget *types, *scope;
 	GtkWidget *hbox, *table, *check, *dbox;
 	char *str;
 	GtkTreeSelection *sel;
@@ -2022,12 +2025,11 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 					      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					      GTK_STOCK_SAVE, GTK_RESPONSE_OK,
 					      NULL);
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 
 	str = g_strdup_printf ("<big><b>%s:</b></big>\n%s", _("Saving data to a file"),
-			       _("The data will be exported without any of the modifications which may "
-				 "have been made and have not been committed."));
+			       _("The data will be exported to the selected file."));
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
@@ -2045,7 +2047,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
-	gtk_box_pack_start (GTK_BOX (dbox), hbox, FALSE, FALSE, 5);
+	gtk_box_pack_start (GTK_BOX (dbox), hbox, TRUE, TRUE, 5);
 	gtk_widget_show (hbox);
 	label = gtk_label_new ("    ");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
@@ -2086,7 +2088,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 
 	types = gtk_combo_box_text_new ();
 	gtk_table_attach_defaults (GTK_TABLE (table), types, 1, 2, 0, 1);
-	gtk_widget_show (label);
+	gtk_widget_show (types);
 	g_object_set_data (G_OBJECT (dialog), "types", types);
 
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (types), _("Tab-delimited"));
@@ -2097,8 +2099,8 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	g_signal_connect (types, "changed",
 			  G_CALLBACK (export_type_changed_cb), dialog);
 
-	/* limit to selection ? */
-	label = gtk_label_new (_("Limit to selection?"));
+	/* data scope */
+	label = gtk_label_new (_("Data to save:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (label);
@@ -2108,14 +2110,16 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	if (selrows <= 0)
 		gtk_widget_set_sensitive (label, FALSE);
 
-	check = gtk_check_button_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), check, 1, 2, 1, 2);
-	gtk_widget_show (check);
-	if (selrows <= 0)
-		gtk_widget_set_sensitive (check, FALSE);
-	else
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check), TRUE);
-	g_object_set_data (G_OBJECT (dialog), "sel_only", check);
+	scope = gtk_combo_box_text_new ();
+	gtk_table_attach_defaults (GTK_TABLE (table), scope, 1, 2, 1, 2);
+	gtk_widget_show (scope);
+	g_object_set_data (G_OBJECT (dialog), "scope", scope);
+
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (scope), _("All data (without any local modification)"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (scope), _("Only displayed data"));
+	if (selrows > 0)
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (scope), _("Only selected data"));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (scope), 0);
 
 	/* other options */
 	GtkWidget *exp;
@@ -2183,15 +2187,14 @@ static gboolean confirm_file_overwrite (GtkWindow *parent, const gchar *path);
 static void
 save_as_response_cb (GtkDialog *dialog, gint response_id, GdauiRawGrid *grid)
 {
-	GtkWidget *types;
-	gint export_type;
-	GtkWidget *filename;
-	gboolean selection_only = FALSE;
-	gboolean null_as_empty = FALSE;
-	gboolean invalid_as_null = FALSE;
-	gboolean first_row = FALSE;
-
 	if (response_id == GTK_RESPONSE_OK) {
+		GtkWidget *types;
+		gint export_type;
+		GtkWidget *filename;
+		gboolean selection_only = FALSE;
+		gboolean null_as_empty = FALSE;
+		gboolean invalid_as_null = FALSE;
+		gboolean first_row = FALSE;
 		gchar *body;
 		gchar *path;
 		GList *columns, *list;
@@ -2199,12 +2202,21 @@ save_as_response_cb (GtkDialog *dialog, gint response_id, GdauiRawGrid *grid)
 		gint *rows = NULL, nb_rows = 0;
 		GdaHolder *param;
 		GdaSet *paramlist;
+		GdaDataModel *model_to_use = (GdaDataModel*) grid->priv->proxy;
+		GtkWidget *scope;
+		gint scope_v;
+
+		model_to_use = model_to_use;
+		scope = g_object_get_data (G_OBJECT (dialog), "scope");
+		scope_v = gtk_combo_box_get_active (GTK_COMBO_BOX (scope));
+		if (scope_v == 0)
+			model_to_use = grid->priv->data_model;
+		else if (scope_v == 2)
+			selection_only = TRUE;
 
 		types = g_object_get_data (G_OBJECT (dialog), "types");
 		filename = g_object_get_data (G_OBJECT (dialog), "filename");
 		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (filename)));
-		selection_only = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
-							       (g_object_get_data (G_OBJECT (dialog), "sel_only")));
 		null_as_empty = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
 							      (g_object_get_data (G_OBJECT (dialog), "null_as_empty")));
 		invalid_as_null = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
@@ -2214,7 +2226,7 @@ save_as_response_cb (GtkDialog *dialog, gint response_id, GdauiRawGrid *grid)
 
 		/* output columns computation */
 		columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (grid));
-		cols = g_new (gint, gda_data_model_get_n_columns (GDA_DATA_MODEL (grid->priv->data_model)));
+		cols = g_new (gint, gda_data_model_get_n_columns (GDA_DATA_MODEL (model_to_use)));
 		nb_cols = 0;
 		for (list = columns; list; list = list->next) {
 			if (gtk_tree_view_column_get_visible (GTK_TREE_VIEW_COLUMN (list->data))) {
@@ -2275,7 +2287,7 @@ save_as_response_cb (GtkDialog *dialog, gint response_id, GdauiRawGrid *grid)
 			param = gda_holder_new_string ("SEPARATOR", "\t");
 			gda_set_add_holder (paramlist, param);
 			g_object_unref (param);
-			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
+			body = gda_data_model_export_to_string (GDA_DATA_MODEL (model_to_use),
 								GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 								cols, nb_cols, rows, nb_rows, paramlist);
 			break;
@@ -2283,20 +2295,20 @@ save_as_response_cb (GtkDialog *dialog, gint response_id, GdauiRawGrid *grid)
 			param = gda_holder_new_string ("SEPARATOR", ",");
 			gda_set_add_holder (paramlist, param);
 			g_object_unref (param);
-			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
+			body = gda_data_model_export_to_string (GDA_DATA_MODEL (model_to_use),
 								GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 								cols, nb_cols, rows, nb_rows, paramlist);
 			break;
 		case 2:
 			param = NULL;
-			body = (gchar *) g_object_get_data (G_OBJECT (grid->priv->data_model), "name");
+			body = (gchar *) g_object_get_data (G_OBJECT (model_to_use), "name");
 			if (body)
 				param = gda_holder_new_string ("NAME", body);
 			if (param) {
 				gda_set_add_holder (paramlist, param);
 				g_object_unref (param);
 			}
-			body = gda_data_model_export_to_string (GDA_DATA_MODEL (grid->priv->data_model),
+			body = gda_data_model_export_to_string (GDA_DATA_MODEL (model_to_use),
 								GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
 								cols, nb_cols, rows, nb_rows, paramlist);
 			break;
@@ -2855,6 +2867,12 @@ iter_row_changed_cb (G_GNUC_UNUSED GdaDataModelIter *iter, gint row, GdauiRawGri
 	}
 	else
 		gtk_tree_selection_unselect_all (selection);
+}
+
+static void
+proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiRawGrid *grid)
+{
+	
 }
 
 static void
