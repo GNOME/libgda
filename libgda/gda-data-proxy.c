@@ -3075,6 +3075,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 	g_signal_emit (G_OBJECT (proxy),
 		       gda_data_proxy_signals[FILTER_CHANGED],
 		       0);
+	gda_data_model_reset (GDA_DATA_MODEL (proxy));
 
 	adjust_displayed_chunk (proxy);
 
