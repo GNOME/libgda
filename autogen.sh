@@ -19,4 +19,8 @@ which gnome-autogen.sh || {
     exit 1
 }
 
+# Work around usage of gettext macros (AM_ICONV) without calling gettextize.
+# intltoolize is used intead. https://bugzilla.gnome.org/show_bug.cgi?id=660537
+touch config.rpath
+
 USE_GNOME2_MACROS=1 USE_COMMON_DOC_BUILD=yes . gnome-autogen.sh
