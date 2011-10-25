@@ -50,6 +50,7 @@ static void create_columns_data (GdauiRawGrid *grid);
 static void proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiRawGrid *grid);
 static void proxy_sample_changed_cb (GdaDataProxy *proxy, gint sample_start, gint sample_end, GdauiRawGrid *grid);
 static void proxy_row_updated_cb (GdaDataProxy *proxy, gint proxy_row, GdauiRawGrid *grid);
+static void proxy_reset_pre_cb (GdaDataProxy *proxy, GdauiRawGrid *grid);
 static void proxy_reset_cb (GdaDataProxy *proxy, GdauiRawGrid *grid);
 static void paramlist_public_data_changed_cb (GdauiSet *paramlist, GdauiRawGrid *grid);
 static void paramlist_param_attr_changed_cb (GdaSet *paramlist, GdaHolder *param,
@@ -110,6 +111,7 @@ struct _GdauiRawGridPriv
 	GdaDataModel               *data_model;  /* data model provided by set_model() */
 	GdaDataModelIter           *iter;        /* iterator for @store, used for its structure */
 	GdauiSet                   *iter_info;
+	gint                        iter_row;    /* @iter's last row in case of proxy reset */
 	GdauiDataStore             *store;       /* GtkTreeModel interface, using @proxy */
 	GdaDataProxy               *proxy;       /* proxy data model, proxying @data_model */
 
@@ -365,6 +367,8 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 
 	grid->priv = g_new0 (GdauiRawGridPriv, 1);
 	grid->priv->store = NULL;
+	grid->priv->iter = NULL;
+	grid->priv->iter_row = -1;
 	grid->priv->proxy = NULL;
 	grid->priv->default_show_info_cell = FALSE;
 	grid->priv->default_show_global_actions = TRUE;
@@ -488,28 +492,32 @@ gdaui_raw_grid_set_property (GObject *object,
 		case PROP_MODEL: {
 			gboolean reset;
 			GdaDataModel *model = GDA_DATA_MODEL (g_value_get_object (value));
+			GdkRectangle vis = {0, 0, 0, 0};
 
 			if (model)
 				g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
 			reset = !proxy_reset_was_soft (grid, model);
 
+			if (gtk_widget_get_realized ((GtkWidget*) grid))
+				gtk_tree_view_get_visible_rect ((GtkTreeView*) grid, &vis);
+
 			if (reset)
 				gdaui_raw_grid_clean (grid);
-			else {
-				if (grid->priv->store) {
-					g_object_unref (grid->priv->store);
-					grid->priv->store = NULL;
-				}
+
+			if (grid->priv->store) {
+				g_object_unref (grid->priv->store);
+				grid->priv->store = NULL;
 			}
 
 			if (!model)
 				return;
 
-			grid->priv->store = GDAUI_DATA_STORE (gdaui_data_store_new (model));
-
 			if (reset) {
-				grid->priv->proxy = gdaui_data_store_get_proxy (grid->priv->store);
+				grid->priv->proxy = GDA_DATA_PROXY (gda_data_proxy_new (model));
+				g_signal_connect (grid->priv->proxy, "reset",
+						  G_CALLBACK (proxy_reset_pre_cb), grid);
+				grid->priv->store = GDAUI_DATA_STORE (gdaui_data_store_new ((GdaDataModel*) grid->priv->proxy));
 				grid->priv->data_model = gda_data_proxy_get_proxied_model (grid->priv->proxy);
 
 				g_object_ref (G_OBJECT (grid->priv->proxy));
@@ -523,6 +531,7 @@ gdaui_raw_grid_set_property (GObject *object,
 						  G_CALLBACK (proxy_reset_cb), grid);
 
 				grid->priv->iter = gda_data_model_create_iter (GDA_DATA_MODEL (grid->priv->proxy));
+				grid->priv->iter_row = -1;
 				grid->priv->iter_info = _gdaui_set_new (GDA_SET (grid->priv->iter));
 
 				g_signal_connect (grid->priv->iter_info, "public-data-changed",
@@ -544,13 +553,15 @@ gdaui_raw_grid_set_property (GObject *object,
 				g_signal_emit_by_name (object, "proxy-changed", grid->priv->proxy);
 			}
 			else {
+				grid->priv->store = GDAUI_DATA_STORE (gdaui_data_store_new (model));
 				grid->priv->data_model = gda_data_proxy_get_proxied_model (grid->priv->proxy);
 				gda_data_model_iter_invalidate_contents (grid->priv->iter);
 
 				gtk_tree_view_set_model ((GtkTreeView *) grid,
 							 GTK_TREE_MODEL (grid->priv->store));
 			}
-
+			if (gtk_widget_get_realized ((GtkWidget*) grid))
+				gtk_tree_view_scroll_to_point ((GtkTreeView*) grid, vis.x, vis.y);
 			break;
 		}
 
@@ -2917,11 +2928,20 @@ proxy_row_updated_cb (GdaDataProxy *proxy, gint proxy_row, GdauiRawGrid *grid)
 }
 
 static void
+proxy_reset_pre_cb (GdaDataProxy *proxy, GdauiRawGrid *grid)
+{
+	grid->priv->iter_row = gda_data_model_iter_get_row (grid->priv->iter);
+}
+
+static void
 proxy_reset_cb (GdaDataProxy *proxy, GdauiRawGrid *grid)
 {
 	g_object_ref (G_OBJECT (proxy));
 	g_object_set (G_OBJECT (grid), "model", proxy, NULL);
 	g_object_unref (G_OBJECT (proxy));
+	if (grid->priv->iter_row >= 0)
+		gda_data_model_iter_move_to_row (grid->priv->iter, grid->priv->iter_row);
+	grid->priv->iter_row = -1;
 }
 
 static void
@@ -2956,6 +2976,7 @@ gdaui_raw_grid_clean (GdauiRawGrid *grid)
 	if (grid->priv->proxy) {
 		g_signal_handlers_disconnect_by_func (grid->priv->proxy, G_CALLBACK (proxy_sample_changed_cb), grid);
 		g_signal_handlers_disconnect_by_func (grid->priv->proxy, G_CALLBACK (proxy_row_updated_cb), grid);
+		g_signal_handlers_disconnect_by_func (grid->priv->proxy, G_CALLBACK (proxy_reset_pre_cb), grid);
 		g_signal_handlers_disconnect_by_func (grid->priv->proxy, G_CALLBACK (proxy_reset_cb), grid);
 		g_object_unref (grid->priv->proxy);
 		grid->priv->proxy = NULL;
