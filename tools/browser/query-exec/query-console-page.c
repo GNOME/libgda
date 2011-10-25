@@ -540,6 +540,11 @@ history_copy_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 	g_string_free (string, TRUE);
 }
 
+static void
+params_form_activated_cb (GdauiBasicForm *form, QueryConsolePage *tconsole)
+{
+	sql_execute_clicked_cb (NULL, tconsole);
+}
 
 static gboolean
 compute_params (QueryConsolePage *tconsole)
@@ -577,6 +582,8 @@ compute_params (QueryConsolePage *tconsole)
 				tconsole->priv->params_form = gdaui_basic_form_new (tconsole->priv->params);
 				g_object_set ((GObject*) tconsole->priv->params_form,
 					      "show-actions", TRUE, NULL);
+				g_signal_connect (tconsole->priv->params_form, "activated",
+						  G_CALLBACK (params_form_activated_cb), tconsole);
 			}
 			else {
 				tconsole->priv->params_form = gtk_label_new ("");
