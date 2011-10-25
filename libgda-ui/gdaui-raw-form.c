@@ -459,7 +459,7 @@ gdaui_raw_form_set_property (GObject *object,
 					g_object_set (object, "paramlist", form->priv->iter, NULL);
 					gda_data_proxy_set_sample_size (form->priv->proxy, 0);
 
-					/* handle invalie iterators' GdaHolder */
+					/* handle invalid iterators' GdaHolder */
 					GSList *list;
 					for (list = GDA_SET (form->priv->iter)->holders; list; list = list->next) {
 						GtkWidget *entry;
@@ -574,10 +574,14 @@ proxy_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, GdauiRawForm *form)
 static void
 proxy_reset_cb (GdaDataProxy *proxy, GdauiRawForm *form)
 {
+	gint row;
+	row = gda_data_model_iter_get_row (form->priv->iter);
 	g_object_ref (G_OBJECT (proxy));
 	g_object_set (G_OBJECT (form), "model", proxy, NULL);
 	g_object_unref (G_OBJECT (proxy));
-	g_signal_emit_by_name (G_OBJECT (form), "selection-changed");
+	if (row >= 0)
+		gda_data_model_iter_move_to_row (form->priv->iter, row);
+	iter_row_changed_cb (form->priv->iter, gda_data_model_iter_get_row (form->priv->iter), form);
 }
 
 static void
