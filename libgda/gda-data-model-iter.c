@@ -247,9 +247,9 @@ model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDataModelI
 static void
 model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 {
-	/* reset the iter to before the 1st row */
-	gda_data_model_iter_invalidate_contents (iter);
-	gda_data_model_iter_move_to_row (iter, -1);
+	gint row;
+
+	row = gda_data_model_iter_get_row (iter);
 	
 	/* adjust GdaHolder's type if a column's type has changed from GDA_TYPE_NULL
 	 * to something else */
@@ -266,6 +266,13 @@ model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 					      gda_column_get_g_type (col), NULL);
 		}
 	}
+
+	gda_data_model_iter_invalidate_contents (iter);
+	if (row >= 0)
+		gda_data_model_iter_move_to_row (iter, row);
+	else
+		/* reset the iter to before the 1st row */
+		gda_data_model_iter_move_to_row (iter, -1);
 }
 
 /*
@@ -597,8 +604,18 @@ gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 	g_return_val_if_fail (iter->priv, FALSE);
 
 	if ((gda_data_model_iter_get_row (iter) >= 0) &&
-	    (gda_data_model_iter_get_row (iter) == row))
-		return TRUE; /* nothing to do! */
+	    (gda_data_model_iter_get_row (iter) == row)) {
+		/* refresh @iter's contents */
+		GdaDataModel *model;
+		model = iter->priv->data_model;
+		g_return_val_if_fail (model, FALSE);
+
+		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
+			return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter,
+										  row);
+		else
+			return gda_data_model_iter_move_to_row_default (model, iter, row);
+	}
 
 	if (row < 0) {
 		if (gda_data_model_iter_get_row (iter) >= 0) {
@@ -615,7 +632,7 @@ gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 	else {
 		GdaDataModel *model;
 		model = iter->priv->data_model;
-		g_return_val_if_fail (iter->priv->data_model, FALSE);
+		g_return_val_if_fail (model, FALSE);
 
 		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) {
 			if ((gda_data_model_iter_get_row (iter) >= 0) &&
