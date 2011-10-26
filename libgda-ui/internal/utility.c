@@ -275,12 +275,11 @@ _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataSt
 					       GdaDataModelIter *model_iter, 
 					       GtkTreeIter *tree_iter, gboolean model_values)
 {
-	gint offset;
 	GList *retval = NULL;
+#ifdef PROXY_STORE_EXTRA_VALUES
 	GdaDataProxy *proxy;
-
 	proxy = gdaui_data_store_get_proxy (store);
-	offset = gda_data_proxy_get_proxied_model_n_cols (proxy);
+#endif
 	if (!model_values) {
 		GSList *list;
 		GValue *value;
@@ -294,13 +293,17 @@ _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataSt
 		}
 	}
 	else {
-		gint col, i, proxy_row;
+		gint col, i;
+#ifdef PROXY_STORE_EXTRA_VALUES
+		gint proxy_row;
+#endif
 		GdauiSetSource *source;
 		const GValue *value;
 		gboolean slow_way = FALSE;
 		gboolean ret_null = FALSE;
-
+#ifdef PROXY_STORE_EXTRA_VALUES
 		proxy_row = gdaui_data_store_get_row_from_iter (store, tree_iter);
+#endif
 		source = group->source;
 		for (i = 0 ; (i < source->shown_n_cols)  && !ret_null; i++) {
 			col = source->shown_cols_index[i];

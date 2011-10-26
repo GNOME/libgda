@@ -315,8 +315,7 @@ sub_thread_open_cnc (AuthData *ad, GError **error)
 #ifdef HAVE_LDAP
 	if (cnc && GDA_IS_LDAP_CONNECTION (cnc)) {
 		/* force classes init */
-		GdaLdapClass *lcl;
-		lcl = gda_ldap_get_class_info (GDA_LDAP_CONNECTION (cnc), "top");
+		gda_ldap_get_class_info (GDA_LDAP_CONNECTION (cnc), "top");
 	}
 #endif
 	return cnc;

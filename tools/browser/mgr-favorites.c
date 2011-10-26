@@ -382,7 +382,6 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 			BrowserFavoritesAttributes *fav = (BrowserFavoritesAttributes *) list->data;
 			GdaTreeNode* snode = NULL;
 			GValue *av;
-			gboolean newsnode = TRUE;
 
 			if (ehash)
 				snode = g_hash_table_lookup (ehash, &(fav->id));
@@ -391,7 +390,6 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 			if (snode) {
 				/* use the same node */
 				g_object_ref (G_OBJECT (snode));
-				newsnode = FALSE;
 			}
 
 			if (fav->type == BROWSER_FAVORITES_TABLES) {

@@ -49,7 +49,8 @@ gda_oracle_pstmt_get_type (void)
 			NULL,
 			sizeof (GdaOraclePStmt),
 			0,
-			(GInstanceInitFunc) gda_oracle_pstmt_init
+			(GInstanceInitFunc) gda_oracle_pstmt_init,
+			NULL
 		};
 
 		g_static_mutex_lock (&registering);

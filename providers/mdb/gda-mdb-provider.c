@@ -131,7 +131,8 @@ gda_mdb_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaMdbProvider),
 			0,
-			(GInstanceInitFunc) gda_mdb_provider_init
+			(GInstanceInitFunc) gda_mdb_provider_init,
+			NULL
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -327,7 +328,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 							   cdata, (GDestroyNotify) gda_mdb_free_cnc_data);
 
 	/* declare the virtual tables */
-	gint i;
+	guint i;
 	for (i = 0; i < cdata->mdb->num_catalog; i++) {
                 MdbCatalogEntry *entry;
 
@@ -392,7 +393,7 @@ gda_mdb_type_to_gda (int col_type)
 static GList *
 table_create_columns_func (LocalSpec *spec)
 {
-	gint j;
+	guint j;
         GList *columns = NULL;
 	MdbTableDef *mdb_table;
 	
@@ -427,7 +428,7 @@ table_create_model_func (LocalSpec *spec)
 	GdaDataModel *model;
 	MdbTableDef *mdb_table;
 	GType *coltypes;
-	gint c;
+	guint c;
 
 	char **bound_values;
 	int *bound_len;

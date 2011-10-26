@@ -144,12 +144,16 @@ gda_row_set_property (GObject *object,
         row = GDA_ROW (object);
         if (row->priv) {
                 switch (param_id) {
-		case PROP_NB_VALUES:
+		case PROP_NB_VALUES: {
+			gint i;
 			g_return_if_fail (!row->priv->fields);
 
 			row->priv->nfields = g_value_get_int (value);
-			row->priv->fields = g_new0 (GValue, row->priv->nfields);			
+			row->priv->fields = g_new0 (GValue, row->priv->nfields);
+			for (i = 0; i < row->priv->nfields; i++)
+				gda_value_set_null (& (row->priv->fields [i]));
 			break;
+		}
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -272,7 +276,7 @@ void
 gda_row_invalidate_value_e (GdaRow *row, GValue *value, GError *error)
 {
 	gda_value_set_null (value);
-	G_VALUE_TYPE (value) = G_TYPE_NONE;
+	G_VALUE_TYPE (value) = G_TYPE_INVALID;
 	if (error) {
 		guint i;
 		if (! row->priv->errors)
@@ -341,7 +345,7 @@ gboolean
 gda_row_value_is_valid_e (GdaRow *row, GValue *value, GError **error)
 {
 	gboolean valid;
-	valid = (G_VALUE_TYPE (value) == G_TYPE_NONE) ? FALSE : TRUE;
+	valid = (G_VALUE_TYPE (value) == G_TYPE_INVALID) ? FALSE : TRUE;
 	if (!valid && row->priv->errors && error) {
 		guint i;
 		for (i = 0; i < row->priv->nfields; i++) {

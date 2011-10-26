@@ -451,7 +451,6 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 	}
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL: {
 		GdaDataModel *model;
-		GdaDataProxy *proxy;
 		GtkWidget *winfo;
 		GtkWidget *box, *grid;
 
@@ -470,7 +469,6 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 						 GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE);
 		gtk_widget_show (grid);
 
-		proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (grid));
 		g_object_set (G_OBJECT (grid), "info-cell-visible", FALSE, NULL);
 
 		winfo = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (grid),

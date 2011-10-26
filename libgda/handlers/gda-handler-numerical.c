@@ -346,7 +346,7 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 		}
 	}
 	else if (type == G_TYPE_ULONG) {
-		if (!*endptr && (llint >= 0) && (llint <= G_MAXULONG)) {
+		if (!*endptr && (llint >= 0) && ((gulong) llint <= G_MAXULONG)) {
 			value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
 			g_value_set_ulong (value, (gulong) llint);
 		}

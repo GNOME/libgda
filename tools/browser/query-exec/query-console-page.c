@@ -1245,10 +1245,8 @@ query_console_page_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
 static GtkWidget *
 query_console_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
-	QueryConsolePage *tconsole;
 	const gchar *tab_name;
 
-	tconsole = QUERY_CONSOLE_PAGE (page);
 	tab_name = _("Query editor");
 	return browser_make_tab_label_with_stock (tab_name,
 						  STOCK_CONSOLE,

@@ -58,9 +58,7 @@ data_manager_add_proposals_to_menu (GtkWidget *menu,
 			if (!select_field->validity_meta_table_column)
 				continue;
 			GdaMetaDbObject *dbo;
-			GdaMetaTableColumn *field;
 			dbo = select_field->validity_meta_object;
-			field = select_field->validity_meta_table_column;
 			if (dbo->obj_type == GDA_META_DB_TABLE) {
 				GdaMetaTable *mtable;
 				mtable = GDA_META_TABLE (dbo);

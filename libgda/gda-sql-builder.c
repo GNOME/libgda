@@ -128,7 +128,7 @@ gda_sql_builder_class_init (GdaSqlBuilderClass *klass)
 	 */
 	g_object_class_install_property (object_class, PROP_TYPE,
 					 g_param_spec_enum ("stmt-type", NULL, "Statement Type",
-							    GDA_SQL_PARSER_TYPE_SQL_STATEMENT_TYPE,
+							    GDA_TYPE_SQL_STATEMENT_TYPE,
 							    GDA_SQL_STATEMENT_UNKNOWN,
 							    (G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 }
@@ -519,12 +519,12 @@ gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_nam
 	const GdaSqlBuilderId field_id = gda_sql_builder_add_id (builder, tmp);
 	if (alias && *alias)
 		gda_sql_builder_add_field_value_id (builder,
-					      field_id,
-					      gda_sql_builder_add_id (builder, alias));
+						    field_id,
+						    gda_sql_builder_add_id (builder, alias));
 	else
 		gda_sql_builder_add_field_value_id (builder,
-					      field_id,
-					      0);
+						    field_id,
+						    0);
 	if (tmp_is_allocated)
 		g_free (tmp);
 
@@ -911,14 +911,14 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type
 /**
  * gda_sql_builder_add_id:
  * @builder: a #GdaSqlBuilder object
- * @string: a string
+ * @str: a string
  *
  * Defines an expression representing an identifier in @builder,
  * which may be reused to build other parts of a statement,
  * for instance as a parameter to gda_sql_builder_add_cond() or
  * gda_sql_builder_add_field_value_id().
  *
- * The new expression will contain the @string literal.
+ * The new expression will contain the @str literal.
  * For example:
  * <programlisting>
  * gda_sql_builder_add_id (b, "name")
@@ -940,16 +940,16 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type
  * Since: 4.2
  */
 GdaSqlBuilderId
-gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *string)
+gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *str)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
 
 	GdaSqlExpr *expr;
 	expr = gda_sql_expr_new (NULL);
-	if (string) {
+	if (str) {
 		expr->value = gda_value_new (G_TYPE_STRING);
-		g_value_set_string (expr->value, string);
+		g_value_set_string (expr->value, str);
 		expr->value_is_ident = (gpointer) 0x1;
 	}
 
@@ -983,7 +983,7 @@ gda_sql_builder_add_field_id (GdaSqlBuilder *builder, const gchar *field_name, c
 	if (table_name && *table_name) {
 		tmp = g_strdup_printf ("%s.%s", table_name, field_name);
 		tmp_is_allocated = TRUE;
-	}
+        }
 	else
 		tmp = (gchar*) field_name;
 
@@ -1039,7 +1039,7 @@ gda_sql_builder_add_param (GdaSqlBuilder *builder, const gchar *param_name, GTyp
 }
 
 /**
- * gda_sql_builder_add_cond: (skip)
+ * gda_sql_builder_add_cond:
  * @builder: a #GdaSqlBuilder object
  * @op: type of condition
  * @op1: the ID of the 1st argument (not 0)
@@ -1764,7 +1764,7 @@ gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst)
 }
 
 /**
- * gda_sql_builder_compound_set_type: (skip)
+ * gda_sql_builder_compound_set_type:
  * @builder: a #GdaSqlBuilder object
  * @compound_type: a type of compound
  *
@@ -1818,6 +1818,7 @@ gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement
 	cstmt->stmt_list = g_slist_append (cstmt->stmt_list, sub);
 }
 
+
 /**
  * gda_sql_builder_compound_add_sub_select_from_builder:
  * @builder: a #GdaSqlBuilder object
@@ -1825,7 +1826,7 @@ gda_sql_builder_compound_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement
  *
  * Add a sub select to a COMPOUND statement
  *
- * Since: 4.2.10
+ * Since: 4.2
  */
 void
 gda_sql_builder_compound_add_sub_select_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *subselect)
@@ -2029,6 +2030,7 @@ gda_sql_builder_import_expression (GdaSqlBuilder *builder, GdaSqlExpr *expr)
 	return add_part (builder, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));
 }
 
+
 /**
  * gda_sql_builder_import_expression_from_builder:
  * @builder: a #GdaSqlBuilder object
@@ -2039,20 +2041,21 @@ gda_sql_builder_import_expression (GdaSqlBuilder *builder, GdaSqlExpr *expr)
  *
  * Returns: the ID of the new expression, or %0 if there was an error
  *
- * Since: 4.2.10
+ * Since: 4.2
  */
 GdaSqlBuilderId
 gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, GdaSqlBuilderId expr_id)
 {
- GdaSqlExpr *expr;
-
- g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
- g_return_val_if_fail (builder->priv->main_stmt, 0);
- g_return_val_if_fail (GDA_IS_SQL_BUILDER (query), 0);
- g_return_val_if_fail (query->priv->main_stmt, 0);
- g_return_val_if_fail (expr_id, 0);
-
- expr = gda_sql_builder_export_expression(query, expr_id);
- g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, 0);
- return add_part (builder, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));
+	GdaSqlExpr *expr;
+	
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
+	g_return_val_if_fail (builder->priv->main_stmt, 0);
+	g_return_val_if_fail (GDA_IS_SQL_BUILDER (query), 0);
+	g_return_val_if_fail (query->priv->main_stmt, 0);
+	g_return_val_if_fail (expr_id, 0);
+	
+	expr = gda_sql_builder_export_expression(query, expr_id);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, 0);
+	return add_part (builder, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));
 }
+

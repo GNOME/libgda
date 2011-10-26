@@ -2359,12 +2359,11 @@ wrapper_ldap_search (LdapSearchData *data, GError **error)
 	}
 	else {
 		GdaDataModel *wrapped;
-		gint nb;
 		wrapped = gda_data_access_wrapper_new (model);
 		g_object_unref (model);
 		/* force loading all the LDAP entries in memory to avoid
 		 * having the GTK thread lock on LDAP searches */
-		nb = gda_data_model_get_n_rows (wrapped);
+		gda_data_model_get_n_rows (wrapped);
 		return wrapped;
 	}
 }

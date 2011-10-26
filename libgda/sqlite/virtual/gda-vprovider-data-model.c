@@ -241,7 +241,10 @@ static sqlite3_module Module = {
 	virtualCommit,                /* xCommit - commit transaction */
 	virtualRollback,              /* xRollback - rollback transaction */
 	NULL,                         /* xFindFunction - function overloading */
-	virtualRename                 /* Rename - Notification that the table will be given a new name */
+	virtualRename,                /* Rename - Notification that the table will be given a new name */
+	NULL,                         /* xSavepoint */  
+	NULL,                         /* xRelease */
+	NULL                          /* xRollbackTo */
 };
 
 /*

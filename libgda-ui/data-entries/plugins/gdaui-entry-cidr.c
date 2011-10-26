@@ -252,10 +252,8 @@ static void popup_menu_item_activate_cb (GtkMenuItem *item, GdauiEntryCidr *mgci
 static void
 mask_popup (G_GNUC_UNUSED GtkEntry *entry, GtkMenu *arg1, GdauiEntryCidr *mgcidr)
 {
-	GtkWidget *submenu, *item;
+	GtkWidget *item;
 	gint net;
-
-	submenu = gtk_menu_item_new_with_label (_("Mask settings"));
 
 	item = gtk_separator_menu_item_new ();
 	gtk_menu_shell_prepend (GTK_MENU_SHELL (arg1), item);

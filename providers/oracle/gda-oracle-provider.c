@@ -329,7 +329,8 @@ gda_oracle_provider_get_type (void)
 			NULL, NULL,
 			sizeof (GdaOracleProvider),
 			0,
-			(GInstanceInitFunc) gda_oracle_provider_init
+			(GInstanceInitFunc) gda_oracle_provider_init,
+			NULL
 		};
 		g_static_mutex_lock (&registering);
 		if (type == 0)
@@ -1344,10 +1345,6 @@ oracle_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext 
         str = string->str;
         g_string_free (string, FALSE);
         return str;
-
- err:
-        g_string_free (string, TRUE);
-        return NULL;
 }
 
 static gchar *
