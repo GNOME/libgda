@@ -1,3 +1,18 @@
+libgda 5.0.0, 2011-10-26
+
+ - GObject Introspection fixes and automatic Vala bindings generation
+ - SQLite provider: allow one to load SQLite extensions using "SELECT load_extension ('xxx')"
+ - Corrected bug when executing statement with a NULL variable
+ - New GdaDataPivot object to perform data summarisation
+ - Many small corrections and improvements
+ - Bugs corrected: #662279, #658643, #622899, #660563 (partially), #661164, #660344, #661684,
+   #660537
+ - Translations:
+	- sl (Matej Urbančič, Martin Srebotnjak)
+	- es (Daniel Mustieles, Jorge González)
+	- de (Mario Blättermann)
+	- cs (Marek Černocký)
+
 libgda 4.99.4, 2011-09-02
 
  - GdaBrowser: improved LDAP support and other general improvements and
