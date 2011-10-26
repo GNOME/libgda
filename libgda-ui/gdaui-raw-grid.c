@@ -2153,15 +2153,15 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	if (selrows <= 0)
 		gtk_widget_set_sensitive (label, FALSE);
 
-	scope = gtk_combo_box_text_new ();
+	scope = gtk_combo_box_new_text ();
 	gtk_table_attach_defaults (GTK_TABLE (table), scope, 1, 2, 1, 2);
 	gtk_widget_show (scope);
 	g_object_set_data (G_OBJECT (dialog), "scope", scope);
 
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (scope), _("All data (without any local modification)"));
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (scope), _("Only displayed data"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (scope), _("All data (without any local modification)"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (scope), _("Only displayed data"));
 	if (selrows > 0)
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (scope), _("Only selected data"));
+		gtk_combo_box_append_text (GTK_COMBO_BOX (scope), _("Only selected data"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (scope), 0);
 
 	/* other options */
