@@ -59,9 +59,7 @@ endif
 
 
 
-# setenv() is in libiberty in mingw
 if PLATFORM_WIN32
-gda_sql_4_0_LDADD += -liberty
 gda_sql_4_0_SOURCES += gda-sql-res.rc
 endif
 
