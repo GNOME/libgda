@@ -1,6 +1,6 @@
 m4_define(major, 5)
 m4_define(minor, 0)
-m4_define(micro, 0)
+m4_define(micro, 1)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 AC_CONFIG_MACRO_DIR([m4])
