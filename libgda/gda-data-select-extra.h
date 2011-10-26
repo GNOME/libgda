@@ -51,6 +51,9 @@ typedef struct {
 	GHashTable             *ins_stmts; /* key = a gboolean vector with TRUEs when the column is used, value = an INSERT GdaStatement  */
 	GdaStatement           *one_row_select_stmt; /* used to retrieve one row after an UPDATE
 						      * or INSERT operation */
+
+	gboolean               *cols_mod[NB_QUERIES]; /* each NULL or an array of booleans the same size as
+						       * GdaDataSelectPriv's PrivateShareable's @columns's length */
 } GdaDataSelectInternals;
 
 GdaDataSelectInternals *_gda_data_select_internals_steal (GdaDataSelect *model);
