@@ -111,6 +111,8 @@ typedef struct {
 	int  (*sqlite3_rekey)(sqlite3 *, const void *, int);
 
 	int  (*sqlite3_create_collation) (sqlite3*, const char *, int, void*, int(*xCompare)(void*,int,const void*,int,const void*));
+
+	int (*sqlite3_enable_load_extension) (sqlite3 *, int);
 } Sqlite3ApiRoutines;
 
 extern Sqlite3ApiRoutines *s3r;

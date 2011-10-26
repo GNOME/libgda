@@ -284,7 +284,9 @@ load_symbols (GModule *module)
 		s3r->sqlite3_rekey = NULL;
 
 	if (! g_module_symbol (module, "sqlite3_create_collation", (gpointer*) &(s3r->sqlite3_create_collation)))
-		s3r->sqlite3_rekey = NULL;
+		goto onerror;
+	if (! g_module_symbol (module, "sqlite3_enable_load_extension", (gpointer*) &(s3r->sqlite3_enable_load_extension)))
+		s3r->sqlite3_enable_load_extension = NULL;
 	return;
 
  onerror:

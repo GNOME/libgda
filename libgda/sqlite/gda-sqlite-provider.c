@@ -701,7 +701,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
 	const gchar *is_virtual = NULL;
-	const gchar *use_extra_functions = NULL, *with_fk = NULL, *locale_collate;
+	const gchar *use_extra_functions = NULL, *with_fk = NULL, *locale_collate, *extensions;
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
@@ -731,6 +731,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
 
 	locale_collate = gda_quark_list_find (params, "EXTRA_COLLATIONS");
+	extensions = gda_quark_list_find (params, "EXTENSIONS");
 
 	if (! is_virtual) {
 		if (!dbname) {
@@ -862,6 +863,18 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	
 	/* allow a busy timeout of 500 ms */
 	SQLITE3_CALL (sqlite3_busy_timeout) (cdata->connection, 500);
+
+	/* allow loading extensions using SELECT load_extension ()... */
+	if (extensions && ((*extensions == 't') || (*extensions == 'T'))) {
+		if (SQLITE3_CALL (sqlite3_enable_load_extension))
+			SQLITE3_CALL (sqlite3_enable_load_extension) (cdata->connection, 1);
+		else {
+			gda_connection_add_event_string (cnc, _("Extension loading is not supported"));
+			gda_sqlite_free_cnc_data (cdata);
+			g_static_rec_mutex_unlock (&cnc_mutex);
+			return FALSE;
+		}
+	}
 
 	/* try to prepare all the internal statements */
 	InternalStatementItem i;

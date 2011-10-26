@@ -13,5 +13,6 @@
       <gda_value>TRUE</gda_value>
     </parameter>
     <parameter id="FK" _name="With foreign keys" _descr="Enforce foreign keys" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="EXTENSIONS" _name="Allow extensions" _descr="Allow SQLite to load extensions using the load_extension() function" gdatype="gboolean" nullok="TRUE"/>
   </parameters>
 </data-set-spec>
