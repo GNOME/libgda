@@ -19,7 +19,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I. \
 	$(LIBGDA_CFLAGS) \
-	$(LIBGDA_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
 gda_list_config_4_0_SOURCES = \
