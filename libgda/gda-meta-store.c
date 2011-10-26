@@ -3833,7 +3833,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 
 <!ELEMENT definition (#PCDATA)>]]></programlisting>
  *
- * Returns: TRUE if the new object has sucessfully been added
+ * Returns: TRUE if the new object has successfully been added
  */
 gboolean
 gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_description, GError **error)
@@ -4041,7 +4041,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
  *
  * Removes the custom database object named @obj_name.
  *
- * Returns: TRUE if the custom object has sucessfully been removed
+ * Returns: TRUE if the custom object has successfully been removed
  */
 gboolean
 gda_meta_store_schema_remove_custom_object (GdaMetaStore *store, const gchar *obj_name, GError **error)
