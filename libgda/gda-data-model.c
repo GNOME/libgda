@@ -850,7 +850,9 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * the data model from being destroyed).
  *
  * Depending on the data model's implementation, a new #GdaDataModelIter object may be created,
- * or a reference to an already existing #GdaDataModelIter may be returned.
+ * or a reference to an already existing #GdaDataModelIter may be returned. For example if @model only
+ * supports being accessed using a forward moving cursor (say a the result of a SELECT executed by SQLite
+ * with a cursor access mode specified), then this method will always return the same iterator.
  *
  * If a new #GdaDataModelIter is created, then the row it represents is undefined.
  *
