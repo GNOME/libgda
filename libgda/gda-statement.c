@@ -1506,14 +1506,34 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 				str = g_string_free (string, FALSE);
 			}
 		}
-		else {
-			str = gda_value_stringify (expr->value);
-			if (!str) goto err;
-			if (is_null && gda_value_is_null (expr->value))
+		else if (gda_value_is_null (expr->value)) {
+			str = g_strdup ("NULL");
+			if (is_null)
 				*is_null = TRUE;
-			else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
-				 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
+		}
+		else if (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) {
+			if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
+			    !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
 				*is_default = TRUE;
+			str = g_value_dup_string (expr->value);
+		}
+		else {
+			GdaDataHandler *dh;
+			if (context->cnc) {
+				GdaServerProvider *prov;
+				prov = gda_connection_get_provider (context->cnc);
+				dh = gda_server_provider_get_data_handler_g_type (prov, context->cnc,
+										  G_VALUE_TYPE (expr->value));
+				if (!dh) goto err;
+			}
+			else
+				dh = gda_data_handler_get_default (G_VALUE_TYPE (expr->value));
+
+			if (dh)
+				str = gda_data_handler_get_sql_from_value (dh, expr->value);
+			else
+				str = gda_value_stringify (expr->value);
+			if (!str) goto err;
 		}
 	}
 	else if (expr->func) {

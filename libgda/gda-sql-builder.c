@@ -818,38 +818,15 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
 
 	gchar *str;
-
-	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
-		GType type = G_VALUE_TYPE (value);
-		if (!dh)
-			dh = gda_data_handler_get_default (type);
-		else {
-			if (! gda_data_handler_accepts_g_type (dh, type)) {
-				g_warning (_("Unhandled data type '%s'"), g_type_name (type));
-				return 0;
-			}
-		}
-		if (!dh) {
-			g_warning (_("Unhandled data type '%s'"), g_type_name (type));
-			return 0;
-		}
-		str = gda_data_handler_get_sql_from_value (dh, value);
-	}
-	else
-		str = g_strdup ("NULL");
-
-	if (str) {
-		GdaSqlExpr *expr;
-		expr = gda_sql_expr_new (NULL);
-		expr->value = gda_value_new (G_TYPE_STRING);
-		g_value_take_string (expr->value, str);
-		return add_part (builder, (GdaSqlAnyPart *) expr);
-	}
+	GdaSqlExpr *expr;
+	expr = gda_sql_expr_new (NULL);
+	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL))
+		expr->value = gda_value_copy (value);
 	else {
-		g_warning (_("Could not convert value to type '%s'"),
-			   g_type_name (G_VALUE_TYPE (value)));
-		return 0;
+		expr->value = gda_value_new (G_TYPE_STRING);
+		g_value_set_string (expr->value, "NULL");
 	}
+	return add_part (builder, (GdaSqlAnyPart *) expr);
 }
 
 /**
