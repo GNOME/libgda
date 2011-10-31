@@ -98,7 +98,7 @@ struct _GdaHolderPrivate
 	GType            g_type;
 	GdaHolder       *full_bind;     /* FULL bind to holder */
 	GdaHolder       *simple_bind;  /* SIMPLE bind to holder */
-	gulong           simple_bind_notify_signal_id;
+	gulong           simple_bind_type_changed_id;
 	
 	gboolean         invalid_forced;
 	GError          *invalid_error;
@@ -311,7 +311,7 @@ gda_holder_init (GdaHolder *holder)
 	holder->priv->g_type = G_TYPE_INVALID;
 	holder->priv->full_bind = NULL;
 	holder->priv->simple_bind = NULL;
-	holder->priv->simple_bind_notify_signal_id = 0;
+	holder->priv->simple_bind_type_changed_id = 0;
 
 	holder->priv->invalid_forced = FALSE;
 	holder->priv->invalid_error = NULL;
@@ -1624,8 +1624,8 @@ static void
 bind_to_notify_cb (GdaHolder *bind_to, G_GNUC_UNUSED GParamSpec *pspec, GdaHolder *holder)
 {
 	g_signal_handler_disconnect (holder->priv->simple_bind,
-				     holder->priv->simple_bind_notify_signal_id);
-	holder->priv->simple_bind_notify_signal_id = 0;
+				     holder->priv->simple_bind_type_changed_id);
+	holder->priv->simple_bind_type_changed_id = 0;
 	if (holder->priv->g_type == GDA_TYPE_NULL) {
 		holder->priv->g_type = bind_to->priv->g_type;
 		g_object_notify ((GObject*) holder, "g-type");
@@ -1691,10 +1691,10 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 	if (holder->priv->simple_bind) {
 		g_signal_handlers_disconnect_by_func (G_OBJECT (holder->priv->simple_bind),
 						      G_CALLBACK (full_bind_changed_cb), holder);
-		if (holder->priv->simple_bind_notify_signal_id) {
+		if (holder->priv->simple_bind_type_changed_id) {
 			g_signal_handler_disconnect (holder->priv->simple_bind,
-						     holder->priv->simple_bind_notify_signal_id);
-			holder->priv->simple_bind_notify_signal_id = 0;
+						     holder->priv->simple_bind_type_changed_id);
+			holder->priv->simple_bind_type_changed_id = 0;
 		}
 		g_object_unref (holder->priv->simple_bind);
 		holder->priv->simple_bind = NULL;
@@ -1702,15 +1702,14 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 
 	/* setting the new alias or reseting the value if there is no new alias */
 	if (bind_to) {
-		holder->priv->simple_bind = bind_to;
-		g_object_ref (holder->priv->simple_bind);
+		holder->priv->simple_bind = g_object_ref (bind_to);
 		g_signal_connect (G_OBJECT (holder->priv->simple_bind), "changed",
 				  G_CALLBACK (full_bind_changed_cb), holder);
 
 		if (bind_to->priv->g_type == GDA_TYPE_NULL)
-			holder->priv->simple_bind_notify_signal_id = g_signal_connect (bind_to, "notify::g-type",
-										       G_CALLBACK (bind_to_notify_cb),
-										       holder);
+			holder->priv->simple_bind_type_changed_id = g_signal_connect (bind_to, "notify::g-type",
+										      G_CALLBACK (bind_to_notify_cb),
+										      holder);
 		else if (holder->priv->g_type == GDA_TYPE_NULL)
 			g_object_set ((GObject*) holder, "g-type", bind_to->priv->g_type , NULL);
 
@@ -1778,8 +1777,7 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 			holder->priv->value = NULL;
 		}
 
-		holder->priv->full_bind = alias_of;
-		g_object_ref (alias_of);
+		holder->priv->full_bind = g_object_ref (alias_of);
 		g_signal_connect (G_OBJECT (alias_of), "changed",
 				  G_CALLBACK (full_bind_changed_cb), holder);
 
