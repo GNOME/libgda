@@ -679,14 +679,73 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		 */
 		guchar *unescaped;
                 size_t pqlength = 0;
+		PostgresConnectionData *cdata;
+		gboolean valueset = FALSE;
 
-		unescaped = PQunescapeBytea ((guchar*)thevalue, &pqlength);
-		if (unescaped != NULL) {
-			GdaBinary bin;
-			bin.data = unescaped;
-			bin.binary_length = pqlength;
-			gda_value_set_binary (value, &bin);
-			PQfreemem (unescaped);
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		if (cdata) {
+			if ((thevalue[0] == '\\') && (thevalue[1] == 'x')) {
+				guint len;
+				len = strlen (thevalue + 2);
+				if (!(len % 2)) {
+					guint i;
+					const gchar *ptr;
+					pqlength = len / 2;
+					unescaped = g_new (guchar, pqlength);
+					for (i = 0, ptr = thevalue + 2; *ptr; i++, ptr += 2) {
+						gchar c;
+						c = ptr[0];
+						if ((c >= 'a') && (c <= 'z'))
+							unescaped [i] = c - 'a' + 10;
+						else if ((c >= 'A') && (c <= 'Z'))
+							unescaped [i] = c - 'A' + 10;
+						else if ((c >= '0') && (c <= '9'))
+							unescaped [i] = c - '0';
+						else
+							break;
+						unescaped [i] <<= 4;
+
+						c = ptr[1];
+						if ((c >= 'a') && (c <= 'z'))
+							unescaped [i] += c - 'a' + 10;
+						else if ((c >= 'A') && (c <= 'Z'))
+							unescaped [i] += c - 'A' + 10;
+						else if ((c >= '0') && (c <= '9'))
+							unescaped [i] += c - '0';
+						else
+							break;
+					}
+					if (! *ptr) {
+						GdaBinary *bin;
+						bin = g_new (GdaBinary, 1);
+						bin->data = unescaped;
+						bin->binary_length = pqlength;
+						gda_value_take_binary (value, bin);
+						valueset = TRUE;
+					}
+				}
+			}
+			else {
+				unescaped = PQunescapeBytea ((guchar*) thevalue, &pqlength);
+				if (unescaped) {
+					GdaBinary bin;
+					bin.data = unescaped;
+					bin.binary_length = pqlength;
+					gda_value_set_binary (value, &bin);
+					PQfreemem (unescaped);
+					valueset = TRUE;
+				}
+			}
+		}
+		if (!valueset) {
+			gchar *tmp;
+			tmp = g_strndup (thevalue, 20);
+			gda_row_invalidate_value (row, value);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_DATA_ERROR,
+				     _("Invalid binary string representation '%s ...'"), 
+				     tmp);
+			g_free (tmp);
 		}
 	}
 	else if (type == GDA_TYPE_BLOB) {
