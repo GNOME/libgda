@@ -2577,7 +2577,8 @@ gda_ushort_get_type (void) {
  *
  * Converts all the non printable characters of bin->data into the "\xyz" representation
  * where "xyz" is the octal representation of the byte, and the '\' (backslash) character
- * is converted to "\\".
+ * is converted to "\\". Printable characters (defined by g_ascii_isprint()) as well as newline
+ * character are not converted.
  *
  * Note that the backslash and newline characters are considered as printable characters and
  * will not be represented by the "\xyz" representation.
@@ -2655,22 +2656,23 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 
 /**
  * gda_string_to_binary:
- * @str: a string to convert
+ * @str: (allow-none): a string to convert, or %NULL
  *
  * Performs the reverse of gda_binary_to_string() (note that for any "\xyz" succession
  * of 4 characters where "xyz" represents a valid octal value, the resulting read value will
- * be modulo 256)
+ * be modulo 256).
  *
- * Returns: (transfer full): a new #GdaBinary if no error were found in @str, or NULL otherwise
+ * I @str is %NULL, then an empty (i.e. where the @data part is %NULL) #GdaBinary is created and returned.
+ *
+ * Returns: (transfer full): a new #GdaBinary if no error were found in @str, or %NULL otherwise
  */
 GdaBinary *
 gda_string_to_binary (const gchar *str)
 {
 	GdaBinary *bin;
 	glong len = 0, total;
-	gchar *rptr;
-	const gchar *sptr;
-	gchar *retval;
+	const guchar *sptr;
+	guchar *rptr, *retval;
 
 	if (!str) {
 		bin = g_new0 (GdaBinary, 1);
@@ -2681,8 +2683,8 @@ gda_string_to_binary (const gchar *str)
 
 	total = strlen (str);
 	retval = g_new0 (gchar, total + 1);
-	sptr = str;
-	rptr = (gchar *) retval;
+	sptr = (guchar*) str;
+	rptr = retval;
 
 	while (*sptr) {
 		if (*sptr == '\\') {
@@ -2691,13 +2693,15 @@ gda_string_to_binary (const gchar *str)
 				sptr += 2;
 			}
 			else {
+				guint tmp;
 				if ((*(sptr+1) >= '0') && (*(sptr+1) <= '7') &&
 				    (*(sptr+2) >= '0') && (*(sptr+2) <= '7') &&
 				    (*(sptr+3) >= '0') && (*(sptr+3) <= '7')) {
-					*rptr = (*(sptr+1) - '0') * 64 +
+					tmp = (*(sptr+1) - '0') * 64 +
 						(*(sptr+2) - '0') * 8 +
 						(*(sptr+3) - '0');
 					sptr += 4;
+					*rptr = tmp % 256;
 				}
 				else {
 					g_free (retval);
@@ -2715,7 +2719,7 @@ gda_string_to_binary (const gchar *str)
 	}
 
 	bin = g_new0 (GdaBinary, 1);
-	bin->data = (guchar*)retval;
+	bin->data = retval;
 	bin->binary_length = len;
 
 	return bin;
