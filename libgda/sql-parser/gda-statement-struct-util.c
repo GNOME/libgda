@@ -350,14 +350,15 @@ gda_sql_identifier_needs_quotes (const gchar *str)
  * @str: a quoted string
  *
  * Prepares @str to be compared:
- * - if surrounded by double quotes or single quotes, then just remove the quotes
- * - otherwise convert to lower case
+ * <itemizedlist>
+ *  <listitem><para>if surrounded by double quotes or single quotes, then just remove the quotes</para></listitem>
+ *  <listitem><para>otherwise convert to lower case</para></listitem>
+ * </itemizedlist>
  *
  * The quoted string:
  * <itemizedlist>
- *   <listitem><para>must start and finish with the same single or double quotes character</para></listitem>
- *   <listitem><para>can contain the delimiter character (the single or double quotes) in the string if every instance
- *     of it is preceeded with a backslash character or with the delimiter character itself</para></listitem>
+ *  <listitem><para>must start and finish with the same single or double quotes character</para></listitem>
+ *  <listitem><para>can contain the delimiter character (the single or double quotes) in the string if every instance of it is preceeded with a backslash character or with the delimiter character itself</para></listitem>
  * </itemizedlist>
  *
  * WARNING: @str must NOT be a composed identifier (&lt;part1&gt;."&lt;part2&gt;" for example)
