@@ -25,7 +25,7 @@ GdaStatement *stmt;
 GdaSqlParser *parser = ...;
 GdaDataModel *model;
 
-stmt = gda_sql_parser_parse_from_string (parser,
+stmt = gda_sql_parser_parse_string (parser,
        "SELECT * FROM customers WHERE id &lt;= ##theid::gint",
        NULL, NULL);
 gda_statement_get_parameters (stmt, &amp;params, NULL);
@@ -83,7 +83,7 @@ id | name           | default_served_by | country | city
 GdaSqlParser *parser = ...;
 GdaDataModel *model;
 
-stmt = gda_sql_parser_parse_from_string (parser, 
+stmt = gda_sql_parser_parse_string (parser, 
        "SELECT * FROM customers WHERE id &lt;= ##theid::gint",
         NULL, NULL);
 gda_statement_get_parameters (stmt, &amp;params, NULL);
