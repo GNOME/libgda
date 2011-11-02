@@ -517,6 +517,8 @@ browser_window_new (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory)
 
 	/* create a PerspectiveData */
 	PerspectiveData *pers;
+	if (! factory && browser_connection_is_ldap (bcnc))
+		factory = browser_core_get_factory (_("LDAP browser"));
 	pers = perspective_data_new (bwin, factory);
 	bwin->priv->perspectives = g_slist_prepend (bwin->priv->perspectives, pers);
 	GtkActionGroup *actions;
