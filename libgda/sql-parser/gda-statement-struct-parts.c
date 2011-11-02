@@ -93,7 +93,6 @@ gda_sql_expr_free (GdaSqlExpr *expr)
 	}
 	gda_sql_case_free (expr->case_s);
 	g_free (expr->cast_as);
-	expr->value_is_ident = TRUE;
 	g_free (expr);
 }
 
