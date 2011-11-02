@@ -804,8 +804,11 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
  *
- * The new expression will contain the value passed as the @value argument. It is possible to
- * customize how the value has to be interpreted by passing a specific #GdaDataHandler object as @dh.
+ * The new expression will contain the value passed as the @value argument.
+ *
+ * If @value's type is a string then it is possible to customize how the value has to be interpreted by passing a
+ * specific #GdaDataHandler object as @dh. This feature is very rarely used and the @dh argument should generally
+ * be %NULL.
  *
  * Returns: the ID of the new expression, or %0 if there was an error
  *
@@ -820,8 +823,16 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
 	gchar *str;
 	GdaSqlExpr *expr;
 	expr = gda_sql_expr_new (NULL);
-	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL))
-		expr->value = gda_value_copy (value);
+	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+		if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
+			if (!dh)
+				dh = gda_data_handler_get_default (G_TYPE_STRING);
+			expr->value = gda_value_new (G_TYPE_STRING);
+			g_value_take_string (expr->value, gda_data_handler_get_sql_from_value (dh, value));
+		}
+		else
+			expr->value = gda_value_copy (value);
+	}
 	else {
 		expr->value = gda_value_new (G_TYPE_STRING);
 		g_value_set_string (expr->value, "NULL");
@@ -838,8 +849,11 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
  *
- * The new expression will contain the value passed as the @... argument. It is possible to
- * customize how the value has to be interpreted by passing a specific #GdaDataHandler object as @dh.
+ * The new expression will contain the value passed as the @... argument.
+ *
+ * If @type is G_TYPE_STRING then it is possible to customize how the value has to be interpreted by passing a
+ * specific #GdaDataHandler object as @dh. This feature is very rarely used and the @dh argument should generally
+ * be %NULL.
  *
  * Note that for composite types such as #GdaNumeric, #Gdate, #GdaTime, ... pointer to these
  * structures are expected, they should no be passed by value. For example:
