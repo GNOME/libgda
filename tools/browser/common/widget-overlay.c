@@ -1042,6 +1042,9 @@ widget_overlay_set_child_props (WidgetOverlay *ovl, GtkWidget *child, ...)
 						/*gtk_widget_queue_resize (GTK_WIDGET (ovl));*/
 						gtk_widget_queue_resize (cd->child);
 					}
+
+					if (ovl->priv->scale_range && (cd == get_first_child (ovl)))
+						gtk_range_set_value (ovl->priv->scale_range, cd->scale);
 					break;
 				}
 				case WIDGET_OVERLAY_CHILD_TOOLTIP:
