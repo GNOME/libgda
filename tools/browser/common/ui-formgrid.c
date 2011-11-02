@@ -65,7 +65,8 @@ struct _UiFormGridPriv
 	GtkWidget   *raw_form;
 	GtkWidget   *raw_grid;
 	GtkWidget   *info;
-	GtkWidget   *overlay;
+	GtkWidget   *overlay_form;
+	GtkWidget   *overlay_grid;
 	GtkWidget   *autoupdate_toggle;
 	gboolean     autoupdate;
 	gboolean     autoupdate_possible;
@@ -205,7 +206,37 @@ ui_formgrid_show (GtkWidget *widget)
 	GtkWidget *ovl, *packed;
 	formgrid = UI_FORMGRID (widget);
 
-	if (! formgrid->priv->overlay) {
+	if (! formgrid->priv->overlay_grid) {
+		/* finalize packing */
+		GtkWidget *sw, *vp;
+		sw = gtk_scrolled_window_new (NULL, NULL);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+						GTK_POLICY_AUTOMATIC,
+						GTK_POLICY_AUTOMATIC);
+		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw),
+						     GTK_SHADOW_NONE);
+		gtk_container_add (GTK_CONTAINER (sw), formgrid->priv->raw_grid);
+		gtk_widget_show_all (sw);
+		packed = sw;
+
+		/* overlay */
+		ovl = widget_overlay_new ();
+		formgrid->priv->overlay_grid = ovl;
+		g_object_set (G_OBJECT (ovl), "add-scale", TRUE, NULL);
+		g_object_set (G_OBJECT (ovl), "add-scale", FALSE, NULL);
+		gtk_container_add (GTK_CONTAINER (ovl), packed);
+		widget_overlay_set_child_props (WIDGET_OVERLAY (ovl), packed,
+						WIDGET_OVERLAY_CHILD_HALIGN,
+						WIDGET_OVERLAY_ALIGN_FILL,
+						WIDGET_OVERLAY_CHILD_VALIGN,
+						WIDGET_OVERLAY_ALIGN_FILL,
+						WIDGET_OVERLAY_CHILD_SCALE, .9,
+						-1);
+		gtk_widget_show (ovl);
+		gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), ovl, NULL);
+	}
+
+	if (! formgrid->priv->overlay_form) {
 		/* finalize packing */
 		if (formgrid->priv->scroll_form) {
 			GtkWidget *sw, *vp;
@@ -229,7 +260,7 @@ ui_formgrid_show (GtkWidget *widget)
 		
 		/* overlay */
 		ovl = widget_overlay_new ();
-		formgrid->priv->overlay = ovl;
+		formgrid->priv->overlay_form = ovl;
 		g_object_set (G_OBJECT (ovl), "add-scale", TRUE, NULL);
 		g_object_set (G_OBJECT (ovl), "add-scale", FALSE, NULL);
 		gtk_container_add (GTK_CONTAINER (ovl), packed);
@@ -281,31 +312,13 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	gtk_box_pack_start (GTK_BOX (formgrid), formgrid->priv->nb, TRUE, TRUE, 0);
 	gtk_widget_show (formgrid->priv->nb);
 
-	/* grid on 1st page of notebook */
-	sw = gtk_scrolled_window_new (NULL, NULL);
-        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-        gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (formgrid->priv->nb), sw, NULL);
-	gtk_widget_show (sw);
-
+	/* grid on 1st page of notebook, not added there */
 	formgrid->priv->raw_grid = gdaui_raw_grid_new (NULL);
 	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_grid), -1, FALSE);
-	gtk_container_add (GTK_CONTAINER (sw), formgrid->priv->raw_grid);
-	gtk_widget_show (formgrid->priv->raw_grid);
 	g_signal_connect (formgrid->priv->raw_grid, "populate-popup",
 			  G_CALLBACK (form_grid_populate_popup_cb), formgrid);
 
-	PangoContext *pc;
-	PangoFontDescription *fd, *fdc;
-	pc = gtk_widget_get_pango_context (formgrid->priv->raw_grid);
-	fd = pango_context_get_font_description (pc);
-	fdc = pango_font_description_copy (fd);
-	pango_font_description_set_size (fdc,
-					 pango_font_description_get_size (fd) * .8);
-	gtk_widget_override_font (formgrid->priv->raw_grid, fdc);
-	pango_font_description_free (fdc);
-
-	/* form on the 2nd page of the notebook */
+	/* form on the 2nd page of the notebook, not added there */
 	formgrid->priv->raw_form = gdaui_raw_form_new (NULL);
 	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_form), -1, FALSE);
 	g_signal_connect (formgrid->priv->raw_form, "populate-popup",
@@ -463,7 +476,8 @@ static void execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid
 #ifdef HAVE_LDAP
 static void ldap_view_dn_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid);
 #endif
-static void zoom_mitem_cb (GtkCheckMenuItem *checkmenuitem, UiFormGrid *formgrid);
+static void zoom_form_mitem_cb (GtkCheckMenuItem *checkmenuitem, UiFormGrid *formgrid);
+static void zoom_grid_mitem_cb (GtkCheckMenuItem *checkmenuitem, UiFormGrid *formgrid);
 
 static void
 form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid)
@@ -546,20 +560,38 @@ form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid
 	if (wid == formgrid->priv->raw_form) {
 		GtkWidget *mitem;
 		gboolean add_scale;
-		g_object_get (G_OBJECT (formgrid->priv->overlay), "add-scale", &add_scale, NULL);
+		g_object_get (G_OBJECT (formgrid->priv->overlay_form), "add-scale", &add_scale, NULL);
 		mitem = gtk_check_menu_item_new_with_label (_("Zoom..."));
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), add_scale);
 		gtk_widget_show (mitem);
 		gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
 		g_signal_connect (mitem, "toggled",
-				  G_CALLBACK (zoom_mitem_cb), formgrid);
+				  G_CALLBACK (zoom_form_mitem_cb), formgrid);
+	}
+	else if (wid == formgrid->priv->raw_grid) {
+		GtkWidget *mitem;
+		gboolean add_scale;
+		g_object_get (G_OBJECT (formgrid->priv->overlay_grid), "add-scale", &add_scale, NULL);
+		mitem = gtk_check_menu_item_new_with_label (_("Zoom..."));
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), add_scale);
+		gtk_widget_show (mitem);
+		gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
+		g_signal_connect (mitem, "toggled",
+				  G_CALLBACK (zoom_grid_mitem_cb), formgrid);
 	}
 }
 
 static void
-zoom_mitem_cb (GtkCheckMenuItem *checkmenuitem, UiFormGrid *formgrid)
+zoom_form_mitem_cb (GtkCheckMenuItem *checkmenuitem, UiFormGrid *formgrid)
 {
-	g_object_set (G_OBJECT (formgrid->priv->overlay), "add-scale",
+	g_object_set (G_OBJECT (formgrid->priv->overlay_form), "add-scale",
+		      gtk_check_menu_item_get_active (checkmenuitem), NULL);
+}
+
+static void
+zoom_grid_mitem_cb (GtkCheckMenuItem *checkmenuitem, UiFormGrid *formgrid)
+{
+	g_object_set (G_OBJECT (formgrid->priv->overlay_grid), "add-scale",
 		      gtk_check_menu_item_get_active (checkmenuitem), NULL);
 }
 
