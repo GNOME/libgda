@@ -990,7 +990,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		const gchar *this_col_name;
 		const GValue *this_col_pname;
 		GValue *nthis_col_pname;
-		GType gtype = G_TYPE_INVALID;
+		GType gtype = GDA_TYPE_NULL;
 		const GValue *cvalue;
 		
 		this_col_pname = gda_data_model_get_value_at (tmpmodel, 1, i, error);
@@ -1067,7 +1067,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			gtype = pg ? (GType) *pg : GDA_TYPE_NULL;
 			g_free (tmp);
 		}
-		if (gtype == G_TYPE_INVALID)
+		if (gtype == GDA_TYPE_NULL)
 			/* default to string if nothing else */
 			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), "string");
 		else
