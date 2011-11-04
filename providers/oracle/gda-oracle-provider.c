@@ -1291,7 +1291,7 @@ gda_oracle_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	context.flags = flags;
 	context.render_select = (GdaSqlRenderingFunc) oracle_render_select;
 	context.render_select_target = (GdaSqlRenderingFunc) oracle_render_select_target;
-	context.render_expr = oracle_render_expr; /* render "FALSE" as 0 and TRUE as !0 */
+	context.render_expr = oracle_render_expr; /* render "FALSE" as 0 and TRUE as 1 */
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1468,6 +1468,9 @@ oracle_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *conte
 	return NULL;
 }
 
+/*
+ * The difference with the default implementation is to render TRUE and FALSE as 0 and 1
+ */
 static gchar *
 oracle_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
 		    gboolean *is_default, gboolean *is_null,
@@ -1495,46 +1498,82 @@ oracle_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 		if (!str) goto err;
 	}
 	else if (expr->value) {
-		if (expr->value_is_ident && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING)) {
-			gchar **ids_array;
-			gint i;
-			GString *string = NULL;
-			GdaConnectionOptions cncoptions = 0;
-			if (context->cnc)
-				g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
-
-			ids_array = gda_sql_identifier_split (g_value_get_string (expr->value));
-			if ((!ids_array) || !(ids_array[0])) goto err;
-			for (i = 0; ids_array[i]; i++) {
-				gchar *tmp;
-				if (!string)
-					string = g_string_new ("");
-				else
-					g_string_append_c (string, '.');
-				tmp = gda_sql_identifier_quote (ids_array[i], context->cnc, context->provider, FALSE,
-								cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
-				g_string_append (string, tmp);
-				g_free (tmp);
+		if (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) {
+			/* specific treatment for strings, see documentation about GdaSqlExpr's value attribute */
+			const gchar *vstr;
+			vstr = g_value_get_string (expr->value);
+			if (vstr) {
+				if (expr->value_is_ident) {
+					gchar **ids_array;
+					gint i;
+					GString *string = NULL;
+					GdaConnectionOptions cncoptions = 0;
+					if (context->cnc)
+						g_object_get (G_OBJECT (context->cnc), "options", &cncoptions, NULL);
+					ids_array = gda_sql_identifier_split (vstr);
+					if (!ids_array)
+						str = g_strdup (vstr);
+					else if (!(ids_array[0])) goto err;
+					else {
+						for (i = 0; ids_array[i]; i++) {
+							gchar *tmp;
+							if (!string)
+								string = g_string_new ("");
+							else
+								g_string_append_c (string, '.');
+							tmp = gda_sql_identifier_quote (ids_array[i], context->cnc,
+											context->provider, FALSE,
+											cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+							g_string_append (string, tmp);
+							g_free (tmp);
+						}
+						g_strfreev (ids_array);
+						str = g_string_free (string, FALSE);
+					}
+				}
+				else {
+					/* we don't have an identifier */
+					if (!g_ascii_strcasecmp (vstr, "default")) {
+						if (is_default)
+							*is_default = TRUE;
+						str = g_strdup ("DEFAULT");
+					}
+					else if (!g_ascii_strcasecmp (vstr, "FALSE")) {
+						g_free (str);
+						str = g_strdup ("0");
+					}
+					else if (!g_ascii_strcasecmp (vstr, "TRUE")) {
+						g_free (str);
+						str = g_strdup ("1");
+					}
+					else
+						str = g_strdup (vstr);
+				}
 			}
-			g_strfreev (ids_array);
-			str = g_string_free (string, FALSE);
+			else {
+				str = g_strdup ("NULL");
+				if (is_null)
+					*is_null = TRUE;
+			}
 		}
-		else {
-			str = gda_value_stringify (expr->value);
+		if (!str) {
+			/* use a GdaDataHandler to render the value as valid SQL */
+			GdaDataHandler *dh;
+			if (context->cnc) {
+				GdaServerProvider *prov;
+				prov = gda_connection_get_provider (context->cnc);
+				dh = gda_server_provider_get_data_handler_g_type (prov, context->cnc,
+										  G_VALUE_TYPE (expr->value));
+				if (!dh) goto err;
+			}
+			else
+				dh = gda_data_handler_get_default (G_VALUE_TYPE (expr->value));
+
+			if (dh)
+				str = gda_data_handler_get_sql_from_value (dh, expr->value);
+			else
+				str = gda_value_stringify (expr->value);
 			if (!str) goto err;
-			if (is_null && gda_value_is_null (expr->value))
-				*is_null = TRUE;
-			else if (is_default && (G_VALUE_TYPE (expr->value) == G_TYPE_STRING) && 
-				 !g_ascii_strcasecmp (g_value_get_string (expr->value), "default"))
-				*is_default = TRUE;
-			else if (!g_ascii_strcasecmp (str, "FALSE")) {
-				g_free (str);
-				str = g_strdup ("0");
-			}
-			else if (!g_ascii_strcasecmp (str, "TRUE")) {
-				g_free (str);
-				str = g_strdup ("1");
-			}
 		}
 	}
 	else if (expr->func) {
@@ -1568,10 +1607,7 @@ oracle_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 		str = g_strdup ("NULL");
 	}
 
-	if (!str) {
-		/* TO REMOVE */
-		str = g_strdup ("[...]");
-	}
+	if (!str) goto err;
 
 	if (expr->cast_as) 
 		g_string_append_printf (string, "CAST (%s AS %s)", str, expr->cast_as);
