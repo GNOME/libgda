@@ -106,6 +106,7 @@ _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 		array [i] = type;
 		g_hash_table_insert (hash, "text", array + i);
 		g_hash_table_insert (hash, "string", array + i);
+		g_hash_table_insert (hash, "varchar", array + i);
 
 		type = GDA_TYPE_BINARY;
 		i++;
