@@ -799,7 +799,7 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
 /**
  * gda_sql_builder_add_expr_value:
  * @builder: a #GdaSqlBuilder object
- * @dh: (allow-none): a #GdaDataHandler to use, or %NULL
+ * @dh: (allow-none): deprecated useless argument, just pass %NULL
  * @value: (allow-none): value to set the expression to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
@@ -815,7 +815,7 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
  * Since: 4.2
  */
 GdaSqlBuilderId
-gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, const GValue *value)
+gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, G_GNUC_UNUSED GdaDataHandler *dh, const GValue *value)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -825,10 +825,10 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
 	expr = gda_sql_expr_new (NULL);
 	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 		if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
-			if (!dh)
-				dh = gda_data_handler_get_default (G_TYPE_STRING);
+			GdaDataHandler *ldh;
+			ldh = gda_data_handler_get_default (G_TYPE_STRING);
 			expr->value = gda_value_new (G_TYPE_STRING);
-			g_value_take_string (expr->value, gda_data_handler_get_sql_from_value (dh, value));
+			g_value_take_string (expr->value, gda_data_handler_get_sql_from_value (ldh, value));
 		}
 		else
 			expr->value = gda_value_copy (value);
@@ -843,7 +843,7 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataHandler *dh, cons
 /**
  * gda_sql_builder_add_expr: (skip)
  * @builder: a #GdaSqlBuilder object
- * @dh: (allow-none): a #GdaDataHandler to use, or %NULL
+ * @dh: (allow-none): deprecated useless argument, just pass %NULL
  * @type: the GType of the following argument
  * @...: value to set the expression to, of the type specified by @type
  *
@@ -877,7 +877,7 @@ id = gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 25);
  * Since: 4.2
  */
 GdaSqlBuilderId
-gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type, ...)
+gda_sql_builder_add_expr (GdaSqlBuilder *builder, G_GNUC_UNUSED GdaDataHandler *dh, GType type, ...)
 {
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
@@ -892,7 +892,7 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, GdaDataHandler *dh, GType type
 
 	if (!value)
 		return 0;
-	retval = gda_sql_builder_add_expr_value (builder, dh, value);
+	retval = gda_sql_builder_add_expr_value (builder, NULL, value);
 
 	gda_value_free (value);
 
