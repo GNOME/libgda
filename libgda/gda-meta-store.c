@@ -133,6 +133,8 @@ typedef struct {
 	/* columns which contain SQL identifiers */
 	gint         *ident_cols;
 	gint          ident_cols_size;
+
+	gint          gtype_column; /* -1 if no column represents a GType */
 } TableInfo;
 static void table_info_free_contents (TableInfo *info);
 
@@ -1369,6 +1371,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	}
 	xmlFree (table_name);
 	dbobj->obj_type = GDA_SERVER_OPERATION_CREATE_TABLE;
+	TABLE_INFO (dbobj)->gtype_column = -1;
 
 	/* current_all */
 	gchar *sql;
@@ -1436,6 +1439,9 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         cname = xmlGetProp (cnode, BAD_CAST "name");
                         if (!cname)
                                 g_error ("Missing column name (table=%s)", complete_obj_name);
+			if (g_str_has_suffix (cname, "gtype"))
+				TABLE_INFO (dbobj)->gtype_column = colindex;
+
                         xstr = xmlGetProp (cnode, BAD_CAST "pkey");
                         if (xstr) {
                                 if ((*xstr == 'T') || (*xstr == 't'))
@@ -2834,6 +2840,17 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 						retval = FALSE;
 						g_object_unref (wrapped_data);
 						goto out;
+					}
+					/* optionaly test reported GType validity */
+					if ((j == schema_set->gtype_column) &&
+					    (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+						GType gtype;
+						g_assert (G_VALUE_TYPE (value) == G_TYPE_STRING);
+						gtype = gda_g_type_from_string (g_value_get_string (value));
+						if ((gtype == G_TYPE_INVALID) || (gtype == GDA_TYPE_NULL)) {
+							g_warning ("Unknown reported type '%s', please report this bug to "
+								   "http://bugzilla.gnome.org/ for the \"libgda\" product.", g_value_get_string (value));
+						}
 					}
 
 					if (! gda_holder_set_value (h, value, error)) {
