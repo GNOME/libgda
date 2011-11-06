@@ -3093,8 +3093,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			gda_connection_internal_statement_executed (cnc, stmt, params, NULL);
 			if (new_ps)
 				g_object_unref (ps);
-			if (allow_noparam)
-				g_object_set (data_model, "auto-reset", TRUE, NULL);
 			pending_blobs_free_list (blobs_list);
 			return data_model;
 		}

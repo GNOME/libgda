@@ -2196,8 +2196,6 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
                         }
                         else if (status == PGRES_TUPLES_OK) {
 				retval = (GObject*) gda_postgres_recordset_new_random (cnc, ps, params, pg_res, col_types);
-				if (allow_noparam)
-					g_object_set (retval, "auto-reset", TRUE, NULL);
 			}
                         else {
                                 PQclear (pg_res);
