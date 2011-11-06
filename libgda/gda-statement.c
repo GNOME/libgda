@@ -1610,10 +1610,7 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		str = g_strdup ("NULL");
 	}
 
-	if (!str) {
-		/* TO REMOVE */
-		str = g_strdup ("[...]");
-	}
+	if (!str) goto err;
 
 	if (expr->cast_as) 
 		g_string_append_printf (string, "CAST (%s AS %s)", str, expr->cast_as);
