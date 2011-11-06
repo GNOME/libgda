@@ -79,6 +79,8 @@ struct _GdaHolderClass
  *
  * The type of a #GdaHolder has to be set and cannot be modified, except if it's initialized
  * with a GDA_TYPE_NULL GType (representing NULL values) where it can be changed once to a real GType.
+ *
+ * Each GdaHolder object is thread safe.
  */
 
 GType               gda_holder_get_type                (void) G_GNUC_CONST;
