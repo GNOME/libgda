@@ -1,3 +1,12 @@
+libgda 5.0.1, 2011-11-06
+
+ - Fixed Vala bindings generation
+ - Several small corrections and improvements
+ - Bugs corrected: #662809, #567891, #662922, #597390, #663357
+ - Translations:
+	- cz (Marek Černocký)
+	- es (Daniel Mustieles)
+
 libgda 5.0.0, 2011-10-26
 
  - GObject Introspection fixes and automatic Vala bindings generation
