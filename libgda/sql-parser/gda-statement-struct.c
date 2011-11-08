@@ -643,6 +643,7 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 	g_value_unset (&value);
 	if (!dbo && (*name == '"')) {
 		gchar *tmp;
+		g_clear_error (&lerror);
 		tmp = gda_sql_identifier_quote (name, data->cnc, NULL, TRUE, FALSE);
 		dbo = find_table_or_view (part, data, tmp, error);
 		g_free (tmp);
@@ -652,7 +653,9 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 		/* use @name as a table alias in the statement */
 		GdaSqlAnyPart *any;
 
-		for (any = part->parent; any && any->parent; any = any->parent);
+		for (any = part->parent;
+		     any && any->parent && (any->type != GDA_SQL_ANY_STMT_SELECT);
+		     any = any->parent);
 		if (!any)
 			g_set_error (&lerror, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 				      "%s", _("GdaSqlSelectField is not part of a SELECT statement"));

@@ -444,15 +444,6 @@ gda_sql_statement_select_check_validity (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpoi
 		hash = g_hash_table_new (g_str_hash, g_str_equal);
 		for (list = select->from->targets; list; list = list->next) {
 			GdaSqlSelectTarget *t = (GdaSqlSelectTarget*) list->data;
-			if (t->table_name) {
-				if (g_hash_table_lookup (hash, t->table_name)) {
-					g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
-						     _("Multiple targets named or aliased '%s'"), t->table_name);
-					retval = FALSE;
-					break;
-				}
-				g_hash_table_insert (hash, t->table_name, t);
-			}
 			if (t->as) {
 				if (g_hash_table_lookup (hash, t->as)) {
 					g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
@@ -461,6 +452,15 @@ gda_sql_statement_select_check_validity (GdaSqlAnyPart *stmt, G_GNUC_UNUSED gpoi
 					break;
 				}
 				g_hash_table_insert (hash, t->as, t);
+			}
+			else if (t->table_name) {
+				if (g_hash_table_lookup (hash, t->table_name)) {
+					g_set_error (error, GDA_SQL_ERROR, GDA_SQL_VALIDATION_ERROR,
+						     _("Multiple targets named or aliased '%s'"), t->table_name);
+					retval = FALSE;
+					break;
+				}
+				g_hash_table_insert (hash, t->table_name, t);
 			}
 
 			if (!retval)
