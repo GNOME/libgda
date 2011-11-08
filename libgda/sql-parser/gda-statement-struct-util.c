@@ -85,7 +85,6 @@ _remove_quotes (gchar *str)
 	if ((delim != '\'') && (delim != '"'))
 		return str;
 
-
         total = strlen (str);
         if (str[total-1] == delim) {
 		/* string is correctly terminated by a double quote */
@@ -112,7 +111,17 @@ _remove_quotes (gchar *str)
                                 return str;
                         }
                 }
-                if (*ptr == '\\') {
+                else if (*ptr == '"') {
+                        if (*(ptr+1) == '"') {
+                                g_memmove (ptr+1, ptr+2, total - offset);
+                                offset += 2;
+                        }
+                        else {
+				*str = 0;
+				return str;
+                        }
+                }
+		else if (*ptr == '\\') {
                         if (*(ptr+1) == '\\') {
                                 g_memmove (ptr+1, ptr+2, total - offset);
                                 offset += 2;
@@ -143,7 +152,7 @@ _remove_quotes (gchar *str)
  * @str: an SQL identifier
  *
  * Add double quotes around the @str identifier. This function is normally used only by database provider's
- * implementation.
+ * implementation. Any double quote character is replaced by two double quote characters.
  *
  * For other uses, see gda_sql_identifier_quote().
  *
@@ -164,7 +173,7 @@ gda_sql_identifier_force_quotes (const gchar *str)
 	*retval = '"';
 	for (rptr = retval+1, sptr = str; *sptr; sptr++, rptr++) {
 		if (*sptr == '"') {
-			*rptr = '\\';
+			*rptr = '"';
 			rptr++;
 			*rptr = *sptr;
 		}

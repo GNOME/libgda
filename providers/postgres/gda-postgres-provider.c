@@ -2417,7 +2417,7 @@ identifier_add_quotes (const gchar *str)
         *retval = '"';
         for (rptr = retval+1, sptr = str; *sptr; sptr++, rptr++) {
                 if (*sptr == '"') {
-                        *rptr = '\\';
+                        *rptr = '"';
                         rptr++;
                         *rptr = *sptr;
                 }
@@ -2468,7 +2468,6 @@ pg_remove_quotes (gchar *str)
 	if ((delim != '\'') && (delim != '"'))
 		return str;
 
-
         total = strlen (str);
         if (str[total-1] == delim) {
 		/* string is correctly terminated */
@@ -2495,7 +2494,17 @@ pg_remove_quotes (gchar *str)
                                 return str;
                         }
                 }
-                if (*ptr == '\\') {
+                else if (*ptr == '"') {
+                        if (*(ptr+1) == '"') {
+                                g_memmove (ptr+1, ptr+2, total - offset);
+                                offset += 2;
+                        }
+                        else {
+				*str = 0;
+				return str;
+                        }
+                }
+		else if (*ptr == '\\') {
                         if (*(ptr+1) == '\\') {
                                 g_memmove (ptr+1, ptr+2, total - offset);
                                 offset += 2;
