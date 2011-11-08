@@ -1686,6 +1686,8 @@ gda_sqlite_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider, G_
 /*
  * GdaStatement to SQL request
  */
+static gchar *sqlite_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *context, GError **error);
+
 static gchar *sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error);
 static gchar *sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
 				  gboolean *is_default, gboolean *is_null,
@@ -1710,6 +1712,7 @@ gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	context.params = params;
 	context.flags = flags;
 	context.render_operation = (GdaSqlRenderingFunc) sqlite_render_operation; /* specific REGEXP rendering */
+	context.render_compound = (GdaSqlRenderingFunc) sqlite_render_compound; /* don't surround each SELECT with parenthesis, EXCEPT ALL and INTERSECT ALL are not supported */
 	context.render_expr = sqlite_render_expr; /* render "FALSE" as 0 and TRUE as 1 */
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
@@ -1728,6 +1731,84 @@ gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	return str;
 }
 
+/*
+ * The difference with the default implementation is to avoid surrounding each SELECT with parenthesis
+ * and that EXCEPT ALL and INTERSECT ALL are not supported
+ */
+static gchar *
+sqlite_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	GString *string;
+	gchar *str;
+	GSList *list;
+
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_COMPOUND, NULL);
+
+	string = g_string_new ("");
+
+	for (list = stmt->stmt_list; list; list = list->next) {
+		GdaSqlStatement *sqlstmt = (GdaSqlStatement*) list->data;
+		if (list != stmt->stmt_list) {
+			switch (stmt->compound_type) {
+			case GDA_SQL_STATEMENT_COMPOUND_UNION:
+				g_string_append (string, " UNION ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_UNION_ALL:
+				g_string_append (string, " UNION ALL ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_INTERSECT:
+				g_string_append (string, " INTERSECT ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_INTERSECT_ALL:
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+					     _("'%s' compound not supported by SQLite"),
+					     "INTERSECT ALL");
+				goto err;
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_EXCEPT:
+				g_string_append (string, " EXCEPT ");
+				break;
+			case GDA_SQL_STATEMENT_COMPOUND_EXCEPT_ALL:
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+					     _("'%s' compound not supported by SQLite"),
+					     "EXCEPT ALL");
+				goto err;
+				break;
+			default:
+				g_assert_not_reached ();
+			}
+		}
+		switch (sqlstmt->stmt_type) {
+		case GDA_SQL_ANY_STMT_SELECT:
+			str = context->render_select (GDA_SQL_ANY_PART (sqlstmt->contents), context, error);
+			if (!str) goto err;
+			g_string_append (string, str);
+			g_free (str);
+			break;
+		case GDA_SQL_ANY_STMT_COMPOUND:
+			str = context->render_compound (GDA_SQL_ANY_PART (sqlstmt->contents), context, error);
+			if (!str) goto err;
+			g_string_append (string, str);
+			g_free (str);
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+
+ err:
+	g_string_free (string, TRUE);
+	return NULL;
+}
+
+/* The difference with the default implementation is specific REGEXP rendering */
 static gchar *
 sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error)
 {
