@@ -687,6 +687,9 @@ find_table_or_view (GdaSqlAnyPart *part, GdaSqlStatementCheckValidityData *data,
 			case GDA_SQL_ANY_STMT_DELETE:
 				TO_IMPLEMENT;
 				break;
+			case GDA_SQL_ANY_STMT_COMPOUND:
+				TO_IMPLEMENT;
+				break;
 			default:
 				g_assert_not_reached ();
 				break;
@@ -854,9 +857,7 @@ static gboolean
 gda_sql_select_target_check_validity (GdaSqlSelectTarget *target, GdaSqlStatementCheckValidityData *data, GError **error)
 {
 	GdaMetaDbObject *dbo;
-
-	if (!target) return TRUE;
-	if (!target->table_name)
+	if (!target || !target->table_name)
 		return TRUE;
 
 	dbo = find_table_or_view ((GdaSqlAnyPart*) target, data, target->table_name, error);
