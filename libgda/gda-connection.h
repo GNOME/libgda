@@ -274,6 +274,11 @@ GdaConnection       *gda_connection_open_from_dsn        (const gchar *dsn, cons
 GdaConnection       *gda_connection_open_from_string     (const gchar *provider_name, 
 							  const gchar *cnc_string, const gchar *auth_string,
 							  GdaConnectionOptions options, GError **error);
+GdaConnection       *gda_connection_new_from_dsn         (const gchar *dsn, const gchar *auth_string,
+							  GdaConnectionOptions options, GError **error);
+GdaConnection       *gda_connection_new_from_string      (const gchar *provider_name, 
+							  const gchar *cnc_string, const gchar *auth_string,
+							  GdaConnectionOptions options, GError **error);
 gboolean             gda_connection_open                 (GdaConnection *cnc, GError **error);
 void                 gda_connection_close                (GdaConnection *cnc);
 void                 gda_connection_close_no_warning     (GdaConnection *cnc);

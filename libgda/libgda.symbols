@@ -151,6 +151,8 @@
 	gda_connection_internal_transaction_started
 	gda_connection_is_opened
 	gda_connection_meta_type_get_type
+	gda_connection_new_from_dsn
+	gda_connection_new_from_string
 	gda_connection_open
 	gda_connection_open_from_dsn
 	gda_connection_open_from_string

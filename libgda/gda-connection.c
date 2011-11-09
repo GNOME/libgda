@@ -1020,39 +1020,23 @@ _gda_connection_get_internal_thread_provider (void)
 	return _gda_thread_wrapper_provider;
 }
 
+
 /**
- * gda_connection_open_from_dsn:
+ * gda_connection_new_from_dsn:
  * @dsn: data source name.
  * @auth_string: (allow-none): authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
- * This function is the way of opening database connections with libgda, using a pre-defined data source (DSN),
- * see gda_config_define_dsn() for more information about how to define a DSN. If you don't want to define
- * a DSN, it is possible to use gda_connection_open_from_string() instead of this method.
- *
- * The @dsn string must have the following format: "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" 
- * (if &lt;username&gt; and/or &lt;password&gt; are provided, and @auth_string is %NULL, then these username
- * and passwords will be used). Note that if provided, &lt;username&gt; and &lt;password&gt; 
- * must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
- *
- * The @auth_string can contain the authentication information for the server
- * to accept the connection. It is a string containing semi-colon seperated named value, usually 
- * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. Note that each
- * name and value must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
- *
- * The actual named parameters required depend on the provider being used, and that list is available
- * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
- * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-5.0 -L" command to 
- * list the possible named parameters.
- *
- * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
- * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
+ * This function is similar to gda_connection_open_from_dsn(), except it does not actually open the
+ * connection, you have to open it using gda_connection_open().
  *
  * Returns: (transfer full): a new #GdaConnection if connection opening was successful or %NULL if there was an error.
+ *
+ * Since: 5.0.2
  */
 GdaConnection *
-gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string, 
+gda_connection_new_from_dsn (const gchar *dsn, const gchar *auth_string, 
 			      GdaConnectionOptions options, GError **error)
 {
 	GdaConnection *cnc = NULL;
@@ -1138,12 +1122,6 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 						    "dsn", real_dsn, 
 						    "auth-string", auth_string ? auth_string : real_auth_string, 
 						    "options", options, NULL);
-			
-			/* open connection */
-			if (!gda_connection_open (cnc, error)) {
-				g_object_unref (cnc);
-				cnc = NULL;
-			}
 		}
 	}
 	else 
@@ -1158,47 +1136,30 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
 }
 
 /**
- * gda_connection_open_from_string:
- * @provider_name: (allow-none): provider ID to connect to, or %NULL
- * @cnc_string: connection string.
+ * gda_connection_open_from_dsn:
+ * @dsn: data source name.
  * @auth_string: (allow-none): authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
- * Opens a connection given a provider ID and a connection string. This
- * allows applications to open connections without having to create
- * a data source (DSN) in the configuration. The format of @cnc_string is
- * similar to PostgreSQL and MySQL connection strings. It is a semicolumn-separated
- * series of &lt;key&gt;=&lt;value&gt; pairs, where each key and value are encoded as per RFC 1738, 
- * see gda_rfc1738_encode() for more information.
+ * This function is the way of opening database connections with libgda, using a pre-defined data source (DSN),
+ * see gda_config_define_dsn() for more information about how to define a DSN. If you don't want to define
+ * a DSN, it is possible to use gda_connection_open_from_string() instead of this method.
  *
- * The possible keys depend on the provider, the "gda-sql-5.0 -L" command
- * can be used to list the actual keys for each installed database provider.
- *
- * For example the connection string to open an SQLite connection to a database
- * file named "my_data.db" in the current directory would be <constant>"DB_DIR=.;DB_NAME=my_data"</constant>.
- *
- * The @cnc_string string must have the following format: 
- * "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;"
+ * The @dsn string must have the following format: "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" 
  * (if &lt;username&gt; and/or &lt;password&gt; are provided, and @auth_string is %NULL, then these username
- * and passwords will be used, and if &lt;provider&gt; is provided and @provider_name is %NULL then this
- * provider will be used). Note that if provided, &lt;username&gt;, &lt;password&gt; and  &lt;provider&gt;
+ * and passwords will be used). Note that if provided, &lt;username&gt; and &lt;password&gt; 
  * must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
  *
- * The @auth_string must contain the authentication information for the server
- * to accept the connection. It is a string containing semi-colon seperated named values, usually 
+ * The @auth_string can contain the authentication information for the server
+ * to accept the connection. It is a string containing semi-colon seperated named value, usually 
  * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. Note that each
  * name and value must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
  *
  * The actual named parameters required depend on the provider being used, and that list is available
  * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
- * provider (use gda_config_get_provider_info() to get it). Similarly to the format of the connection
- * string, use the "gda-sql-5.0 -L" command to list the possible named parameters.
- *
- * Additionally, it is possible to have the connection string
- * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name
- * and the real connection string will be extracted from that string (note that if @provider_name
- * is not %NULL then it will still be used as the provider ID).\
+ * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-5.0 -L" command to 
+ * list the possible named parameters.
  *
  * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
  * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
@@ -1206,7 +1167,36 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * Returns: (transfer full): a new #GdaConnection if connection opening was successful or %NULL if there was an error.
  */
 GdaConnection *
-gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_string, const gchar *auth_string,
+gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string, 
+			      GdaConnectionOptions options, GError **error)
+{
+	GdaConnection *cnc;
+	cnc = gda_connection_new_from_dsn (dsn, auth_string, options, error);
+	if (cnc && !gda_connection_open (cnc, error)) {
+		g_object_unref (cnc);
+		cnc = NULL;
+	}
+	return cnc;
+}
+
+
+/**
+ * gda_connection_new_from_string:
+ * @provider_name: (allow-none): provider ID to connect to, or %NULL
+ * @cnc_string: connection string.
+ * @auth_string: (allow-none): authentication string, or %NULL
+ * @options: options for the connection (see #GdaConnectionOptions).
+ * @error: a place to store an error, or %NULL
+ *
+ * This function is similar to gda_connection_open_from_string(), except it does not actually open the
+ * connection, you have to open it using gda_connection_open().
+ *
+ * Returns: (transfer full): a new #GdaConnection if connection opening was successful or %NULL if there was an error.
+ *
+ * Since: 5.0.2
+ */
+GdaConnection *
+gda_connection_new_from_string (const gchar *provider_name, const gchar *cnc_string, const gchar *auth_string,
 				 GdaConnectionOptions options, GError **error)
 {
 	GdaConnection *cnc = NULL;
@@ -1312,6 +1302,68 @@ gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_st
 
 	return cnc;
 }
+
+/**
+ * gda_connection_open_from_string:
+ * @provider_name: (allow-none): provider ID to connect to, or %NULL
+ * @cnc_string: connection string.
+ * @auth_string: (allow-none): authentication string, or %NULL
+ * @options: options for the connection (see #GdaConnectionOptions).
+ * @error: a place to store an error, or %NULL
+ *
+ * Opens a connection given a provider ID and a connection string. This
+ * allows applications to open connections without having to create
+ * a data source (DSN) in the configuration. The format of @cnc_string is
+ * similar to PostgreSQL and MySQL connection strings. It is a semicolumn-separated
+ * series of &lt;key&gt;=&lt;value&gt; pairs, where each key and value are encoded as per RFC 1738, 
+ * see gda_rfc1738_encode() for more information.
+ *
+ * The possible keys depend on the provider, the "gda-sql-5.0 -L" command
+ * can be used to list the actual keys for each installed database provider.
+ *
+ * For example the connection string to open an SQLite connection to a database
+ * file named "my_data.db" in the current directory would be <constant>"DB_DIR=.;DB_NAME=my_data"</constant>.
+ *
+ * The @cnc_string string must have the following format: 
+ * "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;"
+ * (if &lt;username&gt; and/or &lt;password&gt; are provided, and @auth_string is %NULL, then these username
+ * and passwords will be used, and if &lt;provider&gt; is provided and @provider_name is %NULL then this
+ * provider will be used). Note that if provided, &lt;username&gt;, &lt;password&gt; and  &lt;provider&gt;
+ * must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
+ *
+ * The @auth_string must contain the authentication information for the server
+ * to accept the connection. It is a string containing semi-colon seperated named values, usually 
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. Note that each
+ * name and value must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
+ *
+ * The actual named parameters required depend on the provider being used, and that list is available
+ * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
+ * provider (use gda_config_get_provider_info() to get it). Similarly to the format of the connection
+ * string, use the "gda-sql-5.0 -L" command to list the possible named parameters.
+ *
+ * Additionally, it is possible to have the connection string
+ * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name
+ * and the real connection string will be extracted from that string (note that if @provider_name
+ * is not %NULL then it will still be used as the provider ID).\
+ *
+ * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
+ * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
+ *
+ * Returns: (transfer full): a new #GdaConnection if connection opening was successful or %NULL if there was an error.
+ */
+GdaConnection *
+gda_connection_open_from_string (const gchar *provider_name, const gchar *cnc_string, const gchar *auth_string,
+				 GdaConnectionOptions options, GError **error)
+{
+	GdaConnection *cnc;
+	cnc = gda_connection_new_from_string (provider_name, cnc_string, auth_string, options, error);
+	if (cnc && !gda_connection_open (cnc, error)) {
+		g_object_unref (cnc);
+		cnc = NULL;
+	}
+	return cnc;
+}
+
 
 /*
  * Uses _gda_config_sqlite_provider to open a connection
