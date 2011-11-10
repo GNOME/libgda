@@ -1285,12 +1285,6 @@ gda_connection_new_from_string (const gchar *provider_name, const gchar *cnc_str
 								      "cnc-string", real_cnc, 
 								      "auth-string", auth_string ? auth_string : real_auth_string, 
 								      "options", options, NULL);
-			
-			/* open the connection */
-			if (!gda_connection_open (cnc, error)) {
-				g_object_unref (cnc);
-				cnc = NULL;
-			}
 		}
 	}
 
