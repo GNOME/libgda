@@ -6240,7 +6240,7 @@ gda_connection_internal_set_provider_data (GdaConnection *cnc, gpointer data, GD
  * Get the opaque pointer previously set using gda_connection_internal_set_provider_data().
  * If it's not set, then add a connection event and returns %NULL
  *
- * Returns: the pointer to the opaque structure set using gda_connection_internal_set_provider_data()
+ * Returns: (allow-none): the pointer to the opaque structure set using gda_connection_internal_set_provider_data(), or %NULL
  */
 gpointer
 gda_connection_internal_get_provider_data (GdaConnection *cnc)
@@ -6249,8 +6249,6 @@ gda_connection_internal_get_provider_data (GdaConnection *cnc)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	retval = cnc->priv->provider_data;
-	if (! retval)
-		gda_connection_add_event_string (cnc, _("Internal error: invalid provider handle"));
 
 	return retval;
 }
@@ -6275,9 +6273,7 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 		ThreadConnectionData *cdata = NULL;
 		if (cnc->priv->is_thread_wrapper) {
 			cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
-			g_assert (cdata);
-			
-			if (cdata->sub_connection->priv->meta_store) {
+			if (cdata && cdata->sub_connection->priv->meta_store) {
 				cnc->priv->meta_store = g_object_ref (cdata->sub_connection->priv->meta_store);
 				store = cnc->priv->meta_store;
 			}

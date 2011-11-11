@@ -3028,11 +3028,10 @@ gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 
 	if (cnc) {
 		cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
-		if (!cdata) 
-			return NULL;
-		case_sensitive = cdata->reuseable->identifiers_case_sensitive;
+		if (cdata) 
+			case_sensitive = cdata->reuseable->identifiers_case_sensitive;
 	}
-	else if (((GdaMysqlProvider*) provider)->test_mode)
+	if (!cdata && ((GdaMysqlProvider*) provider)->test_mode)
 		case_sensitive = ((GdaMysqlProvider*) provider)->test_identifiers_case_sensitive;
 
 	kwfunc = _gda_mysql_reuseable_get_reserved_keywords_func

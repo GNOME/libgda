@@ -311,7 +311,7 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 #endif
 }
 
-#define GDA_POSTGRES_GET_REUSEABLE_DATA(cdata) (* ((GdaPostgresReuseable**) (cdata)))
+#define GDA_POSTGRES_GET_REUSEABLE_DATA(cdata) ((cdata) ? * ((GdaPostgresReuseable**) (cdata)) : NULL)
 
 gboolean
 _gda_postgres_meta__info (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,

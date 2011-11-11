@@ -193,10 +193,7 @@ gda_postgres_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue
 
 	if (hdl->priv->cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (hdl->priv->cnc), NULL);
-		
 		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (hdl->priv->cnc);
-		if (!cdata) 
-			return FALSE;
 	}
 
 	if (value) {

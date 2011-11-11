@@ -561,7 +561,7 @@ gda_web_provider_get_server_version (GdaServerProvider *provider, GdaConnection 
 
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
-		return FALSE;
+		return NULL;
 	return cdata->server_version;
 }
 
