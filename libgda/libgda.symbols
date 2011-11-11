@@ -492,8 +492,17 @@
 	gda_null_get_type
 	gda_numeric_copy
 	gda_numeric_free
+	gda_numeric_get_double
+	gda_numeric_get_precision
 	gda_numeric_get_type
+	gda_numeric_get_string
+	gda_numeric_get_width
 	gda_numeric_locale
+	gda_numeric_new
+	gda_numeric_set_double
+	gda_numeric_set_from_string
+	gda_numeric_set_precision
+	gda_numeric_set_width
 	gda_paramlist_dtd
 	gda_parse_iso8601_date
 	gda_parse_iso8601_time

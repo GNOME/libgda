@@ -864,12 +864,16 @@ gda_numeric_free (gpointer boxed)
 /**
  * gda_numeric_new:
  *
+ * Creates a new #GdaNumeric with defaults.
+ *
+ * Returns: (transfer full): a new #GdaNumeric.
+ * Since: 5.0.2
  */
 GdaNumeric*
-gda_numeric_new() 
+gda_numeric_new (void)
 {
-	GdaNumeric *n = g_new0(GdaNumeric, 1);
-	n->number = g_strdup_printf("0.0");
+	GdaNumeric *n = g_new0 (GdaNumeric, 1);
+	n->number = g_strdup_printf ("0.0");
 	return n;
 }
 
@@ -878,16 +882,18 @@ gda_numeric_new()
  * @numeric: a #GdaNumeric
  * @number: a string representing a number
  *
+ * Sets @numeric with a number represented by @str.
  *
+ * * Since: 5.0.2
  */
 void
 gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str)
 {
-	g_return_if_fail(numeric);
-	g_return_if_fail(str);
-	if(numeric->number)
-		g_free(numeric->number);
-	numeric->number = g_strdup(str); // FIXME: May a pre-verification is required in order to check string validity
+	g_return_if_fail (numeric);
+	g_return_if_fail (str);
+	if (numeric->number)
+		g_free (numeric->number);
+	numeric->number = g_strdup (str); // FIXME: May a pre-verification is required in order to check string validity
 }
 
 
@@ -896,16 +902,18 @@ gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str)
  * @numeric: a #GdaNumeric
  * @number: a #gdouble
  *
+ * Sets @numeric using a #gdouble represented by @number.
  *
+ * Since: 5.0.2
  */
 void
 gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
 {
-	g_return_if_fail(numeric);
-	g_return_if_fail(number);
-	if(numeric->number)
-		g_free(numeric->number);
-	numeric->number = g_strdup_printf("%lf", number);
+	g_return_if_fail (numeric);
+	g_return_if_fail (number);
+	if (numeric->number)
+		g_free (numeric->number);
+	numeric->number = g_strdup_printf ("%lf", number);
 }
 
 /**
@@ -913,13 +921,14 @@ gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
  * @numeric: a #GdaNumeric
  *
  * Returns: a #gdouble representation of @numeric
+ * Since: 5.0.2
  */
 gdouble
 gda_numeric_get_double (GdaNumeric *numeric)
 {
-	g_return_val_if_fail(numeric, 0.0);
-	if(numeric->number)
-		return atof(numeric->number);
+	g_return_val_if_fail (numeric, 0.0);
+	if (numeric->number)
+		return atof (numeric->number);
 	else
 		return 0.0;
 }
@@ -929,12 +938,14 @@ gda_numeric_get_double (GdaNumeric *numeric)
  * @numeric: a #GdaNumeric
  * @number: a #glong
  *
+ * Sets the width of a #GdaNumeric. (Not yet implemented).
  *
+ * Since: 5.0.2
  */
 void
 gda_numeric_set_width (GdaNumeric *numeric, glong width)
 {
-	g_return_if_fail(numeric);
+	g_return_if_fail (numeric);
 	numeric->width = width;
 }
 
@@ -942,12 +953,15 @@ gda_numeric_set_width (GdaNumeric *numeric, glong width)
  * gda_numeric_get_width:
  * @numeric: a #GdaNumeric
  *
- * Returns: a #gdouble representation of @numeric
+ * Gets the width of a #GdaNumeric. (Not yet implemented).
+ *
+ * Returns: an integer with the width of a #GdaNumeric. (Not jet implemented).
+ * Since: 5.0.2
  */
 glong
 gda_numeric_get_width (GdaNumeric *numeric)
 {
-	g_return_val_if_fail(numeric, 0.0);
+	g_return_val_if_fail (numeric, 0.0);
 	return numeric->width;
 }
 
@@ -956,12 +970,14 @@ gda_numeric_get_width (GdaNumeric *numeric)
  * @numeric: a #GdaNumeric
  * @number: a #glong
  *
+ * Sets the precision of a #GdaNumeric.
  *
+ * Since: 5.0.2
  */
 void
 gda_numeric_set_precision (GdaNumeric *numeric, glong precision)
 {
-	g_return_if_fail(numeric);
+	g_return_if_fail (numeric);
 	numeric->precision = precision;
 }
 
@@ -969,12 +985,15 @@ gda_numeric_set_precision (GdaNumeric *numeric, glong precision)
  * gda_numeric_get_precision:
  * @numeric: a #GdaNumeric
  *
- * Returns: a #gdouble representation of @numeric
+ * Gets the precision of a #GdaNumeric.
+ *
+ * Returns: an integer with the precision of a #GdaNumeric.
+ * Since: 5.0.2
  */
 glong
 gda_numeric_get_precision (GdaNumeric *numeric)
 {
-	g_return_val_if_fail(numeric, -1);
+	g_return_val_if_fail (numeric, -1);
 	return numeric->precision;
 }
 /**
@@ -984,12 +1003,13 @@ gda_numeric_get_precision (GdaNumeric *numeric)
  * Get the string representation of @numeric.
  *
  * Returns: (transfer full) (allow-none): a new string representing the stored valued in @numeric
+ * Since: 5.0.2
  */
 gchar*
 gda_numeric_get_string (GdaNumeric *numeric)
 {
-	g_return_val_if_fail(numeric, NULL);
-	return g_strdup(numeric->number);
+	g_return_val_if_fail (numeric, NULL);
+	return g_strdup (numeric->number);
 }
 
 /*

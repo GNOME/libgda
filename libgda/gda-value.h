@@ -82,6 +82,9 @@ typedef struct {
  *
  * Holds numbers represented as strings.
  *
+ * This struct must be considered as opaque. Any access to its members must use its
+ * accessors added since version 5.0.2.
+ *
  * Set value func: gda_value_set_numeric
  * Get value func: gda_value_get_numeric
  */
@@ -260,7 +263,7 @@ GdaBlob                          *gda_string_to_blob (const gchar *str);
 GType                             gda_null_get_type (void) G_GNUC_CONST;
 GType                             gda_default_get_type (void) G_GNUC_CONST;
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
-GdaNumeric*                       gda_numeric_new();
+GdaNumeric*                       gda_numeric_new (void);
 gpointer                          gda_numeric_copy (gpointer boxed);
 void                              gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str);
 void                              gda_numeric_set_double (GdaNumeric *numeric, gdouble number);
