@@ -908,7 +908,6 @@ void
 gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
 {
 	g_return_if_fail (numeric);
-	g_return_if_fail (number);
 	if (numeric->number)
 		g_free (numeric->number);
 	numeric->number = g_strdup_printf ("%lf", number);
