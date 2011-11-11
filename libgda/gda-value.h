@@ -74,6 +74,9 @@ typedef struct {
 	gdouble y;
 } GdaGeometricPoint;
 
+
+typedef struct _GdaNumeric GdaNumeric;
+
 /**
  * GdaNumeric:
  * @number: a string representing a number
@@ -88,14 +91,14 @@ typedef struct {
  * Set value func: gda_value_set_numeric
  * Get value func: gda_value_get_numeric
  */
-typedef struct {
+struct _GdaNumeric {
 	gchar*   GSEAL(number);
 	glong    GSEAL(precision);
 	glong    GSEAL(width);
 	
 	/*< private >*/
 	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
-} GdaNumeric;
+};
 
 /**
  * GdaTime:
