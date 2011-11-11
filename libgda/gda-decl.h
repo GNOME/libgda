@@ -135,4 +135,18 @@ typedef struct _GdaTreeNodePrivate GdaTreeNodePrivate;
 #define strtok_r(s,d,p) strtok(s,d)
 #endif 
 
+/*
+ *
+ */
+#ifndef GSEAL
+
+/* introduce GSEAL() here for all API without the need to modify GDA */
+
+#  ifdef GSEAL_ENABLE
+#    define GSEAL(ident)      _g_sealed__ ## ident
+#  else
+#    define GSEAL(ident)      ident
+#  endif
+#endif /* !GSEAL */
+
 #endif

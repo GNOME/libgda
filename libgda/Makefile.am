@@ -301,7 +301,8 @@ if ENABLE_GDA_GI
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) \
 			     --namespace Gda \
-			     --warn-all
+			     --warn-all \
+			     --c-include=libgda/libgda.h
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 psupport = \

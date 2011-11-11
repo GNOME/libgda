@@ -644,10 +644,11 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * Upon errors %NULL will be returned and @error will be assigned a
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
- * Returns: (transfer none): a #GValue containing the value stored in the given
+ * Returns: (allow-none) (transfer none): a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
  *
  * Virtual: i_get_value_at
+ *
  */
 const GValue *
 gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)

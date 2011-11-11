@@ -766,6 +766,36 @@ numeric_to_boolean (const GValue *src, GValue *dest)
 		g_value_set_boolean (dest, 0);
 }
 
+static void
+numeric_to_double (const GValue *src, GValue *dest)
+{
+	const GdaNumeric *numeric;
+
+	g_return_if_fail (G_VALUE_HOLDS_DOUBLE (dest) &&
+			  GDA_VALUE_HOLDS_NUMERIC (src));
+
+	numeric = gda_value_get_numeric (src);
+	if (numeric)
+		g_value_set_double (dest, g_strtod (numeric->number, NULL));
+	else
+		g_value_set_double (dest, 0.0);
+}
+
+static void
+numeric_to_float (const GValue *src, GValue *dest)
+{
+	const GdaNumeric *numeric;
+
+	g_return_if_fail (G_VALUE_HOLDS_FLOAT (dest) &&
+			  GDA_VALUE_HOLDS_NUMERIC (src));
+
+	numeric = gda_value_get_numeric (src);
+	if (numeric)
+		g_value_set_float (dest, (float) g_strtod (numeric->number, NULL));
+	else
+		g_value_set_float (dest, 0.0);
+}
+
 GType
 gda_numeric_get_type (void)
 {
@@ -782,6 +812,8 @@ gda_numeric_get_type (void)
 		g_value_register_transform_func (type, G_TYPE_INT, numeric_to_int);
 		g_value_register_transform_func (type, G_TYPE_UINT, numeric_to_uint);
 		g_value_register_transform_func (type, G_TYPE_BOOLEAN, numeric_to_boolean);
+		g_value_register_transform_func (type, G_TYPE_DOUBLE, numeric_to_double);
+		g_value_register_transform_func (type, G_TYPE_FLOAT, numeric_to_float);
 	}
 
 	return type;
@@ -802,15 +834,14 @@ gpointer
 gda_numeric_copy (gpointer boxed)
 {
 	GdaNumeric *src = (GdaNumeric*) boxed;
-	GdaNumeric *copy = NULL;
+	GdaNumeric *copy;
 
 	g_return_val_if_fail (src, NULL);
 
-	copy = g_new0 (GdaNumeric, 1);
-	copy->number = g_strdup (src->number);
-	copy->precision = src->precision;
-	copy->width = src->width;
-
+	copy = gda_numeric_new();
+	gda_numeric_set_from_string(copy, gda_numeric_get_string(src));
+	gda_numeric_set_width(copy, gda_numeric_get_width(src));
+	gda_numeric_set_precision(copy, gda_numeric_get_precision(src));
 	return copy;
 }
 
@@ -830,7 +861,136 @@ gda_numeric_free (gpointer boxed)
 	g_free (numeric);
 }
 
+/**
+ * gda_numeric_new:
+ *
+ */
+GdaNumeric*
+gda_numeric_new() 
+{
+	GdaNumeric *n = g_new0(GdaNumeric, 1);
+	n->number = g_strdup_printf("0.0");
+	return n;
+}
 
+/**
+ * gda_numeric_set_from_string:
+ * @numeric: a #GdaNumeric
+ * @number: a string representing a number
+ *
+ *
+ */
+void
+gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str)
+{
+	g_return_if_fail(numeric);
+	g_return_if_fail(str);
+	if(numeric->number)
+		g_free(numeric->number);
+	numeric->number = g_strdup(str); // FIXME: May a pre-verification is required in order to check string validity
+}
+
+
+/**
+ * gda_numeric_set_double:
+ * @numeric: a #GdaNumeric
+ * @number: a #gdouble
+ *
+ *
+ */
+void
+gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
+{
+	g_return_if_fail(numeric);
+	g_return_if_fail(number);
+	if(numeric->number)
+		g_free(numeric->number);
+	numeric->number = g_strdup_printf("%lf", number);
+}
+
+/**
+ * gda_numeric_get_double:
+ * @numeric: a #GdaNumeric
+ *
+ * Returns: a #gdouble representation of @numeric
+ */
+gdouble
+gda_numeric_get_double (GdaNumeric *numeric)
+{
+	g_return_val_if_fail(numeric, 0.0);
+	if(numeric->number)
+		return atof(numeric->number);
+	else
+		return 0.0;
+}
+
+/**
+ * gda_numeric_set_width:
+ * @numeric: a #GdaNumeric
+ * @number: a #glong
+ *
+ *
+ */
+void
+gda_numeric_set_width (GdaNumeric *numeric, glong width)
+{
+	g_return_if_fail(numeric);
+	numeric->width = width;
+}
+
+/**
+ * gda_numeric_get_width:
+ * @numeric: a #GdaNumeric
+ *
+ * Returns: a #gdouble representation of @numeric
+ */
+glong
+gda_numeric_get_width (GdaNumeric *numeric)
+{
+	g_return_val_if_fail(numeric, 0.0);
+	return numeric->width;
+}
+
+/**
+ * gda_numeric_set_precision:
+ * @numeric: a #GdaNumeric
+ * @number: a #glong
+ *
+ *
+ */
+void
+gda_numeric_set_precision (GdaNumeric *numeric, glong precision)
+{
+	g_return_if_fail(numeric);
+	numeric->precision = precision;
+}
+
+/**
+ * gda_numeric_get_precision:
+ * @numeric: a #GdaNumeric
+ *
+ * Returns: a #gdouble representation of @numeric
+ */
+glong
+gda_numeric_get_precision (GdaNumeric *numeric)
+{
+	g_return_val_if_fail(numeric, -1);
+	return numeric->precision;
+}
+/**
+ * gda_numeric_get_string:
+ * @numeric: a #GdaNumeric
+ *
+ * Get the string representation of @numeric.
+ *
+ * Returns: (transfer full) (allow-none): a new string representing the stored valued in @numeric
+ */
+gchar*
+gda_numeric_get_string (GdaNumeric *numeric)
+{
+	g_return_val_if_fail(numeric, NULL);
+	return g_strdup(numeric->number);
+}
 
 /*
  * Register the GdaTime type in the GType system

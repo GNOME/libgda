@@ -767,7 +767,7 @@ gda_holder_get_id (GdaHolder *holder)
  *
  * If @holder is invalid, then the returned value is %NULL.
  *
- * Returns: the value, or %NULL
+ * Returns: (allow-none) (transfer none): the value, or %NULL
  */
 const GValue *
 gda_holder_get_value (GdaHolder *holder)
@@ -1272,7 +1272,7 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
  * of which can prevent the change from happening) which can be connected to to have a greater control
  * of which values @holder can have, or implement some business rules.
  *
- * Returns: (transfer none): NULL if an error occurred or if the previous GValue was NULL itself. It returns
+ * Returns: NULL if an error occurred or if the previous GValue was NULL itself. It returns
  * the static GValue user set previously, so that he can free it.
  */
 GValue *

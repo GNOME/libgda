@@ -1399,7 +1399,7 @@ gda_data_proxy_get_values (GdaDataProxy *proxy, gint proxy_row, gint *cols_index
  * Get the attributes of the value stored at (proxy_row, col) in @proxy, which
  * is an ORed value of #GdaValueAttribute flags
  *
- * Returns: (transfer none): the attribute
+ * Returns: a #GdaValueAttribute with the value's attributes at given position
  */
 GdaValueAttribute
 gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint col)

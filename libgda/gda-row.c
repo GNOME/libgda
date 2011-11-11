@@ -236,7 +236,7 @@ gda_row_new (gint count)
  * This is a pointer to the internal array of values. Don't try to free
  * or modify it (modifying is reserved to database provider's implementations).
  *
- * Returns: (transfer none): a pointer to the #GValue in the position @num of @row.
+ * Returns: a pointer to the #GValue in the position @num of @row.
  */
 GValue *
 gda_row_get_value (GdaRow *row, gint num)

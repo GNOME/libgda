@@ -76,14 +76,19 @@ typedef struct {
 
 /**
  * GdaNumeric:
- * @number:
- * @precision:
- * @width:
+ * @number: a string representing a number
+ * @precision: precision to use when @number is converted (not implemented jet)
+ * @width: (not implemented jet)
+ *
+ * Holds numbers represented as strings.
+ *
+ * Set value func: gda_value_set_numeric
+ * Get value func: gda_value_get_numeric
  */
 typedef struct {
-	gchar   *number;
-	glong    precision;
-	glong    width;
+	gchar*   GSEAL(number);
+	glong    GSEAL(precision);
+	glong    GSEAL(width);
 	
 	/*< private >*/
 	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
@@ -255,7 +260,16 @@ GdaBlob                          *gda_string_to_blob (const gchar *str);
 GType                             gda_null_get_type (void) G_GNUC_CONST;
 GType                             gda_default_get_type (void) G_GNUC_CONST;
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
+GdaNumeric*                       gda_numeric_new();
 gpointer                          gda_numeric_copy (gpointer boxed);
+void                              gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str);
+void                              gda_numeric_set_double (GdaNumeric *numeric, gdouble number);
+gdouble                           gda_numeric_get_double (GdaNumeric *numeric);
+void                              gda_numeric_set_precision (GdaNumeric *numeric, glong precision);
+glong                             gda_numeric_get_precision (GdaNumeric *numeric);
+void                              gda_numeric_set_width (GdaNumeric *numeric, glong width);
+glong                             gda_numeric_get_width (GdaNumeric *numeric);
+gchar*                            gda_numeric_get_string (GdaNumeric *numeric);
 void                              gda_numeric_free (gpointer boxed);
 
 GType                             gda_time_get_type (void) G_GNUC_CONST;
