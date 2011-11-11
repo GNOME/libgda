@@ -6286,11 +6286,31 @@ gda_connection_internal_set_provider_data (GdaConnection *cnc, gpointer data, GD
 gpointer
 gda_connection_internal_get_provider_data (GdaConnection *cnc)
 {
+	return gda_connection_internal_get_provider_data_error (cnc, NULL);
+}
+
+/**
+ * gda_connection_internal_get_provider_data_error: (skip)
+ * @cnc: a #GdaConnection object
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Get the opaque pointer previously set using gda_connection_internal_set_provider_data().
+ * If it's not set, then add a connection event and returns %NULL
+ *
+ * Returns: (allow-none): the pointer to the opaque structure set using gda_connection_internal_set_provider_data(), or %NULL
+ *
+ * Since: 5.0.2
+ */
+gpointer
+gda_connection_internal_get_provider_data_error (GdaConnection *cnc, GError **error)
+{
 	gpointer retval;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	retval = cnc->priv->provider_data;
-
+	if (!retval)
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+                             _("Connection is closed"));
 	return retval;
 }
 
