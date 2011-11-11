@@ -264,7 +264,7 @@ GType                             gda_null_get_type (void) G_GNUC_CONST;
 GType                             gda_default_get_type (void) G_GNUC_CONST;
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
 GdaNumeric*                       gda_numeric_new (void);
-gpointer                          gda_numeric_copy (gpointer boxed);
+GdaNumeric*                       gda_numeric_copy (GdaNumeric *src);
 void                              gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str);
 void                              gda_numeric_set_double (GdaNumeric *numeric, gdouble number);
 gdouble                           gda_numeric_get_double (GdaNumeric *numeric);
@@ -273,7 +273,7 @@ glong                             gda_numeric_get_precision (GdaNumeric *numeric
 void                              gda_numeric_set_width (GdaNumeric *numeric, glong width);
 glong                             gda_numeric_get_width (GdaNumeric *numeric);
 gchar*                            gda_numeric_get_string (GdaNumeric *numeric);
-void                              gda_numeric_free (gpointer boxed);
+void                              gda_numeric_free (GdaNumeric *numeric);
 
 GType                             gda_time_get_type (void) G_GNUC_CONST;
 gpointer                          gda_time_copy (gpointer boxed);

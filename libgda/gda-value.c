@@ -830,10 +830,9 @@ gda_numeric_get_type (void)
  * Free-function: gda_numeric_free
  */
 
-gpointer
-gda_numeric_copy (gpointer boxed)
+GdaNumeric*
+gda_numeric_copy (GdaNumeric *src)
 {
-	GdaNumeric *src = (GdaNumeric*) boxed;
 	GdaNumeric *copy;
 
 	g_return_val_if_fail (src, NULL);
@@ -852,9 +851,8 @@ gda_numeric_copy (gpointer boxed)
  * Deallocates all memory associated to the given @boxed
  */
 void
-gda_numeric_free (gpointer boxed)
+gda_numeric_free (GdaNumeric *numeric)
 {
-	GdaNumeric *numeric = (GdaNumeric*) boxed;
 	g_return_if_fail (numeric);
 
 	g_free (numeric->number);
