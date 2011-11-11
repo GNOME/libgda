@@ -424,7 +424,7 @@ gda_capi_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 
 	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
-		return FALSE;
+		return NULL;
 	TO_IMPLEMENT;
 	return NULL;
 }

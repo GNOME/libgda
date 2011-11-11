@@ -1379,7 +1379,7 @@ gda_thread_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 
 	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
-		return FALSE;
+		return NULL;
 	
 	wdata.prov = cdata->cnc_provider;
 	wdata.cnc = cdata->sub_connection;

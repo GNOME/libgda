@@ -782,7 +782,7 @@ gda_oracle_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 
 	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
-		return FALSE;
+		return NULL;
 
 	return cdata->version;
 }
@@ -2524,11 +2524,8 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
         GdaSqlReservedKeywordsFunc kwfunc;
         OracleConnectionData *cdata = NULL;
 
-        if (cnc) {
+        if (cnc)
                 cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
-                if (!cdata)
-                        return NULL;
-        }
 
         kwfunc = _gda_oracle_get_reserved_keyword_func (cdata);
 

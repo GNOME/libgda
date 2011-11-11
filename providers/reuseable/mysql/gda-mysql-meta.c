@@ -280,7 +280,7 @@ _gda_mysql_provider_meta_init (GdaServerProvider  *provider)
 #endif
 }
 
-#define GDA_MYSQL_GET_REUSEABLE_DATA(cdata) (* ((GdaMysqlReuseable**) (cdata)))
+#define GDA_MYSQL_GET_REUSEABLE_DATA(cdata) ((cdata) ? * ((GdaMysqlReuseable**) (cdata)) : NULL)
 
 gboolean
 _gda_mysql_meta__info (G_GNUC_UNUSED GdaServerProvider  *prov,

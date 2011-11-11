@@ -2538,11 +2538,8 @@ gda_postgresql_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
         GdaSqlReservedKeywordsFunc kwfunc;
         PostgresConnectionData *cdata = NULL;
 
-        if (cnc) {
+        if (cnc)
                 cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
-                if (!cdata)
-                        return NULL;
-        }
 
         kwfunc = _gda_postgres_reuseable_get_reserved_keywords_func
 		(cdata ? (GdaProviderReuseable*) cdata->reuseable : NULL);
