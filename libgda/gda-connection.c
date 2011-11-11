@@ -84,7 +84,6 @@ struct _GdaConnectionPrivate {
 	gchar                *dsn;
 	gchar                *cnc_string;
 	gchar                *auth_string;
-	gboolean              is_open;
 	gboolean              is_thread_wrapper;
 	guint                 monitor_id;
 
@@ -466,7 +465,6 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 	cnc->priv->dsn = NULL;
 	cnc->priv->cnc_string = NULL;
 	cnc->priv->auth_string = NULL;
-	cnc->priv->is_open = FALSE;
 	cnc->priv->auto_clear_events = TRUE;
 	cnc->priv->events_array_size = EVENTS_ARRAY_SIZE;
 	cnc->priv->events_array = g_new0 (GdaConnectionEvent*, EVENTS_ARRAY_SIZE);
@@ -483,6 +481,7 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 	cnc->priv->completed_tasks = g_array_new (FALSE, FALSE, sizeof (gpointer));
 
 	cnc->priv->trans_meta_context = NULL;
+	cnc->priv->provider_data = NULL;
 }
 
 static void auto_update_meta_context_free (GdaMetaContext *context);
@@ -686,7 +685,7 @@ gda_connection_set_property (GObject *object,
 			GdaDsnInfo *dsn;
 
 			gda_connection_lock ((GdaLockable*) cnc);
-			if (cnc->priv->is_open) {
+			if (cnc->priv->provider_data) {
 				g_warning (_("Could not set the '%s' property when the connection is opened"),
 					   pspec->name);
 				gda_connection_unlock ((GdaLockable*) cnc);
@@ -714,7 +713,7 @@ gda_connection_set_property (GObject *object,
 		}
                 case PROP_CNC_STRING:
 			gda_connection_lock ((GdaLockable*) cnc);
-			if (cnc->priv->is_open) {
+			if (cnc->priv->provider_data) {
 				g_warning (_("Could not set the '%s' property when the connection is opened"),
 					   pspec->name);
 				gda_connection_unlock ((GdaLockable*) cnc);
@@ -728,7 +727,7 @@ gda_connection_set_property (GObject *object,
                         break;
                 case PROP_PROVIDER_OBJ:
 			gda_connection_lock ((GdaLockable*) cnc);
-			if (cnc->priv->is_open) {
+			if (cnc->priv->provider_data) {
 				g_warning (_("Could not set the '%s' property when the connection is opened"),
 					   pspec->name);
 				gda_connection_unlock ((GdaLockable*) cnc);
@@ -743,7 +742,7 @@ gda_connection_set_property (GObject *object,
                         break;
                 case PROP_AUTH_STRING:
 			gda_connection_lock ((GdaLockable*) cnc);
-			if (cnc->priv->is_open) {
+			if (cnc->priv->provider_data) {
 				g_warning (_("Could not set the '%s' property when the connection is opened"),
 					   pspec->name);
 				gda_connection_unlock ((GdaLockable*) cnc);
@@ -762,7 +761,7 @@ gda_connection_set_property (GObject *object,
 			GdaConnectionOptions flags;
 			flags = g_value_get_flags (value);
 			gda_mutex_lock (cnc->priv->mutex);
-			if (cnc->priv->is_open &&
+			if (cnc->priv->provider_data &&
 			    ((flags & (~GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE)) !=
 			     (cnc->priv->options & (~GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE)))) {
 				g_warning (_("Can't set the '%s' property once the connection is opened"),
@@ -1501,7 +1500,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* don't do anything if connection is already opened */
-	if (cnc->priv->is_open)
+	if (cnc->priv->provider_data)
 		return TRUE;
 
 	gda_connection_lock ((GdaLockable*) cnc);
@@ -1589,16 +1588,18 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	/* try to open the connection */
 	auth = gda_quark_list_new_from_string (real_auth_string);
+	gboolean opened;
 
-	cnc->priv->is_open = TRUE; /* consider the connection opened to allow the open_connection()
-				    * virtual method to execute statements of needed */
-	if (PROV_CLASS (cnc->priv->provider_obj)->open_connection (cnc->priv->provider_obj, cnc, params, auth,
-								   NULL, NULL, NULL))
-		cnc->priv->is_open = TRUE;
-	else {
+	opened = PROV_CLASS (cnc->priv->provider_obj)->open_connection (cnc->priv->provider_obj, cnc, params, auth,
+									NULL, NULL, NULL);
+	if (opened && !cnc->priv->provider_data) {
+		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		opened = FALSE;
+	}
+
+	if (!opened) {
 		const GList *events;
 		
-		cnc->priv->is_open = FALSE;
 		events = gda_connection_get_events (cnc);
 		if (events) {
 			GList *l;
@@ -1614,8 +1615,6 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 				}
 			}
 		}
-
-		cnc->priv->is_open = FALSE;
 	}
 
 	/* free memory */
@@ -1623,7 +1622,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	gda_quark_list_free (auth);
 	g_free (real_auth_string);
 
-	if (cnc->priv->is_open) {
+	if (cnc->priv->provider_data) {
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'CONN_OPENED' from %s\n", __FUNCTION__);
 #endif
@@ -1640,7 +1639,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 
 	gda_connection_unlock ((GdaLockable*) cnc);
-	return cnc->priv->is_open;
+	return cnc->priv->provider_data ? TRUE : FALSE;
 }
 
 
@@ -1656,7 +1655,7 @@ gda_connection_close (GdaConnection *cnc)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
-	if (! cnc->priv->is_open)
+	if (! cnc->priv->provider_data)
 		return;
 
 	gda_connection_lock ((GdaLockable*) cnc);
@@ -1707,7 +1706,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 		cnc->priv->monitor_id = 0;
 	}
 
-	if (! cnc->priv->is_open) {
+	if (! cnc->priv->provider_data) {
 		g_object_unref (cnc);
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return;
@@ -1745,8 +1744,6 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	if (PROV_CLASS (cnc->priv->provider_obj)->close_connection) 
 		PROV_CLASS (cnc->priv->provider_obj)->close_connection (cnc->priv->provider_obj, 
 									cnc);
-	cnc->priv->is_open = FALSE;
-
 	if (cnc->priv->provider_data) {
 		if (cnc->priv->provider_data_destroy_func)
 			cnc->priv->provider_data_destroy_func (cnc->priv->provider_data);
@@ -1780,7 +1777,7 @@ gda_connection_is_opened (GdaConnection *cnc)
 {
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	return cnc->priv->is_open;
+	return cnc->priv->provider_data ? TRUE : FALSE;
 }
 
 
@@ -3082,7 +3079,7 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 		return 0;
 	}
 
-	if (!cnc->priv->is_open) {
+	if (!cnc->priv->provider_data) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
 			     _("Connection is closed"));
 		gda_connection_unlock (GDA_LOCKABLE (cnc));
@@ -3310,7 +3307,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	if (last_inserted_row) 
 		*last_inserted_row = NULL;
 
-	if (!cnc->priv->is_open) {
+	if (!cnc->priv->provider_data) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
 			     _("Connection is closed"));
 		gda_connection_unlock (GDA_LOCKABLE (cnc));
@@ -3676,7 +3673,7 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 
 	_clear_connection_events (cnc);
 
-	if (!cnc->priv->is_open) {
+	if (!cnc->priv->provider_data) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
 			     _("Connection is closed"));
 		gda_connection_unlock (GDA_LOCKABLE (cnc));
@@ -3766,7 +3763,7 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	g_object_ref ((GObject*) cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
 	
-	if (!cnc->priv->is_open) {
+	if (!cnc->priv->provider_data) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
 			     _("Connection is closed"));
 		gda_connection_unlock (GDA_LOCKABLE (cnc));
@@ -3852,7 +3849,7 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 	g_object_ref ((GObject*) cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
 
-	if (!cnc->priv->is_open) {
+	if (!cnc->priv->provider_data) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
 			     _("Connection is closed"));
 		gda_connection_unlock (GDA_LOCKABLE (cnc));
