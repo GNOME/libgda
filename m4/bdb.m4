@@ -145,6 +145,7 @@ m4_define([_BDB_CHECK_INTERNAL],
 
 		for db_hdr in $try_headers
 		do
+		    #echo "Checking for files $d/include/$db_hdr and $db_libfile"
 		    if test -f $d/include/$db_hdr -a -f $db_libfile
 		    then
   	                save_CFLAGS="$CFLAGS"
@@ -231,14 +232,19 @@ m4_define([_BDBSQL_CHECK_INTERNAL],
     if test "x$BDB_DIR" != x
     then
         AC_MSG_CHECKING([for Berkeley DB SQL files along with found BDB installation])
-	if test -f $BDB_DIR/include/dbsql.h
+	#echo "Checking $BDB_DIR/include/dbsql.h and $BDB_DIR/include/libdb/dbsql.h"
+	if test -f $BDB_DIR/include/dbsql.h -o -f $BDB_DIR/include/libdb/dbsql.h
 	then
-	    BDBSQL_CFLAGS="$BDB_CFLAGS"
+	    if test -f $BDB_DIR/include/libdb/dbsql.h
+	    then
+	        BDBSQL_CFLAGS="$BDB_CFLAGS/libdb"
+	    else
+	        BDBSQL_CFLAGS="$BDB_CFLAGS"
+	    fi
 	    BDBSQL_LIBS="-L$BDB_DIR/$bdb_loclibdir -ldb_sql"
 	    BDBSQL_PATH="$BDB_DIR/$bdb_loclibdir"
 	    AC_MSG_RESULT([found])
 	    AC_CHECK_LIB(db_sql, sqlite3_table_column_metadata,[bdbsql_api=1], [bdbsql_api=0], $BDBSQL_CFLAGS $BDBSQL_LIBS -pthread -ldl)
-
 	    if test $bdbsql_api = 0
 	    then
 		BDBSQL_CFLAGS=""
