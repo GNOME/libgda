@@ -170,6 +170,11 @@ m4_define([_JAVA_CHECK_INTERNAL],
 		    JTYPE="Sun JRE 1.6"
 		    JFLAGS="-Xlint:unchecked -Xlint:deprecation"
 		    ;;
+                JRE1.7.*)
+		    try_java=true
+		    JTYPE="Sun JRE 1.7"
+		    JFLAGS="-Xlint:unchecked -Xlint:deprecation"
+		    ;;
                 JREgcj-4*)
 		    try_java=true
 		    JTYPE="GCJ"
@@ -281,6 +286,7 @@ m4_define([_JAVA_CHECK_INTERNAL],
 #include <jni.h>
 int main(void) {
     jobject o;
+    o = NULL;
     return 0;
 }])],
 	               [AC_MSG_RESULT(yes)],
@@ -294,6 +300,7 @@ int main(void) {
 #include <jni.h>
 int main(void) {
     jobject o;
+    o = NULL;
     return 0;
 }])],
 	              [AC_MSG_RESULT(yes)],

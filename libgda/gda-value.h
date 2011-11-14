@@ -74,6 +74,10 @@ typedef struct {
 	gdouble y;
 } GdaGeometricPoint;
 
+
+typedef struct _GdaNumeric GdaNumeric;
+# ifdef GSEAL_ENABLE
+# else
 /**
  * GdaNumeric:
  * @number: a string representing a number
@@ -88,14 +92,15 @@ typedef struct {
  * Set value func: gda_value_set_numeric
  * Get value func: gda_value_get_numeric
  */
-typedef struct {
+struct _GdaNumeric {
 	gchar*   GSEAL(number);
 	glong    GSEAL(precision);
 	glong    GSEAL(width);
 	
 	/*< private >*/
 	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
-} GdaNumeric;
+};
+#endif
 
 /**
  * GdaTime:
@@ -264,7 +269,7 @@ GType                             gda_null_get_type (void) G_GNUC_CONST;
 GType                             gda_default_get_type (void) G_GNUC_CONST;
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
 GdaNumeric*                       gda_numeric_new (void);
-gpointer                          gda_numeric_copy (gpointer boxed);
+GdaNumeric*                       gda_numeric_copy (GdaNumeric *src);
 void                              gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str);
 void                              gda_numeric_set_double (GdaNumeric *numeric, gdouble number);
 gdouble                           gda_numeric_get_double (GdaNumeric *numeric);
@@ -273,7 +278,7 @@ glong                             gda_numeric_get_precision (GdaNumeric *numeric
 void                              gda_numeric_set_width (GdaNumeric *numeric, glong width);
 glong                             gda_numeric_get_width (GdaNumeric *numeric);
 gchar*                            gda_numeric_get_string (GdaNumeric *numeric);
-void                              gda_numeric_free (gpointer boxed);
+void                              gda_numeric_free (GdaNumeric *numeric);
 
 GType                             gda_time_get_type (void) G_GNUC_CONST;
 gpointer                          gda_time_copy (gpointer boxed);

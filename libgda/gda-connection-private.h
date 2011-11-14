@@ -30,6 +30,7 @@ G_BEGIN_DECLS
  */
 void     gda_connection_internal_set_provider_data (GdaConnection *cnc, gpointer data, GDestroyNotify destroy_func);
 gpointer gda_connection_internal_get_provider_data (GdaConnection *cnc);
+gpointer gda_connection_internal_get_provider_data_error (GdaConnection *cnc, GError **error);
 
 /*
  * Connection's events

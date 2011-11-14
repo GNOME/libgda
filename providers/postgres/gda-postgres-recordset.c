@@ -649,12 +649,12 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		setlocale (LC_NUMERIC, gda_numeric_locale);
 	}
 	else if (type == GDA_TYPE_NUMERIC) {
-		GdaNumeric numeric;
-		numeric.number = g_strdup (thevalue);
-		numeric.precision = 0; /* FIXME */
-		numeric.width = 0; /* FIXME */
-		gda_value_set_numeric (value, &numeric);
-		g_free (numeric.number);
+		GdaNumeric* numeric = gda_numeric_new ();
+		gda_numeric_set_from_string (numeric, thevalue);
+		gda_numeric_set_precision (numeric, 0); /* FIXME */
+		gda_numeric_set_width (numeric, 0); /* FIXME */
+		gda_value_set_numeric (value, numeric);
+		gda_numeric_free (numeric);
 	}
 	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
 		GdaGeometricPoint point;

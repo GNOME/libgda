@@ -52,6 +52,35 @@
 #define bcmp(s1, s2, n) memcmp ((s1), (s2), (n))
 #endif
 
+
+#  ifdef GSEAL_ENABLE
+/**
+ * GdaNumeric:
+ * @number: a string representing a number
+ * @precision: precision to use when @number is converted (not implemented jet)
+ * @width: (not implemented jet)
+ *
+ * Holds numbers represented as strings.
+ *
+ * This struct must be considered as opaque. Any access to its members must use its
+ * accessors added since version 5.0.2.
+ *
+ * Set value func: gda_value_set_numeric
+ * Get value func: gda_value_get_numeric
+ */
+struct _GdaNumeric {
+	gchar*   number;
+	glong    precision;
+	glong    width;
+	
+	/*< private >*/
+	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
+};
+#  else
+#endif
+
+
+
 static gboolean
 set_from_string (GValue *value, const gchar *as_string)
 {
@@ -819,6 +848,7 @@ gda_numeric_get_type (void)
 	return type;
 }
 
+
 /**
  * gda_numeric_copy:
  * @boxed: source to get a copy from.
@@ -830,10 +860,9 @@ gda_numeric_get_type (void)
  * Free-function: gda_numeric_free
  */
 
-gpointer
-gda_numeric_copy (gpointer boxed)
+GdaNumeric*
+gda_numeric_copy (GdaNumeric *src)
 {
-	GdaNumeric *src = (GdaNumeric*) boxed;
 	GdaNumeric *copy;
 
 	g_return_val_if_fail (src, NULL);
@@ -852,9 +881,8 @@ gda_numeric_copy (gpointer boxed)
  * Deallocates all memory associated to the given @boxed
  */
 void
-gda_numeric_free (gpointer boxed)
+gda_numeric_free (GdaNumeric *numeric)
 {
-	GdaNumeric *numeric = (GdaNumeric*) boxed;
 	g_return_if_fail (numeric);
 
 	g_free (numeric->number);
@@ -910,7 +938,6 @@ void
 gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
 {
 	g_return_if_fail (numeric);
-	g_return_if_fail (number);
 	if (numeric->number)
 		g_free (numeric->number);
 	numeric->number = g_strdup_printf ("%lf", number);

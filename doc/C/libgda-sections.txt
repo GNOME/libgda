@@ -1587,6 +1587,7 @@ gda_server_provider_load_file_contents
 <SUBSECTION>
 gda_connection_internal_set_provider_data
 gda_connection_internal_get_provider_data
+gda_connection_internal_get_provider_data_error
 <SUBSECTION>
 gda_connection_add_event
 gda_connection_add_event_string
