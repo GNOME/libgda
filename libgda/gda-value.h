@@ -76,7 +76,8 @@ typedef struct {
 
 
 typedef struct _GdaNumeric GdaNumeric;
-
+# ifdef GSEAL_ENABLE
+# else
 /**
  * GdaNumeric:
  * @number: a string representing a number
@@ -99,6 +100,7 @@ struct _GdaNumeric {
 	/*< private >*/
 	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
 };
+#endif
 
 /**
  * GdaTime:

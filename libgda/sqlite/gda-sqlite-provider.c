@@ -3245,7 +3245,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			const GdaNumeric *gdan;
 
 			gdan = gda_value_get_numeric (value);
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, gdan->number, -1, SQLITE_TRANSIENT);
+			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, gda_numeric_get_string(gdan), -1, SQLITE_TRANSIENT);
 		}
 		else {
 			gchar *str;

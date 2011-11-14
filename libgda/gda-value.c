@@ -52,6 +52,35 @@
 #define bcmp(s1, s2, n) memcmp ((s1), (s2), (n))
 #endif
 
+
+#  ifdef GSEAL_ENABLE
+/**
+ * GdaNumeric:
+ * @number: a string representing a number
+ * @precision: precision to use when @number is converted (not implemented jet)
+ * @width: (not implemented jet)
+ *
+ * Holds numbers represented as strings.
+ *
+ * This struct must be considered as opaque. Any access to its members must use its
+ * accessors added since version 5.0.2.
+ *
+ * Set value func: gda_value_set_numeric
+ * Get value func: gda_value_get_numeric
+ */
+struct _GdaNumeric {
+	gchar*   number;
+	glong    precision;
+	glong    width;
+	
+	/*< private >*/
+	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
+};
+#  else
+#endif
+
+
+
 static gboolean
 set_from_string (GValue *value, const gchar *as_string)
 {
@@ -818,6 +847,7 @@ gda_numeric_get_type (void)
 
 	return type;
 }
+
 
 /**
  * gda_numeric_copy:
