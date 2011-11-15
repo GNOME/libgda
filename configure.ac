@@ -844,16 +844,20 @@ AC_ARG_ENABLE(default-binary,
 AM_CONDITIONAL(DEFAULT_BINARY, test "x$enable_default_binary" = xyes)
 
 # We use -Wno-address because SQLITE3_CALL() has an ifdefed definition that 
-# makes it hard to always avoid the warning.
+#   makes it hard to always avoid the warning.
 # We use -Wno-unused-variable because the lemon parser generator (in libgda's sources),
-# creates some generic macros that declare variables that are not always used. 
+#   creates some generic macros that declare variables that are not always used. 
 # We use -Wno-unused-parameter because the lemon parser generator (in libgda's sources),
-# produces generic code, and it's hard to fix that generated code.
+#   produces generic code, and it's hard to fix that generated code.
 # We use -Wno-pointer-sign because the sqlite source code (copied into libgda's sources)
-# has problems but we do not want to patch that code.
+#   has problems but we do not want to patch that code.
+# We use -Wno-missing-field-initializers because recent glib versions introduced this 
+#  and they refuse to fix it: https://bugzilla.gnome.org/show_bug.cgi?id=662797
+#  We should remove -Wno-missing-field-initializers when we replace the use of 
+#  the deprecated G_STATIC_MUTEX_INIT macro.
 DK_ARG_ENABLE_WARNINGS([COREDEPS_WFLAGS],
 	[-Wall],
-	[-Wall -Wextra -Wformat-security -Wno-address -Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign],
+	[-Wall -Wextra -Wformat-security -Wno-address -Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign -Wno-missing-field-initializers -DGSEAL_ENABLE],
 	[PANGO G GDK GDK_PIXBUF GTK])
 
 AC_SUBST(COREDEPS_CFLAGS)
