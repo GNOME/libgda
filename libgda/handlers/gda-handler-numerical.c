@@ -262,13 +262,14 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 		}
 	}
 	else if (type == GDA_TYPE_NUMERIC) {
-		GdaNumeric numeric;
+		GdaNumeric *numeric;
 		const gchar *p = str;
 		gboolean ok = TRUE;
 		gboolean hasdot = FALSE;
 
-		numeric.precision = 0;
-		numeric.width = 0;
+		numeric = gda_numeric_new ();
+		gda_numeric_set_precision (numeric, 0);
+		gda_numeric_set_width (numeric, 0);
 		while (p && *p && ok) {
 			if ((*p == '.') || (*p == ',')) {
 				if (hasdot)
@@ -281,17 +282,20 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 					ok = FALSE;
 				else {
 					if (hasdot)
-						numeric.precision++;
-					numeric.width++;
+						gda_numeric_set_precision (numeric,
+									   gda_numeric_get_precision (numeric) + 1);
+					gda_numeric_set_width (numeric,
+							       gda_numeric_get_width (numeric) + 1);
 				}
 			}
 			p++;
 		}
 		if (ok) {
-			numeric.number = (gchar *) str;
+			gda_numeric_set_from_string (numeric, (gchar*) str);
 			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_NUMERIC);
-			gda_value_set_numeric (value, &numeric);
+			gda_value_set_numeric (value, numeric);
 		}
+		gda_numeric_free (numeric);
 	}
 	else if (type == G_TYPE_FLOAT) {
 		gfloat flt;
