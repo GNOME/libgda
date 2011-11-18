@@ -20,15 +20,14 @@
 # Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>, 2011.
 # Christian Kirbach <Christian.Kirbach@googlemail.com>, 2009, 2010, 2011.
 #
-#: ../libgda/gda-connection.c:401
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-11-06 17:11+0000\n"
-"PO-Revision-Date: 2011-11-06 18:34+0100\n"
-"Last-Translator: Christian Kirbach <Christian.Kirbach@googlemail.com>\n"
+"POT-Creation-Date: 2011-11-08 22:15+0000\n"
+"PO-Revision-Date: 2011-11-18 17:25+0100\n"
+"Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,13 +130,13 @@ msgstr "Browser-Programm konnte nicht ausgeführt werden"
 #: ../libgda/gda-holder.c:1923 ../libgda/gda-server-operation.c:633
 #: ../libgda/gda-server-operation.c:1037 ../libgda/gda-set.c:567
 #: ../libgda/gda-tree-mgr-select.c:187 ../libgda/gda-tree-mgr-select.c:222
-#: ../libgda/sqlite/gda-sqlite-provider.c:2539
-#: ../libgda/sqlite/gda-sqlite-provider.c:2551
-#: ../libgda/sqlite/gda-sqlite-provider.c:2573
-#: ../libgda/sqlite/gda-sqlite-provider.c:2763
-#: ../libgda/sqlite/gda-sqlite-provider.c:3105
-#: ../libgda/sqlite/gda-sqlite-provider.c:3117
-#: ../libgda/sqlite/gda-sqlite-provider.c:3216
+#: ../libgda/sqlite/gda-sqlite-provider.c:2620
+#: ../libgda/sqlite/gda-sqlite-provider.c:2632
+#: ../libgda/sqlite/gda-sqlite-provider.c:2654
+#: ../libgda/sqlite/gda-sqlite-provider.c:2844
+#: ../libgda/sqlite/gda-sqlite-provider.c:3186
+#: ../libgda/sqlite/gda-sqlite-provider.c:3198
+#: ../libgda/sqlite/gda-sqlite-provider.c:3297
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:283
@@ -152,8 +151,7 @@ msgstr "Browser-Programm konnte nicht ausgeführt werden"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:535
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:159
 #: ../libgda-ui/gdaui-init.c:507 ../libgda-ui/gdaui-login.c:430
-#: ../libgda-ui/gdaui-rt-editor.c:731
-#: ../providers/jdbc/gda-jdbc-provider.c:390
+#: ../libgda-ui/gdaui-rt-editor.c:731 ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1331
 #: ../providers/jdbc/gda-jdbc-provider.c:1360
 #: ../providers/jdbc/gda-jdbc-provider.c:1422
@@ -181,8 +179,7 @@ msgstr "Browser-Programm konnte nicht ausgeführt werden"
 #: ../tools/browser/browser-connection.c:1045
 #: ../tools/browser/browser-connection.c:1260
 #: ../tools/browser/browser-window.c:919 ../tools/browser/browser-window.c:933
-#: ../tools/browser/browser-window.c:947
-#: ../tools/browser/browser-window.c:1172
+#: ../tools/browser/browser-window.c:947 ../tools/browser/browser-window.c:1172
 #: ../tools/browser/browser-window.c:1213
 #: ../tools/browser/browser-window.c:1481 ../tools/browser/login-dialog.c:235
 #: ../tools/browser/main.c:131 ../tools/browser/main.c:150
@@ -408,8 +405,8 @@ msgid ""
 "available,\n"
 "editing the data source's attributes is disabled</span>"
 msgstr ""
-"<span foreground='red'>Der von dieser Datenquelle verwendete "
-"Datenbanktreiber ist nicht verfügbar,\n"
+"<span foreground='red'>Der von dieser Datenquelle verwendete Datenbanktreiber "
+"ist nicht verfügbar,\n"
 "das Bearbeiten der Attribute der Datenquelle wird deaktiviert.</span>"
 
 #. connection's authentication
@@ -420,8 +417,8 @@ msgid "Authentication"
 msgstr "Legitimierung"
 
 #: ../control-center/gdaui-login-dialog.c:75
-#: ../control-center/gdaui-login-dialog.c:83
-#: ../tools/browser/auth-dialog.c:230 ../tools/browser/login-dialog.c:189
+#: ../control-center/gdaui-login-dialog.c:83 ../tools/browser/auth-dialog.c:230
+#: ../tools/browser/login-dialog.c:189
 msgid "Connection opening"
 msgstr "Verbindung wird geöffnet"
 
@@ -525,9 +522,9 @@ msgid ""
 "Providers are addons that actually implement the access to each database "
 "using the means provided by each database vendor."
 msgstr ""
-"Treiber sind Addons, die den eigentlichen Zugriff auf jede Datenbank "
-"umsetzen unter Zuhilfenahme dessen, was der jeweilige Anbieter der Datenbank "
-"zur Verfügung stellt."
+"Treiber sind Addons, die den eigentlichen Zugriff auf jede Datenbank umsetzen "
+"unter Zuhilfenahme dessen, was der jeweilige Anbieter der Datenbank zur "
+"Verfügung stellt."
 
 #: ../libgda/gda-batch.c:321
 msgid "Statement could not be found in batch's statements"
@@ -551,8 +548,7 @@ msgstr ""
 
 #: ../libgda/gda-config.c:619 ../libgda/gda-config.c:632
 #, c-format
-msgid ""
-"User specific configuration directory '%s' exists and is not a directory"
+msgid "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
 "Ordner für die benutzerspezifische Konfiguration »%s« existiert, ist aber "
 "kein Ordner"
@@ -703,8 +699,8 @@ msgid ""
 "Tells if the connection acts as a thread wrapper around another connection, "
 "making it completely thread safe"
 msgstr ""
-"Besagt, ob die Verbindung ein Thread-Wrapper für eine andere ist, so dass "
-"sie vollständig sicher für Threads ist"
+"Besagt, ob die Verbindung ein Thread-Wrapper für eine andere ist, so dass sie "
+"vollständig sicher für Threads ist"
 
 #: ../libgda/gda-connection.c:387
 msgid ""
@@ -998,8 +994,8 @@ msgstr "BerkeleyDB-Bibliothek ist nicht geladen"
 msgid ""
 "Custom BDB model implementation is not complete: the '%s' method is missing"
 msgstr ""
-"Die benutzerdefinierte Implementierung des BDB-Modells ist nicht "
-"vollständig: die Methode »%s« fehlt"
+"Die benutzerdefinierte Implementierung des BDB-Modells ist nicht vollständig: "
+"die Methode »%s« fehlt"
 
 #: ../libgda/gda-data-model-bdb.c:861 ../libgda/gda-data-model-bdb.c:951
 #, c-format
@@ -1080,8 +1076,8 @@ msgstr ""
 #: ../libgda/gda-data-model.c:1717
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
-"Datentyp der Spalte konnte nicht ermittelt werden (Typ ist UNKNOWN oder "
-"wurde nicht angegeben)"
+"Datentyp der Spalte konnte nicht ermittelt werden (Typ ist UNKNOWN oder wurde "
+"nicht angegeben)"
 
 #: ../libgda/gda-data-model.c:1801
 #, c-format
@@ -1133,8 +1129,8 @@ msgstr "Die Inhalte des Datenmodells konnten nicht abgelegt werden: %s"
 #: ../libgda/gda-data-model.c:2507
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr ""
-"Das Datenmodell unterstützt keine Rückwärtsbewegung der Positionsmarke, "
-"Daten werden nicht angezeigt"
+"Das Datenmodell unterstützt keine Rückwärtsbewegung der Positionsmarke, Daten "
+"werden nicht angezeigt"
 
 #: ../libgda/gda-data-model.c:2630
 #: ../tools/browser/common/gdaui-entry-import.c:213
@@ -1411,8 +1407,7 @@ msgstr "Kein Zeilenfeld definiert"
 #: ../libgda/gda-data-pivot.c:1623 ../libgda/gda-data-pivot.c:1635
 #: ../libgda/gda-data-pivot.c:1651
 msgid "Could not get information from source data model"
-msgstr ""
-"Es konnten keine Informationen für das Quelldatenmodell erhalten werden"
+msgstr "Es konnten keine Informationen für das Quelldatenmodell erhalten werden"
 
 #: ../libgda/gda-data-pivot.c:2113 ../libgda/gda-data-proxy.c:2987
 #: ../tools/gda-sql.c:3340
@@ -1425,8 +1420,7 @@ msgstr "Keine Quelle definiert"
 
 #: ../libgda/gda-data-pivot.c:2147
 msgid "Invalid source data model (may have incompatible column names)"
-msgstr ""
-"Ungültiges Quelldatenmodell (eventuell durch inkompatible Spaltennamen)"
+msgstr "Ungültiges Quelldatenmodell (eventuell durch inkompatible Spaltennamen)"
 
 #: ../libgda/gda-data-proxy.c:926
 msgid "GdaDataProxy can't handle non random access data models"
@@ -1448,8 +1442,8 @@ msgid ""
 "the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" "
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
-"Proxy-Datenmodelle erstellen Berichte der Änderungen nach Zugriff, aber "
-"geben nicht die zugehörigen Signale »row-inserted«, »row-updated« oder »row-"
+"Proxy-Datenmodelle erstellen Berichte der Änderungen nach Zugriff, aber geben "
+"nicht die zugehörigen Signale »row-inserted«, »row-updated« oder »row-"
 "removed« aus. Dies ist ein Fehler in der Implementation von %s. Bitte melden "
 "Sie diesen Fehler."
 
@@ -1592,14 +1586,12 @@ msgstr ""
 #: ../libgda/gda-data-select.c:2282 ../libgda/gda-data-select.c:2292
 #, c-format
 msgid "Could not change iter's value for column %d: %s"
-msgstr ""
-"Der Wert des Iterators konnte nicht für Spalte %d festgelegt werden: %s"
+msgstr "Der Wert des Iterators konnte nicht für Spalte %d festgelegt werden: %s"
 
 #: ../libgda/gda-data-select.c:2287
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
-"Bei Wert NULL für den Wert des GdaHolder darf der Iterator aktualisiert "
-"werden"
+"Bei Wert NULL für den Wert des GdaHolder darf der Iterator aktualisiert werden"
 
 #: ../libgda/gda-data-select.c:2372 ../libgda/gda-data-select.c:2465
 msgid "Some columns can't be modified"
@@ -1716,8 +1708,8 @@ msgstr "(%s): Falscher Werttyp: erwarteter Typ »%s«, wobei der Werttyp »%s« 
 msgid ""
 "GdaHolder has a gda type (%s) incompatible with source column %d type (%s)"
 msgstr ""
-"GdaHolder hat einen GDA-Typ (%s), der inkompatibel zum Typ der Quellspalte %"
-"d ist (%s)"
+"GdaHolder hat einen GDA-Typ (%s), der inkompatibel zum Typ der Quellspalte %d "
+"ist (%s)"
 
 #. break holder's binding because type differ
 #: ../libgda/gda-holder.c:1708
@@ -1737,8 +1729,8 @@ msgstr "Holder können nicht gekoppelt werden, da sie nicht gleichen Typs sind"
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
-"GdaHolder kann nicht geändert werden, um mit dem Wert im gebundenen "
-"GdaHolder übereinzustimmen: %s"
+"GdaHolder kann nicht geändert werden, um mit dem Wert im gebundenen GdaHolder "
+"übereinzustimmen: %s"
 
 #: ../libgda/gda-init.c:135
 msgid "Ignoring attempt to re-initialize GDA library."
@@ -1761,12 +1753,12 @@ msgstr ""
 #: ../libgda/gda-init.c:250
 #, c-format
 msgid ""
-"Could not parse '%s': Validation for XML files for server operations will "
-"not be performed (some weird errors may occur)"
+"Could not parse '%s': Validation for XML files for server operations will not "
+"be performed (some weird errors may occur)"
 msgstr ""
 "»%s« kann nicht verarbeitet werden: Überprüfung der XML-Dateien für "
-"Serveroperationen wird nicht ausgeführt (einige schwerwiegende Fehler "
-"könnten auftreten)"
+"Serveroperationen wird nicht ausgeführt (einige schwerwiegende Fehler könnten "
+"auftreten)"
 
 #: ../libgda/gda-meta-store.c:437
 msgid "Connection string for the internal connection to use"
@@ -1913,18 +1905,17 @@ msgstr "Mit »_« beginnende Attributnamen sind für internen Gebrauch reservier
 
 #: ../libgda/gda-meta-store.c:3763
 msgid ""
-"Could not start a transaction because one already started, this could lead "
-"to GdaMetaStore attributes problems"
+"Could not start a transaction because one already started, this could lead to "
+"GdaMetaStore attributes problems"
 msgstr ""
 "Eine Transaktion konnte wegen einer bereits laufenden Transaktion nicht "
-"gestartet werden. Dies könnte zu Fehlern in den GdaMetaStore-Attributen "
-"führen"
+"gestartet werden. Dies könnte zu Fehlern in den GdaMetaStore-Attributen führen"
 
 #: ../libgda/gda-meta-store.c:3878
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
-"Die XML-Beschreibung des hinzuzufügenden benutzerdefinierten "
-"Datenbankobjekts konnte nicht verarbeitet werden"
+"Die XML-Beschreibung des hinzuzufügenden benutzerdefinierten Datenbankobjekts "
+"konnte nicht verarbeitet werden"
 
 #: ../libgda/gda-meta-store.c:3892
 msgid "Missing custom database object name"
@@ -2026,8 +2017,8 @@ msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
 "referencing table %s.%s.%s"
 msgstr ""
-"Zusammenhanglose Metadaten in Fremdschlüssel-Beschränkung für Tabelle %s.%s.%"
-"s in Bezug auf Tabelle %s.%s.%s"
+"Zusammenhanglose Metadaten in Fremdschlüssel-Beschränkung für Tabelle %s.%s."
+"%s in Bezug auf Tabelle %s.%s.%s"
 
 #: ../libgda/gda-meta-struct.c:2557
 msgid "Missing object name in GdaMetaDbObject structure"
@@ -2129,8 +2120,7 @@ msgid "Expected tag <%s>, got <%s>"
 msgstr "Tag <%s> wurde erwartet, jedoch <%s> erhalten"
 
 #: ../libgda/gda-server-operation.c:1549 ../libgda/gda-server-operation.c:2268
-msgid ""
-"Parameterlist values can only be set for individual parameters within it"
+msgid "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 "Parameterlisten-Werte können nur für beinhaltete Parameter gesetzt werden"
 
@@ -2173,8 +2163,8 @@ msgid ""
 "implement the %s one, please report this bug to http://bugzilla.gnome.org/ "
 "for the \"libgda\" product."
 msgstr ""
-"GdaServerProvider-Objekt implementiert die virtuelle Methode %s, aber nicht %"
-"s, Fehlerbericht bitte an http://bugzilla.gnome.org/ für das Modul »libgda«"
+"GdaServerProvider-Objekt implementiert die virtuelle Methode %s, aber nicht "
+"%s, Fehlerbericht bitte an http://bugzilla.gnome.org/ für das Modul »libgda«"
 
 #: ../libgda/gda-set.c:558 ../libgda/gda-set.c:659
 #, c-format
@@ -2294,7 +2284,7 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr "Fehlender Parameter »%s«"
 
-#: ../libgda/gda-statement.c:1338 ../libgda/sqlite/gda-sqlite-provider.c:2948
+#: ../libgda/gda-statement.c:1338 ../libgda/sqlite/gda-sqlite-provider.c:3029
 #: ../providers/jdbc/gda-jdbc-provider.c:1370
 #: ../providers/mysql/gda-mysql-provider.c:2293
 #: ../providers/postgres/gda-postgres-provider.c:1966
@@ -2458,7 +2448,7 @@ msgstr ""
 "geschrieben werden"
 
 #: ../libgda/gda-util.c:1776 ../libgda/gda-util.c:1833
-#: ../libgda/gda-util.c:1873 ../libgda/sqlite/gda-sqlite-provider.c:2929
+#: ../libgda/gda-util.c:1873 ../libgda/sqlite/gda-sqlite-provider.c:3010
 #: ../providers/jdbc/gda-jdbc-provider.c:1341
 #: ../providers/mysql/gda-mysql-provider.c:2273
 #: ../providers/postgres/gda-postgres-provider.c:1948
@@ -2485,8 +2475,7 @@ msgid "Connection does not support distributed transaction"
 msgstr "Verbindung unterstützt keine verteilten Transaktionen"
 
 #: ../libgda/gda-xa-transaction.c:353
-msgid ""
-"Cannot unregister connection not registered with GdaXaTransaction object"
+msgid "Cannot unregister connection not registered with GdaXaTransaction object"
 msgstr ""
 "Registrierung für nicht registrierte Verbindung kann mit GdaXaTransaction-"
 "Objekt nicht entfernt werden"
@@ -2608,8 +2597,7 @@ msgstr "Der Treiber unterstützt die Öffnung einer asynchronen Verbindung nicht
 #: ../libgda/sqlite/gda-sqlite-provider.c:766
 #: ../providers/mdb/gda-mdb-provider.c:252
 msgid "The connection string must contain DB_DIR and DB_NAME values"
-msgstr ""
-"Die Verbindungszeichenkette muss die Werte DB_DIR und DB_NAME enthalten"
+msgstr "Die Verbindungszeichenkette muss die Werte DB_DIR und DB_NAME enthalten"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:793
 #: ../libgda/sqlite/gda-sqlite-provider.c:801
@@ -2620,13 +2608,12 @@ msgid ""
 "end)."
 msgstr ""
 "Das Format der Verbindungszeichenkette wurde geändert: Ersetzen Sie »URI« "
-"durch »DB_DIR« (Pfad zur Datenbankdatei) und »DB_NAME« (Datenbankdatei ohne »%"
-"s« am Ende)"
+"durch »DB_DIR« (Pfad zur Datenbankdatei) und »DB_NAME« (Datenbankdatei ohne "
+"»%s« am Ende)"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:816
 #: ../providers/mdb/gda-mdb-provider.c:294
-msgid ""
-"The DB_DIR part of the connection string must point to a valid directory"
+msgid "The DB_DIR part of the connection string must point to a valid directory"
 msgstr ""
 "Der DB_DIR-Teil der Verbindungszeichenkette muss auf einen gültigen Ordner "
 "verweisen"
@@ -2688,15 +2675,21 @@ msgstr "Fehlender Datenbankname oder Ordner"
 msgid "Transactions are not supported in read-only mode"
 msgstr "Im schreibgeschützten Modus werden keine Transaktionen unterstützt"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2425
+#: ../libgda/sqlite/gda-sqlite-provider.c:1889
+#: ../libgda/sqlite/gda-sqlite-provider.c:1899
+#, c-format
+msgid "'%s' compound not supported by SQLite"
+msgstr "Verbindung »%s« wird von SQLite nicht unterstützt"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:2506
 #: ../providers/jdbc/gda-jdbc-provider.c:1122
 #: ../providers/postgres/gda-postgres-provider.c:1540
 #: ../providers/web/gda-web-provider.c:1269
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Unbenannte Parameter sind in vorbereiteten Anweisungen nicht erlaubt"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2538
-#: ../libgda/sqlite/gda-sqlite-provider.c:2550
+#: ../libgda/sqlite/gda-sqlite-provider.c:2619
+#: ../libgda/sqlite/gda-sqlite-provider.c:2631
 #: ../providers/mysql/gda-mysql-provider.c:2005
 #: ../providers/postgres/gda-postgres-provider.c:1683
 #, c-format
@@ -2705,7 +2698,7 @@ msgstr ""
 "SELECT-Anweisung zur Ermittlung der zuletzt eingefügten Zeile kann nicht "
 "erstellt werden: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2572
+#: ../libgda/sqlite/gda-sqlite-provider.c:2653
 #: ../providers/mysql/gda-mysql-provider.c:2020
 #: ../providers/postgres/gda-postgres-provider.c:1698
 #, c-format
@@ -2714,7 +2707,7 @@ msgstr ""
 "SELECT-Anweisung zur Ermittlung der zuletzt eingefügten Zeile kann nicht "
 "ausgeführt werden: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2585
+#: ../libgda/sqlite/gda-sqlite-provider.c:2666
 #: ../providers/mysql/gda-mysql-provider.c:2033
 #: ../providers/postgres/gda-postgres-provider.c:1711
 msgid "SELECT statement to get last inserted row did not return any row"
@@ -2722,7 +2715,7 @@ msgstr ""
 "Die SELECT-Anweisung zur Ermittlung der zuletzt eingefügten Zeile gab keine "
 "Zeile zurück"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2589
+#: ../libgda/sqlite/gda-sqlite-provider.c:2670
 #: ../providers/mysql/gda-mysql-provider.c:2037
 #: ../providers/postgres/gda-postgres-provider.c:1715
 #, c-format
@@ -2731,21 +2724,21 @@ msgstr ""
 "Die SELECT-Anweisung zur Ermittlung der zuletzt eingefügten Zeile gab zu "
 "viele Zeilen zurück (%d)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2654
+#: ../libgda/sqlite/gda-sqlite-provider.c:2735
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Vorbereitete Anweisung hat kein zugehöriges GdaStatement"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2694
-#: ../libgda/sqlite/gda-sqlite-provider.c:2731
+#: ../libgda/sqlite/gda-sqlite-provider.c:2775
+#: ../libgda/sqlite/gda-sqlite-provider.c:2812
 msgid "Can't create SQLite BLOB handle"
 msgstr "SQLite-BLOB-Handle kann nicht erstellt werden"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2698
-#: ../libgda/sqlite/gda-sqlite-provider.c:2736
+#: ../libgda/sqlite/gda-sqlite-provider.c:2779
+#: ../libgda/sqlite/gda-sqlite-provider.c:2817
 msgid "Can't write to SQLite's BLOB"
 msgstr "BLOB für SQLite kann nicht geschrieben werden"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2721
+#: ../libgda/sqlite/gda-sqlite-provider.c:2802
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2755,11 +2748,11 @@ msgstr ""
 "ist »%s«, bitte Fehlerbericht an http://bugzilla.gnome.org/ für das Modul "
 "»libgda«."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2746
+#: ../libgda/sqlite/gda-sqlite-provider.c:2827
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "ROWID zum Füllen von BLOB kann nicht identifiziert werden"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2794
+#: ../libgda/sqlite/gda-sqlite-provider.c:2875
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:379
 #: ../providers/jdbc/gda-jdbc-provider.c:1220
 #: ../providers/ldap/gda-ldap-provider.c:518
@@ -2767,16 +2760,15 @@ msgstr "ROWID zum Füllen von BLOB kann nicht identifiziert werden"
 #: ../providers/postgres/gda-postgres-provider.c:1810
 #: ../providers/web/gda-web-provider.c:1402
 msgid "Provider does not support asynchronous statement execution"
-msgstr ""
-"Der Treiber unterstützt die asynchrone Ausführung einer Anweisung nicht"
+msgstr "Der Treiber unterstützt die asynchrone Ausführung einer Anweisung nicht"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2862
+#: ../libgda/sqlite/gda-sqlite-provider.c:2943
 #: ../tools/browser/mgr-favorites.c:248 ../tools/browser/mgr-favorites.c:290
 msgid "Empty statement"
 msgstr "Leere Anweisung"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2904
-#: ../libgda/sqlite/gda-sqlite-provider.c:2907
+#: ../libgda/sqlite/gda-sqlite-provider.c:2985
+#: ../libgda/sqlite/gda-sqlite-provider.c:2988
 #: ../providers/jdbc/gda-jdbc-provider.c:1307
 #: ../providers/jdbc/gda-jdbc-provider.c:1310
 #: ../providers/mysql/gda-mysql-provider.c:2248
@@ -2789,7 +2781,7 @@ msgstr "Leere Anweisung"
 msgid "Missing parameter(s) to execute query"
 msgstr "Fehlende(r) Parameter zur Ausführung der Abfrage"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2967
+#: ../libgda/sqlite/gda-sqlite-provider.c:3048
 #: ../providers/jdbc/gda-jdbc-provider.c:1389
 #: ../providers/mysql/gda-mysql-provider.c:2312
 #: ../providers/postgres/gda-postgres-provider.c:1985
@@ -2799,53 +2791,53 @@ msgstr ""
 "Die Anweisung zur Abarbeitung der Vorgabewerte kann nicht neu geschrieben "
 "werden"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3087
+#: ../libgda/sqlite/gda-sqlite-provider.c:3168
 #: ../providers/mysql/gda-mysql-provider.c:2558
 msgid "Can't get BLOB's length"
 msgstr "BLOB-Länge kann nicht ermittelt werden"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3089
+#: ../libgda/sqlite/gda-sqlite-provider.c:3170
 #: ../providers/mysql/gda-mysql-provider.c:2560
 msgid "BLOB is too big"
 msgstr "BLOB ist zu groß"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3171
+#: ../libgda/sqlite/gda-sqlite-provider.c:3252
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Unbehandelter Datentyp »%s«"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3238
+#: ../libgda/sqlite/gda-sqlite-provider.c:3319
 msgid "Could not start transaction to create BLOB"
 msgstr "Transaktion zur Erstellung des BLOB konnte nicht gestartet werden"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3403
-#: ../libgda/sqlite/gda-sqlite-provider.c:3424
-#: ../libgda/sqlite/gda-sqlite-provider.c:3515
-#: ../libgda/sqlite/gda-sqlite-provider.c:3535
-#: ../libgda/sqlite/gda-sqlite-provider.c:3558
+#: ../libgda/sqlite/gda-sqlite-provider.c:3484
+#: ../libgda/sqlite/gda-sqlite-provider.c:3505
+#: ../libgda/sqlite/gda-sqlite-provider.c:3596
+#: ../libgda/sqlite/gda-sqlite-provider.c:3616
+#: ../libgda/sqlite/gda-sqlite-provider.c:3639
 msgid "Function requires one argument"
 msgstr "Funktion benötigt ein Argument"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3456
-#: ../libgda/sqlite/gda-sqlite-provider.c:3590
+#: ../libgda/sqlite/gda-sqlite-provider.c:3537
+#: ../libgda/sqlite/gda-sqlite-provider.c:3671
 msgid "Function requires two arguments"
 msgstr "Funktion benötigt zwei Argumente"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3495
+#: ../libgda/sqlite/gda-sqlite-provider.c:3576
 msgid "Function requires one or two arguments"
 msgstr "Funktion benötigt ein oder zwei Argumente"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3630
-#: ../libgda/sqlite/gda-sqlite-provider.c:3737
+#: ../libgda/sqlite/gda-sqlite-provider.c:3711
+#: ../libgda/sqlite/gda-sqlite-provider.c:3818
 msgid "Function requires two or three arguments"
 msgstr "Funktion benötigt zwei oder drei Argumente"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3684
+#: ../libgda/sqlite/gda-sqlite-provider.c:3765
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Fehler im regulären Ausdruck »%s« in SQLite:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3685
+#: ../libgda/sqlite/gda-sqlite-provider.c:3766
 msgid "Invalid regular expression"
 msgstr "Ungültiger regulärer Ausdruck"
 
@@ -2857,8 +2849,7 @@ msgstr "Ungültiger regulärer Ausdruck"
 #: ../providers/web/gda-web-recordset.c:186
 #, c-format
 msgid "Column %d out of range (0-%d), ignoring its specified type"
-msgstr ""
-"Spalte %d außerhalb des Bereichs (0-%d), angegebener Typ wird ignoriert"
+msgstr "Spalte %d außerhalb des Bereichs (0-%d), angegebener Typ wird ignoriert"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:408
 #: ../libgda/sqlite/gda-sqlite-recordset.c:421
@@ -3070,98 +3061,98 @@ msgid "Missing table in statement"
 msgstr "Fehlender Tabellenname in Anweisung"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:615
-#: ../libgda/sql-parser/gda-statement-struct.c:837
+#: ../libgda/sql-parser/gda-statement-struct.c:840
 #, c-format
 msgid "Column '%s' not found"
 msgstr "Spalte »%s« nicht gefunden"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:658
-#: ../libgda/sql-parser/gda-statement-struct.c:770
+#: ../libgda/sql-parser/gda-statement-struct.c:773
 msgid "GdaSqlSelectField is not part of a SELECT statement"
 msgstr "GdaSqlSelectField ist nicht Teil einer SELECT-Anweisung"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:718
+#: ../libgda/sql-parser/gda-statement-struct.c:721
 msgid "Missing table name in statement"
 msgstr "Fehlender Tabellenname in Anweisung"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:726
-#: ../libgda/sql-parser/gda-statement-struct.c:819
-#: ../libgda/sql-parser/gda-statement-struct.c:866
+#: ../libgda/sql-parser/gda-statement-struct.c:729
+#: ../libgda/sql-parser/gda-statement-struct.c:822
+#: ../libgda/sql-parser/gda-statement-struct.c:867
 #, c-format
 msgid "Table '%s' not found"
 msgstr "Tabelle »%s« nicht gefunden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:792
-#: ../libgda/sql-parser/gda-statement-struct.c:807
+#: ../libgda/sql-parser/gda-statement-struct.c:795
+#: ../libgda/sql-parser/gda-statement-struct.c:810
 #: ../tools/browser/browser-connection.c:2006
 #: ../tools/browser/browser-connection.c:2060
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "Tabelle oder Feld »%s« konnten nicht identifiziert werden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:996
+#: ../libgda/sql-parser/gda-statement-struct.c:997
 msgid "Expression can't have both a type cast and a parameter specification"
 msgstr ""
 "Der Ausdruck darf nicht zugleich eine Typumwandlung und eine "
 "Parameterspezifikation enthalten"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1006
-#: ../libgda/sql-parser/gda-statement-struct.c:1019
-#: ../libgda/sql-parser/gda-statement-struct.c:1032
+#: ../libgda/sql-parser/gda-statement-struct.c:1007
+#: ../libgda/sql-parser/gda-statement-struct.c:1020
+#: ../libgda/sql-parser/gda-statement-struct.c:1033
 #, c-format
 msgid "'%s' is not a valid identifier"
 msgstr "»%s« ist kein gültiger Bezeichner"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1009
-#: ../libgda/sql-parser/gda-statement-struct.c:1022
-#: ../libgda/sql-parser/gda-statement-struct.c:1035
+#: ../libgda/sql-parser/gda-statement-struct.c:1010
+#: ../libgda/sql-parser/gda-statement-struct.c:1023
+#: ../libgda/sql-parser/gda-statement-struct.c:1036
 msgid "Empty identifier"
 msgstr "Leerer Bezeichner"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1044
+#: ../libgda/sql-parser/gda-statement-struct.c:1045
 msgid "Operation has no operand"
 msgstr "Operation hat keinen Operanden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1068
-#: ../libgda/sql-parser/gda-statement-struct.c:1075
-#: ../libgda/sql-parser/gda-statement-struct.c:1085
-#: ../libgda/sql-parser/gda-statement-struct.c:1097
-#: ../libgda/sql-parser/gda-statement-struct.c:1105
+#: ../libgda/sql-parser/gda-statement-struct.c:1069
+#: ../libgda/sql-parser/gda-statement-struct.c:1076
+#: ../libgda/sql-parser/gda-statement-struct.c:1086
+#: ../libgda/sql-parser/gda-statement-struct.c:1098
+#: ../libgda/sql-parser/gda-statement-struct.c:1106
 msgid "Wrong number of operands"
 msgstr "Falsche Anzahl der Operanden"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1111
+#: ../libgda/sql-parser/gda-statement-struct.c:1112
 #, c-format
 msgid "Unknown operator %d"
 msgstr "Unbekannter Operator %d"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1134
+#: ../libgda/sql-parser/gda-statement-struct.c:1135
 msgid "Missing expression in select field"
 msgstr "Fehlender Ausdruck im SELECT-Feld"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1143
+#: ../libgda/sql-parser/gda-statement-struct.c:1144
 msgid "Missing expression in select target"
 msgstr "Fehlender Ausdruck im SELECT-Ziel"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1152
+#: ../libgda/sql-parser/gda-statement-struct.c:1153
 msgid ""
 "Join can't at the same time specify a join condition and a list of fields to "
 "join on"
 msgstr ""
-"Verbinden kann nicht gleichzeitig eine Verbindungsbedingung und eine Liste "
-"zu verbindender Felder angeben"
+"Verbinden kann nicht gleichzeitig eine Verbindungsbedingung und eine Liste zu "
+"verbindender Felder angeben"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1157
+#: ../libgda/sql-parser/gda-statement-struct.c:1158
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
 "Kreuzverbinden kann nicht gleichzeitig eine Verbindungsbedingung und eine "
 "Liste zu verbindender Felder angeben"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1166
+#: ../libgda/sql-parser/gda-statement-struct.c:1167
 msgid "Empty FROM clause"
 msgstr "Leere FROM-Klausel"
 
-#: ../libgda/sql-parser/gda-statement-struct.c:1441
+#: ../libgda/sql-parser/gda-statement-struct.c:1442
 msgid "Select field is not in a SELECT statement"
 msgstr "Select-Feld ist keine SELECT-Anweisung"
 
@@ -3193,8 +3184,7 @@ msgstr "COMPOUND-Anweisung enthält eine leere SELECT-Anweisung"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:301
 msgid "All statements in a COMPOUND must have the same number of columns"
-msgstr ""
-"Alle Anweisungen in COMPOUND müssen die gleiche Spaltenanzahl enthalten"
+msgstr "Alle Anweisungen in COMPOUND müssen die gleiche Spaltenanzahl enthalten"
 
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:167
 msgid "DELETE statement needs a table to delete from"
@@ -3541,8 +3531,8 @@ msgstr "Zeichenkette wurde abgeschnitten, weil sie zu lang ist"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:273
 #, c-format
 msgid ""
-"Data cell renderer's specified type (%s) differs from actual value to "
-"display type (%s)"
+"Data cell renderer's specified type (%s) differs from actual value to display "
+"type (%s)"
 msgstr ""
 "Der angegebene Typ (%s) des Elements zur Dateneingabe unterscheidet sich vom "
 "tatsächlichen Typ (%s) zum Anzeigen"
@@ -3555,8 +3545,8 @@ msgid ""
 "%s and %s, which means the data model has some incoherencies"
 msgstr ""
 "Das Element zur Dateneingabe fordert die Anzeige von Werten verschiedener "
-"Datentypen, zumindest %s und %s, was bedeutet, dass das Datenmodell "
-"unstimmig ist"
+"Datentypen, zumindest %s und %s, was bedeutet, dass das Datenmodell unstimmig "
+"ist"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:506
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:298
@@ -3618,8 +3608,7 @@ msgstr "Tausender-Trenner verwenden"
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:6
 msgid "Use thousands separator as specified by current locale"
 msgstr ""
-"Tausender-Trenner verwenden, wie in der aktuellen Spracheinstellung "
-"festgelegt"
+"Tausender-Trenner verwenden, wie in der aktuellen Spracheinstellung festgelegt"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:1
 msgid "Display only one line, or a complete text editor"
@@ -4111,8 +4100,8 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-basic-form.c:2350
 msgid ""
-"size group was not taken into account using "
-"gdaui_basic_form_add_to_size_group()"
+"size group was not taken into account using gdaui_basic_form_add_to_size_group"
+"()"
 msgstr ""
 "Die Gruppengröße wurde bei Verwendung von gdaui_basic_form_add_to_size_group"
 "() nicht beachtet"
@@ -4178,8 +4167,7 @@ msgstr "Filter leeren"
 
 #: ../libgda-ui/gdaui-init.c:70
 msgid "Attempt to initialize an already initialized library"
-msgstr ""
-"Versuch der Neuinitialisierung einer bereits initialisierten Bibliothek"
+msgstr "Versuch der Neuinitialisierung einer bereits initialisierten Bibliothek"
 
 #: ../libgda-ui/gdaui-init.c:476
 msgid "Could not open plugins directory, no plugin loaded."
@@ -5416,16 +5404,14 @@ msgstr "libdb_sql-5 kann nicht gefunden werden."
 msgid "Provider for BDB SQL databases"
 msgstr "Treiber für BDB-SQL-Datenbanken"
 
-#: ../providers/jdbc/GdaInputStream.c:48
-#: ../providers/jdbc/GdaInputStream.c:122 ../providers/jdbc/GdaJValue.c:207
-#: ../providers/jdbc/GdaJValue.c:250 ../providers/jdbc/GdaJValue.c:298
-#: ../providers/jdbc/GdaJValue.c:345 ../providers/jdbc/GdaJValue.c:388
-#: ../providers/jdbc/GdaJValue.c:515
+#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
+#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:345
+#: ../providers/jdbc/GdaJValue.c:388 ../providers/jdbc/GdaJValue.c:515
 msgid "Invalid argument: NULL"
 msgstr "Ungültiges Argument: NULL"
 
-#: ../providers/jdbc/GdaInputStream.c:68
-#: ../providers/jdbc/GdaInputStream.c:141
+#: ../providers/jdbc/GdaInputStream.c:68 ../providers/jdbc/GdaInputStream.c:141
 msgid "Can't read BLOB"
 msgstr "BLOB kann nicht gelesen werden"
 
@@ -5458,8 +5444,7 @@ msgstr "Das Erstellen der virtuellen JAVA-Maschine ist gescheitert: %s"
 
 #: ../providers/jdbc/libmain.c:483
 msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
-msgstr ""
-"JVM-Laufzeitumgebung (libjvm.so) und JDBC-Treiber sind nicht verfügbar."
+msgstr "JVM-Laufzeitumgebung (libjvm.so) und JDBC-Treiber sind nicht verfügbar."
 
 #: ../providers/ldap/gda-ldap-provider.c:267
 msgid "The connection string must contain the DB_NAME value"
@@ -5503,8 +5488,7 @@ msgstr "Benutzername"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base distinguished name, starting point for the searches"
-msgstr ""
-"Eindeutiger Name der obersten Ebene, Ausgangspunkt für die Suchvorgänge"
+msgstr "Eindeutiger Name der obersten Ebene, Ausgangspunkt für die Suchvorgänge"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
 msgid "Base name"
@@ -5585,8 +5569,8 @@ msgstr ""
 #, c-format
 msgid ""
 "The connection string format has changed: replace FILENAME with DB_DIR (the "
-"path to the database file) and DB_NAME (the database file without the '%s' "
-"at the end)."
+"path to the database file) and DB_NAME (the database file without the '%s' at "
+"the end)."
 msgstr ""
 "Das Format der Verbindungszeichenkette wurde geändert: Ersetzen Sie FILENAME "
 "durch DB_DIR (der Pfad zur Datenbankdatei) und DB_NAME (Datenbankdatei ohne "
@@ -5650,8 +5634,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"Client-Zeichensatz kann nicht auf UTF-8 gesetzt werden. %s wird verwendet. "
-"Es könnte Probleme mit Nicht-UTF-8-Zeichen geben."
+"Client-Zeichensatz kann nicht auf UTF-8 gesetzt werden. %s wird verwendet. Es "
+"könnte Probleme mit Nicht-UTF-8-Zeichen geben."
 
 #: ../providers/mysql/gda-mysql-provider.c:600
 msgid "The connection string must contain the DB_NAME values"
@@ -5884,8 +5868,7 @@ msgstr "EUC-KR Koreanisch"
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
 msgid "Full path of the UNIX socket to use when connecting locally"
 msgstr ""
-"Voller Pfad des UNIX-Socket, der für die lokale Verbindung genutzt werden "
-"soll"
+"Voller Pfad des UNIX-Socket, der für die lokale Verbindung genutzt werden soll"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
@@ -6564,10 +6547,9 @@ msgid "Number of rows chunks read since the object creation"
 msgstr "Anzahl der gelesenen Zeilenabschnitte seit Erstellung des Objekts"
 
 #: ../providers/postgres/gda-postgres-recordset.c:746
-#, fuzzy, c-format
-#| msgid "SQlite binary representation"
+#, c-format
 msgid "Invalid binary string representation '%s ...'"
-msgstr "SQlite-Binärdarstellung"
+msgstr "Ungültige SQlite-Binärdarstellung »%s …«"
 
 #: ../providers/postgres/libmain.c:82
 msgid "Provider for PostgreSQL databases"
@@ -6763,8 +6745,7 @@ msgid "The name of the database user who will own the new database"
 msgstr "Name des Datenbankbenutzers, dem die neue Datenbank gehören soll"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:69
-msgid ""
-"The name of the tablespace that will be associated with the new database"
+msgid "The name of the tablespace that will be associated with the new database"
 msgstr "Der Name des Tabellenraums, der der neuen Datenbank zugeordnet wird"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:70
@@ -6883,8 +6864,7 @@ msgstr "Bestehende Rolle"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:32
 msgid ""
-"Existing roles to which the new role will be immediately added as a new "
-"member"
+"Existing roles to which the new role will be immediately added as a new member"
 msgstr "Bestehende Rollen, zu denen die neue Funktion sofort hinzugefügt wird"
 
 #.
@@ -6919,8 +6899,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:44
 msgid ""
 "Lists one or more existing roles which are automatically added as members of "
-"the new role, giving them the right to grant membership in this role to "
-"others"
+"the new role, giving them the right to grant membership in this role to others"
 msgstr ""
 "Listet eine oder mehrere bestehende Rollen auf, die automatisch Mitglied der "
 "neuen Rolle werden und die Befugnisse haben, andere in die Mitgliedschaft "
@@ -7220,8 +7199,7 @@ msgstr "Es wird Mysql mindestens in Version 5.0 benötigt"
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:174
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:215
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
-#: ../providers/web/gda-web-recordset.c:311
-#: ../providers/web/gda-web-meta.c:105
+#: ../providers/web/gda-web-recordset.c:311 ../providers/web/gda-web-meta.c:105
 msgid "Can't import data from web server"
 msgstr "Daten können nicht vom Server importiert werden"
 
@@ -7344,8 +7322,7 @@ msgid "The name of the web server which proxies connections"
 msgstr "Name des Webservers, der als Proxy für Verbindungen dienen soll"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:8
-msgid ""
-"The path of the script to use if service is not at the web server's root"
+msgid "The path of the script to use if service is not at the web server's root"
 msgstr ""
 "Der Pfad zum zu verwendenden Skript, falls sich der Dienst nicht im "
 "Basisordner des Webservers befindet"
@@ -7512,8 +7489,8 @@ msgstr "Datenquelle"
 
 #: ../tools/browser/browser-connection.c:1258
 msgid ""
-"Execution reported an undefined error, please report error to http://"
-"bugzilla.gnome.org/ for the \"libgda\" product"
+"Execution reported an undefined error, please report error to http://bugzilla."
+"gnome.org/ for the \"libgda\" product"
 msgstr ""
 "Ausführung lieferte einen nicht definierten Fehler, bitte Fehlerbericht an "
 "http://bugzilla.gnome.org/ für das Modul »libgda« melden"
@@ -7531,8 +7508,8 @@ msgstr "Verbindung noch nicht geöffnet"
 #: ../tools/browser/browser-connection.c:1661
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
-"Beschreibung zum Speichern der Tabelleneinstellungen kann nicht "
-"initialisiert werden"
+"Beschreibung zum Speichern der Tabelleneinstellungen kann nicht initialisiert "
+"werden"
 
 #: ../tools/browser/browser-connection.c:1707
 #: ../tools/browser/browser-connection.c:1713
@@ -7684,8 +7661,7 @@ msgstr "Gekoppelte Verbindung wird verwendet"
 
 #: ../tools/browser/browser-virtual-connection.c:114
 msgid "Virtual connection using this connection is busy"
-msgstr ""
-"Die virtuelle Verbindung, welche diese Verbindung verwendet, ist belegt"
+msgstr "Die virtuelle Verbindung, welche diese Verbindung verwendet, ist belegt"
 
 #: ../tools/browser/browser-window.c:275
 msgid "_Fullscreen"
@@ -8027,17 +8003,17 @@ msgid ""
 "Can't get the list of files used to store information about each connection: "
 "%s\n"
 msgstr ""
-"Die Liste der Dateien zur Speicherung von Verbindungsinformationen kann "
-"nicht gelesen werden: %s\n"
+"Die Liste der Dateien zur Speicherung von Verbindungsinformationen kann nicht "
+"gelesen werden: %s\n"
 
 #: ../tools/browser/main.c:185 ../tools/gda-sql.c:258
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: %"
-"s\n"
+"Error while purging files used to store information about each connection: "
+"%s\n"
 msgstr ""
-"Fehler beim Löschen der Dateien zur Speicherung von "
-"Verbindungsinformationen: %s\n"
+"Fehler beim Löschen der Dateien zur Speicherung von Verbindungsinformationen: "
+"%s\n"
 
 #: ../tools/browser/mgr-favorites.c:250
 msgid "Multiple statements"
@@ -10156,8 +10132,8 @@ msgstr "Kein Passwort für »%s«"
 #: ../tools/gda-sql.c:1595
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the '%"
-"s' file\n"
+"All the information related to the '%s' connection will be stored in the '%s' "
+"file\n"
 msgstr ""
 "Alle der Verbindung »%s« zugeordneten Informationen werden in der Datei »%s« "
 "gespeichert\n"
@@ -10216,8 +10192,7 @@ msgstr "%s [METADATENTYP]"
 
 #: ../tools/gda-sql.c:2168
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:\"tables\")"
 msgstr ""
 "Lesen der Metadaten der Datenbank erzwingen (oder Teil der Metadaten, "
 "ex:»tables«)"
@@ -10229,8 +10204,7 @@ msgstr "%s <FS-Name> <TabelleA>(<SpalteA>,...) <TabelleB>(<SpalteB>,...)"
 
 #: ../tools/gda-sql.c:2180
 msgid ""
-"Declare a new foreign key (not actually in database): tableA references "
-"tableB"
+"Declare a new foreign key (not actually in database): tableA references tableB"
 msgstr ""
 "Einen neuen Fremdschlüssel deklarieren (derzeit nicht in der Datenbank): "
 "tableA referenziert tableB"
@@ -10299,8 +10273,8 @@ msgstr "%s [Port [Legitimierungs-Token]]"
 #: ../tools/gda-sql.c:2265
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
 msgstr ""
-"Eingebetteten HTTP-Server starten oder stoppen (auf angegebenem Port oder "
-"auf Vorgabeport 12345)"
+"Eingebetteten HTTP-Server starten oder stoppen (auf angegebenem Port oder auf "
+"Vorgabeport 12345)"
 
 #: ../tools/gda-sql.c:2278
 #, c-format
@@ -10327,8 +10301,7 @@ msgstr "%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"
 
 #: ../tools/gda-sql.c:2303
 msgid "Bind several connections together into the CNC_NAME virtual connection"
-msgstr ""
-"Verschiedene Verbindungen in der virtuellen Verbindung CNC_NAME koppeln"
+msgstr "Verschiedene Verbindungen in der virtuellen Verbindung CNC_NAME koppeln"
 
 #: ../tools/gda-sql.c:2313 ../tools/gda-sql.c:2325 ../tools/gda-sql.c:2337
 #: ../tools/gda-sql.c:2349
@@ -10537,8 +10510,8 @@ msgstr "%s SELECT ZEILENFELDER SPALTENFELDER [DATENFELDER]"
 
 #: ../tools/gda-sql.c:2628
 msgid ""
-"Performs a statistical analysis on the data from SELECT, using ROW_FIELDS "
-"and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data"
+"Performs a statistical analysis on the data from SELECT, using ROW_FIELDS and "
+"COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data"
 msgstr ""
 "Führt eine statistische Analyse der Daten mittels SELECT aus, unter "
 "Verwendung der Kriterien ZEILENFELDER und SPALTENFELDER sowie optional "
