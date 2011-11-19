@@ -643,7 +643,7 @@ gda_capi_provider_begin_transaction (GdaServerProvider *provider, GdaConnection 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -664,7 +664,7 @@ gda_capi_provider_commit_transaction (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -685,7 +685,7 @@ gda_capi_provider_rollback_transaction (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -706,7 +706,7 @@ gda_capi_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -727,7 +727,7 @@ gda_capi_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -748,7 +748,7 @@ gda_capi_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1044,7 +1044,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
                 *last_inserted_row = NULL;
 
 	/* Get private data */
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1335,7 +1335,7 @@ gda_capi_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1357,7 +1357,7 @@ gda_capi_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1378,7 +1378,7 @@ gda_capi_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1400,7 +1400,7 @@ gda_capi_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1421,7 +1421,7 @@ gda_capi_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1443,7 +1443,7 @@ gda_capi_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return NULL;
 

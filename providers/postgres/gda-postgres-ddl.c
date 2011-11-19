@@ -778,7 +778,7 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	}
 	if (cdata && (cdata->reuseable->version_float < 8.1))
 		use_role = FALSE;
@@ -983,7 +983,7 @@ gda_postgres_render_DROP_USER (GdaServerProvider *provider, GdaConnection *cnc,
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	}
 	if (cdata && (cdata->reuseable->version_float < 8.1))
 		use_role = FALSE;

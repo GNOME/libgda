@@ -469,7 +469,7 @@ _gda_sqlite_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc
 	gint i, nrows;
 
 	/* get connection's private data */
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -524,7 +524,7 @@ _gda_sqlite_meta_udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 	GHashTable *added_hash;
 
 	/* get connection's private data */
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1118,7 +1118,7 @@ _gda_sqlite_meta__columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 	gint i, nrows;
 	SqliteConnectionData *cdata;
 	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1200,7 +1200,7 @@ _gda_sqlite_meta_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *
 	GdaDataModel *mod_model = NULL;
 	SqliteConnectionData *cdata;
 	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1470,7 +1470,7 @@ _gda_sqlite_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaCon
 	gint i, nrows;
 	SqliteConnectionData *cdata;
 	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1552,7 +1552,7 @@ _gda_sqlite_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConn
 	GdaDataModel *mod_model = NULL;
 	SqliteConnectionData *cdata;
 	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1662,7 +1662,7 @@ _gda_sqlite_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaCon
 	SqliteConnectionData *cdata;
 	gint fk_enforced = -1;
 	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1762,7 +1762,7 @@ _gda_sqlite_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaConn
 	GdaDataModel *mod_model = NULL;
 	SqliteConnectionData *cdata;
 	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -2007,7 +2007,7 @@ _gda_sqlite_meta__key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 	gint i, nrows;
 	SqliteConnectionData *cdata;
 	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -2123,7 +2123,7 @@ _gda_sqlite_meta_key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 	GdaDataModel *mod_model = NULL;
 	SqliteConnectionData *cdata;
 	
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -2244,7 +2244,7 @@ _gda_sqlite_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 	GdaDataModel *tmpmodel, *mod_model;
 	gint i, nrows;
 
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 

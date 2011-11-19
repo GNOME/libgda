@@ -149,7 +149,7 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 

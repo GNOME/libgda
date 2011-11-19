@@ -29,7 +29,7 @@ _gda_firebird_make_error (GdaConnection *cnc, const gint statement_type)
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 

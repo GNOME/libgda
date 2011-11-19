@@ -616,7 +616,7 @@ _gda_oracle_set_value (GValue *value,
 		gint result;
 
 		/* REM: we need to make a "copy" of the lob locator to give to the GdaOracleblobOp object */
-		cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 		if (!cdata) {
 			gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 			gda_value_set_null (value);

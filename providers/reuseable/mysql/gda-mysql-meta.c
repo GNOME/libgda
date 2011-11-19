@@ -292,7 +292,7 @@ _gda_mysql_meta__info (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
         gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -365,7 +365,7 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
         GdaDataModel *model;
         gboolean retval = TRUE;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -604,7 +604,7 @@ _gda_mysql_meta__character_sets (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -640,7 +640,7 @@ _gda_mysql_meta_character_sets (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -679,7 +679,7 @@ _gda_mysql_meta__schemata (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -713,7 +713,7 @@ _gda_mysql_meta_schemata (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -770,7 +770,7 @@ _gda_mysql_meta__tables_views (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -833,7 +833,7 @@ _gda_mysql_meta_tables_views (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1069,7 +1069,7 @@ _gda_mysql_meta__columns (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval = TRUE;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1135,7 +1135,7 @@ _gda_mysql_meta_columns (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1206,7 +1206,7 @@ _gda_mysql_meta__view_cols (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1248,7 +1248,7 @@ _gda_mysql_meta_view_cols (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1285,7 +1285,7 @@ _gda_mysql_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1321,7 +1321,7 @@ _gda_mysql_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1381,7 +1381,7 @@ _gda_mysql_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider  *prov,
 {
 	GdaMysqlReuseable *rdata;
 
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	g_return_val_if_fail (rdata, FALSE);
 
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1425,7 +1425,7 @@ _gda_mysql_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider  *prov,
 {
 	GdaMysqlReuseable *rdata;
 
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	g_return_val_if_fail (rdata, FALSE);
 
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1478,7 +1478,7 @@ _gda_mysql_meta__key_columns (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1515,7 +1515,7 @@ _gda_mysql_meta_key_columns (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1592,7 +1592,7 @@ _gda_mysql_meta__triggers (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1635,7 +1635,7 @@ _gda_mysql_meta_triggers (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1679,7 +1679,7 @@ _gda_mysql_meta__routines (G_GNUC_UNUSED GdaServerProvider  *prov,
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1715,7 +1715,7 @@ _gda_mysql_meta_routines (G_GNUC_UNUSED GdaServerProvider  *prov,
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1814,7 +1814,7 @@ _gda_mysql_meta__indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	/* Check correct mysql server version. */
@@ -1854,7 +1854,7 @@ _gda_mysql_meta_indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))
@@ -1905,7 +1905,7 @@ _gda_mysql_meta__index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	GdaDataModel *model;
 	gboolean retval;
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	/* Check correct mysql server version. */
@@ -1945,7 +1945,7 @@ _gda_mysql_meta_index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 	gboolean retval;
 	/* Check correct mysql server version. */
 	GdaMysqlReuseable *rdata;
-	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_MYSQL_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_long == 0) && ! _gda_mysql_compute_version (cnc, rdata, error))

@@ -718,7 +718,7 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	}
 
 	if (type == GDA_SERVER_OPERATION_CREATE_USER) {
@@ -986,7 +986,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1070,7 +1070,7 @@ gda_postgres_provider_commit_transaction (GdaServerProvider *provider, GdaConnec
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1094,7 +1094,7 @@ gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1118,7 +1118,7 @@ gda_postgres_provider_add_savepoint (GdaServerProvider *provider, GdaConnection 
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1168,7 +1168,7 @@ gda_postgres_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnec
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1218,7 +1218,7 @@ gda_postgres_provider_delete_savepoint (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1494,7 +1494,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 		return TRUE;
 
 	/* get private connection data */
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -1820,7 +1820,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	if (last_inserted_row)
 		*last_inserted_row = NULL;
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return NULL;
 

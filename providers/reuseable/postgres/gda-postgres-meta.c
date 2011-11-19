@@ -321,7 +321,7 @@ _gda_postgres_meta__info (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -352,7 +352,7 @@ _gda_postgres_meta__btypes (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 	gint i, nrows;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -411,7 +411,7 @@ _gda_postgres_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -440,7 +440,7 @@ _gda_postgres_meta_udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -472,7 +472,7 @@ _gda_postgres_meta__udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -502,7 +502,7 @@ _gda_postgres_meta_udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -535,7 +535,7 @@ _gda_postgres_meta__enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 {
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float >= 8.3)
@@ -552,7 +552,7 @@ _gda_postgres_meta_enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *
 {
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float >= 8.3)
@@ -569,7 +569,7 @@ _gda_postgres_meta__domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -598,7 +598,7 @@ _gda_postgres_meta_domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -631,7 +631,7 @@ _gda_postgres_meta__constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaC
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -661,7 +661,7 @@ _gda_postgres_meta_constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaCo
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -697,7 +697,7 @@ _gda_postgres_meta__el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -731,7 +731,7 @@ _gda_postgres_meta_el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -838,7 +838,7 @@ _gda_postgres_meta__schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -867,7 +867,7 @@ _gda_postgres_meta_schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -916,7 +916,7 @@ _gda_postgres_meta__tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConn
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if ((rdata->version_float == 0) && ! _gda_postgres_compute_version (cnc, rdata, error))
@@ -974,7 +974,7 @@ _gda_postgres_meta_tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1053,7 +1053,7 @@ gboolean _gda_postgres_meta__columns (G_GNUC_UNUSED GdaServerProvider *prov, Gda
 	gint i, nrows;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1149,7 +1149,7 @@ _gda_postgres_meta_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 	GdaPostgresReuseable *rdata;
 
 	/* check correct postgres server version */
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1255,7 +1255,7 @@ _gda_postgres_meta__view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1289,7 +1289,7 @@ _gda_postgres_meta_view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1324,7 +1324,7 @@ _gda_postgres_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaC
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1354,7 +1354,7 @@ _gda_postgres_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaCo
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1415,7 +1415,7 @@ _gda_postgres_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaC
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1445,7 +1445,7 @@ _gda_postgres_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaCo
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1489,7 +1489,7 @@ _gda_postgres_meta__key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1519,7 +1519,7 @@ _gda_postgres_meta_key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1563,7 +1563,7 @@ _gda_postgres_meta__check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaCon
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1593,7 +1593,7 @@ _gda_postgres_meta_check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConn
 	gboolean retval = TRUE;
 	GdaPostgresReuseable *rdata;
 
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 
@@ -1638,7 +1638,7 @@ _gda_postgres_meta__triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1673,7 +1673,7 @@ _gda_postgres_meta_triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1713,7 +1713,7 @@ _gda_postgres_meta__routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1748,7 +1748,7 @@ _gda_postgres_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1797,7 +1797,7 @@ _gda_postgres_meta__routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1862,7 +1862,7 @@ _gda_postgres_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1931,7 +1931,7 @@ _gda_postgres_meta__routine_par (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -1966,7 +1966,7 @@ _gda_postgres_meta_routine_par (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -2007,7 +2007,7 @@ _gda_postgres_meta__indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -2051,7 +2051,7 @@ _gda_postgres_meta_indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -2193,7 +2193,7 @@ _gda_postgres_meta__index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {
@@ -2234,7 +2234,7 @@ _gda_postgres_meta_index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 
 	/* check correct postgres server version */
 	GdaPostgresReuseable *rdata;
-	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data (cnc));
+	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float < 8.2) {

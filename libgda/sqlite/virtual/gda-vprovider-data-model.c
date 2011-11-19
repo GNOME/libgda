@@ -333,7 +333,8 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
 	if (!scnc) {
 		gda_connection_close_no_warning (cnc);
-
+		gda_connection_add_event_string (cnc,
+						 _("Connection is closed"));
 		return FALSE;
 	}
 

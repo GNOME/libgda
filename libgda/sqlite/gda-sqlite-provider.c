@@ -2465,7 +2465,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	gint nb_rows_added;
 
 	/* get SQLite's private data */
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return NULL;
 
@@ -2883,7 +2883,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		*last_inserted_row = NULL;
 
 	/* get SQLite's private data */
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return NULL;
 
