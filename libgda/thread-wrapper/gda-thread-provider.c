@@ -148,8 +148,6 @@ static gboolean gda_thread_provider_xa_rollback (GdaServerProvider *provider, Gd
 static GList   *gda_thread_provider_xa_recover  (GdaServerProvider *provider, GdaConnection *cnc, 
 						   GError **error);
 
-static void gda_thread_free_cnc_data (ThreadConnectionData *cdata);
-
 /*
  * GdaThreadProvider class implementation
  */
@@ -350,18 +348,18 @@ typedef struct {
 	GdaConnectionOptions options;
 
 	GdaServerProvider *out_cnc_provider;
-} OpenConnectionData;
+} NewConnectionData;
 
 static GdaConnection *
-sub_thread_open_connection (OpenConnectionData *data, GError **error)
+sub_thread_new_connection (NewConnectionData *data, GError **error)
 {
 	/* WARNING: function executed in sub thread! */
 	GdaConnection *cnc;
 	if (data->dsn)
-		cnc = gda_connection_open_from_dsn (data->dsn, data->auth_string, data->options, error);
+		cnc = gda_connection_new_from_dsn (data->dsn, data->auth_string, data->options, error);
 	else
-		cnc = gda_connection_open_from_string (data->prov_name, data->cnc_string, 
-						       data->auth_string, data->options, error);
+		cnc = gda_connection_new_from_string (data->prov_name, data->cnc_string, 
+						      data->auth_string, data->options, error);
 	if (cnc)
 		data->out_cnc_provider = gda_connection_get_provider (cnc);
 #ifdef GDA_DEBUG_NO
@@ -371,25 +369,11 @@ sub_thread_open_connection (OpenConnectionData *data, GError **error)
 }
 
 static void setup_signals (GdaConnection *cnc, ThreadConnectionData *cdata);
-
-static gboolean
-gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
-				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
-				     G_GNUC_UNUSED gpointer cb_data)
+static ThreadConnectionData *
+create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuarkList *params)
 {
 	GdaThreadWrapper *wr = NULL;
 	gboolean wr_created = FALSE;
-
-	g_return_val_if_fail (GDA_IS_THREAD_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, 
-						 _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
 
 	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 	g_static_mutex_lock (&mutex);
@@ -397,14 +381,14 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	/* test if connection has to be opened using a DSN or a connection string */
 	gchar *dsn, *auth_string, *cnc_string;
 	GdaConnectionOptions options;
-	OpenConnectionData *data = NULL;
+	NewConnectionData *data = NULL;
 	g_object_get (cnc, "dsn", &dsn, 
-		      "auth_string", &auth_string,
+		      "auth-string", &auth_string,
 		      "cnc-string", &cnc_string, 
 		      "options", &options,
 		      NULL);
 	if (dsn) {
-		data = g_new0 (OpenConnectionData, 1);
+		data = g_new0 (NewConnectionData, 1);
 		data->dsn = dsn;
 		
 		GdaDsnInfo *dsninfo;
@@ -414,8 +398,15 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 						  dsninfo->provider);
 	}
 	else if (cnc_string) {
-		data = g_new0 (OpenConnectionData, 1);
-		data->prov_name = gda_quark_list_find (params, "PROVIDER_NAME");
+		data = g_new0 (NewConnectionData, 1);
+		if (params)
+			data->prov_name = gda_quark_list_find (params, "PROVIDER_NAME");
+		else {
+			params = gda_quark_list_new_from_string (cnc_string);
+			data->prov_name = gda_quark_list_find (params, "PROVIDER_NAME");
+			gda_quark_list_free (params);
+			params = NULL;
+		}
 		data->cnc_string = cnc_string;
 		wr = g_hash_table_lookup (GDA_THREAD_PROVIDER (provider)->priv->prov_wrappers,
 					  data->prov_name);
@@ -429,7 +420,7 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			gda_connection_add_event_string (cnc, "%s", _("Multi threading is not supported or enabled"));
 			g_free (data);
 			g_static_mutex_unlock (&mutex);
-			return FALSE;
+			return NULL;
 		}
 	}
 	else {
@@ -446,7 +437,7 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	data->auth_string = auth_string;
 	data->options = options & (~(GDA_CONNECTION_OPTIONS_THREAD_ISOLATED | GDA_CONNECTION_OPTIONS_THREAD_SAFE));
 
-	jid = gda_thread_wrapper_execute (wr, (GdaThreadWrapperFunc) sub_thread_open_connection, data, NULL, NULL);
+	jid = gda_thread_wrapper_execute (wr, (GdaThreadWrapperFunc) sub_thread_new_connection, data, NULL, NULL);
 	sub_cnc = gda_thread_wrapper_fetch_result (wr, TRUE, jid, &error);
 	g_free (dsn);
 	g_free (cnc_string);
@@ -459,7 +450,7 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		g_free (data);
 		if (wr_created)
 			g_static_mutex_unlock (&mutex);
-		return FALSE;
+		return NULL;
 	}
 	
 	ThreadConnectionData *cdata;
@@ -470,7 +461,8 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	cdata->wrapper = wr;
 	cdata->handlers_ids = g_array_sized_new (FALSE, FALSE, sizeof (gulong), 2);
 	g_free (data);
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_thread_free_cnc_data);
+	_gda_thread_connection_set_data (cnc, cdata);
+	gda_connection_internal_set_provider_data (cnc, cdata, NULL);
 	setup_signals (cnc, cdata);
 
 	if (wr_created) {
@@ -483,6 +475,59 @@ gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		g_static_mutex_unlock (&mutex);
 	}
 
+	return cdata;	
+}
+
+static gpointer
+sub_thread_open_connection (GdaConnection *sub_cnc, GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	gboolean retval;
+	retval = gda_connection_open (sub_cnc, error);
+
+#ifdef GDA_DEBUG_NO
+	g_print ("/%s() => %d\n", __FUNCTION__, retval);
+#endif
+	return retval ? (gpointer) 0x01 : NULL;
+}
+
+static gboolean
+gda_thread_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
+				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
+				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
+				     G_GNUC_UNUSED gpointer cb_data)
+{
+	g_return_val_if_fail (GDA_IS_THREAD_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	/* If asynchronous connection opening is not supported, then exit now */
+	if (async_cb) {
+		gda_connection_add_event_string (cnc, 
+						 _("Provider does not support asynchronous connection open"));
+                return FALSE;
+	}
+
+	ThreadConnectionData *cdata;
+	cdata =_gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, params);
+	if (!cdata)
+		return FALSE;
+
+	gpointer result;
+	GError *error = NULL;
+	guint jid;
+	jid = gda_thread_wrapper_execute (cdata->wrapper,
+					  (GdaThreadWrapperFunc) sub_thread_open_connection, cdata->sub_connection,
+					  NULL, NULL);
+	result = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, &error);
+	if (!result) {
+		gda_connection_add_event_string (cnc, "%s", error && error->message ? error->message : _("No detail"));
+		if (error)
+			g_error_free (error);
+		return FALSE;
+	}
+	gda_connection_internal_set_provider_data (cnc, cdata, NULL);
 	return TRUE;
 }
 
@@ -522,7 +567,7 @@ _gda_thread_provider_handle_virtual_connection (GdaThreadProvider *provider, Gda
 	cdata->cnc_provider = g_object_ref (sub_prov);
 	cdata->wrapper = wr;
 	cdata->handlers_ids = g_array_sized_new (FALSE, FALSE, sizeof (gulong), 2);
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_thread_free_cnc_data);
+	gda_connection_internal_set_provider_data (cnc, cdata, NULL);
 	setup_signals (cnc, cdata);
 
 	return cnc;
@@ -557,7 +602,7 @@ sub_cnc_closed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper, G_GNUC_UNUSED GdaCon
 		   GdaConnection *wrapper_cnc)
 {
 	ThreadConnectionData *cdata;
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (wrapper_cnc);
+	cdata = _gda_thread_connection_get_data (wrapper_cnc);
 	if (!cdata) 
 		return;
 	cdata->sub_connection_has_closed = TRUE;
@@ -621,7 +666,9 @@ gda_thread_provider_close_connection (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = _gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, NULL);
 	if (!cdata) 
 		return FALSE;
 	
@@ -664,7 +711,9 @@ gda_thread_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = _gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	
@@ -706,7 +755,9 @@ gda_thread_provider_get_database (GdaServerProvider *provider, GdaConnection *cn
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = _gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	
@@ -761,7 +812,9 @@ gda_thread_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = _gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, NULL);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1328,7 +1381,9 @@ gda_thread_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = _gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, NULL);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1377,7 +1432,9 @@ gda_thread_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = _gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	
@@ -1424,8 +1481,10 @@ gda_thread_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
-	if (!cdata) 
+	cdata = _gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, NULL);
+	if (!cdata)
 		return NULL;
 	
 	wdata.prov = cdata->cnc_provider;
@@ -2086,7 +2145,9 @@ gda_thread_provider_identifier_quote (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = _gda_thread_connection_get_data (cnc);
+	if (!cdata)
+		cdata = create_connection_data (provider, cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	
@@ -2100,50 +2161,4 @@ gda_thread_provider_identifier_quote (GdaServerProvider *provider, GdaConnection
 					  (GdaThreadWrapperFunc) sub_thread_identifier_quote, &wdata, NULL, NULL);
 	res = gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
 	return res;
-}
-
-static gpointer
-sub_thread_unref_connection (GdaConnection *cnc, G_GNUC_UNUSED GError **error)
-{
-	/* WARNING: function executed in sub thread! */
-	g_object_unref (cnc);
-#ifdef GDA_DEBUG_NO
-	g_print ("/%s()\n", __FUNCTION__);
-#endif
-	return NULL;
-}
-
-/*
- * Free connection's specific data
- */
-static void
-gda_thread_free_cnc_data (ThreadConnectionData *cdata)
-{
-	if (!cdata)
-		return;
-
-	/* disconnect signals handlers */
-	gsize i;
-	for (i = 0; i < cdata->handlers_ids->len; i++) {
-		gulong hid = g_array_index (cdata->handlers_ids, gulong, i);
-		gda_thread_wrapper_disconnect (cdata->wrapper, hid);
-	}
-
-	/* unref cdata->sub_connection in sub thread */
-	guint jid;
-	jid = gda_thread_wrapper_execute (cdata->wrapper, 
-					  (GdaThreadWrapperFunc) sub_thread_unref_connection,
-					  cdata->sub_connection, NULL, NULL);
-	gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
-	g_object_unref (cdata->wrapper);
-
-	/* free async data */
-	if (cdata->async_tasks) {
-		g_slist_foreach (cdata->async_tasks, (GFunc) _ThreadConnectionAsyncTask_free, NULL);
-		g_slist_free (cdata->async_tasks);
-	}
-
-	g_object_unref (cdata->cnc_provider);
-
-	g_free (cdata);
 }

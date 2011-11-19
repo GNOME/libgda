@@ -117,6 +117,8 @@ struct _GdaConnectionPrivate {
 	GArray               *trans_meta_context; /* Array of GdaMetaContext pointers */
 
 	gboolean              exec_times;
+
+	ThreadConnectionData *th_data; /* used if connection is used by the GdaThreadProvider, NULL otherwise */
 };
 
 /* represents an asynchronous execution task */
@@ -497,6 +499,11 @@ gda_connection_dispose (GObject *object)
 	cnc->priv->unique_possible_thread = NULL;
 	gda_connection_close_no_warning (cnc);
 
+	if (cnc->priv->th_data) {
+		_gda_thread_connection_data_free (cnc->priv->th_data);
+		cnc->priv->th_data = NULL;
+	}
+
 	/* get rid of prepared statements to avoid problems */
 	if (cnc->priv->prepared_stmts) {
 		g_hash_table_foreach (cnc->priv->prepared_stmts, 
@@ -663,6 +670,11 @@ gda_connection_set_property (GObject *object,
 
         cnc = GDA_CONNECTION (object);
         if (cnc->priv) {
+		if (cnc->priv->th_data && ! gda_connection_internal_get_provider_data (cnc)) {
+			_gda_thread_connection_data_free (cnc->priv->th_data);
+			cnc->priv->th_data = NULL;
+		}
+
                 switch (param_id) {
 		case PROP_THREAD_OWNER:
 			g_mutex_lock (cnc->priv->object_mutex);
@@ -685,6 +697,7 @@ gda_connection_set_property (GObject *object,
 			GdaDsnInfo *dsn;
 
 			gda_connection_lock ((GdaLockable*) cnc);
+			_gda_thread_connection_set_data (cnc, NULL);
 			if (cnc->priv->provider_data) {
 				g_warning (_("Could not set the '%s' property when the connection is opened"),
 					   pspec->name);
@@ -713,6 +726,7 @@ gda_connection_set_property (GObject *object,
 		}
                 case PROP_CNC_STRING:
 			gda_connection_lock ((GdaLockable*) cnc);
+			_gda_thread_connection_set_data (cnc, NULL);
 			if (cnc->priv->provider_data) {
 				g_warning (_("Could not set the '%s' property when the connection is opened"),
 					   pspec->name);
@@ -727,6 +741,7 @@ gda_connection_set_property (GObject *object,
                         break;
                 case PROP_PROVIDER_OBJ:
 			gda_connection_lock ((GdaLockable*) cnc);
+			_gda_thread_connection_set_data (cnc, NULL);
 			if (cnc->priv->provider_data) {
 				g_warning (_("Could not set the '%s' property when the connection is opened"),
 					   pspec->name);
@@ -742,6 +757,7 @@ gda_connection_set_property (GObject *object,
                         break;
                 case PROP_AUTH_STRING:
 			gda_connection_lock ((GdaLockable*) cnc);
+			_gda_thread_connection_set_data (cnc, NULL);
 			if (cnc->priv->provider_data) {
 				g_warning (_("Could not set the '%s' property when the connection is opened"),
 					   pspec->name);
@@ -761,12 +777,13 @@ gda_connection_set_property (GObject *object,
 			GdaConnectionOptions flags;
 			flags = g_value_get_flags (value);
 			gda_mutex_lock (cnc->priv->mutex);
+			_gda_thread_connection_set_data (cnc, NULL);
 			if (cnc->priv->provider_data &&
 			    ((flags & (~GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE)) !=
 			     (cnc->priv->options & (~GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE)))) {
 				g_warning (_("Can't set the '%s' property once the connection is opened"),
 					   pspec->name);
-				gda_connection_unlock ((GdaLockable*) cnc);
+				gda_mutex_unlock (cnc->priv->mutex);
 				return;
 			}
 			cnc->priv->options = flags;
@@ -1117,8 +1134,8 @@ gda_connection_new_from_dsn (const gchar *dsn, const gchar *auth_string,
 			}
 			else
 				cnc = g_object_new (GDA_TYPE_CONNECTION, 
-						    "provider", prov, 
-						    "dsn", real_dsn, 
+						    "provider", prov,
+						    "dsn", real_dsn,
 						    "auth-string", auth_string ? auth_string : real_auth_string, 
 						    "options", options, NULL);
 		}
@@ -1747,7 +1764,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	if (cnc->priv->provider_data) {
 		if (cnc->priv->provider_data_destroy_func)
 			cnc->priv->provider_data_destroy_func (cnc->priv->provider_data);
-		else
+		else if (cnc->priv->provider_data != cnc->priv->th_data)
 			g_warning ("Provider did not clean its connection data");
 		cnc->priv->provider_data = NULL;
 	}
@@ -6743,4 +6760,66 @@ _gda_connection_compute_table_virtual_name (GdaConnection *cnc, const gchar *tab
 	}
 	g_strfreev (array);
 	return g_string_free (string, FALSE);
+}
+
+/*
+ * Free connection's specific data
+ */
+static gpointer
+sub_thread_unref_connection (GdaConnection *cnc, G_GNUC_UNUSED GError **error)
+{
+	/* WARNING: function executed in sub thread! */
+	g_object_unref (cnc);
+#ifdef GDA_DEBUG_NO
+	g_print ("/%s()\n", __FUNCTION__);
+#endif
+	return NULL;
+}
+
+void
+_gda_thread_connection_data_free (ThreadConnectionData *cdata)
+{
+	if (!cdata)
+		return;
+
+	/* disconnect signals handlers */
+	gsize i;
+	for (i = 0; i < cdata->handlers_ids->len; i++) {
+		gulong hid = g_array_index (cdata->handlers_ids, gulong, i);
+		gda_thread_wrapper_disconnect (cdata->wrapper, hid);
+	}
+
+	/* unref cdata->sub_connection in sub thread */
+	guint jid;
+	jid = gda_thread_wrapper_execute (cdata->wrapper,
+					  (GdaThreadWrapperFunc) sub_thread_unref_connection,
+					  cdata->sub_connection, NULL, NULL);
+	gda_thread_wrapper_fetch_result (cdata->wrapper, TRUE, jid, NULL);
+	g_object_unref (cdata->wrapper);
+
+	/* free async data */
+	if (cdata->async_tasks) {
+		g_slist_foreach (cdata->async_tasks, (GFunc) _ThreadConnectionAsyncTask_free, NULL);
+		g_slist_free (cdata->async_tasks);
+	}
+
+	g_object_unref (cdata->cnc_provider);
+
+	g_free (cdata);
+}
+
+void
+_gda_thread_connection_set_data (GdaConnection *cnc, ThreadConnectionData *cdata)
+{
+	gda_mutex_lock (cnc->priv->mutex);
+	if (cnc->priv->th_data)
+		_gda_thread_connection_data_free (cnc->priv->th_data);
+	cnc->priv->th_data = cdata;
+	gda_mutex_unlock (cnc->priv->mutex);
+}
+
+ThreadConnectionData *
+_gda_thread_connection_get_data (GdaConnection *cnc)
+{
+	return cnc->priv->th_data;
 }

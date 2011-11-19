@@ -71,8 +71,11 @@ typedef struct {
 	/* current async. tasks */
 	GSList *async_tasks; /* list of ThreadConnectionAsyncTask pointers */
 } ThreadConnectionData; /* Per connection private data for */
-void               _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc);
-GdaServerProvider *_gda_connection_get_internal_thread_provider (void);
+void                  _gda_thread_connection_set_data (GdaConnection *cnc, ThreadConnectionData *cdata);
+ThreadConnectionData *_gda_thread_connection_get_data (GdaConnection *cnc);
+void                  _gda_thread_connection_data_free (ThreadConnectionData *cdata);
+void                  _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc);
+GdaServerProvider    *_gda_connection_get_internal_thread_provider (void);
 
 /*
  * Used by virtual connections to keep meta data up to date when a table
