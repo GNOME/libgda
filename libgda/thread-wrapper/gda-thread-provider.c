@@ -399,11 +399,16 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 	}
 	else if (cnc_string) {
 		data = g_new0 (NewConnectionData, 1);
-		if (params)
+		if (params) {
 			data->prov_name = gda_quark_list_find (params, "PROVIDER_NAME");
+			if (data->prov_name)
+				data->prov_name = g_strdup (data->prov_name);
+		}
 		else {
 			params = gda_quark_list_new_from_string (cnc_string);
 			data->prov_name = gda_quark_list_find (params, "PROVIDER_NAME");
+			if (data->prov_name)
+				data->prov_name = g_strdup (data->prov_name);
 			gda_quark_list_free (params);
 			params = NULL;
 		}
@@ -418,6 +423,7 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 		wr = gda_thread_wrapper_new ();
 		if (!wr) {
 			gda_connection_add_event_string (cnc, "%s", _("Multi threading is not supported or enabled"));
+			g_free (data->prov_name);
 			g_free (data);
 			g_static_mutex_unlock (&mutex);
 			return NULL;
@@ -447,6 +453,7 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 		if (error)
 			g_error_free (error);
 		g_object_unref (wr);
+		g_free (data->prov_name);
 		g_free (data);
 		if (wr_created)
 			g_static_mutex_unlock (&mutex);
@@ -460,9 +467,9 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 	cdata->cnc_provider = g_object_ref (data->out_cnc_provider);
 	cdata->wrapper = wr;
 	cdata->handlers_ids = g_array_sized_new (FALSE, FALSE, sizeof (gulong), 2);
+	g_free (data->prov_name);
 	g_free (data);
 	_gda_thread_connection_set_data (cnc, cdata);
-	gda_connection_internal_set_provider_data (cnc, cdata, NULL);
 	setup_signals (cnc, cdata);
 
 	if (wr_created) {
@@ -475,7 +482,7 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 		g_static_mutex_unlock (&mutex);
 	}
 
-	return cdata;	
+	return cdata;
 }
 
 static gpointer
