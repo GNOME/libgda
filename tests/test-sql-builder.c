@@ -617,9 +617,12 @@ build13 (void)
 					    gda_sql_builder_add_expr (b, NULL, G_TYPE_INT, 234), 0);
 	gda_sql_builder_add_field_value_id (b,
 					    gda_sql_builder_add_expr (b, NULL, G_TYPE_BOOLEAN, TRUE), 0);
-	GdaNumeric numval = {"123.4567890", 0, 0, NULL};
+	GdaNumeric *numval;
+	numval = gda_numeric_new ();
+	gda_numeric_set_from_string (numval, "123.4567890");
 	gda_sql_builder_add_field_value_id (b,
-					    gda_sql_builder_add_expr (b, NULL, GDA_TYPE_NUMERIC, &numval), 0);
+					    gda_sql_builder_add_expr (b, NULL, GDA_TYPE_NUMERIC, numval), 0);
+	gda_numeric_free (numval);
 	GDate *date = g_date_new_dmy (27, G_DATE_MAY, 1972);
 	gda_sql_builder_add_field_value_id (b,
 					    gda_sql_builder_add_expr (b, NULL, G_TYPE_DATE, date), 0);
