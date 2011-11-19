@@ -42,7 +42,7 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 
 ADDCANVASLIBS=
 if HAVE_GOOCANVAS
-ADDCANVASLIBS+=$(top_builddir)/tools/browser/canvas/libcanvas.la
+ADDCANVASLIBS+=$(top_builddir)/tools/browser/canvas/libcanvas.la -lm
 endif
 
 ADDLDAPLIBS=
