@@ -120,6 +120,7 @@ libgda-ui/internal/utility.c
 libgda-ui/gdaui-basic-form.c
 libgda-ui/gdaui-cloud.c
 libgda-ui/gdaui-combo.c
+libgda-ui/gdaui-data-selector.c
 libgda-ui/gdaui-data-store.c
 libgda-ui/gdaui-data-proxy.c
 libgda-ui/gdaui-data-proxy-info.c

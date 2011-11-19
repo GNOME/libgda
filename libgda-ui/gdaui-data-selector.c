@@ -199,7 +199,7 @@ gdaui_data_selector_unselect_row (GdauiDataSelector *iface, gint row)
 /**
  * gdaui_data_selector_set_column_visible:
  * @iface: an object which implements the #GdauiDataSelector interface
- * @column: a column number, starting at %0
+ * @column: a column number, starting at %0, or -1 tp apply to all the columns
  * @visible: required visibility of the data in the @column column
  *
  * Shows or hides the data at column @column
@@ -211,8 +211,23 @@ gdaui_data_selector_set_column_visible (GdauiDataSelector *iface, gint column, g
 {
 	g_return_if_fail (GDAUI_IS_DATA_SELECTOR (iface));
 	
-	if (GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_column_visible)
+	if (!GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_column_visible)
+		return;
+
+	if (column >= 0)
 		(GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_column_visible) (iface, column, visible);
+	else if (column == -1) {
+		gint i, ncols;
+		GdaDataModelIter *iter;
+		iter = gdaui_data_selector_get_data_set (iface);
+		if (!iter)
+			return;
+		ncols = g_slist_length (GDA_SET (iter)->holders);
+		for (i = 0; i < ncols; i++)
+			(GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_column_visible) (iface, i, visible);
+	}
+	else
+		g_warning (_("Invalid column number %d"), column);
 }
 
 /**
