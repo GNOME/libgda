@@ -1,3 +1,17 @@
+libgda 5.0.2, 2011-11-20
+
+ - Gobject introspection improvements
+ - Several small corrections and improvements
+ - Better handling of closed connections, allowing some operations on closed connections
+   and better error reporting on them
+ - GdaNumeric sealing
+ - Bugs corrected: #663608
+ - Translations:
+	- de (Mario Blättermann)
+	- cz (Marek Černocký)
+	- es (Daniel Mustieles)
+	- sl (Matej Urbančič)
+
 libgda 5.0.1, 2011-11-06
 
  - Fixed Vala bindings generation
