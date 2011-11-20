@@ -940,6 +940,7 @@
 	gda_value_new_default
 	gda_value_new_from_string
 	gda_value_new_from_xml
+	gda_value_new_null
 	gda_value_new_timestamp_from_timet
 	gda_value_reset_with_type
 	gda_value_set_binary
