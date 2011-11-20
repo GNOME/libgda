@@ -580,15 +580,19 @@ _gda_oracle_set_value (GValue *value,
 		break;
 	case GDA_STYPE_NUMERIC: {
 		GdaNumeric *numeric;
+		gchar *tmp;
 		g_assert (!ora_value->use_callback);
 		
-		numeric = g_new0 (GdaNumeric, 1);
-		numeric->number = g_malloc0 (ora_value->defined_size);
-		memcpy (numeric->number, ora_value->value, ora_value->defined_size);
-		numeric->number [ora_value->rlen] = '\0';
-		g_strchomp (numeric->number);
-		numeric->precision = ora_value->precision;
-		numeric->width = ora_value->scale;
+		tmp = g_malloc0 (ora_value->defined_size);
+		memcpy (tmp, ora_value->value, ora_value->defined_size);
+		tmp [ora_value->rlen] = '\0';
+		g_strchomp (tmp);
+
+		numeric = gda_numeric_new ();
+		gda_numeric_set_from_string (numeric, tmp);
+		g_free (tmp);
+		gda_numeric_set_precision (numeric, ora_value->precision);
+		gda_numeric_set_width (numeric, ora_value->scale);
 		g_value_take_boxed (value, numeric);
 		break;
 	}
