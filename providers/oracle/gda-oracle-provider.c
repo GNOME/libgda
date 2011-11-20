@@ -370,7 +370,7 @@ execute_raw_command (GdaConnection *cnc, const gchar *sql)
 	OCIStmt *hstmt = NULL;
 	int result;
 
-	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 	
@@ -745,7 +745,7 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	/* Close the connection using the C API */
-	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
@@ -780,7 +780,7 @@ gda_oracle_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return NULL;
 
@@ -800,7 +800,7 @@ gda_oracle_provider_get_database (GdaServerProvider *provider, GdaConnection *cn
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return NULL;
 	TO_IMPLEMENT;
@@ -2525,7 +2525,7 @@ gda_oracle_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
         OracleConnectionData *cdata = NULL;
 
         if (cnc)
-                cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+                cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
 
         kwfunc = _gda_oracle_get_reserved_keyword_func (cdata);
 
