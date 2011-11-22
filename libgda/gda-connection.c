@@ -2873,9 +2873,13 @@ make_col_types_array (va_list args)
 	gint max = 10;
 	gint col, lastidx = 0;
 
+	col = va_arg (args, gint);
+	if (col < 0)
+		return NULL;
+
 	types = g_new0 (GType, max + 1);
 	types [max] = G_TYPE_NONE;
-	for (col = va_arg (args, gint); col >= 0; col = va_arg (args, gint)) {
+	for (; col >= 0; col = va_arg (args, gint)) {
 		if (col >= max) {
 			gint i;
 			types = g_renew (GType, types, col + 5 + 1);
