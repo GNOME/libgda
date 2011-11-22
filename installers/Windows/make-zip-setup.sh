@@ -455,9 +455,13 @@ files=(gtkrc)
 add_files_to_zip $archive_ext . etc/gtk-3.0 $files
 add_found_files_to_nsh core etc/gtk-3.0
 
-#files=(pango.modules)
-#add_files_to_zip $archive_ext "${depend_path}" etc/pango $files
-#add_found_files_to_nsh core "${depend_path}" etc/pango $files
+files=(pango.modules)
+add_files_to_zip $archive_ext "${depend_path}" etc/pango $files
+add_found_files_to_nsh core etc/pango
+
+files=(pango-*.dll)
+add_files_to_zip $archive_ext "${depend_path}" lib/pango/1.6.0/modules $files
+add_found_files_to_nsh core lib/pango/1.6.0/modules
 
 files=(gda-sql-5.0.exe libgda-5.0-4.dll libgda-report-5.0-4.dll libgda-ui-5.0-4.dll gda-browser-5.0.exe gda-control-center-5.0.exe)
 add_files_to_zip $archive $prefix bin $files
