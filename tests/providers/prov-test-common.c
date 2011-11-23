@@ -612,6 +612,7 @@ prov_test_common_check_data_select ()
 		columns = g_slist_append (columns, gda_data_model_describe_column (model, i));
 
 	/* change param */
+	g_object_set (model, "auto-reset", TRUE, NULL);
 	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
                 number_failed++;
                 goto out;

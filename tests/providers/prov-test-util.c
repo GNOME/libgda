@@ -152,6 +152,27 @@ prov_test_check_types_schema (GdaConnection *cnc)
 	GdaDataModel *schema_m;
 	GError *error = NULL;
 	gchar *str;
+	GdaMetaContext mcontext = {"_builtin_data_types", 0, NULL, NULL};
+	g_print ("updating [%s]\n", mcontext.table_name);
+	if (! gda_connection_update_meta_store (cnc, &mcontext, &error)) {
+		g_warning ("Can't update meta store: %s\n",
+			   error && error->message ? error->message : "???");
+		return FALSE;
+	}
+	mcontext.table_name="_udt";
+	g_print ("updating [%s]\n", mcontext.table_name);
+	if (! gda_connection_update_meta_store (cnc, &mcontext, &error)) {
+		g_warning ("Can't update meta store: %s\n",
+			   error && error->message ? error->message : "???");
+		return FALSE;
+	}
+	mcontext.table_name="_domains";
+	g_print ("updating [%s]\n", mcontext.table_name);
+	if (! gda_connection_update_meta_store (cnc, &mcontext, &error)) {
+		g_warning ("Can't update meta store: %s\n",
+			   error && error->message ? error->message : "???");
+		return FALSE;
+	}
 	
 	schema_m = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_TYPES, &error, 0);
 	if (!schema_m) {
