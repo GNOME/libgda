@@ -16,7 +16,7 @@
 # $version is the current Libgda's version
 #
 
-depend_path="/usr/i686-pc-mingw32/sys-root/mingw /local/Win32Compiled /local/Win32"
+depend_path="/usr/i686-pc-mingw32/sys-root/mingw /local/Win32Compiled /local/Win32/bdb /local/Win32/mysql /local/Win32/pgsql /local/Win32/ldap /local/Win32/mdb /local/Win32/oracle"
 prefix=/local/Win32/Libgda
 debug=no
 
@@ -79,7 +79,12 @@ function add_files_to_zip
 	for tdir in ${dir[*]}
 	do
 	    pushd $tdir >&/dev/null
-	    find . -name $item 2> /dev/null | grep $subdir >> $localtmpfile
+	    if ! test -e $subdir
+	    then
+		continue
+	    fi
+
+	    find $subdir -name $item 2> /dev/null >> $localtmpfile
 	    if test -s $localtmpfile
 	    then
 		if test "x$debug" = "xyes"
