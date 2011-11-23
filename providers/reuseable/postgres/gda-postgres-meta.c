@@ -539,7 +539,7 @@ _gda_postgres_meta__enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 	if (!rdata)
 		return FALSE;
 	if (rdata->version_float >= 8.3)
-		TO_IMPLEMENT;
+		/*TO_IMPLEMENT*/;
 
 	return TRUE;
 }
