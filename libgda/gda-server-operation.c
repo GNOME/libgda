@@ -2622,6 +2622,7 @@ gda_server_operation_perform_drop_database (GdaServerOperation *op, const gchar 
 	GdaServerProvider *prov;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_DROP_DB, FALSE);
 	if (provider)
 		prov = gda_config_get_provider (provider, error);
 	else
