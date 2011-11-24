@@ -367,9 +367,9 @@ if ENABLE_VALA
 vapi: libgda-5.0.vapi
 
 libgda-5.0.vapi: Gda-5.0.gir
-	$(VALA_VAPIGEN) --metadatadir=$(top_srcdir)/libgda --library libgda-5.0 --pkg libxml-2.0 Gda-5.0.gir 
+	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda --library libgda-5.0 --pkg libxml-2.0 Gda-5.0.gir 
 
-vapidir = $(VALA_VAPIDIR)
+vapidir = $(VAPIDIR)
 vapi_DATA=libgda-5.0.vapi
 
 EXTRA_DIST += \

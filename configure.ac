@@ -490,14 +490,14 @@ then
 
     if test "x$have_vala" = "xyes"
     then
-	    VALA_BINDIR=`pkg-config $VALA_MODULES --variable=bindir`
-	    AC_SUBST(VALA_BINDIR)
-	    VALA_COMPILER="$VALA_BINDIR/valac"
-	    AC_SUBST(VALA_COMPILER)
-	    VALA_VAPIGEN=`pkg-config $VALA_MODULES --variable=vapigen`
-	    AC_SUBST(VALA_VAPIGEN)
-	    VALA_VAPIDIR=`pkg-config $VALA_MODULES --variable=vapidir`
-	    AC_SUBST(VALA_VAPIDIR)	    
+        AC_PATH_PROG(VAPIGEN, [vapigen], [no])
+        if test "x$VAPIGEN" = "xno"
+        then
+            AC_MSG_ERROR([Vala found but vapigen not found])
+        fi
+        VAPIDIR=`pkg-config $VALA_MODULES --variable=vapidir`
+        AC_SUBST(VAPIGEN)
+        AC_SUBST(VAPIDIR)
     fi
 else
     if test "x$enable_vala" = xyes
@@ -507,7 +507,6 @@ else
 fi
 enable_vala=$have_vala
 AM_CONDITIONAL(ENABLE_VALA, [test "$enable_vala" = "yes"])
-
 
 
 dnl ******************************
