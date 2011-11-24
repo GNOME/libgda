@@ -290,9 +290,7 @@ _browser_make_tab_label (const gchar *label,
 		gtk_css_provider_load_from_data (css_provider,
 						 "* {\n"
 						 "-GtkWidget-focus-padding : 0;\n"
-						 "-GtkWidget-focus-line-width : 0;\n"
-						 "xthickness : 0;\n"
-						 "ythickness : 0}",
+						 "-GtkWidget-focus-line-width : 0}",
 						 -1, NULL);
 	}
 
