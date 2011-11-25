@@ -227,6 +227,7 @@ gdaui_numeric_entry_init (GdauiNumericEntry *entry)
 	entry->priv->decimal_sep = get_default_decimal_sep ();
 	entry->priv->thousands_sep = 0;
 	entry->priv->nb_decimals = G_MAXUINT16;
+	gtk_entry_set_width_chars (GTK_ENTRY (entry), 3);
 }
 
 static void 

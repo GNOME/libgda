@@ -1562,6 +1562,27 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 		g_free (tmp);
 	}
 	else {
+		if (bwin->priv->notif_widgets) {
+			GSList *list;
+			for (list = bwin->priv->notif_widgets; list; list = list->next) {
+				const gchar *c1, *t1;
+				c1 = g_object_get_data (G_OBJECT (list->data), "context");
+				t1 = g_object_get_data (G_OBJECT (list->data), "text");
+				if (((c1 && context && !strcmp (c1, context)) || (!c1 && !context)) &&
+				    ((t1 && text && !strcmp (t1, text)) || (!t1 && !text)))
+					break;
+			}
+			if (list) {
+				GtkWidget *wid;
+				wid = GTK_WIDGET (list->data);
+				g_object_ref ((GObject*) wid);
+				gtk_container_remove (GTK_CONTAINER (bwin->priv->notif_box), wid);
+				gtk_box_pack_end (GTK_BOX (bwin->priv->notif_box), wid, TRUE, TRUE, 0);
+				g_object_unref ((GObject*) wid);
+				return;
+			}
+		}
+
 		GtkWidget *cb = NULL;
 		if (context && (type == GTK_MESSAGE_INFO)) {
 			cb = gtk_check_button_new_with_label (_("Don't show this message again"));
@@ -1574,6 +1595,10 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 		GtkWidget *ibar, *content_area, *label;
 		
 		ibar = gtk_info_bar_new_with_buttons (GTK_STOCK_CLOSE, 1, NULL);
+		if (context)
+			g_object_set_data_full (G_OBJECT (ibar), "context", g_strdup (context), g_free);
+		if (text)
+			g_object_set_data_full (G_OBJECT (ibar), "text", g_strdup (text), g_free);
 		gtk_info_bar_set_message_type (GTK_INFO_BAR (ibar), type);
 		label = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (label), text);
@@ -1582,7 +1607,7 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 		content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (ibar));
 		if (cb) {
 			GtkWidget *box;
-			box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+			box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 			gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
 			gtk_box_pack_start (GTK_BOX (box), cb, FALSE, FALSE, 0);
 			gtk_container_add (GTK_CONTAINER (content_area), box);
@@ -1594,7 +1619,7 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 		}
 		g_signal_connect (ibar, "response",
 				  G_CALLBACK (info_bar_response_cb), bwin);
-		gtk_box_pack_start (GTK_BOX (bwin->priv->notif_box), ibar, TRUE, TRUE, 0);
+		gtk_box_pack_end (GTK_BOX (bwin->priv->notif_box), ibar, TRUE, TRUE, 0);
 		bwin->priv->notif_widgets = g_slist_append (bwin->priv->notif_widgets, ibar);
 		if (g_slist_length (bwin->priv->notif_widgets) > 2) {
 			gtk_widget_destroy (GTK_WIDGET (bwin->priv->notif_widgets->data));

@@ -394,9 +394,7 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 		css_provider = gtk_css_provider_new ();
 		gtk_css_provider_load_from_data (css_provider,
 						 "* {\n"
-						 "-GtkToolbar-shadow-type : GTK_SHADOW_NONE;\n"
-						 "xthickness : 0;\n"
-						 "ythickness : 0}",
+						 "-GtkToolbar-shadow-type : none}",
 						 -1, NULL);
 	}
 	gtk_style_context_add_provider (gtk_widget_get_style_context ((GtkWidget*) toolbar),
