@@ -473,16 +473,20 @@ AC_ARG_ENABLE([vala],
     AS_HELP_STRING([--enable-vala], [Enable support for Vala bindings generation [default=auto]]),
     [enable_vala=$enableval],[enable_vala=auto])
 
+AC_ARG_ENABLE([vala-extensions],
+    AS_HELP_STRING([--enable-vala-extensions], [Enable support for Vala extensions [default=no]]),
+    [enable_vala_ext=$enableval],[enable_vala_ext=no])
+
 have_vala=no
 if test "x$found_introspection" = "xyes"
 then
     VALA_MODULES="libvala-0.14 >= 0.14"
     PKG_CHECK_MODULES(VALA, $VALA_MODULES,
-        if test "$enable_vala" = "yes" -o "$enable_vala" = "auto"
+    if test "$enable_vala" = "yes" -o "$enable_vala" = "auto"
 	then
-            have_vala=yes
+        have_vala=yes
 	    AC_DEFINE(HAVE_VALA, [], [Defined if Vala support is enabled])
-	fi,
+	fi
 	if test "$enable_vala" = "yes"
 	then
 	    AC_MSG_ERROR([Vala support requested but not found])
@@ -497,7 +501,23 @@ then
 	    VALA_VAPIGEN=`pkg-config $VALA_MODULES --variable=vapigen`
 	    AC_SUBST(VALA_VAPIGEN)
 	    VALA_VAPIDIR=`pkg-config $VALA_MODULES --variable=vapidir`
-	    AC_SUBST(VALA_VAPIDIR)	    
+	    AC_SUBST(VALA_VAPIDIR)
+	    
+	    if test "x$enable_vala_ext" = "xyes"
+	    then
+dnl Check for libgee
+        GEE_REQUIRED="0.6.1"
+
+        PKG_CHECK_MODULES(GEE, gee-1.0 >= $GEE_REQUIRED)
+        AC_SUBST(GEE_CFLAGS)
+        AC_SUBST(GEE_LIBS)
+	    fi
+    else
+        if test "x$enable_vala_ext" = "xyes"
+        then
+            AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala is not available or enable])
+            $enable_vala_ext = "no"
+        fi
     fi
 else
     if test "x$enable_vala" = xyes
@@ -508,7 +528,7 @@ fi
 enable_vala=$have_vala
 AM_CONDITIONAL(ENABLE_VALA, [test "$enable_vala" = "yes"])
 
-
+AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, [test "$enable_vala_ext" = "yes"])
 
 dnl ******************************
 dnl Checks for libcrypto
@@ -878,6 +898,8 @@ libgda/sqlite/sqlite-src/Makefile
 libgda/sqlite/virtual/libgda-virtual.h
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile
+libgda/data/Makefile
+libgda/data/libgdadata-1.0.pc
 providers/Makefile
 providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile
@@ -949,6 +971,7 @@ tests/providers/Makefile
 tests/value-holders/Makefile
 tests/meta-store/Makefile
 tests/multi-threading/Makefile
+tests/vala/Makefile
 doc/Makefile
 doc/C/Makefile
 doc/C/libgda.types
@@ -990,6 +1013,7 @@ echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes;
 echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building Vala Bindings: `if test x$enable_vala != xno; then echo yes; else echo no; fi`"
+echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
 echo "      Berkeley DB SQL = $bdbsql_found"

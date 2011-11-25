@@ -1,7 +1,7 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * libgda
- * Copyright (C) Daniel Espinosa Ortiz 2008 <esodan@gmail.com>
+ * libgdavala
+ * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -17,66 +17,77 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using Gee;
+using Gda;
 
-namespace Gda {
-    [Compact]
-    private class SelectQuery {
+namespace GdaData {
+    
+    private class SelectQuery : Object {
         
-        public Gee.ArrayList<string> _fields;
+        private Gee.ArrayList<string> _fields;
         private SqlBuilder _sql;
-         
-        public string table { set; get; }
+        private string _table;
+        
+        public string table { 
+        	get {
+        		return this._table;
+        	} 
+        	set { 
+        		this._table = value;
+        		this._sql.select_add_target (value, null); 
+        	}
+        }
+        
         public Connection connection { set; get; }
         
-        SelectQuery()
+        public SelectQuery()
         {
-        	this.fields.add("*");
-        	this._cond = 0;
+        	this._fields.add ("*");
         	this.table = "";
         }
         
         public void add_field (string field)
         {
-        	if (this._fields.get(0) == "*")
+        	if (this._fields.get (0) == "*")
         	{
-        		this._fields.clear();
+        		this._fields.clear ();
         	}
 	        
-	        this.fields.add(field);
+	        this._fields.add (field);
         }
         
-        public SqlBuilder build (void)
+        public SqlBuilder build ()
+        	requires (this.table != "")
         {
-        	this._sql = new SqlBuilder(Gda.SqlStatementType.SELECT);
+        	this._sql = new SqlBuilder (Gda.SqlStatementType.SELECT);
         	
-        	foreach string f in this._fields {
+        	foreach (string f in this._fields) {
 	        	this._sql.select_add_field (f, null, null);
 	        }            
-			this._sql.select_add_target(this.table, null);
+			return this._sql;
         }
         
-        public void set_fields_to_all (void) 
+        public void set_fields_to_all () 
         {
-        	this._fields.clear();
-        	this._fields.add("*");
+        	this._fields.clear ();
+        	this._fields.add ("*");
         }
         
         public void set_condition (string field, Value v, SqlOperatorType op) 
         {
-        	var f_id = this._sql.add_id (c.field);
-			var e_id = this._sql.add_expr_value (null, c.v);
-			var c_id = this._sql.add_cond(c.op, f_id, e_id, 0);
-			this._sql.set_where(c_id);
+        	var f_id = this._sql.add_id (field);
+			var e_id = this._sql.add_expr_value (null, v);
+			var c_id = this._sql.add_cond (op, f_id, e_id, 0);
+			this._sql.set_where (c_id);
         }
         
-        public DataModel execute (void) 
+        public DataModel execute () 
             throws Error 
             requires (this.connection.is_opened())
         {
             /* Build Select Query */
-            var b = this.build();
-		    var s = b.get_statement();
-		    return this.connection.statement_execute_select(s, null);
+            var b = this.build ();
+		    var s = b.get_statement ();
+		    return this.connection.statement_execute_select (s, null);
         }
     }
 }

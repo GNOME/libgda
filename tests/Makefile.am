@@ -5,7 +5,7 @@ TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers
 check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers
 
 
-SUBDIRS = providers parser value-holders meta-store data-models multi-threading
+SUBDIRS = providers parser value-holders meta-store data-models multi-threading vala
 
 AM_CPPFLAGS = \
         -I$(top_builddir) \
