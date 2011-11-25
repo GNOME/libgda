@@ -149,8 +149,6 @@ gdaui_entry_shell_init (GdauiEntryShell *shell)
 						 "-GtkArrow-arrow-scaling: 0.4;\n"
 						 "margin: 0;\n"
 						 "padding: 0;\n"
-						 "xthickness: 0;\n"
-						 "ythickness: 0;\n"
 						 "border-style: none;\n"
 						 "border-width: 0;\n"
 						 "-GtkButton-default-border: 0;\n"
