@@ -35,7 +35,7 @@ const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
-GModule           *bdbsql_module;
+GModule           *bdbsql_module = NULL;
 
 /*
  * Functions executed when calling g_module_open() and g_module_close()
