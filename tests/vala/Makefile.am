@@ -1,5 +1,13 @@
 NULL = 
-if ENABLE_VALA_EXTENSIONS
+
+AM_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/libgda \
+	-I$(top_builddir) \
+	$(COREDEPS_CFLAGS) \
+	$(COREDEPS_WFLAGS) \
+	$(JSON_GLIB_CFLAGS) \
+	-DROOT_DIR=\""$(top_srcdir)"\"
 
 TESTS_ENVIRONMENT = 
 TESTS = check_dataobject
@@ -27,5 +35,3 @@ check_dataobject check_dataobject.vala.stamp: $(check_dataobject_VALASOURCES)
 	@touch $@
 
 EXTRA_DIST = 
-
-endif

@@ -1,7 +1,5 @@
 NULL =
 
-if ENABLE_VALA_EXTENSIONS
-
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
@@ -25,7 +23,6 @@ AM_CFLAGS =\
 lib_LTLIBRARIES = libgdadata.la
 
 VALAFLAGS = \
-    $(top_srcdir)/libgda/data/config.vapi \
     --vapidir=$(top_srcdir)/libgda \
     --pkg libxml-2.0 \
     --pkg gee-1.0 \
@@ -37,7 +34,7 @@ libgdadata_la_VALASOURCES = \
 	SelectQuery.vala \
 	$(NULL)
 
-libgdavala_la_SOURCES = \
+libgdadata_la_SOURCES = \
 	gdadata.vala.stamp \
 	$(libgdadata_la_VALASOURCES:.vala=.c) \
 	$(NULL)	
@@ -48,9 +45,10 @@ gdadata-1.0.vapi gdadata.vala.stamp GdaData-1.0.gir: $(libgdadata_la_VALASOURCES
 
 CLEANFILES+= gdadata-1.0.vapi GdaData-1.0.gir
 
-libgdavala_la_LDFLAGS = 
+libgdadata_la_LDFLAGS = 
 
-libgdavala_la_LIBADD = \
+libgdadata_la_LIBADD = \
+    $(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) \
 	$(GEE_LIBS) \
 	$(VALA_LIBS) \
@@ -60,8 +58,8 @@ include_HEADERS = \
 	libgdadata.h \
 	$(NULL)
 
-gdavalaincludedir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/data
-gdavalainclude_HEADERS = libgdadata.h
+gdadataincludedir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/data
+gdadatainclude_HEADERS = libgdadata.h
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgdadata-1.0.pc
@@ -94,10 +92,9 @@ CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA) gdadata-1.0.vapi
 
 EXTRA_DIST = \
 	libgdadata-1.0.pc.in \
-	$(libgdadata_la_VALASOURCES) \
+	$(libgdadata_la_VALASOURCES:.vala=.c) \
 	$(vapi_DATA) \
 	$(INTROSPECTION_GIRS) \
 	$(typelibs_DATA) \
 	gdadata.vala.stamp
 
-endif
