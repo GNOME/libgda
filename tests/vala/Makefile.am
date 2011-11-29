@@ -28,10 +28,17 @@ VALAFLAGS = \
     $(NULL)
 
 check_dataobject_VALASOURCES = \
-	CheckDataObject.vala
+	CheckDataObject.vala \
+	$(NULL)
 
-check_dataobject check_dataobject.vala.stamp: $(check_dataobject_VALASOURCES)
-	$(VALA_COMPILER) $(VALAFLAGS) -o check_dataobject $^
+check_dataobject.vala.stamp: $(check_dataobject_VALASOURCES)
+	$(VALA_COMPILER) $(VALAFLAGS) -C -H check_dataobject.h $^
 	@touch $@
+
+check_dataobject_SOURCES = $(check_dataobject_VALASOURCES:.vala=.c) check_dataobject.h
+check_dataobject_LDADD = \
+    $(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/data/libgdadata-1.0.la \
+	$(COREDEPS_LIBS)
 
 EXTRA_DIST = 

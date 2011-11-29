@@ -24,10 +24,10 @@ namespace GdaData {
 
     public abstract class Object : GLib.Object {
         
-        private DataModel? _model;
         private string? _field_id;
         private Value? _id_value;
         
+        protected DataModel? _model;
         protected string? _table;
         
         public Connection connection { get; set; }
@@ -94,6 +94,7 @@ namespace GdaData {
 			var e_id = q.add_expr_value (null, this._id_value);
 			var c_id = q.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
 			q.set_where (c_id);
+			q.select_add_field ("*", null, null);
 			return q;			
         }
     }

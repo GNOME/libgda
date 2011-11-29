@@ -20,7 +20,7 @@ AM_CFLAGS =\
     $(VALA_CFLAGS) \
     $(NULL)
 
-lib_LTLIBRARIES = libgdadata.la
+lib_LTLIBRARIES = libgdadata-1.0.la
 
 VALAFLAGS = \
     --vapidir=$(top_srcdir)/libgda \
@@ -29,25 +29,25 @@ VALAFLAGS = \
     --pkg libgda-5.0 \
     $(NULL)
 
-libgdadata_la_VALASOURCES = \
+libgdadata_1_0_la_VALASOURCES = \
 	DataObject.vala \
 	SelectQuery.vala \
 	$(NULL)
 
-libgdadata_la_SOURCES = \
+libgdadata_1_0_la_SOURCES = \
 	gdadata.vala.stamp \
-	$(libgdadata_la_VALASOURCES:.vala=.c) \
+	$(libgdadata_1_0_la_VALASOURCES:.vala=.c) \
 	$(NULL)	
 
-gdadata-1.0.vapi gdadata.vala.stamp GdaData-1.0.gir: $(libgdadata_la_VALASOURCES)
+gdadata-1.0.vapi gdadata.vala.stamp GdaData-1.0.gir: $(libgdadata_1_0_la_VALASOURCES)
 	$(VALA_COMPILER) $(VALAFLAGS) -C -H libgdadata.h --gir=GdaData-1.0.gir --library gdadata-1.0 $^
 	@touch $@
 
 CLEANFILES+= gdadata-1.0.vapi GdaData-1.0.gir
 
-libgdadata_la_LDFLAGS = 
+libgdadata_1_0_la_LDFLAGS = 
 
-libgdadata_la_LIBADD = \
+libgdadata_1_0_la_LIBADD = \
     $(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) \
 	$(GEE_LIBS) \
@@ -88,11 +88,11 @@ typelibs_DATA = GdaData-1.0.typelib
 vapidir = $(VALA_VAPIDIR)
 vapi_DATA = gdadata-1.0.vapi
 
-CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA) gdadata-1.0.vapi 
+CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA) gdadata-1.0.vapi $(libgdadata_1_0_la_VALASOURCES:.vala=.c)
 
 EXTRA_DIST = \
 	libgdadata-1.0.pc.in \
-	$(libgdadata_la_VALASOURCES:.vala=.c) \
+	$(libgdadata_1_0_la_VALASOURCES:.vala=.c) \
 	$(vapi_DATA) \
 	$(INTROSPECTION_GIRS) \
 	$(typelibs_DATA) \
