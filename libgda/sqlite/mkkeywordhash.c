@@ -488,7 +488,7 @@ main (int argc, char **argv)
 	printf("\tint i;\n");
 	printf("\tfor (i = 0; i < %d; i++) {\n", nKeyword);
 	printf("\t\tif (! %sis_keyword (%skeywords[i]))\n", prefix ? prefix : "", prefix ? prefix : "");
-	printf("\t\t\tprintf (\"KEYWORK %%s ignored!\\n\", %skeywords[i]);\n", prefix ? prefix : "");
+	printf("\t\t\tg_print (\"KEYWORK %%s ignored!\\n\", %skeywords[i]);\n", prefix ? prefix : "");
 	printf("\t}\n");
 	printf("}\n\n");
 #endif

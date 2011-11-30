@@ -682,7 +682,7 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		PostgresConnectionData *cdata;
 		gboolean valueset = FALSE;
 
-		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 		if (cdata) {
 			if ((thevalue[0] == '\\') && (thevalue[1] == 'x')) {
 				guint len;

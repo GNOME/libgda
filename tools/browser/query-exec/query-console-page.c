@@ -304,13 +304,13 @@ query_console_page_new (BrowserConnection *bcnc)
 	GtkWidget *wid, *vbox, *hbox, *bbox, *hpaned, *button;
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_paned_add1 (GTK_PANED (vpaned), hbox);
+	gtk_paned_pack1 (GTK_PANED (vpaned), hbox, TRUE, FALSE);
 
 	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (hbox), hpaned, TRUE, TRUE, 0);
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, TRUE);
+	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
 
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("SQL code to execute:"));
@@ -330,7 +330,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	tconsole->priv->params_top = vbox;
-	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, TRUE, TRUE);
+	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, FALSE, FALSE);
 	
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("Variables' values:"));
@@ -396,11 +396,11 @@ query_console_page_new (BrowserConnection *bcnc)
 
 	/* bottom paned for the results and history */
 	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_paned_add2 (GTK_PANED (vpaned), hpaned);
+	gtk_paned_pack2 (GTK_PANED (vpaned), hpaned, TRUE, FALSE);
 
 	/* bottom left */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, FALSE, TRUE);
+	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, FALSE, FALSE);
 
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("Execution history:"));
@@ -769,6 +769,12 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 }
 
 static void
+fav_form_name_activated_cb (G_GNUC_UNUSED GtkWidget *form, GtkWidget *dlg)
+{
+	gtk_dialog_response (dlg, GTK_RESPONSE_ACCEPT);
+}
+
+static void
 sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *tconsole)
 {
 	BrowserFavorites *bfav;
@@ -776,7 +782,7 @@ sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *t
 	GError *error = NULL;
 
 	GdaSet *set;
-	GtkWidget *dlg;
+	GtkWidget *dlg, *form;
 	gint response;
 	const GValue *cvalue;
 	set = gda_set_new_inline (1, _("Favorite's name"),
@@ -785,6 +791,9 @@ sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *t
 					      (GtkWindow*) gtk_widget_get_toplevel (GTK_WIDGET (tconsole)),
 					      _("Name of the favorite to create"),
 					      _("Enter the name of the favorite to create"));
+	form = g_object_get_data (G_OBJECT (dlg), "form");
+	g_signal_connect (form, "activated",
+			  G_CALLBACK (fav_form_name_activated_cb), dlg);
 	response = gtk_dialog_run (GTK_DIALOG (dlg));
 	if (response == GTK_RESPONSE_REJECT) {
 		g_object_unref (set);
@@ -886,6 +895,9 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 {
 	gchar *sql;
 
+	if (tconsole->priv->params_popup)
+		gtk_widget_hide (tconsole->priv->params_popup);
+
 	/* compute parameters if necessary */
 	if (tconsole->priv->params_compute_id > 0) {
 		g_source_remove (tconsole->priv->params_compute_id);
@@ -947,6 +959,8 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 			g_object_set ((GObject*) form, "show-actions", TRUE, NULL);
 			g_signal_connect (form, "holder-changed",
 					  G_CALLBACK (params_form_changed_cb), tconsole);
+			g_signal_connect (form, "activated",
+					  G_CALLBACK (sql_execute_clicked_cb), tconsole);
 
 			gtk_box_pack_start (GTK_BOX (cont), form, TRUE, TRUE, 0);
 			g_object_set_data (G_OBJECT (tconsole->priv->params_popup), "form", form);

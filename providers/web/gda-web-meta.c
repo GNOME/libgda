@@ -120,7 +120,7 @@ _gda_web_meta__info (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -151,7 +151,7 @@ _gda_web_meta__btypes (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -180,7 +180,7 @@ _gda_web_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -204,7 +204,7 @@ _gda_web_meta_udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -229,7 +229,7 @@ _gda_web_meta__udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -253,7 +253,7 @@ _gda_web_meta_udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -278,7 +278,7 @@ _gda_web_meta__enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -302,7 +302,7 @@ _gda_web_meta_enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -328,7 +328,7 @@ _gda_web_meta__domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -352,7 +352,7 @@ _gda_web_meta_domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -376,7 +376,7 @@ _gda_web_meta__constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -401,7 +401,7 @@ _gda_web_meta_constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -426,7 +426,7 @@ _gda_web_meta__el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -450,7 +450,7 @@ _gda_web_meta_el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -474,7 +474,7 @@ _gda_web_meta__collations (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -499,7 +499,7 @@ _gda_web_meta_collations (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -525,7 +525,7 @@ _gda_web_meta__character_sets (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -550,7 +550,7 @@ _gda_web_meta_character_sets (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -577,7 +577,7 @@ _gda_web_meta__schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -609,7 +609,7 @@ _gda_web_meta_schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -646,7 +646,7 @@ _gda_web_meta__tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	gboolean retval = TRUE;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -695,7 +695,7 @@ _gda_web_meta_tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 	gboolean retval = TRUE;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -761,7 +761,7 @@ _gda_web_meta__columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -794,7 +794,7 @@ _gda_web_meta_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -827,7 +827,7 @@ _gda_web_meta__view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -852,7 +852,7 @@ _gda_web_meta_view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -879,7 +879,7 @@ _gda_web_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -912,7 +912,7 @@ _gda_web_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -955,7 +955,7 @@ _gda_web_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -988,7 +988,7 @@ _gda_web_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1026,7 +1026,7 @@ _gda_web_meta__key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1059,7 +1059,7 @@ _gda_web_meta_key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1097,7 +1097,7 @@ _gda_web_meta__check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1130,7 +1130,7 @@ _gda_web_meta_check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1168,7 +1168,7 @@ _gda_web_meta__triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1201,7 +1201,7 @@ _gda_web_meta_triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 	gboolean retval;
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 	
@@ -1235,7 +1235,7 @@ _gda_web_meta__routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1260,7 +1260,7 @@ _gda_web_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1285,7 +1285,7 @@ _gda_web_meta__routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1310,7 +1310,7 @@ _gda_web_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1335,7 +1335,7 @@ _gda_web_meta__routine_par (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1360,7 +1360,7 @@ _gda_web_meta_routine_par (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1385,7 +1385,7 @@ _gda_web_meta__indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1410,7 +1410,7 @@ _gda_web_meta_indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1435,7 +1435,7 @@ _gda_web_meta__index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1460,7 +1460,7 @@ _gda_web_meta_index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *
 {
 	WebConnectionData *cdata;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 

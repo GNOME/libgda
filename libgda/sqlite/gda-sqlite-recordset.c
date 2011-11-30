@@ -326,8 +326,8 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	GdaSqlitePStmt *ps;
 	GdaRow *prow = NULL;
 
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data 
-		(gda_data_select_get_connection ((GdaDataSelect*) model));
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error 
+		(gda_data_select_get_connection ((GdaDataSelect*) model), error);
 	if (!cdata)
 		return NULL;
 	ps = GDA_SQLITE_PSTMT (GDA_DATA_SELECT (model)->prep_stmt);

@@ -88,7 +88,7 @@ find_sqlite_in_dir (const gchar *dir_name, const gchar *name_part)
 GModule *
 find_sqlite_library (const gchar *name_part)
 {
-	GModule *handle;
+	GModule *handle = NULL;
 	const gchar *env;
 
 	/* first use the compile time SEARCH_LIB_PATH */

@@ -382,7 +382,7 @@ _gda_oracle_meta__tables_views (GdaServerProvider *prov, GdaConnection *cnc,
         gboolean retval = TRUE;
 
         OracleConnectionData *cdata;
-        cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
+        cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
         if (!cdata)
                 return FALSE;
 
@@ -427,7 +427,7 @@ _gda_oracle_meta_tables_views (GdaServerProvider *prov, GdaConnection *cnc,
         gboolean retval = TRUE;
 
         OracleConnectionData *cdata;
-        cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
+        cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
         if (!cdata)
                 return FALSE;
 
@@ -519,7 +519,7 @@ _gda_oracle_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 	gint i, nrows;
 	OracleConnectionData *cdata;
 
-	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (OracleConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 

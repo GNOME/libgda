@@ -152,7 +152,7 @@ gda_firebird_recordset_new (GdaConnection *cnc, GdaFirebirdPStmt *ps, GdaDataMod
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
 
-	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return NULL;
 

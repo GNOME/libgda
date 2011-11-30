@@ -513,7 +513,7 @@ fetch_next_oracle_row (GdaOracleRecordset *model, G_GNUC_UNUSED gboolean do_stor
 	GdaConnection *cnc;
 
 	cnc = gda_data_select_get_connection ((GdaDataSelect*) model);
-	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data (cnc);
+	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return NULL;
 
@@ -597,7 +597,7 @@ gda_oracle_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
 
 	imodel = GDA_ORACLE_RECORDSET (model);
 	cnc = gda_data_select_get_connection (model);
-	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data (cnc);
+	cdata = (OracleConnectionData*)	gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return TRUE;
 

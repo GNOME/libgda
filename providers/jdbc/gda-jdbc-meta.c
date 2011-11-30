@@ -81,7 +81,7 @@ _gda_jdbc_meta__info (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 	gboolean jni_detach;
 
 	/* Get private data */
-	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -322,7 +322,7 @@ _gda_jdbc_meta_schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 	jstring catalog = NULL, schema = NULL;
 
 	/* Get private data */
-	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -403,7 +403,7 @@ _gda_jdbc_meta_tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	jstring catalog = NULL, schema = NULL, name = NULL;
 
 	/* Get private data */
-	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 
@@ -519,7 +519,7 @@ _gda_jdbc_meta_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cn
 	jstring catalog = NULL, schema = NULL, table = NULL;
 
 	/* Get private data */
-	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
 

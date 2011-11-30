@@ -140,6 +140,7 @@
 	gda_connection_insert_row_into_table_v
 	gda_connection_internal_change_transaction_state
 	gda_connection_internal_get_provider_data
+	gda_connection_internal_get_provider_data_error
 	gda_connection_internal_reset_transaction_status
 	gda_connection_internal_savepoint_added
 	gda_connection_internal_savepoint_removed
@@ -939,6 +940,7 @@
 	gda_value_new_default
 	gda_value_new_from_string
 	gda_value_new_from_xml
+	gda_value_new_null
 	gda_value_new_timestamp_from_timet
 	gda_value_reset_with_type
 	gda_value_set_binary
@@ -974,7 +976,6 @@
 	gda_vconnection_hub_remove
 	gda_virtual_connection_get_type
 	gda_virtual_connection_internal_get_provider_data
-	gda_virtual_connection_internal_get_provider_data_error
 	gda_virtual_connection_internal_set_provider_data
 	gda_virtual_connection_open
 	gda_virtual_connection_open_extended

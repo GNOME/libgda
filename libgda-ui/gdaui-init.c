@@ -715,7 +715,7 @@ get_spec_with_isocodes (const gchar *file)
 		xmlFreeNode (node);
 
 		node = find_child_node_from_name (xmlDocGetRootElement (spec), "parameters", NULL, NULL);
-		node = find_child_node_from_name (xmlDocGetRootElement (spec), "parameter", "id", "CURRENCY");
+		node = find_child_node_from_name (node, "parameter", "id", "CURRENCY");
 		xmlSetProp (node, BAD_CAST "source", NULL);
 	}
 

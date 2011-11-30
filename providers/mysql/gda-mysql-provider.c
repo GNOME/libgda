@@ -1070,7 +1070,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider        *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1124,7 +1124,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1154,7 +1154,7 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1183,7 +1183,7 @@ gda_mysql_provider_add_savepoint (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1206,7 +1206,7 @@ gda_mysql_provider_rollback_savepoint (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1229,7 +1229,7 @@ gda_mysql_provider_delete_savepoint (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1750,7 +1750,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	GdaMysqlPStmt *ps = NULL;
 	MysqlConnectionData *cdata;
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return NULL;
 
@@ -2133,7 +2133,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	if (last_inserted_row)
 		*last_inserted_row = NULL;
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -2774,7 +2774,7 @@ gda_mysql_provider_xa_start (GdaServerProvider         *provider,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -2798,7 +2798,7 @@ gda_mysql_provider_xa_end (GdaServerProvider         *provider,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -2821,7 +2821,7 @@ gda_mysql_provider_xa_prepare (GdaServerProvider         *provider,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -2845,7 +2845,7 @@ gda_mysql_provider_xa_commit (GdaServerProvider         *provider,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -2868,7 +2868,7 @@ gda_mysql_provider_xa_rollback (GdaServerProvider         *provider,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -2891,7 +2891,7 @@ gda_mysql_provider_xa_recover (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return NULL;
 

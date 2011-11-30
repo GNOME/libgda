@@ -622,7 +622,7 @@ gda_web_provider_create_operation (GdaServerProvider *provider, GdaConnection *c
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	}
 	if (!cdata) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
@@ -651,7 +651,7 @@ gda_web_provider_render_operation (GdaServerProvider *provider, GdaConnection *c
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	}
 	if (!cdata) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
@@ -722,7 +722,7 @@ gda_web_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *
 			     "%s", _("Transaction level is not supported"));
 		return FALSE;
 	}
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -782,7 +782,7 @@ gda_web_provider_commit_transaction (GdaServerProvider *provider, GdaConnection 
 			     "%s", _("Named transaction is not supported"));
 		return FALSE;
 	}
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -842,7 +842,7 @@ gda_web_provider_rollback_transaction (GdaServerProvider *provider, GdaConnectio
 			     "%s", _("Named transaction is not supported"));
 		return FALSE;
 	}
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -902,7 +902,7 @@ gda_web_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc,
 			     "%s", _("Unnamed savepoint is not supported"));
 		return FALSE;
 	}
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -963,7 +963,7 @@ gda_web_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection 
 			     "%s", _("Unnamed savepoint is not supported"));
 		return FALSE;
 	}
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1019,7 +1019,7 @@ gda_web_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *c
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1149,7 +1149,7 @@ gda_web_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *c
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	}
 	if (!cdata)
 		return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
@@ -1238,7 +1238,7 @@ gda_web_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *
 	if (ps)
 		return TRUE;
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return FALSE;
 
@@ -1410,7 +1410,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
                 *last_inserted_row = NULL;
 
 	/* Get private data */
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata) 
 		return NULL;
 

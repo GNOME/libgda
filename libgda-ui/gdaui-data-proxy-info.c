@@ -471,9 +471,7 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		gtk_css_provider_load_from_data (css_provider,
 						 "* {\n"
 						 "-GtkToolbar-shadow-type : none;\n"
-						 "-GtkSpinButton-shadow-type : none;\n"
-						 "xthickness : 0;\n"
-						 "ythickness : 0}",
+						 "-GtkSpinButton-shadow-type : none}",
 						 -1, NULL);
         }
 

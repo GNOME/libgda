@@ -259,7 +259,7 @@ m4_define([_BDBSQL_CHECK_INTERNAL],
 	fi
     fi
 
-    AM_CONDITIONAL(BDBSQL,[test "bdbsql_found" = "yes"])
+    AM_CONDITIONAL(BDBSQL,[test "$bdbsql_found" = "yes"])
     AC_SUBST(BDBSQL_LIBS)
     AC_SUBST(BDBSQL_CFLAGS)
 ])

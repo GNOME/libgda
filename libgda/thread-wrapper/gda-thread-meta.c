@@ -42,7 +42,7 @@ typedef struct {
 	BasicThreadData wdata; \
 	gpointer res; \
 	guint jid; \
-        cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data ((cnc)); \
+        cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data_error ((cnc),(error)); \
 	if (!cdata) \
 		return FALSE; \
 	wdata.prov = cdata->cnc_provider; \
@@ -80,7 +80,7 @@ typedef struct {
 	DetailedThreadData wdata; \
 	gpointer res; \
 	guint jid; \
-        cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data ((cnc)); \
+        cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data_error ((cnc),(error)); \
 	if (!cdata) \
 		return FALSE; \
 	wdata.prov = cdata->cnc_provider; \

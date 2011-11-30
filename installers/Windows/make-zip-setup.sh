@@ -11,31 +11,44 @@
 # It is made to be used when cross compiling
 #
 # Variables to set are:
-# $cross_path is the location of the cross-compilation environment
-# $depend_path is the location of the dependencies (GLib, DBMS client libraries, etc)
+# $depend_path is the location of the cross compilation environment and dependencies (GLib, DBMS client libraries, etc)
 # $prefix is the location of the compiled and installed Libgda's sources
 # $version is the current Libgda's version
 #
 
-cross_path=/local/Win32/gtk
-depend_path=/local/Win32
+depend_path="/usr/i686-pc-mingw32/sys-root/mingw /local/Win32Compiled /local/Win32/bdb /local/Win32/mysql /local/Win32/pgsql /local/Win32/ldap /local/Win32/mdb /local/Win32/oracle"
 prefix=/local/Win32/Libgda
-version=5.0.1
-
-
+debug=no
 
 #
 # no modification below
 #
+#
+# determine version
+#
 current_dir=`pwd`
+conf=$current_dir/../../configure.ac
+if test -e $conf
+then
+    major=`cat $conf | grep m4_define | grep major | sed -e 's/[^ ]* \([0-9]*\).*/\1/'`
+    minor=`cat $conf | grep m4_define | grep minor | sed -e 's/[^ ]* \([0-9]*\).*/\1/'`
+    micro=`cat $conf | grep m4_define | grep micro | sed -e 's/[^ ]* \([0-9]*\).*/\1/'`
+    version="$major.$minor.$micro"
+    echo "Determined version [$version]"
+else
+    echo "configure.ac file not found"
+fi
+
 archive=${current_dir}/libgda-${version}.zip
 archive_dev=${current_dir}/libgda-dev-${version}.zip
 archive_ext=${current_dir}/libgda-dep-${version}.zip
 nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh prov_oracle.nsh prov_postgresql.nsh prov_sqlite.nsh prov_web.nsh prov_ldap.nsh)
+tmpfile=`mktemp`
 
 # remove current archive if it exists
 rm -f $archive $archive_dev $archive_ext
 rm -f *.nsh *.exe
+rm -f gda-browser.nsi
 
 if test "$CLEAN" = "yes"
 then
@@ -45,28 +58,66 @@ fi
 #
 # Takes 3 arguments:
 # $1 = the archive name
-# $2 = the prefix directory where files are located
-# $3 = the prefix under $1 where all the files are
-# $4 = a list of files physically in $1/$2/
+# $2 = the directory(ies) where files may be located
+# $3 = the prefix under $2 where all the files are
+# $4 = a list of files
 #
 function add_files_to_zip
 {
-    arch=$1
-    dir=$2
-    subdir=$3
+    local arch=$1
+    local dir=$2
+    local subdir=$3
     files=$4
-    pushd $dir >& /dev/null
+
+    local localtmpfile=`mktemp`
+    rm -f $tmpfile
+
     for item in ${files[*]}
     do
-	echo "Zipping file $dir/$subdir/$item"
-	zip ${arch} $subdir/$item >& /dev/null
-	if [ $? -ne 0 ]
+	rm -f $localtmpfile
+	echo "Zipping file [$subdir] [$item]"
+	for tdir in ${dir[*]}
+	do
+	    pushd $tdir >&/dev/null
+	    if ! test -e $subdir
+	    then
+		continue
+	    fi
+
+	    find $subdir -name $item 2> /dev/null >> $localtmpfile
+	    if test -s $localtmpfile
+	    then
+		if test "x$debug" = "xyes"
+		then
+		    cat $localtmpfile | zip -@ $arch
+		else
+		    cat $localtmpfile | zip -@ $arch >& /dev/null
+		fi
+		if [ $? -ne 0 ]
+		then
+		    echo "Error adding to ZIP..."
+		    exit 1
+		fi
+		if test "x$debug" = "xyes"
+		then
+		    echo " found in $tdir"
+		fi
+		popd >& /dev/null
+		break;
+	    fi
+	    popd >& /dev/null
+	done
+
+	if test -s $localtmpfile
 	then
-	    echo "Error (file may noy exist)"
+	    cat $localtmpfile | sed -e "s,^,${tdir}/," >> $tmpfile
+	else
+	    echo "File not found, searched in $dir"
 	    exit 1
 	fi
     done
-    popd >& /dev/null
+
+    rm -f $localtmpfile
 }
 
 
@@ -74,22 +125,46 @@ function add_files_to_zip
 # Takes 3 arguments:
 # $1 = the archive name
 # $2 = the prefix directory where files are located
-# $3 = the prefix under $1 where all the files are
+# $3 = the prefix under $2 where all the files are
 #
 function add_all_files_to_zip
 {
-    arch=$1
-    dir=$2
-    subdir=$3
-    pushd $dir >& /dev/null
-    echo "Zipping file: $dir/$subdir/$item"
-    zip ${arch} $subdir/* >& /dev/null
-    if [ $? -ne 0 ]
+    local arch=$1
+    local dir=$2
+    local subdir=$3
+
+    rm -f $tmpfile
+    echo "Zipping all files in directory [$subdir]"
+    for tdir in ${dir[*]}
+    do
+	pushd $tdir >&/dev/null
+	if test -e $subdir
+	then
+	    echo $subdir > $tmpfile
+	    zip ${arch} $subdir/* >& /dev/null
+	    if [ $? -ne 0 ]
+	    then
+		echo "Error adding to ZIP..."
+		exit 1
+	    fi
+	    if test "x$debug" = "xyes"
+	    then
+		echo " found in $tdir"
+	    fi
+	    popd >& /dev/null
+	    break;
+	fi
+	popd >& /dev/null
+    done
+
+    if test -s $tmpfile
     then
-	echo "Error (file may noy exist)"
+	cat $tmpfile | sed -e "s,^,${tdir}/," >> $tmpfile.1
+	mv $tmpfile.1 $tmpfile
+    else
+	echo "File not found, searched in $dir"
 	exit 1
     fi
-    popd >& /dev/null
 }
 
 # test NSH file is known
@@ -112,49 +187,36 @@ function check_nsh_file_ok
 }
 
 #
-# Takes 3 arguments:
+# Takes 1 argument:
 # $1 = the section name, without the .nsh extension
-# $2 = the prefix directory where files are located
-# $3 = the prefix under $1 where all the files are
-# $4 = a list of files physically in $1/$2/
+# $2 = the prefix under where all the files will be installed
 #
-function add_files_to_nsh
+function add_found_files_to_nsh
 {
     section=$1
-    dir=$2
-    subdir=$3
-    files=$4
+    subdir=$2
 
     check_nsh_file_ok $section.nsh
+    if test "x$debug" = "xyes"
+    then
+	echo "Adding file(s) in section '$section.nsh'"
+	echo "==== The following file(s) are added to NSH file ===="
+	cat $tmpfile
+	echo "====================================================="
+    fi
 
     wsubdir=`echo "${subdir}" | sed -e 's/\//\\\\/g'`
     echo "  SetOutPath \"\$INSTDIR\\${wsubdir}\"" >> $section.nsh
-    for item in ${files[*]}
+    #cat $tmpfile | sed -e 's/^/  File "/' -e 's/$/"/' >> $section.nsh
+    while read line
     do
-	echo "Adding file in section '$section.nsh': $dir/$subdir/$item"
-	echo "  File \"$dir/$subdir/$item\"" >> $section.nsh
-    done
-}
-
-#
-# Takes 3 arguments:
-# $1 = the section name, without the .nsh extension
-# $2 = the prefix directory where files are located
-# $3 = the prefix under $1 where all the files are
-#
-function add_all_files_to_nsh
-{
-    section=$1
-    dir=$2
-    subdir=$3
-
-    check_nsh_file_ok $section.nsh
-
-    wsubdir=`echo "${subdir}" | sed -e 's/\//\\\\/g'`
-    echo "  SetOutPath \"\$INSTDIR\\${wsubdir}\"" >> $section.nsh
-
-    echo "Adding all files to section '$section.nsh': $dir/$subdir/*"
-    echo "  File \"$dir/$subdir/*\"" >> $section.nsh
+	if test -d $line
+	then
+	    echo "$line/*" | sed -e 's/^/  File "/' -e 's/$/"/' >> $section.nsh
+	else
+	    echo "$line" | sed -e 's/^/  File "/' -e 's/$/"/' >> $section.nsh
+	fi
+    done < $tmpfile
 }
 
 #
@@ -246,81 +308,79 @@ EOF
 #
 # dependencies DLLs
 #
-files=(Pathplan.dll ltdl.dll libexpat*.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll cdt.dll graph.dll gvc.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg-8.dll libtiff-3.dll)
-add_files_to_zip $archive_ext ${depend_path}/gtk bin $files
-add_files_to_nsh core ${depend_path}/gtk bin $files
+files=(libexpat.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll libcdt*.dll libcgraph*.dll libgvc*.dll libpathplan*.dll libxdot*.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg*.dll libtiff*.dll libffi*.dll readline.dll iconv.dll libgraph*.dll libgtksourceview*.dll libtermcap*.dll)
+add_files_to_zip $archive_ext "${depend_path}" bin $files
+add_found_files_to_nsh core bin
 
 files=(libdb51.dll)
-add_files_to_zip $archive_ext ${depend_path}/bdb bin $files
-add_files_to_nsh prov_bdb ${depend_path}/bdb bin $files
+add_files_to_zip $archive_ext "${depend_path}" bin $files
+add_found_files_to_nsh prov_bdb bin
 
 files=(libmySQL.dll)
-add_files_to_zip $archive_ext ${depend_path}/mysql bin $files
-add_files_to_nsh prov_mysql ${depend_path}/mysql bin $files
+add_files_to_zip $archive_ext "${depend_path}" bin $files
+add_found_files_to_nsh prov_mysql bin
 
-files=(iconv.dll libeay32.dll libiconv-2.dll libpq.dll libxml2.dll libxslt.dll msvcr71.dll ssleay32.dll)
-add_files_to_zip $archive_ext ${depend_path}/pgsql bin $files
-add_files_to_nsh prov_postgresql ${depend_path}/pgsql bin $files
+files=(libeay32.dll libpq.dll libxml2.dll libxslt.dll msvcr71.dll ssleay32.dll)
+add_files_to_zip $archive_ext "${depend_path}" bin $files
+add_found_files_to_nsh prov_postgresql bin
 
 files=(liblber.dll libldap.dll)
-add_files_to_zip $archive_ext ${depend_path}/ldap bin $files
-add_files_to_nsh prov_ldap ${depend_path}/ldap bin $files
+add_files_to_zip $archive_ext "${depend_path}" bin $files
+add_found_files_to_nsh prov_ldap bin
 
 #
 # dependencies from the cross compilation environment
 #
-#files=(readline5.dll)
-#add_files_to_zip $archive $cross_path bin $files
 
 #
 # Libgda's files
 #
 files=(information_schema.xml import_encodings.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh core $prefix share/libgda-5.0 $files
+add_found_files_to_nsh core share/libgda-5.0
 
 files=(gda-sql.lang)
 add_files_to_zip $archive $prefix share/libgda-5.0/language-specs $files
-add_files_to_nsh core $prefix share/libgda-5.0/language-specs $files
+add_found_files_to_nsh core share/libgda-5.0/language-specs
 
-add_all_files_to_zip $archive_ext $cross_path share/gtksourceview-2.0/language-specs
-add_all_files_to_nsh core $cross_path share/gtksourceview-2.0/language-specs
+add_all_files_to_zip $archive_ext "${depend_path}" share/gtksourceview-3.0/language-specs
+add_found_files_to_nsh core share/gtksourceview-3.0/language-specs
 
 files=(bdb_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh prov_bdb $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_bdb share/libgda-5.0
 
 files=(mdb_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh prov_mdb $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_mdb share/libgda-5.0
 
 files=(mysql_specs_add_column.xml mysql_specs_create_db.xml mysql_specs_create_index.xml mysql_specs_create_table.xml mysql_specs_create_view.xml mysql_specs_drop_column.xml mysql_specs_drop_db.xml mysql_specs_drop_index.xml mysql_specs_drop_table.xml mysql_specs_drop_view.xml mysql_specs_dsn.xml mysql_specs_rename_table.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh prov_mysql $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_mysql share/libgda-5.0
 
 files=(postgres_specs_add_column.xml postgres_specs_create_db.xml postgres_specs_create_index.xml postgres_specs_create_table.xml postgres_specs_create_view.xml postgres_specs_drop_column.xml postgres_specs_drop_db.xml postgres_specs_drop_index.xml postgres_specs_drop_table.xml postgres_specs_drop_view.xml postgres_specs_dsn.xml postgres_specs_rename_table.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh prov_postgresql $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_postgresql share/libgda-5.0
 
 files=(sqlite_specs_add_column.xml sqlite_specs_create_db.xml sqlite_specs_create_index.xml sqlite_specs_create_table.xml sqlite_specs_create_view.xml sqlite_specs_drop_db.xml sqlite_specs_drop_index.xml sqlite_specs_drop_table.xml sqlite_specs_drop_view.xml sqlite_specs_dsn.xml sqlite_specs_rename_table.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh prov_sqlite $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_sqlite share/libgda-5.0
 
 files=(web_specs_auth.xml web_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh prov_web $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_web share/libgda-5.0
 
 files=(oracle_specs_dsn.xml oracle_specs_create_table.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh prov_oracle $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_oracle share/libgda-5.0
 
 files=(ldap_specs_auth.xml ldap_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_files_to_nsh prov_ldap $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_ldap share/libgda-5.0
 
 files=(gdaui-generic.png)
 add_files_to_zip $archive $prefix share/libgda-5.0/pixmaps $files
-add_files_to_nsh core $prefix share/libgda-5.0/pixmaps $files
+add_found_files_to_nsh core share/libgda-5.0/pixmaps
 
 
 #
@@ -344,119 +404,123 @@ cp /usr/share/icons/gnome/24x24/apps/accessories-text-editor.png $prefix/share/l
 cp /usr/share/icons/gnome/32x32/apps/accessories-text-editor.png $prefix/share/libgda-5.0/icons/hicolor/32x32/apps
 
 add_all_files_to_zip $archive $prefix share/libgda-5.0/pixmaps
-add_all_files_to_nsh core $prefix share/libgda-5.0/pixmaps
+add_found_files_to_nsh core share/libgda-5.0/pixmaps
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/16x16/actions
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/16x16/actions
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/16x16/actions
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/22x22/actions
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/22x22/actions
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/22x22/actions
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/24x24/actions
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/24x24/actions
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/24x24/actions
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/32x32/actions
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/32x32/actions
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/32x32/actions
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/scalable/actions
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/scalable/actions
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/scalable/actions
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/16x16/apps
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/16x16/apps
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/16x16/apps
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/22x22/apps
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/22x22/apps
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/22x22/apps
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/24x24/apps
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/24x24/apps
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/24x24/apps
 add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/32x32/apps
-add_all_files_to_nsh core $prefix share/libgda-5.0/icons/hicolor/32x32/apps
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/32x32/apps
 
 files=(index.theme)
 add_files_to_zip $archive . share/libgda-5.0/icons/hicolor $files
-add_files_to_nsh core . share/libgda-5.0/icons/hicolor $files
+add_found_files_to_nsh core share/libgda-5.0/icons/hicolor
 
 files=(gda-browser-5.0.png)
 add_files_to_zip $archive $prefix share/pixmaps $files
-add_files_to_nsh core $prefix share/pixmaps $files
+add_found_files_to_nsh core share/pixmaps
 
 files=(gda-control-center.png)
 add_files_to_zip $archive $prefix share/libgda-5.0/pixmaps $files
-add_files_to_nsh core $prefix share/libgda-5.0/pixmaps $files
+add_found_files_to_nsh core share/libgda-5.0/pixmaps
 
 files=(gdaui-entry-number.xml gdaui-entry-string.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0/ui $files
-add_files_to_nsh core $prefix share/libgda-5.0/ui $files
+add_found_files_to_nsh core share/libgda-5.0/ui
 
 files=(cnc.js md5.js jquery.js mouseapp_2.js mouseirb_2.js irb.js gda.css gda-print.css irb.css)
 add_files_to_zip $archive $prefix share/libgda-5.0/web $files
-add_files_to_nsh core $prefix share/libgda-5.0/web $files
+add_found_files_to_nsh core share/libgda-5.0/web
 
 files=(libgda-paramlist.dtd libgda-array.dtd libgda-server-operation.dtd gdaui-layout.dtd)
 add_files_to_zip $archive $prefix share/libgda-5.0/dtd $files
-add_files_to_nsh core $prefix share/libgda-5.0/dtd $files
+add_found_files_to_nsh core share/libgda-5.0/dtd
 
 files=(config sales_test.db)
 add_files_to_zip $archive $prefix etc/libgda-5.0 $files
-add_files_to_nsh core $prefix etc/libgda-5.0 $files
+add_found_files_to_nsh core etc/libgda-5.0
 
-files=(gdk-pixbuf.loaders gtk.immodules)
-add_files_to_zip $archive_ext $cross_path etc/gtk-3.0 $files
-add_files_to_nsh core $cross_path etc/gtk-3.0 $files
+files=(gtk.immodules)
+add_files_to_zip $archive_ext "${depend_path}" etc/gtk-3.0 $files
+add_found_files_to_nsh core etc/gtk-3.0
 
 files=(gtkrc)
 add_files_to_zip $archive_ext . etc/gtk-3.0 $files
-add_files_to_nsh core . etc/gtk-2.0 $files
+add_found_files_to_nsh core etc/gtk-3.0
 
-#files=(pango.modules)
-#add_files_to_zip $archive_ext $cross_path etc/pango $files
-#add_files_to_nsh core $cross_path etc/pango $files
+files=(pango.modules)
+add_files_to_zip $archive_ext "${depend_path}" etc/pango $files
+add_found_files_to_nsh core etc/pango
+
+files=(pango-*.dll)
+add_files_to_zip $archive_ext "${depend_path}" lib/pango/1.6.0/modules $files
+add_found_files_to_nsh core lib/pango/1.6.0/modules
 
 files=(gda-sql-5.0.exe libgda-5.0-4.dll libgda-report-5.0-4.dll libgda-ui-5.0-4.dll gda-browser-5.0.exe gda-control-center-5.0.exe)
 add_files_to_zip $archive $prefix bin $files
-add_files_to_nsh core $prefix bin $files
+add_found_files_to_nsh core bin
 
 files=(gda-test-connection-5.0.exe)
 add_files_to_zip $archive $prefix bin $files
 
 files=(gspawn-win32-helper.exe)
-add_files_to_zip $archive $cross_path bin $files
-add_files_to_nsh core $cross_path bin $files
+add_files_to_zip $archive "${depend_path}" bin $files
+add_found_files_to_nsh core bin
 
 files=(gdaui-demo-5.0.exe)
 add_files_to_zip $archive_dev $prefix bin $files
 
 files=(libgda-bdb.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_files_to_nsh prov_bdb $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_bdb lib/libgda-5.0/providers
 
 files=(libgda-mdb.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_files_to_nsh prov_mdb $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_mdb lib/libgda-5.0/providers
 
 files=(libgda-mysql.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_files_to_nsh prov_mysql $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_mysql lib/libgda-5.0/providers
 
 files=(libgda-postgres.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_files_to_nsh prov_postgresql $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_postgresql lib/libgda-5.0/providers
 
 files=(libgda-sqlite.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_files_to_nsh prov_sqlite $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_sqlite lib/libgda-5.0/providers
 
 files=(libgda-web.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_files_to_nsh prov_web $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_web lib/libgda-5.0/providers
 
 files=(libgda-ldap.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_files_to_nsh prov_ldap $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_ldap lib/libgda-5.0/providers
 
 files=(libgda-oracle.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_files_to_nsh prov_oracle $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_oracle lib/libgda-5.0/providers
 
 files=(gdaui-entry-filesel-spec.xml gdaui-entry-password.xml gdaui-entry-pict-spec.xml gdaui-entry-pict-spec_string.xml libgda-ui-plugins.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/plugins $files
-add_files_to_nsh core $prefix lib/libgda-5.0/plugins $files
+add_found_files_to_nsh core lib/libgda-5.0/plugins
 
 files=(libwimp.dll)
-add_files_to_zip $archive_ext $cross_path lib/gtk-3.0/3.0.0/engines $files
-add_files_to_nsh core $cross_path lib/gtk-3.0/3.0.0/engines $files
+add_files_to_zip $archive_ext "${depend_path}" lib/gtk-3.0/3.0.0/engines $files
+add_found_files_to_nsh core lib/gtk-3.0/3.0.0/engines
 
 #
 # includes
@@ -523,11 +587,14 @@ do
     echo "SectionEnd" >> $item
 done
 
+cat gda-browser-tmpl.nsi | sed -e "s,GdaBrowserSetup,GdaBrowserSetup-${version}," > gda-browser.nsi
+
 #
 # The End
 #
+rm -f $tmpfile
 echo "Archives written to:"
 echo "   ${archive}"
 echo "   ${archive_dev}"
 echo "   ${archive_ext}"
-echo "Generate Windows installer using 'makensis gda-browser.nsi'"
+echo "Generate Windows installer using 'makensis -V0 gda-browser.nsi'"
