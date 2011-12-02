@@ -41,4 +41,10 @@ check_dataobject_LDADD = \
 	$(top_builddir)/libgda/data/libgdadata-1.0.la \
 	$(COREDEPS_LIBS)
 
+CLEANFILES += \
+    $(check_dataobject_VALASOURCES:.vala=.c) \
+    check_dataobject.h \
+    dataobject.db \
+    $(NULL)
+
 EXTRA_DIST = 

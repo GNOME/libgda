@@ -94,6 +94,7 @@ CLEANFILES += \
     $(typelibs_DATA) \
     gdadata-0.2.vapi \
     libgdadata-0.2.pc \
+    libgdadata.h \
     $(libgdadata_0_2_la_VALASOURCES:.vala=.c) \
     $(NULL)
 
