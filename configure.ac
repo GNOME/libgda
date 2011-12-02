@@ -510,9 +510,9 @@ then
 	    if test "x$enable_vala_ext" = "xyes"
 	    then
 dnl Check for libgee
-        GEE_REQUIRED="0.6.1"
+        GEE_REQUIRED="0.7.0"
 
-        PKG_CHECK_MODULES(GEE, gee-1.0 >= $GEE_REQUIRED)
+        PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
         AC_SUBST(GEE_CFLAGS)
         AC_SUBST(GEE_LIBS)
 	    fi
@@ -907,7 +907,7 @@ libgda/sqlite/virtual/libgda-virtual.h
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile
 libgda/data/Makefile
-libgda/data/libgdadata-1.0.pc
+libgda/data/libgdadata-0.2.pc
 providers/Makefile
 providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile

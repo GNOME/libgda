@@ -1,7 +1,7 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * libgda
- * Copyright (C) Daniel Espinosa Ortiz 2008 <esodan@gmail.com>
+ * libgdadata Unit Tests
+ * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -22,8 +22,6 @@ using GdaData;
 
 namespace Check {
 	class Tests : GdaData.Object {
-		private int fails;
-		
 		Tests()
 		{
 			try {
@@ -123,6 +121,31 @@ namespace Check {
 			catch (Error e) {
 				fails++;
 				stdout.printf ("Couln't UPDATE...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+			}
+			
+			stdout.printf("Setting a new Table... \n");
+			this._table = "company";
+			stdout.printf("Updating values from database using a new table 'company'...\n");
+			try {
+				this.update();
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this._table);
+				stdout.printf("%s\n", this._model.dump_as_string());
+			}
+			catch (Error e) {
+				fails++;
+				stdout.printf ("Couln't UPDATE...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+			}
+			
+			v = 2;
+			stdout.printf("Setting ID to %i\n", (int) v);
+			try {
+				this.set_id ("id", v);
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this._table);
+				stdout.printf("%s\n", this._model.dump_as_string());
+			}
+			catch (Error e) {
+				fails++;
+				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
 			}
 			
 			return fails;

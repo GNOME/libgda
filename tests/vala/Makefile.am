@@ -17,11 +17,11 @@ BUILT_SOURCES = check_dataobject.vala.stamp
 CLEANFILES = check_dataobject.vala.stamp
 
 VALAFLAGS = \
-    --pkg gee-1.0 \
+    --pkg gee-0.8 \
     --pkg gobject-2.0 \
     --pkg libxml-2.0 \
     --pkg libgda-5.0 \
-    --pkg gdadata-1.0 \
+    --pkg gdadata-0.2 \
     --includedir=$(top_builddir) \
     --vapidir=$(top_srcdir)/libgda \
     --vapidir=$(top_builddir)/libgda/data \
