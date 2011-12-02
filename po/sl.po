@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-11-23 20:39+0000\n"
-"PO-Revision-Date: 2011-11-24 15:40+0100\n"
+"POT-Creation-Date: 2011-12-02 14:53+0000\n"
+"PO-Revision-Date: 2011-12-02 16:25+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -141,7 +141,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda-ui/gdaui-data-filter.c:159
 #: ../libgda-ui/gdaui-init.c:507
 #: ../libgda-ui/gdaui-login.c:430
-#: ../libgda-ui/gdaui-rt-editor.c:731
+#: ../libgda-ui/gdaui-rt-editor.c:729
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1331
 #: ../providers/jdbc/gda-jdbc-provider.c:1360
@@ -203,12 +203,12 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:253
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:600
 #: ../tools/browser/ldap-browser/ldap-search-page.c:383
-#: ../tools/browser/query-exec/query-console-page.c:807
-#: ../tools/browser/query-exec/query-console-page.c:837
-#: ../tools/browser/query-exec/query-console-page.c:1032
-#: ../tools/browser/query-exec/query-console-page.c:1062
-#: ../tools/browser/query-exec/query-console-page.c:1093
-#: ../tools/browser/query-exec/query-console-page.c:1146
+#: ../tools/browser/query-exec/query-console-page.c:816
+#: ../tools/browser/query-exec/query-console-page.c:846
+#: ../tools/browser/query-exec/query-console-page.c:1046
+#: ../tools/browser/query-exec/query-console-page.c:1076
+#: ../tools/browser/query-exec/query-console-page.c:1107
+#: ../tools/browser/query-exec/query-console-page.c:1160
 #: ../tools/browser/query-exec/query-favorite-selector.c:191
 #: ../tools/browser/query-exec/query-favorite-selector.c:266
 #: ../tools/browser/query-exec/query-favorite-selector.c:287
@@ -2848,8 +2848,8 @@ msgstr "Usodna notranja napaka ponudnika SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:634
 #, c-format
-msgid "Tuncated data"
-msgstr "Razrezani podatki"
+msgid "Truncated data"
+msgstr "Prirezani podatki"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:684
 #: ../providers/jdbc/gda-jdbc-recordset.c:492
@@ -3332,7 +3332,7 @@ msgstr "Izberite datoteko za nalaganje"
 
 #: ../libgda-ui/data-entries/common-bin.c:78
 #: ../libgda-ui/data-entries/plugins/common-pict.c:421
-#: ../libgda-ui/gdaui-rt-editor.c:729
+#: ../libgda-ui/gdaui-rt-editor.c:727
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3385,7 +3385,7 @@ msgstr "Velikost podatkov"
 #: ../providers/ldap/gda-ldap-provider.c:698
 #: ../providers/mysql/gda-mysql-provider.c:635
 #: ../providers/mysql/gda-mysql-util.c:63
-#: ../tools/browser/support.c:446
+#: ../tools/browser/support.c:444
 #: ../tools/browser/ldap-browser/entry-properties.c:584
 #: ../tools/browser/schema-browser/table-columns.c:515
 #: ../tools/tools-utils.c:35
@@ -3467,7 +3467,7 @@ msgstr "Omogočiti je mogoče spremenilnik podrobnosti in stanja"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:407
 msgid "string truncated because too long"
-msgstr "niz je zaradi dolžine razrezan"
+msgstr "niz je zaradi dolžine prirezan"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:433
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:273
@@ -3497,20 +3497,20 @@ msgstr "neveljaven zapis UTF-8!"
 msgid "Format is hh:mm:ss"
 msgstr "Zapis je hh:mm:ss"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:274
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:272
 #, c-format
 msgid "Widget of class '%s' does not have any associated GdaDataHandler, (to be set using the 'handler' property) expect some mis-behaviours"
 msgstr "Gradnik razreda '%s' ni povezan z GdaDataHandler, (z uporabo lastnosti 'upravljalnik') razen nekaterih napačnih povezav"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:430
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:428
 msgid "Value is NULL"
 msgstr "Vrednosti je določena kot NULL"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:436
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:434
 msgid "Value will be determined by default"
 msgstr "Vrednost bo določena privzeto"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:442
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:440
 msgid "Value is invalid"
 msgstr "Vrednost je neveljavna"
 
@@ -3567,17 +3567,17 @@ msgstr "Več vrstični vnos"
 msgid "Unknown format character starting at %s"
 msgstr "Neznani znak oblikovanja pri %s"
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:267
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:268
 #, c-format
 msgid "Type %s is not numerical"
 msgstr "Vrsta %s ni številčna"
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:280
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:281
 #, c-format
 msgid "Decimal separator cannot be the '%c' character"
 msgstr "Znak '%c' ni ustrezen ločilnik decimalk"
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:289
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:290
 #, c-format
 msgid "Decimal thousands cannot be the '%c' character"
 msgstr "Znak '%c' ni ustrezen ločilnik tisočic"
@@ -3624,7 +3624,7 @@ msgid "_Save image"
 msgstr "_Shrani sliko"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:359
-#: ../libgda-ui/gdaui-rt-editor.c:688
+#: ../libgda-ui/gdaui-rt-editor.c:686
 msgid "Select image to load"
 msgstr "Izbor slike za nalaganje"
 
@@ -4047,11 +4047,11 @@ msgstr "Notranji GdaDataProxy podatkovni model"
 msgid "Trying to modify a read-only row"
 msgstr "Poskus spreminjanja stolpca le za branje"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:837
+#: ../libgda-ui/gdaui-data-proxy-info.c:835
 msgid "Undelete the selected entry"
 msgstr "Povrni izbrane izbrisane vnose"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:844
+#: ../libgda-ui/gdaui-data-proxy-info.c:842
 msgid "Delete the selected entry"
 msgstr "Izbriši izbranega vnosa"
 
@@ -4476,19 +4476,19 @@ msgstr "Medpomnilnik, ki je prikazan"
 msgid "Determines if the contents appears in a scrolled window"
 msgstr "Določa ali se vsebina pojavi v drsnem oknu"
 
-#: ../libgda-ui/gdaui-rt-editor.c:895
+#: ../libgda-ui/gdaui-rt-editor.c:893
 msgid "Reset font size"
 msgstr "Počisti velikost pisave"
 
-#: ../libgda-ui/gdaui-rt-editor.c:901
+#: ../libgda-ui/gdaui-rt-editor.c:899
 msgid "Decrease font size (zoom out)"
 msgstr "Zmanjšaj velikost pisave (oddalji)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:907
+#: ../libgda-ui/gdaui-rt-editor.c:905
 msgid "Increase font size (zoom in)"
 msgstr "Povečaj velikost pisave (približaj)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:913
+#: ../libgda-ui/gdaui-rt-editor.c:911
 msgid "Show source markup"
 msgstr "Prikaži izvorno oblikovanje"
 
@@ -5397,7 +5397,7 @@ msgstr "Razločno ime"
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1113
 #, c-format
 msgid "Truncated result because LDAP server limit encountered"
-msgstr "Rezultati so prirezani, ker je sodežena dovoljena meja strežnika LDAP"
+msgstr "Rezultati so prirezani, ker je dosežena dovoljena meja strežnika LDAP"
 
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:2
 msgid "User name"
@@ -7685,11 +7685,11 @@ msgstr "Ni mogoče odpreti povezave: %s"
 msgid "Database browser"
 msgstr "Brskalnik podatkovne zbirke"
 
-#: ../tools/browser/browser-window.c:1567
+#: ../tools/browser/browser-window.c:1588
 msgid "Don't show this message again"
 msgstr "Sporočila ne pokaži več"
 
-#: ../tools/browser/browser-window.c:1710
+#: ../tools/browser/browser-window.c:1735
 #, c-format
 msgid "The current perspective has changed to the '%s' perspective, you can switch back to previous perspective through the 'Perspective/%s' menu, or using the '%s' shortcut"
 msgstr "Trenutna perspektiva je spremenjena v '%s' perspektivo, nazaj pa jo je mogoče preklopiti preko vnosa menija 'Perspektiva/%s' ali pa s tipkovno bližnjico '%s'."
@@ -7897,19 +7897,19 @@ msgstr "Ni mogoče odpreti datoteke pomoči"
 msgid "Help is being loaded, please wait..."
 msgstr "Dokumenti pomoči se nalagajo, počakajte ..."
 
-#: ../tools/browser/support.c:322
+#: ../tools/browser/support.c:320
 msgid "Close tab"
 msgstr "Zapri zavihek"
 
-#: ../tools/browser/support.c:440
+#: ../tools/browser/support.c:438
 msgid "Abstract"
 msgstr "Izvleček"
 
-#: ../tools/browser/support.c:442
+#: ../tools/browser/support.c:440
 msgid "Structural"
 msgstr "Po zgradbi"
 
-#: ../tools/browser/support.c:444
+#: ../tools/browser/support.c:442
 msgid "Auxilliary"
 msgstr "Pomožno"
 
@@ -8306,8 +8306,8 @@ msgstr "Izjave za izvedbo ni izjava izbire"
 #: ../tools/browser/common/ui-formgrid.c:660
 #: ../tools/browser/common/ui-formgrid.c:688
 #: ../tools/browser/common/ui-formgrid.c:719
-#: ../tools/browser/query-exec/query-console-page.c:1030
-#: ../tools/browser/query-exec/query-console-page.c:1060
+#: ../tools/browser/query-exec/query-console-page.c:1044
+#: ../tools/browser/query-exec/query-console-page.c:1074
 #: ../tools/browser/schema-browser/table-info.c:519
 #, c-format
 msgid ""
@@ -8336,7 +8336,7 @@ msgid "Execution of action"
 msgstr "Izvajanje dejanja"
 
 #: ../tools/browser/common/ui-formgrid.c:830
-#: ../tools/browser/query-exec/query-console-page.c:1145
+#: ../tools/browser/query-exec/query-console-page.c:1159
 #: ../tools/browser/schema-browser/table-info.c:547
 #, c-format
 msgid "Error executing query: %s"
@@ -8502,8 +8502,8 @@ msgstr "Ni mogoče odstraniti priljubljenega: %s"
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:482
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:252
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:599
-#: ../tools/browser/query-exec/query-console-page.c:806
-#: ../tools/browser/query-exec/query-console-page.c:836
+#: ../tools/browser/query-exec/query-console-page.c:815
+#: ../tools/browser/query-exec/query-console-page.c:845
 #: ../tools/browser/query-exec/query-favorite-selector.c:265
 #: ../tools/browser/query-exec/query-favorite-selector.c:706
 #: ../tools/browser/schema-browser/favorite-selector.c:351
@@ -9036,7 +9036,7 @@ msgid "Query execution (SQL)"
 msgstr "Izvajanje poizvedbe (SQL)"
 
 #: ../tools/browser/query-exec/query-console-page.c:290
-#: ../tools/browser/query-exec/query-console-page.c:1253
+#: ../tools/browser/query-exec/query-console-page.c:1267
 msgid "Query editor"
 msgstr "Urejevalnik poizvedb"
 
@@ -9120,34 +9120,34 @@ msgstr "Spremeni priljubljen predmet '%s'"
 msgid "Modify a favorite"
 msgstr "Spremeni priljubljen predmet"
 
-#: ../tools/browser/query-exec/query-console-page.c:782
-#: ../tools/browser/query-exec/query-console-page.c:799
+#: ../tools/browser/query-exec/query-console-page.c:788
+#: ../tools/browser/query-exec/query-console-page.c:808
 msgid "Favorite's name"
 msgstr "Ime priljubljenega predmeta:"
 
-#: ../tools/browser/query-exec/query-console-page.c:783
+#: ../tools/browser/query-exec/query-console-page.c:789
 #: ../tools/browser/query-exec/query-favorite-selector.c:696
 msgid "Unnamed query"
 msgstr "Neimenovana poizvedba"
 
-#: ../tools/browser/query-exec/query-console-page.c:786
+#: ../tools/browser/query-exec/query-console-page.c:792
 msgid "Name of the favorite to create"
 msgstr "Ime novega priljubljenega predmeta"
 
-#: ../tools/browser/query-exec/query-console-page.c:787
+#: ../tools/browser/query-exec/query-console-page.c:793
 msgid "Enter the name of the favorite to create"
 msgstr "Vnos imena novega priljubljenega  predmeta"
 
-#: ../tools/browser/query-exec/query-console-page.c:911
+#: ../tools/browser/query-exec/query-console-page.c:923
 msgid "Invalid variable's contents"
 msgstr "Neveljavna vsebina spremenljivke"
 
-#: ../tools/browser/query-exec/query-console-page.c:912
+#: ../tools/browser/query-exec/query-console-page.c:924
 #: ../tools/browser/schema-browser/table-info.c:922
 msgid "assign values to the following variables"
 msgstr "dodeli vrednosti naslednjim spremenljivkam"
 
-#: ../tools/browser/query-exec/query-console-page.c:1017
+#: ../tools/browser/query-exec/query-console-page.c:1031
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -9162,36 +9162,36 @@ msgstr ""
 "so blobi dostopni. Počistiti je treba zgodovino pred\n"
 "končanjem prenosa."
 
-#: ../tools/browser/query-exec/query-console-page.c:1035
+#: ../tools/browser/query-exec/query-console-page.c:1049
 msgid "Statement executed"
 msgstr "Izjava je izvedena"
 
-#: ../tools/browser/query-exec/query-console-page.c:1092
+#: ../tools/browser/query-exec/query-console-page.c:1106
 #, c-format
 msgid "Error while parsing code: %s"
 msgstr "Napaka med razčlenjevanjem kode: %s"
 
-#: ../tools/browser/query-exec/query-console-page.c:1102
+#: ../tools/browser/query-exec/query-console-page.c:1116
 msgid "A query is already being executed, to execute another query, open a new connection."
 msgstr "Poizvedba je že izvedena. Za izvedbo druge poizvedbe, odprite novo povezavo."
 
-#: ../tools/browser/query-exec/query-console-page.c:1161
+#: ../tools/browser/query-exec/query-console-page.c:1175
 msgid "Internal error, please report error to http://bugzilla.gnome.org/ for the \"libgda\" product"
 msgstr "Notranja napaka, pošljite poročilo o napaki na http://bugzilla.gnome.org/ za knjižnico \"libgda\""
 
-#: ../tools/browser/query-exec/query-console-page.c:1204
+#: ../tools/browser/query-exec/query-console-page.c:1218
 msgid "_Execute"
 msgstr "_Izvedi"
 
-#: ../tools/browser/query-exec/query-console-page.c:1204
+#: ../tools/browser/query-exec/query-console-page.c:1218
 msgid "Execute query"
 msgstr "Izvedi poizvedbo"
 
-#: ../tools/browser/query-exec/query-console-page.c:1207
+#: ../tools/browser/query-exec/query-console-page.c:1221
 msgid "_Undo"
 msgstr "_Razveljavi"
 
-#: ../tools/browser/query-exec/query-console-page.c:1207
+#: ../tools/browser/query-exec/query-console-page.c:1221
 msgid "Undo last change"
 msgstr "Razveljavi zadnjo spremembo"
 
