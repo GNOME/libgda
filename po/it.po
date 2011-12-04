@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: gnome-db\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-12-02 14:48+0100\n"
-"PO-Revision-Date: 2011-12-02 15:50+0100\n"
+"PO-Revision-Date: 2011-12-04 11:24+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
 "Language: \n"
@@ -1321,12 +1321,11 @@ msgstr "GdaDataModel ha rifiutato il cambiamento di valore"
 
 #. dummy setup to enable GIR compilation
 #: ../libgda/gda-data-model-ldap.c:136
-#, fuzzy
 msgid ""
 "Dummy GdaDataModelLdap object: if you see this message in your application "
 "then it's likely that there is an installation problem with the LDAP "
 "provider. In any case the GdaDataModelLdap object won't be useable."
-msgstr "Dummy GdaDataModelLdap object: if you see this message in your application then it's likely that there is an installation problem with the LDAP provider. In any case the GdaDataModelLdap object won't be useable."
+msgstr "Oggetto dummy GdaDataModelLdap: se si sta osservando l'attuale messaggio nell'applicazione significa che probabilmente c'è un problema nell'installazione del fornitore LDAP. In ogni caso l'oggeto GdaDataModelLdap non sarà utilizzabile."
 
 #: ../libgda/gda-data-pivot.c:492
 msgid "Pivot model not populated"
@@ -3382,9 +3381,8 @@ msgid "This report document does not handle %s output"
 msgstr "Questo rapporto non gestisce il risultato in %s"
 
 #: ../libgda-ui/data-entries/common-bin.c:39
-#, fuzzy
 msgid "Select file to load"
-msgstr "Seleziona immagine da caricare"
+msgstr "Selezionare il file da caricare"
 
 #: ../libgda-ui/data-entries/common-bin.c:78
 #: ../libgda-ui/data-entries/plugins/common-pict.c:421
@@ -3398,17 +3396,16 @@ msgstr ""
 " %s"
 
 #: ../libgda-ui/data-entries/common-bin.c:109
-#, fuzzy
 msgid "Select a file to save data to"
-msgstr "Seleziona un file su cui salvare l'immagine"
+msgstr "Selezionare il file su cui salvare i dati"
 
 #: ../libgda-ui/data-entries/common-bin.c:155
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not save data to '%s':\n"
 " %s"
 msgstr ""
-"Impossibile salvare l'immagine su \"%s\":\n"
+"Impossibile salvare i dati su \"%s\":\n"
 " %s"
 
 #: ../libgda-ui/data-entries/common-bin.c:195
@@ -3754,7 +3751,6 @@ msgid "Keyword"
 msgstr "Parola chiave"
 
 #: ../libgda-ui/data-entries/plugins/gda-sql.lang.h:8
-#, fuzzy
 msgid "No idea what it is"
 msgstr "Nessuna idea su cosa sia"
 
@@ -4025,11 +4021,10 @@ msgid "Correct data first"
 msgstr "Correggi prima i dati"
 
 #: ../libgda-ui/gdaui-basic-form.c:286
-#, fuzzy
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
-msgstr "Puntatore ad una specifica di struttura dati XML"
+msgstr "Puntatore ad una specifica di struttura XML (come un xmlNodePtr verso un nodo <gdaui_form>)"
 
 #: ../libgda-ui/gdaui-basic-form.c:290
 msgid "List of parameters to show in the form"
@@ -4052,9 +4047,8 @@ msgid "TRUE if expanding the form vertically makes sense"
 msgstr ""
 
 #: ../libgda-ui/gdaui-basic-form.c:333
-#, fuzzy
 msgid "Shown data entries"
-msgstr "Proprietà della sorgente dati"
+msgstr "Mostra le voci dati"
 
 #: ../libgda-ui/gdaui-basic-form.c:955 ../libgda-ui/gdaui-raw-grid.c:829
 #: ../libgda-ui/gdaui-raw-grid.c:2783
@@ -4091,11 +4085,9 @@ msgid ""
 msgstr ""
 
 #: ../libgda-ui/gdaui-cloud.c:245 ../libgda-ui/gdaui-cloud.c:976
-#, fuzzy, c-format
+#, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
-msgstr ""
-"Parametro di tipo sbagliato per \"%s\": era previsto il tipo \"%s\" e si è "
-"ottenuto \"%s\""
+msgstr "Colonna di tipo sbagliato per l'etichetta: era prevista una stringa e si è ottenuto \"%s\""
 
 #: ../libgda-ui/gdaui-cloud.c:1069 ../tools/browser/common/objects-cloud.c:458
 msgid "Find:"
@@ -4205,49 +4197,40 @@ msgid "Data to display"
 msgstr "Dati da mostrare"
 
 #: ../libgda-ui/gdaui-raw-form.c:198 ../libgda-ui/gdaui-raw-grid.c:183
-#, fuzzy
 msgid "Delete the current record"
-msgstr "Eliminare il record corrente"
+msgstr "Elimina il record corrente"
 
 #: ../libgda-ui/gdaui-raw-form.c:202 ../libgda-ui/gdaui-raw-grid.c:187
-#, fuzzy
 msgid "Create a new record"
 msgstr "Crea un nuovo record"
 
 #: ../libgda-ui/gdaui-raw-form.c:203 ../libgda-ui/gdaui-raw-grid.c:188
-#, fuzzy
 msgid "Commit the modifications"
-msgstr "Porta specificata non valida"
+msgstr "Esegui il commit delle modifiche"
 
 #: ../libgda-ui/gdaui-raw-form.c:204 ../libgda-ui/gdaui-raw-grid.c:189
-#, fuzzy
 msgid "Clear all the modifications"
-msgstr "Impossibile recuperate i dati dopo le modifiche"
+msgstr "Annulla tutte le modifiche"
 
 #: ../libgda-ui/gdaui-raw-form.c:205
-#, fuzzy
 msgid "Go to first record"
 msgstr "Vai al primo record"
 
 #: ../libgda-ui/gdaui-raw-form.c:206
-#, fuzzy
 msgid "Go to last record"
 msgstr "Vai all'ultimo record"
 
 #: ../libgda-ui/gdaui-raw-form.c:207
-#, fuzzy
 msgid "Go to previous record"
 msgstr "Va al record precedente"
 
 #: ../libgda-ui/gdaui-raw-form.c:208
-#, fuzzy
 msgid "Go to next record"
 msgstr "Va al record successivo"
 
 #: ../libgda-ui/gdaui-raw-form.c:209 ../libgda-ui/gdaui-raw-grid.c:194
-#, fuzzy
 msgid "Filter records"
-msgstr "Filtro record"
+msgstr "Filtra i record"
 
 #: ../libgda-ui/gdaui-raw-form.c:624
 #, c-format
@@ -4271,11 +4254,10 @@ msgid "Go to next chunck"
 msgstr "Va al blocco successivo"
 
 #: ../libgda-ui/gdaui-raw-grid.c:308
-#, fuzzy
 msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
-msgstr "Puntatore ad una specifica di struttura dati XML"
+msgstr "Puntatore ad una specifica di struttura XML (come un xmlNodePtr ad un nodo <gdaui_grid>)"
 
 #: ../libgda-ui/gdaui-raw-grid.c:311
 msgid "Info cell visible"
@@ -5300,16 +5282,14 @@ msgstr "Definisci la funzione REGEXP"
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:8
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:8
-#, fuzzy
 msgid "Enable usage of extra collation methods (LOCALE and DCASE)"
-msgstr "Abilita l'uso di alcune funzioni SQL extra"
+msgstr "Abilita l'uso di metodi extra collation (LOCALE e DCASE)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:9
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:9
-#, fuzzy
 msgid "Enable usage of extra functions (gda_upper, ...)"
-msgstr "Abilita l'uso di alcune funzioni SQL extra"
+msgstr "Abilita l'uso di funzioni extra (gda_upper, ...)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:10
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:10
@@ -6772,9 +6752,8 @@ msgstr "Può creare database"
 #. available since PostgreSQL 8.1
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:10
-#, fuzzy
 msgid "Can create roles"
-msgstr "Può creare regole"
+msgstr "Può creare ruoli"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6814,15 +6793,14 @@ msgid "Encrypt password"
 msgstr "Cifra password"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:31
-#, fuzzy
 msgid "Existing role"
-msgstr "Tipi di operazioni esistenti:\n"
+msgstr "Ruolo esistente"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:32
 msgid ""
 "Existing roles to which the new role will be immediately added as a new "
 "member"
-msgstr ""
+msgstr "Ruoli esistenti ai quali il nuovo ruolo sarà immediatamente aggiunto come nuovo membro"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6832,7 +6810,7 @@ msgstr ""
 msgid ""
 "If the role is allowed to log in, defines the number of concurrent "
 "connections the role can make (-1 or unset for unlimited)"
-msgstr ""
+msgstr "Se al ruolo è permesso di effettuare il login, definisce il numero di connessioni contemporanee che il ruolo può effettuare (-1 o non impostato per un numero illimitato)"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6846,14 +6824,14 @@ msgstr "Eredita"
 msgid ""
 "Lists one or more existing roles which are automatically added as members of "
 "the new role"
-msgstr ""
+msgstr "Elenca uno o più ruoli esistenti automaticamente aggiunti come membri del nuovo ruolo"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:44
 msgid ""
 "Lists one or more existing roles which are automatically added as members of "
 "the new role, giving them the right to grant membership in this role to "
 "others"
-msgstr ""
+msgstr "Elenca uno o più ruoli esistenti automaticamente aggiunti come membri del nuovo ruolo, dando a loro volta il diritto di rendere membri di questo ruolo altri membri"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6882,13 +6860,12 @@ msgstr ""
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:67
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:4
-#, fuzzy
 msgid "Role's definition"
-msgstr "Definizione della vista"
+msgstr "Definizione del roulo"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:68
 msgid "Role's members"
-msgstr ""
+msgstr "Membri del ruolo"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6896,18 +6873,16 @@ msgstr ""
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:73
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:5
-#, fuzzy
 msgid "Role's name"
-msgstr "Nome tabella"
+msgstr "Nome del ruolo"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:78
-#, fuzzy
 msgid "Role's password"
-msgstr "Password"
+msgstr "Password del ruolo"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6917,7 +6892,7 @@ msgstr "Password"
 msgid ""
 "Set to TRUE if the created role inherits the privileges of roles it is a "
 "member of"
-msgstr ""
+msgstr "Imposta a TRUE se il ruolo creato eredita i privilegi del ruolo di cui è membro"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -6925,7 +6900,7 @@ msgstr ""
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:88
 msgid "Set to TRUE if the role is a database superuser"
-msgstr ""
+msgstr "Imposta a TRUE se il ruolo è un superutente del database"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7094,14 +7069,12 @@ msgid "The name of a database to drop"
 msgstr "Nome di un database da eliminare"
 
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:1
-#, fuzzy
 msgid "Drop role only if it exists"
-msgstr "Elimina la tabella solo se esiste"
+msgstr "Elimina il ruolo solo se esiste"
 
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:1
-#, fuzzy
 msgid "Drop user only if it exists"
-msgstr "Elimina la vista solo se esiste"
+msgstr "Elimina l'utente solo se esiste"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:1
 msgid "Automatically drop objects that depend on the view (CASCADE)"
@@ -7154,12 +7127,11 @@ msgstr ""
 #: ../providers/reuseable/postgres/gda-postgres-meta.c:2114
 #, fuzzy, c-format
 msgid "could not determine the indexed columns for index"
-msgstr "Impossibile trovare il destinatario del join"
+msgstr "impossibile determinare le colonne indicizzate per indice"
 
 #: ../providers/sqlcipher/libmain.c:76
-#, fuzzy
 msgid "Provider for SQLCipher"
-msgstr "Fornitore per database SQLite"
+msgstr "Fornitore per SQLCipher"
 
 #. DSN parameters
 #: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:1
@@ -7237,23 +7209,21 @@ msgid "The transaction has been automatically rolled back"
 msgstr "Sulla transazione è stato fatto un rollback automatico"
 
 #: ../providers/web/gda-web-util.c:575
-#, fuzzy, c-format
+#, c-format
 msgid "Error cleaning data on the server for session %s"
-msgstr "Errore nell'ottenere i meta dati dalla connessione: %s"
+msgstr "Errore nel pulire i dati sul server per la sessione %s"
 
 #: ../providers/web/gda-web-util.c:607
-#, fuzzy
 msgid "Non detailled error"
-msgstr "Nessun dettagio"
+msgstr "Errore non dettagiato"
 
 #: ../providers/web/libmain.c:75
-#, fuzzy
 msgid "Provider for web server proxies"
-msgstr "Fornitore per database Berkeley"
+msgstr "Fornitore per i proxy del server web"
 
 #: ../providers/web/web_specs_auth.xml.in.h:1
 msgid "Connection password as defined on the web server"
-msgstr ""
+msgstr "Password di connessione come definita sul server web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:2
 msgid "Path to PHP script"
@@ -7631,9 +7601,8 @@ msgid "Open a connection"
 msgstr "Apri una connessione"
 
 #: ../tools/browser/browser-window.c:281
-#, fuzzy
 msgid "_Bind connection"
-msgstr "Connessioni aperte"
+msgstr "Insta_ura connessione"
 
 #: ../tools/browser/browser-window.c:281
 msgid ""
@@ -7799,14 +7768,14 @@ msgid "Hit the Escape key to leave the fullscreen mode"
 msgstr "Premere il tasto Esc per uscire dalla modalità a pieno schermo"
 
 #: ../tools/browser/browser-window.c:1171
-#, fuzzy, c-format
+#, c-format, fuzzy
 msgid "Error updating bound connection: %s"
-msgstr "Errore durante l'aggiornamento della connessione collegata: %s"
+msgstr "Errore aggiornando la connessione instaurata: %s"
 
 #: ../tools/browser/browser-window.c:1212
-#, fuzzy, c-format
+#, c-format, fuzzy
 msgid "Could not open binding connection: %s"
-msgstr "Impossibile aprire una connessione collegata: %s"
+msgstr "Impossibile aprire una connessione: %s"
 
 #: ../tools/browser/browser-window.c:1252
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
@@ -7843,35 +7812,32 @@ msgid ""
 "The virtual connection you are about to define can bind tables from an "
 "existing connection as well as bind a data set which will appear as a table "
 "(importing CSV data for example). You can add as many binds as needed"
-msgstr ""
+msgstr "La connessione virtuale che si sta per definire può collegare tabelle da una connessione esistente come degli insiemi di dati che appariranno come delle tabelle (importanto dati CSV per esempio). È possibile aggiungere collegamenti a piacere"
 
 #: ../tools/browser/connection-binding-properties.c:279
 msgid "Add binding"
-msgstr ""
+msgstr "Aggiungi collegamento"
 
 #: ../tools/browser/connection-binding-properties.c:329
-#, fuzzy
 msgid "Bind a connection"
-msgstr "Connessioni aperte"
+msgstr "Collega una connessione"
 
 #: ../tools/browser/connection-binding-properties.c:335
-#, fuzzy
 msgid "Bind a data set"
-msgstr "Dati binari"
+msgstr "Collega un insieme di dati"
 
 #: ../tools/browser/connection-binding-properties.c:418
-#, fuzzy
 msgid "Bind a data set as a table:"
-msgstr "Dati binari"
+msgstr "Collega un insieme di dati come una tabella:"
 
 #: ../tools/browser/connection-binding-properties.c:422
 msgid "Import a data set and make it appear as a table"
-msgstr ""
+msgstr "Importa un insieme di dati e fallo apparire come una tabella"
 
 #: ../tools/browser/connection-binding-properties.c:425
 #: ../tools/browser/connection-binding-properties.c:535
 msgid "Remove this bind"
-msgstr ""
+msgstr "Rimuovi questo collegamento"
 
 #: ../tools/browser/connection-binding-properties.c:475
 #, c-format
@@ -7881,7 +7847,7 @@ msgstr "Nome dello schema non valido"
 #: ../tools/browser/connection-binding-properties.c:525
 #, fuzzy
 msgid "Bind all tables of a connection using a schema prefix:"
-msgstr "Chiudi una connessione"
+msgstr "Collega tutte le tabelle di una connessione usando un prefisso a schema:"
 
 #: ../tools/browser/connection-binding-properties.c:529
 #, fuzzy
@@ -7892,11 +7858,12 @@ msgstr ""
 "Allaccia le diverse connessioni assieme nella connessione NOME_CNS virtuale"
 
 #: ../tools/browser/connection-binding-properties.c:562
-#, fuzzy
 msgid ""
 "Name of the schema the\n"
 "tables will be in"
-msgstr "Nome del database nel file di database da usare"
+msgstr ""
+"Nome dello schema di cui le\n"
+"tabelle faranno parte"
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:1
 msgid "Browse your database's contents"
@@ -8346,9 +8313,8 @@ msgid "No data."
 msgstr "Nessun dato."
 
 #: ../tools/browser/common/gdaui-entry-import.c:181
-#, fuzzy
 msgid "Data set import from file"
-msgstr "Carica immagine da fi_le"
+msgstr "Importazione insieme di dati dal file"
 
 #: ../tools/browser/common/gdaui-entry-import.c:214
 #: ../tools/browser/query-exec/query-result.c:229
@@ -8375,16 +8341,15 @@ msgstr "Importa"
 
 #: ../tools/browser/common/gdaui-entry-import.c:224
 #: ../tools/browser/common/gdaui-entry-import.c:247
-#, fuzzy
 msgid "No data set"
 msgstr "Nessun insieme di dati"
 
 #: ../tools/browser/common/objects-cloud.c:250
-#, fuzzy, c-format
+#, c-format
 msgid "%d table in current schema:"
 msgid_plural "%d tables in current schema:"
-msgstr[0] "Tabelle nello schema \"%s\""
-msgstr[1] "Tabelle nello schema \"%s\""
+msgstr[0] "%d tabella nello schema attuale:"
+msgstr[1] "%d tabelle nello schema attuale:"
 
 #: ../tools/browser/common/objects-cloud.c:254
 msgid "Tables in current schema:"
@@ -8407,9 +8372,8 @@ msgid "Enable or disable auto update of data"
 msgstr "Abilita o disabilita il comando di autoaggiornamento dei dati"
 
 #: ../tools/browser/common/ui-formgrid.c:360
-#, fuzzy
 msgid "Toggle between grid and form presentations"
-msgstr "Commuta tra presentazione da griglia o a modulo"
+msgstr "Commuta tra presentazione a griglia o a modulo"
 
 #: ../tools/browser/common/ui-formgrid.c:501
 msgid "Execute action"
@@ -8427,9 +8391,9 @@ msgstr "Zoom..."
 
 #: ../tools/browser/common/ui-formgrid.c:652
 #: ../tools/browser/data-manager/data-source.c:811
-#, fuzzy, c-format
+#, c-format
 msgid "Statement to execute is not a selection statement"
-msgstr "Il comando non è un comando di selezione"
+msgstr "Il comando da eseguire non è un comando di selezione"
 
 #: ../tools/browser/common/ui-formgrid.c:660
 #: ../tools/browser/common/ui-formgrid.c:688
@@ -8437,17 +8401,18 @@ msgstr "Il comando non è un comando di selezione"
 #: ../tools/browser/query-exec/query-console-page.c:1044
 #: ../tools/browser/query-exec/query-console-page.c:1074
 #: ../tools/browser/schema-browser/table-info.c:519
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error executing query:\n"
 "%s"
-msgstr "Errore nella creazione del database: %s"
+msgstr ""
+"Errore eseguendo l'interrogazione:\n"
+"%s"
 
 #: ../tools/browser/common/ui-formgrid.c:778
 #: ../tools/browser/common/ui-formgrid.c:782
-#, fuzzy
 msgid "Action successfully executed"
-msgstr "Connessione aperta con successo!"
+msgstr "Azione conseguita con successo!"
 
 #: ../tools/browser/common/ui-formgrid.c:799
 #, c-format
@@ -8457,16 +8422,15 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/common/ui-formgrid.c:803
-#, fuzzy
 msgid "Execution of action"
-msgstr "Opzioni di connessione extra"
+msgstr "Esecuzione dell'azione"
 
 #: ../tools/browser/common/ui-formgrid.c:830
 #: ../tools/browser/query-exec/query-console-page.c:1159
 #: ../tools/browser/schema-browser/table-info.c:547
-#, fuzzy, c-format
+#, c-format
 msgid "Error executing query: %s"
-msgstr "Errore nella creazione del database: %s"
+msgstr "Errore eseguendo l'interrogazione: %s"
 
 #: ../tools/browser/data-manager/analyser.c:192
 #, fuzzy
@@ -8474,62 +8438,61 @@ msgid "Obtain referenced data in table "
 msgstr "Aggiungi tabelle riferite"
 
 #: ../tools/browser/data-manager/analyser.c:209
+#, fuzzy
 msgid "List referencing data in "
-msgstr ""
+msgstr "Elenca i dati riferenti in "
 
 #: ../tools/browser/data-manager/analyser.c:276
-#, fuzzy, c-format
+#, c-format
 msgid "Error adding new data source: %s"
-msgstr "Errore nella creazione del database: %s"
+msgstr "Errore aggiungendo una nuova sorgente dati: %s"
 
 #: ../tools/browser/data-manager/data-console.c:300
-#, fuzzy
 msgid "Data Manager"
-msgstr "Nome database"
+msgstr "Gestore dati"
 
 #: ../tools/browser/data-manager/data-console.c:300
 #: ../tools/browser/data-manager/data-console.c:519
 #: ../tools/browser/schema-browser/relations-diagram.c:327
 #: ../tools/browser/schema-browser/relations-diagram.c:475
-#, fuzzy
 msgid "Unsaved"
-msgstr "Diagramma non salvato"
+msgstr "Nonsalvato"
 
 #: ../tools/browser/data-manager/data-console.c:331
 #: ../tools/browser/query-exec/query-console-page.c:336
 msgid "Variables' values:"
-msgstr ""
+msgstr "Valori delle variabili:"
 
 #: ../tools/browser/data-manager/data-console.c:388
 msgid "Reset"
-msgstr ""
+msgstr "Reimposta"
 
 #: ../tools/browser/data-manager/data-console.c:389
 msgid ""
 "Reset the editor's\n"
 "contents"
 msgstr ""
+"Reimposta i contenuti\n"
+"dell'editor"
 
 #: ../tools/browser/data-manager/data-console.c:396
-#, fuzzy
 msgid "Add a new data source"
-msgstr "Aggiungi una nuova sorgente dati..."
+msgstr "Aggiungi una nuova sorgente dati"
 
 #: ../tools/browser/data-manager/data-console.c:402
 #: ../tools/browser/query-exec/query-console-page.c:369
-#, fuzzy
 msgid "Variables"
-msgstr "Valori"
+msgstr "Variabili"
 
 #: ../tools/browser/data-manager/data-console.c:402
 msgid "Show variables needed"
-msgstr ""
+msgstr "Mostra le variabili necessarie"
 
 #: ../tools/browser/data-manager/data-console.c:408
 #: ../tools/browser/ldap-browser/ldap-search-page.c:327
 #: ../tools/browser/query-exec/query-console-page.c:376
 msgid "Execute"
-msgstr ""
+msgstr "Esegui"
 
 #: ../tools/browser/data-manager/data-console.c:408
 msgid ""
@@ -8538,9 +8501,8 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/data-manager/data-console.c:414
-#, fuzzy
 msgid "View XML"
-msgstr "Vista"
+msgstr "Vista XML"
 
 #: ../tools/browser/data-manager/data-console.c:414
 msgid ""
@@ -8553,9 +8515,9 @@ msgid "BBB:"
 msgstr ""
 
 #: ../tools/browser/data-manager/data-console.c:507
-#, fuzzy, c-format
+#, c-format
 msgid "'%s' data manager"
-msgstr "Diagramma \"%s\""
+msgstr "Gestore dati \"%s\""
 
 #: ../tools/browser/data-manager/data-console.c:508
 #: ../tools/browser/data-manager/data-console.c:519
@@ -8564,19 +8526,16 @@ msgstr "Diagramma \"%s\""
 #: ../tools/browser/data-manager/perspective-main.c:33
 #: ../tools/browser/schema-browser/relations-diagram.c:510
 #: ../tools/browser/schema-browser/table-info.c:484
-#, fuzzy
 msgid "Data manager"
-msgstr "Nome database"
+msgstr "Gestore dati"
 
 #: ../tools/browser/data-manager/data-console.c:562
-#, fuzzy
 msgid "Could not save data manager"
-msgstr "Impossibile salvare il diagramma"
+msgstr "Impossibile salvare il gestore dati"
 
 #: ../tools/browser/data-manager/data-console.c:588
-#, fuzzy
 msgid "Data manager's name"
-msgstr "Nome database"
+msgstr "Nome del gestore dati"
 
 #: ../tools/browser/data-manager/data-console.c:608
 #: ../tools/browser/ldap-browser/entry-properties.c:274
@@ -8585,39 +8544,38 @@ msgid "Save"
 msgstr "Salva"
 
 #: ../tools/browser/data-manager/data-console.c:727
-#, fuzzy, c-format
+#, c-format
 msgid "source%d"
-msgstr "Sorgenti dati"
+msgstr "Sorgente%d"
 
 #: ../tools/browser/data-manager/data-console.c:786
-#, fuzzy
 msgid "Data source from SQL"
-msgstr "Nome sorgente dati"
+msgstr "Sorgente dati da SQL"
 
 #. To translators: "In schema" refers to the database schema an object is in
 #: ../tools/browser/data-manager/data-console.c:824
 #: ../tools/browser/schema-browser/table-info.c:331
-#, fuzzy, c-format
+#, c-format
 msgid "In schema '%s'"
-msgstr "Tabelle nello schema \"%s\":"
+msgstr "Nello schema \"%s\""
 
 #: ../tools/browser/data-manager/data-console.c:834
 #, c-format
 msgid "For table: %s"
-msgstr ""
+msgstr "Per tabella: %s"
 
 #: ../tools/browser/data-manager/data-console.c:918
 msgid ""
 "Switching to execution mode. Hit the Escape key to return to the compose mode"
-msgstr ""
+msgstr "Passaggio a modalità \"esecuzione\". Premere il tasto Esc per ritornare alla modalità \"composizione\""
 
 #: ../tools/browser/data-manager/data-console.c:924
 msgid "_Toggle mode"
-msgstr ""
+msgstr "Commu_ta modalità"
 
 #: ../tools/browser/data-manager/data-console.c:924
 msgid "Switch between compose and execute modes"
-msgstr ""
+msgstr "Passa dalla modalità \"composizione\" ad \"esecuzione\" e viceversa"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:200
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:189
@@ -8646,66 +8604,56 @@ msgstr "Impossibile aggiungere un favorito: %s"
 #: ../tools/browser/data-manager/data-favorite-selector.c:289
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:283
 #: ../tools/browser/query-exec/query-favorite-selector.c:336
-#, fuzzy
 msgid "Favorite's properties"
-msgstr "Proprietà della connessione"
+msgstr "Proprietà dei favoriti"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:311
-#, fuzzy
 msgid "Specifications"
-msgstr "Specifica connessione:"
+msgstr "Specifiche"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:482
-#, fuzzy
 msgid "Saved"
-msgstr "Salva"
+msgstr "Salvato"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:608
-#, fuzzy
 msgid "Unnamed data manager"
-msgstr "Parametro senza nome"
+msgstr "Gestore dati senza nome"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:332
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
 #: ../tools/browser/query-exec/query-exec-perspective.c:306
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:307
-#, fuzzy
 msgid "_Show favorites"
-msgstr "Favoriti"
+msgstr "Mo_stra i favoriti"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:332
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
 #: ../tools/browser/query-exec/query-exec-perspective.c:306
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:307
-#, fuzzy
 msgid "Show or hide favorites"
-msgstr "Impossibile aggiungere un favorito: %s"
+msgstr "Mostra o nascondi i favoriti"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:336
-#, fuzzy
 msgid "_Manager"
-msgstr "Nome database"
+msgstr "Gestore"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:336
-#, fuzzy
 msgid "Manager"
-msgstr "Nome database"
+msgstr "Gestore"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:337
-#, fuzzy
 msgid "_New data manager"
-msgstr "Diagramma \"%s\""
+msgstr "_Nuovo gestore dati"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:337
-#, fuzzy
 msgid "New data manager"
-msgstr "Diagramma \"%s\""
+msgstr "Nuovo gestore dati"
 
 #. Translators: Do not translate "table" nor "query"
 #: ../tools/browser/data-manager/data-source.c:404
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
-msgstr ""
+msgstr "Il nodo doveva essere \"tabella\" o \"query\" e invece è \"%s\""
 
 #: ../tools/browser/data-manager/data-source.c:437
 #: ../tools/browser/schema-browser/mgr-columns.c:278
@@ -8714,30 +8662,30 @@ msgid "Not ready"
 msgstr "Non pronto"
 
 #: ../tools/browser/data-manager/data-source.c:444
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed table name \"%s\""
-msgstr "Nome tabella malformato"
+msgstr "Nome tabella malformato \"%s\""
 
 #: ../tools/browser/data-manager/data-source.c:461
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find the \"%s\" table"
-msgstr "Impossibile trovare il programma \"%s\""
+msgstr "Impossibile trovare la tabella \"%s\""
 
 #: ../tools/browser/data-manager/data-source.c:466
-#, fuzzy, c-format
+#, c-format
 msgid "The \"%s\" object is not a table"
-msgstr "L'oggetto richiesto non è una tabella o una vista"
+msgstr "L'oggetto \"%s\" non è una tabella"
 
 #. Translators: Do not translate "name"
 #: ../tools/browser/data-manager/data-source.c:485
 #, fuzzy, c-format
 msgid "Missing attribute \"name\" for table"
-msgstr "Attributo mancante con nome \"path\""
+msgstr "Attributo mancante \"name\" per la tabella"
 
 #: ../tools/browser/data-manager/data-source.c:625
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find any foreign key to \"%s\""
-msgstr "Impossibile trovare un fornitore di nome \"%s\""
+msgstr "Impossibile trovare una chiave esterna a \"%s\""
 
 #: ../tools/browser/data-manager/data-source.c:630
 #, c-format
@@ -8751,22 +8699,22 @@ msgstr "Nessun comando SELECT specificato"
 
 #: ../tools/browser/data-manager/data-source.c:1023
 msgid "Refresh data"
-msgstr ""
+msgstr "Aggiorna i dati"
 
 #: ../tools/browser/data-manager/data-source.c:1210
-#, fuzzy, c-format
+#, c-format
 msgid "Contents of '%s'"
-msgstr "Impossibile impostare i contenuti del nome del file \"%s\""
+msgstr "Contenuti di \"%s\""
 
 #: ../tools/browser/data-manager/data-source.c:1221
-#, fuzzy, c-format
+#, c-format
 msgid "Could not build SELECT statement"
-msgstr "Impossibile creare il comando SELECT"
+msgstr "Impossibile costruire il comando SELECT"
 
 #: ../tools/browser/data-manager/data-source.c:1288
 #, c-format
 msgid "Multiple statements detected, only the first will be used"
-msgstr ""
+msgstr "Rilevato più di un comando. Solo il primo verrà usato"
 
 #: ../tools/browser/data-manager/data-source-editor.c:158
 msgid "Id"
@@ -8779,9 +8727,8 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/data-manager/data-source-editor.c:166
-#, fuzzy
 msgid "Data source's description"
-msgstr "Descrizione database"
+msgstr "Descrizione sorgente dati"
 
 #: ../tools/browser/data-manager/data-source-editor.c:170
 msgid ""
@@ -8804,29 +8751,27 @@ msgstr ""
 
 #: ../tools/browser/data-manager/data-source-editor.c:182
 msgid "Dependencies"
-msgstr ""
+msgstr "Dipendenze"
 
 #: ../tools/browser/data-manager/data-source-editor.c:183
 msgid "Required and provided named parameters"
 msgstr ""
 
 #: ../tools/browser/data-manager/data-source-editor.c:243
-#, fuzzy
 msgid "Requires:"
-msgstr "Richiede SSL"
+msgstr "Richiede:"
 
 #: ../tools/browser/data-manager/data-source-editor.c:255
 msgid "Exports:"
-msgstr ""
+msgstr "Esporta:"
 
 #: ../tools/browser/data-manager/data-widget.c:243
 msgid "Link to other data"
-msgstr ""
+msgstr "Collegamento ad altri dati"
 
 #: ../tools/browser/data-manager/data-widget.c:345
-#, fuzzy
 msgid "Remove data source"
-msgstr "Usa sorgente dati:"
+msgstr "Rimuovi sorgente dati"
 
 #: ../tools/browser/data-manager/data-widget.c:351
 #, fuzzy
@@ -8834,9 +8779,8 @@ msgid "Show data source's properties"
 msgstr "Proprietà della sorgente dati"
 
 #: ../tools/browser/data-manager/data-widget.c:389
-#, fuzzy
 msgid "No data source defined"
-msgstr "Nuova definizione di sorgente dati"
+msgstr "Nessuna sorgente dati definita"
 
 #: ../tools/browser/data-manager/data-widget.c:888
 #, fuzzy, c-format
@@ -8849,80 +8793,74 @@ msgid "Remove"
 msgstr "Elimina"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:244
-#, fuzzy
 msgid "Data sources:"
-msgstr "Sorgenti dati"
+msgstr "Sorgenti dati:"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:302
-#, fuzzy
 msgid "Selected data source's properties:"
-msgstr "Proprietà della sorgente dati"
+msgstr "Proprietà della sorgente dati selezionata:"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:171
-#, fuzzy, c-format
+#, c-format
 msgid "Error parsing XML specifications"
-msgstr "Specifiche delle operazioni sul server"
+msgstr "Errore analizzando le specifiche XML"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "Expecting <%s> root node"
-msgstr "Era previsto il tag <%s>, è stato invece ottenuto <%s>"
+msgstr "Era previsto il nodo root <%s>"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:315
 #: ../tools/browser/query-exec/query-console-page.c:316
 msgid "SQL code to execute:"
-msgstr ""
+msgstr "Codice SQL da eseguire:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:404
-#, fuzzy
 msgid "Could not get information about LDAP class"
-msgstr "Impossibile ottenere il valore dell'iteratore"
+msgstr "Impossibile ottenere informazioni sulla classe LDAP"
 
 #: ../tools/browser/ldap-browser/class-properties.c:424
 msgid "Class OID:"
-msgstr ""
+msgstr "Classe OID:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:435
 msgid "Class kind:"
-msgstr ""
+msgstr "Classe kind:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:449
 #, fuzzy
 msgid "Class name:"
 msgid_plural "Class names:"
-msgstr[0] "Nome grafico"
-msgstr[1] "Nome grafico"
+msgstr[0] "Classe name:"
+msgstr[1] "Classe names:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:462
 msgid "This LDAP class is obsolete"
-msgstr ""
+msgstr "Questa classe LDAP è obsoleta"
 
 #: ../tools/browser/ldap-browser/class-properties.c:470
-#, fuzzy
 msgid "Required attribute:"
 msgid_plural "Required attributes:"
-msgstr[0] "Attributi extra"
-msgstr[1] "Attributi extra"
+msgstr[0] "Attributo rischiesto:"
+msgstr[1] "Attributi richiesti:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:486
-#, fuzzy
 msgid "Optional attribute:"
 msgid_plural "Optional attributes:"
-msgstr[0] "Attributi extra"
-msgstr[1] "Attributi extra"
+msgstr[0] "Attributo opzionale:"
+msgstr[1] "Attributi opzionali:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:505
 msgid "Children class:"
 msgid_plural "Children classes:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Classe figlio:"
+msgstr[1] "Classi figlio:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:550
-#, fuzzy
 msgid "Inherited class:"
 msgid_plural "Inherited classes:"
-msgstr[0] "Ereditarietà"
-msgstr[1] "Ereditarietà"
+msgstr[0] "Classe ereditata:"
+msgstr[1] "Classi ereditate:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:221
 #, fuzzy
@@ -8937,48 +8875,43 @@ msgstr ""
 " %s"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:530
-#, fuzzy
 msgid "Non activated"
-msgstr "Nessuna azione"
+msgstr "Non attivato"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:578
 #: ../tools/browser/ldap-browser/entry-properties.c:582
 msgid "Never"
-msgstr ""
+msgstr "Mai"
 
 #. DN
 #: ../tools/browser/ldap-browser/entry-properties.c:762
 msgid "Distinguished Name:"
-msgstr ""
+msgstr "Distinguished Name:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:909
 msgid "Can't display attribute value"
-msgstr ""
+msgstr "Impossibile mostrare il valore dell'attributo"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:924
 #: ../tools/browser/ldap-browser/entry-properties.c:959
-#, fuzzy
 msgid "Could not get information about LDAP entry"
-msgstr "Impossibile ottenere l'attributo"
+msgstr "Impossibile ottenere informazioni sulla voce LDAP"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:151
-#, fuzzy
 msgid "Base DN:"
-msgstr "Base 64"
+msgstr "Base DN:"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:155
-#, fuzzy
 msgid "Filter expression:"
-msgstr "Errore nell'espressione filtro"
+msgstr "Espressione filtro:"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:159
-#, fuzzy
 msgid "Attributes to fetch:"
-msgstr "Attributo \"%s\" non trovato"
+msgstr "Attributi da ottenere:"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:163
 msgid "Search scope:"
-msgstr ""
+msgstr "Scope della ricerca:"
 
 #: ../tools/browser/ldap-browser/hierarchy-view.c:567
 #, fuzzy, c-format
@@ -8990,103 +8923,97 @@ msgstr "Impossibile trovare un DSN di nome \"%s\""
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:558
 #: ../tools/browser/ldap-browser/ldap-search-page.c:463
 msgid "_LDAP"
-msgstr ""
+msgstr "_LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:552
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:558
 #: ../tools/browser/ldap-browser/ldap-search-page.c:463
 msgid "LDAP"
-msgstr ""
+msgstr "LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
 msgid "_New LDAP entries browser"
-msgstr ""
+msgstr "_Nuovo navigatore delle voci LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
 msgid "Open a new LDAP entries browser"
-msgstr ""
+msgstr "Apri un nuovo navigatore delle voci LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
 msgid "_New LDAP classes browser"
-msgstr ""
+msgstr "_Nuovo navigatore delle classi LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
 msgid "Open a new LDAP classes browser"
-msgstr ""
+msgstr "Apri un nuovo navigatore delle classi LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
 msgid "_New LDAP search"
-msgstr ""
+msgstr "_Nuova ricerca LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
 msgid "Open a new LDAP search form"
-msgstr ""
+msgstr "Apri un nuovo modulo di ricerca LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:362
-#, fuzzy
 msgid "LDAP classes browser"
-msgstr "Navigatore del database"
+msgstr "Navigatore classi LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:382
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:618
 msgid "LDAP classes"
-msgstr ""
+msgstr "Classi LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:409
-#, fuzzy
 msgid "LDAP class's properties"
-msgstr "Proprietà della connessione"
+msgstr "Proprietà della classi LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:553
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:559
 #: ../tools/browser/schema-browser/table-info.c:988
-#, fuzzy
 msgid "Add to _Favorites"
-msgstr "Aggiungi tabella tra i favoriti"
+msgstr "Aggiungi ai _favoriti"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:553
-#, fuzzy
 msgid "Add class to favorites"
-msgstr "Aggiungi tabella tra i favoriti"
+msgstr "Aggiungi classe ai favoriti"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:555
 msgid "Previous class"
-msgstr ""
+msgstr "Classe precedente"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:555
 msgid "Move back to previous LDAP class"
-msgstr ""
+msgstr "Torna alla classa LDAP precedente"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:557
 msgid "Next class"
-msgstr ""
+msgstr "Classe successiva"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:557
 msgid "Move to next LDAP class"
-msgstr ""
+msgstr "Passa alla successiva classe LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:368
-#, fuzzy
 msgid "LDAP entries browser"
-msgstr "Navigatore del database"
+msgstr "Navigatore delle voci LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:388
 msgid "LDAP hierarchy"
-msgstr ""
+msgstr "Gerarchia LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:415
 msgid "LDAP entry's details"
-msgstr ""
+msgstr "Dettagli della voce LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:559
-#, fuzzy
 msgid "Add entry to favorites"
-msgstr "Aggiungi tabella tra i favoriti"
+msgstr "Aggiungi voce ai favoriti"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:561
 msgid "Previous entry"
-msgstr ""
+msgstr "Voce precedente"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:561
 msgid "Move back to previous LDAP entry"
@@ -9094,7 +9021,7 @@ msgstr ""
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:563
 msgid "Next entry"
-msgstr ""
+msgstr "Voce successiva"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:563
 msgid "Move to next LDAP entry"
@@ -9102,7 +9029,7 @@ msgstr ""
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:624
 msgid "LDAP entries"
-msgstr ""
+msgstr "Voci LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:477
 #: ../tools/browser/query-exec/query-favorite-selector.c:563
@@ -9112,65 +9039,60 @@ msgstr "Favoriti"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:286
 msgid "LDAP search page"
-msgstr ""
+msgstr "Pagina di ricerca LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:296
-#, fuzzy
 msgid "LDAP search settings"
-msgstr "Impostazioni maschera"
+msgstr "Impostazioni di ricerca LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:321
 #: ../tools/browser/query-exec/query-console-page.c:363
 #: ../tools/browser/query-exec/query-console-page.c:432
 msgid "Clear"
-msgstr ""
+msgstr "Cancella"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:322
-#, fuzzy
 msgid "Clear the search settings"
-msgstr "Cancella filtro"
+msgstr "Cancella le impostazioni di ricerca"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:328
-#, fuzzy
 msgid "Execute LDAP search"
-msgstr "Sull'azione di cancellamento"
+msgstr "Esegui ricerca LDAP"
 
 #. results
 #: ../tools/browser/ldap-browser/ldap-search-page.c:334
 msgid "Results"
-msgstr ""
+msgstr "Risultati"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:382
-#, fuzzy, c-format
+#, c-format
 msgid "Could not define virtual table for this LDAP search: %s"
-msgstr "Impossibile identificare la tabella per il campo \"%s\""
+msgstr "Impossibile definire una tabella virtuale per questa ricerca LDAP: %s"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:388
 #, c-format
 msgid "Virtual table '%s' for this LDAP search has been defined"
-msgstr ""
+msgstr "La tabella virtuale \"%s\" per questa ricerca LDAP è stata definita"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:464
-#, fuzzy
 msgid "Define as table"
-msgstr "Tabella riferita"
+msgstr "Definisci come tabella"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:464
 msgid "Define search as a virtual table"
-msgstr ""
+msgstr "Definisci la ricerca come una tabella virtuale"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:538
 msgid "LDAP search"
-msgstr ""
+msgstr "Ricerca LDAP"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:116
 msgid "Define LDAP search as a virtual table"
-msgstr ""
+msgstr "Difinisci la ricerca LDAP come una tabella virtuale"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:125
-#, fuzzy
 msgid "Name of the virtual LDAP table to create"
-msgstr "Nome di un database da creare"
+msgstr "Nome della tabella virtuale LDAP da creare"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:126
 msgid ""
@@ -9179,46 +9101,45 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:139
-#, fuzzy
 msgid "Table name:"
-msgstr "Nome tabella"
+msgstr "Nome tabella:"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:147
-#, fuzzy
 msgid "Replace if exists:"
-msgstr "Rimpiazza se esiste già"
+msgstr "Rimpiazza se esiste già:"
 
 #: ../tools/browser/query-exec/perspective-main.c:33
 msgid "Query execution (SQL)"
-msgstr ""
+msgstr "Esecuzione query (SQL)"
 
 #: ../tools/browser/query-exec/query-console-page.c:290
 #: ../tools/browser/query-exec/query-console-page.c:1267
-#, fuzzy
 msgid "Query editor"
-msgstr "Buffer query"
+msgstr "Editor della query"
 
 #: ../tools/browser/query-exec/query-console-page.c:364
-#, fuzzy
 msgid ""
 "Clear the editor's\n"
 "contents"
-msgstr "Cancella filtro"
+msgstr ""
+"Cancella  i contenuti \n"
+"dell'editor"
 
 #: ../tools/browser/query-exec/query-console-page.c:370
 msgid ""
 "Show variables needed\n"
 "to execute SQL"
 msgstr ""
+"Mostra le variabili necessarie\n"
+"per l'esecuzione dell'SQL"
 
 #: ../tools/browser/query-exec/query-console-page.c:376
 msgid "Execute SQL in editor"
-msgstr ""
+msgstr "Esegui l'SQL nell'editor"
 
 #: ../tools/browser/query-exec/query-console-page.c:382
-#, fuzzy
 msgid "Indent"
-msgstr "Indice"
+msgstr "Indenta"
 
 #: ../tools/browser/query-exec/query-console-page.c:383
 msgid ""
@@ -9228,22 +9149,20 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/query-exec/query-console-page.c:391
-#, fuzzy
 msgid "Favorite"
-msgstr "Favoriti"
+msgstr "Favorita"
 
 #: ../tools/browser/query-exec/query-console-page.c:392
-#, fuzzy
 msgid "Add SQL to favorite"
-msgstr "Aggiungi tabella tra i favoriti"
+msgstr "Aggiungi SQL alle favorite"
 
 #: ../tools/browser/query-exec/query-console-page.c:406
 msgid "Execution history:"
-msgstr ""
+msgstr "Cronologia di esecuzione:"
 
 #: ../tools/browser/query-exec/query-console-page.c:424
 msgid "Copy"
-msgstr ""
+msgstr "Copia"
 
 #: ../tools/browser/query-exec/query-console-page.c:425
 msgid ""
@@ -9252,56 +9171,48 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/query-exec/query-console-page.c:433
-#, fuzzy
 msgid "Clear history"
-msgstr "Cancella filtro"
+msgstr "Cancella la cronologia"
 
 #: ../tools/browser/query-exec/query-console-page.c:445
 msgid "Execution Results:"
-msgstr ""
+msgstr "Risultati dell'esecuzione:"
 
 #: ../tools/browser/query-exec/query-console-page.c:707
-#, fuzzy
 msgid "New favorite"
-msgstr "Favoriti"
+msgstr "Nuovo favorita"
 
 #: ../tools/browser/query-exec/query-console-page.c:718
 #: ../tools/browser/query-exec/query-console-page.c:751
-#, fuzzy, c-format
+#, c-format
 msgid "Modify favorite '%s'"
-msgstr "Favoriti"
+msgstr "Modifica la favorita \"%s\""
 
 #: ../tools/browser/query-exec/query-console-page.c:739
-#, fuzzy
 msgid "Modify a favorite"
-msgstr "Favoriti"
+msgstr "Modifica una favorita"
 
 #: ../tools/browser/query-exec/query-console-page.c:788
 #: ../tools/browser/query-exec/query-console-page.c:808
-#, fuzzy
 msgid "Favorite's name"
-msgstr "Favoriti"
+msgstr "Nome favorita"
 
 #: ../tools/browser/query-exec/query-console-page.c:789
 #: ../tools/browser/query-exec/query-favorite-selector.c:696
-#, fuzzy
 msgid "Unnamed query"
-msgstr "Senzanome"
+msgstr "Query senza nome"
 
 #: ../tools/browser/query-exec/query-console-page.c:792
-#, fuzzy
 msgid "Name of the favorite to create"
-msgstr "Nome di un database da creare"
+msgstr "Nome della favorita da creare"
 
 #: ../tools/browser/query-exec/query-console-page.c:793
-#, fuzzy
 msgid "Enter the name of the favorite to create"
-msgstr "Nome di un database da creare"
+msgstr "Inserire il nome della favorita da creare"
 
 #: ../tools/browser/query-exec/query-console-page.c:923
-#, fuzzy
 msgid "Invalid variable's contents"
-msgstr "Gestore Oracle non valido"
+msgstr "Contenuti della variabile non validi"
 
 #: ../tools/browser/query-exec/query-console-page.c:924
 #: ../tools/browser/schema-browser/table-info.c:922
@@ -9320,7 +9231,7 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console-page.c:1049
 msgid "Statement executed"
-msgstr ""
+msgstr "Comando eseguito"
 
 #: ../tools/browser/query-exec/query-console-page.c:1106
 #, fuzzy, c-format
@@ -9344,80 +9255,77 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console-page.c:1218
 msgid "_Execute"
-msgstr ""
+msgstr "_Esegui"
 
 #: ../tools/browser/query-exec/query-console-page.c:1218
 msgid "Execute query"
-msgstr ""
+msgstr "Esegui la query"
 
 #: ../tools/browser/query-exec/query-console-page.c:1221
-#, fuzzy
 msgid "_Undo"
-msgstr "Union"
+msgstr "Ann_ulla"
 
 #: ../tools/browser/query-exec/query-console-page.c:1221
 msgid "Undo last change"
-msgstr ""
+msgstr "Annulla l'ultimo cambiamento"
 
 #: ../tools/browser/query-exec/query-editor.c:1198
 msgid "In the future:\n"
-msgstr ""
+msgstr "Nel futuro:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1202
 msgid "Less than a minute ago:\n"
-msgstr ""
+msgstr "Meno di un minuto fa:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1207
 #, c-format
 msgid "%lu minute ago:\n"
 msgid_plural "%lu minutes ago:\n"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%lu minuto fa:\n"
+msgstr[1] "%lu minuti fa:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1214
 #, c-format
 msgid "%lu hour ago\n"
 msgid_plural "%lu hours ago\n"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%lu ora fa\n"
+msgstr[1] "%lu ore fa\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1220
 #, c-format
 msgid "%lu day ago\n"
 msgid_plural "%lu days ago\n"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%lu giorno fa\n"
+msgstr[1] "%lu giorni fa\n"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:310
 msgid "_Query"
-msgstr ""
+msgstr "_Query"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:310
 msgid "Query"
-msgstr ""
+msgstr "Query"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:311
 msgid "_New editor"
-msgstr ""
+msgstr "_Nuovo editor"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:311
 msgid "Open a new query editor"
-msgstr ""
+msgstr "Apri un nuovo editor della query"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:286
-#, fuzzy, c-format
+#, c-format
 msgid "Could not add action: %s"
-msgstr "Impossibile aggiungere un favorito: %s"
+msgstr "Impossibile aggiungere una azione: %s"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:360
-#, fuzzy
 msgid "SQL Code"
-msgstr "Console SQL:"
+msgstr "Codice SQL"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:367
-#, fuzzy
 msgid "Is action"
-msgstr "Nessuna azione"
+msgstr "È azione"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:370
 msgid ""
@@ -9428,41 +9336,38 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/query-exec/query-result.c:218
-#, fuzzy
 msgid "Statement:"
-msgstr "Comando vuoto"
+msgstr "Comando:"
 
 #: ../tools/browser/query-exec/query-result.c:239
 #: ../tools/browser/query-exec/query-result.c:267
 #: ../tools/browser/query-exec/query-result.c:453 ../tools/gda-sql.c:608
 #: ../tools/gda-sql.c:690 ../tools/gda-sql.c:1883
-#, fuzzy, c-format
+#, c-format
 msgid "Execution delay"
-msgstr "Modello selezione"
+msgstr "Ritardo esecuzione"
 
 #: ../tools/browser/query-exec/query-result.c:259
 #: ../tools/browser/query-exec/query-result.c:446 ../tools/gda-sql.c:601
 #: ../tools/gda-sql.c:683
-#, fuzzy
 msgid "Number of rows impacted"
-msgstr "Numero di righe prese alla volta "
+msgstr "Numero di righe coinvolte"
 
 #: ../tools/browser/query-exec/query-result.c:292
-#, fuzzy
 msgid "Execution Parameters"
-msgstr "Parametri di connessione"
+msgstr "Parametri di esecuzione"
 
 #: ../tools/browser/query-exec/query-result.c:354
 msgid "No result selected"
-msgstr ""
+msgstr "Nessun risultato selezionato"
 
 #: ../tools/browser/query-exec/query-result.c:397
 msgid "Re-execute query"
-msgstr ""
+msgstr "Ri-esegui la query"
 
 #: ../tools/browser/query-exec/query-result.c:495
 msgid "Execution error:\n"
-msgstr ""
+msgstr "Errore di esecuzione:\n"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:296
 #, c-format
@@ -9475,9 +9380,8 @@ msgid "Requested object is not a table or view"
 msgstr "L'oggetto richiesto non è una tabella o una vista"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:394
-#, fuzzy
 msgid "Auto incremented"
-msgstr "Autoincremento"
+msgstr "Auto incrementata"
 
 #: ../tools/browser/schema-browser/objects-index.c:170
 msgid "Tables' index"
@@ -9525,19 +9429,16 @@ msgstr "Attributo tabella mancante nel contenuto del favorito"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:519
 #: ../tools/browser/schema-browser/table-info.c:990
-#, fuzzy
 msgid "_Contents"
-msgstr "Commenti"
+msgstr "_Contenuti"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:519
-#, fuzzy
 msgid "View contents"
-msgstr "Vincolo univoco"
+msgstr "Visualizza i contenuti"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:312
-#, fuzzy
 msgid "_Schema"
-msgstr "Schema"
+msgstr "_Schema"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:312
 #: ../tools/command-exec.c:659
@@ -9545,49 +9446,47 @@ msgid "Schema"
 msgstr "Schema"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:313
-#, fuzzy
 msgid "_New Diagram"
-msgstr "Diagramma"
+msgstr "_Nuovo diagramma"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:313
-#, fuzzy
 msgid "Create a new diagram"
-msgstr "Crea un nuovo database:"
+msgstr "Crea un nuovo diagramma"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:417
 msgid "Could not load diagram"
 msgstr "Impossibile caricare il diagramma"
 
 #: ../tools/browser/schema-browser/table-columns.c:267
-#, fuzzy, c-format
+#, c-format
 msgid "Declared foreign key '%s' on "
-msgstr "Chiave esterna abilitata"
+msgstr "Dichiara la chiave esterna \"%s\" abilitata"
 
 #: ../tools/browser/schema-browser/table-columns.c:270
-#, fuzzy, c-format
+#, c-format
 msgid "Foreign key '%s' on "
-msgstr "Chiave esterna abilitata"
+msgstr "Chiave esterna \"%s\" abilitata"
 
 #: ../tools/browser/schema-browser/table-columns.c:336
 #, c-format
 msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
-msgstr ""
+msgstr "tipi incompatibili: \"%s\" per la chiave esterna e \"%s\" per la chiave primaria a cui fa riferimento"
 
 #: ../tools/browser/schema-browser/table-columns.c:385
-#, fuzzy, c-format
+#, c-format
 msgid "Could not compute table's UNIQUE constraints for %s.%s.%s"
-msgstr "Impossibile elaborare le colonne della tabella virtuale"
+msgstr "Impossibile elaborare i vincoli UNIQUE della tabella virtuale per %s.%s.%s"
 
 #: ../tools/browser/schema-browser/table-columns.c:408
 msgid "Unique constraint"
-msgstr "Vincolo univoco"
+msgstr "Vincolo di unicità"
 
 #: ../tools/browser/schema-browser/table-columns.c:430
 #, fuzzy
 msgid "Tables referencing this one"
-msgstr "Descrizione tabella"
+msgstr "Tabelle che si riferiscono a questo"
 
 #: ../tools/browser/schema-browser/table-columns.c:628
 msgid "Column Name"
@@ -9595,28 +9494,26 @@ msgstr "Nome colonna"
 
 #. To translators: "Not NULL?" is a table's column's attribute. The NULL term should not be translated as it refers to the SQL NULL value
 #: ../tools/browser/schema-browser/table-columns.c:650
-#, fuzzy
 msgid "Not NULL?"
-msgstr "Non NULL"
+msgstr "Non NULL?"
 
 #: ../tools/browser/schema-browser/table-columns.c:688
-#, fuzzy
 msgid "LDAP virtual table definition"
-msgstr "Nuova definizione di database"
+msgstr "Definizione tabella virtuale LDAP"
 
 #: ../tools/browser/schema-browser/table-columns.c:735
 msgid "Constraints and integrity rules"
-msgstr "Regole vincoli e di integrità"
+msgstr "Regole di vincoli e di integrità"
 
 #: ../tools/browser/schema-browser/table-columns.c:926
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find table '%s.%s'"
-msgstr "Impossibile mappare la tabella \"%s\": %s"
+msgstr "Impossibile trovare la tabella \"%s.%s\""
 
 #: ../tools/browser/schema-browser/table-columns.c:961
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find declared foreign key '%s'"
-msgstr "Impossibile trovare un fornitore di nome \"%s\""
+msgstr "Impossibile trovare la chiave esterna dichiarata \"%s\""
 
 #: ../tools/browser/schema-browser/table-info.c:356
 msgid ""
@@ -9633,22 +9530,20 @@ msgid "Relations"
 msgstr "Relazioni"
 
 #: ../tools/browser/schema-browser/table-info.c:397
-#, fuzzy
 msgid "Preferences"
-msgstr "Riferimenti"
+msgstr "Preferenze"
 
 #: ../tools/browser/schema-browser/table-info.c:526
-#, fuzzy
 msgid "Data successfully inserted"
-msgstr "Connessione aperta con successo!"
+msgstr "Dati inseriti con successo"
 
 #: ../tools/browser/schema-browser/table-info.c:674
 msgid "Meta data not yet available"
-msgstr ""
+msgstr "Meta dati non ancora disponibili"
 
 #: ../tools/browser/schema-browser/table-info.c:691
 msgid "Can't find information about table"
-msgstr ""
+msgstr "Impossibile trovare le informazioni sulla tabella"
 
 #: ../tools/browser/schema-browser/table-info.c:727
 #, c-format
@@ -9658,20 +9553,18 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/schema-browser/table-info.c:773
-#, fuzzy, c-format
+#, c-format
 msgid "Default value: '%s'"
-msgstr "Valore predefinito"
+msgstr "Valore predefinito: \"%s\""
 
 #: ../tools/browser/schema-browser/table-info.c:783
-#, fuzzy
 msgid "Default value: auto incremented value"
-msgstr "Valore ad autoincremento"
+msgstr "Valore predefinito: valore ad autoincremento"
 
 #: ../tools/browser/schema-browser/table-info.c:897
 #: ../tools/browser/schema-browser/table-info.c:921
-#, fuzzy
 msgid "Values to insert into table"
-msgstr "Valori da riempire"
+msgstr "Valori da inserire nella tabella"
 
 #: ../tools/browser/schema-browser/table-info.c:958
 #, fuzzy, c-format
@@ -9679,56 +9572,48 @@ msgid "Can't find information about table '%s'"
 msgstr "Impossibile ottenere il valore dell'iteratore"
 
 #: ../tools/browser/schema-browser/table-info.c:987
-#, fuzzy
 msgid "_Table"
-msgstr "Tabella"
+msgstr "_Tabella"
 
 #: ../tools/browser/schema-browser/table-info.c:988
 msgid "Add table to favorites"
 msgstr "Aggiungi tabella tra i favoriti"
 
 #: ../tools/browser/schema-browser/table-info.c:990
-#, fuzzy
 msgid "View table's contents"
-msgstr "Gestore Oracle non valido"
+msgstr "Visualizza i contenuti della tabella"
 
 #: ../tools/browser/schema-browser/table-info.c:992
-#, fuzzy
 msgid "_Insert data"
-msgstr "Metodo di inserimento"
+msgstr "_Inserimento dati"
 
 #: ../tools/browser/schema-browser/table-info.c:992
-#, fuzzy
 msgid "Insert data into table"
-msgstr "Salvataggio dati su un file"
+msgstr "Inserimento dati in tabella"
 
 #: ../tools/browser/schema-browser/table-info.c:994
-#, fuzzy
 msgid "_Declare foreign key"
-msgstr "Chiavi esterne"
+msgstr "_Dichiara chiave esterna"
 
 #: ../tools/browser/schema-browser/table-info.c:994
 msgid "Declare a foreign key for table"
-msgstr ""
+msgstr "Dichiara una chiave esterna per una tabella"
 
 #: ../tools/browser/schema-browser/table-preferences.c:261
-#, fuzzy
 msgid "default"
-msgstr "Predefinito"
+msgstr "predefinito"
 
 #: ../tools/browser/schema-browser/table-preferences.c:338
-#, fuzzy
 msgid "Table's fields"
-msgstr "Nome tabella"
+msgstr "Campi della tabella"
 
 #: ../tools/browser/schema-browser/table-preferences.c:382
 msgid "Field's display preferences"
-msgstr ""
+msgstr "Preferenze di visualizzazione dei campi"
 
 #: ../tools/browser/schema-browser/table-preferences.c:459
-#, fuzzy
 msgid "Data entry type:"
-msgstr "Tipo dati"
+msgstr "Tipo voce dati:"
 
 #: ../tools/browser/schema-browser/table-preferences.c:460
 msgid ""
@@ -9743,13 +9628,12 @@ msgid "none"
 msgstr ""
 
 #: ../tools/browser/schema-browser/table-preferences.c:473
-#, fuzzy
 msgid "Options:"
-msgstr "Opzioni"
+msgstr "Opzioni:"
 
 #: ../tools/browser/schema-browser/table-preferences.c:484
 msgid "Preview:"
-msgstr ""
+msgstr "Anteprima:"
 
 #: ../tools/browser/schema-browser/table-preferences.c:485
 msgid ""
@@ -9759,17 +9643,15 @@ msgstr ""
 
 #: ../tools/browser/text-search.c:264
 msgid "Hide search toolbar"
-msgstr ""
+msgstr "Nascondi la barra di ricerca"
 
 #: ../tools/browser/text-search.c:269
-#, fuzzy
 msgid "Search:"
-msgstr "Percorso di ricerca"
+msgstr "Ricerca:"
 
 #: ../tools/browser/text-search.c:289
-#, fuzzy
 msgid "Case sensitive"
-msgstr "Le intestazioni di ingresso distinguono tra miuscole e minuscole"
+msgstr "Distingui le minuscole"
 
 #: ../tools/command-exec.c:338
 msgid "History is not supported"
@@ -9829,14 +9711,14 @@ msgid "no"
 msgstr "no"
 
 #: ../tools/command-exec.c:789
-#, fuzzy, c-format
+#, c-format
 msgid "Could not determine columns of view '%s'"
-msgstr "Impossibile sovrascrivere i contenuti del file \"%s\""
+msgstr "Impossibile determinare le colonne della vista \"%s\""
 
 #: ../tools/command-exec.c:793
-#, fuzzy, c-format
+#, c-format
 msgid "Could not determine columns of table '%s'"
-msgstr "Impossibile trovare un DSN di nome \"%s\""
+msgstr "Impossibile determinare le colonne della tabella \"%s\""
 
 #: ../tools/command-exec.c:806
 #, c-format
@@ -9847,26 +9729,26 @@ msgstr "Definizione vista: %s"
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
 #: ../tools/command-exec.c:963
-#, fuzzy, c-format
+#, c-format
 msgid "references %s"
-msgstr "Riferimenti"
+msgstr "riferimenti %s"
 
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
 #: ../tools/command-exec.c:969
-#, fuzzy, c-format
+#, c-format
 msgid "references %s.%s"
-msgstr "Riferimenti"
+msgstr "riferimenti %s.%s"
 
 #: ../tools/config-info.c:70
 msgid "Installed providers list"
 msgstr "Elenco dei fornitori installati"
 
 #: ../tools/config-info.c:108
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find provider '%s'"
-msgstr "Impossibile trovare un fornitore di nome \"%s\""
+msgstr "Impossibile trovare il fornitore \"%s\""
 
 #: ../tools/config-info.c:120 ../tools/config-info.c:289
 msgid "Attribute"
@@ -9878,9 +9760,9 @@ msgid "Provider '%s' description"
 msgstr "Descrizione del fornitore \"%s\""
 
 #: ../tools/config-info.c:277
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find data source '%s'"
-msgstr "Impossibile mappare la tabella \"%s\": %s"
+msgstr "Impossibile trovare la sorgente dati \"%s\""
 
 #: ../tools/config-info.c:292
 #, c-format
@@ -9888,47 +9770,42 @@ msgid "DSN '%s' description"
 msgstr "Descrizione DSN \"%s\""
 
 #: ../tools/config-info.c:298
-#, fuzzy
 msgid "DSN name"
-msgstr "Nessun nome"
+msgstr "Nome DSN"
 
 #: ../tools/config-info.c:340
-#, fuzzy
 msgid "Parameters"
-msgstr "Parametri DSN"
+msgstr "Parametri"
 
 #: ../tools/config-info.c:388
 msgid "System DSN?"
-msgstr ""
+msgstr "DSN di sistema?"
 
 #: ../tools/config-info.c:394
-#, fuzzy
 msgid "Yes"
-msgstr "sì"
+msgstr "Sì"
 
 #: ../tools/config-info.c:394
-#, fuzzy
 msgid "No"
-msgstr "Nessuna"
+msgstr "No"
 
 #: ../tools/config-info.c:427
 msgid "Last used"
-msgstr ""
+msgstr "L'ultimo usato"
 
 #: ../tools/config-info.c:470
 #, c-format
 msgid "(%s)"
-msgstr ""
+msgstr "(%s)"
 
 #: ../tools/config-info.c:612
-#, fuzzy
 msgid "Failed to remove: "
-msgstr "Tabella da rinominare"
+msgstr "Rimozione fallita: "
 
 #: ../tools/config-info.c:640
 #, c-format
 msgid "No file to purge!"
-msgstr ""
+msgstr "Nessun file da pulire!"
 
 #: ../tools/gda-list-server-op.c:50
 msgid "Gda server operations list"
