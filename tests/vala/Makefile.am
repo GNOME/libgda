@@ -7,14 +7,22 @@ AM_CPPFLAGS = \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	$(JSON_GLIB_CFLAGS) \
+	$(GEE_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
 TESTS_ENVIRONMENT = 
-TESTS = check_dataobject
-check_PROGRAMS = check_dataobject
+TESTS = check_dataobject check_datamodeliterator
+check_PROGRAMS = check_dataobject check_datamodeliterator
 
-BUILT_SOURCES = check_dataobject.vala.stamp
-CLEANFILES = check_dataobject.vala.stamp
+BUILT_SOURCES = \
+    check_dataobject.vala.stamp \
+    check_datamodeliterator.vala.stamp \
+    $(NULL)
+
+CLEANFILES = \
+    check_dataobject.vala.stamp \
+    check_datamodeliterator.vala.stamp \
+    $(NULL)
 
 VALAFLAGS = \
     --pkg gee-0.8 \
@@ -31,20 +39,43 @@ check_dataobject_VALASOURCES = \
 	CheckDataObject.vala \
 	$(NULL)
 
+check_datamodeliterator_VALASOURCES = \
+	CheckDataModelIterator.vala \
+	$(NULL)
+
 check_dataobject.vala.stamp: $(check_dataobject_VALASOURCES)
 	$(VALA_COMPILER) $(VALAFLAGS) -C -H check_dataobject.h $^
 	@touch $@
 
+check_datamodeliterator.vala.stamp: $(check_datamodeliterator_VALASOURCES)
+	$(VALA_COMPILER) $(VALAFLAGS) -C -H check_datamodeliterator.h $^
+	@touch $@
+
 check_dataobject_SOURCES = $(check_dataobject_VALASOURCES:.vala=.c) check_dataobject.h
+check_dataobject_CFLAGS= \
+    -I$(top_builddir)/libgda/data \
+    $(NULL)
 check_dataobject_LDADD = \
     $(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda/data/libgdadata-1.0.la \
+	$(top_builddir)/libgda/data/libgdadata-0.2.la \
+	$(COREDEPS_LIBS)
+
+check_datamodeliterator_SOURCES = $(check_datamodeliterator_VALASOURCES:.vala=.c) check_datamodeliterator.h
+check_datamodeliterator_CFLAGS= \
+    -I$(top_builddir)/libgda/data \
+    $(NULL)
+check_datamodeliterator_LDADD = \
+    $(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/data/libgdadata-0.2.la \
 	$(COREDEPS_LIBS)
 
 CLEANFILES += \
     $(check_dataobject_VALASOURCES:.vala=.c) \
     check_dataobject.h \
+    $(check_datamodeliterator_VALASOURCES:.vala=.c) \
+    check_datamodeliterator.h \
     dataobject.db \
+    datamodeliterator.db \
     $(NULL)
 
 EXTRA_DIST = 

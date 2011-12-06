@@ -22,10 +22,60 @@
  
  namespace GdaData {
  	
+ 	public class DataModelIterable : GLib.Object, Gee.Traversable <Value?>, Gee.Iterable <Value?>
+ 	{
+ 		private Gda.DataModel model;
+ 		
+ 		public DataModelIterable (Gda.DataModel model) {
+ 			this.model = model;
+ 		}
+ 		
+ 		// Iterable Interface
+ 		
+ 		public Type element_type { 
+ 			get { return typeof (GLib.Value); } 
+ 		}
+ 		
+ 		public Iterator<Value?> iterator ()
+ 		{
+ 			return new DataModelIterator (this.model);
+ 		}
+ 		
+ 		// Traversable Interface
+ 		
+		public Gee.Iterator<Value?> chop (int offset, int length = -1)
+ 		{
+ 			var iter = new DataModelIterator (this.model);
+ 			return iter.chop (offset, length);
+ 		}
+ 		
+		public Gee.Iterator<Value?> filter (owned Gee.Predicate<Value?> f)
+		{
+			var iter = new DataModelIterator (this.model);
+ 			return iter.filter (f);
+		}
+		
+		public new void @foreach (Gee.ForallFunc<Value?> f)
+		{
+			for (int i = 0; i < this.model.get_n_rows (); i++) {
+				for (int j = 0; j < this.model.get_n_columns (); j++) {
+					Value v = this.model.get_value_at (i, j);
+					f(v);
+				}				
+			}
+		}
+		
+		public Gee.Iterator<Value?> stream<Value> (owned Gee.StreamFunc<Value?,Value?> f)
+		{
+			var iter = new DataModelIterator (this.model);
+ 			return iter.stream<Value> (f);
+		}
+ 	}
+ 	
  	/**
  	 * Iterator that implements [@link [Gee.Iterator] and [@link [Gee.Traversable]]
  	 */
- 	class DataModelIterator : Object, Gee.Iterator <Value>, Gee.Traversable < Value >
+ 	public class DataModelIterator : GLib.Object, Gee.Traversable <Value?>, Gee.Iterator <Value?>
  	{
  		private Gda.DataModelIter iter;
  		private int _current_pos;
@@ -36,8 +86,12 @@
  		private bool filtered;	
  		
  		
- 		public int current_col {
+ 		public int current_column {
  			get { return this._current_pos - this.iter.get_row () * this.iter.data_model.get_n_columns (); }
+ 		}
+ 		
+ 		public int current_row {
+ 			get { return this.iter.get_row (); }
  		}
  		
  		public DataModelIterator (Gda.DataModel model)
@@ -58,10 +112,11 @@
  			if (maxpos > (model.get_n_columns () *  model.get_n_rows () - 1))
  				this.iter.invalidate_contents ();
  			
- 			this._current_pos = i;
+ 			this._current_pos = -1;
  			this.pos_init = i;
  			this.maxpos = maxpos;
  			this.filtered = false;
+ 			this.move_to_row (this.pos_init / this.iter.data_model.get_n_columns ());
  		}
  		
  		private DataModelIterator.filtered_elements (Gda.DataModel model, Gee.HashMap <int, int> elements)
@@ -74,6 +129,8 @@
  			this.elements = elements;
  		}
  		
+ 		// Iterator Interface
+ 		
  		public bool valid 
  		{ 
  			get { return this.iter.is_valid (); }
@@ -84,7 +141,10 @@
  		public bool next () {
  			if (!this.filtered) 
  			{
-	 			this._current_pos++;
+	 			if (this._current_pos == -1)
+	 				this._current_pos = this.pos_init;
+	 			else
+	 				this._current_pos++;
 	 			if (this._current_pos > this.maxpos) {
 	 				this.iter.invalidate_contents ();
 	 				return false;
@@ -121,7 +181,7 @@
 		 * ''Implementation:'' Gda.DataModel have read only GLib.Value no modification is allowed.
 		 * This function returns a copy of the Value stored in the DataModel.
 		 */
- 		public Value @get ()
+ 		public Value? @get ()
  		{
  			return this.iter.get_value_at (this._current_pos - 
  										this.iter.get_row () * 
@@ -130,18 +190,18 @@
  		
  		public void remove () {}
  		
- 		/* Traversable */
+ 		/* Traversable  Interface */
  		public Gee.Iterator<Value?> chop (int offset, int length = -1) 
  			requires ( offset >= 0)
  		{
- 			int elements = this.iter.data_model.get_n_columns () * this.iter.data_model.get_n_rows ();
- 			int maxpos = elements;
+ 			int maxpos = this.maxpos;
+ 			int pos_init = this.pos_init + offset;
  			if (length > -1) {
- 				maxpos = offset + length;
- 				if (maxpos > elements)
- 					maxpos = elements;
+ 				maxpos = this.pos_init + offset + length;
+ 				if (maxpos > this.maxpos)
+ 					maxpos = this.maxpos;
  			}
- 			return new DataModelIterator.with_offset (this.iter.data_model, offset, maxpos);
+ 			return new DataModelIterator.with_offset (this.iter.data_model, pos_init, maxpos);
  		}
  		
 		public Gee.Iterator<Value?> filter (owned Gee.Predicate<Value?> f)
@@ -159,7 +219,7 @@
 		
 		public new void @foreach (Gee.ForallFunc<Value?> f)
 		{
-			for (int i = 0; i < this.maxpos; i++) {
+			for (int i = this.pos_init; i < this.maxpos; i++) {
 				int row = i / this.iter.data_model.get_n_columns ();
 				int col = i - row * this.iter.data_model.get_n_columns ();
 				Value v = this.iter.data_model.get_value_at (row, col);

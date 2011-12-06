@@ -13,6 +13,7 @@ AM_CFLAGS =\
 	 -g \
 	 -I$(top_srcdir) -I$(srcdir)/.. \
         -I$(top_builddir) \
+    -I$(top_builddir)/libgda/data \
     $(COREDEPS_CFLAGS) \
     $(LIBGDA_WFLAGDS) \
     $(LIBGDA_CFLAGS) \
@@ -59,7 +60,7 @@ include_HEADERS = \
 	libgdadata.h \
 	$(NULL)
 
-gdadataincludedir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/data
+gdadataincludedir = $(includedir)/libgdadata-0.2/
 gdadatainclude_HEADERS = libgdadata.h
 
 pkgconfigdir = $(libdir)/pkgconfig
