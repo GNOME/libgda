@@ -97,7 +97,7 @@
  		public DataModelIterator (Gda.DataModel model)
  		{
  			this.iter = model.create_iter ();
- 			this._current_pos = 0;
+ 			this._current_pos = -1;
  			this.pos_init = 0;
  			this.maxpos = this.iter.data_model.get_n_columns () * this.iter.data_model.get_n_rows () - 1;
  			this.filtered = false;
@@ -112,11 +112,11 @@
  			if (maxpos > (model.get_n_columns () *  model.get_n_rows () - 1))
  				this.iter.invalidate_contents ();
  			
- 			this._current_pos = -1;
  			this.pos_init = i;
+ 			this._current_pos = this.pos_init - 1;
  			this.maxpos = maxpos;
  			this.filtered = false;
- 			this.move_to_row (this.pos_init / this.iter.data_model.get_n_columns ());
+ 			this.iter.move_to_row (this.pos_init / this.iter.data_model.get_n_columns ());
  		}
  		
  		private DataModelIterator.filtered_elements (Gda.DataModel model, Gee.HashMap <int, int> elements)
