@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-11-19 16:47+0000\n"
-"PO-Revision-Date: 2011-11-25 17:12+0100\n"
+"POT-Creation-Date: 2011-12-02 14:53+0000\n"
+"PO-Revision-Date: 2011-12-05 18:19+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -131,8 +131,8 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:283
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1328
-#: ../libgda/thread-wrapper/gda-thread-provider.c:446
-#: ../libgda/thread-wrapper/gda-thread-provider.c:525
+#: ../libgda/thread-wrapper/gda-thread-provider.c:452
+#: ../libgda/thread-wrapper/gda-thread-provider.c:532
 #: ../libgda-ui/data-entries/common-bin.c:80
 #: ../libgda-ui/data-entries/common-bin.c:157
 #: ../libgda-ui/data-entries/plugins/common-pict.c:211
@@ -142,7 +142,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:535
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:159
 #: ../libgda-ui/gdaui-init.c:507 ../libgda-ui/gdaui-login.c:430
-#: ../libgda-ui/gdaui-rt-editor.c:731
+#: ../libgda-ui/gdaui-rt-editor.c:729
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1331
 #: ../providers/jdbc/gda-jdbc-provider.c:1360
@@ -197,12 +197,12 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:253
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:600
 #: ../tools/browser/ldap-browser/ldap-search-page.c:383
-#: ../tools/browser/query-exec/query-console-page.c:807
-#: ../tools/browser/query-exec/query-console-page.c:837
-#: ../tools/browser/query-exec/query-console-page.c:1032
-#: ../tools/browser/query-exec/query-console-page.c:1062
-#: ../tools/browser/query-exec/query-console-page.c:1093
-#: ../tools/browser/query-exec/query-console-page.c:1146
+#: ../tools/browser/query-exec/query-console-page.c:816
+#: ../tools/browser/query-exec/query-console-page.c:846
+#: ../tools/browser/query-exec/query-console-page.c:1046
+#: ../tools/browser/query-exec/query-console-page.c:1076
+#: ../tools/browser/query-exec/query-console-page.c:1107
+#: ../tools/browser/query-exec/query-console-page.c:1160
 #: ../tools/browser/query-exec/query-favorite-selector.c:191
 #: ../tools/browser/query-exec/query-favorite-selector.c:266
 #: ../tools/browser/query-exec/query-favorite-selector.c:287
@@ -725,8 +725,8 @@ msgstr ""
 "No se puede configurar la propiedad «%s» cuando la conexión está abierta"
 
 #: ../libgda/gda-connection.c:1068 ../libgda/gda-connection.c:1227
-#: ../libgda/thread-wrapper/gda-thread-provider.c:420
-#: ../libgda/thread-wrapper/gda-thread-provider.c:559
+#: ../libgda/thread-wrapper/gda-thread-provider.c:425
+#: ../libgda/thread-wrapper/gda-thread-provider.c:566
 msgid "Multi threading is not supported or enabled"
 msgstr "El procesado multihilo no se soporta o no está activado "
 
@@ -780,29 +780,29 @@ msgstr "Error al mantener los metadatos actualizados: %s"
 msgid "Provider does not support statement preparation"
 msgstr "El proveedor no soporta la preparación de declaraciones"
 
-#: ../libgda/gda-connection.c:3094 ../libgda/gda-connection.c:3188
-#: ../libgda/gda-connection.c:3258 ../libgda/gda-meta-store.c:675
+#: ../libgda/gda-connection.c:3098 ../libgda/gda-connection.c:3192
+#: ../libgda/gda-connection.c:3262 ../libgda/gda-meta-store.c:675
 #, c-format
 msgid "Can't obtain connection lock"
 msgstr "No se puede abrir la conexión virtual"
 
-#: ../libgda/gda-connection.c:3101 ../libgda/gda-connection.c:3329
-#: ../libgda/gda-connection.c:3695 ../libgda/gda-connection.c:3785
-#: ../libgda/gda-connection.c:3871 ../libgda/gda-connection.c:6330
+#: ../libgda/gda-connection.c:3105 ../libgda/gda-connection.c:3333
+#: ../libgda/gda-connection.c:3699 ../libgda/gda-connection.c:3789
+#: ../libgda/gda-connection.c:3875 ../libgda/gda-connection.c:6334
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:169
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:337
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1703
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1710
 #, c-format
 msgid "Connection is closed"
 msgstr "La conexión está cerrada"
 
-#: ../libgda/gda-connection.c:3203 ../libgda/gda-connection.c:3296
+#: ../libgda/gda-connection.c:3207 ../libgda/gda-connection.c:3300
 #, c-format
 msgid "Can't find task %u"
 msgstr "No se puede encontrar la tarea %u"
 
-#: ../libgda/gda-connection.c:3281 ../libgda/sqlite/gda-sqlite-provider.c:1308
-#: ../libgda/thread-wrapper/gda-thread-provider.c:981
+#: ../libgda/gda-connection.c:3285 ../libgda/sqlite/gda-sqlite-provider.c:1308
+#: ../libgda/thread-wrapper/gda-thread-provider.c:988
 #: ../providers/jdbc/gda-jdbc-provider.c:580
 #: ../providers/mysql/gda-mysql-provider.c:977
 #: ../providers/postgres/gda-postgres-provider.c:875
@@ -810,35 +810,35 @@ msgstr "No se puede encontrar la tarea %u"
 msgid "Provider does not support asynchronous server operation"
 msgstr "El proveedor no soporta operaciones asíncronas de servidor"
 
-#: ../libgda/gda-connection.c:3566 ../libgda/gda-connection.c:3581
+#: ../libgda/gda-connection.c:3570 ../libgda/gda-connection.c:3585
 msgid "Statement is a selection statement"
 msgstr "La declaración es una declaración de selección"
 
-#: ../libgda/gda-connection.c:3638 ../libgda/gda-connection.c:3734
-#: ../libgda/gda-connection.c:3819
+#: ../libgda/gda-connection.c:3642 ../libgda/gda-connection.c:3738
+#: ../libgda/gda-connection.c:3823
 msgid "Statement is not a selection statement"
 msgstr "La declaración no es una declaración de selección"
 
-#: ../libgda/gda-connection.c:4301
+#: ../libgda/gda-connection.c:4305
 msgid "Invalid argument"
 msgstr "Argumento inválido"
 
-#: ../libgda/gda-connection.c:4311
+#: ../libgda/gda-connection.c:4315
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Faltan argumentos o son erróneos para la tabla «%s»: %s"
 
-#: ../libgda/gda-connection.c:5067
+#: ../libgda/gda-connection.c:5071
 msgid "Meta update error"
 msgstr "Error en la metaactualización"
 
-#: ../libgda/gda-connection.c:5631
+#: ../libgda/gda-connection.c:5635
 msgid "Wrong filter arguments"
 msgstr "Argumentos de filtrado erróneos"
 
-#: ../libgda/gda-connection.c:5819 ../libgda/gda-connection.c:5872
-#: ../libgda/gda-connection.c:5916 ../libgda/gda-connection.c:5960
-#: ../libgda/gda-connection.c:6004
+#: ../libgda/gda-connection.c:5823 ../libgda/gda-connection.c:5876
+#: ../libgda/gda-connection.c:5920 ../libgda/gda-connection.c:5964
+#: ../libgda/gda-connection.c:6008
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
@@ -2129,15 +2129,15 @@ msgstr "Falta el atributo llamado «path»"
 msgid "Missing required value for '%s'"
 msgstr "Falta el valor requerido para «%s»"
 
-#: ../libgda/gda-server-operation.c:2688
+#: ../libgda/gda-server-operation.c:2689
 msgid "Unspecified table name"
 msgstr "Nombre de la tabla no especificado"
 
-#: ../libgda/gda-server-operation.c:2727
+#: ../libgda/gda-server-operation.c:2728
 msgid "Invalid type"
 msgstr "Tipo no válido"
 
-#: ../libgda/gda-server-operation.c:2821
+#: ../libgda/gda-server-operation.c:2822
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "El servidor de la base de datos no soporta la operación CREATE TABLE"
 
@@ -2581,7 +2581,7 @@ msgstr "No se puede encontrar libsqlite3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:738
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:314
-#: ../libgda/thread-wrapper/gda-thread-provider.c:506
+#: ../libgda/thread-wrapper/gda-thread-provider.c:513
 #: ../providers/bdb/gda-bdb-provider.c:154
 #: ../providers/jdbc/gda-jdbc-provider.c:356
 #: ../providers/ldap/gda-ldap-provider.c:250
@@ -2889,7 +2889,8 @@ msgstr "Error interno fatal del proveedor SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:634
 #, c-format
-msgid "Tuncated data"
+#| msgid "Tuncated data"
+msgid "Truncated data"
 msgstr "Datos truncados"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:684
@@ -3259,21 +3260,21 @@ msgid "UPDATE statement does not have any target columns to update"
 msgstr ""
 "La declaración UPDATE no tiene ninguna columna de destino para actualizar"
 
-#: ../libgda/thread-wrapper/gda-thread-provider.c:870
-#: ../libgda/thread-wrapper/gda-thread-provider.c:925
-#: ../libgda/thread-wrapper/gda-thread-provider.c:988
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1045
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1102
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1151
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1200
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1249
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1298
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1836
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1887
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1937
-#: ../libgda/thread-wrapper/gda-thread-provider.c:1988
-#: ../libgda/thread-wrapper/gda-thread-provider.c:2038
-#: ../libgda/thread-wrapper/gda-thread-provider.c:2089
+#: ../libgda/thread-wrapper/gda-thread-provider.c:877
+#: ../libgda/thread-wrapper/gda-thread-provider.c:932
+#: ../libgda/thread-wrapper/gda-thread-provider.c:995
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1052
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1109
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1158
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1207
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1256
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1305
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1843
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1894
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1944
+#: ../libgda/thread-wrapper/gda-thread-provider.c:1995
+#: ../libgda/thread-wrapper/gda-thread-provider.c:2045
+#: ../libgda/thread-wrapper/gda-thread-provider.c:2096
 msgid "A connection is required"
 msgstr "Se necesita una conexión"
 
@@ -3404,7 +3405,7 @@ msgstr "Seleccionar archivo para cargar"
 
 #: ../libgda-ui/data-entries/common-bin.c:78
 #: ../libgda-ui/data-entries/plugins/common-pict.c:421
-#: ../libgda-ui/gdaui-rt-editor.c:729
+#: ../libgda-ui/gdaui-rt-editor.c:727
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3454,7 +3455,7 @@ msgstr "Tamaño de datos"
 #: ../libgda-ui/data-entries/common-bin.c:301
 #: ../providers/ldap/gda-ldap-provider.c:698
 #: ../providers/mysql/gda-mysql-provider.c:635
-#: ../providers/mysql/gda-mysql-util.c:63 ../tools/browser/support.c:446
+#: ../providers/mysql/gda-mysql-util.c:63 ../tools/browser/support.c:444
 #: ../tools/browser/ldap-browser/entry-properties.c:584
 #: ../tools/browser/schema-browser/table-columns.c:515
 #: ../tools/tools-utils.c:35
@@ -3572,7 +3573,7 @@ msgstr "Formato UTF-8 no válido."
 msgid "Format is hh:mm:ss"
 msgstr "El formato es hh:mm:ss"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:274
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:272
 #, c-format
 msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
@@ -3581,15 +3582,15 @@ msgstr ""
 "El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a establecer "
 "usando la propiedad «manejador») espere algún comportamiento no deseado"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:430
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:428
 msgid "Value is NULL"
 msgstr "El valor es NULL"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:436
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:434
 msgid "Value will be determined by default"
 msgstr "El valor se determinará de forma predeterminada"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:442
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:440
 msgid "Value is invalid"
 msgstr "El valor no es válido"
 
@@ -3651,17 +3652,17 @@ msgstr "Multilínea"
 msgid "Unknown format character starting at %s"
 msgstr "Formato del carácter desconocido comenzando en %s"
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:267
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:268
 #, c-format
 msgid "Type %s is not numerical"
 msgstr "El tipo %s no es numérico"
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:280
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:281
 #, c-format
 msgid "Decimal separator cannot be the '%c' character"
 msgstr "El separador decimal no puede ser el carácter «%c»"
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:289
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:290
 #, c-format
 msgid "Decimal thousands cannot be the '%c' character"
 msgstr "El separador de miles no puede ser el carácter «%c»"
@@ -3706,7 +3707,7 @@ msgid "_Save image"
 msgstr "_Guardar imagen"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:359
-#: ../libgda-ui/gdaui-rt-editor.c:688
+#: ../libgda-ui/gdaui-rt-editor.c:686
 msgid "Select image to load"
 msgstr "Seleccionar la imagen que cargar"
 
@@ -4128,7 +4129,6 @@ msgstr "Mostrar las ventanas emergentes como una lista"
 
 #: ../libgda-ui/gdaui-data-selector.c:230
 #, c-format
-#| msgid "Unknown column number %d"
 msgid "Invalid column number %d"
 msgstr "Número de columna %d no válido"
 
@@ -4144,11 +4144,11 @@ msgstr "Modelo de datos GdaDataProxy interno"
 msgid "Trying to modify a read-only row"
 msgstr "Intentando modificar una fila de sólo lectura"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:837
+#: ../libgda-ui/gdaui-data-proxy-info.c:835
 msgid "Undelete the selected entry"
 msgstr "Recuperar la entrada seleccionada"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:844
+#: ../libgda-ui/gdaui-data-proxy-info.c:842
 msgid "Delete the selected entry"
 msgstr "Eliminar la entrada seleccionada"
 
@@ -4571,19 +4571,19 @@ msgstr ""
 "Determina si los contenidos aparecen en una ventana con barras de "
 "desplazamiento"
 
-#: ../libgda-ui/gdaui-rt-editor.c:895
+#: ../libgda-ui/gdaui-rt-editor.c:893
 msgid "Reset font size"
 msgstr "Restablecer el tamaño de la tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:901
+#: ../libgda-ui/gdaui-rt-editor.c:899
 msgid "Decrease font size (zoom out)"
 msgstr "Reducir tamaño de tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:907
+#: ../libgda-ui/gdaui-rt-editor.c:905
 msgid "Increase font size (zoom in)"
 msgstr "Aumentar tamaño de tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:913
+#: ../libgda-ui/gdaui-rt-editor.c:911
 msgid "Show source markup"
 msgstr "Mostrar el origen del marcado"
 
@@ -6455,15 +6455,15 @@ msgstr "No se pudo obtener el atributo"
 msgid "NO DESCRIPTION"
 msgstr "SIN DESCRIPCIÓN"
 
-#: ../providers/oracle/gda-oracle-util.c:621
+#: ../providers/oracle/gda-oracle-util.c:625
 msgid "Invalid Oracle handle"
 msgstr "Manejador Oracle no válido"
 
-#: ../providers/oracle/gda-oracle-util.c:629
+#: ../providers/oracle/gda-oracle-util.c:633
 msgid "Could not allocate Lob locator"
 msgstr "No se pudo reservar el localizador Lob"
 
-#: ../providers/oracle/gda-oracle-util.c:636
+#: ../providers/oracle/gda-oracle-util.c:640
 msgid "Could not copy Lob locator"
 msgstr "No se pudo copiar el localizador Lob"
 
@@ -7884,11 +7884,11 @@ msgstr "No se pudo abrir la conexión de vinculación: %s"
 msgid "Database browser"
 msgstr "Visor de la base de datos"
 
-#: ../tools/browser/browser-window.c:1567
+#: ../tools/browser/browser-window.c:1588
 msgid "Don't show this message again"
 msgstr "No mostrar este mensaje de nuevo"
 
-#: ../tools/browser/browser-window.c:1710
+#: ../tools/browser/browser-window.c:1735
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -8119,19 +8119,19 @@ msgstr "No se puede abrir el archivo de ayuda"
 msgid "Help is being loaded, please wait..."
 msgstr "Se está cargando la ayuda, espere…"
 
-#: ../tools/browser/support.c:322
+#: ../tools/browser/support.c:320
 msgid "Close tab"
 msgstr "Cerrar pestaña"
 
-#: ../tools/browser/support.c:440
+#: ../tools/browser/support.c:438
 msgid "Abstract"
 msgstr "Abstracta"
 
-#: ../tools/browser/support.c:442
+#: ../tools/browser/support.c:440
 msgid "Structural"
 msgstr "Estructural"
 
-#: ../tools/browser/support.c:444
+#: ../tools/browser/support.c:442
 msgid "Auxilliary"
 msgstr "Auxiliar"
 
@@ -8527,8 +8527,8 @@ msgstr "La declaración que ejecutar no es una declaración de selección"
 #: ../tools/browser/common/ui-formgrid.c:660
 #: ../tools/browser/common/ui-formgrid.c:688
 #: ../tools/browser/common/ui-formgrid.c:719
-#: ../tools/browser/query-exec/query-console-page.c:1030
-#: ../tools/browser/query-exec/query-console-page.c:1060
+#: ../tools/browser/query-exec/query-console-page.c:1044
+#: ../tools/browser/query-exec/query-console-page.c:1074
 #: ../tools/browser/schema-browser/table-info.c:519
 #, c-format
 msgid ""
@@ -8557,7 +8557,7 @@ msgid "Execution of action"
 msgstr "Ejecución de la acción"
 
 #: ../tools/browser/common/ui-formgrid.c:830
-#: ../tools/browser/query-exec/query-console-page.c:1145
+#: ../tools/browser/query-exec/query-console-page.c:1159
 #: ../tools/browser/schema-browser/table-info.c:547
 #, c-format
 msgid "Error executing query: %s"
@@ -8726,8 +8726,8 @@ msgstr "No se pudo quitar el favorito: %s"
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:482
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:252
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:599
-#: ../tools/browser/query-exec/query-console-page.c:806
-#: ../tools/browser/query-exec/query-console-page.c:836
+#: ../tools/browser/query-exec/query-console-page.c:815
+#: ../tools/browser/query-exec/query-console-page.c:845
 #: ../tools/browser/query-exec/query-favorite-selector.c:265
 #: ../tools/browser/query-exec/query-favorite-selector.c:706
 #: ../tools/browser/schema-browser/favorite-selector.c:351
@@ -9256,7 +9256,7 @@ msgid "Query execution (SQL)"
 msgstr "Ejecución de la consulta (SQL)"
 
 #: ../tools/browser/query-exec/query-console-page.c:290
-#: ../tools/browser/query-exec/query-console-page.c:1253
+#: ../tools/browser/query-exec/query-console-page.c:1267
 msgid "Query editor"
 msgstr "Editor de consultas"
 
@@ -9341,34 +9341,34 @@ msgstr "Modificar el favorito «%s»"
 msgid "Modify a favorite"
 msgstr "Modificar un favorito"
 
-#: ../tools/browser/query-exec/query-console-page.c:782
-#: ../tools/browser/query-exec/query-console-page.c:799
+#: ../tools/browser/query-exec/query-console-page.c:788
+#: ../tools/browser/query-exec/query-console-page.c:808
 msgid "Favorite's name"
 msgstr "Nombre del favorito"
 
-#: ../tools/browser/query-exec/query-console-page.c:783
+#: ../tools/browser/query-exec/query-console-page.c:789
 #: ../tools/browser/query-exec/query-favorite-selector.c:696
 msgid "Unnamed query"
 msgstr "Consulta sin nombre"
 
-#: ../tools/browser/query-exec/query-console-page.c:786
+#: ../tools/browser/query-exec/query-console-page.c:792
 msgid "Name of the favorite to create"
 msgstr "Nombre del favorito que crear"
 
-#: ../tools/browser/query-exec/query-console-page.c:787
+#: ../tools/browser/query-exec/query-console-page.c:793
 msgid "Enter the name of the favorite to create"
 msgstr "Introduzca el nombre del favorito que crear"
 
-#: ../tools/browser/query-exec/query-console-page.c:911
+#: ../tools/browser/query-exec/query-console-page.c:923
 msgid "Invalid variable's contents"
 msgstr "Contenido de la variable no válido"
 
-#: ../tools/browser/query-exec/query-console-page.c:912
+#: ../tools/browser/query-exec/query-console-page.c:924
 #: ../tools/browser/schema-browser/table-info.c:922
 msgid "assign values to the following variables"
 msgstr "asignar valores a las siguientes variables"
 
-#: ../tools/browser/query-exec/query-console-page.c:1017
+#: ../tools/browser/query-exec/query-console-page.c:1031
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -9384,16 +9384,16 @@ msgstr ""
 "estén accesibles, limpie el elemento correspondiente\n"
 "del histórico antes de cerrar la transacción)."
 
-#: ../tools/browser/query-exec/query-console-page.c:1035
+#: ../tools/browser/query-exec/query-console-page.c:1049
 msgid "Statement executed"
 msgstr "Declaración ejecutada"
 
-#: ../tools/browser/query-exec/query-console-page.c:1092
+#: ../tools/browser/query-exec/query-console-page.c:1106
 #, c-format
 msgid "Error while parsing code: %s"
 msgstr "Error al analizar el código: %s"
 
-#: ../tools/browser/query-exec/query-console-page.c:1102
+#: ../tools/browser/query-exec/query-console-page.c:1116
 msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
@@ -9401,7 +9401,7 @@ msgstr ""
 "Ya se está ejecutando una consulta, para ejecutar otra consulta abra una "
 "conexión nueva."
 
-#: ../tools/browser/query-exec/query-console-page.c:1161
+#: ../tools/browser/query-exec/query-console-page.c:1175
 msgid ""
 "Internal error, please report error to http://bugzilla.gnome.org/ for the "
 "\"libgda\" product"
@@ -9409,19 +9409,19 @@ msgstr ""
 "Error interno, por favor informe del error en http://bugzilla.gnome.org/ "
 "para el producto «libgda»"
 
-#: ../tools/browser/query-exec/query-console-page.c:1204
+#: ../tools/browser/query-exec/query-console-page.c:1218
 msgid "_Execute"
 msgstr "_Ejecutar"
 
-#: ../tools/browser/query-exec/query-console-page.c:1204
+#: ../tools/browser/query-exec/query-console-page.c:1218
 msgid "Execute query"
 msgstr "Ejecutar consulta"
 
-#: ../tools/browser/query-exec/query-console-page.c:1207
+#: ../tools/browser/query-exec/query-console-page.c:1221
 msgid "_Undo"
 msgstr "_Deshacer"
 
-#: ../tools/browser/query-exec/query-console-page.c:1207
+#: ../tools/browser/query-exec/query-console-page.c:1221
 msgid "Undo last change"
 msgstr "Deshacer el último cambio"
 
