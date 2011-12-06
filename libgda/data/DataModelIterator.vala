@@ -246,25 +246,24 @@
 		 * ''Implementation:'' This function returns an iterator that can iterate over YIELDED values
 		 * by {@link [StreamFunc].
 		 */
-		public Gee.Iterator<Value?> stream<Value> (owned Gee.StreamFunc<Value?,Value?> f)
+		public Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<Value?, A> f)
 		{
-			var l = new Gee.HashMap<int,int> ();
-			for (int i = 0; i < this.maxpos; i++) {
+			var l = new Gee.ArrayList<A> ();
+			for (int i = this.pos_init; i < this.maxpos; i++) {
 				int row = i / this.iter.data_model.get_n_columns ();
 				int col = i - row * this.iter.data_model.get_n_columns ();
-				Value v = this.iter.data_model.get_value_at (row, col);
-				var g = new Gee.Lazy<Value>.from_value (v);
-				Gee.Lazy<Value> s;
+				Value v = this.iter.data_model.get_value_at (col, row);
+				var g = new Gee.Lazy<Value?>.from_value (v);
+				Gee.Lazy<A> s;
 				var r = f (Gee.Traversable.Stream.CONTINUE, g, out s);
 				if (r == Gee.Traversable.Stream.END)
 					break;
-				if (r == Stream.YIELD)
-					l.set (this.iter.get_row (), this._current_pos - 
-													this.iter.get_row () * 
-															this.iter.data_model.get_n_columns ());
+				if (r == Gee.Traversable.Stream.YIELD) {
+					l.add (s);
+				}
 			}
 						
-			return new DataModelIterator.filtered_elements (this.iter.data_model, l);
+			return l.iterator<A> ();
 		}
  	}
  }

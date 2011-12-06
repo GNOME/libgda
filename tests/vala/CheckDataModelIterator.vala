@@ -50,7 +50,7 @@ namespace Check {
 		public int t1()
 			throws Error
 		{
-			stdout.printf (">>> NEW TEST: Gda.DataModelIterator API tests\n");
+			stdout.printf (">>> NEW TEST: Gda.DataModelIterable & DataModelIterator API tests\n");
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			var itermodel = new DataModelIterable (model);
@@ -144,7 +144,23 @@ namespace Check {
 			}
 			
 			stdout.printf ("Filtering Values: Any STRING with a letter 'n'...\n");
-			var iter4 = itermodel.filter (Filter);
+			Gee.Predicate <Value?> f = (g) => {
+						bool ret = false;
+						if (g.type () == typeof (string)) {
+							string t = (string) g;
+							if (t.contains ("n"))
+								ret = true;
+							else
+								ret = false;
+						}
+						else
+							ret = false;
+						stdout.printf ("To be Included?: %s, %s\n", 
+										Gda.value_stringify (g), ret == true ? "TRUE" : "FALSE");
+						return ret;
+					};
+			
+			var iter4 = itermodel.filter (f);
 			stdout.printf ("Printing Filtered Values...\n");
 			while (iter4.next ()) {
 				Value v4 = iter4.get ();
@@ -153,26 +169,32 @@ namespace Check {
 					    ((GdaData.DataModelIterator) iter4).current_column,
 					    typeof (int).name (), Gda.value_stringify (v4));
 			}
-						
+			
+			/* FIXME: This code doesn't return YIELDED strings maybe becasue Lazy is not correctly build. 
+				In theory stream() function is working correctly*/
+			stdout.printf ("Streaming Values: Any STRING will be YIELDED...\n");
+			Gee.StreamFunc<Value?,string> s = (state, g, lazy) =>	{
+						if (state == Gee.Traversable.Stream.CONTINUE) {
+							Value vs = g.get ();
+							stdout.printf ("Value to YIELD: %s\n", Gda.value_stringify (vs));
+							string ts = "YIELDED Value = " + Gda.value_stringify (vs) + "\n";
+							lazy = new Gee.Lazy<string>.from_value (ts.dup ());
+							stdout.printf (ts);
+							return Gee.Traversable.Stream.YIELD;
+						}
+						return Gee.Traversable.Stream.END;
+					};
+			
+			var iter5 = itermodel.stream<string> (s);
+			stdout.printf ("Printing Streamed Values...\n");
+			while (iter5.next ()) {
+				string sv = iter5.get ();
+				stdout.printf ("%s\n", sv);
+			}	
+				
 			return fails;
 		}
-		
-		private bool Filter (Value? g) 
-		{
-			bool ret = false;
-			if (g.type () == typeof (string)) {
-				string t = (string) g;
-				if (t.contains ("n"))
-					ret = true;
-				else
-					ret = false;
-			}
-			else
-				ret = false;
-			stdout.printf ("To be Included?: %s, %s\n", Gda.value_stringify (g), ret == true ? "TRUE" : "FALSE");
-			return ret;
-		}
-		
+				
 		public static int main (string[] args) {
 			stdout.printf ("Checking Gda.DataModelIterator implementation...\n");
 			int failures = 0;
