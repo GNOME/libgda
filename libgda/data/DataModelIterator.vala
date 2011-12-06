@@ -65,10 +65,10 @@
 			}
 		}
 		
-		public Gee.Iterator<Value?> stream<Value> (owned Gee.StreamFunc<Value?,Value?> f)
+		public Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<Value?,A> f)
 		{
 			var iter = new DataModelIterator (this.model);
- 			return iter.stream<Value> (f);
+ 			return iter.stream<A> (f);
 		}
  	}
  	
