@@ -99,7 +99,7 @@
  			this.iter = model.create_iter ();
  			this._current_pos = -1;
  			this.pos_init = 0;
- 			this.maxpos = this.iter.data_model.get_n_columns () * this.iter.data_model.get_n_rows () - 1;
+ 			this.maxpos = this.iter.data_model.get_n_columns () * this.iter.data_model.get_n_rows ();
  			this.filtered = false;
  		}
  		
@@ -122,9 +122,9 @@
  		private DataModelIterator.filtered_elements (Gda.DataModel model, Gee.HashMap <int, int> elements)
  		{
  			this.iter = model.create_iter ();
- 			this._current_pos = 0;
+ 			this._current_pos = -1;
  			this.pos_init = 0;
- 			this.maxpos = this.iter.data_model.get_n_columns () * this.iter.data_model.get_n_rows () - 1;
+ 			this.maxpos = this.iter.data_model.get_n_columns () * this.iter.data_model.get_n_rows ();
  			this.filtered = true;
  			this.elements = elements;
  		}
@@ -154,23 +154,28 @@
  			}
  			else
  			{
- 				while (true) {
- 					if (this.elements.has_key (++this._current_pos))
+ 				bool ret = false;
+ 				while (this.has_next ()) {
+ 					if (this.elements.has_key (++this._current_pos)) {
+ 						int r = this.elements.get (this._current_pos);
+ 						ret = true;
+ 						this.iter.move_to_row (r);
  						break;
+ 					}
  				}
- 				return this.iter.move_to_row (this._current_pos / this.iter.data_model.get_n_columns ());
+ 				
+ 				if (this._current_pos > this.maxpos)
+ 					this.iter.invalidate_contents ();
+ 				return ret;
  			}
  		}
  		
  		public bool has_next () {
- 			if (this.iter.is_valid ()) {
- 				int pos = this._current_pos;
- 				if (++pos > this.maxpos)
- 					return false;
- 				else
- 					return true;
- 			}
- 			return false;
+ 			int pos = this._current_pos + 1;
+			if (pos < this.maxpos && pos >= this.pos_init)
+				return true;
+			
+			return false;
  		}
  		
  		/**
@@ -207,12 +212,18 @@
 		public Gee.Iterator<Value?> filter (owned Gee.Predicate<Value?> f)
 		{
 			var elements = new Gee.HashMap <int,int> ();
-			for (int i = 0; i < this.maxpos; i++) {
+			for (int i = this.pos_init; i < this.maxpos; i++) {
 				int row = i / this.iter.data_model.get_n_columns ();
 				int col = i - row * this.iter.data_model.get_n_columns ();
-				Value v = this.iter.data_model.get_value_at (row, col);
-				if (f (v))
-					elements.set (row, col);
+				try {
+					Value v = this.iter.data_model.get_value_at (col, row);
+					if (f (v))
+						elements.set (i, row);
+				}
+				catch (Error e) {
+					stdout.printf ("ERROR***DataModelIterator: %s\n", e.message);
+					continue;
+				}
 			}
 			return new DataModelIterator.filtered_elements (this.iter.data_model, elements);
 		}

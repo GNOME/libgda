@@ -142,8 +142,35 @@ namespace Check {
 						}
 				}
 			}
+			
+			stdout.printf ("Filtering Values: Any STRING with a letter 'n'...\n");
+			var iter4 = itermodel.filter (Filter);
+			stdout.printf ("Printing Filtered Values...\n");
+			while (iter4.next ()) {
+				Value v4 = iter4.get ();
+				stdout.printf ("Row: %i, Col: %i\t%s\t\t%s\n", 
+						((GdaData.DataModelIterator) iter4).current_row,
+					    ((GdaData.DataModelIterator) iter4).current_column,
+					    typeof (int).name (), Gda.value_stringify (v4));
+			}
 						
 			return fails;
+		}
+		
+		private bool Filter (Value? g) 
+		{
+			bool ret = false;
+			if (g.type () == typeof (string)) {
+				string t = (string) g;
+				if (t.contains ("n"))
+					ret = true;
+				else
+					ret = false;
+			}
+			else
+				ret = false;
+			stdout.printf ("To be Included?: %s, %s\n", Gda.value_stringify (g), ret == true ? "TRUE" : "FALSE");
+			return ret;
 		}
 		
 		public static int main (string[] args) {
