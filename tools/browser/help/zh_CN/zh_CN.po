@@ -1,14 +1,15 @@
 # Chinese (China) translation for libgda.
 # Copyright (C) 2010 libgda's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libgda package.
-# Yinghua_Wang <wantinghard@gmail.com>, 2010.
+# Wylmer Wang <wantinghard@gmail.com>, 2010, 2011.
+# kn1792 <kn1792@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2011-03-19 11:39+0000\n"
-"PO-Revision-Date: 2010-07-30 14:29+0800\n"
-"Last-Translator: Yinghua Wang <wantinghard@gmail.com>\n"
+"POT-Creation-Date: 2011-09-24 19:50+0000\n"
+"PO-Revision-Date: 2011-09-25 11:18+0800\n"
+"Last-Translator: Wylmer Wang <wantinghard@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,60 +17,16 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/virtual-connections.page:29(None)
-#, fuzzy
-#| msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
+#: C/ldap-connections.page:52(None)
 msgid ""
-"@@image: 'figures/virtual-cnc.png'; md5=0a3b008f3696c6239331bf697e2b4847"
-msgstr "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/virtual-connections.page:94(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
-msgid ""
-"@@image: 'figures/virtual-cnc-4.png'; md5=9c19e575c63411872a3742efd02473c1"
+"@@image: 'figures/ldap-table-mapping.png'; "
+"md5=39f204f664cf1202deb716bb19b8993b"
 msgstr ""
-"@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+"@@image: 'figures/ldap-table-mapping.png'; "
+"md5=39f204f664cf1202deb716bb19b8993b@@image: 'figures/data-man-mode.png'; "
+"md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/virtual-connections.page:108(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
-msgid ""
-"@@image: 'figures/virtual-cnc-5.png'; md5=aec9ae2fc4bfac2ac3460720f5f31bb9"
-msgstr ""
-"@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/virtual-connections.page:117(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/table-insert-data.png'; "
-#| "md5=308807b8443d5ab26c8704a6e01aa1ab"
-msgid ""
-"@@image: 'figures/virtual-cnc-2.png'; md5=275c8e47da75738596b0b4c47b06a70a"
-msgstr ""
-"@@image: 'figures/table-insert-data.png'; "
-"md5=308807b8443d5ab26c8704a6e01aa1ab"
-
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/virtual-connections.page:124(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/data-man-persp.png'; "
-#| "md5=a0469e170ca29937cd898aae8af6620c"
-msgid ""
-"@@image: 'figures/virtual-cnc-3.png'; md5=a47d581b293767deb95f77e555f07e8c"
-msgstr ""
-"@@image: 'figures/data-man-persp.png'; md5=a0469e170ca29937cd898aae8af6620c"
-
+#: C/ldap-connections.page:5(title) C/ldap-browser-perspective.page:5(title)
 #: C/virtual-connections.page:5(title) C/variables.page:5(title)
 #: C/table-insert-data.page:5(title) C/transactions.page:5(title)
 #: C/schema-browser-perspective.page:5(title)
@@ -81,9 +38,409 @@ msgstr ""
 msgid "1"
 msgstr "1"
 
-#: C/virtual-connections.page:9(title)
-msgid "Connections binding (ie. virtual connections)"
+#: C/ldap-connections.page:9(title)
+msgid "LDAP connections"
+msgstr "LDAP 连接"
+
+#: C/ldap-connections.page:10(p)
+msgid ""
+"LDAP connections are different than other connections in a way that an LDAP "
+"database stores data in a hierarchical way, in the DIT (Directory "
+"Information Tree), whereas other databases accessible using the <app>gda-"
+"browser</app> application are relational databases."
 msgstr ""
+
+#: C/ldap-connections.page:15(p)
+msgid ""
+"As a consequence, LDAP connections are treaded specially: as normal "
+"connections with tables (see the table mapping explained next), and through "
+"the presence of the <link xref=\"ldap-browser-perspective\"> LDAP browser "
+"perspective</link>"
+msgstr ""
+
+#: C/ldap-connections.page:20(p)
+msgid ""
+"Note that LDAP connections may not be available is either the LDAP database "
+"provider is not installed or if the LDAP support was disabled during the "
+"compilation."
+msgstr ""
+
+#: C/ldap-connections.page:26(title)
+msgid "LDAP table's mapping"
+msgstr ""
+
+#: C/ldap-connections.page:27(p)
+msgid ""
+"Within an LDAP connection, it is possible to declare virtual tables which "
+"are mapped to an LDAP search. These virtual tables can then later be used "
+"like any other table. The first column of each LDAP virtual table will "
+"always be the DN (Distinguished Name) of the entry represented in the row; "
+"the other columns depend on the table definition."
+msgstr ""
+
+#: C/ldap-connections.page:33(p)
+msgid "An LDAP virtual table is defined by the following attributes:"
+msgstr ""
+
+#: C/ldap-connections.page:37(p)
+msgid "a table name"
+msgstr ""
+
+#: C/ldap-connections.page:38(p)
+msgid ""
+"the base DN for the search: the LDAP entry at which the search begins (if "
+"not specified then the top level entry of the LDAP connection is used)"
+msgstr ""
+
+#: C/ldap-connections.page:40(p)
+msgid ""
+"the search filter: a valid LDAP search filter (if none is provided then the "
+"default search filter is \"(objectClass=*)\", requesting any LDAP entry)."
+msgstr ""
+
+#: C/ldap-connections.page:42(p)
+msgid ""
+"the attributes: the attributes to retrieve, each attribute will be mapped to "
+"a column of the table. The attributes must be a comma separated list of "
+"attributes, where each attribute can optionally be assigned a type and a "
+"multi value option (see below)."
+msgstr ""
+
+#: C/ldap-connections.page:45(p)
+msgid ""
+"the scope: the search scope, \"subtree\" (to search the base DN and the "
+"entire sub tree below), \"onelevel\" (to search the immediate children of "
+"the base DN entry only), or \"base\" (to search the base DN only)"
+msgstr ""
+
+#: C/ldap-connections.page:50(title) C/ldap-connections.page:51(desc)
+msgid "LDAP table's properties"
+msgstr ""
+
+#: C/ldap-connections.page:54(p)
+msgid ""
+"For example in the figure above, the \"users\" table will \"contain\" all "
+"the LDAP entries from the top level LDAP entry of the connection, and have 3 "
+"columns: the DN, the \"cn\" and the \"jpegPhoto\"."
+msgstr ""
+
+#: C/ldap-connections.page:61(title)
+msgid "Attributes to columns mapping"
+msgstr ""
+
+#: C/ldap-connections.page:62(p)
+msgid ""
+"As mentioned in the previous section, each attribute will be mapped to a "
+"column. The column type is normally automatically determined (string, "
+"number, ...) but can be forced by appending to the attribute name the \"::"
+"&lt;type&gt;\" for the requested type."
+msgstr ""
+
+#: C/ldap-connections.page:67(p)
+msgid ""
+"Also, because some attributes can have multiple values, the table "
+"construction handles multi-valued attributes in different ways, depending on "
+"each attribute's options. An option can be specified by appending the \"::"
+"&lt;option&gt;\" to the attribute name. Valid options are:"
+msgstr ""
+
+#: C/ldap-connections.page:74(p)
+msgid "\"NULL\" or \"0\": a NULL value will be returned for the attribute"
+msgstr ""
+
+#: C/ldap-connections.page:75(p)
+msgid ""
+"\"CSV\": a comma separated value with all the values of the attribute will "
+"be returned. This only works for string attribute types."
+msgstr ""
+
+#: C/ldap-connections.page:77(p)
+msgid ""
+"\"MULT\" or \"*\": a row will be returned for each value of the attribute, "
+"effectively multiplying the number of returned rows"
+msgstr ""
+
+#: C/ldap-connections.page:79(p)
+msgid ""
+"\"1\": only the first value of the attribute will be used, the other values "
+"ignored"
+msgstr ""
+
+#: C/ldap-connections.page:80(p)
+msgid ""
+"\"CONCAT\": the attributes' values are concatenated (with a newline char "
+"between each value)"
+msgstr ""
+
+#: C/ldap-connections.page:82(p)
+msgid ""
+"\"ERROR\": an error value will be returned (this is the default behaviour)"
+msgstr ""
+
+#: C/ldap-connections.page:87(title)
+msgid "SQL usable with LDAP connections"
+msgstr ""
+
+#: C/ldap-connections.page:88(p)
+msgid ""
+"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> in any LDAP connection. Be aware however that if you define "
+"database objects (outside of the extended SQL presented next section), they "
+"will be lost the next time the LDAP connection is opened."
+msgstr ""
+
+#: C/ldap-connections.page:93(p)
+msgid ""
+"So it is perfectly safe for example to create a table to store some LDAP "
+"data which may require a long operation to obtain, but after closing the "
+"LDAP connection, the table and its data will be lost."
+msgstr ""
+
+#: C/ldap-connections.page:98(p) C/virtual-connections.page:135(p)
+msgid ""
+"See the <link xref=\"sql-sqlite\">SQL understood by LDAP connections and "
+"virtual connections</link> section for more information."
+msgstr ""
+
+#: C/ldap-connections.page:105(title)
+msgid "SQL extension to handle LDAP tables"
+msgstr ""
+
+#: C/ldap-connections.page:106(p)
+msgid "LDAP tables can be created using an extended set of SQL commands:"
+msgstr ""
+
+#: C/ldap-connections.page:110(p)
+msgid ""
+"<code>CREATE LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> to declare a new LDAP virtual table"
+msgstr ""
+
+#: C/ldap-connections.page:111(p)
+msgid ""
+"<code>DESCRIBE LDAP TABLE &lt;table_name&gt;</code> to show LDAP virtual "
+"table's definition"
+msgstr ""
+
+#: C/ldap-connections.page:112(p)
+msgid ""
+"<code>ALTER LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> to modify an LDAP virtual table's definition (only the "
+"specified part is actually modified)"
+msgstr ""
+
+#: C/ldap-connections.page:113(p)
+msgid ""
+"<code>DROP LDAP TABLE &lt;table_name&gt;</code> to remove an LDAP virtual "
+"table. Note that the usual <code>DROP TABLE &lt;table_name&gt;</code> can "
+"also be used instead."
+msgstr ""
+
+#: C/ldap-connections.page:116(p)
+msgid "For example the following SQL code:"
+msgstr ""
+
+#: C/ldap-connections.page:119(code)
+#, no-wrap
+msgid ""
+"\n"
+"      CREATE LDAP TABLE users FILTER='(objectClass=inetOrgPerson)'\n"
+"              ATTRIBUTES='cn,sn,givenName,seeAlso::*' SCOPE='subtree';\n"
+"      SELECT * FROM users WHERE cn like '%john%';\n"
+"      ALTER LDAP TABLE users FILTER='(&amp;(objectClass=inetOrgPerson)(cn=*john*))';\n"
+"      SELECT * FROM users;\n"
+"      DROP LDAP TABLE users;\n"
+"    "
+msgstr ""
+
+#: C/ldap-connections.page:127(p)
+msgid ""
+"should display twice the same results, which list all the LDAP entries of "
+"the \"inetOrgPerson\" class with a CommonName (cn) containing the \"john\" "
+"string."
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/ldap-browser-perspective.page:22(None)
+msgid ""
+"@@image: 'figures/ldap-browser-persp.png'; "
+"md5=e2c1bbcb2f65ffe16b632141908f7027"
+msgstr ""
+"@@image: 'figures/ldap-browser-persp.png'; "
+"md5=e2c1bbcb2f65ffe16b632141908f7027@@image: 'figures/query-exec-persp.png'; "
+"md5=14f701b0619a497da6c7902facad9f42"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/ldap-browser-perspective.page:47(None)
+msgid ""
+"@@image: 'figures/ldap-classes.png'; md5=1ef8ffca04b9ba762a3cf2e884c98d03"
+msgstr ""
+"@@image: 'figures/ldap-classes.png'; md5=1ef8ffca04b9ba762a3cf2e884c98d03"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/ldap-browser-perspective.page:52(None)
+msgid ""
+"@@image: 'figures/ldap-search.png'; md5=81aa2f8a2770590d96fd9c980c578d62"
+msgstr ""
+"@@image: 'figures/ldap-search.png'; "
+"md5=81aa2f8a2770590d96fd9c980c578d62@@image: 'figures/data-man-persp.png'; "
+"md5=a0469e170ca29937cd898aae8af6620c"
+
+#: C/ldap-browser-perspective.page:8(title)
+msgid "The LDAP browser perspective"
+msgstr "LDAP 浏览器透视"
+
+#: C/ldap-browser-perspective.page:9(p)
+msgid ""
+"Use the LDAP browser perspective to view and manipulate data stored in an "
+"LDAP directory. To switch to this perspective, use the "
+"<guiseq><gui>Perspective</gui><gui>LDAP browser</gui></guiseq> menu, or the "
+"<keyseq><key>Ctrl</key><key>P</key></keyseq> shortcut. This perspective is "
+"of course only available when the opened connection is an <link xref=\"ldap-"
+"connection\">LDAP connection</link>."
+msgstr ""
+"使用 LDAP 浏览器透视来查看和操纵 LDAP 目录中存储的数据。要切换到此透视，使用"
+"<guiseq><gui>透视</gui><gui>LDAP 浏览器</gui></guiseq> 菜单或 "
+"<keyseq><key>Ctrl</key><key>P</key></keyseq> 快捷键。当然，只有在打开的连接为"
+"<link xref=\"ldap-connection\">LDAP 连接</link>时方可使用此透视。"
+
+#: C/ldap-browser-perspective.page:14(p)
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorites (to hold references to specific LDAP entries or "
+"specific LDAP classes), and the right pane being the action area."
+msgstr ""
+"透视分为两个水平面板：左面板为用户定义的收藏(存有对特定 LDAP 记录或特定 LDAP "
+"类的引用)，右面板为操作区。"
+
+#: C/ldap-browser-perspective.page:20(title)
+msgid "LDAP browser's entry tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:21(desc)
+msgid "LDAP entries tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:25(p)
+msgid ""
+"The left part of the perspective lists the favorite LDAP entries or classes. "
+"Double clicking on a favorite opens its properties in the right pane. Note "
+"that the LDAP entries favorites will always appear before the classes "
+"favorites."
+msgstr ""
+"透视的左半部分，列出了收藏的LDAP 记录或类。双击一个收藏将在右面板中打开它的属"
+"性。注意 LDAP 记录收藏总是出现在类收藏前面。"
+
+#: C/ldap-browser-perspective.page:31(p)
+#: C/schema-browser-perspective.page:29(p)
+msgid "The right pane is composed of several types of tabs:"
+msgstr "右侧面板由几类标签构成："
+
+#: C/ldap-browser-perspective.page:35(p)
+msgid ""
+"tabs to explore the LDAP DIT (Directory Information Tree): when an entry is "
+"selected from the tree, its attributes are displayed (only the valued "
+"attributes are displayed, the ones with no value are hidden), and the "
+"entry's DN (Distinguished Name) is always displayed first. Also note that "
+"the children of each entry are only fetched when necessary to avoid "
+"unnecessary requests to the LDAP server."
+msgstr ""
+
+#: C/ldap-browser-perspective.page:39(p)
+msgid ""
+"tabs to explore the LDAP's classes, see figure below. For a selected class, "
+"all the information regarding the class is displayed (description, OID, "
+"type, ...)"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:41(p)
+msgid ""
+"tabs to perform LDAP searches, see figure below. An LDAP search definition "
+"can be saved as a virtual table, see the <link xref=\"ldap-connection#ldap-"
+"table-mapping\">LDAP table's mapping</link>."
+msgstr ""
+
+#: C/ldap-browser-perspective.page:45(title)
+msgid "LDAP browser's classes tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:46(desc)
+msgid "LDAP classes tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:50(title)
+msgid "LDAP browser's search tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:51(desc)
+msgid "LDAP search tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:54(p)
+msgid ""
+"Links in these tabs (identified by blue and underlined text) open a new tab, "
+"or use the first tab next to the current tab to display information about "
+"the selected link. For example in the figure above illustrating an LDAP "
+"entries tab, clicking on the \"inetOrgPerson\" will open a new \"LDAP classes"
+"\" tab and display the information about that class."
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:29(None)
+msgid ""
+"@@image: 'figures/virtual-cnc.png'; md5=0a3b008f3696c6239331bf697e2b4847"
+msgstr ""
+"@@image: 'figures/virtual-cnc.png'; md5=0a3b008f3696c6239331bf697e2b4847"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:94(None)
+msgid ""
+"@@image: 'figures/virtual-cnc-4.png'; md5=9c19e575c63411872a3742efd02473c1"
+msgstr ""
+"@@image: 'figures/virtual-cnc-4.png'; "
+"md5=9c19e575c63411872a3742efd02473c1@@image: 'figures/data-man-mode.png'; "
+"md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:108(None)
+msgid ""
+"@@image: 'figures/virtual-cnc-5.png'; md5=aec9ae2fc4bfac2ac3460720f5f31bb9"
+msgstr ""
+"@@image: 'figures/virtual-cnc-5.png'; "
+"md5=aec9ae2fc4bfac2ac3460720f5f31bb9@@image: 'figures/data-man-mode.png'; "
+"md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:117(None)
+msgid ""
+"@@image: 'figures/virtual-cnc-2.png'; md5=275c8e47da75738596b0b4c47b06a70a"
+msgstr ""
+"@@image: 'figures/virtual-cnc-2.png'; "
+"md5=275c8e47da75738596b0b4c47b06a70a@@image: 'figures/table-insert-data."
+"png'; md5=308807b8443d5ab26c8704a6e01aa1ab"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:124(None)
+msgid ""
+"@@image: 'figures/virtual-cnc-3.png'; md5=a47d581b293767deb95f77e555f07e8c"
+msgstr ""
+"@@image: 'figures/virtual-cnc-3.png'; "
+"md5=a47d581b293767deb95f77e555f07e8c@@image: 'figures/data-man-persp.png'; "
+"md5=a0469e170ca29937cd898aae8af6620c"
+
+#: C/virtual-connections.page:9(title)
+msgid "Connections binding (i.e. virtual connections)"
+msgstr "连接绑定(即虚拟连接)"
 
 #: C/virtual-connections.page:10(p)
 msgid ""
@@ -91,14 +448,16 @@ msgid ""
 "and/or imported data sets into a single connection, which can be used almost "
 "like a regular connection."
 msgstr ""
+"连接绑定功能是一个可以 \"联合\" 几个连接 并/或输入数据集到一个单一连接，与使"
+"用普通连接几乎一样。"
 
 #: C/virtual-connections.page:14(p)
 msgid ""
-"This feature is usefull when one needs to execute an SQL command (for "
-"example to extract data) takinginto account data actually stored in "
-"different databases. Without this feature, the way to achieve the same "
-"result is by exporting the necessary data from each database and work on the "
-"data outside of the databases."
+"This feature is useful when one needs to execute an SQL command (for example "
+"to extract data) taking into account data actually stored in different "
+"databases. Without this feature, the way to achieve the same result is by "
+"exporting the necessary data from each database and work on the data outside "
+"of the databases."
 msgstr ""
 
 #: C/virtual-connections.page:20(p)
@@ -112,11 +471,11 @@ msgstr ""
 
 #: C/virtual-connections.page:27(title)
 msgid "Dialog to create a new virtual connection"
-msgstr ""
+msgstr "建立新虚拟连接对话框"
 
 #: C/virtual-connections.page:28(desc)
 msgid "Here the current connection (c1) will be bound in the \"c1\" schema"
-msgstr ""
+msgstr "这里的当前连接 (c1) 将绑定到 \"c1\" 架构"
 
 #: C/virtual-connections.page:31(p)
 msgid "Use the <guiseq><gui>Add binding</gui></guiseq> button to either:"
@@ -139,24 +498,27 @@ msgstr ""
 
 #: C/virtual-connections.page:40(title)
 msgid "Use case for virtual connections"
-msgstr ""
+msgstr "虚拟连接的用例"
 
 #: C/virtual-connections.page:41(p)
 msgid ""
 "To illustrate virtual connection usage, let's define a simple use case and "
-"see how it's usefull. Suppose you have a database which contains the list of "
+"see how it's useful. Suppose you have a database which contains the list of "
 "servers which you are responsible for. For simplicity, let's assume that the "
 "database contains a table named \"server\" with the following definition:"
 msgstr ""
+"为了图解虚拟连接的使用，让我们定义一个简单的用例来看看虚拟连接是多么的有用。"
+"假设您有一个包含自己负责的服务器列表的数据库。简单起见，假定这个数据库中包含"
+"一张名为“server”的、使用以下方式定义的表："
 
 #: C/virtual-connections.page:46(code)
 #, no-wrap
 msgid "CREATE TABLE servers (name string, location string);"
-msgstr ""
+msgstr "CREATE TABLE servers (name string, location string);"
 
 #: C/virtual-connections.page:47(p)
 msgid "Let's suppose this table contains the following information:"
-msgstr ""
+msgstr "我们假设表里含有下列信息："
 
 #: C/virtual-connections.page:50(code)
 #, no-wrap
@@ -174,6 +536,18 @@ msgid ""
 "&gt;\n"
 "    "
 msgstr ""
+"\n"
+"&gt; select * from servers ;\n"
+"name     | location\n"
+"---------+---------\n"
+"moon     | room1   \n"
+"darkstar | room2   \n"
+"flag     | room3   \n"
+"alf      | room2   \n"
+"vador    | room3   \n"
+"(5 rows)\n"
+"&gt;\n"
+"    "
 
 #: C/virtual-connections.page:62(p)
 msgid ""
@@ -183,6 +557,9 @@ msgid ""
 "a column describing the problem. Let's assume the CSV file has the following "
 "contents:"
 msgstr ""
+"现在我们假设你有一个第三方的程序给你了一份有可能出问题的服务器列表, 这个程序"
+"输出的CSV文件中有一列是服务器名，一列是错误代码，还有一列是错误的描述。让我们"
+"假设这个CSV文件有下列内容： "
 
 #: C/virtual-connections.page:67(code)
 #, no-wrap
@@ -197,6 +574,15 @@ msgid ""
 "$\n"
 "    "
 msgstr ""
+"\n"
+"$ cat problems.csv \n"
+"Server name,Error code,Error description\n"
+"darkstar,0,文件系统已满\n"
+"vador,1,过期的AV签名\n"
+"darkstar,2,过载\n"
+"flag,0,文件系统已满\n"
+"$\n"
+"    "
 
 #: C/virtual-connections.page:76(p)
 msgid ""
@@ -264,6 +650,18 @@ msgstr ""
 
 #: C/virtual-connections.page:123(title)
 msgid "New opened virtual connection"
+msgstr ""
+
+#: C/virtual-connections.page:129(title)
+msgid "SQL usable with virtual connections"
+msgstr "虚拟连接可以使用的 SQL"
+
+#: C/virtual-connections.page:130(p)
+msgid ""
+"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> in any virtual connection. Be aware however that if you "
+"define database objects (outside of the extended SQL presented next "
+"section), they will be lost the next time the virtual connection is opened."
 msgstr ""
 
 #: C/variables.page:9(title)
@@ -376,14 +774,13 @@ msgid "The noticeable points here are:"
 msgstr "这里需要注意以下几点："
 
 #: C/table-insert-data.page:26(p)
-#, fuzzy
 msgid ""
 "There is one data entry per column in the table, with the exception (not "
 "shown in this figure) of multiple foreign key fields for which a single drop "
 "down choice widget is shown;"
 msgstr ""
-"表中每列都有一个数据记录，除了多选外部键字段(图中未显示)，该字段显示为一个单"
-"选下拉选择组件；"
+"表中每列都有一条数据记录，除了多外键字段(图中未显示)，这种字段显示为一个单选"
+"下拉选择控件；"
 
 #: C/table-insert-data.page:28(p)
 msgid ""
@@ -403,7 +800,7 @@ msgstr "红色：表示数据记录的当前值无效"
 #: C/table-insert-data.page:34(p)
 msgid ""
 "Blue: means the current value in the data entry is unused and the column's "
-"default value will be used instead (usefull for example for auto incremented "
+"default value will be used instead (useful for example for auto incremented "
 "columns)"
 msgstr ""
 "蓝色：表示数据记录的当前值未使用，将使用该列的默认值代替(自动递增列等情况下有"
@@ -422,11 +819,11 @@ msgstr "与用户界面其他部分相同的颜色：表示以上情况都不适
 msgid ""
 "Columns which are foreign keys to other tables are presented as a drop down "
 "combo box where you can only choose among the values in the referenced table "
-"(hint: to have that values list refresned you should close the popup dialog "
+"(hint: to have that values list refreshed you should close the popup dialog "
 "and reopen it);"
 msgstr ""
-"指向其他表的外部键列用下拉列表组合框表示，您只能在参考表的值中选择(提提示：要"
-"刷新值列表，您需要关闭下拉框并重新打开它)；"
+"指向其他表的外键列用下拉列表组合框表示，您只能在引用表的值中选择(提示：要刷新"
+"值列表，您需要关闭弹出对话框并重新打开它)；"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -503,23 +900,19 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/schema-browser-perspective.page:21(None) C/general-ui.page:18(None)
-#, fuzzy
-#| msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
 msgid "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
-msgstr "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
+msgstr "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/schema-browser-perspective.page:47(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/query-exec-persp.png'; "
-#| "md5=14f701b0619a497da6c7902facad9f42"
 msgid ""
 "@@image: 'figures/schema-browser-persp.png'; "
 "md5=991ae01b9fb6b17c0b93ee4873b9b985"
 msgstr ""
-"@@image: 'figures/query-exec-persp.png'; md5=14f701b0619a497da6c7902facad9f42"
+"@@image: 'figures/schema-browser-persp.png'; "
+"md5=991ae01b9fb6b17c0b93ee4873b9b985@@image: 'figures/query-exec-persp.png'; "
+"md5=14f701b0619a497da6c7902facad9f42"
 
 #: C/schema-browser-perspective.page:8(title)
 msgid "The schema browser perspective"
@@ -559,19 +952,14 @@ msgstr ""
 "透视的左半部分，列出了收藏的数据库对象或图。双击一个收藏，在右面板中会打开它"
 "的属性。"
 
-#: C/schema-browser-perspective.page:29(p)
-msgid "The right pane is composed of several types of tabs:"
-msgstr "右侧面板由几类标签构成："
-
 #: C/schema-browser-perspective.page:33(p)
-#, fuzzy
 msgid ""
 "a tab listing all the database's tables and views, in a <em>cloud</em> view "
 "where the tables with the more relations to other tables being displayed in "
 "a larger font; this tab is always present"
 msgstr ""
-"一个标签以<em>云</em>视图列出了数据库中的表和视图，与其他表关系较多的表以更大"
-"的字体显示；这个标签总是存在"
+"一个以<em>云</em>视图方式列出数据库中所有表和视图的标签，与其他表关系较多的表"
+"以更大的字体显示；这个标签总是存在"
 
 #: C/schema-browser-perspective.page:36(p)
 msgid ""
@@ -602,14 +990,10 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/query-execution-perspective.page:17(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/query-exec-persp.png'; "
-#| "md5=14f701b0619a497da6c7902facad9f42"
 msgid ""
 "@@image: 'figures/query-exec-persp.png'; md5=c52ce85c0f89d26775c8b9dad282910a"
 msgstr ""
-"@@image: 'figures/query-exec-persp.png'; md5=14f701b0619a497da6c7902facad9f42"
+"@@image: 'figures/query-exec-persp.png'; md5=c52ce85c0f89d26775c8b9dad282910a"
 
 #: C/query-execution-perspective.page:8(title)
 msgid "The query execution perspective"
@@ -849,20 +1233,21 @@ msgid ""
 "href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
 "postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
 "\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
-"projects/mdbtools/\">MDBTools</link> library) and <link href=\"http://java."
-"sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at "
-"the moment)."
+"projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en."
+"wikipedia.org/wiki/LDAP\">LDAP</link> and <link href=\"http://java.sun.com/"
+"docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at the "
+"moment)."
 msgstr ""
 
-#: C/index.page:28(title)
+#: C/index.page:29(title)
 msgid "Presentation"
 msgstr ""
 
-#: C/index.page:31(title)
+#: C/index.page:32(title)
 msgid "Perspectives"
 msgstr ""
 
-#: C/index.page:35(title)
+#: C/index.page:36(title)
 msgid "Connections management"
 msgstr "连接管理"
 
@@ -931,10 +1316,8 @@ msgid "<app>gda-browser</app>'s current features are:"
 msgstr ""
 
 #: C/features.page:13(title)
-#, fuzzy
-#| msgid "General interface organization"
 msgid "General user interface"
-msgstr "常规界面组织"
+msgstr "常规用户界面"
 
 #: C/features.page:15(p) C/features.page:26(p)
 msgid ""
@@ -951,8 +1334,6 @@ msgid "full screen mode accessible to maximize the screen space usage"
 msgstr ""
 
 #: C/features.page:22(title)
-#, fuzzy
-#| msgid "Connections management"
 msgid "Connection management"
 msgstr "连接管理"
 
@@ -980,7 +1361,7 @@ msgstr ""
 
 #: C/features.page:36(p)
 msgid ""
-"analyse the database schema (tables, relations, ...), see the the <link xref="
+"analyse the database schema (tables, relations, ...), see the <link xref="
 "\"schema-browser-perspective\">Schema browser perspective</link>"
 msgstr ""
 
@@ -996,28 +1377,35 @@ msgid ""
 "\">Data manager perspective</link>"
 msgstr ""
 
-#: C/features.page:43(p)
+#: C/features.page:42(p)
+msgid ""
+"for <link xref=\"ldap-connection\">LDAP connections</link>, manage the "
+"hierarchical data in the LDAP tree, see the <link xref=\"ldap-browser-"
+"perspective\">LDAP browser perspective</link>"
+msgstr ""
+
+#: C/features.page:45(p)
 msgid "See also the section about <link xref=\"actions\">actions</link>"
 msgstr ""
 
-#: C/features.page:48(title)
+#: C/features.page:50(title)
 msgid "Openness"
 msgstr ""
 
-#: C/features.page:50(p)
+#: C/features.page:52(p)
 msgid ""
 "CSV and other text files can be imported and used in conjunction with <link "
 "type=\"topic\" xref=\"virtual-connections\">connection binding</link>"
 msgstr ""
 
-#: C/features.page:51(p)
+#: C/features.page:53(p)
 msgid ""
 "the general framework is opened enough to add new integrated features; "
 "specifically anyone can develop new <link type=\"topic\" xref=\"general-ui"
 "\">perspectives</link>"
 msgstr ""
 
-#: C/features.page:49(list)
+#: C/features.page:51(list)
 msgid "<placeholder-1/> x <placeholder-2/>"
 msgstr ""
 
@@ -1091,20 +1479,19 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/declaredfk.page:25(None)
-#, fuzzy
-#| msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
 msgid "@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
-msgstr "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
+msgstr ""
+"@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/declaredfk.page:65(None)
-#, fuzzy
-#| msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
 msgid ""
 "@@image: 'figures/declaredfk-dialog.png'; "
 "md5=56aba297f8b88248fabc23c54b361a8f"
-msgstr "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
+msgstr ""
+"@@image: 'figures/declaredfk-dialog.png'; "
+"md5=56aba297f8b88248fabc23c54b361a8f"
 
 #: C/declaredfk.page:8(title)
 msgid "Declared foreign keys"
@@ -1447,14 +1834,10 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:27(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/data-man-persp.png'; "
-#| "md5=a0469e170ca29937cd898aae8af6620c"
 msgid ""
 "@@image: 'figures/data-man-persp.png'; md5=b4e0678527c03093031dcb3805bb2841"
 msgstr ""
-"@@image: 'figures/data-man-persp.png'; md5=a0469e170ca29937cd898aae8af6620c"
+"@@image: 'figures/data-man-persp.png'; md5=b4e0678527c03093031dcb3805bb2841"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1468,30 +1851,22 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:62(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/data-man-xmlcompose.png'; "
-#| "md5=47629c29ef2c7d336e4401e66ba849e0"
 msgid ""
 "@@image: 'figures/data-man-xmlcompose.png'; "
 "md5=fd3ae97c42d58ddbd87404c92b95ee9c"
 msgstr ""
 "@@image: 'figures/data-man-xmlcompose.png'; "
-"md5=47629c29ef2c7d336e4401e66ba849e0"
+"md5=fd3ae97c42d58ddbd87404c92b95ee9c"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/data-manager-perspective.page:69(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/data-man-xmlcompose.png'; "
-#| "md5=47629c29ef2c7d336e4401e66ba849e0"
 msgid ""
 "@@image: 'figures/data-man-uicompose.png'; "
 "md5=33b1cf9354761dac4ee3f14a9534357a"
 msgstr ""
-"@@image: 'figures/data-man-xmlcompose.png'; "
-"md5=47629c29ef2c7d336e4401e66ba849e0"
+"@@image: 'figures/data-man-uicompose.png'; "
+"md5=33b1cf9354761dac4ee3f14a9534357a"
 
 #: C/data-manager-perspective.page:8(title)
 msgid "The data manager perspective"
@@ -1652,12 +2027,8 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/actions.page:33(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 msgid "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
-msgstr ""
-"@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+msgstr "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1668,26 +2039,18 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/actions.page:48(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
 msgid "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
-msgstr ""
-"@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+msgstr "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/actions.page:56(None)
-#, fuzzy
-#| msgid "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
 msgid "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
-msgstr "@@image: 'figures/mainwin.png'; md5=532619e33d31404118bec46a23e6e6b7"
+msgstr "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
 
 #: C/actions.page:9(title)
-#, fuzzy
-#| msgid "Transactions"
 msgid "Actions"
-msgstr "事务"
+msgstr "操作"
 
 #: C/actions.page:10(p)
 msgid ""
@@ -1706,8 +2069,8 @@ msgstr ""
 #: C/actions.page:19(p)
 msgid ""
 "An action can be defined to show all the entries in the \"comments\" table "
-"provided the key defining a product. Then anytime a product is listed in a "
-"resultset, the contextual menu will allow the user to execute this action "
+"provided the key is defining a product. Then anytime a product is listed in "
+"a result set, the contextual menu will allow the user to execute this action "
 "and thus display all the comments on the selected product. This situation is "
 "illustrated in the following figures."
 msgstr ""
