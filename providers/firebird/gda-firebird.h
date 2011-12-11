@@ -20,7 +20,7 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-c/* GDA firebird provider
+/* GDA firebird provider
  * Copyright (C) 2008 The GNOME Foundation.
  *
  * AUTHORS:
@@ -50,21 +50,24 @@ c/* GDA firebird provider
  */
 #define FIREBIRD_PROVIDER_NAME "Firebird"
 
+#include <libgda/libgda.h>
 #include <ibase.h>
 
 /*
  * Provider's specific connection data
  */
-typedef struct {
-	gchar         *dbname;
-	gchar         *server_version;
-        isc_db_handle  handle;
-        ISC_STATUS     status[20];
-        gchar          dpb_buffer[128];
-        gshort         dpb_length;
 
-	/* transaction */
-	isc_tr_handle *ftr;
+typedef struct
+{
+	//GdaConnection	*cnc;
+	gchar	       *dbname;
+	gchar	       *server_version;
+	isc_db_handle	handle;
+	ISC_STATUS	status[20];
+	gchar		dpb_buffer[128];
+	gshort		dpb_length;
+
+	isc_tr_handle	*ftr;
 } FirebirdConnectionData;
 
 #endif

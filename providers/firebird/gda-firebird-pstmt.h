@@ -37,9 +37,12 @@ typedef struct _GdaFirebirdPStmtClass   GdaFirebirdPStmtClass;
 struct _GdaFirebirdPStmt {
 	GdaPStmt        object;
 
-	/* TO_ADD: this structure holds any information necessary to reference a prepared statement, usually a connection
-         * handle from the C or C++ API
-         */
+	isc_stmt_handle	stmt_h;
+	ISC_STATUS	status[20];
+	XSQLDA 	       *sqlda;
+
+	gint		statement_type;
+	gboolean	is_non_select;
 };
 
 struct _GdaFirebirdPStmtClass {

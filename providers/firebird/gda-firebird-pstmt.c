@@ -75,7 +75,8 @@ gda_firebird_pstmt_init (GdaFirebirdPStmt *pstmt, GdaFirebirdPStmtClass *klass)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	
 	/* initialize specific parts of @pstmt */
-	TO_IMPLEMENT;
+	pstmt->stmt_h = 0;
+	pstmt->sqlda = NULL;
 }
 
 static void
@@ -86,7 +87,12 @@ gda_firebird_pstmt_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 
 	/* free memory */
-	TO_IMPLEMENT; /* free some specific parts of @pstmt */
+	//TO_IMPLEMENT; /* free some specific parts of @pstmt */
+	isc_dsql_free_statement(pstmt->status, &(pstmt->stmt_h), DSQL_close);
+
+	g_free(pstmt->sqlda);
+	pstmt->sqlda = NULL;
+	pstmt->stmt_h = 0;
 
 	/* chain to parent class */
 	parent_class->finalize (object);

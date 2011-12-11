@@ -24,7 +24,7 @@
 %define           SYBASE   0
 %define 	  MDB	   0
 %define		  LDAP	   0
-%define		  FIREBIRD 0
+%define		  FIREBIRD 1
 
 %{?_with_tds:%define FREETDS 	1}
 %{?_with_db2:%define IBMDB2 	1}

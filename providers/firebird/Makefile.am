@@ -1,14 +1,19 @@
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
-provider_LTLIBRARIES = libgda-firebird.la
+provider_LTLIBRARIES =
 
-#Rem: FIREBIRD_CFLAGS and FIREBIRD_LIBS are the compile and link flags necessary to use the
-# C API. It is specific to the API and should be computed in the configure.in script.
+if FIREBIRD_CLIENT
+provider_LTLIBRARIES+=libgda-firebird-client.la
+endif
+
+if FIREBIRD_EMBED
+provider_LTLIBRARIES+=libgda-firebird-embed.la
+endif
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) #$(FIREBIRD_CFLAGS) 
+	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(FIREBIRD_CFLAGS)
 
 # parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
@@ -22,15 +27,15 @@ firebird_token_types.h: gen_def$(EXEEXT_FOR_BUILD) parser.h
 
 $(OBJECTS) $(libgda_firebird_la_OBJECTS): firebird_token_types.h
 
-libgda_firebird_la_SOURCES = \
+firebird_sources = \
+	gda-firebird-provider.c \
+	gda-firebird-provider.h \
 	gda-firebird-blob-op.c \
 	gda-firebird-blob-op.h \
 	gda-firebird-ddl.c \
 	gda-firebird-ddl.h \
 	gda-firebird-parser.c \
 	gda-firebird-parser.h \
-	gda-firebird-provider.c \
-	gda-firebird-provider.h \
 	gda-firebird-pstmt.h \
 	gda-firebird-pstmt.c \
 	gda-firebird-meta.c \
@@ -40,15 +45,21 @@ libgda_firebird_la_SOURCES = \
 	gda-firebird-util.c \
 	gda-firebird-util.h \
 	gda-firebird.h \
-	libmain.c \
 	parser.h \
-        parser.c \
-        firebird_token_types.h
+	parser.c \
+	firebird_token_types.h
 
-libgda_firebird_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
-libgda_firebird_la_LIBADD = \
+libgda_firebird_client_la_SOURCES = $(firebird_sources) libmain-client.c
+libgda_firebird_client_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
+libgda_firebird_client_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
-	$(COREDEPS_LIBS) #$(FIREBIRD_LIBS)
+	$(COREDEPS_LIBS) $(FIREBIRD_CLIENT_LIBS)
+
+libgda_firebird_embed_la_SOURCES = $(firebird_sources) libmain-embed.c
+libgda_firebird_embed_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
+libgda_firebird_embed_la_LIBADD = \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(COREDEPS_LIBS) $(FIREBIRD_EMBED_LIBS)
 
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \

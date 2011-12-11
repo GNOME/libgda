@@ -40,6 +40,8 @@
 #include "gda-firebird-recordset.h"
 #include "gda-firebird-ddl.h"
 #include "gda-firebird-meta.h"
+#include "gda-firebird-parser.h"
+#include "gda-firebird-util.h"
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 /*
@@ -54,9 +56,13 @@ static GObjectClass *parent_class = NULL;
  * GdaServerProvider's virtual methods
  */
 /* connection management */
-static gboolean            gda_firebird_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-								  GdaQuarkList *params, GdaQuarkList *auth,
-								  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+static gboolean            gda_firebird_provider_open_connection (GdaServerProvider *provider,
+								  GdaConnection *cnc,
+								  GdaQuarkList *params,
+								  GdaQuarkList *auth,
+								  guint *task_id,
+								  GdaServerProviderAsyncCallback async_cb,
+								  gpointer cb_data);
 static gboolean            gda_firebird_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_firebird_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_firebird_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
@@ -101,35 +107,51 @@ static GdaDataHandler     *gda_firebird_provider_get_data_handler (GdaServerProv
 static const gchar*        gda_firebird_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc,
 									GType type);
 /* statements */
-static GdaSqlParser        *gda_firebird_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc);
-static gchar               *gda_firebird_provider_statement_to_sql  (GdaServerProvider *provider, GdaConnection *cnc,
-								     GdaStatement *stmt, GdaSet *params, 
+static GdaSqlParser        *gda_firebird_provider_create_parser (GdaServerProvider *provider,
+								 GdaConnection *cnc);
+static gchar               *gda_firebird_provider_statement_to_sql  (GdaServerProvider *provider,
+								     GdaConnection *cnc,
+								     GdaStatement *stmt,
+								     GdaSet *params,
 								     GdaStatementSqlFlag flags,
-								     GSList **params_used, GError **error);
-static gboolean             gda_firebird_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *cnc,
+								     GSList **params_used,
+								     GError **error);
+static gboolean             gda_firebird_provider_statement_prepare (GdaServerProvider *provider,
+								     GdaConnection *cnc,
 								     GdaStatement *stmt, GError **error);
-static GObject             *gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
-								     GdaStatement *stmt, GdaSet *params,
-								     GdaStatementModelUsage model_usage, 
-								     GType *col_types, GdaSet **last_inserted_row, 
-								     guint *task_id, GdaServerProviderAsyncCallback async_cb, 
+static GObject             *gda_firebird_provider_statement_execute (GdaServerProvider *provider,
+								     GdaConnection *cnc,
+								     GdaStatement *stmt,
+								     GdaSet *params,
+								     GdaStatementModelUsage model_usage,
+								     GType *col_types,
+								     GdaSet **last_inserted_row,
+								     guint *task_id,
+								     GdaServerProviderAsyncCallback async_cb,
 								     gpointer cb_data, GError **error);
 
 /* distributed transactions */
-static gboolean gda_firebird_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
+static gboolean gda_firebird_provider_xa_start    (GdaServerProvider *provider,
+						   GdaConnection *cnc,
+						   const GdaXaTransactionId *xid,
+						   GError **error);
+
+static gboolean gda_firebird_provider_xa_end      (GdaServerProvider *provider,
+						   GdaConnection *cnc,
+						   const GdaXaTransactionId *xid,
+						   GError **error);
+
+static gboolean gda_firebird_provider_xa_prepare  (GdaServerProvider *provider,
+						   GdaConnection *cnc,
+						   const GdaXaTransactionId *xid,
+						   GError **error);
+
+static gboolean gda_firebird_provider_xa_commit   (GdaServerProvider *provider, GdaConnection *cnc,
+						   const GdaXaTransactionId *xid, GError **error);
+static gboolean gda_firebird_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc,
 						   const GdaXaTransactionId *xid, GError **error);
 
-static gboolean gda_firebird_provider_xa_end      (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
-static gboolean gda_firebird_provider_xa_prepare  (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
-
-static gboolean gda_firebird_provider_xa_commit   (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
-static gboolean gda_firebird_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
-
-static GList   *gda_firebird_provider_xa_recover  (GdaServerProvider *provider, GdaConnection *cnc, 
+static GList   *gda_firebird_provider_xa_recover  (GdaServerProvider *provider, GdaConnection *cnc,
 						   GError **error);
 
 /* 
@@ -137,6 +159,8 @@ static GList   *gda_firebird_provider_xa_recover  (GdaServerProvider *provider, 
  */
 static void gda_firebird_free_cnc_data (FirebirdConnectionData *cdata);
 
+
+static gchar	*fb_server_get_version (FirebirdConnectionData *fcnc);
 
 /*
  * Prepared internal statements
@@ -187,10 +211,10 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
         provider_class->rollback_savepoint = NULL /*gda_firebird_provider_rollback_savepoint*/;
         provider_class->delete_savepoint = NULL /*gda_firebird_provider_delete_savepoint*/;
 
-	provider_class->create_parser = NULL /*gda_firebird_provider_create_parser*/;
-	provider_class->statement_to_sql = NULL /*gda_firebird_provider_statement_to_sql*/;
-	provider_class->statement_prepare = NULL /*gda_firebird_provider_statement_prepare*/;
-	provider_class->statement_execute = NULL /*gda_firebird_provider_statement_execute*/;
+	provider_class->create_parser = gda_firebird_provider_create_parser;
+	provider_class->statement_to_sql = gda_firebird_provider_statement_to_sql;
+	provider_class->statement_prepare = gda_firebird_provider_statement_prepare;
+	provider_class->statement_execute = gda_firebird_provider_statement_execute;
 
 	provider_class->is_busy = NULL;
 	provider_class->cancel = NULL;
@@ -277,7 +301,7 @@ gda_firebird_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		//static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static GTypeInfo info = {
 			sizeof (GdaFirebirdProviderClass),
 			(GBaseInitFunc) NULL,
@@ -330,6 +354,7 @@ gda_firebird_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 				       GdaQuarkList *params, GdaQuarkList *auth,
 				       guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
 {
+	g_print("Attempting to open Firebird DB connection\n");
 	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
@@ -343,7 +368,7 @@ gda_firebird_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	const gchar *fb_db, *fb_user, *fb_password, *fb_charset;
 	fb_db = (gchar *) gda_quark_list_find (params, "DB_NAME");
         if (!fb_db) {
-                gda_connection_add_event_string (cnc, 
+                gda_connection_add_event_string (cnc,
 						 _("The connection string must contain the DB_NAME values"));
                 return FALSE;
         }
@@ -360,7 +385,7 @@ gda_firebird_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	cdata = g_new0 (FirebirdConnectionData, 1);
 
 	/* Initialize dpb_buffer */
-        dpb = fcnc->dpb_buffer;
+        dpb = cdata->dpb_buffer;
         *dpb++ = isc_dpb_version1;
 
         /* Set user name */
@@ -388,20 +413,22 @@ gda_firebird_provider_open_connection (GdaServerProvider *provider, GdaConnectio
         }
 
         /* Save dpb length */
-        fcnc->dpb_length = dpb - fcnc->dpb_buffer;
+        cdata->dpb_length = dpb - cdata->dpb_buffer;
 
-	if (isc_attach_database (fcnc->status, strlen (fb_db), fb_db, &(fcnc->handle), fcnc->dpb_length,
-                                 fcnc->dpb_buffer)) {
-		gda_firebird_free_cnc_data (fcnc);
-		
+	if (isc_attach_database (cdata->status, strlen (fb_db), fb_db, &(cdata->handle), cdata->dpb_length,
+                                 cdata->dpb_buffer)) {
+		gda_firebird_free_cnc_data (cdata);
+		gda_connection_add_event_string (cnc, 
+						 _("Failed to connect to the database"));
+		//g_print("Failed to connect to the database\n");
 		return FALSE;
 	}
 
 	/* connection is now opened */
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_firebird_free_cnc_data);
 	 
-        fcnc->dbname = g_strdup (fb_db);
-        fcnc->server_version = fb_server_get_version (fcnc);
+	cdata->dbname = g_strdup (fb_db);
+	cdata->server_version = fb_server_get_version (cdata);
 
 	return TRUE;
 }
@@ -424,12 +451,12 @@ gda_firebird_provider_close_connection (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	/* Close the connection using the C API */
-	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
 	/* detach from database */
-        isc_detach_database (fcnc->status, &(fcnc->handle));
+	isc_detach_database (cdata->status, &(cdata->handle));
 
 	/* Free the FirebirdConnectionData structure and its contents*/
 	gda_firebird_free_cnc_data (cdata);
@@ -451,7 +478,7 @@ gda_firebird_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
@@ -471,7 +498,7 @@ gda_firebird_provider_get_database (GdaServerProvider *provider, GdaConnection *
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return NULL;
 
@@ -659,8 +686,10 @@ gda_firebird_provider_perform_operation (GdaServerProvider *provider, GdaConnect
  * Begin transaction request
  */
 static gboolean
-gda_firebird_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
-					 const gchar *name, GdaTransactionIsolation level,
+gda_firebird_provider_begin_transaction (GdaServerProvider *provider,
+					 GdaConnection *cnc,
+					 const gchar *name,
+					 GdaTransactionIsolation level,
 					 GError **error)
 {
 	FirebirdConnectionData *cdata;
@@ -688,20 +717,20 @@ gda_firebird_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
 		return FALSE;
 	}
 
-        /* start the transaction */
-        cdata->ftr = g_new0 (isc_tr_handle, 1);
-        if (isc_start_transaction (cdata->status, cdata->ftr, 1, &(cdata->handle),
-                                   (unsigned short) sizeof (tpb), &tpb)) {
-                _gda_firebird_connection_make_error (cnc, 0);
-                g_free (cdata->ftr);
+	/* start the transaction */
+	cdata->ftr = g_new0 (isc_tr_handle, 1);
+	if (isc_start_transaction (cdata->status, (cdata->ftr), 1, &(cdata->handle),
+				(unsigned short) sizeof (tpb), &tpb)) {
+		_gda_firebird_make_error (cnc, 0);
+		g_free (cdata->ftr);
 		cdata->ftr = NULL;
 
-                return FALSE;
-        }
+		return FALSE;
+	}
 
-        gda_connection_internal_transaction_started (cnc, NULL, name, level);
+	gda_connection_internal_transaction_started (cnc, NULL, name, level);
 
-        return TRUE;
+	return TRUE;
 }
 
 /*
@@ -712,7 +741,7 @@ gda_firebird_provider_commit_transaction (GdaServerProvider *provider, GdaConnec
 					  const gchar *name, GError **error)
 {
 	FirebirdConnectionData *cdata;
-        gboolean result;
+	gboolean result;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -726,8 +755,8 @@ gda_firebird_provider_commit_transaction (GdaServerProvider *provider, GdaConnec
                 return FALSE;
         }
 
-        if (isc_commit_transaction (fcnc->status, cdata->ftr)) {
-		_gda_firebird_connection_make_error (cnc, 0);
+        if (isc_commit_transaction (cdata->status, cdata->ftr)) {
+		_gda_firebird_make_error (cnc, 0);
                 result = FALSE;
         }
         else {
@@ -749,6 +778,7 @@ gda_firebird_provider_rollback_transaction (GdaServerProvider *provider, GdaConn
 					    const gchar *name, GError **error)
 {
 	FirebirdConnectionData *cdata;
+	gboolean result = FALSE;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -757,9 +787,24 @@ gda_firebird_provider_rollback_transaction (GdaServerProvider *provider, GdaConn
 	if (!cdata) 
 		return FALSE;
 
-	TO_IMPLEMENT;
+	if (!cdata->ftr) {
+		gda_connection_add_event_string (cnc, _("Invalid transaction handle"));
+		return FALSE;
+	}
 
-	return FALSE;
+	if (isc_rollback_transaction (cdata->status, cdata->ftr)) {
+		_gda_firebird_make_error (cnc, 0);
+		result = FALSE;
+	}
+	else {
+		gda_connection_internal_transaction_committed (cnc, name);
+		result = TRUE;
+	}
+
+	g_free (cdata->ftr);
+	cdata->ftr = NULL;
+
+	return result;
 }
 
 /*
@@ -959,8 +1004,8 @@ gda_firebird_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
 static GdaSqlParser *
 gda_firebird_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	TO_IMPLEMENT;
-	return NULL;
+	return (GdaSqlParser*) g_object_new (GDA_TYPE_FIREBIRD_PARSER, "tokenizer-flavour",
+                                             GDA_SQL_PARSER_FLAVOUR_STANDARD, NULL);
 }
 
 /*
@@ -997,26 +1042,212 @@ static gboolean
 gda_firebird_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *cnc,
 					 GdaStatement *stmt, GError **error)
 {
-	GdaFirebirdPStmt *ps;
+	GdaFirebirdPStmt 		*ps;
+	FirebirdConnectionData	*cdata;
+	gboolean				result = FALSE;
+
+	int            buffer[2048];
+
+	XSQLVAR         *var;
+	short           num_cols, i;
+	short           length, alignment, type, offset;
+	int             fetch_stat;
+	static char     stmt_info[] = { isc_info_sql_stmt_type };
+	char            info_buffer[20];
+	short           l;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
 	/* fetch prepares stmt if already done */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaFirebirdPStmt *)gda_connection_get_prepared_statement (cnc, stmt);
 	if (ps)
 		return TRUE;
 
-	/* prepare @stmt using the C API, creates @ps */
-	TO_IMPLEMENT;
-	if (!ps)
-		return FALSE;
-	else {
-		gda_connection_add_prepared_statement (cnc, stmt, ps);
-		g_object_unref (ps);
-		return TRUE;
+	/* render as SQL understood by Firebird */
+	GdaSet *params		= NULL;
+	gchar *sql			= NULL;
+	GSList *used_params	= NULL;
+	g_print("gda_statement_get_parameters\n\n");
+	if (!gda_statement_get_parameters (stmt, &params, error))
+		goto out_err;
+
+	g_print("gda_firebird_provider_statement_to_sql\n");
+	sql = gda_firebird_provider_statement_to_sql (provider, NULL, stmt, params, GDA_STATEMENT_SQL_PARAMS_AS_COLON,
+						&used_params, error);
+	if (!sql)
+		goto out_err;
+
+	g_print("Now get the internal FB-connection\n");
+	/* get private connection data */
+	cdata = (FirebirdConnectionData *) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		goto out_err;
+
+	/* create the stmt object */
+	ps = (GdaFirebirdPStmt *) g_object_new (GDA_TYPE_FIREBIRD_PSTMT, NULL);
+	ps->stmt_h = 0;
+
+	g_print("isc_dsql_allocate_statement\n\n");
+	/* actually prepare statement */
+	if (isc_dsql_allocate_statement(cdata->status, &(cdata->handle), &(ps->stmt_h)))
+		goto out_err;
+
+
+	g_print("Check if we have a transaction.\n\n");
+	if (NULL == cdata->ftr) {
+		g_print("Begin a transaction.\n");
+
+		if (!gda_firebird_provider_begin_transaction (provider
+					, cnc
+					, "prepare_tr"
+					, GDA_TRANSACTION_ISOLATION_UNKNOWN
+					, error)){
+			g_print("Could not start a transaction.\n");
+			isc_print_status(cdata->status);
+			g_print("\n");
+			goto out_err;
+		}
 	}
+	if (NULL == ps->sqlda){
+		/* 
+		 * Allocate enough space for 20 fields.  
+		 * If more fields get selected, re-allocate SQLDA later.
+		 */
+		ps->sqlda			= g_new0(XSQLDA, 1);
+		ps->sqlda->sqln		= 1;
+		ps->sqlda->version	= 1;
+	}
+	g_print("isc_dsql_prepare\n");
+
+	/* now prepare the fb statement */
+	if (isc_dsql_prepare(cdata->status, (cdata->ftr), &(ps->stmt_h), 0, sql, SQL_DIALECT_V6, ps->sqlda)){
+		//gda_connection_add_event_string (cnc, _("Could not prepare the FB statement"));
+		g_print("Failed to prepare the statement.\n");
+		goto out_err;
+	}
+
+	/* What is the statement type of this statement?
+	 *
+	 * stmt_info is a 1 byte info request.  info_buffer is a buffer
+	 * large enough to hold the returned info packet
+	 * The info_buffer returned contains a isc_info_sql_stmt_type in the first byte, 
+	 * two bytes of length, and a statement_type token.
+	 */
+
+	if (!isc_dsql_sql_info(cdata->status, &(ps->stmt_h), sizeof (stmt_info), stmt_info,
+			       sizeof (info_buffer), info_buffer)) {
+		l = (short) isc_vax_integer((char *) info_buffer + 1, 2);
+		ps->statement_type = isc_vax_integer((char *) info_buffer + 3, l);
+	}
+
+	ps->is_non_select = !ps->sqlda->sqld;
+
+	if (!ps->is_non_select){
+		/*
+		 * Process select statements.
+		 */
+
+		num_cols = ps->sqlda->sqld;
+
+		/* Need more room. */
+		if (ps->sqlda->sqln < num_cols)
+		{
+			g_free(ps->sqlda);
+			ps->sqlda			= g_new0(XSQLDA, num_cols);
+			ps->sqlda->sqln		= num_cols;
+			ps->sqlda->version	= 1;
+
+			if (isc_dsql_describe(cdata->status, &(ps->stmt_h), SQL_DIALECT_V6, ps->sqlda))
+			{
+				goto out_err;
+			}
+
+			num_cols = ps->sqlda->sqld;
+		}
+
+		/*
+		 * Set up SQLDA.
+		 */
+		for (var = ps->sqlda->sqlvar, offset = 0, i = 0; i < num_cols; var++, i++)
+		{
+			length = alignment = var->sqllen;
+			type = var->sqltype & ~1;
+			var->sqlname[var->sqlname_length + 1] = '\0';
+			var->relname[var->relname_length + 1] = '\0';
+			var->ownname[var->ownname_length + 1] = '\0';
+			var->aliasname[var->aliasname_length + 1] = '\0';
+
+			if (type == SQL_TEXT)
+				alignment = 1;
+			else if (type == SQL_VARYING)
+			{
+				length += sizeof (short) + 1;
+				alignment = sizeof (short);
+			}
+			/*  RISC machines are finicky about word alignment
+			 *  So the output buffer values must be placed on
+			 *  word boundaries where appropriate
+			 */
+			offset			= FB_ALIGN(offset, alignment);
+			var->sqldata	= (char *) buffer + offset;
+			offset			+= length;
+			offset			= FB_ALIGN(offset, sizeof (short));
+			var->sqlind		= (short*) ((char *) buffer + offset);
+			offset			+= sizeof  (short);
+		}
+	}
+
+	/* prepare @stmt using the C API, creates @ps */
+	/* make a list of the parameter names used in the statement */
+	GSList *param_ids = NULL;
+	if (used_params) {
+		GSList *list;
+		for (list = used_params; list; list = list->next) {
+				const gchar *cid;
+				cid = gda_holder_get_id (GDA_HOLDER (list->data));
+				if (cid) {
+					param_ids = g_slist_append (param_ids, g_strdup (cid));
+					//g_print ("PostgreSQL's PREPARATION: param ID: %s\n", cid);
+				}
+				else {
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
+						"%s", _("Unnamed parameter is not allowed in prepared statements"));
+					g_slist_foreach (param_ids, (GFunc) g_free, NULL);
+					g_slist_free (param_ids);
+					goto out_err;
+				}
+		}
+	}
+
+	g_print("Adding the prepared statement to GDA.\n");
+	//ps = (GdaFirebirdPStmt *) g_object_new (GDA_TYPE_FIREBIRD_PSTMT, NULL);
+	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
+	_GDA_PSTMT (ps)->param_ids = param_ids;
+	_GDA_PSTMT (ps)->sql = sql;
+
+	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
+	g_object_unref (ps);
+
+	/* create a prepared statement */
+
+	result  = TRUE;
+
+ out_err:
+ 	if (FALSE == result){
+		g_print("ERROR OCCURED!!!\n");
+		isc_print_status(cdata->status);
+		g_print("\n");
+
+		if (used_params)
+			g_slist_free (used_params);
+		if (params)
+			g_object_unref (params);
+
+		g_free (sql);
+	}
+	return result;
 }
 
 /*
@@ -1033,15 +1264,20 @@ gda_firebird_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
  * actual inserted row
  */
 static GObject *
-gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
+gda_firebird_provider_statement_execute (GdaServerProvider *provider,
+					 GdaConnection *cnc,
 					 GdaStatement *stmt, GdaSet *params,
-					 GdaStatementModelUsage model_usage, 
-					 GType *col_types, GdaSet **last_inserted_row, 
-					 guint *task_id, 
-					 GdaServerProviderAsyncCallback async_cb, gpointer cb_data, GError **error)
+					 GdaStatementModelUsage model_usage,
+					 GType *col_types,
+					 GdaSet **last_inserted_row,
+					 guint *task_id,
+					 GdaServerProviderAsyncCallback async_cb,
+					 gpointer cb_data,
+					 GError **error)
 {
 	GdaFirebirdPStmt *ps;
 	FirebirdConnectionData *cdata;
+	gchar *sql;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
@@ -1060,7 +1296,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 
 	/* get/create new prepared statement */
-	ps = gda_connection_get_prepared_statement (cnc, stmt);
+	ps = (GdaFirebirdPStmt *)gda_connection_get_prepared_statement (cnc, stmt);
 	if (!ps) {
 		if (!gda_firebird_provider_statement_prepare (provider, cnc, stmt, NULL)) {
 			/* this case can appear for example if some variables are used in places
@@ -1068,16 +1304,17 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			 * in a SELECT statement). The action here is to get the actual SQL code for @stmt,
 			 * and use that SQL instead of @stmt to create another GdaFirebirdPStmt object.
 			 */
-			TO_IMPLEMENT;
+			g_print("Could not prepare the statement :-(.\n");
+			//TO_IMPLEMENT;
 			return NULL;
 		}
 		else
-			ps = gda_connection_get_prepared_statement (cnc, stmt);
+			ps = (GdaFirebirdPStmt *)gda_connection_get_prepared_statement (cnc, stmt);
 	}
 	g_assert (ps);
 
 	/* optionnally reset the prepared statement if required by the API */
-	TO_IMPLEMENT;
+	//TO_IMPLEMENT;
 	
 	/* bind statement's parameters */
 	GSList *list;
@@ -1089,7 +1326,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		
 		/* find requested parameter */
 		if (!params) {
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
@@ -1108,17 +1345,18 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		if (!h) {
 			gchar *str;
 			str = g_strdup_printf (_("Missing parameter '%s' to execute query"), pname);
-			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, str);
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     "%s", GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, str);
+				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR, "%s", str);
 			g_free (str);
 			break;
 		}
 
 		/* actual binding using the C API, for parameter at position @i */
-		const GValue *value = gda_holder_get_value (h);
-		TO_IMPLEMENT;
+		//TODO: Not sure how this should be done right now.
+		//const GValue *value = gda_holder_get_value (h);
+		//TO_IMPLEMENT;
 	}
 		
 	if (event) {
@@ -1127,9 +1365,9 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	}
 	
 	/* add a connection event for the execution */
-	event = gda_connection_event_new (GDA_CONNECTION_EVENT_COMMAND);
-        gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
-        gda_connection_add_event (cnc, event);
+	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
+	gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
+	gda_connection_add_event (cnc, event);
 	
 	/* execute prepared statement using C API depending on its kind */
 	if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SELECT", 6) ||
@@ -1142,15 +1380,21 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		else
 			flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
-                data_model = (GObject *) gda_firebird_recordset_new (cnc, ps, flags, col_types);
+		data_model = (GObject *) gda_firebird_recordset_new (cnc, ps, flags, col_types);
 		gda_connection_internal_statement_executed (cnc, stmt, params, NULL); /* required: help @cnc keep some stats */
 		return data_model;
         }
 	else {
 		GdaSet *set = NULL;
+		//TODO: What the hell must I do here?
+		//TO_IMPLEMENT;
+		//g_print("SQL: %s\n\n", _GDA_PSTMT (ps)->sql);
+		if (isc_dsql_execute(cdata->status, cdata->ftr, &(ps->stmt_h), SQL_DIALECT_V6, NULL)) {
+			isc_print_status(cdata->status);
+			g_print("\n");
+		}
 
-		TO_IMPLEMENT;
-                /* Create a #GdaSet containing "IMPACTED_ROWS" */
+		/* Create a #GdaSet containing "IMPACTED_ROWS" */
 		/* Create GdaConnectionEvent notice with the type of command and impacted rows */
 
 		gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
@@ -1162,7 +1406,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider, GdaConnect
  * starts a distributed transaction: put the XA transaction in the ACTIVE state
  */
 static gboolean
-gda_firebird_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc, 
+gda_firebird_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
 				const GdaXaTransactionId *xid, GError **error)
 {
 	FirebirdConnectionData *cdata;
@@ -1184,7 +1428,7 @@ gda_firebird_provider_xa_start (GdaServerProvider *provider, GdaConnection *cnc,
  * This state is required by some database providers before actually going to the PREPARED state
  */
 static gboolean
-gda_firebird_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc, 
+gda_firebird_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
 			      const GdaXaTransactionId *xid, GError **error)
 {
 	FirebirdConnectionData *cdata;
@@ -1205,7 +1449,7 @@ gda_firebird_provider_xa_end (GdaServerProvider *provider, GdaConnection *cnc,
  * prepares the distributed transaction: put the XA transaction in the PREPARED state
  */
 static gboolean
-gda_firebird_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc, 
+gda_firebird_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cnc,
 				  const GdaXaTransactionId *xid, GError **error)
 {
 	FirebirdConnectionData *cdata;
@@ -1227,7 +1471,7 @@ gda_firebird_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cn
  * terminates the XA transaction
  */
 static gboolean
-gda_firebird_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc, 
+gda_firebird_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc,
 				 const GdaXaTransactionId *xid, GError **error)
 {
 	FirebirdConnectionData *cdata;
@@ -1248,7 +1492,7 @@ gda_firebird_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc
  * Rolls back an XA transaction, possible only if in the ACTIVE, IDLE or PREPARED state
  */
 static gboolean
-gda_firebird_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
+gda_firebird_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc,
 				   const GdaXaTransactionId *xid, GError **error)
 {
 	FirebirdConnectionData *cdata;
@@ -1298,4 +1542,38 @@ gda_firebird_free_cnc_data (FirebirdConnectionData *cdata)
 
 	TO_IMPLEMENT;
 	g_free (cdata);
+}
+
+/*
+ *  fb_server_get_version
+ *
+ *  Gets Firebird connection's server version number
+ *
+ *  Returns: A string containing server version, or NULL if error
+ *           String must be released after use
+ */
+static gchar *
+fb_server_get_version (FirebirdConnectionData *fcnc)
+{
+	gchar buffer[254], item, *p_buffer;
+	gint length;
+	gchar fdb_info[] = {
+		isc_info_isc_version,
+		isc_info_end
+	};
+
+	/* Try to get datbase version */
+	if (! isc_database_info (fcnc->status, &(fcnc->handle), sizeof (fdb_info), fdb_info,
+				 sizeof (buffer), buffer)) {
+		p_buffer = buffer;
+		if (*p_buffer != isc_info_end) {
+			item = *p_buffer++;
+			length = isc_vax_integer (p_buffer, 2);
+			p_buffer += 2;
+			if (item == isc_info_isc_version)
+				return g_strndup ((const gchar *) &p_buffer[2], length-2);
+		}
+	}
+
+	return NULL;
 }

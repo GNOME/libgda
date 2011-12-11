@@ -130,8 +130,8 @@ _gda_firebird_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 	gboolean retval = TRUE;
 
 	/* set internal holder's values from the arguments */
-	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog);
-	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema);
+	gda_holder_set_value (gda_set_get_holder (i_set, "cat"), udt_catalog, error);
+	gda_holder_set_value (gda_set_get_holder (i_set, "schema"), udt_schema, error);
 
 	TO_IMPLEMENT;
 	/* fill in @model, with something like:

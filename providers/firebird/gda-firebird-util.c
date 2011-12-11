@@ -24,22 +24,22 @@ GdaConnectionEvent *
 _gda_firebird_make_error (GdaConnection *cnc, const gint statement_type)
 {
 	FirebirdConnectionData *cdata;
-	GdaConnectionEvent *error;
+	GdaConnectionEvent *error_ev;
         gchar *description;
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
 		return FALSE;
 
-        error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-        gda_connection_event_set_code (error, isc_sqlcode (cdata->status));
+        error_ev = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
+        gda_connection_event_set_code (error_ev, isc_sqlcode (cdata->status));
         description = fb_sqlerror_get_description (cdata, statement_type);
-        gda_connection_event_set_source (error, "[GDA Firebird]");
-        gda_connection_event_set_description (error, description);
-        gda_connection_add_event (cnc, error);
+        gda_connection_event_set_source (error_ev, "[GDA Firebird]");
+        gda_connection_event_set_description (error_ev, description);
+        gda_connection_add_event (cnc, error_ev);
         g_free (description);
 
-        return error;
+        return error_ev;
 }

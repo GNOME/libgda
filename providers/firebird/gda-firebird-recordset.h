@@ -23,7 +23,7 @@
 #define __GDA_FIREBIRD_RECORDSET_H__
 
 #include <libgda/libgda.h>
-#include <providers-support/gda-data-select.h>
+#include <providers-support/gda-data-select-priv.h>
 #include "gda-firebird-pstmt.h"
 
 G_BEGIN_DECLS
@@ -34,6 +34,34 @@ G_BEGIN_DECLS
 #define GDA_IS_FIREBIRD_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_FIREBIRD_RECORDSET))
 #define GDA_IS_FIREBIRD_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_FIREBIRD_RECORDSET))
 
+
+#ifdef VMS
+#define FB_ALIGN(n,b)              (n)
+#endif
+
+#ifdef sun
+#ifdef sparc
+#define FB_ALIGN(n,b)          ((n + b - 1) & ~(b - 1))
+#endif
+#endif
+
+#ifdef hpux
+#define FB_ALIGN(n,b)          ((n + b - 1) & ~(b - 1))
+#endif
+
+#ifdef _AIX
+#define FB_ALIGN(n,b)          ((n + b - 1) & ~(b - 1))
+#endif
+ 
+#if (defined(_MSC_VER) && defined(WIN32)) 
+#define FB_ALIGN(n,b)          ((n + b - 1) & ~(b - 1))
+#endif
+
+#ifndef FB_ALIGN
+#define FB_ALIGN(n,b)          ((n+1) & ~1)
+#endif
+
+
 typedef struct _GdaFirebirdRecordset        GdaFirebirdRecordset;
 typedef struct _GdaFirebirdRecordsetClass   GdaFirebirdRecordsetClass;
 typedef struct _GdaFirebirdRecordsetPrivate GdaFirebirdRecordsetPrivate;
@@ -41,6 +69,7 @@ typedef struct _GdaFirebirdRecordsetPrivate GdaFirebirdRecordsetPrivate;
 struct _GdaFirebirdRecordset {
 	GdaDataSelect                model;
 	GdaFirebirdRecordsetPrivate *priv;
+
 };
 
 struct _GdaFirebirdRecordsetClass {

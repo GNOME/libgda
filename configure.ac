@@ -10,6 +10,7 @@ m4_include(m4/mdbtools.m4)
 m4_include(m4/bdb.m4)
 m4_include(m4/mysql.m4)
 m4_include(m4/postgresql.m4)
+m4_include(m4/firebird.m4)
 m4_include(m4/oracle.m4)
 m4_include(m4/java.m4)
 m4_include(m4/ldap.m4)
@@ -602,52 +603,7 @@ dnl Test for LDAP
 LDAP_CHECK($lib)
 
 dnl test for FireBird
-try_firebird=true
-AC_ARG_WITH(firebird,
-[  --with-firebird=<directory>	use FireBird backend in <directoty>],[
-if test $withval = no
-then
-	try_firebird=false
-elif test $withval = yes
-then
-	dir="/usr/local"
-else
-	dir=$withval
-fi
-])
-if test $try_firebird = true
-then
-	AC_MSG_CHECKING(for FireBird installation)
-	for d in $dir /usr/local/firebird /usr/local /usr /opt/firebird
-	do
-		if test -f $d/include/ibase.h
-		then
-			AC_MSG_RESULT(found FireBird in $d)
-			firebirddir=$d
-			break
-		fi
-	done
-	if test x$firebirddir = x
-	then
-		AC_MSG_WARN(FireBird backend not used)
-	else
-		AC_DEFINE(HAVE_FIREBIRD, 1, [Have FireBird])
-		FIREBIRD_CFLAGS="-I${firebirddir}/include"
-		if test -f $firebirddir/lib/libfbembed.so
-		then
-			FIREBIRD_LIBS="-L${firebirddir}/lib -lfbembed"
-		else
-			if test -f $firebirddir/lib/libfbclient.so
-			then
-				FIREBIRD_LIBS="-L${firebirddir}/lib -lfbclient"
-			else
-				FIREBIRD_LIBS="-L${firebirddir}/lib -lgds -ldl -lcrypt"
-			fi
-		fi
-	fi
-fi
-
-AM_CONDITIONAL(FIREBIRD, test x$firebirddir != x)
+FIREBIRD_CHECK($lib)
 
 dnl Test for MDB Tools (for MS Access files)
 MDBTOOLS_CHECK([$lib])
@@ -898,6 +854,8 @@ providers/oracle/Makefile
 providers/oracle/libgda-oracle-5.0.pc
 providers/postgres/Makefile
 providers/postgres/libgda-postgres-5.0.pc
+providers/firebird/Makefile
+providers/firebird/libgda-firebird-5.0.pc
 providers/sqlite/Makefile
 providers/sqlite/libgda-sqlite-5.0.pc
 providers/jdbc/Makefile
@@ -996,7 +954,8 @@ echo "   Building Vala Bindings: `if test x$enable_vala != xno; then echo yes; e
 echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
 echo "      Berkeley DB SQL = $bdbsql_found"
-dnl echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
+echo "      FireBird (client)= $firebird_client_found"
+echo "      FireBird (embed)= $firebird_embed_found"
 echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = $mysql_found"
 echo "      Oracle = $oracle_found"
