@@ -1476,7 +1476,13 @@ gda_config_list_providers (void)
 	GDA_CONFIG_UNLOCK ();
 	return model;
 }
- 
+
+static gint
+internal_provider_sort_func (InternalProvider *a, InternalProvider *b)
+{
+	return strcmp (a->pinfo.id, b->pinfo.id);
+}
+
 static void load_providers_from_dir (const gchar *dirname, gboolean recurs);
 static void
 load_all_providers (void)
@@ -1504,6 +1510,10 @@ load_all_providers (void)
 		_gda_config_sqlite_provider = (GdaServerProvider*) 
 			g_object_new (GDA_TYPE_SQLITE_PROVIDER, NULL);
 	}
+
+	/* sort providers by name */
+	unique_instance->priv->prov_list = g_slist_sort (unique_instance->priv->prov_list,
+							 (GCompareFunc) internal_provider_sort_func);
 }
 
 static InternalProvider *
