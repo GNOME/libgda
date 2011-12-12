@@ -124,6 +124,7 @@ typedef gchar *(*GdaSqlRenderingValue)     (const GValue *value, GdaSqlRendering
  * @render_select_join: function to render a #GdaSqlSelectJoin
  * @render_select_from: function to render a #GdaSqlSelectFrom
  * @render_select_order: function to render a #GdaSqlSelectOrder
+ * @render_distinct: function to render the DISTINCT clause in a SELECT
  */
 struct _GdaSqlRenderingContext {
 	GdaStatementSqlFlag      flags;
@@ -162,6 +163,7 @@ struct _GdaSqlRenderingContext {
 	GdaSqlRenderingFunc      render_select_join;
 	GdaSqlRenderingFunc      render_select_from;
 	GdaSqlRenderingFunc      render_select_order;
+	GdaSqlRenderingFunc      render_distinct;
 
 	/*< private >*/
 	/* Padding for future expansion */
@@ -172,7 +174,6 @@ struct _GdaSqlRenderingContext {
 	void (*_gda_reserved5) (void);
 	void (*_gda_reserved6) (void);
 	void (*_gda_reserved7) (void);
-	void (*_gda_reserved8) (void);
 };
 
 /**
