@@ -25,7 +25,7 @@ gen_def$(EXEEXT_FOR_BUILD): gen_def.c
 firebird_token_types.h: gen_def$(EXEEXT_FOR_BUILD) parser.h
 	./gen_def$(EXEEXT_FOR_BUILD) > firebird_token_types.h
 
-$(OBJECTS) $(libgda_firebird_la_OBJECTS): firebird_token_types.h
+$(OBJECTS) $(libgda_firebird_client_la_OBJECTS) $(libgda_firebird_embed_la_OBJECTS): firebird_token_types.h
 
 firebird_sources = \
 	gda-firebird-provider.c \
