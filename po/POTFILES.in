@@ -147,6 +147,8 @@ providers/bdbsql/bdbsql_specs_drop_view.xml.in
 providers/bdbsql/bdbsql_specs_dsn.xml.in
 providers/bdbsql/bdbsql_specs_rename_table.xml.in
 providers/bdbsql/libmain.c
+providers/firebird/libmain-client.c
+providers/firebird/libmain-embed.c
 providers/jdbc/GdaInputStream.c
 providers/jdbc/GdaJValue.c
 providers/jdbc/gda-jdbc-ddl.c
