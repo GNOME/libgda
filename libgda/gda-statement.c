@@ -1164,7 +1164,7 @@ default_render_distinct (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *co
 				g_string_free (string, TRUE);
 				return NULL;
 			}
-			g_string_append (string, "ON (");
+			g_string_append (string, " ON (");
 			g_string_append (string, str);
 			g_string_append (string, ") ");
 			g_free (str);
