@@ -907,7 +907,7 @@ libgda/sqlite/virtual/libgda-virtual.h
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile
 libgda/data/Makefile
-libgda/data/libgdadata-0.2.pc
+libgda/data/libgdadata-5.0.pc
 providers/Makefile
 providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile

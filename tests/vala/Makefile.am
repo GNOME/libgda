@@ -29,7 +29,7 @@ VALAFLAGS = \
     --pkg gobject-2.0 \
     --pkg libxml-2.0 \
     --pkg libgda-5.0 \
-    --pkg gdadata-0.2 \
+    --pkg gdadata-5.0 \
     --includedir=$(top_builddir) \
     --vapidir=$(top_srcdir)/libgda \
     --vapidir=$(top_builddir)/libgda/data \
@@ -57,7 +57,7 @@ check_dataobject_CFLAGS= \
     $(NULL)
 check_dataobject_LDADD = \
     $(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda/data/libgdadata-0.2.la \
+	$(top_builddir)/libgda/data/libgdadata-5.0.la \
 	$(COREDEPS_LIBS)
 
 check_datamodeliterator_SOURCES = $(check_datamodeliterator_VALASOURCES:.vala=.c) check_datamodeliterator.h
@@ -66,7 +66,7 @@ check_datamodeliterator_CFLAGS= \
     $(NULL)
 check_datamodeliterator_LDADD = \
     $(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda/data/libgdadata-0.2.la \
+	$(top_builddir)/libgda/data/libgdadata-5.0.la \
 	$(COREDEPS_LIBS)
 
 CLEANFILES += \

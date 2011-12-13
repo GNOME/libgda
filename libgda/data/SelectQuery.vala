@@ -82,7 +82,7 @@ namespace GdaData {
         
         public DataModel execute () 
             throws Error 
-            requires (this.connection.is_opened())
+            requires (this.connection.is_opened ())
         {
             /* Build Select Query */
             var b = this.build ();

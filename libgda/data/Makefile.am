@@ -21,35 +21,36 @@ AM_CFLAGS =\
     $(VALA_CFLAGS) \
     $(NULL)
 
-lib_LTLIBRARIES = libgdadata-0.2.la
+lib_LTLIBRARIES = libgdadata-5.0.la
 
 VALAFLAGS = \
     --vapidir=$(top_srcdir)/libgda \
+    --includedir=$(top_srcdir)/libgda \
     --pkg libxml-2.0 \
     --pkg gee-0.8 \
     --pkg libgda-5.0 \
     $(NULL)
 
-libgdadata_0_2_la_VALASOURCES = \
+libgdadata_5_0_la_VALASOURCES = \
 	DataObject.vala \
 	SelectQuery.vala \
 	DataModelIterator.vala \
 	$(NULL)
 
-libgdadata_0_2_la_SOURCES = \
+libgdadata_5_0_la_SOURCES = \
 	gdadata.vala.stamp \
-	$(libgdadata_0_2_la_VALASOURCES:.vala=.c) \
+	$(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
 	$(NULL)	
 
-gdadata-0.2.vapi gdadata.vala.stamp GdaData-0.2.gir: $(libgdadata_0_2_la_VALASOURCES)
-	$(VALA_COMPILER) $(VALAFLAGS) -C -H libgdadata.h --gir=GdaData-0.2.gir --library gdadata-0.2 $^
+gdadata-5.0.vapi gdadata.vala.stamp GdaData-5.0.gir: $(libgdadata_5_0_la_VALASOURCES)
+	$(VALA_COMPILER) $(VALAFLAGS) -C -H libgdadata.h --gir=GdaData-5.0.gir --library gdadata-5.0 $^
 	@touch $@
 
-CLEANFILES+= gdadata-0.2.vapi GdaData-0.2.gir
+CLEANFILES+= gdadata-5.0.vapi GdaData-5.0.gir
 
-libgdadata_0_2_la_LDFLAGS = 
+libgdadata_5_0_la_LDFLAGS = 
 
-libgdadata_0_2_la_LIBADD = \
+libgdadata_5_0_la_LIBADD = \
     $(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) \
 	$(GEE_LIBS) \
@@ -60,11 +61,11 @@ include_HEADERS = \
 	libgdadata.h \
 	$(NULL)
 
-gdadataincludedir = $(includedir)/libgdadata-0.2/
+gdadataincludedir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
 gdadatainclude_HEADERS = libgdadata.h
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgdadata-0.2.pc
+pkgconfig_DATA = libgdadata-5.0.pc
 
 # GObject Introspection
 
@@ -78,30 +79,30 @@ endif
 
 # GIR files are generated automatically by Valac then is not necessary to scan source code to generate it
 INTROSPECTION_GIRS =
-INTROSPECTION_GIRS += GdaData-0.2.gir
+INTROSPECTION_GIRS += GdaData-5.0.gir
 INTROSPECTION_COMPILER_ARGS = 
 
 GdaData-0.2.typelib: $(INTROSPECTION_GIRS)
 	$(INTROSPECTION_COMPILER) $(INTROSPECTION_COMPILER_ARGS) --includedir=. $< -o $@
 
 gir_DATA = $(INTROSPECTION_GIRS)
-typelibs_DATA = GdaData-0.2.typelib
+typelibs_DATA = GdaData-5.0.typelib
 
 vapidir = $(VALA_VAPIDIR)
-vapi_DATA = gdadata-0.2.vapi
+vapi_DATA = gdadata-5.0.vapi
 
 CLEANFILES += \
     $(INTROSPECTION_GIRS) \
     $(typelibs_DATA) \
-    gdadata-0.2.vapi \
-    libgdadata-0.2.pc \
+    gdadata-5.0.vapi \
+    libgdadata-5.0.pc \
     libgdadata.h \
-    $(libgdadata_0_2_la_VALASOURCES:.vala=.c) \
+    $(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
     $(NULL)
 
 EXTRA_DIST = \
-	libgdadata-0.2.pc \
-	$(libgdadata_0_2_la_VALASOURCES:.vala=.c) \
+	libgdadata-5.0.pc \
+	$(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
 	$(vapi_DATA) \
 	$(INTROSPECTION_GIRS) \
 	$(typelibs_DATA) \

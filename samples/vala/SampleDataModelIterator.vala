@@ -50,8 +50,7 @@ namespace Check {
 		public int t1()
 			throws Error
 		{
-			stdout.printf (">>> NEW TEST: Gda.DataModelIterable & DataModelIterator API tests\n"
-						 	+ ">>> Testing Iterable, Traversable Interfaces\n");
+			stdout.printf (">>> NEW TEST: Gda.DataModelIterable & DataModelIterator API tests\n");
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			var itermodel = new DataModelIterable (model);
@@ -194,17 +193,6 @@ namespace Check {
 			}	
 				
 			return fails;
-		}
-		
-		public int t2 ()
-		{
-			stdout.printf (">>> NEW TEST: Gda.DataModelIterable & DataModelIterator API tests\n"
-							+ ">>> Testing Collection Interface\n");
-			int fails = 0;
-			var model = this.connection.execute_select_command ("SELECT * FROM user");
-			var itermodel = new DataModelIterable (model);
-			
-			
 		}
 				
 		public static int main (string[] args) {

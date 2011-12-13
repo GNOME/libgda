@@ -26,9 +26,15 @@ namespace GdaData {
         
         private string? _field_id;
         private Value? _id_value;
+        private DataModel? _model;
         
-        protected DataModel? _model;
         protected string? _table;
+        
+        public DataModelIterable record {
+        	owned get {
+        		return new DataModelIterable (this._model);
+        	}
+        }
         
         public Connection connection { get; set; }
         
@@ -55,7 +61,7 @@ namespace GdaData {
         	var s = q.get_statement ();
         	var m = this.connection.statement_execute_select (s, null);
         	((DataSelect) m).compute_modification_statements ();
-        	this._model = (DataProxy) DataProxy.new (m);
+        	this._model= (DataProxy) DataProxy.new (m);
         }
         
         public unowned Value? get_value (string field)

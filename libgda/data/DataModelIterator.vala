@@ -22,7 +22,8 @@
  
  namespace GdaData {
  	
- 	public class DataModelIterable : GLib.Object, Gee.Traversable <Value?>, Gee.Iterable <Value?>
+ 	public class DataModelIterable : GLib.Object, Gee.Traversable <Value?>, 
+ 										Gee.Iterable <Value?>, Gee.Collection <Value?>, Gda.DataModel
  	{
  		private Gda.DataModel model;
  		
@@ -69,6 +70,304 @@
 		{
 			var iter = new DataModelIterator (this.model);
  			return iter.stream<A> (f);
+		}
+		
+		// Interface Collection
+		public bool add (Value? item) {
+			int i = this.model.append_row ();
+			if (i >= 0)
+				return true;
+			
+			return false;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * {@inheritDoc}<< BR >>
+		 * << BR >>
+		 * collection must include just values for one row, with the same type expected in the table.<<BR>>
+		 * <<BR>>
+		 * If the collection is a database proxy, you need to apply to make changes permanently.
+		 */
+		public bool add_all (Gee.Collection<Value?> collection)
+			requires (collection.size == this.model.get_n_columns ()) 
+		{
+			var vals = collection.to_array ();
+			for (int i = 0; i < this.model.get_n_columns (); i++) {
+				var v = this.model.get_value_at (i, 0);
+				if (vals[i].type () != v.type ())
+					return false;
+			}
+			
+			var r = this.model.append_row ();
+			for (int j = 0; j < this.model.get_n_columns (); j++) {
+				var v2 = vals[j];
+				try {
+					this.model.set_value_at (j, r, v2);
+				}
+				catch {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * {@inheritDoc}<< BR >>
+		 * <<BR>>
+		 * If the collection is a proxy, you need to apply to make changes permanently.
+		 */
+		public void clear () {
+			for (int i = 0; i < this.model.get_n_rows (); i++ ) {
+				this.model.remove_row (i);
+			}
+		}
+		
+		public bool contains (Value? item)
+		{
+			for (int r = 0; r < this.model.get_n_rows (); r++) {
+				for (int c = 0; c < this.model.get_n_columns (); c++) {
+					Value v = this.model.get_value_at (c, r);
+					if (Gda.value_compare (v, item) == 0)
+						return true;
+				}
+			}
+			return false;
+		}
+		
+		public bool contains_all (Gee.Collection<Value?> collection)
+		{
+			bool ret = true;
+			foreach (Value v in collection) {
+				if (this.contains (v))
+					continue;
+				else
+					ret = false;
+			}
+			
+			return ret;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * {@inheritDoc}<< BR >>
+		 * << BR >>
+		 * Search for the first item in the collection that match item and removes it.<<BR>>
+		 * <<BR>>
+		 * ''Caution:'' Removing a single value removes all the row.
+		 * <<BR>>
+		 * If the collection is a database proxy, you need to apply to make changes permanently.
+		 */
+		public bool remove (Value? item) {
+			for (int r = 0; r < this.model.get_n_rows (); r++) {
+				for (int c = 0; c < this.model.get_n_columns (); c++) {
+					try {
+						Value v = this.model.get_value_at (c, r);
+						if (Gda.value_compare (v, item) == 0) {
+							this.model.remove_row (r);
+							return true;
+						}
+					}
+					catch {
+						continue;
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * {@inheritDoc}<< BR >>
+		 * << BR >>
+		 * Search for the first item in the collection that match item and removes it.<<BR>>
+		 * <<BR>>
+		 * ''Caution:'' Removing a single value removes all the row and its values.
+		 * <<BR>>
+		 * If the collection is a database proxy, you need to apply to make changes permanently.
+		 */
+		public bool remove_all (Gee.Collection<Value?> collection)
+		{
+			foreach (Value v in collection) {
+				for (int r = 0; r < this.model.get_n_rows (); r++) {
+					for (int c = 0; c < this.model.get_n_columns (); c++) {
+						try {
+							Value v2 = this.model.get_value_at (c, r);
+							if (Gda.value_compare (v2, v) == 0) {
+								try {
+									this.model.remove_row (r);
+								}
+								catch {
+									return false;
+								}
+							}
+						}
+						catch {
+							continue;
+						}
+					}
+				}
+			}
+			
+			return true;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * {@inheritDoc}<< BR >>
+		 * << BR >>
+		 * Search for the first item in the collection that match item and removes it.<<BR>>
+		 * <<BR>>
+		 * ''Caution:'' Removing a single value removes all the row and its values.
+		 * <<BR>>
+		 * If the collection is a database proxy, you need to apply to make changes permanently.
+		 */
+		public bool retain_all (Gee.Collection<Value?> collection)
+		{
+			foreach (Value v in collection) {
+				for (int r = 0; r < this.model.get_n_rows (); r++) {
+					for (int c = 0; c < this.model.get_n_columns (); c++) {
+						try {
+							Value v2 = this.model.get_value_at (c, r);
+							if (Gda.value_compare (v2, v) != 0) {
+								try {
+									this.model.remove_row (r);
+								}
+								catch {
+									return false;
+								}
+							}
+						}
+						catch {
+							continue;
+						}	
+					}
+				}
+			}
+			
+			return true;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * {@inheritDoc}<< BR >>
+		 * << BR >>
+		 * ''Implementation:'' The array is a copy of all values in the DataModel.
+		 */
+		public Value[] to_array ()
+		{
+			Value[] array = new Value[1];
+			array.resize (this.model.get_n_columns () * this.model.get_n_rows ());
+			for (int i = 0; i < this.model.get_n_columns () * this.model.get_n_rows (); i++) {
+				int r = i / this.model.get_n_columns ();
+				int c = i - r * this.model.get_n_columns ();
+				array[i] = this.model.get_value_at (c, r);
+			}
+			
+			return array;
+		}
+		
+		public bool is_empty { 
+			get {
+				if (this.model.get_n_rows () <= 0)
+					return true;
+				
+				return false;
+			} 
+		}
+		public bool read_only { 
+			get {
+				// FIXME: Check if is a Proxy DataModel can be modified to return true
+				return true;
+			}
+		}
+		public Gee.Collection<Value?> read_only_view { 
+			owned get {
+				return (Gee.Collection<Value?>) ((GLib.Object) this).ref ();
+			}
+		}
+		
+		public int size { 
+			get {
+				return this.model.get_n_columns () * this.model.get_n_rows ();
+			} 
+		}
+		
+		// Interface Gda.DataModel
+		public int append_row () throws GLib.Error {
+			return this.model.append_row ();
+		}
+		
+		public Gda.DataModelIter create_iter () {
+			return this.model.create_iter ();
+		}
+		
+		public unowned Gda.Column describe_column (int col) {
+			return this.model.describe_column (col);
+		}
+		
+		public void freeze (bool do_notify_changes) {
+			this.model.freeze (do_notify_changes);
+		}
+		
+		public Gda.DataModelAccessFlags get_access_flags () {
+			return this.model.get_access_flags ();
+		}
+		
+		public Gda.ValueAttribute get_attributes_at (int col, int row) {
+			return this.model.get_attributes_at (col, row);
+		}
+		
+		public int get_n_columns () {
+			return this.model.get_n_columns ();
+		}
+		
+		public int get_n_rows () {
+			return this.model.get_n_rows ();
+		}
+		
+		public unowned GLib.Value? get_value_at (int col, int row) throws GLib.Error {
+			return this.model.get_value_at (col, row);
+		}
+		
+		public bool i_get_notify () {
+			return this.model.i_get_notify ();
+		}
+
+		public bool i_iter_at_row (Gda.DataModelIter iter, int row) {
+			return this.model.i_iter_at_row (iter, row);
+		}
+		
+		public bool i_iter_next (Gda.DataModelIter iter) {
+			return this.model.i_iter_next (iter);
+		}
+		
+		public bool i_iter_prev (Gda.DataModelIter iter) {
+			return this.model.i_iter_prev (iter);
+		}
+		
+		public bool i_iter_set_value (Gda.DataModelIter iter, int col, GLib.Value value) throws GLib.Error {
+			return this.model.i_iter_set_value (iter, col, value);
+		}
+		
+		public bool remove_row (int row) throws GLib.Error {
+			return this.model.remove_row (row);
+		}
+		
+		public void send_hint (Gda.DataModelHint hint, GLib.Value? hint_value) {
+			this.model.send_hint (hint, hint_value);
+		}
+		
+		public bool set_value_at (int col, int row, GLib.Value value) throws GLib.Error {
+			return this.model.set_value_at (col, row, value);
 		}
  	}
  	
