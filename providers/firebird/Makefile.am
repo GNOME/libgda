@@ -56,6 +56,7 @@ libgda_firebird_client_la_LIBADD = \
 	$(COREDEPS_LIBS) $(FIREBIRD_CLIENT_LIBS)
 
 libgda_firebird_embed_la_SOURCES = $(firebird_sources) libmain-embed.c
+libgda_firebird_embed_la_CFLAGS = -DFIREBIRD_EMBED
 libgda_firebird_embed_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_firebird_embed_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \

@@ -52,8 +52,13 @@ gda_firebird_pstmt_get_type (void)
 		};
 
 		g_static_mutex_lock (&registering);
-		if (type == 0)
+		if (type == 0) {
+#ifdef FIREBIRD_EMBED
+			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaFirebirdPStmtEmbed", &info, 0);
+#else
 			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaFirebirdPStmt", &info, 0);
+#endif
+		}
 		g_static_mutex_unlock (&registering);
 	}
 	return type;
