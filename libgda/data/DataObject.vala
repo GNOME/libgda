@@ -26,13 +26,13 @@ namespace GdaData {
         
         private string? _field_id;
         private Value? _id_value;
-        private DataModel? _model;
+        private DataModelIterable _model;
         
         public abstract string table { get; }
         
         public DataModelIterable record {
-        	owned get {
-        		return new DataModelIterable (this._model);
+        	get {
+        		return this._model;
         	}
         }
         
@@ -57,11 +57,11 @@ namespace GdaData {
         {
         	this._field_id = field;
         	this._id_value = v;
-        	var q = this.build ();
+        	var q = this.sql ();
         	var s = q.get_statement ();
         	var m = this.connection.statement_execute_select (s, null);
         	((DataSelect) m).compute_modification_statements ();
-        	this._model= (DataProxy) DataProxy.new (m);
+        	this._model= new DataModelIterable ((DataProxy) DataProxy.new (m));
         }
         
         public unowned Value? get_value (string field)
@@ -89,7 +89,7 @@ namespace GdaData {
         	set_id (this._field_id, this._id_value);
         }
         
-        private SqlBuilder build ()
+        public SqlBuilder sql ()
         	requires (this.table != null || this.table != "")
         	requires (this._field_id != null || this._field_id != "")
         	requires (this._id_value != null)
