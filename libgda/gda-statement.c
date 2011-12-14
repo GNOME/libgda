@@ -653,6 +653,7 @@ static gchar *default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRe
 static gchar *default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *context, GError **error);
 static gchar *default_render_select_from (GdaSqlSelectFrom *from, GdaSqlRenderingContext *context, GError **error);
 static gchar *default_render_select_order (GdaSqlSelectOrder *order, GdaSqlRenderingContext *context, GError **error);
+static gchar *default_render_distinct (GdaSqlStatementSelect *select, GdaSqlRenderingContext *context, GError **error);
 
 /**
  * gda_statement_to_sql_real:
@@ -714,6 +715,8 @@ gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, 
 		context->render_select_from = (GdaSqlRenderingFunc) default_render_select_from;
 	if (!context->render_select_order)
 		context->render_select_order = (GdaSqlRenderingFunc) default_render_select_order;
+	if (!context->render_distinct)
+		context->render_distinct = (GdaSqlRenderingFunc) default_render_distinct;
 
 	cinfo = gda_sql_statement_get_contents_infos (stmt->priv->internal_struct->stmt_type);
 	if (cinfo->check_structure_func && !cinfo->check_structure_func (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), 
@@ -1145,6 +1148,36 @@ default_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *
 }
 
 static gchar *
+default_render_distinct (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	gboolean pretty = context->flags & GDA_STATEMENT_SQL_PRETTY;
+	g_return_val_if_fail (stmt, NULL);
+	g_return_val_if_fail (GDA_SQL_ANY_PART (stmt)->type == GDA_SQL_ANY_STMT_SELECT, NULL);
+
+	if (stmt->distinct) {
+		GString *string;
+		string = g_string_new ("DISTINCT");
+		if (stmt->distinct_expr) {
+			gchar *str;
+			str = context->render_expr (stmt->distinct_expr, context, NULL, NULL, error);
+			if (!str) {
+				g_string_free (string, TRUE);
+				return NULL;
+			}
+			g_string_append (string, "ON (");
+			g_string_append (string, str);
+			g_string_append (string, ") ");
+			g_free (str);
+		}
+		if (pretty)
+			g_string_append_c (string, '\n');
+		return g_string_free (string, FALSE);
+	}
+	else
+		return NULL;
+}
+
+static gchar *
 default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *context, GError **error)
 {
 	GString *string;
@@ -1158,17 +1191,11 @@ default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *cont
 	string = g_string_new ("SELECT ");
 	/* distinct */
 	if (stmt->distinct) {
-		g_string_append (string, "DISTINCT ");
-		if (stmt->distinct_expr) {
-			str = context->render_expr (stmt->distinct_expr, context, NULL, NULL, error);
-			if (!str) goto err;
-			g_string_append (string, "ON ");
-			g_string_append (string, str);
-			g_string_append_c (string, ' ');
-			g_free (str);
-		}
-		if (pretty)
-			g_string_append_c (string, '\n');
+		str = context->render_distinct (GDA_SQL_ANY_PART (stmt), context, error);
+		if (!str) goto err;
+		g_string_append (string, str);
+		g_string_append_c (string, ' ');
+		g_free (str);
 	}
 	
 	/* selected expressions */

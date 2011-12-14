@@ -1692,6 +1692,9 @@ static gchar *sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingConte
 static gchar *sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
 				  gboolean *is_default, gboolean *is_null,
 				  GError **error);
+static gchar *sqlite_render_distinct (GdaSqlStatementSelect *stmt,
+				      GdaSqlRenderingContext *context, GError **error);
+
 static gchar *
 gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
 				      GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
@@ -1714,6 +1717,7 @@ gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 	context.render_operation = (GdaSqlRenderingFunc) sqlite_render_operation; /* specific REGEXP rendering */
 	context.render_compound = (GdaSqlRenderingFunc) sqlite_render_compound; /* don't surround each SELECT with parenthesis, EXCEPT ALL and INTERSECT ALL are not supported */
 	context.render_expr = sqlite_render_expr; /* render "FALSE" as 0 and TRUE as 1 */
+	context.render_distinct = (GdaSqlRenderingFunc) sqlite_render_distinct; /* DISTINCT ON (...) is not supported */
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -1729,6 +1733,31 @@ gda_sqlite_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection
 		g_slist_free (context.params_used);
 	}
 	return str;
+}
+
+/*
+ * The difference with the default implementation is that DISTINCT ON (...) is not supported
+ */
+static gchar *
+sqlite_render_distinct (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *context, GError **error)
+{
+	if (stmt->distinct) {
+		if (stmt->distinct_expr) {
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+				     "%s", _("SQLite does not support specifying fields to apply DISTINCT clause on"));
+			return NULL;
+		}
+		else {
+			gchar *tmp;
+			tmp = g_strdup ("DISTINCT\n");
+			if (! (context->flags & GDA_STATEMENT_SQL_PRETTY))
+				tmp [8] = 0;
+			return tmp;
+		}
+	}
+	else
+		return NULL;
 }
 
 /*

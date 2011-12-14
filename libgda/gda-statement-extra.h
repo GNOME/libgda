@@ -99,6 +99,7 @@ struct _GdaSqlRenderingContext {
 	GdaSqlRenderingFunc      render_select_join;
 	GdaSqlRenderingFunc      render_select_from;
 	GdaSqlRenderingFunc      render_select_order;
+	GdaSqlRenderingFunc      render_distinct;
 
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
@@ -108,7 +109,6 @@ struct _GdaSqlRenderingContext {
 	void (*_gda_reserved5) (void);
 	void (*_gda_reserved6) (void);
 	void (*_gda_reserved7) (void);
-	void (*_gda_reserved8) (void);
 };
 
 gchar *gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, GError **error);
