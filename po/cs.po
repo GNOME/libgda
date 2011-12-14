@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-12-12 19:32+0000\n"
-"PO-Revision-Date: 2011-12-13 17:48+0100\n"
+"POT-Creation-Date: 2011-12-13 19:35+0000\n"
+"PO-Revision-Date: 2011-12-14 11:09+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2828,7 +2828,6 @@ msgstr "Kritická interní chyba poskytovatele SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:634
 #, c-format
-#| msgid "Tuncated data"
 msgid "Truncated data"
 msgstr "Zkrácená data"
 
@@ -5323,6 +5322,16 @@ msgstr "Nelze najít libdb_sql-5."
 #: ../providers/bdbsql/libmain.c:89
 msgid "Provider for BDB SQL databases"
 msgstr "Poskytovatel pro databáze BDB SQL"
+
+#: ../providers/firebird/libmain-client.c:51
+#| msgid "Provider for SQLite databases"
+msgid "Provider for Firebird databases"
+msgstr "Poskytovatel pro databáze Firebird"
+
+#: ../providers/firebird/libmain-embed.c:51
+#| msgid "Provider for Berkeley databases"
+msgid "Provider for embedded Firebird databases"
+msgstr "Poskytovatel pro zabudované databáze Firebird"
 
 #: ../providers/jdbc/GdaInputStream.c:48
 #: ../providers/jdbc/GdaInputStream.c:122 ../providers/jdbc/GdaJValue.c:207
