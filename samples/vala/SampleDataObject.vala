@@ -24,6 +24,10 @@ namespace Sample {
 
 	class Book : GdaData.Object {
 		
+		public override string table { 
+			get { return "book"; }
+		}
+		
 		public Collection accounts {
 			get {
 				int id = (int) this.get_value_id ();
@@ -31,10 +35,6 @@ namespace Sample {
 				var accs = this.connection.execute_select (sql);
 				return (Collection) new DataModelIterable (accs);
 			}
-		}
-		
-		public Book () {
-			this._table = "book";
 		}
 		
 		public static Book create ( Gda.Connection cnn, string name, string manager)
@@ -61,6 +61,9 @@ namespace Sample {
 	}
 	
 	class Account : GdaData.Object {
+		public override string table { 
+			get { return "account"; }
+		}
 		public Book book { get; set; }
 		/* Is possible to create properties to easy access to any field in the database row */
 		public string name { 
@@ -93,10 +96,6 @@ namespace Sample {
 			}
 		}
 		
-		public Account () {
-			this._table = "account";
-		}
-		
 		public bool open (string name) {
 			Value n = name;
 			this.set_id (name, n);
@@ -105,6 +104,9 @@ namespace Sample {
 	}
 	
 	class Transaction : GdaData.Object {
+		public override string table { 
+			get { return "transaction"; }
+		}
 		public Account account { get; set; }
 		public string description { 
 			get {

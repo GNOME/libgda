@@ -80,10 +80,14 @@ endif
 # GIR files are generated automatically by Valac then is not necessary to scan source code to generate it
 INTROSPECTION_GIRS =
 INTROSPECTION_GIRS += GdaData-5.0.gir
-INTROSPECTION_COMPILER_ARGS = 
+INTROSPECTION_COMPILER_ARGS = \
+    --includedir=. \
+    --includedir=$(top_srcdir)/libgda \
+    --includedir=$(top_srcdir)/libgda/data \
+    $(NULL)
 
-GdaData-0.2.typelib: $(INTROSPECTION_GIRS)
-	$(INTROSPECTION_COMPILER) $(INTROSPECTION_COMPILER_ARGS) --includedir=. $< -o $@
+GdaData-5.0.typelib: $(INTROSPECTION_GIRS)
+	$(INTROSPECTION_COMPILER) $(INTROSPECTION_COMPILER_ARGS)  $< -o $@
 
 gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = GdaData-5.0.typelib

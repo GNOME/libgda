@@ -22,8 +22,7 @@
  
  namespace GdaData {
  	
- 	public class DataModelIterable : GLib.Object, Gee.Traversable <Value?>, 
- 										Gee.Iterable <Value?>, Gee.Collection <Value?>, Gda.DataModel
+ 	public class DataModelIterable : Gee.AbstractCollection<Value?>, Gda.DataModel
  	{
  		private Gda.DataModel model;
  		
@@ -37,20 +36,20 @@
  			get { return typeof (GLib.Value); } 
  		}
  		
- 		public Iterator<Value?> iterator ()
+ 		public override Iterator<Value?> iterator ()
  		{
  			return new DataModelIterator (this.model);
  		}
  		
  		// Traversable Interface
  		
-		public Gee.Iterator<Value?> chop (int offset, int length = -1)
+		public override Gee.Iterator<Value?> chop (int offset, int length = -1)
  		{
  			var iter = new DataModelIterator (this.model);
  			return iter.chop (offset, length);
  		}
  		
-		public Gee.Iterator<Value?> filter (owned Gee.Predicate<Value?> f)
+		public override Gee.Iterator<Value?> filter (owned Gee.Predicate<Value?> f)
 		{
 			var iter = new DataModelIterator (this.model);
  			return iter.filter (f);
@@ -58,25 +57,29 @@
 		
 		public new void @foreach (Gee.ForallFunc<Value?> f)
 		{
-			for (int i = 0; i < this.model.get_n_rows (); i++) {
-				for (int j = 0; j < this.model.get_n_columns (); j++) {
-					Value v = this.model.get_value_at (i, j);
-					f(v);
-				}				
-			}
+			try {
+				for (int i = 0; i < this.model.get_n_rows (); i++) {
+					for (int j = 0; j < this.model.get_n_columns (); j++) {
+						Value v = this.model.get_value_at (i, j);
+						f(v);
+					}				
+				}
+			} catch {}
 		}
 		
-		public Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<Value?,A> f)
+		public override Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<Value?,A> f)
 		{
 			var iter = new DataModelIterator (this.model);
  			return iter.stream<A> (f);
 		}
 		
 		// Interface Collection
-		public bool add (Value? item) {
-			int i = this.model.append_row ();
-			if (i >= 0)
-				return true;
+		public override bool add (Value? item) {
+			try {
+				int i = this.model.append_row ();
+				if (i >= 0)
+					return true;
+			} catch {}
 			
 			return false;
 		}
@@ -90,26 +93,28 @@
 		 * <<BR>>
 		 * If the collection is a database proxy, you need to apply to make changes permanently.
 		 */
-		public bool add_all (Gee.Collection<Value?> collection)
+		public override bool add_all (Gee.Collection<Value?> collection)
 			requires (collection.size == this.model.get_n_columns ()) 
 		{
-			var vals = collection.to_array ();
-			for (int i = 0; i < this.model.get_n_columns (); i++) {
-				var v = this.model.get_value_at (i, 0);
-				if (vals[i].type () != v.type ())
-					return false;
-			}
+			try {
+				var vals = collection.to_array ();
+				for (int i = 0; i < this.model.get_n_columns (); i++) {
+					var v = this.model.get_value_at (i, 0);
+					if (vals[i].type () != v.type ())
+						return false;
+				}
 			
-			var r = this.model.append_row ();
-			for (int j = 0; j < this.model.get_n_columns (); j++) {
-				var v2 = vals[j];
-				try {
-					this.model.set_value_at (j, r, v2);
+				var r = this.model.append_row ();
+				for (int j = 0; j < this.model.get_n_columns (); j++) {
+					var v2 = vals[j];
+					try {
+						this.model.set_value_at (j, r, v2);
+					}
+					catch {
+						return false;
+					}
 				}
-				catch {
-					return false;
-				}
-			}
+			} catch {}
 			return true;
 		}
 		
@@ -120,25 +125,29 @@
 		 * <<BR>>
 		 * If the collection is a proxy, you need to apply to make changes permanently.
 		 */
-		public void clear () {
-			for (int i = 0; i < this.model.get_n_rows (); i++ ) {
-				this.model.remove_row (i);
-			}
+		public override void clear () {
+			try {
+				for (int i = 0; i < this.model.get_n_rows (); i++ ) {
+					this.model.remove_row (i);
+				}
+			} catch {}
 		}
 		
-		public bool contains (Value? item)
+		public override bool contains (Value? item)
 		{
-			for (int r = 0; r < this.model.get_n_rows (); r++) {
-				for (int c = 0; c < this.model.get_n_columns (); c++) {
-					Value v = this.model.get_value_at (c, r);
-					if (Gda.value_compare (v, item) == 0)
-						return true;
+			try {
+				for (int r = 0; r < this.model.get_n_rows (); r++) {
+					for (int c = 0; c < this.model.get_n_columns (); c++) {
+						Value v = this.model.get_value_at (c, r);
+						if (Gda.value_compare (v, item) == 0)
+							return true;
+					}
 				}
-			}
+			} catch {}
 			return false;
 		}
 		
-		public bool contains_all (Gee.Collection<Value?> collection)
+		public override bool contains_all (Gee.Collection<Value?> collection)
 		{
 			bool ret = true;
 			foreach (Value v in collection) {
@@ -162,7 +171,7 @@
 		 * <<BR>>
 		 * If the collection is a database proxy, you need to apply to make changes permanently.
 		 */
-		public bool remove (Value? item) {
+		public override bool remove (Value? item) {
 			for (int r = 0; r < this.model.get_n_rows (); r++) {
 				for (int c = 0; c < this.model.get_n_columns (); c++) {
 					try {
@@ -192,7 +201,7 @@
 		 * <<BR>>
 		 * If the collection is a database proxy, you need to apply to make changes permanently.
 		 */
-		public bool remove_all (Gee.Collection<Value?> collection)
+		public override bool remove_all (Gee.Collection<Value?> collection)
 		{
 			foreach (Value v in collection) {
 				for (int r = 0; r < this.model.get_n_rows (); r++) {
@@ -229,7 +238,7 @@
 		 * <<BR>>
 		 * If the collection is a database proxy, you need to apply to make changes permanently.
 		 */
-		public bool retain_all (Gee.Collection<Value?> collection)
+		public override bool retain_all (Gee.Collection<Value?> collection)
 		{
 			foreach (Value v in collection) {
 				for (int r = 0; r < this.model.get_n_rows (); r++) {
@@ -255,27 +264,7 @@
 			return true;
 		}
 		
-		/**
-		 * {@inheritDoc}
-		 *
-		 * {@inheritDoc}<< BR >>
-		 * << BR >>
-		 * ''Implementation:'' The array is a copy of all values in the DataModel.
-		 */
-		public Value[] to_array ()
-		{
-			Value[] array = new Value[1];
-			array.resize (this.model.get_n_columns () * this.model.get_n_rows ());
-			for (int i = 0; i < this.model.get_n_columns () * this.model.get_n_rows (); i++) {
-				int r = i / this.model.get_n_columns ();
-				int c = i - r * this.model.get_n_columns ();
-				array[i] = this.model.get_value_at (c, r);
-			}
-			
-			return array;
-		}
-		
-		public bool is_empty { 
+		public override bool is_empty { 
 			get {
 				if (this.model.get_n_rows () <= 0)
 					return true;
@@ -283,19 +272,24 @@
 				return false;
 			} 
 		}
-		public bool read_only { 
+		public override bool read_only { 
 			get {
-				// FIXME: Check if is a Proxy DataModel can be modified to return true
+				if (this.model is Gda.DataProxy)
+					return ((Gda.DataProxy) this.model).is_read_only ();
+				
 				return true;
 			}
 		}
-		public Gee.Collection<Value?> read_only_view { 
+		public override Gee.Collection<Value?> read_only_view { 
 			owned get {
-				return (Gee.Collection<Value?>) ((GLib.Object) this).ref ();
+				if (this.model is Gda.DataProxy)
+					return (Gee.Collection<Value?>) 
+								new DataModelIterable (((DataProxy)this.model).get_proxied_model ());
+				return (Gee.Collection<Value?>) new DataModelIterable (this.model);
 			}
 		}
 		
-		public int size { 
+		public override int size { 
 			get {
 				return this.model.get_n_columns () * this.model.get_n_rows ();
 			} 
@@ -312,10 +306,6 @@
 		
 		public unowned Gda.Column describe_column (int col) {
 			return this.model.describe_column (col);
-		}
-		
-		public void freeze (bool do_notify_changes) {
-			this.model.freeze (do_notify_changes);
 		}
 		
 		public Gda.DataModelAccessFlags get_access_flags () {
@@ -358,6 +348,10 @@
 			return this.model.i_iter_set_value (iter, col, value);
 		}
 		
+		public void i_set_notify (bool do_notify_changes)
+		{
+			this.model.i_set_notify (do_notify_changes);
+		}
 		public bool remove_row (int row) throws GLib.Error {
 			return this.model.remove_row (row);
 		}
@@ -529,12 +523,15 @@
 		
 		public new void @foreach (Gee.ForallFunc<Value?> f)
 		{
-			for (int i = this.pos_init; i < this.maxpos; i++) {
-				int row = i / this.iter.data_model.get_n_columns ();
-				int col = i - row * this.iter.data_model.get_n_columns ();
-				Value v = this.iter.data_model.get_value_at (row, col);
-				f(v);
+			try {
+				for (int i = this.pos_init; i < this.maxpos; i++) {
+					int row = i / this.iter.data_model.get_n_columns ();
+					int col = i - row * this.iter.data_model.get_n_columns ();
+					Value v = this.iter.data_model.get_value_at (row, col);
+					f(v);
+				}
 			}
+			catch {}
 		}
 		
 		/**
@@ -548,20 +545,21 @@
 		public Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<Value?, A> f)
 		{
 			var l = new Gee.ArrayList<A> ();
-			for (int i = this.pos_init; i < this.maxpos; i++) {
-				int row = i / this.iter.data_model.get_n_columns ();
-				int col = i - row * this.iter.data_model.get_n_columns ();
-				Value v = this.iter.data_model.get_value_at (col, row);
-				var g = new Gee.Lazy<Value?>.from_value (v);
-				Gee.Lazy<A> s;
-				var r = f (Gee.Traversable.Stream.CONTINUE, g, out s);
-				if (r == Gee.Traversable.Stream.END)
-					break;
-				if (r == Gee.Traversable.Stream.YIELD) {
-					l.add (s);
+			try {
+				for (int i = this.pos_init; i < this.maxpos; i++) {
+					int row = i / this.iter.data_model.get_n_columns ();
+					int col = i - row * this.iter.data_model.get_n_columns ();
+					Value v = this.iter.data_model.get_value_at (col, row);
+					var g = new Gee.Lazy<Value?>.from_value (v);
+					Gee.Lazy<A> s;
+					var r = f (Gee.Traversable.Stream.CONTINUE, g, out s);
+					if (r == Gee.Traversable.Stream.END)
+						break;
+					if (r == Gee.Traversable.Stream.YIELD) {
+						l.add (s);
+					}
 				}
-			}
-						
+			} catch {}		
 			return l.iterator<A> ();
 		}
  	}

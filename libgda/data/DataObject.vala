@@ -28,7 +28,7 @@ namespace GdaData {
         private Value? _id_value;
         private DataModel? _model;
         
-        protected string? _table;
+        public abstract string table { get; }
         
         public DataModelIterable record {
         	owned get {
@@ -53,7 +53,7 @@ namespace GdaData {
          */
         public void set_id (string field, Value v)
         	throws Error
-        	requires (this._table != "")
+        	requires (this.table != "")
         {
         	this._field_id = field;
         	this._id_value = v;
@@ -84,18 +84,18 @@ namespace GdaData {
         
         public void update ()
         	throws Error
-        	requires (this._table != "")
+        	requires (this.table != "")
         {
         	set_id (this._field_id, this._id_value);
         }
         
         private SqlBuilder build ()
-        	requires (this._table != null || this._table != "")
+        	requires (this.table != null || this.table != "")
         	requires (this._field_id != null || this._field_id != "")
         	requires (this._id_value != null)
         {
         	var q = new SqlBuilder (SqlStatementType.SELECT);
-        	q.select_add_target (this._table, null);
+        	q.select_add_target (this.table, null);
         	var f_id = q.add_id (this._field_id);
 			var e_id = q.add_expr_value (null, this._id_value);
 			var c_id = q.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
