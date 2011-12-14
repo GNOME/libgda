@@ -1,3 +1,16 @@
+libgda 4.2.12, 2011-12-14
+
+ - Vala bindings corrections
+ - Several small corrections and improvements
+ - Bugs corrected: #663608, #665917
+ - Translations:
+	- de (Mario Blättermann)
+	- sl (Matej Urbančič)
+	- es (Daniel Mustieles)
+	- nb (Kjartan Maraas)
+	- it (Marco Ciampa)
+	- zh_CN (kn1792)
+
 libgda 4.2.11, 2011-11-06
 
  - Fixed Vala bindings generation
