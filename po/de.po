@@ -25,8 +25,8 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-12-12 19:32+0000\n"
-"PO-Revision-Date: 2011-12-13 01:34+0100\n"
+"POT-Creation-Date: 2011-12-15 00:47+0000\n"
+"PO-Revision-Date: 2011-12-15 12:22+0100\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -120,8 +120,8 @@ msgstr "Browser-Programm konnte nicht ausgeführt werden"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:285
-#: ../libgda/gda-connection.c:1699 ../libgda/gda-data-model.c:2222
-#: ../libgda/gda-data-model.c:2230 ../libgda/gda-data-model-dir.c:388
+#: ../libgda/gda-connection.c:1699 ../libgda/gda-data-model.c:2221
+#: ../libgda/gda-data-model.c:2229 ../libgda/gda-data-model-dir.c:388
 #: ../libgda/gda-data-model-import.c:1679 ../libgda/gda-data-pivot.c:1280
 #: ../libgda/gda-data-pivot.c:1310 ../libgda/gda-data-pivot.c:1408
 #: ../libgda/gda-data-pivot.c:1521 ../libgda/gda-data-select.c:399
@@ -962,7 +962,7 @@ msgid "Attempting to modify a read-only data model"
 msgstr "Versuch, ein nur lesbares Datenmodell zu ändern"
 
 #: ../libgda/gda-data-model-array.c:710 ../libgda/gda-data-model-array.c:749
-#: ../libgda/gda-data-model.c:822
+#: ../libgda/gda-data-model.c:821
 msgid "Too many values in list"
 msgstr "Zu viele Werte in der Liste"
 
@@ -1003,94 +1003,94 @@ msgstr "GdaBinary-Wert wurde erwartet, %s wurde erhalten"
 msgid "Key modification is not supported"
 msgstr "Änderung von Schlüsseln wird nicht unterstützt"
 
-#: ../libgda/gda-data-model.c:663
+#: ../libgda/gda-data-model.c:662
 msgid "Data model does not support getting individual value"
 msgstr "Das Datenmodell unterstützt das Ermitteln individueller Werte nicht"
 
-#: ../libgda/gda-data-model.c:706 ../libgda/gda-data-model.c:716
+#: ../libgda/gda-data-model.c:705 ../libgda/gda-data-model.c:715
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr "Datenmodell gab einen des ungültigen Typs »%s« zurück"
 
-#: ../libgda/gda-data-model.c:713
+#: ../libgda/gda-data-model.c:712
 msgid "Data model returned invalid NULL value"
 msgstr "Datenmodell gab den ungültigen Wert NULL zurück"
 
-#: ../libgda/gda-data-model.c:783
+#: ../libgda/gda-data-model.c:782
 msgid "Data model does not support setting individual value"
 msgstr "Das Datenmodell unterstützt das Setzen individueller Werte nicht"
 
-#: ../libgda/gda-data-model.c:841
+#: ../libgda/gda-data-model.c:840
 msgid "Data model does not support setting values"
 msgstr "Das Datenmodell unterstützt das Setzen von Werten nicht"
 
-#: ../libgda/gda-data-model.c:918 ../libgda/gda-data-model.c:954
+#: ../libgda/gda-data-model.c:917 ../libgda/gda-data-model.c:953
 msgid "Data model does not support row append"
 msgstr "Das Datenmodell unterstützt das Anhängen von Zeilen nicht"
 
-#: ../libgda/gda-data-model.c:945
+#: ../libgda/gda-data-model.c:944
 msgid "Model does not allow row insertion"
 msgstr "Modell unterstützt das Einfügen von Zeilen nicht"
 
-#: ../libgda/gda-data-model.c:982
+#: ../libgda/gda-data-model.c:981
 msgid "Model does not allow row deletion"
 msgstr "Modell unterstützt das Entfernen von Zeilen nicht"
 
-#: ../libgda/gda-data-model.c:991
+#: ../libgda/gda-data-model.c:990
 msgid "Data model does not support row removal"
 msgstr "Das Datenmodell unterstützt das Entfernen von Zeilen nicht"
 
-#: ../libgda/gda-data-model.c:1168 ../libgda/gda-data-model.c:1209
-#: ../libgda/gda-data-model.c:1223
+#: ../libgda/gda-data-model.c:1167 ../libgda/gda-data-model.c:1208
+#: ../libgda/gda-data-model.c:1222
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr ""
 "Der Parameter »%s« muss einen Zeichenketten-Wert enthalten,wird ignoriert."
 
-#: ../libgda/gda-data-model.c:1232 ../libgda/gda-data-model.c:1242
-#: ../libgda/gda-data-model.c:1252 ../libgda/gda-data-model.c:1292
-#: ../libgda/gda-data-model.c:1390
+#: ../libgda/gda-data-model.c:1231 ../libgda/gda-data-model.c:1241
+#: ../libgda/gda-data-model.c:1251 ../libgda/gda-data-model.c:1291
+#: ../libgda/gda-data-model.c:1389
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "Der Parameter »%s« muss einen booleschen Wert enthalten,wird ignoriert."
 
-#: ../libgda/gda-data-model.c:1398
+#: ../libgda/gda-data-model.c:1397
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Datei »%s« existiert bereits"
 
-#: ../libgda/gda-data-model.c:1567
+#: ../libgda/gda-data-model.c:1566
 msgid "Exported Data"
 msgstr "Exportierte Daten"
 
-#: ../libgda/gda-data-model.c:1688
+#: ../libgda/gda-data-model.c:1687
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "Erwarteter Tag <gda_value> oder <gda_array_value>, erhalten wurde <%s>, wird "
 "ignoriert"
 
-#: ../libgda/gda-data-model.c:1718
+#: ../libgda/gda-data-model.c:1717
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "Datentyp der Spalte konnte nicht ermittelt werden (Typ ist UNKNOWN oder wurde "
 "nicht angegeben)"
 
-#: ../libgda/gda-data-model.c:1802
+#: ../libgda/gda-data-model.c:1801
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Erwarteter Tag <gda_array_data>, erhalten wurde <%s>"
 
-#: ../libgda/gda-data-model.c:1874
+#: ../libgda/gda-data-model.c:1873
 msgid "Could not get an iterator for source data model"
 msgstr "Es konnte kein Iterator für das Quelldatenmodell angefordert werden"
 
-#: ../libgda/gda-data-model.c:1891
+#: ../libgda/gda-data-model.c:1890
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Nicht vorhandene Spalte im Quelldatenmodell: %d"
 
-#: ../libgda/gda-data-model.c:1905
+#: ../libgda/gda-data-model.c:1904
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
@@ -1099,7 +1099,7 @@ msgstr ""
 "Zielspalte %d kann nicht NULL sein, hat aber keine Zuordnung im "
 "Quelldatenmodell"
 
-#: ../libgda/gda-data-model.c:1915
+#: ../libgda/gda-data-model.c:1914
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -1108,28 +1108,28 @@ msgstr ""
 "Zielspalte %d hat einen GDA-Typ (%s), der inkompatibel zum Typ der "
 "Quellspalte %d ist (%s)"
 
-#: ../libgda/gda-data-model.c:2011
+#: ../libgda/gda-data-model.c:2010
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "»%s« kann nicht aus GDA-Typ %s in GDA-Typ %s umgewandelt werden"
 
-#: ../libgda/gda-data-model.c:2221
+#: ../libgda/gda-data-model.c:2220
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "Die Attribute des Datenmodells konnten nicht abgelegt werden: %s"
 
-#: ../libgda/gda-data-model.c:2229
+#: ../libgda/gda-data-model.c:2228
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "Die Inhalte des Datenmodells konnten nicht abgelegt werden: %s"
 
-#: ../libgda/gda-data-model.c:2508
+#: ../libgda/gda-data-model.c:2507
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr ""
 "Das Datenmodell unterstützt keine Rückwärtsbewegung der Positionsmarke, Daten "
 "werden nicht angezeigt"
 
-#: ../libgda/gda-data-model.c:2631
+#: ../libgda/gda-data-model.c:2630
 #: ../tools/browser/common/gdaui-entry-import.c:213
 #: ../tools/browser/query-exec/query-result.c:228
 #, c-format
@@ -1139,7 +1139,7 @@ msgstr[0] "%d Zeile"
 msgstr[1] "%d Zeilen"
 
 # Ergibt keinen Sinn, aber was solls...
-#: ../libgda/gda-data-model.c:2633
+#: ../libgda/gda-data-model.c:2632
 #, c-format
 msgid "0 row"
 msgstr "0 Zeilen"
@@ -5415,6 +5415,14 @@ msgstr "libdb_sql-5 kann nicht gefunden werden."
 #: ../providers/bdbsql/libmain.c:89
 msgid "Provider for BDB SQL databases"
 msgstr "Treiber für BDB-SQL-Datenbanken"
+
+#: ../providers/firebird/libmain-client.c:51
+msgid "Provider for Firebird databases"
+msgstr "Treiber für Firebird-Datenbanken"
+
+#: ../providers/firebird/libmain-embed.c:51
+msgid "Provider for embedded Firebird databases"
+msgstr "Treiber für eingebettete Firebird-Datenbanken"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
 #: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
