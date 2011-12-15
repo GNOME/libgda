@@ -46,7 +46,7 @@ gdadata-5.0.vapi gdadata.vala.stamp GdaData-5.0.gir: $(libgdadata_5_0_la_VALASOU
 	$(VALA_COMPILER) $(VALAFLAGS) -C -H libgdadata.h --gir=GdaData-5.0.gir --library gdadata-5.0 $^
 	@touch $@
 
-CLEANFILES+= gdadata-5.0.vapi GdaData-5.0.gir
+CLEANFILES+= gdadata-5.0.vapi
 
 libgdadata_5_0_la_LDFLAGS = 
 
@@ -96,7 +96,6 @@ vapidir = $(VALA_VAPIDIR)
 vapi_DATA = gdadata-5.0.vapi
 
 CLEANFILES += \
-    $(INTROSPECTION_GIRS) \
     $(typelibs_DATA) \
     gdadata-5.0.vapi \
     libgdadata-5.0.pc \
