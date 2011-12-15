@@ -4,8 +4,11 @@ TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs
 TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers
 check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers
 
+if ENABLE_VALA_EXTENSIONS
+    VALA_EXTENSIONS= vala
+endif
 
-SUBDIRS = providers parser value-holders meta-store data-models multi-threading
+SUBDIRS = providers parser value-holders meta-store data-models multi-threading $(VALA_EXTENSIONS)
 
 AM_CPPFLAGS = \
         -I$(top_builddir) \

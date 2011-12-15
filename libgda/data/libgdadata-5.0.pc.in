@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+includedir=@includedir@
+
+Name: libgdadata-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
+Description: Gda Data Library. Data oriented GObject implementations using Vala and Gee
+Version: @VERSION@
+Requires: gobject-2.0 gthread-2.0 libxml-2.0 libgda-5.0 libgee-0.8
+Libs: -L${libdir} -lgdadata-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
+Cflags: -I${includedir}/libgdadata-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@ -I${includedir}/libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@/libgda @GDA_DEBUG_FLAGS@

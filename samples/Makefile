@@ -1,5 +1,10 @@
 SHELL= /bin/sh 
-SUBDIRS = BDB DDL DirDataModel F-Spot Report SimpleExample SqlParserConsole TableCopy Virtual XSLT MetaStore Tree SqlBuilder AsyncExec Gir LdapBrowser CustomUIPlugin
+
+if ENABLE_VALA_EXTENSIONS
+    VALA_EXTENSIONS= vala
+endif
+
+SUBDIRS = BDB DDL DirDataModel F-Spot Report SimpleExample SqlParserConsole TableCopy Virtual XSLT MetaStore Tree SqlBuilder AsyncExec Gir LdapBrowser CustomUIPlugin $(VALA_EXTENSIONS)
 all:
 	for dir in ${SUBDIRS} ; do ( cd $$dir ; ${MAKE} ) ; done
 clean:

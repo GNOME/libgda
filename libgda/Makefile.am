@@ -2,7 +2,11 @@ QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
 
 lib_LTLIBRARIES = libgda-5.0.la
 
-SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper
+if ENABLE_VALA_EXTENSIONS
+    VALA_EXTENSIONS= . data
+endif
+
+SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper $(VALA_EXTENSIONS)
 
 DEF_FLAGS=
 if BDB 

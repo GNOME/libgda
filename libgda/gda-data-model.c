@@ -362,7 +362,6 @@ gda_data_model_reset (GdaDataModel *model)
  * re-enable notifications again, you should call the
  * #gda_data_model_thaw function.
  *
- * Virtual: i_set_notify
  */
 void
 gda_data_model_freeze (GdaDataModel *model)
